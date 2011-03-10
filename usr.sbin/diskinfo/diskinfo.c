@@ -158,6 +158,10 @@ decl_stmt|,
 name|fd
 decl_stmt|,
 name|error
+decl_stmt|,
+name|exitval
+init|=
+literal|0
 decl_stmt|;
 name|char
 name|buf
@@ -334,9 +338,10 @@ name|fd
 operator|<
 literal|0
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
+literal|"%s"
 argument_list|,
 name|argv
 index|[
@@ -344,6 +349,14 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+name|exitval
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 name|error
 operator|=
 name|ioctl
@@ -360,10 +373,9 @@ if|if
 condition|(
 name|error
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"%s: ioctl(DIOCGMEDIASIZE) failed, probably not a disk."
 argument_list|,
 name|argv
@@ -372,6 +384,14 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+name|exitval
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 name|error
 operator|=
 name|ioctl
@@ -388,10 +408,9 @@ if|if
 condition|(
 name|error
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"%s: DIOCGSECTORSIZE failed, probably not a disk."
 argument_list|,
 name|argv
@@ -400,6 +419,14 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+name|exitval
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 name|error
 operator|=
 name|ioctl
@@ -709,6 +736,8 @@ argument_list|,
 name|sectorsize
 argument_list|)
 expr_stmt|;
+name|out
+label|:
 name|close
 argument_list|(
 name|fd
@@ -717,7 +746,7 @@ expr_stmt|;
 block|}
 name|exit
 argument_list|(
-literal|0
+name|exitval
 argument_list|)
 expr_stmt|;
 block|}
