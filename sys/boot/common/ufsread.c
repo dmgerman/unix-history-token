@@ -257,7 +257,7 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
-name|int
+name|uint8_t
 name|ls
 decl_stmt|,
 name|dsk_meta
@@ -456,20 +456,6 @@ expr_stmt|;
 name|dt
 operator|=
 name|DT_DIR
-expr_stmt|;
-name|name
-index|[
-literal|0
-index|]
-operator|=
-literal|'/'
-expr_stmt|;
-name|name
-index|[
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 for|for
 control|(
