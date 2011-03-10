@@ -1711,13 +1711,13 @@ name|pCap
 operator|->
 name|halTxStreams
 operator|=
-literal|2
+literal|1
 expr_stmt|;
 name|pCap
 operator|->
 name|halRxStreams
 operator|=
-literal|2
+literal|1
 expr_stmt|;
 name|pCap
 operator|->
