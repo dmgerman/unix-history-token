@@ -2416,7 +2416,7 @@ switch|switch
 condition|(
 name|cpu_id
 operator|&
-literal|0xfff
+literal|0xff0
 condition|)
 block|{
 case|case
@@ -2433,6 +2433,16 @@ name|cpu
 operator|=
 name|CPU_GEODE1100
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|cpu_id
+operator|&
+name|CPUID_STEPPING
+operator|)
+operator|==
+literal|0
+condition|)
 name|tsc_freq
 operator|=
 literal|0
