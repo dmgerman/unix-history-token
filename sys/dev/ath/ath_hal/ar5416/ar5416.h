@@ -325,6 +325,10 @@ decl_stmt|;
 name|int
 name|initPDADC
 decl_stmt|;
+name|int
+name|ah_need_an_top2_fixup
+decl_stmt|;
+comment|/* merlin or later chips that may need this workaround */
 block|}
 struct|;
 end_struct

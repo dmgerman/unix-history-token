@@ -411,7 +411,10 @@ name|AR_EEP_WRITEPROTECT
 block|,
 comment|/* use ath_hal_eepromGetFlag */
 name|AR_EEP_PWR_TABLE_OFFSET
+block|,
 comment|/* int8_t* */
+name|AR_EEP_PWDCLKIND
+comment|/* uint8_t* */
 block|}
 enum|;
 end_enum

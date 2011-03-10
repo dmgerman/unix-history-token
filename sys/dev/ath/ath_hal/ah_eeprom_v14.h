@@ -180,6 +180,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR5416_EEP_MINOR_VER_10
+value|0xa
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR5416_EEP_MINOR_VER_16
 value|0x10
 end_define
