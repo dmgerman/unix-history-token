@@ -50,7 +50,7 @@ specifier|extern
 name|char
 name|kernelname
 index|[
-name|MAXPATHLEN
+comment|/*MAXPATHLEN*/
 index|]
 decl_stmt|;
 end_decl_stmt
