@@ -445,7 +445,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_int
+name|ssize_t
 name|secsize
 decl_stmt|;
 end_decl_stmt
@@ -2997,7 +2997,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"#        size   offset    fstype   [fsize bsize bps/cpg]\n"
+literal|"#          size     offset    fstype   [fsize bsize bps/cpg]\n"
 argument_list|)
 expr_stmt|;
 name|pp
@@ -3036,7 +3036,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"  %c: %8lu %8lu  "
+literal|"  %c: %10lu %10lu  "
 argument_list|,
 literal|'a'
 operator|+
@@ -3106,7 +3106,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"    %5lu %5lu %5.5s "
+literal|"    %5lu %5lu %2s"
 argument_list|,
 operator|(
 name|u_long
@@ -3139,7 +3139,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"    %5lu %5lu %5u "
+literal|"    %5lu %5lu %5u"
 argument_list|,
 operator|(
 name|u_long
