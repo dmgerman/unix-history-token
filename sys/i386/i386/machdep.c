@@ -6183,9 +6183,6 @@ condition|(
 name|tsc_freq
 operator|!=
 literal|0
-operator|&&
-operator|!
-name|tsc_is_broken
 condition|)
 block|{
 operator|*

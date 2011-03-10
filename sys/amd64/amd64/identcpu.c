@@ -743,6 +743,13 @@ block|{
 case|case
 name|CPUCLASS_K8
 case|:
+if|if
+condition|(
+name|tsc_freq
+operator|!=
+literal|0
+condition|)
+block|{
 name|hw_clockrate
 operator|=
 operator|(
@@ -784,6 +791,7 @@ operator|%
 literal|100
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"K8"

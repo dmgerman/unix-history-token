@@ -1500,9 +1500,9 @@ argument_list|,
 literal|"K5 model 0"
 argument_list|)
 expr_stmt|;
-name|tsc_is_broken
+name|tsc_freq
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -2279,9 +2279,9 @@ argument_list|,
 literal|"IDT WinChip C6"
 argument_list|)
 expr_stmt|;
-name|tsc_is_broken
+name|tsc_freq
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -2433,9 +2433,9 @@ name|cpu
 operator|=
 name|CPU_GEODE1100
 expr_stmt|;
-name|tsc_is_broken
+name|tsc_freq
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 break|break;
 default|default:
@@ -2534,6 +2534,13 @@ argument_list|)
 case|case
 name|CPUCLASS_586
 case|:
+if|if
+condition|(
+name|tsc_freq
+operator|!=
+literal|0
+condition|)
+block|{
 name|hw_clockrate
 operator|=
 operator|(
@@ -2575,6 +2582,7 @@ operator|%
 literal|100
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"586"
@@ -2592,6 +2600,13 @@ argument_list|)
 case|case
 name|CPUCLASS_686
 case|:
+if|if
+condition|(
+name|tsc_freq
+operator|!=
+literal|0
+condition|)
+block|{
 name|hw_clockrate
 operator|=
 operator|(
@@ -2633,6 +2648,7 @@ operator|%
 literal|100
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"686"

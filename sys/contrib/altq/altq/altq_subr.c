@@ -309,35 +309,9 @@ begin_comment
 comment|/* for pentium tsc */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<machine/specialreg.h>
-end_include
-
-begin_comment
-comment|/* for CPUID_TSC */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/md_var.h>
-end_include
-
-begin_comment
-comment|/* for cpu_feature */
-end_comment
-
-begin_elif
-elif|#
-directive|elif
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|__NetBSD__
@@ -347,7 +321,17 @@ name|defined
 argument_list|(
 name|__OpenBSD__
 argument_list|)
-end_elif
+end_if
+
+begin_include
+include|#
+directive|include
+file|<machine/specialreg.h>
+end_include
+
+begin_comment
+comment|/* for CPUID_TSC */
+end_comment
 
 begin_include
 include|#
@@ -4015,13 +3999,19 @@ argument_list|(
 name|__i386__
 argument_list|)
 comment|/* check if TSC is available */
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 if|if
 condition|(
-name|machclk_usepcc
+name|tsc_freq
 operator|==
-literal|1
-operator|&&
-operator|(
+literal|0
+condition|)
+else|#
+directive|else
+if|if
+condition|(
 operator|(
 name|cpu_feature
 operator|&
@@ -4029,10 +4019,9 @@ name|CPUID_TSC
 operator|)
 operator|==
 literal|0
-operator|||
-name|tsc_is_broken
-operator|)
 condition|)
+endif|#
+directive|endif
 name|machclk_usepcc
 operator|=
 literal|0

@@ -127,12 +127,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|tsc_is_broken
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|tsc_is_invariant
 decl_stmt|;
 end_decl_stmt
@@ -663,9 +657,6 @@ condition|(
 name|tsc_freq
 operator|!=
 literal|0
-operator|&&
-operator|!
-name|tsc_is_broken
 condition|)
 block|{
 name|tsc_timecounter

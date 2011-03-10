@@ -845,9 +845,6 @@ name|tsc_freq
 operator|!=
 literal|0
 operator|&&
-operator|!
-name|tsc_is_broken
-operator|&&
 name|mp_ncpus
 operator|==
 literal|1
