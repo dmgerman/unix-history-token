@@ -2191,24 +2191,6 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/* 		 * With the addition of TLS support binutils started to make 		 * addend values relative to relocbase instead of sections. 		 */
-if|if
-condition|(
-name|addr
-operator|>
-name|relocbase
-operator|&&
-name|addr
-operator|<=
-name|relocbase
-operator|+
-name|value
-condition|)
-name|value
-operator|+=
-name|relocbase
-expr_stmt|;
-else|else
 name|value
 operator|+=
 name|addr
