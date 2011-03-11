@@ -308,8 +308,10 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|ti_type
+specifier|const
 name|ti_devs
 index|[]
 init|=
@@ -4780,6 +4782,8 @@ operator|.
 name|ti_jumbo_buf
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_COHERENT
 argument_list|,
 operator|&
 name|sc
@@ -10237,6 +10241,7 @@ name|device_t
 name|dev
 decl_stmt|;
 block|{
+specifier|const
 name|struct
 name|ti_type
 modifier|*
@@ -10837,6 +10842,8 @@ operator|->
 name|ti_rdata
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_COHERENT
 argument_list|,
 operator|&
 name|sc
@@ -11257,12 +11264,6 @@ operator|->
 name|if_baudrate
 operator|=
 literal|1000000000
-expr_stmt|;
-name|ifp
-operator|->
-name|if_mtu
-operator|=
-name|ETHERMTU
 expr_stmt|;
 name|ifp
 operator|->
