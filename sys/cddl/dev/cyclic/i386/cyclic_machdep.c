@@ -384,7 +384,7 @@ operator|->
 name|cpuid
 argument_list|)
 argument_list|,
-name|NULL
+name|smp_no_rendevous_barrier
 argument_list|,
 name|func
 argument_list|,
