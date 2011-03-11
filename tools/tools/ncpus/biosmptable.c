@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/mptable.h>
+file|<x86/mptable.h>
 end_include
 
 begin_include
