@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: mdreloc.c,v 1.5 2001/04/25 12:24:51 kleink Exp $	*/
+comment|/*	$NetBSD: mdreloc.c,v 1.42 2008/04/28 20:23:04 martin Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2000 Eduardo Horvath.  * Copyright (c) 1999 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Paul Kranenburg.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2000 Eduardo Horvath.  * Copyright (c) 1999 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Paul Kranenburg.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -148,6 +148,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|_RF_X
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* Bare symbols, needs proc */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|_RF_SZ
 parameter_list|(
 name|s
@@ -198,7 +209,7 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
-comment|/* RELOC_8 */
+comment|/* 8 */
 name|_RF_S
 operator||
 name|_RF_A
@@ -213,7 +224,7 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
-comment|/* RELOC_16 */
+comment|/* 16 */
 name|_RF_S
 operator||
 name|_RF_A
@@ -228,7 +239,7 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
-comment|/* RELOC_32 */
+comment|/* 32 */
 name|_RF_S
 operator||
 name|_RF_A
@@ -318,6 +329,8 @@ name|_RF_S
 operator||
 name|_RF_A
 operator||
+name|_RF_X
+operator||
 name|_RF_SZ
 argument_list|(
 literal|32
@@ -332,6 +345,8 @@ comment|/* HI22 */
 name|_RF_S
 operator||
 name|_RF_A
+operator||
+name|_RF_X
 operator||
 name|_RF_SZ
 argument_list|(
@@ -348,6 +363,8 @@ name|_RF_S
 operator||
 name|_RF_A
 operator||
+name|_RF_X
+operator||
 name|_RF_SZ
 argument_list|(
 literal|32
@@ -362,6 +379,8 @@ comment|/* 13 */
 name|_RF_S
 operator||
 name|_RF_A
+operator||
+name|_RF_X
 operator||
 name|_RF_SZ
 argument_list|(
@@ -619,6 +638,8 @@ name|_RF_S
 operator||
 name|_RF_A
 operator||
+name|_RF_X
+operator||
 name|_RF_SZ
 argument_list|(
 literal|32
@@ -634,6 +655,8 @@ name|_RF_S
 operator||
 name|_RF_A
 operator||
+name|_RF_X
+operator||
 name|_RF_SZ
 argument_list|(
 literal|32
@@ -648,6 +671,8 @@ comment|/* 11 */
 name|_RF_S
 operator||
 name|_RF_A
+operator||
+name|_RF_X
 operator||
 name|_RF_SZ
 argument_list|(
@@ -680,6 +705,8 @@ name|_RF_S
 operator||
 name|_RF_A
 operator||
+name|_RF_X
+operator||
 name|_RF_SZ
 argument_list|(
 literal|32
@@ -695,6 +722,8 @@ name|_RF_S
 operator||
 name|_RF_A
 operator||
+name|_RF_X
+operator||
 name|_RF_SZ
 argument_list|(
 literal|32
@@ -709,6 +738,8 @@ comment|/* HM10 */
 name|_RF_S
 operator||
 name|_RF_A
+operator||
+name|_RF_X
 operator||
 name|_RF_SZ
 argument_list|(
@@ -825,6 +856,8 @@ name|_RF_S
 operator||
 name|_RF_A
 operator||
+name|_RF_X
+operator||
 name|_RF_SZ
 argument_list|(
 literal|32
@@ -840,6 +873,8 @@ name|_RF_S
 operator||
 name|_RF_A
 operator||
+name|_RF_X
+operator||
 name|_RF_SZ
 argument_list|(
 literal|32
@@ -854,6 +889,8 @@ comment|/* 5 */
 name|_RF_S
 operator||
 name|_RF_A
+operator||
+name|_RF_X
 operator||
 name|_RF_SZ
 argument_list|(
@@ -900,6 +937,8 @@ name|_RF_S
 operator||
 name|_RF_A
 operator||
+name|_RF_X
+operator||
 name|_RF_SZ
 argument_list|(
 literal|32
@@ -914,6 +953,8 @@ comment|/* HIX22 */
 name|_RF_S
 operator||
 name|_RF_A
+operator||
+name|_RF_X
 operator||
 name|_RF_SZ
 argument_list|(
@@ -930,6 +971,8 @@ name|_RF_S
 operator||
 name|_RF_A
 operator||
+name|_RF_X
+operator||
 name|_RF_SZ
 argument_list|(
 literal|32
@@ -945,6 +988,8 @@ name|_RF_S
 operator||
 name|_RF_A
 operator||
+name|_RF_X
+operator||
 name|_RF_SZ
 argument_list|(
 literal|32
@@ -959,6 +1004,8 @@ comment|/* M44 */
 name|_RF_S
 operator||
 name|_RF_A
+operator||
+name|_RF_X
 operator||
 name|_RF_SZ
 argument_list|(
@@ -1031,7 +1078,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static const char *reloc_names[] = { 	"NONE", "RELOC_8", "RELOC_16", "RELOC_32", "DISP_8", 	"DISP_16", "DISP_32", "WDISP_30", "WDISP_22", "HI22", 	"22", "13", "LO10", "GOT10", "GOT13", 	"GOT22", "PC10", "PC22", "WPLT30", "COPY", 	"GLOB_DAT", "JMP_SLOT", "RELATIVE", "UA_32", "PLT32", 	"HIPLT22", "LOPLT10", "LOPLT10", "PCPLT22", "PCPLT32", 	"10", "11", "64", "OLO10", "HH22", 	"HM10", "LM22", "PC_HH22", "PC_HM10", "PC_LM22", 	"WDISP16", "WDISP19", "GLOB_JMP", "7", "5", "6", 	"DISP64", "PLT64", "HIX22", "LOX10", "H44", "M44", 	"L44", "REGISTER", "UA64", "UA16" };
+unit|static const char *const reloc_names[] = { 	"NONE", "8", "16", "32", "DISP_8", "DISP_16", "DISP_32", "WDISP_30", 	"WDISP_22", "HI22", "22", "13", "LO10", "GOT10", "GOT13", "GOT22", 	"PC10", "PC22", "WPLT30", "COPY", "GLOB_DAT", "JMP_SLOT", "RELATIVE", 	"UA_32", "PLT32", "HIPLT22", "LOPLT10", "LOPLT10", "PCPLT22", 	"PCPLT32", "10", "11", "64", "OLO10", "HH22", "HM10", "LM22", 	"PC_HH22", "PC_HM10", "PC_LM22", "WDISP16", "WDISP19", "GLOB_JMP", 	"7", "5", "6", "DISP64", "PLT64", "HIX22", "LOX10", "H44", "M44", 	"L44", "REGISTER", "UA64", "UA16" };
 endif|#
 directive|endif
 end_endif
@@ -1089,6 +1136,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|RELOC_BARE_SYMBOL
+parameter_list|(
+name|t
+parameter_list|)
+value|((reloc_target_flags[t]& _RF_X) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|RELOC_TARGET_SIZE
 parameter_list|(
 name|t
@@ -1139,7 +1196,7 @@ argument_list|(
 literal|32
 argument_list|)
 block|,
-comment|/* RELOC_8, 16, 32 */
+comment|/* 8, 16, 32 */
 name|_BM
 argument_list|(
 literal|8
@@ -1188,7 +1245,7 @@ argument_list|(
 literal|10
 argument_list|)
 block|,
-comment|/* RELOC_13, LO10 */
+comment|/* 13, LO10 */
 name|_BM
 argument_list|(
 literal|10
@@ -1407,85 +1464,6 @@ literal|16
 argument_list|)
 block|,
 comment|/* REGISTER, UA64, UA16 */
-name|_BM
-argument_list|(
-literal|22
-argument_list|)
-block|,
-name|_BM
-argument_list|(
-literal|10
-argument_list|)
-block|,
-literal|0
-block|,
-name|_BM
-argument_list|(
-literal|30
-argument_list|)
-block|,
-comment|/* GD_HI22, GD_LO10, GD_ADD, GD_CALL */
-name|_BM
-argument_list|(
-literal|22
-argument_list|)
-block|,
-name|_BM
-argument_list|(
-literal|10
-argument_list|)
-block|,
-literal|0
-block|,
-comment|/* LDM_HI22, LDMO10, LDM_ADD */
-name|_BM
-argument_list|(
-literal|30
-argument_list|)
-block|,
-comment|/* LDM_CALL */
-name|_BM
-argument_list|(
-literal|22
-argument_list|)
-block|,
-name|_BM
-argument_list|(
-literal|10
-argument_list|)
-block|,
-literal|0
-block|,
-comment|/* LDO_HIX22, LDO_LOX10, LDO_ADD */
-name|_BM
-argument_list|(
-literal|22
-argument_list|)
-block|,
-name|_BM
-argument_list|(
-literal|10
-argument_list|)
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* IE_HI22, IE_LO10, IE_LD, IE_LDX */
-literal|0
-block|,
-comment|/* IE_ADD */
-name|_BM
-argument_list|(
-literal|22
-argument_list|)
-block|,
-name|_BM
-argument_list|(
-literal|13
-argument_list|)
-block|,
-comment|/* LE_HIX22, LE_LOX10 */
 undef|#
 directive|undef
 name|_BM
@@ -2321,7 +2299,7 @@ name|type
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * Note that even though sparcs use `Elf_rela' exclusively 		 * we still need the implicit memory addend in relocations 		 * referring to GOT entries. Undoubtedly, someone f*cked 		 * this up in the distant past, and now we're stuck with 		 * it in the name of compatibility for all eternity.. 		 * 		 * In any case, the implicit and explicit should be mutually 		 * exclusive. We provide a check for that here. 		 */
+comment|/* 		 * Note that even though sparcs use `Elf_rela' exclusively 		 * we still need the implicit memory addend in relocations 		 * referring to GOT entries.  Undoubtedly, someone f*cked 		 * this up in the distant past, and now we're stuck with 		 * it in the name of compatibility for all eternity ... 		 * 		 * In any case, the implicit and explicit should be mutually 		 * exclusive.  We provide a check for that here. 		 */
 comment|/* XXXX -- apparently we ignore the preexisting value */
 name|value
 operator|+=
@@ -2984,7 +2962,7 @@ literal|20
 operator|)
 condition|)
 block|{
-comment|/* 			 * We're within 1MB -- we can use a direct branch insn. 			 * 			 * We can generate this pattern: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	ba,a	%xcc, addr 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
+comment|/* 			 * We're within 1MB -- we can use a direct branch 			 * instruction. 			 * 			 * We can generate this pattern: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	ba,a	%xcc, addr 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
 name|where
 index|[
 literal|1
@@ -3241,7 +3219,7 @@ literal|44
 operator|)
 condition|)
 block|{
-comment|/* 			 * We're withing 44 bits.  We can generate this pattern: 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%h44(addr), %g1 			 *	or	%g1, %m44(addr), %g1 			 *	sllx	%g1, 12, %g1 			 *	jmp	%g1+%l44(addr) 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
+comment|/* 			 * We're withing 44 bits.  We can generate this 			 * pattern: 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%h44(addr), %g1 			 *	or	%g1, %m44(addr), %g1 			 *	sllx	%g1, 12, %g1 			 *	jmp	%g1+%l44(addr) 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
 name|where
 index|[
 literal|4
@@ -3342,7 +3320,7 @@ literal|44
 operator|)
 condition|)
 block|{
-comment|/* 			 * We're withing 44 bits.  We can generate this pattern: 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%h44(-addr), %g1 			 *	xor	%g1, %m44(-addr), %g1 			 *	sllx	%g1, 12, %g1 			 *	jmp	%g1+%l44(addr) 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
+comment|/* 			 * We're withing 44 bits.  We can generate this 			 * pattern: 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%h44(-addr), %g1 			 *	xor	%g1, %m44(-addr), %g1 			 *	sllx	%g1, 12, %g1 			 *	jmp	%g1+%l44(addr) 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
 name|where
 index|[
 literal|4
@@ -3549,7 +3527,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * This is a high PLT slot; the relocation offset specifies a 		 * pointer that needs to be frobbed; no actual code needs to 		 * be modified. The pointer to be calculated needs the addend 		 * added and the reference object relocation base subtraced. 		 */
+comment|/* 		 * This is a high PLT slot; the relocation offset specifies a 		 * pointer that needs to be frobbed; no actual code needs to 		 * be modified.  The pointer to be calculated needs the addend 		 * added and the reference object relocation base subtraced. 		 */
 operator|*
 name|wherep
 operator|=
