@@ -707,20 +707,6 @@ parameter_list|)
 value|atomic_add_int(&port_counters[port][(counter)], 1)
 end_define
 
-begin_define
-define|#
-directive|define
-name|port_set_counter
-parameter_list|(
-name|port
-parameter_list|,
-name|counter
-parameter_list|,
-name|value
-parameter_list|)
-value|atomic_set_int(&port_counters[port][(counter)], (value))
-end_define
-
 begin_else
 else|#
 directive|else
@@ -734,23 +720,6 @@ parameter_list|(
 name|port
 parameter_list|,
 name|counter
-parameter_list|)
-end_define
-
-begin_comment
-comment|/* Nothing */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|port_set_counter
-parameter_list|(
-name|port
-parameter_list|,
-name|counter
-parameter_list|,
-name|value
 parameter_list|)
 end_define
 
@@ -11949,20 +11918,14 @@ name|i
 operator|++
 control|)
 block|{
-name|atomic_set_int
-argument_list|(
-operator|&
-operator|(
 name|priv
 operator|->
 name|frin_to_be_sent
 index|[
 name|i
 index|]
-operator|)
-argument_list|,
+operator|=
 literal|0
-argument_list|)
 expr_stmt|;
 block|}
 return|return
