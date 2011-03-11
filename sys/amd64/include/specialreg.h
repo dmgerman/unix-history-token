@@ -675,6 +675,38 @@ value|0x00800000
 end_define
 
 begin_comment
+comment|/*  * Important bits in the Thermal and Power Management flags  * CPUID.6 EAX and ECX.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUTPM1_SENSOR
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUTPM1_TURBO
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUTPM1_ARAT
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUTPM2_EFFREQ
+value|0x00000001
+end_define
+
+begin_comment
 comment|/*  * Important bits in the AMD extended cpuid flags  */
 end_comment
 
