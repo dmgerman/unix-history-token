@@ -827,6 +827,16 @@ name|ah_spurMitigate
 operator|=
 name|ar5416SpurMitigate
 expr_stmt|;
+comment|/* Internal calibration ops */
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_cal_initcal
+operator|=
+name|ar5416InitCalHardware
+expr_stmt|;
 comment|/* Internal TX power control related operations */
 name|AH5416
 argument_list|(

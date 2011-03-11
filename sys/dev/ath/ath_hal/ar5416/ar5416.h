@@ -222,6 +222,37 @@ name|ieee80211_channel
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* calibration ops */
+name|HAL_BOOL
+function_decl|(
+modifier|*
+name|ah_cal_initcal
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_channel
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|ah_cal_pacal
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|HAL_BOOL
+name|is_reset
+parameter_list|)
+function_decl|;
 comment|/* optional open-loop tx power control related methods */
 name|void
 function_decl|(
