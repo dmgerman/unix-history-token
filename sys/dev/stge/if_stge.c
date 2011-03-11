@@ -4513,6 +4513,8 @@ name|stge_tx_ring
 argument_list|,
 name|BUS_DMA_NOWAIT
 operator||
+name|BUS_DMA_COHERENT
+operator||
 name|BUS_DMA_ZERO
 argument_list|,
 operator|&
@@ -4641,6 +4643,8 @@ operator|.
 name|stge_rx_ring
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_COHERENT
 operator||
 name|BUS_DMA_ZERO
 argument_list|,
