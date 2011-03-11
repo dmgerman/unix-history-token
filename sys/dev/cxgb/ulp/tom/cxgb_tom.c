@@ -1046,15 +1046,11 @@ name|atids_in_use
 operator|=
 literal|0
 expr_stmt|;
-name|atomic_set_int
-argument_list|(
-operator|&
 name|t
 operator|->
 name|tids_in_use
-argument_list|,
+operator|=
 literal|0
-argument_list|)
 expr_stmt|;
 name|mtx_init
 argument_list|(
