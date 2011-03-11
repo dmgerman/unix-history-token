@@ -35,6 +35,23 @@ decl_stmt|;
 name|HAL_INI_ARRAY
 name|ah_ini_rxgain
 decl_stmt|;
+struct|struct
+block|{
+name|int32_t
+name|prev_offset
+decl_stmt|;
+comment|/* Previous value of PA offset value */
+name|int8_t
+name|max_skipcount
+decl_stmt|;
+comment|/* Max No. of times PACAL can be skipped */
+name|int8_t
+name|skipcount
+decl_stmt|;
+comment|/* No. of times the PACAL to be skipped */
+block|}
+name|pacal_info
+struct|;
 block|}
 struct|;
 end_struct

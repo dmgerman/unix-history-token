@@ -83,6 +83,12 @@ begin_comment
 comment|/* XXX ini for tx/rx gain */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"ar9002/ar9285_cal.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -570,6 +576,31 @@ operator||
 name|ADC_DC_CAL
 operator||
 name|IQ_MISMATCH_CAL
+expr_stmt|;
+if|if
+condition|(
+name|AR_SREV_KITE_12_OR_LATER
+argument_list|(
+name|ah
+argument_list|)
+condition|)
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_cal_initcal
+operator|=
+name|ar9285InitCalHardware
+expr_stmt|;
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_cal_pacal
+operator|=
+name|ar9002_hw_pa_cal
 expr_stmt|;
 name|AH5416
 argument_list|(
