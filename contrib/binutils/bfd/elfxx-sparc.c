@@ -12385,6 +12385,12 @@ decl_stmt|;
 name|int
 name|num_relocs
 decl_stmt|;
+specifier|const
+name|struct
+name|elf_backend_data
+modifier|*
+name|bed
+decl_stmt|;
 name|htab
 operator|=
 name|_bfd_sparc_elf_hash_table
@@ -12414,6 +12420,13 @@ operator|=
 name|elf_local_got_offsets
 argument_list|(
 name|input_bfd
+argument_list|)
+expr_stmt|;
+name|bed
+operator|=
+name|get_elf_backend_data
+argument_list|(
+name|output_bfd
 argument_list|)
 expr_stmt|;
 if|if
@@ -13960,7 +13973,6 @@ name|asection
 modifier|*
 name|osec
 decl_stmt|;
-comment|/* We are turning this relocation into one 			     against a section symbol.  It would be 			     proper to subtract the symbol's value, 			     osec->vma, from the emitted reloc addend, 			     but ld.so expects buggy relocs.  */
 name|osec
 operator|=
 name|sec
@@ -14034,6 +14046,23 @@ return|return
 name|FALSE
 return|;
 block|}
+comment|/* We are turning this relocation into one 			     against a section symbol, so subtract out 			     the output section's address but not the 			     offset of the input section in the output 			     section on OSes where ld.so doesn't expect 			     buggy relocs.  */
+if|if
+condition|(
+name|bed
+operator|->
+name|elf_osabi
+operator|==
+name|ELFOSABI_FREEBSD
+condition|)
+name|outrel
+operator|.
+name|r_addend
+operator|-=
+name|osec
+operator|->
+name|vma
+expr_stmt|;
 block|}
 name|outrel
 operator|.
