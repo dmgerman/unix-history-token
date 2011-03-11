@@ -302,6 +302,16 @@ end_if
 begin_include
 include|#
 directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_comment
+comment|/* for cpu_feature or tsc_present */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<machine/cpufunc.h>
 end_include
 
@@ -331,16 +341,6 @@ end_include
 
 begin_comment
 comment|/* for CPUID_TSC */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/cpu.h>
-end_include
-
-begin_comment
-comment|/* for cpu_feature */
 end_comment
 
 begin_endif
@@ -4004,6 +4004,9 @@ directive|ifdef
 name|__FreeBSD__
 if|if
 condition|(
+operator|!
+name|tsc_present
+operator|||
 name|tsc_freq
 operator|==
 literal|0

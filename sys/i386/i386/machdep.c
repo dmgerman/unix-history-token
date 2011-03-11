@@ -245,6 +245,23 @@ directive|include
 file|<sys/signalvar.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/smp.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -6082,6 +6099,10 @@ comment|/* If TSC is P-state invariant, DELAY(9) based logic fails. */
 if|if
 condition|(
 name|tsc_is_invariant
+operator|&&
+name|tsc_freq
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -6092,6 +6113,10 @@ comment|/* If we're booting, trust the rate calibrated moments ago. */
 if|if
 condition|(
 name|cold
+operator|&&
+name|tsc_freq
+operator|!=
+literal|0
 condition|)
 block|{
 operator|*
@@ -6108,6 +6133,13 @@ block|}
 ifdef|#
 directive|ifdef
 name|SMP
+if|if
+condition|(
+name|smp_cpus
+operator|>
+literal|1
+condition|)
+block|{
 comment|/* Schedule ourselves on the indicated cpu. */
 name|thread_lock
 argument_list|(
@@ -6126,6 +6158,7 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* Calibrate by measuring a short delay. */
@@ -6157,6 +6190,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
+if|if
+condition|(
+name|smp_cpus
+operator|>
+literal|1
+condition|)
+block|{
 name|thread_lock
 argument_list|(
 name|curthread
@@ -6172,6 +6212,7 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|tsc2
