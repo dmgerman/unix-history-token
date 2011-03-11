@@ -2892,6 +2892,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MSR_HWCR
+value|0xc0010015
+end_define
+
+begin_define
+define|#
+directive|define
 name|MSR_IORRBASE0
 value|0xc0010016
 end_define

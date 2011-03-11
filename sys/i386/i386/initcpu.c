@@ -2621,11 +2621,11 @@ index|]
 decl_stmt|;
 name|wrmsr
 argument_list|(
-literal|0xC0010015
+name|MSR_HWCR
 argument_list|,
 name|rdmsr
 argument_list|(
-literal|0xC0010015
+name|MSR_HWCR
 argument_list|)
 operator|&
 operator|~
