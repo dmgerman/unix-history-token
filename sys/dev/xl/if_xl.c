@@ -5554,6 +5554,8 @@ name|xl_rx_list
 argument_list|,
 name|BUS_DMA_NOWAIT
 operator||
+name|BUS_DMA_COHERENT
+operator||
 name|BUS_DMA_ZERO
 argument_list|,
 operator|&
@@ -5767,6 +5769,8 @@ operator|.
 name|xl_tx_list
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_COHERENT
 operator||
 name|BUS_DMA_ZERO
 argument_list|,
