@@ -3629,6 +3629,8 @@ name|int
 name|error
 decl_stmt|,
 name|mode
+decl_stmt|,
+name|debuglevel
 decl_stmt|;
 comment|/* 	 * Create communication channel for sending control commands from 	 * parent to child. 	 */
 if|if
@@ -3830,6 +3832,11 @@ operator|=
 name|pjdlog_mode_get
 argument_list|()
 expr_stmt|;
+name|debuglevel
+operator|=
+name|pjdlog_debug_get
+argument_list|()
+expr_stmt|;
 comment|/* Declare that we are sender. */
 name|proto_send
 argument_list|(
@@ -3880,6 +3887,11 @@ expr_stmt|;
 name|pjdlog_init
 argument_list|(
 name|mode
+argument_list|)
+expr_stmt|;
+name|pjdlog_debug_set
+argument_list|(
+name|debuglevel
 argument_list|)
 expr_stmt|;
 name|pjdlog_prefix_set
