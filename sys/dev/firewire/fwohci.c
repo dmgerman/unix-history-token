@@ -4379,6 +4379,8 @@ operator|->
 name|crom_dma
 argument_list|,
 name|BUS_DMA_WAITOK
+operator||
+name|BUS_DMA_COHERENT
 argument_list|)
 expr_stmt|;
 if|if
@@ -4435,6 +4437,8 @@ operator|->
 name|sid_dma
 argument_list|,
 name|BUS_DMA_WAITOK
+operator||
+name|BUS_DMA_COHERENT
 argument_list|)
 expr_stmt|;
 if|if
