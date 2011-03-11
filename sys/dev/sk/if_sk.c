@@ -9432,6 +9432,8 @@ name|sk_tx_ring
 argument_list|,
 name|BUS_DMA_NOWAIT
 operator||
+name|BUS_DMA_COHERENT
+operator||
 name|BUS_DMA_ZERO
 argument_list|,
 operator|&
@@ -9554,6 +9556,8 @@ operator|.
 name|sk_rx_ring
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_COHERENT
 operator||
 name|BUS_DMA_ZERO
 argument_list|,
@@ -10084,6 +10088,8 @@ operator|.
 name|sk_jumbo_rx_ring
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_COHERENT
 operator||
 name|BUS_DMA_ZERO
 argument_list|,
