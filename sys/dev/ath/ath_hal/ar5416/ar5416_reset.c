@@ -407,35 +407,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|HAL_BOOL
-name|ar5416FillVpdTable
-parameter_list|(
-name|uint8_t
-name|pwrMin
-parameter_list|,
-name|uint8_t
-name|pwrMax
-parameter_list|,
-name|uint8_t
-modifier|*
-name|pPwrList
-parameter_list|,
-name|uint8_t
-modifier|*
-name|pVpdList
-parameter_list|,
-name|uint16_t
-name|numIntercepts
-parameter_list|,
-name|uint8_t
-modifier|*
-name|pRetVpdList
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Places the device in and out of reset and then places sane  * values in the registers based on EEPROM config, initialization  * vectors (as determined by the mode), and station configuration  *  * bChannelChange is used to preserve DMA/PCU registers across  * a HW Reset during channel change.  */
 end_comment
@@ -11358,7 +11329,6 @@ comment|/**************************************************************  * ar541
 end_comment
 
 begin_function
-specifier|static
 name|HAL_BOOL
 name|ar5416FillVpdTable
 parameter_list|(
