@@ -371,26 +371,6 @@ modifier|*
 name|param
 parameter_list|)
 block|{
-comment|/* 	 * If the target CPU is the current one, just call the 	 * function. This covers the non-SMP case. 	 */
-if|if
-condition|(
-name|c
-operator|==
-operator|&
-name|solaris_cpu
-index|[
-name|curcpu
-index|]
-condition|)
-call|(
-modifier|*
-name|func
-call|)
-argument_list|(
-name|param
-argument_list|)
-expr_stmt|;
-else|else
 name|smp_rendezvous_cpus
 argument_list|(
 call|(
