@@ -3214,6 +3214,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MSR_HWCR
+value|0xc0010015
+end_define
+
+begin_define
+define|#
+directive|define
 name|MSR_K8_UCODE_UPDATE
 value|0xc0010020
 end_define
