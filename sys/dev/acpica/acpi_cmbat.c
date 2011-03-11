@@ -1160,6 +1160,41 @@ operator|->
 name|bst_lastupdated
 argument_list|)
 expr_stmt|;
+comment|/* Clear out undefined/extended bits that might be set by hardware. */
+name|sc
+operator|->
+name|bst
+operator|.
+name|state
+operator|&=
+name|ACPI_BATT_STAT_BST_MASK
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|bst
+operator|.
+name|state
+operator|&
+name|ACPI_BATT_STAT_INVALID
+operator|)
+operator|==
+name|ACPI_BATT_STAT_INVALID
+condition|)
+name|ACPI_VPRINT
+argument_list|(
+name|dev
+argument_list|,
+name|acpi_device_get_parent_softc
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+literal|"battery reports simultaneous charging and discharging\n"
+argument_list|)
+expr_stmt|;
 comment|/* XXX If all batteries are critical, perhaps we should suspend. */
 if|if
 condition|(
