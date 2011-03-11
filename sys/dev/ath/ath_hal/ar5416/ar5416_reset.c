@@ -1728,7 +1728,7 @@ comment|/* Setup the transmit power values. */
 end_comment
 
 begin_comment
-unit|if (!ar5416SetTransmitPower(ah, chan, rfXpdGain)) { 		HALDEBUG(ah, HAL_DEBUG_ANY, 		    "%s: error init'ing transmit power\n", __func__); 		return AH_FALSE; 	}
+unit|if (!ah->ah_setTxPower(ah, chan, rfXpdGain)) { 		HALDEBUG(ah, HAL_DEBUG_ANY, 		    "%s: error init'ing transmit power\n", __func__); 		return AH_FALSE; 	}
 comment|/* 	 * Wait for the frequency synth to settle (synth goes on 	 * via PHY_ACTIVE_EN).  Read the phy active delay register. 	 * Value is in 100ns increments. 	 */
 end_comment
 
@@ -2924,7 +2924,9 @@ name|MAX_RATE_POWER
 argument_list|)
 expr_stmt|;
 return|return
-name|ar5416SetTransmitPower
+name|ah
+operator|->
+name|ah_setTxPower
 argument_list|(
 name|ah
 argument_list|,
