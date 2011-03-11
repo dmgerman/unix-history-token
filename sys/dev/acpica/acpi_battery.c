@@ -358,8 +358,8 @@ operator|(
 name|bst
 operator|->
 name|state
-operator|<
-name|ACPI_BATT_STAT_MAX
+operator|!=
+name|ACPI_BATT_STAT_NOT_PRESENT
 operator|&&
 name|bst
 operator|->
