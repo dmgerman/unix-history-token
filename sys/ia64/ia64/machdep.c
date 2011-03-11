@@ -3479,7 +3479,10 @@ name|kernelname
 argument_list|,
 name|p
 argument_list|,
-name|MAXPATHLEN
+sizeof|sizeof
+argument_list|(
+name|kernelname
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|freeenv
