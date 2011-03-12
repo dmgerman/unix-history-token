@@ -26126,6 +26126,8 @@ operator|->
 name|vaddr
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_COHERENT
 argument_list|,
 operator|&
 name|hscb_map
@@ -26334,6 +26336,8 @@ operator|->
 name|vaddr
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_COHERENT
 argument_list|,
 operator|&
 name|sg_map
@@ -27623,6 +27627,8 @@ operator|.
 name|vaddr
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_COHERENT
 argument_list|,
 operator|&
 name|ahd
