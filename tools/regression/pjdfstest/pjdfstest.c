@@ -367,6 +367,7 @@ begin_struct
 struct|struct
 name|syscall_desc
 block|{
+specifier|const
 name|char
 modifier|*
 name|sd_name
@@ -1094,6 +1095,7 @@ name|long
 name|long
 name|f_flag
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|f_str
@@ -1555,6 +1557,7 @@ block|{
 name|int
 name|n_name
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|n_str
