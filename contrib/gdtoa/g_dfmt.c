@@ -383,6 +383,16 @@ name|i
 operator|=
 name|STRTOG_Normal
 expr_stmt|;
+if|if
+condition|(
+name|sign
+condition|)
+name|i
+operator|=
+name|STRTOG_Normal
+operator||
+name|STRTOG_Neg
+expr_stmt|;
 name|s
 operator|=
 name|gdtoa

@@ -187,7 +187,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|malloc
+name|MALLOC
 argument_list|(
 name|strlen
 argument_list|(
