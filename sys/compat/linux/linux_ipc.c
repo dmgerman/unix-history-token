@@ -1476,7 +1476,6 @@ name|msg_qbytes
 expr_stmt|;
 block|}
 else|else
-block|{
 name|error
 operator|=
 name|copyin
@@ -1492,7 +1491,6 @@ name|linux_msqid
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|error
@@ -1669,7 +1667,6 @@ operator|)
 return|;
 block|}
 else|else
-block|{
 return|return
 operator|(
 name|copyout
@@ -1686,7 +1683,6 @@ argument_list|)
 argument_list|)
 operator|)
 return|;
-block|}
 block|}
 end_function
 
@@ -1796,7 +1792,6 @@ name|mode
 expr_stmt|;
 block|}
 else|else
-block|{
 name|error
 operator|=
 name|copyin
@@ -1812,7 +1807,6 @@ name|linux_semid
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|error
@@ -1915,7 +1909,6 @@ operator|)
 return|;
 block|}
 else|else
-block|{
 return|return
 operator|(
 name|copyout
@@ -1932,7 +1925,6 @@ argument_list|)
 argument_list|)
 operator|)
 return|;
-block|}
 block|}
 end_function
 
@@ -2042,7 +2034,6 @@ name|mode
 expr_stmt|;
 block|}
 else|else
-block|{
 name|error
 operator|=
 name|copyin
@@ -2058,7 +2049,6 @@ name|linux_shmid
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|error
@@ -2194,7 +2184,6 @@ operator|)
 return|;
 block|}
 else|else
-block|{
 return|return
 operator|(
 name|copyout
@@ -2211,7 +2200,6 @@ argument_list|)
 argument_list|)
 operator|)
 return|;
-block|}
 block|}
 end_function
 
@@ -2312,7 +2300,6 @@ operator|)
 return|;
 block|}
 else|else
-block|{
 return|return
 operator|(
 name|copyout
@@ -2329,7 +2316,6 @@ argument_list|)
 argument_list|)
 operator|)
 return|;
-block|}
 block|}
 end_function
 
@@ -2381,6 +2367,7 @@ operator|->
 name|nsops
 expr_stmt|;
 return|return
+operator|(
 name|semop
 argument_list|(
 name|td
@@ -2388,6 +2375,7 @@ argument_list|,
 operator|&
 name|bsd_args
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -2450,6 +2438,7 @@ operator|->
 name|semflg
 expr_stmt|;
 return|return
+operator|(
 name|semget
 argument_list|(
 name|td
@@ -2457,6 +2446,7 @@ argument_list|,
 operator|&
 name|bsd_args
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -2823,7 +2813,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|td
 operator|->
@@ -2837,7 +2829,9 @@ operator|.
 name|semmni
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* No need for __semctl call */
 case|case
@@ -2892,7 +2886,9 @@ name|LINUX_IPC_64
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 return|return
@@ -3213,7 +3209,7 @@ parameter_list|)
 block|{
 name|struct
 name|msgget_args
-comment|/* { 	key_t	key; 	int	msgflg;     } */
+comment|/* { 		key_t	key; 		int	msgflg; 	} */
 name|bsd_args
 decl_stmt|;
 name|bsd_args
@@ -3233,6 +3229,7 @@ operator|->
 name|msgflg
 expr_stmt|;
 return|return
+operator|(
 name|msgget
 argument_list|(
 name|td
@@ -3240,6 +3237,7 @@ argument_list|,
 operator|&
 name|bsd_args
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -3297,7 +3295,7 @@ name|struct
 name|l_msginfo
 name|linux_msginfo
 decl_stmt|;
-comment|/* 	 * XXX MSG_INFO uses the same data structure but returns different 	 * dynamic counters in msgpool, msgmap, and msgtql fields. 	 */
+comment|/* 		 * XXX MSG_INFO uses the same data structure but returns different 		 * dynamic counters in msgpool, msgmap, and msgtql fields. 		 */
 name|linux_msginfo
 operator|.
 name|msgpool
@@ -3421,7 +3419,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/*   * TODO: implement this   * case LINUX_MSG_STAT:  */
+comment|/*  	 * TODO: implement this  	 * case LINUX_MSG_STAT: 	 */
 case|case
 name|LINUX_IPC_STAT
 case|:
@@ -3584,7 +3582,7 @@ parameter_list|)
 block|{
 name|struct
 name|shmat_args
-comment|/* { 	int shmid; 	void *shmaddr; 	int shmflg;     } */
+comment|/* { 		int shmid; 		void *shmaddr; 		int shmflg; 	} */
 name|bsd_args
 decl_stmt|;
 name|int
@@ -3655,7 +3653,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 if|#
 directive|if
@@ -3709,7 +3709,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|td
 operator|->
@@ -3723,7 +3725,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3745,7 +3749,7 @@ parameter_list|)
 block|{
 name|struct
 name|shmdt_args
-comment|/* { 	void *shmaddr;     } */
+comment|/* { 		void *shmaddr; 	} */
 name|bsd_args
 decl_stmt|;
 name|bsd_args
@@ -3760,6 +3764,7 @@ name|shmaddr
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|shmdt
 argument_list|(
 name|td
@@ -3767,6 +3772,7 @@ argument_list|,
 operator|&
 name|bsd_args
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -3788,7 +3794,7 @@ parameter_list|)
 block|{
 name|struct
 name|shmget_args
-comment|/* { 	key_t key; 	int size; 	int shmflg;     } */
+comment|/* { 		key_t key; 		int size; 		int shmflg; 	} */
 name|bsd_args
 decl_stmt|;
 name|bsd_args
@@ -3816,6 +3822,7 @@ operator|->
 name|shmflg
 expr_stmt|;
 return|return
+operator|(
 name|shmget
 argument_list|(
 name|td
@@ -3823,6 +3830,7 @@ argument_list|,
 operator|&
 name|bsd_args
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -3907,7 +3915,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|bsd_to_linux_shminfo
 argument_list|(
@@ -3977,7 +3987,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|bsd_to_linux_shm_info
 argument_list|(
@@ -3989,6 +4001,7 @@ name|linux_shm_info
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|copyout
 argument_list|(
 operator|&
@@ -4007,6 +4020,7 @@ expr|struct
 name|l_shm_info
 argument_list|)
 argument_list|)
+operator|)
 return|;
 block|}
 case|case
@@ -4040,7 +4054,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|bsd_to_linux_shmid_ds
 argument_list|(
@@ -4104,7 +4120,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|bsd_to_linux_shmid_ds
 argument_list|(
@@ -4166,7 +4184,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|linux_to_bsd_shmid_ds
 argument_list|(
@@ -4179,6 +4199,7 @@ argument_list|)
 expr_stmt|;
 comment|/* Perform shmctl wanting removed segments lookup */
 return|return
+operator|(
 name|kern_shmctl
 argument_list|(
 name|td
@@ -4198,6 +4219,7 @@ name|bsd_shmid
 argument_list|,
 name|NULL
 argument_list|)
+operator|)
 return|;
 case|case
 name|LINUX_IPC_RMID
@@ -4247,7 +4269,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|linux_to_bsd_shmid_ds
 argument_list|(
@@ -4269,6 +4293,7 @@ name|bsd_shmid
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|kern_shmctl
 argument_list|(
 name|td
@@ -4283,14 +4308,17 @@ name|buf
 argument_list|,
 name|NULL
 argument_list|)
+operator|)
 return|;
 block|}
 case|case
 name|LINUX_SHM_LOCK
 case|:
+comment|/* FALLTHROUGH */
 case|case
 name|LINUX_SHM_UNLOCK
 case|:
+comment|/* FALLTHROUGH */
 default|default:
 name|linux_msg
 argument_list|(
@@ -4307,7 +4335,9 @@ name|LINUX_IPC_64
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 block|}
