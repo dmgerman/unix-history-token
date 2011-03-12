@@ -241,6 +241,7 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
+literal|"(pam_group) "
 literal|"the luser and ruser options are mutually exclusive"
 argument_list|)
 expr_stmt|;
@@ -269,6 +270,7 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_NOTICE
 argument_list|,
+literal|"(pam_group) "
 literal|"neither luser nor ruser specified, assuming ruser"
 argument_list|)
 expr_stmt|;
