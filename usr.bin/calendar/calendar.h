@@ -838,7 +838,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* ostern.c / pashka.c */
+comment|/* ostern.c / paskha.c */
 end_comment
 
 begin_function_decl
@@ -853,6 +853,15 @@ end_function_decl
 begin_function_decl
 name|int
 name|easter
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|j2g
 parameter_list|(
 name|int
 parameter_list|)

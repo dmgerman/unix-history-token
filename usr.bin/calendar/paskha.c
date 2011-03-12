@@ -56,11 +56,57 @@ value|(sizeof(PASKHA) - 1)
 end_define
 
 begin_comment
+comment|/* return difference in days between Julian and Gregorian calendars */
+end_comment
+
+begin_function
+name|int
+name|j2g
+parameter_list|(
+name|int
+name|year
+parameter_list|)
+block|{
+return|return
+operator|(
+name|year
+operator|<
+literal|1500
+operator|)
+condition|?
+literal|0
+else|:
+literal|10
+operator|+
+operator|(
+name|year
+operator|/
+literal|100
+operator|-
+literal|16
+operator|)
+operator|-
+operator|(
+operator|(
+name|year
+operator|/
+literal|100
+operator|-
+literal|16
+operator|)
+operator|/
+literal|4
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* return year day for Orthodox Easter using Gauss formula */
 end_comment
 
 begin_comment
-comment|/* (old style result) */
+comment|/* (new style result) */
 end_comment
 
 begin_function
@@ -179,6 +225,11 @@ name|d
 operator|+
 name|e
 operator|)
+operator|+
+name|j2g
+argument_list|(
+name|R
+argument_list|)
 operator|)
 return|;
 block|}

@@ -216,7 +216,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Expected styles:  *  * Date			::=	Month . ' ' . DayOfMonth |  *				Month . ' ' . DayOfWeek . ModifierIndex |  *				Month . '/' . DayOfMonth |  *				Month . '/' . DayOfWeek . ModifierIndex |  *				DayOfMonth . ' ' . Month |  *				DayOfMonth . '/' . Month |  *				DayOfWeek . ModifierIndex . ' ' .Month |  *				DayOfWeek . ModifierIndex . '/' .Month |  *				DayOfWeek . ModifierIndex |  *				SpecialDay . ModifierOffset  *  * Month		::=	MonthName | MonthNumber | '*'  * MonthNumber		::=	'0' ... '9' | '00' ... '09' | '10' ... '12'  * MonthName		::=	MonthNameShort | MonthNameLong  * MonthNameLong	::=	'January' ... 'December'  * MonthNameShort	::=	'Jan' ... 'Dec' | 'Jan.' ... 'Dec.'  *  * DayOfWeek		::=	DayOfWeekShort | DayOfWeekLong  * DayOfWeekShort	::=	'Mon' .. 'Sun'  * DayOfWeekLong	::=	'Monday' .. 'Sunday'  * DayOfMonth		::=	'0' ... '9' | '00' ... '09' | '10' ... '29' |  *				'30' ... '31' | '*'  *  * ModifierOffset	::=	'' | '+' . ModifierNumber | '-' . ModifierNumber  * ModifierNumber	::=	'0' ... '9' | '00' ... '99' | '000' ... '299' |  *				'300' ... '359' | '360' ... '365'  * ModifierIndex	::=	'Second' | 'Third' | 'Fourth' | 'Fifth' |  *				'First' | 'Last'  *   * SpecialDay		::=	'Easter' | 'Pashka' | 'ChineseNewYear'  *  */
+comment|/*  * Expected styles:  *  * Date			::=	Month . ' ' . DayOfMonth |  *				Month . ' ' . DayOfWeek . ModifierIndex |  *				Month . '/' . DayOfMonth |  *				Month . '/' . DayOfWeek . ModifierIndex |  *				DayOfMonth . ' ' . Month |  *				DayOfMonth . '/' . Month |  *				DayOfWeek . ModifierIndex . ' ' .Month |  *				DayOfWeek . ModifierIndex . '/' .Month |  *				DayOfWeek . ModifierIndex |  *				SpecialDay . ModifierOffset  *  * Month		::=	MonthName | MonthNumber | '*'  * MonthNumber		::=	'0' ... '9' | '00' ... '09' | '10' ... '12'  * MonthName		::=	MonthNameShort | MonthNameLong  * MonthNameLong	::=	'January' ... 'December'  * MonthNameShort	::=	'Jan' ... 'Dec' | 'Jan.' ... 'Dec.'  *  * DayOfWeek		::=	DayOfWeekShort | DayOfWeekLong  * DayOfWeekShort	::=	'Mon' .. 'Sun'  * DayOfWeekLong	::=	'Monday' .. 'Sunday'  * DayOfMonth		::=	'0' ... '9' | '00' ... '09' | '10' ... '29' |  *				'30' ... '31' | '*'  *  * ModifierOffset	::=	'' | '+' . ModifierNumber | '-' . ModifierNumber  * ModifierNumber	::=	'0' ... '9' | '00' ... '99' | '000' ... '299' |  *				'300' ... '359' | '360' ... '365'  * ModifierIndex	::=	'Second' | 'Third' | 'Fourth' | 'Fifth' |  *				'First' | 'Last'  *   * SpecialDay		::=	'Easter' | 'Paskha' | 'ChineseNewYear'  *  */
 end_comment
 
 begin_function
@@ -2350,6 +2350,15 @@ operator|->
 name|ieaster
 operator|=
 name|easter
+argument_list|(
+name|year
+argument_list|)
+expr_stmt|;
+name|yearinfo
+operator|->
+name|ipaskha
+operator|=
+name|paskha
 argument_list|(
 name|year
 argument_list|)
