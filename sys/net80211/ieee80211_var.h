@@ -3374,6 +3374,50 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_HTC_RXUNEQUAL
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* CAPABILITY: RX unequal MCS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_HTC_RXMCS32
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* CAPABILITY: MCS32 support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_HTC_TXUNEQUAL
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* CAPABILITY: TX unequal MCS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_HTC_TXMCS32
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* CAPABILITY: MCS32 suport */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_C_HTCAP_BITS
 define|\
 value|"\20\1LDPC\2CHWIDTH40\5GREENFIELD\6SHORTGI20\7SHORTGI40\10TXSTBC" \ 	"\21AMPDU\22AMSDU\23HT\24SMPS\25RIFS"

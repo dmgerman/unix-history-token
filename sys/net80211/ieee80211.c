@@ -1212,6 +1212,35 @@ argument_list|,
 name|ieee80211_rateset_11g
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Setup required information to fill the mcsset field, if driver did 	 * not. Assume a 2T2R setup for historic reasons. 	 */
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_rxstream
+operator|==
+literal|0
+condition|)
+name|ic
+operator|->
+name|ic_rxstream
+operator|=
+literal|2
+expr_stmt|;
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_txstream
+operator|==
+literal|0
+condition|)
+name|ic
+operator|->
+name|ic_txstream
+operator|=
+literal|2
+expr_stmt|;
 comment|/* 	 * Set auto mode to reset active channel state and any desired channel. 	 */
 operator|(
 name|void
