@@ -2682,7 +2682,7 @@ name|p
 argument_list|(
 name|sctps_sendheartbeat
 argument_list|,
-literal|"\t\t%ju intput HB chunk%s\n"
+literal|"\t\t%ju output HB chunk%s\n"
 argument_list|)
 expr_stmt|;
 name|p
