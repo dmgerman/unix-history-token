@@ -216,7 +216,7 @@ condition|)
 break|break;
 name|match
 operator|=
-name|getLowerUpperIndex
+name|ath_ee_getLowerUpperIndex
 argument_list|(
 operator|(
 name|uint8_t
