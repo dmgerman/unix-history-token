@@ -6592,14 +6592,6 @@ name|arge_tx_cnt
 operator|=
 literal|0
 expr_stmt|;
-name|sc
-operator|->
-name|arge_cdata
-operator|.
-name|arge_tx_pkts
-operator|=
-literal|0
-expr_stmt|;
 name|rd
 operator|=
 operator|&
@@ -8257,7 +8249,7 @@ name|sc
 operator|->
 name|arge_cdata
 operator|.
-name|arge_tx_pkts
+name|arge_tx_cnt
 operator|>
 literal|0
 condition|)

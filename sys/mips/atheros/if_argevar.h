@@ -372,9 +372,6 @@ name|bus_dmamap_t
 name|arge_rx_sparemap
 decl_stmt|;
 name|int
-name|arge_tx_pkts
-decl_stmt|;
-name|int
 name|arge_tx_prod
 decl_stmt|;
 name|int
