@@ -609,14 +609,14 @@ comment|/* bytes to delete */
 if|if
 condition|(
 name|offset
-operator|-
-name|length
 operator|>
 name|imgp
 operator|->
 name|args
 operator|->
 name|stringspace
+operator|+
+name|length
 condition|)
 block|{
 if|if
