@@ -1286,7 +1286,7 @@ name|chan
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * XXX Gotta be careful here; the rate set returned by 		 * ieee80211_get_suprates is actually any HT rate 		 * set so blindly copying it will be bad.  We must 		 * install the legacy rate est in ni_rates and the 		 * HT rate set in ni_htrates. 		 */
+comment|/* 		 * We must install the legacy rate est in ni_rates and the 		 * HT rate set in ni_htrates. 		 */
 name|ni
 operator|->
 name|ni_htrates
