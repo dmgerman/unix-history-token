@@ -1486,6 +1486,20 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX */
 block|}
+elseif|else
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_state
+operator|==
+name|IEEE80211_S_SCAN
+condition|)
+name|senderr
+argument_list|(
+name|EIO
+argument_list|)
+expr_stmt|;
 comment|/* XXX bypass bridge, pfil, carp, etc. */
 if|if
 condition|(
