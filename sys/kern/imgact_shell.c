@@ -544,15 +544,16 @@ comment|/* bytes to delete */
 if|if
 condition|(
 name|offset
-operator|-
-name|length
 operator|>
 name|imgp
 operator|->
 name|args
 operator|->
 name|stringspace
+operator|+
+name|length
 condition|)
+block|{
 return|return
 operator|(
 name|E2BIG
@@ -805,13 +806,7 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Tell kern_execve.c about it, with a little help from the linker.  */
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|struct
 name|execsw
@@ -823,9 +818,6 @@ block|,
 literal|"#!"
 block|}
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|EXEC_SET
 argument_list|(
 name|shell
@@ -833,7 +825,7 @@ argument_list|,
 name|shell_execsw
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+end_function
 
 end_unit
 
