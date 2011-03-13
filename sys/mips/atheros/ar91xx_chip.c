@@ -585,6 +585,27 @@ argument_list|(
 literal|100
 argument_list|)
 expr_stmt|;
+comment|/* Wireless */
+name|ar71xx_device_stop
+argument_list|(
+name|AR91XX_RST_RESET_MODULE_AMBA2WMAC
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
+name|ar71xx_device_start
+argument_list|(
+name|AR91XX_RST_RESET_MODULE_AMBA2WMAC
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
