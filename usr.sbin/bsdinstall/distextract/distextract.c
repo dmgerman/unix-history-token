@@ -398,6 +398,11 @@ decl_stmt|,
 modifier|*
 name|tok2
 decl_stmt|;
+name|rewind
+argument_list|(
+name|manifest
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|fgets
