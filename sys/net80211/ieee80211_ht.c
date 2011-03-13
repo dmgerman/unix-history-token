@@ -2431,7 +2431,7 @@ name|if_printf
 argument_list|(
 name|ifp
 argument_list|,
-literal|"%s MCS 20Mhz\n"
+literal|"%s MCS 20MHz\n"
 argument_list|,
 name|modestr
 argument_list|)
@@ -2458,7 +2458,7 @@ name|if_printf
 argument_list|(
 name|ifp
 argument_list|,
-literal|"%s MCS 20Mhz SGI\n"
+literal|"%s MCS 20MHz SGI\n"
 argument_list|,
 name|modestr
 argument_list|)
@@ -2486,7 +2486,7 @@ name|if_printf
 argument_list|(
 name|ifp
 argument_list|,
-literal|"%s MCS 40Mhz:\n"
+literal|"%s MCS 40MHz:\n"
 argument_list|,
 name|modestr
 argument_list|)
@@ -2524,7 +2524,7 @@ name|if_printf
 argument_list|(
 name|ifp
 argument_list|,
-literal|"%s MCS 40Mhz SGI:\n"
+literal|"%s MCS 40MHz SGI:\n"
 argument_list|,
 name|modestr
 argument_list|)
@@ -7361,7 +7361,7 @@ name|ni
 argument_list|)
 expr_stmt|;
 comment|/* NB: honor operating mode constraint */
-comment|/* XXX 40 MHZ intolerant */
+comment|/* XXX 40 MHz intolerant */
 name|htflags
 operator|=
 operator|(

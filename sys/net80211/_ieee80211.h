@@ -307,7 +307,7 @@ comment|/* see below */
 name|uint16_t
 name|ic_freq
 decl_stmt|;
-comment|/* setting in Mhz */
+comment|/* setting in MHz */
 name|uint8_t
 name|ic_ieee
 decl_stmt|;
