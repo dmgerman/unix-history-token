@@ -120,6 +120,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR724X_DDR_REG_FLUSH_GE0
+value|(AR71XX_DDR_CONFIG + 0x7c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR724X_DDR_REG_FLUSH_GE1
+value|(AR71XX_DDR_CONFIG + 0x80)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR724X_RESET_REG_RESET_MODULE
 value|AR71XX_RST_BLOCK_BASE + 0x1c
 end_define

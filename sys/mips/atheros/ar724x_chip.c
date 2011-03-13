@@ -440,7 +440,13 @@ name|ar724x_chip_ddr_flush_ge0
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{
+name|ar71xx_ddr_flush
+argument_list|(
+name|AR724X_DDR_REG_FLUSH_GE0
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -450,7 +456,13 @@ name|ar724x_chip_ddr_flush_ge1
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{
+name|ar71xx_ddr_flush
+argument_list|(
+name|AR724X_DDR_REG_FLUSH_GE1
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function
