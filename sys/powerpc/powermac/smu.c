@@ -5995,6 +5995,7 @@ modifier|*
 name|ts
 parameter_list|)
 block|{
+specifier|static
 name|struct
 name|smu_cmd
 name|cmd
@@ -6141,7 +6142,7 @@ argument_list|,
 operator|&
 name|cmd
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 operator|)
 return|;
