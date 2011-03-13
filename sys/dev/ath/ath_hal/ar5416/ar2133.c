@@ -1412,6 +1412,10 @@ directive|endif
 block|}
 end_function
 
+begin_comment
+comment|/*  * The ordering of nfarray is thus:  *  * nfarray[0]:	Chain 0 ctl  * nfarray[1]:	Chain 1 ctl  * nfarray[2]:	Chain 2 ctl  * nfarray[3]:	Chain 0 ext  * nfarray[4]:	Chain 1 ext  * nfarray[5]:	Chain 2 ext  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1440,6 +1444,41 @@ decl_stmt|;
 name|int16_t
 name|nf
 decl_stmt|;
+comment|/* 	 * Blank nf array - some chips may only 	 * have one or two RX chainmasks enabled. 	 */
+name|nfarray
+index|[
+literal|0
+index|]
+operator|=
+name|nfarray
+index|[
+literal|1
+index|]
+operator|=
+name|nfarray
+index|[
+literal|2
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|nfarray
+index|[
+literal|3
+index|]
+operator|=
+name|nfarray
+index|[
+literal|4
+index|]
+operator|=
+name|nfarray
+index|[
+literal|5
+index|]
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|ahp
@@ -1497,7 +1536,7 @@ argument_list|)
 expr_stmt|;
 name|nfarray
 index|[
-literal|4
+literal|2
 index|]
 operator|=
 name|nf
@@ -1608,7 +1647,7 @@ argument_list|)
 expr_stmt|;
 name|nfarray
 index|[
-literal|2
+literal|1
 index|]
 operator|=
 name|nf
@@ -1660,7 +1699,7 @@ argument_list|)
 expr_stmt|;
 name|nfarray
 index|[
-literal|3
+literal|4
 index|]
 operator|=
 name|nf
@@ -1768,7 +1807,7 @@ argument_list|)
 expr_stmt|;
 name|nfarray
 index|[
-literal|1
+literal|3
 index|]
 operator|=
 name|nf

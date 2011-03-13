@@ -51,6 +51,10 @@ directive|include
 file|"ar5416/ar5416phy.h"
 end_include
 
+begin_comment
+comment|/*  * The ordering of nfarray is thus:  *  * nfarray[0]: Chain 0 ctl  * nfarray[1]: Chain 1 ctl  * nfarray[2]: Chain 2 ctl  * nfarray[3]: Chain 0 ext  * nfarray[4]: Chain 1 ext  * nfarray[5]: Chain 2 ext  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -121,13 +125,6 @@ index|]
 operator|=
 name|nf
 expr_stmt|;
-name|nfarray
-index|[
-literal|1
-index|]
-operator|=
-literal|0
-expr_stmt|;
 name|nf
 operator|=
 name|MS
@@ -180,9 +177,32 @@ index|]
 operator|=
 name|nf
 expr_stmt|;
+comment|/* Chain 1 - invalid */
+name|nfarray
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
 name|nfarray
 index|[
 literal|4
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Chain 2 - invalid */
+name|nfarray
+index|[
+literal|2
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|nfarray
+index|[
+literal|5
 index|]
 operator|=
 literal|0
