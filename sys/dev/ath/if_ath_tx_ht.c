@@ -344,6 +344,13 @@ name|int
 name|flags
 parameter_list|)
 block|{
+define|#
+directive|define
+name|HT_RC_2_STREAMS
+parameter_list|(
+name|_rc
+parameter_list|)
+value|((((_rc)& 0x78)>> 3) + 1)
 name|struct
 name|ieee80211com
 modifier|*
@@ -577,12 +584,24 @@ index|]
 operator|.
 name|Rate
 argument_list|,
-name|ic
-operator|->
-name|ic_txstream
+name|HT_RC_2_STREAMS
+argument_list|(
+name|series
+index|[
+name|i
+index|]
+operator|.
+name|Rate
+argument_list|)
 argument_list|,
-literal|0
-comment|/* disable 20/40 for now */
+name|series
+index|[
+name|i
+index|]
+operator|.
+name|RateFlags
+operator|&
+name|HAL_RATESERIES_2040
 argument_list|,
 name|series
 index|[
@@ -622,6 +641,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+undef|#
+directive|undef
+name|HT_RC_2_STREAMS
 block|}
 end_function
 
