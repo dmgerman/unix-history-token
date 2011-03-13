@@ -3448,7 +3448,7 @@ name|ar5416SetGainBoundariesClosedLoop
 argument_list|(
 name|ah
 argument_list|,
-name|regChainOffset
+name|i
 argument_list|,
 name|pdGainOverlap_t2
 argument_list|,
@@ -3461,7 +3461,7 @@ name|ar5416WritePdadcValues
 argument_list|(
 name|ah
 argument_list|,
-name|regChainOffset
+name|i
 argument_list|,
 name|pdadcValues
 argument_list|)

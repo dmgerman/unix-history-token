@@ -9157,7 +9157,7 @@ modifier|*
 name|ah
 parameter_list|,
 name|int
-name|regChainOffset
+name|i
 parameter_list|,
 name|uint16_t
 name|pdGainOverlap_t2
@@ -9167,6 +9167,54 @@ name|gainBoundaries
 index|[]
 parameter_list|)
 block|{
+name|int
+name|regChainOffset
+decl_stmt|;
+name|regChainOffset
+operator|=
+name|ar5416GetRegChainOffset
+argument_list|(
+name|ah
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_EEPROM
+argument_list|,
+literal|"%s: chain %d: gainOverlap_t2: %d,"
+literal|" gainBoundaries: %d, %d, %d, %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|i
+argument_list|,
+name|pdGainOverlap_t2
+argument_list|,
+name|gainBoundaries
+index|[
+literal|0
+index|]
+argument_list|,
+name|gainBoundaries
+index|[
+literal|1
+index|]
+argument_list|,
+name|gainBoundaries
+index|[
+literal|2
+index|]
+argument_list|,
+name|gainBoundaries
+index|[
+literal|3
+index|]
+argument_list|)
+expr_stmt|;
 name|OS_REG_WRITE
 argument_list|(
 name|ah
@@ -9344,6 +9392,35 @@ name|xpdGainValues
 index|[]
 parameter_list|)
 block|{
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_EEPROM
+argument_list|,
+literal|"%s: numXpdGain: %d,"
+literal|" xpdGainValues: %d, %d, %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|numXpdGain
+argument_list|,
+name|xpdGainValues
+index|[
+literal|0
+index|]
+argument_list|,
+name|xpdGainValues
+index|[
+literal|1
+index|]
+argument_list|,
+name|xpdGainValues
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
 name|OS_REG_WRITE
 argument_list|(
 name|ah
@@ -9414,7 +9491,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Write the PDADC array to the given chain offset.  *  * The 32 PDADC registers are written without any care about  * their contents - so if various chips treat values as "special",  * this routine will not care.  */
+comment|/*  * Write the PDADC array to the given radio chain i.  *  * The 32 PDADC registers are written without any care about  * their contents - so if various chips treat values as "special",  * this routine will not care.  */
 end_comment
 
 begin_function
@@ -9427,7 +9504,7 @@ modifier|*
 name|ah
 parameter_list|,
 name|int
-name|regChainOffset
+name|i
 parameter_list|,
 name|uint8_t
 name|pdadcValues
@@ -9436,6 +9513,8 @@ parameter_list|)
 block|{
 name|int
 name|regOffset
+decl_stmt|,
+name|regChainOffset
 decl_stmt|;
 name|int
 name|j
@@ -9443,6 +9522,15 @@ decl_stmt|;
 name|int
 name|reg32
 decl_stmt|;
+name|regChainOffset
+operator|=
+name|ar5416GetRegChainOffset
+argument_list|(
+name|ah
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 name|regOffset
 operator|=
 name|AR_PHY_BASE
@@ -9548,16 +9636,15 @@ argument_list|,
 name|reg32
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PDADC_DUMP
-name|ath_hal_printf
+name|HALDEBUG
 argument_list|(
 name|ah
 argument_list|,
-literal|"PDADC: Chain %d | PDADC %3d Value %3d |"
+name|HAL_DEBUG_EEPROM
+argument_list|,
+literal|"PDADC: Chain %d |"
 literal|" PDADC %3d Value %3d | PDADC %3d Value %3d | PDADC %3d"
-literal|" Value %3d |\n"
+literal|" Value %3d | PDADC %3d Value %3d |\n"
 argument_list|,
 name|i
 argument_list|,
@@ -9618,8 +9705,6 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|regOffset
 operator|+=
 literal|4
@@ -9939,7 +10024,7 @@ name|ar5416SetGainBoundariesClosedLoop
 argument_list|(
 name|ah
 argument_list|,
-name|regChainOffset
+name|i
 argument_list|,
 name|pdGainOverlap_t2
 argument_list|,
@@ -9952,7 +10037,7 @@ name|ar5416WritePdadcValues
 argument_list|(
 name|ah
 argument_list|,
-name|regChainOffset
+name|i
 argument_list|,
 name|pdadcValues
 argument_list|)

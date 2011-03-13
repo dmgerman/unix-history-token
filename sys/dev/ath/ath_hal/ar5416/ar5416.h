@@ -1701,7 +1701,7 @@ modifier|*
 name|ah
 parameter_list|,
 name|int
-name|regChainOffset
+name|i
 parameter_list|,
 name|uint16_t
 name|pdGainOverlap_t2
@@ -1764,7 +1764,7 @@ modifier|*
 name|ah
 parameter_list|,
 name|int
-name|regChainOffset
+name|i
 parameter_list|,
 name|uint8_t
 name|pdadcValues

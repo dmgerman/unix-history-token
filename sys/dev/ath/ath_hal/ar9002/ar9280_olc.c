@@ -1002,7 +1002,7 @@ modifier|*
 name|ah
 parameter_list|,
 name|int
-name|regChainOffset
+name|i
 parameter_list|,
 name|uint16_t
 name|pdGainOverlap_t2
@@ -1012,6 +1012,18 @@ name|gainBoundaries
 index|[]
 parameter_list|)
 block|{
+name|int
+name|regChainOffset
+decl_stmt|;
+name|regChainOffset
+operator|=
+name|ar5416GetRegChainOffset
+argument_list|(
+name|ah
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 comment|/* These are unused for OLC */
 operator|(
 name|void
@@ -1022,6 +1034,19 @@ operator|(
 name|void
 operator|)
 name|gainBoundaries
+expr_stmt|;
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_EEPROM
+argument_list|,
+literal|"%s: chain %d: writing closed loop values\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|i
+argument_list|)
 expr_stmt|;
 name|OS_REG_WRITE
 argument_list|(
@@ -1606,7 +1631,7 @@ name|ar9280SetGainBoundariesOpenLoop
 argument_list|(
 name|ah
 argument_list|,
-name|regChainOffset
+name|i
 argument_list|,
 name|pdGainOverlap_t2
 argument_list|,
@@ -1618,7 +1643,7 @@ name|ar5416SetGainBoundariesClosedLoop
 argument_list|(
 name|ah
 argument_list|,
-name|regChainOffset
+name|i
 argument_list|,
 name|pdGainOverlap_t2
 argument_list|,
@@ -1643,7 +1668,7 @@ name|ar5416WritePdadcValues
 argument_list|(
 name|ah
 argument_list|,
-name|regChainOffset
+name|i
 argument_list|,
 name|pdadcValues
 argument_list|)
