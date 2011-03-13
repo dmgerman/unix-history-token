@@ -321,6 +321,13 @@ name|LINUX_SYS_linux_sendsig
 value|0
 end_define
 
+begin_define
+define|#
+directive|define
+name|LINUX_PS_STRINGS
+value|(LINUX_USRSTACK - sizeof(struct ps_strings))
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -1678,8 +1685,6 @@ name|caddr_t
 operator|)
 name|arginfo
 operator|-
-name|linux_szsigcode
-operator|-
 name|SPARE_USRSPACE
 operator|-
 name|linux_szplatform
@@ -1703,27 +1708,6 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * install sigcode 	 */
-name|copyout
-argument_list|(
-name|p
-operator|->
-name|p_sysent
-operator|->
-name|sv_sigcode
-argument_list|,
-operator|(
-operator|(
-name|caddr_t
-operator|)
-name|arginfo
-operator|-
-name|linux_szsigcode
-operator|)
-argument_list|,
-name|linux_szsigcode
-argument_list|)
-expr_stmt|;
 comment|/* 	 * install LINUX_PLATFORM 	 */
 name|copyout
 argument_list|(
@@ -1734,8 +1718,6 @@ operator|(
 name|caddr_t
 operator|)
 name|arginfo
-operator|-
-name|linux_szsigcode
 operator|-
 name|linux_szplatform
 operator|)
@@ -2837,16 +2819,11 @@ name|regs
 operator|->
 name|tf_eip
 operator|=
-name|PS_STRINGS
-operator|-
-operator|*
-operator|(
 name|p
 operator|->
 name|p_sysent
 operator|->
-name|sv_szsigcode
-operator|)
+name|sv_sigcode_base
 operator|+
 name|linux_sznonrtsigcode
 expr_stmt|;
@@ -3515,16 +3492,11 @@ name|regs
 operator|->
 name|tf_eip
 operator|=
-name|PS_STRINGS
-operator|-
-operator|*
-operator|(
 name|p
 operator|->
 name|p_sysent
 operator|->
-name|sv_szsigcode
-operator|)
+name|sv_sigcode_base
 expr_stmt|;
 name|regs
 operator|->
@@ -5047,7 +5019,7 @@ block|,
 operator|.
 name|sv_usrstack
 operator|=
-name|USRSTACK
+name|LINUX_USRSTACK
 block|,
 operator|.
 name|sv_psstrings
@@ -5106,12 +5078,33 @@ operator|=
 name|NULL
 block|,
 operator|.
+name|sv_shared_page_base
+operator|=
+name|LINUX_SHAREDPAGE
+block|,
+operator|.
+name|sv_shared_page_len
+operator|=
+name|PAGE_SIZE
+block|,
+operator|.
 name|sv_schedtail
 operator|=
 name|linux_schedtail
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|INIT_SYSENTVEC
+argument_list|(
+name|aout_sysvec
+argument_list|,
+operator|&
+name|linux_sysvec
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|struct
@@ -5225,12 +5218,12 @@ block|,
 operator|.
 name|sv_usrstack
 operator|=
-name|USRSTACK
+name|LINUX_USRSTACK
 block|,
 operator|.
 name|sv_psstrings
 operator|=
-name|PS_STRINGS
+name|LINUX_PS_STRINGS
 block|,
 operator|.
 name|sv_stackprot
@@ -5265,6 +5258,8 @@ operator||
 name|SV_IA32
 operator||
 name|SV_ILP32
+operator||
+name|SV_SHP
 block|,
 operator|.
 name|sv_set_syscall_retval
@@ -5282,12 +5277,33 @@ operator|=
 name|NULL
 block|,
 operator|.
+name|sv_shared_page_base
+operator|=
+name|LINUX_SHAREDPAGE
+block|,
+operator|.
+name|sv_shared_page_len
+operator|=
+name|PAGE_SIZE
+block|,
+operator|.
 name|sv_schedtail
 operator|=
 name|linux_schedtail
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|INIT_SYSENTVEC
+argument_list|(
+name|elf_sysvec
+argument_list|,
+operator|&
+name|elf_linux_sysvec
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static

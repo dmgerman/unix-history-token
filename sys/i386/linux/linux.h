@@ -97,6 +97,20 @@ end_endif
 begin_define
 define|#
 directive|define
+name|LINUX_SHAREDPAGE
+value|(VM_MAXUSER_ADDRESS - PAGE_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_USRSTACK
+value|LINUX_SHAREDPAGE
+end_define
+
+begin_define
+define|#
+directive|define
 name|PTRIN
 parameter_list|(
 name|v

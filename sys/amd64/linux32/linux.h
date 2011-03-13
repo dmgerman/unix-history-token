@@ -87,8 +87,22 @@ end_endif
 begin_define
 define|#
 directive|define
-name|LINUX32_USRSTACK
+name|LINUX32_MAXUSER
 value|((1ul<< 32) - PAGE_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX32_SHAREDPAGE
+value|(LINUX32_MAXUSER - PAGE_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX32_USRSTACK
+value|LINUX32_SHAREDPAGE
 end_define
 
 begin_comment
