@@ -6398,7 +6398,7 @@ name|htinfo
 operator|==
 name|NULL
 condition|)
-name|htcap
+name|htinfo
 operator|=
 name|frm
 expr_stmt|;
