@@ -1292,7 +1292,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|ath9285SetBoardGain
+name|ar9285SetBoardGain
 parameter_list|(
 name|struct
 name|ath_hal
