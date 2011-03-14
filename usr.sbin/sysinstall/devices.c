@@ -503,6 +503,13 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
+literal|"bxe"
+argument_list|,
+literal|"Broadcom NetXtreme II 10Gb Ethernet card"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
 literal|"cas"
 argument_list|,
 literal|"Sun Cassini/Cassini+ or NS DP83065 Saturn Ethernet"
