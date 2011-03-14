@@ -524,6 +524,13 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
+literal|"cxgbe"
+argument_list|,
+literal|"Chelsio T4 10Gb Ethernet card"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
 literal|"fpa"
 argument_list|,
 literal|"DEC DEFPA PCI FDDI card"
