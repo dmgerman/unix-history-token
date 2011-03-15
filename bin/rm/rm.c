@@ -321,7 +321,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|argv
 index|[
