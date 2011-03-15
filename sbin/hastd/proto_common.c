@@ -399,12 +399,6 @@ return|;
 block|}
 end_function
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
 begin_function
 specifier|static
 name|int
