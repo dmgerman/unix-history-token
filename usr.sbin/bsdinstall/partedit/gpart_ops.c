@@ -2669,7 +2669,7 @@ name|md
 operator|->
 name|newfs
 argument_list|,
-literal|"newfs /dev/%s"
+literal|"newfs -U /dev/%s"
 argument_list|,
 name|name
 argument_list|)
