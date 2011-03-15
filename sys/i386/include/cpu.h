@@ -186,6 +186,17 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|I486_CPU
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|KLD_MODULE
+argument_list|)
 name|struct
 name|bintime
 name|bt
@@ -214,6 +225,16 @@ operator|>>
 literal|8
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|(
+name|rdtsc
+argument_list|()
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
