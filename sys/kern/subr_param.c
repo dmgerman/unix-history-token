@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_msgbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_maxusers.h"
 end_include
 
@@ -57,6 +63,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/msgbuf.h>
 end_include
 
 begin_include
@@ -276,6 +288,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|msgbufsize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* size of kernel message buffer */
+end_comment
+
+begin_decl_stmt
+name|int
 name|ncallout
 decl_stmt|;
 end_decl_stmt
@@ -486,6 +508,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Number of swap buffers"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|msgbufsize
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|msgbufsize
+argument_list|,
+literal|0
+argument_list|,
+literal|"Size of the kernel message buffer"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1033,6 +1076,18 @@ literal|"kern.maxbcache"
 argument_list|,
 operator|&
 name|maxbcache
+argument_list|)
+expr_stmt|;
+name|msgbufsize
+operator|=
+name|MSGBUF_SIZE
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.msgbufsize"
+argument_list|,
+operator|&
+name|msgbufsize
 argument_list|)
 expr_stmt|;
 name|maxtsiz

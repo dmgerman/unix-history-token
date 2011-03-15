@@ -4693,7 +4693,7 @@ name|msgbuf_phys
 operator|=
 name|moea64_bootstrap_alloc
 argument_list|(
-name|MSGBUF_SIZE
+name|msgbufsize
 argument_list|,
 name|PAGE_SIZE
 argument_list|)
@@ -4715,7 +4715,7 @@ name|virtual_avail
 operator|+=
 name|round_page
 argument_list|(
-name|MSGBUF_SIZE
+name|msgbufsize
 argument_list|)
 expr_stmt|;
 while|while

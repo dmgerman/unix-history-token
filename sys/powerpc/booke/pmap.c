@@ -4718,7 +4718,7 @@ name|data_end
 expr_stmt|;
 name|data_end
 operator|+=
-name|MSGBUF_SIZE
+name|msgbufsize
 expr_stmt|;
 name|debugf
 argument_list|(
