@@ -6087,8 +6087,13 @@ operator|)
 return|;
 if|if
 condition|(
-operator|!
-name|tsc_present
+operator|(
+name|cpu_feature
+operator|&
+name|CPUID_TSC
+operator|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(

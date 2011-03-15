@@ -132,12 +132,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|tsc_present
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|eventhandler_tag
 name|tsc_levels_tag
@@ -392,14 +386,7 @@ name|CPUID_TSC
 operator|)
 operator|==
 literal|0
-condition|)
-return|return;
-name|tsc_present
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
+operator|||
 name|tsc_disabled
 condition|)
 return|return;
@@ -660,8 +647,13 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|!
-name|tsc_present
+operator|(
+name|cpu_feature
+operator|&
+name|CPUID_TSC
+operator|)
+operator|==
+literal|0
 operator|||
 name|tsc_disabled
 condition|)
