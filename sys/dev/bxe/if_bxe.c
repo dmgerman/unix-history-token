@@ -5773,6 +5773,11 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|int
+name|i
+init|=
+literal|0
+decl_stmt|;
 name|DBENTER
 argument_list|(
 name|BXE_EXTREME_LOAD
@@ -5860,7 +5865,7 @@ block|}
 comment|/* Device features. */
 name|printf
 argument_list|(
-literal|"); Flags ( "
+literal|"); Flags ("
 argument_list|)
 expr_stmt|;
 comment|/* Miscellaneous flags. */
@@ -5874,7 +5879,7 @@ name|BXE_USING_MSI_FLAG
 condition|)
 name|printf
 argument_list|(
-literal|"MSI "
+literal|"MSI"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5885,11 +5890,27 @@ name|bxe_flags
 operator|&
 name|BXE_USING_MSIX_FLAG
 condition|)
+block|{
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
 name|printf
 argument_list|(
-literal|"MSI-X "
+literal|"|"
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"MSI-X"
+argument_list|)
+expr_stmt|;
+name|i
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|sc
@@ -5898,11 +5919,27 @@ name|bxe_flags
 operator|&
 name|BXE_SAFC_TX_FLAG
 condition|)
+block|{
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
 name|printf
 argument_list|(
-literal|"SAFC "
+literal|"|"
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"SAFC"
+argument_list|)
+expr_stmt|;
+name|i
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|TPA_ENABLED
@@ -5910,11 +5947,27 @@ argument_list|(
 name|sc
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
 name|printf
 argument_list|(
-literal|"TPA "
+literal|"|"
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"TPA"
+argument_list|)
+expr_stmt|;
+name|i
+operator|++
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|") Queues ("
@@ -5954,9 +6007,9 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Firmware versions and device features. */
-name|BXE_PRINTF
+name|printf
 argument_list|(
-literal|"Firmware (%d.%d.%d); Bootcode (%d.%d.%d)\n"
+literal|"); Firmware (%d.%d.%d); Bootcode (%d.%d.%d)\n"
 argument_list|,
 name|BCM_5710_FW_MAJOR_VERSION
 argument_list|,
