@@ -327,7 +327,9 @@ name|RuntimeServices
 expr_stmt|;
 name|heapsize
 operator|=
-literal|512
+literal|2
+operator|*
+literal|1024
 operator|*
 literal|1024
 expr_stmt|;

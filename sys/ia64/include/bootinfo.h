@@ -26,10 +26,14 @@ comment|/* version 1 */
 name|uint64_t
 name|bi_spare
 index|[
-literal|6
+literal|5
 index|]
 decl_stmt|;
 comment|/* was: name of booted kernel */
+name|uint64_t
+name|bi_pbvm_pgtbl
+decl_stmt|;
+comment|/* PA of PBVM page table. */
 name|uint64_t
 name|bi_hcdp
 decl_stmt|;
@@ -63,8 +67,9 @@ name|bi_memdesc_version
 decl_stmt|;
 comment|/* EFI memory desc version */
 name|uint32_t
-name|bi_spare2
+name|bi_pbvm_pgtblsz
 decl_stmt|;
+comment|/* PBVM page table size. */
 name|uint64_t
 name|bi_symtab
 decl_stmt|;

@@ -76,38 +76,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Exported for ia64 only */
-end_comment
-
-begin_comment
-comment|/*   * Sort formats so that those that can detect based on arguments  * rather than reading the file go first.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|file_format
-name|ia64_elf
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|file_format
-modifier|*
-name|file_formats
-index|[]
-init|=
-block|{
-operator|&
-name|ia64_elf
-block|,
-name|NULL
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*   * Consoles   *  * We don't prototype these in libski.h because they require  * data structures from bootstrap.h as well.  */
 end_comment
 

@@ -27,39 +27,67 @@ directive|include
 file|<ia64/include/bootinfo.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<ia64/include/vmparam.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|IS_LEGACY_KERNEL
+parameter_list|()
+value|(ia64_pgtbl == NULL || ia64_pgtblsz == 0)
+end_define
+
 begin_comment
 comment|/*  * Portability functions provided by the loader  * implementation specific to the platform.  */
 end_comment
 
 begin_function_decl
-specifier|extern
-name|uint64_t
-name|ldr_alloc
+name|vm_paddr_t
+name|ia64_platform_alloc
 parameter_list|(
 name|vm_offset_t
+parameter_list|,
+name|vm_size_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+name|void
+name|ia64_platform_free
+parameter_list|(
+name|vm_offset_t
+parameter_list|,
+name|vm_paddr_t
+parameter_list|,
+name|vm_size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
-name|ldr_bootinfo
+name|ia64_platform_bootinfo
 parameter_list|(
 name|struct
 name|bootinfo
 modifier|*
 parameter_list|,
-name|uint64_t
+name|struct
+name|bootinfo
+modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
-name|ldr_enter
+name|ia64_platform_enter
 parameter_list|(
 specifier|const
 name|char
@@ -72,8 +100,22 @@ begin_comment
 comment|/*  * Functions and variables provided by the ia64 common code  * and shared by all loader implementations.  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
+name|uint64_t
+modifier|*
+name|ia64_pgtbl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|ia64_pgtblsz
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
 name|int
 name|ia64_autoload
 parameter_list|(
@@ -83,7 +125,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+name|int
+name|ia64_bootinfo
+parameter_list|(
+name|struct
+name|preloaded_file
+modifier|*
+parameter_list|,
+name|struct
+name|bootinfo
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|ssize_t
 name|ia64_copyin
 parameter_list|(
@@ -99,7 +156,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|ssize_t
 name|ia64_copyout
 parameter_list|(
@@ -114,7 +170,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|ssize_t
 name|ia64_readin
 parameter_list|(
@@ -128,7 +183,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|ia64_fmtdev
@@ -141,7 +195,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|ia64_getdev
 parameter_list|(
@@ -162,7 +215,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|ia64_setcurrdev
 parameter_list|(
