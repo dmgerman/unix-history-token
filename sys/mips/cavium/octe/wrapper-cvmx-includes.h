@@ -103,6 +103,12 @@ directive|include
 file|<contrib/octeon-sdk/cvmx-interrupt.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<contrib/octeon-sdk/octeon-model.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
