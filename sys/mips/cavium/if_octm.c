@@ -677,24 +677,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-switch|switch
-condition|(
-name|cvmx_sysinfo_get
-argument_list|()
-operator|->
-name|board_type
-condition|)
-block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|OCTEON_VENDOR_LANNER
-argument_list|)
-case|case
-name|CVMX_BOARD_TYPE_CUST_LANNER_MR730
-case|:
-comment|/* 		 * The MR-730 uses its first two MACs for the management 		 * ports. 		 */
+comment|/* 	 * Set MAC address for this management port. 	 */
 name|mac
 operator|=
 literal|0
@@ -732,41 +715,6 @@ argument_list|,
 name|mac
 argument_list|)
 expr_stmt|;
-break|break;
-endif|#
-directive|endif
-default|default:
-name|mac
-operator|=
-name|cvmx_mgmt_port_get_mac
-argument_list|(
-name|sc
-operator|->
-name|sc_port
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mac
-operator|==
-name|CVMX_MGMT_PORT_GET_MAC_ERROR
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"unable to read MAC.\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
-break|break;
-block|}
 comment|/* No watermark for input ring.  */
 name|mixx_irhwm
 operator|.

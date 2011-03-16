@@ -278,6 +278,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * The offset from mac_addr_base that should be used for the next port  * that is configured.  By convention, if any mgmt ports exist on the  * chip, they get the first mac addresses.  The ports controlled by  * this driver are numbered sequencially following any mgmt addresses  * that may exist.  */
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|int
+name|cvm_oct_mac_addr_offset
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/**  * Function to update link status.  */
 end_comment
 
@@ -1156,6 +1167,40 @@ literal|"cavium-ethernet: %s\n"
 argument_list|,
 name|OCTEON_SDK_VERSION_STRING
 argument_list|)
+expr_stmt|;
+comment|/* 	 * MAC addresses for this driver start after the management 	 * ports. 	 * 	 * XXX Would be nice if __cvmx_mgmt_port_num_ports() were 	 *     not static to cvmx-mgmt-port.c. 	 */
+if|if
+condition|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN56XX
+argument_list|)
+condition|)
+name|cvm_oct_mac_addr_offset
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN52XX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN63XX
+argument_list|)
+condition|)
+name|cvm_oct_mac_addr_offset
+operator|=
+literal|2
+expr_stmt|;
+else|else
+name|cvm_oct_mac_addr_offset
+operator|=
+literal|0
 expr_stmt|;
 name|cvm_oct_rx_initialize
 argument_list|()

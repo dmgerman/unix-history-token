@@ -204,5 +204,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|int
+name|cvm_oct_mac_addr_offset
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 
