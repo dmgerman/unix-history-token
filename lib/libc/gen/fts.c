@@ -417,6 +417,8 @@ init|=
 block|{
 literal|"ufs"
 block|,
+literal|"zfs"
+block|,
 literal|"nfs"
 block|,
 literal|"nfs4"
