@@ -123,7 +123,7 @@ begin_function_decl
 name|void
 name|cvm_oct_cleanup_module
 parameter_list|(
-name|void
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -906,7 +906,10 @@ name|NULL
 argument_list|,
 name|cvm_oct_device
 argument_list|,
-name|NULL
+operator|&
+name|sc
+operator|->
+name|sc_rx_intr_cookie
 argument_list|)
 expr_stmt|;
 if|if
@@ -1881,11 +1884,22 @@ begin_function
 name|void
 name|cvm_oct_cleanup_module
 parameter_list|(
-name|void
+name|device_t
+name|bus
 parameter_list|)
 block|{
 name|int
 name|port
+decl_stmt|;
+name|struct
+name|octebus_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|bus
+argument_list|)
 decl_stmt|;
 comment|/* Disable POW interrupt */
 name|cvmx_write_csr
@@ -1898,13 +1912,20 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
 comment|/* Free the interrupt handler */
-block|free_irq(8 + pow_receive_group, cvm_oct_device);
-endif|#
-directive|endif
+name|bus_teardown_intr
+argument_list|(
+name|bus
+argument_list|,
+name|sc
+operator|->
+name|sc_rx_irq
+argument_list|,
+name|sc
+operator|->
+name|sc_rx_intr_cookie
+argument_list|)
+expr_stmt|;
 name|callout_stop
 argument_list|(
 operator|&

@@ -27,6 +27,10 @@ name|resource
 modifier|*
 name|sc_rx_irq
 decl_stmt|;
+name|void
+modifier|*
+name|sc_rx_intr_cookie
+decl_stmt|;
 name|struct
 name|resource
 modifier|*

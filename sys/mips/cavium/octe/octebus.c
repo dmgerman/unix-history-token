@@ -391,7 +391,9 @@ name|dev
 parameter_list|)
 block|{
 name|cvm_oct_cleanup_module
-argument_list|()
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
