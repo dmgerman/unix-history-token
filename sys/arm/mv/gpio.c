@@ -1620,6 +1620,10 @@ name|mv_gpio_value_get
 argument_list|(
 name|pin
 argument_list|)
+condition|?
+literal|1
+else|:
+literal|0
 operator|)
 return|;
 block|}
