@@ -272,7 +272,7 @@ specifier|static
 name|int
 name|read_max
 init|=
-literal|32
+literal|64
 decl_stmt|;
 end_decl_stmt
 
