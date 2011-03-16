@@ -627,17 +627,24 @@ begin_comment
 comment|/* CPU dependent mtc0 hazard hook */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CPU_CNMIPS
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_RMI
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
 name|COP0_SYNC
-value|nop; nop; nop; nop; nop;
 end_define
 
 begin_elif
@@ -654,21 +661,6 @@ define|#
 directive|define
 name|COP0_SYNC
 value|ssnop; ssnop; ssnop; ssnop; ssnop; ssnop; ssnop; ssnop; ssnop
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|CPU_RMI
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|COP0_SYNC
 end_define
 
 begin_else
@@ -2143,7 +2135,7 @@ value|0x80000200
 end_define
 
 begin_comment
-comment|/*  * Coprocessor 0 registers:  *  *				v--- width for mips I,III,32,64  *				     (3=32bit, 6=64bit, i=impl dep)  *  0	MIPS_COP_0_TLB_INDEX	3333 TLB Index.  *  1	MIPS_COP_0_TLB_RANDOM	3333 TLB Random.  *  2	MIPS_COP_0_TLB_LO0	.636 r4k TLB entry low.  *  3	MIPS_COP_0_TLB_LO1	.636 r4k TLB entry low, extended.  *  4	MIPS_COP_0_TLB_CONTEXT	3636 TLB Context.  *  5	MIPS_COP_0_TLB_PG_MASK	.333 TLB Page Mask register.  *  6	MIPS_COP_0_TLB_WIRED	.333 Wired TLB number.  *  7	MIPS_COP_0_INFO		..33 Info registers  *  8	MIPS_COP_0_BAD_VADDR	3636 Bad virtual address.  *  9	MIPS_COP_0_COUNT	.333 Count register.  * 10	MIPS_COP_0_TLB_HI	3636 TLB entry high.  * 11	MIPS_COP_0_COMPARE	.333 Compare (against Count).  * 12	MIPS_COP_0_STATUS	3333 Status register.  * 13	MIPS_COP_0_CAUSE	3333 Exception cause register.  * 14	MIPS_COP_0_EXC_PC	3636 Exception PC.  * 15	MIPS_COP_0_PRID		3333 Processor revision identifier.  * 16	MIPS_COP_0_CONFIG	3333 Configuration register.  * 16/1	MIPS_COP_0_CONFIG1	..33 Configuration register 1.  * 16/2	MIPS_COP_0_CONFIG2	..33 Configuration register 2.  * 16/3	MIPS_COP_0_CONFIG3	..33 Configuration register 3.  * 17	MIPS_COP_0_LLADDR	.336 Load Linked Address.  * 18	MIPS_COP_0_WATCH_LO	.336 WatchLo register.  * 19	MIPS_COP_0_WATCH_HI	.333 WatchHi register.  * 20	MIPS_COP_0_TLB_XCONTEXT .6.6 TLB XContext register.  * 23	MIPS_COP_0_DEBUG	.... Debug JTAG register.  * 24	MIPS_COP_0_DEPC		.... DEPC JTAG register.  * 25	MIPS_COP_0_PERFCNT	..36 Performance Counter register.  * 26	MIPS_COP_0_ECC		.3ii ECC / Error Control register.  * 27	MIPS_COP_0_CACHE_ERR	.3ii Cache Error register.  * 28/0	MIPS_COP_0_TAG_LO	.3ii Cache TagLo register (instr).  * 28/1	MIPS_COP_0_DATA_LO	..ii Cache DataLo register (instr).  * 28/2	MIPS_COP_0_TAG_LO	..ii Cache TagLo register (data).  * 28/3	MIPS_COP_0_DATA_LO	..ii Cache DataLo register (data).  * 29/0	MIPS_COP_0_TAG_HI	.3ii Cache TagHi register (instr).  * 29/1	MIPS_COP_0_DATA_HI	..ii Cache DataHi register (instr).  * 29/2	MIPS_COP_0_TAG_HI	..ii Cache TagHi register (data).  * 29/3	MIPS_COP_0_DATA_HI	..ii Cache DataHi register (data).  * 30	MIPS_COP_0_ERROR_PC	.636 Error EPC register.  * 31	MIPS_COP_0_DESAVE	.... DESAVE JTAG register.  */
+comment|/*  * Coprocessor 0 registers:  *  *				v--- width for mips I,III,32,64  *				     (3=32bit, 6=64bit, i=impl dep)  *  0	MIPS_COP_0_TLB_INDEX	3333 TLB Index.  *  1	MIPS_COP_0_TLB_RANDOM	3333 TLB Random.  *  2	MIPS_COP_0_TLB_LO0	.636 r4k TLB entry low.  *  3	MIPS_COP_0_TLB_LO1	.636 r4k TLB entry low, extended.  *  4	MIPS_COP_0_TLB_CONTEXT	3636 TLB Context.  *  5	MIPS_COP_0_TLB_PG_MASK	.333 TLB Page Mask register.  *  6	MIPS_COP_0_TLB_WIRED	.333 Wired TLB number.  *  7	MIPS_COP_0_INFO		..33 Info registers  *  8	MIPS_COP_0_BAD_VADDR	3636 Bad virtual address.  *  9	MIPS_COP_0_COUNT	.333 Count register.  * 10	MIPS_COP_0_TLB_HI	3636 TLB entry high.  * 11	MIPS_COP_0_COMPARE	.333 Compare (against Count).  * 12	MIPS_COP_0_STATUS	3333 Status register.  * 13	MIPS_COP_0_CAUSE	3333 Exception cause register.  * 14	MIPS_COP_0_EXC_PC	3636 Exception PC.  * 15	MIPS_COP_0_PRID		3333 Processor revision identifier.  * 16	MIPS_COP_0_CONFIG	3333 Configuration register.  * 16/1	MIPS_COP_0_CONFIG1	..33 Configuration register 1.  * 16/2	MIPS_COP_0_CONFIG2	..33 Configuration register 2.  * 16/3	MIPS_COP_0_CONFIG3	..33 Configuration register 3.  * 16/4 MIPS_COP_0_CONFIG4	..33 Configuration register 4.  * 17	MIPS_COP_0_LLADDR	.336 Load Linked Address.  * 18	MIPS_COP_0_WATCH_LO	.336 WatchLo register.  * 19	MIPS_COP_0_WATCH_HI	.333 WatchHi register.  * 20	MIPS_COP_0_TLB_XCONTEXT .6.6 TLB XContext register.  * 23	MIPS_COP_0_DEBUG	.... Debug JTAG register.  * 24	MIPS_COP_0_DEPC		.... DEPC JTAG register.  * 25	MIPS_COP_0_PERFCNT	..36 Performance Counter register.  * 26	MIPS_COP_0_ECC		.3ii ECC / Error Control register.  * 27	MIPS_COP_0_CACHE_ERR	.3ii Cache Error register.  * 28/0	MIPS_COP_0_TAG_LO	.3ii Cache TagLo register (instr).  * 28/1	MIPS_COP_0_DATA_LO	..ii Cache DataLo register (instr).  * 28/2	MIPS_COP_0_TAG_LO	..ii Cache TagLo register (data).  * 28/3	MIPS_COP_0_DATA_LO	..ii Cache DataLo register (data).  * 29/0	MIPS_COP_0_TAG_HI	.3ii Cache TagHi register (instr).  * 29/1	MIPS_COP_0_DATA_HI	..ii Cache DataHi register (instr).  * 29/2	MIPS_COP_0_TAG_HI	..ii Cache TagHi register (data).  * 29/3	MIPS_COP_0_DATA_HI	..ii Cache DataHi register (data).  * 30	MIPS_COP_0_ERROR_PC	.636 Error EPC register.  * 31	MIPS_COP_0_DESAVE	.... DESAVE JTAG register.  */
 end_comment
 
 begin_comment
@@ -2544,7 +2536,7 @@ begin_define
 define|#
 directive|define
 name|MIPS_MAX_TLB_ENTRIES
-value|64
+value|128
 end_define
 
 begin_define
@@ -2737,6 +2729,39 @@ end_define
 
 begin_comment
 comment|/* FPU implemented */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_CONFIG4_MMUSIZEEXT
+value|0x000000FF
+end_define
+
+begin_comment
+comment|/* bits 7.. 0 MMU Size Extension */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_CONFIG4_MMUEXTDEF
+value|0x0000C000
+end_define
+
+begin_comment
+comment|/* bits 15.14 MMU Extension Definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_CONFIG4_MMUEXTDEF_MMUSIZEEXT
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* This values denotes CONFIG4 bits  */
 end_comment
 
 begin_comment
