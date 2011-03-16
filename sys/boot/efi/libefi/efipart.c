@@ -955,12 +955,15 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"%s: rw=%d, status=%u\n"
+literal|"%s: rw=%d, status=%lu\n"
 argument_list|,
 name|__func__
 argument_list|,
 name|rw
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|status
 argument_list|)
 expr_stmt|;
