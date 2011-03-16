@@ -191,7 +191,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * We will override default region handlers for memory and I/O. Especially  * the SystemMemory handler, which must be implemented locally to simulate  * memory operation regions. Do not override the PCI_Config handler since  * we would like to exercise the default handler code. Do not override  * DataTable handler, since the default handler works correctly under  * acpiexec (and is used by the test suites.)  */
+comment|/*  * We will override some of the default region handlers, especially the  * SystemMemory handler, which must be implemented locally. Do not override  * the PCI_Config handler since we would like to exercise the default handler  * code. These handlers are installed "early" - before any _REG methods  * are executed - since they are special in the sense that tha ACPI spec  * declares that they must "always be available". Cannot override the  * DataTable region handler either -- needed for test execution.  */
 end_comment
 
 begin_decl_stmt
@@ -209,8 +209,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * We will install handlers for some of the various address space IDs  */
+comment|/*  * We will install handlers for some of the various address space IDs  * Test one user-defined address space (used by aslts.)  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_ADR_SPACE_USER_DEFINED
+value|0x80
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -228,6 +235,8 @@ block|,
 name|ACPI_ADR_SPACE_IPMI
 block|,
 name|ACPI_ADR_SPACE_FIXED_HARDWARE
+block|,
+name|ACPI_ADR_SPACE_USER_DEFINED
 block|}
 decl_stmt|;
 end_decl_stmt

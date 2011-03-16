@@ -606,7 +606,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGlobalLockHandler  *  * PARAMETERS:  Context         - From thread interface, not used  *  * RETURN:      ACPI_INTERRUPT_HANDLED  *  * DESCRIPTION: Invoked directly from the SCI handler when a global lock  *              release interrupt occurs. Attempt to acquire the global lock,  *              if successful, signal the thread waiting for the lock.  *  * NOTE: Assumes that the semaphore can be signaled from interrupt level. If  * this is not possible for some reason, a separate thread will have to be  * scheduled to do this.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGlobalLockHandler  *  * PARAMETERS:  Context         - From thread interface, not used  *  * RETURN:      ACPI_INTERRUPT_HANDLED  *  * DESCRIPTION: Invoked directly from the SCI handler when a global lock  *              release interrupt occurs. If there is actually a pending  *              request for the lock, signal the waiting thread.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -619,33 +619,31 @@ modifier|*
 name|Context
 parameter_list|)
 block|{
-name|BOOLEAN
-name|Acquired
-init|=
-name|FALSE
-decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-comment|/*      * Attempt to get the lock.      *      * If we don't get it now, it will be marked pending and we will      * take another interrupt when it becomes free.      */
-name|ACPI_ACQUIRE_GLOBAL_LOCK
+name|ACPI_CPU_FLAGS
+name|Flags
+decl_stmt|;
+name|Flags
+operator|=
+name|AcpiOsAcquireLock
 argument_list|(
-name|AcpiGbl_FACS
-argument_list|,
-name|Acquired
+name|AcpiGbl_GlobalLockPendingLock
 argument_list|)
 expr_stmt|;
+comment|/*      * If a request for the global lock is not actually pending,      * we are done. This handles "spurious" global lock interrupts      * which are possible (and have been seen) with bad BIOSs.      */
 if|if
 condition|(
-name|Acquired
+operator|!
+name|AcpiGbl_GlobalLockPending
 condition|)
 block|{
-comment|/* Got the lock, now wake the thread waiting for it */
-name|AcpiGbl_GlobalLockAcquired
-operator|=
-name|TRUE
-expr_stmt|;
-comment|/* Send a unit to the semaphore */
+goto|goto
+name|CleanupAndExit
+goto|;
+block|}
+comment|/*      * Send a unit to the global lock semaphore. The actual acquisition      * of the global lock will be performed by the waiting thread.      */
 name|Status
 operator|=
 name|AcpiOsSignalSemaphore
@@ -673,7 +671,19 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-block|}
+name|AcpiGbl_GlobalLockPending
+operator|=
+name|FALSE
+expr_stmt|;
+name|CleanupAndExit
+label|:
+name|AcpiOsReleaseLock
+argument_list|(
+name|AcpiGbl_GlobalLockPendingLock
+argument_list|,
+name|Flags
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ACPI_INTERRUPT_HANDLED
@@ -714,6 +724,10 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/*      * If the global lock does not exist on this platform, the attempt to      * enable GBL_STATUS will fail (the GBL_ENABLE bit will not stick).      * Map to AE_OK, but mark global lock as not present. Any attempt to      * actually use the global lock will be flagged with an error.      */
+name|AcpiGbl_GlobalLockPresent
+operator|=
+name|FALSE
+expr_stmt|;
 if|if
 condition|(
 name|Status
@@ -730,16 +744,38 @@ literal|"No response from Global Lock hardware, disabling lock"
 operator|)
 argument_list|)
 expr_stmt|;
-name|AcpiGbl_GlobalLockPresent
-operator|=
-name|FALSE
-expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
+name|Status
+operator|=
+name|AcpiOsCreateLock
+argument_list|(
+operator|&
+name|AcpiGbl_GlobalLockPendingLock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+name|AcpiGbl_GlobalLockPending
+operator|=
+name|FALSE
+expr_stmt|;
 name|AcpiGbl_GlobalLockPresent
 operator|=
 name|TRUE
@@ -805,10 +841,11 @@ name|UINT16
 name|Timeout
 parameter_list|)
 block|{
+name|ACPI_CPU_FLAGS
+name|Flags
+decl_stmt|;
 name|ACPI_STATUS
 name|Status
-init|=
-name|AE_OK
 decl_stmt|;
 name|BOOLEAN
 name|Acquired
@@ -864,7 +901,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/*      * Make sure that a global lock actually exists. If not, just treat the      * lock as a standard mutex.      */
+comment|/*      * Make sure that a global lock actually exists. If not, just      * treat the lock as a standard mutex.      */
 if|if
 condition|(
 operator|!
@@ -881,6 +918,15 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
+name|Flags
+operator|=
+name|AcpiOsAcquireLock
+argument_list|(
+name|AcpiGbl_GlobalLockPendingLock
+argument_list|)
+expr_stmt|;
+do|do
+block|{
 comment|/* Attempt to acquire the actual hardware lock */
 name|ACPI_ACQUIRE_GLOBAL_LOCK
 argument_list|(
@@ -894,7 +940,10 @@ condition|(
 name|Acquired
 condition|)
 block|{
-comment|/* We got the lock */
+name|AcpiGbl_GlobalLockAcquired
+operator|=
+name|TRUE
+expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -904,17 +953,20 @@ literal|"Acquired hardware Global Lock\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|AcpiGbl_GlobalLockAcquired
+break|break;
+block|}
+comment|/*          * Did not get the lock. The pending bit was set above, and          * we must now wait until we receive the global lock          * released interrupt.          */
+name|AcpiGbl_GlobalLockPending
 operator|=
 name|TRUE
 expr_stmt|;
-name|return_ACPI_STATUS
+name|AcpiOsReleaseLock
 argument_list|(
-name|AE_OK
+name|AcpiGbl_GlobalLockPendingLock
+argument_list|,
+name|Flags
 argument_list|)
 expr_stmt|;
-block|}
-comment|/*      * Did not get the lock. The pending bit was set above, and we must now      * wait until we get the global lock released interrupt.      */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -924,7 +976,7 @@ literal|"Waiting for hardware Global Lock\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Wait for handshake with the global lock interrupt handler.      * This interface releases the interpreter if we must wait.      */
+comment|/*          * Wait for handshake with the global lock interrupt handler.          * This interface releases the interpreter if we must wait.          */
 name|Status
 operator|=
 name|AcpiExSystemWaitSemaphore
@@ -932,6 +984,33 @@ argument_list|(
 name|AcpiGbl_GlobalLockSemaphore
 argument_list|,
 name|ACPI_WAIT_FOREVER
+argument_list|)
+expr_stmt|;
+name|Flags
+operator|=
+name|AcpiOsAcquireLock
+argument_list|(
+name|AcpiGbl_GlobalLockPendingLock
+argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+do|;
+name|AcpiGbl_GlobalLockPending
+operator|=
+name|FALSE
+expr_stmt|;
+name|AcpiOsReleaseLock
+argument_list|(
+name|AcpiGbl_GlobalLockPendingLock
+argument_list|,
+name|Flags
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS

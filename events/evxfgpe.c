@@ -493,7 +493,21 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Validate WakeDevice is of type Device */
+comment|/* Handle root object case */
+if|if
+condition|(
+name|WakeDevice
+operator|==
+name|ACPI_ROOT_OBJECT
+condition|)
+block|{
+name|DeviceNode
+operator|=
+name|AcpiGbl_RootNode
+expr_stmt|;
+block|}
+else|else
+block|{
 name|DeviceNode
 operator|=
 name|ACPI_CAST_PTR
@@ -503,6 +517,8 @@ argument_list|,
 name|WakeDevice
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* Validate WakeDevice is of type Device */
 if|if
 condition|(
 name|DeviceNode

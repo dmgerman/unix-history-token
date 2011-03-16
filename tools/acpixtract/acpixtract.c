@@ -39,7 +39,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|0x20100107
+value|0x20110225
 end_define
 
 begin_define
@@ -62,6 +62,17 @@ directive|define
 name|BUFFER_SIZE
 value|256
 end_define
+
+begin_define
+define|#
+directive|define
+name|HEADER_LINE_LENGTH
+value|17
+end_define
+
+begin_comment
+comment|/* strlen ("FACP @ 0x737e1000") */
+end_comment
 
 begin_comment
 comment|/* Local prototypes */
@@ -1284,6 +1295,19 @@ block|{
 case|case
 name|FIND_HEADER
 case|:
+comment|/* Ignore lines that are too short to be header lines */
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|Buffer
+argument_list|)
+operator|<
+name|HEADER_LINE_LENGTH
+condition|)
+block|{
+continue|continue;
+block|}
 comment|/* Ignore empty lines and lines that start with a space */
 if|if
 condition|(
@@ -1303,6 +1327,39 @@ literal|0
 index|]
 operator|==
 literal|'\n'
+operator|)
+condition|)
+block|{
+continue|continue;
+block|}
+comment|/* Ignore lines that are not of the form "ABCD @ " */
+if|if
+condition|(
+operator|(
+name|Buffer
+index|[
+literal|4
+index|]
+operator|!=
+literal|' '
+operator|)
+operator|||
+operator|(
+name|Buffer
+index|[
+literal|5
+index|]
+operator|!=
+literal|'@'
+operator|)
+operator|||
+operator|(
+name|Buffer
+index|[
+literal|6
+index|]
+operator|!=
+literal|' '
 operator|)
 condition|)
 block|{
