@@ -4652,6 +4652,8 @@ name|m_PENT4
 operator||
 name|m_NOCONA
 operator||
+name|m_CORE2
+operator||
 name|m_PPRO
 operator||
 name|m_GENERIC32
@@ -4751,6 +4753,8 @@ name|int
 name|x86_cmpxchg16b
 init|=
 name|m_NOCONA
+operator||
+name|m_CORE2
 decl_stmt|;
 end_decl_stmt
 
