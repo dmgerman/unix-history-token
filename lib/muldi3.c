@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ===-- muldi3.c - Implement __muldi3 -------------------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is distributed under the University of Illinois Open Source  * License. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file implements __muldi3 for the compiler_rt library.  *  * ===----------------------------------------------------------------------===  */
+comment|/* ===-- muldi3.c - Implement __muldi3 -------------------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is dual licensed under the MIT and the University of Illinois Open  * Source Licenses. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file implements __muldi3 for the compiler_rt library.  *  * ===----------------------------------------------------------------------===  */
 end_comment
 
 begin_include

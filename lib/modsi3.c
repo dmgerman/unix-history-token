@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ===-- modsi3.c - Implement __modsi3 -------------------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is distributed under the University of Illinois Open Source  * License. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file implements __modsi3 for the compiler_rt library.  *  * ===----------------------------------------------------------------------===  */
+comment|/* ===-- modsi3.c - Implement __modsi3 -------------------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is dual licensed under the MIT and the University of Illinois Open  * Source Licenses. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file implements __modsi3 for the compiler_rt library.  *  * ===----------------------------------------------------------------------===  */
 end_comment
 
 begin_include
@@ -8,6 +8,19 @@ include|#
 directive|include
 file|"int_lib.h"
 end_include
+
+begin_function_decl
+name|su_int
+name|__divsi3
+parameter_list|(
+name|si_int
+name|a
+parameter_list|,
+name|si_int
+name|b
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Returns: a % b */
@@ -27,11 +40,12 @@ block|{
 return|return
 name|a
 operator|-
-operator|(
+name|__divsi3
+argument_list|(
 name|a
-operator|/
+argument_list|,
 name|b
-operator|)
+argument_list|)
 operator|*
 name|b
 return|;

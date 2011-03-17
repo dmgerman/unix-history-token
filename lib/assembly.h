@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ===-- assembly.h - compiler-rt assembler support macros -----------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is distributed under the University of Illinois Open Source  * License. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file defines macros for use in compiler-rt assembler source.  * This file is not part of the interface of this library.  *  * ===----------------------------------------------------------------------===  */
+comment|/* ===-- assembly.h - compiler-rt assembler support macros -----------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is dual licensed under the MIT and the University of Illinois Open  * Source Licenses. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file defines macros for use in compiler-rt assembler source.  * This file is not part of the interface of this library.  *  * ===----------------------------------------------------------------------===  */
 end_comment
 
 begin_ifndef
