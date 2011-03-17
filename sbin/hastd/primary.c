@@ -457,17 +457,6 @@ name|HAST_NCOMPONENTS
 value|2
 end_define
 
-begin_comment
-comment|/*  * Number of seconds to sleep between reconnect retries or keepalive packets.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RETRY_SLEEP
-value|10
-end_define
-
 begin_define
 define|#
 directive|define
@@ -5981,7 +5970,7 @@ name|send
 argument_list|,
 name|ncomp
 argument_list|,
-name|RETRY_SLEEP
+name|HAST_KEEPALIVE
 argument_list|)
 expr_stmt|;
 if|if
@@ -6002,7 +5991,7 @@ if|if
 condition|(
 name|lastcheck
 operator|+
-name|RETRY_SLEEP
+name|HAST_KEEPALIVE
 operator|<=
 name|now
 condition|)
@@ -9707,7 +9696,7 @@ name|timeout
 operator|.
 name|tv_sec
 operator|=
-name|RETRY_SLEEP
+name|HAST_KEEPALIVE
 expr_stmt|;
 name|timeout
 operator|.
@@ -9770,7 +9759,7 @@ if|if
 condition|(
 name|lastcheck
 operator|+
-name|RETRY_SLEEP
+name|HAST_KEEPALIVE
 operator|<=
 name|now
 condition|)

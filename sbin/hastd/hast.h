@@ -318,6 +318,17 @@ name|HAST_TOKEN_SIZE
 value|16
 end_define
 
+begin_comment
+comment|/* Number of seconds to sleep between reconnect retries or keepalive packets. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAST_KEEPALIVE
+value|10
+end_define
+
 begin_struct
 struct|struct
 name|hastd_config

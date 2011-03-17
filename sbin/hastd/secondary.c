@@ -1630,7 +1630,9 @@ name|res
 operator|->
 name|hr_remotein
 argument_list|,
-literal|0
+literal|2
+operator|*
+name|HAST_KEEPALIVE
 argument_list|)
 operator|<
 literal|0
