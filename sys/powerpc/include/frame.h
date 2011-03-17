@@ -208,21 +208,6 @@ begin_comment
 comment|/* first arg in reg 3 */
 end_comment
 
-begin_comment
-comment|/* Definitions for syscalls */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FIRSTARG
-value|3
-end_define
-
-begin_comment
-comment|/* first arg in reg 3 */
-end_comment
-
 begin_define
 define|#
 directive|define
