@@ -750,6 +750,9 @@ case|case
 name|ACPI_DMT_BUF16
 case|:
 case|case
+name|ACPI_DMT_BUF128
+case|:
+case|case
 name|ACPI_DMT_PCI_PATH
 case|:
 name|Type
@@ -1027,6 +1030,9 @@ case|case
 name|ACPI_DMT_NAME4
 case|:
 case|case
+name|ACPI_DMT_SLIC
+case|:
+case|case
 name|ACPI_DMT_SIG
 case|:
 name|ByteLength
@@ -1201,6 +1207,14 @@ case|:
 name|ByteLength
 operator|=
 literal|16
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_BUF128
+case|:
+name|ByteLength
+operator|=
+literal|128
 expr_stmt|;
 break|break;
 case|case

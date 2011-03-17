@@ -404,6 +404,25 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+name|AcpiDmSlicSubnames
+index|[]
+init|=
+block|{
+literal|"Public Key Structure"
+block|,
+literal|"Windows Marker Structure"
+block|,
+literal|"Unknown SubTable Type"
+comment|/* Reserved */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
 name|AcpiDmSratSubnames
 index|[]
 init|=
@@ -786,13 +805,13 @@ block|,
 block|{
 name|ACPI_SIG_SLIC
 block|,
-name|AcpiDmTableInfoSlic
-block|,
 name|NULL
 block|,
-name|NULL
+name|AcpiDmDumpSlic
 block|,
-name|NULL
+name|DtCompileSlic
+block|,
+name|TemplateSlic
 block|,
 literal|"Software Licensing Description Table"
 block|}
@@ -1376,6 +1395,18 @@ modifier|*
 name|Name
 parameter_list|)
 block|{
+comment|/* Allow a null name for fields that span multiple lines (large buffers) */
+if|if
+condition|(
+operator|!
+name|Name
+condition|)
+block|{
+name|Name
+operator|=
+literal|""
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|Gbl_DoTemplates
@@ -1392,7 +1423,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"[%.3d] %34s : "
+literal|"[%.4d] %34s : "
 argument_list|,
 name|ByteLength
 argument_list|,
@@ -1404,7 +1435,7 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%40s : "
+literal|"%41s : "
 argument_list|,
 name|Name
 argument_list|)
@@ -1421,7 +1452,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"[%3.3Xh %4.4d% 3d] %28s : "
+literal|"[%3.3Xh %4.4d% 4d] %28s : "
 argument_list|,
 name|Offset
 argument_list|,
@@ -1437,7 +1468,7 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%43s : "
+literal|"%44s : "
 argument_list|,
 name|Name
 argument_list|)
@@ -1780,6 +1811,9 @@ case|:
 case|case
 name|ACPI_DMT_SIG
 case|:
+case|case
+name|ACPI_DMT_SLIC
+case|:
 name|ByteLength
 operator|=
 literal|4
@@ -1824,6 +1858,14 @@ case|:
 name|ByteLength
 operator|=
 literal|16
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_BUF128
+case|:
+name|ByteLength
+operator|=
+literal|128
 expr_stmt|;
 break|break;
 case|case
@@ -2143,18 +2185,21 @@ case|:
 case|case
 name|ACPI_DMT_BUF16
 case|:
+case|case
+name|ACPI_DMT_BUF128
+case|:
 comment|/*              * Buffer: Size depends on the opcode and was set above.              * Each hex byte is separated with a space.              */
 for|for
 control|(
-name|Temp8
+name|Temp16
 operator|=
 literal|0
 init|;
-name|Temp8
+name|Temp16
 operator|<
 name|ByteLength
 condition|;
-name|Temp8
+name|Temp16
 operator|++
 control|)
 block|{
@@ -2164,7 +2209,7 @@ literal|"%2.2X"
 argument_list|,
 name|Target
 index|[
-name|Temp8
+name|Temp16
 index|]
 argument_list|)
 expr_stmt|;
@@ -2174,7 +2219,7 @@ call|(
 name|UINT32
 call|)
 argument_list|(
-name|Temp8
+name|Temp16
 operator|+
 literal|1
 argument_list|)
@@ -2182,11 +2227,51 @@ operator|<
 name|ByteLength
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|Temp16
+operator|>
+literal|0
+operator|)
+operator|&&
+operator|(
+operator|!
+operator|(
+operator|(
+name|Temp16
+operator|+
+literal|1
+operator|)
+operator|%
+literal|16
+operator|)
+operator|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|AcpiDmLineHeader
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|" "
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 name|AcpiOsPrintf
@@ -2865,6 +2950,41 @@ operator|*
 name|Target
 argument_list|,
 name|AcpiDmMadtSubnames
+index|[
+name|Temp8
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_SLIC
+case|:
+comment|/* SLIC subtable types */
+name|Temp8
+operator|=
+operator|*
+name|Target
+expr_stmt|;
+if|if
+condition|(
+name|Temp8
+operator|>
+name|ACPI_SLIC_TYPE_RESERVED
+condition|)
+block|{
+name|Temp8
+operator|=
+name|ACPI_SLIC_TYPE_RESERVED
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"%8.8X<%s>\n"
+argument_list|,
+operator|*
+name|Target
+argument_list|,
+name|AcpiDmSlicSubnames
 index|[
 name|Temp8
 index|]

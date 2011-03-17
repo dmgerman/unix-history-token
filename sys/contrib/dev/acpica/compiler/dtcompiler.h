@@ -1100,6 +1100,18 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
+name|DtCompileSlic
+parameter_list|(
+name|void
+modifier|*
+modifier|*
+name|PFieldList
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
 name|DtCompileSlit
 parameter_list|(
 name|void

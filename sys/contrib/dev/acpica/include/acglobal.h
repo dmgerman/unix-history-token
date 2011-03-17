@@ -352,7 +352,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Global lock mutex is an actual AML mutex object  * Global lock semaphore works in conjunction with the HW global lock  */
+comment|/*  * Global lock mutex is an actual AML mutex object  * Global lock semaphore works in conjunction with the actual global lock  * Global lock spinlock is used for "pending" handshake  */
 end_comment
 
 begin_decl_stmt
@@ -367,6 +367,13 @@ begin_decl_stmt
 name|ACPI_EXTERN
 name|ACPI_SEMAPHORE
 name|AcpiGbl_GlobalLockSemaphore
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|ACPI_SPINLOCK
+name|AcpiGbl_GlobalLockPendingLock
 decl_stmt|;
 end_decl_stmt
 
@@ -388,6 +395,13 @@ begin_decl_stmt
 name|ACPI_EXTERN
 name|BOOLEAN
 name|AcpiGbl_GlobalLockPresent
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|BOOLEAN
+name|AcpiGbl_GlobalLockPending
 decl_stmt|;
 end_decl_stmt
 
