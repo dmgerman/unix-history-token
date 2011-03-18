@@ -2658,7 +2658,7 @@ expr_stmt|;
 asm|__asm __volatile("ptr.d %0,%1; ptr.i %0,%1" ::
 literal|"r"
 operator|(
-name|VM_MAX_ADDRESS
+name|VM_MAXUSER_ADDRESS
 operator|)
 operator|,
 literal|"r"
@@ -2691,7 +2691,7 @@ end_expr_stmt
 begin_expr_stmt
 name|ia64_set_ifa
 argument_list|(
-name|VM_MAX_ADDRESS
+name|VM_MAXUSER_ADDRESS
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2743,7 +2743,7 @@ end_comment
 begin_expr_stmt
 name|ia64_set_k5
 argument_list|(
-name|VM_MAX_ADDRESS
+name|VM_MAXUSER_ADDRESS
 argument_list|)
 expr_stmt|;
 end_expr_stmt

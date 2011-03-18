@@ -23,7 +23,7 @@ begin_define
 define|#
 directive|define
 name|USRSTACK
-value|VM_MAX_ADDRESS
+value|VM_MAXUSER_ADDRESS
 end_define
 
 begin_comment
@@ -474,7 +474,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|VM_MAX_ADDRESS
+name|VM_MAXUSER_ADDRESS
 value|IA64_RR_BASE(5)
 end_define
 
@@ -488,15 +488,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|VM_MAXUSER_ADDRESS
-value|(VM_MAX_ADDRESS + VM_GATEWAY_SIZE)
-end_define
-
-begin_define
-define|#
-directive|define
 name|VM_MIN_KERNEL_ADDRESS
-value|VM_MAXUSER_ADDRESS
+value|(VM_MAXUSER_ADDRESS + VM_GATEWAY_SIZE)
 end_define
 
 begin_define
@@ -509,8 +502,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|VM_MAX_ADDRESS
+value|~0UL
+end_define
+
+begin_define
+define|#
+directive|define
 name|KERNBASE
-value|VM_MAX_ADDRESS
+value|VM_MAXUSER_ADDRESS
 end_define
 
 begin_comment

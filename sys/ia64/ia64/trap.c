@@ -2072,7 +2072,7 @@ if|if
 condition|(
 name|va
 operator|>=
-name|VM_MAX_ADDRESS
+name|VM_MAXUSER_ADDRESS
 condition|)
 block|{
 comment|/* 			 * Don't allow user-mode faults for kernel virtual 			 * addresses, including the gateway page. 			 */
@@ -3082,7 +3082,7 @@ name|tf_special
 operator|.
 name|iip
 operator|>=
-name|VM_MAX_ADDRESS
+name|VM_MAXUSER_ADDRESS
 condition|)
 return|return;
 name|tf
