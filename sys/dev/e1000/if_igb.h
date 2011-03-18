@@ -895,9 +895,6 @@ decl_stmt|;
 name|bool
 name|discard
 decl_stmt|;
-name|bool
-name|needs_refresh
-decl_stmt|;
 name|struct
 name|mtx
 name|rx_mtx
@@ -1102,6 +1099,12 @@ name|link_duplex
 decl_stmt|;
 name|u32
 name|smartspeed
+decl_stmt|;
+name|u32
+name|fc_setting
+decl_stmt|;
+name|u32
+name|dma_coalesce
 decl_stmt|;
 comment|/* Interface queues */
 name|struct

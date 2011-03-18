@@ -1761,6 +1761,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_RXDEXT_STATERR_LB
+value|0x00040000
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_RXDEXT_STATERR_CE
 value|0x01000000
 end_define
@@ -10831,6 +10838,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|M88E1340M_E_PHY_ID
+value|0x01410DF0
+end_define
+
+begin_define
+define|#
+directive|define
 name|GG82563_E_PHY_ID
 value|0x01410CA0
 end_define
@@ -12455,7 +12469,7 @@ value|0x00FF0000
 end_define
 
 begin_comment
-comment|/* DMA Coalescing Receive                                                     * Threshold */
+comment|/* DMA Coalescing Rx                                                     * Threshold */
 end_comment
 
 begin_define
@@ -12524,7 +12538,7 @@ value|0x0007FFFF
 end_define
 
 begin_comment
-comment|/* Receive Traffic Rate                                                     * Threshold */
+comment|/* Rx Traffic Rate                                                     * Threshold */
 end_comment
 
 begin_define
@@ -12535,7 +12549,7 @@ value|0x80000000
 end_define
 
 begin_comment
-comment|/* Rcv packet rate in                                                     * current window */
+comment|/* Rx packet rate in                                                     * current window */
 end_comment
 
 begin_define
@@ -12546,7 +12560,7 @@ value|0x01FFFFFF
 end_define
 
 begin_comment
-comment|/* DMA Coal Rcv Traffic                                                     * Current Cnt */
+comment|/* DMA Coal Rx Traffic                                                     * Current Cnt */
 end_comment
 
 begin_define
@@ -12557,7 +12571,7 @@ value|0x0003FFF0
 end_define
 
 begin_comment
-comment|/* Flow ctrl Rcv Threshold                                                     * High val */
+comment|/* Flow ctrl Rx Threshold                                                     * High val */
 end_comment
 
 begin_define

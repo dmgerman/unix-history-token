@@ -2587,6 +2587,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|s32
+name|e1000_init_nvm_params_82575
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_enum
 enum|enum
 name|e1000_promisc_type

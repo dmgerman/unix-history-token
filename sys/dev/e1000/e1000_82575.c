@@ -8,7 +8,7 @@ comment|/*$FreeBSD$*/
 end_comment
 
 begin_comment
-comment|/*  * 82575EB Gigabit Network Connection  * 82575EB Gigabit Backplane Connection  * 82575GB Gigabit Network Connection  * 82575GB Gigabit Network Connection  * 82576 Gigabit Network Connection  * 82576 Quad Port Gigabit Mezzanine Adapter  */
+comment|/*  * 82575EB Gigabit Network Connection  * 82575EB Gigabit Backplane Connection  * 82575GB Gigabit Network Connection  * 82576 Gigabit Network Connection  * 82576 Quad Port Gigabit Mezzanine Adapter  */
 end_comment
 
 begin_include
@@ -21,19 +21,6 @@ begin_function_decl
 specifier|static
 name|s32
 name|e1000_init_phy_params_82575
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|s32
-name|e1000_init_nvm_params_82575
 parameter_list|(
 name|struct
 name|e1000_hw
@@ -1086,6 +1073,9 @@ case|case
 name|M88E1112_E_PHY_ID
 case|:
 case|case
+name|M88E1340M_E_PHY_ID
+case|:
+case|case
 name|M88E1111_I_PHY_ID
 case|:
 name|phy
@@ -1123,6 +1113,12 @@ operator|->
 name|id
 operator|==
 name|M88E1112_E_PHY_ID
+operator|||
+name|phy
+operator|->
+name|id
+operator|==
+name|M88E1340M_E_PHY_ID
 condition|)
 name|phy
 operator|->
@@ -1295,7 +1291,6 @@ comment|/**  *  e1000_init_nvm_params_82575 - Init NVM func ptrs.  *  @hw: point
 end_comment
 
 begin_function
-specifier|static
 name|s32
 name|e1000_init_nvm_params_82575
 parameter_list|(
@@ -1457,14 +1452,12 @@ operator|<<
 literal|15
 operator|)
 condition|)
-block|{
 name|nvm
 operator|->
 name|page_size
 operator|=
 literal|128
 expr_stmt|;
-block|}
 comment|/* Function Pointers */
 name|nvm
 operator|->
@@ -1473,6 +1466,14 @@ operator|.
 name|acquire
 operator|=
 name|e1000_acquire_nvm_82575
+expr_stmt|;
+name|nvm
+operator|->
+name|ops
+operator|.
+name|release
+operator|=
+name|e1000_release_nvm_82575
 expr_stmt|;
 if|if
 condition|(
@@ -1486,7 +1487,6 @@ operator|<<
 literal|15
 operator|)
 condition|)
-block|{
 name|nvm
 operator|->
 name|ops
@@ -1495,9 +1495,7 @@ name|read
 operator|=
 name|e1000_read_nvm_eerd
 expr_stmt|;
-block|}
 else|else
-block|{
 name|nvm
 operator|->
 name|ops
@@ -1506,14 +1504,29 @@ name|read
 operator|=
 name|e1000_read_nvm_spi
 expr_stmt|;
-block|}
 name|nvm
 operator|->
 name|ops
 operator|.
-name|release
+name|write
 operator|=
-name|e1000_release_nvm_82575
+name|e1000_write_nvm_spi
+expr_stmt|;
+name|nvm
+operator|->
+name|ops
+operator|.
+name|validate
+operator|=
+name|e1000_validate_nvm_checksum_generic
+expr_stmt|;
+name|nvm
+operator|->
+name|ops
+operator|.
+name|update
+operator|=
+name|e1000_update_nvm_checksum_generic
 expr_stmt|;
 name|nvm
 operator|->
@@ -1523,6 +1536,7 @@ name|valid_led_default
 operator|=
 name|e1000_valid_led_default_82575
 expr_stmt|;
+comment|/* override genric family function pointers for specific descendants */
 switch|switch
 condition|(
 name|hw
@@ -1573,31 +1587,8 @@ name|e1000_update_nvm_checksum_i350
 expr_stmt|;
 break|break;
 default|default:
-name|nvm
-operator|->
-name|ops
-operator|.
-name|validate
-operator|=
-name|e1000_validate_nvm_checksum_generic
-expr_stmt|;
-name|nvm
-operator|->
-name|ops
-operator|.
-name|update
-operator|=
-name|e1000_update_nvm_checksum_generic
-expr_stmt|;
+break|break;
 block|}
-name|nvm
-operator|->
-name|ops
-operator|.
-name|write
-operator|=
-name|e1000_write_nvm_spi
-expr_stmt|;
 return|return
 name|E1000_SUCCESS
 return|;
@@ -3569,11 +3560,6 @@ argument_list|(
 literal|"e1000_release_nvm_82575"
 argument_list|)
 expr_stmt|;
-name|e1000_release_nvm_generic
-argument_list|(
-name|hw
-argument_list|)
-expr_stmt|;
 name|e1000_release_swfw_sync_82575
 argument_list|(
 name|hw
@@ -5020,6 +5006,14 @@ operator|.
 name|id
 operator|==
 name|M88E1112_E_PHY_ID
+operator|||
+name|hw
+operator|->
+name|phy
+operator|.
+name|id
+operator|==
+name|M88E1340M_E_PHY_ID
 condition|)
 name|ret_val
 operator|=
@@ -7146,7 +7140,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_reset_mdicnfg_82580 - Reset MDICNFG destination and com_mdio bits  *  @hw: pointer to the HW structure  *  *  This resets the MDICNFG.Destination and MDICNFG.Com_MDIO bits based on  *  the values found in the EEPROM.  This addresses an issue in which these  *  bits are not restored from EEPROM after reset.  **/
+comment|/**  *  e1000_reset_mdicnfg_82580 - Reset MDICNFG destination and com_mdio bits  *  @hw: pointer to the HW structure  *  *  This resets the the MDICNFG.Destination and MDICNFG.Com_MDIO bits based on  *  the values found in the EEPROM.  This addresses an issue in which these  *  bits are not restored from EEPROM after reset.  **/
 end_comment
 
 begin_function

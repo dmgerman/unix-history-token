@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2011, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2010, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -334,7 +334,7 @@ name|char
 name|igb_driver_version
 index|[]
 init|=
-literal|"version - 2.1.4"
+literal|"version - 2.1.7"
 decl_stmt|;
 end_decl_stmt
 
@@ -1700,24 +1700,21 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|igb_add_rx_process_limit
+name|igb_msix_que
 parameter_list|(
-name|struct
-name|adapter
+name|void
 modifier|*
-parameter_list|,
-specifier|const
-name|char
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|igb_msix_link
+parameter_list|(
+name|void
 modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1752,28 +1749,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* These are MSIX only irq handlers */
-end_comment
-
 begin_function_decl
 specifier|static
 name|void
-name|igb_msix_que
+name|igb_set_sysctl_value
 parameter_list|(
-name|void
+name|struct
+name|adapter
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|igb_msix_link
-parameter_list|(
-name|void
+parameter_list|,
+specifier|const
+name|char
 modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2156,6 +2152,54 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* Energy Efficient Ethernet - default to off */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|igb_eee_setting
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.igb.ee_setting"
+argument_list|,
+operator|&
+name|igb_eee_setting
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* ** DMA Coalescing, only for i350 - default to off, ** this feature is for power savings */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|igb_dma_coalesce
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.igb.dma_coalesce"
+argument_list|,
+operator|&
+name|igb_dma_coalesce
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*********************************************************************  *  Device identification routine  *  *  igb_probe determines if the driver should be loaded on  *  adapter based on PCI vendor/device id of the adapter.  *  *  return BUS_PROBE_DEFAULT on success, positive on failure  *********************************************************************/
 end_comment
 
@@ -2450,41 +2494,6 @@ name|SYSCTL_ADD_INT
 argument_list|(
 name|device_get_sysctl_ctx
 argument_list|(
-name|adapter
-operator|->
-name|dev
-argument_list|)
-argument_list|,
-name|SYSCTL_CHILDREN
-argument_list|(
-name|device_get_sysctl_tree
-argument_list|(
-name|adapter
-operator|->
-name|dev
-argument_list|)
-argument_list|)
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"flow_control"
-argument_list|,
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|igb_fc_setting
-argument_list|,
-literal|0
-argument_list|,
-literal|"Flow Control"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_INT
-argument_list|(
-name|device_get_sysctl_ctx
-argument_list|(
 name|dev
 argument_list|)
 argument_list|,
@@ -2594,8 +2603,8 @@ operator|->
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* Sysctls for limiting the amount of work done in the taskqueue */
-name|igb_add_rx_process_limit
+comment|/* Sysctl for limiting the amount of work done in the taskqueue */
+name|igb_set_sysctl_value
 argument_list|(
 name|adapter
 argument_list|,
@@ -2609,6 +2618,23 @@ operator|->
 name|rx_process_limit
 argument_list|,
 name|igb_rx_process_limit
+argument_list|)
+expr_stmt|;
+comment|/* Sysctl for setting the interface flow control */
+name|igb_set_sysctl_value
+argument_list|(
+name|adapter
+argument_list|,
+literal|"flow_control"
+argument_list|,
+literal|"configure flow control"
+argument_list|,
+operator|&
+name|adapter
+operator|->
+name|fc_setting
+argument_list|,
+name|igb_fc_setting
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Validate number of transmit and receive descriptors. It 	 * must not exceed hardware maximum, and must be multiple 	 * of E1000_DBA_ALIGN. 	 */
@@ -2966,6 +2992,67 @@ expr_stmt|;
 goto|goto
 name|err_late
 goto|;
+block|}
+comment|/* Some adapter-specific advanced features */
+if|if
+condition|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac
+operator|.
+name|type
+operator|>=
+name|e1000_i350
+condition|)
+block|{
+name|igb_set_sysctl_value
+argument_list|(
+name|adapter
+argument_list|,
+literal|"dma_coalesce"
+argument_list|,
+literal|"configure dma coalesce"
+argument_list|,
+operator|&
+name|adapter
+operator|->
+name|dma_coalesce
+argument_list|,
+name|igb_dma_coalesce
+argument_list|)
+expr_stmt|;
+name|igb_set_sysctl_value
+argument_list|(
+name|adapter
+argument_list|,
+literal|"eee_control"
+argument_list|,
+literal|"enable Energy Efficient Ethernet"
+argument_list|,
+operator|&
+name|adapter
+operator|->
+name|hw
+operator|.
+name|dev_spec
+operator|.
+name|_82575
+operator|.
+name|eee_disable
+argument_list|,
+name|igb_eee_setting
+argument_list|)
+expr_stmt|;
+name|e1000_set_eee_i350
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	** Start from a known state, this is 	** important in reading the nvm and 	** mac from that. 	*/
 name|e1000_reset_hw
@@ -6596,6 +6683,26 @@ argument_list|(
 name|txr
 argument_list|)
 expr_stmt|;
+comment|/* If RX ring is depleted do refresh first */
+if|if
+condition|(
+name|rxr
+operator|->
+name|next_to_check
+operator|==
+name|rxr
+operator|->
+name|next_to_refresh
+condition|)
+name|igb_refresh_mbufs
+argument_list|(
+name|rxr
+argument_list|,
+name|rxr
+operator|->
+name|next_to_check
+argument_list|)
+expr_stmt|;
 name|more_rx
 operator|=
 name|igb_rxeof
@@ -8723,7 +8830,7 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|DEVICE_POLLING
-comment|/* Fire off all queue interrupts - deadlock protection */
+comment|/* Schedule all queue interrupts - deadlock protection */
 name|E1000_WRITE_REG
 argument_list|(
 operator|&
@@ -8883,9 +8990,19 @@ name|tx_rings
 decl_stmt|;
 name|u32
 name|link_check
-init|=
-literal|0
+decl_stmt|,
+name|thstat
+decl_stmt|,
+name|ctrl
 decl_stmt|;
+name|link_check
+operator|=
+name|thstat
+operator|=
+name|ctrl
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Get the cached link value or read for real */
 switch|switch
 condition|(
@@ -8993,6 +9110,37 @@ comment|/* Fall thru */
 default|default:
 break|break;
 block|}
+comment|/* Check for thermal downshift or shutdown */
+if|if
+condition|(
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|==
+name|e1000_i350
+condition|)
+block|{
+name|thstat
+operator|=
+name|E1000_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_THSTAT
+argument_list|)
+expr_stmt|;
+name|ctrl
+operator|=
+name|E1000_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_CTRL_EXT
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Now we check if a transition has happened */
 if|if
 condition|(
@@ -9070,6 +9218,27 @@ name|link_speed
 operator|*
 literal|1000000
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ctrl
+operator|&
+name|E1000_CTRL_EXT_LINK_MODE_GMII
+operator|)
+operator|&&
+operator|(
+name|thstat
+operator|&
+name|E1000_THSTAT_LINK_THROTTLE
+operator|)
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Link: thermal downshift\n"
+argument_list|)
+expr_stmt|;
 comment|/* This can sleep */
 name|if_link_state_change
 argument_list|(
@@ -9119,6 +9288,27 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Link is Down\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ctrl
+operator|&
+name|E1000_CTRL_EXT_LINK_MODE_GMII
+operator|)
+operator|&&
+operator|(
+name|thstat
+operator|&
+name|E1000_THSTAT_PWR_DOWN
+operator|)
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Link: thermal shutdown\n"
 argument_list|)
 expr_stmt|;
 name|adapter
@@ -12164,7 +12354,9 @@ name|fc
 operator|->
 name|requested_mode
 operator|=
-name|igb_fc_setting
+name|adapter
+operator|->
+name|fc_setting
 expr_stmt|;
 else|else
 name|fc
@@ -12215,6 +12407,7 @@ expr_stmt|;
 comment|/* Setup DMA Coalescing */
 if|if
 condition|(
+operator|(
 name|hw
 operator|->
 name|mac
@@ -12222,6 +12415,15 @@ operator|.
 name|type
 operator|==
 name|e1000_i350
+operator|)
+operator|&&
+operator|(
+name|adapter
+operator|->
+name|dma_coalesce
+operator|==
+name|TRUE
+operator|)
 condition|)
 block|{
 name|u32
@@ -12231,36 +12433,63 @@ name|hwm
 operator|=
 operator|(
 name|pba
+operator|-
+literal|4
+operator|)
 operator|<<
 literal|10
-operator|)
-operator|-
+expr_stmt|;
+name|reg
+operator|=
 operator|(
-literal|2
-operator|*
-name|adapter
-operator|->
-name|max_frame_size
+operator|(
+operator|(
+name|pba
+operator|-
+literal|6
+operator|)
+operator|<<
+name|E1000_DMACR_DMACTHR_SHIFT
+operator|)
+operator|&
+name|E1000_DMACR_DMACTHR_MASK
 operator|)
 expr_stmt|;
-comment|/* 		 * 0x80000000 - enable DMA COAL 		 * 0x10000000 - use L0s as low power 		 * 0x20000000 - use L1 as low power 		 * X<< 16 - exit dma coal when rx data exceeds X kB 		 * Y - upper limit to stay in dma coal in units of 32usecs 		 */
+comment|/* transition to L0x or L1 if available..*/
+name|reg
+operator||=
+operator|(
+name|E1000_DMACR_DMAC_EN
+operator||
+name|E1000_DMACR_DMAC_LX_MASK
+operator|)
+expr_stmt|;
+comment|/* timer = +-1000 usec in 32usec intervals */
+name|reg
+operator||=
+operator|(
+literal|1000
+operator|>>
+literal|5
+operator|)
+expr_stmt|;
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
 argument_list|,
 name|E1000_DMACR
 argument_list|,
-literal|0xA0000006
-operator||
-operator|(
-operator|(
-name|hwm
-operator|<<
-literal|6
-operator|)
-operator|&
-literal|0x00FF0000
-operator|)
+name|reg
+argument_list|)
+expr_stmt|;
+comment|/* No lower threshold */
+name|E1000_WRITE_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_DMCRTRH
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* set hwm to PBA -  2 * max frame size */
@@ -12273,14 +12502,28 @@ argument_list|,
 name|hwm
 argument_list|)
 expr_stmt|;
-comment|/* 		 * This sets the time to wait before requesting transition to 		 * low power state to number of usecs needed to receive 1 512 		 * byte frame at gigabit line rate 		 */
+comment|/* Set the interval before transition */
+name|reg
+operator|=
+name|E1000_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_DMCTLX
+argument_list|)
+expr_stmt|;
+name|reg
+operator||=
+literal|0x800000FF
+expr_stmt|;
+comment|/* 255 usec */
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
 argument_list|,
 name|E1000_DMCTLX
 argument_list|,
-literal|4
+name|reg
 argument_list|)
 expr_stmt|;
 comment|/* free space in tx packet buffer to wake from DMA coal */
@@ -12324,6 +12567,13 @@ argument_list|,
 name|reg
 operator||
 name|E1000_PCIEMISC_LX_DECISION
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"DMA Coalescing enabled\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -16704,33 +16954,42 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
+name|j
+decl_stmt|,
 name|nsegs
 decl_stmt|,
 name|error
-decl_stmt|,
-name|cleaned
+decl_stmt|;
+name|bool
+name|refreshed
+init|=
+name|FALSE
 decl_stmt|;
 name|i
+operator|=
+name|j
 operator|=
 name|rxr
 operator|->
 name|next_to_refresh
 expr_stmt|;
-name|rxr
+comment|/* 	** Get one descriptor beyond 	** our work mark to control 	** the loop.         */
+if|if
+condition|(
+operator|++
+name|j
+operator|==
+name|adapter
 operator|->
-name|needs_refresh
+name|num_rx_desc
+condition|)
+name|j
 operator|=
-name|FALSE
+literal|0
 expr_stmt|;
-name|cleaned
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-comment|/* Signify no completions */
 while|while
 condition|(
-name|i
+name|j
 operator|!=
 name|limit
 condition|)
@@ -16781,17 +17040,9 @@ name|mh
 operator|==
 name|NULL
 condition|)
-block|{
-name|rxr
-operator|->
-name|needs_refresh
-operator|=
-name|TRUE
-expr_stmt|;
 goto|goto
 name|update
 goto|;
-block|}
 block|}
 else|else
 name|mh
@@ -16949,17 +17200,9 @@ name|mp
 operator|==
 name|NULL
 condition|)
-block|{
-name|rxr
-operator|->
-name|needs_refresh
-operator|=
-name|TRUE
-expr_stmt|;
 goto|goto
 name|update
 goto|;
-block|}
 block|}
 else|else
 name|mp
@@ -17075,42 +17318,43 @@ operator|.
 name|ds_addr
 argument_list|)
 expr_stmt|;
-name|cleaned
+name|refreshed
 operator|=
-name|i
+name|TRUE
 expr_stmt|;
-comment|/* Calculate next index */
-if|if
-condition|(
-operator|++
-name|i
-operator|==
-name|adapter
-operator|->
-name|num_rx_desc
-condition|)
+comment|/* I feel wefreshed :) */
 name|i
 operator|=
-literal|0
+name|j
 expr_stmt|;
-comment|/* This is the work marker for refresh */
+comment|/* our next is precalculated */
 name|rxr
 operator|->
 name|next_to_refresh
 operator|=
 name|i
 expr_stmt|;
+if|if
+condition|(
+operator|++
+name|j
+operator|==
+name|adapter
+operator|->
+name|num_rx_desc
+condition|)
+name|j
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|update
 label|:
 if|if
 condition|(
-name|cleaned
-operator|!=
-operator|-
-literal|1
+name|refreshed
 condition|)
-comment|/* If we refreshed some, bump tail */
+comment|/* update tail */
 name|E1000_WRITE_REG
 argument_list|(
 operator|&
@@ -17125,7 +17369,9 @@ operator|->
 name|me
 argument_list|)
 argument_list|,
-name|cleaned
+name|rxr
+operator|->
+name|next_to_refresh
 argument_list|)
 expr_stmt|;
 return|return;
@@ -17500,21 +17746,20 @@ name|rxr
 operator|->
 name|adapter
 expr_stmt|;
-for|for
-control|(
 name|i
 operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|adapter
+name|rxr
 operator|->
-name|num_rx_desc
-condition|;
+name|next_to_check
+expr_stmt|;
+while|while
+condition|(
 name|i
-operator|++
-control|)
+operator|!=
+name|rxr
+operator|->
+name|next_to_refresh
+condition|)
 block|{
 name|rxbuf
 operator|=
@@ -17636,7 +17881,32 @@ name|m_pack
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+operator|++
+name|i
+operator|==
+name|adapter
+operator|->
+name|num_rx_desc
+condition|)
+name|i
+operator|=
+literal|0
+expr_stmt|;
 block|}
+name|rxr
+operator|->
+name|next_to_check
+operator|=
+literal|0
+expr_stmt|;
+name|rxr
+operator|->
+name|next_to_refresh
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
@@ -17695,7 +17965,9 @@ operator|->
 name|lro
 decl_stmt|;
 name|int
-name|rsize
+name|i
+decl_stmt|,
+name|j
 decl_stmt|,
 name|nsegs
 decl_stmt|,
@@ -17721,48 +17993,54 @@ name|adapter
 operator|->
 name|ifp
 expr_stmt|;
-comment|/* Clear the ring contents */
 name|IGB_RX_LOCK
 argument_list|(
 name|rxr
 argument_list|)
 expr_stmt|;
-name|rsize
+comment|/* Invalidate all descriptors */
+for|for
+control|(
+name|i
 operator|=
-name|roundup2
-argument_list|(
+literal|0
+init|;
+name|i
+operator|<
 name|adapter
 operator|->
 name|num_rx_desc
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|union
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|union
 name|e1000_adv_rx_desc
-argument_list|)
-argument_list|,
-name|IGB_DBA_ALIGN
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
+modifier|*
+name|cur
+decl_stmt|;
+name|cur
+operator|=
+operator|&
 name|rxr
 operator|->
 name|rx_base
-argument_list|,
-name|rsize
-argument_list|)
+index|[
+name|i
+index|]
 expr_stmt|;
-comment|/* 	** Free current RX buffer structures and their mbufs 	*/
-name|igb_free_receive_ring
-argument_list|(
-name|rxr
-argument_list|)
+name|cur
+operator|->
+name|wb
+operator|.
+name|upper
+operator|.
+name|status_error
+operator|=
+literal|0
 expr_stmt|;
+block|}
 comment|/* Configure for header split? */
 if|if
 condition|(
@@ -17774,23 +18052,37 @@ name|hdr_split
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* Now replenish the ring mbufs */
-for|for
-control|(
-name|int
+comment|/* Get our indices */
+name|i
+operator|=
 name|j
-init|=
-literal|0
-init|;
+operator|=
+name|rxr
+operator|->
+name|next_to_refresh
+expr_stmt|;
+if|if
+condition|(
+operator|++
 name|j
-operator|<
+operator|==
 name|adapter
 operator|->
 name|num_rx_desc
-condition|;
-operator|++
+condition|)
 name|j
-control|)
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Now replenish the ring mbufs */
+while|while
+condition|(
+name|j
+operator|!=
+name|rxr
+operator|->
+name|next_to_check
+condition|)
 block|{
 name|struct
 name|mbuf
@@ -17807,7 +18099,7 @@ name|rxr
 operator|->
 name|rx_buffers
 index|[
-name|j
+name|i
 index|]
 expr_stmt|;
 if|if
@@ -17936,7 +18228,7 @@ name|rxr
 operator|->
 name|rx_base
 index|[
-name|j
+name|i
 index|]
 operator|.
 name|read
@@ -18060,7 +18352,7 @@ name|rxr
 operator|->
 name|rx_base
 index|[
-name|j
+name|i
 index|]
 operator|.
 name|read
@@ -18077,19 +18369,31 @@ operator|.
 name|ds_addr
 argument_list|)
 expr_stmt|;
+comment|/* Setup for next loop */
+name|i
+operator|=
+name|j
+expr_stmt|;
+if|if
+condition|(
+operator|++
+name|j
+operator|==
+name|adapter
+operator|->
+name|num_rx_desc
+condition|)
+name|j
+operator|=
+literal|0
+expr_stmt|;
 block|}
 comment|/* Setup our descriptor indices */
 name|rxr
 operator|->
-name|next_to_check
-operator|=
-literal|0
-expr_stmt|;
-name|rxr
-operator|->
 name|next_to_refresh
 operator|=
-literal|0
+name|i
 expr_stmt|;
 name|rxr
 operator|->
@@ -18211,6 +18515,12 @@ operator|)
 return|;
 name|fail
 label|:
+name|rxr
+operator|->
+name|next_to_refresh
+operator|=
+name|i
+expr_stmt|;
 name|igb_free_receive_ring
 argument_list|(
 name|rxr
@@ -18425,9 +18735,7 @@ expr_stmt|;
 comment|/* 	** Set up for header split 	*/
 if|if
 condition|(
-name|rxr
-operator|->
-name|hdr_split
+name|igb_header_split
 condition|)
 block|{
 comment|/* Use a standard mbuf for the header */
@@ -19091,6 +19399,16 @@ name|i
 operator|++
 control|)
 block|{
+name|rxr
+operator|=
+operator|&
+name|adapter
+operator|->
+name|rx_rings
+index|[
+name|i
+index|]
+expr_stmt|;
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
@@ -19100,7 +19418,9 @@ argument_list|(
 name|i
 argument_list|)
 argument_list|,
-literal|0
+name|rxr
+operator|->
+name|next_to_check
 argument_list|)
 expr_stmt|;
 name|E1000_WRITE_REG
@@ -19112,11 +19432,9 @@ argument_list|(
 name|i
 argument_list|)
 argument_list|,
-name|adapter
+name|rxr
 operator|->
-name|num_rx_desc
-operator|-
-literal|1
+name|next_to_refresh
 argument_list|)
 expr_stmt|;
 block|}
@@ -19892,24 +20210,6 @@ operator||
 name|BUS_DMASYNC_POSTWRITE
 argument_list|)
 expr_stmt|;
-comment|/* Try outstanding refresh first */
-if|if
-condition|(
-name|rxr
-operator|->
-name|needs_refresh
-operator|==
-name|TRUE
-condition|)
-name|igb_refresh_mbufs
-argument_list|(
-name|rxr
-argument_list|,
-name|rxr
-operator|->
-name|next_to_check
-argument_list|)
-expr_stmt|;
 comment|/* Main clean loop */
 for|for
 control|(
@@ -20063,6 +20363,40 @@ argument_list|)
 operator|&
 name|IGB_PKTTYPE_MASK
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac
+operator|.
+name|type
+operator|==
+name|e1000_i350
+operator|)
+operator|&&
+operator|(
+name|staterr
+operator|&
+name|E1000_RXDEXT_STATERR_LB
+operator|)
+condition|)
+name|vtag
+operator|=
+name|be16toh
+argument_list|(
+name|cur
+operator|->
+name|wb
+operator|.
+name|upper
+operator|.
+name|vlan
+argument_list|)
+expr_stmt|;
+else|else
 name|vtag
 operator|=
 name|le16toh
@@ -20663,8 +20997,13 @@ condition|(
 name|processed
 operator|!=
 literal|0
+operator|||
+name|i
+operator|==
+name|rxr
+operator|->
+name|next_to_refresh
 condition|)
-block|{
 name|igb_refresh_mbufs
 argument_list|(
 name|rxr
@@ -20672,11 +21011,6 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|processed
-operator|=
-literal|0
-expr_stmt|;
-block|}
 name|rxr
 operator|->
 name|next_to_check
@@ -20719,11 +21053,6 @@ name|queued
 argument_list|)
 expr_stmt|;
 block|}
-name|IGB_RX_UNLOCK
-argument_list|(
-name|rxr
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|done
@@ -20735,24 +21064,21 @@ name|done
 operator|=
 name|rxdone
 expr_stmt|;
-comment|/* 	** We still have cleaning to do? 	** Schedule another interrupt if so. 	*/
-if|if
-condition|(
+name|IGB_RX_UNLOCK
+argument_list|(
+name|rxr
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
 operator|(
 name|staterr
 operator|&
 name|E1000_RXD_STAT_DD
 operator|)
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
+condition|?
 name|TRUE
-operator|)
-return|;
-return|return
-operator|(
+else|:
 name|FALSE
 operator|)
 return|;
@@ -23746,7 +24072,7 @@ name|QUEUE_NAME_LEN
 index|]
 decl_stmt|;
 comment|/* Driver Statistics */
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -24100,8 +24426,6 @@ name|OID_AUTO
 argument_list|,
 literal|"interrupt_rate"
 argument_list|,
-name|CTLTYPE_UINT
-operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -24140,8 +24464,6 @@ name|OID_AUTO
 argument_list|,
 literal|"txd_head"
 argument_list|,
-name|CTLTYPE_UINT
-operator||
 name|CTLFLAG_RD
 argument_list|,
 name|adapter
@@ -24170,8 +24492,6 @@ name|OID_AUTO
 argument_list|,
 literal|"txd_tail"
 argument_list|,
-name|CTLTYPE_UINT
-operator||
 name|CTLFLAG_RD
 argument_list|,
 name|adapter
@@ -24190,7 +24510,7 @@ argument_list|,
 literal|"Transmit Descriptor Tail"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24210,7 +24530,7 @@ argument_list|,
 literal|"Queue No Descriptor Available"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24240,8 +24560,6 @@ name|OID_AUTO
 argument_list|,
 literal|"rxd_head"
 argument_list|,
-name|CTLTYPE_UINT
-operator||
 name|CTLFLAG_RD
 argument_list|,
 name|adapter
@@ -24270,8 +24588,6 @@ name|OID_AUTO
 argument_list|,
 literal|"rxd_tail"
 argument_list|,
-name|CTLTYPE_UINT
-operator||
 name|CTLFLAG_RD
 argument_list|,
 name|adapter
@@ -24290,7 +24606,7 @@ argument_list|,
 literal|"Receive Descriptor Tail"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24310,7 +24626,7 @@ argument_list|,
 literal|"Queue Packets Received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24330,7 +24646,7 @@ argument_list|,
 literal|"Queue Bytes Received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -24352,7 +24668,7 @@ argument_list|,
 literal|"LRO Queued"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -24410,7 +24726,7 @@ operator|->
 name|vf_ifp
 condition|)
 block|{
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24430,7 +24746,7 @@ argument_list|,
 literal|"Good Packets Received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24450,7 +24766,7 @@ argument_list|,
 literal|"Good Packets Transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24470,7 +24786,7 @@ argument_list|,
 literal|"Good Octets Received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24490,7 +24806,7 @@ argument_list|,
 literal|"Good Octets Transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24512,7 +24828,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24532,7 +24848,7 @@ argument_list|,
 literal|"Excessive collisions"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24552,7 +24868,7 @@ argument_list|,
 literal|"Single collisions"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24572,7 +24888,7 @@ argument_list|,
 literal|"Multiple collisions"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24592,7 +24908,7 @@ argument_list|,
 literal|"Late collisions"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24612,7 +24928,7 @@ argument_list|,
 literal|"Collision Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24632,7 +24948,7 @@ argument_list|,
 literal|"Symbol Errors"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24652,7 +24968,7 @@ argument_list|,
 literal|"Sequence Errors"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24672,7 +24988,7 @@ argument_list|,
 literal|"Defer Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24692,7 +25008,7 @@ argument_list|,
 literal|"Missed Packets"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24712,7 +25028,7 @@ argument_list|,
 literal|"Receive No Buffers"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24732,7 +25048,7 @@ argument_list|,
 literal|"Receive Undersize"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24752,7 +25068,7 @@ argument_list|,
 literal|"Fragmented Packets Received "
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24772,7 +25088,7 @@ argument_list|,
 literal|"Oversized Packets Received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24792,7 +25108,7 @@ argument_list|,
 literal|"Recevied Jabber"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24812,7 +25128,7 @@ argument_list|,
 literal|"Receive Errors"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24832,7 +25148,7 @@ argument_list|,
 literal|"CRC errors"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24853,7 +25169,7 @@ literal|"Alignment Errors"
 argument_list|)
 expr_stmt|;
 comment|/* On 82575 these are collision counts */
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24873,7 +25189,7 @@ argument_list|,
 literal|"Collision/Carrier extension errors"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24893,7 +25209,7 @@ argument_list|,
 literal|"XON Received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24913,7 +25229,7 @@ argument_list|,
 literal|"XON Transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24933,7 +25249,7 @@ argument_list|,
 literal|"XOFF Received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24954,7 +25270,7 @@ literal|"XOFF Transmitted"
 argument_list|)
 expr_stmt|;
 comment|/* Packet Reception Stats */
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24974,7 +25290,7 @@ argument_list|,
 literal|"Total Packets Received "
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24994,7 +25310,7 @@ argument_list|,
 literal|"Good Packets Received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25014,7 +25330,7 @@ argument_list|,
 literal|"Broadcast Packets Received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25034,7 +25350,7 @@ argument_list|,
 literal|"Multicast Packets Received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25054,7 +25370,7 @@ argument_list|,
 literal|"64 byte frames received "
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25074,7 +25390,7 @@ argument_list|,
 literal|"65-127 byte frames received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25094,7 +25410,7 @@ argument_list|,
 literal|"128-255 byte frames received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25114,7 +25430,7 @@ argument_list|,
 literal|"256-511 byte frames received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25134,7 +25450,7 @@ argument_list|,
 literal|"512-1023 byte frames received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25154,7 +25470,7 @@ argument_list|,
 literal|"1023-1522 byte frames received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25175,7 +25491,7 @@ literal|"Good Octets Received"
 argument_list|)
 expr_stmt|;
 comment|/* Packet Transmission Stats */
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25195,7 +25511,7 @@ argument_list|,
 literal|"Good Octets Transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25215,7 +25531,7 @@ argument_list|,
 literal|"Total Packets Transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25235,7 +25551,7 @@ argument_list|,
 literal|"Good Packets Transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25255,7 +25571,7 @@ argument_list|,
 literal|"Broadcast Packets Transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25275,7 +25591,7 @@ argument_list|,
 literal|"Multicast Packets Transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25295,7 +25611,7 @@ argument_list|,
 literal|"64 byte frames transmitted "
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25315,7 +25631,7 @@ argument_list|,
 literal|"65-127 byte frames transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25335,7 +25651,7 @@ argument_list|,
 literal|"128-255 byte frames transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25355,7 +25671,7 @@ argument_list|,
 literal|"256-511 byte frames transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25375,7 +25691,7 @@ argument_list|,
 literal|"512-1023 byte frames transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25395,7 +25711,7 @@ argument_list|,
 literal|"1024-1522 byte frames transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25415,7 +25731,7 @@ argument_list|,
 literal|"TSO Contexts Transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25462,7 +25778,7 @@ argument_list|(
 name|int_node
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25482,7 +25798,7 @@ argument_list|,
 literal|"Interrupt Assertion Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25502,7 +25818,7 @@ argument_list|,
 literal|"Interrupt Cause Rx Pkt Timer Expire Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25522,7 +25838,7 @@ argument_list|,
 literal|"Interrupt Cause Rx Abs Timer Expire Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25542,7 +25858,7 @@ argument_list|,
 literal|"Interrupt Cause Tx Pkt Timer Expire Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25562,7 +25878,7 @@ argument_list|,
 literal|"Interrupt Cause Tx Abs Timer Expire Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25582,7 +25898,7 @@ argument_list|,
 literal|"Interrupt Cause Tx Queue Empty Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25602,7 +25918,7 @@ argument_list|,
 literal|"Interrupt Cause Tx Queue Min Thresh Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25622,7 +25938,7 @@ argument_list|,
 literal|"Interrupt Cause Rx Desc Min Thresh Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25669,7 +25985,7 @@ argument_list|(
 name|host_node
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25689,7 +26005,7 @@ argument_list|,
 literal|"Circuit Breaker Tx Packet Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25709,7 +26025,7 @@ argument_list|,
 literal|"Host Transmit Discarded Packets"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25729,7 +26045,7 @@ argument_list|,
 literal|"Rx Packets To Host"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25749,7 +26065,7 @@ argument_list|,
 literal|"Circuit Breaker Rx Packet Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25769,7 +26085,7 @@ argument_list|,
 literal|"Circuit Breaker Rx Dropped Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25789,7 +26105,7 @@ argument_list|,
 literal|"Host Good Packets Tx Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25809,7 +26125,7 @@ argument_list|,
 literal|"Host Tx Circuit Breaker Dropped Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25829,7 +26145,7 @@ argument_list|,
 literal|"Host Good Octets Received Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25849,7 +26165,7 @@ argument_list|,
 literal|"Host Good Octets Transmit Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25869,7 +26185,7 @@ argument_list|,
 literal|"Length Errors"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25889,7 +26205,7 @@ argument_list|,
 literal|"SerDes/SGMII Code Violation Pkt Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -26111,7 +26427,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|igb_add_rx_process_limit
+name|igb_set_sysctl_value
 parameter_list|(
 name|struct
 name|adapter
