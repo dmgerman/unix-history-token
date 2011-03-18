@@ -4558,6 +4558,15 @@ name|breakout
 decl_stmt|;
 if|if
 condition|(
+name|p
+operator|->
+name|p_state
+operator|!=
+name|PRS_NORMAL
+condition|)
+continue|continue;
+if|if
+condition|(
 name|PROC_TRYLOCK
 argument_list|(
 name|p
@@ -5967,6 +5976,15 @@ name|limit
 decl_stmt|,
 name|size
 decl_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|p_state
+operator|!=
+name|PRS_NORMAL
+condition|)
+continue|continue;
 comment|/* 			 * if this is a system process or if we have already 			 * looked at this process, skip it. 			 */
 name|PROC_LOCK
 argument_list|(
