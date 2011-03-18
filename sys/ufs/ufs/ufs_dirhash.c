@@ -1659,15 +1659,10 @@ literal|0
 expr_stmt|;
 name|dh
 operator|->
-name|dh_seqopt
-operator|=
-literal|0
-expr_stmt|;
-name|dh
-operator|->
 name|dh_seqoff
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 name|dh
 operator|->
@@ -2373,6 +2368,8 @@ decl_stmt|,
 name|offset
 decl_stmt|,
 name|prevoff
+decl_stmt|,
+name|seqoff
 decl_stmt|;
 name|int
 name|i
@@ -2544,6 +2541,12 @@ name|bp
 operator|=
 name|NULL
 expr_stmt|;
+name|seqoff
+operator|=
+name|dh
+operator|->
+name|dh_seqoff
+expr_stmt|;
 name|restart
 label|:
 name|slot
@@ -2559,12 +2562,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dh
-operator|->
-name|dh_seqopt
+name|seqoff
+operator|!=
+operator|-
+literal|1
 condition|)
 block|{
-comment|/* 		 * Sequential access optimisation. dh_seqoff contains the 		 * offset of the directory entry immediately following 		 * the last entry that was looked up. Check if this offset 		 * appears in the hash chain for the name we are looking for. 		 */
+comment|/* 		 * Sequential access optimisation. seqoff contains the 		 * offset of the directory entry immediately following 		 * the last entry that was looked up. Check if this offset 		 * appears in the hash chain for the name we are looking for. 		 */
 for|for
 control|(
 name|i
@@ -2599,32 +2603,27 @@ if|if
 condition|(
 name|offset
 operator|==
-name|dh
-operator|->
-name|dh_seqoff
+name|seqoff
 condition|)
 break|break;
 if|if
 condition|(
 name|offset
 operator|==
-name|dh
-operator|->
-name|dh_seqoff
+name|seqoff
 condition|)
 block|{
-comment|/* 			 * We found an entry with the expected offset. This 			 * is probably the entry we want, but if not, the 			 * code below will turn off seqopt and retry. 			 */
+comment|/* 			 * We found an entry with the expected offset. This 			 * is probably the entry we want, but if not, the 			 * code below will retry. 			 */
 name|slot
 operator|=
 name|i
 expr_stmt|;
 block|}
 else|else
-name|dh
-operator|->
-name|dh_seqopt
+name|seqoff
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 block|}
 for|for
@@ -2869,27 +2868,7 @@ operator|=
 name|prevoff
 expr_stmt|;
 block|}
-comment|/* Check for sequential access, and update offset. */
-if|if
-condition|(
-name|dh
-operator|->
-name|dh_seqopt
-operator|==
-literal|0
-operator|&&
-name|dh
-operator|->
-name|dh_seqoff
-operator|==
-name|offset
-condition|)
-name|dh
-operator|->
-name|dh_seqopt
-operator|=
-literal|1
-expr_stmt|;
+comment|/* Update offset. */
 name|dh
 operator|->
 name|dh_seqoff
@@ -2924,19 +2903,19 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 		 * When the name doesn't match in the seqopt case, go back 		 * and search normally. 		 */
+comment|/* 		 * When the name doesn't match in the sequential 		 * optimization case, go back and search normally. 		 */
 if|if
 condition|(
-name|dh
-operator|->
-name|dh_seqopt
+name|seqoff
+operator|!=
+operator|-
+literal|1
 condition|)
 block|{
-name|dh
-operator|->
-name|dh_seqopt
+name|seqoff
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 goto|goto
 name|restart
