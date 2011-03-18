@@ -192,10 +192,6 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* first blk with N words free */
-name|int
-name|dh_seqopt
-decl_stmt|;
-comment|/* sequential access optimisation enabled */
 name|doff_t
 name|dh_seqoff
 decl_stmt|;
