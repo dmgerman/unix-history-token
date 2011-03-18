@@ -3381,7 +3381,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (bootverbose || bp->bio_offset / PAGE_SIZE< 17) printf("wire_count %d busy %d flags %x hold_count %d act_count %d queue %d valid %d dirty %d @ %d\n",     m->wire_count, m->busy,      m->flags, m->hold_count, m->act_count, m->queue, m->valid, m->dirty, i);
+block|if (bootverbose || bp->bio_offset / PAGE_SIZE< 17) printf("wire_count %d busy %d flags %x hold_count %d act_count %d queue %d valid %d dirty %d @ %d\n",     m->wire_count, m->busy,     m->flags, m->hold_count, m->act_count, m->queue, m->valid, m->dirty, i);
 endif|#
 directive|endif
 block|}
