@@ -323,6 +323,10 @@ struct|struct
 name|pcicfg_ht
 block|{
 name|uint8_t
+name|ht_slave
+decl_stmt|;
+comment|/* Non-zero if device is an HT slave. */
+name|uint8_t
 name|ht_msimap
 decl_stmt|;
 comment|/* Offset of MSI mapping cap registers. */
