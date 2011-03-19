@@ -698,12 +698,9 @@ if|if
 condition|(
 name|OF_getprop
 argument_list|(
-name|OF_parent
+name|OF_peer
 argument_list|(
-name|PCPU_GET
-argument_list|(
-name|node
-argument_list|)
+literal|0
 argument_list|)
 argument_list|,
 literal|"stick-frequency"
