@@ -157,6 +157,11 @@ init|=
 literal|33
 block|,
 comment|/* write registers */
+name|HAL_DIAG_CHANSURVEY
+init|=
+literal|34
+block|,
+comment|/* channel survey */
 block|}
 enum|;
 end_enum
