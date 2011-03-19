@@ -9989,10 +9989,12 @@ operator|~
 operator|(
 name|MCR0_PROMISC
 operator||
-name|MCR0_BROADCAST
-operator||
 name|MCR0_MULTICAST
 operator|)
+expr_stmt|;
+name|mcr
+operator||=
+name|MCR0_BROADCAST_DIS
 expr_stmt|;
 if|if
 condition|(
@@ -10007,8 +10009,9 @@ operator|!=
 literal|0
 condition|)
 name|mcr
-operator||=
-name|MCR0_BROADCAST
+operator|&=
+operator|~
+name|MCR0_BROADCAST_DIS
 expr_stmt|;
 if|if
 condition|(
