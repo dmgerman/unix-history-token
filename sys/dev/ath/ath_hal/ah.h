@@ -1795,6 +1795,68 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
+comment|/*  * This is a channel survey sample entry.  *  * The AR5212 ANI routines fill these samples. The ANI code then uses it  * when calculating listen time; it is also exported via a diagnostic  * API.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|uint32_t
+name|seq_num
+decl_stmt|;
+name|uint32_t
+name|tx_busy
+decl_stmt|;
+name|uint32_t
+name|rx_busy
+decl_stmt|;
+name|uint32_t
+name|chan_busy
+decl_stmt|;
+name|uint32_t
+name|cycle_count
+decl_stmt|;
+block|}
+name|HAL_SURVEY_SAMPLE
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * This provides 3.2 seconds of sample space given an  * ANI time of 1/10th of a second. This may not be enough!  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHANNEL_SURVEY_SAMPLE_COUNT
+value|32
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|HAL_SURVEY_SAMPLE
+name|samples
+index|[
+name|CHANNEL_SURVEY_SAMPLE_COUNT
+index|]
+decl_stmt|;
+name|uint32_t
+name|cur_sample
+decl_stmt|;
+comment|/* current sample in sequence */
+name|uint32_t
+name|cur_seq
+decl_stmt|;
+comment|/* current sequence number */
+block|}
+name|HAL_CHANNEL_SURVEY
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Hardware Access Layer (HAL) API.  *  * Clients of the HAL call ath_hal_attach to obtain a reference to an  * ath_hal structure for use with the device.  Hardware-related operations  * that follow must call back into the HAL through interface, supplying  * the reference as the first parameter.  Note that before using the  * reference returned by ath_hal_attach the caller should verify the  * ABI version number.  */
 end_comment
 
