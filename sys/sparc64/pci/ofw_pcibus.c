@@ -603,8 +603,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|reg
-operator|!=
+operator|>
 literal|0
 condition|)
 block|{
