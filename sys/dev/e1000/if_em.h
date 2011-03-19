@@ -411,7 +411,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|SYSTCL_ADD_UQUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|)
 end_if
 
