@@ -1090,8 +1090,6 @@ operator|)
 name|data
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -1110,11 +1108,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 switch|switch
 condition|(
 name|command
@@ -1275,14 +1268,6 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-operator|(
-name|void
-operator|)
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
