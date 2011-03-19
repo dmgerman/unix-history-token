@@ -815,6 +815,13 @@ name|ah
 argument_list|,
 name|AR_MISC_MODE
 argument_list|,
+name|OS_REG_READ
+argument_list|(
+name|ah
+argument_list|,
+name|AR_MISC_MODE
+argument_list|)
+operator||
 name|ahp
 operator|->
 name|ah_miscMode
