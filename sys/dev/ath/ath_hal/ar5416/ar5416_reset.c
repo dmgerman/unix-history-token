@@ -1367,7 +1367,9 @@ condition|;
 name|i
 operator|++
 control|)
-name|ar5212ResetTxQueue
+name|ah
+operator|->
+name|ah_resetTxQueue
 argument_list|(
 name|ah
 argument_list|,
