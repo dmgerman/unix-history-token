@@ -1466,6 +1466,10 @@ operator|->
 name|sa_family
 argument_list|)
 expr_stmt|;
+name|newrt
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|rnh
@@ -1476,10 +1480,6 @@ goto|goto
 name|miss
 goto|;
 comment|/* 	 * Look up the address in the table for that Address Family 	 */
-name|newrt
-operator|=
-name|NULL
-expr_stmt|;
 name|needlock
 operator|=
 operator|!
