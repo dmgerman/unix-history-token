@@ -428,6 +428,11 @@ init|=
 literal|4
 block|,
 comment|/* u-apsd power save xmit q */
+name|HAL_TX_QUEUE_PSPOLL
+init|=
+literal|5
+block|,
+comment|/* power save poll xmit q */
 block|}
 name|HAL_TX_QUEUE
 typedef|;
