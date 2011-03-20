@@ -4757,29 +4757,11 @@ name|dmisc
 operator|=
 name|AR_D_MISC_FRAG_WAIT_EN
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_5311
-if|if
-condition|(
-name|AH_PRIVATE
-argument_list|(
-name|ah
-argument_list|)
-operator|->
-name|ah_macVersion
-operator|<
-name|AR_SREV_VERSION_OAHU
-condition|)
-block|{
-comment|/* Configure DCU to use the global sequence count */
+comment|/*  	 * The chip reset default is to use a DCU backoff threshold of 0x2. 	 * Restore this when programming the DCU MISC register. 	 */
 name|dmisc
 operator||=
-name|AR5311_D_MISC_SEQ_NUM_CONTROL
+literal|0x2
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 comment|/* multiqueue support */
 if|if
 condition|(
