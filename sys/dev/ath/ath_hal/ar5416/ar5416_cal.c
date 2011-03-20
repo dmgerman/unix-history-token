@@ -707,6 +707,13 @@ begin_comment
 comment|/*  * Initialize Calibration infrastructure.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAX_CAL_CHECK
+value|32
+end_define
+
 begin_function
 name|HAL_BOOL
 name|ar5416InitCal
@@ -739,6 +746,9 @@ decl_stmt|;
 name|HAL_CHANNEL_INTERNAL
 modifier|*
 name|ichan
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 name|ichan
 operator|=
@@ -822,10 +832,23 @@ argument_list|,
 name|AR_PHY_AGC_CONTROL_NF
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Try to make sure the above NF cal completes, just so 	 * it doesn't clash with subsequent percals -adrian 	 */
+comment|/* 	 * This sometimes takes a -lot- longer than it should. 	 * Just give it a bit more time. 	 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|MAX_CAL_CHECK
+condition|;
+name|i
+operator|++
+control|)
+block|{
 if|if
 condition|(
-operator|!
 name|ar5212WaitNFCalComplete
 argument_list|(
 name|ah
@@ -833,7 +856,7 @@ argument_list|,
 literal|10000
 argument_list|)
 condition|)
-block|{
+break|break;
 name|HALDEBUG
 argument_list|(
 name|ah
@@ -841,14 +864,31 @@ argument_list|,
 name|HAL_DEBUG_ANY
 argument_list|,
 literal|"%s: initial NF calibration did "
-literal|"not complete in time; noisy environment?\n"
+literal|"not complete in time; noisy environment (pass %d)?\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
-return|return
-name|AH_FALSE
-return|;
+block|}
+comment|/* 	 * Although periodic and NF calibrations shouldn't run concurrently, 	 * this was causing the radio to not be usable on the active 	 * channel if the channel was busy. 	 * 	 * Instead, now simply print a warning and continue. That way if users 	 * report "weird crap", they should get this warning. 	 */
+if|if
+condition|(
+name|i
+operator|>=
+name|MAX_CAL_CHECK
+condition|)
+block|{
+name|ath_hal_printf
+argument_list|(
+name|ah
+argument_list|,
+literal|"[ath] Warning - initial NF calibration did "
+literal|"not complete in time, noisy environment?\n"
+argument_list|)
+expr_stmt|;
+comment|/* return AH_FALSE; */
 block|}
 comment|/* Initialize list pointers */
 name|cal
@@ -1049,6 +1089,9 @@ expr_stmt|;
 return|return
 name|AH_TRUE
 return|;
+undef|#
+directive|undef
+name|MAX_CAL_CHECK
 block|}
 end_function
 
