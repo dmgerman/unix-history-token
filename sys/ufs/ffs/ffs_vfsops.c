@@ -3913,6 +3913,12 @@ name|um_rdonly
 operator|=
 name|ffs_rdonly
 expr_stmt|;
+name|ump
+operator|->
+name|um_snapgone
+operator|=
+name|ffs_snapgone
+expr_stmt|;
 name|mtx_init
 argument_list|(
 name|UFS_MTX
