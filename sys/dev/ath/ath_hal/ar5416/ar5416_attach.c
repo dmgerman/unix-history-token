@@ -519,6 +519,18 @@ name|ah_getTxCompletionRates
 operator|=
 name|ar5416GetTxCompletionRates
 expr_stmt|;
+name|ah
+operator|->
+name|ah_setupTxQueue
+operator|=
+name|ar5416SetupTxQueue
+expr_stmt|;
+name|ah
+operator|->
+name|ah_resetTxQueue
+operator|=
+name|ar5416ResetTxQueue
+expr_stmt|;
 comment|/* Receive Functions */
 name|ah
 operator|->
