@@ -4122,6 +4122,22 @@ name|val
 init|=
 literal|0
 decl_stmt|;
+name|pjdlog_prefix_set
+argument_list|(
+literal|"[%s] (%s) "
+argument_list|,
+name|res
+operator|->
+name|hr_name
+argument_list|,
+name|role2str
+argument_list|(
+name|res
+operator|->
+name|hr_role
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|proto_recv
@@ -4278,6 +4294,13 @@ argument_list|(
 name|LOG_WARNING
 argument_list|,
 literal|"Unable to send connection"
+argument_list|)
+expr_stmt|;
+name|pjdlog_prefix_set
+argument_list|(
+literal|"%s"
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 block|}
