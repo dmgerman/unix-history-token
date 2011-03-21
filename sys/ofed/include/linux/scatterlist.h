@@ -46,8 +46,7 @@ decl_stmt|;
 block|}
 name|sl_un
 union|;
-name|unsigned
-name|long
+name|dma_addr_t
 name|address
 decl_stmt|;
 name|unsigned

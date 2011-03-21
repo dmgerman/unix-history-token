@@ -1117,6 +1117,9 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|__amd64__
 if|if
 condition|(
 name|dev
@@ -1177,6 +1180,8 @@ return|return
 name|IB_RATE_10_GBPS
 return|;
 else|else
+endif|#
+directive|endif
 return|return
 name|IB_RATE_PORT_CURRENT
 return|;

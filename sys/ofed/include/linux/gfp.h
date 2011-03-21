@@ -155,10 +155,14 @@ operator|)
 return|;
 return|return
 operator|(
+operator|(
 name|void
 operator|*
 operator|)
-operator|(
+call|(
+name|uintptr_t
+call|)
+argument_list|(
 name|VM_MIN_KERNEL_ADDRESS
 operator|+
 name|IDX_TO_OFF
@@ -166,6 +170,7 @@ argument_list|(
 name|page
 operator|->
 name|pindex
+argument_list|)
 argument_list|)
 operator|)
 return|;

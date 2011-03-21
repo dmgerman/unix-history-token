@@ -5697,11 +5697,11 @@ block|{
 name|printk
 argument_list|(
 argument|KERN_ERR PFX
-literal|"%s has invalid driver data %lx\n"
+literal|"%s has invalid driver data %jx\n"
 argument_list|,
 argument|pci_name(pdev)
 argument_list|,
-argument|id->driver_data
+argument|(uintmax_t)id->driver_data
 argument_list|)
 empty_stmt|;
 name|mutex_unlock
