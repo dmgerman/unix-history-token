@@ -1478,7 +1478,6 @@ block|{
 case|case
 name|HAST_ROLE_INIT
 case|:
-comment|/* Is that valid to set, hmm? */
 case|case
 name|HAST_ROLE_PRIMARY
 case|:
