@@ -1429,13 +1429,20 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|IS_5416V2_2
+name|AR_SREV_OWL_22_OR_LATER
 argument_list|(
 name|ah
 argument_list|)
 condition|)
 block|{
 comment|/* Owl 2.1/2.0 */
+name|ath_hal_printf
+argument_list|(
+name|ah
+argument_list|,
+literal|"[ath] Enabling CLKDRV workaround for AR5416< v2.2\n"
+argument_list|)
+expr_stmt|;
 struct|struct
 name|ini
 block|{
