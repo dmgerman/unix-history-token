@@ -990,7 +990,7 @@ operator|->
 name|hr_primary_localcnt
 operator|)
 operator|||
-comment|/* Node are more or less in sync? */
+comment|/* Nodes are more or less in sync? */
 operator|(
 name|res
 operator|->
