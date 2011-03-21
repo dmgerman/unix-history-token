@@ -1558,6 +1558,30 @@ name|ii
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|str
+operator|=
+name|nv_get_string
+argument_list|(
+name|nv
+argument_list|,
+literal|"sourceaddr%u"
+argument_list|,
+name|ii
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|str
+operator|!=
+name|NULL
+condition|)
+name|printf
+argument_list|(
+literal|"  sourceaddr: %s\n"
+argument_list|,
+name|str
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"  replication: %s\n"
@@ -2246,6 +2270,8 @@ if|if
 condition|(
 name|proto_client
 argument_list|(
+name|NULL
+argument_list|,
 name|cfg
 operator|->
 name|hc_controladdr
