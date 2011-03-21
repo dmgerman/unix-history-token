@@ -957,6 +957,11 @@ name|hr_remoteaddr
 argument_list|)
 expr_stmt|;
 block|}
+name|nv_free
+argument_list|(
+name|nvout
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 name|EX_CONFIG
