@@ -2032,7 +2032,7 @@ name|res
 operator|->
 name|hr_primary_localcnt
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 name|res
 operator|->
@@ -4912,7 +4912,13 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* This is first write, initialize resuid. */
+comment|/* 				 * This is first write, initialize localcnt and 				 * resuid. 				 */
+name|res
+operator|->
+name|hr_primary_localcnt
+operator|=
+literal|1
+expr_stmt|;
 operator|(
 name|void
 operator|)
