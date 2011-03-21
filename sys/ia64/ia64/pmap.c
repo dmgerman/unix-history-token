@@ -9799,7 +9799,7 @@ argument_list|)
 expr_stmt|;
 name|res
 operator|=
-name|ia64_call_pal_stacked_physical
+name|ia64_pal_physical
 argument_list|(
 name|PAL_VM_TR_READ
 argument_list|,

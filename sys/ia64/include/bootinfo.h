@@ -98,6 +98,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|bootinfo
+modifier|*
 name|bootinfo
 decl_stmt|;
 end_decl_stmt

@@ -537,6 +537,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|bootinfo
+modifier|*
 name|bootinfo
 decl_stmt|;
 end_decl_stmt
@@ -3075,7 +3076,6 @@ comment|/* 	 * TODO: Get critical system information (if possible, from the 	 * 
 comment|/* 	 * pa_bootinfo is the physical address of the bootinfo block as 	 * passed to us by the loader and set in locore.s. 	 */
 name|bootinfo
 operator|=
-operator|*
 operator|(
 expr|struct
 name|bootinfo
@@ -3091,13 +3091,13 @@ expr_stmt|;
 if|if
 condition|(
 name|bootinfo
-operator|.
+operator|->
 name|bi_magic
 operator|!=
 name|BOOTINFO_MAGIC
 operator|||
 name|bootinfo
-operator|.
+operator|->
 name|bi_version
 operator|!=
 literal|1
@@ -3105,17 +3105,17 @@ condition|)
 block|{
 name|bzero
 argument_list|(
-operator|&
 name|bootinfo
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|bootinfo
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|bootinfo
-operator|.
+operator|->
 name|bi_kernend
 operator|=
 operator|(
@@ -3195,7 +3195,7 @@ expr_stmt|;
 if|if
 condition|(
 name|bootinfo
-operator|.
+operator|->
 name|bi_modulep
 condition|)
 name|preload_metadata
@@ -3204,7 +3204,7 @@ operator|(
 name|caddr_t
 operator|)
 name|bootinfo
-operator|.
+operator|->
 name|bi_modulep
 expr_stmt|;
 else|else
@@ -3219,7 +3219,7 @@ operator|==
 literal|0
 operator|&&
 name|bootinfo
-operator|.
+operator|->
 name|bi_envp
 condition|)
 name|kern_envp
@@ -3228,7 +3228,7 @@ operator|(
 name|caddr_t
 operator|)
 name|bootinfo
-operator|.
+operator|->
 name|bi_envp
 expr_stmt|;
 else|else
@@ -3240,7 +3240,7 @@ comment|/* 	 * Look at arguments passed to us and compute boothowto. 	 */
 name|boothowto
 operator|=
 name|bootinfo
-operator|.
+operator|->
 name|bi_boothowto
 expr_stmt|;
 if|if
@@ -3267,13 +3267,13 @@ name|DDB
 name|ksym_start
 operator|=
 name|bootinfo
-operator|.
+operator|->
 name|bi_symtab
 expr_stmt|;
 name|ksym_end
 operator|=
 name|bootinfo
-operator|.
+operator|->
 name|bi_esymtab
 expr_stmt|;
 name|kernend
@@ -3304,7 +3304,7 @@ comment|/* But if the bootstrap tells us otherwise, believe it! */
 if|if
 condition|(
 name|bootinfo
-operator|.
+operator|->
 name|bi_kernend
 condition|)
 name|kernend
@@ -3312,7 +3312,7 @@ operator|=
 name|round_page
 argument_list|(
 name|bootinfo
-operator|.
+operator|->
 name|bi_kernend
 argument_list|)
 expr_stmt|;
@@ -3408,7 +3408,7 @@ expr_stmt|;
 name|efi_boot_minimal
 argument_list|(
 name|bootinfo
-operator|.
+operator|->
 name|bi_systab
 argument_list|)
 expr_stmt|;
@@ -3435,7 +3435,7 @@ name|fpswa_iface
 operator|=
 operator|(
 name|bootinfo
-operator|.
+operator|->
 name|bi_fpswa
 operator|==
 literal|0
@@ -3451,7 +3451,7 @@ operator|)
 name|IA64_PHYS_TO_RR7
 argument_list|(
 name|bootinfo
-operator|.
+operator|->
 name|bi_fpswa
 argument_list|)
 expr_stmt|;
@@ -3985,7 +3985,7 @@ block|{
 return|return
 operator|(
 name|bootinfo
-operator|.
+operator|->
 name|bi_hcdp
 operator|)
 return|;
