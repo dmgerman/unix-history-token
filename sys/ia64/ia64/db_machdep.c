@@ -2269,10 +2269,7 @@ if|if
 condition|(
 name|bsp
 operator|>=
-name|IA64_RR_BASE
-argument_list|(
-literal|5
-argument_list|)
+name|VM_MAXUSER_ADDRESS
 condition|)
 block|{
 for|for
@@ -2378,10 +2375,7 @@ if|if
 condition|(
 name|sp
 operator|<
-name|IA64_RR_BASE
-argument_list|(
-literal|5
-argument_list|)
+name|VM_MAXUSER_ADDRESS
 condition|)
 break|break;
 name|tf
@@ -2415,10 +2409,7 @@ name|tf_special
 operator|.
 name|iip
 operator|<
-name|IA64_RR_BASE
-argument_list|(
-literal|5
-argument_list|)
+name|VM_MAXUSER_ADDRESS
 condition|)
 break|break;
 comment|/* XXX ask if we should unwind across the trapframe. */

@@ -45,6 +45,12 @@ directive|include
 file|<machine/pte.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/vmparam.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -146,10 +152,9 @@ comment|/* list of mappings in pmap */
 name|uint32_t
 name|pm_rid
 index|[
-literal|5
+name|IA64_VM_MINKERN_REGION
 index|]
 decl_stmt|;
-comment|/* base RID for pmap */
 name|struct
 name|pmap_statistics
 name|pm_stats

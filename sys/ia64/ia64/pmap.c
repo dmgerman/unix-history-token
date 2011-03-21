@@ -124,7 +124,7 @@ comment|/*  *	Manages physical address maps.  *  *	In addition to hardware addre
 end_comment
 
 begin_comment
-comment|/*  * Following the Linux model, region IDs are allocated in groups of  * eight so that a single region ID can be used for as many RRs as we  * want by encoding the RR number into the low bits of the ID.  *  * We reserve region ID 0 for the kernel and allocate the remaining  * IDs for user pmaps.  *  * Region 0..4  *	User virtually mapped  *  * Region 5  *	Kernel virtually mapped  *  * Region 6  *	Kernel physically mapped uncacheable  *  * Region 7  *	Kernel physically mapped cacheable  */
+comment|/*  * Following the Linux model, region IDs are allocated in groups of  * eight so that a single region ID can be used for as many RRs as we  * want by encoding the RR number into the low bits of the ID.  *  * We reserve region ID 0 for the kernel and allocate the remaining  * IDs for user pmaps.  *  * Region 0-3:	User virtually mapped  * Region 4:	PBVM and special mappings  * Region 5:	Kernel virtual memory  * Region 6:	Direct-mapped uncacheable  * Region 7:	Direct-mapped cacheable  */
 end_comment
 
 begin_comment
@@ -1377,7 +1377,7 @@ argument_list|,
 name|pmap_ptc_e_stride2
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Setup RIDs. RIDs 0..7 are reserved for the kernel. 	 * 	 * We currently need at least 19 bits in the RID because PID_MAX 	 * can only be encoded in 17 bits and we need RIDs for 5 regions 	 * per process. With PID_MAX equalling 99999 this means that we 	 * need to be able to encode 499995 (=5*PID_MAX). 	 * The Itanium processor only has 18 bits and the architected 	 * minimum is exactly that. So, we cannot use a PID based scheme 	 * in those cases. Enter pmap_ridmap... 	 * We should avoid the map when running on a processor that has 	 * implemented enough bits. This means that we should pass the 	 * process/thread ID to pmap. This we currently don't do, so we 	 * use the map anyway. However, we don't want to allocate a map 	 * that is large enough to cover the range dictated by the number 	 * of bits in the RID, because that may result in a RID map of 	 * 2MB in size for a 24-bit RID. A 64KB map is enough. 	 * The bottomline: we create a 32KB map when the processor only 	 * implements 18 bits (or when we can't figure it out). Otherwise 	 * we create a 64KB map. 	 */
+comment|/* 	 * Setup RIDs. RIDs 0..7 are reserved for the kernel. 	 * 	 * We currently need at least 19 bits in the RID because PID_MAX 	 * can only be encoded in 17 bits and we need RIDs for 4 regions 	 * per process. With PID_MAX equalling 99999 this means that we 	 * need to be able to encode 399996 (=4*PID_MAX). 	 * The Itanium processor only has 18 bits and the architected 	 * minimum is exactly that. So, we cannot use a PID based scheme 	 * in those cases. Enter pmap_ridmap... 	 * We should avoid the map when running on a processor that has 	 * implemented enough bits. This means that we should pass the 	 * process/thread ID to pmap. This we currently don't do, so we 	 * use the map anyway. However, we don't want to allocate a map 	 * that is large enough to cover the range dictated by the number 	 * of bits in the RID, because that may result in a RID map of 	 * 2MB in size for a 24-bit RID. A 64KB map is enough. 	 * The bottomline: we create a 32KB map when the processor only 	 * implements 18 bits (or when we can't figure it out). Otherwise 	 * we create a 64KB map. 	 */
 name|res
 operator|=
 name|ia64_call_pal_static
@@ -1527,8 +1527,6 @@ expr_stmt|;
 name|kernel_vm_end
 operator|=
 name|VM_MIN_KERNEL_ADDRESS
-operator|-
-name|VM_GATEWAY_SIZE
 expr_stmt|;
 for|for
 control|(
@@ -1898,7 +1896,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|5
+name|IA64_VM_MINKERN_REGION
 condition|;
 name|i
 operator|++
@@ -1929,7 +1927,7 @@ argument_list|,
 name|kernel_pmap
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Region 5 is mapped via the vhpt. 	 */
+comment|/* Region 5 is mapped via the VHPT. */
 name|ia64_set_rr
 argument_list|(
 name|IA64_RR_BASE
@@ -2759,7 +2757,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|5
+name|IA64_VM_MINKERN_REGION
 condition|;
 name|i
 operator|++
@@ -2830,7 +2828,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|5
+name|IA64_VM_MINKERN_REGION
 condition|;
 name|i
 operator|++
@@ -5167,10 +5165,7 @@ name|KASSERT
 argument_list|(
 name|va
 operator|>=
-name|IA64_RR_BASE
-argument_list|(
-literal|5
-argument_list|)
+name|VM_MAXUSER_ADDRESS
 argument_list|,
 operator|(
 literal|"Must be kernel VA"
@@ -5214,7 +5209,7 @@ name|va
 operator|<
 name|gwpage
 operator|+
-name|VM_GATEWAY_SIZE
+name|PAGE_SIZE
 condition|)
 return|return
 operator|(
@@ -9293,7 +9288,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|5
+name|IA64_VM_MINKERN_REGION
 condition|;
 name|i
 operator|++
@@ -9333,7 +9328,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|5
+name|IA64_VM_MINKERN_REGION
 condition|;
 name|i
 operator|++

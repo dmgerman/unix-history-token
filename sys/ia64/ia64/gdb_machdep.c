@@ -971,7 +971,7 @@ literal|0
 comment|/* slot is unsigned. No need to test for negative values. */
 block|if (slot>= (kdb_frame->tf_special.ndirty>> 3)) { 		return (-1); 	}
 comment|/* 	 * If the trapframe describes a kernel entry, bspstore holds 	 * the address of the user backing store. Calculate the right 	 * kernel stack address. See also ptrace_machdep(). 	 */
-block|bspstore = kdb_frame->tf_special.bspstore; 	kstack = (bspstore>= IA64_RR_BASE(5)) ? (uint64_t*)bspstore : 	    (uint64_t*)(kdb_thread->td_kstack + (bspstore& 0x1ffUL)); 	gdb_tx_begin('\0'); 	gdb_tx_mem((void*)(kstack + slot), 8); 	gdb_tx_end(); 	return (1);
+block|bspstore = kdb_frame->tf_special.bspstore; 	kstack = (bspstore>= VM_MAXUSER_ADDRESS) ? (uint64_t*)bspstore : 	    (uint64_t*)(kdb_thread->td_kstack + (bspstore& 0x1ffUL)); 	gdb_tx_begin('\0'); 	gdb_tx_mem((void*)(kstack + slot), 8); 	gdb_tx_end(); 	return (1);
 endif|#
 directive|endif
 block|}
