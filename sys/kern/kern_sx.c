@@ -756,7 +756,7 @@ name|sargs
 init|=
 name|arg
 decl_stmt|;
-name|sx_init
+name|sx_init_flags
 argument_list|(
 name|sargs
 operator|->
@@ -765,6 +765,10 @@ argument_list|,
 name|sargs
 operator|->
 name|sa_desc
+argument_list|,
+name|sargs
+operator|->
+name|sa_flags
 argument_list|)
 expr_stmt|;
 block|}

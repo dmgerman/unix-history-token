@@ -227,6 +227,17 @@ begin_comment
 comment|/* pseudo teletype master device */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DTYPE_DEV
+value|11
+end_define
+
+begin_comment
+comment|/* Device specific fd type */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef

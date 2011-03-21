@@ -287,7 +287,6 @@ comment|/* The boot-time adjusted value for cache line alignment. */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|uma_align_cache
 init|=

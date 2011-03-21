@@ -400,7 +400,7 @@ begin_define
 define|#
 directive|define
 name|SYSCTL_HANDLER_ARGS
-value|struct sysctl_oid *oidp, void *arg1, int arg2, \ 	struct sysctl_req *req
+value|struct sysctl_oid *oidp, void *arg1,	\ 	intptr_t arg2, struct sysctl_req *req
 end_define
 
 begin_comment
@@ -580,7 +580,7 @@ name|void
 modifier|*
 name|oid_arg1
 decl_stmt|;
-name|int
+name|intptr_t
 name|oid_arg2
 decl_stmt|;
 specifier|const
@@ -3596,7 +3596,7 @@ name|void
 modifier|*
 name|arg1
 parameter_list|,
-name|int
+name|intptr_t
 name|arg2
 parameter_list|,
 name|int
@@ -3617,6 +3617,29 @@ specifier|const
 name|char
 modifier|*
 name|descr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sysctl_remove_name
+parameter_list|(
+name|struct
+name|sysctl_oid
+modifier|*
+name|parent
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|del
+parameter_list|,
+name|int
+name|recurse
 parameter_list|)
 function_decl|;
 end_function_decl

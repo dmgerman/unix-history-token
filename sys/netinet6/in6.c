@@ -10208,6 +10208,9 @@ case|:
 comment|/* ditto */
 endif|#
 directive|endif
+case|case
+name|IFT_INFINIBAND
+case|:
 return|return
 operator|(
 literal|64

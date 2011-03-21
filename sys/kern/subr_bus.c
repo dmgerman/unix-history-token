@@ -4353,7 +4353,6 @@ comment|/**  * @brief Add a device driver to a device class  *  * Add a device d
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|devclass_add_driver
 parameter_list|(
@@ -4738,7 +4737,6 @@ comment|/**  * @brief Delete a device driver from a device class  *  * Delete a 
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|devclass_delete_driver
 parameter_list|(

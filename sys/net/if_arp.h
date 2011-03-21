@@ -52,6 +52,11 @@ directive|define
 name|ARPHRD_IEEE1394
 value|24
 comment|/* firewire hardware format */
+define|#
+directive|define
+name|ARPHRD_INFINIBAND
+value|32
+comment|/* infiniband hardware format */
 name|u_short
 name|ar_pro
 decl_stmt|;

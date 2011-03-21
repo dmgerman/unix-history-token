@@ -19967,8 +19967,11 @@ argument_list|(
 name|numbuf
 argument_list|)
 argument_list|,
-literal|"%d"
+literal|"%jd"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|arg2
 argument_list|)
 expr_stmt|;

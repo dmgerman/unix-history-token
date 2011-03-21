@@ -1516,6 +1516,11 @@ decl_stmt|,
 modifier|*
 name|warning
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|objprefix
+decl_stmt|;
 name|int
 name|compile
 decl_stmt|,
@@ -1563,7 +1568,7 @@ argument_list|)
 expr_stmt|;
 name|next
 label|:
-comment|/* 	 * include "filename" 	 * filename    [ standard | mandatory | optional ] 	 *	[ dev* [ | dev* ... ] | profiling-routine ] [ no-obj ] 	 *	[ compile-with "compile rule" [no-implicit-rule] ] 	 *      [ dependency "dependency-list"] [ before-depend ] 	 *	[ clean "file-list"] [ warning "text warning" ] 	 */
+comment|/* 	 * include "filename" 	 * filename    [ standard | mandatory | optional ] 	 *	[ dev* [ | dev* ... ] | profiling-routine ] [ no-obj ] 	 *	[ compile-with "compile rule" [no-implicit-rule] ] 	 *      [ dependency "dependency-list"] [ before-depend ] 	 *	[ clean "file-list"] [ warning "text warning" ] 	 *	[ obj-prefix "file prefix"] 	 */
 name|wd
 operator|=
 name|get_word
@@ -1822,6 +1827,10 @@ expr_stmt|;
 name|filetype
 operator|=
 name|NORMAL
+expr_stmt|;
+name|objprefix
+operator|=
+literal|""
 expr_stmt|;
 if|if
 condition|(
@@ -2248,6 +2257,56 @@ goto|goto
 name|nextparam
 goto|;
 block|}
+if|if
+condition|(
+name|eq
+argument_list|(
+name|wd
+argument_list|,
+literal|"obj-prefix"
+argument_list|)
+condition|)
+block|{
+name|next_quoted_word
+argument_list|(
+name|fp
+argument_list|,
+name|wd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wd
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: %s missing object prefix string.\n"
+argument_list|,
+name|fname
+argument_list|,
+name|this
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|objprefix
+operator|=
+name|ns
+argument_list|(
+name|wd
+argument_list|)
+expr_stmt|;
+goto|goto
+name|nextparam
+goto|;
+block|}
 name|nreqs
 operator|++
 expr_stmt|;
@@ -2577,6 +2636,12 @@ operator|->
 name|f_warn
 operator|=
 name|warning
+expr_stmt|;
+name|tp
+operator|->
+name|f_objprefix
+operator|=
+name|objprefix
 expr_stmt|;
 goto|goto
 name|next
@@ -3036,6 +3101,15 @@ name|cp
 operator|=
 literal|'o'
 expr_stmt|;
+name|len
+operator|+=
+name|strlen
+argument_list|(
+name|tp
+operator|->
+name|f_objprefix
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|len
@@ -3061,7 +3135,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%s "
+literal|"%s%s "
+argument_list|,
+name|tp
+operator|->
+name|f_objprefix
 argument_list|,
 name|sp
 argument_list|)
@@ -3489,7 +3567,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%s: %s\n"
+literal|"%s%s: %s\n"
+argument_list|,
+name|ftp
+operator|->
+name|f_objprefix
 argument_list|,
 name|np
 argument_list|,
@@ -3503,7 +3585,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%s: \n"
+literal|"%s%s: \n"
+argument_list|,
+name|ftp
+operator|->
+name|f_objprefix
 argument_list|,
 name|np
 argument_list|)
@@ -3527,7 +3613,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%so:\n\t-cp $S/%so .\n\n"
+literal|"%s%so:\n\t-cp $S/%so .\n\n"
+argument_list|,
+name|ftp
+operator|->
+name|f_objprefix
 argument_list|,
 name|tail
 argument_list|(
@@ -3550,7 +3640,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%sln: $S/%s%c %s\n"
+literal|"%s%sln: $S/%s%c %s\n"
+argument_list|,
+name|ftp
+operator|->
+name|f_objprefix
 argument_list|,
 name|tail
 argument_list|(
@@ -3577,7 +3671,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%so: $S/%s%c %s\n"
+literal|"%s%so: $S/%s%c %s\n"
+argument_list|,
+name|ftp
+operator|->
+name|f_objprefix
 argument_list|,
 name|tail
 argument_list|(
@@ -3600,7 +3698,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%sln: $S/%s%c\n"
+literal|"%s%sln: $S/%s%c\n"
+argument_list|,
+name|ftp
+operator|->
+name|f_objprefix
 argument_list|,
 name|tail
 argument_list|(
@@ -3623,7 +3725,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%so: $S/%s%c\n"
+literal|"%s%so: $S/%s%c\n"
+argument_list|,
+name|ftp
+operator|->
+name|f_objprefix
 argument_list|,
 name|tail
 argument_list|(
@@ -3737,6 +3843,27 @@ name|cp
 operator|=
 name|och
 expr_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|ftp
+operator|->
+name|f_objprefix
+argument_list|)
+condition|)
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"\t%s $S/%s\n\n"
+argument_list|,
+name|compilewith
+argument_list|,
+name|np
+argument_list|)
+expr_stmt|;
+else|else
 name|fprintf
 argument_list|(
 name|f

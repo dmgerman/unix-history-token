@@ -105,6 +105,12 @@ modifier|*
 name|f_warn
 decl_stmt|;
 comment|/* warning message */
+specifier|const
+name|char
+modifier|*
+name|f_objprefix
+decl_stmt|;
+comment|/* prefix string for object name */
 block|}
 struct|;
 end_struct

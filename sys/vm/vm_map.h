@@ -1332,6 +1332,17 @@ begin_comment
 comment|/* region may have holes */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VM_MAP_WIRE_WRITE
+value|4
+end_define
+
+begin_comment
+comment|/* Validate writable. */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef

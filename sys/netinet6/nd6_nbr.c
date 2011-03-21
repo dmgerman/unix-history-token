@@ -4979,6 +4979,9 @@ case|:
 endif|#
 directive|endif
 case|case
+name|IFT_INFINIBAND
+case|:
+case|case
 name|IFT_BRIDGE
 case|:
 case|case
@@ -6312,6 +6315,9 @@ name|IFT_IEEE80211
 case|:
 endif|#
 directive|endif
+case|case
+name|IFT_INFINIBAND
+case|:
 name|in6
 operator|=
 name|ia

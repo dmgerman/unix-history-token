@@ -7965,6 +7965,9 @@ case|:
 endif|#
 directive|endif
 case|case
+name|IFT_INFINIBAND
+case|:
+case|case
 name|IFT_GIF
 case|:
 comment|/* XXX need more cases? */

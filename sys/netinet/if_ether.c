@@ -2254,6 +2254,15 @@ name|ar_hrd
 argument_list|)
 operator|!=
 name|ARPHRD_IEEE1394
+operator|&&
+name|ntohs
+argument_list|(
+name|ar
+operator|->
+name|ar_hrd
+argument_list|)
+operator|!=
+name|ARPHRD_INFINIBAND
 condition|)
 block|{
 name|log
