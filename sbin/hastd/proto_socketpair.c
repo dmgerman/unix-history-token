@@ -142,7 +142,12 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|addr
+name|srcaddr
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|dstaddr
 parameter_list|,
 name|void
 modifier|*
@@ -162,7 +167,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|addr
+name|dstaddr
 argument_list|,
 literal|"socketpair://"
 argument_list|)
@@ -175,6 +180,13 @@ operator|-
 literal|1
 operator|)
 return|;
+name|PJDLOG_ASSERT
+argument_list|(
+name|srcaddr
+operator|==
+name|NULL
+argument_list|)
+expr_stmt|;
 name|spctx
 operator|=
 name|malloc

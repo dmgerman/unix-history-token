@@ -367,7 +367,12 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|addr
+name|srcaddr
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|dstaddr
 parameter_list|,
 name|struct
 name|proto_conn
@@ -443,7 +448,9 @@ name|proto
 operator|->
 name|hp_client
 argument_list|(
-name|addr
+name|srcaddr
+argument_list|,
+name|dstaddr
 argument_list|,
 operator|&
 name|ctx
@@ -473,14 +480,14 @@ name|proto
 operator|->
 name|hp_server
 argument_list|(
-name|addr
+name|dstaddr
 argument_list|,
 operator|&
 name|ctx
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * ret == 0  - success 		 * ret == -1 - addr is not for this protocol 		 * ret> 0   - right protocol, but an error occured 		 */
+comment|/* 		 * ret == 0  - success 		 * ret == -1 - dstaddr is not for this protocol 		 * ret> 0   - right protocol, but an error occured 		 */
 if|if
 condition|(
 name|ret
@@ -595,7 +602,12 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|addr
+name|srcaddr
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|dstaddr
 parameter_list|,
 name|struct
 name|proto_conn
@@ -608,7 +620,9 @@ return|return
 operator|(
 name|proto_common_setup
 argument_list|(
-name|addr
+name|srcaddr
+argument_list|,
+name|dstaddr
 argument_list|,
 name|connp
 argument_list|,
@@ -858,6 +872,8 @@ return|return
 operator|(
 name|proto_common_setup
 argument_list|(
+name|NULL
+argument_list|,
 name|addr
 argument_list|,
 name|connp

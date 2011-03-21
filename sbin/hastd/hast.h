@@ -532,6 +532,13 @@ index|[
 name|HAST_ADDRSIZE
 index|]
 decl_stmt|;
+comment|/* Local address to bind to for outgoing connections. */
+name|char
+name|hr_sourceaddr
+index|[
+name|HAST_ADDRSIZE
+index|]
+decl_stmt|;
 comment|/* Connection for incoming data. */
 name|struct
 name|proto_conn

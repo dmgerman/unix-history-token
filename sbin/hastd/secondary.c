@@ -1290,6 +1290,8 @@ if|if
 condition|(
 name|proto_client
 argument_list|(
+name|NULL
+argument_list|,
 literal|"socketpair://"
 argument_list|,
 operator|&
@@ -1325,6 +1327,8 @@ if|if
 condition|(
 name|proto_client
 argument_list|(
+name|NULL
+argument_list|,
 literal|"socketpair://"
 argument_list|,
 operator|&
@@ -1360,6 +1364,8 @@ if|if
 condition|(
 name|proto_client
 argument_list|(
+name|NULL
+argument_list|,
 literal|"socketpair://"
 argument_list|,
 operator|&

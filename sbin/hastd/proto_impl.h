@@ -57,6 +57,10 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
 name|void
 modifier|*
 modifier|*
