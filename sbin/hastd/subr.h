@@ -117,7 +117,8 @@ begin_function_decl
 name|int
 name|drop_privs
 parameter_list|(
-name|void
+name|bool
+name|usecapsicum
 parameter_list|)
 function_decl|;
 end_function_decl

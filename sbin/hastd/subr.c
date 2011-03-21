@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -63,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdbool.h>
 end_include
 
 begin_include
@@ -541,7 +553,8 @@ begin_function
 name|int
 name|drop_privs
 parameter_list|(
-name|void
+name|bool
+name|usecapsicum
 parameter_list|)
 block|{
 name|struct
@@ -569,6 +582,40 @@ index|[
 literal|1
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|usecapsicum
+condition|)
+block|{
+if|if
+condition|(
+name|cap_enter
+argument_list|()
+operator|==
+literal|0
+condition|)
+block|{
+name|pjdlog_debug
+argument_list|(
+literal|1
+argument_list|,
+literal|"Privileges successfully dropped using capsicum."
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+name|pjdlog_errno
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Unable to sandbox using capsicum"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * According to getpwnam(3) we have to clear errno before calling the 	 * function to be able to distinguish between an error and missing 	 * entry (with is not treated as error by getpwnam(3)). 	 */
 name|errno
 operator|=
@@ -925,6 +972,13 @@ operator|==
 name|pw
 operator|->
 name|pw_gid
+argument_list|)
+expr_stmt|;
+name|pjdlog_debug
+argument_list|(
+literal|1
+argument_list|,
+literal|"Privileges successfully dropped using chroot+setgid+setuid."
 argument_list|)
 expr_stmt|;
 return|return
