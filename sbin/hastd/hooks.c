@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"subr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"synch.h"
 end_include
 
@@ -699,13 +705,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|strlcat
+name|snprlcat
 argument_list|(
 name|hp
 operator|->
 name|hp_comm
-argument_list|,
-literal|" "
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -713,28 +717,13 @@ name|hp
 operator|->
 name|hp_comm
 argument_list|)
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strlcat
-argument_list|(
-name|hp
-operator|->
-name|hp_comm
+argument_list|,
+literal|" %s"
 argument_list|,
 name|args
 index|[
 name|ii
 index|]
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|hp
-operator|->
-name|hp_comm
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
