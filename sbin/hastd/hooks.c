@@ -1194,7 +1194,7 @@ argument_list|)
 expr_stmt|;
 name|pjdlog_debug
 argument_list|(
-literal|1
+literal|2
 argument_list|,
 literal|"Checking hooks."
 argument_list|)
