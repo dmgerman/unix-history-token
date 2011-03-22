@@ -92,7 +92,7 @@ name|int
 name|pc_magic
 decl_stmt|;
 name|struct
-name|hast_proto
+name|proto
 modifier|*
 name|pc_proto
 decl_stmt|;
@@ -124,7 +124,7 @@ specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|hast_proto
+argument|proto
 argument_list|)
 name|protos
 operator|=
@@ -140,7 +140,7 @@ name|void
 name|proto_register
 parameter_list|(
 name|struct
-name|hast_proto
+name|proto
 modifier|*
 name|proto
 parameter_list|,
@@ -166,7 +166,7 @@ name|protos
 argument_list|,
 name|proto
 argument_list|,
-name|hp_next
+name|prt_next
 argument_list|)
 expr_stmt|;
 else|else
@@ -188,7 +188,7 @@ name|protos
 argument_list|,
 name|proto
 argument_list|,
-name|hp_next
+name|prt_next
 argument_list|)
 expr_stmt|;
 block|}
@@ -203,7 +203,7 @@ modifier|*
 name|proto_alloc
 parameter_list|(
 name|struct
-name|hast_proto
+name|proto
 modifier|*
 name|proto
 parameter_list|,
@@ -385,7 +385,7 @@ name|side
 parameter_list|)
 block|{
 name|struct
-name|hast_proto
+name|proto
 modifier|*
 name|proto
 decl_stmt|;
@@ -418,7 +418,7 @@ argument|proto
 argument_list|,
 argument|&protos
 argument_list|,
-argument|hp_next
+argument|prt_next
 argument_list|)
 block|{
 if|if
@@ -432,7 +432,7 @@ if|if
 condition|(
 name|proto
 operator|->
-name|hp_client
+name|prt_client
 operator|==
 name|NULL
 condition|)
@@ -446,7 +446,7 @@ name|ret
 operator|=
 name|proto
 operator|->
-name|hp_client
+name|prt_client
 argument_list|(
 name|srcaddr
 argument_list|,
@@ -464,7 +464,7 @@ if|if
 condition|(
 name|proto
 operator|->
-name|hp_server
+name|prt_server
 operator|==
 name|NULL
 condition|)
@@ -478,7 +478,7 @@ name|ret
 operator|=
 name|proto
 operator|->
-name|hp_server
+name|prt_server
 argument_list|(
 name|dstaddr
 argument_list|,
@@ -554,13 +554,13 @@ if|if
 condition|(
 name|proto
 operator|->
-name|hp_close
+name|prt_close
 operator|!=
 name|NULL
 condition|)
 name|proto
 operator|->
-name|hp_close
+name|prt_close
 argument_list|(
 name|ctx
 argument_list|)
@@ -689,7 +689,7 @@ name|conn
 operator|->
 name|pc_proto
 operator|->
-name|hp_connect
+name|prt_connect
 operator|!=
 name|NULL
 argument_list|)
@@ -708,7 +708,7 @@ name|conn
 operator|->
 name|pc_proto
 operator|->
-name|hp_connect
+name|prt_connect
 argument_list|(
 name|conn
 operator|->
@@ -799,7 +799,7 @@ name|conn
 operator|->
 name|pc_proto
 operator|->
-name|hp_connect_wait
+name|prt_connect_wait
 operator|!=
 name|NULL
 argument_list|)
@@ -817,7 +817,7 @@ name|conn
 operator|->
 name|pc_proto
 operator|->
-name|hp_connect_wait
+name|prt_connect_wait
 argument_list|(
 name|conn
 operator|->
@@ -949,7 +949,7 @@ name|conn
 operator|->
 name|pc_proto
 operator|->
-name|hp_accept
+name|prt_accept
 operator|!=
 name|NULL
 argument_list|)
@@ -983,7 +983,7 @@ name|conn
 operator|->
 name|pc_proto
 operator|->
-name|hp_accept
+name|prt_accept
 argument_list|(
 name|conn
 operator|->
@@ -1084,7 +1084,7 @@ name|conn
 operator|->
 name|pc_proto
 operator|->
-name|hp_send
+name|prt_send
 operator|!=
 name|NULL
 argument_list|)
@@ -1095,7 +1095,7 @@ name|conn
 operator|->
 name|pc_proto
 operator|->
-name|hp_send
+name|prt_send
 argument_list|(
 name|conn
 operator|->
@@ -1187,7 +1187,7 @@ name|conn
 operator|->
 name|pc_proto
 operator|->
-name|hp_recv
+name|prt_recv
 operator|!=
 name|NULL
 argument_list|)
@@ -1198,7 +1198,7 @@ name|conn
 operator|->
 name|pc_proto
 operator|->
-name|hp_recv
+name|prt_recv
 argument_list|(
 name|conn
 operator|->
@@ -1294,7 +1294,7 @@ name|conn
 operator|->
 name|pc_proto
 operator|->
-name|hp_send
+name|prt_send
 operator|!=
 name|NULL
 argument_list|)
@@ -1344,7 +1344,7 @@ name|mconn
 operator|->
 name|pc_proto
 operator|->
-name|hp_name
+name|prt_name
 expr_stmt|;
 name|PJDLOG_ASSERT
 argument_list|(
@@ -1359,7 +1359,7 @@ name|conn
 operator|->
 name|pc_proto
 operator|->
-name|hp_send
+name|prt_send
 argument_list|(
 name|conn
 operator|->
@@ -1435,7 +1435,7 @@ literal|128
 index|]
 decl_stmt|;
 name|struct
-name|hast_proto
+name|proto
 modifier|*
 name|proto
 decl_stmt|;
@@ -1480,7 +1480,7 @@ name|conn
 operator|->
 name|pc_proto
 operator|->
-name|hp_recv
+name|prt_recv
 operator|!=
 name|NULL
 argument_list|)
@@ -1508,7 +1508,7 @@ name|conn
 operator|->
 name|pc_proto
 operator|->
-name|hp_recv
+name|prt_recv
 argument_list|(
 name|conn
 operator|->
@@ -1558,7 +1558,7 @@ argument|proto
 argument_list|,
 argument|&protos
 argument_list|,
-argument|hp_next
+argument|prt_next
 argument_list|)
 block|{
 if|if
@@ -1567,7 +1567,7 @@ name|strcmp
 argument_list|(
 name|proto
 operator|->
-name|hp_name
+name|prt_name
 argument_list|,
 name|protoname
 argument_list|)
@@ -1625,7 +1625,7 @@ name|newconn
 operator|->
 name|pc_proto
 operator|->
-name|hp_wrap
+name|prt_wrap
 operator|!=
 name|NULL
 argument_list|)
@@ -1636,7 +1636,7 @@ name|newconn
 operator|->
 name|pc_proto
 operator|->
-name|hp_wrap
+name|prt_wrap
 argument_list|(
 name|fd
 argument_list|,
@@ -1726,7 +1726,7 @@ name|conn
 operator|->
 name|pc_proto
 operator|->
-name|hp_descriptor
+name|prt_descriptor
 operator|!=
 name|NULL
 argument_list|)
@@ -1737,7 +1737,7 @@ name|conn
 operator|->
 name|pc_proto
 operator|->
-name|hp_descriptor
+name|prt_descriptor
 argument_list|(
 name|conn
 operator|->
@@ -1795,7 +1795,7 @@ name|conn
 operator|->
 name|pc_proto
 operator|->
-name|hp_address_match
+name|prt_address_match
 operator|!=
 name|NULL
 argument_list|)
@@ -1806,7 +1806,7 @@ name|conn
 operator|->
 name|pc_proto
 operator|->
-name|hp_address_match
+name|prt_address_match
 argument_list|(
 name|conn
 operator|->
@@ -1868,7 +1868,7 @@ name|conn
 operator|->
 name|pc_proto
 operator|->
-name|hp_local_address
+name|prt_local_address
 operator|!=
 name|NULL
 argument_list|)
@@ -1877,7 +1877,7 @@ name|conn
 operator|->
 name|pc_proto
 operator|->
-name|hp_local_address
+name|prt_local_address
 argument_list|(
 name|conn
 operator|->
@@ -1940,7 +1940,7 @@ name|conn
 operator|->
 name|pc_proto
 operator|->
-name|hp_remote_address
+name|prt_remote_address
 operator|!=
 name|NULL
 argument_list|)
@@ -1949,7 +1949,7 @@ name|conn
 operator|->
 name|pc_proto
 operator|->
-name|hp_remote_address
+name|prt_remote_address
 argument_list|(
 name|conn
 operator|->
@@ -2143,7 +2143,7 @@ name|conn
 operator|->
 name|pc_proto
 operator|->
-name|hp_close
+name|prt_close
 operator|!=
 name|NULL
 argument_list|)
@@ -2152,7 +2152,7 @@ name|conn
 operator|->
 name|pc_proto
 operator|->
-name|hp_close
+name|prt_close
 argument_list|(
 name|conn
 operator|->

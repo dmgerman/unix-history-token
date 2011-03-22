@@ -264,13 +264,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|HASTD_PORT
-value|8457
-end_define
-
-begin_define
-define|#
-directive|define
 name|HASTD_LISTEN
 value|"tcp4://0.0.0.0:8457"
 end_define
