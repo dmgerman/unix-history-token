@@ -1329,10 +1329,6 @@ name|unsigned
 name|long
 name|errors
 decl_stmt|;
-name|unsigned
-name|int
-name|use_frags
-decl_stmt|;
 name|struct
 name|lro_ctrl
 name|lro
@@ -1487,12 +1483,12 @@ name|u8
 name|rx_pause
 decl_stmt|;
 name|u8
-name|rx_ppp
-decl_stmt|;
-name|u8
 name|tx_pause
 decl_stmt|;
-name|u8
+name|u32
+name|rx_ppp
+decl_stmt|;
+name|u32
 name|tx_ppp
 decl_stmt|;
 block|}
@@ -2006,9 +2002,6 @@ name|u32
 name|rx_ring_num
 decl_stmt|;
 name|u32
-name|udp_rings
-decl_stmt|;
-name|u32
 name|rx_mb_size
 decl_stmt|;
 name|struct
@@ -2023,6 +2016,9 @@ name|num_frags
 decl_stmt|;
 name|u16
 name|log_rx_info
+decl_stmt|;
+name|int
+name|ip_reasm
 decl_stmt|;
 name|struct
 name|mlx4_en_tx_ring
