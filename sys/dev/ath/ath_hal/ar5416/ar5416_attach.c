@@ -2308,13 +2308,21 @@ argument_list|,
 name|AR_PHY_SEL_EXTERNAL_RADIO
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
 comment|/* NB: only required for Sowl */
-block|ar5416EepromSetAddac(ah, chan);
-endif|#
-directive|endif
+if|if
+condition|(
+name|AR_SREV_SOWL
+argument_list|(
+name|ah
+argument_list|)
+condition|)
+name|ar5416EepromSetAddac
+argument_list|(
+name|ah
+argument_list|,
+name|chan
+argument_list|)
+expr_stmt|;
 name|regWrites
 operator|=
 name|ath_hal_ini_write
