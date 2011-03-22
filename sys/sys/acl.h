@@ -945,21 +945,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|acl_nfs4_trivial_from_mode
-parameter_list|(
-name|struct
-name|acl
-modifier|*
-name|aclp
-parameter_list|,
-name|mode_t
-name|mode
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|acl_nfs4_sync_acl_from_mode
 parameter_list|(
 name|struct

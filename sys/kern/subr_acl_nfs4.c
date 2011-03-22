@@ -131,7 +131,23 @@ name|a
 parameter_list|)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_KERNEL */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_function_decl
+specifier|static
 name|void
 name|acl_nfs4_trivial_from_mode
 parameter_list|(
@@ -146,15 +162,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !_KERNEL */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -163,12 +170,6 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -2782,6 +2783,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_function
 name|void
 name|acl_nfs4_sync_acl_from_mode
@@ -2821,6 +2828,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_function
 name|void
@@ -3496,6 +3512,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
 comment|/*  * Calculate inherited ACL in a manner compatible with NFSv4 Minor Version 1,  * draft-ietf-nfsv4-minorversion1-03.txt.  */
 end_comment
@@ -3918,6 +3940,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_comment
 comment|/*  * Populate the ACL with entries inherited from parent_aclp.  */
@@ -4644,6 +4675,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_function
 name|void
 name|acl_nfs4_compute_inherited_acl
@@ -4703,11 +4740,21 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Calculate trivial ACL in a manner compatible with PSARC/2010/029.  * Note that this results in an ACL different from (but semantically  * equal to) the "canonical six" trivial ACL computed using algorithm  * described in draft-ietf-nfsv4-minorversion1-03.txt, 3.16.6.2.  *  * This routine is not static only because the code is being used in libc.  * Kernel code should call acl_nfs4_sync_acl_from_mode() instead.  */
+comment|/* _KERNEL */
+end_comment
+
+begin_comment
+comment|/*  * Calculate trivial ACL in a manner compatible with PSARC/2010/029.  * Note that this results in an ACL different from (but semantically  * equal to) the "canonical six" trivial ACL computed using algorithm  * described in draft-ietf-nfsv4-minorversion1-03.txt, 3.16.6.2.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|acl_nfs4_trivial_from_mode
 parameter_list|(
@@ -4743,6 +4790,72 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_comment
+comment|/*  * This routine is used by libc to implement acl_strip_np(3)  * and acl_is_trivial_np(3).  */
+end_comment
+
+begin_function
+name|void
+name|acl_nfs4_trivial_from_mode_libc
+parameter_list|(
+name|struct
+name|acl
+modifier|*
+name|aclp
+parameter_list|,
+name|int
+name|mode
+parameter_list|,
+name|int
+name|canonical_six
+parameter_list|)
+block|{
+name|aclp
+operator|->
+name|acl_cnt
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|canonical_six
+condition|)
+name|acl_nfs4_sync_acl_from_mode_draft
+argument_list|(
+name|aclp
+argument_list|,
+name|mode
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
+name|acl_nfs4_trivial_from_mode
+argument_list|(
+name|aclp
+argument_list|,
+name|mode
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_KERNEL */
+end_comment
 
 begin_ifdef
 ifdef|#
