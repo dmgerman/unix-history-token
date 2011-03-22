@@ -8132,7 +8132,7 @@ name|hr_primary_localcnt
 operator|=
 name|res
 operator|->
-name|hr_secondary_localcnt
+name|hr_secondary_remotecnt
 expr_stmt|;
 name|res
 operator|->
@@ -8140,7 +8140,7 @@ name|hr_primary_remotecnt
 operator|=
 name|res
 operator|->
-name|hr_secondary_remotecnt
+name|hr_secondary_localcnt
 expr_stmt|;
 name|pjdlog_debug
 argument_list|(
@@ -8160,7 +8160,7 @@ name|uintmax_t
 operator|)
 name|res
 operator|->
-name|hr_secondary_localcnt
+name|hr_primary_remotecnt
 argument_list|)
 expr_stmt|;
 operator|(
