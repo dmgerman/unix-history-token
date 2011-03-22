@@ -4702,38 +4702,6 @@ name|r
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* Analog shift register delay seems needed for Merlin - PR kern/154220 */
-comment|/* XXX verify whether any analog radio bank writes will hit up this */
-comment|/* XXX since this is a merlin work-around; and merlin doesn't use radio banks */
-if|if
-condition|(
-name|HAL_INI_VAL
-argument_list|(
-name|ia
-argument_list|,
-name|r
-argument_list|,
-literal|0
-argument_list|)
-operator|>=
-literal|0x7800
-operator|&&
-name|HAL_INI_VAL
-argument_list|(
-name|ia
-argument_list|,
-name|r
-argument_list|,
-literal|0
-argument_list|)
-operator|<
-literal|0x78a0
-condition|)
-name|OS_DELAY
-argument_list|(
-literal|100
-argument_list|)
-expr_stmt|;
 name|DMA_YIELD
 argument_list|(
 name|regWr
