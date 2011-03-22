@@ -4068,6 +4068,27 @@ name|HAL_TXQ_BACKOFF_DISABLE
 expr_stmt|;
 break|break;
 case|case
+name|HAL_TX_QUEUE_PSPOLL
+case|:
+name|q
+operator|=
+literal|1
+expr_stmt|;
+comment|/* lowest priority */
+name|defqflags
+operator||=
+name|HAL_TXQ_DBA_GATED
+operator||
+name|HAL_TXQ_CBR_DIS_QEMPTY
+operator||
+name|HAL_TXQ_CBR_DIS_BEMPTY
+operator||
+name|HAL_TXQ_ARB_LOCKOUT_GLOBAL
+operator||
+name|HAL_TXQ_BACKOFF_DISABLE
+expr_stmt|;
+break|break;
+case|case
 name|HAL_TX_QUEUE_UAPSD
 case|:
 name|q
@@ -4757,6 +4778,11 @@ name|dmisc
 operator|=
 name|AR_D_MISC_FRAG_WAIT_EN
 expr_stmt|;
+comment|/* Enable exponential backoff window */
+name|dmisc
+operator||=
+name|AR_D_MISC_BKOFF_PERSISTENCE
+expr_stmt|;
 comment|/*  	 * The chip reset default is to use a DCU backoff threshold of 0x2. 	 * Restore this when programming the DCU MISC register. 	 */
 name|dmisc
 operator||=
@@ -5150,6 +5176,22 @@ name|AR_D_MISC_ARB_LOCKOUT_CNTRL_GLOBAL
 argument_list|,
 name|AR_D_MISC_ARB_LOCKOUT_CNTRL
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|HAL_TX_QUEUE_PSPOLL
+case|:
+name|qmisc
+operator||=
+name|AR_Q_MISC_CBR_INCR_DIS1
+expr_stmt|;
+break|break;
+case|case
+name|HAL_TX_QUEUE_UAPSD
+case|:
+name|dmisc
+operator||=
+name|AR_D_MISC_POST_FR_BKOFF_DIS
 expr_stmt|;
 break|break;
 default|default:
