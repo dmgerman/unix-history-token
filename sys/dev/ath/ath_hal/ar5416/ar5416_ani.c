@@ -2199,7 +2199,7 @@ name|OS_REG_WRITE
 argument_list|(
 name|ah
 argument_list|,
-name|AR_PHY_ERR_MASK_1
+name|AR_PHY_ERR_MASK_2
 argument_list|,
 name|AR_PHY_ERR_CCK_TIMING
 argument_list|)
