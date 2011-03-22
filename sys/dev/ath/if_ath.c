@@ -16113,14 +16113,6 @@ name|sc_lastrs
 operator|=
 name|rs
 expr_stmt|;
-comment|/* tag AMPDU aggregates for reorder processing */
-if|#
-directive|if
-literal|0
-comment|/* 		 * Just make sure all frames are tagged for AMPDU reorder checking. 		 * As there seems to be some situations where single frames aren't 		 * matching a node but bump the seqno. This needs to be investigated. 		 */
-block|m->m_flags |= M_AMPDU;
-endif|#
-directive|endif
 comment|/* Keep statistics on the number of aggregate packets received */
 if|if
 condition|(
