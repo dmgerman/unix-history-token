@@ -509,7 +509,7 @@ name|ncomp
 parameter_list|,
 name|timeout
 parameter_list|)
-value|do {			\ 	bool _last;							\ 									\ 	mtx_lock(&hio_##name##_list_lock[(ncomp)]);			\ 	_last = false;							\ 	while (((hio) = TAILQ_FIRST(&hio_##name##_list[(ncomp)])) == NULL&& !_last) { \ 		cv_timedwait(&hio_##name##_list_cond[(ncomp)],		\&hio_##name##_list_lock[(ncomp)], (timeout));	\ 		if ((timeout) != 0) 					\ 			_last = true;					\ 	}								\ 	if (hio != NULL) {						\ 		TAILQ_REMOVE(&hio_##name##_list[(ncomp)], (hio),	\ 		    hio_next[(ncomp)]);					\ 	}								\ 	mtx_unlock(&hio_##name##_list_lock[(ncomp)]);			\ } while (0)
+value|do {			\ 	bool _last;							\ 									\ 	mtx_lock(&hio_##name##_list_lock[(ncomp)]);			\ 	_last = false;							\ 	while (((hio) = TAILQ_FIRST(&hio_##name##_list[(ncomp)])) == NULL&& !_last) { \ 		cv_timedwait(&hio_##name##_list_cond[(ncomp)],		\&hio_##name##_list_lock[(ncomp)], (timeout));	\ 		if ((timeout) != 0)					\ 			_last = true;					\ 	}								\ 	if (hio != NULL) {						\ 		TAILQ_REMOVE(&hio_##name##_list[(ncomp)], (hio),	\ 		    hio_next[(ncomp)]);					\ 	}								\ 	mtx_unlock(&hio_##name##_list_lock[(ncomp)]);			\ } while (0)
 end_define
 
 begin_define
