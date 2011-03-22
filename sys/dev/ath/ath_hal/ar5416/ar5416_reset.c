@@ -6323,7 +6323,7 @@ name|OS_REG_RMW_FIELD
 argument_list|(
 name|ah
 argument_list|,
-name|AR_PHY_EXT_CCA0
+name|AR_PHY_EXT_CCA
 argument_list|,
 name|AR_PHY_EXT_CCA_THRESH62
 argument_list|,
