@@ -167,7 +167,7 @@ specifier|static
 name|int
 name|acl_nfs4_old_semantics
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -185,7 +185,7 @@ argument_list|,
 operator|&
 name|acl_nfs4_old_semantics
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 literal|"Use pre-PSARC/2010/029 NFSv4 ACL semantics"
 argument_list|)
