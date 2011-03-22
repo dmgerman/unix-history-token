@@ -23964,7 +23964,6 @@ name|sc
 operator|->
 name|sc_currates
 expr_stmt|;
-comment|/* XXX HT rates */
 name|sc
 operator|->
 name|sc_stats
@@ -23984,6 +23983,29 @@ name|dot11Rate
 operator|&
 operator|~
 name|IEEE80211_RATE_BASIC
+expr_stmt|;
+if|if
+condition|(
+name|rt
+operator|->
+name|info
+index|[
+name|sc
+operator|->
+name|sc_txrix
+index|]
+operator|.
+name|phy
+operator|&
+name|IEEE80211_T_HT
+condition|)
+name|sc
+operator|->
+name|sc_stats
+operator|.
+name|ast_tx_rate
+operator||=
+name|IEEE80211_RATE_MCS
 expr_stmt|;
 return|return
 name|copyout
