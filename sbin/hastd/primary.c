@@ -7415,7 +7415,33 @@ operator|==
 name|ncomps
 condition|)
 block|{
-comment|/* 			 * None of the requests were successful. 			 * Use first error. 			 */
+comment|/* 			 * None of the requests were successful. 			 * Use the error from local component except the 			 * case when we did only remote request. 			 */
+if|if
+condition|(
+name|ggio
+operator|->
+name|gctl_cmd
+operator|==
+name|BIO_READ
+operator|&&
+name|res
+operator|->
+name|hr_syncsrc
+operator|==
+name|HAST_SYNCSRC_SECONDARY
+condition|)
+name|ggio
+operator|->
+name|gctl_error
+operator|=
+name|hio
+operator|->
+name|hio_errors
+index|[
+literal|1
+index|]
+expr_stmt|;
+else|else
 name|ggio
 operator|->
 name|gctl_error
