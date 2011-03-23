@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: lsi64854var.h,v 1.6 2005/02/04 02:10:36 perry Exp $ */
+comment|/*	$NetBSD: lsi64854var.h,v 1.12 2008/04/28 20:23:50 martin Exp $ */
 end_comment
 
 begin_comment
