@@ -2200,7 +2200,7 @@ name|PRS_ZOMBIE
 block|}
 name|p_state
 enum|;
-comment|/* (j/c) S* process status. */
+comment|/* (j/c) Process status. */
 name|pid_t
 name|p_pid
 decl_stmt|;
