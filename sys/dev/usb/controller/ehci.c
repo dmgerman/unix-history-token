@@ -6170,14 +6170,8 @@ name|uint16_t
 name|xlen
 parameter_list|)
 block|{
-name|uint8_t
-name|full
-init|=
-operator|(
-name|actlen
-operator|==
-name|xlen
-operator|)
+name|uint16_t
+name|rem
 decl_stmt|;
 name|uint8_t
 name|dt
@@ -6196,7 +6190,7 @@ operator|&
 literal|1
 expr_stmt|;
 comment|/* cumpute remainder */
-name|actlen
+name|rem
 operator|=
 name|actlen
 operator|%
@@ -6206,7 +6200,7 @@ name|max_packet_size
 expr_stmt|;
 if|if
 condition|(
-name|actlen
+name|rem
 operator|>
 literal|0
 condition|)
@@ -6218,8 +6212,9 @@ comment|/* short packet at the end */
 elseif|else
 if|if
 condition|(
-operator|!
-name|full
+name|actlen
+operator|!=
+name|xlen
 condition|)
 name|dt
 operator|^=
