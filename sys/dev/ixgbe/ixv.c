@@ -7201,7 +7201,7 @@ block|{
 name|int
 name|msix_ctrl
 decl_stmt|;
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,

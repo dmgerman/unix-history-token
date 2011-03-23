@@ -2040,7 +2040,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
@@ -4903,7 +4903,7 @@ expr_stmt|;
 block|}
 name|error
 operator|=
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->
@@ -7145,7 +7145,7 @@ name|val
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Configure PME. 	 */
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->

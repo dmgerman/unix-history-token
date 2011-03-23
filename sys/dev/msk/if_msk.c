@@ -9242,7 +9242,7 @@ block|}
 comment|/* Check bus type. */
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->
@@ -9273,7 +9273,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->

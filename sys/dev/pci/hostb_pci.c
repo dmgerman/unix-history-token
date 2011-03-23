@@ -154,7 +154,7 @@ expr_stmt|;
 comment|/* 	 * If AGP capabilities are present on this device, then create 	 * an AGP child. 	 */
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,

@@ -5401,7 +5401,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->
@@ -11583,7 +11583,7 @@ else|else
 block|{
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->

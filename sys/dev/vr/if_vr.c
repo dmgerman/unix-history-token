@@ -3441,7 +3441,7 @@ name|vr_revid
 operator|>=
 name|REV_ID_VT6102_A
 operator|&&
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
@@ -3490,7 +3490,7 @@ directive|endif
 comment|/* 	 * Windows may put the chip in suspend mode when it 	 * shuts down. Be sure to kick it in the head to wake it 	 * up again. 	 */
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
@@ -12107,7 +12107,7 @@ name|vr_revid
 operator|<
 name|REV_ID_VT6102_A
 operator|||
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->

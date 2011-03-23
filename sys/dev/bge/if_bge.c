@@ -14358,7 +14358,7 @@ block|}
 comment|/* 	 * Check if this is a PCI-X or PCI Express device.   	 */
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
@@ -14406,7 +14406,7 @@ block|{
 comment|/* 		 * Check if the device is in PCI-X Mode. 		 * (This bit is not valid on PCI Express controllers.) 		 */
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
@@ -14477,7 +14477,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->

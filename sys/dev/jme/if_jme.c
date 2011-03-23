@@ -4380,7 +4380,7 @@ expr_stmt|;
 comment|/* Set max allowable DMA size. */
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
@@ -4673,7 +4673,7 @@ name|CSUM_TSO
 expr_stmt|;
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
@@ -8585,7 +8585,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->
@@ -8974,7 +8974,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->

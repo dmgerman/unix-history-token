@@ -4604,7 +4604,7 @@ expr_stmt|;
 comment|/* 	 * It seems that some hardwares doesn't provide 3.3V auxiliary 	 * supply(3VAUX) to drive PME such that checking PCI power 	 * management capability is necessary. 	 */
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->
@@ -12439,7 +12439,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->
@@ -12838,7 +12838,7 @@ name|nge_ifp
 expr_stmt|;
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->

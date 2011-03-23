@@ -96,7 +96,7 @@ operator|>=
 literal|602102
 return|return
 operator|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 operator|->

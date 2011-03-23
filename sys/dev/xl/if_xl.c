@@ -6050,7 +6050,7 @@ operator|)
 operator|!=
 literal|0
 operator|&&
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,

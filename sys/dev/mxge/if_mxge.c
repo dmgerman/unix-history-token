@@ -2505,7 +2505,7 @@ expr_stmt|;
 comment|/* 	 * Verify the max read request size was set to 4KB 	 * before trying the test with 4KB. 	 */
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
@@ -18614,7 +18614,7 @@ decl_stmt|;
 comment|/* find the PCIe link width and set max read request to 4KB*/
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
@@ -18787,7 +18787,7 @@ decl_stmt|;
 comment|/* find the vendor specific offset */
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,

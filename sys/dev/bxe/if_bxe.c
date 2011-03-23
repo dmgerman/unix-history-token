@@ -8116,7 +8116,7 @@ expr_stmt|;
 comment|/* Check if PCI Power Management capability is enabled. */
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
@@ -8160,7 +8160,7 @@ block|}
 comment|/* Check if PCIe capability is enabled. */
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
@@ -8317,7 +8317,7 @@ block|}
 comment|/* Check if MSI capability is enabled. */
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
@@ -8361,7 +8361,7 @@ block|}
 comment|/* Check if MSI-X capability is enabled. */
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,

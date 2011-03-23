@@ -3007,7 +3007,7 @@ expr_stmt|;
 comment|/* 	 * Get the offset of the PCI Express Capability Structure in PCI 	 * Configuration Space. 	 */
 name|error
 operator|=
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,

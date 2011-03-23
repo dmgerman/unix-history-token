@@ -2887,7 +2887,7 @@ operator|)
 operator|!=
 literal|0
 operator|&&
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->
@@ -5510,7 +5510,7 @@ name|ifp
 expr_stmt|;
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->
@@ -5669,7 +5669,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->

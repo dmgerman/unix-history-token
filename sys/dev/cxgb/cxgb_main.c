@@ -2262,7 +2262,7 @@ expr_stmt|;
 comment|/* find the PCIe link width and set max read request to 4KB*/
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,

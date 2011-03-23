@@ -4719,7 +4719,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
@@ -4754,7 +4754,7 @@ name|VGE_FLAG_JUMBO
 expr_stmt|;
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
