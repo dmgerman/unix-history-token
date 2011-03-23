@@ -6011,13 +6011,6 @@ begin_comment
 comment|/* syncer process flush some inodedeps */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|FLUSH_INODES
-value|1
-end_define
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -6028,20 +6021,6 @@ end_decl_stmt
 begin_comment
 comment|/* syncer process flush some freeblks */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|FLUSH_REMOVE
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|FLUSH_REMOVE_WAIT
-value|3
-end_define
 
 begin_decl_stmt
 specifier|static
@@ -33935,7 +33914,7 @@ argument_list|)
 operator|->
 name|v_mount
 argument_list|,
-name|FLUSH_REMOVE
+name|FLUSH_BLOCKS
 argument_list|)
 expr_stmt|;
 name|num_dirrem
@@ -50403,7 +50382,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called by the allocation routines when they are about to fail  * in the hope that we can free up some disk space.  *   * First check to see if the work list has anything on it. If it has,  * clean up entries until we successfully free some space. Because this  * process holds inodes locked, we cannot handle any remove requests  * that might block on a locked inode as that could lead to deadlock.  * If the worklist yields no free space, encourage the syncer daemon  * to help us. In no event will we try for longer than tickdelay seconds.  */
+comment|/*  * Called by the allocation routines when they are about to fail  * in the hope that we can free up the requested resource (inodes  * or disk space).  *   * First check to see if the work list has anything on it. If it has,  * clean up entries until we successfully free the requested resource.  * Because this process holds inodes locked, we cannot handle any remove  * requests that might block on a locked inode as that could lead to  * deadlock. If the worklist yields none of the requested resource,  * encourage the syncer daemon to help us. In no event will we try for  * longer than tickdelay seconds.  */
 end_comment
 
 begin_function
@@ -50413,6 +50392,8 @@ parameter_list|(
 name|fs
 parameter_list|,
 name|vp
+parameter_list|,
+name|resource
 parameter_list|)
 name|struct
 name|fs
@@ -50423,6 +50404,9 @@ name|struct
 name|vnode
 modifier|*
 name|vp
+decl_stmt|;
+name|int
+name|resource
 decl_stmt|;
 block|{
 name|struct
@@ -50458,6 +50442,12 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|resource
+operator|==
+name|FLUSH_BLOCKS_WAIT
+condition|)
 name|needed
 operator|=
 name|fs
@@ -50470,6 +50460,29 @@ name|fs
 operator|->
 name|fs_contigsumsize
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|resource
+operator|==
+name|FLUSH_INODES_WAIT
+condition|)
+name|needed
+operator|=
+name|fs
+operator|->
+name|fs_cstotal
+operator|.
+name|cs_nifree
+operator|+
+literal|2
+expr_stmt|;
+else|else
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|starttime
 operator|=
 name|time_second
@@ -50522,6 +50535,11 @@ return|;
 block|}
 while|while
 condition|(
+operator|(
+name|resource
+operator|==
+name|FLUSH_BLOCKS_WAIT
+operator|&&
 name|fs
 operator|->
 name|fs_pendingblocks
@@ -50535,6 +50553,27 @@ operator|.
 name|cs_nbfree
 operator|<=
 name|needed
+operator|)
+operator|||
+operator|(
+name|resource
+operator|==
+name|FLUSH_INODES_WAIT
+operator|&&
+name|fs
+operator|->
+name|fs_pendinginodes
+operator|>
+literal|0
+operator|&&
+name|fs
+operator|->
+name|fs_cstotal
+operator|.
+name|cs_nifree
+operator|<=
+name|needed
+operator|)
 condition|)
 block|{
 if|if
@@ -50610,7 +50649,7 @@ argument_list|(
 name|ump
 argument_list|)
 argument_list|,
-name|FLUSH_REMOVE_WAIT
+name|resource
 argument_list|)
 expr_stmt|;
 name|FREE_LOCK
@@ -50766,7 +50805,11 @@ argument_list|()
 operator|&&
 name|resource
 operator|!=
-name|FLUSH_REMOVE_WAIT
+name|FLUSH_BLOCKS_WAIT
+operator|&&
+name|resource
+operator|!=
+name|FLUSH_INODES_WAIT
 condition|)
 return|return
 operator|(
@@ -50781,6 +50824,9 @@ condition|)
 block|{
 case|case
 name|FLUSH_INODES
+case|:
+case|case
+name|FLUSH_INODES_WAIT
 case|:
 name|stat_ino_limit_push
 operator|+=
@@ -50797,10 +50843,10 @@ name|stat_ino_limit_hit
 expr_stmt|;
 break|break;
 case|case
-name|FLUSH_REMOVE
+name|FLUSH_BLOCKS
 case|:
 case|case
-name|FLUSH_REMOVE_WAIT
+name|FLUSH_BLOCKS_WAIT
 case|:
 name|stat_blk_limit_push
 operator|+=

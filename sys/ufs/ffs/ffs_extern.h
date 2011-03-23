@@ -1031,6 +1031,8 @@ parameter_list|,
 name|struct
 name|vnode
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1355,6 +1357,38 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * Things to request flushing in softdep_request_cleanup()  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FLUSH_INODES
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|FLUSH_INODES_WAIT
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|FLUSH_BLOCKS
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|FLUSH_BLOCKS_WAIT
+value|4
+end_define
 
 begin_function_decl
 name|int
