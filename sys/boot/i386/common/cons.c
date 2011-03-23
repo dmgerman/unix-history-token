@@ -98,6 +98,12 @@ parameter_list|)
 block|{
 name|v86
 operator|.
+name|ctl
+operator|=
+name|V86_FLAGS
+expr_stmt|;
+name|v86
+operator|.
 name|addr
 operator|=
 literal|0x10
