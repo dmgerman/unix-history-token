@@ -376,6 +376,36 @@ begin_comment
 comment|/* AH_DEBUG */
 end_comment
 
+begin_decl_stmt
+name|int
+name|ath_hal_ar5416_biasadj
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_ath_hal
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ar5416_biasadj
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ath_hal_debug
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable 2ghz AR5416 direction sensitivity"
+literal|" bias adjust"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* NB: these are deprecated; they exist for now for compatibility */
 end_comment

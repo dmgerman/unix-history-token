@@ -1983,6 +1983,17 @@ begin_comment
 comment|/* in TU's */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|ath_hal_ar5416_biasadj
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 1 or 0 */
+end_comment
+
 begin_comment
 comment|/* wait for the register contents to have the specified value */
 end_comment

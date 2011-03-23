@@ -747,6 +747,8 @@ name|AR_SREV_OWL
 argument_list|(
 name|ah
 argument_list|)
+operator|&&
+name|ath_hal_ar5416_biasadj
 condition|)
 name|ar2133ForceBias
 argument_list|(
