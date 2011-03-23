@@ -23845,20 +23845,6 @@ name|uint8_t
 modifier|*
 name|cdbp
 decl_stmt|;
-comment|/* 	 * First, DMA sync the received command- 	 * which is in the *request* * phys area. 	 * 	 * XXX: We could optimize this for a range 	 */
-name|bus_dmamap_sync
-argument_list|(
-name|mpt
-operator|->
-name|request_dmat
-argument_list|,
-name|mpt
-operator|->
-name|request_dmap
-argument_list|,
-name|BUS_DMASYNC_POSTREAD
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Stash info for the current command where we can get at it later. 	 */
 name|vbuf
 operator|=
