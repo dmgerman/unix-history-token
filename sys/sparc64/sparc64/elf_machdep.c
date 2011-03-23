@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 Jake Burkholder.  * Copyright (c) 2000 Eduardo Horvath.  * Copyright (c) 1999 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Paul Kranenburg.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  *	from: NetBSD: mdreloc.c,v 1.5 2001/04/25 12:24:51 kleink Exp  */
+comment|/*-  * Copyright (c) 2001 Jake Burkholder.  * Copyright (c) 2000 Eduardo Horvath.  * Copyright (c) 1999 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Paul Kranenburg.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  *	from: NetBSD: mdreloc.c,v 1.42 2008/04/28 20:23:04 martin Exp  */
 end_comment
 
 begin_include
@@ -601,7 +601,7 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
-comment|/* RELOC_8 */
+comment|/* 8 */
 name|_RF_S
 operator||
 name|_RF_A
@@ -616,7 +616,7 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
-comment|/* RELOC_16 */
+comment|/* 16 */
 name|_RF_S
 operator||
 name|_RF_A
@@ -631,7 +631,7 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
-comment|/* RELOC_32 */
+comment|/* 32 */
 name|_RF_S
 operator||
 name|_RF_A
@@ -1470,7 +1470,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static const char *const reloc_names[] = { 	"NONE", "RELOC_8", "RELOC_16", "RELOC_32", "DISP_8", 	"DISP_16", "DISP_32", "WDISP_30", "WDISP_22", "HI22", 	"22", "13", "LO10", "GOT10", "GOT13", 	"GOT22", "PC10", "PC22", "WPLT30", "COPY", 	"GLOB_DAT", "JMP_SLOT", "RELATIVE", "UA_32", "PLT32", 	"HIPLT22", "LOPLT10", "LOPLT10", "PCPLT22", "PCPLT32", 	"10", "11", "64", "OLO10", "HH22", 	"HM10", "LM22", "PC_HH22", "PC_HM10", "PC_LM22",  	"WDISP16", "WDISP19", "GLOB_JMP", "7", "5", "6", 	"DISP64", "PLT64", "HIX22", "LOX10", "H44", "M44",  	"L44", "REGISTER", "UA64", "UA16" };
+unit|static const char *const reloc_names[] = { 	"NONE", "8", "16", "32", "DISP_8", "DISP_16", "DISP_32", "WDISP_30", 	"WDISP_22", "HI22", "22", "13", "LO10", "GOT10", "GOT13", "GOT22", 	"PC10", "PC22", "WPLT30", "COPY", "GLOB_DAT", "JMP_SLOT", "RELATIVE", 	"UA_32", "PLT32", "HIPLT22", "LOPLT10", "LOPLT10", "PCPLT22", 	"PCPLT32", "10", "11", "64", "OLO10", "HH22", "HM10", "LM22", 	"PC_HH22", "PC_HM10", "PC_LM22", "WDISP16", "WDISP19", "GLOB_JMP", 	"7", "5", "6", "DISP64", "PLT64", "HIX22", "LOX10", "H44", "M44", 	"L44", "REGISTER", "UA64", "UA16" };
 endif|#
 directive|endif
 end_endif
@@ -1588,7 +1588,7 @@ argument_list|(
 literal|32
 argument_list|)
 block|,
-comment|/* RELOC_8, _16, _32 */
+comment|/* 8, 16, 32 */
 name|_BM
 argument_list|(
 literal|8
@@ -1626,7 +1626,7 @@ argument_list|(
 literal|22
 argument_list|)
 block|,
-comment|/* HI22, _22 */
+comment|/* HI22, 22 */
 name|_BM
 argument_list|(
 literal|13
@@ -1637,7 +1637,7 @@ argument_list|(
 literal|10
 argument_list|)
 block|,
-comment|/* RELOC_13, _LO10 */
+comment|/* 13, LO10 */
 name|_BM
 argument_list|(
 literal|10
@@ -1664,7 +1664,7 @@ argument_list|(
 literal|22
 argument_list|)
 block|,
-comment|/* _PC10, _PC22 */
+comment|/* PC10, PC22 */
 name|_BM
 argument_list|(
 literal|30
@@ -1672,7 +1672,7 @@ argument_list|)
 block|,
 literal|0
 block|,
-comment|/* _WPLT30, _COPY */
+comment|/* WPLT30, COPY */
 name|_BM
 argument_list|(
 literal|32
@@ -1688,7 +1688,7 @@ argument_list|(
 literal|32
 argument_list|)
 block|,
-comment|/* _GLOB_DAT, JMP_SLOT, _RELATIVE */
+comment|/* GLOB_DAT, JMP_SLOT, RELATIVE */
 name|_BM
 argument_list|(
 literal|32
@@ -1699,7 +1699,7 @@ argument_list|(
 literal|32
 argument_list|)
 block|,
-comment|/* _UA32, PLT32 */
+comment|/* UA32, PLT32 */
 name|_BM
 argument_list|(
 literal|22
@@ -1710,7 +1710,7 @@ argument_list|(
 literal|10
 argument_list|)
 block|,
-comment|/* _HIPLT22, LOPLT10 */
+comment|/* HIPLT22, LOPLT10 */
 name|_BM
 argument_list|(
 literal|32
@@ -1726,7 +1726,7 @@ argument_list|(
 literal|10
 argument_list|)
 block|,
-comment|/* _PCPLT32, _PCPLT22, _PCPLT10 */
+comment|/* PCPLT32, PCPLT22, PCPLT10 */
 name|_BM
 argument_list|(
 literal|10
@@ -1740,7 +1740,7 @@ block|,
 operator|-
 literal|1
 block|,
-comment|/* _10, _11, _64 */
+comment|/* 10, 11, 64 */
 name|_BM
 argument_list|(
 literal|13
@@ -1751,7 +1751,7 @@ argument_list|(
 literal|22
 argument_list|)
 block|,
-comment|/* _OLO10, _HH22 */
+comment|/* OLO10, HH22 */
 name|_BM
 argument_list|(
 literal|10
@@ -1762,7 +1762,7 @@ argument_list|(
 literal|22
 argument_list|)
 block|,
-comment|/* _HM10, _LM22 */
+comment|/* HM10, LM22 */
 name|_BM
 argument_list|(
 literal|22
@@ -1778,7 +1778,7 @@ argument_list|(
 literal|22
 argument_list|)
 block|,
-comment|/* _PC_HH22, _PC_HM10, _PC_LM22 */
+comment|/* PC_HH22, PC_HM10, PC_LM22 */
 name|_BM
 argument_list|(
 literal|16
@@ -1789,7 +1789,7 @@ argument_list|(
 literal|19
 argument_list|)
 block|,
-comment|/* _WDISP16, _WDISP19 */
+comment|/* WDISP16, WDISP19 */
 operator|-
 literal|1
 block|,
@@ -1808,7 +1808,8 @@ name|_BM
 argument_list|(
 literal|6
 argument_list|)
-comment|/* _7, _5, _6 */
+block|,
+comment|/* 7, 5, 6 */
 operator|-
 literal|1
 block|,
