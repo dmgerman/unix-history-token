@@ -308,7 +308,9 @@ name|char
 modifier|*
 name|mountpoint
 parameter_list|,
-name|int
+specifier|const
+name|char
+modifier|*
 name|newfs
 parameter_list|)
 function_decl|;
