@@ -3460,11 +3460,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|PROC_SLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|p
@@ -3547,11 +3542,6 @@ literal|"? (unknown)"
 expr_stmt|;
 break|break;
 block|}
-name|PROC_SUNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 block|}
 name|fill_kinfo_proc
 argument_list|(
