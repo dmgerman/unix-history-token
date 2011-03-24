@@ -12550,37 +12550,6 @@ operator|&
 name|AT_SIZE
 condition|)
 block|{
-name|err
-operator|=
-name|zfs_zaccess
-argument_list|(
-name|zp
-argument_list|,
-name|ACE_WRITE_DATA
-argument_list|,
-literal|0
-argument_list|,
-name|skipaclchk
-argument_list|,
-name|cr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-block|{
-name|ZFS_EXIT
-argument_list|(
-name|zfsvfs
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|err
-operator|)
-return|;
-block|}
 comment|/* 		 * XXX - Note, we are not providing any open 		 * mode flags here (like FNDELAY), so we may 		 * block if there are locks present... this 		 * should be addressed in openat(). 		 */
 comment|/* XXX - would it be OK to generate a log record here? */
 name|err
