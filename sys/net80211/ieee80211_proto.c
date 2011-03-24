@@ -5247,6 +5247,15 @@ operator|>
 literal|1
 condition|)
 return|return;
+comment|/* 	 * Clear the wme cap_info field so a qoscount from a previous 	 * vap doesn't confuse later code which only parses the beacon 	 * field and updates hardware when said field changes. 	 * Otherwise the hardware is programmed with defaults, not what 	 * the beacon actually announces. 	 */
+name|wme
+operator|->
+name|wme_wmeChanParams
+operator|.
+name|cap_info
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Select mode; we can be called early in which case we 	 * always use auto mode.  We know we'll be called when 	 * entering the RUN state with bsschan setup properly 	 * so state will eventually get set correctly 	 */
 if|if
 condition|(
