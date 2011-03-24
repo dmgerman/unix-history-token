@@ -443,10 +443,12 @@ block|,
 name|NULL
 block|,
 name|LJUST
+operator||
+name|DSIZ
 block|,
 name|loginclass
 block|,
-name|NULL
+name|s_loginclass
 block|,
 name|MAXLOGNAME
 operator|-
@@ -931,10 +933,12 @@ block|,
 name|NULL
 block|,
 name|LJUST
+operator||
+name|DSIZ
 block|,
 name|logname
 block|,
-name|NULL
+name|s_logname
 block|,
 name|MAXLOGNAME
 operator|-

@@ -495,6 +495,26 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|s_loginclass
+parameter_list|(
+name|KINFO
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|s_logname
+parameter_list|(
+name|KINFO
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|s_rgroupname
 parameter_list|(
 name|KINFO
