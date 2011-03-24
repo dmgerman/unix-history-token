@@ -6189,7 +6189,7 @@ operator|)
 operator|&
 literal|1
 expr_stmt|;
-comment|/* cumpute remainder */
+comment|/* compute remainder */
 name|rem
 operator|=
 name|actlen
