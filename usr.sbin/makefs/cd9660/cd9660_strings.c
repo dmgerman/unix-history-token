@@ -109,7 +109,7 @@ begin_function
 specifier|static
 specifier|inline
 name|int
-name|cd9660_is_a_char
+name|cd9660_is_d_char
 parameter_list|(
 name|char
 name|c
@@ -148,7 +148,7 @@ begin_function
 specifier|static
 specifier|inline
 name|int
-name|cd9660_is_d_char
+name|cd9660_is_a_char
 parameter_list|(
 name|char
 name|c
