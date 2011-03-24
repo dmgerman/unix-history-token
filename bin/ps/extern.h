@@ -485,6 +485,16 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|s_cputime
+parameter_list|(
+name|KINFO
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|s_label
 parameter_list|(
 name|KINFO
@@ -535,7 +545,27 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|s_systime
+parameter_list|(
+name|KINFO
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|s_uname
+parameter_list|(
+name|KINFO
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|s_usertime
 parameter_list|(
 name|KINFO
 modifier|*
