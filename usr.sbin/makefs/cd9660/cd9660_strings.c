@@ -137,7 +137,7 @@ literal|'0'
 operator|&&
 name|c
 operator|<=
-literal|'?'
+literal|'9'
 operator|)
 operator|)
 return|;
@@ -176,7 +176,7 @@ literal|'%'
 operator|&&
 name|c
 operator|<=
-literal|'9'
+literal|'?'
 operator|)
 operator|||
 operator|(
