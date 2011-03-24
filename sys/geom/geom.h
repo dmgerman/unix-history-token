@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sbuf.h>
 end_include
 
@@ -1817,6 +1823,10 @@ name|offset
 decl_stmt|;
 name|off_t
 name|length
+decl_stmt|;
+name|struct
+name|dumperinfo
+name|di
 decl_stmt|;
 block|}
 struct|;
