@@ -3045,7 +3045,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: umount [-fv] special | node | fsid"
+literal|"usage: umount [-fv] special ... | node ... | fsid ..."
 argument_list|,
 literal|"       umount -a | -A [-F fstab] [-fv] [-h host] [-t type]"
 argument_list|)
