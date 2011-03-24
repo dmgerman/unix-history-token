@@ -476,6 +476,37 @@ end_enum
 begin_enum
 enum|enum
 block|{
+comment|/* adapter intr_type */
+name|INTR_INTX
+init|=
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
+block|,
+name|INTR_MSI
+init|=
+operator|(
+literal|1
+operator|<<
+literal|1
+operator|)
+block|,
+name|INTR_MSIX
+init|=
+operator|(
+literal|1
+operator|<<
+literal|2
+operator|)
+block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+block|{
 comment|/* adapter flags */
 name|FULL_INIT_DONE
 init|=
