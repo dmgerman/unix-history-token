@@ -396,7 +396,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|ath_hal_debug
+name|ath_hal_ar5416_biasadj
 argument_list|,
 literal|0
 argument_list|,
