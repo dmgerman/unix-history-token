@@ -3642,6 +3642,10 @@ parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|,
+name|nqsets
+init|=
+literal|0
 decl_stmt|;
 name|ADAPTER_LOCK
 argument_list|(
@@ -3720,6 +3724,17 @@ name|dev
 argument_list|,
 literal|"failed to delete child port\n"
 argument_list|)
+expr_stmt|;
+name|nqsets
+operator|+=
+name|sc
+operator|->
+name|port
+index|[
+name|i
+index|]
+operator|.
+name|nqsets
 expr_stmt|;
 block|}
 comment|/* 	 * At this point, it is as if cxgb_port_detach has run on all ports, and 	 * cxgb_down has run on the adapter.  All interrupts have been silenced, 	 * all open devices have been closed. 	 */
@@ -3813,6 +3828,8 @@ block|{
 name|t3_free_sge_resources
 argument_list|(
 name|sc
+argument_list|,
+name|nqsets
 argument_list|)
 expr_stmt|;
 name|sc
@@ -4261,6 +4278,8 @@ block|{
 name|t3_free_sge_resources
 argument_list|(
 name|sc
+argument_list|,
+name|qset_idx
 argument_list|)
 expr_stmt|;
 name|device_printf
