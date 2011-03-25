@@ -3793,6 +3793,17 @@ decl_stmt|;
 name|boolean_t
 name|pmap_failed
 decl_stmt|;
+if|if
+condition|(
+name|len
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|end
 operator|=
 name|round_page
