@@ -551,6 +551,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|_RF_D
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* Use dynamic TLS offset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_RF_O
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* Use static TLS offset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_RF_I
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* Use TLS object ID */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|_RF_SZ
 parameter_list|(
 name|s
@@ -1459,6 +1492,60 @@ literal|0
 argument_list|)
 block|,
 comment|/* UA16 */
+if|#
+directive|if
+literal|0
+comment|/* TLS */
+block|_RF_S|_RF_A|		_RF_SZ(32) | _RF_RS(10),
+comment|/* GD_HI22 */
+block|_RF_S|_RF_A|		_RF_SZ(32) | _RF_RS(0),
+comment|/* GD_LO10 */
+block|0,
+comment|/* GD_ADD */
+block|_RF_A|_RF_P|	_RF_SZ(32) | _RF_RS(2),
+comment|/* GD_CALL */
+block|_RF_S|_RF_A|		_RF_SZ(32) | _RF_RS(10),
+comment|/* LDM_HI22 */
+block|_RF_S|_RF_A|		_RF_SZ(32) | _RF_RS(0),
+comment|/* LDM_LO10 */
+block|0,
+comment|/* LDM_ADD */
+block|_RF_A|_RF_P|	_RF_SZ(32) | _RF_RS(2),
+comment|/* LDM_CALL */
+block|_RF_S|_RF_A|		_RF_SZ(32) | _RF_RS(10),
+comment|/* LDO_HIX22 */
+block|_RF_S|_RF_A|		_RF_SZ(32) | _RF_RS(0),
+comment|/* LDO_LOX10 */
+block|0,
+comment|/* LDO_ADD */
+block|_RF_S|_RF_A|		_RF_SZ(32) | _RF_RS(10),
+comment|/* IE_HI22 */
+block|_RF_S|_RF_A|		_RF_SZ(32) | _RF_RS(0),
+comment|/* IE_LO10 */
+block|0,
+comment|/* IE_LD */
+block|0,
+comment|/* IE_LDX */
+block|0,
+comment|/* IE_ADD */
+block|_RF_S|_RF_A|	_RF_O|	_RF_SZ(32) | _RF_RS(10),
+comment|/* LE_HIX22 */
+block|_RF_S|_RF_A|	_RF_O|	_RF_SZ(32) | _RF_RS(0),
+comment|/* LE_LOX10 */
+block|_RF_S|		_RF_I|	_RF_SZ(32) | _RF_RS(0),
+comment|/* DTPMOD32 */
+block|_RF_S|		_RF_I|	_RF_SZ(64) | _RF_RS(0),
+comment|/* DTPMOD64 */
+block|_RF_S|_RF_A|	_RF_D|	_RF_SZ(32) | _RF_RS(0),
+comment|/* DTPOFF32 */
+block|_RF_S|_RF_A|	_RF_D|	_RF_SZ(64) | _RF_RS(0),
+comment|/* DTPOFF64 */
+block|_RF_S|_RF_A|	_RF_O|	_RF_SZ(32) | _RF_RS(0),
+comment|/* TPOFF32 */
+block|_RF_S|_RF_A|	_RF_O|	_RF_SZ(64) | _RF_RS(0)
+comment|/* TPOFF64 */
+endif|#
+directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1470,7 +1557,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static const char *const reloc_names[] = { 	"NONE", "8", "16", "32", "DISP_8", "DISP_16", "DISP_32", "WDISP_30", 	"WDISP_22", "HI22", "22", "13", "LO10", "GOT10", "GOT13", "GOT22", 	"PC10", "PC22", "WPLT30", "COPY", "GLOB_DAT", "JMP_SLOT", "RELATIVE", 	"UA_32", "PLT32", "HIPLT22", "LOPLT10", "LOPLT10", "PCPLT22", 	"PCPLT32", "10", "11", "64", "OLO10", "HH22", "HM10", "LM22", 	"PC_HH22", "PC_HM10", "PC_LM22", "WDISP16", "WDISP19", "GLOB_JMP", 	"7", "5", "6", "DISP64", "PLT64", "HIX22", "LOX10", "H44", "M44", 	"L44", "REGISTER", "UA64", "UA16" };
+unit|static const char *const reloc_names[] = { 	"NONE", "8", "16", "32", "DISP_8", "DISP_16", "DISP_32", "WDISP_30", 	"WDISP_22", "HI22", "22", "13", "LO10", "GOT10", "GOT13", "GOT22", 	"PC10", "PC22", "WPLT30", "COPY", "GLOB_DAT", "JMP_SLOT", "RELATIVE", 	"UA_32", "PLT32", "HIPLT22", "LOPLT10", "LOPLT10", "PCPLT22", 	"PCPLT32", "10", "11", "64", "OLO10", "HH22", "HM10", "LM22", 	"PC_HH22", "PC_HM10", "PC_LM22", "WDISP16", "WDISP19", "GLOB_JMP", 	"7", "5", "6", "DISP64", "PLT64", "HIX22", "LOX10", "H44", "M44", 	"L44", "REGISTER", "UA64", "UA16", "GD_HI22", "GD_LO10", "GD_ADD", 	"GD_CALL", "LDM_HI22", "LDMO10", "LDM_ADD", "LDM_CALL", "LDO_HIX22", 	"LDO_LOX10", "LDO_ADD", "IE_HI22", "IE_LO10", "IE_LD", "IE_LDX", 	"IE_ADD", "LE_HIX22", "LE_LOX10", "DTPMOD32", "DTPMOD64", "DTPOFF32", 	"DTPOFF64", "TPOFF32", "TPOFF64" };
 endif|#
 directive|endif
 end_endif
@@ -1533,6 +1620,36 @@ parameter_list|(
 name|t
 parameter_list|)
 value|((reloc_target_flags[t]& _RF_X) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RELOC_USE_TLS_DOFF
+parameter_list|(
+name|t
+parameter_list|)
+value|((reloc_target_flags[t]& _RF_D) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RELOC_USE_TLS_OFF
+parameter_list|(
+name|t
+parameter_list|)
+value|((reloc_target_flags[t]& _RF_O) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RELOC_USE_TLS_ID
+parameter_list|(
+name|t
+parameter_list|)
+value|((reloc_target_flags[t]& _RF_I) != 0)
 end_define
 
 begin_define
@@ -1856,6 +1973,31 @@ literal|16
 argument_list|)
 block|,
 comment|/* REGISTER, UA64, UA16 */
+if|#
+directive|if
+literal|0
+block|_BM(22), _BM(10), 0, _BM(30),
+comment|/* GD_HI22, GD_LO10, GD_ADD, GD_CALL */
+block|_BM(22), _BM(10), 0,
+comment|/* LDM_HI22, LDMO10, LDM_ADD */
+block|_BM(30),
+comment|/* LDM_CALL */
+block|_BM(22), _BM(10), 0,
+comment|/* LDO_HIX22, LDO_LOX10, LDO_ADD */
+block|_BM(22), _BM(10), 0, 0,
+comment|/* IE_HI22, IE_LO10, IE_LD, IE_LDX */
+block|0,
+comment|/* IE_ADD */
+block|_BM(22), _BM(13),
+comment|/* LE_HIX22, LE_LOX10 */
+block|_BM(32), -1,
+comment|/* DTPMOD32, DTPMOD64 */
+block|_BM(32), -1,
+comment|/* DTPOFF32, DTPOFF64 */
+block|_BM(32), -1
+comment|/* TPOFF32, TPOFF64 */
+endif|#
+directive|endif
 undef|#
 directive|undef
 name|_BM
@@ -2131,12 +2273,21 @@ operator|*
 name|reloc_target_bitmask
 argument_list|)
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"kldload: unexpected relocation type %ld\n"
+argument_list|,
+name|rtype
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|RELOC_UNALIGNED
@@ -2144,12 +2295,21 @@ argument_list|(
 name|rtype
 argument_list|)
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"kldload: unaligned relocation type %ld\n"
+argument_list|,
+name|rtype
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 name|value
 operator|=
 name|rela
@@ -2231,6 +2391,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|rtype
+operator|==
+name|R_SPARC_HIX22
+condition|)
+name|value
+operator|^=
+literal|0xffffffffffffffff
+expr_stmt|;
+if|if
+condition|(
 name|RELOC_PC_RELATIVE
 argument_list|(
 name|rtype
@@ -2278,6 +2448,16 @@ expr_stmt|;
 name|value
 operator|&=
 name|mask
+expr_stmt|;
+if|if
+condition|(
+name|rtype
+operator|==
+name|R_SPARC_LOX10
+condition|)
+name|value
+operator||=
+literal|0x1c00
 expr_stmt|;
 if|if
 condition|(
