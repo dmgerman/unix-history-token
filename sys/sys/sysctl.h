@@ -319,6 +319,17 @@ name|CTLFLAG_RDTUN
 value|(CTLFLAG_RD|CTLFLAG_TUN)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CTLFLAG_DYING
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* oid is being removed */
+end_comment
+
 begin_comment
 comment|/*  * Secure level.   Note that CTLFLAG_SECURE == CTLFLAG_SECURE1.    *  * Secure when the securelevel is raised to at least N.  */
 end_comment
@@ -605,8 +616,11 @@ name|char
 modifier|*
 name|oid_fmt
 decl_stmt|;
-name|int
+name|int16_t
 name|oid_refcnt
+decl_stmt|;
+name|uint16_t
+name|oid_running
 decl_stmt|;
 specifier|const
 name|char
@@ -930,7 +944,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|static struct sysctl_oid sysctl__##parent##_##name = {		 \&sysctl_##parent##_children, { NULL }, nbr, kind,	 \ 		a1, a2, #name, handler, fmt, 0, __DESCR(descr) };     \ 	DATA_SET(sysctl_set, sysctl__##parent##_##name)
+value|static struct sysctl_oid sysctl__##parent##_##name = {		 \&sysctl_##parent##_children, { NULL }, nbr, kind,	 \ 		a1, a2, #name, handler, fmt, 0, 0, __DESCR(descr) };	 \ 	DATA_SET(sysctl_set, sysctl__##parent##_##name)
 end_define
 
 begin_define
