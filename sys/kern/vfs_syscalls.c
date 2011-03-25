@@ -5183,7 +5183,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|falloc
+name|fallocf
 argument_list|(
 name|td
 argument_list|,
@@ -5192,6 +5192,8 @@ name|nfp
 argument_list|,
 operator|&
 name|indx
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -22478,7 +22480,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|falloc
+name|fallocf
 argument_list|(
 name|td
 argument_list|,
@@ -22487,6 +22489,8 @@ name|nfp
 argument_list|,
 operator|&
 name|indx
+argument_list|,
+name|fmode
 argument_list|)
 operator|)
 operator|!=

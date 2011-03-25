@@ -441,10 +441,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Defined by POSIX 1003.1-2008; BSD default, but reserve for future use. */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -452,6 +448,10 @@ name|__POSIX_VISIBLE
 operator|>=
 literal|200809
 end_if
+
+begin_comment
+comment|/* Defined by POSIX 1003.1-2008; BSD default, but reserve for future use. */
+end_comment
 
 begin_define
 define|#
@@ -463,6 +463,13 @@ end_define
 begin_comment
 comment|/* Restore default termios attributes */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|O_CLOEXEC
+value|0x00100000
+end_define
 
 begin_endif
 endif|#
