@@ -490,10 +490,27 @@ name|RateFlags
 operator||=
 name|HAL_RATESERIES_RTS_CTS
 expr_stmt|;
+comment|/* 		 * Transmit 40MHz frames only if the node has negotiated 		 * it rather than whether the node is capable of it or not. 	 	 * It's subtly different in the hostap case. 	 	 */
+if|if
+condition|(
+name|ni
+operator|->
+name|ni_chw
+operator|==
+literal|40
+condition|)
+name|series
+index|[
+name|i
+index|]
+operator|.
+name|RateFlags
+operator||=
+name|HAL_RATESERIES_2040
+expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (ni->ni_htcap& IEEE80211_HTCAP_CHWIDTH40) 			series[i].RateFlags |= HAL_RATESERIES_2040;
 comment|/* 		 * The hardware only supports short-gi in 40mhz mode - 		 * if later hardware supports it in 20mhz mode, be sure 		 * to add the relevant check here. 		 */
 block|if (ni->ni_htcap& IEEE80211_HTCAP_SHORTGI40) 			series[i].RateFlags |= HAL_RATESERIES_HALFGI;
 endif|#
