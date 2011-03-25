@@ -606,6 +606,20 @@ parameter_list|)
 value|do {			\ 	if ((STAILQ_NEXT(elm, field) =					\ 	     STAILQ_NEXT(STAILQ_NEXT(elm, field), field)) == NULL)	\ 		(head)->stqh_last =&STAILQ_NEXT((elm), field);		\ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|STAILQ_SWAP
+parameter_list|(
+name|head1
+parameter_list|,
+name|head2
+parameter_list|,
+name|type
+parameter_list|)
+value|do {				\ 	struct type *swap_first = STAILQ_FIRST(head1);			\ 	struct type **swap_last = (head1)->stqh_last;			\ 	STAILQ_FIRST(head1) = STAILQ_FIRST(head2);			\ 	(head1)->stqh_last = (head2)->stqh_last;			\ 	STAILQ_FIRST(head2) = swap_first;				\ 	(head2)->stqh_last = swap_last;					\ 	if (STAILQ_EMPTY(head1))					\ 		(head1)->stqh_last =&STAILQ_FIRST(head1);		\ 	if (STAILQ_EMPTY(head2))					\ 		(head2)->stqh_last =&STAILQ_FIRST(head2);		\ } while (0)
+end_define
+
 begin_comment
 comment|/*  * List declarations.  */
 end_comment
@@ -880,6 +894,22 @@ parameter_list|,
 name|field
 parameter_list|)
 value|do {					\ 	QMD_SAVELINK(oldnext, (elm)->field.le_next);			\ 	QMD_SAVELINK(oldprev, (elm)->field.le_prev);			\ 	QMD_LIST_CHECK_NEXT(elm, field);				\ 	QMD_LIST_CHECK_PREV(elm, field);				\ 	if (LIST_NEXT((elm), field) != NULL)				\ 		LIST_NEXT((elm), field)->field.le_prev = 		\ 		    (elm)->field.le_prev;				\ 	*(elm)->field.le_prev = LIST_NEXT((elm), field);		\ 	TRASHIT(*oldnext);						\ 	TRASHIT(*oldprev);						\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LIST_SWAP
+parameter_list|(
+name|head1
+parameter_list|,
+name|head2
+parameter_list|,
+name|type
+parameter_list|,
+name|field
+parameter_list|)
+value|do {			\ 	struct type *swap_tmp = LIST_FIRST((head1));			\ 	LIST_FIRST((head1)) = LIST_FIRST((head2));			\ 	LIST_FIRST((head2)) = swap_tmp;					\ 	if ((swap_tmp = LIST_FIRST((head1))) != NULL)			\ 		swap_tmp->field.le_prev =&LIST_FIRST((head1));		\ 	if ((swap_tmp = LIST_FIRST((head2))) != NULL)			\ 		swap_tmp->field.le_prev =&LIST_FIRST((head2));		\ } while (0)
 end_define
 
 begin_comment
@@ -1277,6 +1307,22 @@ parameter_list|,
 name|field
 parameter_list|)
 value|do {				\ 	QMD_SAVELINK(oldnext, (elm)->field.tqe_next);			\ 	QMD_SAVELINK(oldprev, (elm)->field.tqe_prev);			\ 	QMD_TAILQ_CHECK_NEXT(elm, field);				\ 	QMD_TAILQ_CHECK_PREV(elm, field);				\ 	if ((TAILQ_NEXT((elm), field)) != NULL)				\ 		TAILQ_NEXT((elm), field)->field.tqe_prev = 		\ 		    (elm)->field.tqe_prev;				\ 	else {								\ 		(head)->tqh_last = (elm)->field.tqe_prev;		\ 		QMD_TRACE_HEAD(head);					\ 	}								\ 	*(elm)->field.tqe_prev = TAILQ_NEXT((elm), field);		\ 	TRASHIT(*oldnext);						\ 	TRASHIT(*oldprev);						\ 	QMD_TRACE_ELEM(&(elm)->field);					\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAILQ_SWAP
+parameter_list|(
+name|head1
+parameter_list|,
+name|head2
+parameter_list|,
+name|type
+parameter_list|,
+name|field
+parameter_list|)
+value|do {			\ 	struct type *swap_first = (head1)->tqh_first;			\ 	struct type **swap_last = (head1)->tqh_last;			\ 	(head1)->tqh_first = (head2)->tqh_first;			\ 	(head1)->tqh_last = (head2)->tqh_last;				\ 	(head2)->tqh_first = swap_first;				\ 	(head2)->tqh_last = swap_last;					\ 	if ((swap_first = (head1)->tqh_first) != NULL)			\ 		swap_first->field.tqe_prev =&(head1)->tqh_first;	\ 	else								\ 		(head1)->tqh_last =&(head1)->tqh_first;		\ 	if ((swap_first = (head2)->tqh_first) != NULL)			\ 		swap_first->field.tqe_prev =&(head2)->tqh_first;	\ 	else								\ 		(head2)->tqh_last =&(head2)->tqh_first;		\ } while (0)
 end_define
 
 begin_ifdef
