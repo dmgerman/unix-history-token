@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ttydefaults.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/gdb_machdep.h>
 end_include
 
@@ -166,6 +172,47 @@ operator|-
 literal|1
 condition|)
 do|;
+if|if
+condition|(
+name|c
+operator|==
+name|CTRL
+argument_list|(
+literal|'C'
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Received ^C; trying to switch back to ddb.\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|kdb_dbbe_select
+argument_list|(
+literal|"ddb"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"The ddb backend could not be selected.\n"
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"using longjmp, hope it works!\n"
+argument_list|)
+expr_stmt|;
+name|kdb_reenter
+argument_list|()
+expr_stmt|;
+block|}
+block|}
 return|return
 operator|(
 name|c
