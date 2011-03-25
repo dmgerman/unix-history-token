@@ -328,6 +328,8 @@ operator|=
 name|dmaflags
 operator||
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_COHERENT
 expr_stmt|;
 name|b
 operator|->
