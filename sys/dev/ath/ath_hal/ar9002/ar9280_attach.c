@@ -480,7 +480,7 @@ argument_list|,
 operator|&
 name|aniparams
 argument_list|,
-name|AH_FALSE
+name|AH_TRUE
 argument_list|)
 expr_stmt|;
 block|}

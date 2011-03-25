@@ -400,7 +400,17 @@ operator|=
 literal|100
 block|, 	}
 decl_stmt|;
-comment|/* NB: ANI is not enabled yet */
+comment|/* NB: disable ANI noise immmunity for reliable RIFS rx */
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_ani_function
+operator|&=
+operator|~
+name|HAL_ANI_NOISE_IMMUNITY_LEVEL
+expr_stmt|;
 name|ar5416AniAttach
 argument_list|(
 name|ah
@@ -411,7 +421,7 @@ argument_list|,
 operator|&
 name|aniparams
 argument_list|,
-name|AH_FALSE
+name|AH_TRUE
 argument_list|)
 expr_stmt|;
 block|}
