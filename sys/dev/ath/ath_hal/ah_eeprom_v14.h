@@ -1002,39 +1002,39 @@ comment|// 1
 define|#
 directive|define
 name|AR5416_EEP_FLAG_USEANT1
-value|0x01
+value|0x80
 comment|/* +1 configured antenna */
 define|#
 directive|define
 name|AR5416_EEP_FLAG_FORCEXPAON
-value|0x02
+value|0x40
 comment|/* force XPA bit for 5G */
 define|#
 directive|define
 name|AR5416_EEP_FLAG_LOCALBIAS
-value|0x04
+value|0x20
 comment|/* enable local bias */
 define|#
 directive|define
 name|AR5416_EEP_FLAG_FEMBANDSELECT
-value|0x08
+value|0x10
 comment|/* FEM band select used */
 define|#
 directive|define
 name|AR5416_EEP_FLAG_XLNABUFIN
-value|0x10
+value|0x08
 define|#
 directive|define
-name|AR5416_EEP_FLAG_XLNAISEL
-value|0x60
+name|AR5416_EEP_FLAG_XLNAISEL1
+value|0x04
 define|#
 directive|define
-name|AR5416_EEP_FLAG_XLNAISEL_S
-value|5
+name|AR5416_EEP_FLAG_XLNAISEL2
+value|0x02
 define|#
 directive|define
 name|AR5416_EEP_FLAG_XLNABUFMODE
-value|0x80
+value|0x01
 name|uint8_t
 name|miscBits
 decl_stmt|;
