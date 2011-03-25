@@ -3907,11 +3907,18 @@ argument_list|)
 expr_stmt|;
 name|setproctitle
 argument_list|(
-literal|"%s (primary)"
+literal|"%s (%s)"
 argument_list|,
 name|res
 operator|->
 name|hr_name
+argument_list|,
+name|role2str
+argument_list|(
+name|res
+operator|->
+name|hr_role
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|init_local
