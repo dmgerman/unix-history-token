@@ -216,21 +216,6 @@ if|if
 condition|(
 name|uap
 operator|->
-name|data
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"%s: where is my ioctl data??"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|uap
-operator|->
 name|com
 operator|&
 name|IOC_IN
@@ -610,21 +595,6 @@ name|error
 decl_stmt|;
 if|if
 condition|(
-name|uap
-operator|->
-name|data
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"%s: where is my ioctl data??"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 operator|(
 name|error
 operator|=
@@ -737,21 +707,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-if|if
-condition|(
-name|uap
-operator|->
-name|data
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"%s: where is my ioctl data??"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
