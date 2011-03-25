@@ -44,6 +44,13 @@ name|AR5416_MAGIC
 value|0x20065416
 end_define
 
+begin_define
+define|#
+directive|define
+name|AR5416_INT_MITIGATION
+value|1
+end_define
+
 begin_enum
 enum|enum
 block|{
