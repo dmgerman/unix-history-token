@@ -605,10 +605,10 @@ name|char
 modifier|*
 name|oid_fmt
 decl_stmt|;
-name|int
+name|int16_t
 name|oid_refcnt
 decl_stmt|;
-name|u_int
+name|uint16_t
 name|oid_running
 decl_stmt|;
 specifier|const
