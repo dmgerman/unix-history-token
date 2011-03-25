@@ -2202,7 +2202,9 @@ name|proto_connect_wait
 argument_list|(
 name|conn
 argument_list|,
-name|HAST_TIMEOUT
+name|res
+operator|->
+name|hr_timeout
 argument_list|)
 operator|<
 literal|0
