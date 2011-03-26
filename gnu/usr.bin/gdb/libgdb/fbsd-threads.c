@@ -6042,9 +6042,16 @@ break|break;
 block|}
 name|printf_filtered
 argument_list|(
-literal|"si_code %s si_pid %d si_uid %d si_status %x si_addr %p\n"
+literal|"si_code %s (%d) si_pid %d si_uid %d si_status %x "
+literal|"si_addr %p\n"
 argument_list|,
 name|code
+argument_list|,
+name|ti
+operator|.
+name|ti_siginfo
+operator|.
+name|si_code
 argument_list|,
 name|ti
 operator|.
