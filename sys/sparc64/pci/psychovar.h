@@ -23,6 +23,10 @@ begin_struct
 struct|struct
 name|psycho_softc
 block|{
+name|struct
+name|bus_dma_methods
+name|sc_dma_methods
+decl_stmt|;
 name|device_t
 name|sc_dev
 decl_stmt|;
