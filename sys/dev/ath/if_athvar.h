@@ -56,6 +56,35 @@ name|ATH_TIMEOUT
 value|1000
 end_define
 
+begin_comment
+comment|/*  * 802.11n requires more TX and RX buffers to do AMPDU.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AH_ENABLE_11N
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ATH_TXBUF
+value|512
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_RXBUF
+value|512
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
