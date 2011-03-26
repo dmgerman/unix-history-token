@@ -147,13 +147,6 @@ value|(((off_t)(x) + (DEV_BSIZE-1))& ~(DEV_BSIZE-1))
 end_define
 
 begin_decl_stmt
-specifier|extern
-name|uint64_t
-name|KPDPphys
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|uint64_t
 modifier|*
 name|vm_page_dump

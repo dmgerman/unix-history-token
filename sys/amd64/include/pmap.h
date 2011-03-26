@@ -687,6 +687,17 @@ end_define
 begin_decl_stmt
 specifier|extern
 name|u_int64_t
+name|KPDPphys
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* physical address of kernel level 3 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_int64_t
 name|KPML4phys
 decl_stmt|;
 end_decl_stmt
