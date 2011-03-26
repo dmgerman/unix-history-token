@@ -2720,13 +2720,26 @@ name|HAL_ENOTSUPP
 return|;
 block|}
 case|case
-name|HAP_CAP_SPLIT_4KB_TRANS
+name|HAL_CAP_SPLIT_4KB_TRANS
 case|:
 comment|/* hardware handles descriptors straddling 4k page boundary */
 return|return
 name|pCap
 operator|->
 name|hal4kbSplitTransSupport
+condition|?
+name|HAL_OK
+else|:
+name|HAL_ENOTSUPP
+return|;
+case|case
+name|HAL_CAP_HAS_PSPOLL
+case|:
+comment|/* hardware has ps-poll support */
+return|return
+name|pCap
+operator|->
+name|halHasPsPollSupport
 condition|?
 name|HAL_OK
 else|:
