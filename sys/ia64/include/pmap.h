@@ -57,28 +57,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NKPT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NKPT
-value|30
-end_define
-
-begin_comment
-comment|/* initial number of kernel page tables */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
