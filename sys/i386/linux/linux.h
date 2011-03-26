@@ -2957,6 +2957,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LINUX_SO_PASSCRED
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_SO_PEERCRED
 value|17
 end_define
