@@ -743,6 +743,7 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
+comment|/* 	 * These bits correspond to AR_RX_FILTER for all chips. 	 * Not all bits are supported by all chips. 	 */
 name|HAL_RX_FILTER_UCAST
 init|=
 literal|0x00000001
@@ -778,24 +779,40 @@ init|=
 literal|0x00000080
 block|,
 comment|/* Allow probe request frames */
-name|HAL_RX_FILTER_PHYERR
-init|=
-literal|0x00000100
-block|,
-comment|/* Allow phy errors */
-name|HAL_RX_FILTER_PHYRADAR
-init|=
-literal|0x00000200
-block|,
-comment|/* Allow phy radar errors */
 name|HAL_RX_FILTER_COMPBAR
 init|=
 literal|0x00000400
 block|,
 comment|/* Allow compressed BAR */
-name|HAL_RX_FILTER_BSSID
+name|HAL_RX_FILTER_COMP_BA
 init|=
 literal|0x00000800
+block|,
+comment|/* Allow compressed blockack */
+name|HAL_RX_FILTER_PSPOLL
+init|=
+literal|0x00004000
+block|,
+comment|/* Allow PS-POLL frames */
+name|HAL_RX_FILTER_MCAST_BCAST_ALL
+init|=
+literal|0x00008000
+block|,
+comment|/* Allow all mcast/bcast frames */
+comment|/* 	 * Magic RX filter flags that aren't targetting hardware bits 	 * but instead the HAL sets individual bits - eg PHYERR will result 	 * in OFDM/CCK timing error frames being received. 	 */
+name|HAL_RX_FILTER_PHYERR
+init|=
+literal|0x10000000
+block|,
+comment|/* Allow phy errors */
+name|HAL_RX_FILTER_PHYRADAR
+init|=
+literal|0x20000000
+block|,
+comment|/* Allow phy radar errors */
+name|HAL_RX_FILTER_BSSID
+init|=
+literal|0x40000000
 block|,
 comment|/* Disable BSSID match */
 block|}
