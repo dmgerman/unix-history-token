@@ -617,7 +617,7 @@ begin_define
 define|#
 directive|define
 name|MLX4_EN_MAX_RX_POLL
-value|16
+value|1024
 end_define
 
 begin_comment
@@ -2020,6 +2020,9 @@ decl_stmt|;
 name|int
 name|ip_reasm
 decl_stmt|;
+name|bool
+name|wol
+decl_stmt|;
 name|struct
 name|mlx4_en_tx_ring
 name|tx_ring
@@ -2121,6 +2124,37 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_enum
+enum|enum
+name|mlx4_en_wol
+block|{
+name|MLX4_EN_WOL_MAGIC
+init|=
+operator|(
+literal|1ULL
+operator|<<
+literal|61
+operator|)
+block|,
+name|MLX4_EN_WOL_ENABLED
+init|=
+operator|(
+literal|1ULL
+operator|<<
+literal|62
+operator|)
+block|,
+name|MLX4_EN_WOL_DO_MODIFY
+init|=
+operator|(
+literal|1ULL
+operator|<<
+literal|63
+operator|)
+block|, }
+enum|;
+end_enum
 
 begin_function_decl
 name|int

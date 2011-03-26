@@ -2806,6 +2806,11 @@ operator|=
 name|mlx4_en_get_wol
 block|,
 operator|.
+name|set_wol
+operator|=
+name|mlx4_en_set_wol
+block|,
+operator|.
 name|get_msglevel
 operator|=
 name|mlx4_en_get_msglevel

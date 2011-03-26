@@ -208,6 +208,9 @@ decl_stmt|;
 name|int
 name|loopback_support
 decl_stmt|;
+name|int
+name|wol
+decl_stmt|;
 name|u64
 name|flags
 decl_stmt|;

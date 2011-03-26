@@ -1959,6 +1959,16 @@ name|dev
 operator|->
 name|caps
 operator|.
+name|wol
+operator|=
+name|dev_cap
+operator|->
+name|wol
+expr_stmt|;
+name|dev
+operator|->
+name|caps
+operator|.
 name|max_gso_sz
 operator|=
 name|dev_cap
