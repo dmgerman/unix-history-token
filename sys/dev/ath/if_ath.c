@@ -8735,6 +8735,13 @@ name|rfilt
 operator||=
 name|HAL_RX_FILTER_BEACON
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* 	 * Enable hardware PS-POLL only for hostap mode; 	 * STA mode sends PS-POLL frames but never 	 * sends them. 	 */
+block|if (ath_hal_getcapability(ah, HAL_CAP_HAS_PSPOLL, 	    0, NULL) == HAL_OK&& 	    ic->ic_opmode == IEEE80211_M_HOSTAP) 		rfilt |= HAL_RX_FILTER_PSPOLL;
+endif|#
+directive|endif
 if|if
 condition|(
 name|sc
@@ -8774,6 +8781,7 @@ name|rfilt
 operator||=
 name|HAL_RX_FILTER_CONTROL
 expr_stmt|;
+comment|/* 	 * Enable RX of compressed BAR frames only when doing 	 * 802.11n. Required for A-MPDU. 	 */
 if|if
 condition|(
 name|IEEE80211_IS_CHAN_HT
