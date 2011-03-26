@@ -97,7 +97,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|MCR0_BROADCAST
+name|MCR0_BROADCAST_DIS
 value|0x0040
 end_define
 
