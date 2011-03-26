@@ -760,7 +760,6 @@ operator|(
 literal|1
 operator|)
 return|;
-else|else
 return|return
 operator|(
 literal|0
@@ -805,7 +804,6 @@ operator|(
 literal|1
 operator|)
 return|;
-else|else
 return|return
 operator|(
 literal|0
