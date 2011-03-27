@@ -594,6 +594,22 @@ operator|*
 literal|1024
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Allow build-time override in case Redboot lies 	 * or in other situations (eg where there's u-boot) 	 * where there isn't (yet) a convienent method of 	 * being told how much RAM is available. 	 * 	 * This happens on at least the Ubiquiti LS-SR71A 	 * board, where redboot says there's 16mb of RAM 	 * but in fact there's 32mb. 	 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|AR71XX_REALMEM
+argument_list|)
+name|realmem
+operator|=
+name|btoc
+argument_list|(
+name|MIPS_REALMEM
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* phys_avail regions are in bytes */
 name|phys_avail
 index|[
