@@ -2784,6 +2784,9 @@ name|DC_MIN_FRAMELEN
 index|]
 decl_stmt|;
 name|int
+name|dc_tx_pkts
+decl_stmt|;
+name|int
 name|dc_tx_first
 decl_stmt|;
 name|int
@@ -4103,13 +4106,6 @@ define|#
 directive|define
 name|DC_TULIP_LEDS
 value|0x00004000
-end_define
-
-begin_define
-define|#
-directive|define
-name|DC_TX_ONE
-value|0x00008000
 end_define
 
 begin_define
