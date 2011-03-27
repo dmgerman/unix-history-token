@@ -197,6 +197,11 @@ begin_struct
 struct|struct
 name|g_gate_softc
 block|{
+name|char
+modifier|*
+name|sc_name
+decl_stmt|;
+comment|/* P: (read-only) */
 name|int
 name|sc_unit
 decl_stmt|;
@@ -267,13 +272,6 @@ comment|/* P: (read-only) */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|sc_name
-value|sc_provider->geom->name
-end_define
 
 begin_define
 define|#
