@@ -2595,7 +2595,7 @@ name|sc
 operator|->
 name|intr_type
 operator|==
-literal|1
+name|INTR_INTX
 condition|)
 name|t4_write_reg
 argument_list|(
