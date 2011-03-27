@@ -186,17 +186,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|u_long
-modifier|*
-name|ipi_lazypmap_counts
-index|[
-name|MAXCPU
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
