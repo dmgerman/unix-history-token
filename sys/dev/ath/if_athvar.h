@@ -63,7 +63,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|AH_ENABLE_11N
+name|ATH_ENABLE_11N
 end_ifdef
 
 begin_define

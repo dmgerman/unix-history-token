@@ -3407,7 +3407,7 @@ directive|endif
 comment|/* 	 * The if_ath 11n support is completely not ready for normal use. 	 * Enabling this option will likely break everything and everything. 	 * Don't think of doing that unless you know what you're doing. 	 */
 ifdef|#
 directive|ifdef
-name|AH_ENABLE_11N
+name|ATH_ENABLE_11N
 comment|/* 	 * Query HT capabilities 	 */
 if|if
 condition|(
