@@ -1491,7 +1491,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|dc_read_srom
 parameter_list|(
 name|struct
@@ -1505,7 +1505,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|dc_parse_21143_srom
 parameter_list|(
 name|struct
@@ -1517,7 +1517,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|dc_decode_leaf_sia
 parameter_list|(
 name|struct
@@ -1533,7 +1533,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|dc_decode_leaf_mii
 parameter_list|(
 name|struct
@@ -1549,7 +1549,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|dc_decode_leaf_sym
 parameter_list|(
 name|struct
@@ -7976,7 +7976,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|dc_decode_leaf_sia
 parameter_list|(
 name|struct
@@ -8012,6 +8012,28 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dc_dev
+argument_list|,
+literal|"Could not allocate mediainfo\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
 switch|switch
 condition|(
 name|l
@@ -8147,12 +8169,17 @@ name|dc_pmode
 operator|=
 name|DC_PMODE_SIA
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|dc_decode_leaf_sym
 parameter_list|(
 name|struct
@@ -8188,6 +8215,28 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dc_dev
+argument_list|,
+literal|"Could not allocate mediainfo\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|l
@@ -8257,12 +8306,17 @@ name|dc_pmode
 operator|=
 name|DC_PMODE_SYM
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|dc_decode_leaf_mii
 parameter_list|(
 name|struct
@@ -8302,6 +8356,28 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dc_dev
+argument_list|,
+literal|"Could not allocate mediainfo\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
 comment|/* We abuse IFM_AUTO to represent MII. */
 name|m
 operator|->
@@ -8377,12 +8453,17 @@ name|dc_mi
 operator|=
 name|m
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|dc_read_srom
 parameter_list|(
 name|struct
@@ -8399,9 +8480,10 @@ name|size
 decl_stmt|;
 name|size
 operator|=
-literal|2
-operator|<<
+name|DC_ROM_SIZE
+argument_list|(
 name|bits
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -8416,6 +8498,30 @@ argument_list|,
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|dc_srom
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dc_dev
+argument_list|,
+literal|"Could not allocate SROM buffer\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
 name|dc_read_eeprom
 argument_list|(
 name|sc
@@ -8438,12 +8544,17 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|dc_parse_21143_srom
 parameter_list|(
 name|struct
@@ -8463,6 +8574,8 @@ modifier|*
 name|hdr
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|have_mii
 decl_stmt|,
 name|i
@@ -8591,6 +8704,10 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -8626,6 +8743,8 @@ block|{
 case|case
 name|DC_EBLOCK_MII
 case|:
+name|error
+operator|=
 name|dc_decode_leaf_mii
 argument_list|(
 name|sc
@@ -8647,6 +8766,8 @@ condition|(
 operator|!
 name|have_mii
 condition|)
+name|error
+operator|=
 name|dc_decode_leaf_sia
 argument_list|(
 name|sc
@@ -8668,6 +8789,8 @@ condition|(
 operator|!
 name|have_mii
 condition|)
+name|error
+operator|=
 name|dc_decode_leaf_sym
 argument_list|(
 name|sc
@@ -8699,6 +8822,11 @@ name|ptr
 operator|++
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_function
 
@@ -8981,6 +9109,10 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Get the eeprom width, but PNIC and XIRCOM have diff eeprom */
 if|if
 condition|(
@@ -9053,6 +9185,8 @@ operator||=
 name|DC_REDUCED_MII_POLL
 expr_stmt|;
 comment|/* Save EEPROM contents so we can parse them later. */
+name|error
+operator|=
 name|dc_read_srom
 argument_list|(
 name|sc
@@ -9062,6 +9196,15 @@ operator|->
 name|dc_romwidth
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|fail
+goto|;
 break|break;
 case|case
 name|DC_DEVID
@@ -9166,6 +9309,8 @@ name|dc_pmode
 operator|=
 name|DC_PMODE_MII
 expr_stmt|;
+name|error
+operator|=
 name|dc_read_srom
 argument_list|(
 name|sc
@@ -9175,6 +9320,15 @@ operator|->
 name|dc_romwidth
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|fail
+goto|;
 break|break;
 case|case
 name|DC_DEVID
@@ -9558,6 +9712,32 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|sc
+operator|->
+name|dc_pnic_rx_buf
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dc_dev
+argument_list|,
+literal|"Could not allocate PNIC RX buffer\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENOMEM
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+if|if
+condition|(
 name|revision
 operator|<
 name|DC_REVISION_82C169
@@ -9668,6 +9848,8 @@ name|dc_pmode
 operator|=
 name|DC_PMODE_MII
 expr_stmt|;
+name|error
+operator|=
 name|dc_read_srom
 argument_list|(
 name|sc
@@ -9677,6 +9859,15 @@ operator|->
 name|dc_romwidth
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|fail
+goto|;
 break|break;
 default|default:
 name|device_printf
@@ -9778,11 +9969,24 @@ argument_list|(
 name|sc
 argument_list|)
 condition|)
+block|{
+name|error
+operator|=
 name|dc_parse_21143_srom
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|fail
+goto|;
+block|}
 elseif|else
 if|if
 condition|(

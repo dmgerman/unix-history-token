@@ -4992,6 +4992,16 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DC_ROM_SIZE
+parameter_list|(
+name|bits
+parameter_list|)
+value|(2<< (bits))
+end_define
+
+begin_define
+define|#
+directive|define
 name|DC_IB_CTLRCNT
 value|0x13
 end_define
