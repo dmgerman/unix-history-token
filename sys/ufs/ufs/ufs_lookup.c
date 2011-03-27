@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_ffs_broken_fixme.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ufs.h"
 end_include
 
@@ -5032,7 +5026,7 @@ name|i_effnlink
 operator|==
 literal|0
 condition|)
-name|ffs_snapgone
+name|UFS_SNAPGONE
 argument_list|(
 name|ip
 argument_list|)
@@ -5287,7 +5281,7 @@ name|i_effnlink
 operator|==
 literal|0
 condition|)
-name|ffs_snapgone
+name|UFS_SNAPGONE
 argument_list|(
 name|oip
 argument_list|)

@@ -418,6 +418,17 @@ name|inode
 modifier|*
 parameter_list|)
 function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|um_snapgone
+function_decl|)
+parameter_list|(
+name|struct
+name|inode
+modifier|*
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -538,6 +549,16 @@ parameter_list|(
 name|aa
 parameter_list|)
 value|((aa)->i_ump->um_rdonly(aa))
+end_define
+
+begin_define
+define|#
+directive|define
+name|UFS_SNAPGONE
+parameter_list|(
+name|aa
+parameter_list|)
+value|((aa)->i_ump->um_snapgone(aa))
 end_define
 
 begin_define
