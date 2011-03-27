@@ -2653,9 +2653,33 @@ parameter_list|)
 value|(x) = (x + 1) % y
 end_define
 
+begin_define
+define|#
+directive|define
+name|DC_LIST_ALIGN
+value|(sizeof(struct dc_desc))
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_RXBUF_ALIGN
+value|4
+end_define
+
 begin_comment
 comment|/* Macros to easily get the DMA address of a descriptor. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_ADDR_LO
+parameter_list|(
+name|x
+parameter_list|)
+value|((uint64_t)(x)& 0xFFFFFFFF)
+end_define
 
 begin_define
 define|#
@@ -2666,7 +2690,8 @@ name|sc
 parameter_list|,
 name|i
 parameter_list|)
-value|(sc->dc_laddr +				\     (uintptr_t)(sc->dc_ldata->dc_rx_list + i) - (uintptr_t)sc->dc_ldata)
+define|\
+value|(DC_ADDR_LO(sc->dc_ldata.dc_rx_list_paddr + (sizeof(struct dc_desc) * i)))
 end_define
 
 begin_define
@@ -2678,7 +2703,8 @@ name|sc
 parameter_list|,
 name|i
 parameter_list|)
-value|(sc->dc_laddr +				\     (uintptr_t)(sc->dc_ldata->dc_tx_list + i) - (uintptr_t)sc->dc_ldata)
+define|\
+value|(DC_ADDR_LO(sc->dc_ldata.dc_tx_list_paddr + (sizeof(struct dc_desc) * i)))
 end_define
 
 begin_if
@@ -2725,21 +2751,37 @@ name|dc_list_data
 block|{
 name|struct
 name|dc_desc
+modifier|*
 name|dc_rx_list
-index|[
-name|DC_RX_LIST_CNT
-index|]
+decl_stmt|;
+name|bus_addr_t
+name|dc_rx_list_paddr
 decl_stmt|;
 name|struct
 name|dc_desc
+modifier|*
 name|dc_tx_list
-index|[
-name|DC_TX_LIST_CNT
-index|]
+decl_stmt|;
+name|bus_addr_t
+name|dc_tx_list_paddr
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|DC_RX_LIST_SZ
+value|((sizeof(struct dc_desc) * DC_RX_LIST_CNT))
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_TX_LIST_SZ
+value|((sizeof(struct dc_desc) * DC_TX_LIST_CNT))
+end_define
 
 begin_struct
 struct|struct
@@ -3828,23 +3870,25 @@ name|dc_btag
 decl_stmt|;
 comment|/* bus space tag */
 name|bus_dma_tag_t
-name|dc_ltag
+name|dc_ptag
 decl_stmt|;
-comment|/* tag for descriptor ring */
-name|bus_dmamap_t
-name|dc_lmap
-decl_stmt|;
-comment|/* map for descriptor ring */
-name|u_int32_t
-name|dc_laddr
-decl_stmt|;
-comment|/* DMA address of dc_ldata */
-name|bus_dma_tag_t
-name|dc_mtag
-decl_stmt|;
-comment|/* tag for mbufs */
+comment|/* parent DMA tag */
 name|bus_dmamap_t
 name|dc_sparemap
+decl_stmt|;
+name|bus_dma_tag_t
+name|dc_rx_ltag
+decl_stmt|;
+comment|/* tag for RX descriptors */
+name|bus_dmamap_t
+name|dc_rx_lmap
+decl_stmt|;
+name|bus_dma_tag_t
+name|dc_tx_ltag
+decl_stmt|;
+comment|/* tag for TX descriptors */
+name|bus_dmamap_t
+name|dc_tx_lmap
 decl_stmt|;
 name|bus_dma_tag_t
 name|dc_stag
@@ -3854,10 +3898,18 @@ name|bus_dmamap_t
 name|dc_smap
 decl_stmt|;
 comment|/* map for the setup frame */
-name|u_int32_t
+name|bus_addr_t
 name|dc_saddr
 decl_stmt|;
 comment|/* DMA address of setup frame */
+name|bus_dma_tag_t
+name|dc_rx_mtag
+decl_stmt|;
+comment|/* tag for RX mbufs */
+name|bus_dma_tag_t
+name|dc_tx_mtag
+decl_stmt|;
+comment|/* tag for TX mbufs */
 name|void
 modifier|*
 name|dc_intrhand
@@ -3934,7 +3986,6 @@ name|dc_mi
 decl_stmt|;
 name|struct
 name|dc_list_data
-modifier|*
 name|dc_ldata
 decl_stmt|;
 name|struct
@@ -4171,13 +4222,6 @@ define|#
 directive|define
 name|DC_TIMEOUT
 value|1000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ETHER_ALIGN
-value|2
 end_define
 
 begin_comment
