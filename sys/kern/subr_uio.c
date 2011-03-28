@@ -2120,12 +2120,6 @@ name|struct
 name|vmspace
 modifier|*
 name|vms
-init|=
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_vmspace
 decl_stmt|;
 name|int
 name|error
@@ -2133,7 +2127,15 @@ decl_stmt|;
 name|vm_size_t
 name|size
 decl_stmt|;
-comment|/*  	 * Map somewhere after heap in process memory. 	 */
+name|vms
+operator|=
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_vmspace
+expr_stmt|;
+comment|/* 	 * Map somewhere after heap in process memory. 	 */
 name|PROC_LOCK
 argument_list|(
 name|td
