@@ -717,7 +717,7 @@ name|realmem
 operator|=
 name|btoc
 argument_list|(
-name|MIPS_REALMEM
+name|AR71XX_REALMEM
 argument_list|)
 expr_stmt|;
 endif|#
