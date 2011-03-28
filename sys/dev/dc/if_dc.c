@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * DEC "tulip" clone ethernet driver. Supports the DEC/Intel 21143  * series chips and several workalikes including the following:  *  * Macronix 98713/98715/98725/98727/98732 PMAC (www.macronix.com)  * Macronix/Lite-On 82c115 PNIC II (www.macronix.com)  * Lite-On 82c168/82c169 PNIC (www.litecom.com)  * ASIX Electronics AX88140A (www.asix.com.tw)  * ASIX Electronics AX88141 (www.asix.com.tw)  * ADMtek AL981 (www.admtek.com.tw)  * ADMtek AN983 (www.admtek.com.tw)  * ADMtek cardbus AN985 (www.admtek.com.tw)  * Netgear FA511 (www.netgear.com) Appears to be rebadged ADMTek cardbus AN985  * Davicom DM9100, DM9102, DM9102A (www.davicom8.com)  * Accton EN1217 (www.accton.com)  * Xircom X3201 (www.xircom.com)  * Abocom FE2500  * Conexant LANfinity (www.conexant.com)  * 3Com OfficeConnect 10/100B 3CSOHO100B (www.3com.com)  *  * Datasheets for the 21143 are available at developer.intel.com.  * Datasheets for the clone parts can be found at their respective sites.  * (Except for the PNIC; see www.freebsd.org/~wpaul/PNIC/pnic.ps.gz.)  * The PNIC II is essentially a Macronix 98715A chip; the only difference  * worth noting is that its multicast hash table is only 128 bits wide  * instead of 512.  *  * Written by Bill Paul<wpaul@ee.columbia.edu>  * Electrical Engineering Department  * Columbia University, New York City  */
+comment|/*  * DEC "tulip" clone ethernet driver. Supports the DEC/Intel 21143  * series chips and several workalikes including the following:  *  * Macronix 98713/98715/98725/98727/98732 PMAC (www.macronix.com)  * Macronix/Lite-On 82c115 PNIC II (www.macronix.com)  * Lite-On 82c168/82c169 PNIC (www.litecom.com)  * ASIX Electronics AX88140A (www.asix.com.tw)  * ASIX Electronics AX88141 (www.asix.com.tw)  * ADMtek AL981 (www.admtek.com.tw)  * ADMtek AN983 (www.admtek.com.tw)  * ADMtek CardBus AN985 (www.admtek.com.tw)  * Netgear FA511 (www.netgear.com) Appears to be rebadged ADMTek CardBus AN985  * Davicom DM9100, DM9102, DM9102A (www.davicom8.com)  * Accton EN1217 (www.accton.com)  * Xircom X3201 (www.xircom.com)  * Abocom FE2500  * Conexant LANfinity (www.conexant.com)  * 3Com OfficeConnect 10/100B 3CSOHO100B (www.3com.com)  *  * Datasheets for the 21143 are available at developer.intel.com.  * Datasheets for the clone parts can be found at their respective sites.  * (Except for the PNIC; see www.freebsd.org/~wpaul/PNIC/pnic.ps.gz.)  * The PNIC II is essentially a Macronix 98715A chip; the only difference  * worth noting is that its multicast hash table is only 128 bits wide  * instead of 512.  *  * Written by Bill Paul<wpaul@ee.columbia.edu>  * Electrical Engineering Department  * Columbia University, New York City  */
 end_comment
 
 begin_comment
@@ -399,7 +399,7 @@ argument_list|)
 block|,
 literal|0
 block|,
-literal|"ADMtek AN985 cardBus 10/100BaseTX or clone"
+literal|"ADMtek AN985 CardBus 10/100BaseTX or clone"
 block|}
 block|,
 block|{
