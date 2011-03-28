@@ -2281,7 +2281,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|vm_map_remove
 argument_list|(
 name|map
@@ -2292,6 +2291,8 @@ name|addr
 operator|+
 name|size
 argument_list|)
+operator|!=
+name|KERN_SUCCESS
 condition|)
 return|return
 operator|(
