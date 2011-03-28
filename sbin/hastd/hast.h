@@ -236,6 +236,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAST_USER
+value|"hast"
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAST_TIMEOUT
 value|5
 end_define
@@ -327,6 +334,12 @@ name|struct
 name|proto_conn
 modifier|*
 name|hc_controlconn
+decl_stmt|;
+comment|/* Incoming control connection. */
+name|struct
+name|proto_conn
+modifier|*
+name|hc_controlin
 decl_stmt|;
 comment|/* Address to listen on. */
 name|char
@@ -518,7 +531,7 @@ comment|/* PID of child worker process. 0 - no child. */
 name|pid_t
 name|hr_workerpid
 decl_stmt|;
-comment|/* Control connection between parent and child. */
+comment|/* Control commands from parent to child. */
 name|struct
 name|proto_conn
 modifier|*
@@ -529,6 +542,12 @@ name|struct
 name|proto_conn
 modifier|*
 name|hr_event
+decl_stmt|;
+comment|/* Connection requests from child to parent. */
+name|struct
+name|proto_conn
+modifier|*
+name|hr_conn
 decl_stmt|;
 comment|/* Activemap structure. */
 name|struct

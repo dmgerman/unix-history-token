@@ -50,12 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<err.h>
 end_include
 
@@ -797,7 +791,7 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Provider is used for the first time. If primary node done no 		 * writes yet as well (we will find "virgin" argument) then 		 * there is no need to synchronize anything. If primary node 		 * done any writes already we have to synchronize everything. 		 */
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->
@@ -1060,7 +1054,7 @@ else|else
 comment|/* if (res->hr_secondary_localcnt< res->hr_primary_remotecnt || 	    res->hr_primary_localcnt< res->hr_secondary_remotecnt) */
 block|{
 comment|/* 		 * This should never happen in practise, but we will perform 		 * full synchronization. 		 */
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->
@@ -1286,6 +1280,8 @@ name|pid
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|mode
 decl_stmt|;
 comment|/* 	 * Create communication channel between parent and child. 	 */
 if|if
@@ -1354,6 +1350,42 @@ argument_list|(
 name|EX_OSERR
 argument_list|,
 literal|"Unable to create event sockets between child and parent"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * Create communication channel for sending connection requests from 	 * parent to child. 	 */
+if|if
+condition|(
+name|proto_client
+argument_list|(
+literal|"socketpair://"
+argument_list|,
+operator|&
+name|res
+operator|->
+name|hr_conn
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* TODO: There's no need for this to be fatal error. */
+name|KEEP_ERRNO
+argument_list|(
+operator|(
+name|void
+operator|)
+name|pidfile_remove
+argument_list|(
+name|pfh
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|pjdlog_exit
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"Unable to create connection sockets between parent and child"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1434,6 +1466,29 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* Declare that we are sender. */
+name|proto_send
+argument_list|(
+name|res
+operator|->
+name|hr_ctrl
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|proto_send
+argument_list|(
+name|res
+operator|->
+name|hr_conn
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|res
 operator|->
 name|hr_workerpid
@@ -1446,16 +1501,78 @@ name|gres
 operator|=
 name|res
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|pidfile_close
+name|mode
+operator|=
+name|pjdlog_mode_get
+argument_list|()
+expr_stmt|;
+comment|/* Declare that we are sender. */
+name|proto_send
 argument_list|(
-name|pfh
+name|res
+operator|->
+name|hr_event
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-name|hook_fini
-argument_list|()
+comment|/* Declare that we are receiver. */
+name|proto_recv
+argument_list|(
+name|res
+operator|->
+name|hr_ctrl
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|proto_recv
+argument_list|(
+name|res
+operator|->
+name|hr_conn
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|descriptors_cleanup
+argument_list|(
+name|res
+argument_list|)
+expr_stmt|;
+name|descriptors_assert
+argument_list|(
+name|res
+argument_list|,
+name|mode
+argument_list|)
+expr_stmt|;
+name|pjdlog_init
+argument_list|(
+name|mode
+argument_list|)
+expr_stmt|;
+name|pjdlog_prefix_set
+argument_list|(
+literal|"[%s] (%s) "
+argument_list|,
+name|res
+operator|->
+name|hr_name
+argument_list|,
+name|role2str
+argument_list|(
+name|res
+operator|->
+name|hr_role
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|setproctitle
 argument_list|(
@@ -1489,18 +1606,6 @@ argument_list|,
 name|NULL
 argument_list|)
 operator|==
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* Declare that we are sender. */
-name|proto_send
-argument_list|(
-name|res
-operator|->
-name|hr_event
-argument_list|,
-name|NULL
-argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1555,6 +1660,23 @@ expr_stmt|;
 name|init_environment
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|drop_privs
+argument_list|()
+operator|!=
+literal|0
+condition|)
+name|exit
+argument_list|(
+name|EX_CONFIG
+argument_list|)
+expr_stmt|;
+name|pjdlog_info
+argument_list|(
+literal|"Privileges successfully dropped."
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Create the control thread before sending any event to the parent, 	 * as we can deadlock when parent sends control request to worker, 	 * but worker has no control thread started yet, so parent waits. 	 * In the meantime worker sends an event to the parent, but parent 	 * is unable to handle the event, because it waits for control 	 * request response. 	 */
 name|error
 operator|=
@@ -1570,7 +1692,7 @@ argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -1605,7 +1727,7 @@ argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -1626,7 +1748,7 @@ argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -2334,7 +2456,7 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|exitcode
 operator|!=

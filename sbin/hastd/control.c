@@ -171,6 +171,29 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|res
+operator|->
+name|hr_conn
+operator|!=
+name|NULL
+condition|)
+block|{
+name|proto_close
+argument_list|(
+name|res
+operator|->
+name|hr_conn
+argument_list|)
+expr_stmt|;
+name|res
+operator|->
+name|hr_conn
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|res
 operator|->
 name|hr_workerpid
@@ -643,7 +666,17 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* LOG */
+name|pjdlog_common
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|0
+argument_list|,
+name|error
+argument_list|,
+literal|"Unable to prepare control header"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|end
 goto|;
@@ -672,7 +705,13 @@ name|error
 operator|=
 name|errno
 expr_stmt|;
-comment|/* LOG */
+name|pjdlog_errno
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Unable to send control header"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|end
 goto|;
@@ -697,14 +736,20 @@ name|error
 operator|=
 name|errno
 expr_stmt|;
-comment|/* LOG */
+name|pjdlog_errno
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Unable to receive control header"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|end
 goto|;
 block|}
 name|error
 operator|=
-name|nv_get_int64
+name|nv_get_int16
 argument_list|(
 name|cnvin
 argument_list|,
@@ -740,7 +785,13 @@ name|error
 operator|=
 name|ENOENT
 expr_stmt|;
-comment|/* LOG */
+name|pjdlog_errno
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Field 'status' is missing."
+argument_list|)
+expr_stmt|;
 goto|goto
 name|end
 goto|;
@@ -1202,6 +1253,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|cfg
+operator|->
+name|hc_controlin
+operator|=
+name|conn
+expr_stmt|;
 name|nvin
 operator|=
 name|nvout
@@ -1647,6 +1704,12 @@ argument_list|(
 name|conn
 argument_list|)
 expr_stmt|;
+name|cfg
+operator|->
+name|hc_controlin
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_function
 
@@ -1761,11 +1824,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|nv_free
-argument_list|(
-name|nvin
-argument_list|)
-expr_stmt|;
 name|nvout
 operator|=
 name|nv_alloc
@@ -1904,6 +1962,45 @@ literal|"dirty"
 argument_list|)
 expr_stmt|;
 block|}
+name|nv_add_int16
+argument_list|(
+name|nvout
+argument_list|,
+literal|0
+argument_list|,
+literal|"error"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|HASTCTL_RELOAD
+case|:
+comment|/* 			 * When parent receives SIGHUP and discovers that 			 * something related to us has changes, it sends reload 			 * message to us. 			 */
+name|assert
+argument_list|(
+name|res
+operator|->
+name|hr_role
+operator|==
+name|HAST_ROLE_PRIMARY
+argument_list|)
+expr_stmt|;
+name|primary_config_reload
+argument_list|(
+name|res
+argument_list|,
+name|nvin
+argument_list|)
+expr_stmt|;
+name|nv_add_int16
+argument_list|(
+name|nvout
+argument_list|,
+literal|0
+argument_list|,
+literal|"error"
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 name|nv_add_int16
@@ -1917,6 +2014,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|nv_free
+argument_list|(
+name|nvin
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|nv_error
