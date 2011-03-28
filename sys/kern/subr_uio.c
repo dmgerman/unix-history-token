@@ -2245,6 +2245,17 @@ decl_stmt|;
 name|vm_size_t
 name|size
 decl_stmt|;
+if|if
+condition|(
+name|sz
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|map
 operator|=
 operator|&
