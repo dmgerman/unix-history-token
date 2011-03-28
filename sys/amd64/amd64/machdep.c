@@ -700,6 +700,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * The file "conf/ldscript.amd64" defines the symbol "kernphys".  Its value is  * the physical address at which the kernel is loaded.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|kernphys
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -6514,7 +6526,10 @@ if|if
 condition|(
 name|pa
 operator|>=
-literal|0x100000
+operator|(
+name|vm_paddr_t
+operator|)
+name|kernphys
 operator|&&
 name|pa
 operator|<
