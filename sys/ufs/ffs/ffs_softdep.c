@@ -1599,6 +1599,8 @@ parameter_list|(
 name|fs
 parameter_list|,
 name|vp
+parameter_list|,
+name|resource
 parameter_list|)
 name|struct
 name|fs
@@ -1609,6 +1611,9 @@ name|struct
 name|vnode
 modifier|*
 name|vp
+decl_stmt|;
+name|int
+name|resource
 decl_stmt|;
 block|{
 return|return
