@@ -148,6 +148,12 @@ block|}
 struct|;
 end_struct
 
+begin_struct_decl
+struct_decl|struct
+name|racct
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*-  * Per uid resource consumption.  This structure is used to track  * the total resource consumption (process count, socket buffer size,  * etc) for the uid and impose limits.  *  * Locking guide:  * (a) Constant from inception  * (b) Lockless, updated using atomics  * (c) Locked by global uihashtbl_mtx  * (d) Locked by the ui_vmsize_mtx  */
 end_comment
@@ -191,6 +197,12 @@ name|u_int
 name|ui_ref
 decl_stmt|;
 comment|/* (b) reference count */
+name|struct
+name|racct
+modifier|*
+name|ui_racct
+decl_stmt|;
+comment|/* (a) resource accounting */
 block|}
 struct|;
 end_struct
@@ -663,6 +675,41 @@ name|struct
 name|uidinfo
 modifier|*
 name|uip
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ui_racct_foreach
+parameter_list|(
+name|void
+function_decl|(
+modifier|*
+name|callback
+function_decl|)
+parameter_list|(
+name|struct
+name|racct
+modifier|*
+name|racct
+parameter_list|,
+name|void
+modifier|*
+name|arg2
+parameter_list|,
+name|void
+modifier|*
+name|arg3
+parameter_list|)
+parameter_list|,
+name|void
+modifier|*
+name|arg2
+parameter_list|,
+name|void
+modifier|*
+name|arg3
 parameter_list|)
 function_decl|;
 end_function_decl

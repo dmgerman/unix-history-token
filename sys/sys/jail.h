@@ -474,6 +474,12 @@ name|HOSTUUIDLEN
 value|64
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|racct
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * This structure describes a prison.  It is pointed to by all struct  * ucreds's of the inmates.  pr_ref keeps track of them and is used to  * delete the struture when the last inmate is dead.  *  * Lock key:  *   (a) allprison_lock  *   (p) locked by pr_mtx  *   (c) set only during creation before the structure is shared, no mutex  *       required to read  *   (d) set only during destruction of jail, no mutex needed  */
 end_comment
@@ -578,11 +584,17 @@ modifier|*
 name|pr_ip6
 decl_stmt|;
 comment|/* (p) v6 IPs of jail */
+name|struct
+name|racct
+modifier|*
+name|pr_racct
+decl_stmt|;
+comment|/* (c) resource accounting */
 name|void
 modifier|*
 name|pr_sparep
 index|[
-literal|4
+literal|3
 index|]
 decl_stmt|;
 name|int
@@ -1800,6 +1812,41 @@ name|int
 name|sysctl_jail_param
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|prison_racct_foreach
+parameter_list|(
+name|void
+function_decl|(
+modifier|*
+name|callback
+function_decl|)
+parameter_list|(
+name|struct
+name|racct
+modifier|*
+name|racct
+parameter_list|,
+name|void
+modifier|*
+name|arg2
+parameter_list|,
+name|void
+modifier|*
+name|arg3
+parameter_list|)
+parameter_list|,
+name|void
+modifier|*
+name|arg2
+parameter_list|,
+name|void
+modifier|*
+name|arg3
 parameter_list|)
 function_decl|;
 end_function_decl

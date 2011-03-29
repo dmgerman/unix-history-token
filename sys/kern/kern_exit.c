@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/racct.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/resourcevar.h>
 end_include
 
@@ -2738,6 +2744,12 @@ operator|-
 literal|1
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Destroy resource accounting information associated with the process. 	 */
+name|racct_proc_exit
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Free credentials, arguments, and sigacts. 	 */

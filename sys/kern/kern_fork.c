@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/racct.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/resourcevar.h>
 end_include
 
@@ -3246,6 +3252,40 @@ operator|->
 name|p_ktr
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX: This is ugly; when we copy resource usage, we need to bump 	 *      per-cred resource counters. 	 */
+name|newproc
+operator|->
+name|p_ucred
+operator|=
+name|p1
+operator|->
+name|p_ucred
+expr_stmt|;
+comment|/* 	 * Initialize resource accounting for the child process. 	 */
+name|error
+operator|=
+name|racct_proc_fork
+argument_list|(
+name|p1
+argument_list|,
+name|newproc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|error
+operator|=
+name|EAGAIN
+expr_stmt|;
+goto|goto
+name|fail1
+goto|;
+block|}
 comment|/* We have to lock the process tree while we look for a pid. */
 name|sx_slock
 argument_list|(
@@ -3400,6 +3440,11 @@ name|EAGAIN
 expr_stmt|;
 name|fail
 label|:
+name|racct_proc_exit
+argument_list|(
+name|newproc
+argument_list|)
+expr_stmt|;
 name|sx_sunlock
 argument_list|(
 operator|&

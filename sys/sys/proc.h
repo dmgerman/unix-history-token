@@ -336,6 +336,12 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
+name|racct
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|kaudit_record
 struct_decl|;
 end_struct_decl
@@ -2559,6 +2565,16 @@ name|cv
 name|p_dbgwait
 decl_stmt|;
 comment|/* (*) wait cv for debugger attach 					   after fork. */
+name|uint64_t
+name|p_prev_runtime
+decl_stmt|;
+comment|/* (c) Resource usage accounting. */
+name|struct
+name|racct
+modifier|*
+name|p_racct
+decl_stmt|;
+comment|/* (b) Resource accounting. */
 block|}
 struct|;
 end_struct

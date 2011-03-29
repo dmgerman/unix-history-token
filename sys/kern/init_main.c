@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/racct.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/resourcevar.h>
 end_include
 
@@ -2340,6 +2346,15 @@ operator|->
 name|p_cpulimit
 operator|=
 name|RLIM_INFINITY
+expr_stmt|;
+comment|/* Initialize resource accounting structures. */
+name|racct_create
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_racct
+argument_list|)
 expr_stmt|;
 name|p
 operator|->
