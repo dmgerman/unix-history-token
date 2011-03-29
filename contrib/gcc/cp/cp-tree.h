@@ -14404,6 +14404,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|bool
+name|in_main_input_context
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* in method.c */
 end_comment
@@ -15235,6 +15245,16 @@ name|bool
 name|explicit_class_specialization_p
 parameter_list|(
 name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|outermost_tinst_level
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
