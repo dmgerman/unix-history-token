@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2009-2010 The FreeBSD Foundation  * All rights reserved.  *  * This software was developed by Pawel Jakub Dawidek under sponsorship from  * the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2009-2010 The FreeBSD Foundation  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>  * All rights reserved.  *  * This software was developed by Pawel Jakub Dawidek under sponsorship from  * the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -264,13 +264,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|HASTD_PORT
-value|8457
-end_define
-
-begin_define
-define|#
-directive|define
 name|HASTD_LISTEN
 value|"tcp4://0.0.0.0:8457"
 end_define
@@ -316,6 +309,17 @@ define|#
 directive|define
 name|HAST_TOKEN_SIZE
 value|16
+end_define
+
+begin_comment
+comment|/* Number of seconds to sleep between reconnect retries or keepalive packets. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAST_KEEPALIVE
+value|10
 end_define
 
 begin_struct
@@ -387,6 +391,48 @@ name|HAST_REPLICATION_ASYNC
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|HAST_COMPRESSION_NONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAST_COMPRESSION_HOLE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAST_COMPRESSION_LZF
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAST_CHECKSUM_NONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAST_CHECKSUM_CRC32
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAST_CHECKSUM_SHA256
+value|2
+end_define
+
 begin_comment
 comment|/*  * Structure that describes single resource.  */
 end_comment
@@ -428,6 +474,14 @@ index|[
 name|PATH_MAX
 index|]
 decl_stmt|;
+comment|/* Compression algorithm. */
+name|int
+name|hr_compression
+decl_stmt|;
+comment|/* Checksum algorithm. */
+name|int
+name|hr_checksum
+decl_stmt|;
 comment|/* Path to local component. */
 name|char
 name|hr_localpath
@@ -467,6 +521,13 @@ decl_stmt|;
 comment|/* Address of the remote component. */
 name|char
 name|hr_remoteaddr
+index|[
+name|HAST_ADDRSIZE
+index|]
+decl_stmt|;
+comment|/* Local address to bind to for outgoing connections. */
+name|char
+name|hr_sourceaddr
 index|[
 name|HAST_ADDRSIZE
 index|]

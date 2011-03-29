@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"subr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"synch.h"
 end_include
 
@@ -699,13 +705,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|strlcat
+name|snprlcat
 argument_list|(
 name|hp
 operator|->
 name|hp_comm
-argument_list|,
-literal|" "
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -713,28 +717,13 @@ name|hp
 operator|->
 name|hp_comm
 argument_list|)
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strlcat
-argument_list|(
-name|hp
-operator|->
-name|hp_comm
+argument_list|,
+literal|" %s"
 argument_list|,
 name|args
 index|[
 name|ii
 index|]
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|hp
-operator|->
-name|hp_comm
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1203,6 +1192,13 @@ argument_list|(
 name|hooks_initialized
 argument_list|)
 expr_stmt|;
+name|pjdlog_debug
+argument_list|(
+literal|2
+argument_list|,
+literal|"Checking hooks."
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Report about processes that are running for a long time. 	 */
 name|now
 operator|=
@@ -1540,6 +1536,17 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|pjdlog_debug
+argument_list|(
+literal|1
+argument_list|,
+literal|"Executing hook: %s"
+argument_list|,
+name|hp
+operator|->
+name|hp_comm
+argument_list|)
+expr_stmt|;
 name|pid
 operator|=
 name|fork

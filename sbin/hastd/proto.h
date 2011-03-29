@@ -48,7 +48,12 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|addr
+name|srcaddr
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|dstaddr
 parameter_list|,
 name|struct
 name|proto_conn
