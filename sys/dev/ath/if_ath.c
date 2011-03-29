@@ -15289,6 +15289,13 @@ name|bf_daddr
 condition|)
 block|{
 comment|/* NB: never process the self-linked entry at the end */
+name|sc
+operator|->
+name|sc_stats
+operator|.
+name|ast_rx_hitqueueend
+operator|++
+expr_stmt|;
 break|break;
 block|}
 comment|/* XXX sync descriptor memory */
