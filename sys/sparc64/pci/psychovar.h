@@ -25,6 +25,7 @@ name|psycho_softc
 block|{
 name|struct
 name|bus_dma_methods
+modifier|*
 name|sc_dma_methods
 decl_stmt|;
 name|device_t
