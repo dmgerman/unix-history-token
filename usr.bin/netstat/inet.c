@@ -2023,7 +2023,18 @@ name|Aflag
 condition|)
 name|printf
 argument_list|(
-literal|"%-8.8s "
+literal|"%-*s "
+argument_list|,
+literal|2
+operator|*
+operator|(
+name|int
+operator|)
+sizeof|sizeof
+argument_list|(
+name|void
+operator|*
+argument_list|)
 argument_list|,
 literal|"Tcpcb"
 argument_list|)
@@ -2034,7 +2045,16 @@ name|Lflag
 condition|)
 name|printf
 argument_list|(
-literal|"%-5.5s %-14.14s %-22.22s\n"
+operator|(
+name|Aflag
+operator|&&
+operator|!
+name|Wflag
+operator|)
+condition|?
+literal|"%-5.5s %-14.14s %-18.18s"
+else|:
+literal|"%-5.5s %-14.14s %-22.22s"
 argument_list|,
 literal|"Proto"
 argument_list|,
@@ -2043,6 +2063,7 @@ argument_list|,
 literal|"Local Address"
 argument_list|)
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|Tflag
@@ -2056,9 +2077,9 @@ operator|!
 name|Wflag
 operator|)
 condition|?
-literal|"%-5.5s %-6.6s %-6.6s %-6.6s %-18.18s %s\n"
+literal|"%-5.5s %-6.6s %-6.6s %-6.6s %-18.18s %s"
 else|:
-literal|"%-5.5s %-6.6s %-6.6s %-6.6s %-22.22s %s\n"
+literal|"%-5.5s %-6.6s %-6.6s %-6.6s %-22.22s %s"
 argument_list|,
 literal|"Proto"
 argument_list|,
@@ -2073,6 +2094,43 @@ argument_list|,
 literal|"Foreign Address"
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+name|printf
+argument_list|(
+operator|(
+name|Aflag
+operator|&&
+operator|!
+name|Wflag
+operator|)
+condition|?
+literal|"%-5.5s %-6.6s %-6.6s %-18.18s %-18.18s"
+else|:
+literal|"%-5.5s %-6.6s %-6.6s %-22.22s %-22.22s"
+argument_list|,
+literal|"Proto"
+argument_list|,
+literal|"Recv-Q"
+argument_list|,
+literal|"Send-Q"
+argument_list|,
+literal|"Local Address"
+argument_list|,
+literal|"Foreign Address"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|xflag
+condition|)
+name|printf
+argument_list|(
+literal|" (state)"
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|xflag
@@ -2080,7 +2138,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s "
+literal|" %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s"
 argument_list|,
 literal|"R-MBUF"
 argument_list|,
@@ -2107,63 +2165,12 @@ argument_list|,
 literal|"S-BMAX"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%7.7s %7.7s %7.7s %7.7s %7.7s %7.7s\n"
-argument_list|,
-literal|"rexmt"
-argument_list|,
-literal|"persist"
-argument_list|,
-literal|"keep"
-argument_list|,
-literal|"2msl"
-argument_list|,
-literal|"delack"
-argument_list|,
-literal|"rcvtime"
-argument_list|)
-expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-name|xflag
-operator|&&
-operator|!
-name|Tflag
-condition|)
-block|{
-name|printf
+name|putchar
 argument_list|(
-operator|(
-name|Aflag
-operator|&&
-operator|!
-name|Wflag
-operator|)
-condition|?
-literal|"%-5.5s %-6.6s %-6.6s  %-18.18s %-18.18s"
-else|:
-literal|"%-5.5s %-6.6s %-6.6s  %-22.22s %-22.22s"
-argument_list|,
-literal|"Proto"
-argument_list|,
-literal|"Recv-Q"
-argument_list|,
-literal|"Send-Q"
-argument_list|,
-literal|"Local Address"
-argument_list|,
-literal|"Foreign Address"
+literal|'\n'
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"(state)\n"
-argument_list|)
-expr_stmt|;
-block|}
 name|first
 operator|=
 literal|0
@@ -2191,7 +2198,18 @@ name|istcp
 condition|)
 name|printf
 argument_list|(
-literal|"%8lx "
+literal|"%*lx "
+argument_list|,
+literal|2
+operator|*
+operator|(
+name|int
+operator|)
+sizeof|sizeof
+argument_list|(
+name|void
+operator|*
+argument_list|)
 argument_list|,
 operator|(
 name|u_long
@@ -2204,7 +2222,18 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%8lx "
+literal|"%*lx "
+argument_list|,
+literal|2
+operator|*
+operator|(
+name|int
+operator|)
+sizeof|sizeof
+argument_list|(
+name|void
+operator|*
+argument_list|)
 argument_list|,
 operator|(
 name|u_long
@@ -2751,93 +2780,9 @@ condition|(
 name|xflag
 condition|)
 block|{
-if|if
-condition|(
-name|Lflag
-condition|)
 name|printf
 argument_list|(
-literal|"%21s %6u %6u %6u %6u %6u %6u %6u %6u %6u %6u %6u %6u "
-argument_list|,
-literal|" "
-argument_list|,
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_mcnt
-argument_list|,
-name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_mcnt
-argument_list|,
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_ccnt
-argument_list|,
-name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_ccnt
-argument_list|,
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_hiwat
-argument_list|,
-name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_hiwat
-argument_list|,
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_lowat
-argument_list|,
-name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_lowat
-argument_list|,
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_mbcnt
-argument_list|,
-name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_mbcnt
-argument_list|,
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_mbmax
-argument_list|,
-name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_mbmax
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"%6u %6u %6u %6u %6u %6u %6u %6u %6u %6u %6u %6u "
+literal|"%6u %6u %6u %6u %6u %6u %6u %6u %6u %6u %6u %6u"
 argument_list|,
 name|so
 operator|->
