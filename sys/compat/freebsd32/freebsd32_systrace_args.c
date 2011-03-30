@@ -7379,13 +7379,13 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-comment|/* kldstat */
+comment|/* freebsd32_kldstat */
 case|case
 literal|308
 case|:
 block|{
 name|struct
-name|kldstat_args
+name|freebsd32_kldstat_args
 modifier|*
 name|p
 init|=
@@ -7413,7 +7413,7 @@ name|p
 operator|->
 name|stat
 expr_stmt|;
-comment|/* struct kld_file_stat * */
+comment|/* struct kld32_file_stat * */
 operator|*
 name|n_args
 operator|=
@@ -21391,7 +21391,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* kldstat */
+comment|/* freebsd32_kldstat */
 case|case
 literal|308
 case|:
@@ -21413,7 +21413,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct kld_file_stat *"
+literal|"struct kld32_file_stat *"
 expr_stmt|;
 break|break;
 default|default:
