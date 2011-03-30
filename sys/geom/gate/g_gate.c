@@ -705,7 +705,7 @@ argument_list|()
 expr_stmt|;
 name|G_GATE_DEBUG
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 literal|"Device %s destroyed."
 argument_list|,
@@ -2497,6 +2497,17 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|g_gate_units_lock
+argument_list|)
+expr_stmt|;
+name|G_GATE_DEBUG
+argument_list|(
+literal|1
+argument_list|,
+literal|"Device %s created."
+argument_list|,
+name|gp
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 if|if
