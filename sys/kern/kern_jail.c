@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sx.h>
 end_include
 
@@ -13142,6 +13148,18 @@ argument_list|(
 name|pr
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RCTL
+name|rctl_racct_release
+argument_list|(
+name|pr
+operator|->
+name|pr_racct
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|racct_destroy
 argument_list|(
 operator|&
