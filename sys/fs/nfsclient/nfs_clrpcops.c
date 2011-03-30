@@ -17344,14 +17344,14 @@ name|nfsva
 operator|.
 name|na_fileid
 operator|=
-name|fxdr_unsigned
+name|fxdr_hyper
 argument_list|(
-name|long
-argument_list|,
-operator|*
-operator|++
 name|tl
 argument_list|)
+expr_stmt|;
+name|tl
+operator|+=
+literal|2
 expr_stmt|;
 name|len
 operator|=
@@ -17360,7 +17360,6 @@ argument_list|(
 name|int
 argument_list|,
 operator|*
-operator|++
 name|tl
 argument_list|)
 expr_stmt|;
