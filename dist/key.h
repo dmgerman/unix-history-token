@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: key.h,v 1.10 2006/03/23 20:22:51 christos Exp $	*/
+comment|/*	$NetBSD: key.h,v 1.13 2009/12/30 22:37:40 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ name|el_action_t
 name|cmd
 decl_stmt|;
 comment|/* If it is a command the #	*/
-name|char
+name|Char
 modifier|*
 name|str
 decl_stmt|;
@@ -55,7 +55,7 @@ typedef|typedef
 struct|struct
 name|el_key_t
 block|{
-name|char
+name|Char
 modifier|*
 name|buf
 decl_stmt|;
@@ -165,7 +165,7 @@ parameter_list|(
 name|EditLine
 modifier|*
 parameter_list|,
-name|char
+name|Char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -190,7 +190,7 @@ parameter_list|(
 name|EditLine
 modifier|*
 parameter_list|,
-name|char
+name|Char
 modifier|*
 parameter_list|,
 name|key_value_t
@@ -208,7 +208,7 @@ name|EditLine
 modifier|*
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 parameter_list|,
 name|key_value_t
@@ -231,7 +231,7 @@ name|el_action_t
 modifier|*
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -246,7 +246,7 @@ name|EditLine
 modifier|*
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -261,7 +261,7 @@ name|EditLine
 modifier|*
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -276,7 +276,7 @@ name|EditLine
 modifier|*
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 parameter_list|,
 name|key_value_t
@@ -289,38 +289,21 @@ end_function_decl
 
 begin_function_decl
 name|protected
-name|int
+name|size_t
 name|key__decode_str
 parameter_list|(
 specifier|const
-name|char
+name|Char
 modifier|*
 parameter_list|,
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|protected
-name|int
-name|key__decode_char
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl

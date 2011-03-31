@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: hist.h,v 1.10 2003/08/07 16:44:31 agc Exp $	*/
+comment|/*	$NetBSD: hist.h,v 1.12 2009/12/30 23:54:52 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -32,21 +32,24 @@ end_include
 begin_typedef
 typedef|typedef
 name|int
-function_decl|(
-modifier|*
+argument_list|(
+operator|*
 name|hist_fun_t
-function_decl|)
-parameter_list|(
+argument_list|)
+argument_list|(
 name|ptr_t
-parameter_list|,
+argument_list|,
+name|TYPE
+argument_list|(
 name|HistEvent
-modifier|*
-parameter_list|,
+argument_list|)
+operator|*
+argument_list|,
 name|int
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
+argument_list|,
+operator|...
+argument_list|)
+expr_stmt|;
 end_typedef
 
 begin_typedef
@@ -54,7 +57,7 @@ typedef|typedef
 struct|struct
 name|el_history_t
 block|{
-name|char
+name|Char
 modifier|*
 name|buf
 decl_stmt|;
@@ -63,7 +66,7 @@ name|size_t
 name|sz
 decl_stmt|;
 comment|/* Size of history buffer	*/
-name|char
+name|Char
 modifier|*
 name|last
 decl_stmt|;
@@ -80,14 +83,38 @@ name|hist_fun_t
 name|fun
 decl_stmt|;
 comment|/* Event access			*/
-name|HistEvent
+name|TYPE
+argument_list|(
+argument|HistEvent
+argument_list|)
 name|ev
-decl_stmt|;
+expr_stmt|;
 comment|/* Event cookie			*/
 block|}
 name|el_history_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|HIST_FUN_INTERNAL
+parameter_list|(
+name|el
+parameter_list|,
+name|fn
+parameter_list|,
+name|arg
+parameter_list|)
+define|\
+value|((((*(el)->el_history.fun) ((el)->el_history.ref,&(el)->el_history.ev, \ 	fn, arg)) == -1) ? NULL : (el)->el_history.ev.str)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WIDECHAR
+end_ifdef
 
 begin_define
 define|#
@@ -101,8 +128,32 @@ parameter_list|,
 name|arg
 parameter_list|)
 define|\
-value|((((*(el)->el_history.fun) ((el)->el_history.ref,&(el)->el_history.ev, \ 	fn, arg)) == -1) ? NULL : (el)->el_history.ev.str)
+value|(((el)->el_flags& NARROW_HISTORY) ? hist_convert(el, fn, arg) : \ 	HIST_FUN_INTERNAL(el, fn, arg))
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|HIST_FUN
+parameter_list|(
+name|el
+parameter_list|,
+name|fn
+parameter_list|,
+name|arg
+parameter_list|)
+value|HIST_FUN_INTERNAL(el, fn, arg)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -239,7 +290,7 @@ parameter_list|,
 name|int
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 modifier|*
 parameter_list|)
@@ -260,6 +311,33 @@ name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WIDECHAR
+end_ifdef
+
+begin_function_decl
+name|protected
+name|wchar_t
+modifier|*
+name|hist_convert
+parameter_list|(
+name|EditLine
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|ptr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

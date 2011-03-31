@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: tty.h,v 1.11 2005/06/01 11:37:52 lukem Exp $	*/
+comment|/*	$NetBSD: tty.h,v 1.12 2009/12/30 22:37:40 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -22,6 +22,12 @@ define|#
 directive|define
 name|_h_el_tty
 end_define
+
+begin_include
+include|#
+directive|include
+file|"sys.h"
+end_include
 
 begin_include
 include|#
@@ -2876,7 +2882,7 @@ parameter_list|,
 name|int
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 modifier|*
 parameter_list|)

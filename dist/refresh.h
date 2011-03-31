@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: refresh.h,v 1.5 2003/08/07 16:44:33 agc Exp $	*/
+comment|/*	$NetBSD: refresh.h,v 1.6 2009/12/30 22:37:40 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -57,7 +57,7 @@ parameter_list|(
 name|EditLine
 modifier|*
 parameter_list|,
-name|int
+name|Int
 parameter_list|,
 name|int
 parameter_list|)

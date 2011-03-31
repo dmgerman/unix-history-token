@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: common.c,v 1.19 2006/03/06 21:11:56 christos Exp $	*/
+comment|/*	$NetBSD: common.c,v 1.24 2009/12/30 22:37:40 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: common.c,v 1.19 2006/03/06 21:11:56 christos Exp $"
+literal|"$NetBSD: common.c,v 1.24 2009/12/30 22:37:40 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -87,7 +87,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -132,7 +132,7 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
-name|int
+name|Int
 name|c
 parameter_list|)
 block|{
@@ -345,7 +345,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -355,7 +355,7 @@ operator|)
 argument_list|)
 argument_list|)
 block|{
-name|char
+name|Char
 modifier|*
 name|cp
 decl_stmt|,
@@ -457,6 +457,10 @@ name|c_delbefore
 argument_list|(
 name|el
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|el
 operator|->
 name|el_line
@@ -464,6 +468,7 @@ operator|.
 name|cursor
 operator|-
 name|cp
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* delete before dot */
@@ -524,7 +529,7 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
-name|int
+name|Int
 name|c
 parameter_list|)
 block|{
@@ -636,7 +641,7 @@ return|;
 else|#
 directive|else
 comment|/* then do an EOF */
-name|term_writechar
+name|term_writec
 argument_list|(
 name|el
 argument_list|,
@@ -780,7 +785,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -790,7 +795,7 @@ operator|)
 argument_list|)
 argument_list|)
 block|{
-name|char
+name|Char
 modifier|*
 name|kp
 decl_stmt|,
@@ -879,7 +884,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -912,18 +917,6 @@ operator|==
 name|MAP_VI
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|VI_MOVE
-name|el
-operator|->
-name|el_line
-operator|.
-name|cursor
-operator|--
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|el
@@ -948,6 +941,18 @@ name|CC_REFRESH
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|VI_MOVE
+name|el
+operator|->
+name|el_line
+operator|.
+name|cursor
+operator|--
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 return|return
 operator|(
@@ -971,7 +976,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -1007,12 +1012,8 @@ block|{
 comment|/* We want FIRST non space character */
 while|while
 condition|(
-name|isspace
+name|Isspace
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|el
 operator|->
@@ -1074,7 +1075,7 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
-name|int
+name|Int
 name|c
 parameter_list|)
 block|{
@@ -1218,7 +1219,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -1228,7 +1229,7 @@ operator|)
 argument_list|)
 argument_list|)
 block|{
-name|char
+name|Char
 modifier|*
 name|lim
 init|=
@@ -1369,7 +1370,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -1483,7 +1484,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -1608,14 +1609,14 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
-name|int
+name|Int
 name|c
 parameter_list|)
 block|{
 name|int
 name|num
 decl_stmt|;
-name|char
+name|Char
 name|tc
 decl_stmt|;
 name|tty_quotemode
@@ -1625,7 +1626,12 @@ argument_list|)
 expr_stmt|;
 name|num
 operator|=
-name|el_getc
+name|FUN
+argument_list|(
+name|el
+argument_list|,
+name|getc
+argument_list|)
 argument_list|(
 name|el
 argument_list|,
@@ -1635,10 +1641,6 @@ argument_list|)
 expr_stmt|;
 name|c
 operator|=
-operator|(
-name|unsigned
-name|char
-operator|)
 name|tc
 expr_stmt|;
 name|tty_noquotemode
@@ -1689,14 +1691,14 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
-name|int
+name|Int
 name|c
 parameter_list|)
 block|{
 if|if
 condition|(
 operator|!
-name|isdigit
+name|Isdigit
 argument_list|(
 name|c
 argument_list|)
@@ -1806,14 +1808,14 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
-name|int
+name|Int
 name|c
 parameter_list|)
 block|{
 if|if
 condition|(
 operator|!
-name|isdigit
+name|Isdigit
 argument_list|(
 name|c
 argument_list|)
@@ -1914,7 +1916,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -1956,7 +1958,7 @@ name|__unused__
 operator|)
 argument_list|)
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -1994,7 +1996,7 @@ name|__unused__
 operator|)
 argument_list|)
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2032,7 +2034,7 @@ name|__unused__
 operator|)
 argument_list|)
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2070,7 +2072,7 @@ name|__unused__
 operator|)
 argument_list|)
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2108,7 +2110,7 @@ name|__unused__
 operator|)
 argument_list|)
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2146,7 +2148,7 @@ name|__unused__
 operator|)
 argument_list|)
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2184,7 +2186,7 @@ name|__unused__
 operator|)
 argument_list|)
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2216,7 +2218,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2272,7 +2274,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2372,7 +2374,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2422,7 +2424,7 @@ name|__unused__
 operator|)
 argument_list|)
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2454,7 +2456,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2499,7 +2501,7 @@ name|__unused__
 operator|)
 argument_list|)
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2531,7 +2533,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2591,7 +2593,7 @@ comment|/* save the current buffer 						 * away */
 operator|(
 name|void
 operator|)
-name|strncpy
+name|Strncpy
 argument_list|(
 name|el
 operator|->
@@ -2676,9 +2678,6 @@ name|eventno
 operator|=
 name|sv_event
 expr_stmt|;
-return|return
-name|CC_ERROR
-return|;
 block|}
 name|beep
 operator|=
@@ -2721,7 +2720,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2831,7 +2830,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2842,7 +2841,7 @@ argument_list|)
 argument_list|)
 block|{
 specifier|const
-name|char
+name|Char
 modifier|*
 name|hp
 decl_stmt|;
@@ -2941,7 +2940,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|strncpy
+name|Strncpy
 argument_list|(
 name|el
 operator|->
@@ -3077,7 +3076,7 @@ directive|endif
 if|if
 condition|(
 operator|(
-name|strncmp
+name|Strncmp
 argument_list|(
 name|hp
 argument_list|,
@@ -3207,7 +3206,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -3218,7 +3217,7 @@ argument_list|)
 argument_list|)
 block|{
 specifier|const
-name|char
+name|Char
 modifier|*
 name|hp
 decl_stmt|;
@@ -3357,7 +3356,7 @@ directive|endif
 if|if
 condition|(
 operator|(
-name|strncmp
+name|Strncmp
 argument_list|(
 name|hp
 argument_list|,
@@ -3499,7 +3498,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -3509,7 +3508,7 @@ operator|)
 argument_list|)
 argument_list|)
 block|{
-name|char
+name|Char
 modifier|*
 name|ptr
 decl_stmt|;
@@ -3667,7 +3666,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -3677,7 +3676,7 @@ operator|)
 argument_list|)
 argument_list|)
 block|{
-name|char
+name|Char
 modifier|*
 name|ptr
 decl_stmt|;
@@ -3801,7 +3800,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -3811,7 +3810,7 @@ operator|)
 argument_list|)
 argument_list|)
 block|{
-name|char
+name|Char
 name|tmpbuf
 index|[
 name|EL_BUFSIZ
@@ -3828,11 +3827,16 @@ name|el
 argument_list|,
 name|tmpbuf
 argument_list|,
+name|STR
+argument_list|(
 literal|"\n: "
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|term__putc
 argument_list|(
+name|el
+argument_list|,
 literal|'\n'
 argument_list|)
 expr_stmt|;

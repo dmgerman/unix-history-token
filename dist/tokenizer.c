@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: tokenizer.c,v 1.14 2003/12/05 13:37:48 lukem Exp $	*/
+comment|/*	$NetBSD: tokenizer.c,v 1.18 2010/01/03 18:27:10 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: tokenizer.c,v 1.14 2003/12/05 13:37:48 lukem Exp $"
+literal|"$NetBSD: tokenizer.c,v 1.18 2010/01/03 18:27:10 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -61,6 +61,10 @@ end_endif
 
 begin_comment
 comment|/* not lint&& not SCCSID */
+end_comment
+
+begin_comment
+comment|/* We build this file twice, once as NARROW, once as WIDE. */
 end_comment
 
 begin_comment
@@ -85,6 +89,12 @@ directive|include
 file|"histedit.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"chartype.h"
+end_include
+
 begin_typedef
 typedef|typedef
 enum|enum
@@ -102,13 +112,6 @@ block|}
 name|quote_t
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|IFS
-value|"\t \n"
-end_define
 
 begin_define
 define|#
@@ -141,11 +144,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|tok_strdup
-parameter_list|(
-name|a
-parameter_list|)
-value|strdup(a)
+name|IFS
+value|STR("\t \n")
 end_define
 
 begin_define
@@ -180,11 +180,24 @@ parameter_list|)
 value|realloc(a, b)
 end_define
 
-begin_struct
-struct|struct
+begin_define
+define|#
+directive|define
+name|tok_strdup
+parameter_list|(
+name|a
+parameter_list|)
+value|Strdup(a)
+end_define
+
+begin_function
+name|struct
+name|TYPE
+function|(
 name|tokenizer
+function|)
 block|{
-name|char
+name|Char
 modifier|*
 name|ifs
 decl_stmt|;
@@ -195,13 +208,13 @@ decl_stmt|,
 name|amax
 decl_stmt|;
 comment|/* Current and maximum number of args	 */
-name|char
+name|Char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
 comment|/* Argument list			 */
-name|char
+name|Char
 modifier|*
 name|wptr
 decl_stmt|,
@@ -209,12 +222,12 @@ modifier|*
 name|wmax
 decl_stmt|;
 comment|/* Space and limit on the word buffer	 */
-name|char
+name|Char
 modifier|*
 name|wstart
 decl_stmt|;
 comment|/* Beginning of next word		 */
-name|char
+name|Char
 modifier|*
 name|wspace
 decl_stmt|;
@@ -228,33 +241,52 @@ name|flags
 decl_stmt|;
 comment|/* flags;				 */
 block|}
-struct|;
-end_struct
+end_function
 
-begin_function_decl
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
 name|private
 name|void
-name|tok_finish
-parameter_list|(
+name|FUN
+argument_list|(
+name|tok
+argument_list|,
+name|finish
+argument_list|)
+argument_list|(
+name|TYPE
+argument_list|(
 name|Tokenizer
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|/* tok_finish():  *	Finish a word in the tokenizer.  */
+comment|/* FUN(tok,finish)():  *	Finish a word in the tokenizer.  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|private
 name|void
-name|tok_finish
-parameter_list|(
-name|Tokenizer
-modifier|*
+name|FUN
+argument_list|(
 name|tok
-parameter_list|)
+argument_list|,
+name|finish
+argument_list|)
+argument_list|(
+name|TYPE
+argument_list|(
+name|Tokenizer
+argument_list|)
+operator|*
+name|tok
+argument_list|)
 block|{
 operator|*
 name|tok
@@ -325,40 +357,50 @@ operator|~
 name|TOK_KEEP
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
-comment|/* tok_init():  *	Initialize the tokenizer  */
+comment|/* FUN(tok,init)():  *	Initialize the tokenizer  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|public
+name|TYPE
+argument_list|(
 name|Tokenizer
+argument_list|)
 modifier|*
-name|tok_init
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|ifs
-parameter_list|)
-block|{
-name|Tokenizer
-modifier|*
+name|FUN
+argument_list|(
 name|tok
-init|=
-operator|(
-name|Tokenizer
+argument_list|,
+name|init
+argument_list|)
+argument_list|(
+specifier|const
+name|Char
 operator|*
-operator|)
+name|ifs
+argument_list|)
+block|{
+name|TYPE
+argument_list|(
+name|Tokenizer
+argument_list|)
+operator|*
+name|tok
+operator|=
 name|tok_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
+name|TYPE
+argument_list|(
 name|Tokenizer
 argument_list|)
 argument_list|)
-decl_stmt|;
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tok
@@ -418,17 +460,14 @@ name|tok
 operator|->
 name|argv
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|tok_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|char
 operator|*
+name|tok
+operator|->
+name|argv
 argument_list|)
 operator|*
 name|tok
@@ -480,13 +519,17 @@ name|tok
 operator|->
 name|wspace
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|tok_malloc
 argument_list|(
 name|WINCR
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|tok
+operator|->
+name|wspace
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -574,21 +617,29 @@ name|tok
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
-comment|/* tok_reset():  *	Reset the tokenizer  */
+comment|/* FUN(tok,reset)():  *	Reset the tokenizer  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|public
 name|void
-name|tok_reset
-parameter_list|(
-name|Tokenizer
-modifier|*
+name|FUN
+argument_list|(
 name|tok
-parameter_list|)
+argument_list|,
+name|reset
+argument_list|)
+argument_list|(
+name|TYPE
+argument_list|(
+name|Tokenizer
+argument_list|)
+operator|*
+name|tok
+argument_list|)
 block|{
 name|tok
 operator|->
@@ -625,21 +676,29 @@ operator|=
 name|Q_none
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
-comment|/* tok_end():  *	Clean up  */
+comment|/* FUN(tok,end)():  *	Clean up  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|public
 name|void
-name|tok_end
-parameter_list|(
-name|Tokenizer
-modifier|*
+name|FUN
+argument_list|(
 name|tok
-parameter_list|)
+argument_list|,
+name|end
+argument_list|)
+argument_list|(
+name|TYPE
+argument_list|(
+name|Tokenizer
+argument_list|)
+operator|*
+name|tok
+argument_list|)
 block|{
 name|tok_free
 argument_list|(
@@ -680,48 +739,59 @@ name|tok
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
-comment|/* tok_line():  *	Bourne shell (sh(1)) like tokenizing  *	Arguments:  *		tok	current tokenizer state (setup with tok_init())  *		line	line to parse  *	Returns:  *		-1	Internal error  *		 3	Quoted return  *		 2	Unmatched double quote  *		 1	Unmatched single quote  *		 0	Ok  *	Modifies (if return value is 0):  *		argc	number of arguments  *		argv	argument array  *		cursorc	if !NULL, argv element containing cursor  *		cursorv	if !NULL, offset in argv[cursorc] of cursor  */
+comment|/* FUN(tok,line)():  *	Bourne shell (sh(1)) like tokenizing  *	Arguments:  *		tok	current tokenizer state (setup with FUN(tok,init)())  *		line	line to parse  *	Returns:  *		-1	Internal error  *		 3	Quoted return  *		 2	Unmatched double quote  *		 1	Unmatched single quote  *		 0	Ok  *	Modifies (if return value is 0):  *		argc	number of arguments  *		argv	argument array  *		cursorc	if !NULL, argv element containing cursor  *		cursorv	if !NULL, offset in argv[cursorc] of cursor  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|public
 name|int
-name|tok_line
-parameter_list|(
-name|Tokenizer
-modifier|*
+name|FUN
+argument_list|(
 name|tok
-parameter_list|,
-specifier|const
-name|LineInfo
-modifier|*
+argument_list|,
 name|line
-parameter_list|,
-name|int
-modifier|*
-name|argc
-parameter_list|,
+argument_list|)
+argument_list|(
+name|TYPE
+argument_list|(
+name|Tokenizer
+argument_list|)
+operator|*
+name|tok
+argument_list|,
 specifier|const
-name|char
-modifier|*
-modifier|*
-modifier|*
+name|TYPE
+argument_list|(
+name|LineInfo
+argument_list|)
+operator|*
+name|line
+argument_list|,
+name|int
+operator|*
+name|argc
+argument_list|,
+specifier|const
+name|Char
+operator|*
+operator|*
+operator|*
 name|argv
-parameter_list|,
+argument_list|,
 name|int
-modifier|*
+operator|*
 name|cursorc
-parameter_list|,
+argument_list|,
 name|int
-modifier|*
+operator|*
 name|cursoro
-parameter_list|)
+argument_list|)
 block|{
 specifier|const
-name|char
+name|Char
 modifier|*
 name|ptr
 decl_stmt|;
@@ -766,7 +836,10 @@ name|lastchar
 condition|)
 name|ptr
 operator|=
+name|STR
+argument_list|(
 literal|""
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -785,6 +858,10 @@ name|argc
 expr_stmt|;
 name|co
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|tok
 operator|->
 name|wptr
@@ -792,6 +869,7 @@ operator|-
 name|tok
 operator|->
 name|wstart
+argument_list|)
 expr_stmt|;
 block|}
 switch|switch
@@ -1328,7 +1406,7 @@ name|Q_none
 case|:
 if|if
 condition|(
-name|strchr
+name|Strchr
 argument_list|(
 name|tok
 operator|->
@@ -1340,7 +1418,12 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
-name|tok_finish
+name|FUN
+argument_list|(
+name|tok
+argument_list|,
+name|finish
+argument_list|)
 argument_list|(
 name|tok
 argument_list|)
@@ -1454,14 +1537,10 @@ name|wspace
 operator|+
 name|WINCR
 decl_stmt|;
-name|char
+name|Char
 modifier|*
 name|s
 init|=
-operator|(
-name|char
-operator|*
-operator|)
 name|tok_realloc
 argument_list|(
 name|tok
@@ -1469,6 +1548,12 @@ operator|->
 name|wspace
 argument_list|,
 name|size
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|s
+argument_list|)
 argument_list|)
 decl_stmt|;
 if|if
@@ -1595,7 +1680,7 @@ operator|-
 literal|4
 condition|)
 block|{
-name|char
+name|Char
 modifier|*
 modifier|*
 name|p
@@ -1608,11 +1693,6 @@ name|AINCR
 expr_stmt|;
 name|p
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|tok_realloc
 argument_list|(
 name|tok
@@ -1625,8 +1705,8 @@ name|amax
 operator|*
 sizeof|sizeof
 argument_list|(
-name|char
 operator|*
+name|p
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1673,6 +1753,10 @@ name|argc
 expr_stmt|;
 name|co
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|tok
 operator|->
 name|wptr
@@ -1680,6 +1764,7 @@ operator|-
 name|tok
 operator|->
 name|wstart
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -1704,7 +1789,12 @@ name|cursoro
 operator|=
 name|co
 expr_stmt|;
-name|tok_finish
+name|FUN
+argument_list|(
+name|tok
+argument_list|,
+name|finish
+argument_list|)
 argument_list|(
 name|tok
 argument_list|)
@@ -1714,7 +1804,7 @@ name|argv
 operator|=
 operator|(
 specifier|const
-name|char
+name|Char
 operator|*
 operator|*
 operator|)
@@ -1735,41 +1825,52 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
-comment|/* tok_str():  *	Simpler version of tok_line, taking a NUL terminated line  *	and splitting into words, ignoring cursor state.  */
+comment|/* FUN(tok,str)():  *	Simpler version of tok_line, taking a NUL terminated line  *	and splitting into words, ignoring cursor state.  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|public
 name|int
-name|tok_str
-parameter_list|(
-name|Tokenizer
-modifier|*
+name|FUN
+argument_list|(
 name|tok
-parameter_list|,
+argument_list|,
+name|str
+argument_list|)
+argument_list|(
+name|TYPE
+argument_list|(
+name|Tokenizer
+argument_list|)
+operator|*
+name|tok
+argument_list|,
 specifier|const
-name|char
-modifier|*
+name|Char
+operator|*
 name|line
-parameter_list|,
+argument_list|,
 name|int
-modifier|*
+operator|*
 name|argc
-parameter_list|,
+argument_list|,
 specifier|const
-name|char
-modifier|*
-modifier|*
-modifier|*
+name|Char
+operator|*
+operator|*
+operator|*
 name|argv
-parameter_list|)
+argument_list|)
 block|{
-name|LineInfo
+name|TYPE
+argument_list|(
+argument|LineInfo
+argument_list|)
 name|li
-decl_stmt|;
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -1797,7 +1898,7 @@ name|li
 operator|.
 name|lastchar
 operator|=
-name|strchr
+name|Strchr
 argument_list|(
 name|line
 argument_list|,
@@ -1806,7 +1907,12 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|tok_line
+name|FUN
+argument_list|(
+name|tok
+argument_list|,
+name|line
+argument_list|)
 argument_list|(
 name|tok
 argument_list|,
@@ -1824,7 +1930,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 end_unit
 

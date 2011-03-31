@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: prompt.h,v 1.6 2003/08/07 16:44:32 agc Exp $	*/
+comment|/*	$NetBSD: prompt.h,v 1.10 2009/12/30 22:37:40 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ end_include
 
 begin_typedef
 typedef|typedef
-name|char
+name|Char
 modifier|*
 function_decl|(
 modifier|*
@@ -52,11 +52,18 @@ block|{
 name|el_pfunc_t
 name|p_func
 decl_stmt|;
-comment|/* Function to return the prompt	*/
+comment|/* Function to return the prompt */
 name|coord_t
 name|p_pos
 decl_stmt|;
-comment|/* position in the line after prompt	*/
+comment|/* position in the line after prompt */
+name|Char
+name|p_ignore
+decl_stmt|;
+comment|/* character to start/end literal */
+name|int
+name|p_wide
+decl_stmt|;
 block|}
 name|el_prompt_t
 typedef|;
@@ -85,6 +92,10 @@ modifier|*
 parameter_list|,
 name|el_pfunc_t
 parameter_list|,
+name|Char
+parameter_list|,
+name|int
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -99,6 +110,9 @@ name|EditLine
 modifier|*
 parameter_list|,
 name|el_pfunc_t
+modifier|*
+parameter_list|,
+name|Char
 modifier|*
 parameter_list|,
 name|int

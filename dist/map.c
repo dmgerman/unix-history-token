@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: map.c,v 1.24 2006/04/09 01:36:51 christos Exp $	*/
+comment|/*	$NetBSD: map.c,v 1.25 2009/12/30 22:37:40 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: map.c,v 1.24 2006/04/09 01:36:51 christos Exp $"
+literal|"$NetBSD: map.c,v 1.25 2009/12/30 22:37:40 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -79,13 +79,6 @@ directive|include
 file|"el.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|N_KEYS
-value|256
-end_define
-
 begin_function_decl
 name|private
 name|void
@@ -98,7 +91,7 @@ name|el_action_t
 modifier|*
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -115,9 +108,9 @@ parameter_list|,
 name|el_action_t
 modifier|*
 parameter_list|,
-name|int
+name|Int
 parameter_list|,
-name|int
+name|Int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3914,7 +3907,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|isprint
+name|Isprint
 argument_list|(
 name|i
 argument_list|)
@@ -3943,7 +3936,7 @@ modifier|*
 name|el
 parameter_list|)
 block|{
-name|char
+name|Char
 name|buf
 index|[
 literal|3
@@ -4059,7 +4052,7 @@ literal|0
 index|]
 operator|=
 operator|(
-name|char
+name|Char
 operator|)
 name|i
 expr_stmt|;
@@ -4312,7 +4305,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|char
+name|Char
 name|buf
 index|[
 literal|3
@@ -4487,18 +4480,21 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
-name|char
+name|Char
 modifier|*
 name|editor
 parameter_list|)
 block|{
 if|if
 condition|(
-name|strcmp
+name|Strcmp
 argument_list|(
 name|editor
 argument_list|,
+name|STR
+argument_list|(
 literal|"emacs"
+argument_list|)
 argument_list|)
 operator|==
 literal|0
@@ -4517,11 +4513,14 @@ return|;
 block|}
 if|if
 condition|(
-name|strcmp
+name|Strcmp
 argument_list|(
 name|editor
 argument_list|,
+name|STR
+argument_list|(
 literal|"vi"
+argument_list|)
 argument_list|)
 operator|==
 literal|0
@@ -4561,7 +4560,7 @@ modifier|*
 name|el
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 modifier|*
 name|editor
@@ -4594,7 +4593,10 @@ case|:
 operator|*
 name|editor
 operator|=
+name|STR
+argument_list|(
 literal|"emacs"
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -4607,7 +4609,10 @@ case|:
 operator|*
 name|editor
 operator|=
+name|STR
+argument_list|(
 literal|"vi"
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -4642,7 +4647,7 @@ modifier|*
 name|map
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 name|in
 parameter_list|)
@@ -4753,7 +4758,9 @@ name|el
 operator|->
 name|el_outfile
 argument_list|,
-literal|"%s\t->\t%s\n"
+literal|"%s\t->\t"
+name|FSTR
+literal|"\n"
 argument_list|,
 name|outbuf
 argument_list|,
@@ -4793,10 +4800,10 @@ name|el_action_t
 modifier|*
 name|map
 parameter_list|,
-name|int
+name|Int
 name|first
 parameter_list|,
-name|int
+name|Int
 name|last
 parameter_list|)
 block|{
@@ -4807,7 +4814,7 @@ decl_stmt|,
 modifier|*
 name|ep
 decl_stmt|;
-name|char
+name|Char
 name|firstbuf
 index|[
 literal|2
@@ -4987,7 +4994,9 @@ name|el
 operator|->
 name|el_outfile
 argument_list|,
-literal|"%-15s->  %s\n"
+literal|"%-15s->  "
+name|FSTR
+literal|"\n"
 argument_list|,
 name|unparsbuf
 argument_list|,
@@ -5042,7 +5051,9 @@ name|el
 operator|->
 name|el_outfile
 argument_list|,
-literal|"%-4s to %-7s->  %s\n"
+literal|"%-4s to %-7s->  "
+name|FSTR
+literal|"\n"
 argument_list|,
 name|unparsbuf
 argument_list|,
@@ -5414,7 +5425,10 @@ name|key_print
 argument_list|(
 name|el
 argument_list|,
+name|STR
+argument_list|(
 literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -5433,7 +5447,10 @@ name|term_print_arrow
 argument_list|(
 name|el
 argument_list|,
+name|STR
+argument_list|(
 literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5456,7 +5473,7 @@ name|int
 name|argc
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 modifier|*
 name|argv
@@ -5472,30 +5489,30 @@ decl_stmt|,
 name|rem
 decl_stmt|;
 specifier|const
-name|char
+name|Char
 modifier|*
 name|p
 decl_stmt|;
-name|char
+name|Char
 name|inbuf
 index|[
 name|EL_BUFSIZ
 index|]
 decl_stmt|;
-name|char
+name|Char
 name|outbuf
 index|[
 name|EL_BUFSIZ
 index|]
 decl_stmt|;
 specifier|const
-name|char
+name|Char
 modifier|*
 name|in
 init|=
 name|NULL
 decl_stmt|;
-name|char
+name|Char
 modifier|*
 name|out
 init|=
@@ -5701,7 +5718,11 @@ name|el
 operator|->
 name|el_outfile
 argument_list|,
-literal|"%s\n\t%s\n"
+literal|""
+name|FSTR
+literal|"\n\t"
+name|FSTR
+literal|"\n"
 argument_list|,
 name|bp
 operator|->
@@ -5727,7 +5748,9 @@ name|el
 operator|->
 name|el_errfile
 argument_list|,
-literal|"%s: Invalid switch `%c'.\n"
+literal|""
+name|FSTR
+literal|": Invalid switch `%c'.\n"
 argument_list|,
 name|argv
 index|[
@@ -5806,7 +5829,9 @@ name|el
 operator|->
 name|el_errfile
 argument_list|,
-literal|"%s: Invalid \\ or ^ in instring.\n"
+literal|""
+name|FSTR
+literal|": Invalid \\ or ^ in instring.\n"
 argument_list|,
 name|argv
 index|[
@@ -6012,7 +6037,9 @@ name|el
 operator|->
 name|el_errfile
 argument_list|,
-literal|"%s: Invalid \\ or ^ in outstring.\n"
+literal|""
+name|FSTR
+literal|": Invalid \\ or ^ in outstring.\n"
 argument_list|,
 name|argv
 index|[
@@ -6109,7 +6136,11 @@ name|el
 operator|->
 name|el_errfile
 argument_list|,
-literal|"%s: Invalid command `%s'.\n"
+literal|""
+name|FSTR
+literal|": Invalid command `"
+name|FSTR
+literal|"'.\n"
 argument_list|,
 name|argv
 index|[
@@ -6252,12 +6283,12 @@ modifier|*
 name|el
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 name|name
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 name|help
 parameter_list|,

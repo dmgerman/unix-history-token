@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: term.h,v 1.18 2006/11/24 00:01:17 christos Exp $	*/
+comment|/*	$NetBSD: term.h,v 1.21 2009/12/30 22:37:40 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ struct|struct
 block|{
 comment|/* Symbolic function key bindings	*/
 specifier|const
-name|char
+name|Char
 modifier|*
 name|name
 decl_stmt|;
@@ -255,10 +255,10 @@ name|EditLine
 modifier|*
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -271,7 +271,7 @@ parameter_list|(
 name|EditLine
 modifier|*
 parameter_list|,
-name|char
+name|Char
 modifier|*
 parameter_list|,
 name|int
@@ -377,7 +377,7 @@ name|EditLine
 modifier|*
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -392,7 +392,7 @@ name|EditLine
 modifier|*
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -407,7 +407,7 @@ name|EditLine
 modifier|*
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 parameter_list|,
 name|key_value_t
@@ -471,7 +471,7 @@ parameter_list|,
 name|int
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 modifier|*
 parameter_list|)
@@ -506,7 +506,7 @@ parameter_list|,
 name|int
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 modifier|*
 parameter_list|)
@@ -524,7 +524,7 @@ parameter_list|,
 name|int
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 modifier|*
 parameter_list|)
@@ -539,7 +539,7 @@ parameter_list|(
 name|EditLine
 modifier|*
 parameter_list|,
-name|int
+name|Int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -549,7 +549,10 @@ name|protected
 name|int
 name|term__putc
 parameter_list|(
-name|int
+name|EditLine
+modifier|*
+parameter_list|,
+name|Int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -559,7 +562,8 @@ name|protected
 name|void
 name|term__flush
 parameter_list|(
-name|void
+name|EditLine
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

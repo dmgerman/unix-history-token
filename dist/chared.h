@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: chared.h,v 1.17 2006/03/06 21:11:56 christos Exp $	*/
+comment|/*	$NetBSD: chared.h,v 1.20 2010/04/15 00:57:33 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -69,7 +69,7 @@ decl_stmt|;
 name|int
 name|offset
 decl_stmt|;
-name|char
+name|Char
 modifier|*
 modifier|*
 name|macro
@@ -88,7 +88,7 @@ typedef|typedef
 struct|struct
 name|c_undo_t
 block|{
-name|int
+name|ssize_t
 name|len
 decl_stmt|;
 comment|/* length of saved line */
@@ -96,7 +96,7 @@ name|int
 name|cursor
 decl_stmt|;
 comment|/* position of saved cursor */
-name|char
+name|Char
 modifier|*
 name|buf
 decl_stmt|;
@@ -115,16 +115,16 @@ typedef|typedef
 struct|struct
 name|c_redo_t
 block|{
-name|char
+name|Char
 modifier|*
 name|buf
 decl_stmt|;
 comment|/* redo insert key sequence */
-name|char
+name|Char
 modifier|*
 name|pos
 decl_stmt|;
-name|char
+name|Char
 modifier|*
 name|lim
 decl_stmt|;
@@ -132,7 +132,7 @@ name|el_action_t
 name|cmd
 decl_stmt|;
 comment|/* command to redo */
-name|char
+name|Char
 name|ch
 decl_stmt|;
 comment|/* char that invoked it */
@@ -160,7 +160,7 @@ block|{
 name|int
 name|action
 decl_stmt|;
-name|char
+name|Char
 modifier|*
 name|pos
 decl_stmt|;
@@ -178,15 +178,15 @@ typedef|typedef
 struct|struct
 name|c_kill_t
 block|{
-name|char
+name|Char
 modifier|*
 name|buf
 decl_stmt|;
-name|char
+name|Char
 modifier|*
 name|last
 decl_stmt|;
-name|char
+name|Char
 modifier|*
 name|mark
 decl_stmt|;
@@ -239,16 +239,6 @@ parameter_list|(
 name|a
 parameter_list|)
 value|(strchr("*[]?", (a)) != NULL)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isword
-parameter_list|(
-name|a
-parameter_list|)
-value|(isprint(a))
 end_define
 
 begin_define
@@ -349,7 +339,7 @@ name|protected
 name|int
 name|cv__isword
 parameter_list|(
-name|int
+name|Int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -359,7 +349,7 @@ name|protected
 name|int
 name|cv__isWord
 parameter_list|(
-name|int
+name|Int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -377,14 +367,14 @@ end_function_decl
 
 begin_function_decl
 name|protected
-name|char
+name|Char
 modifier|*
 name|cv__endword
 parameter_list|(
-name|char
+name|Char
 modifier|*
 parameter_list|,
-name|char
+name|Char
 modifier|*
 parameter_list|,
 name|int
@@ -394,7 +384,7 @@ function_decl|(
 modifier|*
 function_decl|)
 parameter_list|(
-name|int
+name|Int
 parameter_list|)
 parameter_list|)
 function_decl|;
@@ -405,7 +395,7 @@ name|protected
 name|int
 name|ce__isword
 parameter_list|(
-name|int
+name|Int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -430,7 +420,7 @@ name|EditLine
 modifier|*
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 parameter_list|,
 name|int
@@ -440,17 +430,17 @@ end_function_decl
 
 begin_function_decl
 name|protected
-name|char
+name|Char
 modifier|*
 name|cv_next_word
 parameter_list|(
 name|EditLine
 modifier|*
 parameter_list|,
-name|char
+name|Char
 modifier|*
 parameter_list|,
-name|char
+name|Char
 modifier|*
 parameter_list|,
 name|int
@@ -460,7 +450,7 @@ function_decl|(
 modifier|*
 function_decl|)
 parameter_list|(
-name|int
+name|Int
 parameter_list|)
 parameter_list|)
 function_decl|;
@@ -468,14 +458,14 @@ end_function_decl
 
 begin_function_decl
 name|protected
-name|char
+name|Char
 modifier|*
 name|cv_prev_word
 parameter_list|(
-name|char
+name|Char
 modifier|*
 parameter_list|,
-name|char
+name|Char
 modifier|*
 parameter_list|,
 name|int
@@ -485,7 +475,7 @@ function_decl|(
 modifier|*
 function_decl|)
 parameter_list|(
-name|int
+name|Int
 parameter_list|)
 parameter_list|)
 function_decl|;
@@ -493,14 +483,14 @@ end_function_decl
 
 begin_function_decl
 name|protected
-name|char
+name|Char
 modifier|*
 name|c__next_word
 parameter_list|(
-name|char
+name|Char
 modifier|*
 parameter_list|,
-name|char
+name|Char
 modifier|*
 parameter_list|,
 name|int
@@ -510,7 +500,7 @@ function_decl|(
 modifier|*
 function_decl|)
 parameter_list|(
-name|int
+name|Int
 parameter_list|)
 parameter_list|)
 function_decl|;
@@ -518,14 +508,14 @@ end_function_decl
 
 begin_function_decl
 name|protected
-name|char
+name|Char
 modifier|*
 name|c__prev_word
 parameter_list|(
-name|char
+name|Char
 modifier|*
 parameter_list|,
-name|char
+name|Char
 modifier|*
 parameter_list|,
 name|int
@@ -535,7 +525,7 @@ function_decl|(
 modifier|*
 function_decl|)
 parameter_list|(
-name|int
+name|Int
 parameter_list|)
 parameter_list|)
 function_decl|;
@@ -610,11 +600,11 @@ parameter_list|(
 name|EditLine
 modifier|*
 parameter_list|,
-name|char
+name|Char
 modifier|*
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 parameter_list|)
 function_decl|;

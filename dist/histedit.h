@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: histedit.h,v 1.31 2006/12/15 22:13:33 christos Exp $	*/
+comment|/*	$NetBSD: histedit.h,v 1.46 2010/04/15 00:50:03 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -34,8 +34,14 @@ begin_define
 define|#
 directive|define
 name|LIBEDIT_MINOR
-value|10
+value|11
 end_define
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
 
 begin_include
 include|#
@@ -193,6 +199,7 @@ parameter_list|(
 name|EditLine
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -253,108 +260,123 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-comment|/*  * el_set/el_get parameters  */
+comment|/*  * el_set/el_get parameters  *  * When using el_wset/el_wget (as opposed to el_set/el_get):  *   Char is wchar_t, otherwise it is char.  *   prompt_func is el_wpfunc_t, otherwise it is el_pfunc_t .   * Prompt function prototypes are:  *   typedef char    *(*el_pfunct_t)  (EditLine *);  *   typedef wchar_t *(*el_wpfunct_t) (EditLine *);  *  * For operations that support set or set/get, the argument types listed are for  * the "set" operation. For "get", each listed type must be a pointer.  * E.g. EL_EDITMODE takes an int when set, but an int* when get.  *   * Operations that only support "get" have the correct argument types listed.  */
 define|#
 directive|define
 name|EL_PROMPT
 value|0
-comment|/* , el_pfunc_t);		*/
+comment|/* , prompt_func);		      set/get */
 define|#
 directive|define
 name|EL_TERMINAL
 value|1
-comment|/* , const char *);		*/
+comment|/* , const char *);		      set/get */
 define|#
 directive|define
 name|EL_EDITOR
 value|2
-comment|/* , const char *);		*/
+comment|/* , const Char *);		      set/get */
 define|#
 directive|define
 name|EL_SIGNAL
 value|3
-comment|/* , int);			*/
+comment|/* , int);			      set/get */
 define|#
 directive|define
 name|EL_BIND
 value|4
-comment|/* , const char *, ..., NULL);	*/
+comment|/* , const Char *, ..., NULL);	      set     */
 define|#
 directive|define
 name|EL_TELLTC
 value|5
-comment|/* , const char *, ..., NULL);	*/
+comment|/* , const Char *, ..., NULL);	      set     */
 define|#
 directive|define
 name|EL_SETTC
 value|6
-comment|/* , const char *, ..., NULL);	*/
+comment|/* , const Char *, ..., NULL);	      set     */
 define|#
 directive|define
 name|EL_ECHOTC
 value|7
-comment|/* , const char *, ..., NULL);	*/
+comment|/* , const Char *, ..., NULL);        set     */
 define|#
 directive|define
 name|EL_SETTY
 value|8
-comment|/* , const char *, ..., NULL);	*/
+comment|/* , const Char *, ..., NULL);        set     */
 define|#
 directive|define
 name|EL_ADDFN
 value|9
-comment|/* , const char *, const char *	*/
-comment|/* , el_func_t);		*/
+comment|/* , const Char *, const Char,        set     */
+comment|/*   el_func_t);		 	      */
 define|#
 directive|define
 name|EL_HIST
 value|10
-comment|/* , hist_fun_t, const char *);	*/
+comment|/* , hist_fun_t, const ptr_t);	      set     */
 define|#
 directive|define
 name|EL_EDITMODE
 value|11
-comment|/* , int);			*/
+comment|/* , int);			      set/get */
 define|#
 directive|define
 name|EL_RPROMPT
 value|12
-comment|/* , el_pfunc_t);		*/
+comment|/* , prompt_func);		      set/get */
 define|#
 directive|define
 name|EL_GETCFN
 value|13
-comment|/* , el_rfunc_t);		*/
+comment|/* , el_rfunc_t);		      set/get */
 define|#
 directive|define
 name|EL_CLIENTDATA
 value|14
-comment|/* , void *);			*/
+comment|/* , void *);			      set/get */
 define|#
 directive|define
 name|EL_UNBUFFERED
 value|15
-comment|/* , int);			*/
+comment|/* , int);			      set/get */
 define|#
 directive|define
 name|EL_PREP_TERM
 value|16
-comment|/* , int);                      */
+comment|/* , int);			      set     */
 define|#
 directive|define
 name|EL_GETTC
 value|17
-comment|/* , const char *, ..., NULL);	*/
+comment|/* , const Char *, ..., NULL);		  get */
 define|#
 directive|define
 name|EL_GETFP
 value|18
-comment|/* , int, FILE **)		*/
+comment|/* , int, FILE **);		          get */
 define|#
 directive|define
 name|EL_SETFP
 value|19
-comment|/* , int, FILE *)		*/
+comment|/* , int, FILE *);		      set     */
+define|#
+directive|define
+name|EL_REFRESH
+value|20
+comment|/* , void);			      set     */
+define|#
+directive|define
+name|EL_PROMPT_ESC
+value|21
+comment|/* , prompt_func, Char);	      set/get */
+define|#
+directive|define
+name|EL_RPROMPT_ESC
+value|22
+comment|/* , prompt_func, Char);	      set/get */
 define|#
 directive|define
 name|EL_BUILTIN_GETCFN
@@ -508,17 +530,17 @@ define|#
 directive|define
 name|H_ADD
 value|9
-comment|/* , const char *);	*/
+comment|/* , const wchar_t *);	*/
 define|#
 directive|define
 name|H_ENTER
 value|10
-comment|/* , const char *);	*/
+comment|/* , const wchar_t *);	*/
 define|#
 directive|define
 name|H_APPEND
 value|11
-comment|/* , const char *);	*/
+comment|/* , const wchar_t *);	*/
 define|#
 directive|define
 name|H_END
@@ -528,12 +550,12 @@ define|#
 directive|define
 name|H_NEXT_STR
 value|13
-comment|/* , const char *);	*/
+comment|/* , const wchar_t *);	*/
 define|#
 directive|define
 name|H_PREV_STR
 value|14
-comment|/* , const char *);	*/
+comment|/* , const wchar_t *);	*/
 define|#
 directive|define
 name|H_NEXT_EVENT
@@ -574,6 +596,21 @@ directive|define
 name|H_DEL
 value|22
 comment|/* , int);		*/
+define|#
+directive|define
+name|H_NEXT_EVDATA
+value|23
+comment|/* , const int, histdata_t *);	*/
+define|#
+directive|define
+name|H_DELDATA
+value|24
+comment|/* , int, histdata_t *);*/
+define|#
+directive|define
+name|H_REPLACE
+value|25
+comment|/* , const char *, histdata_t);	*/
 comment|/*  * ==== Tokenization ====  */
 typedef|typedef
 name|struct
@@ -645,6 +682,269 @@ modifier|*
 parameter_list|,
 specifier|const
 name|char
+modifier|*
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/*  * Begin Wide Character Support  */
+ifdef|#
+directive|ifdef
+name|__linux__
+comment|/* Apparently we need _GNU_SOURCE defined to get access to wcsdup on Linux */
+ifndef|#
+directive|ifndef
+name|_GNU_SOURCE
+define|#
+directive|define
+name|_GNU_SOURCE
+endif|#
+directive|endif
+endif|#
+directive|endif
+include|#
+directive|include
+file|<wchar.h>
+include|#
+directive|include
+file|<wctype.h>
+comment|/*  * Wide character versions  */
+comment|/*  * ==== Editing ====  */
+typedef|typedef
+struct|struct
+name|lineinfow
+block|{
+specifier|const
+name|wchar_t
+modifier|*
+name|buffer
+decl_stmt|;
+specifier|const
+name|wchar_t
+modifier|*
+name|cursor
+decl_stmt|;
+specifier|const
+name|wchar_t
+modifier|*
+name|lastchar
+decl_stmt|;
+block|}
+name|LineInfoW
+typedef|;
+specifier|const
+name|wchar_t
+modifier|*
+name|el_wgets
+parameter_list|(
+name|EditLine
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+name|el_wgetc
+parameter_list|(
+name|EditLine
+modifier|*
+parameter_list|,
+name|wchar_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|el_wpush
+parameter_list|(
+name|EditLine
+modifier|*
+parameter_list|,
+specifier|const
+name|wchar_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+name|el_wparse
+parameter_list|(
+name|EditLine
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|wchar_t
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+name|el_wset
+parameter_list|(
+name|EditLine
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+name|int
+name|el_wget
+parameter_list|(
+name|EditLine
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+specifier|const
+name|LineInfoW
+modifier|*
+name|el_wline
+parameter_list|(
+name|EditLine
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+name|el_winsertstr
+parameter_list|(
+name|EditLine
+modifier|*
+parameter_list|,
+specifier|const
+name|wchar_t
+modifier|*
+parameter_list|)
+function_decl|;
+define|#
+directive|define
+name|el_wdeletestr
+value|el_deletestr
+comment|/*  * ==== History ====  */
+typedef|typedef
+struct|struct
+name|histeventW
+block|{
+name|int
+name|num
+decl_stmt|;
+specifier|const
+name|wchar_t
+modifier|*
+name|str
+decl_stmt|;
+block|}
+name|HistEventW
+typedef|;
+typedef|typedef
+name|struct
+name|historyW
+name|HistoryW
+typedef|;
+name|HistoryW
+modifier|*
+name|history_winit
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|void
+name|history_wend
+parameter_list|(
+name|HistoryW
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+name|history_w
+parameter_list|(
+name|HistoryW
+modifier|*
+parameter_list|,
+name|HistEventW
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+comment|/*  * ==== Tokenization ====  */
+typedef|typedef
+name|struct
+name|tokenizerW
+name|TokenizerW
+typedef|;
+comment|/* Wide character tokenizer support */
+name|TokenizerW
+modifier|*
+name|tok_winit
+parameter_list|(
+specifier|const
+name|wchar_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|tok_wend
+parameter_list|(
+name|TokenizerW
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|tok_wreset
+parameter_list|(
+name|TokenizerW
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+name|tok_wline
+parameter_list|(
+name|TokenizerW
+modifier|*
+parameter_list|,
+specifier|const
+name|LineInfoW
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+specifier|const
+name|wchar_t
+modifier|*
+modifier|*
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+name|tok_wstr
+parameter_list|(
+name|TokenizerW
+modifier|*
+parameter_list|,
+specifier|const
+name|wchar_t
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+specifier|const
+name|wchar_t
 modifier|*
 modifier|*
 modifier|*

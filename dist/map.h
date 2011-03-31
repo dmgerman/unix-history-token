@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: map.h,v 1.8 2003/08/07 16:44:32 agc Exp $	*/
+comment|/*	$NetBSD: map.h,v 1.9 2009/12/30 22:37:40 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -30,7 +30,7 @@ name|el_bindings_t
 block|{
 comment|/* for the "bind" shell command */
 specifier|const
-name|char
+name|Char
 modifier|*
 name|name
 decl_stmt|;
@@ -40,7 +40,7 @@ name|func
 decl_stmt|;
 comment|/* function numeric value */
 specifier|const
-name|char
+name|Char
 modifier|*
 name|description
 decl_stmt|;
@@ -125,6 +125,13 @@ name|MAP_VI
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|N_KEYS
+value|256
+end_define
+
 begin_function_decl
 name|protected
 name|int
@@ -136,7 +143,7 @@ parameter_list|,
 name|int
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 modifier|*
 parameter_list|)
@@ -195,7 +202,7 @@ parameter_list|(
 name|EditLine
 modifier|*
 parameter_list|,
-name|char
+name|Char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -210,7 +217,7 @@ name|EditLine
 modifier|*
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 modifier|*
 parameter_list|)
@@ -226,11 +233,11 @@ name|EditLine
 modifier|*
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 parameter_list|,
 name|el_func_t

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: parse.h,v 1.6 2005/05/29 04:58:15 lukem Exp $	*/
+comment|/*	$NetBSD: parse.h,v 1.7 2009/12/30 22:37:40 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ name|EditLine
 modifier|*
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -44,7 +44,7 @@ name|int
 name|parse__escape
 parameter_list|(
 specifier|const
-name|char
+name|Char
 modifier|*
 modifier|*
 parameter_list|)
@@ -53,15 +53,15 @@ end_function_decl
 
 begin_function_decl
 name|protected
-name|char
+name|Char
 modifier|*
 name|parse__string
 parameter_list|(
-name|char
+name|Char
 modifier|*
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -76,7 +76,7 @@ name|EditLine
 modifier|*
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 parameter_list|)
 function_decl|;

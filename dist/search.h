@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: search.h,v 1.8 2003/10/18 23:27:36 christos Exp $	*/
+comment|/*	$NetBSD: search.h,v 1.9 2009/12/30 22:37:40 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -34,7 +34,7 @@ typedef|typedef
 struct|struct
 name|el_search_t
 block|{
-name|char
+name|Char
 modifier|*
 name|patbuf
 decl_stmt|;
@@ -51,7 +51,7 @@ name|int
 name|chadir
 decl_stmt|;
 comment|/* Character search direction	*/
-name|char
+name|Char
 name|chacha
 decl_stmt|;
 comment|/* Character we are looking for	*/
@@ -70,11 +70,11 @@ name|int
 name|el_match
 parameter_list|(
 specifier|const
-name|char
+name|Char
 modifier|*
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -111,7 +111,7 @@ name|EditLine
 modifier|*
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -175,7 +175,7 @@ parameter_list|(
 name|EditLine
 modifier|*
 parameter_list|,
-name|int
+name|Int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -190,7 +190,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|int
+name|Int
 parameter_list|,
 name|int
 parameter_list|,

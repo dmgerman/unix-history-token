@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: sig.h,v 1.5 2003/08/07 16:44:33 agc Exp $	*/
+comment|/*	$NetBSD: sig.h,v 1.8 2009/02/19 15:20:22 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,26 +44,36 @@ define|#
 directive|define
 name|ALLSIGS
 define|\
-value|_DO(SIGINT)	\ 	_DO(SIGTSTP)	\ 	_DO(SIGSTOP)	\ 	_DO(SIGQUIT)	\ 	_DO(SIGHUP)	\ 	_DO(SIGTERM)	\ 	_DO(SIGCONT)	\ 	_DO(SIGWINCH)
+value|_DO(SIGINT)	\ 	_DO(SIGTSTP)	\ 	_DO(SIGQUIT)	\ 	_DO(SIGHUP)	\ 	_DO(SIGTERM)	\ 	_DO(SIGCONT)	\ 	_DO(SIGWINCH)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALLSIGSNO
+value|7
 end_define
 
 begin_typedef
 typedef|typedef
-name|void
-function_decl|(
-modifier|*
-name|el_signalhandler_t
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|el_signalhandler_t
-modifier|*
+struct|struct
+block|{
+name|struct
+name|sigaction
+name|sig_action
+index|[
+name|ALLSIGSNO
+index|]
+decl_stmt|;
+name|sigset_t
+name|sig_set
+decl_stmt|;
+specifier|volatile
+name|sig_atomic_t
+name|sig_no
+decl_stmt|;
+block|}
+typedef|*
 name|el_signal_t
 typedef|;
 end_typedef

@@ -82,6 +82,13 @@ name|HAVE_STRUNVIS
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_DIRENT_D_NAMLEN
+value|1
+end_define
+
 begin_include
 include|#
 directive|include

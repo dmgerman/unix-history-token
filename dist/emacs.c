@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: emacs.c,v 1.21 2006/03/06 21:11:56 christos Exp $	*/
+comment|/*	$NetBSD: emacs.c,v 1.23 2009/12/30 22:37:40 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: emacs.c,v 1.21 2006/03/06 21:11:56 christos Exp $"
+literal|"$NetBSD: emacs.c,v 1.23 2009/12/30 22:37:40 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -87,7 +87,7 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
-name|int
+name|Int
 name|c
 parameter_list|)
 block|{
@@ -229,7 +229,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -239,7 +239,7 @@ operator|)
 argument_list|)
 argument_list|)
 block|{
-name|char
+name|Char
 modifier|*
 name|cp
 decl_stmt|,
@@ -342,6 +342,10 @@ name|c_delafter
 argument_list|(
 name|el
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|cp
 operator|-
 name|el
@@ -349,6 +353,7 @@ operator|->
 name|el_line
 operator|.
 name|cursor
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* delete after dot */
@@ -401,7 +406,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -411,7 +416,7 @@ operator|)
 argument_list|)
 argument_list|)
 block|{
-name|char
+name|Char
 modifier|*
 name|kp
 decl_stmt|,
@@ -505,6 +510,10 @@ name|c_insert
 argument_list|(
 name|el
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|el
 operator|->
 name|el_chared
@@ -520,6 +529,7 @@ operator|.
 name|c_kill
 operator|.
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* copy the chars */
@@ -596,7 +606,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -606,7 +616,7 @@ operator|)
 argument_list|)
 argument_list|)
 block|{
-name|char
+name|Char
 modifier|*
 name|kp
 decl_stmt|,
@@ -707,7 +717,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -717,7 +727,7 @@ operator|)
 argument_list|)
 argument_list|)
 block|{
-name|char
+name|Char
 modifier|*
 name|kp
 decl_stmt|,
@@ -810,6 +820,10 @@ name|c_delafter
 argument_list|(
 name|el
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|cp
 operator|-
 name|el
@@ -817,6 +831,7 @@ operator|->
 name|el_line
 operator|.
 name|cursor
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -876,6 +891,10 @@ name|c_delbefore
 argument_list|(
 name|el
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|cp
 operator|-
 name|el
@@ -885,6 +904,7 @@ operator|.
 name|c_kill
 operator|.
 name|mark
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|el
@@ -924,7 +944,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -934,7 +954,7 @@ operator|)
 argument_list|)
 argument_list|)
 block|{
-name|char
+name|Char
 modifier|*
 name|kp
 decl_stmt|,
@@ -1097,7 +1117,7 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
-name|int
+name|Int
 name|c
 parameter_list|)
 block|{
@@ -1194,7 +1214,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -1308,7 +1328,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -1318,7 +1338,7 @@ operator|)
 argument_list|)
 argument_list|)
 block|{
-name|char
+name|Char
 modifier|*
 name|cp
 decl_stmt|,
@@ -1369,12 +1389,8 @@ operator|++
 control|)
 if|if
 condition|(
-name|islower
+name|Islower
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|cp
 argument_list|)
@@ -1382,12 +1398,8 @@ condition|)
 operator|*
 name|cp
 operator|=
-name|toupper
+name|Toupper
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|cp
 argument_list|)
@@ -1448,7 +1460,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -1458,7 +1470,7 @@ operator|)
 argument_list|)
 argument_list|)
 block|{
-name|char
+name|Char
 modifier|*
 name|cp
 decl_stmt|,
@@ -1510,12 +1522,8 @@ control|)
 block|{
 if|if
 condition|(
-name|isalpha
+name|Isalpha
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|cp
 argument_list|)
@@ -1523,12 +1531,8 @@ condition|)
 block|{
 if|if
 condition|(
-name|islower
+name|Islower
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|cp
 argument_list|)
@@ -1536,12 +1540,8 @@ condition|)
 operator|*
 name|cp
 operator|=
-name|toupper
+name|Toupper
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|cp
 argument_list|)
@@ -1564,12 +1564,8 @@ operator|++
 control|)
 if|if
 condition|(
-name|isupper
+name|Isupper
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|cp
 argument_list|)
@@ -1577,12 +1573,8 @@ condition|)
 operator|*
 name|cp
 operator|=
-name|tolower
+name|Tolower
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|cp
 argument_list|)
@@ -1643,7 +1635,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -1653,7 +1645,7 @@ operator|)
 argument_list|)
 argument_list|)
 block|{
-name|char
+name|Char
 modifier|*
 name|cp
 decl_stmt|,
@@ -1704,12 +1696,8 @@ operator|++
 control|)
 if|if
 condition|(
-name|isupper
+name|Isupper
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|cp
 argument_list|)
@@ -1717,12 +1705,8 @@ condition|)
 operator|*
 name|cp
 operator|=
-name|tolower
+name|Tolower
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|cp
 argument_list|)
@@ -1783,7 +1767,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -1829,7 +1813,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -1839,7 +1823,7 @@ operator|)
 argument_list|)
 argument_list|)
 block|{
-name|char
+name|Char
 modifier|*
 name|cp
 decl_stmt|;
@@ -1897,7 +1881,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -1961,7 +1945,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2001,7 +1985,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2053,7 +2037,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2063,7 +2047,7 @@ operator|)
 argument_list|)
 argument_list|)
 block|{
-name|char
+name|Char
 modifier|*
 name|cp
 decl_stmt|,
@@ -2130,9 +2114,14 @@ name|c_insert
 argument_list|(
 name|el
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|oldc
 operator|-
 name|cp
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -2194,7 +2183,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2239,7 +2228,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2284,7 +2273,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|int
+name|Int
 name|c
 name|__attribute__
 argument_list|(
