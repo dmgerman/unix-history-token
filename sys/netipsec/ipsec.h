@@ -329,7 +329,7 @@ name|sp
 decl_stmt|;
 comment|/* back pointer to SP */
 name|struct
-name|mtx
+name|rwlock
 name|lock
 decl_stmt|;
 comment|/* to interlock updates */
@@ -349,7 +349,7 @@ parameter_list|(
 name|_isr
 parameter_list|)
 define|\
-value|mtx_init(&(_isr)->lock, "ipsec request", NULL, MTX_DEF | MTX_RECURSE)
+value|rw_init_flags(&(_isr)->lock, "ipsec request", RW_RECURSE)
 end_define
 
 begin_define
@@ -359,7 +359,7 @@ name|IPSECREQUEST_LOCK
 parameter_list|(
 name|_isr
 parameter_list|)
-value|mtx_lock(&(_isr)->lock)
+value|rw_rlock(&(_isr)->lock)
 end_define
 
 begin_define
@@ -369,7 +369,47 @@ name|IPSECREQUEST_UNLOCK
 parameter_list|(
 name|_isr
 parameter_list|)
-value|mtx_unlock(&(_isr)->lock)
+value|rw_runlock(&(_isr)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPSECREQUEST_WLOCK
+parameter_list|(
+name|_isr
+parameter_list|)
+value|rw_wlock(&(_isr)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPSECREQUEST_WUNLOCK
+parameter_list|(
+name|_isr
+parameter_list|)
+value|rw_wunlock(&(_isr)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPSECREQUEST_UPGRADE
+parameter_list|(
+name|_isr
+parameter_list|)
+value|rw_try_upgrade(&(_isr)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPSECREQUEST_DOWNGRADE
+parameter_list|(
+name|_isr
+parameter_list|)
+value|rw_downgrade(&(_isr)->lock)
 end_define
 
 begin_define
@@ -379,7 +419,7 @@ name|IPSECREQUEST_LOCK_DESTROY
 parameter_list|(
 name|_isr
 parameter_list|)
-value|mtx_destroy(&(_isr)->lock)
+value|rw_destroy(&(_isr)->lock)
 end_define
 
 begin_define
@@ -389,7 +429,7 @@ name|IPSECREQUEST_LOCK_ASSERT
 parameter_list|(
 name|_isr
 parameter_list|)
-value|mtx_assert(&(_isr)->lock, MA_OWNED)
+value|rw_assert(&(_isr)->lock, RA_LOCKED)
 end_define
 
 begin_comment
