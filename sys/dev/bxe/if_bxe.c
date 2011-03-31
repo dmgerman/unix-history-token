@@ -2898,7 +2898,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|bxe_dump_grc
+name|bxe_grcdump
 parameter_list|(
 name|struct
 name|bxe_softc
@@ -37016,6 +37016,7 @@ operator|==
 name|ENOMEM
 condition|)
 block|{
+comment|/* Temporary OS resource issue. */
 name|rc
 operator|=
 name|ENOMEM
@@ -37029,6 +37030,15 @@ operator|==
 name|EFBIG
 condition|)
 block|{
+comment|/* Possibly recoverable. */
+name|DBRUN
+argument_list|(
+name|fp
+operator|->
+name|mbuf_defrag_attempts
+operator|++
+argument_list|)
+expr_stmt|;
 name|m0
 operator|=
 name|m_defrag
@@ -37046,6 +37056,15 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|BXE_PRINTF
+argument_list|(
+literal|"%s(%d): Can't defrag TX frame!\n"
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|)
+expr_stmt|;
 name|rc
 operator|=
 name|ENOBUFS
@@ -37054,6 +37073,14 @@ block|}
 else|else
 block|{
 comment|/* Defrag was successful, try mapping again.*/
+name|DBRUN
+argument_list|(
+name|fp
+operator|->
+name|mbuf_defrag_successes
+operator|++
+argument_list|)
+expr_stmt|;
 operator|*
 name|m_head
 operator|=
@@ -37083,6 +37110,29 @@ block|}
 block|}
 else|else
 block|{
+comment|/* Unrecoverable. */
+name|BXE_PRINTF
+argument_list|(
+literal|"%s(%d): Unknown TX mapping error! "
+literal|"rc = %d.\n"
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+name|DBRUN
+argument_list|(
+name|bxe_dump_mbuf
+argument_list|(
+name|sc
+argument_list|,
+name|m0
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|rc
 operator|=
 name|error
@@ -37120,6 +37170,16 @@ argument_list|,
 name|map
 argument_list|)
 expr_stmt|;
+name|BXE_PRINTF
+argument_list|(
+literal|"%s(%d): Insufficient TX queue space!\n"
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|)
+expr_stmt|;
+comment|/* DRC - Should we drop a frame with this error? */
 name|rc
 operator|=
 name|ENOBUFS
@@ -37129,12 +37189,15 @@ block|}
 comment|/* Now make sure it fits in the pkt window */
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|nsegs
 operator|>
 literal|12
+argument_list|)
 condition|)
 block|{
-comment|/* The mbuf has more segments than the controller can handle. 		 * Try to defrag the mbuf if there are too many 		 * segments.  If it can't be defragged then 		 * drop the frame, log an error, and exit. 		 * An alternative would be to use a bounce buffer. 		 */
+comment|/* The mbuf has more segments than the controller can 			 * handle. Try to defrag the mbuf if there are too many 			 * segments.  If it can't be defragged then 			 * drop the frame, log an error, and exit. 			 * An alternative would be to use a bounce buffer. 			 */
 if|if
 condition|(
 name|m0
@@ -37164,6 +37227,14 @@ comment|/* Send it */
 break|break;
 block|}
 comment|/* Defrag for non tso and if tso needs it */
+name|DBRUN
+argument_list|(
+name|fp
+operator|->
+name|mbuf_defrag_attempts
+operator|++
+argument_list|)
+expr_stmt|;
 name|m0
 operator|=
 name|m_defrag
@@ -37181,6 +37252,15 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|BXE_PRINTF
+argument_list|(
+literal|"%s(%d): Can't defrag TX frame!\n"
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|)
+expr_stmt|;
 name|rc
 operator|=
 name|ENOBUFS
@@ -37188,6 +37268,14 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Defrag was successful, try mapping again. */
+name|DBRUN
+argument_list|(
+name|fp
+operator|->
+name|mbuf_defrag_successes
+operator|++
+argument_list|)
+expr_stmt|;
 operator|*
 name|m_head
 operator|=
@@ -37238,6 +37326,15 @@ block|}
 else|else
 block|{
 comment|/* The frame can't be defragged, 					 *  drop it. 					 */
+name|BXE_PRINTF
+argument_list|(
+literal|"%s(%d): Can't map TX frame!\n"
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|)
+expr_stmt|;
 name|rc
 operator|=
 name|error
@@ -37283,6 +37380,16 @@ operator|>
 literal|12
 condition|)
 block|{
+name|BXE_PRINTF
+argument_list|(
+literal|"%s(%d): Too many fragments for a TSO "
+literal|"frame!\n"
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|)
+expr_stmt|;
 name|rc
 operator|=
 name|ENOBUFS
@@ -37311,8 +37418,8 @@ block|{
 comment|/* Recoverable try again later  */
 name|BXE_PRINTF
 argument_list|(
-literal|"%s(%d): Error mapping mbuf into TX chain"
-literal|"returning pkt to queue\n"
+literal|"%s(%d): Error mapping mbuf into TX chain, "
+literal|"returning pkt to queue!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -37345,16 +37452,6 @@ operator|*
 name|m_head
 operator|=
 name|NULL
-expr_stmt|;
-name|BXE_PRINTF
-argument_list|(
-literal|"%s(%d): Error mapping mbuf into TX chain"
-literal|"Frame dropped \n"
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|)
 expr_stmt|;
 block|}
 return|return
@@ -65075,7 +65172,7 @@ goto|goto
 name|bxe_rxeof_next_rx
 goto|;
 block|}
-comment|/* 			 * The high level logic used here is to 			 * immediatley replace each	receive buffer 			 * as it is used so that the receive chain 			 * is full at all times.  First we try to 			 * allocate a new receive buffer, but if 			 * that fails then we will reuse the 			 * existing mbuf and log an error for the 			 * lost packet. 			 */
+comment|/* 			 * The high level logic used here is to 			 * immediatley replace each receive buffer 			 * as it is used so that the receive chain 			 * is full at all times.  First we try to 			 * allocate a new receive buffer, but if 			 * that fails then we will reuse the 			 * existing mbuf and log an error for the 			 * lost packet. 			 */
 comment|/* Allocate a new mbuf for the receive chain. */
 if|if
 condition|(
@@ -67317,7 +67414,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|bxe_sysctl_dump_grc
+name|bxe_sysctl_grcdump
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
@@ -67382,7 +67479,7 @@ literal|1
 condition|)
 block|{
 comment|/* Generate a grcdump and log the contents.*/
-name|bxe_dump_grc
+name|bxe_grcdump
 argument_list|(
 name|sc
 argument_list|,
@@ -67393,7 +67490,7 @@ block|}
 else|else
 block|{
 comment|/* Generate a grcdump and don't log the contents. */
-name|bxe_dump_grc
+name|bxe_grcdump
 argument_list|(
 name|sc
 argument_list|,
@@ -67518,35 +67615,19 @@ name|struct
 name|sysctl_ctx_list
 modifier|*
 name|ctx
-decl_stmt|;
-name|struct
-name|sysctl_oid_list
-modifier|*
-name|children
-decl_stmt|;
-name|struct
-name|bxe_eth_stats
-modifier|*
-name|estats
-decl_stmt|;
-name|estats
-operator|=
-operator|&
-name|sc
-operator|->
-name|eth_stats
-expr_stmt|;
-name|ctx
-operator|=
+init|=
 name|device_get_sysctl_ctx
 argument_list|(
 name|sc
 operator|->
 name|bxe_dev
 argument_list|)
-expr_stmt|;
+decl_stmt|;
+name|struct
+name|sysctl_oid_list
+modifier|*
 name|children
-operator|=
+init|=
 name|SYSCTL_CHILDREN
 argument_list|(
 name|device_get_sysctl_tree
@@ -67556,7 +67637,37 @@ operator|->
 name|bxe_dev
 argument_list|)
 argument_list|)
-expr_stmt|;
+decl_stmt|;
+name|struct
+name|bxe_eth_stats
+modifier|*
+name|estats
+init|=
+operator|&
+name|sc
+operator|->
+name|eth_stats
+decl_stmt|;
+name|struct
+name|sysctl_oid
+modifier|*
+name|queue_node
+decl_stmt|;
+name|struct
+name|sysctl_oid_list
+modifier|*
+name|queue_list
+decl_stmt|;
+define|#
+directive|define
+name|QUEUE_NAME_LEN
+value|32
+name|char
+name|namebuf
+index|[
+name|QUEUE_NAME_LEN
+index|]
+decl_stmt|;
 name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
@@ -68066,6 +68177,134 @@ argument_list|,
 literal|"mbuf cluster allocation failures"
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|int
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+name|sc
+operator|->
+name|num_queues
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|struct
+name|bxe_fastpath
+modifier|*
+name|fp
+init|=
+operator|&
+name|sc
+operator|->
+name|fp
+index|[
+name|i
+index|]
+decl_stmt|;
+name|snprintf
+argument_list|(
+name|namebuf
+argument_list|,
+name|QUEUE_NAME_LEN
+argument_list|,
+literal|"fp[%02d]"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|queue_node
+operator|=
+name|SYSCTL_ADD_NODE
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|namebuf
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+name|NULL
+argument_list|,
+literal|"Queue Name"
+argument_list|)
+expr_stmt|;
+name|queue_list
+operator|=
+name|SYSCTL_CHILDREN
+argument_list|(
+name|queue_node
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"mbuf_alloc_failed"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|fp
+operator|->
+name|mbuf_alloc_failed
+argument_list|,
+literal|"Mbuf allocation failures"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"mbuf_defrag_attempts"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|fp
+operator|->
+name|mbuf_defrag_attempts
+argument_list|,
+literal|"Mbuf defrag attempts"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"mbuf_defrag_successes"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|fp
+operator|->
+name|mbuf_defrag_successes
+argument_list|,
+literal|"Mbuf defrag successes"
+argument_list|)
+expr_stmt|;
+block|}
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|ctx
@@ -68240,7 +68479,7 @@ argument_list|,
 literal|"Dump tx_bd chain"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Generates a GRCdump (run sysctl dev.bxe.0.grcdump=0 	 * before access buffer below). 	 */
+comment|/* 	 * Generates a GRCdump (run sysctl dev.bxe.0.grcdump=0 	 * before accessing buffer below). 	 */
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|ctx
@@ -68263,7 +68502,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|bxe_sysctl_dump_grc
+name|bxe_sysctl_grcdump
 argument_list|,
 literal|"I"
 argument_list|,
@@ -68293,7 +68532,7 @@ name|BXE_GRCDUMP_BUF_SIZE
 argument_list|,
 literal|"IU"
 argument_list|,
-literal|"Grcdump buffer"
+literal|"Access grcdump buffer"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_PROC
@@ -68969,7 +69208,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|bxe_dump_grc
+name|bxe_grcdump
 parameter_list|(
 name|struct
 name|bxe_softc

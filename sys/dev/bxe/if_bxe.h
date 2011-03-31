@@ -3610,6 +3610,14 @@ name|unsigned
 name|long
 name|mbuf_alloc_failed
 decl_stmt|;
+name|unsigned
+name|long
+name|mbuf_defrag_attempts
+decl_stmt|;
+name|unsigned
+name|long
+name|mbuf_defrag_successes
+decl_stmt|;
 comment|/* Track the number of enqueued mbufs. */
 name|int
 name|tx_mbuf_alloc
