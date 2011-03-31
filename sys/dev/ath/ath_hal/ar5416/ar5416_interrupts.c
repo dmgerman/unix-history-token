@@ -492,7 +492,7 @@ block|}
 comment|/* Interrupt Mitigation on AR5416 */
 ifdef|#
 directive|ifdef
-name|AR5416_INT_MITIGATION
+name|AH_AR5416_INTERRUPT_MITIGATION
 if|if
 condition|(
 name|isr
@@ -815,7 +815,7 @@ literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|AR5416_INT_MITIGATION
+name|AH_AR5416_INTERRUPT_MITIGATION
 comment|/* 	 * Overwrite default mask if Interrupt mitigation 	 * is specified for AR5416 	 */
 name|mask
 operator|=

@@ -1441,7 +1441,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|AR5416_INT_MITIGATION
+name|AH_AR5416_INTERRUPT_MITIGATION
 name|OS_REG_WRITE
 argument_list|(
 name|ah
@@ -2044,7 +2044,7 @@ name|AR_IMR_BCNMISC
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|AR5416_INT_MITIGATION
+name|AH_AR5416_INTERRUPT_MITIGATION
 name|ahp
 operator|->
 name|ah_maskReg
