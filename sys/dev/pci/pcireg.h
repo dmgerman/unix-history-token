@@ -1225,6 +1225,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCIR_BIOS_1
+value|0x38
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIR_BRIDGECTL_1
 value|0x3e
 end_define

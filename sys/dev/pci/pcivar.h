@@ -95,6 +95,30 @@ end_struct
 
 begin_struct
 struct|struct
+name|pci_map
+block|{
+name|pci_addr_t
+name|pm_value
+decl_stmt|;
+comment|/* Raw BAR value */
+name|pci_addr_t
+name|pm_size
+decl_stmt|;
+name|uint8_t
+name|pm_reg
+decl_stmt|;
+name|STAILQ_ENTRY
+argument_list|(
+argument|pci_map
+argument_list|)
+name|pm_link
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|vpd_readonly
 block|{
 name|char
@@ -357,17 +381,14 @@ modifier|*
 name|dev
 decl_stmt|;
 comment|/* device which owns this */
-name|uint32_t
-name|bar
-index|[
-name|PCI_MAXMAPS_0
-index|]
-decl_stmt|;
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|pci_map
+argument_list|)
+name|maps
+expr_stmt|;
 comment|/* BARs */
-name|uint32_t
-name|bios
-decl_stmt|;
-comment|/* BIOS mapping */
 name|uint16_t
 name|subvendor
 decl_stmt|;
@@ -1951,6 +1972,36 @@ name|uint32_t
 name|pci_generation
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|struct
+name|pci_map
+modifier|*
+name|pci_find_bar
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|int
+name|reg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pci_bar_enabled
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|struct
+name|pci_map
+modifier|*
+name|pm
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
