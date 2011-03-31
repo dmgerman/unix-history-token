@@ -6028,10 +6028,6 @@ name|meta
 operator|=
 name|NULL
 expr_stmt|;
-name|spare
-operator|=
-literal|0
-expr_stmt|;
 name|vendor
 operator|=
 literal|0xffff
@@ -7598,7 +7594,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|-
-literal|4
+literal|7
 expr_stmt|;
 break|break;
 block|}
@@ -7886,6 +7882,27 @@ operator|(
 name|error
 operator|)
 return|;
+if|if
+condition|(
+name|sectorsize
+operator|<=
+literal|0
+condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"Can't get sector size."
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|8
+operator|)
+return|;
+block|}
 comment|/* Reserve some space for metadata. */
 name|size
 operator|-=
@@ -10454,14 +10471,6 @@ operator|->
 name|d_consumer
 operator|=
 name|cp
-expr_stmt|;
-name|disk
-operator|->
-name|d_consumer
-operator|->
-name|private
-operator|=
-name|disk
 expr_stmt|;
 name|disk
 operator|->

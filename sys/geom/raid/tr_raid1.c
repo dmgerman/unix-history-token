@@ -2752,11 +2752,6 @@ name|bp
 parameter_list|)
 block|{
 name|struct
-name|g_raid_softc
-modifier|*
-name|sc
-decl_stmt|;
-name|struct
 name|g_raid_volume
 modifier|*
 name|vol
@@ -2783,12 +2778,6 @@ operator|=
 name|tr
 operator|->
 name|tro_volume
-expr_stmt|;
-name|sc
-operator|=
-name|vol
-operator|->
-name|v_softc
 expr_stmt|;
 comment|/* 	 * Allocate all bios before sending any request, so we can return 	 * ENOMEM in nice and clean way. 	 */
 name|bioq_init

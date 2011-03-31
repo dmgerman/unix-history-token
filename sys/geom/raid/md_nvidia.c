@@ -2831,11 +2831,6 @@ modifier|*
 name|mdi
 decl_stmt|;
 name|struct
-name|nvidia_raid_conf
-modifier|*
-name|meta
-decl_stmt|;
-name|struct
 name|g_raid_disk
 modifier|*
 name|disk
@@ -2864,12 +2859,6 @@ name|g_raid_md_nvidia_object
 operator|*
 operator|)
 name|md
-expr_stmt|;
-name|meta
-operator|=
-name|mdi
-operator|->
-name|mdio_meta
 expr_stmt|;
 name|update
 operator|=
@@ -3008,7 +2997,6 @@ if|if
 condition|(
 name|update
 condition|)
-block|{
 name|g_raid_md_write_nvidia
 argument_list|(
 name|md
@@ -3020,13 +3008,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|meta
-operator|=
-name|mdi
-operator|->
-name|mdio_meta
-expr_stmt|;
-block|}
 comment|/* Update status of our need for spare. */
 name|mdi
 operator|->
@@ -4190,8 +4171,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
-name|disk_pos
-decl_stmt|,
 name|result
 decl_stmt|,
 name|spare
@@ -4240,17 +4219,9 @@ name|meta
 operator|=
 name|NULL
 expr_stmt|;
-name|spare
-operator|=
-literal|0
-expr_stmt|;
 name|vendor
 operator|=
 literal|0xffff
-expr_stmt|;
-name|disk_pos
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -4377,32 +4348,6 @@ name|G_RAID_MD_TASTE_FAIL
 operator|)
 return|;
 block|}
-comment|/* Check this disk position in obtained metadata. */
-name|disk_pos
-operator|=
-name|meta
-operator|->
-name|disk_number
-expr_stmt|;
-if|if
-condition|(
-name|disk_pos
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|G_RAID_DEBUG
-argument_list|(
-literal|1
-argument_list|,
-literal|"NVIDIA disk position not found"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|fail1
-goto|;
-block|}
 comment|/* Metadata valid. Print it. */
 name|g_raid_md_nvidia_print
 argument_list|(
@@ -4415,7 +4360,9 @@ literal|1
 argument_list|,
 literal|"NVIDIA disk position %d"
 argument_list|,
-name|disk_pos
+name|meta
+operator|->
+name|disk_number
 argument_list|)
 expr_stmt|;
 name|spare
@@ -5884,6 +5831,27 @@ operator|(
 name|error
 operator|)
 return|;
+if|if
+condition|(
+name|sectorsize
+operator|<=
+literal|0
+condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"Can't get sector size."
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|8
+operator|)
+return|;
+block|}
 comment|/* Reserve space for metadata. */
 name|size
 operator|-=
@@ -7130,14 +7098,6 @@ name|cp
 expr_stmt|;
 name|disk
 operator|->
-name|d_consumer
-operator|->
-name|private
-operator|=
-name|disk
-expr_stmt|;
-name|disk
-operator|->
 name|d_md_data
 operator|=
 operator|(
@@ -8109,11 +8069,6 @@ modifier|*
 name|sc
 decl_stmt|;
 name|struct
-name|g_raid_md_nvidia_object
-modifier|*
-name|mdi
-decl_stmt|;
-name|struct
 name|g_raid_md_nvidia_perdisk
 modifier|*
 name|pd
@@ -8128,15 +8083,6 @@ operator|=
 name|md
 operator|->
 name|mdo_softc
-expr_stmt|;
-name|mdi
-operator|=
-operator|(
-expr|struct
-name|g_raid_md_nvidia_object
-operator|*
-operator|)
-name|md
 expr_stmt|;
 name|pd
 operator|=
