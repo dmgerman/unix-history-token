@@ -141,6 +141,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR724X_RESET_USB_HOST
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR724X_RESET_USB_PHY
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR724X_RESET_MODULE_USB_OHCI_DLL
 value|(1<< 3)
 end_define
