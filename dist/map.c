@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: map.c,v 1.3 1997/01/11 06:48:00 lukem Exp $	*/
+comment|/*	$NetBSD: map.c,v 1.14 2001/01/09 17:22:09 jdolecek Exp $	*/
 end_comment
 
 begin_comment
 comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_if
 if|#
@@ -35,15 +41,13 @@ else|#
 directive|else
 end_else
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$NetBSD: map.c,v 1.3 1997/01/11 06:48:00 lukem Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$NetBSD: map.c,v 1.14 2001/01/09 17:22:09 jdolecek Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -60,7 +64,7 @@ comment|/* not lint&& not SCCSID */
 end_comment
 
 begin_comment
-comment|/*  * map.c: Editor function definitions   */
+comment|/*  * map.c: Editor function definitions  */
 end_comment
 
 begin_include
@@ -88,88 +92,73 @@ name|N_KEYS
 value|256
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|private
 name|void
 name|map_print_key
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|el_action_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|private
 name|void
 name|map_print_some_keys
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|el_action_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|private
 name|void
 name|map_print_all_keys
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|private
 name|void
 name|map_init_nls
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|private
 name|void
 name|map_init_meta
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* keymap tables ; should be N_KEYS*sizeof(KEYCMD) bytes long */
@@ -177,6 +166,7 @@ end_comment
 
 begin_decl_stmt
 name|private
+specifier|const
 name|el_action_t
 name|el_map_emacs
 index|[]
@@ -1216,6 +1206,7 @@ end_comment
 
 begin_decl_stmt
 name|private
+specifier|const
 name|el_action_t
 name|el_map_vi_insert
 index|[]
@@ -1322,7 +1313,7 @@ comment|/*  23 */
 name|ED_DELETE_PREV_WORD
 block|,
 comment|/* ^W */
-comment|/* Only until strt edit pos */
+comment|/* ED_DELETE_PREV_WORD: Only until strt edit pos */
 comment|/*  24 */
 name|ED_INSERT
 block|,
@@ -1359,41 +1350,35 @@ comment|/* ^_ */
 else|#
 directive|else
 comment|/* !KSHVI */
+comment|/* 				 * NOTE: These mappings do NOT Correspond well 				 * to the KSH VI editing assignments. 				 * On the other and they are convenient and 				 * many people have have gotten used to them. 				 */
 comment|/*   0 */
 name|ED_UNASSIGNED
 block|,
 comment|/* ^@ */
-comment|/* NOTE: These mappings do */
 comment|/*   1 */
 name|ED_MOVE_TO_BEG
 block|,
 comment|/* ^A */
-comment|/* NOT Correspond well to  */
 comment|/*   2 */
 name|ED_PREV_CHAR
 block|,
 comment|/* ^B */
-comment|/* the KSH VI editing as-  */
 comment|/*   3 */
 name|ED_TTY_SIGINT
 block|,
 comment|/* ^C */
-comment|/* signments. On the other */
 comment|/*   4 */
 name|VI_LIST_OR_EOF
 block|,
 comment|/* ^D */
-comment|/* hand they are convenient*/
 comment|/*   5 */
 name|ED_MOVE_TO_END
 block|,
 comment|/* ^E */
-comment|/* and many people have    */
 comment|/*   6 */
 name|ED_NEXT_CHAR
 block|,
 comment|/* ^F */
-comment|/* have gotten used to them*/
 comment|/*   7 */
 name|ED_UNASSIGNED
 block|,
@@ -2400,6 +2385,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|private
+specifier|const
 name|el_action_t
 name|el_map_vi_command
 index|[]
@@ -3441,14 +3427,12 @@ name|protected
 name|int
 name|map_init
 parameter_list|(
-name|el
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|)
 block|{
-comment|/*      * Make sure those are correct before starting.      */
+comment|/*          * Make sure those are correct before starting.          */
 ifdef|#
 directive|ifdef
 name|MAP_DEBUG
@@ -3466,8 +3450,16 @@ argument_list|(
 name|el_action_t
 argument_list|)
 condition|)
-name|abort
-argument_list|()
+name|EL_ABORT
+argument_list|(
+operator|(
+name|el
+operator|->
+name|errfile
+operator|,
+literal|"Emacs map incorrect\n"
+operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3483,8 +3475,16 @@ argument_list|(
 name|el_action_t
 argument_list|)
 condition|)
-name|abort
-argument_list|()
+name|EL_ABORT
+argument_list|(
+operator|(
+name|el
+operator|->
+name|errfile
+operator|,
+literal|"Vi command map incorrect\n"
+operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3500,8 +3500,16 @@ argument_list|(
 name|el_action_t
 argument_list|)
 condition|)
-name|abort
-argument_list|()
+name|EL_ABORT
+argument_list|(
+operator|(
+name|el
+operator|->
+name|errfile
+operator|,
+literal|"Vi insert map incorrect\n"
+operator|)
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -3525,6 +3533,22 @@ operator|*
 name|N_KEYS
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|el
+operator|->
+name|el_map
+operator|.
+name|alt
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 name|el
 operator|->
 name|el_map
@@ -3545,6 +3569,22 @@ operator|*
 name|N_KEYS
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|el
+operator|->
+name|el_map
+operator|.
+name|key
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 name|el
 operator|->
 name|el_map
@@ -3589,6 +3629,22 @@ operator|*
 name|EL_NUM_FCNS
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|el
+operator|->
+name|el_map
+operator|.
+name|help
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 operator|(
 name|void
 operator|)
@@ -3631,6 +3687,22 @@ operator|*
 name|EL_NUM_FCNS
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|el
+operator|->
+name|el_map
+operator|.
+name|func
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 name|memcpy
 argument_list|(
 name|el
@@ -3677,7 +3749,9 @@ endif|#
 directive|endif
 comment|/* VIDEFAULT */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3691,12 +3765,10 @@ name|protected
 name|void
 name|map_end
 parameter_list|(
-name|el
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|)
 block|{
 name|el_free
 argument_list|(
@@ -3814,12 +3886,10 @@ name|private
 name|void
 name|map_init_nls
 parameter_list|(
-name|el
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -3873,12 +3943,10 @@ name|private
 name|void
 name|map_init_meta
 parameter_list|(
-name|el
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -3886,7 +3954,6 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -4075,6 +4142,9 @@ break|break;
 block|}
 name|map
 index|[
+operator|(
+name|int
+operator|)
 name|buf
 index|[
 literal|0
@@ -4095,14 +4165,11 @@ name|protected
 name|void
 name|map_init_vi
 parameter_list|(
-name|el
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -4126,6 +4193,7 @@ name|el_map
 operator|.
 name|alt
 decl_stmt|;
+specifier|const
 name|el_action_t
 modifier|*
 name|vii
@@ -4136,6 +4204,7 @@ name|el_map
 operator|.
 name|vii
 decl_stmt|;
+specifier|const
 name|el_action_t
 modifier|*
 name|vic
@@ -4211,21 +4280,11 @@ argument_list|(
 name|el
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
-if|if
-condition|(
-literal|0
-comment|/* XXX: USER has set LC_CTYPE */
-condition|)
 name|map_init_nls
 argument_list|(
 name|el
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|tty_bind_char
 argument_list|(
 name|el
@@ -4250,12 +4309,10 @@ name|protected
 name|void
 name|map_init_emacs
 parameter_list|(
-name|el
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -4286,6 +4343,7 @@ name|el_map
 operator|.
 name|alt
 decl_stmt|;
+specifier|const
 name|el_action_t
 modifier|*
 name|emacs
@@ -4358,21 +4416,6 @@ argument_list|(
 name|el
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
-if|if
-condition|(
-literal|0
-comment|/* XXX: USER has set LC_CTYPE */
-condition|)
-name|map_init_nls
-argument_list|(
-name|el
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|map_init_nls
 argument_list|(
 name|el
@@ -4437,7 +4480,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* map_set_editor():  *	Set the editor   */
+comment|/* map_set_editor():  *	Set the editor  */
 end_comment
 
 begin_function
@@ -4445,18 +4488,14 @@ name|protected
 name|int
 name|map_set_editor
 parameter_list|(
-name|el
-parameter_list|,
-name|editor
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|editor
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -4476,7 +4515,9 @@ name|el
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -4497,12 +4538,93 @@ name|el
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* map_get_editor():  *	Retrieve the editor  */
+end_comment
+
+begin_function
+name|protected
+name|int
+name|map_get_editor
+parameter_list|(
+name|EditLine
+modifier|*
+name|el
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|editor
+parameter_list|)
+block|{
+if|if
+condition|(
+name|editor
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+switch|switch
+condition|(
+name|el
+operator|->
+name|el_map
+operator|.
+name|type
+condition|)
+block|{
+case|case
+name|MAP_EMACS
+case|:
+operator|*
+name|editor
+operator|=
+literal|"emacs"
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+case|case
+name|MAP_VI
+case|:
+operator|*
+name|editor
+operator|=
+literal|"vi"
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -4516,24 +4638,18 @@ name|private
 name|void
 name|map_print_key
 parameter_list|(
-name|el
-parameter_list|,
-name|map
-parameter_list|,
-name|in
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|el_action_t
 modifier|*
 name|map
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|in
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|outbuf
@@ -4651,27 +4767,20 @@ name|private
 name|void
 name|map_print_some_keys
 parameter_list|(
-name|el
-parameter_list|,
-name|map
-parameter_list|,
-name|first
-parameter_list|,
-name|last
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|el_action_t
 modifier|*
 name|map
-decl_stmt|;
+parameter_list|,
 name|int
 name|first
-decl_stmt|,
+parameter_list|,
+name|int
 name|last
-decl_stmt|;
+parameter_list|)
 block|{
 name|el_bindings_t
 modifier|*
@@ -4979,8 +5088,16 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|abort
-argument_list|()
+name|EL_ABORT
+argument_list|(
+operator|(
+name|el
+operator|->
+name|el_errfile
+operator|,
+literal|"Error printing keys\n"
+operator|)
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -4994,12 +5111,10 @@ name|private
 name|void
 name|map_print_all_keys
 parameter_list|(
-name|el
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|prev
@@ -5236,24 +5351,18 @@ name|protected
 name|int
 name|map_bind
 parameter_list|(
-name|el
-parameter_list|,
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|el_action_t
 modifier|*
@@ -5262,7 +5371,7 @@ decl_stmt|;
 name|int
 name|ntype
 decl_stmt|,
-name|remove
+name|rem
 decl_stmt|;
 name|char
 modifier|*
@@ -5309,8 +5418,10 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|map
 operator|=
@@ -5326,7 +5437,7 @@ name|XK_CMD
 expr_stmt|;
 name|key
 operator|=
-name|remove
+name|rem
 operator|=
 literal|0
 expr_stmt|;
@@ -5411,7 +5522,7 @@ break|break;
 case|case
 literal|'r'
 case|:
-name|remove
+name|rem
 operator|=
 literal|1
 expr_stmt|;
@@ -5425,7 +5536,9 @@ name|el
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 case|case
 literal|'e'
@@ -5436,7 +5549,9 @@ name|el
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 case|case
 literal|'l'
@@ -5481,7 +5596,9 @@ name|description
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 default|default:
 operator|(
@@ -5525,7 +5642,9 @@ name|el
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -5579,13 +5698,15 @@ index|]
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
 condition|(
-name|remove
+name|rem
 condition|)
 block|{
 if|if
@@ -5604,8 +5725,10 @@ name|in
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -5664,7 +5787,9 @@ operator|=
 name|ED_UNASSIGNED
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -5699,7 +5824,9 @@ name|in
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 ifdef|#
@@ -5721,8 +5848,10 @@ name|bindkey_usage
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 endif|#
@@ -5775,8 +5904,10 @@ index|]
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -5875,8 +6006,10 @@ index|]
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -5965,13 +6098,25 @@ block|}
 block|}
 break|break;
 default|default:
-name|abort
-argument_list|()
+name|EL_ABORT
+argument_list|(
+operator|(
+name|el
+operator|->
+name|el_errfile
+operator|,
+literal|"Bad XK_ type\n"
+operator|,
+name|ntype
+operator|)
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -5985,32 +6130,28 @@ name|protected
 name|int
 name|map_addfunc
 parameter_list|(
-name|el
-parameter_list|,
-name|name
-parameter_list|,
-name|help
-parameter_list|,
-name|func
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|help
-decl_stmt|;
+parameter_list|,
 name|el_func_t
 name|func
-decl_stmt|;
+parameter_list|)
 block|{
+name|void
+modifier|*
+name|p
+decl_stmt|;
 name|int
 name|nf
 init|=
@@ -6037,8 +6178,40 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
+return|;
+if|if
+condition|(
+operator|(
+name|p
+operator|=
+name|el_realloc
+argument_list|(
+name|el
+operator|->
+name|el_map
+operator|.
+name|func
+argument_list|,
+name|nf
+operator|*
+sizeof|sizeof
+argument_list|(
+name|el_func_t
+argument_list|)
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
 return|;
 name|el
 operator|->
@@ -6050,22 +6223,38 @@ operator|(
 name|el_func_t
 operator|*
 operator|)
+name|p
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|p
+operator|=
 name|el_realloc
 argument_list|(
 name|el
 operator|->
 name|el_map
 operator|.
-name|func
+name|help
 argument_list|,
 name|nf
 operator|*
 sizeof|sizeof
 argument_list|(
-name|el_func_t
+name|el_bindings_t
 argument_list|)
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 name|el
 operator|->
 name|el_map
@@ -6076,21 +6265,7 @@ operator|(
 name|el_bindings_t
 operator|*
 operator|)
-name|el_realloc
-argument_list|(
-name|el
-operator|->
-name|el_map
-operator|.
-name|help
-argument_list|,
-name|nf
-operator|*
-sizeof|sizeof
-argument_list|(
-name|el_bindings_t
-argument_list|)
-argument_list|)
+name|p
 expr_stmt|;
 name|nf
 operator|=
@@ -6172,7 +6347,9 @@ name|nfunc
 operator|++
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

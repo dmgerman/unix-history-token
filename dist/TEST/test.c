@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD	*/
+comment|/*	$NetBSD: test.c,v 1.9 2000/09/04 23:36:41 lukem Exp $	*/
 end_comment
 
 begin_comment
 comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_ifndef
 ifndef|#
@@ -13,15 +19,13 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|copyright
-index|[]
-init|=
+begin_expr_stmt
+name|__COPYRIGHT
+argument_list|(
 literal|"@(#) Copyright (c) 1992, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -60,15 +64,13 @@ else|#
 directive|else
 end_else
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$NetBSD"
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$NetBSD: test.c,v 1.9 2000/09/04 23:36:41 lukem Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -173,19 +175,64 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|u_char
+name|complete
+parameter_list|(
+name|EditLine
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|main
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|char
+modifier|*
+name|prompt
+parameter_list|(
+name|EditLine
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|sig
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|char
 modifier|*
-comment|/*ARGSUSED*/
 name|prompt
 parameter_list|(
-name|el
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -202,11 +249,13 @@ init|=
 literal|"Edit>"
 decl_stmt|;
 return|return
+operator|(
 name|continuation
 condition|?
 name|b
 else|:
 name|a
+operator|)
 return|;
 block|}
 end_function
@@ -216,11 +265,9 @@ specifier|static
 name|void
 name|sig
 parameter_list|(
-name|i
-parameter_list|)
 name|int
 name|i
-decl_stmt|;
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -246,20 +293,15 @@ begin_function
 specifier|static
 name|unsigned
 name|char
-comment|/*ARGSUSED*/
 name|complete
 parameter_list|(
-name|el
-parameter_list|,
-name|ch
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|ch
-decl_stmt|;
+parameter_list|)
 block|{
 name|DIR
 modifier|*
@@ -293,7 +335,7 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-comment|/*      * Find the last word      */
+comment|/* 	 * Find the last word 	 */
 for|for
 control|(
 name|ptr
@@ -403,11 +445,15 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
 else|else
 return|return
+operator|(
 name|CC_REFRESH
+operator|)
 return|;
 block|}
 block|}
@@ -417,28 +463,25 @@ name|dd
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
 block|}
 end_function
 
 begin_function
 name|int
-comment|/*ARGSUSED*/
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|argv
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|num
@@ -452,9 +495,19 @@ name|Tokenizer
 modifier|*
 name|tok
 decl_stmt|;
+name|int
+name|lastevent
+init|=
+literal|0
+decl_stmt|,
+name|ncontinuation
+decl_stmt|;
 name|History
 modifier|*
 name|hist
+decl_stmt|;
+name|HistEvent
+name|ev
 decl_stmt|;
 operator|(
 name|void
@@ -502,16 +555,19 @@ name|history_init
 argument_list|()
 expr_stmt|;
 comment|/* Init the builtin history	*/
+comment|/* Remember 100 events		*/
 name|history
 argument_list|(
 name|hist
 argument_list|,
-name|H_EVENT
+operator|&
+name|ev
+argument_list|,
+name|H_SETSIZE
 argument_list|,
 literal|100
 argument_list|)
 expr_stmt|;
-comment|/* Remember 100 events		*/
 name|tok
 operator|=
 name|tok_init
@@ -520,6 +576,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Initialize the tokenizer	*/
+comment|/* Initialize editline		*/
 name|el
 operator|=
 name|el_init
@@ -530,9 +587,10 @@ argument_list|,
 name|stdin
 argument_list|,
 name|stdout
+argument_list|,
+name|stderr
 argument_list|)
 expr_stmt|;
-comment|/* Initialize editline		*/
 name|el_set
 argument_list|(
 name|el
@@ -542,7 +600,7 @@ argument_list|,
 literal|"vi"
 argument_list|)
 expr_stmt|;
-comment|/* Default editor is vi 	*/
+comment|/* Default editor is vi		*/
 name|el_set
 argument_list|(
 name|el
@@ -563,7 +621,7 @@ name|prompt
 argument_list|)
 expr_stmt|;
 comment|/* Set the prompt function	*/
-comment|/* Tell editline to use this history interface			*/
+comment|/* Tell editline to use this history interface	*/
 name|el_set
 argument_list|(
 name|el
@@ -575,7 +633,7 @@ argument_list|,
 name|hist
 argument_list|)
 expr_stmt|;
-comment|/* Add a user-defined function 					*/
+comment|/* Add a user-defined function	*/
 name|el_set
 argument_list|(
 name|el
@@ -589,6 +647,7 @@ argument_list|,
 name|complete
 argument_list|)
 expr_stmt|;
+comment|/* Bind tab to it 		*/
 name|el_set
 argument_list|(
 name|el
@@ -602,8 +661,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* Bind tab to it 	*/
-comment|/*      * Bind j, k in vi command mode to previous and next line, instead      * of previous and next history.      */
+comment|/* 	 * Bind j, k in vi command mode to previous and next line, instead 	 * of previous and next history. 	 */
 name|el_set
 argument_list|(
 name|el
@@ -634,7 +692,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/*      * Source the user's defaults file.      */
+comment|/* 	 * Source the user's defaults file. 	 */
 name|el_source
 argument_list|(
 name|el
@@ -717,40 +775,42 @@ argument_list|)
 operator|>
 literal|0
 condition|)
-block|{
-name|history
-argument_list|(
-name|hist
-argument_list|,
-name|continuation
-condition|?
-name|H_ADD
-else|:
-name|H_ENTER
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-name|continuation
+name|ncontinuation
 operator|=
 literal|1
 expr_stmt|;
-continue|continue;
-block|}
+if|#
+directive|if
+literal|0
+block|if (continuation) {
+comment|/* 			 * Append to the right event in case the user 			 * moved around in history. 			 */
+block|if (history(hist,&ev, H_SET, lastevent) == -1) 				err(1, "%d: %s\n", lastevent, ev.str); 			history(hist,&ev, H_ADD , buf); 		} else { 			history(hist,&ev, H_ENTER, buf); 			lastevent = ev.num; 		}
+else|#
+directive|else
+comment|/* Simpler */
 name|history
 argument_list|(
 name|hist
 argument_list|,
+operator|&
+name|ev
+argument_list|,
 name|continuation
 condition|?
-name|H_ADD
+name|H_APPEND
 else|:
 name|H_ENTER
 argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|continuation
+operator|=
+name|ncontinuation
+expr_stmt|;
+name|ncontinuation
 operator|=
 literal|0
 expr_stmt|;
@@ -769,11 +829,8 @@ operator|==
 literal|0
 condition|)
 block|{
-specifier|const
-name|struct
-name|HistEvent
-modifier|*
-name|he
+name|int
+name|rv
 decl_stmt|;
 switch|switch
 condition|(
@@ -785,22 +842,31 @@ literal|1
 case|:
 for|for
 control|(
-name|he
+name|rv
 operator|=
 name|history
 argument_list|(
 name|hist
 argument_list|,
+operator|&
+name|ev
+argument_list|,
 name|H_LAST
 argument_list|)
 init|;
-name|he
+name|rv
+operator|!=
+operator|-
+literal|1
 condition|;
-name|he
+name|rv
 operator|=
 name|history
 argument_list|(
 name|hist
+argument_list|,
+operator|&
+name|ev
 argument_list|,
 name|H_PREV
 argument_list|)
@@ -814,12 +880,12 @@ name|stdout
 argument_list|,
 literal|"%4d %s"
 argument_list|,
-name|he
-operator|->
+name|ev
+operator|.
 name|num
 argument_list|,
-name|he
-operator|->
+name|ev
+operator|.
 name|str
 argument_list|)
 expr_stmt|;
@@ -844,6 +910,9 @@ condition|)
 name|history
 argument_list|(
 name|hist
+argument_list|,
+operator|&
+name|ev
 argument_list|,
 name|H_CLEAR
 argument_list|)
@@ -874,6 +943,9 @@ name|history
 argument_list|(
 name|hist
 argument_list|,
+operator|&
+name|ev
+argument_list|,
 name|H_LOAD
 argument_list|,
 name|av
@@ -900,6 +972,9 @@ condition|)
 name|history
 argument_list|(
 name|hist
+argument_list|,
+operator|&
+name|ev
 argument_list|,
 name|H_SAVE
 argument_list|,
@@ -1040,7 +1115,9 @@ name|hist
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

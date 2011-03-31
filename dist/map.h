@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: map.h,v 1.2 1997/01/11 06:48:01 lukem Exp $	*/
+comment|/*	$NetBSD: map.h,v 1.6 2001/01/09 17:22:09 jdolecek Exp $	*/
 end_comment
 
 begin_comment
@@ -59,50 +59,53 @@ name|el_action_t
 modifier|*
 name|alt
 decl_stmt|;
-comment|/* The current alternate key map	*/
+comment|/* The current alternate key map */
 name|el_action_t
 modifier|*
 name|key
 decl_stmt|;
-comment|/* The current normal key map		*/
+comment|/* The current normal key map	*/
 name|el_action_t
 modifier|*
 name|current
 decl_stmt|;
-comment|/* The keymap we are using		*/
+comment|/* The keymap we are using	*/
+specifier|const
 name|el_action_t
 modifier|*
 name|emacs
 decl_stmt|;
-comment|/* The default emacs key map		*/
+comment|/* The default emacs key map	*/
+specifier|const
 name|el_action_t
 modifier|*
 name|vic
 decl_stmt|;
-comment|/* The vi command mode key map		*/
+comment|/* The vi command mode key map	*/
+specifier|const
 name|el_action_t
 modifier|*
 name|vii
 decl_stmt|;
-comment|/* The vi insert mode key map		*/
+comment|/* The vi insert mode key map	*/
 name|int
 name|type
 decl_stmt|;
-comment|/* Emacs or vi				*/
+comment|/* Emacs or vi			*/
 name|el_bindings_t
 modifier|*
 name|help
 decl_stmt|;
-comment|/* The help for the editor functions	*/
+comment|/* The help for the editor functions */
 name|el_func_t
 modifier|*
 name|func
 decl_stmt|;
-comment|/* List of available functions		*/
+comment|/* List of available functions	*/
 name|int
 name|nfunc
 decl_stmt|;
-comment|/* The number of functions/help items	*/
+comment|/* The number of functions/help items */
 block|}
 name|el_map_t
 typedef|;
@@ -122,122 +125,117 @@ name|MAP_VI
 value|1
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|protected
 name|int
 name|map_bind
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|protected
 name|int
 name|map_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|protected
 name|void
 name|map_end
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|protected
 name|void
 name|map_init_vi
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|protected
 name|void
 name|map_init_emacs
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|protected
 name|int
 name|map_set_editor
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
+name|protected
+name|int
+name|map_get_editor
+parameter_list|(
+name|EditLine
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|protected
 name|int
 name|map_addfunc
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|el_func_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

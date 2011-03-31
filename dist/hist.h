@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: hist.h,v 1.3 1997/01/11 06:47:56 lukem Exp $	*/
+comment|/*	$NetBSD: hist.h,v 1.6 2001/01/10 07:45:41 jdolecek Exp $	*/
 end_comment
 
 begin_comment
@@ -31,24 +31,22 @@ end_include
 
 begin_typedef
 typedef|typedef
-specifier|const
-name|HistEvent
-operator|*
-operator|(
-operator|*
-name|hist_fun_t
-operator|)
-name|__P
-argument_list|(
-operator|(
-name|ptr_t
-operator|,
 name|int
-operator|,
-operator|...
-operator|)
-argument_list|)
-expr_stmt|;
+function_decl|(
+modifier|*
+name|hist_fun_t
+function_decl|)
+parameter_list|(
+name|ptr_t
+parameter_list|,
+name|HistEvent
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
 end_typedef
 
 begin_typedef
@@ -61,6 +59,10 @@ modifier|*
 name|buf
 decl_stmt|;
 comment|/* The history buffer		*/
+name|size_t
+name|sz
+decl_stmt|;
+comment|/* Size of history buffer	*/
 name|char
 modifier|*
 name|last
@@ -78,9 +80,7 @@ name|hist_fun_t
 name|fun
 decl_stmt|;
 comment|/* Event access			*/
-specifier|const
 name|HistEvent
-modifier|*
 name|ev
 decl_stmt|;
 comment|/* Event cookie			*/
@@ -101,7 +101,7 @@ parameter_list|,
 name|arg
 parameter_list|)
 define|\
-value|((((el)->el_history.ev = \        (*(el)->el_history.fun)((el)->el_history.ref, fn, arg)) == NULL) ? \      NULL : (el)->el_history.ev->str)
+value|((((*(el)->el_history.fun) ((el)->el_history.ref,&(el)->el_history.ev, \ 	fn, arg)) == -1) ? NULL : (el)->el_history.ev.str)
 end_define
 
 begin_define
@@ -180,85 +180,85 @@ parameter_list|)
 value|HIST_FUN(el, H_SAVE fname)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|protected
 name|int
 name|hist_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|protected
 name|void
 name|hist_end
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|protected
 name|el_action_t
 name|hist_get
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|protected
 name|int
 name|hist_set
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|hist_fun_t
-operator|,
+parameter_list|,
 name|ptr_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|protected
 name|int
 name|hist_list
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|int
+name|hist_enlargebuf
+parameter_list|(
+name|EditLine
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

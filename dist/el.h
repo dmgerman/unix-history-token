@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: el.h,v 1.2 1997/01/11 06:47:53 lukem Exp $	*/
+comment|/*	$NetBSD: el.h,v 1.9 2001/09/27 19:29:50 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -72,7 +72,21 @@ begin_define
 define|#
 directive|define
 name|HANDLE_SIGNALS
-value|1
+value|1<<0
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO_TTY
+value|1<<1
+end_define
+
+begin_define
+define|#
+directive|define
+name|EDIT_DISABLED
+value|1<<2
 end_define
 
 begin_typedef
@@ -106,7 +120,8 @@ block|{
 comment|/* Position on the screen	*/
 name|int
 name|h
-decl_stmt|,
+decl_stmt|;
+name|int
 name|v
 decl_stmt|;
 block|}
@@ -122,16 +137,20 @@ block|{
 name|char
 modifier|*
 name|buffer
-decl_stmt|,
-comment|/* Input line 			*/
+decl_stmt|;
+comment|/* Input line			*/
+name|char
 modifier|*
 name|cursor
-decl_stmt|,
-comment|/* Cursor position 		*/
+decl_stmt|;
+comment|/* Cursor position		*/
+name|char
 modifier|*
 name|lastchar
-decl_stmt|,
-comment|/* Last character 		*/
+decl_stmt|;
+comment|/* Last character		*/
+specifier|const
+name|char
 modifier|*
 name|limit
 decl_stmt|;
@@ -153,7 +172,7 @@ block|{
 name|int
 name|inputmode
 decl_stmt|;
-comment|/* What mode are we in? 	*/
+comment|/* What mode are we in?		*/
 name|int
 name|doingarg
 decl_stmt|;
@@ -161,7 +180,7 @@ comment|/* Are we getting an argument?	*/
 name|int
 name|argument
 decl_stmt|;
-comment|/* Numeric argument 		*/
+comment|/* Numeric argument		*/
 name|int
 name|metanext
 decl_stmt|;
@@ -289,6 +308,12 @@ directive|include
 file|"help.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"read.h"
+end_include
+
 begin_struct
 struct|struct
 name|editline
@@ -297,91 +322,153 @@ name|char
 modifier|*
 name|el_prog
 decl_stmt|;
-comment|/* the program name 			*/
+comment|/* the program name		*/
 name|FILE
 modifier|*
 name|el_outfile
 decl_stmt|;
-comment|/* Stdio stuff				*/
+comment|/* Stdio stuff			*/
 name|FILE
 modifier|*
 name|el_errfile
 decl_stmt|;
-comment|/* Stdio stuff				*/
+comment|/* Stdio stuff			*/
 name|int
 name|el_infd
 decl_stmt|;
-comment|/* Input file descriptor		*/
+comment|/* Input file descriptor	*/
 name|int
 name|el_flags
 decl_stmt|;
-comment|/* Various flags.			*/
+comment|/* Various flags.		*/
 name|coord_t
 name|el_cursor
 decl_stmt|;
-comment|/* Cursor location			*/
+comment|/* Cursor location		*/
 name|char
 modifier|*
 modifier|*
 name|el_display
-decl_stmt|,
-comment|/* Real screen image = what is there	*/
+decl_stmt|;
+comment|/* Real screen image = what is there */
+name|char
 modifier|*
 modifier|*
 name|el_vdisplay
 decl_stmt|;
-comment|/* Virtual screen image = what we see	*/
+comment|/* Virtual screen image = what we see */
 name|el_line_t
 name|el_line
 decl_stmt|;
-comment|/* The current line information		*/
+comment|/* The current line information	*/
 name|el_state_t
 name|el_state
 decl_stmt|;
-comment|/* Current editor state			*/
+comment|/* Current editor state		*/
 name|el_term_t
 name|el_term
 decl_stmt|;
-comment|/* Terminal dependent stuff		*/
+comment|/* Terminal dependent stuff	*/
 name|el_tty_t
 name|el_tty
 decl_stmt|;
-comment|/* Tty dependent stuff			*/
+comment|/* Tty dependent stuff		*/
 name|el_refresh_t
 name|el_refresh
 decl_stmt|;
-comment|/* Refresh stuff			*/
+comment|/* Refresh stuff		*/
 name|el_prompt_t
 name|el_prompt
 decl_stmt|;
-comment|/* Prompt stuff				*/
+comment|/* Prompt stuff			*/
+name|el_prompt_t
+name|el_rprompt
+decl_stmt|;
+comment|/* Prompt stuff			*/
 name|el_chared_t
 name|el_chared
 decl_stmt|;
-comment|/* Characted editor stuff		*/
+comment|/* Characted editor stuff	*/
 name|el_map_t
 name|el_map
 decl_stmt|;
-comment|/* Key mapping stuff			*/
+comment|/* Key mapping stuff		*/
 name|el_key_t
 name|el_key
 decl_stmt|;
-comment|/* Key binding stuff			*/
+comment|/* Key binding stuff		*/
 name|el_history_t
 name|el_history
 decl_stmt|;
-comment|/* History stuff			*/
+comment|/* History stuff		*/
 name|el_search_t
 name|el_search
 decl_stmt|;
-comment|/* Search stuff				*/
+comment|/* Search stuff			*/
 name|el_signal_t
 name|el_signal
 decl_stmt|;
-comment|/* Signal handling stuff		*/
+comment|/* Signal handling stuff	*/
+name|el_read_t
+name|el_read
+decl_stmt|;
+comment|/* Character reading stuff	*/
 block|}
 struct|;
 end_struct
+
+begin_function_decl
+name|protected
+name|int
+name|el_editmode
+parameter_list|(
+name|EditLine
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|EL_ABORT
+parameter_list|(
+name|a
+parameter_list|)
+value|(void) (fprintf(el->el_errfile, "%s, %d: ", \ 				__FILE__, __LINE__), fprintf a, abort())
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|EL_ABORT
+parameter_list|(
+name|a
+parameter_list|)
+value|abort()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

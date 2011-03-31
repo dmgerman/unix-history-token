@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: histedit.h,v 1.5 1997/04/11 17:52:45 christos Exp $	*/
+comment|/*	$NetBSD: histedit.h,v 1.17 2001/09/27 19:29:50 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -14,13 +14,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_h_editline
+name|_HISTEDIT_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_h_editline
+name|_HISTEDIT_H_
 end_define
 
 begin_include
@@ -143,155 +143,170 @@ name|CC_REDISPLAY
 value|8
 end_define
 
+begin_define
+define|#
+directive|define
+name|CC_REFRESH_BEEP
+value|9
+end_define
+
 begin_comment
 comment|/*  * Initialization, cleanup, and resetting  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|EditLine
 modifier|*
 name|el_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|FILE
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|,
+name|FILE
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|el_reset
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|el_end
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Get a line, a character or push a string back in the input queue  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|const
 name|char
 modifier|*
 name|el_gets
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|el_getc
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|el_push
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Beep!  */
+end_comment
+
+begin_function_decl
+name|void
+name|el_beep
+parameter_list|(
+name|EditLine
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * High level function internals control  * Parses argc, argv array and executes builtin editline commands  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|el_parse
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * Low level editline access function  */
+comment|/*  * Low level editline access functions  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|el_set
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|el_get
+parameter_list|(
+name|EditLine
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * el_set/el_get parameters  */
@@ -422,93 +437,119 @@ begin_comment
 comment|/* , hist_fun_t, const char *);	*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EL_EDITMODE
+value|11
+end_define
+
+begin_comment
+comment|/* , int);			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EL_RPROMPT
+value|12
+end_define
+
+begin_comment
+comment|/* , el_pfunc_t);		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EL_GETCFN
+value|13
+end_define
+
+begin_comment
+comment|/* , el_rfunc_t);		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EL_BUILTIN_GETCFN
+value|(NULL)
+end_define
+
 begin_comment
 comment|/*  * Source named file or $PWD/.editrc or $HOME/.editrc  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|el_source
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Must be called when the terminal changes size; If EL_SIGNAL  * is set this is done automatically otherwise it is the responsibility  * of the application  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|el_resize
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * User-defined function interface.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|const
 name|LineInfo
 modifier|*
 name|el_line
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|el_insertstr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|,
+modifier|*
+parameter_list|,
+specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|el_deletestr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * ==== History ====  */
@@ -544,50 +585,42 @@ begin_comment
 comment|/*  * History access functions.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|History
 modifier|*
 name|history_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|history_end
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|History
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
-specifier|const
+begin_function_decl
+name|int
+name|history
+parameter_list|(
+name|History
+modifier|*
+parameter_list|,
 name|HistEvent
 modifier|*
-name|history
-name|__P
-argument_list|(
-operator|(
-name|History
-operator|*
-operator|,
+parameter_list|,
 name|int
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -603,7 +636,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|H_EVENT
+name|H_SETSIZE
 value|1
 end_define
 
@@ -614,7 +647,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|H_FIRST
+name|H_GETSIZE
 value|2
 end_define
 
@@ -625,7 +658,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|H_LAST
+name|H_FIRST
 value|3
 end_define
 
@@ -636,7 +669,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|H_PREV
+name|H_LAST
 value|4
 end_define
 
@@ -647,7 +680,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|H_NEXT
+name|H_PREV
 value|5
 end_define
 
@@ -658,7 +691,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|H_CURR
+name|H_NEXT
 value|6
 end_define
 
@@ -669,30 +702,63 @@ end_comment
 begin_define
 define|#
 directive|define
-name|H_ADD
+name|H_CURR
+value|8
+end_define
+
+begin_comment
+comment|/* , const int);	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_SET
 value|7
 end_define
 
 begin_comment
-comment|/* , const char*);	*/
+comment|/* , void);		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_ADD
+value|9
+end_define
+
+begin_comment
+comment|/* , const char *);	*/
 end_comment
 
 begin_define
 define|#
 directive|define
 name|H_ENTER
-value|8
+value|10
 end_define
 
 begin_comment
-comment|/* , const char*);	*/
+comment|/* , const char *);	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_APPEND
+value|11
+end_define
+
+begin_comment
+comment|/* , const char *);	*/
 end_comment
 
 begin_define
 define|#
 directive|define
 name|H_END
-value|9
+value|12
 end_define
 
 begin_comment
@@ -703,50 +769,17 @@ begin_define
 define|#
 directive|define
 name|H_NEXT_STR
-value|10
+value|13
 end_define
 
 begin_comment
-comment|/* , const char*);	*/
+comment|/* , const char *);	*/
 end_comment
 
 begin_define
 define|#
 directive|define
 name|H_PREV_STR
-value|11
-end_define
-
-begin_comment
-comment|/* , const char*);	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|H_NEXT_EVENT
-value|12
-end_define
-
-begin_comment
-comment|/* , const int);	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|H_PREV_EVENT
-value|13
-end_define
-
-begin_comment
-comment|/* , const int);	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|H_LOAD
 value|14
 end_define
 
@@ -757,8 +790,41 @@ end_comment
 begin_define
 define|#
 directive|define
-name|H_SAVE
+name|H_NEXT_EVENT
 value|15
+end_define
+
+begin_comment
+comment|/* , const int);	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_PREV_EVENT
+value|16
+end_define
+
+begin_comment
+comment|/* , const int);	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_LOAD
+value|17
+end_define
+
+begin_comment
+comment|/* , const char *);	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_SAVE
+value|18
 end_define
 
 begin_comment
@@ -769,7 +835,7 @@ begin_define
 define|#
 directive|define
 name|H_CLEAR
-value|16
+value|19
 end_define
 
 begin_comment
@@ -782,7 +848,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _h_editline */
+comment|/* _HISTEDIT_H_ */
 end_comment
 
 end_unit

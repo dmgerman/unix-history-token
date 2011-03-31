@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: refresh.c,v 1.2 1997/01/11 06:48:07 lukem Exp $	*/
+comment|/*	$NetBSD: refresh.c,v 1.17 2001/04/13 00:53:11 lukem Exp $	*/
 end_comment
 
 begin_comment
 comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_if
 if|#
@@ -35,15 +41,13 @@ else|#
 directive|else
 end_else
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$NetBSD: refresh.c,v 1.2 1997/01/11 06:48:07 lukem Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$NetBSD: refresh.c,v 1.17 2001/04/13 00:53:11 lukem Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -99,146 +103,125 @@ directive|include
 file|"el.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 name|private
 name|void
 name|re_addc
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|private
 name|void
 name|re_update_line
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|private
 name|void
 name|re_insert
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|private
 name|void
 name|re_delete
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|private
 name|void
 name|re_fastputc
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|private
 name|void
 name|re__strncopy
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|private
 name|void
 name|re__copy_and_pad
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -246,28 +229,25 @@ directive|ifdef
 name|DEBUG_REFRESH
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 name|private
 name|void
 name|re_printstr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -279,7 +259,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|RE_DEBUG
+name|ELRE_ASSERT
 parameter_list|(
 name|a
 parameter_list|,
@@ -288,6 +268,18 @@ parameter_list|,
 name|c
 parameter_list|)
 value|do 				\ 				    if (a) {			\ 					(void) fprintf b;	\ 					c;			\ 				    }				\ 				while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELRE_DEBUG
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|ELRE_ASSERT(a,b,;)
 end_define
 
 begin_comment
@@ -299,34 +291,24 @@ name|private
 name|void
 name|re_printstr
 parameter_list|(
-name|el
-parameter_list|,
-name|str
-parameter_list|,
-name|f
-parameter_list|,
-name|t
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|f
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|t
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -337,7 +319,7 @@ literal|"%s:\""
 operator|,
 name|str
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -345,7 +327,7 @@ name|f
 operator|<
 name|t
 condition|)
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -360,9 +342,9 @@ operator|++
 operator|&
 literal|0177
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -371,10 +353,10 @@ name|__F
 operator|,
 literal|"\"\r\n"
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_else
 else|#
@@ -384,13 +366,24 @@ end_else
 begin_define
 define|#
 directive|define
-name|RE_DEBUG
+name|ELRE_ASSERT
 parameter_list|(
 name|a
 parameter_list|,
 name|b
 parameter_list|,
 name|c
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELRE_DEBUG
+parameter_list|(
+name|a
+parameter_list|,
+name|b
 parameter_list|)
 end_define
 
@@ -408,17 +401,13 @@ name|private
 name|void
 name|re_addc
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -433,6 +422,8 @@ argument_list|(
 name|el
 argument_list|,
 name|c
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 return|return;
@@ -444,15 +435,42 @@ operator|==
 literal|'\n'
 condition|)
 block|{
-comment|/* expand the newline	 */
+comment|/* expand the newline */
+name|int
+name|oldv
+init|=
+name|el
+operator|->
+name|el_refresh
+operator|.
+name|r_cursor
+operator|.
+name|v
+decl_stmt|;
 name|re_putc
 argument_list|(
 name|el
 argument_list|,
 literal|'\0'
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-comment|/* assure end of line	 */
+comment|/* assure end of line */
+if|if
+condition|(
+name|oldv
+operator|==
+name|el
+operator|->
+name|el_refresh
+operator|.
+name|r_cursor
+operator|.
+name|v
+condition|)
+block|{
+comment|/* XXX */
 name|el
 operator|->
 name|el_refresh
@@ -463,7 +481,7 @@ name|h
 operator|=
 literal|0
 expr_stmt|;
-comment|/* reset cursor pos	 */
+comment|/* reset cursor pos */
 name|el
 operator|->
 name|el_refresh
@@ -473,6 +491,7 @@ operator|.
 name|v
 operator|++
 expr_stmt|;
+block|}
 return|return;
 block|}
 if|if
@@ -482,7 +501,7 @@ operator|==
 literal|'\t'
 condition|)
 block|{
-comment|/* expand the tab 	 */
+comment|/* expand the tab */
 for|for
 control|(
 init|;
@@ -494,6 +513,8 @@ argument_list|(
 name|el
 argument_list|,
 literal|' '
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -513,7 +534,7 @@ operator|==
 literal|0
 condition|)
 break|break;
-comment|/* go until tab stop	 */
+comment|/* go until tab stop */
 block|}
 block|}
 elseif|else
@@ -530,6 +551,8 @@ argument_list|(
 name|el
 argument_list|,
 literal|'^'
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -543,6 +566,8 @@ argument_list|(
 name|el
 argument_list|,
 literal|'?'
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 else|else
@@ -556,6 +581,8 @@ name|c
 operator||
 literal|0100
 operator|)
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -566,14 +593,24 @@ argument_list|(
 name|el
 argument_list|,
 literal|'\\'
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|re_putc
 argument_list|(
 name|el
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
 operator|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|c
 operator|>>
 literal|6
@@ -584,13 +621,24 @@ operator|)
 operator|+
 literal|'0'
 argument_list|)
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|re_putc
 argument_list|(
 name|el
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
 operator|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|c
 operator|>>
 literal|3
@@ -601,6 +649,9 @@ operator|)
 operator|+
 literal|'0'
 argument_list|)
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|re_putc
 argument_list|(
@@ -613,15 +664,13 @@ literal|07
 operator|)
 operator|+
 literal|'0'
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_comment
-comment|/* end re_addc */
-end_comment
 
 begin_comment
 comment|/* re_putc():  *	Draw the character given  */
@@ -632,19 +681,18 @@ name|protected
 name|void
 name|re_putc
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|,
+name|int
+name|shift
+parameter_list|)
 block|{
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -657,7 +705,7 @@ name|c
 operator|,
 name|c
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
 name|el
 operator|->
@@ -683,6 +731,12 @@ index|]
 operator|=
 name|c
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|shift
+condition|)
+return|return;
 name|el
 operator|->
 name|el_refresh
@@ -748,6 +802,102 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* reset it. */
+comment|/* 		 * If we would overflow (input is longer than terminal size), 		 * emulate scroll by dropping first line and shuffling the rest. 		 * We do this via pointer shuffling - it's safe in this case 		 * and we avoid memcpy(). 		 */
+if|if
+condition|(
+name|el
+operator|->
+name|el_refresh
+operator|.
+name|r_cursor
+operator|.
+name|v
+operator|+
+literal|1
+operator|>=
+name|el
+operator|->
+name|el_term
+operator|.
+name|t_size
+operator|.
+name|v
+condition|)
+block|{
+name|int
+name|i
+decl_stmt|,
+name|lins
+init|=
+name|el
+operator|->
+name|el_term
+operator|.
+name|t_size
+operator|.
+name|v
+decl_stmt|;
+name|char
+modifier|*
+name|firstline
+init|=
+name|el
+operator|->
+name|el_vdisplay
+index|[
+literal|0
+index|]
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+name|lins
+condition|;
+name|i
+operator|++
+control|)
+name|el
+operator|->
+name|el_vdisplay
+index|[
+name|i
+operator|-
+literal|1
+index|]
+operator|=
+name|el
+operator|->
+name|el_vdisplay
+index|[
+name|i
+index|]
+expr_stmt|;
+name|firstline
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* empty the string */
+name|el
+operator|->
+name|el_vdisplay
+index|[
+name|i
+operator|-
+literal|1
+index|]
+operator|=
+name|firstline
+expr_stmt|;
+block|}
+else|else
 name|el
 operator|->
 name|el_refresh
@@ -757,7 +907,7 @@ operator|.
 name|v
 operator|++
 expr_stmt|;
-name|RE_DEBUG
+name|ELRE_ASSERT
 argument_list|(
 name|el
 operator|->
@@ -806,10 +956,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* end re_putc */
-end_comment
-
-begin_comment
 comment|/* re_refresh():  *	draws the new virtual screen image from the current input  *  	line, then goes line-by-line changing the real image to the new  *	virtual image. The routine to re-draw a line can be replaced  *	easily in hopes of a smarter one being placed there.  */
 end_comment
 
@@ -818,24 +964,35 @@ name|protected
 name|void
 name|re_refresh
 parameter_list|(
-name|el
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|,
+name|rhdiff
 decl_stmt|;
 name|char
 modifier|*
 name|cp
+decl_stmt|,
+modifier|*
+name|st
 decl_stmt|;
 name|coord_t
 name|cur
 decl_stmt|;
-name|RE_DEBUG
+ifdef|#
+directive|ifdef
+name|notyet
+name|size_t
+name|termsz
+decl_stmt|;
+endif|#
+directive|endif
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -850,7 +1007,36 @@ name|el_line
 operator|.
 name|buffer
 operator|)
-argument_list|,)
+argument_list|)
+expr_stmt|;
+comment|/* reset the Drawing cursor */
+name|el
+operator|->
+name|el_refresh
+operator|.
+name|r_cursor
+operator|.
+name|h
+operator|=
+literal|0
+expr_stmt|;
+name|el
+operator|->
+name|el_refresh
+operator|.
+name|r_cursor
+operator|.
+name|v
+operator|=
+literal|0
+expr_stmt|;
+comment|/* temporarily draw rprompt to calculate its size */
+name|prompt_print
+argument_list|(
+name|el
+argument_list|,
+name|EL_RPROMPT
+argument_list|)
 expr_stmt|;
 comment|/* reset the Drawing cursor */
 name|el
@@ -890,18 +1076,126 @@ expr_stmt|;
 name|prompt_print
 argument_list|(
 name|el
+argument_list|,
+name|EL_PROMPT
 argument_list|)
 expr_stmt|;
 comment|/* draw the current input buffer */
-for|for
-control|(
-name|cp
+if|#
+directive|if
+name|notyet
+name|termsz
+operator|=
+name|el
+operator|->
+name|el_term
+operator|.
+name|t_size
+operator|.
+name|h
+operator|*
+name|el
+operator|->
+name|el_term
+operator|.
+name|t_size
+operator|.
+name|v
+expr_stmt|;
+if|if
+condition|(
+name|el
+operator|->
+name|el_line
+operator|.
+name|lastchar
+operator|-
+name|el
+operator|->
+name|el_line
+operator|.
+name|buffer
+operator|>
+name|termsz
+condition|)
+block|{
+comment|/* 		 * If line is longer than terminal, process only part 		 * of line which would influence display. 		 */
+name|size_t
+name|rem
+init|=
+operator|(
+name|el
+operator|->
+name|el_line
+operator|.
+name|lastchar
+operator|-
+name|el
+operator|->
+name|el_line
+operator|.
+name|buffer
+operator|)
+operator|%
+name|termsz
+decl_stmt|;
+name|st
+operator|=
+name|el
+operator|->
+name|el_line
+operator|.
+name|lastchar
+operator|-
+name|rem
+operator|-
+operator|(
+name|termsz
+operator|-
+operator|(
+operator|(
+operator|(
+name|rem
+operator|/
+name|el
+operator|->
+name|el_term
+operator|.
+name|t_size
+operator|.
+name|v
+operator|)
+operator|-
+literal|1
+operator|)
+operator|*
+name|el
+operator|->
+name|el_term
+operator|.
+name|t_size
+operator|.
+name|v
+operator|)
+operator|)
+expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
+name|st
 operator|=
 name|el
 operator|->
 name|el_line
 operator|.
 name|buffer
+expr_stmt|;
+for|for
+control|(
+name|cp
+operator|=
+name|st
 init|;
 name|cp
 operator|<
@@ -926,6 +1220,7 @@ operator|.
 name|cursor
 condition|)
 block|{
+comment|/* save for later */
 name|cur
 operator|.
 name|h
@@ -938,7 +1233,6 @@ name|r_cursor
 operator|.
 name|h
 expr_stmt|;
-comment|/* save for later */
 name|cur
 operator|.
 name|v
@@ -956,6 +1250,10 @@ name|re_addc
 argument_list|(
 name|el
 argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
@@ -997,7 +1295,125 @@ operator|.
 name|v
 expr_stmt|;
 block|}
-comment|/* must be done BEFORE the NUL is written */
+name|rhdiff
+operator|=
+name|el
+operator|->
+name|el_term
+operator|.
+name|t_size
+operator|.
+name|h
+operator|-
+name|el
+operator|->
+name|el_refresh
+operator|.
+name|r_cursor
+operator|.
+name|h
+operator|-
+name|el
+operator|->
+name|el_rprompt
+operator|.
+name|p_pos
+operator|.
+name|h
+expr_stmt|;
+if|if
+condition|(
+name|el
+operator|->
+name|el_rprompt
+operator|.
+name|p_pos
+operator|.
+name|h
+operator|&&
+operator|!
+name|el
+operator|->
+name|el_rprompt
+operator|.
+name|p_pos
+operator|.
+name|v
+operator|&&
+operator|!
+name|el
+operator|->
+name|el_refresh
+operator|.
+name|r_cursor
+operator|.
+name|v
+operator|&&
+name|rhdiff
+operator|>
+literal|1
+condition|)
+block|{
+comment|/* 		 * have a right-hand side prompt that will fit 		 * on the end of the first line with at least 		 * one character gap to the input buffer. 		 */
+while|while
+condition|(
+operator|--
+name|rhdiff
+operator|>
+literal|0
+condition|)
+comment|/* pad out with spaces */
+name|re_putc
+argument_list|(
+name|el
+argument_list|,
+literal|' '
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|prompt_print
+argument_list|(
+name|el
+argument_list|,
+name|EL_RPROMPT
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|el
+operator|->
+name|el_rprompt
+operator|.
+name|p_pos
+operator|.
+name|h
+operator|=
+literal|0
+expr_stmt|;
+comment|/* flag "not using rprompt" */
+name|el
+operator|->
+name|el_rprompt
+operator|.
+name|p_pos
+operator|.
+name|v
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|re_putc
+argument_list|(
+name|el
+argument_list|,
+literal|'\0'
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* make line ended with NUL, no cursor shift */
 name|el
 operator|->
 name|el_refresh
@@ -1012,15 +1428,7 @@ name|r_cursor
 operator|.
 name|v
 expr_stmt|;
-name|re_putc
-argument_list|(
-name|el
-argument_list|,
-literal|'\0'
-argument_list|)
-expr_stmt|;
-comment|/* put NUL on end */
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -1060,9 +1468,9 @@ index|[
 literal|0
 index|]
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -1077,7 +1485,7 @@ name|el_refresh
 operator|.
 name|r_newcv
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -1119,7 +1527,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Copy the new line to be the current one, and pad out with spaces 	 * to the full width of the terminal so that if we try moving the 	 * cursor by writing the character that is at the end of the 	 * screen line, it won't be a NUL or some old leftover stuff. 	 */
+comment|/* 		 * Copy the new line to be the current one, and pad out with 		 * spaces to the full width of the terminal so that if we try 		 * moving the cursor by writing the character that is at the 		 * end of the screen line, it won't be a NUL or some old 		 * leftover stuff. 		 */
 name|re__copy_and_pad
 argument_list|(
 name|el
@@ -1136,6 +1544,9 @@ index|[
 name|i
 index|]
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|el
 operator|->
 name|el_term
@@ -1146,7 +1557,7 @@ name|h
 argument_list|)
 expr_stmt|;
 block|}
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -1171,7 +1582,7 @@ name|r_oldcv
 operator|,
 name|i
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1220,6 +1631,9 @@ name|term_clear_EOL
 argument_list|(
 name|el
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|el
@@ -1246,12 +1660,14 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEBUG_REFRESH */
-operator|*
 name|el
 operator|->
 name|el_display
 index|[
 name|i
+index|]
+index|[
+literal|0
 index|]
 operator|=
 literal|'\0'
@@ -1270,7 +1686,7 @@ operator|.
 name|r_newcv
 expr_stmt|;
 comment|/* set for next time */
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -1303,7 +1719,7 @@ name|cur
 operator|.
 name|v
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
 name|term_move_to_line
 argument_list|(
@@ -1328,11 +1744,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* end re_refresh */
-end_comment
-
-begin_comment
-comment|/* re_goto_bottom():  *	 used to go to last used screen line   */
+comment|/* re_goto_bottom():  *	 used to go to last used screen line  */
 end_comment
 
 begin_function
@@ -1340,12 +1752,10 @@ name|protected
 name|void
 name|re_goto_bottom
 parameter_list|(
-name|el
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|)
 block|{
 name|term_move_to_line
 argument_list|(
@@ -1380,11 +1790,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* end re_goto_bottom */
-end_comment
-
-begin_comment
-comment|/* re_insert():  *	insert num characters of s into d (in front of the character)  *	at dat, maximum length of d is dlen   */
+comment|/* re_insert():  *	insert num characters of s into d (in front of the character)  *	at dat, maximum length of d is dlen  */
 end_comment
 
 begin_function
@@ -1393,38 +1799,27 @@ name|void
 comment|/*ARGSUSED*/
 name|re_insert
 parameter_list|(
-name|el
-parameter_list|,
-name|d
-parameter_list|,
-name|dat
-parameter_list|,
-name|dlen
-parameter_list|,
-name|s
-parameter_list|,
-name|num
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|d
-decl_stmt|;
+parameter_list|,
 name|int
 name|dat
-decl_stmt|,
+parameter_list|,
+name|int
 name|dlen
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|,
 name|int
 name|num
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1454,7 +1849,7 @@ name|dlen
 operator|-
 name|dat
 expr_stmt|;
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -1471,9 +1866,9 @@ name|dlen
 operator|,
 name|d
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -1484,7 +1879,7 @@ literal|"s == \"%s\"n"
 operator|,
 name|s
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
 comment|/* open up the space for num chars */
 if|if
@@ -1535,7 +1930,7 @@ literal|'\0'
 expr_stmt|;
 comment|/* just in case */
 block|}
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -1552,9 +1947,9 @@ name|dlen
 operator|,
 name|d
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -1565,7 +1960,7 @@ literal|"s == \"%s\"n"
 operator|,
 name|s
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
 comment|/* copy the characters */
 for|for
@@ -1601,7 +1996,7 @@ operator|*
 name|s
 operator|++
 expr_stmt|;
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -1620,9 +2015,9 @@ name|d
 operator|,
 name|s
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -1633,17 +2028,13 @@ literal|"s == \"%s\"n"
 operator|,
 name|s
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/* end re_insert */
-end_comment
-
-begin_comment
-comment|/* re_delete():  *	delete num characters d at dat, maximum length of d is dlen   */
+comment|/* re_delete():  *	delete num characters d at dat, maximum length of d is dlen  */
 end_comment
 
 begin_function
@@ -1652,31 +2043,23 @@ name|void
 comment|/*ARGSUSED*/
 name|re_delete
 parameter_list|(
-name|el
-parameter_list|,
-name|d
-parameter_list|,
-name|dat
-parameter_list|,
-name|dlen
-parameter_list|,
-name|num
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|d
-decl_stmt|;
+parameter_list|,
 name|int
 name|dat
-decl_stmt|,
+parameter_list|,
+name|int
 name|dlen
-decl_stmt|,
+parameter_list|,
+name|int
 name|num
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1710,7 +2093,7 @@ literal|'\0'
 expr_stmt|;
 return|return;
 block|}
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -1727,7 +2110,7 @@ name|dlen
 operator|,
 name|d
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
 comment|/* open up the space for num chars */
 if|if
@@ -1776,7 +2159,7 @@ literal|'\0'
 expr_stmt|;
 comment|/* just in case */
 block|}
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -1793,14 +2176,10 @@ name|dlen
 operator|,
 name|d
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* end re_delete */
-end_comment
 
 begin_comment
 comment|/* re__strncopy():  *	Like strncpy without padding.  */
@@ -1811,28 +2190,17 @@ name|private
 name|void
 name|re__strncopy
 parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|n
-parameter_list|)
 name|char
 modifier|*
 name|a
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|b
-decl_stmt|;
-end_function
-
-begin_decl_stmt
+parameter_list|,
 name|size_t
 name|n
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 while|while
 condition|(
@@ -1851,14 +2219,10 @@ name|b
 operator|++
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/* end re__strncopy */
-end_comment
-
-begin_comment
-comment|/* ****************************************************************     re_update_line() is based on finding the middle difference of each line     on the screen; vis:  			     /old first difference 	/beginning of line   |              /old last same       /old EOL 	v		     v              v                    v old:	eddie> Oh, my little gruntle-buggy is to me, as lurgid as new:	eddie> Oh, my little buggy says to me, as lurgid as 	^		     ^        ^			   ^ 	\beginning of line   |        \new last same	   \new end of line 			     \new first difference      all are character pointers for the sake of speed.  Special cases for     no differences, as well as for end of line additions must be handled. **************************************************************** */
+comment|/*****************************************************************     re_update_line() is based on finding the middle difference of each line     on the screen; vis:  			     /old first difference 	/beginning of line   |              /old last same       /old EOL 	v		     v              v                    v old:	eddie> Oh, my little gruntle-buggy is to me, as lurgid as new:	eddie> Oh, my little buggy says to me, as lurgid as 	^		     ^        ^			   ^ 	\beginning of line   |        \new last same	   \new end of line 			     \new first difference      all are character pointers for the sake of speed.  Special cases for     no differences, as well as for end of line additions must be handled. **************************************************************** */
 end_comment
 
 begin_comment
@@ -1877,34 +2241,21 @@ name|private
 name|void
 name|re_update_line
 parameter_list|(
-name|el
-parameter_list|,
-name|old
-parameter_list|,
-name|new
-parameter_list|,
-name|i
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|old
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|new
-decl_stmt|;
-end_function
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|i
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1955,7 +2306,7 @@ name|fx
 decl_stmt|,
 name|sx
 decl_stmt|;
-comment|/*      * find first diff      */
+comment|/*          * find first diff          */
 for|for
 control|(
 name|o
@@ -1992,7 +2343,7 @@ name|nfd
 operator|=
 name|n
 expr_stmt|;
-comment|/*      * Find the end of both old and new      */
+comment|/*          * Find the end of both old and new          */
 while|while
 condition|(
 operator|*
@@ -2001,7 +2352,7 @@ condition|)
 name|o
 operator|++
 expr_stmt|;
-comment|/*       * Remove any trailing blanks off of the end, being careful not to      * back up past the beginning.      */
+comment|/*          * Remove any trailing blanks off of the end, being careful not to          * back up past the beginning.          */
 while|while
 condition|(
 name|ofd
@@ -2073,7 +2424,7 @@ name|ne
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/*      * if no diff, continue to next line of redraw      */
+comment|/*          * if no diff, continue to next line of redraw          */
 if|if
 condition|(
 operator|*
@@ -2087,7 +2438,7 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -2096,11 +2447,11 @@ name|__F
 operator|,
 literal|"no difference.\r\n"
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/*      * find last same pointer      */
+comment|/*          * find last same pointer          */
 while|while
 condition|(
 operator|(
@@ -2136,7 +2487,7 @@ operator|=
 operator|++
 name|n
 expr_stmt|;
-comment|/*      * find same begining and same end      */
+comment|/*          * find same begining and same end          */
 name|osb
 operator|=
 name|ols
@@ -2153,7 +2504,7 @@ name|nse
 operator|=
 name|nls
 expr_stmt|;
-comment|/*      * case 1: insert: scan from nfd to nls looking for *ofd      */
+comment|/*          * case 1: insert: scan from nfd to nls looking for *ofd          */
 if|if
 condition|(
 operator|*
@@ -2218,7 +2569,7 @@ name|p
 operator|++
 control|)
 continue|continue;
-comment|/* 		 * if the new match is longer and it's worth keeping, then we 		 * take it 		 */
+comment|/* 				 * if the new match is longer and it's worth 				 * keeping, then we take it 				 */
 if|if
 condition|(
 operator|(
@@ -2270,7 +2621,7 @@ block|}
 block|}
 block|}
 block|}
-comment|/*      * case 2: delete: scan from ofd to ols looking for *nfd      */
+comment|/*          * case 2: delete: scan from ofd to ols looking for *nfd          */
 if|if
 condition|(
 operator|*
@@ -2335,7 +2686,7 @@ name|n
 operator|++
 control|)
 continue|continue;
-comment|/* 		 * if the new match is longer and it's worth keeping, then we 		 * take it 		 */
+comment|/* 				 * if the new match is longer and it's worth 				 * keeping, then we take it 				 */
 if|if
 condition|(
 operator|(
@@ -2387,7 +2738,7 @@ block|}
 block|}
 block|}
 block|}
-comment|/*      * Pragmatics I: If old trailing whitespace or not enough characters to      * save to be worth it, then don't save the last same info.      */
+comment|/*          * Pragmatics I: If old trailing whitespace or not enough characters to          * save to be worth it, then don't save the last same info.          */
 if|if
 condition|(
 operator|(
@@ -2408,8 +2759,8 @@ operator|=
 name|ne
 expr_stmt|;
 block|}
-comment|/*      * Pragmatics II: if the terminal isn't smart enough, make the data dumber      * so the smart update doesn't try anything fancy      */
-comment|/*      * fx is the number of characters we need to insert/delete: in the      * beginning to bring the two same begins together      */
+comment|/*          * Pragmatics II: if the terminal isn't smart enough, make the data          * dumber so the smart update doesn't try anything fancy          */
+comment|/*          * fx is the number of characters we need to insert/delete: in the          * beginning to bring the two same begins together          */
 name|fx
 operator|=
 operator|(
@@ -2424,7 +2775,7 @@ operator|-
 name|ofd
 operator|)
 expr_stmt|;
-comment|/*      * sx is the number of characters we need to insert/delete: in the end to      * bring the two same last parts together      */
+comment|/*          * sx is the number of characters we need to insert/delete: in the          * end to bring the two same last parts together          */
 name|sx
 operator|=
 operator|(
@@ -2581,7 +2932,7 @@ name|ne
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Pragmatics III: make sure the middle shifted pointers are correct if      * they don't point to anything (we may have moved ols or nls).      */
+comment|/*          * Pragmatics III: make sure the middle shifted pointers are correct if          * they don't point to anything (we may have moved ols or nls).          */
 comment|/* if the change isn't worth it, don't bother */
 comment|/* was: if (osb == ose) */
 if|if
@@ -2612,7 +2963,7 @@ operator|=
 name|nls
 expr_stmt|;
 block|}
-comment|/*      * Now that we are done with pragmatics we recompute fx, sx      */
+comment|/*          * Now that we are done with pragmatics we recompute fx, sx          */
 name|fx
 operator|=
 operator|(
@@ -2641,7 +2992,7 @@ operator|-
 name|ose
 operator|)
 expr_stmt|;
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -2650,9 +3001,9 @@ name|__F
 operator|,
 literal|"\n"
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -2681,9 +3032,9 @@ name|oe
 operator|-
 name|old
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -2712,9 +3063,9 @@ name|ne
 operator|-
 name|new
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -2723,9 +3074,9 @@ name|__F
 operator|,
 literal|"xxx-xxx:\"00000000001111111111222222222233333333334\"\r\n"
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -2734,7 +3085,7 @@ name|__F
 operator|,
 literal|"xxx-xxx:\"01234567890123456789012345678901234567890\"\r\n"
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2874,7 +3225,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEBUG_REFRESH */
-comment|/*      * el_cursor.v to this line i MUST be in this routine so that if we      * don't have to change the line, we don't move to it. el_cursor.h to first      * diff char      */
+comment|/*          * el_cursor.v to this line i MUST be in this routine so that if we          * don't have to change the line, we don't move to it. el_cursor.h to          * first diff char          */
 name|term_move_to_line
 argument_list|(
 name|el
@@ -2882,9 +3233,9 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-comment|/*      * at this point we have something like this:      *       * /old                  /ofd    /osb               /ose    /ols     /oe      * v.....................v       v..................v       v........v      * eddie> Oh, my fredded gruntle-buggy is to me, as foo var lurgid as      * eddie> Oh, my fredded quiux buggy is to me, as gruntle-lurgid as      * ^.....................^     ^..................^       ^........^       * \new                  \nfd  \nsb               \nse     \nls    \ne      *       * fx is the difference in length between the the chars between nfd and      * nsb, and the chars between ofd and osb, and is thus the number of      * characters to delete if< 0 (new is shorter than old, as above),      * or insert (new is longer than short).      *      * sx is the same for the second differences.      */
-comment|/*      * if we have a net insert on the first difference, AND inserting the net      * amount ((nsb-nfd) - (osb-ofd)) won't push the last useful character      * (which is ne if nls != ne, otherwise is nse) off the edge of the screen      * (el->el_term.t_size.h) else we do the deletes first so that we keep everything we need      * to.      */
-comment|/*      * if the last same is the same like the end, there is no last same part,      * otherwise we want to keep the last same part set p to the last useful      * old character      */
+comment|/*          * at this point we have something like this:          *          * /old                  /ofd    /osb               /ose    /ols     /oe          * v.....................v       v..................v       v........v          * eddie> Oh, my fredded gruntle-buggy is to me, as foo var lurgid as          * eddie> Oh, my fredded quiux buggy is to me, as gruntle-lurgid as          * ^.....................^     ^..................^       ^........^          * \new                  \nfd  \nsb               \nse     \nls    \ne          *          * fx is the difference in length between the chars between nfd and          * nsb, and the chars between ofd and osb, and is thus the number of          * characters to delete if< 0 (new is shorter than old, as above),          * or insert (new is longer than short).          *          * sx is the same for the second differences.          */
+comment|/*          * if we have a net insert on the first difference, AND inserting the          * net amount ((nsb-nfd) - (osb-ofd)) won't push the last useful          * character (which is ne if nls != ne, otherwise is nse) off the edge 	 * of the screen (el->el_term.t_size.h) else we do the deletes first 	 * so that we keep everything we need to.          */
+comment|/*          * if the last same is the same like the end, there is no last same          * part, otherwise we want to keep the last same part set p to the          * last useful old character          */
 name|p
 operator|=
 operator|(
@@ -2897,7 +3248,7 @@ name|oe
 else|:
 name|ose
 expr_stmt|;
-comment|/*      * if (There is a diffence in the beginning)&& (we need to insert      * characters)&& (the number of characters to insert is less than the term      * width) We need to do an insert! else if (we need to delete characters)      * We need to delete characters! else No insert or delete      */
+comment|/*          * if (There is a diffence in the beginning)&& (we need to insert          *   characters)&& (the number of characters to insert is less than          *   the term width) 	 *	We need to do an insert! 	 * else if (we need to delete characters) 	 *	We need to delete characters! 	 * else 	 *	No insert or delete          */
 if|if
 condition|(
 operator|(
@@ -2929,7 +3280,7 @@ name|h
 operator|)
 condition|)
 block|{
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -2942,9 +3293,9 @@ name|nfd
 operator|-
 name|new
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
-comment|/* 	 * Move to the first char to insert, where the first diff is. 	 */
+comment|/* 		 * Move to the first char to insert, where the first diff is. 		 */
 name|term_move_to_char
 argument_list|(
 name|el
@@ -2954,7 +3305,7 @@ operator|-
 name|new
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check if we have stuff to keep at end 	 */
+comment|/* 		 * Check if we have stuff to keep at end 		 */
 if|if
 condition|(
 name|nsb
@@ -2962,7 +3313,7 @@ operator|!=
 name|ne
 condition|)
 block|{
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -2971,9 +3322,9 @@ name|__F
 operator|,
 literal|"with stuff to keep at end\r\n"
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
-comment|/* 	     * insert fx chars of new starting at nfd 	     */
+comment|/* 		         * insert fx chars of new starting at nfd 		         */
 if|if
 condition|(
 name|fx
@@ -2981,7 +3332,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 operator|!
 name|EL_CAN_INSERT
@@ -2991,7 +3342,7 @@ name|__F
 operator|,
 literal|"ERROR: cannot insert in early first diff\n"
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
 name|term_insertwrite
 argument_list|(
@@ -3026,7 +3377,7 @@ name|fx
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	     * write (nsb-nfd) - fx chars of new starting at (nfd + fx) 	     */
+comment|/* 		         * write (nsb-nfd) - fx chars of new starting at 		         * (nfd + fx) 			 */
 name|term_overwrite
 argument_list|(
 name|el
@@ -3054,6 +3405,10 @@ name|nfd
 operator|+
 name|fx
 argument_list|,
+call|(
+name|size_t
+call|)
+argument_list|(
 operator|(
 name|nsb
 operator|-
@@ -3062,11 +3417,12 @@ operator|)
 operator|-
 name|fx
 argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -3075,7 +3431,7 @@ name|__F
 operator|,
 literal|"without anything to save\r\n"
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
 name|term_overwrite
 argument_list|(
@@ -3096,14 +3452,17 @@ name|ofd
 argument_list|,
 name|nfd
 argument_list|,
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|nsb
 operator|-
 name|nfd
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	     * Done 	     */
+comment|/* 		         * Done 		         */
 return|return;
 block|}
 block|}
@@ -3115,7 +3474,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -3128,9 +3487,9 @@ name|ofd
 operator|-
 name|old
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
-comment|/* 	 * move to the first char to delete where the first diff is 	 */
+comment|/* 		 * move to the first char to delete where the first diff is 		 */
 name|term_move_to_char
 argument_list|(
 name|el
@@ -3140,7 +3499,7 @@ operator|-
 name|old
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check if we have stuff to save 	 */
+comment|/* 		 * Check if we have stuff to save 		 */
 if|if
 condition|(
 name|osb
@@ -3148,7 +3507,7 @@ operator|!=
 name|oe
 condition|)
 block|{
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -3157,9 +3516,9 @@ name|__F
 operator|,
 literal|"with stuff to save at end\r\n"
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
-comment|/* 	     * fx is less than zero *always* here but we check for code 	     * symmetry 	     */
+comment|/* 		         * fx is less than zero *always* here but we check 		         * for code symmetry 		         */
 if|if
 condition|(
 name|fx
@@ -3167,7 +3526,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 operator|!
 name|EL_CAN_DELETE
@@ -3177,7 +3536,7 @@ name|__F
 operator|,
 literal|"ERROR: cannot delete in first diff\n"
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
 name|term_deletechars
 argument_list|(
@@ -3210,7 +3569,7 @@ name|fx
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	     * write (nsb-nfd) chars of new starting at nfd 	     */
+comment|/* 		         * write (nsb-nfd) chars of new starting at nfd 		         */
 name|term_overwrite
 argument_list|(
 name|el
@@ -3230,17 +3589,20 @@ name|ofd
 argument_list|,
 name|nfd
 argument_list|,
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|nsb
 operator|-
 name|nfd
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -3249,9 +3611,9 @@ name|__F
 operator|,
 literal|"but with nothing left to save\r\n"
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
-comment|/* 	     * write (nsb-nfd) chars of new starting at nfd 	     */
+comment|/* 		         * write (nsb-nfd) chars of new starting at nfd 		         */
 name|term_overwrite
 argument_list|(
 name|el
@@ -3265,7 +3627,7 @@ name|nfd
 operator|)
 argument_list|)
 expr_stmt|;
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -3286,7 +3648,7 @@ operator|-
 name|new
 operator|)
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
 name|term_clear_EOL
 argument_list|(
@@ -3305,7 +3667,7 @@ name|new
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	     * Done 	     */
+comment|/* 		         * Done 		         */
 return|return;
 block|}
 block|}
@@ -3319,9 +3681,25 @@ condition|(
 name|sx
 operator|<
 literal|0
+operator|&&
+operator|(
+name|ose
+operator|-
+name|old
+operator|)
+operator|+
+name|fx
+operator|<
+name|el
+operator|->
+name|el_term
+operator|.
+name|t_size
+operator|.
+name|h
 condition|)
 block|{
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -3338,10 +3716,10 @@ operator|)
 operator|+
 name|fx
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
-comment|/* 	 * Check if we have stuff to delete 	 */
-comment|/* 	 * fx is the number of characters inserted (+) or deleted (-) 	 */
+comment|/* 		 * Check if we have stuff to delete 		 */
+comment|/* 		 * fx is the number of characters inserted (+) or deleted (-) 		 */
 name|term_move_to_char
 argument_list|(
 name|el
@@ -3355,7 +3733,7 @@ operator|+
 name|fx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check if we have stuff to save 	 */
+comment|/* 		 * Check if we have stuff to save 		 */
 if|if
 condition|(
 name|ols
@@ -3363,7 +3741,7 @@ operator|!=
 name|oe
 condition|)
 block|{
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -3372,9 +3750,9 @@ name|__F
 operator|,
 literal|"with stuff to save at end\r\n"
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
-comment|/* 	     * Again a duplicate test. 	     */
+comment|/* 		         * Again a duplicate test. 		         */
 if|if
 condition|(
 name|sx
@@ -3382,7 +3760,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 operator|!
 name|EL_CAN_DELETE
@@ -3392,7 +3770,7 @@ name|__F
 operator|,
 literal|"ERROR: cannot delete in second diff\n"
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
 name|term_deletechars
 argument_list|(
@@ -3403,7 +3781,7 @@ name|sx
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	     * write (nls-nse) chars of new starting at nse 	     */
+comment|/* 		         * write (nls-nse) chars of new starting at nse 		         */
 name|term_overwrite
 argument_list|(
 name|el
@@ -3420,7 +3798,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -3429,7 +3807,7 @@ name|__F
 operator|,
 literal|"but with nothing left to save\r\n"
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
 name|term_overwrite
 argument_list|(
@@ -3444,7 +3822,7 @@ name|nse
 operator|)
 argument_list|)
 expr_stmt|;
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -3465,8 +3843,24 @@ operator|-
 name|new
 operator|)
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|oe
+operator|-
+name|old
+operator|)
+operator|-
+operator|(
+name|ne
+operator|-
+name|new
+operator|)
+operator|!=
+literal|0
+condition|)
 name|term_clear_EOL
 argument_list|(
 name|el
@@ -3486,7 +3880,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * if we have a first insert AND WE HAVEN'T ALREADY DONE IT...      */
+comment|/*          * if we have a first insert AND WE HAVEN'T ALREADY DONE IT...          */
 if|if
 condition|(
 operator|(
@@ -3514,7 +3908,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -3527,7 +3921,7 @@ name|nfd
 operator|-
 name|new
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
 name|term_move_to_char
 argument_list|(
@@ -3538,7 +3932,7 @@ operator|-
 name|new
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check if we have stuff to keep at the end 	 */
+comment|/* 		 * Check if we have stuff to keep at the end 		 */
 if|if
 condition|(
 name|nsb
@@ -3546,7 +3940,7 @@ operator|!=
 name|ne
 condition|)
 block|{
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -3555,9 +3949,9 @@ name|__F
 operator|,
 literal|"with stuff to keep at end\r\n"
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
-comment|/*  	     * We have to recalculate fx here because we set it 	     * to zero above as a flag saying that we hadn't done 	     * an early first insert. 	     */
+comment|/* 		         * We have to recalculate fx here because we set it 		         * to zero above as a flag saying that we hadn't done 		         * an early first insert. 		         */
 name|fx
 operator|=
 operator|(
@@ -3579,8 +3973,8 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* 		 * insert fx chars of new starting at nfd 		 */
-name|RE_DEBUG
+comment|/* 				 * insert fx chars of new starting at nfd 				 */
+name|ELRE_DEBUG
 argument_list|(
 operator|!
 name|EL_CAN_INSERT
@@ -3590,7 +3984,7 @@ name|__F
 operator|,
 literal|"ERROR: cannot insert in late first diff\n"
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
 name|term_insertwrite
 argument_list|(
@@ -3625,7 +4019,7 @@ name|fx
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	     * write (nsb-nfd) - fx chars of new starting at (nfd + fx) 	     */
+comment|/* 		         * write (nsb-nfd) - fx chars of new starting at 		         * (nfd + fx) 			 */
 name|term_overwrite
 argument_list|(
 name|el
@@ -3653,6 +4047,10 @@ name|nfd
 operator|+
 name|fx
 argument_list|,
+call|(
+name|size_t
+call|)
+argument_list|(
 operator|(
 name|nsb
 operator|-
@@ -3661,11 +4059,12 @@ operator|)
 operator|-
 name|fx
 argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -3674,7 +4073,7 @@ name|__F
 operator|,
 literal|"without anything to save\r\n"
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
 name|term_overwrite
 argument_list|(
@@ -3695,16 +4094,19 @@ name|ofd
 argument_list|,
 name|nfd
 argument_list|,
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|nsb
 operator|-
 name|nfd
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * line is now NEW up to nse      */
+comment|/*          * line is now NEW up to nse          */
 if|if
 condition|(
 name|sx
@@ -3712,7 +4114,7 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -3725,7 +4127,7 @@ name|nse
 operator|-
 name|new
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
 name|term_move_to_char
 argument_list|(
@@ -3743,7 +4145,7 @@ operator|!=
 name|oe
 condition|)
 block|{
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -3752,7 +4154,7 @@ name|__F
 operator|,
 literal|"with stuff to keep at end\r\n"
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3762,7 +4164,7 @@ literal|0
 condition|)
 block|{
 comment|/* insert sx chars of new starting at nse */
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 operator|!
 name|EL_CAN_INSERT
@@ -3772,7 +4174,7 @@ name|__F
 operator|,
 literal|"ERROR: cannot insert in second diff\n"
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
 name|term_insertwrite
 argument_list|(
@@ -3784,7 +4186,7 @@ name|sx
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	     * write (nls-nse) - sx chars of new starting at (nse + sx) 	     */
+comment|/* 		         * write (nls-nse) - sx chars of new starting at 			 * (nse + sx) 		         */
 name|term_overwrite
 argument_list|(
 name|el
@@ -3805,7 +4207,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -3814,7 +4216,7 @@ name|__F
 operator|,
 literal|"without anything to save\r\n"
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
 name|term_overwrite
 argument_list|(
@@ -3829,10 +4231,10 @@ name|nse
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*              * No need to do a clear-to-end here because we were doing 	     * a second insert, so we will have over written all of the 	     * old string. 	     */
+comment|/* 	                 * No need to do a clear-to-end here because we were 	                 * doing a second insert, so we will have over 	                 * written all of the old string. 		         */
 block|}
 block|}
-name|RE_DEBUG
+name|ELRE_DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -3841,14 +4243,10 @@ name|__F
 operator|,
 literal|"done.\r\n"
 operator|)
-argument_list|,)
+argument_list|)
 expr_stmt|;
 block|}
-end_block
-
-begin_comment
-comment|/* re_update_line */
-end_comment
+end_function
 
 begin_comment
 comment|/* re__copy_and_pad():  *	Copy string and pad with spaces  */
@@ -3859,28 +4257,17 @@ name|private
 name|void
 name|re__copy_and_pad
 parameter_list|(
-name|dst
-parameter_list|,
-name|src
-parameter_list|,
-name|width
-parameter_list|)
 name|char
 modifier|*
 name|dst
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|src
-decl_stmt|;
-end_function
-
-begin_decl_stmt
+parameter_list|,
 name|size_t
 name|width
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|i
@@ -3916,34 +4303,29 @@ name|src
 operator|++
 expr_stmt|;
 block|}
-while|while
-condition|(
+for|for
+control|(
+init|;
 name|i
 operator|<
 name|width
-condition|)
-block|{
+condition|;
+name|i
+operator|++
+control|)
 operator|*
 name|dst
 operator|++
 operator|=
 literal|' '
 expr_stmt|;
-name|i
-operator|++
-expr_stmt|;
-block|}
 operator|*
 name|dst
 operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-end_block
-
-begin_comment
-comment|/* end re__copy_and_pad */
-end_comment
+end_function
 
 begin_comment
 comment|/* re_refresh_cursor():  *	Move to the new cursor position  */
@@ -3954,12 +4336,10 @@ name|protected
 name|void
 name|re_refresh_cursor
 parameter_list|(
-name|el
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -4005,7 +4385,7 @@ name|t_size
 operator|.
 name|h
 expr_stmt|;
-comment|/* optimize for speed 		*/
+comment|/* optimize for speed */
 comment|/* do input buffer to el->el_line.cursor */
 for|for
 control|(
@@ -4081,6 +4461,10 @@ if|if
 condition|(
 name|iscntrl
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|)
@@ -4112,6 +4496,10 @@ condition|(
 operator|!
 name|isprint
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|)
@@ -4179,10 +4567,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* re_refresh_cursor */
-end_comment
-
-begin_comment
 comment|/* re_fastputc():  *	Add a character fast.  */
 end_comment
 
@@ -4191,17 +4575,13 @@ name|private
 name|void
 name|re_fastputc
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 name|term__putc
 argument_list|(
@@ -4255,6 +4635,102 @@ name|h
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 		 * If we would overflow (input is longer than terminal size), 		 * emulate scroll by dropping first line and shuffling the rest. 		 * We do this via pointer shuffling - it's safe in this case 		 * and we avoid memcpy(). 		 */
+if|if
+condition|(
+name|el
+operator|->
+name|el_cursor
+operator|.
+name|v
+operator|+
+literal|1
+operator|>=
+name|el
+operator|->
+name|el_term
+operator|.
+name|t_size
+operator|.
+name|v
+condition|)
+block|{
+name|int
+name|i
+decl_stmt|,
+name|lins
+init|=
+name|el
+operator|->
+name|el_term
+operator|.
+name|t_size
+operator|.
+name|v
+decl_stmt|;
+name|char
+modifier|*
+name|firstline
+init|=
+name|el
+operator|->
+name|el_display
+index|[
+literal|0
+index|]
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+name|lins
+condition|;
+name|i
+operator|++
+control|)
+name|el
+operator|->
+name|el_display
+index|[
+name|i
+operator|-
+literal|1
+index|]
+operator|=
+name|el
+operator|->
+name|el_display
+index|[
+name|i
+index|]
+expr_stmt|;
+name|re__copy_and_pad
+argument_list|(
+name|firstline
+argument_list|,
+literal|""
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|el
+operator|->
+name|el_display
+index|[
+name|i
+operator|-
+literal|1
+index|]
+operator|=
+name|firstline
+expr_stmt|;
+block|}
+else|else
+block|{
 name|el
 operator|->
 name|el_cursor
@@ -4269,6 +4745,31 @@ operator|.
 name|r_oldcv
 operator|++
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|EL_HAS_AUTO_MARGINS
+condition|)
+block|{
+if|if
+condition|(
+name|EL_HAS_MAGIC_MARGINS
+condition|)
+block|{
+name|term__putc
+argument_list|(
+literal|' '
+argument_list|)
+expr_stmt|;
+name|term__putc
+argument_list|(
+literal|'\b'
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
 name|term__putc
 argument_list|(
 literal|'\r'
@@ -4281,14 +4782,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
 end_function
 
 begin_comment
-comment|/* end re_fastputc */
-end_comment
-
-begin_comment
-comment|/* re_fastaddc():  *	we added just one char, handle it fast.  *	Assumes that screen cursor == real cursor   */
+comment|/* re_fastaddc():  *	we added just one char, handle it fast.  *	Assumes that screen cursor == real cursor  */
 end_comment
 
 begin_function
@@ -4296,15 +4794,16 @@ name|protected
 name|void
 name|re_fastaddc
 parameter_list|(
-name|el
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|c
+decl_stmt|;
+name|int
+name|rhdiff
 decl_stmt|;
 name|c
 operator|=
@@ -4345,11 +4844,62 @@ expr_stmt|;
 comment|/* too hard to handle */
 return|return;
 block|}
+name|rhdiff
+operator|=
+name|el
+operator|->
+name|el_term
+operator|.
+name|t_size
+operator|.
+name|h
+operator|-
+name|el
+operator|->
+name|el_cursor
+operator|.
+name|h
+operator|-
+name|el
+operator|->
+name|el_rprompt
+operator|.
+name|p_pos
+operator|.
+name|h
+expr_stmt|;
+if|if
+condition|(
+name|el
+operator|->
+name|el_rprompt
+operator|.
+name|p_pos
+operator|.
+name|h
+operator|&&
+name|rhdiff
+operator|<
+literal|3
+condition|)
+block|{
+name|re_refresh
+argument_list|(
+name|el
+argument_list|)
+expr_stmt|;
+comment|/* clear out rprompt if less than 1 char gap */
+return|return;
+block|}
 comment|/* else (only do at end of line, no TAB) */
 if|if
 condition|(
 name|iscntrl
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|)
@@ -4392,6 +4942,10 @@ if|if
 condition|(
 name|isprint
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|)
@@ -4418,8 +4972,16 @@ name|re_fastputc
 argument_list|(
 name|el
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
 operator|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|c
 operator|>>
 literal|6
@@ -4430,13 +4992,22 @@ operator|)
 operator|+
 literal|'0'
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|re_fastputc
 argument_list|(
 name|el
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
 operator|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|c
 operator|>>
 literal|3
@@ -4446,6 +5017,7 @@ literal|7
 operator|)
 operator|+
 literal|'0'
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|re_fastputc
@@ -4469,11 +5041,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* end re_fastaddc */
-end_comment
-
-begin_comment
-comment|/* re_clear_display():  *	clear the screen buffers so that new new prompt starts fresh.   */
+comment|/* re_clear_display():  *	clear the screen buffers so that new new prompt starts fresh.  */
 end_comment
 
 begin_function
@@ -4481,12 +5049,10 @@ name|protected
 name|void
 name|re_clear_display
 parameter_list|(
-name|el
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -4550,11 +5116,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* end re_clear_display */
-end_comment
-
-begin_comment
-comment|/* re_clear_lines():  *	Make sure all lines are *really* blank   */
+comment|/* re_clear_lines():  *	Make sure all lines are *really* blank  */
 end_comment
 
 begin_function
@@ -4562,12 +5124,10 @@ name|protected
 name|void
 name|re_clear_lines
 parameter_list|(
-name|el
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -4661,10 +5221,6 @@ comment|/* go to new line */
 block|}
 block|}
 end_function
-
-begin_comment
-comment|/* end re_clear_lines */
-end_comment
 
 end_unit
 

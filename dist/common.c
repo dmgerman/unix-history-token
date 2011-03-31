@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: common.c,v 1.3 1997/01/14 04:17:22 lukem Exp $	*/
+comment|/*	$NetBSD: common.c,v 1.10 2001/01/10 07:45:41 jdolecek Exp $	*/
 end_comment
 
 begin_comment
 comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_if
 if|#
@@ -35,15 +41,13 @@ else|#
 directive|else
 end_else
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$NetBSD: common.c,v 1.3 1997/01/14 04:17:22 lukem Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$NetBSD: common.c,v 1.10 2001/01/10 07:45:41 jdolecek Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -76,7 +80,7 @@ file|"el.h"
 end_include
 
 begin_comment
-comment|/* ed_end_of_file():   *	Indicate end of file  *	[^D]  */
+comment|/* ed_end_of_file():  *	Indicate end of file  *	[^D]  */
 end_comment
 
 begin_function
@@ -85,17 +89,13 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_end_of_file
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 name|re_goto_bottom
 argument_list|(
@@ -112,13 +112,15 @@ operator|=
 literal|'\0'
 expr_stmt|;
 return|return
+operator|(
 name|CC_EOF
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_insert():   *	Add character to the line  *	Insert a character [bound to all insert keys]  */
+comment|/* ed_insert():  *	Add character to the line  *	Insert a character [bound to all insert keys]  */
 end_comment
 
 begin_function
@@ -126,17 +128,13 @@ name|protected
 name|el_action_t
 name|ed_insert
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -148,7 +146,9 @@ operator|==
 literal|'\0'
 condition|)
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
 if|if
 condition|(
@@ -170,10 +170,30 @@ name|el_line
 operator|.
 name|limit
 condition|)
+block|{
+comment|/* end of buffer space, try to allocate more */
+if|if
+condition|(
+operator|!
+name|ch_enlargebufs
+argument_list|(
+name|el
+argument_list|,
+operator|(
+name|size_t
+operator|)
+name|el
+operator|->
+name|el_state
+operator|.
+name|argument
+argument_list|)
+condition|)
 return|return
 name|CC_ERROR
 return|;
-comment|/* end of buffer space */
+comment|/* error allocating more */
+block|}
 if|if
 condition|(
 name|el
@@ -426,13 +446,15 @@ literal|0
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|CC_NORM
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_delete_prev_word():   *	Delete from beginning of current word to cursor  *	[M-^?] [^W]  */
+comment|/* ed_delete_prev_word():  *	Delete from beginning of current word to cursor  *	[M-^?] [^W]  */
 end_comment
 
 begin_function
@@ -441,17 +463,13 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_delete_prev_word
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -478,7 +496,9 @@ operator|.
 name|buffer
 condition|)
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
 name|cp
 operator|=
@@ -599,13 +619,15 @@ name|buffer
 expr_stmt|;
 comment|/* bounds check */
 return|return
+operator|(
 name|CC_REFRESH
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_delete_next_char():   *	Delete character under cursor  *	[^D] [x]  */
+comment|/* ed_delete_next_char():  *	Delete character under cursor  *	[^D] [x]  */
 end_comment
 
 begin_function
@@ -614,17 +636,13 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_delete_next_char
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -634,9 +652,14 @@ define|#
 directive|define
 name|EL
 value|el->el_line
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
-name|stderr
+name|el
+operator|->
+name|el_errlfile
 argument_list|,
 literal|"\nD(b: %x(%s)  c: %x(%s) last: %x(%s) limit: %x(%s)\n"
 argument_list|,
@@ -722,7 +745,9 @@ ifdef|#
 directive|ifdef
 name|KSHVI
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
 else|#
 directive|else
@@ -740,7 +765,9 @@ name|term__flush
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 name|CC_EOF
+operator|)
 return|;
 endif|#
 directive|endif
@@ -760,7 +787,9 @@ expr_stmt|;
 else|#
 directive|else
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
 endif|#
 directive|endif
@@ -791,7 +820,9 @@ operator|--
 expr_stmt|;
 else|else
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
 block|}
 block|}
@@ -833,6 +864,7 @@ name|el_line
 operator|.
 name|buffer
 condition|)
+comment|/* bounds check */
 name|el
 operator|->
 name|el_line
@@ -847,15 +879,16 @@ name|lastchar
 operator|-
 literal|1
 expr_stmt|;
-comment|/* bounds check */
 return|return
+operator|(
 name|CC_REFRESH
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_kill_line():   *	Cut to the end of line  *	[^K] [^K]  */
+comment|/* ed_kill_line():  *	Cut to the end of line  *	[^K] [^K]  */
 end_comment
 
 begin_function
@@ -864,17 +897,13 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_kill_line
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -930,6 +959,7 @@ name|last
 operator|=
 name|kp
 expr_stmt|;
+comment|/* zap! -- delete to end */
 name|el
 operator|->
 name|el_line
@@ -942,15 +972,16 @@ name|el_line
 operator|.
 name|cursor
 expr_stmt|;
-comment|/* zap! -- delete to end */
 return|return
+operator|(
 name|CC_REFRESH
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_move_to_end():   *	Move cursor to the end of line  *	[^E] [^E]  */
+comment|/* ed_move_to_end():  *	Move cursor to the end of line  *	[^E] [^E]  */
 end_comment
 
 begin_function
@@ -959,17 +990,13 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_move_to_end
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 name|el
 operator|->
@@ -1025,18 +1052,22 @@ name|el
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|CC_REFRESH
+operator|)
 return|;
 block|}
 block|}
 return|return
+operator|(
 name|CC_CURSOR
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_move_to_beg():   *	Move cursor to the beginning of line  *	[^A] [^A]  */
+comment|/* ed_move_to_beg():  *	Move cursor to the beginning of line  *	[^A] [^A]  */
 end_comment
 
 begin_function
@@ -1045,17 +1076,13 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_move_to_beg
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 name|el
 operator|->
@@ -1085,6 +1112,10 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|el
 operator|->
@@ -1119,18 +1150,22 @@ name|el
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|CC_REFRESH
+operator|)
 return|;
 block|}
 block|}
 return|return
+operator|(
 name|CC_CURSOR
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_transpose_chars():   *	Exchange the character to the left of the cursor with the one under it  *	[^T] [^T]  */
+comment|/* ed_transpose_chars():  *	Exchange the character to the left of the cursor with the one under it  *	[^T] [^T]  */
 end_comment
 
 begin_function
@@ -1138,17 +1173,13 @@ name|protected
 name|el_action_t
 name|ed_transpose_chars
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1184,7 +1215,9 @@ literal|1
 index|]
 condition|)
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
 else|else
 name|el
@@ -1260,18 +1293,22 @@ operator|=
 name|c
 expr_stmt|;
 return|return
+operator|(
 name|CC_REFRESH
+operator|)
 return|;
 block|}
 else|else
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_next_char():   *	Move to the right one character  *	[^F] [^F]  */
+comment|/* ed_next_char():  *	Move to the right one character  *	[^F] [^F]  */
 end_comment
 
 begin_function
@@ -1280,17 +1317,13 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_next_char
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1307,7 +1340,9 @@ operator|.
 name|lastchar
 condition|)
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
 name|el
 operator|->
@@ -1376,17 +1411,21 @@ name|el
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|CC_REFRESH
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|CC_CURSOR
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_prev_word():   *	Move to the beginning of the current word  *	[M-b] [b]  */
+comment|/* ed_prev_word():  *	Move to the beginning of the current word  *	[M-b] [b]  */
 end_comment
 
 begin_function
@@ -1395,17 +1434,13 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_prev_word
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1422,7 +1457,9 @@ operator|.
 name|buffer
 condition|)
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
 name|el
 operator|->
@@ -1482,17 +1519,21 @@ name|el
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|CC_REFRESH
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|CC_CURSOR
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_prev_char():   *	Move to the left one character  *	[^B] [^B]  */
+comment|/* ed_prev_char():  *	Move to the left one character  *	[^B] [^B]  */
 end_comment
 
 begin_function
@@ -1501,17 +1542,13 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_prev_char
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1595,22 +1632,28 @@ name|el
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|CC_REFRESH
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|CC_CURSOR
+operator|)
 return|;
 block|}
 else|else
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_quoted_insert():   *	Add the next character typed verbatim  *	[^V] [^V]  */
+comment|/* ed_quoted_insert():  *	Add the next character typed verbatim  *	[^V] [^V]  */
 end_comment
 
 begin_function
@@ -1618,17 +1661,13 @@ name|protected
 name|el_action_t
 name|ed_quoted_insert
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|num
@@ -1671,27 +1710,31 @@ operator|==
 literal|1
 condition|)
 return|return
+operator|(
 name|ed_insert
 argument_list|(
 name|el
 argument_list|,
 name|c
 argument_list|)
+operator|)
 return|;
 else|else
 return|return
+operator|(
 name|ed_end_of_file
 argument_list|(
 name|el
 argument_list|,
 literal|0
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_digit():   *	Adds to argument or enters a digit  */
+comment|/* ed_digit():  *	Adds to argument or enters a digit  */
 end_comment
 
 begin_function
@@ -1699,17 +1742,13 @@ name|protected
 name|el_action_t
 name|ed_digit
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1720,7 +1759,9 @@ name|c
 argument_list|)
 condition|)
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
 if|if
 condition|(
@@ -1765,7 +1806,9 @@ operator|>
 literal|1000000
 condition|)
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
 name|el
 operator|->
@@ -1791,7 +1834,9 @@ operator|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|CC_ARGHACK
+operator|)
 return|;
 block|}
 else|else
@@ -1812,9 +1857,23 @@ name|el_line
 operator|.
 name|limit
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|ch_enlargebufs
+argument_list|(
+name|el
+argument_list|,
+literal|1
+argument_list|)
+condition|)
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
+block|}
 if|if
 condition|(
 name|el
@@ -1910,13 +1969,15 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|CC_NORM
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_argument_digit():   *	Digit that starts argument  *	For ESC-n  */
+comment|/* ed_argument_digit():  *	Digit that starts argument  *	For ESC-n  */
 end_comment
 
 begin_function
@@ -1924,18 +1985,13 @@ name|protected
 name|el_action_t
 name|ed_argument_digit
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
-specifier|register
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1946,7 +2002,9 @@ name|c
 argument_list|)
 condition|)
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
 if|if
 condition|(
@@ -1968,7 +2026,9 @@ operator|>
 literal|1000000
 condition|)
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
 name|el
 operator|->
@@ -2016,13 +2076,15 @@ literal|1
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|CC_ARGHACK
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_unassigned():   *	Indicates unbound character  *	Bound to keys that are not assigned  */
+comment|/* ed_unassigned():  *	Indicates unbound character  *	Bound to keys that are not assigned  */
 end_comment
 
 begin_function
@@ -2031,17 +2093,13 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_unassigned
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 name|term_beep
 argument_list|(
@@ -2052,7 +2110,9 @@ name|term__flush
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 name|CC_NORM
+operator|)
 return|;
 block|}
 end_function
@@ -2062,7 +2122,7 @@ comment|/**  ** TTY key handling.  **/
 end_comment
 
 begin_comment
-comment|/* ed_tty_sigint():   *	Tty interrupt character  *	[^C]  */
+comment|/* ed_tty_sigint():  *	Tty interrupt character  *	[^C]  */
 end_comment
 
 begin_function
@@ -2071,26 +2131,24 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_tty_sigint
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
+operator|(
 name|CC_NORM
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_tty_dsusp():   *	Tty delayed suspend character  *	[^Y]  */
+comment|/* ed_tty_dsusp():  *	Tty delayed suspend character  *	[^Y]  */
 end_comment
 
 begin_function
@@ -2099,26 +2157,24 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_tty_dsusp
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
+operator|(
 name|CC_NORM
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_tty_flush_output():   *	Tty flush output characters  *	[^O]  */
+comment|/* ed_tty_flush_output():  *	Tty flush output characters  *	[^O]  */
 end_comment
 
 begin_function
@@ -2127,26 +2183,24 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_tty_flush_output
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
+operator|(
 name|CC_NORM
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_tty_sigquit():   *	Tty quit character  *	[^\]  */
+comment|/* ed_tty_sigquit():  *	Tty quit character  *	[^\]  */
 end_comment
 
 begin_function
@@ -2155,26 +2209,24 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_tty_sigquit
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
+operator|(
 name|CC_NORM
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_tty_sigtstp():   *	Tty suspend character  *	[^Z]  */
+comment|/* ed_tty_sigtstp():  *	Tty suspend character  *	[^Z]  */
 end_comment
 
 begin_function
@@ -2183,26 +2235,24 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_tty_sigtstp
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
+operator|(
 name|CC_NORM
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_tty_stop_output():   *	Tty disallow output characters  *	[^S]  */
+comment|/* ed_tty_stop_output():  *	Tty disallow output characters  *	[^S]  */
 end_comment
 
 begin_function
@@ -2211,26 +2261,24 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_tty_stop_output
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
+operator|(
 name|CC_NORM
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_tty_start_output():   *	Tty allow output characters  *	[^Q]  */
+comment|/* ed_tty_start_output():  *	Tty allow output characters  *	[^Q]  */
 end_comment
 
 begin_function
@@ -2239,26 +2287,24 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_tty_start_output
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
+operator|(
 name|CC_NORM
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_newline():   *	Execute command  *	[^J]  */
+comment|/* ed_newline():  *	Execute command  *	[^J]  */
 end_comment
 
 begin_function
@@ -2267,17 +2313,13 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_newline
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 name|re_goto_bottom
 argument_list|(
@@ -2328,13 +2370,15 @@ operator|.
 name|buffer
 expr_stmt|;
 return|return
+operator|(
 name|CC_NEWLINE
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_delete_prev_char():   *	Delete the character to the left of the cursor  *	[^?]  */
+comment|/* ed_delete_prev_char():  *	Delete the character to the left of the cursor  *	[^?]  */
 end_comment
 
 begin_function
@@ -2343,17 +2387,13 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_delete_prev_char
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2370,7 +2410,9 @@ operator|.
 name|buffer
 condition|)
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
 name|c_delbefore
 argument_list|(
@@ -2422,13 +2464,15 @@ operator|.
 name|buffer
 expr_stmt|;
 return|return
+operator|(
 name|CC_REFRESH
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_clear_screen():   *	Clear screen leaving current line at the top  *	[^L]  */
+comment|/* ed_clear_screen():  *	Clear screen leaving current line at the top  *	[^L]  */
 end_comment
 
 begin_function
@@ -2437,17 +2481,13 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_clear_screen
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 name|term_clear_screen
 argument_list|(
@@ -2462,13 +2502,15 @@ argument_list|)
 expr_stmt|;
 comment|/* reset everything */
 return|return
+operator|(
 name|CC_REFRESH
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_redisplay():   *	Redisplay everything  *	^R  */
+comment|/* ed_redisplay():  *	Redisplay everything  *	^R  */
 end_comment
 
 begin_function
@@ -2477,26 +2519,24 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_redisplay
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
+operator|(
 name|CC_REDISPLAY
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_start_over():   *	Erase current line and start from scratch  *	[^G]  */
+comment|/* ed_start_over():  *	Erase current line and start from scratch  *	[^G]  */
 end_comment
 
 begin_function
@@ -2505,17 +2545,13 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_start_over
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 name|ch_reset
 argument_list|(
@@ -2523,13 +2559,15 @@ name|el
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|CC_REFRESH
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_sequence_lead_in():   *	First character in a bound sequence  *	Placeholder for external keys  */
+comment|/* ed_sequence_lead_in():  *	First character in a bound sequence  *	Placeholder for external keys  */
 end_comment
 
 begin_function
@@ -2538,26 +2576,24 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_sequence_lead_in
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
+operator|(
 name|CC_NORM
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_prev_history():   *	Move to the previous history line  *	[^P] [k]  */
+comment|/* ed_prev_history():  *	Move to the previous history line  *	[^P] [k]  */
 end_comment
 
 begin_function
@@ -2566,17 +2602,13 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_prev_history
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|beep
@@ -2614,7 +2646,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* save the current buffer away */
+comment|/* save the current buffer 						 * away */
 operator|(
 name|void
 operator|)
@@ -2708,18 +2740,22 @@ condition|(
 name|beep
 condition|)
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
 else|else
 return|return
+operator|(
 name|CC_NORM
+operator|)
 return|;
 comment|/* was CC_UP_HIST */
 block|}
 end_function
 
 begin_comment
-comment|/* ed_next_history():   *	Move to the next history line  *	[^N] [j]  */
+comment|/* ed_next_history():  *	Move to the next history line  *	[^N] [j]  */
 end_comment
 
 begin_function
@@ -2728,17 +2764,13 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_next_history
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 name|el
 operator|->
@@ -2792,21 +2824,25 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
 comment|/* make it beep */
 block|}
 return|return
+operator|(
 name|hist_get
 argument_list|(
 name|el
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_search_prev_history():   *	Search previous in history for a line matching the current  *	next search history [M-P] [K]  */
+comment|/* ed_search_prev_history():  *	Search previous in history for a line matching the current  *	next search history [M-P] [K]  */
 end_comment
 
 begin_function
@@ -2815,17 +2851,13 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_search_prev_history
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -2907,7 +2939,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
 block|}
 if|if
@@ -2979,7 +3013,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
 name|hp
 operator|=
@@ -2995,7 +3031,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
 name|c_setpat
 argument_list|(
@@ -3066,6 +3104,10 @@ name|el_line
 operator|.
 name|buffer
 argument_list|,
+call|(
+name|size_t
+call|)
+argument_list|(
 name|el
 operator|->
 name|el_line
@@ -3077,6 +3119,7 @@ operator|->
 name|el_line
 operator|.
 name|buffer
+argument_list|)
 argument_list|)
 operator|||
 name|hp
@@ -3143,7 +3186,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
 block|}
 name|el
@@ -3155,16 +3200,18 @@ operator|=
 name|h
 expr_stmt|;
 return|return
+operator|(
 name|hist_get
 argument_list|(
 name|el
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_search_next_history():   *	Search next in history for a line matching the current  *	[M-N] [J]  */
+comment|/* ed_search_next_history():  *	Search next in history for a line matching the current  *	[M-N] [J]  */
 end_comment
 
 begin_function
@@ -3173,17 +3220,13 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_search_next_history
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -3239,7 +3282,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
 if|if
 condition|(
@@ -3252,7 +3297,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
 name|hp
 operator|=
@@ -3268,7 +3315,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
 name|c_setpat
 argument_list|(
@@ -3328,6 +3377,10 @@ name|el_line
 operator|.
 name|buffer
 argument_list|,
+call|(
+name|size_t
+call|)
+argument_list|(
 name|el
 operator|->
 name|el_line
@@ -3339,6 +3392,7 @@ operator|->
 name|el_line
 operator|.
 name|buffer
+argument_list|)
 argument_list|)
 operator|||
 name|hp
@@ -3416,7 +3470,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
 block|}
 block|}
@@ -3429,10 +3485,12 @@ operator|=
 name|found
 expr_stmt|;
 return|return
+operator|(
 name|hist_get
 argument_list|(
 name|el
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -3447,17 +3505,13 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_prev_line
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -3471,7 +3525,7 @@ argument_list|(
 name|el
 argument_list|)
 decl_stmt|;
-comment|/*      * Move to the line requested      */
+comment|/*          * Move to the line requested          */
 if|if
 condition|(
 operator|*
@@ -3532,9 +3586,11 @@ operator|>
 literal|0
 condition|)
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
-comment|/*      * Move to the beginning of the line      */
+comment|/*          * Move to the beginning of the line          */
 for|for
 control|(
 name|ptr
@@ -3557,7 +3613,7 @@ name|ptr
 operator|--
 control|)
 continue|continue;
-comment|/*      * Move to the character requested      */
+comment|/*          * Move to the character requested          */
 for|for
 control|(
 name|ptr
@@ -3594,7 +3650,9 @@ operator|=
 name|ptr
 expr_stmt|;
 return|return
+operator|(
 name|CC_CURSOR
+operator|)
 return|;
 block|}
 end_function
@@ -3609,17 +3667,13 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_next_line
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -3633,7 +3687,7 @@ argument_list|(
 name|el
 argument_list|)
 decl_stmt|;
-comment|/*      * Move to the line requested      */
+comment|/*          * Move to the line requested          */
 for|for
 control|(
 name|ptr
@@ -3683,9 +3737,11 @@ operator|>
 literal|0
 condition|)
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
-comment|/*      * Move to the character requested      */
+comment|/*          * Move to the character requested          */
 for|for
 control|(
 name|ptr
@@ -3722,13 +3778,15 @@ operator|=
 name|ptr
 expr_stmt|;
 return|return
+operator|(
 name|CC_CURSOR
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ed_command():   *	Editline extended command  *	[M-X] [:]  */
+comment|/* ed_command():  *	Editline extended command  *	[M-X] [:]  */
 end_comment
 
 begin_function
@@ -3737,17 +3795,13 @@ name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_command
 parameter_list|(
-name|el
-parameter_list|,
-name|c
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|tmpbuf
@@ -3900,11 +3954,15 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 name|CC_ERROR
+operator|)
 return|;
 else|else
 return|return
+operator|(
 name|CC_REFRESH
+operator|)
 return|;
 block|}
 end_function

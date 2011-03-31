@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: sig.h,v 1.2 1997/01/11 06:48:11 lukem Exp $	*/
+comment|/*	$NetBSD: sig.h,v 1.3 2000/09/04 22:06:32 lukem Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ define|#
 directive|define
 name|ALLSIGS
 define|\
-value|_DO(SIGINT)		\     _DO(SIGTSTP)	\     _DO(SIGSTOP)	\     _DO(SIGQUIT)	\     _DO(SIGHUP)		\     _DO(SIGTERM)	\     _DO(SIGCONT)	\     _DO(SIGWINCH)
+value|_DO(SIGINT)	\ 	_DO(SIGTSTP)	\ 	_DO(SIGSTOP)	\ 	_DO(SIGQUIT)	\ 	_DO(SIGHUP)	\ 	_DO(SIGTERM)	\ 	_DO(SIGCONT)	\ 	_DO(SIGWINCH)
 end_define
 
 begin_typedef
@@ -55,61 +55,49 @@ name|el_signal_t
 typedef|;
 end_typedef
 
-begin_decl_stmt
+begin_function_decl
 name|protected
 name|void
 name|sig_end
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|protected
 name|int
 name|sig_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|protected
 name|void
 name|sig_set
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|protected
 name|void
 name|sig_clr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
