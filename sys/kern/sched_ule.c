@@ -7699,6 +7699,15 @@ name|td_oncpu
 operator|=
 name|NOCPU
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|SW_PREEMPT
+operator|)
+condition|)
 name|td
 operator|->
 name|td_flags
