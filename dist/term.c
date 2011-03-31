@@ -1,16 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: term.c,v 1.32 2001/01/23 15:55:31 jdolecek Exp $	*/
+comment|/*	$NetBSD: term.c,v 1.40 2004/05/22 23:21:28 christos Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|"config.h"
 end_include
 
 begin_if
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: term.c,v 1.32 2001/01/23 15:55:31 jdolecek Exp $"
+literal|"$NetBSD: term.c,v 1.40 2004/05/22 23:21:28 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -66,12 +66,6 @@ end_comment
 begin_comment
 comment|/*  * term.c: Editor/termcap-curses interface  *	   We have to declare a static variable here, since the  *	   termcap putchar routine does not take an argument!  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"sys.h"
-end_include
 
 begin_include
 include|#
@@ -103,11 +97,88 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_TERMCAP_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<termcap.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CURSES_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<curses.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_NCURSES_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<ncurses.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Solaris's term.h does horrid things. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|HAVE_TERM_H
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SUNOS
+argument_list|)
+operator|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<term.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1024,6 +1095,7 @@ name|struct
 name|termcapstr
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1631,24 +1703,16 @@ name|el
 operator|->
 name|el_outfile
 expr_stmt|;
-if|if
-condition|(
+operator|(
+name|void
+operator|)
 name|term_set
 argument_list|(
 name|el
 argument_list|,
 name|NULL
 argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+expr_stmt|;
 name|term_init_arrow
 argument_list|(
 name|el
@@ -1764,6 +1828,26 @@ name|t_val
 operator|=
 name|NULL
 expr_stmt|;
+name|el_free
+argument_list|(
+operator|(
+name|ptr_t
+operator|)
+name|el
+operator|->
+name|el_term
+operator|.
+name|t_fkey
+argument_list|)
+expr_stmt|;
+name|el
+operator|->
+name|el_term
+operator|.
+name|t_fkey
+operator|=
+name|NULL
+expr_stmt|;
 name|term_free_display
 argument_list|(
 name|el
@@ -1791,6 +1875,7 @@ name|termcapstr
 modifier|*
 name|t
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|cap
@@ -3271,6 +3356,10 @@ condition|(
 name|EL_CAN_TAB
 condition|?
 operator|(
+operator|(
+name|unsigned
+name|int
+operator|)
 operator|-
 name|del
 operator|>
@@ -3367,6 +3456,7 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|cp
@@ -4396,6 +4486,34 @@ endif|#
 directive|endif
 end_endif
 
+begin_function
+name|protected
+name|void
+name|term_get
+parameter_list|(
+name|EditLine
+modifier|*
+name|el
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|term
+parameter_list|)
+block|{
+operator|*
+name|term
+operator|=
+name|el
+operator|->
+name|el_term
+operator|.
+name|t_name
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/* term_set():  *	Read in the terminal capabilities from the requested terminal  */
 end_comment
@@ -4409,6 +4527,7 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|term
@@ -4772,6 +4891,8 @@ condition|;
 name|t
 operator|++
 control|)
+block|{
+comment|/* XXX: some systems tgetstr needs non const */
 name|term_alloc
 argument_list|(
 name|el
@@ -4780,15 +4901,24 @@ name|t
 argument_list|,
 name|tgetstr
 argument_list|(
+name|strchr
+argument_list|(
 name|t
 operator|->
 name|name
+argument_list|,
+operator|*
+name|t
+operator|->
+name|name
+argument_list|)
 argument_list|,
 operator|&
 name|area
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -4906,6 +5036,14 @@ name|term_bind_arrow
 argument_list|(
 name|el
 argument_list|)
+expr_stmt|;
+name|el
+operator|->
+name|el_term
+operator|.
+name|t_name
+operator|=
+name|term
 expr_stmt|;
 return|return
 operator|(
@@ -6256,6 +6394,7 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -6358,6 +6497,7 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -6443,6 +6583,7 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -6902,24 +7043,37 @@ begin_comment
 comment|/* term_telltc():  *	Print the current termcap characteristics  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|protected
 name|int
 comment|/*ARGSUSED*/
 name|term_telltc
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-parameter_list|,
+argument_list|,
 name|int
 name|argc
-parameter_list|,
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|,
+specifier|const
 name|char
-modifier|*
-modifier|*
+operator|*
+operator|*
 name|argv
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 specifier|const
 name|struct
@@ -7143,30 +7297,37 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* term_settc():  *	Change the current terminal characteristics  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|protected
 name|int
 comment|/*ARGSUSED*/
 name|term_settc
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-parameter_list|,
+argument_list|,
 name|int
 name|argc
-parameter_list|,
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|,
+specifier|const
 name|char
-modifier|*
-modifier|*
+operator|*
+operator|*
 name|argv
-parameter_list|)
+argument_list|)
 block|{
 specifier|const
 name|struct
@@ -7180,6 +7341,7 @@ name|termcapval
 modifier|*
 name|tv
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|what
@@ -7619,30 +7781,37 @@ literal|1
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* term_echotc():  *	Print the termcap string out with variable substitution  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|protected
 name|int
 comment|/*ARGSUSED*/
 name|term_echotc
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-parameter_list|,
+argument_list|,
 name|int
 name|argc
-parameter_list|,
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|,
+specifier|const
 name|char
-modifier|*
-modifier|*
+operator|*
+operator|*
 name|argv
-parameter_list|)
+argument_list|)
 block|{
 name|char
 modifier|*
@@ -8055,6 +8224,9 @@ name|el_outfile
 argument_list|,
 name|fmtd
 argument_list|,
+operator|(
+name|int
+operator|)
 name|el
 operator|->
 name|el_tty
@@ -8212,17 +8384,27 @@ name|name
 operator|==
 name|NULL
 condition|)
+block|{
+comment|/* XXX: some systems tgetstr needs non const */
 name|scap
 operator|=
 name|tgetstr
 argument_list|(
+name|strchr
+argument_list|(
 operator|*
 name|argv
+argument_list|,
+operator|*
+operator|*
+name|argv
+argument_list|)
 argument_list|,
 operator|&
 name|area
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -8922,7 +9104,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 end_unit
 

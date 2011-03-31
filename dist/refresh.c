@@ -1,16 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: refresh.c,v 1.17 2001/04/13 00:53:11 lukem Exp $	*/
+comment|/*	$NetBSD: refresh.c,v 1.26 2003/08/07 16:44:33 agc Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|"config.h"
 end_include
 
 begin_if
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: refresh.c,v 1.17 2001/04/13 00:53:11 lukem Exp $"
+literal|"$NetBSD: refresh.c,v 1.26 2003/08/07 16:44:33 agc Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -66,12 +66,6 @@ end_comment
 begin_comment
 comment|/*  * refresh.c: Lower level screen refreshing functions  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"sys.h"
-end_include
 
 begin_include
 include|#
@@ -215,6 +209,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -237,6 +232,7 @@ parameter_list|(
 name|EditLine
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -267,7 +263,11 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|do 				\ 				    if (a) {			\ 					(void) fprintf b;	\ 					c;			\ 				    }				\ 				while (0)
+value|do 				\ 				    if (
+comment|/*CONSTCOND*/
+value|a) {	\ 					(void) fprintf b;	\ 					c;			\ 				    }				\ 				while (
+comment|/*CONSTCOND*/
+value|0)
 end_define
 
 begin_define
@@ -295,6 +295,7 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1059,6 +1060,75 @@ name|v
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|el
+operator|->
+name|el_line
+operator|.
+name|cursor
+operator|>=
+name|el
+operator|->
+name|el_line
+operator|.
+name|lastchar
+condition|)
+block|{
+if|if
+condition|(
+name|el
+operator|->
+name|el_map
+operator|.
+name|current
+operator|==
+name|el
+operator|->
+name|el_map
+operator|.
+name|alt
+operator|&&
+name|el
+operator|->
+name|el_line
+operator|.
+name|lastchar
+operator|!=
+name|el
+operator|->
+name|el_line
+operator|.
+name|buffer
+condition|)
+name|el
+operator|->
+name|el_line
+operator|.
+name|cursor
+operator|=
+name|el
+operator|->
+name|el_line
+operator|.
+name|lastchar
+operator|-
+literal|1
+expr_stmt|;
+else|else
+name|el
+operator|->
+name|el_line
+operator|.
+name|cursor
+operator|=
+name|el
+operator|->
+name|el_line
+operator|.
+name|lastchar
+expr_stmt|;
+block|}
 name|cur
 operator|.
 name|h
@@ -1770,11 +1840,6 @@ argument_list|)
 expr_stmt|;
 name|term__putc
 argument_list|(
-literal|'\r'
-argument_list|)
-expr_stmt|;
-name|term__putc
-argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
@@ -1793,33 +1858,39 @@ begin_comment
 comment|/* re_insert():  *	insert num characters of s into d (in front of the character)  *	at dat, maximum length of d is dlen  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|private
 name|void
 comment|/*ARGSUSED*/
 name|re_insert
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-parameter_list|,
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|,
 name|char
-modifier|*
+operator|*
 name|d
-parameter_list|,
+argument_list|,
 name|int
 name|dat
-parameter_list|,
+argument_list|,
 name|int
 name|dlen
-parameter_list|,
+argument_list|,
 name|char
-modifier|*
+operator|*
 name|s
-parameter_list|,
+argument_list|,
 name|int
 name|num
-parameter_list|)
+argument_list|)
 block|{
 name|char
 modifier|*
@@ -2031,35 +2102,41 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* re_delete():  *	delete num characters d at dat, maximum length of d is dlen  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|private
 name|void
 comment|/*ARGSUSED*/
 name|re_delete
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-parameter_list|,
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|,
 name|char
-modifier|*
+operator|*
 name|d
-parameter_list|,
+argument_list|,
 name|int
 name|dat
-parameter_list|,
+argument_list|,
 name|int
 name|dlen
-parameter_list|,
+argument_list|,
 name|int
 name|num
-parameter_list|)
+argument_list|)
 block|{
 name|char
 modifier|*
@@ -2179,7 +2256,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* re__strncopy():  *	Like strncpy without padding.  */
@@ -4261,6 +4338,7 @@ name|char
 modifier|*
 name|dst
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|src
@@ -4269,7 +4347,7 @@ name|size_t
 name|width
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 for|for
@@ -4354,6 +4432,75 @@ name|v
 decl_stmt|,
 name|th
 decl_stmt|;
+if|if
+condition|(
+name|el
+operator|->
+name|el_line
+operator|.
+name|cursor
+operator|>=
+name|el
+operator|->
+name|el_line
+operator|.
+name|lastchar
+condition|)
+block|{
+if|if
+condition|(
+name|el
+operator|->
+name|el_map
+operator|.
+name|current
+operator|==
+name|el
+operator|->
+name|el_map
+operator|.
+name|alt
+operator|&&
+name|el
+operator|->
+name|el_line
+operator|.
+name|lastchar
+operator|!=
+name|el
+operator|->
+name|el_line
+operator|.
+name|buffer
+condition|)
+name|el
+operator|->
+name|el_line
+operator|.
+name|cursor
+operator|=
+name|el
+operator|->
+name|el_line
+operator|.
+name|lastchar
+operator|-
+literal|1
+expr_stmt|;
+else|else
+name|el
+operator|->
+name|el_line
+operator|.
+name|cursor
+operator|=
+name|el
+operator|->
+name|el_line
+operator|.
+name|lastchar
+expr_stmt|;
+block|}
 comment|/* first we must find where the cursor is... */
 name|h
 operator|=
@@ -4979,15 +5126,17 @@ argument_list|(
 operator|(
 operator|(
 operator|(
+operator|(
 name|unsigned
 name|int
 operator|)
 name|c
+operator|)
 operator|>>
 literal|6
 operator|)
 operator|&
-literal|7
+literal|3
 operator|)
 operator|+
 literal|'0'
@@ -5005,10 +5154,12 @@ argument_list|(
 operator|(
 operator|(
 operator|(
+operator|(
 name|unsigned
 name|int
 operator|)
 name|c
+operator|)
 operator|>>
 literal|3
 operator|)

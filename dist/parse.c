@@ -1,16 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: parse.c,v 1.14 2001/01/23 15:55:30 jdolecek Exp $	*/
+comment|/*	$NetBSD: parse.c,v 1.22 2005/05/29 04:58:15 lukem Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|"config.h"
 end_include
 
 begin_if
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: parse.c,v 1.14 2001/01/23 15:55:30 jdolecek Exp $"
+literal|"$NetBSD: parse.c,v 1.22 2005/05/29 04:58:15 lukem Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -70,19 +70,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sys.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"el.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tokenizer.h"
 end_include
 
 begin_include
@@ -96,6 +84,7 @@ name|private
 specifier|const
 expr|struct
 block|{
+specifier|const
 name|char
 operator|*
 name|name
@@ -111,6 +100,7 @@ operator|*
 argument_list|,
 name|int
 argument_list|,
+specifier|const
 name|char
 operator|*
 operator|*
@@ -141,7 +131,7 @@ block|,
 block|{
 literal|"history"
 block|,
-name|hist_list
+name|hist_command
 block|}
 block|,
 block|{
@@ -190,6 +180,7 @@ modifier|*
 name|line
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -209,7 +200,7 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-name|tok_line
+name|tok_str
 argument_list|(
 name|tok
 argument_list|,
@@ -262,12 +253,14 @@ parameter_list|,
 name|int
 name|argc
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|argv
 index|[]
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|ptr
@@ -505,7 +498,6 @@ specifier|const
 name|char
 modifier|*
 modifier|*
-specifier|const
 name|ptr
 parameter_list|)
 block|{
@@ -748,18 +740,6 @@ operator|*
 name|p
 operator|==
 literal|'^'
-operator|&&
-name|isalpha
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
-name|p
-index|[
-literal|1
-index|]
-argument_list|)
 condition|)
 block|{
 name|p
@@ -890,6 +870,39 @@ operator|=
 name|n
 expr_stmt|;
 break|break;
+case|case
+literal|'M'
+case|:
+if|if
+condition|(
+name|in
+index|[
+literal|1
+index|]
+operator|==
+literal|'-'
+operator|&&
+name|in
+index|[
+literal|2
+index|]
+operator|!=
+literal|'\0'
+condition|)
+block|{
+operator|*
+name|out
+operator|++
+operator|=
+literal|'\033'
+expr_stmt|;
+name|in
+operator|+=
+literal|2
+expr_stmt|;
+break|break;
+block|}
+comment|/*FALLTHROUGH*/
 default|default:
 operator|*
 name|out

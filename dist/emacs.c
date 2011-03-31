@@ -1,16 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: emacs.c,v 1.9 2001/01/10 07:45:41 jdolecek Exp $	*/
+comment|/*	$NetBSD: emacs.c,v 1.19 2004/10/28 21:14:52 dsl Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|"config.h"
 end_include
 
 begin_if
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: emacs.c,v 1.9 2001/01/10 07:45:41 jdolecek Exp $"
+literal|"$NetBSD: emacs.c,v 1.19 2004/10/28 21:14:52 dsl Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -70,12 +70,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sys.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"el.h"
 end_include
 
@@ -83,19 +77,25 @@ begin_comment
 comment|/* em_delete_or_list():  *	Delete character under cursor or list completions if at end of line  *	[^D]  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|protected
 name|el_action_t
 comment|/*ARGSUSED*/
 name|em_delete_or_list
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-parameter_list|,
+argument_list|,
 name|int
 name|c
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 if|if
 condition|(
@@ -165,6 +165,14 @@ block|}
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|el
+operator|->
+name|el_state
+operator|.
+name|doingarg
+condition|)
 name|c_delafter
 argument_list|(
 name|el
@@ -176,7 +184,12 @@ operator|.
 name|argument
 argument_list|)
 expr_stmt|;
-comment|/* delete after dot */
+else|else
+name|c_delafter1
+argument_list|(
+name|el
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|el
@@ -211,25 +224,31 @@ operator|)
 return|;
 block|}
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* em_delete_next_word():  *	Cut from cursor to end of current word  *	[M-d]  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|protected
 name|el_action_t
 comment|/*ARGSUSED*/
 name|em_delete_next_word
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-parameter_list|,
+argument_list|,
 name|int
 name|c
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 name|char
 modifier|*
@@ -377,25 +396,31 @@ name|CC_REFRESH
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* em_yank():  *	Paste cut buffer at cursor position  *	[^Y]  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|protected
 name|el_action_t
 comment|/*ARGSUSED*/
 name|em_yank
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-parameter_list|,
+argument_list|,
 name|int
 name|c
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 name|char
 modifier|*
@@ -422,23 +447,11 @@ name|c_kill
 operator|.
 name|buf
 condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|ch_enlargebufs
-argument_list|(
-name|el
-argument_list|,
-literal|1
-argument_list|)
-condition|)
 return|return
 operator|(
-name|CC_ERROR
+name|CC_NORM
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|el
@@ -578,25 +591,31 @@ name|CC_REFRESH
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* em_kill_line():  *	Cut the entire line and save in cut buffer  *	[^U]  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|protected
 name|el_action_t
 comment|/*ARGSUSED*/
 name|em_kill_line
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-parameter_list|,
+argument_list|,
 name|int
 name|c
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 name|char
 modifier|*
@@ -683,25 +702,31 @@ name|CC_REFRESH
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* em_kill_region():  *	Cut area between mark and cursor and save in cut buffer  *	[^W]  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|protected
 name|el_action_t
 comment|/*ARGSUSED*/
 name|em_kill_region
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-parameter_list|,
+argument_list|,
 name|int
 name|c
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 name|char
 modifier|*
@@ -894,25 +919,31 @@ name|CC_REFRESH
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* em_copy_region():  *	Copy area between mark and cursor to cut buffer  *	[M-W]  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|protected
 name|el_action_t
 comment|/*ARGSUSED*/
 name|em_copy_region
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-parameter_list|,
+argument_list|,
 name|int
 name|c
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 name|char
 modifier|*
@@ -923,6 +954,7 @@ name|cp
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|el
 operator|->
 name|el_chared
@@ -1061,16 +1093,16 @@ name|CC_NORM
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
-comment|/* em_gosmacs_traspose():  *	Exchange the two characters before the cursor  *	Gosling emacs transpose chars [^T]  */
+comment|/* em_gosmacs_transpose():  *	Exchange the two characters before the cursor  *	Gosling emacs transpose chars [^T]  */
 end_comment
 
 begin_function
 name|protected
 name|el_action_t
-name|em_gosmacs_traspose
+name|em_gosmacs_transpose
 parameter_list|(
 name|EditLine
 modifier|*
@@ -1163,19 +1195,25 @@ begin_comment
 comment|/* em_next_word():  *	Move next to end of current word  *	[M-f]  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|protected
 name|el_action_t
 comment|/*ARGSUSED*/
 name|em_next_word
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-parameter_list|,
+argument_list|,
 name|int
 name|c
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 if|if
 condition|(
@@ -1244,8 +1282,8 @@ operator|.
 name|c_vcmd
 operator|.
 name|action
-operator|&
-name|DELETE
+operator|!=
+name|NOP
 condition|)
 block|{
 name|cv_delfini
@@ -1265,25 +1303,31 @@ name|CC_CURSOR
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* em_upper_case():  *	Uppercase the characters from cursor to end of current word  *	[M-u]  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|protected
 name|el_action_t
 comment|/*ARGSUSED*/
 name|em_upper_case
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-parameter_list|,
+argument_list|,
 name|int
 name|c
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 name|char
 modifier|*
@@ -1351,6 +1395,10 @@ name|cp
 operator|=
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
@@ -1395,25 +1443,31 @@ name|CC_REFRESH
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* em_capitol_case():  *	Capitalize the characters from cursor to end of current word  *	[M-c]  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|protected
 name|el_action_t
 comment|/*ARGSUSED*/
 name|em_capitol_case
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-parameter_list|,
+argument_list|,
 name|int
 name|c
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 name|char
 modifier|*
@@ -1495,6 +1549,10 @@ name|cp
 operator|=
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
@@ -1532,6 +1590,10 @@ name|cp
 operator|=
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
@@ -1576,25 +1638,31 @@ name|CC_REFRESH
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* em_lower_case():  *	Lowercase the characters from cursor to end of current word  *	[M-l]  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|protected
 name|el_action_t
 comment|/*ARGSUSED*/
 name|em_lower_case
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-parameter_list|,
+argument_list|,
 name|int
 name|c
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 name|char
 modifier|*
@@ -1662,6 +1730,10 @@ name|cp
 operator|=
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
@@ -1706,25 +1778,31 @@ name|CC_REFRESH
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* em_set_mark():  *	Set the mark at cursor  *	[^@]  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|protected
 name|el_action_t
 comment|/*ARGSUSED*/
 name|em_set_mark
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-parameter_list|,
+argument_list|,
 name|int
 name|c
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 name|el
 operator|->
@@ -1746,25 +1824,31 @@ name|CC_NORM
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* em_exchange_mark():  *	Exchange the cursor and mark  *	[^X^X]  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|protected
 name|el_action_t
 comment|/*ARGSUSED*/
 name|em_exchange_mark
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-parameter_list|,
+argument_list|,
 name|int
 name|c
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 name|char
 modifier|*
@@ -1808,25 +1892,31 @@ name|CC_CURSOR
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* em_universal_argument():  *	Universal argument (argument times 4)  *	[^U]  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|protected
 name|el_action_t
 comment|/*ARGSUSED*/
 name|em_universal_argument
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-parameter_list|,
+argument_list|,
 name|int
 name|c
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 comment|/* multiply current argument by 4 */
 if|if
@@ -1866,25 +1956,31 @@ name|CC_ARGHACK
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* em_meta_next():  *	Add 8th bit to next character typed  *	[<ESC>]  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|protected
 name|el_action_t
 comment|/*ARGSUSED*/
 name|em_meta_next
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-parameter_list|,
+argument_list|,
 name|int
 name|c
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 name|el
 operator|->
@@ -1900,25 +1996,31 @@ name|CC_ARGHACK
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* em_toggle_overwrite():  *	Switch from insert to overwrite mode or vice versa  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|protected
 name|el_action_t
 comment|/*ARGSUSED*/
 name|em_toggle_overwrite
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-parameter_list|,
+argument_list|,
 name|int
 name|c
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 name|el
 operator|->
@@ -1946,25 +2048,31 @@ name|CC_NORM
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* em_copy_prev_word():  *	Copy current word to cursor  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|protected
 name|el_action_t
 comment|/*ARGSUSED*/
 name|em_copy_prev_word
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-parameter_list|,
+argument_list|,
 name|int
 name|c
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 name|char
 modifier|*
@@ -2081,25 +2189,31 @@ name|CC_REFRESH
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* em_inc_search_next():  *	Emacs incremental next search  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|protected
 name|el_action_t
 comment|/*ARGSUSED*/
 name|em_inc_search_next
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-parameter_list|,
+argument_list|,
 name|int
 name|c
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 name|el
 operator|->
@@ -2120,25 +2234,31 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* em_inc_search_prev():  *	Emacs incremental reverse search  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|protected
 name|el_action_t
 comment|/*ARGSUSED*/
 name|em_inc_search_prev
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-parameter_list|,
+argument_list|,
 name|int
 name|c
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 name|el
 operator|->
@@ -2159,7 +2279,121 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
+
+begin_comment
+comment|/* em_delete_prev_char():  *	Delete the character to the left of the cursor  *	[^?]  */
+end_comment
+
+begin_decl_stmt
+name|protected
+name|el_action_t
+comment|/*ARGSUSED*/
+name|em_delete_prev_char
+argument_list|(
+name|EditLine
+operator|*
+name|el
+argument_list|,
+name|int
+name|c
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
+block|{
+if|if
+condition|(
+name|el
+operator|->
+name|el_line
+operator|.
+name|cursor
+operator|<=
+name|el
+operator|->
+name|el_line
+operator|.
+name|buffer
+condition|)
+return|return
+operator|(
+name|CC_ERROR
+operator|)
+return|;
+if|if
+condition|(
+name|el
+operator|->
+name|el_state
+operator|.
+name|doingarg
+condition|)
+name|c_delbefore
+argument_list|(
+name|el
+argument_list|,
+name|el
+operator|->
+name|el_state
+operator|.
+name|argument
+argument_list|)
+expr_stmt|;
+else|else
+name|c_delbefore1
+argument_list|(
+name|el
+argument_list|)
+expr_stmt|;
+name|el
+operator|->
+name|el_line
+operator|.
+name|cursor
+operator|-=
+name|el
+operator|->
+name|el_state
+operator|.
+name|argument
+expr_stmt|;
+if|if
+condition|(
+name|el
+operator|->
+name|el_line
+operator|.
+name|cursor
+operator|<
+name|el
+operator|->
+name|el_line
+operator|.
+name|buffer
+condition|)
+name|el
+operator|->
+name|el_line
+operator|.
+name|cursor
+operator|=
+name|el
+operator|->
+name|el_line
+operator|.
+name|buffer
+expr_stmt|;
+return|return
+operator|(
+name|CC_REFRESH
+operator|)
+return|;
+block|}
+end_decl_stmt
 
 end_unit
 

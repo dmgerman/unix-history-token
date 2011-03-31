@@ -1,16 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: prompt.c,v 1.8 2001/01/10 07:45:41 jdolecek Exp $	*/
+comment|/*	$NetBSD: prompt.c,v 1.11 2003/08/07 16:44:32 agc Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|"config.h"
 end_include
 
 begin_if
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: prompt.c,v 1.8 2001/01/10 07:45:41 jdolecek Exp $"
+literal|"$NetBSD: prompt.c,v 1.11 2003/08/07 16:44:32 agc Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -66,12 +66,6 @@ end_comment
 begin_comment
 comment|/*  * prompt.c: Prompt printing functions  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"sys.h"
-end_include
 
 begin_include
 include|#
@@ -113,17 +107,23 @@ begin_comment
 comment|/* prompt_default():  *	Just a default prompt, in case the user did not provide one  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|private
 name|char
 modifier|*
 comment|/*ARGSUSED*/
 name|prompt_default
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 specifier|static
 name|char
@@ -146,23 +146,29 @@ name|a
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* prompt_default_r():  *	Just a default rprompt, in case the user did not provide one  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|private
 name|char
 modifier|*
 comment|/*ARGSUSED*/
 name|prompt_default_r
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 specifier|static
 name|char
@@ -181,7 +187,7 @@ name|a
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* prompt_print():  *	Print the prompt and update the prompt position.  *	We use an array of integers in case we want to pass  * 	literal escape sequences in the prompt and we want a  *	bit to flag them  */
@@ -369,18 +375,24 @@ begin_comment
 comment|/* prompt_end():  *	Clean up the prompt stuff  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|protected
 name|void
 comment|/*ARGSUSED*/
 name|prompt_end
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{ }
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* prompt_set():  *	Install a prompt printing function  */

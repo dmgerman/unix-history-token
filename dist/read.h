@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: read.h,v 1.1 2001/09/27 19:29:50 christos Exp $	*/
+comment|/*	$NetBSD: read.h,v 1.4 2004/02/27 14:52:18 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -58,6 +58,28 @@ begin_function_decl
 name|protected
 name|int
 name|read_init
+parameter_list|(
+name|EditLine
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|void
+name|read_prepare
+parameter_list|(
+name|EditLine
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|void
+name|read_finish
 parameter_list|(
 name|EditLine
 modifier|*
