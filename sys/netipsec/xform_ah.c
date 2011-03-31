@@ -3438,6 +3438,12 @@ operator|==
 name|EAGAIN
 condition|)
 block|{
+name|KEY_FREESAV
+argument_list|(
+operator|&
+name|sav
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|crypto_dispatch

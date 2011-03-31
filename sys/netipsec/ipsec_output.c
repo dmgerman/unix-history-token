@@ -1047,12 +1047,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|KEY_FREESAV
-argument_list|(
-operator|&
-name|sav
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
