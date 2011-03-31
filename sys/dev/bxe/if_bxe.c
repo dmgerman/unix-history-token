@@ -2826,7 +2826,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|bxe_sysctl_dump_cqe_chain
+name|bxe_sysctl_dump_rx_cq_chain
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
@@ -2836,7 +2836,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|bxe_sysctl_dump_rx_chain
+name|bxe_sysctl_dump_rx_bd_chain
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
@@ -2976,10 +2976,10 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|bxe_dump_pbd_locked
+name|bxe_dump_tx_parsing_bd
 parameter_list|(
 name|struct
-name|bxe_softc
+name|bxe_fastpath
 modifier|*
 parameter_list|,
 name|int
@@ -2994,7 +2994,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|bxe_dump_txbd_locked
+name|bxe_dump_txbd
 parameter_list|(
 name|struct
 name|bxe_fastpath
@@ -3002,8 +3002,8 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|struct
-name|eth_tx_bd
+name|union
+name|eth_tx_bd_types
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3012,7 +3012,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|bxe_dump_rxbd_locked
+name|bxe_dump_rxbd
 parameter_list|(
 name|struct
 name|bxe_fastpath
@@ -3030,7 +3030,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|bxe_dump_cqe_locked
+name|bxe_dump_cqe
 parameter_list|(
 name|struct
 name|bxe_fastpath
@@ -3064,7 +3064,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|bxe_dump_cqe_chain
+name|bxe_dump_rx_cq_chain
 parameter_list|(
 name|struct
 name|bxe_fastpath
@@ -3080,7 +3080,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|bxe_dump_rx_chain
+name|bxe_dump_rx_bd_chain
 parameter_list|(
 name|struct
 name|bxe_fastpath
@@ -16842,7 +16842,6 @@ goto|goto
 name|bxe_init_locked_exit
 goto|;
 comment|/* Try and gracefully shutdown the device because of a failure. */
-comment|/* Try and gracefully shutdown the device because of a failure. */
 name|bxe_init_locked_failed4
 label|:
 for|for
@@ -19579,6 +19578,7 @@ argument_list|(
 literal|50
 argument_list|)
 expr_stmt|;
+comment|/* Wait up to 200ms. */
 name|timeout
 operator|=
 literal|4000
@@ -19639,7 +19639,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* * Perform a DMAE read from to device memory. *  * Some of the registers on the 577XX controller are 128bits wide.  It is  * required that when accessing those registers that they be read  * atomically and that no intervening bus acceses to the device occur.  * This could be handled by a lock held across all driver instances for  * the device or it can be handled by performing a DMA operation when  * reading from the device.  This code implements the latter. * * Returns: *   None. */
+comment|/*  * Perform a DMAE read from to device memory.  *  * Some of the registers on the 577XX controller are 128bits wide.  It is  * required that when accessing those registers that they be read  * atomically and that no intervening bus acceses to the device occur.  * This could be handled by a lock held across all driver instances for  * the device or it can be handled by performing a DMA operation when  * reading from the device.  This code implements the latter.  *  * Returns:  *   None.  */
 end_comment
 
 begin_function
@@ -36882,7 +36882,7 @@ decl_stmt|;
 name|struct
 name|eth_tx_parse_bd
 modifier|*
-name|pbd
+name|tx_parse_bd
 decl_stmt|;
 name|struct
 name|eth_tx_bd
@@ -36981,7 +36981,7 @@ name|tx_data_bd
 operator|=
 name|NULL
 expr_stmt|;
-name|pbd
+name|tx_parse_bd
 operator|=
 name|NULL
 expr_stmt|;
@@ -37737,7 +37737,7 @@ name|bd_prod
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|pbd
+name|tx_parse_bd
 operator|=
 operator|(
 expr|struct
@@ -37765,7 +37765,7 @@ name|parse_bd
 expr_stmt|;
 name|memset
 argument_list|(
-name|pbd
+name|tx_parse_bd
 argument_list|,
 literal|0
 argument_list|,
@@ -37776,7 +37776,7 @@ name|eth_tx_parse_bd
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Gather all info about the packet and add to pbd */
+comment|/* Gather all info about the packet and add to tx_parse_bd */
 if|if
 condition|(
 name|m0
@@ -37875,7 +37875,7 @@ name|ETHER_HDR_LEN
 expr_stmt|;
 block|}
 comment|/* Set the Ethernet header length in 16 bit words. */
-name|pbd
+name|tx_parse_bd
 operator|->
 name|global_data
 operator|=
@@ -37887,7 +37887,7 @@ operator|)
 operator|>>
 literal|1
 expr_stmt|;
-name|pbd
+name|tx_parse_bd
 operator|->
 name|global_data
 operator||=
@@ -37955,7 +37955,7 @@ name|e_hlen
 operator|)
 expr_stmt|;
 comment|/* Calculate IP header length (16 bit words). */
-name|pbd
+name|tx_parse_bd
 operator|->
 name|ip_hlen
 operator|=
@@ -37968,11 +37968,11 @@ literal|1
 operator|)
 expr_stmt|;
 comment|/* Calculate enet + IP header length (16 bit words). */
-name|pbd
+name|tx_parse_bd
 operator|->
 name|total_hlen
 operator|=
-name|pbd
+name|tx_parse_bd
 operator|->
 name|ip_hlen
 operator|+
@@ -38092,7 +38092,7 @@ operator|++
 argument_list|)
 expr_stmt|;
 comment|/* Update the enet + IP + TCP header length. */
-name|pbd
+name|tx_parse_bd
 operator|->
 name|total_hlen
 operator|+=
@@ -38108,7 +38108,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Get the pseudo header checksum. */
-name|pbd
+name|tx_parse_bd
 operator|->
 name|tcp_pseudo_csum
 operator|=
@@ -38194,7 +38194,7 @@ name|debug_udp_csum_offload_frames
 operator|++
 argument_list|)
 expr_stmt|;
-name|pbd
+name|tx_parse_bd
 operator|->
 name|global_data
 operator||=
@@ -38277,7 +38277,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Update the enet + IP + UDP header length. */
-name|pbd
+name|tx_parse_bd
 operator|->
 name|total_hlen
 operator|+=
@@ -38291,7 +38291,7 @@ operator|>>
 literal|1
 operator|)
 expr_stmt|;
-name|pbd
+name|tx_parse_bd
 operator|->
 name|tcp_pseudo_csum
 operator|=
@@ -38358,7 +38358,7 @@ block|{
 name|uint16_t
 name|hdr_len
 init|=
-name|pbd
+name|tx_parse_bd
 operator|->
 name|total_hlen
 operator|<<
@@ -38445,7 +38445,7 @@ name|bd_prod
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Get a new transmit BD (after the pbd) and fill it. */
+comment|/* Get a new transmit BD (after the tx_parse_bd) and fill it. */
 name|tx_data_bd
 operator|=
 operator|&
@@ -38548,7 +38548,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 			 * For TSO the controller needs the following info: 			 * MSS, tcp_send_seq, ip_id, and tcp_pseudo_csum. 			 */
-name|pbd
+name|tx_parse_bd
 operator|->
 name|lso_mss
 operator|=
@@ -38561,7 +38561,7 @@ operator|.
 name|tso_segsz
 argument_list|)
 expr_stmt|;
-name|pbd
+name|tx_parse_bd
 operator|->
 name|tcp_send_seq
 operator|=
@@ -38572,7 +38572,7 @@ operator|->
 name|th_seq
 argument_list|)
 expr_stmt|;
-name|pbd
+name|tx_parse_bd
 operator|->
 name|tcp_flags
 operator|=
@@ -38580,7 +38580,7 @@ name|th
 operator|->
 name|th_flags
 expr_stmt|;
-name|pbd
+name|tx_parse_bd
 operator|->
 name|ip_id
 operator|=
@@ -38591,7 +38591,7 @@ operator|->
 name|ip_id
 argument_list|)
 expr_stmt|;
-name|pbd
+name|tx_parse_bd
 operator|->
 name|tcp_pseudo_csum
 operator|=
@@ -38618,7 +38618,7 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|pbd
+name|tx_parse_bd
 operator|->
 name|global_data
 operator||=
@@ -38760,7 +38760,6 @@ name|bd_prod
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* BXE_PRINTF("tx_start_bd: addrlo:0x%x, addrhi:0x%x, nbytes:0x%x, bitfield:0x%x, gendata:0x%x, nbd:0x%x\n", tx_start_bd->addr_lo, tx_start_bd->addr_hi, tx_start_bd->nbytes, tx_start_bd->bd_flags.as_bitfield, tx_start_bd->general_data, tx_start_bd->nbd );  bxe_dump_mbuf(sc, m0); */
 name|DBRUNMSG
 argument_list|(
 name|BXE_EXTREME_SEND
@@ -39976,7 +39975,7 @@ begin_function
 specifier|static
 name|__inline
 name|uint16_t
-name|bxe_rx_comp_cons
+name|bxe_rx_cq_cons
 parameter_list|(
 name|struct
 name|bxe_fastpath
@@ -40013,10 +40012,10 @@ condition|(
 operator|(
 name|rx_cons_sb
 operator|&
-name|TOTAL_RCQ_ENTRIES_PER_PAGE
+name|USABLE_RCQ_ENTRIES_PER_PAGE
 operator|)
 operator|==
-name|TOTAL_RCQ_ENTRIES_PER_PAGE
+name|USABLE_RCQ_ENTRIES_PER_PAGE
 condition|)
 name|rx_cons_sb
 operator|++
@@ -40098,14 +40097,14 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|bxe_rx_comp_cons
+name|bxe_rx_cq_cons
 argument_list|(
 name|fp
 argument_list|)
 operator|!=
 name|fp
 operator|->
-name|rx_comp_cons
+name|rx_cq_cons
 operator|)
 return|;
 block|}
@@ -43838,6 +43837,12 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|,
+name|rcq_idx
+decl_stmt|,
+name|rx_idx
+decl_stmt|,
+name|rx_sge_idx
+decl_stmt|,
 name|max_agg_queues
 decl_stmt|;
 name|DBENTER
@@ -44184,24 +44189,17 @@ name|j
 operator|++
 control|)
 block|{
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
+name|rx_sge_idx
+operator|=
 operator|(
-name|BXE_INSANE_LOAD
-operator||
-name|BXE_INSANE_RESET
-operator|)
-argument_list|,
-literal|"%s(): Linking fp[%d] SGE ring[%d].\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|,
-name|i
-argument_list|,
+operator|(
 name|j
-argument_list|)
+operator|+
+literal|1
+operator|)
+operator|%
+name|NUM_RX_SGE_PAGES
+operator|)
 expr_stmt|;
 name|sge
 operator|=
@@ -44216,6 +44214,40 @@ index|[
 name|MAX_RX_SGE_CNT
 index|]
 expr_stmt|;
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+operator|(
+name|BXE_EXTREME_LOAD
+operator||
+name|BXE_EXTREME_RESET
+operator|)
+argument_list|,
+literal|"%s(): fp[%02d].rx_sge_chain[%02d][0x%04X]=0x%jX\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|,
+name|i
+argument_list|,
+name|j
+argument_list|,
+operator|(
+name|uint16_t
+operator|)
+name|MAX_RX_SGE_CNT
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|fp
+operator|->
+name|rx_sge_chain_paddr
+index|[
+name|rx_sge_idx
+index|]
+argument_list|)
+expr_stmt|;
 name|sge
 operator|->
 name|addr_hi
@@ -44228,13 +44260,7 @@ name|fp
 operator|->
 name|rx_sge_chain_paddr
 index|[
-operator|(
-name|j
-operator|+
-literal|1
-operator|)
-operator|%
-name|NUM_RX_SGE_PAGES
+name|rx_sge_idx
 index|]
 argument_list|)
 argument_list|)
@@ -44251,13 +44277,7 @@ name|fp
 operator|->
 name|rx_sge_chain_paddr
 index|[
-operator|(
-name|j
-operator|+
-literal|1
-operator|)
-operator|%
-name|NUM_RX_SGE_PAGES
+name|rx_sge_idx
 index|]
 argument_list|)
 argument_list|)
@@ -44301,6 +44321,18 @@ name|j
 operator|++
 control|)
 block|{
+name|rx_idx
+operator|=
+operator|(
+operator|(
+name|j
+operator|+
+literal|1
+operator|)
+operator|%
+name|NUM_RX_PAGES
+operator|)
+expr_stmt|;
 name|rx_bd
 operator|=
 operator|&
@@ -44319,18 +44351,31 @@ argument_list|(
 name|sc
 argument_list|,
 operator|(
-name|BXE_INSANE_LOAD
-operator||
-name|BXE_INSANE_RESET
+name|BXE_INFO_LOAD
 operator|)
 argument_list|,
-literal|"%s(): Linking fp[%d] RX BD chain page[%d].\n"
+literal|"%s(): fp[%02d].rx_bd_chain[%02d][0x%04X]=0x%jX\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|i
 argument_list|,
 name|j
+argument_list|,
+operator|(
+name|uint16_t
+operator|)
+name|USABLE_RX_BD_PER_PAGE
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|fp
+operator|->
+name|rx_bd_chain_paddr
+index|[
+name|rx_idx
+index|]
 argument_list|)
 expr_stmt|;
 name|rx_bd
@@ -44345,13 +44390,7 @@ name|fp
 operator|->
 name|rx_bd_chain_paddr
 index|[
-operator|(
-name|j
-operator|+
-literal|1
-operator|)
-operator|%
-name|NUM_RX_PAGES
+name|rx_idx
 index|]
 argument_list|)
 argument_list|)
@@ -44368,13 +44407,7 @@ name|fp
 operator|->
 name|rx_bd_chain_paddr
 index|[
-operator|(
-name|j
-operator|+
-literal|1
-operator|)
-operator|%
-name|NUM_RX_PAGES
+name|rx_idx
 index|]
 argument_list|)
 argument_list|)
@@ -44412,6 +44445,18 @@ name|j
 operator|++
 control|)
 block|{
+name|rcq_idx
+operator|=
+operator|(
+operator|(
+name|j
+operator|+
+literal|1
+operator|)
+operator|%
+name|NUM_RCQ_PAGES
+operator|)
+expr_stmt|;
 name|nextpg
 operator|=
 operator|(
@@ -44422,7 +44467,7 @@ operator|)
 operator|&
 name|fp
 operator|->
-name|rx_comp_chain
+name|rx_cq_chain
 index|[
 name|j
 index|]
@@ -44435,18 +44480,31 @@ argument_list|(
 name|sc
 argument_list|,
 operator|(
-name|BXE_INSANE_LOAD
-operator||
-name|BXE_INSANE_RESET
+name|BXE_INFO_LOAD
 operator|)
 argument_list|,
-literal|"%s(): Linking fp[%d] RX completion chain page[%d].\n"
+literal|"%s(): fp[%02d].rx_cq_chain[%02d][0x%04X]=0x%jX\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|i
 argument_list|,
 name|j
+argument_list|,
+operator|(
+name|uint16_t
+operator|)
+name|USABLE_RCQ_ENTRIES_PER_PAGE
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|fp
+operator|->
+name|rx_cq_chain_paddr
+index|[
+name|rcq_idx
+index|]
 argument_list|)
 expr_stmt|;
 name|nextpg
@@ -44459,15 +44517,9 @@ name|U64_HI
 argument_list|(
 name|fp
 operator|->
-name|rx_comp_chain_paddr
+name|rx_cq_chain_paddr
 index|[
-operator|(
-name|j
-operator|+
-literal|1
-operator|)
-operator|%
-name|NUM_RCQ_PAGES
+name|rcq_idx
 index|]
 argument_list|)
 argument_list|)
@@ -44482,15 +44534,9 @@ name|U64_LO
 argument_list|(
 name|fp
 operator|->
-name|rx_comp_chain_paddr
+name|rx_cq_chain_paddr
 index|[
-operator|(
-name|j
-operator|+
-literal|1
-operator|)
-operator|%
-name|NUM_RCQ_PAGES
+name|rcq_idx
 index|]
 argument_list|)
 argument_list|)
@@ -44534,7 +44580,8 @@ condition|)
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"%s(%d): Memory allocation failure! Disabling TPA for fp[%d].\n"
+literal|"%s(%d): Memory allocation failure! "
+literal|"Disabling TPA for fp[%d].\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -44583,7 +44630,7 @@ block|}
 comment|/* 		 * Allocate buffers for all the RX BDs in RX BD Chain. 		 * Add completion queue entries at the same time. 		 */
 name|fp
 operator|->
-name|rx_comp_cons
+name|rx_cq_cons
 operator|=
 name|ring_prod
 operator|=
@@ -44658,11 +44705,11 @@ name|ring_prod
 expr_stmt|;
 name|fp
 operator|->
-name|rx_comp_prod
+name|rx_cq_prod
 operator|=
 name|cqe_ring_prod
 expr_stmt|;
-comment|/* 		 * fp->rx_comp_prod = 		 *     (uint16_t)min(NUM_RCQ_PAGES*TOTAL_RCQ_ENTRIES_PER_PAGE, 		 *     cqe_ring_prod); 		 */
+comment|/* 		 * fp->rx_cq_prod = 		 *     (uint16_t)min(NUM_RCQ_PAGES*TOTAL_RCQ_ENTRIES_PER_PAGE, 		 *     cqe_ring_prod); 		 */
 name|DBRUN
 argument_list|(
 name|fp
@@ -44725,11 +44772,11 @@ name|bus_dmamap_sync
 argument_list|(
 name|fp
 operator|->
-name|rx_comp_chain_tag
+name|rx_cq_chain_tag
 argument_list|,
 name|fp
 operator|->
-name|rx_comp_chain_map
+name|rx_cq_chain_map
 index|[
 name|j
 index|]
@@ -44750,7 +44797,7 @@ name|ring_prod
 argument_list|,
 name|fp
 operator|->
-name|rx_comp_prod
+name|rx_cq_prod
 argument_list|,
 name|fp
 operator|->
@@ -44779,7 +44826,7 @@ name|U64_LO
 argument_list|(
 name|fp
 operator|->
-name|rx_comp_chain_paddr
+name|rx_cq_chain_paddr
 index|[
 literal|0
 index|]
@@ -44803,7 +44850,7 @@ name|U64_HI
 argument_list|(
 name|fp
 operator|->
-name|rx_comp_chain_paddr
+name|rx_cq_chain_paddr
 index|[
 literal|0
 index|]
@@ -44844,7 +44891,7 @@ decl_stmt|;
 name|struct
 name|eth_tx_next_bd
 modifier|*
-name|tx_bd
+name|tx_n_bd
 decl_stmt|;
 name|int
 name|i
@@ -44915,7 +44962,7 @@ name|j
 operator|++
 control|)
 block|{
-name|tx_bd
+name|tx_n_bd
 operator|=
 operator|&
 name|fp
@@ -44949,7 +44996,7 @@ argument_list|,
 name|j
 argument_list|)
 expr_stmt|;
-name|tx_bd
+name|tx_n_bd
 operator|->
 name|addr_hi
 operator|=
@@ -44972,7 +45019,7 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|tx_bd
+name|tx_n_bd
 operator|->
 name|addr_lo
 operator|=
@@ -45305,7 +45352,7 @@ if|if
 condition|(
 name|fp
 operator|->
-name|rx_comp_chain
+name|rx_cq_chain
 index|[
 name|j
 index|]
@@ -45320,7 +45367,7 @@ operator|*
 operator|)
 name|fp
 operator|->
-name|rx_comp_chain
+name|rx_cq_chain
 index|[
 name|j
 index|]
@@ -47983,7 +48030,7 @@ operator|)
 operator|&
 name|fp
 operator|->
-name|rx_comp_chain
+name|rx_cq_chain
 index|[
 name|i
 index|]
@@ -48011,7 +48058,7 @@ name|U64_LO
 argument_list|(
 name|fp
 operator|->
-name|rx_comp_chain_paddr
+name|rx_cq_chain_paddr
 index|[
 literal|0
 index|]
@@ -48039,7 +48086,7 @@ name|U64_HI
 argument_list|(
 name|fp
 operator|->
-name|rx_comp_chain_paddr
+name|rx_cq_chain_paddr
 index|[
 literal|0
 index|]
@@ -56669,7 +56716,7 @@ if|if
 condition|(
 name|fp
 operator|->
-name|rx_comp_chain_tag
+name|rx_cq_chain_tag
 operator|!=
 name|NULL
 condition|)
@@ -56692,7 +56739,7 @@ if|if
 condition|(
 name|fp
 operator|->
-name|rx_comp_chain_map
+name|rx_cq_chain_map
 index|[
 name|j
 index|]
@@ -56704,7 +56751,7 @@ if|if
 condition|(
 name|fp
 operator|->
-name|rx_comp_chain
+name|rx_cq_chain
 index|[
 name|j
 index|]
@@ -56715,18 +56762,18 @@ name|bus_dmamem_free
 argument_list|(
 name|fp
 operator|->
-name|rx_comp_chain_tag
+name|rx_cq_chain_tag
 argument_list|,
 name|fp
 operator|->
-name|rx_comp_chain
+name|rx_cq_chain
 index|[
 name|j
 index|]
 argument_list|,
 name|fp
 operator|->
-name|rx_comp_chain_map
+name|rx_cq_chain_map
 index|[
 name|j
 index|]
@@ -56736,11 +56783,11 @@ name|bus_dmamap_unload
 argument_list|(
 name|fp
 operator|->
-name|rx_comp_chain_tag
+name|rx_cq_chain_tag
 argument_list|,
 name|fp
 operator|->
-name|rx_comp_chain_map
+name|rx_cq_chain_map
 index|[
 name|j
 index|]
@@ -56750,11 +56797,11 @@ name|bus_dmamap_destroy
 argument_list|(
 name|fp
 operator|->
-name|rx_comp_chain_tag
+name|rx_cq_chain_tag
 argument_list|,
 name|fp
 operator|->
-name|rx_comp_chain_map
+name|rx_cq_chain_map
 index|[
 name|j
 index|]
@@ -56766,7 +56813,7 @@ name|bus_dma_tag_destroy
 argument_list|(
 name|fp
 operator|->
-name|rx_comp_chain_tag
+name|rx_cq_chain_tag
 argument_list|)
 expr_stmt|;
 block|}
@@ -57840,7 +57887,7 @@ argument_list|,
 comment|/* max map for this tag */
 name|BUS_SPACE_UNRESTRICTED
 argument_list|,
-comment|/* #of discontinuities */
+comment|/* # of discontinuities */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* max seg size */
@@ -57935,7 +57982,7 @@ name|bxe_fastpath
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Create a DMA tag for the status block, allocate and clear the 		 * memory, map the memory into DMA space, and fetch the physical 		 * address of the block. 		 */
+comment|/* 		 * Create a DMA tag for the status block, allocate and 		 * clear the memory, map the memory into DMA space, and 		 * fetch the physical address of the block. 		 */
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -58542,7 +58589,8 @@ condition|)
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"%s(%d): Unable to create fp[%d] TX mbuf DMA map!\n"
+literal|"%s(%d): Unable to create fp[%d] "
+literal|"TX mbuf DMA map!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -58985,7 +59033,7 @@ comment|/* lock f() arg */
 operator|&
 name|fp
 operator|->
-name|rx_comp_chain_tag
+name|rx_cq_chain_tag
 argument_list|)
 condition|)
 block|{
@@ -59028,7 +59076,7 @@ name|bus_dmamem_alloc
 argument_list|(
 name|fp
 operator|->
-name|rx_comp_chain_tag
+name|rx_cq_chain_tag
 argument_list|,
 operator|(
 name|void
@@ -59038,7 +59086,7 @@ operator|)
 operator|&
 name|fp
 operator|->
-name|rx_comp_chain
+name|rx_cq_chain
 index|[
 name|j
 index|]
@@ -59048,7 +59096,7 @@ argument_list|,
 operator|&
 name|fp
 operator|->
-name|rx_comp_chain_map
+name|rx_cq_chain_map
 index|[
 name|j
 index|]
@@ -59082,7 +59130,7 @@ operator|*
 operator|)
 name|fp
 operator|->
-name|rx_comp_chain
+name|rx_cq_chain
 index|[
 name|j
 index|]
@@ -59096,18 +59144,18 @@ name|bus_dmamap_load
 argument_list|(
 name|fp
 operator|->
-name|rx_comp_chain_tag
+name|rx_cq_chain_tag
 argument_list|,
 name|fp
 operator|->
-name|rx_comp_chain_map
+name|rx_cq_chain_map
 index|[
 name|j
 index|]
 argument_list|,
 name|fp
 operator|->
-name|rx_comp_chain
+name|rx_cq_chain
 index|[
 name|j
 index|]
@@ -59149,7 +59197,7 @@ block|}
 comment|/* 			 * Physical address of each page in the RX 			 * Completion Chain. 			 */
 name|fp
 operator|->
-name|rx_comp_chain_paddr
+name|rx_cq_chain_paddr
 index|[
 name|j
 index|]
@@ -59166,7 +59214,7 @@ operator||
 name|BXE_EXTREME_RESET
 operator|)
 argument_list|,
-literal|"%s(): fp[%d]->rx_comp_chain_paddr[%d] = 0x%jX\n"
+literal|"%s(): fp[%d]->rx_cq_chain_paddr[%d] = 0x%jX\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -64462,10 +64510,10 @@ name|uint16_t
 name|bd_prod
 parameter_list|,
 name|uint16_t
-name|rx_comp_prod
+name|rx_cq_prod
 parameter_list|,
 name|uint16_t
-name|rx_sge_prod
+name|sge_prod
 parameter_list|)
 block|{
 specifier|volatile
@@ -64487,21 +64535,18 @@ name|bd_prod
 operator|=
 name|bd_prod
 expr_stmt|;
-comment|/* htole16(bd_prod);*/
 name|rx_prods
 operator|.
 name|cqe_prod
 operator|=
-name|rx_comp_prod
+name|rx_cq_prod
 expr_stmt|;
-comment|/*htole16(rx_comp_prod);*/
 name|rx_prods
 operator|.
 name|sge_prod
 operator|=
-name|rx_sge_prod
+name|sge_prod
 expr_stmt|;
-comment|/*htole16(rx_sge_prod);*/
 name|wmb
 argument_list|()
 expr_stmt|;
@@ -64568,10 +64613,12 @@ name|sc
 argument_list|,
 name|BXE_EXTREME_RECV
 argument_list|,
-literal|"%s(): Wrote fp[%d] bd_prod = 0x%04X, "
-literal|"cqe_prod = 0x%04X, sge_prod = 0x%04X\n"
+literal|"%s(%d): Wrote fp[%02d] bd_prod = 0x%04X, "
+literal|"rx_cq_prod = 0x%04X, sge_prod = 0x%04X\n"
 argument_list|,
 name|__FUNCTION__
+argument_list|,
+name|curcpu
 argument_list|,
 name|fp
 operator|->
@@ -64579,9 +64626,9 @@ name|index
 argument_list|,
 name|bd_prod
 argument_list|,
-name|rx_comp_prod
+name|rx_cq_prod
 argument_list|,
-name|rx_sge_prod
+name|sge_prod
 argument_list|)
 expr_stmt|;
 block|}
@@ -64613,21 +64660,24 @@ modifier|*
 name|ifp
 decl_stmt|;
 name|uint16_t
-name|bd_cons
+name|rx_bd_cons
 decl_stmt|,
-name|bd_prod
-decl_stmt|,
-name|bd_prod_fw
+name|rx_bd_cons_idx
 decl_stmt|;
 name|uint16_t
-name|hw_comp_cons_idx
+name|rx_bd_prod
 decl_stmt|,
-name|sw_comp_cons_idx
-decl_stmt|,
-name|sw_comp_prod
+name|rx_bd_prod_idx
 decl_stmt|;
 name|uint16_t
-name|comp_ring_cons
+name|rx_cq_cons
+decl_stmt|,
+name|rx_cq_cons_idx
+decl_stmt|;
+name|uint16_t
+name|rx_cq_prod
+decl_stmt|,
+name|rx_cq_cons_sb
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -64657,56 +64707,38 @@ argument_list|(
 name|BXE_EXTREME_RECV
 argument_list|)
 expr_stmt|;
-comment|/* Get the sb's view of the RX completion consumer index. */
-name|hw_comp_cons_idx
+comment|/* Get the status block's view of the RX completion consumer index. */
+name|rx_cq_cons_sb
 operator|=
-name|le16toh
+name|bxe_rx_cq_cons
 argument_list|(
-operator|*
 name|fp
-operator|->
-name|rx_cons_sb
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|hw_comp_cons_idx
-operator|&
-name|USABLE_RCQ_ENTRIES_PER_PAGE
-operator|)
-operator|==
-name|USABLE_RCQ_ENTRIES_PER_PAGE
-condition|)
-name|hw_comp_cons_idx
-operator|++
-expr_stmt|;
-comment|/* Get working copies of the driver's view of the RX indices. */
-name|bd_cons
+comment|/* 	 * Get working copies of the driver's view of the 	 * RX indices. These are 16 bit values that are 	 * expected to increment from from 0 to	65535 	 * and then wrap-around to 0 again. 	 */
+name|rx_bd_cons
 operator|=
 name|fp
 operator|->
 name|rx_bd_cons
 expr_stmt|;
-name|bd_prod
-operator|=
-name|bd_prod_fw
+name|rx_bd_prod
 operator|=
 name|fp
 operator|->
 name|rx_bd_prod
 expr_stmt|;
-name|sw_comp_cons_idx
+name|rx_cq_cons
 operator|=
 name|fp
 operator|->
-name|rx_comp_cons
+name|rx_cq_cons
 expr_stmt|;
-name|sw_comp_prod
+name|rx_cq_prod
 operator|=
 name|fp
 operator|->
-name|rx_comp_prod
+name|rx_cq_prod
 expr_stmt|;
 name|DBPRINT
 argument_list|(
@@ -64716,22 +64748,24 @@ operator|(
 name|BXE_EXTREME_RECV
 operator|)
 argument_list|,
-literal|"%s(): fp[%d], bd_cons = 0x%04X, bd_prod = 0x%04X, "
-literal|"sw_comp_cons = 0x%04X, sw_comp_prod = 0x%04X\n"
+literal|"%s(%d): BEFORE: fp[%d], rx_bd_cons = 0x%04X, rx_bd_prod = 0x%04X, "
+literal|"rx_cq_cons_sw = 0x%04X, rx_cq_prod_sw = 0x%04X\n"
 argument_list|,
 name|__FUNCTION__
+argument_list|,
+name|curcpu
 argument_list|,
 name|fp
 operator|->
 name|index
 argument_list|,
-name|bd_cons
+name|rx_bd_cons
 argument_list|,
-name|bd_prod
+name|rx_bd_prod
 argument_list|,
-name|sw_comp_cons_idx
+name|rx_cq_cons
 argument_list|,
-name|sw_comp_prod
+name|rx_cq_prod
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Memory barrier to prevent speculative reads of the RX buffer 	 * from getting ahead of the index in the status block. 	 */
@@ -64741,9 +64775,9 @@ expr_stmt|;
 comment|/* 	 * Scan through the receive chain as long 	 * as there is work to do. 	 */
 while|while
 condition|(
-name|sw_comp_cons_idx
+name|rx_cq_cons
 operator|!=
-name|hw_comp_cons_idx
+name|rx_cq_cons_sb
 condition|)
 block|{
 name|struct
@@ -64764,26 +64798,26 @@ name|len
 decl_stmt|,
 name|pad
 decl_stmt|;
-comment|/* Convert the indices to an actual rx_bd index. */
-name|comp_ring_cons
+comment|/* 		 * Convert the 16 bit indices used by hardware 		 * into values that map to the arrays used by 		 * the driver (i.e. an index). 		 */
+name|rx_cq_cons_idx
 operator|=
 name|RCQ_ENTRY
 argument_list|(
-name|sw_comp_cons_idx
+name|rx_cq_cons
 argument_list|)
 expr_stmt|;
-name|bd_prod
+name|rx_bd_prod_idx
 operator|=
 name|RX_BD
 argument_list|(
-name|bd_prod
+name|rx_bd_prod
 argument_list|)
 expr_stmt|;
-name|bd_cons
+name|rx_bd_cons_idx
 operator|=
 name|RX_BD
 argument_list|(
-name|bd_cons
+name|rx_bd_cons
 argument_list|)
 expr_stmt|;
 name|wmb
@@ -64800,17 +64834,17 @@ operator|)
 operator|&
 name|fp
 operator|->
-name|rx_comp_chain
+name|rx_cq_chain
 index|[
 name|RCQ_PAGE
 argument_list|(
-name|comp_ring_cons
+name|rx_cq_cons_idx
 argument_list|)
 index|]
 index|[
 name|RCQ_IDX
 argument_list|(
-name|comp_ring_cons
+name|rx_cq_cons_idx
 argument_list|)
 index|]
 expr_stmt|;
@@ -64859,20 +64893,16 @@ endif|#
 directive|endif
 name|DBRUNIF
 argument_list|(
-operator|(
-name|cqe_fp_flags
-operator|==
+argument|(cqe_fp_flags ==
 literal|0
-operator|)
+argument|)
 argument_list|,
-name|BXE_PRINTF
-argument_list|(
-literal|"%s(): CQE received with null type/error flags!\n"
-argument_list|,
-name|__FUNCTION__
+argument|BXE_PRINTF(
+literal|"%s(): CQE received with null "
+literal|"type/error flags!\n"
+argument|, __FUNCTION__); 		    bxe_dump_cqe(fp, rx_cq_cons_idx, cqe)
 argument_list|)
-argument_list|)
-expr_stmt|;
+empty_stmt|;
 comment|/* Check the CQE type for slowpath or fastpath completion. */
 if|if
 condition|(
@@ -64973,9 +65003,9 @@ name|fp
 argument_list|,
 name|queue
 argument_list|,
-name|bd_cons
+name|rx_bd_cons_idx
 argument_list|,
-name|bd_prod
+name|rx_bd_prod_idx
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -65039,7 +65069,7 @@ name|len
 argument_list|,
 name|cqe
 argument_list|,
-name|comp_ring_cons
+name|rx_cq_cons_idx
 argument_list|)
 expr_stmt|;
 name|bxe_update_sge_prod
@@ -65064,14 +65094,14 @@ name|fp
 operator|->
 name|rx_mbuf_ptr
 index|[
-name|bd_cons
+name|rx_bd_cons_idx
 index|]
 expr_stmt|;
 name|fp
 operator|->
 name|rx_mbuf_ptr
 index|[
-name|bd_cons
+name|rx_bd_cons_idx
 index|]
 operator|=
 name|NULL
@@ -65125,7 +65155,7 @@ name|fp
 operator|->
 name|rx_mbuf_map
 index|[
-name|bd_cons
+name|rx_bd_cons_idx
 index|]
 argument_list|,
 name|BUS_DMASYNC_POSTREAD
@@ -65141,7 +65171,7 @@ name|fp
 operator|->
 name|rx_mbuf_map
 index|[
-name|bd_cons
+name|rx_bd_cons_idx
 index|]
 argument_list|)
 expr_stmt|;
@@ -65188,7 +65218,7 @@ name|fp
 argument_list|,
 name|m
 argument_list|,
-name|bd_prod
+name|rx_bd_prod_idx
 argument_list|)
 condition|)
 block|{
@@ -65211,6 +65241,7 @@ name|sc
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* ToDo: Find alterntive to panic(). */
 name|panic
 argument_list|(
 literal|"bxe%d: Can't reuse RX mbuf!\n"
@@ -65238,7 +65269,7 @@ name|fp
 argument_list|,
 name|NULL
 argument_list|,
-name|bd_prod
+name|rx_bd_prod_idx
 argument_list|)
 argument_list|)
 condition|)
@@ -65260,7 +65291,7 @@ name|fp
 argument_list|,
 name|m
 argument_list|,
-name|bd_prod
+name|rx_bd_prod_idx
 argument_list|)
 argument_list|)
 condition|)
@@ -65516,7 +65547,7 @@ name|bxe_validate_rx_packet
 argument_list|(
 name|fp
 argument_list|,
-name|comp_ring_cons
+name|rx_cq_cons
 argument_list|,
 name|cqe
 argument_list|,
@@ -65530,6 +65561,7 @@ operator|->
 name|if_ipackets
 operator|++
 expr_stmt|;
+comment|/* ToDo: Any potential locking issues here? */
 comment|/* Pass the frame to the stack. */
 call|(
 modifier|*
@@ -65554,25 +65586,18 @@ expr_stmt|;
 block|}
 name|bxe_rxeof_next_rx
 label|:
-name|bd_prod
+name|rx_bd_prod
 operator|=
 name|NEXT_RX_BD
 argument_list|(
-name|bd_prod
+name|rx_bd_prod
 argument_list|)
 expr_stmt|;
-name|bd_prod_fw
+name|rx_bd_cons
 operator|=
 name|NEXT_RX_BD
 argument_list|(
-name|bd_prod_fw
-argument_list|)
-expr_stmt|;
-name|bd_cons
-operator|=
-name|NEXT_RX_BD
-argument_list|(
-name|bd_cons
+name|rx_bd_cons
 argument_list|)
 expr_stmt|;
 name|DBRUN
@@ -65583,18 +65608,18 @@ argument_list|)
 expr_stmt|;
 name|bxe_rxeof_next_cqe
 label|:
-name|sw_comp_prod
+name|rx_cq_prod
 operator|=
 name|NEXT_RCQ_IDX
 argument_list|(
-name|sw_comp_prod
+name|rx_cq_prod
 argument_list|)
 expr_stmt|;
-name|sw_comp_cons_idx
+name|rx_cq_cons
 operator|=
 name|NEXT_RCQ_IDX
 argument_list|(
-name|sw_comp_cons_idx
+name|rx_cq_cons
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Memory barrier to prevent speculative reads of the RX buffer 		 * from getting ahead of the index in the status block. 		 */
@@ -65607,25 +65632,25 @@ name|fp
 operator|->
 name|rx_bd_cons
 operator|=
-name|bd_cons
+name|rx_bd_cons
 expr_stmt|;
 name|fp
 operator|->
 name|rx_bd_prod
 operator|=
-name|bd_prod_fw
+name|rx_bd_prod
 expr_stmt|;
 name|fp
 operator|->
-name|rx_comp_cons
+name|rx_cq_cons
 operator|=
-name|sw_comp_cons_idx
+name|rx_cq_cons
 expr_stmt|;
 name|fp
 operator|->
-name|rx_comp_prod
+name|rx_cq_prod
 operator|=
-name|sw_comp_prod
+name|rx_cq_prod
 expr_stmt|;
 name|DBPRINT
 argument_list|(
@@ -65635,22 +65660,24 @@ operator|(
 name|BXE_EXTREME_RECV
 operator|)
 argument_list|,
-literal|"%s(): fp[%d], bd_cons = 0x%04X, bd_prod = 0x%04X, "
-literal|"sw_comp_cons = 0x%04X, sw_comp_prod = 0x%04X\n"
+literal|"%s(%d):  AFTER: fp[%d], rx_bd_cons = 0x%04X, rx_bd_prod = 0x%04X, "
+literal|"rx_cq_cons_sw = 0x%04X, rx_cq_prod_sw = 0x%04X\n"
 argument_list|,
 name|__FUNCTION__
+argument_list|,
+name|curcpu
 argument_list|,
 name|fp
 operator|->
 name|index
 argument_list|,
-name|bd_cons
+name|rx_bd_cons
 argument_list|,
-name|bd_prod
+name|rx_bd_prod
 argument_list|,
-name|sw_comp_cons_idx
+name|rx_cq_cons
 argument_list|,
-name|sw_comp_prod
+name|rx_cq_prod
 argument_list|)
 expr_stmt|;
 comment|/* Update producers */
@@ -65660,9 +65687,13 @@ name|sc
 argument_list|,
 name|fp
 argument_list|,
-name|bd_prod_fw
+name|fp
+operator|->
+name|rx_bd_prod
 argument_list|,
-name|sw_comp_prod
+name|fp
+operator|->
+name|rx_cq_prod
 argument_list|,
 name|fp
 operator|->
@@ -66139,7 +66170,7 @@ decl_stmt|;
 name|struct
 name|eth_rx_bd
 modifier|*
-name|rxbd
+name|rx_bd
 decl_stmt|;
 name|int
 name|rc
@@ -66315,7 +66346,7 @@ name|bxe_get_buf_exit
 goto|;
 block|}
 comment|/* Setup the rx_bd for the first segment. */
-name|rxbd
+name|rx_bd
 operator|=
 operator|&
 name|fp
@@ -66334,7 +66365,7 @@ name|prod
 argument_list|)
 index|]
 expr_stmt|;
-name|rxbd
+name|rx_bd
 operator|->
 name|addr_lo
 operator|=
@@ -66348,7 +66379,7 @@ name|ds_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|rxbd
+name|rx_bd
 operator|->
 name|addr_hi
 operator|=
@@ -67036,7 +67067,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|bxe_sysctl_dump_cqe_chain
+name|bxe_sysctl_dump_rx_cq_chain
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
@@ -67108,7 +67139,7 @@ operator|)
 operator|&&
 operator|(
 name|result
-operator|<=
+operator|<
 name|sc
 operator|->
 name|num_queues
@@ -67125,13 +67156,13 @@ index|[
 name|result
 index|]
 expr_stmt|;
-name|bxe_dump_cqe_chain
+name|bxe_dump_rx_cq_chain
 argument_list|(
 name|fp
 argument_list|,
 literal|0
 argument_list|,
-name|USABLE_RX_BD
+name|TOTAL_RCQ_ENTRIES
 argument_list|)
 expr_stmt|;
 block|}
@@ -67150,7 +67181,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|bxe_sysctl_dump_rx_chain
+name|bxe_sysctl_dump_rx_bd_chain
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
@@ -67222,7 +67253,7 @@ operator|)
 operator|&&
 operator|(
 name|result
-operator|<=
+operator|<
 name|sc
 operator|->
 name|num_queues
@@ -67239,13 +67270,13 @@ index|[
 name|result
 index|]
 expr_stmt|;
-name|bxe_dump_rx_chain
+name|bxe_dump_rx_bd_chain
 argument_list|(
 name|fp
 argument_list|,
 literal|0
 argument_list|,
-name|USABLE_RX_BD
+name|TOTAL_RX_BD
 argument_list|)
 expr_stmt|;
 block|}
@@ -67336,7 +67367,7 @@ operator|)
 operator|&&
 operator|(
 name|result
-operator|<=
+operator|<
 name|sc
 operator|->
 name|num_queues
@@ -67359,7 +67390,7 @@ name|fp
 argument_list|,
 literal|0
 argument_list|,
-name|USABLE_TX_BD
+name|TOTAL_TX_BD
 argument_list|)
 expr_stmt|;
 block|}
@@ -68460,7 +68491,7 @@ name|children
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"dump_rx_chain"
+literal|"dump_rx_bd_chain"
 argument_list|,
 name|CTLTYPE_INT
 operator||
@@ -68474,7 +68505,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|bxe_sysctl_dump_rx_chain
+name|bxe_sysctl_dump_rx_bd_chain
 argument_list|,
 literal|"I"
 argument_list|,
@@ -68489,7 +68520,7 @@ name|children
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"dump_cqe_chain"
+literal|"dump_rx_cq_chain"
 argument_list|,
 name|CTLTYPE_INT
 operator||
@@ -68503,7 +68534,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|bxe_sysctl_dump_cqe_chain
+name|bxe_sysctl_dump_rx_cq_chain
 argument_list|,
 literal|"I"
 argument_list|,
@@ -69534,7 +69565,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|bxe_dump_cqe_locked
+name|bxe_dump_cqe
 argument_list|(
 name|fp
 argument_list|,
@@ -70034,113 +70065,17 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|bxe_dump_mbuf_data
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|,
-name|int
-name|len
-parameter_list|)
-block|{
-name|uint8_t
-modifier|*
-name|ptr
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-name|ptr
-operator|=
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-name|uint8_t
-operator|*
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\nmbuf->m_data:"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n0x"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
+begin_if
+if|#
+directive|if
 literal|0
-init|;
-name|i
-operator|<
-name|len
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|i
-operator|!=
-literal|0
-operator|&&
-name|i
-operator|%
-literal|40
-operator|==
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"\n0x"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|i
-operator|!=
-literal|0
-operator|&&
-name|i
-operator|%
-literal|6
-operator|==
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|" 0x"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%02x"
-argument_list|,
-operator|*
-name|ptr
-operator|++
-argument_list|)
-expr_stmt|;
-block|}
-name|printf
-argument_list|(
-literal|"\n\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+end_if
+
+begin_endif
+unit|static void bxe_dump_mbuf_data(struct mbuf *m, int len) { 	uint8_t *ptr; 	int i;  	ptr = mtod(m, uint8_t *); 	printf("\nmbuf->m_data:"); 	printf("\n0x"); 	for (i = 0; i< len; i++){ 		if (i != 0&& i % 40 == 0) 			printf("\n0x"); 		else if (i != 0&& i % 6 == 0) 			printf(" 0x"); 		printf("%02x", *ptr++); 	} 	printf("\n\n"); }
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Prints out information about an mbuf.  *  * Returns:  *   Nothing.  */
@@ -70159,19 +70094,7 @@ argument|struct bxe_softc *sc
 argument_list|,
 argument|struct mbuf *m
 argument_list|)
-block|{ 	struct
-name|mbuf
-operator|*
-name|mp
-block|,
-operator|*
-name|mx
-block|;
-name|int
-name|i
-block|,
-name|n
-block|;
+block|{
 if|if
 condition|(
 name|m
@@ -70186,132 +70109,39 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|mp
-operator|=
-name|m
-expr_stmt|;
 end_expr_stmt
 
-begin_for
-for|for
-control|(
-name|i
-operator|=
-literal|0
-operator|,
-name|mx
-operator|=
-name|m
-init|;
-name|mx
-condition|;
-name|i
-operator|++
-control|)
-name|mx
-operator|=
-name|mx
-operator|->
-name|m_next
-expr_stmt|;
-end_for
-
-begin_for
-for|for
-control|(
-name|n
-operator|=
-literal|0
-operator|,
-name|mx
-operator|=
-name|m
-init|;
-name|mx
-condition|;
-name|n
-operator|++
-control|)
-name|mx
-operator|=
-name|mx
-operator|->
-name|m_nextpkt
-expr_stmt|;
-end_for
-
-begin_expr_stmt
-name|printf
-argument_list|(
-literal|"There are %d mbufs on the mbuf chain& %d packets "
-literal|"on the mbuf queue.\n"
-argument_list|,
-name|i
-argument_list|,
-name|n
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_for
-for|for
-control|(
-name|n
-operator|=
-literal|0
-operator|,
-name|mx
-operator|=
-name|m
-init|;
-name|mx
-condition|;
-name|n
-operator|++
-operator|,
-name|i
-operator|=
-literal|0
-control|)
-block|{
-name|printf
-argument_list|(
-literal|"packet#%d on packet queue\n"
-argument_list|,
-name|n
-argument_list|)
-expr_stmt|;
+begin_while
 while|while
 condition|(
-name|mp
+name|m
 condition|)
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"mbuf#%d: %p, m_len = %d, m_flags = 0x%b, m_data = %p\n"
+literal|"mbuf: %p, m_len = %d, m_flags = 0x%b, "
+literal|"m_data = %p\n"
 argument_list|,
-name|i
+name|m
 argument_list|,
-name|mp
-argument_list|,
-name|mp
+name|m
 operator|->
 name|m_len
 argument_list|,
-name|mp
+name|m
 operator|->
 name|m_flags
 argument_list|,
 literal|"\20\1M_EXT\2M_PKTHDR\3M_EOR\4M_RDONLY"
 argument_list|,
-name|mp
+name|m
 operator|->
 name|m_data
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mp
+name|m
 operator|->
 name|m_flags
 operator|&
@@ -70320,22 +70150,24 @@ condition|)
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"- m_pkthdr: len = %d, flags = 0x%b, csum_flags = %b\n"
+literal|"- m_pkthdr: len = %d, flags = 0x%b, "
+literal|"csum_flags = %b\n"
 argument_list|,
-name|mp
+name|m
 operator|->
 name|m_pkthdr
 operator|.
 name|len
 argument_list|,
-name|mp
+name|m
 operator|->
 name|m_flags
 argument_list|,
-literal|"\20\12M_BCAST\13M_MCAST\14M_FRAG\15M_FIRSTFRAG"
-literal|"\16M_LASTFRAG\21M_VLANTAG\22M_PROMISC\23M_NOFREE"
+literal|"\20\12M_BCAST\13M_MCAST\14M_FRAG"
+literal|"\15M_FIRSTFRAG\16M_LASTFRAG\21M_VLANTAG"
+literal|"\22M_PROMISC\23M_NOFREE"
 argument_list|,
-name|mp
+name|m
 operator|->
 name|m_pkthdr
 operator|.
@@ -70343,13 +70175,14 @@ name|csum_flags
 argument_list|,
 literal|"\20\1CSUM_IP\2CSUM_TCP\3CSUM_UDP\4CSUM_IP_FRAGS"
 literal|"\5CSUM_FRAGMENT\6CSUM_TSO\11CSUM_IP_CHECKED"
-literal|"\12CSUM_IP_VALID\13CSUM_DATA_VALID\14CSUM_PSEUDO_HDR"
+literal|"\12CSUM_IP_VALID\13CSUM_DATA_VALID"
+literal|"\14CSUM_PSEUDO_HDR"
 argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|mp
+name|m
 operator|->
 name|m_flags
 operator|&
@@ -70360,13 +70193,13 @@ name|BXE_PRINTF
 argument_list|(
 literal|"- m_ext: %p, ext_size = %d, type = "
 argument_list|,
-name|mp
+name|m
 operator|->
 name|m_ext
 operator|.
 name|ext_buf
 argument_list|,
-name|mp
+name|m
 operator|->
 name|m_ext
 operator|.
@@ -70375,7 +70208,7 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|mp
+name|m
 operator|->
 name|m_ext
 operator|.
@@ -70450,7 +70283,7 @@ name|EXT_MOD_TYPE
 case|:
 name|printf
 argument_list|(
-literal|"EXT_MDD_TYPE\n"
+literal|"EXT_MOD_TYPE\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -70480,31 +70313,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|bxe_dump_mbuf_data
-argument_list|(
-name|mp
-argument_list|,
-literal|64
-argument_list|)
-expr_stmt|;
-name|mp
+name|m
 operator|=
-name|mp
+name|m
 operator|->
 name|m_next
 expr_stmt|;
-name|i
-operator|++
-expr_stmt|;
 block|}
-name|mx
-operator|=
-name|mx
-operator|->
-name|m_nextpkt
-expr_stmt|;
-block|}
-end_for
+end_while
 
 begin_comment
 unit|}
@@ -70521,7 +70337,7 @@ end_macro
 
 begin_function
 name|void
-name|bxe_dump_rxbd_locked
+name|bxe_dump_rxbd
 parameter_list|(
 name|struct
 name|bxe_fastpath
@@ -70534,20 +70350,18 @@ parameter_list|,
 name|struct
 name|eth_rx_bd
 modifier|*
-name|rxbd
+name|rx_bd
 parameter_list|)
 block|{
 name|struct
 name|bxe_softc
 modifier|*
 name|sc
-decl_stmt|;
-name|sc
-operator|=
+init|=
 name|fp
 operator|->
 name|sc
-expr_stmt|;
+decl_stmt|;
 comment|/* Check if index out of range. */
 if|if
 condition|(
@@ -70555,9 +70369,10 @@ name|idx
 operator|>
 name|MAX_RX_BD
 condition|)
+block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"fp[%d].rx_bd[0x%04X]: Invalid rx_bd index!\n"
+literal|"fp[%02d].rx_bd[0x%04X] XX: Invalid rx_bd index!\n"
 argument_list|,
 name|fp
 operator|->
@@ -70566,9 +70381,23 @@ argument_list|,
 name|idx
 argument_list|)
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|idx
+operator|&
+name|RX_DESC_MASK
+operator|)
+operator|>=
+name|USABLE_RX_BD_PER_PAGE
+condition|)
+block|{
+comment|/* RX Chain page pointer. */
 name|BXE_PRINTF
 argument_list|(
-literal|"fp[%d].rx_bd[0x%04X]: 0x%08X:%08X\n"
+literal|"fp[%02d].rx_bd[0x%04X] NP: haddr=0x%08X:%08X\n"
 argument_list|,
 name|fp
 operator|->
@@ -70576,15 +70405,38 @@ name|index
 argument_list|,
 name|idx
 argument_list|,
-name|rxbd
+name|rx_bd
 operator|->
 name|addr_hi
 argument_list|,
-name|rxbd
+name|rx_bd
 operator|->
 name|addr_lo
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|BXE_PRINTF
+argument_list|(
+literal|"fp[%02d].rx_bd[0x%04X] RX: haddr=0x%08X:%08X\n"
+argument_list|,
+name|fp
+operator|->
+name|index
+argument_list|,
+name|idx
+argument_list|,
+name|rx_bd
+operator|->
+name|addr_hi
+argument_list|,
+name|rx_bd
+operator|->
+name|addr_lo
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -70599,7 +70451,7 @@ argument_list|(
 argument|(noinline)
 argument_list|)
 name|void
-name|bxe_dump_cqe_locked
+name|bxe_dump_cqe
 argument_list|(
 argument|struct bxe_fastpath *fp
 argument_list|,
@@ -70611,8 +70463,6 @@ block|{ 	struct
 name|bxe_softc
 operator|*
 name|sc
-block|;
-name|sc
 operator|=
 name|fp
 operator|->
@@ -70622,13 +70472,13 @@ if|if
 condition|(
 name|idx
 operator|>
-name|MAX_RX_BD
+name|MAX_RCQ_ENTRIES
 condition|)
 block|{
 comment|/* Index out of range. */
 name|BXE_PRINTF
 argument_list|(
-literal|"fp[%d].rx_cqe[0x%04X]: Invalid rx_cqe index!\n"
+literal|"fp[%02d].rx_cqe[0x%04X]: Invalid rx_cqe index!\n"
 argument_list|,
 name|fp
 operator|->
@@ -70647,22 +70497,40 @@ condition|(
 operator|(
 name|idx
 operator|&
-name|USABLE_RX_BD_PER_PAGE
+name|USABLE_RCQ_ENTRIES_PER_PAGE
 operator|)
 operator|==
-name|USABLE_RX_BD_PER_PAGE
+name|USABLE_RCQ_ENTRIES_PER_PAGE
 condition|)
 block|{
 comment|/* CQE next page pointer. */
 name|BXE_PRINTF
 argument_list|(
-literal|"fp[%d].rx_cqe[0x%04X]: Next page pointer.\n"
+literal|"fp[%02d].rx_cqe[0x%04X] NP: haddr=0x%08X:%08X\n"
 argument_list|,
 name|fp
 operator|->
 name|index
 argument_list|,
 name|idx
+argument_list|,
+name|le32toh
+argument_list|(
+name|cqe
+operator|->
+name|next_page_cqe
+operator|.
+name|addr_hi
+argument_list|)
+argument_list|,
+name|le32toh
+argument_list|(
+name|cqe
+operator|->
+name|next_page_cqe
+operator|.
+name|addr_lo
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -70674,9 +70542,9 @@ block|{
 comment|/* Normal CQE. */
 name|BXE_PRINTF
 argument_list|(
-literal|"fp[%d].rx_cqe[0x%04X]: error_flags = 0x%b, "
-literal|"pkt_len = 0x%04X, status_flags = 0x%02X, vlan = 0x%04X "
-literal|"rss_hash = 0x%08X\n"
+literal|"fp[%02d].rx_cqe[0x%04X] CQ: error_flags=0x%b, "
+literal|"pkt_len=0x%04X, status_flags=0x%02X, vlan=0x%04X "
+literal|"rss_hash=0x%08X\n"
 argument_list|,
 name|fp
 operator|->
@@ -70731,7 +70599,7 @@ end_else
 
 begin_comment
 unit|}
-comment|/*  * Prints out information about a parsing BD.  *  * Returns:  *   Nothing.  */
+comment|/*  * Prints out information about a TX parsing BD.  *  * Returns:  *   Nothing.  */
 end_comment
 
 begin_macro
@@ -70744,12 +70612,12 @@ end_macro
 
 begin_function
 name|void
-name|bxe_dump_pbd_locked
+name|bxe_dump_tx_parsing_bd
 parameter_list|(
 name|struct
-name|bxe_softc
+name|bxe_fastpath
 modifier|*
-name|sc
+name|fp
 parameter_list|,
 name|int
 name|idx
@@ -70757,54 +70625,91 @@ parameter_list|,
 name|struct
 name|eth_tx_parse_bd
 modifier|*
-name|pbd
+name|p_bd
 parameter_list|)
+block|{
+name|struct
+name|bxe_softc
+modifier|*
+name|sc
+init|=
+name|fp
+operator|->
+name|sc
+decl_stmt|;
+if|if
+condition|(
+name|idx
+operator|>
+name|MAX_TX_BD
+condition|)
+block|{
+comment|/* Index out of range. */
+name|BXE_PRINTF
+argument_list|(
+literal|"fp[%02d].tx_bd[0x%04X] XX: Invalid tx_bd index!\n"
+argument_list|,
+name|fp
+operator|->
+name|index
+argument_list|,
+name|idx
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"---------pbd[0x%04X]: gdata = 0x%b, tcp_flags = 0x%b, "
-literal|"ip_hlen = %d, cs_offset = %d, total_hlen = %d, lso_mss = 0x%04X, "
-literal|"tcp_pseudo_csum = 0x%04X, ip_id = 0x%04X\n"
+literal|"fp[%02d]:tx_bd[0x%04X] PB: global_data=0x%b, "
+literal|"tcp_flags=0x%b, ip_hlen=%04d, total_hlen=%04d, "
+literal|"tcp_pseudo_csum=0x%04X, lso_mss=0x%04X, ip_id=0x%04X, "
+literal|"tcp_send_seq=0x%08X\n"
+argument_list|,
+name|fp
+operator|->
+name|index
 argument_list|,
 name|idx
 argument_list|,
-name|pbd
+name|p_bd
 operator|->
 name|global_data
 argument_list|,
 name|BXE_ETH_TX_PARSE_BD_GLOBAL_DATA_PRINTFB
 argument_list|,
-name|pbd
+name|p_bd
 operator|->
 name|tcp_flags
 argument_list|,
 name|BXE_ETH_TX_PARSE_BD_TCP_FLAGS_PRINTFB
 argument_list|,
-name|pbd
+name|p_bd
 operator|->
 name|ip_hlen
 argument_list|,
-comment|/* t48 pbd->cs_offset*/
-literal|0
-comment|/*zz*/
-argument_list|,
-name|pbd
+name|p_bd
 operator|->
 name|total_hlen
 argument_list|,
-name|pbd
-operator|->
-name|lso_mss
-argument_list|,
-name|pbd
+name|p_bd
 operator|->
 name|tcp_pseudo_csum
 argument_list|,
-name|pbd
+name|p_bd
+operator|->
+name|lso_mss
+argument_list|,
+name|p_bd
 operator|->
 name|ip_id
+argument_list|,
+name|p_bd
+operator|->
+name|tcp_send_seq
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -70819,19 +70724,17 @@ argument_list|(
 argument|(noinline)
 argument_list|)
 name|void
-name|bxe_dump_txbd_locked
+name|bxe_dump_txbd
 argument_list|(
 argument|struct bxe_fastpath *fp
 argument_list|,
 argument|int idx
 argument_list|,
-argument|struct eth_tx_bd *txbd
+argument|union eth_tx_bd_types *tx_bd
 argument_list|)
 block|{ 	struct
 name|bxe_softc
 operator|*
-name|sc
-block|;
 name|sc
 operator|=
 name|fp
@@ -70848,7 +70751,11 @@ block|{
 comment|/* Index out of range. */
 name|BXE_PRINTF
 argument_list|(
-literal|"tx_bd[0x%04X]: Invalid tx_bd index!\n"
+literal|"fp[%02d]:tx_bd[0x%04X] XX: Invalid tx_bd index!\n"
+argument_list|,
+name|fp
+operator|->
+name|index
 argument_list|,
 name|idx
 argument_list|)
@@ -70869,11 +70776,10 @@ operator|==
 name|USABLE_TX_BD_PER_PAGE
 condition|)
 block|{
-comment|/* TX Chain page pointer. */
+comment|/* TX next page BD. */
 name|BXE_PRINTF
 argument_list|(
-literal|"fp[02%d]:tx_bd[0x%04X]: haddr = 0x%08X:%08X, "
-literal|"chain page pointer\n"
+literal|"fp[%02d]:tx_bd[0x%04X] NP: haddr=0x%08X:%08X\n"
 argument_list|,
 name|fp
 operator|->
@@ -70881,13 +70787,99 @@ name|index
 argument_list|,
 name|idx
 argument_list|,
-name|txbd
+name|tx_bd
 operator|->
+name|next_bd
+operator|.
 name|addr_hi
 argument_list|,
-name|txbd
+name|tx_bd
 operator|->
+name|next_bd
+operator|.
 name|addr_lo
+argument_list|)
+expr_stmt|;
+block|}
+end_elseif
+
+begin_elseif
+elseif|else
+if|if
+condition|(
+operator|(
+name|tx_bd
+operator|->
+name|start_bd
+operator|.
+name|bd_flags
+operator|.
+name|as_bitfield
+operator|&
+name|ETH_TX_BD_FLAGS_START_BD
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* TX start BD. */
+name|BXE_PRINTF
+argument_list|(
+literal|"fp[%02d]:tx_bd[0x%04X] ST: haddr=0x%08X:%08X, "
+literal|"nbd=%02d, nbytes=%05d, vlan/idx=0x%04X, flags=0x%b, "
+literal|"gendata=0x%02X\n"
+argument_list|,
+name|fp
+operator|->
+name|index
+argument_list|,
+name|idx
+argument_list|,
+name|tx_bd
+operator|->
+name|start_bd
+operator|.
+name|addr_hi
+argument_list|,
+name|tx_bd
+operator|->
+name|start_bd
+operator|.
+name|addr_lo
+argument_list|,
+name|tx_bd
+operator|->
+name|start_bd
+operator|.
+name|nbd
+argument_list|,
+name|tx_bd
+operator|->
+name|start_bd
+operator|.
+name|nbytes
+argument_list|,
+name|tx_bd
+operator|->
+name|start_bd
+operator|.
+name|vlan
+argument_list|,
+name|tx_bd
+operator|->
+name|start_bd
+operator|.
+name|bd_flags
+operator|.
+name|as_bitfield
+argument_list|,
+name|BXE_ETH_TX_BD_FLAGS_PRINTFB
+argument_list|,
+name|tx_bd
+operator|->
+name|start_bd
+operator|.
+name|general_data
 argument_list|)
 expr_stmt|;
 block|}
@@ -70896,11 +70888,11 @@ end_elseif
 begin_else
 else|else
 block|{
-comment|/* Normal tx_bd entry. */
+comment|/* Regular TX BD. */
 name|BXE_PRINTF
 argument_list|(
-literal|"fp[%02d]:tx_bd[0x%04X]: haddr = 0x%08X:%08X, "
-literal|"nbytes = %d, nbd = %d, flags = 0x%b, gendata = 0x%02X\n"
+literal|"fp[%02d]:tx_bd[0x%04X] TX: haddr=0x%08X:%08X, "
+literal|"total_pkt_bytes=%05d, nbytes=%05d\n"
 argument_list|,
 name|fp
 operator|->
@@ -70908,28 +70900,29 @@ name|index
 argument_list|,
 name|idx
 argument_list|,
-name|txbd
+name|tx_bd
 operator|->
+name|reg_bd
+operator|.
 name|addr_hi
 argument_list|,
-name|txbd
+name|tx_bd
 operator|->
+name|reg_bd
+operator|.
 name|addr_lo
 argument_list|,
-name|txbd
+name|tx_bd
 operator|->
+name|reg_bd
+operator|.
+name|total_pkt_bytes
+argument_list|,
+name|tx_bd
+operator|->
+name|reg_bd
+operator|.
 name|nbytes
-argument_list|,
-comment|/* t48 txbd->nbd*/
-literal|0
-argument_list|,
-comment|/* t48 txbd->bd_flags.as_bitfield*/
-literal|0
-argument_list|,
-name|BXE_ETH_TX_BD_FLAGS_PRINTFB
-argument_list|,
-comment|/*t48 txbd->general_data*/
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -70968,11 +70961,15 @@ name|struct
 name|bxe_softc
 modifier|*
 name|sc
+init|=
+name|fp
+operator|->
+name|sc
 decl_stmt|;
-name|struct
-name|eth_tx_bd
+name|union
+name|eth_tx_bd_types
 modifier|*
-name|txbd
+name|tx_bd
 decl_stmt|;
 name|uint32_t
 name|val_hi
@@ -70983,17 +70980,9 @@ name|int
 name|i
 decl_stmt|,
 name|parsing_bd
-decl_stmt|;
-name|sc
-operator|=
-name|fp
-operator|->
-name|sc
-expr_stmt|;
-name|parsing_bd
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 comment|/* First some info about the tx_bd chain structure. */
 name|BXE_PRINTF
 argument_list|(
@@ -71091,7 +71080,7 @@ name|i
 operator|++
 control|)
 block|{
-name|txbd
+name|tx_bd
 operator|=
 operator|&
 name|fp
@@ -71109,26 +71098,50 @@ argument_list|(
 name|tx_bd_prod
 argument_list|)
 index|]
-operator|.
-name|reg_bd
 expr_stmt|;
 if|if
 condition|(
 name|parsing_bd
 condition|)
 block|{
-name|bxe_dump_pbd_locked
-argument_list|(
-name|sc
-argument_list|,
-name|tx_bd_prod
-argument_list|,
+name|struct
+name|eth_tx_parse_bd
+modifier|*
+name|p_bd
+decl_stmt|;
+name|p_bd
+operator|=
 operator|(
 expr|struct
 name|eth_tx_parse_bd
 operator|*
 operator|)
-name|txbd
+operator|&
+name|fp
+operator|->
+name|tx_bd_chain
+index|[
+name|TX_PAGE
+argument_list|(
+name|tx_bd_prod
+argument_list|)
+index|]
+index|[
+name|TX_IDX
+argument_list|(
+name|tx_bd_prod
+argument_list|)
+index|]
+operator|.
+name|parse_bd
+expr_stmt|;
+name|bxe_dump_tx_parsing_bd
+argument_list|(
+name|fp
+argument_list|,
+name|tx_bd_prod
+argument_list|,
+name|p_bd
 argument_list|)
 expr_stmt|;
 name|parsing_bd
@@ -71138,38 +71151,51 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|bxe_dump_txbd_locked
+name|bxe_dump_txbd
 argument_list|(
 name|fp
 argument_list|,
 name|tx_bd_prod
 argument_list|,
-name|txbd
+name|tx_bd
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-comment|/*t48 txbd->bd_flags.as_bitfield&*/
 operator|(
-name|ETH_TX_BD_FLAGS_IP_CSUM
-comment|/* t48 | ETH_TX_BD_FLAGS_TCP_CSUM*/
+name|tx_bd
+operator|->
+name|start_bd
+operator|.
+name|bd_flags
+operator|.
+name|as_bitfield
+operator|&
+name|ETH_TX_BD_FLAGS_START_BD
 operator|)
+operator|!=
+literal|0
 condition|)
+comment|/* 				 * There is always a parsing BD following the 				 * tx_bd with the start bit set. 				 */
 name|parsing_bd
 operator|=
 literal|1
 expr_stmt|;
 block|}
+comment|/* Don't skip next page pointers. */
 name|tx_bd_prod
 operator|=
-name|TX_BD
-argument_list|(
-name|NEXT_TX_BD
-argument_list|(
+operator|(
+operator|(
 name|tx_bd_prod
-argument_list|)
-argument_list|)
+operator|+
+literal|1
+operator|)
+operator|&
+name|MAX_TX_BD
+operator|)
 expr_stmt|;
+comment|/* tx_bd_prod = TX_BD(NEXT_TX_BD(tx_bd_prod)); */
 block|}
 name|BXE_PRINTF
 argument_list|(
@@ -71192,11 +71218,11 @@ argument_list|(
 argument|(noinline)
 argument_list|)
 name|void
-name|bxe_dump_cqe_chain
+name|bxe_dump_rx_cq_chain
 argument_list|(
 argument|struct bxe_fastpath *fp
 argument_list|,
-argument|int rx_cqe_prod
+argument|int rx_cq_prod
 argument_list|,
 argument|int count
 argument_list|)
@@ -71217,12 +71243,6 @@ block|;
 name|int
 name|i
 block|;
-name|sc
-operator|=
-name|fp
-operator|->
-name|sc
-block|;
 comment|/* First some info about the tx_bd chain structure. */
 name|BXE_PRINTF
 argument_list|(
@@ -71231,14 +71251,46 @@ literal|"   CQE  Chain   "
 literal|"----------------------------\n"
 argument_list|)
 block|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NUM_RCQ_PAGES
+condition|;
+name|i
+operator|++
+control|)
+block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"----- CQE Chain -----\n"
+literal|"fp[%02d]->rx_cq_chain_paddr[%d] = 0x%jX\n"
+argument_list|,
+name|fp
+operator|->
+name|index
+argument_list|,
+name|i
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|fp
+operator|->
+name|rx_cq_chain_paddr
+index|[
+name|i
+index|]
 argument_list|)
-block|;
+expr_stmt|;
+block|}
 name|BXE_PRINTF
 argument_list|(
-literal|"page size = 0x%08X, cq chain pages = 0x%08X\n"
+literal|"page size       = 0x%08X, cq chain pages    "
+literal|"     = 0x%08X\n"
 argument_list|,
 operator|(
 name|uint32_t
@@ -71250,7 +71302,10 @@ name|uint32_t
 operator|)
 name|NUM_RCQ_PAGES
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|BXE_PRINTF
 argument_list|(
 literal|"cqe_bd per page = 0x%08X, usable cqe_bd per "
@@ -71266,26 +71321,37 @@ name|uint32_t
 operator|)
 name|USABLE_RCQ_ENTRIES_PER_PAGE
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|BXE_PRINTF
 argument_list|(
-literal|"total cqe_bd = 0x%08X\n"
+literal|"total cqe_bd    = 0x%08X\n"
 argument_list|,
 operator|(
 name|uint32_t
 operator|)
 name|TOTAL_RCQ_ENTRIES
 argument_list|)
-block|;
-comment|/* Now the RXCQE entries themselves. */
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Now the CQE entries themselves. */
+end_comment
+
+begin_expr_stmt
 name|BXE_PRINTF
 argument_list|(
 literal|"----------------------------"
 literal|"    CQE Data    "
 literal|"----------------------------\n"
 argument_list|)
-block|;
-comment|/* Now print out the rx_bd's themselves. */
+expr_stmt|;
+end_expr_stmt
+
+begin_for
 for|for
 control|(
 name|i
@@ -71294,7 +71360,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|10
+name|count
 condition|;
 name|i
 operator|++
@@ -71310,67 +71376,46 @@ operator|)
 operator|&
 name|fp
 operator|->
-name|rx_comp_chain
-index|[
-literal|0
-index|]
-index|[
-name|i
-index|]
-expr_stmt|;
-name|bxe_dump_cqe_locked
-argument_list|(
-name|fp
-argument_list|,
-name|rx_cqe_prod
-argument_list|,
-name|cqe
-argument_list|)
-expr_stmt|;
-name|cqe
-operator|=
-operator|(
-expr|union
-name|eth_rx_cqe
-operator|*
-operator|)
-operator|&
-name|fp
-operator|->
-name|rx_comp_chain
+name|rx_cq_chain
 index|[
 name|RCQ_PAGE
 argument_list|(
-name|rx_cqe_prod
+name|rx_cq_prod
 argument_list|)
 index|]
 index|[
 name|RCQ_IDX
 argument_list|(
-name|rx_cqe_prod
+name|rx_cq_prod
 argument_list|)
 index|]
 expr_stmt|;
-name|bxe_dump_cqe_locked
+name|bxe_dump_cqe
 argument_list|(
 name|fp
 argument_list|,
-name|rx_cqe_prod
+name|rx_cq_prod
 argument_list|,
 name|cqe
 argument_list|)
 expr_stmt|;
-name|rx_cqe_prod
+comment|/* Don't skip next page pointers. */
+name|rx_cq_prod
 operator|=
-name|RCQ_ENTRY
-argument_list|(
-name|NEXT_RCQ_IDX
-argument_list|(
-name|rx_cqe_prod
-argument_list|)
-argument_list|)
+operator|(
+operator|(
+name|rx_cq_prod
+operator|+
+literal|1
+operator|)
+operator|&
+name|MAX_RCQ_ENTRIES
+operator|)
 expr_stmt|;
 block|}
+end_for
+
+begin_expr_stmt
 name|BXE_PRINTF
 argument_list|(
 literal|"----------------------------"
@@ -71395,7 +71440,7 @@ end_macro
 
 begin_function
 name|void
-name|bxe_dump_rx_chain
+name|bxe_dump_rx_bd_chain
 parameter_list|(
 name|struct
 name|bxe_fastpath
@@ -71417,7 +71462,12 @@ decl_stmt|;
 name|struct
 name|eth_rx_bd
 modifier|*
-name|rxbd
+name|rx_bd
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|m
 decl_stmt|;
 name|int
 name|i
@@ -71439,6 +71489,25 @@ expr_stmt|;
 name|BXE_PRINTF
 argument_list|(
 literal|"----- RX_BD Chain -----\n"
+argument_list|)
+expr_stmt|;
+name|BXE_PRINTF
+argument_list|(
+literal|"fp[%02d]->rx_cq_chain_paddr[0] = 0x%jX\n"
+argument_list|,
+name|fp
+operator|->
+name|index
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|fp
+operator|->
+name|rx_cq_chain_paddr
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 name|BXE_PRINTF
@@ -71504,7 +71573,7 @@ name|i
 operator|++
 control|)
 block|{
-name|rxbd
+name|rx_bd
 operator|=
 operator|(
 expr|struct
@@ -71530,24 +71599,45 @@ argument_list|)
 index|]
 operator|)
 expr_stmt|;
-name|bxe_dump_rxbd_locked
+name|m
+operator|=
+name|sc
+operator|->
+name|fp
+operator|->
+name|rx_mbuf_ptr
+index|[
+name|rx_prod
+index|]
+expr_stmt|;
+name|bxe_dump_rxbd
 argument_list|(
 name|fp
 argument_list|,
 name|rx_prod
 argument_list|,
-name|rxbd
+name|rx_bd
 argument_list|)
 expr_stmt|;
+name|bxe_dump_mbuf
+argument_list|(
+name|sc
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+comment|/* Don't skip next page pointers. */
 name|rx_prod
 operator|=
-name|RX_BD
-argument_list|(
-name|NEXT_RX_BD
-argument_list|(
+operator|(
+operator|(
 name|rx_prod
-argument_list|)
-argument_list|)
+operator|+
+literal|1
+operator|)
+operator|&
+name|MAX_RX_BD
+operator|)
 expr_stmt|;
 block|}
 name|BXE_PRINTF
@@ -72710,6 +72800,290 @@ operator|->
 name|index
 argument_list|)
 block|;
+comment|/* Receive state. */
+name|BXE_PRINTF
+argument_list|(
+literal|"             0x%04X - (fp[%02d]->free_rx_bd)\n"
+argument_list|,
+name|fp
+operator|->
+name|free_rx_bd
+argument_list|,
+name|fp
+operator|->
+name|index
+argument_list|)
+block|;
+name|BXE_PRINTF
+argument_list|(
+literal|"             0x%04X - (fp[%02d]->rx_bd_prod)\n"
+argument_list|,
+name|fp
+operator|->
+name|rx_bd_prod
+argument_list|,
+name|fp
+operator|->
+name|index
+argument_list|)
+block|;
+name|BXE_PRINTF
+argument_list|(
+literal|"             0x%04X - (fp[%02d]->rx_bd_cons)\n"
+argument_list|,
+name|fp
+operator|->
+name|rx_bd_cons
+argument_list|,
+name|fp
+operator|->
+name|index
+argument_list|)
+block|;
+name|BXE_PRINTF
+argument_list|(
+literal|"             0x%04X - (fp[%02d]->rx_cq_prod)\n"
+argument_list|,
+name|fp
+operator|->
+name|rx_cq_prod
+argument_list|,
+name|fp
+operator|->
+name|index
+argument_list|)
+block|;
+name|BXE_PRINTF
+argument_list|(
+literal|"             0x%04X - (fp[%02d]->rx_cq_cons)\n"
+argument_list|,
+name|fp
+operator|->
+name|rx_cq_cons
+argument_list|,
+name|fp
+operator|->
+name|index
+argument_list|)
+block|;
+name|BXE_PRINTF
+argument_list|(
+literal|"   %16lu - (fp[%02d]->rx_pkts)\n"
+argument_list|,
+name|fp
+operator|->
+name|rx_pkts
+argument_list|,
+name|fp
+operator|->
+name|index
+argument_list|)
+block|;
+name|BXE_PRINTF
+argument_list|(
+literal|"         0x%08X - (fp[%02d]->rx_mbuf_alloc)\n"
+argument_list|,
+name|fp
+operator|->
+name|rx_mbuf_alloc
+argument_list|,
+name|fp
+operator|->
+name|index
+argument_list|)
+block|;
+name|BXE_PRINTF
+argument_list|(
+literal|"   %16lu - (fp[%02d]->ipackets)\n"
+argument_list|,
+name|fp
+operator|->
+name|ipackets
+argument_list|,
+name|fp
+operator|->
+name|index
+argument_list|)
+block|;
+name|BXE_PRINTF
+argument_list|(
+literal|"   %16lu - (fp[%02d]->soft_rx_errors)\n"
+argument_list|,
+name|fp
+operator|->
+name|soft_rx_errors
+argument_list|,
+name|fp
+operator|->
+name|index
+argument_list|)
+block|;
+comment|/* Transmit state. */
+name|BXE_PRINTF
+argument_list|(
+literal|"             0x%04X - (fp[%02d]->used_tx_bd)\n"
+argument_list|,
+name|fp
+operator|->
+name|used_tx_bd
+argument_list|,
+name|fp
+operator|->
+name|index
+argument_list|)
+block|;
+name|BXE_PRINTF
+argument_list|(
+literal|"             0x%04X - (fp[%02d]->tx_bd_prod)\n"
+argument_list|,
+name|fp
+operator|->
+name|tx_bd_prod
+argument_list|,
+name|fp
+operator|->
+name|index
+argument_list|)
+block|;
+name|BXE_PRINTF
+argument_list|(
+literal|"             0x%04X - (fp[%02d]->tx_bd_cons)\n"
+argument_list|,
+name|fp
+operator|->
+name|tx_bd_cons
+argument_list|,
+name|fp
+operator|->
+name|index
+argument_list|)
+block|;
+name|BXE_PRINTF
+argument_list|(
+literal|"             0x%04X - (fp[%02d]->tx_pkt_prod)\n"
+argument_list|,
+name|fp
+operator|->
+name|tx_pkt_prod
+argument_list|,
+name|fp
+operator|->
+name|index
+argument_list|)
+block|;
+name|BXE_PRINTF
+argument_list|(
+literal|"             0x%04X - (fp[%02d]->tx_pkt_cons)\n"
+argument_list|,
+name|fp
+operator|->
+name|tx_pkt_cons
+argument_list|,
+name|fp
+operator|->
+name|index
+argument_list|)
+block|;
+name|BXE_PRINTF
+argument_list|(
+literal|"   %16lu - (fp[%02d]->tx_pkts)\n"
+argument_list|,
+name|fp
+operator|->
+name|tx_pkts
+argument_list|,
+name|fp
+operator|->
+name|index
+argument_list|)
+block|;
+name|BXE_PRINTF
+argument_list|(
+literal|"         0x%08X - (fp[%02d]->tx_mbuf_alloc)\n"
+argument_list|,
+name|fp
+operator|->
+name|tx_mbuf_alloc
+argument_list|,
+name|fp
+operator|->
+name|index
+argument_list|)
+block|;
+name|BXE_PRINTF
+argument_list|(
+literal|"   %16lu - (fp[%02d]->opackets)\n"
+argument_list|,
+name|fp
+operator|->
+name|opackets
+argument_list|,
+name|fp
+operator|->
+name|index
+argument_list|)
+block|;
+name|BXE_PRINTF
+argument_list|(
+literal|"   %16lu - (fp[%02d]->soft_tx_errors)\n"
+argument_list|,
+name|fp
+operator|->
+name|soft_tx_errors
+argument_list|,
+name|fp
+operator|->
+name|index
+argument_list|)
+block|;
+comment|/* TPA state. */
+if|if
+condition|(
+name|TPA_ENABLED
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+block|{
+name|BXE_PRINTF
+argument_list|(
+literal|"   %16lu - (fp[%02d]->tpa_pkts)\n"
+argument_list|,
+name|fp
+operator|->
+name|tpa_pkts
+argument_list|,
+name|fp
+operator|->
+name|index
+argument_list|)
+expr_stmt|;
+name|BXE_PRINTF
+argument_list|(
+literal|"         0x%08X - (fp[%02d]->tpa_mbuf_alloc)\n"
+argument_list|,
+name|fp
+operator|->
+name|tpa_mbuf_alloc
+argument_list|,
+name|fp
+operator|->
+name|index
+argument_list|)
+expr_stmt|;
+name|BXE_PRINTF
+argument_list|(
+literal|"         0x%08X - (fp[%02d]->sge_mbuf_alloc)\n"
+argument_list|,
+name|fp
+operator|->
+name|sge_mbuf_alloc
+argument_list|,
+name|fp
+operator|->
+name|index
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|CHIP_IS_E1
@@ -72796,332 +73170,12 @@ block|}
 end_else
 
 begin_expr_stmt
-name|BXE_PRINTF
-argument_list|(
-literal|"             0x%04X - (fp[%02d]->free_rx_bd)\n"
-argument_list|,
-name|fp
-operator|->
-name|free_rx_bd
-argument_list|,
-name|fp
-operator|->
-name|index
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|BXE_PRINTF
-argument_list|(
-literal|"             0x%04X - (fp[%02d]->rx_bd_prod)\n"
-argument_list|,
-name|fp
-operator|->
-name|rx_bd_prod
-argument_list|,
-name|fp
-operator|->
-name|index
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|BXE_PRINTF
-argument_list|(
-literal|"             0x%04X - (fp[%02d]->rx_bd_cons)\n"
-argument_list|,
-name|fp
-operator|->
-name|rx_bd_cons
-argument_list|,
-name|fp
-operator|->
-name|index
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|BXE_PRINTF
-argument_list|(
-literal|"             0x%04X - (fp[%02d]->rx_comp_prod)\n"
-argument_list|,
-name|fp
-operator|->
-name|rx_comp_prod
-argument_list|,
-name|fp
-operator|->
-name|index
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|BXE_PRINTF
-argument_list|(
-literal|"             0x%04X - (fp[%02d]->rx_comp_cons)\n"
-argument_list|,
-name|fp
-operator|->
-name|rx_comp_cons
-argument_list|,
-name|fp
-operator|->
-name|index
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|BXE_PRINTF
-argument_list|(
-literal|"   %16lu - (fp[%02d]->rx_pkts)\n"
-argument_list|,
-name|fp
-operator|->
-name|rx_pkts
-argument_list|,
-name|fp
-operator|->
-name|index
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|BXE_PRINTF
-argument_list|(
-literal|"   %16lu - (fp[%02d]->tpa_pkts)\n"
-argument_list|,
-name|fp
-operator|->
-name|tpa_pkts
-argument_list|,
-name|fp
-operator|->
-name|index
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|BXE_PRINTF
-argument_list|(
-literal|"             0x%04X - (fp[%02d]->used_tx_bd)\n"
-argument_list|,
-name|fp
-operator|->
-name|used_tx_bd
-argument_list|,
-name|fp
-operator|->
-name|index
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|BXE_PRINTF
-argument_list|(
-literal|"             0x%04X - (fp[%02d]->tx_pkt_prod)\n"
-argument_list|,
-name|fp
-operator|->
-name|tx_pkt_prod
-argument_list|,
-name|fp
-operator|->
-name|index
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|BXE_PRINTF
-argument_list|(
-literal|"             0x%04X - (fp[%02d]->tx_pkt_cons)\n"
-argument_list|,
-name|fp
-operator|->
-name|tx_pkt_cons
-argument_list|,
-name|fp
-operator|->
-name|index
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|BXE_PRINTF
-argument_list|(
-literal|"             0x%04X - (fp[%02d]->tx_bd_prod)\n"
-argument_list|,
-name|fp
-operator|->
-name|tx_bd_prod
-argument_list|,
-name|fp
-operator|->
-name|index
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|BXE_PRINTF
-argument_list|(
-literal|"   %16lu - (fp[%02d]->tx_pkts)\n"
-argument_list|,
-name|fp
-operator|->
-name|tx_pkts
-argument_list|,
-name|fp
-operator|->
-name|index
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|BXE_PRINTF
-argument_list|(
-literal|"         0x%08X - (fp[%02d]->tx_mbuf_alloc)\n"
-argument_list|,
-name|fp
-operator|->
-name|tx_mbuf_alloc
-argument_list|,
-name|fp
-operator|->
-name|index
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|BXE_PRINTF
-argument_list|(
-literal|"         0x%08X - (fp[%02d]->rx_mbuf_alloc)\n"
-argument_list|,
-name|fp
-operator|->
-name|rx_mbuf_alloc
-argument_list|,
-name|fp
-operator|->
-name|index
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|BXE_PRINTF
-argument_list|(
-literal|"         0x%08X - (fp[%02d]->tpa_mbuf_alloc)\n"
-argument_list|,
-name|fp
-operator|->
-name|tpa_mbuf_alloc
-argument_list|,
-name|fp
-operator|->
-name|index
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|BXE_PRINTF
-argument_list|(
-literal|"         0x%08X - (fp[%02d]->sge_mbuf_alloc)\n"
-argument_list|,
-name|fp
-operator|->
-name|sge_mbuf_alloc
-argument_list|,
-name|fp
-operator|->
-name|index
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|BXE_PRINTF
-argument_list|(
-literal|"   %16lu - (fp[%02d]->ipackets)\n"
-argument_list|,
-name|fp
-operator|->
-name|ipackets
-argument_list|,
-name|fp
-operator|->
-name|index
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|BXE_PRINTF
-argument_list|(
-literal|"   %16lu - (fp[%02d]->opackets)\n"
-argument_list|,
-name|fp
-operator|->
-name|opackets
-argument_list|,
-name|fp
-operator|->
-name|index
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|BXE_PRINTF
-argument_list|(
-literal|"   %16lu - (fp[%02d]->soft_rx_errors)\n"
-argument_list|,
-name|fp
-operator|->
-name|soft_rx_errors
-argument_list|,
-name|fp
-operator|->
-name|index
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|BXE_PRINTF
-argument_list|(
-literal|"   %16lu - (fp[%02d]->soft_tx_errors)\n"
-argument_list|,
-name|fp
-operator|->
-name|soft_tx_errors
-argument_list|,
-name|fp
-operator|->
-name|index
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|BXE_PRINTF
-argument_list|(
+unit|}  	BXE_PRINTF
+operator|(
 literal|"----------------------------"
 literal|"----------------"
 literal|"----------------------------\n"
-argument_list|)
+operator|)
 expr_stmt|;
 end_expr_stmt
 
@@ -73695,36 +73749,9 @@ argument_list|,
 name|val_lo
 argument_list|)
 block|;
-name|val_hi
-operator|=
-name|U64_HI
-argument_list|(
-name|sc
-operator|->
-name|fp
-argument_list|)
-block|;
-name|val_lo
-operator|=
-name|U64_LO
-argument_list|(
-name|sc
-operator|->
-name|fp
-argument_list|)
-block|;
 name|BXE_PRINTF
 argument_list|(
-literal|"0x%08X:%08X - (sc->fp) Fastpath address\n"
-argument_list|,
-name|val_hi
-argument_list|,
-name|val_lo
-argument_list|)
-block|;
-name|BXE_PRINTF
-argument_list|(
-literal|"         0x%08X - (sc->num_queues) Number of fastpath queues\n"
+literal|"         0x%08X - (sc->num_queues) Fastpath queues\n"
 argument_list|,
 name|sc
 operator|->
@@ -73733,7 +73760,7 @@ argument_list|)
 block|;
 name|BXE_PRINTF
 argument_list|(
-literal|"         0x%08X - (sc->rx_lane_swap) Receive XAUI lane swap\n"
+literal|"         0x%08X - (sc->rx_lane_swap) RX XAUI lane swap\n"
 argument_list|,
 name|sc
 operator|->
@@ -73742,7 +73769,7 @@ argument_list|)
 block|;
 name|BXE_PRINTF
 argument_list|(
-literal|"         0x%08X - (sc->tx_lane_swap) Transmit XAUI lane swap\n"
+literal|"         0x%08X - (sc->tx_lane_swap) TX XAUI lane swap\n"
 argument_list|,
 name|sc
 operator|->
@@ -74794,7 +74821,7 @@ argument_list|,
 name|USABLE_TX_BD
 argument_list|)
 expr_stmt|;
-name|bxe_dump_cqe_chain
+name|bxe_dump_rx_cq_chain
 argument_list|(
 name|fp
 argument_list|,
@@ -74803,7 +74830,7 @@ argument_list|,
 name|USABLE_RCQ_ENTRIES
 argument_list|)
 expr_stmt|;
-name|bxe_dump_rx_chain
+name|bxe_dump_rx_bd_chain
 argument_list|(
 name|fp
 argument_list|,

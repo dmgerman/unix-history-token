@@ -1368,7 +1368,7 @@ comment|/* Receive Completion Queue definitions. */
 end_comment
 
 begin_comment
-comment|/* CQEs are 4 times larger (32 bytes) than rx_bd's (8 bytes). 8pages. */
+comment|/* CQEs (32 bytes) are 4 times larger than rx_bd's (8 bytes). */
 end_comment
 
 begin_define
@@ -1442,7 +1442,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|((((x)& USABLE_RCQ_ENTRIES_PER_PAGE) ==			\ 	(USABLE_RCQ_ENTRIES_PER_PAGE-1)) ? (x) + 2 : (x) + 1)
+value|((((x)& USABLE_RCQ_ENTRIES_PER_PAGE) ==			\ 	(USABLE_RCQ_ENTRIES_PER_PAGE - 1)) ? (x) + 2 : (x) + 1)
 end_define
 
 begin_define
@@ -3306,10 +3306,10 @@ index|]
 decl_stmt|;
 comment|/* Hardware maintained Completion Queue (CQ) chains. */
 name|bus_dma_tag_t
-name|rx_comp_chain_tag
+name|rx_cq_chain_tag
 decl_stmt|;
 name|bus_dmamap_t
-name|rx_comp_chain_map
+name|rx_cq_chain_map
 index|[
 name|NUM_RCQ_PAGES
 index|]
@@ -3317,13 +3317,13 @@ decl_stmt|;
 name|union
 name|eth_rx_cqe
 modifier|*
-name|rx_comp_chain
+name|rx_cq_chain
 index|[
 name|NUM_RCQ_PAGES
 index|]
 decl_stmt|;
 name|bus_addr_t
-name|rx_comp_chain_paddr
+name|rx_cq_chain_paddr
 index|[
 name|NUM_RCQ_PAGES
 index|]
@@ -3416,11 +3416,10 @@ comment|/* Transmit packet consumer index. */
 name|uint16_t
 name|tx_pkt_cons
 decl_stmt|;
-comment|/* Transmit buffer descriptor producer index. */
+comment|/* Transmit buffer descriptor prod/cons indices. */
 name|uint16_t
 name|tx_bd_prod
 decl_stmt|;
-comment|/* Transmit buffer descriptor consumer index. */
 name|uint16_t
 name|tx_bd_cons
 decl_stmt|;
@@ -3440,10 +3439,10 @@ name|rx_bd_cons
 decl_stmt|;
 comment|/* Driver's copy of the receive completion queue prod/cons indices. */
 name|uint16_t
-name|rx_comp_prod
+name|rx_cq_prod
 decl_stmt|;
 name|uint16_t
-name|rx_comp_cons
+name|rx_cq_cons
 decl_stmt|;
 comment|/* Pointer to the receive consumer index in the status block. */
 name|uint16_t
