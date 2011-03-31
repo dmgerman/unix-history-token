@@ -3973,6 +3973,7 @@ name|flags
 operator|&
 name|DN_HAVE_MASK
 condition|)
+block|{
 name|dn_ht_scan
 argument_list|(
 name|s
@@ -3984,6 +3985,16 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|dn_ht_free
+argument_list|(
+name|s
+operator|->
+name|siht
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
