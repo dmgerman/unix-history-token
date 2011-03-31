@@ -3661,7 +3661,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Specifies the number of queues that will be used when a multi-queue  * RSS mode is selected  using bxe_multi_mode below.  Some RSS modes  * require additional queue configuration which may conflict with this  * setting.  In that case this value will be overriden.  *  * Allowable values are 0 (Auto) or 1 to MAX_CONTEXT (fixed queue number).  */
+comment|/*  * Specifies the number of queues that will be used when a multi-queue  * RSS mode is selected  using bxe_multi_mode below.  *  * Allowable values are 0 (Auto) or 1 to MAX_CONTEXT (fixed queue number).  */
 end_comment
 
 begin_decl_stmt
@@ -6319,7 +6319,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* User	has	forced INTx mode. */
+comment|/* User	has forced INTx mode. */
 name|sc
 operator|->
 name|multi_mode
@@ -7703,7 +7703,7 @@ argument_list|,
 name|__FUNCTION__
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Setup the interrupt handler.  Note that we pass the driver 		 * instance to the interrupt handler for the slowpath. 		 */
+comment|/* 		 * Setup the interrupt handler. Note that we pass the driver 		 * instance to the interrupt handler for the slowpath. 		 */
 name|rc
 operator|=
 name|bus_setup_intr
@@ -7804,7 +7804,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Setup the interrupt handler.  Note that we pass the 			 * fastpath context to the interrupt handler in this 			 * case. 			 */
+comment|/* 			 * Setup the interrupt handler. Note that we pass the 			 * fastpath context to the interrupt handler in this 			 * case. 			 */
 name|rc
 operator|=
 name|bus_setup_intr
@@ -9322,7 +9322,11 @@ condition|)
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"Error loading firmware\n"
+literal|"%s(%d): Error loading firmware\n"
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -9373,15 +9377,13 @@ name|sc
 argument_list|)
 condition|)
 block|{
-name|DBPRINT
+name|BXE_PRINTF
 argument_list|(
-name|sc
+literal|"%s(%d): Failed NVRAM test!\n"
 argument_list|,
-name|BXE_WARN
+name|__FILE__
 argument_list|,
-literal|"%s(): Failed NVRAM test!\n"
-argument_list|,
-name|__FUNCTION__
+name|__LINE__
 argument_list|)
 expr_stmt|;
 name|rc
@@ -9548,6 +9550,13 @@ name|wol
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Assume a standard 1500 byte MTU size for mbuf allocations. */
+name|sc
+operator|->
+name|mbuf_alloc_size
+operator|=
+name|MCLBYTES
+expr_stmt|;
 comment|/* Allocate DMA memory resources. */
 if|if
 condition|(
@@ -9707,13 +9716,6 @@ name|IF_Gbps
 argument_list|(
 literal|10UL
 argument_list|)
-expr_stmt|;
-comment|/* Assume a standard 1500 byte MTU size for mbuf allocations. */
-name|sc
-operator|->
-name|mbuf_alloc_size
-operator|=
-name|MCLBYTES
 expr_stmt|;
 name|ifp
 operator|->
@@ -13621,6 +13623,18 @@ operator||
 name|BXE_VERBOSE_RAMROD
 argument_list|)
 expr_stmt|;
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BXE_INFO_LOAD
+argument_list|,
+literal|"%s(): Setup leading connection "
+literal|"on fp[00].\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 comment|/* Reset IGU state for the leading connection. */
 name|bxe_ack_sb
 argument_list|(
@@ -13728,6 +13742,18 @@ operator||
 name|BXE_VERBOSE_RESET
 operator||
 name|BXE_VERBOSE_RAMROD
+argument_list|)
+expr_stmt|;
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BXE_INFO_LOAD
+argument_list|,
+literal|"%s(): Stop client connection "
+literal|"on fp[00].\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|)
 expr_stmt|;
 comment|/* Send the ETH_HALT ramrod. */
@@ -13943,6 +13969,20 @@ operator||
 name|BXE_VERBOSE_RAMROD
 argument_list|)
 expr_stmt|;
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BXE_INFO_LOAD
+argument_list|,
+literal|"%s(): Setup client connection "
+literal|"on fp[%02d].\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|,
+name|index
+argument_list|)
+expr_stmt|;
 name|fp
 operator|=
 operator|&
@@ -14066,6 +14106,20 @@ operator||
 name|BXE_VERBOSE_RESET
 operator||
 name|BXE_VERBOSE_RAMROD
+argument_list|)
+expr_stmt|;
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BXE_INFO_LOAD
+argument_list|,
+literal|"%s(): Stop client connection "
+literal|"on fp[%02d].\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|,
+name|index
 argument_list|)
 expr_stmt|;
 name|fp
@@ -19522,7 +19576,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|5
+literal|50
 argument_list|)
 expr_stmt|;
 name|timeout
@@ -19565,7 +19619,7 @@ operator|--
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|5
+literal|50
 argument_list|)
 expr_stmt|;
 block|}
@@ -19891,12 +19945,12 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|5
+literal|50
 argument_list|)
 expr_stmt|;
 name|timeout
 operator|=
-literal|200
+literal|4000
 expr_stmt|;
 while|while
 condition|(
@@ -19934,7 +19988,7 @@ operator|--
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|5
+literal|50
 argument_list|)
 expr_stmt|;
 block|}
@@ -36791,7 +36845,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * bxe_tx_encap()  * Encapsultes an mbuf cluster into the bxe tx_bd chain structure and  * makes the memory visible to the controller.  *  * If an mbuf is submitted to this routine and cannot be given to the  * controller (e.g. it has too many fragments) then the function may free  * the mbuf and return to the caller.  *  * Returns:  *   0 = Success, !0 = Failure  *   Note the side effect that an mbuf may be freed if it causes a problem.  */
+comment|/*  * Encapsultes an mbuf cluster into the tx_bd chain structure and  * makes the memory visible to the controller.  *  * If an mbuf is submitted to this routine and cannot be given to the  * controller (e.g. it has too many fragments) then the function may free  * the mbuf and return to the caller.  *  * Returns:  *   0 = Success, !0 = Failure  *   Note the side effect that an mbuf may be freed if it causes a problem.  */
 end_comment
 
 begin_function
@@ -48577,7 +48631,7 @@ operator||
 name|BXE_INFO_RESET
 operator|)
 argument_list|,
-literal|"%s(): fp[%d]: cl_id = %d, sb_id = %d,\n"
+literal|"%s(): fp[%d]: cl_id = %d, sb_id = %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -64829,7 +64883,7 @@ argument_list|(
 name|cqe_fp_flags
 argument_list|)
 operator|==
-literal|1
+name|RX_ETH_CQE_TYPE_ETH_RAMROD
 argument_list|)
 condition|)
 block|{
@@ -65231,6 +65285,7 @@ name|sc
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* ToDo: Find alterntive to panic(). */
 name|panic
 argument_list|(
 literal|"bxe%d: Double mbuf allocation failure!\n"
@@ -66794,6 +66849,11 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
+name|bxe_dump_status_block
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
