@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: term.c,v 1.40 2004/05/22 23:21:28 christos Exp $	*/
+comment|/*	$NetBSD: term.c,v 1.41 2005/08/08 14:05:37 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: term.c,v 1.40 2004/05/22 23:21:28 christos Exp $"
+literal|"$NetBSD: term.c,v 1.41 2005/08/08 14:05:37 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4892,7 +4892,7 @@ name|t
 operator|++
 control|)
 block|{
-comment|/* XXX: some systems tgetstr needs non const */
+comment|/* XXX: some systems' tgetstr needs non const */
 name|term_alloc
 argument_list|(
 name|el
@@ -8385,7 +8385,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* XXX: some systems tgetstr needs non const */
+comment|/* XXX: some systems' tgetstr needs non const */
 name|scap
 operator|=
 name|tgetstr

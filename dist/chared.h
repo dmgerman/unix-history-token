@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: chared.h,v 1.15 2005/08/01 23:00:15 christos Exp $	*/
+comment|/*	$NetBSD: chared.h,v 1.16 2005/08/08 14:05:37 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -49,7 +49,7 @@ value|10
 end_define
 
 begin_comment
-comment|/*  * This is a issue of basic "vi" look-and-feel. Defining VI_MOVE works  * like real vi: i.e. the transition from command<->insert modes moves  * the cursor.  *  * On the other hand we really don't want to move the cursor, because  * all the editing commands don't include the character under the cursor.  * Probably the best fix is to make all the editing commands aware of  * this fact.  */
+comment|/*  * This is an issue of basic "vi" look-and-feel. Defining VI_MOVE works  * like real vi: i.e. the transition from command<->insert modes moves  * the cursor.  *  * On the other hand we really don't want to move the cursor, because  * all the editing commands don't include the character under the cursor.  * Probably the best fix is to make all the editing commands aware of  * this fact.  */
 end_comment
 
 begin_define

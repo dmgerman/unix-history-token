@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: common.c,v 1.17 2005/08/01 23:00:15 christos Exp $	*/
+comment|/*	$NetBSD: common.c,v 1.18 2005/08/08 14:05:37 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: common.c,v 1.17 2005/08/01 23:00:15 christos Exp $"
+literal|"$NetBSD: common.c,v 1.18 2005/08/08 14:05:37 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -650,7 +650,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* then do a EOF */
+comment|/* then do an EOF */
 name|term__flush
 argument_list|()
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: el.c,v 1.40 2005/08/01 23:00:15 christos Exp $	*/
+comment|/*	$NetBSD: el.c,v 1.41 2005/08/19 04:21:47 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: el.c,v 1.40 2005/08/01 23:00:15 christos Exp $"
+literal|"$NetBSD: el.c,v 1.41 2005/08/19 04:21:47 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1148,10 +1148,9 @@ argument_list|(
 name|el
 argument_list|,
 operator|(
-name|void
+name|el_pfunc_t
 operator|*
 operator|)
-operator|&
 name|ret
 argument_list|,
 name|op
@@ -1168,10 +1167,11 @@ argument_list|(
 name|el
 argument_list|,
 operator|(
-name|void
+specifier|const
+name|char
+operator|*
 operator|*
 operator|)
-operator|&
 name|ret
 argument_list|)
 expr_stmt|;

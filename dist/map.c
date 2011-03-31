@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: map.c,v 1.20 2004/08/13 12:10:39 mycroft Exp $	*/
+comment|/*	$NetBSD: map.c,v 1.22 2005/08/09 13:58:44 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: map.c,v 1.20 2004/08/13 12:10:39 mycroft Exp $"
+literal|"$NetBSD: map.c,v 1.22 2005/08/09 13:58:44 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4656,6 +4656,9 @@ decl_stmt|;
 name|el_bindings_t
 modifier|*
 name|bp
+decl_stmt|,
+modifier|*
+name|ep
 decl_stmt|;
 if|if
 condition|(
@@ -4686,6 +4689,22 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
+name|ep
+operator|=
+operator|&
+name|el
+operator|->
+name|el_map
+operator|.
+name|help
+index|[
+name|el
+operator|->
+name|el_map
+operator|.
+name|nfunc
+index|]
+expr_stmt|;
 for|for
 control|(
 name|bp
@@ -4697,10 +4716,8 @@ operator|.
 name|help
 init|;
 name|bp
-operator|->
-name|name
-operator|!=
-name|NULL
+operator|<
+name|ep
 condition|;
 name|bp
 operator|++
@@ -4781,6 +4798,9 @@ block|{
 name|el_bindings_t
 modifier|*
 name|bp
+decl_stmt|,
+modifier|*
+name|ep
 decl_stmt|;
 name|char
 name|firstbuf
@@ -4871,6 +4891,22 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|ep
+operator|=
+operator|&
+name|el
+operator|->
+name|el_map
+operator|.
+name|help
+index|[
+name|el
+operator|->
+name|el_map
+operator|.
+name|nfunc
+index|]
+expr_stmt|;
 for|for
 control|(
 name|bp
@@ -4882,10 +4918,8 @@ operator|.
 name|help
 init|;
 name|bp
-operator|->
-name|name
-operator|!=
-name|NULL
+operator|<
+name|ep
 condition|;
 name|bp
 operator|++
@@ -5403,6 +5437,9 @@ decl_stmt|;
 name|el_bindings_t
 modifier|*
 name|bp
+decl_stmt|,
+modifier|*
+name|ep
 decl_stmt|;
 name|int
 name|cmd
@@ -5555,6 +5592,22 @@ return|;
 case|case
 literal|'l'
 case|:
+name|ep
+operator|=
+operator|&
+name|el
+operator|->
+name|el_map
+operator|.
+name|help
+index|[
+name|el
+operator|->
+name|el_map
+operator|.
+name|nfunc
+index|]
+expr_stmt|;
 for|for
 control|(
 name|bp
@@ -5566,10 +5619,8 @@ operator|.
 name|help
 init|;
 name|bp
-operator|->
-name|name
-operator|!=
-name|NULL
+operator|<
+name|ep
 condition|;
 name|bp
 operator|++
@@ -6160,7 +6211,7 @@ name|el_map
 operator|.
 name|nfunc
 operator|+
-literal|2
+literal|1
 decl_stmt|;
 if|if
 condition|(
@@ -6323,20 +6374,6 @@ operator|.
 name|description
 operator|=
 name|help
-expr_stmt|;
-name|el
-operator|->
-name|el_map
-operator|.
-name|help
-index|[
-operator|++
-name|nf
-index|]
-operator|.
-name|name
-operator|=
-name|NULL
 expr_stmt|;
 name|el
 operator|->

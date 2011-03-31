@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: chared.c,v 1.24 2005/08/01 23:00:15 christos Exp $	*/
+comment|/*	$NetBSD: chared.c,v 1.25 2005/08/08 01:41:30 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: chared.c,v 1.24 2005/08/01 23:00:15 christos Exp $"
+literal|"$NetBSD: chared.c,v 1.25 2005/08/08 01:41:30 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2614,6 +2614,14 @@ operator|.
 name|lastcmd
 operator|=
 name|ED_UNASSIGNED
+expr_stmt|;
+name|el
+operator|->
+name|el_history
+operator|.
+name|eventno
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(

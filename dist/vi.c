@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: vi.c,v 1.21 2005/04/25 01:06:03 matt Exp $	*/
+comment|/*	$NetBSD: vi.c,v 1.24 2005/08/10 12:46:24 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -62,7 +62,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: vi.c,v 1.21 2005/04/25 01:06:03 matt Exp $"
+literal|"$NetBSD: vi.c,v 1.24 2005/08/10 12:46:24 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -220,6 +220,16 @@ name|pos
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|c
+operator|&
+name|YANK
+operator|)
+condition|)
+block|{
 name|el
 operator|->
 name|el_line
@@ -244,6 +254,7 @@ name|el_line
 operator|.
 name|buffer
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|c
@@ -317,10 +328,6 @@ name|int
 name|c
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|ptr
-decl_stmt|;
 name|c_kill_t
 modifier|*
 name|k
@@ -412,14 +419,6 @@ operator|.
 name|cursor
 operator|++
 expr_stmt|;
-name|ptr
-operator|=
-name|el
-operator|->
-name|el_line
-operator|.
-name|cursor
-expr_stmt|;
 name|c_insert
 argument_list|(
 name|el
@@ -453,7 +452,11 @@ name|void
 operator|)
 name|memcpy
 argument_list|(
-name|ptr
+name|el
+operator|->
+name|el_line
+operator|.
+name|cursor
 argument_list|,
 name|k
 operator|->
@@ -3636,7 +3639,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* vi_comment_out():  *	Vi comment out current command  *	[c]  */
+comment|/* vi_comment_out():  *	Vi comment out current command  *	[#]  */
 end_comment
 
 begin_function
@@ -3698,7 +3701,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* vi_alias():  *	Vi include shell alias  *	[@]  * NB: posix impiles that we should enter insert mode, however  * this is against historical precedent...  */
+comment|/* vi_alias():  *	Vi include shell alias  *	[@]  * NB: posix implies that we should enter insert mode, however  * this is against historical precedent...  */
 end_comment
 
 begin_function

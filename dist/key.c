@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: key.c,v 1.16 2005/07/06 21:13:02 christos Exp $	*/
+comment|/*	$NetBSD: key.c,v 1.17 2005/08/08 14:05:37 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: key.c,v 1.16 2005/07/06 21:13:02 christos Exp $"
+literal|"$NetBSD: key.c,v 1.17 2005/08/08 14:05:37 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -64,7 +64,7 @@ comment|/* not lint&& not SCCSID */
 end_comment
 
 begin_comment
-comment|/*  * key.c: This module contains the procedures for maintaining  *	  the extended-key map.  *  *      An extended-key (key) is a sequence of keystrokes introduced  *	with an sequence introducer and consisting of an arbitrary  *	number of characters.  This module maintains a map (the el->el_key.map)  *	to convert these extended-key sequences into input strs  *	(XK_STR), editor functions (XK_CMD), or unix commands (XK_EXE).  *  *      Warning:  *	  If key is a substr of some other keys, then the longer  *	  keys are lost!!  That is, if the keys "abcd" and "abcef"  *	  are in el->el_key.map, adding the key "abc" will cause the first two  *	  definitions to be lost.  *  *      Restrictions:  *      -------------  *      1) It is not possible to have one key that is a  *	   substr of another.  */
+comment|/*  * key.c: This module contains the procedures for maintaining  *	  the extended-key map.  *  *      An extended-key (key) is a sequence of keystrokes introduced  *	with a sequence introducer and consisting of an arbitrary  *	number of characters.  This module maintains a map (the el->el_key.map)  *	to convert these extended-key sequences into input strs  *	(XK_STR), editor functions (XK_CMD), or unix commands (XK_EXE).  *  *      Warning:  *	  If key is a substr of some other keys, then the longer  *	  keys are lost!!  That is, if the keys "abcd" and "abcef"  *	  are in el->el_key.map, adding the key "abc" will cause the first two  *	  definitions to be lost.  *  *      Restrictions:  *      -------------  *      1) It is not possible to have one key that is a  *	   substr of another.  */
 end_comment
 
 begin_include
@@ -1820,7 +1820,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* node__get():  *	Returns pointer to an key_node_t for ch.  */
+comment|/* node__get():  *	Returns pointer to a key_node_t for ch.  */
 end_comment
 
 begin_function

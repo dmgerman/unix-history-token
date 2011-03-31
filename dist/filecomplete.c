@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: filecomplete.c,v 1.7 2005/06/11 18:18:59 christos Exp $	*/
+comment|/*	$NetBSD: filecomplete.c,v 1.8 2005/08/03 13:41:38 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ end_if
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: filecomplete.c,v 1.7 2005/06/11 18:18:59 christos Exp $"
+literal|"$NetBSD: filecomplete.c,v 1.8 2005/08/03 13:41:38 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2117,6 +2117,7 @@ name|over
 operator|!=
 name|NULL
 operator|&&
+operator|!
 operator|*
 name|over
 operator|&&
