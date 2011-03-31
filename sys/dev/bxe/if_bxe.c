@@ -83,7 +83,7 @@ begin_decl_stmt
 name|uint32_t
 name|bxe_debug
 init|=
-name|BXE_WARN
+name|BXE_INFO
 decl_stmt|;
 end_decl_stmt
 
@@ -3252,7 +3252,7 @@ begin_define
 define|#
 directive|define
 name|BXE_DRIVER_VERSION
-value|"1.5.52_preliminary"
+value|"1.5.52"
 end_define
 
 begin_function_decl
@@ -57682,28 +57682,40 @@ name|parent_tag
 argument_list|,
 name|BCM_PAGE_SIZE
 argument_list|,
+comment|/* alignment for segs */
 name|BXE_DMA_BOUNDARY
 argument_list|,
+comment|/* cannot cross */
 name|BUS_SPACE_MAXADDR
 argument_list|,
+comment|/* restricted low */
 name|BUS_SPACE_MAXADDR
 argument_list|,
+comment|/* restricted hi */
 name|NULL
 argument_list|,
+comment|/* filter f() */
 name|NULL
 argument_list|,
+comment|/* filter f() arg */
 name|BXE_STATUS_BLK_SZ
 argument_list|,
+comment|/* max map for this tag */
 literal|1
 argument_list|,
+comment|/* # of discontinuities */
 name|BXE_STATUS_BLK_SZ
 argument_list|,
+comment|/* max seg size */
 literal|0
 argument_list|,
+comment|/* flags */
 name|NULL
 argument_list|,
+comment|/* lock f() */
 name|NULL
 argument_list|,
+comment|/* lock f() arg */
 operator|&
 name|fp
 operator|->
@@ -57884,28 +57896,40 @@ name|parent_tag
 argument_list|,
 name|BCM_PAGE_SIZE
 argument_list|,
+comment|/* alignment for segs */
 name|BXE_DMA_BOUNDARY
 argument_list|,
+comment|/* cannot cross */
 name|BUS_SPACE_MAXADDR
 argument_list|,
+comment|/* restricted low */
 name|BUS_SPACE_MAXADDR
 argument_list|,
+comment|/* restricted hi */
 name|NULL
 argument_list|,
+comment|/* filter f() */
 name|NULL
 argument_list|,
+comment|/* filter f() arg */
 name|BXE_TX_CHAIN_PAGE_SZ
 argument_list|,
+comment|/* max map for this tag */
 literal|1
 argument_list|,
+comment|/* # of discontinuities */
 name|BXE_TX_CHAIN_PAGE_SZ
 argument_list|,
+comment|/* max seg size */
 literal|0
 argument_list|,
+comment|/* flags */
 name|NULL
 argument_list|,
+comment|/* lock f() */
 name|NULL
 argument_list|,
+comment|/* lock f() arg */
 operator|&
 name|fp
 operator|->
@@ -58108,7 +58132,7 @@ name|busaddr
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Check the required size before mapping to conserve resources. 		 */
+comment|/* 		 * Check required size before mapping to conserve resources. 		 */
 if|if
 condition|(
 name|bxe_tso_enable
@@ -58120,9 +58144,8 @@ name|BXE_TSO_MAX_SIZE
 expr_stmt|;
 name|max_segments
 operator|=
-literal|32
+name|BXE_TSO_MAX_SEGMENTS
 expr_stmt|;
-comment|/* BXE_MAX_SEGMENTS; */
 name|max_seg_size
 operator|=
 name|BXE_TSO_MAX_SEG_SIZE
@@ -58156,28 +58179,40 @@ name|parent_tag
 argument_list|,
 literal|1
 argument_list|,
+comment|/* alignment for segs */
 name|BXE_DMA_BOUNDARY
 argument_list|,
+comment|/* cannot cross */
 name|BUS_SPACE_MAXADDR
 argument_list|,
+comment|/* restricted low */
 name|BUS_SPACE_MAXADDR
 argument_list|,
+comment|/* restricted hi */
 name|NULL
 argument_list|,
+comment|/* filter f() */
 name|NULL
 argument_list|,
+comment|/* filter f() arg */
 name|max_size
 argument_list|,
+comment|/* max map for this tag */
 name|max_segments
 argument_list|,
+comment|/* # of discontinuities */
 name|max_seg_size
 argument_list|,
+comment|/* max seg size */
 literal|0
 argument_list|,
+comment|/* flags */
 name|NULL
 argument_list|,
+comment|/* lock f() */
 name|NULL
 argument_list|,
+comment|/* lock f() arg */
 operator|&
 name|fp
 operator|->
@@ -58272,28 +58307,40 @@ name|parent_tag
 argument_list|,
 name|BCM_PAGE_SIZE
 argument_list|,
+comment|/* alignment for segs */
 name|BXE_DMA_BOUNDARY
 argument_list|,
+comment|/* cannot cross */
 name|BUS_SPACE_MAXADDR
 argument_list|,
+comment|/* restricted low */
 name|BUS_SPACE_MAXADDR
 argument_list|,
+comment|/* restricted hi */
 name|NULL
 argument_list|,
+comment|/* filter f() */
 name|NULL
 argument_list|,
+comment|/* filter f() arg */
 name|BXE_RX_CHAIN_PAGE_SZ
 argument_list|,
+comment|/* max map for this tag */
 literal|1
 argument_list|,
+comment|/* # of discontinuities */
 name|BXE_RX_CHAIN_PAGE_SZ
 argument_list|,
+comment|/* max seg size */
 literal|0
 argument_list|,
+comment|/* flags */
 name|NULL
 argument_list|,
+comment|/* lock f() */
 name|NULL
 argument_list|,
+comment|/* lock f() arg */
 operator|&
 name|fp
 operator|->
@@ -58303,7 +58350,8 @@ condition|)
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"%s(%d): Could not allocate fp[%d] RX BD chain DMA tag!\n"
+literal|"%s(%d): Could not allocate fp[%d] "
+literal|"RX BD chain DMA tag!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -58508,28 +58556,40 @@ name|parent_tag
 argument_list|,
 literal|1
 argument_list|,
+comment|/* alignment for segs */
 name|BXE_DMA_BOUNDARY
 argument_list|,
+comment|/* cannot cross */
 name|BUS_SPACE_MAXADDR
 argument_list|,
+comment|/* restricted low */
 name|BUS_SPACE_MAXADDR
 argument_list|,
+comment|/* restricted hi */
 name|NULL
 argument_list|,
+comment|/* filter f() */
 name|NULL
 argument_list|,
+comment|/* filter f() arg */
 name|MJUM9BYTES
 argument_list|,
+comment|/* max map for this tag */
 literal|1
 argument_list|,
+comment|/* # of discontinuities */
 name|MJUM9BYTES
 argument_list|,
+comment|/* max seg size */
 literal|0
 argument_list|,
+comment|/* flags */
 name|NULL
 argument_list|,
+comment|/* lock f() */
 name|NULL
 argument_list|,
+comment|/* lock f() arg */
 operator|&
 name|fp
 operator|->
@@ -58624,28 +58684,40 @@ name|parent_tag
 argument_list|,
 name|BCM_PAGE_SIZE
 argument_list|,
+comment|/* alignment for segs */
 name|BXE_DMA_BOUNDARY
 argument_list|,
+comment|/* cannot cross */
 name|BUS_SPACE_MAXADDR
 argument_list|,
+comment|/* restricted low */
 name|BUS_SPACE_MAXADDR
 argument_list|,
+comment|/* restricted hi */
 name|NULL
 argument_list|,
+comment|/* filter f() */
 name|NULL
 argument_list|,
+comment|/* filter f() arg */
 name|BXE_RX_CHAIN_PAGE_SZ
 argument_list|,
+comment|/* max map for this tag */
 literal|1
 argument_list|,
+comment|/* # of discontinuities */
 name|BXE_RX_CHAIN_PAGE_SZ
 argument_list|,
+comment|/* max seg size */
 literal|0
 argument_list|,
+comment|/* flags */
 name|NULL
 argument_list|,
+comment|/* lock f() */
 name|NULL
 argument_list|,
+comment|/* lock f() arg */
 operator|&
 name|fp
 operator|->
@@ -58876,28 +58948,40 @@ name|parent_tag
 argument_list|,
 name|BCM_PAGE_SIZE
 argument_list|,
+comment|/* alignment for segs */
 name|BXE_DMA_BOUNDARY
 argument_list|,
+comment|/* cannot cross */
 name|BUS_SPACE_MAXADDR
 argument_list|,
+comment|/* restricted low */
 name|BUS_SPACE_MAXADDR
 argument_list|,
+comment|/* restricted hi */
 name|NULL
 argument_list|,
+comment|/* filter f() */
 name|NULL
 argument_list|,
+comment|/* filter f() arg */
 name|BXE_RX_CHAIN_PAGE_SZ
 argument_list|,
+comment|/* max map for this tag */
 literal|1
 argument_list|,
+comment|/* # of discontinuities */
 name|BXE_RX_CHAIN_PAGE_SZ
 argument_list|,
+comment|/* max seg size */
 literal|0
 argument_list|,
+comment|/* flags */
 name|NULL
 argument_list|,
+comment|/* lock f() */
 name|NULL
 argument_list|,
+comment|/* lock f() arg */
 operator|&
 name|fp
 operator|->

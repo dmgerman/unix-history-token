@@ -1615,8 +1615,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|BXE_TSO_MAX_SEGMENTS
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
 name|BXE_TSO_MAX_SIZE
-value|65536
+value|(65535 + sizeof(struct ether_vlan_header))
 end_define
 
 begin_define
