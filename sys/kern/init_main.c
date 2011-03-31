@@ -2459,6 +2459,25 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|racct_add_force
+argument_list|(
+name|p
+argument_list|,
+name|RACCT_NPROC
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
