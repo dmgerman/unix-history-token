@@ -2015,6 +2015,8 @@ sizeof|sizeof
 argument_list|(
 name|PROMISE_MAGIC
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|meta
@@ -2426,6 +2428,8 @@ sizeof|sizeof
 argument_list|(
 name|PROMISE_MAGIC
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|meta
@@ -4333,6 +4337,10 @@ condition|(
 name|update
 condition|)
 block|{
+name|updated
+operator|=
+literal|1
+expr_stmt|;
 name|g_raid_md_write_promise
 argument_list|(
 name|md
@@ -4346,10 +4354,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|updated
-operator|+=
-name|update
-expr_stmt|;
 block|}
 block|}
 if|if
@@ -9116,6 +9120,8 @@ sizeof|sizeof
 argument_list|(
 name|PROMISE_MAGIC
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|meta

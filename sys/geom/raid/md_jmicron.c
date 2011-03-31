@@ -2062,6 +2062,14 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Find disk position in metadata by it's serial. */
+if|if
+condition|(
+name|pd
+operator|->
+name|pd_meta
+operator|!=
+name|NULL
+condition|)
 name|disk_pos
 operator|=
 name|jmicron_meta_find_disk
@@ -2072,6 +2080,12 @@ name|pd
 operator|->
 name|pd_disk_id
 argument_list|)
+expr_stmt|;
+else|else
+name|disk_pos
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -2477,12 +2491,6 @@ block|{
 comment|/* 		 * Different disks may have different sizes/offsets, 		 * especially in concat mode. Update. 		 */
 if|if
 condition|(
-name|pd
-operator|->
-name|pd_meta
-operator|!=
-name|NULL
-operator|&&
 operator|!
 name|resurrection
 condition|)
@@ -6679,13 +6687,6 @@ argument_list|,
 name|G_RAID_DISK_S_OFFLINE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|disk
-operator|->
-name|d_consumer
-condition|)
-block|{
 name|g_raid_kill_consumer
 argument_list|(
 name|sc
@@ -6701,7 +6702,6 @@ name|d_consumer
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 name|TAILQ_FOREACH
 argument_list|(
 argument|sd
