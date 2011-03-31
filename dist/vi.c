@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: vi.c,v 1.24 2005/08/10 12:46:24 christos Exp $	*/
+comment|/*	$NetBSD: vi.c,v 1.25 2006/03/06 21:11:56 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -62,7 +62,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: vi.c,v 1.24 2005/08/10 12:46:24 christos Exp $"
+literal|"$NetBSD: vi.c,v 1.25 2006/03/06 21:11:56 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2483,25 +2483,19 @@ begin_comment
 comment|/* vi_list_or_eof():  *	Vi list choices for completion or indicate end of file if empty line  *	[^D]  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|protected
 name|el_action_t
 comment|/*ARGSUSED*/
 name|vi_list_or_eof
-argument_list|(
+parameter_list|(
 name|EditLine
-operator|*
+modifier|*
 name|el
-argument_list|,
+parameter_list|,
 name|int
 name|c
-name|__attribute__
-argument_list|(
-operator|(
-name|__unused__
-operator|)
-argument_list|)
-argument_list|)
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2533,19 +2527,14 @@ operator|.
 name|buffer
 condition|)
 block|{
-name|term_overwrite
+name|term_writec
 argument_list|(
 name|el
 argument_list|,
-name|STReof
-argument_list|,
-literal|4
+name|c
 argument_list|)
 expr_stmt|;
 comment|/* then do a EOF */
-name|term__flush
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|CC_EOF
@@ -2609,7 +2598,7 @@ endif|#
 directive|endif
 block|}
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/* vi_kill_line_prev():  *	Vi cut from beginning of line to cursor  *	[^U]  */

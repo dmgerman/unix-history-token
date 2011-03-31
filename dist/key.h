@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: key.h,v 1.8 2003/08/07 16:44:32 agc Exp $	*/
+comment|/*	$NetBSD: key.h,v 1.10 2006/03/23 20:22:51 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -289,8 +289,7 @@ end_function_decl
 
 begin_function_decl
 name|protected
-name|char
-modifier|*
+name|int
 name|key__decode_str
 parameter_list|(
 specifier|const
@@ -300,9 +299,28 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
+name|int
+parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|int
+name|key__decode_char
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

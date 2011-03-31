@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: chared.h,v 1.16 2005/08/08 14:05:37 christos Exp $	*/
+comment|/*	$NetBSD: chared.h,v 1.17 2006/03/06 21:11:56 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -223,13 +223,6 @@ block|}
 name|el_chared_t
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|STReof
-value|"^D\b\b"
-end_define
 
 begin_define
 define|#

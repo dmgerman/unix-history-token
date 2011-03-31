@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: common.c,v 1.18 2005/08/08 14:05:37 christos Exp $	*/
+comment|/*	$NetBSD: common.c,v 1.19 2006/03/06 21:11:56 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: common.c,v 1.18 2005/08/08 14:05:37 christos Exp $"
+literal|"$NetBSD: common.c,v 1.19 2006/03/06 21:11:56 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -514,25 +514,19 @@ begin_comment
 comment|/* ed_delete_next_char():  *	Delete character under cursor  *	[^D] [x]  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|protected
 name|el_action_t
 comment|/*ARGSUSED*/
 name|ed_delete_next_char
-argument_list|(
+parameter_list|(
 name|EditLine
-operator|*
+modifier|*
 name|el
-argument_list|,
+parameter_list|,
 name|int
 name|c
-name|__attribute__
-argument_list|(
-operator|(
-name|__unused__
-operator|)
-argument_list|)
-argument_list|)
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -641,18 +635,13 @@ operator|)
 return|;
 else|#
 directive|else
-name|term_overwrite
+comment|/* then do an EOF */
+name|term_writechar
 argument_list|(
 name|el
 argument_list|,
-name|STReof
-argument_list|,
-literal|4
+name|c
 argument_list|)
-expr_stmt|;
-comment|/* then do an EOF */
-name|term__flush
-argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -775,7 +764,7 @@ name|CC_REFRESH
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/* ed_kill_line():  *	Cut to the end of line  *	[^K] [^K]  */
