@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: term.h,v 1.17 2006/03/06 21:11:56 christos Exp $	*/
+comment|/*	$NetBSD: term.h,v 1.18 2006/11/24 00:01:17 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -471,6 +471,23 @@ parameter_list|,
 name|int
 parameter_list|,
 specifier|const
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|int
+name|term_gettc
+parameter_list|(
+name|EditLine
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
 name|char
 modifier|*
 modifier|*

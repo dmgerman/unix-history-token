@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: map.c,v 1.23 2006/03/06 21:11:56 christos Exp $	*/
+comment|/*	$NetBSD: map.c,v 1.24 2006/04/09 01:36:51 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: map.c,v 1.23 2006/03/06 21:11:56 christos Exp $"
+literal|"$NetBSD: map.c,v 1.24 2006/04/09 01:36:51 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6222,7 +6222,7 @@ name|el
 operator|->
 name|el_errfile
 operator|,
-literal|"Bad XK_ type\n"
+literal|"Bad XK_ type %d\n"
 operator|,
 name|ntype
 operator|)

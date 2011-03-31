@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: histedit.h,v 1.28 2005/07/14 15:00:58 christos Exp $	*/
+comment|/*	$NetBSD: histedit.h,v 1.31 2006/12/15 22:13:33 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -34,7 +34,7 @@ begin_define
 define|#
 directive|define
 name|LIBEDIT_MINOR
-value|9
+value|10
 end_define
 
 begin_include
@@ -240,8 +240,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|void
-modifier|*
+modifier|...
 parameter_list|)
 function_decl|;
 name|unsigned
@@ -341,6 +340,21 @@ directive|define
 name|EL_PREP_TERM
 value|16
 comment|/* , int);                      */
+define|#
+directive|define
+name|EL_GETTC
+value|17
+comment|/* , const char *, ..., NULL);	*/
+define|#
+directive|define
+name|EL_GETFP
+value|18
+comment|/* , int, FILE **)		*/
+define|#
+directive|define
+name|EL_SETFP
+value|19
+comment|/* , int, FILE *)		*/
 define|#
 directive|define
 name|EL_BUILTIN_GETCFN

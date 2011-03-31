@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: el.h,v 1.16 2003/10/18 23:48:42 christos Exp $	*/
+comment|/*	$NetBSD: el.h,v 1.17 2006/12/15 22:13:33 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -348,6 +348,11 @@ modifier|*
 name|el_prog
 decl_stmt|;
 comment|/* the program name		*/
+name|FILE
+modifier|*
+name|el_infile
+decl_stmt|;
+comment|/* Stdio stuff			*/
 name|FILE
 modifier|*
 name|el_outfile

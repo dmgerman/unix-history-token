@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: vi.c,v 1.25 2006/03/06 21:11:56 christos Exp $	*/
+comment|/*	$NetBSD: vi.c,v 1.27 2006/10/22 07:48:13 mrg Exp $	*/
 end_comment
 
 begin_comment
@@ -62,7 +62,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: vi.c,v 1.25 2006/03/06 21:11:56 christos Exp $"
+literal|"$NetBSD: vi.c,v 1.27 2006/10/22 07:48:13 mrg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3693,6 +3693,34 @@ begin_comment
 comment|/* vi_alias():  *	Vi include shell alias  *	[@]  * NB: posix implies that we should enter insert mode, however  * this is against historical precedent...  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__weak_reference
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|get_alias_text
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|__weak_reference
+parameter_list|(
+name|get_alias_text
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|protected
 name|el_action_t
@@ -3709,7 +3737,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|__weak_extern
+name|__weak_reference
 name|char
 name|alias_name
 index|[
@@ -3720,21 +3748,6 @@ name|char
 modifier|*
 name|alias_text
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|get_alias_text
-argument_list|(
-specifier|const
-name|char
-operator|*
-argument_list|)
-decl_stmt|;
-name|__weak_extern
-argument_list|(
-name|get_alias_text
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|get_alias_text
