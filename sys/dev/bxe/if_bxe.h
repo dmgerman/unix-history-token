@@ -3725,6 +3725,9 @@ name|ifnet
 modifier|*
 name|bxe_ifp
 decl_stmt|;
+name|int
+name|media
+decl_stmt|;
 comment|/* Parent device handle. */
 name|device_t
 name|bxe_dev
