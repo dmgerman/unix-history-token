@@ -67739,26 +67739,6 @@ name|sc
 operator|->
 name|eth_stats
 decl_stmt|;
-name|struct
-name|sysctl_oid
-modifier|*
-name|queue_node
-decl_stmt|;
-name|struct
-name|sysctl_oid_list
-modifier|*
-name|queue_list
-decl_stmt|;
-define|#
-directive|define
-name|QUEUE_NAME_LEN
-value|32
-name|char
-name|namebuf
-index|[
-name|QUEUE_NAME_LEN
-index|]
-decl_stmt|;
 name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
@@ -68268,6 +68248,28 @@ argument_list|,
 literal|"mbuf cluster allocation failures"
 argument_list|)
 expr_stmt|;
+do|do
+operator|(
+operator|)
+block|{
+define|#
+directive|define
+name|QUEUE_NAME_LEN
+value|32
+name|char
+name|namebuf
+index|[
+name|QUEUE_NAME_LEN
+index|]
+block|; 		struct
+name|sysctl_oid
+operator|*
+name|queue_node
+block|; 		struct
+name|sysctl_oid_list
+operator|*
+name|queue_list
+block|;
 for|for
 control|(
 name|int
@@ -68396,6 +68398,7 @@ literal|"Mbuf defrag successes"
 argument_list|)
 expr_stmt|;
 block|}
+do|}
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|ctx
