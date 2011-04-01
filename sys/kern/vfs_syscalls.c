@@ -5183,7 +5183,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|fallocf
+name|falloc
 argument_list|(
 name|td
 argument_list|,
@@ -22536,7 +22536,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|fallocf
+name|falloc
 argument_list|(
 name|td
 argument_list|,

@@ -816,6 +816,8 @@ name|fp
 argument_list|,
 operator|&
 name|fd
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1739,6 +1741,8 @@ name|nfp
 argument_list|,
 operator|&
 name|fd
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2939,6 +2943,8 @@ name|fp1
 argument_list|,
 operator|&
 name|fd
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2973,6 +2979,8 @@ name|fp2
 argument_list|,
 operator|&
 name|fd
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -10772,6 +10780,8 @@ name|nfp
 argument_list|,
 operator|&
 name|fd
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
