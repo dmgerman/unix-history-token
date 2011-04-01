@@ -137,6 +137,23 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|mem_range_op32
+block|{
+name|caddr_t32
+name|mo_desc
+decl_stmt|;
+name|int
+name|mo_arg
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -184,6 +201,20 @@ define|#
 directive|define
 name|FIODGNAME_32
 value|_IOW('f', 120, struct fiodgname_arg32)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MEMRANGE_GET32
+value|_IOWR('m', 50, struct mem_range_op32)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MEMRANGE_SET32
+value|_IOW('m', 51, struct mem_range_op32)
 end_define
 
 begin_endif
