@@ -5813,7 +5813,7 @@ goto|goto
 name|again
 goto|;
 block|}
-comment|/* 	 * Create Tx/Rx buffer parent tag. 	 * L1 supports full 64bit DMA addressing in Tx/Rx buffers 	 * so it needs separate parent DMA tag. 	 */
+comment|/* 	 * Create Tx/Rx buffer parent tag. 	 * L1 supports full 64bit DMA addressing in Tx/Rx buffers 	 * so it needs separate parent DMA tag. 	 * XXX 	 * It seems enabling 64bit DMA causes data corruption. Limit 	 * DMA address space to 32bit. 	 */
 name|error
 operator|=
 name|bus_dma_tag_create
@@ -5831,7 +5831,7 @@ argument_list|,
 literal|0
 argument_list|,
 comment|/* alignment, boundary */
-name|BUS_SPACE_MAXADDR
+name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
 comment|/* lowaddr */
 name|BUS_SPACE_MAXADDR
