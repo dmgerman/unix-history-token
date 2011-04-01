@@ -435,22 +435,6 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|static
-name|void
-name|ia32_fixlimit
-parameter_list|(
-name|struct
-name|rlimit
-modifier|*
-name|rl
-parameter_list|,
-name|int
-name|which
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -511,7 +495,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-specifier|static
 name|u_long
 name|ia32_maxssiz
 init|=
@@ -1051,7 +1034,6 @@ block|{ }
 end_function
 
 begin_function
-specifier|static
 name|void
 name|ia32_fixlimit
 parameter_list|(

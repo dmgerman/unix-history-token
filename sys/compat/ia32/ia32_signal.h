@@ -284,7 +284,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMPAT_FREEBSD3
+name|COMPAT_43
 end_ifdef
 
 begin_struct
@@ -456,7 +456,7 @@ end_struct
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMPAT_FREEBSD3
+name|COMPAT_43
 end_ifdef
 
 begin_struct
@@ -545,6 +545,21 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|char
+name|ia32_osigcode
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|lcall_tramp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|sz_ia32_sigcode
 decl_stmt|;
@@ -557,8 +572,21 @@ name|sz_freebsd4_ia32_sigcode
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
+name|int
+name|sz_ia32_osigcode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|sz_lcall_tramp
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
 name|void
 name|ia32_sendsig
 parameter_list|(
@@ -575,7 +603,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ia32_setregs
 parameter_list|(
@@ -591,6 +618,15 @@ name|imgp
 parameter_list|,
 name|u_long
 name|stack
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|setup_lcall_gate
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
