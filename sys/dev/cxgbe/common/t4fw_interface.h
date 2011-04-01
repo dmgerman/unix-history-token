@@ -83,11 +83,11 @@ init|=
 literal|110
 block|,
 comment|/* timeout */
-name|FW_TIMEDOUT
+name|FW_EINPROGRESS
 init|=
-literal|110
+literal|115
 block|,
-comment|/* timeout */
+comment|/* fw internal */
 name|FW_SCSI_ABORT_REQUESTED
 init|=
 literal|128
@@ -19568,33 +19568,25 @@ name|FW_PORT_CAP_ANEG
 init|=
 literal|0x0100
 block|,
-name|FW_PORT_CAP_MDI_0
+name|FW_PORT_CAP_MDIX
 init|=
 literal|0x0200
 block|,
-name|FW_PORT_CAP_MDI_1
+name|FW_PORT_CAP_MDIAUTO
 init|=
 literal|0x0400
 block|,
-name|FW_PORT_CAP_BEAN
+name|FW_PORT_CAP_FEC
 init|=
 literal|0x0800
 block|,
-name|FW_PORT_CAP_PMA_LPBK
+name|FW_PORT_CAP_TECHKR
 init|=
 literal|0x1000
 block|,
-name|FW_PORT_CAP_PCS_LPBK
+name|FW_PORT_CAP_TECHKX4
 init|=
 literal|0x2000
-block|,
-name|FW_PORT_CAP_PHYXS_LPBK
-init|=
-literal|0x4000
-block|,
-name|FW_PORT_CAP_FAR_END_LPBK
-init|=
-literal|0x8000
 block|, }
 enum|;
 end_enum
@@ -19667,6 +19659,41 @@ name|x
 parameter_list|)
 define|\
 value|(((x)>> S_FW_PORT_CAP_FC)& M_FW_PORT_CAP_FC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_FW_PORT_CAP_ANEG
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FW_PORT_CAP_ANEG
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FW_PORT_CAP_ANEG
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_FW_PORT_CAP_ANEG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FW_PORT_CAP_ANEG
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_FW_PORT_CAP_ANEG)& M_FW_PORT_CAP_ANEG)
 end_define
 
 begin_enum
@@ -21097,6 +21124,8 @@ enum|enum
 name|fw_port_module_type
 block|{
 name|FW_PORT_MOD_TYPE_NA
+init|=
+literal|0x0
 block|,
 name|FW_PORT_MOD_TYPE_LR
 init|=
@@ -21121,6 +21150,18 @@ block|,
 name|FW_PORT_MOD_TYPE_LRM
 init|=
 literal|0x6
+block|,
+name|FW_PORT_MOD_TYPE_UNKNOWN
+init|=
+name|M_FW_PORT_CMD_MODTYPE
+operator|-
+literal|2
+block|,
+name|FW_PORT_MOD_TYPE_NOTSUPPORTED
+init|=
+name|M_FW_PORT_CMD_MODTYPE
+operator|-
+literal|1
 block|,
 name|FW_PORT_MOD_TYPE_NONE
 init|=

@@ -14668,6 +14668,8 @@ block|,
 literal|"TWINAX"
 block|,
 literal|"active TWINAX"
+block|,
+literal|"LRM"
 block|}
 decl_stmt|;
 if|if
@@ -14685,6 +14687,42 @@ operator|->
 name|ifp
 argument_list|,
 literal|"transceiver unplugged.\n"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|pi
+operator|->
+name|mod_type
+operator|==
+name|FW_PORT_MOD_TYPE_UNKNOWN
+condition|)
+name|if_printf
+argument_list|(
+name|pi
+operator|->
+name|ifp
+argument_list|,
+literal|"unknown transceiver inserted.\n"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|pi
+operator|->
+name|mod_type
+operator|==
+name|FW_PORT_MOD_TYPE_NOTSUPPORTED
+condition|)
+name|if_printf
+argument_list|(
+name|pi
+operator|->
+name|ifp
+argument_list|,
+literal|"unsupported transceiver inserted.\n"
 argument_list|)
 expr_stmt|;
 elseif|else
