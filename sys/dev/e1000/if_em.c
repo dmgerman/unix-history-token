@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2010, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2011, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -304,7 +304,7 @@ name|char
 name|em_driver_version
 index|[]
 init|=
-literal|"7.2.2"
+literal|"7.2.3"
 decl_stmt|;
 end_decl_stmt
 
@@ -10312,6 +10312,9 @@ name|adapter
 operator|->
 name|rx_rings
 decl_stmt|;
+name|u32
+name|trigger
+decl_stmt|;
 name|EM_CORE_LOCK_ASSERT
 argument_list|(
 name|adapter
@@ -10368,52 +10371,25 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* trigger tq to refill rx ring queue if it is empty */
-for|for
-control|(
-name|int
-name|i
-init|=
-literal|0
-init|;
-name|i
-operator|<
-name|adapter
-operator|->
-name|num_queues
-condition|;
-name|i
-operator|++
-operator|,
-name|rxr
-operator|++
-control|)
-block|{
+comment|/* Mask to use in the irq trigger */
 if|if
 condition|(
-name|rxr
+name|adapter
 operator|->
-name|next_to_check
-operator|==
-name|rxr
-operator|->
-name|next_to_refresh
+name|msix_mem
 condition|)
-block|{
-name|taskqueue_enqueue
-argument_list|(
+name|trigger
+operator|=
 name|rxr
 operator|->
-name|tq
-argument_list|,
-operator|&
-name|rxr
-operator|->
-name|rx_task
-argument_list|)
+name|ims
 expr_stmt|;
-block|}
-block|}
+comment|/* RX for 82574 */
+else|else
+name|trigger
+operator|=
+name|E1000_ICS_RXDMT0
+expr_stmt|;
 comment|/*  	** Don't do TX watchdog check if we've been paused 	*/
 if|if
 condition|(
@@ -10479,6 +10455,24 @@ argument_list|,
 name|adapter
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|DEVICE_POLLING
+comment|/* Trigger an RX interrupt to guarantee mbuf refresh */
+name|E1000_WRITE_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|E1000_ICS
+argument_list|,
+name|trigger
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return;
 name|hung
 label|:
@@ -20415,15 +20409,10 @@ block|}
 comment|/* Catch any remaining refresh work */
 if|if
 condition|(
-name|processed
-operator|!=
-literal|0
-operator|||
-name|i
-operator|==
+name|e1000_rx_unrefreshed
+argument_list|(
 name|rxr
-operator|->
-name|next_to_refresh
+argument_list|)
 condition|)
 name|em_refresh_mbufs
 argument_list|(
