@@ -2576,6 +2576,18 @@ argument_list|,
 name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KTRACE
+name|ktrprocfork
+argument_list|(
+name|p1
+argument_list|,
+name|p2
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * If PF_FORK is set, the child process inherits the 	 * procfs ioctl flags from its parent. 	 */
 if|if
 condition|(
@@ -2683,18 +2695,6 @@ argument_list|(
 name|p2
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KTRACE
-name|ktrprocfork
-argument_list|(
-name|p1
-argument_list|,
-name|p2
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Finish creating the child process.  It will return via a different 	 * execution path later.  (ie: directly into user mode) 	 */
 name|vm_forkproc
 argument_list|(

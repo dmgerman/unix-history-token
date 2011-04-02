@@ -3478,22 +3478,6 @@ argument_list|)
 expr_stmt|;
 comment|/* NOT REACHED */
 block|}
-ifdef|#
-directive|ifdef
-name|KTRACE
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-condition|)
-name|ktrprocctor
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|error
