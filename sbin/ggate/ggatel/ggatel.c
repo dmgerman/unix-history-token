@@ -171,15 +171,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|unsigned
-name|queue_size
-init|=
-name|G_GATE_QUEUE_SIZE
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|unsigned
 name|sectorsize
 init|=
 literal|0
@@ -207,7 +198,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s create [-v] [-o<ro|wo|rw>] [-q queue_size] "
+literal|"usage: %s create [-v] [-o<ro|wo|rw>] "
 literal|"[-s sectorsize] [-t timeout] [-u unit]<path>\n"
 argument_list|,
 name|getprogname
@@ -789,7 +780,7 @@ name|ggioc
 operator|.
 name|gctl_maxcount
 operator|=
-name|queue_size
+literal|0
 expr_stmt|;
 name|strlcpy
 argument_list|(
@@ -1050,7 +1041,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"fo:q:s:t:u:v"
+literal|"fo:s:t:u:v"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1156,51 +1147,6 @@ literal|"Invalid argument for '-o' option."
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
-case|case
-literal|'q'
-case|:
-if|if
-condition|(
-name|action
-operator|!=
-name|CREATE
-condition|)
-name|usage
-argument_list|()
-expr_stmt|;
-name|errno
-operator|=
-literal|0
-expr_stmt|;
-name|queue_size
-operator|=
-name|strtoul
-argument_list|(
-name|optarg
-argument_list|,
-name|NULL
-argument_list|,
-literal|10
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|queue_size
-operator|==
-literal|0
-operator|&&
-name|errno
-operator|!=
-literal|0
-condition|)
-name|errx
-argument_list|(
-name|EXIT_FAILURE
-argument_list|,
-literal|"Invalid queue_size."
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 literal|'s'
