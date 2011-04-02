@@ -3144,6 +3144,49 @@ argument_list|(
 name|nvin
 argument_list|)
 expr_stmt|;
+comment|/* Setup directions. */
+if|if
+condition|(
+name|proto_send
+argument_list|(
+name|out
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|pjdlog_errno
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Unable to set connection direction"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|proto_recv
+argument_list|(
+name|in
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|pjdlog_errno
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Unable to set connection direction"
+argument_list|)
+expr_stmt|;
 name|pjdlog_info
 argument_list|(
 literal|"Connected to %s."

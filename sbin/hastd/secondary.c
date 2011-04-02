@@ -631,6 +631,30 @@ decl_stmt|;
 name|size_t
 name|mapsize
 decl_stmt|;
+comment|/* Setup direction. */
+if|if
+condition|(
+name|proto_send
+argument_list|(
+name|res
+operator|->
+name|hr_remoteout
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|pjdlog_errno
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Unable to set connection direction"
+argument_list|)
+expr_stmt|;
 name|map
 operator|=
 name|NULL
@@ -1318,6 +1342,30 @@ expr_stmt|;
 name|nv_free
 argument_list|(
 name|nvout
+argument_list|)
+expr_stmt|;
+comment|/* Setup direction. */
+if|if
+condition|(
+name|proto_recv
+argument_list|(
+name|res
+operator|->
+name|hr_remotein
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|pjdlog_errno
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Unable to set connection direction"
 argument_list|)
 expr_stmt|;
 if|if
