@@ -396,6 +396,12 @@ name|stat
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|sysentvec
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * KTR_SYSCTL - name of a sysctl MIB  */
 end_comment
@@ -410,6 +416,40 @@ end_define
 begin_comment
 comment|/* record contains null-terminated MIB name */
 end_comment
+
+begin_comment
+comment|/*  * KTR_PROCCTOR - trace process creation (multiple ABI support)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KTR_PROCCTOR
+value|10
+end_define
+
+begin_struct
+struct|struct
+name|ktr_proc_ctor
+block|{
+name|u_int
+name|sv_flags
+decl_stmt|;
+comment|/* struct sysentvec sv_flags copy */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * KTR_PROCDTOR - trace process destruction (multiple ABI support)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KTR_PROCDTOR
+value|11
+end_define
 
 begin_comment
 comment|/*  * KTR_DROP - If this bit is set in ktr_type, then at least one event  * between the previous record and this record was dropped.  */
@@ -494,6 +534,20 @@ define|#
 directive|define
 name|KTRFAC_SYSCTL
 value|(1<<KTR_SYSCTL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KTRFAC_PROCCTOR
+value|(1<<KTR_PROCCTOR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KTRFAC_PROCDTOR
+value|(1<<KTR_PROCDTOR)
 end_define
 
 begin_comment
@@ -633,6 +687,17 @@ parameter_list|,
 name|int
 parameter_list|,
 name|register_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ktrprocctor
+parameter_list|(
+name|struct
+name|proc
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
