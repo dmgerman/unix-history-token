@@ -13,15 +13,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|PROC_ABI_POINTS
-value|(KTRFAC_PROCCTOR | KTRFAC_PROCDTOR)
-end_define
-
-begin_define
-define|#
-directive|define
 name|ALL_POINTS
-value|(DEF_POINTS | KTRFAC_CSW | PROC_ABI_POINTS)
+value|(DEF_POINTS | KTRFAC_CSW)
 end_define
 
 begin_define

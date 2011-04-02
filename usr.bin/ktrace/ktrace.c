@@ -691,10 +691,6 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|trpoints
-operator||=
-name|PROC_ABI_POINTS
-expr_stmt|;
 if|if
 condition|(
 operator|*
