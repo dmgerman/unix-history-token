@@ -244,7 +244,7 @@ begin_define
 define|#
 directive|define
 name|HAST_TIMEOUT
-value|5
+value|20
 end_define
 
 begin_define
