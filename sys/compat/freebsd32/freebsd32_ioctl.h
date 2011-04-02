@@ -154,6 +154,154 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|pci_conf32
+block|{
+name|struct
+name|pcisel
+name|pc_sel
+decl_stmt|;
+comment|/* domain+bus+slot+function */
+name|u_int8_t
+name|pc_hdr
+decl_stmt|;
+comment|/* PCI header type */
+name|u_int16_t
+name|pc_subvendor
+decl_stmt|;
+comment|/* card vendor ID */
+name|u_int16_t
+name|pc_subdevice
+decl_stmt|;
+comment|/* card device ID, assigned by 					   card vendor */
+name|u_int16_t
+name|pc_vendor
+decl_stmt|;
+comment|/* chip vendor ID */
+name|u_int16_t
+name|pc_device
+decl_stmt|;
+comment|/* chip device ID, assigned by 					   chip vendor */
+name|u_int8_t
+name|pc_class
+decl_stmt|;
+comment|/* chip PCI class */
+name|u_int8_t
+name|pc_subclass
+decl_stmt|;
+comment|/* chip PCI subclass */
+name|u_int8_t
+name|pc_progif
+decl_stmt|;
+comment|/* chip PCI programming interface */
+name|u_int8_t
+name|pc_revid
+decl_stmt|;
+comment|/* chip revision ID */
+name|char
+name|pd_name
+index|[
+name|PCI_MAXNAMELEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* device name */
+name|u_int32_t
+name|pd_unit
+decl_stmt|;
+comment|/* device unit number */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|pci_match_conf32
+block|{
+name|struct
+name|pcisel
+name|pc_sel
+decl_stmt|;
+comment|/* domain+bus+slot+function */
+name|char
+name|pd_name
+index|[
+name|PCI_MAXNAMELEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* device name */
+name|u_int32_t
+name|pd_unit
+decl_stmt|;
+comment|/* Unit number */
+name|u_int16_t
+name|pc_vendor
+decl_stmt|;
+comment|/* PCI Vendor ID */
+name|u_int16_t
+name|pc_device
+decl_stmt|;
+comment|/* PCI Device ID */
+name|u_int8_t
+name|pc_class
+decl_stmt|;
+comment|/* PCI class */
+name|u_int32_t
+name|flags
+decl_stmt|;
+comment|/* Matching expression */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|pci_conf_io32
+block|{
+name|u_int32_t
+name|pat_buf_len
+decl_stmt|;
+comment|/* pattern buffer length */
+name|u_int32_t
+name|num_patterns
+decl_stmt|;
+comment|/* number of patterns */
+name|caddr_t32
+name|patterns
+decl_stmt|;
+comment|/* struct pci_match_conf ptr */
+name|u_int32_t
+name|match_buf_len
+decl_stmt|;
+comment|/* match buffer length */
+name|u_int32_t
+name|num_matches
+decl_stmt|;
+comment|/* number of matches returned */
+name|caddr_t32
+name|matches
+decl_stmt|;
+comment|/* struct pci_conf ptr */
+name|u_int32_t
+name|offset
+decl_stmt|;
+comment|/* offset into device list */
+name|u_int32_t
+name|generation
+decl_stmt|;
+comment|/* device list generation */
+name|u_int32_t
+name|status
+decl_stmt|;
+comment|/* request status */
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -215,6 +363,13 @@ define|#
 directive|define
 name|MEMRANGE_SET32
 value|_IOW('m', 51, struct mem_range_op32)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIOCGETCONF_32
+value|_IOWR('p', 5, struct pci_conf_io32)
 end_define
 
 begin_endif
