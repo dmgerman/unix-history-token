@@ -3379,6 +3379,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Whether 5ghz fast clock is needed for Merlin and later */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IS_5GHZ_FAST_CLOCK_EN
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_c
+parameter_list|)
+define|\
+value|(IEEE80211_IS_CHAN_5GHZ(_c)&& \ 	ath_hal_eepromGetFlag(ah, AR_EEP_FSTCLK_5G))
+end_define
+
 begin_endif
 endif|#
 directive|endif
