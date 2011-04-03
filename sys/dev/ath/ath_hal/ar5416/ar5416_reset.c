@@ -1840,6 +1840,24 @@ literal|0x200
 argument_list|)
 expr_stmt|;
 comment|/* 	 * reduce the number of usable entries in PCU TXBUF to avoid 	 * wrap around. 	 */
+if|if
+condition|(
+name|AR_SREV_KITE
+argument_list|(
+name|ah
+argument_list|)
+condition|)
+comment|/* 		 * For AR9285 the number of Fifos are reduced to half. 		 * So set the usable tx buf size also to half to 		 * avoid data/delimiter underruns 		 */
+name|OS_REG_WRITE
+argument_list|(
+name|ah
+argument_list|,
+name|AR_PCU_TXBUF_CTRL
+argument_list|,
+name|AR_9285_PCU_TXBUF_CTRL_USABLE_SIZE
+argument_list|)
+expr_stmt|;
+else|else
 name|OS_REG_WRITE
 argument_list|(
 name|ah
