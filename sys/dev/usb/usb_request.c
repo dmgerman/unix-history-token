@@ -4054,39 +4054,53 @@ block|{
 comment|/* silently skip bad character */
 continue|continue;
 block|}
-comment|/* 		 * Filter by default - we don't allow greater and less than 		 * signs because they might confuse the dmesg printouts! 		 */
+comment|/* 		 * Filter by default - We only allow alphanumerical 		 * and a few more to avoid any problems with scripts 		 * and daemons. 		 */
 if|if
 condition|(
-operator|(
-operator|*
-name|s
-operator|==
-literal|'<'
-operator|)
-operator|||
-operator|(
-operator|*
-name|s
-operator|==
-literal|'>'
-operator|)
-operator|||
-operator|(
-operator|!
-name|isprint
+name|isalpha
 argument_list|(
 operator|*
 name|s
 argument_list|)
-operator|)
+operator|||
+name|isdigit
+argument_list|(
+operator|*
+name|s
+argument_list|)
+operator|||
+operator|*
+name|s
+operator|==
+literal|'-'
+operator|||
+operator|*
+name|s
+operator|==
+literal|'+'
+operator|||
+operator|*
+name|s
+operator|==
+literal|' '
+operator|||
+operator|*
+name|s
+operator|==
+literal|'.'
+operator|||
+operator|*
+name|s
+operator|==
+literal|','
 condition|)
 block|{
-comment|/* silently skip bad character */
-continue|continue;
-block|}
+comment|/* allowed */
 name|s
 operator|++
 expr_stmt|;
+block|}
+comment|/* silently skip bad character */
 block|}
 operator|*
 name|s
