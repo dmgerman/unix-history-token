@@ -30,6 +30,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ah_eeprom.h"
+end_include
+
+begin_comment
+comment|/* for 5ghz fast clock flag */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|"ar5416/ar5416reg.h"
 end_include
 
@@ -1820,6 +1830,13 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|CLOCK_FAST_RATE_5GHZ_OFDM
+value|44
+end_define
+
 begin_function
 name|u_int
 name|ath_hal_mac_clks
@@ -1850,6 +1867,40 @@ name|u_int
 name|clks
 decl_stmt|;
 comment|/* NB: ah_curchan may be null when called attach time */
+comment|/* XXX merlin and later specific workaround - 5ghz fast clock is 44 */
+if|if
+condition|(
+name|c
+operator|!=
+name|AH_NULL
+operator|&&
+name|IS_5GHZ_FAST_CLOCK_EN
+argument_list|(
+name|ah
+argument_list|,
+name|c
+argument_list|)
+condition|)
+block|{
+name|clks
+operator|=
+name|usecs
+operator|*
+name|CLOCK_FAST_RATE_5GHZ_OFDM
+expr_stmt|;
+if|if
+condition|(
+name|IEEE80211_IS_CHAN_HT40
+argument_list|(
+name|c
+argument_list|)
+condition|)
+name|clks
+operator|<<=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|c
@@ -1929,6 +1980,40 @@ name|u_int
 name|usec
 decl_stmt|;
 comment|/* NB: ah_curchan may be null when called attach time */
+comment|/* XXX merlin and later specific workaround - 5ghz fast clock is 44 */
+if|if
+condition|(
+name|c
+operator|!=
+name|AH_NULL
+operator|&&
+name|IS_5GHZ_FAST_CLOCK_EN
+argument_list|(
+name|ah
+argument_list|,
+name|c
+argument_list|)
+condition|)
+block|{
+name|usec
+operator|=
+name|clks
+operator|/
+name|CLOCK_FAST_RATE_5GHZ_OFDM
+expr_stmt|;
+if|if
+condition|(
+name|IEEE80211_IS_CHAN_HT40
+argument_list|(
+name|c
+argument_list|)
+condition|)
+name|usec
+operator|>>=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|c
