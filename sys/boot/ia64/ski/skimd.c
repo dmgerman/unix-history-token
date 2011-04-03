@@ -90,6 +90,8 @@ literal|0
 condition|)
 name|pa
 operator|=
+literal|2
+operator|*
 literal|1024
 operator|*
 literal|1024
@@ -104,7 +106,7 @@ name|IA64_PBVM_BASE
 operator|)
 operator|+
 operator|(
-literal|64
+literal|32
 operator|*
 literal|1024
 operator|*
@@ -170,6 +172,11 @@ expr_stmt|;
 name|acpi_stub_init
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|IS_LEGACY_KERNEL
+argument_list|()
+condition|)
 operator|*
 name|res
 operator|=
