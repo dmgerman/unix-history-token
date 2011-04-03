@@ -2025,6 +2025,10 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+comment|/* size of context */
+name|uint8_t
+name|sc_ctx_is_64_byte
+decl_stmt|;
 comment|/* vendor string for root HUB */
 name|char
 name|sc_vendor
