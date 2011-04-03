@@ -923,7 +923,7 @@ operator|->
 name|sc_io_res
 condition|)
 block|{
-name|EWRITE4
+name|EOWRITE4
 argument_list|(
 name|sc
 argument_list|,
