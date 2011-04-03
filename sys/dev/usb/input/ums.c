@@ -3497,7 +3497,7 @@ name|ums_sysctl_handler_parseinfo
 argument_list|,
 literal|""
 argument_list|,
-literal|"Dump UMS report parsing information"
+literal|"Dump of parsed HID report descriptor"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4953,6 +4953,8 @@ decl_stmt|,
 name|j
 decl_stmt|,
 name|err
+decl_stmt|,
+name|had_output
 decl_stmt|;
 name|sb
 operator|=
@@ -4962,6 +4964,10 @@ expr_stmt|;
 for|for
 control|(
 name|i
+operator|=
+literal|0
+operator|,
+name|had_output
 operator|=
 literal|0
 init|;
@@ -5013,6 +5019,21 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+if|if
+condition|(
+name|had_output
+condition|)
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|had_output
+operator|=
+literal|1
+expr_stmt|;
 name|sbuf_printf
 argument_list|(
 name|sb
@@ -5286,13 +5307,6 @@ name|size
 argument_list|)
 expr_stmt|;
 block|}
-name|sbuf_printf
-argument_list|(
-name|sb
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
 block|}
 name|sbuf_finish
 argument_list|(
