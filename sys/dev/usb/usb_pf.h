@@ -20,17 +20,29 @@ struct|struct
 name|usbpf_pkthdr
 block|{
 name|uint32_t
+name|up_totlen
+decl_stmt|;
+comment|/* Total length including all headers */
+name|uint32_t
 name|up_busunit
 decl_stmt|;
 comment|/* Host controller unit number */
 name|uint8_t
 name|up_address
 decl_stmt|;
-comment|/* USB device address */
+comment|/* USB device index */
 name|uint8_t
-name|up_endpoint
+name|up_mode
 decl_stmt|;
-comment|/* USB endpoint */
+comment|/* Mode of transfer */
+define|#
+directive|define
+name|USBPF_MODE_HOST
+value|0
+define|#
+directive|define
+name|USBPF_MODE_DEVICE
+value|1
 name|uint8_t
 name|up_type
 decl_stmt|;
@@ -38,7 +50,7 @@ comment|/* points SUBMIT / DONE */
 name|uint8_t
 name|up_xfertype
 decl_stmt|;
-comment|/* Transfer type */
+comment|/* Transfer type, see USB2.0 spec. */
 name|uint32_t
 name|up_flags
 decl_stmt|;
@@ -135,9 +147,6 @@ define|#
 directive|define
 name|USBPF_STATUS_SHORT_XFER_OK
 value|(1<< 12)
-if|#
-directive|if
-name|USB_HAVE_BUSDMA
 define|#
 directive|define
 name|USBPF_STATUS_BDMA_ENABLE
@@ -150,8 +159,6 @@ define|#
 directive|define
 name|USBPF_STATUS_BDMA_SETUP
 value|(1<< 15)
-endif|#
-directive|endif
 define|#
 directive|define
 name|USBPF_STATUS_ISOCHRONOUS_XFR
@@ -169,28 +176,70 @@ directive|define
 name|USBPF_STATUS_DOING_CALLBACK
 value|(1<< 19)
 name|uint32_t
-name|up_length
-decl_stmt|;
-comment|/* Total data length (submit/actual) */
-name|uint32_t
-name|up_frames
-decl_stmt|;
-comment|/* USB frame number (submit/actual) */
-name|uint32_t
 name|up_error
 decl_stmt|;
-comment|/* usb_error_t */
+comment|/* USB error, see USB_ERR_XXX */
 name|uint32_t
 name|up_interval
 decl_stmt|;
-comment|/* for interrupt and isoc */
+comment|/* For interrupt and isoc (ms) */
+name|uint32_t
+name|up_frames
+decl_stmt|;
+comment|/* Number of following frames */
+name|uint32_t
+name|up_packet_size
+decl_stmt|;
+comment|/* Packet size used */
+name|uint32_t
+name|up_packet_count
+decl_stmt|;
+comment|/* Packet count used */
+name|uint32_t
+name|up_endpoint
+decl_stmt|;
+comment|/* USB endpoint / stream ID */
+name|uint8_t
+name|up_speed
+decl_stmt|;
+comment|/* USB speed, see USB_SPEED_XXX */
 comment|/* sizeof(struct usbpf_pkthdr) == 128 bytes */
 name|uint8_t
 name|up_reserved
 index|[
-literal|96
+literal|83
 index|]
 decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|usbpf_framehdr
+block|{
+comment|/* 	 * The frame length field excludes length of frame header and 	 * any alignment. 	 */
+name|uint32_t
+name|length
+decl_stmt|;
+define|#
+directive|define
+name|USBPF_FRAME_ALIGN
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x) + 3)& ~3)
+name|uint32_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|USBPF_FRAMEFLAG_READ
+value|(1<< 0)
+define|#
+directive|define
+name|USBPF_FRAMEFLAG_DATA_FOLLOWS
+value|(1<< 1)
 block|}
 struct|;
 end_struct
@@ -201,6 +250,67 @@ directive|define
 name|USBPF_HDR_LEN
 value|128
 end_define
+
+begin_comment
+comment|/* bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USBPF_FRAME_HDR_LEN
+value|8
+end_define
+
+begin_comment
+comment|/* bytes */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|uint8_t
+name|usbpf_pkthdr_size_ok
+index|[
+operator|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|usbpf_pkthdr
+argument_list|)
+operator|==
+name|USBPF_HDR_LEN
+operator|)
+condition|?
+literal|1
+else|:
+operator|-
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uint8_t
+name|usbpf_framehdr_size_ok
+index|[
+operator|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|usbpf_framehdr
+argument_list|)
+operator|==
+name|USBPF_FRAME_HDR_LEN
+operator|)
+condition|?
+literal|1
+else|:
+operator|-
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#

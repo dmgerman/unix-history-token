@@ -2169,6 +2169,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|usb_frlength_t
+name|usbd_xfer_old_frame_length
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|,
+name|usb_frcount_t
+name|frindex
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|usbd_xfer_status
 parameter_list|(

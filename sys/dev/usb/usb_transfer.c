@@ -2513,7 +2513,7 @@ operator|-=
 name|REQ_SIZE
 expr_stmt|;
 block|}
-comment|/* setup "frlengths" */
+comment|/* 	 * Setup "frlengths" and shadow "frlengths" for keeping the 	 * initial frame lengths when a USB transfer is complete. This 	 * information is useful when computing isochronous offsets. 	 */
 name|xfer
 operator|->
 name|frlengths
@@ -2526,6 +2526,8 @@ name|parm
 operator|->
 name|xfer_length_ptr
 operator|+=
+literal|2
+operator|*
 name|n_frlengths
 expr_stmt|;
 comment|/* setup "frbuffers" */
@@ -5907,7 +5909,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* compute total transfer length */
+comment|/* compute some variables */
 for|for
 control|(
 name|x
@@ -5924,6 +5926,26 @@ name|x
 operator|++
 control|)
 block|{
+comment|/* make a copy of the frlenghts[] */
+name|xfer
+operator|->
+name|frlengths
+index|[
+name|x
+operator|+
+name|xfer
+operator|->
+name|max_frame_count
+index|]
+operator|=
+name|xfer
+operator|->
+name|frlengths
+index|[
+name|x
+index|]
+expr_stmt|;
+comment|/* compute total transfer length */
 name|xfer
 operator|->
 name|sumlen
@@ -7110,6 +7132,53 @@ index|[
 name|frindex
 index|]
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*------------------------------------------------------------------------*  *	usbd_xfer_old_frame_length  *  * This function returns the framelength of the given frame at the  * time the transfer was submitted. This function can be used to  * compute the starting data pointer of the next isochronous frame  * when an isochronous transfer has completed.  *------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+name|usb_frlength_t
+name|usbd_xfer_old_frame_length
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|,
+name|usb_frcount_t
+name|frindex
+parameter_list|)
+block|{
+name|KASSERT
+argument_list|(
+name|frindex
+operator|<
+name|xfer
+operator|->
+name|max_frame_count
+argument_list|,
+operator|(
+literal|"frame index overflow"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|xfer
+operator|->
+name|frlengths
+index|[
+name|frindex
+operator|+
+name|xfer
+operator|->
+name|max_frame_count
+index|]
+operator|)
+return|;
 block|}
 end_function
 
