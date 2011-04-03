@@ -26,13 +26,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/efi.h>
+file|<machine/bootinfo.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ia64/include/bootinfo.h>
+file|<machine/efi.h>
 end_include
 
 begin_include

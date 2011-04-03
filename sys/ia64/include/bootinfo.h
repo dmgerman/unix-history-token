@@ -26,10 +26,26 @@ comment|/* version 1 */
 name|uint64_t
 name|bi_spare
 index|[
-literal|5
+literal|3
 index|]
 decl_stmt|;
 comment|/* was: name of booted kernel */
+name|uint32_t
+name|bi_itr_used
+decl_stmt|;
+comment|/* Number of ITR and DTR ... */
+name|uint32_t
+name|bi_dtr_used
+decl_stmt|;
+comment|/* ... entries used. */
+name|uint32_t
+name|bi_text_mapped
+decl_stmt|;
+comment|/* Size of text mapped. */
+name|uint32_t
+name|bi_data_mapped
+decl_stmt|;
+comment|/* Size of data mapped. */
 name|uint64_t
 name|bi_pbvm_pgtbl
 decl_stmt|;
