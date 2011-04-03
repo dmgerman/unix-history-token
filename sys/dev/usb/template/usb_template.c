@@ -621,11 +621,11 @@ operator|->
 name|size
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|raw
-argument_list|,
 name|dst
+argument_list|,
+name|raw
 argument_list|,
 name|len
 argument_list|)
