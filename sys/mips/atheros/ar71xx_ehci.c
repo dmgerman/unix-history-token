@@ -743,6 +743,21 @@ default|default:
 comment|/* fallthrough */
 break|break;
 block|}
+comment|/* 	 * ehci_reset() needs the correct offset to access the host controller 	 * registers. The AR724x/AR913x offsets aren't 0. 	*/
+name|sc
+operator|->
+name|sc_offs
+operator|=
+name|EHCI_CAPLENGTH
+argument_list|(
+name|EREAD4
+argument_list|(
+name|sc
+argument_list|,
+name|EHCI_CAPLEN_HCIVERSION
+argument_list|)
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
