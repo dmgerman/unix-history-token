@@ -128,7 +128,7 @@ begin_define
 define|#
 directive|define
 name|FW_VERSION_MICRO
-value|0
+value|8
 end_define
 
 begin_struct
