@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: readline.h,v 1.30 2009/09/07 21:24:34 christos Exp $	*/
+comment|/*	$NetBSD: readline.h,v 1.31 2010/08/04 20:29:18 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -1076,6 +1076,12 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+name|int
+name|rl_on_new_line
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 comment|/*  * The following are not implemented  */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: readline.c,v 1.89 2010/04/15 00:57:33 christos Exp $	*/
+comment|/*	$NetBSD: readline.c,v 1.90 2010/08/04 20:29:18 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ end_if
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: readline.c,v 1.89 2010/04/15 00:57:33 christos Exp $"
+literal|"$NetBSD: readline.c,v 1.90 2010/08/04 20:29:18 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -10896,6 +10896,19 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{ }
+end_function
+
+begin_function
+name|int
+name|rl_on_new_line
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
 end_function
 
 end_unit

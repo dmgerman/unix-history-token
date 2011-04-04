@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: read.c,v 1.55 2010/03/22 22:59:06 christos Exp $	*/
+comment|/*	$NetBSD: read.c,v 1.57 2010/07/21 18:18:52 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: read.c,v 1.55 2010/03/22 22:59:06 christos Exp $"
+literal|"$NetBSD: read.c,v 1.57 2010/07/21 18:18:52 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1350,22 +1350,18 @@ operator|-
 literal|1
 condition|)
 block|{
-if|if
+switch|switch
 condition|(
 name|el
 operator|->
 name|el_signal
 operator|->
 name|sig_no
-operator|==
-name|SIGCONT
 condition|)
 block|{
-name|sig_set
-argument_list|(
-name|el
-argument_list|)
-expr_stmt|;
+case|case
+name|SIGCONT
+case|:
 name|el_set
 argument_list|(
 name|el
@@ -1373,9 +1369,20 @@ argument_list|,
 name|EL_REFRESH
 argument_list|)
 expr_stmt|;
+comment|/*FALLTHROUGH*/
+case|case
+name|SIGWINCH
+case|:
+name|sig_set
+argument_list|(
+name|el
+argument_list|)
+expr_stmt|;
 goto|goto
 name|again
 goto|;
+default|default:
+break|break;
 block|}
 if|if
 condition|(
