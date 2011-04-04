@@ -1340,7 +1340,7 @@ operator|)
 operator|(
 name|filename
 operator|,
-name|loadaddr
+name|dest
 operator|,
 operator|&
 name|fp
