@@ -9476,51 +9476,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find the difference between two PM tick counts. */
-end_comment
-
-begin_function
-name|uint32_t
-name|acpi_TimerDelta
-parameter_list|(
-name|uint32_t
-name|end
-parameter_list|,
-name|uint32_t
-name|start
-parameter_list|)
-block|{
-if|if
-condition|(
-name|end
-operator|<
-name|start
-operator|&&
-operator|(
-name|AcpiGbl_FADT
-operator|.
-name|Flags
-operator|&
-name|ACPI_FADT_32BIT_TIMER
-operator|)
-operator|==
-literal|0
-condition|)
-name|end
-operator||=
-literal|0x01000000
-expr_stmt|;
-return|return
-operator|(
-name|end
-operator|-
-name|start
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Allocate a buffer with a preset data size.  */
 end_comment
 
