@@ -1593,7 +1593,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%.*s.%06ju usbus%d.%d %s-%s-EP=%08x,SPD=%s,NFR=%d,SLEN=%d,IVAL=%d%s%s\n"
+literal|"%.*s.%06ld usbus%d.%d %s-%s-EP=%08x,SPD=%s,NFR=%d,SLEN=%d,IVAL=%d%s%s\n"
 argument_list|,
 operator|(
 name|int
