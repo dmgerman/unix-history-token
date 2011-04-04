@@ -2830,6 +2830,19 @@ name|HAL_OK
 else|:
 name|HAL_ENOTSUPP
 return|;
+case|case
+name|HAL_CAP_RXDESC_SELFLINK
+case|:
+comment|/* hardware supports self-linked final RX descriptors correctly */
+return|return
+name|pCap
+operator|->
+name|halHasRxSelfLinkedTail
+condition|?
+name|HAL_OK
+else|:
+name|HAL_ENOTSUPP
+return|;
 default|default:
 return|return
 name|HAL_EINVAL

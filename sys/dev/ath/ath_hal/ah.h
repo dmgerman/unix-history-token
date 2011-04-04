@@ -363,6 +363,11 @@ init|=
 literal|41
 block|,
 comment|/* hardware has ps-poll support */
+name|HAL_CAP_RXDESC_SELFLINK
+init|=
+literal|42
+block|,
+comment|/* support a self-linked tail RX descriptor */
 block|}
 name|HAL_CAPABILITY_TYPE
 typedef|;

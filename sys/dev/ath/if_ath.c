@@ -3345,6 +3345,15 @@ argument_list|(
 name|ah
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_rxslink
+operator|=
+name|ath_hal_self_linked_final_rxdesc
+argument_list|(
+name|ah
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ath_hal_hasfastframes
@@ -14290,12 +14299,19 @@ name|BUS_DMASYNC_PREREAD
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Setup descriptors.  For receive we always terminate 	 * the descriptor list with a self-linked entry so we'll 	 * not get overrun under high load (as can happen with a 	 * 5212 when ANI processing enables PHY error frames). 	 * 	 * To insure the last descriptor is self-linked we create 	 * each descriptor as self-linked and add it to the end.  As 	 * each additional descriptor is added the previous self-linked 	 * entry is ``fixed'' naturally.  This should be safe even 	 * if DMA is happening.  When processing RX interrupts we 	 * never remove/process the last, self-linked, entry on the 	 * descriptor list.  This insures the hardware always has 	 * someplace to write a new frame. 	 */
+comment|/* 	 * 11N: we can no longer afford to self link the last descriptor. 	 * MAC acknowledges BA status as long as it copies frames to host 	 * buffer (or rx fifo). This can incorrectly acknowledge packets 	 * to a sender if last desc is self-linked. 	 */
 name|ds
 operator|=
 name|bf
 operator|->
 name|bf_desc
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_rxslink
+condition|)
 name|ds
 operator|->
 name|ds_link
@@ -14305,6 +14321,14 @@ operator|->
 name|bf_daddr
 expr_stmt|;
 comment|/* link to self */
+else|else
+name|ds
+operator|->
+name|ds_link
+operator|=
+literal|0
+expr_stmt|;
+comment|/* terminate the list */
 name|ds
 operator|->
 name|ds_data
@@ -15221,6 +15245,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|sc
+operator|->
+name|sc_rxslink
+operator|&&
 name|bf
 operator|==
 name|NULL
@@ -15235,6 +15263,24 @@ literal|"%s: no buffer!\n"
 argument_list|,
 name|__func__
 argument_list|)
+expr_stmt|;
+break|break;
+block|}
+elseif|else
+if|if
+condition|(
+name|bf
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* 			 * End of List: 			 * this can happen for non-self-linked RX chains 			 */
+name|sc
+operator|->
+name|sc_stats
+operator|.
+name|ast_rx_hitqueueend
+operator|++
 expr_stmt|;
 break|break;
 block|}

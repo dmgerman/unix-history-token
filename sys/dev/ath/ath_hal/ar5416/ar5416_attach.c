@@ -4736,6 +4736,13 @@ name|hal4kbSplitTransSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
+comment|/* Disable this so Block-ACK works correctly */
+name|pCap
+operator|->
+name|halHasRxSelfLinkedTail
+operator|=
+name|AH_FALSE
+expr_stmt|;
 if|#
 directive|if
 literal|0

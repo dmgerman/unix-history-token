@@ -1676,6 +1676,12 @@ name|hal4kbSplitTransSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
+name|pCap
+operator|->
+name|halHasRxSelfLinkedTail
+operator|=
+name|AH_TRUE
+expr_stmt|;
 name|ahpriv
 operator|->
 name|ah_rxornIsFatal

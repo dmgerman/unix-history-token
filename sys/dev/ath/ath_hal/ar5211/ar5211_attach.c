@@ -2412,6 +2412,12 @@ name|hal4kbSplitTransSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
+name|pCap
+operator|->
+name|halHasRxSelfLinkedTail
+operator|=
+name|AH_TRUE
+expr_stmt|;
 comment|/* XXX might be ok w/ some chip revs */
 name|ahpriv
 operator|->

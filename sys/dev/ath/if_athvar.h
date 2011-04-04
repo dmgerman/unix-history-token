@@ -1051,8 +1051,13 @@ comment|/* set/clr CCA with TDMA */
 name|sc_resetcal
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* reset cal state next trip */
+name|sc_rxslink
+range|:
+literal|1
+decl_stmt|;
+comment|/* do self-linked final descriptor */
 name|uint32_t
 name|sc_eerd
 decl_stmt|;
@@ -3296,6 +3301,17 @@ name|_ah
 parameter_list|)
 define|\
 value|(ath_hal_getcapability(_ah, HAP_CAP_SPLIT_4KB_TRANS, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_self_linked_final_rxdesc
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_RXDESC_SELFLINK, 0, NULL) == HAL_OK)
 end_define
 
 begin_define
