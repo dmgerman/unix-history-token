@@ -249,16 +249,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int
-name|acpi_timer_read
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|acpi_timer_test
 parameter_list|(
@@ -391,9 +381,12 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|u_int
+name|__inline
+name|uint32_t
 name|acpi_timer_read
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(
