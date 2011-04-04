@@ -417,7 +417,17 @@ parameter_list|,
 name|int
 name|now
 parameter_list|)
-block|{ }
+block|{
+name|AH_PRIVATE
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_coverageClass
+operator|=
+name|coverageclass
+expr_stmt|;
+block|}
 end_function
 
 begin_comment
