@@ -1202,7 +1202,7 @@ name|s
 decl_stmt|;
 name|min
 operator|=
-literal|10000000
+name|INT32_MAX
 expr_stmt|;
 name|max
 operator|=
@@ -1257,7 +1257,6 @@ name|max
 operator|=
 name|delta
 expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|delta
