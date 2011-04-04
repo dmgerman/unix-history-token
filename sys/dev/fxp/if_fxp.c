@@ -9429,6 +9429,9 @@ if|if
 condition|(
 name|total_len
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -9453,6 +9456,8 @@ operator|(
 name|FXP_RFA_STATUS_CRC
 operator||
 name|FXP_RFA_STATUS_ALIGN
+operator||
+name|FXP_RFA_STATUS_OVERRUN
 operator|)
 condition|)
 block|{
