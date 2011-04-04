@@ -700,6 +700,10 @@ decl_stmt|,
 name|halHasPsPollSupport
 range|:
 literal|1
+decl_stmt|,
+name|halHasRxSelfLinkedTail
+range|:
+literal|1
 decl_stmt|;
 name|uint32_t
 name|halWirelessModes

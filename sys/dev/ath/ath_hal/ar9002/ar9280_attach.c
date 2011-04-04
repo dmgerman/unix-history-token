@@ -4422,6 +4422,13 @@ name|hal4kbSplitTransSupport
 operator|=
 name|AH_FALSE
 expr_stmt|;
+comment|/* Disable this so Block-ACK works correctly */
+name|pCap
+operator|->
+name|halHasRxSelfLinkedTail
+operator|=
+name|AH_FALSE
+expr_stmt|;
 if|if
 condition|(
 name|AR_SREV_MERLIN_20_OR_LATER
