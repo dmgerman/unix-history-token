@@ -2146,6 +2146,8 @@ name|t3_free_sge_resources
 parameter_list|(
 name|adapter_t
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
