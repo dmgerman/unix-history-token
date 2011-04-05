@@ -510,6 +510,12 @@ decl_stmt|;
 name|uint32_t
 name|tx_pkts_aligned
 decl_stmt|;
+name|uint32_t
+name|rx_overflow
+decl_stmt|;
+name|uint32_t
+name|tx_underflow
+decl_stmt|;
 block|}
 name|stats
 struct|;
