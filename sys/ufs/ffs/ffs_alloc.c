@@ -931,12 +931,6 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|fs
-operator|->
-name|fs_pendingblocks
-operator|>
-literal|0
-operator|&&
 name|reclaimed
 operator|==
 literal|0
@@ -954,6 +948,8 @@ name|ITOV
 argument_list|(
 name|ip
 argument_list|)
+argument_list|,
+name|cred
 argument_list|,
 name|FLUSH_BLOCKS_WAIT
 argument_list|)
@@ -1997,12 +1993,6 @@ label|:
 comment|/* 	 * no space available 	 */
 if|if
 condition|(
-name|fs
-operator|->
-name|fs_pendingblocks
-operator|>
-literal|0
-operator|&&
 name|reclaimed
 operator|==
 literal|0
@@ -2017,6 +2007,8 @@ argument_list|(
 name|fs
 argument_list|,
 name|vp
+argument_list|,
+name|cred
 argument_list|,
 name|FLUSH_BLOCKS_WAIT
 argument_list|)
@@ -5324,6 +5316,8 @@ argument_list|(
 name|fs
 argument_list|,
 name|pvp
+argument_list|,
+name|cred
 argument_list|,
 name|FLUSH_INODES_WAIT
 argument_list|)

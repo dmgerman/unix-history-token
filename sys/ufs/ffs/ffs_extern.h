@@ -1032,6 +1032,10 @@ name|struct
 name|vnode
 modifier|*
 parameter_list|,
+name|struct
+name|ucred
+modifier|*
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
