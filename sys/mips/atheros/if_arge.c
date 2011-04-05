@@ -302,12 +302,6 @@ name|arge_debug_flags
 typedef|;
 end_typedef
 
-begin_undef
-undef|#
-directive|undef
-name|ARGE_DEBUG
-end_undef
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1107,6 +1101,9 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ARGE_DEBUG
 name|SYSCTL_ADD_INT
 argument_list|(
 name|ctx
@@ -1132,6 +1129,8 @@ argument_list|,
 literal|"arge interface debugging flags"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
@@ -1186,6 +1185,9 @@ argument_list|,
 literal|"number of TX unaligned packets"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ARGE_DEBUG
 name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
@@ -1267,6 +1269,8 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
