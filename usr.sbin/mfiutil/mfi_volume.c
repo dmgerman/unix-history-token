@@ -574,6 +574,25 @@ else|:
 literal|"none"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|changes
+operator|&
+name|MR_LD_CACHE_WRITE_CACHE_BAD_BBU
+condition|)
+name|printf
+argument_list|(
+literal|"%s write caching with bad BBU\n"
+argument_list|,
+name|policy
+operator|&
+name|MR_LD_CACHE_WRITE_CACHE_BAD_BBU
+condition|?
+literal|"Enabling"
+else|:
+literal|"Disabling"
+argument_list|)
+expr_stmt|;
 name|props
 operator|->
 name|default_cache_policy
@@ -781,7 +800,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"      I/O caching: "
+literal|"             I/O caching: "
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -838,7 +857,7 @@ break|break;
 block|}
 name|printf
 argument_list|(
-literal|"    write caching: %s\n"
+literal|"           write caching: %s\n"
 argument_list|,
 name|props
 operator|.
@@ -853,7 +872,22 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"       read ahead: %s\n"
+literal|"write cache with bad BBU: %s\n"
+argument_list|,
+name|props
+operator|.
+name|default_cache_policy
+operator|&
+name|MR_LD_CACHE_WRITE_CACHE_BAD_BBU
+condition|?
+literal|"enabled"
+else|:
+literal|"disabled"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"              read ahead: %s\n"
 argument_list|,
 name|props
 operator|.
@@ -878,7 +912,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"drive write cache: "
+literal|"       drive write cache: "
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1275,6 +1309,105 @@ argument_list|,
 name|MR_LD_CACHE_READ_AHEAD
 operator||
 name|MR_LD_CACHE_READ_ADAPTIVE
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|av
+index|[
+literal|2
+index|]
+argument_list|,
+literal|"bad-bbu-write-cache"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|ac
+operator|<
+literal|4
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"cache: bad BBU setting required"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|av
+index|[
+literal|3
+index|]
+argument_list|,
+literal|"enable"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|policy
+operator|=
+name|MR_LD_CACHE_WRITE_CACHE_BAD_BBU
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|av
+index|[
+literal|3
+index|]
+argument_list|,
+literal|"disable"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|policy
+operator|=
+literal|0
+expr_stmt|;
+else|else
+block|{
+name|warnx
+argument_list|(
+literal|"cache: invalid bad BBU setting"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
+name|error
+operator|=
+name|update_cache_policy
+argument_list|(
+name|fd
+argument_list|,
+operator|&
+name|props
+argument_list|,
+name|policy
+argument_list|,
+name|MR_LD_CACHE_WRITE_CACHE_BAD_BBU
 argument_list|)
 expr_stmt|;
 block|}
