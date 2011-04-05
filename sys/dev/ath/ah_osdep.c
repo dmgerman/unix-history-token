@@ -788,14 +788,39 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
-modifier|*
 name|ath_hal_logfile
+index|[
+name|MAXPATHLEN
+index|]
 init|=
 literal|"/tmp/ath_hal.log"
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_STRING
+argument_list|(
+name|_hw_ath_hal
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|alq_logfile
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ath_hal_logfile
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|kernelname
+argument_list|)
+argument_list|,
+literal|"Name of ALQ logfile"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
