@@ -14583,6 +14583,10 @@ name|BGE_FLAG_JUMBO
 value|0x00000002
 define|#
 directive|define
+name|BGE_FLAG_JUMBO_STD
+value|0x00000004
+define|#
+directive|define
 name|BGE_FLAG_EADDR
 value|0x00000008
 define|#
