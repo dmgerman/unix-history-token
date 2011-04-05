@@ -31,21 +31,23 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_macro
+begin_expr_stmt
 name|__BEGIN_DECLS
-end_macro
-
-begin_comment
+ifdef|#
+directive|ifdef
+name|__cplusplus
+specifier|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
 comment|/*  * ==== Editing ====  */
-end_comment
-
-begin_typedef
 typedef|typedef
 name|struct
 name|editline
 name|EditLine
 typedef|;
-end_typedef
+end_expr_stmt
 
 begin_comment
 comment|/*  * For user-defined function interface  */
@@ -234,6 +236,7 @@ parameter_list|(
 name|EditLine
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -559,6 +562,50 @@ end_define
 
 begin_comment
 comment|/* , int, FILE *)		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EL_REFRESH
+value|20
+end_define
+
+begin_comment
+comment|/* , void);			      set     */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EL_PROMPT_ESC
+value|21
+end_define
+
+begin_comment
+comment|/* , prompt_func, Char);	      set/get */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EL_RPROMPT_ESC
+value|22
+end_define
+
+begin_comment
+comment|/* , prompt_func, Char);	      set/get */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EL_RESIZE
+value|23
+end_define
+
+begin_comment
+comment|/* , el_zfunc_t, void *);	      set     */
 end_comment
 
 begin_define
@@ -1011,6 +1058,39 @@ begin_comment
 comment|/* , int);		*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|H_NEXT_EVDATA
+value|23
+end_define
+
+begin_comment
+comment|/* , const int, histdata_t *);	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_DELDATA
+value|24
+end_define
+
+begin_comment
+comment|/* , int, histdata_t *);*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_REPLACE
+value|25
+end_define
+
+begin_comment
+comment|/* , const char *, histdata_t);	*/
+end_comment
+
 begin_comment
 comment|/*  * ==== Tokenization ====  */
 end_comment
@@ -1111,9 +1191,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_macro
+begin_expr_stmt
 name|__END_DECLS
-end_macro
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_endif
+unit|}
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
