@@ -8666,7 +8666,11 @@ else|else
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"Unsupported chip revision\n"
+literal|"%s(%d): Unsupported chip revision\n"
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
 argument_list|)
 expr_stmt|;
 return|return
@@ -9362,7 +9366,12 @@ block|{
 comment|/* Failure is OK, just print a message and continue attach. */
 name|BXE_PRINTF
 argument_list|(
-literal|"Failed to allocate grcdump memory buffer!\n"
+literal|"%s(%d): Failed to allocate grcdump memory "
+literal|"buffer!\n"
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
 argument_list|)
 expr_stmt|;
 block|}
@@ -9444,7 +9453,12 @@ condition|)
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"Second device disabled (no bootcode), exiting...\n"
+literal|"%s(%d): Second device disabled (no bootcode), "
+literal|"exiting...\n"
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
 argument_list|)
 expr_stmt|;
 name|rc
@@ -9570,7 +9584,7 @@ condition|)
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"%s(%d): DMA allocation failed!\n"
+literal|"%s(%d): DMA memory allocation failed!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -10002,8 +10016,8 @@ break|break;
 default|default:
 name|BXE_PRINTF
 argument_list|(
-literal|"%s(%d): BAD External PHY NVRAM config data "
-literal|"(0x%08X).\n"
+literal|"%s(%d): Bad NVRAM 1Gb PHY configuration data "
+literal|"(ext_phy_config=0x%08X).\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -10429,11 +10443,10 @@ name|__FUNCTION__
 argument_list|)
 expr_stmt|;
 break|break;
-default|default:
 name|BXE_PRINTF
 argument_list|(
-literal|"%s(%d): BAD External PHY NVRAM config data "
-literal|"(0x%08X).\n"
+literal|"%s(%d): Bad NVRAM 10Gb PHY configuration data "
+literal|"(ext_phy_config=0x%08X).\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -12732,7 +12745,12 @@ condition|)
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"Invalid NVRAM-Bad validity signature!\n"
+literal|"%s(%d): Invalid NVRAM! Bad validity "
+literal|"signature.\n"
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -12925,8 +12943,12 @@ condition|)
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"Warning: This driver needs bootcode 0x%08X "
-literal|"but found 0x%08X, please upgrade!\n"
+literal|"%s(%d): Warning: This driver needs bootcode "
+literal|"0x%08X but found 0x%08X, please upgrade!\n"
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
 argument_list|,
 name|MIN_BXE_BC_VER
 argument_list|,
@@ -13433,7 +13455,11 @@ condition|)
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"Cannot detach while VLANs are in use.\n"
+literal|"%s(%d): Cannot detach while VLANs are in use.\n"
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
 argument_list|)
 expr_stmt|;
 return|return
@@ -14184,7 +14210,13 @@ condition|)
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"halted failed \n"
+literal|"%s(%d): fp[%02d] client ramrod halt failed!\n"
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
+name|index
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -14675,7 +14707,7 @@ condition|)
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"%s(%d): Timeout wating for fp[%d] to complete.\n"
+literal|"%s(%d): Timeout wating for fp[%d] transmits to complete!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -15114,11 +15146,6 @@ name|i
 argument_list|)
 condition|)
 block|{
-name|BXE_PRINTF
-argument_list|(
-literal|"multi failed \n"
-argument_list|)
-expr_stmt|;
 goto|goto
 name|bxe_stop_locked_exit
 goto|;
@@ -15166,9 +15193,12 @@ condition|)
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"%s(): Failed to close leading connection!\n"
+literal|"%s(%d): Failed to close leading "
+literal|"client connection!\n"
 argument_list|,
-name|__FUNCTION__
+name|__FILE__
+argument_list|,
+name|__LINE__
 argument_list|)
 expr_stmt|;
 block|}
@@ -15670,7 +15700,7 @@ block|{
 comment|/* Report the link down */
 name|BXE_PRINTF
 argument_list|(
-literal|"Link is down.\n"
+literal|"Link is down\n"
 argument_list|)
 expr_stmt|;
 name|if_link_state_change
@@ -16353,7 +16383,12 @@ condition|)
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"HW init failed, aborting\n"
+literal|"%s(%d): Hardware initialization failed, "
+literal|"aborting!\n"
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -16430,7 +16465,8 @@ name|sc
 argument_list|,
 name|BXE_INFO
 argument_list|,
-literal|"%s(): mbuf_alloc_size = %d, max_frame_size = %d\n"
+literal|"%s(): mbuf_alloc_size = %d, "
+literal|"max_frame_size = %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -16477,7 +16513,7 @@ condition|)
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|" setting dcc support\n"
+literal|"Enabing DCC support\n"
 argument_list|)
 expr_stmt|;
 name|SHMEM2_WR
@@ -16638,9 +16674,9 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-literal|1
+name|BXE_FATAL
 argument_list|,
-literal|"%s(): fp[%d] CLIENT_SETUP ramrod failed! State not OPEN!\n"
+literal|"%s(): fp[%02d] CLIENT_SETUP ramrod failed! State not OPEN!\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -18149,10 +18185,12 @@ parameter_list|)
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"%s(): Compressed FW is not supported yet. "
-literal|"ERROR: address:0x%x len:0x%x bloboffset:0x%x\n"
+literal|"%s(%d): Compressed FW is not supported yet. "
+literal|"ERROR: address:0x%x len:0x%x blob_offset:0x%x\n"
 argument_list|,
-name|__FUNCTION__
+name|__FILE__
+argument_list|,
+name|__LINE__
 argument_list|,
 name|addr
 argument_list|,
@@ -24427,9 +24465,15 @@ operator|>
 name|MISC_REGISTERS_GPIO_3
 condition|)
 block|{
-name|BXE_PRINTF
+name|DBPRINT
 argument_list|(
-literal|"Invalid GPIO %d\n"
+name|sc
+argument_list|,
+name|BXE_WARN
+argument_list|,
+literal|"%s(): Invalid GPIO %d\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|,
 name|gpio_num
 argument_list|)
@@ -24899,9 +24943,15 @@ operator|>
 name|MISC_REGISTERS_GPIO_3
 condition|)
 block|{
-name|BXE_PRINTF
+name|DBPRINT
 argument_list|(
-literal|"Invalid GPIO %d\n"
+name|sc
+argument_list|,
+name|BXE_WARN
+argument_list|,
+literal|"%s(): Invalid GPIO %d\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|,
 name|gpio_num
 argument_list|)
@@ -26946,7 +26996,7 @@ name|asserted
 condition|)
 name|BXE_PRINTF
 argument_list|(
-literal|"%s(%d): IGU ERROR!\n"
+literal|"%s(%d): IGU attention ERROR!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -27683,8 +27733,8 @@ expr_stmt|;
 comment|/* Log the failure */
 name|BXE_PRINTF
 argument_list|(
-literal|"A fan failure has caused the driver to shutdown "
-literal|"the device to prevent permanent damage.\n"
+literal|"A fan failure has caused the driver to "
+literal|"shutdown the device to prevent permanent damage.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -27755,7 +27805,8 @@ argument_list|)
 expr_stmt|;
 name|BXE_PRINTF
 argument_list|(
-literal|"%s(%d): FATAL hardware block attention (set0 = 0x%08X)!\n"
+literal|"%s(%d): FATAL hardware block attention "
+literal|"(set0 = 0x%08X)!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -27916,7 +27967,8 @@ argument_list|)
 expr_stmt|;
 name|BXE_PRINTF
 argument_list|(
-literal|"%s(%d): FATAL hardware block attention (set1 = 0x%08X)!\n"
+literal|"%s(%d): FATAL hardware block attention "
+literal|"(set1 = 0x%08X)!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -29791,7 +29843,7 @@ condition|)
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"%s(%d): Bug!\n"
+literal|"%s(%d): Invalid statistcs port setup!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -31590,7 +31642,7 @@ condition|)
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"%s(%d): Bug!\n"
+literal|"%s(%d): Invalid statistics port setup!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -33002,7 +33054,7 @@ condition|)
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"%s(%d): Bug!\n"
+literal|"%s(%d): Invalid statistics function setup!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -34584,26 +34636,12 @@ operator|->
 name|stats_counter
 condition|)
 block|{
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BXE_WARN
-argument_list|,
-literal|"%s(): Stats not updated by TSTORM "
-literal|"(tstorm counter (%d) != stats_counter (%d))!\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|,
-name|tclient
-operator|->
-name|stats_counter
-argument_list|,
-name|sc
-operator|->
-name|stats_counter
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|DBPRINT(sc, BXE_WARN, "%s(): Stats not updated by TSTORM " 			    "(tstorm counter (%d) != stats_counter (%d))!\n", 			    __FUNCTION__, tclient->stats_counter, sc->stats_counter);
+endif|#
+directive|endif
 name|rc
 operator|=
 literal|1
@@ -34633,26 +34671,12 @@ operator|->
 name|stats_counter
 condition|)
 block|{
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BXE_WARN
-argument_list|,
-literal|"%s(): Stats not updated by USTORM "
-literal|"(ustorm counter (%d) != stats_counter (%d))!\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|,
-name|uclient
-operator|->
-name|stats_counter
-argument_list|,
-name|sc
-operator|->
-name|stats_counter
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|DBPRINT(sc, BXE_WARN, "%s(): Stats not updated by USTORM " 			    "(ustorm counter (%d) != stats_counter (%d))!\n", 			    __FUNCTION__, uclient->stats_counter, sc->stats_counter);
+endif|#
+directive|endif
 name|rc
 operator|=
 literal|2
@@ -34682,26 +34706,12 @@ operator|->
 name|stats_counter
 condition|)
 block|{
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BXE_WARN
-argument_list|,
-literal|"%s(): Stats not updated by XSTORM "
-literal|"(xstorm counter (%d) != stats_counter (%d))!\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|,
-name|xclient
-operator|->
-name|stats_counter
-argument_list|,
-name|sc
-operator|->
-name|stats_counter
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|DBPRINT(sc, BXE_WARN, "%s(): Stats not updated by XSTORM " 			    "(xstorm counter (%d) != stats_counter (%d))!\n", 			    __FUNCTION__, xclient->stats_counter, sc->stats_counter);
+endif|#
+directive|endif
 name|rc
 operator|=
 literal|3
@@ -36660,7 +36670,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * bxe_chktso_window()  * Checks to ensure the 13 bd sliding window is>= MSS for TSO.  * Check that (13 total bds - 3bds) = 10 bd window>= MSS.  * The window: 3 bds are = 1 (for headers BD) + 2 (for PBD and last BD)  * The headers comes in a seperate bd in FreeBSD. So 13-3=10.  * returns 1 to defrag, 0 if OK.  */
+comment|/*  * bxe_chktso_window()  * Checks to ensure the 13 bd sliding window is>= MSS for TSO.  * Check that (13 total bds - 3bds) = 10 bd window>= MSS.  * The window: 3 bds are = 1 (for headers BD) + 2 (for PBD and last BD)  * The headers comes in a seperate bd in FreeBSD. So 13-3=10.  *  * Returns:  *   0 if OK to send, 1 if packet needs further defragmentation.  */
 end_comment
 
 begin_function
@@ -36946,20 +36956,12 @@ argument_list|)
 expr_stmt|;
 name|rc
 operator|=
-literal|0
-expr_stmt|;
 name|nbds
 operator|=
-literal|0
-expr_stmt|;
 name|ovlan
 operator|=
-literal|0
-expr_stmt|;
 name|vlan_off
 operator|=
-literal|0
-expr_stmt|;
 name|total_pkt_size
 operator|=
 literal|0
@@ -37063,6 +37065,11 @@ name|error
 argument_list|)
 condition|)
 block|{
+name|fp
+operator|->
+name|tx_dma_mapping_failure
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -37070,7 +37077,7 @@ operator|==
 name|ENOMEM
 condition|)
 block|{
-comment|/* Temporary OS resource issue. */
+comment|/* Resource issue, try again later. */
 name|rc
 operator|=
 name|ENOMEM
@@ -37085,13 +37092,10 @@ name|EFBIG
 condition|)
 block|{
 comment|/* Possibly recoverable. */
-name|DBRUN
-argument_list|(
 name|fp
 operator|->
 name|mbuf_defrag_attempts
 operator|++
-argument_list|)
 expr_stmt|;
 name|m0
 operator|=
@@ -37110,14 +37114,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|BXE_PRINTF
-argument_list|(
-literal|"%s(%d): Can't defrag TX frame!\n"
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|)
+name|fp
+operator|->
+name|mbuf_defrag_failures
+operator|++
 expr_stmt|;
 name|rc
 operator|=
@@ -37127,13 +37127,10 @@ block|}
 else|else
 block|{
 comment|/* Defrag was successful, try mapping again.*/
-name|DBRUN
-argument_list|(
 name|fp
 operator|->
 name|mbuf_defrag_successes
 operator|++
-argument_list|)
 expr_stmt|;
 operator|*
 name|m_head
@@ -37160,19 +37157,36 @@ argument_list|,
 name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|fp
+operator|->
+name|tx_dma_mapping_failure
+operator|++
+expr_stmt|;
+name|rc
+operator|=
+name|error
+expr_stmt|;
+block|}
 block|}
 block|}
 else|else
 block|{
 comment|/* Unrecoverable. */
-name|BXE_PRINTF
+name|DBPRINT
 argument_list|(
-literal|"%s(%d): Unknown TX mapping error! "
+name|sc
+argument_list|,
+name|BXE_WARN_SEND
+argument_list|,
+literal|"%s(): Unknown TX mapping error! "
 literal|"rc = %d.\n"
 argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
+name|__FUNCTION__
 argument_list|,
 name|error
 argument_list|)
@@ -37194,7 +37208,7 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-comment|/* 		 * Now that we know how many buffer descriptors	are required to 		 * send the frame, check whether we have enough transmit BD's 		 * to do the job.  Make sure we have enough room for a parsing 		 * BD too. 		 */
+comment|/* Make sure this enough room in the send queue. */
 if|if
 condition|(
 name|__predict_false
@@ -37215,6 +37229,11 @@ operator|)
 argument_list|)
 condition|)
 block|{
+name|fp
+operator|->
+name|tx_queue_too_full
+operator|++
+expr_stmt|;
 name|bus_dmamap_unload
 argument_list|(
 name|fp
@@ -37224,16 +37243,6 @@ argument_list|,
 name|map
 argument_list|)
 expr_stmt|;
-name|BXE_PRINTF
-argument_list|(
-literal|"%s(%d): Insufficient TX queue space!\n"
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
-comment|/* DRC - Should we drop a frame with this error? */
 name|rc
 operator|=
 name|ENOBUFS
@@ -37251,7 +37260,7 @@ literal|12
 argument_list|)
 condition|)
 block|{
-comment|/* The mbuf has more segments than the controller can 			 * handle. Try to defrag the mbuf if there are too many 			 * segments.  If it can't be defragged then 			 * drop the frame, log an error, and exit. 			 * An alternative would be to use a bounce buffer. 			 */
+comment|/* 			 * The mbuf may be to big for the controller 			 * to handle.  If the frame is a TSO frame 			 * we'll need to do an additional check. 			 */
 if|if
 condition|(
 name|m0
@@ -37265,7 +37274,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|bxe_chktso_window
 argument_list|(
 name|sc
@@ -37276,17 +37284,37 @@ name|segs
 argument_list|,
 name|m0
 argument_list|)
+operator|==
+literal|0
 condition|)
-comment|/* Send it */
+comment|/* OK to send. */
 break|break;
+else|else
+name|fp
+operator|->
+name|tso_window_violation
+operator|++
+expr_stmt|;
 block|}
-comment|/* Defrag for non tso and if tso needs it */
-name|DBRUN
-argument_list|(
+else|else
+name|fp
+operator|->
+name|std_window_violation
+operator|++
+expr_stmt|;
+comment|/* 			 * If this is a standard frame then defrag is 			 * required.  Unmap the mbuf, defrag it, then 			 * try mapping it again. 			 */
 name|fp
 operator|->
 name|mbuf_defrag_attempts
 operator|++
+expr_stmt|;
+name|bus_dmamap_unload
+argument_list|(
+name|fp
+operator|->
+name|tx_mbuf_tag
+argument_list|,
+name|map
 argument_list|)
 expr_stmt|;
 name|m0
@@ -37306,14 +37334,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|BXE_PRINTF
-argument_list|(
-literal|"%s(%d): Can't defrag TX frame!\n"
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|)
+name|fp
+operator|->
+name|mbuf_defrag_failures
+operator|++
 expr_stmt|;
 name|rc
 operator|=
@@ -37322,13 +37346,10 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Defrag was successful, try mapping again. */
-name|DBRUN
-argument_list|(
 name|fp
 operator|->
 name|mbuf_defrag_successes
 operator|++
-argument_list|)
 expr_stmt|;
 operator|*
 name|m_head
@@ -37364,36 +37385,15 @@ name|error
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|error
-operator|==
-name|ENOMEM
-condition|)
-block|{
-comment|/* This is a recoverable error, 					 * try again later. 					 */
-name|rc
-operator|=
-name|ENOMEM
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* The frame can't be defragged, 					 *  drop it. 					 */
-name|BXE_PRINTF
-argument_list|(
-literal|"%s(%d): Can't map TX frame!\n"
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|)
+name|fp
+operator|->
+name|tx_dma_mapping_failure
+operator|++
 expr_stmt|;
 name|rc
 operator|=
 name|error
 expr_stmt|;
-block|}
 break|break;
 block|}
 comment|/* Last try */
@@ -37420,6 +37420,8 @@ name|segs
 argument_list|,
 name|m0
 argument_list|)
+operator|==
+literal|1
 condition|)
 name|rc
 operator|=
@@ -37434,21 +37436,16 @@ operator|>
 literal|12
 condition|)
 block|{
-name|BXE_PRINTF
-argument_list|(
-literal|"%s(%d): Too many fragments for a TSO "
-literal|"frame!\n"
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
 name|rc
 operator|=
 name|ENOBUFS
 expr_stmt|;
 block|}
+else|else
+name|rc
+operator|=
+literal|0
+expr_stmt|;
 block|}
 block|}
 do|while
@@ -37470,16 +37467,6 @@ name|ENOMEM
 condition|)
 block|{
 comment|/* Recoverable try again later  */
-name|BXE_PRINTF
-argument_list|(
-literal|"%s(%d): Error mapping mbuf into TX chain, "
-literal|"returning pkt to queue!\n"
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -37726,7 +37713,7 @@ argument_list|(
 name|pkt_prod
 argument_list|)
 expr_stmt|;
-comment|/* Add a parsing BD from the chain. The parsing bd is always added, 	 * however, it is only used for tso& chksum. 	 */
+comment|/* 	 * Add a parsing BD from the chain. The parsing bd is always added, 	 * however, it is only used for tso& chksum. 	 */
 name|bd_prod
 operator|=
 name|TX_BD
@@ -38005,13 +37992,10 @@ argument_list|,
 name|__FUNCTION__
 argument_list|)
 expr_stmt|;
-name|DBRUN
-argument_list|(
-name|sc
+name|fp
 operator|->
-name|debug_ip_csum_offload_frames
+name|ip_csum_offload_frames
 operator|++
-argument_list|)
 expr_stmt|;
 name|flags
 operator||=
@@ -38083,13 +38067,10 @@ name|flags
 operator||=
 name|ETH_TX_BD_FLAGS_L4_CSUM
 expr_stmt|;
-name|DBRUN
-argument_list|(
-name|sc
+name|fp
 operator|->
-name|debug_tcp_csum_offload_frames
+name|tcp_csum_offload_frames
 operator|++
-argument_list|)
 expr_stmt|;
 comment|/* Update the enet + IP + TCP header length. */
 name|tx_parse_bd
@@ -38186,13 +38167,10 @@ name|flags
 operator||=
 name|ETH_TX_BD_FLAGS_L4_CSUM
 expr_stmt|;
-name|DBRUN
-argument_list|(
-name|sc
+name|fp
 operator|->
-name|debug_udp_csum_offload_frames
+name|udp_csum_offload_frames
 operator|++
-argument_list|)
 expr_stmt|;
 name|tx_parse_bd
 operator|->
@@ -38321,27 +38299,20 @@ block|}
 case|case
 name|ETHERTYPE_IPV6
 case|:
-name|BXE_PRINTF
-argument_list|(
-literal|"%s(%d): IPv6 checksum offload not "
-literal|"supported!.\n"
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|)
+name|fp
+operator|->
+name|unsupported_tso_ipv6_request
+operator|++
 expr_stmt|;
+comment|/* DRC - How to handle this error? */
 break|break;
 default|default:
-name|BXE_PRINTF
-argument_list|(
-literal|"%s(%d): TSO enabled for unsupported protocol!.\n"
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|)
+name|fp
+operator|->
+name|unsupported_tso_protocol_request
+operator|++
 expr_stmt|;
+comment|/* DRC - How to handle this error? */
 block|}
 comment|/* Setup the Parsing BD with TSO specific info */
 if|if
@@ -38383,13 +38354,10 @@ name|as_bitfield
 operator||=
 name|ETH_TX_BD_FLAGS_SW_LSO
 expr_stmt|;
-name|DBRUN
-argument_list|(
-name|sc
+name|fp
 operator|->
-name|debug_tso_offload_frames
+name|tso_offload_frames
 operator|++
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -38520,6 +38488,16 @@ name|ds_len
 argument_list|)
 operator|-
 name|hdr_len
+expr_stmt|;
+if|if
+condition|(
+name|tx_total_pkt_size_bd
+operator|==
+name|NULL
+condition|)
+name|tx_total_pkt_size_bd
+operator|=
+name|tx_data_bd
 expr_stmt|;
 comment|/* 				 * This indicates that the transmit BD 				 * has no individual mapping and the 				 * FW ignores this flag in a BD that is 				 * not marked with the start flag. 				 */
 name|DBPRINT
@@ -38809,7 +38787,6 @@ expr_stmt|;
 comment|//BXE_PRINTF("nsegs:%d, tpktsz:0x%x\n",nsegs, total_pkt_size) ;
 comment|/* 	 * Update the buffer descriptor producer count and the packet 	 * producer count in doorbell data memory (eth_tx_db_data) then 	 * ring the doorbell. 	 */
 comment|/*	fp->hw_tx_prods->bds_prod = 		htole16(le16toh(fp->hw_tx_prods->bds_prod) + nbds); */
-comment|//pci_read_config(sc->bxe_dev, PCIR_REVID, 4);
 comment|/* Don't allow reordering of writes for nbd and packets. */
 name|mb
 argument_list|()
@@ -38875,7 +38852,7 @@ argument_list|,
 name|BUS_SPACE_BARRIER_READ
 argument_list|)
 expr_stmt|;
-comment|/* Prevent speculative reads from getting ahead of the status block. */
+comment|/* Prevent speculative reads from getting ahead of the doorbell. */
 name|bus_space_barrier
 argument_list|(
 name|sc
@@ -38893,7 +38870,6 @@ argument_list|,
 name|BUS_SPACE_BARRIER_READ
 argument_list|)
 expr_stmt|;
-comment|//pci_read_config(sc->bxe_dev, PCIR_REVID, 4);
 name|DBEXIT
 argument_list|(
 name|BXE_VERBOSE_SEND
@@ -39077,9 +39053,13 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|tx_count
+init|=
+literal|0
 decl_stmt|;
 name|sc
 operator|=
@@ -39091,14 +39071,6 @@ name|DBENTER
 argument_list|(
 name|BXE_EXTREME_SEND
 argument_list|)
-expr_stmt|;
-name|m
-operator|=
-name|NULL
-expr_stmt|;
-name|tx_count
-operator|=
-literal|0
 expr_stmt|;
 comment|/* Keep adding entries while there are frames to send. */
 while|while
@@ -39158,6 +39130,11 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+name|fp
+operator|->
+name|tx_encap_failures
+operator|++
+expr_stmt|;
 comment|/* Very Bad Frames(tm) may have been dropped. */
 if|if
 condition|(
@@ -39221,29 +39198,9 @@ comment|/* No TX packets were dequeued. */
 if|if
 condition|(
 name|tx_count
-operator|==
+operator|>
 literal|0
 condition|)
-block|{
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BXE_INFO_SEND
-argument_list|,
-literal|"%s(): No packets were dequeued on fp[%d].\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|,
-name|fp
-operator|->
-name|index
-argument_list|)
-expr_stmt|;
-goto|goto
-name|bxe_tx_start_locked_exit
-goto|;
-block|}
 comment|/* Reset the TX watchdog timeout timer. */
 name|sc
 operator|->
@@ -39251,8 +39208,12 @@ name|watchdog_timer
 operator|=
 name|BXE_TX_TIMEOUT
 expr_stmt|;
-name|bxe_tx_start_locked_exit
-label|:
+else|else
+name|fp
+operator|->
+name|tx_start_called_on_empty_queue
+operator|++
+expr_stmt|;
 name|DBEXIT
 argument_list|(
 name|BXE_EXTREME_SEND
@@ -39848,37 +39809,6 @@ operator|->
 name|if_capenable
 operator|^=
 name|IFCAP_TSO6
-expr_stmt|;
-block|}
-comment|/* Handle any other capabilities. */
-if|if
-condition|(
-name|mask
-operator|&
-operator|~
-operator|(
-name|IFCAP_VLAN_HWTAGGING
-operator||
-name|IFCAP_VLAN_MTU
-operator||
-name|IFCAP_RXCSUM
-operator||
-name|IFCAP_TXCSUM
-operator|)
-condition|)
-block|{
-name|BXE_PRINTF
-argument_list|(
-literal|"%s(%d): Unsupported capability!\n"
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|EINVAL
 expr_stmt|;
 block|}
 comment|/* Handle any other capabilities. */
@@ -43232,13 +43162,10 @@ argument_list|,
 name|__FUNCTION__
 argument_list|)
 expr_stmt|;
-name|DBRUN
-argument_list|(
 name|fp
 operator|->
 name|mbuf_alloc_failed
 operator|++
-argument_list|)
 expr_stmt|;
 goto|goto
 name|bxe_alloc_mbuf_exit
@@ -43451,13 +43378,10 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|DBRUN
-argument_list|(
 name|fp
 operator|->
 name|mbuf_alloc_failed
 operator|++
-argument_list|)
 expr_stmt|;
 goto|goto
 name|bxe_map_mbuf_exit
@@ -43951,7 +43875,7 @@ operator||
 name|BXE_INSANE_RESET
 operator|)
 argument_list|,
-literal|"%s(): Initializing fp[%d] TPA pool.\n"
+literal|"%s(): Initializing fp[%02d] TPA pool.\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -43982,7 +43906,8 @@ operator||
 name|BXE_INSANE_RESET
 operator|)
 argument_list|,
-literal|"%s(): Initializing fp[%d] TPA pool[%d].\n"
+literal|"%s(): Initializing fp[%02d] TPA "
+literal|"pool[%d].\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -44027,14 +43952,15 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|fp
+operator|->
+name|tpa_mbuf_alloc_failed
+operator|++
+expr_stmt|;
 name|BXE_PRINTF
 argument_list|(
-literal|"%s(%d): Failed to allocate TPA pool mbuf for fp[%d]! "
-literal|"Disabling TPA on this queue!\n"
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
+literal|"TPA disabled on "
+literal|"fp[%02d]!\n"
 argument_list|,
 name|i
 argument_list|)
@@ -44578,10 +44504,15 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|fp
+operator|->
+name|tpa_mbuf_alloc_failed
+operator|++
+expr_stmt|;
 name|BXE_PRINTF
 argument_list|(
 literal|"%s(%d): Memory allocation failure! "
-literal|"Disabling TPA for fp[%d].\n"
+literal|"Disabling TPA for fp[%02d].\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -48945,7 +48876,7 @@ name|bxe_gunzip_init_nomem1
 label|:
 name|BXE_PRINTF
 argument_list|(
-literal|"%s(%d): Cannot allocate firmware buffer for un-compression!\n"
+literal|"%s(%d): Cannot allocate firmware buffer for decompression!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -58036,8 +57967,7 @@ condition|)
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"%s(%d): Could not allocate fp[%d] "
-literal|"status block DMA tag!\n"
+literal|"%s(%d): Could not allocate fp[%d] status block DMA tag!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -58083,8 +58013,7 @@ condition|)
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"%s(%d): Could not allocate fp[%d] status block "
-literal|"DMA memory!\n"
+literal|"%s(%d): Could not allocate fp[%d] status block	DMA memory!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -58147,8 +58076,7 @@ condition|)
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"%s(%d): Could not map fp[%d] status block "
-literal|"DMA memory!\n"
+literal|"%s(%d): Could not map fp[%d] status block DMA memory!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -58250,8 +58178,7 @@ condition|)
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"%s(%d): Could not allocate fp[%d] TX descriptor "
-literal|"chain DMA tag!\n"
+literal|"%s(%d): Could not allocate fp[%d] TX descriptor chain DMA tag!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -58317,8 +58244,7 @@ condition|)
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"%s(%d): Could not allocate fp[%d] TX "
-literal|"descriptor chain DMA memory!\n"
+literal|"%s(%d): Could not allocate fp[%d] TX descriptor chain DMA memory!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -58390,8 +58316,7 @@ condition|)
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"%s(%d): Could not map fp[%d] "
-literal|"TX descriptor chain DMA memory!\n"
+literal|"%s(%d): Could not map fp[%d] TX descriptor chain DMA memory!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -58589,8 +58514,7 @@ condition|)
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"%s(%d): Unable to create fp[%d] "
-literal|"TX mbuf DMA map!\n"
+literal|"%s(%d): Unable to create fp[%d] TX mbuf DMA map!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -58662,8 +58586,7 @@ condition|)
 block|{
 name|BXE_PRINTF
 argument_list|(
-literal|"%s(%d): Could not allocate fp[%d] "
-literal|"RX BD chain DMA tag!\n"
+literal|"%s(%d): Could not allocate fp[%d] RX BD chain DMA tag!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -64897,12 +64820,10 @@ argument|(cqe_fp_flags ==
 literal|0
 argument|)
 argument_list|,
-argument|BXE_PRINTF(
-literal|"%s(): CQE received with null "
-literal|"type/error flags!\n"
-argument|, __FUNCTION__); 		    bxe_dump_cqe(fp, rx_cq_cons_idx, cqe)
+argument|fp->null_cqe_flags++; 		    bxe_dump_cqe(fp, rx_cq_cons_idx, cqe)
 argument_list|)
 empty_stmt|;
+comment|/* DRC - ANything else to do here? */
 comment|/* Check the CQE type for slowpath or fastpath completion. */
 if|if
 condition|(
@@ -66009,14 +65930,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|BXE_PRINTF
-argument_list|(
-literal|"%s(%d): Lost an mbuf from the TX chain!\n"
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|)
+name|fp
+operator|->
+name|tx_chain_lost_mbuf
+operator|++
 expr_stmt|;
 block|}
 comment|/* Skip over the remaining used buffer descriptors. */
@@ -66504,11 +66421,7 @@ name|bxe_watchdog_exit
 goto|;
 name|BXE_PRINTF
 argument_list|(
-literal|"%s(%d): Watchdog timeout occurred, resetting! \n"
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
+literal|"TX watchdog timeout occurred, resetting!\n"
 argument_list|)
 expr_stmt|;
 comment|/* DBRUNLV(BXE_FATAL, bxe_breakpoint(sc)); */
@@ -68138,116 +68051,8 @@ argument_list|,
 literal|"Debug message level flag"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
-argument_list|(
-name|ctx
-argument_list|,
-name|children
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"tso_offload_frames"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|debug_tso_offload_frames
-argument_list|,
-literal|0
-argument_list|,
-literal|"TSO offload frames processed count"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_UINT
-argument_list|(
-name|ctx
-argument_list|,
-name|children
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"ip_csum_offload_frames"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|debug_ip_csum_offload_frames
-argument_list|,
-literal|0
-argument_list|,
-literal|"IP checksum offload frames processed count"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_UINT
-argument_list|(
-name|ctx
-argument_list|,
-name|children
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"tcp_csum_offload_frames"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|debug_tcp_csum_offload_frames
-argument_list|,
-literal|0
-argument_list|,
-literal|"TCP checksum offload frames processed count"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_UINT
-argument_list|(
-name|ctx
-argument_list|,
-name|children
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"udp_csum_offload_frames"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|debug_udp_csum_offload_frames
-argument_list|,
-literal|0
-argument_list|,
-literal|"UDP checksum offload frames processed count"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_INT
-argument_list|(
-name|ctx
-argument_list|,
-name|children
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"mbuf_alloc_failed"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|mbuf_alloc_failed
-argument_list|,
-literal|0
-argument_list|,
-literal|"mbuf cluster allocation failures"
-argument_list|)
-expr_stmt|;
+endif|#
+directive|endif
 do|do
 block|{
 define|#
@@ -68354,7 +68159,27 @@ name|fp
 operator|->
 name|mbuf_alloc_failed
 argument_list|,
-literal|"Mbuf allocation failures"
+literal|"Mbuf allocation failure count"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"tpa_mbuf_alloc_failed"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|fp
+operator|->
+name|tpa_mbuf_alloc_failed
+argument_list|,
+literal|"TPA mbuf allocation failure count"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_ULONG
@@ -68374,7 +68199,27 @@ name|fp
 operator|->
 name|mbuf_defrag_attempts
 argument_list|,
-literal|"Mbuf defrag attempts"
+literal|"Mbuf defrag attempt count"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"mbuf_defrag_failures"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|fp
+operator|->
+name|mbuf_defrag_failures
+argument_list|,
+literal|"Mbuf defrag failure count"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_ULONG
@@ -68394,9 +68239,275 @@ name|fp
 operator|->
 name|mbuf_defrag_successes
 argument_list|,
-literal|"Mbuf defrag successes"
+literal|"Mbuf defrag success count"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"ip_csum_offload_frames"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|fp
+operator|->
+name|ip_csum_offload_frames
+argument_list|,
+literal|"IP checksum offload frame count"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"tcp_csum_offload_frames"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|fp
+operator|->
+name|tcp_csum_offload_frames
+argument_list|,
+literal|"TCP checksum offload frame count"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"udp_csum_offload_frames"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|fp
+operator|->
+name|udp_csum_offload_frames
+argument_list|,
+literal|"UDP checksum offload frame count"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"tso_offload_frames"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|fp
+operator|->
+name|tso_offload_frames
+argument_list|,
+literal|"TSO offload frame count"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"tx_encap_failures"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|fp
+operator|->
+name|tx_encap_failures
+argument_list|,
+literal|"TX encapsulation failure count"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"tx_start_called_on_empty_queue"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|fp
+operator|->
+name|tx_start_called_on_empty_queue
+argument_list|,
+literal|"TX start function called on empty "
+literal|"TX queue count"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"tx_queue_too_full"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|fp
+operator|->
+name|tx_queue_too_full
+argument_list|,
+literal|"TX queue too full to add a TX frame count"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"std_window_violation"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|fp
+operator|->
+name|std_window_violation
+argument_list|,
+literal|"Standard frame TX BD window violation count"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"tso_window_violation"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|fp
+operator|->
+name|tso_window_violation
+argument_list|,
+literal|"TSO frame TX BD window violation count"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"unsupported_tso_ipv6_request"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|fp
+operator|->
+name|unsupported_tso_ipv6_request
+argument_list|,
+literal|"TSO frames with unsupported IPv6 protocol count"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"unsupported_tso_protocol_request"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|fp
+operator|->
+name|unsupported_tso_protocol_request
+argument_list|,
+literal|"TSO frames with unsupported protocol count"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"tx_chain_lost_mbuf"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|fp
+operator|->
+name|tx_chain_lost_mbuf
+argument_list|,
+literal|"Mbufs lost on TX chain count"
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BXE_DEBUG
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"null_cqe_flags"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|fp
+operator|->
+name|null_cqe_flags
+argument_list|,
+literal|"CQEs with NULL flags count"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 do|while
@@ -68404,6 +68515,9 @@ condition|(
 literal|0
 condition|)
 do|;
+ifdef|#
+directive|ifdef
+name|BXE_DEBUG
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|ctx
