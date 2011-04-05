@@ -136,6 +136,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/racct.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/resourcevar.h>
 end_include
 
@@ -1604,6 +1610,23 @@ name|td_proc
 argument_list|,
 name|RLIMIT_DATA
 argument_list|)
+operator|||
+name|racct_set
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|,
+name|RACCT_DATA
+argument_list|,
+name|a_out
+operator|->
+name|a_data
+operator|+
+name|bss_size
+argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|PROC_UNLOCK
