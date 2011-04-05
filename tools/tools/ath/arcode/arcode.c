@@ -196,15 +196,26 @@ name|s
 init|=
 literal|"UNKNOWN"
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|if (a->reg<= MAX_MARKERS)                 s = markers[a->reg];
-endif|#
-directive|endif
+if|if
+condition|(
+name|a
+operator|->
+name|reg
+operator|<=
+name|MAX_MARKERS
+condition|)
+name|s
+operator|=
+name|markers
+index|[
+name|a
+operator|->
+name|reg
+index|]
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"mark\t%d (%d): %d\n"
+literal|"mark\t%s (%d): %d\n"
 argument_list|,
 name|s
 argument_list|,
@@ -258,7 +269,7 @@ if|if
 condition|(
 name|argc
 operator|<
-literal|1
+literal|2
 condition|)
 block|{
 name|printf
