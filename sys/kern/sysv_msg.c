@@ -2126,6 +2126,19 @@ goto|;
 block|}
 endif|#
 directive|endif
+name|crfree
+argument_list|(
+name|msqkptr
+operator|->
+name|cred
+argument_list|)
+expr_stmt|;
+name|msqkptr
+operator|->
+name|cred
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Free the message headers */
 name|msghdr
 operator|=
@@ -2980,6 +2993,17 @@ name|msgflg
 operator|&
 literal|0777
 operator|)
+expr_stmt|;
+name|crhold
+argument_list|(
+name|cred
+argument_list|)
+expr_stmt|;
+name|msqkptr
+operator|->
+name|cred
+operator|=
+name|cred
 expr_stmt|;
 comment|/* Make sure that the returned msqid is unique */
 name|msqkptr

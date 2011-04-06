@@ -1158,6 +1158,19 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|crfree
+argument_list|(
+name|shmseg
+operator|->
+name|cred
+argument_list|)
+expr_stmt|;
+name|shmseg
+operator|->
+name|cred
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_function
 
@@ -3565,6 +3578,17 @@ name|ACCESSPERMS
 operator|)
 operator||
 name|SHMSEG_ALLOCATED
+expr_stmt|;
+name|crhold
+argument_list|(
+name|cred
+argument_list|)
+expr_stmt|;
+name|shmseg
+operator|->
+name|cred
+operator|=
+name|cred
 expr_stmt|;
 name|shmseg
 operator|->
