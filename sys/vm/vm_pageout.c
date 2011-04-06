@@ -4668,6 +4668,12 @@ name|TD_IS_SLEEPING
 argument_list|(
 name|td
 argument_list|)
+operator|&&
+operator|!
+name|TD_IS_SUSPENDED
+argument_list|(
+name|td
+argument_list|)
 condition|)
 block|{
 name|thread_unlock
@@ -6090,6 +6096,12 @@ argument_list|)
 operator|&&
 operator|!
 name|TD_IS_SLEEPING
+argument_list|(
+name|td
+argument_list|)
+operator|&&
+operator|!
+name|TD_IS_SUSPENDED
 argument_list|(
 name|td
 argument_list|)
