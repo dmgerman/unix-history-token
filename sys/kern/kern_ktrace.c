@@ -4151,6 +4151,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|p
+operator|->
+name|p_state
+operator|==
+name|PRS_NEW
+operator|||
 name|p_cansee
 argument_list|(
 name|td
