@@ -3083,16 +3083,14 @@ operator|&
 literal|0777
 operator|)
 expr_stmt|;
-name|crhold
-argument_list|(
-name|cred
-argument_list|)
-expr_stmt|;
 name|msqkptr
 operator|->
 name|cred
 operator|=
+name|crhold
+argument_list|(
 name|cred
+argument_list|)
 expr_stmt|;
 comment|/* Make sure that the returned msqid is unique */
 name|msqkptr

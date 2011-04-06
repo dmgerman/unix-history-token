@@ -5407,11 +5407,6 @@ operator|)
 operator||
 name|SEM_ALLOC
 expr_stmt|;
-name|crhold
-argument_list|(
-name|cred
-argument_list|)
-expr_stmt|;
 name|sema
 index|[
 name|semid
@@ -5419,7 +5414,10 @@ index|]
 operator|.
 name|cred
 operator|=
+name|crhold
+argument_list|(
 name|cred
+argument_list|)
 expr_stmt|;
 name|sema
 index|[
