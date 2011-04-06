@@ -796,6 +796,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|inline
 name|int
 name|getc
 parameter_list|(
