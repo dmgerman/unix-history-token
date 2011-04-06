@@ -2334,7 +2334,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Do the actual work of freeing a struct ifnet, associated index, and layer  * 2 common structure.  This call is made when the last reference to an  * interface is released.  */
+comment|/*  * Do the actual work of freeing a struct ifnet, and layer 2 common  * structure.  This call is made when the last reference to an  * interface is released.  */
 end_comment
 
 begin_function
@@ -2362,39 +2362,6 @@ operator|(
 literal|"if_free_internal: interface not dying"
 operator|)
 argument_list|)
-expr_stmt|;
-name|IFNET_WLOCK
-argument_list|()
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|ifp
-operator|==
-name|ifnet_byindex_locked
-argument_list|(
-name|ifp
-operator|->
-name|if_index
-argument_list|)
-argument_list|,
-operator|(
-literal|"%s: freeing unallocated ifnet"
-operator|,
-name|ifp
-operator|->
-name|if_xname
-operator|)
-argument_list|)
-expr_stmt|;
-name|ifindex_free_locked
-argument_list|(
-name|ifp
-operator|->
-name|if_index
-argument_list|)
-expr_stmt|;
-name|IFNET_WUNLOCK
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2522,6 +2489,39 @@ operator||=
 name|IFF_DYING
 expr_stmt|;
 comment|/* XXX: Locking */
+name|IFNET_WLOCK
+argument_list|()
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ifp
+operator|==
+name|ifnet_byindex_locked
+argument_list|(
+name|ifp
+operator|->
+name|if_index
+argument_list|)
+argument_list|,
+operator|(
+literal|"%s: freeing unallocated ifnet"
+operator|,
+name|ifp
+operator|->
+name|if_xname
+operator|)
+argument_list|)
+expr_stmt|;
+name|ifindex_free_locked
+argument_list|(
+name|ifp
+operator|->
+name|if_index
+argument_list|)
+expr_stmt|;
+name|IFNET_WUNLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
