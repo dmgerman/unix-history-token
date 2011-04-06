@@ -1100,6 +1100,76 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|kld32_file_stat_1
+block|{
+name|int
+name|version
+decl_stmt|;
+comment|/* set to sizeof(struct kld_file_stat_1) */
+name|char
+name|name
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+name|int
+name|refs
+decl_stmt|;
+name|int
+name|id
+decl_stmt|;
+name|uint32_t
+name|address
+decl_stmt|;
+comment|/* load address */
+name|uint32_t
+name|size
+decl_stmt|;
+comment|/* size in bytes */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|kld32_file_stat
+block|{
+name|int
+name|version
+decl_stmt|;
+comment|/* set to sizeof(struct kld_file_stat) */
+name|char
+name|name
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+name|int
+name|refs
+decl_stmt|;
+name|int
+name|id
+decl_stmt|;
+name|uint32_t
+name|address
+decl_stmt|;
+comment|/* load address */
+name|uint32_t
+name|size
+decl_stmt|;
+comment|/* size in bytes */
+name|char
+name|pathname
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_endif
 endif|#
 directive|endif
