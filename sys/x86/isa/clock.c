@@ -973,6 +973,9 @@ name|delay_tsc
 parameter_list|(
 name|int
 name|n
+parameter_list|,
+name|uint64_t
+name|freq
 parameter_list|)
 block|{
 name|uint64_t
@@ -995,7 +998,7 @@ operator|=
 name|start
 operator|+
 operator|(
-name|tsc_freq
+name|freq
 operator|*
 name|n
 operator|)
@@ -1165,6 +1168,9 @@ name|timecounter
 modifier|*
 name|tc
 decl_stmt|;
+name|uint64_t
+name|freq
+decl_stmt|;
 name|int
 name|delta
 decl_stmt|,
@@ -1193,9 +1199,17 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
+name|freq
+operator|=
+name|atomic_load_acq_64
+argument_list|(
+operator|&
+name|tsc_freq
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|tsc_freq
+name|freq
 operator|!=
 literal|0
 condition|)
@@ -1203,6 +1217,8 @@ block|{
 name|delay_tsc
 argument_list|(
 name|n
+argument_list|,
+name|freq
 argument_list|)
 expr_stmt|;
 return|return;

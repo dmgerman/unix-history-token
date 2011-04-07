@@ -4028,7 +4028,11 @@ operator|)
 operator|==
 literal|0
 operator|||
+name|atomic_load_acq_64
+argument_list|(
+operator|&
 name|tsc_freq
+argument_list|)
 operator|==
 literal|0
 condition|)
@@ -4132,7 +4136,11 @@ directive|ifdef
 name|__FreeBSD__
 name|machclk_freq
 operator|=
+name|atomic_load_acq_64
+argument_list|(
+operator|&
 name|tsc_freq
+argument_list|)
 expr_stmt|;
 elif|#
 directive|elif

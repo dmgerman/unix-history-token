@@ -1481,7 +1481,11 @@ decl_stmt|;
 comment|/* 	 * Get TSC frequency known at this moment. 	 * This should be constant if TSC is invariant. 	 * Otherwise tick->time conversion will be inaccurate, but 	 * will preserve monotonic property of TSC. 	 */
 name|tsc_f
 operator|=
+name|atomic_load_acq_64
+argument_list|(
+operator|&
 name|tsc_freq
+argument_list|)
 expr_stmt|;
 comment|/* 	 * The following line checks that nsec_scale calculated below 	 * doesn't overflow 32-bit unsigned integer, so that it can multiply 	 * another 32-bit integer without overflowing 64-bit. 	 * Thus minimum supported TSC frequency is 62.5MHz. 	 */
 name|KASSERT

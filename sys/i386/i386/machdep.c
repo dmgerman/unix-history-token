@@ -6063,6 +6063,8 @@ name|register_t
 name|reg
 decl_stmt|;
 name|uint64_t
+name|freq
+decl_stmt|,
 name|tsc1
 decl_stmt|,
 name|tsc2
@@ -6100,12 +6102,20 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
+name|freq
+operator|=
+name|atomic_load_acq_64
+argument_list|(
+operator|&
+name|tsc_freq
+argument_list|)
+expr_stmt|;
 comment|/* If TSC is P-state invariant, DELAY(9) based logic fails. */
 if|if
 condition|(
 name|tsc_is_invariant
 operator|&&
-name|tsc_freq
+name|freq
 operator|!=
 literal|0
 condition|)
@@ -6119,7 +6129,7 @@ if|if
 condition|(
 name|cold
 operator|&&
-name|tsc_freq
+name|freq
 operator|!=
 literal|0
 condition|)
@@ -6127,7 +6137,7 @@ block|{
 operator|*
 name|rate
 operator|=
-name|tsc_freq
+name|freq
 expr_stmt|;
 return|return
 operator|(
@@ -6226,7 +6236,7 @@ name|tsc1
 expr_stmt|;
 if|if
 condition|(
-name|tsc_freq
+name|freq
 operator|!=
 literal|0
 condition|)
