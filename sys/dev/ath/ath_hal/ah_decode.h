@@ -96,7 +96,26 @@ comment|/* ar*AniReset, listen time */
 name|AH_MARK_ANI_CONTROL
 block|,
 comment|/* ar*AniReset, cmd */
+name|AH_MARK_RX_CTL
+block|,
+comment|/* RX DMA control */
 block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+block|{
+name|AH_MARK_RX_CTL_PCU_START
+block|,
+name|AH_MARK_RX_CTL_PCU_STOP
+block|,
+name|AH_MARK_RX_CTL_DMA_START
+block|,
+name|AH_MARK_RX_CTL_DMA_STOP
+block|,
+name|AH_MARK_RX_CTL_DMA_STOP_ERR
+block|, }
 enum|;
 end_enum
 
