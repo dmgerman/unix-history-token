@@ -228,31 +228,12 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
-end_if
-
 begin_decl_stmt
 specifier|static
 name|int
 name|cputime_prof_active
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -343,25 +324,6 @@ name|delta
 decl_stmt|;
 if|#
 directive|if
-operator|(
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
-operator|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|SMP
-argument_list|)
-operator|&&
-expr|\
 name|defined
 argument_list|(
 name|PERFMON
@@ -370,6 +332,12 @@ operator|&&
 name|defined
 argument_list|(
 name|I586_PMC_GUPROF
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SMP
 argument_list|)
 name|u_quad_t
 name|event_count
@@ -385,17 +353,6 @@ specifier|static
 name|u_int
 name|prev_count
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
 if|if
 condition|(
 name|cputime_clock
@@ -502,9 +459,6 @@ block|}
 endif|#
 directive|endif
 comment|/* PERFMON&& I586_PMC_GUPROF&& !SMP */
-endif|#
-directive|endif
-comment|/* I586_CPU || I686_CPU */
 comment|/* 	 * Read the current value of the 8254 timer counter 0. 	 */
 name|outb
 argument_list|(
@@ -850,17 +804,6 @@ name|cputime_clock
 operator|=
 name|CPUTIME_CLOCK_I8254
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
 if|if
 condition|(
 name|tsc_freq
@@ -875,8 +818,6 @@ name|cputime_clock
 operator|=
 name|CPUTIME_CLOCK_TSC
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|gp
 operator|->
@@ -886,17 +827,6 @@ name|i8254_freq
 operator|<<
 name|CPUTIME_CLOCK_I8254_SHIFT
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
 if|if
 condition|(
 name|cputime_clock
@@ -1032,9 +962,6 @@ block|}
 endif|#
 directive|endif
 comment|/* PERFMON&& I586_PMC_GUPROF */
-endif|#
-directive|endif
-comment|/* I586_CPU || I686_CPU */
 name|cputime_bias
 operator|=
 literal|0
@@ -1090,17 +1017,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
 if|if
 condition|(
 name|cputime_clock
@@ -1111,24 +1027,8 @@ name|cputime_prof_active
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
-end_if
 
 begin_comment
 comment|/* If the cpu frequency changed while profiling, report a warning. */
@@ -1192,15 +1092,6 @@ name|EVENTHANDLER_PRI_ANY
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* I586_CPU || I686_CPU */
-end_comment
 
 begin_endif
 endif|#
