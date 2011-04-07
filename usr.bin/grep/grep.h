@@ -337,6 +337,9 @@ decl_stmt|;
 name|bool
 name|reversed
 decl_stmt|;
+name|bool
+name|word
+decl_stmt|;
 block|}
 name|fastgrep_t
 typedef|;

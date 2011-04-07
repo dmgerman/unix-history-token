@@ -149,6 +149,10 @@ modifier|*
 name|fname
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|fname_base
+decl_stmt|;
 name|bool
 name|ret
 decl_stmt|;
@@ -159,6 +163,13 @@ condition|?
 name|false
 else|:
 name|true
+expr_stmt|;
+name|fname_base
+operator|=
+name|basename
+argument_list|(
+name|fname
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -203,10 +214,7 @@ index|]
 operator|.
 name|pat
 argument_list|,
-name|basename
-argument_list|(
-name|fname
-argument_list|)
+name|fname_base
 argument_list|,
 literal|0
 argument_list|)
@@ -1235,7 +1243,6 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
 name|int
 name|procline
 parameter_list|(
@@ -1470,7 +1477,12 @@ name|r
 operator|==
 literal|0
 operator|&&
-name|wflag
+name|fg_pattern
+index|[
+name|i
+index|]
+operator|.
+name|word
 operator|&&
 name|pmatch
 operator|.

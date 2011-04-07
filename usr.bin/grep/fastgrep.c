@@ -271,16 +271,6 @@ decl_stmt|;
 name|int
 name|shiftPatternLen
 decl_stmt|;
-name|bool
-name|bol
-init|=
-name|false
-decl_stmt|;
-name|bool
-name|eol
-init|=
-name|false
-decl_stmt|;
 comment|/* Initialize. */
 name|fg
 operator|->
@@ -309,6 +299,12 @@ name|reversed
 operator|=
 name|false
 expr_stmt|;
+name|fg
+operator|->
+name|word
+operator|=
+name|wflag
+expr_stmt|;
 comment|/* Remove end-of-line character ('$'). */
 if|if
 condition|(
@@ -330,10 +326,6 @@ operator|==
 literal|'$'
 condition|)
 block|{
-name|eol
-operator|=
-name|true
-expr_stmt|;
 name|fg
 operator|->
 name|eol
@@ -357,10 +349,6 @@ operator|==
 literal|'^'
 condition|)
 block|{
-name|bol
-operator|=
-name|true
-expr_stmt|;
 name|fg
 operator|->
 name|bol
@@ -371,6 +359,9 @@ name|fg
 operator|->
 name|len
 operator|--
+expr_stmt|;
+name|pat
+operator|++
 expr_stmt|;
 block|}
 if|if
@@ -421,7 +412,9 @@ operator|+=
 literal|7
 expr_stmt|;
 comment|/* Word boundary is handled separately in util.c */
-name|wflag
+name|fg
+operator|->
+name|word
 operator|=
 name|true
 expr_stmt|;
@@ -580,8 +573,12 @@ operator|(
 operator|(
 operator|!
 operator|(
+name|fg
+operator|->
 name|bol
 operator|||
+name|fg
+operator|->
 name|eol
 operator|)
 operator|)
