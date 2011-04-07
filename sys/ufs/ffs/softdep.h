@@ -1255,6 +1255,11 @@ name|ir_deplisthd
 decl_stmt|;
 comment|/* allocindir deps for this block */
 name|struct
+name|jnewblkhd
+name|ir_jnewblkhd
+decl_stmt|;
+comment|/* Canceled block allocations. */
+name|struct
 name|workhead
 name|ir_jwork
 decl_stmt|;
@@ -1369,9 +1374,9 @@ directive|define
 name|ff_state
 value|ff_list.wk_state
 name|struct
-name|jfreefrag
+name|worklist
 modifier|*
-name|ff_jfreefrag
+name|ff_jdep
 decl_stmt|;
 comment|/* Associated journal entry. */
 name|struct
@@ -1478,6 +1483,12 @@ argument_list|)
 name|fw_next
 expr_stmt|;
 comment|/* Queue for freeblk list. */
+name|struct
+name|jnewblk
+modifier|*
+name|fw_jnewblk
+decl_stmt|;
+comment|/* Journal entry to cancel. */
 name|struct
 name|freeblks
 modifier|*
@@ -2070,12 +2081,19 @@ argument_list|)
 name|jn_deps
 expr_stmt|;
 comment|/* Jnewblks on sm_jnewblkhd. */
+name|LIST_ENTRY
+argument_list|(
+argument|jnewblk
+argument_list|)
+name|jn_indirdeps
+expr_stmt|;
+comment|/* Jnewblks on ir_jnewblkhd. */
 name|struct
-name|newblk
+name|worklist
 modifier|*
-name|jn_newblk
+name|jn_dep
 decl_stmt|;
-comment|/* Back pointer to newblk. */
+comment|/* Dependency to ref completed seg. */
 name|ino_t
 name|jn_ino
 decl_stmt|;
