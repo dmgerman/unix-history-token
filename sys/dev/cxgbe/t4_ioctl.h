@@ -22,14 +22,14 @@ end_comment
 begin_enum
 enum|enum
 block|{
-name|T4_GET32
+name|T4_GETREG
 init|=
 literal|0x40
 block|,
-comment|/* read 32 bit register */
-name|T4_SET32
+comment|/* read register */
+name|T4_SETREG
 block|,
-comment|/* write 32 bit register */
+comment|/* write register */
 name|T4_REGDUMP
 block|,
 comment|/* dump of all registers */
@@ -39,12 +39,15 @@ end_enum
 
 begin_struct
 struct|struct
-name|t4_reg32
+name|t4_reg
 block|{
 name|uint32_t
 name|addr
 decl_stmt|;
 name|uint32_t
+name|size
+decl_stmt|;
+name|uint64_t
 name|val
 decl_stmt|;
 block|}
@@ -69,7 +72,7 @@ name|uint32_t
 name|len
 decl_stmt|;
 comment|/* bytes */
-name|uint8_t
+name|uint32_t
 modifier|*
 name|data
 decl_stmt|;
@@ -80,15 +83,15 @@ end_struct
 begin_define
 define|#
 directive|define
-name|CHELSIO_T4_GETREG32
-value|_IOWR('f', T4_GET32, struct t4_reg32)
+name|CHELSIO_T4_GETREG
+value|_IOWR('f', T4_GETREG, struct t4_reg)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CHELSIO_T4_SETREG32
-value|_IOW('f', T4_SET32, struct t4_reg32)
+name|CHELSIO_T4_SETREG
+value|_IOW('f', T4_SETREG, struct t4_reg)
 end_define
 
 begin_define
