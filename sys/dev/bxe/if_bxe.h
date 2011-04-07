@@ -1144,7 +1144,7 @@ value|(((el) + 1)& RX_SGE_MASK_LEN_MASK)
 end_define
 
 begin_comment
-comment|/* Transmit Buffer Descriptor (tx_bd) definitions. */
+comment|/*  * Transmit Buffer Descriptor (tx_bd) definitions*  */
 end_comment
 
 begin_comment
@@ -1242,7 +1242,7 @@ value|((x)& USABLE_TX_BD_PER_PAGE)
 end_define
 
 begin_comment
-comment|/* Receive Buffer Descriptor (rx_bd) definitions. */
+comment|/*  * Receive Buffer Descriptor (rx_bd) definitions*  */
 end_comment
 
 begin_define
@@ -1364,7 +1364,7 @@ value|((x)& RX_DESC_MASK)
 end_define
 
 begin_comment
-comment|/* Receive Completion Queue definitions. */
+comment|/*  * Receive Completion Queue definitions*  */
 end_comment
 
 begin_comment
@@ -1386,7 +1386,6 @@ begin_define
 define|#
 directive|define
 name|TOTAL_RCQ_ENTRIES_PER_PAGE
-define|\
 value|(BCM_PAGE_SIZE / sizeof(union eth_rx_cqe))
 end_define
 
@@ -3447,7 +3446,7 @@ decl_stmt|;
 comment|/* Pointer to the receive consumer index in the status block. */
 name|uint16_t
 modifier|*
-name|rx_cons_sb
+name|rx_cq_cons_sb
 decl_stmt|;
 comment|/* 	 * Pointer to the receive buffer descriptor consumer in the 	 * status block. 	 */
 name|uint16_t
@@ -3596,12 +3595,10 @@ name|unsigned
 name|long
 name|tpa_pkts
 decl_stmt|;
-comment|/* Receive interrupt counter. */
 name|unsigned
 name|long
 name|rx_calls
 decl_stmt|;
-comment|/* Memory buffer allocation failure counter. */
 name|unsigned
 name|long
 name|mbuf_alloc_failed
@@ -3640,19 +3637,19 @@ name|null_cqe_flags
 decl_stmt|;
 name|unsigned
 name|long
-name|ip_csum_offload_frames
+name|offload_frames_csum_ip
 decl_stmt|;
 name|unsigned
 name|long
-name|tcp_csum_offload_frames
+name|offload_frames_csum_tcp
 decl_stmt|;
 name|unsigned
 name|long
-name|udp_csum_offload_frames
+name|offload_frames_csum_udp
 decl_stmt|;
 name|unsigned
 name|long
-name|tso_offload_frames
+name|offload_frames_tso
 decl_stmt|;
 name|unsigned
 name|long
@@ -3672,19 +3669,19 @@ name|tx_dma_mapping_failure
 decl_stmt|;
 name|unsigned
 name|long
-name|tso_window_violation
+name|window_violation_tso
 decl_stmt|;
 name|unsigned
 name|long
-name|std_window_violation
+name|window_violation_std
 decl_stmt|;
 name|unsigned
 name|long
-name|unsupported_tso_ipv6_request
+name|unsupported_tso_request_ipv6
 decl_stmt|;
 name|unsigned
 name|long
-name|unsupported_tso_protocol_request
+name|unsupported_tso_request_not_tcp
 decl_stmt|;
 name|unsigned
 name|long
@@ -4718,17 +4715,14 @@ name|grcdump_buffer
 decl_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|EVST_STOP_ON_ERROR
-name|uint32_t
-name|next_free
+name|unsigned
+name|long
+name|tx_start_called_with_link_down
 decl_stmt|;
-name|uint32_t
-name|last_alloc
+name|unsigned
+name|long
+name|tx_start_called_with_queue_full
 decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct

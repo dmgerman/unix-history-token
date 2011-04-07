@@ -3709,6 +3709,10 @@ begin_comment
 comment|/*  * ETH_RSS_MODE_DISABLED (0)  * Disables all multi-queue/packet sorting algorithms.  Each  * received frame is routed to the same receive queue.  *  * ETH_RSS_MODE_REGULAR (1)  * The default mode which assigns incoming frames to receive  * queues according to RSS (i.e a 2-tuple match on the source/  * destination IP address or a 4-tuple match on the source/  * destination IP address and the source/destination TCP port).  *  */
 end_comment
 
+begin_comment
+comment|/* static int bxe_multi_mode = ETH_RSS_MODE_REGULAR; */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -3746,47 +3750,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Multi-Queue Mode"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|uint32_t
-name|bxe_pri_map
-init|=
-literal|0x0
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.bxe.pri_map"
-argument_list|,
-operator|&
-name|bxe_pri_map
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_UINT
-argument_list|(
-name|_hw_bxe
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|pri_map
-argument_list|,
-name|CTLFLAG_RDTUN
-argument_list|,
-operator|&
-name|bxe_pri_map
-argument_list|,
-literal|0
-argument_list|,
-literal|"Priority map"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3923,97 +3886,26 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
 comment|/*  * Allows setting the maximum number of received frames to process  * during an interrupt.  *  * Allowable values are:  * -1 (Unlimited), 0 (None), otherwise specifies the number of RX frames.  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|int
-name|bxe_rx_limit
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.bxe.rx_limit"
-argument_list|,
-operator|&
-name|bxe_rx_limit
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_UINT
-argument_list|(
-name|_hw_bxe
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|rx_limit
-argument_list|,
-name|CTLFLAG_RDTUN
-argument_list|,
-operator|&
-name|bxe_rx_limit
-argument_list|,
-literal|0
-argument_list|,
-literal|"Maximum received frames processed during an interrupt."
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
+unit|static int bxe_rx_limit = -1; TUNABLE_INT("hw.bxe.rx_limit",&bxe_rx_limit); SYSCTL_UINT(_hw_bxe, OID_AUTO, rx_limit, CTLFLAG_RDTUN,&bxe_rx_limit,     0, "Maximum received frames processed during an interrupt.");
 comment|/*  * Allows setting the maximum number of transmit frames to process  * during an interrupt.  *  * Allowable values are:  * -1 (Unlimited), 0 (None), otherwise specifies the number of TX frames.  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|int
-name|bxe_tx_limit
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.bxe.tx_limit"
-argument_list|,
-operator|&
-name|bxe_tx_limit
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_UINT
-argument_list|(
-name|_hw_bxe
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|tx_limit
-argument_list|,
-name|CTLFLAG_RDTUN
-argument_list|,
-operator|&
-name|bxe_tx_limit
-argument_list|,
-literal|0
-argument_list|,
-literal|"Maximum transmit frames processed during an interrupt."
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_endif
+unit|static int bxe_tx_limit = -1; TUNABLE_INT("hw.bxe.tx_limit",&bxe_tx_limit); SYSCTL_UINT(_hw_bxe, OID_AUTO, tx_limit, CTLFLAG_RDTUN,&bxe_tx_limit, 	0, "Maximum transmit frames processed during an interrupt.");
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Global variables  */
@@ -9524,12 +9416,16 @@ name|mrrs
 operator|=
 name|bxe_mrrs
 expr_stmt|;
-comment|/* Select the RX and TX ring sizes */
+comment|/* 	 * Select the RX and TX ring sizes.  The actual 	 * ring size for TX is complicated by the fact 	 * that a single TX frame may be broken up into 	 * many buffer descriptors (tx_start_bd, 	 * tx_parse_bd, tx_data_bd).  In the best case, 	 * there are always at least two BD's required 	 * so we'll assume the best case here. 	 */
 name|sc
 operator|->
 name|tx_ring_size
 operator|=
+operator|(
 name|USABLE_TX_BD
+operator|>>
+literal|1
+operator|)
 expr_stmt|;
 name|sc
 operator|->
@@ -13653,7 +13549,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BXE_INFO_LOAD
+name|BXE_VERBOSE_LOAD
 argument_list|,
 literal|"%s(): Setup leading connection "
 literal|"on fp[00].\n"
@@ -13774,7 +13670,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BXE_INFO_LOAD
+name|BXE_VERBOSE_LOAD
 argument_list|,
 literal|"%s(): Stop client connection "
 literal|"on fp[00].\n"
@@ -13999,7 +13895,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BXE_INFO_LOAD
+name|BXE_VERBOSE_LOAD
 argument_list|,
 literal|"%s(): Setup client connection "
 literal|"on fp[%02d].\n"
@@ -14138,7 +14034,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BXE_INFO_LOAD
+name|BXE_VERBOSE_LOAD
 argument_list|,
 literal|"%s(): Stop client connection "
 literal|"on fp[%02d].\n"
@@ -17033,8 +16929,8 @@ name|sc
 argument_list|,
 name|BXE_VERBOSE_RAMROD
 argument_list|,
-literal|"%s(): %s for state 0x%08X on fp[%d], "
-literal|"currently 0x%08X.\n"
+literal|"%s(): %s for state 0x%08X on "
+literal|"fp[%02d], currently 0x%08X.\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -37292,14 +37188,14 @@ break|break;
 else|else
 name|fp
 operator|->
-name|tso_window_violation
+name|window_violation_tso
 operator|++
 expr_stmt|;
 block|}
 else|else
 name|fp
 operator|->
-name|std_window_violation
+name|window_violation_std
 operator|++
 expr_stmt|;
 comment|/* 			 * If this is a standard frame then defrag is 			 * required.  Unmap the mbuf, defrag it, then 			 * try mapping it again. 			 */
@@ -37994,7 +37890,7 @@ argument_list|)
 expr_stmt|;
 name|fp
 operator|->
-name|ip_csum_offload_frames
+name|offload_frames_csum_ip
 operator|++
 expr_stmt|;
 name|flags
@@ -38069,7 +37965,7 @@ name|ETH_TX_BD_FLAGS_L4_CSUM
 expr_stmt|;
 name|fp
 operator|->
-name|tcp_csum_offload_frames
+name|offload_frames_csum_tcp
 operator|++
 expr_stmt|;
 comment|/* Update the enet + IP + TCP header length. */
@@ -38169,7 +38065,7 @@ name|ETH_TX_BD_FLAGS_L4_CSUM
 expr_stmt|;
 name|fp
 operator|->
-name|udp_csum_offload_frames
+name|offload_frames_csum_udp
 operator|++
 expr_stmt|;
 name|tx_parse_bd
@@ -38301,7 +38197,7 @@ name|ETHERTYPE_IPV6
 case|:
 name|fp
 operator|->
-name|unsupported_tso_ipv6_request
+name|unsupported_tso_request_ipv6
 operator|++
 expr_stmt|;
 comment|/* DRC - How to handle this error? */
@@ -38309,7 +38205,7 @@ break|break;
 default|default:
 name|fp
 operator|->
-name|unsupported_tso_protocol_request
+name|unsupported_tso_request_not_tcp
 operator|++
 expr_stmt|;
 comment|/* DRC - How to handle this error? */
@@ -38356,7 +38252,7 @@ name|ETH_TX_BD_FLAGS_SW_LSO
 expr_stmt|;
 name|fp
 operator|->
-name|tso_offload_frames
+name|offload_frames_tso
 operator|++
 expr_stmt|;
 if|if
@@ -38826,13 +38722,10 @@ operator|.
 name|raw
 argument_list|)
 expr_stmt|;
-name|DBRUN
-argument_list|(
 name|fp
 operator|->
 name|tx_pkts
 operator|++
-argument_list|)
 expr_stmt|;
 comment|/* Prevent speculative reads from getting ahead of the status block. */
 name|bus_space_barrier
@@ -38908,9 +38801,6 @@ name|bxe_fastpath
 modifier|*
 name|fp
 decl_stmt|;
-name|int
-name|fp_index
-decl_stmt|;
 name|sc
 operator|=
 name|ifp
@@ -38921,10 +38811,6 @@ name|DBENTER
 argument_list|(
 name|BXE_EXTREME_SEND
 argument_list|)
-expr_stmt|;
-name|fp_index
-operator|=
-literal|0
 expr_stmt|;
 comment|/* Exit if there's no link. */
 if|if
@@ -38994,7 +38880,7 @@ name|sc
 operator|->
 name|fp
 index|[
-name|fp_index
+literal|0
 index|]
 expr_stmt|;
 name|BXE_CORE_LOCK
@@ -39915,14 +39801,14 @@ parameter_list|)
 block|{
 specifier|volatile
 name|uint16_t
-name|rx_cons_sb
+name|rx_cq_cons_sb
 init|=
 literal|0
 decl_stmt|;
 name|rmb
 argument_list|()
 expr_stmt|;
-name|rx_cons_sb
+name|rx_cq_cons_sb
 operator|=
 operator|(
 specifier|volatile
@@ -39933,26 +39819,26 @@ argument_list|(
 operator|*
 name|fp
 operator|->
-name|rx_cons_sb
+name|rx_cq_cons_sb
 argument_list|)
 expr_stmt|;
 comment|/* 	 * It is valid for the hardware's copy of the completion 	 * consumer index to be pointing at a "Next Page" entry in 	 * the completion chain but the driver prefers to assume 	 * that it is pointing at the next available CQE so we 	 * need to adjust the value accordingly. 	 */
 if|if
 condition|(
 operator|(
-name|rx_cons_sb
+name|rx_cq_cons_sb
 operator|&
 name|USABLE_RCQ_ENTRIES_PER_PAGE
 operator|)
 operator|==
 name|USABLE_RCQ_ENTRIES_PER_PAGE
 condition|)
-name|rx_cons_sb
+name|rx_cq_cons_sb
 operator|++
 expr_stmt|;
 return|return
 operator|(
-name|rx_cons_sb
+name|rx_cq_cons_sb
 operator|)
 return|;
 block|}
@@ -43750,9 +43636,9 @@ modifier|*
 name|nextpg
 decl_stmt|;
 name|uint16_t
-name|ring_prod
+name|rx_bd_prod
 decl_stmt|,
-name|cqe_ring_prod
+name|rx_sge_prod
 decl_stmt|;
 name|int
 name|func
@@ -43992,6 +43878,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
+comment|/* Allocate memory for RX and CQ chains. */
 for|for
 control|(
 name|i
@@ -44039,12 +43926,26 @@ name|fp
 operator|->
 name|rx_bd_cons
 operator|=
-literal|0
-expr_stmt|;
-comment|/* Pointer to status block's completion queue consumer index. */
 name|fp
 operator|->
-name|rx_cons_sb
+name|rx_bd_prod
+operator|=
+literal|0
+expr_stmt|;
+name|fp
+operator|->
+name|rx_cq_cons
+operator|=
+name|fp
+operator|->
+name|rx_cq_prod
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Status block's completion queue consumer index. */
+name|fp
+operator|->
+name|rx_cq_cons_sb
 operator|=
 operator|&
 name|fp
@@ -44277,7 +44178,7 @@ argument_list|(
 name|sc
 argument_list|,
 operator|(
-name|BXE_INFO_LOAD
+name|BXE_EXTREME_LOAD
 operator|)
 argument_list|,
 literal|"%s(): fp[%02d].rx_bd_chain[%02d][0x%04X]=0x%jX\n"
@@ -44406,7 +44307,7 @@ argument_list|(
 name|sc
 argument_list|,
 operator|(
-name|BXE_INFO_LOAD
+name|BXE_EXTREME_LOAD
 operator|)
 argument_list|,
 literal|"%s(): fp[%02d].rx_cq_chain[%02d][0x%04X]=0x%jX\n"
@@ -44477,13 +44378,13 @@ argument_list|)
 condition|)
 block|{
 comment|/* Allocate SGEs and initialize the ring elements. */
-name|ring_prod
+name|rx_sge_prod
 operator|=
 literal|0
 expr_stmt|;
 while|while
 condition|(
-name|ring_prod
+name|rx_sge_prod
 operator|<
 name|sc
 operator|->
@@ -44498,7 +44399,7 @@ name|sc
 argument_list|,
 name|fp
 argument_list|,
-name|ring_prod
+name|rx_sge_prod
 argument_list|)
 operator|!=
 literal|0
@@ -44528,7 +44429,7 @@ name|sc
 argument_list|,
 name|fp
 argument_list|,
-name|ring_prod
+name|rx_sge_prod
 argument_list|)
 expr_stmt|;
 name|fp
@@ -44537,17 +44438,17 @@ name|disable_tpa
 operator|=
 literal|1
 expr_stmt|;
-name|ring_prod
+name|rx_sge_prod
 operator|=
 literal|0
 expr_stmt|;
 break|break;
 block|}
-name|ring_prod
+name|rx_sge_prod
 operator|=
 name|NEXT_SGE_IDX
 argument_list|(
-name|ring_prod
+name|rx_sge_prod
 argument_list|)
 expr_stmt|;
 block|}
@@ -44555,17 +44456,11 @@ name|fp
 operator|->
 name|rx_sge_prod
 operator|=
-name|ring_prod
+name|rx_sge_prod
 expr_stmt|;
 block|}
-comment|/* 		 * Allocate buffers for all the RX BDs in RX BD Chain. 		 * Add completion queue entries at the same time. 		 */
-name|fp
-operator|->
-name|rx_cq_cons
-operator|=
-name|ring_prod
-operator|=
-name|cqe_ring_prod
+comment|/* 		 * Allocate buffers for all the RX BDs in RX BD Chain. 		 */
+name|rx_bd_prod
 operator|=
 literal|0
 expr_stmt|;
@@ -44575,17 +44470,26 @@ name|fp
 operator|->
 name|free_rx_bd
 operator|=
-name|USABLE_RX_BD
+name|sc
+operator|->
+name|rx_ring_size
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-name|ring_prod
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
 operator|<
 name|sc
 operator|->
 name|rx_ring_size
-condition|)
+condition|;
+name|j
+operator|++
+control|)
 block|{
 if|if
 condition|(
@@ -44595,7 +44499,7 @@ name|fp
 argument_list|,
 name|NULL
 argument_list|,
-name|ring_prod
+name|rx_bd_prod
 argument_list|)
 condition|)
 block|{
@@ -44612,18 +44516,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|ring_prod
+name|rx_bd_prod
 operator|=
 name|NEXT_RX_BD
 argument_list|(
-name|ring_prod
-argument_list|)
-expr_stmt|;
-name|cqe_ring_prod
-operator|=
-name|NEXT_RCQ_IDX
-argument_list|(
-name|cqe_ring_prod
+name|rx_bd_prod
 argument_list|)
 expr_stmt|;
 block|}
@@ -44632,17 +44529,14 @@ name|fp
 operator|->
 name|rx_bd_prod
 operator|=
-name|ring_prod
+name|rx_bd_prod
 expr_stmt|;
 name|fp
 operator|->
 name|rx_cq_prod
 operator|=
-name|cqe_ring_prod
+name|MAX_RCQ_ENTRIES
 expr_stmt|;
-comment|/* 		 * fp->rx_cq_prod = 		 *     (uint16_t)min(NUM_RCQ_PAGES*TOTAL_RCQ_ENTRIES_PER_PAGE, 		 *     cqe_ring_prod); 		 */
-name|DBRUN
-argument_list|(
 name|fp
 operator|->
 name|rx_pkts
@@ -44652,9 +44546,58 @@ operator|->
 name|rx_calls
 operator|=
 literal|0
+expr_stmt|;
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+operator|(
+name|BXE_VERBOSE_LOAD
+operator||
+name|BXE_VERBOSE_RESET
+operator|)
+argument_list|,
+literal|"%s(): USABLE_RX_BD=0x%04X, USABLE_RCQ_ENTRIES=0x%04X\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|,
+operator|(
+name|uint16_t
+operator|)
+name|USABLE_RX_BD
+argument_list|,
+operator|(
+name|uint16_t
+operator|)
+name|USABLE_RCQ_ENTRIES
 argument_list|)
 expr_stmt|;
-comment|/* Prepare the CQ buffers for DMA access. */
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+operator|(
+name|BXE_VERBOSE_LOAD
+operator||
+name|BXE_VERBOSE_RESET
+operator|)
+argument_list|,
+literal|"%s(): fp[%02d]->rx_bd_prod=0x%04X, rx_cq_prod=0x%04X\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|,
+name|i
+argument_list|,
+name|fp
+operator|->
+name|rx_bd_prod
+argument_list|,
+name|fp
+operator|->
+name|rx_cq_prod
+argument_list|)
+expr_stmt|;
+comment|/* Prepare the recevie BD and CQ buffers for DMA access. */
 for|for
 control|(
 name|j
@@ -44717,14 +44660,16 @@ operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Tell the controller that we have rx_bd's and CQE's available. 		 * Warning! this will generate an interrupt (to the TSTORM). 		 * This must only be done when the controller is initialized. 		 */
+comment|/* 		 * Tell the controller that we have rx_bd's and CQE's 		 * available.  Warning! this will generate an interrupt 		 * (to the TSTORM).  This must only be done when the 		 * controller is initialized. 		 */
 name|bxe_update_rx_prod
 argument_list|(
 name|sc
 argument_list|,
 name|fp
 argument_list|,
-name|ring_prod
+name|fp
+operator|->
+name|rx_bd_prod
 argument_list|,
 name|fp
 operator|->
@@ -44735,13 +44680,14 @@ operator|->
 name|rx_sge_prod
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Tell controller where the receive CQ 		 * chains start in physical memory. 		 */
 if|if
 condition|(
 name|i
-operator|!=
+operator|==
 literal|0
 condition|)
-continue|continue;
+block|{
 name|REG_WR
 argument_list|(
 name|sc
@@ -44788,6 +44734,7 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|DBEXIT
 argument_list|(
@@ -45053,14 +45000,11 @@ index|[
 name|C_SB_ETH_TX_CQ_INDEX
 index|]
 expr_stmt|;
-name|DBRUN
-argument_list|(
 name|fp
 operator|->
 name|tx_pkts
 operator|=
 literal|0
-argument_list|)
 expr_stmt|;
 block|}
 name|DBEXIT
@@ -47963,7 +47907,7 @@ name|fp
 operator|->
 name|rx_cq_chain
 index|[
-name|i
+literal|0
 index|]
 index|[
 name|USABLE_RCQ_ENTRIES_PER_PAGE
@@ -48024,7 +47968,7 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Next page */
+comment|/* Program the first CQ next page address. */
 name|REG_WR
 argument_list|(
 name|sc
@@ -48295,23 +48239,6 @@ argument_list|,
 name|__FUNCTION__
 argument_list|)
 expr_stmt|;
-block|}
-switch|switch
-condition|(
-name|sc
-operator|->
-name|multi_mode
-condition|)
-block|{
-case|case
-name|ETH_RSS_MODE_DISABLED
-case|:
-case|case
-name|ETH_RSS_MODE_REGULAR
-case|:
-break|break;
-default|default:
-break|break;
 block|}
 comment|/* Store it to internal memory */
 if|if
@@ -48604,9 +48531,9 @@ argument_list|(
 name|sc
 argument_list|,
 operator|(
-name|BXE_INFO_LOAD
+name|BXE_VERBOSE_LOAD
 operator||
-name|BXE_INFO_RESET
+name|BXE_VERBOSE_RESET
 operator|)
 argument_list|,
 literal|"%s(): fp[%d]: cl_id = %d, sb_id = %d\n"
@@ -51850,9 +51777,15 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BXE_INFO
+operator|(
+name|BXE_VERBOSE_LOAD
+operator||
+name|BXE_VERBOSE_RESET
+operator|)
 argument_list|,
-literal|"read order of %d order adjusted to %d\n"
+literal|"%s(): Read order of %d order adjusted to %d\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|,
 name|r_order
 argument_list|,
@@ -51875,9 +51808,15 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BXE_INFO
+operator|(
+name|BXE_VERBOSE_LOAD
+operator||
+name|BXE_VERBOSE_RESET
+operator|)
 argument_list|,
-literal|"write order of %d order adjusted to %d\n"
+literal|"%s(): Write order of %d order adjusted to %d\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|,
 name|w_order
 argument_list|,
@@ -51893,9 +51832,15 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BXE_INFO
+operator|(
+name|BXE_VERBOSE_LOAD
+operator||
+name|BXE_VERBOSE_RESET
+operator|)
 argument_list|,
-literal|"read order %d write order %d\n"
+literal|"%s(): Read order %d, write order %d\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|,
 name|r_order
 argument_list|,
@@ -52564,9 +52509,15 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BXE_INFO
+operator|(
+name|BXE_VERBOSE_LOAD
+operator||
+name|BXE_VERBOSE_RESET
+operator|)
 argument_list|,
-literal|"read 0x%x from devctl\n"
+literal|"%s(): Read 0x%x from devctl\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|,
 name|devctl
 argument_list|)
@@ -52610,9 +52561,15 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BXE_INFO
+operator|(
+name|BXE_VERBOSE_LOAD
+operator||
+name|BXE_VERBOSE_RESET
+operator|)
 argument_list|,
-literal|"force read order to %d\n"
+literal|"%s(): Force MRRS read order to %d\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|,
 name|sc
 operator|->
@@ -64433,7 +64390,7 @@ name|uint16_t
 name|bd_prod
 parameter_list|,
 name|uint16_t
-name|rx_cq_prod
+name|cqe_prod
 parameter_list|,
 name|uint16_t
 name|sge_prod
@@ -64462,7 +64419,7 @@ name|rx_prods
 operator|.
 name|cqe_prod
 operator|=
-name|rx_cq_prod
+name|cqe_prod
 expr_stmt|;
 name|rx_prods
 operator|.
@@ -64537,7 +64494,7 @@ argument_list|,
 name|BXE_EXTREME_RECV
 argument_list|,
 literal|"%s(%d): Wrote fp[%02d] bd_prod = 0x%04X, "
-literal|"rx_cq_prod = 0x%04X, sge_prod = 0x%04X\n"
+literal|"cqe_prod = 0x%04X, sge_prod = 0x%04X\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -64549,7 +64506,7 @@ name|index
 argument_list|,
 name|bd_prod
 argument_list|,
-name|rx_cq_prod
+name|cqe_prod
 argument_list|,
 name|sge_prod
 argument_list|)
@@ -64602,17 +64559,12 @@ name|rx_cq_prod
 decl_stmt|,
 name|rx_cq_cons_sb
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|BXE_DEBUG
 name|unsigned
 name|long
 name|rx_pkts
 init|=
 literal|0
 decl_stmt|;
-endif|#
-directive|endif
 name|sc
 operator|=
 name|fp
@@ -65521,11 +65473,8 @@ argument_list|(
 name|rx_bd_cons
 argument_list|)
 expr_stmt|;
-name|DBRUN
-argument_list|(
 name|rx_pkts
 operator|++
-argument_list|)
 expr_stmt|;
 name|bxe_rxeof_next_cqe
 label|:
@@ -65638,22 +65587,16 @@ argument_list|,
 name|BUS_SPACE_BARRIER_READ
 argument_list|)
 expr_stmt|;
-name|DBRUN
-argument_list|(
 name|fp
 operator|->
 name|rx_pkts
 operator|+=
 name|rx_pkts
-argument_list|)
 expr_stmt|;
-name|DBRUN
-argument_list|(
 name|fp
 operator|->
 name|rx_calls
 operator|++
-argument_list|)
 expr_stmt|;
 name|DBEXIT
 argument_list|(
@@ -68027,6 +67970,46 @@ argument_list|,
 literal|"Driver transmit queue full count"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"tx_start_called_with_link_down"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|tx_start_called_with_link_down
+argument_list|,
+literal|"TX start routine called while link down count"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"tx_start_called_with_queue_full"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|tx_start_called_with_queue_full
+argument_list|,
+literal|"TX start routine called with queue full count"
+argument_list|)
+expr_stmt|;
 comment|/* ToDo: Add more statistics here. */
 ifdef|#
 directive|ifdef
@@ -68150,6 +68133,46 @@ name|queue_list
 argument_list|,
 name|OID_AUTO
 argument_list|,
+literal|"rx_pkts"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|fp
+operator|->
+name|rx_pkts
+argument_list|,
+literal|"Received packets"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"tx_pkts"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|fp
+operator|->
+name|tx_pkts
+argument_list|,
+literal|"Transmitted packets"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
 literal|"mbuf_alloc_failed"
 argument_list|,
 name|CTLFLAG_RD
@@ -68250,14 +68273,14 @@ name|queue_list
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"ip_csum_offload_frames"
+literal|"offload_frames_csum_ip"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|fp
 operator|->
-name|ip_csum_offload_frames
+name|offload_frames_csum_ip
 argument_list|,
 literal|"IP checksum offload frame count"
 argument_list|)
@@ -68270,14 +68293,14 @@ name|queue_list
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"tcp_csum_offload_frames"
+literal|"offload_frames_csum_tcp"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|fp
 operator|->
-name|tcp_csum_offload_frames
+name|offload_frames_csum_tcp
 argument_list|,
 literal|"TCP checksum offload frame count"
 argument_list|)
@@ -68290,14 +68313,14 @@ name|queue_list
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"udp_csum_offload_frames"
+literal|"offload_frames_csum_udp"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|fp
 operator|->
-name|udp_csum_offload_frames
+name|offload_frames_csum_udp
 argument_list|,
 literal|"UDP checksum offload frame count"
 argument_list|)
@@ -68310,14 +68333,14 @@ name|queue_list
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"tso_offload_frames"
+literal|"offload_frames_tso"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|fp
 operator|->
-name|tso_offload_frames
+name|offload_frames_tso
 argument_list|,
 literal|"TSO offload frame count"
 argument_list|)
@@ -68391,14 +68414,14 @@ name|queue_list
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"std_window_violation"
+literal|"window_violation_std"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|fp
 operator|->
-name|std_window_violation
+name|window_violation_std
 argument_list|,
 literal|"Standard frame TX BD window violation count"
 argument_list|)
@@ -68411,14 +68434,14 @@ name|queue_list
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"tso_window_violation"
+literal|"window_violation_tso"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|fp
 operator|->
-name|tso_window_violation
+name|window_violation_tso
 argument_list|,
 literal|"TSO frame TX BD window violation count"
 argument_list|)
@@ -68431,14 +68454,14 @@ name|queue_list
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"unsupported_tso_ipv6_request"
+literal|"unsupported_tso_request_ipv6"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|fp
 operator|->
-name|unsupported_tso_ipv6_request
+name|unsupported_tso_request_ipv6
 argument_list|,
 literal|"TSO frames with unsupported IPv6 protocol count"
 argument_list|)
@@ -68451,14 +68474,14 @@ name|queue_list
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"unsupported_tso_protocol_request"
+literal|"unsupported_tso_request_not_tcp"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|fp
 operator|->
-name|unsupported_tso_protocol_request
+name|unsupported_tso_request_not_tcp
 argument_list|,
 literal|"TSO frames with unsupported protocol count"
 argument_list|)
