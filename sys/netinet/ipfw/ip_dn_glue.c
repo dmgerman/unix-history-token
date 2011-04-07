@@ -3804,7 +3804,7 @@ name|free
 argument_list|(
 name|v
 argument_list|,
-name|M_DUMMYNET
+name|M_TEMP
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3851,7 +3851,7 @@ name|free
 argument_list|(
 name|v
 argument_list|,
-name|M_DUMMYNET
+name|M_TEMP
 argument_list|)
 expr_stmt|;
 break|break;
