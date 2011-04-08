@@ -662,6 +662,9 @@ name|MaxFrameCount
 parameter_list|,
 name|uint8_t
 name|ep_no
+parameter_list|,
+name|uint8_t
+name|pre_scale
 parameter_list|)
 function_decl|;
 end_typedef

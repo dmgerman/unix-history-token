@@ -451,10 +451,16 @@ decl_stmt|;
 define|#
 directive|define
 name|USB_FS_MAX_FRAMES
-value|(1<< 12)
+value|(1U<< 12)
+define|#
+directive|define
+name|USB_FS_MAX_FRAMES_PRE_SCALE
+value|(1U<< 31)
+comment|/* for ISOCHRONOUS transfers */
 name|uint32_t
 name|max_frames
 decl_stmt|;
+comment|/* read and write */
 name|uint16_t
 name|max_packet_length
 decl_stmt|;

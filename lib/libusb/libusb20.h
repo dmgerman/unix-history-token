@@ -336,6 +336,10 @@ index|]
 decl_stmt|;
 block|}
 struct|;
+define|#
+directive|define
+name|LIBUSB20_MAX_FRAME_PRE_SCALE
+value|(1U<< 31)
 comment|/* USB transfer operations */
 name|int
 name|libusb20_tr_close
