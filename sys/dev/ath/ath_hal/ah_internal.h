@@ -56,6 +56,16 @@ directive|include
 file|<net80211/_ieee80211.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_ah.h"
+end_include
+
+begin_comment
+comment|/* needed for AH_SUPPORT_AR5416 */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -467,6 +477,11 @@ directive|define
 name|CHANNEL_ANI_SETUP
 value|0x04
 comment|/* ANI state setup */
+define|#
+directive|define
+name|CHANNEL_MIMO_NF_VALID
+value|0x04
+comment|/* Mimo NF values are valid */
 name|uint8_t
 name|calValid
 decl_stmt|;
@@ -483,6 +498,24 @@ decl_stmt|;
 name|int16_t
 name|noiseFloorAdjust
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|AH_SUPPORT_AR5416
+name|uint8_t
+name|noiseFloorCtl
+index|[
+name|AH_MIMO_MAX_CHAINS
+index|]
+decl_stmt|;
+name|uint8_t
+name|noiseFloorExt
+index|[
+name|AH_MIMO_MAX_CHAINS
+index|]
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* AH_SUPPORT_AR5416 */
 name|uint16_t
 name|mainSpur
 decl_stmt|;
