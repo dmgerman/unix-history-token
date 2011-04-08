@@ -4091,11 +4091,11 @@ name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
-name|uint8_t
+name|int16_t
 modifier|*
 name|nf_ctl
 parameter_list|,
-name|uint8_t
+name|int16_t
 modifier|*
 name|nf_ext
 parameter_list|)

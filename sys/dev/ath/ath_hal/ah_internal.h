@@ -501,13 +501,13 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|AH_SUPPORT_AR5416
-name|uint8_t
+name|int16_t
 name|noiseFloorCtl
 index|[
 name|AH_MIMO_MAX_CHAINS
 index|]
 decl_stmt|;
-name|uint8_t
+name|int16_t
 name|noiseFloorExt
 index|[
 name|AH_MIMO_MAX_CHAINS
