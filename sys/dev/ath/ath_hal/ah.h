@@ -4071,6 +4071,38 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Fetch the ctl/ext noise floor values reported by a MIMO  * radio. Returns 1 for valid results, 0 for invalid channel.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|__ahdecl
+name|ath_hal_get_mimo_chan_noise
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_channel
+modifier|*
+name|chan
+parameter_list|,
+name|uint8_t
+modifier|*
+name|nf_ctl
+parameter_list|,
+name|uint8_t
+modifier|*
+name|nf_ext
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Calibrate noise floor data following a channel scan or similar.  * This must be called prior retrieving noise floor data.  */
 end_comment
 
