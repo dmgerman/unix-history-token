@@ -327,6 +327,14 @@ decl_stmt|;
 name|uint32_t
 name|rs_evm2
 decl_stmt|;
+name|uint32_t
+name|rs_evm3
+decl_stmt|;
+comment|/* needed for ar9300 and later */
+name|uint32_t
+name|rs_evm4
+decl_stmt|;
+comment|/* needed for ar9300 and later */
 endif|#
 directive|endif
 comment|/* AH_SUPPORT_AR5416 */
