@@ -556,6 +556,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"machdep.kdb_on_nmi"
+argument_list|,
+operator|&
+name|kdb_on_nmi
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -587,6 +598,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Panic on NMI"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"machdep.panic_on_nmi"
+argument_list|,
+operator|&
+name|panic_on_nmi
 argument_list|)
 expr_stmt|;
 end_expr_stmt
