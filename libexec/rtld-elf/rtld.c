@@ -7494,7 +7494,6 @@ name|obj
 operator|->
 name|next
 control|)
-block|{
 if|if
 condition|(
 name|obj
@@ -7513,15 +7512,7 @@ name|sb
 operator|.
 name|st_dev
 condition|)
-block|{
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
 break|break;
-block|}
-block|}
 if|if
 condition|(
 name|obj
