@@ -1506,6 +1506,12 @@ name|IEEE80211_MAX_CHAINS
 index|]
 decl_stmt|;
 comment|/* per-antenna noise floor */
+name|uint8_t
+name|pad
+index|[
+literal|2
+index|]
+decl_stmt|;
 name|uint32_t
 name|evm
 index|[
