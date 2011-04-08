@@ -4656,9 +4656,39 @@ name|USB_MODE_HOST
 condition|)
 block|{
 comment|/* not possible in device side mode */
+name|DPRINTFN
+argument_list|(
+literal|6
+argument_list|,
+literal|"device mode\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOTTY
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|udev
+operator|->
+name|parent_hub
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* the root HUB cannot be re-enumerated */
+name|DPRINTFN
+argument_list|(
+literal|6
+argument_list|,
+literal|"cannot reset root HUB\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
 operator|)
 return|;
 block|}
