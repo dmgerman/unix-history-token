@@ -2499,6 +2499,16 @@ operator|.
 name|rcvif
 operator|!=
 name|NULL
+argument_list|,
+operator|(
+literal|"%s:%d rcvif == NULL: m=%p"
+operator|,
+name|__func__
+operator|,
+name|__LINE__
+operator|,
+name|m
+operator|)
 argument_list|)
 expr_stmt|;
 name|CURVNET_SET

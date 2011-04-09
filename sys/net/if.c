@@ -1884,6 +1884,18 @@ argument_list|(
 operator|&
 name|V_ifnet
 argument_list|)
+argument_list|,
+operator|(
+literal|"%s:%d tailq&V_ifnet=%p "
+literal|"not empty"
+operator|,
+name|__func__
+operator|,
+name|__LINE__
+operator|,
+operator|&
+name|V_ifnet
+operator|)
 argument_list|)
 expr_stmt|;
 name|VNET_ASSERT
@@ -1893,6 +1905,18 @@ argument_list|(
 operator|&
 name|V_ifg_head
 argument_list|)
+argument_list|,
+operator|(
+literal|"%s:%d tailq&V_ifg_head=%p "
+literal|"not empty"
+operator|,
+name|__func__
+operator|,
+name|__LINE__
+operator|,
+operator|&
+name|V_ifg_head
+operator|)
 argument_list|)
 expr_stmt|;
 name|free

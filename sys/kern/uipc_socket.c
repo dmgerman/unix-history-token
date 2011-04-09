@@ -1786,6 +1786,18 @@ argument_list|(
 name|head
 operator|->
 name|so_vnet
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"%s:%d so_vnet is NULL, head=%p"
+operator|,
+name|__func__
+operator|,
+name|__LINE__
+operator|,
+name|head
+operator|)
 argument_list|)
 expr_stmt|;
 name|so
