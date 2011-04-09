@@ -3019,9 +3019,18 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * If we happen to receive data on an interface which is now down, 	 * just discard the data. 	 */
+comment|/* 	 * If we happen to receive data on an interface which is now gone 	 * or down, just discard the data. 	 */
 if|if
 condition|(
+name|iflist
+index|[
+name|pi
+operator|->
+name|ipi6_ifindex
+index|]
+operator|==
+name|NULL
+operator|||
 operator|(
 name|iflist
 index|[
@@ -3046,6 +3055,19 @@ literal|"<%s> received data on a disabled interface (%s)"
 argument_list|,
 name|__func__
 argument_list|,
+operator|(
+name|iflist
+index|[
+name|pi
+operator|->
+name|ipi6_ifindex
+index|]
+operator|==
+name|NULL
+operator|)
+condition|?
+literal|"[gone]"
+else|:
 name|if_indextoname
 argument_list|(
 name|pi
