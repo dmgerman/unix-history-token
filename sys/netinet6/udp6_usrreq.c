@@ -2500,9 +2500,18 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+comment|/* Undo an address bind that may have occurred. */
+name|inp
+operator|->
+name|in6p_laddr
+operator|=
+name|in6addr_any
+expr_stmt|;
 goto|goto
 name|release
 goto|;
+block|}
 block|}
 else|else
 block|{
