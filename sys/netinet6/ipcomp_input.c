@@ -418,6 +418,39 @@ name|ipcomp
 operator|*
 argument_list|)
 expr_stmt|;
+name|nxt
+operator|=
+name|ipcomp
+operator|->
+name|comp_nxt
+expr_stmt|;
+comment|/* 	 * Check that the next header of the IPComp is not IPComp again, before 	 * doing any real work.  Given it is not possible to do double 	 * compression it means someone is playing tricks on us. 	 */
+if|if
+condition|(
+name|nxt
+operator|==
+name|IPPROTO_IPCOMP
+condition|)
+block|{
+name|ipseclog
+argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
+literal|"IPv4 IPComp input: "
+literal|"recursive compression detected."
+operator|)
+argument_list|)
+expr_stmt|;
+name|ipsecstat
+operator|.
+name|in_inval
+operator|++
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 name|ip
 operator|=
 name|mtod
@@ -428,12 +461,6 @@ expr|struct
 name|ip
 operator|*
 argument_list|)
-expr_stmt|;
-name|nxt
-operator|=
-name|ipcomp
-operator|->
-name|comp_nxt
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1169,6 +1196,33 @@ name|ipcomp
 operator|->
 name|comp_nxt
 expr_stmt|;
+comment|/* 	 * Check that the next header of the IPComp is not IPComp again, before 	 * doing any real work.  Given it is not possible to do double 	 * compression it means someone is playing tricks on us. 	 */
+if|if
+condition|(
+name|nxt
+operator|==
+name|IPPROTO_IPCOMP
+condition|)
+block|{
+name|ipseclog
+argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
+literal|"IPv6 IPComp input: "
+literal|"recursive compression detected."
+operator|)
+argument_list|)
+expr_stmt|;
+name|ipsecstat
+operator|.
+name|in_inval
+operator|++
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 name|cpi
 operator|=
 name|ntohs
