@@ -116,6 +116,14 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|extern
+name|SVCPOOL
+modifier|*
+name|nfsrvd_pool
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|vfsoptlist
 name|nfsv4root_opt
@@ -15858,9 +15866,27 @@ name|nfsd_call_nfsd
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* Clean out all NFSv4 state. */
+name|nfsrv_throwawayallstate
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 comment|/* Clean the NFS server reply cache */
 name|nfsrvd_cleancache
 argument_list|()
+expr_stmt|;
+comment|/* Free up the krpc server pool. */
+if|if
+condition|(
+name|nfsrvd_pool
+operator|!=
+name|NULL
+condition|)
+name|svcpool_destroy
+argument_list|(
+name|nfsrvd_pool
+argument_list|)
 expr_stmt|;
 comment|/* and get rid of the locks */
 name|mtx_destroy

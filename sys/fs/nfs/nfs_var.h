@@ -767,6 +767,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|nfsrv_throwawayallstate
+parameter_list|(
+name|NFSPROC_T
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* nfs_nfsdserv.c */
 end_comment
