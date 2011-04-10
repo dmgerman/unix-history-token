@@ -413,7 +413,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-empty_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|imgp
