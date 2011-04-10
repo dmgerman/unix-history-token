@@ -2057,7 +2057,7 @@ name|filter
 operator|->
 name|rr_subject
 operator|.
-name|hr_loginclass
+name|rs_loginclass
 operator|!=
 name|NULL
 operator|&&
@@ -2065,13 +2065,13 @@ name|rule
 operator|->
 name|rr_subject
 operator|.
-name|hr_loginclass
+name|rs_loginclass
 operator|!=
 name|filter
 operator|->
 name|rr_subject
 operator|.
-name|hr_loginclass
+name|rs_loginclass
 condition|)
 return|return
 operator|(
@@ -2816,7 +2816,7 @@ name|rule
 operator|->
 name|rr_subject
 operator|.
-name|hr_loginclass
+name|rs_loginclass
 operator|!=
 name|NULL
 condition|)
@@ -2826,7 +2826,7 @@ name|rule
 operator|->
 name|rr_subject
 operator|.
-name|hr_loginclass
+name|rs_loginclass
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2904,7 +2904,7 @@ name|rule
 operator|->
 name|rr_subject
 operator|.
-name|hr_loginclass
+name|rs_loginclass
 operator|!=
 name|NULL
 condition|)
@@ -2914,7 +2914,7 @@ name|rule
 operator|->
 name|rr_subject
 operator|.
-name|hr_loginclass
+name|rs_loginclass
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2993,7 +2993,7 @@ name|rule
 operator|->
 name|rr_subject
 operator|.
-name|hr_loginclass
+name|rs_loginclass
 operator|=
 name|NULL
 expr_stmt|;
@@ -3124,13 +3124,13 @@ name|copy
 operator|->
 name|rr_subject
 operator|.
-name|hr_loginclass
+name|rs_loginclass
 operator|=
 name|rule
 operator|->
 name|rr_subject
 operator|.
-name|hr_loginclass
+name|rs_loginclass
 expr_stmt|;
 name|copy
 operator|->
@@ -3426,7 +3426,7 @@ name|rule
 operator|->
 name|rr_subject
 operator|.
-name|hr_loginclass
+name|rs_loginclass
 operator|==
 name|NULL
 condition|)
@@ -3714,7 +3714,7 @@ name|rule
 operator|->
 name|rr_subject
 operator|.
-name|hr_loginclass
+name|rs_loginclass
 operator|=
 name|NULL
 expr_stmt|;
@@ -3857,7 +3857,7 @@ name|rule
 operator|->
 name|rr_subject
 operator|.
-name|hr_loginclass
+name|rs_loginclass
 operator|=
 name|loginclass_find
 argument_list|(
@@ -3870,7 +3870,7 @@ name|rule
 operator|->
 name|rr_subject
 operator|.
-name|hr_loginclass
+name|rs_loginclass
 operator|==
 name|NULL
 condition|)
@@ -4457,7 +4457,7 @@ name|rule
 operator|->
 name|rr_subject
 operator|.
-name|hr_loginclass
+name|rs_loginclass
 expr_stmt|;
 name|KASSERT
 argument_list|(
@@ -4599,7 +4599,7 @@ name|rule
 operator|->
 name|rr_subject
 operator|.
-name|hr_loginclass
+name|rs_loginclass
 condition|)
 break|break;
 continue|continue;
@@ -5064,7 +5064,7 @@ name|rule
 operator|->
 name|rr_subject
 operator|.
-name|hr_loginclass
+name|rs_loginclass
 operator|==
 name|NULL
 condition|)
@@ -5086,7 +5086,7 @@ name|rule
 operator|->
 name|rr_subject
 operator|.
-name|hr_loginclass
+name|rs_loginclass
 operator|->
 name|lc_name
 argument_list|)
@@ -5582,7 +5582,7 @@ name|priv_check
 argument_list|(
 name|td
 argument_list|,
-name|PRIV_RCTL_GET_USAGE
+name|PRIV_RCTL_GET_RACCT
 argument_list|)
 expr_stmt|;
 if|if
@@ -5786,7 +5786,7 @@ name|filter
 operator|->
 name|rr_subject
 operator|.
-name|hr_loginclass
+name|rs_loginclass
 expr_stmt|;
 if|if
 condition|(

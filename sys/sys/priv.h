@@ -2669,35 +2669,35 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRIV_RCTL_GET_RULES
+name|PRIV_RCTL_GET_RACCT
 value|670
 end_define
 
 begin_define
 define|#
 directive|define
-name|PRIV_RCTL_ADD_RULE
+name|PRIV_RCTL_GET_RULES
 value|671
 end_define
 
 begin_define
 define|#
 directive|define
-name|PRIV_RCTL_REMOVE_RULE
+name|PRIV_RCTL_GET_LIMITS
 value|672
 end_define
 
 begin_define
 define|#
 directive|define
-name|PRIV_RCTL_GET_USAGE
+name|PRIV_RCTL_ADD_RULE
 value|673
 end_define
 
 begin_define
 define|#
 directive|define
-name|PRIV_RCTL_GET_LIMITS
+name|PRIV_RCTL_REMOVE_RULE
 value|674
 end_define
 

@@ -111,7 +111,7 @@ decl_stmt|;
 name|struct
 name|loginclass
 modifier|*
-name|hr_loginclass
+name|rs_loginclass
 decl_stmt|;
 name|struct
 name|prison
