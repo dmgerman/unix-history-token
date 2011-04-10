@@ -631,6 +631,30 @@ decl_stmt|;
 name|size_t
 name|mapsize
 decl_stmt|;
+comment|/* Setup direction. */
+if|if
+condition|(
+name|proto_send
+argument_list|(
+name|res
+operator|->
+name|hr_remoteout
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|pjdlog_errno
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Unable to set connection direction"
+argument_list|)
+expr_stmt|;
 name|map
 operator|=
 name|NULL
@@ -768,18 +792,6 @@ name|mapsize
 argument_list|)
 expr_stmt|;
 block|}
-name|nv_add_uint32
-argument_list|(
-name|nvout
-argument_list|,
-operator|(
-name|uint32_t
-operator|)
-name|mapsize
-argument_list|,
-literal|"mapsize"
-argument_list|)
-expr_stmt|;
 comment|/* 	 * When we work as primary and secondary is missing we will increase 	 * localcnt in our metadata. When secondary is connected and synced 	 * we make localcnt be equal to remotecnt, which means nodes are more 	 * or less in sync. 	 * Split-brain condition is when both nodes are not able to communicate 	 * and are both configured as primary nodes. In turn, they can both 	 * make incompatible changes to the data and we have to detect that. 	 * Under split-brain condition we will increase our localcnt on first 	 * write and remote node will increase its localcnt on first write. 	 * When we connect we can see that primary's localcnt is greater than 	 * our remotecnt (primary was modified while we weren't watching) and 	 * our localcnt is greater than primary's remotecnt (we were modified 	 * while primary wasn't watching). 	 * There are many possible combinations which are all gathered below. 	 * Don't pay too much attention to exact numbers, the more important 	 * is to compare them. We compare secondary's local with primary's 	 * remote and secondary's remote with primary's local. 	 * Note that every case where primary's localcnt is smaller than 	 * secondary's remotecnt and where secondary's localcnt is smaller than 	 * primary's remotecnt should be impossible in practise. We will perform 	 * full synchronization then. Those cases are marked with an asterisk. 	 * Regular synchronization means that only extents marked as dirty are 	 * synchronized (regular synchronization). 	 * 	 * SECONDARY METADATA PRIMARY METADATA 	 * local=3 remote=3   local=2 remote=2*  ?! Full sync from secondary. 	 * local=3 remote=3   local=2 remote=3*  ?! Full sync from primary. 	 * local=3 remote=3   local=2 remote=4*  ?! Full sync from primary. 	 * local=3 remote=3   local=3 remote=2   Primary is out-of-date, 	 *                                       regular sync from secondary. 	 * local=3 remote=3   local=3 remote=3   Regular sync just in case. 	 * local=3 remote=3   local=3 remote=4*  ?! Full sync from primary. 	 * local=3 remote=3   local=4 remote=2   Split-brain condition. 	 * local=3 remote=3   local=4 remote=3   Secondary out-of-date, 	 *                                       regular sync from primary. 	 * local=3 remote=3   local=4 remote=4*  ?! Full sync from primary. 	 */
 if|if
 condition|(
@@ -1272,6 +1284,18 @@ name|hr_secondary_remotecnt
 argument_list|)
 expr_stmt|;
 block|}
+name|nv_add_uint32
+argument_list|(
+name|nvout
+argument_list|,
+operator|(
+name|uint32_t
+operator|)
+name|mapsize
+argument_list|,
+literal|"mapsize"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|hast_proto_send
@@ -1318,6 +1342,30 @@ expr_stmt|;
 name|nv_free
 argument_list|(
 name|nvout
+argument_list|)
+expr_stmt|;
+comment|/* Setup direction. */
+if|if
+condition|(
+name|proto_recv
+argument_list|(
+name|res
+operator|->
+name|hr_remotein
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|pjdlog_errno
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Unable to set connection direction"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1636,11 +1684,18 @@ argument_list|)
 expr_stmt|;
 name|setproctitle
 argument_list|(
-literal|"%s (secondary)"
+literal|"%s (%s)"
 argument_list|,
 name|res
 operator|->
 name|hr_name
+argument_list|,
+name|role2str
+argument_list|(
+name|res
+operator|->
+name|hr_role
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|PJDLOG_VERIFY

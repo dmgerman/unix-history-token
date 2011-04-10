@@ -2202,7 +2202,9 @@ name|proto_connect_wait
 argument_list|(
 name|conn
 argument_list|,
-name|HAST_TIMEOUT
+name|res
+operator|->
+name|hr_timeout
 argument_list|)
 operator|<
 literal|0
@@ -3142,6 +3144,49 @@ argument_list|(
 name|nvin
 argument_list|)
 expr_stmt|;
+comment|/* Setup directions. */
+if|if
+condition|(
+name|proto_send
+argument_list|(
+name|out
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|pjdlog_errno
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Unable to set connection direction"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|proto_recv
+argument_list|(
+name|in
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|pjdlog_errno
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Unable to set connection direction"
+argument_list|)
+expr_stmt|;
 name|pjdlog_info
 argument_list|(
 literal|"Connected to %s."
@@ -3404,7 +3449,7 @@ name|ggiocreate
 operator|.
 name|gctl_maxcount
 operator|=
-name|G_GATE_MAX_QUEUE_SIZE
+literal|0
 expr_stmt|;
 name|ggiocreate
 operator|.
@@ -3907,11 +3952,18 @@ argument_list|)
 expr_stmt|;
 name|setproctitle
 argument_list|(
-literal|"%s (primary)"
+literal|"%s (%s)"
 argument_list|,
 name|res
 operator|->
 name|hr_name
+argument_list|,
+name|role2str
+argument_list|(
+name|res
+operator|->
+name|hr_role
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|init_local
