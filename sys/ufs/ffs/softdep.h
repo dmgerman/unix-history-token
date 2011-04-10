@@ -1482,7 +1482,7 @@ argument|freework
 argument_list|)
 name|fw_next
 expr_stmt|;
-comment|/* Queue for freeblk list. */
+comment|/* For seg journal list. */
 name|struct
 name|jnewblk
 modifier|*
@@ -2307,6 +2307,14 @@ name|workhead
 name|js_entries
 decl_stmt|;
 comment|/* Entries awaiting write */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|freework
+argument_list|)
+name|js_indirs
+expr_stmt|;
+comment|/* List of indirects in this seg. */
 name|TAILQ_ENTRY
 argument_list|(
 argument|jseg
@@ -2330,6 +2338,10 @@ name|uint64_t
 name|js_seq
 decl_stmt|;
 comment|/* Journal record sequence number. */
+name|uint64_t
+name|js_oldseq
+decl_stmt|;
+comment|/* Oldest valid sequence number. */
 name|int
 name|js_size
 decl_stmt|;
