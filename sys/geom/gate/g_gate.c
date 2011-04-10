@@ -983,6 +983,12 @@ if|if
 condition|(
 name|sc
 operator|->
+name|sc_queue_size
+operator|>
+literal|0
+operator|&&
+name|sc
+operator|->
 name|sc_queue_count
 operator|>
 name|sc
