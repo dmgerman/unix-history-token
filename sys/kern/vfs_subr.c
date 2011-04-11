@@ -272,19 +272,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_expr_stmt
-specifier|static
-name|MALLOC_DEFINE
-argument_list|(
-name|M_NETADDR
-argument_list|,
-literal|"subr_export_host"
-argument_list|,
-literal|"Export host address structure"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function_decl
 specifier|static
 name|void
