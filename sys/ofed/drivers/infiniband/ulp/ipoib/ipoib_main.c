@@ -4499,7 +4499,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if (priv->dev->features& NETIF_F_SG&& priv->hca_caps& IB_DEVICE_UD_TSO) 		priv->dev->if_capabilities |= IFCAP_TSO4 | CSUM_TSO;
+block|if (priv->dev->features& NETIF_F_SG&& priv->hca_caps& IB_DEVICE_UD_TSO) { 		priv->dev->if_capabilities |= IFCAP_TSO4; 		priv->dev->if_hwassist |= CSUM_TSO; 	}
 endif|#
 directive|endif
 endif|#
