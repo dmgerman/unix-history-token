@@ -1467,6 +1467,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|HN_IEC_PREFIXES
+value|0x10
+end_define
+
+begin_comment
+comment|/* maxscale = 0x07 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HN_GETSCALE
 value|0x10
 end_define
