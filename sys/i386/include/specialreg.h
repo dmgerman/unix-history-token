@@ -960,6 +960,24 @@ value|0xff000000
 end_define
 
 begin_comment
+comment|/*  * CPUID instruction 6 ecx info  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUID_PERF_STAT
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_PERF_BIAS
+value|0x00000008
+end_define
+
+begin_comment
 comment|/*   * CPUID instruction 0xb ebx info.  */
 end_comment
 
