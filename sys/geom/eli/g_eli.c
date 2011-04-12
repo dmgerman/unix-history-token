@@ -725,6 +725,11 @@ name|bp
 operator|->
 name|bio_error
 expr_stmt|;
+name|g_destroy_bio
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Do we have all sectors already? 	 */
 name|pbp
 operator|->
@@ -742,11 +747,6 @@ operator|->
 name|bio_children
 condition|)
 return|return;
-name|g_destroy_bio
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|pbp
@@ -913,6 +913,11 @@ operator|->
 name|bio_error
 expr_stmt|;
 block|}
+name|g_destroy_bio
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Do we have all sectors already? 	 */
 name|pbp
 operator|->
@@ -974,11 +979,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|g_destroy_bio
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Write is finished, send it up. 	 */
 name|pbp
 operator|->
