@@ -1139,7 +1139,7 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
-comment|/* 	 * disable interrupts that might have been switched on in ehci_init 	 */
+comment|/* 	 * disable interrupts that might have been switched on in mv_ehci_attach 	 */
 if|if
 condition|(
 name|sc
@@ -1147,15 +1147,6 @@ operator|->
 name|sc_io_res
 condition|)
 block|{
-name|EOWRITE4
-argument_list|(
-name|sc
-argument_list|,
-name|EHCI_USBINTR
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|EWRITE4
 argument_list|(
 name|sc
