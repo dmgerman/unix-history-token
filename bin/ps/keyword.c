@@ -443,8 +443,6 @@ block|,
 name|NULL
 block|,
 name|LJUST
-operator||
-name|DSIZ
 block|,
 name|loginclass
 block|,
@@ -471,8 +469,6 @@ block|,
 name|NULL
 block|,
 name|LJUST
-operator||
-name|DSIZ
 block|,
 name|ucomm
 block|,
@@ -859,8 +855,6 @@ block|,
 name|NULL
 block|,
 name|LJUST
-operator||
-name|DSIZ
 block|,
 name|label
 block|,
@@ -933,8 +927,6 @@ block|,
 name|NULL
 block|,
 name|LJUST
-operator||
-name|DSIZ
 block|,
 name|logname
 block|,
@@ -1749,8 +1741,6 @@ block|,
 name|NULL
 block|,
 name|LJUST
-operator||
-name|DSIZ
 block|,
 name|rgroupname
 block|,
@@ -1856,8 +1846,6 @@ block|,
 name|NULL
 block|,
 name|LJUST
-operator||
-name|DSIZ
 block|,
 name|runame
 block|,
@@ -2172,8 +2160,6 @@ block|,
 name|NULL
 block|,
 name|USER
-operator||
-name|DSIZ
 block|,
 name|systime
 block|,
@@ -2279,8 +2265,6 @@ block|,
 name|NULL
 block|,
 name|USER
-operator||
-name|DSIZ
 block|,
 name|cputime
 block|,
@@ -2434,8 +2418,6 @@ block|,
 name|NULL
 block|,
 name|LJUST
-operator||
-name|DSIZ
 block|,
 name|ucomm
 block|,
@@ -2548,8 +2530,6 @@ block|,
 name|NULL
 block|,
 name|LJUST
-operator||
-name|DSIZ
 block|,
 name|uname
 block|,
@@ -2574,8 +2554,6 @@ block|,
 name|NULL
 block|,
 name|USER
-operator||
-name|DSIZ
 block|,
 name|usertime
 block|,
