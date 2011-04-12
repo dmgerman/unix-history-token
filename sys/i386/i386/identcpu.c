@@ -3133,11 +3133,22 @@ if|if
 condition|(
 name|tsc_is_invariant
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"\n  TSC: P-state invariant"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tsc_perf_stat
+condition|)
+name|printf
+argument_list|(
+literal|", performance statistics"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 elseif|else
