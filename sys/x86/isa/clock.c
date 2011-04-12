@@ -1039,6 +1039,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|tsc_is_invariant
+operator|&&
 name|freq
 operator|!=
 literal|0
