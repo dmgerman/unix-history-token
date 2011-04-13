@@ -1454,7 +1454,7 @@ name|AcpiEvExecuteRegMethod
 argument_list|(
 name|RegionObj
 argument_list|,
-literal|1
+name|ACPI_REG_CONNECT
 argument_list|)
 expr_stmt|;
 if|if

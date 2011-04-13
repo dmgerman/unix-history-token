@@ -1074,6 +1074,186 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Example ECDT */
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|char
+name|EcdtCode
+index|[]
+init|=
+block|{
+literal|0x45
+block|,
+literal|0x43
+block|,
+literal|0x44
+block|,
+literal|0x54
+block|,
+literal|0x4E
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000000    "ECDTN..." */
+literal|0x01
+block|,
+literal|0x94
+block|,
+literal|0x20
+block|,
+literal|0x49
+block|,
+literal|0x6E
+block|,
+literal|0x74
+block|,
+literal|0x65
+block|,
+literal|0x6C
+block|,
+comment|/* 00000008    ".. Intel" */
+literal|0x54
+block|,
+literal|0x65
+block|,
+literal|0x6D
+block|,
+literal|0x70
+block|,
+literal|0x6C
+block|,
+literal|0x61
+block|,
+literal|0x74
+block|,
+literal|0x65
+block|,
+comment|/* 00000010    "Template" */
+literal|0x01
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x49
+block|,
+literal|0x4E
+block|,
+literal|0x54
+block|,
+literal|0x4C
+block|,
+comment|/* 00000018    "....INTL" */
+literal|0x16
+block|,
+literal|0x03
+block|,
+literal|0x11
+block|,
+literal|0x20
+block|,
+literal|0x01
+block|,
+literal|0x08
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000020    "... ...." */
+literal|0x66
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000028    "f......." */
+literal|0x01
+block|,
+literal|0x08
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x62
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000030    "....b..." */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000038    "........" */
+literal|0x09
+block|,
+literal|0x5C
+block|,
+literal|0x5F
+block|,
+literal|0x53
+block|,
+literal|0x42
+block|,
+literal|0x2E
+block|,
+literal|0x50
+block|,
+literal|0x43
+block|,
+comment|/* 00000040    ".\_SB.PC" */
+literal|0x49
+block|,
+literal|0x30
+block|,
+literal|0x2E
+block|,
+literal|0x45
+block|,
+literal|0x43
+block|,
+literal|0x00
+comment|/* 00000048    "I0.EC."   */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Example installable control method  *  * DefinitionBlock ("", "DSDT", 2, "Intel", "MTHDTEST", 0x20090512)  * {  *     Method (\_SI_._T97, 1, Serialized)  *     {  *         Store ("Example installed method", Debug)  *         Store (Arg0, Debug)  *         Return ()  *     }  * }  *  * Compiled byte code below.  */
 end_comment
 
@@ -1389,8 +1569,18 @@ unit|0x02,0x5C,0x47,0x50,0x45,0x32,0x01,0x00
 comment|/* 000000A8    ".\GPE2.." */
 end_comment
 
-begin_endif
+begin_comment
 unit|})      Name (HNDL, 0)     Method (LD)     {         Load (BUF1, HNDL)         Store ("Load operator, handle:", Debug)         Store (HNDL, Debug)     }      Method (MAIN, 0, NotSerialized)     {         Store ("Loading OEMX table", Debug)         Store (LoadTable ("OEMX", "MyOEM", "Test"), Debug)     }      Scope (\_GPE)     {         Method (_L08) {}         Method (_E08) {}         Method (_L0B) {}     }      Device (DEV0)     {         Name (_PRW, Package() {0x11, 0})     }      Device (\GPE2)     {         Method (_L00) {}     } }
+comment|/* Example ECDT */
+end_comment
+
+begin_comment
+unit|[000h 0000   4]                    Signature : "ECDT"
+comment|/* Embedded Controller Boot Resources Table */
+end_comment
+
+begin_endif
+unit|[004h 0004   4]                 Table Length : 0000004E [008h 0008   1]                     Revision : 01 [009h 0009   1]                     Checksum : 14 [00Ah 0010   6]                       Oem ID : " Intel" [010h 0016   8]                 Oem Table ID : "Template" [018h 0024   4]                 Oem Revision : 00000001 [01Ch 0028   4]              Asl Compiler ID : "INTL" [020h 0032   4]        Asl Compiler Revision : 20110316   [024h 0036  12]      Command/Status Register :<Generic Address Structure> [024h 0036   1]                     Space ID : 01 (SystemIO) [025h 0037   1]                    Bit Width : 08 [026h 0038   1]                   Bit Offset : 00 [027h 0039   1]         Encoded Access Width : 00 (Undefined/Legacy) [028h 0040   8]                      Address : 0000000000000066  [030h 0048  12]                Data Register :<Generic Address Structure> [030h 0048   1]                     Space ID : 01 (SystemIO) [031h 0049   1]                    Bit Width : 08 [032h 0050   1]                   Bit Offset : 00 [033h 0051   1]         Encoded Access Width : 00 (Undefined/Legacy) [034h 0052   8]                      Address : 0000000000000062  [03Ch 0060   4]                          UID : 00000000 [040h 0064   1]                   GPE Number : 09 [041h 0065  13]                     Namepath : "\_SB.PCI0.EC"
 endif|#
 directive|endif
 end_endif

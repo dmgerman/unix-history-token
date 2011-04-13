@@ -418,6 +418,13 @@ name|ASL_NO_ABORT
 value|FALSE
 end_define
 
+begin_define
+define|#
+directive|define
+name|ASL_EOF
+value|ACPI_UINT32_MAX
+end_define
+
 begin_comment
 comment|/* Support for reserved method names */
 end_comment

@@ -58,7 +58,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * This module attempts to repair or convert objects returned by the  * predefined methods to an object type that is expected, as per the ACPI  * specification. The need for this code is dictated by the many machines that  * return incorrect types for the standard predefined methods. Performing these  * conversions here, in one place, eliminates the need for individual ACPI  * device drivers to do the same. Note: Most of these conversions are different  * than the internal object conversion routines used for implicit object  * conversion.  *  * The following conversions can be performed as necessary:  *  * Integer -> String  * Integer -> Buffer  * String  -> Integer  * String  -> Buffer  * Buffer  -> Integer  * Buffer  -> String  * Buffer  -> Package of Integers  * Package -> Package of one Package  *  * Additional possible repairs:  *  * Optional/unnecessary NULL package elements removed  * Required package elements that are NULL replaced by Integer/String/Buffer  * Incorrect standalone package wrapped with required outer package  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * This module attempts to repair or convert objects returned by the  * predefined methods to an object type that is expected, as per the ACPI  * specification. The need for this code is dictated by the many machines that  * return incorrect types for the standard predefined methods. Performing these  * conversions here, in one place, eliminates the need for individual ACPI  * device drivers to do the same. Note: Most of these conversions are different  * than the internal object conversion routines used for implicit object  * conversion.  *  * The following conversions can be performed as necessary:  *  * Integer -> String  * Integer -> Buffer  * String  -> Integer  * String  -> Buffer  * Buffer  -> Integer  * Buffer  -> String  * Buffer  -> Package of Integers  * Package -> Package of one Package  *  * Additional possible repairs:  *  * Required package elements that are NULL replaced by Integer/String/Buffer  * Incorrect standalone package wrapped with required outer package  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1480,22 +1480,15 @@ argument_list|(
 name|NsRemoveNullElements
 argument_list|)
 expr_stmt|;
-comment|/*      * PTYPE1 packages contain no subpackages.      * PTYPE2 packages contain a variable number of sub-packages. We can      * safely remove all NULL elements from the PTYPE2 packages.      */
+comment|/*      * We can safely remove all NULL elements from these package types:      * PTYPE1_VAR packages contain a variable number of simple data types.      * PTYPE2 packages contain a variable number of sub-packages.      */
 switch|switch
 condition|(
 name|PackageType
 condition|)
 block|{
 case|case
-name|ACPI_PTYPE1_FIXED
-case|:
-case|case
 name|ACPI_PTYPE1_VAR
 case|:
-case|case
-name|ACPI_PTYPE1_OPTION
-case|:
-return|return;
 case|case
 name|ACPI_PTYPE2
 case|:
@@ -1516,6 +1509,12 @@ name|ACPI_PTYPE2_REV_FIXED
 case|:
 break|break;
 default|default:
+case|case
+name|ACPI_PTYPE1_FIXED
+case|:
+case|case
+name|ACPI_PTYPE1_OPTION
+case|:
 return|return;
 block|}
 name|Count

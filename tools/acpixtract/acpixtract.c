@@ -39,7 +39,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|0x20110225
+value|0x20110330
 end_define
 
 begin_define
@@ -66,12 +66,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|HEADER_LINE_LENGTH
-value|17
+name|MIN_HEADER_LENGTH
+value|6
 end_define
 
 begin_comment
-comment|/* strlen ("FACP @ 0x737e1000") */
+comment|/* strlen ("DSDT @") */
 end_comment
 
 begin_comment
@@ -1303,7 +1303,7 @@ argument_list|(
 name|Buffer
 argument_list|)
 operator|<
-name|HEADER_LINE_LENGTH
+name|MIN_HEADER_LENGTH
 condition|)
 block|{
 continue|continue;
@@ -1332,35 +1332,16 @@ condition|)
 block|{
 continue|continue;
 block|}
-comment|/* Ignore lines that are not of the form "ABCD @ " */
+comment|/*              * Ignore lines that are not of the form<sig> @<addr>. Examples:              *              * DSDT @ 0x737e4000              * XSDT @ 0x737f2fff              * RSD PTR @ 0xf6cd0              * SSDT @ (nil)              */
 if|if
 condition|(
-operator|(
+operator|!
+name|strstr
+argument_list|(
 name|Buffer
-index|[
-literal|4
-index|]
-operator|!=
-literal|' '
-operator|)
-operator|||
-operator|(
-name|Buffer
-index|[
-literal|5
-index|]
-operator|!=
-literal|'@'
-operator|)
-operator|||
-operator|(
-name|Buffer
-index|[
-literal|6
-index|]
-operator|!=
-literal|' '
-operator|)
+argument_list|,
+literal|" @ "
+argument_list|)
 condition|)
 block|{
 continue|continue;

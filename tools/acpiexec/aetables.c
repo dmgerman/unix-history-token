@@ -133,7 +133,7 @@ begin_define
 define|#
 directive|define
 name|BASE_XSDT_TABLES
-value|7
+value|8
 end_define
 
 begin_define
@@ -471,6 +471,20 @@ name|ACPI_PTR_TO_PHYSADDR
 argument_list|(
 operator|&
 name|OemxCode
+argument_list|)
+expr_stmt|;
+comment|/* Install the ECDT table to test _REG */
+name|LocalXSDT
+operator|->
+name|TableOffsetEntry
+index|[
+literal|7
+index|]
+operator|=
+name|ACPI_PTR_TO_PHYSADDR
+argument_list|(
+operator|&
+name|EcdtCode
 argument_list|)
 expr_stmt|;
 comment|/*      * Install the user tables. The DSDT must be installed in the FADT.      * All other tables are installed directly into the XSDT.      */

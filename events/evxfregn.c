@@ -192,9 +192,19 @@ name|ACPI_ADR_SPACE_DATA_TABLE
 case|:
 if|if
 condition|(
+operator|!
 name|AcpiGbl_RegMethodsExecuted
 condition|)
 block|{
+comment|/* We will defer execution of the _REG methods for this space */
+goto|goto
+name|UnlockAndExit
+goto|;
+block|}
+break|break;
+default|default:
+break|break;
+block|}
 comment|/* Run all _REG methods for this address space */
 name|Status
 operator|=
@@ -205,20 +215,6 @@ argument_list|,
 name|SpaceId
 argument_list|)
 expr_stmt|;
-block|}
-break|break;
-default|default:
-name|Status
-operator|=
-name|AcpiEvExecuteRegMethods
-argument_list|(
-name|Node
-argument_list|,
-name|SpaceId
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 name|UnlockAndExit
 label|:
 operator|(

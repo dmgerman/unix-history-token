@@ -167,6 +167,13 @@ name|NODE_IS_RESOURCE_DATA
 value|0x00080000
 end_define
 
+begin_define
+define|#
+directive|define
+name|NODE_IS_NULL_RETURN
+value|0x00100000
+end_define
+
 begin_comment
 comment|/* Keeps information about individual control methods */
 end_comment

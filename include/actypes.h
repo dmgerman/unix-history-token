@@ -2344,15 +2344,48 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_ADR_SPACE_DATA_TABLE
-value|(ACPI_ADR_SPACE_TYPE) 8
+name|ACPI_NUM_PREDEFINED_REGIONS
+value|8
 end_define
+
+begin_comment
+comment|/*  * Special Address Spaces  *  * Note: A Data Table region is a special type of operation region  * that has its own AML opcode. However, internally, the AML  * interpreter simply creates an operation region with an an address  * space type of ACPI_ADR_SPACE_DATA_TABLE.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_ADR_SPACE_DATA_TABLE
+value|(ACPI_ADR_SPACE_TYPE) 0x7E
+end_define
+
+begin_comment
+comment|/* Internal to ACPICA only */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_ADR_SPACE_FIXED_HARDWARE
-value|(ACPI_ADR_SPACE_TYPE) 127
+value|(ACPI_ADR_SPACE_TYPE) 0x7F
+end_define
+
+begin_comment
+comment|/* Values for _REG connection code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_REG_DISCONNECT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_REG_CONNECT
+value|1
 end_define
 
 begin_comment
