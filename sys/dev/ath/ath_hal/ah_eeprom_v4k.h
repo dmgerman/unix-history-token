@@ -584,12 +584,24 @@ decl_stmt|;
 endif|#
 directive|endif
 name|uint8_t
+name|tx_diversity
+decl_stmt|;
+name|uint8_t
+name|flc_pwr_thresh
+decl_stmt|;
+name|uint8_t
+name|bb_scale_smrt_antenna
+decl_stmt|;
+define|#
+directive|define
+name|EEP_4K_BB_DESIRED_SCALE_MASK
+value|0x1f
+name|uint8_t
 name|futureModal
 index|[
-literal|4
+literal|1
 index|]
 decl_stmt|;
-comment|// 4
 name|SPUR_CHAN
 name|spurChans
 index|[
