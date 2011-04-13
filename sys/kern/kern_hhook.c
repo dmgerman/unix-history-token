@@ -116,14 +116,7 @@ struct|;
 end_struct
 
 begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_HHOOK
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_HHOOK
