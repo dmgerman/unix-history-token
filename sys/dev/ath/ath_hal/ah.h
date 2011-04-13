@@ -2833,6 +2833,27 @@ name|HAL_NODE_STATS
 modifier|*
 parameter_list|)
 function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_rxAntCombDiversity
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|struct
+name|ath_rx_status
+modifier|*
+parameter_list|,
+name|unsigned
+name|long
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
 comment|/* Misc Functions */
 name|HAL_STATUS
 name|__ahdecl

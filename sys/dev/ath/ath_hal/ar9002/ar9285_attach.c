@@ -89,6 +89,18 @@ directive|include
 file|"ar9002/ar9285_cal.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ar9002/ar9285_phy.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ar9002/ar9285_diversity.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -1263,6 +1275,29 @@ expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
+comment|/* Print out whether the EEPROM settings enable AR9285 diversity */
+if|if
+condition|(
+name|ar9285_check_div_comb
+argument_list|(
+name|ah
+argument_list|)
+condition|)
+block|{
+name|ath_hal_printf
+argument_list|(
+name|ah
+argument_list|,
+literal|"[ath] Enabling diversity for Kite\n"
+argument_list|)
+expr_stmt|;
+name|ah
+operator|->
+name|ah_rxAntCombDiversity
+operator|=
+name|ar9285_ant_comb_scan
+expr_stmt|;
 block|}
 comment|/* Disable 11n for the AR2427 */
 if|if
