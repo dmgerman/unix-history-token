@@ -116,6 +116,11 @@ init|=
 literal|0x00080000
 block|,
 comment|/* interrupt handling */
+name|HAL_DEBUG_DIVERSITY
+init|=
+literal|0x00100000
+block|,
+comment|/* diversity debugging */
 name|HAL_DEBUG_ANY
 init|=
 literal|0xffffffff
