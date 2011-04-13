@@ -4389,7 +4389,16 @@ argument_list|(
 name|xid
 argument_list|)
 condition|)
+block|{
+name|m_freem
+argument_list|(
+name|ct
+operator|->
+name|ct_record
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 name|m_copydata
 argument_list|(
 name|ct
