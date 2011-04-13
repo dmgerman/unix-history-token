@@ -10274,14 +10274,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Wait for clearing busy status. */
+comment|/* Wait for port ready status. */
 if|if
 condition|(
 name|siis_wait_ready
 argument_list|(
 name|dev
 argument_list|,
-literal|10000
+literal|1000
 argument_list|)
 condition|)
 block|{
@@ -10289,7 +10289,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"device ready timeout\n"
+literal|"port ready timeout\n"
 argument_list|)
 expr_stmt|;
 if|if
