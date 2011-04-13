@@ -1922,6 +1922,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|OS_REG_RMW
+parameter_list|(
+name|_a
+parameter_list|,
+name|_r
+parameter_list|,
+name|_set
+parameter_list|,
+name|_clr
+parameter_list|)
+define|\
+value|OS_REG_WRITE(_a, _r, (OS_REG_READ(_a, _r)& ~(_clr)) | (_set))
+end_define
+
+begin_define
+define|#
+directive|define
 name|OS_REG_RMW_FIELD
 parameter_list|(
 name|_a
