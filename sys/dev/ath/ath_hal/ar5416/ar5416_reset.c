@@ -4976,7 +4976,7 @@ name|HALDEBUG
 argument_list|(
 name|ah
 argument_list|,
-name|HAL_DEBUG_ANY
+name|HAL_DEBUG_RESET
 argument_list|,
 literal|"TX chainmask: 0x%x; RX chainmask: 0x%x\n"
 argument_list|,
