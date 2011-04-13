@@ -16334,6 +16334,34 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* Newer school diversity - kite specific for now */
+comment|/* XXX perhaps migrate the normal diversity code to this? */
+if|if
+condition|(
+operator|(
+name|ah
+operator|)
+operator|->
+name|ah_rxAntCombDiversity
+condition|)
+operator|(
+operator|*
+operator|(
+name|ah
+operator|)
+operator|->
+name|ah_rxAntCombDiversity
+operator|)
+operator|(
+name|ah
+operator|,
+name|rs
+operator|,
+name|ticks
+operator|,
+name|hz
+operator|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
