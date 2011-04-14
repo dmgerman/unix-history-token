@@ -1161,7 +1161,7 @@ name|acpi_timer_sysctl_freq
 argument_list|,
 literal|"I"
 argument_list|,
-literal|""
+literal|"ACPI timer frequency"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

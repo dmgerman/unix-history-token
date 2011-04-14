@@ -2009,7 +2009,7 @@ name|sysctl_machdep_i8254_freq
 argument_list|,
 literal|"IU"
 argument_list|,
-literal|""
+literal|"i8254 timer frequency"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -1529,7 +1529,7 @@ name|sysctl_machdep_tsc_freq
 argument_list|,
 literal|"QU"
 argument_list|,
-literal|""
+literal|"Time Stamp Counter frequency"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
