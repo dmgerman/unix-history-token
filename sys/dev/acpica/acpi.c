@@ -11504,6 +11504,11 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|power_suspend
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|smp_started
@@ -11800,6 +11805,11 @@ name|curthread
 argument_list|)
 expr_stmt|;
 block|}
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|power_resume
+argument_list|)
+expr_stmt|;
 comment|/* Allow another sleep request after a while. */
 name|timeout
 argument_list|(
