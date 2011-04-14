@@ -797,6 +797,36 @@ end_typedef
 begin_define
 define|#
 directive|define
+name|XPORT_IS_ATA
+parameter_list|(
+name|t
+parameter_list|)
+value|((t) == XPORT_ATA || (t) == XPORT_SATA)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XPORT_IS_SCSI
+parameter_list|(
+name|t
+parameter_list|)
+value|((t) != XPORT_UNKNOWN&& \ 				 (t) != XPORT_UNSPECIFIED&& \ 				 !XPORT_IS_ATA(t))
+end_define
+
+begin_define
+define|#
+directive|define
+name|XPORT_DEVSTAT_TYPE
+parameter_list|(
+name|t
+parameter_list|)
+value|(XPORT_IS_ATA(t) ? DEVSTAT_TYPE_IF_IDE : \ 				 XPORT_IS_SCSI(t) ? DEVSTAT_TYPE_IF_SCSI : \ 				 DEVSTAT_TYPE_IF_OTHER)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PROTO_VERSION_UNKNOWN
 value|(UINT_MAX - 1)
 end_define

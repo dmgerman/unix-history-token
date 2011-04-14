@@ -3058,7 +3058,12 @@ name|DEVSTAT_BS_UNAVAILABLE
 argument_list|,
 name|DEVSTAT_TYPE_CDROM
 operator||
-name|DEVSTAT_TYPE_IF_SCSI
+name|XPORT_DEVSTAT_TYPE
+argument_list|(
+name|cpi
+operator|.
+name|transport
+argument_list|)
 argument_list|,
 name|DEVSTAT_PRIORITY_CD
 argument_list|)
