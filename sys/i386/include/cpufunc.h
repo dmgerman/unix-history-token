@@ -143,7 +143,7 @@ name|readb
 parameter_list|(
 name|va
 parameter_list|)
-value|(*(volatile u_int8_t *) (va))
+value|(*(volatile uint8_t *) (va))
 end_define
 
 begin_define
@@ -153,7 +153,7 @@ name|readw
 parameter_list|(
 name|va
 parameter_list|)
-value|(*(volatile u_int16_t *) (va))
+value|(*(volatile uint16_t *) (va))
 end_define
 
 begin_define
@@ -163,7 +163,7 @@ name|readl
 parameter_list|(
 name|va
 parameter_list|)
-value|(*(volatile u_int32_t *) (va))
+value|(*(volatile uint32_t *) (va))
 end_define
 
 begin_define
@@ -175,7 +175,7 @@ name|va
 parameter_list|,
 name|d
 parameter_list|)
-value|(*(volatile u_int8_t *) (va) = (d))
+value|(*(volatile uint8_t *) (va) = (d))
 end_define
 
 begin_define
@@ -187,7 +187,7 @@ name|va
 parameter_list|,
 name|d
 parameter_list|)
-value|(*(volatile u_int16_t *) (va) = (d))
+value|(*(volatile uint16_t *) (va) = (d))
 end_define
 
 begin_define
@@ -199,7 +199,7 @@ name|va
 parameter_list|,
 name|d
 parameter_list|)
-value|(*(volatile u_int32_t *) (va) = (d))
+value|(*(volatile uint32_t *) (va) = (d))
 end_define
 
 begin_if
