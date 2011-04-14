@@ -985,7 +985,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|rdtsc
+name|rdtsc32
 argument_list|()
 operator|)
 return|;
