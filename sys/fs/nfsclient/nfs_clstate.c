@@ -14836,6 +14836,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|va
 argument_list|,
@@ -14852,6 +14854,13 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+operator|(
+name|uint64_t
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;

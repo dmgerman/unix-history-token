@@ -26607,6 +26607,11 @@ name|nfsv4_fillattr
 argument_list|(
 name|nd
 argument_list|,
+name|vnode_mount
+argument_list|(
+name|vp
+argument_list|)
+argument_list|,
 name|vp
 argument_list|,
 name|aclp
@@ -26626,6 +26631,13 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+operator|(
+name|uint64_t
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
