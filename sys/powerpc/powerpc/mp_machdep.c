@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/platform.h>
 end_include
 
@@ -211,6 +217,16 @@ specifier|static
 name|struct
 name|mtx
 name|ap_boot_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|pcb
+name|stoppcbs
+index|[
+name|MAXCPU
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -1190,6 +1206,18 @@ argument_list|,
 literal|"%s: IPI_STOP or IPI_STOP_HARD (stop)"
 argument_list|,
 name|__func__
+argument_list|)
+expr_stmt|;
+name|savectx
+argument_list|(
+operator|&
+name|stoppcbs
+index|[
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+index|]
 argument_list|)
 expr_stmt|;
 name|self
