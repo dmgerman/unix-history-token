@@ -817,6 +817,8 @@ decl_stmt|,
 name|error
 init|=
 literal|0
+decl_stmt|,
+name|supports_nfsv4acls
 decl_stmt|;
 name|struct
 name|nfsreferral
@@ -1087,6 +1089,13 @@ operator|==
 literal|0
 condition|)
 block|{
+name|supports_nfsv4acls
+operator|=
+name|nfs_supportsnfsv4acls
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|mp
 operator|=
 name|vp
@@ -1293,6 +1302,8 @@ argument_list|,
 name|isdgram
 argument_list|,
 literal|1
+argument_list|,
+name|supports_nfsv4acls
 argument_list|,
 name|at_root
 argument_list|,
