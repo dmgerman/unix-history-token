@@ -3535,7 +3535,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"IPMI device rev. %d, firmware rev. %d.%d, "
+literal|"IPMI device rev. %d, firmware rev. %d.%d%d, "
 literal|"version %d.%d\n"
 argument_list|,
 name|req
@@ -3554,14 +3554,25 @@ index|[
 literal|2
 index|]
 operator|&
-literal|0x0f
+literal|0x7f
 argument_list|,
 name|req
 operator|->
 name|ir_reply
 index|[
-literal|4
+literal|3
 index|]
+operator|>>
+literal|4
+argument_list|,
+name|req
+operator|->
+name|ir_reply
+index|[
+literal|3
+index|]
+operator|&
+literal|0x0f
 argument_list|,
 name|req
 operator|->
