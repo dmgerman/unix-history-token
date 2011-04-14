@@ -1536,7 +1536,7 @@ end_expr_stmt
 
 begin_function
 specifier|static
-name|unsigned
+name|u_int
 name|tsc_get_timecount
 parameter_list|(
 name|struct
@@ -1547,7 +1547,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|rdtsc
+name|rdtsc32
 argument_list|()
 operator|)
 return|;
