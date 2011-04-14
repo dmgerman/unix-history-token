@@ -645,7 +645,7 @@ block|{
 name|u_char
 name|data
 decl_stmt|;
-asm|__asm volatile("inb %w1, %0" : "=a" (data) : "Nd" (port));
+asm|__asm __volatile("inb %w1, %0" : "=a" (data) : "Nd" (port));
 return|return
 operator|(
 name|data
@@ -667,7 +667,7 @@ block|{
 name|u_int
 name|data
 decl_stmt|;
-asm|__asm volatile("inl %w1, %0" : "=a" (data) : "Nd" (port));
+asm|__asm __volatile("inl %w1, %0" : "=a" (data) : "Nd" (port));
 return|return
 operator|(
 name|data
@@ -819,7 +819,7 @@ block|{
 name|u_short
 name|data
 decl_stmt|;
-asm|__asm volatile("inw %w1, %0" : "=a" (data) : "Nd" (port));
+asm|__asm __volatile("inw %w1, %0" : "=a" (data) : "Nd" (port));
 return|return
 operator|(
 name|data
@@ -858,7 +858,7 @@ name|u_int
 name|data
 parameter_list|)
 block|{
-asm|__asm volatile("outl %0, %w1" : : "a" (data), "Nd" (port));
+asm|__asm __volatile("outl %0, %w1" : : "a" (data), "Nd" (port));
 block|}
 end_function
 
@@ -989,7 +989,7 @@ name|u_short
 name|data
 parameter_list|)
 block|{
-asm|__asm volatile("outw %0, %w1" : : "a" (data), "Nd" (port));
+asm|__asm __volatile("outw %0, %w1" : : "a" (data), "Nd" (port));
 block|}
 end_function
 
