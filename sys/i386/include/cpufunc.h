@@ -1106,6 +1106,27 @@ end_function
 begin_function
 specifier|static
 name|__inline
+name|uint32_t
+name|rdtsc32
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|uint32_t
+name|rv
+decl_stmt|;
+asm|__asm __volatile("rdtsc" : "=a" (rv) : : "edx");
+return|return
+operator|(
+name|rv
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
 name|void
 name|wbinvd
 parameter_list|(
