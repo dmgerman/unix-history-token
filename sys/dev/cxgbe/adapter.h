@@ -982,7 +982,7 @@ literal|2
 operator|)
 block|,
 comment|/* started */
-name|EQ_STALLED
+name|EQ_CRFLUSHED
 init|=
 operator|(
 literal|1
@@ -990,7 +990,7 @@ operator|<<
 literal|3
 operator|)
 block|,
-comment|/* currently stalled */
+comment|/* expecting an update from SGE */
 block|}
 enum|;
 end_enum

@@ -14340,6 +14340,15 @@ argument_list|(
 name|txq
 argument_list|)
 expr_stmt|;
+name|txq
+operator|->
+name|eq
+operator|.
+name|flags
+operator|&=
+operator|~
+name|EQ_CRFLUSHED
+expr_stmt|;
 name|txq_start
 argument_list|(
 name|txq
