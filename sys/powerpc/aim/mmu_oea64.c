@@ -4390,7 +4390,7 @@ name|CTR2
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"moea_bootstrap: kstack0 at %#x (%#x)"
+literal|"moea64_bootstrap: kstack0 at %#x (%#x)"
 argument_list|,
 name|pa
 argument_list|,
