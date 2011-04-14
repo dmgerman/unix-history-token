@@ -328,15 +328,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|MOEA_PVO_CHECK
-parameter_list|(
-name|pvo
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
 name|LOCK_TABLE
 parameter_list|()
 value|mtx_lock(&moea64_table_mutex)
@@ -9366,12 +9357,6 @@ argument_list|,
 name|pvo_vlink
 argument_list|)
 expr_stmt|;
-name|MOEA_PVO_CHECK
-argument_list|(
-name|pvo
-argument_list|)
-expr_stmt|;
-comment|/* sanity check */
 name|pmap
 operator|=
 name|pvo
@@ -10766,12 +10751,6 @@ argument_list|,
 argument|pvo_vlink
 argument_list|)
 block|{
-name|MOEA_PVO_CHECK
-argument_list|(
-name|pvo
-argument_list|)
-expr_stmt|;
-comment|/* sanity check */
 comment|/* 		 * See if we saved the bit off.  If so, cache it and return 		 * success. 		 */
 if|if
 condition|(
@@ -10793,12 +10772,6 @@ argument_list|,
 name|ptebit
 argument_list|)
 expr_stmt|;
-name|MOEA_PVO_CHECK
-argument_list|(
-name|pvo
-argument_list|)
-expr_stmt|;
-comment|/* sanity check */
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
@@ -10822,12 +10795,6 @@ argument_list|,
 argument|pvo_vlink
 argument_list|)
 block|{
-name|MOEA_PVO_CHECK
-argument_list|(
-name|pvo
-argument_list|)
-expr_stmt|;
-comment|/* sanity check */
 comment|/* 		 * See if this pvo has a valid PTE.  if so, fetch the 		 * REF/CHG bits from the valid PTE.  If the appropriate 		 * ptebit is set, cache it and return success. 		 */
 name|LOCK_TABLE
 argument_list|()
@@ -10886,12 +10853,6 @@ argument_list|,
 name|ptebit
 argument_list|)
 expr_stmt|;
-name|MOEA_PVO_CHECK
-argument_list|(
-name|pvo
-argument_list|)
-expr_stmt|;
-comment|/* sanity check */
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
@@ -10972,12 +10933,6 @@ argument_list|,
 argument|pvo_vlink
 argument_list|)
 block|{
-name|MOEA_PVO_CHECK
-argument_list|(
-name|pvo
-argument_list|)
-expr_stmt|;
-comment|/* sanity check */
 name|LOCK_TABLE
 argument_list|()
 expr_stmt|;
@@ -11061,12 +11016,6 @@ operator|&=
 operator|~
 name|ptebit
 expr_stmt|;
-name|MOEA_PVO_CHECK
-argument_list|(
-name|pvo
-argument_list|)
-expr_stmt|;
-comment|/* sanity check */
 name|UNLOCK_TABLE
 argument_list|()
 expr_stmt|;

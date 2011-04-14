@@ -272,15 +272,6 @@ parameter_list|)
 value|(((vsid)>> 4)& 0xfffff)
 end_define
 
-begin_define
-define|#
-directive|define
-name|MOEA_PVO_CHECK
-parameter_list|(
-name|pvo
-parameter_list|)
-end_define
-
 begin_struct
 struct|struct
 name|ofw_map
@@ -8415,12 +8406,6 @@ argument_list|,
 name|pvo_vlink
 argument_list|)
 expr_stmt|;
-name|MOEA_PVO_CHECK
-argument_list|(
-name|pvo
-argument_list|)
-expr_stmt|;
-comment|/* sanity check */
 name|pmap
 operator|=
 name|pvo
@@ -10042,11 +10027,6 @@ argument|pvo_olink
 argument_list|)
 block|{
 comment|/* 		 * We need to find a pvo entry for this address. 		 */
-name|MOEA_PVO_CHECK
-argument_list|(
-name|pvo
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|source_pvo
@@ -10109,11 +10089,6 @@ argument_list|)
 expr_stmt|;
 name|moea_pte_overflow
 operator|--
-expr_stmt|;
-name|MOEA_PVO_CHECK
-argument_list|(
-name|pvo
-argument_list|)
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
@@ -10238,11 +10213,6 @@ argument_list|,
 argument|pvo_olink
 argument_list|)
 block|{
-name|MOEA_PVO_CHECK
-argument_list|(
-name|pvo
-argument_list|)
-expr_stmt|;
 comment|/* 			 * We also need the pvo entry of the victim we are 			 * replacing so save the R& C bits of the PTE. 			 */
 if|if
 condition|(
@@ -10335,16 +10305,6 @@ argument_list|)
 expr_stmt|;
 name|moea_pte_replacements
 operator|++
-expr_stmt|;
-name|MOEA_PVO_CHECK
-argument_list|(
-name|victim_pvo
-argument_list|)
-expr_stmt|;
-name|MOEA_PVO_CHECK
-argument_list|(
-name|source_pvo
-argument_list|)
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
@@ -10577,12 +10537,6 @@ argument_list|,
 argument|pvo_vlink
 argument_list|)
 block|{
-name|MOEA_PVO_CHECK
-argument_list|(
-name|pvo
-argument_list|)
-expr_stmt|;
-comment|/* sanity check */
 comment|/* 		 * See if we saved the bit off.  If so, cache it and return 		 * success. 		 */
 if|if
 condition|(
@@ -10604,12 +10558,6 @@ argument_list|,
 name|ptebit
 argument_list|)
 expr_stmt|;
-name|MOEA_PVO_CHECK
-argument_list|(
-name|pvo
-argument_list|)
-expr_stmt|;
-comment|/* sanity check */
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
@@ -10633,12 +10581,6 @@ argument_list|,
 argument|pvo_vlink
 argument_list|)
 block|{
-name|MOEA_PVO_CHECK
-argument_list|(
-name|pvo
-argument_list|)
-expr_stmt|;
-comment|/* sanity check */
 comment|/* 		 * See if this pvo has a valid PTE.  if so, fetch the 		 * REF/CHG bits from the valid PTE.  If the appropriate 		 * ptebit is set, cache it and return success. 		 */
 name|pt
 operator|=
@@ -10695,12 +10637,6 @@ argument_list|,
 name|ptebit
 argument_list|)
 expr_stmt|;
-name|MOEA_PVO_CHECK
-argument_list|(
-name|pvo
-argument_list|)
-expr_stmt|;
-comment|/* sanity check */
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
@@ -10777,12 +10713,6 @@ argument_list|,
 argument|pvo_vlink
 argument_list|)
 block|{
-name|MOEA_PVO_CHECK
-argument_list|(
-name|pvo
-argument_list|)
-expr_stmt|;
-comment|/* sanity check */
 name|pt
 operator|=
 name|moea_pvo_to_pte
@@ -10859,12 +10789,6 @@ operator|&=
 operator|~
 name|ptebit
 expr_stmt|;
-name|MOEA_PVO_CHECK
-argument_list|(
-name|pvo
-argument_list|)
-expr_stmt|;
-comment|/* sanity check */
 block|}
 name|vm_page_unlock_queues
 argument_list|()
