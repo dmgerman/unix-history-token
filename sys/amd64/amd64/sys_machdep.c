@@ -957,13 +957,6 @@ name|tf_fs
 operator|=
 name|_ufssel
 expr_stmt|;
-name|set_pcb_flags
-argument_list|(
-name|pcb
-argument_list|,
-name|PCB_FULL_IRET
-argument_list|)
-expr_stmt|;
 name|update_gdt_fsbase
 argument_list|(
 name|td
@@ -1031,13 +1024,6 @@ operator|->
 name|pcb_gsbase
 operator|=
 name|i386base
-expr_stmt|;
-name|set_pcb_flags
-argument_list|(
-name|pcb
-argument_list|,
-name|PCB_FULL_IRET
-argument_list|)
 expr_stmt|;
 name|td
 operator|->
