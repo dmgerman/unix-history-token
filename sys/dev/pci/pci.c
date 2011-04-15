@@ -473,7 +473,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|pci_read_extcap
+name|pci_read_cap
 parameter_list|(
 name|device_t
 name|pcib
@@ -2478,7 +2478,7 @@ argument_list|)
 operator|&
 name|PCIM_STATUS_CAPPRESENT
 condition|)
-name|pci_read_extcap
+name|pci_read_cap
 argument_list|(
 name|pcib
 argument_list|,
@@ -2653,7 +2653,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|pci_read_extcap
+name|pci_read_cap
 parameter_list|(
 name|device_t
 name|pcib
@@ -8207,7 +8207,7 @@ name|val
 decl_stmt|;
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
@@ -8278,7 +8278,7 @@ name|val
 decl_stmt|;
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
