@@ -296,22 +296,6 @@ name|true
 value|TRUE
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|msleep
-end_undef
-
-begin_define
-define|#
-directive|define
-name|msleep
-parameter_list|(
-name|x
-parameter_list|)
-value|DELAY((x) * 1000)
-end_define
-
 begin_define
 define|#
 directive|define
