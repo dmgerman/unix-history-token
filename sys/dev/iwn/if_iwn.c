@@ -18028,10 +18028,6 @@ operator|->
 name|sc_tx_timer
 operator|>
 literal|0
-operator|||
-name|counter
-operator|==
-literal|50
 condition|)
 block|{
 if|if
@@ -18042,10 +18038,6 @@ operator|->
 name|sc_tx_timer
 operator|==
 literal|0
-operator|||
-name|counter
-operator|==
-literal|50
 condition|)
 block|{
 name|if_printf
