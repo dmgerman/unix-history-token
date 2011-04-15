@@ -100,13 +100,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ASL_YYTNAME_START
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
 name|ASL_PARSE_OPCODE_BASE
 value|PARSEOP_ACCESSAS
 end_define
@@ -114,6 +107,55 @@ end_define
 begin_comment
 comment|/* First Lex type */
 end_comment
+
+begin_comment
+comment|/*  * Per-parser-generator configuration. These values are used to cheat and  * directly access the bison/yacc token name table (yyname or yytname).  * Note: These values are the index in yyname for the first lex token  * (PARSEOP_ACCCESSAS).  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|YYBISON
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ASL_YYTNAME_START
+value|3
+end_define
+
+begin_comment
+comment|/* Bison */
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|YYBYACC
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|ASL_YYTNAME_START
+value|257
+end_define
+
+begin_comment
+comment|/* Berkeley yacc */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Macros  */
@@ -283,6 +325,13 @@ end_define
 begin_comment
 comment|/* filename suffixes for output files */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_PREPROCESSOR
+value|"i"
+end_define
 
 begin_define
 define|#
