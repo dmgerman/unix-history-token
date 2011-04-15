@@ -1820,7 +1820,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|iwn5000_temp_offset_calib
+name|iwn5000_crystal_calib
 parameter_list|(
 name|struct
 name|iwn_softc
@@ -1832,7 +1832,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|iwn5000_crystal_calib
+name|iwn5000_temp_offset_calib
 parameter_list|(
 name|struct
 name|iwn_softc
