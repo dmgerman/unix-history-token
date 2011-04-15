@@ -626,10 +626,16 @@ name|struct
 name|mfi_bbu_design_info
 name|design
 decl_stmt|;
+name|struct
+name|mfi_bbu_status
+name|stat
+decl_stmt|;
 name|uint8_t
 name|status
 decl_stmt|;
 name|int
+name|comma
+decl_stmt|,
 name|error
 decl_stmt|,
 name|fd
@@ -784,6 +790,43 @@ name|error
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|mfi_dcmd_command
+argument_list|(
+name|fd
+argument_list|,
+name|MFI_DCMD_BBU_GET_STATUS
+argument_list|,
+operator|&
+name|stat
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|stat
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"Failed to get status"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|errno
+operator|)
+return|;
+block|}
 name|printf
 argument_list|(
 literal|"mfi%d: Battery State:\n"
@@ -793,7 +836,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" Manufacture Date: %d/%d/%d\n"
+literal|"     Manufacture Date: %d/%d/%d\n"
 argument_list|,
 name|design
 operator|.
@@ -820,7 +863,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    Serial Number: %d\n"
+literal|"        Serial Number: %d\n"
 argument_list|,
 name|design
 operator|.
@@ -829,7 +872,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"     Manufacturer: %s\n"
+literal|"         Manufacturer: %s\n"
 argument_list|,
 name|design
 operator|.
@@ -838,7 +881,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"            Model: %s\n"
+literal|"                Model: %s\n"
 argument_list|,
 name|design
 operator|.
@@ -847,7 +890,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"        Chemistry: %s\n"
+literal|"            Chemistry: %s\n"
 argument_list|,
 name|design
 operator|.
@@ -856,7 +899,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  Design Capacity: %d mAh\n"
+literal|"      Design Capacity: %d mAh\n"
 argument_list|,
 name|design
 operator|.
@@ -865,7 +908,43 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"   Design Voltage: %d mV\n"
+literal|" Full Charge Capacity: %d mAh\n"
+argument_list|,
+name|cap
+operator|.
+name|full_charge_capacity
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"     Current Capacity: %d mAh\n"
+argument_list|,
+name|cap
+operator|.
+name|remaining_capacity
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"        Charge Cycles: %d\n"
+argument_list|,
+name|cap
+operator|.
+name|cycle_count
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"       Current Charge: %d%%\n"
+argument_list|,
+name|cap
+operator|.
+name|relative_charge
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"       Design Voltage: %d mV\n"
 argument_list|,
 name|design
 operator|.
@@ -874,13 +953,190 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"   Current Charge: %d%%\n"
+literal|"      Current Voltage: %d mV\n"
 argument_list|,
-name|cap
+name|stat
 operator|.
-name|relative_charge
+name|voltage
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"          Temperature: %d C\n"
+argument_list|,
+name|stat
+operator|.
+name|temperature
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"               Status:"
+argument_list|)
+expr_stmt|;
+name|comma
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|stat
+operator|.
+name|fw_status
+operator|&
+name|MFI_BBU_STATE_PACK_MISSING
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" PACK_MISSING"
+argument_list|)
+expr_stmt|;
+name|comma
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|stat
+operator|.
+name|fw_status
+operator|&
+name|MFI_BBU_STATE_VOLTAGE_LOW
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s VOLTAGE_LOW"
+argument_list|,
+name|comma
+condition|?
+literal|","
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+name|comma
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|stat
+operator|.
+name|fw_status
+operator|&
+name|MFI_BBU_STATE_TEMPERATURE_HIGH
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s TEMPERATURE_HIGH"
+argument_list|,
+name|comma
+condition|?
+literal|","
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+name|comma
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|stat
+operator|.
+name|fw_status
+operator|&
+name|MFI_BBU_STATE_CHARGE_ACTIVE
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s CHARGING"
+argument_list|,
+name|comma
+condition|?
+literal|","
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+name|comma
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|stat
+operator|.
+name|fw_status
+operator|&
+name|MFI_BBU_STATE_DISCHARGE_ACTIVE
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s DISCHARGING"
+argument_list|,
+name|comma
+condition|?
+literal|","
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|comma
+condition|)
+name|printf
+argument_list|(
+literal|" normal"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|stat
+operator|.
+name|battery_type
+condition|)
+block|{
+case|case
+name|MFI_BBU_TYPE_BBU
+case|:
+name|printf
+argument_list|(
+literal|"      State of Health: %s\n"
+argument_list|,
+name|stat
+operator|.
+name|detail
+operator|.
+name|bbu
+operator|.
+name|is_SOH_good
+condition|?
+literal|"good"
+else|:
+literal|"bad"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|close
 argument_list|(
 name|fd
