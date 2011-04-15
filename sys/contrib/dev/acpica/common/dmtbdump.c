@@ -3871,7 +3871,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|","
+literal|" "
 argument_list|)
 expr_stmt|;
 if|if
@@ -3895,16 +3895,17 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"\n"
+literal|"\\\n"
 argument_list|)
 expr_stmt|;
+comment|/* With line continuation char */
 name|AcpiDmLineHeader
 argument_list|(
 name|Offset
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}

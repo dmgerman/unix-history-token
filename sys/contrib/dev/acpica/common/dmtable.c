@@ -85,6 +85,38 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Common format strings for commented values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UINT8_FORMAT
+value|"%2.2X [%s]\n"
+end_define
+
+begin_define
+define|#
+directive|define
+name|UINT16_FORMAT
+value|"%4.4X [%s]\n"
+end_define
+
+begin_define
+define|#
+directive|define
+name|UINT32_FORMAT
+value|"%8.8X [%s]\n"
+end_define
+
+begin_define
+define|#
+directive|define
+name|STRING_FORMAT
+value|"[%s]\n"
+end_define
+
+begin_comment
 comment|/* These tables map a subtable type to a description string */
 end_comment
 
@@ -1433,6 +1465,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+operator|*
+name|Name
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|"%41s : "
@@ -1440,6 +1478,17 @@ argument_list|,
 name|Name
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"%41s   "
+argument_list|,
+name|Name
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 else|else
@@ -1466,6 +1515,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+operator|*
+name|Name
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|"%44s : "
@@ -1473,6 +1528,17 @@ argument_list|,
 name|Name
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"%44s   "
+argument_list|,
+name|Name
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -1512,7 +1578,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"[%.3d] %30s % 3d : "
+literal|"[%.4d] %30s %3d : "
 argument_list|,
 name|ByteLength
 argument_list|,
@@ -1545,7 +1611,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"[%3.3Xh %4.4d% 3d] %24s % 3d : "
+literal|"[%3.3Xh %4.4d %3d] %24s %3d : "
 argument_list|,
 name|Offset
 argument_list|,
@@ -1563,7 +1629,7 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"[%3.3Xh %4.4d   ] %24s % 3d : "
+literal|"[%3.3Xh %4.4d   ] %24s %3d : "
 argument_list|,
 name|Offset
 argument_list|,
@@ -2188,7 +2254,7 @@ case|:
 case|case
 name|ACPI_DMT_BUF128
 case|:
-comment|/*              * Buffer: Size depends on the opcode and was set above.              * Each hex byte is separated with a space.              */
+comment|/*              * Buffer: Size depends on the opcode and was set above.              * Each hex byte is separated with a space.              * Multiple lines are separated by line continuation char.              */
 for|for
 control|(
 name|Temp16
@@ -2251,9 +2317,10 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"\n"
+literal|" \\\n"
 argument_list|)
 expr_stmt|;
+comment|/* Line continuation */
 name|AcpiDmLineHeader
 argument_list|(
 literal|0
@@ -2361,7 +2428,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"/* %s */"
+name|STRING_FORMAT
 argument_list|,
 name|TableData
 operator|->
@@ -2369,11 +2436,14 @@ name|Name
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|ACPI_DMT_NAME4
@@ -2507,7 +2577,7 @@ case|:
 comment|/* Address Space ID */
 name|AcpiOsPrintf
 argument_list|(
-literal|"%2.2X (%s)\n"
+name|UINT8_FORMAT
 argument_list|,
 operator|*
 name|Target
@@ -2543,7 +2613,7 @@ expr_stmt|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"%2.2X (%s)\n"
+name|UINT8_FORMAT
 argument_list|,
 name|Temp8
 argument_list|,
@@ -2560,7 +2630,9 @@ case|:
 comment|/* Generic Address Structure */
 name|AcpiOsPrintf
 argument_list|(
-literal|"<Generic Address Structure>\n"
+name|STRING_FORMAT
+argument_list|,
+literal|"Generic Address Structure"
 argument_list|)
 expr_stmt|;
 name|AcpiDmDumpTable
@@ -2622,7 +2694,7 @@ expr_stmt|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"%2.2X<%s>\n"
+name|UINT8_FORMAT
 argument_list|,
 operator|*
 name|Target
@@ -2659,7 +2731,7 @@ expr_stmt|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"%4.4X<%s>\n"
+name|UINT16_FORMAT
 argument_list|,
 name|ACPI_GET16
 argument_list|(
@@ -2696,7 +2768,7 @@ expr_stmt|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"%2.2X (%s)\n"
+name|UINT8_FORMAT
 argument_list|,
 operator|*
 name|Target
@@ -2731,7 +2803,7 @@ expr_stmt|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"%2.2X (%s)\n"
+name|UINT8_FORMAT
 argument_list|,
 operator|*
 name|Target
@@ -2766,7 +2838,7 @@ expr_stmt|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"%2.2X (%s)\n"
+name|UINT8_FORMAT
 argument_list|,
 operator|*
 name|Target
@@ -2801,7 +2873,7 @@ expr_stmt|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"%2.2X (%s)\n"
+name|UINT8_FORMAT
 argument_list|,
 operator|*
 name|Target
@@ -2838,7 +2910,7 @@ expr_stmt|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"%4.4X (%s)\n"
+name|UINT16_FORMAT
 argument_list|,
 name|ACPI_GET16
 argument_list|(
@@ -2857,7 +2929,9 @@ name|ACPI_DMT_HESTNTFY
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"<Hardware Error Notification Structure>\n"
+name|STRING_FORMAT
+argument_list|,
+literal|"Hardware Error Notification Structure"
 argument_list|)
 expr_stmt|;
 name|AcpiDmDumpTable
@@ -2909,7 +2983,7 @@ expr_stmt|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"%2.2X (%s)\n"
+name|UINT8_FORMAT
 argument_list|,
 operator|*
 name|Target
@@ -2944,7 +3018,7 @@ expr_stmt|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"%2.2X<%s>\n"
+name|UINT8_FORMAT
 argument_list|,
 operator|*
 name|Target
@@ -2979,7 +3053,7 @@ expr_stmt|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"%8.8X<%s>\n"
+name|UINT32_FORMAT
 argument_list|,
 operator|*
 name|Target
@@ -3014,7 +3088,7 @@ expr_stmt|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"%2.2X<%s>\n"
+name|UINT8_FORMAT
 argument_list|,
 operator|*
 name|Target
@@ -3049,7 +3123,7 @@ expr_stmt|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"%2.2X (%s)\n"
+name|UINT8_FORMAT
 argument_list|,
 operator|*
 name|Target
@@ -3115,7 +3189,7 @@ break|break;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"%2.2X<%s>\n"
+name|UINT8_FORMAT
 argument_list|,
 operator|*
 name|Target

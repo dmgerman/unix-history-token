@@ -110,6 +110,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|DtParserdebug
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 specifier|const
 name|ASL_MAPPING_ENTRY
 name|AslKeywordMapping

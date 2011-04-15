@@ -3249,10 +3249,10 @@ name|Integer
 condition|)
 block|{
 case|case
-name|REGION_EC
+name|ACPI_ADR_SPACE_EC
 case|:
 case|case
-name|REGION_CMOS
+name|ACPI_ADR_SPACE_CMOS
 case|:
 if|if
 condition|(
@@ -3288,10 +3288,10 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|REGION_SMBUS
+name|ACPI_ADR_SPACE_SMBUS
 case|:
 case|case
-name|REGION_IPMI
+name|ACPI_ADR_SPACE_IPMI
 case|:
 if|if
 condition|(

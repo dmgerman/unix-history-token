@@ -328,7 +328,7 @@ name|OP_TABLE_ENTRY
 argument_list|(
 name|AML_BYTE_OP
 argument_list|,
-name|REGION_FIXED_HW
+name|ACPI_ADR_SPACE_FIXED_HARDWARE
 argument_list|,
 literal|0
 argument_list|,
@@ -2492,7 +2492,7 @@ name|OP_TABLE_ENTRY
 argument_list|(
 name|AML_RAW_DATA_BYTE
 argument_list|,
-name|REGION_CMOS
+name|ACPI_ADR_SPACE_CMOS
 argument_list|,
 literal|0
 argument_list|,
@@ -2504,7 +2504,7 @@ name|OP_TABLE_ENTRY
 argument_list|(
 name|AML_RAW_DATA_BYTE
 argument_list|,
-name|REGION_EC
+name|ACPI_ADR_SPACE_EC
 argument_list|,
 literal|0
 argument_list|,
@@ -2516,7 +2516,7 @@ name|OP_TABLE_ENTRY
 argument_list|(
 name|AML_RAW_DATA_BYTE
 argument_list|,
-name|REGION_IO
+name|ACPI_ADR_SPACE_SYSTEM_IO
 argument_list|,
 literal|0
 argument_list|,
@@ -2528,7 +2528,7 @@ name|OP_TABLE_ENTRY
 argument_list|(
 name|AML_RAW_DATA_BYTE
 argument_list|,
-name|REGION_IPMI
+name|ACPI_ADR_SPACE_IPMI
 argument_list|,
 literal|0
 argument_list|,
@@ -2540,7 +2540,7 @@ name|OP_TABLE_ENTRY
 argument_list|(
 name|AML_RAW_DATA_BYTE
 argument_list|,
-name|REGION_MEMORY
+name|ACPI_ADR_SPACE_SYSTEM_MEMORY
 argument_list|,
 literal|0
 argument_list|,
@@ -2552,7 +2552,7 @@ name|OP_TABLE_ENTRY
 argument_list|(
 name|AML_RAW_DATA_BYTE
 argument_list|,
-name|REGION_PCI_CONFIG
+name|ACPI_ADR_SPACE_PCI_CONFIG
 argument_list|,
 literal|0
 argument_list|,
@@ -2564,7 +2564,7 @@ name|OP_TABLE_ENTRY
 argument_list|(
 name|AML_RAW_DATA_BYTE
 argument_list|,
-name|REGION_PCI_BAR
+name|ACPI_ADR_SPACE_PCI_BAR_TARGET
 argument_list|,
 literal|0
 argument_list|,
@@ -2576,7 +2576,7 @@ name|OP_TABLE_ENTRY
 argument_list|(
 name|AML_RAW_DATA_BYTE
 argument_list|,
-name|REGION_SMBUS
+name|ACPI_ADR_SPACE_SMBUS
 argument_list|,
 literal|0
 argument_list|,

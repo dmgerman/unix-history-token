@@ -159,25 +159,6 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|ACPI_STATUS
-name|UtStrtoul64
-parameter_list|(
-name|char
-modifier|*
-name|String
-parameter_list|,
-name|UINT32
-name|Base
-parameter_list|,
-name|UINT64
-modifier|*
-name|RetInteger
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|UtPadNameWithUnderscores
 parameter_list|(
@@ -1902,7 +1883,6 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-specifier|static
 name|ACPI_STATUS
 name|UtStrtoul64
 parameter_list|(

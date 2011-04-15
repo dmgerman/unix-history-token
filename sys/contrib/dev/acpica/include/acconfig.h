@@ -345,13 +345,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_NUM_PREDEFINED_REGIONS
-value|9
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPI_USER_REGION_BEGIN
 value|0x80
 end_define
