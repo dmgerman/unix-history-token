@@ -729,6 +729,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_SE_EXCHANGED
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_SCONTROL
 value|15
 end_define
@@ -1356,7 +1363,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AHCI_P_IX_DI
+name|AHCI_P_IX_MP
 value|0x00000080
 end_define
 
@@ -2283,6 +2290,10 @@ name|int
 name|resetting
 decl_stmt|;
 comment|/* Hard-reset in progress. */
+name|int
+name|listening
+decl_stmt|;
+comment|/* SUD bit is cleared. */
 name|union
 name|ccb
 modifier|*
