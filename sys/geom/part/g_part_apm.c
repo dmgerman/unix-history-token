@@ -2265,10 +2265,7 @@ argument_list|(
 name|buf
 argument_list|)
 operator|==
-name|be16toh
-argument_list|(
 name|APM_DDR_SIG
-argument_list|)
 condition|)
 block|{
 comment|/* Normal Apple DDR */
