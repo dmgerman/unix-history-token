@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -195,7 +201,7 @@ name|enum
 name|nfsiod_state
 name|ncl_iodwant
 index|[
-name|NFS_MAXRAHEAD
+name|NFS_MAXASYNCDAEMON
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -207,7 +213,7 @@ name|nfsmount
 modifier|*
 name|ncl_iodmount
 index|[
-name|NFS_MAXRAHEAD
+name|NFS_MAXASYNCDAEMON
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -232,6 +238,13 @@ specifier|extern
 name|struct
 name|nfsstats
 name|newnfsstats
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|task
+name|ncl_nfsiodnew_task
 decl_stmt|;
 end_decl_stmt
 
@@ -1693,7 +1706,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NFS_MAXRAHEAD
+name|NFS_MAXASYNCDAEMON
 condition|;
 name|i
 operator|++
@@ -1714,6 +1727,18 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|TASK_INIT
+argument_list|(
+operator|&
+name|ncl_nfsiodnew_task
+argument_list|,
+literal|0
+argument_list|,
+name|ncl_nfsiodnew_tq
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|ncl_nhinit
 argument_list|()
 expr_stmt|;

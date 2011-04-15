@@ -327,7 +327,7 @@ begin_define
 define|#
 directive|define
 name|NFS_DEFRAHEAD
-value|0
+value|1
 end_define
 
 begin_comment
@@ -338,11 +338,22 @@ begin_define
 define|#
 directive|define
 name|NFS_MAXRAHEAD
-value|32
+value|16
 end_define
 
 begin_comment
 comment|/* Max. read ahead # blocks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFS_MAXASYNCDAEMON
+value|64
+end_define
+
+begin_comment
+comment|/* Max. number async_daemons runnable */
 end_comment
 
 begin_define

@@ -161,7 +161,7 @@ name|enum
 name|nfsiod_state
 name|ncl_iodwant
 index|[
-name|NFS_MAXRAHEAD
+name|NFS_MAXASYNCDAEMON
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -173,7 +173,7 @@ name|nfsmount
 modifier|*
 name|ncl_iodmount
 index|[
-name|NFS_MAXRAHEAD
+name|NFS_MAXASYNCDAEMON
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -6273,20 +6273,6 @@ name|error
 decl_stmt|,
 name|error2
 decl_stmt|;
-comment|/* 	 * Unless iothreadcnt is set> 0, don't bother with async I/O 	 * threads. For LAN environments, they don't buy any significant 	 * performance improvement that you can't get with large block 	 * sizes. 	 */
-if|if
-condition|(
-name|nmp
-operator|->
-name|nm_readahead
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|EPERM
-operator|)
-return|;
 comment|/* 	 * Commits are usually short and sweet so lets save some cpu and 	 * leave the async daemons for more important rpc's (such as reads 	 * and writes). 	 */
 name|mtx_lock
 argument_list|(
@@ -6387,30 +6373,10 @@ condition|(
 operator|!
 name|gotiod
 condition|)
-block|{
-name|iod
-operator|=
 name|ncl_nfsiodnew
-argument_list|(
-literal|1
-argument_list|)
+argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|iod
-operator|!=
-operator|-
-literal|1
-condition|)
-name|gotiod
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|gotiod
-condition|)
+else|else
 block|{
 comment|/* 		 * Found one, so wake it up and tell it which 		 * mount to process. 		 */
 name|NFS_DPF
@@ -6601,30 +6567,9 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 			 * We might have lost our iod while sleeping, 			 * so check and loop if nescessary. 			 */
-if|if
-condition|(
-name|nmp
-operator|->
-name|nm_bufqiods
-operator|==
-literal|0
-condition|)
-block|{
-name|NFS_DPF
-argument_list|(
-name|ASYNCIO
-argument_list|,
-operator|(
-literal|"ncl_asyncio: no iods after mount %p queue was drained, looping\n"
-operator|,
-name|nmp
-operator|)
-argument_list|)
-expr_stmt|;
 goto|goto
 name|again
 goto|;
-block|}
 block|}
 comment|/* We might have lost our nfsiod */
 if|if
