@@ -940,6 +940,13 @@ name|HAL_OK
 else|:
 name|HAL_ENOTSUPP
 return|;
+case|case
+name|HAL_CAP_DIVERSITY
+case|:
+comment|/* disable classic fast diversity */
+return|return
+name|HAL_ENXIO
+return|;
 default|default:
 break|break;
 block|}
