@@ -11338,17 +11338,6 @@ name|m_len
 operator|=
 name|len
 expr_stmt|;
-name|rssi
-operator|=
-name|hal
-operator|->
-name|get_rssi
-argument_list|(
-name|sc
-argument_list|,
-name|stat
-argument_list|)
-expr_stmt|;
 comment|/* Grab a reference to the source node. */
 name|wh
 operator|=
@@ -11408,6 +11397,17 @@ else|:
 operator|-
 literal|95
 expr_stmt|;
+name|rssi
+operator|=
+name|hal
+operator|->
+name|get_rssi
+argument_list|(
+name|sc
+argument_list|,
+name|stat
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ieee80211_radiotap_active
@@ -11430,12 +11430,9 @@ name|tap
 operator|->
 name|wr_tsft
 operator|=
-name|htole64
-argument_list|(
 name|stat
 operator|->
 name|tstamp
-argument_list|)
 expr_stmt|;
 name|tap
 operator|->
@@ -11602,12 +11599,18 @@ name|tap
 operator|->
 name|wr_dbm_antsignal
 operator|=
+operator|(
+name|int8_t
+operator|)
 name|rssi
 expr_stmt|;
 name|tap
 operator|->
 name|wr_dbm_antnoise
 operator|=
+operator|(
+name|int8_t
+operator|)
 name|nf
 expr_stmt|;
 block|}
@@ -21538,21 +21541,15 @@ name|rssi
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (mask& IWN_ANT_A)
-comment|/* Ant A */
-block|rssi = max(rssi, phy->rssi[0]); 	if (mask& IWN_ATH_B)
-comment|/* Ant B */
-block|rssi = max(rssi, phy->rssi[2]); 	if (mask& IWN_ANT_C)
-comment|/* Ant C */
-block|rssi = max(rssi, phy->rssi[4]);
-else|#
-directive|else
+if|if
+condition|(
+name|mask
+operator|&
+name|IWN_ANT_A
+condition|)
 name|rssi
 operator|=
-name|max
+name|MAX
 argument_list|(
 name|rssi
 argument_list|,
@@ -21564,9 +21561,15 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mask
+operator|&
+name|IWN_ANT_B
+condition|)
 name|rssi
 operator|=
-name|max
+name|MAX
 argument_list|(
 name|rssi
 argument_list|,
@@ -21578,9 +21581,15 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mask
+operator|&
+name|IWN_ANT_C
+condition|)
 name|rssi
 operator|=
-name|max
+name|MAX
 argument_list|(
 name|rssi
 argument_list|,
@@ -21592,8 +21601,6 @@ literal|4
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|DPRINTF
 argument_list|(
 name|sc
