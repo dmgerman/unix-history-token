@@ -1962,18 +1962,6 @@ name|off
 decl_stmt|,
 name|fcnt
 decl_stmt|;
-comment|/* 	 * We don't allow exporting fdesc mounts, and currently local 	 * requests do not need cookies. 	 */
-if|if
-condition|(
-name|ap
-operator|->
-name|a_ncookies
-condition|)
-name|panic
-argument_list|(
-literal|"fdesc_readdir: not hungry"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|VTOFDESC
@@ -1991,6 +1979,21 @@ name|panic
 argument_list|(
 literal|"fdesc_readdir: not dir"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ap
+operator|->
+name|a_ncookies
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|ap
+operator|->
+name|a_ncookies
+operator|=
+literal|0
 expr_stmt|;
 name|off
 operator|=
