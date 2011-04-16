@@ -6934,11 +6934,11 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|MJUMPAGESIZE
+name|IWN_RBUF_SIZE
 argument_list|,
 literal|1
 argument_list|,
-name|MJUMPAGESIZE
+name|IWN_RBUF_SIZE
 argument_list|,
 name|BUS_DMA_NOWAIT
 argument_list|,
@@ -7114,7 +7114,7 @@ name|MT_DATA
 argument_list|,
 name|M_PKTHDR
 argument_list|,
-name|MJUMPAGESIZE
+name|IWN_RBUF_SIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -7145,7 +7145,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* Map page. */
 name|error
 operator|=
 name|bus_dmamap_load
@@ -7164,10 +7163,11 @@ name|data
 operator|->
 name|m
 argument_list|,
-name|caddr_t
+name|void
+operator|*
 argument_list|)
 argument_list|,
-name|MJUMPAGESIZE
+name|IWN_RBUF_SIZE
 argument_list|,
 name|iwn_dma_map_addr
 argument_list|,
@@ -11131,7 +11131,6 @@ operator|++
 expr_stmt|;
 return|return;
 block|}
-comment|/* XXX don't need mbuf, just dma buffer */
 name|m1
 operator|=
 name|m_getjcl
@@ -11142,7 +11141,7 @@ name|MT_DATA
 argument_list|,
 name|M_PKTHDR
 argument_list|,
-name|MJUMPAGESIZE
+name|IWN_RBUF_SIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -11197,10 +11196,11 @@ name|mtod
 argument_list|(
 name|m1
 argument_list|,
-name|caddr_t
+name|void
+operator|*
 argument_list|)
 argument_list|,
-name|MJUMPAGESIZE
+name|IWN_RBUF_SIZE
 argument_list|,
 name|iwn_dma_map_addr
 argument_list|,
