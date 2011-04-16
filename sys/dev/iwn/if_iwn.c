@@ -7182,7 +7182,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|ENOMEM
+name|ENOBUFS
 expr_stmt|;
 goto|goto
 name|fail
@@ -7244,18 +7244,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|data
-operator|->
-name|m
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|ENOMEM
-expr_stmt|;
-comment|/* XXX unique code */
 goto|goto
 name|fail
 goto|;
@@ -7525,6 +7513,12 @@ name|data
 operator|->
 name|m
 argument_list|)
+expr_stmt|;
+name|data
+operator|->
+name|m
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 if|if
