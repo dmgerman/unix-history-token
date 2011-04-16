@@ -6335,24 +6335,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"%s: bus_dma_tag_create failed, error %d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
 goto|goto
 name|fail
 goto|;
-block|}
 name|error
 operator|=
 name|bus_dmamem_alloc
@@ -6389,24 +6374,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"%s: bus_dmamem_alloc failed, error %d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
 goto|goto
 name|fail
 goto|;
-block|}
 name|error
 operator|=
 name|bus_dmamap_load
@@ -6441,24 +6411,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"%s: bus_dmamap_load failed, error %d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
 goto|goto
 name|fail
 goto|;
-block|}
 name|bus_dmamap_sync
 argument_list|(
 name|dma
@@ -6942,7 +6897,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: could not allocate Rx ring DMA memory, error %d\n"
+literal|"%s: could not allocate RX ring DMA memory, error %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -6997,7 +6952,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: could not allocate Rx status DMA memory, error %d\n"
+literal|"%s: could not allocate RX status DMA memory, error %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -7063,7 +7018,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: bus_dma_tag_create_failed, error %d\n"
+literal|"%s: could not create RX buf DMA tag, error %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -7134,7 +7089,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: bus_dmamap_create failed, error %d\n"
+literal|"%s: could not create RX buf DMA map, error %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -7175,7 +7130,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: could not allocate rx mbuf\n"
+literal|"%s: could not allocate RX mbuf\n"
 argument_list|,
 name|__func__
 argument_list|)
@@ -7237,7 +7192,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: bus_dmamap_load failed, error %d\n"
+literal|"%s: can't not map mbuf, error %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -7802,7 +7757,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: bus_dma_tag_create_failed, error %d\n"
+literal|"%s: could not create TX buf DMA tag, error %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -7899,7 +7854,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: bus_dmamap_create failed, error %d\n"
+literal|"%s: could not create TX buf DMA map, error %d\n"
 argument_list|,
 name|__func__
 argument_list|,
