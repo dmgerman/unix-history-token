@@ -349,24 +349,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|uint16_t
-name|ar5416GetMaxEdgePower
-parameter_list|(
-name|uint16_t
-name|freq
-parameter_list|,
-name|CAL_CTL_EDGES
-modifier|*
-name|pRdEdgesPower
-parameter_list|,
-name|HAL_BOOL
-name|is2GHz
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|ar5416Set11nRegs
 parameter_list|(
@@ -8069,7 +8051,6 @@ comment|/*  * ar5416GetMaxEdgePower  *  * Find the maximum conformance test limi
 end_comment
 
 begin_function
-specifier|static
 name|uint16_t
 name|ar5416GetMaxEdgePower
 parameter_list|(

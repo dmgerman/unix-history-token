@@ -1672,6 +1672,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|uint16_t
+name|ar5416GetMaxEdgePower
+parameter_list|(
+name|uint16_t
+name|freq
+parameter_list|,
+name|CAL_CTL_EDGES
+modifier|*
+name|pRdEdgesPower
+parameter_list|,
+name|HAL_BOOL
+name|is2GHz
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* TX power setup related routines in ar5416_reset.c */
 end_comment
