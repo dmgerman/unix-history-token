@@ -10366,6 +10366,8 @@ name|if_softc
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 name|DPRINTF
 argument_list|(
@@ -10467,6 +10469,9 @@ name|state
 operator|=
 name|IWN_CALIB_STATE_INIT
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|error
 operator|=
 name|iwn_auth
@@ -10475,7 +10480,23 @@ name|sc
 argument_list|,
 name|vap
 argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: could not move to auth state\n"
+argument_list|,
+name|__func__
+argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|IEEE80211_S_RUN
@@ -10499,6 +10520,9 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* 		 * !RUN -> RUN requires setting the association id 		 * which is done with a firmware cmd.  We also defer 		 * starting the timers until that work is done. 		 */
+if|if
+condition|(
+operator|(
 name|error
 operator|=
 name|iwn_run
@@ -10507,7 +10531,23 @@ name|sc
 argument_list|,
 name|vap
 argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: could not move to run state\n"
+argument_list|,
+name|__func__
+argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|IEEE80211_S_INIT
@@ -10534,6 +10574,15 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+name|error
+return|;
 return|return
 name|ivp
 operator|->
