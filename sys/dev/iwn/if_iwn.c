@@ -3584,6 +3584,7 @@ name|irq_rid
 operator|=
 literal|1
 expr_stmt|;
+comment|/* Install interrupt handler. */
 name|sc
 operator|->
 name|irq
@@ -3802,7 +3803,7 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* Allocate TX rings (16 on 4965AGN, 20 on 5000). */
+comment|/* Allocate TX rings (16 on 4965AGN, 20 on>=5000). */
 for|for
 control|(
 name|i
@@ -5362,6 +5363,7 @@ name|ic
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Uninstall interrupt handler. */
 if|if
 condition|(
 name|sc
@@ -8235,7 +8237,7 @@ name|cur
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Allocate TX descriptors (256-byte aligned.) */
+comment|/* Allocate TX descriptors (256-byte aligned). */
 name|size
 operator|=
 name|IWN_TX_RING_COUNT
@@ -8296,7 +8298,7 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* 	 * We only use rings 0 through 4 (4 EDCA + cmd) so there is no need 	 * to allocate commands space for other rings. 	 */
+comment|/* 	 * We only use rings 0 through 4 (4 EDCA + cmd) so there is no need 	 * to allocate commands space for other rings. 	 * XXX Do we really need to allocate descriptors for other rings? 	 */
 if|if
 condition|(
 name|qid
@@ -8892,7 +8894,7 @@ name|ict_cur
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Set physical address of ICT table (4KB aligned.) */
+comment|/* Set physical address of ICT table (4KB aligned). */
 name|DPRINTF
 argument_list|(
 name|sc
@@ -9267,7 +9269,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* Read regulatory domain (4 ASCII characters.) */
+comment|/* Read regulatory domain (4 ASCII characters). */
 name|iwn_read_prom_data
 argument_list|(
 name|sc
@@ -9281,7 +9283,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* Read the list of authorized channels (20MHz ones only.) */
+comment|/* Read the list of authorized channels (20MHz ones only). */
 for|for
 control|(
 name|i
@@ -9822,7 +9824,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* Read regulatory domain (4 ASCII characters.) */
+comment|/* Read regulatory domain (4 ASCII characters). */
 name|iwn_read_prom_data
 argument_list|(
 name|sc
@@ -9857,7 +9859,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* Read the list of authorized channels (20MHz ones only.) */
+comment|/* Read the list of authorized channels (20MHz ones only). */
 for|for
 control|(
 name|i
@@ -13126,7 +13128,7 @@ decl_stmt|;
 name|int
 name|temp
 decl_stmt|;
-comment|/* Beacon stats are meaningful only when associated and not scanning. */
+comment|/* Ignore statistics received during a scan. */
 if|if
 condition|(
 name|vap
@@ -13228,7 +13230,7 @@ argument_list|,
 name|temp
 argument_list|)
 expr_stmt|;
-comment|/* Update TX power if need be (4965AGN only.) */
+comment|/* Update TX power if need be (4965AGN only). */
 if|if
 condition|(
 name|sc
@@ -15764,6 +15766,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+comment|/* Dump firmware error log and stop. */
 name|iwn_fatal_intr
 argument_list|(
 name|sc
@@ -15970,7 +15973,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Update TX scheduler ring when transmitting an 802.11 frame (4965AGN and  * 5000 adapters use a slightly different format.)  */
+comment|/*  * Update TX scheduler ring when transmitting an 802.11 frame (4965AGN and  * 5000 adapters use a slightly different format).  */
 end_comment
 
 begin_function
@@ -16743,6 +16746,7 @@ operator|&
 name|IEEE80211_FC1_WEP
 condition|)
 block|{
+comment|/* Retrieve key for TX. */
 name|k
 operator|=
 name|ieee80211_crypto_encap
@@ -16768,7 +16772,7 @@ return|return
 name|ENOBUFS
 return|;
 block|}
-comment|/* Packet header may have moved, reset our local pointer. */
+comment|/* 802.11 header may have moved. */
 name|wh
 operator|=
 name|mtod
@@ -18314,6 +18318,7 @@ index|]
 operator|&
 name|IEEE80211_FC0_SUBTYPE_MASK
 decl_stmt|;
+comment|/* Tell HW to set timestamp in probe responses. */
 if|if
 condition|(
 name|subtype
@@ -21090,7 +21095,6 @@ sizeof|sizeof
 name|cmd
 argument_list|,
 literal|1
-comment|/*async*/
 argument_list|)
 expr_stmt|;
 name|IWN_UNLOCK
@@ -21530,7 +21534,7 @@ name|ifp
 operator|->
 name|if_l2com
 decl_stmt|;
-comment|/* Adjust TX power if need be (delta>= 3 degC.) */
+comment|/* Adjust TX power if need be (delta>= 3 degC). */
 name|DPRINTF
 argument_list|(
 name|sc
@@ -23180,7 +23184,7 @@ name|r1
 operator|==
 name|r3
 condition|)
-comment|/* Prevents division by 0 (should not happen.) */
+comment|/* Prevents division by 0 (should not happen). */
 return|return
 literal|0
 return|;
@@ -23269,7 +23273,7 @@ block|{
 name|int32_t
 name|temp
 decl_stmt|;
-comment|/* 	 * Temperature is not used by the driver for 5000 Series because 	 * TX power calibration is handled by firmware.  We export it to 	 * users through the sensor framework though. 	 */
+comment|/* 	 * Temperature is not used by the driver for 5000 Series because 	 * TX power calibration is handled by firmware. 	 */
 name|temp
 operator|=
 name|le32toh
@@ -26126,7 +26130,7 @@ name|error
 return|;
 block|}
 block|}
-comment|/* Configure valid TX chains for 5000 Series. */
+comment|/* Configure valid TX chains for>=5000 Series. */
 if|if
 condition|(
 name|sc
@@ -27914,7 +27918,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* XXX assume 802.11b/g */
+comment|/* Assume 802.11b/g. */
 name|sc
 operator|->
 name|rxon
@@ -28088,10 +28092,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * Configure the adapter for associated state.  */
-end_comment
 
 begin_function
 specifier|static
@@ -28395,7 +28395,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* XXX assume 802.11b/g */
+comment|/* Assume 802.11b/g. */
 name|sc
 operator|->
 name|rxon
@@ -28810,7 +28810,7 @@ end_comment
 
 begin_comment
 unit|static int iwn_ampdu_rx_start(struct ieee80211com *ic, struct ieee80211_node *ni,     uint8_t tid) { 	struct ieee80211_rx_ba *ba =&ni->ni_rx_ba[tid]; 	struct iwn_softc *sc = ic->ic_softc; 	struct iwn_node *wn = (void *)ni; 	struct iwn_node_info node;  	memset(&node, 0, sizeof node); 	node.id = wn->id; 	node.control = IWN_NODE_UPDATE; 	node.flags = IWN_FLAG_SET_ADDBA; 	node.addba_tid = tid; 	node.addba_ssn = htole16(ba->ba_winstart); 	DPRINTF(sc, IWN_DEBUG_RECV, "ADDBA RA=%d TID=%d SSN=%d\n", 	    wn->id, tid, ba->ba_winstart); 	return sc->sc_hal->add_node(sc,&node, 1); }
-comment|/*  * This function is called by upper layer on teardown of an HT-immediate  * Block Ack agreement (eg. uppon receipt of a DELBA frame.)  */
+comment|/*  * This function is called by upper layer on teardown of an HT-immediate  * Block Ack agreement (eg. uppon receipt of a DELBA frame).  */
 end_comment
 
 begin_comment
@@ -29569,7 +29569,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function is called after the runtime firmware notifies us of its  * readiness (called in a process context.)  */
+comment|/*  * This function is called after the runtime firmware notifies us of its  * readiness (called in a process context).  */
 end_comment
 
 begin_function
@@ -29636,7 +29636,7 @@ name|uint32_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Set physical address of TX scheduler rings (1KB aligned.) */
+comment|/* Set physical address of TX scheduler rings (1KB aligned). */
 name|iwn_prph_write
 argument_list|(
 name|sc
@@ -29837,7 +29837,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function is called after the initialization or runtime firmware  * notifies us of its readiness (called in a process context.)  */
+comment|/*  * This function is called after the initialization or runtime firmware  * notifies us of its readiness (called in a process context).  */
 end_comment
 
 begin_function
@@ -29910,7 +29910,7 @@ name|uint32_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Set physical address of TX scheduler rings (1KB aligned.) */
+comment|/* Set physical address of TX scheduler rings (1KB aligned). */
 name|iwn_prph_write
 argument_list|(
 name|sc
@@ -30262,7 +30262,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The firmware boot code is small and is intended to be copied directly into  * the NIC internal memory (no DMA transfer.)  */
+comment|/*  * The firmware boot code is small and is intended to be copied directly into  * the NIC internal memory (no DMA transfer).  */
 end_comment
 
 begin_function
@@ -32493,7 +32493,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* Disable L0s exit timer (NMI bug workaround.) */
+comment|/* Disable L0s exit timer (NMI bug workaround). */
 name|IWN_SETBITS
 argument_list|(
 name|sc
@@ -32503,7 +32503,7 @@ argument_list|,
 name|IWN_GIO_CHICKEN_DIS_L0S_TIMER
 argument_list|)
 expr_stmt|;
-comment|/* Don't wait for ICH L0s (ICH bug workaround.) */
+comment|/* Don't wait for ICH L0s (ICH bug workaround). */
 name|IWN_SETBITS
 argument_list|(
 name|sc
@@ -32513,7 +32513,7 @@ argument_list|,
 name|IWN_GIO_CHICKEN_L1A_NO_L0S_RX
 argument_list|)
 expr_stmt|;
-comment|/* Set FH wait threshold to max (HW bug under stress workaround.) */
+comment|/* Set FH wait threshold to max (HW bug under stress workaround). */
 name|IWN_SETBITS
 argument_list|(
 name|sc
@@ -32643,7 +32643,7 @@ operator|==
 name|IWN_HW_REV_TYPE_4965
 condition|)
 block|{
-comment|/* Enable DMA and BSM (Bootstrap State Machine.) */
+comment|/* Enable DMA and BSM (Bootstrap State Machine). */
 name|iwn_prph_write
 argument_list|(
 name|sc
@@ -33396,7 +33396,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Set physical address of RX ring (256-byte aligned.) */
+comment|/* Set physical address of RX ring (256-byte aligned). */
 name|IWN_WRITE
 argument_list|(
 name|sc
@@ -33414,7 +33414,7 @@ operator|>>
 literal|8
 argument_list|)
 expr_stmt|;
-comment|/* Set physical address of RX status (16-byte aligned.) */
+comment|/* Set physical address of RX status (16-byte aligned). */
 name|IWN_WRITE
 argument_list|(
 name|sc
@@ -33508,7 +33508,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Set physical address of "keep warm" page (16-byte aligned.) */
+comment|/* Set physical address of "keep warm" page (16-byte aligned). */
 name|IWN_WRITE
 argument_list|(
 name|sc
@@ -33554,7 +33554,7 @@ index|[
 name|qid
 index|]
 decl_stmt|;
-comment|/* Set physical address of TX ring (256-byte aligned.) */
+comment|/* Set physical address of TX ring (256-byte aligned). */
 name|IWN_WRITE
 argument_list|(
 name|sc

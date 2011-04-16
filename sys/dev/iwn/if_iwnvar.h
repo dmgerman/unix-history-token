@@ -708,7 +708,6 @@ decl_stmt|;
 name|int
 name|sc_debug
 decl_stmt|;
-comment|/* Locks */
 name|struct
 name|mtx
 name|sc_mtx
