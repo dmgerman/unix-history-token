@@ -6,6 +6,24 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/syscall.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -42,20 +60,35 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<unistd.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/syscall.h>
-end_include
+begin_function_decl
+name|void
+name|cleanup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
+begin_function_decl
+name|void
+name|setup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|setup_once
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_union
 union|union
@@ -64,6 +97,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|cp
@@ -84,6 +118,7 @@ decl_stmt|;
 name|gid_t
 name|g
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -122,6 +157,7 @@ decl_stmt|;
 name|int
 name|num_of_cases
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -167,6 +203,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|relative_path
@@ -176,6 +213,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|not_dir_path
@@ -185,6 +223,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|file
@@ -212,6 +251,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|symlinkf
@@ -221,6 +261,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|newlink
@@ -230,6 +271,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|newlink2
@@ -239,6 +281,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|newlink3
@@ -248,6 +291,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|newdir
@@ -257,6 +301,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|fifo
@@ -266,6 +311,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|nod
@@ -275,6 +321,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|newfile
@@ -284,6 +331,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|newslink
@@ -346,6 +394,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|pargv
@@ -380,15 +429,14 @@ end_decl_stmt
 begin_function
 name|void
 name|setup
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
 decl_stmt|,
 name|error
-decl_stmt|;
-name|size_t
-name|siz
 decl_stmt|;
 name|struct
 name|stat
@@ -7508,7 +7556,9 @@ end_function
 begin_function
 name|void
 name|cleanup
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|system
 argument_list|(
@@ -7521,7 +7571,9 @@ end_function
 begin_function
 name|void
 name|setup_once
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{ }
 end_function
 
@@ -7546,6 +7598,16 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|argc
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|argv
+expr_stmt|;
 name|setup
 argument_list|()
 expr_stmt|;
