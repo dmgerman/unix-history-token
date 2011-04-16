@@ -3516,7 +3516,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not allocate memory resources\n"
+literal|"can't map mem space\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -3617,7 +3617,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not allocate interrupt resource\n"
+literal|"can't map interrupt\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -3731,7 +3731,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not allocate \"Keep Warm\" page, error %d\n"
+literal|"could not allocate keep warm page, error %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -3765,9 +3765,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"%s: could not allocate ICT table, error %d\n"
-argument_list|,
-name|__func__
+literal|"could not allocate ICT table, error %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -3849,7 +3847,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not allocate Tx ring %d, error %d\n"
+literal|"could not allocate TX ring %d, error %d\n"
 argument_list|,
 name|i
 argument_list|,
@@ -3885,7 +3883,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not allocate Rx ring, error %d\n"
+literal|"could not allocate RX ring, error %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -3985,11 +3983,14 @@ operator|&
 literal|1
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 name|device_printf
 argument_list|(
-name|sc
-operator|->
-name|sc_dev
+name|dev
 argument_list|,
 literal|"MIMO %dT%dR, %.4s, address %6D\n"
 argument_list|,
@@ -4010,6 +4011,7 @@ argument_list|,
 literal|":"
 argument_list|)
 expr_stmt|;
+block|}
 name|ifp
 operator|=
 name|sc
@@ -4465,7 +4467,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not set up interrupt, error %d\n"
+literal|"can't establish interrupt, error %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -4474,6 +4476,10 @@ goto|goto
 name|fail
 goto|;
 block|}
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|ieee80211_announce
 argument_list|(
 name|ic
@@ -8010,28 +8016,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IWN_DEBUG
-if|if
-condition|(
-name|ntries
-operator|==
-literal|1000
-condition|)
-name|DPRINTF
-argument_list|(
-name|sc
-argument_list|,
-name|IWN_DEBUG_ANY
-argument_list|,
-literal|"%s\n"
-argument_list|,
-literal|"timeout resetting Rx ring"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|ring
 operator|->
@@ -11961,7 +11945,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: invalid rx statistic header, len %d\n"
+literal|"%s: invalid RX statistic header, len %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -12079,7 +12063,7 @@ name|sc
 argument_list|,
 name|IWN_DEBUG_RECV
 argument_list|,
-literal|"%s: rx flags error %x\n"
+literal|"%s: RX flags error %x\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -13181,7 +13165,7 @@ name|sc
 argument_list|,
 name|IWN_DEBUG_CALIBRATE
 argument_list|,
-literal|"%s: cmd %d\n"
+literal|"%s: received statistics, cmd %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -15769,6 +15753,17 @@ name|IWN_INT_HW_ERR
 operator|)
 condition|)
 block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: fatal firmware error\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|iwn_fatal_intr
 argument_list|(
 name|sc
@@ -22802,8 +22797,7 @@ name|sc
 argument_list|,
 name|IWN_DEBUG_RECV
 argument_list|,
-literal|"%s: agc %d mask 0x%x rssi %d %d %d "
-literal|"result %d\n"
+literal|"%s: agc %d mask 0x%x rssi %d %d %d result %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -22953,8 +22947,7 @@ name|sc
 argument_list|,
 name|IWN_DEBUG_RECV
 argument_list|,
-literal|"%s: agc %d rssi %d %d %d "
-literal|"result %d\n"
+literal|"%s: agc %d rssi %d %d %d result %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -23503,7 +23496,7 @@ name|sc
 argument_list|,
 name|IWN_DEBUG_CALIBRATE
 argument_list|,
-literal|"%s: calibrate phy\n"
+literal|"%s: sending request for statistics\n"
 argument_list|,
 name|__func__
 argument_list|)
@@ -26610,7 +26603,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: ccould not set critical temperature\n"
+literal|"%s: could not set critical temperature\n"
 argument_list|,
 name|__func__
 argument_list|)
@@ -27945,35 +27938,19 @@ name|sc
 argument_list|,
 name|IWN_DEBUG_STATE
 argument_list|,
-literal|"%s: config chan %d mode %d flags 0x%x cck 0x%x ofdm 0x%x "
-literal|"ht_single 0x%x ht_dual 0x%x rxchain 0x%x "
-literal|"myaddr %6D wlap %6D bssid %6D associd %d filter 0x%x\n"
+literal|"rxon chan %d flags %x cck %x ofdm %x\n"
 argument_list|,
-name|__func__
-argument_list|,
-name|le16toh
-argument_list|(
 name|sc
 operator|->
 name|rxon
 operator|.
 name|chan
-argument_list|)
 argument_list|,
-name|sc
-operator|->
-name|rxon
-operator|.
-name|mode
-argument_list|,
-name|le32toh
-argument_list|(
 name|sc
 operator|->
 name|rxon
 operator|.
 name|flags
-argument_list|)
 argument_list|,
 name|sc
 operator|->
@@ -27986,69 +27963,6 @@ operator|->
 name|rxon
 operator|.
 name|ofdm_mask
-argument_list|,
-name|sc
-operator|->
-name|rxon
-operator|.
-name|ht_single_mask
-argument_list|,
-name|sc
-operator|->
-name|rxon
-operator|.
-name|ht_dual_mask
-argument_list|,
-name|le16toh
-argument_list|(
-name|sc
-operator|->
-name|rxon
-operator|.
-name|rxchain
-argument_list|)
-argument_list|,
-name|sc
-operator|->
-name|rxon
-operator|.
-name|myaddr
-argument_list|,
-literal|":"
-argument_list|,
-name|sc
-operator|->
-name|rxon
-operator|.
-name|wlap
-argument_list|,
-literal|":"
-argument_list|,
-name|sc
-operator|->
-name|rxon
-operator|.
-name|bssid
-argument_list|,
-literal|":"
-argument_list|,
-name|le16toh
-argument_list|(
-name|sc
-operator|->
-name|rxon
-operator|.
-name|associd
-argument_list|)
-argument_list|,
-name|le32toh
-argument_list|(
-name|sc
-operator|->
-name|rxon
-operator|.
-name|filter
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|error
@@ -28124,7 +28038,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: could not set Tx power, error %d\n"
+literal|"%s: could not set TX power, error %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -28523,110 +28437,19 @@ name|sc
 argument_list|,
 name|IWN_DEBUG_STATE
 argument_list|,
-literal|"%s: config chan %d mode %d flags 0x%x cck 0x%x ofdm 0x%x "
-literal|"ht_single 0x%x ht_dual 0x%x rxchain 0x%x "
-literal|"myaddr %6D wlap %6D bssid %6D associd %d filter 0x%x\n"
+literal|"rxon chan %d flags %x\n"
 argument_list|,
-name|__func__
-argument_list|,
-name|le16toh
-argument_list|(
 name|sc
 operator|->
 name|rxon
 operator|.
 name|chan
-argument_list|)
 argument_list|,
-name|sc
-operator|->
-name|rxon
-operator|.
-name|mode
-argument_list|,
-name|le32toh
-argument_list|(
 name|sc
 operator|->
 name|rxon
 operator|.
 name|flags
-argument_list|)
-argument_list|,
-name|sc
-operator|->
-name|rxon
-operator|.
-name|cck_mask
-argument_list|,
-name|sc
-operator|->
-name|rxon
-operator|.
-name|ofdm_mask
-argument_list|,
-name|sc
-operator|->
-name|rxon
-operator|.
-name|ht_single_mask
-argument_list|,
-name|sc
-operator|->
-name|rxon
-operator|.
-name|ht_dual_mask
-argument_list|,
-name|le16toh
-argument_list|(
-name|sc
-operator|->
-name|rxon
-operator|.
-name|rxchain
-argument_list|)
-argument_list|,
-name|sc
-operator|->
-name|rxon
-operator|.
-name|myaddr
-argument_list|,
-literal|":"
-argument_list|,
-name|sc
-operator|->
-name|rxon
-operator|.
-name|wlap
-argument_list|,
-literal|":"
-argument_list|,
-name|sc
-operator|->
-name|rxon
-operator|.
-name|bssid
-argument_list|,
-literal|":"
-argument_list|,
-name|le16toh
-argument_list|(
-name|sc
-operator|->
-name|rxon
-operator|.
-name|associd
-argument_list|)
-argument_list|,
-name|le32toh
-argument_list|(
-name|sc
-operator|->
-name|rxon
-operator|.
-name|filter
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|error
@@ -28702,7 +28525,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: could not set Tx power, error %d\n"
+literal|"%s: could not set TX power, error %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -28792,20 +28615,9 @@ name|sc
 argument_list|,
 name|IWN_DEBUG_STATE
 argument_list|,
-literal|"%s: add BSS node, id %d htflags 0x%x\n"
+literal|"%s: adding BSS node\n"
 argument_list|,
 name|__func__
-argument_list|,
-name|node
-operator|.
-name|id
-argument_list|,
-name|le32toh
-argument_list|(
-name|node
-operator|.
-name|htflags
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|error
@@ -28835,7 +28647,11 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"could not add BSS node\n"
+literal|"%s: could not add BSS node, error %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 return|return
@@ -28848,7 +28664,9 @@ name|sc
 argument_list|,
 name|IWN_DEBUG_STATE
 argument_list|,
-literal|"setting link quality for node %d\n"
+literal|"%s: setting link quality for node %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|node
 operator|.
@@ -28877,7 +28695,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: could not setup MRR for node %d, error %d\n"
+literal|"%s: could not setup link quality for node %d, error %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -28991,7 +28809,7 @@ comment|/*  * This function is called by upper layer when an ADDBA request is re
 end_comment
 
 begin_comment
-unit|static int iwn_ampdu_rx_start(struct ieee80211com *ic, struct ieee80211_node *ni,     uint8_t tid) { 	struct ieee80211_rx_ba *ba =&ni->ni_rx_ba[tid]; 	struct iwn_softc *sc = ic->ic_softc; 	struct iwn_node *wn = (void *)ni; 	struct iwn_node_info node;  	memset(&node, 0, sizeof node); 	node.id = wn->id; 	node.control = IWN_NODE_UPDATE; 	node.flags = IWN_FLAG_SET_ADDBA; 	node.addba_tid = tid; 	node.addba_ssn = htole16(ba->ba_winstart); 	DPRINTF(sc, IWN_DEBUG_RECV, "ADDBA RA=%d TID=%d SSN=%d\n", 	    wn->id, tid, ba->ba_winstart)); 	return sc->sc_hal->add_node(sc,&node, 1); }
+unit|static int iwn_ampdu_rx_start(struct ieee80211com *ic, struct ieee80211_node *ni,     uint8_t tid) { 	struct ieee80211_rx_ba *ba =&ni->ni_rx_ba[tid]; 	struct iwn_softc *sc = ic->ic_softc; 	struct iwn_node *wn = (void *)ni; 	struct iwn_node_info node;  	memset(&node, 0, sizeof node); 	node.id = wn->id; 	node.control = IWN_NODE_UPDATE; 	node.flags = IWN_FLAG_SET_ADDBA; 	node.addba_tid = tid; 	node.addba_ssn = htole16(ba->ba_winstart); 	DPRINTF(sc, IWN_DEBUG_RECV, "ADDBA RA=%d TID=%d SSN=%d\n", 	    wn->id, tid, ba->ba_winstart); 	return sc->sc_hal->add_node(sc,&node, 1); }
 comment|/*  * This function is called by upper layer on teardown of an HT-immediate  * Block Ack agreement (eg. uppon receipt of a DELBA frame.)  */
 end_comment
 
@@ -31544,7 +31362,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: firmware file too short: %zu bytes\n"
+literal|"%s: firmware too short: %zu bytes\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -31668,7 +31486,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: firmware file too short: %zu bytes\n"
+literal|"%s: firmware too short: %zu bytes\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -31841,7 +31659,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: firmware file too short: %zu bytes\n"
+literal|"%s: firmware too short: %zu bytes\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -31884,7 +31702,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: bad firmware file signature 0x%08x\n"
+literal|"%s: bad firmware signature 0x%08x\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -31900,6 +31718,26 @@ return|return
 name|EINVAL
 return|;
 block|}
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_RESET
+argument_list|,
+literal|"FW: \"%.64s\", build 0x%x\n"
+argument_list|,
+name|hdr
+operator|->
+name|descr
+argument_list|,
+name|le32toh
+argument_list|(
+name|hdr
+operator|->
+name|build
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Select the closest supported alternative that is less than 	 * or equal to the specified one. 	 */
 name|altmask
 operator|=
@@ -31931,6 +31769,17 @@ name|alt
 operator|--
 expr_stmt|;
 comment|/* Downgrade. */
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_RESET
+argument_list|,
+literal|"using alternative %d\n"
+argument_list|,
+name|alt
+argument_list|)
+expr_stmt|;
 name|ptr
 operator|=
 operator|(
@@ -32017,7 +31866,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: firmware file too short: %zu bytes\n"
+literal|"%s: firmware too short: %zu bytes\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -32168,9 +32017,7 @@ name|sc
 argument_list|,
 name|IWN_DEBUG_RESET
 argument_list|,
-literal|"%s: TLV type %d not handled\n"
-argument_list|,
-name|__func__
+literal|"TLV type %d not handled\n"
 argument_list|,
 name|le16toh
 argument_list|(
@@ -32282,7 +32129,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: could not load firmare image \"%s\"\n"
+literal|"%s: could not read firmware %s\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -32348,7 +32195,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: firmware file too short: %zu bytes\n"
+literal|"%s: firmware too short: %zu bytes\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -32426,9 +32273,11 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: could not read firmware sections\n"
+literal|"%s: could not read firmware sections, error %d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 name|firmware_put
@@ -34393,7 +34242,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: hardware not ready, eror %d\n"
+literal|"%s: hardware not ready, error %d\n"
 argument_list|,
 name|__func__
 argument_list|,
