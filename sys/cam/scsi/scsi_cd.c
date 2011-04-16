@@ -2968,6 +2968,21 @@ name|minimum_command_size
 operator|=
 literal|6
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|cam_periph_hold
+argument_list|(
+name|periph
+argument_list|,
+name|PRIBIO
+argument_list|)
+expr_stmt|;
+name|cam_periph_unlock
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Load the user's default, if any. 	 */
 name|snprintf
 argument_list|(
@@ -3026,11 +3041,6 @@ operator|=
 literal|10
 expr_stmt|;
 comment|/* 	 * We need to register the statistics structure for this device, 	 * but we don't have the blocksize yet for it.  So, we register 	 * the structure and indicate that we don't have the blocksize 	 * yet.  Unlike other SCSI peripheral drivers, we explicitly set 	 * the device type here to be CDROM, rather than just ORing in 	 * the device type.  This is because this driver can attach to either 	 * CDROM or WORM devices, and we want this peripheral driver to 	 * show up in the devstat list as a CD peripheral driver, not a 	 * WORM peripheral driver.  WORM drives will also have the WORM 	 * driver attached to them. 	 */
-name|cam_periph_unlock
-argument_list|(
-name|periph
-argument_list|)
-expr_stmt|;
 name|softc
 operator|->
 name|disk
@@ -3336,6 +3346,11 @@ name|DISK_VERSION
 argument_list|)
 expr_stmt|;
 name|cam_periph_lock
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
+name|cam_periph_unhold
 argument_list|(
 name|periph
 argument_list|)
