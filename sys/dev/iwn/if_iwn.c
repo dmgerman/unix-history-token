@@ -1401,7 +1401,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|iwn_wme_update
+name|iwn_updateedca
 parameter_list|(
 name|struct
 name|ieee80211com
@@ -3001,7 +3001,7 @@ modifier|*
 name|hal
 decl_stmt|;
 name|uint32_t
-name|tmp
+name|reg
 decl_stmt|;
 name|int
 name|i
@@ -3068,7 +3068,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Hardware bug workaround. */
-name|tmp
+name|reg
 operator|=
 name|pci_read_config
 argument_list|(
@@ -3081,7 +3081,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|tmp
+name|reg
 operator|&
 name|PCIM_CMD_INTxDIS
 condition|)
@@ -3097,7 +3097,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|tmp
+name|reg
 operator|&=
 operator|~
 name|PCIM_CMD_INTxDIS
@@ -3108,7 +3108,7 @@ name|dev
 argument_list|,
 name|PCIR_COMMAND
 argument_list|,
-name|tmp
+name|reg
 argument_list|,
 literal|1
 argument_list|)
@@ -3980,7 +3980,7 @@ name|ic_wme
 operator|.
 name|wme_update
 operator|=
-name|iwn_wme_update
+name|iwn_updateedca
 expr_stmt|;
 name|ic
 operator|->
@@ -4854,7 +4854,7 @@ modifier|*
 name|ic
 decl_stmt|;
 name|int
-name|i
+name|qid
 decl_stmt|;
 if|if
 condition|(
@@ -4947,11 +4947,11 @@ name|NULL
 condition|)
 for|for
 control|(
-name|i
+name|qid
 operator|=
 literal|0
 init|;
-name|i
+name|qid
 operator|<
 name|sc
 operator|->
@@ -4959,7 +4959,7 @@ name|sc_hal
 operator|->
 name|ntxqs
 condition|;
-name|i
+name|qid
 operator|++
 control|)
 name|iwn_free_tx_ring
@@ -4971,7 +4971,7 @@ name|sc
 operator|->
 name|txq
 index|[
-name|i
+name|qid
 index|]
 argument_list|)
 expr_stmt|;
@@ -20050,7 +20050,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|iwn_wme_update
+name|iwn_updateedca
 parameter_list|(
 name|struct
 name|ieee80211com
@@ -20082,7 +20082,7 @@ name|iwn_edca_params
 name|cmd
 decl_stmt|;
 name|int
-name|i
+name|aci
 decl_stmt|;
 name|memset
 argument_list|(
@@ -20106,15 +20106,15 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|i
+name|aci
 operator|=
 literal|0
 init|;
-name|i
+name|aci
 operator|<
 name|WME_NUM_AC
 condition|;
-name|i
+name|aci
 operator|++
 control|)
 block|{
@@ -20122,7 +20122,7 @@ specifier|const
 name|struct
 name|wmeParams
 modifier|*
-name|wmep
+name|ac
 init|=
 operator|&
 name|ic
@@ -20133,19 +20133,19 @@ name|wme_chanParams
 operator|.
 name|cap_wmeParams
 index|[
-name|i
+name|aci
 index|]
 decl_stmt|;
 name|cmd
 operator|.
 name|ac
 index|[
-name|i
+name|aci
 index|]
 operator|.
 name|aifsn
 operator|=
-name|wmep
+name|ac
 operator|->
 name|wmep_aifsn
 expr_stmt|;
@@ -20153,7 +20153,7 @@ name|cmd
 operator|.
 name|ac
 index|[
-name|i
+name|aci
 index|]
 operator|.
 name|cwmin
@@ -20162,7 +20162,7 @@ name|htole16
 argument_list|(
 name|IWN_EXP2
 argument_list|(
-name|wmep
+name|ac
 operator|->
 name|wmep_logcwmin
 argument_list|)
@@ -20172,7 +20172,7 @@ name|cmd
 operator|.
 name|ac
 index|[
-name|i
+name|aci
 index|]
 operator|.
 name|cwmax
@@ -20181,7 +20181,7 @@ name|htole16
 argument_list|(
 name|IWN_EXP2
 argument_list|(
-name|wmep
+name|ac
 operator|->
 name|wmep_logcwmax
 argument_list|)
@@ -20191,7 +20191,7 @@ name|cmd
 operator|.
 name|ac
 index|[
-name|i
+name|aci
 index|]
 operator|.
 name|txoplimit
@@ -20200,7 +20200,7 @@ name|htole16
 argument_list|(
 name|IEEE80211_TXOP_TO_US
 argument_list|(
-name|wmep
+name|ac
 operator|->
 name|wmep_txopLimit
 argument_list|)
@@ -24791,7 +24791,7 @@ decl_stmt|,
 name|skip_dtim
 decl_stmt|;
 name|uint32_t
-name|tmp
+name|reg
 decl_stmt|;
 name|int
 name|i
@@ -24887,7 +24887,7 @@ name|IWN_PS_FAST_PD
 argument_list|)
 expr_stmt|;
 comment|/* Retrieve PCIe Active State Power Management (ASPM). */
-name|tmp
+name|reg
 operator|=
 name|pci_read_config
 argument_list|(
@@ -24908,7 +24908,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|tmp
+name|reg
 operator|&
 literal|0x1
 operator|)
@@ -31777,7 +31777,7 @@ name|sc
 parameter_list|)
 block|{
 name|uint32_t
-name|tmp
+name|reg
 decl_stmt|;
 name|int
 name|error
@@ -31823,7 +31823,7 @@ name|IWN_HW_IF_CONFIG_HAP_WAKE_L1A
 argument_list|)
 expr_stmt|;
 comment|/* Retrieve PCIe Active State Power Management (ASPM). */
-name|tmp
+name|reg
 operator|=
 name|pci_read_config
 argument_list|(
@@ -31843,7 +31843,7 @@ expr_stmt|;
 comment|/* Workaround for HW instability in PCIe L0->L0s->L1 transition. */
 if|if
 condition|(
-name|tmp
+name|reg
 operator|&
 literal|0x02
 condition|)
