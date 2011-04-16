@@ -461,8 +461,6 @@ parameter_list|,
 name|bus_size_t
 parameter_list|,
 name|bus_size_t
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6273,9 +6271,6 @@ name|size
 parameter_list|,
 name|bus_size_t
 name|alignment
-parameter_list|,
-name|int
-name|flags
 parameter_list|)
 block|{
 name|int
@@ -6322,7 +6317,7 @@ literal|1
 argument_list|,
 name|size
 argument_list|,
-name|flags
+name|BUS_DMA_NOWAIT
 argument_list|,
 name|NULL
 argument_list|,
@@ -6376,9 +6371,11 @@ name|dma
 operator|->
 name|vaddr
 argument_list|,
-name|flags
+name|BUS_DMA_NOWAIT
 operator||
 name|BUS_DMA_ZERO
+operator||
+name|BUS_DMA_COHERENT
 argument_list|,
 operator|&
 name|dma
@@ -6435,7 +6432,7 @@ name|dma
 operator|->
 name|paddr
 argument_list|,
-name|flags
+name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -6623,8 +6620,6 @@ operator|->
 name|schedsz
 argument_list|,
 literal|1024
-argument_list|,
-name|BUS_DMA_NOWAIT
 argument_list|)
 return|;
 block|}
@@ -6679,8 +6674,6 @@ argument_list|,
 literal|4096
 argument_list|,
 literal|4096
-argument_list|,
-name|BUS_DMA_NOWAIT
 argument_list|)
 return|;
 block|}
@@ -6743,8 +6736,6 @@ argument_list|,
 name|IWN_ICT_SIZE
 argument_list|,
 literal|4096
-argument_list|,
-name|BUS_DMA_NOWAIT
 argument_list|)
 return|;
 block|}
@@ -6803,8 +6794,6 @@ operator|->
 name|fwsz
 argument_list|,
 literal|16
-argument_list|,
-name|BUS_DMA_NOWAIT
 argument_list|)
 return|;
 block|}
@@ -6896,8 +6885,6 @@ argument_list|,
 name|size
 argument_list|,
 literal|256
-argument_list|,
-name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -7018,8 +7005,6 @@ name|iwn_rx_status
 argument_list|)
 argument_list|,
 literal|16
-argument_list|,
-name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -7618,8 +7603,6 @@ argument_list|,
 name|size
 argument_list|,
 literal|256
-argument_list|,
-name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -7690,8 +7673,6 @@ argument_list|,
 name|size
 argument_list|,
 literal|4
-argument_list|,
-name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
