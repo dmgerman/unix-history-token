@@ -6459,6 +6459,19 @@ goto|goto
 name|fail
 goto|;
 block|}
+name|bus_dmamap_sync
+argument_list|(
+name|dma
+operator|->
+name|tag
+argument_list|,
+name|dma
+operator|->
+name|map
+argument_list|,
+name|BUS_DMASYNC_PREWRITE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|kvap
@@ -7247,19 +7260,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|bus_dmamap_sync
-argument_list|(
-name|ring
-operator|->
-name|data_dmat
-argument_list|,
-name|data
-operator|->
-name|map
-argument_list|,
-name|BUS_DMASYNC_PREWRITE
-argument_list|)
-expr_stmt|;
 comment|/* Set physical address of RX buffer (256-byte aligned). */
 name|ring
 operator|->
@@ -7916,19 +7916,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|bus_dmamap_sync
-argument_list|(
-name|ring
-operator|->
-name|data_dmat
-argument_list|,
-name|data
-operator|->
-name|map
-argument_list|,
-name|BUS_DMASYNC_PREWRITE
-argument_list|)
-expr_stmt|;
 block|}
 return|return
 literal|0
@@ -8003,6 +7990,19 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|bus_dmamap_sync
+argument_list|(
+name|ring
+operator|->
+name|data_dmat
+argument_list|,
+name|data
+operator|->
+name|map
+argument_list|,
+name|BUS_DMASYNC_POSTWRITE
+argument_list|)
+expr_stmt|;
 name|bus_dmamap_unload
 argument_list|(
 name|ring
@@ -11831,7 +11831,7 @@ comment|/* Process an incoming Compressed BlockAck. */
 end_comment
 
 begin_comment
-unit|static void iwn_rx_compressed_ba(struct iwn_softc *sc, struct iwn_rx_desc *desc,     struct iwn_rx_data *data) { 	struct iwn_compressed_ba *ba = (struct iwn_compressed_ba *)(desc + 1); 	struct iwn_tx_ring *txq;  	txq =&sc->txq[letoh16(ba->qid)];
+unit|static void iwn_rx_compressed_ba(struct iwn_softc *sc, struct iwn_rx_desc *desc,     struct iwn_rx_data *data) { 	struct iwn_compressed_ba *ba = (struct iwn_compressed_ba *)(desc + 1); 	struct iwn_tx_ring *txq;  	bus_dmamap_sync(sc->rxq.data_dmat, data->map, BUS_DMASYNC_POSTREAD);  	txq =&sc->txq[letoh16(ba->qid)];
 comment|/* XXX TBD */
 end_comment
 
@@ -13143,6 +13143,19 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|bus_dmamap_sync
+argument_list|(
+name|ring
+operator|->
+name|data_dmat
+argument_list|,
+name|data
+operator|->
+name|map
+argument_list|,
+name|BUS_DMASYNC_POSTWRITE
+argument_list|)
+expr_stmt|;
 name|bus_dmamap_unload
 argument_list|(
 name|ring
