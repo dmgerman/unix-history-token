@@ -16842,9 +16842,6 @@ name|mbuf
 modifier|*
 name|mnew
 decl_stmt|;
-name|bus_addr_t
-name|paddr
-decl_stmt|;
 name|bus_dma_segment_t
 name|segs
 index|[
@@ -17369,24 +17366,6 @@ name|txant
 argument_list|)
 expr_stmt|;
 comment|/* Set physical address of "scratch area". */
-name|paddr
-operator|=
-name|ring
-operator|->
-name|cmd_dma
-operator|.
-name|paddr
-operator|+
-name|ring
-operator|->
-name|cur
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|iwn_tx_cmd
-argument_list|)
-expr_stmt|;
 name|tx
 operator|->
 name|loaddr
@@ -17395,7 +17374,9 @@ name|htole32
 argument_list|(
 name|IWN_LOADDR
 argument_list|(
-name|paddr
+name|data
+operator|->
+name|scratch_paddr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -17405,7 +17386,9 @@ name|hiaddr
 operator|=
 name|IWN_HIADDR
 argument_list|(
-name|paddr
+name|data
+operator|->
+name|scratch_paddr
 argument_list|)
 expr_stmt|;
 comment|/* Copy 802.11 header in TX command. */
