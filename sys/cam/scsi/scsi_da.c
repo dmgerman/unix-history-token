@@ -4587,7 +4587,6 @@ argument_list|,
 name|periph
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Register this media as a disk 	 */
 comment|/* 	 * Add async callbacks for bus reset and 	 * bus device reset calls.  I don't bother 	 * checking if this fails as, in most cases, 	 * the system will function just fine without 	 * them and the only alternative would be to 	 * not attach the device on failure. 	 */
 name|xpt_register_async
 argument_list|(
@@ -4802,6 +4801,7 @@ name|minimum_cmd_size
 operator|=
 literal|16
 expr_stmt|;
+comment|/* 	 * Register this media as a disk. 	 */
 name|softc
 operator|->
 name|disk
