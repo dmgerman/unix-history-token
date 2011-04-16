@@ -127,6 +127,12 @@ directive|include
 file|<fs/portalfs/portal.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -687,6 +693,13 @@ operator|(
 name|ECONNREFUSED
 operator|)
 return|;
+name|CURVNET_SET
+argument_list|(
+name|so2
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -702,11 +715,19 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|ECONNREFUSED
 operator|)
 return|;
+block|}
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 name|unp2
 operator|=
 name|sotounpcb

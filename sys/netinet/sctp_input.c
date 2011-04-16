@@ -13251,6 +13251,13 @@ name|stcb
 operator|)
 argument_list|)
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|oso
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 name|so
 operator|=
 name|sonewconn
@@ -13259,6 +13266,9 @@ name|oso
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 name|SCTP_TCB_LOCK
 argument_list|(

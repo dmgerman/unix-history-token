@@ -727,13 +727,6 @@ name|NULL
 operator|)
 return|;
 block|}
-name|CURVNET_SET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -760,18 +753,12 @@ name|re_errno
 operator|=
 literal|0
 expr_stmt|;
-name|CURVNET_RESTORE
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
 block|}
-name|CURVNET_RESTORE
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Find the receive and the send size 	 */
 name|sendsz
 operator|=

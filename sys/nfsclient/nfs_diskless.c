@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -963,6 +969,14 @@ name|ifa
 operator|=
 name|NULL
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|TD_TO_VNET
+argument_list|(
+name|curthread
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|IFNET_RLOCK
 argument_list|()
 expr_stmt|;
@@ -1051,6 +1065,9 @@ block|{
 name|IFNET_RUNLOCK
 argument_list|()
 expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 goto|goto
 name|match_done
 goto|;
@@ -1059,6 +1076,9 @@ block|}
 block|}
 block|}
 name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
+name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
 name|printf

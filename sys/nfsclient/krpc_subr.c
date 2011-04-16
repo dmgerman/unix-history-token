@@ -700,14 +700,6 @@ name|from
 operator|=
 name|NULL
 expr_stmt|;
-name|CURVNET_SET
-argument_list|(
-name|TD_TO_VNET
-argument_list|(
-name|td
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Create socket and set its recieve timeout. 	 */
 if|if
 condition|(
@@ -1652,9 +1644,6 @@ name|soclose
 argument_list|(
 name|so
 argument_list|)
-expr_stmt|;
-name|CURVNET_RESTORE
-argument_list|()
 expr_stmt|;
 return|return
 name|error

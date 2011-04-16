@@ -124,6 +124,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netgraph/ng_message.h>
 end_include
 
@@ -2530,6 +2536,16 @@ name|so
 operator|->
 name|so_qlimit
 condition|)
+block|{
+name|CURVNET_SET
+argument_list|(
+name|pcb
+operator|->
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 name|so1
 operator|=
 name|sonewconn
@@ -2541,6 +2557,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|so1
