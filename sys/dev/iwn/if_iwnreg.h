@@ -5884,22 +5884,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|IWN_RIDX_CCK11
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
 name|IWN_RIDX_OFDM6
 value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWN_RIDX_OFDM54
-value|11
 end_define
 
 begin_struct
