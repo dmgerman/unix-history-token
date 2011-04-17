@@ -256,7 +256,7 @@ name|_vfs_newnfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|newnfs_realign_test
+name|realign_test
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
@@ -265,7 +265,7 @@ name|nfs_realign_test
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of realign tests done"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -277,7 +277,7 @@ name|_vfs_newnfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|newnfs_realign_count
+name|realign_count
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
@@ -286,7 +286,7 @@ name|nfs_realign_count
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of mbuf realignments done"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -307,7 +307,7 @@ name|nfsrv_useacl
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Enable NFSv4 ACLs"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -330,7 +330,7 @@ argument_list|(
 name|nfsv4_callbackaddr
 argument_list|)
 argument_list|,
-literal|""
+literal|"NFSv4 callback addr for server to use"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
