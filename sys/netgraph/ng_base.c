@@ -2357,9 +2357,9 @@ operator|*
 name|nodepp
 argument_list|)
 operator|)
+operator|)
 operator|!=
 literal|0
-operator|)
 condition|)
 block|{
 name|NG_NODE_UNREF
