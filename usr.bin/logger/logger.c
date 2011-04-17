@@ -183,6 +183,10 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -489,15 +493,27 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
+if|if
+condition|(
+name|tag
+operator|==
+name|NULL
+condition|)
+name|tag
+operator|=
+name|getlogin
+argument_list|()
+expr_stmt|;
 comment|/* setup for logging */
+if|if
+condition|(
+name|host
+operator|==
+name|NULL
+condition|)
 name|openlog
 argument_list|(
 name|tag
-condition|?
-name|tag
-else|:
-name|getlogin
-argument_list|()
 argument_list|,
 name|logflags
 argument_list|,
@@ -577,6 +593,8 @@ name|logmessage
 argument_list|(
 name|pri
 argument_list|,
+name|tag
+argument_list|,
 name|host
 argument_list|,
 name|svcname
@@ -603,6 +621,8 @@ condition|)
 name|logmessage
 argument_list|(
 name|pri
+argument_list|,
+name|tag
 argument_list|,
 name|host
 argument_list|,
@@ -659,6 +679,8 @@ name|logmessage
 argument_list|(
 name|pri
 argument_list|,
+name|tag
+argument_list|,
 name|host
 argument_list|,
 name|svcname
@@ -688,6 +710,8 @@ name|logmessage
 argument_list|(
 name|pri
 argument_list|,
+name|tag
+argument_list|,
 name|host
 argument_list|,
 name|svcname
@@ -713,6 +737,11 @@ name|logmessage
 parameter_list|(
 name|int
 name|pri
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|tag
 parameter_list|,
 specifier|const
 name|char
@@ -1041,9 +1070,11 @@ argument_list|(
 operator|&
 name|line
 argument_list|,
-literal|"<%d>%s"
+literal|"<%d>%s: %s"
 argument_list|,
 name|pri
+argument_list|,
+name|tag
 argument_list|,
 name|buf
 argument_list|)
