@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: dlg_colors.h,v 1.15 2007/02/18 18:23:29 tom Exp $  *  *  colors.h -- color attribute definitions  *  *  Copyright 2000-2005,2006	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors  *	Savio Lam (lam836@cs.cuhk.hk)  */
+comment|/*  *  $Id: dlg_colors.h,v 1.16 2011/01/17 00:20:32 tom Exp $  *  *  colors.h -- color attribute definitions  *  *  Copyright 2000-2007,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors  *	Savio Lam (lam836@cs.cuhk.hk)  */
 end_comment
 
 begin_ifndef
@@ -716,6 +716,27 @@ begin_define
 define|#
 directive|define
 name|DLGC_HL_FORM_TEXT
+value|TRUE
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLGC_FG_GAUGE
+value|COLOR_BLUE
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLGC_BG_GAUGE
+value|COLOR_WHITE
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLGC_HL_GAUGE
 value|TRUE
 end_define
 

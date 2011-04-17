@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: dialog.h,v 1.214 2010/04/28 21:11:49 tom Exp $  *  * dialog.h -- common declarations for all dialog modules  *  * Copyright 2000-2008,2010 Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors  *	Savio Lam (lam836@cs.cuhk.hk)  */
+comment|/*  *  $Id: dialog.h,v 1.223 2011/03/02 10:04:09 tom Exp $  *  *  dialog.h -- common declarations for all dialog modules  *  *  Copyright 2000-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors  *	Savio Lam (lam836@cs.cuhk.hk)  */
 end_comment
 
 begin_ifndef
@@ -15,6 +15,10 @@ directive|define
 name|DIALOG_H_included
 value|1
 end_define
+
+begin_comment
+comment|/* *INDENT-OFF* */
+end_comment
 
 begin_include
 include|#
@@ -103,6 +107,16 @@ end_include
 
 begin_comment
 comment|/* sqrt() */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ERR
+end_undef
+
+begin_comment
+comment|/* header conflict with Solaris xpg4 */
 end_comment
 
 begin_if
@@ -199,6 +213,68 @@ include|#
 directive|include
 file|<unctrl.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Solaris xpg4 renames these */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KEY_MAX
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__KEY_MAX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KEY_MAX
+value|__KEY_MAX
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KEY_MIN
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__KEY_MIN
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KEY_MIN
+value|__KEY_MIN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -649,7 +725,7 @@ begin_define
 define|#
 directive|define
 name|BUF_SIZE
-value|(10*1024)
+value|(10L*1024)
 end_define
 
 begin_undef
@@ -719,6 +795,10 @@ directive|define
 name|WTIMEOUT_VAL
 value|10
 end_define
+
+begin_comment
+comment|/* minimum amount of time needed for curses */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -1757,6 +1837,10 @@ name|form_item_readonly_attr
 value|DIALOG_ATR(32)
 define|#
 directive|define
+name|gauge_attr
+value|DIALOG_ATR(33)
+define|#
+directive|define
 name|DLGK_max
 value|(KEY_MAX + 256)
 comment|/*  * Callbacks are used to implement the "background" tailbox.  */
@@ -1836,6 +1920,22 @@ name|caller
 decl_stmt|;
 name|DIALOG_FREEBACK
 name|freeback
+decl_stmt|;
+comment|/* 1.1-20110107 */
+name|bool
+function_decl|(
+modifier|*
+name|handle_input
+function_decl|)
+parameter_list|(
+name|struct
+name|_dlg_callback
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+name|bool
+name|input_ready
 decl_stmt|;
 block|}
 name|DIALOG_CALLBACK
@@ -1943,6 +2043,11 @@ decl_stmt|;
 comment|/* option "--trace file" */
 endif|#
 directive|endif
+comment|/* 1.1-20110106 */
+name|bool
+name|no_mouse
+decl_stmt|;
+comment|/* option "--no-mouse" */
 block|}
 name|DIALOG_STATE
 typedef|;
@@ -2249,7 +2354,7 @@ name|t
 parameter_list|,
 name|n
 parameter_list|)
-value|(t *) malloc((n) * sizeof(t))
+value|(t *) malloc((size_t)(n) * sizeof(t))
 define|#
 directive|define
 name|dlg_calloc
@@ -2258,7 +2363,7 @@ name|t
 parameter_list|,
 name|n
 parameter_list|)
-value|(t *) calloc((n), sizeof(t))
+value|(t *) calloc((size_t)(n), sizeof(t))
 define|#
 directive|define
 name|dlg_realloc
@@ -2685,6 +2790,35 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|int
+name|dialog_prgbox
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+comment|/*title*/
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/*cprompt*/
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/*command*/
+parameter_list|,
+name|int
+comment|/*height*/
+parameter_list|,
+name|int
+comment|/*width*/
+parameter_list|,
+name|int
+comment|/*pauseopt*/
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
 name|dialog_progressbox
 parameter_list|(
 specifier|const
@@ -3023,6 +3157,77 @@ comment|/*current_item*/
 parameter_list|,
 name|DIALOG_INPUTMENU
 comment|/*rename_menu*/
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|dlg_progressbox
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+comment|/*title*/
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/*cprompt*/
+parameter_list|,
+name|int
+comment|/*height*/
+parameter_list|,
+name|int
+comment|/*width*/
+parameter_list|,
+name|int
+comment|/*pauseopt*/
+parameter_list|,
+name|FILE
+modifier|*
+comment|/* fp */
+parameter_list|)
+function_decl|;
+comment|/* argv.c */
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|dlg_string_to_argv
+parameter_list|(
+name|char
+modifier|*
+comment|/* blob */
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|dlg_count_argv
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+comment|/* argv */
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|dlg_eat_argv
+parameter_list|(
+name|int
+modifier|*
+comment|/* argcp */
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+modifier|*
+comment|/* argvp */
+parameter_list|,
+name|int
+comment|/* start */
+parameter_list|,
+name|int
+comment|/* count */
 parameter_list|)
 function_decl|;
 comment|/* arrows.c */
@@ -3833,6 +4038,15 @@ name|dlg_boxchar
 parameter_list|(
 name|chtype
 comment|/*ch*/
+parameter_list|)
+function_decl|;
+specifier|extern
+name|chtype
+name|dlg_get_attrs
+parameter_list|(
+name|WINDOW
+modifier|*
+comment|/*win*/
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -5109,6 +5323,10 @@ unit|}
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* *INDENT-ON* */
+end_comment
 
 begin_endif
 endif|#

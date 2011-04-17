@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: mixedgauge.c,v 1.18 2010/01/15 23:43:53 tom Exp $  *  *  mixedgauge.c -- implements the mixedgauge dialog  *  *  Copyright 2007,2010	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  This is inspired by a patch from Kiran Cherupally  *  (but different interface design).  */
+comment|/*  *  $Id: mixedgauge.c,v 1.23 2011/01/19 00:27:53 tom Exp $  *  *  mixedgauge.c -- implements the mixedgauge dialog  *  *  Copyright 2007-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  This is inspired by a patch from Kiran Cherupally  *  (but different interface design).  */
 end_comment
 
 begin_include
@@ -284,7 +284,7 @@ operator|==
 literal|'-'
 condition|)
 block|{
-name|unsigned
+name|size_t
 name|need
 init|=
 name|strlen
@@ -987,6 +987,7 @@ name|attr
 init|=
 name|A_NORMAL
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|message
@@ -999,7 +1000,7 @@ decl_stmt|;
 name|chtype
 name|save2
 init|=
-name|getattrs
+name|dlg_get_attrs
 argument_list|(
 name|win
 argument_list|)
@@ -1132,7 +1133,7 @@ name|dlg
 operator|->
 name|dialog
 argument_list|,
-name|title_attr
+name|gauge_attr
 argument_list|)
 expr_stmt|;
 for|for

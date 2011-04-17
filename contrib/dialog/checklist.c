@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: checklist.c,v 1.121 2010/01/17 19:32:17 tom Exp $  *  *  checklist.c -- implements the checklist box  *  *  Copyright 2000-2009,2010	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors:  *	Savio Lam (lam836@cs.cuhk.hk)  *	Stuart Herbert - S.Herbert@sheffield.ac.uk: radiolist extension  *	Alessandro Rubini - rubini@ipvvis.unipv.it: merged the two  */
+comment|/*  *  $Id: checklist.c,v 1.124 2011/01/19 00:27:53 tom Exp $  *  *  checklist.c -- implements the checklist box  *  *  Copyright 2000-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors:  *	Savio Lam (lam836@cs.cuhk.hk)  *	Stuart Herbert - S.Herbert@sheffield.ac.uk: radiolist extension  *	Alessandro Rubini - rubini@ipvvis.unipv.it: merged the two  */
 end_comment
 
 begin_include
@@ -127,15 +127,35 @@ name|dlg_draw_scrollbar
 argument_list|(
 name|win
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|scrollamt
+argument_list|)
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|scrollamt
+argument_list|)
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|scrollamt
 operator|+
 name|choice
+argument_list|)
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|item_no
+argument_list|)
 argument_list|,
 name|box_x
 operator|+
@@ -193,7 +213,7 @@ block|{
 name|chtype
 name|save
 init|=
-name|getattrs
+name|dlg_get_attrs
 argument_list|(
 name|win
 argument_list|)
@@ -3105,6 +3125,9 @@ index|]
 operator|.
 name|text
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|DIALOG_LISTITEM
@@ -3377,6 +3400,9 @@ index|]
 operator|.
 name|text
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|DIALOG_LISTITEM
