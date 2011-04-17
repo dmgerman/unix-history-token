@@ -66,7 +66,7 @@ name|sys_errlist
 index|[]
 init|=
 block|{
-literal|"Undefined error: 0"
+literal|"No error: 0"
 block|,
 comment|/*  0 - ENOERROR */
 literal|"Operation not permitted"
