@@ -3402,6 +3402,26 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* For forced unmounts, just return. */
+if|if
+condition|(
+operator|(
+name|vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_kern_flag
+operator|&
+name|MNTK_UNMOUNTF
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|doclose

@@ -7889,6 +7889,24 @@ name|td
 operator|=
 name|curthread
 expr_stmt|;
+comment|/* For a forced unmount, just return EPERM. */
+if|if
+condition|(
+operator|(
+name|mp
+operator|->
+name|mnt_kern_flag
+operator|&
+name|MNTK_UNMOUNTF
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
 comment|/* 	 * Force stale buffer cache information to be flushed. 	 */
 name|MNT_ILOCK
 argument_list|(
