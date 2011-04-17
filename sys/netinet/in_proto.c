@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_inet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_inet6.h"
 end_include
 
@@ -112,6 +118,16 @@ include|#
 directive|include
 file|<sys/sysctl.h>
 end_include
+
+begin_comment
+comment|/*  * While this file provides the domain and protocol switch tables for IPv4, it  * also provides the sysctl node declarations for net.inet.* often shared with  * IPv6 for common features or by upper layer protocols.  In case of no IPv4  * support compile out everything but these sysctl nodes.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_include
 include|#
@@ -1545,6 +1561,15 @@ name|inet
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_expr_stmt
 name|SYSCTL_NODE
