@@ -6810,7 +6810,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"SIG_DFL\n"
+literal|"SIG_DFL code=0x%x\n"
+argument_list|,
+name|psig
+operator|->
+name|code
 argument_list|)
 expr_stmt|;
 else|else
