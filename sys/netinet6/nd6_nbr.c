@@ -1462,6 +1462,8 @@ operator|)
 argument_list|,
 name|tlladdr
 argument_list|,
+name|proxy
+condition|?
 operator|(
 expr|struct
 name|sockaddr
@@ -1469,6 +1471,8 @@ operator|*
 operator|)
 operator|&
 name|proxydl
+else|:
+name|NULL
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1528,6 +1532,8 @@ name|ND_NA_FLAG_SOLICITED
 argument_list|,
 name|tlladdr
 argument_list|,
+name|proxy
+condition|?
 operator|(
 expr|struct
 name|sockaddr
@@ -1535,6 +1541,8 @@ operator|*
 operator|)
 operator|&
 name|proxydl
+else|:
+name|NULL
 argument_list|)
 expr_stmt|;
 name|freeit
