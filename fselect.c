@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: fselect.c,v 1.74 2010/04/28 20:45:40 tom Exp $  *  * fselect.c -- implements the file-selector box  *  * Copyright 2000-2009,2010 Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
+comment|/*  *  $Id: fselect.c,v 1.76 2011/01/16 22:20:16 tom Exp $  *  *  fselect.c -- implements the file-selector box  *  *  Copyright 2000-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
 end_comment
 
 begin_include
@@ -1253,14 +1253,24 @@ name|list
 operator|->
 name|par
 argument_list|,
+operator|(
+name|long
+operator|)
 name|list
 operator|->
 name|offset
 argument_list|,
+operator|(
+name|long
+operator|)
 name|list
 operator|->
 name|offset
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|list
 operator|->
 name|offset
@@ -1271,10 +1281,16 @@ name|list
 operator|->
 name|win
 argument_list|)
+argument_list|)
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|list
 operator|->
 name|length
+argument_list|)
 argument_list|,
 name|x
 operator|+
@@ -1458,7 +1474,7 @@ name|LIST
 modifier|*
 name|list
 parameter_list|,
-name|bool
+name|int
 name|keep
 parameter_list|)
 block|{
@@ -1506,7 +1522,7 @@ name|LIST
 modifier|*
 name|f_list
 parameter_list|,
-name|bool
+name|int
 name|keep
 parameter_list|)
 block|{
@@ -2243,7 +2259,7 @@ name|LIST
 modifier|*
 name|f_list
 parameter_list|,
-name|bool
+name|int
 name|keep
 parameter_list|)
 block|{
@@ -2754,7 +2770,7 @@ parameter_list|,
 name|int
 name|width
 parameter_list|,
-name|bool
+name|int
 name|dselect
 parameter_list|)
 block|{
@@ -2932,6 +2948,7 @@ init|=
 name|dlg_ok_labels
 argument_list|()
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|d_label
@@ -2941,6 +2958,7 @@ argument_list|(
 literal|"Directories"
 argument_list|)
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|f_label
@@ -3670,8 +3688,14 @@ literal|0
 argument_list|,
 name|tbox_width
 argument_list|,
+operator|(
+name|bool
+operator|)
 literal|0
 argument_list|,
+operator|(
+name|bool
+operator|)
 name|first
 argument_list|)
 expr_stmt|;

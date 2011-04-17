@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: arrows.c,v 1.29 2010/02/24 09:17:00 Samuel.Martin.Moro Exp $  *  *  arrows.c -- draw arrows to indicate end-of-range for lists  *  * Copyright 2000-2009,2010   Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
+comment|/*  *  $Id: arrows.c,v 1.33 2011/01/19 00:27:53 tom Exp $  *  *  arrows.c -- draw arrows to indicate end-of-range for lists  *  *  Copyright 2000-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
 end_comment
 
 begin_include
@@ -14,6 +14,56 @@ ifdef|#
 directive|ifdef
 name|USE_WIDE_CURSES
 end_ifdef
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CURSES_WACS_ARRAY
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|CURSES_WACS_SYMBOLS
+argument_list|)
+end_if
+
+begin_comment
+comment|/* workaround for NetBSD 5.1 curses */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|WACS_DARROW
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|WACS_UARROW
+end_undef
+
+begin_define
+define|#
+directive|define
+name|WACS_DARROW
+value|&(CURSES_WACS_ARRAY['.'])
+end_define
+
+begin_define
+define|#
+directive|define
+name|WACS_UARROW
+value|&(CURSES_WACS_ARRAY['-'])
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -225,7 +275,7 @@ block|{
 name|chtype
 name|save
 init|=
-name|getattrs
+name|dlg_get_attrs
 argument_list|(
 name|win
 argument_list|)
@@ -571,7 +621,7 @@ decl_stmt|;
 name|chtype
 name|save
 init|=
-name|getattrs
+name|dlg_get_attrs
 argument_list|(
 name|win
 argument_list|)
@@ -752,7 +802,7 @@ name|BARSIZE
 parameter_list|(
 name|num
 parameter_list|)
-value|((all_high * (num)) + all_high - 1) / total_data
+value|(int) (((all_high * (num)) + all_high - 1) / total_data)
 if|if
 condition|(
 name|dialog_state

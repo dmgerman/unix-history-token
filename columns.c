@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: columns.c,v 1.5 2010/01/18 10:26:36 tom Exp $  *  *  columns.c -- implements column-alignment  *  *  Copyright 2008,2010	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
+comment|/*  *  $Id: columns.c,v 1.7 2011/01/16 21:51:44 tom Exp $  *  *  columns.c -- implements column-alignment  *  *  Copyright 2008-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
 end_comment
 
 begin_include
@@ -281,6 +281,9 @@ condition|)
 do|;
 name|offset
 operator|=
+operator|(
+name|unsigned
+operator|)
 name|strlen
 argument_list|(
 name|source
@@ -347,7 +350,7 @@ name|numcols
 init|=
 literal|1
 decl_stmt|;
-name|unsigned
+name|size_t
 name|maxcols
 init|=
 literal|0
@@ -381,7 +384,7 @@ name|value
 argument_list|)
 control|)
 block|{
-name|unsigned
+name|size_t
 name|len
 init|=
 name|strlen
@@ -607,6 +610,9 @@ name|text
 argument_list|,
 literal|' '
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|realwidth
 argument_list|)
 expr_stmt|;
@@ -638,6 +644,9 @@ index|[
 name|n
 index|]
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|widths
 index|[
 name|n

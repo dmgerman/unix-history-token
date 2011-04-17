@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: textbox.c,v 1.97 2010/04/28 21:03:44 tom Exp $  *  * textbox.c -- implements the text box  *  * Copyright 2000-2009,2010 Thomas E.  Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors:  *	Savio Lam (lam836@cs.cuhk.hk)  */
+comment|/*  *  $Id: textbox.c,v 1.99 2011/01/16 22:20:34 tom Exp $  *  *  textbox.c -- implements the text box  *  *  Copyright 2000-2010,2011	Thomas E.  Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors:  *	Savio Lam (lam836@cs.cuhk.hk)  */
 end_comment
 
 begin_include
@@ -201,7 +201,7 @@ name|lseek_obj
 argument_list|(
 name|obj
 argument_list|,
-literal|0
+literal|0L
 argument_list|,
 name|SEEK_CUR
 argument_list|)
@@ -1282,7 +1282,7 @@ name|lseek_obj
 argument_list|(
 name|obj
 argument_list|,
-literal|0
+literal|0L
 argument_list|,
 name|SEEK_SET
 argument_list|)
@@ -1447,7 +1447,7 @@ name|lseek_obj
 argument_list|(
 name|obj
 argument_list|,
-literal|0
+literal|0L
 argument_list|,
 name|SEEK_SET
 argument_list|)
@@ -2117,6 +2117,7 @@ name|result
 init|=
 name|DLG_EXIT_UNKNOWN
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|caption
@@ -2829,7 +2830,7 @@ name|back_lines
 argument_list|(
 name|obj
 argument_list|,
-literal|2
+literal|2L
 argument_list|)
 expr_stmt|;
 block|}
@@ -2901,7 +2902,7 @@ name|back_lines
 argument_list|(
 name|obj
 argument_list|,
-literal|1
+literal|1L
 argument_list|)
 expr_stmt|;
 block|}
@@ -3324,7 +3325,7 @@ argument_list|(
 operator|&
 name|obj
 argument_list|,
-literal|0
+literal|0L
 argument_list|,
 name|SEEK_END
 argument_list|)
@@ -3335,7 +3336,7 @@ argument_list|(
 operator|&
 name|obj
 argument_list|,
-literal|0
+literal|0L
 argument_list|,
 name|SEEK_SET
 argument_list|)
@@ -4090,7 +4091,7 @@ argument_list|(
 operator|&
 name|obj
 argument_list|,
-literal|0
+literal|0L
 argument_list|,
 name|SEEK_SET
 argument_list|)
@@ -4177,6 +4178,9 @@ argument_list|(
 operator|&
 name|obj
 argument_list|,
+operator|(
+name|long
+operator|)
 name|PAGE_LENGTH
 argument_list|)
 expr_stmt|;

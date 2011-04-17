@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: inputstr.c,v 1.66 2010/01/15 23:13:36 tom Exp $  *  * inputstr.c -- functions for input/display of a string  *  * Copyright 2000-2009,2010 Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
+comment|/*  *  $Id: inputstr.c,v 1.69 2011/01/16 21:52:35 tom Exp $  *  *  inputstr.c -- functions for input/display of a string  *  *  Copyright 2000-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
 end_comment
 
 begin_include
@@ -171,11 +171,11 @@ decl_stmt|;
 comment|/* unique: associate caches by char* */
 endif|#
 directive|endif
-name|unsigned
+name|size_t
 name|s_len
 decl_stmt|;
 comment|/* strlen(string) - we add 1 for EOS */
-name|unsigned
+name|size_t
 name|i_len
 decl_stmt|;
 comment|/* length(list) - we add 1 for EOS */
@@ -392,6 +392,10 @@ literal|0
 decl_stmt|;
 name|result
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|p
 operator|->
 name|cache_at
@@ -399,6 +403,7 @@ operator|-
 name|q
 operator|->
 name|cache_at
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -408,6 +413,10 @@ literal|0
 condition|)
 name|result
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|p
 operator|->
 name|string_at
@@ -415,6 +424,7 @@ operator|-
 name|q
 operator|->
 name|string_at
+argument_list|)
 expr_stmt|;
 return|return
 name|result
@@ -846,7 +856,7 @@ block|{
 name|unsigned
 name|need
 decl_stmt|;
-name|unsigned
+name|size_t
 name|s_len
 init|=
 name|strlen
@@ -880,6 +890,9 @@ name|cache
 argument_list|,
 name|string
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|s_len
 argument_list|)
 condition|)
@@ -1037,11 +1050,11 @@ name|char
 modifier|*
 name|string
 parameter_list|,
-name|unsigned
+name|size_t
 name|i_len
 parameter_list|)
 block|{
-name|unsigned
+name|size_t
 name|s_len
 init|=
 name|strlen
@@ -1063,6 +1076,9 @@ name|cache
 argument_list|,
 name|string
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|s_len
 argument_list|)
 condition|)
@@ -2114,17 +2130,23 @@ operator|<
 literal|0
 condition|)
 block|{
+specifier|const
 name|wchar_t
 modifier|*
 name|printable
 decl_stmt|;
 name|cchar_t
 name|temp2
+decl_stmt|,
+modifier|*
+name|temp2p
+init|=
+operator|&
+name|temp2
 decl_stmt|;
 name|setcchar
 argument_list|(
-operator|&
-name|temp2
+name|temp2p
 argument_list|,
 name|temp
 argument_list|,
@@ -2139,8 +2161,7 @@ name|printable
 operator|=
 name|wunctrl
 argument_list|(
-operator|&
-name|temp2
+name|temp2p
 argument_list|)
 expr_stmt|;
 name|result

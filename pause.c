@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: pause.c,v 1.22 2010/04/28 00:29:50 tom Exp $  *  *  pause.c -- implements the pause dialog  *  *  Copyright 2004-2009,2010	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  This is adapted from source contributed by  *	Yura Kalinichenko  */
+comment|/*  *  $Id: pause.c,v 1.26 2011/01/18 10:16:33 tom Exp $  *  *  pause.c -- implements the pause dialog  *  *  Copyright 2004-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  This is adapted from source contributed by  *	Yura Kalinichenko  */
 end_comment
 
 begin_include
@@ -214,7 +214,7 @@ name|MARGIN
 operator|)
 decl_stmt|;
 name|int
-name|guage_y
+name|gauge_y
 decl_stmt|;
 name|char
 modifier|*
@@ -317,7 +317,7 @@ name|MIN_WIDE
 argument_list|)
 expr_stmt|;
 block|}
-name|guage_y
+name|gauge_y
 operator|=
 name|height
 operator|-
@@ -461,7 +461,7 @@ name|dlg_draw_box
 argument_list|(
 name|dialog
 argument_list|,
-name|guage_y
+name|gauge_y
 argument_list|,
 literal|2
 operator|+
@@ -494,7 +494,7 @@ name|wmove
 argument_list|(
 name|dialog
 argument_list|,
-name|guage_y
+name|gauge_y
 operator|+
 name|MARGIN
 argument_list|,
@@ -548,7 +548,7 @@ name|wmove
 argument_list|(
 name|dialog
 argument_list|,
-name|guage_y
+name|gauge_y
 operator|+
 name|MARGIN
 argument_list|,
@@ -630,7 +630,7 @@ name|wmove
 argument_list|(
 name|dialog
 argument_list|,
-name|guage_y
+name|gauge_y
 operator|+
 name|MARGIN
 argument_list|,
@@ -919,14 +919,12 @@ break|break;
 case|case
 name|DLGK_ENTER
 case|:
-comment|/* Do not use dlg_exit_buttoncode() since we want to return 		 * a cancel rather than ok if the timeout has not expired. 		 */
 name|result
 operator|=
+name|dlg_ok_buttoncode
+argument_list|(
 name|button
-condition|?
-name|DLG_EXIT_CANCEL
-else|:
-name|DLG_EXIT_OK
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -956,10 +954,6 @@ name|ERR
 case|:
 break|break;
 default|default:
-name|result
-operator|=
-name|DLG_EXIT_OK
-expr_stmt|;
 break|break;
 block|}
 block|}
