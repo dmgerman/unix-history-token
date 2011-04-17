@@ -366,6 +366,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|ar5416MarkPhyInactive
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Places the device in and out of reset and then places sane  * values in the registers based on EEPROM config, initialization  * vectors (as determined by the mode), and station configuration  *  * bChannelChange is used to preserve DMA/PCU registers across  * a HW Reset during channel change.  */
 end_comment
@@ -669,6 +682,12 @@ condition|)
 name|tsf
 operator|=
 name|ar5212GetTsf64
+argument_list|(
+name|ah
+argument_list|)
+expr_stmt|;
+comment|/* Mark PHY as inactive; marked active in ar5416InitBB() */
+name|ar5416MarkPhyInactive
 argument_list|(
 name|ah
 argument_list|)
@@ -11883,6 +11902,29 @@ expr_stmt|;
 undef|#
 directive|undef
 name|XPA_LVL_FREQ
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|ar5416MarkPhyInactive
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+block|{
+name|OS_REG_WRITE
+argument_list|(
+name|ah
+argument_list|,
+name|AR_PHY_ACTIVE
+argument_list|,
+name|AR_PHY_ACTIVE_DIS
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
