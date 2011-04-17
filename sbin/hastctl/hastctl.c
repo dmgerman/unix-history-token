@@ -2373,18 +2373,12 @@ expr_stmt|;
 comment|/* ...and receive reply. */
 if|if
 condition|(
-name|hast_proto_recv
+name|hast_proto_recv_hdr
 argument_list|(
-name|NULL
-argument_list|,
 name|controlconn
 argument_list|,
 operator|&
 name|nv
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
 argument_list|)
 operator|<
 literal|0
