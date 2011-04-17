@@ -479,7 +479,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|SetAliasAddressFromIfName
 parameter_list|(
 specifier|const
@@ -877,6 +877,9 @@ name|readMask
 decl_stmt|;
 name|int
 name|fdMax
+decl_stmt|;
+name|int
+name|rval
 decl_stmt|;
 comment|/*   * Initialize packet aliasing software.  * Done already here to be able to alter option bits  * during command line and configuration file processing.  */
 name|NewInstance
@@ -1510,6 +1513,11 @@ literal|1
 expr_stmt|;
 block|}
 else|else
+block|{
+do|do
+block|{
+name|rval
+operator|=
 name|SetAliasAddressFromIfName
 argument_list|(
 name|mip
@@ -1517,6 +1525,39 @@ operator|->
 name|ifName
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rval
+operator|==
+operator|-
+literal|2
+condition|)
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|rval
+operator|==
+operator|-
+literal|2
+condition|)
+do|;
+if|if
+condition|(
+name|rval
+operator|!=
+literal|0
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 if|if
@@ -2429,7 +2470,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if (mip->assignAliasAddr) { 		SetAliasAddressFromIfName (mip->ifName); 		mip->assignAliasAddr = 0; 	}
+block|if (mip->assignAliasAddr) { 		if (SetAliasAddressFromIfName (mip->ifName) != 0) 			exit(1); 		mip->assignAliasAddr = 0; 	}
 endif|#
 directive|endif
 comment|/*  * This is an IP packet.  */
@@ -2742,6 +2783,9 @@ index|[
 literal|80
 index|]
 decl_stmt|;
+name|int
+name|rval
+decl_stmt|;
 if|if
 condition|(
 name|mip
@@ -2749,11 +2793,47 @@ operator|->
 name|assignAliasAddr
 condition|)
 block|{
+do|do
+block|{
+name|rval
+operator|=
 name|SetAliasAddressFromIfName
 argument_list|(
 name|mip
 operator|->
 name|ifName
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rval
+operator|==
+operator|-
+literal|2
+condition|)
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|rval
+operator|==
+operator|-
+literal|2
+condition|)
+do|;
+if|if
+condition|(
+name|rval
+operator|!=
+literal|0
+condition|)
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 name|mip
@@ -3618,7 +3698,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|SetAliasAddressFromIfName
 parameter_list|(
 specifier|const
@@ -4098,15 +4178,24 @@ name|sin
 operator|==
 name|NULL
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"%s: cannot get interface address"
 argument_list|,
 name|ifn
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|2
+return|;
+block|}
 name|LibAliasSetAddress
 argument_list|(
 name|mla
@@ -4139,6 +4228,9 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
