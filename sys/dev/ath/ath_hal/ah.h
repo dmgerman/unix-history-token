@@ -386,6 +386,11 @@ init|=
 literal|42
 block|,
 comment|/* support a self-linked tail RX descriptor */
+name|HAL_CAP_GTXTO
+init|=
+literal|43
+block|,
+comment|/* hardware supports global tx timeout */
 block|}
 name|HAL_CAPABILITY_TYPE
 typedef|;

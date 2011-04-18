@@ -398,9 +398,13 @@ name|u_int32_t
 name|ast_rx_hitqueueend
 decl_stmt|;
 name|u_int32_t
+name|ast_tx_timeout
+decl_stmt|;
+comment|/* Global TX timeout */
+name|u_int32_t
 name|ast_pad
 index|[
-literal|2
+literal|1
 index|]
 decl_stmt|;
 block|}

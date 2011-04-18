@@ -5012,6 +5012,30 @@ argument_list|,
 literal|"RX hit queue end"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_UINT
+argument_list|(
+name|ctx
+argument_list|,
+name|child
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"ast_tx_timeout"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_stats
+operator|.
+name|ast_tx_timeout
+argument_list|,
+literal|0
+argument_list|,
+literal|"TX Global Timeout"
+argument_list|)
+expr_stmt|;
 comment|/* Attach the RX phy error array */
 name|ath_sysctl_stats_attach_rxphyerr
 argument_list|(

@@ -2388,13 +2388,33 @@ operator|->
 name|ah_diagreg
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* XXX Todo */
-block|if (ahp->ah_globaltxtimeout != (u_int) -1)         	ar5416SetGlobalTxTimeout(ah, ahp->ah_globaltxtimeout);
-endif|#
-directive|endif
+if|if
+condition|(
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_globaltxtimeout
+operator|!=
+operator|(
+name|u_int
+operator|)
+operator|-
+literal|1
+condition|)
+name|ar5416SetGlobalTxTimeout
+argument_list|(
+name|ah
+argument_list|,
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_globaltxtimeout
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
