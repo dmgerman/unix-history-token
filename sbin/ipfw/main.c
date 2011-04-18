@@ -2538,7 +2538,7 @@ literal|0
 condition|)
 block|{
 comment|/* Tell the user that we could not find a usable */
-comment|/* Winsock DLL.                                  */
+comment|/* Winsock DLL.				  */
 name|printf
 argument_list|(
 literal|"WSAStartup failed with error: %d\n"

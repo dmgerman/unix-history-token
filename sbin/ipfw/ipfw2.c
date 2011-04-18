@@ -11764,7 +11764,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * fill the interface structure. We do not check the name as we can  * create interfaces dynamically, so checking them at insert time  * makes relatively little sense.  * Interface names containing '*', '?', or '[' are assumed to be shell   * patterns which match interfaces.  */
+comment|/*  * fill the interface structure. We do not check the name as we can  * create interfaces dynamically, so checking them at insert time  * makes relatively little sense.  * Interface names containing '*', '?', or '[' are assumed to be shell  * patterns which match interfaces.  */
 end_comment
 
 begin_function

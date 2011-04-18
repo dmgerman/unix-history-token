@@ -265,7 +265,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Print the ip address contained in a command.  */
+comment|/*  * Print the ip address contained in a command.  */
 end_comment
 
 begin_function
@@ -384,7 +384,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/*         * len == 4 indicates a single IP, whereas lists of 1 or more         * addr/mask pairs have len = (2n+1). We convert len to n so we         * use that to count the number of entries.         */
+comment|/* 	* len == 4 indicates a single IP, whereas lists of 1 or more 	* addr/mask pairs have len = (2n+1). We convert len to n so we 	* use that to count the number of entries. 	*/
 for|for
 control|(
 name|len
@@ -1423,7 +1423,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * fill the addr and mask fields in the instruction as appropriate from av.  * Update length as appropriate.  * The following formats are allowed:  *     any     matches any IP6. Actually returns an empty instruction.  *     me      returns O_IP6_*_ME  *  *     03f1::234:123:0342                single IP6 addres  *     03f1::234:123:0342/24            address/mask  *     03f1::234:123:0342/24,03f1::234:123:0343/               List of address  *  * Set of address (as in ipv6) not supported because ipv6 address  * are typically random past the initial prefix.  * Return 1 on success, 0 on failure.  */
+comment|/*  * fill the addr and mask fields in the instruction as appropriate from av.  * Update length as appropriate.  * The following formats are allowed:  *     any     matches any IP6. Actually returns an empty instruction.  *     me      returns O_IP6_*_ME  *  *     03f1::234:123:0342		single IP6 addres  *     03f1::234:123:0342/24	    address/mask  *     03f1::234:123:0342/24,03f1::234:123:0343/	       List of address  *  * Set of address (as in ipv6) not supported because ipv6 address  * are typically random past the initial prefix.  * Return 1 on success, 0 on failure.  */
 end_comment
 
 begin_function
