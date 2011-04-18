@@ -1000,11 +1000,6 @@ decl_stmt|;
 name|priv_p
 name|priv
 decl_stmt|;
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
 comment|/* Allocate node and interface private structures */
 name|priv
 operator|=
