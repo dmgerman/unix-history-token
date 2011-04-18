@@ -3562,8 +3562,19 @@ name|p
 parameter_list|,
 name|T
 parameter_list|)
+value|PULLUP_LEN(_len, p, sizeof(T))
+define|#
+directive|define
+name|PULLUP_LEN
+parameter_list|(
+name|_len
+parameter_list|,
+name|p
+parameter_list|,
+name|T
+parameter_list|)
 define|\
-value|do {								\ 	int x = (_len) + sizeof(T);				\ 	if ((m)->m_len< x) {					\ 		args->m = m = m_pullup(m, x);			\ 		if (m == NULL)					\ 			goto pullup_failed;			\ 	}							\ 	p = (mtod(m, char *) + (_len));				\ } while (0)
+value|do {								\ 	int x = (_len) + T;					\ 	if ((m)->m_len< x) {					\ 		args->m = m = m_pullup(m, x);			\ 		if (m == NULL)					\ 			goto pullup_failed;			\ 	}							\ 	p = (mtod(m, char *) + (_len));				\ } while (0)
 comment|/* 	 * if we have an ether header, 	 */
 if|if
 condition|(
@@ -6679,6 +6690,24 @@ break|break;
 case|case
 name|O_TCPOPTS
 case|:
+name|PULLUP_LEN
+argument_list|(
+name|hlen
+argument_list|,
+name|ulp
+argument_list|,
+operator|(
+name|TCP
+argument_list|(
+name|ulp
+argument_list|)
+operator|->
+name|th_off
+operator|<<
+literal|2
+operator|)
+argument_list|)
+expr_stmt|;
 name|match
 operator|=
 operator|(
@@ -9247,6 +9276,12 @@ end_function
 begin_comment
 comment|/* end of inner loop, scan opcodes */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|PULLUP_LEN
+end_undef
 
 begin_if
 if|if
