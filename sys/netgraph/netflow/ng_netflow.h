@@ -1327,7 +1327,7 @@ comment|/* Prototypes for netflow.c */
 end_comment
 
 begin_function_decl
-name|int
+name|void
 name|ng_netflow_cache_init
 parameter_list|(
 name|priv_p

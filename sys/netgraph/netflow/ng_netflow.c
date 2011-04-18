@@ -728,10 +728,6 @@ name|priv_p
 name|priv
 decl_stmt|;
 name|int
-name|error
-init|=
-literal|0
-decl_stmt|,
 name|i
 decl_stmt|;
 comment|/* Initialize private data */
@@ -822,22 +818,11 @@ name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 comment|/* Allocate memory and set up flow cache */
-if|if
-condition|(
-operator|(
-name|error
-operator|=
 name|ng_netflow_cache_init
 argument_list|(
 name|priv
 argument_list|)
-operator|)
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+expr_stmt|;
 return|return
 operator|(
 literal|0

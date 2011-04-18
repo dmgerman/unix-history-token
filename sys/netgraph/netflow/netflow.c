@@ -2490,7 +2490,7 @@ comment|/* Allocate memory and set up flow cache */
 end_comment
 
 begin_function
-name|int
+name|void
 name|ng_netflow_cache_init
 parameter_list|(
 name|priv_p
@@ -2748,11 +2748,6 @@ argument_list|,
 literal|"ng_netflow startup()"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
