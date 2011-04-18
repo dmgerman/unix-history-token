@@ -458,7 +458,7 @@ end_comment
 begin_function
 specifier|static
 name|__inline
-name|int
+name|void
 name|ng_sppp_get_unit
 parameter_list|(
 name|int
@@ -540,20 +540,9 @@ argument_list|)
 argument_list|,
 name|M_NETGRAPH_SPPP
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|newarray
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
 name|bcopy
 argument_list|(
 name|ng_sppp_units
@@ -681,11 +670,6 @@ expr_stmt|;
 name|ng_units_in_use
 operator|++
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -1087,11 +1071,6 @@ operator|=
 name|ifp
 expr_stmt|;
 comment|/* Get an interface unit number */
-if|if
-condition|(
-operator|(
-name|error
-operator|=
 name|ng_sppp_get_unit
 argument_list|(
 operator|&
@@ -1099,31 +1078,7 @@ name|priv
 operator|->
 name|unit
 argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|free
-argument_list|(
-name|pp
-argument_list|,
-name|M_NETGRAPH_SPPP
-argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|priv
-argument_list|,
-name|M_NETGRAPH_SPPP
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
 comment|/* Link together node and private info */
 name|NG_NODE_SET_PRIVATE
 argument_list|(
