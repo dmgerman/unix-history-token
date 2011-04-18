@@ -214,7 +214,7 @@ begin_decl_stmt
 name|u_int
 name|g_raid_debug
 init|=
-literal|2
+literal|0
 decl_stmt|;
 end_decl_stmt
 
