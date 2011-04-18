@@ -2359,20 +2359,6 @@ argument_list|(
 name|periph
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|periph
-operator|->
-name|refcount
-operator|<
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"cam_invalidate_periph: refcount< 0!!\n"
-argument_list|)
-expr_stmt|;
 name|xpt_unlock_buses
 argument_list|()
 expr_stmt|;
