@@ -2291,6 +2291,10 @@ name|resetting
 decl_stmt|;
 comment|/* Hard-reset in progress. */
 name|int
+name|resetpolldiv
+decl_stmt|;
+comment|/* Hard-reset poll divider. */
+name|int
 name|listening
 decl_stmt|;
 comment|/* SUD bit is cleared. */
