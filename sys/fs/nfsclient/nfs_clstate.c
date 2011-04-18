@@ -3451,27 +3451,6 @@ name|idlen
 init|=
 literal|0
 decl_stmt|;
-comment|/* For forced unmounts, just return an error. */
-if|if
-condition|(
-operator|(
-name|vnode_mount
-argument_list|(
-name|vp
-argument_list|)
-operator|->
-name|mnt_kern_flag
-operator|&
-name|MNTK_UNMOUNTF
-operator|)
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-name|EPERM
-operator|)
-return|;
 if|if
 condition|(
 name|cred
