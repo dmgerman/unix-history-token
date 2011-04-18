@@ -404,7 +404,7 @@ comment|/* Global TX timeout */
 name|u_int32_t
 name|ast_pad
 index|[
-literal|1
+literal|16
 index|]
 decl_stmt|;
 block|}
