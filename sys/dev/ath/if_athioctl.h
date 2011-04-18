@@ -402,6 +402,10 @@ name|ast_tx_timeout
 decl_stmt|;
 comment|/* Global TX timeout */
 name|u_int32_t
+name|ast_tx_cst
+decl_stmt|;
+comment|/* Carrier sense timeout */
+name|u_int32_t
 name|ast_pad
 index|[
 literal|16

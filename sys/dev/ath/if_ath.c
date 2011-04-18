@@ -6459,6 +6459,19 @@ if|if
 condition|(
 name|status
 operator|&
+name|HAL_INT_CST
+condition|)
+name|sc
+operator|->
+name|sc_stats
+operator|.
+name|ast_tx_cst
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|status
+operator|&
 name|HAL_INT_MIB
 condition|)
 block|{
@@ -7306,7 +7319,7 @@ name|sc_imask
 operator||=
 name|HAL_INT_MIB
 expr_stmt|;
-comment|/* Enable global TX timeout statistics if available */
+comment|/* Enable global TX timeout and carrier sense timeout if available */
 if|if
 condition|(
 name|ath_hal_gtxto_supported
@@ -7318,7 +7331,11 @@ name|sc
 operator|->
 name|sc_imask
 operator||=
+operator|(
 name|HAL_INT_GTT
+operator||
+name|HAL_INT_CST
+operator|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
