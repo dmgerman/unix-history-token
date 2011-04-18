@@ -1217,7 +1217,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_OPAQUE
+name|SYSCTL_ADD_PROC
 argument_list|(
 operator|&
 name|sc
@@ -1235,6 +1235,8 @@ name|OID_AUTO
 argument_list|,
 literal|"temperature"
 argument_list|,
+name|CTLTYPE_INT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1242,12 +1244,9 @@ name|sc
 operator|->
 name|tz_temperature
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sc
-operator|->
-name|tz_temperature
-argument_list|)
+literal|0
+argument_list|,
+name|sysctl_handle_int
 argument_list|,
 literal|"IK"
 argument_list|,
@@ -1473,7 +1472,7 @@ argument_list|,
 literal|"critical temp setpoint (shutdown now)"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_OPAQUE
+name|SYSCTL_ADD_PROC
 argument_list|(
 operator|&
 name|sc
@@ -1491,6 +1490,8 @@ name|OID_AUTO
 argument_list|,
 literal|"_ACx"
 argument_list|,
+name|CTLTYPE_INT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1500,14 +1501,9 @@ name|tz_zone
 operator|.
 name|ac
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sc
-operator|->
-name|tz_zone
-operator|.
-name|ac
-argument_list|)
+literal|0
+argument_list|,
+name|sysctl_handle_int
 argument_list|,
 literal|"IK"
 argument_list|,
