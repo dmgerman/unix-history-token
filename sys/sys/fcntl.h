@@ -1252,7 +1252,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * XXX missing posix_fadvise() and posix_fallocate(), and POSIX_FADV_* macros.  */
+comment|/*  * XXX missing posix_fadvise() and POSIX_FADV_* macros.  */
 end_comment
 
 begin_ifndef
@@ -1326,6 +1326,34 @@ parameter_list|,
 name|int
 parameter_list|,
 modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+operator|||
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
+end_if
+
+begin_function_decl
+name|int
+name|posix_fallocate
+parameter_list|(
+name|int
+parameter_list|,
+name|off_t
+parameter_list|,
+name|off_t
 parameter_list|)
 function_decl|;
 end_function_decl
