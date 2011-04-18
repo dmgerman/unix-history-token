@@ -7331,11 +7331,7 @@ name|sc
 operator|->
 name|sc_imask
 operator||=
-operator|(
 name|HAL_INT_GTT
-operator||
-name|HAL_INT_CST
-operator|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
