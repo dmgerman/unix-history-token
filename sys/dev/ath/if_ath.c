@@ -7318,11 +7318,22 @@ name|sc
 operator|->
 name|sc_imask
 operator||=
-operator|(
 name|HAL_INT_GTT
-operator|&
-name|HAL_INT_BMISC
-operator|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_RESET
+argument_list|,
+literal|"%s: imask=0x%x\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|sc
+operator|->
+name|sc_imask
+argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
