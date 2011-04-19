@@ -2254,6 +2254,8 @@ name|FW_RSS_GLB_CONFIG_CMD_MODE_BASICVIRTUAL
 argument_list|,
 name|F_FW_RSS_GLB_CONFIG_CMD_TNLMAPEN
 operator||
+name|F_FW_RSS_GLB_CONFIG_CMD_HASHTOEPLITZ
+operator||
 name|F_FW_RSS_GLB_CONFIG_CMD_TNLALLLKP
 argument_list|)
 expr_stmt|;
