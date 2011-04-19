@@ -4364,36 +4364,6 @@ name|pr_usrreqs
 modifier|*
 name|pru
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|IN6_IS_ADDR_UNSPECIFIED
-argument_list|(
-operator|&
-name|inp
-operator|->
-name|in6p_laddr
-argument_list|)
-operator|&&
-operator|!
-name|IN6_IS_ADDR_V4MAPPED
-argument_list|(
-operator|&
-name|inp
-operator|->
-name|in6p_laddr
-argument_list|)
-condition|)
-block|{
-comment|/* 				 * When remote addr is IPv4-mapped address, 				 * local addr should not be an IPv6 address; 				 * since you cannot determine how to map IPv6 				 * source address to IPv4. 				 */
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 comment|/* 			 * XXXRW: We release UDP-layer locks before calling 			 * udp_send() in order to avoid recursion.  However, 			 * this does mean there is a short window where inp's 			 * fields are unstable.  Could this lead to a 			 * potential race in which the factors causing us to 			 * select the UDPv4 output routine are invalidated? 			 */
 name|INP_WUNLOCK
 argument_list|(
@@ -4482,8 +4452,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 name|INP_WUNLOCK
 argument_list|(
 name|inp
