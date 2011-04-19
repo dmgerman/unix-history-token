@@ -2279,6 +2279,10 @@ name|int
 name|taggedtarget
 decl_stmt|;
 comment|/* Last tagged target */
+name|int
+name|resetting
+decl_stmt|;
+comment|/* Hard-reset in progress. */
 name|union
 name|ccb
 modifier|*
@@ -2290,6 +2294,11 @@ name|callout
 name|pm_timer
 decl_stmt|;
 comment|/* Power management events */
+name|struct
+name|callout
+name|reset_timer
+decl_stmt|;
+comment|/* Hard-reset timeout */
 name|struct
 name|ahci_device
 name|user
