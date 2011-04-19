@@ -2113,6 +2113,12 @@ name|cam_path
 modifier|*
 name|path
 decl_stmt|;
+name|struct
+name|cdev
+modifier|*
+name|led
+decl_stmt|;
+comment|/* Activity led led(4) cdev. */
 name|int
 name|quirks
 decl_stmt|;
