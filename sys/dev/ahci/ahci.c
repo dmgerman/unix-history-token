@@ -1364,6 +1364,18 @@ name|AHCI_Q_NOCOUNT
 block|}
 block|,
 block|{
+literal|0x91201b4b
+block|,
+literal|0x00
+block|,
+literal|"Marvell 88SE912x"
+block|,
+name|AHCI_Q_EDGEIS
+operator||
+name|AHCI_Q_NOBSYRES
+block|}
+block|,
+block|{
 literal|0x91231b4b
 block|,
 literal|0x11
