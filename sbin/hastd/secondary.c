@@ -868,6 +868,15 @@ name|mapsize
 argument_list|)
 expr_stmt|;
 block|}
+name|nv_add_int8
+argument_list|(
+name|nvout
+argument_list|,
+literal|1
+argument_list|,
+literal|"virgin"
+argument_list|)
+expr_stmt|;
 name|nv_add_uint8
 argument_list|(
 name|nvout
