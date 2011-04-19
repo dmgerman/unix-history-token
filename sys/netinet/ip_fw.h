@@ -857,13 +857,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|NAT_BUF_LEN
-value|1024
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
