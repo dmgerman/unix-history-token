@@ -3128,6 +3128,10 @@ literal|16
 index|]
 decl_stmt|;
 comment|/* Current settings */
+name|int
+name|requestsense
+decl_stmt|;
+comment|/* CCB waiting for SENSE. */
 endif|#
 directive|endif
 name|struct
