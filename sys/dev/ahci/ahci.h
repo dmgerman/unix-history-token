@@ -2264,7 +2264,7 @@ name|numhslots
 decl_stmt|;
 comment|/* Number of holden slots */
 name|int
-name|readlog
+name|recoverycmd
 decl_stmt|;
 comment|/* Our READ LOG active */
 name|int
