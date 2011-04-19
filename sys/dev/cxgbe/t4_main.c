@@ -3128,7 +3128,14 @@ name|s
 operator|->
 name|nrxq
 expr_stmt|;
-comment|/* the fl in an rxq is an eq */
+comment|/* the free list in an rxq is an eq */
+name|s
+operator|->
+name|neq
+operator|+=
+name|NCHAN
+expr_stmt|;
+comment|/* control queues, 1 per hw channel */
 name|s
 operator|->
 name|niq
@@ -3188,6 +3195,27 @@ name|M_WAITOK
 argument_list|)
 expr_stmt|;
 block|}
+name|s
+operator|->
+name|ctrlq
+operator|=
+name|malloc
+argument_list|(
+name|NCHAN
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sge_ctrlq
+argument_list|)
+argument_list|,
+name|M_CXGBE
+argument_list|,
+name|M_ZERO
+operator||
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
 name|s
 operator|->
 name|rxq
@@ -3726,6 +3754,17 @@ operator|->
 name|sge
 operator|.
 name|txq
+argument_list|,
+name|M_CXGBE
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|sc
+operator|->
+name|sge
+operator|.
+name|ctrlq
 argument_list|,
 name|M_CXGBE
 argument_list|)
@@ -5394,8 +5433,6 @@ name|br
 operator|=
 name|txq
 operator|->
-name|eq
-operator|.
 name|br
 expr_stmt|;
 if|if
@@ -5607,8 +5644,6 @@ name|buf_ring_dequeue_sc
 argument_list|(
 name|txq
 operator|->
-name|eq
-operator|.
 name|br
 argument_list|)
 operator|)
@@ -10142,10 +10177,10 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The firmware event queue and the optional forwarded interrupt queues. 	 */
+comment|/* 	 * queues that belong to the adapter (not any particular port). 	 */
 name|rc
 operator|=
-name|t4_setup_adapter_iqs
+name|t4_setup_adapter_queues
 argument_list|(
 name|sc
 argument_list|)
@@ -10491,7 +10526,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|t4_teardown_adapter_iqs
+name|t4_teardown_adapter_queues
 argument_list|(
 name|sc
 argument_list|)
@@ -11971,8 +12006,6 @@ name|drops
 operator|+=
 name|txq
 operator|->
-name|eq
-operator|.
 name|br
 operator|->
 name|br_drops
@@ -14346,8 +14379,6 @@ name|br
 operator|=
 name|txq
 operator|->
-name|eq
-operator|.
 name|br
 expr_stmt|;
 name|m

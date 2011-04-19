@@ -419,6 +419,14 @@ init|=
 literal|64
 block|,
 comment|/* At least 64 mandated by the firmware spec */
+name|CTRL_EQ_QSIZE
+init|=
+literal|128
+block|,
+name|CTRL_EQ_ESIZE
+init|=
+literal|64
+block|,
 name|RX_IQ_QSIZE
 init|=
 literal|1024
@@ -820,9 +828,9 @@ name|desc_used
 decl_stmt|;
 comment|/* # of hardware descriptors used by the WR */
 name|uint8_t
-name|map_used
+name|credits
 decl_stmt|;
-comment|/* # of frames sent out in the WR */
+comment|/* NIC txq: # of frames sent out in the WR */
 block|}
 struct|;
 end_struct
@@ -1016,10 +1024,6 @@ struct|struct
 name|sge_eq
 block|{
 name|bus_dma_tag_t
-name|tx_tag
-decl_stmt|;
-comment|/* tag for transmit buffers */
-name|bus_dma_tag_t
 name|desc_tag
 decl_stmt|;
 name|bus_dmamap_t
@@ -1049,18 +1053,6 @@ name|bus_addr_t
 name|ba
 decl_stmt|;
 comment|/* bus address of descriptor ring */
-name|struct
-name|tx_sdesc
-modifier|*
-name|sdesc
-decl_stmt|;
-comment|/* KVA of software descriptor ring */
-name|struct
-name|buf_ring
-modifier|*
-name|br
-decl_stmt|;
-comment|/* tx buffer ring */
 name|struct
 name|sge_qstat
 modifier|*
@@ -1099,33 +1091,7 @@ name|uint32_t
 name|cntxt_id
 decl_stmt|;
 comment|/* SGE context id for the eq */
-comment|/* DMA maps used for tx */
-name|struct
-name|tx_map
-modifier|*
-name|maps
-decl_stmt|;
-name|uint32_t
-name|map_total
-decl_stmt|;
-comment|/* # of DMA maps */
-name|uint32_t
-name|map_pidx
-decl_stmt|;
-comment|/* next map to be used */
-name|uint32_t
-name|map_cidx
-decl_stmt|;
-comment|/* reclaimed up to this index */
-name|uint32_t
-name|map_avail
-decl_stmt|;
-comment|/* # of available maps */
 block|}
-name|__aligned
-argument_list|(
-name|CACHE_LINE_SIZE
-argument_list|)
 struct|;
 end_struct
 
@@ -1210,7 +1176,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* txq: SGE egress queue + miscellaneous items */
+comment|/* txq: SGE egress queue + what's needed for Ethernet NIC */
 end_comment
 
 begin_struct
@@ -1223,6 +1189,28 @@ name|eq
 decl_stmt|;
 comment|/* MUST be first */
 name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+comment|/* the interface this txq belongs to */
+name|bus_dma_tag_t
+name|tx_tag
+decl_stmt|;
+comment|/* tag for transmit buffers */
+name|struct
+name|buf_ring
+modifier|*
+name|br
+decl_stmt|;
+comment|/* tx buffer ring */
+name|struct
+name|tx_sdesc
+modifier|*
+name|sdesc
+decl_stmt|;
+comment|/* KVA of software descriptor ring */
+name|struct
 name|mbuf
 modifier|*
 name|m
@@ -1232,12 +1220,28 @@ name|struct
 name|task
 name|resume_tx
 decl_stmt|;
+comment|/* DMA maps used for tx */
 name|struct
-name|ifnet
+name|tx_map
 modifier|*
-name|ifp
+name|maps
 decl_stmt|;
-comment|/* the interface this txq belongs to */
+name|uint32_t
+name|map_total
+decl_stmt|;
+comment|/* # of DMA maps */
+name|uint32_t
+name|map_pidx
+decl_stmt|;
+comment|/* next map to be used */
+name|uint32_t
+name|map_cidx
+decl_stmt|;
+comment|/* reclaimed up to this index */
+name|uint32_t
+name|map_avail
+decl_stmt|;
+comment|/* # of available maps */
 comment|/* stats for common events first */
 name|uint64_t
 name|txcsum
@@ -1285,6 +1289,10 @@ name|egr_update
 decl_stmt|;
 comment|/* # of SGE_EGR_UPDATE notifications for txq */
 block|}
+name|__aligned
+argument_list|(
+name|CACHE_LINE_SIZE
+argument_list|)
 struct|;
 end_struct
 
@@ -1357,6 +1365,41 @@ argument_list|)
 struct|;
 end_struct
 
+begin_comment
+comment|/* ctrlq: SGE egress queue + stats for control queue */
+end_comment
+
+begin_struct
+struct|struct
+name|sge_ctrlq
+block|{
+name|struct
+name|sge_eq
+name|eq
+decl_stmt|;
+comment|/* MUST be first */
+comment|/* stats for common events first */
+name|uint64_t
+name|total_wrs
+decl_stmt|;
+comment|/* # of work requests sent down this queue */
+comment|/* stats for not-that-common events */
+name|uint32_t
+name|no_desc
+decl_stmt|;
+comment|/* out of hardware descriptors */
+name|uint32_t
+name|too_long
+decl_stmt|;
+comment|/* WR longer than hardware max */
+block|}
+name|__aligned
+argument_list|(
+name|CACHE_LINE_SIZE
+argument_list|)
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|sge
@@ -1394,6 +1437,12 @@ name|sge_iq
 name|fwq
 decl_stmt|;
 comment|/* Firmware event queue */
+name|struct
+name|sge_ctrlq
+modifier|*
+name|ctrlq
+decl_stmt|;
+comment|/* Control queues */
 name|struct
 name|sge_iq
 modifier|*
@@ -1556,6 +1605,16 @@ decl_stmt|;
 name|struct
 name|t4_virt_res
 name|vres
+decl_stmt|;
+name|struct
+name|sysctl_ctx_list
+name|ctx
+decl_stmt|;
+comment|/* from first_port_up to last_port_down */
+name|struct
+name|sysctl_oid
+modifier|*
+name|oid_ctrlq
 decl_stmt|;
 name|struct
 name|mtx
@@ -2454,7 +2513,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|t4_setup_adapter_iqs
+name|t4_setup_adapter_queues
 parameter_list|(
 name|struct
 name|adapter
@@ -2465,7 +2524,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|t4_teardown_adapter_iqs
+name|t4_teardown_adapter_queues
 parameter_list|(
 name|struct
 name|adapter
@@ -2561,6 +2620,21 @@ name|void
 name|t4_eth_rx
 parameter_list|(
 name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|t4_mgmt_tx
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
 modifier|*
 parameter_list|)
 function_decl|;
