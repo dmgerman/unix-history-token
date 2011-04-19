@@ -14312,7 +14312,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* Find some holden command. */
+comment|/* Find some held command. */
 for|for
 control|(
 name|i
@@ -14356,12 +14356,12 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Unable allocate recovery command\n"
+literal|"Unable to allocate recovery command\n"
 argument_list|)
 expr_stmt|;
 name|completeall
 label|:
-comment|/* We can't do anything -- complete holden commands. */
+comment|/* We can't do anything -- complete held commands. */
 for|for
 control|(
 name|i
@@ -14546,7 +14546,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Unable allocate memory for READ LOG command\n"
+literal|"Unable to allocate memory for READ LOG command\n"
 argument_list|)
 expr_stmt|;
 goto|goto

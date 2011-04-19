@@ -2188,7 +2188,7 @@ comment|/* Number of tagged slots */
 name|int
 name|numhslots
 decl_stmt|;
-comment|/* Number of holden slots */
+comment|/* Number of held slots */
 name|int
 name|recoverycmd
 decl_stmt|;
