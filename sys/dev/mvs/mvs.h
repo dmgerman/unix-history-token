@@ -3808,6 +3808,14 @@ name|taggedtarget
 decl_stmt|;
 comment|/* Last tagged target */
 name|int
+name|resetting
+decl_stmt|;
+comment|/* Hard-reset in progress. */
+name|int
+name|resetpolldiv
+decl_stmt|;
+comment|/* Hard-reset poll divider. */
+name|int
 name|out_idx
 decl_stmt|;
 comment|/* Next written CRQB */
@@ -3842,6 +3850,11 @@ name|callout
 name|pm_timer
 decl_stmt|;
 comment|/* Power management events */
+name|struct
+name|callout
+name|reset_timer
+decl_stmt|;
+comment|/* Hard-reset timeout */
 name|struct
 name|mvs_device
 name|user
