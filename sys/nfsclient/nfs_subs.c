@@ -1928,7 +1928,7 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-name|printf
+name|vprintf
 argument_list|(
 name|fmt
 argument_list|,
@@ -3025,7 +3025,7 @@ name|nfs_acdebug
 argument_list|,
 literal|0
 argument_list|,
-literal|"Toggle acdebug (access cache debug) flag"
+literal|"Toggle acdebug (attribute cache debug) flag"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3312,6 +3312,18 @@ operator|->
 name|n_mtx
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NFS_ACDEBUG
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* nfs_printf() */
+endif|#
+directive|endif
 name|KDTRACE_NFS_ATTRCACHE_GET_MISS
 argument_list|(
 name|vp
