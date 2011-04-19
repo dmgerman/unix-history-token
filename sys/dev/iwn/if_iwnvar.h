@@ -757,6 +757,12 @@ decl_stmt|;
 name|bus_size_t
 name|sched_txfact_addr
 decl_stmt|;
+name|uint32_t
+name|reset_noise_gain
+decl_stmt|;
+name|uint32_t
+name|noise_gain
+decl_stmt|;
 comment|/* TX scheduler rings. */
 name|struct
 name|iwn_dma_info
