@@ -319,6 +319,7 @@ name|MBUF_STRESS_TEST
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|int
 name|mbuf_frag_size
 init|=
