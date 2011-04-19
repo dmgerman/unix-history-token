@@ -1544,9 +1544,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %9.9s %9.9s\n"
+literal|" %9.9s %9.9s %9.9s %9.9s\n"
 argument_list|,
 literal|"DirE Hits"
+argument_list|,
+literal|"Misses"
+argument_list|,
+literal|"Accs Hits"
 argument_list|,
 literal|"Misses"
 argument_list|)
@@ -1582,7 +1586,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %9d %9d\n"
+literal|" %9d %9d %9d %9d\n"
 argument_list|,
 name|nfsstats
 operator|.
@@ -1591,6 +1595,14 @@ argument_list|,
 name|nfsstats
 operator|.
 name|direofcache_misses
+argument_list|,
+name|nfsstats
+operator|.
+name|accesscache_hits
+argument_list|,
+name|nfsstats
+operator|.
+name|accesscache_misses
 argument_list|)
 expr_stmt|;
 block|}
