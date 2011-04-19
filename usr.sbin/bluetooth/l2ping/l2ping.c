@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -177,14 +183,10 @@ name|struct
 name|hostent
 modifier|*
 name|he
-init|=
-name|NULL
 decl_stmt|;
 name|uint8_t
 modifier|*
 name|echo_data
-init|=
-name|NULL
 decl_stmt|;
 name|struct
 name|sockaddr_l2cap
@@ -207,9 +209,10 @@ name|numeric
 decl_stmt|;
 name|char
 modifier|*
+name|endp
+decl_stmt|,
+modifier|*
 name|rname
-init|=
-name|NULL
 decl_stmt|;
 comment|/* Set defaults */
 name|memcpy
@@ -392,9 +395,14 @@ literal|'c'
 case|:
 name|count
 operator|=
-name|atoi
+name|strtol
 argument_list|(
 name|optarg
+argument_list|,
+operator|&
+name|endp
+argument_list|,
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -402,6 +410,11 @@ condition|(
 name|count
 operator|<=
 literal|0
+operator|||
+operator|*
+name|endp
+operator|!=
+literal|'\0'
 condition|)
 name|usage
 argument_list|()
@@ -420,9 +433,14 @@ literal|'i'
 case|:
 name|wait
 operator|=
-name|atoi
+name|strtol
 argument_list|(
 name|optarg
+argument_list|,
+operator|&
+name|endp
+argument_list|,
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -430,6 +448,11 @@ condition|(
 name|wait
 operator|<=
 literal|0
+operator|||
+operator|*
+name|endp
+operator|!=
+literal|'\0'
 condition|)
 name|usage
 argument_list|()
@@ -507,9 +530,14 @@ literal|'s'
 case|:
 name|echo_size
 operator|=
-name|atoi
+name|strtol
 argument_list|(
 name|optarg
+argument_list|,
+operator|&
+name|endp
+argument_list|,
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -524,6 +552,11 @@ operator|||
 name|echo_size
 operator|>
 name|NG_L2CAP_MAX_ECHO_SIZE
+operator|||
+operator|*
+name|endp
+operator|!=
+literal|'\0'
 condition|)
 name|usage
 argument_list|()
@@ -1282,9 +1315,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: l2ping -a bd_addr "
+literal|"Usage: l2ping [-fhn] -a remote "
 expr|\
-literal|"[-S bd_addr -c count -i wait -n -s size -h]\n"
+literal|"[-c count] [-i wait] [-S source] [-s size]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1312,7 +1345,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"  -f         No delay (sort of flood)\n"
+literal|"  -f         No delay between packets\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
