@@ -417,6 +417,26 @@ name|NULL
 decl_stmt|;
 if|if
 condition|(
+name|dflt
+operator|<
+name|lo
+condition|)
+name|dflt
+operator|=
+name|lo
+expr_stmt|;
+if|if
+condition|(
+name|dflt
+operator|>
+name|hi
+condition|)
+name|dflt
+operator|=
+name|hi
+expr_stmt|;
+if|if
+condition|(
 name|oldv
 operator|<
 name|lo
@@ -11319,7 +11339,7 @@ name|dn_cfg
 operator|.
 name|max_hash_size
 operator|=
-literal|1024
+literal|65536
 expr_stmt|;
 comment|/* max in the hash tables */
 name|dn_cfg
