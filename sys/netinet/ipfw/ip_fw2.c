@@ -7534,7 +7534,8 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 name|mtag
@@ -7542,9 +7543,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-operator|(
 name|mtag
 operator|=
 name|m_tag_alloc
@@ -7557,7 +7555,10 @@ literal|0
 argument_list|,
 name|M_NOWAIT
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|mtag
 operator|!=
 name|NULL
 condition|)
@@ -7568,6 +7569,7 @@ argument_list|,
 name|mtag
 argument_list|)
 expr_stmt|;
+block|}
 name|match
 operator|=
 literal|1
