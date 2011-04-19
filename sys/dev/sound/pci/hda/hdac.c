@@ -295,6 +295,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_INTEL_PATSBURG
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x1d20)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_INTEL_82801F
 value|HDA_MODEL_CONSTRUCT(INTEL, 0x2668)
 end_define
@@ -346,6 +353,13 @@ define|#
 directive|define
 name|HDA_INTEL_PCH
 value|HDA_MODEL_CONSTRUCT(INTEL, 0x3b56)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_INTEL_PCH2
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x3b57)
 end_define
 
 begin_define
@@ -2263,6 +2277,14 @@ index|[]
 init|=
 block|{
 block|{
+name|HDA_INTEL_PATSBURG
+block|,
+literal|"Intel Patsburg"
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|HDA_INTEL_82801F
 block|,
 literal|"Intel 82801F"
@@ -2321,7 +2343,15 @@ block|,
 block|{
 name|HDA_INTEL_PCH
 block|,
-literal|"Intel PCH"
+literal|"Intel 5 Series/3400 Series"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_INTEL_PCH2
+block|,
+literal|"Intel 5 Series/3400 Series"
 block|,
 literal|0
 block|}

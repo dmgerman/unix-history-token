@@ -406,6 +406,22 @@ literal|10
 block|}
 block|,
 block|{
+name|DEVICEID_PATSBURG_LPC1
+block|,
+literal|"Intel Patsburg watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PATSBURG_LPC2
+block|,
+literal|"Intel Patsburg watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL
