@@ -6560,6 +6560,8 @@ operator|.
 name|caps
 operator||=
 name|CTS_SATA_CAPS_H_DMAAA
+operator||
+name|CTS_SATA_CAPS_H_AN
 expr_stmt|;
 block|}
 name|rid
@@ -18051,6 +18053,16 @@ operator|.
 name|caps
 operator||=
 name|CTS_SATA_CAPS_H_DMAAA
+expr_stmt|;
+name|cts
+operator|->
+name|xport_specific
+operator|.
+name|sata
+operator|.
+name|caps
+operator||=
+name|CTS_SATA_CAPS_H_AN
 expr_stmt|;
 name|cts
 operator|->

@@ -2841,6 +2841,11 @@ value|0x00000010
 comment|/* Auto-activation */
 define|#
 directive|define
+name|CTS_SATA_CAPS_H_AN
+value|0x00000020
+comment|/* Async. notification */
+define|#
+directive|define
 name|CTS_SATA_CAPS_D
 value|0xffff0000
 define|#

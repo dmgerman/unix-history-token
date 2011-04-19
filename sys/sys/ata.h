@@ -440,6 +440,10 @@ name|ATA_SUPPORT_INORDERDATA
 value|0x0010
 define|#
 directive|define
+name|ATA_SUPPORT_ASYNCNOTIF
+value|0x0020
+define|#
+directive|define
 name|ATA_SUPPORT_SOFTSETPRESERVE
 value|0x0040
 comment|/*79*/
