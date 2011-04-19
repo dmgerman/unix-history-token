@@ -3746,7 +3746,6 @@ begin_struct
 struct|struct
 name|bxe_softc
 block|{
-comment|/* 	 * MUST start with ifnet pointer (see definition of miibus_statchg()). 	 */
 name|struct
 name|ifnet
 modifier|*
