@@ -1438,7 +1438,27 @@ name|AHCI_Q_NOBSYRES
 block|}
 block|,
 block|{
+literal|0x06401b4b
+block|,
+literal|0x00
+block|,
+literal|"HighPoint RocketRAID 640"
+block|,
+name|AHCI_Q_NOBSYRES
+block|}
+block|,
+block|{
 literal|0x06441103
+block|,
+literal|0x00
+block|,
+literal|"HighPoint RocketRAID 644"
+block|,
+name|AHCI_Q_NOBSYRES
+block|}
+block|,
+block|{
+literal|0x06441b4b
 block|,
 literal|0x00
 block|,
