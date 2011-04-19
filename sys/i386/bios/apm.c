@@ -2529,9 +2529,14 @@ expr_stmt|;
 name|apm_processevent
 argument_list|()
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
-else|else
-block|{
 comment|/* Failure, 'resume' the system again */
 name|apm_execute_hook
 argument_list|(
@@ -2546,7 +2551,6 @@ argument_list|(
 name|root_bus
 argument_list|)
 expr_stmt|;
-block|}
 name|backout
 label|:
 name|mtx_unlock
