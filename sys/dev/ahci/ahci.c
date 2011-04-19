@@ -11809,6 +11809,8 @@ operator|->
 name|ccb_h
 operator|.
 name|timeout
+operator|*
+literal|100
 decl_stmt|;
 name|enum
 name|ahci_err_type
@@ -11832,7 +11834,7 @@ control|)
 block|{
 name|DELAY
 argument_list|(
-literal|1000
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -12096,7 +12098,7 @@ condition|)
 block|{
 name|DELAY
 argument_list|(
-literal|1000
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -15441,7 +15443,7 @@ do|do
 block|{
 name|DELAY
 argument_list|(
-literal|1000
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -15449,7 +15451,7 @@ condition|(
 name|timeout
 operator|++
 operator|>
-literal|1000
+literal|50000
 condition|)
 block|{
 name|device_printf
@@ -15554,7 +15556,7 @@ do|do
 block|{
 name|DELAY
 argument_list|(
-literal|1000
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -15562,7 +15564,7 @@ condition|(
 name|timeout
 operator|++
 operator|>
-literal|1000
+literal|50000
 condition|)
 block|{
 name|device_printf
@@ -15653,7 +15655,7 @@ do|do
 block|{
 name|DELAY
 argument_list|(
-literal|1000
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -15661,7 +15663,7 @@ condition|(
 name|timeout
 operator|++
 operator|>
-literal|1000
+literal|50000
 condition|)
 block|{
 name|device_printf
@@ -15944,6 +15946,13 @@ name|resetting
 operator|=
 literal|0
 expr_stmt|;
+name|ahci_start
+argument_list|(
+name|dev
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|xpt_release_simq
 argument_list|(
 name|ch
@@ -15964,11 +15973,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ahci_stop
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|ahci_clo
 argument_list|(
 name|dev
@@ -16445,13 +16449,6 @@ operator|=
 literal|310
 expr_stmt|;
 block|}
-name|ahci_start
-argument_list|(
-name|dev
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 name|ch
 operator|->
 name|devices
@@ -16563,6 +16560,14 @@ name|dev
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|ahci_start
+argument_list|(
+name|dev
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|xpt_release_simq
 argument_list|(
 name|ch
@@ -16572,6 +16577,7 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -17074,7 +17080,7 @@ literal|0
 init|;
 name|timeout
 operator|<
-literal|100
+literal|1000
 condition|;
 name|timeout
 operator|++
@@ -17160,7 +17166,7 @@ return|;
 block|}
 name|DELAY
 argument_list|(
-literal|1000
+literal|100
 argument_list|)
 expr_stmt|;
 block|}
@@ -17168,7 +17174,7 @@ if|if
 condition|(
 name|timeout
 operator|>=
-literal|100
+literal|1000
 condition|)
 block|{
 if|if
@@ -17205,9 +17211,11 @@ name|ch
 operator|->
 name|dev
 argument_list|,
-literal|"SATA connect time=%dms status=%08x\n"
+literal|"SATA connect time=%dus status=%08x\n"
 argument_list|,
 name|timeout
+operator|*
+literal|100
 argument_list|,
 name|status
 argument_list|)
@@ -17371,7 +17379,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|5000
+literal|1000
 argument_list|)
 expr_stmt|;
 name|ATA_OUTL
@@ -17403,11 +17411,6 @@ operator||
 name|ATA_SC_IPM_DIS_SLUMBER
 operator|)
 operator|)
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|5000
 argument_list|)
 expr_stmt|;
 if|if
