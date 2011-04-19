@@ -9781,7 +9781,7 @@ condition|)
 block|{
 name|DELAY
 argument_list|(
-literal|1000
+literal|100
 argument_list|)
 expr_stmt|;
 if|if
@@ -9789,17 +9789,15 @@ condition|(
 name|timeout
 operator|++
 operator|>
-literal|100
+literal|1000
 condition|)
 block|{
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"device reset stuck (timeout %dms) "
-literal|"status = %08x\n"
-argument_list|,
-name|timeout
+literal|"device reset stuck "
+literal|"(timeout 100ms) status = %08x\n"
 argument_list|,
 name|val
 argument_list|)
@@ -11038,6 +11036,10 @@ name|status
 decl_stmt|;
 name|int
 name|timeout
+decl_stmt|,
+name|found
+init|=
+literal|0
 decl_stmt|;
 comment|/* Wait up to 100ms for "connect well" */
 for|for
@@ -11048,7 +11050,7 @@ literal|0
 init|;
 name|timeout
 operator|<
-literal|100
+literal|1000
 condition|;
 name|timeout
 operator|++
@@ -11064,6 +11066,20 @@ name|r_mem
 argument_list|,
 name|SIIS_P_SSTS
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|status
+operator|&
+name|ATA_SS_DET_MASK
+operator|)
+operator|!=
+name|ATA_SS_DET_NO_DEVICE
+condition|)
+name|found
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -11098,17 +11114,15 @@ name|ATA_SS_IPM_ACTIVE
 operator|)
 condition|)
 break|break;
-name|DELAY
-argument_list|(
-literal|1000
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
-name|timeout
-operator|>=
-literal|100
+operator|(
+name|status
+operator|&
+name|ATA_SS_DET_MASK
+operator|)
+operator|==
+name|ATA_SS_DET_PHY_OFFLINE
 condition|)
 block|{
 if|if
@@ -11122,7 +11136,61 @@ name|ch
 operator|->
 name|dev
 argument_list|,
-literal|"SATA connect timeout status=%08x\n"
+literal|"SATA offline status=%08x\n"
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|found
+operator|==
+literal|0
+operator|&&
+name|timeout
+operator|>=
+literal|100
+condition|)
+break|break;
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|timeout
+operator|>=
+literal|1000
+operator|||
+operator|!
+name|found
+condition|)
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|ch
+operator|->
+name|dev
+argument_list|,
+literal|"SATA connect timeout time=%dus status=%08x\n"
+argument_list|,
+name|timeout
+operator|*
+literal|100
 argument_list|,
 name|status
 argument_list|)
@@ -11145,9 +11213,11 @@ name|ch
 operator|->
 name|dev
 argument_list|,
-literal|"SATA connect time=%dms status=%08x\n"
+literal|"SATA connect time=%dus status=%08x\n"
 argument_list|,
 name|timeout
+operator|*
+literal|100
 argument_list|,
 name|status
 argument_list|)
