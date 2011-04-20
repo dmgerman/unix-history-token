@@ -3610,7 +3610,7 @@ operator|!=
 name|HAST_ROLE_SECONDARY
 condition|)
 block|{
-name|pjdlog_error
+name|pjdlog_warning
 argument_list|(
 literal|"We act as %s for the resource and not as %s as requested by %s."
 argument_list|,
