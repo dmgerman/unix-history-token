@@ -151,6 +151,9 @@ decl_stmt|;
 name|int
 name|state
 decl_stmt|;
+name|_thr_check_init
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 init|;
