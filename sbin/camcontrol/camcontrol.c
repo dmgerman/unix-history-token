@@ -13951,6 +13951,14 @@ name|XPT_REL_SIMQ
 expr_stmt|;
 name|ccb
 operator|->
+name|ccb_h
+operator|.
+name|flags
+operator|=
+name|CAM_DEV_QFREEZE
+expr_stmt|;
+name|ccb
+operator|->
 name|crs
 operator|.
 name|release_flags
