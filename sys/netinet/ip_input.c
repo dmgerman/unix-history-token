@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/callout.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mbuf.h>
 end_include
 
@@ -997,13 +991,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|struct
-name|callout
-name|ipport_tick_callout
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1763,38 +1750,6 @@ operator|-
 name|inetsw
 expr_stmt|;
 block|}
-comment|/* Start ipport_tick. */
-name|callout_init
-argument_list|(
-operator|&
-name|ipport_tick_callout
-argument_list|,
-name|CALLOUT_MPSAFE
-argument_list|)
-expr_stmt|;
-name|callout_reset
-argument_list|(
-operator|&
-name|ipport_tick_callout
-argument_list|,
-literal|1
-argument_list|,
-name|ipport_tick
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|EVENTHANDLER_REGISTER
-argument_list|(
-name|shutdown_pre_sync
-argument_list|,
-name|ip_fini
-argument_list|,
-name|NULL
-argument_list|,
-name|SHUTDOWN_PRI_DEFAULT
-argument_list|)
-expr_stmt|;
 name|EVENTHANDLER_REGISTER
 argument_list|(
 name|nmbclusters_change
@@ -1863,24 +1818,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_function
-name|void
-name|ip_fini
-parameter_list|(
-name|void
-modifier|*
-name|xtp
-parameter_list|)
-block|{
-name|callout_stop
-argument_list|(
-operator|&
-name|ipport_tick_callout
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
 comment|/*  * Ip input routine.  Checksum and byte swap header.  If fragmented  * try to reassemble.  Process options.  Pass to next level.  */
