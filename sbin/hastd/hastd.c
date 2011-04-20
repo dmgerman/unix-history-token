@@ -3650,6 +3650,26 @@ name|HAST_ROLE_SECONDARY
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|res
+operator|->
+name|hr_role
+operator|==
+name|HAST_ROLE_PRIMARY
+condition|)
+block|{
+comment|/* 			 * If we act as primary request the other side to wait 			 * for us for a bit, as may might be finishing cleanups. 			 */
+name|nv_add_uint8
+argument_list|(
+name|nverr
+argument_list|,
+literal|1
+argument_list|,
+literal|"wait"
+argument_list|)
+expr_stmt|;
+block|}
 goto|goto
 name|fail
 goto|;
