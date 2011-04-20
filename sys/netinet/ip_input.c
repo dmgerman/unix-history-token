@@ -1148,18 +1148,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_expr_stmt
-name|VNET_DEFINE
-argument_list|(
-name|int
-argument_list|,
-name|fw_one_pass
-argument_list|)
-operator|=
-literal|1
-expr_stmt|;
-end_expr_stmt
-
 begin_function_decl
 specifier|static
 name|void

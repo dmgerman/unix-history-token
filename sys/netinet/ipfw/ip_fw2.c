@@ -469,6 +469,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|fw_one_pass
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Each rule belongs to one of 32 different sets (0..31).  * The variable set_disable contains one bit per set.  * If the bit is set, all rules in the corresponding set  * are disabled. Set RESVD_SET(31) is reserved for the default rule  * and rules that are not deleted by the flush command,  * and CANNOT be disabled.  * Rules in set RESVD_SET can only be deleted individually.  */
 end_comment
