@@ -8171,7 +8171,7 @@ block|{
 name|rc
 operator|=
 operator|-
-name|t4_eth_eq_free
+name|t4_ctrl_eq_free
 argument_list|(
 name|sc
 argument_list|,
