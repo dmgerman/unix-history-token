@@ -3659,7 +3659,7 @@ operator|==
 name|HAST_ROLE_PRIMARY
 condition|)
 block|{
-comment|/* 			 * If we act as primary request the other side to wait 			 * for us for a bit, as may might be finishing cleanups. 			 */
+comment|/* 			 * If we act as primary request the other side to wait 			 * for us a bit, as we might be finishing cleanups. 			 */
 name|nv_add_uint8
 argument_list|(
 name|nverr
