@@ -7633,11 +7633,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|subtype
-operator|!=
-name|VSLENGTH
-operator|&&
-operator|(
 name|state
 index|[
 name|level
@@ -7655,7 +7650,6 @@ operator|.
 name|syntax
 operator|==
 name|ARISYNTAX
-operator|)
 condition|)
 name|flags
 operator||=
