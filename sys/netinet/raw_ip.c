@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_inet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_inet6.h"
 end_include
 
@@ -356,6 +362,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_comment
 comment|/*  * Hooks for multicast routing. They all default to NULL, so leave them not  * initialized and rely on BSS being set to 0.  */
 end_comment
@@ -544,6 +556,73 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
+
+begin_decl_stmt
+name|u_long
+name|rip_sendspace
+init|=
+literal|9216
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_ULONG
+argument_list|(
+name|_net_inet_raw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|maxdgram
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|rip_sendspace
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum outgoing raw IP datagram size"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|u_long
+name|rip_recvspace
+init|=
+literal|9216
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_ULONG
+argument_list|(
+name|_net_inet_raw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|recvspace
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|rip_recvspace
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum space for incoming raw IP datagrams"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Hash functions  */
 end_comment
@@ -571,6 +650,12 @@ parameter_list|)
 define|\
 value|(((proto) + (laddr) + (faddr)) % (mask) + 1)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_function
 specifier|static
@@ -721,6 +806,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
+
 begin_comment
 comment|/*  * Raw interface to IP protocol.  */
 end_comment
@@ -861,6 +955,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_function
 specifier|static
@@ -3180,64 +3280,6 @@ block|}
 block|}
 end_function
 
-begin_decl_stmt
-name|u_long
-name|rip_sendspace
-init|=
-literal|9216
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_long
-name|rip_recvspace
-init|=
-literal|9216
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_ULONG
-argument_list|(
-name|_net_inet_raw
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|maxdgram
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|rip_sendspace
-argument_list|,
-literal|0
-argument_list|,
-literal|"Maximum outgoing raw IP datagram size"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_ULONG
-argument_list|(
-name|_net_inet_raw
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|recvspace
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|rip_recvspace
-argument_list|,
-literal|0
-argument_list|,
-literal|"Maximum space for incoming raw IP datagrams"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
 specifier|static
 name|int
@@ -4387,6 +4429,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -4944,6 +4995,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|pr_usrreqs
@@ -5017,6 +5074,15 @@ name|rip_close
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 end_unit
 
