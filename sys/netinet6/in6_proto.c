@@ -514,6 +514,17 @@ name|pr_ctloutput
 operator|=
 name|ip6_ctloutput
 block|,
+ifndef|#
+directive|ifndef
+name|INET
+comment|/* Do not call initialization twice. */
+operator|.
+name|pr_init
+operator|=
+name|udp_init
+block|,
+endif|#
+directive|endif
 operator|.
 name|pr_usrreqs
 operator|=
@@ -635,6 +646,17 @@ name|pr_drain
 operator|=
 name|sctp_drain
 block|,
+ifndef|#
+directive|ifndef
+name|INET
+comment|/* Do not call initialization twice. */
+operator|.
+name|pr_init
+operator|=
+name|sctp_init
+block|,
+endif|#
+directive|endif
 operator|.
 name|pr_usrreqs
 operator|=
@@ -787,6 +809,17 @@ name|pr_ctloutput
 operator|=
 name|rip6_ctloutput
 block|,
+ifndef|#
+directive|ifndef
+name|INET
+comment|/* Do not call initialization twice. */
+operator|.
+name|pr_init
+operator|=
+name|rip_init
+block|,
+endif|#
+directive|endif
 operator|.
 name|pr_usrreqs
 operator|=
