@@ -712,6 +712,10 @@ define|#
 directive|define
 name|IWN_FLAG_ENH_SENS
 value|(1<< 7)
+define|#
+directive|define
+name|IWN_FLAG_ADV_BTCOEX
+value|(1<< 8)
 name|uint8_t
 name|hw_type
 decl_stmt|;
