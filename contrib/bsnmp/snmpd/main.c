@@ -5560,6 +5560,14 @@ name|USE_TCPWRAPPERS
 comment|/* 	 * In case of AF_INET{6} peer, do hosts_access(5) check. 	 */
 if|if
 condition|(
+name|pi
+operator|->
+name|peer
+operator|->
+name|sa_family
+operator|!=
+name|AF_LOCAL
+operator|&&
 name|inet_ntop
 argument_list|(
 name|pi
@@ -5643,7 +5651,17 @@ operator|)
 return|;
 block|}
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|pi
+operator|->
+name|peer
+operator|->
+name|sa_family
+operator|!=
+name|AF_LOCAL
+condition|)
 name|syslog
 argument_list|(
 name|LOG_ERR
