@@ -344,22 +344,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Required to be non-static for SysVR4 emulator */
-end_comment
-
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|M_ZOMBIE
-argument_list|,
-literal|"zombie"
-argument_list|,
-literal|"zombie proc status"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Hook for NFS teardown procedure. */
 end_comment
 

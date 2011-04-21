@@ -3154,14 +3154,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_ZOMBIE
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_endif
 endif|#
 directive|endif
