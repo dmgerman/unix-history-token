@@ -12008,7 +12008,7 @@ name|CVT
 argument_list|(
 name|mi
 operator|->
-name|rssi
+name|rssi_ctl
 index|[
 literal|0
 index|]
@@ -12024,7 +12024,7 @@ name|CVT
 argument_list|(
 name|mi
 operator|->
-name|rssi
+name|rssi_ctl
 index|[
 literal|1
 index|]
@@ -12040,7 +12040,7 @@ name|CVT
 argument_list|(
 name|mi
 operator|->
-name|rssi
+name|rssi_ctl
 index|[
 literal|2
 index|]
@@ -12054,7 +12054,7 @@ argument_list|)
 expr_stmt|;
 name|mi
 operator|->
-name|noise
+name|noise_ctl
 index|[
 literal|0
 index|]
@@ -12067,7 +12067,7 @@ name|nf_a
 expr_stmt|;
 name|mi
 operator|->
-name|noise
+name|noise_ctl
 index|[
 literal|1
 index|]
@@ -12080,7 +12080,7 @@ name|nf_b
 expr_stmt|;
 name|mi
 operator|->
-name|noise
+name|noise_ctl
 index|[
 literal|2
 index|]
