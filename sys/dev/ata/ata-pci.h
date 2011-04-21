@@ -972,7 +972,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATA_I82801IB_AH2
+name|ATA_I82801IB_S3
 value|0x29218086
 end_define
 
