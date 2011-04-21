@@ -472,6 +472,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|BXE_FP_LOCK
+parameter_list|(
+name|fp
+parameter_list|)
+define|\
+value|mtx_lock(&(fp->mtx))
+end_define
+
+begin_define
+define|#
+directive|define
 name|BXE_DMAE_LOCK
 parameter_list|(
 name|sc
@@ -538,6 +549,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|BXE_FP_LOCK_ASSERT
+parameter_list|(
+name|fp
+parameter_list|)
+define|\
+value|mtx_assert(&(fp->mtx), MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
 name|BXE_DMAE_LOCK_ASSERT
 parameter_list|(
 name|sc
@@ -577,6 +599,17 @@ name|sc
 parameter_list|)
 define|\
 value|mtx_unlock(&(sc->bxe_sp_mtx))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BXE_FP_UNLOCK
+parameter_list|(
+name|fp
+parameter_list|)
+define|\
+value|mtx_unlock(&(fp->mtx))
 end_define
 
 begin_define
@@ -1624,7 +1657,7 @@ define|#
 directive|define
 name|BXE_IF_CAPABILITIES
 define|\
-value|(IFCAP_VLAN_MTU | IFCAP_VLAN_HWTAGGING | IFCAP_HWCSUM |		\ 	IFCAP_JUMBO_MTU | IFCAP_LRO)
+value|(IFCAP_VLAN_MTU | IFCAP_VLAN_HWTAGGING | IFCAP_HWCSUM |		\ 	IFCAP_JUMBO_MTU)
 end_define
 
 begin_else
@@ -1641,7 +1674,7 @@ define|#
 directive|define
 name|BXE_IF_CAPABILITIES
 define|\
-value|(IFCAP_VLAN_MTU | IFCAP_VLAN_HWTAGGING | IFCAP_HWCSUM |		\ 	IFCAP_JUMBO_MTU | IFCAP_LRO | IFCAP_TSO4 | IFCAP_VLAN_HWCSUM)
+value|(IFCAP_VLAN_MTU | IFCAP_VLAN_HWTAGGING | IFCAP_HWCSUM |		\ 	IFCAP_JUMBO_MTU | IFCAP_TSO4 | IFCAP_VLAN_HWCSUM)
 end_define
 
 begin_endif
@@ -1779,6 +1812,13 @@ define|#
 directive|define
 name|MIN_BXE_BC_VER
 value|0x00040200
+end_define
+
+begin_define
+define|#
+directive|define
+name|BXE_BR_SIZE
+value|4096
 end_define
 
 begin_define
@@ -3154,6 +3194,16 @@ name|bxe_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|struct
+name|mtx
+name|mtx
+decl_stmt|;
+name|char
+name|mtx_name
+index|[
+literal|16
+index|]
+decl_stmt|;
 comment|/* Hardware maintained status block. */
 name|bus_dma_tag_t
 name|status_block_tag
@@ -3290,6 +3340,10 @@ name|rx_cq_chain_paddr
 index|[
 name|NUM_RCQ_PAGES
 index|]
+decl_stmt|;
+comment|/* Ticks until chip reset. */
+name|int
+name|watchdog_timer
 decl_stmt|;
 comment|/* Taskqueue reqources. */
 name|struct
@@ -3546,6 +3600,18 @@ decl_stmt|;
 name|uint16_t
 name|free_rx_bd
 decl_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800000
+name|struct
+name|buf_ring
+modifier|*
+name|br
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* Recieve/transmit packet counters. */
 name|unsigned
 name|long
@@ -3746,6 +3812,7 @@ begin_struct
 struct|struct
 name|bxe_softc
 block|{
+comment|/* 	 * MUST start with ifnet pointer (see definition of miibus_statchg()). 	 */
 name|struct
 name|ifnet
 modifier|*
@@ -3756,7 +3823,7 @@ name|media
 decl_stmt|;
 comment|/* Parent device handle. */
 name|device_t
-name|bxe_dev
+name|dev
 decl_stmt|;
 comment|/* Driver instance number. */
 name|u_int8_t
@@ -4185,10 +4252,6 @@ decl_stmt|;
 name|uint16_t
 name|pm_cap
 decl_stmt|;
-comment|/* PCIe maximum read request size. */
-name|int
-name|mrrs
-decl_stmt|;
 comment|/* ToDo: Is this really needed? */
 name|uint16_t
 name|sp_running
@@ -4299,12 +4362,44 @@ define|#
 directive|define
 name|BXE_STATE_ERROR
 value|0xF000
+comment|/* Driver tunable options. */
 name|int
 name|int_mode
 decl_stmt|;
 name|int
 name|multi_mode
 decl_stmt|;
+name|int
+name|tso_enable
+decl_stmt|;
+name|int
+name|num_queues
+decl_stmt|;
+name|int
+name|stats_enable
+decl_stmt|;
+name|int
+name|mrrs
+decl_stmt|;
+name|int
+name|dcc_enable
+decl_stmt|;
+define|#
+directive|define
+name|BXE_NUM_QUEUES
+parameter_list|(
+name|cos
+parameter_list|)
+define|\
+value|((bxe_qs_per_cos& (0xff<< (cos * 8)))>> (cos * 8))
+define|#
+directive|define
+name|BXE_MAX_QUEUES
+parameter_list|(
+name|sc
+parameter_list|)
+define|\
+value|(IS_E1HMF(sc) ? (MAX_CONTEXT / E1HVN_MAX) : MAX_CONTEXT)
 define|#
 directive|define
 name|BXE_MAX_COS
@@ -4345,26 +4440,6 @@ index|[
 name|BXE_MAX_COS
 index|]
 decl_stmt|;
-comment|/* The number of fastpath queues (for RSS/multi-queue). */
-name|int
-name|num_queues
-decl_stmt|;
-define|#
-directive|define
-name|BXE_NUM_QUEUES
-parameter_list|(
-name|cos
-parameter_list|)
-define|\
-value|((bxe_qs_per_cos& (0xff<< (cos * 8)))>> (cos * 8))
-define|#
-directive|define
-name|BXE_MAX_QUEUES
-parameter_list|(
-name|sc
-parameter_list|)
-define|\
-value|(IS_E1HMF(sc) ? (MAX_CONTEXT / E1HVN_MAX) : MAX_CONTEXT)
 comment|/* Used for multiple function devices. */
 name|uint32_t
 name|mf_config
@@ -4643,10 +4718,6 @@ name|mbuf_alloc_size
 decl_stmt|;
 name|uint16_t
 name|tx_driver
-decl_stmt|;
-comment|/* Ticks until chip reset. */
-name|int
-name|watchdog_timer
 decl_stmt|;
 comment|/* Verify bxe_function_init is run before handling interrupts. */
 name|uint8_t

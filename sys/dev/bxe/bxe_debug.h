@@ -736,7 +736,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {													\ 		if (BXE_LOG_MSG(level)) {							\ 			device_printf(sc->bxe_dev, format, ## args);	\ 		}													\ 	} while (0)
+value|do {								\ 		if (BXE_LOG_MSG(level)) {				\ 			device_printf(sc->dev, format, ## args);	\ 		}							\ 	} while (0)
 end_define
 
 begin_comment
@@ -752,7 +752,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {						\ 		args;					\ 	} while (0)
+value|do {								\ 		args;							\ 	} while (0)
 end_define
 
 begin_comment
@@ -770,7 +770,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|if (BXE_MSG_LEVEL(level)) { \ 		args; 					\ 	}
+value|if (BXE_MSG_LEVEL(level)) { 					\ 		args; 							\ 	}
 end_define
 
 begin_comment
@@ -788,7 +788,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|if (BXE_CODE_PATH(cp)) { 	\ 		args; 					\ 	}
+value|if (BXE_CODE_PATH(cp)) { 					\ 		args; 							\ 	}
 end_define
 
 begin_comment
@@ -806,7 +806,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|if (cond) {					\ 		args;					\ 	}
+value|if (cond) {							\ 		args;							\ 	}
 end_define
 
 begin_comment
@@ -824,7 +824,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|if (BXE_LOG_MSG(msg)) {		\ 		args;					\ 	}
+value|if (BXE_LOG_MSG(msg)) {						\ 		args;							\ 	}
 end_define
 
 begin_comment
@@ -843,7 +843,6 @@ value|DBPRINT(sc, (cond), "%s(enter:%d)\n", __FUNCTION__, curcpu)
 end_define
 
 begin_comment
-unit|\
 comment|/* Announces function exit. */
 end_comment
 
@@ -859,7 +858,6 @@ value|DBPRINT(sc, (cond), "%s(exit:%d)\n", __FUNCTION__, curcpu)
 end_define
 
 begin_comment
-unit|\
 comment|/* Needed for random() function which is only used in debugging. */
 end_comment
 
