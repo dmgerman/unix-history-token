@@ -1628,10 +1628,11 @@ init|=
 operator|&
 name|V_layer3_chain
 decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
 name|int
 name|gencnt
-decl_stmt|,
-name|len
 decl_stmt|,
 name|error
 init|=
