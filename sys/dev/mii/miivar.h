@@ -437,7 +437,7 @@ value|0x00200000
 end_define
 
 begin_comment
-comment|/* force PAUSE advertisment */
+comment|/* force PAUSE advertisement */
 end_comment
 
 begin_define

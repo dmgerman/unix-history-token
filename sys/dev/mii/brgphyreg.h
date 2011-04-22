@@ -209,7 +209,7 @@ value|0x0010
 end_define
 
 begin_comment
-comment|/* Remote fault condition occured */
+comment|/* Remote fault condition occurred */
 end_comment
 
 begin_define

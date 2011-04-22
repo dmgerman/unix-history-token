@@ -270,7 +270,7 @@ operator|==
 name|IFM_AUTO
 condition|)
 block|{
-comment|/* 		 * Force renegotiation if MIIF_DOPAUSE or MIIF_FORCEANEG. 		 * The former is necessary as we might switch from flow- 		 * control advertisment being off to on or vice versa. 		 */
+comment|/* 		 * Force renegotiation if MIIF_DOPAUSE or MIIF_FORCEANEG. 		 * The former is necessary as we might switch from flow- 		 * control advertisement being off to on or vice versa. 		 */
 if|if
 condition|(
 operator|(
