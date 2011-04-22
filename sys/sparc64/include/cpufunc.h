@@ -645,7 +645,7 @@ value|wr(asr25, (val), (xorval))
 end_define
 
 begin_comment
-comment|/*  * Macro intended to be used instead of wr(asr23, val, xorval) for writing to  * the TICK_COMPARE register in order to avoid a bug in BlackBird CPUs that  * can cause these writes to fail under certain condidtions which in turn  * causes the hardclock to stop.  The workaround is to read the TICK_COMPARE  * register back immediately after writing to it with these two instructions  * aligned to a quadword boundary in order to ensure that I$ misses won't  * split them up.  */
+comment|/*  * Macro intended to be used instead of wr(asr23, val, xorval) for writing to  * the TICK_COMPARE register in order to avoid a bug in BlackBird CPUs that  * can cause these writes to fail under certain conditions which in turn  * causes the hardclock to stop.  The workaround is to read the TICK_COMPARE  * register back immediately after writing to it with these two instructions  * aligned to a quadword boundary in order to ensure that I$ misses won't  * split them up.  */
 end_comment
 
 begin_define

@@ -37,7 +37,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Address translation accross busses */
+comment|/* Address translation across busses */
 end_comment
 
 begin_struct

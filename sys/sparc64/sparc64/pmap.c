@@ -4746,7 +4746,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Map a wired page into kernel virtual address space.  This additionally  * takes a flag argument wich is or'ed to the TTE data.  This is used by  * sparc64_bus_mem_map().  * NOTE: if the mapping is non-cacheable, it's the caller's responsibility  * to flush entries that might still be in the cache, if applicable.  */
+comment|/*  * Map a wired page into kernel virtual address space.  This additionally  * takes a flag argument which is or'ed to the TTE data.  This is used by  * sparc64_bus_mem_map().  * NOTE: if the mapping is non-cacheable, it's the caller's responsibility  * to flush entries that might still be in the cache, if applicable.  */
 end_comment
 
 begin_function

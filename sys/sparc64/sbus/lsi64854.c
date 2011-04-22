@@ -1975,7 +1975,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* transfered< 0? */
+comment|/* transferred< 0? */
 if|#
 directive|if
 literal|0
@@ -2828,7 +2828,7 @@ name|trans
 operator|<
 literal|0
 condition|)
-comment|/* transfered< 0? */
+comment|/* transferred< 0? */
 name|trans
 operator|=
 name|sc
