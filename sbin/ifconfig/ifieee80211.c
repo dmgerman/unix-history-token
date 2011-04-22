@@ -15882,12 +15882,11 @@ name|mi
 parameter_list|)
 block|{
 comment|/* NB: don't muddy display unless there's something to show */
-comment|/* XXX should check flags and n_rx_chains */
 if|if
 condition|(
 name|mi
 operator|->
-name|rssi_ctl
+name|rssi
 index|[
 literal|0
 index|]
@@ -15896,7 +15895,7 @@ literal|0
 operator|||
 name|mi
 operator|->
-name|rssi_ctl
+name|rssi
 index|[
 literal|1
 index|]
@@ -15905,7 +15904,7 @@ literal|0
 operator|||
 name|mi
 operator|->
-name|rssi_ctl
+name|rssi
 index|[
 literal|2
 index|]
@@ -15914,49 +15913,48 @@ literal|0
 condition|)
 block|{
 comment|/* XXX ignore EVM for now */
-comment|/* XXX ignore EXT for now */
 name|printf
 argument_list|(
 literal|" (rssi %d:%d:%d nf %d:%d:%d)"
 argument_list|,
 name|mi
 operator|->
-name|rssi_ctl
+name|rssi
 index|[
 literal|0
 index|]
 argument_list|,
 name|mi
 operator|->
-name|rssi_ctl
+name|rssi
 index|[
 literal|1
 index|]
 argument_list|,
 name|mi
 operator|->
-name|rssi_ctl
+name|rssi
 index|[
 literal|2
 index|]
 argument_list|,
 name|mi
 operator|->
-name|noise_ctl
+name|noise
 index|[
 literal|0
 index|]
 argument_list|,
 name|mi
 operator|->
-name|noise_ctl
+name|noise
 index|[
 literal|1
 index|]
 argument_list|,
 name|mi
 operator|->
-name|noise_ctl
+name|noise
 index|[
 literal|2
 index|]

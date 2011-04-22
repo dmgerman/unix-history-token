@@ -1492,55 +1492,30 @@ begin_struct
 struct|struct
 name|ieee80211_mimo_info
 block|{
-name|uint16_t
-name|flags
-decl_stmt|;
-comment|/* IEEE80211_R_* flags */
-name|uint8_t
-name|n_rx_chains
-decl_stmt|;
-comment|/* number of RX chains involved */
-name|uint8_t
-name|pad
-index|[
-literal|1
-index|]
-decl_stmt|;
 name|int8_t
-name|rssi_ctl
+name|rssi
 index|[
 name|IEEE80211_MAX_CHAINS
 index|]
 decl_stmt|;
 comment|/* per-antenna rssi */
 name|int8_t
-name|noise_ctl
+name|noise
 index|[
 name|IEEE80211_MAX_CHAINS
 index|]
 decl_stmt|;
 comment|/* per-antenna noise floor */
-name|int8_t
-name|rssi_ext
+name|uint8_t
+name|pad
 index|[
-name|IEEE80211_MAX_CHAINS
+literal|2
 index|]
 decl_stmt|;
-comment|/* per-antenna ext rssi */
-name|int8_t
-name|noise_ext
-index|[
-name|IEEE80211_MAX_CHAINS
-index|]
-decl_stmt|;
-comment|/* per-antenna ext noise floor */
 name|uint32_t
 name|evm
 index|[
-name|IEEE80211_MAX_CHAINS
-index|]
-index|[
-name|IEEE80211_MAX_EVM_PILOTS
+literal|3
 index|]
 decl_stmt|;
 comment|/* EVM data */
