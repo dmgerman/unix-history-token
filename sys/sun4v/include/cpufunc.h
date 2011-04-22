@@ -34,7 +34,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * membar operand macros for use in other macros when # is a special  * character.  Keep these in sync with what the hardware expects.  */
+comment|/*  * Membar operand macros for use in other macros when # is a special  * character.  Keep these in sync with what the hardware expects.  */
 end_comment
 
 begin_define
@@ -232,7 +232,7 @@ value|do {						\ 	__asm __volatile("mov %0, %" __XSTRING(reg) : : "r" (val));	\
 end_define
 
 begin_comment
-comment|/* Generate ld*a/st*a functions for non-constant ASI's. */
+comment|/* Generate ld*a/st*a functions for non-constant ASIs. */
 end_comment
 
 begin_define
@@ -580,9 +580,9 @@ name|name
 parameter_list|,
 name|val
 parameter_list|,
-name|xor
+name|xorval
 parameter_list|)
-value|do {						\ 	__asm __volatile("wr %0, %1, %%" #name				\ 	    : : "r" (val), "rI" (xor));					\ } while (0)
+value|do {					\ 	__asm __volatile("wr %0, %1, %%" #name				\ 	    : : "r" (val), "rI" (xorval));				\ } while (0)
 end_define
 
 begin_define
@@ -604,14 +604,38 @@ name|name
 parameter_list|,
 name|val
 parameter_list|,
-name|xor
+name|xorval
 parameter_list|)
-value|do {					\ 	__asm __volatile("wrpr %0, %1, %%" #name			\ 	    : : "r" (val), "rI" (xor));					\ } while (0)
+value|do {					\ 	__asm __volatile("wrpr %0, %1, %%" #name			\ 	    : : "r" (val), "rI" (xorval));				\ } while (0)
 end_define
 
 begin_comment
-comment|/*  * Macro intended to be used instead of wr(asr23, val, xor) for writing to  * the TICK_CMPR register in order to avoid a bug in BlackBird CPUs that  * can cause these writes to fail under certain condidtions which in turn  * causes the hardclock to stop. The workaround is to perform the write  * at the beginning of an I-Cache line directly followed by a dummy read.  */
+comment|/*  * Trick GAS/GCC into compiling access to TICK/(S)TICK_COMPARE independently  * of the selected instruction set.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|rdtickcmpr
+parameter_list|()
+value|rd(asr23)
+end_define
+
+begin_define
+define|#
+directive|define
+name|rdstick
+parameter_list|()
+value|rd(asr24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|rdstickcmpr
+parameter_list|()
+value|rd(asr25)
+end_define
 
 begin_define
 define|#
@@ -620,9 +644,33 @@ name|wrtickcmpr
 parameter_list|(
 name|val
 parameter_list|,
-name|xor
+name|xorval
 parameter_list|)
-value|({						\ 	__asm __volatile(						\ 	"	ba,pt	%%xcc, 1f ;		"			\ 	"	 nop	 ;			"			\ 	"	.align	64 ;			"			\ 	"1:	wr	%0, %1, %%asr23 ;	"			\ 	"	rd	%%asr23, %%g0 ;		"			\ 	: : "r" (val), "rI" (xor));					\ })
+value|wr(asr23, (val), (xorval))
+end_define
+
+begin_define
+define|#
+directive|define
+name|wrstick
+parameter_list|(
+name|val
+parameter_list|,
+name|xorval
+parameter_list|)
+value|wr(asr24, (val), (xorval))
+end_define
+
+begin_define
+define|#
+directive|define
+name|wrstickcmpr
+parameter_list|(
+name|val
+parameter_list|,
+name|xorval
+parameter_list|)
+value|wr(asr25, (val), (xorval))
 end_define
 
 begin_function
@@ -647,7 +695,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_long
+name|register_t
 name|s
 decl_stmt|;
 name|s
@@ -696,7 +744,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_long
+name|register_t
 name|s
 decl_stmt|;
 name|s
@@ -734,7 +782,7 @@ value|wrpr(pil, (s), 0)
 end_define
 
 begin_comment
-comment|/*  * In some places, it is required that the store is directly followed by a  * membar #Sync. Don't trust the compiler to not insert instructions in  * between. We also need to disable interrupts completely.  */
+comment|/*  * In some places, it is required that the store is directly followed by a  * membar #Sync.  Don't trust the compiler to not insert instructions in  * between.  We also need to disable interrupts completely.  */
 end_comment
 
 begin_define
@@ -748,7 +796,7 @@ name|asi
 parameter_list|,
 name|val
 parameter_list|)
-value|do {					\ 	u_long s;							\ 	s = intr_disable_all();						\ 	__asm __volatile("stxa %0, [%1] %2; membar #Sync"		\ 	    : : "r" (val), "r" (va), "n" (asi));			\ 	intr_restore_all(s);						\ } while (0)
+value|do {					\ 	register_t s;							\ 	s = intr_disable_all();						\ 	__asm __volatile("stxa %0, [%1] %2; membar #Sync"		\ 	    : : "r" (val), "r" (va), "n" (asi));			\ 	intr_restore_all(s);						\ } while (0)
 end_define
 
 begin_function_decl
