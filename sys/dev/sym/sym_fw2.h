@@ -2655,7 +2655,7 @@ argument_list|)
 block|,
 literal|0
 block|,
-comment|/* 	 *  It shall be a tagged command. 	 *  Read SIMPLE+TAG. 	 *  The C code will deal with errors. 	 *  Aggressive optimization, is'nt it? :) 	 */
+comment|/* 	 *  It shall be a tagged command. 	 *  Read SIMPLE+TAG. 	 *  The C code will deal with errors. 	 *  Aggressive optimization, isn't it? :) 	 */
 name|SCR_MOVE_ABS
 argument_list|(
 literal|2
