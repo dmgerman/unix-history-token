@@ -704,6 +704,65 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * These are the secondary regulatory domain flags  * for regDmn[1].  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR5416_REGDMN_EN_FCC_MID
+value|0x01
+end_define
+
+begin_comment
+comment|/* 5.47 - 5.7GHz operation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR5416_REGDMN_EN_JAP_MID
+value|0x02
+end_define
+
+begin_comment
+comment|/* 5.47 - 5.7GHz operation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR5416_REGDMN_EN_FCC_DFS_HT40
+value|0x04
+end_define
+
+begin_comment
+comment|/* FCC HT40 + DFS operation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR5416_REGDMN_EN_JAP_HT40
+value|0x08
+end_define
+
+begin_comment
+comment|/* JP HT40 operation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR5416_REGDMN_EN_JAP_DFS_HT40
+value|0x10
+end_define
+
+begin_comment
+comment|/* JP HT40 + DFS operation */
+end_comment
+
+begin_comment
 comment|/*  * NB: The format in EEPROM has words 0 and 2 swapped (i.e. version  * and length are swapped).  We reverse their position after reading  * the data into host memory so the version field is at the same  * offset as in previous EEPROM layouts.  This makes utilities that  * inspect the EEPROM contents work without looking at the PCI device  * id which may or may not be reliable.  */
 end_comment
 
