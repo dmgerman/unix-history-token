@@ -40,7 +40,7 @@ ifndef|#
 directive|ifndef
 name|_ASM
 comment|/* 	 * Internal definitions 	 */
-comment|/*  * Each MD has the following header to  * provide information about each section of the MD.  *  * There are 3 sections:  * The description list, the name table and the data block.  *  * All values are stored in network byte order.  *  * Elements in the first (description list) section are defined by their  * index location within the node block. An index is simply the byte offset  * within the block / element size (16bytes). All elements are refered to  * by their index, to avoid bugs related to alignment etc.  *  * The name_len field holds the storage length of an ASCII name, NOT the strlen.  * The header fields are written in network  * byte order.  */
+comment|/*  * Each MD has the following header to  * provide information about each section of the MD.  *  * There are 3 sections:  * The description list, the name table and the data block.  *  * All values are stored in network byte order.  *  * Elements in the first (description list) section are defined by their  * index location within the node block. An index is simply the byte offset  * within the block / element size (16bytes). All elements are referred to  * by their index, to avoid bugs related to alignment etc.  *  * The name_len field holds the storage length of an ASCII name, NOT the strlen.  * The header fields are written in network  * byte order.  */
 struct|struct
 name|md_header_s
 block|{

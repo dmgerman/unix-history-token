@@ -2760,7 +2760,7 @@ argument_list|,
 name|PAGE_SHIFT
 argument_list|)
 expr_stmt|;
-comment|/* should actualy be a function of tte_data */
+comment|/* should actually be a function of tte_data */
 name|tte_tag
 operator|=
 operator|(
