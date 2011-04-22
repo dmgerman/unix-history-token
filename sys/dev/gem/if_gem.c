@@ -5295,7 +5295,7 @@ name|v
 argument_list|)
 expr_stmt|;
 comment|/* step 14.  Issue Transmit Pending command. */
-comment|/* step 15.  Give the reciever a swift kick. */
+comment|/* step 15.  Give the receiver a swift kick. */
 name|GEM_BANK1_WRITE_4
 argument_list|(
 name|sc
