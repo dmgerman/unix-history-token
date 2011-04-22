@@ -310,13 +310,13 @@ block|,
 block|{
 name|MPI_IOCSTATUS_TARGET_FC_RX_ID_INVALID
 block|,
-literal|"FC: Recieve ID Invalid"
+literal|"FC: Receive ID Invalid"
 block|}
 block|,
 block|{
 name|MPI_IOCSTATUS_TARGET_FC_DID_INVALID
 block|,
-literal|"FC: Recieve DID Invalid"
+literal|"FC: Receive DID Invalid"
 block|}
 block|,
 block|{
@@ -352,13 +352,13 @@ block|,
 block|{
 name|MPI_IOCSTATUS_LAN_RECEIVE_ERROR
 block|,
-literal|"LAN: Recieve Error"
+literal|"LAN: Receive Error"
 block|}
 block|,
 block|{
 name|MPI_IOCSTATUS_LAN_RECEIVE_ABORTED
 block|,
-literal|"LAN: Recieve Aborted"
+literal|"LAN: Receive Aborted"
 block|}
 block|,
 block|{

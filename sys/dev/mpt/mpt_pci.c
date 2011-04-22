@@ -3152,7 +3152,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* Allocate some DMA accessable memory for replies */
+comment|/* Allocate some DMA accessible memory for replies */
 if|if
 condition|(
 name|bus_dmamem_alloc

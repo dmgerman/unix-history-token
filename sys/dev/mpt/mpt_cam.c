@@ -14205,7 +14205,7 @@ argument_list|(
 literal|0x000ffff
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Dork with the reply frame so that the reponse to it 		 * will be correct. 		 */
+comment|/* 		 * Dork with the reply frame so that the response to it 		 * will be correct. 		 */
 name|rp
 operator|->
 name|Rctl_Did
@@ -14721,7 +14721,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* XXX Handle SPI-Packet and FCP-2 reponse info. */
+comment|/* XXX Handle SPI-Packet and FCP-2 response info. */
 name|mpt_set_ccb_status
 argument_list|(
 name|ccb
