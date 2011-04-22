@@ -454,7 +454,7 @@ value|0x20000000
 end_define
 
 begin_comment
-comment|/* tag error durig tx DMA */
+comment|/* tag error during tx DMA */
 end_comment
 
 begin_define
