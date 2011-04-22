@@ -53,6 +53,13 @@ name|AR9285_RDEXT_DEFAULT
 value|0x1F
 end_define
 
+begin_define
+define|#
+directive|define
+name|AR5416_4K_EEP_PD_GAIN_BOUNDARY_DEFAULT
+value|58
+end_define
+
 begin_undef
 undef|#
 directive|undef

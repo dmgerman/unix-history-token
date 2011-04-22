@@ -5409,12 +5409,7 @@ index|[
 name|i
 index|]
 operator|=
-name|pPdGainBoundaries
-index|[
-name|i
-operator|-
-literal|1
-index|]
+name|AR5416_4K_EEP_PD_GAIN_BOUNDARY_DEFAULT
 expr_stmt|;
 name|i
 operator|++
