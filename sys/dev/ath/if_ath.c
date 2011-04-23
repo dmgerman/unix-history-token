@@ -6075,6 +6075,8 @@ name|sc_ah
 decl_stmt|;
 name|HAL_INT
 name|status
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -6197,6 +6199,14 @@ operator|->
 name|sc_imask
 expr_stmt|;
 comment|/* discard unasked for bits */
+comment|/* Short-circuit un-handled interrupts */
+if|if
+condition|(
+name|status
+operator|==
+literal|0x0
+condition|)
+return|return;
 if|if
 condition|(
 name|status

@@ -108,7 +108,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reads the Interrupt Status Register value from the NIC, thus deasserting  * the interrupt line, and returns both the masked and unmasked mapped ISR  * values.  The value returned is mapped to abstract the hw-specific bit  * locations in the Interrupt Status Register.  *  * Returns: A hardware-abstracted bitmap of all non-masked-out  *          interrupts pending, as well as an unmasked value  */
+comment|/*  * Reads the Interrupt Status Register value from the NIC, thus deasserting  * the interrupt line, and returns both the masked and unmasked mapped ISR  * values.  The value returned is mapped to abstract the hw-specific bit  * locations in the Interrupt Status Register.  *  * (*masked) is cleared on initial call.  *  * Returns: A hardware-abstracted bitmap of all non-masked-out  *          interrupts pending, as well as an unmasked value  */
 end_comment
 
 begin_function
@@ -188,6 +188,11 @@ name|sync_cause
 operator|&=
 name|AR_INTR_SYNC_DEFAULT
 expr_stmt|;
+operator|*
+name|masked
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|isr
@@ -198,16 +203,9 @@ name|sync_cause
 operator|==
 literal|0
 condition|)
-block|{
-operator|*
-name|masked
-operator|=
-literal|0
-expr_stmt|;
 return|return
 name|AH_FALSE
 return|;
-block|}
 if|if
 condition|(
 name|isr
