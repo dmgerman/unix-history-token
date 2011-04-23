@@ -382,7 +382,7 @@ index|]
 operator|.
 name|name
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_STRING
 operator||
 name|CTLFLAG_RD
 argument_list|,
