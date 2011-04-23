@@ -364,6 +364,10 @@ literal|0
 operator|||
 operator|!
 name|rootshell
+operator|||
+name|exception
+operator|==
+name|EXEXIT
 condition|)
 name|exitshell
 argument_list|(
