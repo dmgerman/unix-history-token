@@ -242,13 +242,21 @@ argument_list|,
 literal|"could not get privileged resources"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|setuid
 argument_list|(
 name|getuid
 argument_list|()
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"setuid()"
 argument_list|)
 expr_stmt|;
 if|if
