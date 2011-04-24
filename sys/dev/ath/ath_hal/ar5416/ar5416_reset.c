@@ -290,25 +290,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|ar5416InitPLL
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-name|ah
-parameter_list|,
-specifier|const
-name|struct
-name|ieee80211_channel
-modifier|*
-name|chan
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|HAL_BOOL
 name|ar5416SetPowerPerRateTable
 parameter_list|(
@@ -1950,7 +1931,12 @@ else|:
 literal|"2GHz"
 argument_list|)
 expr_stmt|;
-name|ar5416InitPLL
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_initPLL
 argument_list|(
 name|ah
 argument_list|,
@@ -2611,7 +2597,12 @@ condition|)
 return|return
 name|AH_FALSE
 return|;
-name|ar5416InitPLL
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_initPLL
 argument_list|(
 name|ah
 argument_list|,
@@ -4848,7 +4839,12 @@ name|INIT_CONFIG_STATUS
 argument_list|)
 expr_stmt|;
 block|}
-name|ar5416InitPLL
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_initPLL
 argument_list|(
 name|ah
 argument_list|,
@@ -5130,7 +5126,6 @@ directive|endif
 end_endif
 
 begin_function
-specifier|static
 name|void
 name|ar5416InitPLL
 parameter_list|(
