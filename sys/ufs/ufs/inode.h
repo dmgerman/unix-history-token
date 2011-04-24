@@ -257,12 +257,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IN_RENAME
+name|IN_NEEDSYNC
 value|0x0010
 end_define
 
 begin_comment
-comment|/* Inode is being renamed. */
+comment|/* Inode requires fsync. */
 end_comment
 
 begin_define
