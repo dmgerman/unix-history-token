@@ -327,7 +327,7 @@ begin_decl_stmt
 name|int
 name|run_v4server
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -677,11 +677,11 @@ expr_stmt|;
 define|#
 directive|define
 name|GETOPT
-value|"ah:n:rdtue"
+value|"ah:n:rdtueo"
 define|#
 directive|define
 name|USAGE
-value|"[-ardtue] [-n num_servers] [-h bindip]"
+value|"[-ardtueo] [-n num_servers] [-h bindip]"
 while|while
 condition|(
 operator|(
@@ -849,9 +849,14 @@ break|break;
 case|case
 literal|'e'
 case|:
+comment|/* now a no-op, since this is the default */
+break|break;
+case|case
+literal|'o'
+case|:
 name|run_v4server
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 break|break;
 default|default:
@@ -936,7 +941,7 @@ name|DEFNFSDCNT
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * If the "-e" option was specified OR only the nfsd module is 	 * found in the server, run "nfsd". 	 * Otherwise, try and run "nfsserver". 	 */
+comment|/* 	 * Unless the "-o" option was specified, try and run "nfsd". 	 * If "-o" was specified, try and run "nfsserver". 	 */
 if|if
 condition|(
 name|run_v4server
@@ -979,29 +984,6 @@ literal|"NFS server is not available"
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|modfind
-argument_list|(
-literal|"nfsserver"
-argument_list|)
-operator|<
-literal|0
-operator|&&
-name|modfind
-argument_list|(
-literal|"nfsd"
-argument_list|)
-operator|>=
-literal|0
-condition|)
-block|{
-name|run_v4server
-operator|=
-literal|1
-expr_stmt|;
 block|}
 elseif|else
 if|if

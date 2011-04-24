@@ -1424,7 +1424,7 @@ begin_decl_stmt
 name|int
 name|run_v4server
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1718,7 +1718,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"2deh:lnp:r"
+literal|"2deh:lnop:r"
 argument_list|)
 operator|)
 operator|!=
@@ -1741,10 +1741,7 @@ break|break;
 case|case
 literal|'e'
 case|:
-name|run_v4server
-operator|=
-literal|1
-expr_stmt|;
+comment|/* now a no-op, since this is the default */
 break|break;
 case|case
 literal|'n'
@@ -1780,6 +1777,14 @@ case|:
 name|dolog
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'o'
+case|:
+name|run_v4server
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -1973,7 +1978,7 @@ argument_list|()
 expr_stmt|;
 block|}
 empty_stmt|;
-comment|/* 	 * If the "-e" option was specified OR only the nfsd module is 	 * found in the server, run "nfsd". 	 * Otherwise, try and run "nfsserver". 	 */
+comment|/* 	 * Unless the "-o" option was specified, try and run "nfsd". 	 * If "-o" was specified, try and run "nfsserver". 	 */
 if|if
 condition|(
 name|run_v4server
@@ -2016,29 +2021,6 @@ literal|"NFS server is not available"
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|modfind
-argument_list|(
-literal|"nfsserver"
-argument_list|)
-operator|<
-literal|0
-operator|&&
-name|modfind
-argument_list|(
-literal|"nfsd"
-argument_list|)
-operator|>=
-literal|0
-condition|)
-block|{
-name|run_v4server
-operator|=
-literal|1
-expr_stmt|;
 block|}
 elseif|else
 if|if
