@@ -38,12 +38,6 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|nfs_diskless
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|sockaddr_in
 struct_decl|;
 end_struct_decl
