@@ -237,8 +237,15 @@ begin_comment
 comment|/* Use NFS Version 3 protocol */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NFSMNT_KERB
+value|0x00000400
+end_define
+
 begin_comment
-comment|/* 0x400 free, was NFSMNT_KERB */
+comment|/* Use RPCSEC_GSS/Krb5 */
 end_comment
 
 begin_define
@@ -377,6 +384,50 @@ end_define
 
 begin_comment
 comment|/* NFSv4 Write verifier */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_INTEGRITY
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* Use integrity with RPCSEC_GSS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_PRIVACY
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* Use privacy with RPCSEC_GSS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_ALLGSSNAME
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* Use principal for all accesses */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_STRICT3530
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* Adhere strictly to RFC3530 */
 end_comment
 
 begin_endif

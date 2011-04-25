@@ -1445,7 +1445,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/nfsclient/nfsargs.h>
+file|<nfsclient/nfsargs.h>
 end_include
 
 begin_include
