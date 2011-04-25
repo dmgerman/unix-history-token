@@ -1818,6 +1818,27 @@ name|u_long
 name|tcps_ecn_rcwnd
 decl_stmt|;
 comment|/* # times ECN reduced the cwnd */
+comment|/* TCP_SIGNATURE related stats */
+name|u_long
+name|tcps_sig_rcvgoodsig
+decl_stmt|;
+comment|/* Total matching signature received */
+name|u_long
+name|tcps_sig_rcvbadsig
+decl_stmt|;
+comment|/* Total bad signature received */
+name|u_long
+name|tcps_sig_err_buildsig
+decl_stmt|;
+comment|/* Mismatching signature received */
+name|u_long
+name|tcps_sig_err_sigopt
+decl_stmt|;
+comment|/* No signature expected by socket */
+name|u_long
+name|tcps_sig_err_nosigopt
+decl_stmt|;
+comment|/* No signature provided by segment */
 name|u_long
 name|_pad
 index|[
@@ -3148,6 +3169,33 @@ parameter_list|,
 name|int
 parameter_list|,
 name|u_char
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|tcp_signature_verify
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|tcpopt
+modifier|*
+parameter_list|,
+name|struct
+name|tcphdr
 modifier|*
 parameter_list|,
 name|u_int

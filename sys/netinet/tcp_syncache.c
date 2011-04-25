@@ -4768,6 +4768,9 @@ decl_stmt|;
 name|u_int32_t
 name|flowtmp
 decl_stmt|;
+name|u_int
+name|ltflags
+decl_stmt|;
 name|int
 name|win
 decl_stmt|,
@@ -4776,8 +4779,6 @@ decl_stmt|,
 name|ip_ttl
 decl_stmt|,
 name|ip_tos
-decl_stmt|,
-name|noopt
 decl_stmt|;
 name|char
 modifier|*
@@ -4928,14 +4929,18 @@ name|so_rcv
 operator|.
 name|sb_hiwat
 expr_stmt|;
-name|noopt
+name|ltflags
 operator|=
 operator|(
 name|tp
 operator|->
 name|t_flags
 operator|&
+operator|(
 name|TF_NOOPT
+operator||
+name|TF_SIGNATURE
+operator|)
 operator|)
 expr_stmt|;
 comment|/* By the time we drop the lock these should no longer be used. */
@@ -5611,6 +5616,10 @@ operator|->
 name|to_flags
 operator|&
 name|TOF_SIGNATURE
+operator|||
+name|ltflags
+operator|&
+name|TF_SIGNATURE
 condition|)
 name|sc
 operator|->
@@ -5653,7 +5662,9 @@ expr_stmt|;
 comment|/* peer mss may be zero */
 if|if
 condition|(
-name|noopt
+name|ltflags
+operator|&
+name|TF_NOOPT
 condition|)
 name|sc
 operator|->
