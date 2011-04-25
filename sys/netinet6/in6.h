@@ -1361,7 +1361,7 @@ value|12
 end_define
 
 begin_comment
-comment|/* ip6_mreq; join a group membership */
+comment|/* ipv6_mreq; join a group membership */
 end_comment
 
 begin_define
@@ -1372,7 +1372,7 @@ value|13
 end_define
 
 begin_comment
-comment|/* ip6_mreq; leave a group membership */
+comment|/* ipv6_mreq; leave a group membership */
 end_comment
 
 begin_define
