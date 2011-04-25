@@ -1057,7 +1057,7 @@ argument_list|,
 name|TCO_TIMEOUT
 argument_list|)
 expr_stmt|;
-comment|/*  	 * According to Intel's docs, clearing SECOND_TO_STS and BOOT_STS must  	 * be done in two separate operations. 	 */
+comment|/* 	 * According to Intel's docs, clearing SECOND_TO_STS and BOOT_STS must 	 * be done in two separate operations. 	 */
 name|ichwd_write_tco_2
 argument_list|(
 name|sc
