@@ -4313,6 +4313,9 @@ modifier|*
 name|nf_ext
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|AH_SUPPORT_AR5416
 name|HAL_CHANNEL_INTERNAL
 modifier|*
 name|ichan
@@ -4558,6 +4561,14 @@ return|return
 literal|1
 return|;
 block|}
+else|#
+directive|else
+return|return
+literal|0
+return|;
+endif|#
+directive|endif
+comment|/* AH_SUPPORT_AR5416 */
 block|}
 end_function
 
