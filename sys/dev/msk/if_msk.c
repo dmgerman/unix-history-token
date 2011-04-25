@@ -10201,6 +10201,10 @@ operator|->
 name|msk_tick_ch
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+condition|)
 name|ether_ifdetach
 argument_list|(
 name|ifp
