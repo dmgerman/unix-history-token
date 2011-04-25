@@ -335,7 +335,7 @@ name|interval
 operator||
 name|WD_ACTIVE
 expr_stmt|;
-comment|/* We cannot turn of our watchdog so if user 	 * fails to turn us on go to passive mode. */
+comment|/* We cannot turn off our watchdog so if user 	 * fails to turn us on go to passive mode. */
 if|if
 condition|(
 operator|(
