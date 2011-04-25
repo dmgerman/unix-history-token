@@ -1032,6 +1032,41 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Check if the watchdog SMI triggering is enabled.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|ichwd_smi_is_enabled
+parameter_list|(
+name|struct
+name|ichwd_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|ichwd_read_smi_4
+argument_list|(
+name|sc
+argument_list|,
+name|SMI_EN
+argument_list|)
+operator|&
+name|SMI_TCO_EN
+operator|)
+operator|!=
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Reset the watchdog status bits.  */
 end_comment
 
@@ -2413,6 +2448,15 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* disable the SMI handler */
+name|sc
+operator|->
+name|smi_enabled
+operator|=
+name|ichwd_smi_is_enabled
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ichwd_smi_disable
 argument_list|(
 name|sc
@@ -2548,6 +2592,14 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* enable the SMI handler */
+if|if
+condition|(
+name|sc
+operator|->
+name|smi_enabled
+operator|!=
+literal|0
+condition|)
 name|ichwd_smi_enable
 argument_list|(
 name|sc
