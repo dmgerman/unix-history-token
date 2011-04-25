@@ -224,7 +224,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfsclient/nfsdiskless.h>
+file|<nfs/nfsdiskless.h>
 end_include
 
 begin_expr_stmt
@@ -811,48 +811,6 @@ name|nfs_invaldir
 block|,
 name|nfs_commit
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * This structure must be filled in by a primary bootstrap or bootstrap  * server for a diskless/dataless machine. It is initialized below just  * to ensure that it is allocated to initialized data (.data not .bss).  */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|nfs_diskless
-name|nfs_diskless
-init|=
-block|{
-block|{
-block|{
-literal|0
-block|}
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|nfsv3_diskless
-name|nfsv3_diskless
-init|=
-block|{
-block|{
-block|{
-literal|0
-block|}
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|nfs_diskless_valid
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 

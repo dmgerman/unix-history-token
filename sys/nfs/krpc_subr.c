@@ -114,7 +114,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfsclient/krpc.h>
+file|<nfs/krpc.h>
 end_include
 
 begin_include
