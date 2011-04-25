@@ -1916,6 +1916,11 @@ expr_stmt|;
 name|INTON
 expr_stmt|;
 block|}
+else|else
+name|exitstatus
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
@@ -2572,6 +2577,11 @@ expr_stmt|;
 name|INTON
 expr_stmt|;
 block|}
+else|else
+name|exitstatus
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
@@ -5201,6 +5211,11 @@ operator|=
 name|jp
 expr_stmt|;
 block|}
+else|else
+name|exitstatus
+operator|=
+literal|0
+expr_stmt|;
 name|out
 label|:
 if|if
