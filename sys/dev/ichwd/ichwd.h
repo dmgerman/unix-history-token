@@ -55,6 +55,9 @@ name|int
 name|timeout
 decl_stmt|;
 name|int
+name|smi_enabled
+decl_stmt|;
+name|int
 name|smi_rid
 decl_stmt|;
 name|struct
