@@ -1458,7 +1458,7 @@ if|if
 condition|(
 name|cmd
 operator|==
-name|HASTCTL_SET_ROLE
+name|HASTCTL_CMD_SETROLE
 condition|)
 block|{
 name|role
@@ -1539,7 +1539,7 @@ name|cmd
 condition|)
 block|{
 case|case
-name|HASTCTL_SET_ROLE
+name|HASTCTL_CMD_SETROLE
 case|:
 name|control_set_role_common
 argument_list|(
@@ -1561,7 +1561,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|HASTCTL_STATUS
+name|HASTCTL_CMD_STATUS
 case|:
 name|control_status
 argument_list|(
@@ -1636,7 +1636,7 @@ name|cmd
 condition|)
 block|{
 case|case
-name|HASTCTL_SET_ROLE
+name|HASTCTL_CMD_SETROLE
 case|:
 name|control_set_role_common
 argument_list|(
@@ -1655,7 +1655,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|HASTCTL_STATUS
+name|HASTCTL_CMD_STATUS
 case|:
 name|control_status
 argument_list|(
