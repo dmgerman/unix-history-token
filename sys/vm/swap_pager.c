@@ -1835,7 +1835,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWP_SIZECHECK() -	update swap_pager_full indication  *	  *	update the swap_pager_almost_full indication and warn when we are  *	about to run out of swap space, using lowat/hiwat hysteresis.  *  *	Clear swap_pager_full ( task killing ) indication when lowat is met.  *  *	No restrictions on call  *	This routine may not block.  *	This routine must be called at splvm()  */
+comment|/*  * SWP_SIZECHECK() -	update swap_pager_full indication  *	  *	update the swap_pager_almost_full indication and warn when we are  *	about to run out of swap space, using lowat/hiwat hysteresis.  *  *	Clear swap_pager_full ( task killing ) indication when lowat is met.  *  *	No restrictions on call  *	This routine may not block.  */
 end_comment
 
 begin_function
@@ -1892,7 +1892,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWP_PAGER_HASH() -	hash swap meta data  *  *	This is an helper function which hashes the swapblk given  *	the object and page index.  It returns a pointer to a pointer  *	to the object, or a pointer to a NULL pointer if it could not  *	find a swapblk.  *  *	This routine must be called at splvm().  */
+comment|/*  * SWP_PAGER_HASH() -	hash swap meta data  *  *	This is an helper function which hashes the swapblk given  *	the object and page index.  It returns a pointer to a pointer  *	to the object, or a pointer to a NULL pointer if it could not  *	find a swapblk.  */
 end_comment
 
 begin_function
@@ -2326,7 +2326,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWAP_PAGER_ALLOC() -	allocate a new OBJT_SWAP VM object and instantiate  *			its metadata structures.  *  *	This routine is called from the mmap and fork code to create a new  *	OBJT_SWAP object.  We do this by creating an OBJT_DEFAULT object  *	and then converting it with swp_pager_meta_build().  *  *	This routine may block in vm_object_allocate() and create a named  *	object lookup race, so we must interlock.   We must also run at  *	splvm() for the object lookup to handle races with interrupts, but  *	we do not have to maintain splvm() in between the lookup and the  *	add because (I believe) it is not possible to attempt to create  *	a new swap object w/handle when a default object with that handle  *	already exists.  *  * MPSAFE  */
+comment|/*  * SWAP_PAGER_ALLOC() -	allocate a new OBJT_SWAP VM object and instantiate  *			its metadata structures.  *  *	This routine is called from the mmap and fork code to create a new  *	OBJT_SWAP object.  We do this by creating an OBJT_DEFAULT object  *	and then converting it with swp_pager_meta_build().  *  *	This routine may block in vm_object_allocate() and create a named  *	object lookup race, so we must interlock.  *  * MPSAFE  */
 end_comment
 
 begin_function
@@ -2682,7 +2682,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * SWP_PAGER_GETSWAPSPACE() -	allocate raw swap space  *  *	Allocate swap for the requested number of pages.  The starting  *	swap block number (a page index) is returned or SWAPBLK_NONE  *	if the allocation failed.  *  *	Also has the side effect of advising that somebody made a mistake  *	when they configured swap and didn't configure enough.  *  *	Must be called at splvm() to avoid races with bitmap frees from  *	vm_page_remove() aka swap_pager_page_removed().  *  *	This routine may not block  *	This routine must be called at splvm().  *  *	We allocate in round-robin fashion from the configured devices.  */
+comment|/*  * SWP_PAGER_GETSWAPSPACE() -	allocate raw swap space  *  *	Allocate swap for the requested number of pages.  The starting  *	swap block number (a page index) is returned or SWAPBLK_NONE  *	if the allocation failed.  *  *	Also has the side effect of advising that somebody made a mistake  *	when they configured swap and didn't configure enough.  *  *	This routine may not block  *  *	We allocate in round-robin fashion from the configured devices.  */
 end_comment
 
 begin_function
@@ -2972,7 +2972,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWP_PAGER_FREESWAPSPACE() -	free raw swap space   *  *	This routine returns the specified swap blocks back to the bitmap.  *  *	Note:  This routine may not block (it could in the old swap code),  *	and through the use of the new blist routines it does not block.  *  *	We must be called at splvm() to avoid races with bitmap frees from  *	vm_page_remove() aka swap_pager_page_removed().  *  *	This routine may not block  *	This routine must be called at splvm().  */
+comment|/*  * SWP_PAGER_FREESWAPSPACE() -	free raw swap space   *  *	This routine returns the specified swap blocks back to the bitmap.  *  *	Note:  This routine may not block (it could in the old swap code),  *	and through the use of the new blist routines it does not block.  *  *	This routine may not block  */
 end_comment
 
 begin_function
@@ -3083,7 +3083,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWAP_PAGER_FREESPACE() -	frees swap blocks associated with a page  *				range within an object.  *  *	This is a globally accessible routine.  *  *	This routine removes swapblk assignments from swap metadata.  *  *	The external callers of this routine typically have already destroyed   *	or renamed vm_page_t's associated with this range in the object so   *	we should be ok.  *  *	This routine may be called at any spl.  We up our spl to splvm temporarily  *	in order to perform the metadata removal.  */
+comment|/*  * SWAP_PAGER_FREESPACE() -	frees swap blocks associated with a page  *				range within an object.  *  *	This is a globally accessible routine.  *  *	This routine removes swapblk assignments from swap metadata.  *  *	The external callers of this routine typically have already destroyed   *	or renamed vm_page_t's associated with this range in the object so   *	we should be ok.  */
 end_comment
 
 begin_function
@@ -3269,7 +3269,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWAP_PAGER_COPY() -  copy blocks from source pager to destination pager  *			and destroy the source.  *  *	Copy any valid swapblks from the source to the destination.  In  *	cases where both the source and destination have a valid swapblk,  *	we keep the destination's.  *  *	This routine is allowed to block.  It may block allocating metadata  *	indirectly through swp_pager_meta_build() or if paging is still in  *	progress on the source.   *  *	This routine can be called at any spl  *  *	XXX vm_page_collapse() kinda expects us not to block because we   *	supposedly do not need to allocate memory, but for the moment we  *	*may* have to get a little memory from the zone allocator, but  *	it is taken from the interrupt memory.  We should be ok.   *  *	The source object contains no vm_page_t's (which is just as well)  *  *	The source object is of type OBJT_SWAP.  *  *	The source and destination objects must be locked or   *	inaccessible (XXX are they ?)  */
+comment|/*  * SWAP_PAGER_COPY() -  copy blocks from source pager to destination pager  *			and destroy the source.  *  *	Copy any valid swapblks from the source to the destination.  In  *	cases where both the source and destination have a valid swapblk,  *	we keep the destination's.  *  *	This routine is allowed to block.  It may block allocating metadata  *	indirectly through swp_pager_meta_build() or if paging is still in  *	progress on the source.   *  *	XXX vm_page_collapse() kinda expects us not to block because we   *	supposedly do not need to allocate memory, but for the moment we  *	*may* have to get a little memory from the zone allocator, but  *	it is taken from the interrupt memory.  We should be ok.   *  *	The source object contains no vm_page_t's (which is just as well)  *  *	The source object is of type OBJT_SWAP.  *  *	The source and destination objects must be locked or   *	inaccessible (XXX are they ?)  */
 end_comment
 
 begin_function
@@ -3719,7 +3719,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWAP_PAGER_PAGE_UNSWAPPED() - remove swap backing store related to page  *  *	This removes any associated swap backing store, whether valid or  *	not, from the page.    *  *	This routine is typically called when a page is made dirty, at  *	which point any associated swap can be freed.  MADV_FREE also  *	calls us in a special-case situation  *  *	NOTE!!!  If the page is clean and the swap was valid, the caller  *	should make the page dirty before calling this routine.  This routine  *	does NOT change the m->dirty status of the page.  Also: MADV_FREE  *	depends on it.  *  *	This routine may not block  *	This routine must be called at splvm()  */
+comment|/*  * SWAP_PAGER_PAGE_UNSWAPPED() - remove swap backing store related to page  *  *	This removes any associated swap backing store, whether valid or  *	not, from the page.    *  *	This routine is typically called when a page is made dirty, at  *	which point any associated swap can be freed.  MADV_FREE also  *	calls us in a special-case situation  *  *	NOTE!!!  If the page is clean and the swap was valid, the caller  *	should make the page dirty before calling this routine.  This routine  *	does NOT change the m->dirty status of the page.  Also: MADV_FREE  *	depends on it.  *  *	This routine may not block  */
 end_comment
 
 begin_function
@@ -5939,11 +5939,11 @@ block|}
 end_function
 
 begin_comment
-comment|/************************************************************************  *				SWAP META DATA 				*  ************************************************************************  *  *	These routines manipulate the swap metadata stored in the   *	OBJT_SWAP object.  All swp_*() routines must be called at  *	splvm() because swap can be freed up by the low level vm_page  *	code which might be called from interrupts beyond what splbio() covers.  *  *	Swap metadata is implemented with a global hash and not directly  *	linked into the object.  Instead the object simply contains  *	appropriate tracking counters.  */
+comment|/************************************************************************  *				SWAP META DATA 				*  ************************************************************************  *  *	These routines manipulate the swap metadata stored in the   *	OBJT_SWAP object.  *  *	Swap metadata is implemented with a global hash and not directly  *	linked into the object.  Instead the object simply contains  *	appropriate tracking counters.  */
 end_comment
 
 begin_comment
-comment|/*  * SWP_PAGER_META_BUILD() -	add swap block to swap meta data for object  *  *	We first convert the object to a swap object if it is a default  *	object.  *  *	The specified swapblk is added to the object's swap metadata.  If  *	the swapblk is not valid, it is freed instead.  Any previously  *	assigned swapblk is freed.  *  *	This routine must be called at splvm(), except when used to convert  *	an OBJT_DEFAULT object into an OBJT_SWAP object.  */
+comment|/*  * SWP_PAGER_META_BUILD() -	add swap block to swap meta data for object  *  *	We first convert the object to a swap object if it is a default  *	object.  *  *	The specified swapblk is added to the object's swap metadata.  If  *	the swapblk is not valid, it is freed instead.  Any previously  *	assigned swapblk is freed.  */
 end_comment
 
 begin_function
@@ -6287,7 +6287,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWP_PAGER_META_FREE() - free a range of blocks in the object's swap metadata  *  *	The requested range of blocks is freed, with any associated swap   *	returned to the swap bitmap.  *  *	This routine will free swap metadata structures as they are cleaned   *	out.  This routine does *NOT* operate on swap metadata associated  *	with resident pages.  *  *	This routine must be called at splvm()  */
+comment|/*  * SWP_PAGER_META_FREE() - free a range of blocks in the object's swap metadata  *  *	The requested range of blocks is freed, with any associated swap   *	returned to the swap bitmap.  *  *	This routine will free swap metadata structures as they are cleaned   *	out.  This routine does *NOT* operate on swap metadata associated  *	with resident pages.  */
 end_comment
 
 begin_function
@@ -6478,7 +6478,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWP_PAGER_META_FREE_ALL() - destroy all swap metadata associated with object  *  *	This routine locates and destroys all swap metadata associated with  *	an object.  *  *	This routine must be called at splvm()  */
+comment|/*  * SWP_PAGER_META_FREE_ALL() - destroy all swap metadata associated with object  *  *	This routine locates and destroys all swap metadata associated with  *	an object.  */
 end_comment
 
 begin_function
@@ -6660,7 +6660,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWP_PAGER_METACTL() -  misc control of swap and vm_page_t meta data.  *  *	This routine is capable of looking up, popping, or freeing  *	swapblk assignments in the swap meta data or in the vm_page_t.  *	The routine typically returns the swapblk being looked-up, or popped,  *	or SWAPBLK_NONE if the block was freed, or SWAPBLK_NONE if the block  *	was invalid.  This routine will automatically free any invalid   *	meta-data swapblks.  *  *	It is not possible to store invalid swapblks in the swap meta data  *	(other then a literal 'SWAPBLK_NONE'), so we don't bother checking.  *  *	When acting on a busy resident page and paging is in progress, we   *	have to wait until paging is complete but otherwise can act on the   *	busy page.  *  *	This routine must be called at splvm().  *  *	SWM_FREE	remove and free swap block from metadata  *	SWM_POP		remove from meta data but do not free.. pop it out  */
+comment|/*  * SWP_PAGER_METACTL() -  misc control of swap and vm_page_t meta data.  *  *	This routine is capable of looking up, popping, or freeing  *	swapblk assignments in the swap meta data or in the vm_page_t.  *	The routine typically returns the swapblk being looked-up, or popped,  *	or SWAPBLK_NONE if the block was freed, or SWAPBLK_NONE if the block  *	was invalid.  This routine will automatically free any invalid   *	meta-data swapblks.  *  *	It is not possible to store invalid swapblks in the swap meta data  *	(other then a literal 'SWAPBLK_NONE'), so we don't bother checking.  *  *	When acting on a busy resident page and paging is in progress, we   *	have to wait until paging is complete but otherwise can act on the   *	busy page.  *  *	SWM_FREE	remove and free swap block from metadata  *	SWM_POP		remove from meta data but do not free.. pop it out  */
 end_comment
 
 begin_function
