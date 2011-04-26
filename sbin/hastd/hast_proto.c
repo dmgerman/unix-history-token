@@ -210,6 +210,9 @@ block|,
 name|compression_recv
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|HAVE_CRYPTO
 block|{
 literal|"checksum"
 block|,
@@ -217,6 +220,8 @@ name|checksum_send
 block|,
 name|checksum_recv
 block|}
+endif|#
+directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
