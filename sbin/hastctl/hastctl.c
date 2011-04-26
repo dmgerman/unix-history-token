@@ -2261,7 +2261,7 @@ default|default:
 name|assert
 argument_list|(
 operator|!
-literal|"Impossible role!"
+literal|"Impossible command!"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2465,7 +2465,7 @@ default|default:
 name|assert
 argument_list|(
 operator|!
-literal|"Impossible role!"
+literal|"Impossible command!"
 argument_list|)
 expr_stmt|;
 block|}
