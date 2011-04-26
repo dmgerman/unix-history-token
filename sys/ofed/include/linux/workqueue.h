@@ -519,6 +519,11 @@ name|struct
 name|task
 name|flushtask
 decl_stmt|;
+name|PHOLD
+argument_list|(
+name|curproc
+argument_list|)
+expr_stmt|;
 name|TASK_INIT
 argument_list|(
 operator|&
@@ -545,6 +550,11 @@ name|tq
 argument_list|,
 operator|&
 name|flushtask
+argument_list|)
+expr_stmt|;
+name|PRELE
+argument_list|(
+name|curproc
 argument_list|)
 expr_stmt|;
 block|}
