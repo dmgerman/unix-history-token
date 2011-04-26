@@ -18,22 +18,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|HASTCTL_SET_ROLE
-value|1
+name|CONTROL_STATUS
+value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|HASTCTL_STATUS
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|HASTCTL_RELOAD
-value|3
+name|CONTROL_RELOAD
+value|11
 end_define
 
 begin_struct_decl

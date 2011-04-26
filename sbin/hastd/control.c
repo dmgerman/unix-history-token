@@ -659,7 +659,7 @@ name|nv_add_uint8
 argument_list|(
 name|cnvout
 argument_list|,
-name|HASTCTL_STATUS
+name|CONTROL_STATUS
 argument_list|,
 literal|"cmd"
 argument_list|)
@@ -1902,7 +1902,7 @@ name|cmd
 condition|)
 block|{
 case|case
-name|HASTCTL_STATUS
+name|CONTROL_STATUS
 case|:
 if|if
 condition|(
@@ -2040,7 +2040,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|HASTCTL_RELOAD
+name|CONTROL_RELOAD
 case|:
 comment|/* 			 * When parent receives SIGHUP and discovers that 			 * something related to us has changes, it sends reload 			 * message to us. 			 */
 name|assert

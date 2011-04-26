@@ -2105,7 +2105,7 @@ name|nv_add_uint8
 argument_list|(
 name|nvout
 argument_list|,
-name|HASTCTL_RELOAD
+name|CONTROL_RELOAD
 argument_list|,
 literal|"cmd"
 argument_list|)
