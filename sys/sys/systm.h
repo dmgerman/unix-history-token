@@ -648,7 +648,7 @@ name|type
 parameter_list|,
 name|u_long
 modifier|*
-name|hashmark
+name|hashmask
 parameter_list|)
 function_decl|;
 end_function_decl
