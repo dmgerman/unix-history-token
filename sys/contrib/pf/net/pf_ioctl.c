@@ -1160,6 +1160,12 @@ begin_comment
 comment|/*  * Wrapper functions for pfil(9) hooks  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -1221,6 +1227,11 @@ name|inp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -19539,6 +19550,9 @@ name|error
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|INET
 specifier|static
 name|int
 name|pf_check_in
@@ -19899,6 +19913,8 @@ return|return
 name|chk
 return|;
 block|}
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
@@ -20150,6 +20166,9 @@ name|ESRCH
 operator|)
 return|;
 comment|/* XXX */
+ifdef|#
+directive|ifdef
+name|INET
 name|pfil_add_hook
 argument_list|(
 name|pf_check_in
@@ -20176,6 +20195,8 @@ argument_list|,
 name|pfh_inet
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
@@ -20195,6 +20216,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 name|pfil_remove_hook
 argument_list|(
 name|pf_check_in
@@ -20221,6 +20245,8 @@ argument_list|,
 name|pfh_inet
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|ESRCH
@@ -20325,6 +20351,9 @@ name|ESRCH
 operator|)
 return|;
 comment|/* XXX */
+ifdef|#
+directive|ifdef
+name|INET
 name|pfil_remove_hook
 argument_list|(
 name|pf_check_in
@@ -20351,6 +20380,8 @@ argument_list|,
 name|pfh_inet
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6

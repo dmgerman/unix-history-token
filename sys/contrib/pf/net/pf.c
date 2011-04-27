@@ -8482,7 +8482,12 @@ argument|} }  void pf_send_icmp(struct mbuf *m, u_int8_t type, u_int8_t code, sa
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
+ifdef|#
+directive|ifdef
+name|INET
 argument|struct ip *ip;
+endif|#
+directive|endif
 endif|#
 directive|endif
 ifdef|#
