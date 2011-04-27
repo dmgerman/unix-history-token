@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_inet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -2847,6 +2853,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_comment
 comment|/**  * If this interface has an ipv4 address, send an arp for it. This  * helps to get the network going again after migrating hosts.  */
 end_comment
@@ -2912,6 +2924,11 @@ block|}
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/**  * Callback received when the backend's state changes.  */
@@ -3003,6 +3020,9 @@ argument_list|,
 name|XenbusStateConnected
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|netfront_send_fake_arp
 argument_list|(
 name|dev
@@ -3010,6 +3030,8 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|XenbusStateClosing
@@ -7217,6 +7239,9 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|struct
 name|ifaddr
 modifier|*
@@ -7229,6 +7254,8 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|mask
 decl_stmt|,
@@ -7247,6 +7274,9 @@ case|:
 case|case
 name|SIOCGIFADDR
 case|:
+ifdef|#
+directive|ifdef
+name|INET
 name|XN_LOCK
 argument_list|(
 name|sc
@@ -7305,6 +7335,8 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|error
 operator|=
 name|ether_ioctl
@@ -7316,7 +7348,12 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 block|}
+endif|#
+directive|endif
 break|break;
 case|case
 name|SIOCSIFMTU

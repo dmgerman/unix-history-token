@@ -221,11 +221,19 @@ directive|include
 file|<net/vnet.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|INET
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -242,13 +250,36 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in_systm.h>
+file|<netinet/ip_carp.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<netinet/ip.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/in_cksum.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_systm.h>
 end_include
 
 begin_include
@@ -261,12 +292,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/if_ether.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/in_cksum.h>
 end_include
 
 begin_endif
@@ -313,6 +338,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet6/in6_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet6/nd6.h>
 end_include
 
@@ -325,12 +356,6 @@ begin_include
 include|#
 directive|include
 file|<crypto/sha1.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_carp.h>
 end_include
 
 begin_define
@@ -383,10 +408,15 @@ modifier|*
 name|sc_ia
 decl_stmt|;
 comment|/* primary iface address */
+ifdef|#
+directive|ifdef
+name|INET
 name|struct
 name|ip_moptions
 name|sc_imo
 decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
@@ -1071,6 +1101,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -1082,6 +1118,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -1186,6 +1227,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -1204,6 +1251,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_enum
 enum|enum
 block|{
@@ -1213,6 +1265,12 @@ name|CARP_COUNT_RUNNING
 block|}
 enum|;
 end_enum
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -1260,6 +1318,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -2241,6 +2304,9 @@ argument_list|,
 argument|ifa_list
 argument_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 name|ifa
@@ -2316,6 +2382,8 @@ name|RTF_HOST
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 name|splx
 argument_list|(
@@ -2450,6 +2518,9 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* M_ZERO? */
+ifdef|#
+directive|ifdef
+name|INET
 name|sc
 operator|->
 name|sc_imo
@@ -2505,6 +2576,8 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
@@ -2784,6 +2857,9 @@ argument_list|,
 name|IFT_ETHER
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|free
 argument_list|(
 name|sc
@@ -2795,6 +2871,8 @@ argument_list|,
 name|M_CARP
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
@@ -2924,6 +3002,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|carp_multicast_cleanup
 argument_list|(
 name|sc
@@ -2931,6 +3012,8 @@ argument_list|,
 name|unlock
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
@@ -3138,6 +3221,12 @@ end_function
 begin_comment
 comment|/*  * process input packet.  * we have rearranged checks order compared to the rfc,  * but it seems more efficient this way or not possible otherwise.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_function
 name|void
@@ -3580,6 +3669,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -4049,6 +4143,14 @@ name|if_bpf
 argument_list|)
 condition|)
 block|{
+name|uint32_t
+name|af1
+init|=
+name|af
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|struct
 name|ip
 modifier|*
@@ -4063,12 +4165,14 @@ name|ip
 operator|*
 argument_list|)
 decl_stmt|;
-name|uint32_t
-name|af1
-init|=
-name|af
-decl_stmt|;
 comment|/* BPF wants net byte order */
+if|if
+condition|(
+name|af
+operator|==
+name|AF_INET
+condition|)
+block|{
 name|ip
 operator|->
 name|ip_len
@@ -4099,6 +4203,9 @@ operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|bpf_mtap2
 argument_list|(
 name|SC2IFP
@@ -6026,6 +6133,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_comment
 comment|/*  * Broadcast a gratuitous ARP request containing  * the virtual router MAC address for each IP address  * associated with the virtual router.  */
 end_comment
@@ -6092,6 +6205,11 @@ comment|/* XXX */
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -6195,6 +6313,12 @@ end_endif
 begin_comment
 comment|/* INET6 */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_function
 specifier|static
@@ -6718,6 +6842,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -7403,11 +7532,16 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|carp_send_arp
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
@@ -7585,11 +7719,16 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|carp_send_arp
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
@@ -7857,6 +7996,12 @@ block|}
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -7963,6 +8108,11 @@ name|NULL
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -8082,6 +8232,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_function
 specifier|static
@@ -9018,6 +9174,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

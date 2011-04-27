@@ -6,6 +6,24 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_inet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_inet6.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_enc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -147,12 +165,6 @@ directive|include
 file|<netinet/in_var.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_inet6.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -175,12 +187,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"opt_enc.h"
-end_include
 
 begin_include
 include|#
@@ -1105,17 +1111,24 @@ block|}
 comment|/* Skip pfil(9) if no filters are loaded */
 if|if
 condition|(
+literal|1
+ifdef|#
+directive|ifdef
+name|INET
+operator|&&
 operator|!
-operator|(
 name|PFIL_HOOKED
 argument_list|(
 operator|&
 name|V_inet_pfil_hook
 argument_list|)
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
-operator|||
+operator|&&
+operator|!
 name|PFIL_HOOKED
 argument_list|(
 operator|&
@@ -1123,7 +1136,6 @@ name|V_inet6_pfil_hook
 argument_list|)
 endif|#
 directive|endif
-operator|)
 condition|)
 block|{
 return|return
@@ -1217,6 +1229,9 @@ operator|->
 name|ip_v
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 case|case
 literal|4
 case|:
@@ -1307,6 +1322,8 @@ name|ip_off
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
