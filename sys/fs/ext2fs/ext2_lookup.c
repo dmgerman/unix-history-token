@@ -94,19 +94,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/ext2fs/ext2_extern.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fs/ext2fs/ext2fs.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<fs/ext2fs/ext2_dinode.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fs/ext2fs/ext2_dir.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fs/ext2fs/ext2_extern.h>
 end_include
 
 begin_ifdef
@@ -4163,7 +4169,7 @@ goto|;
 block|}
 name|rootino
 operator|=
-name|ROOTINO
+name|EXT2_ROOTINO
 expr_stmt|;
 name|error
 operator|=

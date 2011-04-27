@@ -30,13 +30,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|ROOTINO
-value|((ino_t)2)
-end_define
-
-begin_define
-define|#
-directive|define
 name|NDADDR
 value|12
 end_define

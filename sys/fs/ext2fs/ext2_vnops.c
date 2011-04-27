@@ -154,19 +154,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/ext2fs/inode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fs/ext2fs/ext2_mount.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fs/ext2fs/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fs/ext2fs/inode.h>
 end_include
 
 begin_include
@@ -184,7 +178,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fs/ext2fs/ext2_dinode.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fs/ext2fs/ext2_dir.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fs/ext2fs/ext2_mount.h>
 end_include
 
 begin_function_decl
@@ -6703,7 +6709,7 @@ name|ip
 operator|->
 name|i_number
 operator|==
-name|ROOTINO
+name|EXT2_ROOTINO
 condition|)
 name|vp
 operator|->

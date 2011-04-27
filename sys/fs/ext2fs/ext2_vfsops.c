@@ -4990,7 +4990,7 @@ name|ufhp
 operator|->
 name|ufid_ino
 operator|<
-name|ROOTINO
+name|EXT2_ROOTINO
 operator|||
 name|ufhp
 operator|->
@@ -5435,10 +5435,7 @@ name|VFS_VGET
 argument_list|(
 name|mp
 argument_list|,
-operator|(
-name|ino_t
-operator|)
-name|ROOTINO
+name|EXT2_ROOTINO
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
