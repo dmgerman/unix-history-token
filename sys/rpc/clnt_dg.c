@@ -4994,8 +4994,15 @@ argument_list|(
 name|xid
 argument_list|)
 condition|)
+block|{
 comment|/* 			 * Should never happen. 			 */
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 name|m_copydata
 argument_list|(
 name|m
