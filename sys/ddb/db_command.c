@@ -3062,14 +3062,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-else|else
-block|{
-comment|/* 		 * XXX: Right now we only support WD_ACTIVE, in the future we 		 * may be possibly needing a more convoluted function for 		 * dealing with different cases. 		 */
-name|tout
-operator||=
-name|WD_ACTIVE
-expr_stmt|;
-block|}
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|watchdog_list
