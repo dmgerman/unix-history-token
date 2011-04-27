@@ -369,7 +369,7 @@ name|platform_reset
 argument_list|,
 name|e500_reset
 argument_list|)
-block|;
+block|,
 block|{
 literal|0
 block|,
