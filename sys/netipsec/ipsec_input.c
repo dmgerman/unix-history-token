@@ -389,12 +389,17 @@ name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
+name|INET
+ifdef|#
+directive|ifdef
 name|IPSEC_NAT_T
 name|struct
 name|m_tag
 modifier|*
 name|tag
 decl_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|IPSEC_ISTAT

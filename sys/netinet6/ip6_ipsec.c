@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_inet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_inet6.h"
 end_include
 
@@ -87,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/syslog.h>
 end_include
 
 begin_include
@@ -1132,12 +1144,28 @@ operator|&
 name|CSUM_DELAY_DATA
 condition|)
 block|{
+name|ipseclog
+argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
+literal|"%s: we do not support IPv4 over IPv6"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|in_delayed_cksum
 argument_list|(
 operator|*
 name|m
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 operator|(
 operator|*
 name|m
