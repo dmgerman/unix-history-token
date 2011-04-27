@@ -1076,6 +1076,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|g_compare_names
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|namea
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|nameb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|g_destroy_consumer
 parameter_list|(
