@@ -3610,7 +3610,7 @@ operator|!=
 name|HAST_ROLE_SECONDARY
 condition|)
 block|{
-name|pjdlog_error
+name|pjdlog_warning
 argument_list|(
 literal|"We act as %s for the resource and not as %s as requested by %s."
 argument_list|,
@@ -3650,6 +3650,26 @@ name|HAST_ROLE_SECONDARY
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|res
+operator|->
+name|hr_role
+operator|==
+name|HAST_ROLE_PRIMARY
+condition|)
+block|{
+comment|/* 			 * If we act as primary request the other side to wait 			 * for us a bit, as we might be finishing cleanups. 			 */
+name|nv_add_uint8
+argument_list|(
+name|nverr
+argument_list|,
+literal|1
+argument_list|,
+literal|"wait"
+argument_list|)
+expr_stmt|;
+block|}
 goto|goto
 name|fail
 goto|;

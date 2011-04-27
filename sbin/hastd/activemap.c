@@ -2036,7 +2036,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Function merges the given bitmap with existng one.  */
+comment|/*  * Function merges the given bitmap with existing one.  */
 end_comment
 
 begin_function
