@@ -2689,7 +2689,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine whether a given block has been reallocated to a new location.  * Returns a mask of overlapping bits if any frags have been reused or  * zero if the block has not been re-used and the contents can be trusted.  *   * This is used to ensure that an orphaned pointer due to truncate is safe  * to be freed.  The mask value can be used to free partial blocks.  */
+comment|/*  * Determine whether a given block has been reallocated to a new location.  * Returns a mask of overlapping bits if any frags have been reused or  * zero if the block has not been re-used and the contents can be trusted.  *  * This is used to ensure that an orphaned pointer due to truncate is safe  * to be freed.  The mask value can be used to free partial blocks.  */
 end_comment
 
 begin_function
@@ -2865,7 +2865,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine whether it is safe to follow an indirect.  It is not safe  * if any part of the indirect has been reallocated or the last journal  * entry was an allocation.  Just allocated indirects may not have valid  * pointers yet and all of their children will have their own records.  * It is also not safe to follow an indirect if the cg bitmap has been  * cleared as a new allocation may write to the block prior to the journal  * being written.  *   * Returns 1 if it's safe to follow the indirect and 0 otherwise.  */
+comment|/*  * Determine whether it is safe to follow an indirect.  It is not safe  * if any part of the indirect has been reallocated or the last journal  * entry was an allocation.  Just allocated indirects may not have valid  * pointers yet and all of their children will have their own records.  * It is also not safe to follow an indirect if the cg bitmap has been  * cleared as a new allocation may write to the block prior to the journal  * being written.  *  * Returns 1 if it's safe to follow the indirect and 0 otherwise.  */
 end_comment
 
 begin_function
