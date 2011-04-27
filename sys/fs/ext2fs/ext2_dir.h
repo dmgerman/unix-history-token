@@ -30,15 +30,15 @@ begin_struct
 struct|struct
 name|ext2fs_direct
 block|{
-name|u_int32_t
+name|uint32_t
 name|e2d_ino
 decl_stmt|;
 comment|/* inode number of entry */
-name|u_int16_t
+name|uint16_t
 name|e2d_reclen
 decl_stmt|;
 comment|/* length of this record */
-name|u_int16_t
+name|uint16_t
 name|e2d_namlen
 decl_stmt|;
 comment|/* length of string in d_name */
@@ -61,19 +61,19 @@ begin_struct
 struct|struct
 name|ext2fs_direct_2
 block|{
-name|u_int32_t
+name|uint32_t
 name|e2d_ino
 decl_stmt|;
 comment|/* inode number of entry */
-name|u_int16_t
+name|uint16_t
 name|e2d_reclen
 decl_stmt|;
 comment|/* length of this record */
-name|u_int8_t
+name|uint8_t
 name|e2d_namlen
 decl_stmt|;
 comment|/* length of string in d_name */
-name|u_int8_t
+name|uint8_t
 name|e2d_type
 decl_stmt|;
 comment|/* file type */

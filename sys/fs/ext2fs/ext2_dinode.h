@@ -189,98 +189,98 @@ begin_struct
 struct|struct
 name|ext2fs_dinode
 block|{
-name|u_int16_t
+name|uint16_t
 name|e2di_mode
 decl_stmt|;
 comment|/*   0: IFMT, permissions; see below. */
-name|u_int16_t
+name|uint16_t
 name|e2di_uid
 decl_stmt|;
 comment|/*   2: Owner UID */
-name|u_int32_t
+name|uint32_t
 name|e2di_size
 decl_stmt|;
 comment|/*	 4: Size (in bytes) */
-name|u_int32_t
+name|uint32_t
 name|e2di_atime
 decl_stmt|;
 comment|/*	 8: Access time */
-name|u_int32_t
+name|uint32_t
 name|e2di_ctime
 decl_stmt|;
 comment|/*	12: Create time */
-name|u_int32_t
+name|uint32_t
 name|e2di_mtime
 decl_stmt|;
 comment|/*	16: Modification time */
-name|u_int32_t
+name|uint32_t
 name|e2di_dtime
 decl_stmt|;
 comment|/*	20: Deletion time */
-name|u_int16_t
+name|uint16_t
 name|e2di_gid
 decl_stmt|;
 comment|/*  24: Owner GID */
-name|u_int16_t
+name|uint16_t
 name|e2di_nlink
 decl_stmt|;
 comment|/*  26: File link count */
-name|u_int32_t
+name|uint32_t
 name|e2di_nblock
 decl_stmt|;
 comment|/*  28: Blocks count */
-name|u_int32_t
+name|uint32_t
 name|e2di_flags
 decl_stmt|;
 comment|/*  32: Status flags (chflags) */
-name|u_int32_t
+name|uint32_t
 name|e2di_linux_reserved1
 decl_stmt|;
 comment|/* 36 */
-name|u_int32_t
+name|uint32_t
 name|e2di_blocks
 index|[
 name|EXT2_N_BLOCKS
 index|]
 decl_stmt|;
 comment|/* 40: disk blocks */
-name|u_int32_t
+name|uint32_t
 name|e2di_gen
 decl_stmt|;
 comment|/* 100: generation number */
-name|u_int32_t
+name|uint32_t
 name|e2di_facl
 decl_stmt|;
 comment|/* 104: file ACL (not implemented) */
-name|u_int32_t
+name|uint32_t
 name|e2di_dacl
 decl_stmt|;
 comment|/* 108: dir ACL (not implemented) */
-name|u_int32_t
+name|uint32_t
 name|e2di_faddr
 decl_stmt|;
 comment|/* 112: fragment address */
-name|u_int8_t
+name|uint8_t
 name|e2di_nfrag
 decl_stmt|;
 comment|/* 116: fragment number */
-name|u_int8_t
+name|uint8_t
 name|e2di_fsize
 decl_stmt|;
 comment|/* 117: fragment size */
-name|u_int16_t
+name|uint16_t
 name|e2di_linux_reserved2
 decl_stmt|;
 comment|/* 118 */
-name|u_int16_t
+name|uint16_t
 name|e2di_uid_high
 decl_stmt|;
 comment|/* 120: Owner UID top 16 bits */
-name|u_int16_t
+name|uint16_t
 name|e2di_gid_high
 decl_stmt|;
 comment|/* 122: Owner GID top 16 bits */
-name|u_int32_t
+name|uint32_t
 name|e2di_linux_reserved3
 decl_stmt|;
 comment|/* 124 */
