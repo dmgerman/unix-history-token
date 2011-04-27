@@ -696,7 +696,7 @@ name|VFS_SET
 argument_list|(
 name|nfs_vfsops
 argument_list|,
-name|nfs
+name|oldnfs
 argument_list|,
 name|VFCF_NETWORK
 argument_list|)

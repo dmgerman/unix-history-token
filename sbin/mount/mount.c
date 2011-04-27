@@ -637,8 +637,6 @@ literal|"mfs"
 block|,
 literal|"msdosfs"
 block|,
-literal|"newnfs"
-block|,
 literal|"nfs"
 block|,
 literal|"ntfs"
@@ -646,6 +644,8 @@ block|,
 literal|"nwfs"
 block|,
 literal|"nullfs"
+block|,
+literal|"oldnfs"
 block|,
 literal|"portalfs"
 block|,
