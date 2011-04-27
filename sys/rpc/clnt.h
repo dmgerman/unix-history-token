@@ -1429,7 +1429,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	struct socket *so;			-- socket  *	struct sockaddr *svcaddr;		-- servers address  *	rpcprog_t prog;				-- program number  *	rpcvers_t vers;				-- version number  *	size_t sendsz;				-- buffer recv size  *	size_t recvsz;				-- buffer send size  */
+comment|/*  *	struct socket *so;			-- socket  *	struct sockaddr *svcaddr;		-- servers address  *	rpcprog_t prog;				-- program number  *	rpcvers_t vers;				-- version number  *	size_t sendsz;				-- buffer recv size  *	size_t recvsz;				-- buffer send size  *	int intrflag;				-- is it interruptible  */
 end_comment
 
 begin_function_decl
@@ -1459,6 +1459,9 @@ name|sendsz
 parameter_list|,
 name|size_t
 name|recvsz
+parameter_list|,
+name|int
+name|intrflag
 parameter_list|)
 function_decl|;
 end_function_decl

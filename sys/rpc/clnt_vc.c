@@ -627,8 +627,12 @@ parameter_list|,
 comment|/* buffer recv size */
 name|size_t
 name|recvsz
-parameter_list|)
+parameter_list|,
 comment|/* buffer send size */
+name|int
+name|intrflag
+parameter_list|)
+comment|/* interruptible */
 block|{
 name|CLIENT
 modifier|*
@@ -670,6 +674,8 @@ decl_stmt|,
 name|one
 init|=
 literal|1
+decl_stmt|,
+name|sleep_flag
 decl_stmt|;
 name|struct
 name|sockopt
@@ -797,6 +803,24 @@ name|interrupted
 operator|=
 literal|0
 expr_stmt|;
+name|sleep_flag
+operator|=
+name|PSOCK
+expr_stmt|;
+if|if
+condition|(
+name|intrflag
+operator|!=
+literal|0
+condition|)
+name|sleep_flag
+operator||=
+operator|(
+name|PCATCH
+operator||
+name|PBDRY
+operator|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -828,11 +852,7 @@ argument_list|(
 name|so
 argument_list|)
 argument_list|,
-name|PSOCK
-operator||
-name|PCATCH
-operator||
-name|PBDRY
+name|sleep_flag
 argument_list|,
 literal|"connec"
 argument_list|,

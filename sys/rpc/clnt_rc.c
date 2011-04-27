@@ -965,6 +965,10 @@ argument_list|,
 name|rc
 operator|->
 name|rc_recvsz
+argument_list|,
+name|rc
+operator|->
+name|rc_intr
 argument_list|)
 expr_stmt|;
 name|td
