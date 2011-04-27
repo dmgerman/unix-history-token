@@ -710,7 +710,7 @@ end_comment
 begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
-name|nfs
+name|oldnfs
 argument_list|,
 literal|1
 argument_list|)
@@ -720,7 +720,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|nfs
+name|oldnfs
 argument_list|,
 name|krpc
 argument_list|,
@@ -742,7 +742,7 @@ end_ifdef
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|nfs
+name|oldnfs
 argument_list|,
 name|kgssapi
 argument_list|,
@@ -763,7 +763,7 @@ end_endif
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|nfs
+name|oldnfs
 argument_list|,
 name|nfs_common
 argument_list|,
@@ -779,7 +779,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|nfs
+name|oldnfs
 argument_list|,
 name|nfslock
 argument_list|,
