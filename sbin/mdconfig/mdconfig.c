@@ -1731,7 +1731,7 @@ operator|&
 name|MD_AUTOUNIT
 condition|)
 block|{
-comment|/*  			 * Listing all devices. This is why we pass NULL 			 * together with OPT_LIST. 			 */
+comment|/* 			 * Listing all devices. This is why we pass NULL 			 * together with OPT_LIST. 			 */
 name|md_list
 argument_list|(
 name|NULL
