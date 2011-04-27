@@ -1071,7 +1071,7 @@ index|[
 literal|2
 index|]
 argument_list|,
-literal|"continously"
+literal|"continuously"
 argument_list|)
 operator|==
 literal|0
