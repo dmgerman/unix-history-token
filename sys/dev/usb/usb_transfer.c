@@ -194,6 +194,12 @@ directive|include
 file|<dev/usb/usb_bus.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/usb/usb_pf.h>
+end_include
+
 begin_struct
 struct|struct
 name|usb_std_packet_size
@@ -2507,7 +2513,7 @@ operator|-=
 name|REQ_SIZE
 expr_stmt|;
 block|}
-comment|/* setup "frlengths" */
+comment|/* 	 * Setup "frlengths" and shadow "frlengths" for keeping the 	 * initial frame lengths when a USB transfer is complete. This 	 * information is useful when computing isochronous offsets. 	 */
 name|xfer
 operator|->
 name|frlengths
@@ -2520,6 +2526,8 @@ name|parm
 operator|->
 name|xfer_length_ptr
 operator|+=
+literal|2
+operator|*
 name|n_frlengths
 expr_stmt|;
 comment|/* setup "frbuffers" */
@@ -5901,7 +5909,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* compute total transfer length */
+comment|/* compute some variables */
 for|for
 control|(
 name|x
@@ -5918,6 +5926,26 @@ name|x
 operator|++
 control|)
 block|{
+comment|/* make a copy of the frlenghts[] */
+name|xfer
+operator|->
+name|frlengths
+index|[
+name|x
+operator|+
+name|xfer
+operator|->
+name|max_frame_count
+index|]
+operator|=
+name|xfer
+operator|->
+name|frlengths
+index|[
+name|x
+index|]
+expr_stmt|;
+comment|/* compute total transfer length */
 name|xfer
 operator|->
 name|sumlen
@@ -7107,6 +7135,53 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*------------------------------------------------------------------------*  *	usbd_xfer_old_frame_length  *  * This function returns the framelength of the given frame at the  * time the transfer was submitted. This function can be used to  * compute the starting data pointer of the next isochronous frame  * when an isochronous transfer has completed.  *------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+name|usb_frlength_t
+name|usbd_xfer_old_frame_length
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|,
+name|usb_frcount_t
+name|frindex
+parameter_list|)
+block|{
+name|KASSERT
+argument_list|(
+name|frindex
+operator|<
+name|xfer
+operator|->
+name|max_frame_count
+argument_list|,
+operator|(
+literal|"frame index overflow"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|xfer
+operator|->
+name|frlengths
+index|[
+name|frindex
+operator|+
+name|xfer
+operator|->
+name|max_frame_count
+index|]
+operator|)
+return|;
+block|}
+end_function
+
 begin_function
 name|void
 name|usbd_xfer_status
@@ -7895,6 +7970,26 @@ endif|#
 directive|endif
 block|}
 block|}
+if|#
+directive|if
+name|USB_HAVE_PF
+if|if
+condition|(
+name|xfer
+operator|->
+name|usb_state
+operator|!=
+name|USB_ST_SETUP
+condition|)
+name|usbpf_xfertap
+argument_list|(
+name|xfer
+argument_list|,
+name|USBPF_XFERTAP_DONE
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* call processing routine */
 call|(
 name|xfer
@@ -8440,6 +8535,18 @@ argument_list|(
 literal|"start\n"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_PF
+name|usbpf_xfertap
+argument_list|(
+name|xfer
+argument_list|,
+name|USBPF_XFERTAP_SUBMIT
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* start the transfer */
 call|(
 name|ep
@@ -8991,6 +9098,18 @@ argument_list|(
 literal|"start\n"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_PF
+name|usbpf_xfertap
+argument_list|(
+name|xfer
+argument_list|,
+name|USBPF_XFERTAP_SUBMIT
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* start USB transfer */
 call|(
 name|ep
