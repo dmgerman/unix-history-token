@@ -53,11 +53,11 @@ directive|include
 file|"drv.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|GPT
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_XREAD
+end_ifdef
 
 begin_include
 include|#
@@ -236,11 +236,11 @@ begin_comment
 comment|/* GPT */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GPT
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USE_XREAD
+end_ifndef
 
 begin_struct
 specifier|static
@@ -270,10 +270,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* GPT */
-end_comment
 
 begin_function
 name|int
@@ -324,9 +320,9 @@ operator|>>
 literal|24
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|GPT
+ifndef|#
+directive|ifndef
+name|USE_XREAD
 name|packet
 operator|.
 name|len
@@ -411,7 +407,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* !GPT */
+comment|/* USE_XREAD */
 name|v86
 operator|.
 name|ctl
@@ -475,7 +471,7 @@ name|drive
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !GPT */
+comment|/* USE_XREAD */
 name|v86int
 argument_list|()
 expr_stmt|;
