@@ -6221,6 +6221,18 @@ operator|^=
 literal|1
 expr_stmt|;
 comment|/* zero length packet at the end */
+elseif|else
+if|if
+condition|(
+name|xlen
+operator|==
+literal|0
+condition|)
+name|dt
+operator|^=
+literal|1
+expr_stmt|;
+comment|/* zero length transfer */
 name|xfer
 operator|->
 name|endpoint
