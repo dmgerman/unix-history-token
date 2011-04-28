@@ -1021,7 +1021,8 @@ literal|"\034OSXSAVE"
 literal|"\035<b28>"
 literal|"\036<b29>"
 literal|"\037<b30>"
-literal|"\040<b31>"
+literal|"\040HV"
+comment|/* Hypervisor */
 argument_list|)
 expr_stmt|;
 block|}
