@@ -406,6 +406,12 @@ return|return
 literal|"5418"
 return|;
 case|case
+name|AR_XSREV_VERSION_HOWL
+case|:
+return|return
+literal|"9130"
+return|;
+case|case
 name|AR_XSREV_VERSION_SOWL
 case|:
 return|return

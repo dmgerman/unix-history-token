@@ -315,11 +315,45 @@ name|AR_OBS
 value|0x4080
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AH_SUPPORT_AR9130
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|AR_RTC_BASE
+value|0x20000
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|AR_RTC_BASE
+value|0x7000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AH_SUPPORT_AR9130 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|AR_RTC_RC
-value|0x7000
+value|AR_RTC_BASE + 0x00
 end_define
 
 begin_comment
@@ -330,14 +364,14 @@ begin_define
 define|#
 directive|define
 name|AR_RTC_PLL_CONTROL
-value|0x7014
+value|AR_RTC_BASE + 0x14
 end_define
 
 begin_define
 define|#
 directive|define
 name|AR_RTC_RESET
-value|0x7040
+value|AR_RTC_BASE + 0x40
 end_define
 
 begin_comment
@@ -348,7 +382,7 @@ begin_define
 define|#
 directive|define
 name|AR_RTC_STATUS
-value|0x7044
+value|AR_RTC_BASE + 0x44
 end_define
 
 begin_comment
@@ -359,14 +393,14 @@ begin_define
 define|#
 directive|define
 name|AR_RTC_SLEEP_CLK
-value|0x7048
+value|AR_RTC_BASE + 0x48
 end_define
 
 begin_define
 define|#
 directive|define
 name|AR_RTC_FORCE_WAKE
-value|0x704c
+value|AR_RTC_BASE + 0x4c
 end_define
 
 begin_comment
@@ -377,7 +411,7 @@ begin_define
 define|#
 directive|define
 name|AR_RTC_INTR_CAUSE
-value|0x7050
+value|AR_RTC_BASE + 0x50
 end_define
 
 begin_comment
@@ -388,7 +422,7 @@ begin_define
 define|#
 directive|define
 name|AR_RTC_INTR_ENABLE
-value|0x7054
+value|AR_RTC_BASE + 0x54
 end_define
 
 begin_comment
@@ -399,11 +433,51 @@ begin_define
 define|#
 directive|define
 name|AR_RTC_INTR_MASK
-value|0x7058
+value|AR_RTC_BASE + 0x58
 end_define
 
 begin_comment
 comment|/* RTC interrupt mask */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AH_SUPPORT_AR9130
+end_ifdef
+
+begin_comment
+comment|/* RTC_DERIVED_* - only for AR9130 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_RTC_DERIVED_CLK
+value|(AR_RTC_BASE + 0x0038)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_RTC_DERIVED_CLK_PERIOD
+value|0x0000fffe
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_RTC_DERIVED_CLK_PERIOD_S
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AH_SUPPORT_AR9130 */
 end_comment
 
 begin_comment
@@ -2168,6 +2242,35 @@ name|AR_RTC_RC_MAC_COLD
 value|0x00000002
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AH_SUPPORT_AR9130
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|AR_RTC_RC_COLD_RESET
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_RTC_RC_WARM_RESET
+value|0x00000008
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AH_SUPPORT_AR9130 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2260,6 +2363,28 @@ begin_comment
 comment|/* Pwr Mgmt Status */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AH_SUPPORT_AR9130
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|AR_RTC_STATUS_M
+value|0x0000000f
+end_define
+
+begin_comment
+comment|/* RTC Status */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -2269,6 +2394,15 @@ end_define
 
 begin_comment
 comment|/* RTC Status */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AH_SUPPORT_AR9130 */
 end_comment
 
 begin_define
@@ -3903,6 +4037,10 @@ name|AR_XSREV_VERSION_SOWL
 value|0x40
 end_define
 
+begin_comment
+comment|/* Sowl (AR9160) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4044,6 +4182,27 @@ name|_ah
 parameter_list|)
 define|\
 value|((AR_SREV_OWL(_ah)&& AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_OWL_22) || \ 	AH_PRIVATE((_ah))->ah_macVersion>= AR_XSREV_VERSION_HOWL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_HOWL
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(AH_PRIVATE((_ah))->ah_macVersion == AR_XSREV_VERSION_HOWL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_9100
+parameter_list|(
+name|_ah
+parameter_list|)
+value|AR_SREV_HOWL(_ah)
 end_define
 
 begin_define
@@ -4218,16 +4377,6 @@ begin_define
 define|#
 directive|define
 name|AR_SREV_9287_11_OR_LATER
-parameter_list|(
-name|_ah
-parameter_list|)
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR_SREV_9100
 parameter_list|(
 name|_ah
 parameter_list|)

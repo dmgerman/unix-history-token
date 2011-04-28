@@ -201,7 +201,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AR9100_DEVID
+name|AR9130_DEVID
 value|0x000b
 end_define
 
@@ -219,14 +219,14 @@ name|char
 modifier|*
 name|devname
 decl_stmt|;
-comment|/* Atheros / ar9100 */
+comment|/* Atheros / ar9130 */
 name|devname
 operator|=
 name|ath_hal_probe
 argument_list|(
 name|VENDOR_ATHEROS
 argument_list|,
-name|AR9100_DEVID
+name|AR9130_DEVID
 argument_list|)
 expr_stmt|;
 if|if
@@ -720,7 +720,7 @@ name|error
 operator|=
 name|ath_attach
 argument_list|(
-name|AR9100_DEVID
+name|AR9130_DEVID
 argument_list|,
 name|sc
 argument_list|)

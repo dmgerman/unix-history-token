@@ -1648,6 +1648,10 @@ define|\
 value|(((_ee)->ee_base.baseEepHeader.version)& 0xFFF)
 end_define
 
+begin_comment
+comment|/*  * Howl is (hopefully) a special case where the endian-ness of the EEPROM  * matches the native endian-ness; and that supplied EEPROMs don't have  * a magic value to check.  */
+end_comment
+
 begin_function
 name|HAL_STATUS
 name|ath_hal_v14EepromAttach
@@ -1702,6 +1706,16 @@ operator|==
 name|AH_NULL
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Don't check magic if we're supplied with an EEPROM block, 	 * typically this is from Howl but it may also be from later 	 * boards w/ an embedded Merlin. 	 */
+if|if
+condition|(
+name|ah
+operator|->
+name|ah_eepromdata
+operator|==
+name|NULL
+condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -1763,6 +1777,7 @@ expr_stmt|;
 return|return
 name|HAL_EEMAGIC
 return|;
+block|}
 block|}
 name|ee
 operator|=
@@ -1858,8 +1873,15 @@ return|;
 block|}
 block|}
 comment|/* Convert to eeprom native eeprom endian format */
+comment|/* XXX this is likely incorrect but will do for now to get howl/ap83 working. */
 if|if
 condition|(
+name|ah
+operator|->
+name|ah_eepromdata
+operator|==
+name|NULL
+operator|&&
 name|isBigEndian
 argument_list|()
 condition|)

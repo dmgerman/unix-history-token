@@ -211,6 +211,14 @@ decl_stmt|;
 name|uint32_t
 name|bits
 decl_stmt|;
+if|if
+condition|(
+name|AR_SREV_HOWL
+argument_list|(
+name|ah
+argument_list|)
+condition|)
+return|return;
 name|bits
 operator|=
 name|OS_REG_READ

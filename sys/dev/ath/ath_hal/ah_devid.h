@@ -421,6 +421,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR5416_AR9130_DEVID
+value|0x000b
+end_define
+
+begin_comment
+comment|/* AR9130 SoC WiMAC */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AR9160_DEVID_PCI
 value|0x0027
 end_define

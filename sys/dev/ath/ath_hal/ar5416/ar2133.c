@@ -659,6 +659,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|AR_SREV_HOWL
+argument_list|(
+name|ah
+argument_list|)
+operator|||
 name|AR_SREV_SOWL_10_OR_LATER
 argument_list|(
 name|ah
