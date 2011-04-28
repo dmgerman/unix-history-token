@@ -1033,7 +1033,8 @@ name|rdtsc
 argument_list|,
 name|tsc_freq
 argument_list|,
-literal|1
+operator|!
+name|tsc_is_invariant
 argument_list|)
 expr_stmt|;
 if|if
