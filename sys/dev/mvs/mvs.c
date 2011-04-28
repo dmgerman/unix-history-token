@@ -11630,12 +11630,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|ch
-operator|->
-name|recoverycmd
-operator|=
-literal|1
-expr_stmt|;
 comment|/* Find some holden command. */
 for|for
 control|(
@@ -11678,11 +11672,96 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Unable allocate READ LOG command"
+literal|"Unable allocate recovery command\n"
+argument_list|)
+expr_stmt|;
+name|completeall
+label|:
+comment|/* We can't do anything -- complete holden commands. */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|MVS_MAX_SLOTS
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|ch
+operator|->
+name|hold
+index|[
+name|i
+index|]
+operator|==
+name|NULL
+condition|)
+continue|continue;
+name|ch
+operator|->
+name|hold
+index|[
+name|i
+index|]
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator|&=
+operator|~
+name|CAM_STATUS_MASK
+expr_stmt|;
+name|ch
+operator|->
+name|hold
+index|[
+name|i
+index|]
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator||=
+name|CAM_RESRC_UNAVAIL
+expr_stmt|;
+name|xpt_done
+argument_list|(
+name|ch
+operator|->
+name|hold
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|ch
+operator|->
+name|hold
+index|[
+name|i
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+name|ch
+operator|->
+name|numhslots
+operator|--
+expr_stmt|;
+block|}
+name|mvs_reset
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 return|return;
-comment|/* XXX */
 block|}
 name|ccb
 operator|->
@@ -11781,11 +11860,12 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Unable allocate memory for READ LOG command"
+literal|"Unable allocate memory for READ LOG command\n"
 argument_list|)
 expr_stmt|;
-return|return;
-comment|/* XXX */
+goto|goto
+name|completeall
+goto|;
 block|}
 name|ataio
 operator|->
@@ -12006,7 +12086,13 @@ operator|->
 name|dxfer_len
 expr_stmt|;
 block|}
-comment|/* Freeze SIM while doing READ LOG EXT. */
+comment|/* Freeze SIM while doing recovery. */
+name|ch
+operator|->
+name|recoverycmd
+operator|=
+literal|1
+expr_stmt|;
 name|xpt_freeze_simq
 argument_list|(
 name|ch
