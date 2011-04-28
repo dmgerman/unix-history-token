@@ -693,7 +693,7 @@ name|IO_DIRECT
 operator|)
 condition|)
 block|{
-comment|/* 			 * If there are no dependencies, and it's VMIO, 			 * then we don't need the buf, mark it available 			 * for freeing. The VM has the data. 			 */
+comment|/* 			 * If it's VMIO or direct I/O, then we don't 			 * need the buf, mark it available for 			 * freeing. If it's VMIO, the VM has the data. 			 */
 name|bp
 operator|->
 name|b_flags
