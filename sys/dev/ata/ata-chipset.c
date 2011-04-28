@@ -31084,6 +31084,20 @@ literal|"SiI 3132"
 block|}
 block|,
 block|{
+name|ATA_SII3132_2
+block|,
+literal|0x00
+block|,
+name|SIIPRBIO
+block|,
+literal|0
+block|,
+name|ATA_SA300
+block|,
+literal|"SiI 3132"
+block|}
+block|,
+block|{
 name|ATA_SII0680
 block|,
 literal|0x00

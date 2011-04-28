@@ -1967,6 +1967,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_SII3132_2
+value|0x02441095
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_SII0680
 value|0x06801095
 end_define
