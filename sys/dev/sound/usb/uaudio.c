@@ -6376,16 +6376,16 @@ operator|->
 name|sc_mixer_iface_index
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If just one sampling rate is supported, 	 * no need to call "uaudio_set_speed()". 	 * Roland SD-90 freezes by a SAMPLING_FREQ_CONTROL request. 	 */
+comment|/* 	 * Only set the sample rate if the channel reports that it 	 * supports the frequency control. 	 */
 if|if
 condition|(
 name|ch
 operator|->
-name|p_asf1d
+name|p_sed
 operator|->
-name|bSamFreqType
-operator|!=
-literal|1
+name|bmAttributes
+operator|&
+name|UA_SED_FREQ_CONTROL
 condition|)
 block|{
 if|if
