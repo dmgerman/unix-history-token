@@ -387,6 +387,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATA_CAM
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -398,6 +404,11 @@ name|data
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* global vars */
@@ -1076,8 +1087,6 @@ operator||=
 name|CTS_SATA_CAPS_D_PMREQ
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|callout_init
 argument_list|(
 operator|&
@@ -1088,6 +1097,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* reset the controller HW, the channel and device(s) */
 while|while
 condition|(
@@ -1239,6 +1250,27 @@ return|return
 name|error
 return|;
 block|}
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+comment|/* probe and attach devices on this channel unless we are in early boot */
+if|if
+condition|(
+operator|!
+name|ata_delayed_attach
+condition|)
+name|ata_identify
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+else|#
+directive|else
 if|if
 condition|(
 name|ch
@@ -1261,27 +1293,6 @@ argument_list|,
 name|ch
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|ATA_CAM
-comment|/* probe and attach devices on this channel unless we are in early boot */
-if|if
-condition|(
-operator|!
-name|ata_delayed_attach
-condition|)
-name|ata_identify
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-else|#
-directive|else
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1612,6 +1623,9 @@ operator|->
 name|state_mtx
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ATA_CAM
 if|if
 condition|(
 name|ch
@@ -1628,6 +1642,8 @@ operator|->
 name|poll_callout
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|ATA_CAM
@@ -2551,6 +2567,9 @@ condition|)
 return|return
 name|ENXIO
 return|;
+ifdef|#
+directive|ifdef
+name|ATA_CAM
 if|if
 condition|(
 name|ch
@@ -2567,9 +2586,6 @@ operator|->
 name|poll_callout
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ATA_CAM
 name|mtx_lock
 argument_list|(
 operator|&
@@ -2773,24 +2789,6 @@ operator|->
 name|state_mtx
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* reinit the devices, we dont know what mode/state they are in */
-name|error
-operator|=
-name|ata_reinit
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-comment|/* kick off requests on the queue */
-name|ata_start
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|ch
@@ -2813,6 +2811,24 @@ argument_list|,
 name|ch
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* reinit the devices, we dont know what mode/state they are in */
+name|error
+operator|=
+name|ata_reinit
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+comment|/* kick off requests on the queue */
+name|ata_start
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|error
 return|;
@@ -3076,6 +3092,12 @@ directive|endif
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATA_CAM
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -3119,6 +3141,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
