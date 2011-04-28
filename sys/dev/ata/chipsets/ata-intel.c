@@ -1176,11 +1176,11 @@ literal|"ICH9"
 block|}
 block|,
 block|{
-name|ATA_I82801IB_AH2
+name|ATA_I82801IB_S3
 block|,
 literal|0
 block|,
-name|INTEL_AHCI
+name|INTEL_6CH2
 block|,
 literal|0
 block|,
@@ -2727,9 +2727,9 @@ operator|==
 literal|0
 operator|)
 condition|?
-literal|4
+literal|0
 else|:
-literal|5
+literal|1
 expr_stmt|;
 name|smap
 index|[
