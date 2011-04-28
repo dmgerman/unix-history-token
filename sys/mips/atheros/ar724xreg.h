@@ -187,6 +187,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR724X_DDR_REG_FLUSH_PCIE
+value|(AR71XX_DDR_CONFIG + 0x88)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR724X_PCI_CRP_BASE
 value|(AR71XX_APB_BASE + 0x000C0000)
 end_define

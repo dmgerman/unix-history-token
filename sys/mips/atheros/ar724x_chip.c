@@ -473,6 +473,22 @@ end_function
 
 begin_function
 specifier|static
+name|void
+name|ar724x_chip_ddr_flush_ip2
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|ar71xx_ddr_flush
+argument_list|(
+name|AR724X_DDR_REG_FLUSH_PCIE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|uint32_t
 name|ar724x_chip_get_eth_pll
 parameter_list|(
@@ -623,9 +639,9 @@ block|,
 operator|&
 name|ar724x_chip_get_eth_pll
 block|,
-name|NULL
+operator|&
+name|ar724x_chip_ddr_flush_ip2
 block|,
-comment|/* ar71xx_chip_irq_flush_ip2 */
 operator|&
 name|ar724x_chip_init_usb_peripheral
 block|}
