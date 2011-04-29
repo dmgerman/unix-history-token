@@ -3022,8 +3022,6 @@ parameter_list|)
 block|{
 name|u32
 name|ctrl
-decl_stmt|,
-name|icr
 decl_stmt|;
 name|s32
 name|ret_val
@@ -3154,8 +3152,6 @@ argument_list|,
 literal|0xffffffff
 argument_list|)
 expr_stmt|;
-name|icr
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -3208,6 +3204,9 @@ name|reg_data
 decl_stmt|;
 name|s32
 name|ret_val
+decl_stmt|;
+name|u16
+name|kum_reg_data
 decl_stmt|;
 name|u16
 name|i
@@ -3311,6 +3310,30 @@ operator|.
 name|setup_link
 argument_list|(
 name|hw
+argument_list|)
+expr_stmt|;
+comment|/* Disable IBIST slave mode (far-end loopback) */
+name|e1000_read_kmrn_reg_80003es2lan
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_KMRNCTRLSTA_INBAND_PARAM
+argument_list|,
+operator|&
+name|kum_reg_data
+argument_list|)
+expr_stmt|;
+name|kum_reg_data
+operator||=
+name|E1000_KMRNCTRLSTA_IBIST_DISABLE
+expr_stmt|;
+name|e1000_write_kmrn_reg_80003es2lan
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_KMRNCTRLSTA_INBAND_PARAM
+argument_list|,
+name|kum_reg_data
 argument_list|)
 expr_stmt|;
 comment|/* Set the transmit descriptor write-back policy */

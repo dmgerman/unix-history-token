@@ -471,6 +471,32 @@ value|0x10000
 end_define
 
 begin_comment
+comment|/* Keep older OS drivers building... */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|SYSCTL_ADD_UQUAD
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_ADD_UQUAD
+value|SYSCTL_ADD_QUAD
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Defines for printing debug information */
 end_comment
 

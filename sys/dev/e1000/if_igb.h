@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2010, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2011, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -129,21 +129,14 @@ value|(10 * hz)
 end_define
 
 begin_comment
-comment|/*  * This parameter controls when the driver calls the routine to reclaim  * transmit descriptors.  */
+comment|/*  * This parameter controls when the driver calls the routine to reclaim  * transmit descriptors. Cleaning earlier seems a win.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IGB_TX_CLEANUP_THRESHOLD
-value|(adapter->num_tx_desc / 8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGB_TX_OP_THRESHOLD
-value|(adapter->num_tx_desc / 32)
+value|(adapter->num_tx_desc / 2)
 end_define
 
 begin_comment
@@ -282,7 +275,7 @@ begin_define
 define|#
 directive|define
 name|IGB_TX_WTHRESH
-value|(((hw->mac.type == e1000_82576 || \ 					  hw->mac.type == e1000_vfadapt)&& \                                           adapter->msix_mem) ? 1 : 16)
+value|((hw->mac.type != e1000_82575&& \                                           adapter->msix_mem) ? 1 : 16)
 end_define
 
 begin_define
@@ -1011,7 +1004,7 @@ modifier|*
 name|tag
 decl_stmt|;
 name|u32
-name|eims_mask
+name|que_mask
 decl_stmt|;
 name|int
 name|linkvec
@@ -1060,6 +1053,10 @@ decl_stmt|;
 name|u16
 name|num_queues
 decl_stmt|;
+name|u16
+name|vf_ifp
+decl_stmt|;
+comment|/* a VF interface */
 name|eventhandler_tag
 name|vlan_attach
 decl_stmt|;
@@ -1095,6 +1092,9 @@ name|link_duplex
 decl_stmt|;
 name|u32
 name|smartspeed
+decl_stmt|;
+name|u32
+name|dma_coalesce
 decl_stmt|;
 comment|/* Interface queues */
 name|struct
@@ -1308,6 +1308,77 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* ** Find the number of unrefreshed RX descriptors */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|u16
+name|igb_rx_unrefreshed
+parameter_list|(
+name|struct
+name|rx_ring
+modifier|*
+name|rxr
+parameter_list|)
+block|{
+name|struct
+name|adapter
+modifier|*
+name|adapter
+init|=
+name|rxr
+operator|->
+name|adapter
+decl_stmt|;
+if|if
+condition|(
+name|rxr
+operator|->
+name|next_to_check
+operator|>
+name|rxr
+operator|->
+name|next_to_refresh
+condition|)
+return|return
+operator|(
+name|rxr
+operator|->
+name|next_to_check
+operator|-
+name|rxr
+operator|->
+name|next_to_refresh
+operator|-
+literal|1
+operator|)
+return|;
+else|else
+return|return
+operator|(
+operator|(
+name|adapter
+operator|->
+name|num_rx_desc
+operator|+
+name|rxr
+operator|->
+name|next_to_check
+operator|)
+operator|-
+name|rxr
+operator|->
+name|next_to_refresh
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
 begin_define
 define|#
 directive|define
@@ -1469,6 +1540,10 @@ end_define
 begin_if
 if|#
 directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800000
+operator|&&
 name|__FreeBSD_version
 operator|<
 literal|800504

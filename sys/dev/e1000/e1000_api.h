@@ -756,22 +756,6 @@ end_function_decl
 
 begin_function_decl
 name|s32
-name|e1000_read_pba_num
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|,
-name|u32
-modifier|*
-name|part_num
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|s32
 name|e1000_read_pba_string
 parameter_list|(
 name|struct

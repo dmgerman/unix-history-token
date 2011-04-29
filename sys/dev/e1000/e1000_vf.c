@@ -1860,7 +1860,7 @@ literal|"e1000_check_for_link_vf"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We only want to run this if there has been a rst asserted. 	 * in this case that could mean a link change, device reset, 	 * or a virtual function reset 	 */
-comment|/* If we were hit with a reset drop the link */
+comment|/* If we were hit with a reset or timeout drop the link */
 if|if
 condition|(
 operator|!
@@ -1874,6 +1874,11 @@ name|hw
 argument_list|,
 literal|0
 argument_list|)
+operator|||
+operator|!
+name|mbx
+operator|->
+name|timeout
 condition|)
 name|mac
 operator|->

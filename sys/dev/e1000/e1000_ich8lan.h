@@ -1140,6 +1140,35 @@ value|0x6000
 end_define
 
 begin_comment
+comment|/* EMI Registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I82579_EMI_ADDR
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|I82579_EMI_DATA
+value|0x11
+end_define
+
+begin_define
+define|#
+directive|define
+name|I82579_LPI_UPDATE_TIMER
+value|0x4805
+end_define
+
+begin_comment
+comment|/* in 40ns units + 40 ns base value */
+end_comment
+
+begin_comment
 comment|/*  * Additional interrupts need to be handled for ICH family:  *  DSW = The FW changed the status of the DISSW bit in FWSM  *  PHYINT = The LAN connected device generates an interrupt  *  EPRST = Manageability reset event  */
 end_comment
 

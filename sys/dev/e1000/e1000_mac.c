@@ -2647,7 +2647,7 @@ goto|;
 block|}
 name|DEBUGOUT
 argument_list|(
-literal|"NOT RXing /C/, disable AutoNeg and force link.\n"
+literal|"NOT Rx'ing /C/, disable AutoNeg and force link.\n"
 argument_list|)
 expr_stmt|;
 comment|/* Disable auto-negotiation in the TXCW register */
@@ -2736,7 +2736,7 @@ block|{
 comment|/* 		 * If we are forcing link and we are receiving /C/ ordered 		 * sets, re-enable auto-negotiation in the TXCW register 		 * and disable forced link in the Device Control register 		 * in an attempt to auto-negotiate with our link partner. 		 */
 name|DEBUGOUT
 argument_list|(
-literal|"RXing /C/, enable AutoNeg and stop forcing link.\n"
+literal|"Rx'ing /C/, enable AutoNeg and stop forcing link.\n"
 argument_list|)
 expr_stmt|;
 name|E1000_WRITE_REG
@@ -2893,7 +2893,7 @@ goto|;
 block|}
 name|DEBUGOUT
 argument_list|(
-literal|"NOT RXing /C/, disable AutoNeg and force link.\n"
+literal|"NOT Rx'ing /C/, disable AutoNeg and force link.\n"
 argument_list|)
 expr_stmt|;
 comment|/* Disable auto-negotiation in the TXCW register */
@@ -2982,7 +2982,7 @@ block|{
 comment|/* 		 * If we are forcing link and we are receiving /C/ ordered 		 * sets, re-enable auto-negotiation in the TXCW register 		 * and disable forced link in the Device Control register 		 * in an attempt to auto-negotiate with our link partner. 		 */
 name|DEBUGOUT
 argument_list|(
-literal|"RXing /C/, enable AutoNeg and stop forcing link.\n"
+literal|"Rx'ing /C/, enable AutoNeg and stop forcing link.\n"
 argument_list|)
 expr_stmt|;
 name|E1000_WRITE_REG
