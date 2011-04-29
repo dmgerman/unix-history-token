@@ -2580,6 +2580,8 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
+name|int
+parameter_list|,
 name|uint64_t
 parameter_list|)
 function_decl|;
@@ -3012,6 +3014,15 @@ name|newnfs_timer
 parameter_list|(
 name|void
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|nfs_supportsnfsv4acls
+parameter_list|(
+name|vnode_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5984,6 +5995,8 @@ modifier|*
 parameter_list|,
 name|NFSPROC_T
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|,
