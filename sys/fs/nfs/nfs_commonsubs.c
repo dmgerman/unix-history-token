@@ -3490,9 +3490,6 @@ name|aclerrp
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
 if|if
 condition|(
 name|aclp
@@ -3503,8 +3500,6 @@ name|acl_cnt
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Parse out the ace entries and expect them to conform to 	 * what can be supported by R/W/X bits. 	 */
 name|NFSM_DISSECT
 argument_list|(
@@ -3530,9 +3525,6 @@ operator|*
 name|tl
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
 if|if
 condition|(
 name|acecnt
@@ -3543,8 +3535,6 @@ name|aceerr
 operator|=
 literal|1
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|nfsrv_useacl
@@ -3569,9 +3559,6 @@ name|i
 operator|++
 control|)
 block|{
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
 if|if
 condition|(
 name|aclp
@@ -3603,8 +3590,6 @@ name|p
 argument_list|)
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|error
 operator|=
 name|nfsrv_skipace
@@ -3629,9 +3614,6 @@ operator|+=
 name|acesize
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
 if|if
 condition|(
 name|aclp
@@ -3645,8 +3627,6 @@ name|acl_cnt
 operator|=
 name|acecnt
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|aceerr
@@ -5453,9 +5433,6 @@ name|retcmpp
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
 if|if
 condition|(
 name|nfsrv_useacl
@@ -5528,8 +5505,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
 block|{
 name|error
 operator|=
@@ -10284,9 +10259,6 @@ argument_list|(
 name|retbitp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
 name|naclp
 operator|=
 name|acl_alloc
@@ -10294,8 +10266,6 @@ argument_list|(
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|aclp
 operator|=
 name|naclp
@@ -10376,9 +10346,6 @@ name|retbitp
 argument_list|,
 name|NFSATTRBIT_ACLSUPPORT
 argument_list|)
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
 operator|&&
 operator|(
 name|nfsrv_useacl
@@ -10406,8 +10373,6 @@ argument_list|)
 argument_list|)
 operator|)
 operator|)
-endif|#
-directive|endif
 condition|)
 block|{
 name|NFSCLRBIT_ATTRBIT
@@ -10428,9 +10393,6 @@ name|NFSATTRBIT_ACL
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
 if|if
 condition|(
 name|nfsrv_useacl
@@ -10459,8 +10421,6 @@ argument_list|)
 operator|)
 condition|)
 block|{
-endif|#
-directive|endif
 name|NFSCLRBIT_ATTRBIT
 argument_list|(
 name|retbitp
@@ -10468,9 +10428,6 @@ argument_list|,
 name|NFSATTRBIT_ACL
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
 block|}
 elseif|else
 if|if
@@ -10572,8 +10529,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
 block|}
 comment|/* 	 * Put out the attribute bitmap for the ones being filled in 	 * and get the field for the number of attributes returned. 	 */
 name|prefixnum
@@ -10638,9 +10593,6 @@ operator|&
 name|attrbits
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
 if|if
 condition|(
 name|nfsrv_useacl
@@ -10668,8 +10620,6 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
-endif|#
-directive|endif
 block|{
 name|NFSCLRBIT_ATTRBIT
 argument_list|(
@@ -11053,9 +11003,6 @@ name|NFSX_UNSIGNED
 expr_stmt|;
 break|break;
 comment|/* 		 * Recommended Attributes. (Only the supported ones.) 		 */
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
 case|case
 name|NFSATTRBIT_ACL
 case|:
@@ -11102,8 +11049,6 @@ operator|+=
 name|NFSX_UNSIGNED
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|NFSATTRBIT_CANSETTIME
 case|:
@@ -12792,9 +12737,6 @@ block|}
 empty_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
 if|if
 condition|(
 name|naclp
@@ -12806,8 +12748,6 @@ argument_list|(
 name|naclp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 operator|*
 name|retnump
 operator|=

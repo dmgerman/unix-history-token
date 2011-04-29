@@ -556,12 +556,6 @@ name|nfs_advlockasync
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|vop_getacl_t
@@ -575,11 +569,6 @@ name|vop_setacl_t
 name|nfs_setacl
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Global vfs data structures for nfs  */
@@ -742,9 +731,6 @@ name|vop_write
 operator|=
 name|ncl_write
 block|,
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
 operator|.
 name|vop_getacl
 operator|=
@@ -754,10 +740,7 @@ operator|.
 name|vop_setacl
 operator|=
 name|nfs_setacl
-block|,
-endif|#
-directive|endif
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1569,9 +1552,6 @@ operator|(
 name|VWRITE
 operator||
 name|VAPPEND
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
 operator||
 name|VWRITE_NAMED_ATTRS
 operator||
@@ -1584,8 +1564,6 @@ operator||
 name|VWRITE_ACL
 operator||
 name|VWRITE_OWNER
-endif|#
-directive|endif
 operator|)
 operator|)
 operator|!=
@@ -1701,9 +1679,6 @@ name|mode
 operator||=
 name|NFSACCESS_EXECUTE
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
 if|if
 condition|(
 name|ap
@@ -1716,8 +1691,6 @@ name|mode
 operator||=
 name|NFSACCESS_DELETE
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 block|{
@@ -1761,9 +1734,6 @@ name|mode
 operator||=
 name|NFSACCESS_LOOKUP
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
 if|if
 condition|(
 name|ap
@@ -1788,8 +1758,6 @@ name|mode
 operator||=
 name|NFSACCESS_MODIFY
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 comment|/* XXX safety belt, only make blanket request if caching */
 if|if
@@ -16703,12 +16671,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
-end_ifdef
-
 begin_function
 specifier|static
 name|int
@@ -16892,15 +16854,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NFS4_ACL_EXTATTR_NAME */
-end_comment
 
 begin_comment
 comment|/*  * Return POSIX pathconf information applicable to nfs filesystems.  */
