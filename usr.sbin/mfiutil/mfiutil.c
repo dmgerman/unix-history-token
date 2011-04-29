@@ -184,6 +184,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"    show progress             - display status of active operations\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"    fail<drive>              - fail a physical drive\n"
 argument_list|)
 expr_stmt|;
