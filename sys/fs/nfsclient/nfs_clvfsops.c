@@ -4301,6 +4301,9 @@ name|krbnamelen
 decl_stmt|,
 name|srvkrbnamelen
 decl_stmt|;
+name|size_t
+name|hstlen
+decl_stmt|;
 name|has_nfs_args_opt
 operator|=
 literal|0
@@ -5967,7 +5970,7 @@ operator|-
 literal|1
 argument_list|,
 operator|&
-name|len
+name|hstlen
 argument_list|)
 expr_stmt|;
 if|if
@@ -5984,12 +5987,12 @@ argument_list|(
 operator|&
 name|hst
 index|[
-name|len
+name|hstlen
 index|]
 argument_list|,
 name|MNAMELEN
 operator|-
-name|len
+name|hstlen
 argument_list|)
 expr_stmt|;
 name|args
