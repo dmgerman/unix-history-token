@@ -305,7 +305,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:Bc:CdfFm:npry"
+literal|"b:Bc:CdEfFm:npry"
 argument_list|)
 operator|)
 operator|!=
@@ -394,6 +394,13 @@ case|case
 literal|'d'
 case|:
 name|debug
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'E'
+case|:
+name|Eflag
 operator|++
 expr_stmt|;
 break|break;
@@ -3019,7 +3026,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-BFprfny] [-b block] [-c level] [-m mode] "
+literal|"usage: %s [-BEFprfny] [-b block] [-c level] [-m mode] "
 literal|"filesystem ...\n"
 argument_list|,
 name|getprogname

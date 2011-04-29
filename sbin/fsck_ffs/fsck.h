@@ -1049,6 +1049,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|Eflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* zero out empty data blocks */
+end_comment
+
+begin_decl_stmt
+name|int
 name|inoopt
 decl_stmt|;
 end_decl_stmt
@@ -1531,6 +1541,22 @@ parameter_list|,
 name|char
 modifier|*
 name|buf
+parameter_list|,
+name|ufs2_daddr_t
+name|blk
+parameter_list|,
+name|long
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|blerase
+parameter_list|(
+name|int
+name|fd
 parameter_list|,
 name|ufs2_daddr_t
 name|blk
