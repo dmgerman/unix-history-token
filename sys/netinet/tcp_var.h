@@ -772,6 +772,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TF_PREVVALID
+value|0x002000
+end_define
+
+begin_comment
+comment|/* saved values for bad rxmit valid */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TF_MORETOCOME
 value|0x010000
 end_define

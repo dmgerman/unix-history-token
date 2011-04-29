@@ -5265,6 +5265,13 @@ decl_stmt|;
 name|int
 name|tt
 decl_stmt|;
+name|tp
+operator|->
+name|t_flags
+operator|&=
+operator|~
+name|TF_PREVVALID
+expr_stmt|;
 if|if
 condition|(
 name|tcp_timer_active
