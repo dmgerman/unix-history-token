@@ -16245,7 +16245,6 @@ name|sc_lastrs
 operator|=
 name|rs
 expr_stmt|;
-comment|/* Keep statistics on the number of aggregate packets received */
 if|if
 condition|(
 name|rs
@@ -16266,7 +16265,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/*  			 * Only punt packets for ampdu reorder processing for 11n nodes;  			 * net80211 enforces that M_AMPDU is only set for 11n nodes.  			 */
+comment|/*  			 * Only punt packets for ampdu reorder processing for 			 * 11n nodes; net80211 enforces that M_AMPDU is only 			 * set for 11n nodes.  			 */
 if|if
 condition|(
 name|ni
