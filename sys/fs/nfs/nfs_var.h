@@ -2546,6 +2546,10 @@ name|struct
 name|nfsrv_descript
 modifier|*
 parameter_list|,
+name|struct
+name|mount
+modifier|*
+parameter_list|,
 name|vnode_t
 parameter_list|,
 name|NFSACL_T
@@ -2573,6 +2577,10 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|uint64_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5952,6 +5960,10 @@ name|struct
 name|nfsrv_descript
 modifier|*
 parameter_list|,
+name|struct
+name|mount
+modifier|*
+parameter_list|,
 name|vnode_t
 parameter_list|,
 name|struct
@@ -5976,6 +5988,10 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|uint64_t
 parameter_list|)
 function_decl|;
 end_function_decl

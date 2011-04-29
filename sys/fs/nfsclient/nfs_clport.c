@@ -4117,6 +4117,10 @@ argument_list|(
 name|nd
 argument_list|,
 name|vp
+operator|->
+name|v_mount
+argument_list|,
+name|vp
 argument_list|,
 name|NULL
 argument_list|,
@@ -4135,6 +4139,13 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+operator|(
+name|uint64_t
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
