@@ -8,6 +8,10 @@ comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights
 end_comment
 
 begin_comment
+comment|/*  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  */
+end_comment
+
+begin_comment
 comment|/* Portions Copyright 2010 Robert Milkowski */
 end_comment
 
@@ -2628,6 +2632,11 @@ name|drc_newfs
 decl_stmt|;
 name|boolean_t
 name|drc_force
+decl_stmt|;
+name|struct
+name|avl_tree
+modifier|*
+name|drc_guid_to_ds_map
 decl_stmt|;
 block|}
 name|dmu_recv_cookie_t
