@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Thomas E. Dickey                    1997-on                     *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Thomas E. Dickey                        1997-on                 *  *     and: Juergen Pfeifer                         2009                    *  ****************************************************************************/
 end_comment
 
 begin_include
@@ -16,27 +16,29 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: define_key.c,v 1.13 2006/12/30 23:23:31 tom Exp $"
+literal|"$Id: define_key.c,v 1.20 2009/11/28 22:53:17 tom Exp $"
 argument_list|)
 end_macro
 
-begin_macro
+begin_function
 name|NCURSES_EXPORT
+function|(
+name|int
+function|)
+name|NCURSES_SP_NAME
 argument_list|(
-argument|int
+argument|define_key
 argument_list|)
-end_macro
-
-begin_macro
-name|define_key
-argument_list|(
-argument|const char *str
-argument_list|,
-argument|int keycode
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|NCURSES_SP_DCLx
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|,
+name|int
+name|keycode
+parameter_list|)
 block|{
 name|int
 name|code
@@ -48,8 +50,14 @@ argument_list|(
 operator|(
 name|T_CALLED
 argument_list|(
-literal|"define_key(%s,%d)"
+literal|"define_key(%p, %s,%d)"
 argument_list|)
+operator|,
+operator|(
+name|void
+operator|*
+operator|)
+name|SP_PARM
 operator|,
 name|_nc_visbuf
 argument_list|(
@@ -62,9 +70,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SP
+name|SP_PARM
 operator|==
 literal|0
+operator|||
+operator|!
+name|HasTInfoTerminal
+argument_list|(
+name|SP_PARM
+argument_list|)
 condition|)
 block|{
 name|code
@@ -88,6 +102,27 @@ name|unsigned
 operator|)
 name|keycode
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_TERM_DRIVER
+define|#
+directive|define
+name|CallHasKey
+parameter_list|(
+name|keycode
+parameter_list|)
+value|CallDriver_1(SP_PARM, kyExist, keycode)
+else|#
+directive|else
+define|#
+directive|define
+name|CallHasKey
+parameter_list|(
+name|keycode
+parameter_list|)
+value|NCURSES_SP_NAME(has_key)(NCURSES_SP_ARGx keycode)
+endif|#
+directive|endif
 if|if
 condition|(
 name|str
@@ -95,18 +130,22 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|define_key
+name|NCURSES_SP_NAME
 argument_list|(
-name|str
-argument_list|,
-literal|0
+argument|define_key
 argument_list|)
+operator|(
+name|NCURSES_SP_ARGx
+name|str
+operator|,
+literal|0
+operator|)
 expr_stmt|;
 block|}
 elseif|else
 if|if
 condition|(
-name|has_key
+name|CallHasKey
 argument_list|(
 name|keycode
 argument_list|)
@@ -118,7 +157,7 @@ name|_nc_remove_key
 argument_list|(
 operator|&
 operator|(
-name|SP
+name|SP_PARM
 operator|->
 name|_keytry
 operator|)
@@ -140,10 +179,14 @@ condition|)
 block|{
 if|if
 condition|(
-name|key_defined
+name|NCURSES_SP_NAME
 argument_list|(
-name|str
+argument|key_defined
 argument_list|)
+operator|(
+name|NCURSES_SP_ARGx
+name|str
+operator|)
 operator|==
 literal|0
 condition|)
@@ -154,7 +197,7 @@ name|_nc_add_to_try
 argument_list|(
 operator|&
 operator|(
-name|SP
+name|SP_PARM
 operator|->
 name|_keytry
 operator|)
@@ -197,7 +240,7 @@ name|_nc_remove_string
 argument_list|(
 operator|&
 operator|(
-name|SP
+name|SP_PARM
 operator|->
 name|_keytry
 operator|)
@@ -216,7 +259,52 @@ name|code
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_if
+if|#
+directive|if
+name|NCURSES_SP_FUNCS
+end_if
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|define_key
+argument_list|(
+argument|const char *str
+argument_list|,
+argument|int keycode
+argument_list|)
+end_macro
+
+begin_block
+block|{
+return|return
+name|NCURSES_SP_NAME
+argument_list|(
+name|define_key
+argument_list|)
+argument_list|(
+name|CURRENT_SCREEN
+argument_list|,
+name|str
+argument_list|,
+name|keycode
+argument_list|)
+return|;
+block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

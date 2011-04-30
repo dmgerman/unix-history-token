@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: infocmp.c,v 1.103 2008/08/16 22:04:56 tom Exp $"
+literal|"$Id: infocmp.c,v 1.105 2010/05/01 22:04:08 tom Exp $"
 argument_list|)
 end_macro
 
@@ -4674,15 +4674,6 @@ operator|->
 name|next
 control|)
 block|{
-name|rp
-operator|=
-name|qp
-operator|->
-name|crosslinks
-index|[
-literal|0
-index|]
-expr_stmt|;
 if|if
 condition|(
 name|qp
@@ -6568,6 +6559,42 @@ begin_comment
 comment|/***************************************************************************  *  * Main sequence  *  ***************************************************************************/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|NO_LEAKS
+end_if
+
+begin_define
+define|#
+directive|define
+name|MAIN_LEAKS
+parameter_list|()
+define|\
+value|free(myargv); \     free(tfile); \     free(tname)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MAIN_LEAKS
+parameter_list|()
+end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|int
 name|main
@@ -7450,6 +7477,9 @@ argument_list|,
 name|_nc_progname
 argument_list|)
 expr_stmt|;
+name|MAIN_LEAKS
+argument_list|()
+expr_stmt|;
 name|ExitProgram
 argument_list|(
 name|EXIT_FAILURE
@@ -7504,11 +7534,6 @@ operator|.
 name|tterm
 argument_list|)
 expr_stmt|;
-name|directory
-operator|=
-name|TERMINFO
-expr_stmt|;
-comment|/* for error message */
 block|}
 if|if
 condition|(
@@ -7533,6 +7558,9 @@ index|[
 name|termcount
 index|]
 argument_list|)
+expr_stmt|;
+name|MAIN_LEAKS
+argument_list|()
 expr_stmt|;
 name|ExitProgram
 argument_list|(
@@ -8164,26 +8192,9 @@ operator|+
 name|optind
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NO_LEAKS
-name|free
-argument_list|(
-name|myargv
-argument_list|)
+name|MAIN_LEAKS
+argument_list|()
 expr_stmt|;
-name|free
-argument_list|(
-name|tfile
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|tname
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ExitProgram
 argument_list|(
 name|EXIT_SUCCESS

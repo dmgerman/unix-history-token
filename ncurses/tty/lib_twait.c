@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -137,6 +137,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__MINGW32__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_undef
 undef|#
 directive|undef
@@ -146,7 +163,7 @@ end_undef
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_twait.c,v 1.59 2008/08/30 20:08:19 tom Exp $"
+literal|"$Id: lib_twait.c,v 1.61 2010/12/25 23:43:58 tom Exp $"
 argument_list|)
 end_macro
 
@@ -426,8 +443,74 @@ begin_comment
 comment|/* NCURSES_WGETCH_EVENTS */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|(
+name|USE_FUNC_POLL
+operator|||
+name|HAVE_SELECT
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MAYBE_UNUSED
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MAYBE_UNUSED
+value|GCC_UNUSED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|(
+name|USE_FUNC_POLL
+operator|||
+name|HAVE_SELECT
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MAYBE_UNUSED
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MAYBE_UNUSED
+value|GCC_UNUSED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Wait a specified number of milliseconds, returning nonzero if the timer  * didn't expire before there is activity on the specified file descriptors.  * The file-descriptors are specified by the mode:  *	0 - none (absolute time)  *	1 - ncurses' normal input-descriptor  *	2 - mouse descriptor, if any  *	3 - either input or mouse.  *  * Experimental:  if NCURSES_WGETCH_EVENTS is defined, (mode& 4) determines  * whether to pay attention to evl argument.  If set, the smallest of  * millisecond and of timeout of evl is taken.  *  * We return a mask that corresponds to the mode (e.g., 2 for mouse activity).  *  * If the milliseconds given are -1, the wait blocks until activity on the  * descriptors.  */
+comment|/*  * Wait a specified number of milliseconds, returning nonzero if the timer  * didn't expire before there is activity on the specified file descriptors.  * The file-descriptors are specified by the mode:  *	TW_NONE    0 - none (absolute time)  *	TW_INPUT   1 - ncurses' normal input-descriptor  *	TW_MOUSE   2 - mouse descriptor, if any  *	TW_ANY     3 - either input or mouse.  *      TW_EVENT   4 -  * Experimental:  if NCURSES_WGETCH_EVENTS is defined, (mode& 4) determines  * whether to pay attention to evl argument.  If set, the smallest of  * millisecond and of timeout of evl is taken.  *  * We return a mask that corresponds to the mode (e.g., 2 for mouse activity).  *  * If the milliseconds given are -1, the wait blocks until activity on the  * descriptors.  */
 end_comment
 
 begin_macro
@@ -440,9 +523,9 @@ end_macro
 begin_macro
 name|_nc_timed_wait
 argument_list|(
-argument|SCREEN *sp
+argument|SCREEN *sp MAYBE_UNUSED
 argument_list|,
-argument|int mode
+argument|int mode MAYBE_UNUSED
 argument_list|,
 argument|int milliseconds
 argument_list|,
@@ -453,19 +536,28 @@ end_macro
 begin_block
 block|{
 name|int
-name|fd
-decl_stmt|;
-name|int
 name|count
 decl_stmt|;
 name|int
 name|result
 init|=
-literal|0
+name|TW_NONE
 decl_stmt|;
 name|TimeType
 name|t0
 decl_stmt|;
+if|#
+directive|if
+operator|(
+name|USE_FUNC_POLL
+operator|||
+name|HAVE_SELECT
+operator|)
+name|int
+name|fd
+decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|NCURSES_WGETCH_EVENTS
@@ -539,7 +631,7 @@ if|if
 condition|(
 name|mode
 operator|&
-literal|4
+name|TW_EVENT
 condition|)
 block|{
 name|int
@@ -610,7 +702,7 @@ condition|(
 operator|(
 name|mode
 operator|&
-literal|4
+name|TW_EVENT
 operator|)
 operator|&&
 name|evl
@@ -646,7 +738,7 @@ condition|(
 operator|(
 name|mode
 operator|&
-literal|4
+name|TW_EVENT
 operator|)
 operator|&&
 name|evl
@@ -671,7 +763,7 @@ if|if
 condition|(
 name|mode
 operator|&
-literal|1
+name|TW_INPUT
 condition|)
 block|{
 name|fds
@@ -703,7 +795,7 @@ condition|(
 operator|(
 name|mode
 operator|&
-literal|2
+name|TW_MOUSE
 operator|)
 operator|&&
 operator|(
@@ -747,7 +839,7 @@ condition|(
 operator|(
 name|mode
 operator|&
-literal|4
+name|TW_EVENT
 operator|)
 operator|&&
 name|evl
@@ -855,7 +947,7 @@ condition|(
 operator|(
 name|mode
 operator|&
-literal|4
+name|TW_EVENT
 operator|)
 operator|&&
 name|evl
@@ -1039,13 +1131,13 @@ argument_list|)
 comment|/*      * BeOS's select() is declared in socket.h, so the configure script does      * not see it.  That's just as well, since that function works only for      * sockets.  This (using snooze and ioctl) was distilled from Be's patch      * for ncurses which uses a separate thread to simulate select().      *      * FIXME: the return values from the ioctl aren't very clear if we get      * interrupted.      *      * FIXME: this assumes mode&1 if milliseconds< 0 (see lib_getch.c).      */
 name|result
 operator|=
-literal|0
+name|TW_NONE
 expr_stmt|;
 if|if
 condition|(
 name|mode
 operator|&
-literal|1
+name|TW_INPUT
 condition|)
 block|{
 name|int
@@ -1209,7 +1301,7 @@ if|if
 condition|(
 name|mode
 operator|&
-literal|1
+name|TW_INPUT
 condition|)
 block|{
 name|FD_SET
@@ -1236,7 +1328,7 @@ condition|(
 operator|(
 name|mode
 operator|&
-literal|2
+name|TW_MOUSE
 operator|)
 operator|&&
 operator|(
@@ -1278,7 +1370,7 @@ condition|(
 operator|(
 name|mode
 operator|&
-literal|4
+name|TW_EVENT
 operator|)
 operator|&&
 name|evl
@@ -1444,7 +1536,7 @@ condition|(
 operator|(
 name|mode
 operator|&
-literal|4
+name|TW_EVENT
 operator|)
 operator|&&
 name|evl
@@ -1594,11 +1686,14 @@ literal|0
 condition|)
 name|milliseconds
 operator|-=
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 name|returntime
 operator|-
 name|starttime
-operator|)
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1827,7 +1922,7 @@ name|__BEOS__
 argument_list|)
 name|result
 operator|=
-literal|1
+name|TW_INPUT
 expr_stmt|;
 comment|/* redundant, but simple */
 elif|#
@@ -1838,7 +1933,7 @@ condition|(
 operator|(
 name|mode
 operator|&
-literal|2
+name|TW_MOUSE
 operator|)
 operator|&&
 operator|(
@@ -1861,14 +1956,14 @@ argument_list|)
 condition|)
 name|result
 operator||=
-literal|2
+name|TW_MOUSE
 expr_stmt|;
 if|if
 condition|(
 operator|(
 name|mode
 operator|&
-literal|1
+name|TW_INPUT
 operator|)
 operator|&&
 name|FD_ISSET
@@ -1883,7 +1978,7 @@ argument_list|)
 condition|)
 name|result
 operator||=
-literal|1
+name|TW_INPUT
 expr_stmt|;
 endif|#
 directive|endif
@@ -1902,7 +1997,7 @@ condition|(
 operator|(
 name|mode
 operator|&
-literal|4
+name|TW_EVENT
 operator|)
 operator|&&
 name|evl
@@ -1913,7 +2008,7 @@ name|result_flags
 condition|)
 name|result
 operator||=
-literal|4
+name|TW_EVENT
 expr_stmt|;
 endif|#
 directive|endif

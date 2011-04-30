@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  *     and: Juergen Pfeifer                                                 *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_data.c,v 1.52 2008/08/23 22:16:15 tom Exp $"
+literal|"$Id: lib_data.c,v 1.61 2010/05/15 22:06:56 tom Exp $"
 argument_list|)
 end_macro
 
@@ -49,11 +49,12 @@ name|void
 parameter_list|)
 block|{
 return|return
-name|SP
+name|CURRENT_SCREEN
 condition|?
-name|SP
-operator|->
-name|_stdscr
+name|StdScreen
+argument_list|(
+name|CURRENT_SCREEN
+argument_list|)
 else|:
 literal|0
 return|;
@@ -75,11 +76,12 @@ name|void
 parameter_list|)
 block|{
 return|return
-name|SP
+name|CURRENT_SCREEN
 condition|?
-name|SP
-operator|->
-name|_curscr
+name|CurScreen
+argument_list|(
+name|CURRENT_SCREEN
+argument_list|)
 else|:
 literal|0
 return|;
@@ -101,11 +103,12 @@ name|void
 parameter_list|)
 block|{
 return|return
-name|SP
+name|CURRENT_SCREEN
 condition|?
-name|SP
-operator|->
-name|_newscr
+name|NewScreen
+argument_list|(
+name|CURRENT_SCREEN
+argument_list|)
 else|:
 literal|0
 return|;
@@ -239,12 +242,8 @@ operator|(
 operator|(
 name|my_screen
 operator|=
-name|typeCalloc
-argument_list|(
-name|SCREEN
-argument_list|,
-literal|1
-argument_list|)
+name|_nc_alloc_screen_sp
+argument_list|()
 operator|)
 operator|!=
 literal|0
@@ -397,9 +396,14 @@ comment|/* tgetent_index */
 literal|0
 block|,
 comment|/* tgetent_sequence */
+ifndef|#
+directive|ifndef
+name|USE_SP_WINDOWLIST
 literal|0
 block|,
 comment|/* _nc_windowlist */
+endif|#
+directive|endif
 if|#
 directive|if
 name|USE_HOME_TERMINFO
@@ -418,6 +422,14 @@ comment|/* safeprint_cols */
 literal|0
 block|,
 comment|/* safeprint_rows */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|USE_TERM_DRIVER
+literal|0
+block|,
+comment|/* term_driver */
 endif|#
 directive|endif
 ifdef|#
@@ -476,6 +488,20 @@ operator|-
 literal|1
 block|,
 comment|/* traceatr_color_last */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|USE_PTHREADS
+argument_list|)
+operator|&&
+name|USE_REENTRANT
+literal|0
+block|,
+comment|/* nested_tracef */
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* TRACE */
@@ -497,6 +523,14 @@ comment|/* nested_tracef */
 literal|0
 block|,
 comment|/* use_pthreads */
+endif|#
+directive|endif
+if|#
+directive|if
+name|USE_PTHREADS_EINTR
+literal|0
+block|,
+comment|/* read_thread */
 endif|#
 directive|endif
 block|}
@@ -558,12 +592,17 @@ comment|/* filter_mode */
 name|A_NORMAL
 block|,
 comment|/* previous_attr */
+ifndef|#
+directive|ifndef
+name|USE_SP_RIPOFF
 name|RIPOFF_0s
 block|,
 comment|/* ripoff */
 name|NULL
 block|,
 comment|/* rsp */
+endif|#
+directive|endif
 block|{
 comment|/* tparm_state */
 ifdef|#
@@ -617,6 +656,9 @@ block|,
 comment|/* flag to set if padding disabled  */
 endif|#
 directive|endif
+literal|0
+block|,
+comment|/* _outch */
 if|#
 directive|if
 name|BROKEN_LINKER
@@ -631,6 +673,12 @@ comment|/* LINES */
 literal|0
 block|,
 comment|/* COLS */
+literal|8
+block|,
+comment|/* TABSIZE */
+literal|1000
+block|,
+comment|/* ESCDELAY */
 literal|0
 block|,
 comment|/* cur_term */
@@ -654,6 +702,57 @@ end_expr_stmt
 begin_comment
 comment|/* *INDENT-ON* */
 end_comment
+
+begin_comment
+comment|/*  * wgetch() and other functions with a WINDOW* parameter may use a SCREEN*  * internally, and it is useful to allow those to be invoked without switching  * SCREEN's, e.g., for multi-threaded applications.  */
+end_comment
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|SCREEN *
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_screen_of
+argument_list|(
+argument|WINDOW *win
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|SCREEN
+modifier|*
+name|sp
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|win
+operator|!=
+literal|0
+condition|)
+block|{
+name|sp
+operator|=
+name|WINDOW_EXT
+argument_list|(
+name|win
+argument_list|,
+name|screen
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|sp
+operator|)
+return|;
+block|}
+end_block
 
 begin_comment
 comment|/******************************************************************************/
@@ -953,6 +1052,26 @@ argument_list|)
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USE_PTHREADS */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_PTHREADS
+argument_list|)
+operator|||
+name|USE_PTHREADS_EINTR
+end_if
 
 begin_if
 if|#

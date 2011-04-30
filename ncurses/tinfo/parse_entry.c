@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -35,16 +35,10 @@ directive|include
 file|<tic.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<term_entry.h>
-end_include
-
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: parse_entry.c,v 1.69 2008/08/16 21:52:03 tom Exp $"
+literal|"$Id: parse_entry.c,v 1.75 2010/05/01 19:35:09 tom Exp $"
 argument_list|)
 end_macro
 
@@ -236,6 +230,10 @@ name|first
 expr_stmt|;
 name|offset
 operator|=
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|tp
 operator|->
 name|ext_Booleans
@@ -243,6 +241,7 @@ operator|+
 name|tp
 operator|->
 name|ext_Numbers
+argument_list|)
 expr_stmt|;
 name|tindex
 operator|=
@@ -256,6 +255,10 @@ name|STRING
 case|:
 name|first
 operator|=
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|tp
 operator|->
 name|ext_Booleans
@@ -263,6 +266,7 @@ operator|+
 name|tp
 operator|->
 name|ext_Numbers
+argument_list|)
 expr_stmt|;
 name|last
 operator|=
@@ -274,6 +278,10 @@ name|first
 expr_stmt|;
 name|offset
 operator|=
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|tp
 operator|->
 name|ext_Booleans
@@ -285,6 +293,7 @@ operator|+
 name|tp
 operator|->
 name|ext_Strings
+argument_list|)
 expr_stmt|;
 name|tindex
 operator|=
@@ -500,6 +509,14 @@ block|}
 break|break;
 block|}
 block|}
+define|#
+directive|define
+name|for_each_value
+parameter_list|(
+name|max
+parameter_list|)
+define|\
+value|for (last = (unsigned) (max - 1); last> tindex; last--)
 if|if
 condition|(
 operator|!
@@ -517,14 +534,12 @@ case|:
 name|tp
 operator|->
 name|ext_Booleans
-operator|+=
-literal|1
+operator|++
 expr_stmt|;
 name|tp
 operator|->
 name|num_Booleans
-operator|+=
-literal|1
+operator|++
 expr_stmt|;
 name|tp
 operator|->
@@ -543,23 +558,10 @@ operator|->
 name|Booleans
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|last
-operator|=
-name|tp
-operator|->
-name|num_Booleans
-operator|-
-literal|1
-init|;
-name|last
-operator|>
-name|tindex
-condition|;
-name|last
-operator|--
-control|)
+name|for_each_value
+argument_list|(
+argument|tp->num_Booleans
+argument_list|)
 name|tp
 operator|->
 name|Booleans
@@ -583,14 +585,12 @@ case|:
 name|tp
 operator|->
 name|ext_Numbers
-operator|+=
-literal|1
+operator|++
 expr_stmt|;
 name|tp
 operator|->
 name|num_Numbers
-operator|+=
-literal|1
+operator|++
 expr_stmt|;
 name|tp
 operator|->
@@ -609,23 +609,10 @@ operator|->
 name|Numbers
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|last
-operator|=
-name|tp
-operator|->
-name|num_Numbers
-operator|-
-literal|1
-init|;
-name|last
-operator|>
-name|tindex
-condition|;
-name|last
-operator|--
-control|)
+name|for_each_value
+argument_list|(
+argument|tp->num_Numbers
+argument_list|)
 name|tp
 operator|->
 name|Numbers
@@ -649,14 +636,12 @@ case|:
 name|tp
 operator|->
 name|ext_Strings
-operator|+=
-literal|1
+operator|++
 expr_stmt|;
 name|tp
 operator|->
 name|num_Strings
-operator|+=
-literal|1
+operator|++
 expr_stmt|;
 name|tp
 operator|->
@@ -676,23 +661,10 @@ operator|->
 name|Strings
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|last
-operator|=
-name|tp
-operator|->
-name|num_Strings
-operator|-
-literal|1
-init|;
-name|last
-operator|>
-name|tindex
-condition|;
-name|last
-operator|--
-control|)
+name|for_each_value
+argument_list|(
+argument|tp->num_Strings
+argument_list|)
 name|tp
 operator|->
 name|Strings
@@ -791,6 +763,9 @@ name|temp
 operator|.
 name|nte_index
 operator|=
+operator|(
+name|short
+operator|)
 name|tindex
 expr_stmt|;
 name|temp
@@ -1631,12 +1606,9 @@ literal|"ma"
 argument_list|,
 name|NUMBER
 argument_list|,
-name|_nc_get_table
-argument_list|(
 name|_nc_syntax
 operator|!=
 literal|0
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|assert
@@ -1674,12 +1646,9 @@ literal|"MT"
 argument_list|,
 name|STRING
 argument_list|,
-name|_nc_get_table
-argument_list|(
 name|_nc_syntax
 operator|!=
 literal|0
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|assert
@@ -1877,6 +1846,9 @@ operator|->
 name|nte_index
 index|]
 operator|=
+operator|(
+name|short
+operator|)
 name|_nc_curr_token
 operator|.
 name|tk_valnumber
@@ -2131,10 +2103,16 @@ block|{
 if|if
 condition|(
 operator|!
+name|VALID_STRING
+argument_list|(
 name|s
+argument_list|)
 operator|&&
 operator|!
+name|VALID_STRING
+argument_list|(
 name|t
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -2145,10 +2123,16 @@ elseif|else
 if|if
 condition|(
 operator|!
+name|VALID_STRING
+argument_list|(
 name|s
+argument_list|)
 operator|||
 operator|!
+name|VALID_STRING
+argument_list|(
 name|t
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -2884,7 +2868,7 @@ operator|=
 name|backspace_if_not_bs
 expr_stmt|;
 block|}
-comment|/* vi doesn't use "do", but it does seems to use nl (or '\n') instead */
+comment|/* vi doesn't use "do", but it does seem to use nl (or '\n') instead */
 if|if
 condition|(
 name|WANTED
@@ -3352,8 +3336,6 @@ block|{
 name|char
 modifier|*
 name|base
-init|=
-name|other_non_function_keys
 decl_stmt|;
 name|char
 modifier|*
@@ -3448,9 +3430,14 @@ block|{
 name|size_t
 name|len
 init|=
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|cp
 operator|-
 name|base
+argument_list|)
 decl_stmt|;
 for|for
 control|(
@@ -3734,7 +3721,6 @@ expr_stmt|;
 block|}
 operator|*
 name|dp
-operator|++
 operator|=
 literal|'\0'
 expr_stmt|;

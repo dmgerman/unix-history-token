@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: fty_ipv4.c,v 1.8 2006/12/02 19:33:02 tom Exp $"
+literal|"$Id: fty_ipv4.c,v 1.10 2009/11/07 20:17:58 tom Exp $"
 argument_list|)
 end_macro
 
@@ -243,13 +243,32 @@ name|NULL
 block|,
 name|NULL
 block|,
+name|INIT_FT_FUNC
+argument_list|(
 name|Check_IPV4_Field
+argument_list|)
 block|,
+name|INIT_FT_FUNC
+argument_list|(
 name|Check_IPV4_Character
+argument_list|)
 block|,
+name|INIT_FT_FUNC
+argument_list|(
 name|NULL
+argument_list|)
 block|,
+name|INIT_FT_FUNC
+argument_list|(
 name|NULL
+argument_list|)
+block|,
+if|#
+directive|if
+name|NCURSES_INTEROP_FUNCS
+name|NULL
+endif|#
+directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -268,6 +287,43 @@ operator|&
 name|typeIPV4
 expr_stmt|;
 end_expr_stmt
+
+begin_if
+if|#
+directive|if
+name|NCURSES_INTEROP_FUNCS
+end_if
+
+begin_comment
+comment|/* The next routines are to simplify the use of ncurses from    programming languages with restictions on interop with C level    constructs (e.g. variable access or va_list + ellipsis constructs) */
+end_comment
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|FIELDTYPE *
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_TYPE_IPV4
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
+block|{
+return|return
+name|TYPE_IPV4
+return|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* fty_ipv4.c ends here */

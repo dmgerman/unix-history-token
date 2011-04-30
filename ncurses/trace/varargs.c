@@ -22,7 +22,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: varargs.c,v 1.7 2008/08/03 15:42:49 tom Exp $"
+literal|"$Id: varargs.c,v 1.8 2008/11/16 00:19:59 juergen Exp $"
 argument_list|)
 end_macro
 
@@ -66,7 +66,7 @@ name|VA_INT
 parameter_list|(
 name|type
 parameter_list|)
-value|ival = va_arg(ap, type)
+value|ival = (int) va_arg(ap, type)
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,29 +20,31 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: m_new.c,v 1.18 2006/11/04 19:04:06 tom Exp $"
+literal|"$Id: m_new.c,v 1.21 2010/01/23 21:20:11 tom Exp $"
 argument_list|)
 end_macro
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  MENU *new_menu(ITEM **items) |    |   Description   :  Creates a new menu connected to the item pointer |                    array items and returns a pointer to the new menu. |                    The new menu is initialized with the values from the |                    default menu. | |   Return Values :  NULL on error +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  MENU* _nc_new_menu(SCREEN*, ITEM **items) |    |   Description   :  Creates a new menu connected to the item pointer |                    array items and returns a pointer to the new menu. |                    The new menu is initialized with the values from the |                    default menu. | |   Return Values :  NULL on error +--------------------------------------------------------------------------*/
 end_comment
 
-begin_macro
+begin_function
 name|NCURSES_EXPORT
+function|(
+name|MENU
+modifier|*
+function|)
+name|NCURSES_SP_NAME
 argument_list|(
-argument|MENU *
+argument|new_menu
 argument_list|)
-end_macro
-
-begin_macro
-name|new_menu
-argument_list|(
-argument|ITEM ** items
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|NCURSES_SP_DCLx
+name|ITEM
+modifier|*
+modifier|*
+name|items
+parameter_list|)
 block|{
 name|int
 name|err
@@ -53,18 +55,11 @@ name|MENU
 modifier|*
 name|menu
 init|=
-operator|(
-name|MENU
-operator|*
-operator|)
-name|calloc
+name|typeCalloc
 argument_list|(
-literal|1
+name|MENU
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|MENU
-argument_list|)
+literal|1
 argument_list|)
 decl_stmt|;
 name|T
@@ -72,9 +67,19 @@ argument_list|(
 operator|(
 name|T_CALLED
 argument_list|(
-literal|"new_menu(%p)"
+literal|"new_menu(%p,%p)"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
+name|SP_PARM
+operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|items
 operator|)
 argument_list|)
@@ -111,6 +116,28 @@ name|menu
 operator|->
 name|fcols
 expr_stmt|;
+if|#
+directive|if
+name|NCURSES_SP_FUNCS
+comment|/* This ensures userwin and usersub are always non-null,          so we can derive always the SCREEN that this menu is          running on. */
+name|menu
+operator|->
+name|userwin
+operator|=
+name|SP_PARM
+operator|->
+name|_stdscr
+expr_stmt|;
+name|menu
+operator|->
+name|usersub
+operator|=
+name|SP_PARM
+operator|->
+name|_stdscr
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|items
@@ -148,6 +175,11 @@ operator|)
 literal|0
 expr_stmt|;
 block|}
+else|else
+name|err
+operator|=
+name|E_OK
+expr_stmt|;
 block|}
 block|}
 if|if
@@ -166,7 +198,52 @@ name|menu
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  MENU *new_menu(ITEM **items) |    |   Description   :  Creates a new menu connected to the item pointer |                    array items and returns a pointer to the new menu. |                    The new menu is initialized with the values from the |                    default menu. | |   Return Values :  NULL on error +--------------------------------------------------------------------------*/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|NCURSES_SP_FUNCS
+end_if
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|MENU *
+argument_list|)
+end_macro
+
+begin_macro
+name|new_menu
+argument_list|(
+argument|ITEM ** items
+argument_list|)
+end_macro
+
+begin_block
+block|{
+return|return
+name|NCURSES_SP_NAME
+argument_list|(
+name|new_menu
+argument_list|)
+argument_list|(
+name|CURRENT_SCREEN
+argument_list|,
+name|items
+argument_list|)
+return|;
+block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  int free_menu(MENU *menu)   |    |   Description   :  Disconnects menu from its associated item pointer  |                    array and frees the storage allocated for the menu. | |   Return Values :  E_OK               - success |                    E_BAD_ARGUMENT     - Invalid menu pointer passed |                    E_POSTED           - Menu is already posted +--------------------------------------------------------------------------*/
@@ -196,6 +273,10 @@ argument_list|(
 literal|"free_menu(%p)"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|menu
 operator|)
 argument_list|)

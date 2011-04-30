@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  *     and: Juergen Pfeifer                         2009                    *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,27 +20,28 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_pad.c,v 1.41 2006/10/14 20:47:13 tom Exp $"
+literal|"$Id: lib_pad.c,v 1.46 2010/04/24 23:50:45 tom Exp $"
 argument_list|)
 end_macro
 
-begin_macro
+begin_function
 name|NCURSES_EXPORT
+function|(
+name|WINDOW
+modifier|*
+function|)
+name|NCURSES_SP_NAME
 argument_list|(
-argument|WINDOW *
+argument|newpad
 argument_list|)
-end_macro
-
-begin_macro
-name|newpad
-argument_list|(
-argument|int l
-argument_list|,
-argument|int c
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|NCURSES_SP_DCLx
+name|int
+name|l
+parameter_list|,
+name|int
+name|c
+parameter_list|)
 block|{
 name|WINDOW
 modifier|*
@@ -58,8 +59,14 @@ argument_list|(
 operator|(
 name|T_CALLED
 argument_list|(
-literal|"newpad(%d, %d)"
+literal|"newpad(%p,%d, %d)"
 argument_list|)
+operator|,
+operator|(
+name|void
+operator|*
+operator|)
+name|SP_PARM
 operator|,
 name|l
 operator|,
@@ -82,24 +89,28 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|win
 operator|=
-name|_nc_makenew
+name|NCURSES_SP_NAME
 argument_list|(
-name|l
-argument_list|,
-name|c
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|_ISPAD
+argument|_nc_makenew
 argument_list|)
+operator|(
+name|NCURSES_SP_ARGx
+name|l
+operator|,
+name|c
+operator|,
+literal|0
+operator|,
+literal|0
+operator|,
+name|_ISPAD
 operator|)
+expr_stmt|;
+if|if
+condition|(
+name|win
 operator|==
 name|NULL
 condition|)
@@ -224,7 +235,52 @@ name|win
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_if
+if|#
+directive|if
+name|NCURSES_SP_FUNCS
+end_if
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|WINDOW *
+argument_list|)
+end_macro
+
+begin_macro
+name|newpad
+argument_list|(
+argument|int l
+argument_list|,
+argument|int c
+argument_list|)
+end_macro
+
+begin_block
+block|{
+return|return
+name|NCURSES_SP_NAME
+argument_list|(
+name|newpad
+argument_list|)
+argument_list|(
+name|CURRENT_SCREEN
+argument_list|,
+name|l
+argument_list|,
+name|c
+argument_list|)
+return|;
+block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|NCURSES_EXPORT
@@ -353,6 +409,20 @@ end_macro
 
 begin_block
 block|{
+if|#
+directive|if
+name|NCURSES_SP_FUNCS
+name|SCREEN
+modifier|*
+name|sp
+init|=
+name|_nc_screen_of
+argument_list|(
+name|win
+argument_list|)
+decl_stmt|;
+endif|#
+directive|endif
 name|T
 argument_list|(
 operator|(
@@ -384,8 +454,13 @@ argument_list|)
 operator|!=
 name|ERR
 operator|&&
+name|NCURSES_SP_NAME
+argument_list|(
 name|doupdate
-argument_list|()
+argument_list|)
+argument_list|(
+name|NCURSES_SP_ARG
+argument_list|)
 operator|!=
 name|ERR
 condition|)
@@ -432,21 +507,25 @@ end_macro
 
 begin_block
 block|{
-name|NCURSES_SIZE_T
+name|int
 name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|NCURSES_SIZE_T
+name|int
 name|m
 decl_stmt|,
 name|n
 decl_stmt|;
-name|NCURSES_SIZE_T
+name|int
 name|pmaxrow
 decl_stmt|;
-name|NCURSES_SIZE_T
+name|int
 name|pmaxcol
+decl_stmt|;
+name|SCREEN
+modifier|*
+name|sp
 decl_stmt|;
 if|#
 directive|if
@@ -474,6 +553,10 @@ argument_list|(
 literal|"pnoutrefresh(%p, %d, %d, %d, %d, %d, %d)"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|win
 operator|,
 name|pminrow
@@ -515,6 +598,13 @@ condition|)
 name|returnCode
 argument_list|(
 name|ERR
+argument_list|)
+expr_stmt|;
+name|sp
+operator|=
+name|_nc_screen_of
+argument_list|(
+name|win
 argument_list|)
 expr_stmt|;
 comment|/* negative values are interpreted as zero */
@@ -674,10 +764,16 @@ condition|(
 name|smaxrow
 operator|>=
 name|screen_lines
+argument_list|(
+name|sp
+argument_list|)
 operator|||
 name|smaxcol
 operator|>=
 name|screen_columns
+argument_list|(
+name|sp
+argument_list|)
 operator|||
 name|sminrow
 operator|>
@@ -764,7 +860,10 @@ operator|&&
 name|smaxcol
 operator|>
 operator|(
-name|newscr
+name|NewScreen
+argument_list|(
+name|sp
+argument_list|)
 operator|->
 name|_maxx
 operator|-
@@ -794,7 +893,10 @@ name|pmaxrow
 operator|&&
 name|m
 operator|<=
-name|newscr
+name|NewScreen
+argument_list|(
+name|sp
+argument_list|)
 operator|->
 name|_maxy
 condition|;
@@ -812,7 +914,10 @@ modifier|*
 name|nline
 init|=
 operator|&
-name|newscr
+name|NewScreen
+argument_list|(
+name|sp
+argument_list|)
 operator|->
 name|_line
 index|[
@@ -993,7 +1098,10 @@ modifier|*
 name|pline
 init|=
 operator|&
-name|curscr
+name|CurScreen
+argument_list|(
+name|sp
+argument_list|)
 operator|->
 name|_line
 index|[
@@ -1017,7 +1125,10 @@ block|{
 name|int
 name|k
 init|=
-name|newscr
+name|NewScreen
+argument_list|(
+name|sp
+argument_list|)
 operator|->
 name|_maxx
 operator|-
@@ -1186,12 +1297,18 @@ name|win
 operator|->
 name|_begx
 operator|=
+operator|(
+name|NCURSES_SIZE_T
+operator|)
 name|smincol
 expr_stmt|;
 name|win
 operator|->
 name|_begy
 operator|=
+operator|(
+name|NCURSES_SIZE_T
+operator|)
 name|sminrow
 expr_stmt|;
 if|if
@@ -1207,7 +1324,10 @@ name|_clear
 operator|=
 name|FALSE
 expr_stmt|;
-name|newscr
+name|NewScreen
+argument_list|(
+name|sp
+argument_list|)
 operator|->
 name|_clear
 operator|=
@@ -1248,10 +1368,17 @@ operator|<=
 name|pmaxcol
 condition|)
 block|{
-name|newscr
+name|NewScreen
+argument_list|(
+name|sp
+argument_list|)
 operator|->
 name|_cury
 operator|=
+call|(
+name|NCURSES_SIZE_T
+call|)
+argument_list|(
 name|win
 operator|->
 name|_cury
@@ -1265,11 +1392,19 @@ operator|+
 name|win
 operator|->
 name|_yoffset
+argument_list|)
 expr_stmt|;
-name|newscr
+name|NewScreen
+argument_list|(
+name|sp
+argument_list|)
 operator|->
 name|_curx
 operator|=
+call|(
+name|NCURSES_SIZE_T
+call|)
+argument_list|(
 name|win
 operator|->
 name|_curx
@@ -1279,9 +1414,13 @@ operator|+
 name|win
 operator|->
 name|_begx
+argument_list|)
 expr_stmt|;
 block|}
-name|newscr
+name|NewScreen
+argument_list|(
+name|sp
+argument_list|)
 operator|->
 name|_leaveok
 operator|=
@@ -1303,6 +1442,9 @@ name|_pad
 operator|.
 name|_pad_y
 operator|=
+operator|(
+name|NCURSES_SIZE_T
+operator|)
 name|pminrow
 expr_stmt|;
 name|win
@@ -1311,6 +1453,9 @@ name|_pad
 operator|.
 name|_pad_x
 operator|=
+operator|(
+name|NCURSES_SIZE_T
+operator|)
 name|pmincol
 expr_stmt|;
 name|win
@@ -1319,6 +1464,9 @@ name|_pad
 operator|.
 name|_pad_top
 operator|=
+operator|(
+name|NCURSES_SIZE_T
+operator|)
 name|sminrow
 expr_stmt|;
 name|win
@@ -1327,6 +1475,9 @@ name|_pad
 operator|.
 name|_pad_left
 operator|=
+operator|(
+name|NCURSES_SIZE_T
+operator|)
 name|smincol
 expr_stmt|;
 name|win
@@ -1335,6 +1486,9 @@ name|_pad
 operator|.
 name|_pad_bottom
 operator|=
+operator|(
+name|NCURSES_SIZE_T
+operator|)
 name|smaxrow
 expr_stmt|;
 name|win
@@ -1343,6 +1497,9 @@ name|_pad
 operator|.
 name|_pad_right
 operator|=
+operator|(
+name|NCURSES_SIZE_T
+operator|)
 name|smaxcol
 expr_stmt|;
 name|returnCode
@@ -1379,6 +1536,10 @@ argument_list|(
 literal|"pechochar(%p, %s)"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|pad
 operator|,
 name|_tracechtype

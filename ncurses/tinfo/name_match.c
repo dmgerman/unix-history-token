@@ -16,19 +16,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<term.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<tic.h>
 end_include
 
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: name_match.c,v 1.17 2008/08/03 19:49:33 tom Exp $"
+literal|"$Id: name_match.c,v 1.18 2008/11/16 00:19:59 juergen Exp $"
 argument_list|)
 end_macro
 
