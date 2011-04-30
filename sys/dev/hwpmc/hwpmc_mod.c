@@ -15309,7 +15309,7 @@ expr_stmt|;
 name|done
 label|:
 comment|/* mark CPU as needing processing */
-name|atomic_set_rel_int
+name|atomic_set_int
 argument_list|(
 operator|&
 name|pmc_cpumask
@@ -15690,7 +15690,7 @@ name|PMC_SAMPLE_INUSE
 condition|)
 block|{
 comment|/* Need a rescan at a later time. */
-name|atomic_set_rel_int
+name|atomic_set_int
 argument_list|(
 operator|&
 name|pmc_cpumask
@@ -18127,7 +18127,7 @@ literal|"cleanup"
 argument_list|)
 expr_stmt|;
 comment|/* switch off sampling */
-name|atomic_store_rel_int
+name|atomic_store_int
 argument_list|(
 operator|&
 name|pmc_cpumask
