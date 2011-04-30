@@ -648,6 +648,11 @@ name|dp
 operator|->
 name|dp_tx
 decl_stmt|;
+name|size_t
+name|stksize
+init|=
+literal|0
+decl_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
@@ -703,6 +708,17 @@ name|minclsyspri
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The sync thread can need a larger-than-default stack size on 	 * 32-bit x86.  This is due in part to nested pools and 	 * scrub_visitbp() recursion. 	 */
+ifdef|#
+directive|ifdef
+name|__i386__
+name|stksize
+operator|=
+literal|16
+operator|<<
+literal|10
+expr_stmt|;
+endif|#
+directive|endif
 name|tx
 operator|->
 name|tx_sync_thread
@@ -711,9 +727,7 @@ name|thread_create
 argument_list|(
 name|NULL
 argument_list|,
-literal|16
-operator|<<
-literal|10
+name|stksize
 argument_list|,
 name|txg_sync_thread
 argument_list|,
