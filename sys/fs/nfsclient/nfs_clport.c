@@ -280,6 +280,9 @@ parameter_list|,
 name|void
 modifier|*
 name|stuff
+parameter_list|,
+name|int
+name|lkflags
 parameter_list|)
 block|{
 name|struct
@@ -359,7 +362,7 @@ name|mntp
 argument_list|,
 name|hash
 argument_list|,
-name|LK_EXCLUSIVE
+name|lkflags
 argument_list|,
 name|td
 argument_list|,
@@ -1179,7 +1182,7 @@ name|vp
 argument_list|,
 name|hash
 argument_list|,
-name|LK_EXCLUSIVE
+name|lkflags
 argument_list|,
 name|td
 argument_list|,

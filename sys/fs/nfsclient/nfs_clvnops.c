@@ -5670,6 +5670,8 @@ operator|&
 name|np
 argument_list|,
 name|NULL
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 if|if
@@ -5856,6 +5858,10 @@ operator|&
 name|np
 argument_list|,
 name|NULL
+argument_list|,
+name|cnp
+operator|->
+name|cn_lkflags
 argument_list|)
 expr_stmt|;
 if|if
@@ -6047,6 +6053,10 @@ operator|&
 name|np
 argument_list|,
 name|NULL
+argument_list|,
+name|cnp
+operator|->
+name|cn_lkflags
 argument_list|)
 expr_stmt|;
 if|if
@@ -7156,6 +7166,8 @@ operator|&
 name|np
 argument_list|,
 name|NULL
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 block|}
@@ -7820,6 +7832,8 @@ operator|&
 name|np
 argument_list|,
 name|NULL
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 block|}
@@ -10282,6 +10296,8 @@ operator|&
 name|np
 argument_list|,
 name|NULL
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 if|if
@@ -10779,6 +10795,8 @@ operator|&
 name|np
 argument_list|,
 name|NULL
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 if|if
@@ -12911,6 +12929,8 @@ operator|&
 name|np
 argument_list|,
 name|NULL
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 if|if

@@ -1454,6 +1454,8 @@ name|nm_fhsize
 argument_list|,
 operator|&
 name|np
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 if|if
@@ -7062,6 +7064,8 @@ name|nm_fhsize
 argument_list|,
 operator|&
 name|np
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 if|if
@@ -7631,6 +7635,8 @@ name|nm_fhsize
 argument_list|,
 operator|&
 name|np
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
