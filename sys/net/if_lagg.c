@@ -8912,6 +8912,16 @@ expr_stmt|;
 comment|/* Tap off LACP control messages */
 if|if
 condition|(
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_VLANTAG
+operator|)
+operator|==
+literal|0
+operator|&&
 name|etype
 operator|==
 name|ETHERTYPE_SLOW
