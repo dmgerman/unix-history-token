@@ -18127,13 +18127,9 @@ literal|"cleanup"
 argument_list|)
 expr_stmt|;
 comment|/* switch off sampling */
-name|atomic_store_int
-argument_list|(
-operator|&
 name|pmc_cpumask
-argument_list|,
+operator|=
 literal|0
-argument_list|)
 expr_stmt|;
 name|pmc_intr
 operator|=
