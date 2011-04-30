@@ -134,6 +134,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR724X_DDR_REG_FLUSH_USB
+value|(AR71XX_DDR_CONFIG + 0x84)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR724X_DDR_REG_FLUSH_PCIE
+value|(AR71XX_DDR_CONFIG + 0x88)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR724X_RESET_REG_RESET_MODULE
 value|AR71XX_RST_BLOCK_BASE + 0x1c
 end_define
@@ -159,6 +173,62 @@ name|AR724X_RESET_MODULE_USB_OHCI_DLL
 value|(1<< 3)
 end_define
 
+begin_define
+define|#
+directive|define
+name|AR724X_RESET_GE1_MDIO
+value|(1<< 23)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR724X_RESET_GE0_MDIO
+value|(1<< 22)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR724X_RESET_PCIE_PHY_SERIAL
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR724X_RESET_PCIE_PHY
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR724X_RESET_PCIE
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR724X_RESET_USB_HOST
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR724X_RESET_USB_PHY
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR724X_RESET_USBSUS_OVERRIDE
+value|(1<< 3)
+end_define
+
 begin_comment
 comment|/* XXX so USB requires different init code? -adrian */
 end_comment
@@ -180,20 +250,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|AR724X_DDR_REG_FLUSH_USB
-value|(AR71XX_DDR_CONFIG + 0x84)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR724X_DDR_REG_FLUSH_PCIE
-value|(AR71XX_DDR_CONFIG + 0x88)
-end_define
-
-begin_define
-define|#
-directive|define
 name|AR724X_PCI_CRP_BASE
 value|(AR71XX_APB_BASE + 0x000C0000)
 end_define
@@ -208,6 +264,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR724X_PCI_CFG_BASE
+value|0x14000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR724X_PCI_CFG_SIZE
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR724X_PCI_CTRL_BASE
 value|(AR71XX_APB_BASE + 0x000F0000)
 end_define
@@ -217,6 +287,59 @@ define|#
 directive|define
 name|AR724X_PCI_CTRL_SIZE
 value|0x100
+end_define
+
+begin_comment
+comment|/* PCI config registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR724X_PCI_APP
+value|0x180f0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR724X_PCI_APP_LTSSM_ENABLE
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR724X_PCI_RESET
+value|0x180f0018
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR724X_PCI_RESET_LINK_UP
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR724X_PCI_INTR_STATUS
+value|0x180f004c
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR724X_PCI_INTR_MASK
+value|0x180f0050
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR724X_PCI_INTR_DEV0
+value|(1<< 14)
 end_define
 
 begin_define
