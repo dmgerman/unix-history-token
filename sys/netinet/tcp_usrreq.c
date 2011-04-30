@@ -178,48 +178,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip6.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
 file|<netinet/in_pcb.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<netinet6/in6_pcb.h>
+file|<netinet/in_systm.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -238,6 +204,18 @@ ifdef|#
 directive|ifdef
 name|INET6
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip6.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/in6_pcb.h>
+end_include
 
 begin_include
 include|#
@@ -325,6 +303,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -345,6 +329,15 @@ name|td
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -856,6 +849,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_comment
 comment|/*  * Give the socket an address.  */
 end_comment
@@ -1056,6 +1055,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1228,6 +1236,9 @@ name|inp_vflag
 operator||=
 name|INP_IPV6
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 operator|(
@@ -1318,6 +1329,8 @@ name|out
 goto|;
 block|}
 block|}
+endif|#
+directive|endif
 name|error
 operator|=
 name|in6_pcbbind
@@ -1365,6 +1378,12 @@ end_endif
 begin_comment
 comment|/* INET6 */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_comment
 comment|/*  * Prepare to accept connections.  */
@@ -1566,6 +1585,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -1800,6 +1828,12 @@ end_endif
 begin_comment
 comment|/* INET6 */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_comment
 comment|/*  * Initiate connection to peer.  * Create a template for use in transmissions on this connection.  * Enter SYN_SENT state, and mark socket as connecting.  * Start keep-alive timer, and seed output sequence space.  * Send initial segment on connection.  */
@@ -2042,6 +2076,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2201,6 +2244,9 @@ expr_stmt|;
 name|TCPDEBUG1
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 name|IN6_IS_ADDR_V4MAPPED
@@ -2320,6 +2366,8 @@ goto|goto
 name|out
 goto|;
 block|}
+endif|#
+directive|endif
 name|inp
 operator|->
 name|inp_vflag
@@ -2553,6 +2601,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_comment
 comment|/*  * Accept a connection.  Essentially all the work is done at higher levels;  * just return the address of the peer, storing through addr.  *  * The rationale for acquiring the tcbinfo lock here is somewhat complicated,  * and is described in detail in the commit log entry for r175612.  Acquiring  * it delays an accept(2) racing with sonewconn(), which inserts the socket  * before the inpcb address/port fields are initialized.  A better fix would  * prevent the socket from being placed in the listen queue until all fields  * are fully initialized.  */
 end_comment
@@ -2730,6 +2784,15 @@ name|error
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -3511,10 +3574,26 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-else|else
 endif|#
 directive|endif
 comment|/* INET6 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+else|else
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET
 name|error
 operator|=
 name|tcp_connect
@@ -3526,6 +3605,8 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|error
@@ -3736,10 +3817,26 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-else|else
 endif|#
 directive|endif
 comment|/* INET6 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+else|else
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET
 name|error
 operator|=
 name|tcp_connect
@@ -3751,6 +3848,8 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|error
@@ -4429,6 +4528,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|pr_usrreqs
@@ -4522,6 +4627,15 @@ name|tcp_usr_close
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -4631,6 +4745,12 @@ end_endif
 begin_comment
 comment|/* INET6 */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_comment
 comment|/*  * Common subroutine to open a TCP connection to remote host specified  * by struct sockaddr_in in mbuf *nam.  Call in_pcbbind to assign a local  * port number if needed.  Call in_pcbconnect_setup to do the routing and  * to choose a local host address (interface).  If there is an existing  * incarnation of the same connection in TIME-WAIT state and if the remote  * host was sending CC options and if the connection duration was< MSL, then  * truncate the previous TIME-WAIT state and proceed.  * Initialize connection parameters and enter SYN-SENT state.  */
@@ -4880,6 +5000,15 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -5635,11 +5764,27 @@ name|sopt
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
 endif|#
 directive|endif
 comment|/* INET6 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+else|else
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET
+block|{
 name|INP_WUNLOCK
 argument_list|(
 name|inp
@@ -5654,9 +5799,6 @@ argument_list|,
 name|sopt
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 block|}
 endif|#
 directive|endif

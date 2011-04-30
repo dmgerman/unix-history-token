@@ -821,7 +821,10 @@ decl_stmt|,
 name|flags
 decl_stmt|,
 name|error
+init|=
+literal|0
 decl_stmt|;
+comment|/* Keep compiler happy */
 name|struct
 name|mbuf
 modifier|*
@@ -3291,6 +3294,7 @@ block|}
 block|}
 endif|#
 directive|endif
+comment|/* notyet */
 comment|/* 		 * If we're sending everything we've got, set PUSH. 		 * (This will keep happy those implementations which only 		 * give data to the user when a buffer fills or 		 * a PUSH comes in.) 		 */
 if|if
 condition|(
@@ -4744,6 +4748,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* TCPDEBUG */
 comment|/* 	 * Fill in IP length and desired time to live and 	 * send to IP level.  There should be a better way 	 * to handle ttl and tos; we could keep them in 	 * the template, but need a way to checksum without them. 	 */
 comment|/* 	 * m->m_pkthdr.len should have been set before cksum calcuration, 	 * because in6_cksum() need it. 	 */
 ifdef|#
@@ -4807,10 +4812,26 @@ name|t_inpcb
 argument_list|)
 expr_stmt|;
 block|}
-else|else
 endif|#
 directive|endif
 comment|/* INET6 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+else|else
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET
 block|{
 name|ip
 operator|->
@@ -4904,6 +4925,9 @@ name|t_inpcb
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* INET */
 if|if
 condition|(
 name|error

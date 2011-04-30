@@ -199,13 +199,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in_pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in_systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<netinet/in_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/ip.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip_icmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip_var.h>
 end_include
 
 begin_ifdef
@@ -220,51 +244,11 @@ directive|include
 file|<netinet/ip6.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_pcb.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<netinet6/in6_pcb.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_var.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
 
 begin_include
 include|#
@@ -288,12 +272,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_icmp.h>
-end_include
 
 begin_include
 include|#
@@ -371,11 +349,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<netinet6/ip6protosw.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -690,6 +679,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* INET6 */
+end_comment
 
 begin_comment
 comment|/*  * Minimum MSS we accept and use. This prevents DoS attacks where  * we are forced to a ridiculous low MSS like 20 and send hundreds  * of packets instead of one. The effect scales with the available  * bandwidth and quickly saturates the CPU and network interface  * with packet generation and sending. Set to zero to disable MINMSS  * checking. This setting prevents us from sending too small packets.  */
@@ -1933,9 +1926,26 @@ operator|->
 name|in6p_faddr
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* INET6 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|INET
+argument_list|)
 else|else
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|INET
 block|{
 name|struct
 name|ip
@@ -2026,6 +2036,9 @@ operator|->
 name|inp_faddr
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* INET */
 name|th
 operator|->
 name|th_sport
@@ -2282,7 +2295,11 @@ operator|)
 operator|->
 name|ip_v
 operator|==
-literal|6
+operator|(
+name|IPV6_VERSION
+operator|>>
+literal|4
+operator|)
 expr_stmt|;
 name|ip6
 operator|=
@@ -2763,9 +2780,25 @@ name|tcphdr
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 else|else
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|INET
 block|{
 name|tlen
 operator|+=
@@ -2798,6 +2831,8 @@ operator||=
 name|IP_DF
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|m
 operator|->
 name|m_len
@@ -2999,10 +3034,26 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-else|else
 endif|#
 directive|endif
 comment|/* INET6 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+else|else
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET
 block|{
 name|nth
 operator|->
@@ -3066,6 +3117,9 @@ name|th_sum
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* INET */
 ifdef|#
 directive|ifdef
 name|TCPDEBUG
@@ -3135,10 +3189,26 @@ argument_list|,
 name|inp
 argument_list|)
 expr_stmt|;
-else|else
 endif|#
 directive|endif
 comment|/* INET6 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+else|else
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET
 operator|(
 name|void
 operator|)
@@ -3157,6 +3227,8 @@ argument_list|,
 name|inp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -5516,6 +5588,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -5774,6 +5852,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -5806,11 +5893,17 @@ name|inp
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
+name|int
 name|mapped
 init|=
 literal|0
 decl_stmt|;
+endif|#
+directive|endif
 name|error
 operator|=
 name|priv_check
@@ -5911,6 +6004,9 @@ name|sin6_addr
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 name|IN6_IS_ADDR_V4MAPPED
@@ -5929,6 +6025,8 @@ operator|=
 literal|1
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 return|return
 operator|(
 name|EINVAL
@@ -5941,6 +6039,9 @@ operator|&
 name|V_tcbinfo
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 name|mapped
@@ -6012,6 +6113,8 @@ name|NULL
 argument_list|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|inp
 operator|=
 name|in6_pcblookup_hash
@@ -6200,6 +6303,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* INET6 */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_function
 name|void
@@ -6761,6 +6874,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -7995,6 +8117,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_comment
 comment|/*  * Look-up the routing entry to the peer of this inpcb.  If no route  * is found and it cannot be allocated, then return 0.  This routine  * is called by TCP routines that access the rmx structure and by  * tcp_mss_update to get the peer/interface MTU.  */
 end_comment
@@ -8210,6 +8338,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -8789,10 +8926,15 @@ name|union
 name|sockaddr_union
 name|dst
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|struct
 name|ippseudo
 name|ippseudo
 decl_stmt|;
+endif|#
+directive|endif
 name|MD5_CTX
 name|ctx
 decl_stmt|;
@@ -8804,11 +8946,16 @@ name|ip
 modifier|*
 name|ip
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|struct
 name|ipovly
 modifier|*
 name|ipovly
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|secasvar
 modifier|*
@@ -8911,6 +9058,9 @@ operator|->
 name|ip_v
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 case|case
 name|IPVERSION
 case|:
@@ -8955,6 +9105,8 @@ operator|->
 name|ip_dst
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
@@ -9130,6 +9282,9 @@ operator|->
 name|ip_v
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 case|case
 name|IPVERSION
 case|:
@@ -9244,6 +9399,8 @@ operator|+
 name|optlen
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
@@ -10154,6 +10311,9 @@ return|;
 break|break;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|INET
 case|case
 name|AF_INET
 case|:
@@ -10211,6 +10371,8 @@ name|EINVAL
 operator|)
 return|;
 break|break;
+endif|#
+directive|endif
 default|default:
 return|return
 operator|(
@@ -10273,6 +10435,9 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|INET
 case|case
 name|AF_INET
 case|:
@@ -10305,6 +10470,8 @@ name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -10978,6 +11145,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* INET6 */
+ifdef|#
+directive|ifdef
+name|INET
 block|}
 elseif|else
 if|if
@@ -11060,6 +11230,9 @@ name|th_dport
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* INET */
 block|}
 else|else
 block|{
