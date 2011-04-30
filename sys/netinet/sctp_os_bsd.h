@@ -51,22 +51,11 @@ directive|include
 file|"opt_inet6.h"
 end_include
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
 begin_include
 include|#
 directive|include
 file|"opt_inet.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
