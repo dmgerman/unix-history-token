@@ -2344,6 +2344,10 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* Flush DDR FIFO for IP2 */
+name|ar71xx_device_ddr_flush_ip2
+argument_list|()
+expr_stmt|;
 comment|/* TODO: frame instead of NULL? */
 name|intr_event_handle
 argument_list|(
