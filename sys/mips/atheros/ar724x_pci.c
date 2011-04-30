@@ -175,11 +175,11 @@ directive|include
 file|<mips/atheros/ar71xx_cpudef.h>
 end_include
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|AR724X_PCI_DEBUG
-end_define
+end_undef
 
 begin_ifdef
 ifdef|#
