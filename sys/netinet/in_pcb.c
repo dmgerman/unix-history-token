@@ -172,6 +172,20 @@ directive|include
 file|<net/vnet.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
@@ -182,12 +196,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in_pcb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_var.h>
 end_include
 
 begin_include
@@ -214,6 +222,28 @@ directive|include
 file|<netinet/udp_var.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_var.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -229,13 +259,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet6/ip6_var.h>
+file|<netinet6/in6_pcb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet6/in6_pcb.h>
+file|<netinet6/in6_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/ip6_var.h>
 end_include
 
 begin_endif
@@ -516,6 +552,25 @@ name|V_ipport_tcplastcount
 value|VNET(ipport_tcplastcount)
 end_define
 
+begin_function_decl
+specifier|static
+name|void
+name|in_pcbremlists
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+name|inp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -530,19 +585,6 @@ parameter_list|)
 define|\
 value|if ((var)< (min)) { (var) = (min); } \ 	else if ((var)> (max)) { (var) = (max); }
 end_define
-
-begin_function_decl
-specifier|static
-name|void
-name|in_pcbremlists
-parameter_list|(
-name|struct
-name|inpcb
-modifier|*
-name|inp
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 specifier|static
@@ -997,6 +1039,11 @@ literal|"allocation before switching to a random one"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * in_pcb.c: manage the Protocol Control Blocks.  *  * NOTE: It is assumed that most of these functions will be called with  * the pcbinfo lock held, and often, the inpcb lock held, as these utility  * functions often modify hash chains or addresses in pcbs.  */
@@ -1509,6 +1556,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_function
 name|int
 name|in_pcbbind
@@ -1673,6 +1726,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -1982,6 +2040,11 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|tmpinp
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* Make compiler happy. */
 name|lport
 operator|=
 operator|*
@@ -2184,6 +2247,12 @@ end_endif
 begin_comment
 comment|/* INET || INET6 */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_comment
 comment|/*  * Set up a bind operation on a PCB, performing port allocation  * as required, but do not actually modify the PCB. Callers can  * either complete the bind by setting inp_laddr/inp_lport and  * calling in_pcbinshash(), or they can just use the resulting  * port and address to authorise the sending of a once-off packet.  *  * On error, the values of *laddrp and *lportp are not changed.  */
@@ -4792,6 +4861,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * in_pcbdetach() is responsibe for disassociating a socket from an inpcb.  * For most protocols, this will be invoked immediately prior to calling  * in_pcbfree().  However, with TCP the inpcb may significantly outlive the  * socket, in which case in_pcbfree() is deferred.  */
 end_comment
@@ -4988,6 +5062,9 @@ operator|->
 name|inp_options
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 name|inp
@@ -5003,6 +5080,8 @@ operator|->
 name|inp_moptions
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|inp
 operator|->
 name|inp_vflag
@@ -5340,6 +5419,12 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_comment
 comment|/*  * Common routines to return the socket addresses associated with inpcbs.  */
@@ -6841,6 +6926,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_comment
 comment|/*  * Insert PCB onto various hash lists.  */

@@ -807,6 +807,9 @@ operator|(
 name|EADDRINUSE
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 operator|(
@@ -912,6 +915,8 @@ name|EADDRINUSE
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 block|}
 name|t
 operator|=
@@ -969,6 +974,9 @@ operator|(
 name|EADDRINUSE
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 operator|(
@@ -1130,6 +1138,8 @@ name|EADDRINUSE
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 block|}
 name|inp
 operator|->
@@ -2212,6 +2222,9 @@ literal|"in6_mapped_sockaddr: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 operator|(
@@ -2251,6 +2264,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 block|{
 comment|/* scope issues will be handled in in6_getsockaddr(). */
 name|error
@@ -2311,6 +2326,9 @@ literal|"in6_mapped_peeraddr: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 operator|(
@@ -2350,6 +2368,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 comment|/* scope issues will be handled in in6_getpeeraddr(). */
 name|error
 operator|=
