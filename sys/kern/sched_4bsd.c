@@ -663,6 +663,13 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|cpumask_t
+name|idle_cpus_mask
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
