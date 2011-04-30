@@ -3640,6 +3640,9 @@ name|inp_vflag
 operator||=
 name|INP_IPV4
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 elseif|else
 if|if
 condition|(
@@ -3700,6 +3703,8 @@ goto|goto
 name|out
 goto|;
 block|}
+endif|#
+directive|endif
 block|}
 name|error
 operator|=
@@ -3714,8 +3719,13 @@ operator|->
 name|td_ucred
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|out
 label|:
+endif|#
+directive|endif
 name|INP_WUNLOCK
 argument_list|(
 name|inp
@@ -3938,6 +3948,9 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 name|IN6_IS_ADDR_V4MAPPED
@@ -4071,6 +4084,8 @@ goto|goto
 name|out
 goto|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!

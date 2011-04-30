@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_inet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_inet6.h"
 end_include
 
@@ -588,6 +594,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -628,6 +640,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -977,6 +994,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_comment
 comment|/*  * Subroutine of udp_input(), which appends the provided mbuf chain to the  * passed pcb/socket.  The caller must provide a sockaddr_in via udp_in that  * contains the source address.  If the socket ends up being an IPv6 socket,  * udp_append() will convert to a sockaddr_in6 before passing the address  * into the socket code.  */
 end_comment
@@ -1123,9 +1146,6 @@ block|}
 ifdef|#
 directive|ifdef
 name|IPSEC_NAT_T
-ifdef|#
-directive|ifdef
-name|INET
 name|up
 operator|=
 name|intoudpcb
@@ -1178,9 +1198,6 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/* INET */
-endif|#
-directive|endif
 comment|/* IPSEC_NAT_T */
 endif|#
 directive|endif
@@ -1209,6 +1226,7 @@ return|return;
 block|}
 endif|#
 directive|endif
+comment|/* MAC */
 if|if
 condition|(
 name|inp
@@ -1259,6 +1277,7 @@ expr_stmt|;
 else|else
 endif|#
 directive|endif
+comment|/* INET6 */
 name|ip_savecontrol
 argument_list|(
 name|inp
@@ -1332,6 +1351,7 @@ block|}
 else|else
 endif|#
 directive|endif
+comment|/* INET6 */
 name|append_sa
 operator|=
 operator|(
@@ -2673,6 +2693,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
+
 begin_comment
 comment|/*  * Notify a udp user of an asynchronous error; just wake up so that they can  * collect error status.  */
 end_comment
@@ -2727,6 +2756,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_function
 name|void
@@ -2956,6 +2991,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_function
 specifier|static
@@ -3556,6 +3600,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -3814,6 +3864,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
+
 begin_function
 name|int
 name|udp_ctloutput
@@ -3913,10 +3972,26 @@ name|sopt
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+else|else
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET
+block|{
 name|INP_WUNLOCK
 argument_list|(
 name|inp
@@ -3931,9 +4006,6 @@ argument_list|,
 name|sopt
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 block|}
 endif|#
 directive|endif
@@ -4217,6 +4289,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_function
 specifier|static
@@ -5588,12 +5666,6 @@ name|IPSEC_NAT_T
 argument_list|)
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET
-end_ifdef
-
 begin_comment
 comment|/*  * Potentially decap ESP in UDP frame.  Check for an ESP header  * and optional marker; if present, strip the UDP header and  * push the result through IPSec.  *  * Returns mbuf to be processed (potentially re-allocated) or  * NULL if consumed and/or processed.  */
 end_comment
@@ -6148,15 +6220,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* INET */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* defined(IPSEC)&& defined(IPSEC_NAT_T) */
 end_comment
 
@@ -6419,6 +6482,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
+
 begin_function
 name|int
 name|udp_set_kernel_tunneling
@@ -6523,6 +6595,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_function
 specifier|static
@@ -7198,6 +7276,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
+
 begin_function
 name|int
 name|udp_shutdown
@@ -7253,6 +7340,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_decl_stmt
 name|struct
@@ -7337,6 +7430,15 @@ name|udp_close
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 end_unit
 
