@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: tclock.c,v 1.29 2010/11/14 01:04:52 tom Exp $ */
+comment|/* $Id: tclock.c,v 1.30 2011/03/22 09:16:00 tom Exp $ */
 end_comment
 
 begin_include
@@ -8,6 +8,12 @@ include|#
 directive|include
 file|<test.priv.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|HAVE_MATH_H
+end_if
 
 begin_include
 include|#
@@ -1304,6 +1310,44 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function
+name|int
+name|main
+parameter_list|(
+name|int
+name|argc
+name|GCC_UNUSED
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+name|GCC_UNUSED
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"This program requires the development header math.h\n"
+argument_list|)
+expr_stmt|;
+name|ExitProgram
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

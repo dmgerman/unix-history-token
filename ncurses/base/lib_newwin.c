@@ -26,7 +26,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_newwin.c,v 1.68 2011/01/22 20:34:15 tom Exp $"
+literal|"$Id: lib_newwin.c,v 1.69 2011/03/07 21:58:17 tom Exp $"
 argument_list|)
 end_macro
 
@@ -513,11 +513,11 @@ operator|<
 literal|0
 operator|||
 name|num_lines
-operator|<=
+operator|<
 literal|0
 operator|||
 name|num_columns
-operator|<=
+operator|<
 literal|0
 condition|)
 name|returnWin
@@ -856,11 +856,11 @@ operator|==
 literal|0
 operator|||
 name|num_lines
-operator|<=
+operator|<
 literal|0
 operator|||
 name|num_columns
-operator|<=
+operator|<
 literal|0
 condition|)
 name|returnWin
