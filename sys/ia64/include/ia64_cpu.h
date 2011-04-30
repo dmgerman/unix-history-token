@@ -16,6 +16,30 @@ name|_MACHINE_IA64_CPU_H_
 end_define
 
 begin_comment
+comment|/*  * Local Interrupt ID.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IA64_LID_GET_SAPIC_ID
+parameter_list|(
+name|x
+parameter_list|)
+value|((u_int)((x)>> 16)& 0xffff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IA64_LID_SET_SAPIC_ID
+parameter_list|(
+name|x
+parameter_list|)
+value|((u_int)((x)& 0xffff)<< 16)
+end_define
+
+begin_comment
 comment|/*  * Definition of DCR bits.  */
 end_comment
 

@@ -529,12 +529,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int64_t
-name|pa_bootinfo
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|bootinfo
 modifier|*
@@ -593,13 +587,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int64_t
+name|vm_size_t
+name|ia64_pal_size
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vm_paddr_t
 name|ia64_pal_base
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int64_t
+name|vm_offset_t
 name|ia64_port_base
 decl_stmt|;
 end_decl_stmt
@@ -2427,7 +2427,7 @@ expr_stmt|;
 asm|__asm __volatile("ptr.d %0,%1" :: "r"(vhpt),
 literal|"r"
 operator|(
-name|IA64_ID_PAGE_SHIFT
+name|pmap_vhpt_log2size
 operator|<<
 literal|2
 operator|)
@@ -2460,7 +2460,7 @@ end_expr_stmt
 begin_expr_stmt
 name|ia64_set_itir
 argument_list|(
-name|IA64_ID_PAGE_SHIFT
+name|pmap_vhpt_log2size
 operator|<<
 literal|2
 argument_list|)
@@ -2474,7 +2474,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_asm
-asm|__asm __volatile("itr.d dtr[%0]=%1" :: "r"(2), "r"(pte));
+asm|__asm __volatile("itr.d dtr[%0]=%1" :: "r"(3), "r"(pte));
 end_asm
 
 begin_asm
@@ -2500,16 +2500,55 @@ block|{
 name|pt_entry_t
 name|pte
 decl_stmt|;
+name|vm_offset_t
+name|va
+decl_stmt|;
+name|vm_size_t
+name|sz
+decl_stmt|;
 name|uint64_t
 name|psr
 decl_stmt|;
+name|u_int
+name|shft
+decl_stmt|;
 if|if
 condition|(
-name|ia64_pal_base
+name|ia64_pal_size
 operator|==
 literal|0
 condition|)
 return|return;
+name|va
+operator|=
+name|IA64_PHYS_TO_RR7
+argument_list|(
+name|ia64_pal_base
+argument_list|)
+expr_stmt|;
+name|sz
+operator|=
+name|ia64_pal_size
+expr_stmt|;
+name|shft
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+name|sz
+operator|>
+literal|1
+condition|)
+block|{
+name|shft
+operator|++
+expr_stmt|;
+name|sz
+operator|>>=
+literal|1
+expr_stmt|;
+block|}
 name|pte
 operator|=
 name|PTE_PRESENT
@@ -2530,102 +2569,45 @@ name|ia64_pal_base
 operator|&
 name|PTE_PPN_MASK
 expr_stmt|;
-asm|__asm __volatile("ptr.d %0,%1; ptr.i %0,%1" ::
-literal|"r"
-operator|(
-name|IA64_PHYS_TO_RR7
-argument_list|(
-name|ia64_pal_base
-argument_list|)
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|IA64_ID_PAGE_SHIFT
-operator|<<
-literal|2
-operator|)
-block|)
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_asm
+asm|__asm __volatile("ptr.d %0,%1; ptr.i %0,%1" :: "r"(va), "r"(shft<<2));
 asm|__asm __volatile("mov	%0=psr" : "=r"(psr));
-end_asm
-
-begin_asm
 asm|__asm __volatile("rsm	psr.ic|psr.i");
-end_asm
-
-begin_expr_stmt
 name|ia64_srlz_i
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ia64_set_ifa
 argument_list|(
-name|IA64_PHYS_TO_RR7
-argument_list|(
-name|ia64_pal_base
-argument_list|)
+name|va
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ia64_set_itir
 argument_list|(
-name|IA64_ID_PAGE_SHIFT
+name|shft
 operator|<<
 literal|2
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ia64_srlz_d
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_asm
-asm|__asm __volatile("itr.d	dtr[%0]=%1" :: "r"(1), "r"(pte));
-end_asm
-
-begin_expr_stmt
+asm|__asm __volatile("itr.d	dtr[%0]=%1" :: "r"(4), "r"(pte));
 name|ia64_srlz_d
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_asm
 asm|__asm __volatile("itr.i	itr[%0]=%1" :: "r"(1), "r"(pte));
-end_asm
-
-begin_asm
 asm|__asm __volatile("mov	psr.l=%0" :: "r" (psr));
-end_asm
-
-begin_expr_stmt
 name|ia64_srlz_i
 argument_list|()
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
-begin_macro
-unit|}  void
+begin_function
+name|void
 name|map_gateway_page
-argument_list|(
-argument|void
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|pt_entry_t
 name|pte
@@ -2649,10 +2631,13 @@ name|PTE_AR_X_RX
 expr_stmt|;
 name|pte
 operator||=
+name|ia64_tpa
+argument_list|(
 operator|(
 name|uint64_t
 operator|)
 name|ia64_gateway_page
+argument_list|)
 operator|&
 name|PTE_PPN_MASK
 expr_stmt|;
@@ -2669,11 +2654,8 @@ operator|<<
 literal|2
 operator|)
 block|)
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+function|;
+end_function
 
 begin_asm
 asm|__asm __volatile("mov	%0=psr" : "=r"(psr));
@@ -2714,7 +2696,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_asm
-asm|__asm __volatile("itr.d	dtr[%0]=%1" :: "r"(3), "r"(pte));
+asm|__asm __volatile("itr.d	dtr[%0]=%1" :: "r"(5), "r"(pte));
 end_asm
 
 begin_expr_stmt
@@ -2724,7 +2706,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_asm
-asm|__asm __volatile("itr.i	itr[%0]=%1" :: "r"(3), "r"(pte));
+asm|__asm __volatile("itr.i	itr[%0]=%1" :: "r"(2), "r"(pte));
 end_asm
 
 begin_asm
@@ -3073,60 +3055,6 @@ name|IA64_FPSR_DEFAULT
 argument_list|)
 expr_stmt|;
 comment|/* 	 * TODO: Get critical system information (if possible, from the 	 * information provided by the boot program). 	 */
-comment|/* 	 * pa_bootinfo is the physical address of the bootinfo block as 	 * passed to us by the loader and set in locore.s. 	 */
-name|bootinfo
-operator|=
-operator|(
-expr|struct
-name|bootinfo
-operator|*
-operator|)
-operator|(
-name|IA64_PHYS_TO_RR7
-argument_list|(
-name|pa_bootinfo
-argument_list|)
-operator|)
-expr_stmt|;
-if|if
-condition|(
-name|bootinfo
-operator|->
-name|bi_magic
-operator|!=
-name|BOOTINFO_MAGIC
-operator|||
-name|bootinfo
-operator|->
-name|bi_version
-operator|!=
-literal|1
-condition|)
-block|{
-name|bzero
-argument_list|(
-name|bootinfo
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|bootinfo
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|bootinfo
-operator|->
-name|bi_kernend
-operator|=
-operator|(
-name|vm_offset_t
-operator|)
-name|round_page
-argument_list|(
-name|_end
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Look for the I/O ports first - we need them for console 	 * probing. 	 */
 for|for
 control|(
@@ -3179,6 +3107,14 @@ break|break;
 case|case
 name|EFI_MD_TYPE_PALCODE
 case|:
+name|ia64_pal_size
+operator|=
+name|md
+operator|->
+name|md_pages
+operator|*
+name|EFI_PAGE_SIZE
+expr_stmt|;
 name|ia64_pal_base
 operator|=
 name|md
@@ -3316,6 +3252,70 @@ operator|->
 name|bi_kernend
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Region 6 is direct mapped UC and region 7 is direct mapped 	 * WC. The details of this is controlled by the Alt {I,D}TLB 	 * handlers. Here we just make sure that they have the largest 	 * possible page size to minimise TLB usage. 	 */
+name|ia64_set_rr
+argument_list|(
+name|IA64_RR_BASE
+argument_list|(
+literal|6
+argument_list|)
+argument_list|,
+operator|(
+literal|6
+operator|<<
+literal|8
+operator|)
+operator||
+operator|(
+name|PAGE_SHIFT
+operator|<<
+literal|2
+operator|)
+argument_list|)
+expr_stmt|;
+name|ia64_set_rr
+argument_list|(
+name|IA64_RR_BASE
+argument_list|(
+literal|7
+argument_list|)
+argument_list|,
+operator|(
+literal|7
+operator|<<
+literal|8
+operator|)
+operator||
+operator|(
+name|PAGE_SHIFT
+operator|<<
+literal|2
+operator|)
+argument_list|)
+expr_stmt|;
+name|ia64_srlz_d
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Wire things up so we can call the firmware. 	 */
+name|map_pal_code
+argument_list|()
+expr_stmt|;
+name|efi_boot_minimal
+argument_list|(
+name|bootinfo
+operator|->
+name|bi_systab
+argument_list|)
+expr_stmt|;
+name|ia64_xiv_init
+argument_list|()
+expr_stmt|;
+name|ia64_sal_init
+argument_list|()
+expr_stmt|;
+name|calculate_frequencies
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Setup the PCPU data for the bootstrap processor. It is needed 	 * by printf(). Also, since printf() has critical sections, we 	 * need to initialize at least pc_curthread. 	 */
 name|pcpup
 operator|=
@@ -3353,6 +3353,16 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|PCPU_SET
+argument_list|(
+name|md
+operator|.
+name|lid
+argument_list|,
+name|ia64_get_lid
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|kernend
 operator|+=
 name|DPCPU_SIZE
@@ -3370,57 +3380,6 @@ name|cninit
 argument_list|()
 expr_stmt|;
 comment|/* OUTPUT NOW ALLOWED */
-if|if
-condition|(
-name|ia64_pal_base
-operator|!=
-literal|0
-condition|)
-block|{
-name|ia64_pal_base
-operator|&=
-operator|~
-name|IA64_ID_PAGE_MASK
-expr_stmt|;
-comment|/* 		 * We use a TR to map the first 256M of memory - this might 		 * cover the palcode too. 		 */
-if|if
-condition|(
-name|ia64_pal_base
-operator|==
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"PAL code mapped by the kernel's TR\n"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|printf
-argument_list|(
-literal|"PAL code not found\n"
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Wire things up so we can call the firmware. 	 */
-name|map_pal_code
-argument_list|()
-expr_stmt|;
-name|efi_boot_minimal
-argument_list|(
-name|bootinfo
-operator|->
-name|bi_systab
-argument_list|)
-expr_stmt|;
-name|ia64_xiv_init
-argument_list|()
-expr_stmt|;
-name|ia64_sal_init
-argument_list|()
-expr_stmt|;
-name|calculate_frequencies
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|metadata_missing

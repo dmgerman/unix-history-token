@@ -468,9 +468,12 @@ name|bootinfo
 operator|->
 name|bi_memdesc_version
 argument_list|,
+name|ia64_tpa
+argument_list|(
 name|bootinfo
 operator|->
 name|bi_memmap
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -631,12 +634,9 @@ expr|struct
 name|efi_md
 operator|*
 operator|)
-name|IA64_PHYS_TO_RR7
-argument_list|(
 name|bootinfo
 operator|->
 name|bi_memmap
-argument_list|)
 operator|)
 return|;
 block|}
@@ -659,8 +659,6 @@ name|plim
 decl_stmt|;
 name|plim
 operator|=
-name|IA64_PHYS_TO_RR7
-argument_list|(
 name|bootinfo
 operator|->
 name|bi_memmap
@@ -668,7 +666,6 @@ operator|+
 name|bootinfo
 operator|->
 name|bi_memmap_size
-argument_list|)
 expr_stmt|;
 name|md
 operator|=
