@@ -18335,6 +18335,7 @@ argument_list|)
 operator|<
 literal|0
 operator|&&
+operator|(
 operator|!
 name|TYPE_UNSIGNED
 argument_list|(
@@ -18343,6 +18344,15 @@ argument_list|(
 name|t
 argument_list|)
 argument_list|)
+operator|||
+name|TYPE_IS_SIZETYPE
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|t
+argument_list|)
+argument_list|)
+operator|)
 operator|)
 operator|||
 operator|(

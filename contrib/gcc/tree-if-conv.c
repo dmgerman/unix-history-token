@@ -2574,14 +2574,17 @@ name|aux
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Create temp. for the condition. Vectorizer prefers to have gimple      value as condition. Various targets use different means to communicate      condition in vector compare operation. Using gimple value allows compiler      to emit vector compare and select RTL without exposing compare's result.  */
+comment|/* Create temp. for the condition. Vectorizer prefers to have gimple      value as condition. Various targets use different means to communicate      condition in vector compare operation. Using gimple value allows      compiler to emit vector compare and select RTL without exposing      compare's result.  */
 operator|*
 name|cond
 operator|=
 name|force_gimple_operand
 argument_list|(
+name|unshare_expr
+argument_list|(
 operator|*
 name|cond
+argument_list|)
 argument_list|,
 operator|&
 name|new_stmts
