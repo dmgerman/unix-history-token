@@ -293,6 +293,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Returns 0 on failure. Successful allocations return an address  * larger or equal to IA64_EFI_ALLOC_BOUNDARY.  */
+end_comment
+
 begin_function
 specifier|static
 name|vm_paddr_t
@@ -538,6 +542,9 @@ name|vm_size_t
 name|sz
 parameter_list|)
 block|{
+name|vm_paddr_t
+name|pa
+decl_stmt|;
 if|if
 condition|(
 name|va
@@ -554,7 +561,8 @@ name|IA64_EFI_PGTBLSZ_MAX
 condition|)
 return|return
 operator|(
-literal|0
+operator|~
+literal|0UL
 operator|)
 return|;
 if|if
@@ -597,7 +605,8 @@ block|{
 comment|/* Should not happen. */
 return|return
 operator|(
-literal|0
+operator|~
+literal|0UL
 operator|)
 return|;
 block|}
@@ -634,12 +643,25 @@ name|va
 operator|)
 return|;
 comment|/* Allocate a page at a time when we go beyond the chunk. */
-return|return
-operator|(
+name|pa
+operator|=
 name|ia64_efi_alloc
 argument_list|(
 name|sz
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|(
+name|pa
+operator|==
+literal|0
+operator|)
+condition|?
+operator|~
+literal|0UL
+else|:
+name|pa
 operator|)
 return|;
 block|}
