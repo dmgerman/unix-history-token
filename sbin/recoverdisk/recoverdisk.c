@@ -588,7 +588,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: recoverdisk [-r worklist] [-w worklist] source-drive [destination]\n"
+literal|"usage: recoverdisk [-b bigsize] [-r readlist] "
+literal|"[-s interval] [-w writelist] source [destination]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -654,8 +655,6 @@ name|j
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|flags
 decl_stmt|,
 name|state
 decl_stmt|;
@@ -865,10 +864,6 @@ argument_list|,
 literal|"fstat failed"
 argument_list|)
 expr_stmt|;
-name|flags
-operator|=
-name|O_WRONLY
-expr_stmt|;
 if|if
 condition|(
 name|S_ISBLK
@@ -958,12 +953,6 @@ operator|=
 name|sb
 operator|.
 name|st_size
-expr_stmt|;
-name|flags
-operator||=
-name|O_CREAT
-operator||
-name|O_TRUNC
 expr_stmt|;
 block|}
 if|if
@@ -1065,7 +1054,9 @@ index|[
 literal|1
 index|]
 argument_list|,
-name|flags
+name|O_WRONLY
+operator||
+name|O_CREAT
 argument_list|,
 name|DEFFILEMODE
 argument_list|)
@@ -1086,6 +1077,34 @@ name|argv
 index|[
 literal|1
 index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ftruncate
+argument_list|(
+name|fdw
+argument_list|,
+name|t
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"Cannot truncate output %s to %jd bytes"
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|t
 argument_list|)
 expr_stmt|;
 block|}
@@ -1451,6 +1470,23 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|==
+name|EINVAL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"read() size too big? Try with -b 131072"
+argument_list|)
+expr_stmt|;
+name|aborting
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|errno
