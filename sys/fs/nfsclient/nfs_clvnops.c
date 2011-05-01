@@ -1107,7 +1107,7 @@ name|_vfs_newnfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|directio_enable
+name|nfs_directio_enable
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
@@ -1140,7 +1140,7 @@ name|_vfs_newnfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|directio_allow_mmap
+name|nfs_directio_allow_mmap
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
