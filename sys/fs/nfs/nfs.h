@@ -209,6 +209,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NFS_RETRANS_TCP
+value|2
+end_define
+
+begin_comment
+comment|/* Num of retrans for TCP soft mounts */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NFS_MAXGRPS
 value|16
 end_define
