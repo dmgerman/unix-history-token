@@ -2301,7 +2301,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 			 * If there are no dependencies, and it's VMIO, 			 * then we don't need the buf, mark it available 			 * for freeing.  For non-direct VMIO reads, he VM 			 * has the data. 			 */
+comment|/* 			 * If there are no dependencies, and it's VMIO, 			 * then we don't need the buf, mark it available 			 * for freeing.  For non-direct VMIO reads, the VM 			 * has the data. 			 */
 name|bp
 operator|->
 name|b_flags
@@ -4050,7 +4050,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 			 * If there are no dependencies, and it's VMIO, 			 * then we don't need the buf, mark it available 			 * for freeing.  For non-direct VMIO reads, The VM 			 * has the data. 			 */
+comment|/* 			 * If there are no dependencies, and it's VMIO, 			 * then we don't need the buf, mark it available 			 * for freeing.  For non-direct VMIO reads, the VM 			 * has the data. 			 */
 name|bp
 operator|->
 name|b_flags

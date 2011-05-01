@@ -15,15 +15,21 @@ directive|define
 name|_MEMSTAT_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/param.h>
+end_include
+
 begin_comment
-comment|/*  * Number of CPU slots in library-internal data structures.  This should be  * at least the value of MAXCPU from param.h.  */
+comment|/*  * Number of CPU slots in library-internal data structures.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MEMSTAT_MAXCPU
-value|32
+value|MAXCPU
 end_define
 
 begin_comment
