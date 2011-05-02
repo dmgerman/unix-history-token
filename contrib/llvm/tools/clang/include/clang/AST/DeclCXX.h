@@ -966,6 +966,52 @@ name|Abstract
 operator|:
 literal|1
 block|;
+comment|/// IsStandardLayout - True when this class has standard layout.
+comment|///
+comment|/// C++0x [class]p7.  A standard-layout class is a class that:
+comment|/// * has no non-static data members of type non-standard-layout class (or
+comment|///   array of such types) or reference,
+comment|/// * has no virtual functions (10.3) and no virtual base classes (10.1),
+comment|/// * has the same access control (Clause 11) for all non-static data members
+comment|/// * has no non-standard-layout base classes,
+comment|/// * either has no non-static data members in the most derived class and at
+comment|///   most one base class with non-static data members, or has no base
+comment|///   classes with non-static data members, and
+comment|/// * has no base classes of the same type as the first non-static data
+comment|///   member.
+name|bool
+name|IsStandardLayout
+operator|:
+literal|1
+block|;
+comment|/// HasNoNonEmptyBases - True when there are no non-empty base classes.
+comment|///
+comment|/// This is a helper bit of state used to implement IsStandardLayout more
+comment|/// efficiently.
+name|bool
+name|HasNoNonEmptyBases
+operator|:
+literal|1
+block|;
+comment|/// HasPrivateFields - True when there are private non-static data members.
+name|bool
+name|HasPrivateFields
+operator|:
+literal|1
+block|;
+comment|/// HasProtectedFields - True when there are protected non-static data
+comment|/// members.
+name|bool
+name|HasProtectedFields
+operator|:
+literal|1
+block|;
+comment|/// HasPublicFields - True when there are private non-static data members.
+name|bool
+name|HasPublicFields
+operator|:
+literal|1
+block|;
 comment|/// HasTrivialConstructor - True when this class has a trivial constructor.
 comment|///
 comment|/// C++ [class.ctor]p5.  A constructor is trivial if it is an
@@ -979,34 +1025,83 @@ name|HasTrivialConstructor
 operator|:
 literal|1
 block|;
+comment|/// HasConstExprNonCopyMoveConstructor - True when this class has at least
+comment|/// one constexpr constructor which is neither the copy nor move
+comment|/// constructor.
+name|bool
+name|HasConstExprNonCopyMoveConstructor
+operator|:
+literal|1
+block|;
 comment|/// HasTrivialCopyConstructor - True when this class has a trivial copy
 comment|/// constructor.
 comment|///
-comment|/// C++ [class.copy]p6.  A copy constructor for class X is trivial
-comment|/// if it is implicitly declared and if
-comment|/// * class X has no virtual functions and no virtual base classes, and
-comment|/// * each direct base class of X has a trivial copy constructor, and
-comment|/// * for all the nonstatic data members of X that are of class type (or
-comment|///   array thereof), each such class type has a trivial copy constructor;
-comment|/// otherwise the copy constructor is non-trivial.
+comment|/// C++0x [class.copy]p13:
+comment|///   A copy/move constructor for class X is trivial if it is neither
+comment|///   user-provided nor deleted and if
+comment|///    -- class X has no virtual functions and no virtual base classes, and
+comment|///    -- the constructor selected to copy/move each direct base class
+comment|///       subobject is trivial, and
+comment|///    -- for each non-static data member of X that is of class type (or an
+comment|///       array thereof), the constructor selected to copy/move that member
+comment|///       is trivial;
+comment|///   otherwise the copy/move constructor is non-trivial.
 name|bool
 name|HasTrivialCopyConstructor
+operator|:
+literal|1
+block|;
+comment|/// HasTrivialMoveConstructor - True when this class has a trivial move
+comment|/// constructor.
+comment|///
+comment|/// C++0x [class.copy]p13:
+comment|///   A copy/move constructor for class X is trivial if it is neither
+comment|///   user-provided nor deleted and if
+comment|///    -- class X has no virtual functions and no virtual base classes, and
+comment|///    -- the constructor selected to copy/move each direct base class
+comment|///       subobject is trivial, and
+comment|///    -- for each non-static data member of X that is of class type (or an
+comment|///       array thereof), the constructor selected to copy/move that member
+comment|///       is trivial;
+comment|///   otherwise the copy/move constructor is non-trivial.
+name|bool
+name|HasTrivialMoveConstructor
 operator|:
 literal|1
 block|;
 comment|/// HasTrivialCopyAssignment - True when this class has a trivial copy
 comment|/// assignment operator.
 comment|///
-comment|/// C++ [class.copy]p11.  A copy assignment operator for class X is
-comment|/// trivial if it is implicitly declared and if
-comment|/// * class X has no virtual functions and no virtual base classes, and
-comment|/// * each direct base class of X has a trivial copy assignment operator, and
-comment|/// * for all the nonstatic data members of X that are of class type (or
-comment|///   array thereof), each such class type has a trivial copy assignment
-comment|///   operator;
-comment|/// otherwise the copy assignment operator is non-trivial.
+comment|/// C++0x [class.copy]p27:
+comment|///   A copy/move assignment operator for class X is trivial if it is
+comment|///   neither user-provided nor deleted and if
+comment|///    -- class X has no virtual functions and no virtual base classes, and
+comment|///    -- the assignment operator selected to copy/move each direct base
+comment|///       class subobject is trivial, and
+comment|///    -- for each non-static data member of X that is of class type (or an
+comment|///       array thereof), the assignment operator selected to copy/move
+comment|///       that member is trivial;
+comment|///   otherwise the copy/move assignment operator is non-trivial.
 name|bool
 name|HasTrivialCopyAssignment
+operator|:
+literal|1
+block|;
+comment|/// HasTrivialMoveAssignment - True when this class has a trivial move
+comment|/// assignment operator.
+comment|///
+comment|/// C++0x [class.copy]p27:
+comment|///   A copy/move assignment operator for class X is trivial if it is
+comment|///   neither user-provided nor deleted and if
+comment|///    -- class X has no virtual functions and no virtual base classes, and
+comment|///    -- the assignment operator selected to copy/move each direct base
+comment|///       class subobject is trivial, and
+comment|///    -- for each non-static data member of X that is of class type (or an
+comment|///       array thereof), the assignment operator selected to copy/move
+comment|///       that member is trivial;
+comment|///   otherwise the copy/move assignment operator is non-trivial.
+name|bool
+name|HasTrivialMoveAssignment
 operator|:
 literal|1
 block|;
@@ -1020,6 +1115,13 @@ comment|/// * for all of the non-static data members of its class that are of cl
 comment|///   type (or array thereof), each such class has a trivial destructor.
 name|bool
 name|HasTrivialDestructor
+operator|:
+literal|1
+block|;
+comment|/// HasNonLiteralTypeFieldsOrBases - True when this class contains at least
+comment|/// one non-static data member or base class of non literal type.
+name|bool
+name|HasNonLiteralTypeFieldsOrBases
 operator|:
 literal|1
 block|;
@@ -1251,13 +1353,13 @@ argument|TagKind TK
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
 argument|CXXRecordDecl *PrevDecl
-argument_list|,
-argument|SourceLocation TKL = SourceLocation()
 argument_list|)
 block|;
 name|public
@@ -1433,17 +1535,14 @@ modifier|*
 name|DC
 parameter_list|,
 name|SourceLocation
-name|L
+name|StartLoc
+parameter_list|,
+name|SourceLocation
+name|IdLoc
 parameter_list|,
 name|IdentifierInfo
 modifier|*
 name|Id
-parameter_list|,
-name|SourceLocation
-name|TKL
-init|=
-name|SourceLocation
-argument_list|()
 parameter_list|,
 name|CXXRecordDecl
 modifier|*
@@ -2597,6 +2696,29 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// isStandardLayout - Whether this class has standard layout
+end_comment
+
+begin_comment
+comment|/// (C++ [class]p7)
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isStandardLayout
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|IsStandardLayout
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|// hasTrivialConstructor - Whether this class has a trivial constructor
 end_comment
 
@@ -2620,11 +2742,34 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|// hasConstExprNonCopyMoveConstructor - Whether this class has at least one
+end_comment
+
+begin_comment
+comment|// constexpr constructor other than the copy or move constructors
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasConstExprNonCopyMoveConstructor
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|HasConstExprNonCopyMoveConstructor
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|// hasTrivialCopyConstructor - Whether this class has a trivial copy
 end_comment
 
 begin_comment
-comment|// constructor (C++ [class.copy]p6)
+comment|// constructor (C++ [class.copy]p6, C++0x [class.copy]p13)
 end_comment
 
 begin_expr_stmt
@@ -2643,11 +2788,34 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|// hasTrivialMoveConstructor - Whether this class has a trivial move
+end_comment
+
+begin_comment
+comment|// constructor (C++0x [class.copy]p13)
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasTrivialMoveConstructor
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|HasTrivialMoveConstructor
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|// hasTrivialCopyAssignment - Whether this class has a trivial copy
 end_comment
 
 begin_comment
-comment|// assignment operator (C++ [class.copy]p11)
+comment|// assignment operator (C++ [class.copy]p11, C++0x [class.copy]p27)
 end_comment
 
 begin_expr_stmt
@@ -2661,6 +2829,29 @@ name|data
 argument_list|()
 operator|.
 name|HasTrivialCopyAssignment
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|// hasTrivialMoveAssignment - Whether this class has a trivial move
+end_comment
+
+begin_comment
+comment|// assignment operator (C++0x [class.copy]p27)
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasTrivialMoveAssignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|HasTrivialMoveAssignment
 return|;
 block|}
 end_expr_stmt
@@ -2686,6 +2877,45 @@ operator|.
 name|HasTrivialDestructor
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
+comment|// hasNonLiteralTypeFieldsOrBases - Whether this class has a non-literal type
+end_comment
+
+begin_comment
+comment|// non-static data member or base class.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasNonLiteralTypeFieldsOrBases
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|HasNonLiteralTypeFieldsOrBases
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|// isTriviallyCopyable - Whether this class is considered trivially copyable
+end_comment
+
+begin_comment
+comment|// (C++0x [class]p5).
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isTriviallyCopyable
+argument_list|()
+specifier|const
+expr_stmt|;
 end_expr_stmt
 
 begin_comment
@@ -4056,6 +4286,8 @@ argument|Kind DK
 argument_list|,
 argument|CXXRecordDecl *RD
 argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
 argument|const DeclarationNameInfo&NameInfo
 argument_list|,
 argument|QualType T
@@ -4067,6 +4299,8 @@ argument_list|,
 argument|StorageClass SCAsWritten
 argument_list|,
 argument|bool isInline
+argument_list|,
+argument|SourceLocation EndLocation
 argument_list|)
 operator|:
 name|FunctionDecl
@@ -4074,6 +4308,8 @@ argument_list|(
 argument|DK
 argument_list|,
 argument|RD
+argument_list|,
+argument|StartLoc
 argument_list|,
 argument|NameInfo
 argument_list|,
@@ -4087,7 +4323,20 @@ argument|SCAsWritten
 argument_list|,
 argument|isInline
 argument_list|)
-block|{}
+block|{
+if|if
+condition|(
+name|EndLocation
+operator|.
+name|isValid
+argument_list|()
+condition|)
+name|setRangeEnd
+argument_list|(
+name|EndLocation
+argument_list|)
+expr_stmt|;
+block|}
 name|public
 operator|:
 specifier|static
@@ -4099,17 +4348,21 @@ argument|ASTContext&C
 argument_list|,
 argument|CXXRecordDecl *RD
 argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
 argument|const DeclarationNameInfo&NameInfo
 argument_list|,
 argument|QualType T
 argument_list|,
 argument|TypeSourceInfo *TInfo
 argument_list|,
-argument|bool isStatic = false
+argument|bool isStatic
 argument_list|,
-argument|StorageClass SCAsWritten = SC_None
+argument|StorageClass SCAsWritten
 argument_list|,
-argument|bool isInline = false
+argument|bool isInline
+argument_list|,
+argument|SourceLocation EndLocation
 argument_list|)
 block|;
 name|bool
@@ -4626,11 +4879,11 @@ name|class
 name|CXXCtorInitializer
 block|{
 comment|/// \brief Either the base class name (stored as a TypeSourceInfo*), an normal
-comment|/// field (FieldDecl) or an anonymous field (IndirectFieldDecl*) being
-comment|/// initialized.
+comment|/// field (FieldDecl), anonymous field (IndirectFieldDecl*), or target
+comment|/// constructor (CXXConstructorDecl*) being initialized.
 name|llvm
 operator|::
-name|PointerUnion3
+name|PointerUnion4
 operator|<
 name|TypeSourceInfo
 operator|*
@@ -4640,11 +4893,16 @@ operator|*
 operator|,
 name|IndirectFieldDecl
 operator|*
+operator|,
+name|CXXConstructorDecl
+operator|*
 operator|>
 name|Initializee
 expr_stmt|;
 comment|/// \brief The source location for the field name or, for a base initializer
-comment|/// pack expansion, the location of the ellipsis.
+comment|/// pack expansion, the location of the ellipsis. In the case of a delegating
+comment|/// constructor, it will still include the type's source location as the
+comment|/// Initializee points to the CXXConstructorDecl (to allow loop detection).
 name|SourceLocation
 name|MemberOrEllipsisLocation
 decl_stmt|;
@@ -4762,6 +5020,7 @@ name|SourceLocation
 name|R
 parameter_list|)
 function_decl|;
+comment|/// CXXCtorInitializer - Creates a new anonymous field initializer.
 name|explicit
 name|CXXCtorInitializer
 parameter_list|(
@@ -4778,6 +5037,32 @@ name|MemberLoc
 parameter_list|,
 name|SourceLocation
 name|L
+parameter_list|,
+name|Expr
+modifier|*
+name|Init
+parameter_list|,
+name|SourceLocation
+name|R
+parameter_list|)
+function_decl|;
+comment|/// CXXCtorInitializer - Creates a new delegating Initializer.
+name|explicit
+name|CXXCtorInitializer
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
+name|SourceLocation
+name|D
+parameter_list|,
+name|SourceLocation
+name|L
+parameter_list|,
+name|CXXConstructorDecl
+modifier|*
+name|Target
 parameter_list|,
 name|Expr
 modifier|*
@@ -4886,6 +5171,25 @@ operator|.
 name|is
 operator|<
 name|IndirectFieldDecl
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+comment|/// isDelegatingInitializer - Returns true when this initializer is creating
+comment|/// a delegating constructor.
+name|bool
+name|isDelegatingInitializer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Initializee
+operator|.
+name|is
+operator|<
+name|CXXConstructorDecl
 operator|*
 operator|>
 operator|(
@@ -5074,6 +5378,33 @@ operator|.
 name|get
 operator|<
 name|IndirectFieldDecl
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+else|else
+return|return
+literal|0
+return|;
+block|}
+name|CXXConstructorDecl
+operator|*
+name|getTargetConstructor
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|isDelegatingInitializer
+argument_list|()
+condition|)
+return|return
+name|Initializee
+operator|.
+name|get
+operator|<
+name|CXXConstructorDecl
 operator|*
 operator|>
 operator|(
@@ -5437,6 +5768,8 @@ name|CXXConstructorDecl
 argument_list|(
 argument|CXXRecordDecl *RD
 argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
 argument|const DeclarationNameInfo&NameInfo
 argument_list|,
 argument|QualType T
@@ -5456,6 +5789,8 @@ name|CXXConstructor
 argument_list|,
 name|RD
 argument_list|,
+name|StartLoc
+argument_list|,
 name|NameInfo
 argument_list|,
 name|T
@@ -5467,6 +5802,9 @@ argument_list|,
 name|SC_None
 argument_list|,
 name|isInline
+argument_list|,
+name|SourceLocation
+argument_list|()
 argument_list|)
 block|,
 name|IsExplicitSpecified
@@ -5514,6 +5852,8 @@ argument_list|(
 argument|ASTContext&C
 argument_list|,
 argument|CXXRecordDecl *RD
+argument_list|,
+argument|SourceLocation StartLoc
 argument_list|,
 argument|const DeclarationNameInfo&NameInfo
 argument_list|,
@@ -5830,6 +6170,75 @@ block|}
 end_function
 
 begin_comment
+comment|/// isDelegatingConstructor - Whether this constructor is a
+end_comment
+
+begin_comment
+comment|/// delegating constructor
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isDelegatingConstructor
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|getNumCtorInitializers
+argument_list|()
+operator|==
+literal|1
+operator|)
+operator|&&
+name|CtorInitializers
+index|[
+literal|0
+index|]
+operator|->
+name|isDelegatingInitializer
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// getTargetConstructor - When this constructor delegates to
+end_comment
+
+begin_comment
+comment|/// another, retrieve the target
+end_comment
+
+begin_expr_stmt
+name|CXXConstructorDecl
+operator|*
+name|getTargetConstructor
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|isDelegatingConstructor
+argument_list|()
+condition|)
+return|return
+name|CtorInitializers
+index|[
+literal|0
+index|]
+operator|->
+name|getTargetConstructor
+argument_list|()
+return|;
+else|else
+return|return
+literal|0
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// isDefaultConstructor - Whether this constructor is a default
 end_comment
 
@@ -5986,7 +6395,19 @@ name|bool
 name|isMoveConstructor
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+name|unsigned
+name|TypeQuals
+operator|=
+literal|0
+block|;
+return|return
+name|isMoveConstructor
+argument_list|(
+name|TypeQuals
+argument_list|)
+return|;
+block|}
 end_expr_stmt
 
 begin_comment
@@ -6250,6 +6671,8 @@ name|CXXDestructorDecl
 argument_list|(
 argument|CXXRecordDecl *RD
 argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
 argument|const DeclarationNameInfo&NameInfo
 argument_list|,
 argument|QualType T
@@ -6267,6 +6690,8 @@ name|CXXDestructor
 argument_list|,
 name|RD
 argument_list|,
+name|StartLoc
+argument_list|,
 name|NameInfo
 argument_list|,
 name|T
@@ -6278,6 +6703,9 @@ argument_list|,
 name|SC_None
 argument_list|,
 name|isInline
+argument_list|,
+name|SourceLocation
+argument_list|()
 argument_list|)
 block|,
 name|ImplicitlyDefined
@@ -6315,6 +6743,8 @@ argument_list|(
 argument|ASTContext&C
 argument_list|,
 argument|CXXRecordDecl *RD
+argument_list|,
+argument|SourceLocation StartLoc
 argument_list|,
 argument|const DeclarationNameInfo&NameInfo
 argument_list|,
@@ -6497,6 +6927,8 @@ name|CXXConversionDecl
 argument_list|(
 argument|CXXRecordDecl *RD
 argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
 argument|const DeclarationNameInfo&NameInfo
 argument_list|,
 argument|QualType T
@@ -6506,6 +6938,8 @@ argument_list|,
 argument|bool isInline
 argument_list|,
 argument|bool isExplicitSpecified
+argument_list|,
+argument|SourceLocation EndLocation
 argument_list|)
 operator|:
 name|CXXMethodDecl
@@ -6513,6 +6947,8 @@ argument_list|(
 name|CXXConversion
 argument_list|,
 name|RD
+argument_list|,
+name|StartLoc
 argument_list|,
 name|NameInfo
 argument_list|,
@@ -6525,6 +6961,8 @@ argument_list|,
 name|SC_None
 argument_list|,
 name|isInline
+argument_list|,
+name|EndLocation
 argument_list|)
 block|,
 name|IsExplicitSpecified
@@ -6553,6 +6991,8 @@ argument|ASTContext&C
 argument_list|,
 argument|CXXRecordDecl *RD
 argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
 argument|const DeclarationNameInfo&NameInfo
 argument_list|,
 argument|QualType T
@@ -6562,6 +7002,8 @@ argument_list|,
 argument|bool isInline
 argument_list|,
 argument|bool isExplicit
+argument_list|,
+argument|SourceLocation EndLocation
 argument_list|)
 block|;
 comment|/// IsExplicitSpecified - Whether this conversion function declaration is
@@ -6722,21 +7164,25 @@ comment|/// Language - The language for this linkage specification.
 name|LanguageIDs
 name|Language
 decl_stmt|;
-comment|/// HadBraces - Whether this linkage specification had curly braces or not.
-name|bool
-name|HadBraces
-range|:
-literal|1
+comment|/// ExternLoc - The source location for the extern keyword.
+name|SourceLocation
+name|ExternLoc
+decl_stmt|;
+comment|/// RBraceLoc - The source location for the right brace (if valid).
+name|SourceLocation
+name|RBraceLoc
 decl_stmt|;
 name|LinkageSpecDecl
 argument_list|(
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation ExternLoc
+argument_list|,
+argument|SourceLocation LangLoc
 argument_list|,
 argument|LanguageIDs lang
 argument_list|,
-argument|bool Braces
+argument|SourceLocation RBLoc
 argument_list|)
 block|:
 name|Decl
@@ -6745,7 +7191,7 @@ name|LinkageSpec
 argument_list|,
 name|DC
 argument_list|,
-name|L
+name|LangLoc
 argument_list|)
 operator|,
 name|DeclContext
@@ -6758,9 +7204,14 @@ argument_list|(
 name|lang
 argument_list|)
 operator|,
-name|HadBraces
+name|ExternLoc
 argument_list|(
-argument|Braces
+name|ExternLoc
+argument_list|)
+operator|,
+name|RBraceLoc
+argument_list|(
+argument|RBLoc
 argument_list|)
 block|{ }
 name|public
@@ -6774,11 +7225,13 @@ argument|ASTContext&C
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation ExternLoc
+argument_list|,
+argument|SourceLocation LangLoc
 argument_list|,
 argument|LanguageIDs Lang
 argument_list|,
-argument|bool Braces
+argument|SourceLocation RBraceLoc = SourceLocation()
 argument_list|)
 expr_stmt|;
 comment|/// \brief Return the language specified by this linkage specification.
@@ -6812,23 +7265,105 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|HadBraces
+name|RBraceLoc
+operator|.
+name|isValid
+argument_list|()
 return|;
 block|}
-comment|/// \brief Set whether this linkage specification has braces in its
-comment|/// syntactic form.
+name|SourceLocation
+name|getExternLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ExternLoc
+return|;
+block|}
+name|SourceLocation
+name|getRBraceLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RBraceLoc
+return|;
+block|}
 name|void
-name|setHasBraces
+name|setExternLoc
 parameter_list|(
-name|bool
-name|B
+name|SourceLocation
+name|L
 parameter_list|)
 block|{
-name|HadBraces
+name|ExternLoc
 operator|=
-name|B
+name|L
 expr_stmt|;
 block|}
+name|void
+name|setRBraceLoc
+parameter_list|(
+name|SourceLocation
+name|L
+parameter_list|)
+block|{
+name|RBraceLoc
+operator|=
+name|L
+expr_stmt|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|hasBraces
+argument_list|()
+condition|)
+return|return
+name|getRBraceLoc
+argument_list|()
+return|;
+comment|// No braces: get the end location of the (only) declaration in context
+comment|// (if present).
+return|return
+name|decls_empty
+argument_list|()
+condition|?
+name|getLocation
+argument_list|()
+else|:
+name|decls_begin
+argument_list|()
+operator|->
+name|getLocEnd
+argument_list|()
+return|;
+block|}
+end_decl_stmt
+
+begin_expr_stmt
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|ExternLoc
+argument_list|,
+name|getLocEnd
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|bool
 name|classof
@@ -6849,6 +7384,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classof
@@ -6863,6 +7401,9 @@ return|return
 name|true
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classofKind
@@ -6877,6 +7418,9 @@ operator|==
 name|LinkageSpec
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|DeclContext
 modifier|*
@@ -6906,6 +7450,9 @@ operator|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|LinkageSpecDecl
 modifier|*
@@ -6935,14 +7482,10 @@ operator|)
 operator|)
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function
 
 begin_comment
+unit|};
 comment|/// UsingDirectiveDecl - Represents C++ using-directive. For example:
 end_comment
 
@@ -8082,20 +8625,6 @@ name|getNestedNameSpecifier
 argument_list|()
 return|;
 block|}
-comment|/// \brief Retrieve the source range of the nested-name-specifier
-comment|/// that qualifies the name.
-name|SourceRange
-name|getQualifierRange
-argument_list|()
-specifier|const
-block|{
-return|return
-name|QualifierLoc
-operator|.
-name|getSourceRange
-argument_list|()
-return|;
-block|}
 name|DeclarationNameInfo
 name|getNameInfo
 argument_list|()
@@ -8687,20 +9216,6 @@ name|getNestedNameSpecifier
 argument_list|()
 return|;
 block|}
-comment|/// \brief Retrieve the source range of the nested-name-specifier
-comment|/// that qualifies the name.
-name|SourceRange
-name|getQualifierRange
-argument_list|()
-specifier|const
-block|{
-return|return
-name|QualifierLoc
-operator|.
-name|getSourceRange
-argument_list|()
-return|;
-block|}
 name|DeclarationNameInfo
 name|getNameInfo
 argument_list|()
@@ -8884,10 +9399,7 @@ argument_list|,
 name|TargetNameLoc
 argument_list|,
 name|TargetName
-argument_list|)
-block|,
-name|UsingLocation
-argument_list|(
+argument_list|,
 name|UsingLoc
 argument_list|)
 block|,
@@ -8914,7 +9426,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|UsingLocation
+name|getLocStart
+argument_list|()
 return|;
 block|}
 comment|/// \brief Returns the source location of the 'typename' keyword.
@@ -8952,21 +9465,6 @@ name|getNestedNameSpecifier
 argument_list|()
 return|;
 block|}
-comment|/// \brief Retrieve the source range of the nested-name-specifier
-comment|/// that qualifies the name.
-name|SourceRange
-name|getQualifierRange
-argument_list|()
-specifier|const
-block|{
-return|return
-name|QualifierLoc
-operator|.
-name|getSourceRange
-argument_list|()
-return|;
-block|}
-comment|// FIXME: DeclarationNameInfo
 specifier|static
 name|UnresolvedUsingTypenameDecl
 operator|*
@@ -8987,21 +9485,6 @@ argument_list|,
 argument|DeclarationName TargetName
 argument_list|)
 block|;
-name|SourceRange
-name|getSourceRange
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SourceRange
-argument_list|(
-name|UsingLocation
-argument_list|,
-name|getLocation
-argument_list|()
-argument_list|)
-return|;
-block|}
 specifier|static
 name|bool
 name|classof
@@ -9060,15 +9543,20 @@ name|StringLiteral
 operator|*
 name|Message
 block|;
+name|SourceLocation
+name|RParenLoc
+block|;
 name|StaticAssertDecl
 argument_list|(
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StaticAssertLoc
 argument_list|,
 argument|Expr *assertexpr
 argument_list|,
 argument|StringLiteral *message
+argument_list|,
+argument|SourceLocation RParenLoc
 argument_list|)
 operator|:
 name|Decl
@@ -9077,7 +9565,7 @@ name|StaticAssert
 argument_list|,
 name|DC
 argument_list|,
-name|L
+name|StaticAssertLoc
 argument_list|)
 block|,
 name|AssertExpr
@@ -9087,7 +9575,12 @@ argument_list|)
 block|,
 name|Message
 argument_list|(
-argument|message
+name|message
+argument_list|)
+block|,
+name|RParenLoc
+argument_list|(
+argument|RParenLoc
 argument_list|)
 block|{ }
 name|public
@@ -9101,11 +9594,13 @@ argument|ASTContext&C
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StaticAssertLoc
 argument_list|,
 argument|Expr *AssertExpr
 argument_list|,
 argument|StringLiteral *Message
+argument_list|,
+argument|SourceLocation RParenLoc
 argument_list|)
 block|;
 name|Expr
@@ -9146,6 +9641,41 @@ specifier|const
 block|{
 return|return
 name|Message
+return|;
+block|}
+name|SourceLocation
+name|getRParenLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RParenLoc
+return|;
+block|}
+name|void
+name|setRParenLoc
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|RParenLoc
+operator|=
+name|L
+block|; }
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|getLocation
+argument_list|()
+argument_list|,
+name|getRParenLoc
+argument_list|()
+argument_list|)
 return|;
 block|}
 specifier|static

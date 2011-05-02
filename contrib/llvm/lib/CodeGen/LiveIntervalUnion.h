@@ -369,6 +369,20 @@ modifier|&
 name|VirtReg
 parameter_list|)
 function_decl|;
+comment|// Remove all inserted virtual registers.
+name|void
+name|clear
+parameter_list|()
+block|{
+name|Segments
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+operator|++
+name|Tag
+expr_stmt|;
+block|}
 comment|// Print union, using TRI to translate register names
 name|void
 name|print
@@ -629,6 +643,8 @@ name|SeenUnspillableVReg
 decl_stmt|;
 name|unsigned
 name|Tag
+decl_stmt|,
+name|UserTag
 decl_stmt|;
 name|public
 label|:
@@ -640,6 +656,16 @@ argument_list|()
 operator|,
 name|VirtReg
 argument_list|()
+operator|,
+name|Tag
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|UserTag
+argument_list|(
+literal|0
+argument_list|)
 block|{}
 name|Query
 argument_list|(
@@ -709,10 +735,16 @@ block|;
 name|Tag
 operator|=
 literal|0
+block|;
+name|UserTag
+operator|=
+literal|0
 block|;     }
 name|void
 name|init
 argument_list|(
+argument|unsigned UTag
+argument_list|,
 argument|LiveInterval *VReg
 argument_list|,
 argument|LiveIntervalUnion *LIU
@@ -729,6 +761,10 @@ argument_list|)
 block|;
 if|if
 condition|(
+name|UserTag
+operator|==
+name|UTag
+operator|&&
 name|VirtReg
 operator|==
 name|VReg
@@ -766,6 +802,10 @@ name|LIU
 operator|->
 name|getTag
 argument_list|()
+expr_stmt|;
+name|UserTag
+operator|=
+name|UTag
 expr_stmt|;
 block|}
 name|LiveInterval
@@ -875,6 +915,11 @@ name|unsigned
 name|MaxInterferingRegs
 init|=
 name|UINT_MAX
+parameter_list|,
+name|float
+name|MaxWeight
+init|=
+name|HUGE_VALF
 parameter_list|)
 function_decl|;
 comment|// Was this virtual register visited during collectInterferingVRegs?

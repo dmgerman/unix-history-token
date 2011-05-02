@@ -281,6 +281,93 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+comment|/// SimplifySRemInst - Given operands for an SRem, see if we can
+comment|/// fold the result.  If not, this returns null.
+name|Value
+modifier|*
+name|SimplifySRemInst
+parameter_list|(
+name|Value
+modifier|*
+name|LHS
+parameter_list|,
+name|Value
+modifier|*
+name|RHS
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// SimplifyURemInst - Given operands for a URem, see if we can
+comment|/// fold the result.  If not, this returns null.
+name|Value
+modifier|*
+name|SimplifyURemInst
+parameter_list|(
+name|Value
+modifier|*
+name|LHS
+parameter_list|,
+name|Value
+modifier|*
+name|RHS
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// SimplifyFRemInst - Given operands for an FRem, see if we can
+comment|/// fold the result.  If not, this returns null.
+name|Value
+modifier|*
+name|SimplifyFRemInst
+parameter_list|(
+name|Value
+modifier|*
+name|LHS
+parameter_list|,
+name|Value
+modifier|*
+name|RHS
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+literal|0
+parameter_list|)
+function_decl|;
 comment|/// SimplifyShlInst - Given operands for a Shl, see if we can
 comment|/// fold the result.  If not, this returns null.
 name|Value

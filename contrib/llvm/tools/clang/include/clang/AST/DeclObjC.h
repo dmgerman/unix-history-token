@@ -498,27 +498,34 @@ block|}
 enum|;
 name|private
 label|:
-comment|/// Bitfields must be first fields in this class so they pack with those
-comment|/// declared in class Decl.
+comment|// The conventional meaning of this method; an ObjCMethodFamily.
+comment|// This is not serialized; instead, it is computed on demand and
+comment|// cached.
+name|mutable
+name|unsigned
+name|Family
+range|:
+name|ObjCMethodFamilyBitWidth
+decl_stmt|;
 comment|/// instance (true) or class (false) method.
-name|bool
+name|unsigned
 name|IsInstance
 range|:
 literal|1
 decl_stmt|;
-name|bool
+name|unsigned
 name|IsVariadic
 range|:
 literal|1
 decl_stmt|;
 comment|// Synthesized declaration method for a property setter/getter
-name|bool
+name|unsigned
 name|IsSynthesized
 range|:
 literal|1
 decl_stmt|;
 comment|// Method has a definition.
-name|bool
+name|unsigned
 name|IsDefined
 range|:
 literal|1
@@ -623,6 +630,11 @@ operator|,
 name|DeclContext
 argument_list|(
 name|ObjCMethod
+argument_list|)
+operator|,
+name|Family
+argument_list|(
+name|InvalidObjCMethodFamily
 argument_list|)
 operator|,
 name|IsInstance
@@ -1212,6 +1224,12 @@ operator|=
 name|CD
 expr_stmt|;
 block|}
+comment|/// Determines the family of this method.
+name|ObjCMethodFamily
+name|getMethodFamily
+argument_list|()
+specifier|const
+expr_stmt|;
 name|bool
 name|isInstanceMethod
 argument_list|()
@@ -2054,7 +2072,7 @@ comment|/// \brief List of categories and class extensions defined for this clas
 comment|///
 comment|/// Categories are stored as a linked list in the AST, since the categories
 comment|/// and class extensions come long after the initial interface declaration,
-comment|/// and we avoid dynamically-resized arrays in the AST whereever possible.
+comment|/// and we avoid dynamically-resized arrays in the AST wherever possible.
 name|ObjCCategoryDecl
 operator|*
 name|CategoryList
@@ -3323,7 +3341,9 @@ name|ObjCIvarDecl
 argument_list|(
 argument|ObjCContainerDecl *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
@@ -3344,7 +3364,9 @@ name|ObjCIvar
 argument_list|,
 name|DC
 argument_list|,
-name|L
+name|StartLoc
+argument_list|,
+name|IdLoc
 argument_list|,
 name|Id
 argument_list|,
@@ -3384,7 +3406,9 @@ argument|ASTContext&C
 argument_list|,
 argument|ObjCContainerDecl *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
@@ -3573,7 +3597,9 @@ name|ObjCAtDefsFieldDecl
 argument_list|(
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
@@ -3588,7 +3614,9 @@ argument|ObjCAtDefsField
 argument_list|,
 argument|DC
 argument_list|,
-argument|L
+argument|StartLoc
+argument_list|,
+argument|IdLoc
 argument_list|,
 argument|Id
 argument_list|,
@@ -3615,7 +3643,9 @@ argument|ASTContext&C
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
@@ -3670,7 +3700,7 @@ expr|}
 block|;
 comment|/// ObjCProtocolDecl - Represents a protocol declaration. ObjC protocols
 comment|/// declare a pure abstract type (i.e no instance variables are permitted).
-comment|/// Protocols orginally drew inspiration from C++ pure virtual functions (a C++
+comment|/// Protocols originally drew inspiration from C++ pure virtual functions (a C++
 comment|/// feature with nice semantics and lousy syntax:-). Here is an example:
 comment|///
 comment|/// @protocol NSDraggingInfo<refproto1, refproto2>

@@ -1370,20 +1370,11 @@ argument_list|)
 struct|struct
 name|ExprMapKeyType
 block|{
-typedef|typedef
-name|SmallVector
-operator|<
-name|unsigned
-operator|,
-literal|4
-operator|>
-name|IndexList
-expr_stmt|;
 name|ExprMapKeyType
 argument_list|(
 argument|unsigned opc
 argument_list|,
-argument|const std::vector<Constant*>&ops
+argument|ArrayRef<Constant*> ops
 argument_list|,
 argument|unsigned short flags =
 literal|0
@@ -1391,7 +1382,7 @@ argument_list|,
 argument|unsigned short optionalflags =
 literal|0
 argument_list|,
-argument|const IndexList&inds = IndexList()
+argument|ArrayRef<unsigned> inds = ArrayRef<unsigned>()
 argument_list|)
 block|:
 name|opcode
@@ -1412,11 +1403,21 @@ operator|,
 name|operands
 argument_list|(
 name|ops
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|ops
+operator|.
+name|end
+argument_list|()
 argument_list|)
 operator|,
 name|indices
 argument_list|(
-argument|inds
+argument|inds.begin()
+argument_list|,
+argument|inds.end()
 argument_list|)
 block|{}
 name|uint8_t
@@ -1437,9 +1438,14 @@ operator|*
 operator|>
 name|operands
 expr_stmt|;
-name|IndexList
+name|SmallVector
+operator|<
+name|unsigned
+operator|,
+literal|4
+operator|>
 name|indices
-decl_stmt|;
+expr_stmt|;
 name|bool
 name|operator
 operator|==
@@ -2624,11 +2630,9 @@ operator|->
 name|getIndices
 argument_list|()
 else|:
-name|SmallVector
+name|ArrayRef
 operator|<
 name|unsigned
-argument_list|,
-literal|4
 operator|>
 operator|(
 operator|)

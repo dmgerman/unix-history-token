@@ -2500,10 +2500,20 @@ name|dp
 argument_list|)
 block|{
 return|return
-name|__builtin_ia32_loadupd
-argument_list|(
+operator|(
+name|__m128d
+operator|)
+block|{
 name|dp
-argument_list|)
+index|[
+literal|0
+index|]
+block|,
+name|dp
+index|[
+literal|1
+index|]
+block|}
 return|;
 block|}
 end_decl_stmt
@@ -7209,7 +7219,7 @@ parameter_list|,
 name|imm
 parameter_list|)
 define|\
-value|((__m128i)__builtin_shufflevector((__v4si)(a), (__v4si) {0}, \                                     (imm)& 0x3, ((imm)& 0xc)>> 2, \                                     ((imm)& 0x30)>> 4, ((imm)& 0xc0)>> 6))
+value|((__m128i)__builtin_shufflevector((__v4si)(a), (__v4si) _mm_set1_epi32(0), \                                     (imm)& 0x3, ((imm)& 0xc)>> 2, \                                     ((imm)& 0x30)>> 4, ((imm)& 0xc0)>> 6))
 end_define
 
 begin_define
@@ -7222,7 +7232,7 @@ parameter_list|,
 name|imm
 parameter_list|)
 define|\
-value|((__m128i)__builtin_shufflevector((__v8hi)(a), (__v8hi) {0}, \                                     (imm)& 0x3, ((imm)& 0xc)>> 2, \                                     ((imm)& 0x30)>> 4, ((imm)& 0xc0)>> 6, \                                     4, 5, 6, 7))
+value|((__m128i)__builtin_shufflevector((__v8hi)(a), (__v8hi) _mm_set1_epi16(0), \                                     (imm)& 0x3, ((imm)& 0xc)>> 2, \                                     ((imm)& 0x30)>> 4, ((imm)& 0xc0)>> 6, \                                     4, 5, 6, 7))
 end_define
 
 begin_define
@@ -7235,7 +7245,7 @@ parameter_list|,
 name|imm
 parameter_list|)
 define|\
-value|((__m128i)__builtin_shufflevector((__v8hi)(a), (__v8hi) {0}, 0, 1, 2, 3, \                                     4 + (((imm)& 0x03)>> 0), \                                     4 + (((imm)& 0x0c)>> 2), \                                     4 + (((imm)& 0x30)>> 4), \                                     4 + (((imm)& 0xc0)>> 6)))
+value|((__m128i)__builtin_shufflevector((__v8hi)(a), (__v8hi) _mm_set1_epi16(0), 0, 1, 2, 3, \                                     4 + (((imm)& 0x03)>> 0), \                                     4 + (((imm)& 0x0c)>> 2), \                                     4 + (((imm)& 0x30)>> 4), \                                     4 + (((imm)& 0xc0)>> 6)))
 end_define
 
 begin_decl_stmt

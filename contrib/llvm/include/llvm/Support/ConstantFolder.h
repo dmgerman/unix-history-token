@@ -87,9 +87,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|LLVMContext
-decl_stmt|;
 comment|/// ConstantFolder - Create constants with minimum, target independent, folding.
 name|class
 name|ConstantFolder
@@ -98,10 +95,7 @@ name|public
 label|:
 name|explicit
 name|ConstantFolder
-parameter_list|(
-name|LLVMContext
-modifier|&
-parameter_list|)
+parameter_list|()
 block|{}
 comment|//===--------------------------------------------------------------------===//
 comment|// Binary Operators

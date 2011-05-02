@@ -3041,7 +3041,7 @@ block|}
 expr|}
 block|;
 comment|//===----------------------------------------------------------------------===//
-comment|// Auxillary data classes for use with MemRegions.
+comment|// Auxiliary data classes for use with MemRegions.
 comment|//===----------------------------------------------------------------------===//
 name|class
 name|ElementRegion
@@ -3773,7 +3773,7 @@ operator|*
 name|LC
 argument_list|)
 block|;
-comment|/// getCXXThisRegion - Retrieve the [artifical] region associated with the
+comment|/// getCXXThisRegion - Retrieve the [artificial] region associated with the
 comment|///  parameter 'this'.
 specifier|const
 name|CXXThisRegion

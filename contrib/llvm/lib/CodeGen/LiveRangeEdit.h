@@ -98,6 +98,9 @@ name|class
 name|LiveIntervals
 decl_stmt|;
 name|class
+name|MachineLoopInfo
+decl_stmt|;
+name|class
 name|MachineRegisterInfo
 decl_stmt|;
 name|class
@@ -106,6 +109,65 @@ decl_stmt|;
 name|class
 name|LiveRangeEdit
 block|{
+name|public
+label|:
+comment|/// Callback methods for LiveRangeEdit owners.
+struct|struct
+name|Delegate
+block|{
+comment|/// Called immediately before erasing a dead machine instruction.
+name|virtual
+name|void
+name|LRE_WillEraseInstruction
+parameter_list|(
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|)
+block|{}
+comment|/// Called when a virtual register is no longer used. Return false to defer
+comment|/// its deletion from LiveIntervals.
+name|virtual
+name|bool
+name|LRE_CanEraseVirtReg
+parameter_list|(
+name|unsigned
+parameter_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// Called before shrinking the live range of a virtual register.
+name|virtual
+name|void
+name|LRE_WillShrinkVirtReg
+parameter_list|(
+name|unsigned
+parameter_list|)
+block|{}
+comment|/// Called after cloning a virtual register.
+comment|/// This is used for new registers representing connected components of Old.
+name|virtual
+name|void
+name|LRE_DidCloneVirtReg
+parameter_list|(
+name|unsigned
+name|New
+parameter_list|,
+name|unsigned
+name|Old
+parameter_list|)
+block|{}
+name|virtual
+operator|~
+name|Delegate
+argument_list|()
+block|{}
+block|}
+struct|;
+name|private
+label|:
 name|LiveInterval
 modifier|&
 name|parent_
@@ -118,13 +180,18 @@ operator|>
 operator|&
 name|newRegs_
 expr_stmt|;
+name|Delegate
+modifier|*
+specifier|const
+name|delegate_
+decl_stmt|;
 specifier|const
 name|SmallVectorImpl
 operator|<
 name|LiveInterval
 operator|*
 operator|>
-operator|&
+operator|*
 name|uselessRegs_
 expr_stmt|;
 comment|/// firstNew_ - Index of the first register added to newRegs_.
@@ -140,6 +207,7 @@ comment|/// remattable_ - Values defined by remattable instructions as identifie
 comment|/// tii.isTriviallyReMaterializable().
 name|SmallPtrSet
 operator|<
+specifier|const
 name|VNInfo
 operator|*
 operator|,
@@ -151,6 +219,7 @@ comment|/// rematted_ - Values that were actually rematted, and so need to have 
 comment|/// live range trimmed or entirely removed.
 name|SmallPtrSet
 operator|<
+specifier|const
 name|VNInfo
 operator|*
 operator|,
@@ -197,6 +266,34 @@ modifier|&
 name|lis
 parameter_list|)
 function_decl|;
+comment|/// foldAsLoad - If LI has a single use and a single def that can be folded as
+comment|/// a load, eliminate the register by folding the def into the use.
+name|bool
+name|foldAsLoad
+argument_list|(
+name|LiveInterval
+operator|*
+name|LI
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|MachineInstr
+operator|*
+operator|>
+operator|&
+name|Dead
+argument_list|,
+name|MachineRegisterInfo
+operator|&
+argument_list|,
+name|LiveIntervals
+operator|&
+argument_list|,
+specifier|const
+name|TargetInstrInfo
+operator|&
+argument_list|)
+decl_stmt|;
 name|public
 label|:
 comment|/// Create a LiveRangeEdit for breaking down parent into smaller pieces.
@@ -219,14 +316,22 @@ operator|>
 operator|&
 name|newRegs
 argument_list|,
+name|Delegate
+operator|*
+name|delegate
+operator|=
+literal|0
+argument_list|,
 specifier|const
 name|SmallVectorImpl
 operator|<
 name|LiveInterval
 operator|*
 operator|>
-operator|&
+operator|*
 name|uselessRegs
+operator|=
+literal|0
 argument_list|)
 operator|:
 name|parent_
@@ -237,6 +342,11 @@ operator|,
 name|newRegs_
 argument_list|(
 name|newRegs
+argument_list|)
+operator|,
+name|delegate_
+argument_list|(
+name|delegate
 argument_list|)
 operator|,
 name|uselessRegs_
@@ -359,14 +469,43 @@ name|firstNew_
 index|]
 return|;
 block|}
-comment|/// create - Create a new register with the same class and stack slot as
-comment|/// parent.
+comment|/// FIXME: Temporary accessors until we can get rid of
+comment|/// LiveIntervals::AddIntervalsForSpills
+name|SmallVectorImpl
+operator|<
+name|LiveInterval
+operator|*
+operator|>
+operator|*
+name|getNewVRegs
+argument_list|()
+block|{
+return|return
+operator|&
+name|newRegs_
+return|;
+block|}
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|LiveInterval
+operator|*
+operator|>
+operator|*
+name|getUselessVRegs
+argument_list|()
+block|{
+return|return
+name|uselessRegs_
+return|;
+block|}
+comment|/// createFrom - Create a new virtual register based on OldReg.
 name|LiveInterval
 modifier|&
-name|create
+name|createFrom
 parameter_list|(
-name|MachineRegisterInfo
-modifier|&
+name|unsigned
+name|OldReg
 parameter_list|,
 name|LiveIntervals
 modifier|&
@@ -375,14 +514,63 @@ name|VirtRegMap
 modifier|&
 parameter_list|)
 function_decl|;
+comment|/// create - Create a new register with the same class and original slot as
+comment|/// parent.
+name|LiveInterval
+modifier|&
+name|create
+parameter_list|(
+name|LiveIntervals
+modifier|&
+name|LIS
+parameter_list|,
+name|VirtRegMap
+modifier|&
+name|VRM
+parameter_list|)
+block|{
+return|return
+name|createFrom
+argument_list|(
+name|getReg
+argument_list|()
+argument_list|,
+name|LIS
+argument_list|,
+name|VRM
+argument_list|)
+return|;
+block|}
 comment|/// anyRematerializable - Return true if any parent values may be
 comment|/// rematerializable.
-comment|/// This function must be called before ny rematerialization is attempted.
+comment|/// This function must be called before any rematerialization is attempted.
 name|bool
 name|anyRematerializable
 parameter_list|(
 name|LiveIntervals
 modifier|&
+parameter_list|,
+specifier|const
+name|TargetInstrInfo
+modifier|&
+parameter_list|,
+name|AliasAnalysis
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/// checkRematerializable - Manually add VNI to the list of rematerializable
+comment|/// values if DefMI may be rematerializable.
+name|bool
+name|checkRematerializable
+parameter_list|(
+name|VNInfo
+modifier|*
+name|VNI
+parameter_list|,
+specifier|const
+name|MachineInstr
+modifier|*
+name|DefMI
 parameter_list|,
 specifier|const
 name|TargetInstrInfo
@@ -481,6 +669,11 @@ argument_list|,
 specifier|const
 name|TargetRegisterInfo
 operator|&
+argument_list|,
+name|bool
+name|Late
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 comment|/// markRematerialized - explicitly mark a value as rematerialized after doing
@@ -488,6 +681,7 @@ comment|/// it manually.
 name|void
 name|markRematerialized
 parameter_list|(
+specifier|const
 name|VNInfo
 modifier|*
 name|ParentVNI
@@ -505,6 +699,7 @@ comment|/// didRematerialize - Return true if ParentVNI was rematerialized anywh
 name|bool
 name|didRematerialize
 argument_list|(
+specifier|const
 name|VNInfo
 operator|*
 name|ParentVNI
@@ -520,6 +715,60 @@ name|ParentVNI
 argument_list|)
 return|;
 block|}
+comment|/// eraseVirtReg - Notify the delegate that Reg is no longer in use, and try
+comment|/// to erase it from LIS.
+name|void
+name|eraseVirtReg
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|,
+name|LiveIntervals
+modifier|&
+name|LIS
+parameter_list|)
+function_decl|;
+comment|/// eliminateDeadDefs - Try to delete machine instructions that are now dead
+comment|/// (allDefsAreDead returns true). This may cause live intervals to be trimmed
+comment|/// and further dead efs to be eliminated.
+name|void
+name|eliminateDeadDefs
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|MachineInstr
+operator|*
+operator|>
+operator|&
+name|Dead
+argument_list|,
+name|LiveIntervals
+operator|&
+argument_list|,
+name|VirtRegMap
+operator|&
+argument_list|,
+specifier|const
+name|TargetInstrInfo
+operator|&
+argument_list|)
+decl_stmt|;
+comment|/// calculateRegClassAndHint - Recompute register class and hint for each new
+comment|/// register.
+name|void
+name|calculateRegClassAndHint
+parameter_list|(
+name|MachineFunction
+modifier|&
+parameter_list|,
+name|LiveIntervals
+modifier|&
+parameter_list|,
+specifier|const
+name|MachineLoopInfo
+modifier|&
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 block|}

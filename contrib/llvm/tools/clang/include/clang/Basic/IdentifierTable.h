@@ -1153,6 +1153,85 @@ end_function
 
 begin_comment
 unit|};
+comment|/// \brief an RAII object for [un]poisoning an identifier
+end_comment
+
+begin_comment
+comment|/// within a certain scope. II is allowed to be null, in
+end_comment
+
+begin_comment
+comment|/// which case, objects of this type have no effect.
+end_comment
+
+begin_decl_stmt
+name|class
+name|PoisonIdentifierRAIIObject
+block|{
+name|IdentifierInfo
+modifier|*
+specifier|const
+name|II
+decl_stmt|;
+specifier|const
+name|bool
+name|OldValue
+decl_stmt|;
+name|public
+label|:
+name|PoisonIdentifierRAIIObject
+argument_list|(
+argument|IdentifierInfo *II
+argument_list|,
+argument|bool NewValue
+argument_list|)
+block|:
+name|II
+argument_list|(
+name|II
+argument_list|)
+operator|,
+name|OldValue
+argument_list|(
+argument|II ? II->isPoisoned() : false
+argument_list|)
+block|{
+if|if
+condition|(
+name|II
+condition|)
+name|II
+operator|->
+name|setIsPoisoned
+argument_list|(
+name|NewValue
+argument_list|)
+expr_stmt|;
+block|}
+operator|~
+name|PoisonIdentifierRAIIObject
+argument_list|()
+block|{
+if|if
+condition|(
+name|II
+condition|)
+name|II
+operator|->
+name|setIsPoisoned
+argument_list|(
+name|OldValue
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief An iterator that walks over all of the known identifiers
 end_comment
 
@@ -1367,7 +1446,7 @@ comment|/// IdentifierInfo nodes.  It has no other purpose, but this is an
 end_comment
 
 begin_comment
-comment|/// extremely performance-critical piece of the code, as each occurrance of
+comment|/// extremely performance-critical piece of the code, as each occurrence of
 end_comment
 
 begin_comment
@@ -1873,6 +1952,144 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
+comment|/// ObjCMethodFamily - A family of Objective-C methods.  These
+end_comment
+
+begin_comment
+comment|/// families have no inherent meaning in the language, but are
+end_comment
+
+begin_comment
+comment|/// nonetheless central enough in the existing implementations to
+end_comment
+
+begin_comment
+comment|/// merit direct AST support.  While, in theory, arbitrary methods can
+end_comment
+
+begin_comment
+comment|/// be considered to form families, we focus here on the methods
+end_comment
+
+begin_comment
+comment|/// involving allocation and retain-count management, as these are the
+end_comment
+
+begin_comment
+comment|/// most "core" and the most likely to be useful to diverse clients
+end_comment
+
+begin_comment
+comment|/// without extra information.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Both selectors and actual method declarations may be classified
+end_comment
+
+begin_comment
+comment|/// into families.  Method families may impose additional restrictions
+end_comment
+
+begin_comment
+comment|/// beyond their selector name; for example, a method called '_init'
+end_comment
+
+begin_comment
+comment|/// that returns void is not considered to be in the 'init' family
+end_comment
+
+begin_comment
+comment|/// (but would be if it returned 'id').  It is also possible to
+end_comment
+
+begin_comment
+comment|/// explicitly change or remove a method's family.  Therefore the
+end_comment
+
+begin_comment
+comment|/// method's family should be considered the single source of truth.
+end_comment
+
+begin_enum
+enum|enum
+name|ObjCMethodFamily
+block|{
+comment|/// \brief No particular method family.
+name|OMF_None
+block|,
+comment|// Selectors in these families may have arbitrary arity, may be
+comment|// written with arbitrary leading underscores, and may have
+comment|// additional CamelCase "words" in their first selector chunk
+comment|// following the family name.
+name|OMF_alloc
+block|,
+name|OMF_copy
+block|,
+name|OMF_init
+block|,
+name|OMF_mutableCopy
+block|,
+name|OMF_new
+block|,
+comment|// These families are singletons consisting only of the nullary
+comment|// selector with the given name.
+name|OMF_autorelease
+block|,
+name|OMF_dealloc
+block|,
+name|OMF_release
+block|,
+name|OMF_retain
+block|,
+name|OMF_retainCount
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/// Enough bits to store any enumerator in ObjCMethodFamily or
+end_comment
+
+begin_comment
+comment|/// InvalidObjCMethodFamily.
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|ObjCMethodFamilyBitWidth
+init|=
+literal|4
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/// An invalid value of ObjCMethodFamily.
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|InvalidObjCMethodFamily
+init|=
+operator|(
+literal|1
+operator|<<
+name|ObjCMethodFamilyBitWidth
+operator|)
+operator|-
+literal|1
+block|}
+enum|;
+end_enum
+
+begin_comment
 comment|/// Selector - This smart pointer class efficiently represents Objective-C
 end_comment
 
@@ -2041,6 +2258,17 @@ name|ArgFlags
 return|;
 block|}
 end_expr_stmt
+
+begin_function_decl
+specifier|static
+name|ObjCMethodFamily
+name|getMethodFamilyImpl
+parameter_list|(
+name|Selector
+name|sel
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_label
 name|public
@@ -2342,6 +2570,26 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/// getMethodFamily - Derive the conventional family of this method.
+end_comment
+
+begin_expr_stmt
+name|ObjCMethodFamily
+name|getMethodFamily
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getMethodFamilyImpl
+argument_list|(
+operator|*
+name|this
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
 begin_function
 specifier|static
 name|Selector
@@ -2474,6 +2722,12 @@ literal|0
 argument_list|)
 return|;
 block|}
+comment|/// Return the total amount of memory allocated for managing selectors.
+name|size_t
+name|getTotalMemory
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// constructSetterName - Return the setter name for the given
 comment|/// identifier, i.e. "set" + Name where the initial character of Name
 comment|/// has been capitalized.

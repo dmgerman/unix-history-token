@@ -59,14 +59,22 @@ directive|define
 name|LLVM_CLANG_BASIC_TARGETINFO_H
 end_define
 
-begin_comment
-comment|// FIXME: Daniel isn't smart enough to use a prototype for this.
-end_comment
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/IntrusiveRefCntPtr.h"
+end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -85,6 +93,18 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/AddressSpaces.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/VersionTuple.h"
 end_include
 
 begin_include
@@ -112,9 +132,6 @@ block|{
 struct_decl|struct
 name|fltSemantics
 struct_decl|;
-name|class
-name|StringRef
-decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -169,124 +186,149 @@ comment|/// TargetInfo - This class exposes information about the current target
 comment|///
 name|class
 name|TargetInfo
+range|:
+name|public
+name|llvm
+operator|::
+name|RefCountedBase
+operator|<
+name|TargetInfo
+operator|>
 block|{
 name|llvm
 operator|::
 name|Triple
 name|Triple
-expr_stmt|;
+block|;
 name|protected
-label|:
+operator|:
 comment|// Target values set by the ctor of the actual target implementation.  Default
 comment|// values are specified by the TargetInfo constructor.
 name|bool
 name|TLSSupported
-decl_stmt|;
+block|;
 name|bool
 name|NoAsmVariants
-decl_stmt|;
+block|;
 comment|// True if {|} are normal characters.
 name|unsigned
 name|char
 name|PointerWidth
-decl_stmt|,
+block|,
 name|PointerAlign
-decl_stmt|;
+block|;
 name|unsigned
 name|char
 name|BoolWidth
-decl_stmt|,
+block|,
 name|BoolAlign
-decl_stmt|;
+block|;
 name|unsigned
 name|char
 name|IntWidth
-decl_stmt|,
+block|,
 name|IntAlign
-decl_stmt|;
+block|;
 name|unsigned
 name|char
 name|FloatWidth
-decl_stmt|,
+block|,
 name|FloatAlign
-decl_stmt|;
+block|;
 name|unsigned
 name|char
 name|DoubleWidth
-decl_stmt|,
+block|,
 name|DoubleAlign
-decl_stmt|;
+block|;
 name|unsigned
 name|char
 name|LongDoubleWidth
-decl_stmt|,
+block|,
 name|LongDoubleAlign
-decl_stmt|;
+block|;
 name|unsigned
 name|char
 name|LargeArrayMinWidth
-decl_stmt|,
+block|,
 name|LargeArrayAlign
-decl_stmt|;
+block|;
 name|unsigned
 name|char
 name|LongWidth
-decl_stmt|,
+block|,
 name|LongAlign
-decl_stmt|;
+block|;
 name|unsigned
 name|char
 name|LongLongWidth
-decl_stmt|,
+block|,
 name|LongLongAlign
-decl_stmt|;
+block|;
 specifier|const
 name|char
-modifier|*
+operator|*
 name|DescriptionString
-decl_stmt|;
+block|;
 specifier|const
 name|char
-modifier|*
+operator|*
 name|UserLabelPrefix
-decl_stmt|;
+block|;
 specifier|const
 name|char
-modifier|*
+operator|*
 name|MCountName
-decl_stmt|;
+block|;
 specifier|const
 name|llvm
 operator|::
 name|fltSemantics
 operator|*
 name|FloatFormat
-operator|,
+block|,
 operator|*
 name|DoubleFormat
-operator|,
+block|,
 operator|*
 name|LongDoubleFormat
-expr_stmt|;
+block|;
 name|unsigned
 name|char
 name|RegParmMax
-decl_stmt|,
+block|,
 name|SSERegParmMax
-decl_stmt|;
+block|;
 name|TargetCXXABI
 name|CXXABI
-decl_stmt|;
+block|;
+specifier|const
+name|LangAS
+operator|::
+name|Map
+operator|*
+name|AddrSpaceMap
+block|;
+name|mutable
+name|llvm
+operator|::
+name|StringRef
+name|PlatformName
+block|;
+name|mutable
+name|VersionTuple
+name|PlatformMinVersion
+block|;
 name|unsigned
 name|HasAlignMac68kSupport
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 name|unsigned
 name|RealTypeUsesObjCFPRet
-range|:
+operator|:
 literal|3
-decl_stmt|;
+block|;
 comment|// TargetInfo Constructor.  Default initializes all fields.
 name|TargetInfo
 argument_list|(
@@ -297,9 +339,9 @@ name|string
 operator|&
 name|T
 argument_list|)
-expr_stmt|;
+block|;
 name|public
-label|:
+operator|:
 comment|/// CreateTargetInfo - Construct a target for the given options.
 comment|///
 comment|/// \param Opts - The options to use to initialize the target. The target may
@@ -307,29 +349,29 @@ comment|/// modify the options to canonicalize the target feature information to
 comment|/// what the backend expects.
 specifier|static
 name|TargetInfo
-modifier|*
+operator|*
 name|CreateTargetInfo
-parameter_list|(
+argument_list|(
 name|Diagnostic
-modifier|&
+operator|&
 name|Diags
-parameter_list|,
+argument_list|,
 name|TargetOptions
-modifier|&
+operator|&
 name|Opts
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|virtual
 operator|~
 name|TargetInfo
 argument_list|()
-expr_stmt|;
+block|;
 comment|///===---- Target Data Type Query Methods -------------------------------===//
-enum|enum
+block|enum
 name|IntType
 block|{
 name|NoInt
-init|=
+operator|=
 literal|0
 block|,
 name|SignedShort
@@ -348,44 +390,43 @@ name|SignedLongLong
 block|,
 name|UnsignedLongLong
 block|}
-enum|;
-enum|enum
+block|;    enum
 name|RealType
 block|{
 name|Float
-init|=
+operator|=
 literal|0
 block|,
 name|Double
 block|,
 name|LongDouble
 block|}
-enum|;
+block|;
 name|protected
-label|:
+operator|:
 name|IntType
 name|SizeType
-decl_stmt|,
+block|,
 name|IntMaxType
-decl_stmt|,
+block|,
 name|UIntMaxType
-decl_stmt|,
+block|,
 name|PtrDiffType
-decl_stmt|,
+block|,
 name|IntPtrType
-decl_stmt|,
+block|,
 name|WCharType
-decl_stmt|,
+block|,
 name|WIntType
-decl_stmt|,
+block|,
 name|Char16Type
-decl_stmt|,
+block|,
 name|Char32Type
-decl_stmt|,
+block|,
 name|Int64Type
-decl_stmt|,
+block|,
 name|SigAtomicType
-decl_stmt|;
+block|;
 comment|/// Control whether the alignment of bit-field types is respected when laying
 comment|/// out structures. If true, then the alignment of the bit-field type will be
 comment|/// used to (a) impact the alignment of the containing structure, and (b)
@@ -393,11 +434,11 @@ comment|/// ensure that the individual bit-field will not straddle an alignment
 comment|/// boundary.
 name|unsigned
 name|UseBitFieldTypeAlignment
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|IntType
 name|getSizeType
 argument_list|()
@@ -428,18 +469,17 @@ block|}
 name|IntType
 name|getPtrDiffType
 argument_list|(
-name|unsigned
-name|AddrSpace
+argument|unsigned AddrSpace
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|AddrSpace
 operator|==
 literal|0
-condition|?
+operator|?
 name|PtrDiffType
-else|:
+operator|:
 name|getPtrDiffTypeV
 argument_list|(
 name|AddrSpace
@@ -514,40 +554,36 @@ comment|/// enum. For example, SignedInt -> getIntWidth().
 name|unsigned
 name|getTypeWidth
 argument_list|(
-name|IntType
-name|T
+argument|IntType T
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// getTypeAlign - Return the alignment (in bits) of the specified integer
 comment|/// type enum. For example, SignedInt -> getIntAlign().
 name|unsigned
 name|getTypeAlign
 argument_list|(
-name|IntType
-name|T
+argument|IntType T
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// isTypeSigned - Return whether an integer types is signed. Returns true if
 comment|/// the type is signed; false otherwise.
 specifier|static
 name|bool
 name|isTypeSigned
-parameter_list|(
-name|IntType
-name|T
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|IntType T
+argument_list|)
+block|;
 comment|/// getPointerWidth - Return the width of pointers on this target, for the
 comment|/// specified address space.
 name|uint64_t
 name|getPointerWidth
 argument_list|(
-name|unsigned
-name|AddrSpace
+argument|unsigned AddrSpace
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|AddrSpace
@@ -565,10 +601,9 @@ block|}
 name|uint64_t
 name|getPointerAlign
 argument_list|(
-name|unsigned
-name|AddrSpace
+argument|unsigned AddrSpace
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|AddrSpace
@@ -969,34 +1004,31 @@ comment|/// For example, SignedShort -> "short".
 specifier|static
 specifier|const
 name|char
-modifier|*
+operator|*
 name|getTypeName
-parameter_list|(
-name|IntType
-name|T
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|IntType T
+argument_list|)
+block|;
 comment|/// getTypeConstantSuffix - Return the constant suffix for the specified
 comment|/// integer type enum. For example, SignedLong -> "L".
 specifier|static
 specifier|const
 name|char
-modifier|*
+operator|*
 name|getTypeConstantSuffix
-parameter_list|(
-name|IntType
-name|T
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|IntType T
+argument_list|)
+block|;
 comment|/// \brief Check whether the given real type should use the "fpret" flavor of
 comment|/// Obj-C message passing on this target.
 name|bool
 name|useObjCFPRetForRealType
 argument_list|(
-name|RealType
-name|T
+argument|RealType T
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|RealTypeUsesObjCFPRet
@@ -1015,19 +1047,14 @@ name|virtual
 name|void
 name|getTargetDefines
 argument_list|(
-specifier|const
-name|LangOptions
-operator|&
-name|Opts
+argument|const LangOptions&Opts
 argument_list|,
-name|MacroBuilder
-operator|&
-name|Builder
+argument|MacroBuilder&Builder
 argument_list|)
-decl|const
-init|=
+specifier|const
+operator|=
 literal|0
-decl_stmt|;
+block|;
 comment|/// getTargetBuiltins - Return information about target-specific builtins for
 comment|/// the current primary target, and info about which builtins are non-portable
 comment|/// across the current set of primary and secondary targets.
@@ -1035,22 +1062,14 @@ name|virtual
 name|void
 name|getTargetBuiltins
 argument_list|(
-specifier|const
-name|Builtin
-operator|::
-name|Info
-operator|*
-operator|&
-name|Records
+argument|const Builtin::Info *&Records
 argument_list|,
-name|unsigned
-operator|&
-name|NumRecords
+argument|unsigned&NumRecords
 argument_list|)
-decl|const
-init|=
+specifier|const
+operator|=
 literal|0
-decl_stmt|;
+block|;
 comment|/// getVAListDeclaration - Return the declaration to use for
 comment|/// __builtin_va_list, which is target-specific.
 name|virtual
@@ -1062,20 +1081,17 @@ argument_list|()
 specifier|const
 operator|=
 literal|0
-expr_stmt|;
+block|;
 comment|/// isValidGCCRegisterName - Returns whether the passed in string
 comment|/// is a valid register name according to GCC. This is used by Sema for
 comment|/// inline asm statements.
 name|bool
 name|isValidGCCRegisterName
 argument_list|(
-name|llvm
-operator|::
-name|StringRef
-name|Name
+argument|llvm::StringRef Name
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|// getNormalizedGCCRegisterName - Returns the "normalized" GCC register name.
 comment|// For example, on x86 it will return "ax" when "eax" is passed in.
 name|llvm
@@ -1086,73 +1102,71 @@ argument_list|(
 argument|llvm::StringRef Name
 argument_list|)
 specifier|const
-expr_stmt|;
-struct|struct
+block|;    struct
 name|ConstraintInfo
-block|{
-enum|enum
+block|{     enum
 block|{
 name|CI_None
-init|=
+operator|=
 literal|0x00
 block|,
 name|CI_AllowsMemory
-init|=
+operator|=
 literal|0x01
 block|,
 name|CI_AllowsRegister
-init|=
+operator|=
 literal|0x02
 block|,
 name|CI_ReadWrite
-init|=
+operator|=
 literal|0x04
 block|,
 comment|// "+r" output constraint (read and write).
 name|CI_HasMatchingInput
-init|=
+operator|=
 literal|0x08
 comment|// This output operand has a matching input.
 block|}
-enum|;
+block|;
 name|unsigned
 name|Flags
-decl_stmt|;
+block|;
 name|int
 name|TiedOperand
-decl_stmt|;
+block|;
 name|std
 operator|::
 name|string
 name|ConstraintStr
-expr_stmt|;
+block|;
 comment|// constraint: "=rm"
 name|std
 operator|::
 name|string
 name|Name
-expr_stmt|;
+block|;
 comment|// Operand name: [foo] with no []'s.
 name|public
-label|:
+operator|:
 name|ConstraintInfo
 argument_list|(
 argument|llvm::StringRef ConstraintStr
 argument_list|,
 argument|llvm::StringRef Name
 argument_list|)
-block|:
+operator|:
 name|Flags
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+block|,
 name|TiedOperand
 argument_list|(
 operator|-
 literal|1
 argument_list|)
-operator|,
+block|,
 name|ConstraintStr
 argument_list|(
 name|ConstraintStr
@@ -1160,7 +1174,7 @@ operator|.
 name|str
 argument_list|()
 argument_list|)
-operator|,
+block|,
 name|Name
 argument_list|(
 argument|Name.str()
@@ -1291,123 +1305,100 @@ return|;
 block|}
 name|void
 name|setIsReadWrite
-parameter_list|()
+argument_list|()
 block|{
 name|Flags
 operator||=
 name|CI_ReadWrite
-expr_stmt|;
-block|}
+block|; }
 name|void
 name|setAllowsMemory
-parameter_list|()
+argument_list|()
 block|{
 name|Flags
 operator||=
 name|CI_AllowsMemory
-expr_stmt|;
-block|}
+block|; }
 name|void
 name|setAllowsRegister
-parameter_list|()
+argument_list|()
 block|{
 name|Flags
 operator||=
 name|CI_AllowsRegister
-expr_stmt|;
-block|}
+block|; }
 name|void
 name|setHasMatchingInput
-parameter_list|()
+argument_list|()
 block|{
 name|Flags
 operator||=
 name|CI_HasMatchingInput
-expr_stmt|;
-block|}
+block|; }
 comment|/// setTiedOperand - Indicate that this is an input operand that is tied to
 comment|/// the specified output operand.  Copy over the various constraint
 comment|/// information from the output.
 name|void
 name|setTiedOperand
-parameter_list|(
-name|unsigned
-name|N
-parameter_list|,
-name|ConstraintInfo
-modifier|&
-name|Output
-parameter_list|)
+argument_list|(
+argument|unsigned N
+argument_list|,
+argument|ConstraintInfo&Output
+argument_list|)
 block|{
 name|Output
 operator|.
 name|setHasMatchingInput
 argument_list|()
-expr_stmt|;
+block|;
 name|Flags
 operator|=
 name|Output
 operator|.
 name|Flags
-expr_stmt|;
+block|;
 name|TiedOperand
 operator|=
 name|N
-expr_stmt|;
+block|;
 comment|// Don't copy Name or constraint string.
 block|}
-block|}
-struct|;
+expr|}
+block|;
 comment|// validateOutputConstraint, validateInputConstraint - Checks that
 comment|// a constraint is valid and provides information about it.
 comment|// FIXME: These should return a real error instead of just true/false.
 name|bool
 name|validateOutputConstraint
 argument_list|(
-name|ConstraintInfo
-operator|&
-name|Info
+argument|ConstraintInfo&Info
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|bool
 name|validateInputConstraint
 argument_list|(
-name|ConstraintInfo
-operator|*
-name|OutputConstraints
+argument|ConstraintInfo *OutputConstraints
 argument_list|,
-name|unsigned
-name|NumOutputs
+argument|unsigned NumOutputs
 argument_list|,
-name|ConstraintInfo
-operator|&
-name|info
+argument|ConstraintInfo&info
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|bool
 name|resolveSymbolicName
 argument_list|(
-specifier|const
-name|char
-operator|*
-operator|&
-name|Name
+argument|const char *&Name
 argument_list|,
-name|ConstraintInfo
-operator|*
-name|OutputConstraints
+argument|ConstraintInfo *OutputConstraints
 argument_list|,
-name|unsigned
-name|NumOutputs
+argument|unsigned NumOutputs
 argument_list|,
-name|unsigned
-operator|&
-name|Index
+argument|unsigned&Index
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|virtual
 name|std
 operator|::
@@ -1454,7 +1445,7 @@ argument_list|()
 specifier|const
 operator|=
 literal|0
-expr_stmt|;
+block|;
 comment|/// getTriple - Return the target triple of the primary target.
 specifier|const
 name|llvm
@@ -1480,26 +1471,25 @@ return|return
 name|DescriptionString
 return|;
 block|}
-struct|struct
+expr|struct
 name|GCCRegAlias
 block|{
 specifier|const
 name|char
-modifier|*
+operator|*
 specifier|const
 name|Aliases
 index|[
 literal|5
 index|]
-decl_stmt|;
+block|;
 specifier|const
 name|char
-modifier|*
+operator|*
 specifier|const
 name|Register
-decl_stmt|;
-block|}
-struct|;
+block|;   }
+block|;
 name|virtual
 name|bool
 name|useGlobalsForAutomaticVariables
@@ -1582,12 +1572,12 @@ comment|/// language options which change the target configuration.
 name|virtual
 name|void
 name|setForcedLangOptions
-parameter_list|(
+argument_list|(
 name|LangOptions
-modifier|&
+operator|&
 name|Opts
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// getDefaultFeatures - Get the default set of target features for
 comment|/// the \args CPU; this should include all legal feature strings on
 comment|/// the target.
@@ -1595,23 +1585,11 @@ name|virtual
 name|void
 name|getDefaultFeatures
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|CPU
+argument|const std::string&CPU
 argument_list|,
-name|llvm
-operator|::
-name|StringMap
-operator|<
-name|bool
-operator|>
-operator|&
-name|Features
+argument|llvm::StringMap<bool>&Features
 argument_list|)
-decl|const
+specifier|const
 block|{   }
 comment|/// getABI - Get the ABI in use.
 name|virtual
@@ -1646,12 +1624,7 @@ name|virtual
 name|bool
 name|setCPU
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
+argument|const std::string&Name
 argument_list|)
 block|{
 return|return
@@ -1665,12 +1638,7 @@ name|virtual
 name|bool
 name|setABI
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
+argument|const std::string&Name
 argument_list|)
 block|{
 return|return
@@ -1683,19 +1651,14 @@ comment|/// \return - False on error (invalid C++ ABI name).
 name|bool
 name|setCXXABI
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
+argument|const std::string&Name
 argument_list|)
 block|{
 specifier|static
 specifier|const
 name|TargetCXXABI
 name|Unknown
-init|=
+operator|=
 name|static_cast
 operator|<
 name|TargetCXXABI
@@ -1704,10 +1667,10 @@ operator|(
 operator|-
 literal|1
 operator|)
-decl_stmt|;
+block|;
 name|TargetCXXABI
 name|ABI
-init|=
+operator|=
 name|llvm
 operator|::
 name|StringSwitch
@@ -1743,7 +1706,7 @@ name|Default
 argument_list|(
 name|Unknown
 argument_list|)
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|ABI
@@ -1896,6 +1859,44 @@ specifier|const
 block|{
 return|return
 literal|0
+return|;
+block|}
+specifier|const
+name|LangAS
+operator|::
+name|Map
+operator|&
+name|getAddressSpaceMap
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|AddrSpaceMap
+return|;
+block|}
+comment|/// \brief Retrieve the name of the platform as it is used in the
+comment|/// availability attribute.
+name|llvm
+operator|::
+name|StringRef
+name|getPlatformName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PlatformName
+return|;
+block|}
+comment|/// \brief Retrieve the minimum desired version of the platform, to
+comment|/// which the program should be compiled.
+name|VersionTuple
+name|getPlatformMinVersion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PlatformMinVersion
 return|;
 block|}
 name|protected

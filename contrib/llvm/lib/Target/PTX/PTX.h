@@ -107,6 +107,18 @@ init|=
 literal|4
 block|}
 enum|;
+enum|enum
+name|Predicate
+block|{
+name|PRED_NORMAL
+init|=
+literal|0
+block|,
+name|PRED_NEGATE
+init|=
+literal|1
+block|}
+enum|;
 block|}
 comment|// namespace PTX
 name|FunctionPass
@@ -139,7 +151,11 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|Target
-name|ThePTXTarget
+name|ThePTX32Target
+decl_stmt|;
+specifier|extern
+name|Target
+name|ThePTX64Target
 decl_stmt|;
 block|}
 end_decl_stmt

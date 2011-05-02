@@ -62,7 +62,25 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/Diagnostic.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/IntrusiveRefCntPtr.h"
 end_include
 
 begin_include
@@ -90,6 +108,9 @@ name|ASTConsumer
 decl_stmt|;
 name|class
 name|CompilerInstance
+decl_stmt|;
+name|class
+name|CompilerInvocation
 decl_stmt|;
 name|class
 name|Decl
@@ -288,6 +309,11 @@ name|StringRef
 name|OutputPath
 operator|=
 literal|""
+argument_list|,
+name|bool
+name|ShowDepth
+operator|=
+name|true
 argument_list|)
 decl_stmt|;
 comment|/// CacheTokens - Cache tokens for use with PCH. Note that this requires
@@ -304,6 +330,43 @@ operator|::
 name|raw_fd_ostream
 operator|*
 name|OS
+argument_list|)
+decl_stmt|;
+comment|/// createInvocationFromCommandLine - Construct a compiler invocation object for
+comment|/// a command line argument vector.
+comment|///
+comment|/// \return A CompilerInvocation, or 0 if none was built for the given
+comment|/// argument vector.
+name|CompilerInvocation
+modifier|*
+name|createInvocationFromCommandLine
+argument_list|(
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+name|Args
+argument_list|,
+name|llvm
+operator|::
+name|IntrusiveRefCntPtr
+operator|<
+name|Diagnostic
+operator|>
+name|Diags
+operator|=
+name|llvm
+operator|::
+name|IntrusiveRefCntPtr
+operator|<
+name|Diagnostic
+operator|>
+operator|(
+operator|)
 argument_list|)
 decl_stmt|;
 block|}

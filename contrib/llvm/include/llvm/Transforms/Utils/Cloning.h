@@ -587,7 +587,7 @@ comment|/// though.
 comment|///
 comment|/// Note that this only does one level of inlining.  For example, if the
 comment|/// instruction 'call B' is inlined, and 'B' calls 'C', then the call to 'C' now
-comment|/// exists in the instruction stream.  Similiarly this will inline a recursive
+comment|/// exists in the instruction stream.  Similarly this will inline a recursive
 comment|/// function by one level.
 comment|///
 name|bool

@@ -182,6 +182,8 @@ block|;   }
 name|void
 name|PrintIncludeStack
 argument_list|(
+argument|Diagnostic::Level Level
+argument_list|,
 argument|SourceLocation Loc
 argument_list|,
 argument|const SourceManager&SM
@@ -206,6 +208,8 @@ block|;
 name|void
 name|EmitCaretDiagnostic
 argument_list|(
+argument|Diagnostic::Level Level
+argument_list|,
 argument|SourceLocation Loc
 argument_list|,
 argument|CharSourceRange *Ranges
@@ -231,7 +235,7 @@ name|virtual
 name|void
 name|HandleDiagnostic
 argument_list|(
-argument|Diagnostic::Level DiagLevel
+argument|Diagnostic::Level Level
 argument_list|,
 argument|const DiagnosticInfo&Info
 argument_list|)

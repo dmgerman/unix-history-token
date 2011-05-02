@@ -128,12 +128,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"CGCall.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"CGValue.h"
 end_include
 
@@ -180,6 +174,9 @@ name|ASTContext
 decl_stmt|;
 name|class
 name|CXXDestructorDecl
+decl_stmt|;
+name|class
+name|CXXForRangeStmt
 decl_stmt|;
 name|class
 name|CXXTryStmt
@@ -3619,6 +3616,28 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// isObviouslyBranchWithoutCleanups - Return true if a branch to the
+end_comment
+
+begin_comment
+comment|/// specified destination obviously has no cleanups to run.  'false' is always
+end_comment
+
+begin_comment
+comment|/// a conservatively correct answer for this method.
+end_comment
+
+begin_function
+name|bool
+name|isObviouslyBranchWithoutCleanups
+parameter_list|(
+name|JumpDest
+name|Dest
+parameter_list|)
+function|const;
+end_function
+
+begin_comment
 comment|/// EmitBranchThroughEHCleanup - Emit a branch from the current
 end_comment
 
@@ -4393,6 +4412,12 @@ name|DebugInfo
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|bool
+name|DisableDebugInfo
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/// IndirectBranch - The first time an indirect goto is seen we create a block
 end_comment
@@ -4845,9 +4870,40 @@ modifier|*
 name|getDebugInfo
 parameter_list|()
 block|{
+if|if
+condition|(
+name|DisableDebugInfo
+condition|)
+return|return
+name|NULL
+return|;
 return|return
 name|DebugInfo
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|disableDebugInfo
+parameter_list|()
+block|{
+name|DisableDebugInfo
+operator|=
+name|true
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|enableDebugInfo
+parameter_list|()
+block|{
+name|DisableDebugInfo
+operator|=
+name|false
+expr_stmt|;
 block|}
 end_function
 
@@ -5254,38 +5310,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|GeneratebyrefCopyHelperFunction
-argument_list|(
-argument|const llvm::Type *
-argument_list|,
-argument|BlockFieldFlags flags
-argument_list|,
-argument|const VarDecl *BD
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|GeneratebyrefDestroyHelperFunction
-argument_list|(
-argument|const llvm::Type *T
-argument_list|,
-argument|BlockFieldFlags flags
-argument_list|,
-argument|const VarDecl *BD
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 name|void
 name|BuildBlockRelease
@@ -5301,6 +5325,36 @@ name|flags
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|class
+name|AutoVarEmission
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|void
+name|emitByrefStructureInit
+parameter_list|(
+specifier|const
+name|AutoVarEmission
+modifier|&
+name|emission
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|enterByrefCleanup
+parameter_list|(
+specifier|const
+name|AutoVarEmission
+modifier|&
+name|emission
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|llvm
@@ -5416,6 +5470,11 @@ operator|::
 name|Function
 operator|*
 name|Fn
+argument_list|,
+specifier|const
+name|CGFunctionInfo
+operator|&
+name|FnInfo
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -5435,6 +5494,11 @@ operator|::
 name|Function
 operator|*
 name|Fn
+argument_list|,
+specifier|const
+name|CGFunctionInfo
+operator|&
+name|FnInfo
 argument_list|,
 specifier|const
 name|FunctionArgList
@@ -5530,6 +5594,11 @@ name|Function
 operator|*
 name|Fn
 argument_list|,
+specifier|const
+name|CGFunctionInfo
+operator|&
+name|FnInfo
+argument_list|,
 name|GlobalDecl
 name|GD
 argument_list|,
@@ -5584,7 +5653,7 @@ name|CXXRecordDecl
 operator|*
 name|NearestVBase
 argument_list|,
-name|uint64_t
+name|CharUnits
 name|OffsetFromNearestVBase
 argument_list|,
 name|llvm
@@ -5629,7 +5698,7 @@ name|CXXRecordDecl
 operator|*
 name|NearestVBase
 argument_list|,
-name|uint64_t
+name|CharUnits
 name|OffsetFromNearestVBase
 argument_list|,
 name|bool
@@ -6677,7 +6746,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitsAnyExprToMem - Emits the code necessary to evaluate an
+comment|/// EmitAnyExprToMem - Emits the code necessary to evaluate an
 end_comment
 
 begin_comment
@@ -6704,6 +6773,43 @@ name|IsLocationVolatile
 argument_list|,
 name|bool
 name|IsInitializer
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// EmitExprAsInit - Emits the code necessary to initialize a
+end_comment
+
+begin_comment
+comment|/// location in memory with the given initializer.
+end_comment
+
+begin_decl_stmt
+name|void
+name|EmitExprAsInit
+argument_list|(
+specifier|const
+name|Expr
+operator|*
+name|init
+argument_list|,
+specifier|const
+name|VarDecl
+operator|*
+name|var
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|loc
+argument_list|,
+name|CharUnits
+name|alignment
+argument_list|,
+name|bool
+name|capturedByInit
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -7315,6 +7421,39 @@ name|Ctor
 parameter_list|,
 name|CXXCtorType
 name|CtorType
+parameter_list|,
+specifier|const
+name|FunctionArgList
+modifier|&
+name|Args
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// It's important not to confuse this and the previous function. Delegating
+end_comment
+
+begin_comment
+comment|// constructors are the C++0x feature. The constructor delegate optimization
+end_comment
+
+begin_comment
+comment|// is used to reduce duplication in the base and complete consturctors where
+end_comment
+
+begin_comment
+comment|// they are substantially the same.
+end_comment
+
+begin_function_decl
+name|void
+name|EmitDelegatingCXXConstructorCall
+parameter_list|(
+specifier|const
+name|CXXConstructorDecl
+modifier|*
+name|Ctor
 parameter_list|,
 specifier|const
 name|FunctionArgList
@@ -8087,6 +8226,9 @@ operator|::
 name|Value
 operator|*
 name|Arg
+argument_list|,
+name|unsigned
+name|ArgNo
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -8586,6 +8728,18 @@ name|EmitCXXTryStmt
 parameter_list|(
 specifier|const
 name|CXXTryStmt
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|EmitCXXForRangeStmt
+parameter_list|(
+specifier|const
+name|CXXForRangeStmt
 modifier|&
 name|S
 parameter_list|)
@@ -9103,7 +9257,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// Note: only availabe for agg return types
+comment|// Note: only available for agg return types
 end_comment
 
 begin_function_decl
@@ -10880,32 +11034,87 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// containsBreak - Return true if the statement contains a break out of it.
+end_comment
+
+begin_comment
+comment|/// If the statement (recursively) contains a switch or loop with a break
+end_comment
+
+begin_comment
+comment|/// inside of it, this is fine.
+end_comment
+
+begin_function_decl
+specifier|static
+name|bool
+name|containsBreak
+parameter_list|(
+specifier|const
+name|Stmt
+modifier|*
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// ConstantFoldsToSimpleInteger - If the specified expression does not fold
 end_comment
 
 begin_comment
-comment|/// to a constant, or if it does but contains a label, return 0.  If it
+comment|/// to a constant, or if it does but contains a label, return false.  If it
 end_comment
 
 begin_comment
-comment|/// constant folds to 'true' and does not contain a label, return 1, if it
-end_comment
-
-begin_comment
-comment|/// constant folds to 'false' and does not contain a label, return -1.
+comment|/// constant folds return true and set the boolean result in Result.
 end_comment
 
 begin_function_decl
-name|int
+name|bool
 name|ConstantFoldsToSimpleInteger
 parameter_list|(
 specifier|const
 name|Expr
 modifier|*
 name|Cond
+parameter_list|,
+name|bool
+modifier|&
+name|Result
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// ConstantFoldsToSimpleInteger - If the specified expression does not fold
+end_comment
+
+begin_comment
+comment|/// to a constant, or if it does but contains a label, return false.  If it
+end_comment
+
+begin_comment
+comment|/// constant folds return true and set the folded value.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|ConstantFoldsToSimpleInteger
+argument_list|(
+specifier|const
+name|Expr
+operator|*
+name|Cond
+argument_list|,
+name|llvm
+operator|::
+name|APInt
+operator|&
+name|Result
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// EmitBranchOnBoolExpr - Emit a branch on a boolean condition (e.g. for an
@@ -10966,9 +11175,13 @@ comment|/// EmitCallArg - Emit a single call argument.
 end_comment
 
 begin_function_decl
-name|RValue
+name|void
 name|EmitCallArg
 parameter_list|(
+name|CallArgList
+modifier|&
+name|args
+parameter_list|,
 specifier|const
 name|Expr
 modifier|*
@@ -10993,13 +11206,17 @@ comment|/// a r-value suitable for passing the given parameter.
 end_comment
 
 begin_function_decl
-name|RValue
+name|void
 name|EmitDelegateCallArg
 parameter_list|(
+name|CallArgList
+modifier|&
+name|args
+parameter_list|,
 specifier|const
 name|VarDecl
 modifier|*
-name|Param
+name|param
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -11377,24 +11594,14 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|Args
-operator|.
-name|push_back
-argument_list|(
-name|std
-operator|::
-name|make_pair
-argument_list|(
 name|EmitCallArg
 argument_list|(
+name|Args
+argument_list|,
 operator|*
 name|Arg
 argument_list|,
 name|ArgType
-argument_list|)
-argument_list|,
-name|ArgType
-argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -11443,35 +11650,19 @@ expr|;
 operator|++
 name|Arg
 operator|)
-block|{
-name|QualType
-name|ArgType
-operator|=
+name|EmitCallArg
+argument_list|(
+name|Args
+argument_list|,
+operator|*
+name|Arg
+argument_list|,
 name|Arg
 operator|->
 name|getType
 argument_list|()
-block|;
-name|Args
-operator|.
-name|push_back
-argument_list|(
-name|std
-operator|::
-name|make_pair
-argument_list|(
-name|EmitCallArg
-argument_list|(
-operator|*
-name|Arg
-argument_list|,
-name|ArgType
 argument_list|)
-argument_list|,
-name|ArgType
-argument_list|)
-argument_list|)
-block|;     }
+expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
@@ -11497,6 +11688,28 @@ name|EmitDeclMetadata
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+name|CodeGenModule
+operator|::
+name|ByrefHelpers
+operator|*
+name|buildByrefHelpers
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|StructType
+operator|&
+name|byrefType
+argument_list|,
+specifier|const
+name|AutoVarEmission
+operator|&
+name|emission
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 unit|};

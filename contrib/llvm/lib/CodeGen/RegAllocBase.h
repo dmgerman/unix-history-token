@@ -207,6 +207,11 @@ operator|::
 name|Allocator
 name|UnionAllocator
 expr_stmt|;
+comment|// Cache tag for PhysReg2LiveUnion entries. Increment whenever virtual
+comment|// registers may have changed.
+name|unsigned
+name|UserTag
+decl_stmt|;
 name|protected
 label|:
 comment|// Array of LiveIntervalUnions indexed by physical register.
@@ -327,6 +332,11 @@ expr_stmt|;
 name|RegAllocBase
 argument_list|()
 operator|:
+name|UserTag
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|TRI
 argument_list|(
 literal|0
@@ -387,6 +397,8 @@ index|]
 operator|.
 name|init
 argument_list|(
+name|UserTag
+argument_list|,
 operator|&
 name|VirtReg
 argument_list|,

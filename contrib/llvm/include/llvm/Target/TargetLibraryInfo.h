@@ -68,8 +68,20 @@ block|,
 comment|// void *memcpy(void *s1, const void *s2, size_t n);
 name|memcpy
 block|,
+comment|// void *memmove(void *s1, const void *s2, size_t n);
+name|memmove
+block|,
 comment|/// void memset_pattern16(void *b, const void *pattern16, size_t len);
 name|memset_pattern16
+block|,
+comment|/// int iprintf(const char *format, ...);
+name|iprintf
+block|,
+comment|/// int siprintf(char *str, const char *format, ...);
+name|siprintf
+block|,
+comment|/// int fiprintf(FILE *stream, const char *format, ...);
+name|fiprintf
 block|,
 name|NumLibFuncs
 block|}

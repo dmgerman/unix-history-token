@@ -2928,9 +2928,15 @@ argument|isParameterPack
 argument_list|)
 name|LLVM_CLANG_CANPROXY_SIMPLE_ACCESSOR
 argument_list|(
+argument|TemplateTypeParmDecl *
+argument_list|,
+argument|getDecl
+argument_list|)
+name|LLVM_CLANG_CANPROXY_SIMPLE_ACCESSOR
+argument_list|(
 argument|IdentifierInfo *
 argument_list|,
-argument|getName
+argument|getIdentifier
 argument_list|)
 block|}
 expr_stmt|;

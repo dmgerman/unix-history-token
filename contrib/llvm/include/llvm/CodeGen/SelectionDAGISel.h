@@ -395,6 +395,8 @@ name|OPC_EmitInteger
 block|,
 name|OPC_EmitRegister
 block|,
+name|OPC_EmitRegister2
+block|,
 name|OPC_EmitConvertToTarget
 block|,
 name|OPC_EmitMergeInputChains
@@ -824,7 +826,7 @@ name|assert
 argument_list|(
 literal|0
 operator|&&
-literal|"Tblgen shoudl generate this!"
+literal|"Tblgen should generate this!"
 argument_list|)
 block|;
 return|return
@@ -915,6 +917,11 @@ specifier|const
 name|LoadInst
 operator|*
 name|LI
+argument_list|,
+specifier|const
+name|Instruction
+operator|*
+name|FoldInst
 argument_list|,
 name|FastISel
 operator|*

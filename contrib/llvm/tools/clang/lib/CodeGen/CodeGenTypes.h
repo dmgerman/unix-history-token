@@ -358,6 +358,29 @@ name|void
 name|HandleLateResolvedPointers
 parameter_list|()
 function_decl|;
+comment|/// addRecordTypeName - Compute a name from the given record decl with an
+comment|/// optional suffix and name the given LLVM type using it.
+name|void
+name|addRecordTypeName
+argument_list|(
+specifier|const
+name|RecordDecl
+operator|*
+name|RD
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Type
+operator|*
+name|Ty
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|suffix
+argument_list|)
+decl_stmt|;
 name|public
 label|:
 name|CodeGenTypes
@@ -583,6 +606,22 @@ name|RecordDecl
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/// addBaseSubobjectTypeName - Add a type name for the base subobject of the
+comment|/// given record layout.
+name|void
+name|addBaseSubobjectTypeName
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|,
+specifier|const
+name|CGRecordLayout
+modifier|&
+name|layout
+parameter_list|)
+function_decl|;
 comment|/// UpdateCompletedType - When we find the full definition for a TagDecl,
 comment|/// replace the 'opaque' type we previously made for it if applicable.
 name|void
@@ -593,6 +632,14 @@ name|TagDecl
 modifier|*
 name|TD
 parameter_list|)
+function_decl|;
+comment|/// getNullaryFunctionInfo - Get the function info for a void()
+comment|/// function with standard CC.
+specifier|const
+name|CGFunctionInfo
+modifier|&
+name|getNullaryFunctionInfo
+parameter_list|()
 function_decl|;
 comment|/// getFunctionInfo - Get the function info for the specified function decl.
 specifier|const

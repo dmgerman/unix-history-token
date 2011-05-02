@@ -256,6 +256,9 @@ name|template
 operator|<
 name|typename
 name|EdgeIter
+operator|,
+name|typename
+name|GraphType
 operator|>
 specifier|static
 name|std
@@ -266,6 +269,8 @@ argument_list|(
 argument|const void *Node
 argument_list|,
 argument|EdgeIter EI
+argument_list|,
+argument|const GraphType& Graph
 argument_list|)
 block|{
 return|return

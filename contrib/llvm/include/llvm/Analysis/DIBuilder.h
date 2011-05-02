@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -442,6 +448,72 @@ name|DIType
 name|Ty
 parameter_list|)
 function_decl|;
+comment|/// createObjCIVar - Create debugging information entry for Objective-C
+comment|/// instance variable.
+comment|/// @param Name         Member name.
+comment|/// @param File         File where this member is defined.
+comment|/// @param LineNo       Line number.
+comment|/// @param SizeInBits   Member size.
+comment|/// @param AlignInBits  Member alignment.
+comment|/// @param OffsetInBits Member offset.
+comment|/// @param Flags        Flags to encode member attribute, e.g. private
+comment|/// @param Ty           Parent type.
+comment|/// @param PropertyName Name of the Objective C property assoicated with
+comment|///                     this ivar.
+comment|/// @param GetterName   Name of the Objective C property getter selector.
+comment|/// @param SetterName   Name of the Objective C property setter selector.
+comment|/// @param PropertyAttributes Objective C property attributes.
+name|DIType
+name|createObjCIVar
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|,
+name|DIFile
+name|File
+parameter_list|,
+name|unsigned
+name|LineNo
+parameter_list|,
+name|uint64_t
+name|SizeInBits
+parameter_list|,
+name|uint64_t
+name|AlignInBits
+parameter_list|,
+name|uint64_t
+name|OffsetInBits
+parameter_list|,
+name|unsigned
+name|Flags
+parameter_list|,
+name|DIType
+name|Ty
+parameter_list|,
+name|StringRef
+name|PropertyName
+init|=
+name|StringRef
+argument_list|()
+parameter_list|,
+name|StringRef
+name|PropertyGetterName
+init|=
+name|StringRef
+argument_list|()
+parameter_list|,
+name|StringRef
+name|PropertySetterName
+init|=
+name|StringRef
+argument_list|()
+parameter_list|,
+name|unsigned
+name|PropertyAttributes
+init|=
+literal|0
+parameter_list|)
+function_decl|;
 comment|/// createClassType - Create debugging information entry for a class.
 comment|/// @param Scope        Scope in which this class is defined.
 comment|/// @param Name         class name.
@@ -795,17 +867,15 @@ function_decl|;
 comment|/// getOrCreateArray - Get a DIArray, create one if required.
 name|DIArray
 name|getOrCreateArray
-parameter_list|(
+argument_list|(
+name|ArrayRef
+operator|<
 name|Value
-modifier|*
-specifier|const
-modifier|*
+operator|*
+operator|>
 name|Elements
-parameter_list|,
-name|unsigned
-name|NumElements
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// getOrCreateSubrange - Create a descriptor for a value range.  This
 comment|/// implicitly uniques the values returned.
 name|DISubrange
@@ -905,6 +975,8 @@ comment|/// @param Ty          Variable Type
 comment|/// @param AlwaysPreserve Boolean. Set to true if debug info for this
 comment|///                       variable should be preserved in optimized build.
 comment|/// @param Flags          Flags, e.g. artificial variable.
+comment|/// @param ArgNo       If this variable is an arugment then this argument's
+comment|///                    number. 1 indicates 1st argument.
 name|DIVariable
 name|createLocalVariable
 parameter_list|(
@@ -935,6 +1007,11 @@ name|unsigned
 name|Flags
 init|=
 literal|0
+parameter_list|,
+name|unsigned
+name|ArgNo
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// createComplexVariable - Create a new descriptor for the specified
@@ -946,39 +1023,43 @@ comment|/// @param Name        Variable name.
 comment|/// @param File        File where this variable is defined.
 comment|/// @param LineNo      Line number.
 comment|/// @param Ty          Variable Type
-comment|/// @param Addr        A pointer to a vector of complex address operations.
-comment|/// @param NumAddr     Num of address operations in the vector.
+comment|/// @param Addr        An array of complex address operations.
+comment|/// @param ArgNo       If this variable is an arugment then this argument's
+comment|///                    number. 1 indicates 1st argument.
 name|DIVariable
 name|createComplexVariable
-parameter_list|(
+argument_list|(
 name|unsigned
 name|Tag
-parameter_list|,
+argument_list|,
 name|DIDescriptor
 name|Scope
-parameter_list|,
+argument_list|,
 name|StringRef
 name|Name
-parameter_list|,
+argument_list|,
 name|DIFile
 name|F
-parameter_list|,
+argument_list|,
 name|unsigned
 name|LineNo
-parameter_list|,
+argument_list|,
 name|DIType
 name|Ty
-parameter_list|,
+argument_list|,
+name|ArrayRef
+operator|<
 name|Value
-modifier|*
-specifier|const
-modifier|*
+operator|*
+operator|>
 name|Addr
-parameter_list|,
+argument_list|,
 name|unsigned
-name|NumAddr
-parameter_list|)
-function_decl|;
+name|ArgNo
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
 comment|/// createFunction - Create a new descriptor for the specified subprogram.
 comment|/// See comments in DISubprogram for descriptions of these fields.
 comment|/// @param Scope         Function scope.
@@ -993,6 +1074,7 @@ comment|/// @param Flags         e.g. is this function prototyped or not.
 comment|///                      This flags are used to emit dwarf attributes.
 comment|/// @param isOptimized   True if optimization is ON.
 comment|/// @param Fn            llvm::Function pointer.
+comment|/// @param TParam        Function template parameters.
 name|DISubprogram
 name|createFunction
 parameter_list|(
@@ -1035,6 +1117,18 @@ modifier|*
 name|Fn
 init|=
 literal|0
+parameter_list|,
+name|MDNode
+modifier|*
+name|TParam
+init|=
+literal|0
+parameter_list|,
+name|MDNode
+modifier|*
+name|Decl
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// createMethod - Create a new descriptor for the specified C++ method.
@@ -1047,7 +1141,7 @@ comment|/// @param LineNo        Line number.
 comment|/// @param Ty            Function type.
 comment|/// @param isLocalToUnit True if this function is not externally visible..
 comment|/// @param isDefinition  True if this is a function definition.
-comment|/// @param Virtuality    Attributes describing virutallness. e.g. pure
+comment|/// @param Virtuality    Attributes describing virtualness. e.g. pure
 comment|///                      virtual function.
 comment|/// @param VTableIndex   Index no of this method in virtual table.
 comment|/// @param VTableHolder  Type that holds vtable.
@@ -1055,6 +1149,7 @@ comment|/// @param Flags         e.g. is this function prototyped or not.
 comment|///                      This flags are used to emit dwarf attributes.
 comment|/// @param isOptimized   True if optimization is ON.
 comment|/// @param Fn            llvm::Function pointer.
+comment|/// @param TParam        Function template parameters.
 name|DISubprogram
 name|createMethod
 parameter_list|(
@@ -1111,6 +1206,12 @@ parameter_list|,
 name|Function
 modifier|*
 name|Fn
+init|=
+literal|0
+parameter_list|,
+name|MDNode
+modifier|*
+name|TParam
 init|=
 literal|0
 parameter_list|)

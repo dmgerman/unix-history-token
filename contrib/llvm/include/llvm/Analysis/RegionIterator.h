@@ -92,7 +92,7 @@ name|namespace
 name|llvm
 block|{
 comment|//===----------------------------------------------------------------------===//
-comment|/// @brief Hierachical RegionNode successor iterator.
+comment|/// @brief Hierarchical RegionNode successor iterator.
 comment|///
 comment|/// This iterator iterates over all successors of a RegionNode.
 comment|///

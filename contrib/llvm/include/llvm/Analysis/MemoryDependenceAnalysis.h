@@ -160,6 +160,11 @@ comment|/// pair holds the instruction that clobbers the memory.  For example,
 comment|/// this occurs when we see a may-aliased store to the memory location we
 comment|/// care about.
 comment|///
+comment|/// There are several cases that may be interesting here:
+comment|///   1. Loads are clobbered by may-alias stores.
+comment|///   2. Loads are considered clobbered by partially-aliased loads.  The
+comment|///      client may choose to analyze deeper into these cases.
+comment|///
 comment|/// A dependence query on the first instruction of the entry block will
 comment|/// return a clobber(self) result.
 name|Clobber
@@ -1074,6 +1079,39 @@ operator|*
 name|BB
 argument_list|)
 decl_stmt|;
+comment|/// getLoadLoadClobberFullWidthSize - This is a little bit of analysis that
+comment|/// looks at a memory location for a load (specified by MemLocBase, Offs,
+comment|/// and Size) and compares it against a load.  If the specified load could
+comment|/// be safely widened to a larger integer load that is 1) still efficient,
+comment|/// 2) safe for the target, and 3) would provide the specified memory
+comment|/// location value, then this function returns the size in bytes of the
+comment|/// load width to use.  If not, this returns zero.
+specifier|static
+name|unsigned
+name|getLoadLoadClobberFullWidthSize
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|MemLocBase
+parameter_list|,
+name|int64_t
+name|MemLocOffs
+parameter_list|,
+name|unsigned
+name|MemLocSize
+parameter_list|,
+specifier|const
+name|LoadInst
+modifier|*
+name|LI
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|&
+name|TD
+parameter_list|)
+function_decl|;
 name|private
 label|:
 name|MemDepResult

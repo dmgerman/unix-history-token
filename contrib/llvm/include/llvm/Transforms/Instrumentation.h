@@ -66,9 +66,6 @@ block|{
 name|class
 name|ModulePass
 decl_stmt|;
-name|class
-name|FunctionPass
-decl_stmt|;
 comment|// Insert edge profiling instrumentation
 name|ModulePass
 modifier|*
@@ -86,6 +83,22 @@ name|ModulePass
 modifier|*
 name|createPathProfilerPass
 parameter_list|()
+function_decl|;
+comment|// Insert GCOV profiling instrumentation
+name|ModulePass
+modifier|*
+name|createGCOVProfilerPass
+parameter_list|(
+name|bool
+name|EmitNotes
+init|=
+name|true
+parameter_list|,
+name|bool
+name|EmitData
+init|=
+name|true
+parameter_list|)
 function_decl|;
 block|}
 end_decl_stmt

@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"CGBuilder.h"
 end_include
 
@@ -292,6 +286,73 @@ operator|*
 name|Offset
 argument_list|)
 decl_stmt|;
+comment|/// Emits a try / catch statement.  This function is intended to be called by
+comment|/// subclasses, and provides a generic mechanism for generating these, which
+comment|/// should be usable by all runtimes.  The caller must provide the functions to
+comment|/// call when entering and exiting a @catch() block, and the function used to
+comment|/// rethrow exceptions.  If the begin and end catch functions are NULL, then
+comment|/// the function assumes that the EH personality function provides the
+comment|/// thrown object directly.
+name|void
+name|EmitTryCatchStmt
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+specifier|const
+name|ObjCAtTryStmt
+operator|&
+name|S
+argument_list|,
+name|llvm
+operator|::
+name|Function
+operator|*
+name|beginCatchFn
+argument_list|,
+name|llvm
+operator|::
+name|Function
+operator|*
+name|endCatchFn
+argument_list|,
+name|llvm
+operator|::
+name|Function
+operator|*
+name|exceptionRethrowFn
+argument_list|)
+decl_stmt|;
+comment|/// Emits an @synchronize() statement, using the syncEnterFn and syncExitFn
+comment|/// arguments as the functions called to lock and unlock the object.  This
+comment|/// function can be called by subclasses that use zero-cost exception
+comment|/// handling.
+name|void
+name|EmitAtSynchronizedStmt
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+specifier|const
+name|ObjCAtSynchronizedStmt
+operator|&
+name|S
+argument_list|,
+name|llvm
+operator|::
+name|Function
+operator|*
+name|syncEnterFn
+argument_list|,
+name|llvm
+operator|::
+name|Function
+operator|*
+name|syncExitFn
+argument_list|)
+decl_stmt|;
 name|public
 label|:
 name|virtual
@@ -395,7 +456,7 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// Generate a class stucture for this class.
+comment|/// Generate a class structure for this class.
 name|virtual
 name|void
 name|GenerateClass
@@ -925,15 +986,6 @@ function_decl|;
 name|CGObjCRuntime
 modifier|*
 name|CreateMacObjCRuntime
-parameter_list|(
-name|CodeGenModule
-modifier|&
-name|CGM
-parameter_list|)
-function_decl|;
-name|CGObjCRuntime
-modifier|*
-name|CreateMacNonFragileABIObjCRuntime
 parameter_list|(
 name|CodeGenModule
 modifier|&

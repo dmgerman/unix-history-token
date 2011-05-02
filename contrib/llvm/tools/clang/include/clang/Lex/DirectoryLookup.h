@@ -72,6 +72,14 @@ block|{
 name|class
 name|StringRef
 decl_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|SmallVectorImpl
+expr_stmt|;
 block|}
 end_decl_stmt
 
@@ -375,6 +383,17 @@ return|;
 block|}
 comment|/// LookupFile - Lookup the specified file in this search path, returning it
 comment|/// if it exists or returning null if not.
+comment|///
+comment|/// \param Filename The file to look up relative to the search paths.
+comment|///
+comment|/// \param HS The header search instance to search with.
+comment|///
+comment|/// \param SearchPath If not NULL, will be set to the search path relative
+comment|/// to which the file was found.
+comment|///
+comment|/// \param RelativePath If not NULL, will be set to the path relative to
+comment|/// SearchPath at which the file was found. This only differs from the
+comment|/// Filename for framework includes.
 specifier|const
 name|FileEntry
 modifier|*
@@ -388,6 +407,24 @@ argument_list|,
 name|HeaderSearch
 operator|&
 name|HS
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|*
+name|SearchPath
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|*
+name|RelativePath
 argument_list|)
 decl|const
 decl_stmt|;
@@ -406,6 +443,24 @@ argument_list|,
 name|HeaderSearch
 operator|&
 name|HS
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|*
+name|SearchPath
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|*
+name|RelativePath
 argument_list|)
 decl|const
 decl_stmt|;

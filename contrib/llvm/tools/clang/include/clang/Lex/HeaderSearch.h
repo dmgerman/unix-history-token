@@ -269,7 +269,7 @@ comment|/// directory of the #including file first, then each directory in Searc
 comment|/// consequtively. Requests for<x> search the current dir first, then each
 comment|/// directory in SearchDirs, starting at SystemDirIdx, consequtively.  If
 comment|/// NoCurDirSearch is true, then the check for the file in the current
-comment|/// directory is supressed.
+comment|/// directory is suppressed.
 name|std
 operator|::
 name|vector
@@ -502,13 +502,26 @@ name|ES
 expr_stmt|;
 block|}
 comment|/// LookupFile - Given a "foo" or<foo> reference, look up the indicated file,
-comment|/// return null on failure.  isAngled indicates whether the file reference is
-comment|/// a<> reference.  If successful, this returns 'UsedDir', the
-comment|/// DirectoryLookup member the file was found in, or null if not applicable.
-comment|/// If CurDir is non-null, the file was found in the specified directory
-comment|/// search location.  This is used to implement #include_next.  CurFileEnt, if
-comment|/// non-null, indicates where the #including file is, in case a relative
-comment|/// search is needed.
+comment|/// return null on failure.
+comment|///
+comment|/// \returns If successful, this returns 'UsedDir', the DirectoryLookup member
+comment|/// the file was found in, or null if not applicable.
+comment|///
+comment|/// \param isAngled indicates whether the file reference is a<> reference.
+comment|///
+comment|/// \param CurDir If non-null, the file was found in the specified directory
+comment|/// search location.  This is used to implement #include_next.
+comment|///
+comment|/// \param CurFileEnt If non-null, indicates where the #including file is, in
+comment|/// case a relative search is needed.
+comment|///
+comment|/// \param SearchPath If non-null, will be set to the search path relative
+comment|/// to which the file was found. If the include path is absolute, SearchPath
+comment|/// will be set to an empty string.
+comment|///
+comment|/// \param RelativePath If non-null, will be set to the path relative to
+comment|/// SearchPath at which the file was found. This only differs from the
+comment|/// Filename for framework includes.
 specifier|const
 name|FileEntry
 modifier|*
@@ -537,6 +550,24 @@ specifier|const
 name|FileEntry
 operator|*
 name|CurFileEnt
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|*
+name|SearchPath
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|*
+name|RelativePath
 argument_list|)
 decl_stmt|;
 comment|/// LookupSubframeworkHeader - Look up a subframework for the specified
@@ -558,6 +589,24 @@ specifier|const
 name|FileEntry
 operator|*
 name|RelativeFileEnt
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|*
+name|SearchPath
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|*
+name|RelativePath
 argument_list|)
 decl_stmt|;
 comment|/// LookupFrameworkCache - Look up the specified framework name in our
@@ -796,6 +845,80 @@ name|unsigned
 name|UID
 parameter_list|)
 function_decl|;
+comment|// Used by external tools
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|DirectoryLookup
+operator|>
+operator|::
+name|const_iterator
+name|search_dir_iterator
+expr_stmt|;
+name|search_dir_iterator
+name|search_dir_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SearchDirs
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|search_dir_iterator
+name|search_dir_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SearchDirs
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|unsigned
+name|search_dir_size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SearchDirs
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+name|search_dir_iterator
+name|system_dir_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SearchDirs
+operator|.
+name|begin
+argument_list|()
+operator|+
+name|SystemDirIdx
+return|;
+block|}
+name|search_dir_iterator
+name|system_dir_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SearchDirs
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
 name|void
 name|PrintStats
 parameter_list|()

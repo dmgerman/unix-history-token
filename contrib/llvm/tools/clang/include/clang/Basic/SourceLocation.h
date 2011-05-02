@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<functional>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -1369,6 +1375,49 @@ name|Loc
 argument_list|)
 return|;
 block|}
+comment|/// \brief Comparison function class, useful for sorting FullSourceLocs.
+expr|struct
+name|BeforeThanCompare
+operator|:
+name|public
+name|std
+operator|::
+name|binary_function
+operator|<
+name|FullSourceLoc
+block|,
+name|FullSourceLoc
+block|,
+name|bool
+operator|>
+block|{
+name|bool
+name|operator
+argument_list|()
+operator|(
+specifier|const
+name|FullSourceLoc
+operator|&
+name|lhs
+expr|,
+specifier|const
+name|FullSourceLoc
+operator|&
+name|rhs
+operator|)
+specifier|const
+block|{
+return|return
+name|lhs
+operator|.
+name|isBeforeInTranslationUnitThan
+argument_list|(
+name|rhs
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
 comment|/// Prints information about this FullSourceLoc to stderr. Useful for
 comment|///  debugging.
 name|void

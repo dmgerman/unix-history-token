@@ -197,6 +197,15 @@ argument_list|(
 argument|char Char
 argument_list|)
 block|;
+name|bool
+name|isAtStatementSeparator
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|Ptr
+argument_list|)
+block|;
 specifier|const
 name|MCAsmInfo
 operator|&

@@ -120,7 +120,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/Dominators.h"
+file|"llvm/Analysis/DominanceFrontier.h"
 end_include
 
 begin_include
@@ -133,6 +133,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<map>
 end_include
 
 begin_decl_stmt
@@ -429,7 +435,7 @@ comment|/// A Region is a connected subgraph of a control flow graph that has ex
 comment|/// two connections to the remaining graph. It can be used to analyze or
 comment|/// optimize parts of the control flow graph.
 comment|///
-comment|/// A<em> simple Region</em> is connected to the remaing graph by just two
+comment|/// A<em> simple Region</em> is connected to the remaining graph by just two
 comment|/// edges. One edge entering the Region and another one leaving the Region.
 comment|///
 comment|/// An<em> extended Region</em> (or just Region) is a subgraph that can be
@@ -824,6 +830,17 @@ return|return
 name|RI
 return|;
 block|}
+comment|/// PrintStyle - Print region in difference ways.
+enum|enum
+name|PrintStyle
+block|{
+name|PrintNone
+block|,
+name|PrintBB
+block|,
+name|PrintRN
+block|}
+enum|;
 comment|/// @brief Print the region.
 comment|///
 comment|/// @param OS The output stream the Region is printed to.
@@ -845,6 +862,12 @@ name|unsigned
 name|level
 operator|=
 literal|0
+argument_list|,
+expr|enum
+name|PrintStyle
+name|Style
+operator|=
+name|PrintNone
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1080,7 +1103,7 @@ parameter_list|)
 function_decl|;
 comment|/// @brief Move all direct child nodes of this Region to another Region.
 comment|///
-comment|/// @param To The Region the child nodes will be transfered to.
+comment|/// @param To The Region the child nodes will be transferred to.
 name|void
 name|transferChildrenTo
 parameter_list|(

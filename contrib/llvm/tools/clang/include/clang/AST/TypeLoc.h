@@ -2117,9 +2117,9 @@ operator|>
 block|{
 name|public
 operator|:
-name|TypedefDecl
+name|TypedefNameDecl
 operator|*
-name|getTypedefDecl
+name|getTypedefNameDecl
 argument_list|()
 specifier|const
 block|{
@@ -2294,7 +2294,24 @@ name|TemplateTypeParmTypeLoc
 block|,
 name|TemplateTypeParmType
 operator|>
-block|{ }
+block|{
+name|public
+operator|:
+name|TemplateTypeParmDecl
+operator|*
+name|getDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTypePtr
+argument_list|()
+operator|->
+name|getDecl
+argument_list|()
+return|;
+block|}
+expr|}
 block|;
 comment|/// \brief Wrapper for substituted template type parameters.
 name|class
@@ -3496,6 +3513,16 @@ name|Loc
 argument_list|)
 block|;   }
 expr|}
+block|;  struct
+name|MemberPointerLocInfo
+operator|:
+name|public
+name|PointerLikeLocInfo
+block|{
+name|TypeSourceInfo
+operator|*
+name|ClassTInfo
+block|; }
 block|;
 comment|/// \brief Wrapper for source info for member pointers.
 name|class
@@ -3507,6 +3534,8 @@ operator|<
 name|MemberPointerTypeLoc
 block|,
 name|MemberPointerType
+block|,
+name|MemberPointerLocInfo
 operator|>
 block|{
 name|public
@@ -3532,6 +3561,103 @@ argument_list|(
 name|Loc
 argument_list|)
 block|;   }
+specifier|const
+name|Type
+operator|*
+name|getClass
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTypePtr
+argument_list|()
+operator|->
+name|getClass
+argument_list|()
+return|;
+block|}
+name|TypeSourceInfo
+operator|*
+name|getClassTInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getLocalData
+argument_list|()
+operator|->
+name|ClassTInfo
+return|;
+block|}
+name|void
+name|setClassTInfo
+argument_list|(
+argument|TypeSourceInfo* TI
+argument_list|)
+block|{
+name|getLocalData
+argument_list|()
+operator|->
+name|ClassTInfo
+operator|=
+name|TI
+block|;   }
+name|void
+name|initializeLocal
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|setSigilLoc
+argument_list|(
+name|Loc
+argument_list|)
+block|;
+name|setClassTInfo
+argument_list|(
+literal|0
+argument_list|)
+block|;   }
+name|SourceRange
+name|getLocalSourceRange
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|TypeSourceInfo
+modifier|*
+name|TI
+init|=
+name|getClassTInfo
+argument_list|()
+condition|)
+return|return
+name|SourceRange
+argument_list|(
+name|TI
+operator|->
+name|getTypeLoc
+argument_list|()
+operator|.
+name|getBeginLoc
+argument_list|()
+argument_list|,
+name|getStarLoc
+argument_list|()
+argument_list|)
+return|;
+else|else
+return|return
+name|SourceRange
+argument_list|(
+name|getStarLoc
+argument_list|()
+argument_list|)
+return|;
+block|}
 expr|}
 block|;
 comment|/// Wraps an ObjCPointerType with source location information.
@@ -3678,9 +3804,10 @@ block|;   struct
 name|FunctionLocInfo
 block|{
 name|SourceLocation
-name|LParenLoc
-block|,
-name|RParenLoc
+name|LocalRangeBegin
+block|;
+name|SourceLocation
+name|LocalRangeEnd
 block|;
 name|bool
 name|TrailingReturn
@@ -3705,7 +3832,7 @@ block|{
 name|public
 operator|:
 name|SourceLocation
-name|getLParenLoc
+name|getLocalRangeBegin
 argument_list|()
 specifier|const
 block|{
@@ -3713,24 +3840,24 @@ return|return
 name|getLocalData
 argument_list|()
 operator|->
-name|LParenLoc
+name|LocalRangeBegin
 return|;
 block|}
 name|void
-name|setLParenLoc
+name|setLocalRangeBegin
 argument_list|(
-argument|SourceLocation Loc
+argument|SourceLocation L
 argument_list|)
 block|{
 name|getLocalData
 argument_list|()
 operator|->
-name|LParenLoc
+name|LocalRangeBegin
 operator|=
-name|Loc
+name|L
 block|;   }
 name|SourceLocation
-name|getRParenLoc
+name|getLocalRangeEnd
 argument_list|()
 specifier|const
 block|{
@@ -3738,21 +3865,21 @@ return|return
 name|getLocalData
 argument_list|()
 operator|->
-name|RParenLoc
+name|LocalRangeEnd
 return|;
 block|}
 name|void
-name|setRParenLoc
+name|setLocalRangeEnd
 argument_list|(
-argument|SourceLocation Loc
+argument|SourceLocation L
 argument_list|)
 block|{
 name|getLocalData
 argument_list|()
 operator|->
-name|RParenLoc
+name|LocalRangeEnd
 operator|=
-name|Loc
+name|L
 block|;   }
 name|bool
 name|getTrailingReturn
@@ -3880,10 +4007,10 @@ block|{
 return|return
 name|SourceRange
 argument_list|(
-name|getLParenLoc
+name|getLocalRangeBegin
 argument_list|()
 argument_list|,
-name|getRParenLoc
+name|getLocalRangeEnd
 argument_list|()
 argument_list|)
 return|;
@@ -3896,12 +4023,12 @@ argument_list|,
 argument|SourceLocation Loc
 argument_list|)
 block|{
-name|setLParenLoc
+name|setLocalRangeBegin
 argument_list|(
 name|Loc
 argument_list|)
 block|;
-name|setRParenLoc
+name|setLocalRangeEnd
 argument_list|(
 name|Loc
 argument_list|)
@@ -4995,8 +5122,11 @@ block|{
 name|SourceLocation
 name|KeywordLoc
 block|;
-name|SourceRange
-name|QualifierRange
+comment|/// \brief Opaque data pointer used to reconstruct a nested-name-specifier
+comment|/// from
+name|void
+operator|*
+name|QualifierData
 block|; }
 block|;
 name|class
@@ -5045,34 +5175,58 @@ name|KeywordLoc
 operator|=
 name|Loc
 block|;   }
-name|SourceRange
-name|getQualifierRange
+name|NestedNameSpecifierLoc
+name|getQualifierLoc
 argument_list|()
 specifier|const
 block|{
 return|return
-name|this
+name|NestedNameSpecifierLoc
+argument_list|(
+name|getTypePtr
+argument_list|()
 operator|->
+name|getQualifier
+argument_list|()
+argument_list|,
 name|getLocalData
 argument_list|()
 operator|->
-name|QualifierRange
+name|QualifierData
+argument_list|)
 return|;
 block|}
 name|void
-name|setQualifierRange
+name|setQualifierLoc
 argument_list|(
-argument|SourceRange Range
+argument|NestedNameSpecifierLoc QualifierLoc
 argument_list|)
 block|{
-name|this
+name|assert
+argument_list|(
+name|QualifierLoc
+operator|.
+name|getNestedNameSpecifier
+argument_list|()
+operator|==
+name|getTypePtr
+argument_list|()
 operator|->
+name|getQualifier
+argument_list|()
+operator|&&
+literal|"Inconsistent nested-name-specifier pointer"
+argument_list|)
+block|;
 name|getLocalData
 argument_list|()
 operator|->
-name|QualifierRange
+name|QualifierData
 operator|=
-name|Range
+name|QualifierLoc
+operator|.
+name|getOpaqueData
+argument_list|()
 block|;   }
 name|SourceRange
 name|getLocalSourceRange
@@ -5089,13 +5243,7 @@ argument_list|()
 condition|)
 if|if
 condition|(
-name|getQualifierRange
-argument_list|()
-operator|.
-name|getEnd
-argument_list|()
-operator|.
-name|isValid
+name|getQualifierLoc
 argument_list|()
 condition|)
 return|return
@@ -5104,10 +5252,10 @@ argument_list|(
 name|getKeywordLoc
 argument_list|()
 argument_list|,
-name|getQualifierRange
+name|getQualifierLoc
 argument_list|()
 operator|.
-name|getEnd
+name|getEndLoc
 argument_list|()
 argument_list|)
 return|;
@@ -5121,7 +5269,10 @@ argument_list|)
 return|;
 else|else
 return|return
-name|getQualifierRange
+name|getQualifierLoc
+argument_list|()
+operator|.
+name|getSourceRange
 argument_list|()
 return|;
 block|}
@@ -5132,20 +5283,7 @@ argument|ASTContext&Context
 argument_list|,
 argument|SourceLocation Loc
 argument_list|)
-block|{
-name|setKeywordLoc
-argument_list|(
-name|Loc
-argument_list|)
 block|;
-name|setQualifierRange
-argument_list|(
-name|SourceRange
-argument_list|(
-name|Loc
-argument_list|)
-argument_list|)
-block|;   }
 name|TypeLoc
 name|getNamedTypeLoc
 argument_list|()
@@ -5213,6 +5351,11 @@ name|ElaboratedLocInfo
 block|{
 name|SourceLocation
 name|NameLoc
+block|;
+comment|/// \brief Data associated with the nested-name-specifier location.
+name|void
+operator|*
+name|QualifierData
 block|; }
 block|;
 name|class
@@ -5261,34 +5404,58 @@ name|KeywordLoc
 operator|=
 name|Loc
 block|;   }
-name|SourceRange
-name|getQualifierRange
+name|NestedNameSpecifierLoc
+name|getQualifierLoc
 argument_list|()
 specifier|const
 block|{
 return|return
-name|this
+name|NestedNameSpecifierLoc
+argument_list|(
+name|getTypePtr
+argument_list|()
 operator|->
+name|getQualifier
+argument_list|()
+argument_list|,
 name|getLocalData
 argument_list|()
 operator|->
-name|QualifierRange
+name|QualifierData
+argument_list|)
 return|;
 block|}
 name|void
-name|setQualifierRange
+name|setQualifierLoc
 argument_list|(
-argument|SourceRange Range
+argument|NestedNameSpecifierLoc QualifierLoc
 argument_list|)
 block|{
-name|this
+name|assert
+argument_list|(
+name|QualifierLoc
+operator|.
+name|getNestedNameSpecifier
+argument_list|()
+operator|==
+name|getTypePtr
+argument_list|()
 operator|->
+name|getQualifier
+argument_list|()
+operator|&&
+literal|"Inconsistent nested-name-specifier pointer"
+argument_list|)
+block|;
 name|getLocalData
 argument_list|()
 operator|->
-name|QualifierRange
+name|QualifierData
 operator|=
-name|Range
+name|QualifierLoc
+operator|.
+name|getOpaqueData
+argument_list|()
 block|;   }
 name|SourceLocation
 name|getNameLoc
@@ -5346,10 +5513,10 @@ else|else
 return|return
 name|SourceRange
 argument_list|(
-name|getQualifierRange
+name|getQualifierLoc
 argument_list|()
 operator|.
-name|getBegin
+name|getBeginLoc
 argument_list|()
 argument_list|,
 name|getNameLoc
@@ -5397,34 +5564,15 @@ argument|ASTContext&Context
 argument_list|,
 argument|SourceLocation Loc
 argument_list|)
-block|{
-name|setKeywordLoc
-argument_list|(
-name|Loc
-argument_list|)
-block|;
-name|setQualifierRange
-argument_list|(
-name|SourceRange
-argument_list|(
-name|Loc
-argument_list|)
-argument_list|)
-block|;
-name|setNameLoc
-argument_list|(
-name|Loc
-argument_list|)
-block|;   }
-expr|}
-block|;
-comment|// This is exactly the structure of an ElaboratedTypeLoc whose inner
-comment|// type is some sort of TemplateSpecializationTypeLoc.
-block|struct
+block|; }
+block|;  struct
 name|DependentTemplateSpecializationLocInfo
 operator|:
 name|DependentNameLocInfo
 block|{
+name|SourceLocation
+name|KeywordLoc
+block|;
 name|SourceLocation
 name|LAngleLoc
 block|;
@@ -5480,34 +5628,89 @@ name|KeywordLoc
 operator|=
 name|Loc
 block|;   }
-name|SourceRange
-name|getQualifierRange
+name|NestedNameSpecifierLoc
+name|getQualifierLoc
 argument_list|()
 specifier|const
 block|{
-return|return
-name|this
-operator|->
+if|if
+condition|(
+operator|!
 name|getLocalData
 argument_list|()
 operator|->
-name|QualifierRange
+name|QualifierData
+condition|)
+return|return
+name|NestedNameSpecifierLoc
+argument_list|()
+return|;
+return|return
+name|NestedNameSpecifierLoc
+argument_list|(
+name|getTypePtr
+argument_list|()
+operator|->
+name|getQualifier
+argument_list|()
+argument_list|,
+name|getLocalData
+argument_list|()
+operator|->
+name|QualifierData
+argument_list|)
 return|;
 block|}
 name|void
-name|setQualifierRange
+name|setQualifierLoc
 argument_list|(
-argument|SourceRange Range
+argument|NestedNameSpecifierLoc QualifierLoc
 argument_list|)
 block|{
-name|this
-operator|->
+if|if
+condition|(
+operator|!
+name|QualifierLoc
+condition|)
+block|{
+comment|// Even if we have a nested-name-specifier in the dependent
+comment|// template specialization type, we won't record the nested-name-specifier
+comment|// location information when this type-source location information is
+comment|// part of a nested-name-specifier.
 name|getLocalData
 argument_list|()
 operator|->
-name|QualifierRange
+name|QualifierData
 operator|=
-name|Range
+literal|0
+expr_stmt|;
+return|return;
+block|}
+name|assert
+argument_list|(
+name|QualifierLoc
+operator|.
+name|getNestedNameSpecifier
+argument_list|()
+operator|==
+name|getTypePtr
+argument_list|()
+operator|->
+name|getQualifier
+argument_list|()
+operator|&&
+literal|"Inconsistent nested-name-specifier pointer"
+argument_list|)
+expr_stmt|;
+name|getLocalData
+argument_list|()
+operator|->
+name|QualifierData
+operator|=
+name|QualifierLoc
+operator|.
+name|getOpaqueData
+argument_list|()
 block|;   }
 name|SourceLocation
 name|getNameLoc
@@ -5688,14 +5891,30 @@ name|getRAngleLoc
 argument_list|()
 argument_list|)
 return|;
+elseif|else
+if|if
+condition|(
+name|getQualifierLoc
+argument_list|()
+condition|)
+return|return
+name|SourceRange
+argument_list|(
+name|getQualifierLoc
+argument_list|()
+operator|.
+name|getBeginLoc
+argument_list|()
+argument_list|,
+name|getRAngleLoc
+argument_list|()
+argument_list|)
+return|;
 else|else
 return|return
 name|SourceRange
 argument_list|(
-name|getQualifierRange
-argument_list|()
-operator|.
-name|getBegin
+name|getNameLoc
 argument_list|()
 argument_list|,
 name|getRAngleLoc
@@ -5743,56 +5962,7 @@ argument|ASTContext&Context
 argument_list|,
 argument|SourceLocation Loc
 argument_list|)
-block|{
-name|setKeywordLoc
-argument_list|(
-name|Loc
-argument_list|)
 block|;
-name|setQualifierRange
-argument_list|(
-name|SourceRange
-argument_list|(
-name|Loc
-argument_list|)
-argument_list|)
-block|;
-name|setNameLoc
-argument_list|(
-name|Loc
-argument_list|)
-block|;
-name|setLAngleLoc
-argument_list|(
-name|Loc
-argument_list|)
-block|;
-name|setRAngleLoc
-argument_list|(
-name|Loc
-argument_list|)
-block|;
-name|TemplateSpecializationTypeLoc
-operator|::
-name|initializeArgLocs
-argument_list|(
-name|Context
-argument_list|,
-name|getNumArgs
-argument_list|()
-argument_list|,
-name|getTypePtr
-argument_list|()
-operator|->
-name|getArgs
-argument_list|()
-argument_list|,
-name|getArgInfos
-argument_list|()
-argument_list|,
-name|Loc
-argument_list|)
-block|;   }
 name|unsigned
 name|getExtraLocalDataSize
 argument_list|()

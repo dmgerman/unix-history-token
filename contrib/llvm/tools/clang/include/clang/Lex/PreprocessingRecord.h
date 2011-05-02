@@ -1162,6 +1162,10 @@ argument_list|,
 argument|const FileEntry *File
 argument_list|,
 argument|SourceLocation EndLoc
+argument_list|,
+argument|llvm::StringRef SearchPath
+argument_list|,
+argument|llvm::StringRef RelativePath
 argument_list|)
 block|;   }
 block|; }

@@ -589,11 +589,19 @@ block|{}
 comment|// Diagnostic with no location (e.g. file not found, command line arg error).
 name|SMDiagnostic
 argument_list|(
-argument|const std::string&filename
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|filename
 argument_list|,
-argument|const std::string&Msg
-argument_list|,
-argument|bool showline = true
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Msg
 argument_list|)
 operator|:
 name|SM
@@ -625,7 +633,7 @@ argument_list|)
 operator|,
 name|ShowLine
 argument_list|(
-argument|showline
+argument|false
 argument_list|)
 block|{}
 comment|// Diagnostic with a location.
@@ -716,6 +724,7 @@ name|string
 operator|&
 name|getFilename
 argument_list|()
+specifier|const
 block|{
 return|return
 name|Filename

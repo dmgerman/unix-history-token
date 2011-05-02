@@ -1438,15 +1438,6 @@ argument|const Function *F
 argument_list|)
 specifier|const
 block|;
-name|unsigned
-name|getRegPressureLimit
-argument_list|(
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
 comment|/// getStackCookieLocation - Return true if the target stores stack
 comment|/// protector cookies at a fixed offset in some non-standard address
 comment|/// space, and populates the address space and offset as
@@ -2284,6 +2275,26 @@ name|bool
 name|isUsedByReturnOnly
 argument_list|(
 argument|SDNode *N
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|mayBeEmittedAsTailCall
+argument_list|(
+argument|CallInst *CI
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|EVT
+name|getTypeForExtArgOrReturn
+argument_list|(
+argument|LLVMContext&Context
+argument_list|,
+argument|EVT VT
+argument_list|,
+argument|ISD::NodeType ExtendKind
 argument_list|)
 specifier|const
 block|;

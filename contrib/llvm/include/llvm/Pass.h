@@ -60,7 +60,7 @@ comment|// end.  This allows arbitrary passes to be strung together and have the
 end_comment
 
 begin_comment
-comment|// executed as effeciently as possible.
+comment|// executed as efficiently as possible.
 end_comment
 
 begin_comment
@@ -339,7 +339,7 @@ specifier|const
 expr_stmt|;
 comment|// dump - Print to stderr.
 comment|/// createPrinterPass - Get a Pass appropriate to print the IR this
-comment|/// pass operates one (Module, Function or MachineFunction).
+comment|/// pass operates on (Module, Function or MachineFunction).
 name|virtual
 name|Pass
 modifier|*
@@ -872,7 +872,7 @@ argument_list|,
 argument|pid
 argument_list|)
 block|{}
-comment|/// createPrinterPass - Get a function printer pass.
+comment|/// createPrinterPass - Get a basic block printer pass.
 name|Pass
 operator|*
 name|createPrinterPass

@@ -183,6 +183,22 @@ operator|=
 literal|0x1
 block|}
 decl_stmt|;
+enum|enum
+name|MIFlag
+block|{
+name|NoFlags
+init|=
+literal|0
+block|,
+name|FrameSetup
+init|=
+literal|1
+operator|<<
+literal|0
+comment|// Instruction is used as a part of
+comment|// function frame setup code.
+block|}
+enum|;
 name|private
 label|:
 specifier|const
@@ -191,14 +207,18 @@ modifier|*
 name|TID
 decl_stmt|;
 comment|// Instruction descriptor.
-name|unsigned
-name|short
+name|uint16_t
 name|NumImplicitOps
 decl_stmt|;
 comment|// Number of implicit operands (which
 comment|// are determined at construction time).
-name|unsigned
-name|short
+name|uint8_t
+name|Flags
+decl_stmt|;
+comment|// Various bits of additional
+comment|// information about machine
+comment|// instruction.
+name|uint8_t
 name|AsmPrinterFlags
 decl_stmt|;
 comment|// Various bits of information used by
@@ -401,8 +421,7 @@ return|;
 block|}
 comment|/// getAsmPrinterFlags - Return the asm printer flags bitvector.
 comment|///
-name|unsigned
-name|short
+name|uint8_t
 name|getAsmPrinterFlags
 argument_list|()
 specifier|const
@@ -450,10 +469,62 @@ block|{
 name|AsmPrinterFlags
 operator||=
 operator|(
-name|unsigned
-name|short
+name|uint8_t
 operator|)
 name|Flag
+expr_stmt|;
+block|}
+comment|/// getFlags - Return the MI flags bitvector.
+name|uint8_t
+name|getFlags
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+return|;
+block|}
+comment|/// getFlag - Return whether an MI flag is set.
+name|bool
+name|getFlag
+argument_list|(
+name|MIFlag
+name|Flag
+argument_list|)
+decl|const
+block|{
+return|return
+name|Flags
+operator|&
+name|Flag
+return|;
+block|}
+comment|/// setFlag - Set a MI flag.
+name|void
+name|setFlag
+parameter_list|(
+name|MIFlag
+name|Flag
+parameter_list|)
+block|{
+name|Flags
+operator||=
+operator|(
+name|uint8_t
+operator|)
+name|Flag
+expr_stmt|;
+block|}
+name|void
+name|setFlags
+parameter_list|(
+name|unsigned
+name|flags
+parameter_list|)
+block|{
+name|Flags
+operator|=
+name|flags
 expr_stmt|;
 block|}
 comment|/// clearAsmPrinterFlag - clear specific AsmPrinter flags
@@ -1516,8 +1587,8 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// setPhysRegsDeadExcept - Mark every physreg used by this instruction as dead
-comment|/// except those in the UsedRegs list.
+comment|/// setPhysRegsDeadExcept - Mark every physreg used by this instruction as
+comment|/// dead except those in the UsedRegs list.
 name|void
 name|setPhysRegsDeadExcept
 argument_list|(

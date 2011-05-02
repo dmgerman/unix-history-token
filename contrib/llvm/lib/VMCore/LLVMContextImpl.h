@@ -916,7 +916,7 @@ name|Int64Ty
 decl_stmt|;
 comment|// Concrete/Abstract TypeDescriptions - We lazily calculate type descriptions
 comment|// for types as they are needed.  Because resolution of types must invalidate
-comment|// all of the abstract type descriptions, we keep them in a seperate map to
+comment|// all of the abstract type descriptions, we keep them in a separate map to
 comment|// make this easy.
 name|TypePrinting
 name|ConcreteTypeDescriptions

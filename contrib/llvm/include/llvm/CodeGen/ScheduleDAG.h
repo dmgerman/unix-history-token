@@ -938,11 +938,23 @@ name|Latency
 decl_stmt|;
 comment|// Node latency.
 name|bool
+name|isVRegCycle
+range|:
+literal|1
+decl_stmt|;
+comment|// May use and def the same vreg.
+name|bool
 name|isCall
 range|:
 literal|1
 decl_stmt|;
 comment|// Is a function call.
+name|bool
+name|isCallOp
+range|:
+literal|1
+decl_stmt|;
+comment|// Is a function call operand.
 name|bool
 name|isTwoAddress
 range|:
@@ -991,6 +1003,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|// True if preferable to schedule high.
+name|bool
+name|isScheduleLow
+range|:
+literal|1
+decl_stmt|;
+comment|// True if preferable to schedule low.
 name|bool
 name|isCloned
 range|:
@@ -1112,7 +1130,17 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
+name|isVRegCycle
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|isCall
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|isCallOp
 argument_list|(
 name|false
 argument_list|)
@@ -1153,6 +1181,11 @@ name|false
 argument_list|)
 operator|,
 name|isScheduleHigh
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|isScheduleLow
 argument_list|(
 name|false
 argument_list|)
@@ -1263,7 +1296,17 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
+name|isVRegCycle
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|isCall
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|isCallOp
 argument_list|(
 name|false
 argument_list|)
@@ -1304,6 +1347,11 @@ name|false
 argument_list|)
 operator|,
 name|isScheduleHigh
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|isScheduleLow
 argument_list|(
 name|false
 argument_list|)
@@ -1410,7 +1458,17 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
+name|isVRegCycle
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|isCall
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|isCallOp
 argument_list|(
 name|false
 argument_list|)
@@ -1451,6 +1509,11 @@ name|false
 argument_list|)
 operator|,
 name|isScheduleHigh
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|isScheduleLow
 argument_list|(
 name|false
 argument_list|)
@@ -1616,7 +1679,7 @@ name|D
 parameter_list|)
 function_decl|;
 comment|/// getDepth - Return the depth of this node, which is the length of the
-comment|/// maximum path up to any node with has no predecessors.
+comment|/// maximum path up to any node which has no predecessors.
 name|unsigned
 name|getDepth
 argument_list|()
@@ -1650,7 +1713,7 @@ comment|/// getHeight - Return the height of this node, which is the length of t
 end_comment
 
 begin_comment
-comment|/// maximum path down to any node with has no successors.
+comment|/// maximum path down to any node which has no successors.
 end_comment
 
 begin_expr_stmt
@@ -3232,7 +3295,7 @@ modifier|*
 name|TargetSU
 parameter_list|)
 function_decl|;
-comment|/// AddPred - Updates the topological ordering to accomodate an edge
+comment|/// AddPred - Updates the topological ordering to accommodate an edge
 comment|/// to be added from SUnit X to SUnit Y.
 name|void
 name|AddPred
@@ -3246,7 +3309,7 @@ modifier|*
 name|X
 parameter_list|)
 function_decl|;
-comment|/// RemovePred - Updates the topological ordering to accomodate an
+comment|/// RemovePred - Updates the topological ordering to accommodate an
 comment|/// an edge to be removed from the specified node N from the predecessors
 comment|/// of the current node M.
 name|void

@@ -65,6 +65,12 @@ directive|include
 file|<string>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -173,6 +179,25 @@ comment|/// Decl* various IR entities came from.  Only
 comment|/// useful when running CodeGen as a
 comment|/// subroutine.
 name|unsigned
+name|EmitGcovArcs
+range|:
+literal|1
+decl_stmt|;
+comment|/// Emit coverage data files, aka. GCDA.
+name|unsigned
+name|EmitGcovNotes
+range|:
+literal|1
+decl_stmt|;
+comment|/// Emit coverage "notes" files, aka GCNO.
+name|unsigned
+name|ForbidGuardVariables
+range|:
+literal|1
+decl_stmt|;
+comment|/// Issue errors if C++ guard variables
+comment|/// are required
+name|unsigned
 name|FunctionSections
 range|:
 literal|1
@@ -225,6 +250,12 @@ literal|1
 decl_stmt|;
 comment|/// Set when -fno-common or C++ is enabled.
 name|unsigned
+name|NoDwarf2CFIAsm
+range|:
+literal|1
+decl_stmt|;
+comment|/// Set when -fno-dwarf2-cfi-asm is enabled.
+name|unsigned
 name|NoImplicitFloat
 range|:
 literal|1
@@ -270,9 +301,9 @@ comment|/// The -O[0-4] option specified.
 name|unsigned
 name|OptimizeSize
 range|:
-literal|1
+literal|2
 decl_stmt|;
-comment|/// If -Os is specified.
+comment|/// If -Os (==1) or -Oz (==2) is specified.
 name|unsigned
 name|RelaxAll
 range|:
@@ -285,6 +316,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/// Set when -fno-strict-aliasing is enabled.
+name|unsigned
+name|SaveTempLabels
+range|:
+literal|1
+decl_stmt|;
+comment|/// Save temporary labels.
 name|unsigned
 name|SimplifyLibCalls
 range|:
@@ -384,6 +421,17 @@ operator|::
 name|string
 name|RelocationModel
 expr_stmt|;
+comment|/// A list of command-line options to forward to the LLVM backend.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|BackendOptions
+expr_stmt|;
 comment|/// The user specified number of registers to be used for integral arguments,
 comment|/// or 0 if unspecified.
 name|unsigned
@@ -434,6 +482,18 @@ name|EmitDeclMetadata
 operator|=
 literal|0
 expr_stmt|;
+name|EmitGcovArcs
+operator|=
+literal|0
+expr_stmt|;
+name|EmitGcovNotes
+operator|=
+literal|0
+expr_stmt|;
+name|ForbidGuardVariables
+operator|=
+literal|0
+expr_stmt|;
 name|FunctionSections
 operator|=
 literal|0
@@ -463,6 +523,10 @@ operator|=
 literal|1
 expr_stmt|;
 name|NoCommon
+operator|=
+literal|0
+expr_stmt|;
+name|NoDwarf2CFIAsm
 operator|=
 literal|0
 expr_stmt|;
@@ -507,6 +571,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|RelaxedAliasing
+operator|=
+literal|0
+expr_stmt|;
+name|SaveTempLabels
 operator|=
 literal|0
 expr_stmt|;

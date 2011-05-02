@@ -77,6 +77,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+struct_decl|struct
+name|CodeGenRegister
+struct_decl|;
 name|class
 name|CodeGenDAGPatterns
 decl_stmt|;
@@ -97,6 +100,12 @@ name|Record
 decl_stmt|;
 name|class
 name|SDNodeInfo
+decl_stmt|;
+name|class
+name|TreePredicateFn
+decl_stmt|;
+name|class
+name|TreePattern
 decl_stmt|;
 name|Matcher
 modifier|*
@@ -1802,35 +1811,25 @@ operator|:
 name|public
 name|Matcher
 block|{
-name|StringRef
-name|PredName
+name|TreePattern
+operator|*
+name|Pred
 block|;
 name|public
 operator|:
 name|CheckPredicateMatcher
 argument_list|(
-argument|StringRef predname
+specifier|const
+name|TreePredicateFn
+operator|&
+name|pred
 argument_list|)
-operator|:
-name|Matcher
-argument_list|(
-name|CheckPredicate
-argument_list|)
-block|,
-name|PredName
-argument_list|(
-argument|predname
-argument_list|)
-block|{}
-name|StringRef
-name|getPredicateName
+block|;
+name|TreePredicateFn
+name|getPredicate
 argument_list|()
 specifier|const
-block|{
-return|return
-name|PredName
-return|;
-block|}
+block|;
 specifier|static
 specifier|inline
 name|bool
@@ -1879,9 +1878,9 @@ operator|(
 name|M
 operator|)
 operator|->
-name|PredName
+name|Pred
 operator|==
-name|PredName
+name|Pred
 return|;
 block|}
 name|virtual
@@ -3757,7 +3756,8 @@ name|Matcher
 block|{
 comment|/// Reg - The def for the register that we're emitting.  If this is null, then
 comment|/// this is a reference to zero_reg.
-name|Record
+specifier|const
+name|CodeGenRegister
 operator|*
 name|Reg
 block|;
@@ -3770,7 +3770,7 @@ name|public
 operator|:
 name|EmitRegisterMatcher
 argument_list|(
-argument|Record *reg
+argument|const CodeGenRegister *reg
 argument_list|,
 argument|MVT::SimpleValueType vt
 argument_list|)
@@ -3790,7 +3790,8 @@ argument_list|(
 argument|vt
 argument_list|)
 block|{}
-name|Record
+specifier|const
+name|CodeGenRegister
 operator|*
 name|getReg
 argument_list|()

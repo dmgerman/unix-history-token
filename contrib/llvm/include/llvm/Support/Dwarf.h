@@ -861,6 +861,22 @@ name|DW_AT_APPLE_omit_frame_ptr
 init|=
 literal|0x3fe7
 block|,
+name|DW_AT_APPLE_property_name
+init|=
+literal|0x3fe8
+block|,
+name|DW_AT_APPLE_property_getter
+init|=
+literal|0x3fe9
+block|,
+name|DW_AT_APPLE_property_setter
+init|=
+literal|0x3fea
+block|,
+name|DW_AT_APPLE_property_attribute
+init|=
+literal|0x3feb
+block|,
 comment|// Attribute form encodings
 name|DW_FORM_addr
 init|=
@@ -1551,6 +1567,10 @@ name|DW_OP_call_frame_cfa
 init|=
 literal|0x9c
 block|,
+name|DW_OP_bit_piece
+init|=
+literal|0x9d
+block|,
 name|DW_OP_lo_user
 init|=
 literal|0xe0
@@ -2146,6 +2166,31 @@ block|,
 name|DW_EH_PE_indirect
 init|=
 literal|0x80
+block|,
+comment|// Apple Objective-C Property Attributes
+name|DW_APPLE_PROPERTY_readonly
+init|=
+literal|0x01
+block|,
+name|DW_APPLE_PROPERTY_readwrite
+init|=
+literal|0x02
+block|,
+name|DW_APPLE_PROPERTY_assign
+init|=
+literal|0x04
+block|,
+name|DW_APPLE_PROPERTY_retain
+init|=
+literal|0x08
+block|,
+name|DW_APPLE_PROPERTY_copy
+init|=
+literal|0x10
+block|,
+name|DW_APPLE_PROPERTY_nonatomic
+init|=
+literal|0x20
 block|}
 enum|;
 comment|/// TagString - Return the string for the specified tag.

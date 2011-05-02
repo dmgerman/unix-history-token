@@ -82,12 +82,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Operator.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/DerivedTypes.h"
 end_include
 

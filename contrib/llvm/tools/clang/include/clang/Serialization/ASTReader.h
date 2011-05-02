@@ -289,6 +289,9 @@ decl_stmt|;
 struct_decl|struct
 name|HeaderFileInfo
 struct_decl|;
+name|class
+name|VersionTuple
+decl_stmt|;
 struct|struct
 name|PCHPredefinesBlock
 block|{
@@ -673,6 +676,19 @@ name|ASTConsumer
 modifier|*
 name|Consumer
 decl_stmt|;
+comment|/// \brief AST buffers for chained PCHs created and stored in memory.
+comment|/// First (not depending on another) PCH in chain is in front.
+name|std
+operator|::
+name|vector
+operator|<
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|*
+operator|>
+name|ASTBuffers
+expr_stmt|;
 comment|/// \brief Information that is needed for every module.
 struct|struct
 name|PerFileData
@@ -2068,13 +2084,40 @@ comment|/// This routine should only be used for fatal errors that have to
 comment|/// do with non-routine failures (e.g., corrupted AST file).
 name|void
 name|Error
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|Msg
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
+name|void
+name|Error
+argument_list|(
+name|unsigned
+name|DiagID
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|Arg1
+operator|=
+name|llvm
+operator|::
+name|StringRef
+argument_list|()
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|Arg2
+operator|=
+name|llvm
+operator|::
+name|StringRef
+argument_list|()
+argument_list|)
+decl_stmt|;
 name|ASTReader
 argument_list|(
 specifier|const
@@ -2248,6 +2291,44 @@ modifier|&
 name|Context
 parameter_list|)
 function_decl|;
+comment|/// \brief Set AST buffers for chained PCHs created and stored in memory.
+comment|/// First (not depending on another) PCH in chain is first in array.
+name|void
+name|setASTMemoryBuffers
+argument_list|(
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|*
+operator|*
+name|bufs
+argument_list|,
+name|unsigned
+name|numBufs
+argument_list|)
+block|{
+name|ASTBuffers
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|ASTBuffers
+operator|.
+name|insert
+argument_list|(
+name|ASTBuffers
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|bufs
+argument_list|,
+name|bufs
+operator|+
+name|numBufs
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// \brief Retrieve the name of the named (primary) AST file
 specifier|const
 name|std
@@ -2755,6 +2836,18 @@ name|void
 name|PrintStats
 parameter_list|()
 function_decl|;
+comment|/// Return the amount of memory used by memory buffers, breaking down
+comment|/// by heap-backed versus mmap'ed memory.
+name|virtual
+name|void
+name|getMemoryBufferSizes
+argument_list|(
+name|MemoryBufferSizes
+operator|&
+name|sizes
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Initialize the semantic source with the Sema instance
 comment|/// being used to perform semantic analysis on the abstract syntax
 comment|/// tree.
@@ -2965,7 +3058,7 @@ return|;
 block|}
 comment|/// \brief Read the source location entry with index ID.
 name|virtual
-name|void
+name|bool
 name|ReadSLocEntry
 parameter_list|(
 name|unsigned
@@ -3413,6 +3506,20 @@ operator|&
 name|Idx
 argument_list|)
 expr_stmt|;
+comment|/// \brief Read a version tuple.
+name|VersionTuple
+name|ReadVersionTuple
+parameter_list|(
+specifier|const
+name|RecordData
+modifier|&
+name|Record
+parameter_list|,
+name|unsigned
+modifier|&
+name|Idx
+parameter_list|)
+function_decl|;
 name|CXXTemporary
 modifier|*
 name|ReadCXXTemporary

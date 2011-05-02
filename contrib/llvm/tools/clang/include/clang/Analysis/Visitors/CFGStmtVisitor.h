@@ -320,6 +320,10 @@ name|DISPATCH_CASE
 argument_list|(
 argument|ObjCForCollectionStmt
 argument_list|)
+name|DISPATCH_CASE
+argument_list|(
+argument|CXXForRangeStmt
+argument_list|)
 case|case
 name|Stmt
 operator|::
@@ -453,6 +457,28 @@ name|RetTy
 name|BlockStmt_VisitObjCForCollectionStmt
 argument_list|(
 argument|ObjCForCollectionStmt* S
+argument_list|)
+block|{
+return|return
+name|static_cast
+operator|<
+name|ImplClass
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|BlockStmt_VisitStmt
+argument_list|(
+name|S
+argument_list|)
+return|;
+block|}
+name|RetTy
+name|BlockStmt_VisitCXXForRangeStmt
+argument_list|(
+argument|CXXForRangeStmt* S
 argument_list|)
 block|{
 return|return

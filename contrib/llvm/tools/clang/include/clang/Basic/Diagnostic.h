@@ -2679,7 +2679,7 @@ comment|/// is used when the argument is not an std::string.  The specific value
 end_comment
 
 begin_comment
-comment|/// mangled into an intptr_t and the intepretation depends on exactly what
+comment|/// mangled into an intptr_t and the interpretation depends on exactly what
 end_comment
 
 begin_comment
@@ -3303,14 +3303,6 @@ name|Hint
 argument_list|)
 decl|const
 block|{
-if|if
-condition|(
-name|Hint
-operator|.
-name|isNull
-argument_list|()
-condition|)
-return|return;
 name|assert
 argument_list|(
 name|NumFixItHints

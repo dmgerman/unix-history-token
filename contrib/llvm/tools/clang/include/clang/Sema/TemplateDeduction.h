@@ -173,7 +173,7 @@ block|{
 comment|// FIXME: if (Deduced) Deduced->Destroy(Context);
 block|}
 comment|/// \brief Returns the location at which template argument is
-comment|/// occuring.
+comment|/// occurring.
 name|SourceLocation
 name|getLocation
 argument_list|()

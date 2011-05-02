@@ -135,6 +135,9 @@ decl_stmt|;
 name|class
 name|formatted_raw_ostream
 decl_stmt|;
+name|class
+name|raw_ostream
+decl_stmt|;
 comment|// Relocation model types.
 name|namespace
 name|Reloc
@@ -291,7 +294,17 @@ range|:
 literal|1
 decl_stmt|;
 name|unsigned
+name|MCSaveTempLabels
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
 name|MCUseLoc
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|MCUseCFI
 range|:
 literal|1
 decl_stmt|;
@@ -520,6 +533,31 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
+comment|/// hasMCSaveTempLabels - Check whether temporary labels will be preserved
+comment|/// (i.e., not treated as temporary).
+name|bool
+name|hasMCSaveTempLabels
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MCSaveTempLabels
+return|;
+block|}
+comment|/// setMCSaveTempLabels - Set whether temporary labels will be preserved
+comment|/// (i.e., not treated as temporary).
+name|void
+name|setMCSaveTempLabels
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|MCSaveTempLabels
+operator|=
+name|Value
+expr_stmt|;
+block|}
 comment|/// hasMCNoExecStack - Check whether an executable stack is not needed.
 name|bool
 name|hasMCNoExecStack
@@ -562,6 +600,29 @@ name|Value
 parameter_list|)
 block|{
 name|MCUseLoc
+operator|=
+name|Value
+expr_stmt|;
+block|}
+comment|/// hasMCUseCFI - Check whether we should use dwarf's .cfi_* directives.
+name|bool
+name|hasMCUseCFI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MCUseCFI
+return|;
+block|}
+comment|/// setMCUseCFI - Set whether all we should use dwarf's .cfi_* directives.
+name|void
+name|setMCUseCFI
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|MCUseCFI
 operator|=
 name|Value
 expr_stmt|;
@@ -755,6 +816,9 @@ name|MCContext
 operator|*
 operator|&
 argument_list|,
+name|raw_ostream
+operator|&
+argument_list|,
 name|CodeGenOpt
 operator|::
 name|Level
@@ -894,6 +958,8 @@ argument_list|(
 argument|PassManagerBase&PM
 argument_list|,
 argument|MCContext *&Ctx
+argument_list|,
+argument|raw_ostream&OS
 argument_list|,
 argument|CodeGenOpt::Level OptLevel
 argument_list|,

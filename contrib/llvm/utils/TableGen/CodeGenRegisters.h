@@ -124,9 +124,10 @@ argument_list|()
 specifier|const
 expr_stmt|;
 name|unsigned
-name|DeclaredSpillSize
-decl_stmt|,
-name|DeclaredSpillAlignment
+name|EnumValue
+decl_stmt|;
+name|unsigned
+name|CostPerUse
 decl_stmt|;
 name|CodeGenRegister
 argument_list|(

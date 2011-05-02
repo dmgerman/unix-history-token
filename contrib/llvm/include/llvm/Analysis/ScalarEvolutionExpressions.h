@@ -616,86 +616,24 @@ name|getType
 argument_list|()
 return|;
 block|}
-name|bool
-name|hasNoUnsignedWrap
-argument_list|()
+name|NoWrapFlags
+name|getNoWrapFlags
+argument_list|(
+argument|NoWrapFlags Mask = NoWrapMask
+argument_list|)
 specifier|const
 block|{
 return|return
+call|(
+name|NoWrapFlags
+call|)
+argument_list|(
 name|SubclassData
 operator|&
-operator|(
-literal|1
-operator|<<
-literal|0
-operator|)
+name|Mask
+argument_list|)
 return|;
 block|}
-name|void
-name|setHasNoUnsignedWrap
-argument_list|(
-argument|bool B
-argument_list|)
-block|{
-name|SubclassData
-operator|=
-operator|(
-name|SubclassData
-operator|&
-operator|~
-operator|(
-literal|1
-operator|<<
-literal|0
-operator|)
-operator|)
-operator||
-operator|(
-name|B
-operator|<<
-literal|0
-operator|)
-block|;     }
-name|bool
-name|hasNoSignedWrap
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SubclassData
-operator|&
-operator|(
-literal|1
-operator|<<
-literal|1
-operator|)
-return|;
-block|}
-name|void
-name|setHasNoSignedWrap
-argument_list|(
-argument|bool B
-argument_list|)
-block|{
-name|SubclassData
-operator|=
-operator|(
-name|SubclassData
-operator|&
-operator|~
-operator|(
-literal|1
-operator|<<
-literal|1
-operator|)
-operator|)
-operator||
-operator|(
-name|B
-operator|<<
-literal|1
-operator|)
-block|;     }
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -843,6 +781,17 @@ operator|==
 name|scUMaxExpr
 return|;
 block|}
+comment|/// Set flags for a non-recurrence without clearing previously set flags.
+name|void
+name|setNoWrapFlags
+argument_list|(
+argument|NoWrapFlags Flags
+argument_list|)
+block|{
+name|SubclassData
+operator||=
+name|Flags
+block|;     }
 expr|}
 block|;
 comment|//===--------------------------------------------------------------------===//
@@ -1208,6 +1157,7 @@ block|}
 comment|/// getStepRecurrence - This method constructs and returns the recurrence
 comment|/// indicating how much this expression steps by.  If this is a polynomial
 comment|/// of degree N, it returns a chrec of degree N-1.
+comment|/// We cannot determine whether the step recurrence has self-wraparound.
 specifier|const
 name|SCEV
 operator|*
@@ -1253,6 +1203,8 @@ operator|)
 argument_list|,
 name|getLoop
 argument_list|()
+argument_list|,
+name|FlagAnyWrap
 argument_list|)
 return|;
 block|}
@@ -1287,6 +1239,40 @@ operator|==
 literal|3
 return|;
 block|}
+comment|/// Set flags for a recurrence without clearing any previously set flags.
+comment|/// For AddRec, either NUW or NSW implies NW. Keep track of this fact here
+comment|/// to make it easier to propagate flags.
+name|void
+name|setNoWrapFlags
+argument_list|(
+argument|NoWrapFlags Flags
+argument_list|)
+block|{
+if|if
+condition|(
+name|Flags
+operator|&
+operator|(
+name|FlagNUW
+operator||
+name|FlagNSW
+operator|)
+condition|)
+name|Flags
+operator|=
+name|ScalarEvolution
+operator|::
+name|setFlags
+argument_list|(
+name|Flags
+argument_list|,
+name|FlagNW
+argument_list|)
+expr_stmt|;
+name|SubclassData
+operator||=
+name|Flags
+block|;     }
 comment|/// evaluateAtIteration - Return the value of this chain of recurrences at
 comment|/// the specified iteration number.
 specifier|const
@@ -1414,14 +1400,16 @@ argument|N
 argument_list|)
 block|{
 comment|// Max never overflows.
-name|setHasNoUnsignedWrap
+name|setNoWrapFlags
 argument_list|(
-name|true
+call|(
+name|NoWrapFlags
+call|)
+argument_list|(
+name|FlagNUW
+operator||
+name|FlagNSW
 argument_list|)
-block|;
-name|setHasNoSignedWrap
-argument_list|(
-name|true
 argument_list|)
 block|;     }
 name|public
@@ -1492,14 +1480,16 @@ argument|N
 argument_list|)
 block|{
 comment|// Max never overflows.
-name|setHasNoUnsignedWrap
+name|setNoWrapFlags
 argument_list|(
-name|true
+call|(
+name|NoWrapFlags
+call|)
+argument_list|(
+name|FlagNUW
+operator||
+name|FlagNSW
 argument_list|)
-block|;
-name|setHasNoSignedWrap
-argument_list|(
-name|true
 argument_list|)
 block|;     }
 name|public

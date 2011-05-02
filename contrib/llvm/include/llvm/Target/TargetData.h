@@ -541,6 +541,58 @@ name|Width
 argument_list|)
 return|;
 block|}
+comment|/// fitsInLegalInteger - This function returns true if the specified type fits
+comment|/// in a native integer type supported by the CPU.  For example, if the CPU
+comment|/// only supports i32 as a native integer type, then i27 fits in a legal
+comment|// integer type but i45 does not.
+name|bool
+name|fitsInLegalInteger
+argument_list|(
+name|unsigned
+name|Width
+argument_list|)
+decl|const
+block|{
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|,
+name|e
+init|=
+operator|(
+name|unsigned
+operator|)
+name|LegalIntWidths
+operator|.
+name|size
+argument_list|()
+init|;
+name|i
+operator|!=
+name|e
+condition|;
+operator|++
+name|i
+control|)
+if|if
+condition|(
+name|Width
+operator|<=
+name|LegalIntWidths
+index|[
+name|i
+index|]
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|false
+return|;
+block|}
 comment|/// Target pointer alignment
 name|unsigned
 name|getPointerABIAlignment

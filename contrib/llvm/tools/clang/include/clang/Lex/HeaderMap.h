@@ -69,6 +69,14 @@ decl_stmt|;
 name|class
 name|StringRef
 decl_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|SmallVectorImpl
+expr_stmt|;
 block|}
 end_decl_stmt
 
@@ -166,6 +174,10 @@ parameter_list|)
 function_decl|;
 comment|/// LookupFile - Check to see if the specified relative filename is located in
 comment|/// this HeaderMap.  If so, open it and return its FileEntry.
+comment|/// If RawPath is not NULL and the file is found, RawPath will be set to the
+comment|/// raw path at which the file was found in the file system. For example,
+comment|/// for a search path ".." and a filename "../file.h" this would be
+comment|/// "../../file.h".
 specifier|const
 name|FileEntry
 modifier|*

@@ -132,11 +132,11 @@ modifier|*
 name|Desc
 decl_stmt|;
 comment|// Help descriptor
-name|uint32_t
+name|uint64_t
 name|Value
 decl_stmt|;
 comment|// K-V integer value
-name|uint32_t
+name|uint64_t
 name|Implies
 decl_stmt|;
 comment|// K-V bit mask
@@ -328,7 +328,7 @@ name|true
 argument_list|)
 decl_stmt|;
 comment|/// Get feature bits.
-name|uint32_t
+name|uint64_t
 name|getBits
 parameter_list|(
 specifier|const

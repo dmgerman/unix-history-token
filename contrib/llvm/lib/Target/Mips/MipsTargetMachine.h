@@ -265,6 +265,18 @@ argument|PassManagerBase&PM
 argument_list|,
 argument|CodeGenOpt::Level OptLevel
 argument_list|)
+block|;
+name|virtual
+name|bool
+name|addPostRegAlloc
+argument_list|(
+name|PassManagerBase
+operator|&
+argument_list|,
+name|CodeGenOpt
+operator|::
+name|Level
+argument_list|)
 block|;   }
 decl_stmt|;
 comment|/// MipselTargetMachine - Mipsel target machine.

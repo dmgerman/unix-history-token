@@ -73,6 +73,9 @@ name|class
 name|MCOperand
 decl_stmt|;
 name|class
+name|TargetMachine
+decl_stmt|;
+name|class
 name|PPCInstPrinter
 range|:
 name|public
@@ -86,6 +89,8 @@ name|public
 operator|:
 name|PPCInstPrinter
 argument_list|(
+argument|TargetMachine&TM
+argument_list|,
 argument|const MCAsmInfo&MAI
 argument_list|,
 argument|unsigned syntaxVariant

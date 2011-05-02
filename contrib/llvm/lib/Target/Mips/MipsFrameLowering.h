@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ALPHA_FRAMEINFO_H
+name|MIPS_FRAMEINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ALPHA_FRAMEINFO_H
+name|MIPS_FRAMEINFO_H
 end_define
 
 begin_include

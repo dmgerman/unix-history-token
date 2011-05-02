@@ -165,6 +165,20 @@ argument_list|(
 argument|unsigned RegEnum
 argument_list|)
 block|;
+specifier|static
+name|bool
+name|isRegister
+argument_list|(
+argument|unsigned RegEnum
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|isSpecialRegister
+argument_list|(
+argument|unsigned RegEnum
+argument_list|)
+block|;
 comment|/// Get PIC indirect call register
 specifier|static
 name|unsigned

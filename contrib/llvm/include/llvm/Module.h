@@ -769,16 +769,6 @@ name|GlobalScopeAsm
 operator|=
 name|Asm
 expr_stmt|;
-block|}
-comment|/// Append to the module-scope inline assembly blocks, automatically inserting
-comment|/// a separating newline if necessary.
-name|void
-name|appendModuleInlineAsm
-parameter_list|(
-name|StringRef
-name|Asm
-parameter_list|)
-block|{
 if|if
 condition|(
 operator|!
@@ -803,9 +793,43 @@ name|GlobalScopeAsm
 operator|+=
 literal|'\n'
 expr_stmt|;
+block|}
+comment|/// Append to the module-scope inline assembly blocks, automatically inserting
+comment|/// a separating newline if necessary.
+name|void
+name|appendModuleInlineAsm
+parameter_list|(
+name|StringRef
+name|Asm
+parameter_list|)
+block|{
 name|GlobalScopeAsm
 operator|+=
 name|Asm
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|GlobalScopeAsm
+operator|.
+name|empty
+argument_list|()
+operator|&&
+name|GlobalScopeAsm
+index|[
+name|GlobalScopeAsm
+operator|.
+name|size
+argument_list|()
+operator|-
+literal|1
+index|]
+operator|!=
+literal|'\n'
+condition|)
+name|GlobalScopeAsm
+operator|+=
+literal|'\n'
 expr_stmt|;
 block|}
 comment|/// @}
@@ -1005,7 +1029,7 @@ comment|/// table.
 comment|///   1. If it does not exist, add a declaration of the global and return it.
 comment|///   2. Else, the global exists but has the wrong type: return the function
 comment|///      with a constantexpr cast to the right type.
-comment|///   3. Finally, if the existing global is the correct delclaration, return
+comment|///   3. Finally, if the existing global is the correct declaration, return
 comment|///      the existing global.
 name|Constant
 modifier|*

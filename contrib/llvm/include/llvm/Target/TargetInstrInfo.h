@@ -1419,7 +1419,7 @@ name|false
 return|;
 block|}
 comment|/// shouldScheduleLoadsNear - This is a used by the pre-regalloc scheduler to
-comment|/// determine (in conjuction with areLoadsFromSameBasePtr) if two loads should
+comment|/// determine (in conjunction with areLoadsFromSameBasePtr) if two loads should
 comment|/// be scheduled togther. On some targets if two loads are loading from
 comment|/// addresses in the same cache line, it's better if they are scheduled
 comment|/// together. This function takes two integers that represent the load offsets
@@ -1959,6 +1959,21 @@ name|Node
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// isHighLatencyDef - Return true if this opcode has high latency to its
+comment|/// result.
+name|virtual
+name|bool
+name|isHighLatencyDef
+argument_list|(
+name|int
+name|opc
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// hasHighOperandLatency - Compute operand latency between a def of 'Reg'
 comment|/// and an use in the current loop, return true if the target considered
 comment|/// it 'high'. This is used by optimization passes such as machine LICM to

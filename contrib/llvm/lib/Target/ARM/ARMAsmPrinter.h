@@ -312,6 +312,15 @@ argument_list|,
 argument|unsigned TargetOpc
 argument_list|)
 block|;
+name|void
+name|EmitUnwindingInstruction
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|)
+block|;
 name|public
 operator|:
 name|void
@@ -331,6 +340,25 @@ name|MachineLocation
 name|getDebugValueLocation
 argument_list|(
 argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+comment|/// getDwarfRegOpSize - get size required to emit given machine location
+comment|/// using dwarf encoding.
+name|virtual
+name|unsigned
+name|getDwarfRegOpSize
+argument_list|(
+argument|const MachineLocation&MLoc
+argument_list|)
+specifier|const
+block|;
+comment|/// EmitDwarfRegOp - Emit dwarf register operation.
+name|virtual
+name|void
+name|EmitDwarfRegOp
+argument_list|(
+argument|const MachineLocation&MLoc
 argument_list|)
 specifier|const
 block|;

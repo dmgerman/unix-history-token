@@ -480,9 +480,9 @@ specifier|static
 name|void
 name|Profile
 argument_list|(
-argument|const T& X
+argument|const T&X
 argument_list|,
-argument|FoldingSetNodeID& ID
+argument|FoldingSetNodeID&ID
 argument_list|)
 block|{
 name|X
@@ -496,9 +496,9 @@ specifier|static
 name|void
 name|Profile
 argument_list|(
-argument|T& X
+argument|T&X
 argument_list|,
-argument|FoldingSetNodeID& ID
+argument|FoldingSetNodeID&ID
 argument_list|)
 block|{
 name|X
@@ -867,6 +867,15 @@ name|StringRef
 name|String
 parameter_list|)
 function_decl|;
+name|void
+name|AddNodeID
+parameter_list|(
+specifier|const
+name|FoldingSetNodeID
+modifier|&
+name|ID
+parameter_list|)
+function_decl|;
 name|template
 operator|<
 name|typename
@@ -876,7 +885,7 @@ specifier|inline
 name|void
 name|Add
 argument_list|(
-argument|const T& x
+argument|const T&x
 argument_list|)
 block|{
 name|FoldingSetTrait
@@ -2690,7 +2699,7 @@ block|{}
 name|void
 name|Profile
 argument_list|(
-argument|FoldingSetNodeID& ID
+argument|FoldingSetNodeID&ID
 argument_list|)
 block|{
 name|FoldingSetTrait
@@ -2809,14 +2818,17 @@ operator|:
 name|void
 name|Profile
 argument_list|(
-argument|FoldingSetNodeID& ID
+argument|FoldingSetNodeID&ID
 argument_list|)
 specifier|const
 block|{
 name|ID
-operator|=
+operator|.
+name|AddNodeID
+argument_list|(
 name|FastID
-block|; }
+argument_list|)
+block|;    }
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2847,9 +2859,9 @@ specifier|inline
 name|void
 name|Profile
 argument_list|(
-argument|const T* X
+argument|const T *X
 argument_list|,
-argument|FoldingSetNodeID& ID
+argument|FoldingSetNodeID&ID
 argument_list|)
 block|{
 name|ID
@@ -2882,9 +2894,9 @@ specifier|inline
 name|void
 name|Profile
 argument_list|(
-argument|const T* X
+argument|const T *X
 argument_list|,
-argument|FoldingSetNodeID& ID
+argument|FoldingSetNodeID&ID
 argument_list|)
 block|{
 name|ID

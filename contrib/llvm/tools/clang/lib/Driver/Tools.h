@@ -116,6 +116,8 @@ argument_list|(
 argument|const ArgList&Args
 argument_list|,
 argument|ArgStringList&CmdArgs
+argument_list|,
+argument|bool KernelOrKext
 argument_list|)
 specifier|const
 block|;

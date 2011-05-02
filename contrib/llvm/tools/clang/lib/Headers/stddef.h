@@ -15,6 +15,18 @@ directive|define
 name|__STDDEF_H
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PTRDIFF_T
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PTRDIFF_T
+end_define
+
 begin_typedef
 typedef|typedef
 name|__typeof__
@@ -28,6 +40,11 @@ argument_list|)
 name|ptrdiff_t
 expr_stmt|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -159,7 +176,7 @@ comment|/* __STDDEF_H */
 end_comment
 
 begin_comment
-comment|/* Some C libraries expect to see a wint_t here. Others (notably MinGW) will use __WINT_TYPE__ directly; accomodate both by requiring __need_wint_t */
+comment|/* Some C libraries expect to see a wint_t here. Others (notably MinGW) will use __WINT_TYPE__ directly; accommodate both by requiring __need_wint_t */
 end_comment
 
 begin_if

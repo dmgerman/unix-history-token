@@ -139,6 +139,10 @@ label|:
 comment|// MCContext creates and uniques these.
 name|friend
 name|class
+name|MCExpr
+decl_stmt|;
+name|friend
+name|class
 name|MCContext
 decl_stmt|;
 name|MCSymbol

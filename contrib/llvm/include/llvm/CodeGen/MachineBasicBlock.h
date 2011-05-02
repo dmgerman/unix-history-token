@@ -71,6 +71,12 @@ directive|include
 file|"llvm/ADT/GraphTraits.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<functional>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -1237,12 +1243,50 @@ name|iterator
 name|getFirstTerminator
 parameter_list|()
 function_decl|;
+name|const_iterator
+name|getFirstTerminator
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|MachineBasicBlock
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getFirstTerminator
+argument_list|()
+return|;
+block|}
 comment|/// getLastNonDebugInstr - returns an iterator to the last non-debug
 comment|/// instruction in the basic block, or end()
 name|iterator
 name|getLastNonDebugInstr
 parameter_list|()
 function_decl|;
+name|const_iterator
+name|getLastNonDebugInstr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|MachineBasicBlock
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getLastNonDebugInstr
+argument_list|()
+return|;
+block|}
 comment|/// SplitCriticalEdge - Split the critical edge from this block to the
 comment|/// given successor block, and return the newly created block, or null
 comment|/// if splitting is not possible.
@@ -1688,6 +1732,51 @@ name|t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|// This is useful when building IndexedMaps keyed on basic block pointers.
+end_comment
+
+begin_decl_stmt
+name|struct
+name|MBB2NumberFunctor
+range|:
+name|public
+name|std
+operator|::
+name|unary_function
+operator|<
+specifier|const
+name|MachineBasicBlock
+operator|*
+decl_stmt|,
+name|unsigned
+decl|>
+block|{
+name|unsigned
+name|operator
+argument_list|()
+operator|(
+specifier|const
+name|MachineBasicBlock
+operator|*
+name|MBB
+operator|)
+specifier|const
+block|{
+return|return
+name|MBB
+operator|->
+name|getNumber
+argument_list|()
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|//===--------------------------------------------------------------------===//

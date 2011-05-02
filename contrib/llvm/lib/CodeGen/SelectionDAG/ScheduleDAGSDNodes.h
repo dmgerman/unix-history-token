@@ -376,6 +376,33 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// InitVRegCycleFlag - Set isVRegCycle if this node's single use is
+end_comment
+
+begin_comment
+comment|/// CopyToReg and its only active data operands are CopyFromReg within a
+end_comment
+
+begin_comment
+comment|/// single block loop.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_function_decl
+name|void
+name|InitVRegCycleFlag
+parameter_list|(
+name|SUnit
+modifier|*
+name|SU
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// InitNumRegDefsLeft - Determine the # of regs defined by this node.
 end_comment
 

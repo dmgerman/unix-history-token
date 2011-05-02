@@ -96,6 +96,8 @@ block|,
 name|EXIT
 block|,
 name|RET
+block|,
+name|COPY_ADDRESS
 block|}
 enum|;
 block|}
@@ -150,6 +152,16 @@ specifier|const
 block|;
 name|virtual
 name|SDValue
+name|LowerSETCC
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|SDValue
 name|LowerFormalArguments
 argument_list|(
 argument|SDValue Chain
@@ -185,6 +197,16 @@ argument_list|,
 argument|DebugLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|MVT
+operator|::
+name|SimpleValueType
+name|getSetCCResultType
+argument_list|(
+argument|EVT VT
 argument_list|)
 specifier|const
 block|;

@@ -168,11 +168,21 @@ name|TargetAsmInfo
 modifier|*
 name|TAI
 decl_stmt|;
+comment|/// Allocator - Allocator object used for creating machine code objects.
+comment|///
+comment|/// We use a bump pointer allocator to avoid the need to track all allocated
+comment|/// objects.
+name|BumpPtrAllocator
+name|Allocator
+decl_stmt|;
 comment|/// Symbols - Bindings of names to symbols.
 name|StringMap
 operator|<
 name|MCSymbol
 operator|*
+operator|,
+name|BumpPtrAllocator
+operator|&
 operator|>
 name|Symbols
 expr_stmt|;
@@ -181,6 +191,9 @@ comment|/// and artificial symbols.
 name|StringMap
 operator|<
 name|bool
+operator|,
+name|BumpPtrAllocator
+operator|&
 operator|>
 name|UsedNames
 expr_stmt|;
@@ -260,6 +273,12 @@ decl_stmt|;
 name|bool
 name|DwarfLocSeen
 decl_stmt|;
+comment|/// Honor temporary labels, this is useful for debugging semantic
+comment|/// differences between temporary and non-temporary labels (primarily on
+comment|/// Darwin).
+name|bool
+name|AllowTemporaryLabels
+decl_stmt|;
 comment|/// The dwarf line information from the .loc directives for the sections
 comment|/// with assembled machine instructions have after seeing .loc directives.
 name|DenseMap
@@ -285,13 +304,6 @@ operator|*
 operator|>
 name|MCLineSectionOrder
 expr_stmt|;
-comment|/// Allocator - Allocator object used for creating machine code objects.
-comment|///
-comment|/// We use a bump pointer allocator to avoid the need to track all allocated
-comment|/// objects.
-name|BumpPtrAllocator
-name|Allocator
-decl_stmt|;
 name|void
 modifier|*
 name|MachOUniquingMap
@@ -352,6 +364,18 @@ return|return
 operator|*
 name|TAI
 return|;
+block|}
+name|void
+name|setAllowTemporaryLabels
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|AllowTemporaryLabels
+operator|=
+name|Value
+expr_stmt|;
 block|}
 comment|/// @name Symbol Management
 comment|/// @{

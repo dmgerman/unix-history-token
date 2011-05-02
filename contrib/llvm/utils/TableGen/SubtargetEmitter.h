@@ -250,6 +250,16 @@ name|std
 operator|::
 name|vector
 operator|<
+name|Record
+operator|*
+operator|>
+operator|&
+name|ItinClassList
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
 name|std
 operator|::
 name|vector
