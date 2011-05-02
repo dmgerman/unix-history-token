@@ -155,20 +155,6 @@ directive|include
 file|<mips/atheros/ar71xx_pci_bus_space.h>
 end_include
 
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<mips/atheros/ar71xx_bus_space_reversed.h>
-end_include
-
-begin_comment
-comment|/* XXX */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -490,8 +476,6 @@ name|bytes
 parameter_list|)
 block|{
 name|uint32_t
-name|cmd
-decl_stmt|,
 name|data
 decl_stmt|,
 name|shift
@@ -565,7 +549,6 @@ operator|==
 literal|0
 operator|)
 condition|)
-block|{
 name|data
 operator|=
 name|ATH_READ_REG
@@ -580,46 +563,6 @@ literal|3
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * WAR for BAR issue - We are unable to access the PCI device 		 * space if we set the BAR with proper base address. 		 */
-if|if
-condition|(
-name|reg
-operator|==
-name|PCIR_BAR
-argument_list|(
-literal|0
-argument_list|)
-operator|&&
-name|bytes
-operator|==
-literal|4
-condition|)
-block|{
-name|cmd
-operator|=
-operator|(
-name|ar71xx_soc
-operator|==
-name|AR71XX_SOC_AR7240
-operator|)
-condition|?
-literal|0xffff
-else|:
-literal|0x1000ffff
-expr_stmt|;
-name|ar724x_pci_write
-argument_list|(
-name|AR724X_PCI_CFG_BASE
-argument_list|,
-name|reg
-argument_list|,
-name|cmd
-argument_list|,
-name|bytes
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 else|else
 name|data
 operator|=
@@ -721,18 +664,7 @@ literal|0
 operator|)
 condition|)
 return|return;
-name|ar724x_pci_write
-argument_list|(
-name|AR724X_PCI_CFG_BASE
-argument_list|,
-name|reg
-argument_list|,
-name|data
-argument_list|,
-name|bytes
-argument_list|)
-expr_stmt|;
-comment|/* 	 * WAR for BAR issue - We are unable to access the PCI device space 	 * if we set the BAR with proper base address. 	 * Force a flush here (at register writing). 	 */
+comment|/* 	 * WAR for BAR issue on AR7240 - We are unable to access the PCI device 	 * space if we set the BAR with proper base address. 	 */
 if|if
 condition|(
 name|reg
@@ -745,21 +677,30 @@ operator|&&
 name|bytes
 operator|==
 literal|4
+operator|&&
+name|ar71xx_soc
+operator|==
+name|AR71XX_SOC_AR7240
 condition|)
-operator|(
-name|void
-operator|)
-name|ar724x_pci_read_config
+name|ar724x_pci_write
 argument_list|(
-name|dev
-argument_list|,
-name|bus
-argument_list|,
-name|slot
-argument_list|,
-name|func
+name|AR724X_PCI_CFG_BASE
 argument_list|,
 name|reg
+argument_list|,
+literal|0xffff
+argument_list|,
+name|bytes
+argument_list|)
+expr_stmt|;
+else|else
+name|ar724x_pci_write
+argument_list|(
+name|AR724X_PCI_CFG_BASE
+argument_list|,
+name|reg
+argument_list|,
+name|data
 argument_list|,
 name|bytes
 argument_list|)
@@ -1011,6 +952,15 @@ argument_list|(
 name|AR724X_PCI_APP
 argument_list|,
 name|reg
+argument_list|)
+expr_stmt|;
+comment|/* Flush write */
+operator|(
+name|void
+operator|)
+name|ATH_READ_REG
+argument_list|(
+name|AR724X_PCI_APP
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -2076,14 +2026,11 @@ case|:
 case|case
 name|SYS_RES_IOPORT
 case|:
-comment|/* XXX */
-comment|//rman_set_bustag(r, ar71xx_bus_space_pcimem);
-comment|//rman_set_bustag(r, mips_bus_space_generic);
 name|rman_set_bustag
 argument_list|(
 name|r
 argument_list|,
-name|ar71xx_bus_space_reversed
+name|ar71xx_bus_space_pcimem
 argument_list|)
 expr_stmt|;
 break|break;

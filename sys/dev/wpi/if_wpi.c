@@ -12264,10 +12264,7 @@ name|mrr
 operator|.
 name|which
 operator|=
-name|htole32
-argument_list|(
 name|WPI_MRR_CTL
-argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -12311,10 +12308,7 @@ name|mrr
 operator|.
 name|which
 operator|=
-name|htole32
-argument_list|(
 name|WPI_MRR_DATA
-argument_list|)
 expr_stmt|;
 name|error
 operator|=
