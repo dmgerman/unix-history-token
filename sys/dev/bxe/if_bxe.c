@@ -16278,7 +16278,7 @@ name|IS_E1HMF
 argument_list|(
 name|sc
 argument_list|)
-operator|&
+operator|&&
 operator|(
 name|sc
 operator|->
