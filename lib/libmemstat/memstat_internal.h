@@ -153,7 +153,7 @@ decl_stmt|;
 block|}
 name|mt_percpu_alloc
 index|[
-name|MEMSTAT_MAXCPU
+name|MAXCPU
 index|]
 struct|;
 struct|struct
@@ -165,7 +165,7 @@ comment|/* Per-CPU cache free items. */
 block|}
 name|mt_percpu_cache
 index|[
-name|MEMSTAT_MAXCPU
+name|MAXCPU
 index|]
 struct|;
 name|LIST_ENTRY

@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cpuset.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -315,7 +321,7 @@ if|if
 condition|(
 name|maxcpus
 operator|>
-name|MEMSTAT_MAXCPU
+name|MAXCPU
 condition|)
 block|{
 name|list
@@ -636,7 +642,7 @@ name|ushp
 operator|->
 name|ush_maxcpus
 operator|>
-name|MEMSTAT_MAXCPU
+name|MAXCPU
 condition|)
 block|{
 name|list
@@ -1381,7 +1387,7 @@ index|[
 name|MEMTYPE_MAXNAME
 index|]
 decl_stmt|;
-name|__cpumask_t
+name|cpuset_t
 name|all_cpus
 decl_stmt|;
 name|kvm_t
@@ -2016,17 +2022,14 @@ control|)
 block|{
 if|if
 condition|(
-operator|(
-name|all_cpus
-operator|&
-operator|(
-literal|1
-operator|<<
+operator|!
+name|CPU_ISSET
+argument_list|(
 name|i
-operator|)
-operator|)
-operator|==
-literal|0
+argument_list|,
+operator|&
+name|all_cpus
+argument_list|)
 condition|)
 continue|continue;
 name|ucp
