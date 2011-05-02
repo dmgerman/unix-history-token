@@ -1585,13 +1585,6 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|bus_write_ivar
-argument_list|,
-name|pci_write_ivar
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
 name|bus_driver_added
 argument_list|,
 name|cardbus_driver_added
