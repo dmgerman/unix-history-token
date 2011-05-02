@@ -448,7 +448,8 @@ begin_define
 define|#
 directive|define
 name|VM_MAX_KERNEL_ADDRESS
-value|(IA64_RR_BASE(IA64_VM_MINKERN_REGION + 2) - 1)
+define|\
+value|(VM_MIN_KERNEL_ADDRESS + IA64_REGION_GAP_START - 1)
 end_define
 
 begin_define
