@@ -7931,6 +7931,34 @@ name|win
 operator|=
 literal|0
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|SEQ_GEQ
+argument_list|(
+name|tp
+operator|->
+name|rcv_adv
+argument_list|,
+name|tp
+operator|->
+name|rcv_nxt
+argument_list|)
+argument_list|,
+operator|(
+literal|"tcp_input negative window: tp %p rcv_nxt %u rcv_adv %u"
+operator|,
+name|tp
+operator|,
+name|tp
+operator|->
+name|rcv_adv
+operator|,
+name|tp
+operator|->
+name|rcv_nxt
+operator|)
+argument_list|)
+expr_stmt|;
 name|tp
 operator|->
 name|rcv_wnd
@@ -11634,7 +11662,7 @@ if|#
 directive|if
 literal|0
 comment|/* 		 * Note the amount of data that peer has sent into 		 * our window, in order to estimate the sender's 		 * buffer size. 		 * XXX: Unused. 		 */
-block|len = so->so_rcv.sb_hiwat - (tp->rcv_adv - tp->rcv_nxt);
+block|if (SEQ_GT(tp->rcv_adv, tp->rcv_nxt)) 			len = so->so_rcv.sb_hiwat - (tp->rcv_adv - tp->rcv_nxt); 		else 			len = so->so_rcv.sb_hiwat;
 endif|#
 directive|endif
 block|}
