@@ -221,5 +221,48 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|// rdar://problem/9150338
+end_comment
+
+begin_struct
+specifier|static
+struct|struct
+name|test1
+block|{
+comment|// expected-warning {{'static' ignored on this declaration}}
+name|int
+name|x
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+specifier|const
+struct|struct
+name|test2
+block|{
+comment|// expected-warning {{'const' ignored on this declaration}}
+name|int
+name|x
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+specifier|inline
+struct|struct
+name|test3
+block|{
+comment|// expected-warning {{'inline' ignored on this declaration}}
+name|int
+name|x
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 end_unit
 

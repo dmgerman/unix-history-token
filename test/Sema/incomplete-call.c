@@ -45,7 +45,11 @@ end_function_decl
 begin_function
 name|void
 name|func
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+name|p
+parameter_list|)
 block|{
 name|a
 argument_list|()
@@ -59,7 +63,7 @@ expr|struct
 name|foo
 operator|*
 operator|)
-literal|0
+name|p
 argument_list|)
 expr_stmt|;
 comment|// expected-error{{argument type 'struct foo' is incomplete}}
@@ -71,7 +75,7 @@ expr|struct
 name|foo
 operator|*
 operator|)
-literal|0
+name|p
 argument_list|)
 expr_stmt|;
 comment|// expected-error{{argument type 'struct foo' is incomplete}}

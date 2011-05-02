@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core.experimental.FixedAddr,core.experimental.PointerArithm,core.experimental.PointerSub -analyzer-check-objc-mem -analyzer-store=region -verify -triple x86_64-apple-darwin9 %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core.experimental.FixedAddr,core.experimental.PointerArithm,core.experimental.PointerSub -analyzer-store=region -verify -triple x86_64-apple-darwin9 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core.experimental.FixedAddr,core.experimental.PointerArithm,core.experimental.PointerSub -analyzer-check-objc-mem -analyzer-store=region -verify -triple i686-apple-darwin9 %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core.experimental.FixedAddr,core.experimental.PointerArithm,core.experimental.PointerSub -analyzer-store=region -verify -triple i686-apple-darwin9 %s
 end_comment
 
 begin_comment

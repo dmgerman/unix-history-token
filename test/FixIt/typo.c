@@ -8,11 +8,15 @@ comment|// RUN: cp %s %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -fixit -x c %t || true
+comment|// RUN: not %clang_cc1 -fsyntax-only -fixit -x c %t
 end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -fsyntax-only -pedantic -Werror -x c %t
+end_comment
+
+begin_comment
+comment|// RUN: grep "Rectangle" %t
 end_comment
 
 begin_struct
@@ -100,6 +104,60 @@ name|Red
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+name|void
+name|test
+parameter_list|()
+block|{
+name|Rectangle
+name|r1
+decl_stmt|;
+comment|// expected-error{{must use 'struct' tag to refer to type 'Rectangle'}}
+name|r1
+operator|.
+name|top_left
+operator|.
+name|x
+operator|=
+literal|0
+expr_stmt|;
+typedef|typedef
+name|struct
+name|Rectangle
+name|Rectangle
+typedef|;
+comment|// expected-note{{'Rectangle' declared here}}
+name|rectangle
+modifier|*
+name|r2
+init|=
+operator|&
+name|r1
+decl_stmt|;
+comment|// expected-error{{ unknown type name 'rectangle'; did you mean 'Rectangle'?}}
+name|r2
+operator|->
+name|top_left
+operator|.
+name|y
+operator|=
+literal|0
+expr_stmt|;
+name|unsinged
+modifier|*
+name|ptr
+init|=
+literal|0
+decl_stmt|;
+comment|// expected-error{{use of undeclared identifier 'unsinged'; did you mean 'unsigned'?}}
+operator|*
+name|ptr
+operator|=
+literal|17
+expr_stmt|;
+block|}
+end_function
 
 end_unit
 

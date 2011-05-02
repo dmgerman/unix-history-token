@@ -148,7 +148,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Have a stray 'push' to show we don't crash when having inbalanced
+comment|// Have a stray 'push' to show we don't crash when having imbalanced
 end_comment
 
 begin_comment

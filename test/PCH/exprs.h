@@ -201,7 +201,7 @@ expr_stmt|;
 end_typedef
 
 begin_comment
-comment|// SizeOfAlignOfExpr
+comment|// UnaryExprOrTypeTraitExpr
 end_comment
 
 begin_typedef
@@ -546,6 +546,24 @@ literal|1
 argument|)
 argument_list|)
 name|shuffle_expr
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|// GenericSelectionExpr
+end_comment
+
+begin_typedef
+typedef|typedef
+name|typeof
+argument_list|(
+argument|_Generic(i, char*:
+literal|0
+argument|, int:
+literal|0.
+argument|, default: hello)
+argument_list|)
+name|generic_selection_expr
 expr_stmt|;
 end_typedef
 

@@ -86,6 +86,15 @@ name|v2fa
 argument_list|)
 expr_stmt|;
 comment|// expected-error{{invalid argument type 'v2f' to unary}}
+comment|// Comparison operators
+name|v2ua
+operator|=
+operator|(
+name|v2ua
+operator|==
+name|v2sa
+operator|)
+expr_stmt|;
 comment|// Arrays
 name|int
 name|array1

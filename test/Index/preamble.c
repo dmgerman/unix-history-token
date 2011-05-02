@@ -43,7 +43,7 @@ comment|// RUN: FileCheck -check-prefix CHECK-DIAG %s< %t.stderr.txt
 end_comment
 
 begin_comment
-comment|// CHECK: preamble.h:1:12: FunctionDecl=bar:1:12 (Definition) Extent=[1:12 - 6:2]
+comment|// CHECK: preamble.h:1:12: FunctionDecl=bar:1:12 (Definition) Extent=[1:1 - 6:2]
 end_comment
 
 begin_comment
@@ -67,7 +67,7 @@ comment|// CHECK: preamble.h:5:10: UnexposedExpr= Extent=[5:10 - 5:11]
 end_comment
 
 begin_comment
-comment|// CHECK: preamble.c:3:5: FunctionDecl=wibble:3:5 Extent=[3:5 - 3:16]
+comment|// CHECK: preamble.c:3:5: FunctionDecl=wibble:3:5 Extent=[3:1 - 3:16]
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm %s -o %t
+comment|// RUN: %clang_cc1 -emit-llvm %s -o - | FileCheck %s
 end_comment
 
 begin_function
@@ -252,6 +252,98 @@ else|:
 name|test9spare
 argument_list|()
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: @test10
+end_comment
+
+begin_comment
+comment|// CHECK: select i1 {{.*}}, i32 4, i32 5
+end_comment
+
+begin_function
+name|int
+name|test10
+parameter_list|(
+name|int
+name|c
+parameter_list|)
+block|{
+return|return
+name|c
+condition|?
+literal|4
+else|:
+literal|5
+return|;
+block|}
+end_function
+
+begin_enum
+enum|enum
+block|{
+name|Gronk
+init|=
+literal|5
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|// rdar://9289603
+end_comment
+
+begin_comment
+comment|// CHECK: @test11
+end_comment
+
+begin_comment
+comment|// CHECK: select i1 {{.*}}, i32 4, i32 5
+end_comment
+
+begin_function
+name|int
+name|test11
+parameter_list|(
+name|int
+name|c
+parameter_list|)
+block|{
+return|return
+name|c
+condition|?
+literal|4
+else|:
+name|Gronk
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: @test12
+end_comment
+
+begin_comment
+comment|// CHECK: select i1 {{.*}}, double 4.0{{.*}}, double 2.0
+end_comment
+
+begin_function
+name|double
+name|test12
+parameter_list|(
+name|int
+name|c
+parameter_list|)
+block|{
+return|return
+name|c
+condition|?
+literal|4.0
+else|:
+literal|2.0
+return|;
 block|}
 end_function
 

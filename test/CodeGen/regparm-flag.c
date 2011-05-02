@@ -38,6 +38,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|f2
+parameter_list|(
+name|int
+name|a
+parameter_list|,
+name|int
+name|b
+parameter_list|)
+function_decl|__attribute
+parameter_list|(
+function_decl|(regparm
+parameter_list|(
+function_decl|0
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
 begin_function
 name|void
 name|f0
@@ -64,6 +86,14 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
+comment|// CHECK: call void @f2(i32 1, i32 2)
+name|f2
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -73,6 +103,10 @@ end_comment
 
 begin_comment
 comment|// CHECK: i32, i32, i32, i32)
+end_comment
+
+begin_comment
+comment|// CHECK: declare void @f2(i32, i32)
 end_comment
 
 end_unit

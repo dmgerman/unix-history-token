@@ -12,6 +12,10 @@ comment|// RUN: %clang_cc1 -fsyntax-only -pedantic -Wall -Werror %t
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -E -o - %t | FileCheck %s
+end_comment
+
+begin_comment
 comment|/* This is a test of the various code modification hints that are    provided as part of warning or extension diagnostics. All of the    warnings will be fixed by -fixit, and the resulting file should    compile cleanly with -Werror -pedantic. */
 end_comment
 
@@ -203,8 +207,102 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+comment|// Perserve the original formatting for unsigned integers.
+name|unsigned
+name|long
+name|val
+init|=
+literal|42
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"%X"
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// Validate the fixes...
+end_comment
+
+begin_comment
+comment|// CHECK: printf("%d", (int) 123);
+end_comment
+
+begin_comment
+comment|// CHECK: printf("abc%s", "testing testing 123");
+end_comment
+
+begin_comment
+comment|// CHECK: printf("%ld", (long) -12);
+end_comment
+
+begin_comment
+comment|// CHECK: printf("%d", 123);
+end_comment
+
+begin_comment
+comment|// CHECK: printf("%s\n", "x");
+end_comment
+
+begin_comment
+comment|// CHECK: printf("%f\n", 1.23);
+end_comment
+
+begin_comment
+comment|// CHECK: printf("%.2llu", (unsigned long long) 123456);
+end_comment
+
+begin_comment
+comment|// CHECK: printf("%1Lf", (long double) 1.23);
+end_comment
+
+begin_comment
+comment|// CHECK: printf("%0u", (unsigned) 31337);
+end_comment
+
+begin_comment
+comment|// CHECK: printf("%p", (void *) 0);
+end_comment
+
+begin_comment
+comment|// CHECK: printf("%+f", 1.23);
+end_comment
+
+begin_comment
+comment|// CHECK: printf("%-f", 1.23);
+end_comment
+
+begin_comment
+comment|// CHECK: printf("%1$d:%2$.*3$d:%4$.*3$d\n", 1, 2, 3, 4);
+end_comment
+
+begin_comment
+comment|// CHECK: printf("%10.5ld", 1l);
+end_comment
+
+begin_comment
+comment|// CHECK: printf("%c", 'a');
+end_comment
+
+begin_comment
+comment|// CHECK: printf("%-f", 1.23);
+end_comment
+
+begin_comment
+comment|// CHECK: printf("%s", "foo");
+end_comment
+
+begin_comment
+comment|// CHECK: printf("%1$p", (void *)0);
+end_comment
+
+begin_comment
+comment|// CHECK: printf("%lX", val);
+end_comment
 
 end_unit
 

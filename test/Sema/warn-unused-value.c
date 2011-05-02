@@ -322,6 +322,62 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// PR8282
+end_comment
+
+begin_function
+name|void
+name|conditional_for_control_flow
+parameter_list|(
+name|int
+name|cond
+parameter_list|,
+name|int
+name|x
+parameter_list|,
+name|int
+name|y
+parameter_list|)
+block|{
+name|cond
+condition|?
+name|y
+operator|++
+else|:
+name|x
+expr_stmt|;
+comment|// no-warning
+name|cond
+condition|?
+name|y
+else|:
+operator|++
+name|x
+expr_stmt|;
+comment|// no-warning
+name|cond
+condition|?
+operator|(
+name|x
+operator||=
+name|y
+operator|)
+else|:
+operator|++
+name|x
+expr_stmt|;
+comment|// no-warning
+name|cond
+condition|?
+name|y
+else|:
+name|x
+expr_stmt|;
+comment|// expected-warning {{expression result unused}}
+block|}
+end_function
+
 begin_struct
 struct|struct
 name|s0

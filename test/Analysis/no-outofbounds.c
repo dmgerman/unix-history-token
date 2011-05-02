@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyzer-check-objc-mem -analyze -analyzer-checker=core.experimental -analyzer-store=basic -verify %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,core.experimental,unix.experimental,security.experimental.ArrayBound -analyzer-store=basic -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyzer-check-objc-mem -analyze -analyzer-checker=core.experimental -analyzer-store=region -verify %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,core.experimental,unix.experimental,security.experimental.ArrayBound -analyzer-store=region -verify %s
 end_comment
 
 begin_comment
@@ -168,6 +168,7 @@ index|]
 decl_stmt|;
 block|}
 struct|;
+comment|// FIXME: Not warn for this.
 name|struct
 name|vec
 modifier|*
@@ -184,6 +185,7 @@ operator|+
 literal|10
 argument_list|)
 decl_stmt|;
+comment|// expected-warning {{Cast a region whose size is not a multiple of the destination type size}}
 name|a
 operator|->
 name|len
@@ -200,6 +202,11 @@ operator|=
 literal|5
 expr_stmt|;
 comment|// no-warning
+name|free
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

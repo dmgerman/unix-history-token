@@ -159,12 +159,16 @@ parameter_list|,
 name|DESC
 parameter_list|,
 name|GROUP
-parameter_list|,
+parameter_list|,\
 name|SFINAE
 parameter_list|,
 name|ACCESS
 parameter_list|,
 name|CATEGORY
+parameter_list|,
+name|BRIEF
+parameter_list|,
+name|FULL
 parameter_list|)
 value|ENUM,
 include|#
@@ -211,11 +215,17 @@ name|MAP_WARNING_NO_WERROR
 init|=
 literal|5
 block|,
+comment|/// Map this diagnostic to "warning", but make it immune to
+comment|/// -Wno-system-headers.
+name|MAP_WARNING_SHOW_IN_SYSTEM_HEADER
+init|=
+literal|6
+block|,
 comment|/// Map this diagnostic to "error", but make it immune to -Wfatal-errors.
 comment|/// This happens for -Wno-fatal-errors=foo.
 name|MAP_ERROR_NO_WFATAL
 init|=
-literal|6
+literal|7
 block|}
 enum|;
 block|}
@@ -292,7 +302,7 @@ argument|unsigned DiagID
 argument_list|)
 specifier|const
 block|;
-comment|/// isNoteWarningOrExtension - Return true if the unmapped diagnostic
+comment|/// isBuiltinWarningOrExtension - Return true if the unmapped diagnostic
 comment|/// level of the specified diagnostic ID is a Warning or Extension.
 comment|/// This only works on builtin diagnostics, not custom ones, and is not legal to
 comment|/// call on NOTEs.
@@ -360,7 +370,7 @@ argument_list|(
 argument|unsigned DiagID
 argument_list|)
 block|;
-comment|/// getWarningOptionForDiag - Return the category number that a specified
+comment|/// getCategoryNumberForDiag - Return the category number that a specified
 comment|/// DiagID belongs to, or 0 if no category.
 specifier|static
 name|unsigned
@@ -419,6 +429,49 @@ comment|/// are not SFINAE errors.
 specifier|static
 name|SFINAEResponse
 name|getDiagnosticSFINAEResponse
+argument_list|(
+argument|unsigned DiagID
+argument_list|)
+block|;
+comment|/// getName - Given a diagnostic ID, return its name
+specifier|static
+specifier|const
+name|char
+operator|*
+name|getName
+argument_list|(
+argument|unsigned DiagID
+argument_list|)
+block|;
+comment|/// getIdFromName - Given a diagnostic name, return its ID, or 0
+specifier|static
+name|unsigned
+name|getIdFromName
+argument_list|(
+name|char
+specifier|const
+operator|*
+name|Name
+argument_list|)
+block|;
+comment|/// getBriefExplanation - Given a diagnostic ID, return a brief explanation
+comment|/// of the issue
+specifier|static
+specifier|const
+name|char
+operator|*
+name|getBriefExplanation
+argument_list|(
+argument|unsigned DiagID
+argument_list|)
+block|;
+comment|/// getFullExplanation - Given a diagnostic ID, return a full explanation
+comment|/// of the issue
+specifier|static
+specifier|const
+name|char
+operator|*
+name|getFullExplanation
 argument_list|(
 argument|unsigned DiagID
 argument_list|)

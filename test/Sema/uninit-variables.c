@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -Wuninitialized-experimental -fsyntax-only -fblocks %s -verify
+comment|// RUN: %clang_cc1 -fsyntax-only -Wuninitialized -Wconditional-uninitialized -fsyntax-only -fblocks %s -verify
 end_comment
 
 begin_function
@@ -15,7 +15,7 @@ comment|// expected-note{{variable 'x' is declared here}} expected-note{{add ini
 return|return
 name|x
 return|;
-comment|// expected-warning{{variable 'x' is possibly uninitialized when used here}}
+comment|// expected-warning{{variable 'x' is uninitialized when used here}}
 block|}
 end_function
 
@@ -67,7 +67,7 @@ comment|// expected-note{{variable 'x' is declared here}} expected-note{{add ini
 operator|++
 name|x
 expr_stmt|;
-comment|// expected-warning{{variable 'x' is possibly uninitialized when used here}}
+comment|// expected-warning{{variable 'x' is uninitialized when used here}}
 return|return
 name|x
 return|;
@@ -89,7 +89,7 @@ name|x
 operator|=
 name|y
 expr_stmt|;
-comment|// expected-warning{{variable 'y' is possibly uninitialized when used here}}
+comment|// expected-warning{{variable 'y' is uninitialized when used here}}
 return|return
 name|x
 return|;
@@ -109,7 +109,7 @@ name|x
 operator|+=
 literal|2
 expr_stmt|;
-comment|// expected-warning{{variable 'x' is possibly uninitialized when used here}}
+comment|// expected-warning{{variable 'x' is uninitialized when used here}}
 return|return
 name|x
 return|;
@@ -139,7 +139,7 @@ expr_stmt|;
 return|return
 name|x
 return|;
-comment|// expected-warning{{variable 'x' is possibly uninitialized when used here}}
+comment|// expected-warning{{variable 'x' may be uninitialized when used here}}
 block|}
 end_function
 
@@ -217,7 +217,7 @@ block|}
 return|return
 name|x
 return|;
-comment|// expected-warning{{variable 'x' is possibly uninitialized when used here}}
+comment|// expected-warning{{variable 'x' may be uninitialized when used here}}
 block|}
 end_function
 
@@ -256,7 +256,7 @@ block|}
 return|return
 name|x
 return|;
-comment|// expected-warning{{variable 'x' is possibly uninitialized when used here}}
+comment|// expected-warning{{variable 'x' may be uninitialized when used here}}
 block|}
 end_function
 
@@ -295,7 +295,7 @@ block|}
 return|return
 name|x
 return|;
-comment|// expected-warning{{variable 'x' is possibly uninitialized when used here}}
+comment|// expected-warning{{variable 'x' may be uninitialized when used here}}
 block|}
 end_function
 
@@ -318,7 +318,7 @@ operator|++
 name|i
 control|)
 empty_stmt|;
-comment|// expected-warning{{variable 'i' is possibly uninitialized when used here}} expected-note{{variable 'i' is declared here}} expected-note{{add initialization to silence this warning}}
+comment|// expected-warning{{variable 'i' may be uninitialized when used here}} expected-note{{variable 'i' is declared here}} expected-note{{add initialization to silence this warning}}
 block|}
 end_function
 
@@ -364,7 +364,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|test15
 parameter_list|()
 block|{
@@ -373,7 +373,12 @@ name|x
 init|=
 name|x
 decl_stmt|;
-comment|// expected-warning{{variable 'x' is possibly uninitialized when used here}} expected-note{{variable 'x' is declared here}} expected-note{{add initialization to silence this warning}}
+comment|// no-warning: signals intended lack of initialization. \
+comment|// expected-note{{variable 'x' is declared here}}
+return|return
+name|x
+return|;
+comment|// expected-warning{{variable 'x' is uninitialized when used here}}
 block|}
 end_function
 
@@ -443,7 +448,7 @@ name|x
 operator|=
 literal|1
 expr_stmt|;
-comment|// expected-warning{{variable 'x' is possibly uninitialized when used here}}
+comment|// expected-warning{{variable 'x' is uninitialized when used here}}
 operator|*
 name|x
 operator|=
@@ -582,7 +587,7 @@ condition|)
 return|return
 name|z
 return|;
-comment|// expected-warning{{variable 'z' is possibly uninitialized when used here}}
+comment|// expected-warning{{variable 'z' may be uninitialized when used here}}
 return|return
 literal|0
 return|;
@@ -624,7 +629,7 @@ condition|)
 return|return
 name|z
 return|;
-comment|// expected-warning{{variable 'z' is possibly uninitialized when used here}}
+comment|// expected-warning{{variable 'z' may be uninitialized when used here}}
 return|return
 literal|0
 return|;
@@ -751,7 +756,7 @@ expr_stmt|;
 return|return
 name|val
 return|;
-comment|// expected-warning{{variable 'val' is possibly uninitialized when used here}}
+comment|// expected-warning{{variable 'val' may be uninitialized when used here}}
 block|}
 end_function
 
@@ -767,7 +772,7 @@ comment|// expected-note{{variable 'x' is declared here}} expected-note{{add ini
 return|return
 name|x
 return|;
-comment|// expected-warning{{variable 'x' is possibly uninitialized when used here}}
+comment|// expected-warning{{variable 'x' is uninitialized when used here}}
 block|}
 end_function
 
@@ -790,7 +795,7 @@ comment|// expected-note{{variable 'x' is declared here}} expected-note{{add ini
 return|return
 name|x
 return|;
-comment|// expected-warning{{variable 'x' is possibly uninitialized when used here}}
+comment|// expected-warning{{variable 'x' is uninitialized when used here}}
 block|}
 end_function
 
@@ -843,7 +848,7 @@ name|len
 index|]
 argument_list|)
 return|;
-comment|// expected-warning{{variable 'len' is possibly uninitialized when used here}}
+comment|// expected-warning{{variable 'len' is uninitialized when used here}}
 block|}
 end_function
 
@@ -868,7 +873,7 @@ name|x
 expr_stmt|;
 block|}
 expr_stmt|;
-comment|// expected-warning{{variable 'x' is possibly uninitialized when captured by block}}
+comment|// expected-warning{{variable 'x' is uninitialized when captured by block}}
 block|}
 end_function
 
@@ -983,7 +988,7 @@ expr_stmt|;
 return|return
 name|x
 return|;
-comment|// expected-warning{{variable 'x' is possibly uninitialized when used here}}
+comment|// expected-warning{{variable 'x' is uninitialized when used here}}
 block|}
 end_function
 
@@ -1054,7 +1059,7 @@ label|:
 goto|goto *
 name|pc
 goto|;
-comment|// expected-warning{{variable 'pc' is possibly uninitialized when used here}}
+comment|// expected-warning{{variable 'pc' may be uninitialized when used here}}
 name|L2
 label|:
 goto|goto *
@@ -1169,6 +1174,337 @@ operator|)
 operator|)
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test39
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+name|int
+name|y
+decl_stmt|;
+comment|// expected-note {{variable 'y' is declared here}} expected-note{{add initialization to silence this warning}}
+name|int
+name|z
+init|=
+name|x
+operator|+
+name|y
+decl_stmt|;
+comment|// expected-warning {{variable 'y' is uninitialized when used here}}
+return|return
+name|z
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test40
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+name|int
+name|y
+decl_stmt|;
+comment|// expected-note {{variable 'y' is declared here}} expected-note{{add initialization to silence this warning}}
+return|return
+name|x
+condition|?
+literal|1
+else|:
+name|y
+return|;
+comment|// expected-warning {{variable 'y' is uninitialized when used here}}
+block|}
+end_function
+
+begin_function
+name|int
+name|test41
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+name|int
+name|y
+decl_stmt|;
+comment|// expected-note {{variable 'y' is declared here}} expected-note{{add initialization to silence this warning}}
+if|if
+condition|(
+name|x
+condition|)
+name|y
+operator|=
+literal|1
+expr_stmt|;
+comment|// no-warning
+return|return
+name|y
+return|;
+comment|// expected-warning {{variable 'y' may be uninitialized when used here}}
+block|}
+end_function
+
+begin_function
+name|void
+name|test42
+parameter_list|()
+block|{
+name|int
+name|a
+decl_stmt|;
+name|a
+operator|=
+literal|30
+expr_stmt|;
+comment|// no-warning
+block|}
+end_function
+
+begin_function_decl
+name|void
+name|test43_aux
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|test43
+parameter_list|(
+name|int
+name|i
+parameter_list|)
+block|{
+name|int
+name|x
+decl_stmt|;
+comment|// expected-note {{variable 'x' is declared here}} expected-note{{add initialization to silence this warning}}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|10
+condition|;
+name|i
+operator|++
+control|)
+name|test43_aux
+argument_list|(
+name|x
+operator|++
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{variable 'x' may be uninitialized when used here}}
+block|}
+end_function
+
+begin_function
+name|void
+name|test44
+parameter_list|(
+name|int
+name|i
+parameter_list|)
+block|{
+name|int
+name|x
+init|=
+name|i
+decl_stmt|;
+name|int
+name|y
+decl_stmt|;
+comment|// expected-note {{variable 'y' is declared here}} expected-note{{add initialization to silence this warning}}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|10
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|test43_aux
+argument_list|(
+name|x
+operator|++
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|x
+operator|+=
+name|y
+expr_stmt|;
+comment|// expected-warning {{variable 'y' may be uninitialized when used here}}
+block|}
+block|}
+end_function
+
+begin_function
+name|int
+name|test45
+parameter_list|(
+name|int
+name|j
+parameter_list|)
+block|{
+name|int
+name|x
+init|=
+literal|1
+decl_stmt|,
+name|y
+init|=
+name|x
+operator|+
+literal|1
+decl_stmt|;
+if|if
+condition|(
+name|y
+condition|)
+comment|// no-warning
+return|return
+name|x
+return|;
+return|return
+name|y
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test46
+parameter_list|()
+block|{
+name|int
+name|i
+decl_stmt|;
+comment|// expected-note {{variable 'i' is declared here}} expected-note{{add initialization to silence this warning}}
+name|int
+name|j
+init|=
+name|i
+condition|?
+else|:
+literal|1
+decl_stmt|;
+comment|// expected-warning {{variable 'i' is uninitialized when used here}}
+block|}
+end_function
+
+begin_function
+name|void
+modifier|*
+name|test47
+parameter_list|(
+name|int
+modifier|*
+name|i
+parameter_list|)
+block|{
+return|return
+name|i
+condition|?
+else|:
+literal|0
+return|;
+comment|// no-warning
+block|}
+end_function
+
+begin_function
+name|void
+modifier|*
+name|test49
+parameter_list|(
+name|int
+modifier|*
+name|i
+parameter_list|)
+block|{
+name|int
+name|a
+decl_stmt|;
+return|return
+operator|&
+name|a
+condition|?
+else|:
+name|i
+return|;
+comment|// no-warning
+block|}
+end_function
+
+begin_function
+name|void
+name|test50
+parameter_list|()
+block|{
+name|char
+name|c
+index|[
+literal|1
+condition|?
+else|:
+literal|2
+index|]
+decl_stmt|;
+comment|// no-warning
+block|}
+end_function
+
+begin_function
+name|int
+name|test51
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+specifier|__block
+name|int
+name|a
+decl_stmt|;
+lambda|^
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|a
+operator|=
+literal|42
+expr_stmt|;
+block|}
+argument_list|()
+expr_stmt|;
+return|return
+name|a
+return|;
+comment|// no-warning
 block|}
 end_function
 

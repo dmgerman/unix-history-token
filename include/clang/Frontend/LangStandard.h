@@ -75,7 +75,7 @@ operator|<<
 literal|1
 operator|)
 block|,
-name|CPlusPlus
+name|C1X
 init|=
 operator|(
 literal|1
@@ -83,7 +83,7 @@ operator|<<
 literal|2
 operator|)
 block|,
-name|CPlusPlus0x
+name|CPlusPlus
 init|=
 operator|(
 literal|1
@@ -91,7 +91,7 @@ operator|<<
 literal|3
 operator|)
 block|,
-name|Digraphs
+name|CPlusPlus0x
 init|=
 operator|(
 literal|1
@@ -99,7 +99,7 @@ operator|<<
 literal|4
 operator|)
 block|,
-name|GNUMode
+name|Digraphs
 init|=
 operator|(
 literal|1
@@ -107,7 +107,7 @@ operator|<<
 literal|5
 operator|)
 block|,
-name|HexFloat
+name|GNUMode
 init|=
 operator|(
 literal|1
@@ -115,12 +115,20 @@ operator|<<
 literal|6
 operator|)
 block|,
-name|ImplicitInt
+name|HexFloat
 init|=
 operator|(
 literal|1
 operator|<<
 literal|7
+operator|)
+block|,
+name|ImplicitInt
+init|=
+operator|(
+literal|1
+operator|<<
+literal|8
 operator|)
 block|}
 enum|;
@@ -218,6 +226,20 @@ operator|&
 name|frontend
 operator|::
 name|C99
+return|;
+block|}
+comment|/// isC1X - Language is a superset of C1X.
+name|bool
+name|isC1X
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+operator|&
+name|frontend
+operator|::
+name|C1X
 return|;
 block|}
 comment|/// isCPlusPlus - Language is a C++ variant.

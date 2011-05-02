@@ -559,6 +559,7 @@ name|int
 name|x
 decl_stmt|,
 name|y
+decl_stmt|;
 block|}
 struct|;
 end_struct

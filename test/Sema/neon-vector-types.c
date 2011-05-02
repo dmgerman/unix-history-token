@@ -162,7 +162,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-error{{attribute requires 1 argument(s)}}
+comment|// expected-error{{attribute takes one argument}}
 end_comment
 
 begin_comment

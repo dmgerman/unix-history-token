@@ -35,6 +35,39 @@ parameter_list|)
 value|do {\     if (!err_ptr) *(int*)(err_ptr) = 1;\   } while (0)
 end_define
 
+begin_comment
+comment|// Test that we don't report divide-by-zero errors in unreachable code.
+end_comment
+
+begin_comment
+comment|// This test should be left as is, as it also tests CFG functionality.
+end_comment
+
+begin_function
+name|void
+name|radar9171946
+parameter_list|()
+block|{
+if|if
+condition|(
+literal|0
+condition|)
+block|{
+literal|0
+operator|/
+operator|(
+literal|0
+condition|?
+literal|1
+else|:
+literal|0
+operator|)
+expr_stmt|;
+comment|// expected-warning {{expression result unused}}
+block|}
+block|}
+end_function
+
 begin_function
 name|int
 name|test_pr8876
@@ -820,6 +853,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|// expected-note {{'test18_a' declared here}}
+end_comment
+
 begin_function
 name|void
 name|test18
@@ -874,6 +911,46 @@ operator|=
 literal|0
 expr_stmt|;
 comment|// Ok.
+comment|// rdar://9269271
+name|int
+name|x
+init|=
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+literal|0
+decl_stmt|;
+comment|// expected-warning {{indirection of non-volatile null pointer}} \
+comment|// expected-note {{consider using __builtin_trap}}
+name|int
+name|x2
+init|=
+operator|*
+operator|(
+specifier|volatile
+name|int
+operator|*
+operator|)
+literal|0
+decl_stmt|;
+comment|// Ok.
+name|int
+modifier|*
+name|p
+init|=
+operator|&
+operator|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+literal|0
+operator|)
+decl_stmt|;
+comment|// Ok;
 block|}
 end_function
 

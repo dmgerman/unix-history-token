@@ -4,7 +4,7 @@ comment|// RUN: c-index-test -test-load-source all -remap-file="%s;%S/Inputs/rem
 end_comment
 
 begin_comment
-comment|// CHECK: remap-load.c:1:5: FunctionDecl=foo:1:5 (Definition) Extent=[1:5 - 3:2]
+comment|// CHECK: remap-load.c:1:5: FunctionDecl=foo:1:5 (Definition) Extent=[1:1 - 3:2]
 end_comment
 
 begin_comment

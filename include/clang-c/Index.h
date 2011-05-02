@@ -845,6 +845,135 @@ name|unsigned
 name|options
 parameter_list|)
 function_decl|;
+comment|/**   * \brief Categorizes how memory is being used by a translation unit.   */
+enum|enum
+name|CXTUResourceUsageKind
+block|{
+name|CXTUResourceUsage_AST
+init|=
+literal|1
+block|,
+name|CXTUResourceUsage_Identifiers
+init|=
+literal|2
+block|,
+name|CXTUResourceUsage_Selectors
+init|=
+literal|3
+block|,
+name|CXTUResourceUsage_GlobalCompletionResults
+init|=
+literal|4
+block|,
+name|CXTUResourceUsage_SourceManagerContentCache
+init|=
+literal|5
+block|,
+name|CXTUResourceUsage_AST_SideTables
+init|=
+literal|6
+block|,
+name|CXTUResourceUsage_SourceManager_Membuffer_Malloc
+init|=
+literal|7
+block|,
+name|CXTUResourceUsage_SourceManager_Membuffer_MMap
+init|=
+literal|8
+block|,
+name|CXTUResourceUsage_ExternalASTSource_Membuffer_Malloc
+init|=
+literal|9
+block|,
+name|CXTUResourceUsage_ExternalASTSource_Membuffer_MMap
+init|=
+literal|10
+block|,
+name|CXTUResourceUsage_MEMORY_IN_BYTES_BEGIN
+init|=
+name|CXTUResourceUsage_AST
+block|,
+name|CXTUResourceUsage_MEMORY_IN_BYTES_END
+init|=
+name|CXTUResourceUsage_ExternalASTSource_Membuffer_MMap
+block|,
+name|CXTUResourceUsage_First
+init|=
+name|CXTUResourceUsage_AST
+block|,
+name|CXTUResourceUsage_Last
+init|=
+name|CXTUResourceUsage_ExternalASTSource_Membuffer_MMap
+block|}
+enum|;
+comment|/**   * \brief Returns the human-readable null-terminated C string that represents   *  the name of the memory category.  This string should never be freed.   */
+name|CINDEX_LINKAGE
+specifier|const
+name|char
+modifier|*
+name|clang_getTUResourceUsageName
+parameter_list|(
+name|enum
+name|CXTUResourceUsageKind
+name|kind
+parameter_list|)
+function_decl|;
+typedef|typedef
+struct|struct
+name|CXTUResourceUsageEntry
+block|{
+comment|/* \brief The memory usage category. */
+name|enum
+name|CXTUResourceUsageKind
+name|kind
+decl_stmt|;
+comment|/* \brief Amount of resources used.        The units will depend on the resource kind. */
+name|unsigned
+name|long
+name|amount
+decl_stmt|;
+block|}
+name|CXTUResourceUsageEntry
+typedef|;
+comment|/**   * \brief The memory usage of a CXTranslationUnit, broken into categories.   */
+typedef|typedef
+struct|struct
+name|CXTUResourceUsage
+block|{
+comment|/* \brief Private data member, used for queries. */
+name|void
+modifier|*
+name|data
+decl_stmt|;
+comment|/* \brief The number of entries in the 'entries' array. */
+name|unsigned
+name|numEntries
+decl_stmt|;
+comment|/* \brief An array of key-value pairs, representing the breakdown of memory             usage. */
+name|CXTUResourceUsageEntry
+modifier|*
+name|entries
+decl_stmt|;
+block|}
+name|CXTUResourceUsage
+typedef|;
+comment|/**   * \brief Return the memory usage of a translation unit.  This object   *  should be released with clang_disposeCXTUResourceUsage().   */
+name|CINDEX_LINKAGE
+name|CXTUResourceUsage
+name|clang_getCXTUResourceUsage
+parameter_list|(
+name|CXTranslationUnit
+name|TU
+parameter_list|)
+function_decl|;
+name|CINDEX_LINKAGE
+name|void
+name|clang_disposeCXTUResourceUsage
+parameter_list|(
+name|CXTUResourceUsage
+name|usage
+parameter_list|)
+function_decl|;
 comment|/**  * @}  */
 comment|/**  * \brief Describes the kind of entity that a cursor refers to.  */
 enum|enum
@@ -1021,10 +1150,15 @@ name|CXCursor_UsingDirective
 init|=
 literal|34
 block|,
-comment|/** \brief A using declaration. */
+comment|/** \brief A C++ using declaration. */
 name|CXCursor_UsingDeclaration
 init|=
 literal|35
+block|,
+comment|/** \brief A C++ alias declaration */
+name|CXCursor_TypeAliasDecl
+init|=
+literal|36
 block|,
 name|CXCursor_FirstDecl
 init|=
@@ -1032,7 +1166,7 @@ name|CXCursor_UnexposedDecl
 block|,
 name|CXCursor_LastDecl
 init|=
-name|CXCursor_UsingDeclaration
+name|CXCursor_TypeAliasDecl
 block|,
 comment|/* References */
 name|CXCursor_FirstRef
@@ -2699,6 +2833,15 @@ name|CINDEX_LINKAGE
 name|CXString
 name|clang_getClangVersion
 parameter_list|()
+function_decl|;
+comment|/**  * \brief Enable/disable crash recovery.  *  * \param Flag to indicate if crash recovery is enabled.  A non-zero value  *        enables crash recovery, while 0 disables it.  */
+name|CINDEX_LINKAGE
+name|void
+name|clang_toggleCrashRecovery
+parameter_list|(
+name|unsigned
+name|isEnabled
+parameter_list|)
 function_decl|;
 comment|/**   * \brief Visitor invoked for each file in a translation unit   *        (used with clang_getInclusions()).   *   * This visitor function will be invoked by clang_getInclusions() for each   * file included (either at the top-level or by #include directives) within   * a translation unit.  The first argument is the file being included, and   * the second and third arguments provide the inclusion stack.  The   * array is sorted in order of immediate inclusion.  For example,   * the first element refers to the location that included 'included_file'.   */
 typedef|typedef

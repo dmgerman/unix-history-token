@@ -11,10 +11,6 @@ begin_comment
 comment|// RUN: not %clang_cc1 -include-pch %t %s
 end_comment
 
-begin_comment
-comment|// XFAIL: win32
-end_comment
-
 begin_include
 include|#
 directive|include

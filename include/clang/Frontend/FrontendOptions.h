@@ -92,9 +92,6 @@ comment|///< Parse ASTs and dump them in XML.
 name|ASTPrint
 block|,
 comment|///< Parse ASTs and print them.
-name|ASTPrintXML
-block|,
-comment|///< Parse ASTs and print them in XML.
 name|ASTView
 block|,
 comment|///< Parse ASTs and view them in Graphviz.

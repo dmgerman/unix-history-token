@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/CharUnits.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Decl.h"
 end_include
 
@@ -119,7 +125,7 @@ comment|/// Byte offset from the field address, if any. This should generally be
 comment|/// unused as the cleanest IR comes from having a well-constructed LLVM type
 comment|/// with proper GEP instructions, but sometimes its use is required, for
 comment|/// example if an access is intended to straddle an LLVM field boundary.
-name|unsigned
+name|CharUnits
 name|FieldByteOffset
 decl_stmt|;
 comment|/// Bit offset in the accessed value to use. The width is implied by \see
@@ -137,7 +143,7 @@ comment|//
 comment|// FIXME: Remove use of 0 to encode default, instead have IRgen do the right
 comment|// thing when it generates the code, if avoiding align directives is
 comment|// desired.
-name|unsigned
+name|CharUnits
 name|AccessAlignment
 decl_stmt|;
 comment|/// Offset for the target value.

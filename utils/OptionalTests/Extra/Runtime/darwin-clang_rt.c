@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This file tests that we can succesfully call each compiler-rt function. It is    designed to check that the runtime libraries are available for linking and    that they contain the expected contents. It is not designed to test the    correctness of the individual functions in compiler-rt.     This test is assumed to be run on a 10.6 machine. The two environment    variables below should be set to 10.4 and 10.5 machines which can be directly    ssh/rsync'd to in order to actually test the executables can run on the    desired targets. */
+comment|/* This file tests that we can successfully call each compiler-rt function. It is    designed to check that the runtime libraries are available for linking and    that they contain the expected contents. It is not designed to test the    correctness of the individual functions in compiler-rt.     This test is assumed to be run on a 10.6 machine. The two environment    variables below should be set to 10.4 and 10.5 machines which can be directly    ssh/rsync'd to in order to actually test the executables can run on the    desired targets. */
 end_comment
 
 begin_comment

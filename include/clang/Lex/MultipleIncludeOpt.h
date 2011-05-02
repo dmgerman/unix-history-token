@@ -115,7 +115,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/// Invalidate - Permenantly mark this file as not being suitable for the
+comment|/// Invalidate - Permanently mark this file as not being suitable for the
 comment|/// include-file optimization.
 name|void
 name|Invalidate

@@ -1788,6 +1788,24 @@ expr_stmt|;
 comment|// expected-warning{{implicit conversion from enumeration type 'enum E8559831b' to different enumeration type 'enum E8559831a'}}
 name|test_8559831_a
 argument_list|(
+name|E8559831b_val
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{implicit conversion from enumeration type 'enum E8559831b' to different enumeration type 'enum E8559831a'}}
+name|enum
+name|E8559831a
+name|a1a
+init|=
+name|E8559831b_val
+decl_stmt|;
+comment|// expected-warning{{implicit conversion from enumeration type 'enum E8559831b' to different enumeration type 'enum E8559831a'}}
+name|a1
+operator|=
+name|E8559831b_val
+expr_stmt|;
+comment|// expected-warning{{implicit conversion from enumeration type 'enum E8559831b' to different enumeration type 'enum E8559831a'}}
+name|test_8559831_a
+argument_list|(
 name|value_c
 argument_list|)
 expr_stmt|;

@@ -28,7 +28,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -Werror %s
 end_comment
 
 begin_define

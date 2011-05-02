@@ -94,6 +94,31 @@ comment|// TRAPV_HANDLER: foo(
 operator|--
 name|a
 expr_stmt|;
+comment|// -fwrapv should turn off inbounds for GEP's, PR9256
+specifier|extern
+name|int
+modifier|*
+name|P
+decl_stmt|;
+operator|++
+name|P
+expr_stmt|;
+comment|// DEFAULT: getelementptr inbounds i32*
+comment|// WRAPV: getelementptr i32*
+comment|// TRAPV: getelementptr inbounds i32*
+comment|// PR9350: char increment never overflows.
+specifier|extern
+specifier|volatile
+name|signed
+name|char
+name|PR9350
+decl_stmt|;
+comment|// DEFAULT: add i8 {{.*}}, 1
+comment|// WRAPV: add i8 {{.*}}, 1
+comment|// TRAPV: add i8 {{.*}}, 1
+operator|++
+name|PR9350
+expr_stmt|;
 block|}
 end_function
 

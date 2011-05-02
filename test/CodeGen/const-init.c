@@ -25,6 +25,30 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|// CHECK: @a = global [5 x i8] c"asdf\00"
+end_comment
+
+begin_decl_stmt
+name|char
+name|a2
+index|[
+literal|2
+index|]
+index|[
+literal|5
+index|]
+init|=
+block|{
+literal|"asdf"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// CHECK: @a2 = global [2 x [5 x i8]] {{\[}}[5 x i8] c"asdf\00", [5 x i8] zeroinitializer]
+end_comment
+
+begin_comment
 comment|// Double-implicit-conversions of array/functions (not legal C, but
 end_comment
 

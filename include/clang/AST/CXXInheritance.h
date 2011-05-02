@@ -241,7 +241,7 @@ block|}
 empty_stmt|;
 comment|/// BasePaths - Represents the set of paths from a derived class to
 comment|/// one of its (direct or indirect) bases. For example, given the
-comment|/// following class hierachy:
+comment|/// following class hierarchy:
 comment|///
 comment|/// @code
 comment|/// class A { };

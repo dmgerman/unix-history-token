@@ -318,6 +318,12 @@ literal|1
 argument|)                  ;
 comment|// expected-error {{expected ')'}}
 argument|}
+comment|// PR8394
+argument|void test7() {     ({}
+comment|// expected-note {{to match}}
+argument|;
+comment|// expected-error {{expected ')'}}
+argument|}
 end_function
 
 end_unit

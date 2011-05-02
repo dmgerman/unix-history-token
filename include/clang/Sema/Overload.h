@@ -234,6 +234,9 @@ comment|///< Complex-real conversions (C99 6.3.1.7)
 name|ICK_Block_Pointer_Conversion
 block|,
 comment|///< Block Pointer conversions
+name|ICK_TransparentUnionConversion
+block|,
+comment|/// Transparent Union Conversions
 name|ICK_Num_Conversion_Kinds
 comment|///< The number of conversion kinds
 block|}
@@ -1921,26 +1924,29 @@ name|void
 name|clear
 parameter_list|()
 function_decl|;
-operator|~
-name|OverloadCandidateSet
-argument_list|()
-block|{
-name|clear
-argument_list|()
-block|; }
 comment|/// Find the best viable function on this overload set, if it exists.
 name|OverloadingResult
 name|BestViableFunction
 argument_list|(
-argument|Sema&S
+name|Sema
+operator|&
+name|S
 argument_list|,
-argument|SourceLocation Loc
+name|SourceLocation
+name|Loc
 argument_list|,
-argument|OverloadCandidateSet::iterator& Best
+name|OverloadCandidateSet
+operator|::
+name|iterator
+operator|&
+name|Best
 argument_list|,
-argument|bool UserDefinedConversion = false
+name|bool
+name|UserDefinedConversion
+operator|=
+name|false
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|void
 name|NoteCandidates
 parameter_list|(

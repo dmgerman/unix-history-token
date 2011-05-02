@@ -52,10 +52,6 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CXX0X:#define __DEPRECATED 1
-end_comment
-
-begin_comment
 comment|// CXX0X:#define __GNUG__
 end_comment
 
@@ -96,10 +92,6 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CXX98:#define __DEPRECATED 1
-end_comment
-
-begin_comment
 comment|// CXX98:#define __GNUG__
 end_comment
 
@@ -117,6 +109,26 @@ end_comment
 
 begin_comment
 comment|// CXX98:#define __private_extern__ extern
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fdeprecated-macro -E -dM< /dev/null | FileCheck -check-prefix DEPRECATED %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// DEPRECATED:#define __DEPRECATED 1
 end_comment
 
 begin_comment
@@ -256,10 +268,6 @@ comment|//
 end_comment
 
 begin_comment
-comment|// GXX98:#define __DEPRECATED 1
-end_comment
-
-begin_comment
 comment|// GXX98:#define __GNUG__
 end_comment
 
@@ -317,22 +325,6 @@ end_comment
 
 begin_comment
 comment|// MSEXT:#define _INTEGRAL_MAX_BITS 64
-end_comment
-
-begin_comment
-comment|// MSEXT:#define __int16 __INT16_TYPE__
-end_comment
-
-begin_comment
-comment|// MSEXT:#define __int32 __INT32_TYPE__
-end_comment
-
-begin_comment
-comment|// MSEXT:#define __int64 __INT64_TYPE__
-end_comment
-
-begin_comment
-comment|// MSEXT:#define __int8 __INT8_TYPE__
 end_comment
 
 begin_comment
@@ -3936,7 +3928,7 @@ comment|// SPARC:#define __USER_LABEL_PREFIX__ _
 end_comment
 
 begin_comment
-comment|// SPARC:#define __VERSION__ "4.2.1 Compatible Clang Compiler"
+comment|// SPARC:#define __VERSION__ "4.2.1 Compatible
 end_comment
 
 begin_comment

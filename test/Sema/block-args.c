@@ -313,6 +313,56 @@ begin_comment
 comment|// expected-error {{expected ')'}} expected-warning {{type specifier missing}} expected-note {{to match this}}
 end_comment
 
+begin_comment
 unit|}
+comment|// rdar://problem/9170609
+end_comment
+
+begin_expr_stmt
+unit|void
+name|test5_helper
+argument_list|(
+name|void
+argument_list|(
+operator|^
+argument_list|)
+argument_list|(
+name|int
+argument_list|,
+name|int
+index|[
+operator|*
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function
+name|void
+name|test5
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|test5_helper
+argument_list|(
+lambda|^
+parameter_list|(
+name|int
+name|n
+parameter_list|,
+name|int
+name|array
+index|[
+name|n
+index|]
+parameter_list|)
+block|{}
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

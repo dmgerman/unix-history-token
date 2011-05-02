@@ -2030,6 +2030,145 @@ block|}
 block|}
 end_function
 
+begin_function
+name|void
+name|PrintMemoryUsage
+parameter_list|(
+name|CXTranslationUnit
+name|TU
+parameter_list|)
+block|{
+name|unsigned
+name|long
+name|total
+init|=
+literal|0.0
+decl_stmt|;
+name|unsigned
+name|i
+init|=
+literal|0
+decl_stmt|;
+name|CXTUResourceUsage
+name|usage
+init|=
+name|clang_getCXTUResourceUsage
+argument_list|(
+name|TU
+argument_list|)
+decl_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Memory usage:\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|!=
+name|usage
+operator|.
+name|numEntries
+condition|;
+operator|++
+name|i
+control|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|name
+init|=
+name|clang_getTUResourceUsageName
+argument_list|(
+name|usage
+operator|.
+name|entries
+index|[
+name|i
+index|]
+operator|.
+name|kind
+argument_list|)
+decl_stmt|;
+name|unsigned
+name|long
+name|amount
+init|=
+name|usage
+operator|.
+name|entries
+index|[
+name|i
+index|]
+operator|.
+name|amount
+decl_stmt|;
+name|total
+operator|+=
+name|amount
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  %s : %ld bytes (%f MBytes)\n"
+argument_list|,
+name|name
+argument_list|,
+name|amount
+argument_list|,
+operator|(
+operator|(
+name|double
+operator|)
+name|amount
+operator|)
+operator|/
+operator|(
+literal|1024
+operator|*
+literal|1024
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  TOTAL = %ld bytes (%f MBytes)\n"
+argument_list|,
+name|total
+argument_list|,
+operator|(
+operator|(
+name|double
+operator|)
+name|total
+operator|)
+operator|/
+operator|(
+literal|1024
+operator|*
+literal|1024
+operator|)
+argument_list|)
+expr_stmt|;
+name|clang_disposeCXTUResourceUsage
+argument_list|(
+name|usage
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/******************************************************************************/
 end_comment
@@ -5219,6 +5358,10 @@ name|c1
 init|=
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|s1
 argument_list|)
@@ -5227,6 +5370,10 @@ name|c2
 init|=
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|s2
 argument_list|)
@@ -8009,6 +8156,27 @@ condition|)
 return|return
 name|USRVisitor
 return|;
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|s
+argument_list|,
+literal|"-memory-usage"
+argument_list|,
+literal|13
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+name|GetVisitor
+argument_list|(
+name|s
+operator|+
+literal|13
+argument_list|)
+return|;
 return|return
 name|NULL
 return|;
@@ -8043,21 +8211,25 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"       c-index-test -test-load-source-memory-usage "
+literal|"<symbol filter> {<args>}*\n"
 literal|"       c-index-test -test-load-source-reparse<trials><symbol filter> "
 literal|"          {<args>}*\n"
 literal|"       c-index-test -test-load-source-usrs<symbol filter> {<args>}*\n"
+literal|"       c-index-test -test-load-source-usrs-memory-usage "
+literal|"<symbol filter> {<args>}*\n"
 literal|"       c-index-test -test-annotate-tokens=<range> {<args>}*\n"
 literal|"       c-index-test -test-inclusion-stack-source {<args>}*\n"
 literal|"       c-index-test -test-inclusion-stack-tu<AST file>\n"
-literal|"       c-index-test -test-print-linkage-source {<args>}*\n"
-literal|"       c-index-test -test-print-typekind {<args>}*\n"
-literal|"       c-index-test -print-usr [<CursorKind> {<args>}]*\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"       c-index-test -test-print-linkage-source {<args>}*\n"
+literal|"       c-index-test -test-print-typekind {<args>}*\n"
+literal|"       c-index-test -print-usr [<CursorKind> {<args>}]*\n"
 literal|"       c-index-test -print-usr-file<file>\n"
 literal|"       c-index-test -write-pch<file><compiler arguments>\n\n"
 argument_list|)
@@ -8373,6 +8545,27 @@ operator|+
 literal|17
 argument_list|)
 decl_stmt|;
+name|PostVisitTU
+name|postVisit
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|strstr
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"-memory-usage"
+argument_list|)
+condition|)
+name|postVisit
+operator|=
+name|PrintMemoryUsage
+expr_stmt|;
 if|if
 condition|(
 name|I
@@ -8395,7 +8588,7 @@ index|]
 argument_list|,
 name|I
 argument_list|,
-name|NULL
+name|postVisit
 argument_list|)
 return|;
 block|}

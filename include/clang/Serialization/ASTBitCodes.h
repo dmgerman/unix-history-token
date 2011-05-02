@@ -984,6 +984,16 @@ comment|/// \brief The ObjC 'SEL' type.
 name|PREDEF_TYPE_OBJC_SEL
 init|=
 literal|28
+block|,
+comment|/// \brief The 'unknown any' placeholder type.
+name|PREDEF_TYPE_UNKNOWN_ANY
+init|=
+literal|29
+block|,
+comment|/// \brief The placeholder type for bound member functions.
+name|PREDEF_TYPE_BOUND_MEMBER
+init|=
+literal|30
 block|}
 enum|;
 comment|/// \brief The number of predefined type IDs that are reserved for
@@ -1284,6 +1294,16 @@ comment|/// \brief Whether __[u]int128_t identifier is installed.
 name|SPECIAL_TYPE_INT128_INSTALLED
 init|=
 literal|16
+block|,
+comment|/// \brief Cached "auto" deduction type.
+name|SPECIAL_TYPE_AUTO_DEDUCT
+init|=
+literal|17
+block|,
+comment|/// \brief Cached "auto&&" deduction type.
+name|SPECIAL_TYPE_AUTO_RREF_DEDUCT
+init|=
+literal|18
 block|}
 enum|;
 comment|/// \brief Record codes for each kind of declaration.
@@ -1302,6 +1322,9 @@ literal|50
 block|,
 comment|/// \brief A TypedefDecl record.
 name|DECL_TYPEDEF
+block|,
+comment|/// \brief A TypeAliasDecl record.
+name|DECL_TYPEALIAS
 block|,
 comment|/// \brief An EnumDecl record.
 name|DECL_ENUM
@@ -1646,6 +1669,9 @@ block|,
 comment|/// \brief A BlockDeclRef record.
 name|EXPR_BLOCK_DECL_REF
 block|,
+comment|/// \brief A GenericSelectionExpr record.
+name|EXPR_GENERIC_SELECTION
+block|,
 comment|// Objective-C
 comment|/// \brief An ObjCStringLiteral record.
 name|EXPR_OBJC_STRING_LITERAL
@@ -1698,6 +1724,9 @@ name|STMT_CXX_CATCH
 block|,
 comment|/// \brief A CXXTryStmt record.
 name|STMT_CXX_TRY
+block|,
+comment|/// \brief A CXXForRangeStmt record.
+name|STMT_CXX_FOR_RANGE
 block|,
 comment|/// \brief A CXXOperatorCallExpr record.
 name|EXPR_CXX_OPERATOR_CALL
@@ -1789,6 +1818,9 @@ comment|// UnresolvedLookupExpr
 name|EXPR_CXX_UNARY_TYPE_TRAIT
 block|,
 comment|// UnaryTypeTraitExpr
+name|EXPR_CXX_EXPRESSION_TRAIT
+block|,
+comment|// ExpressionTraitExpr
 name|EXPR_CXX_NOEXCEPT
 block|,
 comment|// CXXNoexceptExpr
@@ -1801,6 +1833,9 @@ comment|// BinaryConditionalOperator
 name|EXPR_BINARY_TYPE_TRAIT
 block|,
 comment|// BinaryTypeTraitExpr
+name|EXPR_ARRAY_TYPE_TRAIT
+block|,
+comment|// ArrayTypeTraitIntExpr
 name|EXPR_PACK_EXPANSION
 block|,
 comment|// PackExpansionExpr

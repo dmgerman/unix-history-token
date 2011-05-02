@@ -87,7 +87,7 @@ name|cleanup
 operator|)
 argument_list|)
 decl_stmt|;
-comment|// expected-error {{attribute requires 1 argument(s)}}
+comment|// expected-error {{attribute takes one argument}}
 name|int
 name|v2
 name|__attribute
@@ -102,7 +102,7 @@ argument_list|)
 operator|)
 argument_list|)
 decl_stmt|;
-comment|// expected-error {{attribute requires 1 argument(s)}}
+comment|// expected-error {{attribute takes one argument}}
 specifier|static
 name|int
 name|v3

@@ -8,7 +8,7 @@ comment|// CHECK-LSB: @.str = private unnamed_addr constant [8 x i8] c"string0\0
 end_comment
 
 begin_comment
-comment|// CHECK-LSB: @.str1 = private unnamed_addr constant [8 x i8] c"string1\00"
+comment|// CHECK-LSB: @.str1 = linker_private unnamed_addr constant [8 x i8] c"string1\00"
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ comment|// CHECK-MSB: @.str = private unnamed_addr constant [8 x i8] c"string0\0
 end_comment
 
 begin_comment
-comment|// CHECK-MSB: @.str1 = private unnamed_addr constant [8 x i8] c"string1\00"
+comment|// CHECK-MSB: @.str1 = linker_private unnamed_addr constant [8 x i8] c"string1\00"
 end_comment
 
 begin_comment

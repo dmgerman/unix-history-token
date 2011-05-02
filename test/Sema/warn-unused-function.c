@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -Wunused-function -verify %s
+comment|// RUN: %clang_cc1 -fsyntax-only -Wunused-function -Wunneeded-internal-declaration -verify %s
 end_comment
 
 begin_comment
@@ -55,7 +55,7 @@ block|}
 end_function
 
 begin_comment
-comment|// expected-warning{{unused}}
+comment|// expected-warning{{not needed and will not be emitted}}
 end_comment
 
 begin_decl_stmt
@@ -374,7 +374,7 @@ block|}
 end_function
 
 begin_comment
-comment|// expected-warning{{unused}}
+comment|// expected-warning{{not needed and will not be emitted}}
 end_comment
 
 begin_comment

@@ -1029,7 +1029,7 @@ name|ld
 decl_stmt|;
 comment|// LLVM's hex representation of float constants is really unfortunate;
 comment|// basically it does a float-to-double "conversion" and then prints the
-comment|// hex form of that.  That gives us wierd artifacts like exponents
+comment|// hex form of that.  That gives us weird artifacts like exponents
 comment|// that aren't numerically similar to the original exponent and
 comment|// significand bit-patterns that are offset by three bits (because
 comment|// the exponent was expanded from 8 bits to 11).

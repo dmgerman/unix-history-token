@@ -124,6 +124,14 @@ comment|// ARMV7_SOFTFLOAT: "-mfloat-abi" "soft"
 end_comment
 
 begin_comment
+comment|// ARMV7_SOFTFLOAT: "-target-feature"
+end_comment
+
+begin_comment
+comment|// ARMV7_SOFTFLOAT: "-neon"
+end_comment
+
+begin_comment
 comment|// ARMV7_SOFTFLOAT: "-x" "c"
 end_comment
 

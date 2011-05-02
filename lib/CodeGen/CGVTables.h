@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- CGVTables.h - Emit LLVM Code for C++ vtables ---------------------===//
+comment|//===--- CGVTables.h - Emit LLVM Code for C++ vtables -----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/CharUnits.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"GlobalDecl.h"
 end_include
 
@@ -109,7 +115,7 @@ modifier|*
 name|Base
 decl_stmt|;
 comment|/// BaseOffset - The offset from the most derived class to the base class.
-name|uint64_t
+name|CharUnits
 name|BaseOffset
 decl_stmt|;
 name|public
@@ -118,7 +124,7 @@ name|BaseSubobject
 argument_list|(
 argument|const CXXRecordDecl *Base
 argument_list|,
-argument|uint64_t BaseOffset
+argument|CharUnits BaseOffset
 argument_list|)
 block|:
 name|Base
@@ -144,7 +150,7 @@ name|Base
 return|;
 block|}
 comment|/// getBaseOffset - Returns the base class offset.
-name|uint64_t
+name|CharUnits
 name|getBaseOffset
 argument_list|()
 specifier|const
@@ -243,13 +249,20 @@ operator|::
 name|getEmptyKey
 argument_list|()
 argument_list|,
+name|clang
+operator|::
+name|CharUnits
+operator|::
+name|fromQuantity
+argument_list|(
 name|DenseMapInfo
 operator|<
-name|uint64_t
+name|int64_t
 operator|>
 operator|::
 name|getEmptyKey
 argument_list|()
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -281,13 +294,20 @@ operator|::
 name|getTombstoneKey
 argument_list|()
 argument_list|,
+name|clang
+operator|::
+name|CharUnits
+operator|::
+name|fromQuantity
+argument_list|(
 name|DenseMapInfo
 operator|<
-name|uint64_t
+name|int64_t
 operator|>
 operator|::
 name|getTombstoneKey
 argument_list|()
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -318,7 +338,7 @@ argument_list|)
 operator|^
 name|DenseMapInfo
 operator|<
-name|uint64_t
+name|int64_t
 operator|>
 operator|::
 name|getHashValue
@@ -326,6 +346,9 @@ argument_list|(
 name|Base
 operator|.
 name|getBaseOffset
+argument_list|()
+operator|.
+name|getQuantity
 argument_list|()
 argument_list|)
 return|;
@@ -414,7 +437,7 @@ operator|>
 name|ClassPairTy
 expr_stmt|;
 comment|/// VirtualBaseClassOffsetOffsets - Contains the vtable offset (relative to
-comment|/// the address point) in bytes where the offsets for virtual bases of a class
+comment|/// the address point) in chars where the offsets for virtual bases of a class
 comment|/// are stored.
 typedef|typedef
 name|llvm
@@ -423,7 +446,7 @@ name|DenseMap
 operator|<
 name|ClassPairTy
 operator|,
-name|int64_t
+name|CharUnits
 operator|>
 name|VirtualBaseClassOffsetOffsetsMapTy
 expr_stmt|;
@@ -873,12 +896,12 @@ name|GlobalDecl
 name|GD
 parameter_list|)
 function_decl|;
-comment|/// getVirtualBaseOffsetOffset - Return the offset in bytes (relative to the
+comment|/// getVirtualBaseOffsetOffset - Return the offset in chars (relative to the
 comment|/// vtable address point) where the offset of the virtual base that contains
 comment|/// the given base is stored, otherwise, if no virtual base contains the given
 comment|/// class, return 0.  Base must be a virtual base class or an unambigious
 comment|/// base.
-name|int64_t
+name|CharUnits
 name|getVirtualBaseOffsetOffset
 parameter_list|(
 specifier|const
@@ -955,6 +978,8 @@ argument_list|,
 argument|const BaseSubobject&Base
 argument_list|,
 argument|bool BaseIsVirtual
+argument_list|,
+argument|llvm::GlobalVariable::LinkageTypes Linkage
 argument_list|,
 argument|VTableAddressPointsMapTy& AddressPoints
 argument_list|)

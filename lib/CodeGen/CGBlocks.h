@@ -778,6 +778,14 @@ name|HasCXXObject
 range|:
 literal|1
 decl_stmt|;
+comment|/// UsesStret : True if the block uses an stret return.  Mutable
+comment|/// because it gets set later in the block-creation process.
+name|mutable
+name|bool
+name|UsesStret
+range|:
+literal|1
+decl_stmt|;
 specifier|const
 name|llvm
 operator|::

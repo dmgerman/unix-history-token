@@ -113,5 +113,43 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|// RUN: env MACOSX_DEPLOYMENT_TARGET=10.4.10 \
+end_comment
+
+begin_comment
+comment|// RUN:   %clang -ccc-host-triple i386-apple-darwin9 -DTEST3 -E %s
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TEST3
+end_ifdef
+
+begin_if
+if|#
+directive|if
+name|__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__
+operator|!=
+literal|1049
+end_if
+
+begin_error
+error|#
+directive|error
+error|Invalid version
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 end_unit
 

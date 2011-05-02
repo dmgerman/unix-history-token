@@ -133,6 +133,19 @@ comment|// CHECK: call i32 @llvm.atomic.swap.i32.p0i32(i32* %val, i32 7)
 comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
 name|old
 operator|=
+name|__sync_swap
+argument_list|(
+operator|&
+name|val
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
+comment|// CHECK: call i32 @llvm.atomic.swap.i32.p0i32(i32* %val, i32 8)
+comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
+name|old
+operator|=
 name|__sync_val_compare_and_swap
 argument_list|(
 operator|&

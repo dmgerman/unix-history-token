@@ -954,6 +954,329 @@ end_expr_stmt
 
 begin_comment
 unit|};
+comment|/// \brief Class that aids in the construction of nested-name-specifiers along
+end_comment
+
+begin_comment
+comment|/// with source-location information for all of the components of the
+end_comment
+
+begin_comment
+comment|/// nested-name-specifier.
+end_comment
+
+begin_decl_stmt
+name|class
+name|NestedNameSpecifierLocBuilder
+block|{
+comment|/// \brief The current representation of the nested-name-specifier we're
+comment|/// building.
+name|NestedNameSpecifier
+modifier|*
+name|Representation
+decl_stmt|;
+comment|/// \brief Buffer used to store source-location information for the
+comment|/// nested-name-specifier.
+comment|///
+comment|/// Note that we explicitly manage the buffer (rather than using a
+comment|/// SmallVector) because \c Declarator expects it to be possible to memcpy()
+comment|/// a \c CXXScopeSpec, and CXXScopeSpec uses a NestedNameSpecifierLocBuilder.
+name|char
+modifier|*
+name|Buffer
+decl_stmt|;
+comment|/// \brief The size of the buffer used to store source-location information
+comment|/// for the nested-name-specifier.
+name|unsigned
+name|BufferSize
+decl_stmt|;
+comment|/// \brief The capacity of the buffer used to store source-location
+comment|/// information for the nested-name-specifier.
+name|unsigned
+name|BufferCapacity
+decl_stmt|;
+name|public
+label|:
+name|NestedNameSpecifierLocBuilder
+argument_list|()
+expr_stmt|;
+name|NestedNameSpecifierLocBuilder
+argument_list|(
+specifier|const
+name|NestedNameSpecifierLocBuilder
+operator|&
+name|Other
+argument_list|)
+expr_stmt|;
+name|NestedNameSpecifierLocBuilder
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|NestedNameSpecifierLocBuilder
+operator|&
+name|Other
+operator|)
+decl_stmt|;
+operator|~
+name|NestedNameSpecifierLocBuilder
+argument_list|()
+expr_stmt|;
+comment|/// \brief Retrieve the representation of the nested-name-specifier.
+name|NestedNameSpecifier
+operator|*
+name|getRepresentation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Representation
+return|;
+block|}
+comment|/// \brief Extend the current nested-name-specifier by another
+comment|/// nested-name-specifier component of the form 'type::'.
+comment|///
+comment|/// \param Context The AST context in which this nested-name-specifier
+comment|/// resides.
+comment|///
+comment|/// \param TemplateKWLoc The location of the 'template' keyword, if present.
+comment|///
+comment|/// \param TL The TypeLoc that describes the type preceding the '::'.
+comment|///
+comment|/// \param ColonColonLoc The location of the trailing '::'.
+name|void
+name|Extend
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
+name|SourceLocation
+name|TemplateKWLoc
+parameter_list|,
+name|TypeLoc
+name|TL
+parameter_list|,
+name|SourceLocation
+name|ColonColonLoc
+parameter_list|)
+function_decl|;
+comment|/// \brief Extend the current nested-name-specifier by another
+comment|/// nested-name-specifier component of the form 'identifier::'.
+comment|///
+comment|/// \param Context The AST context in which this nested-name-specifier
+comment|/// resides.
+comment|///
+comment|/// \param Identifier The identifier.
+comment|///
+comment|/// \param IdentifierLoc The location of the identifier.
+comment|///
+comment|/// \param ColonColonLoc The location of the trailing '::'.
+name|void
+name|Extend
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
+name|IdentifierInfo
+modifier|*
+name|Identifier
+parameter_list|,
+name|SourceLocation
+name|IdentifierLoc
+parameter_list|,
+name|SourceLocation
+name|ColonColonLoc
+parameter_list|)
+function_decl|;
+comment|/// \brief Extend the current nested-name-specifier by another
+comment|/// nested-name-specifier component of the form 'namespace::'.
+comment|///
+comment|/// \param Context The AST context in which this nested-name-specifier
+comment|/// resides.
+comment|///
+comment|/// \param Namespace The namespace.
+comment|///
+comment|/// \param NamespaceLoc The location of the namespace name.
+comment|///
+comment|/// \param ColonColonLoc The location of the trailing '::'.
+name|void
+name|Extend
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
+name|NamespaceDecl
+modifier|*
+name|Namespace
+parameter_list|,
+name|SourceLocation
+name|NamespaceLoc
+parameter_list|,
+name|SourceLocation
+name|ColonColonLoc
+parameter_list|)
+function_decl|;
+comment|/// \brief Extend the current nested-name-specifier by another
+comment|/// nested-name-specifier component of the form 'namespace-alias::'.
+comment|///
+comment|/// \param Context The AST context in which this nested-name-specifier
+comment|/// resides.
+comment|///
+comment|/// \param Alias The namespace alias.
+comment|///
+comment|/// \param AliasLoc The location of the namespace alias
+comment|/// name.
+comment|///
+comment|/// \param ColonColonLoc The location of the trailing '::'.
+name|void
+name|Extend
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
+name|NamespaceAliasDecl
+modifier|*
+name|Alias
+parameter_list|,
+name|SourceLocation
+name|AliasLoc
+parameter_list|,
+name|SourceLocation
+name|ColonColonLoc
+parameter_list|)
+function_decl|;
+comment|/// \brief Turn this (empty) nested-name-specifier into the global
+comment|/// nested-name-specifier '::'.
+name|void
+name|MakeGlobal
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
+name|SourceLocation
+name|ColonColonLoc
+parameter_list|)
+function_decl|;
+comment|/// \brief Make a new nested-name-specifier from incomplete source-location
+comment|/// information.
+comment|///
+comment|/// This routine should be used very, very rarely, in cases where we
+comment|/// need to synthesize a nested-name-specifier. Most code should instead use
+comment|/// \c Adopt() with a proper \c NestedNameSpecifierLoc.
+name|void
+name|MakeTrivial
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
+name|NestedNameSpecifier
+modifier|*
+name|Qualifier
+parameter_list|,
+name|SourceRange
+name|R
+parameter_list|)
+function_decl|;
+comment|/// \brief Adopt an existing nested-name-specifier (with source-range
+comment|/// information).
+name|void
+name|Adopt
+parameter_list|(
+name|NestedNameSpecifierLoc
+name|Other
+parameter_list|)
+function_decl|;
+comment|/// \brief Retrieve the source range covered by this nested-name-specifier.
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NestedNameSpecifierLoc
+argument_list|(
+name|Representation
+argument_list|,
+name|Buffer
+argument_list|)
+operator|.
+name|getSourceRange
+argument_list|()
+return|;
+block|}
+comment|/// \brief Retrieve a nested-name-specifier with location information,
+comment|/// copied into the given AST context.
+comment|///
+comment|/// \param Context The context into which this nested-name-specifier will be
+comment|/// copied.
+name|NestedNameSpecifierLoc
+name|getWithLocInContext
+argument_list|(
+name|ASTContext
+operator|&
+name|Context
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Clear out this builder, and prepare it to build another
+comment|/// nested-name-specifier with source-location information.
+name|void
+name|Clear
+parameter_list|()
+block|{
+name|Representation
+operator|=
+literal|0
+expr_stmt|;
+name|BufferSize
+operator|=
+literal|0
+expr_stmt|;
+block|}
+comment|/// \brief Retrieve the underlying buffer.
+comment|///
+comment|/// \returns A pair containing a pointer to the buffer of source-location
+comment|/// data and the size of the source-location data that resides in that
+comment|/// buffer.
+name|std
+operator|::
+name|pair
+operator|<
+name|char
+operator|*
+operator|,
+name|unsigned
+operator|>
+name|getBuffer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|Buffer
+argument_list|,
+name|BufferSize
+argument_list|)
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// Insertion operator for diagnostics.  This allows sending NestedNameSpecifiers
 end_comment
 

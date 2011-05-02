@@ -165,6 +165,17 @@ operator|::
 name|string
 name|ImplicitPCHInclude
 expr_stmt|;
+comment|/// \brief Headers that will be converted to chained PCHs in memory.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|ChainedIncludes
+expr_stmt|;
 comment|/// \brief When true, disables most of the normal validation performed on
 comment|/// precompiled headers.
 name|bool
@@ -219,6 +230,11 @@ operator|::
 name|string
 name|TokenCache
 expr_stmt|;
+comment|/// \brief True if the SourceManager should report the original file name for
+comment|/// contents of files that were remapped to other files. Defaults to true.
+name|bool
+name|RemappedFilesKeepOriginalName
+decl_stmt|;
 comment|/// \brief The set of file remappings, which take existing files on
 comment|/// the system (the first part of each pair) and gives them the
 comment|/// contents of other files on the system (the second part of each
@@ -493,6 +509,11 @@ name|PrecompiledPreambleBytes
 argument_list|(
 literal|0
 argument_list|,
+name|true
+argument_list|)
+operator|,
+name|RemappedFilesKeepOriginalName
+argument_list|(
 name|true
 argument_list|)
 operator|,

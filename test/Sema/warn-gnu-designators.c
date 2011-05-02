@@ -15,6 +15,7 @@ name|z
 index|[
 literal|12
 index|]
+decl_stmt|;
 block|}
 name|value
 init|=

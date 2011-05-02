@@ -288,7 +288,7 @@ comment|// CHECK: 1:8: StructDecl=rdar8650865:1:8 (Definition) Extent=[1:1 - 4:2
 end_comment
 
 begin_comment
-comment|// CHECK: 2:23: FieldDecl=first:2:23 (Definition) Extent=[2:23 - 2:28]
+comment|// CHECK: 2:23: FieldDecl=first:2:23 (Definition) Extent=[2:3 - 2:28]
 end_comment
 
 begin_comment
@@ -296,15 +296,15 @@ comment|// CHECK: 2:10: TypeRef=struct rdar8650865:1:8 Extent=[2:10 - 2:21]
 end_comment
 
 begin_comment
-comment|// CHECK: 3:7: FieldDecl=x:3:7 (Definition) Extent=[3:7 - 3:8]
+comment|// CHECK: 3:7: FieldDecl=x:3:7 (Definition) Extent=[3:3 - 3:8]
 end_comment
 
 begin_comment
-comment|// CHECK: 6:5: FunctionDecl=test_rdar8650865:6:5 (Definition) Extent=[6:5 - 124:2]
+comment|// CHECK: 6:5: FunctionDecl=test_rdar8650865:6:5 (Definition) Extent=[6:1 - 124:2]
 end_comment
 
 begin_comment
-comment|// CHECK: 6:42: ParmDecl=s:6:42 (Definition) Extent=[6:29 - 6:43]
+comment|// CHECK: 6:42: ParmDecl=s:6:42 (Definition) Extent=[6:22 - 6:43]
 end_comment
 
 begin_comment
@@ -812,7 +812,7 @@ comment|// CHECK-tokens: Punctuation: "{" [1:20 - 1:21] StructDecl=rdar8650865:1
 end_comment
 
 begin_comment
-comment|// CHECK-tokens: Keyword: "struct" [2:3 - 2:9] StructDecl=rdar8650865:1:8 (Definition)
+comment|// CHECK-tokens: Keyword: "struct" [2:3 - 2:9] FieldDecl=first:2:23 (Definition)
 end_comment
 
 begin_comment
@@ -864,7 +864,7 @@ comment|// CHECK-tokens: Punctuation: "(" [6:21 - 6:22] FunctionDecl=test_rdar86
 end_comment
 
 begin_comment
-comment|// CHECK-tokens: Keyword: "struct" [6:22 - 6:28] FunctionDecl=test_rdar8650865:6:5 (Definition)
+comment|// CHECK-tokens: Keyword: "struct" [6:22 - 6:28] ParmDecl=s:6:42 (Definition)
 end_comment
 
 begin_comment

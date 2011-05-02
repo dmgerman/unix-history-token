@@ -51,7 +51,7 @@ argument_list|)
 name|int
 name|z
 decl_stmt|;
-comment|// expected-error {{attribute requires 1 argument(s)}}
+comment|// expected-error {{attribute takes one argument}}
 block|}
 end_decl_stmt
 

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-check-objc-mem -analyzer-experimental-checks -analyzer-checker=core.experimental.UnreachableCode -verify -analyzer-constraints=basic %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,deadcode.experimental.UnreachableCode,unix.experimental.Malloc -verify -analyzer-constraints=basic %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-check-objc-mem -analyzer-experimental-checks -analyzer-checker=core.experimental.UnreachableCode -verify -analyzer-constraints=range %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,deadcode.experimental.UnreachableCode,unix.experimental.Malloc -verify -analyzer-constraints=range %s
 end_comment
 
 begin_comment

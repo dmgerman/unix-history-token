@@ -316,6 +316,7 @@ decl_stmt|;
 name|int
 label|:
 literal|5
+expr_stmt|;
 block|}
 name|noNamedImplicit
 index|[]

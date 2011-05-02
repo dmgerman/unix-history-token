@@ -167,49 +167,89 @@ literal|8
 operator|>
 name|AttributeListType
 expr_stmt|;
+struct|struct
+name|CallArg
+block|{
+name|RValue
+name|RV
+decl_stmt|;
+name|QualType
+name|Ty
+decl_stmt|;
+name|CallArg
+argument_list|(
+argument|RValue rv
+argument_list|,
+argument|QualType ty
+argument_list|)
+block|:
+name|RV
+argument_list|(
+name|rv
+argument_list|)
+operator|,
+name|Ty
+argument_list|(
+argument|ty
+argument_list|)
+block|{ }
+block|}
+struct|;
 comment|/// CallArgList - Type for representing both the value and type of
 comment|/// arguments in a call.
-typedef|typedef
+name|class
+name|CallArgList
+range|:
+name|public
 name|llvm
 operator|::
 name|SmallVector
 operator|<
-name|std
-operator|::
-name|pair
-operator|<
+name|CallArg
+decl_stmt|, 16>
+block|{
+name|public
+label|:
+name|void
+name|add
+parameter_list|(
 name|RValue
-operator|,
+name|rvalue
+parameter_list|,
 name|QualType
-operator|>
-operator|,
-literal|16
-operator|>
-name|CallArgList
+name|type
+parameter_list|)
+block|{
+name|push_back
+argument_list|(
+name|CallArg
+argument_list|(
+name|rvalue
+argument_list|,
+name|type
+argument_list|)
+argument_list|)
 expr_stmt|;
+block|}
+block|}
+empty_stmt|;
 comment|/// FunctionArgList - Type for representing both the decl and type
 comment|/// of parameters to a function. The decl must be either a
 comment|/// ParmVarDecl or ImplicitParamDecl.
-typedef|typedef
+name|class
+name|FunctionArgList
+range|:
+name|public
 name|llvm
 operator|::
 name|SmallVector
-operator|<
-name|std
-operator|::
-name|pair
 operator|<
 specifier|const
 name|VarDecl
 operator|*
-operator|,
-name|QualType
-operator|>
-operator|,
-literal|16
-operator|>
-name|FunctionArgList
-expr_stmt|;
+decl_stmt|, 16>
+block|{   }
+empty_stmt|;
 comment|/// CGFunctionInfo - Class to encapsulate the information about a
 comment|/// function definition.
 name|class
@@ -251,6 +291,9 @@ operator|*
 name|Args
 block|;
 comment|/// How many arguments to pass inreg.
+name|bool
+name|HasRegParm
+block|;
 name|unsigned
 name|RegParm
 block|;
@@ -272,6 +315,8 @@ argument_list|(
 argument|unsigned CallingConvention
 argument_list|,
 argument|bool NoReturn
+argument_list|,
+argument|bool HasRegParm
 argument_list|,
 argument|unsigned RegParm
 argument_list|,
@@ -388,6 +433,15 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
+name|bool
+name|getHasRegParm
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasRegParm
+return|;
+block|}
 name|unsigned
 name|getRegParm
 argument_list|()
@@ -464,6 +518,13 @@ operator|.
 name|AddBoolean
 argument_list|(
 name|NoReturn
+argument_list|)
+expr_stmt|;
+name|ID
+operator|.
+name|AddBoolean
+argument_list|(
+name|HasRegParm
 argument_list|)
 expr_stmt|;
 name|ID
@@ -548,6 +609,16 @@ argument_list|(
 name|Info
 operator|.
 name|getNoReturn
+argument_list|()
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddBoolean
+argument_list|(
+name|Info
+operator|.
+name|getHasRegParm
 argument_list|()
 argument_list|)
 block|;

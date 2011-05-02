@@ -198,5 +198,23 @@ block|, }
 enum|;
 end_enum
 
+begin_comment
+comment|// rdar://9295072
+end_comment
+
+begin_struct
+struct|struct
+name|test_struct
+block|{
+comment|// CHECK: struct test_struct *struct_ptr;
+name|test_struct
+modifier|*
+name|struct_ptr
+decl_stmt|;
+comment|// expected-error {{must use 'struct' tag to refer to type 'test_struct'}}
+block|}
+struct|;
+end_struct
+
 end_unit
 

@@ -224,6 +224,9 @@ decl_stmt|;
 name|class
 name|TargetInfo
 decl_stmt|;
+name|class
+name|VersionTuple
+decl_stmt|;
 comment|/// \brief Writes an AST file containing the contents of a translation unit.
 comment|///
 comment|/// The ASTWriter class produces a bitstream containing the serialized
@@ -1034,6 +1037,10 @@ name|Diag
 parameter_list|)
 function_decl|;
 name|void
+name|WriteCXXBaseSpecifiersOffsets
+parameter_list|()
+function_decl|;
+name|void
 name|WriteType
 parameter_list|(
 name|QualType
@@ -1827,6 +1834,20 @@ operator|&
 name|Record
 argument_list|)
 decl_stmt|;
+comment|/// \brief Add a version tuple to the given record
+name|void
+name|AddVersionTuple
+parameter_list|(
+specifier|const
+name|VersionTuple
+modifier|&
+name|Version
+parameter_list|,
+name|RecordDataImpl
+modifier|&
+name|Record
+parameter_list|)
+function_decl|;
 comment|/// \brief Mark a declaration context as needing an update.
 name|void
 name|AddUpdatedDeclContext
@@ -2113,6 +2134,41 @@ name|TD
 parameter_list|,
 specifier|const
 name|ClassTemplateSpecializationDecl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+name|virtual
+name|void
+name|AddedCXXTemplateSpecialization
+parameter_list|(
+specifier|const
+name|FunctionTemplateDecl
+modifier|*
+name|TD
+parameter_list|,
+specifier|const
+name|FunctionDecl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+name|virtual
+name|void
+name|CompletedImplicitDefinition
+parameter_list|(
+specifier|const
+name|FunctionDecl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+name|virtual
+name|void
+name|StaticDataMemberInstantiated
+parameter_list|(
+specifier|const
+name|VarDecl
 modifier|*
 name|D
 parameter_list|)

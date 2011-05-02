@@ -24,11 +24,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK-COMPILE: clang{{.*}}" "-cc1" "-triple" "i386-apple-darwin8.0.0"
+comment|// CHECK-COMPILE: clang{{.*}}" "-cc1" "-triple" "i386-apple-macosx10.4.0"
 end_comment
 
 begin_comment
-comment|// CHECK-COMPILE: clang{{.*}}" "-cc1" "-triple" "x86_64-apple-darwin9.0.0"
+comment|// CHECK-COMPILE: clang{{.*}}" "-cc1" "-triple" "x86_64-apple-macosx10.5.0"
 end_comment
 
 begin_comment

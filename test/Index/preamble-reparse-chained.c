@@ -32,11 +32,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: a.h:3:13: TypedefDecl=A:3:13 (Definition) Extent=[3:13 - 3:14]
+comment|// CHECK: a.h:3:13: TypedefDecl=A:3:13 (Definition) Extent=[3:1 - 3:14]
 end_comment
 
 begin_comment
-comment|// CHECK: b.h:1:15: TypedefDecl=B:1:15 (Definition) Extent=[1:15 - 1:16]
+comment|// CHECK: b.h:1:15: TypedefDecl=B:1:15 (Definition) Extent=[1:1 - 1:16]
 end_comment
 
 end_unit

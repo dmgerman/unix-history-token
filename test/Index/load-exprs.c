@@ -207,7 +207,11 @@ comment|// RUN: c-index-test -test-load-source all %s -fblocks | FileCheck %s
 end_comment
 
 begin_comment
-comment|// CHECK: load-exprs.c:1:13: TypedefDecl=T:1:13 (Definition) Extent=[1:13 - 1:14]
+comment|// CHECK: macro definition=__clang__
+end_comment
+
+begin_comment
+comment|// CHECK: load-exprs.c:1:13: TypedefDecl=T:1:13 (Definition) Extent=[1:1 - 1:14]
 end_comment
 
 begin_comment
@@ -215,15 +219,15 @@ comment|// CHECK: load-exprs.c:2:8: StructDecl=X:2:8 (Definition) Extent=[2:1 - 
 end_comment
 
 begin_comment
-comment|// CHECK: load-exprs.c:2:16: FieldDecl=a:2:16 (Definition) Extent=[2:16 - 2:17]
+comment|// CHECK: load-exprs.c:2:16: FieldDecl=a:2:16 (Definition) Extent=[2:12 - 2:17]
 end_comment
 
 begin_comment
-comment|// CHECK: load-exprs.c:2:19: FieldDecl=b:2:19 (Definition) Extent=[2:19 - 2:20]
+comment|// CHECK: load-exprs.c:2:19: FieldDecl=b:2:19 (Definition) Extent=[2:12 - 2:20]
 end_comment
 
 begin_comment
-comment|// CHECK: load-exprs.c:3:6: FunctionDecl=f:3:6 (Definition) Extent=[3:6 - 8:2]
+comment|// CHECK: load-exprs.c:3:6: FunctionDecl=f:3:6 (Definition) Extent=[3:1 - 8:2]
 end_comment
 
 begin_comment
@@ -251,7 +255,7 @@ comment|// CHECK: load-exprs.c:5:16: TypeRef=T:1:13 Extent=[5:16 - 5:17]
 end_comment
 
 begin_comment
-comment|// CHECK: load-exprs.c:6:12: VarDecl=x:6:12 (Definition) Extent=[6:10 - 6:32]
+comment|// CHECK: load-exprs.c:6:12: VarDecl=x:6:12 (Definition) Extent=[6:3 - 6:32]
 end_comment
 
 begin_comment
@@ -275,7 +279,7 @@ comment|// CHECK: load-exprs.c:7:23: DeclRefExpr=x:6:12 Extent=[7:23 - 7:24]
 end_comment
 
 begin_comment
-comment|// CHECK: load-exprs.c:10:5: FunctionDecl=test_blocks:10:5 (Definition) Extent=[10:5 - 21:2]
+comment|// CHECK: load-exprs.c:10:5: FunctionDecl=test_blocks:10:5 (Definition) Extent=[10:1 - 21:2]
 end_comment
 
 begin_comment
@@ -283,7 +287,7 @@ comment|// CHECK: load-exprs.c:10:21: ParmDecl=x:10:21 (Definition) Extent=[10:1
 end_comment
 
 begin_comment
-comment|// CHECK: load-exprs.c:11:15: VarDecl=y:11:15 (Definition) Extent=[11:11 - 11:20]
+comment|// CHECK: load-exprs.c:11:15: VarDecl=y:11:15 (Definition) Extent=[11:3 - 11:20]
 end_comment
 
 begin_comment
@@ -295,7 +299,7 @@ comment|// CHECK: load-exprs.c:12:3: CallExpr= Extent=[12:3 - 19:7]
 end_comment
 
 begin_comment
-comment|// CHECK: load-exprs.c:13:17: VarDecl=z:13:17 (Definition) Extent=[13:13 - 13:22]
+comment|// CHECK: load-exprs.c:13:17: VarDecl=z:13:17 (Definition) Extent=[13:6 - 13:22]
 end_comment
 
 begin_comment
@@ -331,7 +335,7 @@ comment|// CHECK: load-exprs.c:29:6: FunctionDecl=test_members:29:6 (Definition)
 end_comment
 
 begin_comment
-comment|// CHECK: load-exprs.c:30:12: VarDecl=y0:30:12 (Definition) Extent=[30:10 - 30:77]
+comment|// CHECK: load-exprs.c:30:12: VarDecl=y0:30:12 (Definition) Extent=[30:3 - 30:77]
 end_comment
 
 begin_comment

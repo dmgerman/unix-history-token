@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -Wno-array-bounds -analyze -analyzer-check-objc-mem -analyzer-check-buffer-overflows -verify %s
+comment|// RUN: %clang_cc1 -Wno-array-bounds -analyze -analyzer-checker=core,security.experimental.ArrayBoundV2 -verify %s
 end_comment
 
 begin_comment
@@ -735,6 +735,46 @@ index|]
 operator|=
 literal|1
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// Don't warn when indexing below the start of a symbolic region's whose
+end_comment
+
+begin_comment
+comment|// base extent we don't know.
+end_comment
+
+begin_function_decl
+name|int
+modifier|*
+name|get_symbolic
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|test_index_below_symboloc
+parameter_list|()
+block|{
+name|int
+modifier|*
+name|buf
+init|=
+name|get_symbolic
+argument_list|()
+decl_stmt|;
+name|buf
+index|[
+operator|-
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|// no-warning;
 block|}
 end_function
 

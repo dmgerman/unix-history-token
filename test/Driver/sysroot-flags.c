@@ -12,7 +12,7 @@ comment|// RUN:   FileCheck %s -check-prefix=ISYSROOT
 end_comment
 
 begin_comment
-comment|// ISYSROOT: "-isysroot" "/foo/bar"
+comment|// ISYSROOT: "-isysroot" "{{[^"]*}}/foo/bar"
 end_comment
 
 begin_comment
@@ -36,11 +36,11 @@ comment|// RUN:   FileCheck %s -check-prefix=SYSROOT_EQ
 end_comment
 
 begin_comment
-comment|// SYSROOT_EQ: "-isysroot" "/foo/bar"
+comment|// SYSROOT_EQ: "-isysroot" "{{[^"]*}}/foo/bar"
 end_comment
 
 begin_comment
-comment|// SYSROOT_EQ: "--sysroot{{" "|=}}/foo/bar"
+comment|// SYSROOT_EQ: "--sysroot{{" "|=}}{{[^"]*}}/foo/bar"
 end_comment
 
 begin_comment
@@ -64,11 +64,11 @@ comment|// RUN:   -check-prefix=ISYSROOT_AND_SYSROOT
 end_comment
 
 begin_comment
-comment|// ISYSROOT_AND_SYSROOT: "-isysroot" "/baz"
+comment|// ISYSROOT_AND_SYSROOT: "-isysroot" "{{[^"]*}}/baz"
 end_comment
 
 begin_comment
-comment|// ISYSROOT_AND_SYSROOT: "--sysroot{{" "|=}}/foo/bar"
+comment|// ISYSROOT_AND_SYSROOT: "--sysroot{{" "|=}}{{[^"]*}}/foo/bar"
 end_comment
 
 begin_comment
@@ -88,11 +88,11 @@ comment|// RUN:   FileCheck %s -check-prefix=SYSROOT_SEPARATE
 end_comment
 
 begin_comment
-comment|// SYSROOT_SEPARATE: "-isysroot" "/foo/bar"
+comment|// SYSROOT_SEPARATE: "-isysroot" "{{[^"]*}}/foo/bar"
 end_comment
 
 begin_comment
-comment|// SYSROOT_SEPARATE: "--sysroot{{" "|=}}/foo/bar"
+comment|// SYSROOT_SEPARATE: "--sysroot{{" "|=}}{{[^"]*}}/foo/bar"
 end_comment
 
 end_unit

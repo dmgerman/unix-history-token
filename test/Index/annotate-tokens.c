@@ -81,6 +81,19 @@ decl_stmt|;
 block|}
 end_function
 
+begin_enum
+enum|enum
+name|Color
+block|{
+name|Red
+block|,
+name|Green
+block|,
+name|Blue
+block|}
+enum|;
+end_enum
+
 begin_typedef
 typedef|typedef
 name|int
@@ -89,7 +102,8 @@ typedef|;
 end_typedef
 
 begin_function
-name|void
+name|enum
+name|Color
 name|g
 parameter_list|(
 name|int
@@ -148,11 +162,39 @@ operator|<
 literal|10
 condition|)
 do|;
+name|enum
+name|Color
+name|c
+decl_stmt|;
+switch|switch
+condition|(
+name|c
+condition|)
+block|{
+case|case
+name|Red
+case|:
+return|return
+name|Green
+return|;
+case|case
+name|Green
+case|:
+return|return
+name|Blue
+return|;
+case|case
+name|Blue
+case|:
+return|return
+name|Red
+return|;
+block|}
 block|}
 end_function
 
 begin_comment
-comment|// RUN: c-index-test -test-annotate-tokens=%s:4:1:22:1 %s | FileCheck %s
+comment|// RUN: c-index-test -test-annotate-tokens=%s:4:1:34:1 %s | FileCheck %s
 end_comment
 
 begin_comment
@@ -232,7 +274,7 @@ comment|// CHECK: Comment: "/* A comment */" [6:3 - 6:18] UnexposedStmt=
 end_comment
 
 begin_comment
-comment|// CHECK: Keyword: "struct" [7:3 - 7:9] UnexposedStmt=
+comment|// CHECK: Keyword: "struct" [7:3 - 7:9] VarDecl=x:7:12 (Definition)
 end_comment
 
 begin_comment
@@ -384,7 +426,7 @@ comment|// CHECK: Identifier: "Int" [16:43 - 16:46] TypeRef=Int:12:13
 end_comment
 
 begin_comment
-comment|// CHECK: Keyword: "struct" [18:3 - 18:9] UnexposedStmt=
+comment|// CHECK: Keyword: "struct" [18:3 - 18:9] VarDecl=x:18:12 (Definition)
 end_comment
 
 begin_comment
@@ -441,6 +483,114 @@ end_comment
 
 begin_comment
 comment|// CHECK: Identifier: "a" [21:14 - 21:15] MemberRefExpr=a:2:16
+end_comment
+
+begin_comment
+comment|// CHECK: Keyword: "enum" [23:3 - 23:7] VarDecl=c:23:14 (Definition)
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "Color" [23:8 - 23:13] TypeRef=enum Color:11:6
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "c" [23:14 - 23:15] VarDecl=c:23:14 (Definition)
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: ";" [23:15 - 23:16] UnexposedStmt=
+end_comment
+
+begin_comment
+comment|// CHECK: Keyword: "switch" [24:3 - 24:9] UnexposedStmt=
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: "(" [24:10 - 24:11] UnexposedStmt=
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "c" [24:11 - 24:12] DeclRefExpr=c:23:14
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: ")" [24:12 - 24:13] UnexposedStmt=
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: "{" [24:14 - 24:15] UnexposedStmt=
+end_comment
+
+begin_comment
+comment|// CHECK: Keyword: "case" [25:3 - 25:7] UnexposedStmt=
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "Red" [25:8 - 25:11] DeclRefExpr=Red:11:14
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: ":" [25:11 - 25:12] UnexposedStmt=
+end_comment
+
+begin_comment
+comment|// CHECK: Keyword: "return" [26:5 - 26:11] UnexposedStmt=
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "Green" [26:12 - 26:17] DeclRefExpr=Green:11:19
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: ";" [26:17 - 26:18] UnexposedStmt=
+end_comment
+
+begin_comment
+comment|// CHECK: Keyword: "case" [28:3 - 28:7] UnexposedStmt=
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "Green" [28:8 - 28:13] DeclRefExpr=Green:11:19
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: ":" [28:13 - 28:14] UnexposedStmt=
+end_comment
+
+begin_comment
+comment|// CHECK: Keyword: "return" [29:5 - 29:11] UnexposedStmt=
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "Blue" [29:12 - 29:16] DeclRefExpr=Blue:11:26
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: ";" [29:16 - 29:17] UnexposedStmt=
+end_comment
+
+begin_comment
+comment|// CHECK: Keyword: "case" [31:3 - 31:7] UnexposedStmt=
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "Blue" [31:8 - 31:12] DeclRefExpr=Blue:11:26
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: ":" [31:12 - 31:13] UnexposedStmt=
+end_comment
+
+begin_comment
+comment|// CHECK: Keyword: "return" [32:5 - 32:11] UnexposedStmt=
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "Red" [32:12 - 32:15] DeclRefExpr=Red:11:14
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: ";" [32:15 - 32:16] UnexposedStmt=
 end_comment
 
 begin_comment

@@ -4,11 +4,15 @@ comment|// RUN: %clang -ccc-no-clang -ccc-host-triple i386-apple-darwin10 -m32 -
 end_comment
 
 begin_comment
-comment|// RUN: grep ' ".*cc1" "-E" "-nostdinc" "-v" "-I" "ARG0" "-FARG1" "-I" "ARG2" "-P" "-MD" "/tmp/OUTPUTNAME.d" "-MF" "ARG3" "-MG" "-MP" "-MQ" "/tmp/OUTPUTNAME" "-remap" "-dD" "-H" "-D__STATIC__" "-D_REENTRANT" "-D" "ARG4" "-U" "ARG5" "-A" "ARG6" "-D" "ARG7" "-U" "ARG8" "-A" "ARG9" "-include" "ARG10" ".*darwin-cc.c" "-D_MUDFLAP" "-include" "mf-runtime.h" "-m32" "-mkernel" "-mtune=core2" "-mmacosx-version-min=10.6.0" "-ansi" "-std=c99" "-trigraphs" "-Werror" "-pedantic" "-Wmost" "-w" "-fast" "-fno-eliminate-unused-debug-symbols" "-fFOO" "-fmudflap" "-O2" "-undef" "-fpch-preprocess" "-o" ".*darwin-cc.i"' %t.log
+comment|// RUN: FileCheck %s< %t.log
 end_comment
 
 begin_comment
-comment|// RUN: grep ' ".*cc1" "-fpreprocessed" ".*darwin-cc.i" "-O3" "-dumpbase" ".*darwin-cc.c" "-dA" "-m32" "-mkernel" "-mtune=core2" "-mmacosx-version-min=10.6.0" "-ansi" "-aFOO" "-auxbase-strip" "/tmp/OUTPUTNAME" "-g" "-g0" "-g" "-g3" "-O2" "-Werror" "-pedantic" "-Wmost" "-w" "-ansi" "-std=c99" "-trigraphs" "-version" "-p" "-fast" "-fno-eliminate-unused-debug-symbols" "-fFOO" "-fmudflap" "-undef" "-fno-ident" "-o" "/tmp/OUTPUTNAME" "--param" "a=b" "-fno-builtin" "-fno-merge-constants" "-fprofile-arcs" "-ftest-coverage"' %t.log
+comment|// CHECK: {{ ".*cc1.*" "-E" "-nostdinc" "-v" "-I" "ARG0" "-FARG1" "-I" "ARG2" "-P" "-MD" "[^"]*/OUTPUTNAME.d" "-MF" "ARG3" "-MG" "-MP" "-MQ" "[^"]*/OUTPUTNAME" "-remap" "-dD" "-H" "-D__STATIC__" "-D_REENTRANT" "-D" "ARG4" "-U" "ARG5" "-A" "ARG6" "-D" "ARG7" "-U" "ARG8" "-A" "ARG9" "-include" "ARG10" ".*darwin-cc.c" "-D_MUDFLAP" "-include" "mf-runtime.h" "-m32" "-mkernel" "-mtune=core2" "-mmacosx-version-min=10.6.0" "-ansi" "-std=c99" "-trigraphs" "-Werror" "-pedantic" "-Wmost" "-w" "-fast" "-fno-eliminate-unused-debug-symbols" "-fFOO" "-fmudflap" "-O2" "-undef" "-fpch-preprocess" "-o" ".*darwin-cc.i"}}
+end_comment
+
+begin_comment
+comment|// CHECK: {{ ".*cc1.*" "-fpreprocessed" ".*darwin-cc.i" "-O3" "-dumpbase" ".*darwin-cc.c" "-dA" "-m32" "-mkernel" "-mtune=core2" "-mmacosx-version-min=10.6.0" "-ansi" "-aFOO" "-auxbase-strip" "[^"]*/OUTPUTNAME" "-g" "-g0" "-g" "-g3" "-O2" "-Werror" "-pedantic" "-Wmost" "-w" "-ansi" "-std=c99" "-trigraphs" "-version" "-p" "-fast" "-fno-eliminate-unused-debug-symbols" "-fFOO" "-fmudflap" "-undef" "-fno-ident" "-o" "[^"]*/OUTPUTNAME" "--param" "a=b" "-fno-builtin" "-fno-merge-constants" "-fprofile-arcs" "-ftest-coverage"}}
 end_comment
 
 end_unit

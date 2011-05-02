@@ -95,6 +95,12 @@ directive|include
 file|"clang/Basic/Linkage.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -496,90 +502,16 @@ else|:
 literal|""
 return|;
 block|}
-name|llvm
-operator|::
-name|StringRef
-name|getMessageUnavailableAttr
-argument_list|(
-argument|bool unavailable
-argument_list|)
-specifier|const
-block|{
-if|if
-condition|(
-operator|!
-name|unavailable
-condition|)
-return|return
-literal|""
-return|;
-if|if
-condition|(
-specifier|const
-name|UnavailableAttr
-modifier|*
-name|UA
-init|=
-name|getAttr
-operator|<
-name|UnavailableAttr
-operator|>
-operator|(
-operator|)
-condition|)
-return|return
-name|UA
-operator|->
-name|getMessage
-argument_list|()
-return|;
-return|return
-literal|""
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
 comment|/// getNameAsString - Get a human-readable name for the declaration, even if
-end_comment
-
-begin_comment
 comment|/// it is one of the special kinds of names (C++ constructor, Objective-C
-end_comment
-
-begin_comment
 comment|/// selector, etc).  Creating this name requires expensive string
-end_comment
-
-begin_comment
 comment|/// manipulation, so it should be called only when performance doesn't matter.
-end_comment
-
-begin_comment
 comment|/// For simple declarations, getNameAsCString() should suffice.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// FIXME: This function should be renamed to indicate that it is not just an
-end_comment
-
-begin_comment
 comment|// alternate form of getName(), and clients should move as appropriate.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// FIXME: Deprecated, move clients to getName().
-end_comment
-
-begin_expr_stmt
 name|std
 operator|::
 name|string
@@ -594,19 +526,12 @@ name|getAsString
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_decl_stmt
 name|void
 name|printName
 argument_list|(
-name|llvm
-operator|::
-name|raw_ostream
-operator|&
-name|os
+argument|llvm::raw_ostream&os
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|Name
@@ -617,17 +542,8 @@ name|os
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// getDeclName - Get the actual, stored name of the declaration,
-end_comment
-
-begin_comment
 comment|/// which may be a special name.
-end_comment
-
-begin_expr_stmt
 name|DeclarationName
 name|getDeclName
 argument_list|()
@@ -637,62 +553,30 @@ return|return
 name|Name
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Set the name of this declaration.
-end_comment
-
-begin_function
 name|void
 name|setDeclName
-parameter_list|(
-name|DeclarationName
-name|N
-parameter_list|)
+argument_list|(
+argument|DeclarationName N
+argument_list|)
 block|{
 name|Name
 operator|=
 name|N
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
+block|; }
 comment|/// getQualifiedNameAsString - Returns human-readable qualified name for
-end_comment
-
-begin_comment
 comment|/// declaration, like A::B::i, for i being member of namespace A::B.
-end_comment
-
-begin_comment
 comment|/// If declaration is not member of context which can be named (record,
-end_comment
-
-begin_comment
 comment|/// namespace), it will return same result as getNameAsString().
-end_comment
-
-begin_comment
 comment|/// Creating this name is expensive, so it should be called only when
-end_comment
-
-begin_comment
 comment|/// performance doesn't matter.
-end_comment
-
-begin_expr_stmt
 name|std
 operator|::
 name|string
 name|getQualifiedNameAsString
 argument_list|()
 specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|std
 operator|::
 name|string
@@ -701,65 +585,27 @@ argument_list|(
 argument|const PrintingPolicy&Policy
 argument_list|)
 specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+block|;
 comment|/// getNameForDiagnostic - Appends a human-readable name for this
-end_comment
-
-begin_comment
 comment|/// declaration into the given string.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This is the method invoked by Sema when displaying a NamedDecl
-end_comment
-
-begin_comment
 comment|/// in a diagnostic.  It does not necessarily produce the same
-end_comment
-
-begin_comment
 comment|/// result as getNameAsString(); for example, class template
-end_comment
-
-begin_comment
 comment|/// specializations are printed with their template arguments.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// TODO: use an API that doesn't require so many temporary strings
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|void
 name|getNameForDiagnostic
 argument_list|(
-name|std
-operator|::
-name|string
-operator|&
-name|S
+argument|std::string&S
 argument_list|,
-specifier|const
-name|PrintingPolicy
-operator|&
-name|Policy
+argument|const PrintingPolicy&Policy
 argument_list|,
-name|bool
-name|Qualified
+argument|bool Qualified
 argument_list|)
-decl|const
+specifier|const
 block|{
 if|if
 condition|(
@@ -779,65 +625,27 @@ name|getNameAsString
 argument_list|()
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// declarationReplaces - Determine whether this declaration, if
-end_comment
-
-begin_comment
 comment|/// known to be well-formed within its context, will replace the
-end_comment
-
-begin_comment
 comment|/// declaration OldD if introduced into scope. A declaration will
-end_comment
-
-begin_comment
 comment|/// replace another declaration if, for example, it is a
-end_comment
-
-begin_comment
 comment|/// redeclaration of the same variable or function, but not if it is
-end_comment
-
-begin_comment
 comment|/// a declaration of a different kind (function vs. class) or an
-end_comment
-
-begin_comment
 comment|/// overloaded function.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|declarationReplaces
 argument_list|(
-name|NamedDecl
-operator|*
-name|OldD
+argument|NamedDecl *OldD
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// \brief Determine whether this declaration has linkage.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasLinkage
 argument_list|()
 specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+block|;
 comment|/// \brief Determine whether this declaration is a C++ class member.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isCXXClassMember
 argument_list|()
@@ -872,38 +680,19 @@ operator|->
 name|getParent
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|DC
 operator|->
 name|isRecord
 argument_list|()
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|/// \brief Given that this declaration is a C++ class member,
-end_comment
-
-begin_comment
 comment|/// determine whether it's an instance member of its class.
-end_comment
-
-begin_macro
-unit|bool
+name|bool
 name|isCXXInstanceMember
-argument_list|()
-end_macro
-
-begin_decl_stmt
-specifier|const
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|()
+function|const;
 name|class
 name|LinkageInfo
 block|{
@@ -1287,29 +1076,14 @@ name|L
 return|;
 block|}
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/// \brief Determine what kind of linkage this entity has.
-end_comment
-
-begin_expr_stmt
 name|Linkage
 name|getLinkage
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determines the visibility of this entity.
-end_comment
-
-begin_expr_stmt
 name|Visibility
 name|getVisibility
 argument_list|()
@@ -1323,52 +1097,37 @@ name|visibility
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determines the linkage and visibility of this entity.
-end_comment
-
-begin_expr_stmt
 name|LinkageInfo
 name|getLinkageAndVisibility
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
+comment|/// \brief If visibility was explicitly specified for this
+comment|/// declaration, return that visibility.
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|Visibility
+operator|>
+name|getExplicitVisibility
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Clear the linkage cache in response to a change
-end_comment
-
-begin_comment
 comment|/// to the declaration.
-end_comment
-
-begin_function_decl
 name|void
 name|ClearLinkageCache
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Looks through UsingDecls and ObjCCompatibleAliasDecls for
-end_comment
-
-begin_comment
 comment|/// the underlying named decl.
-end_comment
-
-begin_function_decl
 name|NamedDecl
 modifier|*
 name|getUnderlyingDecl
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_expr_stmt
 specifier|const
 name|NamedDecl
 operator|*
@@ -1390,9 +1149,6 @@ name|getUnderlyingDecl
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 specifier|static
 name|bool
 name|classof
@@ -1413,9 +1169,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|bool
 name|classof
@@ -1430,9 +1183,6 @@ return|return
 name|true
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|bool
 name|classofKind
@@ -1451,10 +1201,14 @@ operator|<=
 name|lastNamed
 return|;
 block|}
-end_function
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_expr_stmt
-unit|};
 specifier|inline
 name|llvm
 operator|::
@@ -1522,15 +1276,23 @@ name|LabelStmt
 operator|*
 name|TheStmt
 block|;
+comment|/// LocStart - For normal labels, this is the same as the main declaration
+comment|/// label, i.e., the location of the identifier; for GNU local labels,
+comment|/// this is the location of the __label__ keyword.
+name|SourceLocation
+name|LocStart
+block|;
 name|LabelDecl
 argument_list|(
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation IdentL
 argument_list|,
 argument|IdentifierInfo *II
 argument_list|,
 argument|LabelStmt *S
+argument_list|,
+argument|SourceLocation StartL
 argument_list|)
 operator|:
 name|NamedDecl
@@ -1539,14 +1301,19 @@ name|Label
 argument_list|,
 name|DC
 argument_list|,
-name|L
+name|IdentL
 argument_list|,
 name|II
 argument_list|)
 block|,
 name|TheStmt
 argument_list|(
-argument|S
+name|S
+argument_list|)
+block|,
+name|LocStart
+argument_list|(
+argument|StartL
 argument_list|)
 block|{}
 name|public
@@ -1560,9 +1327,25 @@ argument|ASTContext&C
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation IdentL
 argument_list|,
 argument|IdentifierInfo *II
+argument_list|)
+block|;
+specifier|static
+name|LabelDecl
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation IdentL
+argument_list|,
+argument|IdentifierInfo *II
+argument_list|,
+argument|SourceLocation GnuLabelL
 argument_list|)
 block|;
 name|LabelStmt
@@ -1585,6 +1368,43 @@ name|TheStmt
 operator|=
 name|T
 block|; }
+name|bool
+name|isGnuLocal
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LocStart
+operator|!=
+name|getLocation
+argument_list|()
+return|;
+block|}
+name|void
+name|setLocStart
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|LocStart
+operator|=
+name|L
+block|; }
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|LocStart
+argument_list|,
+name|getLocation
+argument_list|()
+argument_list|)
+return|;
+block|}
 comment|// Implement isa/cast/dyncast/etc.
 specifier|static
 name|bool
@@ -1644,10 +1464,14 @@ name|IsInline
 operator|:
 literal|1
 block|;
+comment|/// LocStart - The starting location of the source range, pointing
+comment|/// to either the namespace or the inline keyword.
 name|SourceLocation
-name|LBracLoc
-block|,
-name|RBracLoc
+name|LocStart
+block|;
+comment|/// RBraceLoc - The ending location of the source range.
+name|SourceLocation
+name|RBraceLoc
 block|;
 comment|// For extended namespace definitions:
 comment|//
@@ -1690,7 +1514,9 @@ name|NamespaceDecl
 argument_list|(
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|IdentifierInfo *Id
 argument_list|)
@@ -1701,7 +1527,7 @@ name|Namespace
 argument_list|,
 name|DC
 argument_list|,
-name|L
+name|IdLoc
 argument_list|,
 name|Id
 argument_list|)
@@ -1715,6 +1541,14 @@ name|IsInline
 argument_list|(
 name|false
 argument_list|)
+block|,
+name|LocStart
+argument_list|(
+name|StartLoc
+argument_list|)
+block|,
+name|RBraceLoc
+argument_list|()
 block|,
 name|NextNamespace
 argument_list|()
@@ -1737,7 +1571,9 @@ argument|ASTContext&C
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|IdentifierInfo *Id
 argument_list|)
@@ -1940,6 +1776,9 @@ name|D
 operator|->
 name|getParent
 argument_list|()
+operator|->
+name|getRedeclContext
+argument_list|()
 operator|==
 name|this
 argument_list|)
@@ -1986,50 +1825,49 @@ block|{
 return|return
 name|SourceRange
 argument_list|(
-name|getLocation
-argument_list|()
+name|LocStart
 argument_list|,
-name|RBracLoc
+name|RBraceLoc
 argument_list|)
 return|;
 block|}
 name|SourceLocation
-name|getLBracLoc
+name|getLocStart
 argument_list|()
 specifier|const
 block|{
 return|return
-name|LBracLoc
+name|LocStart
 return|;
 block|}
 name|SourceLocation
-name|getRBracLoc
+name|getRBraceLoc
 argument_list|()
 specifier|const
 block|{
 return|return
-name|RBracLoc
+name|RBraceLoc
 return|;
 block|}
 name|void
-name|setLBracLoc
+name|setLocStart
 argument_list|(
 argument|SourceLocation L
 argument_list|)
 block|{
-name|LBracLoc
+name|LocStart
 operator|=
 name|L
 block|; }
 name|void
-name|setRBracLoc
+name|setRBraceLoc
 argument_list|(
-argument|SourceLocation R
+argument|SourceLocation L
 argument_list|)
 block|{
-name|RBracLoc
+name|RBraceLoc
 operator|=
-name|R
+name|L
 block|; }
 comment|// Implement isa/cast/dyncast/etc.
 specifier|static
@@ -2266,13 +2104,18 @@ block|{
 name|NestedNameSpecifierLoc
 name|QualifierLoc
 block|;
-comment|/// NumTemplParamLists - The number of template parameter lists
-comment|/// that were matched against the template-ids occurring into the NNS.
+comment|/// NumTemplParamLists - The number of "outer" template parameter lists.
+comment|/// The count includes all of the template parameter lists that were matched
+comment|/// against the template-ids occurring into the NNS and possibly (in the
+comment|/// case of an explicit specialization) a final "template<>".
 name|unsigned
 name|NumTemplParamLists
 block|;
 comment|/// TemplParamLists - A new-allocated array of size NumTemplParamLists,
-comment|/// containing pointers to the matched template parameter lists.
+comment|/// containing pointers to the "outer" template parameter lists.
+comment|/// It includes all of the template parameter lists that were matched
+comment|/// against the template-ids occurring into the NNS and possibly (in the
+comment|/// case of an explicit specialization) a final "template<>".
 name|TemplateParameterList
 operator|*
 operator|*
@@ -2295,7 +2138,7 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
-comment|/// setTemplateParameterListsInfo - Sets info about matched template
+comment|/// setTemplateParameterListsInfo - Sets info about "outer" template
 comment|/// parameter lists.
 name|void
 name|setTemplateParameterListsInfo
@@ -2360,6 +2203,11 @@ name|ExtInfo
 operator|*
 operator|>
 name|DeclInfo
+block|;
+comment|/// InnerLocStart - The start of the source range for this declaration,
+comment|/// ignoring outer template declarations.
+name|SourceLocation
+name|InnerLocStart
 block|;
 name|bool
 name|hasExtInfo
@@ -2429,6 +2277,8 @@ argument_list|,
 argument|QualType T
 argument_list|,
 argument|TypeSourceInfo *TInfo
+argument_list|,
+argument|SourceLocation StartL
 argument_list|)
 operator|:
 name|ValueDecl
@@ -2446,9 +2296,14 @@ argument_list|)
 block|,
 name|DeclInfo
 argument_list|(
-argument|TInfo
+name|TInfo
 argument_list|)
-block|{}
+block|,
+name|InnerLocStart
+argument_list|(
+argument|StartL
+argument_list|)
+block|{   }
 name|public
 operator|:
 name|TypeSourceInfo
@@ -2503,17 +2358,25 @@ expr_stmt|;
 block|}
 comment|/// getInnerLocStart - Return SourceLocation representing start of source
 comment|/// range ignoring outer template declarations.
-name|virtual
 name|SourceLocation
 name|getInnerLocStart
 argument_list|()
 specifier|const
 block|{
 return|return
-name|getLocation
-argument_list|()
+name|InnerLocStart
 return|;
 block|}
+name|void
+name|setInnerLocStart
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|InnerLocStart
+operator|=
+name|L
+block|; }
 comment|/// getOuterLocStart - Return SourceLocation representing start of source
 comment|/// range taking into account any outer template declarations.
 name|SourceLocation
@@ -2521,22 +2384,12 @@ name|getOuterLocStart
 argument_list|()
 specifier|const
 block|;
+name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
-block|{
-return|return
-name|SourceRange
-argument_list|(
-name|getOuterLocStart
-argument_list|()
-argument_list|,
-name|getLocation
-argument_list|()
-argument_list|)
-return|;
-block|}
+block|;
 comment|/// \brief Retrieve the nested-name-specifier that qualifies the name of this
 comment|/// declaration, if it was present in the source.
 name|NestedNameSpecifier
@@ -2639,19 +2492,7 @@ argument|unsigned NumTPLists
 argument_list|,
 argument|TemplateParameterList **TPLists
 argument_list|)
-block|{
-name|getExtInfo
-argument_list|()
-operator|->
-name|setTemplateParameterListsInfo
-argument_list|(
-name|Context
-argument_list|,
-name|NumTPLists
-argument_list|,
-name|TPLists
-argument_list|)
-block|;   }
+block|;
 name|SourceLocation
 name|getTypeSpecStartLoc
 argument_list|()
@@ -2866,71 +2707,84 @@ name|private
 label|:
 end_label
 
-begin_comment
-comment|// FIXME: This can be packed into the bitfields in Decl.
-end_comment
-
 begin_decl_stmt
+name|class
+name|VarDeclBitfields
+block|{
+name|friend
+name|class
+name|VarDecl
+decl_stmt|;
+name|friend
+name|class
+name|ASTDeclReader
+decl_stmt|;
 name|unsigned
 name|SClass
 range|:
 literal|3
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|unsigned
 name|SClassAsWritten
 range|:
 literal|3
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|bool
+name|unsigned
 name|ThreadSpecified
 range|:
 literal|1
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|bool
+name|unsigned
 name|HasCXXDirectInit
 range|:
 literal|1
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Whether this variable is the exception variable in a C++ catch
-end_comment
-
-begin_comment
 comment|/// or an Objective-C @catch statement.
-end_comment
-
-begin_decl_stmt
-name|bool
+name|unsigned
 name|ExceptionVar
 range|:
 literal|1
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Whether this local variable could be allocated in the return
-end_comment
-
-begin_comment
 comment|/// slot of its function, enabling the named return value optimization (NRVO).
-end_comment
-
-begin_decl_stmt
-name|bool
+name|unsigned
 name|NRVOVariable
 range|:
 literal|1
+decl_stmt|;
+comment|/// \brief Whether this variable is the for-range-declaration in a C++0x
+comment|/// for-range statement.
+name|unsigned
+name|CXXForRangeDecl
+range|:
+literal|1
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_enum
+enum|enum
+block|{
+name|NumVarDeclBits
+init|=
+literal|13
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|// two reserved bits for now
+end_comment
+
+begin_decl_stmt
+name|friend
+name|class
+name|ASTDeclReader
 decl_stmt|;
 end_decl_stmt
 
@@ -2941,17 +2795,84 @@ name|StmtIteratorBase
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|friend
-name|class
-name|ASTDeclReader
-decl_stmt|;
-end_decl_stmt
-
 begin_label
 name|protected
 label|:
 end_label
+
+begin_decl_stmt
+name|class
+name|ParmVarDeclBitfields
+block|{
+name|friend
+name|class
+name|ParmVarDecl
+decl_stmt|;
+name|friend
+name|class
+name|ASTDeclReader
+decl_stmt|;
+name|unsigned
+label|:
+name|NumVarDeclBits
+expr_stmt|;
+comment|/// Whether this parameter inherits a default argument from a
+comment|/// prior declaration.
+name|unsigned
+name|HasInheritedDefaultArg
+range|:
+literal|1
+decl_stmt|;
+comment|/// Whether this parameter undergoes K&R argument promotion.
+name|unsigned
+name|IsKNRPromoted
+range|:
+literal|1
+decl_stmt|;
+comment|/// Whether this parameter is an ObjC method parameter or not.
+name|unsigned
+name|IsObjCMethodParam
+range|:
+literal|1
+decl_stmt|;
+comment|/// If IsObjCMethodParam, a Decl::ObjCDeclQualifier.
+comment|/// Otherwise, the number of function parameter scopes enclosing
+comment|/// the function parameter scope in which this parameter was
+comment|/// declared.
+name|unsigned
+name|ScopeDepthOrObjCQuals
+range|:
+literal|8
+decl_stmt|;
+comment|/// The number of parameters preceding this parameter in the
+comment|/// function parameter scope in which it was declared.
+name|unsigned
+name|ParameterIndex
+range|:
+literal|8
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_union
+union|union
+block|{
+name|unsigned
+name|AllBits
+decl_stmt|;
+name|VarDeclBitfields
+name|VarDeclBits
+decl_stmt|;
+name|ParmVarDeclBitfields
+name|ParmVarDeclBits
+decl_stmt|;
+block|}
+union|;
+end_union
 
 begin_macro
 name|VarDecl
@@ -2960,7 +2881,9 @@ argument|Kind DK
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
@@ -2982,46 +2905,64 @@ name|DK
 argument_list|,
 name|DC
 argument_list|,
-name|L
+name|IdLoc
 argument_list|,
 name|Id
 argument_list|,
 name|T
 argument_list|,
 name|TInfo
+argument_list|,
+name|StartLoc
 argument_list|)
 operator|,
 name|Init
 argument_list|()
-operator|,
-name|ThreadSpecified
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|HasCXXDirectInit
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|ExceptionVar
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|NRVOVariable
-argument_list|(
-argument|false
-argument_list|)
 block|{
+name|assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|VarDeclBitfields
+argument_list|)
+operator|<=
+sizeof|sizeof
+argument_list|(
+name|unsigned
+argument_list|)
+argument_list|)
+block|;
+name|assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|ParmVarDeclBitfields
+argument_list|)
+operator|<=
+sizeof|sizeof
+argument_list|(
+name|unsigned
+argument_list|)
+argument_list|)
+block|;
+name|AllBits
+operator|=
+literal|0
+block|;
+name|VarDeclBits
+operator|.
 name|SClass
 operator|=
 name|SC
 block|;
+name|VarDeclBits
+operator|.
 name|SClassAsWritten
 operator|=
 name|SCAsWritten
-block|;   }
+block|;
+comment|// Everything else is implicitly initialized to false.
+block|}
 end_expr_stmt
 
 begin_typedef
@@ -3109,7 +3050,10 @@ modifier|*
 name|DC
 parameter_list|,
 name|SourceLocation
-name|L
+name|StartLoc
+parameter_list|,
+name|SourceLocation
+name|IdLoc
 parameter_list|,
 name|IdentifierInfo
 modifier|*
@@ -3133,15 +3077,6 @@ end_function_decl
 
 begin_expr_stmt
 name|virtual
-name|SourceLocation
-name|getInnerLocStart
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -3159,6 +3094,8 @@ return|return
 operator|(
 name|StorageClass
 operator|)
+name|VarDeclBits
+operator|.
 name|SClass
 return|;
 block|}
@@ -3174,6 +3111,8 @@ return|return
 operator|(
 name|StorageClass
 operator|)
+name|VarDeclBits
+operator|.
 name|SClassAsWritten
 return|;
 block|}
@@ -3205,6 +3144,8 @@ name|SC
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|VarDeclBits
+operator|.
 name|SClassAsWritten
 operator|=
 name|SC
@@ -3220,6 +3161,8 @@ name|bool
 name|T
 parameter_list|)
 block|{
+name|VarDeclBits
+operator|.
 name|ThreadSpecified
 operator|=
 name|T
@@ -3234,6 +3177,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|VarDeclBits
+operator|.
 name|ThreadSpecified
 return|;
 block|}
@@ -4601,6 +4546,8 @@ argument_list|(
 argument|bool T
 argument_list|)
 block|{
+name|VarDeclBits
+operator|.
 name|HasCXXDirectInit
 operator|=
 name|T
@@ -4617,6 +4564,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|VarDeclBits
+operator|.
 name|HasCXXDirectInit
 return|;
 block|}
@@ -4637,6 +4586,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|VarDeclBits
+operator|.
 name|ExceptionVar
 return|;
 block|}
@@ -4650,6 +4601,8 @@ name|bool
 name|EV
 parameter_list|)
 block|{
+name|VarDeclBits
+operator|.
 name|ExceptionVar
 operator|=
 name|EV
@@ -4704,6 +4657,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|VarDeclBits
+operator|.
 name|NRVOVariable
 return|;
 block|}
@@ -4717,9 +4672,50 @@ name|bool
 name|NRVO
 parameter_list|)
 block|{
+name|VarDeclBits
+operator|.
 name|NRVOVariable
 operator|=
 name|NRVO
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Determine whether this variable is the for-range-declaration in
+end_comment
+
+begin_comment
+comment|/// a C++0x for-range statement.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isCXXForRangeDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VarDeclBits
+operator|.
+name|CXXForRangeDecl
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setCXXForRangeDecl
+parameter_list|(
+name|bool
+name|FRD
+parameter_list|)
+block|{
+name|VarDeclBits
+operator|.
+name|CXXForRangeDecl
+operator|=
+name|FRD
 expr_stmt|;
 block|}
 end_function
@@ -4890,7 +4886,7 @@ argument|ASTContext&C
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation IdLoc
 argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
@@ -4901,11 +4897,11 @@ name|ImplicitParamDecl
 argument_list|(
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation loc
+argument|SourceLocation IdLoc
 argument_list|,
-argument|IdentifierInfo *name
+argument|IdentifierInfo *Id
 argument_list|,
-argument|QualType type
+argument|QualType Type
 argument_list|)
 operator|:
 name|VarDecl
@@ -4914,11 +4910,13 @@ argument|ImplicitParam
 argument_list|,
 argument|DC
 argument_list|,
-argument|loc
+argument|IdLoc
 argument_list|,
-argument|name
+argument|IdLoc
 argument_list|,
-argument|type
+argument|Id
+argument_list|,
+argument|Type
 argument_list|,
 comment|/*tinfo*/
 literal|0
@@ -4975,25 +4973,27 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ParmVarDecl - Represent a parameter to a function.
+comment|/// ParmVarDecl - Represents a parameter to a function.
 name|class
 name|ParmVarDecl
 operator|:
 name|public
 name|VarDecl
 block|{
-comment|// NOTE: VC++ treats enums as signed, avoid using the ObjCDeclQualifier enum
-comment|/// FIXME: Also can be paced into the bitfields in Decl.
-comment|/// in, inout, etc.
-name|unsigned
-name|objcDeclQualifier
+name|public
 operator|:
-literal|6
-block|;
-name|bool
-name|HasInheritedDefaultArg
-operator|:
-literal|1
+expr|enum
+block|{
+name|MaxFunctionScopeDepth
+operator|=
+literal|255
+block|}
+block|;   enum
+block|{
+name|MaxFunctionScopeIndex
+operator|=
+literal|255
+block|}
 block|;
 name|protected
 operator|:
@@ -5003,7 +5003,9 @@ argument|Kind DK
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
@@ -5020,33 +5022,52 @@ argument_list|)
 operator|:
 name|VarDecl
 argument_list|(
-name|DK
+argument|DK
 argument_list|,
-name|DC
+argument|DC
 argument_list|,
-name|L
+argument|StartLoc
 argument_list|,
-name|Id
+argument|IdLoc
 argument_list|,
-name|T
+argument|Id
 argument_list|,
-name|TInfo
+argument|T
 argument_list|,
-name|S
+argument|TInfo
 argument_list|,
-name|SCAsWritten
-argument_list|)
-block|,
-name|objcDeclQualifier
-argument_list|(
-name|OBJC_TQ_None
-argument_list|)
-block|,
-name|HasInheritedDefaultArg
-argument_list|(
-argument|false
+argument|S
+argument_list|,
+argument|SCAsWritten
 argument_list|)
 block|{
+name|assert
+argument_list|(
+name|ParmVarDeclBits
+operator|.
+name|HasInheritedDefaultArg
+operator|==
+name|false
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|ParmVarDeclBits
+operator|.
+name|IsKNRPromoted
+operator|==
+name|false
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|ParmVarDeclBits
+operator|.
+name|IsObjCMethodParam
+operator|==
+name|false
+argument_list|)
+block|;
 name|setDefaultArg
 argument_list|(
 name|DefArg
@@ -5063,7 +5084,9 @@ argument|ASTContext&C
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
@@ -5078,33 +5101,250 @@ argument_list|,
 argument|Expr *DefArg
 argument_list|)
 block|;
+name|void
+name|setObjCMethodScopeInfo
+argument_list|(
+argument|unsigned parameterIndex
+argument_list|)
+block|{
+name|ParmVarDeclBits
+operator|.
+name|IsObjCMethodParam
+operator|=
+name|true
+block|;
+name|ParmVarDeclBits
+operator|.
+name|ParameterIndex
+operator|=
+name|parameterIndex
+block|;
+name|assert
+argument_list|(
+name|ParmVarDeclBits
+operator|.
+name|ParameterIndex
+operator|==
+name|parameterIndex
+operator|&&
+literal|"truncation!"
+argument_list|)
+block|;   }
+name|void
+name|setScopeInfo
+argument_list|(
+argument|unsigned scopeDepth
+argument_list|,
+argument|unsigned parameterIndex
+argument_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|ParmVarDeclBits
+operator|.
+name|IsObjCMethodParam
+argument_list|)
+block|;
+name|ParmVarDeclBits
+operator|.
+name|ScopeDepthOrObjCQuals
+operator|=
+name|scopeDepth
+block|;
+name|assert
+argument_list|(
+name|ParmVarDeclBits
+operator|.
+name|ScopeDepthOrObjCQuals
+operator|==
+name|scopeDepth
+operator|&&
+literal|"truncation!"
+argument_list|)
+block|;
+name|ParmVarDeclBits
+operator|.
+name|ParameterIndex
+operator|=
+name|parameterIndex
+block|;
+name|assert
+argument_list|(
+name|ParmVarDeclBits
+operator|.
+name|ParameterIndex
+operator|==
+name|parameterIndex
+operator|&&
+literal|"truncation!"
+argument_list|)
+block|;   }
+name|bool
+name|isObjCMethodParameter
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ParmVarDeclBits
+operator|.
+name|IsObjCMethodParam
+return|;
+block|}
+name|unsigned
+name|getFunctionScopeDepth
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|ParmVarDeclBits
+operator|.
+name|IsObjCMethodParam
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|ParmVarDeclBits
+operator|.
+name|ScopeDepthOrObjCQuals
+return|;
+block|}
+comment|/// Returns the index of this parameter in its prototype or method scope.
+name|unsigned
+name|getFunctionScopeIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ParmVarDeclBits
+operator|.
+name|ParameterIndex
+return|;
+block|}
 name|ObjCDeclQualifier
 name|getObjCDeclQualifier
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+operator|!
+name|ParmVarDeclBits
+operator|.
+name|IsObjCMethodParam
+condition|)
+return|return
+name|OBJC_TQ_None
+return|;
 return|return
 name|ObjCDeclQualifier
 argument_list|(
-name|objcDeclQualifier
+name|ParmVarDeclBits
+operator|.
+name|ScopeDepthOrObjCQuals
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_function
 name|void
 name|setObjCDeclQualifier
-argument_list|(
-argument|ObjCDeclQualifier QTVal
-argument_list|)
+parameter_list|(
+name|ObjCDeclQualifier
+name|QTVal
+parameter_list|)
 block|{
-name|objcDeclQualifier
+name|assert
+argument_list|(
+name|ParmVarDeclBits
+operator|.
+name|IsObjCMethodParam
+argument_list|)
+expr_stmt|;
+name|ParmVarDeclBits
+operator|.
+name|ScopeDepthOrObjCQuals
 operator|=
 name|QTVal
-block|;   }
-name|Expr
-operator|*
-name|getDefaultArg
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// True if the value passed to this parameter must undergo
+end_comment
+
+begin_comment
+comment|/// K&R-style default argument promotion:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// C99 6.5.2.2.
+end_comment
+
+begin_comment
+comment|///   If the expression that denotes the called function has a type
+end_comment
+
+begin_comment
+comment|///   that does not include a prototype, the integer promotions are
+end_comment
+
+begin_comment
+comment|///   performed on each argument, and arguments that have type float
+end_comment
+
+begin_comment
+comment|///   are promoted to double.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isKNRPromoted
 argument_list|()
-block|;
+specifier|const
+block|{
+return|return
+name|ParmVarDeclBits
+operator|.
+name|IsKNRPromoted
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setKNRPromoted
+parameter_list|(
+name|bool
+name|promoted
+parameter_list|)
+block|{
+name|ParmVarDeclBits
+operator|.
+name|IsKNRPromoted
+operator|=
+name|promoted
+expr_stmt|;
+block|}
+end_function
+
+begin_function_decl
+name|Expr
+modifier|*
+name|getDefaultArg
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
 specifier|const
 name|Expr
 operator|*
@@ -5126,11 +5366,16 @@ name|getDefaultArg
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setDefaultArg
-argument_list|(
-argument|Expr *defarg
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|defarg
+parameter_list|)
 block|{
 name|Init
 operator|=
@@ -5142,27 +5387,39 @@ operator|>
 operator|(
 name|defarg
 operator|)
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
 name|unsigned
 name|getNumDefaultArgTemporaries
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
 name|CXXTemporary
-operator|*
+modifier|*
 name|getDefaultArgTemporary
-argument_list|(
-argument|unsigned i
-argument_list|)
-block|;
+parameter_list|(
+name|unsigned
+name|i
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
 specifier|const
 name|CXXTemporary
-operator|*
+modifier|*
 name|getDefaultArgTemporary
 argument_list|(
-argument|unsigned i
+name|unsigned
+name|i
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|const_cast
@@ -5180,18 +5437,32 @@ name|i
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Retrieve the source range that covers the entire default
+end_comment
+
+begin_comment
 comment|/// argument.
+end_comment
+
+begin_expr_stmt
 name|SourceRange
 name|getDefaultArgRange
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_function
 name|void
 name|setUninstantiatedDefaultArg
-argument_list|(
-argument|Expr *arg
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|arg
+parameter_list|)
 block|{
 name|Init
 operator|=
@@ -5203,11 +5474,15 @@ operator|>
 operator|(
 name|arg
 operator|)
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|Expr
-operator|*
+modifier|*
 name|getUninstantiatedDefaultArg
-argument_list|()
+parameter_list|()
 block|{
 return|return
 operator|(
@@ -5225,6 +5500,9 @@ operator|(
 operator|)
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 specifier|const
 name|Expr
 operator|*
@@ -5249,8 +5527,17 @@ operator|(
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// hasDefaultArg - Determines whether this parameter has a default argument,
+end_comment
+
+begin_comment
 comment|/// either parsed or not.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|hasDefaultArg
 argument_list|()
@@ -5267,16 +5554,49 @@ name|hasUninstantiatedDefaultArg
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// hasUnparsedDefaultArg - Determines whether this parameter has a
+end_comment
+
+begin_comment
 comment|/// default argument that has not yet been parsed. This will occur
+end_comment
+
+begin_comment
 comment|/// during the processing of a C++ class whose member functions have
+end_comment
+
+begin_comment
 comment|/// default arguments, e.g.,
+end_comment
+
+begin_comment
 comment|/// @code
+end_comment
+
+begin_comment
 comment|///   class X {
+end_comment
+
+begin_comment
 comment|///   public:
+end_comment
+
+begin_comment
 comment|///     void f(int x = 17); // x has an unparsed default argument now
+end_comment
+
+begin_comment
 comment|///   }; // x has a regular default argument now
+end_comment
+
+begin_comment
 comment|/// @endcode
+end_comment
+
+begin_expr_stmt
 name|bool
 name|hasUnparsedDefaultArg
 argument_list|()
@@ -5294,6 +5614,9 @@ operator|(
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|hasUninstantiatedDefaultArg
 argument_list|()
@@ -5311,14 +5634,32 @@ operator|(
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// setUnparsedDefaultArg - Specify that this parameter has an
+end_comment
+
+begin_comment
 comment|/// unparsed default argument. The argument will be replaced with a
+end_comment
+
+begin_comment
 comment|/// real default argument via setDefaultArg when the class
+end_comment
+
+begin_comment
 comment|/// definition enclosing the function declaration that owns this
+end_comment
+
+begin_comment
 comment|/// default argument is completed.
+end_comment
+
+begin_function
 name|void
 name|setUnparsedDefaultArg
-argument_list|()
+parameter_list|()
 block|{
 name|Init
 operator|=
@@ -5327,26 +5668,44 @@ name|UnparsedDefaultArgument
 operator|*
 operator|)
 literal|0
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
 name|bool
 name|hasInheritedDefaultArg
 argument_list|()
 specifier|const
 block|{
 return|return
+name|ParmVarDeclBits
+operator|.
 name|HasInheritedDefaultArg
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setHasInheritedDefaultArg
-argument_list|(
-argument|bool I = true
-argument_list|)
+parameter_list|(
+name|bool
+name|I
+init|=
+name|true
+parameter_list|)
 block|{
+name|ParmVarDeclBits
+operator|.
 name|HasInheritedDefaultArg
 operator|=
 name|I
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
 name|QualType
 name|getOriginalType
 argument_list|()
@@ -5364,40 +5723,82 @@ operator|->
 name|getType
 argument_list|()
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|getType
 argument_list|()
 return|;
-block|}
+end_return
+
+begin_comment
+unit|}
 comment|/// \brief Determine whether this parameter is actually a function
+end_comment
+
+begin_comment
 comment|/// parameter pack.
-name|bool
+end_comment
+
+begin_macro
+unit|bool
 name|isParameterPack
 argument_list|()
+end_macro
+
+begin_decl_stmt
 specifier|const
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// setOwningFunction - Sets the function declaration that owns this
+end_comment
+
+begin_comment
 comment|/// ParmVarDecl. Since ParmVarDecls are often created before the
+end_comment
+
+begin_comment
 comment|/// FunctionDecls that own them, this routine is required to update
+end_comment
+
+begin_comment
 comment|/// the DeclContext appropriately.
+end_comment
+
+begin_function
 name|void
 name|setOwningFunction
-argument_list|(
-argument|DeclContext *FD
-argument_list|)
+parameter_list|(
+name|DeclContext
+modifier|*
+name|FD
+parameter_list|)
 block|{
 name|setDeclContext
 argument_list|(
 name|FD
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|// Implement isa/cast/dyncast/etc.
+end_comment
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Decl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|classofKind
@@ -5409,23 +5810,33 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const ParmVarDecl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|ParmVarDecl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classofKind
-argument_list|(
-argument|Kind K
-argument_list|)
+parameter_list|(
+name|Kind
+name|K
+parameter_list|)
 block|{
 return|return
 name|K
@@ -5433,36 +5844,71 @@ operator|==
 name|ParmVar
 return|;
 block|}
-expr|}
-block|;
+end_function
+
+begin_comment
+unit|};
 comment|/// FunctionDecl - An instance of this class is created to represent a
+end_comment
+
+begin_comment
 comment|/// function declaration or definition.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Since a given function can be declared several times in a program,
+end_comment
+
+begin_comment
 comment|/// there may be several FunctionDecls that correspond to that
+end_comment
+
+begin_comment
 comment|/// function. Only one of those FunctionDecls will be found when
+end_comment
+
+begin_comment
 comment|/// traversing the list of declarations in the context of the
+end_comment
+
+begin_comment
 comment|/// FunctionDecl (e.g., the translation unit); this FunctionDecl
+end_comment
+
+begin_comment
 comment|/// contains all of the information known about the function. Other,
+end_comment
+
+begin_comment
 comment|/// previous declarations of the function are available via the
+end_comment
+
+begin_comment
 comment|/// getPreviousDeclaration() chain.
+end_comment
+
+begin_decl_stmt
 name|class
 name|FunctionDecl
-operator|:
+range|:
 name|public
 name|DeclaratorDecl
-block|,
+decl_stmt|,
 name|public
 name|DeclContext
-block|,
+decl_stmt|,
 name|public
 name|Redeclarable
-operator|<
+decl|<
 name|FunctionDecl
-operator|>
+decl|>
 block|{
 name|public
-operator|:
+label|:
 typedef|typedef
 name|clang
 operator|::
@@ -5470,7 +5916,7 @@ name|StorageClass
 name|StorageClass
 expr_stmt|;
 comment|/// \brief The kind of templated function a FunctionDecl can be.
-block|enum
+enum|enum
 name|TemplatedKind
 block|{
 name|TK_NonTemplate
@@ -5483,78 +5929,83 @@ name|TK_FunctionTemplateSpecialization
 block|,
 name|TK_DependentFunctionTemplateSpecialization
 block|}
-block|;
+enum|;
 name|private
-operator|:
+label|:
 comment|/// ParamInfo - new[]'d array of pointers to VarDecls for the formal
 comment|/// parameters of this function.  This is null if a prototype or if there are
 comment|/// no formals.
 name|ParmVarDecl
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|ParamInfo
-block|;
+decl_stmt|;
 name|LazyDeclStmtPtr
 name|Body
-block|;
+decl_stmt|;
 comment|// FIXME: This can be packed into the bitfields in Decl.
 comment|// NOTE: VC++ treats enums as signed, avoid using the StorageClass enum
 name|unsigned
 name|SClass
-operator|:
+range|:
 literal|2
-block|;
+decl_stmt|;
 name|unsigned
 name|SClassAsWritten
-operator|:
+range|:
 literal|2
-block|;
+decl_stmt|;
 name|bool
 name|IsInline
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 name|bool
 name|IsInlineSpecified
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 name|bool
 name|IsVirtualAsWritten
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 name|bool
 name|IsPure
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 name|bool
 name|HasInheritedPrototype
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 name|bool
 name|HasWrittenPrototype
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 name|bool
 name|IsDeleted
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 name|bool
 name|IsTrivial
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 comment|// sunk from CXXMethodDecl
 name|bool
 name|HasImplicitReturnZero
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
+name|bool
+name|IsLateTemplateParsed
+range|:
+literal|1
+decl_stmt|;
 comment|/// \brief End part of this FunctionDecl's source range.
 comment|///
 comment|/// We could compute the full range in getSourceRange(). However, when we're
@@ -5564,7 +6015,7 @@ comment|/// de-serialized, so it's far better to have the (sometimes-redundant)
 comment|/// EndRangeLoc.
 name|SourceLocation
 name|EndRangeLoc
-block|;
+decl_stmt|;
 comment|/// \brief The template or declaration that this declaration
 comment|/// describes or was instantiated from, respectively.
 comment|///
@@ -5583,23 +6034,23 @@ name|PointerUnion4
 operator|<
 name|FunctionTemplateDecl
 operator|*
-block|,
+operator|,
 name|MemberSpecializationInfo
 operator|*
-block|,
+operator|,
 name|FunctionTemplateSpecializationInfo
 operator|*
-block|,
+operator|,
 name|DependentFunctionTemplateSpecializationInfo
 operator|*
 operator|>
 name|TemplateOrSpecialization
-block|;
+expr_stmt|;
 comment|/// DNLoc - Provides source/type location info for the
 comment|/// declaration name embedded in the DeclaratorDecl base class.
 name|DeclarationNameLoc
 name|DNLoc
-block|;
+decl_stmt|;
 comment|/// \brief Specify that this function declaration is actually a function
 comment|/// template specialization.
 comment|///
@@ -5623,51 +6074,78 @@ comment|/// \param PointOfInstantiation point at which the function template
 comment|/// specialization was first instantiated.
 name|void
 name|setFunctionTemplateSpecialization
-argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|FunctionTemplateDecl *Template
-argument_list|,
-argument|const TemplateArgumentList *TemplateArgs
-argument_list|,
-argument|void *InsertPos
-argument_list|,
-argument|TemplateSpecializationKind TSK
-argument_list|,
-argument|const TemplateArgumentListInfo *TemplateArgsAsWritten
-argument_list|,
-argument|SourceLocation PointOfInstantiation
-argument_list|)
-block|;
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|FunctionTemplateDecl
+modifier|*
+name|Template
+parameter_list|,
+specifier|const
+name|TemplateArgumentList
+modifier|*
+name|TemplateArgs
+parameter_list|,
+name|void
+modifier|*
+name|InsertPos
+parameter_list|,
+name|TemplateSpecializationKind
+name|TSK
+parameter_list|,
+specifier|const
+name|TemplateArgumentListInfo
+modifier|*
+name|TemplateArgsAsWritten
+parameter_list|,
+name|SourceLocation
+name|PointOfInstantiation
+parameter_list|)
+function_decl|;
 comment|/// \brief Specify that this record is an instantiation of the
 comment|/// member function FD.
 name|void
 name|setInstantiationOfMemberFunction
-argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|FunctionDecl *FD
-argument_list|,
-argument|TemplateSpecializationKind TSK
-argument_list|)
-block|;
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|FunctionDecl
+modifier|*
+name|FD
+parameter_list|,
+name|TemplateSpecializationKind
+name|TSK
+parameter_list|)
+function_decl|;
 name|void
 name|setParams
-argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|ParmVarDecl **NewParamInfo
-argument_list|,
-argument|unsigned NumParams
-argument_list|)
-block|;
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|ParmVarDecl
+modifier|*
+modifier|*
+name|NewParamInfo
+parameter_list|,
+name|unsigned
+name|NumParams
+parameter_list|)
+function_decl|;
 name|protected
-operator|:
+label|:
 name|FunctionDecl
 argument_list|(
 argument|Kind DK
 argument_list|,
 argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation StartLoc
 argument_list|,
 argument|const DeclarationNameInfo&NameInfo
 argument_list|,
@@ -5681,7 +6159,7 @@ argument|StorageClass SCAsWritten
 argument_list|,
 argument|bool isInlineSpecified
 argument_list|)
-operator|:
+block|:
 name|DeclaratorDecl
 argument_list|(
 name|DK
@@ -5701,76 +6179,83 @@ argument_list|,
 name|T
 argument_list|,
 name|TInfo
+argument_list|,
+name|StartLoc
 argument_list|)
-block|,
+operator|,
 name|DeclContext
 argument_list|(
 name|DK
 argument_list|)
-block|,
+operator|,
 name|ParamInfo
 argument_list|(
 literal|0
 argument_list|)
-block|,
+operator|,
 name|Body
 argument_list|()
-block|,
+operator|,
 name|SClass
 argument_list|(
 name|S
 argument_list|)
-block|,
+operator|,
 name|SClassAsWritten
 argument_list|(
 name|SCAsWritten
 argument_list|)
-block|,
+operator|,
 name|IsInline
 argument_list|(
 name|isInlineSpecified
 argument_list|)
-block|,
+operator|,
 name|IsInlineSpecified
 argument_list|(
 name|isInlineSpecified
 argument_list|)
-block|,
+operator|,
 name|IsVirtualAsWritten
 argument_list|(
 name|false
 argument_list|)
-block|,
+operator|,
 name|IsPure
 argument_list|(
 name|false
 argument_list|)
-block|,
+operator|,
 name|HasInheritedPrototype
 argument_list|(
 name|false
 argument_list|)
-block|,
+operator|,
 name|HasWrittenPrototype
 argument_list|(
 name|true
 argument_list|)
-block|,
+operator|,
 name|IsDeleted
 argument_list|(
 name|false
 argument_list|)
-block|,
+operator|,
 name|IsTrivial
 argument_list|(
 name|false
 argument_list|)
-block|,
+operator|,
 name|HasImplicitReturnZero
 argument_list|(
 name|false
 argument_list|)
-block|,
+operator|,
+name|IsLateTemplateParsed
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|EndRangeLoc
 argument_list|(
 name|NameInfo
@@ -5778,10 +6263,10 @@ operator|.
 name|getEndLoc
 argument_list|()
 argument_list|)
-block|,
+operator|,
 name|TemplateOrSpecialization
 argument_list|()
-block|,
+operator|,
 name|DNLoc
 argument_list|(
 argument|NameInfo.getInfo()
@@ -5796,9 +6281,9 @@ name|redeclarable_base
 expr_stmt|;
 name|virtual
 name|FunctionDecl
-operator|*
+modifier|*
 name|getNextRedeclaration
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|RedeclLink
@@ -5808,19 +6293,13 @@ argument_list|()
 return|;
 block|}
 name|public
-operator|:
-end_decl_stmt
-
-begin_typedef
+label|:
 typedef|typedef
 name|redeclarable_base
 operator|::
 name|redecl_iterator
 name|redecl_iterator
 expr_stmt|;
-end_typedef
-
-begin_expr_stmt
 name|redecl_iterator
 name|redecls_begin
 argument_list|()
@@ -5833,9 +6312,6 @@ name|redecls_begin
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|redecl_iterator
 name|redecls_end
 argument_list|()
@@ -5848,9 +6324,6 @@ name|redecls_end
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 specifier|static
 name|FunctionDecl
 modifier|*
@@ -5865,7 +6338,10 @@ modifier|*
 name|DC
 parameter_list|,
 name|SourceLocation
-name|L
+name|StartLoc
+parameter_list|,
+name|SourceLocation
+name|NLoc
 parameter_list|,
 name|DeclarationName
 name|N
@@ -5878,7 +6354,7 @@ modifier|*
 name|TInfo
 parameter_list|,
 name|StorageClass
-name|S
+name|SC
 init|=
 name|SC_None
 parameter_list|,
@@ -5903,7 +6379,7 @@ name|NameInfo
 argument_list|(
 name|N
 argument_list|,
-name|L
+name|NLoc
 argument_list|)
 decl_stmt|;
 return|return
@@ -5915,13 +6391,15 @@ name|C
 argument_list|,
 name|DC
 argument_list|,
+name|StartLoc
+argument_list|,
 name|NameInfo
 argument_list|,
 name|T
 argument_list|,
 name|TInfo
 argument_list|,
-name|S
+name|SC
 argument_list|,
 name|SCAsWritten
 argument_list|,
@@ -5931,9 +6409,6 @@ name|hasWrittenPrototype
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function_decl
 specifier|static
 name|FunctionDecl
 modifier|*
@@ -5946,6 +6421,9 @@ parameter_list|,
 name|DeclContext
 modifier|*
 name|DC
+parameter_list|,
+name|SourceLocation
+name|StartLoc
 parameter_list|,
 specifier|const
 name|DeclarationNameInfo
@@ -5960,7 +6438,7 @@ modifier|*
 name|TInfo
 parameter_list|,
 name|StorageClass
-name|S
+name|SC
 init|=
 name|SC_None
 parameter_list|,
@@ -5980,9 +6458,6 @@ init|=
 name|true
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_expr_stmt
 name|DeclarationNameInfo
 name|getNameInfo
 argument_list|()
@@ -6001,9 +6476,6 @@ name|DNLoc
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_decl_stmt
 name|virtual
 name|void
 name|getNameForDiagnostic
@@ -6024,30 +6496,8 @@ name|Qualified
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|virtual
-name|SourceRange
-name|getSourceRange
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SourceRange
-argument_list|(
-name|getOuterLocStart
-argument_list|()
-argument_list|,
-name|EndRangeLoc
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_function
 name|void
-name|setLocEnd
+name|setRangeEnd
 parameter_list|(
 name|SourceLocation
 name|E
@@ -6058,29 +6508,17 @@ operator|=
 name|E
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
+name|virtual
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Returns true if the function has a body (definition). The
-end_comment
-
-begin_comment
 comment|/// function body might be in any of the (re-)declarations of this
-end_comment
-
-begin_comment
 comment|/// function. The variant that accepts a FunctionDecl pointer will
-end_comment
-
-begin_comment
 comment|/// set that function declaration to the actual declaration
-end_comment
-
-begin_comment
 comment|/// containing the body (if there is one).
-end_comment
-
-begin_decl_stmt
 name|bool
 name|hasBody
 argument_list|(
@@ -6092,9 +6530,6 @@ name|Definition
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|virtual
 name|bool
 name|hasBody
@@ -6113,37 +6548,13 @@ name|Definition
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// getBody - Retrieve the body (definition) of the function. The
-end_comment
-
-begin_comment
 comment|/// function body might be in any of the (re-)declarations of this
-end_comment
-
-begin_comment
 comment|/// function. The variant that accepts a FunctionDecl pointer will
-end_comment
-
-begin_comment
 comment|/// set that function declaration to the actual declaration
-end_comment
-
-begin_comment
 comment|/// containing the body (if there is one).
-end_comment
-
-begin_comment
 comment|/// NOTE: For checking if there is a body, use hasBody() instead, to avoid
-end_comment
-
-begin_comment
 comment|/// unnecessary AST de-serialization of the body.
-end_comment
-
-begin_decl_stmt
 name|Stmt
 modifier|*
 name|getBody
@@ -6156,9 +6567,6 @@ name|Definition
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|virtual
 name|Stmt
 operator|*
@@ -6178,33 +6586,12 @@ name|Definition
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// isThisDeclarationADefinition - Returns whether this specific
-end_comment
-
-begin_comment
 comment|/// declaration of the function is also a definition. This does not
-end_comment
-
-begin_comment
 comment|/// determine whether the function has been defined (e.g., in a
-end_comment
-
-begin_comment
 comment|/// previous definition); for that information, use getBody.
-end_comment
-
-begin_comment
 comment|/// FIXME: Should return true if function is deleted or defaulted. However,
-end_comment
-
-begin_comment
 comment|/// CodeGenModule.cpp uses it, and I don't know if this would break it.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isThisDeclarationADefinition
 argument_list|()
@@ -6212,11 +6599,10 @@ specifier|const
 block|{
 return|return
 name|Body
+operator|||
+name|IsLateTemplateParsed
 return|;
 block|}
-end_expr_stmt
-
-begin_function_decl
 name|void
 name|setBody
 parameter_list|(
@@ -6225,9 +6611,6 @@ modifier|*
 name|B
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function
 name|void
 name|setLazyBody
 parameter_list|(
@@ -6240,25 +6623,13 @@ operator|=
 name|Offset
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// Whether this function is variadic.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isVariadic
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// Whether this function is marked as virtual explicitly.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isVirtualAsWritten
 argument_list|()
@@ -6268,9 +6639,6 @@ return|return
 name|IsVirtualAsWritten
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setVirtualAsWritten
 parameter_list|(
@@ -6283,17 +6651,8 @@ operator|=
 name|V
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// Whether this virtual function is pure, i.e. makes the containing class
-end_comment
-
-begin_comment
 comment|/// abstract.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isPure
 argument_list|()
@@ -6303,9 +6662,6 @@ return|return
 name|IsPure
 return|;
 block|}
-end_expr_stmt
-
-begin_function_decl
 name|void
 name|setPure
 parameter_list|(
@@ -6315,25 +6671,45 @@ init|=
 name|true
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
+comment|/// Whether this is a constexpr function or constexpr constructor.
+comment|// FIXME: C++0x: Implement tracking of the constexpr specifier.
+name|bool
+name|isConstExpr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// Whether this templated function will be late parsed.
+name|bool
+name|isLateTemplateParsed
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsLateTemplateParsed
+return|;
+block|}
+name|void
+name|setLateTemplateParsed
+parameter_list|(
+name|bool
+name|ILT
+init|=
+name|true
+parameter_list|)
+block|{
+name|IsLateTemplateParsed
+operator|=
+name|ILT
+expr_stmt|;
+block|}
 comment|/// Whether this function is "trivial" in some specialized C++ senses.
-end_comment
-
-begin_comment
 comment|/// Can only be true for default constructors, copy constructors,
-end_comment
-
-begin_comment
 comment|/// copy assignment operators, and destructors.  Not meaningful until
-end_comment
-
-begin_comment
 comment|/// the class has been fully built by Sema.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isTrivial
 argument_list|()
@@ -6343,9 +6719,6 @@ return|return
 name|IsTrivial
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setTrivial
 parameter_list|(
@@ -6358,21 +6731,9 @@ operator|=
 name|IT
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// Whether falling off this function implicitly returns null/zero.
-end_comment
-
-begin_comment
 comment|/// If a more specific implicit return value is required, front-ends
-end_comment
-
-begin_comment
 comment|/// should synthesize the appropriate return statements.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasImplicitReturnZero
 argument_list|()
@@ -6382,9 +6743,6 @@ return|return
 name|HasImplicitReturnZero
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setHasImplicitReturnZero
 parameter_list|(
@@ -6397,25 +6755,10 @@ operator|=
 name|IRZ
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Whether this function has a prototype, either because one
-end_comment
-
-begin_comment
 comment|/// was explicitly written or because it was "inherited" by merging
-end_comment
-
-begin_comment
 comment|/// a declaration without a prototype with a declaration that has a
-end_comment
-
-begin_comment
 comment|/// prototype.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasPrototype
 argument_list|()
@@ -6427,9 +6770,6 @@ operator|||
 name|HasInheritedPrototype
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|bool
 name|hasWrittenPrototype
 argument_list|()
@@ -6439,17 +6779,8 @@ return|return
 name|HasWrittenPrototype
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Whether this function inherited its prototype from a
-end_comment
-
-begin_comment
 comment|/// previous declaration.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasInheritedPrototype
 argument_list|()
@@ -6459,9 +6790,6 @@ return|return
 name|HasInheritedPrototype
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setHasInheritedPrototype
 parameter_list|(
@@ -6476,81 +6804,24 @@ operator|=
 name|P
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Whether this function has been deleted.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// A function that is "deleted" (via the C++0x "= delete" syntax)
-end_comment
-
-begin_comment
 comment|/// acts like a normal function, except that it cannot actually be
-end_comment
-
-begin_comment
 comment|/// called or have its address taken. Deleted functions are
-end_comment
-
-begin_comment
 comment|/// typically used in C++ overload resolution to attract arguments
-end_comment
-
-begin_comment
 comment|/// whose type or lvalue/rvalue-ness would permit the use of a
-end_comment
-
-begin_comment
 comment|/// different overload that would behave incorrectly. For example,
-end_comment
-
-begin_comment
 comment|/// one might use deleted functions to ban implicit conversion from
-end_comment
-
-begin_comment
 comment|/// a floating-point number to an Integer type:
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// @code
-end_comment
-
-begin_comment
 comment|/// struct Integer {
-end_comment
-
-begin_comment
 comment|///   Integer(long); // construct from a long
-end_comment
-
-begin_comment
 comment|///   Integer(double) = delete; // no construction from float or double
-end_comment
-
-begin_comment
 comment|///   Integer(long double) = delete; // no construction from long double
-end_comment
-
-begin_comment
 comment|/// };
-end_comment
-
-begin_comment
 comment|/// @endcode
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isDeleted
 argument_list|()
@@ -6560,9 +6831,6 @@ return|return
 name|IsDeleted
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setDeleted
 parameter_list|(
@@ -6577,53 +6845,26 @@ operator|=
 name|D
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Determines whether this is a function "main", which is
-end_comment
-
-begin_comment
 comment|/// the entry point into an executable program.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isMain
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determines whether this function is a function with
-end_comment
-
-begin_comment
 comment|/// external, C linkage.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isExternC
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determines whether this is a global function.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isGlobal
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_function_decl
 name|void
 name|setPreviousDeclaration
 parameter_list|(
@@ -6632,9 +6873,6 @@ modifier|*
 name|PrevDecl
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_expr_stmt
 name|virtual
 specifier|const
 name|FunctionDecl
@@ -6643,30 +6881,18 @@ name|getCanonicalDecl
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_function_decl
 name|virtual
 name|FunctionDecl
 modifier|*
 name|getCanonicalDecl
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_expr_stmt
 name|unsigned
 name|getBuiltinID
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|// Iterator access to formal parameters.
-end_comment
-
-begin_expr_stmt
 name|unsigned
 name|param_size
 argument_list|()
@@ -6677,18 +6903,12 @@ name|getNumParams
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_typedef
 typedef|typedef
 name|ParmVarDecl
 modifier|*
 modifier|*
 name|param_iterator
 typedef|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|ParmVarDecl
 modifier|*
@@ -6696,9 +6916,6 @@ specifier|const
 modifier|*
 name|param_const_iterator
 typedef|;
-end_typedef
-
-begin_function
 name|param_iterator
 name|param_begin
 parameter_list|()
@@ -6707,9 +6924,6 @@ return|return
 name|ParamInfo
 return|;
 block|}
-end_function
-
-begin_function
 name|param_iterator
 name|param_end
 parameter_list|()
@@ -6721,9 +6935,6 @@ name|param_size
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|param_const_iterator
 name|param_begin
 argument_list|()
@@ -6733,9 +6944,6 @@ return|return
 name|ParamInfo
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|param_const_iterator
 name|param_end
 argument_list|()
@@ -6748,29 +6956,14 @@ name|param_size
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// getNumParams - Return the number of parameters this function must have
-end_comment
-
-begin_comment
 comment|/// based on its FunctionType.  This is the length of the ParamInfo array
-end_comment
-
-begin_comment
 comment|/// after it has been created.
-end_comment
-
-begin_expr_stmt
 name|unsigned
 name|getNumParams
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 specifier|const
 name|ParmVarDecl
 modifier|*
@@ -6798,9 +6991,6 @@ name|i
 index|]
 return|;
 block|}
-end_decl_stmt
-
-begin_function
 name|ParmVarDecl
 modifier|*
 name|getParamDecl
@@ -6826,9 +7016,6 @@ name|i
 index|]
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|setParams
 parameter_list|(
@@ -6852,33 +7039,15 @@ name|NumParams
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// getMinRequiredArguments - Returns the minimum number of arguments
-end_comment
-
-begin_comment
 comment|/// needed to call this function. This may be fewer than the number of
-end_comment
-
-begin_comment
 comment|/// function parameters, if some of the parameters have default
-end_comment
-
-begin_comment
 comment|/// arguments (in C++).
-end_comment
-
-begin_expr_stmt
 name|unsigned
 name|getMinRequiredArguments
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|QualType
 name|getResultType
 argument_list|()
@@ -6899,13 +7068,7 @@ name|getResultType
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine the type of an expression that calls this function.
-end_comment
-
-begin_expr_stmt
 name|QualType
 name|getCallResultType
 argument_list|()
@@ -6929,9 +7092,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|StorageClass
 name|getStorageClass
 argument_list|()
@@ -6944,9 +7104,6 @@ name|SClass
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function_decl
 name|void
 name|setStorageClass
 parameter_list|(
@@ -6954,9 +7111,6 @@ name|StorageClass
 name|SC
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_expr_stmt
 name|StorageClass
 name|getStorageClassAsWritten
 argument_list|()
@@ -6969,17 +7123,8 @@ name|SClassAsWritten
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether the "inline" keyword was specified for this
-end_comment
-
-begin_comment
 comment|/// function.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isInlineSpecified
 argument_list|()
@@ -6989,13 +7134,7 @@ return|return
 name|IsInlineSpecified
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Set whether the "inline" keyword was specified for this function.
-end_comment
-
-begin_function
 name|void
 name|setInlineSpecified
 parameter_list|(
@@ -7012,13 +7151,7 @@ operator|=
 name|I
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// Flag that this function is implicitly inline.
-end_comment
-
-begin_function
 name|void
 name|setImplicitlyInline
 parameter_list|()
@@ -7028,45 +7161,21 @@ operator|=
 name|true
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Determine whether this function should be inlined, because it is
-end_comment
-
-begin_comment
 comment|/// either marked "inline" or is a member function of a C++ class that
-end_comment
-
-begin_comment
 comment|/// was defined in the class body.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isInlined
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|bool
 name|isInlineDefinitionExternallyVisible
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// isOverloadedOperator - Whether this function declaration
-end_comment
-
-begin_comment
 comment|/// represents an C++ overloaded operator, e.g., "operator+".
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isOverloadedOperator
 argument_list|()
@@ -7079,17 +7188,11 @@ operator|!=
 name|OO_None
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|OverloadedOperatorKind
 name|getOverloadedOperator
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 specifier|const
 name|IdentifierInfo
 operator|*
@@ -7097,143 +7200,50 @@ name|getLiteralIdentifier
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief If this function is an instantiation of a member function
-end_comment
-
-begin_comment
 comment|/// of a class template specialization, retrieves the function from
-end_comment
-
-begin_comment
 comment|/// which it was instantiated.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This routine will return non-NULL for (non-templated) member
-end_comment
-
-begin_comment
 comment|/// functions of class templates and for instantiations of function
-end_comment
-
-begin_comment
 comment|/// templates. For example, given:
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \code
-end_comment
-
-begin_comment
 comment|/// template<typename T>
-end_comment
-
-begin_comment
 comment|/// struct X {
-end_comment
-
-begin_comment
 comment|///   void f(T);
-end_comment
-
-begin_comment
 comment|/// };
-end_comment
-
-begin_comment
 comment|/// \endcode
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// The declaration for X<int>::f is a (non-templated) FunctionDecl
-end_comment
-
-begin_comment
 comment|/// whose parent is the class template specialization X<int>. For
-end_comment
-
-begin_comment
 comment|/// this declaration, getInstantiatedFromFunction() will return
-end_comment
-
-begin_comment
 comment|/// the FunctionDecl X<T>::A. When a complete definition of
-end_comment
-
-begin_comment
 comment|/// X<int>::A is required, it will be instantiated from the
-end_comment
-
-begin_comment
 comment|/// declaration returned by getInstantiatedFromMemberFunction().
-end_comment
-
-begin_expr_stmt
 name|FunctionDecl
 operator|*
 name|getInstantiatedFromMemberFunction
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief What kind of templated function this is.
-end_comment
-
-begin_expr_stmt
 name|TemplatedKind
 name|getTemplatedKind
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief If this function is an instantiation of a member function of a
-end_comment
-
-begin_comment
 comment|/// class template specialization, retrieves the member specialization
-end_comment
-
-begin_comment
 comment|/// information.
-end_comment
-
-begin_expr_stmt
 name|MemberSpecializationInfo
 operator|*
 name|getMemberSpecializationInfo
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Specify that this record is an instantiation of the
-end_comment
-
-begin_comment
 comment|/// member function FD.
-end_comment
-
-begin_function
 name|void
 name|setInstantiationOfMemberFunction
 parameter_list|(
@@ -7256,57 +7266,18 @@ name|TSK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Retrieves the function template that is described by this
-end_comment
-
-begin_comment
 comment|/// function declaration.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Every function template is represented as a FunctionTemplateDecl
-end_comment
-
-begin_comment
 comment|/// and a FunctionDecl (or something derived from FunctionDecl). The
-end_comment
-
-begin_comment
 comment|/// former contains template properties (such as the template
-end_comment
-
-begin_comment
 comment|/// parameter lists) while the latter contains the actual
-end_comment
-
-begin_comment
 comment|/// description of the template's
-end_comment
-
-begin_comment
 comment|/// contents. FunctionTemplateDecl::getTemplatedDecl() retrieves the
-end_comment
-
-begin_comment
 comment|/// FunctionDecl that describes the function template,
-end_comment
-
-begin_comment
 comment|/// getDescribedFunctionTemplate() retrieves the
-end_comment
-
-begin_comment
 comment|/// FunctionTemplateDecl from a FunctionDecl.
-end_comment
-
-begin_expr_stmt
 name|FunctionTemplateDecl
 operator|*
 name|getDescribedFunctionTemplate
@@ -7325,9 +7296,6 @@ operator|(
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setDescribedFunctionTemplate
 parameter_list|(
@@ -7341,17 +7309,8 @@ operator|=
 name|Template
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Determine whether this function is a function template
-end_comment
-
-begin_comment
 comment|/// specialization.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isFunctionTemplateSpecialization
 argument_list|()
@@ -7364,21 +7323,9 @@ operator|!=
 literal|0
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief If this function is actually a function template specialization,
-end_comment
-
-begin_comment
 comment|/// retrieve information about this function template specialization.
-end_comment
-
-begin_comment
 comment|/// Otherwise, returns NULL.
-end_comment
-
-begin_expr_stmt
 name|FunctionTemplateSpecializationInfo
 operator|*
 name|getTemplateSpecializationInfo
@@ -7397,99 +7344,39 @@ operator|(
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determines whether this function is a function template
-end_comment
-
-begin_comment
 comment|/// specialization or a member of a class template specialization that can
-end_comment
-
-begin_comment
 comment|/// be implicitly instantiated.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isImplicitlyInstantiable
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Retrieve the function declaration from which this function could
-end_comment
-
-begin_comment
 comment|/// be instantiated, if it is an instantiation (rather than a non-template
-end_comment
-
-begin_comment
 comment|/// or a specialization, for example).
-end_comment
-
-begin_expr_stmt
 name|FunctionDecl
 operator|*
 name|getTemplateInstantiationPattern
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Retrieve the primary template that this function template
-end_comment
-
-begin_comment
 comment|/// specialization either specializes or was instantiated from.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// If this function declaration is not a function template specialization,
-end_comment
-
-begin_comment
 comment|/// returns NULL.
-end_comment
-
-begin_expr_stmt
 name|FunctionTemplateDecl
 operator|*
 name|getPrimaryTemplate
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Retrieve the template arguments used to produce this function
-end_comment
-
-begin_comment
 comment|/// template specialization from the primary template.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// If this function declaration is not a function template specialization,
-end_comment
-
-begin_comment
 comment|/// returns NULL.
-end_comment
-
-begin_expr_stmt
 specifier|const
 name|TemplateArgumentList
 operator|*
@@ -7497,37 +7384,13 @@ name|getTemplateSpecializationArgs
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Retrieve the template argument list as written in the sources,
-end_comment
-
-begin_comment
 comment|/// if any.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// If this function declaration is not a function template specialization
-end_comment
-
-begin_comment
 comment|/// or if it had no explicit template argument list, returns NULL.
-end_comment
-
-begin_comment
 comment|/// Note that it an explicit template argument list may be written empty,
-end_comment
-
-begin_comment
 comment|/// e.g., template<> void foo<>(char* s);
-end_comment
-
-begin_expr_stmt
 specifier|const
 name|TemplateArgumentListInfo
 operator|*
@@ -7535,85 +7398,25 @@ name|getTemplateSpecializationArgsAsWritten
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Specify that this function declaration is actually a function
-end_comment
-
-begin_comment
 comment|/// template specialization.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param Template the function template that this function template
-end_comment
-
-begin_comment
 comment|/// specialization specializes.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param TemplateArgs the template arguments that produced this
-end_comment
-
-begin_comment
 comment|/// function template specialization from the template.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param InsertPos If non-NULL, the position in the function template
-end_comment
-
-begin_comment
 comment|/// specialization set where the function template specialization data will
-end_comment
-
-begin_comment
 comment|/// be inserted.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param TSK the kind of template specialization this is.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param TemplateArgsAsWritten location info of template arguments.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param PointOfInstantiation point at which the function template
-end_comment
-
-begin_comment
 comment|/// specialization was first instantiated.
-end_comment
-
-begin_function
 name|void
 name|setFunctionTemplateSpecialization
 parameter_list|(
@@ -7668,17 +7471,8 @@ name|PointOfInstantiation
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Specifies that this function declaration is actually a
-end_comment
-
-begin_comment
 comment|/// dependent function template specialization.
-end_comment
-
-begin_function_decl
 name|void
 name|setDependentTemplateSpecialization
 parameter_list|(
@@ -7697,9 +7491,6 @@ modifier|&
 name|TemplateArgs
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_expr_stmt
 name|DependentFunctionTemplateSpecializationInfo
 operator|*
 name|getDependentSpecializationInfo
@@ -7718,33 +7509,15 @@ operator|(
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine what kind of template instantiation this function
-end_comment
-
-begin_comment
 comment|/// represents.
-end_comment
-
-begin_expr_stmt
 name|TemplateSpecializationKind
 name|getTemplateSpecializationKind
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine what kind of template instantiation this function
-end_comment
-
-begin_comment
 comment|/// represents.
-end_comment
-
-begin_function_decl
 name|void
 name|setTemplateSpecializationKind
 parameter_list|(
@@ -7758,62 +7531,26 @@ name|SourceLocation
 argument_list|()
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Retrieve the (first) point of instantiation of a function template
-end_comment
-
-begin_comment
 comment|/// specialization or a member of a class template specialization.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \returns the first point of instantiation, if this function was
-end_comment
-
-begin_comment
 comment|/// instantiated from a template; otherwie, returns an invalid source
-end_comment
-
-begin_comment
 comment|/// location.
-end_comment
-
-begin_expr_stmt
 name|SourceLocation
 name|getPointOfInstantiation
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this is or was instantiated from an out-of-line
-end_comment
-
-begin_comment
 comment|/// definition of a member function.
-end_comment
-
-begin_expr_stmt
 name|virtual
 name|bool
 name|isOutOfLine
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|// Implement isa/cast/dyncast/etc.
-end_comment
-
-begin_function
 specifier|static
 name|bool
 name|classof
@@ -7834,9 +7571,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|bool
 name|classof
@@ -7851,9 +7585,6 @@ return|return
 name|true
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|bool
 name|classofKind
@@ -7872,9 +7603,6 @@ operator|<=
 name|lastFunction
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|DeclContext
 modifier|*
@@ -7904,9 +7632,6 @@ operator|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|FunctionDecl
 modifier|*
@@ -7936,24 +7661,22 @@ operator|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_decl_stmt
 name|friend
 name|class
 name|ASTDeclReader
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|friend
 name|class
 name|ASTDeclWriter
 decl_stmt|;
+block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
-unit|};
 comment|/// FieldDecl - An instance of this class is created by Sema::ActOnField to
 end_comment
 
@@ -7992,7 +7715,9 @@ argument|Kind DK
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
@@ -8011,13 +7736,15 @@ name|DK
 argument_list|,
 name|DC
 argument_list|,
-name|L
+name|IdLoc
 argument_list|,
 name|Id
 argument_list|,
 name|T
 argument_list|,
 name|TInfo
+argument_list|,
+name|StartLoc
 argument_list|)
 block|,
 name|Mutable
@@ -8046,7 +7773,9 @@ argument|const ASTContext&C
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
@@ -8180,6 +7909,11 @@ argument_list|()
 operator|)
 return|;
 block|}
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|;
 comment|// Implement isa/cast/dyncast/etc.
 specifier|static
 name|bool
@@ -8673,6 +8407,10 @@ name|Type
 operator|*
 name|TypeForDecl
 block|;
+comment|/// LocStart - The start of the source range for this declaration.
+name|SourceLocation
+name|LocStart
+block|;
 name|friend
 name|class
 name|ASTContext
@@ -8704,6 +8442,8 @@ argument_list|,
 argument|SourceLocation L
 argument_list|,
 argument|IdentifierInfo *Id
+argument_list|,
+argument|SourceLocation StartL = SourceLocation()
 argument_list|)
 operator|:
 name|NamedDecl
@@ -8720,6 +8460,11 @@ block|,
 name|TypeForDecl
 argument_list|(
 literal|0
+argument_list|)
+block|,
+name|LocStart
+argument_list|(
+argument|StartL
 argument_list|)
 block|{}
 name|public
@@ -8746,6 +8491,56 @@ name|TypeForDecl
 operator|=
 name|TD
 block|; }
+name|SourceLocation
+name|getLocStart
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LocStart
+return|;
+block|}
+name|void
+name|setLocStart
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|LocStart
+operator|=
+name|L
+block|; }
+name|virtual
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|LocStart
+operator|.
+name|isValid
+argument_list|()
+condition|)
+return|return
+name|SourceRange
+argument_list|(
+name|LocStart
+argument_list|,
+name|getLocation
+argument_list|()
+argument_list|)
+return|;
+else|else
+return|return
+name|SourceRange
+argument_list|(
+name|getLocation
+argument_list|()
+argument_list|)
+return|;
+block|}
 comment|// Implement isa/cast/dyncast/etc.
 specifier|static
 name|bool
@@ -8794,8 +8589,9 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// Base class for declarations which introduce a typedef-name.
 name|class
-name|TypedefDecl
+name|TypedefNameDecl
 operator|:
 name|public
 name|TypeDecl
@@ -8803,7 +8599,7 @@ block|,
 name|public
 name|Redeclarable
 operator|<
-name|TypedefDecl
+name|TypedefNameDecl
 operator|>
 block|{
 comment|/// UnderlyingType - This is the type the typedef is set to.
@@ -8811,11 +8607,17 @@ name|TypeSourceInfo
 operator|*
 name|TInfo
 block|;
-name|TypedefDecl
+name|protected
+operator|:
+name|TypedefNameDecl
 argument_list|(
+argument|Kind DK
+argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
@@ -8824,13 +8626,15 @@ argument_list|)
 operator|:
 name|TypeDecl
 argument_list|(
-name|Typedef
+name|DK
 argument_list|,
 name|DC
 argument_list|,
-name|L
+name|IdLoc
 argument_list|,
 name|Id
+argument_list|,
+name|StartLoc
 argument_list|)
 block|,
 name|TInfo
@@ -8838,17 +8642,15 @@ argument_list|(
 argument|TInfo
 argument_list|)
 block|{}
-name|protected
-operator|:
 typedef|typedef
 name|Redeclarable
 operator|<
-name|TypedefDecl
+name|TypedefNameDecl
 operator|>
 name|redeclarable_base
 expr_stmt|;
 name|virtual
-name|TypedefDecl
+name|TypedefNameDecl
 operator|*
 name|getNextRedeclaration
 argument_list|()
@@ -8892,25 +8694,6 @@ name|redecls_end
 argument_list|()
 return|;
 block|}
-specifier|static
-name|TypedefDecl
-operator|*
-name|Create
-argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|DeclContext *DC
-argument_list|,
-argument|SourceLocation L
-argument_list|,
-argument|IdentifierInfo *Id
-argument_list|,
-argument|TypeSourceInfo *TInfo
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|TypeSourceInfo
 operator|*
 name|getTypeSourceInfo
@@ -8921,28 +8704,19 @@ return|return
 name|TInfo
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
-comment|/// Retrieves the canonical declaration of this typedef.
-end_comment
-
-begin_function
-name|TypedefDecl
-modifier|*
+comment|/// Retrieves the canonical declaration of this typedef-name.
+name|TypedefNameDecl
+operator|*
 name|getCanonicalDecl
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|getFirstDeclaration
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 specifier|const
-name|TypedefDecl
+name|TypedefNameDecl
 operator|*
 name|getCanonicalDecl
 argument_list|()
@@ -8953,9 +8727,6 @@ name|getFirstDeclaration
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|QualType
 name|getUnderlyingType
 argument_list|()
@@ -8968,38 +8739,23 @@ name|getType
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setTypeSourceInfo
-parameter_list|(
-name|TypeSourceInfo
-modifier|*
-name|newType
-parameter_list|)
+argument_list|(
+argument|TypeSourceInfo *newType
+argument_list|)
 block|{
 name|TInfo
 operator|=
 name|newType
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
+block|;   }
 comment|// Implement isa/cast/dyncast/etc.
-end_comment
-
-begin_function
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Decl
-modifier|*
-name|D
-parameter_list|)
+argument_list|(
+argument|const Decl *D
+argument_list|)
 block|{
 return|return
 name|classofKind
@@ -9011,7 +8767,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -9019,7 +8775,7 @@ name|bool
 name|classof
 parameter_list|(
 specifier|const
-name|TypedefDecl
+name|TypedefNameDecl
 modifier|*
 name|D
 parameter_list|)
@@ -9041,150 +8797,358 @@ parameter_list|)
 block|{
 return|return
 name|K
-operator|==
-name|Typedef
+operator|>=
+name|firstTypedefName
+operator|&&
+name|K
+operator|<=
+name|lastTypedefName
 return|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_comment
 unit|};
-name|class
-name|TypedefDecl
-decl_stmt|;
-end_decl_stmt
+comment|/// TypedefDecl - Represents the declaration of a typedef-name via the 'typedef'
+end_comment
 
 begin_comment
-comment|/// TagDecl - Represents the declaration of a struct/union/class/enum.
+comment|/// type specifier.
 end_comment
 
 begin_decl_stmt
 name|class
-name|TagDecl
+name|TypedefDecl
 range|:
 name|public
+name|TypedefNameDecl
+block|{
+name|TypedefDecl
+argument_list|(
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
+argument_list|,
+argument|IdentifierInfo *Id
+argument_list|,
+argument|TypeSourceInfo *TInfo
+argument_list|)
+operator|:
+name|TypedefNameDecl
+argument_list|(
+argument|Typedef
+argument_list|,
+argument|DC
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|IdLoc
+argument_list|,
+argument|Id
+argument_list|,
+argument|TInfo
+argument_list|)
+block|{}
+name|public
+operator|:
+specifier|static
+name|TypedefDecl
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
+argument_list|,
+argument|IdentifierInfo *Id
+argument_list|,
+argument|TypeSourceInfo *TInfo
+argument_list|)
+block|;
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|;
+comment|// Implement isa/cast/dyncast/etc.
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Decl *D
+argument_list|)
+block|{
+return|return
+name|classofKind
+argument_list|(
+name|D
+operator|->
+name|getKind
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const TypedefDecl *D
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+specifier|static
+name|bool
+name|classofKind
+argument_list|(
+argument|Kind K
+argument_list|)
+block|{
+return|return
+name|K
+operator|==
+name|Typedef
+return|;
+block|}
+expr|}
+block|;
+comment|/// TypeAliasDecl - Represents the declaration of a typedef-name via a C++0x
+comment|/// alias-declaration.
+name|class
+name|TypeAliasDecl
+operator|:
+name|public
+name|TypedefNameDecl
+block|{
+name|TypeAliasDecl
+argument_list|(
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
+argument_list|,
+argument|IdentifierInfo *Id
+argument_list|,
+argument|TypeSourceInfo *TInfo
+argument_list|)
+operator|:
+name|TypedefNameDecl
+argument_list|(
+argument|TypeAlias
+argument_list|,
+argument|DC
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|IdLoc
+argument_list|,
+argument|Id
+argument_list|,
+argument|TInfo
+argument_list|)
+block|{}
+name|public
+operator|:
+specifier|static
+name|TypeAliasDecl
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
+argument_list|,
+argument|IdentifierInfo *Id
+argument_list|,
+argument|TypeSourceInfo *TInfo
+argument_list|)
+block|;
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|;
+comment|// Implement isa/cast/dyncast/etc.
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Decl *D
+argument_list|)
+block|{
+return|return
+name|classofKind
+argument_list|(
+name|D
+operator|->
+name|getKind
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const TypeAliasDecl *D
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+specifier|static
+name|bool
+name|classofKind
+argument_list|(
+argument|Kind K
+argument_list|)
+block|{
+return|return
+name|K
+operator|==
+name|TypeAlias
+return|;
+block|}
+expr|}
+block|;
+comment|/// TagDecl - Represents the declaration of a struct/union/class/enum.
+name|class
+name|TagDecl
+operator|:
+name|public
 name|TypeDecl
-decl_stmt|,
+block|,
 name|public
 name|DeclContext
-decl_stmt|,
+block|,
 name|public
 name|Redeclarable
-decl|<
+operator|<
 name|TagDecl
-decl|>
+operator|>
 block|{
 name|public
-label|:
+operator|:
 comment|// This is really ugly.
 typedef|typedef
 name|TagTypeKind
 name|TagKind
 typedef|;
 name|private
-label|:
+operator|:
 comment|// FIXME: This can be packed into the bitfields in Decl.
 comment|/// TagDeclKind - The TagKind enum.
 name|unsigned
 name|TagDeclKind
-range|:
+operator|:
 literal|2
-decl_stmt|;
+block|;
 comment|/// IsDefinition - True if this is a definition ("struct foo {};"), false if
 comment|/// it is a declaration ("struct foo;").
 name|bool
 name|IsDefinition
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 comment|/// IsBeingDefined - True if this is currently being defined.
 name|bool
 name|IsBeingDefined
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 comment|/// IsEmbeddedInDeclarator - True if this tag declaration is
 comment|/// "embedded" (i.e., defined or declared for the very first time)
 comment|/// in the syntax of a declarator.
 name|bool
 name|IsEmbeddedInDeclarator
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 name|protected
-label|:
+operator|:
 comment|// These are used by (and only defined for) EnumDecl.
 name|unsigned
 name|NumPositiveBits
-range|:
+operator|:
 literal|8
-decl_stmt|;
+block|;
 name|unsigned
 name|NumNegativeBits
-range|:
+operator|:
 literal|8
-decl_stmt|;
+block|;
 comment|/// IsScoped - True if this tag declaration is a scoped enumeration. Only
 comment|/// possible in C++0x mode.
 name|bool
 name|IsScoped
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 comment|/// IsScopedUsingClassTag - If this tag declaration is a scoped enum,
 comment|/// then this is true if the scoped enum was declared using the class
 comment|/// tag, false if it was declared with the struct tag. No meaning is
 comment|/// associated if this tag declaration is not a scoped enum.
 name|bool
 name|IsScopedUsingClassTag
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 comment|/// IsFixed - True if this is an enumeration with fixed underlying type. Only
 comment|/// possible in C++0x mode.
 name|bool
 name|IsFixed
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 name|private
-label|:
-name|SourceLocation
-name|TagKeywordLoc
-decl_stmt|;
+operator|:
 name|SourceLocation
 name|RBraceLoc
-decl_stmt|;
+block|;
 comment|// A struct representing syntactic qualifier info,
 comment|// to be used for the (uncommon) case of out-of-line declarations.
 typedef|typedef
 name|QualifierInfo
 name|ExtInfo
 typedef|;
-comment|/// TypedefDeclOrQualifier - If the (out-of-line) tag declaration name
+comment|/// TypedefNameDeclOrQualifier - If the (out-of-line) tag declaration name
 comment|/// is qualified, it points to the qualifier info (nns and range);
 comment|/// otherwise, if the tag declaration is anonymous and it is part of
-comment|/// a typedef, it points to the TypedefDecl (used for mangling);
-comment|/// otherwise, it is a null (TypedefDecl) pointer.
+comment|/// a typedef or alias, it points to the TypedefNameDecl (used for mangling);
+comment|/// otherwise, it is a null (TypedefNameDecl) pointer.
 name|llvm
 operator|::
 name|PointerUnion
 operator|<
-name|TypedefDecl
+name|TypedefNameDecl
 operator|*
-operator|,
+block|,
 name|ExtInfo
 operator|*
 operator|>
-name|TypedefDeclOrQualifier
-expr_stmt|;
+name|TypedefNameDeclOrQualifier
+block|;
 name|bool
 name|hasExtInfo
 argument_list|()
 specifier|const
 block|{
 return|return
-name|TypedefDeclOrQualifier
+name|TypedefNameDeclOrQualifier
 operator|.
 name|is
 operator|<
@@ -9196,12 +9160,12 @@ operator|)
 return|;
 block|}
 name|ExtInfo
-modifier|*
+operator|*
 name|getExtInfo
-parameter_list|()
+argument_list|()
 block|{
 return|return
-name|TypedefDeclOrQualifier
+name|TypedefNameDeclOrQualifier
 operator|.
 name|get
 operator|<
@@ -9220,7 +9184,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|TypedefDeclOrQualifier
+name|TypedefNameDeclOrQualifier
 operator|.
 name|get
 operator|<
@@ -9232,7 +9196,7 @@ operator|)
 return|;
 block|}
 name|protected
-label|:
+operator|:
 name|TagDecl
 argument_list|(
 argument|Kind DK
@@ -9247,9 +9211,9 @@ argument|IdentifierInfo *Id
 argument_list|,
 argument|TagDecl *PrevDecl
 argument_list|,
-argument|SourceLocation TKL = SourceLocation()
+argument|SourceLocation StartL
 argument_list|)
-block|:
+operator|:
 name|TypeDecl
 argument_list|(
 name|DK
@@ -9259,21 +9223,18 @@ argument_list|,
 name|L
 argument_list|,
 name|Id
+argument_list|,
+name|StartL
 argument_list|)
-operator|,
+block|,
 name|DeclContext
 argument_list|(
 name|DK
 argument_list|)
-operator|,
-name|TagKeywordLoc
+block|,
+name|TypedefNameDeclOrQualifier
 argument_list|(
-name|TKL
-argument_list|)
-operator|,
-name|TypedefDeclOrQualifier
-argument_list|(
-argument|(TypedefDecl*)
+argument|(TypedefNameDecl*)
 literal|0
 argument_list|)
 block|{
@@ -9322,9 +9283,9 @@ name|redeclarable_base
 expr_stmt|;
 name|virtual
 name|TagDecl
-modifier|*
+operator|*
 name|getNextRedeclaration
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|RedeclLink
@@ -9338,16 +9299,25 @@ comment|///
 comment|/// This is a helper function for derived classes.
 name|void
 name|completeDefinition
-parameter_list|()
-function_decl|;
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_typedef
 typedef|typedef
 name|redeclarable_base
 operator|::
 name|redecl_iterator
 name|redecl_iterator
 expr_stmt|;
+end_typedef
+
+begin_expr_stmt
 name|redecl_iterator
 name|redecls_begin
 argument_list|()
@@ -9360,6 +9330,9 @@ name|redecls_begin
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|redecl_iterator
 name|redecls_end
 argument_list|()
@@ -9372,6 +9345,9 @@ name|redecls_end
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|SourceLocation
 name|getRBraceLoc
 argument_list|()
@@ -9381,6 +9357,9 @@ return|return
 name|RBraceLoc
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setRBraceLoc
 parameter_list|(
@@ -9393,58 +9372,64 @@ operator|=
 name|L
 expr_stmt|;
 block|}
-name|SourceLocation
-name|getTagKeywordLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TagKeywordLoc
-return|;
-block|}
-name|void
-name|setTagKeywordLoc
-parameter_list|(
-name|SourceLocation
-name|TKL
-parameter_list|)
-block|{
-name|TagKeywordLoc
-operator|=
-name|TKL
-expr_stmt|;
-block|}
+end_function
+
+begin_comment
 comment|/// getInnerLocStart - Return SourceLocation representing start of source
+end_comment
+
+begin_comment
 comment|/// range ignoring outer template declarations.
-name|virtual
+end_comment
+
+begin_expr_stmt
 name|SourceLocation
 name|getInnerLocStart
 argument_list|()
 specifier|const
 block|{
 return|return
-name|TagKeywordLoc
+name|getLocStart
+argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// getOuterLocStart - Return SourceLocation representing start of source
+end_comment
+
+begin_comment
 comment|/// range taking into account any outer template declarations.
+end_comment
+
+begin_expr_stmt
 name|SourceLocation
 name|getOuterLocStart
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
 name|virtual
 name|TagDecl
 modifier|*
 name|getCanonicalDecl
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_expr_stmt
 specifier|const
 name|TagDecl
 operator|*
@@ -9466,8 +9451,17 @@ name|getCanonicalDecl
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// isThisDeclarationADefinition() - Return true if this declaration
+end_comment
+
+begin_comment
 comment|/// defines the type.  Provided for consistency.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isThisDeclarationADefinition
 argument_list|()
@@ -9478,7 +9472,13 @@ name|isDefinition
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// isDefinition - Return true if this decl has its body specified.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isDefinition
 argument_list|()
@@ -9488,7 +9488,13 @@ return|return
 name|IsDefinition
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// isBeingDefined - Return true if this decl is currently being defined.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isBeingDefined
 argument_list|()
@@ -9498,6 +9504,9 @@ return|return
 name|IsBeingDefined
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|isEmbeddedInDeclarator
 argument_list|()
@@ -9507,6 +9516,9 @@ return|return
 name|IsEmbeddedInDeclarator
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setEmbeddedInDeclarator
 parameter_list|(
@@ -9519,9 +9531,21 @@ operator|=
 name|isInDeclarator
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Whether this declaration declares a type that is
+end_comment
+
+begin_comment
 comment|/// dependent, i.e., a type that somehow depends on template
+end_comment
+
+begin_comment
 comment|/// parameters.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isDependentType
 argument_list|()
@@ -9532,28 +9556,73 @@ name|isDependentContext
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// @brief Starts the definition of this tag declaration.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This method should be invoked at the beginning of the definition
+end_comment
+
+begin_comment
 comment|/// of this tag declaration. It will set the tag type into a state
+end_comment
+
+begin_comment
 comment|/// where it is in the process of being defined.
+end_comment
+
+begin_function_decl
 name|void
 name|startDefinition
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// getDefinition - Returns the TagDecl that actually defines this
+end_comment
+
+begin_comment
 comment|///  struct/union/class/enum.  When determining whether or not a
+end_comment
+
+begin_comment
 comment|///  struct/union/class/enum is completely defined, one should use this method
+end_comment
+
+begin_comment
 comment|///  as opposed to 'isDefinition'.  'isDefinition' indicates whether or not a
+end_comment
+
+begin_comment
 comment|///  specific TagDecl is defining declaration, not whether or not the
+end_comment
+
+begin_comment
 comment|///  struct/union/class/enum type is defined.  This method returns NULL if
+end_comment
+
+begin_comment
 comment|///  there is no TagDecl that defines the struct/union/class/enum.
+end_comment
+
+begin_expr_stmt
 name|TagDecl
 operator|*
 name|getDefinition
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_function
 name|void
 name|setDefinition
 parameter_list|(
@@ -9566,6 +9635,9 @@ operator|=
 name|V
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
 specifier|const
 name|char
 operator|*
@@ -9583,6 +9655,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|TagKind
 name|getTagKind
 argument_list|()
@@ -9595,6 +9670,9 @@ name|TagDeclKind
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setTagKind
 parameter_list|(
@@ -9607,6 +9685,9 @@ operator|=
 name|TK
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
 name|bool
 name|isStruct
 argument_list|()
@@ -9619,6 +9700,9 @@ operator|==
 name|TTK_Struct
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|isClass
 argument_list|()
@@ -9631,6 +9715,9 @@ operator|==
 name|TTK_Class
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|isUnion
 argument_list|()
@@ -9643,6 +9730,9 @@ operator|==
 name|TTK_Union
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|isEnum
 argument_list|()
@@ -9655,9 +9745,12 @@ operator|==
 name|TTK_Enum
 return|;
 block|}
-name|TypedefDecl
+end_expr_stmt
+
+begin_expr_stmt
+name|TypedefNameDecl
 operator|*
-name|getTypedefForAnonDecl
+name|getTypedefNameForAnonDecl
 argument_list|()
 specifier|const
 block|{
@@ -9667,27 +9760,39 @@ argument_list|()
 operator|?
 literal|0
 operator|:
-name|TypedefDeclOrQualifier
+name|TypedefNameDeclOrQualifier
 operator|.
 name|get
 operator|<
-name|TypedefDecl
+name|TypedefNameDecl
 operator|*
 operator|>
 operator|(
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function_decl
 name|void
-name|setTypedefForAnonDecl
+name|setTypedefNameForAnonDecl
 parameter_list|(
-name|TypedefDecl
+name|TypedefNameDecl
 modifier|*
 name|TDD
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Retrieve the nested-name-specifier that qualifies the name of this
+end_comment
+
+begin_comment
 comment|/// declaration, if it was present in the source.
+end_comment
+
+begin_expr_stmt
 name|NestedNameSpecifier
 operator|*
 name|getQualifier
@@ -9709,9 +9814,21 @@ operator|:
 literal|0
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the nested-name-specifier (with source-location
+end_comment
+
+begin_comment
 comment|/// information) that qualifies the name of this declaration, if it was
+end_comment
+
+begin_comment
 comment|/// present in the source.
+end_comment
+
+begin_expr_stmt
 name|NestedNameSpecifierLoc
 name|getQualifierLoc
 argument_list|()
@@ -9730,6 +9847,9 @@ name|NestedNameSpecifierLoc
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_function_decl
 name|void
 name|setQualifierInfo
 parameter_list|(
@@ -9737,6 +9857,9 @@ name|NestedNameSpecifierLoc
 name|QualifierLoc
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_expr_stmt
 name|unsigned
 name|getNumTemplateParameterLists
 argument_list|()
@@ -9754,6 +9877,9 @@ operator|:
 literal|0
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|TemplateParameterList
 modifier|*
 name|getTemplateParameterList
@@ -9781,6 +9907,9 @@ name|i
 index|]
 return|;
 block|}
+end_decl_stmt
+
+begin_function_decl
 name|void
 name|setTemplateParameterListsInfo
 parameter_list|(
@@ -9796,21 +9925,14 @@ modifier|*
 modifier|*
 name|TPLists
 parameter_list|)
-block|{
-name|getExtInfo
-argument_list|()
-operator|->
-name|setTemplateParameterListsInfo
-argument_list|(
-name|Context
-argument_list|,
-name|NumTPLists
-argument_list|,
-name|TPLists
-argument_list|)
-expr_stmt|;
-block|}
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|// Implement isa/cast/dyncast/etc.
+end_comment
+
+begin_function
 specifier|static
 name|bool
 name|classof
@@ -9831,6 +9953,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classof
@@ -9845,6 +9970,9 @@ return|return
 name|true
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classofKind
@@ -9863,6 +9991,9 @@ operator|<=
 name|lastTag
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|DeclContext
 modifier|*
@@ -9892,6 +10023,9 @@ operator|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|TagDecl
 modifier|*
@@ -9921,22 +10055,24 @@ operator|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_decl_stmt
 name|friend
 name|class
 name|ASTDeclReader
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|friend
 name|class
 name|ASTDeclWriter
 decl_stmt|;
-block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
+unit|};
 comment|/// EnumDecl - Represents an enum.  As an extension, we allow forward-declared
 end_comment
 
@@ -10015,13 +10151,13 @@ name|EnumDecl
 argument_list|(
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
 argument|EnumDecl *PrevDecl
-argument_list|,
-argument|SourceLocation TKL
 argument_list|,
 argument|bool Scoped
 argument_list|,
@@ -10038,13 +10174,13 @@ name|TTK_Enum
 argument_list|,
 name|DC
 argument_list|,
-name|L
+name|IdLoc
 argument_list|,
 name|Id
 argument_list|,
 name|PrevDecl
 argument_list|,
-name|TKL
+name|StartLoc
 argument_list|)
 block|,
 name|InstantiatedFrom
@@ -10088,7 +10224,7 @@ block|;
 name|IsFixed
 operator|=
 name|Fixed
-block|;     }
+block|;   }
 name|public
 operator|:
 name|EnumDecl
@@ -10176,11 +10312,11 @@ argument|ASTContext&C
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|IdentifierInfo *Id
-argument_list|,
-argument|SourceLocation TKL
 argument_list|,
 argument|EnumDecl *PrevDecl
 argument_list|,
@@ -10504,7 +10640,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Returns the width in bits requred to store all the
+comment|/// \brief Returns the width in bits required to store all the
 end_comment
 
 begin_comment
@@ -10548,7 +10684,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Returns the width in bits requred to store all the
+comment|/// \brief Returns the width in bits required to store all the
 end_comment
 
 begin_comment
@@ -10862,13 +10998,13 @@ argument|TagKind TK
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
 argument|RecordDecl *PrevDecl
-argument_list|,
-argument|SourceLocation TKL
 argument_list|)
 block|;
 name|public
@@ -10884,11 +11020,11 @@ argument|TagKind TK
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|IdentifierInfo *Id
-argument_list|,
-argument|SourceLocation TKL = SourceLocation()
 argument_list|,
 argument|RecordDecl* PrevDecl =
 literal|0
@@ -11218,13 +11354,18 @@ name|StringLiteral
 operator|*
 name|AsmString
 block|;
+name|SourceLocation
+name|RParenLoc
+block|;
 name|FileScopeAsmDecl
 argument_list|(
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
-argument_list|,
 argument|StringLiteral *asmstring
+argument_list|,
+argument|SourceLocation StartL
+argument_list|,
+argument|SourceLocation EndL
 argument_list|)
 operator|:
 name|Decl
@@ -11233,12 +11374,17 @@ name|FileScopeAsm
 argument_list|,
 name|DC
 argument_list|,
-name|L
+name|StartL
 argument_list|)
 block|,
 name|AsmString
 argument_list|(
-argument|asmstring
+name|asmstring
+argument_list|)
+block|,
+name|RParenLoc
+argument_list|(
+argument|EndL
 argument_list|)
 block|{}
 name|public
@@ -11252,11 +11398,58 @@ argument|ASTContext&C
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
-argument_list|,
 argument|StringLiteral *Str
+argument_list|,
+argument|SourceLocation AsmLoc
+argument_list|,
+argument|SourceLocation RParenLoc
 argument_list|)
 block|;
+name|SourceLocation
+name|getAsmLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getLocation
+argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getRParenLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RParenLoc
+return|;
+block|}
+name|void
+name|setRParenLoc
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|RParenLoc
+operator|=
+name|L
+block|; }
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|getAsmLoc
+argument_list|()
+argument_list|,
+name|getRParenLoc
+argument_list|()
+argument_list|)
+return|;
+block|}
 specifier|const
 name|StringLiteral
 operator|*

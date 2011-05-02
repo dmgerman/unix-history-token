@@ -178,7 +178,7 @@ argument_list|(
 literal|"\0"
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{ CFString literal contains NUL character }}
+comment|// no-warning
 name|X
 operator|=
 name|CFSTR

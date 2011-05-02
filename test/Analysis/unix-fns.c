@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin10 -analyze -analyzer-check-objc-mem -analyzer-checker=unix.API,macosx.API %s -analyzer-store=region -fblocks -verify
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin10 -analyze -analyzer-checker=unix.API,osx.API %s -analyzer-store=region -fblocks -verify
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin10 -analyze -analyzer-check-objc-mem -analyzer-checker=unix.API,macosx.API %s -analyzer-store=basic -fblocks -verify
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin10 -analyze -analyzer-checker=unix.API,osx.API %s -analyzer-store=basic -fblocks -verify
 end_comment
 
 begin_struct

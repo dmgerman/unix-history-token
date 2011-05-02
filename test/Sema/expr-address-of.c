@@ -611,5 +611,64 @@ decl_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|f8
+parameter_list|()
+block|{
+name|void
+modifier|*
+name|dummy0
+init|=
+operator|&
+name|f8
+argument_list|()
+decl_stmt|;
+comment|// expected-error {{address expression must be an lvalue or a function designator}}
+specifier|extern
+name|void
+name|v
+decl_stmt|;
+name|void
+modifier|*
+name|dummy1
+init|=
+operator|&
+operator|(
+literal|1
+condition|?
+name|v
+else|:
+name|f8
+argument_list|()
+operator|)
+decl_stmt|;
+comment|// expected-error {{address expression must be an lvalue or a function designator}}
+name|void
+modifier|*
+name|dummy2
+init|=
+operator|&
+operator|(
+name|f8
+argument_list|()
+expr|,
+name|v
+operator|)
+decl_stmt|;
+comment|// expected-error {{address expression must be an lvalue or a function designator}}
+name|void
+modifier|*
+name|dummy3
+init|=
+operator|&
+operator|(
+block|{ ; }
+operator|)
+decl_stmt|;
+comment|// expected-error {{address expression must be an lvalue or a function designator}}
+block|}
+end_function
+
 end_unit
 

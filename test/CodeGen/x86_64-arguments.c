@@ -10,10 +10,6 @@ file|<stdarg.h>
 end_include
 
 begin_comment
-comment|// CHECK: %0 = type { i64, double }
-end_comment
-
-begin_comment
 comment|// CHECK: define signext i8 @f0()
 end_comment
 
@@ -181,11 +177,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK: define %0 @f8_1()
+comment|// CHECK: define void @f8_1(%struct.s19* sret %agg.result)
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f8_2(i64 %a0.coerce0, double %a0.coerce1)
+comment|// CHECK: define void @f8_2(%struct.s19* byval align 16 %a0)
 end_comment
 
 begin_union
@@ -1241,6 +1237,64 @@ name|arg
 operator|+
 name|arg
 return|;
+block|}
+end_function
+
+begin_comment
+comment|// rdar://9122143
+end_comment
+
+begin_comment
+comment|// CHECK: declare void @func(%struct._str* byval align 16)
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_str
+block|{
+union|union
+block|{
+name|long
+name|double
+name|a
+decl_stmt|;
+name|long
+name|c
+decl_stmt|;
+block|}
+union|;
+block|}
+name|str
+typedef|;
+end_typedef
+
+begin_function_decl
+name|void
+name|func
+parameter_list|(
+name|str
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|str
+name|ss
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|f9122143
+parameter_list|()
+block|{
+name|func
+argument_list|(
+name|ss
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

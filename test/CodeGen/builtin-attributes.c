@@ -41,5 +41,34 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: call i8* @strstr{{.*}} nounwind
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|f2
+parameter_list|(
+name|char
+modifier|*
+name|a
+parameter_list|,
+name|char
+modifier|*
+name|b
+parameter_list|)
+block|{
+return|return
+name|__builtin_strstr
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
 end_unit
 

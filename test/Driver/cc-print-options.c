@@ -8,7 +8,7 @@ comment|// RUN:     CC_PRINT_OPTIONS_FILE=%t.log \
 end_comment
 
 begin_comment
-comment|// RUN: %clang -S -o %t.s %s
+comment|// RUN: %clang -no-canonical-prefixes -S -o %t.s %s
 end_comment
 
 begin_comment

@@ -136,6 +136,8 @@ argument_list|(
 argument|const Compilation&C
 argument_list|,
 argument|const JobAction&JA
+argument_list|,
+argument|const ActionList&Inputs
 argument_list|)
 specifier|const
 block|;
@@ -202,12 +204,17 @@ name|mutable
 name|bool
 name|TargetInitialized
 block|;
-comment|/// Whether we are targetting iPhoneOS target.
+comment|/// Whether we are targeting iPhoneOS target.
 name|mutable
 name|bool
 name|TargetIsIPhoneOS
 block|;
-comment|/// The OS version we are targetting.
+comment|/// Whether we are targeting the iPhoneOS simulator target.
+name|mutable
+name|bool
+name|TargetIsIPhoneOSSimulator
+block|;
+comment|/// The OS version we are targeting.
 name|mutable
 name|unsigned
 name|TargetVersion
@@ -268,16 +275,30 @@ comment|// for these targets and put version in constructor.
 name|void
 name|setTarget
 argument_list|(
-argument|bool isIPhoneOS
+argument|bool IsIPhoneOS
 argument_list|,
 argument|unsigned Major
 argument_list|,
 argument|unsigned Minor
 argument_list|,
 argument|unsigned Micro
+argument_list|,
+argument|bool IsIOSSim
 argument_list|)
 specifier|const
 block|{
+name|assert
+argument_list|(
+operator|(
+operator|!
+name|IsIOSSim
+operator|||
+name|IsIPhoneOS
+operator|)
+operator|&&
+literal|"Unexpected deployment target!"
+argument_list|)
+block|;
 comment|// FIXME: For now, allow reinitialization as long as values don't
 comment|// change. This will go away when we move away from argument translation.
 if|if
@@ -286,7 +307,11 @@ name|TargetInitialized
 operator|&&
 name|TargetIsIPhoneOS
 operator|==
-name|isIPhoneOS
+name|IsIPhoneOS
+operator|&&
+name|TargetIsIPhoneOSSimulator
+operator|==
+name|IsIOSSim
 operator|&&
 name|TargetVersion
 index|[
@@ -324,7 +349,11 @@ name|true
 block|;
 name|TargetIsIPhoneOS
 operator|=
-name|isIPhoneOS
+name|IsIPhoneOS
+block|;
+name|TargetIsIPhoneOSSimulator
+operator|=
+name|IsIOSSim
 block|;
 name|TargetVersion
 index|[
@@ -361,6 +390,22 @@ argument_list|)
 block|;
 return|return
 name|TargetIsIPhoneOS
+return|;
+block|}
+name|bool
+name|isTargetIOSSimulator
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|TargetInitialized
+operator|&&
+literal|"Target not initialized!"
+argument_list|)
+block|;
+return|return
+name|TargetIsIPhoneOSSimulator
 return|;
 block|}
 name|bool
@@ -699,6 +744,11 @@ specifier|const
 name|JobAction
 operator|&
 name|JA
+argument_list|,
+specifier|const
+name|ActionList
+operator|&
+name|Inputs
 argument_list|)
 decl|const
 decl_stmt|;
@@ -904,6 +954,12 @@ specifier|const
 expr_stmt|;
 name|virtual
 name|bool
+name|SupportsProfiling
+argument_list|()
+specifier|const
+expr_stmt|;
+name|virtual
+name|bool
 name|SupportsObjCGC
 argument_list|()
 specifier|const
@@ -992,75 +1048,6 @@ block|;
 name|virtual
 name|void
 name|AddCCKextLibArgs
-argument_list|(
-argument|const ArgList&Args
-argument_list|,
-argument|ArgStringList&CmdArgs
-argument_list|)
-specifier|const
-block|;
-comment|/// }
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// DarwinGCC - The Darwin toolchain used by GCC.
-end_comment
-
-begin_decl_stmt
-name|class
-name|LLVM_LIBRARY_VISIBILITY
-name|DarwinGCC
-range|:
-name|public
-name|Darwin
-block|{
-comment|/// GCC version to use.
-name|unsigned
-name|GCCVersion
-index|[
-literal|3
-index|]
-block|;
-comment|/// The directory suffix for this tool chain.
-name|std
-operator|::
-name|string
-name|ToolChainDir
-block|;
-name|public
-operator|:
-name|DarwinGCC
-argument_list|(
-specifier|const
-name|HostInfo
-operator|&
-name|Host
-argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|Triple
-operator|&
-name|Triple
-argument_list|)
-block|;
-comment|/// @name Darwin ToolChain Implementation
-comment|/// {
-name|virtual
-name|void
-name|AddLinkSearchPathArgs
-argument_list|(
-argument|const ArgList&Args
-argument_list|,
-argument|ArgStringList&CmdArgs
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|void
-name|AddLinkRuntimeLibArgs
 argument_list|(
 argument|const ArgList&Args
 argument_list|,
@@ -1232,6 +1219,8 @@ argument_list|(
 argument|const Compilation&C
 argument_list|,
 argument|const JobAction&JA
+argument_list|,
+argument|const ActionList&Inputs
 argument_list|)
 specifier|const
 block|; }
@@ -1268,6 +1257,8 @@ argument_list|(
 argument|const Compilation&C
 argument_list|,
 argument|const JobAction&JA
+argument_list|,
+argument|const ActionList&Inputs
 argument_list|)
 specifier|const
 block|; }
@@ -1304,6 +1295,8 @@ argument_list|(
 argument|const Compilation&C
 argument_list|,
 argument|const JobAction&JA
+argument_list|,
+argument|const ActionList&Inputs
 argument_list|)
 specifier|const
 block|; }
@@ -1340,6 +1333,8 @@ argument_list|(
 argument|const Compilation&C
 argument_list|,
 argument|const JobAction&JA
+argument_list|,
+argument|const ActionList&Inputs
 argument_list|)
 specifier|const
 block|; }
@@ -1376,6 +1371,8 @@ argument_list|(
 argument|const Compilation&C
 argument_list|,
 argument|const JobAction&JA
+argument_list|,
+argument|const ActionList&Inputs
 argument_list|)
 specifier|const
 block|; }
@@ -1412,6 +1409,8 @@ argument_list|(
 argument|const Compilation&C
 argument_list|,
 argument|const JobAction&JA
+argument_list|,
+argument|const ActionList&Inputs
 argument_list|)
 specifier|const
 block|; }
@@ -1454,6 +1453,8 @@ argument_list|(
 argument|const Compilation&C
 argument_list|,
 argument|const JobAction&JA
+argument_list|,
+argument|const ActionList&Inputs
 argument_list|)
 specifier|const
 block|;
@@ -1511,6 +1512,8 @@ argument_list|(
 argument|const Compilation&C
 argument_list|,
 argument|const JobAction&JA
+argument_list|,
+argument|const ActionList&Inputs
 argument_list|)
 specifier|const
 block|;
@@ -1597,6 +1600,8 @@ argument_list|(
 argument|const Compilation&C
 argument_list|,
 argument|const JobAction&JA
+argument_list|,
+argument|const ActionList&Inputs
 argument_list|)
 specifier|const
 block|;

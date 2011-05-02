@@ -32,7 +32,11 @@ comment|// PR8974
 end_comment
 
 begin_comment
-comment|// XFAIL: win32
+comment|// REQUIRES: shell
+end_comment
+
+begin_comment
+comment|// "cd %t.dir" requires shell.
 end_comment
 
 begin_comment

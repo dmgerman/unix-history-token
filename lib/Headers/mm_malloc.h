@@ -114,6 +114,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|!
+operator|(
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_mm_malloc
+argument_list|)
+operator|)
+end_if
+
 begin_decl_stmt
 specifier|static
 name|__inline__
@@ -248,6 +265,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

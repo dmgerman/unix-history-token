@@ -65,7 +65,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: blocks.c:6:6: FunctionDecl=test:6:6 (Definition) Extent=[6:6 - 10:2]
+comment|// CHECK: blocks.c:6:6: FunctionDecl=test:6:6 (Definition) Extent=[6:1 - 10:2]
 end_comment
 
 begin_comment
@@ -77,7 +77,7 @@ comment|// CHECK: blocks.c:7:3: UnexposedStmt= Extent=[7:3 - 7:26]
 end_comment
 
 begin_comment
-comment|// CHECK: blocks.c:7:21: VarDecl=_foo:7:21 (Definition) Extent=[7:17 - 7:25]
+comment|// CHECK: blocks.c:7:21: VarDecl=_foo:7:21 (Definition) Extent=[7:3 - 7:25]
 end_comment
 
 begin_comment
@@ -85,7 +85,7 @@ comment|// CHECK: blocks.c:7:17: TypeRef=struct foo:4:8 Extent=[7:17 - 7:20]
 end_comment
 
 begin_comment
-comment|// CHECK: blocks.c:8:11: VarDecl=i:8:11 (Definition) Extent=[8:11 - 8:16]
+comment|// CHECK: blocks.c:8:11: VarDecl=i:8:11 (Definition) Extent=[8:3 - 8:16]
 end_comment
 
 begin_comment
@@ -105,7 +105,7 @@ comment|// CHECK: blocks.c:9:5: TypeRef=int_t:3:13 Extent=[9:5 - 9:10]
 end_comment
 
 begin_comment
-comment|// CHECK: blocks.c:9:23: ParmDecl=foo:9:23 (Definition) Extent=[9:18 - 9:26]
+comment|// CHECK: blocks.c:9:23: ParmDecl=foo:9:23 (Definition) Extent=[9:11 - 9:26]
 end_comment
 
 begin_comment

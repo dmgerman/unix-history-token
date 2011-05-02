@@ -4,7 +4,7 @@ comment|// RUN: rm -rf %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-output=html -analyzer-check-objc-mem -o %t %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-output=html -analyzer-checker=core -o %t %s
 end_comment
 
 begin_comment

@@ -7,10 +7,6 @@ begin_comment
 comment|// RUN: %clang_cc1 -fsyntax-only -verify %s
 end_comment
 
-begin_comment
-comment|// FIXME: Sadly, the following doesn't work within a function.
-end_comment
-
 begin_decl_stmt
 name|unsinged
 name|x

@@ -956,5 +956,69 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_decl_stmt
+name|namespace
+name|NonTypeTemplateParmContext
+block|{
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|int
+name|inlineCapacity
+operator|=
+literal|0
+operator|>
+name|class
+name|Vector
+block|{ }
+expr_stmt|;
+struct|struct
+name|String
+block|{
+name|template
+operator|<
+name|int
+name|inlineCapacity
+operator|>
+specifier|static
+name|String
+name|adopt
+argument_list|(
+name|Vector
+operator|<
+name|char
+argument_list|,
+name|inlineCapacity
+operator|>
+operator|&
+argument_list|)
+expr_stmt|;
+block|}
+struct|;
+name|template
+operator|<
+name|int
+name|inlineCapacity
+operator|>
+specifier|inline
+name|bool
+name|equalIgnoringNullity
+argument_list|(
+argument|const Vector<char
+argument_list|,
+argument|inlineCapacity>& a
+argument_list|,
+argument|const String& b
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+block|}
+end_decl_stmt
+
 end_unit
 

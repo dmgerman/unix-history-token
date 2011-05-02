@@ -12,10 +12,6 @@ comment|// RUN: %clang_cc1 -ast-dump %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -ast-print-xml -o %t %s
-end_comment
-
-begin_comment
 comment|// RUN: %clang_cc1 -print-decl-contexts %s
 end_comment
 

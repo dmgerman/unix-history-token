@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cassert>
 end_include
 
@@ -664,6 +658,32 @@ name|bool
 operator|*
 name|Invalid
 operator|=
+literal|0
+argument_list|)
+block|;
+comment|/// getSpelling - This method is used to get the spelling of the
+comment|/// token at the given source location.  If, as is usually true, it
+comment|/// is not necessary to copy any data, then the returned string may
+comment|/// not point into the provided buffer.
+comment|///
+comment|/// This method lexes at the instantiation depth of the given
+comment|/// location and does not jump to the instantiation or spelling
+comment|/// location.
+specifier|static
+name|llvm
+operator|::
+name|StringRef
+name|getSpelling
+argument_list|(
+argument|SourceLocation loc
+argument_list|,
+argument|llvm::SmallVectorImpl<char>&buffer
+argument_list|,
+argument|const SourceManager&SourceMgr
+argument_list|,
+argument|const LangOptions&Features
+argument_list|,
+argument|bool *invalid =
 literal|0
 argument_list|)
 block|;

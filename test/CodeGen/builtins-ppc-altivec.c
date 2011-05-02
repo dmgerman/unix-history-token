@@ -13578,8 +13578,8 @@ name|param_sc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vsc
 operator|=
@@ -13592,8 +13592,8 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
@@ -13606,8 +13606,8 @@ name|param_uc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
@@ -13620,8 +13620,8 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vbc
 operator|=
@@ -13648,8 +13648,8 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vs
 operator|=
@@ -13662,8 +13662,8 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
@@ -13676,8 +13676,8 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
@@ -13690,8 +13690,8 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vbs
 operator|=
@@ -13732,8 +13732,8 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vi
 operator|=
@@ -13746,8 +13746,8 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vui
 operator|=
@@ -13760,8 +13760,8 @@ name|param_ui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vui
 operator|=
@@ -13774,8 +13774,8 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vbi
 operator|=
@@ -13802,8 +13802,8 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<4 x float> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x float> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|/* vec_lvlxl */
 name|res_vsc
@@ -13817,8 +13817,8 @@ name|param_sc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vsc
 operator|=
@@ -13831,8 +13831,8 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
@@ -13845,8 +13845,8 @@ name|param_uc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
@@ -13859,8 +13859,8 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vbc
 operator|=
@@ -13887,8 +13887,8 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vs
 operator|=
@@ -13901,8 +13901,8 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
@@ -13915,8 +13915,8 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
@@ -13929,8 +13929,8 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vbs
 operator|=
@@ -13971,8 +13971,8 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vi
 operator|=
@@ -13985,8 +13985,8 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vui
 operator|=
@@ -13999,8 +13999,8 @@ name|param_ui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vui
 operator|=
@@ -14013,8 +14013,8 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vbi
 operator|=
@@ -14041,8 +14041,8 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
-comment|// CHECK: store<4 x float> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x float> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|/* vec_lvrx */
 name|res_vsc
@@ -14055,9 +14055,9 @@ operator|&
 name|param_sc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vsc
 operator|=
@@ -14069,9 +14069,9 @@ operator|&
 name|vsc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
@@ -14083,9 +14083,9 @@ operator|&
 name|param_uc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
@@ -14097,9 +14097,9 @@ operator|&
 name|vuc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vbc
 operator|=
@@ -14125,9 +14125,9 @@ operator|&
 name|param_s
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vs
 operator|=
@@ -14139,9 +14139,9 @@ operator|&
 name|vs
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
@@ -14153,9 +14153,9 @@ operator|&
 name|param_us
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
@@ -14167,9 +14167,9 @@ operator|&
 name|vus
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vbs
 operator|=
@@ -14209,9 +14209,9 @@ operator|&
 name|param_i
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vi
 operator|=
@@ -14223,9 +14223,9 @@ operator|&
 name|vi
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vui
 operator|=
@@ -14237,9 +14237,9 @@ operator|&
 name|param_ui
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vui
 operator|=
@@ -14251,9 +14251,9 @@ operator|&
 name|vui
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vbi
 operator|=
@@ -14279,9 +14279,9 @@ operator|&
 name|vf
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<4 x float> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x float> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|/* vec_lvrxl */
 name|res_vsc
@@ -14294,9 +14294,9 @@ operator|&
 name|param_sc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vsc
 operator|=
@@ -14308,9 +14308,9 @@ operator|&
 name|vsc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
@@ -14322,9 +14322,9 @@ operator|&
 name|param_uc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
@@ -14336,9 +14336,9 @@ operator|&
 name|vuc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vbc
 operator|=
@@ -14364,9 +14364,9 @@ operator|&
 name|param_s
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vs
 operator|=
@@ -14378,9 +14378,9 @@ operator|&
 name|vs
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
@@ -14392,9 +14392,9 @@ operator|&
 name|param_us
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
@@ -14406,9 +14406,9 @@ operator|&
 name|vus
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vbs
 operator|=
@@ -14448,9 +14448,9 @@ operator|&
 name|param_i
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vi
 operator|=
@@ -14462,9 +14462,9 @@ operator|&
 name|vi
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vui
 operator|=
@@ -14476,9 +14476,9 @@ operator|&
 name|param_ui
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vui
 operator|=
@@ -14490,9 +14490,9 @@ operator|&
 name|vui
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 name|res_vbi
 operator|=
@@ -14518,9 +14518,9 @@ operator|&
 name|vf
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<4 x float> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x float> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|/* vec_stvlx */
 name|vec_stvlx
@@ -14533,9 +14533,9 @@ operator|&
 name|param_sc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -14550,9 +14550,9 @@ operator|&
 name|vsc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -14567,9 +14567,9 @@ operator|&
 name|param_uc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -14584,9 +14584,9 @@ operator|&
 name|vuc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -14618,9 +14618,9 @@ operator|&
 name|param_s
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -14635,9 +14635,9 @@ operator|&
 name|vs
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -14652,9 +14652,9 @@ operator|&
 name|param_us
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -14669,9 +14669,9 @@ operator|&
 name|vus
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -14720,9 +14720,9 @@ operator|&
 name|param_i
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -14737,9 +14737,9 @@ operator|&
 name|vi
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -14754,9 +14754,9 @@ operator|&
 name|param_ui
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -14771,9 +14771,9 @@ operator|&
 name|vui
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -14805,9 +14805,9 @@ operator|&
 name|vf
 argument_list|)
 expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<4 x float> zeroinitializer
-comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -14823,9 +14823,9 @@ operator|&
 name|param_sc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -14840,9 +14840,9 @@ operator|&
 name|vsc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -14857,9 +14857,9 @@ operator|&
 name|param_uc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -14874,9 +14874,9 @@ operator|&
 name|vuc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -14908,9 +14908,9 @@ operator|&
 name|param_s
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -14925,9 +14925,9 @@ operator|&
 name|vs
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -14942,9 +14942,9 @@ operator|&
 name|param_us
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -14959,9 +14959,9 @@ operator|&
 name|vus
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15010,9 +15010,9 @@ operator|&
 name|param_i
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15027,9 +15027,9 @@ operator|&
 name|vi
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15044,9 +15044,9 @@ operator|&
 name|param_ui
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15061,9 +15061,9 @@ operator|&
 name|vui
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15095,9 +15095,9 @@ operator|&
 name|vf
 argument_list|)
 expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<4 x float> zeroinitializer
-comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15114,8 +15114,8 @@ name|param_sc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15131,8 +15131,8 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15148,8 +15148,8 @@ name|param_uc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15165,8 +15165,8 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15199,8 +15199,8 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15216,8 +15216,8 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15233,8 +15233,8 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15250,8 +15250,8 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15301,8 +15301,8 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15318,8 +15318,8 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15335,8 +15335,8 @@ name|param_ui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15352,8 +15352,8 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15386,8 +15386,8 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<4 x float> zeroinitializer
-comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15404,8 +15404,8 @@ name|param_sc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15421,8 +15421,8 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15438,8 +15438,8 @@ name|param_uc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15455,8 +15455,8 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15489,8 +15489,8 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15506,8 +15506,8 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15523,8 +15523,8 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15540,8 +15540,8 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15591,8 +15591,8 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15608,8 +15608,8 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15625,8 +15625,8 @@ name|param_ui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15642,8 +15642,8 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
-comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -15676,8 +15676,8 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<4 x float> zeroinitializer
-comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -18660,7 +18660,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ------------------------------ Relational Operators------------------------------- */
+comment|/* ------------------------------ Relational Operators ------------------------------ */
 end_comment
 
 begin_comment
@@ -19240,47 +19240,6 @@ name|vf2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgefp.p(i32 2
-block|}
-end_function
-
-begin_comment
-comment|/* ------------------------------- increment/decrement: ----------------------------- */
-end_comment
-
-begin_comment
-comment|// CHECK: define void @test8
-end_comment
-
-begin_function
-name|void
-name|test8
-parameter_list|()
-block|{
-name|vector
-name|int
-name|vi
-decl_stmt|;
-name|vi
-operator|++
-expr_stmt|;
-comment|// CHECK: add nsw<4 x i32> {{.*}}<i32 1, i32 1, i32 1, i32 1>
-name|vector
-name|unsigned
-name|int
-name|vui
-decl_stmt|;
-operator|--
-name|vui
-expr_stmt|;
-comment|// CHECK: add<4 x i32> {{.*}}<i32 -1, i32 -1, i32 -1, i32 -1>
-name|vector
-name|float
-name|vf
-decl_stmt|;
-name|vf
-operator|++
-expr_stmt|;
-comment|// CHECK: fadd<4 x float> {{.*}}<float 1.000000e+{{0+}}, float 1.000000e+{{0+}}, float 1.000000e+{{0+}}, float 1.000000e+{{0+}}>
 block|}
 end_function
 

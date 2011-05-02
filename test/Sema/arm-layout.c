@@ -371,6 +371,7 @@ name|int
 name|field0
 range|:
 literal|4
+decl_stmt|;
 block|}
 struct|;
 end_struct

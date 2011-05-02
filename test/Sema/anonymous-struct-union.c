@@ -333,6 +333,7 @@ name|int
 name|a
 decl_stmt|;
 block|}
+comment|// expected-warning{{expected ';' at end of declaration list}}
 block|}
 struct|;
 end_struct

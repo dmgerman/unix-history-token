@@ -55,7 +55,7 @@ operator|*
 name|a
 argument_list|)
 block|{
-comment|// expected-error {{attribute requires 0 argument(s)}}
+comment|// expected-error {{attribute takes no arguments}}
 block|}
 end_decl_stmt
 
@@ -142,7 +142,7 @@ block|{}
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{attribute requires 0 argument(s)}}
+comment|// expected-error {{attribute takes no arguments}}
 end_comment
 
 begin_expr_stmt

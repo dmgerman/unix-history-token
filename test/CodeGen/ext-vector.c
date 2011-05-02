@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm-only %s
+comment|// RUN: %clang_cc1 -emit-llvm %s -o - | FileCheck %s
 end_comment
 
 begin_typedef
@@ -42,6 +42,24 @@ name|int4
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|__attribute__
+argument_list|(
+argument|( ext_vector_type(
+literal|4
+argument|) )
+argument_list|)
+name|unsigned
+name|int
+name|uint4
+typedef|;
+end_typedef
+
+begin_comment
+comment|// CHECK: @foo = global<4 x float><float 1.000000e+00, float 2.000000e+00, float 3.000000e+00, float 4.000000e+00>
+end_comment
+
 begin_decl_stmt
 name|float4
 name|foo
@@ -60,6 +78,10 @@ literal|4.0
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// CHECK: @bar = constant<4 x float><float 1.000000e+00, float 2.000000e+00, float 3.000000e+00, float 0x7FF0000000000000>
+end_comment
 
 begin_decl_stmt
 specifier|const
@@ -81,6 +103,14 @@ argument_list|()
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// CHECK: @test1
+end_comment
+
+begin_comment
+comment|// CHECK: fadd<4 x float>
+end_comment
 
 begin_function
 name|float4
@@ -121,6 +151,30 @@ name|float
 name|f
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// CHECK: @test2
+end_comment
+
+begin_comment
+comment|// CHECK: shufflevector {{.*}}<i32 0, i32 1>
+end_comment
+
+begin_comment
+comment|// CHECK: extractelement
+end_comment
+
+begin_comment
+comment|// CHECK: shufflevector {{.*}}<i32 1, i32 1, i32 1, i32 1>
+end_comment
+
+begin_comment
+comment|// CHECK: insertelement
+end_comment
+
+begin_comment
+comment|// CHECK: shufflevector {{.*}}<i32 1, i32 0>
+end_comment
 
 begin_function
 name|void
@@ -165,6 +219,14 @@ comment|// reverse
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: @test3
+end_comment
+
+begin_comment
+comment|// CHECK: store<4 x float><float 1.000000e+00, float 2.000000e+00, float 3.000000e+00, float 4.000000e+00>
+end_comment
+
 begin_function
 name|void
 name|test3
@@ -194,6 +256,18 @@ operator|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// CHECK: @test4
+end_comment
+
+begin_comment
+comment|// CHECK: store<4 x float>
+end_comment
+
+begin_comment
+comment|// CHECK: store<4 x float>
+end_comment
 
 begin_function
 name|void
@@ -245,6 +319,30 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: @test5
+end_comment
+
+begin_comment
+comment|// CHECK: shufflevector {{.*}}<4 x i32> zeroinitializer
+end_comment
+
+begin_comment
+comment|// CHECK: fmul<4 x float>
+end_comment
+
+begin_comment
+comment|// CHECK: fmul<4 x float>
+end_comment
+
+begin_comment
+comment|// CHECK: shufflevector {{.*}}<4 x i32> zeroinitializer
+end_comment
+
+begin_comment
+comment|// CHECK: fmul<4 x float>
+end_comment
+
 begin_function
 name|void
 name|test5
@@ -292,6 +390,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: @test6
+end_comment
+
 begin_function
 name|void
 name|test6
@@ -320,6 +422,10 @@ init|=
 operator|*
 name|bp
 decl_stmt|;
+comment|// CHECK: fadd<4 x float>
+comment|// CHECK: fsub<4 x float>
+comment|// CHECK: fmul<4 x float>
+comment|// CHECK: fdiv<4 x float>
 name|a
 operator|=
 name|a
@@ -344,6 +450,10 @@ name|a
 operator|/
 name|b
 expr_stmt|;
+comment|// CHECK: fadd<4 x float>
+comment|// CHECK: fsub<4 x float>
+comment|// CHECK: fmul<4 x float>
+comment|// CHECK: fdiv<4 x float>
 name|a
 operator|=
 name|a
@@ -368,6 +478,10 @@ name|a
 operator|/
 name|c
 expr_stmt|;
+comment|// CHECK: fadd<4 x float>
+comment|// CHECK: fsub<4 x float>
+comment|// CHECK: fmul<4 x float>
+comment|// CHECK: fdiv<4 x float>
 name|a
 operator|+=
 name|b
@@ -384,6 +498,10 @@ name|a
 operator|/=
 name|b
 expr_stmt|;
+comment|// CHECK: fadd<4 x float>
+comment|// CHECK: fsub<4 x float>
+comment|// CHECK: fmul<4 x float>
+comment|// CHECK: fdiv<4 x float>
 name|a
 operator|+=
 name|c
@@ -410,6 +528,10 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_comment
+comment|// CHECK: @test7
+end_comment
 
 begin_function
 name|void
@@ -439,6 +561,11 @@ init|=
 operator|*
 name|bp
 decl_stmt|;
+comment|// CHECK: add nsw<4 x i32>
+comment|// CHECK: sub nsw<4 x i32>
+comment|// CHECK: mul nsw<4 x i32>
+comment|// CHECK: sdiv<4 x i32>
+comment|// CHECK: srem<4 x i32>
 name|a
 operator|=
 name|a
@@ -469,6 +596,11 @@ name|a
 operator|%
 name|b
 expr_stmt|;
+comment|// CHECK: add nsw<4 x i32>
+comment|// CHECK: sub nsw<4 x i32>
+comment|// CHECK: mul nsw<4 x i32>
+comment|// CHECK: sdiv<4 x i32>
+comment|// CHECK: srem<4 x i32>
 name|a
 operator|=
 name|a
@@ -499,6 +631,11 @@ name|a
 operator|%
 name|c
 expr_stmt|;
+comment|// CHECK: add nsw<4 x i32>
+comment|// CHECK: sub nsw<4 x i32>
+comment|// CHECK: mul nsw<4 x i32>
+comment|// CHECK: sdiv<4 x i32>
+comment|// CHECK: srem<4 x i32>
 name|a
 operator|+=
 name|b
@@ -519,6 +656,11 @@ name|a
 operator|%=
 name|b
 expr_stmt|;
+comment|// CHECK: add nsw<4 x i32>
+comment|// CHECK: sub nsw<4 x i32>
+comment|// CHECK: mul nsw<4 x i32>
+comment|// CHECK: sdiv<4 x i32>
+comment|// CHECK: srem<4 x i32>
 name|a
 operator|+=
 name|c
@@ -540,6 +682,12 @@ operator|%=
 name|c
 expr_stmt|;
 comment|// Vector comparisons.
+comment|// CHECK: icmp slt
+comment|// CHECK: icmp sle
+comment|// CHECK: icmp sgt
+comment|// CHECK: icmp sge
+comment|// CHECK: icmp eq
+comment|// CHECK: icmp ne
 name|int4
 name|cmp
 decl_stmt|;
@@ -558,7 +706,7 @@ expr_stmt|;
 name|cmp
 operator|=
 name|a
-operator|<
+operator|>
 name|b
 expr_stmt|;
 name|cmp
@@ -581,6 +729,10 @@ name|b
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// CHECK: @test8
+end_comment
 
 begin_function
 name|void
@@ -611,6 +763,12 @@ operator|*
 name|bp
 decl_stmt|;
 comment|// Vector comparisons.
+comment|// CHECK: fcmp olt
+comment|// CHECK: fcmp ole
+comment|// CHECK: fcmp ogt
+comment|// CHECK: fcmp oge
+comment|// CHECK: fcmp oeq
+comment|// CHECK: fcmp une
 name|int4
 name|cmp
 decl_stmt|;
@@ -629,7 +787,7 @@ expr_stmt|;
 name|cmp
 operator|=
 name|a
-operator|<
+operator|>
 name|b
 expr_stmt|;
 name|cmp
@@ -653,6 +811,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: @test9
+end_comment
+
+begin_comment
+comment|// CHECK: extractelement<4 x i32>
+end_comment
+
 begin_function
 name|int
 name|test9
@@ -670,6 +836,18 @@ name|x
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// CHECK: @test10
+end_comment
+
+begin_comment
+comment|// CHECK: add nsw<4 x i32>
+end_comment
+
+begin_comment
+comment|// CHECK: extractelement<4 x i32>
+end_comment
 
 begin_function
 name|int
@@ -691,6 +869,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: @test11
+end_comment
+
+begin_comment
+comment|// CHECK: extractelement<4 x i32>
+end_comment
+
 begin_function_decl
 name|int4
 name|test11a
@@ -711,6 +897,22 @@ name|x
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// CHECK: @test12
+end_comment
+
+begin_comment
+comment|// CHECK: shufflevector {{.*}}<i32 2, i32 1, i32 0>
+end_comment
+
+begin_comment
+comment|// CHECK: shufflevector {{.*}}<i32 0, i32 1, i32 2, i32 undef>
+end_comment
+
+begin_comment
+comment|// CHECK: shufflevector {{.*}}<i32 4, i32 5, i32 6, i32 3>
+end_comment
 
 begin_function
 name|int4
@@ -734,6 +936,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: @test13
+end_comment
+
+begin_comment
+comment|// CHECK: shufflevector {{.*}}<i32 2, i32 1, i32 0, i32 3>
+end_comment
+
 begin_function
 name|int4
 name|test13
@@ -748,6 +958,111 @@ name|V
 operator|->
 name|zyxw
 return|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: @test14
+end_comment
+
+begin_function
+name|void
+name|test14
+parameter_list|(
+name|uint4
+modifier|*
+name|ap
+parameter_list|,
+name|uint4
+modifier|*
+name|bp
+parameter_list|,
+name|unsigned
+name|c
+parameter_list|)
+block|{
+name|uint4
+name|a
+init|=
+operator|*
+name|ap
+decl_stmt|;
+name|uint4
+name|b
+init|=
+operator|*
+name|bp
+decl_stmt|;
+comment|// CHECK: udiv<4 x i32>
+comment|// CHECK: urem<4 x i32>
+name|a
+operator|=
+name|a
+operator|/
+name|b
+expr_stmt|;
+name|a
+operator|=
+name|a
+operator|%
+name|b
+expr_stmt|;
+comment|// CHECK: udiv<4 x i32>
+comment|// CHECK: urem<4 x i32>
+name|a
+operator|=
+name|a
+operator|/
+name|c
+expr_stmt|;
+name|a
+operator|=
+name|a
+operator|%
+name|c
+expr_stmt|;
+comment|// CHECK: icmp ult
+comment|// CHECK: icmp ule
+comment|// CHECK: icmp ugt
+comment|// CHECK: icmp uge
+comment|// CHECK: icmp eq
+comment|// CHECK: icmp ne
+name|a
+operator|=
+name|a
+operator|<
+name|b
+expr_stmt|;
+name|a
+operator|=
+name|a
+operator|<=
+name|b
+expr_stmt|;
+name|a
+operator|=
+name|a
+operator|>
+name|b
+expr_stmt|;
+name|a
+operator|=
+name|a
+operator|>=
+name|b
+expr_stmt|;
+name|a
+operator|=
+name|a
+operator|==
+name|b
+expr_stmt|;
+name|a
+operator|=
+name|a
+operator|!=
+name|b
+expr_stmt|;
 block|}
 end_function
 

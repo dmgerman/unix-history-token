@@ -107,7 +107,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-error {{attribute requires 0 argument(s)}}
+comment|// expected-error {{attribute takes no arguments}}
 end_comment
 
 begin_function_decl
@@ -254,7 +254,7 @@ typedef|)));
 end_typedef
 
 begin_comment
-comment|// expected-error {{attribute requires 0 argument(s)}}
+comment|// expected-error {{attribute takes no arguments}}
 end_comment
 
 end_unit

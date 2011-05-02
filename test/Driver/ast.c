@@ -80,7 +80,7 @@ comment|// FIXME: There is a problem with compiling AST's in that the input lang
 end_comment
 
 begin_comment
-comment|// not availabe for use by other tools (for example, to automatically add
+comment|// not available for use by other tools (for example, to automatically add
 end_comment
 
 begin_comment

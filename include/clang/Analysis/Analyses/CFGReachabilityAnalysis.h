@@ -95,7 +95,7 @@ comment|// tend to have a common destination, so we lazily do a predecessor sear
 comment|// from the destination node and cache the results to prevent work
 comment|// duplication.
 name|class
-name|CFGReachabilityAnalysis
+name|CFGReverseBlockReachabilityAnalysis
 block|{
 typedef|typedef
 name|llvm
@@ -122,7 +122,7 @@ name|reachable
 decl_stmt|;
 name|public
 label|:
-name|CFGReachabilityAnalysis
+name|CFGReverseBlockReachabilityAnalysis
 argument_list|(
 specifier|const
 name|CFG

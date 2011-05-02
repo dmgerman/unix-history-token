@@ -118,6 +118,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/IntrusiveRefCntPtr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -169,53 +175,61 @@ comment|/// compiler, including data such as the include paths, the code generat
 comment|/// options, the warning flags, and so on.
 name|class
 name|CompilerInvocation
+range|:
+name|public
+name|llvm
+operator|::
+name|RefCountedBase
+operator|<
+name|CompilerInvocation
+operator|>
 block|{
 comment|/// Options controlling the static analyzer.
 name|AnalyzerOptions
 name|AnalyzerOpts
-decl_stmt|;
+block|;
 comment|/// Options controlling IRgen and the backend.
 name|CodeGenOptions
 name|CodeGenOpts
-decl_stmt|;
+block|;
 comment|/// Options controlling dependency output.
 name|DependencyOutputOptions
 name|DependencyOutputOpts
-decl_stmt|;
+block|;
 comment|/// Options controlling the diagnostic engine.
 name|DiagnosticOptions
 name|DiagnosticOpts
-decl_stmt|;
+block|;
 comment|/// Options controlling file system operations.
 name|FileSystemOptions
 name|FileSystemOpts
-decl_stmt|;
+block|;
 comment|/// Options controlling the frontend itself.
 name|FrontendOptions
 name|FrontendOpts
-decl_stmt|;
+block|;
 comment|/// Options controlling the #include directive.
 name|HeaderSearchOptions
 name|HeaderSearchOpts
-decl_stmt|;
+block|;
 comment|/// Options controlling the language variant.
 name|LangOptions
 name|LangOpts
-decl_stmt|;
+block|;
 comment|/// Options controlling the preprocessor (aside from #include handling).
 name|PreprocessorOptions
 name|PreprocessorOpts
-decl_stmt|;
+block|;
 comment|/// Options controlling preprocessed output.
 name|PreprocessorOutputOptions
 name|PreprocessorOutputOpts
-decl_stmt|;
+block|;
 comment|/// Options controlling the target.
 name|TargetOptions
 name|TargetOpts
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|CompilerInvocation
 argument_list|()
 block|{}
@@ -231,30 +245,30 @@ comment|/// \param Diags - The diagnostic engine to use for errors.
 specifier|static
 name|void
 name|CreateFromArgs
-parameter_list|(
+argument_list|(
 name|CompilerInvocation
-modifier|&
+operator|&
 name|Res
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 specifier|const
-modifier|*
+operator|*
 name|ArgBegin
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 specifier|const
-modifier|*
+operator|*
 name|ArgEnd
-parameter_list|,
+argument_list|,
 name|Diagnostic
-modifier|&
+operator|&
 name|Diags
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// GetBuiltinIncludePath - Get the directory where the compiler headers
 comment|/// reside, relative to the compiler binary (found by the passed in
 comment|/// arguments).
@@ -278,7 +292,7 @@ name|void
 operator|*
 name|MainAddr
 argument_list|)
-expr_stmt|;
+block|;
 comment|/// toArgs - Convert the CompilerInvocation to a list of strings suitable for
 comment|/// passing to CreateFromArgs.
 name|void
@@ -295,7 +309,7 @@ operator|>
 operator|&
 name|Res
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// setLangDefaults - Set language defaults for the given input language and
 comment|/// language standard in this CompilerInvocation.
 comment|///
@@ -304,17 +318,9 @@ comment|/// \param LangStd - The input language standard.
 name|void
 name|setLangDefaults
 argument_list|(
-name|InputKind
-name|IK
+argument|InputKind IK
 argument_list|,
-name|LangStandard
-operator|::
-name|Kind
-name|LangStd
-operator|=
-name|LangStandard
-operator|::
-name|lang_unspecified
+argument|LangStandard::Kind LangStd = LangStandard::lang_unspecified
 argument_list|)
 block|{
 name|setLangDefaults
@@ -325,8 +331,7 @@ name|IK
 argument_list|,
 name|LangStd
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// setLangDefaults - Set language defaults for the given input language and
 comment|/// language standard in the given LangOptions object.
 comment|///
@@ -337,30 +342,20 @@ specifier|static
 name|void
 name|setLangDefaults
 argument_list|(
-name|LangOptions
-operator|&
-name|Opts
+argument|LangOptions&Opts
 argument_list|,
-name|InputKind
-name|IK
+argument|InputKind IK
 argument_list|,
-name|LangStandard
-operator|::
-name|Kind
-name|LangStd
-operator|=
-name|LangStandard
-operator|::
-name|lang_unspecified
+argument|LangStandard::Kind LangStd = LangStandard::lang_unspecified
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// @}
 comment|/// @name Option Subgroups
 comment|/// @{
 name|AnalyzerOptions
-modifier|&
+operator|&
 name|getAnalyzerOpts
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|AnalyzerOpts
@@ -378,9 +373,9 @@ name|AnalyzerOpts
 return|;
 block|}
 name|CodeGenOptions
-modifier|&
+operator|&
 name|getCodeGenOpts
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|CodeGenOpts
@@ -398,9 +393,9 @@ name|CodeGenOpts
 return|;
 block|}
 name|DependencyOutputOptions
-modifier|&
+operator|&
 name|getDependencyOutputOpts
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|DependencyOutputOpts
@@ -418,9 +413,9 @@ name|DependencyOutputOpts
 return|;
 block|}
 name|DiagnosticOptions
-modifier|&
+operator|&
 name|getDiagnosticOpts
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|DiagnosticOpts
@@ -438,9 +433,9 @@ name|DiagnosticOpts
 return|;
 block|}
 name|FileSystemOptions
-modifier|&
+operator|&
 name|getFileSystemOpts
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|FileSystemOpts
@@ -458,9 +453,9 @@ name|FileSystemOpts
 return|;
 block|}
 name|HeaderSearchOptions
-modifier|&
+operator|&
 name|getHeaderSearchOpts
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|HeaderSearchOpts
@@ -478,9 +473,9 @@ name|HeaderSearchOpts
 return|;
 block|}
 name|FrontendOptions
-modifier|&
+operator|&
 name|getFrontendOpts
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|FrontendOpts
@@ -498,9 +493,9 @@ name|FrontendOpts
 return|;
 block|}
 name|LangOptions
-modifier|&
+operator|&
 name|getLangOpts
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|LangOpts
@@ -518,9 +513,9 @@ name|LangOpts
 return|;
 block|}
 name|PreprocessorOptions
-modifier|&
+operator|&
 name|getPreprocessorOpts
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|PreprocessorOpts
@@ -538,9 +533,9 @@ name|PreprocessorOpts
 return|;
 block|}
 name|PreprocessorOutputOptions
-modifier|&
+operator|&
 name|getPreprocessorOutputOpts
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|PreprocessorOutputOpts
@@ -558,9 +553,9 @@ name|PreprocessorOutputOpts
 return|;
 block|}
 name|TargetOptions
-modifier|&
+operator|&
 name|getTargetOpts
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|TargetOpts
@@ -578,9 +573,8 @@ name|TargetOpts
 return|;
 block|}
 comment|/// @}
-block|}
-empty_stmt|;
-block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

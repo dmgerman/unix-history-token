@@ -188,6 +188,9 @@ block|,
 comment|/// \brief The entity being initialized is a base member subobject.
 name|EK_Base
 block|,
+comment|/// \brief The initialization is being done by a delegating constructor.
+name|EK_Delegating
+block|,
 comment|/// \brief The entity being initialized is an element of a vector.
 comment|/// or vector.
 name|EK_VectorElement
@@ -699,6 +702,27 @@ name|bool
 name|IsInheritedVirtualBase
 parameter_list|)
 function_decl|;
+comment|/// \brief Create the initialization entity for a delegated constructor.
+specifier|static
+name|InitializedEntity
+name|InitializeDelegation
+parameter_list|(
+name|QualType
+name|Type
+parameter_list|)
+block|{
+return|return
+name|InitializedEntity
+argument_list|(
+name|EK_Delegating
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
 comment|/// \brief Create the initialization entity for a member subobject.
 specifier|static
 name|InitializedEntity
@@ -794,7 +818,7 @@ name|Kind
 return|;
 block|}
 comment|/// \brief Retrieve the parent of the entity being initialized, when
-comment|/// the initialization itself is occuring within the context of a
+comment|/// the initialization itself is occurring within the context of a
 comment|/// larger initialization.
 specifier|const
 name|InitializedEntity
@@ -1761,6 +1785,9 @@ block|,
 comment|/// \brief Implicit conversion failed.
 name|FK_ConversionFailed
 block|,
+comment|/// \brief Implicit conversion failed.
+name|FK_ConversionFromPropertyFailed
+block|,
 comment|/// \brief Too many initializers for scalar
 name|FK_TooManyInitsForScalar
 block|,
@@ -1857,7 +1884,7 @@ comment|///
 comment|/// \param Kind the kind of initialization being performed.
 comment|///
 comment|/// \param Args the argument(s) provided for initialization, ownership of
-comment|/// which is transfered into the routine.
+comment|/// which is transferred into the routine.
 comment|///
 comment|/// \param ResultType if non-NULL, will be set to the type of the
 comment|/// initialized object, which is the type of the declaration in most

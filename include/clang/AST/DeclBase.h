@@ -243,6 +243,22 @@ end_macro
 
 begin_block
 block|{
+comment|/// \brief Captures the result of checking the availability of a
+comment|/// declaration.
+enum|enum
+name|AvailabilityResult
+block|{
+name|AR_Available
+init|=
+literal|0
+block|,
+name|AR_NotYetIntroduced
+block|,
+name|AR_Deprecated
+block|,
+name|AR_Unavailable
+block|}
+enum|;
 comment|/// Decl - This represents one declaration (or definition), e.g. a variable,
 comment|/// typedef, function, struct, etc.
 comment|///
@@ -394,9 +410,20 @@ init|=
 literal|0x0400
 block|}
 enum|;
-comment|/// ObjCDeclQualifier - Qualifier used on types in method declarations
-comment|/// for remote messaging. They are meant for the arguments though and
-comment|/// applied to the Decls (ObjCMethodDecl and ParmVarDecl).
+comment|/// ObjCDeclQualifier - 'Qualifiers' written next to the return and
+comment|/// parameter types in method declarations.  Other than remembering
+comment|/// them and mangling them into the method's signature string, these
+comment|/// are ignored by the compiler; they are consumed by certain
+comment|/// remote-messaging frameworks.
+comment|///
+comment|/// in, inout, and out are mutually exclusive and apply only to
+comment|/// method parameters.  bycopy and byref are mutually exclusive and
+comment|/// apply only to method parameters (?).  oneway applies only to
+comment|/// results.  All of these expect their corresponding parameter to
+comment|/// have a particular type.  None of this is currently enforced by
+comment|/// clang.
+comment|///
+comment|/// This should be kept in sync with ObjCDeclSpec::ObjCDeclQualifier.
 enum|enum
 name|ObjCDeclQualifier
 block|{
@@ -590,6 +617,15 @@ name|Used
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief Whether this declaration was "referenced".
+comment|/// The difference with 'Used' is whether the reference appears in a
+comment|/// evaluated context or not, e.g. functions used in uninstantiated templates
+comment|/// are regarded as "referenced" but not "used".
+name|unsigned
+name|Referenced
+range|:
+literal|1
+decl_stmt|;
 name|protected
 label|:
 comment|/// Access - Used by C++ decls for the access specifier.
@@ -697,6 +733,11 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|Referenced
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|Access
 argument_list|(
 name|AS_none
@@ -771,6 +812,11 @@ name|false
 argument_list|)
 operator|,
 name|Used
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|Referenced
 argument_list|(
 name|false
 argument_list|)
@@ -1419,6 +1465,129 @@ operator|=
 name|U
 expr_stmt|;
 block|}
+comment|/// \brief Whether this declaration was referenced.
+name|bool
+name|isReferenced
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
+name|setReferenced
+parameter_list|(
+name|bool
+name|R
+init|=
+name|true
+parameter_list|)
+block|{
+name|Referenced
+operator|=
+name|R
+expr_stmt|;
+block|}
+comment|/// \brief Determine the availability of the given declaration.
+comment|///
+comment|/// This routine will determine the most restrictive availability of
+comment|/// the given declaration (e.g., preferring 'unavailable' to
+comment|/// 'deprecated').
+comment|///
+comment|/// \param Message If non-NULL and the result is not \c
+comment|/// AR_Available, will be set to a (possibly empty) message
+comment|/// describing why the declaration has not been introduced, is
+comment|/// deprecated, or is unavailable.
+name|AvailabilityResult
+name|getAvailability
+argument_list|(
+name|std
+operator|::
+name|string
+operator|*
+name|Message
+operator|=
+literal|0
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Determine whether this declaration is marked 'deprecated'.
+comment|///
+comment|/// \param Message If non-NULL and the declaration is deprecated,
+comment|/// this will be set to the message describing why the declaration
+comment|/// was deprecated (which may be empty).
+name|bool
+name|isDeprecated
+argument_list|(
+name|std
+operator|::
+name|string
+operator|*
+name|Message
+operator|=
+literal|0
+argument_list|)
+decl|const
+block|{
+return|return
+name|getAvailability
+argument_list|(
+name|Message
+argument_list|)
+operator|==
+name|AR_Deprecated
+return|;
+block|}
+comment|/// \brief Determine whether this declaration is marked 'unavailable'.
+comment|///
+comment|/// \param Message If non-NULL and the declaration is unavailable,
+comment|/// this will be set to the message describing why the declaration
+comment|/// was made unavailable (which may be empty).
+name|bool
+name|isUnavailable
+argument_list|(
+name|std
+operator|::
+name|string
+operator|*
+name|Message
+operator|=
+literal|0
+argument_list|)
+decl|const
+block|{
+return|return
+name|getAvailability
+argument_list|(
+name|Message
+argument_list|)
+operator|==
+name|AR_Unavailable
+return|;
+block|}
+comment|/// \brief Determine whether this is a weak-imported symbol.
+comment|///
+comment|/// Weak-imported symbols are typically marked with the
+comment|/// 'weak_import' attribute, but may also be marked with an
+comment|/// 'availability' attribute where we're targing a platform prior to
+comment|/// the introduction of this feature.
+name|bool
+name|isWeakImported
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Determines whether this symbol can be weak-imported,
+comment|/// e.g., whether it would be well-formed to add the weak_import
+comment|/// attribute.
+comment|///
+comment|/// \param IsDefinition Set to \c true to indicate that this
+comment|/// declaration cannot be weak-imported because it has a definition.
+name|bool
+name|canBeWeakImported
+argument_list|(
+name|bool
+operator|&
+name|IsDefinition
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Retrieve the level of precompiled header from which this
 comment|/// declaration was generated.
 comment|///

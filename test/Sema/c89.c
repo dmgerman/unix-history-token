@@ -401,5 +401,26 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+name|int
+name|test15
+index|[
+literal|5
+index|]
+init|=
+block|{
+index|[
+literal|2
+index|]
+operator|=
+literal|1
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* expected-warning {{designated initializers are a C99 feature}} */
+end_comment
+
 end_unit
 

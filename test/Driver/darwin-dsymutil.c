@@ -143,5 +143,25 @@ begin_comment
 comment|// RUN: grep "Dsymutil" %t | count 0
 end_comment
 
+begin_comment
+comment|// Check that we put the .dSYM in the right place.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -ccc-host-triple x86_64-apple-darwin10 -ccc-print-bindings \
+end_comment
+
+begin_comment
+comment|// RUN:   -o bar/foo %s -g 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=CHECK-LOCATION< %t %s
+end_comment
+
+begin_comment
+comment|// CHECK-LOCATION: "x86_64-apple-darwin10" - "darwin::Dsymutil", inputs: ["bar/foo"], output: "bar/foo.dSYM"
+end_comment
+
 end_unit
 

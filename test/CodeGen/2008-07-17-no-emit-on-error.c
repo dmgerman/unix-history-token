@@ -8,7 +8,7 @@ comment|// RUN: %clang_cc1 -DPASS %s -emit-llvm-bc -o %t1.bc
 end_comment
 
 begin_comment
-comment|// RUN: test -f %t1.bc
+comment|// RUN: opt %t1.bc -disable-output
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ comment|// RUN: not %clang_cc1 %s -emit-llvm-bc -o %t1.bc
 end_comment
 
 begin_comment
-comment|// RUN: not test -f %t1.bc
+comment|// RUN: not opt %t1.bc -disable-output
 end_comment
 
 begin_function

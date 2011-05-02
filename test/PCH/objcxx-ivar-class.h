@@ -13,6 +13,10 @@ name|S
 operator|&
 argument_list|)
 expr_stmt|;
+operator|~
+name|S
+argument_list|()
+expr_stmt|;
 name|S
 modifier|&
 name|operator

@@ -26,7 +26,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// expected-note{{previous declaration is here}}
+comment|// expected-note{{previous declaration is here}} expected-note{{'g0' declared here}}
 end_comment
 
 begin_function

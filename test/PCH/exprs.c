@@ -186,7 +186,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// SizeOfAlignOfExpr
+comment|// UnaryExprOrTypeTraitExpr
 end_comment
 
 begin_macro
@@ -451,6 +451,20 @@ name|vec_ptr
 init|=
 operator|&
 name|vec2
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// GenericSelectionExpr
+end_comment
+
+begin_decl_stmt
+name|generic_selection_expr
+modifier|*
+name|double_ptr6
+init|=
+operator|&
+name|floating
 decl_stmt|;
 end_decl_stmt
 

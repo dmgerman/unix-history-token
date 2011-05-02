@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-store=region -analyzer-constraints=range -fblocks -analyzer-opt-analyze-nested-blocks -analyzer-check-objc-mem -analyzer-checker=core.experimental.IdempotentOps -verify %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-store=region -analyzer-constraints=range -fblocks -analyzer-opt-analyze-nested-blocks -analyzer-checker=deadcode.IdempotentOperations -verify %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang --analyze -Xclang -analyzer-disable-checker=deadcode.DeadStores -fblocks -Xclang -verify %s -o %t
 end_comment
 
 begin_comment
@@ -434,16 +438,21 @@ decl_stmt|;
 name|uintptr_t
 name|x
 init|=
+operator|(
+name|uintptr_t
+operator|)
 name|array
 decl_stmt|;
-comment|// expected-warning{{incompatible pointer to integer conversion}}
 name|short
 modifier|*
 name|p
 init|=
+operator|(
+name|short
+operator|*
+operator|)
 name|x
 decl_stmt|;
-comment|// expected-warning{{incompatible integer to pointer conversion}}
 comment|// The following branch should be infeasible.
 if|if
 condition|(
@@ -782,7 +791,7 @@ name|zero
 init|=
 literal|0
 decl_stmt|;
-comment|// psuedo-constant
+comment|// pseudo-constant
 name|int
 name|one
 init|=

@@ -254,5 +254,20 @@ name|t0
 decl_stmt|;
 end_decl_stmt
 
+begin_union
+union|union
+block|{
+name|int
+name|large_bitfield
+range|:
+literal|31
+decl_stmt|;
+name|char
+name|c
+block|}
+name|u2
+union|;
+end_union
+
 end_unit
 

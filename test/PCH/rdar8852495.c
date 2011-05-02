@@ -59,11 +59,14 @@ name|f
 parameter_list|()
 block|{
 name|int
+name|a
+decl_stmt|;
+name|int
 name|b
 init|=
-name|b
+name|a
 operator|==
-name|b
+name|a
 decl_stmt|;
 name|unsigned
 name|x
