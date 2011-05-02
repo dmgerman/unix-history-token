@@ -91,12 +91,6 @@ directive|include
 file|<cstring>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm

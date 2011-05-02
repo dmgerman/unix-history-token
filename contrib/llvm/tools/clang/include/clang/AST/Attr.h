@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringSwitch.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/AttrKinds.h"
 end_include
 
@@ -93,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|"clang/Basic/SourceLocation.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/VersionTuple.h"
 end_include
 
 begin_include
@@ -580,6 +592,62 @@ return|;
 block|}
 expr|}
 block|;
+name|class
+name|InheritableParamAttr
+operator|:
+name|public
+name|InheritableAttr
+block|{
+name|protected
+operator|:
+name|InheritableParamAttr
+argument_list|(
+argument|attr::Kind AK
+argument_list|,
+argument|SourceLocation L
+argument_list|)
+operator|:
+name|InheritableAttr
+argument_list|(
+argument|AK
+argument_list|,
+argument|L
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|// Implement isa/cast/dyncast/etc.
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Attr *A
+argument_list|)
+block|{
+return|return
+name|A
+operator|->
+name|getKind
+argument_list|()
+operator|<=
+name|attr
+operator|::
+name|LAST_INHERITABLE_PARAM
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const InheritableParamAttr *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
 include|#
 directive|include
 file|"clang/AST/Attrs.inc"
@@ -613,15 +681,11 @@ comment|/// DestroyAttrs - Destroy the contents of an AttrVec.
 specifier|inline
 name|void
 name|DestroyAttrs
-parameter_list|(
-name|AttrVec
-modifier|&
-name|V
-parameter_list|,
-name|ASTContext
-modifier|&
-name|C
-parameter_list|)
+argument_list|(
+argument|AttrVec& V
+argument_list|,
+argument|ASTContext&C
+argument_list|)
 block|{ }
 comment|/// specific_attr_iterator - Iterates over a subrange of an AttrVec, only
 comment|/// providing attributes that are of a specifc type.

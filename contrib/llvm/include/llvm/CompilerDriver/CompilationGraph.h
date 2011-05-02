@@ -165,9 +165,6 @@ name|public
 name|llvm
 operator|::
 name|RefCountedBaseVPTR
-operator|<
-name|Edge
-operator|>
 block|{
 name|public
 operator|:

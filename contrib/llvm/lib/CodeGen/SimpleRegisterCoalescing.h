@@ -252,42 +252,14 @@ name|getPassRegistry
 argument_list|()
 argument_list|)
 block|;     }
-expr|struct
-name|InstrSlots
-block|{       enum
-block|{
-name|LOAD
-operator|=
-literal|0
-block|,
-name|USE
-operator|=
-literal|1
-block|,
-name|DEF
-operator|=
-literal|2
-block|,
-name|STORE
-operator|=
-literal|3
-block|,
-name|NUM
-operator|=
-literal|4
-block|}
-block|;     }
-expr_stmt|;
 name|virtual
 name|void
 name|getAnalysisUsage
 argument_list|(
-name|AnalysisUsage
-operator|&
-name|AU
+argument|AnalysisUsage&AU
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+expr_stmt|;
 name|virtual
 name|void
 name|releaseMemory
@@ -505,6 +477,15 @@ modifier|*
 name|CopyMI
 parameter_list|)
 function_decl|;
+comment|/// shouldJoinPhys - Return true if a physreg copy should be joined.
+name|bool
+name|shouldJoinPhys
+parameter_list|(
+name|CoalescerPair
+modifier|&
+name|CP
+parameter_list|)
+function_decl|;
 comment|/// isWinToJoinCrossClass - Return true if it's profitable to coalesce
 comment|/// two virtual registers from different register classes.
 name|bool
@@ -626,6 +607,15 @@ name|LastUseIdx
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// markAsJoined - Remember that CopyMI has already been joined.
+name|void
+name|markAsJoined
+parameter_list|(
+name|MachineInstr
+modifier|*
+name|CopyMI
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 block|}

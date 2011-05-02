@@ -50,7 +50,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* C99 7.18.1.1 Exact-width integer types.  * C99 7.18.1.2 Minimum-width integer types.  * C99 7.18.1.3 Fastest minimum-width integer types.  *  * The standard requires that exact-width type be defined for 8-, 16-, 32-, and   * 64-bit types if they are implemented. Other exact width types are optional.  * This implementation defines an exact-width types for every integer width  * that is represented in the standard integer types.  *  * The standard also requires minimum-width types be defined for 8-, 16-, 32-,  * and 64-bit widths regardless of whether there are corresponding exact-width  * types.   *  * To accomodate targets that are missing types that are exactly 8, 16, 32, or  * 64 bits wide, this implementation takes an approach of cascading  * redefintions, redefining __int_leastN_t to successively smaller exact-width  * types. It is therefore important that the types are defined in order of  * descending widths.  *  * We currently assume that the minimum-width types and the fastest  * minimum-width types are the same. This is allowed by the standard, but is  * suboptimal.  *  * In violation of the standard, some targets do not implement a type that is  * wide enough to represent all of the required widths (8-, 16-, 32-, 64-bit).    * To accomodate these targets, a required minimum-width type is only  * defined if there exists an exact-width type of equal or greater width.  */
+comment|/* C99 7.18.1.1 Exact-width integer types.  * C99 7.18.1.2 Minimum-width integer types.  * C99 7.18.1.3 Fastest minimum-width integer types.  *  * The standard requires that exact-width type be defined for 8-, 16-, 32-, and   * 64-bit types if they are implemented. Other exact width types are optional.  * This implementation defines an exact-width types for every integer width  * that is represented in the standard integer types.  *  * The standard also requires minimum-width types be defined for 8-, 16-, 32-,  * and 64-bit widths regardless of whether there are corresponding exact-width  * types.   *  * To accommodate targets that are missing types that are exactly 8, 16, 32, or  * 64 bits wide, this implementation takes an approach of cascading  * redefintions, redefining __int_leastN_t to successively smaller exact-width  * types. It is therefore important that the types are defined in order of  * descending widths.  *  * We currently assume that the minimum-width types and the fastest  * minimum-width types are the same. This is allowed by the standard, but is  * suboptimal.  *  * In violation of the standard, some targets do not implement a type that is  * wide enough to represent all of the required widths (8-, 16-, 32-, 64-bit).    * To accommodate these targets, a required minimum-width type is only  * defined if there exists an exact-width type of equal or greater width.  */
 end_comment
 
 begin_ifdef
@@ -3315,11 +3315,7 @@ comment|/* __INT_LEAST8_MIN */
 end_comment
 
 begin_comment
-comment|/* C99 7.18.2.4 Limits of integer types capable of holding object pointers. */
-end_comment
-
-begin_comment
-comment|/* C99 7.18.3 Limits of other integer types. */
+comment|/* Some utility macros */
 end_comment
 
 begin_define
@@ -3351,6 +3347,38 @@ name|n
 parameter_list|)
 value|__stdint_join3(UINT, n, _MAX)
 end_define
+
+begin_define
+define|#
+directive|define
+name|__INTN_C
+parameter_list|(
+name|n
+parameter_list|,
+name|v
+parameter_list|)
+value|__stdint_join3( INT, n, _C(v))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__UINTN_C
+parameter_list|(
+name|n
+parameter_list|,
+name|v
+parameter_list|)
+value|__stdint_join3(UINT, n, _C(v))
+end_define
+
+begin_comment
+comment|/* C99 7.18.2.4 Limits of integer types capable of holding object pointers. */
+end_comment
+
+begin_comment
+comment|/* C99 7.18.3 Limits of other integer types. */
+end_comment
 
 begin_define
 define|#
@@ -3437,6 +3465,31 @@ name|SIG_ATOMIC_MAX
 value|__INTN_MAX(__SIG_ATOMIC_WIDTH__)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__WINT_UNSIGNED__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|WINT_MIN
+value|__UINTN_C(__WINT_WIDTH__, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WINT_MAX
+value|__UINTN_MAX(__WINT_WIDTH__)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -3451,9 +3504,10 @@ name|WINT_MAX
 value|__INTN_MAX(__WINT_WIDTH__)
 end_define
 
-begin_comment
-comment|/* FIXME: if we ever support a target with unsigned wchar_t, this should be  * 0 .. Max.  */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -3465,7 +3519,7 @@ begin_define
 define|#
 directive|define
 name|WCHAR_MAX
-value|__INTN_MAX(__WCHAR_WIDTH__)
+value|__WCHAR_MAX__
 end_define
 
 begin_endif
@@ -3479,12 +3533,40 @@ directive|ifndef
 name|WCHAR_MIN
 end_ifndef
 
+begin_if
+if|#
+directive|if
+name|__WCHAR_MAX__
+operator|==
+name|__INTN_MAX
+argument_list|(
+name|__WCHAR_WIDTH__
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|WCHAR_MIN
 value|__INTN_MIN(__WCHAR_WIDTH__)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|WCHAR_MIN
+value|__UINTN_C(__WCHAR_WIDTH__, 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -3494,30 +3576,6 @@ end_endif
 begin_comment
 comment|/* 7.18.4.2 Macros for greatest-width integer constants. */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|__INTN_C
-parameter_list|(
-name|n
-parameter_list|,
-name|v
-parameter_list|)
-value|__stdint_join3( INT, n, _C(v))
-end_define
-
-begin_define
-define|#
-directive|define
-name|__UINTN_C
-parameter_list|(
-name|n
-parameter_list|,
-name|v
-parameter_list|)
-value|__stdint_join3(UINT, n, _C(v))
-end_define
 
 begin_define
 define|#

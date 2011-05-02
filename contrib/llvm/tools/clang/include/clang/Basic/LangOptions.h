@@ -149,6 +149,12 @@ literal|1
 decl_stmt|;
 comment|// C99 Support
 name|unsigned
+name|C1X
+range|:
+literal|1
+decl_stmt|;
+comment|// C1X Support
+name|unsigned
 name|Microsoft
 range|:
 literal|1
@@ -268,6 +274,12 @@ literal|1
 decl_stmt|;
 comment|// Use setjmp-longjump exception handling.
 name|unsigned
+name|TraditionalCPP
+range|:
+literal|1
+decl_stmt|;
+comment|/// Enable some traditional CPP emulation.
+name|unsigned
 name|RTTI
 range|:
 literal|1
@@ -384,6 +396,12 @@ literal|1
 decl_stmt|;
 comment|// Should __NO_INLINE__ be defined.
 name|unsigned
+name|Deprecated
+range|:
+literal|1
+decl_stmt|;
+comment|// Should __DEPRECATED be defined.
+name|unsigned
 name|ObjCGCBitmapPrint
 range|:
 literal|1
@@ -475,6 +493,12 @@ decl_stmt|;
 comment|// Whether inline C++ methods have
 comment|// hidden visibility by default.
 name|unsigned
+name|ParseUnknownAnytype
+range|:
+literal|1
+decl_stmt|;
+comment|/// Let the user write __unknown_anytype.
+name|unsigned
 name|SpellChecking
 range|:
 literal|1
@@ -508,6 +532,25 @@ name|NoBitFieldTypeAlign
 range|:
 literal|1
 decl_stmt|;
+name|unsigned
+name|FakeAddressSpaceMap
+range|:
+literal|1
+decl_stmt|;
+comment|// Use a fake address space map, for
+comment|// testing languages such as OpenCL.
+name|unsigned
+name|MRTD
+range|:
+literal|1
+decl_stmt|;
+comment|// -mrtd calling convention
+name|unsigned
+name|DelayedTemplateParsing
+range|:
+literal|1
+decl_stmt|;
+comment|// Delayed template parsing
 name|private
 label|:
 comment|// We declare multibit enums as unsigned because MSVC insists on making enums
@@ -657,6 +700,8 @@ literal|0
 expr_stmt|;
 name|C99
 operator|=
+name|C1X
+operator|=
 name|Microsoft
 operator|=
 name|Borland
@@ -687,6 +732,8 @@ name|SjLjExceptions
 operator|=
 literal|0
 expr_stmt|;
+name|TraditionalCPP
+operator|=
 name|Freestanding
 operator|=
 name|NoBuiltin
@@ -810,6 +857,10 @@ name|NoInline
 operator|=
 literal|0
 expr_stmt|;
+name|Deprecated
+operator|=
+literal|0
+expr_stmt|;
 name|CharIsSigned
 operator|=
 literal|1
@@ -851,6 +902,22 @@ operator|=
 literal|0
 expr_stmt|;
 name|NoBitFieldTypeAlign
+operator|=
+literal|0
+expr_stmt|;
+name|FakeAddressSpaceMap
+operator|=
+literal|0
+expr_stmt|;
+name|MRTD
+operator|=
+literal|0
+expr_stmt|;
+name|DelayedTemplateParsing
+operator|=
+literal|0
+expr_stmt|;
+name|ParseUnknownAnytype
 operator|=
 literal|0
 expr_stmt|;
@@ -970,12 +1037,15 @@ name|V
 expr_stmt|;
 block|}
 name|bool
-name|areExceptionsEnabled
+name|isSignedOverflowDefined
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Exceptions
+name|getSignedOverflowBehavior
+argument_list|()
+operator|==
+name|SOB_Defined
 return|;
 block|}
 block|}

@@ -563,6 +563,17 @@ return|return
 name|HasVectorUAMem
 return|;
 block|}
+specifier|const
+name|Triple
+operator|&
+name|getTargetTriple
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+return|;
+block|}
 name|bool
 name|isTargetDarwin
 argument_list|()
@@ -571,12 +582,8 @@ block|{
 return|return
 name|TargetTriple
 operator|.
-name|getOS
+name|isOSDarwin
 argument_list|()
-operator|==
-name|Triple
-operator|::
-name|Darwin
 return|;
 block|}
 name|bool
@@ -866,28 +873,6 @@ operator|::
 name|StubPIC
 return|;
 block|}
-comment|/// getDarwinVers - Return the darwin version number, 8 = Tiger, 9 = Leopard,
-comment|/// 10 = Snow Leopard, etc.
-name|unsigned
-name|getDarwinVers
-argument_list|()
-specifier|const
-block|{
-if|if
-condition|(
-name|isTargetDarwin
-argument_list|()
-condition|)
-return|return
-name|TargetTriple
-operator|.
-name|getDarwinMajorNumber
-argument_list|()
-return|;
-return|return
-literal|0
-return|;
-block|}
 comment|/// ClassifyGlobalReference - Classify a global variable reference for the
 comment|/// current subtarget according to how we should reference it in a non-pcrel
 comment|/// context.
@@ -895,18 +880,12 @@ name|unsigned
 name|char
 name|ClassifyGlobalReference
 argument_list|(
-specifier|const
-name|GlobalValue
-operator|*
-name|GV
+argument|const GlobalValue *GV
 argument_list|,
-specifier|const
-name|TargetMachine
-operator|&
-name|TM
+argument|const TargetMachine&TM
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// ClassifyBlockAddressReference - Classify a blockaddress reference for the
 comment|/// current subtarget according to how we should reference it in a non-pcrel
 comment|/// context.
@@ -915,19 +894,16 @@ name|char
 name|ClassifyBlockAddressReference
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// IsLegalToCallImmediateAddr - Return true if the subtarget allows calls
 comment|/// to immediate address.
 name|bool
 name|IsLegalToCallImmediateAddr
 argument_list|(
-specifier|const
-name|TargetMachine
-operator|&
-name|TM
+argument|const TargetMachine&TM
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// This function returns the name of a function which has an interface
 comment|/// like the non-standard bzero function, if such a function exists on
 comment|/// the current subtarget and it is considered prefereable over
@@ -939,7 +915,7 @@ operator|*
 name|getBZeroEntry
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// getSpecialAddressLatency - For targets where it is beneficial to
 comment|/// backschedule instructions that compute addresses, return a value
 comment|/// indicating the number of scheduling cycles of backscheduling that
@@ -948,30 +924,22 @@ name|unsigned
 name|getSpecialAddressLatency
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// IsCalleePop - Test whether a function should pop its own arguments.
 name|bool
 name|IsCalleePop
 argument_list|(
-name|bool
-name|isVarArg
+argument|bool isVarArg
 argument_list|,
-name|CallingConv
-operator|::
-name|ID
-name|CallConv
+argument|CallingConv::ID CallConv
 argument_list|)
-decl|const
+specifier|const
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// End llvm namespace
 end_comment
 

@@ -880,8 +880,8 @@ expr|}
 block|;
 comment|// cast<X> - Return the argument parameter cast to the specified type.  This
 comment|// casting operator asserts that the type is correct, so it does not return null
-comment|// on failure.  But it will correctly return NULL when the input is NULL.
-comment|// Used Like this:
+comment|// on failure.  It does not allow a null argument (use cast_or_null for that).
+comment|// It is typically used like this:
 comment|//
 comment|//  cast<Instruction>(myVal)->getParent()
 comment|//

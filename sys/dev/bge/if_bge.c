@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Broadcom BCM570x family gigabit ethernet driver for FreeBSD.  *  * The Broadcom BCM5700 is based on technology originally developed by  * Alteon Networks as part of the Tigon I and Tigon II gigabit ethernet  * MAC chips. The BCM5700, sometimes refered to as the Tigon III, has  * two on-board MIPS R4000 CPUs and can have as much as 16MB of external  * SSRAM. The BCM5700 supports TCP, UDP and IP checksum offload, jumbo  * frames, highly configurable RX filtering, and 16 RX and TX queues  * (which, along with RX filter rules, can be used for QOS applications).  * Other features, such as TCP segmentation, may be available as part  * of value-added firmware updates. Unlike the Tigon I and Tigon II,  * firmware images can be stored in hardware and need not be compiled  * into the driver.  *  * The BCM5700 supports the PCI v2.2 and PCI-X v1.0 standards, and will  * function in a 32-bit/64-bit 33/66Mhz bus, or a 64-bit/133Mhz bus.  *  * The BCM5701 is a single-chip solution incorporating both the BCM5700  * MAC and a BCM5401 10/100/1000 PHY. Unlike the BCM5700, the BCM5701  * does not support external SSRAM.  *  * Broadcom also produces a variation of the BCM5700 under the "Altima"  * brand name, which is functionally similar but lacks PCI-X support.  *  * Without external SSRAM, you can only have at most 4 TX rings,  * and the use of the mini RX ring is disabled. This seems to imply  * that these features are simply not available on the BCM5701. As a  * result, this driver does not implement any support for the mini RX  * ring.  */
+comment|/*  * Broadcom BCM570x family gigabit ethernet driver for FreeBSD.  *  * The Broadcom BCM5700 is based on technology originally developed by  * Alteon Networks as part of the Tigon I and Tigon II gigabit ethernet  * MAC chips. The BCM5700, sometimes referred to as the Tigon III, has  * two on-board MIPS R4000 CPUs and can have as much as 16MB of external  * SSRAM. The BCM5700 supports TCP, UDP and IP checksum offload, jumbo  * frames, highly configurable RX filtering, and 16 RX and TX queues  * (which, along with RX filter rules, can be used for QOS applications).  * Other features, such as TCP segmentation, may be available as part  * of value-added firmware updates. Unlike the Tigon I and Tigon II,  * firmware images can be stored in hardware and need not be compiled  * into the driver.  *  * The BCM5700 supports the PCI v2.2 and PCI-X v1.0 standards, and will  * function in a 32-bit/64-bit 33/66Mhz bus, or a 64-bit/133Mhz bus.  *  * The BCM5701 is a single-chip solution incorporating both the BCM5700  * MAC and a BCM5401 10/100/1000 PHY. Unlike the BCM5700, the BCM5701  * does not support external SSRAM.  *  * Broadcom also produces a variation of the BCM5700 under the "Altima"  * brand name, which is functionally similar but lacks PCI-X support.  *  * Without external SSRAM, you can only have at most 4 TX rings,  * and the use of the mini RX ring is disabled. This seems to imply  * that these features are simply not available on the BCM5701. As a  * result, this driver does not implement any support for the mini RX  * ring.  */
 end_comment
 
 begin_ifdef
@@ -5567,7 +5567,7 @@ name|bge_rx_jumbo_chain
 index|[
 name|i
 index|]
-operator|==
+operator|!=
 name|NULL
 condition|)
 block|{
@@ -16836,7 +16836,7 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Re-enable MSI, if neccesary, and enable the memory arbiter. */
+comment|/* Re-enable MSI, if necessary, and enable the memory arbiter. */
 if|if
 condition|(
 name|BGE_IS_5714_FAMILY

@@ -88,6 +88,8 @@ name|CXXFILE
 parameter_list|,
 name|HELPTEXT
 parameter_list|,
+name|GROUPINDEX
+parameter_list|,
 name|HIDDEN
 parameter_list|)
 define|\

@@ -65,6 +65,15 @@ decl_stmt|;
 name|class
 name|TargetInstrInfo
 decl_stmt|;
+name|class
+name|TargetRegisterInfo
+decl_stmt|;
+name|class
+name|MachineRegisterInfo
+decl_stmt|;
+name|class
+name|LiveVariables
+decl_stmt|;
 comment|/// Process IMPLICIT_DEF instructions and make sure there is one implicit_def
 comment|/// for each use. Add isUndef marker to implicit_def defs and their uses.
 name|class
@@ -73,8 +82,24 @@ range|:
 name|public
 name|MachineFunctionPass
 block|{
-name|private
-operator|:
+specifier|const
+name|TargetInstrInfo
+operator|*
+name|TII
+block|;
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
+block|;
+name|MachineRegisterInfo
+operator|*
+name|MRI
+block|;
+name|LiveVariables
+operator|*
+name|LV
+block|;
 name|bool
 name|CanTurnIntoImplicitDef
 argument_list|(
@@ -83,8 +108,6 @@ argument_list|,
 argument|unsigned Reg
 argument_list|,
 argument|unsigned OpIdx
-argument_list|,
-argument|const TargetInstrInfo *tii_
 argument_list|,
 argument|SmallSet<unsigned
 argument_list|,

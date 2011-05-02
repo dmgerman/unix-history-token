@@ -312,11 +312,6 @@ init|=
 literal|3
 parameter_list|)
 function_decl|;
-name|Pass
-modifier|*
-name|createStructRetPromotionPass
-parameter_list|()
-function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// createIPConstantPropagationPass - This pass propagates constants from call
 comment|/// sites into the bodies of functions.

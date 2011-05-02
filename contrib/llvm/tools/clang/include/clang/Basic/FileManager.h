@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/IntrusiveRefCntPtr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -492,26 +498,34 @@ comment|/// names (e.g. symlinked) will be treated as a single file.
 comment|///
 name|class
 name|FileManager
+range|:
+name|public
+name|llvm
+operator|::
+name|RefCountedBase
+operator|<
+name|FileManager
+operator|>
 block|{
 name|FileSystemOptions
 name|FileSystemOpts
-decl_stmt|;
+block|;
 name|class
 name|UniqueDirContainer
-decl_stmt|;
+block|;
 name|class
 name|UniqueFileContainer
-decl_stmt|;
+block|;
 comment|/// UniqueRealDirs/UniqueRealFiles - Cache for existing real directories/files.
 comment|///
 name|UniqueDirContainer
-modifier|&
+operator|&
 name|UniqueRealDirs
-decl_stmt|;
+block|;
 name|UniqueFileContainer
-modifier|&
+operator|&
 name|UniqueRealFiles
-decl_stmt|;
+block|;
 comment|/// \brief The virtual directories that we have allocated.  For each
 comment|/// virtual file (e.g. foo/bar/baz.cpp), we add all of its parent
 comment|/// directories (foo/ and foo/bar/) here.
@@ -521,11 +535,11 @@ name|SmallVector
 operator|<
 name|DirectoryEntry
 operator|*
-operator|,
+block|,
 literal|4
 operator|>
 name|VirtualDirectoryEntries
-expr_stmt|;
+block|;
 comment|/// \brief The virtual files that we have allocated.
 name|llvm
 operator|::
@@ -533,11 +547,11 @@ name|SmallVector
 operator|<
 name|FileEntry
 operator|*
-operator|,
+block|,
 literal|4
 operator|>
 name|VirtualFileEntries
-expr_stmt|;
+block|;
 comment|/// SeenDirEntries/SeenFileEntries - This is a cache that maps paths
 comment|/// to directory/file entries (either real or virtual) we have
 comment|/// looked up.  The actual Entries for real directories/files are
@@ -551,42 +565,42 @@ name|StringMap
 operator|<
 name|DirectoryEntry
 operator|*
-operator|,
+block|,
 name|llvm
 operator|::
 name|BumpPtrAllocator
 operator|>
 name|SeenDirEntries
-expr_stmt|;
+block|;
 name|llvm
 operator|::
 name|StringMap
 operator|<
 name|FileEntry
 operator|*
-operator|,
+block|,
 name|llvm
 operator|::
 name|BumpPtrAllocator
 operator|>
 name|SeenFileEntries
-expr_stmt|;
+block|;
 comment|/// NextFileUID - Each FileEntry we create is assigned a unique ID #.
 comment|///
 name|unsigned
 name|NextFileUID
-decl_stmt|;
+block|;
 comment|// Statistics.
 name|unsigned
 name|NumDirLookups
-decl_stmt|,
+block|,
 name|NumFileLookups
-decl_stmt|;
+block|;
 name|unsigned
 name|NumDirCacheMisses
-decl_stmt|,
+block|,
 name|NumFileCacheMisses
-decl_stmt|;
+block|;
 comment|// Caching.
 name|llvm
 operator|::
@@ -595,38 +609,35 @@ operator|<
 name|FileSystemStatCache
 operator|>
 name|StatCache
-expr_stmt|;
+block|;
 name|bool
 name|getStatValue
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
+operator|*
 name|Path
-parameter_list|,
-name|struct
+argument_list|,
+expr|struct
 name|stat
-modifier|&
+operator|&
 name|StatBuf
-parameter_list|,
+argument_list|,
 name|int
-modifier|*
+operator|*
 name|FileDescriptor
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// Add all ancestors of the given path (pointing to either a file
 comment|/// or a directory) as virtual directories.
 name|void
 name|addAncestorsAsVirtualDirs
 argument_list|(
-name|llvm
-operator|::
-name|StringRef
-name|Path
+argument|llvm::StringRef Path
 argument_list|)
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|FileManager
 argument_list|(
 specifier|const
@@ -634,11 +645,11 @@ name|FileSystemOptions
 operator|&
 name|FileSystemOpts
 argument_list|)
-expr_stmt|;
+block|;
 operator|~
 name|FileManager
 argument_list|()
-expr_stmt|;
+block|;
 comment|/// \brief Installs the provided FileSystemStatCache object within
 comment|/// the FileManager.
 comment|///
@@ -652,74 +663,61 @@ comment|/// beginning of the chain of stat caches. Otherwise, it will be added t
 comment|/// the end of the chain.
 name|void
 name|addStatCache
-parameter_list|(
-name|FileSystemStatCache
-modifier|*
-name|statCache
-parameter_list|,
-name|bool
-name|AtBeginning
-init|=
-name|false
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|FileSystemStatCache *statCache
+argument_list|,
+argument|bool AtBeginning = false
+argument_list|)
+block|;
 comment|/// \brief Removes the specified FileSystemStatCache object from the manager.
 name|void
 name|removeStatCache
-parameter_list|(
+argument_list|(
 name|FileSystemStatCache
-modifier|*
+operator|*
 name|statCache
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// getDirectory - Lookup, cache, and verify the specified directory
 comment|/// (real or virtual).  This returns NULL if the directory doesn't exist.
 comment|///
 specifier|const
 name|DirectoryEntry
-modifier|*
+operator|*
 name|getDirectory
 argument_list|(
-name|llvm
-operator|::
-name|StringRef
-name|DirName
+argument|llvm::StringRef DirName
 argument_list|)
-decl_stmt|;
-comment|/// getFile - Lookup, cache, and verify the specified file (real or
+block|;
+comment|/// \brief Lookup, cache, and verify the specified file (real or
 comment|/// virtual).  This returns NULL if the file doesn't exist.
 comment|///
+comment|/// \param openFile if true and the file exists, it will be opened.
 specifier|const
 name|FileEntry
-modifier|*
+operator|*
 name|getFile
 argument_list|(
-name|llvm
-operator|::
-name|StringRef
-name|Filename
+argument|llvm::StringRef Filename
+argument_list|,
+argument|bool openFile = false
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// \brief Retrieve a file entry for a "virtual" file that acts as
 comment|/// if there were a file with the given name on disk. The file
 comment|/// itself is not accessed.
 specifier|const
 name|FileEntry
-modifier|*
+operator|*
 name|getVirtualFile
 argument_list|(
-name|llvm
-operator|::
-name|StringRef
-name|Filename
+argument|llvm::StringRef Filename
 argument_list|,
-name|off_t
-name|Size
+argument|off_t Size
 argument_list|,
-name|time_t
-name|ModificationTime
+argument|time_t ModificationTime
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// \brief Open the specified file as a MemoryBuffer, returning a new
 comment|/// MemoryBuffer if successful, otherwise returning null.
 name|llvm
@@ -741,7 +739,7 @@ name|ErrorStr
 operator|=
 literal|0
 argument_list|)
-expr_stmt|;
+block|;
 name|llvm
 operator|::
 name|MemoryBuffer
@@ -753,53 +751,43 @@ argument_list|,
 argument|std::string *ErrorStr =
 literal|0
 argument_list|)
-expr_stmt|;
+block|;
+comment|// getNoncachedStatValue - Will get the 'stat' information for the given path.
+comment|// If the path is relative, it will be resolved against the WorkingDir of the
+comment|// FileManager's FileSystemOptions.
+name|bool
+name|getNoncachedStatValue
+argument_list|(
+argument|llvm::StringRef Path
+argument_list|,
+argument|struct stat&StatBuf
+argument_list|)
+block|;
 comment|/// \brief If path is not absolute and FileSystemOptions set the working
 comment|/// directory, the path is modified to be relative to the given
 comment|/// working directory.
-specifier|static
 name|void
 name|FixupRelativePath
 argument_list|(
-name|llvm
-operator|::
-name|sys
-operator|::
-name|Path
-operator|&
-name|path
-argument_list|,
-specifier|const
-name|FileSystemOptions
-operator|&
-name|FSOpts
+argument|llvm::SmallVectorImpl<char>&path
 argument_list|)
-decl_stmt|;
+specifier|const
+block|;
 comment|/// \brief Produce an array mapping from the unique IDs assigned to each
 comment|/// file to the corresponding FileEntry pointer.
 name|void
 name|GetUniqueIDMapping
 argument_list|(
-name|llvm
-operator|::
-name|SmallVectorImpl
-operator|<
-specifier|const
-name|FileEntry
-operator|*
-operator|>
-operator|&
-name|UIDToFiles
+argument|llvm::SmallVectorImpl<const FileEntry *>&UIDToFiles
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|void
 name|PrintStats
 argument_list|()
 specifier|const
-expr_stmt|;
-block|}
-empty_stmt|;
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 

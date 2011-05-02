@@ -344,7 +344,8 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// SelectTool - Choose a tool to use to handle the action \arg JA.
+comment|/// SelectTool - Choose a tool to use to handle the action \arg JA with the
+comment|/// given \arg Inputs.
 name|virtual
 name|Tool
 modifier|&
@@ -359,6 +360,11 @@ specifier|const
 name|JobAction
 operator|&
 name|JA
+argument_list|,
+specifier|const
+name|ActionList
+operator|&
+name|Inputs
 argument_list|)
 decl|const
 init|=
@@ -537,6 +543,17 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
+comment|/// SupportsProfiling - Does this tool chain support -pg.
+name|virtual
+name|bool
+name|SupportsProfiling
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// Does this tool chain support Objective-C garbage collection.
 name|virtual
 name|bool

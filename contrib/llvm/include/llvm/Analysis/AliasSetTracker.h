@@ -1494,6 +1494,13 @@ operator|.
 name|pop_back
 argument_list|()
 expr_stmt|;
+operator|--
+name|i
+expr_stmt|;
+operator|--
+name|e
+expr_stmt|;
+comment|// Revisit the moved entry.
 block|}
 block|}
 end_function
@@ -1613,6 +1620,14 @@ name|virtual
 name|void
 name|deleted
 argument_list|()
+block|;
+name|virtual
+name|void
+name|allUsesReplacedWith
+argument_list|(
+name|Value
+operator|*
+argument_list|)
 block|;
 name|public
 operator|:

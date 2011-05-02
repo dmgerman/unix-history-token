@@ -3819,6 +3819,9 @@ comment|/// the target's desired shift amount type.
 name|SDValue
 name|getShiftAmountOperand
 parameter_list|(
+name|EVT
+name|LHSTy
+parameter_list|,
 name|SDValue
 name|Op
 parameter_list|)
@@ -4899,7 +4902,7 @@ comment|///
 comment|/// These functions only replace all existing uses. It's possible that as
 comment|/// these replacements are being performed, CSE may cause the From node
 comment|/// to be given new uses. These new uses of From are left in place, and
-comment|/// not automatically transfered to To.
+comment|/// not automatically transferred to To.
 comment|///
 name|void
 name|ReplaceAllUsesWith

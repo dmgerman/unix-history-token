@@ -93,7 +93,7 @@ name|Scope
 decl_stmt|;
 comment|/// IdentifierResolver - Keeps track of shadowed decls on enclosing
 comment|/// scopes.  It manages the shadowing chains of declaration names and
-comment|/// implements efficent decl lookup based on a declaration name.
+comment|/// implements efficient decl lookup based on a declaration name.
 name|class
 name|IdentifierResolver
 block|{
@@ -187,6 +187,30 @@ modifier|*
 name|New
 parameter_list|)
 function_decl|;
+comment|/// \brief Insert the given declaration at the given position in the list.
+name|void
+name|InsertDecl
+argument_list|(
+name|DeclsTy
+operator|::
+name|iterator
+name|Pos
+argument_list|,
+name|NamedDecl
+operator|*
+name|D
+argument_list|)
+block|{
+name|Decls
+operator|.
+name|insert
+argument_list|(
+name|Pos
+argument_list|,
+name|D
+argument_list|)
+expr_stmt|;
+block|}
 name|private
 label|:
 name|DeclsTy
@@ -506,6 +530,10 @@ block|}
 comment|/// isDeclInScope - If 'Ctx' is a function/method, isDeclInScope returns true
 comment|/// if 'D' is in Scope 'S', otherwise 'S' is ignored and isDeclInScope returns
 comment|/// true if 'D' belongs to the given declaration context.
+comment|///
+comment|/// \param ExplicitInstantiationOrSpecialization When true, we are checking
+comment|/// whether the declaration is in scope for the purposes of explicit template
+comment|/// instantiation or specialization. The default is false.
 name|bool
 name|isDeclInScope
 argument_list|(
@@ -526,6 +554,11 @@ operator|*
 name|S
 operator|=
 literal|0
+argument_list|,
+name|bool
+name|ExplicitInstantiationOrSpecialization
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -561,6 +594,19 @@ parameter_list|,
 name|NamedDecl
 modifier|*
 name|New
+parameter_list|)
+function_decl|;
+comment|/// \brief Insert the given declaration after the given iterator
+comment|/// position.
+name|void
+name|InsertDeclAfter
+parameter_list|(
+name|iterator
+name|Pos
+parameter_list|,
+name|NamedDecl
+modifier|*
+name|D
 parameter_list|)
 function_decl|;
 comment|/// \brief Link the declaration into the chain of declarations for

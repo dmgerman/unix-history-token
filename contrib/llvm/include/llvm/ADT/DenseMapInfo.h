@@ -924,15 +924,37 @@ specifier|static
 name|bool
 name|isEqual
 argument_list|(
-argument|const Pair& LHS
+argument|const Pair&LHS
 argument_list|,
-argument|const Pair& RHS
+argument|const Pair&RHS
 argument_list|)
 block|{
 return|return
+name|FirstInfo
+operator|::
+name|isEqual
+argument_list|(
 name|LHS
-operator|==
+operator|.
+name|first
+argument_list|,
 name|RHS
+operator|.
+name|first
+argument_list|)
+operator|&&
+name|SecondInfo
+operator|::
+name|isEqual
+argument_list|(
+name|LHS
+operator|.
+name|second
+argument_list|,
+name|RHS
+operator|.
+name|second
+argument_list|)
 return|;
 block|}
 expr|}

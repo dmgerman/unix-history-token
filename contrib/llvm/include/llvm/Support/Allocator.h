@@ -653,6 +653,12 @@ name|PrintStats
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Compute the total physical memory allocated by this allocator.
+name|size_t
+name|getTotalMemory
+argument_list|()
+specifier|const
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|/// SpecificBumpPtrAllocator - Same as BumpPtrAllocator but allows only

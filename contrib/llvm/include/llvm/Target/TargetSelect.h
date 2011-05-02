@@ -303,6 +303,31 @@ return|;
 endif|#
 directive|endif
 block|}
+comment|/// InitializeNativeTargetAsmParser - The main program should call
+comment|/// this function to initialize the native target asm parser.
+specifier|inline
+name|bool
+name|InitializeNativeTargetAsmParser
+parameter_list|()
+block|{
+comment|// If we have a native target, initialize the corresponding asm parser.
+ifdef|#
+directive|ifdef
+name|LLVM_NATIVE_ASMPARSER
+name|LLVM_NATIVE_ASMPARSER
+argument_list|()
+expr_stmt|;
+return|return
+name|false
+return|;
+else|#
+directive|else
+return|return
+name|true
+return|;
+endif|#
+directive|endif
+block|}
 block|}
 end_decl_stmt
 

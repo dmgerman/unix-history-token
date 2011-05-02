@@ -202,7 +202,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/**  * Returns the last error string or NULL if last operation was sucessful.  */
+comment|/**  * Returns the last error string or NULL if last operation was successful.  */
 specifier|extern
 specifier|const
 name|char
@@ -310,8 +310,31 @@ name|char
 modifier|*
 name|path
 parameter_list|,
+name|size_t
+name|file_size
+parameter_list|)
+function_decl|;
+comment|/**  * Loads an object file from disk. The seek point of fd is not preserved.  * Returns NULL on error (check lto_get_error_message() for details).  */
+specifier|extern
+name|lto_module_t
+name|lto_module_create_from_fd_at_offset
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|size_t
+name|file_size
+parameter_list|,
+name|size_t
+name|map_size
+parameter_list|,
 name|off_t
-name|size
+name|offset
 parameter_list|)
 function_decl|;
 comment|/**  * Frees all memory internally allocated by the module.  * Upon return the lto_module_t is no longer valid.  */
@@ -510,7 +533,7 @@ modifier|*
 name|path
 parameter_list|)
 function_decl|;
-comment|/**  * Generates code for all added modules into one native object file.  * On sucess returns a pointer to a generated mach-o/ELF buffer and  * length set to the buffer size.  The buffer is owned by the   * lto_code_gen_t and will be freed when lto_codegen_dispose()  * is called, or lto_codegen_compile() is called again.  * On failure, returns NULL (check lto_get_error_message() for details).  */
+comment|/**  * Generates code for all added modules into one native object file.  * On success returns a pointer to a generated mach-o/ELF buffer and  * length set to the buffer size.  The buffer is owned by the   * lto_code_gen_t and will be freed when lto_codegen_dispose()  * is called, or lto_codegen_compile() is called again.  * On failure, returns NULL (check lto_get_error_message() for details).  */
 specifier|extern
 specifier|const
 name|void
@@ -523,6 +546,21 @@ parameter_list|,
 name|size_t
 modifier|*
 name|length
+parameter_list|)
+function_decl|;
+comment|/**  * Generates code for all added modules into one native object file.  * The name of the file is written to name. Returns true on error.  */
+specifier|extern
+name|bool
+name|lto_codegen_compile_to_file
+parameter_list|(
+name|lto_code_gen_t
+name|cg
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|name
 parameter_list|)
 function_decl|;
 comment|/**  * Sets options to help debug codegen bugs.  */

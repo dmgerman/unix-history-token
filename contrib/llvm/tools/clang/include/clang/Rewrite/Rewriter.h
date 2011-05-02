@@ -105,12 +105,6 @@ directive|include
 file|<string>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -228,6 +222,11 @@ name|OrigOffset
 parameter_list|,
 name|unsigned
 name|Size
+parameter_list|,
+name|bool
+name|removeLineIfEmpty
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// InsertText - Insert some text at the specified point, where the offset in
@@ -461,6 +460,44 @@ name|RewriteBuffers
 expr_stmt|;
 name|public
 label|:
+struct|struct
+name|RewriteOptions
+block|{
+comment|/// \brief Given a source range, true to include previous inserts at the
+comment|/// beginning of the range as part of the range itself (true by default).
+name|bool
+name|IncludeInsertsAtBeginOfRange
+decl_stmt|;
+comment|/// \brief Given a source range, true to include previous inserts at the
+comment|/// end of the range as part of the range itself (true by default).
+name|bool
+name|IncludeInsertsAtEndOfRange
+decl_stmt|;
+comment|/// \brief If true and removing some text leaves a blank line
+comment|/// also remove the empty line (false by default).
+name|bool
+name|RemoveLineIfEmpty
+decl_stmt|;
+name|RewriteOptions
+argument_list|()
+operator|:
+name|IncludeInsertsAtBeginOfRange
+argument_list|(
+name|true
+argument_list|)
+operator|,
+name|IncludeInsertsAtEndOfRange
+argument_list|(
+name|true
+argument_list|)
+operator|,
+name|RemoveLineIfEmpty
+argument_list|(
+argument|false
+argument_list|)
+block|{ }
+block|}
+struct|;
 typedef|typedef
 name|std
 operator|::
@@ -575,6 +612,12 @@ name|getRangeSize
 argument_list|(
 name|SourceRange
 name|Range
+argument_list|,
+name|RewriteOptions
+name|opts
+operator|=
+name|RewriteOptions
+argument_list|()
 argument_list|)
 decl|const
 decl_stmt|;
@@ -585,6 +628,12 @@ specifier|const
 name|CharSourceRange
 operator|&
 name|Range
+argument_list|,
+name|RewriteOptions
+name|opts
+operator|=
+name|RewriteOptions
+argument_list|()
 argument_list|)
 decl|const
 decl_stmt|;
@@ -649,6 +698,20 @@ name|Str
 argument_list|)
 return|;
 block|}
+comment|/// \brief Insert the specified string after the token in the
+comment|/// specified location.
+name|bool
+name|InsertTextAfterToken
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|Str
+argument_list|)
+decl_stmt|;
 comment|/// InsertText - Insert the specified string at the specified location in the
 comment|/// original buffer.  This method returns true (and does nothing) if the input
 comment|/// location was not rewritable, false otherwise.  Text is
@@ -686,8 +749,80 @@ name|Start
 parameter_list|,
 name|unsigned
 name|Length
+parameter_list|,
+name|RewriteOptions
+name|opts
+init|=
+name|RewriteOptions
+argument_list|()
 parameter_list|)
 function_decl|;
+comment|/// \brief Remove the specified text region.
+name|bool
+name|RemoveText
+parameter_list|(
+name|CharSourceRange
+name|range
+parameter_list|,
+name|RewriteOptions
+name|opts
+init|=
+name|RewriteOptions
+argument_list|()
+parameter_list|)
+block|{
+return|return
+name|RemoveText
+argument_list|(
+name|range
+operator|.
+name|getBegin
+argument_list|()
+argument_list|,
+name|getRangeSize
+argument_list|(
+name|range
+argument_list|,
+name|opts
+argument_list|)
+argument_list|,
+name|opts
+argument_list|)
+return|;
+block|}
+comment|/// \brief Remove the specified text region.
+name|bool
+name|RemoveText
+parameter_list|(
+name|SourceRange
+name|range
+parameter_list|,
+name|RewriteOptions
+name|opts
+init|=
+name|RewriteOptions
+argument_list|()
+parameter_list|)
+block|{
+return|return
+name|RemoveText
+argument_list|(
+name|range
+operator|.
+name|getBegin
+argument_list|()
+argument_list|,
+name|getRangeSize
+argument_list|(
+name|range
+argument_list|,
+name|opts
+argument_list|)
+argument_list|,
+name|opts
+argument_list|)
+return|;
+block|}
 comment|/// ReplaceText - This method replaces a range of characters in the input
 comment|/// buffer with a new string.  This is effectively a combined "remove/insert"
 comment|/// operation.
@@ -706,6 +841,51 @@ name|StringRef
 name|NewStr
 argument_list|)
 decl_stmt|;
+comment|/// ReplaceText - This method replaces a range of characters in the input
+comment|/// buffer with a new string.  This is effectively a combined "remove/insert"
+comment|/// operation.
+name|bool
+name|ReplaceText
+argument_list|(
+name|SourceRange
+name|range
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|NewStr
+argument_list|)
+block|{
+return|return
+name|ReplaceText
+argument_list|(
+name|range
+operator|.
+name|getBegin
+argument_list|()
+argument_list|,
+name|getRangeSize
+argument_list|(
+name|range
+argument_list|)
+argument_list|,
+name|NewStr
+argument_list|)
+return|;
+block|}
+comment|/// ReplaceText - This method replaces a range of characters in the input
+comment|/// buffer with a new string.  This is effectively a combined "remove/insert"
+comment|/// operation.
+name|bool
+name|ReplaceText
+parameter_list|(
+name|SourceRange
+name|range
+parameter_list|,
+name|SourceRange
+name|replacementRange
+parameter_list|)
+function_decl|;
 comment|/// ReplaceStmt - This replaces a Stmt/Expr with another, using the pretty
 comment|/// printer to generate the replacement code.  This returns true if the input
 comment|/// could not be rewritten, or false if successful.
@@ -721,6 +901,56 @@ modifier|*
 name|To
 parameter_list|)
 function_decl|;
+comment|/// \brief Increase indentation for the lines between the given source range.
+comment|/// To determine what the indentation should be, 'parentIndent' is used
+comment|/// that should be at a source location with an indentation one degree
+comment|/// lower than the given range.
+name|bool
+name|IncreaseIndentation
+parameter_list|(
+name|CharSourceRange
+name|range
+parameter_list|,
+name|SourceLocation
+name|parentIndent
+parameter_list|)
+function_decl|;
+name|bool
+name|IncreaseIndentation
+parameter_list|(
+name|SourceRange
+name|range
+parameter_list|,
+name|SourceLocation
+name|parentIndent
+parameter_list|)
+block|{
+return|return
+name|IncreaseIndentation
+argument_list|(
+name|CharSourceRange
+operator|::
+name|getTokenRange
+argument_list|(
+name|range
+argument_list|)
+argument_list|,
+name|parentIndent
+argument_list|)
+return|;
+block|}
+comment|/// ConvertToString converts statement 'From' to a string using the
+comment|/// pretty printer.
+name|std
+operator|::
+name|string
+name|ConvertToString
+argument_list|(
+name|Stmt
+operator|*
+name|From
+argument_list|)
+expr_stmt|;
 comment|/// getEditBuffer - This is like getRewriteBufferFor, but always returns a
 comment|/// buffer, and allows you to write on it directly.  This is useful if you
 comment|/// want efficient low-level access to apis for scribbling on one specific

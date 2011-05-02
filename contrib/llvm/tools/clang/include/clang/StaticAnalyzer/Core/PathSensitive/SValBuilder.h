@@ -140,11 +140,11 @@ name|ArrayIndexWidth
 decl_stmt|;
 name|public
 label|:
-comment|// FIXME: Make these protected again one RegionStoreManager correctly
-comment|// handles loads from differening bound value types.
+comment|// FIXME: Make these protected again once RegionStoreManager correctly
+comment|// handles loads from different bound value types.
 name|virtual
 name|SVal
-name|evalCastNL
+name|evalCastFromNonLoc
 parameter_list|(
 name|NonLoc
 name|val
@@ -157,7 +157,7 @@ literal|0
 function_decl|;
 name|virtual
 name|SVal
-name|evalCastL
+name|evalCastFromLoc
 parameter_list|(
 name|Loc
 name|val
@@ -240,7 +240,7 @@ block|{}
 name|SVal
 name|evalCast
 argument_list|(
-argument|SVal V
+argument|SVal val
 argument_list|,
 argument|QualType castTy
 argument_list|,
@@ -279,7 +279,7 @@ argument_list|,
 name|BinaryOperator
 operator|::
 name|Opcode
-name|Op
+name|op
 argument_list|,
 name|NonLoc
 name|lhs
@@ -305,7 +305,7 @@ argument_list|,
 name|BinaryOperator
 operator|::
 name|Opcode
-name|Op
+name|op
 argument_list|,
 name|Loc
 name|lhs
@@ -331,7 +331,7 @@ argument_list|,
 name|BinaryOperator
 operator|::
 name|Opcode
-name|Op
+name|op
 argument_list|,
 name|Loc
 name|lhs
@@ -357,7 +357,7 @@ name|getKnownValue
 argument_list|(
 argument|const GRState *state
 argument_list|,
-argument|SVal V
+argument|SVal val
 argument_list|)
 operator|=
 literal|0
@@ -368,21 +368,21 @@ argument_list|(
 specifier|const
 name|GRState
 operator|*
-name|ST
+name|state
 argument_list|,
 name|BinaryOperator
 operator|::
 name|Opcode
-name|Op
+name|op
 argument_list|,
 name|SVal
-name|L
+name|lhs
 argument_list|,
 name|SVal
-name|R
+name|rhs
 argument_list|,
 name|QualType
-name|T
+name|type
 argument_list|)
 decl_stmt|;
 name|DefinedOrUnknownSVal
@@ -391,13 +391,13 @@ parameter_list|(
 specifier|const
 name|GRState
 modifier|*
-name|ST
+name|state
 parameter_list|,
 name|DefinedOrUnknownSVal
-name|L
+name|lhs
 parameter_list|,
 name|DefinedOrUnknownSVal
-name|R
+name|rhs
 parameter_list|)
 function_decl|;
 name|ASTContext
@@ -519,18 +519,18 @@ parameter_list|(
 specifier|const
 name|Stmt
 modifier|*
-name|E
+name|stmt
 parameter_list|,
 name|QualType
-name|T
+name|type
 parameter_list|,
 name|unsigned
-name|VisitCount
+name|visitCount
 parameter_list|,
 specifier|const
 name|void
 modifier|*
-name|SymbolTag
+name|symbolTag
 init|=
 literal|0
 parameter_list|)
@@ -540,13 +540,13 @@ name|SymMgr
 operator|.
 name|getConjuredSymbol
 argument_list|(
-name|E
+name|stmt
 argument_list|,
-name|T
+name|type
 argument_list|,
-name|VisitCount
+name|visitCount
 argument_list|,
-name|SymbolTag
+name|symbolTag
 argument_list|)
 return|;
 block|}
@@ -558,15 +558,15 @@ parameter_list|(
 specifier|const
 name|Expr
 modifier|*
-name|E
+name|expr
 parameter_list|,
 name|unsigned
-name|VisitCount
+name|visitCount
 parameter_list|,
 specifier|const
 name|void
 modifier|*
-name|SymbolTag
+name|symbolTag
 init|=
 literal|0
 parameter_list|)
@@ -576,11 +576,11 @@ name|SymMgr
 operator|.
 name|getConjuredSymbol
 argument_list|(
-name|E
+name|expr
 argument_list|,
-name|VisitCount
+name|visitCount
 argument_list|,
-name|SymbolTag
+name|symbolTag
 argument_list|)
 return|;
 block|}
@@ -589,17 +589,17 @@ name|DefinedOrUnknownSVal
 name|makeZeroVal
 parameter_list|(
 name|QualType
-name|T
+name|type
 parameter_list|)
 function_decl|;
-comment|/// getRegionValueSymbolVal - make a unique symbol for value of R.
+comment|/// getRegionValueSymbolVal - make a unique symbol for value of region.
 name|DefinedOrUnknownSVal
 name|getRegionValueSymbolVal
 parameter_list|(
 specifier|const
 name|TypedRegion
 modifier|*
-name|R
+name|region
 parameter_list|)
 function_decl|;
 name|DefinedOrUnknownSVal
@@ -608,15 +608,15 @@ parameter_list|(
 specifier|const
 name|void
 modifier|*
-name|SymbolTag
+name|symbolTag
 parameter_list|,
 specifier|const
 name|Expr
 modifier|*
-name|E
+name|expr
 parameter_list|,
 name|unsigned
-name|Count
+name|count
 parameter_list|)
 function_decl|;
 name|DefinedOrUnknownSVal
@@ -625,18 +625,18 @@ parameter_list|(
 specifier|const
 name|void
 modifier|*
-name|SymbolTag
+name|symbolTag
 parameter_list|,
 specifier|const
 name|Expr
 modifier|*
-name|E
+name|expr
 parameter_list|,
 name|QualType
-name|T
+name|type
 parameter_list|,
 name|unsigned
-name|Count
+name|count
 parameter_list|)
 function_decl|;
 name|DefinedOrUnknownSVal
@@ -648,7 +648,7 @@ parameter_list|,
 specifier|const
 name|TypedRegion
 modifier|*
-name|R
+name|region
 parameter_list|)
 function_decl|;
 name|DefinedSVal
@@ -657,23 +657,23 @@ parameter_list|(
 specifier|const
 name|void
 modifier|*
-name|SymbolTag
+name|symbolTag
 parameter_list|,
 specifier|const
 name|MemRegion
 modifier|*
-name|MR
+name|region
 parameter_list|,
 specifier|const
 name|Expr
 modifier|*
-name|E
+name|expr
 parameter_list|,
 name|QualType
-name|T
+name|type
 parameter_list|,
 name|unsigned
-name|Count
+name|count
 parameter_list|)
 function_decl|;
 name|DefinedSVal
@@ -682,7 +682,7 @@ parameter_list|(
 specifier|const
 name|FunctionDecl
 modifier|*
-name|FD
+name|func
 parameter_list|)
 function_decl|;
 name|DefinedSVal
@@ -691,7 +691,7 @@ parameter_list|(
 specifier|const
 name|BlockDecl
 modifier|*
-name|BD
+name|block
 parameter_list|,
 name|CanQualType
 name|locTy
@@ -699,14 +699,14 @@ parameter_list|,
 specifier|const
 name|LocationContext
 modifier|*
-name|LC
+name|locContext
 parameter_list|)
 function_decl|;
 name|NonLoc
 name|makeCompoundVal
 argument_list|(
 name|QualType
-name|T
+name|type
 argument_list|,
 name|llvm
 operator|::
@@ -714,7 +714,7 @@ name|ImmutableList
 operator|<
 name|SVal
 operator|>
-name|Vals
+name|vals
 argument_list|)
 block|{
 return|return
@@ -726,9 +726,9 @@ name|BasicVals
 operator|.
 name|getCompoundValData
 argument_list|(
-name|T
+name|type
 argument_list|,
-name|Vals
+name|vals
 argument_list|)
 argument_list|)
 return|;
@@ -737,14 +737,14 @@ name|NonLoc
 name|makeLazyCompoundVal
 parameter_list|(
 specifier|const
-name|void
-modifier|*
+name|StoreRef
+modifier|&
 name|store
 parameter_list|,
 specifier|const
 name|TypedRegion
 modifier|*
-name|R
+name|region
 parameter_list|)
 block|{
 return|return
@@ -758,7 +758,7 @@ name|getLazyCompoundValData
 argument_list|(
 name|store
 argument_list|,
-name|R
+name|region
 argument_list|)
 argument_list|)
 return|;
@@ -810,7 +810,7 @@ name|SVal
 name|convertToArrayIndex
 parameter_list|(
 name|SVal
-name|V
+name|val
 parameter_list|)
 function_decl|;
 name|nonloc
@@ -818,7 +818,7 @@ operator|::
 name|ConcreteInt
 name|makeIntVal
 argument_list|(
-argument|const IntegerLiteral* I
+argument|const IntegerLiteral* integer
 argument_list|)
 block|{
 return|return
@@ -830,12 +830,12 @@ name|BasicVals
 operator|.
 name|getValue
 argument_list|(
-name|I
+name|integer
 operator|->
 name|getValue
 argument_list|()
 argument_list|,
-name|I
+name|integer
 operator|->
 name|getType
 argument_list|()
@@ -851,13 +851,13 @@ operator|::
 name|ConcreteInt
 name|makeBoolVal
 argument_list|(
-argument|const CXXBoolLiteralExpr *E
+argument|const CXXBoolLiteralExpr *boolean
 argument_list|)
 block|{
 return|return
 name|makeTruthVal
 argument_list|(
-name|E
+name|boolean
 operator|->
 name|getValue
 argument_list|()
@@ -869,7 +869,7 @@ operator|::
 name|ConcreteInt
 name|makeIntVal
 argument_list|(
-argument|const llvm::APSInt& V
+argument|const llvm::APSInt& integer
 argument_list|)
 block|{
 return|return
@@ -881,7 +881,7 @@ name|BasicVals
 operator|.
 name|getValue
 argument_list|(
-name|V
+name|integer
 argument_list|)
 argument_list|)
 return|;
@@ -891,7 +891,7 @@ operator|::
 name|ConcreteInt
 name|makeIntLocVal
 argument_list|(
-argument|const llvm::APSInt&v
+argument|const llvm::APSInt&integer
 argument_list|)
 block|{
 return|return
@@ -903,7 +903,7 @@ name|BasicVals
 operator|.
 name|getValue
 argument_list|(
-name|v
+name|integer
 argument_list|)
 argument_list|)
 return|;
@@ -916,7 +916,7 @@ name|llvm
 operator|::
 name|APInt
 operator|&
-name|V
+name|integer
 argument_list|,
 name|bool
 name|isUnsigned
@@ -931,7 +931,7 @@ name|BasicVals
 operator|.
 name|getValue
 argument_list|(
-name|V
+name|integer
 argument_list|,
 name|isUnsigned
 argument_list|)
@@ -942,10 +942,10 @@ name|DefinedSVal
 name|makeIntVal
 parameter_list|(
 name|uint64_t
-name|X
+name|integer
 parameter_list|,
 name|QualType
-name|T
+name|type
 parameter_list|)
 block|{
 if|if
@@ -954,7 +954,7 @@ name|Loc
 operator|::
 name|isLocType
 argument_list|(
-name|T
+name|type
 argument_list|)
 condition|)
 return|return
@@ -966,9 +966,9 @@ name|BasicVals
 operator|.
 name|getValue
 argument_list|(
-name|X
+name|integer
 argument_list|,
-name|T
+name|type
 argument_list|)
 argument_list|)
 return|;
@@ -981,9 +981,9 @@ name|BasicVals
 operator|.
 name|getValue
 argument_list|(
-name|X
+name|integer
 argument_list|,
-name|T
+name|type
 argument_list|)
 argument_list|)
 return|;
@@ -992,7 +992,7 @@ name|NonLoc
 name|makeIntVal
 parameter_list|(
 name|uint64_t
-name|X
+name|integer
 parameter_list|,
 name|bool
 name|isUnsigned
@@ -1007,7 +1007,7 @@ name|BasicVals
 operator|.
 name|getIntValue
 argument_list|(
-name|X
+name|integer
 argument_list|,
 name|isUnsigned
 argument_list|)
@@ -1018,7 +1018,7 @@ name|NonLoc
 name|makeIntValWithPtrWidth
 parameter_list|(
 name|uint64_t
-name|X
+name|integer
 parameter_list|,
 name|bool
 name|isUnsigned
@@ -1033,7 +1033,7 @@ name|BasicVals
 operator|.
 name|getIntWithPtrWidth
 argument_list|(
-name|X
+name|integer
 argument_list|,
 name|isUnsigned
 argument_list|)
@@ -1044,10 +1044,10 @@ name|NonLoc
 name|makeIntVal
 parameter_list|(
 name|uint64_t
-name|X
+name|integer
 parameter_list|,
 name|unsigned
-name|BitWidth
+name|bitWidth
 parameter_list|,
 name|bool
 name|isUnsigned
@@ -1062,9 +1062,9 @@ name|BasicVals
 operator|.
 name|getValue
 argument_list|(
-name|X
+name|integer
 argument_list|,
-name|BitWidth
+name|bitWidth
 argument_list|,
 name|isUnsigned
 argument_list|)
@@ -1075,10 +1075,10 @@ name|NonLoc
 name|makeLocAsInteger
 parameter_list|(
 name|Loc
-name|V
+name|loc
 parameter_list|,
 name|unsigned
-name|Bits
+name|bits
 parameter_list|)
 block|{
 return|return
@@ -1090,9 +1090,9 @@ name|BasicVals
 operator|.
 name|getPersistentSValWithData
 argument_list|(
-name|V
+name|loc
 argument_list|,
-name|Bits
+name|bits
 argument_list|)
 argument_list|)
 return|;
@@ -1118,7 +1118,7 @@ operator|&
 name|rhs
 argument_list|,
 name|QualType
-name|T
+name|type
 argument_list|)
 decl_stmt|;
 name|NonLoc
@@ -1140,7 +1140,7 @@ operator|*
 name|rhs
 argument_list|,
 name|QualType
-name|T
+name|type
 argument_list|)
 decl_stmt|;
 name|nonloc
@@ -1150,7 +1150,7 @@ name|makeTruthVal
 argument_list|(
 argument|bool b
 argument_list|,
-argument|QualType T
+argument|QualType type
 argument_list|)
 block|{
 return|return
@@ -1164,7 +1164,7 @@ name|getTruthValue
 argument_list|(
 name|b
 argument_list|,
-name|T
+name|type
 argument_list|)
 argument_list|)
 return|;
@@ -1211,7 +1211,7 @@ name|Loc
 name|makeLoc
 parameter_list|(
 name|SymbolRef
-name|Sym
+name|sym
 parameter_list|)
 block|{
 return|return
@@ -1223,7 +1223,7 @@ name|MemMgr
 operator|.
 name|getSymbolicRegion
 argument_list|(
-name|Sym
+name|sym
 argument_list|)
 argument_list|)
 return|;
@@ -1234,7 +1234,7 @@ parameter_list|(
 specifier|const
 name|MemRegion
 modifier|*
-name|R
+name|region
 parameter_list|)
 block|{
 return|return
@@ -1242,7 +1242,7 @@ name|loc
 operator|::
 name|MemRegionVal
 argument_list|(
-name|R
+name|region
 argument_list|)
 return|;
 block|}
@@ -1252,7 +1252,7 @@ parameter_list|(
 specifier|const
 name|AddrLabelExpr
 modifier|*
-name|E
+name|expr
 parameter_list|)
 block|{
 return|return
@@ -1260,7 +1260,7 @@ name|loc
 operator|::
 name|GotoLabel
 argument_list|(
-name|E
+name|expr
 operator|->
 name|getLabel
 argument_list|()
@@ -1275,7 +1275,7 @@ name|llvm
 operator|::
 name|APSInt
 operator|&
-name|V
+name|integer
 argument_list|)
 block|{
 return|return
@@ -1287,7 +1287,7 @@ name|BasicVals
 operator|.
 name|getValue
 argument_list|(
-name|V
+name|integer
 argument_list|)
 argument_list|)
 return|;

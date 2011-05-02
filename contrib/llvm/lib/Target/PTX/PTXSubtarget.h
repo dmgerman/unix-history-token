@@ -77,28 +77,137 @@ name|TargetSubtarget
 block|{
 name|private
 operator|:
+comment|/**        * Enumeration of Shader Models supported by the back-end.        */
+expr|enum
+name|PTXShaderModelEnum
+block|{
+name|PTX_SM_1_0
+block|,
+comment|/*< Shader Model 1.0 */
+name|PTX_SM_1_3
+block|,
+comment|/*< Shader Model 1.3 */
+name|PTX_SM_2_0
+comment|/*< Shader Model 2.0 */
+block|}
+block|;
+comment|/**        * Enumeration of PTX versions supported by the back-end.        *        * Currently, PTX 2.0 is the minimum supported version.        */
+block|enum
+name|PTXVersionEnum
+block|{
+name|PTX_VERSION_2_0
+block|,
+comment|/*< PTX Version 2.0 */
+name|PTX_VERSION_2_1
+block|,
+comment|/*< PTX Version 2.1 */
+name|PTX_VERSION_2_2
+comment|/*< PTX Version 2.2 */
+block|}
+block|;
+comment|/// Shader Model supported on the target GPU.
+name|PTXShaderModelEnum
+name|PTXShaderModel
+block|;
+comment|/// PTX Language Version.
+name|PTXVersionEnum
+name|PTXVersion
+block|;
+comment|// The native .f64 type is supported on the hardware.
 name|bool
-name|is_sm20
+name|SupportsDouble
+block|;
+comment|// Use .u64 instead of .u32 for addresses.
+name|bool
+name|Is64Bit
 block|;
 name|public
 operator|:
 name|PTXSubtarget
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|TT
+argument|const std::string&TT
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|FS
+argument|const std::string&FS
+argument_list|,
+argument|bool is64Bit
 argument_list|)
 block|;
+name|std
+operator|::
+name|string
+name|getTargetString
+argument_list|()
+specifier|const
+block|;
+name|std
+operator|::
+name|string
+name|getPTXVersionString
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|supportsDouble
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SupportsDouble
+return|;
+block|}
+name|bool
+name|is64Bit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Is64Bit
+return|;
+block|}
+name|bool
+name|supportsSM13
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PTXShaderModel
+operator|>=
+name|PTX_SM_1_3
+return|;
+block|}
+name|bool
+name|supportsSM20
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PTXShaderModel
+operator|>=
+name|PTX_SM_2_0
+return|;
+block|}
+name|bool
+name|supportsPTX21
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PTXVersion
+operator|>=
+name|PTX_VERSION_2_1
+return|;
+block|}
+name|bool
+name|supportsPTX22
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PTXVersion
+operator|>=
+name|PTX_VERSION_2_2
+return|;
+block|}
 name|std
 operator|::
 name|string

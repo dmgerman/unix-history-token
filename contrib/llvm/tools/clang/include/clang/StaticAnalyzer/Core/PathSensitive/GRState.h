@@ -136,9 +136,6 @@ block|{
 name|class
 name|GRStateManager
 decl_stmt|;
-name|class
-name|Checker
-decl_stmt|;
 typedef|typedef
 name|ConstraintManager
 modifier|*
@@ -991,6 +988,11 @@ specifier|const
 name|Stmt
 operator|*
 name|S
+argument_list|,
+name|bool
+name|useOnlyDirectBindings
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1053,16 +1055,6 @@ name|R
 argument_list|)
 decl|const
 decl_stmt|;
-specifier|const
-name|llvm
-operator|::
-name|APSInt
-operator|*
-name|getSymVal
-argument_list|(
-argument|SymbolRef sym
-argument_list|)
-expr_stmt|;
 name|bool
 name|scanReachableSymbols
 argument_list|(
@@ -2729,31 +2721,6 @@ comment|// Out-of-line method definitions for GRState.
 comment|//===----------------------------------------------------------------------===//
 specifier|inline
 specifier|const
-name|llvm
-operator|::
-name|APSInt
-operator|*
-name|GRState
-operator|::
-name|getSymVal
-argument_list|(
-argument|SymbolRef sym
-argument_list|)
-block|{
-return|return
-name|getStateManager
-argument_list|()
-operator|.
-name|getSymVal
-argument_list|(
-name|this
-argument_list|,
-name|sym
-argument_list|)
-return|;
-block|}
-specifier|inline
-specifier|const
 name|VarRegion
 operator|*
 name|GRState
@@ -3168,6 +3135,8 @@ operator|::
 name|getSVal
 argument_list|(
 argument|const Stmt* Ex
+argument_list|,
+argument|bool useOnlyDirectBindings
 argument_list|)
 specifier|const
 block|{
@@ -3183,6 +3152,8 @@ name|getStateManager
 argument_list|()
 operator|.
 name|svalBuilder
+argument_list|,
+name|useOnlyDirectBindings
 argument_list|)
 return|;
 block|}
@@ -3225,6 +3196,11 @@ argument_list|()
 decl_stmt|;
 if|if
 condition|(
+name|Ex
+operator|->
+name|isLValue
+argument_list|()
+operator|||
 name|Loc
 operator|::
 name|isLocType

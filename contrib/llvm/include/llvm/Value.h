@@ -176,8 +176,8 @@ comment|//===-------------------------------------------------------------------
 comment|/// This is a very important LLVM class. It is the base class of all values
 comment|/// computed by a program that may be used as operands to other values. Value is
 comment|/// the super class of other important classes such as Instruction and Function.
-comment|/// All Values have a Type. Type is not a subclass of Value. All types can have
-comment|/// a name and they should belong to some Module. Setting the name on the Value
+comment|/// All Values have a Type. Type is not a subclass of Value. Some values can
+comment|/// have a name and they belong to some Module.  Setting the name on the Value
 comment|/// automatically updates the module's symbol table.
 comment|///
 comment|/// Every value has a "use list" that keeps track of which other Values are

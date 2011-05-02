@@ -90,11 +90,6 @@ name|deriveNamingConvention
 parameter_list|(
 name|Selector
 name|S
-parameter_list|,
-name|bool
-name|ignorePrefix
-init|=
-name|true
 parameter_list|)
 function_decl|;
 specifier|static

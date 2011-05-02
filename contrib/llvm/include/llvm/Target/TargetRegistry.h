@@ -167,6 +167,9 @@ parameter_list|,
 name|bool
 name|useLoc
 parameter_list|,
+name|bool
+name|useCFI
+parameter_list|,
 name|MCInstPrinter
 modifier|*
 name|InstPrint
@@ -360,6 +363,10 @@ name|Target
 operator|&
 name|T
 operator|,
+name|TargetMachine
+operator|&
+name|TM
+operator|,
 name|unsigned
 name|SyntaxVariant
 operator|,
@@ -452,6 +459,9 @@ name|isVerboseAsm
 operator|,
 name|bool
 name|useLoc
+operator|,
+name|bool
+name|useCFI
 operator|,
 name|MCInstPrinter
 operator|*
@@ -979,6 +989,10 @@ name|MCInstPrinter
 modifier|*
 name|createMCInstPrinter
 argument_list|(
+name|TargetMachine
+operator|&
+name|TM
+argument_list|,
 name|unsigned
 name|SyntaxVariant
 argument_list|,
@@ -1002,6 +1016,8 @@ name|MCInstPrinterCtorFn
 argument_list|(
 operator|*
 name|this
+argument_list|,
+name|TM
 argument_list|,
 name|SyntaxVariant
 argument_list|,
@@ -1137,6 +1153,9 @@ argument_list|,
 name|bool
 name|useLoc
 argument_list|,
+name|bool
+name|useCFI
+argument_list|,
 name|MCInstPrinter
 operator|*
 name|InstPrint
@@ -1165,6 +1184,8 @@ argument_list|,
 name|isVerboseAsm
 argument_list|,
 name|useLoc
+argument_list|,
+name|useCFI
 argument_list|,
 name|InstPrint
 argument_list|,

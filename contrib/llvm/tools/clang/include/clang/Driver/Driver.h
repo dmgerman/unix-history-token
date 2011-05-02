@@ -112,6 +112,14 @@ block|{
 name|class
 name|raw_ostream
 decl_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|ArrayRef
+expr_stmt|;
 block|}
 end_decl_stmt
 
@@ -239,6 +247,16 @@ expr_stmt|;
 name|prefix_list
 name|PrefixDirs
 decl_stmt|;
+comment|/// sysroot, if present
+name|std
+operator|::
+name|string
+name|SysRoot
+expr_stmt|;
+comment|/// If the standard library is used
+name|bool
+name|UseStdLib
+decl_stmt|;
 comment|/// Default host triple.
 name|std
 operator|::
@@ -264,7 +282,7 @@ name|HostInfo
 modifier|*
 name|Host
 decl_stmt|;
-comment|/// Information about the host which can be overriden by the user.
+comment|/// Information about the host which can be overridden by the user.
 name|std
 operator|::
 name|string
@@ -288,9 +306,21 @@ name|char
 modifier|*
 name|CCPrintHeadersFilename
 decl_stmt|;
+comment|/// The file to log CC_LOG_DIAGNOSTICS output to, if enabled.
+specifier|const
+name|char
+modifier|*
+name|CCLogDiagnosticsFilename
+decl_stmt|;
 comment|/// Whether the driver should follow g++ like behavior.
 name|unsigned
 name|CCCIsCXX
+range|:
+literal|1
+decl_stmt|;
+comment|/// Whether the driver is just the preprocessor
+name|unsigned
+name|CCCIsCPP
 range|:
 literal|1
 decl_stmt|;
@@ -320,9 +350,17 @@ name|CCPrintHeaders
 range|:
 literal|1
 decl_stmt|;
+comment|/// Set CC_LOG_DIAGNOSTICS mode, which causes the frontend to log diagnostics
+comment|/// to CCLogDiagnosticsFilename or to stderr, in a stable machine readable
+comment|/// format.
+name|unsigned
+name|CCLogDiagnostics
+range|:
+literal|1
+decl_stmt|;
 name|private
 label|:
-comment|/// Name to use when calling the generic gcc.
+comment|/// Name to use when invoking gcc/g++.
 name|std
 operator|::
 name|string
@@ -442,7 +480,7 @@ argument_list|()
 expr_stmt|;
 comment|/// @name Accessors
 comment|/// @{
-comment|/// Name to use when calling the generic gcc.
+comment|/// Name to use when invoking gcc/g++.
 specifier|const
 name|std
 operator|::
@@ -597,17 +635,18 @@ comment|/// to determine if an error occurred.
 name|Compilation
 modifier|*
 name|BuildCompilation
-parameter_list|(
-name|int
-name|argc
-parameter_list|,
+argument_list|(
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
 specifier|const
 name|char
-modifier|*
-modifier|*
-name|argv
-parameter_list|)
-function_decl|;
+operator|*
+operator|>
+name|Args
+argument_list|)
+decl_stmt|;
 comment|/// @name Driver Steps
 comment|/// @{
 comment|/// ParseArgStrings - Parse the given list of strings into an
@@ -615,20 +654,18 @@ comment|/// ArgList.
 name|InputArgList
 modifier|*
 name|ParseArgStrings
-parameter_list|(
+argument_list|(
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
 specifier|const
 name|char
-modifier|*
-modifier|*
-name|ArgBegin
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|*
-name|ArgEnd
-parameter_list|)
-function_decl|;
+operator|*
+operator|>
+name|Args
+argument_list|)
+decl_stmt|;
 comment|/// BuildActions - Construct the list of actions to perform for the
 comment|/// given arguments, which are only done for a single architecture.
 comment|///
@@ -644,7 +681,7 @@ operator|&
 name|TC
 argument_list|,
 specifier|const
-name|ArgList
+name|DerivedArgList
 operator|&
 name|Args
 argument_list|,
@@ -669,7 +706,7 @@ operator|&
 name|TC
 argument_list|,
 specifier|const
-name|ArgList
+name|DerivedArgList
 operator|&
 name|Args
 argument_list|,

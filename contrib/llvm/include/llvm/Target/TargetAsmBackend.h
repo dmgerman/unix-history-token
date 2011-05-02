@@ -72,6 +72,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MCELFObjectTargetWriter
+decl_stmt|;
+name|class
 name|MCFixup
 decl_stmt|;
 name|class
@@ -149,6 +152,26 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+comment|/// createELFObjectTargetWriter - Create a new ELFObjectTargetWriter to enable
+comment|/// non-standard ELFObjectWriters.
+name|virtual
+name|MCELFObjectTargetWriter
+operator|*
+name|createELFObjectTargetWriter
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+literal|0
+operator|&&
+literal|"createELFObjectTargetWriter is not supported by asm backend"
+argument_list|)
+block|;
+return|return
+literal|0
+return|;
+block|}
 comment|/// hasReliableSymbolDifference - Check whether this target implements
 comment|/// accurate relocations for differences between symbols. If not, differences
 comment|/// between symbols will always be relocatable expressions and any references

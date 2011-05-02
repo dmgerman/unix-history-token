@@ -456,12 +456,25 @@ name|ItinClassIndx
 argument_list|)
 decl|const
 block|{
-comment|// If the target doesn't provide itinerary information, use a
-comment|// simple non-zero default value for all instructions.
+comment|// If the target doesn't provide itinerary information, use a simple
+comment|// non-zero default value for all instructions.  Some target's provide a
+comment|// dummy (Generic) itinerary which should be handled as if it's itinerary is
+comment|// empty. We identify this by looking for a reference to stage zero (invalid
+comment|// stage). This is different from beginStage == endState != 0, which could
+comment|// be used for zero-latency pseudo ops.
 if|if
 condition|(
 name|isEmpty
 argument_list|()
+operator|||
+name|Itineraries
+index|[
+name|ItinClassIndx
+index|]
+operator|.
+name|FirstStage
+operator|==
+literal|0
 condition|)
 return|return
 literal|1

@@ -71,12 +71,6 @@ directive|include
 file|"CodeGenDAGPatterns.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<set>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm

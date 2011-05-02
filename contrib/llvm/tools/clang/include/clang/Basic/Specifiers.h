@@ -150,6 +150,9 @@ comment|// C++0x decltype
 name|TST_auto
 block|,
 comment|// C++0x auto
+name|TST_unknown_anytype
+block|,
+comment|// __unknown_anytype extension
 name|TST_error
 comment|// erroneous type
 block|}

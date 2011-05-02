@@ -321,7 +321,7 @@ block|,
 comment|// RESULT, BOOL = [SU]ADDO(LHS, RHS) - Overflow-aware nodes for addition.
 comment|// These nodes take two operands: the normal LHS and RHS to the add. They
 comment|// produce two results: the normal result of the add, and a boolean that
-comment|// indicates if an overflow occured (*not* a flag, because it may be stored
+comment|// indicates if an overflow occurred (*not* a flag, because it may be stored
 comment|// to memory, etc.).  If the type of the boolean is not i1 then the high
 comment|// bits conform to getBooleanContents.
 comment|// These nodes are generated from the llvm.[su]add.with.overflow intrinsics.

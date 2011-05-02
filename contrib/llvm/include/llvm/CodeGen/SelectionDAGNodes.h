@@ -4075,7 +4075,7 @@ comment|/// HandleSDNode - This class is used to form a handle around another no
 end_comment
 
 begin_comment
-comment|/// is persistant and is updated across invocations of replaceAllUsesWith on its
+comment|/// is persistent and is updated across invocations of replaceAllUsesWith on its
 end_comment
 
 begin_comment

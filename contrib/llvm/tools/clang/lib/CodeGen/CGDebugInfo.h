@@ -133,6 +133,9 @@ decl_stmt|;
 name|class
 name|ObjCInterfaceDecl
 decl_stmt|;
+name|class
+name|ClassTemplateSpecializationDecl
+decl_stmt|;
 name|namespace
 name|CodeGen
 block|{
@@ -652,6 +655,38 @@ argument_list|)
 decl_stmt|;
 name|llvm
 operator|::
+name|DIArray
+name|CollectTemplateParams
+argument_list|(
+argument|const TemplateParameterList *TPList
+argument_list|,
+argument|const TemplateArgumentList&TAList
+argument_list|,
+argument|llvm::DIFile Unit
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|DIArray
+name|CollectFunctionTemplateParams
+argument_list|(
+argument|const FunctionDecl *FD
+argument_list|,
+argument|llvm::DIFile Unit
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|DIArray
+name|CollectCXXTemplateParams
+argument_list|(
+argument|const ClassTemplateSpecializationDecl *TS
+argument_list|,
+argument|llvm::DIFile F
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
 name|DIType
 name|createFieldType
 argument_list|(
@@ -795,6 +830,17 @@ modifier|&
 name|Builder
 parameter_list|)
 function_decl|;
+comment|/// UpdateCompletedType - Update type cache because the type is now
+comment|/// translated.
+name|void
+name|UpdateCompletedType
+parameter_list|(
+specifier|const
+name|TagDecl
+modifier|*
+name|TD
+parameter_list|)
+function_decl|;
 comment|/// EmitRegionStart - Emit a call to llvm.dbg.region.start to indicate start
 comment|/// of a new block.
 name|void
@@ -877,6 +923,9 @@ operator|::
 name|Value
 operator|*
 name|AI
+argument_list|,
+name|unsigned
+name|ArgNo
 argument_list|,
 name|CGBuilderTy
 operator|&
@@ -983,38 +1032,12 @@ name|Value
 operator|*
 name|AI
 argument_list|,
-name|CGBuilderTy
-operator|&
-name|Builder
-argument_list|)
-decl_stmt|;
-comment|/// EmitDeclare - Emit call to llvm.dbg.declare for a variable
-comment|/// declaration from an enclosing block.
-name|void
-name|EmitDeclare
-argument_list|(
-specifier|const
-name|VarDecl
-operator|*
-name|decl
-argument_list|,
 name|unsigned
-name|Tag
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|AI
+name|ArgNo
 argument_list|,
 name|CGBuilderTy
 operator|&
 name|Builder
-argument_list|,
-specifier|const
-name|CGBlockInfo
-operator|&
-name|blockInfo
 argument_list|)
 decl_stmt|;
 comment|// EmitTypeForVarWithBlocksAttr - Build up structure info for the byref.
@@ -1113,6 +1136,19 @@ argument_list|,
 argument|uint64_t *Offset
 argument_list|)
 expr_stmt|;
+comment|/// getFunctionDeclaration - Return debug info descriptor to describe method
+comment|/// declaration for the given method definition.
+name|llvm
+operator|::
+name|DISubprogram
+name|getFunctionDeclaration
+argument_list|(
+specifier|const
+name|Decl
+operator|*
+name|D
+argument_list|)
+expr_stmt|;
 comment|/// getFunctionName - Get function name for the given FunctionDecl. If the
 comment|/// name is constructred on demand (e.g. C++ destructor) then the name
 comment|/// is stored on the side.
@@ -1138,6 +1174,16 @@ specifier|const
 name|ObjCMethodDecl
 operator|*
 name|FD
+argument_list|)
+expr_stmt|;
+comment|/// getSelectorName - Return selector name. This is used for debugging
+comment|/// info.
+name|llvm
+operator|::
+name|StringRef
+name|getSelectorName
+argument_list|(
+argument|Selector S
 argument_list|)
 expr_stmt|;
 comment|/// getClassName - Get class name including template argument list.

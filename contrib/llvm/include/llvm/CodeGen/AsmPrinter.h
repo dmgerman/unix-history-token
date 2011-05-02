@@ -438,6 +438,19 @@ name|void
 name|EmitFunctionBody
 argument_list|()
 block|;
+name|void
+name|emitPrologLabel
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|)
+block|;
+name|bool
+name|needsCFIMoves
+argument_list|()
+block|;
 comment|/// EmitConstantPool - Print to the current output stream assembly
 comment|/// representations of the constants in the constant pool MCP. This is
 comment|/// used to print out constants which have been "spilled to memory" by
@@ -883,6 +896,16 @@ argument|const MachineInstr *MI
 argument_list|)
 specifier|const
 block|;
+comment|/// getDwarfRegOpSize - get size required to emit given machine location
+comment|/// using dwarf encoding.
+name|virtual
+name|unsigned
+name|getDwarfRegOpSize
+argument_list|(
+argument|const MachineLocation&MLoc
+argument_list|)
+specifier|const
+block|;
 comment|/// getISAEncoding - Get the value for DW_AT_APPLE_isa. Zero if no isa
 comment|/// encoding specified.
 name|virtual
@@ -894,6 +917,15 @@ return|return
 literal|0
 return|;
 block|}
+comment|/// EmitDwarfRegOp - Emit dwarf register operation.
+name|virtual
+name|void
+name|EmitDwarfRegOp
+argument_list|(
+argument|const MachineLocation&MLoc
+argument_list|)
+specifier|const
+block|;
 comment|//===------------------------------------------------------------------===//
 comment|// Dwarf Lowering Routines
 comment|//===------------------------------------------------------------------===//
@@ -907,6 +939,13 @@ argument_list|,
 argument|MCSymbol *BaseLabel
 argument_list|,
 argument|bool isEH
+argument_list|)
+specifier|const
+block|;
+name|void
+name|EmitCFIFrameMove
+argument_list|(
+argument|const MachineMove&Move
 argument_list|)
 specifier|const
 block|;

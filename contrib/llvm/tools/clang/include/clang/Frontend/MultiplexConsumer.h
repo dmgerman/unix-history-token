@@ -51,6 +51,18 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CLANG_FRONTEND_MULTIPLEXCONSUMER_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CLANG_FRONTEND_MULTIPLEXCONSUMER_H
+end_define
+
 begin_include
 include|#
 directive|include
@@ -245,6 +257,11 @@ end_decl_stmt
 begin_comment
 comment|// end namespace clang
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

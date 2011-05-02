@@ -115,77 +115,7 @@ name|AddrModeMask
 init|=
 literal|0x1f
 block|,
-name|AddrModeNone
-init|=
-literal|0
-block|,
-name|AddrMode1
-init|=
-literal|1
-block|,
-name|AddrMode2
-init|=
-literal|2
-block|,
-name|AddrMode3
-init|=
-literal|3
-block|,
-name|AddrMode4
-init|=
-literal|4
-block|,
-name|AddrMode5
-init|=
-literal|5
-block|,
-name|AddrMode6
-init|=
-literal|6
-block|,
-name|AddrModeT1_1
-init|=
-literal|7
-block|,
-name|AddrModeT1_2
-init|=
-literal|8
-block|,
-name|AddrModeT1_4
-init|=
-literal|9
-block|,
-name|AddrModeT1_s
-init|=
-literal|10
-block|,
-comment|// i8 * 4 for pc and sp relative data
-name|AddrModeT2_i12
-init|=
-literal|11
-block|,
-name|AddrModeT2_i8
-init|=
-literal|12
-block|,
-name|AddrModeT2_so
-init|=
-literal|13
-block|,
-name|AddrModeT2_pc
-init|=
-literal|14
-block|,
-comment|// +/- i12 for pc relative data
-name|AddrModeT2_i8s4
-init|=
-literal|15
-block|,
-comment|// i8 * 4
-name|AddrMode_i12
-init|=
-literal|16
-block|,
+comment|// The AddrMode enums are declared in ARMBaseInfo.h
 comment|// Size* - Flags to keep track of the size of an instruction.
 name|SizeShift
 init|=
@@ -216,6 +146,7 @@ literal|4
 block|,
 comment|// IndexMode - Unindex, pre-indexed, or post-indexed are valid for load
 comment|// and store ops only.  Generic "updating" flag is used for ld/st multiple.
+comment|// The index mode enums are declared in ARMBaseInfo.h
 name|IndexModeShift
 init|=
 literal|8
@@ -225,18 +156,6 @@ init|=
 literal|3
 operator|<<
 name|IndexModeShift
-block|,
-name|IndexModePre
-init|=
-literal|1
-block|,
-name|IndexModePost
-init|=
-literal|2
-block|,
-name|IndexModeUpd
-init|=
-literal|3
 block|,
 comment|//===------------------------------------------------------------------===//
 comment|// Instruction encoding formats.
@@ -1081,7 +1000,7 @@ argument_list|)
 specifier|const
 block|;
 comment|/// shouldScheduleLoadsNear - This is a used by the pre-regalloc scheduler to
-comment|/// determine (in conjuction with areLoadsFromSameBasePtr) if two loads should
+comment|/// determine (in conjunction with areLoadsFromSameBasePtr) if two loads should
 comment|/// be scheduled togther. On some targets if two loads are loading from
 comment|/// addresses in the same cache line, it's better if they are scheduled
 comment|/// together. This function takes two integers that represent the load offsets
@@ -1122,7 +1041,7 @@ name|isProfitableToIfCvt
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
-argument|unsigned NumCyles
+argument|unsigned NumCycles
 argument_list|,
 argument|unsigned ExtraPredCycles
 argument_list|,
@@ -1160,7 +1079,7 @@ name|isProfitableToDupForIfCvt
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
-argument|unsigned NumCyles
+argument|unsigned NumCycles
 argument_list|,
 argument|float Probability
 argument_list|,
@@ -1169,7 +1088,7 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|NumCyles
+name|NumCycles
 operator|==
 literal|1
 return|;
@@ -1750,6 +1669,9 @@ argument_list|,
 argument|unsigned PredReg
 argument_list|,
 argument|const ARMBaseInstrInfo&TII
+argument_list|,
+argument|unsigned MIFlags =
+literal|0
 argument_list|)
 block|;
 name|void
@@ -1772,6 +1694,9 @@ argument_list|,
 argument|unsigned PredReg
 argument_list|,
 argument|const ARMBaseInstrInfo&TII
+argument_list|,
+argument|unsigned MIFlags =
+literal|0
 argument_list|)
 block|;
 name|void
@@ -1780,6 +1705,8 @@ argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator&MBBI
+argument_list|,
+argument|DebugLoc dl
 argument_list|,
 argument|unsigned DestReg
 argument_list|,
@@ -1791,7 +1718,8 @@ argument|const TargetInstrInfo&TII
 argument_list|,
 argument|const ARMBaseRegisterInfo& MRI
 argument_list|,
-argument|DebugLoc dl
+argument|unsigned MIFlags =
+literal|0
 argument_list|)
 block|;
 comment|/// rewriteARMFrameIndex / rewriteT2FrameIndex -

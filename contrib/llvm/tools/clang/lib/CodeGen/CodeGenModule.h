@@ -98,12 +98,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"CGCall.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"CGVTables.h"
 end_include
 
@@ -263,6 +257,9 @@ name|namespace
 name|CodeGen
 block|{
 name|class
+name|CallArgList
+decl_stmt|;
+name|class
 name|CodeGenFunction
 decl_stmt|;
 name|class
@@ -279,6 +276,9 @@ name|CGObjCRuntime
 decl_stmt|;
 name|class
 name|BlockFieldFlags
+decl_stmt|;
+name|class
+name|FunctionArgList
 decl_stmt|;
 struct|struct
 name|OrderGlobalInits
@@ -871,32 +871,6 @@ decl_stmt|;
 block|}
 name|Block
 struct|;
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-name|uint64_t
-operator|,
-name|llvm
-operator|::
-name|Constant
-operator|*
-operator|>
-name|AssignCache
-expr_stmt|;
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-name|uint64_t
-operator|,
-name|llvm
-operator|::
-name|Constant
-operator|*
-operator|>
-name|DestroyCache
-expr_stmt|;
 comment|/// @}
 name|public
 label|:
@@ -1021,7 +995,7 @@ expr_stmt|;
 block|}
 name|CGDebugInfo
 modifier|*
-name|getDebugInfo
+name|getModuleDebugInfo
 parameter_list|()
 block|{
 return|return
@@ -1211,6 +1185,8 @@ block|{
 name|TVK_ForVTT
 block|,
 name|TVK_ForVTable
+block|,
+name|TVK_ForConstructionVTable
 block|,
 name|TVK_ForRTTI
 block|,
@@ -1523,35 +1499,150 @@ argument_list|,
 argument|CastExpr::path_const_iterator PathEnd
 argument_list|)
 expr_stmt|;
+comment|/// A pair of helper functions for a __block variable.
+name|class
+name|ByrefHelpers
+range|:
+name|public
+name|llvm
+operator|::
+name|FoldingSetNode
+block|{
+name|public
+operator|:
 name|llvm
 operator|::
 name|Constant
 operator|*
-name|BuildbyrefCopyHelper
-argument_list|(
-argument|const llvm::Type *T
-argument_list|,
-argument|BlockFieldFlags flags
-argument_list|,
-argument|unsigned Align
-argument_list|,
-argument|const VarDecl *variable
-argument_list|)
-expr_stmt|;
+name|CopyHelper
+block|;
 name|llvm
 operator|::
 name|Constant
 operator|*
-name|BuildbyrefDestroyHelper
+name|DisposeHelper
+block|;
+comment|/// The alignment of the field.  This is important because
+comment|/// different offsets to the field within the byref struct need to
+comment|/// have different helper functions.
+name|CharUnits
+name|Alignment
+block|;
+name|ByrefHelpers
 argument_list|(
-argument|const llvm::Type *T
-argument_list|,
-argument|BlockFieldFlags flags
-argument_list|,
-argument|unsigned Align
-argument_list|,
-argument|const VarDecl *variable
+argument|CharUnits alignment
 argument_list|)
+operator|:
+name|Alignment
+argument_list|(
+argument|alignment
+argument_list|)
+block|{}
+name|virtual
+operator|~
+name|ByrefHelpers
+argument_list|()
+block|;
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&id
+argument_list|)
+specifier|const
+block|{
+name|id
+operator|.
+name|AddInteger
+argument_list|(
+name|Alignment
+operator|.
+name|getQuantity
+argument_list|()
+argument_list|)
+block|;
+name|profileImpl
+argument_list|(
+name|id
+argument_list|)
+block|;     }
+name|virtual
+name|void
+name|profileImpl
+argument_list|(
+argument|llvm::FoldingSetNodeID&id
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|needsCopy
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|void
+name|emitCopy
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|dest
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|src
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|needsDispose
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|void
+name|emitDispose
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|field
+argument_list|)
+operator|=
+literal|0
+block|;   }
+decl_stmt|;
+name|llvm
+operator|::
+name|FoldingSet
+operator|<
+name|ByrefHelpers
+operator|>
+name|ByrefHelpersCache
 expr_stmt|;
 comment|/// getUniqueBlockCount - Fetches the global unique block count.
 name|int
@@ -1688,18 +1779,9 @@ name|Constant
 operator|*
 name|GetAddrOfConstantString
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|str
+argument|llvm::StringRef Str
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|GlobalName
-operator|=
+argument|const char *GlobalName=
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1738,9 +1820,12 @@ name|GlobalValue
 operator|*
 name|GetAddrOfCXXConstructor
 argument_list|(
-argument|const CXXConstructorDecl *D
+argument|const CXXConstructorDecl *ctor
 argument_list|,
-argument|CXXCtorType Type
+argument|CXXCtorType ctorType
+argument_list|,
+argument|const CGFunctionInfo *fnInfo =
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/// GetAddrOfCXXDestructor - Return the address of the constructor of the
@@ -1751,9 +1836,12 @@ name|GlobalValue
 operator|*
 name|GetAddrOfCXXDestructor
 argument_list|(
-argument|const CXXDestructorDecl *D
+argument|const CXXDestructorDecl *dtor
 argument_list|,
-argument|CXXDtorType Type
+argument|CXXDtorType dtorType
+argument_list|,
+argument|const CGFunctionInfo *fnInfo =
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/// getBuiltinLibFunction - Given a builtin id for a function like
@@ -1914,6 +2002,7 @@ name|getBlockObjectDispose
 argument_list|()
 expr_stmt|;
 comment|///@}
+comment|// UpdateCompleteType - Make sure that this type is translated.
 name|void
 name|UpdateCompletedType
 parameter_list|(
@@ -1922,16 +2011,7 @@ name|TagDecl
 modifier|*
 name|TD
 parameter_list|)
-block|{
-comment|// Make sure that this type is translated.
-name|Types
-operator|.
-name|UpdateCompletedType
-argument_list|(
-name|TD
-argument_list|)
-expr_stmt|;
-block|}
+function_decl|;
 name|llvm
 operator|::
 name|Constant
@@ -1986,6 +2066,19 @@ argument_list|,
 argument|unsigned LineNo
 argument_list|)
 expr_stmt|;
+comment|/// Error - Emit a general error that something can't be done.
+name|void
+name|Error
+argument_list|(
+name|SourceLocation
+name|loc
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|error
+argument_list|)
+decl_stmt|;
 comment|/// ErrorUnsupported - Print out an error that codegen doesn't support the
 comment|/// specified stmt yet.
 comment|/// \param OmitOnError - If true, then this error should only be emitted if no

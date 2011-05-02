@@ -48,11 +48,11 @@ comment|// The runOnMachineFunction() method only precomputes some profiling inf
 end_comment
 
 begin_comment
-comment|// about the CFG. The real work is done by placeSpills() which is called by the
+comment|// about the CFG. The real work is done by prepare(), addConstraints(), and
 end_comment
 
 begin_comment
-comment|// register allocator.
+comment|// finish() which are called by the register allocator.
 end_comment
 
 begin_comment
@@ -114,6 +114,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineFunctionPass.h"
 end_include
 
@@ -133,13 +145,6 @@ decl_stmt|;
 name|class
 name|MachineLoopInfo
 decl_stmt|;
-name|template
-operator|<
-name|typename
-operator|>
-name|class
-name|SmallVectorImpl
-expr_stmt|;
 name|class
 name|SpillPlacement
 range|:
@@ -167,11 +172,39 @@ name|Node
 operator|*
 name|nodes
 block|;
-comment|// Nodes that are active in the current computation. Owned by the placeSpills
+comment|// Nodes that are active in the current computation. Owned by the prepare()
 comment|// caller.
 name|BitVector
 operator|*
 name|ActiveNodes
+block|;
+comment|// Nodes with active links. Populated by scanActiveBundles.
+name|SmallVector
+operator|<
+name|unsigned
+block|,
+literal|8
+operator|>
+name|Linked
+block|;
+comment|// Nodes that went positive during the last call to scanActiveBundles or
+comment|// iterate.
+name|SmallVector
+operator|<
+name|unsigned
+block|,
+literal|8
+operator|>
+name|RecentPositive
+block|;
+comment|// Block frequencies are computed once. Indexed by block number.
+name|SmallVector
+operator|<
+name|float
+block|,
+literal|4
+operator|>
+name|BlockFrequency
 block|;
 name|public
 operator|:
@@ -240,48 +273,101 @@ block|;
 comment|///< Constraint on block exit.
 block|}
 block|;
-comment|/// placeSpills - Compute the optimal spill code placement given the
-comment|/// constraints. No MustSpill constraints will be violated, and the smallest
-comment|/// possible number of PrefX constraints will be violated, weighted by
-comment|/// expected execution frequencies.
-comment|/// @param LiveBlocks Constraints for blocks that have the variable live in or
-comment|///                   live out. DontCare/DontCare means the variable is live
-comment|///                   through the block. DontCare/X means the variable is live
-comment|///                   out, but not live in.
+comment|/// prepare - Reset state and prepare for a new spill placement computation.
 comment|/// @param RegBundles Bit vector to receive the edge bundles where the
 comment|///                   variable should be kept in a register. Each bit
 comment|///                   corresponds to an edge bundle, a set bit means the
 comment|///                   variable should be kept in a register through the
 comment|///                   bundle. A clear bit means the variable should be
-comment|///                   spilled.
-comment|/// @return True if a perfect solution was found, allowing the variable to be
-comment|///         in a register through all relevant bundles.
-name|bool
-name|placeSpills
+comment|///                   spilled. This vector is retained.
+name|void
+name|prepare
 argument_list|(
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|BlockConstraint
-operator|>
-operator|&
-name|LiveBlocks
-argument_list|,
 name|BitVector
 operator|&
 name|RegBundles
 argument_list|)
+block|;
+comment|/// addConstraints - Add constraints and biases. This method may be called
+comment|/// more than once to accumulate constraints.
+comment|/// @param LiveBlocks Constraints for blocks that have the variable live in or
+comment|///                   live out.
+name|void
+name|addConstraints
+argument_list|(
+name|ArrayRef
+operator|<
+name|BlockConstraint
+operator|>
+name|LiveBlocks
+argument_list|)
+block|;
+comment|/// addLinks - Add transparent blocks with the given numbers.
+name|void
+name|addLinks
+argument_list|(
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Links
+argument_list|)
+block|;
+comment|/// scanActiveBundles - Perform an initial scan of all bundles activated by
+comment|/// addConstraints and addLinks, updating their state. Add all the bundles
+comment|/// that now prefer a register to RecentPositive.
+comment|/// Prepare internal data structures for iterate.
+comment|/// Return true is there are any positive nodes.
+name|bool
+name|scanActiveBundles
+argument_list|()
+block|;
+comment|/// iterate - Update the network iteratively until convergence, or new bundles
+comment|/// are found.
+name|void
+name|iterate
+argument_list|()
+block|;
+comment|/// getRecentPositive - Return an array of bundles that became positive during
+comment|/// the previous call to scanActiveBundles or iterate.
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|getRecentPositive
+argument_list|()
+block|{
+return|return
+name|RecentPositive
+return|;
+block|}
+comment|/// finish - Compute the optimal spill code placement given the
+comment|/// constraints. No MustSpill constraints will be violated, and the smallest
+comment|/// possible number of PrefX constraints will be violated, weighted by
+comment|/// expected execution frequencies.
+comment|/// The selected bundles are returned in the bitvector passed to prepare().
+comment|/// @return True if a perfect solution was found, allowing the variable to be
+comment|///         in a register through all relevant bundles.
+name|bool
+name|finish
+argument_list|()
 block|;
 comment|/// getBlockFrequency - Return the estimated block execution frequency per
 comment|/// function invocation.
 name|float
 name|getBlockFrequency
 argument_list|(
-specifier|const
-name|MachineBasicBlock
-operator|*
+argument|unsigned Number
 argument_list|)
-block|;
+specifier|const
+block|{
+return|return
+name|BlockFrequency
+index|[
+name|Number
+index|]
+return|;
+block|}
 name|private
 operator|:
 name|virtual
@@ -309,28 +395,6 @@ name|void
 name|activate
 argument_list|(
 name|unsigned
-argument_list|)
-block|;
-name|void
-name|prepareNodes
-argument_list|(
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|BlockConstraint
-operator|>
-operator|&
-argument_list|)
-block|;
-name|void
-name|iterate
-argument_list|(
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|unsigned
-operator|>
-operator|&
 argument_list|)
 block|; }
 decl_stmt|;

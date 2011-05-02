@@ -147,6 +147,9 @@ specifier|const
 name|char
 modifier|*
 name|BufEnd
+parameter_list|,
+name|bool
+name|RequiresNullTerminator
 parameter_list|)
 function_decl|;
 name|public
@@ -241,6 +244,11 @@ name|FileSize
 operator|=
 operator|-
 literal|1
+argument_list|,
+name|bool
+name|RequiresNullTerminator
+operator|=
+name|true
 argument_list|)
 decl_stmt|;
 specifier|static
@@ -264,6 +272,11 @@ name|FileSize
 operator|=
 operator|-
 literal|1
+argument_list|,
+name|bool
+name|RequiresNullTerminator
+operator|=
+name|true
 argument_list|)
 decl_stmt|;
 comment|/// getOpenFile - Given an already-open file descriptor, read the file and
@@ -287,11 +300,27 @@ operator|>
 operator|&
 name|result
 argument_list|,
-name|int64_t
+name|size_t
 name|FileSize
 operator|=
 operator|-
 literal|1
+argument_list|,
+name|size_t
+name|MapSize
+operator|=
+operator|-
+literal|1
+argument_list|,
+name|off_t
+name|Offset
+operator|=
+literal|0
+argument_list|,
+name|bool
+name|RequiresNullTerminator
+operator|=
+name|true
 argument_list|)
 decl_stmt|;
 comment|/// getMemBuffer - Open the specified memory range as a MemoryBuffer.  Note
@@ -308,6 +337,11 @@ name|StringRef
 name|BufferName
 init|=
 literal|""
+parameter_list|,
+name|bool
+name|RequiresNullTerminator
+init|=
+name|true
 parameter_list|)
 function_decl|;
 comment|/// getMemBufferCopy - Open the specified memory range as a MemoryBuffer,
@@ -424,6 +458,28 @@ operator|-
 literal|1
 argument_list|)
 decl_stmt|;
+comment|//===--------------------------------------------------------------------===//
+comment|// Provided for performance analysis.
+comment|//===--------------------------------------------------------------------===//
+comment|/// The kind of memory backing used to support the MemoryBuffer.
+enum|enum
+name|BufferKind
+block|{
+name|MemoryBuffer_Malloc
+block|,
+name|MemoryBuffer_MMap
+block|}
+enum|;
+comment|/// Return information on the memory mechanism used to support the
+comment|/// MemoryBuffer.
+name|virtual
+name|BufferKind
+name|getBufferKind
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

@@ -257,6 +257,15 @@ argument|unsigned Idx
 argument_list|)
 specifier|const
 block|;
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|getLargestLegalSuperClass
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|)
+specifier|const
+block|;
 comment|/// getPointerRegClass - Returns a TargetRegisterClass used for pointer
 comment|/// values.
 specifier|const
@@ -278,6 +287,15 @@ operator|*
 name|getCrossCopyRegClass
 argument_list|(
 argument|const TargetRegisterClass *RC
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getRegPressureLimit
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|MachineFunction&MF
 argument_list|)
 specifier|const
 block|;

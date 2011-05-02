@@ -79,6 +79,9 @@ name|class
 name|MCOperand
 decl_stmt|;
 name|class
+name|TargetMachine
+decl_stmt|;
+name|class
 name|X86IntelInstPrinter
 range|:
 name|public
@@ -88,6 +91,10 @@ name|public
 operator|:
 name|X86IntelInstPrinter
 argument_list|(
+name|TargetMachine
+operator|&
+name|TM
+argument_list|,
 specifier|const
 name|MCAsmInfo
 operator|&

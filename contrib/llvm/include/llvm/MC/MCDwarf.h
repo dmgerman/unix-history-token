@@ -108,6 +108,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|TargetAsmInfo
+decl_stmt|;
+name|class
 name|MachineMove
 decl_stmt|;
 name|class
@@ -753,11 +756,15 @@ label|:
 enum|enum
 name|OpType
 block|{
+name|SameValue
+block|,
 name|Remember
 block|,
 name|Restore
 block|,
 name|Move
+block|,
+name|RelMove
 block|}
 enum|;
 name|private
@@ -808,6 +815,37 @@ argument_list|)
 block|;     }
 name|MCCFIInstruction
 argument_list|(
+argument|OpType Op
+argument_list|,
+argument|MCSymbol *L
+argument_list|,
+argument|unsigned Register
+argument_list|)
+operator|:
+name|Operation
+argument_list|(
+name|Op
+argument_list|)
+operator|,
+name|Label
+argument_list|(
+name|L
+argument_list|)
+operator|,
+name|Destination
+argument_list|(
+argument|Register
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Op
+operator|==
+name|SameValue
+argument_list|)
+block|;     }
+name|MCCFIInstruction
+argument_list|(
 name|MCSymbol
 operator|*
 name|L
@@ -843,6 +881,44 @@ argument_list|(
 argument|S
 argument_list|)
 block|{     }
+name|MCCFIInstruction
+argument_list|(
+argument|OpType Op
+argument_list|,
+argument|MCSymbol *L
+argument_list|,
+argument|const MachineLocation&D
+argument_list|,
+argument|const MachineLocation&S
+argument_list|)
+operator|:
+name|Operation
+argument_list|(
+name|Op
+argument_list|)
+operator|,
+name|Label
+argument_list|(
+name|L
+argument_list|)
+operator|,
+name|Destination
+argument_list|(
+name|D
+argument_list|)
+operator|,
+name|Source
+argument_list|(
+argument|S
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Op
+operator|==
+name|RelMove
+argument_list|)
+block|;     }
 name|OpType
 name|getOperation
 argument_list|()
@@ -912,13 +988,16 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
+name|Function
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|Instructions
 argument_list|()
 operator|,
 name|PersonalityEncoding
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 operator|,
 name|LsdaEncoding
 argument_list|(
@@ -942,6 +1021,11 @@ specifier|const
 name|MCSymbol
 modifier|*
 name|Lsda
+decl_stmt|;
+specifier|const
+name|MCSymbol
+modifier|*
+name|Function
 decl_stmt|;
 name|std
 operator|::
@@ -974,6 +1058,21 @@ parameter_list|(
 name|MCStreamer
 modifier|&
 name|streamer
+parameter_list|,
+name|bool
+name|usingCFI
+parameter_list|)
+function_decl|;
+specifier|static
+name|void
+name|EmitDarwin
+parameter_list|(
+name|MCStreamer
+modifier|&
+name|streamer
+parameter_list|,
+name|bool
+name|usingCFI
 parameter_list|)
 function_decl|;
 specifier|static
@@ -998,6 +1097,11 @@ parameter_list|,
 name|raw_ostream
 modifier|&
 name|OS
+parameter_list|,
+specifier|const
+name|TargetAsmInfo
+modifier|&
+name|AsmInfo
 parameter_list|)
 function_decl|;
 block|}

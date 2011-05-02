@@ -161,6 +161,10 @@ modifier|*
 name|SuperRegs
 decl_stmt|;
 comment|// Super-register set, described above
+name|unsigned
+name|CostPerUse
+decl_stmt|;
+comment|// Extra cost of instructions using register.
 block|}
 struct|;
 name|class
@@ -1671,6 +1675,25 @@ operator|.
 name|Name
 return|;
 block|}
+comment|/// getCostPerUse - Return the additional cost of using this register instead
+comment|/// of other registers in its class.
+name|unsigned
+name|getCostPerUse
+argument_list|(
+name|unsigned
+name|RegNo
+argument_list|)
+decl|const
+block|{
+return|return
+name|get
+argument_list|(
+name|RegNo
+argument_list|)
+operator|.
+name|CostPerUse
+return|;
+block|}
 comment|/// getNumRegs - Return the number of registers this target has (useful for
 comment|/// sizing arrays holding per register information)
 name|unsigned
@@ -2294,8 +2317,10 @@ return|;
 comment|// Must return a value in order to compile with VS 2005
 block|}
 comment|/// getCrossCopyRegClass - Returns a legal register class to copy a register
-comment|/// in the specified class to or from. Returns NULL if it is possible to copy
-comment|/// between a two registers of the specified class.
+comment|/// in the specified class to or from. If it is possible to copy the register
+comment|/// directly without using a cross register class copy, return the specified
+comment|/// RC. Returns NULL if it is not possible to copy between a two registers of
+comment|/// the specified class.
 name|virtual
 specifier|const
 name|TargetRegisterClass
@@ -2310,7 +2335,52 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|NULL
+name|RC
+return|;
+block|}
+comment|/// getLargestLegalSuperClass - Returns the largest super class of RC that is
+comment|/// legal to use in the current sub-target and has the same spill size.
+comment|/// The returned register class can be used to create virtual registers which
+comment|/// means that all its registers can be copied and spilled.
+name|virtual
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|getLargestLegalSuperClass
+argument_list|(
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|RC
+argument_list|)
+decl|const
+block|{
+comment|/// The default implementation is very conservative and doesn't allow the
+comment|/// register allocator to inflate register classes.
+return|return
+name|RC
+return|;
+block|}
+comment|/// getRegPressureLimit - Return the register pressure "high water mark" for
+comment|/// the specific register class. The scheduler is in high register pressure
+comment|/// mode (for the specific register class) if it goes over the limit.
+name|virtual
+name|unsigned
+name|getRegPressureLimit
+argument_list|(
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|RC
+argument_list|,
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+block|{
+return|return
+literal|0
 return|;
 block|}
 comment|/// getAllocationOrder - Returns the register allocation order for a specified
@@ -2400,6 +2470,25 @@ return|return
 literal|0
 return|;
 block|}
+comment|/// avoidWriteAfterWrite - Return true if the register allocator should avoid
+comment|/// writing a register from RC in two consecutive instructions.
+comment|/// This can avoid pipeline stalls on certain architectures.
+comment|/// It does cause increased register pressure, though.
+name|virtual
+name|bool
+name|avoidWriteAfterWrite
+argument_list|(
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|RC
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// UpdateRegAllocHint - A callback to allow target a chance to update
 comment|/// register allocation hints when a register is "changed" (e.g. coalesced)
 comment|/// to another register. e.g. On ARM, some virtual registers should target
@@ -2439,6 +2528,24 @@ decl|const
 block|{
 return|return
 name|false
+return|;
+block|}
+comment|/// useFPForScavengingIndex - returns true if the target wants to use
+comment|/// frame pointer based accesses to spill to the scavenger emergency spill
+comment|/// slot.
+name|virtual
+name|bool
+name|useFPForScavengingIndex
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+block|{
+return|return
+name|true
 return|;
 block|}
 comment|/// requiresFrameIndexScavenging - returns true if the target requires post

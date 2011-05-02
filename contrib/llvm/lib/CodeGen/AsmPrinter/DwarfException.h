@@ -384,20 +384,20 @@ range|:
 name|public
 name|DwarfException
 block|{
-comment|/// shouldEmitTable - Per-function flag to indicate if EH tables should
-comment|/// be emitted.
+comment|/// shouldEmitPersonality - Per-function flag to indicate if .cfi_personality
+comment|/// should be emitted.
 name|bool
-name|shouldEmitTable
+name|shouldEmitPersonality
+block|;
+comment|/// shouldEmitLSDA - Per-function flag to indicate if .cfi_lsda
+comment|/// should be emitted.
+name|bool
+name|shouldEmitLSDA
 block|;
 comment|/// shouldEmitMoves - Per-function flag to indicate if frame moves info
 comment|/// should be emitted.
 name|bool
 name|shouldEmitMoves
-block|;
-comment|/// shouldEmitTableModule - Per-module flag to indicate if EH tables
-comment|/// should be emitted.
-name|bool
-name|shouldEmitTableModule
 block|;
 name|public
 operator|:
@@ -609,6 +609,70 @@ block|;
 name|virtual
 operator|~
 name|DwarfTableException
+argument_list|()
+block|;
+comment|/// EndModule - Emit all exception information that should come after the
+comment|/// content.
+name|virtual
+name|void
+name|EndModule
+argument_list|()
+block|;
+comment|/// BeginFunction - Gather pre-function exception information.  Assumes being
+comment|/// emitted immediately after the function entry point.
+name|virtual
+name|void
+name|BeginFunction
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|*
+name|MF
+argument_list|)
+block|;
+comment|/// EndFunction - Gather and emit post-function exception information.
+name|virtual
+name|void
+name|EndFunction
+argument_list|()
+block|; }
+decl_stmt|;
+name|class
+name|ARMException
+range|:
+name|public
+name|DwarfException
+block|{
+comment|/// shouldEmitTable - Per-function flag to indicate if EH tables should
+comment|/// be emitted.
+name|bool
+name|shouldEmitTable
+block|;
+comment|/// shouldEmitMoves - Per-function flag to indicate if frame moves info
+comment|/// should be emitted.
+name|bool
+name|shouldEmitMoves
+block|;
+comment|/// shouldEmitTableModule - Per-module flag to indicate if EH tables
+comment|/// should be emitted.
+name|bool
+name|shouldEmitTableModule
+block|;
+name|public
+operator|:
+comment|//===--------------------------------------------------------------------===//
+comment|// Main entry points.
+comment|//
+name|ARMException
+argument_list|(
+name|AsmPrinter
+operator|*
+name|A
+argument_list|)
+block|;
+name|virtual
+operator|~
+name|ARMException
 argument_list|()
 block|;
 comment|/// EndModule - Emit all exception information that should come after the

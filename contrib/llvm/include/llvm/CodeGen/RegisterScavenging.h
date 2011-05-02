@@ -296,17 +296,13 @@ parameter_list|)
 function_decl|;
 comment|/// getRegsAvailable - Return all available registers in the register class
 comment|/// in Mask.
-name|void
+name|BitVector
 name|getRegsAvailable
 parameter_list|(
 specifier|const
 name|TargetRegisterClass
 modifier|*
 name|RC
-parameter_list|,
-name|BitVector
-modifier|&
-name|Mask
 parameter_list|)
 function_decl|;
 comment|/// FindUnusedReg - Find a unused register of the specified register class.

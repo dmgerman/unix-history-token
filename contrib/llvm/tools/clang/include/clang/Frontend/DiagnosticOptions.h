@@ -133,12 +133,24 @@ literal|1
 decl_stmt|;
 comment|/// Show machine parseable fix-its.
 name|unsigned
+name|ShowNames
+range|:
+literal|1
+decl_stmt|;
+comment|/// Show the diagnostic name
+name|unsigned
 name|ShowOptionNames
 range|:
 literal|1
 decl_stmt|;
-comment|/// Show the diagnostic name for mappable
+comment|/// Show the option name for mappable
 comment|/// diagnostics.
+name|unsigned
+name|ShowNoteIncludeStack
+range|:
+literal|1
+decl_stmt|;
+comment|/// Show include stacks for notes.
 name|unsigned
 name|ShowCategories
 range|:
@@ -214,6 +226,12 @@ operator|::
 name|string
 name|DumpBuildInformation
 expr_stmt|;
+comment|/// The file to log diagnostic output to.
+name|std
+operator|::
+name|string
+name|DiagnosticLogFile
+expr_stmt|;
 comment|/// The list of -W... options used to alter the diagnostic mappings, with the
 comment|/// prefixes removed.
 name|std
@@ -280,6 +298,10 @@ expr_stmt|;
 name|ShowLocation
 operator|=
 literal|1
+expr_stmt|;
+name|ShowNames
+operator|=
+literal|0
 expr_stmt|;
 name|ShowOptionNames
 operator|=

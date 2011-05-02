@@ -84,7 +84,16 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MCExpr
+decl_stmt|;
+name|class
 name|MCSection
+decl_stmt|;
+name|class
+name|MCStreamer
+decl_stmt|;
+name|class
+name|MCSymbol
 decl_stmt|;
 name|class
 name|MCContext
@@ -104,6 +113,8 @@ block|,
 name|DwarfCFI
 block|,
 name|SjLj
+block|,
+name|ARM
 block|}
 enum|;
 block|}
@@ -162,11 +173,12 @@ modifier|*
 name|PCSymbol
 decl_stmt|;
 comment|// Defaults to "$".
-comment|/// SeparatorChar - This character, if specified, is used to separate
-comment|/// instructions from each other when on the same line.  This is used to
-comment|/// measure inline asm instructions.
+comment|/// SeparatorString - This string, if specified, is used to separate
+comment|/// instructions from each other when on the same line.
+specifier|const
 name|char
-name|SeparatorChar
+modifier|*
+name|SeparatorString
 decl_stmt|;
 comment|// Defaults to ';'
 comment|/// CommentColumn - This indicates the comment num (zero-based) at
@@ -732,6 +744,45 @@ return|return
 literal|0
 return|;
 block|}
+name|virtual
+specifier|const
+name|MCExpr
+modifier|*
+name|getExprForPersonalitySymbol
+argument_list|(
+specifier|const
+name|MCSymbol
+operator|*
+name|Sym
+argument_list|,
+name|unsigned
+name|Encoding
+argument_list|,
+name|MCStreamer
+operator|&
+name|Streamer
+argument_list|)
+decl|const
+decl_stmt|;
+specifier|const
+name|MCExpr
+modifier|*
+name|getExprForFDESymbol
+argument_list|(
+specifier|const
+name|MCSymbol
+operator|*
+name|Sym
+argument_list|,
+name|unsigned
+name|Encoding
+argument_list|,
+name|MCStreamer
+operator|&
+name|Streamer
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|usesSunStyleELFSectionSwitchSyntax
 argument_list|()
@@ -817,13 +868,15 @@ return|return
 name|PCSymbol
 return|;
 block|}
+specifier|const
 name|char
-name|getSeparatorChar
+operator|*
+name|getSeparatorString
 argument_list|()
 specifier|const
 block|{
 return|return
-name|SeparatorChar
+name|SeparatorString
 return|;
 block|}
 name|unsigned
@@ -1224,6 +1277,12 @@ operator|==
 name|ExceptionHandling
 operator|::
 name|DwarfCFI
+operator|||
+name|ExceptionsType
+operator|==
+name|ExceptionHandling
+operator|::
+name|ARM
 operator|)
 return|;
 block|}

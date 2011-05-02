@@ -1198,7 +1198,9 @@ case|:
 operator|*
 name|result
 operator|=
-literal|0
+name|sc
+operator|->
+name|ap_segment
 expr_stmt|;
 return|return
 operator|(

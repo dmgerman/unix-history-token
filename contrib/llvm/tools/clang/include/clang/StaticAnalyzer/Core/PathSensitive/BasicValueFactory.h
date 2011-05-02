@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/StaticAnalyzer/Core/PathSensitive/StoreRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/StaticAnalyzer/Core/PathSensitive/SVals.h"
 end_include
 
@@ -221,9 +227,7 @@ name|llvm
 operator|::
 name|FoldingSetNode
 block|{
-specifier|const
-name|void
-operator|*
+name|StoreRef
 name|store
 block|;
 specifier|const
@@ -236,8 +240,8 @@ operator|:
 name|LazyCompoundValData
 argument_list|(
 specifier|const
-name|void
-operator|*
+name|StoreRef
+operator|&
 name|st
 argument_list|,
 specifier|const
@@ -265,6 +269,9 @@ specifier|const
 block|{
 return|return
 name|store
+operator|.
+name|getStore
+argument_list|()
 return|;
 block|}
 specifier|const
@@ -289,8 +296,8 @@ operator|&
 name|ID
 argument_list|,
 specifier|const
-name|void
-operator|*
+name|StoreRef
+operator|&
 name|store
 argument_list|,
 specifier|const
@@ -1091,8 +1098,8 @@ modifier|*
 name|getLazyCompoundValData
 parameter_list|(
 specifier|const
-name|void
-modifier|*
+name|StoreRef
+modifier|&
 name|store
 parameter_list|,
 specifier|const

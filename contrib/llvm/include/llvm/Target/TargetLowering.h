@@ -177,6 +177,9 @@ name|class
 name|CallInst
 decl_stmt|;
 name|class
+name|CCState
+decl_stmt|;
+name|class
 name|Function
 decl_stmt|;
 name|class
@@ -659,28 +662,6 @@ argument_list|()
 operator|.
 name|SimpleTy
 index|]
-return|;
-block|}
-comment|/// getRegPressureLimit - Return the register pressure "high water mark" for
-comment|/// the specific register class. The scheduler is in high register pressure
-comment|/// mode (for the specific register class) if it goes over the limit.
-name|virtual
-name|unsigned
-name|getRegPressureLimit
-argument_list|(
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|RC
-argument_list|,
-name|MachineFunction
-operator|&
-name|MF
-argument_list|)
-decl|const
-block|{
-return|return
-literal|0
 return|;
 block|}
 comment|/// isTypeLegal - Return true if the target has native support for the
@@ -3636,6 +3617,14 @@ modifier|*
 name|N
 parameter_list|)
 function_decl|;
+name|void
+name|RemoveFromWorklist
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
 name|SDValue
 name|CombineTo
 argument_list|(
@@ -3975,7 +3964,7 @@ name|isExpensive
 expr_stmt|;
 block|}
 comment|/// JumpIsExpensive - Tells the code generator not to expand sequence of
-comment|/// operations into a seperate sequences that increases the amount of
+comment|/// operations into a separate sequences that increases the amount of
 comment|/// flow control.
 name|void
 name|setJumpIsExpensive
@@ -4934,6 +4923,19 @@ argument_list|()
 return|;
 comment|// this is here to silence compiler errors
 block|}
+comment|/// HandleByVal - Target-specific cleanup for formal ByVal parameters.
+name|virtual
+name|void
+name|HandleByVal
+argument_list|(
+name|CCState
+operator|*
+argument_list|,
+name|unsigned
+operator|&
+argument_list|)
+decl|const
+block|{}
 comment|/// CanLowerReturn - This hook should be implemented to check whether the
 comment|/// return values described by the Outs array can fit into the return
 comment|/// registers.  If false is returned, an sret-demotion is performed.
@@ -5046,6 +5048,73 @@ decl|const
 block|{
 return|return
 name|false
+return|;
+block|}
+comment|/// mayBeEmittedAsTailCall - Return true if the target may be able emit the
+comment|/// call instruction as a tail call. This is used by optimization passes to
+comment|/// determine if it's profitable to duplicate return instructions to enable
+comment|/// tailcall optimization.
+name|virtual
+name|bool
+name|mayBeEmittedAsTailCall
+argument_list|(
+name|CallInst
+operator|*
+name|CI
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// getTypeForExtArgOrReturn - Return the type that should be used to zero or
+comment|/// sign extend a zeroext/signext integer argument or return value.
+comment|/// FIXME: Most C calling convention requires the return type to be promoted,
+comment|/// but this is not true all the time, e.g. i1 on x86-64. It is also not
+comment|/// necessary for non-C calling conventions. The frontend should handle this
+comment|/// and include all of the necessary information.
+name|virtual
+name|EVT
+name|getTypeForExtArgOrReturn
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|EVT
+name|VT
+argument_list|,
+name|ISD
+operator|::
+name|NodeType
+name|ExtendKind
+argument_list|)
+decl|const
+block|{
+name|EVT
+name|MinVT
+init|=
+name|getRegisterType
+argument_list|(
+name|Context
+argument_list|,
+name|MVT
+operator|::
+name|i32
+argument_list|)
+decl_stmt|;
+return|return
+name|VT
+operator|.
+name|bitsLT
+argument_list|(
+name|MinVT
+argument_list|)
+condition|?
+name|MinVT
+else|:
+name|VT
 return|;
 block|}
 comment|/// LowerOperationWrapper - This callback is invoked by the type legalizer

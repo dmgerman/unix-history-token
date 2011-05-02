@@ -1010,6 +1010,17 @@ literal|3
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// getExactInverse - If this value has an exact multiplicative inverse,
+comment|/// store it in inv and return true.
+name|bool
+name|getExactInverse
+argument_list|(
+name|APFloat
+operator|*
+name|inv
+argument_list|)
+decl|const
+decl_stmt|;
 name|private
 label|:
 comment|/* Trivial queries.  */

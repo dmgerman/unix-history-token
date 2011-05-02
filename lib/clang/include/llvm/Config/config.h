@@ -2064,7 +2064,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"llvm 2.9svn"
+value|"llvm 3.0svn"
 end_define
 
 begin_comment
@@ -2086,7 +2086,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"2.9svn"
+value|"3.0svn"
 end_define
 
 begin_comment

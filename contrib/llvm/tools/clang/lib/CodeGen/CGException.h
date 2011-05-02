@@ -145,6 +145,11 @@ decl_stmt|;
 specifier|static
 specifier|const
 name|EHPersonality
+name|GNU_ObjCXX
+decl_stmt|;
+specifier|static
+specifier|const
+name|EHPersonality
 name|NeXT_ObjC
 decl_stmt|;
 specifier|static

@@ -84,6 +84,13 @@ parameter_list|(
 name|X
 parameter_list|)
 value|X, LAST_INHERITABLE = X,
+define|#
+directive|define
+name|LAST_INHERITABLE_PARAM_ATTR
+parameter_list|(
+name|X
+parameter_list|)
+value|X, LAST_INHERITABLE_PARAM = X,
 include|#
 directive|include
 file|"clang/Basic/AttrList.inc"

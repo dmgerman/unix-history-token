@@ -1558,7 +1558,9 @@ name|I
 decl_stmt|;
 if|if
 condition|(
+specifier|const
 name|CFGStmt
+modifier|*
 name|S
 init|=
 name|El
@@ -1573,6 +1575,9 @@ condition|)
 name|ProcessStmt
 argument_list|(
 name|S
+operator|->
+name|getStmt
+argument_list|()
 argument_list|,
 name|recordStmtValues
 argument_list|,
@@ -1673,7 +1678,9 @@ name|I
 decl_stmt|;
 if|if
 condition|(
+specifier|const
 name|CFGStmt
+modifier|*
 name|S
 init|=
 name|El
@@ -1688,6 +1695,9 @@ condition|)
 name|ProcessStmt
 argument_list|(
 name|S
+operator|->
+name|getStmt
+argument_list|()
 argument_list|,
 name|recordStmtValues
 argument_list|,

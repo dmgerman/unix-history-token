@@ -56,7 +56,7 @@ comment|// allocated by either the VM, or by the linker in a static compiler.  A
 end_comment
 
 begin_comment
-comment|// variable may have an intial value, which is copied into the executables .data
+comment|// variable may have an initial value, which is copied into the executables .data
 end_comment
 
 begin_comment

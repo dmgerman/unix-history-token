@@ -151,6 +151,23 @@ literal|0
 argument_list|)
 specifier|const
 block|;
+comment|/// After allocating this many registers, the allocator should feel
+comment|/// register pressure. The value is a somewhat random guess, based on the
+comment|/// number of non callee saved registers in the C calling convention.
+name|virtual
+name|unsigned
+name|getRegPressureLimit
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|{
+return|return
+literal|50
+return|;
+block|}
 comment|//! Return the array of callee-saved registers
 name|virtual
 specifier|const
