@@ -6853,11 +6853,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|pmap_lazyfix
-argument_list|(
-name|pmap
-argument_list|)
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
