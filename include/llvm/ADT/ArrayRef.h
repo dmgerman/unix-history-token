@@ -68,8 +68,8 @@ comment|/// various APIs to take consecutive elements easily and conveniently.
 comment|///
 comment|/// This class does not own the underlying data, it is expected to be used in
 comment|/// situations where the data resides in some other buffer, whose lifetime
-comment|/// extends past that of the StringRef. For this reason, it is not in general
-comment|/// safe to store a ArrayRef.
+comment|/// extends past that of the ArrayRef. For this reason, it is not in general
+comment|/// safe to store an ArrayRef.
 comment|///
 comment|/// This is intended to be trivially copyable, so it should be passed by
 comment|/// value.
@@ -301,6 +301,17 @@ operator|==
 literal|0
 return|;
 block|}
+specifier|const
+name|T
+operator|*
+name|data
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Data
+return|;
+block|}
 comment|/// size - Get the array size.
 name|size_t
 name|size
@@ -355,6 +366,84 @@ name|Length
 operator|-
 literal|1
 index|]
+return|;
+block|}
+comment|/// slice(n) - Chop off the first N elements of the array.
+name|ArrayRef
+operator|<
+name|T
+operator|>
+name|slice
+argument_list|(
+argument|unsigned N
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|N
+operator|<=
+name|size
+argument_list|()
+operator|&&
+literal|"Invalid specifier"
+argument_list|)
+block|;
+return|return
+name|ArrayRef
+operator|<
+name|T
+operator|>
+operator|(
+name|data
+argument_list|()
+operator|+
+name|N
+operator|,
+name|size
+argument_list|()
+operator|-
+name|N
+operator|)
+return|;
+block|}
+comment|/// slice(n, m) - Chop off the first N elements of the array, and keep M
+comment|/// elements in the array.
+name|ArrayRef
+operator|<
+name|T
+operator|>
+name|slice
+argument_list|(
+argument|unsigned N
+argument_list|,
+argument|unsigned M
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|N
+operator|+
+name|M
+operator|<=
+name|size
+argument_list|()
+operator|&&
+literal|"Invalid specifier"
+argument_list|)
+block|;
+return|return
+name|ArrayRef
+operator|<
+name|T
+operator|>
+operator|(
+name|data
+argument_list|()
+operator|+
+name|N
+operator|,
+name|M
+operator|)
 return|;
 block|}
 comment|/// @}

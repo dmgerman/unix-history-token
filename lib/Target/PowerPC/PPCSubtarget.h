@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Triple.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetInstrItineraries.h"
 end_include
 
@@ -172,13 +178,10 @@ block|;
 name|bool
 name|IsJITCodeModel
 block|;
-comment|/// DarwinVers - Nonzero if this is a darwin platform.  Otherwise, the numeric
-comment|/// version of the platform, e.g. 8 = 10.4 (Tiger), 9 = 10.5 (Leopard), etc.
-name|unsigned
-name|char
-name|DarwinVers
+comment|/// TargetTriple - What processor and OS we're targeting.
+name|Triple
+name|TargetTriple
 block|;
-comment|// Is any darwin-ppc platform.
 name|public
 operator|:
 comment|/// This constructor initializes the data members to match that
@@ -370,6 +373,17 @@ return|return
 name|IsGigaProcessor
 return|;
 block|}
+specifier|const
+name|Triple
+operator|&
+name|getTargetTriple
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+return|;
+block|}
 comment|/// isDarwin - True if this is any darwin platform.
 name|bool
 name|isDarwin
@@ -377,31 +391,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|DarwinVers
-operator|!=
-literal|0
-return|;
-block|}
-comment|/// isDarwin - True if this is darwin9 (leopard, 10.5) or above.
-name|bool
-name|isDarwin9
+name|TargetTriple
+operator|.
+name|isMacOSX
 argument_list|()
-specifier|const
-block|{
-return|return
-name|DarwinVers
-operator|>=
-literal|9
-return|;
-block|}
-comment|/// getDarwinVers - Return the darwin version number, 8 = tiger, 9 = leopard.
-name|unsigned
-name|getDarwinVers
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DarwinVers
 return|;
 block|}
 name|bool

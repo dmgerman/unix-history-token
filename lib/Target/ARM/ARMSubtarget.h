@@ -177,6 +177,11 @@ comment|/// whether the FP VML[AS] instructions are slow (if so, don't use them)
 name|bool
 name|SlowFPVMLx
 block|;
+comment|/// HasVMLxForwarding - If true, NEON has special multiplier accumulator
+comment|/// forwarding to allow mul + mla being issued back to back.
+name|bool
+name|HasVMLxForwarding
+block|;
 comment|/// SlowFPBrcc - True if floating point compare + branch is slow.
 name|bool
 name|SlowFPBrcc
@@ -234,6 +239,12 @@ comment|/// Pref32BitThumb - If true, codegen would prefer 32-bit Thumb instruct
 comment|/// over 16-bit ones.
 name|bool
 name|Pref32BitThumb
+block|;
+comment|/// AvoidCPSRPartialUpdate - If true, codegen would avoid using instructions
+comment|/// that partially update CPSR and add false dependency on the previous
+comment|/// CPSR setting instruction.
+name|bool
+name|AvoidCPSRPartialUpdate
 block|;
 comment|/// HasMPExtension - True if the subtarget supports Multiprocessing
 comment|/// extension (ARMv7 only).
@@ -525,6 +536,15 @@ name|SlowFPVMLx
 return|;
 block|}
 name|bool
+name|hasVMLxForwarding
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasVMLxForwarding
+return|;
+block|}
+name|bool
 name|isFPBrccSlow
 argument_list|()
 specifier|const
@@ -549,6 +569,15 @@ specifier|const
 block|{
 return|return
 name|Pref32BitThumb
+return|;
+block|}
+name|bool
+name|avoidCPSRPartialUpdate
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AvoidCPSRPartialUpdate
 return|;
 block|}
 name|bool
@@ -578,6 +607,17 @@ return|return
 name|HasD16
 return|;
 block|}
+specifier|const
+name|Triple
+operator|&
+name|getTargetTriple
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+return|;
+block|}
 name|bool
 name|isTargetDarwin
 argument_list|()
@@ -586,12 +626,8 @@ block|{
 return|return
 name|TargetTriple
 operator|.
-name|getOS
+name|isOSDarwin
 argument_list|()
-operator|==
-name|Triple
-operator|::
-name|Darwin
 return|;
 block|}
 name|bool

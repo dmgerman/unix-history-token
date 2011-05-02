@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -462,7 +468,7 @@ name|FunctionType
 argument_list|(
 argument|const Type *Result
 argument_list|,
-argument|const std::vector<const Type*>&Params
+argument|ArrayRef<const Type*> Params
 argument_list|,
 argument|bool IsVarArgs
 argument_list|)
@@ -480,7 +486,7 @@ argument_list|(
 argument|const Type *Result
 argument_list|,
 comment|///< The result type
-argument|const std::vector<const Type*>&Params
+argument|ArrayRef<const Type*> Params
 argument_list|,
 comment|///< The types of the parameters
 argument|bool isVarArg
@@ -506,9 +512,7 @@ name|get
 argument_list|(
 name|Result
 argument_list|,
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
 specifier|const
 name|Type
@@ -860,7 +864,7 @@ name|StructType
 argument_list|(
 argument|LLVMContext&C
 argument_list|,
-argument|const std::vector<const Type*>&Types
+argument|ArrayRef<const Type*> Types
 argument_list|,
 argument|bool isPacked
 argument_list|)
@@ -877,7 +881,7 @@ name|get
 argument_list|(
 argument|LLVMContext&Context
 argument_list|,
-argument|const std::vector<const Type*>&Params
+argument|ArrayRef<const Type*> Params
 argument_list|,
 argument|bool isPacked=false
 argument_list|)
@@ -899,9 +903,9 @@ name|get
 argument_list|(
 name|Context
 argument_list|,
-name|std
+name|llvm
 operator|::
-name|vector
+name|ArrayRef
 operator|<
 specifier|const
 name|Type

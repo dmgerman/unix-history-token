@@ -374,7 +374,7 @@ modifier|*
 name|NewTy
 parameter_list|)
 function_decl|;
-comment|/// This function markes a type as being concrete (defined).
+comment|/// This function marks a type as being concrete (defined).
 name|virtual
 name|void
 name|typeBecameConcrete

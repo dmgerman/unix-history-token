@@ -239,7 +239,7 @@ comment|///< is non-empty upon return an error occurred while waiting.
 argument_list|)
 decl_stmt|;
 comment|/// This function terminates the program.
-comment|/// @returns true if an error occured.
+comment|/// @returns true if an error occurred.
 comment|/// @see Execute
 comment|/// @brief Terminates the program.
 name|bool

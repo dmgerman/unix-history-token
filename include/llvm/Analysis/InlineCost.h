@@ -168,7 +168,7 @@ block|}
 comment|/// InlineCost - Represent the cost of inlining a function. This
 comment|/// supports special values for functions which should "always" or
 comment|/// "never" be inlined. Otherwise, the cost represents a unitless
-comment|/// amount; smaller values increase the likelyhood of the function
+comment|/// amount; smaller values increase the likelihood of the function
 comment|/// being inlined.
 name|class
 name|InlineCost

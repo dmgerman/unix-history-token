@@ -71,12 +71,6 @@ directive|include
 file|"llvm/Analysis/PathNumbering.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<stack>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm

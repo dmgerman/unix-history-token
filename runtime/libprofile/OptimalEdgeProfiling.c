@@ -40,7 +40,7 @@ name|void
 name|OptEdgeProfAtExitHandler
 parameter_list|()
 block|{
-comment|/* Note that, although the array has a counter for each edge, not all    * counters are updated, the ones that are not used are initialised with -1.    * When loading this information the counters with value -1 have to be    * recalculated, it is guranteed that this is possible.    */
+comment|/* Note that, although the array has a counter for each edge, not all    * counters are updated, the ones that are not used are initialised with -1.    * When loading this information the counters with value -1 have to be    * recalculated, it is guaranteed that this is possible.    */
 name|write_profiling_data
 argument_list|(
 name|OptEdgeInfo

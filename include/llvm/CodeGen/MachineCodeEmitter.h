@@ -118,7 +118,7 @@ name|class
 name|MCSymbol
 decl_stmt|;
 comment|/// MachineCodeEmitter - This class defines two sorts of methods: those for
-comment|/// emitting the actual bytes of machine code, and those for emitting auxillary
+comment|/// emitting the actual bytes of machine code, and those for emitting auxiliary
 comment|/// structures, such as jump tables, relocations, etc.
 comment|///
 comment|/// Emission of machine code is complicated by the fact that we don't (in
@@ -147,7 +147,7 @@ modifier|*
 name|BufferEnd
 decl_stmt|;
 comment|/// CurBufferPtr - Pointer to the next byte of memory to fill when emitting
-comment|/// code.  This is guranteed to be in the range [BufferBegin,BufferEnd].  If
+comment|/// code.  This is guaranteed to be in the range [BufferBegin,BufferEnd].  If
 comment|/// this pointer is at BufferEnd, it will never move due to code emission, and
 comment|/// all code emission requests will be ignored (this is the buffer overflow
 comment|/// condition).

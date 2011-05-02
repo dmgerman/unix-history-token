@@ -114,7 +114,7 @@ name|FCOND_F
 block|,
 name|FCOND_UN
 block|,
-name|FCOND_EQ
+name|FCOND_OEQ
 block|,
 name|FCOND_UEQ
 block|,
@@ -149,9 +149,9 @@ name|FCOND_T
 block|,
 name|FCOND_OR
 block|,
-name|FCOND_NEQ
+name|FCOND_UNE
 block|,
-name|FCOND_OGL
+name|FCOND_ONE
 block|,
 name|FCOND_UGE
 block|,
@@ -176,42 +176,17 @@ block|,
 name|FCOND_NLE
 block|,
 name|FCOND_GT
-block|,
-comment|// Only integer conditions
-name|COND_E
-block|,
-name|COND_GZ
-block|,
-name|COND_GEZ
-block|,
-name|COND_LZ
-block|,
-name|COND_LEZ
-block|,
-name|COND_NE
-block|,
-name|COND_INVALID
 block|}
 enum|;
-comment|// Turn condition code into conditional branch opcode.
+comment|/// GetOppositeBranchOpc - Return the inverse of the specified
+comment|/// opcode, e.g. turning BEQ to BNE.
 name|unsigned
-name|GetCondBranchFromCond
+name|GetOppositeBranchOpc
 parameter_list|(
-name|CondCode
-name|CC
+name|unsigned
+name|Opc
 parameter_list|)
 function_decl|;
-comment|/// GetOppositeBranchCondition - Return the inverse of the specified cond,
-comment|/// e.g. turning COND_E to COND_NE.
-name|CondCode
-name|GetOppositeBranchCondition
-argument_list|(
-name|Mips
-operator|::
-name|CondCode
-name|CC
-argument_list|)
-decl_stmt|;
 comment|/// MipsCCToString - Map each FP condition code to its string
 specifier|inline
 specifier|static
@@ -256,10 +231,10 @@ return|return
 literal|"un"
 return|;
 case|case
-name|FCOND_EQ
+name|FCOND_OEQ
 case|:
 case|case
-name|FCOND_NEQ
+name|FCOND_UNE
 case|:
 return|return
 literal|"eq"
@@ -268,7 +243,7 @@ case|case
 name|FCOND_UEQ
 case|:
 case|case
-name|FCOND_OGL
+name|FCOND_ONE
 case|:
 return|return
 literal|"ueq"
@@ -361,7 +336,7 @@ case|case
 name|FCOND_GE
 case|:
 return|return
-literal|"ge"
+literal|"nge"
 return|;
 case|case
 name|FCOND_LE
@@ -370,7 +345,7 @@ case|case
 name|FCOND_NLE
 case|:
 return|return
-literal|"nle"
+literal|"le"
 return|;
 case|case
 name|FCOND_NGT
@@ -379,7 +354,7 @@ case|case
 name|FCOND_GT
 case|:
 return|return
-literal|"gt"
+literal|"ngt"
 return|;
 block|}
 block|}
@@ -412,9 +387,11 @@ comment|/// MO_GPREL - Represents the offset from the current gp value to be use
 comment|/// for the relocatable object file being produced.
 name|MO_GPREL
 block|,
-comment|/// MO_ABS_HILO - Represents the hi or low part of an absolute symbol
+comment|/// MO_ABS_HI/LO - Represents the hi or low part of an absolute symbol
 comment|/// address.
-name|MO_ABS_HILO
+name|MO_ABS_HI
+block|,
+name|MO_ABS_LO
 block|}
 enum|;
 block|}
@@ -513,6 +490,23 @@ argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
 block|;
+name|private
+operator|:
+name|void
+name|BuildCondBr
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock *TBB
+argument_list|,
+argument|DebugLoc DL
+argument_list|,
+argument|const SmallVectorImpl<MachineOperand>& Cond
+argument_list|)
+specifier|const
+block|;
+name|public
+operator|:
 name|virtual
 name|unsigned
 name|InsertBranch

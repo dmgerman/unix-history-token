@@ -267,6 +267,13 @@ operator|+
 literal|16
 argument_list|)
 expr_stmt|;
+name|WorklistMap
+operator|.
+name|resize
+argument_list|(
+name|NumEntries
+argument_list|)
+expr_stmt|;
 name|DEBUG
 argument_list|(
 name|errs

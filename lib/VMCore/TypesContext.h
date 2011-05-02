@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/STLExtras.h"
 end_include
 
@@ -792,7 +798,7 @@ name|public
 label|:
 name|StructValType
 argument_list|(
-argument|const std::vector<const Type*>&args
+argument|ArrayRef<const Type*> args
 argument_list|,
 argument|bool isPacked
 argument_list|)
@@ -800,6 +806,9 @@ block|:
 name|ElTypes
 argument_list|(
 name|args
+operator|.
+name|vec
+argument_list|()
 argument_list|)
 operator|,
 name|packed
@@ -991,7 +1000,7 @@ name|FunctionValType
 argument_list|(
 argument|const Type *ret
 argument_list|,
-argument|const std::vector<const Type*>&args
+argument|ArrayRef<const Type*> args
 argument_list|,
 argument|bool isVA
 argument_list|)
@@ -1004,6 +1013,9 @@ operator|,
 name|ArgTypes
 argument_list|(
 name|args
+operator|.
+name|vec
+argument_list|()
 argument_list|)
 operator|,
 name|isVarArg
@@ -1972,7 +1984,7 @@ operator|)
 decl_stmt|;
 comment|// Remove the old entry form TypesByHash.  If the hash values differ
 comment|// now, remove it from the old place.  Otherwise, continue scanning
-comment|// withing this hashcode to reduce work.
+comment|// within this hashcode to reduce work.
 if|if
 condition|(
 name|NewTypeHash

@@ -281,9 +281,18 @@ name|argc
 argument_list|)
 expr_stmt|;
 comment|/* Run the JIT. */
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__MINGW64__
+argument_list|)
 name|execvp
 argument_list|(
 name|Interp

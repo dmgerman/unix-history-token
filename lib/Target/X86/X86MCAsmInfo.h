@@ -101,6 +101,36 @@ argument_list|)
 block|;   }
 decl_stmt|;
 name|struct
+name|X86_64MCAsmInfoDarwin
+range|:
+name|public
+name|X86MCAsmInfoDarwin
+block|{
+name|explicit
+name|X86_64MCAsmInfoDarwin
+argument_list|(
+specifier|const
+name|Triple
+operator|&
+name|Triple
+argument_list|)
+block|;
+name|virtual
+specifier|const
+name|MCExpr
+operator|*
+name|getExprForPersonalitySymbol
+argument_list|(
+argument|const MCSymbol *Sym
+argument_list|,
+argument|unsigned Encoding
+argument_list|,
+argument|MCStreamer&Streamer
+argument_list|)
+specifier|const
+block|;   }
+decl_stmt|;
+name|struct
 name|X86ELFMCAsmInfo
 range|:
 name|public

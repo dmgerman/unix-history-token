@@ -178,6 +178,9 @@ operator|::
 name|pointer
 name|pointer
 expr_stmt|;
+name|PredIterator
+argument_list|()
+block|{}
 name|explicit
 specifier|inline
 name|PredIterator
@@ -359,6 +362,29 @@ name|this
 block|;
 return|return
 name|tmp
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// getOperandNo - Return the operand number in the predecessor's
+end_comment
+
+begin_comment
+comment|/// terminator of the successor.
+end_comment
+
+begin_expr_stmt
+name|unsigned
+name|getOperandNo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|It
+operator|.
+name|getOperandNo
+argument_list|()
 return|;
 block|}
 end_expr_stmt

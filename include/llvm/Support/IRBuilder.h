@@ -78,6 +78,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Twine.h"
 end_include
 
@@ -531,18 +543,15 @@ comment|// Miscellaneous creation methods.
 comment|//===--------------------------------------------------------------------===//
 comment|/// CreateGlobalString - Make a new global variable with an initializer that
 comment|/// has array of i8 type filled in with the nul terminated string value
-comment|/// specified.  If Name is specified, it is the name of the global variable
-comment|/// created.
+comment|/// specified.  The new global variable will be marked mergable with any
+comment|/// others of the same contents.  If Name is specified, it is the name of the
+comment|/// global variable created.
 name|Value
 modifier|*
 name|CreateGlobalString
 parameter_list|(
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|Str
-init|=
-literal|""
 parameter_list|,
 specifier|const
 name|Twine
@@ -684,6 +693,27 @@ name|getInt64Ty
 argument_list|()
 argument_list|,
 name|C
+argument_list|)
+return|;
+block|}
+name|ConstantInt
+modifier|*
+name|getInt
+parameter_list|(
+specifier|const
+name|APInt
+modifier|&
+name|AI
+parameter_list|)
+block|{
+return|return
+name|ConstantInt
+operator|::
+name|get
+argument_list|(
+name|Context
+argument_list|,
+name|AI
 argument_list|)
 return|;
 block|}
@@ -1255,9 +1285,7 @@ name|C
 argument_list|)
 block|,
 name|Folder
-argument_list|(
-argument|C
-argument_list|)
+argument_list|()
 block|{   }
 name|explicit
 name|IRBuilder
@@ -1307,9 +1335,7 @@ argument_list|()
 argument_list|)
 block|,
 name|Folder
-argument_list|(
-argument|Context
-argument_list|)
+argument_list|()
 block|{
 name|SetInsertPoint
 argument_list|(
@@ -1333,9 +1359,7 @@ argument_list|()
 argument_list|)
 block|,
 name|Folder
-argument_list|(
-argument|Context
-argument_list|)
+argument_list|()
 block|{
 name|SetInsertPoint
 argument_list|(
@@ -1387,9 +1411,7 @@ argument_list|()
 argument_list|)
 block|,
 name|Folder
-argument_list|(
-argument|Context
-argument_list|)
+argument_list|()
 block|{
 name|SetInsertPoint
 argument_list|(
@@ -6518,12 +6540,8 @@ name|Value
 modifier|*
 name|CreateGlobalStringPtr
 parameter_list|(
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|Str
-init|=
-literal|""
 parameter_list|,
 specifier|const
 name|Twine
@@ -8804,6 +8822,9 @@ name|Type
 modifier|*
 name|Ty
 parameter_list|,
+name|unsigned
+name|NumReservedValues
+parameter_list|,
 specifier|const
 name|Twine
 modifier|&
@@ -8820,6 +8841,8 @@ operator|::
 name|Create
 argument_list|(
 name|Ty
+argument_list|,
+name|NumReservedValues
 argument_list|)
 argument_list|,
 name|Name
@@ -9167,6 +9190,56 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_decl_stmt
+name|CallInst
+modifier|*
+name|CreateCall
+argument_list|(
+name|Value
+operator|*
+name|Callee
+argument_list|,
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|Arg
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|Name
+operator|=
+literal|""
+argument_list|)
+block|{
+return|return
+name|Insert
+argument_list|(
+name|CallInst
+operator|::
+name|Create
+argument_list|(
+name|Callee
+argument_list|,
+name|Arg
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|Arg
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|Name
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_decl_stmt
 
 begin_expr_stmt
 name|template

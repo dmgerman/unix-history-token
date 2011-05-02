@@ -118,17 +118,16 @@ block|,
 comment|// Handle gp_rel (small data/bss sections) relocation.
 name|GPRel
 block|,
-comment|// Select CC Pseudo Instruction
-name|SelectCC
-block|,
-comment|// Floating Point Select CC Pseudo Instruction
-name|FPSelectCC
-block|,
 comment|// Floating Point Branch Conditional
 name|FPBrcond
 block|,
 comment|// Floating Point Compare
 name|FPCmp
+block|,
+comment|// Floating Point Conditional Moves
+name|CMovFP_T
+block|,
+name|CMovFP_F
 block|,
 comment|// Floating Point Rounding
 name|FPRound
@@ -144,6 +143,15 @@ block|,
 name|MSub
 block|,
 name|MSubu
+block|,
+comment|// DivRem(u)
+name|DivRem
+block|,
+name|DivRemU
+block|,
+name|BuildPairF64
+block|,
+name|ExtractElementF64
 block|}
 enum|;
 block|}
@@ -250,15 +258,6 @@ specifier|const
 block|;
 comment|// Lower Operand specifics
 name|SDValue
-name|LowerANDOR
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
 name|LowerBRCOND
 argument_list|(
 argument|SDValue Op
@@ -304,6 +303,15 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerBlockAddress
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerGlobalTLSAddress
 argument_list|(
 argument|SDValue Op
@@ -323,15 +331,6 @@ specifier|const
 block|;
 name|SDValue
 name|LowerSELECT
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerSETCC
 argument_list|(
 argument|SDValue Op
 argument_list|,

@@ -18,14 +18,52 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__MINGW32__
+argument_list|)
+end_if
 
 begin_include
 include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<io.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -42,20 +80,33 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdint.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
+
+begin_comment
+comment|/* Must use __inline in Microsoft C */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|inline
+value|__inline
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* note that this is used for functions with large path counts,          but it is unlikely those paths will ALL be executed */
@@ -407,6 +458,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|inline
 name|uint32_t
 name|hash
@@ -415,7 +467,7 @@ name|uint32_t
 name|key
 parameter_list|)
 block|{
-comment|/* this may benifit from a proper hash function */
+comment|/* this may benefit from a proper hash function */
 return|return
 name|key
 operator|%
@@ -598,6 +650,7 @@ comment|/* Return a pointer to this path's specific path counter */
 end_comment
 
 begin_function
+specifier|static
 specifier|inline
 name|uint32_t
 modifier|*
@@ -857,7 +910,9 @@ begin_function
 specifier|static
 name|void
 name|pathProfAtExitHandler
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|outFile

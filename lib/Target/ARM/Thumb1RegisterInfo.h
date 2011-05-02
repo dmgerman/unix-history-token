@@ -115,6 +115,25 @@ operator|&
 name|STI
 argument_list|)
 block|;
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|getLargestLegalSuperClass
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|)
+specifier|const
+block|;
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|getPointerRegClass
+argument_list|(
+argument|unsigned Kind =
+literal|0
+argument_list|)
+specifier|const
+block|;
 comment|/// emitLoadConstPool - Emits a load from constpool to materialize the
 comment|/// specified immediate.
 name|void
@@ -136,6 +155,8 @@ argument|ARMCC::CondCodes Pred = ARMCC::AL
 argument_list|,
 argument|unsigned PredReg =
 literal|0
+argument_list|,
+argument|unsigned MIFlags = MachineInstr::NoFlags
 argument_list|)
 specifier|const
 block|;

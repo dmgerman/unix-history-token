@@ -183,6 +183,18 @@ return|return
 name|MI
 return|;
 block|}
+name|MachineInstr
+operator|*
+name|operator
+operator|->
+expr|(
+block|)
+decl|const
+block|{
+return|return
+name|MI
+return|;
+block|}
 name|operator
 name|MachineBasicBlock
 operator|::
@@ -713,6 +725,52 @@ operator|*
 name|this
 return|;
 block|}
+specifier|const
+name|MachineInstrBuilder
+modifier|&
+name|setMIFlags
+argument_list|(
+name|unsigned
+name|Flags
+argument_list|)
+decl|const
+block|{
+name|MI
+operator|->
+name|setFlags
+argument_list|(
+name|Flags
+argument_list|)
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+specifier|const
+name|MachineInstrBuilder
+modifier|&
+name|setMIFlag
+argument_list|(
+name|MachineInstr
+operator|::
+name|MIFlag
+name|Flag
+argument_list|)
+decl|const
+block|{
+name|MI
+operator|->
+name|setFlag
+argument_list|(
+name|Flag
+argument_list|)
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
 comment|// Add a displacement from an existing MachineOperand with an added offset.
 specifier|const
 name|MachineInstrBuilder
@@ -783,10 +841,25 @@ return|;
 block|}
 block|}
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// BuildMI - Builder interface.  Specify how to create the initial instruction
+end_comment
+
+begin_comment
 comment|/// itself.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_function
 specifier|inline
 name|MachineInstrBuilder
 name|BuildMI
@@ -818,9 +891,21 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// BuildMI - This version of the builder sets up the first operand as a
+end_comment
+
+begin_comment
 comment|/// destination virtual register.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_function
 specifier|inline
 name|MachineInstrBuilder
 name|BuildMI
@@ -864,10 +949,25 @@ name|Define
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// BuildMI - This version of the builder inserts the newly-built
+end_comment
+
+begin_comment
 comment|/// instruction before the given position in the given MachineBasicBlock, and
+end_comment
+
+begin_comment
 comment|/// sets up the first operand as a destination virtual register.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 specifier|inline
 name|MachineInstrBuilder
 name|BuildMI
@@ -934,10 +1034,25 @@ name|Define
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// BuildMI - This version of the builder inserts the newly-built
+end_comment
+
+begin_comment
 comment|/// instruction before the given position in the given MachineBasicBlock, and
+end_comment
+
+begin_comment
 comment|/// does NOT take a destination register.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 specifier|inline
 name|MachineInstrBuilder
 name|BuildMI
@@ -992,10 +1107,25 @@ name|MI
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// BuildMI - This version of the builder inserts the newly-built
+end_comment
+
+begin_comment
 comment|/// instruction at the end of the given MachineBasicBlock, and does NOT take a
+end_comment
+
+begin_comment
 comment|/// destination register.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_function
 specifier|inline
 name|MachineInstrBuilder
 name|BuildMI
@@ -1030,10 +1160,25 @@ name|TID
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// BuildMI - This version of the builder inserts the newly-built
+end_comment
+
+begin_comment
 comment|/// instruction at the end of the given MachineBasicBlock, and sets up the first
+end_comment
+
+begin_comment
 comment|/// operand as a destination virtual register.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_function
 specifier|inline
 name|MachineInstrBuilder
 name|BuildMI
@@ -1073,6 +1218,9 @@ name|DestReg
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|inline
 name|unsigned
 name|getDefRegState
@@ -1091,6 +1239,9 @@ else|:
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 specifier|inline
 name|unsigned
 name|getImplRegState
@@ -1109,6 +1260,9 @@ else|:
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 specifier|inline
 name|unsigned
 name|getKillRegState
@@ -1127,6 +1281,9 @@ else|:
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 specifier|inline
 name|unsigned
 name|getDeadRegState
@@ -1145,6 +1302,9 @@ else|:
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 specifier|inline
 name|unsigned
 name|getUndefRegState
@@ -1163,10 +1323,10 @@ else|:
 literal|0
 return|;
 block|}
-block|}
-end_decl_stmt
+end_function
 
 begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

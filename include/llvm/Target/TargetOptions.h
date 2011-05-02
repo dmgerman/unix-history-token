@@ -275,6 +275,14 @@ specifier|extern
 name|bool
 name|StrongPHIElim
 decl_stmt|;
+comment|/// getTrapFunctionName - If this returns a non-empty string, this means isel
+comment|/// should lower Intrinsic::trap to a call to the specified function name
+comment|/// instead of an ISD::TRAP node.
+specifier|extern
+name|StringRef
+name|getTrapFunctionName
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 

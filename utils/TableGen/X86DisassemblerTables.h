@@ -116,11 +116,13 @@ comment|/// [0] one-byte opcodes
 comment|/// [1] two-byte opcodes of the form 0f __
 comment|/// [2] three-byte opcodes of the form 0f 38 __
 comment|/// [3] three-byte opcodes of the form 0f 3a __
+comment|/// [4] three-byte opcodes of the form 0f a6 __
+comment|/// [5] three-byte opcodes of the form 0f a7 __
 name|ContextDecision
 modifier|*
 name|Tables
 index|[
-literal|4
+literal|6
 index|]
 decl_stmt|;
 comment|/// The instruction information table
@@ -180,7 +182,7 @@ comment|///   TYPE indicates whether the table has one entry that is the same
 comment|///   regardless of ModR/M byte, two entries - one for bytes 0x00-0xbf and one
 comment|///   for bytes 0xc0-0xff -, or 256 entries, one for each possible byte.
 comment|///   nnnn is the number of a table for looking up these values.  The tables
-comment|///   are writen separately so that tables consisting entirely of zeros will
+comment|///   are written separately so that tables consisting entirely of zeros will
 comment|///   not be duplicated.  (These all have the name modRMEmptyTable.)  A table
 comment|///   is printed as:
 comment|///
@@ -283,7 +285,8 @@ comment|///     }
 comment|///   }
 comment|///
 comment|///   NAME is the name of the ContextDecision (typically one of the four names
-comment|///   ONEBYTE_SYM, TWOBYTE_SYM, THREEBYTE38_SYM, and THREEBYTE3A_SYM from
+comment|///   ONEBYTE_SYM, TWOBYTE_SYM, THREEBYTE38_SYM, THREEBYTE3A_SYM,
+comment|///   THREEBYTEA6_SYM, and THREEBYTEA7_SYM from
 comment|///   X86DisassemblerDecoderCommon.h).
 comment|///   IC is one of the contexts in InstructionContext.  There is an opcode
 comment|///   decision for each possible context.

@@ -131,6 +131,29 @@ operator|*
 name|_Emitter
 argument_list|)
 block|;
+name|MCObjectStreamer
+argument_list|(
+name|MCContext
+operator|&
+name|Context
+argument_list|,
+name|TargetAsmBackend
+operator|&
+name|TAB
+argument_list|,
+name|raw_ostream
+operator|&
+name|_OS
+argument_list|,
+name|MCCodeEmitter
+operator|*
+name|_Emitter
+argument_list|,
+name|MCAssembler
+operator|*
+name|_Assembler
+argument_list|)
+block|;
 operator|~
 name|MCObjectStreamer
 argument_list|()
@@ -201,8 +224,6 @@ argument|const MCExpr *Value
 argument_list|,
 argument|unsigned Size
 argument_list|,
-argument|bool isPCRel
-argument_list|,
 argument|unsigned AddrSpace
 argument_list|)
 block|;
@@ -210,20 +231,20 @@ name|virtual
 name|void
 name|EmitULEB128Value
 argument_list|(
-argument|const MCExpr *Value
-argument_list|,
-argument|unsigned AddrSpace =
-literal|0
+specifier|const
+name|MCExpr
+operator|*
+name|Value
 argument_list|)
 block|;
 name|virtual
 name|void
 name|EmitSLEB128Value
 argument_list|(
-argument|const MCExpr *Value
-argument_list|,
-argument|unsigned AddrSpace =
-literal|0
+specifier|const
+name|MCExpr
+operator|*
+name|Value
 argument_list|)
 block|;
 name|virtual

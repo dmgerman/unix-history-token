@@ -4530,6 +4530,7 @@ specifier|const
 name|std
 operator|::
 name|string
+operator|&
 name|getValue
 argument_list|()
 specifier|const

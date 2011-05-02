@@ -985,6 +985,184 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
+comment|/// TreePredicateFn - This is an abstraction that represents the predicates on
+end_comment
+
+begin_comment
+comment|/// a PatFrag node.  This is a simple one-word wrapper around a pointer to
+end_comment
+
+begin_comment
+comment|/// provide nice accessors.
+end_comment
+
+begin_decl_stmt
+name|class
+name|TreePredicateFn
+block|{
+comment|/// PatFragRec - This is the TreePattern for the PatFrag that we
+comment|/// originally came from.
+name|TreePattern
+modifier|*
+name|PatFragRec
+decl_stmt|;
+name|public
+label|:
+comment|/// TreePredicateFn constructor.  Here 'N' is a subclass of PatFrag.
+name|TreePredicateFn
+argument_list|(
+name|TreePattern
+operator|*
+name|N
+argument_list|)
+expr_stmt|;
+name|TreePattern
+operator|*
+name|getOrigPatFragRecord
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PatFragRec
+return|;
+block|}
+comment|/// isAlwaysTrue - Return true if this is a noop predicate.
+name|bool
+name|isAlwaysTrue
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|isImmediatePattern
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|getImmCode
+argument_list|()
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+comment|/// getImmediatePredicateCode - Return the code that evaluates this pattern if
+comment|/// this is an immediate predicate.  It is an error to call this on a
+comment|/// non-immediate pattern.
+name|std
+operator|::
+name|string
+name|getImmediatePredicateCode
+argument_list|()
+specifier|const
+block|{
+name|std
+operator|::
+name|string
+name|Result
+operator|=
+name|getImmCode
+argument_list|()
+block|;
+name|assert
+argument_list|(
+operator|!
+name|Result
+operator|.
+name|empty
+argument_list|()
+operator|&&
+literal|"Isn't an immediate pattern!"
+argument_list|)
+block|;
+return|return
+name|Result
+return|;
+block|}
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|TreePredicateFn
+operator|&
+name|RHS
+operator|)
+specifier|const
+block|{
+return|return
+name|PatFragRec
+operator|==
+name|RHS
+operator|.
+name|PatFragRec
+return|;
+block|}
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|TreePredicateFn
+operator|&
+name|RHS
+operator|)
+specifier|const
+block|{
+return|return
+operator|!
+operator|(
+operator|*
+name|this
+operator|==
+name|RHS
+operator|)
+return|;
+block|}
+comment|/// Return the name to use in the generated code to reference this, this is
+comment|/// "Predicate_foo" if from a pattern fragment "foo".
+name|std
+operator|::
+name|string
+name|getFnName
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// getCodeToRunOnSDNode - Return the code for the function body that
+comment|/// evaluates this predicate.  The argument is expected to be in "Node",
+comment|/// not N.  This handles casting and conversion to a concrete node type as
+comment|/// appropriate.
+name|std
+operator|::
+name|string
+name|getCodeToRunOnSDNode
+argument_list|()
+specifier|const
+expr_stmt|;
+name|private
+label|:
+name|std
+operator|::
+name|string
+name|getPredCode
+argument_list|()
+specifier|const
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|getImmCode
+argument_list|()
+specifier|const
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// FIXME: TreePatternNode's can be shared in some cases (due to dag-shaped
 end_comment
 
@@ -1038,9 +1216,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|std
-operator|::
-name|string
+name|TreePredicateFn
 operator|>
 name|PredicateFns
 expr_stmt|;
@@ -1464,14 +1640,25 @@ return|return
 name|false
 return|;
 block|}
+name|bool
+name|hasAnyPredicate
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|PredicateFns
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
 specifier|const
 name|std
 operator|::
 name|vector
 operator|<
-name|std
-operator|::
-name|string
+name|TreePredicateFn
 operator|>
 operator|&
 name|getPredicateFns
@@ -1500,9 +1687,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|std
-operator|::
-name|string
+name|TreePredicateFn
 operator|>
 operator|&
 name|Fns
@@ -1525,21 +1710,19 @@ expr_stmt|;
 block|}
 name|void
 name|addPredicateFn
-argument_list|(
+parameter_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|TreePredicateFn
+modifier|&
 name|Fn
-argument_list|)
+parameter_list|)
 block|{
 name|assert
 argument_list|(
 operator|!
 name|Fn
 operator|.
-name|empty
+name|isAlwaysTrue
 argument_list|()
 operator|&&
 literal|"Empty predicate string!"

@@ -77,12 +77,6 @@ directive|include
 file|<cstring>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -261,38 +255,6 @@ name|void
 name|RehashTable
 parameter_list|()
 function_decl|;
-comment|/// ShouldRehash - Return true if the table should be rehashed after a new
-comment|/// element was recently inserted.
-name|bool
-name|ShouldRehash
-argument_list|()
-specifier|const
-block|{
-comment|// If the hash table is now more than 3/4 full, or if fewer than 1/8 of
-comment|// the buckets are empty (meaning that many are filled with tombstones),
-comment|// grow the table.
-return|return
-name|NumItems
-operator|*
-literal|4
-operator|>
-name|NumBuckets
-operator|*
-literal|3
-operator|||
-name|NumBuckets
-operator|-
-operator|(
-name|NumItems
-operator|+
-name|NumTombstones
-operator|)
-operator|<
-name|NumBuckets
-operator|/
-literal|8
-return|;
-block|}
 comment|/// LookupBucketFor - Look up the bucket that the specified string should end
 comment|/// up in.  If it already exists as a key in the map, the Item pointer for the
 comment|/// specified bucket will be non-null.  Otherwise, it will be null.  In either
@@ -1429,11 +1391,15 @@ expr_stmt|;
 operator|++
 name|NumItems
 expr_stmt|;
-if|if
-condition|(
-name|ShouldRehash
-argument_list|()
-condition|)
+name|assert
+argument_list|(
+name|NumItems
+operator|+
+name|NumTombstones
+operator|<=
+name|NumBuckets
+argument_list|)
+expr_stmt|;
 name|RehashTable
 argument_list|()
 expr_stmt|;
@@ -1516,6 +1482,10 @@ expr_stmt|;
 block|}
 block|}
 name|NumItems
+operator|=
+literal|0
+expr_stmt|;
+name|NumTombstones
 operator|=
 literal|0
 expr_stmt|;
@@ -1621,6 +1591,15 @@ expr_stmt|;
 operator|++
 name|NumItems
 expr_stmt|;
+name|assert
+argument_list|(
+name|NumItems
+operator|+
+name|NumTombstones
+operator|<=
+name|NumBuckets
+argument_list|)
+expr_stmt|;
 comment|// Fill in the bucket for the hash table.  The FullHashValue was already
 comment|// filled in by LookupBucketFor.
 name|Bucket
@@ -1629,11 +1608,6 @@ name|Item
 operator|=
 name|NewItem
 expr_stmt|;
-if|if
-condition|(
-name|ShouldRehash
-argument_list|()
-condition|)
 name|RehashTable
 argument_list|()
 expr_stmt|;

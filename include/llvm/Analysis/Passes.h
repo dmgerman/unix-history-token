@@ -296,15 +296,6 @@ parameter_list|()
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|//
-comment|// createLiveValuesPass - This creates an instance of the LiveValues pass.
-comment|//
-name|FunctionPass
-modifier|*
-name|createLiveValuesPass
-parameter_list|()
-function_decl|;
-comment|//===--------------------------------------------------------------------===//
-comment|//
 comment|/// createLazyValueInfoPass - This creates an instance of the LazyValueInfo
 comment|/// pass.
 name|FunctionPass

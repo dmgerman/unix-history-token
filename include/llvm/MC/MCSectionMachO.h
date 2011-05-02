@@ -181,13 +181,13 @@ name|S_SYMBOL_STUBS
 operator|=
 literal|0x08U
 block|,
-comment|/// S_SYMBOL_STUBS - Section with only function pointers for
+comment|/// S_MOD_INIT_FUNC_POINTERS - Section with only function pointers for
 comment|/// initialization.
 name|S_MOD_INIT_FUNC_POINTERS
 operator|=
 literal|0x09U
 block|,
-comment|/// S_MOD_INIT_FUNC_POINTERS - Section with only function pointers for
+comment|/// S_MOD_TERM_FUNC_POINTERS - Section with only function pointers for
 comment|/// termination.
 name|S_MOD_TERM_FUNC_POINTERS
 operator|=
@@ -470,6 +470,10 @@ begin_comment
 comment|/// specifier is present, this returns a string indicating the problem.
 end_comment
 
+begin_comment
+comment|/// If no TAA was parsed, TAA is not altered, and TAAWasSet becomes false.
+end_comment
+
 begin_expr_stmt
 specifier|static
 name|std
@@ -487,6 +491,9 @@ argument|StringRef&Section
 argument_list|,
 comment|// Out.
 argument|unsigned&TAA
+argument_list|,
+comment|// Out.
+argument|bool&TAAParsed
 argument_list|,
 comment|// Out.
 argument|unsigned&StubSize

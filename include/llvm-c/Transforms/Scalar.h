@@ -105,6 +105,14 @@ name|LLVMPassManagerRef
 name|PM
 parameter_list|)
 function_decl|;
+comment|/** See llvm::createLoopIdiomPass function */
+name|void
+name|LLVMAddLoopIdiomPass
+parameter_list|(
+name|LLVMPassManagerRef
+name|PM
+parameter_list|)
+function_decl|;
 comment|/** See llvm::createLoopRotatePass function. */
 name|void
 name|LLVMAddLoopRotatePass
@@ -171,6 +179,14 @@ parameter_list|)
 function_decl|;
 comment|/** See llvm::createScalarReplAggregatesPass function. */
 name|void
+name|LLVMAddScalarReplAggregatesPassSSA
+parameter_list|(
+name|LLVMPassManagerRef
+name|PM
+parameter_list|)
+function_decl|;
+comment|/** See llvm::createScalarReplAggregatesPass function. */
+name|void
 name|LLVMAddScalarReplAggregatesPassWithThreshold
 parameter_list|(
 name|LLVMPassManagerRef
@@ -215,6 +231,38 @@ function_decl|;
 comment|/** See llvm::createVerifierPass function. */
 name|void
 name|LLVMAddVerifierPass
+parameter_list|(
+name|LLVMPassManagerRef
+name|PM
+parameter_list|)
+function_decl|;
+comment|/** See llvm::createCorrelatedValuePropagationPass function */
+name|void
+name|LLVMAddCorrelatedValuePropagationPass
+parameter_list|(
+name|LLVMPassManagerRef
+name|PM
+parameter_list|)
+function_decl|;
+comment|/** See llvm::createEarlyCSEPass function */
+name|void
+name|LLVMAddEarlyCSEPass
+parameter_list|(
+name|LLVMPassManagerRef
+name|PM
+parameter_list|)
+function_decl|;
+comment|/** See llvm::createTypeBasedAliasAnalysisPass function */
+name|void
+name|LLVMAddTypeBasedAliasAnalysisPass
+parameter_list|(
+name|LLVMPassManagerRef
+name|PM
+parameter_list|)
+function_decl|;
+comment|/** See llvm::createBasicAliasAnalysisPass function */
+name|void
+name|LLVMAddBasicAliasAnalysisPass
 parameter_list|(
 name|LLVMPassManagerRef
 name|PM

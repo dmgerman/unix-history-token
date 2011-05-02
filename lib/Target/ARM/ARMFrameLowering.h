@@ -252,6 +252,9 @@ argument_list|,
 argument|bool NoGap
 argument_list|,
 argument|bool(*Func)(unsigned, bool)
+argument_list|,
+argument|unsigned MIFlags =
+literal|0
 argument_list|)
 specifier|const
 block|;

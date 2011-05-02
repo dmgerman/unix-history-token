@@ -128,23 +128,15 @@ name|ValueEnumerator
 block|{
 name|public
 label|:
-comment|// For each type, we remember its Type* and occurrence frequency.
 typedef|typedef
 name|std
 operator|::
 name|vector
 operator|<
-name|std
-operator|::
-name|pair
-operator|<
 specifier|const
 name|Type
 operator|*
-operator|,
-name|unsigned
 operator|>
-expr|>
 name|TypeList
 expr_stmt|;
 comment|// For each value, we remember its Value* and occurrence frequency.
@@ -599,6 +591,10 @@ parameter_list|,
 name|unsigned
 name|CstEnd
 parameter_list|)
+function_decl|;
+name|void
+name|OptimizeTypes
+parameter_list|()
 function_decl|;
 name|void
 name|EnumerateMDNodeOperands

@@ -74,10 +74,13 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MemoryBuffer
+decl_stmt|;
+name|class
 name|Target
 decl_stmt|;
 name|class
-name|MemoryBuffer
+name|TargetMachine
 decl_stmt|;
 name|class
 name|raw_ostream
@@ -95,6 +98,10 @@ specifier|const
 name|Target
 operator|&
 name|target
+argument_list|,
+name|TargetMachine
+operator|&
+name|TM
 argument_list|,
 specifier|const
 name|std

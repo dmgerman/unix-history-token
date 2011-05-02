@@ -454,6 +454,24 @@ literal|0
 argument_list|)
 specifier|const
 block|;
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|getLargestLegalSuperClass
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getRegPressureLimit
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
 name|std
 operator|::
 name|pair
@@ -497,6 +515,14 @@ argument_list|,
 argument|unsigned NewReg
 argument_list|,
 argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|avoidWriteAfterWrite
+argument_list|(
+argument|const TargetRegisterClass *RC
 argument_list|)
 specifier|const
 block|;
@@ -650,6 +676,8 @@ argument|ARMCC::CondCodes Pred = ARMCC::AL
 argument_list|,
 argument|unsigned PredReg =
 literal|0
+argument_list|,
+argument|unsigned MIFlags = MachineInstr::NoFlags
 argument_list|)
 specifier|const
 block|;

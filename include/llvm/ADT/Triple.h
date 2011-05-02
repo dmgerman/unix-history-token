@@ -168,9 +168,12 @@ comment|// XCore: xcore
 name|mblaze
 block|,
 comment|// MBlaze: mblaze
-name|ptx
+name|ptx32
 block|,
-comment|// PTX: ptx
+comment|// PTX: ptx (32-bit)
+name|ptx64
+block|,
+comment|// PTX: ptx (64-bit)
 name|InvalidArch
 block|}
 enum|;
@@ -182,6 +185,8 @@ block|,
 name|Apple
 block|,
 name|PC
+block|,
+name|SCEI
 block|}
 enum|;
 enum|enum
@@ -199,11 +204,15 @@ name|DragonFly
 block|,
 name|FreeBSD
 block|,
+name|IOS
+block|,
 name|Linux
 block|,
 name|Lv2
 block|,
 comment|// PS3
+name|MacOSX
+block|,
 name|MinGW32
 block|,
 comment|// i*86-pc-mingw32, *-w64-mingw32
@@ -690,43 +699,51 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// getDarwinNumber - Parse the 'darwin number' out of the specific target
+comment|/// getOSNumber - Parse the version number from the OS name component of the
 end_comment
 
 begin_comment
-comment|/// triple.  For example, if we have darwin8.5 return 8,5,0.  If any entry is
+comment|/// triple, if present.
 end_comment
 
 begin_comment
-comment|/// not defined, return 0's.  This requires that the triple have an OSType of
+comment|///
 end_comment
 
 begin_comment
-comment|/// darwin before it is called.
+comment|/// For example, "fooos1.2.3" would return (1, 2, 3).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// If an entry is not defined, it will be returned as 0.
 end_comment
 
 begin_decl_stmt
 name|void
-name|getDarwinNumber
+name|getOSVersion
 argument_list|(
 name|unsigned
 operator|&
-name|Maj
+name|Major
 argument_list|,
 name|unsigned
 operator|&
-name|Min
+name|Minor
 argument_list|,
 name|unsigned
 operator|&
-name|Revision
+name|Micro
 argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getDarwinMajorNumber - Return just the major version number, this is
+comment|/// getOSMajorVersion - Return just the major version number, this is
 end_comment
 
 begin_comment
@@ -735,7 +752,7 @@ end_comment
 
 begin_expr_stmt
 name|unsigned
-name|getDarwinMajorNumber
+name|getOSMajorVersion
 argument_list|()
 specifier|const
 block|{
@@ -744,7 +761,7 @@ name|Maj
 block|,
 name|Min
 block|,
-name|Rev
+name|Micro
 block|;
 name|getDarwinNumber
 argument_list|(
@@ -752,7 +769,7 @@ name|Maj
 argument_list|,
 name|Min
 argument_list|,
-name|Rev
+name|Micro
 argument_list|)
 block|;
 return|return
@@ -760,6 +777,333 @@ name|Maj
 return|;
 block|}
 end_expr_stmt
+
+begin_decl_stmt
+name|void
+name|getDarwinNumber
+argument_list|(
+name|unsigned
+operator|&
+name|Major
+argument_list|,
+name|unsigned
+operator|&
+name|Minor
+argument_list|,
+name|unsigned
+operator|&
+name|Micro
+argument_list|)
+decl|const
+block|{
+return|return
+name|getOSVersion
+argument_list|(
+name|Major
+argument_list|,
+name|Minor
+argument_list|,
+name|Micro
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_expr_stmt
+name|unsigned
+name|getDarwinMajorNumber
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOSMajorVersion
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// isOSVersionLT - Helper function for doing comparisons against version
+end_comment
+
+begin_comment
+comment|/// numbers included in the target triple.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isOSVersionLT
+argument_list|(
+name|unsigned
+name|Major
+argument_list|,
+name|unsigned
+name|Minor
+operator|=
+literal|0
+argument_list|,
+name|unsigned
+name|Micro
+operator|=
+literal|0
+argument_list|)
+decl|const
+block|{
+name|unsigned
+name|LHS
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|getOSVersion
+argument_list|(
+name|LHS
+index|[
+literal|0
+index|]
+argument_list|,
+name|LHS
+index|[
+literal|1
+index|]
+argument_list|,
+name|LHS
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|LHS
+index|[
+literal|0
+index|]
+operator|!=
+name|Major
+condition|)
+return|return
+name|LHS
+index|[
+literal|0
+index|]
+operator|<
+name|Major
+return|;
+if|if
+condition|(
+name|LHS
+index|[
+literal|1
+index|]
+operator|!=
+name|Minor
+condition|)
+return|return
+name|LHS
+index|[
+literal|1
+index|]
+operator|<
+name|Minor
+return|;
+if|if
+condition|(
+name|LHS
+index|[
+literal|2
+index|]
+operator|!=
+name|Micro
+condition|)
+return|return
+name|LHS
+index|[
+literal|1
+index|]
+operator|<
+name|Micro
+return|;
+return|return
+name|false
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// isMacOSX - Is this a Mac OS X triple. For legacy reasons, we support both
+end_comment
+
+begin_comment
+comment|/// "darwin" and "osx" as OS X triples.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isMacOSX
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|Darwin
+operator|||
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|MacOSX
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// isOSDarwin - Is this a "Darwin" OS (OS X or iOS).
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isOSDarwin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isMacOSX
+argument_list|()
+operator|||
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|IOS
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// isOSWindows - Is this a "Windows" OS.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isOSWindows
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|Win32
+operator|||
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|Cygwin
+operator|||
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|MinGW32
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// isMacOSXVersionLT - Comparison function for checking OS X version
+end_comment
+
+begin_comment
+comment|/// compatibility, which handles supporting skewed version numbering schemes
+end_comment
+
+begin_comment
+comment|/// used by the "darwin" triples.
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|isMacOSXVersionLT
+argument_list|(
+name|unsigned
+name|Major
+argument_list|,
+name|unsigned
+name|Minor
+operator|=
+literal|0
+argument_list|,
+name|unsigned
+name|Micro
+operator|=
+literal|0
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|isMacOSX
+argument_list|()
+operator|&&
+literal|"Not an OS X triple!"
+argument_list|)
+expr_stmt|;
+comment|// If this is OS X, expect a sane version number.
+if|if
+condition|(
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|MacOSX
+condition|)
+return|return
+name|isOSVersionLT
+argument_list|(
+name|Major
+argument_list|,
+name|Minor
+argument_list|,
+name|Micro
+argument_list|)
+return|;
+comment|// Otherwise, compare to the "Darwin" number.
+name|assert
+argument_list|(
+name|Major
+operator|==
+literal|10
+operator|&&
+literal|"Unexpected major version"
+argument_list|)
+expr_stmt|;
+return|return
+name|isOSVersionLT
+argument_list|(
+name|Minor
+operator|+
+literal|4
+argument_list|,
+name|Micro
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+end_decl_stmt
 
 begin_comment
 comment|/// @}

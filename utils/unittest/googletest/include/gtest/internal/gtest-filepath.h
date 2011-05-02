@@ -527,7 +527,7 @@ name|void
 name|Normalize
 parameter_list|()
 function_decl|;
-comment|// Returns a pointer to the last occurence of a valid path separator in
+comment|// Returns a pointer to the last occurrence of a valid path separator in
 comment|// the FilePath. On Windows, for example, both '/' and '\' are valid path
 comment|// separators. Returns NULL if no path separator was found.
 specifier|const

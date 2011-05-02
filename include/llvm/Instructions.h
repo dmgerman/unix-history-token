@@ -2440,7 +2440,7 @@ name|CmpInst
 block|{
 name|protected
 operator|:
-comment|/// @brief Clone an indentical ICmpInst
+comment|/// @brief Clone an identical ICmpInst
 name|virtual
 name|ICmpInst
 operator|*
@@ -3009,7 +3009,7 @@ name|CmpInst
 block|{
 name|protected
 operator|:
-comment|/// @brief Clone an indentical FCmpInst
+comment|/// @brief Clone an identical FCmpInst
 name|virtual
 name|FCmpInst
 operator|*
@@ -7878,22 +7878,14 @@ block|}
 name|explicit
 name|PHINode
 argument_list|(
-specifier|const
-name|Type
-operator|*
-name|Ty
+argument|const Type *Ty
 argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|NameStr
-operator|=
+argument|unsigned NumReservedValues
+argument_list|,
+argument|const Twine&NameStr =
 literal|""
 argument_list|,
-name|Instruction
-operator|*
-name|InsertBefore
-operator|=
+argument|Instruction *InsertBefore =
 literal|0
 argument_list|)
 operator|:
@@ -7914,29 +7906,31 @@ argument_list|)
 block|,
 name|ReservedSpace
 argument_list|(
-literal|0
+argument|NumReservedValues *
+literal|2
 argument_list|)
 block|{
 name|setName
 argument_list|(
 name|NameStr
+argument_list|)
+block|;
+name|OperandList
+operator|=
+name|allocHungoffUses
+argument_list|(
+name|ReservedSpace
 argument_list|)
 block|;   }
 name|PHINode
 argument_list|(
-specifier|const
-name|Type
-operator|*
-name|Ty
+argument|const Type *Ty
 argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|NameStr
+argument|unsigned NumReservedValues
 argument_list|,
-name|BasicBlock
-operator|*
-name|InsertAtEnd
+argument|const Twine&NameStr
+argument_list|,
+argument|BasicBlock *InsertAtEnd
 argument_list|)
 operator|:
 name|Instruction
@@ -7956,12 +7950,20 @@ argument_list|)
 block|,
 name|ReservedSpace
 argument_list|(
-literal|0
+argument|NumReservedValues *
+literal|2
 argument_list|)
 block|{
 name|setName
 argument_list|(
 name|NameStr
+argument_list|)
+block|;
+name|OperandList
+operator|=
+name|allocHungoffUses
+argument_list|(
+name|ReservedSpace
 argument_list|)
 block|;   }
 name|protected
@@ -7975,12 +7977,16 @@ specifier|const
 block|;
 name|public
 operator|:
+comment|/// Constructors - NumReservedValues is a hint for the number of incoming
+comment|/// edges that this phi node will have (use 0 if you really have no idea).
 specifier|static
 name|PHINode
 operator|*
 name|Create
 argument_list|(
 argument|const Type *Ty
+argument_list|,
+argument|unsigned NumReservedValues
 argument_list|,
 argument|const Twine&NameStr =
 literal|""
@@ -7995,6 +8001,8 @@ name|PHINode
 argument_list|(
 name|Ty
 argument_list|,
+name|NumReservedValues
+argument_list|,
 name|NameStr
 argument_list|,
 name|InsertBefore
@@ -8008,6 +8016,8 @@ name|Create
 argument_list|(
 argument|const Type *Ty
 argument_list|,
+argument|unsigned NumReservedValues
+argument_list|,
 argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
@@ -8019,6 +8029,8 @@ name|PHINode
 argument_list|(
 name|Ty
 argument_list|,
+name|NumReservedValues
+argument_list|,
 name|NameStr
 argument_list|,
 name|InsertAtEnd
@@ -8029,23 +8041,6 @@ operator|~
 name|PHINode
 argument_list|()
 block|;
-comment|/// reserveOperandSpace - This method can be used to avoid repeated
-comment|/// reallocation of PHI operand lists by reserving space for the correct
-comment|/// number of operands before adding them.  Unlike normal vector reserves,
-comment|/// this method can also be used to trim the operand space.
-name|void
-name|reserveOperandSpace
-argument_list|(
-argument|unsigned NumValues
-argument_list|)
-block|{
-name|resizeOperands
-argument_list|(
-name|NumValues
-operator|*
-literal|2
-argument_list|)
-block|;   }
 comment|/// Provide fast operand accessors
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -8369,10 +8364,8 @@ literal|2
 operator|>
 name|ReservedSpace
 condition|)
-name|resizeOperands
-argument_list|(
-literal|0
-argument_list|)
+name|growOperands
+argument_list|()
 expr_stmt|;
 comment|// Get more space!
 comment|// Initialize some new operands.
@@ -8609,10 +8602,8 @@ block|}
 name|private
 operator|:
 name|void
-name|resizeOperands
-argument_list|(
-argument|unsigned NumOperands
-argument_list|)
+name|growOperands
+argument_list|()
 block|; }
 block|;
 name|template
@@ -9515,10 +9506,8 @@ argument|unsigned NumReserved
 argument_list|)
 block|;
 name|void
-name|resizeOperands
-argument_list|(
-argument|unsigned No
-argument_list|)
+name|growOperands
+argument_list|()
 block|;
 comment|// allocate space for exactly zero operands
 name|void
@@ -10187,10 +10176,8 @@ argument|unsigned NumDests
 argument_list|)
 block|;
 name|void
-name|resizeOperands
-argument_list|(
-argument|unsigned No
-argument_list|)
+name|growOperands
+argument_list|()
 block|;
 comment|// allocate space for exactly zero operands
 name|void

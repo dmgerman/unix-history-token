@@ -107,9 +107,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|LLVMContext
-decl_stmt|;
 comment|/// NoFolder - Create "constants" (actually, instructions) with no folding.
 name|class
 name|NoFolder
@@ -118,10 +115,7 @@ name|public
 label|:
 name|explicit
 name|NoFolder
-parameter_list|(
-name|LLVMContext
-modifier|&
-parameter_list|)
+parameter_list|()
 block|{}
 comment|//===--------------------------------------------------------------------===//
 comment|// Binary Operators

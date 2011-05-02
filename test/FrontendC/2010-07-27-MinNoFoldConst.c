@@ -92,7 +92,7 @@ comment|// 1631381461u * 1273463329u = 2077504466193943669, but 32-bit overflow 
 end_comment
 
 begin_comment
-comment|// this to 4047041419. This breaks the comparision implicit in the MIN().
+comment|// this to 4047041419. This breaks the comparison implicit in the MIN().
 end_comment
 
 begin_comment

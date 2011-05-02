@@ -468,6 +468,18 @@ name|bool
 name|isVariadic
 decl_stmt|;
 comment|// Provide transparent accessors to the operand list.
+name|bool
+name|empty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OperandList
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
 name|unsigned
 name|size
 argument_list|()
@@ -829,6 +841,9 @@ name|isCompare
 decl_stmt|;
 name|bool
 name|isMoveImm
+decl_stmt|;
+name|bool
+name|isBitcast
 decl_stmt|;
 name|bool
 name|isBarrier

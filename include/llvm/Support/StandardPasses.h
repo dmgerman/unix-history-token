@@ -248,6 +248,7 @@ argument_list|(
 name|PM
 argument_list|)
 expr_stmt|;
+comment|// If all optimizations are disabled, just run the always-inline pass.
 if|if
 condition|(
 name|OptimizationLevel
@@ -300,7 +301,6 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 comment|// Dead argument elimination
-block|}
 name|PM
 operator|->
 name|add
@@ -319,6 +319,7 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 comment|// Clean up after IPCP& DAE
+block|}
 comment|// Start of CallGraph SCC passes.
 if|if
 condition|(
@@ -554,15 +555,6 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 comment|// Unroll small loops
-name|PM
-operator|->
-name|add
-argument_list|(
-name|createInstructionCombiningPass
-argument_list|()
-argument_list|)
-expr_stmt|;
-comment|// Clean up after the unroller
 if|if
 condition|(
 name|OptimizationLevel
@@ -650,6 +642,15 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 comment|// Merge& remove BBs
+name|PM
+operator|->
+name|add
+argument_list|(
+name|createInstructionCombiningPass
+argument_list|()
+argument_list|)
+expr_stmt|;
+comment|// Clean up after everything.
 if|if
 condition|(
 name|UnitAtATime

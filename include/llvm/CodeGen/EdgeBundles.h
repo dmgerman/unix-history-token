@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/IntEqClasses.h"
 end_include
 
@@ -99,6 +105,20 @@ comment|///   2*BB->getNumber()   -> Ingoing bundle.
 comment|///   2*BB->getNumber()+1 -> Outgoing bundle.
 name|IntEqClasses
 name|EC
+block|;
+comment|/// Blocks - Map each bundle to a list of basic block numbers.
+name|SmallVector
+operator|<
+name|SmallVector
+operator|<
+name|unsigned
+block|,
+literal|8
+operator|>
+block|,
+literal|4
+operator|>
+name|Blocks
 block|;
 name|public
 operator|:
@@ -147,6 +167,23 @@ name|EC
 operator|.
 name|getNumClasses
 argument_list|()
+return|;
+block|}
+comment|/// getBlocks - Return an array of blocks that are connected to Bundle.
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|getBlocks
+argument_list|(
+argument|unsigned Bundle
+argument_list|)
+block|{
+return|return
+name|Blocks
+index|[
+name|Bundle
+index|]
 return|;
 block|}
 comment|/// getMachineFunction - Return the last machine function computed.

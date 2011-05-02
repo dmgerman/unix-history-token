@@ -10,7 +10,7 @@ name|__APPLE__
 end_ifdef
 
 begin_comment
-comment|/* test that X is layed out correctly when this pragma is used. */
+comment|/* test that X is laid out correctly when this pragma is used. */
 end_comment
 
 begin_pragma

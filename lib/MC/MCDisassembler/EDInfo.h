@@ -99,6 +99,8 @@ name|kOperandTypeARMAddrMode6
 block|,
 name|kOperandTypeARMAddrMode6Offset
 block|,
+name|kOperandTypeARMAddrMode7
+block|,
 name|kOperandTypeARMAddrModePC
 block|,
 name|kOperandTypeARMRegisterList
@@ -132,6 +134,8 @@ block|,
 name|kOperandTypeThumb2AddrModeImm8s4
 block|,
 name|kOperandTypeThumb2AddrModeImm8s4Offset
+block|,
+name|kOperandTypeThumb2AddrModeReg
 block|}
 enum|;
 end_enum

@@ -102,13 +102,6 @@ file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_decl_stmt
-name|using
-name|namespace
-name|std
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|namespace
 name|llvm
 block|{
@@ -140,7 +133,7 @@ name|class
 name|Function
 decl_stmt|;
 comment|/// JITCodeEmitter - This class defines two sorts of methods: those for
-comment|/// emitting the actual bytes of machine code, and those for emitting auxillary
+comment|/// emitting the actual bytes of machine code, and those for emitting auxiliary
 comment|/// structures, such as jump tables, relocations, etc.
 comment|///
 comment|/// Emission of machine code is complicated by the fact that we don't (in

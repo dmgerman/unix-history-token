@@ -95,12 +95,6 @@ directive|include
 file|<string>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -875,7 +869,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// HashString - Hash funtion for strings.
+comment|/// HashString - Hash function for strings.
 end_comment
 
 begin_comment

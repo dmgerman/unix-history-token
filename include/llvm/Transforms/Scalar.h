@@ -253,7 +253,25 @@ comment|//
 name|Pass
 modifier|*
 name|createLoopUnrollPass
-parameter_list|()
+parameter_list|(
+name|int
+name|Threshold
+init|=
+operator|-
+literal|1
+parameter_list|,
+name|int
+name|Count
+init|=
+operator|-
+literal|1
+parameter_list|,
+name|int
+name|AllowPartial
+init|=
+operator|-
+literal|1
+parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
@@ -529,15 +547,6 @@ comment|/// specific well-known (library) functions.
 name|FunctionPass
 modifier|*
 name|createSimplifyLibCallsPass
-parameter_list|()
-function_decl|;
-comment|//===----------------------------------------------------------------------===//
-comment|//
-comment|/// createSimplifyHalfPowrLibCallsPass - This is an experimental pass that
-comment|/// optimizes specific half_pow functions.
-name|FunctionPass
-modifier|*
-name|createSimplifyHalfPowrLibCallsPass
 parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//

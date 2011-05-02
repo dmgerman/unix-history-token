@@ -715,6 +715,56 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|// LLVM_BUILTIN_UNREACHABLE - On compilers which support it, expands
+end_comment
+
+begin_comment
+comment|// to an expression which states that it is undefined behavior for the
+end_comment
+
+begin_comment
+comment|// compiler to reach this point.  Otherwise is not defined.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+operator|||
+operator|(
+name|__GNUC__
+operator|>
+literal|4
+operator|)
+expr|\
+operator|||
+operator|(
+name|__GNUC__
+operator|==
+literal|4
+operator|&&
+name|__GNUC_MINOR__
+operator|>=
+literal|5
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_BUILTIN_UNREACHABLE
+value|__builtin_unreachable()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif

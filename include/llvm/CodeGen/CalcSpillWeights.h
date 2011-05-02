@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineFunctionPass.h"
+file|"llvm/CodeGen/SlotIndexes.h"
 end_include
 
 begin_include
@@ -88,21 +88,22 @@ name|unsigned
 name|Size
 parameter_list|)
 block|{
-comment|// The magic constant 200 corresponds to approx. 25 instructions since
-comment|// SlotIndexes allocate 8 slots per instruction.
-comment|//
-comment|// The constant is added to avoid depending too much on accidental SlotIndex
-comment|// gaps for small intervals. The effect is that small intervals have a spill
-comment|// weight that is mostly proportional to the number of uses, while large
-comment|// intervals get a spill weight that is closer to a use density.
-comment|//
+comment|// The constant 25 instructions is added to avoid depending too much on
+comment|// accidental SlotIndex gaps for small intervals. The effect is that small
+comment|// intervals have a spill weight that is mostly proportional to the number
+comment|// of uses, while large intervals get a spill weight that is closer to a use
+comment|// density.
 return|return
 name|UseDefFreq
 operator|/
 operator|(
 name|Size
 operator|+
-literal|200
+literal|25
+operator|*
+name|SlotIndex
+operator|::
+name|InstrDist
 operator|)
 return|;
 block|}
@@ -113,16 +114,16 @@ name|VirtRegAuxInfo
 block|{
 name|MachineFunction
 modifier|&
-name|mf_
+name|MF
 decl_stmt|;
 name|LiveIntervals
 modifier|&
-name|lis_
+name|LIS
 decl_stmt|;
 specifier|const
 name|MachineLoopInfo
 modifier|&
-name|loops_
+name|Loops
 decl_stmt|;
 name|DenseMap
 operator|<
@@ -130,7 +131,7 @@ name|unsigned
 operator|,
 name|float
 operator|>
-name|hint_
+name|Hint
 expr_stmt|;
 name|public
 label|:
@@ -150,17 +151,17 @@ operator|&
 name|loops
 argument_list|)
 operator|:
-name|mf_
+name|MF
 argument_list|(
 name|mf
 argument_list|)
 operator|,
-name|lis_
+name|LIS
 argument_list|(
 name|lis
 argument_list|)
 operator|,
-name|loops_
+name|Loops
 argument_list|(
 argument|loops
 argument_list|)

@@ -1293,8 +1293,11 @@ parameter_list|(
 name|int
 name|FD
 parameter_list|,
-name|uint64_t
+name|size_t
 name|FileSize
+parameter_list|,
+name|off_t
+name|Offset
 parameter_list|)
 function_decl|;
 comment|/// UnMapFilePages - Free pages mapped into the current process by
@@ -1311,7 +1314,7 @@ name|char
 modifier|*
 name|Base
 parameter_list|,
-name|uint64_t
+name|size_t
 name|FileSize
 parameter_list|)
 function_decl|;

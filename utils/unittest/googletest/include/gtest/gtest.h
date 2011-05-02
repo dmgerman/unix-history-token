@@ -3707,6 +3707,16 @@ name|4389
 name|)
 comment|// Temporarily disables warning on
 comment|// signed/unsigned mismatch.
+pragma|#
+directive|pragma
+name|warning
+name|(
+name|disable
+name|:
+name|4805
+name|)
+comment|// Temporarily disables warning on
+comment|// unsafe mix of types
 endif|#
 directive|endif
 if|if

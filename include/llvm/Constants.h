@@ -251,6 +251,28 @@ operator|&
 name|Context
 argument_list|)
 block|;
+specifier|static
+name|Constant
+operator|*
+name|getTrue
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|Ty
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getFalse
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|Ty
+argument_list|)
+block|;
 comment|/// If Ty is a vector type, return a Constant with a splat of the given
 comment|/// value. Otherwise return a ConstantInt for the given value.
 specifier|static
@@ -1532,6 +1554,21 @@ argument|unsigned NumVals
 argument_list|,
 argument|bool Packed
 argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|get
+argument_list|(
+argument|LLVMContext&Context
+argument_list|,
+argument|bool Packed
+argument_list|,
+argument|Constant * Val
+argument_list|,
+argument|...
+argument_list|)
+name|END_WITH_NULL
 block|;
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
@@ -3612,7 +3649,7 @@ argument_list|,
 argument|Constant *RHS
 argument_list|)
 block|;
-comment|/// Getelementptr form.  std::vector<Value*> is only accepted for convenience:
+comment|/// Getelementptr form.  Value* is only accepted for convenience;
 comment|/// all elements must be Constant's.
 comment|///
 specifier|static
@@ -3803,14 +3840,10 @@ specifier|const
 block|;
 comment|/// getIndices - Assert that this is an insertvalue or exactvalue
 comment|/// expression and return the list of indices.
-specifier|const
-name|SmallVector
+name|ArrayRef
 operator|<
 name|unsigned
-block|,
-literal|4
 operator|>
-operator|&
 name|getIndices
 argument_list|()
 specifier|const
@@ -3842,36 +3875,7 @@ name|Constant
 operator|*
 name|getWithOperands
 argument_list|(
-argument|const std::vector<Constant*>&Ops
-argument_list|)
-specifier|const
-block|{
-return|return
-name|getWithOperands
-argument_list|(
-operator|&
-name|Ops
-index|[
-literal|0
-index|]
-argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|Ops
-operator|.
-name|size
-argument_list|()
-argument_list|)
-return|;
-block|}
-name|Constant
-operator|*
-name|getWithOperands
-argument_list|(
-argument|Constant *const *Ops
-argument_list|,
-argument|unsigned NumOps
+argument|ArrayRef<Constant*> Ops
 argument_list|)
 specifier|const
 block|;
