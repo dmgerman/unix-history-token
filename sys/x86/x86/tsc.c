@@ -457,7 +457,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-asm|__asm __volatile("inl (%%dx)"
+asm|__asm __volatile("inl %w3, %0"
 block|:
 literal|"=a"
 operator|(
