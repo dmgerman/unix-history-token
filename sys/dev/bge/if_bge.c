@@ -5567,7 +5567,7 @@ name|bge_rx_jumbo_chain
 index|[
 name|i
 index|]
-operator|==
+operator|!=
 name|NULL
 condition|)
 block|{
