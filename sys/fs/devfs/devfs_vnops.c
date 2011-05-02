@@ -7704,6 +7704,13 @@ argument_list|,
 name|de_list
 argument_list|)
 expr_stmt|;
+name|devfs_rules_apply
+argument_list|(
+name|dmp
+argument_list|,
+name|de
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|devfs_allocv
