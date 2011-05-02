@@ -1605,6 +1605,13 @@ operator|(
 name|type_out
 operator|&&
 operator|(
+operator|!
+name|get_vectype_for_scalar_type
+argument_list|(
+name|type_out
+argument_list|)
+operator|||
+operator|(
 name|insn_data
 index|[
 name|icode
@@ -1624,6 +1631,7 @@ argument_list|(
 name|type_out
 argument_list|)
 argument_list|)
+operator|)
 operator|)
 operator|)
 condition|)

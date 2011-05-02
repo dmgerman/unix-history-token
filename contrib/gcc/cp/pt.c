@@ -6361,8 +6361,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|fns
+operator|==
+name|error_mark_node
 operator|||
 operator|!
 name|is_overloaded_fn
@@ -17707,6 +17708,26 @@ expr_stmt|;
 name|pop_tinst_level
 argument_list|()
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Returns the TINST_LEVEL which gives the original instantiation    context.  */
+end_comment
+
+begin_function
+name|tree
+name|outermost_tinst_level
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|tree_last
+argument_list|(
+name|current_tinst_level
+argument_list|)
+return|;
 block|}
 end_function
 
@@ -36465,6 +36486,15 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tparm
+operator|==
+name|error_mark_node
+condition|)
+return|return
+literal|1
+return|;
 if|if
 condition|(
 name|TEMPLATE_TYPE_LEVEL

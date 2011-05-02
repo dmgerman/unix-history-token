@@ -39571,7 +39571,7 @@ name|stmts_are_full_exprs_p
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* Set up the named return value optimization, if we can.  Candidate      variables are selected in check_return_value.  */
+comment|/* Set up the named return value optimization, if we can.  Candidate      variables are selected in check_return_expr.  */
 if|if
 condition|(
 name|current_function_return_value
