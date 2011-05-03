@@ -23,7 +23,7 @@ name|char
 modifier|*
 name|version
 init|=
-literal|"version 20091126 (FreeBSD)"
+literal|"version 20110501 (FreeBSD)"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,6 +102,14 @@ name|int
 name|dbg
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Awkfloat
+name|srand_seed
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -303,6 +311,15 @@ argument_list|(
 name|SIGFPE
 argument_list|,
 name|fpecatch
+argument_list|)
+expr_stmt|;
+name|srand_seed
+operator|=
+literal|1
+expr_stmt|;
+name|srand
+argument_list|(
+name|srand_seed
 argument_list|)
 expr_stmt|;
 name|yyin
@@ -707,11 +724,34 @@ index|]
 index|[
 literal|2
 index|]
-operator|!=
-literal|0
+operator|==
+literal|'\0'
+operator|&&
+operator|--
+name|argc
+operator|>
+literal|1
+operator|&&
+name|isclvar
+argument_list|(
+operator|(
+operator|++
+name|argv
+operator|)
+index|[
+literal|1
+index|]
+argument_list|)
 condition|)
-block|{
-comment|/* arg is -vsomething */
+name|setclvar
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|argv
@@ -722,7 +762,7 @@ index|[
 literal|2
 index|]
 operator|!=
-literal|0
+literal|'\0'
 condition|)
 name|setclvar
 argument_list|(
@@ -736,39 +776,6 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* arg is -v something */
-name|argc
-operator|--
-expr_stmt|;
-name|argv
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|argc
-operator|>
-literal|1
-operator|&&
-name|isclvar
-argument_list|(
-name|argv
-index|[
-literal|1
-index|]
-argument_list|)
-condition|)
-name|setclvar
-argument_list|(
-name|argv
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'d'
