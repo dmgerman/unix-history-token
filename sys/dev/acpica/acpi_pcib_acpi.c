@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -1703,7 +1709,7 @@ name|u_int
 name|flags
 parameter_list|)
 block|{
-comment|/*      * If no memory preference is given, use upper 32MB slot most      * bioses use for their memory window.  Typically other bridges      * before us get in the way to assert their preferences on memory.      * Hardcoding like this sucks, so a more MD/MI way needs to be      * found to do it.  This is typically only used on older laptops      * that don't have pci busses behind pci bridge, so assuming> 32MB      * is liekly OK.      */
+comment|/*      * If no memory preference is given, use upper 32MB slot most      * bioses use for their memory window.  Typically other bridges      * before us get in the way to assert their preferences on memory.      * Hardcoding like this sucks, so a more MD/MI way needs to be      * found to do it.  This is typically only used on older laptops      * that don't have pci busses behind pci bridge, so assuming> 32MB      * is likely OK.      *      * PCI-PCI bridges may allocate smaller ranges for their windows,      * but the heuristics here should apply to those, so we allow      * several different end addresses.      */
 if|if
 condition|(
 name|type
@@ -1714,10 +1720,16 @@ name|start
 operator|==
 literal|0UL
 operator|&&
+operator|(
 name|end
 operator|==
 operator|~
 literal|0UL
+operator|||
+name|end
+operator|==
+literal|0xffffffff
+operator|)
 condition|)
 name|start
 operator|=
@@ -1733,10 +1745,20 @@ name|start
 operator|==
 literal|0UL
 operator|&&
+operator|(
 name|end
 operator|==
 operator|~
 literal|0UL
+operator|||
+name|end
+operator|==
+literal|0xffff
+operator|||
+name|end
+operator|==
+literal|0xffffffff
+operator|)
 condition|)
 name|start
 operator|=
