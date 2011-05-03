@@ -33,6 +33,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * In userland a bigger cpuset structure is preferable in order to cope  * with kernel bumping of MAXCPU and still have a compatible layout.  */
+end_comment
+
 begin_define
 define|#
 directive|define
