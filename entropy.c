@@ -350,6 +350,13 @@ argument_list|(
 name|devnull
 argument_list|)
 expr_stmt|;
+name|closefrom
+argument_list|(
+name|STDERR_FILENO
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|original_uid

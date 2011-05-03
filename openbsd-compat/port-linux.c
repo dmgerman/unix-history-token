@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: port-linux.c,v 1.11.4.2 2011/02/04 00:43:08 djm Exp $ */
+comment|/* $Id: port-linux.c,v 1.11.4.3 2011/02/06 02:24:17 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -887,6 +887,7 @@ name|path
 operator|==
 name|NULL
 condition|)
+block|{
 name|setfscreatecon
 argument_list|(
 name|NULL
@@ -894,9 +895,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_if
 if|if
 condition|(
 name|matchpathcon
@@ -916,10 +914,10 @@ argument_list|(
 name|context
 argument_list|)
 expr_stmt|;
-end_if
+block|}
+end_function
 
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif
@@ -939,7 +937,7 @@ comment|/*  * The magic "don't kill me" values, old and new, as documented in eg
 end_comment
 
 begin_decl_stmt
-unit|static
+specifier|static
 name|int
 name|oom_adj_save
 init|=
