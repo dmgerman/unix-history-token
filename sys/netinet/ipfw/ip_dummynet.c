@@ -11271,29 +11271,25 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|static
-name|int
-name|init_done
-init|=
-literal|0
-decl_stmt|;
 if|if
 condition|(
+name|dn_cfg
+operator|.
 name|init_done
 condition|)
 return|return;
+name|printf
+argument_list|(
+literal|"DUMMYNET %p with IPv6 initialized (100409)\n"
+argument_list|,
+name|curvnet
+argument_list|)
+expr_stmt|;
+name|dn_cfg
+operator|.
 name|init_done
 operator|=
 literal|1
-expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"DUMMYNET with IPv6 initialized (100131)\n"
-argument_list|)
 expr_stmt|;
 comment|/* Set defaults here. MSVC does not accept initializers, 	 * and this is also useful for vimages 	 */
 comment|/* queue limits */
@@ -11460,14 +11456,6 @@ expr_stmt|;
 name|DN_LOCK_INIT
 argument_list|()
 expr_stmt|;
-name|ip_dn_ctl_ptr
-operator|=
-name|ip_dn_ctl
-expr_stmt|;
-name|ip_dn_io_ptr
-operator|=
-name|dummynet_io
-expr_stmt|;
 name|TASK_INIT
 argument_list|(
 operator|&
@@ -11477,7 +11465,7 @@ literal|0
 argument_list|,
 name|dummynet_task
 argument_list|,
-name|NULL
+name|curvnet
 argument_list|)
 expr_stmt|;
 name|dn_tq
@@ -11549,7 +11537,8 @@ specifier|static
 name|void
 name|ip_dn_destroy
 parameter_list|(
-name|void
+name|int
+name|last
 parameter_list|)
 block|{
 name|callout_drain
@@ -11561,6 +11550,18 @@ expr_stmt|;
 name|DN_BH_WLOCK
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|last
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s removing last instance\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 name|ip_dn_ctl_ptr
 operator|=
 name|NULL
@@ -11569,6 +11570,7 @@ name|ip_dn_io_ptr
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 name|dummynet_flush
 argument_list|()
 expr_stmt|;
@@ -11669,6 +11671,14 @@ block|}
 name|ip_dn_init
 argument_list|()
 expr_stmt|;
+name|ip_dn_ctl_ptr
+operator|=
+name|ip_dn_ctl
+expr_stmt|;
+name|ip_dn_io_ptr
+operator|=
+name|dummynet_io
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -11699,7 +11709,10 @@ return|;
 else|#
 directive|else
 name|ip_dn_destroy
-argument_list|()
+argument_list|(
+literal|1
+comment|/* last */
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -12066,6 +12079,24 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|DN_SI_SUB
+value|SI_SUB_PROTO_IFATTACHDOMAIN
+end_define
+
+begin_define
+define|#
+directive|define
+name|DN_MODEV_ORD
+value|(SI_ORDER_ANY - 128)
+end_define
+
+begin_comment
+comment|/* after ipfw */
+end_comment
+
 begin_expr_stmt
 name|DECLARE_MODULE
 argument_list|(
@@ -12073,11 +12104,9 @@ name|dummynet
 argument_list|,
 name|dummynet_mod
 argument_list|,
-name|SI_SUB_PROTO_IFATTACHDOMAIN
+name|DN_SI_SUB
 argument_list|,
-name|SI_ORDER_ANY
-operator|-
-literal|1
+name|DN_MODEV_ORD
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12107,6 +12136,22 @@ literal|3
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Starting up. Done in order after dummynet_modevent() has been called.  * VNET_SYSINIT is also called for each existing vnet and each new vnet.  */
+end_comment
+
+begin_comment
+comment|//VNET_SYSINIT(vnet_dn_init, DN_SI_SUB, DN_MODEV_ORD+2, ip_dn_init, NULL);
+end_comment
+
+begin_comment
+comment|/*  * Shutdown handlers up shop. These are done in REVERSE ORDER, but still  * after dummynet_modevent() has been called. Not called on reboot.  * VNET_SYSUNINIT is also called for each exiting vnet as it exits.  * or when the module is unloaded.  */
+end_comment
+
+begin_comment
+comment|//VNET_SYSUNINIT(vnet_dn_uninit, DN_SI_SUB, DN_MODEV_ORD+2, ip_dn_destroy, NULL);
+end_comment
 
 begin_comment
 comment|/* end of file */

@@ -124,6 +124,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -219,6 +225,10 @@ name|dn_parms
 name|dn_cfg
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|//VNET_DEFINE(struct dn_parms, _base_dn_cfg);
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -393,6 +403,24 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* wrapper to pass dn_cfg fields to SYSCTL_* */
+end_comment
+
+begin_comment
+comment|//#define DC(x)	(&(VNET_NAME(_base_dn_cfg).x))
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC
+parameter_list|(
+name|x
+parameter_list|)
+value|(&(dn_cfg.x))
+end_define
+
+begin_comment
 comment|/* parameters */
 end_comment
 
@@ -407,10 +435,10 @@ name|hash_size
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
-name|dn_cfg
-operator|.
+name|DC
+argument_list|(
 name|hash_size
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -430,10 +458,10 @@ name|pipe_slot_limit
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
-name|dn_cfg
-operator|.
+name|DC
+argument_list|(
 name|slot_limit
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -453,10 +481,10 @@ name|pipe_byte_limit
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
-name|dn_cfg
-operator|.
+name|DC
+argument_list|(
 name|byte_limit
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -476,10 +504,10 @@ name|io_fast
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
-name|dn_cfg
-operator|.
+name|DC
+argument_list|(
 name|io_fast
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -499,10 +527,10 @@ name|debug
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
-name|dn_cfg
-operator|.
+name|DC
+argument_list|(
 name|debug
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -522,10 +550,10 @@ name|expire
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
-name|dn_cfg
-operator|.
+name|DC
+argument_list|(
 name|expire
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -545,10 +573,10 @@ name|expire_cycle
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
-name|dn_cfg
-operator|.
+name|DC
+argument_list|(
 name|expire_cycle
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -572,10 +600,10 @@ name|red_lookup_depth
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
-name|dn_cfg
-operator|.
+name|DC
+argument_list|(
 name|red_lookup_depth
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -595,10 +623,10 @@ name|red_avg_pkt_size
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
-name|dn_cfg
-operator|.
+name|DC
+argument_list|(
 name|red_avg_pkt_size
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -618,10 +646,10 @@ name|red_max_pkt_size
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
-name|dn_cfg
-operator|.
+name|DC
+argument_list|(
 name|red_max_pkt_size
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -754,10 +782,10 @@ name|schk_count
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
-name|dn_cfg
-operator|.
+name|DC
+argument_list|(
 name|schk_count
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -777,10 +805,10 @@ name|si_count
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
-name|dn_cfg
-operator|.
+name|DC
+argument_list|(
 name|si_count
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -800,10 +828,10 @@ name|fsk_count
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
-name|dn_cfg
-operator|.
+name|DC
+argument_list|(
 name|fsk_count
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -823,10 +851,10 @@ name|queue_count
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
-name|dn_cfg
-operator|.
+name|DC
+argument_list|(
 name|queue_count
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -897,6 +925,12 @@ literal|"Number of packets dropped by dummynet."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_undef
+undef|#
+directive|undef
+name|DC
+end_undef
 
 begin_function_decl
 name|SYSEND
@@ -2413,6 +2447,16 @@ name|NULL
 block|}
 decl_stmt|;
 comment|/* queue to accumulate results */
+name|CURVNET_SET
+argument_list|(
+operator|(
+expr|struct
+name|vnet
+operator|*
+operator|)
+name|context
+argument_list|)
+expr_stmt|;
 name|DN_BH_WLOCK
 argument_list|()
 expr_stmt|;
@@ -2709,6 +2753,9 @@ name|q
 operator|.
 name|head
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 end_function
