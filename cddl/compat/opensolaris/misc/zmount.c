@@ -518,6 +518,14 @@ argument_list|,
 literal|",/ "
 argument_list|)
 control|)
+block|{
+if|if
+condition|(
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|)
 name|build_iovec
 argument_list|(
 operator|&
@@ -537,6 +545,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 name|rv
 operator|=
 name|nmount
