@@ -1603,7 +1603,9 @@ name|racct_alloc_resource
 argument_list|(
 name|pr
 operator|->
-name|pr_racct
+name|pr_prison_racct
+operator|->
+name|prr_racct
 argument_list|,
 name|resource
 argument_list|,
@@ -2508,7 +2510,9 @@ name|racct_alloc_resource
 argument_list|(
 name|pr
 operator|->
-name|pr_racct
+name|pr_prison_racct
+operator|->
+name|prr_racct
 argument_list|,
 name|resource
 argument_list|,
@@ -3140,7 +3144,9 @@ name|racct_sub_racct
 argument_list|(
 name|pr
 operator|->
-name|pr_racct
+name|pr_prison_racct
+operator|->
+name|prr_racct
 argument_list|,
 name|p
 operator|->
@@ -3167,7 +3173,9 @@ name|racct_add_racct
 argument_list|(
 name|pr
 operator|->
-name|pr_racct
+name|pr_prison_racct
+operator|->
+name|prr_racct
 argument_list|,
 name|p
 operator|->
@@ -3494,12 +3502,13 @@ name|UMA_ZONE_NOFREE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX: Move this somewhere. 	 */
-name|racct_create
-argument_list|(
-operator|&
 name|prison0
 operator|.
-name|pr_racct
+name|pr_prison_racct
+operator|=
+name|prison_racct_find
+argument_list|(
+literal|"0"
 argument_list|)
 expr_stmt|;
 block|}

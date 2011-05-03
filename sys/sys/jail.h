@@ -480,6 +480,12 @@ name|racct
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|prison_racct
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * This structure describes a prison.  It is pointed to by all struct  * ucreds's of the inmates.  pr_ref keeps track of them and is used to  * delete the struture when the last inmate is dead.  *  * Lock key:  *   (a) allprison_lock  *   (p) locked by pr_mtx  *   (c) set only during creation before the structure is shared, no mutex  *       required to read  *   (d) set only during destruction of jail, no mutex needed  */
 end_comment
@@ -585,11 +591,11 @@ name|pr_ip6
 decl_stmt|;
 comment|/* (p) v6 IPs of jail */
 name|struct
-name|racct
+name|prison_racct
 modifier|*
-name|pr_racct
+name|pr_prison_racct
 decl_stmt|;
-comment|/* (c) resource accounting */
+comment|/* (c) racct jail proxy */
 name|void
 modifier|*
 name|pr_sparep
@@ -663,6 +669,34 @@ name|HOSTUUIDLEN
 index|]
 decl_stmt|;
 comment|/* (p) jail hostuuid */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|prison_racct
+block|{
+name|LIST_ENTRY
+argument_list|(
+argument|prison_racct
+argument_list|)
+name|prr_next
+expr_stmt|;
+name|char
+name|prr_name
+index|[
+name|MAXHOSTNAMELEN
+index|]
+decl_stmt|;
+name|u_int
+name|prr_refcount
+decl_stmt|;
+name|struct
+name|racct
+modifier|*
+name|prr_racct
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1847,6 +1881,44 @@ parameter_list|,
 name|void
 modifier|*
 name|arg3
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|prison_racct
+modifier|*
+name|prison_racct_find
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|prison_racct_hold
+parameter_list|(
+name|struct
+name|prison_racct
+modifier|*
+name|prr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|prison_racct_free
+parameter_list|(
+name|struct
+name|prison_racct
+modifier|*
+name|prr
 parameter_list|)
 function_decl|;
 end_function_decl

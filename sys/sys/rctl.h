@@ -63,7 +63,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|prison
+name|prison_racct
 struct_decl|;
 end_struct_decl
 
@@ -114,9 +114,9 @@ modifier|*
 name|rs_loginclass
 decl_stmt|;
 name|struct
-name|prison
+name|prison_racct
 modifier|*
-name|rs_prison
+name|rs_prison_racct
 decl_stmt|;
 block|}
 name|rr_subject
