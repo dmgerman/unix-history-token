@@ -1324,9 +1324,6 @@ name|u32
 name|no_of_func
 decl_stmt|;
 name|u32
-name|all_multi_flag
-decl_stmt|;
-name|u32
 name|hw_fw_version
 decl_stmt|;
 name|u32

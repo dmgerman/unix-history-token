@@ -23,7 +23,7 @@ begin_define
 define|#
 directive|define
 name|GENERATED_BUILD_VERSION
-value|22708
+value|22770
 end_define
 
 begin_endif
