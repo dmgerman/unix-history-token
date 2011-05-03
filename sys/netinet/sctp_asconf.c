@@ -12865,6 +12865,7 @@ operator|)
 operator|&
 name|sin
 expr_stmt|;
+break|break;
 block|}
 endif|#
 directive|endif
