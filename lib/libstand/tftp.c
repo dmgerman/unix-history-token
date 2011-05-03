@@ -549,7 +549,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|TFTP_DEBUG
 name|printf
 argument_list|(
 literal|"tftp-error %d\n"
@@ -586,7 +586,7 @@ return|;
 default|default:
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|TFTP_DEBUG
 name|printf
 argument_list|(
 literal|"tftp type %d not handled\n"
@@ -1392,7 +1392,7 @@ block|{
 comment|/* no answer */
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|TFTP_DEBUG
 name|printf
 argument_list|(
 literal|"tftp: read error\n"
@@ -1453,7 +1453,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|TFTP_DEBUG
 name|printf
 argument_list|(
 literal|"tftp: invalid offset %d\n"
@@ -1541,7 +1541,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|TFTP_DEBUG
 name|printf
 argument_list|(
 literal|"tftp: block %d not found\n"
