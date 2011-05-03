@@ -17576,7 +17576,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|xcopyout
+name|ddi_copyout
 argument_list|(
 name|buf
 argument_list|,
@@ -17594,6 +17594,10 @@ argument_list|,
 name|zc
 operator|->
 name|zc_nvlist_dst_size
+argument_list|,
+name|zc
+operator|->
+name|zc_iflags
 argument_list|)
 expr_stmt|;
 block|}
