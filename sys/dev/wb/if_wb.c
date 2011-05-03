@@ -2781,6 +2781,11 @@ name|mii_data
 modifier|*
 name|mii
 decl_stmt|;
+name|struct
+name|mii_softc
+modifier|*
+name|miisc
+decl_stmt|;
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -2909,25 +2914,6 @@ operator|->
 name|wb_miibus
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mii
-operator|==
-name|NULL
-condition|)
-return|return;
-if|if
-condition|(
-name|mii
-operator|->
-name|mii_instance
-condition|)
-block|{
-name|struct
-name|mii_softc
-modifier|*
-name|miisc
-decl_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|miisc
@@ -2936,13 +2922,11 @@ argument|&mii->mii_phys
 argument_list|,
 argument|mii_list
 argument_list|)
-name|mii_phy_reset
+name|PHY_RESET
 argument_list|(
 name|miisc
 argument_list|)
 expr_stmt|;
-block|}
-return|return;
 block|}
 end_function
 
@@ -2974,15 +2958,6 @@ decl_stmt|;
 name|u_int32_t
 name|media
 decl_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|wb_miibus
-operator|==
-name|NULL
-condition|)
-return|return;
 name|mii
 operator|=
 name|device_get_softc
@@ -3068,7 +3043,6 @@ argument_list|,
 name|media
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
