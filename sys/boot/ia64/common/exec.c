@@ -228,7 +228,7 @@ expr_stmt|;
 while|while
 condition|(
 name|s
-operator|<
+operator|<=
 name|sz
 condition|)
 block|{

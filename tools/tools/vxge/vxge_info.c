@@ -13,6 +13,12 @@ directive|include
 file|"vxge_info.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -41,6 +47,28 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+name|uid_t
+name|uid
+decl_stmt|;
+name|uid
+operator|=
+name|getuid
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|uid
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"vxge-manage: Operation not permitted.\nExiting...\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|_exit0
+goto|;
+block|}
 if|if
 condition|(
 name|argc

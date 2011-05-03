@@ -810,14 +810,17 @@ name|struct
 name|env_var
 modifier|*
 name|ev
+name|__unused
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 specifier|const
 name|void
 modifier|*
 name|value
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -836,6 +839,7 @@ name|struct
 name|env_var
 modifier|*
 name|ev
+name|__unused
 parameter_list|)
 block|{
 return|return

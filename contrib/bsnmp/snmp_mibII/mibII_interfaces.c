@@ -1273,8 +1273,8 @@ operator|.
 name|ifmd_data
 operator|.
 name|ifi_link_state
-operator|==
-name|LINK_STATE_DOWN
+operator|!=
+name|LINK_STATE_UP
 condition|)
 name|value
 operator|->
