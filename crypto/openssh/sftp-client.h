@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-client.h,v 1.18 2009/08/18 18:36:20 djm Exp $ */
+comment|/* $OpenBSD: sftp-client.h,v 1.20 2010/12/04 00:18:01 djm Exp $ */
 end_comment
 
 begin_comment
@@ -112,6 +112,8 @@ parameter_list|,
 name|u_int
 parameter_list|,
 name|u_int
+parameter_list|,
+name|u_int64_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -381,6 +383,27 @@ end_comment
 begin_function_decl
 name|int
 name|do_rename
+parameter_list|(
+name|struct
+name|sftp_conn
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Link 'oldpath' to 'newpath' */
+end_comment
+
+begin_function_decl
+name|int
+name|do_hardlink
 parameter_list|(
 name|struct
 name|sftp_conn

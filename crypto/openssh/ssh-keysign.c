@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keysign.c,v 1.32 2010/08/04 06:08:40 djm Exp $ */
+comment|/* $OpenBSD: ssh-keysign.c,v 1.35 2010/08/31 12:33:38 djm Exp $ */
 end_comment
 
 begin_comment
@@ -869,7 +869,7 @@ argument_list|(
 literal|"could not open any host key"
 argument_list|)
 expr_stmt|;
-name|SSLeay_add_all_algorithms
+name|OpenSSL_add_all_algorithms
 argument_list|()
 expr_stmt|;
 for|for

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: openbsd-compat.h,v 1.50 2010/08/16 03:15:23 dtucker Exp $ */
+comment|/* $Id: openbsd-compat.h,v 1.51 2010/10/07 10:25:29 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1261,6 +1261,34 @@ parameter_list|(
 name|gid_t
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_TIMINGSAFE_BCMP
+end_ifndef
+
+begin_function_decl
+name|int
+name|timingsafe_bcmp
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl

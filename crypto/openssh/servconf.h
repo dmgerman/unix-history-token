@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: servconf.h,v 1.93 2010/05/07 11:30:30 djm Exp $ */
+comment|/* $OpenBSD: servconf.h,v 1.95 2010/11/13 23:27:50 djm Exp $ */
 end_comment
 
 begin_comment
@@ -319,6 +319,14 @@ name|int
 name|tcp_keep_alive
 decl_stmt|;
 comment|/* If true, set SO_KEEPALIVE. */
+name|int
+name|ip_qos_interactive
+decl_stmt|;
+comment|/* IP ToS/DSCP/class for interactive */
+name|int
+name|ip_qos_bulk
+decl_stmt|;
+comment|/* IP ToS/DSCP/class for bulk traffic */
 name|char
 modifier|*
 name|ciphers
@@ -329,6 +337,11 @@ modifier|*
 name|macs
 decl_stmt|;
 comment|/* Supported SSH2 macs. */
+name|char
+modifier|*
+name|kex_algorithms
+decl_stmt|;
+comment|/* SSH2 kex methods in order of preference. */
 name|int
 name|protocol
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-add.c,v 1.96 2010/05/14 00:47:22 djm Exp $ */
+comment|/* $OpenBSD: ssh-add.c,v 1.100 2010/08/31 12:33:38 djm Exp $ */
 end_comment
 
 begin_comment
@@ -173,6 +173,13 @@ name|_PATH_SSH_CLIENT_ID_RSA
 block|,
 name|_PATH_SSH_CLIENT_ID_DSA
 block|,
+ifdef|#
+directive|ifdef
+name|OPENSSL_HAS_ECC
+name|_PATH_SSH_CLIENT_ID_ECDSA
+block|,
+endif|#
+directive|endif
 name|_PATH_SSH_CLIENT_IDENTITY
 block|,
 name|NULL
@@ -1678,7 +1685,7 @@ expr_stmt|;
 name|seed_rng
 argument_list|()
 expr_stmt|;
-name|SSLeay_add_all_algorithms
+name|OpenSSL_add_all_algorithms
 argument_list|()
 expr_stmt|;
 comment|/* At first, get a connection to the authentication agent. */

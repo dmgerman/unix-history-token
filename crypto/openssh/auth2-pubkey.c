@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-pubkey.c,v 1.26 2010/06/29 23:16:46 djm Exp $ */
+comment|/* $OpenBSD: auth2-pubkey.c,v 1.27 2010/11/20 05:12:38 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -1106,7 +1106,6 @@ condition|;
 name|ep
 operator|++
 control|)
-empty_stmt|;
 empty_stmt|;
 name|line_opts
 operator|=

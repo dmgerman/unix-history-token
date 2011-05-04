@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: platform.h,v 1.4 2010/01/14 01:44:16 djm Exp $ */
+comment|/* $Id: platform.h,v 1.7 2010/11/05 03:47:01 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -11,6 +11,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
 end_include
 
 begin_function_decl
@@ -46,6 +52,37 @@ name|void
 name|platform_post_fork_child
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|platform_privileged_uidswap
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|platform_setusercontext
+parameter_list|(
+name|struct
+name|passwd
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|platform_setusercontext_post_groups
+parameter_list|(
+name|struct
+name|passwd
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

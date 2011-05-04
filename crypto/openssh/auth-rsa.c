@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-rsa.c,v 1.78 2010/07/13 23:13:16 djm Exp $ */
+comment|/* $OpenBSD: auth-rsa.c,v 1.79 2010/12/03 23:55:27 djm Exp $ */
 end_comment
 
 begin_comment
@@ -351,16 +351,6 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-if|if
-condition|(
-name|auth_key_is_revoked
-argument_list|(
-name|key
-argument_list|)
-condition|)
-return|return
-literal|0
-return|;
 comment|/* don't allow short keys */
 if|if
 condition|(
@@ -1030,6 +1020,15 @@ argument_list|,
 name|bits
 argument_list|)
 expr_stmt|;
+comment|/* Never accept a revoked key */
+if|if
+condition|(
+name|auth_key_is_revoked
+argument_list|(
+name|key
+argument_list|)
+condition|)
+break|break;
 comment|/* We have found the desired key. */
 comment|/* 		 * If our options do not allow this key to be used, 		 * do not send challenge. 		 */
 if|if

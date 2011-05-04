@@ -43,6 +43,12 @@ directive|include
 file|"acss.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"openbsd-compat/openssl-compat.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -147,8 +153,7 @@ name|char
 modifier|*
 name|in
 parameter_list|,
-name|unsigned
-name|int
+name|LIBCRYPTO_EVP_INL_TYPE
 name|inl
 parameter_list|)
 block|{

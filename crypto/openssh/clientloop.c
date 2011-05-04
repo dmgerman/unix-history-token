@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: clientloop.c,v 1.222 2010/07/19 09:15:12 djm Exp $ */
+comment|/* $OpenBSD: clientloop.c,v 1.231 2011/01/16 12:05:59 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1220,11 +1220,9 @@ argument_list|(
 name|MAXPATHLEN
 argument_list|)
 expr_stmt|;
-name|strlcpy
+name|mktemp_proto
 argument_list|(
 name|xauthdir
-argument_list|,
-literal|"/tmp/ssh-XXXXXXXXXX"
 argument_list|,
 name|MAXPATHLEN
 argument_list|)
@@ -2035,7 +2033,9 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"Timeout, server not responding."
+literal|"Timeout, server %s not responding."
+argument_list|,
+name|host
 argument_list|)
 expr_stmt|;
 name|cleanup_exit
@@ -6054,7 +6054,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Output any buffered data for stdout. */
-while|while
+if|if
 condition|(
 name|buffer_len
 argument_list|(
@@ -6067,8 +6067,10 @@ condition|)
 block|{
 name|len
 operator|=
-name|write
+name|atomicio
 argument_list|(
+name|vwrite
+argument_list|,
 name|fileno
 argument_list|(
 name|stdout
@@ -6090,17 +6092,26 @@ expr_stmt|;
 if|if
 condition|(
 name|len
-operator|<=
+operator|<
 literal|0
+operator|||
+operator|(
+name|u_int
+operator|)
+name|len
+operator|!=
+name|buffer_len
+argument_list|(
+operator|&
+name|stdout_buffer
+argument_list|)
 condition|)
-block|{
 name|error
 argument_list|(
 literal|"Write failed flushing stdout buffer."
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
+else|else
 name|buffer_consume
 argument_list|(
 operator|&
@@ -6111,7 +6122,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Output any buffered data for stderr. */
-while|while
+if|if
 condition|(
 name|buffer_len
 argument_list|(
@@ -6124,8 +6135,10 @@ condition|)
 block|{
 name|len
 operator|=
-name|write
+name|atomicio
 argument_list|(
+name|vwrite
+argument_list|,
 name|fileno
 argument_list|(
 name|stderr
@@ -6147,17 +6160,26 @@ expr_stmt|;
 if|if
 condition|(
 name|len
-operator|<=
+operator|<
 literal|0
+operator|||
+operator|(
+name|u_int
+operator|)
+name|len
+operator|!=
+name|buffer_len
+argument_list|(
+operator|&
+name|stderr_buffer
+argument_list|)
 condition|)
-block|{
 name|error
 argument_list|(
 literal|"Write failed flushing stderr buffer."
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
+else|else
 name|buffer_consume
 argument_list|(
 operator|&
@@ -6238,8 +6260,18 @@ name|verbose
 argument_list|(
 literal|"Transferred: sent %llu, received %llu bytes, in %.1f seconds"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|obytes
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|ibytes
 argument_list|,
 name|total_time
@@ -7645,6 +7677,10 @@ block|}
 if|if
 condition|(
 name|reply
+operator|&&
+name|c
+operator|!=
+name|NULL
 condition|)
 block|{
 name|packet_start
@@ -7825,6 +7861,19 @@ argument_list|(
 literal|"client_session2_setup: channel %d: unknown channel"
 argument_list|,
 name|id
+argument_list|)
+expr_stmt|;
+name|packet_set_interactive
+argument_list|(
+name|want_tty
+argument_list|,
+name|options
+operator|.
+name|ip_qos_interactive
+argument_list|,
+name|options
+operator|.
+name|ip_qos_bulk
 argument_list|)
 expr_stmt|;
 if|if
@@ -8654,6 +8703,9 @@ name|options
 operator|.
 name|control_path
 argument_list|)
+expr_stmt|;
+name|ssh_kill_proxy_command
+argument_list|()
 expr_stmt|;
 name|_exit
 argument_list|(

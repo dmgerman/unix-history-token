@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: cipher-ctr.c,v 1.10 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: cipher-ctr.c,v 1.11 2010/10/01 23:05:32 djm Exp $ */
 end_comment
 
 begin_comment
@@ -99,7 +99,7 @@ parameter_list|,
 name|u_char
 modifier|*
 parameter_list|,
-name|u_int
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -134,7 +134,7 @@ name|u_char
 modifier|*
 name|ctr
 parameter_list|,
-name|u_int
+name|size_t
 name|len
 parameter_list|)
 block|{
@@ -187,7 +187,7 @@ name|u_char
 modifier|*
 name|src
 parameter_list|,
-name|u_int
+name|LIBCRYPTO_EVP_INL_TYPE
 name|len
 parameter_list|)
 block|{
@@ -196,7 +196,7 @@ name|ssh_aes_ctr_ctx
 modifier|*
 name|c
 decl_stmt|;
-name|u_int
+name|size_t
 name|n
 init|=
 literal|0
@@ -500,7 +500,7 @@ name|u_char
 modifier|*
 name|iv
 parameter_list|,
-name|u_int
+name|size_t
 name|len
 parameter_list|)
 block|{

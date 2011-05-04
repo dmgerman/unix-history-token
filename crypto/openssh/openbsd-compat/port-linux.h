@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: port-linux.h,v 1.4 2009/12/08 02:39:48 dtucker Exp $ */
+comment|/* $Id: port-linux.h,v 1.4.10.1 2011/02/04 00:42:21 djm Exp $ */
 end_comment
 
 begin_comment
@@ -61,6 +61,17 @@ end_function_decl
 begin_function_decl
 name|void
 name|ssh_selinux_change_context
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ssh_selinux_setfscreatecon
 parameter_list|(
 specifier|const
 name|char

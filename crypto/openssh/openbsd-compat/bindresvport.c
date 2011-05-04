@@ -307,12 +307,10 @@ literal|0
 condition|)
 name|port
 operator|=
-operator|(
-name|arc4random
-argument_list|()
-operator|%
+name|arc4random_uniform
+argument_list|(
 name|NPORTS
-operator|)
+argument_list|)
 operator|+
 name|STARTPORT
 expr_stmt|;

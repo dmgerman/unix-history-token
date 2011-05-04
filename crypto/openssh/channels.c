@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: channels.c,v 1.309 2010/08/05 13:08:42 djm Exp $ */
+comment|/* $OpenBSD: channels.c,v 1.310 2010/11/24 01:24:14 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1559,27 +1559,6 @@ modifier|*
 name|c
 parameter_list|)
 block|{
-name|debug3
-argument_list|(
-literal|"channel %d: close_fds r %d w %d e %d"
-argument_list|,
-name|c
-operator|->
-name|self
-argument_list|,
-name|c
-operator|->
-name|rfd
-argument_list|,
-name|c
-operator|->
-name|wfd
-argument_list|,
-name|c
-operator|->
-name|efd
-argument_list|)
-expr_stmt|;
 name|channel_close_fd
 argument_list|(
 operator|&

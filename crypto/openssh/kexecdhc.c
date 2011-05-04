@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kexdhc.c,v 1.12 2010/11/10 01:33:07 djm Exp $ */
+comment|/* $OpenBSD: kexecdhc.c,v 1.2 2010/09/22 05:01:29 djm Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2001 Markus Friedl.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2001 Markus Friedl.  All rights reserved.  * Copyright (c) 2010 Damien Miller.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -17,18 +17,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/dh.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
 end_include
 
 begin_include
@@ -103,29 +91,43 @@ directive|include
 file|"ssh2.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_HAS_ECC
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<openssl/ecdh.h>
+end_include
+
 begin_function
 name|void
-name|kexdh_client
+name|kexecdh_client
 parameter_list|(
 name|Kex
 modifier|*
 name|kex
 parameter_list|)
 block|{
+name|EC_KEY
+modifier|*
+name|client_key
+decl_stmt|;
+name|EC_POINT
+modifier|*
+name|server_public
+decl_stmt|;
+specifier|const
+name|EC_GROUP
+modifier|*
+name|group
+decl_stmt|;
 name|BIGNUM
 modifier|*
-name|dh_server_pub
-init|=
-name|NULL
-decl_stmt|,
-modifier|*
 name|shared_secret
-init|=
-name|NULL
-decl_stmt|;
-name|DH
-modifier|*
-name|dh
 decl_stmt|;
 name|Key
 modifier|*
@@ -159,68 +161,91 @@ decl_stmt|,
 name|hashlen
 decl_stmt|;
 name|int
-name|kout
+name|curve_nid
 decl_stmt|;
-comment|/* generate and send 'e', client DH public key */
-switch|switch
+if|if
 condition|(
+operator|(
+name|curve_nid
+operator|=
+name|kex_ecdh_name_to_nid
+argument_list|(
 name|kex
 operator|->
-name|kex_type
+name|name
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
 condition|)
-block|{
-case|case
-name|KEX_DH_GRP1_SHA1
-case|:
-name|dh
-operator|=
-name|dh_new_group1
-argument_list|()
-expr_stmt|;
-break|break;
-case|case
-name|KEX_DH_GRP14_SHA1
-case|:
-name|dh
-operator|=
-name|dh_new_group14
-argument_list|()
-expr_stmt|;
-break|break;
-default|default:
 name|fatal
 argument_list|(
-literal|"%s: Unexpected KEX type %d"
+literal|"%s: unsupported ECDH curve \"%s\""
 argument_list|,
 name|__func__
 argument_list|,
 name|kex
 operator|->
-name|kex_type
+name|name
 argument_list|)
 expr_stmt|;
-block|}
-name|dh_gen_key
+if|if
+condition|(
+operator|(
+name|client_key
+operator|=
+name|EC_KEY_new_by_curve_name
 argument_list|(
-name|dh
+name|curve_nid
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: EC_KEY_new_by_curve_name failed"
 argument_list|,
-name|kex
-operator|->
-name|we_need
-operator|*
-literal|8
+name|__func__
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|EC_KEY_generate_key
+argument_list|(
+name|client_key
+argument_list|)
+operator|!=
+literal|1
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: EC_KEY_generate_key failed"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|group
+operator|=
+name|EC_KEY_get0_group
+argument_list|(
+name|client_key
 argument_list|)
 expr_stmt|;
 name|packet_start
 argument_list|(
-name|SSH2_MSG_KEXDH_INIT
+name|SSH2_MSG_KEX_ECDH_INIT
 argument_list|)
 expr_stmt|;
-name|packet_put_bignum2
+name|packet_put_ecpoint
 argument_list|(
-name|dh
-operator|->
-name|pub_key
+name|group
+argument_list|,
+name|EC_KEY_get0_public_key
+argument_list|(
+name|client_key
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|packet_send
@@ -228,55 +253,37 @@ argument_list|()
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"sending SSH2_MSG_KEXDH_INIT"
+literal|"sending SSH2_MSG_KEX_ECDH_INIT"
 argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG_KEXDH
-name|DHparams_print_fp
+name|DEBUG_KEXECDH
+name|fputs
 argument_list|(
-name|stderr
+literal|"client private key:\n"
 argument_list|,
-name|dh
+name|stderr
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|key_dump_ec_key
 argument_list|(
-name|stderr
-argument_list|,
-literal|"pub= "
-argument_list|)
-expr_stmt|;
-name|BN_print_fp
-argument_list|(
-name|stderr
-argument_list|,
-name|dh
-operator|->
-name|pub_key
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
+name|client_key
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 name|debug
 argument_list|(
-literal|"expecting SSH2_MSG_KEXDH_REPLY"
+literal|"expecting SSH2_MSG_KEX_ECDH_REPLY"
 argument_list|)
 expr_stmt|;
 name|packet_read_expect
 argument_list|(
-name|SSH2_MSG_KEXDH_REPLY
+name|SSH2_MSG_KEX_ECDH_REPLY
 argument_list|)
 expr_stmt|;
-comment|/* key, cert */
+comment|/* hostkey */
 name|server_host_key_blob
 operator|=
 name|packet_get_string
@@ -350,60 +357,67 @@ argument_list|(
 literal|"server_host_key verification failed"
 argument_list|)
 expr_stmt|;
-comment|/* DH parameter f, server public DH key */
+comment|/* Q_S, server public key */
 if|if
 condition|(
 operator|(
-name|dh_server_pub
+name|server_public
 operator|=
-name|BN_new
-argument_list|()
+name|EC_POINT_new
+argument_list|(
+name|group
+argument_list|)
 operator|)
 operator|==
 name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"dh_server_pub == NULL"
+literal|"%s: EC_POINT_new failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
-name|packet_get_bignum2
+name|packet_get_ecpoint
 argument_list|(
-name|dh_server_pub
+name|group
+argument_list|,
+name|server_public
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|key_ec_validate_public
+argument_list|(
+name|group
+argument_list|,
+name|server_public
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: invalid server public key"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG_KEXDH
-name|fprintf
+name|DEBUG_KEXECDH
+name|fputs
 argument_list|(
-name|stderr
+literal|"server public key:\n"
 argument_list|,
-literal|"dh_server_pub= "
+name|stderr
 argument_list|)
 expr_stmt|;
-name|BN_print_fp
+name|key_dump_ec_point
 argument_list|(
-name|stderr
+name|group
 argument_list|,
-name|dh_server_pub
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|debug
-argument_list|(
-literal|"bits %d"
-argument_list|,
-name|BN_num_bits
-argument_list|(
-name|dh_server_pub
-argument_list|)
+name|server_public
 argument_list|)
 expr_stmt|;
 endif|#
@@ -420,27 +434,18 @@ expr_stmt|;
 name|packet_check_eom
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|dh_pub_is_valid
-argument_list|(
-name|dh
-argument_list|,
-name|dh_server_pub
-argument_list|)
-condition|)
-name|packet_disconnect
-argument_list|(
-literal|"bad server public DH value"
-argument_list|)
-expr_stmt|;
 name|klen
 operator|=
-name|DH_size
+operator|(
+name|EC_GROUP_get_degree
 argument_list|(
-name|dh
+name|group
 argument_list|)
+operator|+
+literal|7
+operator|)
+operator|/
+literal|8
 expr_stmt|;
 name|kbuf
 operator|=
@@ -451,36 +456,41 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|kout
-operator|=
-name|DH_compute_key
+name|ECDH_compute_key
 argument_list|(
 name|kbuf
 argument_list|,
-name|dh_server_pub
+name|klen
 argument_list|,
-name|dh
+name|server_public
+argument_list|,
+name|client_key
+argument_list|,
+name|NULL
 argument_list|)
+operator|!=
+operator|(
+name|int
 operator|)
-operator|<
-literal|0
+name|klen
 condition|)
 name|fatal
 argument_list|(
-literal|"DH_compute_key: failed"
+literal|"%s: ECDH_compute_key failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG_KEXDH
+name|DEBUG_KEXECDH
 name|dump_digest
 argument_list|(
 literal|"shared secret"
 argument_list|,
 name|kbuf
 argument_list|,
-name|kout
+name|klen
 argument_list|)
 expr_stmt|;
 endif|#
@@ -498,7 +508,9 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"kexdh_client: BN_new failed"
+literal|"%s: BN_new failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -507,7 +519,7 @@ name|BN_bin2bn
 argument_list|(
 name|kbuf
 argument_list|,
-name|kout
+name|klen
 argument_list|,
 name|shared_secret
 argument_list|)
@@ -516,7 +528,9 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"kexdh_client: BN_bin2bn failed"
+literal|"%s: BN_bin2bn failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|memset
@@ -534,8 +548,14 @@ name|kbuf
 argument_list|)
 expr_stmt|;
 comment|/* calc and verify H */
-name|kex_dh_hash
+name|kex_ecdh_hash
 argument_list|(
+name|kex
+operator|->
+name|evp_md
+argument_list|,
+name|group
+argument_list|,
 name|kex
 operator|->
 name|client_version_string
@@ -580,11 +600,12 @@ name|server_host_key_blob
 argument_list|,
 name|sbloblen
 argument_list|,
-name|dh
-operator|->
-name|pub_key
+name|EC_KEY_get0_public_key
+argument_list|(
+name|client_key
+argument_list|)
 argument_list|,
-name|dh_server_pub
+name|server_public
 argument_list|,
 name|shared_secret
 argument_list|,
@@ -600,14 +621,14 @@ argument_list|(
 name|server_host_key_blob
 argument_list|)
 expr_stmt|;
-name|BN_clear_free
+name|EC_POINT_clear_free
 argument_list|(
-name|dh_server_pub
+name|server_public
 argument_list|)
 expr_stmt|;
-name|DH_free
+name|EC_KEY_free
 argument_list|(
-name|dh
+name|client_key
 argument_list|)
 expr_stmt|;
 if|if
@@ -706,6 +727,41 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* OPENSSL_HAS_ECC */
+end_comment
+
+begin_function
+name|void
+name|kexecdh_client
+parameter_list|(
+name|Kex
+modifier|*
+name|kex
+parameter_list|)
+block|{
+name|fatal
+argument_list|(
+literal|"ECC support is not enabled"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* OPENSSL_HAS_ECC */
+end_comment
 
 end_unit
 
