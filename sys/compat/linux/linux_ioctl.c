@@ -182,6 +182,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/tty.h>
 end_include
 
@@ -333,6 +339,26 @@ argument_list|(
 name|LINUX_IFNAMSIZ
 operator|==
 name|IFNAMSIZ
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|linuxulator_v4l
+argument_list|,
+literal|"V4L ioctl wrapper support in the linuxulator"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|linuxulator_v4l2
+argument_list|,
+literal|"V4L2 ioctl wrapper support in the linuxulator"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
