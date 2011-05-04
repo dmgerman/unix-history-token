@@ -529,7 +529,7 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-name|printf
+name|vprintf
 argument_list|(
 name|fmt
 argument_list|,
