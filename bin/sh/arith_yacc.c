@@ -361,6 +361,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|uflag
+operator|&&
+name|str
+operator|==
+name|NULL
+condition|)
+name|yyerror
+argument_list|(
+literal|"variable not set"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|str
 operator|==
 name|NULL
