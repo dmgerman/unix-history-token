@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: myproposal.h,v 1.25 2010/04/16 01:47:26 djm Exp $ */
+comment|/* $OpenBSD: myproposal.h,v 1.27 2010/09/01 22:42:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -13,24 +13,34 @@ directive|include
 file|<openssl/opensslv.h>
 end_include
 
-begin_comment
-comment|/* Old OpenSSL doesn't support what we need for DHGEX-sha256 */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|OPENSSL_VERSION_NUMBER
-operator|<
-literal|0x00907000L
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_HAS_ECC
+end_ifdef
 
 begin_define
 define|#
 directive|define
-name|KEX_DEFAULT_KEX
+name|KEX_ECDH_METHODS
 define|\
-value|"diffie-hellman-group-exchange-sha1," \ 	"diffie-hellman-group14-sha1," \ 	"diffie-hellman-group1-sha1"
+value|"ecdh-sha2-nistp256," \ 	"ecdh-sha2-nistp384," \ 	"ecdh-sha2-nistp521,"
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOSTKEY_ECDSA_CERT_METHODS
+define|\
+value|"ecdsa-sha2-nistp256-cert-v01@openssh.com," \ 	"ecdsa-sha2-nistp384-cert-v01@openssh.com," \ 	"ecdsa-sha2-nistp521-cert-v01@openssh.com,"
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOSTKEY_ECDSA_METHODS
+define|\
+value|"ecdsa-sha2-nistp256," \ 	"ecdsa-sha2-nistp384," \ 	"ecdsa-sha2-nistp521,"
 end_define
 
 begin_else
@@ -41,9 +51,55 @@ end_else
 begin_define
 define|#
 directive|define
-name|KEX_DEFAULT_KEX
+name|KEX_ECDH_METHODS
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOSTKEY_ECDSA_CERT_METHODS
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOSTKEY_ECDSA_METHODS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Old OpenSSL doesn't support what we need for DHGEX-sha256 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|OPENSSL_VERSION_NUMBER
+operator|>=
+literal|0x00907000L
+end_if
+
+begin_define
+define|#
+directive|define
+name|KEX_SHA256_METHODS
 define|\
-value|"diffie-hellman-group-exchange-sha256," \ 	"diffie-hellman-group-exchange-sha1," \ 	"diffie-hellman-group14-sha1," \ 	"diffie-hellman-group1-sha1"
+value|"diffie-hellman-group-exchange-sha256,"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|KEX_SHA256_METHODS
 end_define
 
 begin_endif
@@ -54,9 +110,17 @@ end_endif
 begin_define
 define|#
 directive|define
+name|KEX_DEFAULT_KEX
+define|\
+value|KEX_ECDH_METHODS \ 	KEX_SHA256_METHODS \ 	"diffie-hellman-group-exchange-sha1," \ 	"diffie-hellman-group14-sha1," \ 	"diffie-hellman-group1-sha1"
+end_define
+
+begin_define
+define|#
+directive|define
 name|KEX_DEFAULT_PK_ALG
 define|\
-value|"ssh-rsa-cert-v01@openssh.com," \ 				"ssh-dss-cert-v01@openssh.com," \ 				"ssh-rsa-cert-v00@openssh.com," \  				"ssh-dss-cert-v00@openssh.com," \  				"ssh-rsa,ssh-dss"
+value|HOSTKEY_ECDSA_CERT_METHODS \ 	"ssh-rsa-cert-v01@openssh.com," \ 	"ssh-dss-cert-v01@openssh.com," \ 	"ssh-rsa-cert-v00@openssh.com," \ 	"ssh-dss-cert-v00@openssh.com," \ 	HOSTKEY_ECDSA_METHODS \ 	"ssh-rsa," \ 	"ssh-dss"
 end_define
 
 begin_define

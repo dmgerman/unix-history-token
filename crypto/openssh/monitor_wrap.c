@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor_wrap.c,v 1.69 2010/03/07 11:57:13 dtucker Exp $ */
+comment|/* $OpenBSD: monitor_wrap.c,v 1.70 2010/08/31 11:54:45 djm Exp $ */
 end_comment
 
 begin_comment
@@ -271,6 +271,12 @@ begin_include
 include|#
 directive|include
 file|"jpake.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"uuencode.h"
 end_include
 
 begin_include

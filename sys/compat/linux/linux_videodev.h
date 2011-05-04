@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * This header comes from linux, but it has no license. The author  * (Alan Cox @ Redhat) gave explicit permissions to use it in FreeBSD.  * The freeBSD vendor branch for v4l gives a more detailed description  * about this.  *  * $FreeBSD$  */
+comment|/*  * This header comes from linux, but it has no license. The author  * (Alan Cox @ Redhat) gave explicit permissions to use it in FreeBSD.  * The FreeBSD vendor branch for v4l gives a more detailed description  * about this in the README.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: dns.c,v 1.26 2010/02/26 20:29:54 djm Exp $ */
+comment|/* $OpenBSD: dns.c,v 1.27 2010/08/31 11:54:45 djm Exp $ */
 end_comment
 
 begin_comment
@@ -244,6 +244,7 @@ operator|=
 name|SSHFP_KEY_DSA
 expr_stmt|;
 break|break;
+comment|/* XXX KEY_ECDSA */
 default|default:
 operator|*
 name|algorithm

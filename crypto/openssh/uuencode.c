@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: uuencode.c,v 1.25 2009/03/05 11:30:50 djm Exp $ */
+comment|/* $OpenBSD: uuencode.c,v 1.26 2010/08/31 11:54:45 djm Exp $ */
 end_comment
 
 begin_comment
@@ -206,6 +206,7 @@ name|FILE
 modifier|*
 name|fp
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|data

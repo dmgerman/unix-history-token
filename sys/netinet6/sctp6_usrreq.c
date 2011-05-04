@@ -5013,15 +5013,9 @@ name|EINVAL
 return|;
 block|}
 block|}
-else|else
 endif|#
 directive|endif
 comment|/* INET */
-name|addr
-operator|=
-name|addr
-expr_stmt|;
-comment|/* for true v6 address case */
 comment|/* Now do we connect? */
 if|if
 condition|(

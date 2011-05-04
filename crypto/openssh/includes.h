@@ -108,6 +108,11 @@ argument_list|(
 name|GLOB_HAS_GL_MATCHC
 argument_list|)
 operator|&&
+name|defined
+argument_list|(
+name|GLOB_HAS_GL_STATV
+argument_list|)
+operator|&&
 expr|\
 name|defined
 argument_list|(

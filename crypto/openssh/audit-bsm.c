@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: audit-bsm.c,v 1.6 2008/02/25 10:05:04 dtucker Exp $ */
+comment|/* $Id: audit-bsm.c,v 1.7 2011/01/17 10:15:29 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -1661,10 +1661,10 @@ begin_function
 name|void
 name|audit_session_open
 parameter_list|(
-specifier|const
-name|char
+name|struct
+name|logininfo
 modifier|*
-name|ttyn
+name|li
 parameter_list|)
 block|{
 comment|/* not implemented */
@@ -1675,10 +1675,10 @@ begin_function
 name|void
 name|audit_session_close
 parameter_list|(
-specifier|const
-name|char
+name|struct
+name|logininfo
 modifier|*
-name|ttyn
+name|li
 parameter_list|)
 block|{
 comment|/* not implemented */

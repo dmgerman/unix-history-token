@@ -12327,10 +12327,6 @@ argument_list|(
 name|p_size
 argument_list|)
 expr_stmt|;
-name|lookup_used
-operator|=
-literal|1
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -12398,10 +12394,6 @@ expr|struct
 name|sctp_ipv4addr_param
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|lookup_used
-operator|=
-literal|1
 expr_stmt|;
 block|}
 block|}
@@ -12865,6 +12857,7 @@ operator|)
 operator|&
 name|sin
 expr_stmt|;
+break|break;
 block|}
 endif|#
 directive|endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor.c,v 1.108 2010/07/13 23:13:16 djm Exp $ */
+comment|/* $OpenBSD: monitor.c,v 1.110 2010/09/09 10:45:45 djm Exp $ */
 end_comment
 
 begin_comment
@@ -3066,7 +3066,7 @@ operator|&
 name|datlen
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Supported KEX types will only return SHA1 (20 byte) or 	 * SHA256 (32 byte) hashes 	 */
+comment|/* 	 * Supported KEX types use SHA1 (20 bytes), SHA256 (32 bytes), 	 * SHA384 (48 bytes) and SHA512 (64 bytes). 	 */
 if|if
 condition|(
 name|datlen
@@ -3076,6 +3076,14 @@ operator|&&
 name|datlen
 operator|!=
 literal|32
+operator|&&
+name|datlen
+operator|!=
+literal|48
+operator|&&
+name|datlen
+operator|!=
+literal|64
 condition|)
 name|fatal
 argument_list|(
@@ -8574,6 +8582,15 @@ name|KEX_DH_GEX_SHA256
 index|]
 operator|=
 name|kexgex_server
+expr_stmt|;
+name|kex
+operator|->
+name|kex
+index|[
+name|KEX_ECDH_SHA2
+index|]
+operator|=
+name|kexecdh_server
 expr_stmt|;
 name|kex
 operator|->

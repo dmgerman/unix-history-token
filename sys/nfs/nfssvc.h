@@ -180,8 +180,19 @@ end_define
 begin_define
 define|#
 directive|define
-name|NFSSVC_ZEROSTATS
+name|NFSSVC_ZEROCLTSTATS
 value|0x01000000
+end_define
+
+begin_comment
+comment|/* modifier for GETSTATS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSSVC_ZEROSRVSTATS
+value|0x02000000
 end_define
 
 begin_comment

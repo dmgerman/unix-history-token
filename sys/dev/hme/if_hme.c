@@ -7810,7 +7810,7 @@ argument|&sc->sc_mii->mii_phys
 argument_list|,
 argument|mii_list
 argument_list|)
-name|mii_phy_reset
+name|PHY_RESET
 argument_list|(
 name|child
 argument_list|)

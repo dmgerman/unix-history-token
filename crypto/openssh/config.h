@@ -8,6 +8,14 @@ comment|/* config.h.in.  Generated from configure.ac by autoheader.  */
 end_comment
 
 begin_comment
+comment|/* Define if building universal (internal helper macro) */
+end_comment
+
+begin_comment
+comment|/* #undef AC_APPLE_UNIVERSAL_BUILD */
+end_comment
+
+begin_comment
 comment|/* Define if you have a getaddrinfo that fails for the all-zeros IPv6 address    */
 end_comment
 
@@ -219,14 +227,6 @@ comment|/* #undef CONF_LASTLOG_FILE */
 end_comment
 
 begin_comment
-comment|/* Define if you want to specify the path to your utmpx file */
-end_comment
-
-begin_comment
-comment|/* #undef CONF_UTMPX_FILE */
-end_comment
-
-begin_comment
 comment|/* Define if you want to specify the path to your utmp file */
 end_comment
 
@@ -365,6 +365,14 @@ value|200
 end_define
 
 begin_comment
+comment|/* File names may not contain backslash characters */
+end_comment
+
+begin_comment
+comment|/* #undef FILESYSTEM_NO_BACKSLASH */
+end_comment
+
+begin_comment
 comment|/* fsid_t has member val */
 end_comment
 
@@ -420,6 +428,14 @@ directive|define
 name|GLOB_HAS_GL_MATCHC
 value|1
 end_define
+
+begin_comment
+comment|/* Define if your system glob() function has gl_statv options in glob_t */
+end_comment
+
+begin_comment
+comment|/* #undef GLOB_HAS_GL_STATV */
+end_comment
 
 begin_comment
 comment|/* Define this if you want GSSAPI support in the version 2 protocol */
@@ -602,6 +618,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_BINDRESVPORT_SA
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `BN_is_prime_ex' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_BN_IS_PRIME_EX
 value|1
 end_define
 
@@ -904,6 +931,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_DIRNAME
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `DSA_generate_parameters_ex' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DSA_GENERATE_PARAMETERS_EX
 value|1
 end_define
 
@@ -1629,11 +1667,30 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have isblank(3C). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ISBLANK
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<lastlog.h> header file. */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_LASTLOG_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<libaudit.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBAUDIT_H */
 end_comment
 
 begin_comment
@@ -2274,6 +2331,28 @@ begin_define
 define|#
 directive|define
 name|HAVE_RRESVPORT_AF
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `RSA_generate_key_ex' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_RSA_GENERATE_KEY_EX
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `RSA_get_default_method' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_RSA_GET_DEFAULT_METHOD
 value|1
 end_define
 
@@ -2924,7 +3003,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if `sin6_scope_id' is member of `struct sockaddr_in6'. */
+comment|/* Define to 1 if `sin6_scope_id' is a member of `struct sockaddr_in6'. */
 end_comment
 
 begin_define
@@ -2946,7 +3025,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if `st_blksize' is member of `struct stat'. */
+comment|/* Define to 1 if `st_blksize' is a member of `struct stat'. */
 end_comment
 
 begin_define
@@ -3313,6 +3392,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_TIME_IN_UTMPX */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `timingsafe_bcmp' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_TIMINGSAFE_BCMP */
 end_comment
 
 begin_comment
@@ -3983,6 +4070,17 @@ comment|/* #undef OPENSSL_EVP_DIGESTUPDATE_VOID */
 end_comment
 
 begin_comment
+comment|/* libcrypto includes complete ECC support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPENSSL_HAS_ECC
+value|1
+end_define
+
+begin_comment
 comment|/* libcrypto is missing AES 192 and 256 bit functions */
 end_comment
 
@@ -4043,6 +4141,17 @@ define|#
 directive|define
 name|PACKAGE_TARNAME
 value|"openssh"
+end_define
+
+begin_comment
+comment|/* Define to the home page for this package. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKAGE_URL
+value|""
 end_define
 
 begin_comment
@@ -4375,6 +4484,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Use Linux audit module */
+end_comment
+
+begin_comment
+comment|/* #undef USE_LINUX_AUDIT */
+end_comment
+
+begin_comment
 comment|/* Enable OpenSSL engine support */
 end_comment
 
@@ -4410,6 +4527,14 @@ end_comment
 
 begin_comment
 comment|/* #undef USE_SOLARIS_PROCESS_CONTRACTS */
+end_comment
+
+begin_comment
+comment|/* Define if you have Solaris projects */
+end_comment
+
+begin_comment
+comment|/* #undef USE_SOLARIS_PROJECTS */
 end_comment
 
 begin_comment
@@ -4469,7 +4594,7 @@ comment|/* #undef WITH_SELINUX */
 end_comment
 
 begin_comment
-comment|/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most    significant byte first (like Motorola and SPARC, unlike Intel and VAX). */
+comment|/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most    significant byte first (like Motorola and SPARC, unlike Intel). */
 end_comment
 
 begin_if

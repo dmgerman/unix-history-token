@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-options.c,v 1.52 2010/05/20 23:46:02 djm Exp $ */
+comment|/* $OpenBSD: auth-options.c,v 1.54 2010/12/24 21:41:48 djm Exp $ */
 end_comment
 
 begin_comment
@@ -823,9 +823,7 @@ literal|'\0'
 expr_stmt|;
 name|auth_debug_add
 argument_list|(
-literal|"Forced command: %.900s"
-argument_list|,
-name|forced_command
+literal|"Forced command."
 argument_list|)
 expr_stmt|;
 name|opts
@@ -2157,7 +2155,7 @@ condition|(
 operator|(
 name|name
 operator|=
-name|buffer_get_string_ret
+name|buffer_get_cstring_ret
 argument_list|(
 operator|&
 name|c
@@ -2393,7 +2391,7 @@ condition|(
 operator|(
 name|command
 operator|=
-name|buffer_get_string_ret
+name|buffer_get_cstring_ret
 argument_list|(
 operator|&
 name|data
@@ -2488,7 +2486,7 @@ condition|(
 operator|(
 name|allowed
 operator|=
-name|buffer_get_string_ret
+name|buffer_get_cstring_ret
 argument_list|(
 operator|&
 name|data

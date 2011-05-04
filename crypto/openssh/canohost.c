@@ -928,11 +928,9 @@ name|a6
 operator|->
 name|sin6_port
 expr_stmt|;
-name|memset
+name|bzero
 argument_list|(
-name|addr
-argument_list|,
-literal|0
+name|a4
 argument_list|,
 sizeof|sizeof
 argument_list|(

@@ -19857,9 +19857,6 @@ endif|#
 directive|endif
 parameter_list|)
 block|{
-name|uint32_t
-name|vtag
-decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -19952,14 +19949,6 @@ operator||=
 name|SCTP_STATE_WAS_ABORTED
 expr_stmt|;
 block|}
-name|vtag
-operator|=
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|peer_vtag
-expr_stmt|;
 comment|/* notify the ulp */
 if|if
 condition|(
