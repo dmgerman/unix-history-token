@@ -5036,6 +5036,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
+name|nmp
+operator|->
+name|nm_flag
+operator|&
+name|NFSMNT_NOCTO
+operator|)
+operator|&&
 operator|(
 name|flags
 operator|&
