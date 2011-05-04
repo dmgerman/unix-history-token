@@ -948,6 +948,13 @@ name|BGE_PCI_GEN2_PRODID_ASICREV
 value|0xF4
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_PCI_GEN15_PRODID_ASICREV
+value|0xFC
+end_define
+
 begin_comment
 comment|/* PCI Misc. Host control register */
 end_comment
@@ -1544,6 +1551,20 @@ name|BGE_CHIPID_BCM5717_B0
 value|0x05717100
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_CHIPID_BCM57765_A0
+value|0x57785000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_CHIPID_BCM57765_B0
+value|0x57785100
+end_define
+
 begin_comment
 comment|/* shorthand one */
 end_comment
@@ -1697,6 +1718,13 @@ define|#
 directive|define
 name|BGE_ASICREV_BCM5785
 value|0x5785
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_ASICREV_BCM57765
+value|0x57785
 end_define
 
 begin_define
@@ -1948,6 +1976,13 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x)<< 28)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_PCIDMARWCTL_CRDRDR_RDMA_MRRS_MSK
+value|0x00000380
 end_define
 
 begin_define
@@ -12991,8 +13026,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|BCOM_DEVICEID_BCM57761
+value|0x16B0
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM57765
+value|0x16B4
+end_define
+
+begin_define
+define|#
+directive|define
 name|BCOM_DEVICEID_BCM57780
 value|0x1692
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM57781
+value|0x16B1
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM57785
+value|0x16B5
 end_define
 
 begin_define
@@ -13007,6 +13070,20 @@ define|#
 directive|define
 name|BCOM_DEVICEID_BCM57790
 value|0x1694
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM57791
+value|0x16B2
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM57795
+value|0x16B6
 end_define
 
 begin_comment
