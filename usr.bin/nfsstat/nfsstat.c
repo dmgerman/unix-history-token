@@ -304,13 +304,6 @@ name|ext_nfsstats
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|nfssvc_flag
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|void
 name|intpr
@@ -457,10 +450,6 @@ index|[
 name|_POSIX2_LINE_MAX
 index|]
 decl_stmt|;
-name|nfssvc_flag
-operator|=
-name|NFSSVC_GETSTATS
-expr_stmt|;
 name|interval
 operator|=
 literal|0
@@ -572,10 +561,6 @@ name|zflag
 operator|=
 literal|1
 expr_stmt|;
-name|nfssvc_flag
-operator||=
-name|NFSSVC_ZEROSTATS
-expr_stmt|;
 break|break;
 case|case
 literal|'e'
@@ -679,7 +664,7 @@ if|if
 condition|(
 name|nfssvc
 argument_list|(
-name|nfssvc_flag
+name|NFSSVC_GETSTATS
 argument_list|,
 operator|&
 name|ext_nfsstats
@@ -4112,7 +4097,7 @@ if|if
 condition|(
 name|nfssvc
 argument_list|(
-name|nfssvc_flag
+name|NFSSVC_GETSTATS
 argument_list|,
 name|ext_nfsstatsp
 argument_list|)
@@ -4146,7 +4131,7 @@ if|if
 condition|(
 name|nfssvc
 argument_list|(
-name|nfssvc_flag
+name|NFSSVC_GETSTATS
 argument_list|,
 name|ext_nfsstatsp
 argument_list|)
