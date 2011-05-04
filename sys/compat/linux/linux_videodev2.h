@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * This header comes from linux, but it has no license. The author  * (Bill Dirks) gave explicit permissions to use it in FreeBSD.  * The FreeBSD vendor branch for v4l gives a more detailed description  * about this in the README.  *  * $FreeBSD$  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -14,6 +18,37 @@ end_define
 begin_comment
 comment|/*  *	Video for Linux Two  *  *	Header file for v4l or V4L2 drivers and applications, for  *	Linux kernels 2.2.x or 2.4.x.  *  *	See http://bytesex.org/v4l/ for API specs and other  *	v4l2 documentation.  *  *	Author: Bill Dirks<bdirks@pacbell.net>  *		Justin Schoeman  *		et al.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__user
+end_define
+
+begin_typedef
+typedef|typedef
+name|uint64_t
+name|__u64
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int64_t
+name|__s64
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_ifdef
 ifdef|#
@@ -63,6 +98,11 @@ end_include
 begin_comment
 comment|/* need __user */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
