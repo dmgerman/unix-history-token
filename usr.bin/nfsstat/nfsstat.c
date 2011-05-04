@@ -3355,6 +3355,10 @@ argument_list|,
 name|ext_nfsstats
 operator|.
 name|biocache_reads
+operator|-
+name|ext_nfsstats
+operator|.
+name|read_bios
 argument_list|,
 name|ext_nfsstats
 operator|.
@@ -3363,6 +3367,10 @@ argument_list|,
 name|ext_nfsstats
 operator|.
 name|biocache_writes
+operator|-
+name|ext_nfsstats
+operator|.
+name|write_bios
 argument_list|,
 name|ext_nfsstats
 operator|.
@@ -3404,6 +3412,10 @@ argument_list|,
 name|ext_nfsstats
 operator|.
 name|biocache_readlinks
+operator|-
+name|ext_nfsstats
+operator|.
+name|readlink_bios
 argument_list|,
 name|ext_nfsstats
 operator|.
@@ -3412,6 +3424,10 @@ argument_list|,
 name|ext_nfsstats
 operator|.
 name|biocache_readdirs
+operator|-
+name|ext_nfsstats
+operator|.
+name|readdir_bios
 argument_list|,
 name|ext_nfsstats
 operator|.
