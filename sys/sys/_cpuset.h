@@ -37,7 +37,7 @@ begin_define
 define|#
 directive|define
 name|CPU_MAXSIZE
-value|(4 * MAXCPU)
+value|128
 end_define
 
 begin_ifndef
