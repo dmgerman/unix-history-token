@@ -21,7 +21,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Hash function support in various Operating Systems:  *  * NetBSD:  * - MD5 and SHA1 in libc: without _ after algorithm name  * - SHA2 in libc: with _ after algorithm name  *  * OpenBSD:  * - MD5, SHA1 and SHA2 in libc: without _ after algorithm name  * - OpenBSD 4.4 and earlier have SHA2 in libc with _ after algorithm name  *  * DragonFly and FreeBSD (XXX not used yet):  * - MD5 and SHA1 in libmd: without _ after algorithm name  * - SHA256: with _ after algorithm name  *  * OpenSSL:  * - MD5, SHA1 and SHA2 in libcrypto: with _ after algorithm name  */
+comment|/*  * Hash function support in various Operating Systems:  *  * NetBSD:  * - MD5 and SHA1 in libc: without _ after algorithm name  * - SHA2 in libc: with _ after algorithm name  *  * OpenBSD:  * - MD5, SHA1 and SHA2 in libc: without _ after algorithm name  * - OpenBSD 4.4 and earlier have SHA2 in libc with _ after algorithm name  *  * DragonFly and FreeBSD (XXX not used yet):  * - MD5 in libmd: without _ after algorithm name  * - SHA{1,256,512} in libmd: with _ after algorithm name (conflicts w/OpenSSL!)  *  * OpenSSL:  * - MD5, SHA1, SHA2, SHA{256,384,512} in libcrypto: with _ after algorithm name  */
 end_comment
 
 begin_if
