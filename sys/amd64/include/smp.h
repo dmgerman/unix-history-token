@@ -341,7 +341,7 @@ begin_function_decl
 name|void
 name|ipi_selected
 parameter_list|(
-name|cpumask_t
+name|cpuset_t
 name|cpus
 parameter_list|,
 name|u_int
@@ -391,7 +391,7 @@ begin_function_decl
 name|void
 name|smp_masked_invlpg
 parameter_list|(
-name|cpumask_t
+name|cpuset_t
 name|mask
 parameter_list|,
 name|vm_offset_t
@@ -417,7 +417,7 @@ begin_function_decl
 name|void
 name|smp_masked_invlpg_range
 parameter_list|(
-name|cpumask_t
+name|cpuset_t
 name|mask
 parameter_list|,
 name|vm_offset_t
@@ -442,7 +442,7 @@ begin_function_decl
 name|void
 name|smp_masked_invltlb
 parameter_list|(
-name|cpumask_t
+name|cpuset_t
 name|mask
 parameter_list|)
 function_decl|;

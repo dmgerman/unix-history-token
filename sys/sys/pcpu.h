@@ -35,6 +35,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/_cpuset.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
 end_include
 
@@ -455,11 +461,11 @@ name|u_int
 name|pc_cpuid
 decl_stmt|;
 comment|/* This cpu number */
-name|cpumask_t
+name|cpuset_t
 name|pc_cpumask
 decl_stmt|;
 comment|/* This cpu mask */
-name|cpumask_t
+name|cpuset_t
 name|pc_other_cpus
 decl_stmt|;
 comment|/* Mask of all other cpus */
