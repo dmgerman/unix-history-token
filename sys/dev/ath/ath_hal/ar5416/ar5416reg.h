@@ -1343,6 +1343,68 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR_CFG_SCLK_RATE_IND
+value|0x00000003
+end_define
+
+begin_comment
+comment|/* sleep clock indication */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_CFG_SCLK_RATE_IND_S
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_CFG_SCLK_32MHZ
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* Sleep clock rate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_CFG_SCLK_4MHZ
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Sleep clock rate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_CFG_SCLK_1MHZ
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Sleep clock rate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_CFG_SCLK_32KHZ
+value|0x00000003
+end_define
+
+begin_comment
+comment|/* Sleep clock rate */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AR_MAC_LED_BLINK_SLOW
 value|0x00000008
 end_define
@@ -4151,6 +4213,10 @@ begin_comment
 comment|/* Kite 1.2 */
 end_comment
 
+begin_comment
+comment|/* Owl (AR5416) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4170,7 +4236,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|((AR_SREV_OWL(_ah)&& AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_OWL_20) || \ 	AH_PRIVATE((_ah))->ah_macVersion>= AR_XSREV_VERSION_HOWL)
+value|((AR_SREV_OWL(_ah)&&						\ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_OWL_20) ||	\ 	 AH_PRIVATE((_ah))->ah_macVersion>= AR_XSREV_VERSION_HOWL)
 end_define
 
 begin_define
@@ -4181,8 +4247,12 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|((AR_SREV_OWL(_ah)&& AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_OWL_22) || \ 	AH_PRIVATE((_ah))->ah_macVersion>= AR_XSREV_VERSION_HOWL)
+value|((AR_SREV_OWL(_ah)&&						\ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_OWL_22) ||	\ 	 AH_PRIVATE((_ah))->ah_macVersion>= AR_XSREV_VERSION_HOWL)
 end_define
+
+begin_comment
+comment|/* Howl (AR9130) */
+end_comment
 
 begin_define
 define|#
@@ -4204,6 +4274,10 @@ name|_ah
 parameter_list|)
 value|AR_SREV_HOWL(_ah)
 end_define
+
+begin_comment
+comment|/* Sowl (AR9160) */
+end_comment
 
 begin_define
 define|#
@@ -4237,6 +4311,10 @@ parameter_list|)
 define|\
 value|(AR_SREV_SOWL(_ah)&& \ 	 AH_PRIVATE((_ah))->ah_macRev == AR_XSREV_REVISION_SOWL_11)
 end_define
+
+begin_comment
+comment|/* Merlin (AR9280) */
+end_comment
 
 begin_define
 define|#
@@ -4279,8 +4357,12 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(AR_SREV_MERLIN_20(_ah) || \ 	 AH_PRIVATE((_ah))->ah_macVersion>= AR_XSREV_VERSION_MERLIN)
+value|((AH_PRIVATE((_ah))->ah_macVersion> AR_XSREV_VERSION_MERLIN) ||	\ 	 (AR_SREV_MERLIN((_ah))&&						\ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_MERLIN_20))
 end_define
+
+begin_comment
+comment|/* Kite (AR9285) */
+end_comment
 
 begin_define
 define|#
@@ -4323,7 +4405,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(AR_SREV_KITE_11(_ah) || \ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_KITE_11)
+value|((AH_PRIVATE((_ah))->ah_macVersion> AR_XSREV_VERSION_KITE) ||	\ 	 (AR_SREV_KITE((_ah))&&					\ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_KITE_11))
 end_define
 
 begin_define
@@ -4345,7 +4427,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(AR_SREV_KITE_12(_ah) || \ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_KITE_12)
+value|((AH_PRIVATE((_ah))->ah_macVersion> AR_XSREV_VERSION_KITE) ||	\ 	 (AR_SREV_KITE((_ah))&&					\ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_KITE_12))
 end_define
 
 begin_define

@@ -100,7 +100,7 @@ end_function_decl
 begin_function_decl
 name|char
 modifier|*
-name|sha256_crypt
+name|crypt_sha256
 parameter_list|(
 specifier|const
 name|char
@@ -118,7 +118,7 @@ end_function_decl
 begin_function_decl
 name|char
 modifier|*
-name|sha512_crypt
+name|crypt_sha512
 parameter_list|(
 specifier|const
 name|char

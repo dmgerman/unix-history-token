@@ -1425,21 +1425,21 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_CMT_ON_OFF_MIN
-value|0
+value|SCTP_CMT_OFF
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_CMT_ON_OFF_MAX
-value|2
+value|SCTP_CMT_MAX
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_CMT_ON_OFF_DEFAULT
-value|0
+value|SCTP_CMT_OFF
 end_define
 
 begin_comment

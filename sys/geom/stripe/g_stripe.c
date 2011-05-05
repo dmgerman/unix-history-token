@@ -4095,13 +4095,6 @@ operator|->
 name|md_name
 argument_list|)
 expr_stmt|;
-name|gp
-operator|->
-name|softc
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* for a moment */
 name|sc
 operator|=
 name|malloc
