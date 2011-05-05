@@ -16,7 +16,7 @@ name|_DEFINES_H
 end_define
 
 begin_comment
-comment|/* $Id: defines.h,v 1.164 2011/01/17 10:15:31 dtucker Exp $ */
+comment|/* $Id: defines.h,v 1.165 2011/05/05 01:19:15 djm Exp $ */
 end_comment
 
 begin_comment
@@ -83,6 +83,18 @@ begin_comment
 comment|/*  * Definitions for IP type of service (ip_tos)  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<netinet/in_systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -136,18 +148,6 @@ end_comment
 begin_comment
 comment|/*  * Definitions for DiffServ Codepoints as per RFC2474  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
-end_include
 
 begin_ifndef
 ifndef|#
