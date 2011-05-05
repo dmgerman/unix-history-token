@@ -14751,7 +14751,7 @@ name|bge_phy_flags
 decl_stmt|;
 define|#
 directive|define
-name|BGE_PHY_WIRESPEED
+name|BGE_PHY_NO_WIRESPEED
 value|0x00000001
 define|#
 directive|define
