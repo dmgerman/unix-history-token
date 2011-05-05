@@ -131,7 +131,7 @@ block|,
 block|{
 literal|"sha256"
 block|,
-name|sha256_crypt
+name|crypt_sha256
 block|,
 literal|"$5$"
 block|}
@@ -139,7 +139,7 @@ block|,
 block|{
 literal|"sha512"
 block|,
-name|sha512_crypt
+name|crypt_sha512
 block|,
 literal|"$6$"
 block|}

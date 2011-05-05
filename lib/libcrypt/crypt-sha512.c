@@ -165,7 +165,7 @@ begin_function
 specifier|static
 name|char
 modifier|*
-name|sha512_crypt_r
+name|crypt_sha512_r
 parameter_list|(
 specifier|const
 name|char
@@ -1690,7 +1690,7 @@ end_comment
 begin_function
 name|char
 modifier|*
-name|sha512_crypt
+name|crypt_sha512
 parameter_list|(
 specifier|const
 name|char
@@ -1703,7 +1703,7 @@ modifier|*
 name|salt
 parameter_list|)
 block|{
-comment|/* We don't want to have an arbitrary limit in the size of the 	 * password. We can compute an upper bound for the size of the 	 * result in advance and so we can prepare the buffer we pass to 	 * `sha512_crypt_r'. */
+comment|/* We don't want to have an arbitrary limit in the size of the 	 * password. We can compute an upper bound for the size of the 	 * result in advance and so we can prepare the buffer we pass to 	 * `crypt_sha512_r'. */
 specifier|static
 name|char
 modifier|*
@@ -1790,7 +1790,7 @@ name|needed
 expr_stmt|;
 block|}
 return|return
-name|sha512_crypt_r
+name|crypt_sha512_r
 argument_list|(
 name|key
 argument_list|,
@@ -2344,7 +2344,7 @@ name|char
 modifier|*
 name|cp
 init|=
-name|sha512_crypt
+name|crypt_sha512
 argument_list|(
 name|tests2
 index|[
