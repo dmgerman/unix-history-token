@@ -587,7 +587,7 @@ name|sc
 operator|->
 name|sc_tjmax
 operator|=
-literal|104
+literal|105
 expr_stmt|;
 break|break;
 default|default:
