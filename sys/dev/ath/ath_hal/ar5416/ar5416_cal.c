@@ -2197,13 +2197,13 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* Don't write to EXT radio CCA registers */
+comment|/* Don't write to EXT radio CCA registers unless in HT/40 mode */
 comment|/* XXX this check should really be cleaner! */
 if|if
 condition|(
 name|i
-operator|>=
-literal|3
+operator|>
+literal|2
 operator|&&
 operator|!
 name|IEEE80211_IS_CHAN_HT40
@@ -2385,6 +2385,21 @@ condition|;
 name|i
 operator|++
 control|)
+comment|/* Don't write to EXT radio CCA registers unless in HT/40 mode */
+comment|/* XXX this check should really be cleaner! */
+if|if
+condition|(
+name|i
+operator|>
+literal|2
+operator|&&
+operator|!
+name|IEEE80211_IS_CHAN_HT40
+argument_list|(
+name|chan
+argument_list|)
+condition|)
+continue|continue;
 if|if
 condition|(
 name|chainmask
@@ -2545,6 +2560,11 @@ name|void
 name|ar5416UpdateNFHistBuff
 parameter_list|(
 name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|struct
 name|ar5212NfCalHist
 modifier|*
 name|h
@@ -2557,6 +2577,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
+comment|/* XXX TODO: don't record nfarray[] entries for inactive chains */
 for|for
 control|(
 name|i
@@ -3132,6 +3153,8 @@ name|CHANNEL_MIMO_NF_VALID
 expr_stmt|;
 name|ar5416UpdateNFHistBuff
 argument_list|(
+name|ah
+argument_list|,
 name|AH5416
 argument_list|(
 name|ah
