@@ -11495,8 +11495,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m_head
-init|=
-name|NULL
 decl_stmt|;
 name|struct
 name|xl_chain
@@ -11512,6 +11510,11 @@ name|NULL
 decl_stmt|,
 modifier|*
 name|start_tx
+decl_stmt|;
+name|struct
+name|xl_chain
+modifier|*
+name|prev_tx
 decl_stmt|;
 name|u_int32_t
 name|status
@@ -11631,6 +11634,10 @@ name|NULL
 condition|)
 break|break;
 comment|/* Pick a descriptor off the free list. */
+name|prev_tx
+operator|=
+name|cur_tx
+expr_stmt|;
 name|cur_tx
 operator|=
 name|sc
@@ -11657,6 +11664,10 @@ condition|(
 name|error
 condition|)
 block|{
+name|cur_tx
+operator|=
+name|prev_tx
+expr_stmt|;
 if|if
 condition|(
 name|m_head
@@ -11967,8 +11978,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m_head
-init|=
-name|NULL
 decl_stmt|;
 name|struct
 name|xl_chain
@@ -11984,6 +11993,11 @@ name|NULL
 decl_stmt|,
 modifier|*
 name|start_tx
+decl_stmt|;
+name|struct
+name|xl_chain
+modifier|*
+name|prev_tx
 decl_stmt|;
 name|int
 name|error
@@ -12099,6 +12113,10 @@ operator|==
 name|NULL
 condition|)
 break|break;
+name|prev_tx
+operator|=
+name|cur_tx
+expr_stmt|;
 name|cur_tx
 operator|=
 operator|&
@@ -12129,6 +12147,10 @@ condition|(
 name|error
 condition|)
 block|{
+name|cur_tx
+operator|=
+name|prev_tx
+expr_stmt|;
 if|if
 condition|(
 name|m_head
