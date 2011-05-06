@@ -7114,14 +7114,7 @@ name|nmp
 operator|->
 name|nm_maxfilesize
 operator|=
-operator|(
-name|u_int64_t
-operator|)
-literal|0x80000000
-operator|*
-name|DEV_BSIZE
-operator|-
-literal|1
+name|OFF_MAX
 expr_stmt|;
 name|nmp
 operator|->
