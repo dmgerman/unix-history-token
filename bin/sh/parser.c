@@ -6205,15 +6205,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|subtype
-operator|!=
-name|VSLENGTH
-operator|&&
-operator|(
 name|dblquote
 operator|||
 name|arinest
-operator|)
 condition|)
 name|flags
 operator||=
