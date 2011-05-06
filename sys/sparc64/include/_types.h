@@ -114,14 +114,6 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|int
-name|__cpumask_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
 name|__int64_t
 name|__critical_t
 typedef|;
