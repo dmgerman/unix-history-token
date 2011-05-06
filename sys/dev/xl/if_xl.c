@@ -8747,8 +8747,6 @@ name|cur_rx
 decl_stmt|;
 name|int
 name|total_len
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|rx_npkts
@@ -8854,6 +8852,9 @@ operator|=
 name|rxstat
 operator|&
 name|XL_RXSTAT_LENMASK
+expr_stmt|;
+name|rx_npkts
+operator|++
 expr_stmt|;
 comment|/* 		 * Since we have told the chip to allow large frames, 		 * we need to trap giant frame errors in software. We allow 		 * a little more than the normal frame size to account for 		 * frames with VLAN tags. 		 */
 if|if
@@ -9178,9 +9179,6 @@ name|XL_LOCK
 argument_list|(
 name|sc
 argument_list|)
-expr_stmt|;
-name|rx_npkts
-operator|++
 expr_stmt|;
 comment|/* 		 * If we are running from the taskqueue, the interface 		 * might have been stopped while we were passing the last 		 * packet up the network stack. 		 */
 if|if
@@ -10199,27 +10197,14 @@ operator|&
 name|XL_STAT_UP_COMPLETE
 condition|)
 block|{
-name|int
-name|curpkts
-decl_stmt|;
-name|curpkts
-operator|=
-name|ifp
-operator|->
-name|if_ipackets
-expr_stmt|;
+if|if
+condition|(
 name|xl_rxeof
 argument_list|(
 name|sc
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|curpkts
 operator|==
-name|ifp
-operator|->
-name|if_ipackets
+literal|0
 condition|)
 block|{
 while|while
