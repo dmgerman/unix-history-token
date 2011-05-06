@@ -146,6 +146,12 @@ name|caddr_t
 name|tc_ptr
 decl_stmt|;
 comment|/* associated crypto data */
+name|struct
+name|secasvar
+modifier|*
+name|tc_sav
+decl_stmt|;
+comment|/* related SA */
 block|}
 struct|;
 end_struct
