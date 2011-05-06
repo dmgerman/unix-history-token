@@ -18415,6 +18415,8 @@ decl_stmt|,
 name|nsegs
 decl_stmt|,
 name|error
+init|=
+literal|0
 decl_stmt|;
 comment|/* Clear the ring contents */
 name|EM_RX_LOCK

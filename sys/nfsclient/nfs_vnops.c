@@ -210,7 +210,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfsclient/nfs_kdtrace.h>
+file|<nfs/nfs_kdtrace.h>
 end_include
 
 begin_include

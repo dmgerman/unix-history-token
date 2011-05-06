@@ -461,13 +461,6 @@ name|AR724X_GPIO_FUNC_JTAG_DISABLE
 value|(1>> 0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|AR724X_GPIO_COUNT
-value|18
-end_define
-
 begin_endif
 endif|#
 directive|endif

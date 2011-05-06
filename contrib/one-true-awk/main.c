@@ -23,7 +23,7 @@ name|char
 modifier|*
 name|version
 init|=
-literal|"version 20110501 (FreeBSD)"
+literal|"version 20110506 (FreeBSD)"
 decl_stmt|;
 end_decl_stmt
 

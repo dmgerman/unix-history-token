@@ -2742,6 +2742,10 @@ operator|=
 name|l
 operator|->
 name|delay
+operator|*
+literal|1000
+operator|/
+name|hz
 expr_stmt|;
 name|pipe7
 operator|->
