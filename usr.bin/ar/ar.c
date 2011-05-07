@@ -334,7 +334,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"tV"
+literal|"tDV"
 argument_list|,
 name|longopts
 argument_list|,
@@ -355,6 +355,16 @@ case|case
 literal|'t'
 case|:
 comment|/* Ignored. */
+break|break;
+case|case
+literal|'D'
+case|:
+name|bsdar
+operator|->
+name|options
+operator||=
+name|AR_D
+expr_stmt|;
 break|break;
 case|case
 literal|'V'
