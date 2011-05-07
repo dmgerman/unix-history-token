@@ -1385,6 +1385,17 @@ condition|(
 name|dynamic_kenv
 condition|)
 block|{
+name|WITNESS_WARN
+argument_list|(
+name|WARN_GIANTOK
+operator||
+name|WARN_SLEEPOK
+argument_list|,
+name|NULL
+argument_list|,
+literal|"getenv"
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
