@@ -10622,7 +10622,7 @@ name|status
 operator|&
 name|XL_STAT_STATSOFLOW
 condition|)
-name|xl_stats_update_locked
+name|xl_stats_update
 argument_list|(
 name|sc
 argument_list|)
