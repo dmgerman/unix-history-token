@@ -2016,7 +2016,7 @@ parameter_list|,
 name|ads
 parameter_list|)
 define|\
-value|(AR_SREV_OWL_20_OR_LATER(ah) ? \ 	 MS((ads)->ds_rxstatus0, AR_RxRate) : \ 	 ((ads)->ds_rxstatus3>> 2)& 0xFF)
+value|(AR_SREV_5416_V20_OR_LATER(ah) ? \ 	 MS((ads)->ds_rxstatus0, AR_RxRate) : \ 	 ((ads)->ds_rxstatus3>> 2)& 0xFF)
 end_define
 
 begin_define
@@ -2029,7 +2029,7 @@ parameter_list|,
 name|ads
 parameter_list|)
 define|\
-value|(AR_SREV_OWL_20_OR_LATER(ah) ?	\ 	 MS((ads)->ds_rxstatus3, AR_Parallel40) : \ 	 ((ads)->ds_rxstatus3>> 10)& 0x1)
+value|(AR_SREV_5416_V20_OR_LATER(ah) ?	\ 	 MS((ads)->ds_rxstatus3, AR_Parallel40) : \ 	 ((ads)->ds_rxstatus3>> 10)& 0x1)
 end_define
 
 begin_endif
