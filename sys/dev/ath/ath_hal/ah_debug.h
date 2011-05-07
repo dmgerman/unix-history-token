@@ -121,6 +121,16 @@ init|=
 literal|0x00100000
 block|,
 comment|/* diversity debugging */
+name|HAL_DEBUG_DFS
+init|=
+literal|0x00200000
+block|,
+comment|/* DFS debugging */
+name|HAL_DEBUG_HANG
+init|=
+literal|0x00400000
+block|,
+comment|/* BB/MAC hang debugging */
 name|HAL_DEBUG_ANY
 init|=
 literal|0xffffffff
