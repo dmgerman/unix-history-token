@@ -3925,7 +3925,7 @@ name|IS_5416V1
 parameter_list|(
 name|_ah
 parameter_list|)
-value|(AR_SREV_OWL((ah))&& (_ah)->ah_macRev == AR_SREV_REVISION_OWL_10)
+value|(AR_SREV_OWL((_ah))&& AH_PRIVATE((_ah))->ah_macRev == AR_SREV_REVISION_OWL_10)
 end_define
 
 begin_define
@@ -3935,7 +3935,7 @@ name|IS_5416V2
 parameter_list|(
 name|_ah
 parameter_list|)
-value|(AR_SREV_OWL((ah))&& (_ah)->ah_macRev>= AR_SREV_REVISION_OWL_20)
+value|(AR_SREV_OWL((_ah))&& AH_PRIVATE((_ah))->ah_macRev>= AR_SREV_REVISION_OWL_20)
 end_define
 
 begin_define
@@ -3945,7 +3945,7 @@ name|IS_5416V2_2
 parameter_list|(
 name|_ah
 parameter_list|)
-value|(AR_SREV_OWL((ah))&& (_ah)->ah_macRev == AR_SREV_REVISION_OWL_22)
+value|(AR_SREV_OWL((_ah))&& AH_PRIVATE((_ah))->ah_macRev == AR_SREV_REVISION_OWL_22)
 end_define
 
 begin_comment
