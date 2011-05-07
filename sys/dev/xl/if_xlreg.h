@@ -3146,9 +3146,6 @@ decl_stmt|;
 name|u_int16_t
 name|xl_caps
 decl_stmt|;
-name|u_int8_t
-name|xl_stats_no_timeout
-decl_stmt|;
 name|u_int16_t
 name|xl_tx_thresh
 decl_stmt|;
@@ -3168,7 +3165,7 @@ name|xl_cdata
 decl_stmt|;
 name|struct
 name|callout
-name|xl_stat_callout
+name|xl_tick_callout
 decl_stmt|;
 name|int
 name|xl_wdog_timer
