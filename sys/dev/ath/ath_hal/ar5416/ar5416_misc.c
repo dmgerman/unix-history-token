@@ -869,13 +869,6 @@ name|type
 condition|)
 block|{
 case|case
-name|HAL_CAP_GTXTO
-case|:
-return|return
-name|HAL_OK
-return|;
-comment|/* All AR5416+ supports Global TX Timeout */
-case|case
 name|HAL_CAP_BB_HANG
 case|:
 switch|switch
@@ -887,10 +880,17 @@ case|case
 name|HAL_BB_HANG_RIFS
 case|:
 return|return
+operator|(
+name|AR_SREV_HOWL
+argument_list|(
+name|ah
+argument_list|)
+operator|||
 name|AR_SREV_SOWL
 argument_list|(
 name|ah
 argument_list|)
+operator|)
 condition|?
 name|HAL_OK
 else|:
@@ -900,10 +900,17 @@ case|case
 name|HAL_BB_HANG_DFS
 case|:
 return|return
+operator|(
+name|AR_SREV_HOWL
+argument_list|(
+name|ah
+argument_list|)
+operator|||
 name|AR_SREV_SOWL
 argument_list|(
 name|ah
 argument_list|)
+operator|)
 condition|?
 name|HAL_OK
 else|:
@@ -944,6 +951,11 @@ name|ah_macVersion
 operator|==
 name|AR_XSREV_VERSION_OWL_PCIE
 operator|)
+operator|||
+name|AR_SREV_HOWL
+argument_list|(
+name|ah
+argument_list|)
 operator|||
 name|AR_SREV_SOWL
 argument_list|(
@@ -1846,7 +1858,7 @@ name|HALDEBUG
 argument_list|(
 name|ah
 argument_list|,
-name|HAL_DEBUG_ANY
+name|HAL_DEBUG_HANG
 argument_list|,
 literal|"%s Found an unknown MAC hang signature "
 literal|"DMADBG_3=0x%x DMADBG_4=0x%x DMADBG_5=0x%x DMADBG_6=0x%x\n"
@@ -1871,7 +1883,7 @@ name|dma_dbg_6
 argument_list|)
 expr_stmt|;
 return|return
-name|HAL_MAC_HANG_UNKNOWN
+literal|0
 return|;
 block|}
 end_function
@@ -2036,7 +2048,7 @@ name|HALDEBUG
 argument_list|(
 name|ah
 argument_list|,
-name|HAL_DEBUG_ANY
+name|HAL_DEBUG_HANG
 argument_list|,
 literal|"%s BB hang, signature 0x%x, code 0x%x\n"
 argument_list|,
@@ -2065,7 +2077,7 @@ name|HALDEBUG
 argument_list|(
 name|ah
 argument_list|,
-name|HAL_DEBUG_ANY
+name|HAL_DEBUG_HANG
 argument_list|,
 literal|"%s Found an unknown BB hang signature! "
 literal|"<0x806c>=0x%x\n"
@@ -2076,7 +2088,7 @@ name|hang_sig
 argument_list|)
 expr_stmt|;
 return|return
-name|HAL_BB_HANG_UNKNOWN
+literal|0
 return|;
 undef|#
 directive|undef

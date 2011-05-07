@@ -3841,6 +3841,14 @@ name|AR_EEPROM_STATUS_DATA_ABSENT_ACCESS
 value|0x00080000
 end_define
 
+begin_comment
+comment|/*  * AR5212 defines the MAC revision mask as 0xF, but both ath9k and  * the Atheros HAL define it as 0x7.   *  * What this means however is AR5416 silicon revisions have  * changed. The below macros are for what is contained in the  * lower four bits; if the lower three bits are taken into account  * the revisions become 1.0 => 0x0, 2.0 => 0x1, 2.2 => 0x2.  */
+end_comment
+
+begin_comment
+comment|/* These are the legacy revisions, with a four bit AR_SREV_REVISION mask */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3917,7 +3925,7 @@ name|IS_5416V1
 parameter_list|(
 name|_ah
 parameter_list|)
-value|((_ah)->ah_macRev == AR_SREV_REVISION_OWL_10)
+value|(AR_SREV_OWL((_ah))&& AH_PRIVATE((_ah))->ah_macRev == AR_SREV_REVISION_OWL_10)
 end_define
 
 begin_define
@@ -3927,7 +3935,7 @@ name|IS_5416V2
 parameter_list|(
 name|_ah
 parameter_list|)
-value|((_ah)->ah_macRev>= AR_SREV_REVISION_OWL_20)
+value|(AR_SREV_OWL((_ah))&& AH_PRIVATE((_ah))->ah_macRev>= AR_SREV_REVISION_OWL_20)
 end_define
 
 begin_define
@@ -3937,7 +3945,31 @@ name|IS_5416V2_2
 parameter_list|(
 name|_ah
 parameter_list|)
-value|((_ah)->ah_macRev == AR_SREV_REVISION_OWL_22)
+value|(AR_SREV_OWL((_ah))&& AH_PRIVATE((_ah))->ah_macRev == AR_SREV_REVISION_OWL_22)
+end_define
+
+begin_comment
+comment|/* Misc; compatibility with Atheros HAL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_5416_V20_OR_LATER
+parameter_list|(
+name|_ah
+parameter_list|)
+value|(AR_SREV_HOWL((_ah)) || AR_SREV_OWL_20_OR_LATER(_ah))
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_5416_V22_OR_LATER
+parameter_list|(
+name|_ah
+parameter_list|)
+value|(AR_SREV_HOWL((_ah)) || AR_SREV_OWL_22_OR_LATER(_ah))
 end_define
 
 begin_comment
@@ -4048,6 +4080,16 @@ name|AR_XSREV_VERSION_OWL_PCIE
 value|0x0C
 end_define
 
+begin_comment
+comment|/*  * These are from ath9k/Atheros and assume an AR_SREV version mask  * of 0x07, rather than 0x0F which is being used in the FreeBSD HAL.  * Thus, don't use these values as they're incorrect here; use  * AR_SREV_REVISION_OWL_{10,20,22}.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -4080,6 +4122,11 @@ end_define
 begin_comment
 comment|/* Owl 2.2 */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -4236,7 +4283,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|((AR_SREV_OWL(_ah)&&						\ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_OWL_20) ||	\ 	 AH_PRIVATE((_ah))->ah_macVersion>= AR_XSREV_VERSION_HOWL)
+value|((AR_SREV_OWL(_ah)&&						\ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_SREV_REVISION_OWL_20) ||	\ 	 AH_PRIVATE((_ah))->ah_macVersion>= AR_XSREV_VERSION_HOWL)
 end_define
 
 begin_define
@@ -4247,7 +4294,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|((AR_SREV_OWL(_ah)&&						\ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_OWL_22) ||	\ 	 AH_PRIVATE((_ah))->ah_macVersion>= AR_XSREV_VERSION_HOWL)
+value|((AR_SREV_OWL(_ah)&&						\ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_SREV_REVISION_OWL_22) ||	\ 	 AH_PRIVATE((_ah))->ah_macVersion>= AR_XSREV_VERSION_HOWL)
 end_define
 
 begin_comment

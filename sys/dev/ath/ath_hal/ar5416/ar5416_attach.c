@@ -1836,6 +1836,22 @@ argument_list|,
 name|AH_NULL
 argument_list|)
 expr_stmt|;
+name|AH_PRIVATE
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_currentRDext
+operator|=
+name|ath_hal_eepromGet
+argument_list|(
+name|ah
+argument_list|,
+name|AR_EEP_REGDMN_1
+argument_list|,
+name|AH_NULL
+argument_list|)
+expr_stmt|;
 comment|/* 	 * ah_miscMode is populated by ar5416FillCapabilityInfo() 	 * starting from griffin. Set here to make sure that 	 * AR_MISC_MODE_MIC_NEW_LOC_ENABLE is set before a GTK is 	 * placed into hardware. 	 */
 if|if
 condition|(
@@ -4598,6 +4614,13 @@ name|halTsfAddSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
+name|pCap
+operator|->
+name|hal4AddrAggrSupport
+operator|=
+name|AH_FALSE
+expr_stmt|;
+comment|/* Broken in Owl */
 if|if
 condition|(
 name|ath_hal_eepromGet
@@ -4819,8 +4842,9 @@ name|pCap
 operator|->
 name|halMbssidAggrSupport
 operator|=
-name|AH_TRUE
+name|AH_FALSE
 expr_stmt|;
+comment|/* Broken on Owl */
 name|pCap
 operator|->
 name|halForcePpmSupport
@@ -4836,6 +4860,18 @@ expr_stmt|;
 name|pCap
 operator|->
 name|halBssidMatchSupport
+operator|=
+name|AH_TRUE
+expr_stmt|;
+name|pCap
+operator|->
+name|halGTTSupport
+operator|=
+name|AH_TRUE
+expr_stmt|;
+name|pCap
+operator|->
+name|halCSTSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;

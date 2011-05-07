@@ -653,6 +653,10 @@ name|halHTSupport
 range|:
 literal|1
 decl_stmt|,
+name|halHTSGI20Support
+range|:
+literal|1
+decl_stmt|,
 name|halRfSilentSupport
 range|:
 literal|1
@@ -706,6 +710,10 @@ name|halRifsTxSupport
 range|:
 literal|1
 decl_stmt|,
+name|hal4AddrAggrSupport
+range|:
+literal|1
+decl_stmt|,
 name|halExtChanDfsSupport
 range|:
 literal|1
@@ -727,10 +735,6 @@ range|:
 literal|1
 decl_stmt|,
 name|hal4kbSplitTransSupport
-range|:
-literal|1
-decl_stmt|,
-name|halHasPsPollSupport
 range|:
 literal|1
 decl_stmt|,
@@ -1095,6 +1099,10 @@ name|HAL_REG_DOMAIN
 name|ah_currentRD
 decl_stmt|;
 comment|/* EEPROM regulatory domain */
+name|HAL_REG_DOMAIN
+name|ah_currentRDext
+decl_stmt|;
+comment|/* EEPROM extended regdomain flags */
 name|HAL_CHANNEL_INTERNAL
 name|ah_channels
 index|[

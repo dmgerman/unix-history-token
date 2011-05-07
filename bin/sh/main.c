@@ -251,6 +251,12 @@ name|main_handler
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|localeisutf8
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -313,6 +319,9 @@ name|LC_ALL
 argument_list|,
 literal|""
 argument_list|)
+expr_stmt|;
+name|updatecharset
+argument_list|()
 expr_stmt|;
 name|state
 operator|=

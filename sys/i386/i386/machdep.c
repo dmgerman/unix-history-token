@@ -6920,6 +6920,9 @@ condition|)
 return|return;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|XEN
 comment|/* If we are busy - try to use fast methods. */
 if|if
 condition|(
@@ -6947,9 +6950,6 @@ name|out
 goto|;
 block|}
 block|}
-ifndef|#
-directive|ifndef
-name|XEN
 comment|/* If we have time - switch timers into idle mode. */
 if|if
 condition|(
@@ -7026,10 +7026,10 @@ name|critical_exit
 argument_list|()
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|out
 label|:
+endif|#
+directive|endif
 name|CTR2
 argument_list|(
 name|KTR_SPARE2

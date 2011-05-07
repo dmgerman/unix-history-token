@@ -3013,6 +3013,12 @@ operator|=
 name|next_offset
 expr_stmt|;
 block|}
+comment|/* Build the function table. */
+name|dwarf_build_function_table
+argument_list|(
+name|dbg
+argument_list|)
+expr_stmt|;
 return|return
 name|ret
 return|;
@@ -3537,6 +3543,14 @@ operator|&
 name|dbg
 operator|->
 name|dbg_cu
+argument_list|)
+expr_stmt|;
+name|STAILQ_INIT
+argument_list|(
+operator|&
+name|dbg
+operator|->
+name|dbg_func
 argument_list|)
 expr_stmt|;
 operator|*

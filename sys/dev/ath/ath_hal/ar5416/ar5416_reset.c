@@ -6034,7 +6034,7 @@ name|regChainOffset
 decl_stmt|;
 if|if
 condition|(
-name|AR_SREV_OWL_20_OR_LATER
+name|AR_SREV_5416_V20_OR_LATER
 argument_list|(
 name|ah
 argument_list|)
@@ -6315,7 +6315,7 @@ operator|==
 literal|0
 operator|)
 operator|||
-name|AR_SREV_OWL_20_OR_LATER
+name|AR_SREV_5416_V20_OR_LATER
 argument_list|(
 name|ah
 argument_list|)
@@ -10309,7 +10309,7 @@ operator|==
 literal|0
 operator|)
 operator|||
-name|AR_SREV_OWL_20_OR_LATER
+name|AR_SREV_5416_V20_OR_LATER
 argument_list|(
 name|ah
 argument_list|)
@@ -11042,7 +11042,7 @@ literal|0
 operator|)
 operator|&&
 operator|!
-name|AR_SREV_OWL_20_OR_LATER
+name|AR_SREV_5416_V20_OR_LATER
 argument_list|(
 name|ah
 argument_list|)
@@ -11888,16 +11888,6 @@ name|val
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * The AR5416 initvals have this already set to 0x11; AR9160 has 	 * the register set to 0x0. Figure out whether AR9130/AR9160 needs 	 * this before moving forward with it. 	 */
-if|#
-directive|if
-literal|0
-comment|/* Disable BB clock gating for AR5416v2, AR9130, AR9160 */
-block|if (AR_SREV_OWL_20_OR_LATER(ah) || AR_SREV_HOWL(ah) || AR_SREV_SOWL(ah)) {
-comment|/* 		 * Disable BB clock gating 		 * Necessary to avoid issues on AR5416 2.0 		 */
-block|OS_REG_WRITE(ah, 0x9800 + (651<< 2), 0x11); 	}
-endif|#
-directive|endif
 comment|/* 	 * Disable RIFS search on some chips to avoid baseband 	 * hang issues. 	 */
 if|if
 condition|(
@@ -11919,6 +11909,36 @@ argument_list|(
 name|ah
 argument_list|,
 name|AH_FALSE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|AR_SREV_5416_V20_OR_LATER
+argument_list|(
+name|ah
+argument_list|)
+operator|||
+name|AR_SREV_MERLIN
+argument_list|(
+name|ah
+argument_list|)
+condition|)
+return|return;
+comment|/* 	 * Disable BB clock gating 	 * Necessary to avoid issues on AR5416 2.0 	 */
+name|OS_REG_WRITE
+argument_list|(
+name|ah
+argument_list|,
+literal|0x9800
+operator|+
+operator|(
+literal|651
+operator|<<
+literal|2
+operator|)
+argument_list|,
+literal|0x11
 argument_list|)
 expr_stmt|;
 block|}
