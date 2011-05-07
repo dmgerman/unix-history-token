@@ -316,6 +316,7 @@ init|=
 literal|28
 block|,
 comment|/* 11d beacon support for changing cc */
+comment|/* The following are currently different IDs to the Atheros HAL */
 name|HAL_CAP_INTMIT
 init|=
 literal|29
@@ -391,6 +392,8 @@ init|=
 literal|43
 block|,
 comment|/* hardware supports global tx timeout */
+comment|/* The following are back to normal, shared with the Atheros HAL */
+comment|/* The following are private to the FreeBSD HAL (224 onward) */
 block|}
 name|HAL_CAPABILITY_TYPE
 typedef|;
