@@ -9825,7 +9825,7 @@ name|sc
 operator|->
 name|xl_dev
 argument_list|,
-literal|"transmission error: %x\n"
+literal|"transmission error: 0x%02x\n"
 argument_list|,
 name|txstat
 argument_list|)
@@ -9910,6 +9910,12 @@ argument_list|,
 literal|64
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|xl_wdog_timer
+operator|=
+literal|5
+expr_stmt|;
 block|}
 block|}
 else|else
@@ -9924,6 +9930,7 @@ name|xl_tx_head
 operator|!=
 name|NULL
 condition|)
+block|{
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -9939,6 +9946,13 @@ operator|->
 name|xl_phys
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|xl_wdog_timer
+operator|=
+literal|5
+expr_stmt|;
+block|}
 block|}
 comment|/* 			 * Remember to set this for the 			 * first generation 3c90X chips. 			 */
 name|CSR_WRITE_1
