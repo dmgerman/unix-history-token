@@ -6607,7 +6607,7 @@ name|a
 operator|->
 name|ptr
 operator|=
-name|sndbuf_getreadyptr
+name|sndbuf_getfreeptr
 argument_list|(
 name|bs
 argument_list|)
