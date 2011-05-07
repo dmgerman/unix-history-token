@@ -1661,6 +1661,8 @@ name|mp
 argument_list|)
 argument_list|,
 name|PVFS
+operator||
+name|PDROP
 argument_list|,
 literal|"vfs_busy"
 argument_list|,
@@ -1677,6 +1679,11 @@ name|mtx_lock
 argument_list|(
 operator|&
 name|mountlist_mtx
+argument_list|)
+expr_stmt|;
+name|MNT_ILOCK
+argument_list|(
+name|mp
 argument_list|)
 expr_stmt|;
 block|}
