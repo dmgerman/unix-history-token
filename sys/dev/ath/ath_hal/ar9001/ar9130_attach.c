@@ -1359,6 +1359,19 @@ operator|=
 name|AH_FALSE
 expr_stmt|;
 comment|/* XXX? */
+comment|/* 	 * MBSSID aggregation is broken in Howl v1.1, v1.2, v1.3 	 * and works fine in v1.4. 	 * XXX todo, enable it for v1.4. 	 */
+name|pCap
+operator|->
+name|halMbssidAggrSupport
+operator|=
+name|AH_FALSE
+expr_stmt|;
+name|pCap
+operator|->
+name|hal4AddrAggrSupport
+operator|=
+name|AH_TRUE
+expr_stmt|;
 return|return
 name|AH_TRUE
 return|;

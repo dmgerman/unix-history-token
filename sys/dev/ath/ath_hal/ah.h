@@ -316,84 +316,127 @@ init|=
 literal|28
 block|,
 comment|/* 11d beacon support for changing cc */
-comment|/* The following are currently different IDs to the Atheros HAL */
-name|HAL_CAP_INTMIT
-init|=
-literal|29
-block|,
-comment|/* interference mitigation */
-name|HAL_CAP_RXORN_FATAL
+name|HAL_CAP_HT
 init|=
 literal|30
 block|,
-comment|/* HAL_INT_RXORN treated as fatal */
-name|HAL_CAP_HT
+comment|/* hardware can support HT */
+name|HAL_CAP_GTXTO
 init|=
 literal|31
 block|,
-comment|/* hardware can support HT */
-name|HAL_CAP_TX_CHAINMASK
+comment|/* hardware supports global tx timeout */
+name|HAL_CAP_FAST_CC
 init|=
 literal|32
+block|,
+comment|/* hardware supports fast channel change */
+name|HAL_CAP_TX_CHAINMASK
+init|=
+literal|33
 block|,
 comment|/* mask of TX chains supported */
 name|HAL_CAP_RX_CHAINMASK
 init|=
-literal|33
-block|,
-comment|/* mask of RX chains supported */
-name|HAL_CAP_RXTSTAMP_PREC
-init|=
 literal|34
 block|,
+comment|/* mask of RX chains supported */
+name|HAL_CAP_NUM_GPIO_PINS
+init|=
+literal|36
+block|,
+comment|/* number of GPIO pins */
+name|HAL_CAP_CST
+init|=
+literal|38
+block|,
+comment|/* hardware supports carrier sense timeout */
+name|HAL_CAP_RTS_AGGR_LIMIT
+init|=
+literal|42
+block|,
+comment|/* aggregation limit with RTS */
+name|HAL_CAP_4ADDR_AGGR
+init|=
+literal|43
+block|,
+comment|/* hardware is capable of 4addr aggregation */
+name|HAL_CAP_AUTO_SLEEP
+init|=
+literal|48
+block|,
+comment|/* hardware can go to network sleep 					   automatically after waking up to receive TIM */
+name|HAL_CAP_MBSSID_AGGR_SUPPORT
+init|=
+literal|49
+block|,
+comment|/* Support for mBSSID Aggregation */
+name|HAL_CAP_SPLIT_4KB_TRANS
+init|=
+literal|50
+block|,
+comment|/* hardware supports descriptors straddling a 4k page boundary */
+name|HAL_CAP_REG_FLAG
+init|=
+literal|51
+block|,
+comment|/* Regulatory domain flags */
+name|HAL_CAP_BT_COEX
+init|=
+literal|60
+block|,
+comment|/* hardware is capable of bluetooth coexistence */
+name|HAL_CAP_HT20_SGI
+init|=
+literal|96
+block|,
+comment|/* hardware supports HT20 short GI */
+name|HAL_CAP_RXTSTAMP_PREC
+init|=
+literal|100
+block|,
 comment|/* rx desc tstamp precision (bits) */
+comment|/* The following are private to the FreeBSD HAL (224 onward) */
+name|HAL_CAP_INTMIT
+init|=
+literal|229
+block|,
+comment|/* interference mitigation */
+name|HAL_CAP_RXORN_FATAL
+init|=
+literal|230
+block|,
+comment|/* HAL_INT_RXORN treated as fatal */
 name|HAL_CAP_BB_HANG
 init|=
-literal|35
+literal|235
 block|,
 comment|/* can baseband hang */
 name|HAL_CAP_MAC_HANG
 init|=
-literal|36
+literal|236
 block|,
 comment|/* can MAC hang */
 name|HAL_CAP_INTRMASK
 init|=
-literal|37
+literal|237
 block|,
 comment|/* bitmask of supported interrupts */
 name|HAL_CAP_BSSIDMATCH
 init|=
-literal|38
+literal|238
 block|,
 comment|/* hardware has disable bssid match */
 name|HAL_CAP_STREAMS
 init|=
-literal|39
+literal|239
 block|,
 comment|/* how many 802.11n spatial streams are available */
-name|HAL_CAP_SPLIT_4KB_TRANS
-init|=
-literal|40
-block|,
-comment|/* hardware supports descriptors straddling a 4k page boundary */
-name|HAL_CAP_HAS_PSPOLL
-init|=
-literal|41
-block|,
-comment|/* hardware has ps-poll support */
 name|HAL_CAP_RXDESC_SELFLINK
 init|=
-literal|42
+literal|242
 block|,
 comment|/* support a self-linked tail RX descriptor */
-name|HAL_CAP_GTXTO
-init|=
-literal|43
-block|,
-comment|/* hardware supports global tx timeout */
-comment|/* The following are back to normal, shared with the Atheros HAL */
-comment|/* The following are private to the FreeBSD HAL (224 onward) */
 block|}
 name|HAL_CAPABILITY_TYPE
 typedef|;

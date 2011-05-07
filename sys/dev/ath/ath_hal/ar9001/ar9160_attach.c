@@ -1543,6 +1543,18 @@ operator|=
 name|AH_FALSE
 expr_stmt|;
 comment|/* XXX? */
+name|pCap
+operator|->
+name|halMbssidAggrSupport
+operator|=
+name|AH_TRUE
+expr_stmt|;
+name|pCap
+operator|->
+name|hal4AddrAggrSupport
+operator|=
+name|AH_TRUE
+expr_stmt|;
 comment|/* AR9160 is a 2x2 stream device */
 name|pCap
 operator|->

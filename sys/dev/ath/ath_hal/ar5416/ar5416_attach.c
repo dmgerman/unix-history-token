@@ -4614,6 +4614,13 @@ name|halTsfAddSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
+name|pCap
+operator|->
+name|hal4AddrAggrSupport
+operator|=
+name|AH_FALSE
+expr_stmt|;
+comment|/* Broken in Owl */
 if|if
 condition|(
 name|ath_hal_eepromGet
@@ -4835,8 +4842,9 @@ name|pCap
 operator|->
 name|halMbssidAggrSupport
 operator|=
-name|AH_TRUE
+name|AH_FALSE
 expr_stmt|;
+comment|/* Broken on Owl */
 name|pCap
 operator|->
 name|halForcePpmSupport
@@ -4852,6 +4860,18 @@ expr_stmt|;
 name|pCap
 operator|->
 name|halBssidMatchSupport
+operator|=
+name|AH_TRUE
+expr_stmt|;
+name|pCap
+operator|->
+name|halGTTSupport
+operator|=
+name|AH_TRUE
+expr_stmt|;
+name|pCap
+operator|->
+name|halCSTSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;

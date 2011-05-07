@@ -869,13 +869,6 @@ name|type
 condition|)
 block|{
 case|case
-name|HAL_CAP_GTXTO
-case|:
-return|return
-name|HAL_OK
-return|;
-comment|/* All AR5416+ supports Global TX Timeout */
-case|case
 name|HAL_CAP_BB_HANG
 case|:
 switch|switch
