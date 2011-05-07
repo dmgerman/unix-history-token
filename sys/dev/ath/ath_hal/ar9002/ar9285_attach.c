@@ -1370,6 +1370,16 @@ argument_list|,
 name|AH_NULL
 argument_list|)
 expr_stmt|;
+comment|/*          * For Kite and later chipsets, the following bits are not 	 * programmed in EEPROM and so are set as enabled always. 	 */
+name|AH_PRIVATE
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_currentRDext
+operator|=
+name|AR9285_RDEXT_DEFAULT
+expr_stmt|;
 comment|/* 	 * ah_miscMode is populated by ar5416FillCapabilityInfo() 	 * starting from griffin. Set here to make sure that 	 * AR_MISC_MODE_MIC_NEW_LOC_ENABLE is set before a GTK is 	 * placed into hardware. 	 */
 if|if
 condition|(

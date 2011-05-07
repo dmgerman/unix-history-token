@@ -1095,6 +1095,10 @@ name|HAL_REG_DOMAIN
 name|ah_currentRD
 decl_stmt|;
 comment|/* EEPROM regulatory domain */
+name|HAL_REG_DOMAIN
+name|ah_currentRDext
+decl_stmt|;
+comment|/* EEPROM extended regdomain flags */
 name|HAL_CHANNEL_INTERNAL
 name|ah_channels
 index|[
