@@ -528,7 +528,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abCcdfijlMmopqrSsTtuVvxz"
+literal|"abCcdDfijlMmopqrSsTtuVvxz"
 argument_list|,
 name|longopts
 argument_list|,
@@ -597,6 +597,16 @@ name|bsdar
 argument_list|,
 name|opt
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'D'
+case|:
+name|bsdar
+operator|->
+name|options
+operator||=
+name|AR_D
 expr_stmt|;
 break|break;
 case|case
@@ -1010,6 +1020,23 @@ argument_list|,
 literal|"-C"
 argument_list|,
 literal|"x"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bsdar
+operator|->
+name|options
+operator|&
+name|AR_D
+condition|)
+name|only_mode
+argument_list|(
+name|bsdar
+argument_list|,
+literal|"-D"
+argument_list|,
+literal|"qr"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1443,7 +1470,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tar -q [-Tcjsvz] archive file ...\n"
+literal|"\tar -q [-TcDjsvz] archive file ...\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1453,7 +1480,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tar -r [-Tcjsuvz] archive file ...\n"
+literal|"\tar -r [-TcDjsuvz] archive file ...\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1463,7 +1490,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tar -r [-Tabcijsuvz] position archive file ...\n"
+literal|"\tar -r [-TabcDijsuvz] position archive file ...\n"
 argument_list|)
 expr_stmt|;
 operator|(
