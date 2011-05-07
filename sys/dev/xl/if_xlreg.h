@@ -603,6 +603,61 @@ end_define
 begin_define
 define|#
 directive|define
+name|XL_DMACTL_UP_ALTSEQ_DIS
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* 3c90xB/3c90xC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XL_DMACTL_DOWN_ALTSEQ_DIS
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* 3c90xC only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XL_DMACTL_DEFEAT_MWI
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* 3c90xB/3c90xC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XL_DMACTL_DEFEAT_MRL
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* 3c90xB/3c90xC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XL_DMACTL_UP_OVERRUN_DISC_DIS
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* 3c90xB/3c90xC */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|XL_DMACTL_TARGET_ABORT
 value|0x40000000
 end_define

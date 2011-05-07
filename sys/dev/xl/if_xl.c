@@ -13013,7 +13013,7 @@ literal|2
 operator|)
 argument_list|)
 expr_stmt|;
-name|CSR_WRITE_2
+name|CSR_WRITE_4
 argument_list|(
 name|sc
 argument_list|,
