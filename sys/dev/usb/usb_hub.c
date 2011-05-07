@@ -5112,6 +5112,7 @@ literal|"devclass=0x%02x devsubclass=0x%02x "
 literal|"sernum=\"%s\" "
 literal|"release=0x%04x "
 literal|"intclass=0x%02x intsubclass=0x%02x"
+literal|"%s%s"
 argument_list|,
 name|UGETW
 argument_list|(
@@ -5180,6 +5181,24 @@ operator|->
 name|idesc
 operator|->
 name|bInterfaceSubClass
+argument_list|,
+name|iface
+operator|->
+name|pnpinfo
+condition|?
+literal|" "
+else|:
+literal|""
+argument_list|,
+name|iface
+operator|->
+name|pnpinfo
+condition|?
+name|iface
+operator|->
+name|pnpinfo
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 block|}

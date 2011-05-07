@@ -344,6 +344,10 @@ parameter_list|,
 name|device_t
 modifier|*
 parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|,
 name|uint8_t
 parameter_list|)
 function_decl|;
@@ -3827,12 +3831,21 @@ name|device_t
 modifier|*
 name|ppdev
 parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|ppnpinfo
+parameter_list|,
 name|uint8_t
 name|flag
 parameter_list|)
 block|{
 name|device_t
 name|dev
+decl_stmt|;
+name|char
+modifier|*
+name|pnpinfo
 decl_stmt|;
 name|int
 name|err
@@ -3944,13 +3957,38 @@ name|error
 goto|;
 block|}
 block|}
+name|pnpinfo
+operator|=
+operator|*
+name|ppnpinfo
+expr_stmt|;
+if|if
+condition|(
+name|pnpinfo
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|*
+name|ppnpinfo
+operator|=
+name|NULL
+expr_stmt|;
+name|free
+argument_list|(
+name|pnpinfo
+argument_list|,
+name|M_USBDEV
+argument_list|)
+expr_stmt|;
+block|}
 return|return;
 name|error
 label|:
 comment|/* Detach is not allowed to fail in the USB world */
 name|panic
 argument_list|(
-literal|"A USB driver would not detach\n"
+literal|"usb_detach_device_sub: A USB driver would not detach\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4082,6 +4120,11 @@ operator|&
 name|iface
 operator|->
 name|subdev
+argument_list|,
+operator|&
+name|iface
+operator|->
+name|pnpinfo
 argument_list|,
 name|flag
 argument_list|)
@@ -9281,14 +9324,13 @@ name|buf_size
 argument_list|,
 literal|"%s"
 literal|"%s "
+literal|"at port=%u "
 literal|"vendor=0x%04x "
 literal|"product=0x%04x "
 literal|"devclass=0x%02x "
 literal|"devsubclass=0x%02x "
 literal|"sernum=\"%s\" "
 literal|"release=0x%04x "
-literal|"at "
-literal|"port=%u "
 literal|"on "
 literal|"%s\n"
 argument_list|,
@@ -9297,6 +9339,10 @@ argument_list|,
 name|udev
 operator|->
 name|ugen_name
+argument_list|,
+name|udev
+operator|->
+name|port_no
 argument_list|,
 name|UGETW
 argument_list|(
@@ -9341,10 +9387,6 @@ name|ddesc
 operator|.
 name|bcdDevice
 argument_list|)
-argument_list|,
-name|udev
-operator|->
-name|port_no
 argument_list|,
 name|udev
 operator|->
@@ -9444,7 +9486,7 @@ literal|"sernum=\"%s\" "
 literal|"release=0x%04x "
 literal|"mode=%s "
 literal|"port=%u "
-literal|"parent=%s\n"
+literal|"parent=%s"
 argument_list|,
 name|udev
 operator|->
@@ -9624,7 +9666,7 @@ literal|"interface=%d "
 literal|"endpoints=%d "
 literal|"intclass=0x%02x "
 literal|"intsubclass=0x%02x "
-literal|"intprotocol=0x%02x\n"
+literal|"intprotocol=0x%02x"
 argument_list|,
 name|udev
 operator|->
@@ -10287,6 +10329,130 @@ name|enum_sx
 argument_list|)
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * The following function is used to set the per-interface specific  * plug and play information. The string referred to by the pnpinfo  * argument can safely be freed after calling this function. The  * pnpinfo of an interface will be reset at device detach or when  * passing a NULL argument to this function. This function  * returns zero on success, else a USB_ERR_XXX failure code.  */
+end_comment
+
+begin_function
+name|usb_error_t
+name|usbd_set_pnpinfo
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+name|udev
+parameter_list|,
+name|uint8_t
+name|iface_index
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|pnpinfo
+parameter_list|)
+block|{
+name|struct
+name|usb_interface
+modifier|*
+name|iface
+decl_stmt|;
+name|iface
+operator|=
+name|usbd_get_iface
+argument_list|(
+name|udev
+argument_list|,
+name|iface_index
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|iface
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|USB_ERR_INVAL
+operator|)
+return|;
+if|if
+condition|(
+name|iface
+operator|->
+name|pnpinfo
+operator|!=
+name|NULL
+condition|)
+block|{
+name|free
+argument_list|(
+name|iface
+operator|->
+name|pnpinfo
+argument_list|,
+name|M_USBDEV
+argument_list|)
+expr_stmt|;
+name|iface
+operator|->
+name|pnpinfo
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|pnpinfo
+operator|==
+name|NULL
+operator|||
+name|pnpinfo
+index|[
+literal|0
+index|]
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* success */
+name|iface
+operator|->
+name|pnpinfo
+operator|=
+name|strdup
+argument_list|(
+name|pnpinfo
+argument_list|,
+name|M_USBDEV
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|iface
+operator|->
+name|pnpinfo
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|USB_ERR_NOMEM
+operator|)
+return|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* success */
 block|}
 end_function
 

@@ -1649,6 +1649,16 @@ goto|goto
 name|detach
 goto|;
 block|}
+name|ucom_set_pnpinfo_usb
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_super_ucom
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
 comment|/* start interrupt pipe */
 name|mtx_lock
 argument_list|(
@@ -1753,8 +1763,6 @@ operator|&
 name|sc
 operator|->
 name|sc_ucom
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|usbd_transfer_unsetup

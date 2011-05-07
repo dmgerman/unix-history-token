@@ -681,6 +681,11 @@ modifier|*
 name|bsd_priv_sc
 decl_stmt|;
 comment|/* device specific information */
+name|char
+modifier|*
+name|pnpinfo
+decl_stmt|;
+comment|/* additional PnP-info for this interface */
 name|uint8_t
 name|num_altsetting
 decl_stmt|;
@@ -1752,6 +1757,26 @@ name|mtx
 parameter_list|,
 name|int
 name|_ticks
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|usb_error_t
+name|usbd_set_pnpinfo
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+name|udev
+parameter_list|,
+name|uint8_t
+name|iface_index
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|pnpinfo
 parameter_list|)
 function_decl|;
 end_function_decl
