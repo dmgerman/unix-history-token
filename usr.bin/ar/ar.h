@@ -261,10 +261,6 @@ name|char
 name|mode
 decl_stmt|;
 comment|/* program mode */
-name|char
-name|compression
-decl_stmt|;
-comment|/* compression mode */
 name|int
 name|options
 decl_stmt|;

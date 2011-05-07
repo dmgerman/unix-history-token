@@ -615,12 +615,7 @@ break|break;
 case|case
 literal|'j'
 case|:
-name|bsdar
-operator|->
-name|options
-operator||=
-name|AR_J
-expr_stmt|;
+comment|/* ignored */
 break|break;
 case|case
 literal|'l'
@@ -764,12 +759,7 @@ break|break;
 case|case
 literal|'z'
 case|:
-name|bsdar
-operator|->
-name|options
-operator||=
-name|AR_Z
-expr_stmt|;
+comment|/* ignored */
 break|break;
 case|case
 name|OPTION_HELP
