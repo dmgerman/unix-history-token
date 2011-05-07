@@ -1890,7 +1890,7 @@ name|dma_dbg_6
 argument_list|)
 expr_stmt|;
 return|return
-name|HAL_MAC_HANG_UNKNOWN
+literal|0
 return|;
 block|}
 end_function
@@ -2095,7 +2095,7 @@ name|hang_sig
 argument_list|)
 expr_stmt|;
 return|return
-name|HAL_BB_HANG_UNKNOWN
+literal|0
 return|;
 undef|#
 directive|undef
