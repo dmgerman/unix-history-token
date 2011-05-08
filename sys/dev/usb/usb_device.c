@@ -445,7 +445,7 @@ end_function_decl
 begin_if
 if|#
 directive|if
-name|USB_HAVE_UGEN
+name|USB_HAVE_DEVCTL
 end_if
 
 begin_function_decl
@@ -464,6 +464,17 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|USB_HAVE_UGEN
+end_if
 
 begin_function_decl
 specifier|static
@@ -6961,6 +6972,11 @@ name|bdev
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|USB_HAVE_DEVCTL
 name|usb_notify_addq
 argument_list|(
 literal|"ATTACH"
@@ -7625,7 +7641,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|USB_HAVE_UGEN
+name|USB_HAVE_DEVCTL
 name|usb_notify_addq
 argument_list|(
 literal|"DETACH"
@@ -7633,6 +7649,11 @@ argument_list|,
 name|udev
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|USB_HAVE_UGEN
 name|printf
 argument_list|(
 literal|"%s:<%s> at %s (disconnected)\n"
@@ -9185,7 +9206,7 @@ end_function
 begin_if
 if|#
 directive|if
-name|USB_HAVE_UGEN
+name|USB_HAVE_DEVCTL
 end_if
 
 begin_comment
@@ -9323,7 +9344,12 @@ argument_list|,
 name|buf_size
 argument_list|,
 literal|"%s"
+if|#
+directive|if
+name|USB_HAVE_UGEN
 literal|"%s "
+endif|#
+directive|endif
 literal|"at port=%u "
 literal|"vendor=0x%04x "
 literal|"product=0x%04x "
@@ -9331,15 +9357,25 @@ literal|"devclass=0x%02x "
 literal|"devsubclass=0x%02x "
 literal|"sernum=\"%s\" "
 literal|"release=0x%04x "
-literal|"on "
-literal|"%s\n"
+if|#
+directive|if
+name|USB_HAVE_UGEN
+literal|"on %s\n"
+endif|#
+directive|endif
+literal|""
 argument_list|,
 name|ntype
 argument_list|,
+if|#
+directive|if
+name|USB_HAVE_UGEN
 name|udev
 operator|->
 name|ugen_name
 argument_list|,
+endif|#
+directive|endif
 name|udev
 operator|->
 name|port_no
@@ -9387,6 +9423,9 @@ name|ddesc
 operator|.
 name|bcdDevice
 argument_list|)
+if|#
+directive|if
+name|USB_HAVE_UGEN
 argument_list|,
 name|udev
 operator|->
@@ -9411,6 +9450,8 @@ operator|->
 name|bdev
 argument_list|)
 argument_list|)
+endif|#
+directive|endif
 argument_list|)
 expr_stmt|;
 name|devctl_queue_data
@@ -9477,7 +9518,13 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
+if|#
+directive|if
+name|USB_HAVE_UGEN
+literal|"ugen=%s "
 literal|"cdev=%s "
+endif|#
+directive|endif
 literal|"vendor=0x%04x "
 literal|"product=0x%04x "
 literal|"devclass=0x%02x "
@@ -9486,12 +9533,27 @@ literal|"sernum=\"%s\" "
 literal|"release=0x%04x "
 literal|"mode=%s "
 literal|"port=%u "
+if|#
+directive|if
+name|USB_HAVE_UGEN
 literal|"parent=%s"
+endif|#
+directive|endif
+literal|""
+argument_list|,
+if|#
+directive|if
+name|USB_HAVE_UGEN
+name|udev
+operator|->
+name|ugen_name
 argument_list|,
 name|udev
 operator|->
 name|ugen_name
 argument_list|,
+endif|#
+directive|endif
 name|UGETW
 argument_list|(
 name|udev
@@ -9553,6 +9615,9 @@ argument_list|,
 name|udev
 operator|->
 name|port_no
+if|#
+directive|if
+name|USB_HAVE_UGEN
 argument_list|,
 name|udev
 operator|->
@@ -9577,6 +9642,8 @@ operator|->
 name|bdev
 argument_list|)
 argument_list|)
+endif|#
+directive|endif
 argument_list|)
 expr_stmt|;
 name|sbuf_finish
@@ -9654,7 +9721,13 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
+if|#
+directive|if
+name|USB_HAVE_UGEN
+literal|"ugen=%s "
 literal|"cdev=%s "
+endif|#
+directive|endif
 literal|"vendor=0x%04x "
 literal|"product=0x%04x "
 literal|"devclass=0x%02x "
@@ -9668,10 +9741,19 @@ literal|"intclass=0x%02x "
 literal|"intsubclass=0x%02x "
 literal|"intprotocol=0x%02x"
 argument_list|,
+if|#
+directive|if
+name|USB_HAVE_UGEN
 name|udev
 operator|->
 name|ugen_name
 argument_list|,
+name|udev
+operator|->
+name|ugen_name
+argument_list|,
+endif|#
+directive|endif
 name|UGETW
 argument_list|(
 name|udev
@@ -9788,6 +9870,17 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|USB_HAVE_UGEN
+end_if
 
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb_fifo_free_wrap  *  * This function will free the FIFOs.  *  * Description of "flag" argument: If the USB_UNCFG_FLAG_FREE_EP0 flag  * is set and "iface_index" is set to "USB_IFACE_INDEX_ANY", we free  * all FIFOs. If the USB_UNCFG_FLAG_FREE_EP0 flag is not set and  * "iface_index" is set to "USB_IFACE_INDEX_ANY", we free all non  * control endpoint FIFOs. If "iface_index" is not set to  * "USB_IFACE_INDEX_ANY" the flag has no effect.  *------------------------------------------------------------------------*/
