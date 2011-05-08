@@ -192,6 +192,36 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
+name|int
+name|g_eli_version
+init|=
+name|G_ELI_VERSION
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_geom_eli
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|version
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|g_eli_version
+argument_list|,
+literal|0
+argument_list|,
+literal|"GELI version"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|int
 name|g_eli_debug
 init|=
