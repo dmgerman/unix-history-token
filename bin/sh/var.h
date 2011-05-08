@@ -113,6 +113,10 @@ name|int
 name|flags
 decl_stmt|;
 comment|/* flags are defined above */
+name|int
+name|name_len
+decl_stmt|;
+comment|/* length of name */
 name|char
 modifier|*
 name|text
