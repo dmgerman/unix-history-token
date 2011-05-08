@@ -12710,12 +12710,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|sc
-operator|->
-name|last_rx_valid
-operator|=
-literal|0
-expr_stmt|;
 name|stat
 operator|=
 operator|&
