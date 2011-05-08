@@ -2430,6 +2430,25 @@ name|IWN_RXON_TSF
 value|(1<< 15)
 define|#
 directive|define
+name|IWN_RXON_HT_HT40MINUS
+value|(1<< 22)
+define|#
+directive|define
+name|IWN_RXON_HT_PROTMODE
+parameter_list|(
+name|x
+parameter_list|)
+value|(x<< 23)
+define|#
+directive|define
+name|IWN_RXON_HT_MODEPURE40
+value|(1<< 25)
+define|#
+directive|define
+name|IWN_RXON_HT_MODEMIXED
+value|(2<< 25)
+define|#
+directive|define
 name|IWN_RXON_CTS_TO_SELF
 value|(1<< 30)
 name|uint32_t
@@ -2753,11 +2772,23 @@ name|htflags
 decl_stmt|;
 define|#
 directive|define
+name|IWN_SMPS_MIMO_PROT
+value|(1<< 17)
+define|#
+directive|define
 name|IWN_AMDPU_SIZE_FACTOR
 parameter_list|(
 name|x
 parameter_list|)
 value|((x)<< 19)
+define|#
+directive|define
+name|IWN_NODE_HT40
+value|(1<< 21)
+define|#
+directive|define
+name|IWN_SMPS_MIMO_DIS
+value|(1<< 22)
 define|#
 directive|define
 name|IWN_AMDPU_DENSITY
