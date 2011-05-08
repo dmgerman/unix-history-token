@@ -4459,17 +4459,26 @@ name|AH_TRUE
 expr_stmt|;
 if|if
 condition|(
-name|AR_SREV_MERLIN_20_OR_LATER
+name|AR_SREV_MERLIN_20
 argument_list|(
 name|ah
 argument_list|)
 condition|)
+block|{
 name|pCap
 operator|->
 name|halPSPollBroken
 operator|=
 name|AH_FALSE
 expr_stmt|;
+comment|/* 		 * This just enables the support; it doesn't 		 * state 5ghz fast clock will always be used. 		 */
+name|pCap
+operator|->
+name|halSupportsFastClock5GHz
+operator|=
+name|AH_TRUE
+expr_stmt|;
+block|}
 name|pCap
 operator|->
 name|halRxStbcSupport

@@ -741,7 +741,12 @@ decl_stmt|,
 name|halHasRxSelfLinkedTail
 range|:
 literal|1
+decl_stmt|,
+name|halSupportsFastClock5GHz
+range|:
+literal|1
 decl_stmt|;
+comment|/* Hardware supports 5ghz fast clock; check eeprom/channel before using */
 name|uint32_t
 name|halWirelessModes
 decl_stmt|;
@@ -3442,7 +3447,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Whether 5ghz fast clock is needed for Merlin and later */
+comment|/* Whether 5ghz fast clock is needed */
+end_comment
+
+begin_comment
+comment|/*  * The chipset (Merlin, AR9300/later) should set the capability flag below;  * this flag simply says that the hardware can do it, not that the EEPROM  * says it can.  *  * Merlin 2.0/2.1 chips with an EEPROM version> 16 do 5ghz fast clock  *   if the relevant eeprom flag is set.  * Merlin 2.0/2.1 chips with an EEPROM version<= 16 do 5ghz fast clock  *   by default.  */
 end_comment
 
 begin_define
@@ -3455,7 +3464,7 @@ parameter_list|,
 name|_c
 parameter_list|)
 define|\
-value|(IEEE80211_IS_CHAN_5GHZ(_c)&& \ 	ath_hal_eepromGetFlag(ah, AR_EEP_FSTCLK_5G))
+value|(IEEE80211_IS_CHAN_5GHZ(_c)&& \ 	 AH_PRIVATE((_ah))->ah_caps.halSupportsFastClock5GHz&& \ 	ath_hal_eepromGetFlag((_ah), AR_EEP_FSTCLK_5G))
 end_define
 
 begin_endif
