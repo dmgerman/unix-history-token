@@ -2868,8 +2868,43 @@ end_struct
 begin_define
 define|#
 directive|define
+name|IWN_RFLAG_MCS
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IWN_RFLAG_CCK
 value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_RFLAG_GREENFIELD
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_RFLAG_HT40
+value|(1<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_RFLAG_DUPLICATE
+value|(1<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_RFLAG_SGI
+value|(1<< 13)
 end_define
 
 begin_define
