@@ -392,6 +392,8 @@ name|crp
 operator|->
 name|crp_desc
 operator|->
+name|crd_next
+operator|->
 name|crd_key
 argument_list|)
 expr_stmt|;
