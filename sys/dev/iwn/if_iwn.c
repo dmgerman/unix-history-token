@@ -4255,52 +4255,85 @@ literal|":"
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* HT */
-comment|/* XXX disable until HT channel setup works */
-block|ic->ic_htcaps = 		  IEEE80211_HTCAP_SMPS_ENA
-comment|/* SM PS mode enabled */
-block|| IEEE80211_HTCAP_CHWIDTH40
-comment|/* 40MHz channel width */
-block|| IEEE80211_HTCAP_SHORTGI20
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|IWN_FLAG_HAS_11N
+condition|)
+block|{
+name|ic
+operator|->
+name|ic_rxstream
+operator|=
+name|sc
+operator|->
+name|nrxchains
+expr_stmt|;
+name|ic
+operator|->
+name|ic_txstream
+operator|=
+name|sc
+operator|->
+name|ntxchains
+expr_stmt|;
+name|ic
+operator|->
+name|ic_htcaps
+operator|=
+name|IEEE80211_HTCAP_SMPS_OFF
+comment|/* SMPS mode disabled */
+operator||
+name|IEEE80211_HTCAP_SHORTGI20
 comment|/* short GI in 20MHz */
-block|| IEEE80211_HTCAP_SHORTGI40
+ifdef|#
+directive|ifdef
+name|notyet
+operator||
+name|IEEE80211_HTCAP_CHWIDTH40
+comment|/* 40MHz channel width*/
+operator||
+name|IEEE80211_HTCAP_SHORTGI40
 comment|/* short GI in 40MHz */
-block|| IEEE80211_HTCAP_RXSTBC_2STREAM
-comment|/* 1-2 spatial streams */
-block|| IEEE80211_HTCAP_MAXAMSDU_3839
-comment|/* max A-MSDU length */
-comment|/* s/w capabilities */
-block|| IEEE80211_HTC_HT
-comment|/* HT operation */
-block|| IEEE80211_HTC_AMPDU
-comment|/* tx A-MPDU */
-block|| IEEE80211_HTC_AMSDU
-comment|/* tx A-MSDU */
-block|;
-comment|/* Set HT capabilities. */
-block|ic->ic_htcaps =
+operator||
+name|IEEE80211_HTCAP_GREENFIELD
 if|#
 directive|if
 name|IWN_RBUF_SIZE
 operator|==
 literal|8192
-block|IEEE80211_HTCAP_AMSDU7935 |
+operator||
+name|IEEE80211_HTCAP_MAXAMSDU_7935
+comment|/* max A-MSDU length */
+else|#
+directive|else
+operator||
+name|IEEE80211_HTCAP_MAXAMSDU_3839
+comment|/* max A-MSDU length */
 endif|#
 directive|endif
-block|IEEE80211_HTCAP_CBW20_40 | 	    IEEE80211_HTCAP_SGI20 | 	    IEEE80211_HTCAP_SGI40; 	if (sc->hw_type != IWN_HW_REV_TYPE_4965) 		ic->ic_htcaps |= IEEE80211_HTCAP_GF; 	if (sc->hw_type == IWN_HW_REV_TYPE_6050) 		ic->ic_htcaps |= IEEE80211_HTCAP_SMPS_DYN; 	else 		ic->ic_htcaps |= IEEE80211_HTCAP_SMPS_DIS;
 endif|#
 directive|endif
-if|#
-directive|if
-literal|0
-comment|/* HT */
-comment|/* Set supported HT rates. */
-block|ic->ic_sup_mcs[0] = 0xff; 	if (sc->nrxchains> 1) 		ic->ic_sup_mcs[1] = 0xff; 	if (sc->nrxchains> 2) 		ic->ic_sup_mcs[2] = 0xff;
+comment|/* s/w capabilities */
+operator||
+name|IEEE80211_HTC_HT
+comment|/* HT operation */
+operator||
+name|IEEE80211_HTC_AMPDU
+comment|/* tx A-MPDU */
+ifdef|#
+directive|ifdef
+name|notyet
+operator||
+name|IEEE80211_HTC_AMSDU
+comment|/* tx A-MSDU */
 endif|#
 directive|endif
+expr_stmt|;
+block|}
 name|if_initname
 argument_list|(
 name|ifp
