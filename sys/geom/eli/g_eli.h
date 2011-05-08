@@ -3014,25 +3014,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|uint8_t
-modifier|*
-name|g_eli_crypto_key
-parameter_list|(
-name|struct
-name|g_eli_softc
-modifier|*
-name|sc
-parameter_list|,
-name|off_t
-name|offset
-parameter_list|,
-name|size_t
-name|blocksize
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|g_eli_crypto_ivgen
 parameter_list|(
