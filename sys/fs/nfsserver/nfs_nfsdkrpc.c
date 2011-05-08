@@ -121,7 +121,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfsd
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -145,7 +145,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfsd
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -175,7 +175,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfsd
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -205,7 +205,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfsd
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -1829,7 +1829,7 @@ literal|"nfsd"
 argument_list|,
 name|SYSCTL_STATIC_CHILDREN
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfsd
 argument_list|)
 argument_list|)
 expr_stmt|;
