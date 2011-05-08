@@ -785,6 +785,25 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
+parameter_list|,
+name|int
+name|so_locked
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SCTP_SO_LOCK_TESTING
+argument_list|)
+name|SCTP_UNUSED
+endif|#
+directive|endif
 parameter_list|)
 block|{
 name|int
@@ -1020,6 +1039,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|sp
+argument_list|,
+name|so_locked
 argument_list|)
 expr_stmt|;
 block|}
@@ -1353,6 +1374,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|chk
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 comment|/* sa_ignore FREED_MEMORY */
@@ -1480,6 +1503,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|sp
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 comment|/* sa_ignore FREED_MEMORY */
@@ -4450,6 +4475,8 @@ operator|=
 name|sctp_is_there_unsent_data
 argument_list|(
 name|stcb
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -15238,6 +15265,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|chk
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -16346,6 +16375,8 @@ comment|/* resend the sack */
 name|sctp_send_sack
 argument_list|(
 name|stcb
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 break|break;
@@ -16383,6 +16414,8 @@ argument_list|,
 literal|1
 argument_list|,
 name|net
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
@@ -17203,6 +17236,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|chk
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 comment|/* sa_ignore NO_NULL_CHK */
@@ -20002,6 +20037,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|chk
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 return|return

@@ -694,6 +694,9 @@ name|stcb
 parameter_list|,
 name|uint16_t
 name|keyid
+parameter_list|,
+name|int
+name|so_locked
 parameter_list|)
 function_decl|;
 end_function_decl

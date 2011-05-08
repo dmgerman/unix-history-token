@@ -22756,6 +22756,8 @@ argument_list|,
 name|sp
 operator|->
 name|auth_keyid
+argument_list|,
+name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
 comment|/* Free the zone stuff  */
@@ -22943,6 +22945,8 @@ argument_list|,
 name|chk
 operator|->
 name|auth_keyid
+argument_list|,
+name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
 name|SCTP_ZONE_FREE
@@ -23062,6 +23066,8 @@ argument_list|,
 name|chk
 operator|->
 name|auth_keyid
+argument_list|,
+name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -23186,6 +23192,8 @@ argument_list|,
 name|chk
 operator|->
 name|auth_keyid
+argument_list|,
+name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
 name|sctp_free_remote_addr
@@ -23268,6 +23276,8 @@ argument_list|,
 name|chk
 operator|->
 name|auth_keyid
+argument_list|,
+name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
 name|sctp_free_remote_addr
@@ -23350,6 +23360,8 @@ argument_list|,
 name|chk
 operator|->
 name|auth_keyid
+argument_list|,
+name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
 name|sctp_free_remote_addr
@@ -23431,6 +23443,8 @@ argument_list|,
 name|chk
 operator|->
 name|auth_keyid
+argument_list|,
+name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
 name|sctp_free_remote_addr
@@ -31501,6 +31515,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|chk
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
@@ -31775,6 +31791,8 @@ comment|/* sa_ignore NO_NULL_CHK */
 name|sctp_send_sack
 argument_list|(
 name|stcb
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 name|sctp_chunk_output
