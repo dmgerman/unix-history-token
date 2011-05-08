@@ -2248,6 +2248,23 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|initcharset
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|updatecharset
+argument_list|()
+expr_stmt|;
+name|initial_localeisutf8
+operator|=
+name|localeisutf8
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Generate a list of exported variables.  This routine is used to construct  * the third argument to execve when executing a program.  */
 end_comment

@@ -275,6 +275,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* The parser uses the locale that was in effect at startup. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|initial_localeisutf8
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * The following macros access the values of the above variables.  * They have to skip over the name.  They return the null string  * for unset variables.  */
 end_comment
 
@@ -489,6 +500,15 @@ end_function_decl
 begin_function_decl
 name|void
 name|updatecharset
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|initcharset
 parameter_list|(
 name|void
 parameter_list|)

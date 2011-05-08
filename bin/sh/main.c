@@ -254,6 +254,8 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|localeisutf8
+decl_stmt|,
+name|initial_localeisutf8
 decl_stmt|;
 end_decl_stmt
 
@@ -320,7 +322,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|updatecharset
+name|initcharset
 argument_list|()
 expr_stmt|;
 name|state
