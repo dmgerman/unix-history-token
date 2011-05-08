@@ -28067,6 +28067,17 @@ name|ic_scan
 decl_stmt|;
 comment|/*XXX*/
 name|struct
+name|ieee80211_node
+modifier|*
+name|ni
+init|=
+name|ss
+operator|->
+name|ss_vap
+operator|->
+name|iv_bss
+decl_stmt|;
+name|struct
 name|iwn_scan_hdr
 modifier|*
 name|hdr
@@ -28624,13 +28635,23 @@ argument_list|,
 name|rs
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* HT */
-block|if (ic->ic_flags& IEEE80211_F_HTON) 		frm = ieee80211_add_htcaps(frm, ic);
-endif|#
-directive|endif
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_htcaps
+operator|&
+name|IEEE80211_HTC_HT
+condition|)
+name|frm
+operator|=
+name|ieee80211_add_htcap
+argument_list|(
+name|frm
+argument_list|,
+name|ni
+argument_list|)
+expr_stmt|;
 comment|/* Set length of probe request. */
 name|tx
 operator|->
