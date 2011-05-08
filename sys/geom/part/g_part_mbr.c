@@ -1528,7 +1528,7 @@ name|pp
 operator|->
 name|sectorsize
 argument_list|,
-name|UINT_MAX
+name|UINT32_MAX
 argument_list|)
 expr_stmt|;
 name|basetable
@@ -2416,7 +2416,7 @@ name|pp
 operator|->
 name|sectorsize
 argument_list|,
-name|UINT_MAX
+name|UINT32_MAX
 argument_list|)
 expr_stmt|;
 name|buf
