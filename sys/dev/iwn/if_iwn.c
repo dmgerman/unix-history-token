@@ -4004,9 +4004,6 @@ name|IEEE80211_C_WPA
 operator||
 name|IEEE80211_C_SHPREAMBLE
 comment|/* short preamble supported */
-operator||
-name|IEEE80211_C_BGSCAN
-comment|/* background scanning */
 if|#
 directive|if
 literal|0
@@ -4018,6 +4015,21 @@ operator||
 name|IEEE80211_C_WME
 comment|/* WME */
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|hw_type
+operator|!=
+name|IWN_HW_REV_TYPE_4965
+condition|)
+name|ic
+operator|->
+name|ic_caps
+operator||=
+name|IEEE80211_C_BGSCAN
+expr_stmt|;
+comment|/* background scanning */
 if|#
 directive|if
 literal|0
