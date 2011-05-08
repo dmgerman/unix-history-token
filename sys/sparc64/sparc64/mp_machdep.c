@@ -2196,7 +2196,7 @@ name|cpus
 operator|=
 name|shutdown_cpus
 expr_stmt|;
-comment|/* XXX: Stopp all the CPUs which aren't already. */
+comment|/* XXX: Stop all the CPUs which aren't already. */
 if|if
 condition|(
 name|CPU_CMP

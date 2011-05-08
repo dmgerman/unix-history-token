@@ -2959,7 +2959,7 @@ index|]
 operator|=
 name|TLB_CTX_KERNEL
 expr_stmt|;
-name|CPU_ZERO
+name|CPU_FILL
 argument_list|(
 operator|&
 name|pm
