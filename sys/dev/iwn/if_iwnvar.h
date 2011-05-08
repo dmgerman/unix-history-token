@@ -975,12 +975,6 @@ index|[
 name|IEEE80211_CHAN_MAX
 index|]
 decl_stmt|;
-name|int8_t
-name|enh_maxpwr
-index|[
-literal|35
-index|]
-decl_stmt|;
 name|int32_t
 name|temp_off
 decl_stmt|;
