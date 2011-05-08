@@ -5327,7 +5327,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
+while|while
 condition|(
 operator|*
 name|version
@@ -5335,6 +5335,21 @@ operator|!=
 name|G_ELI_VERSION
 condition|)
 block|{
+if|if
+condition|(
+name|G_ELI_VERSION
+operator|==
+name|G_ELI_VERSION_06
+operator|&&
+operator|*
+name|version
+operator|==
+name|G_ELI_VERSION_05
+condition|)
+block|{
+comment|/* Compatible. */
+break|break;
+block|}
 name|gctl_error
 argument_list|(
 name|req
