@@ -30191,6 +30191,8 @@ operator|=
 name|sctp_is_there_unsent_data
 argument_list|(
 name|stcb
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -31421,6 +31423,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|chk
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
@@ -31572,6 +31576,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|chk
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
@@ -32183,6 +32189,25 @@ name|struct
 name|sctp_association
 modifier|*
 name|asoc
+parameter_list|,
+name|int
+name|so_locked
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SCTP_SO_LOCK_TESTING
+argument_list|)
+name|SCTP_UNUSED
+endif|#
+directive|endif
 parameter_list|)
 block|{
 name|struct
@@ -32415,6 +32440,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|chk
+argument_list|,
+name|so_locked
 argument_list|)
 expr_stmt|;
 block|}
@@ -32643,6 +32670,25 @@ parameter_list|,
 name|int
 modifier|*
 name|bail
+parameter_list|,
+name|int
+name|so_locked
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SCTP_SO_LOCK_TESTING
+argument_list|)
+name|SCTP_UNUSED
+endif|#
+directive|endif
 parameter_list|)
 block|{
 comment|/* Move from the stream to the send_queue keeping track of the total */
@@ -32998,6 +33044,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|sp
+argument_list|,
+name|so_locked
 argument_list|)
 expr_stmt|;
 comment|/* we can't be locked to it */
@@ -33709,6 +33757,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|chk
+argument_list|,
+name|so_locked
 argument_list|)
 expr_stmt|;
 operator|*
@@ -34154,6 +34204,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|chk
+argument_list|,
+name|so_locked
 argument_list|)
 expr_stmt|;
 name|to_move
@@ -34244,6 +34296,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|chk
+argument_list|,
+name|so_locked
 argument_list|)
 expr_stmt|;
 endif|#
@@ -35137,6 +35191,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|sp
+argument_list|,
+name|so_locked
 argument_list|)
 expr_stmt|;
 comment|/* we can't be locked to it */
@@ -35234,6 +35290,25 @@ parameter_list|,
 name|int
 modifier|*
 name|quit_now
+parameter_list|,
+name|int
+name|so_locked
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SCTP_SO_LOCK_TESTING
+argument_list|)
+name|SCTP_UNUSED
+endif|#
+directive|endif
 parameter_list|)
 block|{
 name|struct
@@ -35432,6 +35507,8 @@ name|eeor_mode
 argument_list|,
 operator|&
 name|bail
+argument_list|,
+name|so_locked
 argument_list|)
 expr_stmt|;
 if|if
@@ -36589,6 +36666,8 @@ name|eeor_mode
 argument_list|,
 operator|&
 name|quit_now
+argument_list|,
+name|so_locked
 argument_list|)
 expr_stmt|;
 if|if
@@ -40548,6 +40627,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|asoc
+argument_list|,
+name|so_locked
 argument_list|)
 expr_stmt|;
 return|return
@@ -40647,6 +40728,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|chk
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 return|return;
@@ -43699,6 +43782,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|asoc
+argument_list|,
+name|so_locked
 argument_list|)
 expr_stmt|;
 return|return
@@ -45726,6 +45811,8 @@ block|{
 name|sctp_send_sack
 argument_list|(
 name|stcb
+argument_list|,
+name|so_locked
 argument_list|)
 expr_stmt|;
 operator|(
@@ -47068,6 +47155,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|chk
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 return|return;
@@ -47714,6 +47803,25 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
+parameter_list|,
+name|int
+name|so_locked
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SCTP_SO_LOCK_TESTING
+argument_list|)
+name|SCTP_UNUSED
+endif|#
+directive|endif
 parameter_list|)
 block|{
 comment|/*- 	 * Queue up a SACK or NR-SACK in the control queue. 	 * We must first check to see if a SACK or NR-SACK is 	 * somehow on the control queue. 	 * If so, we will take and and remove the old one. 	 */
@@ -48388,6 +48496,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|a_chk
+argument_list|,
+name|so_locked
 argument_list|)
 expr_stmt|;
 comment|/* sa_ignore NO_NULL_CHK */
@@ -52028,6 +52138,25 @@ name|struct
 name|sctp_nets
 modifier|*
 name|u_net
+parameter_list|,
+name|int
+name|so_locked
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SCTP_SO_LOCK_TESTING
+argument_list|)
+name|SCTP_UNUSED
+endif|#
+directive|endif
 parameter_list|)
 block|{
 name|struct
@@ -52288,6 +52417,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|chk
+argument_list|,
+name|so_locked
 argument_list|)
 expr_stmt|;
 return|return
@@ -52808,6 +52939,8 @@ operator|)
 name|NULL
 argument_list|,
 name|chk
+argument_list|,
+name|so_locked
 argument_list|)
 expr_stmt|;
 return|return
@@ -53113,6 +53246,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|chk
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 return|return;
@@ -53440,6 +53575,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|chk
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 return|return;
@@ -53600,6 +53737,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|chk
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 return|return;
@@ -53736,6 +53875,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|chk
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 return|return;
@@ -54372,6 +54513,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|chk
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 return|return;
@@ -56028,6 +56171,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|chk
+argument_list|,
+name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
 name|SCTP_LTRACE_ERR_RET
@@ -59772,6 +59917,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|sp
+argument_list|,
+name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
 name|sp
@@ -65156,6 +65303,8 @@ operator|=
 name|sctp_is_there_unsent_data
 argument_list|(
 name|stcb
+argument_list|,
+name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
 if|if

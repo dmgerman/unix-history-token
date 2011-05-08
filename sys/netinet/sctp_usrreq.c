@@ -19092,6 +19092,8 @@ argument_list|,
 literal|1
 argument_list|,
 name|net
+argument_list|,
+name|SCTP_SO_LOCKED
 argument_list|)
 operator|<
 literal|0

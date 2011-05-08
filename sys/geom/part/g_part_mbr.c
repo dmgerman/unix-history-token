@@ -1528,7 +1528,7 @@ name|pp
 operator|->
 name|sectorsize
 argument_list|,
-literal|0xffffffff
+name|UINT32_MAX
 argument_list|)
 expr_stmt|;
 name|basetable
@@ -2406,6 +2406,8 @@ name|basetable
 expr_stmt|;
 name|msize
 operator|=
+name|MIN
+argument_list|(
 name|pp
 operator|->
 name|mediasize
@@ -2413,6 +2415,9 @@ operator|/
 name|pp
 operator|->
 name|sectorsize
+argument_list|,
+name|UINT32_MAX
+argument_list|)
 expr_stmt|;
 name|buf
 operator|=

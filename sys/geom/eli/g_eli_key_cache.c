@@ -188,6 +188,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|G_ELI_KEY_MAGIC
+value|0xe11341c
+end_define
+
 begin_struct
 struct|struct
 name|g_eli_key
@@ -198,6 +205,10 @@ name|gek_key
 index|[
 name|G_ELI_DATAKEYLEN
 index|]
+decl_stmt|;
+comment|/* Magic. */
+name|int
+name|gek_magic
 decl_stmt|;
 comment|/* Key number. */
 name|uint64_t
@@ -406,6 +417,12 @@ operator|->
 name|gek_count
 operator|=
 literal|0
+expr_stmt|;
+name|key
+operator|->
+name|gek_magic
+operator|=
+name|G_ELI_KEY_MAGIC
 expr_stmt|;
 block|}
 end_function
@@ -667,6 +684,19 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|key
+operator|->
+name|gek_magic
+operator|==
+name|G_ELI_KEY_MAGIC
+argument_list|,
+operator|(
+literal|"Invalid magic."
+operator|)
+argument_list|)
+expr_stmt|;
 name|RB_REMOVE
 argument_list|(
 name|g_eli_key_tree
@@ -768,6 +798,19 @@ operator|->
 name|sc_ekeys_lock
 argument_list|,
 name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|key
+operator|->
+name|gek_magic
+operator|==
+name|G_ELI_KEY_MAGIC
+argument_list|,
+operator|(
+literal|"Invalid magic."
+operator|)
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -1370,6 +1413,19 @@ name|keyno
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|key
+operator|->
+name|gek_magic
+operator|==
+name|G_ELI_KEY_MAGIC
+argument_list|,
+operator|(
+literal|"Invalid key magic."
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|key
@@ -1515,6 +1571,19 @@ operator|->
 name|sc_ekeys_lock
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|key
+operator|->
+name|gek_magic
+operator|==
+name|G_ELI_KEY_MAGIC
+argument_list|,
+operator|(
+literal|"Invalid key magic."
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|key
@@ -1564,6 +1633,19 @@ operator|!=
 literal|0
 condition|)
 return|return;
+name|KASSERT
+argument_list|(
+name|key
+operator|->
+name|gek_magic
+operator|==
+name|G_ELI_KEY_MAGIC
+argument_list|,
+operator|(
+literal|"Invalid key magic."
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc

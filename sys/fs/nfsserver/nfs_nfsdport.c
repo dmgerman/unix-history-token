@@ -281,9 +281,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_DECL
+name|SYSCTL_NODE
 argument_list|(
-name|_vfs_newnfs
+name|_vfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|nfsd
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"New NFS server"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -291,7 +301,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfsd
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -312,7 +322,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfsd
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -333,7 +343,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfsd
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -354,7 +364,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfsd
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -375,7 +385,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfsd
 argument_list|,
 name|OID_AUTO
 argument_list|,
