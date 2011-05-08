@@ -2297,7 +2297,7 @@ name|pf
 argument_list|,
 literal|0
 argument_list|,
-literal|64
+literal|128
 argument_list|,
 comment|/* max # of egress queues */
 literal|64
