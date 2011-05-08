@@ -160,14 +160,63 @@ value|".eli"
 end_define
 
 begin_comment
-comment|/*  * Version history:  * 0 - Initial version number.  * 1 - Added data authentication support (md_aalgo field and  *     G_ELI_FLAG_AUTH flag).  * 2 - Added G_ELI_FLAG_READONLY.  * 3 - Added 'configure' subcommand.  * 4 - IV is generated from offset converted to little-endian  *     (flag G_ELI_FLAG_NATIVE_BYTE_ORDER will be set for older versions).  * 5 - Added multiple encrypton keys and AES-XTS support.  */
+comment|/*  * Version history:  * 0 - Initial version number.  * 1 - Added data authentication support (md_aalgo field and  *     G_ELI_FLAG_AUTH flag).  * 2 - Added G_ELI_FLAG_READONLY.  * 3 - Added 'configure' subcommand.  * 4 - IV is generated from offset converted to little-endian  *     (the G_ELI_FLAG_NATIVE_BYTE_ORDER flag will be set for older versions).  * 5 - Added multiple encrypton keys and AES-XTS support.  * 6 - Fixed usage of multiple keys for authenticated providers (the  *     G_ELI_FLAG_FIRST_KEY flag will be set for older versions).  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|G_ELI_VERSION
+name|G_ELI_VERSION_00
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_ELI_VERSION_01
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_ELI_VERSION_02
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_ELI_VERSION_03
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_ELI_VERSION_04
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_ELI_VERSION_05
 value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_ELI_VERSION_06
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_ELI_VERSION
+value|G_ELI_VERSION_06
 end_define
 
 begin_comment
@@ -297,6 +346,17 @@ define|#
 directive|define
 name|G_ELI_FLAG_SUSPEND
 value|0x00100000
+end_define
+
+begin_comment
+comment|/* Provider uses first encryption key. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|G_ELI_FLAG_FIRST_KEY
+value|0x00200000
 end_define
 
 begin_define
