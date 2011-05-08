@@ -483,28 +483,32 @@ end_define
 begin_define
 define|#
 directive|define
-name|AR5416_OPFLAGS_5G_HT40
+name|AR5416_OPFLAGS_N_5G_HT40
 value|0x04
 end_define
+
+begin_comment
+comment|/* If set, disable 5G HT40 */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|AR5416_OPFLAGS_2G_HT40
+name|AR5416_OPFLAGS_N_2G_HT40
 value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
-name|AR5416_OPFLAGS_5G_HT20
+name|AR5416_OPFLAGS_N_5G_HT20
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|AR5416_OPFLAGS_2G_HT20
+name|AR5416_OPFLAGS_N_2G_HT20
 value|0x20
 end_define
 
