@@ -3566,6 +3566,17 @@ name|AR_PCU_MISC_MODE2_NO_CRYPTO_FOR_NON_DATA_PKT
 value|0x00000004
 end_define
 
+begin_comment
+comment|/*  * This bit enables the Multicast search based on both MAC Address and Key ID.   * If bit is 0, then Multicast search is based on MAC address only.  * For Merlin and above only.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_PCU_MISC_MODE2_ADHOC_MCAST_KEYID_ENABLE
+value|0x00000040
+end_define
+
 begin_define
 define|#
 directive|define

@@ -1324,6 +1324,7 @@ argument_list|(
 name|ah
 argument_list|)
 expr_stmt|;
+comment|/* This may override the AR_DIAG_SW register */
 name|ar5416InitUserSettings
 argument_list|(
 name|ah
@@ -11895,7 +11896,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|AR_SREV_MERLIN_20_OR_LATER
+name|AR_SREV_MERLIN_10_OR_LATER
 argument_list|(
 name|ah
 argument_list|)
@@ -11909,6 +11910,13 @@ name|ah
 argument_list|,
 name|AR_PCU_MISC_MODE2
 argument_list|)
+expr_stmt|;
+name|val
+operator|&=
+operator|(
+operator|~
+name|AR_PCU_MISC_MODE2_ADHOC_MCAST_KEYID_ENABLE
+operator|)
 expr_stmt|;
 if|if
 condition|(
