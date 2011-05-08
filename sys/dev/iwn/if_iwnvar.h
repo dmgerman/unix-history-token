@@ -259,10 +259,10 @@ decl_stmt|;
 name|uint8_t
 name|id
 decl_stmt|;
-name|uint8_t
+name|uint32_t
 name|ridx
 index|[
-name|IEEE80211_RATE_MAXSIZE
+literal|256
 index|]
 decl_stmt|;
 block|}
