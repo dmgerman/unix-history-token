@@ -8399,16 +8399,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* 	 * We only use rings 0 through 4 (4 EDCA + cmd) so there is no need 	 * to allocate commands space for other rings. 	 * XXX Do we really need to allocate descriptors for other rings? 	 */
-if|if
-condition|(
-name|qid
-operator|>
-literal|4
-condition|)
-return|return
-literal|0
-return|;
 name|size
 operator|=
 name|IWN_TX_RING_COUNT
