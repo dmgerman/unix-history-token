@@ -390,6 +390,14 @@ block|,
 block|{
 literal|0x8086
 block|,
+literal|0x422d
+block|,
+literal|"Intel(R) Wireless WiFi Link 4965"
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
 literal|0x4230
 block|,
 literal|"Intel(R) Wireless WiFi Link 4965"
@@ -401,6 +409,14 @@ block|,
 literal|0x4232
 block|,
 literal|"Intel(R) WiFi Link 5100"
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+literal|0x4233
+block|,
+literal|"Intel(R) Wireless WiFi Link 4965"
 block|}
 block|,
 block|{
