@@ -276,7 +276,7 @@ if|if
 condition|(
 name|maxcpus
 operator|>
-name|MAXCPU
+name|MEMSTAT_MAXCPU
 condition|)
 block|{
 name|list
@@ -597,7 +597,7 @@ name|mtshp
 operator|->
 name|mtsh_maxcpus
 operator|>
-name|MAXCPU
+name|MEMSTAT_MAXCPU
 condition|)
 block|{
 name|list
@@ -1253,7 +1253,7 @@ name|struct
 name|malloc_type_stats
 name|mts
 index|[
-name|MAXCPU
+name|MEMSTAT_MAXCPU
 index|]
 decl_stmt|,
 modifier|*
@@ -1395,7 +1395,7 @@ if|if
 condition|(
 name|mp_maxcpus
 operator|>
-name|MAXCPU
+name|MEMSTAT_MAXCPU
 condition|)
 block|{
 name|list
@@ -1555,6 +1555,7 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* 		 * Since our compile-time value for MAXCPU may differ from the 		 * kernel's, we populate our own array. 		 */
 name|mtip
 operator|=
 name|type

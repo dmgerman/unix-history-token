@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/cpuset.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -327,7 +321,7 @@ if|if
 condition|(
 name|maxcpus
 operator|>
-name|MAXCPU
+name|MEMSTAT_MAXCPU
 condition|)
 block|{
 name|list
@@ -648,7 +642,7 @@ name|ushp
 operator|->
 name|ush_maxcpus
 operator|>
-name|MAXCPU
+name|MEMSTAT_MAXCPU
 condition|)
 block|{
 name|list

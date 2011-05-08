@@ -638,7 +638,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|MAXCPU
+name|MEMSTAT_MAXCPU
 condition|;
 name|i
 operator|++
