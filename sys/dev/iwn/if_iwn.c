@@ -3818,6 +3818,138 @@ argument_list|,
 literal|0xffffffff
 argument_list|)
 expr_stmt|;
+name|ifp
+operator|=
+name|sc
+operator|->
+name|sc_ifp
+operator|=
+name|if_alloc
+argument_list|(
+name|IFT_IEEE80211
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"can not allocate ifnet structure\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+name|ic
+operator|=
+name|ifp
+operator|->
+name|if_l2com
+expr_stmt|;
+name|ic
+operator|->
+name|ic_ifp
+operator|=
+name|ifp
+expr_stmt|;
+name|ic
+operator|->
+name|ic_phytype
+operator|=
+name|IEEE80211_T_OFDM
+expr_stmt|;
+comment|/* not only, but not used */
+name|ic
+operator|->
+name|ic_opmode
+operator|=
+name|IEEE80211_M_STA
+expr_stmt|;
+comment|/* default to BSS mode */
+comment|/* Set device capabilities. */
+name|ic
+operator|->
+name|ic_caps
+operator|=
+name|IEEE80211_C_STA
+comment|/* station mode supported */
+operator||
+name|IEEE80211_C_MONITOR
+comment|/* monitor mode supported */
+operator||
+name|IEEE80211_C_TXPMGT
+comment|/* tx power management */
+operator||
+name|IEEE80211_C_SHSLOT
+comment|/* short slot time supported */
+operator||
+name|IEEE80211_C_WPA
+operator||
+name|IEEE80211_C_SHPREAMBLE
+comment|/* short preamble supported */
+if|#
+directive|if
+literal|0
+expr|| IEEE80211_C_IBSS
+comment|/* ibss/adhoc mode */
+endif|#
+directive|endif
+operator||
+name|IEEE80211_C_WME
+comment|/* WME */
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|hw_type
+operator|!=
+name|IWN_HW_REV_TYPE_4965
+condition|)
+name|ic
+operator|->
+name|ic_caps
+operator||=
+name|IEEE80211_C_BGSCAN
+expr_stmt|;
+comment|/* background scanning */
+comment|/* Read MAC address, channels, etc from EEPROM. */
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|iwn_read_eeprom
+argument_list|(
+name|sc
+argument_list|,
+name|macaddr
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"could not read EEPROM, error %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 comment|/* Count the number of available chains. */
 name|sc
 operator|->
@@ -3928,108 +4060,6 @@ literal|":"
 argument_list|)
 expr_stmt|;
 block|}
-name|ifp
-operator|=
-name|sc
-operator|->
-name|sc_ifp
-operator|=
-name|if_alloc
-argument_list|(
-name|IFT_IEEE80211
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ifp
-operator|==
-name|NULL
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"can not allocate ifnet structure\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|fail
-goto|;
-block|}
-name|ic
-operator|=
-name|ifp
-operator|->
-name|if_l2com
-expr_stmt|;
-name|ic
-operator|->
-name|ic_ifp
-operator|=
-name|ifp
-expr_stmt|;
-name|ic
-operator|->
-name|ic_phytype
-operator|=
-name|IEEE80211_T_OFDM
-expr_stmt|;
-comment|/* not only, but not used */
-name|ic
-operator|->
-name|ic_opmode
-operator|=
-name|IEEE80211_M_STA
-expr_stmt|;
-comment|/* default to BSS mode */
-comment|/* Set device capabilities. */
-name|ic
-operator|->
-name|ic_caps
-operator|=
-name|IEEE80211_C_STA
-comment|/* station mode supported */
-operator||
-name|IEEE80211_C_MONITOR
-comment|/* monitor mode supported */
-operator||
-name|IEEE80211_C_TXPMGT
-comment|/* tx power management */
-operator||
-name|IEEE80211_C_SHSLOT
-comment|/* short slot time supported */
-operator||
-name|IEEE80211_C_WPA
-operator||
-name|IEEE80211_C_SHPREAMBLE
-comment|/* short preamble supported */
-if|#
-directive|if
-literal|0
-expr|| IEEE80211_C_IBSS
-comment|/* ibss/adhoc mode */
-endif|#
-directive|endif
-operator||
-name|IEEE80211_C_WME
-comment|/* WME */
-expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|hw_type
-operator|!=
-name|IWN_HW_REV_TYPE_4965
-condition|)
-name|ic
-operator|->
-name|ic_caps
-operator||=
-name|IEEE80211_C_BGSCAN
-expr_stmt|;
-comment|/* background scanning */
 if|#
 directive|if
 literal|0
@@ -4068,36 +4098,6 @@ directive|endif
 block|IEEE80211_HTCAP_CBW20_40 | 	    IEEE80211_HTCAP_SGI20 | 	    IEEE80211_HTCAP_SGI40; 	if (sc->hw_type != IWN_HW_REV_TYPE_4965) 		ic->ic_htcaps |= IEEE80211_HTCAP_GF; 	if (sc->hw_type == IWN_HW_REV_TYPE_6050) 		ic->ic_htcaps |= IEEE80211_HTCAP_SMPS_DYN; 	else 		ic->ic_htcaps |= IEEE80211_HTCAP_SMPS_DIS;
 endif|#
 directive|endif
-comment|/* Read MAC address, channels, etc from EEPROM. */
-if|if
-condition|(
-operator|(
-name|error
-operator|=
-name|iwn_read_eeprom
-argument_list|(
-name|sc
-argument_list|,
-name|macaddr
-argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"could not read EEPROM, error %d\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-goto|goto
-name|fail
-goto|;
-block|}
 if|#
 directive|if
 literal|0
