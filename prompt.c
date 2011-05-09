@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2009  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2011  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -1158,6 +1158,22 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'F'
+case|:
+comment|/* Last component of file name */
+name|ap_str
+argument_list|(
+name|last_component
+argument_list|(
+name|get_filename
+argument_list|(
+name|curr_ifile
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'i'
 case|:
 comment|/* Index into list of files */
@@ -1434,6 +1450,11 @@ literal|' '
 condition|)
 name|mp
 operator|--
+expr_stmt|;
+operator|*
+name|mp
+operator|=
+literal|'\0'
 expr_stmt|;
 break|break;
 case|case
