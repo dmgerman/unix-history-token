@@ -15,6 +15,12 @@ directive|define
 name|_TEKEN_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_comment
 comment|/*  * libteken: terminal emulation library.  *  * This library converts an UTF-8 stream of bytes to terminal drawing  * commands.  */
 end_comment

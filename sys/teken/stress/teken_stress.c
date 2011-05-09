@@ -42,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"teken.h"
+file|<teken.h>
 end_include
 
 begin_decl_stmt
