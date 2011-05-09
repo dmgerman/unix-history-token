@@ -26,12 +26,20 @@ enum|enum
 name|ar9285_ant_div_comb_lna_conf
 block|{
 name|ATH_ANT_DIV_COMB_LNA1_MINUS_LNA2
+init|=
+literal|0
 block|,
 name|ATH_ANT_DIV_COMB_LNA2
+init|=
+literal|1
 block|,
 name|ATH_ANT_DIV_COMB_LNA1
+init|=
+literal|2
 block|,
 name|ATH_ANT_DIV_COMB_LNA1_PLUS_LNA2
+init|=
+literal|3
 block|, }
 enum|;
 end_enum
