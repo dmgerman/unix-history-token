@@ -1887,6 +1887,7 @@ name|halPSPollBroken
 operator|=
 name|AH_FALSE
 expr_stmt|;
+comment|/* Only RX STBC supported */
 name|pCap
 operator|->
 name|halRxStbcSupport
@@ -1897,7 +1898,7 @@ name|pCap
 operator|->
 name|halTxStbcSupport
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 return|return
 name|AH_TRUE
