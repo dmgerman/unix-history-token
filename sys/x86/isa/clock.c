@@ -1880,9 +1880,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|init_TSC_tc
-argument_list|()
-expr_stmt|;
 name|cpu_initclocks_bsp
 argument_list|()
 expr_stmt|;
