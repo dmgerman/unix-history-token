@@ -113,6 +113,10 @@ name|int
 name|flags
 decl_stmt|;
 comment|/* flags are defined above */
+name|int
+name|name_len
+decl_stmt|;
+comment|/* length of name */
 name|char
 modifier|*
 name|text
@@ -267,6 +271,17 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|localeisutf8
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The parser uses the locale that was in effect at startup. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|initial_localeisutf8
 decl_stmt|;
 end_decl_stmt
 
@@ -485,6 +500,15 @@ end_function_decl
 begin_function_decl
 name|void
 name|updatecharset
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|initcharset
 parameter_list|(
 name|void
 parameter_list|)

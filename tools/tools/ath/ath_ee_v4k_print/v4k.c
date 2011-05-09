@@ -378,7 +378,7 @@ name|i
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"| antCtrlCommon: 0x%.4x |\n"
+literal|"| antCtrlCommon: 0x%.8x |\n"
 argument_list|,
 name|mh
 operator|->

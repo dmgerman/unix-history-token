@@ -4404,7 +4404,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(AR_SREV_MERLIN(_ah)&& \ 	 AH_PRIVATE((_ah))->ah_macRev == AR_XSREV_REVISION_MERLIN_20)
+value|(AR_SREV_MERLIN(_ah)&& \ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_MERLIN_20)
 end_define
 
 begin_define
@@ -4517,6 +4517,16 @@ begin_define
 define|#
 directive|define
 name|AR_SREV_9287_11_OR_LATER
+parameter_list|(
+name|_ah
+parameter_list|)
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_KIWI_10_OR_LATER
 parameter_list|(
 name|_ah
 parameter_list|)

@@ -1905,29 +1905,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Antenna selection is not (currently) done this way.  */
-end_comment
-
-begin_function
-name|HAL_BOOL
-name|ar9285SetAntennaSwitch
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-name|ah
-parameter_list|,
-name|HAL_ANT_SETTING
-name|settings
-parameter_list|)
-block|{
-return|return
-name|AH_TRUE
-return|;
-block|}
-end_function
-
 begin_function
 specifier|static
 specifier|const
