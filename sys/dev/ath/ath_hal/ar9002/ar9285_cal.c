@@ -1564,13 +1564,6 @@ condition|)
 return|return
 name|AH_FALSE
 return|;
-name|ar9285_hw_pa_cal
-argument_list|(
-name|ah
-argument_list|,
-name|AH_TRUE
-argument_list|)
-expr_stmt|;
 return|return
 name|AH_TRUE
 return|;
