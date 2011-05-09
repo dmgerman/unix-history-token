@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/_cpuset.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_lock.h>
 end_include
 
@@ -163,7 +169,7 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
-name|cpumask_t
+name|cpuset_t
 name|pm_active
 decl_stmt|;
 name|struct
@@ -619,7 +625,7 @@ name|MAXCPU
 index|]
 decl_stmt|;
 comment|/* TID to identify this pmap entries in TLB */
-name|cpumask_t
+name|cpuset_t
 name|pm_active
 decl_stmt|;
 comment|/* active on cpus */
