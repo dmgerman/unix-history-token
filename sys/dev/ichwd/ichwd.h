@@ -55,6 +55,9 @@ name|int
 name|timeout
 decl_stmt|;
 name|int
+name|smi_enabled
+decl_stmt|;
+name|int
 name|smi_rid
 decl_stmt|;
 name|struct
@@ -623,6 +626,28 @@ begin_comment
 comment|/* TCO Control 2 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TCO_MESSAGE1
+value|0x0c
+end_define
+
+begin_comment
+comment|/* TCO Message 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCO_MESSAGE2
+value|0x0d
+end_define
+
+begin_comment
+comment|/* TCO Message 2 */
+end_comment
+
 begin_comment
 comment|/* bit definitions for SMI_EN and SMI_STS */
 end_comment
@@ -641,6 +666,13 @@ name|SMI_TCO_STS
 value|0x2000
 end_define
 
+begin_define
+define|#
+directive|define
+name|SMI_GBL_EN
+value|0x0001
+end_define
+
 begin_comment
 comment|/* timer value mask for TCO_RLD and TCO_TMR */
 end_comment
@@ -654,6 +686,17 @@ end_define
 
 begin_comment
 comment|/* status bits for TCO1_STS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCO_NEWCENTURY
+value|0x80
+end_define
+
+begin_comment
+comment|/* set for RTC year roll over (99 to 00) */
 end_comment
 
 begin_define
@@ -733,12 +776,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCO_CNT_PRESERVE
+name|TCO_NMI2SMI_EN
 value|0x0200
 end_define
 
 begin_comment
+comment|/* convert NMIs to SMIs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCO_CNT_PRESERVE
+value|TCO_NMI2SMI_EN
+end_define
+
+begin_comment
 comment|/* preserve these bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCO_NMI_NOW
+value|0x0100
+end_define
+
+begin_comment
+comment|/* trigger an NMI */
 end_comment
 
 begin_comment
