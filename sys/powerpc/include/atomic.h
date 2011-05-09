@@ -64,6 +64,22 @@ parameter_list|()
 value|mb()
 end_define
 
+begin_define
+define|#
+directive|define
+name|_ATOMIC_PUN_LTOI
+parameter_list|(
+name|FUNC
+parameter_list|)
+define|\
+value|static __inline void						\ 	atomic_##FUNC##_long(volatile u_long *p, u_long v)		\ 	{								\ 									\ 		atomic_##FUNC##_int((volatile u_int *)p, (u_int)v);	\ 	}								\ 									\ 	static __inline void						\ 	atomic_##FUNC##_acq_long(volatile u_long *p, u_long v)		\ 	{								\ 									\ 		atomic_##FUNC##_acq_int((volatile u_int *)p,		\ 		    (u_int)v);						\ 	}								\ 									\ 	static __inline void						\ 	atomic_##FUNC##_rel_long(volatile u_long *p, u_long v)		\ 	{								\ 									\ 		atomic_##FUNC##_rel_int((volatile u_int *)p,		\ 		    (u_int)v);						\ 	}
+end_define
+
+begin_comment
+unit|\
+comment|/* _ATOMIC_PUN_LTOI */
+end_comment
+
 begin_comment
 comment|/*  * atomic_add(p, v)  * { *p += v; }  */
 end_comment
@@ -221,39 +237,21 @@ begin_define
 define|#
 directive|define
 name|atomic_add_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_add_long((volatile u_long *)(p), (u_long)(v))
+value|atomic_add_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_add_acq_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_add_acq_long((volatile u_long *)(p), (u_long)(v))
+value|atomic_add_acq_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_add_rel_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_add_rel_long((volatile u_long *)(p), (u_long)(v))
+value|atomic_add_rel_long
 end_define
 
 begin_else
@@ -261,82 +259,32 @@ else|#
 directive|else
 end_else
 
-begin_define
-define|#
-directive|define
-name|atomic_add_long
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_add_int((volatile u_int *)(p), (u_int)(v))
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_add_acq_long
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_add_acq_int((volatile u_int *)(p), (u_int)(v))
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_add_rel_long
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_add_rel_int((volatile u_int *)(p), (u_int)(v))
-end_define
+begin_macro
+name|_ATOMIC_PUN_LTOI
+argument_list|(
+argument|add
+argument_list|)
+end_macro
 
 begin_define
 define|#
 directive|define
 name|atomic_add_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_add_int((volatile u_int *)(p), (u_int)(v))
+value|atomic_add_int
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_add_acq_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_add_acq_int((volatile u_int *)(p), (u_int)(v))
+value|atomic_add_acq_int
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_add_rel_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_add_rel_int((volatile u_int *)(p), (u_int)(v))
+value|atomic_add_rel_int
 end_define
 
 begin_endif
@@ -519,39 +467,21 @@ begin_define
 define|#
 directive|define
 name|atomic_clear_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_clear_long((volatile u_long *)(p), (u_long)(v))
+value|atomic_clear_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_clear_acq_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_clear_acq_long((volatile u_long *)(p), (u_long)(v))
+value|atomic_clear_acq_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_clear_rel_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_clear_rel_long((volatile u_long *)(p), (u_long)(v))
+value|atomic_clear_rel_long
 end_define
 
 begin_else
@@ -559,82 +489,32 @@ else|#
 directive|else
 end_else
 
-begin_define
-define|#
-directive|define
-name|atomic_clear_long
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_clear_int((volatile u_int *)(p), (u_int)(v))
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_clear_acq_long
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_clear_acq_int((volatile u_int *)(p), (u_int)(v))
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_clear_rel_long
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_clear_rel_int((volatile u_int *)(p), (u_int)(v))
-end_define
+begin_macro
+name|_ATOMIC_PUN_LTOI
+argument_list|(
+argument|clear
+argument_list|)
+end_macro
 
 begin_define
 define|#
 directive|define
 name|atomic_clear_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_clear_int((volatile u_int *)(p), (u_int)(v))
+value|atomic_clear_int
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_clear_acq_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_clear_acq_int((volatile u_int *)(p), (u_int)(v))
+value|atomic_clear_acq_int
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_clear_rel_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_clear_rel_int((volatile u_int *)(p), (u_int)(v))
+value|atomic_clear_rel_int
 end_define
 
 begin_endif
@@ -841,39 +721,21 @@ begin_define
 define|#
 directive|define
 name|atomic_set_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_set_long((volatile u_long *)(p), (u_long)(v))
+value|atomic_set_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_set_acq_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_set_acq_long((volatile u_long *)(p), (u_long)(v))
+value|atomic_set_acq_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_set_rel_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_set_rel_long((volatile u_long *)(p), (u_long)(v))
+value|atomic_set_rel_long
 end_define
 
 begin_else
@@ -881,82 +743,32 @@ else|#
 directive|else
 end_else
 
-begin_define
-define|#
-directive|define
-name|atomic_set_long
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_set_int((volatile u_int *)(p), (u_int)(v))
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_set_acq_long
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_set_acq_int((volatile u_int *)(p), (u_int)(v))
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_set_rel_long
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_set_rel_int((volatile u_int *)(p), (u_int)(v))
-end_define
+begin_macro
+name|_ATOMIC_PUN_LTOI
+argument_list|(
+argument|set
+argument_list|)
+end_macro
 
 begin_define
 define|#
 directive|define
 name|atomic_set_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_set_int((volatile u_int *)(p), (u_int)(v))
+value|atomic_set_int
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_set_acq_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_set_acq_int((volatile u_int *)(p), (u_int)(v))
+value|atomic_set_acq_int
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_set_rel_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_set_rel_int((volatile u_int *)(p), (u_int)(v))
+value|atomic_set_rel_int
 end_define
 
 begin_endif
@@ -1139,39 +951,21 @@ begin_define
 define|#
 directive|define
 name|atomic_subtract_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_subtract_long((volatile u_long *)(p), (u_long)(v))
+value|atomic_subtract_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_subtract_acq_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_subtract_acq_long((volatile u_long *)(p), (u_long)(v))
+value|atomic_subtract_acq_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_subtract_rel_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_subtract_rel_long((volatile u_long *)(p), (u_long)(v))
+value|atomic_subtract_rel_long
 end_define
 
 begin_else
@@ -1179,82 +973,32 @@ else|#
 directive|else
 end_else
 
-begin_define
-define|#
-directive|define
-name|atomic_subtract_long
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_subtract_int((volatile u_int *)(p), (u_int)(v))
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_subtract_acq_long
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_subtract_acq_int((volatile u_int *)(p), (u_int)(v))
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_subtract_rel_long
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_subtract_rel_int((volatile u_int *)(p), (u_int)(v))
-end_define
+begin_macro
+name|_ATOMIC_PUN_LTOI
+argument_list|(
+argument|subtract
+argument_list|)
+end_macro
 
 begin_define
 define|#
 directive|define
 name|atomic_subtract_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_subtract_int((volatile u_int *)(p), (u_int)(v))
+value|atomic_subtract_int
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_subtract_acq_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_subtract_acq_int((volatile u_int *)(p), (u_int)(v))
+value|atomic_subtract_acq_int
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_subtract_rel_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_subtract_rel_int((volatile u_int *)(p), (u_int)(v))
+value|atomic_subtract_rel_int
 end_define
 
 begin_endif
@@ -1278,6 +1022,12 @@ begin_undef
 undef|#
 directive|undef
 name|__atomic_subtract_int
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|_ATOMIC_PUN_LTOI
 end_undef
 
 begin_comment
@@ -1487,11 +1237,7 @@ begin_define
 define|#
 directive|define
 name|atomic_readandclear_ptr
-parameter_list|(
-name|p
-parameter_list|)
-define|\
-value|atomic_readandclear_long((volatile u_long *)(p))
+value|atomic_readandclear_long
 end_define
 
 begin_else
@@ -1499,26 +1245,42 @@ else|#
 directive|else
 end_else
 
-begin_define
-define|#
-directive|define
+begin_function
+unit|static
+name|__inline
+name|u_long
 name|atomic_readandclear_long
 parameter_list|(
-name|p
+specifier|volatile
+name|u_long
+modifier|*
+name|addr
 parameter_list|)
-define|\
-value|atomic_readandclear_int((volatile u_int *)(p))
-end_define
+block|{
+return|return
+operator|(
+operator|(
+name|u_long
+operator|)
+name|atomic_readandclear_int
+argument_list|(
+operator|(
+specifier|volatile
+name|u_int
+operator|*
+operator|)
+name|addr
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_define
 define|#
 directive|define
 name|atomic_readandclear_ptr
-parameter_list|(
-name|p
-parameter_list|)
-define|\
-value|atomic_readandclear_int((volatile u_int *)(p))
+value|atomic_readandclear_int
 end_define
 
 begin_endif
@@ -1541,111 +1303,187 @@ define|\
 value|static __inline u_##TYPE					\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)			\ {								\ 	u_##TYPE v;						\ 								\ 	v = *p;							\ 	__ATOMIC_BARRIER;					\ 	return (v);						\ }								\ 								\ static __inline void						\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)	\ {								\ 	__ATOMIC_BARRIER;					\ 	*p = v;							\ }
 end_define
 
-begin_expr_stmt
-unit|ATOMIC_STORE_LOAD
-operator|(
-name|int
-operator|)
+begin_macro
+name|ATOMIC_STORE_LOAD
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_define
 define|#
 directive|define
 name|atomic_load_acq_32
 value|atomic_load_acq_int
+end_define
+
+begin_define
 define|#
 directive|define
 name|atomic_store_rel_32
 value|atomic_store_rel_int
+end_define
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|__powerpc64__
+end_ifdef
+
+begin_macro
 name|ATOMIC_STORE_LOAD
 argument_list|(
 argument|long
 argument_list|)
+end_macro
+
+begin_define
 define|#
 directive|define
 name|atomic_load_acq_64
 value|atomic_load_acq_long
+end_define
+
+begin_define
 define|#
 directive|define
 name|atomic_store_rel_64
 value|atomic_store_rel_long
+end_define
+
+begin_define
 define|#
 directive|define
 name|atomic_load_acq_ptr
-parameter_list|(
-name|p
-parameter_list|)
-define|\
-value|atomic_load_acq_long((volatile u_long *)(p))
+value|atomic_load_acq_long
+end_define
+
+begin_define
 define|#
 directive|define
 name|atomic_store_rel_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_store_rel_long((volatile u_long *)(p), (u_long)(v))
+value|atomic_store_rel_long
+end_define
+
+begin_else
 else|#
 directive|else
-define|#
-directive|define
+end_else
+
+begin_function
+specifier|static
+name|__inline
+name|u_long
 name|atomic_load_acq_long
 parameter_list|(
-name|p
+specifier|volatile
+name|u_long
+modifier|*
+name|addr
 parameter_list|)
-define|\
-value|atomic_load_acq_int((volatile u_int *)(p))
-define|#
-directive|define
+block|{
+return|return
+operator|(
+operator|(
+name|u_long
+operator|)
+name|atomic_load_acq_int
+argument_list|(
+operator|(
+specifier|volatile
+name|u_int
+operator|*
+operator|)
+name|addr
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
 name|atomic_store_rel_long
 parameter_list|(
-name|p
+specifier|volatile
+name|u_long
+modifier|*
+name|addr
 parameter_list|,
-name|v
+name|u_long
+name|val
 parameter_list|)
-define|\
-value|atomic_store_rel_int((volatile u_int *)(p), (u_int)(v))
+block|{
+name|atomic_store_rel_int
+argument_list|(
+operator|(
+specifier|volatile
+name|u_int
+operator|*
+operator|)
+name|addr
+argument_list|,
+operator|(
+name|u_int
+operator|)
+name|val
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_define
 define|#
 directive|define
 name|atomic_load_acq_ptr
-parameter_list|(
-name|p
-parameter_list|)
-define|\
-value|atomic_load_acq_int((volatile u_int *)(p))
+value|atomic_load_acq_int
+end_define
+
+begin_define
 define|#
 directive|define
 name|atomic_store_rel_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_store_rel_int((volatile u_int *)(p), (u_int)(v))
+value|atomic_store_rel_int
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_undef
 undef|#
 directive|undef
 name|ATOMIC_STORE_LOAD
+end_undef
+
+begin_comment
 comment|/*  * Atomically compare the value stored at *p with cmpval and if the  * two values are equal, update the value of *p with newval. Returns  * zero if the compare failed, nonzero otherwise.  */
+end_comment
+
+begin_function
 specifier|static
 name|__inline
 name|int
 name|atomic_cmpset_int
-argument_list|(
-argument|volatile u_int* p
-argument_list|,
-argument|u_int cmpval
-argument_list|,
-argument|u_int newval
-argument_list|)
+parameter_list|(
+specifier|volatile
+name|u_int
+modifier|*
+name|p
+parameter_list|,
+name|u_int
+name|cmpval
+parameter_list|,
+name|u_int
+name|newval
+parameter_list|)
 block|{
 name|int
 name|ret
-block|;
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|__GNUCLIKE_ASM
@@ -1675,7 +1513,7 @@ literal|"=&r"
 operator|(
 name|ret
 operator|)
-block|,
+operator|,
 literal|"=m"
 operator|(
 operator|*
@@ -1686,17 +1524,17 @@ literal|"r"
 operator|(
 name|p
 operator|)
-block|,
+operator|,
 literal|"r"
 operator|(
 name|cmpval
 operator|)
-block|,
+operator|,
 literal|"r"
 operator|(
 name|newval
 operator|)
-block|,
+operator|,
 literal|"m"
 operator|(
 operator|*
@@ -1704,11 +1542,133 @@ name|p
 operator|)
 operator|:
 literal|"cc"
-block|,
+operator|,
 literal|"memory"
 block|)
-expr_stmt|;
-end_expr_stmt
+function|;
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_return
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+end_return
+
+begin_function
+unit|} static
+name|__inline
+name|int
+name|atomic_cmpset_long
+parameter_list|(
+specifier|volatile
+name|u_long
+modifier|*
+name|p
+parameter_list|,
+name|u_long
+name|cmpval
+parameter_list|,
+name|u_long
+name|newval
+parameter_list|)
+block|{
+name|int
+name|ret
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUCLIKE_ASM
+asm|__asm __volatile (
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+literal|"1:\tldarx %0, 0, %2\n\t"
+comment|/* load old value */
+literal|"cmpld %3, %0\n\t"
+comment|/* compare */
+literal|"bne 2f\n\t"
+comment|/* exit if not equal */
+literal|"stdcx. %4, 0, %2\n\t"
+comment|/* attempt to store */
+else|#
+directive|else
+literal|"1:\tlwarx %0, 0, %2\n\t"
+comment|/* load old value */
+literal|"cmplw %3, %0\n\t"
+comment|/* compare */
+literal|"bne 2f\n\t"
+comment|/* exit if not equal */
+literal|"stwcx. %4, 0, %2\n\t"
+comment|/* attempt to store */
+endif|#
+directive|endif
+literal|"bne- 1b\n\t"
+comment|/* spin if failed */
+literal|"li %0, 1\n\t"
+comment|/* success - retval = 1 */
+literal|"b 3f\n\t"
+comment|/* we've succeeded */
+literal|"2:\n\t"
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+literal|"stdcx. %0, 0, %2\n\t"
+comment|/* clear reservation (74xx) */
+else|#
+directive|else
+literal|"stwcx. %0, 0, %2\n\t"
+comment|/* clear reservation (74xx) */
+endif|#
+directive|endif
+literal|"li %0, 0\n\t"
+comment|/* failure - retval = 0 */
+literal|"3:\n\t"
+operator|:
+literal|"=&r"
+operator|(
+name|ret
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|:
+literal|"r"
+operator|(
+name|p
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|cmpval
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|newval
+operator|)
+operator|,
+literal|"m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|:
+literal|"cc"
+operator|,
+literal|"memory"
+block|)
+function|;
+end_function
 
 begin_endif
 endif|#
@@ -1800,133 +1760,8 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|atomic_cmpset_32
-value|atomic_cmpset_int
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_cmpset_acq_32
-value|atomic_cmpset_acq_int
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_cmpset_rel_32
-value|atomic_cmpset_rel_int
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__powerpc64__
-end_ifdef
-
 begin_function
 specifier|static
-name|__inline
-name|int
-name|atomic_cmpset_long
-parameter_list|(
-specifier|volatile
-name|u_long
-modifier|*
-name|p
-parameter_list|,
-name|u_long
-name|cmpval
-parameter_list|,
-name|u_long
-name|newval
-parameter_list|)
-block|{
-name|int
-name|ret
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__GNUCLIKE_ASM
-asm|__asm __volatile (
-literal|"1:\tldarx %0, 0, %2\n\t"
-comment|/* load old value */
-literal|"cmpld %3, %0\n\t"
-comment|/* compare */
-literal|"bne 2f\n\t"
-comment|/* exit if not equal */
-literal|"stdcx. %4, 0, %2\n\t"
-comment|/* attempt to store */
-literal|"bne- 1b\n\t"
-comment|/* spin if failed */
-literal|"li %0, 1\n\t"
-comment|/* success - retval = 1 */
-literal|"b 3f\n\t"
-comment|/* we've succeeded */
-literal|"2:\n\t"
-literal|"stdcx. %0, 0, %2\n\t"
-comment|/* clear reservation (74xx) */
-literal|"li %0, 0\n\t"
-comment|/* failure - retval = 0 */
-literal|"3:\n\t"
-operator|:
-literal|"=&r"
-operator|(
-name|ret
-operator|)
-operator|,
-literal|"=m"
-operator|(
-operator|*
-name|p
-operator|)
-operator|:
-literal|"r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|cmpval
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|newval
-operator|)
-operator|,
-literal|"m"
-operator|(
-operator|*
-name|p
-operator|)
-operator|:
-literal|"cc"
-operator|,
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_return
-return|return
-operator|(
-name|ret
-operator|)
-return|;
-end_return
-
-begin_function
-unit|}  static
 name|__inline
 name|int
 name|atomic_cmpset_acq_long
@@ -2005,6 +1840,33 @@ end_function
 begin_define
 define|#
 directive|define
+name|atomic_cmpset_32
+value|atomic_cmpset_int
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_cmpset_acq_32
+value|atomic_cmpset_acq_int
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_cmpset_rel_32
+value|atomic_cmpset_rel_int
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
 name|atomic_cmpset_64
 value|atomic_cmpset_long
 end_define
@@ -2027,45 +1889,21 @@ begin_define
 define|#
 directive|define
 name|atomic_cmpset_ptr
-parameter_list|(
-name|dst
-parameter_list|,
-name|old
-parameter_list|,
-name|new
-parameter_list|)
-define|\
-value|atomic_cmpset_long((volatile u_long *)(dst), (u_long)(old),	\ 	    (u_long)(new))
+value|atomic_cmpset_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_cmpset_acq_ptr
-parameter_list|(
-name|dst
-parameter_list|,
-name|old
-parameter_list|,
-name|new
-parameter_list|)
-define|\
-value|atomic_cmpset_acq_long((volatile u_long *)(dst), (u_long)(old),	\ 	    (u_long)(new))
+value|atomic_cmpset_acq_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_cmpset_rel_ptr
-parameter_list|(
-name|dst
-parameter_list|,
-name|old
-parameter_list|,
-name|new
-parameter_list|)
-define|\
-value|atomic_cmpset_rel_long((volatile u_long *)(dst), (u_long)(old),	\ 	    (u_long)(new))
+value|atomic_cmpset_rel_long
 end_define
 
 begin_else
@@ -2076,91 +1914,22 @@ end_else
 begin_define
 define|#
 directive|define
-name|atomic_cmpset_long
-parameter_list|(
-name|dst
-parameter_list|,
-name|old
-parameter_list|,
-name|new
-parameter_list|)
-define|\
-value|atomic_cmpset_int((volatile u_int *)(dst), (u_int)(old),	\ 	    (u_int)(new))
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_cmpset_acq_long
-parameter_list|(
-name|dst
-parameter_list|,
-name|old
-parameter_list|,
-name|new
-parameter_list|)
-define|\
-value|atomic_cmpset_acq_int((volatile u_int *)(dst), (u_int)(old),	\ 	    (u_int)(new))
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_cmpset_rel_long
-parameter_list|(
-name|dst
-parameter_list|,
-name|old
-parameter_list|,
-name|new
-parameter_list|)
-define|\
-value|atomic_cmpset_rel_int((volatile u_int *)(dst), (u_int)(old),	\ 	    (u_int)(new))
-end_define
-
-begin_define
-define|#
-directive|define
 name|atomic_cmpset_ptr
-parameter_list|(
-name|dst
-parameter_list|,
-name|old
-parameter_list|,
-name|new
-parameter_list|)
-define|\
-value|atomic_cmpset_int((volatile u_int *)(dst), (u_int)(old),	\ 	    (u_int)(new))
+value|atomic_cmpset_int
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_cmpset_acq_ptr
-parameter_list|(
-name|dst
-parameter_list|,
-name|old
-parameter_list|,
-name|new
-parameter_list|)
-define|\
-value|atomic_cmpset_acq_int((volatile u_int *)(dst), (u_int)(old),	\ 	    (u_int)(new))
+value|atomic_cmpset_acq_int
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_cmpset_rel_ptr
-parameter_list|(
-name|dst
-parameter_list|,
-name|old
-parameter_list|,
-name|new
-parameter_list|)
-define|\
-value|atomic_cmpset_rel_int((volatile u_int *)(dst), (u_int)(old),	\ 	    (u_int)(new))
+value|atomic_cmpset_rel_int
 end_define
 
 begin_endif
@@ -2217,19 +1986,6 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|atomic_fetchadd_32
-value|atomic_fetchadd_int
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__powerpc64__
-end_ifdef
-
 begin_function
 specifier|static
 name|__inline
@@ -2282,26 +2038,21 @@ end_function
 begin_define
 define|#
 directive|define
-name|atomic_fetchadd_64
-value|atomic_fetchadd_long
+name|atomic_fetchadd_32
+value|atomic_fetchadd_int
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
 
 begin_define
 define|#
 directive|define
-name|atomic_fetchadd_long
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|(u_long)atomic_fetchadd_int((volatile u_int *)(p), (u_int)(v))
+name|atomic_fetchadd_64
+value|atomic_fetchadd_long
 end_define
 
 begin_endif
