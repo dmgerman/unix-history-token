@@ -5590,7 +5590,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(x.target_table_entry.flags ==					\ 	TSTORM_CAM_TARGET_TABLE_ENTRY_ACTION_TYPE)
+value|((x)->target_table_entry.flags ==				\ 	TSTORM_CAM_TARGET_TABLE_ENTRY_ACTION_TYPE)
 end_define
 
 begin_define
@@ -5601,7 +5601,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(x.target_table_entry.flags = TSTORM_CAM_TARGET_TABLE_ENTRY_ACTION_TYPE)
+value|((x)->target_table_entry.flags = TSTORM_CAM_TARGET_TABLE_ENTRY_ACTION_TYPE)
 end_define
 
 begin_comment
