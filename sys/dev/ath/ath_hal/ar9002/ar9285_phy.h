@@ -74,7 +74,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|HAL_BOOL
 name|ar9285_check_div_comb
 parameter_list|(
 name|struct

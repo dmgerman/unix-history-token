@@ -5156,9 +5156,12 @@ argument_list|)
 operator|->
 name|ah_rx_chainmask
 decl_stmt|;
+comment|/* Flip this for this chainmask regardless of chip */
 if|if
 condition|(
 name|rx_chainmask
+operator|==
+literal|0x5
 condition|)
 name|OS_REG_SET_BIT
 argument_list|(
