@@ -1054,6 +1054,15 @@ end_function_decl
 
 begin_function_decl
 name|public
+name|char
+modifier|*
+name|last_component
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|public
 name|int
 name|eof_displayed
 parameter_list|()
@@ -1728,6 +1737,15 @@ end_function_decl
 
 begin_function_decl
 name|public
+name|char
+modifier|*
+name|propt
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|public
 name|void
 name|scan_option
 parameter_list|()
@@ -1745,7 +1763,7 @@ end_function_decl
 begin_function_decl
 name|public
 name|int
-name|single_char_option
+name|opt_has_param
 parameter_list|()
 function_decl|;
 end_function_decl

@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1984-2009  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2011  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -6954,7 +6954,14 @@ name|rcSrc
 operator|.
 name|Left
 expr_stmt|;
-comment|/* new_org.Y = rcClip.top; -- doesn't compile under MSVC6 */
+name|new_org
+operator|.
+name|Y
+operator|=
+name|rcClip
+operator|.
+name|Top
+expr_stmt|;
 comment|/* Fill the right character and attributes. */
 name|fillchar
 operator|.
