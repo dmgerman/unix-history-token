@@ -228,11 +228,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check whether antenna diversity should be enabled  */
+comment|/*  * Check whether combined + fast antenna diversity should be enabled.  *  * This enables software-driven RX antenna diversity based on RX  * RSSI + antenna config packet sampling.  */
 end_comment
 
 begin_function
-name|int
+name|HAL_BOOL
 name|ar9285_check_div_comb
 parameter_list|(
 name|struct
@@ -267,6 +267,10 @@ name|ee_base
 operator|.
 name|modalHeader
 decl_stmt|;
+comment|/* For now, simply disable this until it's better debugged. -adrian */
+return|return
+name|AH_FALSE
+return|;
 if|if
 condition|(
 operator|!
@@ -276,7 +280,7 @@ name|ah
 argument_list|)
 condition|)
 return|return
-literal|0
+name|AH_FALSE
 return|;
 if|if
 condition|(
@@ -287,7 +291,7 @@ operator|<
 literal|3
 condition|)
 return|return
-literal|0
+name|AH_FALSE
 return|;
 name|ant_div_ctl1
 operator|=
@@ -314,10 +318,10 @@ literal|0x1
 operator|)
 condition|)
 return|return
-literal|1
+name|AH_TRUE
 return|;
 return|return
-literal|0
+name|AH_FALSE
 return|;
 block|}
 end_function
