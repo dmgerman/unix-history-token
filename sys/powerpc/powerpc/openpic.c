@@ -1039,10 +1039,12 @@ argument_list|(
 name|irq
 argument_list|)
 argument_list|,
-operator|(
-name|long
-operator|)
 name|cpumask
+operator|.
+name|__bits
+index|[
+literal|0
+index|]
 operator|&
 literal|0xffffffff
 argument_list|)
