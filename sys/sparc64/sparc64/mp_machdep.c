@@ -2352,7 +2352,7 @@ name|tcmask
 argument_list|)
 condition|)
 block|{
-name|CPU_OR_ATOMIC
+name|CPU_NAND_ATOMIC
 argument_list|(
 operator|&
 name|shutdown_cpus
