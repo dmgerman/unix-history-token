@@ -541,6 +541,9 @@ name|cpu
 decl_stmt|,
 name|pmc
 decl_stmt|;
+name|size_t
+name|setsize
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -600,6 +603,13 @@ operator|&
 name|haltedcpus
 argument_list|)
 expr_stmt|;
+name|setsize
+operator|=
+operator|(
+name|size_t
+operator|)
+name|cpusetsize
+expr_stmt|;
 if|if
 condition|(
 name|ncpu
@@ -613,12 +623,8 @@ argument_list|,
 operator|&
 name|haltedcpus
 argument_list|,
-operator|(
-name|size_t
-operator|*
-operator|)
 operator|&
-name|cpusetsize
+name|setsize
 argument_list|,
 name|NULL
 argument_list|,
