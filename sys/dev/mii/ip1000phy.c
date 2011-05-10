@@ -214,7 +214,7 @@ block|,
 expr|sizeof
 operator|(
 expr|struct
-name|mii_softc
+name|ip1000phy_softc
 operator|)
 block|}
 decl_stmt|;
