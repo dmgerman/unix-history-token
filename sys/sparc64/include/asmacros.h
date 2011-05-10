@@ -134,6 +134,27 @@ define|\
 value|lduw	[r1], r2 ; \ 9:	andn	r2, bits, r3 ; \ 	casa	[r1] ASI_N, r2, r3 ; \ 	cmp	r2, r3 ; \ 	bne,pn	%icc, 9b ; \ 	 mov	r3, r2
 end_define
 
+begin_comment
+comment|/*  * Atomically clear a number of bits of an u_long in memory.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_CLEAR_LONG
+parameter_list|(
+name|r1
+parameter_list|,
+name|r2
+parameter_list|,
+name|r3
+parameter_list|,
+name|bits
+parameter_list|)
+define|\
+value|ldx	[r1], r2 ; \ 9:	andn	r2, bits, r3 ; \ 	casxa	[r1] ASI_N, r2, r3 ; \ 	cmp	r2, r3 ; \ 	bne,pn	%icc, 9b ; \ 	 mov	r3, r2
+end_define
+
 begin_define
 define|#
 directive|define
