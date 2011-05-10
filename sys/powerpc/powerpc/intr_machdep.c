@@ -1649,6 +1649,13 @@ ifdef|#
 directive|ifdef
 name|SMP
 comment|/* Install an IPI handler. */
+if|if
+condition|(
+name|mp_ncpus
+operator|>
+literal|1
+condition|)
+block|{
 for|for
 control|(
 name|n
@@ -1687,7 +1694,7 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"%s"
+literal|"%s: SMP root PIC does not supply any IPIs"
 operator|,
 name|__func__
 operator|)
@@ -1745,6 +1752,7 @@ operator|(
 name|error
 operator|)
 return|;
+block|}
 block|}
 block|}
 endif|#
