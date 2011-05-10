@@ -16,7 +16,7 @@ name|_MEMSTAT_H_
 end_define
 
 begin_comment
-comment|/*  * Number of CPU slots in library-internal data structures.  This should be  * at least value of MAXCPU from param.h  */
+comment|/*  * Number of CPU slots in library-internal data structures.  This should be  * at least the value of MAXCPU from param.h.  */
 end_comment
 
 begin_define
