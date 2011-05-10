@@ -150,6 +150,11 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|file
+decl_stmt|;
 name|fmt
 operator|=
 name|NOTSET
@@ -159,6 +164,10 @@ operator|.
 name|fd
 operator|=
 name|STDIN_FILENO
+expr_stmt|;
+name|file
+operator|=
+literal|"stdin"
 expr_stmt|;
 name|opterr
 operator|=
@@ -257,6 +266,10 @@ argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
+name|file
+operator|=
+name|optarg
+expr_stmt|;
 break|break;
 case|case
 literal|'g'
@@ -304,7 +317,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"stdin isn't a terminal"
+literal|"%s isn't a terminal"
+argument_list|,
+name|file
 argument_list|)
 expr_stmt|;
 if|if
