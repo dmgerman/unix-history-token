@@ -64,22 +64,6 @@ parameter_list|()
 value|mb()
 end_define
 
-begin_define
-define|#
-directive|define
-name|_ATOMIC_PUN_LTOI
-parameter_list|(
-name|FUNC
-parameter_list|)
-define|\
-value|static __inline void						\ 	atomic_##FUNC##_long(volatile u_long *p, u_long v)		\ 	{								\ 									\ 		atomic_##FUNC##_int((volatile u_int *)p, (u_int)v);	\ 	}								\ 									\ 	static __inline void						\ 	atomic_##FUNC##_acq_long(volatile u_long *p, u_long v)		\ 	{								\ 									\ 		atomic_##FUNC##_acq_int((volatile u_int *)p,		\ 		    (u_int)v);						\ 	}								\ 									\ 	static __inline void						\ 	atomic_##FUNC##_rel_long(volatile u_long *p, u_long v)		\ 	{								\ 									\ 		atomic_##FUNC##_rel_int((volatile u_int *)p,		\ 		    (u_int)v);						\ 	}
-end_define
-
-begin_comment
-unit|\
-comment|/* _ATOMIC_PUN_LTOI */
-end_comment
-
 begin_comment
 comment|/*  * atomic_add(p, v)  * { *p += v; }  */
 end_comment
@@ -147,8 +131,13 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|long atomic_add not implemented
+value|__asm __volatile(						\ 	"1:	lwarx	%0, 0, %2\n"				\ 	"	add	%0, %3, %0\n"				\ 	"	stwcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cc", "memory")
 end_define
+
+begin_comment
+unit|\
+comment|/* __atomic_add_long */
+end_comment
 
 begin_endif
 endif|#
@@ -178,6 +167,13 @@ argument|int
 argument_list|)
 end_macro
 
+begin_macro
+name|_ATOMIC_ADD
+argument_list|(
+argument|long
+argument_list|)
+end_macro
+
 begin_define
 define|#
 directive|define
@@ -204,13 +200,6 @@ ifdef|#
 directive|ifdef
 name|__powerpc64__
 end_ifdef
-
-begin_macro
-name|_ATOMIC_ADD
-argument_list|(
-argument|long
-argument_list|)
-end_macro
 
 begin_define
 define|#
@@ -258,13 +247,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_macro
-name|_ATOMIC_PUN_LTOI
-argument_list|(
-argument|add
-argument_list|)
-end_macro
 
 begin_define
 define|#
@@ -377,8 +359,13 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|long atomic_clear not implemented
+value|__asm __volatile(						\ 	"1:	lwarx	%0, 0, %2\n"				\ 	"	andc	%0, %0, %3\n"				\ 	"	stwcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cc", "memory")
 end_define
+
+begin_comment
+unit|\
+comment|/* __atomic_clear_long */
+end_comment
 
 begin_endif
 endif|#
@@ -408,6 +395,13 @@ argument|int
 argument_list|)
 end_macro
 
+begin_macro
+name|_ATOMIC_CLEAR
+argument_list|(
+argument|long
+argument_list|)
+end_macro
+
 begin_define
 define|#
 directive|define
@@ -434,13 +428,6 @@ ifdef|#
 directive|ifdef
 name|__powerpc64__
 end_ifdef
-
-begin_macro
-name|_ATOMIC_CLEAR
-argument_list|(
-argument|long
-argument_list|)
-end_macro
 
 begin_define
 define|#
@@ -489,13 +476,6 @@ else|#
 directive|else
 end_else
 
-begin_macro
-name|_ATOMIC_PUN_LTOI
-argument_list|(
-argument|clear
-argument_list|)
-end_macro
-
 begin_define
 define|#
 directive|define
@@ -525,7 +505,7 @@ end_endif
 begin_undef
 undef|#
 directive|undef
-name|_ATOMIC_ADD
+name|_ATOMIC_CLEAR
 end_undef
 
 begin_undef
@@ -631,8 +611,13 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|long atomic_set not implemented
+value|__asm __volatile(						\ 	"1:	lwarx	%0, 0, %2\n"				\ 	"	or	%0, %3, %0\n"				\ 	"	stwcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cc", "memory")
 end_define
+
+begin_comment
+unit|\
+comment|/* __atomic_set_long */
+end_comment
 
 begin_endif
 endif|#
@@ -662,6 +647,13 @@ argument|int
 argument_list|)
 end_macro
 
+begin_macro
+name|_ATOMIC_SET
+argument_list|(
+argument|long
+argument_list|)
+end_macro
+
 begin_define
 define|#
 directive|define
@@ -688,13 +680,6 @@ ifdef|#
 directive|ifdef
 name|__powerpc64__
 end_ifdef
-
-begin_macro
-name|_ATOMIC_SET
-argument_list|(
-argument|long
-argument_list|)
-end_macro
 
 begin_define
 define|#
@@ -742,13 +727,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_macro
-name|_ATOMIC_PUN_LTOI
-argument_list|(
-argument|set
-argument_list|)
-end_macro
 
 begin_define
 define|#
@@ -861,8 +839,13 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|long atomic_subtract not implemented
+value|__asm __volatile(						\ 	"1:	lwarx	%0, 0, %2\n"				\ 	"	subf	%0, %3, %0\n"				\ 	"	stwcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cc", "memory")
 end_define
+
+begin_comment
+unit|\
+comment|/* __atomic_subtract_long */
+end_comment
 
 begin_endif
 endif|#
@@ -892,6 +875,13 @@ argument|int
 argument_list|)
 end_macro
 
+begin_macro
+name|_ATOMIC_SUBTRACT
+argument_list|(
+argument|long
+argument_list|)
+end_macro
+
 begin_define
 define|#
 directive|define
@@ -918,13 +908,6 @@ ifdef|#
 directive|ifdef
 name|__powerpc64__
 end_ifdef
-
-begin_macro
-name|_ATOMIC_SUBTRACT
-argument_list|(
-argument|long
-argument_list|)
-end_macro
 
 begin_define
 define|#
@@ -973,13 +956,6 @@ else|#
 directive|else
 end_else
 
-begin_macro
-name|_ATOMIC_PUN_LTOI
-argument_list|(
-argument|subtract
-argument_list|)
-end_macro
-
 begin_define
 define|#
 directive|define
@@ -1022,12 +998,6 @@ begin_undef
 undef|#
 directive|undef
 name|__atomic_subtract_int
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|_ATOMIC_PUN_LTOI
 end_undef
 
 begin_comment
