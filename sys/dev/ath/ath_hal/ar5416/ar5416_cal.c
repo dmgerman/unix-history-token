@@ -822,7 +822,6 @@ name|AH_TRUE
 argument_list|)
 expr_stmt|;
 comment|/*  	 * Do NF calibration after DC offset and other CALs. 	 * Per system engineers, noise floor value can sometimes be 20 dB 	 * higher than normal value if DC offset and noise floor cal are 	 * triggered at the same time. 	 */
-comment|/* XXX this actually kicks off a NF calibration -adrian */
 name|OS_REG_SET_BIT
 argument_list|(
 name|ah
