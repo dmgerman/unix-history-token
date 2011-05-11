@@ -195,7 +195,7 @@ index|[
 name|MAXPATHLEN
 index|]
 init|=
-literal|"/mnt/tmp/net80211.log"
+literal|"/tmp/net80211.log"
 decl_stmt|;
 end_decl_stmt
 
@@ -265,11 +265,21 @@ name|ieee80211_alq_lost
 operator|=
 literal|0
 expr_stmt|;
+name|ieee80211_alq_logged
+operator|=
+literal|0
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"net80211: logging to %s enabled\n"
+literal|"net80211: logging to %s enabled; struct size %d bytes\n"
 argument_list|,
 name|ieee80211_alq_logfile
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ieee80211_alq_rec
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -554,6 +564,8 @@ name|ieee80211_alq_rec
 operator|*
 operator|)
 name|ale
+operator|->
+name|ae_data
 expr_stmt|;
 name|r
 operator|->
