@@ -182,13 +182,20 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|ieee80211_alq_logged
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|char
 name|ieee80211_alq_logfile
 index|[
 name|MAXPATHLEN
 index|]
 init|=
-literal|"/tmp/net80211.log"
+literal|"/mnt/tmp/net80211.log"
 decl_stmt|;
 end_decl_stmt
 
@@ -428,6 +435,27 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_wlan
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|alq_logged
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ieee80211_alq_logged
+argument_list|,
+literal|0
+argument_list|,
+literal|"Debugging operations logged"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|struct
@@ -458,6 +486,10 @@ operator|!
 name|ale
 condition|)
 name|ieee80211_alq_lost
+operator|++
+expr_stmt|;
+else|else
+name|ieee80211_alq_logged
 operator|++
 expr_stmt|;
 return|return
@@ -496,6 +528,13 @@ name|ieee80211_alq_rec
 modifier|*
 name|r
 decl_stmt|;
+if|if
+condition|(
+name|ieee80211_alq
+operator|==
+name|NULL
+condition|)
+return|return;
 name|ale
 operator|=
 name|ieee80211_alq_get
@@ -520,7 +559,10 @@ name|r
 operator|->
 name|r_timestamp
 operator|=
+name|htonl
+argument_list|(
 name|ticks
+argument_list|)
 expr_stmt|;
 name|r
 operator|->
@@ -532,11 +574,14 @@ name|r
 operator|->
 name|r_wlan
 operator|=
+name|htons
+argument_list|(
 name|vap
 operator|->
 name|iv_ifp
 operator|->
 name|if_dunit
+argument_list|)
 expr_stmt|;
 name|r
 operator|->
@@ -564,6 +609,13 @@ operator|->
 name|r_payload
 argument_list|)
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|alq_post
+argument_list|(
+name|ieee80211_alq
+argument_list|,
+name|ale
 argument_list|)
 expr_stmt|;
 block|}
