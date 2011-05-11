@@ -131,6 +131,11 @@ init|=
 literal|0x00400000
 block|,
 comment|/* BB/MAC hang debugging */
+name|HAL_DEBUG_UNMASKABLE
+init|=
+literal|0xf0000000
+block|,
+comment|/* always printed */
 name|HAL_DEBUG_ANY
 init|=
 literal|0xffffffff
