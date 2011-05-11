@@ -1545,6 +1545,9 @@ name|HAL_CHANNEL_INTERNAL
 modifier|*
 name|ichan
 decl_stmt|;
+name|int
+name|r
+decl_stmt|;
 name|OS_MARK
 argument_list|(
 name|ah
@@ -1728,6 +1731,8 @@ name|ah
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Get the value from the previous NF cal 		 * and update the history buffer. 		 */
+name|r
+operator|=
 name|ar5416GetNf
 argument_list|(
 name|ah
@@ -1735,7 +1740,30 @@ argument_list|,
 name|chan
 argument_list|)
 expr_stmt|;
-comment|/*  		 * Load the NF from history buffer of the current channel. 		 * NF is slow time-variant, so it is OK to use a 		 * historical value. 		 */
+if|if
+condition|(
+name|r
+operator|<=
+literal|0
+condition|)
+block|{
+comment|/* NF calibration result isn't valid */
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_UNMASKABLE
+argument_list|,
+literal|"%s: NF calibration"
+literal|" didn't finish; delaying CCA\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/*  			 * NF calibration result is valid. 			 * 			 * Load the NF from history buffer of the current channel. 			 * NF is slow time-variant, so it is OK to use a 			 * historical value. 			 */
 name|ar5416LoadNF
 argument_list|(
 name|ah
@@ -1754,6 +1782,7 @@ argument_list|(
 name|ah
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 name|AH_TRUE
@@ -2889,7 +2918,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read the NF and check it against the noise floor threshhold  */
+comment|/*  * Read the NF and check it against the noise floor threshhold  *  * Return 0 if the NF calibration hadn't finished, 0 if it was  * invalid, or> 0 for a valid NF reading.  */
 end_comment
 
 begin_function
@@ -2916,6 +2945,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|int
+name|retval
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|ar5212IsNFCalInProgress
@@ -2939,6 +2973,12 @@ name|nf
 operator|=
 literal|0
 expr_stmt|;
+name|retval
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* NF didn't finish */
 block|}
 else|else
 block|{
@@ -3010,7 +3050,7 @@ name|HALDEBUG
 argument_list|(
 name|ah
 argument_list|,
-name|HAL_DEBUG_ANY
+name|HAL_DEBUG_UNMASKABLE
 argument_list|,
 literal|"%s: noise floor failed detected; "
 literal|"detected %d, threshold %d\n"
@@ -3033,11 +3073,19 @@ name|nf
 operator|=
 literal|0
 expr_stmt|;
+name|retval
+operator|=
+literal|0
+expr_stmt|;
 block|}
 block|}
 else|else
 block|{
 name|nf
+operator|=
+literal|0
+expr_stmt|;
+name|retval
 operator|=
 literal|0
 expr_stmt|;
@@ -3112,9 +3160,13 @@ name|rawNoiseFloor
 operator|=
 name|nf
 expr_stmt|;
+name|retval
+operator|=
+name|nf
+expr_stmt|;
 block|}
 return|return
-name|nf
+name|retval
 return|;
 block|}
 end_function
