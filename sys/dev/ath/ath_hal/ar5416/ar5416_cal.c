@@ -747,9 +747,6 @@ name|HAL_CHANNEL_INTERNAL
 modifier|*
 name|ichan
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 name|ichan
 operator|=
 name|ath_hal_checkchannel
