@@ -766,14 +766,6 @@ literal|10
 block|}
 block|,
 block|{
-name|DEVICEID_DH89XXCC_LPC
-block|,
-literal|"Intel DH89xxCC watchdog timer"
-block|,
-literal|10
-block|}
-block|,
-block|{
 name|DEVICEID_PATSBURG_LPC1
 block|,
 literal|"Intel Patsburg watchdog timer"
@@ -785,6 +777,270 @@ block|{
 name|DEVICEID_PATSBURG_LPC2
 block|,
 literal|"Intel Patsburg watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT0
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT1
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT2
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT3
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT4
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT5
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT6
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT7
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT8
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT9
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT10
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT11
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT12
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT13
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT14
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT15
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT16
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT17
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT18
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT19
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT20
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT21
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT22
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT23
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT24
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT25
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT26
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT27
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT28
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT29
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT30
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT31
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_DH89XXCC_LPC
+block|,
+literal|"Intel DH89xxCC watchdog timer"
 block|,
 literal|10
 block|}
