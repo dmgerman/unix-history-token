@@ -447,6 +447,17 @@ begin_comment
 comment|/* Done by autofs */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NFSMNT_NOCTO
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* Don't flush attrcache on open */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
