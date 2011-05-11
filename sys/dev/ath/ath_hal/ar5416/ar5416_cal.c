@@ -2295,10 +2295,10 @@ name|HALDEBUG
 argument_list|(
 name|ah
 argument_list|,
-name|HAL_DEBUG_ANY
+name|HAL_DEBUG_UNMASKABLE
 argument_list|,
-literal|"Timeout while waiting for nf "
-literal|"to load: AR_PHY_AGC_CONTROL=0x%x\n"
+literal|"Timeout while waiting for "
+literal|"nf to load: AR_PHY_AGC_CONTROL=0x%x\n"
 argument_list|,
 name|OS_REG_READ
 argument_list|(
