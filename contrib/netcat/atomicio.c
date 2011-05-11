@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: atomicio.c,v 1.9 2007/09/07 14:50:44 tobias Exp $ */
+comment|/* $OpenBSD: atomicio.c,v 1.10 2011/01/08 00:47:19 jeremy Exp $ */
 end_comment
 
 begin_comment
@@ -148,9 +148,17 @@ condition|)
 continue|continue;
 if|if
 condition|(
+operator|(
 name|errno
 operator|==
 name|EAGAIN
+operator|)
+operator|||
+operator|(
+name|errno
+operator|==
+name|ENOBUFS
+operator|)
 condition|)
 block|{
 operator|(
