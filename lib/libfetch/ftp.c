@@ -5954,6 +5954,11 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|--
+name|conn
+operator|->
+name|ref
+expr_stmt|;
 name|ftp_disconnect
 argument_list|(
 name|conn
