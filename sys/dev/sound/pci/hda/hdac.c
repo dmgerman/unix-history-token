@@ -2307,7 +2307,7 @@ literal|0
 block|}
 block|,
 block|{
-name|HDA_INTEL_PPT
+name|HDA_INTEL_PPT1
 block|,
 literal|"Intel Panther Point"
 block|,
