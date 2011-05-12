@@ -4951,6 +4951,7 @@ begin_define
 define|#
 directive|define
 name|IN
+value|const
 end_define
 
 begin_define
