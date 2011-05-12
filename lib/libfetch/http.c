@@ -1904,7 +1904,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get the next header and return the appropriate symbolic code.  We  * need to read one line ahead for checking for a continuation line  * belonging to the current header (continuation lines start with  * white space).   *  * We get called with a fresh line already in the conn buffer, either  * from the previous http_next_header() invocation, or, the first  * time, from a fetch_getln() performed by our caller.  *  * This stops when we encounter an empty line (we dont read beyond the header  * area).  *   * Note that the "headerbuf" is just a place to return the result. Its  * contents are not used for the next call. This means that no cleanup  * is needed when ie doing another connection, just call the cleanup when  * fully done to deallocate memory.  */
+comment|/*  * Get the next header and return the appropriate symbolic code.  We  * need to read one line ahead for checking for a continuation line  * belonging to the current header (continuation lines start with  * white space).  *  * We get called with a fresh line already in the conn buffer, either  * from the previous http_next_header() invocation, or, the first  * time, from a fetch_getln() performed by our caller.  *  * This stops when we encounter an empty line (we dont read beyond the header  * area).  *  * Note that the "headerbuf" is just a place to return the result. Its  * contents are not used for the next call. This means that no cleanup  * is needed when ie doing another connection, just call the cleanup when  * fully done to deallocate memory.  */
 end_comment
 
 begin_comment
@@ -2089,7 +2089,7 @@ name|i
 decl_stmt|,
 name|len
 decl_stmt|;
-comment|/*  	 * Have to do the stripping here because of the first line. So 	 * it's done twice for the subsequent lines. No big deal  	 */
+comment|/* 	 * Have to do the stripping here because of the first line. So 	 * it's done twice for the subsequent lines. No big deal 	 */
 name|http_conn_trimright
 argument_list|(
 name|conn
@@ -2180,7 +2180,7 @@ name|conn
 operator|->
 name|buflen
 expr_stmt|;
-comment|/*  	 * Fetch possible continuation lines. Stop at 1st non-continuation 	 * and leave it in the conn buffer           */
+comment|/* 	 * Fetch possible continuation lines. Stop at 1st non-continuation 	 * and leave it in the conn buffer 	 */
 for|for
 control|(
 name|i
@@ -2210,7 +2210,7 @@ operator|(
 name|hdr_syserror
 operator|)
 return|;
-comment|/*  		 * Note: we carry on the idea from the previous version 		 * that a pure whitespace line is equivalent to an empty 		 * one (so it's not continuation and will be handled when 		 * we are called next)  		 */
+comment|/* 		 * Note: we carry on the idea from the previous version 		 * that a pure whitespace line is equivalent to an empty 		 * one (so it's not continuation and will be handled when 		 * we are called next) 		 */
 name|http_conn_trimright
 argument_list|(
 name|conn
@@ -2390,7 +2390,7 @@ comment|/**************************  * [Proxy-]Authenticate header parsing  */
 end_comment
 
 begin_comment
-comment|/*   * Read doublequote-delimited string into output buffer obuf (allocated   * by caller, whose responsibility it is to ensure that it's big enough)  * cp points to the first char after the initial '"'  * Handles \ quoting   * Returns pointer to the first char after the terminating double quote, or   * NULL for error.  */
+comment|/*  * Read doublequote-delimited string into output buffer obuf (allocated  * by caller, whose responsibility it is to ensure that it's big enough)  * cp points to the first char after the initial '"'  * Handles \ quoting  * Returns pointer to the first char after the terminating double quote, or  * NULL for error.  */
 end_comment
 
 begin_function
@@ -2838,7 +2838,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Enumeration for lexical elements. Separators will be returned as their own  * ascii value  */
+comment|/*  * Enumeration for lexical elements. Separators will be returned as their own  * ascii value  */
 end_comment
 
 begin_typedef
@@ -2866,7 +2866,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*   * Determine what kind of token comes next and return possible value  * in buf, which is supposed to have been allocated big enough by  * caller. Advance input pointer and return element type.   */
+comment|/*  * Determine what kind of token comes next and return possible value  * in buf, which is supposed to have been allocated big enough by  * caller. Advance input pointer and return element type.  */
 end_comment
 
 begin_function
@@ -3022,7 +3022,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Read challenges from http xxx-authenticate header and accumulate them  * in the challenges list structure.  *  * Headers with multiple challenges are specified by rfc2617, but  * servers (ie: squid) often send them in separate headers instead,  * which in turn is forbidden by the http spec (multiple headers with  * the same name are only allowed for pure comma-separated lists, see  * rfc2616 sec 4.2).  *  * We support both approaches anyway  */
+comment|/*  * Read challenges from http xxx-authenticate header and accumulate them  * in the challenges list structure.  *  * Headers with multiple challenges are specified by rfc2617, but  * servers (ie: squid) often send them in separate headers instead,  * which in turn is forbidden by the http spec (multiple headers with  * the same name are only allowed for pure comma-separated lists, see  * rfc2616 sec 4.2).  *  * We support both approaches anyway  */
 end_comment
 
 begin_function
@@ -3272,7 +3272,7 @@ name|scheme
 operator|=
 name|HTTPAS_UNKNOWN
 expr_stmt|;
-comment|/*                           * Continue parsing as basic or digest may 			 * follow, and the syntax is the same for 			 * all. We'll just ignore this one when 			 * looking at the list 			 */
+comment|/* 			 * Continue parsing as basic or digest may 			 * follow, and the syntax is the same for 			 * all. We'll just ignore this one when 			 * looking at the list 			 */
 block|}
 comment|/* Loop on attributes */
 for|for
@@ -3520,7 +3520,7 @@ argument_list|,
 name|key
 argument_list|)
 expr_stmt|;
-comment|/*                           * If we get a word here, this is the beginning of the 			 * next challenge. Break the attributes loop                           */
+comment|/* 			 * If we get a word here, this is the beginning of the 			 * next challenge. Break the attributes loop 			 */
 if|if
 condition|(
 name|lex
@@ -3563,7 +3563,7 @@ block|}
 comment|/* End attributes loop */
 block|}
 comment|/* End challenge loop */
-comment|/*           * Challenges max count exceeded. This really can't happen 	 * with normal data, something's fishy -> error  	 */
+comment|/* 	 * Challenges max count exceeded. This really can't happen 	 * with normal data, something's fishy -> error 	 */
 name|out
 label|:
 if|if
@@ -4944,7 +4944,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Digest response: the code to compute the digest is taken from the  * sample implementation in RFC2616   */
+comment|/*  * Digest response: the code to compute the digest is taken from the  * sample implementation in RFC2616  */
 end_comment
 
 begin_define
@@ -5384,7 +5384,7 @@ name|Response
 comment|/* request-digest or response-digest */
 parameter_list|)
 block|{
-comment|/*	DEBUG(fprintf(stderr,  		      "Calc: HA1[%s] Nonce[%s] qop[%s] method[%s] URI[%s]\n", 		      HA1, pszNonce, pszQop, pszMethod, pszDigestUri));*/
+comment|/*	DEBUG(fprintf(stderr, 		      "Calc: HA1[%s] Nonce[%s] qop[%s] method[%s] URI[%s]\n", 		      HA1, pszNonce, pszQop, pszMethod, pszDigestUri));*/
 name|MD5_CTX
 name|Md5Ctx
 decl_stmt|;
@@ -5645,7 +5645,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Generate/Send a Digest authorization header   * This looks like: [Proxy-]Authorization: credentials  *  *  credentials      = "Digest" digest-response  *  digest-response  = 1#( username | realm | nonce | digest-uri  *                      | response | [ algorithm ] | [cnonce] |  *                      [opaque] | [message-qop] |  *                          [nonce-count]  | [auth-param] )  *  username         = "username" "=" username-value  *  username-value   = quoted-string  *  digest-uri       = "uri" "=" digest-uri-value  *  digest-uri-value = request-uri   ; As specified by HTTP/1.1  *  message-qop      = "qop" "=" qop-value  *  cnonce           = "cnonce" "=" cnonce-value  *  cnonce-value     = nonce-value  *  nonce-count      = "nc" "=" nc-value  *  nc-value         = 8LHEX  *  response         = "response" "=" request-digest  *  request-digest =<"> 32LHEX<">  */
+comment|/*  * Generate/Send a Digest authorization header  * This looks like: [Proxy-]Authorization: credentials  *  *  credentials      = "Digest" digest-response  *  digest-response  = 1#( username | realm | nonce | digest-uri  *                      | response | [ algorithm ] | [cnonce] |  *                      [opaque] | [message-qop] |  *                          [nonce-count]  | [auth-param] )  *  username         = "username" "=" username-value  *  username-value   = quoted-string  *  digest-uri       = "uri" "=" digest-uri-value  *  digest-uri-value = request-uri   ; As specified by HTTP/1.1  *  message-qop      = "qop" "=" qop-value  *  cnonce           = "cnonce" "=" cnonce-value  *  cnonce-value     = nonce-value  *  nonce-count      = "nc" "=" nc-value  *  nc-value         = 8LHEX  *  response         = "response" "=" request-digest  *  request-digest =<"> 32LHEX<">  */
 end_comment
 
 begin_function
@@ -6169,7 +6169,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Chose the challenge to answer and call the appropriate routine to   * produce the header.  */
+comment|/*  * Chose the challenge to answer and call the appropriate routine to  * produce the header.  */
 end_comment
 
 begin_function
@@ -6348,7 +6348,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/*           * If "basic" was specified in the environment, or there is no Digest 	 * challenge, do the basic thing. Don't need a challenge for this, 	 * so no need to check basic!=NULL  	 */
+comment|/* 	 * If "basic" was specified in the environment, or there is no Digest 	 * challenge, do the basic thing. Don't need a challenge for this, 	 * so no need to check basic!=NULL 	 */
 if|if
 condition|(
 operator|!
@@ -7663,7 +7663,7 @@ argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
-comment|/*                   * Proxy authorization: we only send auth after we received 		 * a 407 error. We do not first try basic anyway (changed                   * when support was added for digest-auth)                  */
+comment|/* 		 * Proxy authorization: we only send auth after we received 		 * a 407 error. We do not first try basic anyway (changed 		 * when support was added for digest-auth) 		 */
 if|if
 condition|(
 name|purl
@@ -7801,7 +7801,7 @@ name|aparams
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*                   * Server authorization: we never send "a priori" 		 * Basic auth, which used to be done if user/pass were 		 * set in the url. This would be weird because we'd send the 		 * password in the clear even if Digest is finally to be  		 * used (it would have made more sense for the 		 * pre-digest version to do this when Basic was specified                   * in the environment)                   */
+comment|/* 		 * Server authorization: we never send "a priori" 		 * Basic auth, which used to be done if user/pass were 		 * set in the url. This would be weird because we'd send the 		 * password in the clear even if Digest is finally to be 		 * used (it would have made more sense for the 		 * pre-digest version to do this when Basic was specified 		 * in the environment) 		 */
 if|if
 condition|(
 name|server_challenges
