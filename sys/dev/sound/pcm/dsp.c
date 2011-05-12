@@ -10766,7 +10766,7 @@ operator|*
 name|offset
 operator|=
 operator|(
-name|vm_ooffset_t
+name|uintptr_t
 operator|)
 name|sndbuf_getbufofs
 argument_list|(
