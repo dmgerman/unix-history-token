@@ -5602,7 +5602,6 @@ argument_list|,
 name|AR_RTC_SOWL_PLL_CLKSEL
 argument_list|)
 expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|IEEE80211_IS_CHAN_5GHZ
@@ -5699,7 +5698,6 @@ argument_list|,
 name|AR_RTC_SOWL_PLL_CLKSEL
 argument_list|)
 expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|IEEE80211_IS_CHAN_5GHZ
@@ -5786,7 +5784,6 @@ argument_list|,
 name|AR_RTC_PLL_CLKSEL
 argument_list|)
 expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|IEEE80211_IS_CHAN_5GHZ
