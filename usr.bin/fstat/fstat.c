@@ -2216,7 +2216,7 @@ argument_list|(
 literal|" %6ju"
 argument_list|,
 operator|(
-name|intmax_t
+name|uintmax_t
 operator|)
 name|vn
 operator|.
