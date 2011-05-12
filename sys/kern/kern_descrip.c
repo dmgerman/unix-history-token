@@ -15137,6 +15137,12 @@ argument_list|)
 expr_stmt|;
 name|fail
 label|:
+if|if
+condition|(
+name|fdp
+operator|!=
+name|NULL
+condition|)
 name|fddrop
 argument_list|(
 name|fdp
