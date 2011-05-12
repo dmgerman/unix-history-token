@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libprocstat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -49,10 +55,6 @@ begin_function
 name|void
 name|procstat_basic
 parameter_list|(
-name|pid_t
-name|pid
-name|__unused
-parameter_list|,
 name|struct
 name|kinfo_proc
 modifier|*

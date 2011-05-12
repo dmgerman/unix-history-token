@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -135,16 +141,16 @@ directive|define
 name|ZFS
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|dprintf
-end_undef
+begin_include
+include|#
+directive|include
+file|"libprocstat.h"
+end_include
 
 begin_include
 include|#
 directive|include
-file|<fstat.h>
+file|"common_kvm.h"
 end_include
 
 begin_comment
@@ -172,15 +178,19 @@ begin_function
 name|int
 name|zfs_filestat
 parameter_list|(
+name|kvm_t
+modifier|*
+name|kd
+parameter_list|,
 name|struct
 name|vnode
 modifier|*
 name|vp
 parameter_list|,
 name|struct
-name|filestat
+name|vnstat
 modifier|*
-name|fsp
+name|vn
 parameter_list|)
 block|{
 name|znode_phys_t
@@ -246,16 +256,14 @@ operator|-
 literal|1
 condition|)
 block|{
-name|dprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"error getting sysctl\n"
+literal|"error getting sysctl"
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
@@ -273,16 +281,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|dprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"error allocating memory for znode storage\n"
+literal|"error allocating memory for znode storage"
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
@@ -297,8 +303,14 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|KVM_READ
+name|kvm_read_all
 argument_list|(
+name|kd
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|vnodeptr
 argument_list|,
 name|znodeptr
@@ -310,19 +322,15 @@ name|size
 argument_list|)
 condition|)
 block|{
-name|dprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"can't read znode at %p for pid %d\n"
+literal|"can't read znode at %p"
 argument_list|,
 operator|(
 name|void
 operator|*
 operator|)
 name|vnodeptr
-argument_list|,
-name|Pid
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -366,8 +374,14 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|KVM_READ
+name|kvm_read_all
 argument_list|(
+name|kd
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|zphys_addr
 argument_list|,
 operator|&
@@ -380,15 +394,11 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|dprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"can't read znode_phys at %p for pid %d\n"
+literal|"can't read znode_phys at %p"
 argument_list|,
 name|zphys_addr
-argument_list|,
-name|Pid
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -406,8 +416,14 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|KVM_READ
+name|kvm_read_all
 argument_list|(
+name|kd
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|mountptr
 argument_list|,
 operator|&
@@ -420,35 +436,25 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|dprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"can't read mount at %p for pid %d\n"
+literal|"can't read mount at %p"
 argument_list|,
 operator|(
 name|void
 operator|*
 operator|)
 name|mountptr
-argument_list|,
-name|Pid
 argument_list|)
 expr_stmt|;
 goto|goto
 name|bad
 goto|;
 block|}
-name|fsp
+name|vn
 operator|->
-name|fsid
+name|vn_fsid
 operator|=
-operator|(
-name|long
-operator|)
-operator|(
-name|uint32_t
-operator|)
 name|mount
 operator|.
 name|mnt_stat
@@ -460,17 +466,17 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|fsp
+name|vn
 operator|->
-name|fileid
+name|vn_fileid
 operator|=
 operator|*
 name|zid
 expr_stmt|;
 comment|/* 	 * XXX: Shows up wrong in output, but UFS has this error too. Could 	 * be that we're casting mode-variables from 64-bit to 8-bit or simply 	 * error in the mode-to-string function. 	 */
-name|fsp
+name|vn
 operator|->
-name|mode
+name|vn_mode
 operator|=
 operator|(
 name|mode_t
@@ -479,9 +485,9 @@ name|zphys
 operator|.
 name|zp_mode
 expr_stmt|;
-name|fsp
+name|vn
 operator|->
-name|size
+name|vn_size
 operator|=
 operator|(
 name|u_long
@@ -490,17 +496,6 @@ name|zphys
 operator|.
 name|zp_size
 expr_stmt|;
-name|fsp
-operator|->
-name|rdev
-operator|=
-operator|(
-name|dev_t
-operator|)
-name|zphys
-operator|.
-name|zp_rdev
-expr_stmt|;
 name|free
 argument_list|(
 name|znodeptr
@@ -508,7 +503,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 name|bad
@@ -520,7 +515,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}

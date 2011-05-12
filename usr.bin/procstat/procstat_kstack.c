@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libprocstat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -385,9 +391,6 @@ begin_function
 name|void
 name|procstat_kstack
 parameter_list|(
-name|pid_t
-name|pid
-parameter_list|,
 name|struct
 name|kinfo_proc
 modifier|*
@@ -484,7 +487,9 @@ index|[
 literal|3
 index|]
 operator|=
-name|pid
+name|kipp
+operator|->
+name|ki_pid
 expr_stmt|;
 name|kstk_len
 operator|=
@@ -531,7 +536,9 @@ name|warn
 argument_list|(
 literal|"sysctl: kern.proc.kstack: %d"
 argument_list|,
-name|pid
+name|kipp
+operator|->
+name|ki_pid
 argument_list|)
 expr_stmt|;
 return|return;
@@ -616,7 +623,9 @@ name|warn
 argument_list|(
 literal|"sysctl: kern.proc.pid: %d"
 argument_list|,
-name|pid
+name|kipp
+operator|->
+name|ki_pid
 argument_list|)
 expr_stmt|;
 name|free
@@ -655,7 +664,9 @@ index|[
 literal|3
 index|]
 operator|=
-name|pid
+name|kipp
+operator|->
+name|ki_pid
 expr_stmt|;
 name|kip_len
 operator|=
@@ -694,7 +705,9 @@ name|warn
 argument_list|(
 literal|"sysctl: kern.proc.pid: %d"
 argument_list|,
-name|pid
+name|kipp
+operator|->
+name|ki_pid
 argument_list|)
 expr_stmt|;
 return|return;
@@ -754,7 +767,9 @@ name|warn
 argument_list|(
 literal|"sysctl: kern.proc.pid: %d"
 argument_list|,
-name|pid
+name|kipp
+operator|->
+name|ki_pid
 argument_list|)
 expr_stmt|;
 name|free
@@ -861,7 +876,9 @@ name|printf
 argument_list|(
 literal|"%5d "
 argument_list|,
-name|pid
+name|kipp
+operator|->
+name|ki_pid
 argument_list|)
 expr_stmt|;
 name|printf

@@ -41,6 +41,12 @@ directive|include
 file|<sys/vnode.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -124,13 +130,19 @@ name|VTODE
 parameter_list|(
 name|vp
 parameter_list|)
-value|((struct denode *)(vp)->v_data)
+value|((struct denode *)getvnodedata(vp))
 end_define
 
 begin_include
 include|#
 directive|include
-file|"fstat.h"
+file|"libprocstat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"common_kvm.h"
 end_include
 
 begin_struct
@@ -161,15 +173,19 @@ begin_function
 name|int
 name|msdosfs_filestat
 parameter_list|(
+name|kvm_t
+modifier|*
+name|kd
+parameter_list|,
 name|struct
 name|vnode
 modifier|*
 name|vp
 parameter_list|,
 name|struct
-name|filestat
+name|vnstat
 modifier|*
-name|fsp
+name|vn
 parameter_list|)
 block|{
 name|struct
@@ -196,8 +212,14 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|KVM_READ
+name|kvm_read_all
 argument_list|(
+name|kd
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|VTODE
 argument_list|(
 name|vp
@@ -213,11 +235,9 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|dprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"can't read denode at %p for pid %d\n"
+literal|"can't read denode at %p"
 argument_list|,
 operator|(
 name|void
@@ -227,12 +247,12 @@ name|VTODE
 argument_list|(
 name|vp
 argument_list|)
-argument_list|,
-name|Pid
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|(
+literal|1
+operator|)
 return|;
 block|}
 comment|/* 	 * Find msdosfsmount structure for the vnode's filesystem. Needed 	 * for some filesystem parameters 	 */
@@ -284,18 +304,29 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
-name|NULL
+literal|"malloc()"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|!
-name|KVM_READ
+name|kvm_read_all
 argument_list|(
+name|kd
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|denode
 operator|.
 name|de_pmp
@@ -306,9 +337,11 @@ operator|->
 name|data
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|mnt
 operator|->
 name|data
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -317,11 +350,9 @@ argument_list|(
 name|mnt
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"can't read mount info at %p for pid %d\n"
+literal|"can't read mount info at %p"
 argument_list|,
 operator|(
 name|void
@@ -330,12 +361,12 @@ operator|)
 name|denode
 operator|.
 name|de_pmp
-argument_list|,
-name|Pid
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|(
+literal|1
+operator|)
 return|;
 block|}
 name|mnt
@@ -357,12 +388,14 @@ operator|.
 name|de_pmp
 expr_stmt|;
 block|}
-name|fsp
+name|vn
 operator|->
-name|fsid
+name|vn_fsid
 operator|=
 name|dev2udev
 argument_list|(
+name|kd
+argument_list|,
 name|mnt
 operator|->
 name|data
@@ -370,15 +403,15 @@ operator|.
 name|pm_dev
 argument_list|)
 expr_stmt|;
-name|fsp
+name|vn
 operator|->
-name|mode
+name|vn_mode
 operator|=
 literal|0555
 expr_stmt|;
-name|fsp
+name|vn
 operator|->
-name|mode
+name|vn_mode
 operator||=
 name|denode
 operator|.
@@ -390,9 +423,9 @@ literal|0
 else|:
 literal|0222
 expr_stmt|;
-name|fsp
+name|vn
 operator|->
-name|mode
+name|vn_mode
 operator|&=
 name|mnt
 operator|->
@@ -401,9 +434,9 @@ operator|.
 name|pm_mask
 expr_stmt|;
 comment|/* Distinguish directories and files. No "special" files in FAT. */
-name|fsp
+name|vn
 operator|->
-name|mode
+name|vn_mode
 operator||=
 name|denode
 operator|.
@@ -415,19 +448,13 @@ name|S_IFDIR
 else|:
 name|S_IFREG
 expr_stmt|;
-name|fsp
+name|vn
 operator|->
-name|size
+name|vn_size
 operator|=
 name|denode
 operator|.
 name|de_FileSize
-expr_stmt|;
-name|fsp
-operator|->
-name|rdev
-operator|=
-literal|0
 expr_stmt|;
 comment|/* 	 * XXX - 	 * Culled from msdosfs_vnops.c. There appears to be a problem 	 * here, in that a directory has the same inode number as the first 	 * file in the directory. stat(2) suffers from this problem also, so 	 * I won't try to fix it here. 	 *  	 * The following computation of the fileid must be the same as that 	 * used in msdosfs_readdir() to compute d_fileno. If not, pwd 	 * doesn't work. 	 */
 name|dirsperblk
@@ -535,14 +562,16 @@ name|direntry
 argument_list|)
 expr_stmt|;
 block|}
-name|fsp
+name|vn
 operator|->
-name|fileid
+name|vn_fileid
 operator|=
 name|fileid
 expr_stmt|;
 return|return
-literal|1
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 end_function
