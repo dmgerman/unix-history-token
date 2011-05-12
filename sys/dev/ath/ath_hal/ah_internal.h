@@ -2266,7 +2266,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|do {							\ 		if (ath_hal_debug& (__m)) {			\ 			DO_HALDEBUG((_ah), (__m), __VA_ARGS__);	\ 		}						\ 	} while(0);
+value|do {							\ 		if ((__m) == HAL_DEBUG_UNMASKABLE ||		\ 		    (ath_hal_debug& (__m))) {			\ 			DO_HALDEBUG((_ah), (__m), __VA_ARGS__);	\ 		}						\ 	} while(0);
 end_define
 
 begin_function_decl

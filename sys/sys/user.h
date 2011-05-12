@@ -875,6 +875,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KF_ATTR_VALID
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
 name|KF_TYPE_NONE
 value|0
 end_define
@@ -1062,6 +1069,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KF_FD_TYPE_TRACE
+value|-4
+end_define
+
+begin_comment
+comment|/* ptrace vnode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KF_FD_TYPE_TEXT
+value|-5
+end_define
+
+begin_comment
+comment|/* Text vnode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KF_FD_TYPE_CTTY
+value|-6
+end_define
+
+begin_comment
+comment|/* Controlling terminal */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|KF_FLAG_READ
 value|0x00000001
 end_define
@@ -1113,6 +1153,55 @@ define|#
 directive|define
 name|KF_FLAG_HASLOCK
 value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
+name|KF_FLAG_SHLOCK
+value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
+name|KF_FLAG_EXLOCK
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|KF_FLAG_NOFOLLOW
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|KF_FLAG_CREAT
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
+name|KF_FLAG_TRUNC
+value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
+name|KF_FLAG_EXCL
+value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
+name|KF_FLAG_EXEC
+value|0x00004000
 end_define
 
 begin_comment
@@ -1278,9 +1367,9 @@ name|kf_flags
 decl_stmt|;
 comment|/* Flags. */
 name|int
-name|_kf_pad0
+name|kf_pad0
 decl_stmt|;
-comment|/* Round to 64 bit alignment */
+comment|/* Round to 64 bit alignment. */
 name|int64_t
 name|kf_offset
 decl_stmt|;
@@ -1311,10 +1400,120 @@ name|sockaddr_storage
 name|kf_sa_peer
 decl_stmt|;
 comment|/* Peer address. */
+union|union
+block|{
+struct|struct
+block|{
+comment|/* Address of so_pcb. */
+name|uint64_t
+name|kf_sock_pcb
+decl_stmt|;
+comment|/* Address of inp_ppcb. */
+name|uint64_t
+name|kf_sock_inpcb
+decl_stmt|;
+comment|/* Address of unp_conn. */
+name|uint64_t
+name|kf_sock_unpconn
+decl_stmt|;
+comment|/* Send buffer state. */
+name|uint16_t
+name|kf_sock_snd_sb_state
+decl_stmt|;
+comment|/* Receive buffer state. */
+name|uint16_t
+name|kf_sock_rcv_sb_state
+decl_stmt|;
+comment|/* Round to 64 bit alignment. */
+name|uint32_t
+name|kf_sock_pad0
+decl_stmt|;
+block|}
+name|kf_sock
+struct|;
+struct|struct
+block|{
+comment|/* Global file id. */
+name|uint64_t
+name|kf_file_fileid
+decl_stmt|;
+comment|/* File size. */
+name|uint64_t
+name|kf_file_size
+decl_stmt|;
+comment|/* Vnode filesystem id. */
+name|uint32_t
+name|kf_file_fsid
+decl_stmt|;
+comment|/* File device. */
+name|uint32_t
+name|kf_file_rdev
+decl_stmt|;
+comment|/* File mode. */
+name|uint16_t
+name|kf_file_mode
+decl_stmt|;
+comment|/* Round to 64 bit alignment. */
+name|uint16_t
+name|kf_file_pad0
+decl_stmt|;
+name|uint32_t
+name|kf_file_pad1
+decl_stmt|;
+block|}
+name|kf_file
+struct|;
+struct|struct
+block|{
+name|uint64_t
+name|kf_pipe_addr
+decl_stmt|;
+name|uint64_t
+name|kf_pipe_peer
+decl_stmt|;
+name|uint32_t
+name|kf_pipe_buffer_cnt
+decl_stmt|;
+comment|/* Round to 64 bit alignment. */
+name|uint32_t
+name|kf_pipe_pad0
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+name|kf_pipe
+struct|;
+struct|struct
+block|{
+name|uint32_t
+name|kf_pts_dev
+decl_stmt|;
+comment|/* Round to 64 bit alignment. */
+name|uint32_t
+name|kf_pts_pad0
+index|[
+literal|7
+index|]
+decl_stmt|;
+block|}
+name|kf_pts
+struct|;
+block|}
+name|kf_un
+union|;
+name|uint16_t
+name|kf_status
+decl_stmt|;
+comment|/* Status flags. */
+name|uint16_t
+name|kf_pad1
+decl_stmt|;
+comment|/* Round to 32 bit alignment. */
 name|int
 name|_kf_ispare
 index|[
-literal|16
+literal|7
 index|]
 decl_stmt|;
 comment|/* Space for more stuff. */
@@ -1616,11 +1815,11 @@ name|kve_offset
 decl_stmt|;
 comment|/* Mapping offset in object */
 name|uint64_t
-name|kve_fileid
+name|kve_vn_fileid
 decl_stmt|;
 comment|/* inode number if vnode */
 name|uint32_t
-name|kve_fsid
+name|kve_vn_fsid
 decl_stmt|;
 comment|/* dev_t of vnode location */
 name|int
@@ -1648,13 +1847,29 @@ name|kve_shadow_count
 decl_stmt|;
 comment|/* VM obj shadow count. */
 name|int
-name|_kve_pad0
+name|kve_vn_type
 decl_stmt|;
-comment|/* 64bit align next field */
+comment|/* Vnode type. */
+name|uint64_t
+name|kve_vn_size
+decl_stmt|;
+comment|/* File size. */
+name|uint32_t
+name|kve_vn_rdev
+decl_stmt|;
+comment|/* Device id if device. */
+name|uint16_t
+name|kve_vn_mode
+decl_stmt|;
+comment|/* File mode. */
+name|uint16_t
+name|kve_status
+decl_stmt|;
+comment|/* Status flags. */
 name|int
 name|_kve_ispare
 index|[
-literal|16
+literal|12
 index|]
 decl_stmt|;
 comment|/* Space for more stuff. */
@@ -1769,6 +1984,31 @@ comment|/* Space for more stuff. */
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_function_decl
+name|int
+name|vntype_to_kinfo
+parameter_list|(
+name|int
+name|vtype
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_KERNEL */
+end_comment
 
 begin_endif
 endif|#

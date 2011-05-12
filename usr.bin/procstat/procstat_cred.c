@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libprocstat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -55,9 +61,6 @@ begin_function
 name|void
 name|procstat_cred
 parameter_list|(
-name|pid_t
-name|pid
-parameter_list|,
 name|struct
 name|kinfo_proc
 modifier|*
@@ -117,7 +120,9 @@ name|printf
 argument_list|(
 literal|"%5d "
 argument_list|,
-name|pid
+name|kipp
+operator|->
+name|ki_pid
 argument_list|)
 expr_stmt|;
 name|printf
@@ -222,7 +227,9 @@ index|[
 literal|3
 index|]
 operator|=
-name|pid
+name|kipp
+operator|->
+name|ki_pid
 expr_stmt|;
 name|ngroups
 operator|=
@@ -290,7 +297,9 @@ argument_list|(
 literal|"sysctl: kern.proc.groups: %d "
 literal|"group list truncated"
 argument_list|,
-name|pid
+name|kipp
+operator|->
+name|ki_pid
 argument_list|)
 expr_stmt|;
 name|free

@@ -747,9 +747,6 @@ name|HAL_CHANNEL_INTERNAL
 modifier|*
 name|ichan
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 name|ichan
 operator|=
 name|ath_hal_checkchannel
@@ -822,7 +819,6 @@ name|AH_TRUE
 argument_list|)
 expr_stmt|;
 comment|/*  	 * Do NF calibration after DC offset and other CALs. 	 * Per system engineers, noise floor value can sometimes be 20 dB 	 * higher than normal value if DC offset and noise floor cal are 	 * triggered at the same time. 	 */
-comment|/* XXX this actually kicks off a NF calibration -adrian */
 name|OS_REG_SET_BIT
 argument_list|(
 name|ah
@@ -832,64 +828,7 @@ argument_list|,
 name|AR_PHY_AGC_CONTROL_NF
 argument_list|)
 expr_stmt|;
-comment|/* 	 * This sometimes takes a -lot- longer than it should. 	 * Just give it a bit more time. 	 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|MAX_CAL_CHECK
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|ar5212WaitNFCalComplete
-argument_list|(
-name|ah
-argument_list|,
-literal|10000
-argument_list|)
-condition|)
-break|break;
-name|HALDEBUG
-argument_list|(
-name|ah
-argument_list|,
-name|HAL_DEBUG_ANY
-argument_list|,
-literal|"%s: initial NF calibration did "
-literal|"not complete in time; noisy environment (pass %d)?\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* 	 * Although periodic and NF calibrations shouldn't run concurrently, 	 * this was causing the radio to not be usable on the active 	 * channel if the channel was busy. 	 * 	 * Instead, now simply print a warning and continue. That way if users 	 * report "weird crap", they should get this warning. 	 */
-if|if
-condition|(
-name|i
-operator|>=
-name|MAX_CAL_CHECK
-condition|)
-block|{
-name|ath_hal_printf
-argument_list|(
-name|ah
-argument_list|,
-literal|"[ath] Warning - initial NF calibration did "
-literal|"not complete in time, noisy environment?\n"
-argument_list|)
-expr_stmt|;
-comment|/* return AH_FALSE; */
-block|}
+comment|/* 	 * This may take a while to run; make sure subsequent 	 * calibration routines check that this has completed 	 * before reading the value and triggering a subsequent 	 * calibration. 	 */
 comment|/* Initialize list pointers */
 name|cal
 operator|->
@@ -1606,6 +1545,9 @@ name|HAL_CHANNEL_INTERNAL
 modifier|*
 name|ichan
 decl_stmt|;
+name|int
+name|r
+decl_stmt|;
 name|OS_MARK
 argument_list|(
 name|ah
@@ -1789,6 +1731,8 @@ name|ah
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Get the value from the previous NF cal 		 * and update the history buffer. 		 */
+name|r
+operator|=
 name|ar5416GetNf
 argument_list|(
 name|ah
@@ -1796,7 +1740,30 @@ argument_list|,
 name|chan
 argument_list|)
 expr_stmt|;
-comment|/*  		 * Load the NF from history buffer of the current channel. 		 * NF is slow time-variant, so it is OK to use a 		 * historical value. 		 */
+if|if
+condition|(
+name|r
+operator|<=
+literal|0
+condition|)
+block|{
+comment|/* NF calibration result isn't valid */
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_UNMASKABLE
+argument_list|,
+literal|"%s: NF calibration"
+literal|" didn't finish; delaying CCA\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/*  			 * NF calibration result is valid. 			 * 			 * Load the NF from history buffer of the current channel. 			 * NF is slow time-variant, so it is OK to use a 			 * historical value. 			 */
 name|ar5416LoadNF
 argument_list|(
 name|ah
@@ -1815,6 +1782,7 @@ argument_list|(
 name|ah
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 name|AH_TRUE
@@ -2356,10 +2324,10 @@ name|HALDEBUG
 argument_list|(
 name|ah
 argument_list|,
-name|HAL_DEBUG_ANY
+name|HAL_DEBUG_UNMASKABLE
 argument_list|,
-literal|"Timeout while waiting for nf "
-literal|"to load: AR_PHY_AGC_CONTROL=0x%x\n"
+literal|"Timeout while waiting for "
+literal|"nf to load: AR_PHY_AGC_CONTROL=0x%x\n"
 argument_list|,
 name|OS_REG_READ
 argument_list|(
@@ -2950,7 +2918,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read the NF and check it against the noise floor threshhold  */
+comment|/*  * Read the NF and check it against the noise floor threshhold  *  * Return 0 if the NF calibration hadn't finished, 0 if it was  * invalid, or> 0 for a valid NF reading.  */
 end_comment
 
 begin_function
@@ -2977,6 +2945,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|int
+name|retval
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|ar5212IsNFCalInProgress
@@ -3000,6 +2973,12 @@ name|nf
 operator|=
 literal|0
 expr_stmt|;
+name|retval
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* NF didn't finish */
 block|}
 else|else
 block|{
@@ -3071,7 +3050,7 @@ name|HALDEBUG
 argument_list|(
 name|ah
 argument_list|,
-name|HAL_DEBUG_ANY
+name|HAL_DEBUG_UNMASKABLE
 argument_list|,
 literal|"%s: noise floor failed detected; "
 literal|"detected %d, threshold %d\n"
@@ -3094,11 +3073,19 @@ name|nf
 operator|=
 literal|0
 expr_stmt|;
+name|retval
+operator|=
+literal|0
+expr_stmt|;
 block|}
 block|}
 else|else
 block|{
 name|nf
+operator|=
+literal|0
+expr_stmt|;
+name|retval
 operator|=
 literal|0
 expr_stmt|;
@@ -3173,9 +3160,13 @@ name|rawNoiseFloor
 operator|=
 name|nf
 expr_stmt|;
+name|retval
+operator|=
+name|nf
+expr_stmt|;
 block|}
 return|return
-name|nf
+name|retval
 return|;
 block|}
 end_function

@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libprocstat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -67,14 +73,10 @@ begin_function
 name|void
 name|procstat_vm
 parameter_list|(
-name|pid_t
-name|pid
-parameter_list|,
 name|struct
 name|kinfo_proc
 modifier|*
 name|kipp
-name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -150,7 +152,9 @@ name|freep
 operator|=
 name|kinfo_getvmmap
 argument_list|(
-name|pid
+name|kipp
+operator|->
+name|ki_pid
 argument_list|,
 operator|&
 name|cnt
@@ -189,7 +193,9 @@ name|printf
 argument_list|(
 literal|"%5d "
 argument_list|,
-name|pid
+name|kipp
+operator|->
+name|ki_pid
 argument_list|)
 expr_stmt|;
 name|printf

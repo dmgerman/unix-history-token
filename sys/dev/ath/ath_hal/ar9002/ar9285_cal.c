@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ar9002/ar9285an.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ar9002/ar9285_cal.h"
 end_include
 

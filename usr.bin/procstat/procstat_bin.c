@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libprocstat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<limits.h>
 end_include
 
@@ -61,9 +67,6 @@ begin_function
 name|void
 name|procstat_bin
 parameter_list|(
-name|pid_t
-name|pid
-parameter_list|,
 name|struct
 name|kinfo_proc
 modifier|*
@@ -129,7 +132,9 @@ index|[
 literal|3
 index|]
 operator|=
-name|pid
+name|kipp
+operator|->
+name|ki_pid
 expr_stmt|;
 name|len
 operator|=
@@ -171,7 +176,9 @@ name|warn
 argument_list|(
 literal|"sysctl: kern.proc.pathname: %d"
 argument_list|,
-name|pid
+name|kipp
+operator|->
+name|ki_pid
 argument_list|)
 expr_stmt|;
 return|return;
@@ -207,7 +214,9 @@ name|printf
 argument_list|(
 literal|"%5d "
 argument_list|,
-name|pid
+name|kipp
+operator|->
+name|ki_pid
 argument_list|)
 expr_stmt|;
 name|printf

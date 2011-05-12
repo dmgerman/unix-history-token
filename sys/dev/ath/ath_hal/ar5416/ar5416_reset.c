@@ -708,16 +708,6 @@ name|HAL_EIO
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Restore bmiss rssi& count thresholds */
-name|OS_REG_WRITE
-argument_list|(
-name|ah
-argument_list|,
-name|AR_RSSI_THR
-argument_list|,
-name|rssiThrReg
-argument_list|)
-expr_stmt|;
 comment|/* Restore TSF */
 if|if
 condition|(
@@ -1211,6 +1201,16 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* cleared on write */
+comment|/* Restore bmiss rssi& count thresholds */
+name|OS_REG_WRITE
+argument_list|(
+name|ah
+argument_list|,
+name|AR_RSSI_THR
+argument_list|,
+name|rssiThrReg
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -5602,7 +5602,6 @@ argument_list|,
 name|AR_RTC_SOWL_PLL_CLKSEL
 argument_list|)
 expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|IEEE80211_IS_CHAN_5GHZ
@@ -5699,7 +5698,6 @@ argument_list|,
 name|AR_RTC_SOWL_PLL_CLKSEL
 argument_list|)
 expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|IEEE80211_IS_CHAN_5GHZ
@@ -5786,7 +5784,6 @@ argument_list|,
 name|AR_RTC_PLL_CLKSEL
 argument_list|)
 expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|IEEE80211_IS_CHAN_5GHZ

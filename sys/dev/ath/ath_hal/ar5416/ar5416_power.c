@@ -124,6 +124,19 @@ argument_list|,
 name|AR_RTC_FORCE_WAKE_EN
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|AR_SREV_HOWL
+argument_list|(
+name|ah
+argument_list|)
+condition|)
+name|OS_DELAY
+argument_list|(
+literal|10000
+argument_list|)
+expr_stmt|;
+else|else
 name|OS_DELAY
 argument_list|(
 literal|50
@@ -291,6 +304,14 @@ name|AR_RC_HOSTIF
 argument_list|)
 expr_stmt|;
 comment|/* Shutdown chip. Active low */
+if|if
+condition|(
+operator|!
+name|AR_SREV_OWL
+argument_list|(
+name|ah
+argument_list|)
+condition|)
 name|OS_REG_CLR_BIT
 argument_list|(
 name|ah

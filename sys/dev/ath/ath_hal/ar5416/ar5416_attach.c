@@ -2078,6 +2078,30 @@ operator|==
 name|AR5416_MAGIC
 argument_list|)
 expr_stmt|;
+comment|/* Make sure that chip is awake before writing to it */
+if|if
+condition|(
+operator|!
+name|ar5416SetPowerMode
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_PM_AWAKE
+argument_list|,
+name|AH_TRUE
+argument_list|)
+condition|)
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_UNMASKABLE
+argument_list|,
+literal|"%s: failed to wake up chip\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|ar5416AniDetach
 argument_list|(
 name|ah
