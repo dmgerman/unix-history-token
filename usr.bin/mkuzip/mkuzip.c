@@ -121,7 +121,7 @@ name|CLOOP_MAGIC_START
 index|[]
 init|=
 literal|"#!/bin/sh\n#V2.0 Format\n"
-literal|"m=geom_uzip\n(kldstat -m $m 2>&-||kldload $m)>&-&&"
+literal|"(kldstat -qm g_uzip||kldload geom_uzip)>&-&&"
 literal|"mount_cd9660 /dev/`mdconfig -af $0`.uzip $1\nexit $?\n"
 decl_stmt|;
 end_decl_stmt
