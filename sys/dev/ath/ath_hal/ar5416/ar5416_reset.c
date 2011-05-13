@@ -865,7 +865,17 @@ argument_list|(
 name|ah
 argument_list|)
 expr_stmt|;
-comment|/* Setup the open-loop temperature compensation if required */
+comment|/* Setup the open-loop power calibration if required */
+if|if
+condition|(
+name|ath_hal_eepromGetFlag
+argument_list|(
+name|ah
+argument_list|,
+name|AR_EEP_OL_PWRCTRL
+argument_list|)
+condition|)
+block|{
 name|AH5416
 argument_list|(
 name|ah
@@ -876,6 +886,17 @@ argument_list|(
 name|ah
 argument_list|)
 expr_stmt|;
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_olcTempCompensation
+argument_list|(
+name|ah
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Setup the transmit power values. */
 if|if
 condition|(
