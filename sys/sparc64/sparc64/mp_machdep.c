@@ -2114,7 +2114,7 @@ argument_list|(
 name|curcpu
 argument_list|,
 operator|&
-name|all_cpus
+name|ocpus
 argument_list|)
 expr_stmt|;
 name|PCPU_SET
