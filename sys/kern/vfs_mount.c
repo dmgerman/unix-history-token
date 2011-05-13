@@ -8315,8 +8315,7 @@ argument_list|)
 expr_stmt|;
 name|kern_yield
 argument_list|(
-operator|-
-literal|1
+name|PRI_UNCHANGED
 argument_list|)
 expr_stmt|;
 name|MNT_ILOCK

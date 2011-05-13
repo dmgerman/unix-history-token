@@ -2229,9 +2229,7 @@ name|chunk
 expr_stmt|;
 name|kern_yield
 argument_list|(
-name|curthread
-operator|->
-name|td_user_pri
+name|PRI_USER
 argument_list|)
 expr_stmt|;
 block|}

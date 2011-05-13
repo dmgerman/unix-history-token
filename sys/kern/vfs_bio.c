@@ -9067,8 +9067,7 @@ condition|)
 break|break;
 name|kern_yield
 argument_list|(
-operator|-
-literal|1
+name|PRI_UNCHANGED
 argument_list|)
 expr_stmt|;
 block|}

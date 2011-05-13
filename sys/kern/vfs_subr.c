@@ -3112,8 +3112,7 @@ name|yield
 label|:
 name|kern_yield
 argument_list|(
-operator|-
-literal|1
+name|PRI_UNCHANGED
 argument_list|)
 expr_stmt|;
 name|relock_mnt
@@ -3583,8 +3582,7 @@ block|}
 else|else
 name|kern_yield
 argument_list|(
-operator|-
-literal|1
+name|PRI_UNCHANGED
 argument_list|)
 expr_stmt|;
 block|}
