@@ -2827,13 +2827,6 @@ name|iq
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|ndesc_total
-operator|>
-literal|0
-condition|)
-block|{
 name|t4_write_reg
 argument_list|(
 name|sc
@@ -2866,7 +2859,6 @@ name|intr_params
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|atomic_cmpset_32
 argument_list|(
 operator|&
@@ -3299,13 +3291,6 @@ name|iq
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|ndesc_total
-operator|>
-literal|0
-condition|)
-block|{
 name|t4_write_reg
 argument_list|(
 name|sc
@@ -3335,7 +3320,6 @@ name|intr_params
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
