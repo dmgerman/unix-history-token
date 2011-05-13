@@ -13831,6 +13831,10 @@ argument_list|,
 name|PVF_WIRED
 argument_list|,
 name|wired
+condition|?
+name|PVF_WIRED
+else|:
+literal|0
 argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues

@@ -467,6 +467,19 @@ name|kenvp
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|void
+modifier|*
+name|zero_region
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* address space maps to a zeroed page	*/
+end_comment
+
 begin_comment
 comment|/*  * General function declarations.  */
 end_comment
