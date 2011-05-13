@@ -1600,6 +1600,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|APICBASE_X2APIC
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
 name|APICBASE_ENABLED
 value|0x00000800
 end_define
