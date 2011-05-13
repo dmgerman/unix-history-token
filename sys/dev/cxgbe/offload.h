@@ -99,6 +99,11 @@ name|unsigned
 name|int
 name|natids
 decl_stmt|;
+name|struct
+name|filter_entry
+modifier|*
+name|ftid_tab
+decl_stmt|;
 name|unsigned
 name|int
 name|nftids
@@ -106,6 +111,10 @@ decl_stmt|;
 name|unsigned
 name|int
 name|ftid_base
+decl_stmt|;
+name|unsigned
+name|int
+name|ftids_in_use
 decl_stmt|;
 name|union
 name|aopen_entry
