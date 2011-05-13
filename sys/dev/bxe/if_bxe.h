@@ -3658,6 +3658,9 @@ decl_stmt|;
 name|int
 name|tpa_mbuf_alloc
 decl_stmt|;
+name|int
+name|max_drbr_queue_depth
+decl_stmt|;
 name|uint64_t
 name|tpa_queue_used
 decl_stmt|;
@@ -3803,10 +3806,6 @@ directive|define
 name|BXE_RX_CHAIN_PAGE_SZ
 value|BCM_PAGE_SIZE
 end_define
-
-begin_comment
-comment|/* ToDo: Audit this structure for unused varaibles. */
-end_comment
 
 begin_struct
 struct|struct

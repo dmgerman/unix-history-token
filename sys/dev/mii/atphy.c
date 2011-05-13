@@ -1436,6 +1436,27 @@ operator||
 name|GTCR_ADV_1000THDX
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|sc
+operator|->
+name|mii_mpd_model
+operator|==
+name|MII_MODEL_xxATHEROS_F1
+condition|)
+block|{
+comment|/* 		 * AR8132 has 10/100 PHY and the PHY uses the same 		 * model number of F1 gigabit PHY.  The PHY has no 		 * ability to establish gigabit link so explicitly 		 * disable 1000baseT configuration for the PHY. 		 * Otherwise, there is a case that atphy(4) could 		 * not establish a link against gigabit link partner 		 * unless the link partner supports down-shifting. 		 */
+name|PHY_WRITE
+argument_list|(
+name|sc
+argument_list|,
+name|MII_100T2CR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 name|PHY_WRITE
 argument_list|(
 name|sc

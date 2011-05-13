@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -2135,8 +2141,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %6ld %10s"
+literal|" %6jd %10s"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|vn
 operator|.
 name|vn_fileid
@@ -2204,8 +2213,11 @@ block|}
 else|else
 name|printf
 argument_list|(
-literal|" %6lu"
+literal|" %6ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|vn
 operator|.
 name|vn_size

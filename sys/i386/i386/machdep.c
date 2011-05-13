@@ -6886,9 +6886,14 @@ name|int
 name|busy
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|XEN
 name|uint64_t
 name|msr
 decl_stmt|;
+endif|#
+directive|endif
 name|CTR2
 argument_list|(
 name|KTR_SPARE2
@@ -6950,6 +6955,8 @@ name|out
 goto|;
 block|}
 block|}
+endif|#
+directive|endif
 comment|/* If we have time - switch timers into idle mode. */
 if|if
 condition|(
@@ -6964,19 +6971,15 @@ name|cpu_idleclock
 argument_list|()
 expr_stmt|;
 block|}
-endif|#
-directive|endif
+ifndef|#
+directive|ifndef
+name|XEN
 comment|/* Apply AMD APIC timer C1E workaround. */
 if|if
 condition|(
 name|cpu_ident_amdc1e
-ifndef|#
-directive|ifndef
-name|XEN
 operator|&&
 name|cpu_disable_deep_sleep
-endif|#
-directive|endif
 condition|)
 block|{
 name|msr
@@ -7003,15 +7006,14 @@ name|AMDK8_CMPHALT
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* Call main idle method. */
 name|cpu_idle_fn
 argument_list|(
 name|busy
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|XEN
 comment|/* Switch timers mack into active mode. */
 if|if
 condition|(
@@ -7026,6 +7028,9 @@ name|critical_exit
 argument_list|()
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|XEN
 name|out
 label|:
 endif|#

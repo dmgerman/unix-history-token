@@ -379,6 +379,9 @@ operator|(
 name|u_int32_t
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 operator|&
 name|sin6
 operator|->

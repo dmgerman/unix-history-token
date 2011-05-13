@@ -21,16 +21,6 @@ begin_comment
 comment|/*  * Common routines to manage event timers hardware.  */
 end_comment
 
-begin_comment
-comment|/* XEN has own timer routines now. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|XEN
-end_ifndef
-
 begin_include
 include|#
 directive|include
@@ -4418,11 +4408,6 @@ literal|"Enable event timer periodic mode"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

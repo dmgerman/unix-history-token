@@ -1719,7 +1719,16 @@ argument_list|,
 name|AH_FALSE
 argument_list|)
 expr_stmt|;
-comment|/* Do temperature compensation if the chipset needs it */
+comment|/* Do open-loop temperature compensation if the chipset needs it */
+if|if
+condition|(
+name|ath_hal_eepromGetFlag
+argument_list|(
+name|ah
+argument_list|,
+name|AR_EEP_OL_PWRCTRL
+argument_list|)
+condition|)
 name|AH5416
 argument_list|(
 name|ah

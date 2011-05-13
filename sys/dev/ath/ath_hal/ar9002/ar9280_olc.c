@@ -70,6 +70,29 @@ block|{
 name|uint32_t
 name|i
 decl_stmt|;
+comment|/* Only do OLC if it's enabled for this chipset */
+if|if
+condition|(
+operator|!
+name|ath_hal_eepromGetFlag
+argument_list|(
+name|ah
+argument_list|,
+name|AR_EEP_OL_PWRCTRL
+argument_list|)
+condition|)
+return|return;
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_RESET
+argument_list|,
+literal|"%s: Setting up TX gain tables.\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -500,6 +523,17 @@ name|hpwr_5g
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|ath_hal_eepromGetFlag
+argument_list|(
+name|ah
+argument_list|,
+name|AR_EEP_OL_PWRCTRL
+argument_list|)
+condition|)
+return|return;
 name|rddata
 operator|=
 name|OS_REG_READ

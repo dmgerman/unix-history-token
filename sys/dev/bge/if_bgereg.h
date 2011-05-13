@@ -1554,6 +1554,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_CHIPID_BCM5719_A0
+value|0x05719000
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_CHIPID_BCM57765_A0
 value|0x57785000
 end_define
@@ -1697,6 +1704,13 @@ define|#
 directive|define
 name|BGE_ASICREV_BCM5717
 value|0x5717
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_ASICREV_BCM5719
+value|0x5719
 end_define
 
 begin_define
@@ -1976,6 +1990,13 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x)<< 28)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_PCIDMARWCTL_TAGGED_STATUS_WA
+value|0x00000080
 end_define
 
 begin_define
@@ -8651,6 +8672,13 @@ name|BGE_BMANMODE_LOMBUF_ATTN
 value|0x00000010
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_BMANMODE_NO_TX_UNDERRUN
+value|0x80000000
+end_define
+
 begin_comment
 comment|/* Buffer manager status register */
 end_comment
@@ -8692,6 +8720,13 @@ define|#
 directive|define
 name|BGE_RDMA_RSRVCTRL
 value|0x4900
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_RDMA_LSO_CRPTEN_CTRL
+value|0x4910
 end_define
 
 begin_comment
@@ -8900,6 +8935,62 @@ define|#
 directive|define
 name|BGE_RDMA_RSRVCTRL_FIFO_OFLW_FIX
 value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_RDMA_RSRVCTRL_FIFO_LWM_1_5K
+value|0x00000C00
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_RDMA_RSRVCTRL_FIFO_HWM_1_5K
+value|0x000C0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_RDMA_RSRVCTRL_TXMRGN_320B
+value|0x28000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_RDMA_RSRVCTRL_FIFO_LWM_MASK
+value|0x00000FF0
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_RDMA_RSRVCTRL_FIFO_HWM_MASK
+value|0x000FF000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_RDMA_RSRVCTRL_TXMRGN_MASK
+value|0xFFE00000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_RDMA_LSO_CRPTEN_CTRL_BLEN_BD_4K
+value|0x00030000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_RDMA_LSO_CRPTEN_CTRL_BLEN_LSO_4K
+value|0x000C0000
 end_define
 
 begin_comment
@@ -12720,6 +12811,13 @@ define|#
 directive|define
 name|BCOM_DEVICEID_BCM5718
 value|0x1656
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM5719
+value|0x1657
 end_define
 
 begin_define
