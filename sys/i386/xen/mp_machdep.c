@@ -2383,6 +2383,10 @@ name|idlethread
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Start per-CPU event timers. */
+name|cpu_initclocks_ap
+argument_list|()
+expr_stmt|;
 comment|/* enter the scheduler */
 name|sched_throw
 argument_list|(
