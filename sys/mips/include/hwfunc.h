@@ -15,6 +15,12 @@ directive|define
 name|_MACHINE_HWFUNC_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/_cpuset.h>
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|trapframe
@@ -224,7 +230,7 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|cpumask_t
+name|cpuset_t
 name|platform_cpu_mask
 parameter_list|(
 name|void
