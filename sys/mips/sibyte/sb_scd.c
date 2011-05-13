@@ -765,15 +765,14 @@ block|}
 end_function
 
 begin_function
-name|cpuset_t
+name|void
 name|platform_cpu_mask
 parameter_list|(
-name|void
+name|cpuset_t
+modifier|*
+name|mask
 parameter_list|)
 block|{
-name|cpuset_t
-name|cpumask
-decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -781,8 +780,7 @@ name|s
 decl_stmt|;
 name|CPU_ZERO
 argument_list|(
-operator|&
-name|cpumask
+name|mask
 argument_list|)
 expr_stmt|;
 name|s
@@ -810,15 +808,9 @@ name|CPU_SET
 argument_list|(
 name|i
 argument_list|,
-operator|&
-name|cpumask
+name|mask
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|cpumask
-operator|)
-return|;
 block|}
 end_function
 

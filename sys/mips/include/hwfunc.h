@@ -230,10 +230,12 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|cpuset_t
+name|void
 name|platform_cpu_mask
 parameter_list|(
-name|void
+name|cpuset_t
+modifier|*
+name|mask
 parameter_list|)
 function_decl|;
 end_function_decl
