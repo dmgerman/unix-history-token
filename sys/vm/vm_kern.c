@@ -1764,18 +1764,16 @@ parameter_list|)
 block|{
 name|vm_offset_t
 name|addr
+decl_stmt|,
+name|i
 decl_stmt|;
 name|vm_page_t
 name|m
 decl_stmt|;
-name|unsigned
-name|int
-name|i
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* Allocate virtual address space. */
+comment|/* 	 * Map a single physical page of zeros to a larger virtual range. 	 * This requires less looping in places that want large amounts of 	 * zeros, while not using much more physical resources. 	 */
 name|addr
 operator|=
 name|kmem_alloc_nofault
@@ -1785,7 +1783,6 @@ argument_list|,
 name|ZERO_REGION_SIZE
 argument_list|)
 expr_stmt|;
-comment|/* Allocate a page and zero it. */
 name|m
 operator|=
 name|vm_page_alloc
@@ -1823,7 +1820,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* Map the address space to the page. */
 for|for
 control|(
 name|i
@@ -1850,7 +1846,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Protect it r/o. */
 name|error
 operator|=
 name|vm_map_protect

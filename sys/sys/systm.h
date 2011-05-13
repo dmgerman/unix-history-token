@@ -480,13 +480,6 @@ begin_comment
 comment|/* address space maps to a zeroed page	*/
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ZERO_REGION_SIZE
-value|(2048 * 1024)
-end_define
-
 begin_comment
 comment|/*  * General function declarations.  */
 end_comment

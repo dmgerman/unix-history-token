@@ -83,6 +83,12 @@ directive|include
 file|<machine/bus.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/vmparam.h>
+end_include
+
 begin_comment
 comment|/* For use with destroy_dev(9). */
 end_comment
