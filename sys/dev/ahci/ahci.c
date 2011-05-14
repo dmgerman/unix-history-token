@@ -17168,6 +17168,10 @@ name|status
 decl_stmt|;
 name|int
 name|timeout
+decl_stmt|,
+name|found
+init|=
+literal|0
 decl_stmt|;
 comment|/* Wait up to 100ms for "connect well" */
 for|for
@@ -17194,6 +17198,20 @@ name|r_mem
 argument_list|,
 name|AHCI_P_SSTS
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|status
+operator|&
+name|ATA_SS_DET_MASK
+operator|)
+operator|!=
+name|ATA_SS_DET_NO_DEVICE
+condition|)
+name|found
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -17262,6 +17280,17 @@ literal|0
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|found
+operator|==
+literal|0
+operator|&&
+name|timeout
+operator|>=
+literal|100
+condition|)
+break|break;
 name|DELAY
 argument_list|(
 literal|100
@@ -17273,6 +17302,9 @@ condition|(
 name|timeout
 operator|>=
 literal|1000
+operator|||
+operator|!
+name|found
 condition|)
 block|{
 if|if
@@ -17286,7 +17318,11 @@ name|ch
 operator|->
 name|dev
 argument_list|,
-literal|"SATA connect timeout status=%08x\n"
+literal|"SATA connect timeout time=%dus status=%08x\n"
+argument_list|,
+name|timeout
+operator|*
+literal|100
 argument_list|,
 name|status
 argument_list|)
