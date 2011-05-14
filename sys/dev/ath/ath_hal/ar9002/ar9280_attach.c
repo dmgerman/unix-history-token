@@ -487,6 +487,21 @@ block|}
 end_function
 
 begin_comment
+comment|/* XXX shouldn't be here! */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEP_MINOR
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(AH_PRIVATE(_ah)->ah_eeversion& AR5416_EEP_VER_MINOR_MASK)
+end_define
+
+begin_comment
 comment|/*  * Attach for an AR9280 part.  */
 end_comment
 
@@ -1363,9 +1378,10 @@ operator|)
 name|pwr_table_offset
 argument_list|)
 expr_stmt|;
+comment|/* XXX check for>= minor ver 17 */
 if|if
 condition|(
-name|AR_SREV_MERLIN_20_OR_LATER
+name|AR_SREV_MERLIN_20
 argument_list|(
 name|ah
 argument_list|)
@@ -1444,9 +1460,10 @@ goto|;
 comment|/* XXX ? try to continue */
 block|}
 block|}
+comment|/* XXX check for>= minor ver 19 */
 if|if
 condition|(
-name|AR_SREV_MERLIN_20_OR_LATER
+name|AR_SREV_MERLIN_20
 argument_list|(
 name|ah
 argument_list|)
