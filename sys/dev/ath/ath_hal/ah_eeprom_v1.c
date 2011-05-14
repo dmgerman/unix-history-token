@@ -278,7 +278,7 @@ end_function
 
 begin_function
 specifier|static
-name|HAL_BOOL
+name|HAL_STATUS
 name|v1EepromSet
 parameter_list|(
 name|struct

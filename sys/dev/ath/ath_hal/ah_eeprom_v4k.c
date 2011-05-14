@@ -477,7 +477,7 @@ end_function
 
 begin_function
 specifier|static
-name|HAL_BOOL
+name|HAL_STATUS
 name|v4kEepromSet
 parameter_list|(
 name|struct

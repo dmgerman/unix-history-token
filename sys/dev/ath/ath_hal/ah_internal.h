@@ -970,7 +970,7 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
-name|HAL_BOOL
+name|HAL_STATUS
 function_decl|(
 modifier|*
 name|ah_eepromSet
