@@ -203,6 +203,12 @@ comment|/* ejects after Huawei SCSI command */
 name|UQ_MSC_EJECT_TCT
 block|,
 comment|/* ejects after TCT SCSI command */
+name|UQ_BAD_MIDI
+block|,
+comment|/* device claims MIDI class, but isn't */
+name|UQ_AU_VENDOR_CLASS
+block|,
+comment|/* audio device uses vendor and not audio class */
 name|USB_QUIRK_MAX
 block|}
 enum|;
