@@ -15,12 +15,46 @@ directive|define
 name|_SPARC64_PCI_SCHIZOVAR_H_
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|schizo_softc
+struct_decl|;
+end_struct_decl
+
+begin_struct
+struct|struct
+name|schizo_iommu_state
+block|{
+name|struct
+name|iommu_state
+name|sis_is
+decl_stmt|;
+name|struct
+name|schizo_softc
+modifier|*
+name|sis_sc
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|schizo_softc
 block|{
+name|struct
+name|bus_dma_methods
+name|sc_dma_methods
+decl_stmt|;
 name|device_t
 name|sc_dev
+decl_stmt|;
+name|struct
+name|mtx
+name|sc_sync_mtx
+decl_stmt|;
+name|uint64_t
+name|sc_sync_val
 decl_stmt|;
 name|struct
 name|mtx
@@ -54,7 +88,7 @@ name|SCHIZO_FLAGS_BSWAR
 value|(1<< 0)
 define|#
 directive|define
-name|SCHIZO_FLAGS_CDMA
+name|SCHIZO_FLAGS_XMODE
 value|(1<< 1)
 name|bus_addr_t
 name|sc_cdma_clr
@@ -64,12 +98,16 @@ name|sc_cdma_state
 decl_stmt|;
 define|#
 directive|define
-name|SCHIZO_CDMA_STATE_DONE
+name|SCHIZO_CDMA_STATE_IDLE
 value|(1<< 0)
 define|#
 directive|define
 name|SCHIZO_CDMA_STATE_PENDING
 value|(1<< 1)
+define|#
+directive|define
+name|SCHIZO_CDMA_STATE_RECEIVED
+value|(1<< 2)
 name|u_int
 name|sc_half
 decl_stmt|;
@@ -78,6 +116,9 @@ name|sc_ign
 decl_stmt|;
 name|uint32_t
 name|sc_ver
+decl_stmt|;
+name|uint32_t
+name|sc_mrev
 decl_stmt|;
 name|struct
 name|resource
@@ -103,7 +144,7 @@ name|STX_NINTR
 index|]
 decl_stmt|;
 name|struct
-name|iommu_state
+name|schizo_iommu_state
 name|sc_is
 decl_stmt|;
 name|struct
