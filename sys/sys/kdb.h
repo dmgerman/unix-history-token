@@ -524,7 +524,7 @@ value|"trapsig"
 end_define
 
 begin_comment
-comment|/* Sun4v/Sparc fault. */
+comment|/* Sparc fault. */
 end_comment
 
 begin_define

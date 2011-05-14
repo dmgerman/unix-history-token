@@ -456,6 +456,7 @@ name|ip_ping
 parameter_list|(
 name|u_short
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -485,6 +486,7 @@ parameter_list|,
 name|int
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1569,6 +1571,7 @@ name|int
 modifier|*
 name|fdp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|trans
@@ -1701,6 +1704,7 @@ parameter_list|(
 name|u_short
 name|portnum
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|trans
@@ -2948,6 +2952,7 @@ index|[
 name|NI_MAXHOST
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|hostname
@@ -5220,6 +5225,7 @@ decl_stmt|,
 modifier|*
 name|lp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|pmaphdr
@@ -5239,6 +5245,7 @@ block|,
 literal|"CALLIT"
 block|}
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|rpcb3hdr
@@ -5264,6 +5271,7 @@ block|,
 literal|"T2U"
 block|}
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|rpcb4hdr
@@ -7964,7 +7972,9 @@ block|}
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -8323,6 +8333,7 @@ name|targaddr
 parameter_list|)
 block|{
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|tlist

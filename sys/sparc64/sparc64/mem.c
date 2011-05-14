@@ -135,22 +135,11 @@ directive|include
 file|<vm/vm_extern.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SUN4V
-end_ifndef
-
 begin_include
 include|#
 directive|include
 file|<machine/cache.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -458,9 +447,6 @@ operator|==
 literal|0
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|SUN4V
 if|if
 condition|(
 name|dcache_color_ignore
@@ -471,8 +457,6 @@ name|colors
 operator|=
 name|DCACHE_COLORS
 expr_stmt|;
-endif|#
-directive|endif
 name|ova
 operator|=
 name|kmem_alloc_wait
@@ -485,9 +469,6 @@ name|colors
 argument_list|)
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
-name|SUN4V
 if|if
 condition|(
 name|colors
@@ -516,8 +497,6 @@ operator|*
 name|PAGE_SIZE
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|va
 operator|=
 name|ova
