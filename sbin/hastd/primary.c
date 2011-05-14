@@ -4100,7 +4100,7 @@ if|if
 condition|(
 name|drop_privs
 argument_list|(
-name|true
+name|res
 argument_list|)
 operator|!=
 literal|0

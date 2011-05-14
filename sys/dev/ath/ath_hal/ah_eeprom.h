@@ -591,6 +591,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|HAL_STATUS
+name|ath_hal_9287EepromAttach
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

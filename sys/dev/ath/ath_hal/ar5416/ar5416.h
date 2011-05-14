@@ -1208,6 +1208,12 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_channel
+modifier|*
+name|chan
+parameter_list|,
 name|HAL_BOOL
 name|enable
 parameter_list|)

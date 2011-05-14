@@ -539,6 +539,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR_PHY_SEARCH_START_DELAY
+value|0x9918
+end_define
+
+begin_comment
+comment|/* search start delay */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AR_PHY_EXT_CCA
 value|0x99bc
 end_define

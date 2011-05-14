@@ -162,6 +162,7 @@ specifier|register
 name|struct
 name|pcpu
 modifier|*
+specifier|volatile
 name|pcpup
 name|__asm__
 argument_list|(

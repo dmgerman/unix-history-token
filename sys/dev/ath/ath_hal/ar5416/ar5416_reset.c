@@ -654,7 +654,7 @@ name|ah
 argument_list|)
 operator|||
 operator|(
-name|AR_SREV_MERLIN_20_OR_LATER
+name|AR_SREV_MERLIN
 argument_list|(
 name|ah
 argument_list|)
@@ -2580,7 +2580,7 @@ expr_stmt|;
 comment|/* 	 * Warm reset is optimistic. 	 */
 if|if
 condition|(
-name|AR_SREV_MERLIN_20_OR_LATER
+name|AR_SREV_MERLIN
 argument_list|(
 name|ah
 argument_list|)
@@ -4254,7 +4254,10 @@ control|)
 block|{
 name|ratesArray
 index|[
+name|adj
+index|[
 name|i
+index|]
 index|]
 operator|-=
 name|cck_ofdm_delta
@@ -4263,14 +4266,20 @@ if|if
 condition|(
 name|ratesArray
 index|[
+name|adj
+index|[
 name|i
+index|]
 index|]
 operator|<
 literal|0
 condition|)
 name|ratesArray
 index|[
+name|adj
+index|[
 name|i
+index|]
 index|]
 operator|=
 literal|0
@@ -5920,7 +5929,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|AR_SREV_MERLIN_20_OR_LATER
+name|AR_SREV_MERLIN_10_OR_LATER
 argument_list|(
 name|ah
 argument_list|)
@@ -6041,7 +6050,7 @@ block|}
 block|}
 if|if
 condition|(
-name|AR_SREV_MERLIN_20_OR_LATER
+name|AR_SREV_MERLIN_10_OR_LATER
 argument_list|(
 name|ah
 argument_list|)
@@ -6410,7 +6419,7 @@ name|AR_PHY_TIMING_CTRL4_IQCORR_Q_Q_COFF
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*          * Large signal upgrade. 	 * XXX update          */
+comment|/*          * Large signal upgrade, 	 * If 14.3 or later EEPROM, use 	 * txRxAttenLocal = pModal->txRxAttenCh[i] 	 * else txRxAttenLocal is fixed value above.          */
 if|if
 condition|(
 operator|(
@@ -6442,7 +6451,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|AR_SREV_MERLIN_20_OR_LATER
+name|AR_SREV_MERLIN_10_OR_LATER
 argument_list|(
 name|ah
 argument_list|)
@@ -6645,7 +6654,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|AR_SREV_MERLIN_20_OR_LATER
+name|AR_SREV_MERLIN_10_OR_LATER
 argument_list|(
 name|ah
 argument_list|)
@@ -6943,6 +6952,11 @@ operator|->
 name|baseEepHeader
 operator|.
 name|dacLpMode
+argument_list|)
+expr_stmt|;
+name|OS_DELAY
+argument_list|(
+literal|100
 argument_list|)
 expr_stmt|;
 name|OS_REG_RMW_FIELD
@@ -11306,7 +11320,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|AR_SREV_MERLIN_20_OR_LATER
+name|AR_SREV_MERLIN_10_OR_LATER
 argument_list|(
 name|ah
 argument_list|)
@@ -12137,6 +12151,8 @@ operator|)
 name|ar5416SetRifsDelay
 argument_list|(
 name|ah
+argument_list|,
+name|chan
 argument_list|,
 name|AH_FALSE
 argument_list|)
