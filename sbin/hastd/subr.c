@@ -582,40 +582,9 @@ index|[
 literal|1
 index|]
 decl_stmt|;
-if|if
-condition|(
-name|usecapsicum
-condition|)
-block|{
-if|if
-condition|(
-name|cap_enter
-argument_list|()
-operator|==
-literal|0
-condition|)
-block|{
-name|pjdlog_debug
-argument_list|(
-literal|1
-argument_list|,
-literal|"Privileges successfully dropped using capsicum."
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-name|pjdlog_errno
-argument_list|(
-name|LOG_WARNING
-argument_list|,
-literal|"Unable to sandbox using capsicum"
-argument_list|)
-expr_stmt|;
-block|}
+name|bool
+name|capsicum
+decl_stmt|;
 comment|/* 	 * According to getpwnam(3) we have to clear errno before calling the 	 * function to be able to distinguish between an error and missing 	 * entry (with is not treated as error by getpwnam(3)). 	 */
 name|errno
 operator|=
@@ -849,6 +818,39 @@ literal|1
 operator|)
 return|;
 block|}
+name|capsicum
+operator|=
+name|false
+expr_stmt|;
+if|if
+condition|(
+name|usecapsicum
+condition|)
+block|{
+if|if
+condition|(
+name|cap_enter
+argument_list|()
+operator|==
+literal|0
+condition|)
+block|{
+name|capsicum
+operator|=
+name|true
+expr_stmt|;
+block|}
+else|else
+block|{
+name|pjdlog_errno
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Unable to sandbox using capsicum"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* 	 * Better be sure that everything succeeded. 	 */
 name|PJDLOG_VERIFY
 argument_list|(
@@ -978,7 +980,13 @@ name|pjdlog_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"Privileges successfully dropped using chroot+setgid+setuid."
+literal|"Privileges successfully dropped using %schroot+setgid+setuid."
+argument_list|,
+name|capsicum
+condition|?
+literal|"capsicum+"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 return|return
