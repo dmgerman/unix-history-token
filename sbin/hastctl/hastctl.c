@@ -2324,7 +2324,7 @@ if|if
 condition|(
 name|drop_privs
 argument_list|(
-name|true
+name|NULL
 argument_list|)
 operator|!=
 literal|0
