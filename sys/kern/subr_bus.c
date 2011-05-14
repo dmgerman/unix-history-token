@@ -9660,11 +9660,15 @@ expr_stmt|;
 comment|/* Unset the class; set in device_probe_child */
 if|if
 condition|(
+operator|(
 name|dev
 operator|->
-name|devclass
+name|flags
+operator|&
+name|DF_FIXEDCLASS
+operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 name|device_set_devclass
 argument_list|(
