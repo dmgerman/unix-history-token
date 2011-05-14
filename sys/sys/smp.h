@@ -57,11 +57,11 @@ name|cpuset_t
 name|cg_mask
 decl_stmt|;
 comment|/* Mask of cpus in this group. */
-name|int8_t
+name|int32_t
 name|cg_count
 decl_stmt|;
 comment|/* Count of cpus in this group. */
-name|int8_t
+name|int16_t
 name|cg_children
 decl_stmt|;
 comment|/* Number of children groups. */
