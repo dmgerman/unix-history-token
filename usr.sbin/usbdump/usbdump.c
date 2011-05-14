@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -121,6 +115,18 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_struct
@@ -2090,16 +2096,25 @@ name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
+if|if
+condition|(
 name|ret
-operator|==
+operator|!=
 sizeof|sizeof
 argument_list|(
 name|int
 argument_list|)
+condition|)
+block|{
+name|err
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"Could not write length "
+literal|"field of USB data payload"
 argument_list|)
 expr_stmt|;
+block|}
 name|ret
 operator|=
 name|write
@@ -2113,13 +2128,22 @@ argument_list|,
 name|datalen
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
+if|if
+condition|(
 name|ret
-operator|==
+operator|!=
 name|datalen
+condition|)
+block|{
+name|err
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"Could not write "
+literal|"complete USB data payload"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -2185,11 +2209,17 @@ argument_list|(
 name|datalen
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
+if|if
+condition|(
 name|data
-operator|!=
+operator|==
 name|NULL
+condition|)
+name|errx
+argument_list|(
+name|EX_SOFTWARE
+argument_list|,
+literal|"Out of memory."
 argument_list|)
 expr_stmt|;
 name|ret
@@ -2205,13 +2235,22 @@ argument_list|,
 name|datalen
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
+if|if
+condition|(
 name|ret
-operator|==
+operator|!=
 name|datalen
+condition|)
+block|{
+name|err
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"Could not read complete "
+literal|"USB data payload"
 argument_list|)
 expr_stmt|;
+block|}
 name|print_packets
 argument_list|(
 name|data
@@ -2225,25 +2264,6 @@ name|data
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|ret
-operator|==
-operator|-
-literal|1
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"read: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -2397,23 +2417,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"open: %s (%s)\n"
-argument_list|,
-name|r_arg
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 name|EXIT_FAILURE
+argument_list|,
+literal|"Could not open "
+literal|"'%s' for read"
+argument_list|,
+name|r_arg
 argument_list|)
 expr_stmt|;
 block|}
@@ -2434,46 +2445,107 @@ name|uf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
+if|if
+condition|(
 name|ret
-operator|==
+operator|!=
 sizeof|sizeof
 argument_list|(
 name|uf
 argument_list|)
+condition|)
+block|{
+name|err
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"Could not read USB capture "
+literal|"file header"
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
+block|}
+if|if
+condition|(
 name|le32toh
 argument_list|(
 name|uf
 operator|.
 name|magic
 argument_list|)
-operator|==
+operator|!=
 name|USBCAP_FILEHDR_MAGIC
+condition|)
+block|{
+name|errx
+argument_list|(
+name|EX_SOFTWARE
+argument_list|,
+literal|"Invalid magic field(0x%08x) "
+literal|"in USB capture file header."
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|le32toh
+argument_list|(
+name|uf
+operator|.
+name|magic
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
+block|}
+if|if
+condition|(
 name|uf
 operator|.
 name|major
-operator|==
+operator|!=
 literal|0
+condition|)
+block|{
+name|errx
+argument_list|(
+name|EX_SOFTWARE
+argument_list|,
+literal|"Invalid major version(%d) "
+literal|"field in USB capture file header."
+argument_list|,
+operator|(
+name|int
+operator|)
+name|uf
+operator|.
+name|major
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
+block|}
+if|if
+condition|(
 name|uf
 operator|.
 name|minor
-operator|==
+operator|!=
 literal|2
+condition|)
+block|{
+name|errx
+argument_list|(
+name|EX_SOFTWARE
+argument_list|,
+literal|"Invalid minor version(%d) "
+literal|"field in USB capture file header."
+argument_list|,
+operator|(
+name|int
+operator|)
+name|uf
+operator|.
+name|minor
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -2523,30 +2595,23 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"open: %s (%s)\n"
-argument_list|,
-name|w_arg
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 name|EXIT_FAILURE
+argument_list|,
+literal|"Could not open "
+literal|"'%s' for write"
+argument_list|,
+name|r_arg
 argument_list|)
 expr_stmt|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|uf
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2597,16 +2662,25 @@ name|uf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
+if|if
+condition|(
 name|ret
-operator|==
+operator|!=
 sizeof|sizeof
 argument_list|(
 name|uf
 argument_list|)
+condition|)
+block|{
+name|err
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"Could not write "
+literal|"USB capture header"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -2635,7 +2709,7 @@ name|stderr
 argument_list|,
 name|FMT
 argument_list|,
-literal|"-i ifname"
+literal|"-i<usbusX>"
 argument_list|,
 literal|"Listen on USB bus interface"
 argument_list|)
@@ -2646,7 +2720,7 @@ name|stderr
 argument_list|,
 name|FMT
 argument_list|,
-literal|"-r file"
+literal|"-r<file>"
 argument_list|,
 literal|"Read the raw packets from file"
 argument_list|)
@@ -2657,7 +2731,7 @@ name|stderr
 argument_list|,
 name|FMT
 argument_list|,
-literal|"-s snaplen"
+literal|"-s<snaplen>"
 argument_list|,
 literal|"Snapshot bytes from each packet"
 argument_list|)
@@ -2670,7 +2744,7 @@ name|FMT
 argument_list|,
 literal|"-v"
 argument_list|,
-literal|"Increases the verbose level"
+literal|"Increase the verbose level"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2679,7 +2753,7 @@ name|stderr
 argument_list|,
 name|FMT
 argument_list|,
-literal|"-w file"
+literal|"-w<file>"
 argument_list|,
 literal|"Write the raw packets to file"
 argument_list|)
@@ -2689,7 +2763,7 @@ directive|undef
 name|FMT
 name|exit
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2760,10 +2834,12 @@ name|char
 modifier|*
 name|optstring
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|uc
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2931,20 +3007,13 @@ name|fd
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+name|EXIT_FAILURE
 argument_list|,
-literal|"(no devices found)\n"
+literal|"Could not open BPF device"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|EXIT_FAILURE
-operator|)
-return|;
-block|}
 if|if
 condition|(
 name|ioctl
@@ -2962,25 +3031,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+name|EXIT_FAILURE
 argument_list|,
-literal|"BIOCVERSION: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"BIOCVERSION ioctl failed"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|EXIT_FAILURE
-operator|)
-return|;
-block|}
 if|if
 condition|(
 name|bv
@@ -2995,20 +3052,13 @@ name|bv_minor
 operator|<
 name|BPF_MINOR_VERSION
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|EXIT_FAILURE
 argument_list|,
-literal|"kernel bpf filter out of date"
+literal|"Kernel BPF filter out of date"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|EXIT_FAILURE
-operator|)
-return|;
-block|}
 comment|/* USB transfers can be greater than 64KByte */
 name|v
 operator|=
@@ -3102,22 +3152,13 @@ name|v
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|EXIT_FAILURE
 argument_list|,
-literal|"BIOCSBLEN: %s: No buffer size worked"
-argument_list|,
-name|i_arg
+literal|"No buffer size worked."
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|EXIT_FAILURE
-operator|)
-return|;
-block|}
 if|if
 condition|(
 name|ioctl
@@ -3135,25 +3176,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+name|EXIT_FAILURE
 argument_list|,
-literal|"BIOCGBLEN: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"BIOCGBLEN ioctl failed"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|EXIT_FAILURE
-operator|)
-return|;
-block|}
 name|p
 operator|->
 name|bufsize
@@ -3183,25 +3212,13 @@ name|buffer
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|EX_SOFTWARE
 argument_list|,
-literal|"malloc: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"Out of memory."
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|EXIT_FAILURE
-operator|)
-return|;
-block|}
 comment|/* XXX no read filter rules yet so at this moment accept everything */
 name|total_insn
 operator|.
@@ -3266,25 +3283,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+name|EXIT_FAILURE
 argument_list|,
-literal|"BIOCSETF: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"BIOCSETF ioctl failed"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|EXIT_FAILURE
-operator|)
-return|;
-block|}
 comment|/* 1 second read timeout */
 name|tv
 operator|.
@@ -3317,25 +3322,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+name|EXIT_FAILURE
 argument_list|,
-literal|"BIOCSRTIMEOUT: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"BIOCSRTIMEOUT ioctl failed"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|EXIT_FAILURE
-operator|)
-return|;
-block|}
 operator|(
 name|void
 operator|)
@@ -3368,25 +3361,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+name|EXIT_FAILURE
 argument_list|,
-literal|"BIOCGSTATS: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"BIOCGSTATS ioctl failed"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|EXIT_FAILURE
-operator|)
-return|;
-block|}
 comment|/* XXX what's difference between pkt_captured and us.us_recv? */
 name|printf
 argument_list|(
