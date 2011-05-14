@@ -7951,11 +7951,11 @@ name|tp
 operator|,
 name|tp
 operator|->
-name|rcv_adv
+name|rcv_nxt
 operator|,
 name|tp
 operator|->
-name|rcv_nxt
+name|rcv_adv
 operator|)
 argument_list|)
 expr_stmt|;
