@@ -12152,6 +12152,8 @@ name|ar5416SetRifsDelay
 argument_list|(
 name|ah
 argument_list|,
+name|chan
+argument_list|,
 name|AH_FALSE
 argument_list|)
 expr_stmt|;
