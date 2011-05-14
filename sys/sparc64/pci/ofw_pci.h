@@ -21,6 +21,12 @@ directive|include
 file|<machine/ofw_bus.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ofw_pci_if.h"
+end_include
+
 begin_typedef
 typedef|typedef
 name|uint32_t
