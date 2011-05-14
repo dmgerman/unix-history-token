@@ -1788,31 +1788,25 @@ asm|__asm __volatile("rsm psr.dfh;; srlz.d");
 block|}
 end_function
 
-begin_function
-specifier|static
-name|__inline
-name|void
-name|ia64_srlz_d
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-asm|__asm __volatile("srlz.d");
-block|}
-end_function
+begin_comment
+comment|/*  * Avoid inline functions for the following so that they still work  * correctly when inlining is not enabled (e.g. -O0). Function calls  * need data serialization after setting psr, which results in a  * hazard.  */
+end_comment
 
-begin_function
-specifier|static
-name|__inline
-name|void
+begin_define
+define|#
+directive|define
+name|ia64_srlz_d
+parameter_list|()
+value|__asm __volatile("srlz.d")
+end_define
+
+begin_define
+define|#
+directive|define
 name|ia64_srlz_i
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-asm|__asm __volatile("srlz.i;;");
-block|}
-end_function
+parameter_list|()
+value|__asm __volatile("srlz.i;;")
+end_define
 
 begin_endif
 endif|#
