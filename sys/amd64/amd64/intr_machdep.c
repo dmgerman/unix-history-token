@@ -241,6 +241,26 @@ name|assign_cpu
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|round_robin_interrupts
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"round_robin_interrupts"
+argument_list|,
+operator|&
+name|round_robin_interrupts
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -2010,6 +2030,20 @@ if|if
 condition|(
 operator|!
 name|assign_cpu
+condition|)
+return|return
+operator|(
+name|cpu_apic_ids
+index|[
+literal|0
+index|]
+operator|)
+return|;
+comment|/* All interrupts go to the BSP if not allowed to round robin */
+if|if
+condition|(
+operator|!
+name|round_robin_interrupts
 condition|)
 return|return
 operator|(
