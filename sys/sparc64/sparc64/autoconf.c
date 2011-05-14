@@ -211,16 +211,6 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|SUN4V
-name|intr_restore_all
-argument_list|(
-literal|0x16
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|root_bus_configure
 argument_list|()
 expr_stmt|;
