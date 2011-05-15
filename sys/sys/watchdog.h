@@ -60,6 +60,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|WD_LASTVAL
+value|0x0200000
+end_define
+
+begin_comment
+comment|/* 	 * Use the already last used timeout value. 	 * The kernel will use as timeout the last valid timeout provided.  	 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|WD_INTERVAL
 value|0x00000ff
 end_define
@@ -189,6 +200,25 @@ name|watchdog_fn
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function_decl
+name|u_int
+name|wdog_kern_last_timeout
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|wdog_kern_pat
+parameter_list|(
+name|u_int
+name|utim
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

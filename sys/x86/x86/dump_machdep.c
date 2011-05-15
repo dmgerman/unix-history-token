@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_watchdog.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -58,6 +64,23 @@ include|#
 directive|include
 file|<sys/kerneldump.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SW_WATCHDOG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/watchdog.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -875,6 +898,16 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|SW_WATCHDOG
+name|wdog_kern_pat
+argument_list|(
+name|WD_LASTVAL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|error
 operator|=
 name|dump_write
