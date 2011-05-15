@@ -212,7 +212,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/nfsclient/nfsdiskless.h>
+file|<nfs/nfsdiskless.h>
 end_include
 
 begin_decl_stmt
@@ -384,6 +384,18 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function_decl
+specifier|static
+name|int
+name|nfs_mountroot
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -654,13 +666,29 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * This structure must be filled in by a primary bootstrap or bootstrap  * server for a diskless/dataless machine. It is initialized below just  * to ensure that it is allocated to initialized data (.data not .bss).  */
+comment|/*  * This structure is now defined in sys/nfs/nfs_diskless.c so that it  * can be shared by both NFS clients. It is declared here so that it  * will be defined for kernels built without NFS_ROOT, although it  * isn't used in that case.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NFS_ROOT
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NFSCLIENT
+argument_list|)
+end_if
 
 begin_decl_stmt
 name|struct
 name|nfs_diskless
-name|newnfs_diskless
+name|nfs_diskless
 init|=
 block|{
 block|{
@@ -675,7 +703,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|nfsv3_diskless
-name|newnfsv3_diskless
+name|nfsv3_diskless
 init|=
 block|{
 block|{
@@ -689,11 +717,16 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|newnfs_diskless_valid
+name|nfs_diskless_valid
 init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -707,7 +740,7 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|newnfs_diskless_valid
+name|nfs_diskless_valid
 argument_list|,
 literal|0
 argument_list|,
@@ -727,7 +760,7 @@ name|diskless_rootpath
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-name|newnfsv3_diskless
+name|nfsv3_diskless
 operator|.
 name|root_hostnam
 argument_list|,
@@ -750,14 +783,16 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|newnfsv3_diskless
+name|nfsv3_diskless
 operator|.
 name|root_saddr
 argument_list|,
 sizeof|sizeof
-name|newnfsv3_diskless
+argument_list|(
+name|nfsv3_diskless
 operator|.
 name|root_saddr
+argument_list|)
 argument_list|,
 literal|"%Ssockaddr_in"
 argument_list|,
@@ -1197,12 +1232,12 @@ block|{
 name|bcopy
 argument_list|(
 operator|&
-name|newnfs_diskless
+name|nfs_diskless
 operator|.
 name|myif
 argument_list|,
 operator|&
-name|newnfsv3_diskless
+name|nfsv3_diskless
 operator|.
 name|myif
 argument_list|,
@@ -1216,12 +1251,12 @@ expr_stmt|;
 name|bcopy
 argument_list|(
 operator|&
-name|newnfs_diskless
+name|nfs_diskless
 operator|.
 name|mygateway
 argument_list|,
 operator|&
-name|newnfsv3_diskless
+name|nfsv3_diskless
 operator|.
 name|mygateway
 argument_list|,
@@ -1235,19 +1270,19 @@ expr_stmt|;
 name|nfs_convert_oargs
 argument_list|(
 operator|&
-name|newnfsv3_diskless
+name|nfsv3_diskless
 operator|.
 name|root_args
 argument_list|,
 operator|&
-name|newnfs_diskless
+name|nfs_diskless
 operator|.
 name|root_args
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|newnfsv3_diskless
+name|nfsv3_diskless
 operator|.
 name|root_args
 operator|.
@@ -1256,7 +1291,7 @@ operator|&
 name|NFSMNT_NFSV3
 condition|)
 block|{
-name|newnfsv3_diskless
+name|nfsv3_diskless
 operator|.
 name|root_fhsize
 operator|=
@@ -1264,11 +1299,11 @@ name|NFSX_MYFH
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|newnfs_diskless
+name|nfs_diskless
 operator|.
 name|root_fh
 argument_list|,
-name|newnfsv3_diskless
+name|nfsv3_diskless
 operator|.
 name|root_fh
 argument_list|,
@@ -1278,7 +1313,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|newnfsv3_diskless
+name|nfsv3_diskless
 operator|.
 name|root_fhsize
 operator|=
@@ -1286,11 +1321,11 @@ name|NFSX_V2FH
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|newnfs_diskless
+name|nfs_diskless
 operator|.
 name|root_fh
 argument_list|,
-name|newnfsv3_diskless
+name|nfsv3_diskless
 operator|.
 name|root_fh
 argument_list|,
@@ -1301,12 +1336,12 @@ block|}
 name|bcopy
 argument_list|(
 operator|&
-name|newnfs_diskless
+name|nfs_diskless
 operator|.
 name|root_saddr
 argument_list|,
 operator|&
-name|newnfsv3_diskless
+name|nfsv3_diskless
 operator|.
 name|root_saddr
 argument_list|,
@@ -1319,39 +1354,39 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|newnfs_diskless
+name|nfs_diskless
 operator|.
 name|root_hostnam
 argument_list|,
-name|newnfsv3_diskless
+name|nfsv3_diskless
 operator|.
 name|root_hostnam
 argument_list|,
 name|MNAMELEN
 argument_list|)
 expr_stmt|;
-name|newnfsv3_diskless
+name|nfsv3_diskless
 operator|.
 name|root_time
 operator|=
-name|newnfs_diskless
+name|nfs_diskless
 operator|.
 name|root_time
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|newnfs_diskless
+name|nfs_diskless
 operator|.
 name|my_hostnam
 argument_list|,
-name|newnfsv3_diskless
+name|nfsv3_diskless
 operator|.
 name|my_hostnam
 argument_list|,
 name|MAXHOSTNAMELEN
 argument_list|)
 expr_stmt|;
-name|newnfs_diskless_valid
+name|nfs_diskless_valid
 operator|=
 literal|3
 expr_stmt|;
@@ -2053,12 +2088,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Mount a remote root fs via. nfs. This depends on the info in the  * newnfs_diskless structure that has been filled in properly by some primary  * bootstrap.  * It goes something like this:  * - do enough of "ifconfig" by calling ifioctl() so that the system  *   can talk to the server  * - If newnfs_diskless.mygateway is filled in, use that address as  *   a default gateway.  * - build the rootfs mount point and call mountnfs() to do the rest.  *  * It is assumed to be safe to read, modify, and write the nfsv3_diskless  * structure, as well as other global NFS client variables here, as  * nfs_mountroot() will be called once in the boot before any other NFS  * client activity occurs.  */
+comment|/*  * Mount a remote root fs via. nfs. This depends on the info in the  * nfs_diskless structure that has been filled in properly by some primary  * bootstrap.  * It goes something like this:  * - do enough of "ifconfig" by calling ifioctl() so that the system  *   can talk to the server  * - If nfs_diskless.mygateway is filled in, use that address as  *   a default gateway.  * - build the rootfs mount point and call mountnfs() to do the rest.  *  * It is assumed to be safe to read, modify, and write the nfsv3_diskless  * structure, as well as other global NFS client variables here, as  * nfs_mountroot() will be called once in the boot before any other NFS  * client activity occurs.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
-name|ncl_mountroot
+name|nfs_mountroot
 parameter_list|(
 name|struct
 name|mount
@@ -2079,7 +2115,7 @@ modifier|*
 name|nd
 init|=
 operator|&
-name|newnfsv3_diskless
+name|nfsv3_diskless
 decl_stmt|;
 name|struct
 name|socket
@@ -2139,7 +2175,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|newnfs_diskless_valid
+name|nfs_diskless_valid
 operator|==
 literal|0
 condition|)
@@ -2151,7 +2187,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|newnfs_diskless_valid
+name|nfs_diskless_valid
 operator|==
 literal|1
 condition|)
@@ -4232,7 +4268,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|ncl_mountroot
+name|nfs_mountroot
 argument_list|(
 name|mp
 argument_list|)

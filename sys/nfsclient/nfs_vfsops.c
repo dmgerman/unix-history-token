@@ -224,7 +224,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfsclient/nfsdiskless.h>
+file|<nfs/nfsdiskless.h>
 end_include
 
 begin_expr_stmt
@@ -805,8 +805,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This structure must be filled in by a primary bootstrap or bootstrap  * server for a diskless/dataless machine. It is initialized below just  * to ensure that it is allocated to initialized data (.data not .bss).  */
+comment|/*  * This structure is now defined in sys/nfs/nfs_diskless.c so that it  * can be shared by both NFS clients. It is declared here so that it  * will be defined for kernels built without NFS_ROOT, although it  * isn't used in that case.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NFS_ROOT
+end_ifndef
 
 begin_decl_stmt
 name|struct
@@ -845,6 +851,11 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_INT

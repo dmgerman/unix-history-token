@@ -528,17 +528,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|ncl_mountroot
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|ncl_nfsiodnew
 parameter_list|(

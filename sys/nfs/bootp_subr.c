@@ -152,13 +152,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfsclient/nfsdiskless.h>
+file|<nfs/nfsdiskless.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<nfsclient/krpc.h>
+file|<nfs/krpc.h>
 end_include
 
 begin_include

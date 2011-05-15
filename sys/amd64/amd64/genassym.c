@@ -193,7 +193,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfsclient/nfsdiskless.h>
+file|<nfs/nfsdiskless.h>
 end_include
 
 begin_include
