@@ -2019,7 +2019,7 @@ name|val
 operator|==
 name|RLIM_INFINITY
 condition|)
-name|out1fmt
+name|out1str
 argument_list|(
 literal|"unlimited\n"
 argument_list|)
@@ -2159,7 +2159,7 @@ name|val
 operator|==
 name|RLIM_INFINITY
 condition|)
-name|out1fmt
+name|out1str
 argument_list|(
 literal|"unlimited\n"
 argument_list|)
