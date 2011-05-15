@@ -20271,6 +20271,16 @@ name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 comment|/* Update TX scheduler. */
+if|if
+condition|(
+name|ring
+operator|->
+name|qid
+operator|>=
+name|sc
+operator|->
+name|firstaggqueue
+condition|)
 name|ops
 operator|->
 name|update_sched
@@ -21463,6 +21473,16 @@ name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 comment|/* Update TX scheduler. */
+if|if
+condition|(
+name|ring
+operator|->
+name|qid
+operator|>=
+name|sc
+operator|->
+name|firstaggqueue
+condition|)
 name|ops
 operator|->
 name|update_sched
@@ -22250,16 +22270,6 @@ name|async
 parameter_list|)
 block|{
 name|struct
-name|iwn_ops
-modifier|*
-name|ops
-init|=
-operator|&
-name|sc
-operator|->
-name|ops
-decl_stmt|;
-name|struct
 name|iwn_tx_ring
 modifier|*
 name|ring
@@ -22636,26 +22646,6 @@ operator|.
 name|map
 argument_list|,
 name|BUS_DMASYNC_PREWRITE
-argument_list|)
-expr_stmt|;
-comment|/* Update TX scheduler. */
-name|ops
-operator|->
-name|update_sched
-argument_list|(
-name|sc
-argument_list|,
-name|ring
-operator|->
-name|qid
-argument_list|,
-name|ring
-operator|->
-name|cur
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Kick command ring. */

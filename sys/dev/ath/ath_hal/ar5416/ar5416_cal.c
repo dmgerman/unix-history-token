@@ -1757,8 +1757,13 @@ expr_stmt|;
 if|if
 condition|(
 name|r
-operator|<=
+operator|==
 literal|0
+operator|||
+name|r
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 comment|/* NF calibration result isn't valid */
