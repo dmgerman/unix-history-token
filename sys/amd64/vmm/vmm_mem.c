@@ -572,11 +572,8 @@ operator|/
 name|GB
 argument_list|)
 expr_stmt|;
-comment|/* XXX FreeBSD 8.1 does not use 1G superpages in the direct map */
 if|if
 condition|(
-literal|0
-operator|&&
 name|vmm_supports_1G_pages
 argument_list|()
 condition|)
