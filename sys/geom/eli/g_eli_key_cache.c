@@ -543,6 +543,13 @@ name|key
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|key
+argument_list|,
+name|M_ELI
+argument_list|)
+expr_stmt|;
 name|key
 operator|=
 name|ekey
