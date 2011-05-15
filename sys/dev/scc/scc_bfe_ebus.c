@@ -163,6 +163,14 @@ operator|||
 operator|!
 name|strcmp
 argument_list|(
+name|nm
+argument_list|,
+literal|"FJSV,se"
+argument_list|)
+operator|||
+operator|!
+name|strcmp
+argument_list|(
 name|cmpt
 argument_list|,
 literal|"sab82532"
