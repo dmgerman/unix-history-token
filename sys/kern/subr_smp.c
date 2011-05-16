@@ -127,12 +127,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|cpumask_t
-name|idle_cpus_mask
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|cpumask_t
 name|hlt_cpus_mask
 decl_stmt|;
 end_decl_stmt
