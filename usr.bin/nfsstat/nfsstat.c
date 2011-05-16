@@ -994,7 +994,7 @@ name|NULL
 operator|&&
 name|sysctlbyname
 argument_list|(
-literal|"vfs.nfs.nfsstats"
+literal|"vfs.oldnfs.nfsstats"
 argument_list|,
 operator|*
 name|stp
@@ -1029,7 +1029,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"sysctl: vfs.nfs.nfsstats"
+literal|"sysctl: vfs.oldnfs.nfsstats"
 argument_list|)
 expr_stmt|;
 operator|*

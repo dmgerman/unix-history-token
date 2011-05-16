@@ -2528,6 +2528,16 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|pip
+index|[
+literal|1
+index|]
+operator|!=
+operator|-
+literal|1
+condition|)
 name|close
 argument_list|(
 name|pip

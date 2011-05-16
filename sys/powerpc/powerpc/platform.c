@@ -357,7 +357,7 @@ operator|(
 name|addr
 operator|+
 name|len
-operator|<
+operator|<=
 name|pregions
 index|[
 name|i

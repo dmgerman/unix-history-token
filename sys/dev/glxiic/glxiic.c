@@ -591,13 +591,14 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|DEBUG
+name|GLXIIC_DEBUG_LOG
 parameter_list|(
 name|fmt
 parameter_list|,
 name|args
 modifier|...
 parameter_list|)
+define|\
 value|log(LOG_DEBUG, "%s: " fmt "\n" , __func__ , ## args)
 end_define
 
@@ -609,7 +610,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|DEBUG
+name|GLXIIC_DEBUG_LOG
 parameter_list|(
 name|fmt
 parameter_list|,
@@ -2599,7 +2600,7 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
-name|DEBUG
+name|GLXIIC_DEBUG_LOG
 argument_list|(
 literal|"timeout in state %d"
 argument_list|,
@@ -2915,7 +2916,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG
+name|GLXIIC_DEBUG_LOG
 argument_list|(
 literal|"unknown slave match"
 argument_list|)
@@ -2964,7 +2965,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|DEBUG
+name|GLXIIC_DEBUG_LOG
 argument_list|(
 literal|"bus error in idle"
 argument_list|)
@@ -3038,7 +3039,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|DEBUG
+name|GLXIIC_DEBUG_LOG
 argument_list|(
 literal|"bus error in slave tx"
 argument_list|)
@@ -3146,7 +3147,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|DEBUG
+name|GLXIIC_DEBUG_LOG
 argument_list|(
 literal|"not awaiting data in slave tx"
 argument_list|)
@@ -3226,7 +3227,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|DEBUG
+name|GLXIIC_DEBUG_LOG
 argument_list|(
 literal|"bus error in slave rx"
 argument_list|)
@@ -3306,7 +3307,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|DEBUG
+name|GLXIIC_DEBUG_LOG
 argument_list|(
 literal|"no pending data in slave rx"
 argument_list|)
@@ -3386,7 +3387,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|DEBUG
+name|GLXIIC_DEBUG_LOG
 argument_list|(
 literal|"bus error after master start"
 argument_list|)
@@ -3408,7 +3409,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|DEBUG
+name|GLXIIC_DEBUG_LOG
 argument_list|(
 literal|"not bus master after master start"
 argument_list|)
@@ -3430,7 +3431,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|DEBUG
+name|GLXIIC_DEBUG_LOG
 argument_list|(
 literal|"not awaiting address in master addr"
 argument_list|)
@@ -3580,7 +3581,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|DEBUG
+name|GLXIIC_DEBUG_LOG
 argument_list|(
 literal|"bus error in master tx"
 argument_list|)
@@ -3602,7 +3603,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|DEBUG
+name|GLXIIC_DEBUG_LOG
 argument_list|(
 literal|"not bus master in master tx"
 argument_list|)
@@ -3624,7 +3625,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|DEBUG
+name|GLXIIC_DEBUG_LOG
 argument_list|(
 literal|"slave nack in master tx"
 argument_list|)
@@ -3669,7 +3670,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|DEBUG
+name|GLXIIC_DEBUG_LOG
 argument_list|(
 literal|"not awaiting data in master tx"
 argument_list|)
@@ -3758,7 +3759,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|DEBUG
+name|GLXIIC_DEBUG_LOG
 argument_list|(
 literal|"bus error in master rx"
 argument_list|)
@@ -3780,7 +3781,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|DEBUG
+name|GLXIIC_DEBUG_LOG
 argument_list|(
 literal|"not bus master in master rx"
 argument_list|)
@@ -3802,7 +3803,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|DEBUG
+name|GLXIIC_DEBUG_LOG
 argument_list|(
 literal|"slave nack in rx"
 argument_list|)
@@ -3888,7 +3889,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|DEBUG
+name|GLXIIC_DEBUG_LOG
 argument_list|(
 literal|"no pending data in master rx"
 argument_list|)
@@ -3996,7 +3997,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|DEBUG
+name|GLXIIC_DEBUG_LOG
 argument_list|(
 literal|"bus error in master stop"
 argument_list|)
@@ -4018,7 +4019,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|DEBUG
+name|GLXIIC_DEBUG_LOG
 argument_list|(
 literal|"not bus master in master stop"
 argument_list|)
@@ -4040,7 +4041,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|DEBUG
+name|GLXIIC_DEBUG_LOG
 argument_list|(
 literal|"slave nack in master stop"
 argument_list|)

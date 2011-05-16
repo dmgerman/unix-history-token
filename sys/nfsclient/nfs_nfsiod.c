@@ -258,7 +258,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -280,7 +280,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -458,7 +458,7 @@ end_function
 begin_expr_stmt
 name|SYSCTL_PROC
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -631,7 +631,7 @@ end_function
 begin_expr_stmt
 name|SYSCTL_PROC
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -873,7 +873,7 @@ name|error
 decl_stmt|;
 name|TUNABLE_INT_FETCH
 argument_list|(
-literal|"vfs.nfs.iodmin"
+literal|"vfs.oldnfs.iodmin"
 argument_list|,
 operator|&
 name|nfs_iodmin
@@ -958,7 +958,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|,
 name|OID_AUTO
 argument_list|,

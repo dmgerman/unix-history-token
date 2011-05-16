@@ -238,7 +238,7 @@ name|_vfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|newnfs
+name|nfs
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
@@ -252,7 +252,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -273,7 +273,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -292,30 +292,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_vfs_newnfs
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|nfs4acl_enable
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|nfsrv_useacl
-argument_list|,
-literal|0
-argument_list|,
-literal|"Enable NFSv4 ACLs"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_STRING
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfs
 argument_list|,
 name|OID_AUTO
 argument_list|,

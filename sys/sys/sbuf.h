@@ -73,11 +73,11 @@ name|int
 name|s_error
 decl_stmt|;
 comment|/* current error code */
-name|int
+name|ssize_t
 name|s_size
 decl_stmt|;
 comment|/* size of storage buffer */
-name|int
+name|ssize_t
 name|s_len
 decl_stmt|;
 comment|/* current length of string */
@@ -169,7 +169,7 @@ name|struct
 name|sbuf
 modifier|*
 parameter_list|,
-name|int
+name|ssize_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -335,6 +335,7 @@ begin_function_decl
 name|int
 name|sbuf_error
 parameter_list|(
+specifier|const
 name|struct
 name|sbuf
 modifier|*
@@ -366,7 +367,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|ssize_t
 name|sbuf_len
 parameter_list|(
 name|struct
@@ -380,6 +381,7 @@ begin_function_decl
 name|int
 name|sbuf_done
 parameter_list|(
+specifier|const
 name|struct
 name|sbuf
 modifier|*

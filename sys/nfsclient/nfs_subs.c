@@ -2997,7 +2997,7 @@ end_include
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3012,7 +3012,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
