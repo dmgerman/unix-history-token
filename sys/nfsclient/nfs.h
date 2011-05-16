@@ -491,7 +491,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * vfs.nfs sysctl(3) identifiers  */
+comment|/*  * vfs.oldnfs sysctl(3) identifiers  */
 end_comment
 
 begin_define
