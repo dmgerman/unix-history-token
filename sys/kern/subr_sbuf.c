@@ -409,12 +409,18 @@ operator|->
 name|s_size
 argument_list|,
 operator|(
-literal|"wrote past end of sbuf (%d>= %d)"
+literal|"wrote past end of sbuf (%jd>= %jd)"
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|s
 operator|->
 name|s_len
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|s
 operator|->
 name|s_size
@@ -1210,7 +1216,7 @@ name|sbuf
 modifier|*
 name|s
 parameter_list|,
-name|int
+name|ssize_t
 name|pos
 parameter_list|)
 block|{
@@ -1233,8 +1239,11 @@ operator|>=
 literal|0
 argument_list|,
 operator|(
-literal|"attempt to seek to a negative position (%d)"
+literal|"attempt to seek to a negative position (%jd)"
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|pos
 operator|)
 argument_list|)
@@ -1248,10 +1257,16 @@ operator|->
 name|s_size
 argument_list|,
 operator|(
-literal|"attempt to seek past end of sbuf (%d>= %d)"
+literal|"attempt to seek past end of sbuf (%jd>= %jd)"
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|pos
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|s
 operator|->
 name|s_size
@@ -2872,6 +2887,7 @@ begin_function
 name|int
 name|sbuf_error
 parameter_list|(
+specifier|const
 name|struct
 name|sbuf
 modifier|*
@@ -3060,7 +3076,7 @@ comment|/*  * Return the length of the sbuf data.  */
 end_comment
 
 begin_function
-name|int
+name|ssize_t
 name|sbuf_len
 parameter_list|(
 name|struct
@@ -3191,6 +3207,7 @@ begin_function
 name|int
 name|sbuf_done
 parameter_list|(
+specifier|const
 name|struct
 name|sbuf
 modifier|*
