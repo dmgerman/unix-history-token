@@ -122,7 +122,7 @@ decl_stmt|;
 name|hrtime_t
 name|nsec
 decl_stmt|;
-name|getnanouptime
+name|nanouptime
 argument_list|(
 operator|&
 name|ts

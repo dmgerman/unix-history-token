@@ -74,17 +74,25 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_comment
-comment|/*  * These external variables are actually machine-dependent, so  * they might not actually exist.  *  * Defining them here avoids a proliferation of header files.  */
-end_comment
-
 begin_decl_stmt
 specifier|extern
 name|cyclic_clock_func_t
 name|cyclic_clock_func
-index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|clocksource_cyc_set
+parameter_list|(
+specifier|const
+name|struct
+name|bintime
+modifier|*
+name|t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * The dtrace module handles traps that occur during a DTrace probe.  * This type definition is used in the trap handler to provide a  * hook for the dtrace module to register it's handler with.  */
