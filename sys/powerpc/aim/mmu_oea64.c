@@ -5347,19 +5347,6 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|moea64_initialized
-condition|)
-name|panic
-argument_list|(
-literal|"moea64_zero_page: can't zero pa %#"
-name|PRIxPTR
-argument_list|,
-name|pa
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|size
 operator|+
 name|off
@@ -5459,18 +5446,6 @@ name|va
 decl_stmt|,
 name|off
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|moea64_initialized
-condition|)
-name|panic
-argument_list|(
-literal|"moea64_zero_page: can't zero pa %#zx"
-argument_list|,
-name|pa
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
