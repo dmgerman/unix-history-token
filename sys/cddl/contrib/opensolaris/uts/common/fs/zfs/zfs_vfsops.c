@@ -6052,6 +6052,12 @@ goto|goto
 name|out
 goto|;
 block|}
+name|vfsp
+operator|->
+name|vfs_flag
+operator||=
+name|MNT_NFS4ACLS
+expr_stmt|;
 comment|/* 	 * When doing a remount, we simply refresh our temporary properties 	 * according to those options set in the current VFS options. 	 */
 if|if
 condition|(
