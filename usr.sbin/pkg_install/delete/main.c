@@ -44,7 +44,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pkg.h>
+file|"lib.h"
 end_include
 
 begin_include
@@ -323,13 +323,6 @@ name|struct
 name|stat
 name|stat_s
 decl_stmt|;
-name|pkg_wrap
-argument_list|(
-name|PKG_INSTALL_VERSION
-argument_list|,
-name|argv
-argument_list|)
-expr_stmt|;
 name|pkgs
 operator|=
 name|start
