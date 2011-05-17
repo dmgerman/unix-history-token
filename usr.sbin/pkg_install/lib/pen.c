@@ -20,7 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"pkg.h"
+file|"lib.h"
 end_include
 
 begin_include
@@ -517,7 +517,12 @@ name|sz
 parameter_list|)
 block|{
 name|char
-name|humbuf
+name|humbuf1
+index|[
+literal|6
+index|]
+decl_stmt|,
+name|humbuf2
 index|[
 literal|6
 index|]
@@ -567,12 +572,22 @@ name|pen
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|Verbose
+condition|)
+block|{
+if|if
+condition|(
+name|sz
+condition|)
+block|{
 name|humanize_number
 argument_list|(
-name|humbuf
+name|humbuf1
 argument_list|,
 sizeof|sizeof
-name|humbuf
+name|humbuf1
 argument_list|,
 name|sz
 argument_list|,
@@ -583,6 +598,40 @@ argument_list|,
 name|HN_NOSPACE
 argument_list|)
 expr_stmt|;
+name|humanize_number
+argument_list|(
+name|humbuf2
+argument_list|,
+sizeof|sizeof
+name|humbuf2
+argument_list|,
+name|min_free
+argument_list|(
+name|pen
+argument_list|)
+argument_list|,
+literal|""
+argument_list|,
+name|HN_AUTOSCALE
+argument_list|,
+name|HN_NOSPACE
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Requested space: %s bytes, free space: %s bytes in %s\n"
+argument_list|,
+name|humbuf1
+argument_list|,
+name|humbuf2
+argument_list|,
+name|pen
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|min_free
@@ -609,11 +658,9 @@ literal|2
 argument_list|,
 literal|"%s: not enough free space to create '%s'.\n"
 literal|"Please set your PKG_TMPDIR environment variable to a location\n"
-literal|"with at least %s and try the command again"
+literal|"with more space and\ntry the command again"
 argument_list|,
 name|__func__
-argument_list|,
-name|humbuf
 argument_list|,
 name|pen
 argument_list|)

@@ -20,7 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"pkg.h"
+file|"lib.h"
 end_include
 
 begin_include
@@ -443,6 +443,8 @@ name|pkg
 argument_list|)
 operator|<
 literal|0
+operator|&&
+name|Verbose
 condition|)
 block|{
 name|warnx

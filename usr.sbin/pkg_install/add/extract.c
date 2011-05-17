@@ -32,7 +32,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pkg.h>
+file|"lib.h"
 end_include
 
 begin_include
