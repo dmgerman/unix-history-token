@@ -3782,7 +3782,7 @@ literal|0
 case|:
 comment|/* hardware capability */
 return|return
-name|pcap
+name|pCap
 operator|->
 name|halMcastKeySrchSupport
 condition|?
