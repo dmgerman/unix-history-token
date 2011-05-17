@@ -8666,7 +8666,7 @@ name|th
 argument_list|)
 argument_list|,
 comment|/*sense_flags*/
-literal|0
+name|SF_NO_PRINT
 argument_list|)
 expr_stmt|;
 if|if
