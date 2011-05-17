@@ -4630,8 +4630,9 @@ name|pCap
 operator|->
 name|halMcastKeySrchSupport
 operator|=
-name|AH_FALSE
+name|AH_TRUE
 expr_stmt|;
+comment|/* Works on AR5416 and later */
 name|pCap
 operator|->
 name|halTsfAddSupport
