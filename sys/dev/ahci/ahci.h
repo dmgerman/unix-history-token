@@ -2121,6 +2121,38 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ahci_led
+block|{
+name|device_t
+name|dev
+decl_stmt|;
+comment|/* Device handle */
+name|struct
+name|cdev
+modifier|*
+name|led
+decl_stmt|;
+name|uint8_t
+name|num
+decl_stmt|;
+comment|/* Number of this led */
+name|uint8_t
+name|state
+decl_stmt|;
+comment|/* State of this led */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|AHCI_NUM_LEDS
+value|3
+end_define
+
 begin_comment
 comment|/* structure describing an ATA channel */
 end_comment
@@ -2168,6 +2200,13 @@ name|struct
 name|cam_path
 modifier|*
 name|path
+decl_stmt|;
+name|struct
+name|ahci_led
+name|leds
+index|[
+literal|3
+index|]
 decl_stmt|;
 name|uint32_t
 name|caps
@@ -2410,6 +2449,10 @@ name|uint32_t
 name|capsem
 decl_stmt|;
 comment|/* Controller capabilities */
+name|uint32_t
+name|emloc
+decl_stmt|;
+comment|/* EM buffer location */
 name|int
 name|quirks
 decl_stmt|;
@@ -2452,6 +2495,11 @@ index|[
 name|AHCI_MAX_PORTS
 index|]
 struct|;
+name|struct
+name|mtx
+name|em_mtx
+decl_stmt|;
+comment|/* EM access lock */
 block|}
 struct|;
 end_struct
