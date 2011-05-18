@@ -2866,7 +2866,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Destroying snapshots with delegated permissions requires  * descendent mount and destroy permissions.  * Reassemble the full filesystem@snap name so dsl_deleg_access()  * can do the correct permission check.  *  * Since this routine is used when doing a recursive destroy of snapshots  * and destroying snapshots requires descendent permissions, a successfull  * check of the top level snapshot applies to snapshots of all descendent  * datasets as well.  */
+comment|/*  * Destroying snapshots with delegated permissions requires  * descendent mount and destroy permissions.  * Reassemble the full filesystem@snap name so dsl_deleg_access()  * can do the correct permission check.  *  * Since this routine is used when doing a recursive destroy of snapshots  * and destroying snapshots requires descendent permissions, a successfull  * check of the top level snapshot applies to snapshots of all descendent  * datasets as well.  *  * The top level snapshot may not exist when doing a recursive destroy.  * In this case fallback to permissions of the parent dataset.  */
 end_comment
 
 begin_function
@@ -2910,6 +2910,23 @@ operator|=
 name|zfs_secpolicy_destroy_perms
 argument_list|(
 name|dsname
+argument_list|,
+name|cr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+name|ENOENT
+condition|)
+name|error
+operator|=
+name|zfs_secpolicy_destroy_perms
+argument_list|(
+name|zc
+operator|->
+name|zc_name
 argument_list|,
 name|cr
 argument_list|)
