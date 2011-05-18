@@ -113,26 +113,26 @@ end_ifdef
 
 begin_decl_stmt
 specifier|volatile
-name|cpumask_t
+name|cpuset_t
 name|stopped_cpus
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|volatile
-name|cpumask_t
+name|cpuset_t
 name|started_cpus
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|cpumask_t
+name|cpuset_t
 name|hlt_cpus_mask
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|cpumask_t
+name|cpuset_t
 name|logical_cpus_mask
 decl_stmt|;
 end_decl_stmt
