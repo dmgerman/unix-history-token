@@ -2762,19 +2762,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-if|if
-condition|(
-name|uaa
-operator|->
-name|use_generic
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 comment|/* lookup non-standard device */
 if|if
 condition|(
@@ -2833,7 +2820,7 @@ return|;
 else|else
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_GENERIC
 operator|)
 return|;
 block|}
@@ -2866,7 +2853,7 @@ return|;
 else|else
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_GENERIC
 operator|)
 return|;
 block|}
