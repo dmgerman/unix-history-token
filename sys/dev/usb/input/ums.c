@@ -1774,7 +1774,7 @@ operator|)
 condition|)
 return|return
 operator|(
-name|BUS_PROBE_GENERIC
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 name|error
@@ -1829,7 +1829,7 @@ argument_list|)
 condition|)
 name|error
 operator|=
-name|BUS_PROBE_GENERIC
+name|BUS_PROBE_DEFAULT
 expr_stmt|;
 else|else
 name|error

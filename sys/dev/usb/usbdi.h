@@ -1260,10 +1260,6 @@ name|uint8_t
 name|port
 decl_stmt|;
 name|uint8_t
-name|use_generic
-decl_stmt|;
-comment|/* hint for generic drivers */
-name|uint8_t
 name|dev_state
 decl_stmt|;
 define|#
