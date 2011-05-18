@@ -2601,11 +2601,11 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|f_print
+name|fputs
 argument_list|(
-name|fout
-argument_list|,
 name|separator
+argument_list|,
+name|fout
 argument_list|)
 expr_stmt|;
 block|}
