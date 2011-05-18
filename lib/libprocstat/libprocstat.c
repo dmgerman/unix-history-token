@@ -694,6 +694,11 @@ operator|->
 name|kd
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|procstat
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
