@@ -53,6 +53,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPUID_0000_0006
+value|(0x6)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPUID_0000_000A
 value|(0xA)
 end_define

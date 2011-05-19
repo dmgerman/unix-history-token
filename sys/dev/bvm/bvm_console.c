@@ -226,6 +226,13 @@ name|BVM_CONS_PORT
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|BVM_CONS_SIG
+value|('b'<< 8 | 'v')
+end_define
+
 begin_function_decl
 specifier|static
 name|void
@@ -648,6 +655,12 @@ name|disabled
 operator|=
 literal|0
 expr_stmt|;
+name|cp
+operator|->
+name|cn_pri
+operator|=
+name|CN_DEAD
+expr_stmt|;
 name|resource_int_value
 argument_list|(
 literal|"bvmconsole"
@@ -662,21 +675,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|disabled
 condition|)
-name|cp
-operator|->
-name|cn_pri
-operator|=
-name|CN_DEAD
-expr_stmt|;
-else|else
-name|cp
-operator|->
-name|cn_pri
-operator|=
-name|CN_NORMAL
-expr_stmt|;
+block|{
 if|if
 condition|(
 name|resource_int_value
@@ -697,6 +699,22 @@ name|bvm_cons_port
 operator|=
 name|port
 expr_stmt|;
+if|if
+condition|(
+name|inw
+argument_list|(
+name|bvm_cons_port
+argument_list|)
+operator|==
+name|BVM_CONS_SIG
+condition|)
+name|cp
+operator|->
+name|cn_pri
+operator|=
+name|CN_REMOTE
+expr_stmt|;
+block|}
 block|}
 end_function
 

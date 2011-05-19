@@ -72,6 +72,13 @@ name|BVM_CONSOLE_PORT
 value|0x220
 end_define
 
+begin_define
+define|#
+directive|define
+name|BVM_CONS_SIG
+value|('b'<< 8 | 'v')
+end_define
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -331,6 +338,26 @@ specifier|static
 name|int
 name|opened
 decl_stmt|;
+if|if
+condition|(
+name|bytes
+operator|==
+literal|2
+operator|&&
+name|in
+condition|)
+block|{
+operator|*
+name|eax
+operator|=
+name|BVM_CONS_SIG
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|bytes

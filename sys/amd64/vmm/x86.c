@@ -159,14 +159,20 @@ operator|<<
 name|CPUID_0000_0001_APICID_SHIFT
 operator|)
 expr_stmt|;
-comment|/* 			 * Don't expose VMX capability. 			 * Advertise x2APIC capability. 			 */
+comment|/* 			 * Don't expose VMX, SpeedStep or TME capability. 			 * Advertise x2APIC capability. 			 */
 name|regs
 index|[
 literal|2
 index|]
 operator|&=
 operator|~
+operator|(
 name|CPUID_0000_0001_FEAT0_VMX
+operator||
+name|CPUID2_EST
+operator||
+name|CPUID2_TM2
+operator|)
 expr_stmt|;
 name|regs
 index|[
@@ -174,6 +180,19 @@ literal|2
 index|]
 operator||=
 name|CPUID2_X2APIC
+expr_stmt|;
+comment|/* 			 * Hide thermal monitoring 			 */
+name|regs
+index|[
+literal|3
+index|]
+operator|&=
+operator|~
+operator|(
+name|CPUID_ACPI
+operator||
+name|CPUID_TM
+operator|)
 expr_stmt|;
 comment|/* 			 * Machine check handling is done in the host. 			 * Hide MTRR capability. 			 */
 name|regs
@@ -189,6 +208,39 @@ name|CPUID_MCE
 operator||
 name|CPUID_MTRR
 operator|)
+expr_stmt|;
+break|break;
+case|case
+name|CPUID_0000_0006
+case|:
+comment|/* 			 * Handle the access, but report 0 for 			 * all options 			 */
+name|regs
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|regs
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|regs
+index|[
+literal|2
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|regs
+index|[
+literal|3
+index|]
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case

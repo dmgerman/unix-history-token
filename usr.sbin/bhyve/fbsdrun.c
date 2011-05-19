@@ -330,6 +330,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|strictio
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|lomem_addr
@@ -482,7 +489,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-hBHP][-g<gdb port>][-z<hz>][-s<pci>][-p pincpu]"
+literal|"Usage: %s [-ehBHP][-g<gdb port>][-z<hz>][-s<pci>][-p pincpu]"
 literal|"[-n<pci>][-m lowmem][-M highmem]<vm>\n"
 literal|"       -g: gdb port (default is %d and 0 means don't open)\n"
 literal|"       -c: # cpus (default 1)\n"
@@ -490,6 +497,7 @@ literal|"       -p: pin vcpu 'n' to host cpu 'pincpu + n'\n"
 literal|"       -B: inject breakpoint exception on vm entry\n"
 literal|"       -H: vmexit from the guest on hlt\n"
 literal|"       -P: vmexit from the guest on pause\n"
+literal|"	-e: exit on unhandled i/o access\n"
 literal|"       -h: help\n"
 literal|"       -z: guest hz (default is %d)\n"
 literal|"       -s:<slot,driver,configinfo> PCI slot config\n"
@@ -1185,6 +1193,8 @@ name|bytes
 argument_list|,
 operator|&
 name|eax
+argument_list|,
+name|strictio
 argument_list|)
 expr_stmt|;
 if|if
@@ -2188,7 +2198,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"hBHPxp:g:c:z:s:n:m:M:"
+literal|"ehBHPxp:g:c:z:s:n:m:M:"
 argument_list|)
 operator|)
 operator|!=
@@ -2336,6 +2346,14 @@ case|case
 literal|'P'
 case|:
 name|guest_vmexit_on_pause
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'e'
+case|:
+name|strictio
 operator|=
 literal|1
 expr_stmt|;

@@ -243,6 +243,13 @@ name|RTC_RSTCODE
 value|0x0f
 end_define
 
+begin_define
+define|#
+directive|define
+name|RTC_EQUIPMENT
+value|0x14
+end_define
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -691,6 +698,9 @@ case|:
 case|case
 name|RTC_RSTCODE
 case|:
+case|case
+name|RTC_EQUIPMENT
+case|:
 break|break;
 default|default:
 return|return
@@ -1099,6 +1109,19 @@ operator|*
 name|eax
 operator|=
 name|rstcode
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+case|case
+name|RTC_EQUIPMENT
+case|:
+operator|*
+name|eax
+operator|=
+literal|0
 expr_stmt|;
 return|return
 operator|(
