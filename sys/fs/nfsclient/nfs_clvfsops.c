@@ -6351,7 +6351,10 @@ condition|(
 name|has_nfs_args_opt
 operator|==
 literal|0
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|vfs_getopt
 argument_list|(
 name|mp
@@ -6430,6 +6433,24 @@ name|args
 operator|.
 name|addrlen
 expr_stmt|;
+block|}
+else|else
+block|{
+name|vfs_mount_error
+argument_list|(
+name|mp
+argument_list|,
+literal|"No server address"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 block|}
 name|args
 operator|.
