@@ -397,7 +397,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/*    * FreeBSD has two special kinds of system call redirctions --    * SYS_syscall, and SYS___syscall.  The former is the old syscall()    * routine, basicly; the latter is for quad-aligned arguments.    */
+comment|/*    * FreeBSD has two special kinds of system call redirctions --    * SYS_syscall, and SYS___syscall.  The former is the old syscall()    * routine, basically; the latter is for quad-aligned arguments.    */
 name|regargs
 operator|=
 name|NARGREG
