@@ -7729,6 +7729,9 @@ name|rtx
 name|ret
 decl_stmt|;
 comment|/* This lets us free all storage allocated below, if appropriate.  */
+operator|(
+name|void
+operator|)
 name|obstack_finish
 argument_list|(
 name|rtl_obstack
