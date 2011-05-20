@@ -264,14 +264,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|HASTD_LISTEN_IPV4
+name|HASTD_LISTEN_TCP4
 value|"tcp4://0.0.0.0:8457"
 end_define
 
 begin_define
 define|#
 directive|define
-name|HASTD_LISTEN_IPV6
+name|HASTD_LISTEN_TCP6
 value|"tcp6://[::]:8457"
 end_define
 
