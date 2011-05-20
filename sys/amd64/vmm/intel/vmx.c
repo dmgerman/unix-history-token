@@ -4575,8 +4575,6 @@ decl_stmt|,
 name|handled
 decl_stmt|,
 name|astpending
-decl_stmt|,
-name|loopstart
 decl_stmt|;
 name|uint32_t
 name|exit_reason
@@ -4620,9 +4618,11 @@ index|[
 name|vcpu
 index|]
 expr_stmt|;
-name|loopstart
+name|vmxctx
+operator|->
+name|launched
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 comment|/* 	 * XXX Can we avoid doing this every time we do a vm run? 	 */
 name|VMPTRLD
@@ -4756,12 +4756,18 @@ name|VMX_RETURN_DIRECT
 case|:
 if|if
 condition|(
-name|loopstart
+name|vmxctx
+operator|->
+name|launched
+operator|==
+literal|0
 condition|)
 block|{
-name|loopstart
+name|vmxctx
+operator|->
+name|launched
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 name|vmx_launch
 argument_list|(

@@ -37,6 +37,16 @@ struct|struct
 name|vmxctx
 block|{
 name|register_t
+name|tmpstk
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/* vmx_return() stack */
+name|register_t
+name|tmpstktop
+decl_stmt|;
+name|register_t
 name|guest_rdi
 decl_stmt|;
 comment|/* Guest state */
@@ -111,6 +121,10 @@ name|register_t
 name|host_rip
 decl_stmt|;
 comment|/* 	 * XXX todo debug registers and fpu state 	 */
+name|int
+name|launched
+decl_stmt|;
+comment|/* vmcs launch state */
 name|int
 name|launch_error
 decl_stmt|;
