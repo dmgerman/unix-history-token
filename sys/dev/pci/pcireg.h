@@ -2157,6 +2157,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCIP_SERIALBUS_USB_XHCI
+value|0x30
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIP_SERIALBUS_USB_DEVICE
 value|0xfe
 end_define
