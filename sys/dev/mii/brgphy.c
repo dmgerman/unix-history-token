@@ -4494,11 +4494,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|bge_sc
 operator|->
 name|bge_phy_flags
 operator|&
-name|BGE_PHY_WIRESPEED
+name|BGE_PHY_NO_WIRESPEED
+operator|)
+operator|==
+literal|0
 condition|)
 name|brgphy_ethernet_wirespeed
 argument_list|(
