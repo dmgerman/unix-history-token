@@ -4026,7 +4026,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: tzsetup [-nrs] [zoneinfo file]\n"
+literal|"usage: tzsetup [-nrs] [-C chroot_directory]"
+literal|" [zoneinfo_file | zoneinfo_name]\n"
 argument_list|)
 expr_stmt|;
 name|exit
