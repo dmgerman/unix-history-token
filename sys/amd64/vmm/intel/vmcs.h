@@ -1699,7 +1699,7 @@ begin_define
 define|#
 directive|define
 name|VMCS_INTERRUPTION_INFO_VALID
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
