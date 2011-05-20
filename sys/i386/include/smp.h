@@ -183,6 +183,17 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|u_long
+modifier|*
+name|ipi_lazypmap_counts
+index|[
+name|MAXCPU
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -234,11 +245,17 @@ name|IDTVEC
 argument_list|(
 name|rendezvous
 argument_list|)
+decl_stmt|,
+comment|/* handle CPU rendezvous */
+name|IDTVEC
+argument_list|(
+name|lazypmap
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* handle CPU rendezvous */
+comment|/* handle lazy pmap release */
 end_comment
 
 begin_comment

@@ -716,6 +716,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|pmap_lazyfix_action
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|struct
 name|cpu_group
@@ -1338,6 +1348,32 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|iv_lazypmap
+parameter_list|(
+name|uintptr_t
+name|a
+parameter_list|,
+name|uintptr_t
+name|b
+parameter_list|)
+block|{
+name|pmap_lazyfix_action
+argument_list|()
+expr_stmt|;
+name|atomic_add_int
+argument_list|(
+operator|&
+name|smp_tlb_wait
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * These start from "IPI offset" APIC_IPI_INTS  */
 end_comment
@@ -1348,7 +1384,7 @@ name|call_data_func_t
 modifier|*
 name|ipi_vectors
 index|[
-literal|5
+literal|6
 index|]
 init|=
 block|{
@@ -1361,6 +1397,8 @@ block|,
 name|iv_invlrng
 block|,
 name|iv_invlcache
+block|,
+name|iv_lazypmap
 block|, }
 decl_stmt|;
 end_decl_stmt
