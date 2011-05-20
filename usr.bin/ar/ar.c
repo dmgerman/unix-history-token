@@ -285,7 +285,7 @@ name|progname
 operator|=
 literal|"ar"
 expr_stmt|;
-comment|/* Act like ranlib if our name ends in "ranlib"; this 	 * accomodates arm-freebsd7.1-ranlib, bsdranlib, etc. */
+comment|/* Act like ranlib if our name ends in "ranlib"; this 	 * accommodates arm-freebsd7.1-ranlib, bsdranlib, etc. */
 name|len
 operator|=
 name|strlen
