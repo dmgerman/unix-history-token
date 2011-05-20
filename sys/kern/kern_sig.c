@@ -6872,7 +6872,9 @@ name|td
 operator|->
 name|td_sigmask
 argument_list|,
-literal|0
+name|ksi
+operator|->
+name|ksi_code
 argument_list|)
 expr_stmt|;
 block|}
@@ -13511,7 +13513,9 @@ name|td
 operator|->
 name|td_sigmask
 argument_list|,
-literal|0
+name|ksi
+operator|.
+name|ksi_code
 argument_list|)
 expr_stmt|;
 endif|#
