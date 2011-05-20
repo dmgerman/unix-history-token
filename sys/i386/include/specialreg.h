@@ -662,6 +662,13 @@ name|CPUID2_AESNI
 value|0x02000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|CPUID2_HV
+value|0x80000000
+end_define
+
 begin_comment
 comment|/*  * Important bits in the Thermal and Power Management flags  * CPUID.6 EAX and ECX.  */
 end_comment
