@@ -10497,6 +10497,9 @@ name|struct
 name|sockaddr
 modifier|*
 name|mask
+parameter_list|,
+name|u_int
+name|flags
 parameter_list|)
 block|{
 specifier|const
@@ -10539,6 +10542,7 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+comment|/* 	 * (flags& LLE_STATIC) means deleting all entries  	 * including static ND6 entries 	 */
 for|for
 control|(
 name|i
@@ -10593,6 +10597,23 @@ name|msk
 operator|->
 name|sin6_addr
 argument_list|)
+operator|&&
+operator|(
+operator|(
+name|flags
+operator|&
+name|LLE_STATIC
+operator|)
+operator|||
+operator|!
+operator|(
+name|lle
+operator|->
+name|la_flags
+operator|&
+name|LLE_STATIC
+operator|)
+operator|)
 condition|)
 block|{
 name|int

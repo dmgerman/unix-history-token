@@ -1699,6 +1699,8 @@ parameter_list|,
 name|struct
 name|in_ifaddr
 modifier|*
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
