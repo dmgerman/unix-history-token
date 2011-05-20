@@ -8647,7 +8647,6 @@ name|int
 name|nprot
 parameter_list|)
 block|{
-comment|/* XXX memattr is not honored */
 operator|*
 name|paddr
 operator|=
@@ -8952,10 +8951,6 @@ name|nprot
 argument_list|,
 operator|*
 name|offset
-argument_list|,
-name|curthread
-operator|->
-name|td_ucred
 argument_list|)
 expr_stmt|;
 name|PCM_GIANT_LEAVE
