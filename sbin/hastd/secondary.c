@@ -2246,6 +2246,9 @@ name|hio_cmd
 condition|)
 block|{
 case|case
+name|HIO_FLUSH
+case|:
+case|case
 name|HIO_KEEPALIVE
 case|:
 break|break;
