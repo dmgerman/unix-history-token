@@ -1056,9 +1056,9 @@ operator|.
 name|ifm_cur
 decl_stmt|;
 name|int
-name|reg
-decl_stmt|,
 name|i
+decl_stmt|,
+name|reg
 decl_stmt|;
 if|if
 condition|(
@@ -1133,6 +1133,12 @@ literal|1000
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* NB: a PHY may default to isolation. */
+name|reg
+operator|&=
+operator|~
+name|BMCR_ISO
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1144,10 +1150,8 @@ name|MIIF_NOISOLATE
 operator|)
 operator|==
 literal|0
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
+operator|(
 operator|(
 name|ife
 operator|==
@@ -1176,6 +1180,22 @@ name|sc
 operator|->
 name|mii_inst
 operator|)
+operator|)
+condition|)
+name|reg
+operator||=
+name|BMCR_ISO
+expr_stmt|;
+if|if
+condition|(
+name|PHY_READ
+argument_list|(
+name|sc
+argument_list|,
+name|MII_BMCR
+argument_list|)
+operator|!=
+name|reg
 condition|)
 name|PHY_WRITE
 argument_list|(
@@ -1184,11 +1204,8 @@ argument_list|,
 name|MII_BMCR
 argument_list|,
 name|reg
-operator||
-name|BMCR_ISO
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
