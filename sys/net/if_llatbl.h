@@ -542,6 +542,9 @@ name|struct
 name|sockaddr
 modifier|*
 name|mask
+parameter_list|,
+name|u_int
+name|flags
 parameter_list|)
 function_decl|;
 name|struct
@@ -767,6 +770,8 @@ parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
