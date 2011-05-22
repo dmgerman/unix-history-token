@@ -8099,6 +8099,13 @@ operator|&
 name|mask
 argument_list|)
 expr_stmt|;
+name|MPASS
+argument_list|(
+name|lsb
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
 name|lsb
 operator|--
 expr_stmt|;
