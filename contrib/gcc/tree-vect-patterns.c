@@ -1541,7 +1541,7 @@ block|}
 else|else
 block|{
 name|enum
-name|tree_code
+name|machine_mode
 name|vec_mode
 decl_stmt|;
 name|enum
