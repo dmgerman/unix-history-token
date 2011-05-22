@@ -27,6 +27,45 @@ value|0x7ffff
 end_define
 
 begin_comment
+comment|/*  * Feature Control Registers (FCR)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HEATHROW_FCR
+value|0x38
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEYLARGO_FCR0
+value|0x38
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEYLARGO_FCR1
+value|0x3c
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCR_ENET_ENABLE
+value|0x60000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCR_ENET_RESET
+value|0x80000000
+end_define
+
+begin_comment
 comment|/*  * Format of a macio reg property entry.  */
 end_comment
 

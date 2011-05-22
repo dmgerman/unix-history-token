@@ -2605,6 +2605,11 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* alloc interrupt */
+name|bm_disable_interrupts
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_txdmairqid
@@ -2759,12 +2764,6 @@ argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
-comment|/* reset the adapter  */
-name|bm_chip_setup
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Setup MII 	 * On Apple BMAC controllers, we end up in a weird state of 	 * partially-completed autonegotiation on boot.  So we force 	 * autonegotation to try again. 	 */
 name|error
 operator|=
@@ -2812,6 +2811,12 @@ name|error
 operator|)
 return|;
 block|}
+comment|/* reset the adapter  */
+name|bm_chip_setup
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_mii
@@ -5249,15 +5254,6 @@ name|uint16_t
 modifier|*
 name|eaddr_sect
 decl_stmt|;
-name|char
-name|path
-index|[
-literal|128
-index|]
-decl_stmt|;
-name|ihandle_t
-name|bmac_ih
-decl_stmt|;
 name|eaddr_sect
 operator|=
 operator|(
@@ -5270,57 +5266,20 @@ operator|->
 name|sc_enaddr
 operator|)
 expr_stmt|;
-comment|/*  	 * Enable BMAC cell by opening and closing its OF node. This enables  	 * the cell in macio as a side effect. We should probably directly  	 * twiddle the FCR bits, but we lack a good interface for this at the 	 * present time.  	 */
-name|OF_package_to_path
-argument_list|(
-name|ofw_bus_get_node
+name|dbdma_stop
 argument_list|(
 name|sc
 operator|->
-name|sc_dev
-argument_list|)
-argument_list|,
-name|path
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|path
-argument_list|)
+name|sc_txdma
 argument_list|)
 expr_stmt|;
-name|bmac_ih
-operator|=
-name|OF_open
-argument_list|(
-name|path
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bmac_ih
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|device_printf
+name|dbdma_stop
 argument_list|(
 name|sc
 operator|->
-name|sc_dev
-argument_list|,
-literal|"Enabling BMAC cell failed! Hoping it's already active.\n"
+name|sc_rxdma
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|OF_close
-argument_list|(
-name|bmac_ih
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Reset chip */
 name|CSR_WRITE_2
 argument_list|(
@@ -5342,6 +5301,11 @@ argument_list|)
 expr_stmt|;
 do|do
 block|{
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
 name|reg
 operator|=
 name|CSR_READ_2
