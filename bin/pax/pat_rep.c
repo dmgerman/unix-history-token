@@ -1368,7 +1368,7 @@ name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
-literal|"Pattern list inconsistant"
+literal|"Pattern list inconsistent"
 argument_list|)
 expr_stmt|;
 return|return

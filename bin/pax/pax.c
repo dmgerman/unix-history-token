@@ -1017,7 +1017,7 @@ name|reslimit
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * signal handling to reset stored directory times and modes. Since 	 * we deal with broken pipes via failed writes we ignore it. We also 	 * deal with any file size limit thorugh failed writes. Cpu time 	 * limits are caught and a cleanup is forced. 	 */
+comment|/* 	 * signal handling to reset stored directory times and modes. Since 	 * we deal with broken pipes via failed writes we ignore it. We also 	 * deal with any file size limit thorough failed writes. Cpu time 	 * limits are caught and a cleanup is forced. 	 */
 if|if
 condition|(
 operator|(
