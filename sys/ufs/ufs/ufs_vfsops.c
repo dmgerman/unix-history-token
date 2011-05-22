@@ -690,7 +690,7 @@ name|ufhp
 operator|->
 name|ufid_ino
 argument_list|,
-name|LK_EXCLUSIVE
+name|flags
 argument_list|,
 operator|&
 name|nvp
