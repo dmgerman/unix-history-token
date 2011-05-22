@@ -176,6 +176,8 @@ name|struct
 name|ufid
 modifier|*
 parameter_list|,
+name|int
+parameter_list|,
 name|struct
 name|vnode
 modifier|*

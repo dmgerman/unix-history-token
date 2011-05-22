@@ -1210,6 +1210,8 @@ name|mp
 parameter_list|,
 name|fidp
 parameter_list|,
+name|flags
+parameter_list|,
 name|vpp
 parameter_list|)
 name|struct
@@ -1221,6 +1223,9 @@ name|struct
 name|fid
 modifier|*
 name|fidp
+decl_stmt|;
+name|int
+name|flags
 decl_stmt|;
 name|struct
 name|vnode
@@ -1244,6 +1249,8 @@ operator|->
 name|nullm_vfs
 argument_list|,
 name|fidp
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|,
 name|vpp
 argument_list|)

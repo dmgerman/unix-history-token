@@ -4269,6 +4269,8 @@ name|fhp
 operator|->
 name|fh_fid
 argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
 name|vpp
 argument_list|)
 expr_stmt|;

@@ -2146,6 +2146,9 @@ name|fid
 modifier|*
 name|fidp
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|struct
 name|vnode
 modifier|*

@@ -585,6 +585,9 @@ name|fid_t
 modifier|*
 name|fidp
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|vnode_t
 modifier|*
 modifier|*
@@ -8934,6 +8937,9 @@ parameter_list|,
 name|fid_t
 modifier|*
 name|fidp
+parameter_list|,
+name|int
+name|flags
 parameter_list|,
 name|vnode_t
 modifier|*
