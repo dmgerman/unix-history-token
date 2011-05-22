@@ -43760,6 +43760,9 @@ operator|)
 operator|!=
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|getc
 argument_list|(
 name|file
