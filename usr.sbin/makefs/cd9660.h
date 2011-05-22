@@ -1001,6 +1001,9 @@ decl_stmt|;
 name|int
 name|archimedes_enabled
 decl_stmt|;
+name|int
+name|chrp_boot
+decl_stmt|;
 comment|/* Spec breaking options */
 name|u_char
 name|allow_deep_trees

@@ -1343,7 +1343,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * by default we only will check file mtime, but usee can specify 	 * mtime, ctime (inode change time) or both. 	 */
+comment|/* 	 * by default we only will check file mtime, but the user can specify 	 * mtime, ctime (inode change time) or both. 	 */
 if|if
 condition|(
 operator|(

@@ -5091,7 +5091,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator|<
-literal|0x78a0
+literal|0x7900
 condition|)
 name|OS_DELAY
 argument_list|(

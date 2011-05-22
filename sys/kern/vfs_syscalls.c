@@ -22149,6 +22149,8 @@ name|fhp
 operator|.
 name|fh_fid
 argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
 operator|&
 name|vp
 argument_list|)
@@ -22953,6 +22955,8 @@ name|fh
 operator|.
 name|fh_fid
 argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
 operator|&
 name|vp
 argument_list|)
@@ -23266,6 +23270,8 @@ operator|&
 name|fh
 operator|.
 name|fh_fid
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|,
 operator|&
 name|vp

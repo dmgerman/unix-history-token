@@ -8040,6 +8040,8 @@ name|mp
 parameter_list|,
 name|fhp
 parameter_list|,
+name|flags
+parameter_list|,
 name|vpp
 parameter_list|)
 name|struct
@@ -8051,6 +8053,9 @@ name|struct
 name|fid
 modifier|*
 name|fhp
+decl_stmt|;
+name|int
+name|flags
 decl_stmt|;
 name|struct
 name|vnode
@@ -8119,6 +8124,8 @@ argument_list|(
 name|mp
 argument_list|,
 name|ufhp
+argument_list|,
+name|flags
 argument_list|,
 name|vpp
 argument_list|)

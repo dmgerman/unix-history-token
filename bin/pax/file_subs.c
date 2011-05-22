@@ -192,7 +192,7 @@ decl_stmt|;
 name|int
 name|oerrno
 decl_stmt|;
-comment|/* 	 * assume file doesn't exist, so just try to create it, most times this 	 * works. We have to take special handling when the file does exist. To 	 * detect this, we use O_EXCL. For example when trying to create a 	 * file and a character device or fifo exists with the same name, we 	 * can accidently open the device by mistake (or block waiting to open) 	 * If we find that the open has failed, then figure spend the effort to 	 * figure out why. This strategy was found to have better average 	 * performance in common use than checking the file (and the path) 	 * first with lstat. 	 */
+comment|/* 	 * assume file doesn't exist, so just try to create it, most times this 	 * works. We have to take special handling when the file does exist. To 	 * detect this, we use O_EXCL. For example when trying to create a 	 * file and a character device or fifo exists with the same name, we 	 * can accidentally open the device by mistake (or block waiting to 	 * open). If we find that the open has failed, then spend the effort 	 * to figure out why. This strategy was found to have better average 	 * performance in common use than checking the file (and the path) 	 * first with lstat. 	 */
 name|file_mode
 operator|=
 name|arcn
@@ -1782,7 +1782,7 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* 		 * work foward from the first / and check each part of the path 		 */
+comment|/* 		 * work forward from the first / and check each part of the path 		 */
 name|spt
 operator|=
 name|strchr
@@ -1878,7 +1878,7 @@ argument_list|,
 name|st_gid
 argument_list|)
 expr_stmt|;
-comment|/* 		 * make sure the user doen't have some strange umask that 		 * causes this newly created directory to be unusable. We fix 		 * the modes and restore them back to the creation default at 		 * the end of pax 		 */
+comment|/* 		 * make sure the user doesn't have some strange umask that 		 * causes this newly created directory to be unusable. We fix 		 * the modes and restore them back to the creation default at 		 * the end of pax 		 */
 if|if
 condition|(
 operator|(
@@ -2255,7 +2255,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * file_write()  *	Write/copy a file (during copy or archive extract). This routine knows  *	how to copy files with lseek holes in it. (Which are read as file  *	blocks containing all 0's but do not have any file blocks associated  *	with the data). Typical examples of these are files created by dbm  *	variants (.pag files). While the file size of these files are huge, the  *	actual storage is quite small (the files are sparse). The problem is  *	the holes read as all zeros so are probably stored on the archive that  *	way (there is no way to determine if the file block is really a hole,  *	we only know that a file block of all zero's can be a hole).  *	At this writing, no major archive format knows how to archive files  *	with holes. However, on extraction (or during copy, -rw) we have to  *	deal with these files. Without detecting the holes, the files can  *	consume a lot of file space if just written to disk. This replacement  *	for write when passed the basic allocation size of a file system block,  *	uses lseek whenever it detects the input data is all 0 within that  *	file block. In more detail, the strategy is as follows:  *	While the input is all zero keep doing an lseek. Keep track of when we  *	pass over file block boundries. Only write when we hit a non zero  *	input. once we have written a file block, we continue to write it to  *	the end (we stop looking at the input). When we reach the start of the  *	next file block, start checking for zero blocks again. Working on file  *	block boundries significantly reduces the overhead when copying files  *	that are NOT very sparse. This overhead (when compared to a write) is  *	almost below the measurement resolution on many systems. Without it,  *	files with holes cannot be safely copied. It does has a side effect as  *	it can put holes into files that did not have them before, but that is  *	not a problem since the file contents are unchanged (in fact it saves  *	file space). (Except on paging files for diskless clients. But since we  *	cannot determine one of those file from here, we ignore them). If this  *	ever ends up on a system where CTG files are supported and the holes  *	are not desired, just do a conditional test in those routines that  *	call file_write() and have it call write() instead. BEFORE CLOSING THE  *	FILE, make sure to call file_flush() when the last write finishes with  *	an empty block. A lot of file systems will not create an lseek hole at  *	the end. In this case we drop a single 0 at the end to force the  *	trailing 0's in the file.  *	---Parameters---  *	rem: how many bytes left in this file system block  *	isempt: have we written to the file block yet (is it empty)  *	sz: basic file block allocation size  *	cnt: number of bytes on this write  *	str: buffer to write  * Return:  *	number of bytes written, -1 on write (or lseek) error.  */
+comment|/*  * file_write()  *	Write/copy a file (during copy or archive extract). This routine knows  *	how to copy files with lseek holes in it. (Which are read as file  *	blocks containing all 0's but do not have any file blocks associated  *	with the data). Typical examples of these are files created by dbm  *	variants (.pag files). While the file size of these files are huge, the  *	actual storage is quite small (the files are sparse). The problem is  *	the holes read as all zeros so are probably stored on the archive that  *	way (there is no way to determine if the file block is really a hole,  *	we only know that a file block of all zero's can be a hole).  *	At this writing, no major archive format knows how to archive files  *	with holes. However, on extraction (or during copy, -rw) we have to  *	deal with these files. Without detecting the holes, the files can  *	consume a lot of file space if just written to disk. This replacement  *	for write when passed the basic allocation size of a file system block,  *	uses lseek whenever it detects the input data is all 0 within that  *	file block. In more detail, the strategy is as follows:  *	While the input is all zero keep doing an lseek. Keep track of when we  *	pass over file block boundaries. Only write when we hit a non zero  *	input. once we have written a file block, we continue to write it to  *	the end (we stop looking at the input). When we reach the start of the  *	next file block, start checking for zero blocks again. Working on file  *	block boundaries significantly reduces the overhead when copying files  *	that are NOT very sparse. This overhead (when compared to a write) is  *	almost below the measurement resolution on many systems. Without it,  *	files with holes cannot be safely copied. It does has a side effect as  *	it can put holes into files that did not have them before, but that is  *	not a problem since the file contents are unchanged (in fact it saves  *	file space). (Except on paging files for diskless clients. But since we  *	cannot determine one of those file from here, we ignore them). If this  *	ever ends up on a system where CTG files are supported and the holes  *	are not desired, just do a conditional test in those routines that  *	call file_write() and have it call write() instead. BEFORE CLOSING THE  *	FILE, make sure to call file_flush() when the last write finishes with  *	an empty block. A lot of file systems will not create an lseek hole at  *	the end. In this case we drop a single 0 at the end to force the  *	trailing 0's in the file.  *	---Parameters---  *	rem: how many bytes left in this file system block  *	isempt: have we written to the file block yet (is it empty)  *	sz: basic file block allocation size  *	cnt: number of bytes on this write  *	str: buffer to write  * Return:  *	number of bytes written, -1 on write (or lseek) error.  */
 end_comment
 
 begin_function
@@ -2809,7 +2809,7 @@ literal|0xff
 operator|)
 expr_stmt|;
 block|}
-comment|/* 	 * safety check. we want to avoid archiving files that are active as 	 * they can create inconsistant archive copies. 	 */
+comment|/* 	 * safety check. we want to avoid archiving files that are active as 	 * they can create inconsistent archive copies. 	 */
 if|if
 condition|(
 name|cpcnt
