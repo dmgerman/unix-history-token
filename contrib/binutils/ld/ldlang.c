@@ -17735,6 +17735,9 @@ name|input_section
 operator|.
 name|section
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|bfd_set_section_vma
 argument_list|(
 name|os
@@ -18077,6 +18080,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|bfd_set_section_vma
 argument_list|(
 literal|0
