@@ -784,8 +784,8 @@ name|last
 operator|=
 name|cpu
 expr_stmt|;
-name|mp_ncpus
-operator|++
+name|cpu
+operator|--
 expr_stmt|;
 name|CPU_CLR
 argument_list|(
@@ -794,6 +794,9 @@ argument_list|,
 operator|&
 name|cpumask
 argument_list|)
+expr_stmt|;
+name|mp_ncpus
+operator|++
 expr_stmt|;
 block|}
 if|if
