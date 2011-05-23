@@ -8408,6 +8408,22 @@ name|sb
 argument_list|)
 operator|!=
 literal|0
+operator|||
+operator|(
+name|fflag
+operator|==
+literal|0
+operator|&&
+name|lstat
+argument_list|(
+name|path
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|!=
+literal|0
+operator|)
 condition|)
 block|{
 comment|/* lets try<path>.gz if we're decompressing */
