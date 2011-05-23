@@ -992,17 +992,12 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* 	 * Until capsicum doesn't allow ioctl(2) we cannot use it to sandbox 	 * primary and secondary worker processes, as primary uses GGATE 	 * ioctls and secondary uses ioctls to handle BIO_DELETE and BIO_FLUSH. 	 * For now capsicum is only used to sandbox hastctl. 	 */
 if|if
 condition|(
 name|res
 operator|==
 name|NULL
-operator|||
-name|res
-operator|->
-name|hr_role
-operator|!=
-name|HAST_ROLE_PRIMARY
 condition|)
 name|capsicum
 operator|=
