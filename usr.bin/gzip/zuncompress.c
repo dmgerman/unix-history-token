@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: zuncompress.c,v 1.7 2009/04/12 10:31:14 lukem Exp $ */
+comment|/*	$NetBSD: zuncompress.c,v 1.8 2010/11/06 21:42:32 mrg Exp $ */
 end_comment
 
 begin_comment

@@ -2931,7 +2931,7 @@ name|numdirtybuffers
 operator|=
 literal|0
 expr_stmt|;
-comment|/*  * To support extreme low-memory systems, make sure hidirtybuffers cannot  * eat up all available buffer space.  This occurs when our minimum cannot  * be met.  We try to size hidirtybuffers to 3/4 our buffer space assuming  * BKVASIZE'd (8K) buffers.  */
+comment|/*  * To support extreme low-memory systems, make sure hidirtybuffers cannot  * eat up all available buffer space.  This occurs when our minimum cannot  * be met.  We try to size hidirtybuffers to 3/4 our buffer space assuming  * BKVASIZE'd buffers.  */
 while|while
 condition|(
 operator|(

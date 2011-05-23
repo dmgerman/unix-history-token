@@ -3367,7 +3367,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
-name|wild
+name|lookupflags
 init|=
 literal|0
 decl_stmt|;
@@ -3442,7 +3442,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|wild
+name|lookupflags
 operator|=
 name|INPLOOKUP_WILDCARD
 expr_stmt|;
@@ -3465,7 +3465,7 @@ name|lport
 argument_list|,
 name|cred
 argument_list|,
-name|wild
+name|lookupflags
 argument_list|)
 expr_stmt|;
 if|if
