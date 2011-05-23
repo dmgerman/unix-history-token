@@ -495,6 +495,13 @@ end_struct
 begin_decl_stmt
 specifier|extern
 name|int
+name|ktr_cpumask
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|ktr_mask
 decl_stmt|;
 end_decl_stmt
