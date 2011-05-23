@@ -6864,10 +6864,40 @@ condition|(
 name|sc
 operator|->
 name|msk_hw_id
-operator|==
-name|CHIP_ID_YUKON_EX
+operator|>=
+name|CHIP_ID_YUKON_XL
+operator|&&
+name|sc
+operator|->
+name|msk_hw_id
+operator|<=
+name|CHIP_ID_YUKON_SUPR
 condition|)
 block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|msk_hw_id
+operator|==
+name|CHIP_ID_YUKON_EX
+operator|||
+name|sc
+operator|->
+name|msk_hw_id
+operator|==
+name|CHIP_ID_YUKON_SUPR
+condition|)
+block|{
+name|CSR_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|B28_Y2_CPU_WDOG
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|status
 operator|=
 name|CSR_READ_2
@@ -6893,6 +6923,11 @@ operator|&=
 operator|~
 name|Y2_ASF_HCU_CCSR_UC_STATE_MSK
 expr_stmt|;
+name|status
+operator|&=
+operator|~
+name|Y2_ASF_HCU_CCSR_CPU_CLK_DIVIDE_MSK
+expr_stmt|;
 name|CSR_WRITE_2
 argument_list|(
 name|sc
@@ -6900,6 +6935,15 @@ argument_list|,
 name|B28_Y2_ASF_HCU_CCSR
 argument_list|,
 name|status
+argument_list|)
+expr_stmt|;
+name|CSR_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|B28_Y2_CPU_WDOG
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -6922,7 +6966,7 @@ argument_list|,
 name|Y2_ASF_DISABLE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Since we disabled ASF, S/W reset is required for Power Management. 	 */
+comment|/* 		 * Since we disabled ASF, S/W reset is required for 		 * Power Management. 		 */
 name|CSR_WRITE_2
 argument_list|(
 name|sc
@@ -6941,6 +6985,7 @@ argument_list|,
 name|CS_RST_CLR
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Clear all error bits in the PCI status register. */
 name|status
 operator|=
