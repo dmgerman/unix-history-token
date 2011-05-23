@@ -2156,42 +2156,78 @@ begin_define
 define|#
 directive|define
 name|atomic_set_long
-value|atomic_set_32
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|atomic_set_32((volatile u_int *)(p), (u_int)(v))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_set_acq_long
-value|atomic_set_acq_32
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|atomic_set_acq_32((volatile u_int *)(p), (u_int)(v))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_set_rel_long
-value|atomic_set_rel_32
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|atomic_set_rel_32((volatile u_int *)(p), (u_int)(v))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_clear_long
-value|atomic_clear_32
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|atomic_clear_32((volatile u_int *)(p), (u_int)(v))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_clear_acq_long
-value|atomic_clear_acq_32
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|atomic_clear_acq_32((volatile u_int *)(p), (u_int)(v))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_clear_rel_long
-value|atomic_clear_rel_32
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|atomic_clear_rel_32((volatile u_int *)(p), (u_int)(v))
 end_define
 
 begin_define
@@ -2211,14 +2247,26 @@ begin_define
 define|#
 directive|define
 name|atomic_add_acq_long
-value|atomic_add_acq_32
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|atomic_add_32((volatile u_int *)(p), (u_int)(v))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_add_rel_long
-value|atomic_add_rel_32
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|atomic_add_32((volatile u_int *)(p), (u_int)(v))
 end_define
 
 begin_define
@@ -2238,21 +2286,41 @@ begin_define
 define|#
 directive|define
 name|atomic_subtract_acq_long
-value|atomic_subtract_acq_32
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|atomic_subtract_acq_32((volatile u_int *)(p), (u_int)(v))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_subtract_rel_long
-value|atomic_subtract_rel_32
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|atomic_subtract_rel_32((volatile u_int *)(p), (u_int)(v))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_cmpset_long
-value|atomic_cmpset_32
+parameter_list|(
+name|p
+parameter_list|,
+name|cmpval
+parameter_list|,
+name|newval
+parameter_list|)
+define|\
+value|atomic_cmpset_32((volatile u_int *)(p), (u_int)(cmpval),	\ 	    (u_int)(newval))
 end_define
 
 begin_define
@@ -2267,7 +2335,7 @@ parameter_list|,
 name|newval
 parameter_list|)
 define|\
-value|atomic_cmpset_acq_32((volatile u_int *)(p), \ 	    (u_int)(cmpval), (u_int)(newval))
+value|atomic_cmpset_acq_32((volatile u_int *)(p), (u_int)(cmpval),	\ 	    (u_int)(newval))
 end_define
 
 begin_define
@@ -2282,21 +2350,31 @@ parameter_list|,
 name|newval
 parameter_list|)
 define|\
-value|atomic_cmpset_rel_32((volatile u_int *)(p), \ 	    (u_int)(cmpval), (u_int)(newval))
+value|atomic_cmpset_rel_32((volatile u_int *)(p), (u_int)(cmpval),	\ 	    (u_int)(newval))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_load_acq_long
-value|atomic_load_acq_32
+parameter_list|(
+name|p
+parameter_list|)
+define|\
+value|(u_long)atomic_load_acq_32((volatile u_int *)(p))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_store_rel_long
-value|atomic_store_rel_32
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|atomic_store_rel_32((volatile u_int *)(p), (u_int)(v))
 end_define
 
 begin_define
@@ -2316,7 +2394,11 @@ begin_define
 define|#
 directive|define
 name|atomic_readandclear_long
-value|atomic_readandclear_32
+parameter_list|(
+name|p
+parameter_list|)
+define|\
+value|atomic_readandclear_32((volatile u_int *)(p))
 end_define
 
 begin_endif
