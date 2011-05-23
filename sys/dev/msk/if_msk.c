@@ -7181,7 +7181,7 @@ operator|++
 control|)
 block|{
 comment|/* GPHY Control reset. */
-name|CSR_WRITE_4
+name|CSR_WRITE_1
 argument_list|(
 name|sc
 argument_list|,
@@ -7195,7 +7195,7 @@ argument_list|,
 name|GPC_RST_SET
 argument_list|)
 expr_stmt|;
-name|CSR_WRITE_4
+name|CSR_WRITE_1
 argument_list|(
 name|sc
 argument_list|,
