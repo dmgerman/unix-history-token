@@ -1770,7 +1770,7 @@ modifier|*
 name|cred
 parameter_list|,
 name|int
-name|wild
+name|lookupflags
 parameter_list|)
 block|{
 name|struct
@@ -2148,7 +2148,7 @@ name|in6p_laddr
 argument_list|,
 name|lport
 argument_list|,
-name|wild
+name|lookupflags
 argument_list|,
 name|cred
 argument_list|)
@@ -2182,7 +2182,7 @@ name|laddr
 argument_list|,
 name|lport
 argument_list|,
-name|wild
+name|lookupflags
 argument_list|,
 name|cred
 argument_list|)
@@ -2319,7 +2319,7 @@ init|=
 literal|0
 decl_stmt|;
 name|int
-name|wild
+name|lookupflags
 init|=
 literal|0
 decl_stmt|,
@@ -2401,7 +2401,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|wild
+name|lookupflags
 operator|=
 name|INPLOOKUP_WILDCARD
 expr_stmt|;
@@ -2831,7 +2831,7 @@ name|sin_addr
 argument_list|,
 name|lport
 argument_list|,
-name|wild
+name|lookupflags
 argument_list|,
 name|cred
 argument_list|)
@@ -2979,7 +2979,7 @@ name|lport
 argument_list|,
 name|cred
 argument_list|,
-name|wild
+name|lookupflags
 argument_list|)
 expr_stmt|;
 if|if
@@ -6022,7 +6022,7 @@ name|u_short
 name|lport
 parameter_list|,
 name|int
-name|wild_okay
+name|lookupflags
 parameter_list|,
 name|struct
 name|ucred
@@ -6057,6 +6057,28 @@ directive|endif
 name|int
 name|wildcard
 decl_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|lookupflags
+operator|&
+operator|~
+operator|(
+name|INPLOOKUP_WILDCARD
+operator|)
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"%s: invalid lookup flags %d"
+operator|,
+name|__func__
+operator|,
+name|lookupflags
+operator|)
+argument_list|)
+expr_stmt|;
 name|INP_INFO_LOCK_ASSERT
 argument_list|(
 name|pcbinfo
@@ -6064,8 +6086,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|wild_okay
+operator|(
+name|lookupflags
+operator|&
+name|INPLOOKUP_WILDCARD
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|struct
@@ -6452,7 +6479,7 @@ name|u_int
 name|lport_arg
 parameter_list|,
 name|int
-name|wildcard
+name|lookupflags
 parameter_list|,
 name|struct
 name|ifnet
@@ -6482,6 +6509,28 @@ name|lport
 init|=
 name|lport_arg
 decl_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|lookupflags
+operator|&
+operator|~
+operator|(
+name|INPLOOKUP_WILDCARD
+operator|)
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"%s: invalid lookup flags %d"
+operator|,
+name|__func__
+operator|,
+name|lookupflags
+operator|)
+argument_list|)
+expr_stmt|;
 name|INP_INFO_LOCK_ASSERT
 argument_list|(
 name|pcbinfo
@@ -6621,9 +6670,13 @@ return|;
 comment|/* 	 * Then look for a wildcard match, if requested. 	 */
 if|if
 condition|(
-name|wildcard
-operator|==
+operator|(
+name|lookupflags
+operator|&
 name|INPLOOKUP_WILDCARD
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|struct
@@ -6918,7 +6971,7 @@ endif|#
 directive|endif
 comment|/* defined(INET6) */
 block|}
-comment|/* if (wildcard == INPLOOKUP_WILDCARD) */
+comment|/* if ((lookupflags& INPLOOKUP_WILDCARD) != 0) */
 return|return
 operator|(
 name|NULL
