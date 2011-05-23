@@ -5237,18 +5237,6 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|moea64_initialized
-condition|)
-name|panic
-argument_list|(
-literal|"moea64_zero_page: can't zero pa %#x"
-argument_list|,
-name|pa
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|size
 operator|+
 name|off
@@ -5323,18 +5311,6 @@ decl_stmt|;
 name|vm_offset_t
 name|off
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|moea64_initialized
-condition|)
-name|panic
-argument_list|(
-literal|"moea64_zero_page: can't zero pa %#x"
-argument_list|,
-name|pa
-argument_list|)
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
