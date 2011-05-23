@@ -122,8 +122,44 @@ parameter_list|,
 name|l3
 parameter_list|)
 define|\
-value|set	mask, r1 ; \ 	TEST(ktr_mask, r1, r2, r2, l3) ; \ 	lduw	[PCPU(MID)], r1 ; \ 	mov	1, r2 ; \ 	sllx	r2, r1, r1 ; \ 	TEST(ktr_cpumask, r1, r2, r3, l3) ; \ 	ATR(desc, r1, r2, r3, l1, l2)
+value|set	mask, r1 ; \ 	TEST(ktr_mask, r1, r2, r2, l3) ; \ 	lduw	[PCPU(MID)], r1 ; \ 	mov	1, r2 ; \ 	sllx	r2, r1, r1 ; \ #if 0
 end_define
+
+begin_expr_stmt
+name|TEST
+argument_list|(
+name|ktr_cpumask
+argument_list|,
+name|r1
+argument_list|,
+name|r2
+argument_list|,
+name|r3
+argument_list|,
+name|l3
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+unit|\
+operator|#
+name|endif
+name|ATR
+argument_list|(
+argument|desc
+argument_list|,
+argument|r1
+argument_list|,
+argument|r2
+argument_list|,
+argument|r3
+argument_list|,
+argument|l1
+argument_list|,
+argument|l2
+argument_list|)
+end_expr_stmt
 
 begin_endif
 endif|#
