@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)in_pcb.h	8.1 (Berkeley) 6/10/93  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  * Copyright (c) 2010-2011 Juniper Networks, Inc.  * All rights reserved.  *  * Portions of this software were developed by Robert N. M. Watson under  * contract to Juniper Networks, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)in_pcb.h	8.1 (Berkeley) 6/10/93  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -752,70 +752,83 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Global data structure for each high-level protocol (UDP, TCP, ...) in both  * IPv4 and IPv6.  Holds inpcb lists and information for managing them.  */
+comment|/*-  * Global data structure for each high-level protocol (UDP, TCP, ...) in both  * IPv4 and IPv6.  Holds inpcb lists and information for managing them.  *  * Each pcbinfo is protected by ipi_lock, covering mutable global fields (such  * as the global pcb list) and hashed lookup tables.  The lock order is:  *  *    ipi_lock (before) inpcb locks  *  * Locking key:  *  * (c) Constant or nearly constant after initialisation  * (g) Locked by ipi_lock  * (h) Read using either ipi_lock or inpcb lock; write requires both.  * (x) Synchronisation properties poorly defined  */
 end_comment
 
 begin_struct
 struct|struct
 name|inpcbinfo
 block|{
+comment|/* 	 * Global lock protecting global inpcb list, inpcb count, hash tables, 	 * etc. 	 */
+name|struct
+name|rwlock
+name|ipi_lock
+decl_stmt|;
 comment|/* 	 * Global list of inpcbs on the protocol. 	 */
 name|struct
 name|inpcbhead
 modifier|*
 name|ipi_listhead
 decl_stmt|;
+comment|/* (g) */
 name|u_int
 name|ipi_count
 decl_stmt|;
-comment|/* 	 * Global hash of inpcbs, hashed by local and foreign addresses and 	 * port numbers. 	 */
-name|struct
-name|inpcbhead
-modifier|*
-name|ipi_hashbase
+comment|/* (g) */
+comment|/* 	 * Generation count -- incremented each time a connection is allocated 	 * or freed. 	 */
+name|u_quad_t
+name|ipi_gencnt
 decl_stmt|;
-name|u_long
-name|ipi_hashmask
-decl_stmt|;
-comment|/* 	 * Global hash of inpcbs, hashed by only local port number. 	 */
-name|struct
-name|inpcbporthead
-modifier|*
-name|ipi_porthashbase
-decl_stmt|;
-name|u_long
-name|ipi_porthashmask
-decl_stmt|;
+comment|/* (g) */
 comment|/* 	 * Fields associated with port lookup and allocation. 	 */
 name|u_short
 name|ipi_lastport
 decl_stmt|;
+comment|/* (x) */
 name|u_short
 name|ipi_lastlow
 decl_stmt|;
+comment|/* (x) */
 name|u_short
 name|ipi_lasthi
 decl_stmt|;
+comment|/* (x) */
 comment|/* 	 * UMA zone from which inpcbs are allocated for this protocol. 	 */
 name|struct
 name|uma_zone
 modifier|*
 name|ipi_zone
 decl_stmt|;
-comment|/* 	 * Generation count--incremented each time a connection is allocated 	 * or freed. 	 */
-name|u_quad_t
-name|ipi_gencnt
-decl_stmt|;
+comment|/* (c) */
+comment|/* 	 * Global hash of inpcbs, hashed by local and foreign addresses and 	 * port numbers. 	 */
 name|struct
-name|rwlock
-name|ipi_lock
+name|inpcbhead
+modifier|*
+name|ipi_hashbase
 decl_stmt|;
+comment|/* (g) */
+name|u_long
+name|ipi_hashmask
+decl_stmt|;
+comment|/* (g) */
+comment|/* 	 * Global hash of inpcbs, hashed by only local port number. 	 */
+name|struct
+name|inpcbporthead
+modifier|*
+name|ipi_porthashbase
+decl_stmt|;
+comment|/* (g) */
+name|u_long
+name|ipi_porthashmask
+decl_stmt|;
+comment|/* (g) */
 comment|/* 	 * Pointer to network stack instance 	 */
 name|struct
 name|vnet
 modifier|*
 name|ipi_vnet
 decl_stmt|;
+comment|/* (c) */
 comment|/* 	 * general use 2 	 */
 name|void
 modifier|*
