@@ -935,6 +935,9 @@ case|:
 case|case
 name|BIO_WRITE
 case|:
+case|case
+name|BIO_FLUSH
+case|:
 comment|/* XXX: Hack to allow read-only mounts. */
 if|if
 condition|(
@@ -3224,6 +3227,9 @@ case|:
 case|case
 name|BIO_DELETE
 case|:
+case|case
+name|BIO_FLUSH
+case|:
 break|break;
 case|case
 name|BIO_WRITE
@@ -3561,6 +3567,9 @@ name|BIO_DELETE
 case|:
 case|case
 name|BIO_WRITE
+case|:
+case|case
+name|BIO_FLUSH
 case|:
 break|break;
 block|}
