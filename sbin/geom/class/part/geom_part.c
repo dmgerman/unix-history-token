@@ -1730,7 +1730,7 @@ name|d
 parameter_list|,
 name|a
 parameter_list|)
-value|(-(a)& (d))
+value|((d) % (a) ? (d) - (d) % (a): (d))
 end_define
 
 begin_define
@@ -1742,7 +1742,7 @@ name|d
 parameter_list|,
 name|a
 parameter_list|)
-value|(-(-(a)& -(d)))
+value|((d) % (a) ? (d) - (d) % (a) + (a): (d))
 end_define
 
 begin_function
