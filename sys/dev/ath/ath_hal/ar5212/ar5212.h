@@ -1188,6 +1188,24 @@ name|AH_MAXCHAN
 index|]
 decl_stmt|;
 comment|/* per-channel state */
+comment|/* AR5416 uses some of the AR5212 ANI code; these are the ANI methods */
+name|HAL_BOOL
+function_decl|(
+modifier|*
+name|ah_aniControl
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|HAL_ANI_CMD
+name|cmd
+parameter_list|,
+name|int
+name|param
+parameter_list|)
+function_decl|;
 comment|/* 	 * Transmit power state.  Note these are maintained 	 * here so they can be retrieved by diagnostic tools. 	 */
 name|uint16_t
 modifier|*

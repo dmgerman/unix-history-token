@@ -926,6 +926,16 @@ name|ah_ani_function
 operator|=
 name|HAL_ANI_ALL
 expr_stmt|;
+comment|/* Set overridable ANI methods */
+name|AH5212
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_aniControl
+operator|=
+name|ar5416AniControl
+expr_stmt|;
 block|}
 end_function
 

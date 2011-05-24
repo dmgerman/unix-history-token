@@ -4430,7 +4430,12 @@ argument_list|(
 name|cmds
 argument_list|)
 condition|?
-name|ar5212AniControl
+name|AH5212
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_aniControl
 argument_list|(
 name|ah
 argument_list|,
@@ -4768,7 +4773,12 @@ condition|)
 return|return
 name|AH_FALSE
 return|;
-name|ar5212AniControl
+name|AH5212
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_aniControl
 argument_list|(
 name|ah
 argument_list|,
