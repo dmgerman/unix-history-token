@@ -8068,7 +8068,7 @@ name|u_int
 name|spins
 decl_stmt|;
 name|int
-name|lbs
+name|lsb
 decl_stmt|;
 name|mask
 operator|=
@@ -8157,9 +8157,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|CPU_CMP
+argument_list|(
+operator|&
 name|mask
-operator|==
+argument_list|,
+operator|&
 name|mymask
+argument_list|)
 condition|)
 block|{
 name|lazymask
