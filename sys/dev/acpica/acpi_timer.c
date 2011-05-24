@@ -837,7 +837,7 @@ name|acpi_timer_timecounter
 operator|.
 name|tc_quality
 operator|=
-literal|1000
+literal|900
 expr_stmt|;
 block|}
 else|else

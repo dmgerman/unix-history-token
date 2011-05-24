@@ -67,17 +67,6 @@ begin_comment
 comment|/* RW frame length adjust */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PCI_INTERFACE_XHCI
-value|0x30
-end_define
-
-begin_comment
-comment|/* USB 3.0 - XHCI */
-end_comment
-
 begin_comment
 comment|/* XHCI capability registers */
 end_comment

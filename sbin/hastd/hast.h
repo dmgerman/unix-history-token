@@ -264,8 +264,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|HASTD_LISTEN
+name|HASTD_LISTEN_TCP4
 value|"tcp4://0.0.0.0:8457"
+end_define
+
+begin_define
+define|#
+directive|define
+name|HASTD_LISTEN_TCP6
+value|"tcp6://[::]:8457"
 end_define
 
 begin_define
@@ -324,6 +331,33 @@ end_define
 
 begin_struct
 struct|struct
+name|hastd_listen
+block|{
+comment|/* Address to listen on. */
+name|char
+name|hl_addr
+index|[
+name|HAST_ADDRSIZE
+index|]
+decl_stmt|;
+comment|/* Protocol-specific data. */
+name|struct
+name|proto_conn
+modifier|*
+name|hl_conn
+decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|hastd_listen
+argument_list|)
+name|hl_next
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|hastd_config
 block|{
 comment|/* Address to communicate with hastctl(8). */
@@ -345,19 +379,14 @@ name|proto_conn
 modifier|*
 name|hc_controlin
 decl_stmt|;
-comment|/* Address to listen on. */
-name|char
-name|hc_listenaddr
-index|[
-name|HAST_ADDRSIZE
-index|]
-decl_stmt|;
-comment|/* Protocol-specific data. */
-name|struct
-name|proto_conn
-modifier|*
-name|hc_listenconn
-decl_stmt|;
+comment|/* List of addresses to listen on. */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|hastd_listen
+argument_list|)
+name|hc_listen
+expr_stmt|;
 comment|/* List of resources. */
 name|TAILQ_HEAD
 argument_list|(
@@ -619,6 +648,26 @@ decl_stmt|;
 comment|/* Locked used to synchronize access to hr_amp. */
 name|pthread_mutex_t
 name|hr_amp_lock
+decl_stmt|;
+comment|/* Number of BIO_READ requests. */
+name|uint64_t
+name|hr_stat_read
+decl_stmt|;
+comment|/* Number of BIO_WRITE requests. */
+name|uint64_t
+name|hr_stat_write
+decl_stmt|;
+comment|/* Number of BIO_DELETE requests. */
+name|uint64_t
+name|hr_stat_delete
+decl_stmt|;
+comment|/* Number of BIO_FLUSH requests. */
+name|uint64_t
+name|hr_stat_flush
+decl_stmt|;
+comment|/* Number of activemap updates. */
+name|uint64_t
+name|hr_stat_activemap_update
 decl_stmt|;
 comment|/* Next resource. */
 name|TAILQ_ENTRY

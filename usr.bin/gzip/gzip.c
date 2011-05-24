@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: gzip.c,v 1.97 2009/10/11 09:17:21 mrg Exp $	*/
+comment|/*	$NetBSD: gzip.c,v 1.99 2011/03/23 12:59:44 tsutsui Exp $	*/
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|__RCSID
+name|__FBSDID
 argument_list|(
 literal|"$FreeBSD$"
 argument_list|)
@@ -526,7 +526,7 @@ name|char
 name|gzip_version
 index|[]
 init|=
-literal|"FreeBSD gzip 20100407"
+literal|"FreeBSD gzip 20110523"
 decl_stmt|;
 end_decl_stmt
 
@@ -1825,7 +1825,7 @@ name|SMALL
 define|#
 directive|define
 name|OPT_LIST
-value|"123456789cdhltV"
+value|"123456789cdhlV"
 else|#
 directive|else
 define|#
@@ -8408,6 +8408,22 @@ name|sb
 argument_list|)
 operator|!=
 literal|0
+operator|||
+operator|(
+name|fflag
+operator|==
+literal|0
+operator|&&
+name|lstat
+argument_list|(
+name|path
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|!=
+literal|0
+operator|)
 condition|)
 block|{
 comment|/* lets try<path>.gz if we're decompressing */

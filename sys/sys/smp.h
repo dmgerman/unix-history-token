@@ -51,11 +51,11 @@ name|cpumask_t
 name|cg_mask
 decl_stmt|;
 comment|/* Mask of cpus in this group. */
-name|int8_t
+name|int32_t
 name|cg_count
 decl_stmt|;
 comment|/* Count of cpus in this group. */
-name|int8_t
+name|int16_t
 name|cg_children
 decl_stmt|;
 comment|/* Number of children groups. */
@@ -280,13 +280,6 @@ specifier|extern
 specifier|volatile
 name|cpumask_t
 name|stopped_cpus
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|cpumask_t
-name|idle_cpus_mask
 decl_stmt|;
 end_decl_stmt
 

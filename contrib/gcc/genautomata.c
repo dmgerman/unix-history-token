@@ -2689,6 +2689,9 @@ operator|&
 name|irp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|obstack_finish
 argument_list|(
 operator|&
@@ -3031,6 +3034,9 @@ operator|&
 name|irp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|obstack_finish
 argument_list|(
 operator|&
@@ -3269,6 +3275,9 @@ operator|&
 name|irp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|obstack_finish
 argument_list|(
 operator|&
@@ -12815,6 +12824,9 @@ operator|&
 name|irp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|obstack_finish
 argument_list|(
 operator|&
@@ -16237,6 +16249,9 @@ operator|&
 name|irp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|obstack_finish
 argument_list|(
 operator|&
@@ -16270,6 +16285,9 @@ operator|&
 name|irp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|obstack_finish
 argument_list|(
 operator|&
@@ -16335,6 +16353,9 @@ operator|&
 name|irp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|obstack_finish
 argument_list|(
 operator|&
@@ -16810,6 +16831,9 @@ operator|&
 name|irp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|obstack_finish
 argument_list|(
 operator|&
@@ -16843,6 +16867,9 @@ operator|&
 name|irp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|obstack_finish
 argument_list|(
 operator|&
@@ -16876,6 +16903,9 @@ operator|&
 name|irp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|obstack_finish
 argument_list|(
 operator|&
@@ -16909,6 +16939,9 @@ operator|&
 name|irp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|obstack_finish
 argument_list|(
 operator|&
@@ -20891,6 +20924,9 @@ operator|&
 name|unit_usages
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|obstack_finish
 argument_list|(
 operator|&
@@ -39506,6 +39542,9 @@ operator|&
 name|irp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|obstack_finish
 argument_list|(
 operator|&

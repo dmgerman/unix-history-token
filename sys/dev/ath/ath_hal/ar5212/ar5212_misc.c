@@ -3782,7 +3782,13 @@ literal|0
 case|:
 comment|/* hardware capability */
 return|return
+name|pCap
+operator|->
+name|halMcastKeySrchSupport
+condition|?
 name|HAL_OK
+else|:
+name|HAL_ENXIO
 return|;
 case|case
 literal|1

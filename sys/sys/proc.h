@@ -336,7 +336,13 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
-name|racct
+name|cpuset
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|kaioinfo
 struct_decl|;
 end_struct_decl
 
@@ -348,19 +354,25 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|td_sched
+name|kdtrace_proc
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|kdtrace_thread
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|mqueue_notifier
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
 name|nlminfo
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|kaioinfo
 struct_decl|;
 end_struct_decl
 
@@ -378,7 +390,19 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|racct
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|sleepqueue
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|td_sched
 struct_decl|;
 end_struct_decl
 
@@ -400,30 +424,6 @@ name|turnstile
 struct_decl|;
 end_struct_decl
 
-begin_struct_decl
-struct_decl|struct
-name|mqueue_notifier
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|kdtrace_proc
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|kdtrace_thread
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|cpuset
-struct_decl|;
-end_struct_decl
-
 begin_comment
 comment|/*  * XXX: Does this belong in resource.h or resourcevar.h instead?  * Resource usage extension.  The times in rusage structs in the kernel are  * never up to date.  The actual times are kept as runtimes and tick counts  * (with control info in the "previous" times), and are converted when  * userland asks for rusage info.  Backwards compatibility prevents putting  * this directly in the user-visible rusage struct.  *  * Locking for p_rux: (cj) means (j) for p_rux and (c) for p_crux.  * Locking for td_rux: (t) for all fields.  */
 end_comment
@@ -432,31 +432,31 @@ begin_struct
 struct|struct
 name|rusage_ext
 block|{
-name|u_int64_t
+name|uint64_t
 name|rux_runtime
 decl_stmt|;
 comment|/* (cj) Real time. */
-name|u_int64_t
+name|uint64_t
 name|rux_uticks
 decl_stmt|;
 comment|/* (cj) Statclock hits in user mode. */
-name|u_int64_t
+name|uint64_t
 name|rux_sticks
 decl_stmt|;
 comment|/* (cj) Statclock hits in sys mode. */
-name|u_int64_t
+name|uint64_t
 name|rux_iticks
 decl_stmt|;
 comment|/* (cj) Statclock hits in intr mode. */
-name|u_int64_t
+name|uint64_t
 name|rux_uu
 decl_stmt|;
 comment|/* (c) Previous user time in usec. */
-name|u_int64_t
+name|uint64_t
 name|rux_su
 decl_stmt|;
 comment|/* (c) Previous sys time in usec. */
-name|u_int64_t
+name|uint64_t
 name|rux_tu
 decl_stmt|;
 comment|/* (c) Previous total time in usec. */

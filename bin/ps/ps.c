@@ -1327,7 +1327,7 @@ block|{
 case|case
 literal|'A'
 case|:
-comment|/* 			 * Exactly the same as `-ax'.   This has been 			 * added for compatability with SUSv3, but for 			 * now it will not be described in the man page. 			 */
+comment|/* 			 * Exactly the same as `-ax'.   This has been 			 * added for compatibility with SUSv3, but for 			 * now it will not be described in the man page. 			 */
 name|nselectors
 operator|++
 expr_stmt|;

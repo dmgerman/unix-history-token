@@ -663,6 +663,17 @@ directive|ifdef
 name|AH_DEBUG
 end_ifdef
 
+begin_comment
+comment|/* This must match the definition in ath_hal/ah_debug.h */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_DEBUG_UNMASKABLE
+value|0xf0000000
+end_define
+
 begin_function
 name|void
 name|DO_HALDEBUG
@@ -685,9 +696,17 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|(
+name|mask
+operator|==
+name|HAL_DEBUG_UNMASKABLE
+operator|)
+operator|||
+operator|(
 name|ath_hal_debug
 operator|&
 name|mask
+operator|)
 condition|)
 block|{
 name|__va_list
@@ -717,6 +736,12 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_undef
+undef|#
+directive|undef
+name|HAL_DEBUG_UNMASKABLE
+end_undef
 
 begin_endif
 endif|#

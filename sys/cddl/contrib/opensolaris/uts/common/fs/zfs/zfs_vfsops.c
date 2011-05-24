@@ -585,6 +585,9 @@ name|fid_t
 modifier|*
 name|fidp
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|vnode_t
 modifier|*
 modifier|*
@@ -8935,6 +8938,9 @@ name|fid_t
 modifier|*
 name|fidp
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|vnode_t
 modifier|*
 modifier|*
@@ -9334,7 +9340,7 @@ argument_list|(
 operator|*
 name|vpp
 argument_list|,
-name|LK_EXCLUSIVE
+name|flags
 operator||
 name|LK_RETRY
 argument_list|)
@@ -9504,7 +9510,7 @@ argument_list|(
 operator|*
 name|vpp
 argument_list|,
-name|LK_EXCLUSIVE
+name|flags
 operator||
 name|LK_RETRY
 argument_list|)

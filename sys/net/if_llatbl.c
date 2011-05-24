@@ -816,6 +816,9 @@ name|struct
 name|sockaddr
 modifier|*
 name|mask
+parameter_list|,
+name|u_int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -853,6 +856,8 @@ argument_list|,
 name|prefix
 argument_list|,
 name|mask
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 block|}

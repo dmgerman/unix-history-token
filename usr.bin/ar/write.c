@@ -496,7 +496,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create object from file, return created obj upon success, or NULL  * when an error occurs or the member is not newer than existing  * one while -u is specifed.  */
+comment|/*  * Create object from file, return created obj upon success, or NULL  * when an error occurs or the member is not newer than existing  * one while -u is specified.  */
 end_comment
 
 begin_function
@@ -1114,7 +1114,7 @@ name|obj
 operator|==
 name|pos
 condition|)
-comment|/* 		 * If the object to move happens to be the posistion obj, 		 * or if there is not a pos obj, move it to tail. 		 */
+comment|/* 		 * If the object to move happens to be the position obj, 		 * or if there is not a pos obj, move it to tail. 		 */
 goto|goto
 name|tail
 goto|;
@@ -1960,7 +1960,7 @@ operator|==
 literal|'A'
 condition|)
 block|{
-comment|/* 		 * Read objects from the target archive of ADDLIB command. 		 * If there are members spcified in argv, read those members 		 * only, otherwise the entire archive will be read. 		 */
+comment|/* 		 * Read objects from the target archive of ADDLIB command. 		 * If there are members specified in argv, read those members 		 * only, otherwise the entire archive will be read. 		 */
 name|read_objs
 argument_list|(
 name|bsdar
@@ -2024,7 +2024,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* 		 * If can't find `pos' specified by user, 		 * sliently insert objects at tail. 		 */
+comment|/* 		 * If can't find `pos' specified by user, 		 * silently insert objects at tail. 		 */
 if|if
 condition|(
 name|pos
@@ -3436,7 +3436,7 @@ operator|!=
 name|ELF_K_ELF
 condition|)
 block|{
-comment|/* Sliently ignore non-elf member. */
+comment|/* Silently ignore non-elf member. */
 name|elf_end
 argument_list|(
 name|e

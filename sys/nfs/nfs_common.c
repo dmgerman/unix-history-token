@@ -1751,7 +1751,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check for badly aligned mbuf data and realign by copying the unaligned  * portion of the data into a new mbuf chain and freeing the portions of the  * old chain that were replaced.  *  * We cannot simply realign the data within the existing mbuf chain because  * the underlying buffers may contain other rpc commands and we cannot afford  * to overwrite them.  *  * We would prefer to avoid this situation entirely.  The situation does not  * occur with NFS/UDP and is supposed to only occassionally occur with TCP.  * Use vfs.nfs.realign_count and realign_test to check this.  */
+comment|/*  * Check for badly aligned mbuf data and realign by copying the unaligned  * portion of the data into a new mbuf chain and freeing the portions of the  * old chain that were replaced.  *  * We cannot simply realign the data within the existing mbuf chain because  * the underlying buffers may contain other rpc commands and we cannot afford  * to overwrite them.  *  * We would prefer to avoid this situation entirely.  The situation does not  * occur with NFS/UDP and is supposed to only occassionally occur with TCP.  * Use vfs.nfs_common.realign_count and realign_test to check this.  */
 end_comment
 
 begin_function

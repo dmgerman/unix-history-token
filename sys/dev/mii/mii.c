@@ -2323,9 +2323,10 @@ name|char
 name|x
 parameter_list|)
 block|{
-specifier|static
 name|unsigned
+specifier|const
 name|char
+specifier|const
 name|nibbletab
 index|[
 literal|16

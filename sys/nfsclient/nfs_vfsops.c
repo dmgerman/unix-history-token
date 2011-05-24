@@ -317,13 +317,13 @@ name|_vfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|nfs
+name|oldnfs
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 literal|0
 argument_list|,
-literal|"NFS filesystem"
+literal|"Old NFS filesystem"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -331,7 +331,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_STRUCT
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|,
 name|NFS_NFSSTATS
 argument_list|,
@@ -361,7 +361,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -394,7 +394,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -429,7 +429,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|,
 name|NFS_TPRINTF_INITIAL_DELAY
 argument_list|,
@@ -463,7 +463,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|,
 name|NFS_TPRINTF_DELAY
 argument_list|,
@@ -870,7 +870,7 @@ end_endif
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -891,7 +891,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_STRING
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -913,7 +913,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_OPAQUE
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -6672,6 +6672,29 @@ name|out
 goto|;
 block|}
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|has_addr_opt
+operator|==
+literal|0
+condition|)
+block|{
+name|vfs_mount_error
+argument_list|(
+name|mp
+argument_list|,
+literal|"No server address"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 name|error
 operator|=

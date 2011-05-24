@@ -2070,7 +2070,7 @@ literal|0x7800
 operator|&&
 name|reg
 operator|<
-literal|0x78a0
+literal|0x7900
 condition|)
 name|OS_DELAY
 argument_list|(

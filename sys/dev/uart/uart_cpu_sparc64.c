@@ -1186,6 +1186,14 @@ operator|||
 operator|!
 name|strcmp
 argument_list|(
+name|buf
+argument_list|,
+literal|"FJSV,se"
+argument_list|)
+operator|||
+operator|!
+name|strcmp
+argument_list|(
 name|compat
 argument_list|,
 literal|"sab82532"

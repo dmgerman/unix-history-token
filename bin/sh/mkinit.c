@@ -141,7 +141,7 @@ value|"init.c.new"
 end_define
 
 begin_comment
-comment|/*  * A text structure is basicly just a string that grows as more characters  * are added onto the end of it.  It is implemented as a linked list of  * blocks of characters.  The routines addstr and addchar append a string  * or a single character, respectively, to a text structure.  Writetext  * writes the contents of a text structure to a file.  */
+comment|/*  * A text structure is basically just a string that grows as more characters  * are added onto the end of it.  It is implemented as a linked list of  * blocks of characters.  The routines addstr and addchar append a string  * or a single character, respectively, to a text structure.  Writetext  * writes the contents of a text structure to a file.  */
 end_comment
 
 begin_define

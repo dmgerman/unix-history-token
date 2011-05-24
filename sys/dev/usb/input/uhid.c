@@ -2712,22 +2712,6 @@ if|if
 condition|(
 name|uaa
 operator|->
-name|use_generic
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* give Mouse and Keyboard drivers a try first */
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
-if|if
-condition|(
-name|uaa
-operator|->
 name|info
 operator|.
 name|bInterfaceClass

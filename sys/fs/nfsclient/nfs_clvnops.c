@@ -156,12 +156,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_object.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm_extern.h>
 end_include
 
@@ -967,7 +961,7 @@ end_define
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfs
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -984,7 +978,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -1014,7 +1008,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -1044,7 +1038,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -1074,7 +1068,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -1103,7 +1097,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -1136,7 +1130,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -1161,7 +1155,7 @@ literal|0
 end_if
 
 begin_endif
-unit|SYSCTL_INT(_vfs_newnfs, OID_AUTO, access_cache_hits, CTLFLAG_RD,&newnfsstats.accesscache_hits, 0, "NFS ACCESS cache hit count");  SYSCTL_INT(_vfs_newnfs, OID_AUTO, access_cache_misses, CTLFLAG_RD,&newnfsstats.accesscache_misses, 0, "NFS ACCESS cache miss count");
+unit|SYSCTL_INT(_vfs_nfs, OID_AUTO, access_cache_hits, CTLFLAG_RD,&newnfsstats.accesscache_hits, 0, "NFS ACCESS cache hit count");  SYSCTL_INT(_vfs_nfs, OID_AUTO, access_cache_misses, CTLFLAG_RD,&newnfsstats.accesscache_misses, 0, "NFS ACCESS cache miss count");
 endif|#
 directive|endif
 end_endif

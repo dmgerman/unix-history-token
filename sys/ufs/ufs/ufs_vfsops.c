@@ -643,6 +643,8 @@ name|mp
 parameter_list|,
 name|ufhp
 parameter_list|,
+name|flags
+parameter_list|,
 name|vpp
 parameter_list|)
 name|struct
@@ -654,6 +656,9 @@ name|struct
 name|ufid
 modifier|*
 name|ufhp
+decl_stmt|;
+name|int
+name|flags
 decl_stmt|;
 name|struct
 name|vnode
@@ -685,7 +690,7 @@ name|ufhp
 operator|->
 name|ufid_ino
 argument_list|,
-name|LK_EXCLUSIVE
+name|flags
 argument_list|,
 operator|&
 name|nvp

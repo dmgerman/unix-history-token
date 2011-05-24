@@ -20,7 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"pkg.h"
+file|"lib.h"
 end_include
 
 begin_include
@@ -1344,6 +1344,9 @@ name|cmd
 operator|!=
 name|PLIST_ORIGIN
 operator|&&
+operator|(
+name|Verbose
+operator|||
 literal|0
 operator|!=
 name|strncmp
@@ -1357,6 +1360,7 @@ index|]
 argument_list|,
 literal|7
 argument_list|)
+operator|)
 condition|)
 name|warnx
 argument_list|(

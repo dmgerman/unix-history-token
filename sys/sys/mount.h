@@ -2525,6 +2525,9 @@ name|fid
 modifier|*
 name|fhp
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|struct
 name|vnode
 modifier|*
@@ -2849,10 +2852,12 @@ name|MP
 parameter_list|,
 name|FIDP
 parameter_list|,
+name|FLAGS
+parameter_list|,
 name|VPP
 parameter_list|)
 define|\
-value|(*(MP)->mnt_op->vfs_fhtovp)(MP, FIDP, VPP)
+value|(*(MP)->mnt_op->vfs_fhtovp)(MP, FIDP, FLAGS, VPP)
 end_define
 
 begin_define

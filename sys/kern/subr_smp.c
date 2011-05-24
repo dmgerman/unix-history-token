@@ -127,12 +127,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|cpumask_t
-name|idle_cpus_mask
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|cpumask_t
 name|hlt_cpus_mask
 decl_stmt|;
 end_decl_stmt
@@ -532,6 +526,14 @@ name|smp_rv_waiters
 index|[
 literal|3
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|int
+name|smp_rv_generation
 decl_stmt|;
 end_decl_stmt
 
@@ -1087,11 +1089,14 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 name|void
 modifier|*
 name|local_func_arg
-init|=
-name|smp_rv_func_arg
 decl_stmt|;
 name|void
 function_decl|(
@@ -1102,8 +1107,6 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|)
-init|=
-name|smp_rv_setup_func
 function_decl|;
 name|void
 function_decl|(
@@ -1114,8 +1117,6 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|)
-init|=
-name|smp_rv_action_func
 function_decl|;
 name|void
 function_decl|(
@@ -1126,9 +1127,18 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|)
-init|=
-name|smp_rv_teardown_func
 function_decl|;
+name|int
+name|generation
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|int
+name|owepreempt
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* Ensure we have up-to-date values. */
 name|atomic_add_acq_int
 argument_list|(
@@ -1153,7 +1163,49 @@ condition|)
 name|cpu_spinwait
 argument_list|()
 expr_stmt|;
-comment|/* setup function */
+comment|/* Fetch rendezvous parameters after acquire barrier. */
+name|local_func_arg
+operator|=
+name|smp_rv_func_arg
+expr_stmt|;
+name|local_setup_func
+operator|=
+name|smp_rv_setup_func
+expr_stmt|;
+name|local_action_func
+operator|=
+name|smp_rv_action_func
+expr_stmt|;
+name|local_teardown_func
+operator|=
+name|smp_rv_teardown_func
+expr_stmt|;
+name|generation
+operator|=
+name|smp_rv_generation
+expr_stmt|;
+comment|/* 	 * Use a nested critical section to prevent any preemptions 	 * from occurring during a rendezvous action routine. 	 * Specifically, if a rendezvous handler is invoked via an IPI 	 * and the interrupted thread was in the critical_exit() 	 * function after setting td_critnest to 0 but before 	 * performing a deferred preemption, this routine can be 	 * invoked with td_critnest set to 0 and td_owepreempt true. 	 * In that case, a critical_exit() during the rendezvous 	 * action would trigger a preemption which is not permitted in 	 * a rendezvous action.  To fix this, wrap all of the 	 * rendezvous action handlers in a critical section.  We 	 * cannot use a regular critical section however as having 	 * critical_exit() preempt from this routine would also be 	 * problematic (the preemption must not occur before the IPI 	 * has been acknowleged via an EOI).  Instead, we 	 * intentionally ignore td_owepreempt when leaving the 	 * critical setion.  This should be harmless because we do not 	 * permit rendezvous action routines to schedule threads, and 	 * thus td_owepreempt should never transition from 0 to 1 	 * during this routine. 	 */
+name|td
+operator|=
+name|curthread
+expr_stmt|;
+name|td
+operator|->
+name|td_critnest
+operator|++
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|owepreempt
+operator|=
+name|td
+operator|->
+name|td_owepreempt
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* 	 * If requested, run a setup function before the main action 	 * function.  Ensure all CPUs have completed the setup 	 * function before moving on to the action function. 	 */
 if|if
 condition|(
 name|local_setup_func
@@ -1172,7 +1224,6 @@ argument_list|(
 name|smp_rv_func_arg
 argument_list|)
 expr_stmt|;
-comment|/* spin on entry rendezvous */
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -1197,7 +1248,6 @@ name|cpu_spinwait
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* action function */
 if|if
 condition|(
 name|local_action_func
@@ -1209,7 +1259,14 @@ argument_list|(
 name|local_func_arg
 argument_list|)
 expr_stmt|;
-comment|/* spin on exit rendezvous */
+comment|/* 	 * Signal that the main action has been completed.  If a 	 * full exit rendezvous is requested, then all CPUs will 	 * wait here until all CPUs have finished the main action. 	 * 	 * Note that the write by the last CPU to finish the action 	 * may become visible to different CPUs at different times. 	 * As a result, the CPU that initiated the rendezvous may 	 * exit the rendezvous and drop the lock allowing another 	 * rendezvous to be initiated on the same CPU or a different 	 * CPU.  In that case the exit sentinel may be cleared before 	 * all CPUs have noticed causing those CPUs to hang forever. 	 * Workaround this by using a generation count to notice when 	 * this race occurs and to exit the rendezvous in that case. 	 */
+name|MPASS
+argument_list|(
+name|generation
+operator|==
+name|smp_rv_generation
+argument_list|)
+expr_stmt|;
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -1224,10 +1281,10 @@ expr_stmt|;
 if|if
 condition|(
 name|local_teardown_func
-operator|==
+operator|!=
 name|smp_no_rendevous_barrier
 condition|)
-return|return;
+block|{
 while|while
 condition|(
 name|smp_rv_waiters
@@ -1236,11 +1293,14 @@ literal|2
 index|]
 operator|<
 name|smp_rv_ncpus
+operator|&&
+name|generation
+operator|==
+name|smp_rv_generation
 condition|)
 name|cpu_spinwait
 argument_list|()
 expr_stmt|;
-comment|/* teardown function */
 if|if
 condition|(
 name|local_teardown_func
@@ -1250,6 +1310,25 @@ condition|)
 name|local_teardown_func
 argument_list|(
 name|local_func_arg
+argument_list|)
+expr_stmt|;
+block|}
+name|td
+operator|->
+name|td_critnest
+operator|--
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|owepreempt
+operator|==
+name|td
+operator|->
+name|td_owepreempt
+argument_list|,
+operator|(
+literal|"rendezvous action changed td_owepreempt"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1381,14 +1460,21 @@ argument_list|,
 name|map
 argument_list|)
 expr_stmt|;
-comment|/* obtain rendezvous lock */
 name|mtx_lock_spin
 argument_list|(
 operator|&
 name|smp_ipi_mtx
 argument_list|)
 expr_stmt|;
-comment|/* set static function pointers */
+name|atomic_add_acq_int
+argument_list|(
+operator|&
+name|smp_rv_generation
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Pass rendezvous parameters via global variables. */
 name|smp_rv_ncpus
 operator|=
 name|ncpus
@@ -1434,7 +1520,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* signal other processors, which will enter the IPI with interrupts off */
+comment|/* 	 * Signal other processors, which will enter the IPI with 	 * interrupts off. 	 */
 name|ipi_selected
 argument_list|(
 name|map
@@ -1467,6 +1553,7 @@ condition|)
 name|smp_rendezvous_action
 argument_list|()
 expr_stmt|;
+comment|/* 	 * If the caller did not request an exit barrier to be enforced 	 * on each CPU, ensure that this CPU waits for all the other 	 * CPUs to finish the rendezvous. 	 */
 if|if
 condition|(
 name|teardown_func
@@ -1489,7 +1576,6 @@ condition|)
 name|cpu_spinwait
 argument_list|()
 expr_stmt|;
-comment|/* release lock */
 name|mtx_unlock_spin
 argument_list|(
 operator|&

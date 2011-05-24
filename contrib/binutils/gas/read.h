@@ -41,7 +41,7 @@ directive|define
 name|SKIP_WHITESPACE
 parameter_list|()
 define|\
-value|((*input_line_pointer == ' ') ? ++input_line_pointer : 0)
+value|do { if (*input_line_pointer == ' ') ++input_line_pointer; } while (0)
 end_define
 
 begin_else
