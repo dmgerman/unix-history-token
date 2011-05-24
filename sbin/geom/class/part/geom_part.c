@@ -1730,7 +1730,7 @@ name|d
 parameter_list|,
 name|a
 parameter_list|)
-value|((d) % (a) ? (d) - (d) % (a): (d))
+value|((d) - (d) % (a))
 end_define
 
 begin_define
