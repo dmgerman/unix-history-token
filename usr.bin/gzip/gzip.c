@@ -8414,6 +8414,10 @@ name|fflag
 operator|==
 literal|0
 operator|&&
+name|cflag
+operator|==
+literal|0
+operator|&&
 name|lstat
 argument_list|(
 name|path
