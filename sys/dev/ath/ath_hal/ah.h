@@ -1958,6 +1958,99 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * ANI commands.  *  * These are used both internally and externally via the diagnostic  * API.  *  * Note that this is NOT the ANI commands being used via the INTMIT  * capability - that has a different mapping for some reason.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_ANI_PRESENT
+init|=
+literal|0
+block|,
+comment|/* is ANI support present */
+name|HAL_ANI_NOISE_IMMUNITY_LEVEL
+init|=
+literal|1
+block|,
+comment|/* set level */
+name|HAL_ANI_OFDM_WEAK_SIGNAL_DETECTION
+init|=
+literal|2
+block|,
+comment|/* enable/disable */
+name|HAL_ANI_CCK_WEAK_SIGNAL_THR
+init|=
+literal|3
+block|,
+comment|/* enable/disable */
+name|HAL_ANI_FIRSTEP_LEVEL
+init|=
+literal|4
+block|,
+comment|/* set level */
+name|HAL_ANI_SPUR_IMMUNITY_LEVEL
+init|=
+literal|5
+block|,
+comment|/* set level */
+name|HAL_ANI_MODE
+init|=
+literal|6
+block|,
+comment|/* 0 => manual, 1 => auto (XXX do not change) */
+name|HAL_ANI_PHYERR_RESET
+init|=
+literal|7
+block|,
+comment|/* reset phy error stats */
+block|}
+name|HAL_ANI_CMD
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * This is the layout of the ANI INTMIT capability.  *  * Notice that the command values differ to HAL_ANI_CMD.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_CAP_INTMIT_PRESENT
+init|=
+literal|0
+block|,
+name|HAL_CAP_INTMIT_ENABLE
+init|=
+literal|1
+block|,
+name|HAL_CAP_INTMIT_NOISE_IMMUNITY_LEVEL
+init|=
+literal|2
+block|,
+name|HAL_CAP_INTMIT_OFDM_WEAK_SIGNAL_LEVEL
+init|=
+literal|3
+block|,
+name|HAL_CAP_INTMIT_CCK_WEAK_SIGNAL_THR
+init|=
+literal|4
+block|,
+name|HAL_CAP_INTMIT_FIRSTEP_LEVEL
+init|=
+literal|5
+block|,
+name|HAL_CAP_INTMIT_SPUR_IMMUNITY_LEVEL
+init|=
+literal|6
+block|}
+name|HAL_CAP_INTMIT_CMD
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Hardware Access Layer (HAL) API.  *  * Clients of the HAL call ath_hal_attach to obtain a reference to an  * ath_hal structure for use with the device.  Hardware-related operations  * that follow must call back into the HAL through interface, supplying  * the reference as the first parameter.  Note that before using the  * reference returned by ath_hal_attach the caller should verify the  * ABI version number.  */
 end_comment
 
