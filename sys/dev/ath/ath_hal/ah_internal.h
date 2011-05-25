@@ -1713,53 +1713,54 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Internal HAL ANI commands.  *  * These values represent the ANI commands passed to the ANI Control method  * for AR5212, AR5416 and later chipsets.  */
+end_comment
+
 begin_typedef
 typedef|typedef
 enum|enum
 block|{
 name|HAL_ANI_PRESENT
 init|=
-literal|0x1
+literal|0
 block|,
 comment|/* is ANI support present */
 name|HAL_ANI_NOISE_IMMUNITY_LEVEL
 init|=
-literal|0x2
+literal|1
 block|,
 comment|/* set level */
 name|HAL_ANI_OFDM_WEAK_SIGNAL_DETECTION
 init|=
-literal|0x4
+literal|2
 block|,
 comment|/* enable/disable */
 name|HAL_ANI_CCK_WEAK_SIGNAL_THR
 init|=
-literal|0x8
+literal|3
 block|,
 comment|/* enable/disable */
 name|HAL_ANI_FIRSTEP_LEVEL
 init|=
-literal|0x10
+literal|4
 block|,
 comment|/* set level */
 name|HAL_ANI_SPUR_IMMUNITY_LEVEL
 init|=
-literal|0x20
+literal|5
 block|,
 comment|/* set level */
 name|HAL_ANI_MODE
 init|=
-literal|0x40
+literal|6
 block|,
 comment|/* 0 => manual, 1 => auto (XXX do not change) */
 name|HAL_ANI_PHYERR_RESET
 init|=
-literal|0x80
+literal|7
 block|,
 comment|/* reset phy error stats */
-name|HAL_ANI_ALL
-init|=
-literal|0xff
 block|}
 name|HAL_ANI_CMD
 typedef|;

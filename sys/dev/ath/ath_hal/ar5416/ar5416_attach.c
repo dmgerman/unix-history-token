@@ -293,7 +293,11 @@ operator|->
 name|ah_ani_function
 operator|&=
 operator|~
+operator|(
+literal|1
+operator|<<
 name|HAL_ANI_NOISE_IMMUNITY_LEVEL
+operator|)
 expr_stmt|;
 name|ar5416AniAttach
 argument_list|(
@@ -924,7 +928,7 @@ argument_list|)
 operator|->
 name|ah_ani_function
 operator|=
-name|HAL_ANI_ALL
+literal|0xffffffff
 expr_stmt|;
 comment|/* Set overridable ANI methods */
 name|AH5212
