@@ -4421,6 +4421,12 @@ operator|&=
 operator|~
 name|SI_NAMED
 expr_stmt|;
+name|dev
+operator|->
+name|si_refcount
+operator|++
+expr_stmt|;
+comment|/* Avoid race with dev_rel() */
 comment|/* If we are a child, remove us from the parents list */
 if|if
 condition|(
@@ -4494,12 +4500,6 @@ operator|~
 name|SI_CLONELIST
 expr_stmt|;
 block|}
-name|dev
-operator|->
-name|si_refcount
-operator|++
-expr_stmt|;
-comment|/* Avoid race with dev_rel() */
 name|csw
 operator|=
 name|dev
