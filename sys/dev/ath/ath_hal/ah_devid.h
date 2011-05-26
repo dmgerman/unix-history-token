@@ -487,6 +487,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR9287_DEVID_PCI
+value|0x002d
+end_define
+
+begin_comment
+comment|/* AR9227 PCI Merlin */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR9287_DEVID_PCIE
+value|0x002e
+end_define
+
+begin_comment
+comment|/* AR9287 PCI-E Merlin */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AR_SUBVENDOR_ID_NOG
 value|0x0e11
 end_define

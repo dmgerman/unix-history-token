@@ -12085,7 +12085,7 @@ name|AR_PCU_MISC_MODE2_HWWAR1
 expr_stmt|;
 if|if
 condition|(
-name|AR_SREV_9287_11_OR_LATER
+name|AR_SREV_KIWI_11_OR_LATER
 argument_list|(
 name|ah
 argument_list|)

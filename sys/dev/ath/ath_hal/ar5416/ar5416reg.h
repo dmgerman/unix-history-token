@@ -3724,6 +3724,45 @@ begin_comment
 comment|/* Kite 1.2 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|AR_XSREV_VERSION_KIWI
+value|0x180
+end_define
+
+begin_comment
+comment|/* Kite Version */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_XSREV_REVISION_KIWI_10
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_XSREV_REVISION_KIWI_11
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_XSREV_REVISION_KIWI_12
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_XSREV_REVISION_KIWI_13
+value|3
+end_define
+
 begin_comment
 comment|/* Owl (AR5416) */
 end_comment
@@ -3952,6 +3991,72 @@ define|\
 value|(AR_SREV_KITE_12_OR_LATER(_ah)&& \ 	((OS_REG_READ(_ah, AR_AN_SYNTH9)& 0x7) == 0x1))
 end_define
 
+begin_define
+define|#
+directive|define
+name|AR_SREV_KIWI
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(AH_PRIVATE((_ah))->ah_macVersion == AR_XSREV_VERSION_KIWI)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_KIWI_11_OR_LATER
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(AR_SREV_KIWI(_ah)&& \ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_KIWI_11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_KIWI_11
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(AR_SREV_KIWI(_ah)&& \ 	 AH_PRIVATE((_ah))->ah_macRev == AR_XSREV_REVISION_KIWI_11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_KIWI_12
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(AR_SREV_KIWI(_ah)&& \ 	 AH_PRIVATE((_ah))->ah_macRev == AR_XSREV_REVISION_KIWI_12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_KIWI_12_OR_LATER
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(AR_SREV_KIWI(_ah)&& \ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_KIWI_12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_KIWI_13_OR_LATER
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(AR_SREV_KIWI(_ah)&& \ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_KIWI_13)
+end_define
+
 begin_comment
 comment|/* Not yet implemented chips */
 end_comment
@@ -3960,26 +4065,6 @@ begin_define
 define|#
 directive|define
 name|AR_SREV_9271
-parameter_list|(
-name|_ah
-parameter_list|)
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR_SREV_9287_11_OR_LATER
-parameter_list|(
-name|_ah
-parameter_list|)
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR_SREV_KIWI_10_OR_LATER
 parameter_list|(
 name|_ah
 parameter_list|)
