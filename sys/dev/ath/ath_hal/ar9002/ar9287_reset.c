@@ -490,13 +490,6 @@ name|REDUCE_SCALED_POWER_BY_TWO_CHAIN
 value|6
 end_define
 
-begin_define
-define|#
-directive|define
-name|REDUCE_SCALED_POWER_BY_THREE_CHAIN
-value|10
-end_define
-
 begin_comment
 comment|/*  * ar9287SetPowerPerRateTable  *  * Sets the transmit power in the baseband for the given  * operating channel and mode.  *  * This is like the v14 EEPROM table except the 5GHz code.  */
 end_comment
@@ -796,15 +789,6 @@ name|scaledPower
 operator|-=
 name|REDUCE_SCALED_POWER_BY_TWO_CHAIN
 expr_stmt|;
-break|break;
-case|case
-literal|3
-case|:
-name|scaledPower
-operator|-=
-name|REDUCE_SCALED_POWER_BY_THREE_CHAIN
-expr_stmt|;
-break|break;
 default|default:
 return|return
 name|AH_FALSE
@@ -1560,12 +1544,6 @@ begin_undef
 undef|#
 directive|undef
 name|REDUCE_SCALED_POWER_BY_TWO_CHAIN
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|REDUCE_SCALED_POWER_BY_THREE_CHAIN
 end_undef
 
 begin_comment
