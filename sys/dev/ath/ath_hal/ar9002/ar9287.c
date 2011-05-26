@@ -81,7 +81,7 @@ end_struct
 begin_define
 define|#
 directive|define
-name|AR9280
+name|AR9287
 parameter_list|(
 name|ah
 parameter_list|)
