@@ -17,14 +17,14 @@ begin_define
 define|#
 directive|define
 name|DFL_FRAGSIZE
-value|2048
+value|4096
 end_define
 
 begin_define
 define|#
 directive|define
 name|DFL_BLKSIZE
-value|16384
+value|32768
 end_define
 
 begin_comment
