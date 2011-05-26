@@ -492,7 +492,7 @@ value|0x002d
 end_define
 
 begin_comment
-comment|/* AR9227 PCI Merlin */
+comment|/* AR9227 PCI Kiwi */
 end_comment
 
 begin_define
@@ -503,7 +503,7 @@ value|0x002e
 end_define
 
 begin_comment
-comment|/* AR9287 PCI-E Merlin */
+comment|/* AR9287 PCI-E Kiwi */
 end_comment
 
 begin_define
