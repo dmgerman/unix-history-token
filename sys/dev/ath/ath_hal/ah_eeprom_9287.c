@@ -574,10 +574,15 @@ expr_stmt|;
 return|return
 name|HAL_OK
 return|;
+default|default:
 return|return
 name|HAL_EINVAL
 return|;
 block|}
+block|}
+end_function
+
+begin_function
 specifier|static
 name|HAL_BOOL
 name|v9287EepromDiag
@@ -648,7 +653,13 @@ return|return
 name|AH_FALSE
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/* Do structure specific swaps if Eeprom format is non native to host */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|eepromSwap
@@ -971,6 +982,9 @@ name|word
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|uint16_t
 name|v9287EepromGetSpurChan
@@ -1041,7 +1055,13 @@ operator|.
 name|spurChan
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/**************************************************************************  * fbin2freq  *  * Get channel value from binary representation held in eeprom  * RETURNS: the frequency in MHz  */
+end_comment
+
+begin_function
 specifier|static
 name|uint16_t
 name|fbin2freq
@@ -1088,12 +1108,24 @@ operator|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Copy EEPROM Conformance Testing Limits contents   * into the allocated space  */
+end_comment
+
+begin_comment
 comment|/* USE CTLS from chain zero */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|CTL_CHAIN
 value|0
+end_define
+
+begin_function
 specifier|static
 name|void
 name|v9287EepromReadCTLInfo
@@ -1366,7 +1398,13 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Reclaim any EEPROM-related storage.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|v9287EepromDetach
@@ -1403,6 +1441,9 @@ operator|=
 name|AH_NULL
 expr_stmt|;
 block|}
+end_function
+
+begin_define
 define|#
 directive|define
 name|owl_get_eep_ver
@@ -1411,6 +1452,9 @@ name|_ee
 parameter_list|)
 define|\
 value|(((_ee)->ee_base.baseEepHeader.version>> 12)& 0xF)
+end_define
+
+begin_define
 define|#
 directive|define
 name|owl_get_eep_rev
@@ -1419,6 +1463,9 @@ name|_ee
 parameter_list|)
 define|\
 value|(((_ee)->ee_base.baseEepHeader.version)& 0xFFF)
+end_define
+
+begin_function
 name|HAL_STATUS
 name|ath_hal_9287EepromAttach
 parameter_list|(
