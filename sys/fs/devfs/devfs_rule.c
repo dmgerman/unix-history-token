@@ -510,6 +510,16 @@ name|devfs_ruleset
 modifier|*
 name|ds
 decl_stmt|;
+name|sx_assert
+argument_list|(
+operator|&
+name|dm
+operator|->
+name|dm_lock
+argument_list|,
+name|SX_XLOCKED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dm
