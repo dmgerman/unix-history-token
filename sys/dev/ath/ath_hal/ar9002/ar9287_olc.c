@@ -155,6 +155,26 @@ argument_list|,
 name|AR_PHY_TX_PWRCTRL_PD_AVG_OUT
 argument_list|)
 expr_stmt|;
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_PERCAL
+argument_list|,
+literal|"%s: initPDADC=%d, currPDADC=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|initPDADC
+argument_list|,
+name|currPDADC
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|AH5416
@@ -251,6 +271,19 @@ argument_list|,
 name|AR_PHY_CH1_TX_PWRCTRL11
 argument_list|,
 name|AR_PHY_TX_PWRCTRL_OLPC_TEMP_COMP
+argument_list|,
+name|delta
+argument_list|)
+expr_stmt|;
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_PERCAL
+argument_list|,
+literal|"%s: delta=%d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|delta
 argument_list|)
