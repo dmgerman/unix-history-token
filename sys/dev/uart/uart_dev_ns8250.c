@@ -1031,6 +1031,7 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+comment|/* 	 * Bit 6 of the MCR (= 0x40) appears to be 1 for the Sun1699 	 * chip, but otherwise doesn't seem to have a function. In 	 * other words, uart(4) works regardless. Ignore that bit so 	 * the probe succeeds. 	 */
 name|val
 operator|=
 name|uart_getreg
@@ -1044,7 +1045,7 @@ if|if
 condition|(
 name|val
 operator|&
-literal|0xe0
+literal|0xa0
 condition|)
 return|return
 operator|(
