@@ -1719,6 +1719,17 @@ name|AR_PHY_TX_PWRCTRL9_RES_DC_REMOVAL_S
 value|31
 end_define
 
+begin_define
+define|#
+directive|define
+name|AR_PHY_MODE_ASYNCFIFO
+value|0x80
+end_define
+
+begin_comment
+comment|/* Enable async fifo */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
