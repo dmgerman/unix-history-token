@@ -1319,6 +1319,34 @@ goto|goto
 name|bad
 goto|;
 block|}
+comment|/* 	 * We only implement open-loop TX power control 	 * for the AR9287 in this codebase. 	 */
+if|if
+condition|(
+operator|!
+name|ath_hal_eepromGetFlag
+argument_list|(
+name|ah
+argument_list|,
+name|AR_EEP_OL_PWRCTRL
+argument_list|)
+condition|)
+block|{
+name|ath_hal_printf
+argument_list|(
+name|ah
+argument_list|,
+literal|"[ath] AR9287 w/ closed-loop TX power control"
+literal|" isn't supported.\n"
+argument_list|)
+expr_stmt|;
+name|ecode
+operator|=
+name|HAL_ENOTSUPP
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 comment|/*          * Check whether the power table offset isn't the default.          * This can occur with eeprom minor V21 or greater on Merlin.          */
 operator|(
 name|void
