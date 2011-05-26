@@ -4661,43 +4661,50 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HDA_CODEC_INTELG45_1
+name|HDA_CODEC_INTELIP
+value|HDA_CODEC_CONSTRUCT(INTEL, 0x0054)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_INTELBL
 value|HDA_CODEC_CONSTRUCT(INTEL, 0x2801)
 end_define
 
 begin_define
 define|#
 directive|define
-name|HDA_CODEC_INTELG45_2
+name|HDA_CODEC_INTELCA
 value|HDA_CODEC_CONSTRUCT(INTEL, 0x2802)
 end_define
 
 begin_define
 define|#
 directive|define
-name|HDA_CODEC_INTELG45_3
+name|HDA_CODEC_INTELEL
 value|HDA_CODEC_CONSTRUCT(INTEL, 0x2803)
 end_define
 
 begin_define
 define|#
 directive|define
-name|HDA_CODEC_INTELG45_4
+name|HDA_CODEC_INTELIP2
 value|HDA_CODEC_CONSTRUCT(INTEL, 0x2804)
 end_define
 
 begin_define
 define|#
 directive|define
-name|HDA_CODEC_INTELG45_5
-value|HDA_CODEC_CONSTRUCT(INTEL, 0x29fb)
+name|HDA_CODEC_INTELCPT
+value|HDA_CODEC_CONSTRUCT(INTEL, 0x2805)
 end_define
 
 begin_define
 define|#
 directive|define
-name|HDA_CODEC_INTELQ57
-value|HDA_CODEC_CONSTRUCT(INTEL, 0x0054)
+name|HDA_CODEC_INTELCL
+value|HDA_CODEC_CONSTRUCT(INTEL, 0x29fb)
 end_define
 
 begin_define
@@ -5683,39 +5690,45 @@ literal|"NVidia GT240 HDMI"
 block|}
 block|,
 block|{
-name|HDA_CODEC_INTELG45_1
+name|HDA_CODEC_INTELIP
 block|,
-literal|"Intel G45 HDMI"
+literal|"Intel Ibex Peak HDMI"
 block|}
 block|,
 block|{
-name|HDA_CODEC_INTELG45_2
+name|HDA_CODEC_INTELBL
 block|,
-literal|"Intel G45 HDMI"
+literal|"Intel Bearlake HDMI"
 block|}
 block|,
 block|{
-name|HDA_CODEC_INTELG45_3
+name|HDA_CODEC_INTELCA
 block|,
-literal|"Intel G45 HDMI"
+literal|"Intel Cantiga HDMI"
 block|}
 block|,
 block|{
-name|HDA_CODEC_INTELG45_4
+name|HDA_CODEC_INTELEL
 block|,
-literal|"Intel G45 HDMI"
+literal|"Intel Eaglelake HDMI"
 block|}
 block|,
 block|{
-name|HDA_CODEC_INTELG45_5
+name|HDA_CODEC_INTELIP2
 block|,
-literal|"Intel G45 HDMI"
+literal|"Intel Ibex Peak HDMI"
 block|}
 block|,
 block|{
-name|HDA_CODEC_INTELQ57
+name|HDA_CODEC_INTELCPT
 block|,
-literal|"Intel Q57 HDMI"
+literal|"Intel Cougar Point HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_INTELCL
+block|,
+literal|"Intel Crestline HDMI"
 block|}
 block|,
 block|{
