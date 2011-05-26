@@ -741,6 +741,13 @@ decl_stmt|;
 name|pcell_t
 name|freq
 decl_stmt|;
+if|if
+condition|(
+name|bootinfo
+operator|!=
+name|NULL
+condition|)
+block|{
 comment|/* Backward compatibility. See 8-STABLE. */
 name|ticks
 operator|=
@@ -750,6 +757,12 @@ literal|3
 index|]
 operator|>>
 literal|3
+expr_stmt|;
+block|}
+else|else
+name|ticks
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
