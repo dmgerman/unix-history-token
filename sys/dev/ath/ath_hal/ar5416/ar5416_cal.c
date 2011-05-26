@@ -2134,9 +2134,14 @@ name|AR_SREV_MERLIN
 argument_list|(
 name|ah
 argument_list|)
+operator|||
+name|AR_SREV_KIWI
+argument_list|(
+name|ah
+argument_list|)
 condition|)
 block|{
-comment|/* Merlin has only two chains */
+comment|/* Merlin/Kiwi has only two chains */
 name|chainmask
 operator|=
 literal|0x1B

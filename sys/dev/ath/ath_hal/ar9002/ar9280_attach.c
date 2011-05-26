@@ -467,7 +467,11 @@ operator|->
 name|ah_ani_function
 operator|&=
 operator|~
+operator|(
+literal|1
+operator|<<
 name|HAL_ANI_NOISE_IMMUNITY_LEVEL
+operator|)
 expr_stmt|;
 comment|/* NB: ANI is not enabled yet */
 name|ar5416AniAttach

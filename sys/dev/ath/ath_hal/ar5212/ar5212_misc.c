@@ -3898,14 +3898,14 @@ name|capability
 condition|)
 block|{
 case|case
-literal|0
+name|HAL_CAP_INTMIT_PRESENT
 case|:
 comment|/* hardware capability */
 return|return
 name|HAL_OK
 return|;
 case|case
-literal|1
+name|HAL_CAP_INTMIT_ENABLE
 case|:
 return|return
 operator|(
@@ -3921,25 +3921,20 @@ else|:
 name|HAL_ENXIO
 return|;
 case|case
-literal|2
+name|HAL_CAP_INTMIT_NOISE_IMMUNITY_LEVEL
 case|:
-comment|/* HAL_ANI_NOISE_IMMUNITY_LEVEL */
 case|case
-literal|3
+name|HAL_CAP_INTMIT_OFDM_WEAK_SIGNAL_LEVEL
 case|:
-comment|/* HAL_ANI_OFDM_WEAK_SIGNAL_DETECTION */
 case|case
-literal|4
+name|HAL_CAP_INTMIT_CCK_WEAK_SIGNAL_THR
 case|:
-comment|/* HAL_ANI_CCK_WEAK_SIGNAL_THR */
 case|case
-literal|5
+name|HAL_CAP_INTMIT_FIRSTEP_LEVEL
 case|:
-comment|/* HAL_ANI_FIRSTEP_LEVEL */
 case|case
-literal|6
+name|HAL_CAP_INTMIT_SPUR_IMMUNITY_LEVEL
 case|:
-comment|/* HAL_ANI_SPUR_IMMUNITY_LEVEL */
 name|ani
 operator|=
 name|ar5212AniGetCurrentState
@@ -4400,6 +4395,8 @@ name|HAL_CAP_INTMIT
 case|:
 block|{
 comment|/* interference mitigation */
+comment|/* This maps the public ANI commands to the internal ANI commands */
+comment|/* Private: HAL_ANI_CMD; Public: HAL_CAP_INTMIT_CMD */
 specifier|static
 specifier|const
 name|HAL_ANI_CMD
@@ -4430,7 +4427,12 @@ argument_list|(
 name|cmds
 argument_list|)
 condition|?
-name|ar5212AniControl
+name|AH5212
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_aniControl
 argument_list|(
 name|ah
 argument_list|,
@@ -4768,7 +4770,12 @@ condition|)
 return|return
 name|AH_FALSE
 return|;
-name|ar5212AniControl
+name|AH5212
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_aniControl
 argument_list|(
 name|ah
 argument_list|,

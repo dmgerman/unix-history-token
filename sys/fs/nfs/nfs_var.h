@@ -3564,7 +3564,7 @@ parameter_list|,
 name|int
 modifier|*
 parameter_list|,
-name|u_char
+name|int
 modifier|*
 parameter_list|,
 name|struct

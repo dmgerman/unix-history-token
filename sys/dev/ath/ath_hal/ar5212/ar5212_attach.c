@@ -992,6 +992,16 @@ argument_list|,
 name|AH_TRUE
 argument_list|)
 expr_stmt|;
+comment|/* Set overridable ANI methods */
+name|AH5212
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_aniControl
+operator|=
+name|ar5212AniControl
+expr_stmt|;
 block|}
 end_function
 

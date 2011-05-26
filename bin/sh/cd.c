@@ -346,6 +346,11 @@ decl_stmt|;
 name|int
 name|rc
 decl_stmt|;
+name|int
+name|errno1
+init|=
+name|ENOENT
+decl_stmt|;
 name|optreset
 operator|=
 literal|1
@@ -657,13 +662,28 @@ name|rc
 else|:
 literal|0
 return|;
+if|if
+condition|(
+name|errno
+operator|!=
+name|ENOENT
+condition|)
+name|errno1
+operator|=
+name|errno
+expr_stmt|;
 block|}
 block|}
 name|error
 argument_list|(
-literal|"can't cd to %s"
+literal|"%s: %s"
 argument_list|,
 name|dest
+argument_list|,
+name|strerror
+argument_list|(
+name|errno1
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/

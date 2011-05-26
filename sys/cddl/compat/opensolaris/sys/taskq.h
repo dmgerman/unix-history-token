@@ -35,9 +35,6 @@ name|void
 modifier|*
 name|ost_arg
 decl_stmt|;
-name|int
-name|ost_magic
-decl_stmt|;
 block|}
 struct|;
 end_struct

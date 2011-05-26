@@ -1575,6 +1575,43 @@ comment|/* set page-size as 4k */
 end_comment
 
 begin_comment
+comment|/* Kiwi */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_AHB_CUSTOM_BURST_EN
+value|0x000000C0
+end_define
+
+begin_comment
+comment|/* set Custom Burst Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_AHB_CUSTOM_BURST_EN_S
+value|6
+end_define
+
+begin_comment
+comment|/* set Custom Burst Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_AHB_CUSTOM_BURST_ASYNC_FIFO_VAL
+value|3
+end_define
+
+begin_comment
+comment|/* set both bits in Async FIFO mode */
+end_comment
+
+begin_comment
 comment|/* MAC PCU Registers */
 end_comment
 
@@ -3033,6 +3070,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR_PCU_MISC_MODE2_ENABLE_AGGWEP
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* Kiwi or later? */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AR_PCU_MISC_MODE2_HWWAR1
 value|0x00100000
 end_define
@@ -3042,6 +3090,67 @@ define|#
 directive|define
 name|AR_PCU_MISC_MODE2_HWWAR2
 value|0x02000000
+end_define
+
+begin_comment
+comment|/* For Kiwi */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_PCU_ASYNC_FIFO_REG3
+value|0x8358
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_PCU_ASYNC_FIFO_REG3_DATAPATH_SEL
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_PCU_ASYNC_FIFO_REG3_SOFT_RESET
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* TSF2. For Kiwi only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_TSF2_L32
+value|0x8390
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_TSF2_U32
+value|0x8394
+end_define
+
+begin_comment
+comment|/* MAC Direct Connect Control. For Kiwi only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_DIRECT_CONNECT
+value|0x83A0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_DC_AP_STA_EN
+value|0x00000001
 end_define
 
 begin_comment
@@ -3257,6 +3366,63 @@ define|#
 directive|define
 name|AR_9285_PCU_TXBUF_CTRL_USABLE_SIZE
 value|0x380
+end_define
+
+begin_comment
+comment|/* IFS, SIFS, slot, etc for Async FIFO mode (Kiwi) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_D_GBL_IFS_SIFS_ASYNC_FIFO_DUR
+value|0x000003AB
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_TIME_OUT_ACK_CTS_ASYNC_FIFO_DUR
+value|0x16001D56
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_USEC_ASYNC_FIFO_DUR
+value|0x12e00074
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_D_GBL_IFS_SLOT_ASYNC_FIFO_DUR
+value|0x00000420
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_D_GBL_IFS_EIFS_ASYNC_FIFO_DUR
+value|0x0000A5EB
+end_define
+
+begin_comment
+comment|/* Used by Kiwi Async FIFO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_PCU_LOGIC_ANALYZER
+value|0x8264
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_PCU_LOGIC_ANALYZER_DISBUG20768
+value|0x20000000
 end_define
 
 begin_comment
@@ -3724,6 +3890,45 @@ begin_comment
 comment|/* Kite 1.2 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|AR_XSREV_VERSION_KIWI
+value|0x180
+end_define
+
+begin_comment
+comment|/* Kiwi (AR9287) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_XSREV_REVISION_KIWI_10
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_XSREV_REVISION_KIWI_11
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_XSREV_REVISION_KIWI_12
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_XSREV_REVISION_KIWI_13
+value|3
+end_define
+
 begin_comment
 comment|/* Owl (AR5416) */
 end_comment
@@ -3952,6 +4157,72 @@ define|\
 value|(AR_SREV_KITE_12_OR_LATER(_ah)&& \ 	((OS_REG_READ(_ah, AR_AN_SYNTH9)& 0x7) == 0x1))
 end_define
 
+begin_define
+define|#
+directive|define
+name|AR_SREV_KIWI
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(AH_PRIVATE((_ah))->ah_macVersion == AR_XSREV_VERSION_KIWI)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_KIWI_11_OR_LATER
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(AR_SREV_KIWI(_ah)&& \ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_KIWI_11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_KIWI_11
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(AR_SREV_KIWI(_ah)&& \ 	 AH_PRIVATE((_ah))->ah_macRev == AR_XSREV_REVISION_KIWI_11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_KIWI_12
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(AR_SREV_KIWI(_ah)&& \ 	 AH_PRIVATE((_ah))->ah_macRev == AR_XSREV_REVISION_KIWI_12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_KIWI_12_OR_LATER
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(AR_SREV_KIWI(_ah)&& \ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_KIWI_12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_KIWI_13_OR_LATER
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(AR_SREV_KIWI(_ah)&& \ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_KIWI_13)
+end_define
+
 begin_comment
 comment|/* Not yet implemented chips */
 end_comment
@@ -3960,26 +4231,6 @@ begin_define
 define|#
 directive|define
 name|AR_SREV_9271
-parameter_list|(
-name|_ah
-parameter_list|)
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR_SREV_9287_11_OR_LATER
-parameter_list|(
-name|_ah
-parameter_list|)
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR_SREV_KIWI_10_OR_LATER
 parameter_list|(
 name|_ah
 parameter_list|)

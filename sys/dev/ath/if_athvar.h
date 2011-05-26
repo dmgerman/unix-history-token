@@ -3226,7 +3226,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(ath_hal_getcapability(_ah, HAL_CAP_INTMIT, 0, NULL) == HAL_OK)
+value|(ath_hal_getcapability(_ah, HAL_CAP_INTMIT, HAL_CAP_INTMIT_PRESENT, NULL) == HAL_OK)
 end_define
 
 begin_define
@@ -3237,7 +3237,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(ath_hal_getcapability(_ah, HAL_CAP_INTMIT, 1, NULL) == HAL_OK)
+value|(ath_hal_getcapability(_ah, HAL_CAP_INTMIT, HAL_CAP_INTMIT_ENABLE, NULL) == HAL_OK)
 end_define
 
 begin_define
@@ -3250,7 +3250,7 @@ parameter_list|,
 name|_v
 parameter_list|)
 define|\
-value|ath_hal_setcapability(_ah, HAL_CAP_INTMIT, 1, _v, NULL)
+value|ath_hal_setcapability(_ah, HAL_CAP_INTMIT, HAL_CAP_INTMIT_ENABLE, _v, NULL)
 end_define
 
 begin_define

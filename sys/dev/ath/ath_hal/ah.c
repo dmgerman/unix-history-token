@@ -429,6 +429,12 @@ case|:
 return|return
 literal|"9285"
 return|;
+case|case
+name|AR_XSREV_VERSION_KIWI
+case|:
+return|return
+literal|"9287"
+return|;
 block|}
 return|return
 literal|"????"
