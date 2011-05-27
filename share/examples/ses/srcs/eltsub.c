@@ -318,7 +318,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SESTYP_SAS_EXP
+name|SESTYP_SASEXPANDER
 case|:
 name|sprintf
 argument_list|(
@@ -329,7 +329,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SESTYP_SAS_CONN
+name|SESTYP_SASCONNECTOR
 case|:
 name|sprintf
 argument_list|(

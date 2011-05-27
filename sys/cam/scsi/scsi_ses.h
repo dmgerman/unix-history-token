@@ -282,14 +282,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|SESTYP_SAS_EXP
+name|SESTYP_SASEXPANDER
 value|0x18
 end_define
 
 begin_define
 define|#
 directive|define
-name|SESTYP_SAS_CONN
+name|SESTYP_SASCONNECTOR
 value|0x19
 end_define
 
