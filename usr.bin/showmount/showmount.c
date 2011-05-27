@@ -766,7 +766,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%-35s"
+literal|"%-34s "
 argument_list|,
 name|exp
 operator|->
