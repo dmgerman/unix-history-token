@@ -3101,9 +3101,27 @@ name|error
 decl_stmt|,
 name|i
 decl_stmt|;
+comment|/* 	 * It seems old PCI controllers do not support DAC.  DAC 	 * configuration can be enabled by accessing VGE_CHIPCFG3 	 * register but honor EEPROM configuration instead of 	 * blindly overriding DAC configuration.  PCIe based 	 * controllers are supposed to support 64bit DMA so enable 	 * 64bit DMA on these controllers. 	 */
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|vge_flags
+operator|&
+name|VGE_FLAG_PCIE
+operator|)
+operator|!=
+literal|0
+condition|)
 name|lowaddr
 operator|=
 name|BUS_SPACE_MAXADDR
+expr_stmt|;
+else|else
+name|lowaddr
+operator|=
+name|BUS_SPACE_MAXADDR_32BIT
 expr_stmt|;
 name|again
 label|:
@@ -3679,6 +3697,27 @@ goto|goto
 name|again
 goto|;
 block|}
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|vge_flags
+operator|&
+name|VGE_FLAG_PCIE
+operator|)
+operator|!=
+literal|0
+condition|)
+name|lowaddr
+operator|=
+name|VGE_BUF_DMA_MAXADDR
+expr_stmt|;
+else|else
+name|lowaddr
+operator|=
+name|BUS_SPACE_MAXADDR_32BIT
+expr_stmt|;
 comment|/* Create parent buffer tag. */
 name|error
 operator|=
@@ -3697,7 +3736,7 @@ argument_list|,
 literal|0
 argument_list|,
 comment|/* algnmnt, boundary */
-name|VGE_BUF_DMA_MAXADDR
+name|lowaddr
 argument_list|,
 comment|/* lowaddr */
 name|BUS_SPACE_MAXADDR
