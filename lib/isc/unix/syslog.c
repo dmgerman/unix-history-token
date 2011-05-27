@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: syslog.c,v 1.8 2007/09/13 04:45:18 each Exp $ */
+comment|/* $Id: syslog.c,v 1.8 2007-09-13 04:45:18 each Exp $ */
 end_comment
 
 begin_comment

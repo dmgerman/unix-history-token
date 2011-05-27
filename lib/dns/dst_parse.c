@@ -4,7 +4,7 @@ comment|/*  * Portions Copyright (C) 2004-2010  Internet Systems Consortium, Inc
 end_comment
 
 begin_comment
-comment|/*%  * Principal Author: Brian Wellington  * $Id: dst_parse.c,v 1.14.120.6 2010/01/15 19:38:53 each Exp $  */
+comment|/*%  * Principal Author: Brian Wellington  * $Id: dst_parse.c,v 1.14.120.6 2010-01-15 19:38:53 each Exp $  */
 end_comment
 
 begin_include

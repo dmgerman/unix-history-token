@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2008  Internet Systems Consortium,
 end_comment
 
 begin_comment
-comment|/* $Id: lex.h,v 1.37 2008/05/30 23:47:01 tbox Exp $ */
+comment|/* $Id: lex.h,v 1.37 2008-05-30 23:47:01 tbox Exp $ */
 end_comment
 
 begin_ifndef

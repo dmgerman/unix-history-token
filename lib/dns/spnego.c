@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2006-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: spnego.c,v 1.8.118.4 2009/07/21 07:27:13 marka Exp $ */
+comment|/* $Id: spnego.c,v 1.8.118.4 2009-07-21 07:27:13 marka Exp $ */
 end_comment
 
 begin_comment

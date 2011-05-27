@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: lwdgabn.c,v 1.22 2007/06/19 23:46:59 tbox Exp $ */
+comment|/* $Id: lwdgabn.c,v 1.22 2007-06-19 23:46:59 tbox Exp $ */
 end_comment
 
 begin_comment

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/*  * Principal Author: Brian Wellington  * $Id: opensslrsa_link.c,v 1.20.50.8 2010/01/22 02:36:49 marka Exp $  */
+comment|/*  * Principal Author: Brian Wellington  * $Id: opensslrsa_link.c,v 1.20.50.8 2010-01-22 02:36:49 marka Exp $  */
 end_comment
 
 begin_ifdef

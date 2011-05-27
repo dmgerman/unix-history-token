@@ -4,7 +4,7 @@ comment|/*  * Portions Copyright (C) 2004-2008  Internet Systems Consortium, Inc
 end_comment
 
 begin_comment
-comment|/* $Id: dst_parse.h,v 1.11 2008/05/15 00:50:26 each Exp $ */
+comment|/* $Id: dst_parse.h,v 1.11 2008-05-15 00:50:26 each Exp $ */
 end_comment
 
 begin_comment
