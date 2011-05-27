@@ -76,148 +76,134 @@ end_define
 begin_define
 define|#
 directive|define
-name|RACCT_FSIZE
+name|RACCT_DATA
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|RACCT_DATA
+name|RACCT_STACK
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|RACCT_STACK
+name|RACCT_CORE
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|RACCT_CORE
+name|RACCT_RSS
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|RACCT_RSS
+name|RACCT_MEMLOCK
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|RACCT_MEMLOCK
+name|RACCT_NPROC
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|RACCT_NPROC
+name|RACCT_NOFILE
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|RACCT_NOFILE
+name|RACCT_VMEM
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|RACCT_SBSIZE
+name|RACCT_NPTS
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|RACCT_VMEM
+name|RACCT_SWAP
 value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|RACCT_NPTS
+name|RACCT_NTHR
 value|11
 end_define
 
 begin_define
 define|#
 directive|define
-name|RACCT_SWAP
+name|RACCT_MSGQQUEUED
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|RACCT_NTHR
+name|RACCT_MSGQSIZE
 value|13
 end_define
 
 begin_define
 define|#
 directive|define
-name|RACCT_MSGQQUEUED
+name|RACCT_NMSGQ
 value|14
 end_define
 
 begin_define
 define|#
 directive|define
-name|RACCT_MSGQSIZE
+name|RACCT_NSEM
 value|15
 end_define
 
 begin_define
 define|#
 directive|define
-name|RACCT_NMSGQ
+name|RACCT_NSEMOP
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|RACCT_NSEM
+name|RACCT_NSHM
 value|17
 end_define
 
 begin_define
 define|#
 directive|define
-name|RACCT_NSEMOP
+name|RACCT_SHMSIZE
 value|18
 end_define
 
 begin_define
 define|#
 directive|define
-name|RACCT_NSHM
-value|19
-end_define
-
-begin_define
-define|#
-directive|define
-name|RACCT_SHMSIZE
-value|20
-end_define
-
-begin_define
-define|#
-directive|define
 name|RACCT_WALLCLOCK
-value|21
+value|19
 end_define
 
 begin_define
