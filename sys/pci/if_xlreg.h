@@ -2488,9 +2488,11 @@ name|u_int32_t
 name|xl_next
 decl_stmt|;
 comment|/* final entry has 0 nextptr */
+specifier|volatile
 name|u_int32_t
 name|xl_status
 decl_stmt|;
+specifier|volatile
 name|struct
 name|xl_frag
 name|xl_frag
