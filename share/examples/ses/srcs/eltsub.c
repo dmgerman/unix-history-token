@@ -324,7 +324,7 @@ name|sprintf
 argument_list|(
 name|rbuf
 argument_list|,
-literal|"SAS Expender"
+literal|"SAS Expander"
 argument_list|)
 expr_stmt|;
 break|break;
