@@ -1223,7 +1223,7 @@ name|tftp_log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"send_rrq: %s"
+literal|"send_rrq: %d %s"
 argument_list|,
 name|n
 argument_list|,

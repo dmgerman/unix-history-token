@@ -655,7 +655,7 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-literal|"[-a alignment] [-b start] [-s size] -t type [-i index] "
+literal|"-t type [-a alignment] [-b start] [-s size] [-i index] "
 literal|"[-l label] [-f flags] geom"
 block|}
 block|,
@@ -722,7 +722,7 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-literal|"[-b bootcode] [-p partcode] [-i index] [-f flags] geom"
+literal|"[-b bootcode] [-p partcode -i index] [-f flags] geom"
 block|}
 block|,
 block|{
@@ -988,7 +988,7 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-literal|"[-lrp] [geom ...]"
+literal|"[-l | -r] [-p] [geom ...]"
 block|}
 block|,
 block|{
@@ -1098,7 +1098,7 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-literal|"[-a alignment] [-s size] -i index [-f flags] geom"
+literal|"-i index [-a alignment] [-s size] [-f flags] geom"
 block|}
 block|,
 block|{
