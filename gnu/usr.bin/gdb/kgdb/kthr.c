@@ -389,7 +389,7 @@ operator|-
 literal|1
 operator|&&
 operator|(
-name|u_long
+name|size_t
 operator|)
 name|cpusetsize
 operator|<=
