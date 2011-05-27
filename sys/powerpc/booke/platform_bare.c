@@ -462,6 +462,22 @@ operator|||
 name|ver
 operator|==
 name|SVR_MPC8572
+operator|||
+name|ver
+operator|==
+name|SVR_P1020E
+operator|||
+name|ver
+operator|==
+name|SVR_P1020
+operator|||
+name|ver
+operator|==
+name|SVR_P2020E
+operator|||
+name|ver
+operator|==
+name|SVR_P2020
 condition|)
 name|maxcpu
 operator|=
@@ -1188,36 +1204,7 @@ name|platform_t
 name|plat
 parameter_list|)
 block|{
-name|uint32_t
-name|ver
-init|=
-name|SVR_VER
-argument_list|(
-name|mfspr
-argument_list|(
-name|SPR_SVR
-argument_list|)
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|ver
-operator|==
-name|SVR_MPC8572E
-operator|||
-name|ver
-operator|==
-name|SVR_MPC8572
-operator|||
-name|ver
-operator|==
-name|SVR_MPC8548E
-operator|||
-name|ver
-operator|==
-name|SVR_MPC8548
-condition|)
-comment|/* Systems with dedicated reset register */
+comment|/* 	 * Try the dedicated reset register first. 	 * If the SoC doesn't have one, we'll fall 	 * back to using the debug control register. 	 */
 name|ccsr_write4
 argument_list|(
 name|OCP85XX_RSTCR
@@ -1225,8 +1212,6 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-else|else
-block|{
 comment|/* Clear DBCR0, disables debug interrupts and events. */
 name|mtspr
 argument_list|(
@@ -1260,7 +1245,6 @@ operator||
 name|DBCR0_RST_SYSTEM
 argument_list|)
 expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"Reset failed...\n"
