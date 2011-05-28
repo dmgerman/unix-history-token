@@ -789,6 +789,7 @@ name|scaledPower
 operator|-=
 name|REDUCE_SCALED_POWER_BY_TWO_CHAIN
 expr_stmt|;
+break|break;
 default|default:
 return|return
 name|AH_FALSE
