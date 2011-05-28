@@ -5305,12 +5305,6 @@ name|noinodes
 label|:
 if|if
 condition|(
-name|fs
-operator|->
-name|fs_pendinginodes
-operator|>
-literal|0
-operator|&&
 name|reclaimed
 operator|==
 literal|0
