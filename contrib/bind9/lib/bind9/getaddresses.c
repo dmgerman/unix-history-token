@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: getaddresses.c,v 1.15.18.5 2005/10/14 01:28:24 marka Exp $ */
+comment|/* $Id: getaddresses.c,v 1.15.18.5 2005-10-14 01:28:24 marka Exp $ */
 end_comment
 
 begin_comment

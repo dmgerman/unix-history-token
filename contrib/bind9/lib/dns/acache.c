@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006, 2008  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: acache.c,v 1.3.2.18 2008/02/07 23:45:56 tbox Exp $ */
+comment|/* $Id: acache.c,v 1.3.2.18 2008-02-07 23:45:56 tbox Exp $ */
 end_comment
 
 begin_include

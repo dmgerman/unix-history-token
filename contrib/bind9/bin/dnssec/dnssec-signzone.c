@@ -4,7 +4,7 @@ comment|/*  * Portions Copyright (C) 2004-2009  Internet Systems Consortium, Inc
 end_comment
 
 begin_comment
-comment|/* $Id: dnssec-signzone.c,v 1.177.18.29 2009/07/21 06:44:32 tbox Exp $ */
+comment|/* $Id: dnssec-signzone.c,v 1.177.18.29 2009-07-21 06:44:32 tbox Exp $ */
 end_comment
 
 begin_comment

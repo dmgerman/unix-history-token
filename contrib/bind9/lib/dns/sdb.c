@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: sdb.c,v 1.45.18.21 2010/02/26 23:46:37 tbox Exp $ */
+comment|/* $Id: sdb.c,v 1.45.18.21 2010-02-26 23:46:37 tbox Exp $ */
 end_comment
 
 begin_comment

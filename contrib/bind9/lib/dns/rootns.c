@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2008  Internet Systems Consortium,
 end_comment
 
 begin_comment
-comment|/* $Id: rootns.c,v 1.26.18.7 2008/02/05 23:46:09 tbox Exp $ */
+comment|/* $Id: rootns.c,v 1.26.18.7 2008-02-05 23:46:09 tbox Exp $ */
 end_comment
 
 begin_comment

@@ -4,7 +4,7 @@ comment|/*  * Portions Copyright (C) 2004-2006  Internet Systems Consortium, Inc
 end_comment
 
 begin_comment
-comment|/* $Id: cc.c,v 1.10.18.5 2006/12/07 23:57:58 marka Exp $ */
+comment|/* $Id: cc.c,v 1.10.18.5 2006-12-07 23:57:58 marka Exp $ */
 end_comment
 
 begin_comment

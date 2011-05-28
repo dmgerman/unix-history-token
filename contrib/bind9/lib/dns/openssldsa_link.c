@@ -4,7 +4,7 @@ comment|/*  * Portions Copyright (C) 2004-2007, 2009  Internet Systems Consortiu
 end_comment
 
 begin_comment
-comment|/* $Id: openssldsa_link.c,v 1.1.6.11 2009/01/14 23:46:03 tbox Exp $ */
+comment|/* $Id: openssldsa_link.c,v 1.1.6.11 2009-01-14 23:46:03 tbox Exp $ */
 end_comment
 
 begin_ifdef

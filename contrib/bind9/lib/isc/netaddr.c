@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: netaddr.c,v 1.27.18.8 2005/04/27 05:02:03 sra Exp $ */
+comment|/* $Id: netaddr.c,v 1.27.18.8 2005-04-27 05:02:03 sra Exp $ */
 end_comment
 
 begin_comment

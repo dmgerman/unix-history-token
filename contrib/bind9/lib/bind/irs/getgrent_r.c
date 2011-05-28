@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getgrent_r.c,v 1.6.18.1 2005/04/27 05:00:57 sra Exp $"
+literal|"$Id: getgrent_r.c,v 1.6.18.1 2005-04-27 05:00:57 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 

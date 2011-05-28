@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006, 2008, 2009  Internet Systems Consortium, 
 end_comment
 
 begin_comment
-comment|/* $Id: interfacemgr.c,v 1.76.18.13 2009/01/19 23:46:14 tbox Exp $ */
+comment|/* $Id: interfacemgr.c,v 1.76.18.13 2009-01-19 23:46:14 tbox Exp $ */
 end_comment
 
 begin_comment

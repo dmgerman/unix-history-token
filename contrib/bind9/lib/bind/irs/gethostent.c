@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gethostent.c,v 1.6.18.2 2006/01/10 05:09:08 marka Exp $"
+literal|"$Id: gethostent.c,v 1.6.18.2 2006-01-10 05:09:08 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 

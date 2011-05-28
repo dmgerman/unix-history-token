@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: stdio.c,v 1.6 2004/03/05 05:11:47 marka Exp $ */
+comment|/* $Id: stdio.c,v 1.6 2004-03-05 05:11:47 marka Exp $ */
 end_comment
 
 begin_include

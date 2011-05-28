@@ -4,7 +4,7 @@ comment|/*  * Portions Copyright (C) 2004, 2005, 2007  Internet Systems Consorti
 end_comment
 
 begin_comment
-comment|/* $Id: symtab.c,v 1.5.18.4 2007/09/13 23:46:26 tbox Exp $ */
+comment|/* $Id: symtab.c,v 1.5.18.4 2007-09-13 23:46:26 tbox Exp $ */
 end_comment
 
 begin_comment

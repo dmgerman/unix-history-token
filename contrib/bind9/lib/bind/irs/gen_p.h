@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*  * $Id: gen_p.h,v 1.2.18.1 2005/04/27 05:00:56 sra Exp $  */
+comment|/*  * $Id: gen_p.h,v 1.2.18.1 2005-04-27 05:00:56 sra Exp $  */
 end_comment
 
 begin_comment

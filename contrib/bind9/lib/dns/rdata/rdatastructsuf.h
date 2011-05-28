@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: rdatastructsuf.h,v 1.8 2004/03/05 05:10:04 marka Exp $ */
+comment|/* $Id: rdatastructsuf.h,v 1.8 2004-03-05 05:10:04 marka Exp $ */
 end_comment
 
 begin_macro

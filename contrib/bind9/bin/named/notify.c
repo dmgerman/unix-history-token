@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: notify.c,v 1.30.18.3 2005/04/29 00:15:26 marka Exp $ */
+comment|/* $Id: notify.c,v 1.30.18.3 2005-04-29 00:15:26 marka Exp $ */
 end_comment
 
 begin_include

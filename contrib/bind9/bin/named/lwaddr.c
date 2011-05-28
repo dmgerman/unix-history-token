@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2008  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: lwaddr.c,v 1.4.18.4 2008/01/11 23:45:59 tbox Exp $ */
+comment|/* $Id: lwaddr.c,v 1.4.18.4 2008-01-11 23:45:59 tbox Exp $ */
 end_comment
 
 begin_comment

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2008  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: apl_42.c,v 1.8.18.4 2008/01/22 23:27:06 tbox Exp $ */
+comment|/* $Id: apl_42.c,v 1.8.18.4 2008-01-22 23:27:06 tbox Exp $ */
 end_comment
 
 begin_comment

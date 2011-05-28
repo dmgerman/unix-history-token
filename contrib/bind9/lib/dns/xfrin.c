@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: xfrin.c,v 1.135.18.23 2008/09/25 04:15:52 marka Exp $ */
+comment|/* $Id: xfrin.c,v 1.135.18.23 2008-09-25 04:15:52 marka Exp $ */
 end_comment
 
 begin_comment

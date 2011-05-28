@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: forward.h,v 1.3.18.3 2005/04/27 05:01:33 sra Exp $ */
+comment|/* $Id: forward.h,v 1.3.18.3 2005-04-27 05:01:33 sra Exp $ */
 end_comment
 
 begin_ifndef

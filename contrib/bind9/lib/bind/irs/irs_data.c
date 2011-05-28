@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irs_data.c,v 1.7.18.5 2007/08/27 03:34:24 marka Exp $"
+literal|"$Id: irs_data.c,v 1.7.18.5 2007-08-27 03:34:24 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 

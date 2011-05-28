@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2008  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: net.h,v 1.39.18.8 2008/12/01 04:13:20 marka Exp $ */
+comment|/* $Id: net.h,v 1.39.18.8 2008-12-01 04:13:20 marka Exp $ */
 end_comment
 
 begin_ifndef

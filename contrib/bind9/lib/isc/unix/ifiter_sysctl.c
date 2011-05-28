@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: ifiter_sysctl.c,v 1.20.18.3 2005/04/27 05:02:35 sra Exp $ */
+comment|/* $Id: ifiter_sysctl.c,v 1.20.18.3 2005-04-27 05:02:35 sra Exp $ */
 end_comment
 
 begin_comment

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: string.c,v 1.10.18.7 2006/10/03 23:50:51 marka Exp $ */
+comment|/* $Id: string.c,v 1.10.18.7 2006-10-03 23:50:51 marka Exp $ */
 end_comment
 
 begin_comment

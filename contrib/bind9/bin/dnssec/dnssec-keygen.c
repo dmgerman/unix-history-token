@@ -4,7 +4,7 @@ comment|/*  * Portions Copyright (C) 2004-2007  Internet Systems Consortium, Inc
 end_comment
 
 begin_comment
-comment|/* $Id: dnssec-keygen.c,v 1.66.18.10 2007/08/28 07:19:55 tbox Exp $ */
+comment|/* $Id: dnssec-keygen.c,v 1.66.18.10 2007-08-28 07:19:55 tbox Exp $ */
 end_comment
 
 begin_comment

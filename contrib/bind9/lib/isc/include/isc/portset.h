@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2008, 2009  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: portset.h,v 1.3.4.4 2009/06/25 05:33:47 marka Exp $ */
+comment|/* $Id: portset.h,v 1.3.4.4 2009-06-25 05:33:47 marka Exp $ */
 end_comment
 
 begin_comment

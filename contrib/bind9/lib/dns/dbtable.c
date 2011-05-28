@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/*  * $Id: dbtable.c,v 1.28.18.3 2005/07/12 01:22:19 marka Exp $  */
+comment|/*  * $Id: dbtable.c,v 1.28.18.3 2005-07-12 01:22:19 marka Exp $  */
 end_comment
 
 begin_comment

@@ -17,7 +17,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: naptr_35.h,v 1.19.18.2 2005/04/29 00:16:42 marka Exp $ */
+comment|/* $Id: naptr_35.h,v 1.19.18.2 2005-04-29 00:16:42 marka Exp $ */
 end_comment
 
 begin_comment

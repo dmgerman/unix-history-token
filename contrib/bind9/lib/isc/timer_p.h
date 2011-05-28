@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: timer_p.h,v 1.6.18.2 2005/04/29 00:16:51 marka Exp $ */
+comment|/* $Id: timer_p.h,v 1.6.18.2 2005-04-29 00:16:51 marka Exp $ */
 end_comment
 
 begin_ifndef

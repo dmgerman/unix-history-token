@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006, 2008, 2009  Internet Systems Consortium, 
 end_comment
 
 begin_comment
-comment|/* $Id: mem.h,v 1.59.18.14 2009/02/11 03:11:39 jinmei Exp $ */
+comment|/* $Id: mem.h,v 1.59.18.14 2009-02-11 03:11:39 jinmei Exp $ */
 end_comment
 
 begin_ifndef

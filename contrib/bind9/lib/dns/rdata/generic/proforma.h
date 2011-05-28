@@ -21,7 +21,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: proforma.h,v 1.19.18.2 2005/04/29 00:16:39 marka Exp $ */
+comment|/* $Id: proforma.h,v 1.19.18.2 2005-04-29 00:16:39 marka Exp $ */
 end_comment
 
 begin_typedef

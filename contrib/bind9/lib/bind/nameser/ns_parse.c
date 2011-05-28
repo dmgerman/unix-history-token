@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_parse.c,v 1.5.18.4 2007/08/27 03:34:24 marka Exp $"
+literal|"$Id: ns_parse.c,v 1.5.18.4 2007-08-27 03:34:24 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 

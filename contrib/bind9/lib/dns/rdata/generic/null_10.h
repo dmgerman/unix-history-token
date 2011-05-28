@@ -21,7 +21,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: null_10.h,v 1.21.18.2 2005/04/29 00:16:37 marka Exp $ */
+comment|/* $Id: null_10.h,v 1.21.18.2 2005-04-29 00:16:37 marka Exp $ */
 end_comment
 
 begin_typedef

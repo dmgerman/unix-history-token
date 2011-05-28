@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2009, 2010  Internet Systems Conso
 end_comment
 
 begin_comment
-comment|/* $Id: db.h,v 1.76.18.16 2010/11/17 23:45:12 tbox Exp $ */
+comment|/* $Id: db.h,v 1.76.18.16 2010-11-17 23:45:12 tbox Exp $ */
 end_comment
 
 begin_ifndef

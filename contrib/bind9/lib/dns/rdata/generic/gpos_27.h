@@ -17,7 +17,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: gpos_27.h,v 1.13.18.2 2005/04/29 00:16:32 marka Exp $ */
+comment|/* $Id: gpos_27.h,v 1.13.18.2 2005-04-29 00:16:32 marka Exp $ */
 end_comment
 
 begin_comment

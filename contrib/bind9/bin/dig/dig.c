@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: dig.c,v 1.186.18.37 2009/05/06 10:21:00 fdupont Exp $ */
+comment|/* $Id: dig.c,v 1.186.18.37 2009-05-06 10:21:00 fdupont Exp $ */
 end_comment
 
 begin_comment

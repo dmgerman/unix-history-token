@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006, 2008  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: namedconf.c,v 1.30.18.43 2008/09/04 08:03:08 marka Exp $ */
+comment|/* $Id: namedconf.c,v 1.30.18.43 2008-09-04 08:03:08 marka Exp $ */
 end_comment
 
 begin_comment

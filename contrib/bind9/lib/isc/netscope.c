@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: netscope.c,v 1.7.18.4 2006/08/25 05:25:51 marka Exp $"
+literal|"$Id: netscope.c,v 1.7.18.4 2006-08-25 05:25:51 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: sockaddr.c,v 1.59.18.9 2006/06/21 01:25:40 marka Exp $ */
+comment|/* $Id: sockaddr.c,v 1.59.18.9 2006-06-21 01:25:40 marka Exp $ */
 end_comment
 
 begin_comment

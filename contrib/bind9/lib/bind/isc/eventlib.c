@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: eventlib.c,v 1.5.18.5 2006/03/10 00:20:08 marka Exp $"
+literal|"$Id: eventlib.c,v 1.5.18.5 2006-03-10 00:20:08 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 

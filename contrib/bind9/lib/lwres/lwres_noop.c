@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: lwres_noop.c,v 1.15.18.2 2005/04/29 00:17:20 marka Exp $ */
+comment|/* $Id: lwres_noop.c,v 1.15.18.2 2005-04-29 00:17:20 marka Exp $ */
 end_comment
 
 begin_comment

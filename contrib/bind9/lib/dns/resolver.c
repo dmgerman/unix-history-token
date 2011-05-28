@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: resolver.c,v 1.284.18.103 2010/06/23 23:45:21 tbox Exp $ */
+comment|/* $Id: resolver.c,v 1.284.18.103 2010-06-23 23:45:21 tbox Exp $ */
 end_comment
 
 begin_comment

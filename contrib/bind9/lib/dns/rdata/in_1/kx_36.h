@@ -17,7 +17,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: kx_36.h,v 1.16.18.2 2005/04/29 00:16:42 marka Exp $ */
+comment|/* $Id: kx_36.h,v 1.16.18.2 2005-04-29 00:16:42 marka Exp $ */
 end_comment
 
 begin_comment

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006, 2009  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: zone.h,v 1.126.18.24 2009/07/11 04:30:50 marka Exp $ */
+comment|/* $Id: zone.h,v 1.126.18.24 2009-07-11 04:30:50 marka Exp $ */
 end_comment
 
 begin_ifndef

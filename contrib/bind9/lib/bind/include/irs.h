@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*  * $Id: irs.h,v 1.4.18.1 2005/04/27 05:00:49 sra Exp $  */
+comment|/*  * $Id: irs.h,v 1.4.18.1 2005-04-27 05:00:49 sra Exp $  */
 end_comment
 
 begin_ifndef

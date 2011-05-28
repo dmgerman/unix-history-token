@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: dispatch.c,v 1.116.18.42 2009/12/02 23:36:35 marka Exp $ */
+comment|/* $Id: dispatch.c,v 1.116.18.42 2009-12-02 23:36:35 marka Exp $ */
 end_comment
 
 begin_comment

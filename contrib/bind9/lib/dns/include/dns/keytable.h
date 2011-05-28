@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: keytable.h,v 1.11.18.3 2005/12/05 00:00:03 marka Exp $ */
+comment|/* $Id: keytable.h,v 1.11.18.3 2005-12-05 00:00:03 marka Exp $ */
 end_comment
 
 begin_ifndef

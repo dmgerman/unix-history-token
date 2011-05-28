@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: check-tool.h,v 1.7.18.4 2005/06/20 01:19:25 marka Exp $ */
+comment|/* $Id: check-tool.h,v 1.7.18.4 2005-06-20 01:19:25 marka Exp $ */
 end_comment
 
 begin_ifndef

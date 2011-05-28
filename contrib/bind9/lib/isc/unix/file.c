@@ -8,7 +8,7 @@ comment|/*  * Portions Copyright (c) 1987, 1993  *      The Regents of the Unive
 end_comment
 
 begin_comment
-comment|/* $Id: file.c,v 1.47.18.4 2009/02/16 23:46:03 tbox Exp $ */
+comment|/* $Id: file.c,v 1.47.18.4 2009-02-16 23:46:03 tbox Exp $ */
 end_comment
 
 begin_comment

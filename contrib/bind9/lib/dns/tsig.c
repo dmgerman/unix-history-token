@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/*  * $Id: tsig.c,v 1.117.18.14 2008/01/17 23:46:03 tbox Exp $  */
+comment|/*  * $Id: tsig.c,v 1.117.18.14 2008-01-17 23:46:03 tbox Exp $  */
 end_comment
 
 begin_comment

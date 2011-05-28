@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006, 2009, 2010  Internet Systems Consortium, 
 end_comment
 
 begin_comment
-comment|/* $Id: resolver.h,v 1.40.18.15 2010/02/26 23:46:37 tbox Exp $ */
+comment|/* $Id: resolver.h,v 1.40.18.15 2010-02-26 23:46:37 tbox Exp $ */
 end_comment
 
 begin_ifndef

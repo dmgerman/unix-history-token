@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006, 2008  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: lwconfig.c,v 1.38.18.7 2008/12/17 23:46:01 tbox Exp $ */
+comment|/* $Id: lwconfig.c,v 1.38.18.7 2008-12-17 23:46:01 tbox Exp $ */
 end_comment
 
 begin_comment

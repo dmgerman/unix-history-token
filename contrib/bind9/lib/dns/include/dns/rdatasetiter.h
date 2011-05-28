@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: rdatasetiter.h,v 1.15.18.2 2005/04/29 00:16:19 marka Exp $ */
+comment|/* $Id: rdatasetiter.h,v 1.15.18.2 2005-04-29 00:16:19 marka Exp $ */
 end_comment
 
 begin_ifndef

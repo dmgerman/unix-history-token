@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*  * $Id: dns_p.h,v 1.3.18.1 2005/04/27 05:00:55 sra Exp $  */
+comment|/*  * $Id: dns_p.h,v 1.3.18.1 2005-04-27 05:00:55 sra Exp $  */
 end_comment
 
 begin_ifndef

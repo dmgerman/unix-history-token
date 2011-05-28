@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dns_ho.c,v 1.14.18.8 2008/09/24 05:59:50 marka Exp $"
+literal|"$Id: dns_ho.c,v 1.14.18.8 2008-09-24 05:59:50 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 

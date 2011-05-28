@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: lookup.c,v 1.14.18.7 2007/08/28 07:20:04 tbox Exp $ */
+comment|/* $Id: lookup.c,v 1.14.18.7 2007-08-28 07:20:04 tbox Exp $ */
 end_comment
 
 begin_comment

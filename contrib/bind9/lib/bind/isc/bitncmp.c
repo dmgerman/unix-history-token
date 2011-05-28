@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: bitncmp.c,v 1.2.18.2 2008/05/12 00:21:22 marka Exp $"
+literal|"$Id: bitncmp.c,v 1.2.18.2 2008-05-12 00:21:22 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 

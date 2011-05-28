@@ -4,7 +4,7 @@ comment|/*  * Portions Copyright (C) 2004-2006, 2008, 2009  Internet Systems Con
 end_comment
 
 begin_comment
-comment|/*  * Principal Author: Brian Wellington  * $Id: dst_api.c,v 1.1.6.15 2009/09/25 01:48:28 marka Exp $  */
+comment|/*  * Principal Author: Brian Wellington  * $Id: dst_api.c,v 1.1.6.15 2009-09-25 01:48:28 marka Exp $  */
 end_comment
 
 begin_comment

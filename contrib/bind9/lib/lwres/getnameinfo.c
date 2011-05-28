@@ -4,7 +4,7 @@ comment|/*  * Portions Copyright (C) 2004, 2005  Internet Systems Consortium, In
 end_comment
 
 begin_comment
-comment|/* $Id: getnameinfo.c,v 1.34.18.3 2005/04/29 00:17:18 marka Exp $ */
+comment|/* $Id: getnameinfo.c,v 1.34.18.3 2005-04-29 00:17:18 marka Exp $ */
 end_comment
 
 begin_comment

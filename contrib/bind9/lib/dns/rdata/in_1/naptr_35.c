@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2008  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: naptr_35.c,v 1.47.18.4 2008/02/15 23:45:53 tbox Exp $ */
+comment|/* $Id: naptr_35.c,v 1.47.18.4 2008-02-15 23:45:53 tbox Exp $ */
 end_comment
 
 begin_comment

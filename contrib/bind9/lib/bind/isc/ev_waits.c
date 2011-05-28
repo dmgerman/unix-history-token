@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ev_waits.c,v 1.3.18.1 2005/04/27 05:01:06 sra Exp $"
+literal|"$Id: ev_waits.c,v 1.3.18.1 2005-04-27 05:01:06 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 

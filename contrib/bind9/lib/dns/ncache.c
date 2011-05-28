@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2010  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: ncache.c,v 1.36.18.8 2010/06/03 23:46:10 tbox Exp $ */
+comment|/* $Id: ncache.c,v 1.36.18.8.10.1 2011-05-26 23:56:27 each Exp $ */
 end_comment
 
 begin_comment
@@ -643,7 +643,7 @@ name|r
 operator|.
 name|length
 operator|<
-literal|2
+literal|3
 condition|)
 return|return
 operator|(

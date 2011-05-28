@@ -32,7 +32,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: strerror.c,v 1.4.332.2 2008/02/18 04:04:06 marka Exp $"
+literal|"$Id: strerror.c,v 1.4.332.2 2008-02-18 04:04:06 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 

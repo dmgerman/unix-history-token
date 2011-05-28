@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007, 2009, 2010  Internet Systems Consortium, 
 end_comment
 
 begin_comment
-comment|/* $Id: rdataslab.c,v 1.35.18.12 2010/02/26 23:46:36 tbox Exp $ */
+comment|/* $Id: rdataslab.c,v 1.35.18.12 2010-02-26 23:46:36 tbox Exp $ */
 end_comment
 
 begin_comment

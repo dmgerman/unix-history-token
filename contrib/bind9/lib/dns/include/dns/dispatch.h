@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2008  Internet Systems Consortium,
 end_comment
 
 begin_comment
-comment|/* $Id: dispatch.h,v 1.48.18.9 2008/06/24 23:45:55 tbox Exp $ */
+comment|/* $Id: dispatch.h,v 1.48.18.9 2008-06-24 23:45:55 tbox Exp $ */
 end_comment
 
 begin_ifndef

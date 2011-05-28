@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006, 2008  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: controlconf.c,v 1.40.18.14 2008/07/23 23:33:02 marka Exp $ */
+comment|/* $Id: controlconf.c,v 1.40.18.14 2008-07-23 23:33:02 marka Exp $ */
 end_comment
 
 begin_comment

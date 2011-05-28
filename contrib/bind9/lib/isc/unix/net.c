@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2008  Internet Systems Consortium,
 end_comment
 
 begin_comment
-comment|/* $Id: net.c,v 1.29.18.9 2008/07/04 05:52:05 each Exp $ */
+comment|/* $Id: net.c,v 1.29.18.9 2008-07-04 05:52:05 each Exp $ */
 end_comment
 
 begin_include

@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: assertions.c,v 1.2.18.2 2008/10/15 03:57:21 marka Exp $"
+literal|"$Id: assertions.c,v 1.2.18.2 2008-10-15 03:57:21 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -4,7 +4,7 @@ comment|/*  * ++Copyright++ 1983, 1993  * -  * Copyright (c) 1983, 1993  *    Th
 end_comment
 
 begin_comment
-comment|/*%  *	@(#)inet.h	8.1 (Berkeley) 6/2/93  *	$Id: inet.h,v 1.2.18.1 2005/04/27 05:00:50 sra Exp $  */
+comment|/*%  *	@(#)inet.h	8.1 (Berkeley) 6/2/93  *	$Id: inet.h,v 1.2.18.1 2005-04-27 05:00:50 sra Exp $  */
 end_comment
 
 begin_ifndef

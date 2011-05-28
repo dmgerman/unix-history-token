@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gen_pw.c,v 1.2.18.1 2005/04/27 05:00:57 sra Exp $"
+literal|"$Id: gen_pw.c,v 1.2.18.1 2005-04-27 05:00:57 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 

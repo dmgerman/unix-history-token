@@ -4,7 +4,7 @@ comment|/*  * Portions Copyright (C) 2004-2006  Internet Systems Consortium, Inc
 end_comment
 
 begin_comment
-comment|/*  * Principal Author: Brian Wellington  * $Id: hmac_link.c,v 1.1.6.5 2006/01/27 23:57:44 marka Exp $  */
+comment|/*  * Principal Author: Brian Wellington  * $Id: hmac_link.c,v 1.1.6.5 2006-01-27 23:57:44 marka Exp $  */
 end_comment
 
 begin_include

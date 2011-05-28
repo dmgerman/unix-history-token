@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: adb.c,v 1.215.18.26 2009/02/03 23:46:04 tbox Exp $ */
+comment|/* $Id: adb.c,v 1.215.18.26 2009-02-03 23:46:04 tbox Exp $ */
 end_comment
 
 begin_comment

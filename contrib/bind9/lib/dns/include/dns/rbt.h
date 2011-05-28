@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2009  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: rbt.h,v 1.59.18.7 2009/01/19 23:46:16 tbox Exp $ */
+comment|/* $Id: rbt.h,v 1.59.18.7 2009-01-19 23:46:16 tbox Exp $ */
 end_comment
 
 begin_ifndef

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: rwlock.h,v 1.21.18.3 2005/06/04 06:23:44 jinmei Exp $ */
+comment|/* $Id: rwlock.h,v 1.21.18.3 2005-06-04 06:23:44 jinmei Exp $ */
 end_comment
 
 begin_ifndef

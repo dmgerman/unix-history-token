@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2010  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: ncache.h,v 1.17.18.4 2010/06/04 23:46:02 tbox Exp $ */
+comment|/* $Id: ncache.h,v 1.17.18.4 2010-06-04 23:46:02 tbox Exp $ */
 end_comment
 
 begin_ifndef

@@ -17,7 +17,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: afsdb_18.h,v 1.16.18.2 2005/04/29 00:16:30 marka Exp $ */
+comment|/* $Id: afsdb_18.h,v 1.16.18.2 2005-04-29 00:16:30 marka Exp $ */
 end_comment
 
 begin_comment

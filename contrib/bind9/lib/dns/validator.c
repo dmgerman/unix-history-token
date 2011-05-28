@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: validator.c,v 1.119.18.60 2010/11/16 04:17:44 marka Exp $ */
+comment|/* $Id: validator.c,v 1.119.18.60.6.1 2011-05-26 23:56:27 each Exp $ */
 end_comment
 
 begin_comment
@@ -1418,11 +1418,14 @@ argument_list|(
 literal|3
 argument_list|)
 argument_list|,
-literal|"keyset with trust %d"
+literal|"keyset with trust %s"
 argument_list|,
+name|dns_trust_totext
+argument_list|(
 name|rdataset
 operator|->
 name|trust
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Only extract the dst key if the keyset is secure. 		 */
@@ -1827,11 +1830,14 @@ argument_list|(
 literal|3
 argument_list|)
 argument_list|,
-literal|"dsset with trust %d"
+literal|"dsset with trust %s"
 argument_list|,
+name|dns_trust_totext
+argument_list|(
 name|rdataset
 operator|->
 name|trust
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|val
@@ -2583,13 +2589,16 @@ argument_list|(
 literal|3
 argument_list|)
 argument_list|,
-literal|"keyset with trust %d"
+literal|"keyset with trust %s"
 argument_list|,
+name|dns_trust_totext
+argument_list|(
 name|val
 operator|->
 name|frdataset
 operator|.
 name|trust
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Only extract the dst key if the keyset is secure. 		 */
@@ -2954,7 +2963,7 @@ argument_list|(
 literal|3
 argument_list|)
 argument_list|,
-literal|"%s with trust %d"
+literal|"%s with trust %s"
 argument_list|,
 name|val
 operator|->
@@ -2968,11 +2977,14 @@ literal|"dsset"
 else|:
 literal|"ds non-existance"
 argument_list|,
+name|dns_trust_totext
+argument_list|(
 name|val
 operator|->
 name|frdataset
 operator|.
 name|trust
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|have_dsset
@@ -4788,13 +4800,16 @@ argument_list|(
 literal|3
 argument_list|)
 argument_list|,
-literal|"covering nsec: trust %u"
+literal|"covering nsec: trust %s"
 argument_list|,
+name|dns_trust_totext
+argument_list|(
 name|val
 operator|->
 name|frdataset
 operator|.
 name|trust
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -6225,13 +6240,16 @@ argument_list|(
 literal|3
 argument_list|)
 argument_list|,
-literal|"keyset with trust %d"
+literal|"keyset with trust %s"
 argument_list|,
+name|dns_trust_totext
+argument_list|(
 name|val
 operator|->
 name|frdataset
 operator|.
 name|trust
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|result
@@ -9355,6 +9373,22 @@ name|DNS_R_MUSTBESECURE
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|val
+operator|->
+name|view
+operator|->
+name|dlv
+operator|==
+name|NULL
+operator|||
+name|DLVTRIED
+argument_list|(
+name|val
+argument_list|)
+condition|)
+block|{
 name|markanswer
 argument_list|(
 name|val
@@ -9365,6 +9399,21 @@ expr_stmt|;
 return|return
 operator|(
 name|ISC_R_SUCCESS
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|startfinddlvsep
+argument_list|(
+name|val
+argument_list|,
+name|val
+operator|->
+name|event
+operator|->
+name|name
+argument_list|)
 operator|)
 return|;
 block|}
@@ -12202,13 +12251,16 @@ argument_list|(
 literal|3
 argument_list|)
 argument_list|,
-literal|"dlvset with trust %d"
+literal|"dlvset with trust %s"
 argument_list|,
+name|dns_trust_totext
+argument_list|(
 name|val
 operator|->
 name|frdataset
 operator|.
 name|trust
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|dns_rdataset_clone

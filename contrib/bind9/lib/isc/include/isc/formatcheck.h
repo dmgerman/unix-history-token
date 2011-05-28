@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: formatcheck.h,v 1.7.18.2 2005/04/29 00:16:54 marka Exp $ */
+comment|/* $Id: formatcheck.h,v 1.7.18.2 2005-04-29 00:16:54 marka Exp $ */
 end_comment
 
 begin_ifndef

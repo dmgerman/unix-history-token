@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2005  Internet Systems Consortium, Inc. ("ISC")  *  
 end_comment
 
 begin_comment
-comment|/* $Id: atomic.h,v 1.1.2.1 2005/07/09 07:14:00 jinmei Exp $ */
+comment|/* $Id: atomic.h,v 1.1.2.1 2005-07-09 07:14:00 jinmei Exp $ */
 end_comment
 
 begin_ifndef

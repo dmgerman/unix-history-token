@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2008  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/*  * $Id: tkey.c,v 1.76.18.7 2008/01/02 23:46:02 tbox Exp $  */
+comment|/*  * $Id: tkey.c,v 1.76.18.7 2008-01-02 23:46:02 tbox Exp $  */
 end_comment
 
 begin_comment

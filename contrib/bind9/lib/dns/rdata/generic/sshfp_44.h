@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: sshfp_44.h,v 1.2.18.3 2006/03/10 04:04:32 marka Exp $ */
+comment|/* $Id: sshfp_44.h,v 1.2.18.3 2006-03-10 04:04:32 marka Exp $ */
 end_comment
 
 begin_comment

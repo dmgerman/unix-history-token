@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: interfacemgr.h,v 1.26.18.4 2005/04/27 05:00:35 sra Exp $ */
+comment|/* $Id: interfacemgr.h,v 1.26.18.4 2005-04-27 05:00:35 sra Exp $ */
 end_comment
 
 begin_ifndef

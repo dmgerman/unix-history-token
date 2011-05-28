@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: string.h,v 1.12.18.6 2007/09/13 05:04:01 each Exp $ */
+comment|/* $Id: string.h,v 1.12.18.6 2007-09-13 05:04:01 each Exp $ */
 end_comment
 
 begin_ifndef

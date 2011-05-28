@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: tkeyconf.h,v 1.10.18.4 2006/03/02 00:37:21 marka Exp $ */
+comment|/* $Id: tkeyconf.h,v 1.10.18.4 2006-03-02 00:37:21 marka Exp $ */
 end_comment
 
 begin_ifndef

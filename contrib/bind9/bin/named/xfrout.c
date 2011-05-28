@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006, 2008, 2009  Internet Systems Consortium, 
 end_comment
 
 begin_comment
-comment|/* $Id: xfrout.c,v 1.115.18.13 2009/01/19 00:36:26 marka Exp $ */
+comment|/* $Id: xfrout.c,v 1.115.18.13 2009-01-19 00:36:26 marka Exp $ */
 end_comment
 
 begin_include

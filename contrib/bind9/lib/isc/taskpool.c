@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: taskpool.c,v 1.12.18.3 2005/11/30 03:44:39 marka Exp $ */
+comment|/* $Id: taskpool.c,v 1.12.18.3 2005-11-30 03:44:39 marka Exp $ */
 end_comment
 
 begin_comment

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: nsupdate.c,v 1.130.18.24 2009/04/30 23:46:03 tbox Exp $ */
+comment|/* $Id: nsupdate.c,v 1.130.18.24 2009-04-30 23:46:03 tbox Exp $ */
 end_comment
 
 begin_comment

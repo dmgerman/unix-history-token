@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: quota.h,v 1.10.18.4 2005/08/11 15:01:54 marka Exp $ */
+comment|/* $Id: quota.h,v 1.10.18.4 2005-08-11 15:01:54 marka Exp $ */
 end_comment
 
 begin_ifndef

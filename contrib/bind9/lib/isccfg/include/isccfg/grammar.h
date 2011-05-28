@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: grammar.h,v 1.4.18.8 2006/02/28 03:10:49 marka Exp $ */
+comment|/* $Id: grammar.h,v 1.4.18.8 2006-02-28 03:10:49 marka Exp $ */
 end_comment
 
 begin_ifndef

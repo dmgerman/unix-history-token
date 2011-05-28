@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: socket.c,v 1.237.18.68 2009/09/07 02:17:09 marka Exp $ */
+comment|/* $Id: socket.c,v 1.237.18.68 2009-09-07 02:17:09 marka Exp $ */
 end_comment
 
 begin_comment

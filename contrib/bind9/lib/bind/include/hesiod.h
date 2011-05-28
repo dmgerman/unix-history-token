@@ -8,7 +8,7 @@ comment|/*! \file   * \brief  * This file is primarily maintained by<tytso@mit.e
 end_comment
 
 begin_comment
-comment|/*  * $Id: hesiod.h,v 1.3.18.1 2005/04/27 05:00:49 sra Exp $  */
+comment|/*  * $Id: hesiod.h,v 1.3.18.1 2005-04-27 05:00:49 sra Exp $  */
 end_comment
 
 begin_ifndef

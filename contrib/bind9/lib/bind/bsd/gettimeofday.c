@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gettimeofday.c,v 1.3.332.1 2005/04/27 05:00:43 sra Exp $"
+literal|"$Id: gettimeofday.c,v 1.3.332.1 2005-04-27 05:00:43 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 

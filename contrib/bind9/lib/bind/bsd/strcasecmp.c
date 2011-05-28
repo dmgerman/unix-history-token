@@ -32,7 +32,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: strcasecmp.c,v 1.1.352.1 2005/04/27 05:00:45 sra Exp $"
+literal|"$Id: strcasecmp.c,v 1.1.352.1 2005-04-27 05:00:45 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 

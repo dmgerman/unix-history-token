@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: check-tool.c,v 1.10.18.23 2009/09/24 21:38:50 jinmei Exp $ */
+comment|/* $Id: check-tool.c,v 1.10.18.23 2009-09-24 21:38:50 jinmei Exp $ */
 end_comment
 
 begin_comment

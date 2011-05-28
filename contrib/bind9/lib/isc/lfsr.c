@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: lfsr.c,v 1.14.18.4 2005/10/14 01:28:29 marka Exp $ */
+comment|/* $Id: lfsr.c,v 1.14.18.4 2005-10-14 01:28:29 marka Exp $ */
 end_comment
 
 begin_comment

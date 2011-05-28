@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2005  Internet Systems Consortium, Inc. ("ISC")  *  
 end_comment
 
 begin_comment
-comment|/* $Id: ipseckey_45.h,v 1.2.2.1 2005/07/07 03:17:36 marka Exp $ */
+comment|/* $Id: ipseckey_45.h,v 1.2.2.1 2005-07-07 03:17:36 marka Exp $ */
 end_comment
 
 begin_ifndef

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2009  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: serial.h,v 1.10.18.4 2009/01/19 23:46:16 tbox Exp $ */
+comment|/* $Id: serial.h,v 1.10.18.4 2009-01-19 23:46:16 tbox Exp $ */
 end_comment
 
 begin_ifndef

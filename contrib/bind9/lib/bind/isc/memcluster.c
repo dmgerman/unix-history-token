@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: memcluster.c,v 1.5.18.6 2006/08/30 23:30:35 marka Exp $"
+literal|"$Id: memcluster.c,v 1.5.18.6 2006-08-30 23:30:35 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 

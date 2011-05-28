@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: rootns.h,v 1.9.18.3 2005/04/27 05:01:38 sra Exp $ */
+comment|/* $Id: rootns.h,v 1.9.18.3 2005-04-27 05:01:38 sra Exp $ */
 end_comment
 
 begin_ifndef

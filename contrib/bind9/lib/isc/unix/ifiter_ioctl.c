@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: ifiter_ioctl.c,v 1.44.18.17 2009/01/19 23:46:16 tbox Exp $ */
+comment|/* $Id: ifiter_ioctl.c,v 1.44.18.17 2009-01-19 23:46:16 tbox Exp $ */
 end_comment
 
 begin_comment

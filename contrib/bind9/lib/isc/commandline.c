@@ -8,7 +8,7 @@ comment|/*  * Copyright (c) 1987, 1993, 1994  *	The Regents of the University of
 end_comment
 
 begin_comment
-comment|/* $Id: commandline.c,v 1.16.18.2 2005/04/29 00:16:45 marka Exp $ */
+comment|/* $Id: commandline.c,v 1.16.18.2 2005-04-29 00:16:45 marka Exp $ */
 end_comment
 
 begin_comment

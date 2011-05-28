@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: dbiterator.c,v 1.14.18.2 2005/04/29 00:15:50 marka Exp $ */
+comment|/* $Id: dbiterator.c,v 1.14.18.2 2005-04-29 00:15:50 marka Exp $ */
 end_comment
 
 begin_comment

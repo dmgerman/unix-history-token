@@ -8,7 +8,7 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*  *	$Id: nameser.h,v 1.7.18.2 2008/04/03 23:15:15 marka Exp $  */
+comment|/*  *	$Id: nameser.h,v 1.7.18.2 2008-04-03 23:15:15 marka Exp $  */
 end_comment
 
 begin_ifndef

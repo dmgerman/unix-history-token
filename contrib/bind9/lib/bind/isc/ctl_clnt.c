@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ctl_clnt.c,v 1.7.18.3 2008/02/18 04:04:06 marka Exp $"
+literal|"$Id: ctl_clnt.c,v 1.7.18.3 2008-02-18 04:04:06 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 

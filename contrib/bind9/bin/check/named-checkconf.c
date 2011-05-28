@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007, 2009  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: named-checkconf.c,v 1.28.18.18 2009/02/16 23:46:03 tbox Exp $ */
+comment|/* $Id: named-checkconf.c,v 1.28.18.18 2009-02-16 23:46:03 tbox Exp $ */
 end_comment
 
 begin_comment
