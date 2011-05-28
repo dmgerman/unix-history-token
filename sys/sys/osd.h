@@ -73,6 +73,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|OSD_KHELP
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
 name|OSD_FIRST
 value|OSD_THREAD
 end_define
@@ -81,7 +88,7 @@ begin_define
 define|#
 directive|define
 name|OSD_LAST
-value|OSD_JAIL
+value|OSD_KHELP
 end_define
 
 begin_typedef
