@@ -4561,7 +4561,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * This is called during e500_init, before the system is really initialized.  */
+comment|/*  * This is called during booke_init, before the system is really initialized.  */
 end_comment
 
 begin_function
