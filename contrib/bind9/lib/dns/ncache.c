@@ -705,7 +705,7 @@ name|r
 operator|.
 name|length
 operator|<
-literal|2
+literal|3
 condition|)
 return|return
 operator|(
