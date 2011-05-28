@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007-2009  Internet Systems Consortium, 
 end_comment
 
 begin_comment
-comment|/* $Id: timer.c,v 1.84.58.4 2009/01/23 23:47:21 tbox Exp $ */
+comment|/* $Id: timer.c,v 1.84.58.4 2009-01-23 23:47:21 tbox Exp $ */
 end_comment
 
 begin_comment

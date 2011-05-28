@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2006, 2007, 2009  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: atomic.h,v 1.4.326.3 2009/06/24 02:21:28 marka Exp $ */
+comment|/* $Id: atomic.h,v 1.4.326.3 2009-06-24 02:21:28 marka Exp $ */
 end_comment
 
 begin_ifndef

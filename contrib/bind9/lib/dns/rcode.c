@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2008, 2010  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: rcode.c,v 1.8.48.2 2010/01/15 23:47:33 tbox Exp $ */
+comment|/* $Id: rcode.c,v 1.8.48.2 2010-01-15 23:47:33 tbox Exp $ */
 end_comment
 
 begin_include

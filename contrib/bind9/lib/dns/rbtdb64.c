@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: rbtdb64.c,v 1.11 2007/06/19 23:47:16 tbox Exp $ */
+comment|/* $Id: rbtdb64.c,v 1.11 2007-06-19 23:47:16 tbox Exp $ */
 end_comment
 
 begin_comment

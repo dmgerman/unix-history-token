@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2007  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: hinfo_13.c,v 1.44 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: hinfo_13.c,v 1.44 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment

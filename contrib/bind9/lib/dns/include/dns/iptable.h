@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2007  Internet Systems Consortium, Inc. ("ISC")  *  
 end_comment
 
 begin_comment
-comment|/* $Id: iptable.h,v 1.4 2007/09/14 01:46:05 marka Exp $ */
+comment|/* $Id: iptable.h,v 1.4 2007-09-14 01:46:05 marka Exp $ */
 end_comment
 
 begin_ifndef

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lwinetpton.c,v 1.12 2007/06/19 23:47:22 tbox Exp $"
+literal|"$Id: lwinetpton.c,v 1.12 2007-06-19 23:47:22 tbox Exp $"
 decl_stmt|;
 end_decl_stmt
 

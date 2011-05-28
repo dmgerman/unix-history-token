@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: cache.c,v 1.80.50.3 2009/05/06 23:34:30 jinmei Exp $ */
+comment|/* $Id: cache.c,v 1.80.50.3 2009-05-06 23:34:30 jinmei Exp $ */
 end_comment
 
 begin_comment
