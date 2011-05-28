@@ -581,14 +581,20 @@ modifier|*
 name|ccv
 decl_stmt|;
 comment|/* congestion control specific vars */
+name|struct
+name|osd
+modifier|*
+name|osd
+decl_stmt|;
+comment|/* storage for Khelp module data */
 name|void
 modifier|*
 name|t_pspare2
 index|[
-literal|4
+literal|3
 index|]
 decl_stmt|;
-comment|/* 4 TBD */
+comment|/* 3 TBD */
 name|uint64_t
 name|_pad
 index|[
@@ -1893,6 +1899,63 @@ define|\
 value|kmod_tcpstat_inc(offsetof(struct tcpstat, name) / sizeof(u_long))
 end_define
 
+begin_comment
+comment|/*  * TCP specific helper hook point identifiers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HHOOK_TCP_EST_IN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HHOOK_TCP_EST_OUT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HHOOK_TCP_LAST
+value|HHOOK_TCP_EST_OUT
+end_define
+
+begin_struct
+struct|struct
+name|tcp_hhook_data
+block|{
+name|struct
+name|tcpcb
+modifier|*
+name|tp
+decl_stmt|;
+name|struct
+name|tcphdr
+modifier|*
+name|th
+decl_stmt|;
+name|struct
+name|tcpopt
+modifier|*
+name|to
+decl_stmt|;
+name|long
+name|len
+decl_stmt|;
+name|int
+name|tso
+decl_stmt|;
+name|tcp_seq
+name|curack
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_endif
 endif|#
 directive|endif
@@ -2471,6 +2534,30 @@ define|#
 directive|define
 name|V_tcp_ecn_maxretries
 value|VNET(tcp_ecn_maxretries)
+end_define
+
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+expr|struct
+name|hhook_head
+operator|*
+argument_list|,
+name|tcp_hhh
+index|[
+name|HHOOK_TCP_LAST
+operator|+
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_tcp_hhh
+value|VNET(tcp_hhh)
 end_define
 
 begin_function_decl
