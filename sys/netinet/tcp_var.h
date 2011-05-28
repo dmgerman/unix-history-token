@@ -162,10 +162,10 @@ decl_stmt|;
 name|int
 name|sack_bytes_rexmit
 decl_stmt|;
-name|int
-name|ispare
+name|tcp_seq
+name|last_sack_ack
 decl_stmt|;
-comment|/* explicit pad for 64bit alignment */
+comment|/* Most recent/largest sacked ack */
 name|uint64_t
 name|_pad
 index|[

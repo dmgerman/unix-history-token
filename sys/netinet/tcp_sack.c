@@ -1598,6 +1598,16 @@ literal|1
 index|]
 expr_stmt|;
 comment|/* Last SACK block */
+name|tp
+operator|->
+name|sackhint
+operator|.
+name|last_sack_ack
+operator|=
+name|sblkp
+operator|->
+name|end
+expr_stmt|;
 if|if
 condition|(
 name|SEQ_LT
