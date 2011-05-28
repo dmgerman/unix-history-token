@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: main.h,v 1.15 2007/06/19 23:46:59 tbox Exp $ */
+comment|/* $Id: main.h,v 1.15 2007-06-19 23:46:59 tbox Exp $ */
 end_comment
 
 begin_ifndef

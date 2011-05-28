@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: aclconf.c,v 1.22.34.4 2009/10/01 23:47:17 tbox Exp $ */
+comment|/* $Id: aclconf.c,v 1.22.34.4 2009-10-01 23:47:17 tbox Exp $ */
 end_comment
 
 begin_include

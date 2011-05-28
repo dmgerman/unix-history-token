@@ -17,7 +17,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: nsap_22.h,v 1.18 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: nsap_22.h,v 1.18 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment

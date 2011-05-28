@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: rdataset.h,v 1.65.50.4 2010-02-25 10:56:41 tbox Exp $ */
+comment|/* $Id: rdataset.h,v 1.65.50.4.6.1 2011-05-27 00:19:19 each Exp $ */
 end_comment
 
 begin_ifndef
@@ -1280,6 +1280,22 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Mark the rdataset to be expired in the backing database.  */
+end_comment
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|dns_trust_totext
+parameter_list|(
+name|dns_trust_t
+name|trust
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Display trust in textual form.  */
 end_comment
 
 begin_macro

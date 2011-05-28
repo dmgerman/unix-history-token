@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: config.c,v 1.93.14.2 2009/03/17 23:47:28 tbox Exp $ */
+comment|/* $Id: config.c,v 1.93.14.2 2009-03-17 23:47:28 tbox Exp $ */
 end_comment
 
 begin_comment

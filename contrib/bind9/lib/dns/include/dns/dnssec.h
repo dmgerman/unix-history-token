@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007, 2009  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: dnssec.h,v 1.32.332.6 2009/06/22 23:47:18 tbox Exp $ */
+comment|/* $Id: dnssec.h,v 1.32.332.6 2009-06-22 23:47:18 tbox Exp $ */
 end_comment
 
 begin_ifndef
