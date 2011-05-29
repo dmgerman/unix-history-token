@@ -291,7 +291,11 @@ operator|&
 name|fans
 argument_list|)
 condition|)
-return|return;
+name|kproc_exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 literal|1
