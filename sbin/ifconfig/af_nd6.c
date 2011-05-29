@@ -892,12 +892,6 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|isinet6
-condition|)
-return|return;
 name|memset
 argument_list|(
 operator|&
@@ -995,6 +989,7 @@ argument_list|(
 name|s6
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Display an nd6 line only for cases of IPv6 address + non-zero flag 	 * or accept_rtadv flag. 	 */
 if|if
 condition|(
 name|nd
@@ -1007,6 +1002,26 @@ literal|0
 operator|&&
 operator|!
 name|isdefif
+condition|)
+return|return;
+if|if
+condition|(
+name|nd
+operator|.
+name|ndi
+operator|.
+name|flags
+operator|&
+name|ND6_IFF_ACCEPT_RTADV
+condition|)
+name|isinet6
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|isinet6
 condition|)
 return|return;
 name|printb
