@@ -1673,7 +1673,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/*                          * Short circuit looking at our parent directly                          * since we have encapsulated all of its information                          */
+comment|/* 			* Short circuit looking at our parent directly 			* since we have encapsulated all of its information 			*/
 name|newtag
 operator|->
 name|filter
@@ -1995,7 +1995,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-comment|/*                                  * Last reference count, so                                  * release our reference                                  * count on our parent.                                  */
+comment|/* 				 * Last reference count, so 				 * release our reference 				 * count on our parent. 				 */
 name|dmat
 operator|=
 name|parent
@@ -2630,39 +2630,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*                  * XXX Use Contigmalloc until it is merged into this facility                  *     and handles multi-seg allocations.  Nobody is doing                  *     multi-seg allocations yet though.                  */
-name|vm_paddr_t
-name|maxphys
-decl_stmt|;
-if|if
-condition|(
-operator|(
-name|uint32_t
-operator|)
-name|dmat
-operator|->
-name|lowaddr
-operator|>=
-name|MIPS_KSEG0_LARGEST_PHYS
-condition|)
-block|{
-comment|/* Note in the else case I just put in what was already 		    * being passed in dmat->lowaddr. I am not sure 		    * how this would have worked. Since lowaddr is in the 		    * max address postion. I would have thought that the 		    * caller would have wanted dmat->highaddr. That is 		    * presuming they are asking for physical addresses 		    * which is what contigmalloc takes. - RRS 		    */
-name|maxphys
-operator|=
-name|MIPS_KSEG0_LARGEST_PHYS
-operator|-
-literal|1
-expr_stmt|;
-block|}
-else|else
-block|{
-name|maxphys
-operator|=
-name|dmat
-operator|->
-name|lowaddr
-expr_stmt|;
-block|}
+comment|/* 		 * XXX Use Contigmalloc until it is merged into this facility 		 *     and handles multi-seg allocations.  Nobody is doing 		 *     multi-seg allocations yet though. 		 */
 operator|*
 name|vaddr
 operator|=
@@ -2766,12 +2734,16 @@ operator|(
 name|void
 operator|*
 operator|)
-name|MIPS_PHYS_TO_KSEG1
+name|pmap_mapdev
 argument_list|(
 name|vtophys
 argument_list|(
 name|tmpaddr
 argument_list|)
+argument_list|,
+name|dmat
+operator|->
+name|maxsize
 argument_list|)
 expr_stmt|;
 name|newmap
@@ -2883,6 +2855,28 @@ operator|->
 name|origbuffer
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|map
+operator|->
+name|flags
+operator|&
+name|DMAMAP_UNCACHEABLE
+condition|)
+name|pmap_unmapdev
+argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
+name|map
+operator|->
+name|allocbuffer
+argument_list|,
+name|dmat
+operator|->
+name|maxsize
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|map
@@ -3018,13 +3012,10 @@ expr_stmt|;
 comment|/* 		 * Count the number of bounce pages 		 * needed in order to complete this transfer 		 */
 name|vaddr
 operator|=
-name|trunc_page
-argument_list|(
 operator|(
 name|vm_offset_t
 operator|)
 name|buf
-argument_list|)
 expr_stmt|;
 name|vendaddr
 operator|=
@@ -3042,6 +3033,9 @@ operator|<
 name|vendaddr
 condition|)
 block|{
+name|bus_size_t
+name|sg_len
+decl_stmt|;
 name|KASSERT
 argument_list|(
 name|kernel_pmap
@@ -3052,6 +3046,19 @@ operator|(
 literal|"pmap is not kernel pmap"
 operator|)
 argument_list|)
+expr_stmt|;
+name|sg_len
+operator|=
+name|PAGE_SIZE
+operator|-
+operator|(
+operator|(
+name|vm_offset_t
+operator|)
+name|vaddr
+operator|&
+name|PAGE_MASK
+operator|)
 expr_stmt|;
 name|paddr
 operator|=
@@ -3083,14 +3090,27 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|sg_len
+operator|=
+name|roundup2
+argument_list|(
+name|sg_len
+argument_list|,
+name|dmat
+operator|->
+name|alignment
+argument_list|)
+expr_stmt|;
 name|map
 operator|->
 name|pagesneeded
 operator|++
 expr_stmt|;
+block|}
 name|vaddr
 operator|+=
-name|PAGE_SIZE
+name|sg_len
 expr_stmt|;
 block|}
 name|CTR1
@@ -6449,11 +6469,13 @@ operator|=
 operator|(
 name|vm_offset_t
 operator|)
-name|MIPS_PHYS_TO_KSEG1
+name|pmap_mapdev
 argument_list|(
 name|bpage
 operator|->
 name|busaddr
+argument_list|,
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 name|mtx_lock

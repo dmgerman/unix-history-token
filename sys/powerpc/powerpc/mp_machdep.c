@@ -50,6 +50,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/pcpu.h>
 end_include
 
@@ -128,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/platform.h>
 end_include
 
@@ -179,14 +197,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|volatile
 specifier|static
-name|uint32_t
-name|ap_decr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|volatile
-specifier|static
 name|u_quad_t
 name|ap_timebase
 decl_stmt|;
@@ -198,6 +208,24 @@ name|u_int
 name|ipi_msg_cnt
 index|[
 literal|32
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|ap_boot_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|pcb
+name|stoppcbs
+index|[
+name|MAXCPU
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -240,22 +268,43 @@ literal|0
 condition|)
 empty_stmt|;
 comment|/* Initialize DEC and TB, sync with the BSP values */
-name|decr_ap_init
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+comment|/* Writing to the time base register is hypervisor-privileged */
+if|if
+condition|(
+name|mfmsr
 argument_list|()
-expr_stmt|;
+operator|&
+name|PSL_HV
+condition|)
 name|mttb
 argument_list|(
 name|ap_timebase
 argument_list|)
 expr_stmt|;
-asm|__asm __volatile("mtdec %0" :: "r"(ap_decr));
-name|atomic_add_int
+else|#
+directive|else
+name|mttb
+argument_list|(
+name|ap_timebase
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|decr_ap_init
+argument_list|()
+expr_stmt|;
+comment|/* Serialize console output and AP count increment */
+name|mtx_lock_spin
 argument_list|(
 operator|&
-name|ap_awake
-argument_list|,
-literal|1
+name|ap_boot_mtx
 argument_list|)
+expr_stmt|;
+name|ap_awake
+operator|++
 expr_stmt|;
 name|printf
 argument_list|(
@@ -265,6 +314,12 @@ name|PCPU_GET
 argument_list|(
 name|cpuid
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|ap_boot_mtx
 argument_list|)
 expr_stmt|;
 comment|/* Initialize curthread */
@@ -287,14 +342,9 @@ operator|->
 name|td_pcb
 argument_list|)
 expr_stmt|;
-comment|/* Let the DEC and external interrupts go */
-name|mtmsr
-argument_list|(
-name|mfmsr
+comment|/* Start per-CPU event timers. */
+name|cpu_initclocks_ap
 argument_list|()
-operator||
-name|PSL_EE
-argument_list|)
 expr_stmt|;
 comment|/* Announce ourselves awake, and enter the scheduler */
 name|sched_throw
@@ -302,24 +352,6 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|struct
-name|cpu_group
-modifier|*
-name|cpu_topo
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-name|smp_topo_none
-argument_list|()
-operator|)
-return|;
 block|}
 end_function
 
@@ -699,6 +731,9 @@ literal|"cpu%d: dev=%x"
 argument_list|,
 name|i
 argument_list|,
+operator|(
+name|int
+operator|)
 name|pc
 operator|->
 name|pc_hwref
@@ -751,6 +786,18 @@ operator|<=
 literal|1
 condition|)
 return|return;
+name|mtx_init
+argument_list|(
+operator|&
+name|ap_boot_mtx
+argument_list|,
+literal|"ap boot"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 name|cpus
 operator|=
 literal|0
@@ -802,6 +849,9 @@ name|pc
 operator|->
 name|pc_cpuid
 argument_list|,
+operator|(
+name|int
+operator|)
 name|pc
 operator|->
 name|pc_hwref
@@ -903,7 +953,6 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Provide our current DEC and TB values for APs */
-asm|__asm __volatile("mfdec %0" : "=r"(ap_decr));
 name|ap_timebase
 operator|=
 name|mftb
@@ -921,11 +970,31 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+comment|/* Writing to the time base register is hypervisor-privileged */
+if|if
+condition|(
+name|mfmsr
+argument_list|()
+operator|&
+name|PSL_HV
+condition|)
 name|mttb
 argument_list|(
 name|ap_timebase
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|mttb
+argument_list|(
+name|ap_timebase
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 name|ap_awake
@@ -1139,6 +1208,18 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+name|savectx
+argument_list|(
+operator|&
+name|stoppcbs
+index|[
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+index|]
+argument_list|)
+expr_stmt|;
 name|self
 operator|=
 name|PCPU_GET
@@ -1201,6 +1282,22 @@ name|__func__
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|IPI_HARDCLOCK
+case|:
+name|CTR1
+argument_list|(
+name|KTR_SMP
+argument_list|,
+literal|"%s: IPI_HARDCLOCK"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|hardclockintr
+argument_list|()
+expr_stmt|;
+break|break;
 block|}
 block|}
 return|return
@@ -1258,7 +1355,7 @@ argument_list|)
 expr_stmt|;
 name|PIC_IPI
 argument_list|(
-name|pic
+name|root_pic
 argument_list|,
 name|pc
 operator|->
@@ -1322,6 +1419,34 @@ name|ipi
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Send an IPI to a specific CPU. */
+end_comment
+
+begin_function
+name|void
+name|ipi_cpu
+parameter_list|(
+name|int
+name|cpu
+parameter_list|,
+name|u_int
+name|ipi
+parameter_list|)
+block|{
+name|ipi_send
+argument_list|(
+name|cpuid_to_pcpu
+index|[
+name|cpu
+index|]
+argument_list|,
+name|ipi
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

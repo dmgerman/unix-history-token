@@ -249,20 +249,9 @@ name|M_NETGRAPH
 argument_list|,
 name|M_ZERO
 operator||
-name|M_NOWAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|priv
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
 comment|/* Link together node and private info */
 name|NG_NODE_SET_PRIVATE
 argument_list|(

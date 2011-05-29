@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-libdlpi.c,v 1.1.2.6 2008-04-14 20:41:52 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-libdlpi.c,v 1.6 2008-04-14 20:40:58 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -191,6 +191,17 @@ parameter_list|,
 name|int
 parameter_list|,
 name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|pcap_cleanup_libdlpi
+parameter_list|(
+name|pcap_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -437,7 +448,7 @@ if|if
 condition|(
 name|retv
 operator|==
-name|DLPI_SYSERR
+name|DL_SYSERR
 operator|&&
 name|errno
 operator|==
@@ -630,9 +641,6 @@ goto|;
 block|}
 block|}
 comment|/* Try to enable SAP promiscuity. */
-if|if
-condition|(
-operator|(
 name|retv
 operator|=
 name|dlpi_promiscon
@@ -643,14 +651,20 @@ name|dlpi_hd
 argument_list|,
 name|DL_PROMISC_SAP
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|retv
 operator|!=
 name|DLPI_SUCCESS
 condition|)
 block|{
 if|if
 condition|(
-operator|!
+name|p
+operator|->
+name|opt
+operator|.
 name|promisc
 condition|)
 block|{
@@ -773,7 +787,9 @@ name|pcap_conf_bufmod
 argument_list|(
 name|p
 argument_list|,
-name|snaplen
+name|p
+operator|->
+name|snapshot
 argument_list|,
 name|p
 operator|->

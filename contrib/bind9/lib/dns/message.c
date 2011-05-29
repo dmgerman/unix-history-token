@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: message.c,v 1.245.50.3 2009/11/24 03:25:53 marka Exp $ */
+comment|/* $Id: message.c,v 1.245.50.7 2010-06-03 05:29:03 marka Exp $ */
 end_comment
 
 begin_comment
@@ -6396,6 +6396,15 @@ name|tsigname
 operator|=
 name|name
 expr_stmt|;
+comment|/* Windows doesn't like TSIG names to be compressed. */
+name|msg
+operator|->
+name|tsigname
+operator|->
+name|attributes
+operator||=
+name|DNS_NAMEATTR_NOCOMPRESS
+expr_stmt|;
 name|rdataset
 operator|=
 name|NULL
@@ -10816,6 +10825,19 @@ name|ISC_FALSE
 expr_stmt|;
 if|if
 condition|(
+name|msg
+operator|->
+name|opcode
+operator|==
+name|dns_opcode_update
+condition|)
+name|first_section
+operator|=
+name|DNS_SECTION_ADDITIONAL
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|want_question_section
 condition|)
 block|{
@@ -14039,11 +14061,14 @@ name|ps
 operator|->
 name|ttl
 operator|&
-operator|~
-name|DNS_MESSAGEEXTFLAG_DO
-operator|&
 literal|0xffff
 expr_stmt|;
+name|mbz
+operator|&=
+operator|~
+name|DNS_MESSAGEEXTFLAG_DO
+expr_stmt|;
+comment|/* Known Flags. */
 if|if
 condition|(
 name|mbz
@@ -14155,19 +14180,6 @@ operator|&
 name|rdata
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|rdata
-operator|.
-name|length
-operator|<
-literal|4
-condition|)
-return|return
-operator|(
-name|ISC_R_SUCCESS
-operator|)
-return|;
 name|isc_buffer_init
 argument_list|(
 operator|&
@@ -14192,6 +14204,28 @@ operator|.
 name|length
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+name|isc_buffer_remaininglength
+argument_list|(
+operator|&
+name|optbuf
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|INSIST
+argument_list|(
+name|isc_buffer_remaininglength
+argument_list|(
+operator|&
+name|optbuf
+argument_list|)
+operator|>=
+literal|4U
+argument_list|)
+expr_stmt|;
 name|optcode
 operator|=
 name|isc_buffer_getuint16
@@ -14206,6 +14240,17 @@ name|isc_buffer_getuint16
 argument_list|(
 operator|&
 name|optbuf
+argument_list|)
+expr_stmt|;
+name|INSIST
+argument_list|(
+name|isc_buffer_remaininglength
+argument_list|(
+operator|&
+name|optbuf
+argument_list|)
+operator|>=
+name|optlen
 argument_list|)
 expr_stmt|;
 if|if
@@ -14268,11 +14313,11 @@ argument_list|)
 expr_stmt|;
 name|optdata
 operator|=
-name|rdata
-operator|.
-name|data
-operator|+
-literal|4
+name|isc_buffer_current
+argument_list|(
+operator|&
+name|optbuf
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -14368,6 +14413,14 @@ literal|")"
 argument_list|)
 expr_stmt|;
 block|}
+name|isc_buffer_forward
+argument_list|(
+operator|&
+name|optbuf
+argument_list|,
+name|optlen
+argument_list|)
+expr_stmt|;
 block|}
 name|ADD_STRING
 argument_list|(
@@ -14376,6 +14429,7 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|ISC_R_SUCCESS
@@ -14738,7 +14792,7 @@ name|ADD_STRING
 argument_list|(
 name|target
 argument_list|,
-literal|"\n;; flags: "
+literal|"\n;; flags:"
 argument_list|)
 expr_stmt|;
 if|if
@@ -14757,7 +14811,7 @@ name|ADD_STRING
 argument_list|(
 name|target
 argument_list|,
-literal|"qr "
+literal|" qr"
 argument_list|)
 expr_stmt|;
 if|if
@@ -14776,7 +14830,7 @@ name|ADD_STRING
 argument_list|(
 name|target
 argument_list|,
-literal|"aa "
+literal|" aa"
 argument_list|)
 expr_stmt|;
 if|if
@@ -14795,7 +14849,7 @@ name|ADD_STRING
 argument_list|(
 name|target
 argument_list|,
-literal|"tc "
+literal|" tc"
 argument_list|)
 expr_stmt|;
 if|if
@@ -14814,7 +14868,7 @@ name|ADD_STRING
 argument_list|(
 name|target
 argument_list|,
-literal|"rd "
+literal|" rd"
 argument_list|)
 expr_stmt|;
 if|if
@@ -14833,7 +14887,7 @@ name|ADD_STRING
 argument_list|(
 name|target
 argument_list|,
-literal|"ra "
+literal|" ra"
 argument_list|)
 expr_stmt|;
 if|if
@@ -14852,7 +14906,7 @@ name|ADD_STRING
 argument_list|(
 name|target
 argument_list|,
-literal|"ad "
+literal|" ad"
 argument_list|)
 expr_stmt|;
 if|if
@@ -14871,7 +14925,27 @@ name|ADD_STRING
 argument_list|(
 name|target
 argument_list|,
-literal|"cd "
+literal|" cd"
+argument_list|)
+expr_stmt|;
+comment|/* 		 * The final unnamed flag must be zero. 		 */
+if|if
+condition|(
+operator|(
+name|msg
+operator|->
+name|flags
+operator|&
+literal|0x0040U
+operator|)
+operator|!=
+literal|0
+condition|)
+name|ADD_STRING
+argument_list|(
+name|target
+argument_list|,
+literal|"; MBZ: 0x4"
 argument_list|)
 expr_stmt|;
 if|if

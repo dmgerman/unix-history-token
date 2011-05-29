@@ -108,6 +108,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Safely get the hostid of the specified zone (defaults to machine's hostid  * if the specified zone doesn't emulate a hostid).  Passing NULL retrieves  * the global zone's (i.e., physical system's) hostid.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|uint32_t
+name|zone_get_hostid
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_else
 else|#
 directive|else

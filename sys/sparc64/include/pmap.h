@@ -109,7 +109,7 @@ decl_stmt|;
 name|vm_object_t
 name|pm_tsb_obj
 decl_stmt|;
-name|u_int
+name|cpumask_t
 name|pm_active
 decl_stmt|;
 name|u_int
@@ -166,7 +166,7 @@ name|PMAP_LOCK_INIT
 parameter_list|(
 name|pmap
 parameter_list|)
-value|mtx_init(&(pmap)->pm_mtx, "pmap", \ 				    NULL, MTX_DEF | MTX_DUPOK)
+value|mtx_init(&(pmap)->pm_mtx, "pmap",	\ 				    NULL, MTX_DEF | MTX_DUPOK)
 end_define
 
 begin_define
@@ -394,6 +394,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|pmap_set_kctx
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -463,7 +472,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|static long name; \ 	SYSCTL_LONG(_debug_pmap_stats, OID_AUTO, name, CTLFLAG_RW, \&name, 0, "")
+value|static long name; \ 	SYSCTL_LONG(_debug_pmap_stats, OID_AUTO, name, CTLFLAG_RW,	\&name, 0, "")
 end_define
 
 begin_define

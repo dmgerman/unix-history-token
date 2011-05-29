@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|NFS_TICKINTVL
-value|10
+value|500
 end_define
 
 begin_comment
@@ -209,6 +209,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NFS_RETRANS_TCP
+value|2
+end_define
+
+begin_comment
+comment|/* Num of retrans for TCP soft mounts */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NFS_MAXGRPS
 value|16
 end_define
@@ -327,7 +338,7 @@ begin_define
 define|#
 directive|define
 name|NFS_DEFRAHEAD
-value|0
+value|1
 end_define
 
 begin_comment
@@ -338,11 +349,22 @@ begin_define
 define|#
 directive|define
 name|NFS_MAXRAHEAD
-value|32
+value|16
 end_define
 
 begin_comment
 comment|/* Max. read ahead # blocks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFS_MAXASYNCDAEMON
+value|64
+end_define
+
+begin_comment
+comment|/* Max. number async_daemons runnable */
 end_comment
 
 begin_define
@@ -2515,6 +2537,9 @@ name|savereply
 decl_stmt|;
 name|int
 name|modifyfs
+decl_stmt|;
+name|int
+name|lktype
 decl_stmt|;
 block|}
 struct|;

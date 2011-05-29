@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<memstat.h>
 end_include
 
@@ -812,6 +818,7 @@ specifier|const
 name|char
 modifier|*
 name|spaces
+name|__unused
 parameter_list|)
 block|{
 name|printf
@@ -1004,7 +1011,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s};  // total cnt %llu, total entries %llu\n"
+literal|"%s};  // total cnt %ju, total entries %ju\n"
 argument_list|,
 name|spaces
 argument_list|,
@@ -1072,7 +1079,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s  uc_frees = %llu;\n"
+literal|"%s  uc_frees = %ju;\n"
 argument_list|,
 name|spaces
 argument_list|,
@@ -1083,7 +1090,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s  uc_allocs = %llu;\n"
+literal|"%s  uc_allocs = %ju;\n"
 argument_list|,
 name|spaces
 argument_list|,
@@ -1383,6 +1390,12 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
+name|char
+name|errbuf
+index|[
+name|_POSIX2_LINE_MAX
+index|]
+decl_stmt|;
 name|memf
 operator|=
 name|nlistf
@@ -1467,7 +1480,7 @@ argument_list|()
 expr_stmt|;
 name|kvm
 operator|=
-name|kvm_open
+name|kvm_openfiles
 argument_list|(
 name|nlistf
 argument_list|,
@@ -1477,7 +1490,7 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|,
-literal|"umastat"
+name|errbuf
 argument_list|)
 expr_stmt|;
 if|if
@@ -1486,12 +1499,14 @@ name|kvm
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"kvm_open"
+literal|"kvm_openfiles: %s"
+argument_list|,
+name|errbuf
 argument_list|)
 expr_stmt|;
 if|if
@@ -2130,7 +2145,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    uz_allocs = %llu;\n"
+literal|"    uz_allocs = %ju;\n"
 argument_list|,
 name|uzp_userspace
 operator|->
@@ -2139,7 +2154,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    uz_frees = %llu;\n"
+literal|"    uz_frees = %ju;\n"
 argument_list|,
 name|uzp_userspace
 operator|->
@@ -2148,7 +2163,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    uz_fails = %llu;\n"
+literal|"    uz_fails = %ju;\n"
 argument_list|,
 name|uzp_userspace
 operator|->
@@ -2178,8 +2193,7 @@ argument_list|(
 name|kvm
 argument_list|,
 operator|(
-expr|struct
-name|bucketlist
+name|void
 operator|*
 operator|)
 operator|&
@@ -2197,8 +2211,7 @@ argument_list|(
 name|kvm
 argument_list|,
 operator|(
-expr|struct
-name|bucketlist
+name|void
 operator|*
 operator|)
 operator|&

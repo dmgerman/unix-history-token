@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: cfg.h,v 1.44 2007/10/12 04:17:18 each Exp $ */
+comment|/* $Id: cfg.h,v 1.44 2007-10-12 04:17:18 each Exp $ */
 end_comment
 
 begin_ifndef

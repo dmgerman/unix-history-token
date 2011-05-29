@@ -38,10 +38,18 @@ argument_list|(
 name|OPENSSL_IMPLEMENTS_strncasecmp
 argument_list|)
 operator|&&
+expr|\
 operator|!
 name|defined
 argument_list|(
 name|OPENSSL_SYSNAME_WIN32
+argument_list|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|NETWARE_CLIB
 argument_list|)
 end_if
 

@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -124,6 +117,7 @@ name|pgp
 operator|!=
 name|NULL
 condition|)
+block|{
 name|dt_list_append
 argument_list|(
 operator|&
@@ -134,7 +128,9 @@ argument_list|,
 name|pgp
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 operator|(
 name|void
 operator|)
@@ -145,6 +141,12 @@ argument_list|,
 name|EDT_NOMEM
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 comment|/* 	 * By default, programs start with DOF version 1 so that output files 	 * containing DOF are backward compatible. If a program requires new 	 * DOF features, the version is increased as needed. 	 */
 name|pgp
 operator|->
@@ -704,6 +706,14 @@ case|:
 name|err
 operator|=
 name|EDT_DIFSIZE
+expr_stmt|;
+break|break;
+case|case
+name|EBUSY
+case|:
+name|err
+operator|=
+name|EDT_ENABLING_ERR
 expr_stmt|;
 break|break;
 default|default:
@@ -2732,6 +2742,32 @@ operator|.
 name|dtvd_name
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+if|if
+condition|(
+name|fprintf
+argument_list|(
+name|out
+argument_list|,
+literal|"#include<sys/sdt.h>\n\n"
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|dt_set_errno
+argument_list|(
+name|dtp
+argument_list|,
+name|errno
+argument_list|)
+operator|)
+return|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|fprintf

@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mips/atheros/ar71xx_cpudef.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"uart_if.h"
 end_include
 

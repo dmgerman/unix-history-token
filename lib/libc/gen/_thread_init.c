@@ -23,6 +23,15 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_function_decl
+name|void
+name|_thread_init_stub
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 name|__weak_reference
 argument_list|(

@@ -294,7 +294,7 @@ if|if
 condition|(
 name|errnum
 operator|<
-literal|1
+literal|0
 operator|||
 name|errnum
 operator|>=

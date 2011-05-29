@@ -5475,11 +5475,6 @@ decl_stmt|,
 name|s_w
 decl_stmt|;
 name|int
-name|c_want
-decl_stmt|,
-name|s_want
-decl_stmt|;
-name|int
 name|i
 decl_stmt|,
 name|j
@@ -5666,14 +5661,6 @@ operator|=
 literal|1
 expr_stmt|;
 name|s_w
-operator|=
-literal|0
-expr_stmt|;
-name|c_want
-operator|=
-name|W_WRITE
-expr_stmt|;
-name|s_want
 operator|=
 literal|0
 expr_stmt|;

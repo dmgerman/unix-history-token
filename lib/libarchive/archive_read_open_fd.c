@@ -518,6 +518,12 @@ name|mine
 operator|->
 name|buffer
 expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 name|bytes_read
 operator|=
 name|read
@@ -542,6 +548,13 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EINTR
+condition|)
+continue|continue;
 name|archive_set_error
 argument_list|(
 name|a
@@ -561,6 +574,7 @@ operator|(
 name|bytes_read
 operator|)
 return|;
+block|}
 block|}
 end_function
 

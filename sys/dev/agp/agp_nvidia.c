@@ -1325,7 +1325,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Invalid aperture setting 0x%x"
+literal|"Invalid aperture setting 0x%x\n"
 argument_list|,
 name|pci_read_config
 argument_list|(

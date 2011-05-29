@@ -62,6 +62,7 @@ file|"af.h"
 end_include
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|tok
 name|af_values
@@ -186,6 +187,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|tok
 name|bsd_af_values

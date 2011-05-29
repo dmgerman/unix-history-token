@@ -1059,6 +1059,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NFE_PWR2_GATE_CLOCKS
+value|0x0f00
+end_define
+
+begin_define
+define|#
+directive|define
 name|NFE_MEDIA_SET
 value|0x10000
 end_define

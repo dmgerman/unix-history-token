@@ -137,6 +137,21 @@ directive|include
 file|"authfile.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|ssh_add_identity
+parameter_list|(
+name|auth
+parameter_list|,
+name|key
+parameter_list|,
+name|comment
+parameter_list|)
+define|\
+value|ssh_add_identity_constrained(auth, key, comment, 0, 0)
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -354,7 +369,7 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_DEBUG
 argument_list|,
-literal|"failed to load key from %s\n"
+literal|"failed to load key from %s"
 argument_list|,
 name|fn
 argument_list|)
@@ -369,7 +384,7 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_DEBUG
 argument_list|,
-literal|"loaded '%s' from %s\n"
+literal|"loaded '%s' from %s"
 argument_list|,
 name|comment
 argument_list|,

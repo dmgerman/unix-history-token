@@ -114,7 +114,7 @@ file|<dev/syscons/syscons.h>
 end_include
 
 begin_comment
-comment|/*  * XXX Placeholder.  * This calculations should be dynamically scaled by number of seperate sc  * devices.  A base value of 'extra_history_size' should be defined for  * each syscons unit, and added and subtracted from the dynamic  * 'extra_history_size' as units are added and removed.  This way, each time  * a new syscons unit goes online, extra_history_size is automatically bumped.  */
+comment|/*  * XXX Placeholder.  * This calculations should be dynamically scaled by number of separate sc  * devices.  A base value of 'extra_history_size' should be defined for  * each syscons unit, and added and subtracted from the dynamic  * 'extra_history_size' as units are added and removed.  This way, each time  * a new syscons unit goes online, extra_history_size is automatically bumped.  */
 end_comment
 
 begin_define
@@ -271,7 +271,7 @@ name|int
 name|wait
 parameter_list|)
 block|{
-comment|/* 	 * syscons unconditionally allocates buffers upto  	 * SC_HISTORY_SIZE lines or scp->ysize lines, whichever  	 * is larger. A value greater than that is allowed,  	 * subject to extra_history_size. 	 */
+comment|/* 	 * syscons unconditionally allocates buffers up to  	 * SC_HISTORY_SIZE lines or scp->ysize lines, whichever  	 * is larger. A value greater than that is allowed,  	 * subject to extra_history_size. 	 */
 name|sc_vtb_t
 modifier|*
 name|history
@@ -369,7 +369,7 @@ operator|-
 name|min_lines
 expr_stmt|;
 block|}
-comment|/* lines upto min_lines are always allowed. */
+comment|/* lines up to min_lines are always allowed. */
 name|min_lines
 operator|=
 name|imax

@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/linker_set.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/lock.h>
 end_include
 
@@ -439,7 +433,7 @@ name|df
 operator|->
 name|df_len
 operator|=
-name|DPCPU_MODSIZE
+name|DPCPU_MODMIN
 expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
@@ -1322,28 +1316,11 @@ block|{
 name|int
 name|id
 decl_stmt|;
-for|for
-control|(
-name|id
-operator|=
-literal|0
-init|;
-name|id
-operator|<=
-name|mp_maxid
-condition|;
-name|id
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|CPU_ABSENT
+name|CPU_FOREACH
 argument_list|(
-name|id
+argument|id
 argument_list|)
-condition|)
-continue|continue;
+block|{
 name|db_printf
 argument_list|(
 literal|"dpcpu_off[%2d] = 0x%jx (+ DPCPU_START = %p)\n"
@@ -1406,7 +1383,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"dynamic pcpu	= %p\n"
+literal|"dynamic pcpu = %p\n"
 argument_list|,
 operator|(
 name|void
@@ -1525,15 +1502,13 @@ name|NULL
 condition|)
 name|db_printf
 argument_list|(
-literal|"%p: pid %d \"%s\"\n"
+literal|"%p: tid %d \"%s\"\n"
 argument_list|,
 name|td
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_pid
+name|td_tid
 argument_list|,
 name|td
 operator|->
@@ -1581,6 +1556,8 @@ operator|&
 name|pc
 operator|->
 name|pc_spinlocks
+argument_list|,
+name|db_printf
 argument_list|)
 expr_stmt|;
 endif|#

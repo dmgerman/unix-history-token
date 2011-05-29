@@ -660,6 +660,8 @@ expr_stmt|;
 comment|/* check the CBLID bits for 80 conductor cable detection */
 if|if
 condition|(
+name|ata_dma_check_80pin
+operator|&&
 name|mode
 operator|>
 name|ATA_UDMA2
@@ -1046,6 +1048,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ata_dma_check_80pin
+operator|&&
 name|mode
 operator|>
 name|ATA_UDMA2

@@ -56,6 +56,27 @@ directive|include
 file|<libproc.h>
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<rtld_db.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef

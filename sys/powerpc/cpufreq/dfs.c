@@ -670,11 +670,6 @@ modifier|*
 name|set
 parameter_list|)
 block|{
-name|struct
-name|dfs_softc
-modifier|*
-name|sc
-decl_stmt|;
 name|register_t
 name|hid1
 decl_stmt|;
@@ -689,13 +684,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|sc
-operator|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|hid1
 operator|=
 name|mfspr

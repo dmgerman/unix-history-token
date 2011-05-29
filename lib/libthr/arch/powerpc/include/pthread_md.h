@@ -44,6 +44,24 @@ name|DTV_OFFSET
 value|offsetof(struct tcb, tcb_dtv)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TP_OFFSET
+value|0x7010
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -51,8 +69,13 @@ name|TP_OFFSET
 value|0x7008
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Variant I tcb. The structure layout is fixed, don't blindly  * change it.  * %r2 points to end of the structure.  */
+comment|/*  * Variant I tcb. The structure layout is fixed, don't blindly  * change it.  * %r2 (32-bit) or %r13 (64-bit) points to end of the structure.  */
 end_comment
 
 begin_struct
@@ -110,6 +133,20 @@ modifier|*
 name|tcb
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+specifier|register
+name|uint8_t
+modifier|*
+name|_tp
+name|__asm__
+argument_list|(
+literal|"%r13"
+argument_list|)
+decl_stmt|;
+else|#
+directive|else
 specifier|register
 name|uint8_t
 modifier|*
@@ -119,6 +156,8 @@ argument_list|(
 literal|"%r2"
 argument_list|)
 decl_stmt|;
+endif|#
+directive|endif
 asm|__asm __volatile("mr %0,%1" : "=r"(_tp) :
 literal|"r"
 operator|(
@@ -145,6 +184,20 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+specifier|register
+name|uint8_t
+modifier|*
+name|_tp
+name|__asm__
+argument_list|(
+literal|"%r13"
+argument_list|)
+decl_stmt|;
+else|#
+directive|else
 specifier|register
 name|uint8_t
 modifier|*
@@ -154,6 +207,8 @@ argument_list|(
 literal|"%r2"
 argument_list|)
 decl_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 operator|(

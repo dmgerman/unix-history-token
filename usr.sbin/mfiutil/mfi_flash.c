@@ -220,7 +220,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|display_pending_firmware
 parameter_list|(
 name|int
@@ -234,6 +234,9 @@ decl_stmt|;
 name|struct
 name|mfi_info_component
 name|header
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|u_int
 name|i
@@ -253,12 +256,20 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get controller info"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 name|printf
 argument_list|(
@@ -381,6 +392,11 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -473,6 +489,8 @@ name|stat
 name|sb
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|fd
 decl_stmt|,
 name|flash
@@ -522,6 +540,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"flash: Failed to open %s"
@@ -534,7 +556,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -551,6 +573,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"fstat(%s)"
@@ -563,7 +589,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -609,6 +635,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mfi_open"
@@ -616,7 +646,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -679,6 +709,24 @@ argument_list|(
 name|FLASH_BUF_SIZE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|buf
+operator|==
+name|NULL
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
 name|offset
 operator|=
 literal|0
@@ -886,6 +934,8 @@ argument_list|(
 literal|"finished\n"
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|display_pending_firmware
 argument_list|(
 name|fd
@@ -898,7 +948,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}

@@ -11,6 +11,23 @@ begin_comment
 comment|/* Adapted from newlib/libc/stdlib/{,at}exit.[ch].    If you use xatexit, you must call xexit instead of exit.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -29,34 +46,11 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<stddef.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|size_t
-value|unsigned long
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -85,54 +79,46 @@ begin_comment
 comment|/* For systems with larger pointers than ints, this must be declared.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|PTR
 name|malloc
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|xatexit_cleanup
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Pointer to function run by xexit.  */
 end_comment
 
-begin_extern
-extern|extern void (*_xexit_cleanup
-end_extern
-
-begin_expr_stmt
-unit|)
-name|PARAMS
-argument_list|(
-operator|(
+begin_function_decl
+specifier|extern
 name|void
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+function_decl|(
+modifier|*
+name|_xexit_cleanup
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -156,16 +142,17 @@ name|ind
 decl_stmt|;
 comment|/* next index in this table */
 name|void
-argument_list|(
-argument|*fns[XATEXIT_SIZE]
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|fns
+index|[
+name|XATEXIT_SIZE
+index|]
+function_decl|)
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/* the table itself */
 block|}
 struct|;
@@ -203,29 +190,19 @@ begin_comment
 comment|/* Register function FN to be run by xexit.    Return 0 if successful, -1 if not.  */
 end_comment
 
-begin_function_decl
+begin_function
 name|int
 name|xatexit
 parameter_list|(
-name|fn
-parameter_list|)
-function_decl|void
-parameter_list|(
-function_decl|*fn
-end_function_decl
-
-begin_expr_stmt
-unit|)
-name|PARAMS
-argument_list|(
-operator|(
 name|void
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+function_decl|(
+modifier|*
+name|fn
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -313,7 +290,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Call any cleanup functions.  */
@@ -323,7 +300,9 @@ begin_function
 specifier|static
 name|void
 name|xatexit_cleanup
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|struct

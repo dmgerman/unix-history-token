@@ -68,14 +68,23 @@ index|[]
 init|=
 block|{
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_cpuid_to_pcpu"
 block|}
 block|,
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_mp_maxcpus"
 block|}
 block|,
 block|{
+operator|.
+name|n_name
+operator|=
 name|NULL
 block|}
 block|, }
@@ -319,6 +328,9 @@ argument_list|,
 name|len
 argument_list|)
 operator|!=
+operator|(
+name|ssize_t
+operator|)
 name|len
 condition|)
 block|{
@@ -401,9 +413,6 @@ block|{
 name|char
 modifier|*
 name|buf
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 if|if
 condition|(
@@ -794,7 +803,11 @@ directive|define
 name|NLIST_START_SET_PCPU
 value|0
 block|{
-literal|"___start_set_pcpu"
+operator|.
+name|n_name
+operator|=
+literal|"___start_"
+name|DPCPU_SETNAME
 block|}
 block|,
 define|#
@@ -802,7 +815,11 @@ directive|define
 name|NLIST_STOP_SET_PCPU
 value|1
 block|{
-literal|"___stop_set_pcpu"
+operator|.
+name|n_name
+operator|=
+literal|"___stop_"
+name|DPCPU_SETNAME
 block|}
 block|,
 define|#
@@ -810,6 +827,9 @@ directive|define
 name|NLIST_DPCPU_OFF
 value|2
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_dpcpu_off"
 block|}
 block|,
@@ -818,10 +838,16 @@ directive|define
 name|NLIST_MP_MAXCPUS
 value|3
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_mp_maxcpus"
 block|}
 block|,
 block|{
+operator|.
+name|n_name
+operator|=
 name|NULL
 block|}
 block|, 	}
@@ -936,6 +962,9 @@ argument_list|,
 name|len
 argument_list|)
 operator|!=
+operator|(
+name|ssize_t
+operator|)
 name|len
 condition|)
 block|{

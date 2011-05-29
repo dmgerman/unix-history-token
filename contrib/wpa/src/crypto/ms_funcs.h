@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / shared MSCHAPV2 helper functions / RFC 2433 / RFC 2759  * Copyright (c) 2004-2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant / shared MSCHAPV2 helper functions / RFC 2433 / RFC 2759  * Copyright (c) 2004-2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|MS_FUNCS_H
 end_define
 
 begin_function_decl
-name|void
+name|int
 name|generate_nt_response
 parameter_list|(
 specifier|const
@@ -53,7 +53,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|generate_nt_response_pwhash
 parameter_list|(
 specifier|const
@@ -87,7 +87,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|generate_authenticator_response
 parameter_list|(
 specifier|const
@@ -129,7 +129,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|generate_authenticator_response_pwhash
 parameter_list|(
 specifier|const
@@ -168,7 +168,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|nt_challenge_response
 parameter_list|(
 specifier|const
@@ -213,7 +213,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|nt_password_hash
 parameter_list|(
 specifier|const
@@ -232,7 +232,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|hash_nt_password_hash
 parameter_list|(
 specifier|const
@@ -248,7 +248,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|get_master_key
 parameter_list|(
 specifier|const
@@ -269,7 +269,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|get_asymetric_start_key
 parameter_list|(
 specifier|const
@@ -368,7 +368,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|old_nt_password_hash_encrypted_with_new_nt_password_hash
 parameter_list|(
 specifier|const

@@ -1035,8 +1035,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|jmp_buf
-name|peerdied
-decl_stmt|,
 name|toplevel
 decl_stmt|;
 end_decl_stmt

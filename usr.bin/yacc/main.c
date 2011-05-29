@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Paul Corbett.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Paul Corbett.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_if
@@ -499,11 +499,9 @@ name|__dead2
 name|void
 name|done
 parameter_list|(
-name|k
-parameter_list|)
 name|int
 name|k
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -577,12 +575,10 @@ specifier|static
 name|void
 name|onintr
 parameter_list|(
-name|signo
-parameter_list|)
 name|int
 name|signo
 name|__unused
-decl_stmt|;
+parameter_list|)
 block|{
 name|sigdie
 operator|=
@@ -600,7 +596,9 @@ begin_function
 specifier|static
 name|void
 name|set_signals
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -678,7 +676,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -704,18 +704,14 @@ specifier|static
 name|void
 name|getargs
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|argv
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|ch
@@ -731,7 +727,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:dlo:p:rtv"
+literal|"b:dlo:p:rtvy"
 argument_list|)
 operator|)
 operator|!=
@@ -808,6 +804,11 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'y'
+case|:
+comment|/* for bison compatibility -- byacc is already POSIX compatible */
+break|break;
 default|default:
 name|usage
 argument_list|()
@@ -855,17 +856,15 @@ block|}
 end_function
 
 begin_function
-name|char
+name|void
 modifier|*
 name|allocate
 parameter_list|(
+name|size_t
 name|n
 parameter_list|)
-name|unsigned
-name|n
-decl_stmt|;
 block|{
-name|char
+name|void
 modifier|*
 name|p
 decl_stmt|;
@@ -880,7 +879,7 @@ condition|)
 block|{
 name|p
 operator|=
-name|CALLOC
+name|calloc
 argument_list|(
 literal|1
 argument_list|,
@@ -908,7 +907,9 @@ begin_function
 specifier|static
 name|void
 name|create_file_names
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -972,7 +973,7 @@ name|i
 expr_stmt|;
 name|action_file_name
 operator|=
-name|MALLOC
+name|malloc
 argument_list|(
 name|i
 argument_list|)
@@ -988,7 +989,7 @@ argument_list|()
 expr_stmt|;
 name|text_file_name
 operator|=
-name|MALLOC
+name|malloc
 argument_list|(
 name|i
 argument_list|)
@@ -1004,7 +1005,7 @@ argument_list|()
 expr_stmt|;
 name|union_file_name
 operator|=
-name|MALLOC
+name|malloc
 argument_list|(
 name|i
 argument_list|)
@@ -1162,7 +1163,7 @@ argument_list|)
 expr_stmt|;
 name|output_file_name
 operator|=
-name|MALLOC
+name|malloc
 argument_list|(
 name|len
 operator|+
@@ -1202,7 +1203,7 @@ condition|)
 block|{
 name|code_file_name
 operator|=
-name|MALLOC
+name|malloc
 argument_list|(
 name|len
 operator|+
@@ -1328,7 +1329,7 @@ condition|)
 block|{
 name|defines_file_name
 operator|=
-name|MALLOC
+name|malloc
 argument_list|(
 name|len
 operator|+
@@ -1421,7 +1422,7 @@ condition|)
 block|{
 name|verbose_file_name
 operator|=
-name|MALLOC
+name|malloc
 argument_list|(
 name|len
 operator|+
@@ -1541,7 +1542,9 @@ begin_function
 specifier|static
 name|void
 name|open_files
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|fd

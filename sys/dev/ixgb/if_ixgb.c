@@ -377,7 +377,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|ixgb_setup_interface
 parameter_list|(
 name|device_t
@@ -1552,6 +1552,51 @@ name|rxdma
 operator|.
 name|dma_vaddr
 expr_stmt|;
+comment|/* Allocate multicast array memory. */
+name|adapter
+operator|->
+name|mta
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|u_int8_t
+argument_list|)
+operator|*
+name|IXGB_ETH_LENGTH_OF_ADDRESS
+operator|*
+name|MAX_NUM_MULTICAST_ADDRESSES
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|adapter
+operator|->
+name|mta
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Can not allocate multicast setup array\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENOMEM
+expr_stmt|;
+goto|goto
+name|err_hw_init
+goto|;
+block|}
 comment|/* Initialize the hardware */
 if|if
 condition|(
@@ -1577,13 +1622,20 @@ name|err_hw_init
 goto|;
 block|}
 comment|/* Setup OS specific network interface */
+if|if
+condition|(
 name|ixgb_setup_interface
 argument_list|(
 name|dev
 argument_list|,
 name|adapter
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|err_hw_init
+goto|;
 comment|/* Initialize statistics */
 name|ixgb_clear_hw_cntrs
 argument_list|(
@@ -1636,6 +1688,21 @@ name|err_tx_desc
 label|:
 name|err_pci
 label|:
+if|if
+condition|(
+name|adapter
+operator|->
+name|ifp
+operator|!=
+name|NULL
+condition|)
+name|if_free
+argument_list|(
+name|adapter
+operator|->
+name|ifp
+argument_list|)
+expr_stmt|;
 name|ixgb_free_pci_resources
 argument_list|(
 name|adapter
@@ -1647,6 +1714,15 @@ operator|&
 name|adapter
 operator|->
 name|sysctl_ctx
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|adapter
+operator|->
+name|mta
+argument_list|,
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 return|return
@@ -1877,6 +1953,15 @@ operator|=
 name|adapter
 operator|->
 name|next
+expr_stmt|;
+name|free
+argument_list|(
+name|adapter
+operator|->
+name|mta
+argument_list|,
+name|M_DEVBUF
+argument_list|)
 expr_stmt|;
 name|IXGB_LOCK_DESTROY
 argument_list|(
@@ -4381,12 +4466,8 @@ init|=
 literal|0
 decl_stmt|;
 name|u_int8_t
+modifier|*
 name|mta
-index|[
-name|MAX_NUM_MULTICAST_ADDRESSES
-operator|*
-name|IXGB_ETH_LENGTH_OF_ADDRESS
-index|]
 decl_stmt|;
 name|struct
 name|ifmultiaddr
@@ -4410,6 +4491,26 @@ decl_stmt|;
 name|IOCTL_DEBUGOUT
 argument_list|(
 literal|"ixgb_set_multi: begin"
+argument_list|)
+expr_stmt|;
+name|mta
+operator|=
+name|adapter
+operator|->
+name|mta
+expr_stmt|;
+name|bzero
+argument_list|(
+name|mta
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|u_int8_t
+argument_list|)
+operator|*
+name|IXGB_ETH_LENGTH_OF_ADDRESS
+operator|*
+name|MAX_NUM_MULTICAST_ADDRESSES
 argument_list|)
 expr_stmt|;
 name|if_maddr_rlock
@@ -5460,7 +5561,7 @@ return|;
 block|}
 comment|/*********************************************************************  *  *  Setup networking device structure and register an interface.  *  **********************************************************************/
 specifier|static
-name|void
+name|int
 name|ixgb_setup_interface
 parameter_list|(
 name|device_t
@@ -5499,16 +5600,21 @@ name|ifp
 operator|==
 name|NULL
 condition|)
-name|panic
-argument_list|(
-literal|"%s: can not if_alloc()\n"
-argument_list|,
-name|device_get_nameunit
+block|{
+name|device_printf
 argument_list|(
 name|dev
-argument_list|)
+argument_list|,
+literal|"can not allocate ifnet structure\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 if|#
 directive|if
 name|__FreeBSD_version
@@ -5763,7 +5869,11 @@ operator||
 name|IFM_AUTO
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 comment|/********************************************************************  * Manage DMA'able memory.  *******************************************************************/
 specifier|static

@@ -76,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/linker_set.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
 end_include
 
@@ -294,13 +288,6 @@ define|#
 directive|define
 name|PCI_EHCI_VENDORID_VIA
 value|0x1106
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_EHCI_BASE_REG
-value|0x10
 end_define
 
 begin_function_decl
@@ -680,6 +667,12 @@ literal|0x005b10de
 case|:
 return|return
 literal|"NVIDIA nForce4 USB 2.0 controller"
+return|;
+case|case
+literal|0x036d10de
+case|:
+return|return
+literal|"NVIDIA nForce MCP55 USB 2.0 controller"
 return|;
 case|case
 literal|0x03f210de
@@ -1862,24 +1855,6 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
-comment|/* 	 * disable interrupts that might have been switched on in ehci_init 	 */
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_io_res
-condition|)
-block|{
-name|EWRITE4
-argument_list|(
-name|sc
-argument_list|,
-name|EHCI_USBINTR
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|sc

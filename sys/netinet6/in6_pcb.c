@@ -279,10 +279,11 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
-name|wild
+name|lookupflags
 init|=
 literal|0
-decl_stmt|,
+decl_stmt|;
+name|int
 name|reuseport
 init|=
 operator|(
@@ -353,7 +354,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|wild
+name|lookupflags
 operator|=
 name|INPLOOKUP_WILDCARD
 expr_stmt|;
@@ -807,6 +808,9 @@ operator|(
 name|EADDRINUSE
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 operator|(
@@ -912,6 +916,8 @@ name|EADDRINUSE
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 block|}
 name|t
 operator|=
@@ -926,7 +932,7 @@ name|sin6_addr
 argument_list|,
 name|lport
 argument_list|,
-name|wild
+name|lookupflags
 argument_list|,
 name|cred
 argument_list|)
@@ -969,6 +975,9 @@ operator|(
 name|EADDRINUSE
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 operator|(
@@ -1014,7 +1023,7 @@ name|sin_addr
 argument_list|,
 name|lport
 argument_list|,
-name|wild
+name|lookupflags
 argument_list|,
 name|cred
 argument_list|)
@@ -1130,6 +1139,8 @@ name|EADDRINUSE
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 block|}
 name|inp
 operator|->
@@ -1167,11 +1178,20 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+comment|/* Undo an address bind that may have occurred. */
+name|inp
+operator|->
+name|in6p_laddr
+operator|=
+name|in6addr_any
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 block|}
 else|else
 block|{
@@ -2203,6 +2223,9 @@ literal|"in6_mapped_sockaddr: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 operator|(
@@ -2242,6 +2265,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 block|{
 comment|/* scope issues will be handled in in6_getsockaddr(). */
 name|error
@@ -2302,6 +2327,9 @@ literal|"in6_mapped_peeraddr: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 operator|(
@@ -2341,6 +2369,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 comment|/* scope issues will be handled in in6_getpeeraddr(). */
 name|error
 operator|=
@@ -2845,7 +2875,7 @@ name|u_short
 name|lport
 parameter_list|,
 name|int
-name|wild_okay
+name|lookupflags
 parameter_list|,
 name|struct
 name|ucred
@@ -2866,6 +2896,28 @@ literal|3
 decl_stmt|,
 name|wildcard
 decl_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|lookupflags
+operator|&
+operator|~
+operator|(
+name|INPLOOKUP_WILDCARD
+operator|)
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"%s: invalid lookup flags %d"
+operator|,
+name|__func__
+operator|,
+name|lookupflags
+operator|)
+argument_list|)
+expr_stmt|;
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 name|pcbinfo
@@ -2873,8 +2925,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|wild_okay
+operator|(
+name|lookupflags
+operator|&
+name|INPLOOKUP_WILDCARD
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|struct
@@ -3460,7 +3517,7 @@ name|u_int
 name|lport_arg
 parameter_list|,
 name|int
-name|wildcard
+name|lookupflags
 parameter_list|,
 name|struct
 name|ifnet
@@ -3493,6 +3550,28 @@ decl_stmt|;
 name|int
 name|faith
 decl_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|lookupflags
+operator|&
+operator|~
+operator|(
+name|INPLOOKUP_WILDCARD
+operator|)
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"%s: invalid lookup flags %d"
+operator|,
+name|__func__
+operator|,
+name|lookupflags
+operator|)
+argument_list|)
+expr_stmt|;
 name|INP_INFO_LOCK_ASSERT
 argument_list|(
 name|pcbinfo
@@ -3652,9 +3731,13 @@ return|;
 comment|/* 	 * Then look for a wildcard match, if requested. 	 */
 if|if
 condition|(
-name|wildcard
-operator|==
+operator|(
+name|lookupflags
+operator|&
 name|INPLOOKUP_WILDCARD
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|struct
@@ -3891,7 +3974,7 @@ name|local_wild
 operator|)
 return|;
 block|}
-comment|/* if (wildcard == INPLOOKUP_WILDCARD) */
+comment|/* if ((lookupflags& INPLOOKUP_WILDCARD) != 0) */
 comment|/* 	 * Not found. 	 */
 return|return
 operator|(

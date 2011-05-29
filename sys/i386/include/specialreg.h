@@ -518,6 +518,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPUID2_PCLMULQDQ
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPUID2_DTES64
 value|0x00000004
 end_define
@@ -581,6 +588,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPUID2_FMA
+value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPUID2_CX16
 value|0x00002000
 end_define
@@ -597,6 +611,13 @@ define|#
 directive|define
 name|CPUID2_PDCM
 value|0x00008000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_PCID
+value|0x00020000
 end_define
 
 begin_define
@@ -639,6 +660,87 @@ define|#
 directive|define
 name|CPUID2_POPCNT
 value|0x00800000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_TSCDLT
+value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_AESNI
+value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_XSAVE
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_OSXSAVE
+value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_AVX
+value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_F16C
+value|0x20000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_HV
+value|0x80000000
+end_define
+
+begin_comment
+comment|/*  * Important bits in the Thermal and Power Management flags  * CPUID.6 EAX and ECX.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUTPM1_SENSOR
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUTPM1_TURBO
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUTPM1_ARAT
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUTPM2_EFFREQ
+value|0x00000001
 end_define
 
 begin_comment
@@ -795,7 +897,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AMDID2_SSE5
+name|AMDID2_XOP
 value|0x00000800
 end_define
 
@@ -811,6 +913,41 @@ define|#
 directive|define
 name|AMDID2_WDT
 value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDID2_LWP
+value|0x00008000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDID2_FMA4
+value|0x00010000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDID2_NODE_ID
+value|0x00080000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDID2_TBM
+value|0x00200000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDID2_TOPOLOGY
+value|0x00400000
 end_define
 
 begin_comment
@@ -907,6 +1044,24 @@ value|0xff000000
 end_define
 
 begin_comment
+comment|/*  * CPUID instruction 6 ecx info  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUID_PERF_STAT
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_PERF_BIAS
+value|0x00000008
+end_define
+
+begin_comment
 comment|/*   * CPUID instruction 0xb ebx info.  */
 end_comment
 
@@ -998,6 +1153,13 @@ name|AMDPM_TSC_INVARIANT
 value|0x00000100
 end_define
 
+begin_define
+define|#
+directive|define
+name|AMDPM_CPB
+value|0x00000200
+end_define
+
 begin_comment
 comment|/*  * AMD extended function 8000_0008h ecx info  */
 end_comment
@@ -1007,6 +1169,20 @@ define|#
 directive|define
 name|AMDID_CMP_CORES
 value|0x000000ff
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDID_COREID_SIZE
+value|0x0000f000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDID_COREID_SIZE_SHIFT
+value|12
 end_define
 
 begin_comment
@@ -1209,6 +1385,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|MSR_MPERF
+value|0x0e7
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSR_APERF
+value|0x0e8
+end_define
+
+begin_define
+define|#
+directive|define
 name|MSR_IA32_EXT_CONFIG
 value|0x0ee
 end_define
@@ -1353,6 +1543,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MSR_IA32_TEMPERATURE_TARGET
+value|0x1a2
+end_define
+
+begin_define
+define|#
+directive|define
 name|MSR_DEBUGCTLMSR
 value|0x1d9
 end_define
@@ -1425,6 +1622,13 @@ define|#
 directive|define
 name|MSR_PAT
 value|0x277
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSR_MC0_CTL2
+value|0x280
 end_define
 
 begin_define
@@ -1742,70 +1946,70 @@ begin_define
 define|#
 directive|define
 name|MTRR_CAP_WC
-value|0x0000000000000400ULL
+value|0x0000000000000400
 end_define
 
 begin_define
 define|#
 directive|define
 name|MTRR_CAP_FIXED
-value|0x0000000000000100ULL
+value|0x0000000000000100
 end_define
 
 begin_define
 define|#
 directive|define
 name|MTRR_CAP_VCNT
-value|0x00000000000000ffULL
+value|0x00000000000000ff
 end_define
 
 begin_define
 define|#
 directive|define
 name|MTRR_DEF_ENABLE
-value|0x0000000000000800ULL
+value|0x0000000000000800
 end_define
 
 begin_define
 define|#
 directive|define
 name|MTRR_DEF_FIXED_ENABLE
-value|0x0000000000000400ULL
+value|0x0000000000000400
 end_define
 
 begin_define
 define|#
 directive|define
 name|MTRR_DEF_TYPE
-value|0x00000000000000ffULL
+value|0x00000000000000ff
 end_define
 
 begin_define
 define|#
 directive|define
 name|MTRR_PHYSBASE_PHYSBASE
-value|0x000ffffffffff000ULL
+value|0x000ffffffffff000
 end_define
 
 begin_define
 define|#
 directive|define
 name|MTRR_PHYSBASE_TYPE
-value|0x00000000000000ffULL
+value|0x00000000000000ff
 end_define
 
 begin_define
 define|#
 directive|define
 name|MTRR_PHYSMASK_PHYSMASK
-value|0x000ffffffffff000ULL
+value|0x000ffffffffff000
 end_define
 
 begin_define
 define|#
 directive|define
 name|MTRR_PHYSMASK_VALID
-value|0x0000000000000800ULL
+value|0x0000000000000800
 end_define
 
 begin_comment
@@ -2446,6 +2650,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MCG_CAP_CMCI_P
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
 name|MCG_CAP_TES_P
 value|0x00000800
 end_define
@@ -2455,6 +2666,13 @@ define|#
 directive|define
 name|MCG_CAP_EXT_CNT
 value|0x00ff0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MCG_CAP_SER_P
+value|0x01000000
 end_define
 
 begin_define
@@ -2482,14 +2700,14 @@ begin_define
 define|#
 directive|define
 name|MCG_CTL_ENABLE
-value|0xffffffffffffffffUL
+value|0xffffffffffffffff
 end_define
 
 begin_define
 define|#
 directive|define
 name|MCG_CTL_DISABLE
-value|0x0000000000000000UL
+value|0x0000000000000000
 end_define
 
 begin_define
@@ -2535,71 +2753,165 @@ end_define
 begin_define
 define|#
 directive|define
+name|MSR_MC_CTL2
+parameter_list|(
+name|x
+parameter_list|)
+value|(MSR_MC0_CTL2 + (x))
+end_define
+
+begin_comment
+comment|/* If MCG_CAP_CMCI_P */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MC_STATUS_MCA_ERROR
-value|0x000000000000ffffUL
+value|0x000000000000ffff
 end_define
 
 begin_define
 define|#
 directive|define
 name|MC_STATUS_MODEL_ERROR
-value|0x00000000ffff0000UL
+value|0x00000000ffff0000
 end_define
 
 begin_define
 define|#
 directive|define
 name|MC_STATUS_OTHER_INFO
-value|0x01ffffff00000000UL
+value|0x01ffffff00000000
 end_define
 
 begin_define
 define|#
 directive|define
+name|MC_STATUS_COR_COUNT
+value|0x001fffc000000000
+end_define
+
+begin_comment
+comment|/* If MCG_CAP_CMCI_P */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MC_STATUS_TES_STATUS
+value|0x0060000000000000
+end_define
+
+begin_comment
+comment|/* If MCG_CAP_TES_P */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MC_STATUS_AR
+value|0x0080000000000000
+end_define
+
+begin_comment
+comment|/* If MCG_CAP_TES_P */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MC_STATUS_S
+value|0x0100000000000000
+end_define
+
+begin_comment
+comment|/* If MCG_CAP_TES_P */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MC_STATUS_PCC
-value|0x0200000000000000UL
+value|0x0200000000000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|MC_STATUS_ADDRV
-value|0x0400000000000000UL
+value|0x0400000000000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|MC_STATUS_MISCV
-value|0x0800000000000000UL
+value|0x0800000000000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|MC_STATUS_EN
-value|0x1000000000000000UL
+value|0x1000000000000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|MC_STATUS_UC
-value|0x2000000000000000UL
+value|0x2000000000000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|MC_STATUS_OVER
-value|0x4000000000000000UL
+value|0x4000000000000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|MC_STATUS_VAL
-value|0x8000000000000000UL
+value|0x8000000000000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MC_MISC_RA_LSB
+value|0x000000000000003f
+end_define
+
+begin_comment
+comment|/* If MCG_CAP_SER_P */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MC_MISC_ADDRESS_MODE
+value|0x00000000000001c0
+end_define
+
+begin_comment
+comment|/* If MCG_CAP_SER_P */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MC_CTL2_THRESHOLD
+value|0x0000000000007fff
+end_define
+
+begin_define
+define|#
+directive|define
+name|MC_CTL2_CMCI_EN
+value|0x0000000040000000
 end_define
 
 begin_comment
@@ -3110,6 +3422,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MSR_HWCR
+value|0xc0010015
+end_define
+
+begin_define
+define|#
+directive|define
 name|MSR_K8_UCODE_UPDATE
 value|0xc0010020
 end_define
@@ -3117,6 +3436,13 @@ end_define
 begin_comment
 comment|/* update microcode */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_MC0_CTL_MASK
+value|0xc0010044
+end_define
 
 begin_comment
 comment|/* VIA ACE crypto featureset: for via_feature_rng */

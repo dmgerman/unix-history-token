@@ -76,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/linker_set.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
 end_include
 
@@ -590,6 +584,14 @@ case|:
 return|return
 operator|(
 literal|"nVidia nForce3 USB Controller"
+operator|)
+return|;
+case|case
+literal|0x036c10de
+case|:
+return|return
+operator|(
+literal|"nVidia nForce MCP55 USB Controller"
 operator|)
 return|;
 case|case

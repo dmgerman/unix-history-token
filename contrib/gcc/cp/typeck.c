@@ -25953,6 +25953,12 @@ argument_list|(
 name|retval
 argument_list|)
 operator|&&
+operator|!
+name|DECL_ANON_UNION_VAR_P
+argument_list|(
+name|retval
+argument_list|)
+operator|&&
 operator|(
 name|DECL_ALIGN
 argument_list|(

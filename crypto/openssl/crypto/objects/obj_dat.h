@@ -15,28 +15,28 @@ begin_define
 define|#
 directive|define
 name|NUM_NID
-value|859
+value|893
 end_define
 
 begin_define
 define|#
 directive|define
 name|NUM_SN
-value|852
+value|886
 end_define
 
 begin_define
 define|#
 directive|define
 name|NUM_LN
-value|852
+value|886
 end_define
 
 begin_define
 define|#
 directive|define
 name|NUM_OBJ
-value|806
+value|840
 end_define
 
 begin_decl_stmt
@@ -45,7 +45,7 @@ name|unsigned
 name|char
 name|lvalues
 index|[
-literal|5722
+literal|5824
 index|]
 init|=
 block|{
@@ -9868,7 +9868,7 @@ literal|0x67
 block|,
 literal|0x2B
 block|,
-literal|0x0D
+literal|0x01
 block|,
 comment|/* [4588] OBJ_wap_wsg */
 literal|0x2A
@@ -10630,7 +10630,7 @@ literal|0x67
 block|,
 literal|0x2B
 block|,
-literal|0x0D
+literal|0x01
 block|,
 literal|0x04
 block|,
@@ -10641,7 +10641,7 @@ literal|0x67
 block|,
 literal|0x2B
 block|,
-literal|0x0D
+literal|0x01
 block|,
 literal|0x04
 block|,
@@ -10652,7 +10652,7 @@ literal|0x67
 block|,
 literal|0x2B
 block|,
-literal|0x0D
+literal|0x01
 block|,
 literal|0x04
 block|,
@@ -10663,7 +10663,7 @@ literal|0x67
 block|,
 literal|0x2B
 block|,
-literal|0x0D
+literal|0x01
 block|,
 literal|0x04
 block|,
@@ -10674,7 +10674,7 @@ literal|0x67
 block|,
 literal|0x2B
 block|,
-literal|0x0D
+literal|0x01
 block|,
 literal|0x04
 block|,
@@ -10685,7 +10685,7 @@ literal|0x67
 block|,
 literal|0x2B
 block|,
-literal|0x0D
+literal|0x01
 block|,
 literal|0x04
 block|,
@@ -10696,7 +10696,7 @@ literal|0x67
 block|,
 literal|0x2B
 block|,
-literal|0x0D
+literal|0x01
 block|,
 literal|0x04
 block|,
@@ -10707,7 +10707,7 @@ literal|0x67
 block|,
 literal|0x2B
 block|,
-literal|0x0D
+literal|0x01
 block|,
 literal|0x04
 block|,
@@ -10718,7 +10718,7 @@ literal|0x67
 block|,
 literal|0x2B
 block|,
-literal|0x0D
+literal|0x01
 block|,
 literal|0x04
 block|,
@@ -10729,7 +10729,7 @@ literal|0x67
 block|,
 literal|0x2B
 block|,
-literal|0x0D
+literal|0x01
 block|,
 literal|0x04
 block|,
@@ -10740,7 +10740,7 @@ literal|0x67
 block|,
 literal|0x2B
 block|,
-literal|0x0D
+literal|0x01
 block|,
 literal|0x04
 block|,
@@ -12297,6 +12297,244 @@ block|,
 literal|0x03
 block|,
 comment|/* [5713] OBJ_id_on_permanentIdentifier */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x0E
+block|,
+comment|/* [5721] OBJ_searchGuide */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x0F
+block|,
+comment|/* [5724] OBJ_businessCategory */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x10
+block|,
+comment|/* [5727] OBJ_postalAddress */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x12
+block|,
+comment|/* [5730] OBJ_postOfficeBox */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x13
+block|,
+comment|/* [5733] OBJ_physicalDeliveryOfficeName */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x14
+block|,
+comment|/* [5736] OBJ_telephoneNumber */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x15
+block|,
+comment|/* [5739] OBJ_telexNumber */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x16
+block|,
+comment|/* [5742] OBJ_teletexTerminalIdentifier */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x17
+block|,
+comment|/* [5745] OBJ_facsimileTelephoneNumber */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x18
+block|,
+comment|/* [5748] OBJ_x121Address */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x19
+block|,
+comment|/* [5751] OBJ_internationaliSDNNumber */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x1A
+block|,
+comment|/* [5754] OBJ_registeredAddress */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x1B
+block|,
+comment|/* [5757] OBJ_destinationIndicator */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x1C
+block|,
+comment|/* [5760] OBJ_preferredDeliveryMethod */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x1D
+block|,
+comment|/* [5763] OBJ_presentationAddress */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x1E
+block|,
+comment|/* [5766] OBJ_supportedApplicationContext */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x1F
+block|,
+comment|/* [5769] OBJ_member */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x20
+block|,
+comment|/* [5772] OBJ_owner */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x21
+block|,
+comment|/* [5775] OBJ_roleOccupant */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x22
+block|,
+comment|/* [5778] OBJ_seeAlso */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x23
+block|,
+comment|/* [5781] OBJ_userPassword */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x24
+block|,
+comment|/* [5784] OBJ_userCertificate */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x25
+block|,
+comment|/* [5787] OBJ_cACertificate */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x26
+block|,
+comment|/* [5790] OBJ_authorityRevocationList */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x27
+block|,
+comment|/* [5793] OBJ_certificateRevocationList */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x28
+block|,
+comment|/* [5796] OBJ_crossCertificatePair */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x2F
+block|,
+comment|/* [5799] OBJ_enhancedSearchGuide */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x30
+block|,
+comment|/* [5802] OBJ_protocolInformation */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x31
+block|,
+comment|/* [5805] OBJ_distinguishedName */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x32
+block|,
+comment|/* [5808] OBJ_uniqueMember */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x33
+block|,
+comment|/* [5811] OBJ_houseIdentifier */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x34
+block|,
+comment|/* [5814] OBJ_supportedAlgorithms */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x35
+block|,
+comment|/* [5817] OBJ_deltaRevocationList */
+literal|0x55
+block|,
+literal|0x04
+block|,
+literal|0x36
+block|,
+comment|/* [5820] OBJ_dmdName */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -25271,7 +25509,7 @@ literal|0
 block|}
 block|,
 block|{
-literal|"streetAddress"
+literal|"street"
 block|,
 literal|"streetAddress"
 block|,
@@ -29171,6 +29409,686 @@ operator|)
 block|,
 literal|0
 block|}
+block|,
+block|{
+literal|"searchGuide"
+block|,
+literal|"searchGuide"
+block|,
+name|NID_searchGuide
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5721
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"businessCategory"
+block|,
+literal|"businessCategory"
+block|,
+name|NID_businessCategory
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5724
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"postalAddress"
+block|,
+literal|"postalAddress"
+block|,
+name|NID_postalAddress
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5727
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"postOfficeBox"
+block|,
+literal|"postOfficeBox"
+block|,
+name|NID_postOfficeBox
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5730
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"physicalDeliveryOfficeName"
+block|,
+literal|"physicalDeliveryOfficeName"
+block|,
+name|NID_physicalDeliveryOfficeName
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5733
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"telephoneNumber"
+block|,
+literal|"telephoneNumber"
+block|,
+name|NID_telephoneNumber
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5736
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"telexNumber"
+block|,
+literal|"telexNumber"
+block|,
+name|NID_telexNumber
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5739
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"teletexTerminalIdentifier"
+block|,
+literal|"teletexTerminalIdentifier"
+block|,
+name|NID_teletexTerminalIdentifier
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5742
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"facsimileTelephoneNumber"
+block|,
+literal|"facsimileTelephoneNumber"
+block|,
+name|NID_facsimileTelephoneNumber
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5745
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"x121Address"
+block|,
+literal|"x121Address"
+block|,
+name|NID_x121Address
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5748
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"internationaliSDNNumber"
+block|,
+literal|"internationaliSDNNumber"
+block|,
+name|NID_internationaliSDNNumber
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5751
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"registeredAddress"
+block|,
+literal|"registeredAddress"
+block|,
+name|NID_registeredAddress
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5754
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"destinationIndicator"
+block|,
+literal|"destinationIndicator"
+block|,
+name|NID_destinationIndicator
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5757
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"preferredDeliveryMethod"
+block|,
+literal|"preferredDeliveryMethod"
+block|,
+name|NID_preferredDeliveryMethod
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5760
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"presentationAddress"
+block|,
+literal|"presentationAddress"
+block|,
+name|NID_presentationAddress
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5763
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"supportedApplicationContext"
+block|,
+literal|"supportedApplicationContext"
+block|,
+name|NID_supportedApplicationContext
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5766
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"member"
+block|,
+literal|"member"
+block|,
+name|NID_member
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5769
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"owner"
+block|,
+literal|"owner"
+block|,
+name|NID_owner
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5772
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"roleOccupant"
+block|,
+literal|"roleOccupant"
+block|,
+name|NID_roleOccupant
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5775
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"seeAlso"
+block|,
+literal|"seeAlso"
+block|,
+name|NID_seeAlso
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5778
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"userPassword"
+block|,
+literal|"userPassword"
+block|,
+name|NID_userPassword
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5781
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"userCertificate"
+block|,
+literal|"userCertificate"
+block|,
+name|NID_userCertificate
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5784
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"cACertificate"
+block|,
+literal|"cACertificate"
+block|,
+name|NID_cACertificate
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5787
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"authorityRevocationList"
+block|,
+literal|"authorityRevocationList"
+block|,
+name|NID_authorityRevocationList
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5790
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"certificateRevocationList"
+block|,
+literal|"certificateRevocationList"
+block|,
+name|NID_certificateRevocationList
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5793
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"crossCertificatePair"
+block|,
+literal|"crossCertificatePair"
+block|,
+name|NID_crossCertificatePair
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5796
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"enhancedSearchGuide"
+block|,
+literal|"enhancedSearchGuide"
+block|,
+name|NID_enhancedSearchGuide
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5799
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"protocolInformation"
+block|,
+literal|"protocolInformation"
+block|,
+name|NID_protocolInformation
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5802
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"distinguishedName"
+block|,
+literal|"distinguishedName"
+block|,
+name|NID_distinguishedName
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5805
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"uniqueMember"
+block|,
+literal|"uniqueMember"
+block|,
+name|NID_uniqueMember
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5808
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"houseIdentifier"
+block|,
+literal|"houseIdentifier"
+block|,
+name|NID_houseIdentifier
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5811
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"supportedAlgorithms"
+block|,
+literal|"supportedAlgorithms"
+block|,
+name|NID_supportedAlgorithms
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5814
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"deltaRevocationList"
+block|,
+literal|"deltaRevocationList"
+block|,
+name|NID_deltaRevocationList
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5817
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"dmdName"
+block|,
+literal|"dmdName"
+block|,
+name|NID_dmdName
+block|,
+literal|3
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5820
+index|]
+operator|)
+block|,
+literal|0
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -30926,6 +31844,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|882
+index|]
+operator|)
+block|,
+comment|/* "authorityRevocationList" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|87
 index|]
 operator|)
@@ -30958,6 +31885,15 @@ index|]
 operator|)
 block|,
 comment|/* "buildingName" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|860
+index|]
+operator|)
+block|,
+comment|/* "businessCategory" */
 operator|&
 operator|(
 name|nid_objs
@@ -31142,6 +32078,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|881
+index|]
+operator|)
+block|,
+comment|/* "cACertificate" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|483
 index|]
 operator|)
@@ -31210,6 +32155,15 @@ index|]
 operator|)
 block|,
 comment|/* "certificatePolicies" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|883
+index|]
+operator|)
+block|,
+comment|/* "certificateRevocationList" */
 operator|&
 operator|(
 name|nid_objs
@@ -31304,6 +32258,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|884
+index|]
+operator|)
+block|,
+comment|/* "crossCertificatePair" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|806
 index|]
 operator|)
@@ -31376,11 +32339,29 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|891
+index|]
+operator|)
+block|,
+comment|/* "deltaRevocationList" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|107
 index|]
 operator|)
 block|,
 comment|/* "description" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|871
+index|]
+operator|)
+block|,
+comment|/* "destinationIndicator" */
 operator|&
 operator|(
 name|nid_objs
@@ -31399,6 +32380,24 @@ index|]
 operator|)
 block|,
 comment|/* "directory" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|887
+index|]
+operator|)
+block|,
+comment|/* "distinguishedName" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|892
+index|]
+operator|)
+block|,
+comment|/* "dmdName" */
 operator|&
 operator|(
 name|nid_objs
@@ -31601,6 +32600,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|885
+index|]
+operator|)
+block|,
+comment|/* "enhancedSearchGuide" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|389
 index|]
 operator|)
@@ -31651,6 +32659,15 @@ index|]
 operator|)
 block|,
 comment|/* "extendedStatus" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|867
+index|]
+operator|)
+block|,
+comment|/* "facsimileTelephoneNumber" */
 operator|&
 operator|(
 name|nid_objs
@@ -31885,6 +32902,15 @@ index|]
 operator|)
 block|,
 comment|/* "host" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|889
+index|]
+operator|)
+block|,
+comment|/* "houseIdentifier" */
 operator|&
 operator|(
 name|nid_objs
@@ -33950,6 +34976,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|869
+index|]
+operator|)
+block|,
+comment|/* "internationaliSDNNumber" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|142
 index|]
 operator|)
@@ -34099,6 +35134,15 @@ index|]
 operator|)
 block|,
 comment|/* "md_gost94" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|875
+index|]
+operator|)
+block|,
+comment|/* "member" */
 operator|&
 operator|(
 name|nid_objs
@@ -34418,6 +35462,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|876
+index|]
+operator|)
+block|,
+comment|/* "owner" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|489
 index|]
 operator|)
@@ -34468,6 +35521,15 @@ index|]
 operator|)
 block|,
 comment|/* "photo" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|863
+index|]
+operator|)
+block|,
+comment|/* "physicalDeliveryOfficeName" */
 operator|&
 operator|(
 name|nid_objs
@@ -34697,6 +35759,24 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|862
+index|]
+operator|)
+block|,
+comment|/* "postOfficeBox" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|861
+index|]
+operator|)
+block|,
+comment|/* "postalAddress" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|661
 index|]
 operator|)
@@ -34711,6 +35791,24 @@ index|]
 operator|)
 block|,
 comment|/* "ppBasis" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|872
+index|]
+operator|)
+block|,
+comment|/* "preferredDeliveryMethod" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|873
+index|]
+operator|)
+block|,
+comment|/* "presentationAddress" */
 operator|&
 operator|(
 name|nid_objs
@@ -34814,6 +35912,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|886
+index|]
+operator|)
+block|,
+comment|/* "protocolInformation" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|663
 index|]
 operator|)
@@ -34868,11 +35975,29 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|870
+index|]
+operator|)
+block|,
+comment|/* "registeredAddress" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|400
 index|]
 operator|)
 block|,
 comment|/* "role" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|877
+index|]
+operator|)
+block|,
+comment|/* "roleOccupant" */
 operator|&
 operator|(
 name|nid_objs
@@ -34981,6 +36106,15 @@ index|]
 operator|)
 block|,
 comment|/* "sdsiCertificate" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|859
+index|]
+operator|)
+block|,
+comment|/* "searchGuide" */
 operator|&
 operator|(
 name|nid_objs
@@ -35287,6 +36421,15 @@ index|]
 operator|)
 block|,
 comment|/* "security" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|878
+index|]
+operator|)
+block|,
+comment|/* "seeAlso" */
 operator|&
 operator|(
 name|nid_objs
@@ -36537,7 +37680,7 @@ literal|660
 index|]
 operator|)
 block|,
-comment|/* "streetAddress" */
+comment|/* "street" */
 operator|&
 operator|(
 name|nid_objs
@@ -36596,11 +37739,56 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|890
+index|]
+operator|)
+block|,
+comment|/* "supportedAlgorithms" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|874
+index|]
+operator|)
+block|,
+comment|/* "supportedApplicationContext" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|402
 index|]
 operator|)
 block|,
 comment|/* "targetInformation" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|864
+index|]
+operator|)
+block|,
+comment|/* "telephoneNumber" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|866
+index|]
+operator|)
+block|,
+comment|/* "teletexTerminalIdentifier" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|865
+index|]
+operator|)
+block|,
+comment|/* "telexNumber" */
 operator|&
 operator|(
 name|nid_objs
@@ -36668,6 +37856,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|888
+index|]
+operator|)
+block|,
+comment|/* "uniqueMember" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|55
 index|]
 operator|)
@@ -36686,11 +37883,29 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|880
+index|]
+operator|)
+block|,
+comment|/* "userCertificate" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|465
 index|]
 operator|)
 block|,
 comment|/* "userClass" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|879
+index|]
+operator|)
+block|,
+comment|/* "userPassword" */
 operator|&
 operator|(
 name|nid_objs
@@ -36826,6 +38041,15 @@ index|]
 operator|)
 block|,
 comment|/* "whirlpool" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|868
+index|]
+operator|)
+block|,
+comment|/* "x121Address" */
 operator|&
 operator|(
 name|nid_objs
@@ -38347,6 +39571,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|882
+index|]
+operator|)
+block|,
+comment|/* "authorityRevocationList" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|91
 index|]
 operator|)
@@ -38388,6 +39621,15 @@ index|]
 operator|)
 block|,
 comment|/* "buildingName" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|860
+index|]
+operator|)
+block|,
+comment|/* "businessCategory" */
 operator|&
 operator|(
 name|nid_objs
@@ -38568,6 +39810,15 @@ index|]
 operator|)
 block|,
 comment|/* "c2tnb431r1" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|881
+index|]
+operator|)
+block|,
+comment|/* "cACertificate" */
 operator|&
 operator|(
 name|nid_objs
@@ -38815,6 +40066,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|883
+index|]
+operator|)
+block|,
+comment|/* "certificateRevocationList" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|54
 index|]
 operator|)
@@ -38905,6 +40165,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|884
+index|]
+operator|)
+block|,
+comment|/* "crossCertificatePair" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|806
 index|]
 operator|)
@@ -38964,6 +40233,15 @@ index|]
 operator|)
 block|,
 comment|/* "dcObject" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|891
+index|]
+operator|)
+block|,
+comment|/* "deltaRevocationList" */
 operator|&
 operator|(
 name|nid_objs
@@ -39130,6 +40408,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|871
+index|]
+operator|)
+block|,
+comment|/* "destinationIndicator" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|80
 index|]
 operator|)
@@ -39162,6 +40449,24 @@ index|]
 operator|)
 block|,
 comment|/* "directory services - algorithms" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|887
+index|]
+operator|)
+block|,
+comment|/* "distinguishedName" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|892
+index|]
+operator|)
+block|,
+comment|/* "dmdName" */
 operator|&
 operator|(
 name|nid_objs
@@ -39427,11 +40732,29 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|885
+index|]
+operator|)
+block|,
+comment|/* "enhancedSearchGuide" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|56
 index|]
 operator|)
 block|,
 comment|/* "extendedCertificateAttributes" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|867
+index|]
+operator|)
+block|,
+comment|/* "facsimileTelephoneNumber" */
 operator|&
 operator|(
 name|nid_objs
@@ -39621,6 +40944,15 @@ index|]
 operator|)
 block|,
 comment|/* "host" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|889
+index|]
+operator|)
+block|,
+comment|/* "houseIdentifier" */
 operator|&
 operator|(
 name|nid_objs
@@ -41551,6 +42883,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|869
+index|]
+operator|)
+block|,
+comment|/* "internationaliSDNNumber" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|749
 index|]
 operator|)
@@ -41785,6 +43126,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|875
+index|]
+operator|)
+block|,
+comment|/* "member" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|602
 index|]
 operator|)
@@ -41907,6 +43257,15 @@ index|]
 operator|)
 block|,
 comment|/* "otherMailbox" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|876
+index|]
+operator|)
+block|,
+comment|/* "owner" */
 operator|&
 operator|(
 name|nid_objs
@@ -42087,6 +43446,15 @@ index|]
 operator|)
 block|,
 comment|/* "photo" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|863
+index|]
+operator|)
+block|,
+comment|/* "physicalDeliveryOfficeName" */
 operator|&
 operator|(
 name|nid_objs
@@ -42289,6 +43657,24 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|862
+index|]
+operator|)
+block|,
+comment|/* "postOfficeBox" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|861
+index|]
+operator|)
+block|,
+comment|/* "postalAddress" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|661
 index|]
 operator|)
@@ -42303,6 +43689,24 @@ index|]
 operator|)
 block|,
 comment|/* "ppBasis" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|872
+index|]
+operator|)
+block|,
+comment|/* "preferredDeliveryMethod" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|873
+index|]
+operator|)
+block|,
+comment|/* "presentationAddress" */
 operator|&
 operator|(
 name|nid_objs
@@ -42375,6 +43779,15 @@ index|]
 operator|)
 block|,
 comment|/* "prime256v1" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|886
+index|]
+operator|)
+block|,
+comment|/* "protocolInformation" */
 operator|&
 operator|(
 name|nid_objs
@@ -42532,6 +43945,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|870
+index|]
+operator|)
+block|,
+comment|/* "registeredAddress" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|460
 index|]
 operator|)
@@ -42564,6 +43986,15 @@ index|]
 operator|)
 block|,
 comment|/* "role" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|877
+index|]
+operator|)
+block|,
+comment|/* "roleOccupant" */
 operator|&
 operator|(
 name|nid_objs
@@ -42681,6 +44112,15 @@ index|]
 operator|)
 block|,
 comment|/* "sdsiCertificate" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|859
+index|]
+operator|)
+block|,
+comment|/* "searchGuide" */
 operator|&
 operator|(
 name|nid_objs
@@ -42987,6 +44427,15 @@ index|]
 operator|)
 block|,
 comment|/* "secure device signature" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|878
+index|]
+operator|)
+block|,
+comment|/* "seeAlso" */
 operator|&
 operator|(
 name|nid_objs
@@ -44269,11 +45718,56 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|890
+index|]
+operator|)
+block|,
+comment|/* "supportedAlgorithms" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|874
+index|]
+operator|)
+block|,
+comment|/* "supportedApplicationContext" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|100
 index|]
 operator|)
 block|,
 comment|/* "surname" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|864
+index|]
+operator|)
+block|,
+comment|/* "telephoneNumber" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|866
+index|]
+operator|)
+block|,
+comment|/* "teletexTerminalIdentifier" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|865
+index|]
+operator|)
+block|,
+comment|/* "telexNumber" */
 operator|&
 operator|(
 name|nid_objs
@@ -44332,6 +45826,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|888
+index|]
+operator|)
+block|,
+comment|/* "uniqueMember" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|55
 index|]
 operator|)
@@ -44350,6 +45853,15 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|880
+index|]
+operator|)
+block|,
+comment|/* "userCertificate" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|465
 index|]
 operator|)
@@ -44364,6 +45876,15 @@ index|]
 operator|)
 block|,
 comment|/* "userId" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|879
+index|]
+operator|)
+block|,
+comment|/* "userPassword" */
 operator|&
 operator|(
 name|nid_objs
@@ -44499,6 +46020,15 @@ index|]
 operator|)
 block|,
 comment|/* "whirlpool" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|868
+index|]
+operator|)
+block|,
+comment|/* "x121Address" */
 operator|&
 operator|(
 name|nid_objs
@@ -44859,11 +46389,245 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|859
+index|]
+operator|)
+block|,
+comment|/* OBJ_searchGuide                  2 5 4 14 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|860
+index|]
+operator|)
+block|,
+comment|/* OBJ_businessCategory             2 5 4 15 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|861
+index|]
+operator|)
+block|,
+comment|/* OBJ_postalAddress                2 5 4 16 */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|661
 index|]
 operator|)
 block|,
 comment|/* OBJ_postalCode                   2 5 4 17 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|862
+index|]
+operator|)
+block|,
+comment|/* OBJ_postOfficeBox                2 5 4 18 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|863
+index|]
+operator|)
+block|,
+comment|/* OBJ_physicalDeliveryOfficeName   2 5 4 19 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|864
+index|]
+operator|)
+block|,
+comment|/* OBJ_telephoneNumber              2 5 4 20 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|865
+index|]
+operator|)
+block|,
+comment|/* OBJ_telexNumber                  2 5 4 21 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|866
+index|]
+operator|)
+block|,
+comment|/* OBJ_teletexTerminalIdentifier    2 5 4 22 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|867
+index|]
+operator|)
+block|,
+comment|/* OBJ_facsimileTelephoneNumber     2 5 4 23 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|868
+index|]
+operator|)
+block|,
+comment|/* OBJ_x121Address                  2 5 4 24 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|869
+index|]
+operator|)
+block|,
+comment|/* OBJ_internationaliSDNNumber      2 5 4 25 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|870
+index|]
+operator|)
+block|,
+comment|/* OBJ_registeredAddress            2 5 4 26 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|871
+index|]
+operator|)
+block|,
+comment|/* OBJ_destinationIndicator         2 5 4 27 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|872
+index|]
+operator|)
+block|,
+comment|/* OBJ_preferredDeliveryMethod      2 5 4 28 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|873
+index|]
+operator|)
+block|,
+comment|/* OBJ_presentationAddress          2 5 4 29 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|874
+index|]
+operator|)
+block|,
+comment|/* OBJ_supportedApplicationContext  2 5 4 30 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|875
+index|]
+operator|)
+block|,
+comment|/* OBJ_member                       2 5 4 31 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|876
+index|]
+operator|)
+block|,
+comment|/* OBJ_owner                        2 5 4 32 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|877
+index|]
+operator|)
+block|,
+comment|/* OBJ_roleOccupant                 2 5 4 33 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|878
+index|]
+operator|)
+block|,
+comment|/* OBJ_seeAlso                      2 5 4 34 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|879
+index|]
+operator|)
+block|,
+comment|/* OBJ_userPassword                 2 5 4 35 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|880
+index|]
+operator|)
+block|,
+comment|/* OBJ_userCertificate              2 5 4 36 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|881
+index|]
+operator|)
+block|,
+comment|/* OBJ_cACertificate                2 5 4 37 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|882
+index|]
+operator|)
+block|,
+comment|/* OBJ_authorityRevocationList      2 5 4 38 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|883
+index|]
+operator|)
+block|,
+comment|/* OBJ_certificateRevocationList    2 5 4 39 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|884
+index|]
+operator|)
+block|,
+comment|/* OBJ_crossCertificatePair         2 5 4 40 */
 operator|&
 operator|(
 name|nid_objs
@@ -44918,6 +46682,78 @@ index|]
 operator|)
 block|,
 comment|/* OBJ_dnQualifier                  2 5 4 46 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|885
+index|]
+operator|)
+block|,
+comment|/* OBJ_enhancedSearchGuide          2 5 4 47 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|886
+index|]
+operator|)
+block|,
+comment|/* OBJ_protocolInformation          2 5 4 48 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|887
+index|]
+operator|)
+block|,
+comment|/* OBJ_distinguishedName            2 5 4 49 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|888
+index|]
+operator|)
+block|,
+comment|/* OBJ_uniqueMember                 2 5 4 50 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|889
+index|]
+operator|)
+block|,
+comment|/* OBJ_houseIdentifier              2 5 4 51 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|890
+index|]
+operator|)
+block|,
+comment|/* OBJ_supportedAlgorithms          2 5 4 52 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|891
+index|]
+operator|)
+block|,
+comment|/* OBJ_deltaRevocationList          2 5 4 53 */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|892
+index|]
+operator|)
+block|,
+comment|/* OBJ_dmdName                      2 5 4 54 */
 operator|&
 operator|(
 name|nid_objs
@@ -45223,7 +47059,7 @@ literal|679
 index|]
 operator|)
 block|,
-comment|/* OBJ_wap_wsg                      2 23 43 13 */
+comment|/* OBJ_wap_wsg                      2 23 43 1 */
 operator|&
 operator|(
 name|nid_objs
@@ -46897,7 +48733,7 @@ literal|735
 index|]
 operator|)
 block|,
-comment|/* OBJ_wap_wsg_idm_ecid_wtls1       2 23 43 13 4 1 */
+comment|/* OBJ_wap_wsg_idm_ecid_wtls1       2 23 43 1 4 1 */
 operator|&
 operator|(
 name|nid_objs
@@ -46906,7 +48742,7 @@ literal|736
 index|]
 operator|)
 block|,
-comment|/* OBJ_wap_wsg_idm_ecid_wtls3       2 23 43 13 4 3 */
+comment|/* OBJ_wap_wsg_idm_ecid_wtls3       2 23 43 1 4 3 */
 operator|&
 operator|(
 name|nid_objs
@@ -46915,7 +48751,7 @@ literal|737
 index|]
 operator|)
 block|,
-comment|/* OBJ_wap_wsg_idm_ecid_wtls4       2 23 43 13 4 4 */
+comment|/* OBJ_wap_wsg_idm_ecid_wtls4       2 23 43 1 4 4 */
 operator|&
 operator|(
 name|nid_objs
@@ -46924,7 +48760,7 @@ literal|738
 index|]
 operator|)
 block|,
-comment|/* OBJ_wap_wsg_idm_ecid_wtls5       2 23 43 13 4 5 */
+comment|/* OBJ_wap_wsg_idm_ecid_wtls5       2 23 43 1 4 5 */
 operator|&
 operator|(
 name|nid_objs
@@ -46933,7 +48769,7 @@ literal|739
 index|]
 operator|)
 block|,
-comment|/* OBJ_wap_wsg_idm_ecid_wtls6       2 23 43 13 4 6 */
+comment|/* OBJ_wap_wsg_idm_ecid_wtls6       2 23 43 1 4 6 */
 operator|&
 operator|(
 name|nid_objs
@@ -46942,7 +48778,7 @@ literal|740
 index|]
 operator|)
 block|,
-comment|/* OBJ_wap_wsg_idm_ecid_wtls7       2 23 43 13 4 7 */
+comment|/* OBJ_wap_wsg_idm_ecid_wtls7       2 23 43 1 4 7 */
 operator|&
 operator|(
 name|nid_objs
@@ -46951,7 +48787,7 @@ literal|741
 index|]
 operator|)
 block|,
-comment|/* OBJ_wap_wsg_idm_ecid_wtls8       2 23 43 13 4 8 */
+comment|/* OBJ_wap_wsg_idm_ecid_wtls8       2 23 43 1 4 8 */
 operator|&
 operator|(
 name|nid_objs
@@ -46960,7 +48796,7 @@ literal|742
 index|]
 operator|)
 block|,
-comment|/* OBJ_wap_wsg_idm_ecid_wtls9       2 23 43 13 4 9 */
+comment|/* OBJ_wap_wsg_idm_ecid_wtls9       2 23 43 1 4 9 */
 operator|&
 operator|(
 name|nid_objs
@@ -46969,7 +48805,7 @@ literal|743
 index|]
 operator|)
 block|,
-comment|/* OBJ_wap_wsg_idm_ecid_wtls10      2 23 43 13 4 10 */
+comment|/* OBJ_wap_wsg_idm_ecid_wtls10      2 23 43 1 4 10 */
 operator|&
 operator|(
 name|nid_objs
@@ -46978,7 +48814,7 @@ literal|744
 index|]
 operator|)
 block|,
-comment|/* OBJ_wap_wsg_idm_ecid_wtls11      2 23 43 13 4 11 */
+comment|/* OBJ_wap_wsg_idm_ecid_wtls11      2 23 43 1 4 11 */
 operator|&
 operator|(
 name|nid_objs
@@ -46987,7 +48823,7 @@ literal|745
 index|]
 operator|)
 block|,
-comment|/* OBJ_wap_wsg_idm_ecid_wtls12      2 23 43 13 4 12 */
+comment|/* OBJ_wap_wsg_idm_ecid_wtls12      2 23 43 1 4 12 */
 operator|&
 operator|(
 name|nid_objs

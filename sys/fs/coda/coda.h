@@ -19,6 +19,12 @@ directive|define
 name|_CODA_HEADER_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -28,6 +34,11 @@ end_include
 begin_comment
 comment|/* for CODA_COMPAT_5 option */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Avoid CODA_COMPAT_5 redefinition in coda5 module */
@@ -378,6 +389,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_typedef
+typedef|typedef
+name|u_int32_t
+name|cuid_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|u_int32_t
+name|cgid_t
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  * Cfs constants  */
 end_comment
@@ -537,7 +562,7 @@ struct|struct
 name|venus_dirent
 block|{
 name|unsigned
-name|long
+name|int
 name|d_fileno
 decl_stmt|;
 comment|/* file number of entry */
@@ -546,10 +571,12 @@ name|short
 name|d_reclen
 decl_stmt|;
 comment|/* length of this record */
+name|unsigned
 name|char
 name|d_type
 decl_stmt|;
 comment|/* file type, see below */
+name|unsigned
 name|char
 name|d_namlen
 decl_stmt|;
@@ -685,9 +712,9 @@ directive|ifdef
 name|CODA_COMPAT_5
 end_ifdef
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|CodaFid
 block|{
 name|u_long
 name|Volume
@@ -699,9 +726,8 @@ name|u_long
 name|Unique
 decl_stmt|;
 block|}
-name|CodaFid
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_function
 specifier|static
@@ -709,6 +735,7 @@ name|__inline__
 name|ino_t
 name|coda_f2i
 parameter_list|(
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -755,6 +782,7 @@ name|char
 modifier|*
 name|coda_f2s
 parameter_list|(
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -800,10 +828,12 @@ name|__inline__
 name|int
 name|coda_fid_eq
 parameter_list|(
+name|struct
 name|CodaFid
 modifier|*
 name|fid1
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid2
@@ -876,9 +906,9 @@ begin_comment
 comment|/* CODA_COMPAT_5 */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|CodaFid
 block|{
 name|u_int32_t
 name|opaque
@@ -887,9 +917,8 @@ literal|4
 index|]
 decl_stmt|;
 block|}
-name|CodaFid
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_function
 specifier|static
@@ -897,6 +926,7 @@ name|__inline__
 name|ino_t
 name|coda_f2i
 parameter_list|(
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -959,6 +989,7 @@ name|char
 modifier|*
 name|coda_f2s
 parameter_list|(
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -1020,10 +1051,12 @@ name|__inline__
 name|int
 name|coda_fid_eq
 parameter_list|(
+name|struct
 name|CodaFid
 modifier|*
 name|fid1
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid2
@@ -1145,7 +1178,7 @@ begin_struct
 struct|struct
 name|coda_vattr
 block|{
-name|int
+name|long
 name|va_type
 decl_stmt|;
 comment|/* vnode type (for create) */
@@ -1157,11 +1190,11 @@ name|short
 name|va_nlink
 decl_stmt|;
 comment|/* number of references to file */
-name|uid_t
+name|cuid_t
 name|va_uid
 decl_stmt|;
 comment|/* owner user id */
-name|gid_t
+name|cgid_t
 name|va_gid
 decl_stmt|;
 comment|/* owner group id */
@@ -1511,7 +1544,7 @@ begin_define
 define|#
 directive|define
 name|CIOC_KERNEL_VERSION
-value|_IOWR('c', 10, sizeof (int))
+value|_IOWR('c', 10, int)
 end_define
 
 begin_if
@@ -1652,15 +1685,12 @@ comment|/* Keep multiple outstanding msgs distinct */
 name|pid_t
 name|pid
 decl_stmt|;
-comment|/* Common to all */
 name|pid_t
 name|pgid
 decl_stmt|;
-comment|/* Common to all */
-name|uid_t
+name|cuid_t
 name|uid
 decl_stmt|;
-comment|/* Common to all */
 block|}
 struct|;
 end_struct
@@ -1678,16 +1708,13 @@ begin_struct
 struct|struct
 name|coda_out_hdr
 block|{
-name|unsigned
-name|long
+name|u_int32_t
 name|opcode
 decl_stmt|;
-name|unsigned
-name|long
+name|u_int32_t
 name|unique
 decl_stmt|;
-name|unsigned
-name|long
+name|u_int32_t
 name|result
 decl_stmt|;
 block|}
@@ -1706,6 +1733,7 @@ name|struct
 name|coda_out_hdr
 name|oh
 decl_stmt|;
+name|struct
 name|CodaFid
 name|Fid
 decl_stmt|;
@@ -1745,6 +1773,7 @@ name|struct
 name|coda_in_hdr
 name|ih
 decl_stmt|;
+name|struct
 name|CodaFid
 name|Fid
 decl_stmt|;
@@ -1785,6 +1814,7 @@ name|struct
 name|coda_in_hdr
 name|ih
 decl_stmt|;
+name|struct
 name|CodaFid
 name|Fid
 decl_stmt|;
@@ -1819,6 +1849,7 @@ name|struct
 name|coda_in_hdr
 name|ih
 decl_stmt|;
+name|struct
 name|CodaFid
 name|Fid
 decl_stmt|;
@@ -1871,6 +1902,7 @@ name|struct
 name|coda_in_hdr
 name|ih
 decl_stmt|;
+name|struct
 name|CodaFid
 name|Fid
 decl_stmt|;
@@ -1906,6 +1938,7 @@ name|struct
 name|coda_in_hdr
 name|ih
 decl_stmt|;
+name|struct
 name|CodaFid
 name|Fid
 decl_stmt|;
@@ -1941,6 +1974,7 @@ name|struct
 name|coda_in_hdr
 name|ih
 decl_stmt|;
+name|struct
 name|CodaFid
 name|Fid
 decl_stmt|;
@@ -1993,6 +2027,7 @@ name|struct
 name|coda_in_hdr
 name|ih
 decl_stmt|;
+name|struct
 name|CodaFid
 name|Fid
 decl_stmt|;
@@ -2015,6 +2050,7 @@ name|struct
 name|coda_out_hdr
 name|oh
 decl_stmt|;
+name|struct
 name|CodaFid
 name|Fid
 decl_stmt|;
@@ -2037,6 +2073,7 @@ name|struct
 name|coda_in_hdr
 name|ih
 decl_stmt|;
+name|struct
 name|CodaFid
 name|Fid
 decl_stmt|;
@@ -2066,6 +2103,7 @@ name|struct
 name|coda_out_hdr
 name|oh
 decl_stmt|;
+name|struct
 name|CodaFid
 name|Fid
 decl_stmt|;
@@ -2089,6 +2127,7 @@ name|struct
 name|coda_in_hdr
 name|ih
 decl_stmt|;
+name|struct
 name|CodaFid
 name|Fid
 decl_stmt|;
@@ -2124,10 +2163,12 @@ name|struct
 name|coda_in_hdr
 name|ih
 decl_stmt|;
+name|struct
 name|CodaFid
 name|sourceFid
 decl_stmt|;
 comment|/* cnode to link *to* */
+name|struct
 name|CodaFid
 name|destFid
 decl_stmt|;
@@ -2164,12 +2205,14 @@ name|struct
 name|coda_in_hdr
 name|ih
 decl_stmt|;
+name|struct
 name|CodaFid
 name|sourceFid
 decl_stmt|;
 name|int
 name|srcname
 decl_stmt|;
+name|struct
 name|CodaFid
 name|destFid
 decl_stmt|;
@@ -2204,6 +2247,7 @@ name|struct
 name|coda_in_hdr
 name|ih
 decl_stmt|;
+name|struct
 name|CodaFid
 name|Fid
 decl_stmt|;
@@ -2227,6 +2271,7 @@ name|struct
 name|coda_out_hdr
 name|oh
 decl_stmt|;
+name|struct
 name|CodaFid
 name|Fid
 decl_stmt|;
@@ -2250,6 +2295,7 @@ name|struct
 name|coda_in_hdr
 name|ih
 decl_stmt|;
+name|struct
 name|CodaFid
 name|Fid
 decl_stmt|;
@@ -2285,6 +2331,7 @@ name|struct
 name|coda_in_hdr
 name|ih
 decl_stmt|;
+name|struct
 name|CodaFid
 name|Fid
 decl_stmt|;
@@ -2329,6 +2376,7 @@ name|struct
 name|coda_in_hdr
 name|ih
 decl_stmt|;
+name|struct
 name|CodaFid
 name|Fid
 decl_stmt|;
@@ -2371,6 +2419,7 @@ name|struct
 name|coda_in_hdr
 name|ih
 decl_stmt|;
+name|struct
 name|CodaFid
 name|Fid
 decl_stmt|;
@@ -2409,6 +2458,7 @@ name|struct
 name|coda_in_hdr
 name|ih
 decl_stmt|;
+name|struct
 name|CodaFid
 name|Fid
 decl_stmt|;
@@ -2440,6 +2490,7 @@ name|struct
 name|coda_in_hdr
 name|ih
 decl_stmt|;
+name|struct
 name|CodaFid
 name|Fid
 decl_stmt|;
@@ -2459,6 +2510,7 @@ name|struct
 name|coda_in_hdr
 name|ih
 decl_stmt|;
+name|struct
 name|CodaFid
 name|Fid
 decl_stmt|;
@@ -2474,6 +2526,7 @@ name|struct
 name|coda_out_hdr
 name|oh
 decl_stmt|;
+name|struct
 name|CodaFid
 name|Fid
 decl_stmt|;
@@ -2521,7 +2574,7 @@ name|cred
 decl_stmt|;
 else|#
 directive|else
-name|uid_t
+name|cuid_t
 name|uid
 decl_stmt|;
 endif|#
@@ -2546,6 +2599,7 @@ name|struct
 name|coda_out_hdr
 name|oh
 decl_stmt|;
+name|struct
 name|CodaFid
 name|Fid
 decl_stmt|;
@@ -2569,6 +2623,7 @@ name|struct
 name|coda_out_hdr
 name|oh
 decl_stmt|;
+name|struct
 name|CodaFid
 name|Fid
 decl_stmt|;
@@ -2601,6 +2656,7 @@ name|cred
 decl_stmt|;
 endif|#
 directive|endif
+name|struct
 name|CodaFid
 name|Fid
 decl_stmt|;
@@ -2624,6 +2680,7 @@ name|struct
 name|coda_out_hdr
 name|oh
 decl_stmt|;
+name|struct
 name|CodaFid
 name|Fid
 decl_stmt|;
@@ -2648,9 +2705,11 @@ name|struct
 name|coda_out_hdr
 name|oh
 decl_stmt|;
+name|struct
 name|CodaFid
 name|NewFid
 decl_stmt|;
+name|struct
 name|CodaFid
 name|OldFid
 decl_stmt|;
@@ -2670,6 +2729,7 @@ name|struct
 name|coda_in_hdr
 name|ih
 decl_stmt|;
+name|struct
 name|CodaFid
 name|Fid
 decl_stmt|;
@@ -2691,11 +2751,17 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|_KERNEL
+comment|/* not passed from userspace but used in-kernel only */
 name|struct
 name|vnode
 modifier|*
 name|vp
 decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -2712,6 +2778,7 @@ name|struct
 name|coda_in_hdr
 name|ih
 decl_stmt|;
+name|struct
 name|CodaFid
 name|Fid
 decl_stmt|;
@@ -3021,14 +3088,16 @@ decl_stmt|,
 name|out
 decl_stmt|;
 comment|/* Data to be transferred in, or out */
+name|unsigned
 name|short
 name|in_size
 decl_stmt|;
-comment|/* Size of input buffer<= 2K */
+comment|/* Size of input buffer<= 8K */
+name|unsigned
 name|short
 name|out_size
 decl_stmt|;
-comment|/* Maximum size of output buffer,<= 2K */
+comment|/* Maximum size of output buffer,<= 8K */
 block|}
 struct|;
 end_struct
@@ -3118,6 +3187,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|CTL_VOL
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CTL_VNO
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CTL_UNI
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
 name|CTL_INO
 value|-1
 end_define
@@ -3178,7 +3268,7 @@ name|IS_CTL_FID
 parameter_list|(
 name|fidp
 parameter_list|)
-value|((fidp)->opaque[0] == -1&&\ 				 (fidp)->opaque[1] == -1&&\ 				 (fidp)->opaque[2] == -1&&\ 				 (fidp)->opaque[3] == -1)
+value|((fidp)->opaque[1] == CTL_VOL&& \ 				(fidp)->opaque[2] == CTL_VNO&& \ 				(fidp)->opaque[3] == CTL_UNI)
 end_define
 
 begin_define

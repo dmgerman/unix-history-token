@@ -1076,7 +1076,7 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|pcb_save
+name|pcb_user_save
 operator|.
 name|sv_xmm
 argument_list|,
@@ -1154,7 +1154,7 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|pcb_save
+name|pcb_user_save
 operator|.
 name|sv_xmm
 argument_list|,

@@ -4663,6 +4663,9 @@ argument|&state->ks_kbds
 argument_list|,
 argument|next
 argument_list|)
+operator|(
+name|void
+operator|)
 name|kbdd_ioctl
 argument_list|(
 name|k
@@ -4797,6 +4800,9 @@ argument|&state->ks_kbds
 argument_list|,
 argument|next
 argument_list|)
+operator|(
+name|void
+operator|)
 name|kbdd_ioctl
 argument_list|(
 name|k
@@ -5049,6 +5055,9 @@ argument|&state->ks_kbds
 argument_list|,
 argument|next
 argument_list|)
+operator|(
+name|void
+operator|)
 name|kbdd_ioctl
 argument_list|(
 name|k
@@ -5098,6 +5107,9 @@ argument|&state->ks_kbds
 argument_list|,
 argument|next
 argument_list|)
+operator|(
+name|void
+operator|)
 name|kbdd_ioctl
 argument_list|(
 name|k

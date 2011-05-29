@@ -1173,7 +1173,7 @@ block|{
 name|char
 name|s
 index|[
-literal|1
+literal|2
 index|]
 decl_stmt|;
 name|sprintf
@@ -1202,7 +1202,7 @@ block|{
 name|char
 name|s
 index|[
-literal|5
+literal|11
 index|]
 decl_stmt|;
 name|sprintf

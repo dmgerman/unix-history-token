@@ -195,17 +195,36 @@ directive|include
 file|<net/bpf.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|INET
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+end_if
 
 begin_include
 include|#
 directive|include
 file|<netinet/in.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_include
 include|#
@@ -1183,6 +1202,66 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_link
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_net_link
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|lagg
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"Link Aggregation"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|lagg_failover_rx_all
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Allow input on any failover links */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_link_lagg
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|failover_rx_all
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|lagg_failover_rx_all
+argument_list|,
+literal|0
+argument_list|,
+literal|"Accept input from any interface in a failover lagg"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|int
@@ -2024,6 +2103,14 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Unhook the aggregation protocol */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_detach
+operator|!=
+name|NULL
+condition|)
 call|(
 modifier|*
 name|sc
@@ -2756,20 +2843,6 @@ condition|)
 return|return
 operator|(
 name|ENOSPC
-operator|)
-return|;
-comment|/* New lagg port has to be in an idle state */
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_drv_flags
-operator|&
-name|IFF_DRV_OACTIVE
-condition|)
-return|return
-operator|(
-name|EBUSY
 operator|)
 return|;
 comment|/* Check if port has already been associated to a lagg */
@@ -7857,6 +7930,8 @@ operator|==
 name|sc
 operator|->
 name|sc_primary
+operator|||
+name|lagg_failover_rx_all
 condition|)
 block|{
 name|m
@@ -8837,6 +8912,16 @@ expr_stmt|;
 comment|/* Tap off LACP control messages */
 if|if
 condition|(
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_VLANTAG
+operator|)
+operator|==
+literal|0
+operator|&&
 name|etype
 operator|==
 name|ETHERTYPE_SLOW

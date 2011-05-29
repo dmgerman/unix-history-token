@@ -1248,6 +1248,11 @@ define|#
 directive|define
 name|X509_V_FLAG_NOTIFY_POLICY
 value|0x800
+comment|/* Check selfsigned CA signature */
+define|#
+directive|define
+name|X509_V_FLAG_CHECK_SS_SIGNATURE
+value|0x4000
 define|#
 directive|define
 name|X509_VP_FLAG_DEFAULT

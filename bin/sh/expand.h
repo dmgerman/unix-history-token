@@ -98,6 +98,28 @@ begin_comment
 comment|/* keeps quotes around for CASE pattern */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EXP_SPLIT_LIT
+value|0x20
+end_define
+
+begin_comment
+comment|/* IFS split literal text ${v+-a b c} */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXP_LIT_QUOTED
+value|0x40
+end_define
+
+begin_comment
+comment|/* for EXP_SPLIT_LIT, start off quoted */
+end_comment
+
 begin_union_decl
 union_decl|union
 name|node
@@ -178,6 +200,17 @@ name|union
 name|node
 modifier|*
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|expandhassideeffects
+parameter_list|(
 specifier|const
 name|char
 modifier|*

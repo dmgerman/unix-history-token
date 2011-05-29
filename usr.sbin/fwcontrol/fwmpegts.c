@@ -371,6 +371,8 @@ name|err
 argument_list|(
 name|EX_NOINPUT
 argument_list|,
+literal|"%s"
+argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;

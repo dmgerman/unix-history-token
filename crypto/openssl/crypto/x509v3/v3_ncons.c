@@ -755,15 +755,6 @@ operator|->
 name|base
 argument_list|)
 expr_stmt|;
-name|tree
-operator|=
-name|sk_GENERAL_SUBTREE_value
-argument_list|(
-name|trees
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
 name|BIO_puts
 argument_list|(
 name|bp

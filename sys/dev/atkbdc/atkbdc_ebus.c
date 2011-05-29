@@ -762,6 +762,12 @@ return|;
 block|}
 name|sc
 operator|->
+name|retry
+operator|=
+literal|5000
+expr_stmt|;
+name|sc
+operator|->
 name|port0
 operator|=
 name|bus_alloc_resource

@@ -143,7 +143,7 @@ name|readb
 parameter_list|(
 name|va
 parameter_list|)
-value|(*(volatile u_int8_t *) (va))
+value|(*(volatile uint8_t *) (va))
 end_define
 
 begin_define
@@ -153,7 +153,7 @@ name|readw
 parameter_list|(
 name|va
 parameter_list|)
-value|(*(volatile u_int16_t *) (va))
+value|(*(volatile uint16_t *) (va))
 end_define
 
 begin_define
@@ -163,7 +163,7 @@ name|readl
 parameter_list|(
 name|va
 parameter_list|)
-value|(*(volatile u_int32_t *) (va))
+value|(*(volatile uint32_t *) (va))
 end_define
 
 begin_define
@@ -175,7 +175,7 @@ name|va
 parameter_list|,
 name|d
 parameter_list|)
-value|(*(volatile u_int8_t *) (va) = (d))
+value|(*(volatile uint8_t *) (va) = (d))
 end_define
 
 begin_define
@@ -187,7 +187,7 @@ name|va
 parameter_list|,
 name|d
 parameter_list|)
-value|(*(volatile u_int16_t *) (va) = (d))
+value|(*(volatile uint16_t *) (va) = (d))
 end_define
 
 begin_define
@@ -199,7 +199,7 @@ name|va
 parameter_list|,
 name|d
 parameter_list|)
-value|(*(volatile u_int32_t *) (va) = (d))
+value|(*(volatile uint32_t *) (va) = (d))
 end_define
 
 begin_if
@@ -645,7 +645,7 @@ block|{
 name|u_char
 name|data
 decl_stmt|;
-asm|__asm volatile("inb %w1, %0" : "=a" (data) : "Nd" (port));
+asm|__asm __volatile("inb %w1, %0" : "=a" (data) : "Nd" (port));
 return|return
 operator|(
 name|data
@@ -667,7 +667,7 @@ block|{
 name|u_int
 name|data
 decl_stmt|;
-asm|__asm volatile("inl %w1, %0" : "=a" (data) : "Nd" (port));
+asm|__asm __volatile("inl %w1, %0" : "=a" (data) : "Nd" (port));
 return|return
 operator|(
 name|data
@@ -819,7 +819,7 @@ block|{
 name|u_short
 name|data
 decl_stmt|;
-asm|__asm volatile("inw %w1, %0" : "=a" (data) : "Nd" (port));
+asm|__asm __volatile("inw %w1, %0" : "=a" (data) : "Nd" (port));
 return|return
 operator|(
 name|data
@@ -858,7 +858,7 @@ name|u_int
 name|data
 parameter_list|)
 block|{
-asm|__asm volatile("outl %0, %w1" : : "a" (data), "Nd" (port));
+asm|__asm __volatile("outl %0, %w1" : : "a" (data), "Nd" (port));
 block|}
 end_function
 
@@ -989,7 +989,7 @@ name|u_short
 name|data
 parameter_list|)
 block|{
-asm|__asm volatile("outw %0, %w1" : : "a" (data), "Nd" (port));
+asm|__asm __volatile("outw %0, %w1" : : "a" (data), "Nd" (port));
 block|}
 end_function
 
@@ -1095,6 +1095,27 @@ name|uint64_t
 name|rv
 decl_stmt|;
 asm|__asm __volatile("rdtsc" : "=A" (rv));
+return|return
+operator|(
+name|rv
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|uint32_t
+name|rdtsc32
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|uint32_t
+name|rv
+decl_stmt|;
+asm|__asm __volatile("rdtsc" : "=a" (rv) : : "edx");
 return|return
 operator|(
 name|rv
@@ -1373,16 +1394,16 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|u_int
+name|u_short
 name|rfs
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_int
+name|u_short
 name|sel
 decl_stmt|;
-asm|__asm __volatile("mov %%fs,%0" : "=rm" (sel));
+asm|__asm __volatile("movw %%fs,%0" : "=rm" (sel));
 return|return
 operator|(
 name|sel
@@ -1415,16 +1436,16 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|u_int
+name|u_short
 name|rgs
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_int
+name|u_short
 name|sel
 decl_stmt|;
-asm|__asm __volatile("mov %%gs,%0" : "=rm" (sel));
+asm|__asm __volatile("movw %%gs,%0" : "=rm" (sel));
 return|return
 operator|(
 name|sel
@@ -1478,16 +1499,16 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|u_int
+name|u_short
 name|rss
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_int
+name|u_short
 name|sel
 decl_stmt|;
-asm|__asm __volatile("mov %%ss,%0" : "=rm" (sel));
+asm|__asm __volatile("movw %%ss,%0" : "=rm" (sel));
 return|return
 operator|(
 name|sel
@@ -1523,11 +1544,11 @@ name|__inline
 name|void
 name|load_fs
 parameter_list|(
-name|u_int
+name|u_short
 name|sel
 parameter_list|)
 block|{
-asm|__asm __volatile("mov %0,%%fs" : : "rm" (sel));
+asm|__asm __volatile("movw %0,%%fs" : : "rm" (sel));
 block|}
 end_function
 
@@ -1537,11 +1558,11 @@ name|__inline
 name|void
 name|load_gs
 parameter_list|(
-name|u_int
+name|u_short
 name|sel
 parameter_list|)
 block|{
-asm|__asm __volatile("mov %0,%%gs" : : "rm" (sel));
+asm|__asm __volatile("movw %0,%%gs" : : "rm" (sel));
 block|}
 end_function
 
@@ -2323,7 +2344,7 @@ begin_function_decl
 name|void
 name|load_fs
 parameter_list|(
-name|u_int
+name|u_short
 name|sel
 parameter_list|)
 function_decl|;
@@ -2333,7 +2354,7 @@ begin_function_decl
 name|void
 name|load_gs
 parameter_list|(
-name|u_int
+name|u_short
 name|sel
 parameter_list|)
 function_decl|;

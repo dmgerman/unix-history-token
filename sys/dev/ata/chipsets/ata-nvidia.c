@@ -2314,6 +2314,9 @@ condition|)
 name|ata_sata_phy_check_events
 argument_list|(
 name|dev
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* clear interrupt(s) */
@@ -2384,6 +2387,16 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|struct
+name|ata_channel
+modifier|*
+name|ch
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|ata_sata_phy_reset
@@ -2400,6 +2413,13 @@ name|ata_generic_reset
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+else|else
+name|ch
+operator|->
+name|devices
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function

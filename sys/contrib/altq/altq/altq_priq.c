@@ -35,16 +35,6 @@ directive|include
 file|"opt_altq.h"
 end_include
 
-begin_if
-if|#
-directive|if
-operator|(
-name|__FreeBSD__
-operator|!=
-literal|2
-operator|)
-end_if
-
 begin_include
 include|#
 directive|include
@@ -62,11 +52,6 @@ include|#
 directive|include
 file|"opt_inet6.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -2468,29 +2453,6 @@ literal|0
 condition|)
 block|{
 comment|/* should not happen */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
-expr|\
-operator|||
-operator|(
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD_version
-operator|>=
-literal|501113
-operator|)
 name|printf
 argument_list|(
 literal|"altq: packet for %s does not have pkthdr\n"
@@ -2502,27 +2464,6 @@ operator|->
 name|if_xname
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|printf
-argument_list|(
-literal|"altq: packet for %s%d does not have pkthdr\n"
-argument_list|,
-name|ifq
-operator|->
-name|altq_ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifq
-operator|->
-name|altq_ifp
-operator|->
-name|if_unit
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|m_freem
 argument_list|(
 name|m

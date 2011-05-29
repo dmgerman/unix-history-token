@@ -246,6 +246,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet6/send.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/limits.h>
 end_include
 
@@ -287,6 +293,10 @@ parameter_list|)
 value|((struct sockaddr_in6 *)s)
 end_define
 
+begin_comment
+comment|/* timer values */
+end_comment
+
 begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
@@ -294,8 +304,14 @@ name|int
 argument_list|,
 name|nd6_prune
 argument_list|)
+operator|=
+literal|1
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* walk list every 1 seconds */
+end_comment
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -304,8 +320,14 @@ name|int
 argument_list|,
 name|nd6_delay
 argument_list|)
+operator|=
+literal|5
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* delay first probe time 5 second */
+end_comment
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -314,8 +336,14 @@ name|int
 argument_list|,
 name|nd6_umaxtries
 argument_list|)
+operator|=
+literal|3
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* maximum unicast query */
+end_comment
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -324,8 +352,14 @@ name|int
 argument_list|,
 name|nd6_mmaxtries
 argument_list|)
+operator|=
+literal|3
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* maximum multicast query */
+end_comment
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -334,8 +368,14 @@ name|int
 argument_list|,
 name|nd6_useloopback
 argument_list|)
+operator|=
+literal|1
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* use loopback interface for 					 * local traffic */
+end_comment
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -344,8 +384,20 @@ name|int
 argument_list|,
 name|nd6_gctimer
 argument_list|)
+operator|=
+operator|(
+literal|60
+operator|*
+literal|60
+operator|*
+literal|24
+operator|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* 1 day: garbage 					 * collection timer */
+end_comment
 
 begin_comment
 comment|/* preventing too many loops in ND option parsing */
@@ -359,8 +411,14 @@ name|int
 argument_list|,
 name|nd6_maxndopt
 argument_list|)
+operator|=
+literal|10
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* max # of ND options allowed */
+end_comment
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -369,8 +427,14 @@ name|int
 argument_list|,
 name|nd6_maxnudhint
 argument_list|)
+operator|=
+literal|0
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* max # of subsequent upper 					 * layer hints */
+end_comment
 
 begin_expr_stmt
 specifier|static
@@ -380,8 +444,14 @@ name|int
 argument_list|,
 name|nd6_maxqueuelen
 argument_list|)
+operator|=
+literal|1
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* max pkts cached in unresolved 					 * ND entries */
+end_comment
 
 begin_define
 define|#
@@ -397,6 +467,12 @@ name|V_nd6_maxqueuelen
 value|VNET(nd6_maxqueuelen)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ND6_DEBUG
+end_ifdef
+
 begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
@@ -404,8 +480,32 @@ name|int
 argument_list|,
 name|nd6_debug
 argument_list|)
+operator|=
+literal|1
 expr_stmt|;
 end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|nd6_debug
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* for debugging? */
@@ -452,6 +552,8 @@ name|int
 argument_list|,
 name|nd6_recalc_reachtm_interval
 argument_list|)
+operator|=
+name|ND6_RECALC_REACHTM_INTERVAL
 expr_stmt|;
 end_expr_stmt
 
@@ -469,6 +571,28 @@ name|sockaddr_in6
 name|all1_sa
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|send_sendso_input_hook
+function_decl|)
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -597,40 +721,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
-name|int
-argument_list|,
-name|dad_ignore_ns
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
-name|int
-argument_list|,
-name|dad_maxtry
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_dad_ignore_ns
-value|VNET(dad_ignore_ns)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_dad_maxtry
-value|VNET(dad_maxtry)
-end_define
-
 begin_function
 name|void
 name|nd6_init
@@ -641,132 +731,11 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|V_nd6_prune
-operator|=
-literal|1
-expr_stmt|;
-comment|/* walk list every 1 seconds */
-name|V_nd6_delay
-operator|=
-literal|5
-expr_stmt|;
-comment|/* delay first probe time 5 second */
-name|V_nd6_umaxtries
-operator|=
-literal|3
-expr_stmt|;
-comment|/* maximum unicast query */
-name|V_nd6_mmaxtries
-operator|=
-literal|3
-expr_stmt|;
-comment|/* maximum multicast query */
-name|V_nd6_useloopback
-operator|=
-literal|1
-expr_stmt|;
-comment|/* use loopback interface for local traffic */
-name|V_nd6_gctimer
-operator|=
-operator|(
-literal|60
-operator|*
-literal|60
-operator|*
-literal|24
-operator|)
-expr_stmt|;
-comment|/* 1 day: garbage collection timer */
-comment|/* preventing too many loops in ND option parsing */
-name|V_nd6_maxndopt
-operator|=
-literal|10
-expr_stmt|;
-comment|/* max # of ND options allowed */
-name|V_nd6_maxnudhint
-operator|=
-literal|0
-expr_stmt|;
-comment|/* max # of subsequent upper layer hints */
-name|V_nd6_maxqueuelen
-operator|=
-literal|1
-expr_stmt|;
-comment|/* max pkts cached in unresolved ND entries */
-ifdef|#
-directive|ifdef
-name|ND6_DEBUG
-name|V_nd6_debug
-operator|=
-literal|1
-expr_stmt|;
-else|#
-directive|else
-name|V_nd6_debug
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
-name|V_nd6_recalc_reachtm_interval
-operator|=
-name|ND6_RECALC_REACHTM_INTERVAL
-expr_stmt|;
-name|V_dad_ignore_ns
-operator|=
-literal|0
-expr_stmt|;
-comment|/* ignore NS in DAD - specwise incorrect*/
-name|V_dad_maxtry
-operator|=
-literal|15
-expr_stmt|;
-comment|/* max # of *tries* to transmit DAD packet */
-comment|/* 	 * XXX just to get this to compile KMM 	 */
-ifdef|#
-directive|ifdef
-name|notyet
-name|V_llinfo_nd6
-operator|.
-name|ln_next
-operator|=
-operator|&
-name|V_llinfo_nd6
-expr_stmt|;
-name|V_llinfo_nd6
-operator|.
-name|ln_prev
-operator|=
-operator|&
-name|V_llinfo_nd6
-expr_stmt|;
-endif|#
-directive|endif
 name|LIST_INIT
 argument_list|(
 operator|&
 name|V_nd_prefix
 argument_list|)
-expr_stmt|;
-name|V_ip6_use_tempaddr
-operator|=
-literal|0
-expr_stmt|;
-name|V_ip6_temp_preferred_lifetime
-operator|=
-name|DEF_TEMP_PREFERRED_LIFETIME
-expr_stmt|;
-name|V_ip6_temp_valid_lifetime
-operator|=
-name|DEF_TEMP_VALID_LIFETIME
-expr_stmt|;
-name|V_ip6_temp_regen_advance
-operator|=
-name|TEMPADDR_REGEN_ADVANCE
-expr_stmt|;
-name|V_ip6_desync_factor
-operator|=
-literal|0
 expr_stmt|;
 name|all1_sa
 operator|.
@@ -1830,6 +1799,11 @@ block|{
 name|int
 name|canceled
 decl_stmt|;
+name|LLE_WLOCK_ASSERT
+argument_list|(
+name|ln
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tick
@@ -2012,6 +1986,19 @@ name|ndi
 init|=
 name|NULL
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|arg
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"%s: arg NULL"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 name|ln
 operator|=
 operator|(
@@ -2021,52 +2008,18 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
-if|if
-condition|(
-name|ln
-operator|==
-name|NULL
-condition|)
-block|{
-name|panic
+name|LLE_WLOCK_ASSERT
 argument_list|(
-literal|"%s: NULL entry!\n"
-argument_list|,
-name|__func__
+name|ln
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-operator|(
 name|ifp
 operator|=
-operator|(
-operator|(
-name|ln
-operator|->
-name|lle_tbl
-operator|!=
-name|NULL
-operator|)
-condition|?
 name|ln
 operator|->
 name|lle_tbl
 operator|->
 name|llt_ifp
-else|:
-name|NULL
-operator|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"ln ifp == NULL"
-argument_list|)
 expr_stmt|;
 name|CURVNET_SET
 argument_list|(
@@ -2099,7 +2052,7 @@ name|ln_ntick
 operator|-=
 name|INT_MAX
 expr_stmt|;
-name|nd6_llinfo_settimer
+name|nd6_llinfo_settimer_locked
 argument_list|(
 name|ln
 argument_list|,
@@ -2115,7 +2068,7 @@ name|ln_ntick
 operator|=
 literal|0
 expr_stmt|;
-name|nd6_llinfo_settimer
+name|nd6_llinfo_settimer_locked
 argument_list|(
 name|ln
 argument_list|,
@@ -2210,7 +2163,7 @@ operator|->
 name|la_asked
 operator|++
 expr_stmt|;
-name|nd6_llinfo_settimer
+name|nd6_llinfo_settimer_locked
 argument_list|(
 name|ln
 argument_list|,
@@ -2226,6 +2179,11 @@ operator|/
 literal|1000
 argument_list|)
 expr_stmt|;
+name|LLE_WUNLOCK
+argument_list|(
+name|ln
+argument_list|)
+expr_stmt|;
 name|nd6_ns_output
 argument_list|(
 name|ifp
@@ -2237,6 +2195,11 @@ argument_list|,
 name|ln
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|LLE_WLOCK
+argument_list|(
+name|ln
 argument_list|)
 expr_stmt|;
 block|}
@@ -2261,7 +2224,7 @@ name|mbuf
 modifier|*
 name|m0
 decl_stmt|;
-comment|/* 				 * assuming every packet in la_hold has the 				 * same IP header 				 */
+comment|/* 				 * assuming every packet in la_hold has the 				 * same IP header.  Send error after unlock. 				 */
 name|m0
 operator|=
 name|m
@@ -2273,19 +2236,6 @@ operator|->
 name|m_nextpkt
 operator|=
 name|NULL
-expr_stmt|;
-name|icmp6_error2
-argument_list|(
-name|m
-argument_list|,
-name|ICMP6_DST_UNREACH
-argument_list|,
-name|ICMP6_DST_UNREACH_ADDR
-argument_list|,
-literal|0
-argument_list|,
-name|ifp
-argument_list|)
 expr_stmt|;
 name|ln
 operator|->
@@ -2313,6 +2263,25 @@ name|ln
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|!=
+name|NULL
+condition|)
+name|icmp6_error2
+argument_list|(
+name|m
+argument_list|,
+name|ICMP6_DST_UNREACH
+argument_list|,
+name|ICMP6_DST_UNREACH_ADDR
+argument_list|,
+literal|0
+argument_list|,
+name|ifp
+argument_list|)
+expr_stmt|;
 block|}
 break|break;
 case|case
@@ -2333,7 +2302,7 @@ name|ln_state
 operator|=
 name|ND6_LLINFO_STALE
 expr_stmt|;
-name|nd6_llinfo_settimer
+name|nd6_llinfo_settimer_locked
 argument_list|(
 name|ln
 argument_list|,
@@ -2407,7 +2376,7 @@ name|ln_state
 operator|=
 name|ND6_LLINFO_PROBE
 expr_stmt|;
-name|nd6_llinfo_settimer
+name|nd6_llinfo_settimer_locked
 argument_list|(
 name|ln
 argument_list|,
@@ -2423,6 +2392,11 @@ operator|/
 literal|1000
 argument_list|)
 expr_stmt|;
+name|LLE_WUNLOCK
+argument_list|(
+name|ln
+argument_list|)
+expr_stmt|;
 name|nd6_ns_output
 argument_list|(
 name|ifp
@@ -2436,6 +2410,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|LLE_WLOCK
+argument_list|(
+name|ln
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -2446,7 +2425,7 @@ operator|=
 name|ND6_LLINFO_STALE
 expr_stmt|;
 comment|/* XXX */
-name|nd6_llinfo_settimer
+name|nd6_llinfo_settimer_locked
 argument_list|(
 name|ln
 argument_list|,
@@ -2477,7 +2456,7 @@ operator|->
 name|la_asked
 operator|++
 expr_stmt|;
-name|nd6_llinfo_settimer
+name|nd6_llinfo_settimer_locked
 argument_list|(
 name|ln
 argument_list|,
@@ -2493,6 +2472,11 @@ operator|/
 literal|1000
 argument_list|)
 expr_stmt|;
+name|LLE_WUNLOCK
+argument_list|(
+name|ln
+argument_list|)
+expr_stmt|;
 name|nd6_ns_output
 argument_list|(
 name|ifp
@@ -2504,6 +2488,11 @@ argument_list|,
 name|ln
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|LLE_WLOCK
+argument_list|(
+name|ln
 argument_list|)
 expr_stmt|;
 block|}
@@ -2525,6 +2514,18 @@ name|NULL
 expr_stmt|;
 block|}
 break|break;
+default|default:
+name|panic
+argument_list|(
+literal|"%s: paths in a dark night can be confusing: %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|ln
+operator|->
+name|ln_state
+argument_list|)
+expr_stmt|;
 block|}
 name|done
 label|:
@@ -2534,7 +2535,7 @@ name|ln
 operator|!=
 name|NULL
 condition|)
-name|LLE_FREE
+name|LLE_FREE_LOCKED
 argument_list|(
 name|ln
 argument_list|)
@@ -3395,8 +3396,6 @@ name|ln
 decl_stmt|;
 name|int
 name|llflags
-init|=
-literal|0
 decl_stmt|;
 name|bzero
 argument_list|(
@@ -3436,6 +3435,10 @@ name|IF_AFDATA_LOCK_ASSERT
 argument_list|(
 name|ifp
 argument_list|)
+expr_stmt|;
+name|llflags
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -3486,29 +3489,17 @@ name|NULL
 operator|)
 operator|&&
 operator|(
-name|flags
+name|llflags
 operator|&
 name|LLE_CREATE
 operator|)
 condition|)
-block|{
 name|ln
 operator|->
 name|ln_state
 operator|=
 name|ND6_LLINFO_NOSTATE
 expr_stmt|;
-name|callout_init
-argument_list|(
-operator|&
-name|ln
-operator|->
-name|ln_timer_ch
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|ln
@@ -3986,12 +3977,15 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
-init|=
-name|NULL
 decl_stmt|;
+name|LLE_WLOCK_ASSERT
+argument_list|(
+name|ln
+argument_list|)
+expr_stmt|;
 comment|/* 	 * we used to have pfctlinput(PRC_HOSTDEAD) here. 	 * even though it is not harmful, it was not really necessary. 	 */
 comment|/* cancel timer */
-name|nd6_llinfo_settimer
+name|nd6_llinfo_settimer_locked
 argument_list|(
 name|ln
 argument_list|,
@@ -3999,15 +3993,19 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ND_IFINFO
-argument_list|(
+name|ifp
+operator|=
 name|ln
 operator|->
 name|lle_tbl
 operator|->
 name|llt_ifp
+expr_stmt|;
+if|if
+condition|(
+name|ND_IFINFO
+argument_list|(
+name|ifp
 argument_list|)
 operator|->
 name|flags
@@ -4015,14 +4013,6 @@ operator|&
 name|ND6_IFF_ACCEPT_RTADV
 condition|)
 block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|dr
 operator|=
 name|defrouter_lookup
@@ -4035,11 +4025,7 @@ argument_list|)
 operator|->
 name|sin6_addr
 argument_list|,
-name|ln
-operator|->
-name|lle_tbl
-operator|->
-name|llt_ifp
+name|ifp
 argument_list|)
 expr_stmt|;
 if|if
@@ -4070,7 +4056,7 @@ name|expire
 operator|>
 name|time_second
 condition|)
-name|nd6_llinfo_settimer
+name|nd6_llinfo_settimer_locked
 argument_list|(
 name|ln
 argument_list|,
@@ -4086,7 +4072,7 @@ name|hz
 argument_list|)
 expr_stmt|;
 else|else
-name|nd6_llinfo_settimer
+name|nd6_llinfo_settimer_locked
 argument_list|(
 name|ln
 argument_list|,
@@ -4098,14 +4084,13 @@ operator|*
 name|hz
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-name|LLE_WLOCK
+name|next
+operator|=
+name|LIST_NEXT
 argument_list|(
 name|ln
+argument_list|,
+name|lle_next
 argument_list|)
 expr_stmt|;
 name|LLE_REMREF
@@ -4120,42 +4105,9 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|LIST_NEXT
-argument_list|(
-name|ln
-argument_list|,
-name|lle_next
-argument_list|)
+name|next
 operator|)
 return|;
-block|}
-if|if
-condition|(
-name|ln
-operator|->
-name|ln_router
-operator|||
-name|dr
-condition|)
-block|{
-comment|/* 			 * rt6_flush must be called whether or not the neighbor 			 * is in the Default Router List. 			 * See a corresponding comment in nd6_na_input(). 			 */
-name|rt6_flush
-argument_list|(
-operator|&
-name|L3_ADDR_SIN6
-argument_list|(
-name|ln
-argument_list|)
-operator|->
-name|sin6_addr
-argument_list|,
-name|ln
-operator|->
-name|lle_tbl
-operator|->
-name|llt_ifp
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -4170,18 +4122,62 @@ name|ln_state
 operator|=
 name|ND6_LLINFO_INCOMPLETE
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|ln
+operator|->
+name|ln_router
+operator|||
+name|dr
+condition|)
+block|{
+comment|/* 			 * We need to unlock to avoid a LOR with rt6_flush() with the 			 * rnh and for the calls to pfxlist_onlink_check() and 			 * defrouter_select() in the block further down for calls 			 * into nd6_lookup().  We still hold a ref. 			 */
+name|LLE_WUNLOCK
+argument_list|(
+name|ln
+argument_list|)
+expr_stmt|;
+comment|/* 			 * rt6_flush must be called whether or not the neighbor 			 * is in the Default Router List. 			 * See a corresponding comment in nd6_na_input(). 			 */
+name|rt6_flush
+argument_list|(
+operator|&
+name|L3_ADDR_SIN6
+argument_list|(
+name|ln
+argument_list|)
+operator|->
+name|sin6_addr
+argument_list|,
+name|ifp
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|dr
+condition|)
+block|{
 comment|/* 			 * Since defrouter_select() does not affect the 			 * on-link determination and MIP6 needs the check 			 * before the default router selection, we perform 			 * the check now. 			 */
 name|pfxlist_onlink_check
 argument_list|()
 expr_stmt|;
-comment|/* 			 * refresh default router list 			 */
+comment|/* 			 * Refresh default router list. 			 */
 name|defrouter_select
 argument_list|()
 expr_stmt|;
 block|}
-name|splx
+if|if
+condition|(
+name|ln
+operator|->
+name|ln_router
+operator|||
+name|dr
+condition|)
+name|LLE_WLOCK
 argument_list|(
-name|s
+name|ln
 argument_list|)
 expr_stmt|;
 block|}
@@ -4195,13 +4191,11 @@ argument_list|,
 name|lle_next
 argument_list|)
 expr_stmt|;
-name|ifp
-operator|=
+comment|/* 	 * Save to unlock. We still hold an extra reference and will not 	 * free(9) in llentry_free() if someone else holds one as well. 	 */
+name|LLE_WUNLOCK
+argument_list|(
 name|ln
-operator|->
-name|lle_tbl
-operator|->
-name|llt_ifp
+argument_list|)
 expr_stmt|;
 name|IF_AFDATA_LOCK
 argument_list|(
@@ -4209,6 +4203,11 @@ name|ifp
 argument_list|)
 expr_stmt|;
 name|LLE_WLOCK
+argument_list|(
+name|ln
+argument_list|)
+expr_stmt|;
+name|LLE_REMREF
 argument_list|(
 name|ln
 argument_list|)
@@ -4364,7 +4363,7 @@ name|ln
 argument_list|)
 condition|)
 block|{
-name|nd6_llinfo_settimer
+name|nd6_llinfo_settimer_locked
 argument_list|(
 name|ln
 argument_list|,
@@ -5897,8 +5896,6 @@ name|llchange
 decl_stmt|;
 name|int
 name|flags
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|newstate
@@ -5966,7 +5963,7 @@ name|NULL
 return|;
 comment|/* 	 * Validation about ifp->if_addrlen and lladdrlen must be done in 	 * the caller. 	 * 	 * XXX If the link does not have link-layer adderss, what should 	 * we do? (ifp->if_addrlen == 0) 	 * Spec says nothing in sections for RA, RS and NA.  There's small 	 * description on it in NS section (RFC 2461 7.2.3). 	 */
 name|flags
-operator||=
+operator|=
 name|lladdr
 condition|?
 name|ND6_EXCLUSIVE
@@ -5998,7 +5995,7 @@ condition|)
 block|{
 name|flags
 operator||=
-name|LLE_EXCLUSIVE
+name|ND6_EXCLUSIVE
 expr_stmt|;
 name|ln
 operator|=
@@ -6836,11 +6833,21 @@ init|=
 name|m0
 decl_stmt|;
 name|struct
+name|m_tag
+modifier|*
+name|mtag
+decl_stmt|;
+name|struct
 name|llentry
 modifier|*
 name|ln
 init|=
 name|lle
+decl_stmt|;
+name|struct
+name|ip6_hdr
+modifier|*
+name|ip6
 decl_stmt|;
 name|int
 name|error
@@ -6851,6 +6858,9 @@ name|int
 name|flags
 init|=
 literal|0
+decl_stmt|;
+name|int
+name|ip6len
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -7259,6 +7269,11 @@ goto|goto
 name|retry
 goto|;
 block|}
+name|LLE_WLOCK_ASSERT
+argument_list|(
+name|ln
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ln
@@ -7358,32 +7373,6 @@ operator|=
 name|m
 expr_stmt|;
 block|}
-comment|/* 	 * We did the lookup (no lle arg) so we 	 * need to do the unlock here 	 */
-if|if
-condition|(
-name|lle
-operator|==
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
-name|flags
-operator|&
-name|LLE_EXCLUSIVE
-condition|)
-name|LLE_WUNLOCK
-argument_list|(
-name|ln
-argument_list|)
-expr_stmt|;
-else|else
-name|LLE_RUNLOCK
-argument_list|(
-name|ln
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * If there has been no NS for the neighbor after entering the 	 * INCOMPLETE state, send the first solicitation. 	 */
 if|if
 condition|(
@@ -7405,7 +7394,7 @@ operator|->
 name|la_asked
 operator|++
 expr_stmt|;
-name|nd6_llinfo_settimer
+name|nd6_llinfo_settimer_locked
 argument_list|(
 name|ln
 argument_list|,
@@ -7424,6 +7413,11 @@ operator|/
 literal|1000
 argument_list|)
 expr_stmt|;
+name|LLE_WUNLOCK
+argument_list|(
+name|ln
+argument_list|)
+expr_stmt|;
 name|nd6_ns_output
 argument_list|(
 name|ifp
@@ -7438,6 +7432,40 @@ argument_list|,
 name|ln
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|lle
+operator|!=
+name|NULL
+operator|&&
+name|ln
+operator|==
+name|lle
+condition|)
+name|LLE_WLOCK
+argument_list|(
+name|lle
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|lle
+operator|==
+name|NULL
+operator|||
+name|ln
+operator|!=
+name|lle
+condition|)
+block|{
+comment|/* 		 * We did the lookup (no lle arg) so we 		 * need to do the unlock here. 		 */
+name|LLE_WUNLOCK
+argument_list|(
+name|ln
 argument_list|)
 expr_stmt|;
 block|}
@@ -7518,6 +7546,91 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * If called from nd6_ns_output() (NS), nd6_na_output() (NA), 	 * icmp6_redirect_output() (REDIRECT) or from rip6_output() (RS, RA 	 * as handled by rtsol and rtadvd), mbufs will be tagged for SeND 	 * to be diverted to user space.  When re-injected into the kernel, 	 * send_output() will directly dispatch them to the outgoing interface. 	 */
+if|if
+condition|(
+name|send_sendso_input_hook
+operator|!=
+name|NULL
+condition|)
+block|{
+name|mtag
+operator|=
+name|m_tag_find
+argument_list|(
+name|m
+argument_list|,
+name|PACKET_TAG_ND_OUTGOING
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mtag
+operator|!=
+name|NULL
+condition|)
+block|{
+name|ip6
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ip6_hdr
+operator|*
+argument_list|)
+expr_stmt|;
+name|ip6len
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip6_hdr
+argument_list|)
+operator|+
+name|ntohs
+argument_list|(
+name|ip6
+operator|->
+name|ip6_plen
+argument_list|)
+expr_stmt|;
+comment|/* Use the SEND socket */
+name|error
+operator|=
+name|send_sendso_input_hook
+argument_list|(
+name|m
+argument_list|,
+name|ifp
+argument_list|,
+name|SND_OUT
+argument_list|,
+name|ip6len
+argument_list|)
+expr_stmt|;
+comment|/* -1 == no app on SEND socket */
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+operator|||
+name|error
+operator|!=
+operator|-
+literal|1
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+block|}
 comment|/* 	 * We were passed in a pointer to an lle with the lock held  	 * this means that we can't call if_output as we will 	 * recurse on the lle lock - so what we do is we create 	 * a list of mbufs to send and transmit them in the caller 	 * after the lock is dropped 	 */
 if|if
 condition|(
@@ -7876,6 +7989,9 @@ name|IFT_CARP
 case|:
 endif|#
 directive|endif
+case|case
+name|IFT_INFINIBAND
+case|:
 case|case
 name|IFT_GIF
 case|:

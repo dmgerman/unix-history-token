@@ -163,7 +163,7 @@ value|64
 end_define
 
 begin_comment
-comment|/*  * Data structure to hold all 4 rings and any other ring related data.  */
+comment|/*  * Data structure to hold all 4 rings and any other ring related data  * that should reside in DMA.  */
 end_comment
 
 begin_struct
@@ -207,14 +207,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-name|struct
-name|hifn_command
-modifier|*
-name|hifn_commands
-index|[
-name|HIFN_D_RES_RSIZE
-index|]
-decl_stmt|;
 name|u_char
 name|command_bufs
 index|[
@@ -243,35 +235,6 @@ name|u_int64_t
 name|test_src
 decl_stmt|,
 name|test_dst
-decl_stmt|;
-comment|/* 	 *  Our current positions for insertion and removal from the desriptor 	 *  rings.  	 */
-name|int
-name|cmdi
-decl_stmt|,
-name|srci
-decl_stmt|,
-name|dsti
-decl_stmt|,
-name|resi
-decl_stmt|;
-specifier|volatile
-name|int
-name|cmdu
-decl_stmt|,
-name|srcu
-decl_stmt|,
-name|dstu
-decl_stmt|,
-name|resu
-decl_stmt|;
-name|int
-name|cmdk
-decl_stmt|,
-name|srck
-decl_stmt|,
-name|dstk
-decl_stmt|,
-name|resk
 decl_stmt|;
 block|}
 struct|;
@@ -496,6 +459,43 @@ decl_stmt|;
 comment|/* physical address of sc_dma */
 name|int
 name|sc_dmansegs
+decl_stmt|;
+name|struct
+name|hifn_command
+modifier|*
+name|sc_hifn_commands
+index|[
+name|HIFN_D_RES_RSIZE
+index|]
+decl_stmt|;
+comment|/* 	 *  Our current positions for insertion and removal from the desriptor 	 *  rings.  	 */
+name|int
+name|sc_cmdi
+decl_stmt|,
+name|sc_srci
+decl_stmt|,
+name|sc_dsti
+decl_stmt|,
+name|sc_resi
+decl_stmt|;
+specifier|volatile
+name|int
+name|sc_cmdu
+decl_stmt|,
+name|sc_srcu
+decl_stmt|,
+name|sc_dstu
+decl_stmt|,
+name|sc_resu
+decl_stmt|;
+name|int
+name|sc_cmdk
+decl_stmt|,
+name|sc_srck
+decl_stmt|,
+name|sc_dstk
+decl_stmt|,
+name|sc_resk
 decl_stmt|;
 name|int32_t
 name|sc_cid

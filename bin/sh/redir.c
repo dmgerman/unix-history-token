@@ -220,7 +220,7 @@ comment|/*  * We keep track of whether or not fd0 has been redirected.  This is 
 end_comment
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|int
 name|fd0_redirected
 init|=
@@ -229,7 +229,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|openredirect
 parameter_list|(
@@ -246,7 +246,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|int
 name|openhere
 parameter_list|(
@@ -573,7 +573,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|openredirect
 parameter_list|(
@@ -608,6 +608,9 @@ name|fname
 decl_stmt|;
 name|int
 name|f
+decl_stmt|;
+name|int
+name|e
 decl_stmt|;
 comment|/* 	 * We suppress interrupts so that we won't leave open file 	 * descriptors around.  Because the signal handler remains 	 * installed and we do not use system call restart, interrupts 	 * will still abort blocking opens such as fifos (they will fail 	 * with EINTR). There is, however, a race condition if an interrupt 	 * arrives after INTOFF and before open blocks. 	 */
 name|INTOFF
@@ -675,13 +678,41 @@ operator|!=
 name|fd
 condition|)
 block|{
+if|if
+condition|(
 name|dup2
 argument_list|(
 name|f
 argument_list|,
 name|fd
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|e
+operator|=
+name|errno
 expr_stmt|;
+name|close
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|"%d: %s"
+argument_list|,
+name|fd
+argument_list|,
+name|strerror
+argument_list|(
+name|e
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 name|close
 argument_list|(
 name|f
@@ -1028,6 +1059,9 @@ operator|=
 literal|1
 expr_stmt|;
 else|else
+block|{
+if|if
+condition|(
 name|dup2
 argument_list|(
 name|redir
@@ -1038,7 +1072,26 @@ name|dupfd
 argument_list|,
 name|fd
 argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"%d: %s"
+argument_list|,
+name|redir
+operator|->
+name|ndup
+operator|.
+name|dupfd
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -1080,7 +1133,7 @@ comment|/*  * Handle here documents.  Normally we fork off a process to write th
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|openhere
 parameter_list|(
@@ -1454,18 +1507,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_expr_stmt
-
-begin_macro
-name|SHELLPROC
-end_macro
-
-begin_block
-block|{
-name|clearredir
-argument_list|()
-expr_stmt|;
-block|}
-end_block
 
 begin_endif
 endif|#

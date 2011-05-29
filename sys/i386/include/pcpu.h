@@ -48,11 +48,19 @@ begin_comment
 comment|/*  * The SMP parts are setup in pmap.c and locore.s for the BSP, and  * mp_machdep.c sets up the data for the AP's to "see" when they awake.  * The reason for doing it via a struct is so that an array of pointers  * to each CPU's data can be set up for things like "check curproc on all  * other processors"  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|XEN
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|XENHVM
+argument_list|)
+end_if
 
 begin_ifndef
 ifndef|#
@@ -90,6 +98,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|XEN
+argument_list|)
+end_if
+
 begin_comment
 comment|/* These are peridically updated in shared_info, and then copied here. */
 end_comment
@@ -125,25 +147,49 @@ end_struct
 begin_define
 define|#
 directive|define
-name|PCPU_MD_FIELDS
+name|PCPU_XEN_FIELDS
 define|\
-value|char	pc_monitorbuf[128] __aligned(128);
-comment|/* cache line */
-value|\ 	struct	pcpu *pc_prvspace;
-comment|/* Self-reference */
-value|\ 	struct	pmap *pc_curpmap;					\ 	struct	i386tss pc_common_tss;					\ 	struct	segment_descriptor pc_common_tssd;			\ 	struct	segment_descriptor *pc_tss_gdt;				\ 	struct	segment_descriptor *pc_fsgs_gdt;			\ 	vm_paddr_t 	*pc_pdir_shadow;				\ 	int	pc_currentldt;						\ 	u_int   pc_acpi_id;
-comment|/* ACPI CPU id */
-value|\ 	u_int	pc_apic_id;						\ 	int	pc_private_tss;
-comment|/* Flag indicating private tss*/
-value|\         u_int     pc_cr3;
+value|;								\ 	u_int	pc_cr3;
 comment|/* track cr3 for R1/R3*/
-value|\         u_int     pc_pdir;                                              \         u_int     pc_lazypmap;                                          \         u_int     pc_rendezvous;                                        \         u_int     pc_cpuast;						\ 	uint64_t  pc_processed_system_time;				\ 	struct shadow_time_info pc_shadow_time;				\ 	int	pc_resched_irq;						\ 	int	pc_callfunc_irq;					\         int	pc_virq_to_irq[NR_VIRQS];				\ 	int	pc_ipi_to_irq[NR_IPIS]
+value|\ 	vm_paddr_t *pc_pdir_shadow;					\ 	uint64_t pc_processed_system_time;				\ 	struct shadow_time_info pc_shadow_time;				\ 	int	pc_resched_irq;						\ 	int	pc_callfunc_irq;					\ 	int	pc_virq_to_irq[NR_VIRQS];				\ 	int	pc_ipi_to_irq[NR_IPIS]
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|XENHVM
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|PCPU_XEN_FIELDS
+define|\
+value|;								\ 	unsigned int pc_last_processed_l1i;				\ 	unsigned int pc_last_processed_l2i
 end_define
 
 begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* !XEN&& !XENHVM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCPU_XEN_FIELDS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -156,17 +202,12 @@ value|\ 	struct	pcpu *pc_prvspace;
 comment|/* Self-reference */
 value|\ 	struct	pmap *pc_curpmap;					\ 	struct	i386tss pc_common_tss;					\ 	struct	segment_descriptor pc_common_tssd;			\ 	struct	segment_descriptor *pc_tss_gdt;				\ 	struct	segment_descriptor *pc_fsgs_gdt;			\ 	int	pc_currentldt;						\ 	u_int   pc_acpi_id;
 comment|/* ACPI CPU id */
-value|\ 	u_int	pc_apic_id;						\ 	int	pc_private_tss
+value|\ 	u_int	pc_apic_id;						\ 	int	pc_private_tss;
+comment|/* Flag indicating private tss*/
+value|\ 	u_int	pc_cmci_mask
+comment|/* MCx banks for CMCI */
+value|\ 	PCPU_XEN_FIELDS
 end_define
-
-begin_comment
-comment|/* Flag indicating private tss */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -418,6 +459,7 @@ end_define
 begin_expr_stmt
 specifier|static
 name|__inline
+name|__pure2
 expr|struct
 name|thread
 operator|*
@@ -430,7 +472,7 @@ name|thread
 operator|*
 name|td
 block|;
-asm|__asm __volatile("movl %%fs:0,%0" : "=r" (td));
+asm|__asm("movl %%fs:0,%0" : "=r" (td));
 return|return
 operator|(
 name|td

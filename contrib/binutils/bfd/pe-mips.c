@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for MIPS PE COFF files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003 Free Software Foundation, Inc.    Modified from coff-i386.c by DJ Delorie, dj@cygnus.com  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for MIPS PE COFF files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.    Modified from coff-i386.c by DJ Delorie, dj@cygnus.com     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -25,13 +25,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -64,198 +64,11 @@ directive|include
 file|"libcoff.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|bfd_reloc_status_type
-name|coff_mips_reloc
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|arelent
-operator|*
-operator|,
-name|asymbol
-operator|*
-operator|,
-name|PTR
-operator|,
-name|asection
-operator|*
-operator|,
-name|bfd
-operator|*
-operator|,
-name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|reloc_howto_type
-modifier|*
-name|coff_mips_rtype_to_howto
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-expr|struct
-name|internal_reloc
-operator|*
-operator|,
-expr|struct
-name|coff_link_hash_entry
-operator|*
-operator|,
-expr|struct
-name|internal_syment
-operator|*
-operator|,
-name|bfd_vma
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static void mips_ecoff_swap_reloc_in   PARAMS ((bfd *, PTR, struct internal_reloc *)); static void mips_ecoff_swap_reloc_out   PARAMS ((bfd *, const struct internal_reloc *, PTR)); static void mips_adjust_reloc_in   PARAMS ((bfd *, const struct internal_reloc *, arelent *)); static void mips_adjust_reloc_out   PARAMS ((bfd *, const arelent *, struct internal_reloc *));
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|in_reloc_p
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|reloc_howto_type
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|reloc_howto_type
-modifier|*
-name|coff_mips_reloc_type_lookup
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|bfd_reloc_code_real_type
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|mips_swap_reloc_in
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|PTR
-operator|,
-name|PTR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|int
-name|mips_swap_reloc_out
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|PTR
-operator|,
-name|PTR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|coff_pe_mips_relocate_section
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-expr|struct
-name|bfd_link_info
-operator|*
-operator|,
-name|bfd
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-name|bfd_byte
-operator|*
-operator|,
-expr|struct
-name|internal_reloc
-operator|*
-operator|,
-expr|struct
-name|internal_syment
-operator|*
-operator|,
-name|asection
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
 name|COFF_DEFAULT_SECTION_ALIGNMENT_POWER
-value|(2)
+value|2
 end_define
 
 begin_comment
@@ -282,50 +95,37 @@ specifier|static
 name|bfd_reloc_status_type
 name|coff_mips_reloc
 parameter_list|(
-name|abfd
-parameter_list|,
-name|reloc_entry
-parameter_list|,
-name|symbol
-parameter_list|,
-name|data
-parameter_list|,
-name|input_section
-parameter_list|,
-name|output_bfd
-parameter_list|,
-name|error_message
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 name|reloc_entry
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 name|symbol
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|data
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|input_section
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|bfd
 modifier|*
 name|output_bfd
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|error_message
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|symvalue
 name|diff
@@ -334,10 +134,6 @@ if|if
 condition|(
 name|output_bfd
 operator|==
-operator|(
-name|bfd
-operator|*
-operator|)
 name|NULL
 condition|)
 return|return
@@ -380,28 +176,13 @@ endif|#
 directive|endif
 block|}
 else|else
-block|{
-comment|/* For some reason bfd_perform_relocation always effectively 	 ignores the addend for a COFF target when producing 	 relocatable output.  This seems to be always wrong for 386 	 COFF, so we handle the addend here instead.  */
+comment|/* For some reason bfd_perform_relocation always effectively        ignores the addend for a COFF target when producing        relocatable output.  This seems to be always wrong for 386        COFF, so we handle the addend here instead.  */
 name|diff
 operator|=
 name|reloc_entry
 operator|->
 name|addend
 expr_stmt|;
-block|}
-ifdef|#
-directive|ifdef
-name|COFF_WITH_PE
-if|#
-directive|if
-literal|0
-comment|/* dj - handle it like any other reloc? */
-comment|/* FIXME: How should this case be handled?  */
-block|if (reloc_entry->howto->type == MIPS_R_RVA&& diff != 0)     abort ();
-endif|#
-directive|endif
-endif|#
-directive|endif
 define|#
 directive|define
 name|DOIT
@@ -572,19 +353,15 @@ specifier|static
 name|bfd_boolean
 name|in_reloc_p
 parameter_list|(
-name|abfd
-parameter_list|,
-name|howto
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|reloc_howto_type
 modifier|*
 name|howto
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|!
@@ -636,346 +413,346 @@ name|HOWTO
 argument_list|(
 name|MIPS_R_ABSOLUTE
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|0
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|8
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos. */
 name|complain_overflow_dont
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow. */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function. */
 literal|"IGNORE"
 argument_list|,
-comment|/* name */
+comment|/* Name. */
 name|FALSE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace. */
 literal|0
 argument_list|,
-comment|/* src_mask */
+comment|/* Src_mask. */
 literal|0
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dst_mask. */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* Pcrel_offset. */
 comment|/* A 16 bit reference to a symbol, normally from a data section.  */
 name|HOWTO
 argument_list|(
 name|MIPS_R_REFHALF
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|1
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|16
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos. */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow. */
 name|coff_mips_reloc
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function. */
 literal|"REFHALF"
 argument_list|,
-comment|/* name */
+comment|/* Name. */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace. */
 literal|0xffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Src_mask. */
 literal|0xffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dst_mask. */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* Pcrel_offset. */
 comment|/* A 32 bit reference to a symbol, normally from a data section.  */
 name|HOWTO
 argument_list|(
 name|MIPS_R_REFWORD
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|32
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos. */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow. */
 name|coff_mips_reloc
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function. */
 literal|"REFWORD"
 argument_list|,
-comment|/* name */
+comment|/* Name. */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace. */
 literal|0xffffffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Src_mask. */
 literal|0xffffffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dst_mask. */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* Pcrel_offset. */
 comment|/* A 26 bit absolute jump address.  */
 name|HOWTO
 argument_list|(
 name|MIPS_R_JMPADDR
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|2
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|26
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos. */
 name|complain_overflow_dont
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow. */
 comment|/* This needs complex overflow 				   detection, because the upper four 				   bits must match the PC.  */
 name|coff_mips_reloc
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function. */
 literal|"JMPADDR"
 argument_list|,
-comment|/* name */
+comment|/* Name. */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace. */
 literal|0x3ffffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Src_mask. */
 literal|0x3ffffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dst_mask. */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* Pcrel_offset. */
 comment|/* The high 16 bits of a symbol value.  Handled by the function      mips_refhi_reloc.  */
 name|HOWTO
 argument_list|(
 name|MIPS_R_REFHI
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|16
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|16
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos. */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow. */
 name|coff_mips_reloc
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function. */
 literal|"REFHI"
 argument_list|,
-comment|/* name */
+comment|/* Name. */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace. */
 literal|0xffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Src_mask. */
 literal|0xffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dst_mask. */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* Pcrel_offset. */
 comment|/* The low 16 bits of a symbol value.  */
 name|HOWTO
 argument_list|(
 name|MIPS_R_REFLO
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|16
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos. */
 name|complain_overflow_dont
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow. */
 name|coff_mips_reloc
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function. */
 literal|"REFLO"
 argument_list|,
-comment|/* name */
+comment|/* Name. */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace. */
 literal|0xffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Src_mask. */
 literal|0xffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dst_mask. */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* Pcrel_offset. */
 comment|/* A reference to an offset from the gp register.  Handled by the      function mips_gprel_reloc.  */
 name|HOWTO
 argument_list|(
 name|MIPS_R_GPREL
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|16
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos. */
 name|complain_overflow_signed
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow. */
 name|coff_mips_reloc
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function. */
 literal|"GPREL"
 argument_list|,
-comment|/* name */
+comment|/* Name. */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace. */
 literal|0xffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Src_mask. */
 literal|0xffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dst_mask. */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* Pcrel_offset. */
 comment|/* A reference to a literal using an offset from the gp register.      Handled by the function mips_gprel_reloc.  */
 name|HOWTO
 argument_list|(
 name|MIPS_R_LITERAL
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|16
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos. */
 name|complain_overflow_signed
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow. */
 name|coff_mips_reloc
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function. */
 literal|"LITERAL"
 argument_list|,
-comment|/* name */
+comment|/* Name. */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace. */
 literal|0xffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Src_mask. */
 literal|0xffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dst_mask. */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* Pcrel_offset. */
 name|EMPTY_HOWTO
 argument_list|(
 literal|8
@@ -1110,44 +887,44 @@ name|HOWTO
 argument_list|(
 name|MIPS_R_RVA
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|32
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos. */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow. */
 name|coff_mips_reloc
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function. */
 literal|"rva32"
 argument_list|,
-comment|/* name */
+comment|/* Name. */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace. */
 literal|0xffffffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Src_mask. */
 literal|0xffffffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dst_mask. */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* Pcrel_offset. */
 name|EMPTY_HOWTO
 argument_list|(
 literal|35
@@ -1162,50 +939,50 @@ name|HOWTO
 argument_list|(
 name|MIPS_R_PAIR
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|32
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos. */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow. */
 name|coff_mips_reloc
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function. */
 literal|"PAIR"
 argument_list|,
-comment|/* name */
+comment|/* Name. */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace. */
 literal|0xffffffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Src_mask. */
 literal|0xffffffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dst_mask. */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* Pcrel_offset. */
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Turn a howto into a reloc  nunmber */
+comment|/* Turn a howto into a reloc nunmber.  */
 end_comment
 
 begin_define
@@ -1227,8 +1004,12 @@ name|BADMAG
 parameter_list|(
 name|x
 parameter_list|)
-value|MIPSBADMAG(x)
+value|MIPSBADMAG (x)
 end_define
+
+begin_comment
+comment|/* Customize coffcode.h.  */
+end_comment
 
 begin_define
 define|#
@@ -1236,10 +1017,6 @@ directive|define
 name|MIPS
 value|1
 end_define
-
-begin_comment
-comment|/* Customize coffcode.h */
-end_comment
 
 begin_define
 define|#
@@ -1272,7 +1049,7 @@ parameter_list|,
 name|cache_ptr
 parameter_list|)
 define|\
-value|{								\     coff_symbol_type *coffsym = (coff_symbol_type *) NULL;	\     if (ptr&& bfd_asymbol_bfd (ptr) != abfd)			\       coffsym = (obj_symbols (abfd)				\ 	         + (cache_ptr->sym_ptr_ptr - symbols));		\     else if (ptr)						\       coffsym = coff_symbol_from (abfd, ptr);			\     if (coffsym != (coff_symbol_type *) NULL			\&& coffsym->native->u.syment.n_scnum == 0)		\       cache_ptr->addend = - coffsym->native->u.syment.n_value;	\     else if (ptr&& bfd_asymbol_bfd (ptr) == abfd		\&& ptr->section != (asection *) NULL)		\       cache_ptr->addend = - (ptr->section->vma + ptr->value);	\     else							\       cache_ptr->addend = 0;					\     if (ptr&& howto_table[reloc.r_type].pc_relative)		\       cache_ptr->addend += asect->vma;				\   }
+value|{								\     coff_symbol_type *coffsym = NULL;				\     if (ptr&& bfd_asymbol_bfd (ptr) != abfd)			\       coffsym = (obj_symbols (abfd)				\ 	         + (cache_ptr->sym_ptr_ptr - symbols));		\     else if (ptr)						\       coffsym = coff_symbol_from (abfd, ptr);			\     if (coffsym != NULL						\&& coffsym->native->u.syment.n_scnum == 0)		\       cache_ptr->addend = - coffsym->native->u.syment.n_value;	\     else if (ptr&& bfd_asymbol_bfd (ptr) == abfd		\&& ptr->section != NULL)				\       cache_ptr->addend = - (ptr->section->vma + ptr->value);	\     else							\       cache_ptr->addend = 0;					\     if (ptr&& howto_table[reloc.r_type].pc_relative)		\       cache_ptr->addend += asect->vma;				\   }
 end_define
 
 begin_comment
@@ -1285,46 +1062,34 @@ name|reloc_howto_type
 modifier|*
 name|coff_mips_rtype_to_howto
 parameter_list|(
-name|abfd
-parameter_list|,
-name|sec
-parameter_list|,
-name|rel
-parameter_list|,
-name|h
-parameter_list|,
-name|sym
-parameter_list|,
-name|addendp
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|sec
-decl_stmt|;
+parameter_list|,
 name|struct
 name|internal_reloc
 modifier|*
 name|rel
-decl_stmt|;
+parameter_list|,
 name|struct
 name|coff_link_hash_entry
 modifier|*
 name|h
-decl_stmt|;
+parameter_list|,
 name|struct
 name|internal_syment
 modifier|*
 name|sym
-decl_stmt|;
+parameter_list|,
 name|bfd_vma
 modifier|*
 name|addendp
-decl_stmt|;
+parameter_list|)
 block|{
 name|reloc_howto_type
 modifier|*
@@ -1479,7 +1244,6 @@ name|r_type
 operator|==
 name|MIPS_R_RVA
 condition|)
-block|{
 operator|*
 name|addendp
 operator|-=
@@ -1496,7 +1260,6 @@ name|pe_opthdr
 operator|.
 name|ImageBase
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 return|return
@@ -1519,6 +1282,13 @@ name|coff_bfd_reloc_type_lookup
 value|coff_mips_reloc_type_lookup
 end_define
 
+begin_define
+define|#
+directive|define
+name|coff_bfd_reloc_name_lookup
+value|coff_mips_reloc_name_lookup
+end_define
+
 begin_comment
 comment|/* Get the howto structure for a generic reloc type.  */
 end_comment
@@ -1529,18 +1299,14 @@ name|reloc_howto_type
 modifier|*
 name|coff_mips_reloc_type_lookup
 parameter_list|(
-name|abfd
-parameter_list|,
-name|code
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|bfd_reloc_code_real_type
 name|code
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|mips_type
@@ -1609,7 +1375,6 @@ operator|=
 name|MIPS_R_LITERAL
 expr_stmt|;
 break|break;
-comment|/* FIXME?     case BFD_RELOC_16_PCREL_S2:       mips_type = MIPS_R_PCREL16;       break;     case BFD_RELOC_PCREL_HI16_S:       mips_type = MIPS_R_RELHI;       break;     case BFD_RELOC_PCREL_LO16:       mips_type = MIPS_R_RELLO;       break;     case BFD_RELOC_GPREL32:       mips_type = MIPS_R_SWITCH;       break; */
 case|case
 name|BFD_RELOC_RVA
 case|:
@@ -1620,10 +1385,6 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
-operator|(
-name|reloc_howto_type
-operator|*
-operator|)
 name|NULL
 return|;
 block|}
@@ -1639,25 +1400,104 @@ end_function
 
 begin_function
 specifier|static
-name|void
-name|mips_swap_reloc_in
+name|reloc_howto_type
+modifier|*
+name|coff_mips_reloc_name_lookup
 parameter_list|(
-name|abfd
-parameter_list|,
-name|src
-parameter_list|,
-name|dst
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|r_name
+parameter_list|)
+block|{
+name|unsigned
+name|int
+name|i
 decl_stmt|;
-name|PTR
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+sizeof|sizeof
+argument_list|(
+name|howto_table
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|howto_table
+index|[
+literal|0
+index|]
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|howto_table
+index|[
+name|i
+index|]
+operator|.
+name|name
+operator|!=
+name|NULL
+operator|&&
+name|strcasecmp
+argument_list|(
+name|howto_table
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
+name|r_name
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|&
+name|howto_table
+index|[
+name|i
+index|]
+return|;
+return|return
+name|NULL
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|mips_swap_reloc_in
+parameter_list|(
+name|bfd
+modifier|*
+name|abfd
+parameter_list|,
+name|void
+modifier|*
 name|src
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|dst
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|struct
@@ -1784,7 +1624,6 @@ name|r_offset
 operator|-=
 literal|0x10000
 expr_stmt|;
-comment|/*printf ("dj: pair offset is %08x\n", reloc_dst->r_offset);*/
 name|reloc_dst
 operator|->
 name|r_symndx
@@ -1804,22 +1643,18 @@ name|unsigned
 name|int
 name|mips_swap_reloc_out
 parameter_list|(
-name|abfd
-parameter_list|,
-name|src
-parameter_list|,
-name|dst
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|src
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|dst
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -2006,58 +1841,42 @@ specifier|static
 name|bfd_boolean
 name|coff_pe_mips_relocate_section
 parameter_list|(
-name|output_bfd
-parameter_list|,
-name|info
-parameter_list|,
-name|input_bfd
-parameter_list|,
-name|input_section
-parameter_list|,
-name|contents
-parameter_list|,
-name|relocs
-parameter_list|,
-name|syms
-parameter_list|,
-name|sections
-parameter_list|)
 name|bfd
 modifier|*
 name|output_bfd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|,
 name|bfd
 modifier|*
 name|input_bfd
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|input_section
-decl_stmt|;
+parameter_list|,
 name|bfd_byte
 modifier|*
 name|contents
-decl_stmt|;
+parameter_list|,
 name|struct
 name|internal_reloc
 modifier|*
 name|relocs
-decl_stmt|;
+parameter_list|,
 name|struct
 name|internal_syment
 modifier|*
 name|syms
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 modifier|*
 name|sections
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd_vma
 name|gp
@@ -2099,13 +1918,10 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"\ %s: `ld -r' not supported with PE MIPS objects\n"
+literal|"%B: `ld -r' not supported with PE MIPS objects\n"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|input_bfd
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|bfd_set_error
@@ -2132,12 +1948,6 @@ operator|->
 name|byteorder
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|printf ("dj: relocate %s(%s) %08x\n", 	 input_bfd->filename, input_section->name, 	 input_section->output_section->vma + input_section->output_offset);
-endif|#
-directive|endif
 name|gp
 operator|=
 name|_bfd_get_gp_value
@@ -2145,19 +1955,16 @@ argument_list|(
 name|output_bfd
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|gp_undefined
+operator|=
+operator|(
 name|gp
 operator|==
 literal|0
-condition|)
-name|gp_undefined
-operator|=
+operator|)
+condition|?
 name|TRUE
-expr_stmt|;
-else|else
-name|gp_undefined
-operator|=
+else|:
 name|FALSE
 expr_stmt|;
 name|got_lo
@@ -2579,20 +2386,14 @@ name|input_section
 operator|->
 name|output_offset
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|printf ("dj: reloc %02x %-8s a=%08x/%08x(%08x) v=%08x+%08x %s\n", 	     rel->r_type, howto_table[rel->r_type].name, 	     src, rel->r_vaddr, *(unsigned long *)mem, val, rel->r_offset, 	     h?h->root.root.string:"(none)");
-endif|#
-directive|endif
-comment|/* OK, at this point the following variables are set up: 	   src = VMA of the memory we're fixing up 	   mem = pointer to memory we're fixing up 	   val = VMA of what we need to refer to       */
+comment|/* OK, at this point the following variables are set up: 	   src = VMA of the memory we're fixing up 	   mem = pointer to memory we're fixing up 	   val = VMA of what we need to refer to.  */
 define|#
 directive|define
 name|UI
 parameter_list|(
 name|x
 parameter_list|)
-value|(*_bfd_error_handler) (_("%s: unimplemented %s\n"), \ 				     bfd_archive_filename (input_bfd), x); \ 	      bfd_set_error (bfd_error_bad_value);
+value|(*_bfd_error_handler) (_("%B: unimplemented %s\n"), \ 				     input_bfd, x); \ 	      bfd_set_error (bfd_error_bad_value);
 switch|switch
 condition|(
 name|rel
@@ -2603,7 +2404,7 @@ block|{
 case|case
 name|MIPS_R_ABSOLUTE
 case|:
-comment|/* ignore these */
+comment|/* Ignore these.  */
 break|break;
 case|case
 name|MIPS_R_REFHALF
@@ -2687,13 +2488,10 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: jump too far away\n"
+literal|"%B: jump too far away\n"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|input_bfd
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|bfd_set_error
@@ -2836,13 +2634,10 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: bad pair/reflo after refhi\n"
+literal|"%B: bad pair/reflo after refhi\n"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|input_bfd
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|bfd_set_error
@@ -3039,42 +2834,20 @@ begin_comment
 comment|/* If mips gcc uses underscores for symbol names, then it does not use    a leading dot for local labels, so if TARGET_UNDERSCORE is defined    we treat all symbols starting with L as local.  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|coff_mips_is_local_label_name
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|bfd_boolean
 name|coff_mips_is_local_label_name
 parameter_list|(
-name|abfd
-parameter_list|,
-name|name
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3151,23 +2924,23 @@ else|#
 directive|else
 literal|"pe-mips"
 block|,
-comment|/* name */
+comment|/* Name.  */
 endif|#
 directive|endif
 name|bfd_target_coff_flavour
 block|,
 name|BFD_ENDIAN_LITTLE
 block|,
-comment|/* data byte order is little */
+comment|/* Data byte order is little.  */
 name|BFD_ENDIAN_LITTLE
 block|,
-comment|/* header byte order is little */
+comment|/* Header byte order is little.  */
 operator|(
 name|HAS_RELOC
 operator||
 name|EXEC_P
 operator||
-comment|/* object flags */
+comment|/* Object flags.  */
 name|HAS_LINENO
 operator||
 name|HAS_DEBUG
@@ -3192,7 +2965,7 @@ operator||
 name|SEC_LOAD
 operator||
 name|SEC_RELOC
-comment|/* section flags */
+comment|/* Section flags.  */
 operator||
 name|SEC_CODE
 operator||
@@ -3209,7 +2982,7 @@ operator||
 name|SEC_LOAD
 operator||
 name|SEC_RELOC
-comment|/* section flags */
+comment|/* Section flags.  */
 operator||
 name|SEC_CODE
 operator||
@@ -3227,7 +3000,7 @@ directive|ifdef
 name|TARGET_UNDERSCORE
 name|TARGET_UNDERSCORE
 block|,
-comment|/* leading underscore */
+comment|/* Leading underscore.  */
 else|#
 directive|else
 literal|0
@@ -3237,10 +3010,10 @@ endif|#
 directive|endif
 literal|'/'
 block|,
-comment|/* ar_pad_char */
+comment|/* AR_pad_char.  */
 literal|15
 block|,
-comment|/* ar_max_namelen */
+comment|/* AR_max_namelen.  */
 name|bfd_getl64
 block|,
 name|bfd_getl_signed_64
@@ -3259,7 +3032,7 @@ name|bfd_getl_signed_16
 block|,
 name|bfd_putl16
 block|,
-comment|/* data */
+comment|/* Data.  */
 name|bfd_getl64
 block|,
 name|bfd_getl_signed_64
@@ -3278,14 +3051,14 @@ name|bfd_getl_signed_16
 block|,
 name|bfd_putl16
 block|,
-comment|/* hdrs */
+comment|/* Headers.  */
 comment|/* Note that we allow an object file to be treated as a core file as well.  */
 block|{
 name|_bfd_dummy_target
 block|,
 name|coff_object_p
 block|,
-comment|/* bfd_check_format */
+comment|/* bfd_check_format.  */
 name|bfd_generic_archive_p
 block|,
 name|coff_object_p
@@ -3298,7 +3071,7 @@ name|coff_mkobject
 block|,
 name|_bfd_generic_mkarchive
 block|,
-comment|/* bfd_set_format */
+comment|/* bfd_set_format.  */
 name|bfd_false
 block|}
 block|,
@@ -3307,7 +3080,7 @@ name|bfd_false
 block|,
 name|coff_write_object_contents
 block|,
-comment|/* bfd_write_contents */
+comment|/* bfd_write_contents.  */
 name|_bfd_write_archive_contents
 block|,
 name|bfd_false

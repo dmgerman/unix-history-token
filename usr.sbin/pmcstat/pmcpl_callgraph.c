@@ -523,6 +523,12 @@ name|sym
 operator|->
 name|ps_start
 expr_stmt|;
+else|else
+name|pmcstat_stats
+operator|.
+name|ps_samples_unknown_function
+operator|++
+expr_stmt|;
 for|for
 control|(
 name|hash
@@ -1433,6 +1439,11 @@ block|{
 name|pmcstat_stats
 operator|.
 name|ps_callchain_dubious_frames
+operator|++
+expr_stmt|;
+name|pmcr
+operator|->
+name|pr_dubious_frames
 operator|++
 expr_stmt|;
 return|return;
@@ -2491,6 +2502,18 @@ operator|=
 name|pmcstat_pmcindex_to_pmcr
 argument_list|(
 name|pmcstat_pmcinfilter
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|pmcr
+condition|)
+name|err
+argument_list|(
+name|EX_SOFTWARE
+argument_list|,
+literal|"ERROR: invalid pmcindex"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We pull out all callgraph nodes in the top-level hash table 	 * with a matching PMC index.  We then sort these based on the 	 * frequency of occurrence.  Each callgraph node is then 	 * printed. 	 */

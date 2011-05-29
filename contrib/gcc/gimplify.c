@@ -13470,7 +13470,34 @@ operator|==
 name|INIT_EXPR
 argument_list|)
 expr_stmt|;
-comment|/* For zero sized types only gimplify the left hand side and right hand side      as statements and throw away the assignment.  */
+comment|/* See if any simplifications can be done based on what the RHS is.  */
+name|ret
+operator|=
+name|gimplify_modify_expr_rhs
+argument_list|(
+name|expr_p
+argument_list|,
+name|from_p
+argument_list|,
+name|to_p
+argument_list|,
+name|pre_p
+argument_list|,
+name|post_p
+argument_list|,
+name|want_value
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+name|GS_UNHANDLED
+condition|)
+return|return
+name|ret
+return|;
+comment|/* For zero sized types only gimplify the left hand side and right hand      side as statements and throw away the assignment.  Do this after      gimplify_modify_expr_rhs so we handle TARGET_EXPRs of addressable      types properly.  */
 if|if
 condition|(
 name|zero_sized_type
@@ -13518,33 +13545,6 @@ return|return
 name|GS_ALL_DONE
 return|;
 block|}
-comment|/* See if any simplifications can be done based on what the RHS is.  */
-name|ret
-operator|=
-name|gimplify_modify_expr_rhs
-argument_list|(
-name|expr_p
-argument_list|,
-name|from_p
-argument_list|,
-name|to_p
-argument_list|,
-name|pre_p
-argument_list|,
-name|post_p
-argument_list|,
-name|want_value
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|!=
-name|GS_UNHANDLED
-condition|)
-return|return
-name|ret
-return|;
 comment|/* If the value being copied is of variable width, compute the length      of the copy into a WITH_SIZE_EXPR.   Note that we need to do this      before gimplifying any of the operands so that we can resolve any      PLACEHOLDER_EXPRs in the size.  Also note that the RTL expander uses      the size of the expression to be copied, not of the destination, so      that is what we must here.  */
 name|maybe_with_size_expr
 argument_list|(

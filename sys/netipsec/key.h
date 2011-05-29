@@ -321,6 +321,24 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
+name|key_addrefsa
+parameter_list|(
+name|struct
+name|secasvar
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
 name|key_freesav
 parameter_list|(
 name|struct
@@ -350,6 +368,17 @@ name|spi
 parameter_list|)
 define|\
 value|key_allocsa(dst, proto, spi, __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEY_ADDREFSA
+parameter_list|(
+name|sav
+parameter_list|)
+define|\
+value|key_addrefsa(sav, __FILE__, __LINE__)
 end_define
 
 begin_define

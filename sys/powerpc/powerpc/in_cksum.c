@@ -856,7 +856,7 @@ operator|(
 name|clen
 operator|^
 operator|(
-name|int
+name|long
 operator|)
 name|addr
 operator|)

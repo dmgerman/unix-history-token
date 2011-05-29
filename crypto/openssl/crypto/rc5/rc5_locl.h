@@ -292,7 +292,7 @@ name|a
 parameter_list|,
 name|n
 parameter_list|)
-value|({ register unsigned int ret;	\ 					asm ("roll %%cl,%0"	\ 						: "=r"(ret)	\ 						: "c"(n),"0"(a)	\ 						: "cc");	\ 					ret;			\ 				})
+value|({ register unsigned int ret;	\ 					asm ("roll %%cl,%0"	\ 						: "=r"(ret)	\ 						: "c"(n),"0"((unsigned int)(a))	\ 						: "cc");	\ 					ret;			\ 				})
 end_define
 
 begin_define
@@ -304,7 +304,7 @@ name|a
 parameter_list|,
 name|n
 parameter_list|)
-value|({ register unsigned int ret;	\ 					asm ("rorl %%cl,%0"	\ 						: "=r"(ret)	\ 						: "c"(n),"0"(a)	\ 						: "cc");	\ 					ret;			\ 				})
+value|({ register unsigned int ret;	\ 					asm ("rorl %%cl,%0"	\ 						: "=r"(ret)	\ 						: "c"(n),"0"((unsigned int)(a))	\ 						: "cc");	\ 					ret;			\ 				})
 end_define
 
 begin_endif

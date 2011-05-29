@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|MINIDUMP_VERSION
-value|1
+value|2
 end_define
 
 begin_struct
@@ -50,7 +50,7 @@ name|uint32_t
 name|bitmapsize
 decl_stmt|;
 name|uint32_t
-name|ptesize
+name|pmapsize
 decl_stmt|;
 name|uint64_t
 name|kernbase

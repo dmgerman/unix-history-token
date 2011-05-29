@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Internal format of COFF object file data structures, for GNU BFD.    This file is part of BFD, the Binary File Descriptor library.        Copyright 2001 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.        This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Internal format of COFF object file data structures, for GNU BFD.    This file is part of BFD, the Binary File Descriptor library.        Copyright 1999, 2000, 2001, 2002, 2003, 2004. 2005, 2006, 2007, 2009    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.        This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -181,6 +181,13 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|GO32_STUBSIZE
+value|2048
+end_define
+
 begin_struct
 struct|struct
 name|internal_filehdr
@@ -188,6 +195,13 @@ block|{
 name|struct
 name|internal_extra_pe_filehdr
 name|pe
+decl_stmt|;
+comment|/* coff-stgo32 EXE stub header before BFD tdata has been allocated.      Its data is kept in INTERNAL_FILEHDR.GO32STUB afterwards.            F_GO32STUB is set iff go32stub contains a valid data.  Artifical headers      created in BFD have no pre-set go32stub.  */
+name|char
+name|go32stub
+index|[
+name|GO32_STUBSIZE
+index|]
 decl_stmt|;
 comment|/* Standard coff internal info.  */
 name|unsigned
@@ -232,7 +246,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Bits for f_flags:  	F_RELFLG	relocation info stripped from file  	F_EXEC		file is executable (no unresolved external references)  	F_LNNO		line numbers stripped from file  	F_LSYMS		local symbols stripped from file  	F_AR16WR	file is 16-bit little-endian  	F_AR32WR	file is 32-bit little-endian  	F_AR32W		file is 32-bit big-endian  	F_DYNLOAD	rs/6000 aix: dynamically loadable w/imports& exports  	F_SHROBJ	rs/6000 aix: file is a shared object         F_DLL           PE format DLL.  */
+comment|/* Bits for f_flags:  	F_RELFLG	relocation info stripped from file  	F_EXEC		file is executable (no unresolved external references)  	F_LNNO		line numbers stripped from file  	F_LSYMS		local symbols stripped from file  	F_AR16WR	file is 16-bit little-endian  	F_AR32WR	file is 32-bit little-endian  	F_AR32W		file is 32-bit big-endian  	F_DYNLOAD	rs/6000 aix: dynamically loadable w/imports& exports  	F_SHROBJ	rs/6000 aix: file is a shared object 	F_DLL           PE format DLL 	F_GO32STUB      Field go32stub contains valid data.  */
 end_comment
 
 begin_define
@@ -305,6 +319,13 @@ name|F_DLL
 value|(0x2000)
 end_define
 
+begin_define
+define|#
+directive|define
+name|F_GO32STUB
+value|(0x4000)
+end_define
+
 begin_comment
 comment|/* Extra structure which is used in the optional header.  */
 end_comment
@@ -324,6 +345,115 @@ block|}
 name|IMAGE_DATA_DIRECTORY
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|PE_EXPORT_TABLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PE_IMPORT_TABLE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PE_RESOURCE_TABLE
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PE_EXCEPTION_TABLE
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|PE_CERTIFICATE_TABLE
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|PE_BASE_RELOCATION_TABLE
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|PE_DEBUG_DATA
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|PE_ARCHITECTURE
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|PE_GLOBAL_PTR
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|PE_TLS_TABLE
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|PE_LOAD_CONFIG_TABLE
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|PE_BOUND_IMPORT_TABLE
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|PE_IMPORT_ADDRESS_TABLE
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|PE_DELAY_IMPORT_DESCRIPTOR
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|PE_CLR_RUNTIME_HEADER
+value|14
+end_define
+
+begin_comment
+comment|/* DataDirectory[15] is currently reserved, so no define. */
+end_comment
 
 begin_define
 define|#
@@ -401,6 +531,43 @@ begin_struct
 struct|struct
 name|internal_extra_pe_aouthdr
 block|{
+comment|/* FIXME: The following entries are in AOUTHDR.  But they aren't      available internally in bfd.  We add them here so that objdump      can dump them.  */
+comment|/* The state of the image file  */
+name|short
+name|Magic
+decl_stmt|;
+comment|/* Linker major version number */
+name|char
+name|MajorLinkerVersion
+decl_stmt|;
+comment|/* Linker minor version number  */
+name|char
+name|MinorLinkerVersion
+decl_stmt|;
+comment|/* Total size of all code sections  */
+name|long
+name|SizeOfCode
+decl_stmt|;
+comment|/* Total size of all initialized data sections  */
+name|long
+name|SizeOfInitializedData
+decl_stmt|;
+comment|/* Total size of all uninitialized data sections  */
+name|long
+name|SizeOfUninitializedData
+decl_stmt|;
+comment|/* Address of entry point relative to image base.  */
+name|bfd_vma
+name|AddressOfEntryPoint
+decl_stmt|;
+comment|/* Address of the first code section relative to image base.  */
+name|bfd_vma
+name|BaseOfCode
+decl_stmt|;
+comment|/* Address of the first data section relative to image base.  */
+name|bfd_vma
+name|BaseOfData
+decl_stmt|;
 comment|/* PE stuff  */
 name|bfd_vma
 name|ImageBase
@@ -458,10 +625,11 @@ name|short
 name|Subsystem
 decl_stmt|;
 comment|/* type of subsystem exe uses for user interface,      possible values:      1 - NATIVE   Doesn't require a subsystem      2 - WINDOWS_GUI runs in Windows GUI subsystem      3 - WINDOWS_CUI runs in Windows char sub. (console app)      5 - OS2_CUI runs in OS/2 character subsystem      7 - POSIX_CUI runs in Posix character subsystem */
+name|unsigned
 name|short
 name|DllCharacteristics
 decl_stmt|;
-comment|/* flags for DLL init, use 0 */
+comment|/* flags for DLL init  */
 name|bfd_vma
 name|SizeOfStackReserve
 decl_stmt|;
@@ -969,32 +1137,6 @@ begin_comment
 comment|/* ext symbol in dmert public lib */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-name|_AIX52
-operator|||
-name|defined
-name|AIX_WEAK_SUPPORT
-end_if
-
-begin_define
-define|#
-directive|define
-name|C_WEAKEXT
-value|111
-end_define
-
-begin_comment
-comment|/* weak symbol -- AIX standard.  */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -1005,11 +1147,6 @@ end_define
 begin_comment
 comment|/* weak symbol -- GNU extension.  */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* New storage classes for TI COFF */
@@ -1244,6 +1381,45 @@ begin_comment
 comment|/* Marks ending of include file */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|C_AIX_WEAKEXT
+value|111
+end_define
+
+begin_comment
+comment|/* AIX definition of C_WEAKEXT.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+name|_AIX52
+operator|||
+name|defined
+name|AIX_WEAK_SUPPORT
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|C_WEAKEXT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|C_WEAKEXT
+value|C_AIX_WEAKEXT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* storage classes for stab symbols for RS/6000 */
 end_comment
@@ -1411,6 +1587,21 @@ end_define
 begin_comment
 comment|/* 151 */
 end_comment
+
+begin_comment
+comment|/* True if XCOFF symbols of class CLASS have auxillary csect information.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSECT_SYM_P
+parameter_list|(
+name|CLASS
+parameter_list|)
+define|\
+value|((CLASS) == C_EXT || (CLASS) == C_AIX_WEAKEXT || (CLASS) == C_HIDEXT)
+end_define
 
 begin_comment
 comment|/********************** SECTION HEADER **********************/
@@ -1759,17 +1950,17 @@ index|[
 name|SYMNMLEN
 index|]
 decl_stmt|;
-comment|/* old COFF version	*/
+comment|/* old COFF version		*/
 struct|struct
 block|{
 name|long
 name|_n_zeroes
 decl_stmt|;
-comment|/* new == 0		*/
+comment|/* new == 0			*/
 name|long
 name|_n_offset
 decl_stmt|;
-comment|/* offset into string table */
+comment|/* offset into string table	*/
 block|}
 name|_n_n
 struct|;
@@ -2649,6 +2840,179 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* X86-64 relocations.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_AMD64_ABS
+value|0
+end_define
+
+begin_comment
+comment|/* Reference is absolute, no relocation is necessary.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_AMD64_DIR64
+value|1
+end_define
+
+begin_comment
+comment|/* 64-bit address (VA).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_AMD64_DIR32
+value|2
+end_define
+
+begin_comment
+comment|/* 32-bit address (VA) R_DIR32.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_AMD64_IMAGEBASE
+value|3
+end_define
+
+begin_comment
+comment|/* 32-bit absolute ref w/o base R_IMAGEBASE.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_AMD64_PCRLONG
+value|4
+end_define
+
+begin_comment
+comment|/* 32-bit relative address from byte following reloc R_PCRLONG.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_AMD64_PCRLONG_1
+value|5
+end_define
+
+begin_comment
+comment|/* 32-bit relative address from byte distance 1 from reloc.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_AMD64_PCRLONG_2
+value|6
+end_define
+
+begin_comment
+comment|/* 32-bit relative address from byte distance 2 from reloc.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_AMD64_PCRLONG_3
+value|7
+end_define
+
+begin_comment
+comment|/* 32-bit relative address from byte distance 3 from reloc.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_AMD64_PCRLONG_4
+value|8
+end_define
+
+begin_comment
+comment|/* 32-bit relative address from byte distance 4 from reloc.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_AMD64_PCRLONG_5
+value|9
+end_define
+
+begin_comment
+comment|/* 32-bit relative address from byte distance 5 from reloc.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_AMD64_SECTION
+value|10
+end_define
+
+begin_comment
+comment|/* Section index.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_AMD64_SECREL
+value|11
+end_define
+
+begin_comment
+comment|/* 32 bit offset from base of section containing target R_SECREL.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_AMD64_SECREL7
+value|12
+end_define
+
+begin_comment
+comment|/* 7 bit unsigned offset from base of section containing target.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_AMD64_TOKEN
+value|13
+end_define
+
+begin_comment
+comment|/* 32 bit metadata token.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_AMD64_PCRQUAD
+value|14
+end_define
+
+begin_comment
+comment|/* Pseude PC64 relocation - Note: not specified by MS/AMD but need for gas pc-relative 64bit wide relocation generated by ELF.  */
+end_comment
+
+begin_comment
+comment|/* i386 Relocations.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2675,6 +3039,13 @@ define|#
 directive|define
 name|R_IMAGEBASE
 value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_SECREL32
+value|11
 end_define
 
 begin_define
@@ -3127,6 +3498,36 @@ end_define
 
 begin_comment
 comment|/* djnz displacement */
+end_comment
+
+begin_comment
+comment|/* Z80 modes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_OFF8
+value|0x32
+end_define
+
+begin_comment
+comment|/* 8 bit signed abs, for (i[xy]+d) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IMM24
+value|0x33
+end_define
+
+begin_comment
+comment|/* 24 bit abs */
+end_comment
+
+begin_comment
+comment|/* R_JR, R_IMM8, R_IMM16, R_IMM32 - as for Z8k */
 end_comment
 
 begin_comment

@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"extract.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"addrtoname.h"
 end_include
 
@@ -146,8 +152,9 @@ name|bp
 expr_stmt|;
 name|etype
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|sp
 operator|->
 name|ether_type
@@ -288,9 +295,6 @@ decl_stmt|;
 name|u_short
 name|ether_type
 decl_stmt|;
-name|u_short
-name|extracted_ether_type
-decl_stmt|;
 if|if
 condition|(
 name|caplen
@@ -357,8 +361,9 @@ argument_list|)
 expr_stmt|;
 name|ether_type
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|sp
 operator|->
 name|ether_type
@@ -410,7 +415,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|ether_encap_print
+name|ethertype_print
 argument_list|(
 name|ether_type
 argument_list|,
@@ -419,9 +424,6 @@ argument_list|,
 name|length
 argument_list|,
 name|caplen
-argument_list|,
-operator|&
-name|extracted_ether_type
 argument_list|)
 operator|==
 literal|0

@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2001, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_comment
 comment|/*  * This file is a sewer.  */
@@ -2459,7 +2452,7 @@ argument_list|)
 operator|||
 name|strchr
 argument_list|(
-literal|"_.$"
+literal|"_.$#"
 argument_list|,
 name|c
 argument_list|)
@@ -2480,7 +2473,7 @@ argument_list|)
 operator|||
 name|strchr
 argument_list|(
-literal|" _.$"
+literal|" _.$#"
 argument_list|,
 name|c
 argument_list|)
@@ -5189,7 +5182,7 @@ operator|==
 literal|'S'
 condition|)
 block|{
-comment|/* variable length array - treat as null dimensioned */
+comment|/* 		 * variable length array - treat as null dimensioned 		 * 		 * For VLA variables on sparc, SS12 generated stab entry 		 * looks as follows: 		 * .stabs "buf:(0,28)=zr(0,4);0;S-12;(0,1)", 0x80, 0, 0, -16 		 * Whereas SS12u1 generated stab entry looks like this: 		 * .stabs "buf:(0,28)=zr(0,4);0;S0;(0,1)", 0x80, 0, 0, 0 		 * On x86, both versions generate the first type of entry. 		 * We should be able to parse both. 		 */
 name|cp
 operator|++
 expr_stmt|;
@@ -5197,20 +5190,11 @@ if|if
 condition|(
 operator|*
 name|cp
-operator|++
-operator|!=
+operator|==
 literal|'-'
 condition|)
-name|expected
-argument_list|(
-literal|"arraydef/fpoff-sep"
-argument_list|,
-literal|"-"
-argument_list|,
 name|cp
-operator|-
-literal|1
-argument_list|)
+operator|++
 expr_stmt|;
 name|cp
 operator|=
@@ -5229,7 +5213,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* normal fixed-dimension array */
+comment|/* 		 * normal fixed-dimension array 		 * Stab entry for this looks as follows : 		 * .stabs "x:(0,28)=ar(0,4);0;9;(0,3)", 0x80, 0, 40, 0 		 */
 name|cp
 operator|=
 name|number

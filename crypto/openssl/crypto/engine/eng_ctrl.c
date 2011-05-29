@@ -1087,6 +1087,8 @@ name|p
 argument_list|,
 name|f
 argument_list|)
+operator|>
+literal|0
 condition|)
 return|return
 literal|1
@@ -1318,6 +1320,8 @@ name|arg
 argument_list|,
 name|NULL
 argument_list|)
+operator|>
+literal|0
 condition|)
 return|return
 literal|1
@@ -1372,6 +1376,8 @@ name|arg
 argument_list|,
 name|NULL
 argument_list|)
+operator|>
+literal|0
 condition|)
 return|return
 literal|1
@@ -1456,6 +1462,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|)
+operator|>
+literal|0
 condition|)
 return|return
 literal|1

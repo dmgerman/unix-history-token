@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/intr_machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -875,6 +881,20 @@ return|;
 block|}
 name|sc
 operator|->
+name|sc_nrange
+operator|/=
+sizeof|sizeof
+argument_list|(
+name|sc
+operator|->
+name|sc_range
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
 name|sc_range
 index|[
 literal|6
@@ -900,6 +920,16 @@ name|sc
 operator|->
 name|sc_range
 init|;
+name|rp
+operator|<
+name|sc
+operator|->
+name|sc_range
+operator|+
+name|sc
+operator|->
+name|sc_nrange
+operator|&&
 name|rp
 operator|->
 name|pci_hi
@@ -1558,6 +1588,9 @@ name|pintr
 decl_stmt|,
 name|mintr
 decl_stmt|;
+name|phandle_t
+name|iparent
+decl_stmt|;
 name|uint8_t
 name|maskbuf
 index|[
@@ -1621,12 +1654,20 @@ argument_list|(
 name|mintr
 argument_list|)
 argument_list|,
+operator|&
+name|iparent
+argument_list|,
 name|maskbuf
 argument_list|)
 condition|)
 return|return
 operator|(
+name|MAP_IRQ
+argument_list|(
+name|iparent
+argument_list|,
 name|mintr
+argument_list|)
 operator|)
 return|;
 comment|/* Maybe it's a real interrupt, not an intpin */
@@ -2153,7 +2194,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"grackle mapdev: start %x, len %ld\n"
+literal|"grackle mapdev: start %zx, len %ld\n"
 argument_list|,
 name|start
 argument_list|,

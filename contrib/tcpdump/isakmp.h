@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All righ
 end_comment
 
 begin_comment
-comment|/* YIPS @(#)$Id: isakmp.h,v 1.11 2007-08-29 02:38:14 mcr Exp $ */
+comment|/* YIPS @(#)$Id: isakmp.h,v 1.12 2007-11-24 18:13:33 mcr Exp $ */
 end_comment
 
 begin_comment
@@ -462,6 +462,17 @@ end_define
 
 begin_comment
 comment|/* Vendor ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISAKMP_NPTYPE_v2E
+value|46
+end_define
+
+begin_comment
+comment|/* v2 Encrypted payload */
 end_comment
 
 begin_define
@@ -1512,6 +1523,69 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* 3.5.  Identification Payloads */
+end_comment
+
+begin_enum
+enum|enum
+name|ikev2_id_type
+block|{
+name|ID_IPV4_ADDR
+init|=
+literal|1
+block|,
+name|ID_FQDN
+init|=
+literal|2
+block|,
+name|ID_RFC822_ADDR
+init|=
+literal|3
+block|,
+name|ID_IPV6_ADDR
+init|=
+literal|5
+block|,
+name|ID_DER_ASN1_DN
+init|=
+literal|9
+block|,
+name|ID_DER_ASN1_GN
+init|=
+literal|10
+block|,
+name|ID_KEY_ID
+init|=
+literal|11
+block|, }
+enum|;
+end_enum
+
+begin_struct
+struct|struct
+name|ikev2_id
+block|{
+name|struct
+name|isakmp_gen
+name|h
+decl_stmt|;
+name|u_int8_t
+name|type
+decl_stmt|;
+comment|/* ID type */
+name|u_int8_t
+name|res1
+decl_stmt|;
+name|u_int16_t
+name|res2
+decl_stmt|;
+comment|/* SPI */
+comment|/* Notification Data */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/* 3.10 Notification Payload */
 end_comment
 
@@ -1535,8 +1609,6 @@ name|u_int16_t
 name|type
 decl_stmt|;
 comment|/* Notify Message Type */
-comment|/* SPI */
-comment|/* Notification Data */
 block|}
 struct|;
 end_struct

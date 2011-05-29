@@ -37,20 +37,6 @@ directive|include
 file|<machine/segments.h>
 end_include
 
-begin_comment
-comment|/*  * definitions of cpu-dependent requirements  * referenced in generic code  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|COPY_SIGCODE
-end_undef
-
-begin_comment
-comment|/* don't copy sigcode above user stack in exec */
-end_comment
-
 begin_define
 define|#
 directive|define

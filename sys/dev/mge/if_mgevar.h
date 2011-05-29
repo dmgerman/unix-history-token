@@ -139,6 +139,9 @@ modifier|*
 name|ifp
 decl_stmt|;
 comment|/* per-interface network data */
+name|phandle_t
+name|node
+decl_stmt|;
 name|device_t
 name|dev
 decl_stmt|;

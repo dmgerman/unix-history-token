@@ -27,6 +27,20 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|pci_do_power_resume
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|pci_do_power_suspend
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|pci_add_children

@@ -10429,6 +10429,10 @@ name|tsi
 argument_list|,
 name|t
 argument_list|,
+operator|(
+expr|enum
+name|tsi_iterator_update
+operator|)
 name|m
 argument_list|)
 expr_stmt|;
@@ -10478,6 +10482,10 @@ name|tsi
 argument_list|,
 name|t
 argument_list|,
+operator|(
+expr|enum
+name|tsi_iterator_update
+operator|)
 name|m
 argument_list|)
 expr_stmt|;

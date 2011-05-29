@@ -28,12 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/psl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/trap.h>
 end_include
 
@@ -149,7 +143,7 @@ name|BKPT_SET
 parameter_list|(
 name|ins
 parameter_list|)
-value|(BREAK_DDB)
+value|(MIPS_BREAK_DDB)
 end_define
 
 begin_define
@@ -203,7 +197,7 @@ define|#
 directive|define
 name|BKPT_SKIP
 define|\
-value|do {							\ 		if((db_get_value(kdb_frame->pc, sizeof(int), FALSE)&	\ 		    ~BREAK_VAL_MASK) == BREAK_INSTR) {			\ 			kdb_frame->pc += BKPT_SIZE;			\ 			kdb_thrctx->pcb_regs.pc +=  BKPT_SIZE;		\ 		}							\ 	} while (0);
+value|do {							\ 		if((db_get_value(kdb_frame->pc, sizeof(int), FALSE)&	\ 		    ~MIPS_BREAK_VAL_MASK) == MIPS_BREAK_INSTR) {	\ 			kdb_frame->pc += BKPT_SIZE;			\ 			kdb_thrctx->pcb_regs.pc +=  BKPT_SIZE;		\ 		}							\ 	} while (0);
 end_define
 
 begin_comment
@@ -316,17 +310,6 @@ begin_function_decl
 name|int
 name|db_inst_type
 parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|db_dump_tlb
-parameter_list|(
-name|int
-parameter_list|,
 name|int
 parameter_list|)
 function_decl|;

@@ -71,14 +71,14 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_STRUCT_REG
-value|(38 * mips_regsize (current_gdbarch))
+value|(40 * mips_regsize (current_gdbarch))
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_STRUCT_FPREG
-value|(33 * mips_regsize (current_gdbarch))
+value|(34 * mips_regsize (current_gdbarch))
 end_define
 
 begin_endif

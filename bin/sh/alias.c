@@ -104,7 +104,7 @@ value|39
 end_define
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|struct
 name|alias
 modifier|*
@@ -116,14 +116,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|int
 name|aliases
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|setalias
 parameter_list|(
@@ -139,7 +139,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|int
 name|unalias
 parameter_list|(
@@ -151,7 +151,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|struct
 name|alias
 modifier|*
@@ -166,7 +166,7 @@ function_decl|;
 end_function_decl
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|setalias
 parameter_list|(
@@ -369,7 +369,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|unalias
 parameter_list|(
@@ -499,40 +499,8 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|mkinit
-end_ifdef
-
-begin_function_decl
-name|MKINIT
-name|void
-name|rmaliases
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_macro
-name|SHELLPROC
-end_macro
-
-begin_block
-block|{
-name|rmaliases
-argument_list|()
-expr_stmt|;
-block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
+specifier|static
 name|void
 name|rmaliases
 parameter_list|(
@@ -1053,11 +1021,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|outfmt
+name|warning
 argument_list|(
-name|out2
-argument_list|,
-literal|"alias: %s not found\n"
+literal|"%s not found"
 argument_list|,
 name|n
 argument_list|)
@@ -1176,7 +1142,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|struct
 name|alias
 modifier|*

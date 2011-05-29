@@ -141,15 +141,8 @@ parameter_list|,
 name|int
 name|_status
 parameter_list|)
-function_decl|OPENPAM_NONNULL
-parameter_list|(
-function_decl|(1
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int

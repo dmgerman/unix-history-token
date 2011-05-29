@@ -346,7 +346,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * ipsec_common_input gets called when an IPsec-protected packet  * is received by IPv4 or IPv6.  It's job is to find the right SA  * and call the appropriate transform.  The transform callback  * takes care of further processing (like ingress filtering).  */
+comment|/*  * ipsec_common_input gets called when an IPsec-protected packet  * is received by IPv4 or IPv6.  Its job is to find the right SA  * and call the appropriate transform.  The transform callback  * takes care of further processing (like ingress filtering).  */
 end_comment
 
 begin_function
@@ -389,12 +389,17 @@ name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
+name|INET
+ifdef|#
+directive|ifdef
 name|IPSEC_NAT_T
 name|struct
 name|m_tag
 modifier|*
 name|tag
 decl_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|IPSEC_ISTAT
@@ -2357,6 +2362,8 @@ operator|(
 name|uintptr_t
 operator|)
 name|sav
+operator|->
+name|spi
 argument_list|,
 name|m
 argument_list|)

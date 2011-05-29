@@ -457,7 +457,7 @@ name|control
 parameter_list|)
 block|{
 name|register_t
-name|savecrit
+name|saveintr
 decl_stmt|;
 if|if
 condition|(
@@ -489,7 +489,7 @@ operator|<<
 literal|16
 operator|)
 expr_stmt|;
-name|savecrit
+name|saveintr
 operator|=
 name|intr_disable
 argument_list|()
@@ -523,7 +523,7 @@ argument_list|)
 expr_stmt|;
 name|intr_restore
 argument_list|(
-name|savecrit
+name|saveintr
 argument_list|)
 expr_stmt|;
 return|return
@@ -661,7 +661,7 @@ name|pmc
 parameter_list|)
 block|{
 name|register_t
-name|savecrit
+name|saveintr
 decl_stmt|;
 if|if
 condition|(
@@ -687,7 +687,7 @@ name|pmc
 operator|)
 condition|)
 block|{
-name|savecrit
+name|saveintr
 operator|=
 name|intr_disable
 argument_list|()
@@ -723,7 +723,7 @@ argument_list|)
 expr_stmt|;
 name|intr_restore
 argument_list|(
-name|savecrit
+name|saveintr
 argument_list|)
 expr_stmt|;
 return|return
@@ -745,7 +745,7 @@ name|pmc
 parameter_list|)
 block|{
 name|register_t
-name|savecrit
+name|saveintr
 decl_stmt|;
 if|if
 condition|(
@@ -771,7 +771,7 @@ name|pmc
 operator|)
 condition|)
 block|{
-name|savecrit
+name|saveintr
 operator|=
 name|intr_disable
 argument_list|()
@@ -810,7 +810,7 @@ argument_list|)
 expr_stmt|;
 name|intr_restore
 argument_list|(
-name|savecrit
+name|saveintr
 argument_list|)
 expr_stmt|;
 return|return
@@ -1461,6 +1461,9 @@ name|pmc_tstamp
 modifier|*
 name|pmct
 decl_stmt|;
+name|uint64_t
+name|freq
+decl_stmt|;
 name|int
 modifier|*
 name|ip
@@ -1681,10 +1684,19 @@ break|break;
 case|case
 name|PMIOTSTAMP
 case|:
+name|freq
+operator|=
+name|atomic_load_acq_64
+argument_list|(
+operator|&
+name|tsc_freq
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-operator|!
-name|tsc_freq
+name|freq
+operator|==
+literal|0
 condition|)
 block|{
 name|rv
@@ -1707,7 +1719,7 @@ name|pmct
 operator|->
 name|pmct_rate
 operator|=
-name|tsc_freq
+name|freq
 operator|/
 literal|1000000
 expr_stmt|;

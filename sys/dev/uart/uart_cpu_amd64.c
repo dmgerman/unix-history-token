@@ -57,7 +57,7 @@ begin_decl_stmt
 name|bus_space_tag_t
 name|uart_bus_space_io
 init|=
-name|AMD64_BUS_SPACE_IO
+name|X86_BUS_SPACE_IO
 decl_stmt|;
 end_decl_stmt
 
@@ -65,7 +65,7 @@ begin_decl_stmt
 name|bus_space_tag_t
 name|uart_bus_space_mem
 init|=
-name|AMD64_BUS_SPACE_MEM
+name|X86_BUS_SPACE_MEM
 decl_stmt|;
 end_decl_stmt
 

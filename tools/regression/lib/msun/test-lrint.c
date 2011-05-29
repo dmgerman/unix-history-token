@@ -68,6 +68,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * XXX The volatile here is to avoid gcc's bogus constant folding and work  *     around the lack of support for the FENV_ACCESS pragma.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -81,7 +85,7 @@ name|result
 parameter_list|,
 name|excepts
 parameter_list|)
-value|do {				\ 	assert(feclearexcept(FE_ALL_EXCEPT) == 0);			\ 	assert((func)(x) == (result) || fetestexcept(FE_INVALID));	\ 	assert(fetestexcept(FE_ALL_EXCEPT) == (excepts));		\ } while (0)
+value|do {				\ 	volatile double _d = x;						\ 	assert(feclearexcept(FE_ALL_EXCEPT) == 0);			\ 	assert((func)(_d) == (result) || fetestexcept(FE_INVALID));	\ 	assert(fetestexcept(FE_ALL_EXCEPT) == (excepts));		\ } while (0)
 end_define
 
 begin_define

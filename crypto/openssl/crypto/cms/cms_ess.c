@@ -1219,7 +1219,6 @@ block|}
 comment|/* Get original receipt request details */
 if|if
 condition|(
-operator|!
 name|CMS_get1_ReceiptRequest
 argument_list|(
 name|osi
@@ -1227,6 +1226,8 @@ argument_list|,
 operator|&
 name|rr
 argument_list|)
+operator|<=
+literal|0
 condition|)
 block|{
 name|CMSerr
@@ -1334,7 +1335,6 @@ comment|/* Get original receipt request */
 comment|/* Get original receipt request details */
 if|if
 condition|(
-operator|!
 name|CMS_get1_ReceiptRequest
 argument_list|(
 name|si
@@ -1342,6 +1342,8 @@ argument_list|,
 operator|&
 name|rr
 argument_list|)
+operator|<=
+literal|0
 condition|)
 block|{
 name|CMSerr

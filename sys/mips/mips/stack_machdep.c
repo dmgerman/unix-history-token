@@ -92,8 +92,14 @@ operator|(
 name|u_register_t
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|sp
 operator|+
+operator|(
+name|size_t
+operator|)
 name|stack_pos
 operator|/
 sizeof|sizeof
@@ -165,6 +171,9 @@ operator|<=
 operator|(
 name|u_register_t
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|btext
 condition|)
 break|break;
@@ -178,6 +187,9 @@ name|i
 operator|>=
 operator|(
 name|u_register_t
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|btext
 condition|;
@@ -194,6 +206,9 @@ argument_list|(
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|i
 argument_list|,
@@ -218,6 +233,12 @@ name|OP_ADDI
 case|:
 case|case
 name|OP_ADDIU
+case|:
+case|case
+name|OP_DADDI
+case|:
+case|case
+name|OP_DADDIU
 case|:
 if|if
 condition|(
@@ -253,6 +274,9 @@ expr_stmt|;
 break|break;
 case|case
 name|OP_SW
+case|:
+case|case
+name|OP_SD
 case|:
 if|if
 condition|(
@@ -330,6 +354,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|i
 argument_list|,
 operator|&
@@ -370,6 +397,9 @@ name|ra
 operator|>=
 operator|(
 name|u_register_t
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|btext
 condition|)

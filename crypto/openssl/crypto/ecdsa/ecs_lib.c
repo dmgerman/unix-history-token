@@ -160,11 +160,6 @@ modifier|*
 name|meth
 parameter_list|)
 block|{
-specifier|const
-name|ECDSA_METHOD
-modifier|*
-name|mtmp
-decl_stmt|;
 name|ECDSA_DATA
 modifier|*
 name|ecdsa
@@ -185,12 +180,6 @@ condition|)
 return|return
 literal|0
 return|;
-name|mtmp
-operator|=
-name|ecdsa
-operator|->
-name|meth
-expr_stmt|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_ENGINE

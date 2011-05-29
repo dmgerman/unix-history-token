@@ -370,6 +370,1062 @@ begin_comment
 comment|/*	0xac		   reserved */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA0
+value|((unsigned int) 1<<  0)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA0
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA1
+value|((unsigned int) 1<<  1)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA1
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA2
+value|((unsigned int) 1<<  2)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA2
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA3
+value|((unsigned int) 1<<  3)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA3
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA4
+value|((unsigned int) 1<<  4)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA4
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA5
+value|((unsigned int) 1<<  5)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA5
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA6
+value|((unsigned int) 1<<  6)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA6
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA7
+value|((unsigned int) 1<<  7)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA7
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA8
+value|((unsigned int) 1<<  8)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA8
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA9
+value|((unsigned int) 1<<  9)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA9
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA10
+value|((unsigned int) 1<< 10)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA10
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA11
+value|((unsigned int) 1<< 11)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA11
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA12
+value|((unsigned int) 1<< 12)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA12
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA13
+value|((unsigned int) 1<< 13)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA13
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA14
+value|((unsigned int) 1<< 14)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA14
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA15
+value|((unsigned int) 1<< 15)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA15
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA16
+value|((unsigned int) 1<< 16)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA16
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA17
+value|((unsigned int) 1<< 17)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA17
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA18
+value|((unsigned int) 1<< 18)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA18
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA19
+value|((unsigned int) 1<< 19)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA19
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA20
+value|((unsigned int) 1<< 20)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA20
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA21
+value|((unsigned int) 1<< 21)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA21
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA22
+value|((unsigned int) 1<< 22)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA22
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA23
+value|((unsigned int) 1<< 23)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA23
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA24
+value|((unsigned int) 1<< 24)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA24
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA25
+value|((unsigned int) 1<< 25)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA25
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA26
+value|((unsigned int) 1<< 26)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA26
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA27
+value|((unsigned int) 1<< 27)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA27
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA28
+value|((unsigned int) 1<< 28)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA28
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA29
+value|((unsigned int) 1<< 29)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA29
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA30
+value|((unsigned int) 1<< 30)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA30
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PA31
+value|((unsigned int) 1<< 31)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PA31
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB0
+value|((unsigned int) 1<<  0)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB0
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB1
+value|((unsigned int) 1<<  1)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB1
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB2
+value|((unsigned int) 1<<  2)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB2
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB3
+value|((unsigned int) 1<<  3)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB3
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB4
+value|((unsigned int) 1<<  4)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB4
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB5
+value|((unsigned int) 1<<  5)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB5
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB6
+value|((unsigned int) 1<<  6)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB6
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB7
+value|((unsigned int) 1<<  7)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB7
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB8
+value|((unsigned int) 1<<  8)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB8
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB9
+value|((unsigned int) 1<<  9)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB9
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB10
+value|((unsigned int) 1<< 10)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB10
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB11
+value|((unsigned int) 1<< 11)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB11
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB12
+value|((unsigned int) 1<< 12)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB12
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB13
+value|((unsigned int) 1<< 13)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB13
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB14
+value|((unsigned int) 1<< 14)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB14
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB15
+value|((unsigned int) 1<< 15)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB15
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB16
+value|((unsigned int) 1<< 16)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB16
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB17
+value|((unsigned int) 1<< 17)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB17
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB18
+value|((unsigned int) 1<< 18)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB18
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB19
+value|((unsigned int) 1<< 19)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB19
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB20
+value|((unsigned int) 1<< 20)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB20
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB21
+value|((unsigned int) 1<< 21)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB21
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB22
+value|((unsigned int) 1<< 22)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB22
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB23
+value|((unsigned int) 1<< 23)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB23
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB24
+value|((unsigned int) 1<< 24)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB24
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB25
+value|((unsigned int) 1<< 25)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB25
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB26
+value|((unsigned int) 1<< 26)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB26
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB27
+value|((unsigned int) 1<< 27)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB27
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB28
+value|((unsigned int) 1<< 28)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB28
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB29
+value|((unsigned int) 1<< 29)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB29
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB30
+value|((unsigned int) 1<< 30)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB30
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PB31
+value|((unsigned int) 1<< 31)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PB31
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC0
+value|((unsigned int) 1<<  0)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC0
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC1
+value|((unsigned int) 1<<  1)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC1
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC2
+value|((unsigned int) 1<<  2)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC2
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC3
+value|((unsigned int) 1<<  3)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC3
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC4
+value|((unsigned int) 1<<  4)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC4
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC5
+value|((unsigned int) 1<<  5)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC5
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC6
+value|((unsigned int) 1<<  6)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC6
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC7
+value|((unsigned int) 1<<  7)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC7
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC8
+value|((unsigned int) 1<<  8)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC8
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC9
+value|((unsigned int) 1<<  9)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC9
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC10
+value|((unsigned int) 1<< 10)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC10
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC11
+value|((unsigned int) 1<< 11)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC11
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC12
+value|((unsigned int) 1<< 12)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC12
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC13
+value|((unsigned int) 1<< 13)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC13
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC14
+value|((unsigned int) 1<< 14)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC14
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC15
+value|((unsigned int) 1<< 15)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC15
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC16
+value|((unsigned int) 1<< 16)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC16
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC17
+value|((unsigned int) 1<< 17)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC17
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC18
+value|((unsigned int) 1<< 18)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC18
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC19
+value|((unsigned int) 1<< 19)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC19
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC20
+value|((unsigned int) 1<< 20)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC20
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC21
+value|((unsigned int) 1<< 21)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC21
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC22
+value|((unsigned int) 1<< 22)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC22
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC23
+value|((unsigned int) 1<< 23)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC23
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC24
+value|((unsigned int) 1<< 24)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC24
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC25
+value|((unsigned int) 1<< 25)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC25
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC26
+value|((unsigned int) 1<< 26)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC26
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC27
+value|((unsigned int) 1<< 27)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC27
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC28
+value|((unsigned int) 1<< 28)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC28
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC29
+value|((unsigned int) 1<< 29)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC29
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC30
+value|((unsigned int) 1<< 30)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC30
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91C_PIO_PC31
+value|((unsigned int) 1<< 31)
+end_define
+
+begin_comment
+comment|// Pin Controlled by PC31
+end_comment
+
 begin_endif
 endif|#
 directive|endif

@@ -41,6 +41,7 @@ parameter_list|,
 name|long
 name|length
 parameter_list|,
+specifier|const
 name|CAST_KEY
 modifier|*
 name|schedule

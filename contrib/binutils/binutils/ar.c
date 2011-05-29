@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ar.c - Archive modify and extract.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004    Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ar.c - Archive modify and extract.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004, 2005, 2006, 2007    Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_escape
@@ -9,6 +9,12 @@ end_escape
 begin_comment
 comment|/*    Bugs: should use getopt the way tar does (complete w/optional -) and    should have long options too. GNU ar used to check file against filesystem    in quick_update and replace operations (would check mtime). Doesn't warn    when name truncated. No way to specify pos_end. Error messages should be    more consistent.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"sysdep.h"
+end_include
 
 begin_include
 include|#
@@ -31,12 +37,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bucomm.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"aout/ar.h"
 end_include
 
@@ -44,6 +44,12 @@ begin_include
 include|#
 directive|include
 file|"libbfd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bucomm.h"
 end_include
 
 begin_include
@@ -129,13 +135,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|BUFSIZE
-value|8192
-end_define
 
 begin_comment
 comment|/* Kludge declaration from BFD!  This is ugly!  FIXME!  XXX */
@@ -254,18 +253,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static void do_quick_append   (const char *archive_filename, char **files_to_append);
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|static
 name|void
@@ -326,7 +313,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|ranlib_only
 parameter_list|(
 specifier|const
@@ -339,7 +326,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|ranlib_touch
 parameter_list|(
 specifier|const
@@ -368,6 +355,7 @@ comment|/** Globals and flags */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|mri_mode
 decl_stmt|;
@@ -632,7 +620,7 @@ name|head
 operator|=
 name|arch
 operator|->
-name|next
+name|archive_next
 init|;
 name|head
 condition|;
@@ -640,7 +628,7 @@ name|head
 operator|=
 name|head
 operator|->
-name|next
+name|archive_next
 control|)
 block|{
 name|PROGRESS
@@ -686,7 +674,7 @@ name|head
 operator|=
 name|arch
 operator|->
-name|next
+name|archive_next
 init|;
 name|head
 condition|;
@@ -694,7 +682,7 @@ name|head
 operator|=
 name|head
 operator|->
-name|next
+name|archive_next
 control|)
 block|{
 name|PROGRESS
@@ -1087,6 +1075,16 @@ literal|"  [V]          - display the version number\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|s
+argument_list|,
+name|_
+argument_list|(
+literal|"  @<file>      - read options from<file>\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ar_emul_usage
 argument_list|(
 name|s
@@ -1124,7 +1122,7 @@ name|s
 argument_list|,
 name|_
 argument_list|(
-literal|" The options are:\n\   -h --help                    Print this help message\n\   -V --version                 Print version information\n"
+literal|" The options are:\n\   @<file>                      Read options from<file>\n\   -h --help                    Print this help message\n\   -V --version                 Print version information\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1133,11 +1131,16 @@ name|list_supported_targets
 argument_list|(
 name|program_name
 argument_list|,
-name|stderr
+name|s
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|REPORT_BUGS_TO
+index|[
+literal|0
+index|]
+operator|&&
 name|help
 condition|)
 name|fprintf
@@ -1438,7 +1441,7 @@ argument_list|(
 name|output_file
 argument_list|)
 expr_stmt|;
-name|unlink
+name|unlink_if_ordinary
 argument_list|(
 name|output_filename
 argument_list|)
@@ -1591,6 +1594,15 @@ expr_stmt|;
 name|xmalloc_set_program_name
 argument_list|(
 name|program_name
+argument_list|)
+expr_stmt|;
+name|expandargv
+argument_list|(
+operator|&
+name|argc
+argument_list|,
+operator|&
+name|argv
 argument_list|)
 expr_stmt|;
 if|if
@@ -1864,6 +1876,11 @@ condition|(
 name|is_ranlib
 condition|)
 block|{
+name|int
+name|status
+init|=
+literal|0
+decl_stmt|;
 name|bfd_boolean
 name|touch
 init|=
@@ -1942,7 +1959,7 @@ argument_list|)
 operator|==
 literal|0
 operator|||
-name|strncmp
+name|CONST_STRNEQ
 argument_list|(
 name|argv
 index|[
@@ -1950,11 +1967,7 @@ literal|1
 index|]
 argument_list|,
 literal|"--v"
-argument_list|,
-literal|3
 argument_list|)
-operator|==
-literal|0
 condition|)
 name|print_version
 argument_list|(
@@ -2000,6 +2013,8 @@ condition|(
 operator|!
 name|touch
 condition|)
+name|status
+operator||=
 name|ranlib_only
 argument_list|(
 name|argv
@@ -2009,6 +2024,8 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
+name|status
+operator||=
 name|ranlib_touch
 argument_list|(
 name|argv
@@ -2023,7 +2040,7 @@ expr_stmt|;
 block|}
 name|xexit
 argument_list|(
-literal|0
+name|status
 argument_list|)
 expr_stmt|;
 block|}
@@ -2446,6 +2463,7 @@ name|bfd
 modifier|*
 name|arch
 decl_stmt|;
+comment|/* We don't use do_quick_append any more.  Too many systems 	 expect ar to always rebuild the symbol table even when q is 	 used.  */
 comment|/* We can't write an armap when using ar q, so just do ar r          instead.  */
 if|if
 condition|(
@@ -2475,7 +2493,8 @@ name|write_armap
 operator|==
 literal|1
 condition|)
-block|{
+name|xexit
+argument_list|(
 name|ranlib_only
 argument_list|(
 name|argv
@@ -2483,13 +2502,8 @@ index|[
 name|arg_index
 index|]
 argument_list|)
-expr_stmt|;
-name|xexit
-argument_list|(
-literal|0
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|operation
@@ -2609,16 +2623,6 @@ name|argc
 operator|-
 name|arg_index
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* We don't use do_quick_append any more.  Too many systems          expect ar to always rebuild the symbol table even when q is          used.  */
-comment|/* We can't do a quick append if we need to construct an 	 extended name table, because do_quick_append won't be able to 	 rebuild the name table.  Unfortunately, at this point we 	 don't actually know the maximum name length permitted by this 	 object file format.  So, we guess.  FIXME.  */
-block|if (operation == quick_append&& ! ar_truncate) 	{ 	  char **chk;  	  for (chk = files; chk != NULL&& *chk != '\0'; chk++) 	    { 	      if (strlen (normalize (*chk, (bfd *) NULL))> 14) 		{ 		  operation = replace; 		  break; 		} 	    } 	}        if (operation == quick_append) 	{
-comment|/* Note that quick appending to a non-existent archive creates it, 	     even if there are no files to append.  */
-block|do_quick_append (inarch_filename, files); 	  xexit (0); 	}
-endif|#
-directive|endif
 name|arch
 operator|=
 name|open_inarch
@@ -3101,7 +3105,7 @@ operator|&
 operator|(
 name|arch
 operator|->
-name|next
+name|archive_next
 operator|)
 expr_stmt|;
 comment|/* Read all the contents right away, regardless.  */
@@ -3143,7 +3147,7 @@ operator|=
 operator|&
 name|next_one
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 block|}
 operator|*
@@ -3181,7 +3185,7 @@ modifier|*
 name|abfd
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|ncopied
 init|=
 literal|0
@@ -3199,7 +3203,7 @@ name|struct
 name|stat
 name|buf
 decl_stmt|;
-name|long
+name|size_t
 name|size
 decl_stmt|;
 if|if
@@ -3271,10 +3275,10 @@ operator|<
 name|size
 condition|)
 block|{
-name|int
+name|size_t
 name|nread
 decl_stmt|;
-name|int
+name|size_t
 name|tocopy
 init|=
 name|size
@@ -3328,6 +3332,12 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* fwrite in mingw32 may return int instead of size_t. Cast the 	 return value to size_t to avoid comparison between signed and 	 unsigned values.  */
+if|if
+condition|(
+operator|(
+name|size_t
+operator|)
 name|fwrite
 argument_list|(
 name|cbuf
@@ -3337,6 +3347,18 @@ argument_list|,
 name|nread
 argument_list|,
 name|stdout
+argument_list|)
+operator|!=
+name|nread
+condition|)
+name|fatal
+argument_list|(
+literal|"stdout: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ncopied
@@ -3378,17 +3400,17 @@ argument_list|(
 name|BUFSIZE
 argument_list|)
 decl_stmt|;
-name|int
+name|size_t
 name|nread
 decl_stmt|,
 name|tocopy
 decl_stmt|;
-name|long
+name|size_t
 name|ncopied
 init|=
 literal|0
 decl_stmt|;
-name|long
+name|size_t
 name|size
 decl_stmt|;
 name|struct
@@ -3426,26 +3448,6 @@ operator|=
 name|buf
 operator|.
 name|st_size
-expr_stmt|;
-if|if
-condition|(
-name|size
-operator|<
-literal|0
-condition|)
-comment|/* xgettext:c-format */
-name|fatal
-argument_list|(
-name|_
-argument_list|(
-literal|"stat returns negative size for %s"
-argument_list|)
-argument_list|,
-name|bfd_get_filename
-argument_list|(
-name|abfd
-argument_list|)
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3645,6 +3647,12 @@ operator|=
 name|ostream
 expr_stmt|;
 block|}
+comment|/* fwrite in mingw32 may return int instead of size_t. Cast 	   the return value to size_t to avoid comparison between 	   signed and unsigned values.  */
+if|if
+condition|(
+operator|(
+name|size_t
+operator|)
 name|fwrite
 argument_list|(
 name|cbuf
@@ -3654,6 +3662,20 @@ argument_list|,
 name|nread
 argument_list|,
 name|ostream
+argument_list|)
+operator|!=
+name|nread
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: %s"
+argument_list|,
+name|output_filename
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ncopied
@@ -3696,6 +3718,16 @@ if|if
 condition|(
 name|preserve_dates
 condition|)
+block|{
+comment|/* Set access time to modification time.  Only st_mtime is 	 initialized by bfd_stat_arch_elt.  */
+name|buf
+operator|.
+name|st_atime
+operator|=
+name|buf
+operator|.
+name|st_mtime
+expr_stmt|;
 name|set_times
 argument_list|(
 name|bfd_get_filename
@@ -3707,6 +3739,7 @@ operator|&
 name|buf
 argument_list|)
 expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|cbuf
@@ -3714,80 +3747,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* We don't use this anymore.  Too many systems expect ar to rebuild    the symbol table even when q is used.  */
-end_comment
-
-begin_comment
-comment|/* Just do it quickly; don't worry about dups, armap, or anything like that */
-end_comment
-
-begin_if
-unit|static void do_quick_append (const char *archive_filename, char **files_to_append) {   FILE *ofile, *ifile;   char *buf = xmalloc (BUFSIZE);   long tocopy, thistime;   bfd *temp;   struct stat sbuf;   bfd_boolean newfile = FALSE;   bfd_set_error (bfd_error_no_error);    if (stat (archive_filename,&sbuf) != 0)     {
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__GO32__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__DJGPP__
-argument_list|)
-end_if
-
-begin_comment
-comment|/* FIXME: I don't understand why this fragment was ifndef'ed 	 away for __GO32__; perhaps it was in the days of DJGPP v1.x. 	 stat() works just fine in v2.x, so I think this should be 	 removed.  For now, I enable it for DJGPP v2.  	 (And yes, I know this is all unused, but somebody, someday, 	 might wish to resurrect this again... -- EZ.  */
-end_comment
-
-begin_comment
-comment|/* KLUDGE ALERT! Temporary fix until I figger why    stat() is wrong ... think it's buried in GO32's IDT - Jax  */
-end_comment
-
-begin_endif
-unit|if (errno != ENOENT) 	bfd_fatal (archive_filename);
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-unit|newfile = TRUE;     }    ofile = fopen (archive_filename, FOPEN_AUB);   if (ofile == NULL)     {       perror (program_name);       xexit (1);     }    temp = bfd_openr (archive_filename, NULL);   if (temp == NULL)     {       bfd_fatal (archive_filename);     }   if (!newfile)     {       if (!bfd_check_format (temp, bfd_archive))
-comment|/* xgettext:c-format */
-end_comment
-
-begin_comment
-unit|fatal (_("%s is not an archive"), archive_filename);     }   else     {       fwrite (ARMAG, 1, SARMAG, ofile);       if (!silent_create)
-comment|/* xgettext:c-format */
-end_comment
-
-begin_comment
-unit|non_fatal (_("creating %s"), archive_filename);     }    if (ar_truncate)     temp->flags |= BFD_TRADITIONAL_FORMAT;
-comment|/* assume it's an archive, go straight to the end, sans $200 */
-end_comment
-
-begin_comment
-unit|fseek (ofile, 0, 2);    for (; files_to_append&& *files_to_append; ++files_to_append)     {       struct ar_hdr *hdr = bfd_special_undocumented_glue (temp, *files_to_append);       if (hdr == NULL) 	{ 	  bfd_fatal (*files_to_append); 	}        BFD_SEND (temp, _bfd_truncate_arname, (temp, *files_to_append, (char *) hdr));        ifile = fopen (*files_to_append, FOPEN_RB);       if (ifile == NULL) 	{ 	  bfd_nonfatal (*files_to_append); 	}        if (stat (*files_to_append,&sbuf) != 0) 	{ 	  bfd_nonfatal (*files_to_append); 	}        tocopy = sbuf.st_size;
-comment|/* XXX should do error-checking! */
-end_comment
-
-begin_endif
-unit|fwrite (hdr, 1, sizeof (struct ar_hdr), ofile);        while (tocopy> 0) 	{ 	  thistime = tocopy; 	  if (thistime> BUFSIZE) 	    thistime = BUFSIZE; 	  fread (buf, 1, thistime, ifile); 	  fwrite (buf, 1, thistime, ofile); 	  tocopy -= thistime; 	}       fclose (ifile);       if ((sbuf.st_size % 2) == 1) 	putc ('\012', ofile);     }   fclose (ofile);   bfd_close (temp);   free (buf); }
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 0 */
-end_comment
 
 begin_function
 specifier|static
@@ -3816,7 +3775,7 @@ name|contents_head
 init|=
 name|iarch
 operator|->
-name|next
+name|archive_next
 decl_stmt|;
 name|old_name
 operator|=
@@ -3848,6 +3807,17 @@ operator|=
 name|make_tempname
 argument_list|(
 name|old_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|new_name
+operator|==
+name|NULL
+condition|)
+name|bfd_fatal
+argument_list|(
+literal|"could not create temporary file whilst writing archive"
 argument_list|)
 expr_stmt|;
 name|output_filename
@@ -4063,7 +4033,7 @@ operator|*
 name|after_bfd
 operator|)
 operator|->
-name|next
+name|archive_next
 operator|)
 expr_stmt|;
 block|}
@@ -4083,7 +4053,7 @@ operator|*
 name|after_bfd
 operator|)
 operator|->
-name|next
+name|archive_next
 control|)
 if|if
 condition|(
@@ -4116,7 +4086,7 @@ operator|*
 name|after_bfd
 operator|)
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 break|break;
 block|}
@@ -4210,7 +4180,7 @@ operator|&
 operator|(
 name|arch
 operator|->
-name|next
+name|archive_next
 operator|)
 expr_stmt|;
 while|while
@@ -4287,7 +4257,7 @@ operator|*
 name|current_ptr_ptr
 operator|)
 operator|->
-name|next
+name|archive_next
 operator|)
 expr_stmt|;
 goto|goto
@@ -4304,7 +4274,7 @@ operator|*
 name|current_ptr_ptr
 operator|)
 operator|->
-name|next
+name|archive_next
 operator|)
 expr_stmt|;
 block|}
@@ -4397,7 +4367,7 @@ operator|&
 operator|(
 name|arch
 operator|->
-name|next
+name|archive_next
 operator|)
 expr_stmt|;
 while|while
@@ -4443,7 +4413,7 @@ name|current_ptr_ptr
 operator|=
 name|current_ptr
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 comment|/* Now glue to end */
 name|after_bfd
@@ -4453,7 +4423,7 @@ argument_list|(
 operator|&
 name|arch
 operator|->
-name|next
+name|archive_next
 argument_list|,
 name|pos_end
 argument_list|,
@@ -4472,7 +4442,7 @@ name|current_ptr
 expr_stmt|;
 name|current_ptr
 operator|->
-name|next
+name|archive_next
 operator|=
 name|link
 expr_stmt|;
@@ -4501,7 +4471,7 @@ operator|*
 name|current_ptr_ptr
 operator|)
 operator|->
-name|next
+name|archive_next
 operator|)
 expr_stmt|;
 block|}
@@ -4565,7 +4535,7 @@ modifier|*
 modifier|*
 name|after_bfd
 decl_stmt|;
-comment|/* New entries go after this one */
+comment|/* New entries go after this one.  */
 name|bfd
 modifier|*
 name|current
@@ -4594,7 +4564,7 @@ operator|=
 operator|&
 name|arch
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 while|while
 condition|(
@@ -4726,7 +4696,7 @@ argument_list|(
 operator|&
 name|arch
 operator|->
-name|next
+name|archive_next
 argument_list|,
 name|pos_after
 argument_list|,
@@ -4757,7 +4727,7 @@ operator|*
 name|current_ptr
 operator|)
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 name|changed
 operator|=
@@ -4774,7 +4744,7 @@ operator|&
 operator|(
 name|current
 operator|->
-name|next
+name|archive_next
 operator|)
 expr_stmt|;
 block|}
@@ -4787,7 +4757,7 @@ argument_list|(
 operator|&
 name|arch
 operator|->
-name|next
+name|archive_next
 argument_list|,
 name|pos_end
 argument_list|,
@@ -4796,14 +4766,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|get_file_size
-argument_list|(
-operator|*
-name|files_to_move
-argument_list|)
-operator|>
-literal|0
-operator|&&
 name|ar_emul_append
 argument_list|(
 name|after_bfd
@@ -4844,7 +4806,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ranlib_only
 parameter_list|(
 specifier|const
@@ -4866,7 +4828,9 @@ argument_list|)
 operator|<
 literal|1
 condition|)
-return|return;
+return|return
+literal|1
+return|;
 name|write_armap
 operator|=
 literal|1
@@ -4900,6 +4864,9 @@ argument_list|(
 name|arch
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -4909,7 +4876,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ranlib_touch
 parameter_list|(
 specifier|const
@@ -4950,7 +4917,9 @@ argument_list|)
 operator|<
 literal|1
 condition|)
-return|return;
+return|return
+literal|1
+return|;
 name|f
 operator|=
 name|open
@@ -5092,6 +5061,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+return|return
+literal|0
+return|;
 block|}
 end_function
 

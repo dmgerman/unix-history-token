@@ -26,25 +26,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
+file|<assert.h>
 end_include
 
 begin_include
@@ -56,13 +38,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<libutil.h>
+file|<fcntl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<assert.h>
+file|<fsshare.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
 end_include
 
 begin_include
@@ -78,7 +66,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<fsshare.h>
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_define
@@ -346,7 +352,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Function translate options to a format acceptable by exports(5), eg.  *  *	-ro -network=192.168.0.0 -mask=255.255.255.0 -maproot=0 freefall.freebsd.org 69.147.83.54  *  * Accepted input formats:  *  *	ro,network=192.168.0.0,mask=255.255.255.0,maproot=0,freefall.freebsd.org  *	ro network=192.168.0.0 mask=255.255.255.0 maproot=0 freefall.freebsd.org  *	-ro,-network=192.168.0.0,-mask=255.255.255.0,-maproot=0,freefall.freebsd.org  *	-ro -network=192.168.0.0 -mask=255.255.255.0 -maproot=0 freefall.freebsd.org  *  * Recognized keywords:  *  *	ro, maproot, mapall, mask, network, alldirs, public, webnfs, index, quiet  *  */
+comment|/*  * Function translate options to a format acceptable by exports(5), eg.  *  *	-ro -network=192.168.0.0 -mask=255.255.255.0 -maproot=0 freefall.freebsd.org 69.147.83.54  *  * Accepted input formats:  *  *	ro,network=192.168.0.0,mask=255.255.255.0,maproot=0,freefall.freebsd.org  *	ro network=192.168.0.0 mask=255.255.255.0 maproot=0 freefall.freebsd.org  *	-ro,-network=192.168.0.0,-mask=255.255.255.0,-maproot=0,freefall.freebsd.org  *	-ro -network=192.168.0.0 -mask=255.255.255.0 -maproot=0 freefall.freebsd.org  *  * Recognized keywords:  *  *	ro, maproot, mapall, mask, network, sec, alldirs, public, webnfs, index, quiet  *  */
 end_comment
 
 begin_decl_stmt
@@ -367,6 +373,8 @@ block|,
 literal|"mask"
 block|,
 literal|"network"
+block|,
+literal|"sec"
 block|,
 literal|"alldirs"
 block|,
@@ -991,6 +999,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|fflush
+argument_list|(
+name|newfd
+argument_list|)
+expr_stmt|;
 comment|/* 			 * Send SIGHUP to mountd, but unlock exports file later. 			 */
 name|restart_mountd
 argument_list|()

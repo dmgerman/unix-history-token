@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_comment
 comment|/*  * This file contains the code to implement file range locking in  * ZFS, although there isn't much specific to ZFS (all that comes to mind  * support for growing the blocksize).  *  * Interface  * ---------  * Defined in zfs_rlock.h but essentially:  *	rl = zfs_range_lock(zp, off, len, lock_type);  *	zfs_range_unlock(rl);  *	zfs_range_reduce(rl, off, len);  *  * AVL tree  * --------  * An AVL tree is used to maintain the state of the existing ranges  * that are locked for exclusive (writer) or shared (reader) use.  * The starting range offset is used for searching and sorting the tree.  *  * Common case  * -----------  * The (hopefully) usual case is of no overlaps or contention for  * locks. On entry to zfs_lock_range() a rl_t is allocated; the tree  * searched that finds no overlap, and *this* rl_t is placed in the tree.  *  * Overlaps/Reference counting/Proxy locks  * ---------------------------------------  * The avl code only allows one node at a particular offset. Also it's very  * inefficient to search through all previous entries looking for overlaps  * (because the very 1st in the ordered list might be at offset 0 but  * cover the whole file).  * So this implementation uses reference counts and proxy range locks.  * Firstly, only reader locks use reference counts and proxy locks,  * because writer locks are exclusive.  * When a reader lock overlaps with another then a proxy lock is created  * for that range and replaces the original lock. If the overlap  * is exact then the reference count of the proxy is simply incremented.  * Otherwise, the proxy lock is split into smaller lock ranges and  * new proxy locks created for non overlapping ranges.  * The reference counts are adjusted accordingly.  * Meanwhile, the orginal lock is kept around (this is the callers handle)  * and its offset and length are used when releasing the lock.  *  * Thread coordination  * -------------------  * In order to make wakeups efficient and to ensure multiple continuous  * readers on a range don't starve a writer for the same range lock,  * two condition variables are allocated in each rl_t.  * If a writer (or reader) can't get a range it initialises the writer  * (or reader) cv; sets a flag saying there's a writer (or reader) waiting;  * and waits on that cv. When a thread unlocks that range it wakes up all  * writers then all readers before destroying the lock.  *  * Append mode writes  * ------------------  * Append mode writes need to lock a range at the end of a file.  * The offset of the end of the file is determined under the  * range locking mutex, and the lock type converted from RL_APPEND to  * RL_WRITER and the range locked.  *  * Grow block handling  * -------------------  * ZFS supports multiple block sizes currently upto 128K. The smallest  * block size is used for the file which is grown as needed. During this  * growth all other writers and readers must be excluded.  * So if the block size needs to be grown then the whole file is  * exclusively locked, then later the caller will reduce the lock  * range to just the range to be written using zfs_reduce_range.  */
@@ -81,7 +74,7 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* 		 * Range locking is also used by zvol and uses a 		 * dummied up znode. However, for zvol, we don't need to 		 * append or grow blocksize, and besides we don't have 		 * a z_phys or z_zfsvfs - so skip that processing. 		 * 		 * Yes, this is ugly, and would be solved by not handling 		 * grow or append in range lock code. If that was done then 		 * we could make the range locking code generically available 		 * to other non-zfs consumers. 		 */
+comment|/* 		 * Range locking is also used by zvol and uses a 		 * dummied up znode. However, for zvol, we don't need to 		 * append or grow blocksize, and besides we don't have 		 * a "sa" data or z_zfsvfs - so skip that processing. 		 * 		 * Yes, this is ugly, and would be solved by not handling 		 * grow or append in range lock code. If that was done then 		 * we could make the range locking code generically available 		 * to other non-zfs consumers. 		 */
 if|if
 condition|(
 name|zp
@@ -105,9 +98,7 @@ name|r_off
 operator|=
 name|zp
 operator|->
-name|z_phys
-operator|->
-name|zp_size
+name|z_size
 expr_stmt|;
 comment|/* 			 * If we need to grow the block size then grab the whole 			 * file range. This is also done under z_range_lock to 			 * avoid races. 			 */
 name|end_size
@@ -116,9 +107,7 @@ name|MAX
 argument_list|(
 name|zp
 operator|->
-name|z_phys
-operator|->
-name|zp_size
+name|z_size
 argument_list|,
 name|new
 operator|->
@@ -1629,6 +1618,21 @@ name|new
 operator|->
 name|r_off
 operator|=
+name|off
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|+
+name|off
+operator|<
+name|off
+condition|)
+comment|/* overflow */
+name|len
+operator|=
+name|UINT64_MAX
+operator|-
 name|off
 expr_stmt|;
 name|new

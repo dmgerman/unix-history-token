@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_FS_ZFS_FUID_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -67,6 +60,12 @@ directive|include
 file|<sys/avl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/list.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -99,21 +98,21 @@ name|FUID_SIZE_ESTIMATE
 parameter_list|(
 name|z
 parameter_list|)
-value|(z->z_fuid_size + (SPA_MINBLOCKSIZE<< 1))
+value|((z)->z_fuid_size + (SPA_MINBLOCKSIZE<< 1))
 define|#
 directive|define
 name|FUID_INDEX
 parameter_list|(
 name|x
 parameter_list|)
-value|(x>> 32)
+value|((x)>> 32)
 define|#
 directive|define
 name|FUID_RID
 parameter_list|(
 name|x
 parameter_list|)
-value|(x& 0xffffffff)
+value|((x)& 0xffffffff)
 define|#
 directive|define
 name|FUID_ENCODE
@@ -122,7 +121,7 @@ name|idx
 parameter_list|,
 name|rid
 parameter_list|)
-value|((idx<< 32) | rid)
+value|(((uint64_t)(idx)<< 32) | (rid))
 comment|/*  * FUIDs cause problems for the intent log  * we need to replay the creation of the FUID,  * but we can't count on the idmapper to be around  * and during replay the FUID index may be different than  * before.  Also, if an ACL has 100 ACEs and 12 different  * domains we don't want to log 100 domain strings, but rather  * just the unique 12.  */
 comment|/*  * The FUIDs in the log will index into  * domain string table and the bottom half will be the rid.  * Used for mapping ephemeral uid/gid during ACL setting to FUIDs  */
 typedef|typedef
@@ -229,6 +228,27 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
+name|zfs_fuid_node_add
+parameter_list|(
+name|zfs_fuid_info_t
+modifier|*
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|uint64_t
+parameter_list|,
+name|uint64_t
+parameter_list|,
+name|zfs_fuid_type_t
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
 name|zfs_fuid_destroy
 parameter_list|(
 name|zfsvfs_t
@@ -243,9 +263,6 @@ name|zfsvfs_t
 modifier|*
 parameter_list|,
 name|zfs_fuid_type_t
-parameter_list|,
-name|dmu_tx_t
-modifier|*
 parameter_list|,
 name|cred_t
 modifier|*
@@ -268,9 +285,6 @@ name|cred_t
 modifier|*
 parameter_list|,
 name|zfs_fuid_type_t
-parameter_list|,
-name|dmu_tx_t
-modifier|*
 parameter_list|,
 name|zfs_fuid_info_t
 modifier|*
@@ -310,7 +324,10 @@ function_decl|;
 specifier|extern
 name|void
 name|zfs_fuid_info_free
-parameter_list|()
+parameter_list|(
+name|zfs_fuid_info_t
+modifier|*
+parameter_list|)
 function_decl|;
 specifier|extern
 name|boolean_t
@@ -325,6 +342,64 @@ name|cred_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|void
+name|zfs_fuid_sync
+parameter_list|(
+name|zfsvfs_t
+modifier|*
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|zfs_fuid_find_by_domain
+parameter_list|(
+name|zfsvfs_t
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|domain
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|retdomain
+parameter_list|,
+name|boolean_t
+name|addok
+parameter_list|)
+function_decl|;
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|zfs_fuid_find_by_idx
+parameter_list|(
+name|zfsvfs_t
+modifier|*
+name|zfsvfs
+parameter_list|,
+name|uint32_t
+name|idx
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|zfs_fuid_txhold
+parameter_list|(
+name|zfsvfs_t
+modifier|*
+name|zfsvfs
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
 endif|#
 directive|endif
 name|char
@@ -335,6 +410,16 @@ name|avl_tree_t
 modifier|*
 parameter_list|,
 name|uint32_t
+parameter_list|)
+function_decl|;
+name|void
+name|zfs_fuid_avl_tree_create
+parameter_list|(
+name|avl_tree_t
+modifier|*
+parameter_list|,
+name|avl_tree_t
+modifier|*
 parameter_list|)
 function_decl|;
 name|uint64_t

@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"key.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"auth-options.h"
 end_include
 
@@ -111,12 +117,6 @@ begin_include
 include|#
 directive|include
 file|"servconf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"key.h"
 end_include
 
 begin_include

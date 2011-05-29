@@ -342,9 +342,18 @@ value|43
 comment|/* check whether the MTU 					      * was exceed in the 					      * previous write 					      * operation */
 define|#
 directive|define
+name|BIO_CTRL_DGRAM_GET_PEER
+value|46
+define|#
+directive|define
 name|BIO_CTRL_DGRAM_SET_PEER
 value|44
 comment|/* Destination for the data */
+define|#
+directive|define
+name|BIO_CTRL_DGRAM_SET_NEXT_TIMEOUT
+value|45
+comment|/* Next DTLS handshake timeout to 											  * adjust socket timeouts */
 comment|/* modifiers */
 define|#
 directive|define
@@ -1394,7 +1403,7 @@ name|BIO_get_conn_int_port
 parameter_list|(
 name|b
 parameter_list|)
-value|BIO_int_ctrl(b,BIO_C_GET_CONNECT,3)
+value|BIO_int_ctrl(b,BIO_C_GET_CONNECT,3,0)
 define|#
 directive|define
 name|BIO_set_nbio
@@ -1430,7 +1439,7 @@ name|b
 parameter_list|,
 name|n
 parameter_list|)
-value|BIO_ctrl(b,BIO_C_SET_ACCEPT,1,(n)?"a":NULL)
+value|BIO_ctrl(b,BIO_C_SET_ACCEPT,1,(n)?(void *)"a":NULL)
 define|#
 directive|define
 name|BIO_set_accept_bios
@@ -2065,6 +2074,16 @@ name|b
 parameter_list|)
 define|\
 value|(int)BIO_ctrl(b, BIO_CTRL_DGRAM_GET_SEND_TIMER_EXP, 0, NULL)
+define|#
+directive|define
+name|BIO_dgram_get_peer
+parameter_list|(
+name|b
+parameter_list|,
+name|peer
+parameter_list|)
+define|\
+value|(int)BIO_ctrl(b, BIO_CTRL_DGRAM_GET_PEER, 0, (char *)peer)
 define|#
 directive|define
 name|BIO_dgram_set_peer

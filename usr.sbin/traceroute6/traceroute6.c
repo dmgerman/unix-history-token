@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All righ
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -483,6 +484,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|pr_type
@@ -874,8 +876,6 @@ decl_stmt|,
 name|rcvcmsglen
 decl_stmt|,
 name|error
-decl_stmt|,
-name|minlen
 decl_stmt|;
 name|struct
 name|addrinfo
@@ -903,6 +903,8 @@ name|hp
 decl_stmt|;
 name|size_t
 name|size
+decl_stmt|,
+name|minlen
 decl_stmt|;
 name|uid_t
 name|uid
@@ -2275,13 +2277,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"traceroute6: packet size must be %d<= s< %ld.\n"
+literal|"traceroute6: packet size must be %zu<= s< %d.\n"
 argument_list|,
 name|minlen
 argument_list|,
-operator|(
-name|long
-operator|)
 name|MAXPACKET
 argument_list|)
 expr_stmt|;
@@ -2293,16 +2292,8 @@ expr_stmt|;
 block|}
 name|outpacket
 operator|=
-operator|(
-expr|struct
-name|opacket
-operator|*
-operator|)
 name|malloc
 argument_list|(
-operator|(
-name|unsigned
-operator|)
 name|datalen
 argument_list|)
 expr_stmt|;
@@ -3725,7 +3716,7 @@ name|got_there
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|unsigned
 name|unreachable
 init|=
 literal|0
@@ -4654,6 +4645,9 @@ name|i
 operator|<
 literal|0
 operator|||
+operator|(
+name|u_long
+operator|)
 name|i
 operator|!=
 name|datalen
@@ -4858,15 +4852,14 @@ comment|/*  * Convert an ICMP "type" field to a printable string.  */
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|pr_type
 parameter_list|(
-name|t0
-parameter_list|)
 name|int
 name|t0
-decl_stmt|;
+parameter_list|)
 block|{
 name|u_char
 name|t
@@ -4875,6 +4868,7 @@ name|t0
 operator|&
 literal|0xff
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|cp
@@ -5220,6 +5214,9 @@ if|if
 condition|(
 name|cc
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct

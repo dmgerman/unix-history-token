@@ -76,6 +76,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
+value|do {} while (0)
 end_define
 
 begin_define
@@ -85,6 +86,7 @@ name|debug_called
 parameter_list|(
 name|level
 parameter_list|)
+value|do {} while (0)
 end_define
 
 begin_endif

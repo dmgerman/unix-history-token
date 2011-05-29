@@ -514,7 +514,7 @@ operator|=
 block|{
 name|ASN1_IMP_SET_OF_OPT
 argument_list|(
-name|CMS_SignedData
+name|CMS_OriginatorInfo
 argument_list|,
 name|certificates
 argument_list|,
@@ -525,7 +525,7 @@ argument_list|)
 block|,
 name|ASN1_IMP_SET_OF_OPT
 argument_list|(
-argument|CMS_SignedData
+argument|CMS_OriginatorInfo
 argument_list|,
 argument|crls
 argument_list|,

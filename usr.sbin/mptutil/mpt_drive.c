@@ -380,8 +380,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+name|errno
 operator|)
 return|;
 name|list
@@ -448,6 +447,8 @@ decl_stmt|;
 name|int
 name|count
 decl_stmt|,
+name|error
+decl_stmt|,
 name|i
 decl_stmt|,
 name|j
@@ -470,10 +471,18 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to fetch volume list"
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|error
 expr_stmt|;
 return|return
 operator|(
@@ -499,6 +508,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to fetch drive list"
@@ -508,6 +521,10 @@ name|free
 argument_list|(
 name|ioc2
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|error
 expr_stmt|;
 return|return
 operator|(
@@ -533,6 +550,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to fetch spare list"
@@ -547,6 +568,10 @@ name|free
 argument_list|(
 name|ioc2
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|error
 expr_stmt|;
 return|return
 operator|(
@@ -629,10 +654,18 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to read volume info"
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|error
 expr_stmt|;
 return|return
 operator|(
@@ -1127,27 +1160,17 @@ operator|)
 return|;
 block|}
 block|}
-name|errno
-operator|=
-name|ENOENT
-expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|ENOENT
 operator|)
 return|;
 block|}
 name|bad
 label|:
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|EINVAL
 operator|)
 return|;
 block|}
@@ -1358,6 +1381,8 @@ name|U8
 name|PhysDiskNum
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|fd
 decl_stmt|;
 name|fd
@@ -1374,6 +1399,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mpt_open"
@@ -1381,7 +1410,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -1418,6 +1447,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to find drive %s"
@@ -1427,7 +1460,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -1455,6 +1488,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to fetch info for drive %u"
@@ -1464,7 +1501,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -1493,8 +1530,8 @@ name|EINVAL
 operator|)
 return|;
 block|}
-if|if
-condition|(
+name|error
+operator|=
 name|mpt_raid_action
 argument_list|(
 name|fd
@@ -1525,12 +1562,16 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
-name|warn
+name|warnc
 argument_list|(
+name|error
+argument_list|,
 literal|"Failed to set drive %u to %s"
 argument_list|,
 name|PhysDiskNum
@@ -1540,7 +1581,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}

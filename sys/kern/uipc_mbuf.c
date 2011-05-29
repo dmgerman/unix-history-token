@@ -1275,7 +1275,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Attach the the cluster from *m to *n, set up m_ext in *n  * and bump the refcount of the cluster.  */
+comment|/*  * Attach the cluster from *m to *n, set up m_ext in *n  * and bump the refcount of the cluster.  */
 end_comment
 
 begin_function
@@ -1474,6 +1474,16 @@ operator|->
 name|m_flags
 operator||=
 name|M_EXT
+expr_stmt|;
+name|n
+operator|->
+name|m_flags
+operator||=
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_RDONLY
 expr_stmt|;
 block|}
 end_function
@@ -4884,10 +4894,6 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-name|m
-operator|=
-name|mp
-expr_stmt|;
 if|if
 condition|(
 name|mp
@@ -4896,7 +4902,7 @@ name|m_flags
 operator|&
 name|M_PKTHDR
 condition|)
-name|m
+name|mp
 operator|->
 name|m_pkthdr
 operator|.
@@ -9917,7 +9923,7 @@ name|char
 modifier|*
 name|c
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 modifier|*
 name|p
 decl_stmt|;

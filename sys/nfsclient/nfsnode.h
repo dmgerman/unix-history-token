@@ -144,45 +144,6 @@ name|ndm4_cookies
 value|ndm_un1.ndmu4_cookies
 end_define
 
-begin_define
-define|#
-directive|define
-name|n_ac_ts_tid
-value|n_ac_ts.nfs_ac_ts_tid
-end_define
-
-begin_define
-define|#
-directive|define
-name|n_ac_ts_pid
-value|n_ac_ts.nfs_ac_ts_pid
-end_define
-
-begin_define
-define|#
-directive|define
-name|n_ac_ts_syscalls
-value|n_ac_ts.nfs_ac_ts_syscalls
-end_define
-
-begin_struct
-struct|struct
-name|nfs_attrcache_timestamp
-block|{
-name|lwpid_t
-name|nfs_ac_ts_tid
-decl_stmt|;
-name|pid_t
-name|nfs_ac_ts_pid
-decl_stmt|;
-name|unsigned
-name|long
-name|nfs_ac_ts_syscalls
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_struct
 struct|struct
 name|nfs_accesscache
@@ -249,11 +210,13 @@ name|timespec
 name|n_mtime
 decl_stmt|;
 comment|/* Prev modify time. */
-name|time_t
+name|struct
+name|timespec
 name|n_ctime
 decl_stmt|;
 comment|/* Prev create time. */
-name|time_t
+name|struct
+name|timespec
 name|n_dmtime
 decl_stmt|;
 comment|/* Prev dir modify time. */
@@ -261,10 +224,6 @@ name|int
 name|n_dmtime_ticks
 decl_stmt|;
 comment|/* Tick of -ve cache entry */
-name|time_t
-name|n_expiry
-decl_stmt|;
-comment|/* Lease expiry time */
 name|nfsfh_t
 modifier|*
 name|n_fhp
@@ -363,10 +322,6 @@ name|n_directio_opens
 decl_stmt|;
 name|int
 name|n_directio_asyncwr
-decl_stmt|;
-name|struct
-name|nfs_attrcache_timestamp
-name|n_ac_ts
 decl_stmt|;
 block|}
 struct|;
@@ -587,7 +542,7 @@ value|(((T1)->tv_sec != (T2)->tv_sec) || ((T1)->tv_nsec != (T2)->tv_nsec))
 end_define
 
 begin_comment
-comment|/*  * NFS iod threads can be in one of these three states once spawned.  * NFSIOD_NOT_AVAILABLE - Cannot be assigned an I/O operation at this time.  * NFSIOD_AVAILABLE - Available to be assigned an I/O operation.  * NFSIOD_CREATED_FOR_NFS_ASYNCIO - Newly created for nfs_asyncio() and  *	will be used by the thread that called nfs_asyncio().  */
+comment|/*  * NFS iod threads can be in one of these two states once spawned.  * NFSIOD_NOT_AVAILABLE - Cannot be assigned an I/O operation at this time.  * NFSIOD_AVAILABLE - Available to be assigned an I/O operation.  */
 end_comment
 
 begin_enum
@@ -601,10 +556,6 @@ block|,
 name|NFSIOD_AVAILABLE
 init|=
 literal|1
-block|,
-name|NFSIOD_CREATED_FOR_NFS_ASYNCIO
-init|=
-literal|2
 block|, }
 enum|;
 end_enum
@@ -678,22 +629,6 @@ specifier|extern
 name|struct
 name|buf_ops
 name|buf_ops_nfs
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|vop_advlock_t
-modifier|*
-name|nfs_advlock_p
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|vop_reclaim_t
-modifier|*
-name|nfs_reclaim_p
 decl_stmt|;
 end_decl_stmt
 

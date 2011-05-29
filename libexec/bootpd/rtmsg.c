@@ -432,8 +432,8 @@ modifier|*
 name|ea
 decl_stmt|;
 name|struct
-name|timeval
-name|time
+name|timespec
+name|tp
 decl_stmt|;
 name|int
 name|op
@@ -496,17 +496,17 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* make arp entry temporary */
-name|gettimeofday
+name|clock_gettime
 argument_list|(
-operator|&
-name|time
+name|CLOCK_MONOTONIC
 argument_list|,
-literal|0
+operator|&
+name|tp
 argument_list|)
 expr_stmt|;
 name|expire_time
 operator|=
-name|time
+name|tp
 operator|.
 name|tv_sec
 operator|+

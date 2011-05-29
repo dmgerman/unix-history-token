@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/* $NetBSD: stack_protector.c,v 1.4 2006/11/22 17:23:25 christos Exp $	*/
 end_comment
 
@@ -50,6 +46,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<link.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -69,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
 end_include
 
 begin_function_decl
@@ -198,8 +212,39 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
+name|__stack_chk_guard
+index|[
+literal|0
+index|]
+operator|!=
+literal|0
+condition|)
+return|return;
+name|error
+operator|=
+name|_elf_aux_info
+argument_list|(
+name|AT_CANARY
+argument_list|,
+name|__stack_chk_guard
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|__stack_chk_guard
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+operator|&&
 name|__stack_chk_guard
 index|[
 literal|0
@@ -396,6 +441,8 @@ name|syslog
 argument_list|(
 name|LOG_CRIT
 argument_list|,
+literal|"%s"
+argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
@@ -500,29 +547,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|PIC
-end_ifdef
-
-begin_expr_stmt
-name|__sym_compat
-argument_list|(
-name|__stack_chk_fail_local
-argument_list|,
-name|__stack_chk_fail
-argument_list|,
-name|FBSD_1
-literal|.0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
+end_ifndef
 
 begin_expr_stmt
 name|__weak_reference

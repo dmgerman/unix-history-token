@@ -41,11 +41,6 @@ end_endif
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|XEN
-argument_list|)
-operator|&&
 operator|!
 name|defined
 argument_list|(
@@ -409,6 +404,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|XENHVM
+end_ifndef
+
 begin_comment
 comment|/*  * STI/CLI equivalents. These basically set and clear the virtual  * event_enable flag in teh shared_info structure. Note that when  * the enable bit is set, there may be pending events to be handled.  * We may therefore call into do_hypervisor_callback() directly.  */
 end_comment
@@ -580,6 +581,11 @@ directive|define
 name|spin_unlock_irqrestore
 value|mtx_unlock_irqrestore
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

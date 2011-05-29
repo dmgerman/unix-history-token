@@ -1456,6 +1456,7 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+comment|/* XXX This could be non-atomic but gets called from a locked path */
 return|return
 name|drm_mm_create_tail_node
 argument_list|(
@@ -1465,7 +1466,7 @@ name|start
 argument_list|,
 name|size
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 return|;
 block|}

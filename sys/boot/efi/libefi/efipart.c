@@ -236,6 +236,10 @@ name|sz
 operator|=
 literal|0
 expr_stmt|;
+name|hin
+operator|=
+name|NULL
+expr_stmt|;
 name|status
 operator|=
 name|BS
@@ -957,6 +961,9 @@ name|__func__
 argument_list|,
 name|rw
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|status
 argument_list|)
 expr_stmt|;

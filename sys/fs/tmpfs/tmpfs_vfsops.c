@@ -195,6 +195,8 @@ name|struct
 name|fid
 modifier|*
 parameter_list|,
+name|int
+parameter_list|,
 name|struct
 name|vnode
 modifier|*
@@ -1519,6 +1521,9 @@ name|struct
 name|fid
 modifier|*
 name|fhp
+parameter_list|,
+name|int
+name|flags
 parameter_list|,
 name|struct
 name|vnode

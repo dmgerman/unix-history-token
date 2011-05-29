@@ -564,7 +564,7 @@ begin_define
 define|#
 directive|define
 name|VAR_IPV6_ENABLE
-value|"ipv6_enable"
+value|"ipv6_activate_all_interfaces"
 end_define
 
 begin_define
@@ -815,8 +815,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|VAR_NTPDATE_FLAGS
-value|"ntpdate_flags"
+name|VAR_NTPDATE_HOSTS
+value|"ntpdate_hosts"
 end_define
 
 begin_define
@@ -929,6 +929,13 @@ define|#
 directive|define
 name|VAR_SWAP_SIZE
 value|"swapSize"
+end_define
+
+begin_define
+define|#
+directive|define
+name|VAR_SYSLOG_SERVER
+value|"syslogdServer"
 end_define
 
 begin_define
@@ -1187,41 +1194,11 @@ modifier|*
 name|helpfile
 decl_stmt|;
 comment|/* Help file for "F1"		*/
-if|#
-directive|if
-operator|(
-name|__STDC_VERSION__
-operator|>=
-literal|199901L
-operator|)
-operator|||
-operator|(
-name|__GNUC__
-operator|>=
-literal|3
-operator|)
 name|dialogMenuItem
 name|items
 index|[]
 decl_stmt|;
 comment|/* Array of menu items		*/
-elif|#
-directive|elif
-name|__GNUC__
-name|dialogMenuItem
-name|items
-index|[
-literal|0
-index|]
-decl_stmt|;
-comment|/* Array of menu items		*/
-else|#
-directive|else
-error|#
-directive|error
-literal|"Create hack for C89 and K&R compilers."
-endif|#
-directive|endif
 block|}
 name|DMenu
 typedef|;
@@ -5711,7 +5688,7 @@ name|void
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|void
 modifier|*
 name|aux
 parameter_list|,

@@ -40,7 +40,7 @@ file|<sys/signal.h>
 end_include
 
 begin_comment
-comment|/*  * Kernel signal definitions and data structures,  * not exported to user programs.  */
+comment|/*  * Kernel signal definitions and data structures.  */
 end_comment
 
 begin_comment
@@ -96,7 +96,7 @@ comment|/* Signals being caught by user. */
 name|sigset_t
 name|ps_freebsd4
 decl_stmt|;
-comment|/* signals using freebsd4 ucontext. */
+comment|/* Signals using freebsd4 ucontext. */
 name|sigset_t
 name|ps_osigset
 decl_stmt|;
@@ -152,23 +152,17 @@ begin_comment
 comment|/* The SIGCHLD handler is SIG_IGN. */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|_KERNEL
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|COMPAT_43
-argument_list|)
-end_if
+end_ifdef
 
-begin_comment
-comment|/*  * Compatibility.  */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_43
+end_ifdef
 
 begin_typedef
 typedef|typedef
@@ -261,7 +255,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _KERNEL&& COMPAT_43 */
+comment|/* COMPAT_43 */
 end_comment
 
 begin_comment
@@ -295,8 +289,17 @@ parameter_list|)
 value|(p->p_sigacts->ps_sigact[_SIG_IDX(sig)])
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * sigset_t manipulation macros  */
+comment|/* _KERNEL */
+end_comment
+
+begin_comment
+comment|/*  * sigset_t manipulation macros.  */
 end_comment
 
 begin_define
@@ -1064,15 +1067,44 @@ expr_stmt|;
 block|}
 end_function
 
-begin_struct_decl
-struct_decl|struct
-name|pgrp
-struct_decl|;
-end_struct_decl
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ksiginfo_set_sigev
+parameter_list|(
+name|ksiginfo_t
+modifier|*
+name|dst
+parameter_list|,
+name|struct
+name|sigevent
+modifier|*
+name|sigev
+parameter_list|)
+block|{
+name|dst
+operator|->
+name|ksi_signo
+operator|=
+name|sigev
+operator|->
+name|sigev_signo
+expr_stmt|;
+name|dst
+operator|->
+name|ksi_value
+operator|=
+name|sigev
+operator|->
+name|sigev_value
+expr_stmt|;
+block|}
+end_function
 
 begin_struct_decl
 struct_decl|struct
-name|thread
+name|pgrp
 struct_decl|;
 end_struct_decl
 
@@ -1090,39 +1122,9 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|mtx
+name|thread
 struct_decl|;
 end_struct_decl
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|sugid_coredump
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Sysctl variable kern.sugid_coredump */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mtx
-name|sigio_lock
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|kern_logsigexit
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Sysctl variable kern.logsigexit */
-end_comment
 
 begin_comment
 comment|/*  * Lock the pointers for a sigio object in the underlying objects of  * a file descriptor.  */
@@ -1170,8 +1172,16 @@ parameter_list|)
 value|mtx_assert(&sigio_lock, type)
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|sigio_lock
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/* stop_allowed parameter for cursig */
+comment|/* Values for stop_allowed parameter for cursig(). */
 end_comment
 
 begin_define
@@ -1189,7 +1199,7 @@ value|101
 end_define
 
 begin_comment
-comment|/* flags for kern_sigprocmask */
+comment|/* Flags for kern_sigprocmask(). */
 end_comment
 
 begin_define
@@ -1212,10 +1222,6 @@ directive|define
 name|SIGPROCMASK_PS_LOCKED
 value|0x0004
 end_define
-
-begin_comment
-comment|/*  * Machine-independent functions:  */
-end_comment
 
 begin_function_decl
 name|int
@@ -1278,7 +1284,29 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|ksiginfo_t
+modifier|*
+name|ksiginfo_alloc
+parameter_list|(
+name|int
+name|wait
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
+name|ksiginfo_free
+parameter_list|(
+name|ksiginfo_t
+modifier|*
+name|ksi
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|pksignal
 parameter_list|(
 name|struct
@@ -1304,9 +1332,10 @@ name|struct
 name|sigio
 modifier|*
 modifier|*
+name|sigiop
 parameter_list|,
 name|int
-name|signum
+name|sig
 parameter_list|,
 name|int
 name|checkctty
@@ -1363,19 +1392,33 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|psignal_event
+name|ptracestop
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
-name|struct
-name|sigevent
-modifier|*
+name|int
+name|sig
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sendsig
+parameter_list|(
+name|sig_t
+name|catcher
 parameter_list|,
 name|ksiginfo_t
 modifier|*
+name|ksi
+parameter_list|,
+name|sigset_t
+modifier|*
+name|retmask
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1456,11 +1499,33 @@ operator|*
 name|td
 argument_list|,
 name|int
-name|signum
+name|sig
 argument_list|)
 name|__dead2
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|int
+name|sigev_findtd
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|sigevent
+modifier|*
+name|sigev
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
@@ -1499,64 +1564,28 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|tdsigcleanup
+name|sigqueue_delete
 parameter_list|(
 name|struct
-name|thread
+name|sigqueue
 modifier|*
-name|td
+name|queue
+parameter_list|,
+name|int
+name|sig
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|tdsignal
+name|void
+name|sigqueue_delete_proc
 parameter_list|(
 name|struct
 name|proc
 modifier|*
 name|p
 parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|int
-name|sig
-parameter_list|,
-name|ksiginfo_t
-modifier|*
-name|ksi
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|trapsignal
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|ksiginfo_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ptracestop
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
 name|int
 name|sig
 parameter_list|)
@@ -1564,21 +1593,13 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ksiginfo_t
-modifier|*
-name|ksiginfo_alloc
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
-name|ksiginfo_free
+name|sigqueue_flush
 parameter_list|(
-name|ksiginfo_t
+name|struct
+name|sigqueue
 modifier|*
+name|queue
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1602,48 +1623,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|sigqueue_flush
-parameter_list|(
-name|struct
-name|sigqueue
-modifier|*
-name|queue
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|sigqueue_delete_proc
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|,
-name|int
-name|sig
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|sigqueue_delete
-parameter_list|(
-name|struct
-name|sigqueue
-modifier|*
-name|queue
-parameter_list|,
-name|int
-name|sig
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|sigqueue_take
 parameter_list|(
 name|ksiginfo_t
@@ -1654,28 +1633,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|kern_sigtimedwait
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-parameter_list|,
-name|sigset_t
-parameter_list|,
-name|ksiginfo_t
-modifier|*
-parameter_list|,
-name|struct
-name|timespec
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|kern_sigprocmask
+name|void
+name|tdksignal
 parameter_list|(
 name|struct
 name|thread
@@ -1683,38 +1642,78 @@ modifier|*
 name|td
 parameter_list|,
 name|int
-name|how
+name|sig
 parameter_list|,
-name|sigset_t
+name|ksiginfo_t
 modifier|*
-name|set
-parameter_list|,
-name|sigset_t
-modifier|*
-name|oset
-parameter_list|,
-name|int
-name|flags
+name|ksi
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * Machine-dependent functions:  */
-end_comment
-
 begin_function_decl
-name|void
-name|sendsig
+name|int
+name|tdsendsignal
 parameter_list|(
-name|sig_t
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|sig
 parameter_list|,
 name|ksiginfo_t
 modifier|*
-parameter_list|,
-name|sigset_t
+name|ksi
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tdsigcleanup
+parameter_list|(
+name|struct
+name|thread
 modifier|*
-name|retmask
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tdsignal
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|sig
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|trapsignal
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|ksiginfo_t
+modifier|*
+name|ksi
 parameter_list|)
 function_decl|;
 end_function_decl

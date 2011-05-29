@@ -308,7 +308,7 @@ name|tree
 name|clauses
 parameter_list|,
 name|enum
-name|tree_code
+name|omp_clause_code
 name|kind
 parameter_list|)
 block|{

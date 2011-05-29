@@ -882,6 +882,9 @@ name|cleanup
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|CRYPTO_new_ex_data
 argument_list|(
 name|CRYPTO_EX_INDEX_X509_STORE
@@ -893,7 +896,24 @@ name|ret
 operator|->
 name|ex_data
 argument_list|)
+condition|)
+block|{
+name|sk_X509_OBJECT_free
+argument_list|(
+name|ret
+operator|->
+name|objs
+argument_list|)
 expr_stmt|;
+name|OPENSSL_free
+argument_list|(
+name|ret
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 name|ret
 operator|->
 name|references
@@ -1258,6 +1278,11 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+name|CRYPTO_w_lock
+argument_list|(
+name|CRYPTO_LOCK_X509_STORE
+argument_list|)
+expr_stmt|;
 name|tmp
 operator|=
 name|X509_OBJECT_retrieve_by_subject
@@ -1269,6 +1294,11 @@ argument_list|,
 name|type
 argument_list|,
 name|name
+argument_list|)
+expr_stmt|;
+name|CRYPTO_w_unlock
+argument_list|(
+name|CRYPTO_LOCK_X509_STORE
 argument_list|)
 expr_stmt|;
 if|if
@@ -2114,7 +2144,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/* Try to get issuer certificate from store. Due to limitations  * of the API this can only retrieve a single certificate matching  * a given subject name. However it will fill the cache with all  * matching certificates, so we can examine the cache for all   * matches.  *  * Return values are:  *  1 lookup successful.  *  0 certificate not found.  * -1 some other error.  */
+comment|/* Try to get issuer certificate from store. Due to limitations  * of the API this can only retrieve a single certificate matching  * a given subject name. However it will fill the cache with all  * matching certificates, so we can examine the cache for all  * matches.  *  * Return values are:  *  1 lookup successful.  *  0 certificate not found.  * -1 some other error.  */
 end_comment
 
 begin_function
@@ -2151,6 +2181,8 @@ decl_stmt|,
 name|ok
 decl_stmt|,
 name|idx
+decl_stmt|,
+name|ret
 decl_stmt|;
 name|xn
 operator|=
@@ -2267,7 +2299,16 @@ operator|&
 name|obj
 argument_list|)
 expr_stmt|;
-comment|/* Else find index of first matching cert */
+comment|/* Else find index of first cert accepted by 'check_issued' */
+name|ret
+operator|=
+literal|0
+expr_stmt|;
+name|CRYPTO_w_lock
+argument_list|(
+name|CRYPTO_LOCK_X509_STORE
+argument_list|)
+expr_stmt|;
 name|idx
 operator|=
 name|X509_OBJECT_idx_by_subject
@@ -2283,18 +2324,16 @@ argument_list|,
 name|xn
 argument_list|)
 expr_stmt|;
-comment|/* This shouldn't normally happen since we already have one match */
 if|if
 condition|(
 name|idx
-operator|==
+operator|!=
 operator|-
 literal|1
 condition|)
-return|return
-literal|0
-return|;
-comment|/* Look through all matching certificates for a suitable issuer */
+comment|/* should be true as we've had at least one match */
+block|{
+comment|/* Look through all matching certs for suitable issuer */
 for|for
 control|(
 name|i
@@ -2329,7 +2368,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-comment|/* See if we've ran out of matches */
+comment|/* See if we've run past the matches */
 if|if
 condition|(
 name|pobj
@@ -2338,9 +2377,7 @@ name|type
 operator|!=
 name|X509_LU_X509
 condition|)
-return|return
-literal|0
-return|;
+break|break;
 if|if
 condition|(
 name|X509_NAME_cmp
@@ -2357,9 +2394,7 @@ name|x509
 argument_list|)
 argument_list|)
 condition|)
-return|return
-literal|0
-return|;
+break|break;
 if|if
 condition|(
 name|ctx
@@ -2392,13 +2427,21 @@ argument_list|(
 name|pobj
 argument_list|)
 expr_stmt|;
-return|return
+name|ret
+operator|=
 literal|1
-return|;
+expr_stmt|;
+break|break;
 block|}
 block|}
+block|}
+name|CRYPTO_w_unlock
+argument_list|(
+name|CRYPTO_LOCK_X509_STORE
+argument_list|)
+expr_stmt|;
 return|return
-literal|0
+name|ret
 return|;
 block|}
 end_function

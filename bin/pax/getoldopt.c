@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: getoldopt.c,v 1.4 2000/01/22 20:24:51 deraadt Exp $	*/
+comment|/*	$OpenBSD: getoldopt.c,v 1.9 2009/10/27 23:59:22 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*	$NetBSD: getoldopt.c,v 1.3 1995/03/21 09:07:28 cgd Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Plug-compatible replacement for getopt() for parsing tar-like  * arguments.  If the first argument begins with "-", it uses getopt;  * otherwise, it uses the old rules used by tar, dump, and ps.  *  * Written 25 August 1985 by John Gilmore (ihnp4!hoptoad!gnu) and placed  * in the Pubic Domain for your edification and enjoyment.  */
+comment|/*-  * Plug-compatible replacement for getopt() for parsing tar-like  * arguments.  If the first argument begins with "-", it uses getopt;  * otherwise, it uses the old rules used by tar, dump, and ps.  *  * Written 25 August 1985 by John Gilmore (ihnp4!hoptoad!gnu) and placed  * in the Public Domain for your edification and enjoyment.  */
 end_comment
 
 begin_include
@@ -122,7 +122,10 @@ operator|<
 literal|2
 condition|)
 return|return
-name|EOF
+operator|(
+operator|-
+literal|1
+operator|)
 return|;
 name|key
 operator|=
@@ -152,6 +155,7 @@ condition|(
 name|use_getopt
 condition|)
 return|return
+operator|(
 name|getopt
 argument_list|(
 name|argc
@@ -160,6 +164,7 @@ name|argv
 argument_list|,
 name|optstring
 argument_list|)
+operator|)
 return|;
 name|c
 operator|=
@@ -178,7 +183,10 @@ name|key
 operator|--
 expr_stmt|;
 return|return
-name|EOF
+operator|(
+operator|-
+literal|1
+operator|)
 return|;
 block|}
 name|place

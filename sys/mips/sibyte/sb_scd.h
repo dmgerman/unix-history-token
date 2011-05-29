@@ -28,6 +28,15 @@ end_comment
 
 begin_function_decl
 name|uint64_t
+name|sb_zbbus_cycle_count
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint64_t
 name|sb_cpu_speed
 parameter_list|(
 name|void

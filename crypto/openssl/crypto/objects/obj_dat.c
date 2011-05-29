@@ -2433,6 +2433,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|s
+condition|)
+block|{
+if|if
+condition|(
 name|buf
 condition|)
 name|BUF_strlcpy
@@ -2454,6 +2459,7 @@ expr_stmt|;
 return|return
 name|n
 return|;
+block|}
 block|}
 name|len
 operator|=

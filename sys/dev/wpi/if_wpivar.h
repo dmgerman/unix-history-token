@@ -274,33 +274,6 @@ end_struct
 
 begin_struct
 struct|struct
-name|wpi_node
-block|{
-name|struct
-name|ieee80211_node
-name|ni
-decl_stmt|;
-comment|/* must be the first */
-name|struct
-name|ieee80211_amrr_node
-name|amn
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|WPI_NODE
-parameter_list|(
-name|ni
-parameter_list|)
-value|((struct wpi_node *)(ni))
-end_define
-
-begin_struct
-struct|struct
 name|wpi_power_sample
 block|{
 name|uint8_t
@@ -348,10 +321,6 @@ block|{
 name|struct
 name|ieee80211vap
 name|vap
-decl_stmt|;
-name|struct
-name|ieee80211_amrr
-name|amrr
 decl_stmt|;
 name|int
 function_decl|(

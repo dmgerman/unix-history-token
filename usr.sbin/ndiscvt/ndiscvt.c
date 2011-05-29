@@ -665,7 +665,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|__amd64__
-literal|"objcopy -I binary -O elf64-x86-64 -B i386 %s %s.o\n"
+literal|"objcopy -I binary -O elf64-x86-64-freebsd -B i386 %s %s.o\n"
 argument_list|,
 endif|#
 directive|endif
@@ -828,7 +828,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|__amd64__
-literal|"objcopy -I binary -O elf64-x86-64 -B i386 %s %s.o\n"
+literal|"objcopy -I binary -O elf64-x86-64-freebsd -B i386 %s %s.o\n"
 argument_list|,
 endif|#
 directive|endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * pcap-dag.c: Packet capture interface for Endace DAG card.  *  * The functionality of this code attempts to mimic that of pcap-linux as much  * as possible.  This code is only needed when compiling in the DAG card code  * at the same time as another type of device.  *  * Author: Richard Littin, Sean Irvine ({richard,sean}@reeltwo.com)  *  * @(#) $Header: /tcpdump/master/libpcap/pcap-dag.h,v 1.4.2.3 2008-04-04 19:39:06 guy Exp $ (LBL)  */
+comment|/*  * pcap-dag.c: Packet capture interface for Endace DAG card.  *  * The functionality of this code attempts to mimic that of pcap-linux as much  * as possible.  This code is only needed when compiling in the DAG card code  * at the same time as another type of device.  *  * Author: Richard Littin, Sean Irvine ({richard,sean}@reeltwo.com)  *  * @(#) $Header: /tcpdump/master/libpcap/pcap-dag.h,v 1.7 2008-04-04 19:37:45 guy Exp $ (LBL)  */
 end_comment
 
 begin_function_decl
@@ -387,6 +387,42 @@ define|#
 directive|define
 name|TYPE_IPV6
 value|23
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TYPE_RAW_LINK
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TYPE_RAW_LINK
+value|24
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TYPE_INFINIBAND_LINK
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TYPE_INFINIBAND_LINK
+value|25
 end_define
 
 begin_endif

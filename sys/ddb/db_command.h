@@ -20,6 +20,20 @@ comment|/*  *	Author: David B. Golub, Carnegie Mellon University  *	Date:	7/90  
 end_comment
 
 begin_comment
+comment|/*  * Helper functions.  */
+end_comment
+
+begin_function_decl
+name|db_expr_t
+name|db_hex2dec
+parameter_list|(
+name|db_expr_t
+name|expr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Command loop declarations.  */
 end_comment
 

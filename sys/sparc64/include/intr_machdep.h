@@ -39,13 +39,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|IV_NAMLEN
-value|1024
-end_define
-
-begin_define
-define|#
-directive|define
 name|IR_FREE
 value|(PIL_MAX * 2)
 end_define
@@ -140,6 +133,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PIL_HARDCLOCK
+value|7
+end_define
+
+begin_comment
+comment|/* hardclock broadcast */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PIL_FILTER
 value|12
 end_define
@@ -151,12 +155,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PIL_FAST
+name|PIL_BRIDGE
 value|13
 end_define
 
 begin_comment
-comment|/* fast interrupts */
+comment|/* bridge interrupts */
 end_comment
 
 begin_define
@@ -175,6 +179,13 @@ ifndef|#
 directive|ifndef
 name|LOCORE
 end_ifndef
+
+begin_define
+define|#
+directive|define
+name|INTR_BRIDGE
+value|INTR_MD1
+end_define
 
 begin_struct_decl
 struct_decl|struct

@@ -1160,11 +1160,6 @@ name|next_dma_slot
 operator|=
 literal|1
 expr_stmt|;
-name|ata_dmainit
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|sc_ch
@@ -1217,6 +1212,11 @@ operator|=
 literal|126
 operator|*
 name|DEV_BSIZE
+expr_stmt|;
+name|ata_dmainit
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->

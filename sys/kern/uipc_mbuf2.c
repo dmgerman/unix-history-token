@@ -1119,7 +1119,7 @@ name|m_tag
 modifier|*
 name|m_tag_alloc
 parameter_list|(
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|,
 name|int
@@ -1416,7 +1416,7 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|,
 name|int

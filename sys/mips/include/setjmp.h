@@ -37,7 +37,7 @@ value|95
 end_define
 
 begin_comment
-comment|/* size, in longs, of a jmp_buf */
+comment|/* size, in longs (or long longs), of a jmp_buf */
 end_comment
 
 begin_comment
@@ -66,6 +66,39 @@ operator|||
 name|__XSI_VISIBLE
 end_if
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips_n32
+end_ifdef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_sigjmp_buf
+block|{
+name|long
+name|long
+name|_sjb
+index|[
+name|_JBLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+block|}
+name|sigjmp_buf
+index|[
+literal|1
+index|]
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -92,6 +125,44 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips_n32
+end_ifdef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_jmp_buf
+block|{
+name|long
+name|long
+name|_jb
+index|[
+name|_JBLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+block|}
+name|jmp_buf
+index|[
+literal|1
+index|]
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -112,6 +183,11 @@ literal|1
 index|]
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

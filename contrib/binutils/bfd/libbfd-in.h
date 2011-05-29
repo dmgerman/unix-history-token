@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* libbfd.h -- Declarations used by bfd library *implementation*.    (This include file is not for users of the library.)     Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.     Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* libbfd.h -- Declarations used by bfd library *implementation*.    (This include file is not for users of the library.)     Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007    Free Software Foundation, Inc.     Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"hashtab.h"
+end_include
 
 begin_comment
 comment|/* Align an address upward to a boundary, expressed as a number of bytes.    E.g. align to an 8-byte boundary with argument of 8.  Take care never    to wrap around if the address is within boundary-1 of the end of the    address space.  */
@@ -68,6 +74,21 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|section_hash_entry
+block|{
+name|struct
+name|bfd_hash_entry
+name|root
+decl_stmt|;
+name|asection
+name|section
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* tdata for an archive.  For an input archive, cache    needs to be free()'d.  For an output archive, symdefs do.  */
 end_comment
@@ -80,9 +101,7 @@ name|file_ptr
 name|first_file_filepos
 decl_stmt|;
 comment|/* Speed up searching the armap */
-name|struct
-name|ar_cache
-modifier|*
+name|htab_t
 name|cache
 decl_stmt|;
 name|bfd
@@ -104,6 +123,10 @@ modifier|*
 name|extended_names
 decl_stmt|;
 comment|/* clever intel extension */
+name|bfd_size_type
+name|extended_names_size
+decl_stmt|;
+comment|/* Size of extended names */
 comment|/* when more compilers are standard C, this can be a time_t */
 name|long
 name|armap_timestamp
@@ -205,6 +228,63 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|bfd_malloc2
+parameter_list|(
+name|bfd_size_type
+parameter_list|,
+name|bfd_size_type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|bfd_realloc2
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|bfd_size_type
+parameter_list|,
+name|bfd_size_type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|bfd_zmalloc2
+parameter_list|(
+name|bfd_size_type
+parameter_list|,
+name|bfd_size_type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|_bfd_default_error_handler
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|bfd_error_handler_type
@@ -238,6 +318,38 @@ name|bfd_zalloc
 parameter_list|(
 name|bfd
 modifier|*
+parameter_list|,
+name|bfd_size_type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|bfd_alloc2
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|bfd_size_type
+parameter_list|,
+name|bfd_size_type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|bfd_zalloc2
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|bfd_size_type
 parameter_list|,
 name|bfd_size_type
 parameter_list|)
@@ -456,6 +568,16 @@ end_function_decl
 begin_function_decl
 name|void
 name|_bfd_delete_bfd
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bfd_boolean
+name|_bfd_free_cached_info
 parameter_list|(
 name|bfd
 modifier|*
@@ -706,6 +828,25 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
+name|_bfd_ar_spacepad
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
 modifier|*
 name|_bfd_generic_read_ar_hdr_mag
 parameter_list|(
@@ -781,13 +922,19 @@ name|_bfd_generic_bfd_free_cached_info
 value|bfd_true
 end_define
 
-begin_define
-define|#
-directive|define
+begin_function_decl
+specifier|extern
+name|bfd_boolean
 name|_bfd_generic_new_section_hook
-define|\
-value|((bfd_boolean (*) (bfd *, asection *)) bfd_true)
-end_define
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|asection
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -878,10 +1025,42 @@ end_define
 begin_define
 define|#
 directive|define
+name|_bfd_generic_bfd_copy_private_header_data
+define|\
+value|((bfd_boolean (*) (bfd *, bfd *)) bfd_true)
+end_define
+
+begin_define
+define|#
+directive|define
 name|_bfd_generic_bfd_print_private_bfd_data
 define|\
 value|((bfd_boolean (*) (bfd *, void *)) bfd_true)
 end_define
+
+begin_function_decl
+specifier|extern
+name|bfd_boolean
+name|_bfd_generic_init_private_section_data
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|asection
+modifier|*
+parameter_list|,
+name|bfd
+modifier|*
+parameter_list|,
+name|asection
+modifier|*
+parameter_list|,
+name|struct
+name|bfd_link_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Routines to use for BFD_JUMP_TABLE_CORE when there is no core file    support.  Use BFD_JUMP_TABLE_CORE (_bfd_nocore).  */
@@ -1246,6 +1425,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|_bfd_nosymbols_bfd_is_target_special_symbol
+define|\
+value|((bfd_boolean (*) (bfd *, asymbol *)) bfd_false)
+end_define
+
+begin_define
+define|#
+directive|define
 name|_bfd_nosymbols_get_lineno
 define|\
 value|((alent *(*) (bfd *, asymbol *)) bfd_nullvoidptr)
@@ -1257,6 +1444,14 @@ directive|define
 name|_bfd_nosymbols_find_nearest_line
 define|\
 value|((bfd_boolean (*) (bfd *, asection *, asymbol **, bfd_vma, const char **, \ 		     const char **, unsigned int *)) \    bfd_false)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_bfd_nosymbols_find_inliner_info
+define|\
+value|((bfd_boolean (*) (bfd *, const char **, const char **, unsigned int *)) \    bfd_false)
 end_define
 
 begin_define
@@ -1287,21 +1482,41 @@ begin_comment
 comment|/* Routines to use for BFD_JUMP_TABLE_RELOCS when there is no reloc    support.  Use BFD_JUMP_TABLE_RELOCS (_bfd_norelocs).  */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_function_decl
+specifier|extern
+name|long
 name|_bfd_norelocs_get_reloc_upper_bound
-define|\
-value|((long (*) (bfd *, asection *)) _bfd_n1)
-end_define
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|asection
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_define
-define|#
-directive|define
+begin_function_decl
+specifier|extern
+name|long
 name|_bfd_norelocs_canonicalize_reloc
-define|\
-value|((long (*) (bfd *, asection *, arelent **, asymbol **)) _bfd_n1)
-end_define
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|asection
+modifier|*
+parameter_list|,
+name|arelent
+modifier|*
+modifier|*
+parameter_list|,
+name|asymbol
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -1309,6 +1524,14 @@ directive|define
 name|_bfd_norelocs_bfd_reloc_type_lookup
 define|\
 value|((reloc_howto_type *(*) (bfd *, bfd_reloc_code_real_type)) bfd_nullvoidptr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_bfd_norelocs_bfd_reloc_name_lookup
+define|\
+value|((reloc_howto_type *(*) (bfd *, const char *)) bfd_nullvoidptr)
 end_define
 
 begin_comment
@@ -1372,7 +1595,8 @@ begin_define
 define|#
 directive|define
 name|_bfd_nolink_sizeof_headers
-value|((int (*) (bfd *, bfd_boolean)) bfd_0)
+define|\
+value|((int (*) (bfd *, struct bfd_link_info *)) bfd_0)
 end_define
 
 begin_define
@@ -1405,6 +1629,14 @@ directive|define
 name|_bfd_nolink_bfd_merge_sections
 define|\
 value|((bfd_boolean (*) (bfd *, struct bfd_link_info *)) \    bfd_false)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_bfd_nolink_bfd_is_group_section
+define|\
+value|((bfd_boolean (*) (bfd *, const struct bfd_section *)) \    bfd_false)
 end_define
 
 begin_define
@@ -1463,6 +1695,14 @@ define|\
 value|((bfd_boolean (*) (bfd *, struct bfd_section *)) bfd_false)
 end_define
 
+begin_define
+define|#
+directive|define
+name|_bfd_nolink_section_already_linked
+define|\
+value|((void (*) (bfd *, struct bfd_section *, struct bfd_link_info *)) bfd_void)
+end_define
+
 begin_comment
 comment|/* Routines to use for BFD_JUMP_TABLE_DYNAMIC for targets which do not    have dynamic symbols or relocs.  Use BFD_JUMP_TABLE_DYNAMIC    (_bfd_nodynamic).  */
 end_comment
@@ -1480,6 +1720,14 @@ directive|define
 name|_bfd_nodynamic_canonicalize_dynamic_symtab
 define|\
 value|((long (*) (bfd *, asymbol **)) _bfd_n1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_bfd_nodynamic_get_synthetic_symtab
+define|\
+value|((long (*) (bfd *, long, asymbol **, long, asymbol **, asymbol **)) _bfd_n1)
 end_define
 
 begin_define
@@ -1611,7 +1859,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Find the neaderst line using DWARF 1 debugging information.  */
+comment|/* Find the nearest line using DWARF 1 debugging information.  */
 end_comment
 
 begin_function_decl
@@ -1685,6 +1933,103 @@ modifier|*
 parameter_list|,
 name|unsigned
 name|int
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Find the line using DWARF 2 debugging information.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|bfd_boolean
+name|_bfd_dwarf2_find_line
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|asymbol
+modifier|*
+modifier|*
+parameter_list|,
+name|asymbol
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bfd_boolean
+name|_bfd_generic_find_line
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|asymbol
+modifier|*
+modifier|*
+parameter_list|,
+name|asymbol
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Find inliner info after calling bfd_find_nearest_line. */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|bfd_boolean
+name|_bfd_dwarf2_find_inliner_info
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
 parameter_list|,
 name|void
 modifier|*
@@ -1783,6 +2128,9 @@ specifier|const
 name|char
 operator|*
 argument_list|)
+argument_list|,
+name|unsigned
+name|int
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -2004,6 +2352,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|_bfd_generic_section_already_linked
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|struct
+name|bfd_section
+modifier|*
+parameter_list|,
+name|struct
+name|bfd_link_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Generic reloc_link_order processing routine.  */
 end_comment
@@ -2127,6 +2494,30 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Clear a given location using a given howto.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|_bfd_clear_contents
+parameter_list|(
+name|reloc_howto_type
+modifier|*
+name|howto
+parameter_list|,
+name|bfd
+modifier|*
+name|input_bfd
+parameter_list|,
+name|bfd_byte
+modifier|*
+name|location
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Link stabs in sections in the first pass.  */
 end_comment
 
@@ -2138,8 +2529,8 @@ parameter_list|(
 name|bfd
 modifier|*
 parameter_list|,
-name|void
-modifier|*
+name|struct
+name|stab_info
 modifier|*
 parameter_list|,
 name|asection
@@ -2205,8 +2596,8 @@ parameter_list|(
 name|bfd
 modifier|*
 parameter_list|,
-name|void
-modifier|*
+name|struct
+name|stab_info
 modifier|*
 parameter_list|,
 name|asection
@@ -2234,8 +2625,8 @@ parameter_list|(
 name|bfd
 modifier|*
 parameter_list|,
-name|void
-modifier|*
+name|struct
+name|stab_info
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2250,18 +2641,10 @@ specifier|extern
 name|bfd_vma
 name|_bfd_stab_section_offset
 parameter_list|(
-name|bfd
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-modifier|*
-parameter_list|,
 name|asection
 modifier|*
 parameter_list|,
 name|void
-modifier|*
 modifier|*
 parameter_list|,
 name|bfd_vma
@@ -2270,13 +2653,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Attempt to merge a SEC_MERGE section.  */
+comment|/* Register a SEC_MERGE section as a candidate for merging.  */
 end_comment
 
 begin_function_decl
 specifier|extern
 name|bfd_boolean
-name|_bfd_merge_section
+name|_bfd_add_merge_section
 parameter_list|(
 name|bfd
 modifier|*
@@ -2305,6 +2688,10 @@ name|bfd_boolean
 name|_bfd_merge_sections
 parameter_list|(
 name|bfd
+modifier|*
+parameter_list|,
+name|struct
+name|bfd_link_info
 modifier|*
 parameter_list|,
 name|void
@@ -2364,8 +2751,6 @@ modifier|*
 parameter_list|,
 name|void
 modifier|*
-parameter_list|,
-name|bfd_vma
 parameter_list|,
 name|bfd_vma
 parameter_list|)
@@ -2549,7 +2934,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|{ if (!(x)) bfd_assert(__FILE__,__LINE__); }
+value|do { if (!(x)) bfd_assert(__FILE__,__LINE__); } while (0)
 end_define
 
 begin_define
@@ -2558,7 +2943,7 @@ directive|define
 name|BFD_FAIL
 parameter_list|()
 define|\
-value|{ bfd_assert(__FILE__,__LINE__); }
+value|do { bfd_assert(__FILE__,__LINE__); } while (0)
 end_define
 
 begin_decl_stmt
@@ -2663,23 +3048,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|FILE
 modifier|*
-name|bfd_cache_lookup_worker
+name|real_fopen
 parameter_list|(
-name|bfd
+specifier|const
+name|char
 modifier|*
+name|filename
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|modes
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|bfd
-modifier|*
-name|bfd_last_cache
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* List of supported target vectors, and the default vector (if    bfd_default_vector[0] is NULL, there is no default).  */
@@ -2929,6 +3314,133 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* This is the shape of the elements inside the already_linked hash    table. It maps a name onto a list of already_linked elements with    the same name.  */
+end_comment
+
+begin_struct
+struct|struct
+name|bfd_section_already_linked_hash_entry
+block|{
+name|struct
+name|bfd_hash_entry
+name|root
+decl_stmt|;
+name|struct
+name|bfd_section_already_linked
+modifier|*
+name|entry
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|bfd_section_already_linked
+block|{
+name|struct
+name|bfd_section_already_linked
+modifier|*
+name|next
+decl_stmt|;
+name|asection
+modifier|*
+name|sec
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+specifier|extern
+name|struct
+name|bfd_section_already_linked_hash_entry
+modifier|*
+name|bfd_section_already_linked_table_lookup
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|bfd_section_already_linked_table_insert
+parameter_list|(
+name|struct
+name|bfd_section_already_linked_hash_entry
+modifier|*
+parameter_list|,
+name|asection
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|bfd_section_already_linked_table_traverse
+parameter_list|(
+name|bfd_boolean
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
+name|struct
+name|bfd_section_already_linked_hash_entry
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bfd_vma
+name|read_unsigned_leb128
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|bfd_byte
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bfd_signed_vma
+name|read_signed_leb128
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|bfd_byte
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

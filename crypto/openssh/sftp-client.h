@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-client.h,v 1.17 2008/06/08 20:15:29 dtucker Exp $ */
+comment|/* $OpenBSD: sftp-client.h,v 1.20 2010/12/04 00:18:01 djm Exp $ */
 end_comment
 
 begin_comment
@@ -112,6 +112,8 @@ parameter_list|,
 name|u_int
 parameter_list|,
 name|u_int
+parameter_list|,
+name|u_int64_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -220,6 +222,8 @@ modifier|*
 parameter_list|,
 name|Attrib
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -394,6 +398,27 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Link 'oldpath' to 'newpath' */
+end_comment
+
+begin_function_decl
+name|int
+name|do_hardlink
+parameter_list|(
+name|struct
+name|sftp_conn
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Rename 'oldpath' to 'newpath' */
 end_comment
 
@@ -436,6 +461,37 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
+name|Attrib
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Recursively download 'remote_directory' to 'local_directory'. Preserve   * times if 'pflag' is set  */
+end_comment
+
+begin_function_decl
+name|int
+name|download_dir
+parameter_list|(
+name|struct
+name|sftp_conn
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|Attrib
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -460,6 +516,49 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Recursively upload 'local_directory' to 'remote_directory'. Preserve   * times if 'pflag' is set  */
+end_comment
+
+begin_function_decl
+name|int
+name|upload_dir
+parameter_list|(
+name|struct
+name|sftp_conn
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Concatenate paths, taking care of slashes. Caller must free result. */
+end_comment
+
+begin_function_decl
+name|char
+modifier|*
+name|path_append
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

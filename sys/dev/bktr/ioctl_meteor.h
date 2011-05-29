@@ -70,16 +70,20 @@ begin_struct
 struct|struct
 name|meteor_geomet
 block|{
-name|u_short
+name|unsigned
+name|short
 name|rows
 decl_stmt|;
-name|u_short
+name|unsigned
+name|short
 name|columns
 decl_stmt|;
-name|u_short
+name|unsigned
+name|short
 name|frames
 decl_stmt|;
-name|u_long
+name|unsigned
+name|long
 name|oformat
 decl_stmt|;
 block|}
@@ -94,23 +98,28 @@ begin_struct
 struct|struct
 name|meteor_counts
 block|{
-name|u_long
+name|unsigned
+name|long
 name|fifo_errors
 decl_stmt|;
 comment|/* count of fifo errors since open */
-name|u_long
+name|unsigned
+name|long
 name|dma_errors
 decl_stmt|;
 comment|/* count of dma errors since open */
-name|u_long
+name|unsigned
+name|long
 name|frames_captured
 decl_stmt|;
 comment|/* count of frames captured since open */
-name|u_long
+name|unsigned
+name|long
 name|even_fields_captured
 decl_stmt|;
 comment|/* count of even fields captured */
-name|u_long
+name|unsigned
+name|long
 name|odd_fields_captured
 decl_stmt|;
 comment|/* count of odd fields captured */
@@ -126,19 +135,23 @@ begin_struct
 struct|struct
 name|meteor_video
 block|{
-name|u_long
+name|unsigned
+name|long
 name|addr
 decl_stmt|;
 comment|/* Address of location to dma to */
-name|u_long
+name|unsigned
+name|long
 name|width
 decl_stmt|;
 comment|/* Width of memory area */
-name|u_long
+name|unsigned
+name|long
 name|banksize
 decl_stmt|;
 comment|/* Size of Vram bank */
-name|u_long
+name|unsigned
+name|long
 name|ramsize
 decl_stmt|;
 comment|/* Size of Vram */

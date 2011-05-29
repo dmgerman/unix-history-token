@@ -135,37 +135,19 @@ name|G_VIRSTOR_VERSION
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|intmax_t
-name|chunk_size
-init|=
-literal|4
-operator|*
-literal|1024
-operator|*
-literal|1024
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|GVIRSTOR_CHUNK_SIZE
+value|"4M"
+end_define
 
-begin_comment
-comment|/* in kB (default: 4 MB) */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|intmax_t
-name|vir_size
-init|=
-literal|2ULL
-operator|<<
-literal|40
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* in MB (default: 2 TB) */
-end_comment
+begin_define
+define|#
+directive|define
+name|GVIRSTOR_VIR_SIZE
+value|"2T"
+end_define
 
 begin_if
 if|#
@@ -227,8 +209,6 @@ name|virstor_main
 block|,
 name|G_NULL_OPTS
 block|,
-name|NULL
-block|,
 literal|"[-v] prov ..."
 block|}
 block|,
@@ -240,8 +220,6 @@ block|,
 name|virstor_main
 block|,
 name|G_NULL_OPTS
-block|,
-name|NULL
 block|,
 literal|"prov ..."
 block|}
@@ -271,8 +249,7 @@ literal|'m'
 block|,
 literal|"chunk_size"
 block|,
-operator|&
-name|chunk_size
+name|GVIRSTOR_CHUNK_SIZE
 block|,
 name|G_TYPE_NUMBER
 block|}
@@ -282,16 +259,13 @@ literal|'s'
 block|,
 literal|"vir_size"
 block|,
-operator|&
-name|vir_size
+name|GVIRSTOR_VIR_SIZE
 block|,
 name|G_TYPE_NUMBER
 block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
-block|,
-name|NULL
 block|,
 literal|"[-h] [-v] [-m chunk_size] [-s vir_size] name provider0 [provider1 ...]"
 block|}
@@ -317,8 +291,6 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-name|NULL
-block|,
 literal|"[-fv] name ..."
 block|}
 block|,
@@ -342,8 +314,6 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
-block|,
-name|NULL
 block|,
 literal|"[-fv] name ... (alias for \"destroy\")"
 block|}
@@ -369,8 +339,6 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-name|NULL
-block|,
 literal|"[-vh] name prov [prov ...]"
 block|}
 block|,
@@ -382,8 +350,6 @@ block|,
 name|NULL
 block|,
 name|G_NULL_OPTS
-block|,
-name|NULL
 block|,
 literal|"[-v] name ..."
 block|}
@@ -601,10 +567,12 @@ name|name
 argument_list|,
 name|_PATH_DEV
 argument_list|,
-name|strlen
+sizeof|sizeof
 argument_list|(
 name|_PATH_DEV
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 operator|!=
 literal|0
@@ -1276,6 +1244,8 @@ name|gctl_get_ascii
 argument_list|(
 name|req
 argument_list|,
+literal|"%s"
+argument_list|,
 name|param
 argument_list|)
 expr_stmt|;
@@ -1637,6 +1607,8 @@ name|gctl_get_ascii
 argument_list|(
 name|req
 argument_list|,
+literal|"%s"
+argument_list|,
 name|param
 argument_list|)
 expr_stmt|;
@@ -1831,10 +1803,12 @@ name|name
 argument_list|,
 name|_PATH_DEV
 argument_list|,
-name|strlen
+sizeof|sizeof
 argument_list|(
 name|_PATH_DEV
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 operator|==
 literal|0
@@ -2036,6 +2010,8 @@ name|gctl_get_ascii
 argument_list|(
 name|req
 argument_list|,
+literal|"%s"
+argument_list|,
 name|param
 argument_list|)
 expr_stmt|;
@@ -2122,9 +2098,14 @@ operator|.
 name|md_chunk_size
 argument_list|)
 operator|>
+call|(
+name|off_t
+call|)
+argument_list|(
 name|msize
 operator|-
 name|ssize
+argument_list|)
 condition|)
 name|md
 operator|.
@@ -2227,10 +2208,12 @@ name|name
 argument_list|,
 name|_PATH_DEV
 argument_list|,
-name|strlen
+sizeof|sizeof
 argument_list|(
 name|_PATH_DEV
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 operator|==
 literal|0
@@ -2244,10 +2227,12 @@ name|provider
 argument_list|,
 name|name
 operator|+
-name|strlen
+sizeof|sizeof
 argument_list|(
 name|_PATH_DEV
 argument_list|)
+operator|-
+literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2283,13 +2268,6 @@ argument_list|(
 name|ssize
 argument_list|)
 expr_stmt|;
-name|bzero
-argument_list|(
-name|sect
-argument_list|,
-name|ssize
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sect
@@ -2301,6 +2279,13 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"Cannot allocate sector of %zu bytes"
+argument_list|,
+name|ssize
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|sect
 argument_list|,
 name|ssize
 argument_list|)
@@ -2477,6 +2462,8 @@ name|gctl_get_ascii
 argument_list|(
 name|req
 argument_list|,
+literal|"%s"
+argument_list|,
 name|param
 argument_list|)
 expr_stmt|;
@@ -2528,10 +2515,12 @@ name|name
 argument_list|,
 name|_PATH_DEV
 argument_list|,
-name|strlen
+sizeof|sizeof
 argument_list|(
 name|_PATH_DEV
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 operator|==
 literal|0
@@ -2884,6 +2873,8 @@ operator|=
 name|gctl_get_ascii
 argument_list|(
 name|req
+argument_list|,
+literal|"%s"
 argument_list|,
 name|param
 argument_list|)

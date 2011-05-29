@@ -366,8 +366,6 @@ name|fndstr
 operator|=
 name|numnode
 operator|=
-name|ret
-operator|=
 literal|0
 expr_stmt|;
 if|if

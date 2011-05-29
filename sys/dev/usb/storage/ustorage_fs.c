@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/linker_set.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
 end_include
 
@@ -162,11 +156,11 @@ directive|include
 file|<dev/usb/usb_debug.h>
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -1487,22 +1481,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|uaa
-operator|->
-name|use_generic
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* give other drivers a try first */
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 comment|/* Check for a standards compliant device */
 name|id
 operator|=
@@ -1554,7 +1532,7 @@ return|;
 block|}
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_GENERIC
 operator|)
 return|;
 block|}

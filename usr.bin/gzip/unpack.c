@@ -8,7 +8,7 @@ comment|/* This file is #included by gzip.c */
 end_comment
 
 begin_comment
-comment|/*  * pack(1) file format:  *  * The first 7 bytes is the header:  *	00, 01 - Signature (US, RS), we already validated it earlier.  *	02..05 - Uncompressed size  *	    06 - Level for the huffman tree (<=24)  *  * pack(1) will then store symbols (leaf) nodes count in each huffman  * tree levels, each level would consume 1 byte (See [1]).  *  * After the symbol count table, there is the symbol table, storing  * symbols represented by coresponding leaf node.  EOB is not being  * explicitly transmitted (not necessary anyway) in the symbol table.  *  * Compressed data goes after the symbol table.  *  * NOTES  *  * [1] If we count EOB into the symbols, that would mean that we will  * have at most 256 symbols in the huffman tree.  pack(1) rejects empty  * file and files that just repeats one character, which means that we  * will have at least 2 symbols.  Therefore, pack(1) would reduce the  * last level symbol count by 2 which makes it a number in  * range [0..254], so all levels' symbol count would fit into 1 byte.  */
+comment|/*  * pack(1) file format:  *  * The first 7 bytes is the header:  *	00, 01 - Signature (US, RS), we already validated it earlier.  *	02..05 - Uncompressed size  *	    06 - Level for the huffman tree (<=24)  *  * pack(1) will then store symbols (leaf) nodes count in each huffman  * tree levels, each level would consume 1 byte (See [1]).  *  * After the symbol count table, there is the symbol table, storing  * symbols represented by corresponding leaf node.  EOB is not being  * explicitly transmitted (not necessary anyway) in the symbol table.  *  * Compressed data goes after the symbol table.  *  * NOTES  *  * [1] If we count EOB into the symbols, that would mean that we will  * have at most 256 symbols in the huffman tree.  pack(1) rejects empty  * file and files that just repeats one character, which means that we  * will have at least 2 symbols.  Therefore, pack(1) would reduce the  * last level symbol count by 2 which makes it a number in  * range [0..254], so all levels' symbol count would fit into 1 byte.  */
 end_comment
 
 begin_define
@@ -26,7 +26,7 @@ value|24
 end_define
 
 begin_comment
-comment|/*  * unpack descriptor  *  * Represent the huffman tree in a similiar way that pack(1) would  * store in a packed file.  We store all symbols in a linear table,  * and store pointers to each level's first symbol.  In addition to  * that, maintain two counts for each level: inner nodes count and  * leaf nodes count.  */
+comment|/*  * unpack descriptor  *  * Represent the huffman tree in a similar way that pack(1) would  * store in a packed file.  We store all symbols in a linear table,  * and store pointers to each level's first symbol.  In addition to  * that, maintain two counts for each level: inner nodes count and  * leaf nodes count.  */
 end_comment
 
 begin_typedef
@@ -87,7 +87,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Release resource allocated to an unpack descriptor.  *  * Caller is responsible to make sure that all of these pointers are  * initialized (in our case, they all point to valid memory block).  * We don't zero out pointers here because nobody else would ever  * reference the memory block without scrubing them.  */
+comment|/*  * Release resource allocated to an unpack descriptor.  *  * Caller is responsible to make sure that all of these pointers are  * initialized (in our case, they all point to valid memory block).  * We don't zero out pointers here because nobody else would ever  * reference the memory block without scrubbing them.  */
 end_comment
 
 begin_function
@@ -163,7 +163,7 @@ name|int
 name|level
 parameter_list|)
 block|{
-comment|/* 	 * The internal nodes would be 1/2 of total internal nodes and 	 * leaf nodes in the next level.  For the last level there 	 * would be no internal node by defination. 	 */
+comment|/* 	 * The internal nodes would be 1/2 of total internal nodes and 	 * leaf nodes in the next level.  For the last level there 	 * would be no internal node by definition. 	 */
 if|if
 condition|(
 name|level
@@ -259,7 +259,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read file header and construct the tree.  Also, prepare the buffered I/O  * for decode rountine.  *  * Return value is uncompressed size.  */
+comment|/*  * Read file header and construct the tree.  Also, prepare the buffered I/O  * for decode routine.  *  * Return value is uncompressed size.  */
 end_comment
 
 begin_function
@@ -566,7 +566,7 @@ operator|->
 name|treelevels
 operator|--
 expr_stmt|;
-comment|/* Read the levels symbol count table and caculate total */
+comment|/* Read the levels symbol count table and calculate total */
 name|unpackd
 operator|->
 name|symbol_size
@@ -801,7 +801,7 @@ name|treelevels
 index|]
 operator|++
 expr_stmt|;
-comment|/* 	 * The symbolsin table has been constructed now. 	 * Caculate the internal nodes count table based on it. 	 */
+comment|/* 	 * The symbolsin table has been constructed now. 	 * Calculate the internal nodes count table based on it. 	 */
 name|unpackd_fill_inodesin
 argument_list|(
 name|unpackd
@@ -1091,17 +1091,49 @@ block|{
 name|unpack_descriptor_t
 name|unpackd
 decl_stmt|;
-name|unpack_parse_header
-argument_list|(
+name|in
+operator|=
 name|dup
 argument_list|(
 name|in
 argument_list|)
-argument_list|,
+expr_stmt|;
+if|if
+condition|(
+name|in
+operator|==
+operator|-
+literal|1
+condition|)
+name|maybe_err
+argument_list|(
+literal|"dup"
+argument_list|)
+expr_stmt|;
+name|out
+operator|=
 name|dup
 argument_list|(
 name|out
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|out
+operator|==
+operator|-
+literal|1
+condition|)
+name|maybe_err
+argument_list|(
+literal|"dup"
+argument_list|)
+expr_stmt|;
+name|unpack_parse_header
+argument_list|(
+name|in
+argument_list|,
+name|out
 argument_list|,
 name|pre
 argument_list|,

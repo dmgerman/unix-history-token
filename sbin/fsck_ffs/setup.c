@@ -2356,6 +2356,8 @@ name|fsreadfd
 argument_list|)
 operator|)
 condition|)
+name|real_dev_bsize
+operator|=
 name|dev_bsize
 operator|=
 name|secsize

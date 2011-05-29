@@ -2822,7 +2822,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_ring_is_next_dtr_completed - Check if the next dtr is completed  * @channelh: Channel handle.  *  * Checks if the the _next_ completed descriptor is in host memory  *  * Returns: XGE_HAL_OK - success.  * XGE_HAL_INF_NO_MORE_COMPLETED_DESCRIPTORS - No completed descriptors  * are currently available for processing.  */
+comment|/**  * xge_hal_ring_is_next_dtr_completed - Check if the next dtr is completed  * @channelh: Channel handle.  *  * Checks if the _next_ completed descriptor is in host memory  *  * Returns: XGE_HAL_OK - success.  * XGE_HAL_INF_NO_MORE_COMPLETED_DESCRIPTORS - No completed descriptors  * are currently available for processing.  */
 end_comment
 
 begin_function

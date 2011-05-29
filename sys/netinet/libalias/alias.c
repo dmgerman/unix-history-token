@@ -7136,13 +7136,6 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Loading %s\n"
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
 name|LibAliasLoadModule
 argument_list|(
 name|buf

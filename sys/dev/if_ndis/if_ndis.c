@@ -6046,14 +6046,7 @@ name|m
 operator|==
 name|NULL
 condition|)
-block|{
-name|NdisFreePacket
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 comment|/* Save the data provided to us so far. */
 name|m
 operator|->
@@ -8045,12 +8038,6 @@ break|break;
 default|default:
 break|break;
 block|}
-comment|/* Notify possible listners of interface change. */
-name|rt_ifmsg
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -9838,6 +9825,8 @@ name|cipher
 operator|==
 name|WPA_CSE_WEP40
 operator|||
+name|cipher
+operator|==
 name|WPA_CSE_WEP104
 condition|)
 block|{

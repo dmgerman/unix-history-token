@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-rh-rsa.c,v 1.42 2006/08/03 03:34:41 deraadt Exp $ */
+comment|/* $OpenBSD: auth-rh-rsa.c,v 1.43 2010/03/04 10:36:03 djm Exp $ */
 end_comment
 
 begin_comment
@@ -150,6 +150,16 @@ block|{
 name|HostStatus
 name|host_status
 decl_stmt|;
+if|if
+condition|(
+name|auth_key_is_revoked
+argument_list|(
+name|client_host_key
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
 comment|/* Check if we would accept it using rhosts authentication. */
 if|if
 condition|(

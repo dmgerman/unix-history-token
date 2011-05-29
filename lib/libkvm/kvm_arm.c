@@ -493,7 +493,7 @@ name|vm
 decl_stmt|;
 name|struct
 name|nlist
-name|nlist
+name|nl
 index|[
 literal|2
 index|]
@@ -704,7 +704,7 @@ operator|-
 literal|1
 operator|)
 return|;
-name|nlist
+name|nl
 index|[
 literal|0
 index|]
@@ -713,7 +713,7 @@ name|n_name
 operator|=
 literal|"kernbase"
 expr_stmt|;
-name|nlist
+name|nl
 index|[
 literal|1
 index|]
@@ -728,7 +728,7 @@ name|kvm_nlist
 argument_list|(
 name|kd
 argument_list|,
-name|nlist
+name|nl
 argument_list|)
 operator|!=
 literal|0
@@ -740,14 +740,14 @@ expr_stmt|;
 else|else
 name|kernbase
 operator|=
-name|nlist
+name|nl
 index|[
 literal|0
 index|]
 operator|.
 name|n_value
 expr_stmt|;
-name|nlist
+name|nl
 index|[
 literal|0
 index|]
@@ -762,7 +762,7 @@ name|kvm_nlist
 argument_list|(
 name|kd
 argument_list|,
-name|nlist
+name|nl
 argument_list|)
 operator|!=
 literal|0
@@ -788,14 +788,14 @@ return|;
 block|}
 name|physaddr
 operator|=
-name|nlist
+name|nl
 index|[
 literal|0
 index|]
 operator|.
 name|n_value
 expr_stmt|;
-name|nlist
+name|nl
 index|[
 literal|0
 index|]
@@ -810,7 +810,7 @@ name|kvm_nlist
 argument_list|(
 name|kd
 argument_list|,
-name|nlist
+name|nl
 argument_list|)
 operator|!=
 literal|0
@@ -841,7 +841,7 @@ argument_list|(
 name|kd
 argument_list|,
 operator|(
-name|nlist
+name|nl
 index|[
 literal|0
 index|]
@@ -1075,17 +1075,6 @@ modifier|*
 name|pa
 parameter_list|)
 block|{
-name|u_long
-name|offset
-init|=
-name|va
-operator|&
-operator|(
-name|PAGE_SIZE
-operator|-
-literal|1
-operator|)
-decl_stmt|;
 name|struct
 name|vmstate
 modifier|*
@@ -1409,7 +1398,7 @@ name|kd
 argument_list|,
 literal|0
 argument_list|,
-literal|"Invalid address (%x)"
+literal|"Invalid address (%lx)"
 argument_list|,
 name|va
 argument_list|)
@@ -1424,20 +1413,21 @@ begin_comment
 comment|/*  * Machine-dependent initialization for ALL open kvm descriptors,  * not just those for a kernel crash dump.  Some architectures  * have to deal with these NOT being constants!  (i.e. m68k)  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FBSD_NOT_YET
+end_ifdef
+
 begin_function
 name|int
 name|_kvm_mdopen
 parameter_list|(
-name|kd
-parameter_list|)
 name|kvm_t
 modifier|*
 name|kd
-decl_stmt|;
+parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|FBSD_NOT_YET
 name|kd
 operator|->
 name|usrstack
@@ -1456,8 +1446,6 @@ name|max_uva
 operator|=
 name|VM_MAXUSER_ADDRESS
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -1465,6 +1453,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

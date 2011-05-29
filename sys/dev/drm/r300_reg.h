@@ -1287,7 +1287,7 @@ comment|/* gap */
 end_comment
 
 begin_comment
-comment|/* Addresses are relative to the vertex program instruction area of the  * memory bank. PROGRAM_END points to the last instruction of the active  * program  *  * The meaning of the two UNKNOWN fields is obviously not known. However,  * experiments so far have shown that both *must* point to an instruction  * inside the vertex program, otherwise the GPU locks up.  *  * fglrx usually sets CNTL_3_UNKNOWN to the end of the program and  * R300_PVS_CNTL_1_POS_END_SHIFT points to instruction where last write to  * position takes place.  *  * Most likely this is used to ignore rest of the program in cases  * where group of verts arent visible. For some reason this "section"  * is sometimes accepted other instruction that have no relationship with  * position calculations.  */
+comment|/* Addresses are relative to the vertex program instruction area of the  * memory bank. PROGRAM_END points to the last instruction of the active  * program  *  * The meaning of the two UNKNOWN fields is obviously not known. However,  * experiments so far have shown that both *must* point to an instruction  * inside the vertex program, otherwise the GPU locks up.  *  * fglrx usually sets CNTL_3_UNKNOWN to the end of the program and  * R300_PVS_CNTL_1_POS_END_SHIFT points to instruction where last write to  * position takes place.  *  * Most likely this is used to ignore rest of the program in cases  * where group of verts aren't visible. For some reason this "section"  * is sometimes accepted other instruction that have no relationship with  * position calculations.  */
 end_comment
 
 begin_define
@@ -1319,7 +1319,7 @@ value|20
 end_define
 
 begin_comment
-comment|/* Addresses are relative the the vertex program parameters area. */
+comment|/* Addresses are relative the vertex program parameters area. */
 end_comment
 
 begin_define
@@ -2640,7 +2640,7 @@ value|0x4298
 end_define
 
 begin_comment
-comment|/* Not sure why there are duplicate of factor and constant values.  * My best guess so far is that there are seperate zbiases for test and write.  * Ordering might be wrong.  * Some of the tests indicate that fgl has a fallback implementation of zbias  * via pixel shaders.  */
+comment|/* Not sure why there are duplicate of factor and constant values.  * My best guess so far is that there are separate zbiases for test and write.  * Ordering might be wrong.  * Some of the tests indicate that fgl has a fallback implementation of zbias  * via pixel shaders.  */
 end_comment
 
 begin_define
@@ -2683,7 +2683,7 @@ value|0x42B0
 end_define
 
 begin_comment
-comment|/* This register needs to be set to (1<<1) for RV350 to correctly  * perform depth test (see --vb-triangles in r300_demo)  * Don't know about other chips. - Vladimir  * This is set to 3 when GL_POLYGON_OFFSET_FILL is on.  * My guess is that there are two bits for each zbias primitive  * (FILL, LINE, POINT).  *  One to enable depth test and one for depth write.  * Yet this doesnt explain why depth writes work ...  */
+comment|/* This register needs to be set to (1<<1) for RV350 to correctly  * perform depth test (see --vb-triangles in r300_demo)  * Don't know about other chips. - Vladimir  * This is set to 3 when GL_POLYGON_OFFSET_FILL is on.  * My guess is that there are two bits for each zbias primitive  * (FILL, LINE, POINT).  *  One to enable depth test and one for depth write.  * Yet this doesn't explain why depth writes work ...  */
 end_comment
 
 begin_define
@@ -3077,7 +3077,7 @@ comment|/* GUESS */
 end_comment
 
 begin_comment
-comment|/* Special handling for color: When the fragment program uses color,  * the ROUTE_0_COLOR bit is set and ROUTE_0_COLOR_DEST contains the  * color register index.  *  * Apperently you may set the R300_RS_ROUTE_0_COLOR bit, but not provide any  * R300_RS_ROUTE_0_COLOR_DEST value; this setup is used for clearing the state.  * See r300_ioctl.c:r300EmitClearState. I'm not sure if this setup is strictly  * correct or not. - Oliver.  */
+comment|/* Special handling for color: When the fragment program uses color,  * the ROUTE_0_COLOR bit is set and ROUTE_0_COLOR_DEST contains the  * color register index.  *  * Apparently you may set the R300_RS_ROUTE_0_COLOR bit, but not provide any  * R300_RS_ROUTE_0_COLOR_DEST value; this setup is used for clearing the state.  * See r300_ioctl.c:r300EmitClearState. I'm not sure if this setup is strictly  * correct or not. - Oliver.  */
 end_comment
 
 begin_define
@@ -3709,7 +3709,7 @@ value|(10<<  11)
 end_define
 
 begin_comment
-comment|/* NOTE: NEAREST doesnt seem to exist.  * Im not seting MAG_FILTER_MASK and (3<< 11) on for all  * anisotropy modes because that would void selected mag filter  */
+comment|/* NOTE: NEAREST doesn't seem to exist.  * I'm not setting MAG_FILTER_MASK and (3<< 11) on for all  * anisotropy modes because that would void selected mag filter  */
 end_comment
 
 begin_define

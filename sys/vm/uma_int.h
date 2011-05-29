@@ -8,7 +8,7 @@ comment|/*   * This file includes definitions, structures, prototypes, and inlin
 end_comment
 
 begin_comment
-comment|/*   * Here's a quick description of the relationship between the objects:  *  * Kegs contain lists of slabs which are stored in either the full bin, empty  * bin, or partially allocated bin, to reduce fragmentation.  They also contain  * the user supplied value for size, which is adjusted for alignment purposes  * and rsize is the result of that.  The Keg also stores information for  * managing a hash of page addresses that maps pages to uma_slab_t structures  * for pages that don't have embedded uma_slab_t's.  *    * The uma_slab_t may be embedded in a UMA_SLAB_SIZE chunk of memory or it may  * be allocated off the page from a special slab zone.  The free list within a  * slab is managed with a linked list of indexes, which are 8 bit values.  If  * UMA_SLAB_SIZE is defined to be too large I will have to switch to 16bit  * values.  Currently on alpha you can get 250 or so 32 byte items and on x86  * you can get 250 or so 16byte items.  For item sizes that would yield more  * than 10% memory waste we potentially allocate a separate uma_slab_t if this  * will improve the number of items per slab that will fit.    *  * Other potential space optimizations are storing the 8bit of linkage in space  * wasted between items due to alignment problems.  This may yield a much better  * memory footprint for certain sizes of objects.  Another alternative is to  * increase the UMA_SLAB_SIZE, or allow for dynamic slab sizes.  I prefer  * dynamic slab sizes because we could stick with 8 bit indexes and only use  * large slab sizes for zones with a lot of waste per slab.  This may create  * ineffeciencies in the vm subsystem due to fragmentation in the address space.  *  * The only really gross cases, with regards to memory waste, are for those  * items that are just over half the page size.   You can get nearly 50% waste,  * so you fall back to the memory footprint of the power of two allocator. I  * have looked at memory allocation sizes on many of the machines available to  * me, and there does not seem to be an abundance of allocations at this range  * so at this time it may not make sense to optimize for it.  This can, of   * course, be solved with dynamic slab sizes.  *  * Kegs may serve multiple Zones but by far most of the time they only serve  * one.  When a Zone is created, a Keg is allocated and setup for it.  While  * the backing Keg stores slabs, the Zone caches Buckets of items allocated  * from the slabs.  Each Zone is equipped with an init/fini and ctor/dtor  * pair, as well as with its own set of small per-CPU caches, layered above  * the Zone's general Bucket cache.  *  * The PCPU caches are protected by critical sections, and may be accessed  * safely only from their associated CPU, while the Zones backed by the same  * Keg all share a common Keg lock (to coalesce contention on the backing  * slabs).  The backing Keg typically only serves one Zone but in the case of  * multiple Zones, one of the Zones is considered the Master Zone and all  * Zone-related stats from the Keg are done in the Master Zone.  For an  * example of a Multi-Zone setup, refer to the Mbuf allocation code.  */
+comment|/*   * Here's a quick description of the relationship between the objects:  *  * Kegs contain lists of slabs which are stored in either the full bin, empty  * bin, or partially allocated bin, to reduce fragmentation.  They also contain  * the user supplied value for size, which is adjusted for alignment purposes  * and rsize is the result of that.  The Keg also stores information for  * managing a hash of page addresses that maps pages to uma_slab_t structures  * for pages that don't have embedded uma_slab_t's.  *    * The uma_slab_t may be embedded in a UMA_SLAB_SIZE chunk of memory or it may  * be allocated off the page from a special slab zone.  The free list within a  * slab is managed with a linked list of indices, which are 8 bit values.  If  * UMA_SLAB_SIZE is defined to be too large I will have to switch to 16bit  * values.  Currently on alpha you can get 250 or so 32 byte items and on x86  * you can get 250 or so 16byte items.  For item sizes that would yield more  * than 10% memory waste we potentially allocate a separate uma_slab_t if this  * will improve the number of items per slab that will fit.    *  * Other potential space optimizations are storing the 8bit of linkage in space  * wasted between items due to alignment problems.  This may yield a much better  * memory footprint for certain sizes of objects.  Another alternative is to  * increase the UMA_SLAB_SIZE, or allow for dynamic slab sizes.  I prefer  * dynamic slab sizes because we could stick with 8 bit indices and only use  * large slab sizes for zones with a lot of waste per slab.  This may create  * inefficiencies in the vm subsystem due to fragmentation in the address space.  *  * The only really gross cases, with regards to memory waste, are for those  * items that are just over half the page size.   You can get nearly 50% waste,  * so you fall back to the memory footprint of the power of two allocator. I  * have looked at memory allocation sizes on many of the machines available to  * me, and there does not seem to be an abundance of allocations at this range  * so at this time it may not make sense to optimize for it.  This can, of   * course, be solved with dynamic slab sizes.  *  * Kegs may serve multiple Zones but by far most of the time they only serve  * one.  When a Zone is created, a Keg is allocated and setup for it.  While  * the backing Keg stores slabs, the Zone caches Buckets of items allocated  * from the slabs.  Each Zone is equipped with an init/fini and ctor/dtor  * pair, as well as with its own set of small per-CPU caches, layered above  * the Zone's general Bucket cache.  *  * The PCPU caches are protected by critical sections, and may be accessed  * safely only from their associated CPU, while the Zones backed by the same  * Keg all share a common Keg lock (to coalesce contention on the backing  * slabs).  The backing Keg typically only serves one Zone but in the case of  * multiple Zones, one of the Zones is considered the Master Zone and all  * Zone-related stats from the Keg are done in the Master Zone.  For an  * example of a Multi-Zone setup, refer to the Mbuf allocation code.  */
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ begin_define
 define|#
 directive|define
 name|UMA_BOOT_PAGES
-value|48
+value|64
 end_define
 
 begin_comment
@@ -176,6 +176,42 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * align field or structure to cache line  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|UMA_ALIGN
+value|__aligned(CACHE_LINE_SIZE)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|UMA_ALIGN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Structures for per cpu queues.  */
 end_comment
 
@@ -238,6 +274,7 @@ name|uc_frees
 decl_stmt|;
 comment|/* Count of frees */
 block|}
+name|UMA_ALIGN
 struct|;
 end_struct
 
@@ -730,8 +767,17 @@ name|uma_fini
 name|uz_fini
 decl_stmt|;
 comment|/* Discards memory */
+name|u_int32_t
+name|uz_flags
+decl_stmt|;
+comment|/* Flags inherited from kegs */
+name|u_int32_t
+name|uz_size
+decl_stmt|;
+comment|/* Size inherited from kegs */
 name|u_int64_t
 name|uz_allocs
+name|UMA_ALIGN
 decl_stmt|;
 comment|/* Total number of allocations */
 name|u_int64_t
@@ -742,14 +788,10 @@ name|u_int64_t
 name|uz_fails
 decl_stmt|;
 comment|/* Total number of alloc failures */
-name|u_int32_t
-name|uz_flags
+name|u_int64_t
+name|uz_sleeps
 decl_stmt|;
-comment|/* Flags inherited from kegs */
-name|u_int32_t
-name|uz_size
-decl_stmt|;
-comment|/* Size inherited from kegs */
+comment|/* Total number of alloc sleeps */
 name|uint16_t
 name|uz_fills
 decl_stmt|;
@@ -858,6 +900,12 @@ directive|define
 name|UMA_ZFLAG_INHERIT
 value|(UMA_ZFLAG_INTERNAL | UMA_ZFLAG_CACHEONLY | \ 				    UMA_ZFLAG_BUCKET)
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|UMA_ALIGN
+end_undef
 
 begin_ifdef
 ifdef|#

@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/signalvar.h>
 end_include
 
@@ -431,9 +437,28 @@ argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
+name|thread_lock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 name|TD_SET_CAN_RUN
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+name|sched_prio
+argument_list|(
+name|td
+argument_list|,
+name|PVM
+argument_list|)
+expr_stmt|;
+name|sched_user_prio
+argument_list|(
+name|td
+argument_list|,
+name|PUSER
 argument_list|)
 expr_stmt|;
 comment|/* Delay putting it on the run queue until now. */
@@ -446,12 +471,6 @@ operator|&
 name|RFSTOPPED
 operator|)
 condition|)
-block|{
-name|thread_lock
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
 name|sched_add
 argument_list|(
 name|td
@@ -464,7 +483,6 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 literal|0
 return|;
@@ -1143,6 +1161,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|tidhash_add
+argument_list|(
+name|newtd
+argument_list|)
+expr_stmt|;
 comment|/* Delay putting it on the run queue until now. */
 if|if
 condition|(
@@ -1211,6 +1234,13 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
+comment|/* 	 * The last exiting thread in a kernel process must tear down 	 * the whole process. 	 */
+name|rw_wlock
+argument_list|(
+operator|&
+name|tidhash_lock
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -1230,13 +1260,31 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|rw_wunlock
+argument_list|(
+operator|&
+name|tidhash_lock
+argument_list|)
+expr_stmt|;
 name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* NOTREACHED. */
 block|}
+name|LIST_REMOVE
+argument_list|(
+name|curthread
+argument_list|,
+name|td_hash
+argument_list|)
+expr_stmt|;
+name|rw_wunlock
+argument_list|(
+operator|&
+name|tidhash_lock
+argument_list|)
+expr_stmt|;
 name|PROC_SLOCK
 argument_list|(
 name|p
@@ -1564,6 +1612,7 @@ parameter_list|,
 name|int
 name|pages
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|procname

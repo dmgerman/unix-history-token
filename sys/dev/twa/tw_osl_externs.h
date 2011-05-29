@@ -168,27 +168,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Unfreeze ccb flow from CAM. */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|TW_VOID
-name|tw_osli_allow_new_requests
-parameter_list|(
-name|struct
-name|twa_softc
-modifier|*
-name|sc
-parameter_list|,
-name|TW_VOID
-modifier|*
-name|ccb
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Freeze ccb flow from CAM. */
 end_comment
 
@@ -201,6 +180,11 @@ name|struct
 name|twa_softc
 modifier|*
 name|sc
+parameter_list|,
+name|struct
+name|tw_cl_req_handle
+modifier|*
+name|req_handle
 parameter_list|)
 function_decl|;
 end_function_decl

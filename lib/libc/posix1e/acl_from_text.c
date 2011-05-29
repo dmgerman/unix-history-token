@@ -95,25 +95,6 @@ end_include
 
 begin_function_decl
 specifier|static
-name|int
-name|_posix1e_acl_name_to_id
-parameter_list|(
-name|acl_tag_t
-name|tag
-parameter_list|,
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|uid_t
-modifier|*
-name|id
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|acl_tag_t
 name|acl_string_to_tag
 parameter_list|(
@@ -671,7 +652,7 @@ name|ACL_GROUP
 case|:
 name|error
 operator|=
-name|_posix1e_acl_name_to_id
+name|_acl_name_to_id
 argument_list|(
 name|t
 argument_list|,
@@ -1084,13 +1065,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a username/groupname from a text form of an ACL, return the uid/gid  * XXX NOT THREAD SAFE, RELIES ON GETPWNAM, GETGRNAM  * XXX USES *PW* AND *GR* WHICH ARE STATEFUL AND THEREFORE THIS ROUTINE  * MAY HAVE SIDE-EFFECTS  *  * XXX currently doesn't deal correctly with a numeric uid being passed  * instead of a username.  What is correct behavior here?  Check chown.  */
+comment|/*  * Given a username/groupname from a text form of an ACL, return the uid/gid  * XXX NOT THREAD SAFE, RELIES ON GETPWNAM, GETGRNAM  * XXX USES *PW* AND *GR* WHICH ARE STATEFUL AND THEREFORE THIS ROUTINE  * MAY HAVE SIDE-EFFECTS  */
 end_comment
 
 begin_function
-specifier|static
 name|int
-name|_posix1e_acl_name_to_id
+name|_acl_name_to_id
 parameter_list|(
 name|acl_tag_t
 name|tag

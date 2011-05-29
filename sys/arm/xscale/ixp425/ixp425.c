@@ -167,6 +167,13 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|mtx
+name|ixp425_gpio_mtx
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|int
@@ -737,6 +744,9 @@ name|pin
 argument_list|)
 argument_list|)
 decl_stmt|;
+name|IXP4XX_GPIO_LOCK
+argument_list|()
+expr_stmt|;
 comment|/* clear interrupt type */
 name|GPIO_CONF_WRITE_4
 argument_list|(
@@ -812,6 +822,9 @@ operator|<<
 name|pin
 operator|)
 argument_list|)
+expr_stmt|;
+name|IXP4XX_GPIO_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1365,6 +1378,18 @@ name|arm_post_filter
 operator|=
 name|ixp425_post_filter
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|ixp425_gpio_mtx
+argument_list|,
+literal|"gpio"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bus_space_map
@@ -1730,7 +1755,7 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|int
+name|u_int
 name|order
 parameter_list|,
 specifier|const

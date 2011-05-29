@@ -2460,22 +2460,11 @@ argument_list|)
 argument_list|,
 name|M_NETGRAPH_PPPOE
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|privp
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
 comment|/* Link structs together; this counts as our one reference to *node. */
 name|NG_NODE_SET_PRIVATE
 argument_list|(
@@ -5739,11 +5728,6 @@ argument_list|)
 decl_stmt|;
 name|sessp
 name|sp
-init|=
-name|NG_HOOK_PRIVATE
-argument_list|(
-name|hook
-argument_list|)
 decl_stmt|;
 specifier|const
 name|struct

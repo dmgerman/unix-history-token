@@ -2765,7 +2765,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * Non standard -Y and -Z flag. When the exisiting file is 		 * same age or newer skip 		 */
+comment|/* 		 * Non standard -Y and -Z flag. When the existing file is 		 * same age or newer skip 		 */
 if|if
 condition|(
 operator|(
@@ -3506,7 +3506,7 @@ operator|+
 name|shftsz
 expr_stmt|;
 block|}
-comment|/* 	 * ok got a valid header, check for trailer if format encodes it in the 	 * the header. 	 */
+comment|/* 	 * ok got a valid header, check for trailer if format encodes it in 	 * the header. 	 */
 if|if
 condition|(
 name|frmt

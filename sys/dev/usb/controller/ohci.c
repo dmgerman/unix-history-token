@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/linker_set.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
 end_include
 
@@ -8758,7 +8752,7 @@ block|,
 operator|.
 name|bInterfaceProtocol
 operator|=
-name|UIPROTO_FSHUB
+literal|0
 block|, 	}
 block|,
 operator|.
@@ -11127,15 +11121,6 @@ break|break;
 case|case
 name|UE_BULK
 case|:
-if|if
-condition|(
-name|udev
-operator|->
-name|speed
-operator|!=
-name|USB_SPEED_LOW
-condition|)
-block|{
 name|ep
 operator|->
 name|methods
@@ -11143,7 +11128,6 @@ operator|=
 operator|&
 name|ohci_device_bulk_methods
 expr_stmt|;
-block|}
 break|break;
 default|default:
 comment|/* do nothing */
@@ -11174,9 +11158,9 @@ name|void
 name|ohci_get_dma_delay
 parameter_list|(
 name|struct
-name|usb_bus
+name|usb_device
 modifier|*
-name|bus
+name|udev
 parameter_list|,
 name|uint32_t
 modifier|*

@@ -1095,7 +1095,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"unrefs            int64_t          0x%08x\n"
+literal|"unrefs            int64_t          0x%08jx\n"
 argument_list|,
 name|sb
 operator|->

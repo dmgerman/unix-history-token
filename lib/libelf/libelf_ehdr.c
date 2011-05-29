@@ -80,7 +80,7 @@ decl_stmt|;
 name|size_t
 name|fsz
 decl_stmt|;
-name|void
+name|int
 function_decl|(
 modifier|*
 name|xlator
@@ -89,6 +89,9 @@ parameter_list|(
 name|char
 modifier|*
 name|_d
+parameter_list|,
+name|size_t
+name|_dsz
 parameter_list|,
 name|char
 modifier|*
@@ -213,6 +216,13 @@ operator|&
 name|scn
 operator|->
 name|s_shdr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|scn
+operator|->
+name|s_shdr
+argument_list|)
 argument_list|,
 name|e
 operator|->
@@ -382,7 +392,7 @@ decl_stmt|;
 name|uint64_t
 name|shoff
 decl_stmt|;
-name|void
+name|int
 function_decl|(
 modifier|*
 name|xlator
@@ -391,6 +401,9 @@ parameter_list|(
 name|char
 modifier|*
 name|_d
+parameter_list|,
+name|size_t
+name|_dsz
 parameter_list|,
 name|char
 modifier|*
@@ -747,6 +760,8 @@ name|xlator
 call|)
 argument_list|(
 name|ehdr
+argument_list|,
+name|msz
 argument_list|,
 name|e
 operator|->

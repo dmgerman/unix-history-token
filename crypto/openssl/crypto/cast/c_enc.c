@@ -27,6 +27,7 @@ name|CAST_LONG
 modifier|*
 name|data
 parameter_list|,
+specifier|const
 name|CAST_KEY
 modifier|*
 name|key
@@ -38,10 +39,13 @@ name|l
 decl_stmt|,
 name|r
 decl_stmt|,
+name|t
+decl_stmt|;
+specifier|const
+specifier|register
+name|CAST_LONG
 modifier|*
 name|k
-decl_stmt|,
-name|t
 decl_stmt|;
 name|k
 operator|=
@@ -379,6 +383,7 @@ name|CAST_LONG
 modifier|*
 name|data
 parameter_list|,
+specifier|const
 name|CAST_KEY
 modifier|*
 name|key
@@ -390,10 +395,13 @@ name|l
 decl_stmt|,
 name|r
 decl_stmt|,
+name|t
+decl_stmt|;
+specifier|const
+specifier|register
+name|CAST_LONG
 modifier|*
 name|k
-decl_stmt|,
-name|t
 decl_stmt|;
 name|k
 operator|=
@@ -741,6 +749,7 @@ parameter_list|,
 name|long
 name|length
 parameter_list|,
+specifier|const
 name|CAST_KEY
 modifier|*
 name|ks

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Paul Corbett.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Paul Corbett.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_if
@@ -363,7 +363,9 @@ begin_function
 specifier|static
 name|void
 name|allocate_itemsets
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|short
 modifier|*
@@ -540,7 +542,9 @@ begin_function
 specifier|static
 name|void
 name|allocate_storage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|allocate_itemsets
 argument_list|()
@@ -582,7 +586,9 @@ begin_function
 specifier|static
 name|void
 name|append_states
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -709,39 +715,41 @@ begin_function
 specifier|static
 name|void
 name|free_storage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|shift_symbol
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|redset
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|shiftset
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|kernel_base
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|kernel_end
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|kernel_items
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|state_set
 argument_list|)
@@ -753,7 +761,9 @@ begin_function
 specifier|static
 name|void
 name|generate_states
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|allocate_storage
 argument_list|()
@@ -840,11 +850,9 @@ specifier|static
 name|int
 name|get_state
 parameter_list|(
-name|symbol
-parameter_list|)
 name|int
 name|symbol
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|key
@@ -1064,7 +1072,9 @@ begin_function
 specifier|static
 name|void
 name|initialize_states
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1103,11 +1113,7 @@ control|)
 continue|continue;
 name|p
 operator|=
-operator|(
-name|core
-operator|*
-operator|)
-name|MALLOC
+name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1211,7 +1217,9 @@ begin_function
 specifier|static
 name|void
 name|new_itemsets
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1344,11 +1352,9 @@ name|core
 modifier|*
 name|new_state
 parameter_list|(
-name|symbol
-parameter_list|)
 name|int
 name|symbol
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|n
@@ -1514,22 +1520,22 @@ comment|/* show_cores is used for debugging */
 end_comment
 
 begin_comment
-unit|show_cores() {     core *p;     int i, j, k, n;     int itemno;      k = 0;     for (p = first_state; p; ++k, p = p->next)     { 	if (k) printf("\n"); 	printf("state %d, number = %d, accessing symbol = %s\n", 		k, p->number, symbol_name[p->accessing_symbol]); 	n = p->nitems; 	for (i = 0; i< n; ++i) 	{ 	    itemno = p->items[i]; 	    printf("%4d  ", itemno); 	    j = itemno; 	    while (ritem[j]>= 0) ++j; 	    printf("%s :", symbol_name[rlhs[-ritem[j]]]); 	    j = rrhs[-ritem[j]]; 	    while (j< itemno) 		printf(" %s", symbol_name[ritem[j++]]); 	    printf(" ."); 	    while (ritem[j]>= 0) 		printf(" %s", symbol_name[ritem[j++]]); 	    printf("\n"); 	    fflush(stdout); 	}     } }
+unit|show_cores(void) {     core *p;     int i, j, k, n;     int itemno;      k = 0;     for (p = first_state; p; ++k, p = p->next)     { 	if (k) printf("\n"); 	printf("state %d, number = %d, accessing symbol = %s\n", 		k, p->number, symbol_name[p->accessing_symbol]); 	n = p->nitems; 	for (i = 0; i< n; ++i) 	{ 	    itemno = p->items[i]; 	    printf("%4d  ", itemno); 	    j = itemno; 	    while (ritem[j]>= 0) ++j; 	    printf("%s :", symbol_name[rlhs[-ritem[j]]]); 	    j = rrhs[-ritem[j]]; 	    while (j< itemno) 		printf(" %s", symbol_name[ritem[j++]]); 	    printf(" ."); 	    while (ritem[j]>= 0) 		printf(" %s", symbol_name[ritem[j++]]); 	    printf("\n"); 	    fflush(stdout); 	}     } }
 comment|/* show_ritems is used for debugging */
 end_comment
 
 begin_comment
-unit|show_ritems() {     int i;      for (i = 0; i< nitems; ++i) 	printf("ritem[%d] = %d\n", i, ritem[i]); }
+unit|show_ritems(void) {     int i;      for (i = 0; i< nitems; ++i) 	printf("ritem[%d] = %d\n", i, ritem[i]); }
 comment|/* show_rrhs is used for debugging */
 end_comment
 
 begin_comment
-unit|show_rrhs() {     int i;      for (i = 0; i< nrules; ++i) 	printf("rrhs[%d] = %d\n", i, rrhs[i]); }
+unit|show_rrhs(void) {     int i;      for (i = 0; i< nrules; ++i) 	printf("rrhs[%d] = %d\n", i, rrhs[i]); }
 comment|/* show_shifts is used for debugging */
 end_comment
 
 begin_endif
-unit|show_shifts() {     shifts *p;     int i, j, k;      k = 0;     for (p = first_shift; p; ++k, p = p->next)     { 	if (k) printf("\n"); 	printf("shift %d, number = %d, nshifts = %d\n", k, p->number, 		p->nshifts); 	j = p->nshifts; 	for (i = 0; i< j; ++i) 	    printf("\t%d\n", p->shift[i]);     } }
+unit|show_shifts(void) {     shifts *p;     int i, j, k;      k = 0;     for (p = first_shift; p; ++k, p = p->next)     { 	if (k) printf("\n"); 	printf("shift %d, number = %d, nshifts = %d\n", k, p->number, 		p->nshifts); 	j = p->nshifts; 	for (i = 0; i< j; ++i) 	    printf("\t%d\n", p->shift[i]);     } }
 endif|#
 directive|endif
 end_endif
@@ -1538,7 +1544,9 @@ begin_function
 specifier|static
 name|void
 name|save_shifts
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|shifts
 modifier|*
@@ -1664,7 +1672,9 @@ begin_function
 specifier|static
 name|void
 name|save_reductions
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|short
 modifier|*
@@ -1850,7 +1860,9 @@ begin_function
 specifier|static
 name|void
 name|set_derives
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1978,7 +1990,7 @@ literal|0
 end_if
 
 begin_endif
-unit|free_derives() {     FREE(derives[start_symbol]);     FREE(derives); }
+unit|free_derives() {     free(derives[start_symbol]);     free(derives); }
 endif|#
 directive|endif
 end_endif
@@ -1993,7 +2005,9 @@ begin_function
 specifier|static
 name|void
 name|print_derives
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -2081,7 +2095,9 @@ begin_function
 specifier|static
 name|void
 name|set_nullable
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -2096,7 +2112,7 @@ name|done1
 decl_stmt|;
 name|nullable
 operator|=
-name|MALLOC
+name|malloc
 argument_list|(
 name|nsyms
 argument_list|)
@@ -2287,7 +2303,7 @@ literal|0
 end_if
 
 begin_endif
-unit|free_nullable() {     FREE(nullable); }
+unit|free_nullable(void) {     free(nullable); }
 endif|#
 directive|endif
 end_endif
@@ -2295,7 +2311,9 @@ end_endif
 begin_function
 name|void
 name|lr0
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|set_derives
 argument_list|()

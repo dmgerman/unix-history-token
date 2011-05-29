@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Utility to pick a temporary filename prefix.    Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.  This file is part of the libiberty library. Libiberty is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  Libiberty is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for more details.  You should have received a copy of the GNU Library General Public License along with libiberty; see the file COPYING.LIB.  If not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Utility to pick a temporary filename prefix.    Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.  This file is part of the libiberty library. Libiberty is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  Libiberty is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for more details.  You should have received a copy of the GNU Library General Public License along with libiberty; see the file COPYING.LIB.  If not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifdef
@@ -70,19 +70,16 @@ directive|include
 file|"libiberty.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|choose_tmpdir
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Name of temporary file.    mktemp requires 6 trailing X's.  */
@@ -103,14 +100,16 @@ value|(sizeof(TEMP_FILE) - 1)
 end_define
 
 begin_comment
-comment|/*  @deftypefn Extension char* choose_temp_base (void)  Return a prefix for temporary file names or @code{NULL} if unable to find one.  The current directory is chosen if all else fails so the program is exited if a temporary directory can't be found (@code{mktemp} fails).  The buffer for the result is obtained with @code{xmalloc}.  This function is provided for backwards compatability only.  Its use is not recommended.  @end deftypefn  */
+comment|/*  @deftypefn Extension char* choose_temp_base (void)  Return a prefix for temporary file names or @code{NULL} if unable to find one.  The current directory is chosen if all else fails so the program is exited if a temporary directory can't be found (@code{mktemp} fails).  The buffer for the result is obtained with @code{xmalloc}.  This function is provided for backwards compatibility only.  Its use is not recommended.  @end deftypefn  */
 end_comment
 
 begin_function
 name|char
 modifier|*
 name|choose_temp_base
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -136,8 +135,10 @@ argument_list|)
 expr_stmt|;
 name|temp_filename
 operator|=
-name|xmalloc
+name|XNEWVEC
 argument_list|(
+name|char
+argument_list|,
 name|len
 operator|+
 name|TEMP_FILE_LEN
@@ -161,14 +162,9 @@ argument_list|,
 name|TEMP_FILE
 argument_list|)
 expr_stmt|;
-name|mktemp
-argument_list|(
-name|temp_filename
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|strlen
+name|mktemp
 argument_list|(
 name|temp_filename
 argument_list|)

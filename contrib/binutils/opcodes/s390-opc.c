@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* s390-opc.c -- S390 opcode list    Copyright 2000, 2001 Free Software Foundation, Inc.    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).     This file is part of GDB, GAS, and the GNU binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* s390-opc.c -- S390 opcode list    Copyright 2000, 2001, 2003 Free Software Foundation, Inc.    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).     This file is part of GDB, GAS, and the GNU binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -564,6 +564,62 @@ literal|16
 block|,
 name|S390_OPERAND_PCREL
 block|}
+block|,
+define|#
+directive|define
+name|I32_16
+value|40
+comment|/* 32 bit signed value starting at 16 */
+block|{
+literal|32
+block|,
+literal|16
+block|,
+name|S390_OPERAND_SIGNED
+block|}
+block|,
+define|#
+directive|define
+name|U32_16
+value|41
+comment|/* 32 bit unsigned value starting at 16 */
+block|{
+literal|32
+block|,
+literal|16
+block|,
+literal|0
+block|}
+block|,
+define|#
+directive|define
+name|M_16
+value|42
+comment|/* 4 bit optional mask starting at 16 */
+block|{
+literal|4
+block|,
+literal|16
+block|,
+name|S390_OPERAND_OPTIONAL
+block|}
+block|,
+define|#
+directive|define
+name|RO_28
+value|43
+comment|/* optional GPR starting at position 28 */
+block|{
+literal|4
+block|,
+literal|28
+block|,
+operator|(
+name|S390_OPERAND_GPR
+operator||
+name|S390_OPERAND_OPTIONAL
+operator|)
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -607,7 +663,7 @@ value|{ x>> 40, (x>> 32)& 255, (x>> 24)& 255, \                   (x>> 16)& 255,
 end_define
 
 begin_comment
-comment|/* The new format of the INSTR_x_y and MASK_x_y defines is based    on the following rules:    1) the middle part of the definition (x in INSTR_x_y) is the official       names of the instruction format that you can find in the principals       of operation.    2) the last part of the definition (y in INSTR_x_y) gives you an idea       which operands the binary represenation of the instruction has.       The meanings of the letters in y are:       a - access register       c - control register       d - displacement, 12 bit       f - floating pointer register       i - signed integer, 4 or 8 bit       l - length, 4 or 8 bit       p - pc relative       r - general purpose register       u - unsigned integer, 4 or 8 bit       0 - operand skipped.       The order of the letters reflects the layout of the format in       storage and not the order of the paramaters of the instructions.       The use of the letters is not a 100% match with the PoP but it is       quite close.        For example the instruction "mvo" is defined in the PoP as follows:              MVO  D1(L1,B1),D2(L2,B2)   [SS]        --------------------------------------       | 'F1' | L1 | L2 | B1 | D1 | B2 | D2 |       --------------------------------------        0      8    12   16   20   32   36        The instruction format is: INSTR_SS_LLRDRD / MASK_SS_LLRDRD.  */
+comment|/* The new format of the INSTR_x_y and MASK_x_y defines is based    on the following rules:    1) the middle part of the definition (x in INSTR_x_y) is the official       names of the instruction format that you can find in the principals       of operation.    2) the last part of the definition (y in INSTR_x_y) gives you an idea       which operands the binary represenation of the instruction has.       The meanings of the letters in y are:       a - access register       c - control register       d - displacement, 12 bit       f - floating pointer register       i - signed integer, 4, 8, 16 or 32 bit       l - length, 4 or 8 bit       p - pc relative       r - general purpose register       u - unsigned integer, 4, 8, 16 or 32 bit       m - mode field, 4 bit       0 - operand skipped.       The order of the letters reflects the layout of the format in       storage and not the order of the paramaters of the instructions.       The use of the letters is not a 100% match with the PoP but it is       quite close.        For example the instruction "mvo" is defined in the PoP as follows:              MVO  D1(L1,B1),D2(L2,B2)   [SS]        --------------------------------------       | 'F1' | L1 | L2 | B1 | D1 | B2 | D2 |       --------------------------------------        0      8    12   16   20   32   36        The instruction format is: INSTR_SS_LLRDRD / MASK_SS_LLRDRD.  */
 end_comment
 
 begin_define
@@ -663,6 +719,28 @@ end_define
 
 begin_comment
 comment|/* e.g. brcl  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSTR_RIL_RI
+value|6, { R_8,I32_16,0,0,0,0 }
+end_define
+
+begin_comment
+comment|/* e.g. afi   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSTR_RIL_RU
+value|6, { R_8,U32_16,0,0,0,0 }
+end_define
+
+begin_comment
+comment|/* e.g. alfi  */
 end_comment
 
 begin_define
@@ -833,12 +911,60 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INSTR_RRE_FR
+value|4, { F_24,R_28,0,0,0,0 }
+end_define
+
+begin_comment
+comment|/* e.g. ldgr  */
+end_comment
+
+begin_comment
+comment|/* Actually efpc and sfpc do not take an optional operand.    This is just a workaround for existing code e.g. glibc.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSTR_RRE_RR_OPT
+value|4, { R_24,RO_28,0,0,0,0 }
+end_define
+
+begin_comment
+comment|/* efpc, sfpc */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|INSTR_RRF_F0FF
 value|4, { F_16,F_24,F_28,0,0,0 }
 end_define
 
 begin_comment
 comment|/* e.g. madbr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSTR_RRF_F0FF2
+value|4, { F_24,F_16,F_28,0,0,0 }
+end_define
+
+begin_comment
+comment|/* e.g. cpsdr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSTR_RRF_F0FR
+value|4, { F_24,F_16,R_28,0,0,0 }
+end_define
+
+begin_comment
+comment|/* e.g. iedtr */
 end_comment
 
 begin_define
@@ -882,14 +1008,14 @@ value|4, { F_24,U4_16,F_28,0,0,0 }
 end_define
 
 begin_comment
-comment|/* e.g. cfxbr */
+comment|/* e.g. fixr  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|INSTR_RRF_U0FR
-value|4, { F_24,U4_16,R_28,0,0,0 }
+name|INSTR_RRF_U0RF
+value|4, { R_24,U4_16,F_28,0,0,0 }
 end_define
 
 begin_comment
@@ -899,12 +1025,45 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INSTR_RRF_U0FR
-value|4, { F_24,U4_16,R_28,0,0,0 }
+name|INSTR_RRF_UUFF
+value|4, { F_24,U4_16,F_28,U4_20,0,0 }
 end_define
 
 begin_comment
-comment|/* e.g. cfxbr */
+comment|/* e.g. fidtr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSTR_RRF_0UFF
+value|4, { F_24,F_28,U4_20,0,0,0 }
+end_define
+
+begin_comment
+comment|/* e.g. ldetr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSTR_RRF_FFFU
+value|4, { F_24,F_16,F_28,U4_20,0,0 }
+end_define
+
+begin_comment
+comment|/* e.g. qadtr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSTR_RRF_M0RR
+value|4, { R_24,R_28,M_16,0,0,0 }
+end_define
+
+begin_comment
+comment|/* e.g. sske  */
 end_comment
 
 begin_define
@@ -976,8 +1135,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INSTR_RRR_F0FF
+value|4, { F_24,F_28,F_16,0,0,0 }
+end_define
+
+begin_comment
+comment|/* e.g. ddtr  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|INSTR_RSE_RRRD
 value|6, { R_8,R_12,D_20,B_16,0,0 }
+end_define
+
+begin_comment
+comment|/* e.g. lmh   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSTR_RSE_CCRD
+value|6, { C_8,C_12,D_20,B_16,0,0 }
 end_define
 
 begin_comment
@@ -1044,6 +1225,17 @@ define|#
 directive|define
 name|INSTR_RSY_AARD
 value|6, { A_8,A_12,D20_20,B_16,0,0 }
+end_define
+
+begin_comment
+comment|/* e.g. lamy  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSTR_RSY_CCRD
+value|6, { C_8,C_12,D20_20,B_16,0,0 }
 end_define
 
 begin_comment
@@ -1262,6 +1454,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INSTR_SS_L2RDRD
+value|6, { D_20,B_16,D_36,L8_8,B_32,0     }
+end_define
+
+begin_comment
+comment|/* e.g. pka   */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|INSTR_SS_LIRDRD
 value|6, { D_20,L4_8,B_16,D_36,B_32,U4_12 }
 end_define
@@ -1339,6 +1542,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INSTR_SSF_RRDRD
+value|6, { D_20,B_16,D_36,B_32,R_8,0 }
+end_define
+
+begin_comment
+comment|/* e.g. mvcos */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MASK_E
 value|{ 0xff, 0xff, 0x00, 0x00, 0x00, 0x00 }
 end_define
@@ -1368,6 +1582,20 @@ begin_define
 define|#
 directive|define
 name|MASK_RIL_UP
+value|{ 0xff, 0x0f, 0x00, 0x00, 0x00, 0x00 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_RIL_RI
+value|{ 0xff, 0x0f, 0x00, 0x00, 0x00, 0x00 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_RIL_RU
 value|{ 0xff, 0x0f, 0x00, 0x00, 0x00, 0x00 }
 end_define
 
@@ -1479,7 +1707,35 @@ end_define
 begin_define
 define|#
 directive|define
+name|MASK_RRE_FR
+value|{ 0xff, 0xff, 0xff, 0x00, 0x00, 0x00 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_RRE_RR_OPT
+value|{ 0xff, 0xff, 0xff, 0x00, 0x00, 0x00 }
+end_define
+
+begin_define
+define|#
+directive|define
 name|MASK_RRF_F0FF
+value|{ 0xff, 0xff, 0x0f, 0x00, 0x00, 0x00 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_RRF_F0FF2
+value|{ 0xff, 0xff, 0x0f, 0x00, 0x00, 0x00 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_RRF_F0FR
 value|{ 0xff, 0xff, 0x0f, 0x00, 0x00, 0x00 }
 end_define
 
@@ -1514,14 +1770,35 @@ end_define
 begin_define
 define|#
 directive|define
-name|MASK_RRF_U0FR
+name|MASK_RRF_U0RF
 value|{ 0xff, 0xff, 0x0f, 0x00, 0x00, 0x00 }
 end_define
 
 begin_define
 define|#
 directive|define
-name|MASK_RRF_U0FR
+name|MASK_RRF_UUFF
+value|{ 0xff, 0xff, 0x00, 0x00, 0x00, 0x00 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_RRF_0UFF
+value|{ 0xff, 0xff, 0xf0, 0x00, 0x00, 0x00 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_RRF_FFFU
+value|{ 0xff, 0xff, 0x00, 0x00, 0x00, 0x00 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_RRF_M0RR
 value|{ 0xff, 0xff, 0x0f, 0x00, 0x00, 0x00 }
 end_define
 
@@ -1570,7 +1847,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|MASK_RRR_F0FF
+value|{ 0xff, 0xff, 0x0f, 0x00, 0x00, 0x00 }
+end_define
+
+begin_define
+define|#
+directive|define
 name|MASK_RSE_RRRD
+value|{ 0xff, 0x00, 0x00, 0x00, 0x00, 0xff }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_RSE_CCRD
 value|{ 0xff, 0x00, 0x00, 0x00, 0x00, 0xff }
 end_define
 
@@ -1648,6 +1939,13 @@ begin_define
 define|#
 directive|define
 name|MASK_RSY_AARD
+value|{ 0xff, 0x00, 0x00, 0x00, 0x00, 0xff }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_RSY_CCRD
 value|{ 0xff, 0x00, 0x00, 0x00, 0x00, 0xff }
 end_define
 
@@ -1752,6 +2050,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MASK_SS_L2RDRD
+value|{ 0xff, 0x00, 0x00, 0x00, 0x00, 0x00 }
+end_define
+
+begin_define
+define|#
+directive|define
 name|MASK_SS_LIRDRD
 value|{ 0xff, 0x00, 0x00, 0x00, 0x00, 0x00 }
 end_define
@@ -1796,6 +2101,13 @@ define|#
 directive|define
 name|MASK_S_RD
 value|{ 0xff, 0xff, 0x00, 0x00, 0x00, 0x00 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_SSF_RRDRD
+value|{ 0xff, 0x0f, 0x00, 0x00, 0x00, 0x00 }
 end_define
 
 begin_comment
@@ -1872,6 +2184,23 @@ block|,
 name|MASK_RIL_RP
 block|,
 name|INSTR_RIL_RP
+block|,
+literal|3
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"rilu"
+block|,
+name|OP8
+argument_list|(
+literal|0x00LL
+argument_list|)
+block|,
+name|MASK_RIL_RU
+block|,
+name|INSTR_RIL_RU
 block|,
 literal|3
 block|,
@@ -2144,6 +2473,23 @@ block|,
 name|MASK_SSE_RDRD
 block|,
 name|INSTR_SSE_RDRD
+block|,
+literal|3
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"ssf"
+block|,
+name|OP8
+argument_list|(
+literal|0x00LL
+argument_list|)
+block|,
+name|MASK_SSF_RRDRD
+block|,
+name|INSTR_SSF_RRDRD
 block|,
 literal|3
 block|,

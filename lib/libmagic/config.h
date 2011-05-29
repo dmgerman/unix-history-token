@@ -8,11 +8,11 @@ comment|/* config.h.  Generated from config.h.in by configure.  */
 end_comment
 
 begin_comment
-comment|/* config.h.in.  Generated from configure.in by autoheader.  */
+comment|/* config.h.in.  Generated from configure.ac by autoheader.  */
 end_comment
 
 begin_comment
-comment|/* Use the builtin ELF recognition code */
+comment|/* Define in built-in ELF support is used */
 end_comment
 
 begin_define
@@ -23,7 +23,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Recognize ELF core files */
+comment|/* Define for ELF core file support */
 end_comment
 
 begin_define
@@ -45,7 +45,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* */
+comment|/* HAVE_DAYLIGHT */
 end_comment
 
 begin_comment
@@ -185,17 +185,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_LONG_LONG
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if you have the `mbrtowc' function. */
 end_comment
 
@@ -247,17 +236,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_MMAP
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `snprintf' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SNPRINTF
 value|1
 end_define
 
@@ -372,6 +350,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* HAVE_STRUCT_OPTION */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_OPTION
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if `st_rdev' is member of `struct stat'. */
 end_comment
 
@@ -379,17 +368,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRUCT_STAT_ST_RDEV
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if your `struct stat' has `st_rdev'. Deprecated, use    `HAVE_STRUCT_STAT_ST_RDEV' instead. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_ST_RDEV
 value|1
 end_define
 
@@ -479,7 +457,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* */
+comment|/* HAVE_TM_ISDST */
 end_comment
 
 begin_define
@@ -611,17 +589,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `vsnprintf' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_VSNPRINTF
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if you have the<wchar.h> header file. */
 end_comment
 
@@ -708,7 +675,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_BUGREPORT
-value|""
+value|"christos@astron.com"
 end_define
 
 begin_comment
@@ -719,7 +686,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_NAME
-value|""
+value|"file"
 end_define
 
 begin_comment
@@ -730,7 +697,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|""
+value|"file 5.03"
 end_define
 
 begin_comment
@@ -741,7 +708,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_TARNAME
-value|""
+value|"file"
 end_define
 
 begin_comment
@@ -752,62 +719,18 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|VERSION
+value|"5.03"
 end_define
 
 begin_comment
-comment|/* */
+comment|/* The size of `long long', as computed by sizeof. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SIZEOF_INT64_T
+name|SIZEOF_LONG_LONG
 value|8
-end_define
-
-begin_comment
-comment|/* */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_UINT16_T
-value|2
-end_define
-
-begin_comment
-comment|/* */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_UINT32_T
-value|4
-end_define
-
-begin_comment
-comment|/* */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_UINT64_T
-value|8
-end_define
-
-begin_comment
-comment|/* */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_UINT8_T
-value|1
 end_define
 
 begin_comment
@@ -837,7 +760,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"5.00"
+value|"5.03"
 end_define
 
 begin_comment
@@ -882,6 +805,14 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Define to 1 to make fseeko visible on some hosts (e.g. glibc 2.2). */
+end_comment
+
+begin_comment
+comment|/* #undef _LARGEFILE_SOURCE */
+end_comment
+
+begin_comment
 comment|/* Define for large files, on AIX-style hosts. */
 end_comment
 
@@ -896,6 +827,195 @@ end_comment
 begin_comment
 comment|/* #undef const */
 end_comment
+
+begin_comment
+comment|/* Define to a type if<wchar.h> does not define. */
+end_comment
+
+begin_comment
+comment|/* #undef mbstate_t */
+end_comment
+
+begin_comment
+comment|/* Define to `long int' if<sys/types.h> does not define. */
+end_comment
+
+begin_comment
+comment|/* #undef off_t */
+end_comment
+
+begin_comment
+comment|/* Define to `unsigned int' if<sys/types.h> does not define. */
+end_comment
+
+begin_comment
+comment|/* #undef size_t */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_UINT8_T
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|uint8_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_UINT16_T
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|short
+name|uint16_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_UINT32_T
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|uint32_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_INT32_T
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|int
+name|int32_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_UINT64_T
+end_ifndef
+
+begin_if
+if|#
+directive|if
+name|SIZEOF_LONG_LONG
+operator|==
+literal|8
+end_if
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|long
+name|uint64_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|uint64_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_INT64_T
+end_ifndef
+
+begin_if
+if|#
+directive|if
+name|SIZEOF_LONG_LONG
+operator|==
+literal|8
+end_if
+
+begin_typedef
+typedef|typedef
+name|long
+name|long
+name|int64_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|long
+name|int64_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

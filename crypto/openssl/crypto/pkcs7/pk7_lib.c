@@ -2571,10 +2571,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|ASN1_OBJECT
-modifier|*
-name|objtmp
-decl_stmt|;
 name|PKCS7_ENC_CONTENT
 modifier|*
 name|ec
@@ -2663,13 +2659,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|objtmp
-operator|=
-name|OBJ_nid2obj
-argument_list|(
-name|i
-argument_list|)
-expr_stmt|;
 name|ec
 operator|->
 name|cipher

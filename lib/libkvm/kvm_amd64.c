@@ -572,7 +572,7 @@ parameter_list|)
 block|{
 name|struct
 name|nlist
-name|nlist
+name|nl
 index|[
 literal|2
 index|]
@@ -773,7 +773,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|nlist
+name|nl
 index|[
 literal|0
 index|]
@@ -782,7 +782,7 @@ name|n_name
 operator|=
 literal|"kernbase"
 expr_stmt|;
-name|nlist
+name|nl
 index|[
 literal|1
 index|]
@@ -797,7 +797,7 @@ name|kvm_nlist
 argument_list|(
 name|kd
 argument_list|,
-name|nlist
+name|nl
 argument_list|)
 operator|!=
 literal|0
@@ -823,14 +823,14 @@ return|;
 block|}
 name|kernbase
 operator|=
-name|nlist
+name|nl
 index|[
 literal|0
 index|]
 operator|.
 name|n_value
 expr_stmt|;
-name|nlist
+name|nl
 index|[
 literal|0
 index|]
@@ -839,7 +839,7 @@ name|n_name
 operator|=
 literal|"KPML4phys"
 expr_stmt|;
-name|nlist
+name|nl
 index|[
 literal|1
 index|]
@@ -854,7 +854,7 @@ name|kvm_nlist
 argument_list|(
 name|kd
 argument_list|,
-name|nlist
+name|nl
 argument_list|)
 operator|!=
 literal|0
@@ -885,7 +885,7 @@ argument_list|(
 name|kd
 argument_list|,
 operator|(
-name|nlist
+name|nl
 index|[
 literal|0
 index|]
@@ -1044,9 +1044,6 @@ name|pdeindex
 decl_stmt|;
 name|u_long
 name|pteindex
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|u_long
 name|a

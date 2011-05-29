@@ -162,29 +162,6 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KTRACE
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ktrace.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|HWPMC_HOOKS
 end_ifdef
 
@@ -246,11 +223,6 @@ directive|if
 name|defined
 argument_list|(
 name|__sparc64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__mips__
 argument_list|)
 end_if
 
@@ -420,6 +392,52 @@ value|CPU_ISSET((cpu),&(td)->td_cpuset->cs_mask)
 end_define
 
 begin_comment
+comment|/*  * Priority ranges used for interactive and non-interactive timeshare  * threads.  The timeshare priorities are split up into four ranges.  * The first range handles interactive threads.  The last three ranges  * (NHALF, x, and NHALF) handle non-interactive threads with the outer  * ranges supporting nice values.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRI_TIMESHARE_RANGE
+value|(PRI_MAX_TIMESHARE - PRI_MIN_TIMESHARE + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRI_INTERACT_RANGE
+value|((PRI_TIMESHARE_RANGE - SCHED_PRI_NRESV) / 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRI_MIN_INTERACT
+value|PRI_MIN_TIMESHARE
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRI_MAX_INTERACT
+value|(PRI_MIN_TIMESHARE + PRI_INTERACT_RANGE - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRI_MIN_BATCH
+value|(PRI_MIN_TIMESHARE + PRI_INTERACT_RANGE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRI_MAX_BATCH
+value|PRI_MAX_TIMESHARE
+end_define
+
+begin_comment
 comment|/*  * Cpu percentage computation macros and defines.  *  * SCHED_TICK_SECS:	Number of seconds to average the cpu usage across.  * SCHED_TICK_TARG:	Number of hz ticks to average the cpu usage across.  * SCHED_TICK_MAX:	Maximum number of ticks before scaling back.  * SCHED_TICK_SHIFT:	Shift factor to avoid rounding away results.  * SCHED_TICK_HZ:	Compute the number of hz ticks for a given ticks count.  * SCHED_TICK_TOTAL:	Gives the amount of time we've been recording ticks.  */
 end_comment
 
@@ -493,21 +511,21 @@ begin_define
 define|#
 directive|define
 name|SCHED_PRI_MIN
-value|(PRI_MIN_TIMESHARE + SCHED_PRI_NHALF)
+value|(PRI_MIN_BATCH + SCHED_PRI_NHALF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCHED_PRI_MAX
-value|(PRI_MAX_TIMESHARE - SCHED_PRI_NHALF)
+value|(PRI_MAX_BATCH - SCHED_PRI_NHALF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCHED_PRI_RANGE
-value|(SCHED_PRI_MAX - SCHED_PRI_MIN)
+value|(SCHED_PRI_MAX - SCHED_PRI_MIN + 1)
 end_define
 
 begin_define
@@ -532,7 +550,7 @@ value|(nice)
 end_define
 
 begin_comment
-comment|/*  * These determine the interactivity of a process.  Interactivity differs from  * cpu utilization in that it expresses the voluntary time slept vs time ran  * while cpu utilization includes all time not running.  This more accurately  * models the intent of the thread.  *  * SLP_RUN_MAX:	Maximum amount of sleep time + run time we'll accumulate  *		before throttling back.  * SLP_RUN_FORK:	Maximum slp+run time to inherit at fork time.  * INTERACT_MAX:	Maximum interactivity value.  Smaller is better.  * INTERACT_THRESH:	Threshhold for placement on the current runq.  */
+comment|/*  * These determine the interactivity of a process.  Interactivity differs from  * cpu utilization in that it expresses the voluntary time slept vs time ran  * while cpu utilization includes all time not running.  This more accurately  * models the intent of the thread.  *  * SLP_RUN_MAX:	Maximum amount of sleep time + run time we'll accumulate  *		before throttling back.  * SLP_RUN_FORK:	Maximum slp+run time to inherit at fork time.  * INTERACT_MAX:	Maximum interactivity value.  Smaller is better.  * INTERACT_THRESH:	Threshold for placement on the current runq.  */
 end_comment
 
 begin_define
@@ -670,7 +688,7 @@ specifier|static
 name|int
 name|static_boost
 init|=
-name|PRI_MIN_TIMESHARE
+name|PRI_MIN_BATCH
 decl_stmt|;
 end_decl_stmt
 
@@ -688,7 +706,7 @@ specifier|static
 name|int
 name|sched_idlespinthresh
 init|=
-literal|4
+literal|16
 decl_stmt|;
 end_decl_stmt
 
@@ -717,6 +735,11 @@ name|int
 name|tdq_load
 decl_stmt|;
 comment|/* Aggregate load. */
+specifier|volatile
+name|int
+name|tdq_cpu_idle
+decl_stmt|;
+comment|/* cpu_idle() is active. */
 name|int
 name|tdq_sysload
 decl_stmt|;
@@ -1938,18 +1961,18 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* 	 * If we're realtime or better and there is timeshare or worse running 	 * preempt only remote processors. 	 */
+comment|/* 	 * If we're interactive or better and there is non-interactive 	 * or worse running preempt only remote processors. 	 */
 if|if
 condition|(
 name|remote
 operator|&&
 name|pri
 operator|<=
-name|PRI_MAX_REALTIME
+name|PRI_MAX_INTERACT
 operator|&&
 name|cpri
 operator|>
-name|PRI_MAX_REALTIME
+name|PRI_MAX_INTERACT
 condition|)
 return|return
 operator|(
@@ -1968,7 +1991,7 @@ begin_define
 define|#
 directive|define
 name|TS_RQ_PPQ
-value|(((PRI_MAX_TIMESHARE - PRI_MIN_TIMESHARE) + 1) / RQ_NQS)
+value|(((PRI_MAX_BATCH - PRI_MIN_BATCH) + 1) / RQ_NQS)
 end_define
 
 begin_comment
@@ -2057,8 +2080,8 @@ block|}
 if|if
 condition|(
 name|pri
-operator|<=
-name|PRI_MAX_REALTIME
+operator|<
+name|PRI_MIN_BATCH
 condition|)
 block|{
 name|ts
@@ -2076,7 +2099,7 @@ if|if
 condition|(
 name|pri
 operator|<=
-name|PRI_MAX_TIMESHARE
+name|PRI_MAX_BATCH
 condition|)
 block|{
 name|ts
@@ -2092,11 +2115,11 @@ name|KASSERT
 argument_list|(
 name|pri
 operator|<=
-name|PRI_MAX_TIMESHARE
+name|PRI_MAX_BATCH
 operator|&&
 name|pri
 operator|>=
-name|PRI_MIN_TIMESHARE
+name|PRI_MIN_BATCH
 argument_list|,
 operator|(
 literal|"Invalid priority %d on timeshare runq"
@@ -2126,7 +2149,7 @@ operator|=
 operator|(
 name|pri
 operator|-
-name|PRI_MIN_TIMESHARE
+name|PRI_MIN_BATCH
 operator|)
 operator|/
 name|TS_RQ_PPQ
@@ -3988,10 +4011,8 @@ name|low
 argument_list|)
 expr_stmt|;
 comment|/* 		 * IPI the target cpu to force it to reschedule with the new 		 * workload. 		 */
-name|ipi_selected
+name|ipi_cpu
 argument_list|(
-literal|1
-operator|<<
 name|TDQ_ID
 argument_list|(
 name|low
@@ -4486,6 +4507,11 @@ block|{
 comment|/* 		 * If the MD code has an idle wakeup routine try that before 		 * falling back to IPI. 		 */
 if|if
 condition|(
+operator|!
+name|tdq
+operator|->
+name|tdq_cpu_idle
+operator|||
 name|cpu_idle_wakeup
 argument_list|(
 name|cpu
@@ -4499,10 +4525,8 @@ name|tdq_ipipending
 operator|=
 literal|1
 expr_stmt|;
-name|ipi_selected
+name|ipi_cpu
 argument_list|(
-literal|1
-operator|<<
 name|cpu
 argument_list|,
 name|IPI_PREEMPT
@@ -5660,7 +5684,7 @@ name|td
 operator|->
 name|td_priority
 operator|>=
-name|PRI_MIN_TIMESHARE
+name|PRI_MIN_BATCH
 argument_list|,
 operator|(
 literal|"tdq_choose: Invalid priority on timeshare queue %d"
@@ -5879,28 +5903,11 @@ operator|=
 name|smp_topo
 argument_list|()
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|MAXCPU
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|CPU_ABSENT
+name|CPU_FOREACH
 argument_list|(
-name|i
+argument|i
 argument_list|)
-condition|)
-continue|continue;
+block|{
 name|tdq
 operator|=
 name|TDQ_CPU
@@ -6320,9 +6327,12 @@ name|pri
 decl_stmt|;
 if|if
 condition|(
+name|PRI_BASE
+argument_list|(
 name|td
 operator|->
 name|td_pri_class
+argument_list|)
 operator|!=
 name|PRI_TIMESHARE
 condition|)
@@ -6355,15 +6365,17 @@ condition|)
 block|{
 name|pri
 operator|=
-name|PRI_MIN_REALTIME
+name|PRI_MIN_INTERACT
 expr_stmt|;
 name|pri
 operator|+=
 operator|(
 operator|(
-name|PRI_MAX_REALTIME
+name|PRI_MAX_INTERACT
 operator|-
-name|PRI_MIN_REALTIME
+name|PRI_MIN_INTERACT
+operator|+
+literal|1
 operator|)
 operator|/
 name|sched_interact
@@ -6375,11 +6387,11 @@ name|KASSERT
 argument_list|(
 name|pri
 operator|>=
-name|PRI_MIN_REALTIME
+name|PRI_MIN_INTERACT
 operator|&&
 name|pri
 operator|<=
-name|PRI_MAX_REALTIME
+name|PRI_MAX_INTERACT
 argument_list|,
 operator|(
 literal|"sched_priority: invalid interactive priority %d score %d"
@@ -6429,11 +6441,11 @@ name|KASSERT
 argument_list|(
 name|pri
 operator|>=
-name|PRI_MIN_TIMESHARE
+name|PRI_MIN_BATCH
 operator|&&
 name|pri
 operator|<=
-name|PRI_MAX_TIMESHARE
+name|PRI_MAX_BATCH
 argument_list|,
 operator|(
 literal|"sched_priority: invalid priority %d: nice %d, "
@@ -7330,9 +7342,6 @@ name|u_char
 name|prio
 parameter_list|)
 block|{
-name|u_char
-name|oldprio
-decl_stmt|;
 name|td
 operator|->
 name|td_base_user_pri
@@ -7343,23 +7352,11 @@ if|if
 condition|(
 name|td
 operator|->
-name|td_flags
-operator|&
-name|TDF_UBORROWING
-operator|&&
-name|td
-operator|->
-name|td_user_pri
+name|td_lend_user_pri
 operator|<=
 name|prio
 condition|)
 return|return;
-name|oldprio
-operator|=
-name|td
-operator|->
-name|td_user_pri
-expr_stmt|;
 name|td
 operator|->
 name|td_user_pri
@@ -7382,9 +7379,6 @@ name|u_char
 name|prio
 parameter_list|)
 block|{
-name|u_char
-name|oldprio
-decl_stmt|;
 name|THREAD_LOCK_ASSERT
 argument_list|(
 name|td
@@ -7392,88 +7386,61 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+name|td
+operator|->
+name|td_lend_user_pri
+operator|=
+name|prio
+expr_stmt|;
+name|td
+operator|->
+name|td_user_pri
+operator|=
+name|min
+argument_list|(
+name|prio
+argument_list|,
+name|td
+operator|->
+name|td_base_user_pri
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|td
+operator|->
+name|td_priority
+operator|>
+name|td
+operator|->
+name|td_user_pri
+condition|)
+name|sched_prio
+argument_list|(
+name|td
+argument_list|,
+name|td
+operator|->
+name|td_user_pri
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|td
+operator|->
+name|td_priority
+operator|!=
+name|td
+operator|->
+name|td_user_pri
+condition|)
 name|td
 operator|->
 name|td_flags
 operator||=
-name|TDF_UBORROWING
+name|TDF_NEEDRESCHED
 expr_stmt|;
-name|oldprio
-operator|=
-name|td
-operator|->
-name|td_user_pri
-expr_stmt|;
-name|td
-operator|->
-name|td_user_pri
-operator|=
-name|prio
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|sched_unlend_user_prio
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|u_char
-name|prio
-parameter_list|)
-block|{
-name|u_char
-name|base_pri
-decl_stmt|;
-name|THREAD_LOCK_ASSERT
-argument_list|(
-name|td
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
-name|base_pri
-operator|=
-name|td
-operator|->
-name|td_base_user_pri
-expr_stmt|;
-if|if
-condition|(
-name|prio
-operator|>=
-name|base_pri
-condition|)
-block|{
-name|td
-operator|->
-name|td_flags
-operator|&=
-operator|~
-name|TDF_UBORROWING
-expr_stmt|;
-name|sched_user_prio
-argument_list|(
-name|td
-argument_list|,
-name|base_pri
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|sched_lend_user_prio
-argument_list|(
-name|td
-argument_list|,
-name|prio
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -7732,6 +7699,15 @@ name|td_oncpu
 operator|=
 name|NOCPU
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|SW_PREEMPT
+operator|)
+condition|)
 name|td
 operator|->
 name|td_flags
@@ -7816,6 +7792,39 @@ name|SRQ_OURSELF
 operator||
 name|SRQ_YIELDING
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+if|if
+condition|(
+name|THREAD_CAN_MIGRATE
+argument_list|(
+name|td
+argument_list|)
+operator|&&
+operator|!
+name|THREAD_CAN_SCHED
+argument_list|(
+name|td
+argument_list|,
+name|ts
+operator|->
+name|ts_cpu
+argument_list|)
+condition|)
+name|ts
+operator|->
+name|ts_cpu
+operator|=
+name|sched_pickcpu
+argument_list|(
+name|td
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ts
@@ -7834,6 +7843,31 @@ name|srqflag
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|KASSERT
+argument_list|(
+name|THREAD_CAN_MIGRATE
+argument_list|(
+name|td
+argument_list|)
+operator|||
+operator|(
+name|ts
+operator|->
+name|ts_flags
+operator|&
+name|TSF_BOUND
+operator|)
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"Thread %p shouldn't migrate"
+operator|,
+name|td
+operator|)
+argument_list|)
+expr_stmt|;
 name|mtx
 operator|=
 name|sched_switch_migrate
@@ -7845,6 +7879,7 @@ argument_list|,
 name|srqflag
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -8177,6 +8212,18 @@ name|TDF_CANSWAP
 expr_stmt|;
 if|if
 condition|(
+name|PRI_BASE
+argument_list|(
+name|td
+operator|->
+name|td_pri_class
+argument_list|)
+operator|!=
+name|PRI_TIMESHARE
+condition|)
+return|return;
+if|if
+condition|(
 name|static_boost
 operator|==
 literal|1
@@ -8471,7 +8518,7 @@ name|ts_flags
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Grab our parents cpu estimation information and priority. 	 */
+comment|/* 	 * Grab our parents cpu estimation information. 	 */
 name|ts2
 operator|->
 name|ts_ticks
@@ -8504,21 +8551,14 @@ name|ts
 operator|->
 name|ts_ftick
 expr_stmt|;
+comment|/* 	 * Do not inherit any borrowed priority from the parent. 	 */
 name|child
 operator|->
-name|td_user_pri
+name|td_priority
 operator|=
-name|td
-operator|->
-name|td_user_pri
-expr_stmt|;
 name|child
 operator|->
-name|td_base_user_pri
-operator|=
-name|td
-operator|->
-name|td_base_user_pri
+name|td_base_pri
 expr_stmt|;
 comment|/* 	 * And update interactivity score. 	 */
 name|ts2
@@ -9088,9 +9128,12 @@ condition|)
 return|return;
 if|if
 condition|(
+name|PRI_BASE
+argument_list|(
 name|td
 operator|->
 name|td_pri_class
+argument_list|)
 operator|==
 name|PRI_TIMESHARE
 condition|)
@@ -9150,7 +9193,8 @@ begin_function
 name|void
 name|sched_tick
 parameter_list|(
-name|void
+name|int
+name|cnt
 parameter_list|)
 block|{
 name|struct
@@ -9179,7 +9223,7 @@ name|ts
 operator|->
 name|ts_ticks
 operator|+=
-literal|1
+name|cnt
 operator|<<
 name|SCHED_TICK_SHIFT
 expr_stmt|;
@@ -9195,7 +9239,7 @@ name|ts_incrtick
 operator|=
 name|ticks
 expr_stmt|;
-comment|/* 	 * Update if we've exceeded our desired tick threshhold by over one 	 * second. 	 */
+comment|/* 	 * Update if we've exceeded our desired tick threshold by over one 	 * second. 	 */
 if|if
 condition|(
 name|ts
@@ -9973,9 +10017,11 @@ operator|(
 literal|0
 operator|)
 return|;
-name|thread_lock
+name|THREAD_LOCK_ASSERT
 argument_list|(
 name|td
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 if|if
@@ -10027,11 +10073,6 @@ operator|>>
 name|FSHIFT
 expr_stmt|;
 block|}
-name|thread_unlock
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|pctcpu
@@ -10061,9 +10102,6 @@ name|struct
 name|td_sched
 modifier|*
 name|ts
-decl_stmt|;
-name|int
-name|cpu
 decl_stmt|;
 name|THREAD_LOCK_ASSERT
 argument_list|(
@@ -10121,6 +10159,7 @@ name|td
 argument_list|)
 condition|)
 return|return;
+comment|/* 	 * Force a switch before returning to userspace.  If the 	 * target thread is not running locally send an ipi to force 	 * the issue. 	 */
 name|td
 operator|->
 name|td_flags
@@ -10129,45 +10168,15 @@ name|TDF_NEEDRESCHED
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|THREAD_CAN_MIGRATE
-argument_list|(
 name|td
-argument_list|)
-condition|)
-return|return;
-comment|/* 	 * Assign the new cpu and force a switch before returning to 	 * userspace.  If the target thread is not running locally send 	 * an ipi to force the issue. 	 */
-name|cpu
-operator|=
-name|ts
-operator|->
-name|ts_cpu
-expr_stmt|;
-name|ts
-operator|->
-name|ts_cpu
-operator|=
-name|sched_pickcpu
-argument_list|(
-name|td
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cpu
 operator|!=
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|curthread
 condition|)
-name|ipi_selected
+name|ipi_cpu
 argument_list|(
-literal|1
-operator|<<
-name|cpu
+name|ts
+operator|->
+name|ts_cpu
 argument_list|,
 name|IPI_PREEMPT
 argument_list|)
@@ -10208,6 +10217,17 @@ operator||
 name|MA_NOTRECURSED
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|td
+operator|==
+name|curthread
+argument_list|,
+operator|(
+literal|"sched_bind: can only bind curthread"
+operator|)
+argument_list|)
+expr_stmt|;
 name|ts
 operator|=
 name|td
@@ -10225,6 +10245,20 @@ condition|)
 name|sched_unbind
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|THREAD_CAN_MIGRATE
+argument_list|(
+name|td
+argument_list|)
+argument_list|,
+operator|(
+literal|"%p must be migratable"
+operator|,
+name|td
+operator|)
 argument_list|)
 expr_stmt|;
 name|ts
@@ -10287,6 +10321,17 @@ argument_list|(
 name|td
 argument_list|,
 name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|td
+operator|==
+name|curthread
+argument_list|,
+operator|(
+literal|"sched_unbind: can only bind curthread"
+operator|)
 argument_list|)
 expr_stmt|;
 name|ts
@@ -10412,19 +10457,10 @@ name|total
 operator|=
 literal|0
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<=
-name|mp_maxid
-condition|;
-name|i
-operator|++
-control|)
+name|CPU_FOREACH
+argument_list|(
+argument|i
+argument_list|)
 name|total
 operator|+=
 name|TDQ_CPU
@@ -10669,13 +10705,44 @@ name|tdq_load
 operator|==
 literal|0
 condition|)
+block|{
+name|tdq
+operator|->
+name|tdq_cpu_idle
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|tdq
+operator|->
+name|tdq_load
+operator|==
+literal|0
+condition|)
+block|{
 name|cpu_idle
 argument_list|(
 name|switchcnt
 operator|>
-literal|1
+name|sched_idlespinthresh
+operator|*
+literal|4
 argument_list|)
 expr_stmt|;
+name|tdq
+operator|->
+name|tdq_switchcnt
+operator|++
+expr_stmt|;
+block|}
+name|tdq
+operator|->
+name|tdq_cpu_idle
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|tdq
@@ -11086,7 +11153,11 @@ name|indent
 argument_list|,
 literal|""
 argument_list|,
+literal|1
+operator|+
 name|indent
+operator|/
+literal|2
 argument_list|,
 name|cg
 operator|->
@@ -11182,6 +11253,15 @@ argument_list|,
 literal|"</cpu>\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cg
+operator|->
+name|cg_flags
+operator|!=
+literal|0
+condition|)
+block|{
 name|sbuf_printf
 argument_list|(
 name|sb
@@ -11193,15 +11273,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cg
-operator|->
-name|cg_flags
-operator|!=
-literal|0
-condition|)
-block|{
 if|if
 condition|(
 operator|(
@@ -11218,7 +11289,26 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"<flag name=\"HTT\">HTT group</flag>\n"
+literal|"<flag name=\"HTT\">HTT group</flag>"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|cg
+operator|->
+name|cg_flags
+operator|&
+name|CG_FLAG_THREAD
+operator|)
+operator|!=
+literal|0
+condition|)
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"<flag name=\"THREAD\">THREAD group</flag>"
 argument_list|)
 expr_stmt|;
 if|if
@@ -11237,10 +11327,9 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"<flag name=\"THREAD\">SMT group</flag>\n"
+literal|"<flag name=\"SMT\">SMT group</flag>"
 argument_list|)
 expr_stmt|;
-block|}
 name|sbuf_printf
 argument_list|(
 name|sb
@@ -11248,6 +11337,7 @@ argument_list|,
 literal|"</flags>\n"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|cg

@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"rc4.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"crypto.h"
 end_include
 
@@ -111,7 +105,7 @@ directive|endif
 end_endif
 
 begin_function
-name|void
+name|int
 name|md4_vector
 parameter_list|(
 name|size_t
@@ -182,6 +176,9 @@ argument_list|,
 name|mac
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -312,14 +309,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|EAP_TLS_FUNCS
-end_ifdef
-
 begin_function
-name|void
+name|int
 name|md5_vector
 parameter_list|(
 name|size_t
@@ -390,11 +381,14 @@ argument_list|,
 name|mac
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|sha1_vector
 parameter_list|(
 name|size_t
@@ -465,6 +459,9 @@ argument_list|,
 name|mac
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -737,12 +734,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIG_TLS_INTERNAL
-end_ifdef
 
 begin_struct
 struct|struct
@@ -2128,6 +2119,11 @@ name|key
 parameter_list|,
 name|size_t
 name|len
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|passwd
 parameter_list|)
 block|{
 name|int
@@ -3142,7 +3138,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|EAP_FAST
+name|CONFIG_MODEXP
 end_ifdef
 
 begin_function
@@ -3354,25 +3350,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EAP_FAST */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CONFIG_TLS_INTERNAL */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EAP_TLS_FUNCS */
+comment|/* CONFIG_MODEXP */
 end_comment
 
 end_unit

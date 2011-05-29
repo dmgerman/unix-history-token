@@ -1683,6 +1683,15 @@ operator|->
 name|bst
 operator|.
 name|state
+operator|&=
+operator|~
+name|SMBATT_BS_DISCHARGING
+expr_stmt|;
+name|sc
+operator|->
+name|bst
+operator|.
+name|state
 operator||=
 name|ACPI_BATT_STAT_CHARGING
 expr_stmt|;

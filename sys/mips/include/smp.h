@@ -21,6 +21,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<machine/pcb.h>
+end_include
+
 begin_comment
 comment|/*  * Interprocessor interrupts for SMP.  */
 end_comment
@@ -53,11 +59,48 @@ name|IPI_STOP_HARD
 value|0x0008
 end_define
 
+begin_define
+define|#
+directive|define
+name|IPI_PREEMPT
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_HARDCLOCK
+value|0x0020
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|LOCORE
 end_ifndef
+
+begin_function_decl
+name|void
+name|ipi_all_but_self
+parameter_list|(
+name|int
+name|ipi
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ipi_cpu
+parameter_list|(
+name|int
+name|cpu
+parameter_list|,
+name|u_int
+name|ipi
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -90,6 +133,15 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pcb
+name|stoppcbs
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

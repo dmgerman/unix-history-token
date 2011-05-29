@@ -45,6 +45,11 @@ name|resource
 modifier|*
 name|sc_memr
 decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|sc_intr
+decl_stmt|;
 name|bus_space_tag_t
 name|sc_bt
 decl_stmt|;
@@ -57,6 +62,13 @@ name|sc_version
 decl_stmt|;
 name|int
 name|sc_rid
+decl_stmt|;
+name|int
+name|sc_irq
+decl_stmt|;
+name|void
+modifier|*
+name|sc_icookie
 decl_stmt|;
 name|u_int
 name|sc_ncpu
@@ -84,9 +96,11 @@ end_comment
 
 begin_function_decl
 name|int
-name|openpic_attach
+name|openpic_common_attach
 parameter_list|(
 name|device_t
+parameter_list|,
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -94,6 +108,22 @@ end_function_decl
 begin_comment
 comment|/*  * PIC interface.  */
 end_comment
+
+begin_function_decl
+name|void
+name|openpic_bind
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|u_int
+name|irq
+parameter_list|,
+name|cpumask_t
+name|cpumask
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

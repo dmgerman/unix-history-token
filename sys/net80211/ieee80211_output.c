@@ -165,17 +165,36 @@ directive|include
 file|<net80211/ieee80211_mesh.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|INET
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+end_if
 
 begin_include
 include|#
 directive|include
 file|<netinet/in.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_include
 include|#
@@ -1486,6 +1505,20 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX */
 block|}
+elseif|else
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_state
+operator|==
+name|IEEE80211_S_SCAN
+condition|)
+name|senderr
+argument_list|(
+name|EIO
+argument_list|)
+expr_stmt|;
 comment|/* XXX bypass bridge, pfil, carp, etc. */
 if|if
 condition|(
@@ -13570,7 +13603,7 @@ name|adjust
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|IEEE80211_SUPERG_SUPPORT
+name|IEEE80211_SUPPORT_SUPERG
 name|bo
 operator|->
 name|bo_ath
@@ -13581,7 +13614,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|IEEE80211_TDMA_SUPPORT
+name|IEEE80211_SUPPORT_TDMA
 name|bo
 operator|->
 name|bo_tdma
@@ -13592,7 +13625,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|IEEE80211_MESH_SUPPORT
+name|IEEE80211_SUPPORT_MESH
 name|bo
 operator|->
 name|bo_meshconf
@@ -13824,7 +13857,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|IEEE80211_SUPERG_SUPPORT
+name|IEEE80211_SUPPORT_SUPERG
 name|bo
 operator|->
 name|bo_ath
@@ -13839,7 +13872,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|IEEE80211_TDMA_SUPPORT
+name|IEEE80211_SUPPORT_TDMA
 name|bo
 operator|->
 name|bo_tdma
@@ -13854,7 +13887,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|IEEE80211_MESH_SUPPORT
+name|IEEE80211_SUPPORT_MESH
 name|bo
 operator|->
 name|bo_meshconf

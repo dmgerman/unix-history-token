@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: socks.c,v 1.17 2006/09/25 04:51:20 ray Exp $	*/
+comment|/*	$OpenBSD: socks.c,v 1.19 2011/02/12 15:54:18 okan Exp $	*/
 end_comment
 
 begin_comment
@@ -888,7 +888,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"write failed (%d/3)"
+literal|"write failed (%zu/3)"
 argument_list|,
 name|cnt
 argument_list|)
@@ -916,7 +916,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"read failed (%d/3)"
+literal|"read failed (%zu/3)"
 argument_list|,
 name|cnt
 argument_list|)
@@ -1211,7 +1211,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"write failed (%d/%d)"
+literal|"write failed (%zu/%zu)"
 argument_list|,
 name|cnt
 argument_list|,
@@ -1228,20 +1228,20 @@ name|proxyfd
 argument_list|,
 name|buf
 argument_list|,
-literal|10
+literal|4
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|cnt
 operator|!=
-literal|10
+literal|4
 condition|)
 name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"read failed (%d/10)"
+literal|"read failed (%zu/4)"
 argument_list|,
 name|cnt
 argument_list|)
@@ -1267,6 +1267,91 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+switch|switch
+condition|(
+name|buf
+index|[
+literal|3
+index|]
+condition|)
+block|{
+case|case
+name|SOCKS_IPV4
+case|:
+name|cnt
+operator|=
+name|atomicio
+argument_list|(
+name|read
+argument_list|,
+name|proxyfd
+argument_list|,
+name|buf
+operator|+
+literal|4
+argument_list|,
+literal|6
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cnt
+operator|!=
+literal|6
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"read failed (%zd/6)"
+argument_list|,
+name|cnt
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|SOCKS_IPV6
+case|:
+name|cnt
+operator|=
+name|atomicio
+argument_list|(
+name|read
+argument_list|,
+name|proxyfd
+argument_list|,
+name|buf
+operator|+
+literal|4
+argument_list|,
+literal|18
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cnt
+operator|!=
+literal|18
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"read failed (%zd/18)"
+argument_list|,
+name|cnt
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"connection failed, unsupported address type"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -1386,7 +1471,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"write failed (%d/%d)"
+literal|"write failed (%zu/%zu)"
 argument_list|,
 name|cnt
 argument_list|,
@@ -1416,7 +1501,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"read failed (%d/8)"
+literal|"read failed (%zu/8)"
 argument_list|,
 name|cnt
 argument_list|)
@@ -1588,7 +1673,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"write failed (%d/%d)"
+literal|"write failed (%zu/%d)"
 argument_list|,
 name|cnt
 argument_list|,
@@ -1750,7 +1835,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"write failed (%d/%d)"
+literal|"write failed (%zu/%d)"
 argument_list|,
 name|cnt
 argument_list|,

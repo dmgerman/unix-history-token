@@ -860,7 +860,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"`%s': must be between %d and %d"
+literal|"%s: must be between %d and %d"
 argument_list|,
 name|buf
 argument_list|,
@@ -877,29 +877,13 @@ operator|)
 name|l
 return|;
 block|}
-elseif|else
-if|if
-condition|(
-name|errno
-condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"`%s': must be between %ld and %ld"
+literal|"%s: parameter must be an integer"
 argument_list|,
-name|LONG_MIN
-argument_list|,
-name|LONG_MAX
-argument_list|)
-expr_stmt|;
-block|}
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"`%s': parameter must be an integer"
+name|buf
 argument_list|)
 expr_stmt|;
 block|}

@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_inet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_inet6.h"
 end_include
 
@@ -45,12 +51,6 @@ begin_include
 include|#
 directive|include
 file|"opt_pf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_carp.h"
 end_include
 
 begin_include
@@ -119,6 +119,16 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_comment
+comment|/*  * While this file provides the domain and protocol switch tables for IPv4, it  * also provides the sysctl node declarations for net.inet.* often shared with  * IPv6 for common features or by upper layer protocols.  In case of no IPv4  * support compile out everything but these sysctl nodes.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -154,11 +164,45 @@ directive|include
 file|<net/vnet.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<netinet/in.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_include
 include|#
@@ -327,22 +371,15 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEV_CARP
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_carp.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|inet
+argument_list|,
+literal|"Internet Protocol version 4"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -803,11 +840,6 @@ operator|.
 name|pr_ctloutput
 operator|=
 name|rip_ctloutput
-block|,
-operator|.
-name|pr_init
-operator|=
-name|icmp_init
 block|,
 operator|.
 name|pr_usrreqs
@@ -1371,62 +1403,6 @@ block|,
 endif|#
 directive|endif
 comment|/* DEV_PFSYNC */
-ifdef|#
-directive|ifdef
-name|DEV_CARP
-block|{
-operator|.
-name|pr_type
-operator|=
-name|SOCK_RAW
-block|,
-operator|.
-name|pr_domain
-operator|=
-operator|&
-name|inetdomain
-block|,
-operator|.
-name|pr_protocol
-operator|=
-name|IPPROTO_CARP
-block|,
-operator|.
-name|pr_flags
-operator|=
-name|PR_ATOMIC
-operator||
-name|PR_ADDR
-block|,
-operator|.
-name|pr_input
-operator|=
-name|carp_input
-block|,
-operator|.
-name|pr_output
-operator|=
-operator|(
-name|pr_output_t
-operator|*
-operator|)
-name|rip_output
-block|,
-operator|.
-name|pr_ctloutput
-operator|=
-name|rip_ctloutput
-block|,
-operator|.
-name|pr_usrreqs
-operator|=
-operator|&
-name|rip_usrreqs
-block|}
-block|,
-endif|#
-directive|endif
-comment|/* DEV_CARP */
 comment|/* Spacer n-times for loadable protocols. */
 name|IPPROTOSPACER
 block|,
@@ -1629,6 +1605,15 @@ name|inet
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_expr_stmt
 name|SYSCTL_NODE
@@ -1914,35 +1899,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"PFSYNC"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEV_CARP
-end_ifdef
-
-begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(
-name|_net_inet
-argument_list|,
-name|IPPROTO_CARP
-argument_list|,
-name|carp
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-literal|0
-argument_list|,
-literal|"CARP"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

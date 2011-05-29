@@ -2184,6 +2184,8 @@ begin_decl_stmt
 name|class
 name|free_list
 block|{
+name|public
+label|:
 typedef|typedef
 name|size_t
 modifier|*
@@ -2208,6 +2210,8 @@ typedef|typedef
 name|__mutex
 name|__mutex_type
 typedef|;
+name|private
+label|:
 struct|struct
 name|_LT_pointer_compare
 block|{

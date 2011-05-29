@@ -386,17 +386,24 @@ name|ace_t
 modifier|*
 name|ace
 decl_stmt|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 name|nentries
-operator|>=
+operator|<
 literal|1
-argument_list|,
-operator|(
-literal|"empty ZFS ACL"
-operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"acl_from_aces: empty ZFS ACL; returning EINVAL.\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|nentries

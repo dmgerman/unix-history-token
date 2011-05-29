@@ -572,7 +572,7 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|int
+name|u_int
 name|order
 parameter_list|,
 specifier|const

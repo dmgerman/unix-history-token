@@ -147,6 +147,9 @@ decl_stmt|;
 name|size_t
 name|bufsize
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|xpt_open
@@ -340,6 +343,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|free
 argument_list|(
 name|ccb
@@ -360,7 +367,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -545,8 +552,6 @@ name|bufsize
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|i
 decl_stmt|;
 comment|/* mpt(4) only handles devices on bus 0. */
 if|if
@@ -794,7 +799,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|i
+name|error
 operator|=
 name|errno
 expr_stmt|;
@@ -818,7 +823,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|i
+name|error
 operator|)
 return|;
 block|}
@@ -2007,13 +2012,13 @@ decl_stmt|;
 name|size_t
 name|bufsize
 decl_stmt|;
-name|u_int
-name|i
-decl_stmt|;
 name|int
 name|count
 decl_stmt|,
 name|error
+decl_stmt|;
+name|uint32_t
+name|i
 decl_stmt|;
 if|if
 condition|(
@@ -2233,7 +2238,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|i
+name|error
 operator|=
 name|errno
 expr_stmt|;
@@ -2257,7 +2262,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|i
+name|error
 operator|)
 return|;
 block|}
@@ -2458,6 +2463,17 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ioc2
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|errno
+operator|)
+return|;
 name|disks
 operator|=
 name|calloc

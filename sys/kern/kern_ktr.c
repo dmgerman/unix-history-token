@@ -173,7 +173,7 @@ begin_define
 define|#
 directive|define
 name|KTR_MASK
-value|(KTR_GEN)
+value|(0)
 end_define
 
 begin_endif
@@ -236,6 +236,16 @@ directive|endif
 end_endif
 
 begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|ktr
+argument_list|,
+literal|"Kernel support for KTR kernel tracing facility"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
 name|_debug
@@ -288,7 +298,7 @@ name|ktr_cpumask
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Bitmask of CPUs on which KTR logging is enabled"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -328,7 +338,7 @@ name|ktr_mask
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Bitmask of KTR event classes for which logging is enabled"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -357,7 +367,7 @@ name|ktr_compile
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Bitmask of KTR event classes compiled into the kernel"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -386,7 +396,7 @@ name|ktr_entries
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of entries in the KTR buffer"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -415,7 +425,7 @@ name|ktr_version
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Version of the KTR interface"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -993,15 +1003,13 @@ name|ale
 init|=
 name|NULL
 decl_stmt|;
-else|#
-directive|else
+endif|#
+directive|endif
 name|int
 name|newindex
 decl_stmt|,
 name|saveindex
 decl_stmt|;
-endif|#
-directive|endif
 if|#
 directive|if
 name|defined
@@ -1096,7 +1104,10 @@ name|KTR_ALQ
 if|if
 condition|(
 name|ktr_alq_enabled
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|td
 operator|->
 name|td_critnest
@@ -1168,11 +1179,16 @@ name|ae_data
 expr_stmt|;
 block|}
 else|else
+block|{
 goto|goto
 name|done
 goto|;
-else|#
-directive|else
+block|}
+block|}
+else|else
+endif|#
+directive|endif
+block|{
 do|do
 block|{
 name|saveindex
@@ -1217,8 +1233,7 @@ index|[
 name|saveindex
 index|]
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 name|entry
 operator|->
 name|ktr_timestamp
@@ -1403,6 +1418,8 @@ directive|ifdef
 name|KTR_ALQ
 if|if
 condition|(
+name|ktr_alq_enabled
+operator|&&
 name|ale
 condition|)
 name|alq_post
@@ -1520,6 +1537,11 @@ literal|1
 expr_stmt|;
 name|db_ktr_verbose
 operator|=
+literal|0
+expr_stmt|;
+name|db_ktr_verbose
+operator||=
+operator|(
 name|index
 argument_list|(
 name|modif
@@ -1528,7 +1550,30 @@ literal|'v'
 argument_list|)
 operator|!=
 name|NULL
+operator|)
+condition|?
+literal|2
+else|:
+literal|0
 expr_stmt|;
+name|db_ktr_verbose
+operator||=
+operator|(
+name|index
+argument_list|(
+name|modif
+argument_list|,
+literal|'V'
+argument_list|)
+operator|!=
+name|NULL
+operator|)
+condition|?
+literal|1
+else|:
+literal|0
+expr_stmt|;
+comment|/* just timestap please */
 if|if
 condition|(
 name|index
@@ -1681,11 +1726,13 @@ expr_stmt|;
 if|if
 condition|(
 name|db_ktr_verbose
+operator|>=
+literal|1
 condition|)
 block|{
 name|db_printf
 argument_list|(
-literal|" %10.10lld %s.%d"
+literal|" %10.10lld"
 argument_list|,
 operator|(
 name|long
@@ -1694,6 +1741,19 @@ operator|)
 name|kp
 operator|->
 name|ktr_timestamp
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|db_ktr_verbose
+operator|>=
+literal|2
+condition|)
+block|{
+name|db_printf
+argument_list|(
+literal|" %s.%d"
 argument_list|,
 name|kp
 operator|->

@@ -194,6 +194,29 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sparc64__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/ofw/openfirm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/ofw_machdep.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -393,6 +416,13 @@ define|#
 directive|define
 name|MPT_ROLE_DEFAULT
 value|MPT_ROLE_INITIATOR
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPT_INI_ID_NONE
+value|-1
 end_define
 
 begin_comment
@@ -1623,7 +1653,7 @@ comment|/* Completion status */
 name|uint16_t
 name|ResponseCode
 decl_stmt|;
-comment|/* TMF Reponse Code */
+comment|/* TMF Response Code */
 name|uint16_t
 name|serno
 decl_stmt|;
@@ -2474,10 +2504,6 @@ name|port_facts
 decl_stmt|;
 define|#
 directive|define
-name|mpt_ini_id
-value|port_facts[0].PortSCSIID
-define|#
-directive|define
 name|mpt_max_tgtcmds
 value|port_facts[0].MaxPostedCmdBuffers
 comment|/* 	 * Device Configuration Information 	 */
@@ -2506,6 +2532,9 @@ name|_dev_page1
 index|[
 literal|16
 index|]
+decl_stmt|;
+name|int
+name|_ini_id
 decl_stmt|;
 name|uint16_t
 name|_tag_enable
@@ -2536,6 +2565,10 @@ define|#
 directive|define
 name|mpt_dev_page1
 value|cfg.spi._dev_page1
+define|#
+directive|define
+name|mpt_ini_id
+value|cfg.spi._ini_id
 define|#
 directive|define
 name|mpt_tag_enable
@@ -2676,7 +2709,7 @@ name|void
 modifier|*
 name|ih
 decl_stmt|;
-comment|/* Interupt handle */
+comment|/* Interrupt handle */
 name|struct
 name|mpt_pci_cfg
 name|pci_cfg
@@ -2762,6 +2795,10 @@ name|uint32_t
 name|max_seg_cnt
 decl_stmt|;
 comment|/* calculated after IOC facts */
+name|uint32_t
+name|max_cam_seg_cnt
+decl_stmt|;
+comment|/* calculated from MAXPHYS*/
 comment|/* 	 * Hardware management 	 */
 name|u_int
 name|reset_cnt
@@ -3995,17 +4032,6 @@ value|256
 end_define
 
 begin_comment
-comment|/* Max i/o size, based on legacy MAXPHYS.  Can be increased. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MPT_MAXPHYS
-value|(128 * 1024)
-end_define
-
-begin_comment
 comment|/*  * Must be less than 16384 in order for target mode to work  */
 end_comment
 
@@ -4250,7 +4276,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/************************** Scatter Gather Managment **************************/
+comment|/************************** Scatter Gather Management **************************/
 end_comment
 
 begin_comment
@@ -4482,7 +4508,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|do {						 \ 	if (level<= (mpt)->debug_level)	 \ 		mpt_prtc(mpt, __VA_ARGS__);	 \ } while (0)
+value|do {						\ 	if (level<= (mpt)->verbose)		\ 		mpt_prtc(mpt, __VA_ARGS__);	\ } while (0)
 end_define
 
 begin_else
@@ -4782,6 +4808,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|static
 name|__inline
@@ -4810,50 +4841,6 @@ modifier|*
 parameter_list|,
 name|request_t
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|__inline
-name|void
-name|mpt_req_spcl
-parameter_list|(
-name|struct
-name|mpt_softc
-modifier|*
-parameter_list|,
-name|request_t
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|__inline
-name|void
-name|mpt_req_not_spcl
-parameter_list|(
-name|struct
-name|mpt_softc
-modifier|*
-parameter_list|,
-name|request_t
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4967,6 +4954,56 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+end_ifdef
+
+begin_function_decl
+specifier|static
+name|__inline
+name|void
+name|mpt_req_spcl
+parameter_list|(
+name|struct
+name|mpt_softc
+modifier|*
+parameter_list|,
+name|request_t
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|__inline
+name|void
+name|mpt_req_not_spcl
+parameter_list|(
+name|struct
+name|mpt_softc
+modifier|*
+parameter_list|,
+name|request_t
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Make sure that req *is* part of one of the special lists  */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD backend for core files which use the ptrace_user structure    Copyright 1993, 1994, 1995, 1996, 1998, 1999, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.    The structure of this file is based on trad-core.c written by John Gilmore    of Cygnus Support.    Modified to work with the ptrace_user structure by Kevin A. Buettner.    (Longterm it may be better to merge this file with trad-core.c)  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD backend for core files which use the ptrace_user structure    Copyright 1993, 1994, 1995, 1996, 1998, 1999, 2001, 2002, 2003, 2004,    2006, 2007  Free Software Foundation, Inc.    The structure of this file is based on trad-core.c written by John Gilmore    of Cygnus Support.    Modified to work with the ptrace_user structure by Kevin A. Buettner.    (Longterm it may be better to merge this file with trad-core.c)  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifdef
@@ -12,13 +12,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -164,23 +164,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|bfd_boolean
+begin_define
+define|#
+directive|define
 name|ptrace_unix_core_file_matches_executable_p
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|core_bfd
-operator|,
-name|bfd
-operator|*
-name|exec_bfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+value|generic_core_file_matches_executable_p
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -222,6 +211,9 @@ name|rawptr
 decl_stmt|;
 name|bfd_size_type
 name|amt
+decl_stmt|;
+name|flagword
+name|flags
 decl_stmt|;
 name|val
 operator|=
@@ -322,16 +314,26 @@ name|u
 expr_stmt|;
 comment|/*Copy the uarea into the tdata part of the bfd */
 comment|/* Create the sections.  */
+name|flags
+operator|=
+name|SEC_ALLOC
+operator|+
+name|SEC_LOAD
+operator|+
+name|SEC_HAS_CONTENTS
+expr_stmt|;
 name|core_stacksec
 argument_list|(
 name|abfd
 argument_list|)
 operator|=
-name|bfd_make_section_anyway
+name|bfd_make_section_anyway_with_flags
 argument_list|(
 name|abfd
 argument_list|,
 literal|".stack"
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -351,11 +353,13 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|=
-name|bfd_make_section_anyway
+name|bfd_make_section_anyway_with_flags
 argument_list|(
 name|abfd
 argument_list|,
 literal|".data"
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -375,11 +379,13 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|=
-name|bfd_make_section_anyway
+name|bfd_make_section_anyway_with_flags
 argument_list|(
 name|abfd
 argument_list|,
 literal|".reg"
+argument_list|,
+name|SEC_HAS_CONTENTS
 argument_list|)
 expr_stmt|;
 if|if
@@ -395,47 +401,12 @@ goto|goto
 name|fail
 goto|;
 comment|/* FIXME:  Need to worry about shared memory, library data, and library      text.  I don't think that any of these things are supported on the      system on which I am developing this for though.  */
-name|core_stacksec
-argument_list|(
-name|abfd
-argument_list|)
-operator|->
-name|flags
-operator|=
-name|SEC_ALLOC
-operator|+
-name|SEC_LOAD
-operator|+
-name|SEC_HAS_CONTENTS
-expr_stmt|;
 name|core_datasec
 argument_list|(
 name|abfd
 argument_list|)
 operator|->
-name|flags
-operator|=
-name|SEC_ALLOC
-operator|+
-name|SEC_LOAD
-operator|+
-name|SEC_HAS_CONTENTS
-expr_stmt|;
-name|core_regsec
-argument_list|(
-name|abfd
-argument_list|)
-operator|->
-name|flags
-operator|=
-name|SEC_HAS_CONTENTS
-expr_stmt|;
-name|core_datasec
-argument_list|(
-name|abfd
-argument_list|)
-operator|->
-name|_raw_size
+name|size
 operator|=
 name|u
 operator|.
@@ -446,7 +417,7 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|->
-name|_raw_size
+name|size
 operator|=
 name|u
 operator|.
@@ -457,7 +428,7 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|->
-name|_raw_size
+name|size
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -679,32 +650,6 @@ name|sig_num
 return|;
 block|}
 end_function
-
-begin_function
-name|bfd_boolean
-name|ptrace_unix_core_file_matches_executable_p
-parameter_list|(
-name|core_bfd
-parameter_list|,
-name|exec_bfd
-parameter_list|)
-name|bfd
-modifier|*
-name|core_bfd
-decl_stmt|,
-decl|*
-name|exec_bfd
-decl_stmt|;
-end_function
-
-begin_block
-block|{
-comment|/* FIXME: Use pt_timdat field of the ptrace_user structure to match      the date of the executable */
-return|return
-name|TRUE
-return|;
-block|}
-end_block
 
 begin_escape
 end_escape

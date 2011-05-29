@@ -251,6 +251,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPILE_ONLY
+end_ifndef
+
 begin_function_decl
 name|private
 name|void
@@ -292,12 +298,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|COMPILE_ONLY
-end_ifndef
 
 begin_function_decl
 name|private
@@ -609,6 +609,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPILE_ONLY
+end_ifndef
+
 begin_function
 name|private
 name|int
@@ -727,6 +733,11 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|public
@@ -936,6 +947,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPILE_ONLY
+end_ifndef
+
 begin_function
 name|private
 name|void
@@ -1113,12 +1130,6 @@ directive|endif
 block|}
 block|}
 end_function
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|COMPILE_ONLY
-end_ifndef
 
 begin_comment
 comment|/*  * find type of descriptor  */
@@ -1748,6 +1759,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* COMPILE_ONLY */
+end_comment
 
 begin_function
 name|public

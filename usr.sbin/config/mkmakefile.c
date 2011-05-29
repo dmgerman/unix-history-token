@@ -305,6 +305,19 @@ expr|*
 name|fp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"calloc"
+argument_list|)
+expr_stmt|;
 name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -324,12 +337,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Build the makefile from the skeleton  */
+comment|/*  * Open the correct Makefile and return it, or error out.  */
 end_comment
 
 begin_function
-name|void
-name|makefile
+name|FILE
+modifier|*
+name|open_makefile_template
 parameter_list|(
 name|void
 parameter_list|)
@@ -337,9 +351,6 @@ block|{
 name|FILE
 modifier|*
 name|ifp
-decl_stmt|,
-modifier|*
-name|ofp
 decl_stmt|;
 name|char
 name|line
@@ -347,20 +358,6 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-name|struct
-name|opt
-modifier|*
-name|op
-decl_stmt|,
-modifier|*
-name|t
-decl_stmt|;
-name|int
-name|versreq
-decl_stmt|;
-name|read_files
-argument_list|()
-expr_stmt|;
 name|snprintf
 argument_list|(
 name|line
@@ -430,6 +427,54 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ifp
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Build the makefile from the skeleton  */
+end_comment
+
+begin_function
+name|void
+name|makefile
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|FILE
+modifier|*
+name|ifp
+decl_stmt|,
+modifier|*
+name|ofp
+decl_stmt|;
+name|char
+name|line
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
+name|struct
+name|opt
+modifier|*
+name|op
+decl_stmt|,
+modifier|*
+name|t
+decl_stmt|;
+name|read_files
+argument_list|()
+expr_stmt|;
+name|ifp
+operator|=
+name|open_makefile_template
+argument_list|()
+expr_stmt|;
 name|ofp
 operator|=
 name|fopen
@@ -467,6 +512,24 @@ argument_list|,
 literal|"KERN_IDENT=%s\n"
 argument_list|,
 name|ident
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|ofp
+argument_list|,
+literal|"MACHINE=%s\n"
+argument_list|,
+name|machinename
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|ofp
+argument_list|,
+literal|"MACHINE_ARCH=%s\n"
+argument_list|,
+name|machinearch
 argument_list|)
 expr_stmt|;
 name|SLIST_FOREACH_SAFE
@@ -691,129 +754,19 @@ name|line
 argument_list|,
 literal|"%VERSREQ="
 argument_list|,
-sizeof|sizeof
-argument_list|(
-literal|"%VERSREQ="
-argument_list|)
-operator|-
-literal|1
+literal|9
 argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-name|versreq
-operator|=
-name|atoi
-argument_list|(
 name|line
-operator|+
-sizeof|sizeof
-argument_list|(
-literal|"%VERSREQ="
-argument_list|)
-operator|-
-literal|1
-argument_list|)
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
-if|if
-condition|(
-name|MAJOR_VERS
-argument_list|(
-name|versreq
-argument_list|)
-operator|!=
-name|MAJOR_VERS
-argument_list|(
-name|CONFIGVERS
-argument_list|)
-operator|||
-name|versreq
-operator|>
-name|CONFIGVERS
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"ERROR: version of config(8) does not match kernel!\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"config version = %d, "
-argument_list|,
-name|CONFIGVERS
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"version required = %d\n\n"
-argument_list|,
-name|versreq
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Make sure that /usr/src/usr.sbin/config is in sync\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"with your /usr/src/sys and install a new config binary\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"before trying this again.\n\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"If running the new config fails check your config\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"file against the GENERIC or LINT config files for\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"changes in config syntax, or option/device naming\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"conventions\n\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-block|}
+comment|/* handled elsewhere */
 else|else
 name|fprintf
 argument_list|(
@@ -1563,6 +1516,11 @@ decl_stmt|,
 modifier|*
 name|warning
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|objprefix
+decl_stmt|;
 name|int
 name|compile
 decl_stmt|,
@@ -1610,7 +1568,7 @@ argument_list|)
 expr_stmt|;
 name|next
 label|:
-comment|/* 	 * include "filename" 	 * filename    [ standard | mandatory | optional ] 	 *	[ dev* [ | dev* ... ] | profiling-routine ] [ no-obj ] 	 *	[ compile-with "compile rule" [no-implicit-rule] ] 	 *      [ dependency "dependency-list"] [ before-depend ] 	 *	[ clean "file-list"] [ warning "text warning" ] 	 */
+comment|/* 	 * include "filename" 	 * filename    [ standard | mandatory | optional ] 	 *	[ dev* [ | dev* ... ] | profiling-routine ] [ no-obj ] 	 *	[ compile-with "compile rule" [no-implicit-rule] ] 	 *      [ dependency "dependency-list"] [ before-depend ] 	 *	[ clean "file-list"] [ warning "text warning" ] 	 *	[ obj-prefix "file prefix"] 	 */
 name|wd
 operator|=
 name|get_word
@@ -1708,8 +1666,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: missing include filename.\n"
 argument_list|,
 name|fname
@@ -1790,8 +1750,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: No type for %s.\n"
 argument_list|,
 name|fname
@@ -1866,6 +1828,10 @@ name|filetype
 operator|=
 name|NORMAL
 expr_stmt|;
+name|objprefix
+operator|=
+literal|""
+expr_stmt|;
 if|if
 condition|(
 name|eq
@@ -1910,11 +1876,15 @@ literal|"optional"
 argument_list|)
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"%s: %s must be optional, mandatory or standard\n"
+name|stderr
+argument_list|,
+literal|"%s: \"%s\" %s must be optional, mandatory or standard\n"
 argument_list|,
 name|fname
+argument_list|,
+name|wd
 argument_list|,
 name|this
 argument_list|)
@@ -1977,8 +1947,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: syntax error describing %s\n"
 argument_list|,
 name|fname
@@ -2042,8 +2014,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: alternate rule required when "
 literal|"\"no-implicit-rule\" is specified.\n"
 argument_list|,
@@ -2099,8 +2073,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: %s missing compile command string.\n"
 argument_list|,
 name|fname
@@ -2149,8 +2125,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: %s missing clean file list.\n"
 argument_list|,
 name|fname
@@ -2199,8 +2177,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: %s missing compile command string.\n"
 argument_list|,
 name|fname
@@ -2249,8 +2229,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: %s missing warning text string.\n"
 argument_list|,
 name|fname
@@ -2265,6 +2247,56 @@ argument_list|)
 expr_stmt|;
 block|}
 name|warning
+operator|=
+name|ns
+argument_list|(
+name|wd
+argument_list|)
+expr_stmt|;
+goto|goto
+name|nextparam
+goto|;
+block|}
+if|if
+condition|(
+name|eq
+argument_list|(
+name|wd
+argument_list|,
+literal|"obj-prefix"
+argument_list|)
+condition|)
+block|{
+name|next_quoted_word
+argument_list|(
+name|fp
+argument_list|,
+name|wd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wd
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: %s missing object prefix string.\n"
+argument_list|,
+name|fname
+argument_list|,
+name|this
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|objprefix
 operator|=
 name|ns
 argument_list|(
@@ -2385,8 +2417,10 @@ condition|(
 name|mandatory
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: mandatory device \"%s\" not found\n"
 argument_list|,
 name|fname
@@ -2405,8 +2439,10 @@ condition|(
 name|std
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"standard entry %s has a device keyword - %s!\n"
 argument_list|,
 name|this
@@ -2468,8 +2504,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: what is %s optional on?\n"
 argument_list|,
 name|fname
@@ -2488,8 +2526,10 @@ condition|(
 name|wd
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: syntax error describing %s\n"
 argument_list|,
 name|fname
@@ -2596,6 +2636,12 @@ operator|->
 name|f_warn
 operator|=
 name|warning
+expr_stmt|;
+name|tp
+operator|->
+name|f_objprefix
+operator|=
+name|objprefix
 expr_stmt|;
 goto|goto
 name|next
@@ -3055,6 +3101,15 @@ name|cp
 operator|=
 literal|'o'
 expr_stmt|;
+name|len
+operator|+=
+name|strlen
+argument_list|(
+name|tp
+operator|->
+name|f_objprefix
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|len
@@ -3080,7 +3135,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%s "
+literal|"%s%s "
+argument_list|,
+name|tp
+operator|->
+name|f_objprefix
 argument_list|,
 name|sp
 argument_list|)
@@ -3433,6 +3492,12 @@ name|char
 modifier|*
 name|compilewith
 decl_stmt|;
+name|char
+name|cmd
+index|[
+literal|128
+index|]
+decl_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
 argument|ftp
@@ -3448,8 +3513,10 @@ name|ftp
 operator|->
 name|f_warn
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"WARNING: %s\n"
 argument_list|,
 name|ftp
@@ -3500,7 +3567,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%s: %s\n"
+literal|"%s%s: %s\n"
+argument_list|,
+name|ftp
+operator|->
+name|f_objprefix
 argument_list|,
 name|np
 argument_list|,
@@ -3514,7 +3585,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%s: \n"
+literal|"%s%s: \n"
+argument_list|,
+name|ftp
+operator|->
+name|f_objprefix
 argument_list|,
 name|np
 argument_list|)
@@ -3538,7 +3613,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%so:\n\t-cp $S/%so .\n\n"
+literal|"%s%so:\n\t-cp $S/%so .\n\n"
+argument_list|,
+name|ftp
+operator|->
+name|f_objprefix
 argument_list|,
 name|tail
 argument_list|(
@@ -3561,7 +3640,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%sln: $S/%s%c %s\n"
+literal|"%s%sln: $S/%s%c %s\n"
+argument_list|,
+name|ftp
+operator|->
+name|f_objprefix
 argument_list|,
 name|tail
 argument_list|(
@@ -3588,7 +3671,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%so: $S/%s%c %s\n"
+literal|"%s%so: $S/%s%c %s\n"
+argument_list|,
+name|ftp
+operator|->
+name|f_objprefix
 argument_list|,
 name|tail
 argument_list|(
@@ -3611,7 +3698,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%sln: $S/%s%c\n"
+literal|"%s%sln: $S/%s%c\n"
+argument_list|,
+name|ftp
+operator|->
+name|f_objprefix
 argument_list|,
 name|tail
 argument_list|(
@@ -3634,7 +3725,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%so: $S/%s%c\n"
+literal|"%s%so: $S/%s%c\n"
+argument_list|,
+name|ftp
+operator|->
+name|f_objprefix
 argument_list|,
 name|tail
 argument_list|(
@@ -3668,13 +3763,6 @@ name|ftype
 init|=
 name|NULL
 decl_stmt|;
-specifier|static
-name|char
-name|cmd
-index|[
-literal|128
-index|]
-decl_stmt|;
 switch|switch
 condition|(
 name|ftp
@@ -3705,8 +3793,10 @@ literal|"PROFILE"
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"config: don't know rules for %s\n"
 argument_list|,
 name|np
@@ -3723,7 +3813,7 @@ argument_list|(
 name|cmd
 argument_list|)
 argument_list|,
-literal|"${%s_%c%s}\n.if defined(NORMAL_CTFCONVERT)&& !empty(NORMAL_CTFCONVERT)\n\t${NORMAL_CTFCONVERT}\n.endif"
+literal|"${%s_%c%s}\n\t@${NORMAL_CTFCONVERT}"
 argument_list|,
 name|ftype
 argument_list|,
@@ -3753,6 +3843,27 @@ name|cp
 operator|=
 name|och
 expr_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|ftp
+operator|->
+name|f_objprefix
+argument_list|)
+condition|)
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"\t%s $S/%s\n\n"
+argument_list|,
+name|compilewith
+argument_list|,
+name|np
+argument_list|)
+expr_stmt|;
+else|else
 name|fprintf
 argument_list|(
 name|f

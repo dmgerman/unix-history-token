@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001-2008, by Cisco Systems, Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2001-2008, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -364,7 +364,7 @@ comment|/* rw */
 end_comment
 
 begin_comment
-comment|/* explict EOR signalling */
+comment|/* explicit EOR signalling */
 end_comment
 
 begin_define
@@ -450,12 +450,19 @@ begin_comment
 comment|/* ro */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SCTP_TIMEOUTS
+value|0x00000106
+end_define
+
 begin_comment
 comment|/*  * user socket options: BSD implementation specific  */
 end_comment
 
 begin_comment
-comment|/*  * Blocking I/O is enabled on any TCP type socket by default. For the UDP  * model if this is turned on then the socket buffer is shared for send  * resources amongst all associations.  The default for the UDP model is that  * is SS_NBIO is set.  Which means all associations have a seperate send  * limit BUT they will NOT ever BLOCK instead you will get an error back  * EAGAIN if you try to send to much. If you want the blocking symantics you  * set this option at the cost of sharing one socket send buffer size amongst  * all associations. Peeled off sockets turn this option off and block. But  * since both TCP and peeled off sockets have only one assoc per socket this  * is fine. It probably does NOT make sense to set this on SS_NBIO on a TCP  * model OR peeled off UDP model, but we do allow you to do so. You just use  * the normal syscall to toggle SS_NBIO the way you want.  *  * Blocking I/O is controled by the SS_NBIO flag on the socket state so_state  * field.  */
+comment|/*  * Blocking I/O is enabled on any TCP type socket by default. For the UDP  * model if this is turned on then the socket buffer is shared for send  * resources amongst all associations.  The default for the UDP model is that  * is SS_NBIO is set.  Which means all associations have a separate send  * limit BUT they will NOT ever BLOCK instead you will get an error back  * EAGAIN if you try to send too much. If you want the blocking semantics you  * set this option at the cost of sharing one socket send buffer size amongst  * all associations. Peeled off sockets turn this option off and block. But  * since both TCP and peeled off sockets have only one assoc per socket this  * is fine. It probably does NOT make sense to set this on SS_NBIO on a TCP  * model OR peeled off UDP model, but we do allow you to do so. You just use  * the normal syscall to toggle SS_NBIO the way you want.  *  * Blocking I/O is controlled by the SS_NBIO flag on the socket state so_state  * field.  */
 end_comment
 
 begin_comment
@@ -510,17 +517,6 @@ value|0x00001201
 end_define
 
 begin_comment
-comment|/* EY - NR_SACK on/off socket option */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_NR_SACK_ON_OFF
-value|0x00001300
-end_define
-
-begin_comment
 comment|/* JRS - Pluggable Congestion Control Socket option */
 end_comment
 
@@ -530,6 +526,35 @@ directive|define
 name|SCTP_PLUGGABLE_CC
 value|0x00001202
 end_define
+
+begin_comment
+comment|/* RS - Pluggable Stream Scheduling Socket option */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_PLUGGABLE_SS
+value|0x00001203
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_SS_VALUE
+value|0x00001204
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_CC_OPTION
+value|0x00001205
+end_define
+
+begin_comment
+comment|/* Options for CC 							 * modules */
+end_comment
 
 begin_comment
 comment|/* read only */
@@ -564,7 +589,7 @@ value|0x00001105
 end_define
 
 begin_comment
-comment|/* Special hook for dynamically setting primary for all assoc's,  * this is a write only option that requires root privledge.  */
+comment|/* Special hook for dynamically setting primary for all assoc's,  * this is a write only option that requires root privilege.  */
 end_comment
 
 begin_define
@@ -575,7 +600,7 @@ value|0x00002001
 end_define
 
 begin_comment
-comment|/* VRF (virtual router feature) and multi-VRF support  * options. VRF's provide splits within a router  * that give the views of multiple routers. A  * standard host, without VRF support, is just  * a single VRF. If VRF's are supported then  * the transport must be VRF aware. This means  * that every socket call coming in must be directed  * within the endpoint to one of the VRF's it belongs  * to. The endpoint, before binding, may select  * the "default" VRF it is in by using a set socket  * option with SCTP_VRF_ID. This will also  * get propegated to the default VRF. Once the  * endpoint binds an address then it CANNOT add  * additional VRF's to become a Multi-VRF endpoint.  *  * Before BINDING additional VRF's can be added with  * the SCTP_ADD_VRF_ID call or deleted with  * SCTP_DEL_VRF_ID.  *  * Associations are ALWAYS contained inside a single  * VRF. They cannot reside in two (or more) VRF's. Incoming  * packets, assuming the router is VRF aware, can always  * tell us what VRF they arrived on. A host not supporting  * any VRF's will find that the packets always arrived on the  * single VRF that the host has.  *  */
+comment|/* VRF (virtual router feature) and multi-VRF support  * options. VRF's provide splits within a router  * that give the views of multiple routers. A  * standard host, without VRF support, is just  * a single VRF. If VRF's are supported then  * the transport must be VRF aware. This means  * that every socket call coming in must be directed  * within the endpoint to one of the VRF's it belongs  * to. The endpoint, before binding, may select  * the "default" VRF it is in by using a set socket  * option with SCTP_VRF_ID. This will also  * get propagated to the default VRF. Once the  * endpoint binds an address then it CANNOT add  * additional VRF's to become a Multi-VRF endpoint.  *  * Before BINDING additional VRF's can be added with  * the SCTP_ADD_VRF_ID call or deleted with  * SCTP_DEL_VRF_ID.  *  * Associations are ALWAYS contained inside a single  * VRF. They cannot reside in two (or more) VRF's. Incoming  * packets, assuming the router is VRF aware, can always  * tell us what VRF they arrived on. A host not supporting  * any VRF's will find that the packets always arrived on the  * single VRF that the host has.  *  */
 end_comment
 
 begin_define
@@ -794,6 +819,150 @@ define|#
 directive|define
 name|SCTP_CC_HTCP
 value|0x00000002
+end_define
+
+begin_comment
+comment|/* RTCC Congestion Control - RFC2581 plus */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_CC_RTCC
+value|0x00000003
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_CC_OPT_RTCC_SETMODE
+value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_CC_OPT_USE_DCCC_ECN
+value|0x00002001
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_CC_OPT_STEADY_STEP
+value|0x00002002
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_CMT_OFF
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_CMT_BASE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_CMT_RPV1
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_CMT_RPV2
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_CMT_MPTCP
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_CMT_MAX
+value|SCTP_CMT_MPTCP
+end_define
+
+begin_comment
+comment|/* RS - Supported stream scheduling modules for pluggable  * stream scheduling  */
+end_comment
+
+begin_comment
+comment|/* Default simple round-robin */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_SS_DEFAULT
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* Real round-robin */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_SS_ROUND_ROBIN
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Real round-robin per packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_SS_ROUND_ROBIN_PACKET
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Priority */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_SS_PRIORITY
+value|0x00000003
+end_define
+
+begin_comment
+comment|/* Fair Bandwidth */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_SS_FAIR_BANDWITH
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* First-come, first-serve */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_SS_FIRST_COME
+value|0x00000005
 end_define
 
 begin_comment
@@ -1066,7 +1235,7 @@ value|0x0105
 end_define
 
 begin_comment
-comment|/*  * error cause parameters (user visisble)  */
+comment|/*  * error cause parameters (user visible)  */
 end_comment
 
 begin_struct
@@ -1439,6 +1608,24 @@ name|SCTP_PACKET_TRUNCATED
 value|0x04
 end_define
 
+begin_comment
+comment|/* Flag for ECN -CWR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_CWR_REDUCE_OVERRIDE
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_CWR_IN_SAME_WINDOW
+value|0x02
+end_define
+
 begin_define
 define|#
 directive|define
@@ -1661,6 +1848,13 @@ define|#
 directive|define
 name|SCTP_PCB_FLAGS_SOCKET_ALLGONE
 value|0x20000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_PCB_FLAGS_SOCKET_CANT_READ
+value|0x40000000
 end_define
 
 begin_comment

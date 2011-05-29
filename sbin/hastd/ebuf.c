@@ -109,7 +109,7 @@ end_struct
 begin_function_decl
 specifier|static
 name|int
-name|ebuf_head_extent
+name|ebuf_head_extend
 parameter_list|(
 name|struct
 name|ebuf
@@ -125,7 +125,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|ebuf_tail_extent
+name|ebuf_tail_extend
 parameter_list|(
 name|struct
 name|ebuf
@@ -358,7 +358,7 @@ block|{
 comment|/* 		 * We can't add more entries at the front, so we have to extend 		 * our buffer. 		 */
 if|if
 condition|(
-name|ebuf_head_extent
+name|ebuf_head_extend
 argument_list|(
 name|eb
 argument_list|,
@@ -488,7 +488,7 @@ block|{
 comment|/* 		 * We can't add more entries at the back, so we have to extend 		 * our buffer. 		 */
 if|if
 condition|(
-name|ebuf_tail_extent
+name|ebuf_tail_extend
 argument_list|(
 name|eb
 argument_list|,
@@ -528,7 +528,7 @@ operator|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If data is NULL the caller just wants to reserve place. 	 */
+comment|/* 	 * If data is NULL the caller just wants to reserve space. 	 */
 if|if
 condition|(
 name|data
@@ -765,7 +765,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|ebuf_head_extent
+name|ebuf_head_extend
 parameter_list|(
 name|struct
 name|ebuf
@@ -907,7 +907,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|ebuf_tail_extent
+name|ebuf_tail_extend
 parameter_list|(
 name|struct
 name|ebuf

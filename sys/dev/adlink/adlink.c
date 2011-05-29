@@ -1862,7 +1862,6 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* XXX why do we need INTR_MPSAFE if INTR_FAST was declared too?!?!? */
 name|i
 operator|=
 name|bus_setup_intr
@@ -1876,8 +1875,6 @@ index|[
 literal|2
 index|]
 argument_list|,
-name|INTR_MPSAFE
-operator||
 name|INTR_TYPE_MISC
 argument_list|,
 name|adlink_intr

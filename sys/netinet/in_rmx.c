@@ -390,19 +390,16 @@ operator|*
 operator|)
 name|rn
 decl_stmt|;
-comment|/*XXX locking? */
 if|if
 condition|(
 name|rt
-operator|&&
-name|rt
-operator|->
-name|rt_refcnt
-operator|==
-literal|0
 condition|)
 block|{
-comment|/* this is first reference */
+name|RT_LOCK
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rt
@@ -428,6 +425,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|RT_UNLOCK
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 name|rn
@@ -443,50 +445,22 @@ name|int
 argument_list|,
 name|rtq_reallyold
 argument_list|)
+operator|=
+literal|60
+operator|*
+literal|60
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
-argument_list|(
-name|int
-argument_list|,
-name|rtq_minreallyold
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
-argument_list|(
-name|int
-argument_list|,
-name|rtq_toomany
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/* one hour is "really old" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|V_rtq_reallyold
 value|VNET(rtq_reallyold)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_rtq_minreallyold
-value|VNET(rtq_minreallyold)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_rtq_toomany
-value|VNET(rtq_toomany)
 end_define
 
 begin_expr_stmt
@@ -513,6 +487,30 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* never automatically crank down to less */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|rtq_minreallyold
+argument_list|)
+operator|=
+literal|10
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_rtq_minreallyold
+value|VNET(rtq_minreallyold)
+end_define
+
 begin_expr_stmt
 name|SYSCTL_VNET_INT
 argument_list|(
@@ -536,6 +534,30 @@ literal|"Minimum time to attempt to hold onto dynamically learned routes"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* 128 cached routes is "too many" */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|rtq_toomany
+argument_list|)
+operator|=
+literal|128
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_rtq_toomany
+value|VNET(rtq_toomany)
+end_define
 
 begin_expr_stmt
 name|SYSCTL_VNET_INT
@@ -924,6 +946,8 @@ name|int
 argument_list|,
 name|rtq_timeout
 argument_list|)
+operator|=
+name|RTQ_TIMEOUT
 expr_stmt|;
 end_expr_stmt
 
@@ -1437,27 +1461,6 @@ return|return
 literal|1
 return|;
 comment|/* only do the rest for a real routing table */
-name|V_rtq_reallyold
-operator|=
-literal|60
-operator|*
-literal|60
-expr_stmt|;
-comment|/* one hour is "really old" */
-name|V_rtq_minreallyold
-operator|=
-literal|10
-expr_stmt|;
-comment|/* never automatically crank down to less */
-name|V_rtq_toomany
-operator|=
-literal|128
-expr_stmt|;
-comment|/* 128 cached routes is "too many" */
-name|V_rtq_timeout
-operator|=
-name|RTQ_TIMEOUT
-expr_stmt|;
 name|rnh
 operator|=
 operator|*
@@ -1642,12 +1645,29 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* 		 * We need to disable the automatic prune that happens 		 * in this case in rtrequest() because it will blow 		 * away the pointers that rn_walktree() needs in order 		 * continue our descent.  We will end up deleting all 		 * the routes that rtrequest() would have in any case, 		 * so that behavior is not needed there. 		 */
+comment|/* 		 * Aquire a reference so that it can later be freed 		 * as the refcount would be 0 here in case of at least 		 * ap->del. 		 */
+name|RT_ADDREF
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Disconnect it from the tree and permit protocols 		 * to cleanup. 		 */
 name|rtexpunge
 argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
+comment|/* 		 * At this point it is an rttrash node, and in case 		 * the above is the only reference we must free it. 		 * If we do not noone will have a pointer and the 		 * rtentry will be leaked forever. 		 * In case someone else holds a reference, we are 		 * fine as we only decrement the refcount. In that 		 * case if the other entity calls RT_REMREF, we 		 * will still be leaking but at least we tried. 		 */
+name|RTFREE_LOCKED
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|RT_UNLOCK
 argument_list|(

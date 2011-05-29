@@ -99,7 +99,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|OF_init
 parameter_list|(
 name|void
@@ -133,6 +133,17 @@ end_define
 
 begin_comment
 comment|/* Real-mode OF interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OFW_STD_32BIT
+value|"ofw_32bit"
+end_define
+
+begin_comment
+comment|/* 32-bit OF interface */
 end_comment
 
 begin_define

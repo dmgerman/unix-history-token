@@ -1370,9 +1370,10 @@ operator|==
 name|MSDOSFSROOT_OFS
 condition|)
 return|return
-name|EROFS
+operator|(
+name|EBUSY
+operator|)
 return|;
-comment|/* really? XXX */
 comment|/* 		 * Write access to directory required to delete files. 		 */
 name|error
 operator|=
@@ -1487,9 +1488,10 @@ operator|==
 name|MSDOSFSROOT_OFS
 condition|)
 return|return
-name|EROFS
+operator|(
+name|EBUSY
+operator|)
 return|;
-comment|/* really? XXX */
 name|error
 operator|=
 name|VOP_ACCESS
@@ -1967,6 +1969,13 @@ argument_list|(
 name|rdp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|rvp
+operator|!=
+name|vp
+condition|)
 name|vn_lock
 argument_list|(
 name|vp
@@ -1991,12 +2000,28 @@ name|error
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|rvp
+operator|==
+name|vp
+condition|)
+name|vunref
+argument_list|(
+operator|*
+name|rvp
+argument_list|)
+expr_stmt|;
+else|else
 name|vput
 argument_list|(
 operator|*
 name|rvp
 argument_list|)
 expr_stmt|;
+block|}
 name|error
 operator|=
 name|ENOENT

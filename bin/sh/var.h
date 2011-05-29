@@ -88,6 +88,17 @@ begin_comment
 comment|/* don't call the callback function */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VNOSET
+value|0x80
+end_define
+
+begin_comment
+comment|/* do not set variable - just readonly test */
+end_comment
+
 begin_struct
 struct|struct
 name|var
@@ -102,6 +113,10 @@ name|int
 name|flags
 decl_stmt|;
 comment|/* flags are defined above */
+name|int
+name|name_len
+decl_stmt|;
+comment|/* length of name */
 name|char
 modifier|*
 name|text
@@ -239,10 +254,36 @@ name|vhistsize
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|var
+name|vterm
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|localeisutf8
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The parser uses the locale that was in effect at startup. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|initial_localeisutf8
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * The following macros access the values of the above variables.  * They have to skip over the name.  They return the null string  * for unset variables.  */
@@ -334,6 +375,14 @@ parameter_list|()
 value|(vhistsize.text + 9)
 end_define
 
+begin_define
+define|#
+directive|define
+name|termval
+parameter_list|()
+value|(vterm.text + 5)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -398,6 +447,8 @@ parameter_list|(
 name|struct
 name|strlist
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -424,6 +475,42 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bltinsetlocale
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bltinunsetlocale
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|updatecharset
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|initcharset
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

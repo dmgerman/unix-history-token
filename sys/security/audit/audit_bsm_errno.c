@@ -2466,6 +2466,46 @@ argument_list|(
 literal|"Key was rejected by service"
 argument_list|)
 block|}
+block|,
+block|{
+name|BSM_ERRNO_ENOTCAPABLE
+block|,
+ifdef|#
+directive|ifdef
+name|ENOTCAPABLE
+name|ENOTCAPABLE
+block|,
+else|#
+directive|else
+name|ERRNO_NO_LOCAL_MAPPING
+block|,
+endif|#
+directive|endif
+name|ES
+argument_list|(
+literal|"Capabilities insufficient"
+argument_list|)
+block|}
+block|,
+block|{
+name|BSM_ERRNO_ECAPMODE
+block|,
+ifdef|#
+directive|ifdef
+name|ECAPMODE
+name|ECAPMODE
+block|,
+else|#
+directive|else
+name|ERRNO_NO_LOCAL_MAPPING
+block|,
+endif|#
+directive|endif
+name|ES
+argument_list|(
+literal|"Not permitted in capability mode"
+argument_list|)
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt

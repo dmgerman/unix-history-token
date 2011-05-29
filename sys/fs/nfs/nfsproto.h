@@ -173,6 +173,10 @@ begin_comment
 comment|/* Stat numbers for rpc returns (version 2, 3 and 4) */
 end_comment
 
+begin_comment
+comment|/*  * These numbers are hard-wired in the RFCs, so they can't be changed.  * The code currently assumes that the ones< 10000 are the same as  * sys/errno.h and that sys/errno.h will never go as high as 10000.  * If the value in sys/errno.h of any entry listed below is changed,  * the NFS code must be modified to do the mapping between them.  * (You can ignore NFSERR_WFLUSH, since it is never actually used.)  */
+end_comment
+
 begin_define
 define|#
 directive|define

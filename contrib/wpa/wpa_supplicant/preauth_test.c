@@ -42,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"wpa.h"
+file|"rsn_supp/wpa.h"
 end_include
 
 begin_include
@@ -78,13 +78,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"preauth.h"
+file|"rsn_supp/preauth.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"pmksa_cache.h"
+file|"rsn_supp/pmksa_cache.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"drivers/driver.h"
 end_include
 
 begin_decl_stmt
@@ -105,7 +111,7 @@ begin_decl_stmt
 name|struct
 name|wpa_driver_ops
 modifier|*
-name|wpa_supplicant_drivers
+name|wpa_drivers
 index|[]
 init|=
 block|{
@@ -369,6 +375,7 @@ name|void
 modifier|*
 name|ctx
 parameter_list|,
+name|enum
 name|wpa_states
 name|state
 parameter_list|)
@@ -391,6 +398,7 @@ end_function
 
 begin_function
 specifier|static
+name|enum
 name|wpa_states
 name|_wpa_supplicant_get_state
 parameter_list|(
@@ -553,6 +561,7 @@ name|void
 modifier|*
 name|wpa_s
 parameter_list|,
+name|enum
 name|wpa_alg
 name|alg
 parameter_list|,
@@ -1014,6 +1023,12 @@ name|wpa_s
 expr_stmt|;
 name|ctx
 operator|->
+name|msg_ctx
+operator|=
+name|wpa_s
+expr_stmt|;
+name|ctx
+operator|->
 name|set_state
 operator|=
 name|_wpa_supplicant_set_state
@@ -1247,10 +1262,6 @@ name|sig
 parameter_list|,
 name|void
 modifier|*
-name|eloop_ctx
-parameter_list|,
-name|void
-modifier|*
 name|signal_ctx
 parameter_list|)
 block|{
@@ -1259,7 +1270,7 @@ name|wpa_supplicant
 modifier|*
 name|wpa_s
 init|=
-name|eloop_ctx
+name|signal_ctx
 decl_stmt|;
 name|wpa_msg
 argument_list|(
@@ -1388,7 +1399,7 @@ return|;
 block|}
 if|if
 condition|(
-name|eap_peer_register_methods
+name|eap_register_methods
 argument_list|()
 condition|)
 block|{
@@ -1407,10 +1418,7 @@ block|}
 if|if
 condition|(
 name|eloop_init
-argument_list|(
-operator|&
-name|wpa_s
-argument_list|)
+argument_list|()
 condition|)
 block|{
 name|wpa_printf
@@ -1621,14 +1629,16 @@ name|eloop_register_signal_terminate
 argument_list|(
 name|eapol_test_terminate
 argument_list|,
-name|NULL
+operator|&
+name|wpa_s
 argument_list|)
 expr_stmt|;
 name|eloop_register_signal_reconfig
 argument_list|(
 name|eapol_test_terminate
 argument_list|,
-name|NULL
+operator|&
+name|wpa_s
 argument_list|)
 expr_stmt|;
 name|eloop_run

@@ -429,6 +429,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|nd6_defifindex
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -441,18 +451,10 @@ name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
-name|nd6_defifindex
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|VNET_DEFINE
-argument_list|(
-name|int
-argument_list|,
 name|ip6_use_tempaddr
 argument_list|)
+operator|=
+literal|0
 expr_stmt|;
 end_expr_stmt
 
@@ -473,6 +475,8 @@ name|u_int32_t
 argument_list|,
 name|ip6_temp_preferred_lifetime
 argument_list|)
+operator|=
+name|DEF_TEMP_PREFERRED_LIFETIME
 expr_stmt|;
 end_expr_stmt
 
@@ -483,6 +487,8 @@ name|u_int32_t
 argument_list|,
 name|ip6_temp_valid_lifetime
 argument_list|)
+operator|=
+name|DEF_TEMP_VALID_LIFETIME
 expr_stmt|;
 end_expr_stmt
 
@@ -493,6 +499,8 @@ name|int
 argument_list|,
 name|ip6_temp_regen_advance
 argument_list|)
+operator|=
+name|TEMPADDR_REGEN_ADVANCE
 expr_stmt|;
 end_expr_stmt
 

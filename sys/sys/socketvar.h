@@ -278,10 +278,14 @@ block|}
 modifier|*
 name|so_accf
 struct|;
+comment|/* 	 * so_fibnum, so_user_cookie and friends can be used to attach 	 * some user-specified metadata to a socket, which then can be 	 * used by the kernel for various actions. 	 * so_user_cookie is used by ipfw/dummynet. 	 */
 name|int
 name|so_fibnum
 decl_stmt|;
 comment|/* routing domain for this socket */
+name|uint32_t
+name|so_user_cookie
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -620,16 +624,6 @@ parameter_list|(
 name|so
 parameter_list|)
 value|do {							\ 	ACCEPT_LOCK_ASSERT();						\ 	SOCK_LOCK_ASSERT(so);						\ 	if ((so)->so_count<= 0)					\ 		panic("sorele");					\ 	if (--(so)->so_count == 0)					\ 		sofree(so);						\ 	else {								\ 		SOCK_UNLOCK(so);					\ 		ACCEPT_UNLOCK();					\ 	}								\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|sotryfree
-parameter_list|(
-name|so
-parameter_list|)
-value|do {						\ 	ACCEPT_LOCK_ASSERT();						\ 	SOCK_LOCK_ASSERT(so);						\ 	if ((so)->so_count == 0)					\ 		sofree(so);						\ 	else {								\ 		SOCK_UNLOCK(so);					\ 		ACCEPT_UNLOCK();					\ 	}								\ } while(0)
 end_define
 
 begin_comment

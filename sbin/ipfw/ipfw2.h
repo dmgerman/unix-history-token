@@ -215,6 +215,8 @@ name|TOK_IPID
 block|,
 name|TOK_IPPRECEDENCE
 block|,
+name|TOK_DSCP
+block|,
 name|TOK_IPTOS
 block|,
 name|TOK_IPTTL
@@ -349,6 +351,8 @@ block|,
 name|TOK_SETFIB
 block|,
 name|TOK_LOOKUP
+block|,
+name|TOK_SOCKARG
 block|, }
 enum|;
 end_enum
@@ -380,15 +384,15 @@ value|{if (!(*av)) errx(EX_USAGE, msg);}
 end_define
 
 begin_function_decl
-name|unsigned
-name|long
-name|long
-name|align_uint64
+name|int
+name|pr_u64
 parameter_list|(
-specifier|const
 name|uint64_t
 modifier|*
-name|pll
+name|pd
+parameter_list|,
+name|int
+name|width
 parameter_list|)
 function_decl|;
 end_function_decl

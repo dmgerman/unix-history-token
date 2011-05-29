@@ -4604,7 +4604,7 @@ expr_stmt|;
 comment|/* 	 * It seems that some hardwares doesn't provide 3.3V auxiliary 	 * supply(3VAUX) to drive PME such that checking PCI power 	 * management capability is necessary. 	 */
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->
@@ -4692,7 +4692,7 @@ block|}
 comment|/* 	 * Do MII setup. 	 */
 name|error
 operator|=
-name|mii_phy_probe
+name|mii_attach
 argument_list|(
 name|dev
 argument_list|,
@@ -4701,9 +4701,19 @@ name|sc
 operator|->
 name|nge_miibus
 argument_list|,
+name|ifp
+argument_list|,
 name|nge_mediachange
 argument_list|,
 name|nge_mediastatus
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|MII_PHY_ANY
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4717,7 +4727,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"no PHY found!\n"
+literal|"attaching PHYs failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -10959,13 +10969,6 @@ operator|->
 name|nge_miibus
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mii
-operator|->
-name|mii_instance
-condition|)
-block|{
 name|LIST_FOREACH
 argument_list|(
 argument|miisc
@@ -10974,12 +10977,11 @@ argument|&mii->mii_phys
 argument_list|,
 argument|mii_list
 argument_list|)
-name|mii_phy_reset
+name|PHY_RESET
 argument_list|(
 name|miisc
 argument_list|)
 expr_stmt|;
-block|}
 name|error
 operator|=
 name|mii_mediachg
@@ -12429,7 +12431,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->
@@ -12828,7 +12830,7 @@ name|nge_ifp
 expr_stmt|;
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->

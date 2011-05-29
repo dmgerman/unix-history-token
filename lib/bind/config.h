@@ -452,6 +452,14 @@ comment|/* #undef NEED_PTHREAD_SCOPE_SYSTEM */
 end_comment
 
 begin_comment
+comment|/* Define if building universal (internal helper macro) */
+end_comment
+
+begin_comment
+comment|/* #undef AC_APPLE_UNIVERSAL_BUILD */
+end_comment
+
+begin_comment
 comment|/* Define if recvmsg() does not meet all of the BSD socket API specifications.    */
 end_comment
 
@@ -484,6 +492,20 @@ comment|/* #undef FD_SETSIZE */
 end_comment
 
 begin_comment
+comment|/* Define to nothing if C supports flexible array members, and to 1 if it does    not. That way, with a declaration like `struct s { int n; double    d[FLEXIBLE_ARRAY_MEMBER]; };', the struct hack can be used with pre-C99    compilers. When computing the size of such an object, don't use 'sizeof    (struct s)' as it overestimates the size. Use 'offsetof (struct s, d)'    instead. Don't use 'offsetof (struct s, d[0])', as this doesn't work with    MSVC and with C++ compilers. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FLEXIBLE_ARRAY_MEMBER
+end_define
+
+begin_comment
+comment|/**/
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `chroot' function. */
 end_comment
 
@@ -493,6 +515,14 @@ directive|define
 name|HAVE_CHROOT
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<devpoll.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DEVPOLL_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<dlfcn.h> header file. */
@@ -564,6 +594,30 @@ directive|define
 name|HAVE_INTTYPES_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<kerberosv5/krb5.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_KERBEROSV5_KRB5_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<krb5.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_KRB5_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<krb5/krb5.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_KRB5_KRB5_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `c' library (-lc). */
@@ -881,6 +935,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to the sub-directory in which libtool stores uninstalled libraries.    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LT_OBJDIR
+value|".libs/"
+end_define
+
+begin_comment
 comment|/* Defined if extern char *optarg is not declared. */
 end_comment
 
@@ -937,6 +1002,17 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_TARNAME
+value|""
+end_define
+
+begin_comment
+comment|/* Define to the home page for this package. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKAGE_URL
 value|""
 end_define
 
@@ -1001,8 +1077,15 @@ comment|/* #undef WITH_IDN */
 end_comment
 
 begin_comment
-comment|/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most    significant byte first (like Motorola and SPARC, unlike Intel and VAX). */
+comment|/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most    significant byte first (like Motorola and SPARC, unlike Intel). */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+name|AC_APPLE_UNIVERSAL_BUILD
+end_if
 
 begin_if
 if|#
@@ -1018,17 +1101,30 @@ name|WORDS_BIGENDIAN
 value|1
 end_define
 
-begin_elif
-elif|#
-directive|elif
-operator|!
-name|defined
-name|__LITTLE_ENDIAN__
-end_elif
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WORDS_BIGENDIAN
+end_ifndef
 
 begin_comment
-comment|/* # undef WORDS_BIGENDIAN */
+comment|/* #  undef WORDS_BIGENDIAN */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

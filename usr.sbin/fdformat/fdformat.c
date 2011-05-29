@@ -315,8 +315,9 @@ operator|=
 name|secsize
 expr_stmt|;
 block|}
-if|if
-condition|(
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|fd
@@ -328,15 +329,6 @@ name|caddr_t
 operator|)
 operator|&
 name|f
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|err
-argument_list|(
-name|EX_OSERR
-argument_list|,
-literal|"ioctl(FD_FORM)"
 argument_list|)
 expr_stmt|;
 block|}

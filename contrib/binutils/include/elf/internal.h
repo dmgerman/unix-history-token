@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ELF support for BFD.    Copyright 1991, 1992, 1993, 1994, 1995, 1997, 1998, 2000, 2001, 2002    Free Software Foundation, Inc.     Written by Fred Fish @ Cygnus Support, from information published    in "UNIX System V Release 4, Programmers Guide: ANSI C and    Programming Support Tools".  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ELF support for BFD.    Copyright 1991, 1992, 1993, 1994, 1995, 1997, 1998, 2000, 2001, 2002,    2003, 2006, 2007 Free Software Foundation, Inc.     Written by Fred Fish @ Cygnus Support, from information published    in "UNIX System V Release 4, Programmers Guide: ANSI C and    Programming Support Tools".  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -709,6 +709,14 @@ comment|/* Program segment physical address.  */
 name|bfd_vma
 name|p_paddr
 decl_stmt|;
+comment|/* Program segment virtual address offset from section vma.  */
+name|bfd_vma
+name|p_vaddr_offset
+decl_stmt|;
+comment|/* Program segment alignment.  */
+name|bfd_vma
+name|p_align
+decl_stmt|;
 comment|/* Whether the p_flags field is valid; if not, the flags are based      on the section flags.  */
 name|unsigned
 name|int
@@ -720,6 +728,13 @@ comment|/* Whether the p_paddr field is valid; if not, the physical address     
 name|unsigned
 name|int
 name|p_paddr_valid
+range|:
+literal|1
+decl_stmt|;
+comment|/* Whether the p_align field is valid; if not, PT_LOAD segment      alignment is based on the default maximum page size.  */
+name|unsigned
+name|int
+name|p_align_valid
 range|:
 literal|1
 decl_stmt|;
@@ -753,6 +768,78 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* .tbss is special.  It doesn't contribute memory space to normal    segments and it doesn't take file space in normal segments.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELF_SECTION_SIZE
+parameter_list|(
+name|sec_hdr
+parameter_list|,
+name|segment
+parameter_list|)
+define|\
+value|(((sec_hdr->sh_flags& SHF_TLS) == 0				\      || sec_hdr->sh_type != SHT_NOBITS				\      || segment->p_type == PT_TLS) ? sec_hdr->sh_size : 0)
+end_define
+
+begin_comment
+comment|/* Decide if the given sec_hdr is in the given segment.  PT_TLS segment    contains only SHF_TLS sections.  Only PT_LOAD and PT_TLS segments    can contain SHF_TLS sections.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELF_IS_SECTION_IN_SEGMENT
+parameter_list|(
+name|sec_hdr
+parameter_list|,
+name|segment
+parameter_list|)
+define|\
+value|(((((sec_hdr->sh_flags& SHF_TLS) != 0)				\&& (segment->p_type == PT_TLS					\ 	 || segment->p_type == PT_LOAD))				\     || ((sec_hdr->sh_flags& SHF_TLS) == 0				\&& segment->p_type != PT_TLS))					\
+comment|/* Any section besides one of type SHT_NOBITS must have a file	\       offset within the segment.  */
+value|\&& (sec_hdr->sh_type == SHT_NOBITS					\        || ((bfd_vma) sec_hdr->sh_offset>= segment->p_offset		\&& (sec_hdr->sh_offset + ELF_SECTION_SIZE(sec_hdr, segment)	\<= segment->p_offset + segment->p_filesz)))		\
+comment|/* SHF_ALLOC sections must have VMAs within the segment.  */
+value|\&& ((sec_hdr->sh_flags& SHF_ALLOC) == 0				\        || (sec_hdr->sh_addr>= segment->p_vaddr				\&& (sec_hdr->sh_addr + ELF_SECTION_SIZE(sec_hdr, segment)	\<= segment->p_vaddr + segment->p_memsz))))
+end_define
+
+begin_comment
+comment|/* Decide if the given sec_hdr is in the given segment in file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELF_IS_SECTION_IN_SEGMENT_FILE
+parameter_list|(
+name|sec_hdr
+parameter_list|,
+name|segment
+parameter_list|)
+define|\
+value|(sec_hdr->sh_size> 0						\&& ELF_IS_SECTION_IN_SEGMENT (sec_hdr, segment))
+end_define
+
+begin_comment
+comment|/* Decide if the given sec_hdr is in the given segment in memory.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELF_IS_SECTION_IN_SEGMENT_MEMORY
+parameter_list|(
+name|sec_hdr
+parameter_list|,
+name|segment
+parameter_list|)
+define|\
+value|(ELF_SECTION_SIZE(sec_hdr, segment)> 0			\&& ELF_IS_SECTION_IN_SEGMENT (sec_hdr, segment))
+end_define
 
 begin_endif
 endif|#

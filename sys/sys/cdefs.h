@@ -142,13 +142,6 @@ name|__GNUCLIKE___SECTION
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|__GNUCLIKE_ATTRIBUTE_MODE_DI
-value|1
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1414,6 +1407,53 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|__GNUC_PREREQ__
+argument_list|(
+literal|4
+operator|,
+literal|2
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__hidden
+value|__attribute__((__visibility__("hidden")))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__exported
+value|__attribute__((__visibility__("default")))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__hidden
+end_define
+
+begin_define
+define|#
+directive|define
+name|__exported
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * We define this here since<stddef.h>,<sys/queue.h>, and<sys/types.h>  * require it.  */
 end_comment
@@ -1841,6 +1881,26 @@ end_endif
 begin_comment
 comment|/* __GNUC__ || __INTEL_COMPILER */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|__GLOBL1
+parameter_list|(
+name|sym
+parameter_list|)
+value|__asm__(".globl " #sym)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__GLOBL
+parameter_list|(
+name|sym
+parameter_list|)
+value|__GLOBL1(sym)
+end_define
 
 begin_if
 if|#

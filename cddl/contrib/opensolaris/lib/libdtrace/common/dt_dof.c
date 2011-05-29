@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -4850,25 +4843,6 @@ operator|->
 name|ddo_secs
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
-name|ssize
-operator|==
-sizeof|sizeof
-argument_list|(
-name|h
-argument_list|)
-operator|+
-sizeof|sizeof
-argument_list|(
-name|dof_sec_t
-argument_list|)
-operator|*
-name|ddo
-operator|->
-name|ddo_nsecs
-argument_list|)
-expr_stmt|;
 name|h
 operator|.
 name|dofh_loadsz
@@ -5004,6 +4978,25 @@ operator|.
 name|dofs_type
 operator|==
 name|DOF_SECT_STRTAB
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|ssize
+operator|==
+sizeof|sizeof
+argument_list|(
+name|h
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|dof_sec_t
+argument_list|)
+operator|*
+name|ddo
+operator|->
+name|ddo_nsecs
 argument_list|)
 expr_stmt|;
 name|sp

@@ -492,11 +492,10 @@ operator|&
 name|netoring
 argument_list|)
 expr_stmt|;
-name|longjmp
+name|ExitString
 argument_list|(
-name|peerdied
+literal|"Connection closed by foreign host.\n"
 argument_list|,
-operator|-
 literal|1
 argument_list|)
 expr_stmt|;

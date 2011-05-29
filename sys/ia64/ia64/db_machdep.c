@@ -116,12 +116,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/pcb.h>
 end_include
 
@@ -2275,10 +2269,7 @@ if|if
 condition|(
 name|bsp
 operator|>=
-name|IA64_RR_BASE
-argument_list|(
-literal|5
-argument_list|)
+name|VM_MAXUSER_ADDRESS
 condition|)
 block|{
 for|for
@@ -2384,10 +2375,7 @@ if|if
 condition|(
 name|sp
 operator|<
-name|IA64_RR_BASE
-argument_list|(
-literal|5
-argument_list|)
+name|VM_MAXUSER_ADDRESS
 condition|)
 break|break;
 name|tf
@@ -2421,10 +2409,7 @@ name|tf_special
 operator|.
 name|iip
 operator|<
-name|IA64_RR_BASE
-argument_list|(
-literal|5
-argument_list|)
+name|VM_MAXUSER_ADDRESS
 condition|)
 break|break;
 comment|/* XXX ask if we should unwind across the trapframe. */
@@ -3903,7 +3888,68 @@ name|pcpu
 modifier|*
 name|pc
 parameter_list|)
-block|{ }
+block|{
+name|struct
+name|pcpu_md
+modifier|*
+name|md
+init|=
+operator|&
+name|pc
+operator|->
+name|pc_md
+decl_stmt|;
+name|db_printf
+argument_list|(
+literal|"MD: vhpt     = %#lx\n"
+argument_list|,
+name|md
+operator|->
+name|vhpt
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"MD: lid      = %#lx\n"
+argument_list|,
+name|md
+operator|->
+name|lid
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"MD: clock    = %#lx/%#lx\n"
+argument_list|,
+name|md
+operator|->
+name|clock
+argument_list|,
+name|md
+operator|->
+name|clockadj
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"MD: stats    = %p\n"
+argument_list|,
+operator|&
+name|md
+operator|->
+name|stats
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"MD: pmap     = %p\n"
+argument_list|,
+name|md
+operator|->
+name|current_pmap
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function

@@ -491,7 +491,7 @@ value|(1<<5)
 end_define
 
 begin_comment
-comment|/**************************************************************************  * These are the registers for the 3Com 3c509 and their bit patterns when *  * applicable.  They have been taken out the the "EtherLink III Parallel  *  * Tasking EISA and ISA Technical Reference" "Beta Draft 10/30/92" manual *  * from 3com.								  *  **************************************************************************/
+comment|/**************************************************************************  * These are the registers for the 3Com 3c509 and their bit patterns when *  * applicable.  They have been taken out the "EtherLink III Parallel  *  * Tasking EISA and ISA Technical Reference" "Beta Draft 10/30/92" manual *  * from 3com.								  *  **************************************************************************/
 end_comment
 
 begin_define

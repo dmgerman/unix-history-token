@@ -284,6 +284,24 @@ end_define
 
 begin_function_decl
 name|HAL_BOOL
+name|ar5416InitCalHardware
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_channel
+modifier|*
+name|chan
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|HAL_BOOL
 name|ar5416InitCal
 parameter_list|(
 name|struct

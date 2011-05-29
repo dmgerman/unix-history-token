@@ -172,6 +172,16 @@ directive|include
 file|<geom/journal/g_journal.h>
 end_include
 
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|geom_journal
+argument_list|,
+literal|"GEOM journaling support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * On-disk journal format:  *  * JH - Journal header  * RH - Record header  *  * %%%%%% ****** +------+ +------+     ****** +------+     %%%%%%  * % JH % * RH * | Data | | Data | ... * RH * | Data | ... % JH % ...  * %%%%%% ****** +------+ +------+     ****** +------+     %%%%%%  *  */
 end_comment
@@ -10233,21 +10243,6 @@ operator|->
 name|sc_name
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|pp
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"Cannot create %s.journal."
-operator|,
-name|sc
-operator|->
-name|sc_name
-operator|)
-argument_list|)
-expr_stmt|;
 name|pp
 operator|->
 name|mediasize
@@ -12402,7 +12397,8 @@ index|]
 operator|!=
 literal|'\0'
 operator|&&
-name|strcmp
+operator|!
+name|g_compare_names
 argument_list|(
 name|md
 operator|.
@@ -12412,8 +12408,6 @@ name|pp
 operator|->
 name|name
 argument_list|)
-operator|!=
-literal|0
 condition|)
 return|return
 operator|(
@@ -14862,6 +14856,12 @@ decl_stmt|;
 name|mp
 operator|=
 name|arg
+expr_stmt|;
+name|curthread
+operator|->
+name|td_pflags
+operator||=
+name|TDP_NORUNNINGBUF
 expr_stmt|;
 for|for
 control|(

@@ -2166,9 +2166,16 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|free
+argument_list|(
+name|ps
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
+block|}
 block|}
 return|return
 name|ps

@@ -135,6 +135,17 @@ directive|include
 file|<rpc/rpc_com.h>
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|sb_max_adj
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* not defined in socketvar.h */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -354,17 +365,8 @@ name|size
 parameter_list|)
 block|{
 name|int
-name|maxsize
-decl_stmt|,
 name|defsize
 decl_stmt|;
-name|maxsize
-operator|=
-literal|256
-operator|*
-literal|1024
-expr_stmt|;
-comment|/* XXX */
 switch|switch
 condition|(
 name|proto
@@ -410,12 +412,12 @@ return|return
 operator|(
 name|size
 operator|>
-name|maxsize
+name|sb_max_adj
 condition|?
 operator|(
 name|u_int
 operator|)
-name|maxsize
+name|sb_max_adj
 else|:
 operator|(
 name|u_int
@@ -545,6 +547,13 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|so
@@ -560,6 +569,9 @@ argument_list|,
 operator|&
 name|sa
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1136,7 +1148,7 @@ name|buf
 expr_stmt|;
 if|if
 condition|(
-name|__rpc_inet_ntop
+name|inet_ntop
 argument_list|(
 name|af
 argument_list|,
@@ -1210,7 +1222,7 @@ name|buf
 expr_stmt|;
 if|if
 condition|(
-name|__rpc_inet_ntop
+name|inet_ntop
 argument_list|(
 name|af
 argument_list|,
@@ -1626,7 +1638,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|__rpc_inet_pton
+name|inet_pton
 argument_list|(
 name|AF_INET
 argument_list|,
@@ -1747,7 +1759,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|__rpc_inet_pton
+name|inet_pton
 argument_list|(
 name|AF_INET6
 argument_list|,
@@ -3521,13 +3533,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|CURVNET_SET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -3588,9 +3593,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|CURVNET_RESTORE
-argument_list|()
-expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -3617,9 +3619,6 @@ argument_list|,
 operator|&
 name|opt
 argument_list|)
-expr_stmt|;
-name|CURVNET_RESTORE
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -3666,13 +3665,6 @@ operator|=
 operator|&
 name|old
 expr_stmt|;
-name|CURVNET_SET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|sosetopt
 argument_list|(
 name|so
@@ -3680,9 +3672,6 @@ argument_list|,
 operator|&
 name|opt
 argument_list|)
-expr_stmt|;
-name|CURVNET_RESTORE
-argument_list|()
 expr_stmt|;
 block|}
 block|}

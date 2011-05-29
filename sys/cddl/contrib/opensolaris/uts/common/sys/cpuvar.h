@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 1989, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -472,7 +472,7 @@ name|cpu_ftrace
 decl_stmt|;
 comment|/* per cpu ftrace data */
 name|clock_t
-name|cpu_deadman_lbolt
+name|cpu_deadman_counter
 decl_stmt|;
 comment|/* used by deadman() */
 name|uint_t
@@ -607,6 +607,14 @@ modifier|*
 name|cpu_supp_freqs
 decl_stmt|;
 comment|/* supported freqs in Hz */
+name|uintptr_t
+name|cpu_cpcprofile_pc
+decl_stmt|;
+comment|/* kernel PC in cpc interrupt */
+name|uintptr_t
+name|cpu_cpcprofile_upc
+decl_stmt|;
+comment|/* user PC in cpc interrupt */
 comment|/* 	 * Interrupt load factor used by dispatcher& softcall 	 */
 name|hrtime_t
 name|cpu_intrlast
@@ -616,6 +624,22 @@ name|int
 name|cpu_intrload
 decl_stmt|;
 comment|/* interrupt load factor (0-99%) */
+name|uint_t
+name|cpu_rotor
+decl_stmt|;
+comment|/* for cheap pseudo-random numbers */
+name|struct
+name|cu_cpu_info
+modifier|*
+name|cpu_cu_info
+decl_stmt|;
+comment|/* capacity& util. info */
+comment|/* 	 * cpu_generation is updated whenever CPU goes on-line or off-line. 	 * Updates to cpu_generation are protected by cpu_lock. 	 * 	 * See CPU_NEW_GENERATION() macro below. 	 */
+specifier|volatile
+name|uint_t
+name|cpu_generation
+decl_stmt|;
+comment|/* tracking on/off-line */
 comment|/* 	 * New members must be added /before/ this member, as the CTF tools 	 * rely on this being the last field before cpu_m, so they can 	 * correctly calculate the offset when synthetically adding the cpu_m 	 * member in objects that do not have it.  This fixup is required for 	 * uniquification to work correctly. 	 */
 name|uintptr_t
 name|cpu_m_pad
@@ -652,7 +676,7 @@ comment|/*  * The cpu_core structure consists of per-CPU state available in any 
 define|#
 directive|define
 name|CPUC_SIZE
-value|(sizeof (uint16_t) + sizeof (uintptr_t) + \ 				sizeof (kmutex_t))
+value|(sizeof (uint16_t) + sizeof (uint8_t) + \ 				sizeof (uintptr_t) + sizeof (kmutex_t))
 define|#
 directive|define
 name|CPUC_PADSIZE
@@ -665,6 +689,10 @@ name|uint16_t
 name|cpuc_dtrace_flags
 decl_stmt|;
 comment|/* DTrace flags */
+name|uint8_t
+name|cpuc_dcpc_intr_state
+decl_stmt|;
+comment|/* DCPC provider intr state */
 name|uint8_t
 name|cpuc_pad
 index|[
@@ -702,6 +730,23 @@ parameter_list|(
 name|cpup
 parameter_list|)
 value|((cpup)->cpu_intr_actv>> (LOCK_LEVEL + 1))
+comment|/*  * Check to see if an interrupt thread might be active at a given ipl.  * If so return true.  * We must be conservative--it is ok to give a false yes, but a false no  * will cause disaster.  (But if the situation changes after we check it is  * ok--the caller is trying to ensure that an interrupt routine has been  * exited).  * This is used when trying to remove an interrupt handler from an autovector  * list in avintr.c.  */
+define|#
+directive|define
+name|INTR_ACTIVE
+parameter_list|(
+name|cpup
+parameter_list|,
+name|level
+parameter_list|)
+define|\
+value|((level)<= LOCK_LEVEL ? 	\ 	((cpup)->cpu_intr_actv& (1<< (level))) : (CPU_ON_INTR(cpup)))
+comment|/*  * CPU_PSEUDO_RANDOM() returns a per CPU value that changes each time one  * looks at it. It's meant as a cheap mechanism to be incorporated in routines  * wanting to avoid biasing, but where true randomness isn't needed (just  * something that changes).  */
+define|#
+directive|define
+name|CPU_PSEUDO_RANDOM
+parameter_list|()
+value|(CPU->cpu_rotor++)
 if|#
 directive|if
 name|defined
@@ -1413,6 +1458,14 @@ index|[]
 decl_stmt|;
 comment|/* indexed by CPU number */
 specifier|extern
+name|struct
+name|cpu
+modifier|*
+modifier|*
+name|cpu_seq
+decl_stmt|;
+comment|/* indexed by sequential CPU id */
+specifier|extern
 name|cpu_t
 modifier|*
 name|cpu_list
@@ -1466,6 +1519,11 @@ name|cpu_t
 modifier|*
 name|clock_cpu_list
 decl_stmt|;
+specifier|extern
+name|processorid_t
+name|max_cpu_seqid_ever
+decl_stmt|;
+comment|/* maximum seqid ever given */
 if|#
 directive|if
 name|defined
@@ -1553,6 +1611,14 @@ name|stat
 parameter_list|)
 define|\
 value|((cp)->cpu_stats.stat)
+comment|/*  * Increment CPU generation value.  * This macro should be called whenever CPU goes on-line or off-line.  * Updates to cpu_generation should be protected by cpu_lock.  */
+define|#
+directive|define
+name|CPU_NEW_GENERATION
+parameter_list|(
+name|cp
+parameter_list|)
+value|((cp)->cpu_generation++)
 endif|#
 directive|endif
 comment|/* _KERNEL || _KMEMUSER */
@@ -2027,6 +2093,13 @@ parameter_list|)
 function_decl|;
 comment|/* get current cpu state as string */
 name|void
+name|cpu_set_curr_clock
+parameter_list|(
+name|uint64_t
+parameter_list|)
+function_decl|;
+comment|/* indicate the current CPU's freq */
+name|void
 name|cpu_set_supp_freqs
 parameter_list|(
 name|cpu_t
@@ -2222,6 +2295,7 @@ name|kmutex_t
 name|cpu_lock
 decl_stmt|;
 comment|/* lock protecting CPU data */
+comment|/*  * CPU state change events  *  * Various subsystems need to know when CPUs change their state. They get this  * information by registering  CPU state change callbacks using  * register_cpu_setup_func(). Whenever any CPU changes its state, the callback  * function is called. The callback function is passed three arguments:  *  *   Event, described by cpu_setup_t  *   CPU ID  *   Transparent pointer passed when registering the callback  *  * The callback function is called with cpu_lock held. The return value from the  * callback function is usually ignored, except for CPU_CONFIG and CPU_UNCONFIG  * events. For these two events, non-zero return value indicates a failure and  * prevents successful completion of the operation.  *  * New events may be added in the future. Callback functions should ignore any  * events that they do not understand.  *  * The following events provide notification callbacks:  *  *  CPU_INIT	A new CPU is started and added to the list of active CPUs  *		  This event is only used during boot  *  *  CPU_CONFIG	A newly inserted CPU is prepared for starting running code  *		  This event is called by DR code  *  *  CPU_UNCONFIG CPU has been powered off and needs cleanup  *		  This event is called by DR code  *  *  CPU_ON	CPU is enabled but does not run anything yet  *  *  CPU_INTR_ON	CPU is enabled and has interrupts enabled  *  *  CPU_OFF	CPU is going offline but can still run threads  *  *  CPU_CPUPART_OUT	CPU is going to move out of its partition  *  *  CPU_CPUPART_IN	CPU is going to move to a new partition  *  *  CPU_SETUP	CPU is set up during boot and can run threads  */
 typedef|typedef
 enum|enum
 block|{
@@ -2238,6 +2312,10 @@ block|,
 name|CPU_CPUPART_IN
 block|,
 name|CPU_CPUPART_OUT
+block|,
+name|CPU_SETUP
+block|,
+name|CPU_INTR_ON
 block|}
 name|cpu_setup_t
 typedef|;
@@ -2283,6 +2361,33 @@ parameter_list|(
 name|int
 parameter_list|,
 name|cpu_setup_t
+parameter_list|)
+function_decl|;
+comment|/*  * Call specified function on the given CPU  */
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|cpu_call_func_t
+function_decl|)
+parameter_list|(
+name|uintptr_t
+parameter_list|,
+name|uintptr_t
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|cpu_call
+parameter_list|(
+name|cpu_t
+modifier|*
+parameter_list|,
+name|cpu_call_func_t
+parameter_list|,
+name|uintptr_t
+parameter_list|,
+name|uintptr_t
 parameter_list|)
 function_decl|;
 comment|/*  * Create various strings that describe the given CPU for the  * processor_info system call and configuration-related kstats.  */

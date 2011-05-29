@@ -14,7 +14,7 @@ define|#
 directive|define
 name|FIFOLOG_FILE_MAGIC
 value|0x307ea50d
-name|unsigned
+name|ssize_t
 name|recsize
 decl_stmt|;
 name|off_t

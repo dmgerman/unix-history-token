@@ -916,9 +916,53 @@ parameter_list|)
 block|{
 name|fprintf
 argument_list|(
-name|stdout
+name|stderr
 argument_list|,
-literal|"Usage: l2control -a BD_ADDR [-n] [-h] cmd [p1] [..]]\n"
+literal|"Usage: l2control [-hn] -a local cmd [params ..]\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Where:\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -a local   Specify local device to connect to\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -h         Display this message\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -n         Show addresses as numbers\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  cmd        Supported command "
+expr|\
+literal|"(see l2control help)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  params     Optional command parameters\n"
 argument_list|)
 expr_stmt|;
 name|exit

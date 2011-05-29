@@ -183,10 +183,6 @@ struct|struct
 name|nfsexstuff
 block|{
 name|int
-name|nes_vfslocked
-decl_stmt|;
-comment|/* required for all ports */
-name|int
 name|nes_exflag
 decl_stmt|;
 comment|/* export flags */
@@ -285,7 +281,7 @@ parameter_list|,
 name|f2
 parameter_list|)
 define|\
-value|((f1)->fh_fsid.val[0] == (f2)->fh_fsid.val[0]&&			\      (f1)->fh_fsid.val[1] == (f2)->fh_fsid.val[1]&&			\      !bcmp((f1)->fh_fid.fid_data, (f2)->fh_fid.fid_data,		\             (f1)->fh_fid.fid_len))
+value|((f1)->fh_fsid.val[0] == (f2)->fh_fsid.val[0]&&			\      (f1)->fh_fsid.val[1] == (f2)->fh_fsid.val[1]&&			\      bcmp(&(f1)->fh_fid,&(f2)->fh_fid, sizeof(struct fid)) == 0)
 end_define
 
 begin_define
@@ -296,7 +292,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|(&nfslockhash[(*((u_int32_t *)((f)->fh_fid.fid_data))) % NFSLOCKHASHSIZE])
+value|(&nfslockhash[nfsrv_hashfh(f) % NFSLOCKHASHSIZE])
 end_define
 
 begin_define

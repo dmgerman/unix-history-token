@@ -12,7 +12,7 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|_NFSPORT_NFS_H_
+name|_NFS_NFSPORT_H_
 end_define
 
 begin_comment
@@ -550,7 +550,7 @@ name|NFSMGET
 parameter_list|(
 name|m
 parameter_list|)
-value|do { 					\ 		MGET((m), M_TRYWAIT, MT_DATA); 			\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, "nfsmget");	\ 			MGET((m), M_TRYWAIT, MT_DATA); 		\ 		} 						\ 	} while (0)
+value|do { 					\ 		MGET((m), M_TRYWAIT, MT_DATA); 			\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, 0, "nfsmget");	\ 			MGET((m), M_TRYWAIT, MT_DATA); 		\ 		} 						\ 	} while (0)
 end_define
 
 begin_define
@@ -560,7 +560,7 @@ name|NFSMGETHDR
 parameter_list|(
 name|m
 parameter_list|)
-value|do { 					\ 		MGETHDR((m), M_TRYWAIT, MT_DATA);		\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, "nfsmget");	\ 			MGETHDR((m), M_TRYWAIT, MT_DATA); 	\ 		} 						\ 	} while (0)
+value|do { 					\ 		MGETHDR((m), M_TRYWAIT, MT_DATA);		\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, 0, "nfsmget");	\ 			MGETHDR((m), M_TRYWAIT, MT_DATA); 	\ 		} 						\ 	} while (0)
 end_define
 
 begin_define
@@ -572,7 +572,7 @@ name|m
 parameter_list|,
 name|w
 parameter_list|)
-value|do { 					\ 		MGET((m), M_TRYWAIT, MT_DATA); 			\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, "nfsmget");	\ 			MGET((m), M_TRYWAIT, MT_DATA); 		\ 		} 						\ 		MCLGET((m), (w));				\ 	} while (0)
+value|do { 					\ 		MGET((m), M_TRYWAIT, MT_DATA); 			\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, 0, "nfsmget");	\ 			MGET((m), M_TRYWAIT, MT_DATA); 		\ 		} 						\ 		MCLGET((m), (w));				\ 	} while (0)
 end_define
 
 begin_define
@@ -584,7 +584,7 @@ name|m
 parameter_list|,
 name|w
 parameter_list|)
-value|do { 				\ 		MGETHDR((m), M_TRYWAIT, MT_DATA);		\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, "nfsmget");	\ 			MGETHDR((m), M_TRYWAIT, MT_DATA); 	\ 		} 						\ 	} while (0)
+value|do { 				\ 		MGETHDR((m), M_TRYWAIT, MT_DATA);		\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, 0, "nfsmget");	\ 			MGETHDR((m), M_TRYWAIT, MT_DATA); 	\ 		} 						\ 	} while (0)
 end_define
 
 begin_define
@@ -1445,7 +1445,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/nfsclient/nfsargs.h>
+file|<nfsclient/nfsargs.h>
 end_include
 
 begin_include
@@ -2082,6 +2082,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NFSSTATEMUTEXPTR
+value|(&nfs_state_mutex)
+end_define
+
+begin_define
+define|#
+directive|define
 name|NFSREQSPINLOCK
 value|extern struct mtx nfs_req_mutex
 end_define
@@ -2469,32 +2476,6 @@ value|(1024 * 1024)
 end_define
 
 begin_comment
-comment|/*  * These macros are called at the start and end of operations that  * might modify the underlying file system.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFS_STARTWRITE
-parameter_list|(
-name|v
-parameter_list|,
-name|m
-parameter_list|)
-value|vn_start_write((v), (m), V_WAIT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFS_ENDWRITE
-parameter_list|(
-name|m
-parameter_list|)
-value|vn_finished_write(m)
-end_define
-
-begin_comment
 comment|/*  * Define these to handle the type of va_rdev.  */
 end_comment
 
@@ -2681,7 +2662,7 @@ value|NULL
 end_define
 
 begin_comment
-comment|/*  * This must be defined to be a global variable the increments once  * per second, but never stops or goes backwards, even when a "date"  * command changes the tod clock. It is used for delta times for  * leases, etc.  */
+comment|/*  * This must be defined to be a global variable that increments once  * per second, but never stops or goes backwards, even when a "date"  * command changes the TOD clock. It is used for delta times for  * leases, etc.  */
 end_comment
 
 begin_define
@@ -2847,6 +2828,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_NEWNFSDROLLBACK
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -2971,6 +2960,13 @@ define|#
 directive|define
 name|M_NFSDIRECTIO
 value|M_NEWNFSDIRECTIO
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_NFSDROLLBACK
+value|M_NEWNFSDROLLBACK
 end_define
 
 begin_define
@@ -3385,53 +3381,6 @@ name|n
 parameter_list|)
 value|((n)->nm_state |= NFSSTA_HASSETFSID)
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|NFSHASNFS4ACL
-parameter_list|(
-name|m
-parameter_list|)
-value|nfs_supportsnfsv4acls(m)
-end_define
-
-begin_function_decl
-name|int
-name|nfs_supportsnfsv4acls
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|NFSHASNFS4ACL
-parameter_list|(
-name|m
-parameter_list|)
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Gets the stats field out of the mount structure.  */
@@ -3915,7 +3864,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _NFSPORT_NFS_H */
+comment|/* _NFS_NFSPORT_H */
 end_comment
 
 end_unit

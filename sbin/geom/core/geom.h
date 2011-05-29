@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|G_LIB_VERSION
-value|4
+value|5
 end_define
 
 begin_define
@@ -74,20 +74,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|G_TYPE_ASCNUM
-value|0x04
-end_define
-
-begin_define
-define|#
-directive|define
-name|G_TYPE_ASCLBA
-value|0x05
-end_define
-
-begin_define
-define|#
-directive|define
 name|G_TYPE_MASK
 value|0x0f
 end_define
@@ -97,6 +83,27 @@ define|#
 directive|define
 name|G_TYPE_DONE
 value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_TYPE_MULTI
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_TYPE_NUMMASK
+value|0xff00
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_TYPE_NUMSHIFT
+value|8
 end_define
 
 begin_define
@@ -129,11 +136,48 @@ end_define
 begin_define
 define|#
 directive|define
+name|G_OPT_ISMULTI
+parameter_list|(
+name|opt
+parameter_list|)
+value|((opt)->go_type& G_TYPE_MULTI)
+end_define
+
+begin_define
+define|#
+directive|define
 name|G_OPT_TYPE
 parameter_list|(
 name|opt
 parameter_list|)
 value|((opt)->go_type& G_TYPE_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_OPT_NUM
+parameter_list|(
+name|opt
+parameter_list|)
+value|(((opt)->go_type& G_TYPE_NUMMASK)>> G_TYPE_NUMSHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_OPT_NUMINC
+parameter_list|(
+name|opt
+parameter_list|)
+value|((opt)->go_type += (1<< G_TYPE_NUMSHIFT))
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_VAL_OPTIONAL
+value|((void *)-1)
 end_define
 
 begin_define
@@ -154,7 +198,7 @@ begin_define
 define|#
 directive|define
 name|G_CMD_SENTINEL
-value|{ NULL, 0, NULL, G_NULL_OPTS, NULL, NULL }
+value|{ NULL, 0, NULL, G_NULL_OPTS, NULL }
 end_define
 
 begin_struct
@@ -169,6 +213,7 @@ name|char
 modifier|*
 name|go_name
 decl_stmt|;
+specifier|const
 name|void
 modifier|*
 name|go_val
@@ -211,11 +256,6 @@ name|gc_options
 index|[
 name|G_OPT_MAX
 index|]
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|gc_argname
 decl_stmt|;
 specifier|const
 name|char

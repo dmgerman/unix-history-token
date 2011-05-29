@@ -134,6 +134,40 @@ parameter_list|)
 value|(db_expr_t *)offsetof(struct trapframe, x)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CALLOFFSET
+value|8
+end_define
+
+begin_comment
+comment|/* Include TOC reload slot */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CALLOFFSET
+value|4
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|db_variable
@@ -774,7 +808,7 @@ name|int
 name|op
 parameter_list|)
 block|{
-name|uint32_t
+name|register_t
 modifier|*
 name|reg
 decl_stmt|;
@@ -792,7 +826,7 @@ return|;
 name|reg
 operator|=
 operator|(
-name|uint32_t
+name|register_t
 operator|*
 operator|)
 operator|(
@@ -921,6 +955,24 @@ name|stackframe
 expr_stmt|;
 name|next_frame
 label|:
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+comment|/* The saved arg values start at frame[6] */
+name|args
+operator|=
+operator|(
+name|db_addr_t
+operator|*
+operator|)
+operator|(
+name|stackframe
+operator|+
+literal|48
+operator|)
+expr_stmt|;
+else|#
+directive|else
 comment|/* The saved arg values start at frame[2] */
 name|args
 operator|=
@@ -934,6 +986,8 @@ operator|+
 literal|8
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|stackframe
@@ -950,6 +1004,26 @@ literal|0
 condition|)
 break|break;
 comment|/* 		 * Extract link register from frame and subtract 		 * 4 to convert into calling address (as opposed to 		 * return address) 		 */
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+name|lr
+operator|=
+operator|*
+operator|(
+name|db_addr_t
+operator|*
+operator|)
+operator|(
+name|stackframe
+operator|+
+literal|16
+operator|)
+operator|-
+literal|4
+expr_stmt|;
+else|#
+directive|else
 name|lr
 operator|=
 operator|*
@@ -965,6 +1039,8 @@ operator|)
 operator|-
 literal|4
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -982,13 +1058,25 @@ condition|)
 block|{
 name|db_printf
 argument_list|(
-literal|"saved LR(0x%x) is invalid."
+literal|"saved LR(0x%zx) is invalid."
 argument_list|,
 name|lr
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+name|db_printf
+argument_list|(
+literal|"0x%16lx: "
+argument_list|,
+name|stackframe
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|db_printf
 argument_list|(
 literal|"0x%08x: "
@@ -996,13 +1084,15 @@ argument_list|,
 name|stackframe
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 		 * The trap code labels the return addresses from the 		 * call to C code as 'trapexit' and 'asttrapexit. Use this 		 * to determine if the callframe has to traverse a saved 		 * trap context 		 */
 if|if
 condition|(
 operator|(
 name|lr
 operator|+
-literal|4
+name|CALLOFFSET
 operator|==
 operator|(
 name|db_addr_t
@@ -1014,7 +1104,7 @@ operator|||
 operator|(
 name|lr
 operator|+
-literal|4
+name|CALLOFFSET
 operator|==
 operator|(
 name|db_addr_t
@@ -1040,9 +1130,7 @@ name|trapframe
 operator|*
 operator|)
 operator|(
-name|stackframe
-operator|+
-literal|8
+name|args
 operator|)
 decl_stmt|;
 name|db_printf
@@ -1073,7 +1161,7 @@ case|:
 comment|/* XXX take advantage of the union. */
 name|db_printf
 argument_list|(
-literal|"DSI %s trap @ %#x by "
+literal|"DSI %s trap @ %#zx by "
 argument_list|,
 operator|(
 name|tf
@@ -1109,7 +1197,7 @@ case|:
 comment|/* XXX take advantage of the union. */
 name|db_printf
 argument_list|(
-literal|"ALI trap @ %#x (xSR %#x) "
+literal|"ALI trap @ %#zx (xSR %#x) "
 argument_list|,
 name|tf
 operator|->
@@ -1119,6 +1207,9 @@ name|aim
 operator|.
 name|dar
 argument_list|,
+operator|(
+name|uint32_t
+operator|)
 name|tf
 operator|->
 name|cpu
@@ -1131,6 +1222,45 @@ expr_stmt|;
 goto|goto
 name|print_trap
 goto|;
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+case|case
+name|EXC_DSE
+case|:
+name|db_printf
+argument_list|(
+literal|"DSE trap @ %#zx by "
+argument_list|,
+name|tf
+operator|->
+name|cpu
+operator|.
+name|aim
+operator|.
+name|dar
+argument_list|)
+expr_stmt|;
+goto|goto
+name|print_trap
+goto|;
+case|case
+name|EXC_ISE
+case|:
+name|db_printf
+argument_list|(
+literal|"ISE trap @ %#zx by "
+argument_list|,
+name|tf
+operator|->
+name|srr0
+argument_list|)
+expr_stmt|;
+goto|goto
+name|print_trap
+goto|;
+endif|#
+directive|endif
 case|case
 name|EXC_ISI
 case|:
@@ -1282,7 +1412,7 @@ else|else
 block|{
 name|db_printf
 argument_list|(
-literal|"trap %#x by "
+literal|"trap %#zx by "
 argument_list|,
 name|tf
 operator|->
@@ -1348,7 +1478,7 @@ condition|)
 block|{
 name|db_printf
 argument_list|(
-literal|"%#x: srr1=%#x\n"
+literal|"%#zx: srr1=%#zx\n"
 argument_list|,
 name|lr
 argument_list|,
@@ -1362,7 +1492,7 @@ else|else
 block|{
 name|db_printf
 argument_list|(
-literal|"%s+%#x: srr1=%#x\n"
+literal|"%s+%#zx: srr1=%#zx\n"
 argument_list|,
 name|symname
 argument_list|,
@@ -1376,7 +1506,7 @@ expr_stmt|;
 block|}
 name|db_printf
 argument_list|(
-literal|"%-10s  r1=%#x cr=%#x xer=%#x ctr=%#x"
+literal|"%-10s  r1=%#zx cr=%#x xer=%#x ctr=%#zx"
 argument_list|,
 literal|""
 argument_list|,
@@ -1387,10 +1517,16 @@ index|[
 literal|1
 index|]
 argument_list|,
+operator|(
+name|uint32_t
+operator|)
 name|tf
 operator|->
 name|cr
 argument_list|,
+operator|(
+name|uint32_t
+operator|)
 name|tf
 operator|->
 name|xer
@@ -1412,6 +1548,9 @@ name|db_printf
 argument_list|(
 literal|" sr=%#x"
 argument_list|,
+operator|(
+name|uint32_t
+operator|)
 name|tf
 operator|->
 name|cpu
@@ -1501,7 +1640,7 @@ argument_list|)
 condition|)
 name|db_printf
 argument_list|(
-literal|"at %x"
+literal|"at %zx"
 argument_list|,
 name|lr
 argument_list|)
@@ -1509,7 +1648,7 @@ expr_stmt|;
 else|else
 name|db_printf
 argument_list|(
-literal|"at %s+%#x"
+literal|"at %s+%#zx"
 argument_list|,
 name|symname
 argument_list|,
@@ -1523,7 +1662,7 @@ condition|)
 comment|/* Print all the args stored in that stackframe. */
 name|db_printf
 argument_list|(
-literal|"(%x, %x, %x, %x, %x, %x, %x, %x)"
+literal|"(%zx, %zx, %zx, %zx, %zx, %zx, %zx, %zx)"
 argument_list|,
 name|args
 index|[

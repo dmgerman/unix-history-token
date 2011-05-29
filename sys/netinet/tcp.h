@@ -358,18 +358,25 @@ comment|/* MAX # SACKs sent in any segment */
 end_comment
 
 begin_comment
-comment|/*  * Default maximum segment size for TCP.  * With an IP MTU of 576, this is 536,  * but 512 is probably more convenient.  * This should be defined as MIN(512, IP_MSS - sizeof (struct tcpiphdr)).  */
+comment|/*  * The default maximum segment size (MSS) to be used for new TCP connections  * when path MTU discovery is not enabled.  *  * RFC879 derives the default MSS from the largest datagram size hosts are  * minimally required to handle directly or through IP reassembly minus the  * size of the IP and TCP header.  With IPv6 the minimum MTU is specified  * in RFC2460.  *  * For IPv4 the MSS is 576 - sizeof(struct tcpiphdr)  * For IPv6 the MSS is IPV6_MMTU - sizeof(struct ip6_hdr) - sizeof(struct tcphdr)  *  * We use explicit numerical definition here to avoid header pollution.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TCP_MSS
-value|512
+value|536
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCP6_MSS
+value|1220
 end_define
 
 begin_comment
-comment|/*  * TCP_MINMSS is defined to be 216 which is fine for the smallest  * link MTU (256 bytes, AX.25 packet radio) in the Internet.  * However it is very unlikely to come across such low MTU interfaces  * these days (anno dato 2003).  * See tcp_subr.c tcp_minmss SYSCTL declaration for more comments.  * Setting this to "0" disables the minmss check.  */
+comment|/*  * Limit the lowest MSS we accept for path MTU discovery and the TCP SYN MSS  * option.  Allowing low values of MSS can consume significant resources and  * be used to mount a resource exhaustion attack.  * Connections requesting lower MSS values will be rounded up to this value  * and the IP_DF flag will be cleared to allow fragmentation along the path.  *  * See tcp_subr.c tcp_minmss SYSCTL declaration for more comments.  Setting  * it to "0" disables the minmss check.  *  * The default value is fine for TCP across the Internet's smallest official  * link MTU (256 bytes for AX.25 packet radio).  However, a connection is very  * unlikely to come across such low MTU interfaces these days (anno domini 2003).  */
 end_comment
 
 begin_define
@@ -377,17 +384,6 @@ define|#
 directive|define
 name|TCP_MINMSS
 value|216
-end_define
-
-begin_comment
-comment|/*  * Default maximum segment size for TCP6.  * With an IP6 MSS of 1280, this is 1220,  * but 1024 is probably more convenient. (xxx kazu in doubt)  * This should be defined as MIN(1024, IP6_MSS - sizeof (struct tcpip6hdr))  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCP6_MSS
-value|1024
 end_define
 
 begin_define
@@ -726,7 +722,7 @@ comment|/* Advertised send window. */
 name|u_int32_t
 name|tcpi_snd_bwnd
 decl_stmt|;
-comment|/* Bandwidth send window. */
+comment|/* No longer used. */
 name|u_int32_t
 name|tcpi_snd_nxt
 decl_stmt|;
@@ -739,11 +735,23 @@ name|u_int32_t
 name|tcpi_toe_tid
 decl_stmt|;
 comment|/* HWTID for TOE endpoints */
+name|u_int32_t
+name|tcpi_snd_rexmitpack
+decl_stmt|;
+comment|/* Retransmitted packets */
+name|u_int32_t
+name|tcpi_rcv_ooopack
+decl_stmt|;
+comment|/* Out-of-order packets */
+name|u_int32_t
+name|tcpi_snd_zerowin
+decl_stmt|;
+comment|/* Zero-sized windows sent */
 comment|/* Padding to grow without breaking ABI. */
 name|u_int32_t
 name|__tcpi_pad
 index|[
-literal|29
+literal|26
 index|]
 decl_stmt|;
 comment|/* Padding. */

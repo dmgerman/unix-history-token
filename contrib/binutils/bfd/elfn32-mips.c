@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MIPS-specific support for 32-bit ELF    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,    2003  Free Software Foundation, Inc.     Most of the information added by Ian Lance Taylor, Cygnus Support,<ian@cygnus.com>.    N32/64 ABI support added by Mark Mitchell, CodeSourcery, LLC.<mark@codesourcery.com>    Traditional MIPS targets support added by Koundinya.K, Dansk Data    Elektronik& Operations Research Group.<kk@ddeorg.soft.net>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* MIPS-specific support for 32-bit ELF    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,    2003, 2004, 2005, 2007 Free Software Foundation, Inc.     Most of the information added by Ian Lance Taylor, Cygnus Support,<ian@cygnus.com>.    N32/64 ABI support added by Mark Mitchell, CodeSourcery, LLC.<mark@codesourcery.com>    Traditional MIPS targets support added by Koundinya.K, Dansk Data    Elektronik& Operations Research Group.<kk@ddeorg.soft.net>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -10,13 +10,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -259,36 +259,6 @@ begin_function_decl
 specifier|static
 name|bfd_reloc_status_type
 name|mips_elf_shift6_reloc
-parameter_list|(
-name|bfd
-modifier|*
-parameter_list|,
-name|arelent
-modifier|*
-parameter_list|,
-name|asymbol
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|asection
-modifier|*
-parameter_list|,
-name|bfd
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|bfd_reloc_status_type
-name|mips16_jump_reloc
 parameter_list|(
 name|bfd
 modifier|*
@@ -982,13 +952,13 @@ name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* 16 bit PC relative reference.  */
+comment|/* 16 bit PC relative reference.  Note that the ABI document has a typo      and claims R_MIPS_PC16 to be not rightshifted, rendering it useless.      We do the right thing here.  */
 name|HOWTO
 argument_list|(
 name|R_MIPS_PC16
 argument_list|,
 comment|/* type */
-literal|0
+literal|2
 argument_list|,
 comment|/* rightshift */
 literal|2
@@ -1646,7 +1616,7 @@ name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* The MIPS ELF64 ABI Draft wants us to support these for REL relocations.      We don't, because        a) It means building the addend from a R_MIPS_HIGHEST/R_MIPS_HIGHER/ 	  R_MIPS_HI16/R_MIPS_LO16 sequence with varying ordering, using 	  fallable heuristics.        b) No other NEwABI toolchain actually emits such relocations.  */
+comment|/* The MIPS ELF64 ABI Draft wants us to support these for REL relocations.      We don't, because        a) It means building the addend from a R_MIPS_HIGHEST/R_MIPS_HIGHER/ 	  R_MIPS_HI16/R_MIPS_LO16 sequence with varying ordering, using 	  fallable heuristics.        b) No other NewABI toolchain actually emits such relocations.  */
 name|EMPTY_HOWTO
 argument_list|(
 name|R_MIPS_HIGHER
@@ -1919,6 +1889,493 @@ literal|0x00000000
 argument_list|,
 comment|/* src_mask */
 literal|0x00000000
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* TLS GD/LD dynamic relocations.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_TLS_DTPMOD32
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|32
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_TLS_DTPMOD32"
+argument_list|,
+comment|/* name */
+name|TRUE
+argument_list|,
+comment|/* partial_inplace */
+literal|0xffffffff
+argument_list|,
+comment|/* src_mask */
+literal|0xffffffff
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+name|HOWTO
+argument_list|(
+name|R_MIPS_TLS_DTPREL32
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|32
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_TLS_DTPREL32"
+argument_list|,
+comment|/* name */
+name|TRUE
+argument_list|,
+comment|/* partial_inplace */
+literal|0xffffffff
+argument_list|,
+comment|/* src_mask */
+literal|0xffffffff
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+name|EMPTY_HOWTO
+argument_list|(
+name|R_MIPS_TLS_DTPMOD64
+argument_list|)
+block|,
+name|EMPTY_HOWTO
+argument_list|(
+name|R_MIPS_TLS_DTPREL64
+argument_list|)
+block|,
+comment|/* TLS general dynamic variable reference.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_TLS_GD
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_signed
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_TLS_GD"
+argument_list|,
+comment|/* name */
+name|TRUE
+argument_list|,
+comment|/* partial_inplace */
+literal|0x0000ffff
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* TLS local dynamic variable reference.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_TLS_LDM
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_signed
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_TLS_LDM"
+argument_list|,
+comment|/* name */
+name|TRUE
+argument_list|,
+comment|/* partial_inplace */
+literal|0x0000ffff
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* TLS local dynamic offset.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_TLS_DTPREL_HI16
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_signed
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_TLS_DTPREL_HI16"
+argument_list|,
+comment|/* name */
+name|TRUE
+argument_list|,
+comment|/* partial_inplace */
+literal|0x0000ffff
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* TLS local dynamic offset.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_TLS_DTPREL_LO16
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_signed
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_TLS_DTPREL_LO16"
+argument_list|,
+comment|/* name */
+name|TRUE
+argument_list|,
+comment|/* partial_inplace */
+literal|0x0000ffff
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* TLS thread pointer offset.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_TLS_GOTTPREL
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_signed
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_TLS_GOTTPREL"
+argument_list|,
+comment|/* name */
+name|TRUE
+argument_list|,
+comment|/* partial_inplace */
+literal|0x0000ffff
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* TLS IE dynamic relocations.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_TLS_TPREL32
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|32
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_TLS_TPREL32"
+argument_list|,
+comment|/* name */
+name|TRUE
+argument_list|,
+comment|/* partial_inplace */
+literal|0xffffffff
+argument_list|,
+comment|/* src_mask */
+literal|0xffffffff
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+name|EMPTY_HOWTO
+argument_list|(
+name|R_MIPS_TLS_TPREL64
+argument_list|)
+block|,
+comment|/* TLS thread pointer offset.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_TLS_TPREL_HI16
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_signed
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_TLS_TPREL_HI16"
+argument_list|,
+comment|/* name */
+name|TRUE
+argument_list|,
+comment|/* partial_inplace */
+literal|0x0000ffff
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* TLS thread pointer offset.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_TLS_TPREL_LO16
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_signed
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_TLS_TPREL_LO16"
+argument_list|,
+comment|/* name */
+name|TRUE
+argument_list|,
+comment|/* partial_inplace */
+literal|0x0000ffff
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* 32 bit relocation with no addend.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_GLOB_DAT
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|32
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_GLOB_DAT"
+argument_list|,
+comment|/* name */
+name|FALSE
+argument_list|,
+comment|/* partial_inplace */
+literal|0x0
+argument_list|,
+comment|/* src_mask */
+literal|0xffffffff
 argument_list|,
 comment|/* dst_mask */
 name|FALSE
@@ -2371,13 +2828,13 @@ name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* 16 bit PC relative reference.  */
+comment|/* 16 bit PC relative reference.  Note that the ABI document has a typo      and claims R_MIPS_PC16 to be not rightshifted, rendering it useless.      We do the right thing here.  */
 name|HOWTO
 argument_list|(
 name|R_MIPS_PC16
 argument_list|,
 comment|/* type */
-literal|0
+literal|2
 argument_list|,
 comment|/* rightshift */
 literal|2
@@ -3382,6 +3839,493 @@ comment|/* partial_inplace */
 literal|0
 argument_list|,
 comment|/* src_mask */
+literal|0
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* TLS GD/LD dynamic relocations.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_TLS_DTPMOD32
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|32
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_TLS_DTPMOD32"
+argument_list|,
+comment|/* name */
+name|TRUE
+argument_list|,
+comment|/* partial_inplace */
+literal|0xffffffff
+argument_list|,
+comment|/* src_mask */
+literal|0xffffffff
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+name|HOWTO
+argument_list|(
+name|R_MIPS_TLS_DTPREL32
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|32
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_TLS_DTPREL32"
+argument_list|,
+comment|/* name */
+name|TRUE
+argument_list|,
+comment|/* partial_inplace */
+literal|0xffffffff
+argument_list|,
+comment|/* src_mask */
+literal|0xffffffff
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+name|EMPTY_HOWTO
+argument_list|(
+name|R_MIPS_TLS_DTPMOD64
+argument_list|)
+block|,
+name|EMPTY_HOWTO
+argument_list|(
+name|R_MIPS_TLS_DTPREL64
+argument_list|)
+block|,
+comment|/* TLS general dynamic variable reference.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_TLS_GD
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_signed
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_TLS_GD"
+argument_list|,
+comment|/* name */
+name|TRUE
+argument_list|,
+comment|/* partial_inplace */
+literal|0x0000ffff
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* TLS local dynamic variable reference.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_TLS_LDM
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_signed
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_TLS_LDM"
+argument_list|,
+comment|/* name */
+name|TRUE
+argument_list|,
+comment|/* partial_inplace */
+literal|0x0000ffff
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* TLS local dynamic offset.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_TLS_DTPREL_HI16
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_signed
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_TLS_DTPREL_HI16"
+argument_list|,
+comment|/* name */
+name|TRUE
+argument_list|,
+comment|/* partial_inplace */
+literal|0x0000ffff
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* TLS local dynamic offset.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_TLS_DTPREL_LO16
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_signed
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_TLS_DTPREL_LO16"
+argument_list|,
+comment|/* name */
+name|TRUE
+argument_list|,
+comment|/* partial_inplace */
+literal|0x0000ffff
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* TLS thread pointer offset.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_TLS_GOTTPREL
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_signed
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_TLS_GOTTPREL"
+argument_list|,
+comment|/* name */
+name|TRUE
+argument_list|,
+comment|/* partial_inplace */
+literal|0x0000ffff
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* TLS IE dynamic relocations.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_TLS_TPREL32
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|32
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_TLS_TPREL32"
+argument_list|,
+comment|/* name */
+name|TRUE
+argument_list|,
+comment|/* partial_inplace */
+literal|0xffffffff
+argument_list|,
+comment|/* src_mask */
+literal|0xffffffff
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+name|EMPTY_HOWTO
+argument_list|(
+name|R_MIPS_TLS_TPREL64
+argument_list|)
+block|,
+comment|/* TLS thread pointer offset.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_TLS_TPREL_HI16
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_signed
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_TLS_TPREL_HI16"
+argument_list|,
+comment|/* name */
+name|TRUE
+argument_list|,
+comment|/* partial_inplace */
+literal|0x0000ffff
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* TLS thread pointer offset.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_TLS_TPREL_LO16
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_signed
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_TLS_TPREL_LO16"
+argument_list|,
+comment|/* name */
+name|TRUE
+argument_list|,
+comment|/* partial_inplace */
+literal|0x0000ffff
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* 32 bit relocation with no addend.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_GLOB_DAT
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|32
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_GLOB_DAT"
+argument_list|,
+comment|/* name */
+name|FALSE
+argument_list|,
+comment|/* partial_inplace */
+literal|0x0
+argument_list|,
+comment|/* src_mask */
 literal|0xffffffff
 argument_list|,
 comment|/* dst_mask */
@@ -3393,15 +4337,14 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* The reloc used for the mips16 jump instruction.  */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|reloc_howto_type
-name|elf_mips16_jump_howto
+name|elf_mips16_howto_table_rel
+index|[]
 init|=
+block|{
+comment|/* The reloc used for the mips16 jump instruction.  */
 name|HOWTO
 argument_list|(
 name|R_MIPS16_26
@@ -3426,7 +4369,7 @@ name|complain_overflow_dont
 argument_list|,
 comment|/* complain_on_overflow */
 comment|/* This needs complex overflow 				   detection, because the upper four 				   bits must match the PC.  */
-name|mips16_jump_reloc
+name|_bfd_mips_elf_generic_reloc
 argument_list|,
 comment|/* special_function */
 literal|"R_MIPS16_26"
@@ -3443,22 +4386,9 @@ argument_list|,
 comment|/* dst_mask */
 name|FALSE
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|,
 comment|/* pcrel_offset */
-end_comment
-
-begin_comment
 comment|/* The reloc used for the mips16 gprel instruction.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|reloc_howto_type
-name|elf_mips16_gprel_howto
-init|=
 name|HOWTO
 argument_list|(
 name|R_MIPS16_GPREL
@@ -3491,20 +4421,313 @@ comment|/* name */
 name|TRUE
 argument_list|,
 comment|/* partial_inplace */
-literal|0x07ff001f
+literal|0x0000ffff
 argument_list|,
 comment|/* src_mask */
-literal|0x07ff001f
+literal|0x0000ffff
 argument_list|,
 comment|/* dst_mask */
 name|FALSE
 argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* A placeholder for MIPS16 reference to global offset table.  */
+name|EMPTY_HOWTO
+argument_list|(
+name|R_MIPS16_GOT16
+argument_list|)
+block|,
+comment|/* A placeholder for MIPS16 16 bit call through global offset table.  */
+name|EMPTY_HOWTO
+argument_list|(
+name|R_MIPS16_CALL16
+argument_list|)
+block|,
+comment|/* MIPS16 high 16 bits of symbol value.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS16_HI16
+argument_list|,
+comment|/* type */
+literal|16
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_hi16_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS16_HI16"
+argument_list|,
+comment|/* name */
+name|TRUE
+argument_list|,
+comment|/* partial_inplace */
+literal|0x0000ffff
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* MIPS16 low 16 bits of symbol value.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS16_LO16
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_lo16_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS16_LO16"
+argument_list|,
+comment|/* name */
+name|TRUE
+argument_list|,
+comment|/* partial_inplace */
+literal|0x0000ffff
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
+begin_decl_stmt
+specifier|static
+name|reloc_howto_type
+name|elf_mips16_howto_table_rela
+index|[]
+init|=
+block|{
+comment|/* The reloc used for the mips16 jump instruction.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS16_26
+argument_list|,
+comment|/* type */
+literal|2
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|26
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+comment|/* This needs complex overflow 				   detection, because the upper four 				   bits must match the PC.  */
+name|_bfd_mips_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS16_26"
+argument_list|,
+comment|/* name */
+name|FALSE
+argument_list|,
+comment|/* partial_inplace */
+literal|0x3ffffff
+argument_list|,
+comment|/* src_mask */
+literal|0x3ffffff
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
 comment|/* pcrel_offset */
-end_comment
+comment|/* The reloc used for the mips16 gprel instruction.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS16_GPREL
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_signed
+argument_list|,
+comment|/* complain_on_overflow */
+name|mips16_gprel_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS16_GPREL"
+argument_list|,
+comment|/* name */
+name|FALSE
+argument_list|,
+comment|/* partial_inplace */
+literal|0x0000ffff
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* A placeholder for MIPS16 reference to global offset table.  */
+name|EMPTY_HOWTO
+argument_list|(
+name|R_MIPS16_GOT16
+argument_list|)
+block|,
+comment|/* A placeholder for MIPS16 16 bit call through global offset table.  */
+name|EMPTY_HOWTO
+argument_list|(
+name|R_MIPS16_CALL16
+argument_list|)
+block|,
+comment|/* MIPS16 high 16 bits of symbol value.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS16_HI16
+argument_list|,
+comment|/* type */
+literal|16
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_hi16_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS16_HI16"
+argument_list|,
+comment|/* name */
+name|FALSE
+argument_list|,
+comment|/* partial_inplace */
+literal|0x0000ffff
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* MIPS16 low 16 bits of symbol value.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS16_LO16
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_lo16_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS16_LO16"
+argument_list|,
+comment|/* name */
+name|FALSE
+argument_list|,
+comment|/* partial_inplace */
+literal|0x0000ffff
+argument_list|,
+comment|/* src_mask */
+literal|0x0000ffff
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* GNU extension to record C++ vtable hierarchy */
@@ -4228,6 +5451,50 @@ decl_stmt|;
 name|bfd_vma
 name|gp
 decl_stmt|;
+comment|/* R_MIPS_LITERAL relocations are defined for local symbols only.  */
+if|if
+condition|(
+name|output_bfd
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|symbol
+operator|->
+name|flags
+operator|&
+name|BSF_SECTION_SYM
+operator|)
+operator|==
+literal|0
+operator|&&
+operator|(
+name|symbol
+operator|->
+name|flags
+operator|&
+name|BSF_LOCAL
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+operator|*
+name|error_message
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|_
+argument_list|(
+literal|"literal relocation occurs for an external symbol"
+argument_list|)
+expr_stmt|;
+return|return
+name|bfd_reloc_outofrange
+return|;
+block|}
 comment|/* FIXME: The entries in the .lit8 and .lit4 sections should be merged.  */
 if|if
 condition|(
@@ -4559,9 +5826,12 @@ name|reloc_entry
 operator|->
 name|address
 operator|>
+name|bfd_get_section_limit
+argument_list|(
+name|abfd
+argument_list|,
 name|input_section
-operator|->
-name|_cooked_size
+argument_list|)
 condition|)
 return|return
 name|bfd_reloc_outofrange
@@ -4760,93 +6030,6 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Handle a mips16 jump.  */
-end_comment
-
-begin_function
-specifier|static
-name|bfd_reloc_status_type
-name|mips16_jump_reloc
-parameter_list|(
-name|bfd
-modifier|*
-name|abfd
-name|ATTRIBUTE_UNUSED
-parameter_list|,
-name|arelent
-modifier|*
-name|reloc_entry
-name|ATTRIBUTE_UNUSED
-parameter_list|,
-name|asymbol
-modifier|*
-name|symbol
-name|ATTRIBUTE_UNUSED
-parameter_list|,
-name|void
-modifier|*
-name|data
-name|ATTRIBUTE_UNUSED
-parameter_list|,
-name|asection
-modifier|*
-name|input_section
-parameter_list|,
-name|bfd
-modifier|*
-name|output_bfd
-name|ATTRIBUTE_UNUSED
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|error_message
-name|ATTRIBUTE_UNUSED
-parameter_list|)
-block|{
-specifier|static
-name|bfd_boolean
-name|warned
-init|=
-name|FALSE
-decl_stmt|;
-comment|/* FIXME.  */
-if|if
-condition|(
-operator|!
-name|warned
-condition|)
-call|(
-modifier|*
-name|_bfd_error_handler
-call|)
-argument_list|(
-name|_
-argument_list|(
-literal|"Linking mips16 objects into %s format is not supported"
-argument_list|)
-argument_list|,
-name|bfd_get_target
-argument_list|(
-name|input_section
-operator|->
-name|output_section
-operator|->
-name|owner
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|warned
-operator|=
-name|TRUE
-expr_stmt|;
-return|return
-name|bfd_reloc_undefined
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/* Handle a mips16 GP relative reloc.  */
 end_comment
 
@@ -4891,27 +6074,53 @@ decl_stmt|;
 name|bfd_reloc_status_type
 name|ret
 decl_stmt|;
+name|bfd_byte
+modifier|*
+name|location
+decl_stmt|;
 name|bfd_vma
 name|gp
 decl_stmt|;
-name|unsigned
-name|short
-name|extend
-init|=
+comment|/* If we're relocating, and this is an external symbol, we don't want      to change anything.  */
+if|if
+condition|(
+name|output_bfd
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|symbol
+operator|->
+name|flags
+operator|&
+name|BSF_SECTION_SYM
+operator|)
+operator|==
 literal|0
-decl_stmt|;
-name|unsigned
-name|short
-name|insn
-init|=
+operator|&&
+operator|(
+name|symbol
+operator|->
+name|flags
+operator|&
+name|BSF_LOCAL
+operator|)
+operator|!=
 literal|0
-decl_stmt|;
-name|bfd_signed_vma
-name|val
-decl_stmt|;
-name|bfd_vma
-name|relocation
-decl_stmt|;
+condition|)
+block|{
+name|reloc_entry
+operator|->
+name|address
+operator|+=
+name|input_section
+operator|->
+name|output_offset
+expr_stmt|;
+return|return
+name|bfd_reloc_ok
+return|;
+block|}
 if|if
 condition|(
 name|output_bfd
@@ -4964,290 +6173,70 @@ condition|)
 return|return
 name|ret
 return|;
-if|if
-condition|(
+name|location
+operator|=
+operator|(
+name|bfd_byte
+operator|*
+operator|)
+name|data
+operator|+
 name|reloc_entry
 operator|->
 name|address
-operator|>
-name|input_section
-operator|->
-name|_cooked_size
-condition|)
-return|return
-name|bfd_reloc_outofrange
-return|;
-if|if
-condition|(
-name|bfd_is_com_section
+expr_stmt|;
+name|_bfd_mips16_elf_reloc_unshuffle
 argument_list|(
-name|symbol
-operator|->
-name|section
-argument_list|)
-condition|)
-name|relocation
-operator|=
-literal|0
-expr_stmt|;
-else|else
-name|relocation
-operator|=
-name|symbol
-operator|->
-name|value
-expr_stmt|;
-name|relocation
-operator|+=
-name|symbol
-operator|->
-name|section
-operator|->
-name|output_section
-operator|->
-name|vma
-expr_stmt|;
-name|relocation
-operator|+=
-name|symbol
-operator|->
-name|section
-operator|->
-name|output_offset
-expr_stmt|;
-comment|/* Set val to the offset into the section or symbol.  */
-name|val
-operator|=
-name|reloc_entry
-operator|->
-name|addend
-expr_stmt|;
-if|if
-condition|(
+name|abfd
+argument_list|,
 name|reloc_entry
 operator|->
 name|howto
 operator|->
-name|partial_inplace
-condition|)
-block|{
-comment|/* Pick up the mips16 extend instruction and the real instruction.  */
-name|extend
+name|type
+argument_list|,
+name|FALSE
+argument_list|,
+name|location
+argument_list|)
+expr_stmt|;
+name|ret
 operator|=
-name|bfd_get_16
+name|_bfd_mips_elf_gprel16_with_gp
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
-name|data
-operator|+
+name|symbol
+argument_list|,
 name|reloc_entry
-operator|->
-name|address
+argument_list|,
+name|input_section
+argument_list|,
+name|relocatable
+argument_list|,
+name|data
+argument_list|,
+name|gp
 argument_list|)
 expr_stmt|;
-name|insn
-operator|=
-name|bfd_get_16
+name|_bfd_mips16_elf_reloc_shuffle
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
-name|data
-operator|+
 name|reloc_entry
 operator|->
-name|address
-operator|+
-literal|2
-argument_list|)
-expr_stmt|;
-name|val
-operator|+=
-operator|(
-operator|(
-name|extend
-operator|&
-literal|0x1f
-operator|)
-operator|<<
-literal|11
-operator|)
-operator||
-operator|(
-name|extend
-operator|&
-literal|0x7e0
-operator|)
-operator||
-operator|(
-name|insn
-operator|&
-literal|0x1f
-operator|)
-expr_stmt|;
-block|}
-name|_bfd_mips_elf_sign_extend
-argument_list|(
-name|val
+name|howto
+operator|->
+name|type
 argument_list|,
-literal|16
-argument_list|)
-expr_stmt|;
-comment|/* Adjust val for the final section location and GP value.  If we      are producing relocatable output, we don't want to do this for      an external symbol.  */
-if|if
-condition|(
 operator|!
 name|relocatable
-operator|||
-operator|(
-name|symbol
-operator|->
-name|flags
-operator|&
-name|BSF_SECTION_SYM
-operator|)
-operator|!=
-literal|0
-condition|)
-name|val
-operator|+=
-name|relocation
-operator|-
-name|gp
-expr_stmt|;
-if|if
-condition|(
-name|reloc_entry
-operator|->
-name|howto
-operator|->
-name|partial_inplace
-condition|)
-block|{
-name|bfd_put_16
-argument_list|(
-name|abfd
 argument_list|,
-operator|(
-name|extend
-operator|&
-literal|0xf800
-operator|)
-operator||
-operator|(
-operator|(
-name|val
-operator|>>
-literal|11
-operator|)
-operator|&
-literal|0x1f
-operator|)
-operator||
-operator|(
-name|val
-operator|&
-literal|0x7e0
-operator|)
-argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
-name|data
-operator|+
-name|reloc_entry
-operator|->
-name|address
+name|location
 argument_list|)
 expr_stmt|;
-name|bfd_put_16
-argument_list|(
-name|abfd
-argument_list|,
-operator|(
-name|insn
-operator|&
-literal|0xffe0
-operator|)
-operator||
-operator|(
-name|val
-operator|&
-literal|0x1f
-operator|)
-argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
-name|data
-operator|+
-name|reloc_entry
-operator|->
-name|address
-operator|+
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|reloc_entry
-operator|->
-name|addend
-operator|=
-name|val
-expr_stmt|;
-if|if
-condition|(
-name|relocatable
-condition|)
-name|reloc_entry
-operator|->
-name|address
-operator|+=
-name|input_section
-operator|->
-name|output_offset
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|(
-operator|(
-name|val
-operator|&
-operator|~
-literal|0xffff
-operator|)
-operator|!=
-operator|~
-literal|0xffff
-operator|)
-operator|&&
-operator|(
-operator|(
-name|val
-operator|&
-operator|~
-literal|0xffff
-operator|)
-operator|!=
-literal|0
-operator|)
-condition|)
 return|return
-name|bfd_reloc_overflow
-return|;
-return|return
-name|bfd_reloc_ok
+name|ret
 return|;
 block|}
 end_function
@@ -5315,7 +6304,7 @@ name|R_MIPS_64
 block|}
 block|,
 block|{
-name|BFD_RELOC_16_PCREL
+name|BFD_RELOC_16_PCREL_S2
 block|,
 name|R_MIPS_PC16
 block|}
@@ -5482,7 +6471,129 @@ name|BFD_RELOC_MIPS_JALR
 block|,
 name|R_MIPS_JALR
 block|}
+block|,
+block|{
+name|BFD_RELOC_MIPS_TLS_DTPMOD32
+block|,
+name|R_MIPS_TLS_DTPMOD32
 block|}
+block|,
+block|{
+name|BFD_RELOC_MIPS_TLS_DTPREL32
+block|,
+name|R_MIPS_TLS_DTPREL32
+block|}
+block|,
+block|{
+name|BFD_RELOC_MIPS_TLS_DTPMOD64
+block|,
+name|R_MIPS_TLS_DTPMOD64
+block|}
+block|,
+block|{
+name|BFD_RELOC_MIPS_TLS_DTPREL64
+block|,
+name|R_MIPS_TLS_DTPREL64
+block|}
+block|,
+block|{
+name|BFD_RELOC_MIPS_TLS_GD
+block|,
+name|R_MIPS_TLS_GD
+block|}
+block|,
+block|{
+name|BFD_RELOC_MIPS_TLS_LDM
+block|,
+name|R_MIPS_TLS_LDM
+block|}
+block|,
+block|{
+name|BFD_RELOC_MIPS_TLS_DTPREL_HI16
+block|,
+name|R_MIPS_TLS_DTPREL_HI16
+block|}
+block|,
+block|{
+name|BFD_RELOC_MIPS_TLS_DTPREL_LO16
+block|,
+name|R_MIPS_TLS_DTPREL_LO16
+block|}
+block|,
+block|{
+name|BFD_RELOC_MIPS_TLS_GOTTPREL
+block|,
+name|R_MIPS_TLS_GOTTPREL
+block|}
+block|,
+block|{
+name|BFD_RELOC_MIPS_TLS_TPREL32
+block|,
+name|R_MIPS_TLS_TPREL32
+block|}
+block|,
+block|{
+name|BFD_RELOC_MIPS_TLS_TPREL64
+block|,
+name|R_MIPS_TLS_TPREL64
+block|}
+block|,
+block|{
+name|BFD_RELOC_MIPS_TLS_TPREL_HI16
+block|,
+name|R_MIPS_TLS_TPREL_HI16
+block|}
+block|,
+block|{
+name|BFD_RELOC_MIPS_TLS_TPREL_LO16
+block|,
+name|R_MIPS_TLS_TPREL_LO16
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|elf_reloc_map
+name|mips16_reloc_map
+index|[]
+init|=
+block|{
+block|{
+name|BFD_RELOC_MIPS16_JMP
+block|,
+name|R_MIPS16_26
+operator|-
+name|R_MIPS16_min
+block|}
+block|,
+block|{
+name|BFD_RELOC_MIPS16_GPREL
+block|,
+name|R_MIPS16_GPREL
+operator|-
+name|R_MIPS16_min
+block|}
+block|,
+block|{
+name|BFD_RELOC_MIPS16_HI16_S
+block|,
+name|R_MIPS16_HI16
+operator|-
+name|R_MIPS16_min
+block|}
+block|,
+block|{
+name|BFD_RELOC_MIPS16_LO16
+block|,
+name|R_MIPS16_LO16
+operator|-
+name|R_MIPS16_min
+block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -5515,6 +6626,12 @@ modifier|*
 name|howto_table
 init|=
 name|elf_mips_howto_table_rela
+decl_stmt|;
+name|reloc_howto_type
+modifier|*
+name|howto16_table
+init|=
+name|elf_mips16_howto_table_rela
 decl_stmt|;
 for|for
 control|(
@@ -5566,25 +6683,61 @@ name|elf_val
 index|]
 return|;
 block|}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+sizeof|sizeof
+argument_list|(
+name|mips16_reloc_map
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|elf_reloc_map
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|mips16_reloc_map
+index|[
+name|i
+index|]
+operator|.
+name|bfd_val
+operator|==
+name|code
+condition|)
+return|return
+operator|&
+name|howto16_table
+index|[
+operator|(
+name|int
+operator|)
+name|mips16_reloc_map
+index|[
+name|i
+index|]
+operator|.
+name|elf_val
+index|]
+return|;
+block|}
 switch|switch
 condition|(
 name|code
 condition|)
 block|{
-case|case
-name|BFD_RELOC_MIPS16_JMP
-case|:
-return|return
-operator|&
-name|elf_mips16_jump_howto
-return|;
-case|case
-name|BFD_RELOC_MIPS16_GPREL
-case|:
-return|return
-operator|&
-name|elf_mips16_gprel_howto
-return|;
 case|case
 name|BFD_RELOC_VTABLE_INHERIT
 case|:
@@ -5599,13 +6752,6 @@ return|return
 operator|&
 name|elf_mips_gnu_vtentry_howto
 return|;
-case|case
-name|BFD_RELOC_16_PCREL_S2
-case|:
-return|return
-operator|&
-name|elf_mips_gnu_rela16_s2
-return|;
 default|default:
 name|bfd_set_error
 argument_list|(
@@ -5616,6 +6762,217 @@ return|return
 name|NULL
 return|;
 block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|reloc_howto_type
+modifier|*
+name|bfd_elf32_bfd_reloc_name_lookup
+parameter_list|(
+name|bfd
+modifier|*
+name|abfd
+name|ATTRIBUTE_UNUSED
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|r_name
+parameter_list|)
+block|{
+name|unsigned
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+operator|(
+sizeof|sizeof
+argument_list|(
+name|elf_mips_howto_table_rela
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|elf_mips_howto_table_rela
+index|[
+literal|0
+index|]
+argument_list|)
+operator|)
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|elf_mips_howto_table_rela
+index|[
+name|i
+index|]
+operator|.
+name|name
+operator|!=
+name|NULL
+operator|&&
+name|strcasecmp
+argument_list|(
+name|elf_mips_howto_table_rela
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
+name|r_name
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|&
+name|elf_mips_howto_table_rela
+index|[
+name|i
+index|]
+return|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+operator|(
+sizeof|sizeof
+argument_list|(
+name|elf_mips16_howto_table_rela
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|elf_mips16_howto_table_rela
+index|[
+literal|0
+index|]
+argument_list|)
+operator|)
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|elf_mips16_howto_table_rela
+index|[
+name|i
+index|]
+operator|.
+name|name
+operator|!=
+name|NULL
+operator|&&
+name|strcasecmp
+argument_list|(
+name|elf_mips16_howto_table_rela
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
+name|r_name
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|&
+name|elf_mips16_howto_table_rela
+index|[
+name|i
+index|]
+return|;
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|elf_mips_gnu_vtinherit_howto
+operator|.
+name|name
+argument_list|,
+name|r_name
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|&
+name|elf_mips_gnu_vtinherit_howto
+return|;
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|elf_mips_gnu_vtentry_howto
+operator|.
+name|name
+argument_list|,
+name|r_name
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|&
+name|elf_mips_gnu_vtentry_howto
+return|;
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|elf_mips_gnu_rel16_s2
+operator|.
+name|name
+argument_list|,
+name|r_name
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|&
+name|elf_mips_gnu_rel16_s2
+return|;
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|elf_mips_gnu_rela16_s2
+operator|.
+name|name
+argument_list|,
+name|r_name
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|&
+name|elf_mips_gnu_rela16_s2
+return|;
+return|return
+name|NULL
+return|;
 block|}
 end_function
 
@@ -5642,20 +6999,6 @@ condition|(
 name|r_type
 condition|)
 block|{
-case|case
-name|R_MIPS16_26
-case|:
-return|return
-operator|&
-name|elf_mips16_jump_howto
-return|;
-case|case
-name|R_MIPS16_GPREL
-case|:
-return|return
-operator|&
-name|elf_mips16_gprel_howto
-return|;
 case|case
 name|R_MIPS_GNU_VTINHERIT
 case|:
@@ -5687,6 +7030,41 @@ operator|&
 name|elf_mips_gnu_rel16_s2
 return|;
 default|default:
+if|if
+condition|(
+name|r_type
+operator|>=
+name|R_MIPS16_min
+operator|&&
+name|r_type
+operator|<
+name|R_MIPS16_max
+condition|)
+block|{
+if|if
+condition|(
+name|rela_p
+condition|)
+return|return
+operator|&
+name|elf_mips16_howto_table_rela
+index|[
+name|r_type
+operator|-
+name|R_MIPS16_min
+index|]
+return|;
+else|else
+return|return
+operator|&
+name|elf_mips16_howto_table_rel
+index|[
+name|r_type
+operator|-
+name|R_MIPS16_min
+index|]
+return|;
+block|}
 name|BFD_ASSERT
 argument_list|(
 name|r_type
@@ -6051,7 +7429,7 @@ name|offset
 decl_stmt|;
 name|unsigned
 name|int
-name|raw_size
+name|size
 decl_stmt|;
 switch|switch
 condition|(
@@ -6111,7 +7489,7 @@ name|offset
 operator|=
 literal|72
 expr_stmt|;
-name|raw_size
+name|size
 operator|=
 literal|360
 expr_stmt|;
@@ -6125,7 +7503,7 @@ name|abfd
 argument_list|,
 literal|".reg"
 argument_list|,
-name|raw_size
+name|size
 argument_list|,
 name|note
 operator|->
@@ -6559,6 +7937,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|elf_backend_merge_symbol_attribute
+define|\
+value|_bfd_mips_elf_merge_symbol_attribute
+end_define
+
+begin_define
+define|#
+directive|define
 name|elf_backend_adjust_dynamic_symbol
 define|\
 value|_bfd_mips_elf_adjust_dynamic_symbol
@@ -6578,6 +7964,13 @@ directive|define
 name|elf_backend_size_dynamic_sections
 define|\
 value|_bfd_mips_elf_size_dynamic_sections
+end_define
+
+begin_define
+define|#
+directive|define
+name|elf_backend_init_index_section
+value|_bfd_elf_init_1_index_section
 end_define
 
 begin_define
@@ -6761,6 +8154,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|bfd_elf32_find_inliner_info
+value|_bfd_mips_elf_find_inliner_info
+end_define
+
+begin_define
+define|#
+directive|define
 name|bfd_elf32_new_section_hook
 value|_bfd_mips_elf_new_section_hook
 end_define
@@ -6857,14 +8257,17 @@ name|TARGET_BIG_NAME
 value|"elf32-nbigmips"
 end_define
 
-begin_comment
-comment|/* The SVR4 MIPS ABI says that this should be 0x10000, but Irix 5 uses    a value of 0x1000, and we are compatible.    FIXME: How does this affect NewABI?  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|ELF_MAXPAGESIZE
+value|0x10000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELF_COMMONPAGESIZE
 value|0x1000
 end_define
 
@@ -6908,6 +8311,12 @@ directive|undef
 name|ELF_MAXPAGESIZE
 end_undef
 
+begin_undef
+undef|#
+directive|undef
+name|ELF_COMMONPAGESIZE
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -6936,15 +8345,18 @@ name|TARGET_BIG_NAME
 value|"elf32-ntradbigmips"
 end_define
 
-begin_comment
-comment|/* The SVR4 MIPS ABI says that this should be 0x10000, and Linux uses    page sizes of up to that limit, so we need to respect it.  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|ELF_MAXPAGESIZE
 value|0x10000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELF_COMMONPAGESIZE
+value|0x1000
 end_define
 
 begin_define

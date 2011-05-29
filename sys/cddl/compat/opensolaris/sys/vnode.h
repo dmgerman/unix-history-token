@@ -15,6 +15,12 @@ directive|define
 name|_OPENSOLARIS_SYS_VNODE_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_struct_decl
 struct_decl|struct
 name|vnode
@@ -125,6 +131,13 @@ end_typedef
 begin_define
 define|#
 directive|define
+name|VOP_FID
+value|VOP_VPTOFH
+end_define
+
+begin_define
+define|#
+directive|define
 name|vop_fid
 value|vop_vptofh
 end_define
@@ -165,6 +178,13 @@ define|#
 directive|define
 name|V_APPEND
 value|VAPPEND
+end_define
+
+begin_define
+define|#
+directive|define
+name|rootvfs
+value|(rootvnode == NULL ? NULL : rootvnode->v_mount)
 end_define
 
 begin_function
@@ -239,7 +259,8 @@ name|vn_has_cached_data
 parameter_list|(
 name|vp
 parameter_list|)
-value|((vp)->v_object != NULL&& (vp)->v_object->resident_page_count> 0)
+define|\
+value|((vp)->v_object != NULL&& \ 	 ((vp)->v_object->resident_page_count> 0 || \ 	  (vp)->v_object->cache != NULL))
 end_define
 
 begin_define
@@ -286,6 +307,18 @@ parameter_list|(
 name|vp
 parameter_list|)
 value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|vn_matchops
+parameter_list|(
+name|vp
+parameter_list|,
+name|vops
+parameter_list|)
+value|((vp)->v_op ==&(vops))
 end_define
 
 begin_define
@@ -453,6 +486,18 @@ define|#
 directive|define
 name|MANDMODE
 parameter_list|(
+name|mode
+parameter_list|)
+value|(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MANDLOCK
+parameter_list|(
+name|vp
+parameter_list|,
 name|mode
 parameter_list|)
 value|(0)
@@ -751,6 +796,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FEXCL
+value|O_EXCL
+end_define
+
+begin_define
+define|#
+directive|define
 name|FDSYNC
 value|FFSYNC
 end_define
@@ -894,6 +946,14 @@ else|else
 block|{
 name|ASSERT
 argument_list|(
+name|filemode
+operator|==
+operator|(
+name|FREAD
+operator||
+name|FOFFMAX
+operator|)
+operator|||
 name|filemode
 operator|==
 operator|(
@@ -1675,6 +1735,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#

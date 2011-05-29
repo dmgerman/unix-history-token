@@ -2872,6 +2872,8 @@ operator|->
 name|dma
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_COHERENT
 argument_list|)
 expr_stmt|;
 if|if
@@ -14129,6 +14131,9 @@ endif|#
 directive|endif
 literal|"(seg=%d/%d)\n"
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|s
 operator|->
 name|ds_len

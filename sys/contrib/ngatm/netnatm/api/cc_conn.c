@@ -4705,7 +4705,7 @@ condition|(
 name|conn
 operator|->
 name|dirty_attr
-operator|&&
+operator|&
 name|CCDIRTY_AAL
 condition|)
 name|resp
@@ -4723,7 +4723,7 @@ condition|(
 name|conn
 operator|->
 name|dirty_attr
-operator|&&
+operator|&
 name|CCDIRTY_BLLI
 condition|)
 name|resp
@@ -4748,7 +4748,7 @@ condition|(
 name|conn
 operator|->
 name|dirty_attr
-operator|&&
+operator|&
 name|CCDIRTY_CONNID
 condition|)
 name|resp
@@ -4767,7 +4767,7 @@ condition|(
 name|conn
 operator|->
 name|dirty_attr
-operator|&&
+operator|&
 name|CCDIRTY_EETD
 condition|)
 name|resp
@@ -4787,7 +4787,7 @@ condition|(
 name|conn
 operator|->
 name|dirty_attr
-operator|&&
+operator|&
 name|CCDIRTY_TRAFFIC
 condition|)
 name|resp
@@ -4805,7 +4805,7 @@ condition|(
 name|conn
 operator|->
 name|dirty_attr
-operator|&&
+operator|&
 name|CCDIRTY_EXQOS
 condition|)
 name|resp
@@ -4823,7 +4823,7 @@ condition|(
 name|conn
 operator|->
 name|dirty_attr
-operator|&&
+operator|&
 name|CCDIRTY_ABRSETUP
 condition|)
 name|resp
@@ -4841,7 +4841,7 @@ condition|(
 name|conn
 operator|->
 name|dirty_attr
-operator|&&
+operator|&
 name|CCDIRTY_ABRADD
 condition|)
 name|resp

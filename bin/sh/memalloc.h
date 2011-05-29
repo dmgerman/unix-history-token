@@ -51,15 +51,9 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|sstrnleft
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|herefd
+name|char
+modifier|*
+name|sstrend
 decl_stmt|;
 end_decl_stmt
 
@@ -145,24 +139,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|growstackblock
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|grabstackblock
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|char
 modifier|*
 name|growstackstr
@@ -177,20 +153,47 @@ name|char
 modifier|*
 name|makestrspace
 parameter_list|(
-name|void
+name|int
+parameter_list|,
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|ungrabstackstr
-parameter_list|(
 name|char
 modifier|*
+name|stputbin
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|len
 parameter_list|,
 name|char
 modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|stputs
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|data
+parameter_list|,
+name|char
+modifier|*
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -214,11 +217,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|grabstackblock
+parameter_list|(
+name|n
+parameter_list|)
+value|stalloc(n)
+end_define
+
+begin_define
+define|#
+directive|define
 name|STARTSTACKSTR
 parameter_list|(
 name|p
 parameter_list|)
-value|p = stackblock(), sstrnleft = stackblocksize()
+value|p = stackblock()
 end_define
 
 begin_define
@@ -230,7 +243,7 @@ name|c
 parameter_list|,
 name|p
 parameter_list|)
-value|(--sstrnleft>= 0? (*p++ = (c)) : (p = growstackstr(), *p++ = (c)))
+value|do { if (p == sstrend) p = growstackstr(); *p++ = (c); } while(0)
 end_define
 
 begin_define
@@ -242,7 +255,7 @@ name|n
 parameter_list|,
 name|p
 parameter_list|)
-value|{ if (sstrnleft< n) p = makestrspace(); }
+value|{ if (sstrend - p< n) p = makestrspace(n, p); }
 end_define
 
 begin_define
@@ -254,8 +267,12 @@ name|c
 parameter_list|,
 name|p
 parameter_list|)
-value|(--sstrnleft, *p++ = (c))
+value|(*p++ = (c))
 end_define
+
+begin_comment
+comment|/*  * STACKSTRNUL's use is where we want to be able to turn a stack  * (non-sentinel, character counting string) into a C string,  * and later pretend the NUL is not there.  * Note: Because of STACKSTRNUL's semantics, STACKSTRNUL cannot be used  * on a stack that will grabstackstr()ed.  */
+end_comment
 
 begin_define
 define|#
@@ -264,7 +281,7 @@ name|STACKSTRNUL
 parameter_list|(
 name|p
 parameter_list|)
-value|(sstrnleft == 0? (p = growstackstr(), *p = '\0') : (*p = '\0'))
+value|(p == sstrend ? (p = growstackstr(), *p = '\0') : (*p = '\0'))
 end_define
 
 begin_define
@@ -274,7 +291,7 @@ name|STUNPUTC
 parameter_list|(
 name|p
 parameter_list|)
-value|(++sstrnleft, --p)
+value|(--p)
 end_define
 
 begin_define
@@ -296,7 +313,7 @@ name|amount
 parameter_list|,
 name|p
 parameter_list|)
-value|(p += (amount), sstrnleft -= (amount))
+value|(p += (amount))
 end_define
 
 begin_define
@@ -306,7 +323,45 @@ name|grabstackstr
 parameter_list|(
 name|p
 parameter_list|)
-value|stalloc(stackblocksize() - sstrnleft)
+value|stalloc((char *)p - stackblock())
+end_define
+
+begin_define
+define|#
+directive|define
+name|ungrabstackstr
+parameter_list|(
+name|s
+parameter_list|,
+name|p
+parameter_list|)
+value|stunalloc((s))
+end_define
+
+begin_define
+define|#
+directive|define
+name|STPUTBIN
+parameter_list|(
+name|s
+parameter_list|,
+name|len
+parameter_list|,
+name|p
+parameter_list|)
+value|p = stputbin((s), (len), p)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STPUTS
+parameter_list|(
+name|s
+parameter_list|,
+name|p
+parameter_list|)
+value|p = stputs((s), p)
 end_define
 
 end_unit

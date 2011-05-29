@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_IDMAP_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_comment
 comment|/* Idmap status codes */
@@ -278,7 +271,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IDMAP_ERR_NONEGENERATED
+name|IDMAP_ERR_NONE_GENERATED
 value|-9967
 end_define
 
@@ -315,6 +308,13 @@ define|#
 directive|define
 name|IDMAP_ERR_NS_LDAP_BAD_WINNAME
 value|-9962
+end_define
+
+begin_define
+define|#
+directive|define
+name|IDMAP_ERR_NO_ACTIVEDIRECTORY
+value|-9961
 end_define
 
 begin_comment
@@ -384,6 +384,24 @@ define|#
 directive|define
 name|IDMAP_MAX_DOOR_RPC
 value|(256 * 1024)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IDMAP_SENTINEL_PID
+value|UINT32_MAX
+end_define
+
+begin_define
+define|#
+directive|define
+name|IDMAP_ID_IS_EPHEMERAL
+parameter_list|(
+name|pid
+parameter_list|)
+define|\
+value|(((pid)> INT32_MAX)&& ((pid) != IDMAP_SENTINEL_PID))
 end_define
 
 begin_endif

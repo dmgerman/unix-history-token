@@ -18,6 +18,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|"crypto/tls.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"crypto/sha1.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"eap_common/eap_tlv_common.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"eap_i.h"
 end_include
 
@@ -31,24 +49,6 @@ begin_include
 include|#
 directive|include
 file|"eap_config.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tls.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"eap_common/eap_tlv_common.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sha1.h"
 end_include
 
 begin_include
@@ -4440,7 +4440,7 @@ break|break;
 case|case
 name|PAC_TYPE_PAC_TYPE
 case|:
-comment|/* 		 * draft-cam-winget-eap-fast-provisioning-04.txt, 		 * Section 4.2.6 - PAC-Type TLV 		 */
+comment|/* RFC 5422, Section 4.2.6 - PAC-Type TLV */
 if|if
 condition|(
 name|len
@@ -4578,7 +4578,7 @@ decl_stmt|;
 name|int
 name|type
 decl_stmt|;
-comment|/* draft-cam-winget-eap-fast-provisioning-04.txt, Section 4.2.4 */
+comment|/* RFC 5422, Section 4.2.4 */
 comment|/* PAC-Type defaults to Tunnel PAC (Type 1) */
 name|entry
 operator|->
@@ -6861,7 +6861,7 @@ literal|"EAP-FAST: Start (server ver=%d, own ver=%d)"
 argument_list|,
 name|flags
 operator|&
-name|EAP_PEAP_VERSION_MASK
+name|EAP_TLS_VERSION_MASK
 argument_list|,
 name|data
 operator|->
@@ -6873,7 +6873,7 @@ condition|(
 operator|(
 name|flags
 operator|&
-name|EAP_PEAP_VERSION_MASK
+name|EAP_TLS_VERSION_MASK
 operator|)
 operator|<
 name|data
@@ -6886,7 +6886,7 @@ name|fast_version
 operator|=
 name|flags
 operator|&
-name|EAP_PEAP_VERSION_MASK
+name|EAP_TLS_VERSION_MASK
 expr_stmt|;
 name|wpa_printf
 argument_list|(

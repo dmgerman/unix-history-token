@@ -141,6 +141,7 @@ comment|/*-----------------------------------------------*/
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|AESTest
 parameter_list|(
@@ -694,6 +695,7 @@ value|((a)[(b)/8]=((a)[(b)/8]&~(1<< (7-(b)%8)))|(!!(v)<< (7-(b)%8)))
 end_define
 
 begin_function
+specifier|static
 name|int
 name|do_mct
 parameter_list|(
@@ -2726,6 +2728,7 @@ comment|/*----------------------------   # Config info for v-one   # AESVS MMT t
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|proc_file
 parameter_list|(
@@ -3826,6 +3829,9 @@ if|if
 condition|(
 name|len
 operator|>=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|plaintext

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2005-2008 Daniel Braniss<danny@cs.huji.ac.il>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*-  * Copyright (c) 2005-2010 Daniel Braniss<danny@cs.huji.ac.il>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
-comment|/*  | iSCSI  | $Id: isc_subr.c,v 1.20 2006/12/01 09:10:17 danny Exp danny $  */
+comment|/*  | iSCSI  | $Id: isc_subr.c 560 2009-05-07 07:37:49Z danny $  */
 end_comment
 
 begin_include
@@ -159,6 +159,18 @@ directive|include
 file|<dev/iscsi/initiator/iscsivar.h>
 end_include
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_ISC
+argument_list|,
+literal|"iSC"
+argument_list|,
+literal|"iSCSI driver options"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|char
@@ -189,7 +201,7 @@ name|malloc
 argument_list|(
 name|maxlen
 argument_list|,
-name|M_ISCSI
+name|M_ISC
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -213,7 +225,7 @@ name|free
 argument_list|(
 name|p
 argument_list|,
-name|M_ISCSI
+name|M_ISC
 argument_list|)
 expr_stmt|;
 return|return
@@ -226,7 +238,7 @@ name|malloc
 argument_list|(
 name|len
 argument_list|,
-name|M_ISCSI
+name|M_ISC
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -244,7 +256,7 @@ name|free
 argument_list|(
 name|p
 argument_list|,
-name|M_ISCSI
+name|M_ISC
 argument_list|)
 expr_stmt|;
 return|return
@@ -373,7 +385,7 @@ name|sdebug
 argument_list|(
 literal|2
 argument_list|,
-literal|"maXmitDataSegmentLength=%d"
+literal|"opt.maXmitDataSegmentLength=%d"
 argument_list|,
 name|sp
 operator|->
@@ -406,7 +418,7 @@ name|sdebug
 argument_list|(
 literal|2
 argument_list|,
-literal|"maxBurstLength=%d"
+literal|"opt.maxBurstLength=%d"
 argument_list|,
 name|sp
 operator|->
@@ -443,7 +455,7 @@ name|opt
 operator|.
 name|targetAddress
 argument_list|,
-name|M_ISCSI
+name|M_ISC
 argument_list|)
 expr_stmt|;
 name|sp
@@ -463,7 +475,7 @@ argument_list|)
 expr_stmt|;
 name|sdebug
 argument_list|(
-literal|4
+literal|2
 argument_list|,
 literal|"opt.targetAddress='%s'"
 argument_list|,
@@ -502,7 +514,7 @@ name|opt
 operator|.
 name|targetName
 argument_list|,
-name|M_ISCSI
+name|M_ISC
 argument_list|)
 expr_stmt|;
 name|sp
@@ -522,7 +534,7 @@ argument_list|)
 expr_stmt|;
 name|sdebug
 argument_list|(
-literal|4
+literal|2
 argument_list|,
 literal|"opt.targetName='%s'"
 argument_list|,
@@ -561,7 +573,7 @@ name|opt
 operator|.
 name|initiatorName
 argument_list|,
-name|M_ISCSI
+name|M_ISC
 argument_list|)
 expr_stmt|;
 name|sp
@@ -581,7 +593,7 @@ argument_list|)
 expr_stmt|;
 name|sdebug
 argument_list|(
-literal|4
+literal|2
 argument_list|,
 literal|"opt.initiatorName='%s'"
 argument_list|,
@@ -631,7 +643,7 @@ name|maxluns
 expr_stmt|;
 name|sdebug
 argument_list|(
-literal|4
+literal|2
 argument_list|,
 literal|"opt.maxluns=%d"
 argument_list|,
@@ -691,7 +703,7 @@ name|sdebug
 argument_list|(
 literal|2
 argument_list|,
-literal|"headerDigest set"
+literal|"opt.headerDigest set"
 argument_list|)
 expr_stmt|;
 block|}
@@ -705,6 +717,17 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|sdebug
+argument_list|(
+literal|2
+argument_list|,
+literal|"opt.dataDigest='%s'"
+argument_list|,
+name|opt
+operator|->
+name|headerDigest
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -733,7 +756,7 @@ name|sdebug
 argument_list|(
 literal|2
 argument_list|,
-literal|"dataDigest set"
+literal|"opt.dataDigest set"
 argument_list|)
 expr_stmt|;
 block|}
@@ -753,6 +776,11 @@ modifier|*
 name|opt
 parameter_list|)
 block|{
+name|debug_called
+argument_list|(
+literal|8
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|opt
@@ -768,7 +796,7 @@ name|opt
 operator|->
 name|targetAddress
 argument_list|,
-name|M_ISCSI
+name|M_ISC
 argument_list|)
 expr_stmt|;
 name|opt
@@ -793,7 +821,7 @@ name|opt
 operator|->
 name|targetName
 argument_list|,
-name|M_ISCSI
+name|M_ISC
 argument_list|)
 expr_stmt|;
 name|opt
@@ -818,7 +846,7 @@ name|opt
 operator|->
 name|initiatorName
 argument_list|,
-name|M_ISCSI
+name|M_ISC
 argument_list|)
 expr_stmt|;
 name|opt

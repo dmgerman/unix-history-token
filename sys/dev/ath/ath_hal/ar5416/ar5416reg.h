@@ -315,11 +315,45 @@ name|AR_OBS
 value|0x4080
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AH_SUPPORT_AR9130
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|AR_RTC_BASE
+value|0x20000
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|AR_RTC_BASE
+value|0x7000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AH_SUPPORT_AR9130 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|AR_RTC_RC
-value|0x7000
+value|AR_RTC_BASE + 0x00
 end_define
 
 begin_comment
@@ -330,14 +364,14 @@ begin_define
 define|#
 directive|define
 name|AR_RTC_PLL_CONTROL
-value|0x7014
+value|AR_RTC_BASE + 0x14
 end_define
 
 begin_define
 define|#
 directive|define
 name|AR_RTC_RESET
-value|0x7040
+value|AR_RTC_BASE + 0x40
 end_define
 
 begin_comment
@@ -348,7 +382,7 @@ begin_define
 define|#
 directive|define
 name|AR_RTC_STATUS
-value|0x7044
+value|AR_RTC_BASE + 0x44
 end_define
 
 begin_comment
@@ -359,14 +393,14 @@ begin_define
 define|#
 directive|define
 name|AR_RTC_SLEEP_CLK
-value|0x7048
+value|AR_RTC_BASE + 0x48
 end_define
 
 begin_define
 define|#
 directive|define
 name|AR_RTC_FORCE_WAKE
-value|0x704c
+value|AR_RTC_BASE + 0x4c
 end_define
 
 begin_comment
@@ -377,7 +411,7 @@ begin_define
 define|#
 directive|define
 name|AR_RTC_INTR_CAUSE
-value|0x7050
+value|AR_RTC_BASE + 0x50
 end_define
 
 begin_comment
@@ -388,7 +422,7 @@ begin_define
 define|#
 directive|define
 name|AR_RTC_INTR_ENABLE
-value|0x7054
+value|AR_RTC_BASE + 0x54
 end_define
 
 begin_comment
@@ -399,149 +433,52 @@ begin_define
 define|#
 directive|define
 name|AR_RTC_INTR_MASK
-value|0x7058
+value|AR_RTC_BASE + 0x58
 end_define
 
 begin_comment
 comment|/* RTC interrupt mask */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AH_SUPPORT_AR9130
+end_ifdef
+
 begin_comment
-comment|/* AR9280: rf long shift registers */
+comment|/* RTC_DERIVED_* - only for AR9130 */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|AR_AN_RF2G1_CH0
-value|0x7810
+name|AR_RTC_DERIVED_CLK
+value|(AR_RTC_BASE + 0x0038)
 end_define
 
 begin_define
 define|#
 directive|define
-name|AR_AN_RF5G1_CH0
-value|0x7818
+name|AR_RTC_DERIVED_CLK_PERIOD
+value|0x0000fffe
 end_define
 
 begin_define
 define|#
 directive|define
-name|AR_AN_RF2G1_CH1
-value|0x7834
+name|AR_RTC_DERIVED_CLK_PERIOD_S
+value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|AR_AN_RF5G1_CH1
-value|0x783C
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
-begin_define
-define|#
-directive|define
-name|AR_AN_TOP2
-value|0x7894
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR_AN_SYNTH9
-value|0x7868
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G1
-value|0x7820
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G2
-value|0x7824
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G3
-value|0x7828
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G4
-value|0x782C
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G6
-value|0x7834
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G7
-value|0x7838
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G8
-value|0x783C
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G9
-value|0x7840
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RXTXBB1
-value|0x7854
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_TOP2
-value|0x7868
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_TOP3
-value|0x786c
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_TOP4
-value|0x7870
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_TOP4_DEFAULT
-value|0x10142c00
-end_define
+begin_comment
+comment|/* AH_SUPPORT_AR9130 */
+end_comment
 
 begin_define
 define|#
@@ -875,6 +812,13 @@ define|#
 directive|define
 name|AR_PCU_TXBUF_CTRL
 value|0x8340
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PCU_MISC_MODE2
+value|0x8344
 end_define
 
 begin_comment
@@ -1262,6 +1206,68 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR_CFG_SCLK_RATE_IND
+value|0x00000003
+end_define
+
+begin_comment
+comment|/* sleep clock indication */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_CFG_SCLK_RATE_IND_S
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_CFG_SCLK_32MHZ
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* Sleep clock rate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_CFG_SCLK_4MHZ
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Sleep clock rate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_CFG_SCLK_1MHZ
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Sleep clock rate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_CFG_SCLK_32KHZ
+value|0x00000003
+end_define
+
+begin_comment
+comment|/* Sleep clock rate */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AR_MAC_LED_BLINK_SLOW
 value|0x00000008
 end_define
@@ -1569,6 +1575,43 @@ comment|/* set page-size as 4k */
 end_comment
 
 begin_comment
+comment|/* Kiwi */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_AHB_CUSTOM_BURST_EN
+value|0x000000C0
+end_define
+
+begin_comment
+comment|/* set Custom Burst Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_AHB_CUSTOM_BURST_EN_S
+value|6
+end_define
+
+begin_comment
+comment|/* set Custom Burst Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_AHB_CUSTOM_BURST_ASYNC_FIFO_VAL
+value|3
+end_define
+
+begin_comment
+comment|/* set both bits in Async FIFO mode */
+end_comment
+
+begin_comment
 comment|/* MAC PCU Registers */
 end_comment
 
@@ -1751,6 +1794,27 @@ end_define
 begin_comment
 comment|/* RX TSF out of range */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_ISR_S5
+value|0x0098
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_ISR_S5_S
+value|0x00d8
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_ISR_S5_TIM_TIMER
+value|0x00000010
+end_define
 
 begin_define
 define|#
@@ -2140,6 +2204,35 @@ name|AR_RTC_RC_MAC_COLD
 value|0x00000002
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AH_SUPPORT_AR9130
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|AR_RTC_RC_COLD_RESET
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_RTC_RC_WARM_RESET
+value|0x00000008
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AH_SUPPORT_AR9130 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2232,6 +2325,28 @@ begin_comment
 comment|/* Pwr Mgmt Status */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AH_SUPPORT_AR9130
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|AR_RTC_STATUS_M
+value|0x0000000f
+end_define
+
+begin_comment
+comment|/* RTC Status */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -2241,6 +2356,15 @@ end_define
 
 begin_comment
 comment|/* RTC Status */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AH_SUPPORT_AR9130 */
 end_comment
 
 begin_define
@@ -2339,6 +2463,48 @@ end_define
 begin_comment
 comment|/* AR9280: rf long shift registers */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_AN_RF2G1_CH0
+value|0x7810
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_AN_RF5G1_CH0
+value|0x7818
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_AN_RF2G1_CH1
+value|0x7834
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_AN_RF5G1_CH1
+value|0x783C
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_AN_TOP2
+value|0x7894
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_AN_SYNTH9
+value|0x7868
+end_define
 
 begin_define
 define|#
@@ -2455,6 +2621,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR_AN_TOP1
+value|0x7890
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_AN_TOP1_DACIPMODE
+value|0x00040000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_AN_TOP1_DACIPMODE_S
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR_AN_TOP2_XPABIAS_LVL
 value|0xC0000000
 end_define
@@ -2508,332 +2695,6 @@ name|AR_AN_SYNTH9_REFDIVA_S
 value|27
 end_define
 
-begin_comment
-comment|/* AR9285 Analog registers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G1_ENPACAL
-value|0x00000800
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G1_ENPACAL_S
-value|11
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G1_PDPADRV1
-value|0x02000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G1_PDPADRV1_S
-value|25
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G1_PDPADRV2
-value|0x01000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G1_PDPADRV2_S
-value|24
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G1_PDPAOUT
-value|0x00800000
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G1_PDPAOUT_S
-value|23
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G2_OFFCAL
-value|0x00001000
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G2_OFFCAL_S
-value|12
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G3_PDVCCOMP
-value|0x02000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G3_PDVCCOMP_S
-value|25
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G3_OB_0
-value|0x00E00000
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G3_OB_0_S
-value|21
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G3_OB_1
-value|0x001C0000
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G3_OB_1_S
-value|18
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G3_OB_2
-value|0x00038000
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G3_OB_2_S
-value|15
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G3_OB_3
-value|0x00007000
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G3_OB_3_S
-value|12
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G3_OB_4
-value|0x00000E00
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G3_OB_4_S
-value|9
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G3_DB1_0
-value|0x000001C0
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G3_DB1_0_S
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G3_DB1_1
-value|0x00000038
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G3_DB1_1_S
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G3_DB1_2
-value|0x00000007
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G3_DB1_2_S
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G4_DB1_3
-value|0xE0000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G4_DB1_3_S
-value|29
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G4_DB1_4
-value|0x1C000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G4_DB1_4_S
-value|26
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G4_DB2_0
-value|0x03800000
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G4_DB2_0_S
-value|23
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G4_DB2_1
-value|0x00700000
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G4_DB2_1_S
-value|20
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G4_DB2_2
-value|0x000E0000
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G4_DB2_2_S
-value|17
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G4_DB2_3
-value|0x0001C000
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G4_DB2_3_S
-value|14
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G4_DB2_4
-value|0x00003800
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G4_DB2_4_S
-value|11
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G6_CCOMP
-value|0x00007800
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G6_CCOMP_S
-value|11
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G6_OFFS
-value|0x03f00000
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G6_OFFS_S
-value|20
-end_define
-
 begin_define
 define|#
 directive|define
@@ -2846,132 +2707,6 @@ define|#
 directive|define
 name|AR9271_AN_RF2G6_OFFS_S
 value|20
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G7_PWDDB
-value|0x00000002
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G7_PWDDB_S
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G7_PADRVGN2TAB0
-value|0xE0000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G7_PADRVGN2TAB0_S
-value|29
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G8_PADRVGN2TAB0
-value|0x0001C000
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RF2G8_PADRVGN2TAB0_S
-value|14
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RXTXBB1_PDRXTXBB1
-value|0x00000020
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RXTXBB1_PDRXTXBB1_S
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RXTXBB1_PDV2I
-value|0x00000080
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RXTXBB1_PDV2I_S
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RXTXBB1_PDDACIF
-value|0x00000100
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RXTXBB1_PDDACIF_S
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RXTXBB1_SPARE9
-value|0x00000001
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_RXTXBB1_SPARE9_S
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_TOP3_XPABIAS_LVL
-value|0x0000000C
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_TOP3_XPABIAS_LVL_S
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_TOP3_PWDDAC
-value|0x00800000
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9285_AN_TOP3_PWDDAC_S
-value|23
 end_define
 
 begin_comment
@@ -3307,6 +3042,117 @@ begin_comment
 comment|/* clear ba state */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|AR_PCU_MISC_MODE2_MGMT_CRYPTO_ENABLE
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PCU_MISC_MODE2_NO_CRYPTO_FOR_NON_DATA_PKT
+value|0x00000004
+end_define
+
+begin_comment
+comment|/*  * This bit enables the Multicast search based on both MAC Address and Key ID.   * If bit is 0, then Multicast search is based on MAC address only.  * For Merlin and above only.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_PCU_MISC_MODE2_ADHOC_MCAST_KEYID_ENABLE
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PCU_MISC_MODE2_ENABLE_AGGWEP
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* Kiwi or later? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_PCU_MISC_MODE2_HWWAR1
+value|0x00100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PCU_MISC_MODE2_HWWAR2
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* For Kiwi */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_PCU_ASYNC_FIFO_REG3
+value|0x8358
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_PCU_ASYNC_FIFO_REG3_DATAPATH_SEL
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_PCU_ASYNC_FIFO_REG3_SOFT_RESET
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* TSF2. For Kiwi only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_TSF2_L32
+value|0x8390
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_TSF2_U32
+value|0x8394
+end_define
+
+begin_comment
+comment|/* MAC Direct Connect Control. For Kiwi only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_DIRECT_CONNECT
+value|0x83A0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_DC_AP_STA_EN
+value|0x00000001
+end_define
+
 begin_comment
 comment|/* GPIO Interrupt */
 end_comment
@@ -3486,6 +3332,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR_GPIO_JTAG_DISABLE
+value|0x00020000
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR_2040_JOINED_RX_CLEAR
 value|0x00000001
 end_define
@@ -3513,6 +3366,63 @@ define|#
 directive|define
 name|AR_9285_PCU_TXBUF_CTRL_USABLE_SIZE
 value|0x380
+end_define
+
+begin_comment
+comment|/* IFS, SIFS, slot, etc for Async FIFO mode (Kiwi) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_D_GBL_IFS_SIFS_ASYNC_FIFO_DUR
+value|0x000003AB
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_TIME_OUT_ACK_CTS_ASYNC_FIFO_DUR
+value|0x16001D56
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_USEC_ASYNC_FIFO_DUR
+value|0x12e00074
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_D_GBL_IFS_SLOT_ASYNC_FIFO_DUR
+value|0x00000420
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_D_GBL_IFS_EIFS_ASYNC_FIFO_DUR
+value|0x0000A5EB
+end_define
+
+begin_comment
+comment|/* Used by Kiwi Async FIFO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_PCU_LOGIC_ANALYZER
+value|0x8264
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_PCU_LOGIC_ANALYZER_DISBUG20768
+value|0x20000000
 end_define
 
 begin_comment
@@ -3560,6 +3470,14 @@ directive|define
 name|AR_EEPROM_STATUS_DATA_ABSENT_ACCESS
 value|0x00080000
 end_define
+
+begin_comment
+comment|/*  * AR5212 defines the MAC revision mask as 0xF, but both ath9k and  * the Atheros HAL define it as 0x7.   *  * What this means however is AR5416 silicon revisions have  * changed. The below macros are for what is contained in the  * lower four bits; if the lower three bits are taken into account  * the revisions become 1.0 => 0x0, 2.0 => 0x1, 2.2 => 0x2.  */
+end_comment
+
+begin_comment
+comment|/* These are the legacy revisions, with a four bit AR_SREV_REVISION mask */
+end_comment
 
 begin_define
 define|#
@@ -3637,7 +3555,7 @@ name|IS_5416V1
 parameter_list|(
 name|_ah
 parameter_list|)
-value|((_ah)->ah_macRev == AR_SREV_REVISION_OWL_10)
+value|(AR_SREV_OWL((_ah))&& AH_PRIVATE((_ah))->ah_macRev == AR_SREV_REVISION_OWL_10)
 end_define
 
 begin_define
@@ -3647,7 +3565,7 @@ name|IS_5416V2
 parameter_list|(
 name|_ah
 parameter_list|)
-value|((_ah)->ah_macRev>= AR_SREV_REVISION_OWL_20)
+value|(AR_SREV_OWL((_ah))&& AH_PRIVATE((_ah))->ah_macRev>= AR_SREV_REVISION_OWL_20)
 end_define
 
 begin_define
@@ -3657,7 +3575,31 @@ name|IS_5416V2_2
 parameter_list|(
 name|_ah
 parameter_list|)
-value|((_ah)->ah_macRev == AR_SREV_REVISION_OWL_22)
+value|(AR_SREV_OWL((_ah))&& AH_PRIVATE((_ah))->ah_macRev == AR_SREV_REVISION_OWL_22)
+end_define
+
+begin_comment
+comment|/* Misc; compatibility with Atheros HAL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_5416_V20_OR_LATER
+parameter_list|(
+name|_ah
+parameter_list|)
+value|(AR_SREV_HOWL((_ah)) || AR_SREV_OWL_20_OR_LATER(_ah))
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_5416_V22_OR_LATER
+parameter_list|(
+name|_ah
+parameter_list|)
+value|(AR_SREV_HOWL((_ah)) || AR_SREV_OWL_22_OR_LATER(_ah))
 end_define
 
 begin_comment
@@ -3768,6 +3710,16 @@ name|AR_XSREV_VERSION_OWL_PCIE
 value|0x0C
 end_define
 
+begin_comment
+comment|/*  * These are from ath9k/Atheros and assume an AR_SREV version mask  * of 0x07, rather than 0x0F which is being used in the FreeBSD HAL.  * Thus, don't use these values as they're incorrect here; use  * AR_SREV_REVISION_OWL_{10,20,22}.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -3801,12 +3753,32 @@ begin_comment
 comment|/* Owl 2.2 */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|AR_XSREV_VERSION_HOWL
+value|0x14
+end_define
+
+begin_comment
+comment|/* Howl (AR9130) */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|AR_XSREV_VERSION_SOWL
 value|0x40
 end_define
+
+begin_comment
+comment|/* Sowl (AR9160) */
+end_comment
 
 begin_define
 define|#
@@ -3921,12 +3893,66 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR_XSREV_VERSION_KIWI
+value|0x180
+end_define
+
+begin_comment
+comment|/* Kiwi (AR9287) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_XSREV_REVISION_KIWI_10
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_XSREV_REVISION_KIWI_11
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_XSREV_REVISION_KIWI_12
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_XSREV_REVISION_KIWI_13
+value|3
+end_define
+
+begin_comment
+comment|/* Owl (AR5416) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_OWL
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((AH_PRIVATE((_ah))->ah_macVersion == AR_XSREV_VERSION_OWL_PCI) || \ 	 (AH_PRIVATE((_ah))->ah_macVersion == AR_XSREV_VERSION_OWL_PCIE))
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR_SREV_OWL_20_OR_LATER
 parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(AH_PRIVATE((_ah))->ah_macVersion>= AR_XSREV_VERSION_SOWL || \ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_OWL_20)
+value|((AR_SREV_OWL(_ah)&&						\ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_SREV_REVISION_OWL_20) ||	\ 	 AH_PRIVATE((_ah))->ah_macVersion>= AR_XSREV_VERSION_HOWL)
 end_define
 
 begin_define
@@ -3937,8 +3963,37 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(AH_PRIVATE((_ah))->ah_macVersion>= AR_XSREV_VERSION_SOWL || \ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_OWL_22)
+value|((AR_SREV_OWL(_ah)&&						\ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_SREV_REVISION_OWL_22) ||	\ 	 AH_PRIVATE((_ah))->ah_macVersion>= AR_XSREV_VERSION_HOWL)
 end_define
+
+begin_comment
+comment|/* Howl (AR9130) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_HOWL
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(AH_PRIVATE((_ah))->ah_macVersion == AR_XSREV_VERSION_HOWL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_9100
+parameter_list|(
+name|_ah
+parameter_list|)
+value|AR_SREV_HOWL(_ah)
+end_define
+
+begin_comment
+comment|/* Sowl (AR9160) */
+end_comment
 
 begin_define
 define|#
@@ -3973,6 +4028,10 @@ define|\
 value|(AR_SREV_SOWL(_ah)&& \ 	 AH_PRIVATE((_ah))->ah_macRev == AR_XSREV_REVISION_SOWL_11)
 end_define
 
+begin_comment
+comment|/* Merlin (AR9280) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4003,7 +4062,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(AR_SREV_MERLIN(_ah)&& \ 	 AH_PRIVATE((_ah))->ah_macRev == AR_XSREV_REVISION_MERLIN_20)
+value|(AR_SREV_MERLIN(_ah)&& \ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_MERLIN_20)
 end_define
 
 begin_define
@@ -4014,8 +4073,12 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(AR_SREV_MERLIN_20(_ah) || \ 	 AH_PRIVATE((_ah))->ah_macVersion> AR_XSREV_VERSION_MERLIN)
+value|((AH_PRIVATE((_ah))->ah_macVersion> AR_XSREV_VERSION_MERLIN) ||	\ 	 (AR_SREV_MERLIN((_ah))&&						\ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_MERLIN_20))
 end_define
+
+begin_comment
+comment|/* Kite (AR9285) */
+end_comment
 
 begin_define
 define|#
@@ -4058,7 +4121,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(AR_SREV_KITE_11(_ah) || \ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_KITE_11)
+value|((AH_PRIVATE((_ah))->ah_macVersion> AR_XSREV_VERSION_KITE) ||	\ 	 (AR_SREV_KITE((_ah))&&					\ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_KITE_11))
 end_define
 
 begin_define
@@ -4080,7 +4143,98 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(AR_SREV_KITE_12(_ah) || \ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_KITE_12)
+value|((AH_PRIVATE((_ah))->ah_macVersion> AR_XSREV_VERSION_KITE) ||	\ 	 (AR_SREV_KITE((_ah))&&					\ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_KITE_12))
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_9285E_20
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(AR_SREV_KITE_12_OR_LATER(_ah)&& \ 	((OS_REG_READ(_ah, AR_AN_SYNTH9)& 0x7) == 0x1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_KIWI
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(AH_PRIVATE((_ah))->ah_macVersion == AR_XSREV_VERSION_KIWI)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_KIWI_11_OR_LATER
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(AR_SREV_KIWI(_ah)&& \ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_KIWI_11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_KIWI_11
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(AR_SREV_KIWI(_ah)&& \ 	 AH_PRIVATE((_ah))->ah_macRev == AR_XSREV_REVISION_KIWI_11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_KIWI_12
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(AR_SREV_KIWI(_ah)&& \ 	 AH_PRIVATE((_ah))->ah_macRev == AR_XSREV_REVISION_KIWI_12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_KIWI_12_OR_LATER
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(AR_SREV_KIWI(_ah)&& \ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_KIWI_12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_KIWI_13_OR_LATER
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(AR_SREV_KIWI(_ah)&& \ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_KIWI_13)
+end_define
+
+begin_comment
+comment|/* Not yet implemented chips */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_9271
+parameter_list|(
+name|_ah
+parameter_list|)
+value|0
 end_define
 
 begin_endif

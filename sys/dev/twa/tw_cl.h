@@ -60,87 +60,6 @@ value|2
 end_define
 
 begin_comment
-comment|/* Possible values of ctlr->state. */
-end_comment
-
-begin_comment
-comment|/* Initialization done, and controller is active. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TW_CLI_CTLR_STATE_ACTIVE
-value|(1<<0)
-end_define
-
-begin_comment
-comment|/* Interrupts on controller enabled. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TW_CLI_CTLR_STATE_INTR_ENABLED
-value|(1<<1)
-end_define
-
-begin_comment
-comment|/* Data buffer for internal requests in use. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TW_CLI_CTLR_STATE_INTERNAL_REQ_BUSY
-value|(1<<2)
-end_define
-
-begin_comment
-comment|/* More AEN's need to be retrieved. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TW_CLI_CTLR_STATE_GET_MORE_AENS
-value|(1<<3)
-end_define
-
-begin_comment
-comment|/* Controller is being reset. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TW_CLI_CTLR_STATE_RESET_IN_PROGRESS
-value|(1<<4)
-end_define
-
-begin_comment
-comment|/* G133 controller is in 'phase 1' of being reset. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TW_CLI_CTLR_STATE_RESET_PHASE1_IN_PROGRESS
-value|(1<<5)
-end_define
-
-begin_comment
-comment|/* G66 register write access bug needs to be worked around. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TW_CLI_CTLR_STATE_G66_WORKAROUND_NEEDED
-value|(1<<6)
-end_define
-
-begin_comment
 comment|/* Possible values of ctlr->ioctl_lock.lock. */
 end_comment
 
@@ -314,15 +233,6 @@ begin_comment
 comment|/* TW_OSL_PCI_CONFIG_ACCESSIBLE */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|1
-name|)
-end_pragma
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -405,8 +315,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TW_CLI_Q_COUNT
+name|TW_CLI_RESET_Q
 value|4
+end_define
+
+begin_comment
+comment|/* q of reqs reset by timeout */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TW_CLI_Q_COUNT
+value|5
 end_define
 
 begin_comment
@@ -537,10 +458,34 @@ name|TW_UINT32
 name|arch_id
 decl_stmt|;
 comment|/* controller architecture id */
-name|TW_UINT32
-name|state
+name|TW_UINT8
+name|active
 decl_stmt|;
-comment|/* controller state */
+comment|/* Initialization done, and controller is active. */
+name|TW_UINT8
+name|interrupts_enabled
+decl_stmt|;
+comment|/* Interrupts on controller enabled. */
+name|TW_UINT8
+name|internal_req_busy
+decl_stmt|;
+comment|/* Data buffer for internal requests in use. */
+name|TW_UINT8
+name|get_more_aens
+decl_stmt|;
+comment|/* More AEN's need to be retrieved. */
+name|TW_UINT8
+name|reset_needed
+decl_stmt|;
+comment|/* Controller needs a soft reset. */
+name|TW_UINT8
+name|reset_in_progress
+decl_stmt|;
+comment|/* Controller is being reset. */
+name|TW_UINT8
+name|reset_phase1_in_progress
+decl_stmt|;
+comment|/* In 'phase 1' of reset. */
 name|TW_UINT32
 name|flags
 decl_stmt|;
@@ -663,15 +608,6 @@ modifier|*
 name|io_lock
 decl_stmt|;
 comment|/* ptr to lock held during cmd 						submission */
-name|TW_LOCK_HANDLE
-name|intr_lock_handle
-decl_stmt|;
-comment|/* lock held during 						ISR/response intr processing */
-name|TW_LOCK_HANDLE
-modifier|*
-name|intr_lock
-decl_stmt|;
-comment|/* ptr to lock held during ISR/ 						response intr processing */
 ifdef|#
 directive|ifdef
 name|TW_OSL_CAN_SLEEP
@@ -713,14 +649,6 @@ comment|/* TW_OSL_DEBUG */
 block|}
 struct|;
 end_struct
-
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|)
-end_pragma
 
 begin_comment
 comment|/*  * Queue primitives  */

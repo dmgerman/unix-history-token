@@ -549,7 +549,7 @@ directive|endif
 block|{
 literal|" Disklabel"
 block|,
-literal|"The disk Label editor"
+literal|"The disk label editor"
 block|,
 name|NULL
 block|,
@@ -992,7 +992,7 @@ block|,
 block|{
 literal|" Media, HTTP"
 block|,
-literal|"Select FTP via HTTP proxy installation media."
+literal|"Select FTP via HTTP proxy install media."
 block|,
 name|NULL
 block|,
@@ -1093,7 +1093,7 @@ name|WITH_SLICES
 block|{
 literal|" Partition"
 block|,
-literal|"The disk Slice (PC-style partition) Editor"
+literal|"The disk slice (PC-style partition) editor"
 block|,
 name|NULL
 block|,
@@ -2476,7 +2476,7 @@ block|,
 block|{
 literal|"2 COM1"
 block|,
-literal|"Serial mouse on COM1 (/dev/cuad0)"
+literal|"Serial mouse on COM1 (/dev/cuau0)"
 block|,
 name|dmenuVarCheck
 block|,
@@ -2485,13 +2485,13 @@ block|,
 name|NULL
 block|,
 name|VAR_MOUSED_PORT
-literal|"=/dev/cuad0"
+literal|"=/dev/cuau0"
 block|}
 block|,
 block|{
 literal|"3 COM2"
 block|,
-literal|"Serial mouse on COM2 (/dev/cuad1)"
+literal|"Serial mouse on COM2 (/dev/cuau1)"
 block|,
 name|dmenuVarCheck
 block|,
@@ -2500,7 +2500,7 @@ block|,
 name|NULL
 block|,
 name|VAR_MOUSED_PORT
-literal|"=/dev/cuad1"
+literal|"=/dev/cuau1"
 block|}
 block|,
 block|{
@@ -2547,7 +2547,7 @@ block|,
 block|{
 literal|"2 COM1"
 block|,
-literal|"Serial mouse on COM1 (/dev/cuad0)"
+literal|"Serial mouse on COM1 (/dev/cuau0)"
 block|,
 name|dmenuVarCheck
 block|,
@@ -2556,13 +2556,13 @@ block|,
 name|NULL
 block|,
 name|VAR_MOUSED_PORT
-literal|"=/dev/cuad0"
+literal|"=/dev/cuau0"
 block|}
 block|,
 block|{
 literal|"3 COM2"
 block|,
-literal|"Serial mouse on COM2 (/dev/cuad1)"
+literal|"Serial mouse on COM2 (/dev/cuau1)"
 block|,
 name|dmenuVarCheck
 block|,
@@ -2571,13 +2571,13 @@ block|,
 name|NULL
 block|,
 name|VAR_MOUSED_PORT
-literal|"=/dev/cuad1"
+literal|"=/dev/cuau1"
 block|}
 block|,
 block|{
 literal|"4 COM3"
 block|,
-literal|"Serial mouse on COM3 (/dev/cuad2)"
+literal|"Serial mouse on COM3 (/dev/cuau2)"
 block|,
 name|dmenuVarCheck
 block|,
@@ -2586,13 +2586,13 @@ block|,
 name|NULL
 block|,
 name|VAR_MOUSED_PORT
-literal|"=/dev/cuad2"
+literal|"=/dev/cuau2"
 block|}
 block|,
 block|{
 literal|"5 COM4"
 block|,
-literal|"Serial mouse on COM4 (/dev/cuad3)"
+literal|"Serial mouse on COM4 (/dev/cuau3)"
 block|,
 name|dmenuVarCheck
 block|,
@@ -2601,7 +2601,7 @@ block|,
 name|NULL
 block|,
 name|VAR_MOUSED_PORT
-literal|"=/dev/cuad3"
+literal|"=/dev/cuau3"
 block|}
 block|,
 block|{
@@ -4517,6 +4517,21 @@ literal|"=ftp://ftp3.se.freebsd.org"
 block|}
 block|,
 block|{
+literal|" Sweden #4"
+block|,
+literal|"ftp4.se.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp4.se.freebsd.org"
+block|}
+block|,
+block|{
 literal|" Sweden #5"
 block|,
 literal|"ftp5.se.freebsd.org"
@@ -4678,7 +4693,7 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.tr.freebsd.org"
+literal|"=ftp://ftp2.tr.freebsd.org"
 block|}
 block|,
 block|{
@@ -5102,13 +5117,8 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Network interface information required"
 block|,
-literal|"If you are using PPP over a serial device, as opposed to a direct\n"
-literal|"ethernet connection, then you may first need to dial your Internet\n"
-literal|"Service Provider using the ppp utility we provide for that purpose.\n"
-literal|"If you're using SLIP over a serial device then the expectation is\n"
-literal|"that you have a HARDWIRED connection.\n\n"
-literal|"You can also install over a parallel port using a special \"laplink\"\n"
-literal|"cable to another machine running FreeBSD."
+literal|"Please select the ethernet or PLIP device to configure.\n\n"
+literal|""
 block|,
 literal|"Press F1 to read network configuration manual"
 block|,
@@ -5409,7 +5419,7 @@ name|distSetUser
 block|}
 block|,
 block|{
-literal|"A Minimal"
+literal|"7 Minimal"
 block|,
 literal|"The smallest configuration possible"
 block|,
@@ -5419,7 +5429,7 @@ name|distSetMinimum
 block|}
 block|,
 block|{
-literal|"B Custom"
+literal|"8 Custom"
 block|,
 literal|"Specify your own distribution set"
 block|,
@@ -5658,9 +5668,17 @@ block|,
 name|DIST_INFO
 block|}
 block|,
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__powerpc64__
+argument_list|)
 block|{
 literal|" lib32"
 block|,
@@ -6850,15 +6868,11 @@ literal|"select between FreeBSD and any other operating systems on your machine\
 literal|"at boot time.  If you have more than one drive and want to boot\n"
 literal|"from the second one, the boot manager will also make it possible\n"
 literal|"to do so (limitations in the PC BIOS usually prevent this otherwise).\n"
-literal|"If you will only have FreeBSD on the machine the boot manager is\n"
-literal|"not needed and it slows down the boot while offering you the choice\n"
-literal|"of which operating system to boot.  If you do not want a boot\n"
-literal|"manager, or wish to replace an existing one, select \"standard\".\n"
-literal|"If you would prefer your Master Boot Record remain untouched then\n"
-literal|"select \"None\".\n\n"
-literal|"  NOTE:  PC-DOS users will almost certainly require \"None\"!"
+literal|"If you have other operating systems installed and would like a choice when\n"
+literal|"booting, choose \"BootMgr\". If you would prefer to keep your existing\n"
+literal|"boot manager, select \"None\".\n\n"
 block|,
-literal|"Press F1 to read about drive setup"
+literal|""
 block|,
 literal|"drives"
 block|,
@@ -6866,7 +6880,7 @@ block|{
 block|{
 literal|"Standard"
 block|,
-literal|"Install a standard MBR (no boot manager)"
+literal|"Install a standard MBR (non-interactive boot manager)"
 block|,
 name|dmenuRadioCheck
 block|,
@@ -6912,7 +6926,7 @@ block|,
 block|{
 literal|"None"
 block|,
-literal|"Leave the Master Boot Record untouched"
+literal|"Do not install a boot manager"
 block|,
 name|dmenuRadioCheck
 block|,
@@ -7024,7 +7038,7 @@ name|WITH_SLICES
 block|{
 literal|" Fdisk"
 block|,
-literal|"The disk Slice (PC-style partition) Editor"
+literal|"The disk slice (PC-style partition) editor"
 block|,
 name|NULL
 block|,
@@ -7036,7 +7050,7 @@ directive|endif
 block|{
 literal|" Label"
 block|,
-literal|"The disk Label editor"
+literal|"The disk label editor"
 block|,
 name|NULL
 block|,
@@ -7466,20 +7480,6 @@ block|,
 endif|#
 directive|endif
 block|{
-literal|" quotas"
-block|,
-literal|"This host wishes to check quotas on startup."
-block|,
-name|dmenuVarCheck
-block|,
-name|dmenuToggleVariable
-block|,
-name|NULL
-block|,
-literal|"check_quotas=YES"
-block|}
-block|,
-block|{
 name|NULL
 block|}
 block|}
@@ -7651,7 +7651,7 @@ block|,
 block|{
 literal|" Ntpdate"
 block|,
-literal|"Select a clock-synchronization server"
+literal|"Select a clock synchronization server"
 block|,
 name|dmenuVarCheck
 block|,
@@ -7940,7 +7940,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=NO,ntpdate_flags=none"
+literal|"ntpdate_enable=NO,ntpdate_hosts=none"
 block|}
 block|,
 block|{
@@ -7968,7 +7968,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=pool.ntp.org"
 block|}
 block|,
 block|{
@@ -7982,7 +7982,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=asia.pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=asia.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -7996,7 +7996,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=europe.pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=europe.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -8010,7 +8010,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=oceania.pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=oceania.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -8024,7 +8024,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=north-america.pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=north-america.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -8038,7 +8038,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=tick.nap.com.ar"
+literal|"ntpdate_enable=YES,ntpdate_hosts=tick.nap.com.ar"
 block|}
 block|,
 block|{
@@ -8052,7 +8052,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=time.sinectis.com.ar"
+literal|"ntpdate_enable=YES,ntpdate_hosts=time.sinectis.com.ar"
 block|}
 block|,
 block|{
@@ -8066,7 +8066,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=tock.nap.com.ar"
+literal|"ntpdate_enable=YES,ntpdate_hosts=tock.nap.com.ar"
 block|}
 block|,
 block|{
@@ -8080,7 +8080,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=au.pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=au.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -8094,7 +8094,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=augean.eleceng.adelaide.edu.au"
+literal|"ntpdate_enable=YES,ntpdate_hosts=augean.eleceng.adelaide.edu.au"
 block|}
 block|,
 block|{
@@ -8108,7 +8108,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.adelaide.edu.au"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.adelaide.edu.au"
 block|}
 block|,
 block|{
@@ -8122,7 +8122,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.saard.net"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.saard.net"
 block|}
 block|,
 block|{
@@ -8136,7 +8136,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=time.deakin.edu.au"
+literal|"ntpdate_enable=YES,ntpdate_hosts=time.deakin.edu.au"
 block|}
 block|,
 block|{
@@ -8150,7 +8150,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.belbone.be"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp1.belbone.be"
 block|}
 block|,
 block|{
@@ -8164,7 +8164,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2.belbone.be"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp2.belbone.be"
 block|}
 block|,
 block|{
@@ -8178,7 +8178,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=a.ntp.br"
+literal|"ntpdate_enable=YES,ntpdate_hosts=a.ntp.br"
 block|}
 block|,
 block|{
@@ -8192,7 +8192,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=b.ntp.br"
+literal|"ntpdate_enable=YES,ntpdate_hosts=b.ntp.br"
 block|}
 block|,
 block|{
@@ -8206,7 +8206,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=c.ntp.br"
+literal|"ntpdate_enable=YES,ntpdate_hosts=c.ntp.br"
 block|}
 block|,
 block|{
@@ -8220,7 +8220,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.cais.rnp.br"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.cais.rnp.br"
 block|}
 block|,
 block|{
@@ -8234,7 +8234,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.pucpr.br"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp1.pucpr.br"
 block|}
 block|,
 block|{
@@ -8248,7 +8248,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ca.pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ca.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -8262,7 +8262,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.cpsc.ucalgary.ca"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.cpsc.ucalgary.ca"
 block|}
 block|,
 block|{
@@ -8276,7 +8276,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.cmc.ec.gc.ca"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp1.cmc.ec.gc.ca"
 block|}
 block|,
 block|{
@@ -8290,7 +8290,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2.cmc.ec.gc.ca"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp2.cmc.ec.gc.ca"
 block|}
 block|,
 block|{
@@ -8304,7 +8304,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=tick.utoronto.ca"
+literal|"ntpdate_enable=YES,ntpdate_hosts=tick.utoronto.ca"
 block|}
 block|,
 block|{
@@ -8318,7 +8318,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=time.chu.nrc.ca"
+literal|"ntpdate_enable=YES,ntpdate_hosts=time.chu.nrc.ca"
 block|}
 block|,
 block|{
@@ -8332,7 +8332,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=time.nrc.ca"
+literal|"ntpdate_enable=YES,ntpdate_hosts=time.nrc.ca"
 block|}
 block|,
 block|{
@@ -8346,7 +8346,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=timelord.uregina.ca"
+literal|"ntpdate_enable=YES,ntpdate_hosts=timelord.uregina.ca"
 block|}
 block|,
 block|{
@@ -8360,7 +8360,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=tock.utoronto.ca"
+literal|"ntpdate_enable=YES,ntpdate_hosts=tock.utoronto.ca"
 block|}
 block|,
 block|{
@@ -8374,7 +8374,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.karpo.cz"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.karpo.cz"
 block|}
 block|,
 block|{
@@ -8388,7 +8388,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.cgi.cz"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.cgi.cz"
 block|}
 block|,
 block|{
@@ -8402,7 +8402,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=clock.netcetera.dk"
+literal|"ntpdate_enable=YES,ntpdate_hosts=clock.netcetera.dk"
 block|}
 block|,
 block|{
@@ -8416,7 +8416,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=clock2.netcetera.dk"
+literal|"ntpdate_enable=YES,ntpdate_hosts=clock2.netcetera.dk"
 block|}
 block|,
 block|{
@@ -8430,7 +8430,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=slug.ctv.es"
+literal|"ntpdate_enable=YES,ntpdate_hosts=slug.ctv.es"
 block|}
 block|,
 block|{
@@ -8444,7 +8444,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=tick.keso.fi"
+literal|"ntpdate_enable=YES,ntpdate_hosts=tick.keso.fi"
 block|}
 block|,
 block|{
@@ -8458,7 +8458,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=tock.keso.fi"
+literal|"ntpdate_enable=YES,ntpdate_hosts=tock.keso.fi"
 block|}
 block|,
 block|{
@@ -8472,7 +8472,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.obspm.fr"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.obspm.fr"
 block|}
 block|,
 block|{
@@ -8486,7 +8486,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.univ-lyon1.fr"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.univ-lyon1.fr"
 block|}
 block|,
 block|{
@@ -8500,7 +8500,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.via.ecp.fr"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.via.ecp.fr"
 block|}
 block|,
 block|{
@@ -8514,7 +8514,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=zg1.ntp.carnet.hr"
+literal|"ntpdate_enable=YES,ntpdate_hosts=zg1.ntp.carnet.hr"
 block|}
 block|,
 block|{
@@ -8528,7 +8528,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=zg2.ntp.carnet.hr"
+literal|"ntpdate_enable=YES,ntpdate_hosts=zg2.ntp.carnet.hr"
 block|}
 block|,
 block|{
@@ -8542,7 +8542,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=st.ntp.carnet.hr"
+literal|"ntpdate_enable=YES,ntpdate_hosts=st.ntp.carnet.hr"
 block|}
 block|,
 block|{
@@ -8556,7 +8556,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ri.ntp.carnet.hr"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ri.ntp.carnet.hr"
 block|}
 block|,
 block|{
@@ -8570,7 +8570,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=os.ntp.carnet.hr"
+literal|"ntpdate_enable=YES,ntpdate_hosts=os.ntp.carnet.hr"
 block|}
 block|,
 block|{
@@ -8584,7 +8584,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=time.kfki.hu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=time.kfki.hu"
 block|}
 block|,
 block|{
@@ -8598,7 +8598,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.kim.lipi.go.id"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.kim.lipi.go.id"
 block|}
 block|,
 block|{
@@ -8612,7 +8612,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.maths.tcd.ie"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.maths.tcd.ie"
 block|}
 block|,
 block|{
@@ -8626,7 +8626,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=it.pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=it.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -8640,7 +8640,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.jst.mfeed.ad.jp"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.jst.mfeed.ad.jp"
 block|}
 block|,
 block|{
@@ -8654,7 +8654,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.v6.mfeed.ad.jp"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp1.v6.mfeed.ad.jp"
 block|}
 block|,
 block|{
@@ -8668,7 +8668,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=time.nuri.net"
+literal|"ntpdate_enable=YES,ntpdate_hosts=time.nuri.net"
 block|}
 block|,
 block|{
@@ -8682,7 +8682,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=mx.pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=mx.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -8696,7 +8696,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp0.nl.net"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp0.nl.net"
 block|}
 block|,
 block|{
@@ -8710,7 +8710,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.nl.net"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp1.nl.net"
 block|}
 block|,
 block|{
@@ -8724,7 +8724,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2.nl.net"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp2.nl.net"
 block|}
 block|,
 block|{
@@ -8738,7 +8738,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=fartein.ifi.uio.no"
+literal|"ntpdate_enable=YES,ntpdate_hosts=fartein.ifi.uio.no"
 block|}
 block|,
 block|{
@@ -8752,7 +8752,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=time.alcanet.no"
+literal|"ntpdate_enable=YES,ntpdate_hosts=time.alcanet.no"
 block|}
 block|,
 block|{
@@ -8766,7 +8766,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.massey.ac.nz"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.massey.ac.nz"
 block|}
 block|,
 block|{
@@ -8780,7 +8780,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.public.otago.ac.nz"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.public.otago.ac.nz"
 block|}
 block|,
 block|{
@@ -8794,7 +8794,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=tk1.ihug.co.nz"
+literal|"ntpdate_enable=YES,ntpdate_hosts=tk1.ihug.co.nz"
 block|}
 block|,
 block|{
@@ -8808,7 +8808,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.waikato.ac.nz"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.waikato.ac.nz"
 block|}
 block|,
 block|{
@@ -8822,7 +8822,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=info.cyf-kr.edu.pl"
+literal|"ntpdate_enable=YES,ntpdate_hosts=info.cyf-kr.edu.pl"
 block|}
 block|,
 block|{
@@ -8836,7 +8836,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ticks.roedu.net"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ticks.roedu.net"
 block|}
 block|,
 block|{
@@ -8850,7 +8850,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ru.pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ru.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -8864,7 +8864,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.psn.ru"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.psn.ru"
 block|}
 block|,
 block|{
@@ -8878,7 +8878,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=se.pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=se.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -8892,7 +8892,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.lth.se"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.lth.se"
 block|}
 block|,
 block|{
@@ -8906,7 +8906,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.sp.se"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp1.sp.se"
 block|}
 block|,
 block|{
@@ -8920,7 +8920,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2.sp.se"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp2.sp.se"
 block|}
 block|,
 block|{
@@ -8934,7 +8934,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.kth.se"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.kth.se"
 block|}
 block|,
 block|{
@@ -8948,7 +8948,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=sg.pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=sg.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -8962,7 +8962,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=si.pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=si.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -8976,7 +8976,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=sizif.mf.uni-lj.si"
+literal|"ntpdate_enable=YES,ntpdate_hosts=sizif.mf.uni-lj.si"
 block|}
 block|,
 block|{
@@ -8990,7 +8990,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.arnes.si"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp1.arnes.si"
 block|}
 block|,
 block|{
@@ -9004,7 +9004,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2.arnes.si"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp2.arnes.si"
 block|}
 block|,
 block|{
@@ -9018,7 +9018,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=time.ijs.si"
+literal|"ntpdate_enable=YES,ntpdate_hosts=time.ijs.si"
 block|}
 block|,
 block|{
@@ -9032,7 +9032,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.cs.strath.ac.uk"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.cs.strath.ac.uk"
 block|}
 block|,
 block|{
@@ -9046,7 +9046,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=time.stdtime.gov.tw"
+literal|"ntpdate_enable=YES,ntpdate_hosts=time.stdtime.gov.tw"
 block|}
 block|,
 block|{
@@ -9060,7 +9060,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=clock.stdtime.gov.tw"
+literal|"ntpdate_enable=YES,ntpdate_hosts=clock.stdtime.gov.tw"
 block|}
 block|,
 block|{
@@ -9074,7 +9074,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=tick.stdtime.gov.tw"
+literal|"ntpdate_enable=YES,ntpdate_hosts=tick.stdtime.gov.tw"
 block|}
 block|,
 block|{
@@ -9088,7 +9088,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=tock.stdtime.gov.tw"
+literal|"ntpdate_enable=YES,ntpdate_hosts=tock.stdtime.gov.tw"
 block|}
 block|,
 block|{
@@ -9102,7 +9102,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=watch.stdtime.gov.tw"
+literal|"ntpdate_enable=YES,ntpdate_hosts=watch.stdtime.gov.tw"
 block|}
 block|,
 block|{
@@ -9116,7 +9116,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=uk.pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=uk.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -9130,7 +9130,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.exnet.com"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.exnet.com"
 block|}
 block|,
 block|{
@@ -9144,7 +9144,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp0.uk.uu.net"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp0.uk.uu.net"
 block|}
 block|,
 block|{
@@ -9158,7 +9158,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.uk.uu.net"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp1.uk.uu.net"
 block|}
 block|,
 block|{
@@ -9172,7 +9172,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2.uk.uu.net"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp2.uk.uu.net"
 block|}
 block|,
 block|{
@@ -9186,7 +9186,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2a.mcc.ac.uk"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp2a.mcc.ac.uk"
 block|}
 block|,
 block|{
@@ -9200,7 +9200,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2b.mcc.ac.uk"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp2b.mcc.ac.uk"
 block|}
 block|,
 block|{
@@ -9214,7 +9214,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2c.mcc.ac.uk"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp2c.mcc.ac.uk"
 block|}
 block|,
 block|{
@@ -9228,7 +9228,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2d.mcc.ac.uk"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp2d.mcc.ac.uk"
 block|}
 block|,
 block|{
@@ -9242,7 +9242,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=us.pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=us.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -9256,7 +9256,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=sushi.compsci.lyon.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=sushi.compsci.lyon.edu"
 block|}
 block|,
 block|{
@@ -9270,7 +9270,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.drydog.com"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.drydog.com"
 block|}
 block|,
 block|{
@@ -9284,7 +9284,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.ucsd.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.ucsd.edu"
 block|}
 block|,
 block|{
@@ -9298,7 +9298,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.mainecoon.com"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp1.mainecoon.com"
 block|}
 block|,
 block|{
@@ -9312,7 +9312,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2.mainecoon.com"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp2.mainecoon.com"
 block|}
 block|,
 block|{
@@ -9326,7 +9326,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=reloj.kjsl.com"
+literal|"ntpdate_enable=YES,ntpdate_hosts=reloj.kjsl.com"
 block|}
 block|,
 block|{
@@ -9340,7 +9340,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=time.five-ten-sg.com"
+literal|"ntpdate_enable=YES,ntpdate_hosts=time.five-ten-sg.com"
 block|}
 block|,
 block|{
@@ -9354,7 +9354,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=louie.udel.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=louie.udel.edu"
 block|}
 block|,
 block|{
@@ -9368,7 +9368,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.shorty.com"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.shorty.com"
 block|}
 block|,
 block|{
@@ -9382,7 +9382,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=rolex.usg.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=rolex.usg.edu"
 block|}
 block|,
 block|{
@@ -9396,7 +9396,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=timex.usg.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=timex.usg.edu"
 block|}
 block|,
 block|{
@@ -9410,7 +9410,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp-0.cso.uiuc.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp-0.cso.uiuc.edu"
 block|}
 block|,
 block|{
@@ -9424,7 +9424,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp-1.cso.uiuc.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp-1.cso.uiuc.edu"
 block|}
 block|,
 block|{
@@ -9438,7 +9438,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp-1.mcs.anl.gov"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp-1.mcs.anl.gov"
 block|}
 block|,
 block|{
@@ -9452,7 +9452,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp-2.cso.uiuc.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp-2.cso.uiuc.edu"
 block|}
 block|,
 block|{
@@ -9466,7 +9466,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp-2.mcs.anl.gov"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp-2.mcs.anl.gov"
 block|}
 block|,
 block|{
@@ -9480,7 +9480,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=gilbreth.ecn.purdue.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=gilbreth.ecn.purdue.edu"
 block|}
 block|,
 block|{
@@ -9494,7 +9494,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=harbor.ecn.purdue.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=harbor.ecn.purdue.edu"
 block|}
 block|,
 block|{
@@ -9508,7 +9508,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=molecule.ecn.purdue.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=molecule.ecn.purdue.edu"
 block|}
 block|,
 block|{
@@ -9522,7 +9522,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.kansas.net"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp1.kansas.net"
 block|}
 block|,
 block|{
@@ -9536,7 +9536,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2.kansas.net"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp2.kansas.net"
 block|}
 block|,
 block|{
@@ -9550,7 +9550,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.ourconcord.net"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.ourconcord.net"
 block|}
 block|,
 block|{
@@ -9564,7 +9564,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=timeserver.cs.umb.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=timeserver.cs.umb.edu"
 block|}
 block|,
 block|{
@@ -9578,7 +9578,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ns.nts.umn.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ns.nts.umn.edu"
 block|}
 block|,
 block|{
@@ -9592,7 +9592,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=nss.nts.umn.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=nss.nts.umn.edu"
 block|}
 block|,
 block|{
@@ -9606,7 +9606,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=time-ext.missouri.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=time-ext.missouri.edu"
 block|}
 block|,
 block|{
@@ -9620,7 +9620,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=chronos1.umt.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=chronos1.umt.edu"
 block|}
 block|,
 block|{
@@ -9634,7 +9634,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=chronos2.umt.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=chronos2.umt.edu"
 block|}
 block|,
 block|{
@@ -9648,7 +9648,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=chronos3.umt.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=chronos3.umt.edu"
 block|}
 block|,
 block|{
@@ -9662,7 +9662,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=clock1.unc.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=clock1.unc.edu"
 block|}
 block|,
 block|{
@@ -9676,7 +9676,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=cuckoo.nevada.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=cuckoo.nevada.edu"
 block|}
 block|,
 block|{
@@ -9690,7 +9690,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=tick.cs.unlv.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=tick.cs.unlv.edu"
 block|}
 block|,
 block|{
@@ -9704,7 +9704,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=tock.cs.unlv.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=tock.cs.unlv.edu"
 block|}
 block|,
 block|{
@@ -9718,7 +9718,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp0.cornell.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp0.cornell.edu"
 block|}
 block|,
 block|{
@@ -9732,7 +9732,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=sundial.columbia.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=sundial.columbia.edu"
 block|}
 block|,
 block|{
@@ -9746,7 +9746,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=timex.cs.columbia.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=timex.cs.columbia.edu"
 block|}
 block|,
 block|{
@@ -9760,7 +9760,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=clock-1.cs.cmu.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=clock-1.cs.cmu.edu"
 block|}
 block|,
 block|{
@@ -9774,7 +9774,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=clock-2.cs.cmu.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=clock-2.cs.cmu.edu"
 block|}
 block|,
 block|{
@@ -9788,7 +9788,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=clock.psu.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=clock.psu.edu"
 block|}
 block|,
 block|{
@@ -9802,7 +9802,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=fuzz.psc.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=fuzz.psc.edu"
 block|}
 block|,
 block|{
@@ -9816,7 +9816,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp-1.ece.cmu.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp-1.ece.cmu.edu"
 block|}
 block|,
 block|{
@@ -9830,7 +9830,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp-2.ece.cmu.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp-2.ece.cmu.edu"
 block|}
 block|,
 block|{
@@ -9844,7 +9844,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.fnbhs.com"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.fnbhs.com"
 block|}
 block|,
 block|{
@@ -9858,7 +9858,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.tmc.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.tmc.edu"
 block|}
 block|,
 block|{
@@ -9872,7 +9872,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp5.tamu.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp5.tamu.edu"
 block|}
 block|,
 block|{
@@ -9886,7 +9886,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=tick.greyware.com"
+literal|"ntpdate_enable=YES,ntpdate_hosts=tick.greyware.com"
 block|}
 block|,
 block|{
@@ -9900,7 +9900,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=tock.greyware.com"
+literal|"ntpdate_enable=YES,ntpdate_hosts=tock.greyware.com"
 block|}
 block|,
 block|{
@@ -9914,7 +9914,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp-1.vt.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp-1.vt.edu"
 block|}
 block|,
 block|{
@@ -9928,7 +9928,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp-2.vt.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp-2.vt.edu"
 block|}
 block|,
 block|{
@@ -9942,7 +9942,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.cmr.gov"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.cmr.gov"
 block|}
 block|,
 block|{
@@ -9956,7 +9956,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp0.state.vt.us"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp0.state.vt.us"
 block|}
 block|,
 block|{
@@ -9970,7 +9970,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.state.vt.us"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp1.state.vt.us"
 block|}
 block|,
 block|{
@@ -9984,7 +9984,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2.state.vt.us"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp2.state.vt.us"
 block|}
 block|,
 block|{
@@ -9998,7 +9998,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.tcp-udp.net"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.tcp-udp.net"
 block|}
 block|,
 block|{
@@ -10012,7 +10012,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.cs.wisc.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp1.cs.wisc.edu"
 block|}
 block|,
 block|{
@@ -10026,7 +10026,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp3.cs.wisc.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp3.cs.wisc.edu"
 block|}
 block|,
 block|{
@@ -10040,7 +10040,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.cs.unp.ac.za"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.cs.unp.ac.za"
 block|}
 block|,
 block|{
@@ -10060,9 +10060,8 @@ name|DMENU_NORMAL_TYPE
 block|,
 literal|"System Console Configuration"
 block|,
-literal|"The default system console driver for FreeBSD (syscons) has a\n"
-literal|"number of configuration options which may be set according to\n"
-literal|"your preference.\n\n"
+literal|"The system console driver for FreeBSD has a number of configuration\n"
+literal|"options which may be set according to your preference.\n\n"
 literal|"When you are done setting configuration options, select Cancel."
 block|,
 literal|"Configure your system console settings"
@@ -10241,12 +10240,9 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"System Console Keymap"
 block|,
-literal|"The default system console driver for FreeBSD (syscons) defaults\n"
-literal|"to a standard \"PC-98x1\" keyboard map.  Users may wish to choose\n"
-literal|"one of the other keymaps below.\n"
-literal|"Note that sysinstall itself only uses the part of the keyboard map\n"
-literal|"which is required to generate the ANSI character subset, but your\n"
-literal|"choice of keymap will also be saved for later (fuller) use."
+literal|"The system console driver for FreeBSD defaults to a standard\n"
+literal|"\"PC-98x1\" keyboard map.  Users may wish to choose one of the\n"
+literal|"other keymaps below."
 block|,
 literal|"Choose a keyboard map"
 block|,
@@ -10299,13 +10295,9 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"System Console Keymap"
 block|,
-literal|"The default system console driver for FreeBSD (syscons) defaults\n"
-literal|"to a standard \"American\" keyboard map.  Users in other countries\n"
-literal|"(or with different keyboard preferences) may wish to choose one of\n"
-literal|"the other keymaps below.\n"
-literal|"Note that sysinstall itself only uses the part of the keyboard map\n"
-literal|"which is required to generate the ANSI character subset, but your\n"
-literal|"choice of keymap will also be saved for later (fuller) use."
+literal|"The system console driver for FreeBSD defaults to a standard\n"
+literal|"\"US\" keyboard map.  Users may wish to choose one of the\n"
+literal|"other keymaps below."
 block|,
 literal|"Choose a keyboard map"
 block|,
@@ -11239,7 +11231,7 @@ block|{
 name|NULL
 block|}
 block|}
-block|, }
+block|}
 block|;
 name|DMenu
 name|MenuSysconsSaver
@@ -11276,7 +11268,21 @@ literal|"saver=blank"
 block|}
 block|,
 block|{
-literal|"2 Daemon"
+literal|"2 Beastie"
+block|,
+literal|"\"BSD Daemon\" animated screen saver (graphics)"
+block|,
+name|dmenuVarCheck
+block|,
+name|configSaver
+block|,
+name|NULL
+block|,
+literal|"saver=beastie"
+block|}
+block|,
+block|{
+literal|"3 Daemon"
 block|,
 literal|"\"BSD Daemon\" animated screen saver (text)"
 block|,
@@ -11290,7 +11296,21 @@ literal|"saver=daemon"
 block|}
 block|,
 block|{
-literal|"3 Fade"
+literal|"4 Dragon"
+block|,
+literal|"Dragon screensaver (graphics)"
+block|,
+name|dmenuVarCheck
+block|,
+name|configSaver
+block|,
+name|NULL
+block|,
+literal|"saver=dragon"
+block|}
+block|,
+block|{
+literal|"5 Fade"
 block|,
 literal|"Fade out effect screen saver"
 block|,
@@ -11304,7 +11324,7 @@ literal|"saver=fade"
 block|}
 block|,
 block|{
-literal|"4 Fire"
+literal|"6 Fire"
 block|,
 literal|"Flames effect screen saver"
 block|,
@@ -11318,7 +11338,7 @@ literal|"saver=fire"
 block|}
 block|,
 block|{
-literal|"5 Green"
+literal|"7 Green"
 block|,
 literal|"\"Green\" power saving mode (if supported by monitor)"
 block|,
@@ -11332,9 +11352,9 @@ literal|"saver=green"
 block|}
 block|,
 block|{
-literal|"6 Logo"
+literal|"8 Logo"
 block|,
-literal|"\"BSD Daemon\" animated screen saver (graphics)"
+literal|"FreeBSD \"logo\" animated screen saver (graphics)"
 block|,
 name|dmenuVarCheck
 block|,
@@ -11346,7 +11366,7 @@ literal|"saver=logo"
 block|}
 block|,
 block|{
-literal|"7 Rain"
+literal|"9 Rain"
 block|,
 literal|"Rain drops screen saver"
 block|,
@@ -11360,7 +11380,7 @@ literal|"saver=rain"
 block|}
 block|,
 block|{
-literal|"8 Snake"
+literal|"a Snake"
 block|,
 literal|"Draw a FreeBSD \"snake\" on your screen"
 block|,
@@ -11374,7 +11394,7 @@ literal|"saver=snake"
 block|}
 block|,
 block|{
-literal|"9 Star"
+literal|"b Star"
 block|,
 literal|"A \"twinkling stars\" effect"
 block|,
@@ -11388,7 +11408,7 @@ literal|"saver=star"
 block|}
 block|,
 block|{
-literal|"Warp"
+literal|"c Warp"
 block|,
 literal|"A \"stars warping\" effect"
 block|,
@@ -11402,9 +11422,9 @@ literal|"saver=warp"
 block|}
 block|,
 block|{
-literal|"Dragon"
+literal|"d None"
 block|,
-literal|"Dragon screensaver (graphics)"
+literal|"Disable the screensaver"
 block|,
 name|dmenuVarCheck
 block|,
@@ -11412,7 +11432,7 @@ name|configSaver
 block|,
 name|NULL
 block|,
-literal|"saver=dragon"
+literal|"saver=NO"
 block|}
 block|,
 block|{
@@ -11439,7 +11459,7 @@ block|{
 name|NULL
 block|}
 block|}
-block|, }
+block|}
 block|;
 ifndef|#
 directive|ifndef

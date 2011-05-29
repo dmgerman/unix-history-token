@@ -1505,7 +1505,7 @@ name|en_nsamples
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * If the firt-level aggregation object alredy exist, 	 * just aggregate the samples and, if needed, resort 	 * it. 	 */
+comment|/* 	 * If the first-level aggregation object already exists, 	 * just aggregate the samples and, if needed, resort 	 * it. 	 */
 if|if
 condition|(
 name|found

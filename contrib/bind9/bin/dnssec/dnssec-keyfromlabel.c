@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2007, 2008, 2010  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: dnssec-keyfromlabel.c,v 1.4.50.2 2010/01/15 23:47:31 tbox Exp $ */
+comment|/* $Id: dnssec-keyfromlabel.c,v 1.4.50.2 2010-01-15 23:47:31 tbox Exp $ */
 end_comment
 
 begin_comment

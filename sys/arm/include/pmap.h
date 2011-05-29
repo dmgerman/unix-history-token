@@ -307,7 +307,7 @@ modifier|*
 name|pm_pdir
 decl_stmt|;
 comment|/* KVA of page directory */
-name|int
+name|cpumask_t
 name|pm_active
 decl_stmt|;
 comment|/* active on cpus */
@@ -606,7 +606,7 @@ end_function
 
 begin_decl_stmt
 specifier|extern
-name|vm_offset_t
+name|vm_paddr_t
 name|phys_avail
 index|[]
 decl_stmt|;
@@ -1284,30 +1284,6 @@ begin_comment
 comment|/* ARM_NMMUS> 1 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SKYEYE_WORKAROUNDS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PMAP_NEEDS_PTE_SYNC
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PMAP_INCLUDE_PTE_SYNC
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_if
 if|#
 directive|if
@@ -1375,11 +1351,6 @@ directive|define
 name|PMAP_NEEDS_PTE_SYNC
 value|0
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

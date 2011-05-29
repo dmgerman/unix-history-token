@@ -78,7 +78,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 end_ifdef
 
 begin_include
@@ -91,12 +91,6 @@ begin_include
 include|#
 directive|include
 file|<machine/fpu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<compat/ia32/ia32_reg.h>
 end_include
 
 begin_comment
@@ -190,7 +184,7 @@ name|td2
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 name|struct
 name|dbreg32
 name|r32
@@ -265,7 +259,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 if|if
 condition|(
 name|SV_CURPROC_FLAG
@@ -276,17 +270,14 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
+name|SV_PROC_FLAG
+argument_list|(
 name|td2
 operator|->
 name|td_proc
-operator|->
-name|p_sysent
-operator|->
-name|sv_flags
-operator|&
+argument_list|,
 name|SV_ILP32
-operator|)
+argument_list|)
 operator|==
 literal|0
 condition|)

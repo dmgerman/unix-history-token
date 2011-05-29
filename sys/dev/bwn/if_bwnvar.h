@@ -200,7 +200,7 @@ name|mac
 parameter_list|,
 name|o
 parameter_list|)
-value|(siba_read_2(mac->mac_sd, o))
+value|(siba_read_2(mac->mac_sc->sc_dev, o))
 end_define
 
 begin_define
@@ -212,7 +212,7 @@ name|mac
 parameter_list|,
 name|o
 parameter_list|)
-value|(siba_read_4(mac->mac_sd, o))
+value|(siba_read_4(mac->mac_sc->sc_dev, o))
 end_define
 
 begin_define
@@ -226,7 +226,8 @@ name|o
 parameter_list|,
 name|v
 parameter_list|)
-value|(siba_write_2(mac->mac_sd, o, v))
+define|\
+value|(siba_write_2(mac->mac_sc->sc_dev, o, v))
 end_define
 
 begin_define
@@ -240,7 +241,8 @@ name|o
 parameter_list|,
 name|v
 parameter_list|)
-value|(siba_write_4(mac->mac_sd, o, v))
+define|\
+value|(siba_write_4(mac->mac_sc->sc_dev, o, v))
 end_define
 
 begin_define
@@ -251,7 +253,7 @@ parameter_list|(
 name|mac
 parameter_list|)
 define|\
-value|((mac->mac_sd->sd_id.sd_rev>= 11) ? 0x18 : 0)
+value|((siba_get_revid(mac->mac_sc->sc_dev)>= 11) ? 0x18 : 0)
 end_define
 
 begin_define
@@ -262,7 +264,7 @@ parameter_list|(
 name|mac
 parameter_list|)
 define|\
-value|((mac->mac_sd->sd_id.sd_rev>= 11) ? 0x38 : 8)
+value|((siba_get_revid(mac->mac_sc->sc_dev)>= 11) ? 0x38 : 8)
 end_define
 
 begin_define
@@ -598,7 +600,7 @@ name|mac
 parameter_list|,
 name|flags
 parameter_list|)
-value|siba_barrier(mac->mac_sd, flags)
+value|siba_barrier(mac->mac_sc->sc_dev, flags)
 end_define
 
 begin_define
@@ -3244,11 +3246,6 @@ name|bwn_softc
 modifier|*
 name|mac_sc
 decl_stmt|;
-name|struct
-name|siba_dev_softc
-modifier|*
-name|mac_sd
-decl_stmt|;
 name|unsigned
 name|mac_status
 decl_stmt|;
@@ -3403,33 +3400,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|bwn_node
-block|{
-name|struct
-name|ieee80211_node
-name|bn_node
-decl_stmt|;
-comment|/* must be the first */
-name|struct
-name|ieee80211_amrr_node
-name|bn_amn
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|BWN_NODE
-parameter_list|(
-name|ni
-parameter_list|)
-value|((struct bwn_node *)(ni))
-end_define
-
 begin_comment
 comment|/*  * Driver-specific vap state.  */
 end_comment
@@ -3443,10 +3413,6 @@ name|ieee80211vap
 name|bv_vap
 decl_stmt|;
 comment|/* base class */
-name|struct
-name|ieee80211_amrr
-name|bv_amrr
-decl_stmt|;
 name|int
 function_decl|(
 modifier|*
@@ -3493,11 +3459,6 @@ name|bwn_softc
 block|{
 name|device_t
 name|sc_dev
-decl_stmt|;
-name|struct
-name|siba_dev_softc
-modifier|*
-name|sc_sd
 decl_stmt|;
 name|struct
 name|mtx

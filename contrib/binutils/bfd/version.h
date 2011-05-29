@@ -3,7 +3,7 @@ begin_define
 define|#
 directive|define
 name|BFD_VERSION_DATE
-value|20040523
+value|20070703
 end_define
 
 begin_define
@@ -17,7 +17,14 @@ begin_define
 define|#
 directive|define
 name|BFD_VERSION_STRING
-value|@bfd_version_string@
+value|@bfd_version_package@ @bfd_version_string@
+end_define
+
+begin_define
+define|#
+directive|define
+name|REPORT_BUGS_TO
+value|@report_bugs_to@
 end_define
 
 end_unit

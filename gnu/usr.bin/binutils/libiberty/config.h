@@ -12,61 +12,6 @@ comment|/* config.in.  Generated from configure.ac by autoheader.  */
 end_comment
 
 begin_comment
-comment|/* Define to `unsigned long' if<sys/types.h> doesn't define.  */
-end_comment
-
-begin_comment
-comment|/* #undef uintptr_t */
-end_comment
-
-begin_comment
-comment|/* 1234 = LIL_ENDIAN, 4321 = BIGENDIAN */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__sparc64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ARMEB__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|TARGET_BIG_ENDIAN
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|BYTEORDER
-value|4321
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|BYTEORDER
-value|1234
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* Define to one of _getb67, GETB67, getb67 for Cray-2 and Cray-YMP systems.    This function is required for alloca.c support on those systems. */
 end_comment
 
@@ -186,6 +131,149 @@ begin_define
 define|#
 directive|define
 name|HAVE_CLOCK
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `asprintf', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_ASPRINTF
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `basename', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_BASENAME
+value|0
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `calloc', and to 0 if you don't.    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_CALLOC
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `ffs', and to 0 if you don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_FFS
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `getenv', and to 0 if you don't.    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_GETENV
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `getopt', and to 0 if you don't.    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_GETOPT
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `malloc', and to 0 if you don't.    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_MALLOC
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `realloc', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_REALLOC
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `sbrk', and to 0 if you don't.    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_SBRK
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `snprintf', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_SNPRINTF
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `strverscmp', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_STRVERSCMP
+value|0
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `vasprintf', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_VASPRINTF
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `vsnprintf', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_VSNPRINTF
 value|1
 end_define
 
@@ -576,6 +664,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<stdio_ext.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STDIO_EXT_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<stdlib.h> header file. */
 end_comment
 
@@ -601,9 +697,12 @@ begin_comment
 comment|/* Define to 1 if you have the `stpncpy' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_STPNCPY */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_STPNCPY
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `strcasecmp' function. */
@@ -683,6 +782,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `strndup' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRNDUP
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `strrchr' function. */
 end_comment
 
@@ -747,6 +857,14 @@ directive|define
 name|HAVE_STRTOUL
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `strverscmp' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRVERSCMP */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `sysconf' function. */
@@ -1088,6 +1206,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `wait3' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WAIT3
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `wait4' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WAIT4
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `waitpid' function. */
 end_comment
 
@@ -1137,39 +1277,12 @@ comment|/* #undef HAVE__SYSTEM_CONFIGURATION */
 end_comment
 
 begin_comment
-comment|/* Define if the host machine stores words of multi-word integers in    big-endian order. */
+comment|/* Define to 1 if you have the `__fsetlocking' function. */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__sparc64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ARMEB__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|TARGET_BIG_ENDIAN
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HOST_WORDS_BIG_ENDIAN
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* #undef HAVE___FSETLOCKING */
+end_comment
 
 begin_comment
 comment|/* Define if canonicalize_file_name is not declared in system header files. */
@@ -1251,6 +1364,14 @@ comment|/* #define PACKAGE_VERSION "" */
 end_comment
 
 begin_comment
+comment|/* The size of a `int', as computed by sizeof. */
+end_comment
+
+begin_comment
+comment|/* #define SIZEOF_INT 4 */
+end_comment
+
+begin_comment
 comment|/* Define if you know the direction of stack growth for your system; otherwise    it will be automatically deduced at run-time. STACK_DIRECTION> 0 => grows    toward higher addresses STACK_DIRECTION< 0 => grows toward lower addresses    STACK_DIRECTION = 0 => direction of growth unknown */
 end_comment
 
@@ -1284,14 +1405,33 @@ value|1
 end_define
 
 begin_comment
-comment|/* whether byteorder is bigendian */
+comment|/* Define to an unsigned 64-bit type available in the compiler. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_define
+define|#
+directive|define
+name|UNSIGNED_64BIT_TYPE
+value|uint64_t
+end_define
+
+begin_comment
+comment|/* Define to 1 if your processor stores words with the most significant byte    first (like Motorola and SPARC, unlike Intel and VAX). */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__powerpc__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|__sparc64__
-end_ifdef
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -1314,12 +1454,23 @@ comment|/* #undef const */
 end_comment
 
 begin_comment
-comment|/* Define as `__inline' if that's what the C compiler calls it, or to nothing    if it is not supported. */
+comment|/* Define to `__inline__' or `__inline' if that's what the C compiler    calls it, or to nothing if 'inline' is not supported under any name.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__cplusplus
+end_ifndef
 
 begin_comment
 comment|/* #undef inline */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to `int' if<sys/types.h> does not define. */

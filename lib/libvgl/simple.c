@@ -1497,8 +1497,9 @@ block|}
 end_function
 
 begin_function
-name|void
+specifier|static
 specifier|inline
+name|void
 name|set4pixels
 parameter_list|(
 name|VGLBitmap
@@ -1855,8 +1856,9 @@ block|}
 end_function
 
 begin_function
-name|void
+specifier|static
 specifier|inline
+name|void
 name|set2lines
 parameter_list|(
 name|VGLBitmap

@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_watchdog.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -162,6 +168,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sleepqueue.h>
 end_include
 
@@ -194,6 +206,23 @@ include|#
 directive|include
 file|<sys/vnode.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SW_WATCHDOG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/watchdog.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -285,19 +314,6 @@ directive|define
 name|WI_GIANTQ
 value|1
 end_define
-
-begin_expr_stmt
-specifier|static
-name|MALLOC_DEFINE
-argument_list|(
-name|M_NETADDR
-argument_list|,
-literal|"subr_export_host"
-argument_list|,
-literal|"Export host address structure"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function_decl
 specifier|static
@@ -552,7 +568,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_LONG
+name|SYSCTL_ULONG
 argument_list|(
 name|_vfs
 argument_list|,
@@ -567,7 +583,7 @@ name|numvnodes
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of vnodes in existence"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -679,7 +695,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_LONG
+name|SYSCTL_ULONG
 argument_list|(
 name|_vfs
 argument_list|,
@@ -711,7 +727,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_LONG
+name|SYSCTL_ULONG
 argument_list|(
 name|_vfs
 argument_list|,
@@ -726,7 +742,7 @@ name|freevnodes
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of vnodes in the free list"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -786,7 +802,7 @@ name|reassignbufcalls
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of calls to reassignbuf"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -854,16 +870,6 @@ begin_decl_stmt
 specifier|static
 name|uma_zone_t
 name|vnodepoll_zone
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Set to 1 to print out reclaim of active vnodes */
-end_comment
-
-begin_decl_stmt
-name|int
-name|prtactive
 decl_stmt|;
 end_decl_stmt
 
@@ -989,7 +995,7 @@ name|filedelay
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Time to delay syncing files (in seconds)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1023,7 +1029,7 @@ name|dirdelay
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Time to delay syncing directories (in seconds)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1057,7 +1063,7 @@ name|metadelay
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Time to delay syncing metadata (in seconds)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1100,7 +1106,7 @@ name|stat_rush_requests
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of times I/O speeded up (rush requests)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1176,7 +1182,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_ULONG
 argument_list|(
 name|_kern
 argument_list|,
@@ -1259,7 +1265,7 @@ value|(((vp)->v_iflag& VI_FREE)&& (vp)->v_holdcnt)
 end_define
 
 begin_comment
-comment|/*  * Initialize the vnode management data structures.  */
+comment|/*  * Initialize the vnode management data structures.  *  * Reevaluate the following cap on the number of vnodes after the physical  * memory size exceeds 512GB.  In the limit, as the physical memory size  * grows, the ratio of physical pages to vnodes approaches sixteen to one.  */
 end_comment
 
 begin_ifndef
@@ -1272,7 +1278,7 @@ begin_define
 define|#
 directive|define
 name|MAXVNODES_MAX
-value|100000
+value|(512 * (1024 * 1024 * 1024 / (int)PAGE_SIZE / 16))
 end_define
 
 begin_endif
@@ -1291,25 +1297,43 @@ name|dummy
 name|__unused
 parameter_list|)
 block|{
-comment|/* 	 * Desiredvnodes is a function of the physical memory size and 	 * the kernel's heap size.  Specifically, desiredvnodes scales 	 * in proportion to the physical memory size until two fifths 	 * of the kernel's heap size is consumed by vnodes and vm 	 * objects. 	 */
-name|desiredvnodes
+name|int
+name|physvnodes
+decl_stmt|,
+name|virtvnodes
+decl_stmt|;
+comment|/* 	 * Desiredvnodes is a function of the physical memory size and the 	 * kernel's heap size.  Generally speaking, it scales with the 	 * physical memory size.  The ratio of desiredvnodes to physical pages 	 * is one to four until desiredvnodes exceeds 98,304.  Thereafter, the 	 * marginal ratio of desiredvnodes to physical pages is one to 	 * sixteen.  However, desiredvnodes is limited by the kernel's heap 	 * size.  The memory required by desiredvnodes vnodes and vm objects 	 * may not exceed one seventh of the kernel's heap size. 	 */
+name|physvnodes
 operator|=
-name|min
-argument_list|(
 name|maxproc
 operator|+
 name|cnt
 operator|.
 name|v_page_count
 operator|/
+literal|16
+operator|+
+literal|3
+operator|*
+name|min
+argument_list|(
+literal|98304
+operator|*
 literal|4
 argument_list|,
-literal|2
-operator|*
+name|cnt
+operator|.
+name|v_page_count
+argument_list|)
+operator|/
+literal|16
+expr_stmt|;
+name|virtvnodes
+operator|=
 name|vm_kmem_size
 operator|/
 operator|(
-literal|5
+literal|7
 operator|*
 operator|(
 sizeof|sizeof
@@ -1325,6 +1349,14 @@ name|vnode
 argument_list|)
 operator|)
 operator|)
+expr_stmt|;
+name|desiredvnodes
+operator|=
+name|min
+argument_list|(
+name|physvnodes
+argument_list|,
+name|virtvnodes
 argument_list|)
 expr_stmt|;
 if|if
@@ -1642,6 +1674,8 @@ name|mp
 argument_list|)
 argument_list|,
 name|PVFS
+operator||
+name|PDROP
 argument_list|,
 literal|"vfs_busy"
 argument_list|,
@@ -1658,6 +1692,11 @@ name|mtx_lock
 argument_list|(
 operator|&
 name|mountlist_mtx
+argument_list|)
+expr_stmt|;
+name|MNT_ILOCK
+argument_list|(
+name|mp
 argument_list|)
 expr_stmt|;
 block|}
@@ -2229,7 +2268,7 @@ name|mp
 parameter_list|)
 block|{
 specifier|static
-name|u_int16_t
+name|uint16_t
 name|mntid_base
 decl_stmt|;
 name|struct
@@ -2435,7 +2474,9 @@ name|timestamp_precision
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"File timestamp precision (0: seconds, "
+literal|"1: sec + ns accurate to 1/HZ, 2: sec + ns truncated to ms, "
+literal|"3+: sec + ns (max. precision))"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3043,13 +3084,9 @@ name|next_iter_mntunlocked
 label|:
 if|if
 condition|(
-operator|(
-name|count
-operator|%
-literal|256
-operator|)
-operator|!=
-literal|0
+operator|!
+name|should_yield
+argument_list|()
 condition|)
 goto|goto
 name|relock_mnt
@@ -3061,13 +3098,9 @@ name|next_iter
 label|:
 if|if
 condition|(
-operator|(
-name|count
-operator|%
-literal|256
-operator|)
-operator|!=
-literal|0
+operator|!
+name|should_yield
+argument_list|()
 condition|)
 continue|continue;
 name|MNT_IUNLOCK
@@ -3077,8 +3110,10 @@ argument_list|)
 expr_stmt|;
 name|yield
 label|:
-name|uio_yield
-argument_list|()
+name|kern_yield
+argument_list|(
+name|PRI_UNCHANGED
+argument_list|)
 expr_stmt|;
 name|relock_mnt
 label|:
@@ -3520,15 +3555,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|EVENTHANDLER_INVOKE
-argument_list|(
-name|vfs_lowvnodes
-argument_list|,
-name|desiredvnodes
-operator|/
-literal|10
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -3554,8 +3580,10 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|uio_yield
-argument_list|()
+name|kern_yield
+argument_list|(
+name|PRI_UNCHANGED
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -5693,9 +5721,19 @@ name|V_SAVE
 operator|)
 condition|)
 block|{
+name|BO_LOCK
+argument_list|(
+name|bo
+argument_list|)
+expr_stmt|;
 name|bremfree
 argument_list|(
 name|bp
+argument_list|)
+expr_stmt|;
+name|BO_UNLOCK
+argument_list|(
+name|bo
 argument_list|)
 expr_stmt|;
 name|bp
@@ -5721,9 +5759,19 @@ operator|)
 return|;
 comment|/* XXX: why not loop ? */
 block|}
+name|BO_LOCK
+argument_list|(
+name|bo
+argument_list|)
+expr_stmt|;
 name|bremfree
 argument_list|(
 name|bp
+argument_list|)
+expr_stmt|;
+name|BO_UNLOCK
+argument_list|(
+name|bo
 argument_list|)
 expr_stmt|;
 name|bp
@@ -5961,9 +6009,19 @@ condition|)
 goto|goto
 name|restart
 goto|;
+name|BO_LOCK
+argument_list|(
+name|bo
+argument_list|)
+expr_stmt|;
 name|bremfree
 argument_list|(
 name|bp
+argument_list|)
+expr_stmt|;
+name|BO_UNLOCK
+argument_list|(
+name|bo
 argument_list|)
 expr_stmt|;
 name|bp
@@ -5991,6 +6049,11 @@ expr_stmt|;
 name|anyfreed
 operator|=
 literal|1
+expr_stmt|;
+name|BO_LOCK
+argument_list|(
+name|bo
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -6029,15 +6092,15 @@ operator|)
 operator|)
 condition|)
 block|{
-goto|goto
-name|restart
-goto|;
-block|}
-name|BO_LOCK
+name|BO_UNLOCK
 argument_list|(
 name|bo
 argument_list|)
 expr_stmt|;
+goto|goto
+name|restart
+goto|;
+block|}
 block|}
 name|TAILQ_FOREACH_SAFE
 argument_list|(
@@ -6082,9 +6145,19 @@ condition|)
 goto|goto
 name|restart
 goto|;
+name|BO_LOCK
+argument_list|(
+name|bo
+argument_list|)
+expr_stmt|;
 name|bremfree
 argument_list|(
 name|bp
+argument_list|)
+expr_stmt|;
+name|BO_UNLOCK
+argument_list|(
+name|bo
 argument_list|)
 expr_stmt|;
 name|bp
@@ -6112,6 +6185,11 @@ expr_stmt|;
 name|anyfreed
 operator|=
 literal|1
+expr_stmt|;
+name|BO_LOCK
+argument_list|(
+name|bo
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -6152,15 +6230,15 @@ literal|0
 operator|)
 condition|)
 block|{
-goto|goto
-name|restart
-goto|;
-block|}
-name|BO_LOCK
+name|BO_UNLOCK
 argument_list|(
 name|bo
 argument_list|)
 expr_stmt|;
+goto|goto
+name|restart
+goto|;
+block|}
 block|}
 block|}
 if|if
@@ -6237,9 +6315,19 @@ name|bp
 operator|)
 argument_list|)
 expr_stmt|;
+name|BO_LOCK
+argument_list|(
+name|bo
+argument_list|)
+expr_stmt|;
 name|bremfree
 argument_list|(
 name|bp
+argument_list|)
+expr_stmt|;
+name|BO_UNLOCK
+argument_list|(
+name|bo
 argument_list|)
 expr_stmt|;
 name|bawrite
@@ -6287,7 +6375,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * buf_splay() - splay tree core for the clean/dirty list of buffers in  * 		 a vnode.  *  *	NOTE: We have to deal with the special case of a background bitmap  *	buffer, a situation where two buffers will have the same logical  *	block offset.  We want (1) only the foreground buffer to be accessed  *	in a lookup and (2) must differentiate between the foreground and  *	background buffer in the splay tree algorithm because the splay  *	tree cannot normally handle multiple entities with the same 'index'.  *	We accomplish this by adding differentiating flags to the splay tree's  *	numerical domain.  */
+comment|/*  * buf_splay() - splay tree core for the clean/dirty list of buffers in  *		 a vnode.  *  *	NOTE: We have to deal with the special case of a background bitmap  *	buffer, a situation where two buffers will have the same logical  *	block offset.  We want (1) only the foreground buffer to be accessed  *	in a lookup and (2) must differentiate between the foreground and  *	background buffer in the splay tree algorithm because the splay  *	tree cannot normally handle multiple entities with the same 'index'.  *	We accomplish this by adding differentiating flags to the splay tree's  *	numerical domain.  */
 end_comment
 
 begin_function
@@ -8462,6 +8550,22 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+ifdef|#
+directive|ifdef
+name|SW_WATCHDOG
+if|if
+condition|(
+name|first_printf
+operator|==
+literal|0
+condition|)
+name|wdog_kern_pat
+argument_list|(
+name|WD_LASTVAL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -8572,6 +8676,35 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* 		 * Just sleep for a short period of time between 		 * iterations when shutting down to allow some I/O 		 * to happen. 		 * 		 * If it has taken us less than a second to process the 		 * current work, then wait. Otherwise start right over 		 * again. We can still lose time if any single round 		 * takes more than two seconds, but it does not really 		 * matter as we are just trying to generally pace the 		 * filesystem activity. 		 */
+if|if
+condition|(
+name|syncer_state
+operator|!=
+name|SYNCER_RUNNING
+operator|||
+name|time_uptime
+operator|==
+name|starttime
+condition|)
+block|{
+name|thread_lock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+name|sched_prio
+argument_list|(
+name|td
+argument_list|,
+name|PPAUSE
+argument_list|)
+expr_stmt|;
+name|thread_unlock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|syncer_state
@@ -9617,7 +9750,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/*  	 * We don't guarantee that any particular close will 	 * trigger inactive processing so just make a best effort 	 * here at preventing a reference to a removed file.  If 	 * we don't succeed no harm is done. 	 */
+comment|/* 	 * We don't guarantee that any particular close will 	 * trigger inactive processing so just make a best effort 	 * here at preventing a reference to a removed file.  If 	 * we don't succeed no harm is done. 	 */
 if|if
 condition|(
 name|vp
@@ -9811,7 +9944,7 @@ name|func
 operator|==
 name|VPUTX_VUNREF
 condition|)
-name|ASSERT_VOP_ELOCKED
+name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
@@ -9949,9 +10082,6 @@ operator|!=
 literal|1
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
 name|vprint
 argument_list|(
 literal|"vputx: negative ref count"
@@ -9959,8 +10089,6 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|panic
 argument_list|(
 literal|"vputx: negative ref cnt"
@@ -9991,13 +10119,14 @@ name|v_iflag
 operator||=
 name|VI_OWEINACT
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|func
-operator|==
-name|VPUTX_VRELE
 condition|)
 block|{
+case|case
+name|VPUTX_VRELE
+case|:
 name|error
 operator|=
 name|vn_lock
@@ -10014,14 +10143,12 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
+break|break;
+case|case
+name|VPUTX_VPUT
+case|:
 if|if
 condition|(
-name|func
-operator|==
-name|VPUTX_VPUT
-operator|&&
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
@@ -10048,6 +10175,25 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+block|}
+break|break;
+case|case
+name|VPUTX_VUNREF
+case|:
+if|if
+condition|(
+name|VOP_ISLOCKED
+argument_list|(
+name|vp
+argument_list|)
+operator|!=
+name|LK_EXCLUSIVE
+condition|)
+name|error
+operator|=
+name|EBUSY
+expr_stmt|;
+break|break;
 block|}
 if|if
 condition|(
@@ -10543,7 +10689,7 @@ name|busyprt
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Print out busy vnodes"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -11504,16 +11650,12 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Clear the advisory locks and wake up waiting threads. 	 */
-name|lf_purgelocks
+operator|(
+name|void
+operator|)
+name|VOP_ADVLOCKPURGE
 argument_list|(
 name|vp
-argument_list|,
-operator|&
-operator|(
-name|vp
-operator|->
-name|v_lockf
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Delete from old mount point vnode list. 	 */
@@ -12716,6 +12858,11 @@ argument_list|)
 expr_stmt|;
 name|MNT_FLAG
 argument_list|(
+name|MNT_NFS4ACLS
+argument_list|)
+expr_stmt|;
+name|MNT_FLAG
+argument_list|(
 name|MNT_EXRDONLY
 argument_list|)
 expr_stmt|;
@@ -12797,6 +12944,11 @@ expr_stmt|;
 name|MNT_FLAG
 argument_list|(
 name|MNT_BYFSID
+argument_list|)
+expr_stmt|;
+name|MNT_FLAG
+argument_list|(
+name|MNT_SOFTDEP
 argument_list|)
 expr_stmt|;
 undef|#
@@ -12904,6 +13056,31 @@ argument_list|)
 expr_stmt|;
 name|MNT_KERN_FLAG
 argument_list|(
+name|MNTK_DRAINING
+argument_list|)
+expr_stmt|;
+name|MNT_KERN_FLAG
+argument_list|(
+name|MNTK_REFEXPIRE
+argument_list|)
+expr_stmt|;
+name|MNT_KERN_FLAG
+argument_list|(
+name|MNTK_EXTENDED_SHARED
+argument_list|)
+expr_stmt|;
+name|MNT_KERN_FLAG
+argument_list|(
+name|MNTK_SHARED_WRITES
+argument_list|)
+expr_stmt|;
+name|MNT_KERN_FLAG
+argument_list|(
+name|MNTK_SUJ
+argument_list|)
+expr_stmt|;
+name|MNT_KERN_FLAG
+argument_list|(
 name|MNTK_UNMOUNT
 argument_list|)
 expr_stmt|;
@@ -12934,12 +13111,12 @@ argument_list|)
 expr_stmt|;
 name|MNT_KERN_FLAG
 argument_list|(
-name|MNTK_NOKNOTE
+name|MNTK_LOOKUP_SHARED
 argument_list|)
 expr_stmt|;
 name|MNT_KERN_FLAG
 argument_list|(
-name|MNTK_LOOKUP_SHARED
+name|MNTK_NOKNOTE
 argument_list|)
 expr_stmt|;
 undef|#
@@ -13596,6 +13773,8 @@ name|OID_AUTO
 argument_list|,
 name|conflist
 argument_list|,
+name|CTLTYPE_OPAQUE
+operator||
 name|CTLFLAG_RD
 argument_list|,
 name|NULL
@@ -15461,7 +15640,7 @@ comment|/*  * Create a new filesystem syncer vnode for the specified mount point
 end_comment
 
 begin_function
-name|int
+name|void
 name|vfs_allocate_syncvnode
 parameter_list|(
 name|struct
@@ -15492,9 +15671,6 @@ name|int
 name|error
 decl_stmt|;
 comment|/* Allocate a new vnode */
-if|if
-condition|(
-operator|(
 name|error
 operator|=
 name|getnewvnode
@@ -15509,23 +15685,18 @@ argument_list|,
 operator|&
 name|vp
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|mp
-operator|->
-name|mnt_syncer
-operator|=
-name|NULL
+name|panic
+argument_list|(
+literal|"vfs_allocate_syncvnode: getnewvnode() failed"
+argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
 name|vp
 operator|->
 name|v_type
@@ -15564,7 +15735,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"vfs_allocate_syncvnode: insmntque failed"
+literal|"vfs_allocate_syncvnode: insmntque() failed"
 argument_list|)
 expr_stmt|;
 name|vp
@@ -15665,6 +15836,26 @@ expr_stmt|;
 name|sync_vnode_count
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|mnt_syncer
+operator|==
+name|NULL
+condition|)
+block|{
+name|mp
+operator|->
+name|mnt_syncer
+operator|=
+name|vp
+expr_stmt|;
+name|vp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -15676,17 +15867,92 @@ argument_list|(
 name|bo
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|!=
+name|NULL
+condition|)
+block|{
+name|vn_lock
+argument_list|(
+name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|)
+expr_stmt|;
+name|vgone
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+name|vput
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|vfs_deallocate_syncvnode
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|)
+block|{
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|sync_mtx
+argument_list|)
+expr_stmt|;
+name|vp
+operator|=
+name|mp
+operator|->
+name|mnt_syncer
+expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|!=
+name|NULL
+condition|)
 name|mp
 operator|->
 name|mnt_syncer
 operator|=
-name|vp
+name|NULL
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sync_mtx
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|!=
+name|NULL
+condition|)
+name|vrele
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -15995,6 +16261,22 @@ argument_list|(
 name|bo
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|sync_mtx
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_syncer
+operator|==
+name|vp
+condition|)
 name|vp
 operator|->
 name|v_mount
@@ -16012,12 +16294,6 @@ operator|&
 name|BO_ONWORKLST
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|sync_mtx
-argument_list|)
-expr_stmt|;
 name|LIST_REMOVE
 argument_list|(
 name|bo
@@ -16031,12 +16307,6 @@ expr_stmt|;
 name|sync_vnode_count
 operator|--
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sync_mtx
-argument_list|)
-expr_stmt|;
 name|bo
 operator|->
 name|bo_flag
@@ -16045,6 +16315,12 @@ operator|~
 name|BO_ONWORKLST
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sync_mtx
+argument_list|)
+expr_stmt|;
 name|BO_UNLOCK
 argument_list|(
 name|bo
@@ -16504,6 +16780,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 		 * Ensure that at least one execute bit is on. Otherwise, 		 * a privileged user will always succeed, and we don't want 		 * this to happen unless the file really is executable. 		 */
 if|if
 condition|(
 operator|(
@@ -16521,6 +16798,20 @@ operator|)
 operator|==
 literal|0
 operator|)
+operator|&&
+operator|(
+name|file_mode
+operator|&
+operator|(
+name|S_IXUSR
+operator||
+name|S_IXGRP
+operator||
+name|S_IXOTH
+operator|)
+operator|)
+operator|!=
+literal|0
 operator|&&
 operator|!
 name|priv_check_cred
@@ -16825,7 +17116,7 @@ name|vfs_badlock_ddb
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Drop into debugger on lock violation"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -16858,7 +17149,7 @@ name|vfs_badlock_mutex
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Check for interlock across VOPs"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -16891,7 +17182,7 @@ name|vfs_badlock_print
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Print lock violations"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -16930,7 +17221,7 @@ name|vfs_badlock_backtrace
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Print backtrace at lock violations"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -17238,6 +17529,73 @@ end_comment
 
 begin_function
 name|void
+name|vop_rename_fail
+parameter_list|(
+name|struct
+name|vop_rename_args
+modifier|*
+name|ap
+parameter_list|)
+block|{
+if|if
+condition|(
+name|ap
+operator|->
+name|a_tvp
+operator|!=
+name|NULL
+condition|)
+name|vput
+argument_list|(
+name|ap
+operator|->
+name|a_tvp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ap
+operator|->
+name|a_tdvp
+operator|==
+name|ap
+operator|->
+name|a_tvp
+condition|)
+name|vrele
+argument_list|(
+name|ap
+operator|->
+name|a_tdvp
+argument_list|)
+expr_stmt|;
+else|else
+name|vput
+argument_list|(
+name|ap
+operator|->
+name|a_tdvp
+argument_list|)
+expr_stmt|;
+name|vrele
+argument_list|(
+name|ap
+operator|->
+name|a_fdvp
+argument_list|)
+expr_stmt|;
+name|vrele
+argument_list|(
+name|ap
+operator|->
+name|a_fvp
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
 name|vop_rename_pre
 parameter_list|(
 name|void
@@ -17303,18 +17661,34 @@ condition|(
 name|a
 operator|->
 name|a_tdvp
+operator|->
+name|v_vnlock
 operator|!=
 name|a
 operator|->
 name|a_fdvp
+operator|->
+name|v_vnlock
 operator|&&
+operator|(
 name|a
 operator|->
 name|a_tvp
+operator|==
+name|NULL
+operator|||
+name|a
+operator|->
+name|a_tvp
+operator|->
+name|v_vnlock
 operator|!=
 name|a
 operator|->
 name|a_fdvp
+operator|->
+name|v_vnlock
+operator|)
 condition|)
 name|ASSERT_VOP_UNLOCKED
 argument_list|(
@@ -17330,10 +17704,20 @@ condition|(
 name|a
 operator|->
 name|a_tvp
+operator|==
+name|NULL
+operator|||
+name|a
+operator|->
+name|a_tvp
+operator|->
+name|v_vnlock
 operator|!=
 name|a
 operator|->
 name|a_fvp
+operator|->
+name|v_vnlock
 condition|)
 name|ASSERT_VOP_UNLOCKED
 argument_list|(
@@ -17476,6 +17860,10 @@ condition|)
 return|return;
 if|if
 condition|(
+name|panicstr
+operator|==
+name|NULL
+operator|&&
 operator|!
 name|BUF_ISLOCKED
 argument_list|(
@@ -18347,7 +18735,7 @@ name|fsid_t
 modifier|*
 name|fsid
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|event
 parameter_list|,
 name|intptr_t
@@ -18690,6 +19078,8 @@ name|OID_AUTO
 argument_list|,
 name|ctl
 argument_list|,
+name|CTLTYPE_OPAQUE
+operator||
 name|CTLFLAG_WR
 argument_list|,
 name|NULL

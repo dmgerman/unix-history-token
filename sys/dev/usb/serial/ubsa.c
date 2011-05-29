@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/linker_set.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
 end_include
 
@@ -184,11 +178,11 @@ directive|include
 file|<dev/usb/serial/usb_serial.h>
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -1356,6 +1350,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|ubsa
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|int
@@ -1645,6 +1649,16 @@ goto|goto
 name|detach
 goto|;
 block|}
+name|ucom_set_pnpinfo_usb
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_super_ucom
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1702,8 +1716,6 @@ operator|&
 name|sc
 operator|->
 name|sc_ucom
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|usbd_transfer_unsetup
@@ -2004,20 +2016,13 @@ modifier|*
 name|t
 parameter_list|)
 block|{
-name|struct
-name|ubsa_softc
-modifier|*
-name|sc
-init|=
-name|ucom
-operator|->
-name|sc_parent
-decl_stmt|;
 name|DPRINTF
 argument_list|(
 literal|"sc = %p\n"
 argument_list|,
-name|sc
+name|ucom
+operator|->
+name|sc_parent
 argument_list|)
 expr_stmt|;
 switch|switch

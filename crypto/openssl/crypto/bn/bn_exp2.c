@@ -1082,6 +1082,9 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+operator|!
 name|BN_from_montgomery
 argument_list|(
 name|rr
@@ -1092,7 +1095,10 @@ name|mont
 argument_list|,
 name|ctx
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|err
+goto|;
 name|ret
 operator|=
 literal|1

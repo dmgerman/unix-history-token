@@ -28,12 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/resourcevar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -71,12 +65,6 @@ begin_include
 include|#
 directive|include
 file|<sys/priv.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
 end_include
 
 begin_include
@@ -160,31 +148,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/signalvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ufs/ufs/dir.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<fs/ext2fs/inode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fs/ext2fs/ext2_mount.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fs/ext2fs/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fs/ext2fs/inode.h>
 end_include
 
 begin_include
@@ -202,7 +178,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fs/ext2fs/ext2_dinode.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fs/ext2fs/ext2_dir.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fs/ext2fs/ext2_mount.h>
 end_include
 
 begin_function_decl
@@ -3364,7 +3352,11 @@ name|ext2_update
 argument_list|(
 name|vp
 argument_list|,
-literal|1
+operator|!
+name|DOINGASYNC
+argument_list|(
+name|vp
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3924,7 +3916,11 @@ name|ext2_update
 argument_list|(
 name|fvp
 argument_list|,
-literal|1
+operator|!
+name|DOINGASYNC
+argument_list|(
+name|fvp
+argument_list|)
 argument_list|)
 operator|)
 operator|!=
@@ -4147,7 +4143,11 @@ name|ext2_update
 argument_list|(
 name|tdvp
 argument_list|,
-literal|1
+operator|!
+name|DOINGASYNC
+argument_list|(
+name|tdvp
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -5235,7 +5235,11 @@ name|ext2_update
 argument_list|(
 name|dvp
 argument_list|,
-literal|1
+operator|!
+name|DOINGASYNC
+argument_list|(
+name|dvp
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -6721,7 +6725,7 @@ name|ip
 operator|->
 name|i_number
 operator|==
-name|ROOTINO
+name|EXT2_ROOTINO
 condition|)
 name|vp
 operator|->
@@ -7073,7 +7077,11 @@ name|ext2_update
 argument_list|(
 name|tvp
 argument_list|,
-literal|1
+operator|!
+name|DOINGASYNC
+argument_list|(
+name|tvp
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

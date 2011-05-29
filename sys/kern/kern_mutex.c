@@ -821,7 +821,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|_get_sleep_lock
+name|__mtx_lock
 argument_list|(
 name|m
 argument_list|,
@@ -1014,7 +1014,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|_rel_sleep_lock
+name|__mtx_unlock
 argument_list|(
 name|m
 argument_list|,
@@ -1159,7 +1159,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|_get_spin_lock
+name|__mtx_lock_spin
 argument_list|(
 name|m
 argument_list|,
@@ -1327,7 +1327,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|_rel_spin_lock
+name|__mtx_unlock_spin
 argument_list|(
 name|m
 argument_list|)
@@ -1473,7 +1473,7 @@ block|}
 else|else
 name|rval
 operator|=
-name|_obtain_lock
+name|_mtx_obtain_lock
 argument_list|(
 name|m
 argument_list|,
@@ -1782,7 +1782,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|!
-name|_obtain_lock
+name|_mtx_obtain_lock
 argument_list|(
 name|m
 argument_list|,
@@ -2245,6 +2245,8 @@ operator|->
 name|lock_object
 argument_list|,
 name|td
+argument_list|,
+name|printf
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2349,7 +2351,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|!
-name|_obtain_lock
+name|_mtx_obtain_lock
 argument_list|(
 name|m
 argument_list|,
@@ -2664,7 +2666,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|!
-name|_obtain_lock
+name|_mtx_obtain_lock
 argument_list|(
 name|m
 argument_list|,
@@ -2785,7 +2787,7 @@ operator|->
 name|td_lock
 condition|)
 break|break;
-name|_rel_spin_lock
+name|__mtx_unlock_spin
 argument_list|(
 name|m
 argument_list|)
@@ -3168,7 +3170,7 @@ argument_list|,
 name|TS_EXCLUSIVE_QUEUE
 argument_list|)
 expr_stmt|;
-name|_release_lock_quick
+name|_mtx_release_lock_quick
 argument_list|(
 name|m
 argument_list|)
@@ -3193,7 +3195,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * All the unlocking of MTX_SPIN locks is done inline.  * See the _rel_spin_lock() macro for the details.  */
+comment|/*  * All the unlocking of MTX_SPIN locks is done inline.  * See the __mtx_unlock_spin() macro for the details.  */
 end_comment
 
 begin_comment

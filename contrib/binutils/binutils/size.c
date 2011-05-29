@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* size.c -- report size of various sections of an executable file.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001,    2002, 2003 Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* size.c -- report size of various sections of an executable file.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_escape
@@ -13,13 +13,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"bucomm.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|"getopt.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bucomm.h"
 end_include
 
 begin_ifndef
@@ -71,17 +77,18 @@ name|decimal
 enum|;
 end_enum
 
+begin_comment
+comment|/* 0 means use AT&T-style output.  */
+end_comment
+
 begin_decl_stmt
+specifier|static
 name|int
 name|berkeley_format
 init|=
 name|BSD_DEFAULT
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* 0 means use AT&T-style output.  */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -209,18 +216,6 @@ name|bfd_size_type
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static void lprint_number (int, bfd_size_type);
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -372,7 +367,7 @@ name|stream
 argument_list|,
 name|_
 argument_list|(
-literal|" The options are:\n\   -A|-B     --format={sysv|berkeley}  Select output style (default is %s)\n\   -o|-d|-x  --radix={8|10|16}         Display numbers in octal, decimal or hex\n\   -t        --totals                  Display the total sizes (Berkeley only)\n\             --target=<bfdname>        Set the binary file format\n\   -h        --help                    Display this information\n\   -v        --version                 Display the program's version\n\ \n"
+literal|" The options are:\n\   -A|-B     --format={sysv|berkeley}  Select output style (default is %s)\n\   -o|-d|-x  --radix={8|10|16}         Display numbers in octal, decimal or hex\n\   -t        --totals                  Display the total sizes (Berkeley only)\n\             --target=<bfdname>        Set the binary file format\n\             @<file>                   Read options from<file>\n\   -h        --help                    Display this information\n\   -v        --version                 Display the program's version\n\ \n"
 argument_list|)
 argument_list|,
 if|#
@@ -395,6 +390,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|REPORT_BUGS_TO
+index|[
+literal|0
+index|]
+operator|&&
 name|status
 operator|==
 literal|0
@@ -420,6 +420,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|option
 name|long_options
@@ -589,6 +590,15 @@ expr_stmt|;
 name|xmalloc_set_program_name
 argument_list|(
 name|program_name
+argument_list|)
+expr_stmt|;
+name|expandargv
+argument_list|(
+operator|&
+name|argc
+argument_list|,
+operator|&
+name|argv
 argument_list|)
 expr_stmt|;
 name|bfd_init
@@ -1306,7 +1316,13 @@ argument_list|)
 operator|<
 literal|1
 condition|)
+block|{
+name|return_code
+operator|=
+literal|1
+expr_stmt|;
 return|return;
+block|}
 name|file
 operator|=
 name|bfd_openr
@@ -1439,22 +1455,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* This is not used.  */
-end_comment
-
-begin_endif
-unit|static void lprint_number (int width, bfd_size_type num) {   char buffer[40];    sprintf (buffer, 	   (radix == decimal ? "%lu" : 	   ((radix == octal) ? "0%lo" : "0x%lx")), 	   (unsigned long) num);    printf ("%-*s", width, buffer); }
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|void
@@ -1584,7 +1584,7 @@ condition|)
 return|return;
 name|size
 operator|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|sec
 argument_list|)
@@ -1681,13 +1681,6 @@ operator|++
 operator|==
 literal|0
 condition|)
-if|#
-directive|if
-literal|0
-comment|/* Intel doesn't like bss/stk because they don't have core files.  */
-then|puts ((radix == octal) ? "   text\t   data\tbss/stk\t    oct\t    hex\tfilename" : 	  "   text\t   data\tbss/stk\t    dec\t    hex\tfilename");
-else|#
-directive|else
 name|puts
 argument_list|(
 operator|(
@@ -1701,8 +1694,6 @@ else|:
 literal|"   text\t   data\t    bss\t    dec\t    hex\tfilename"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|total
 operator|=
 name|textsize

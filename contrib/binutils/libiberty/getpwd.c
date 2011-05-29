@@ -139,28 +139,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Prototype these in case the system headers don't provide them. */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|getpwd
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|getwd
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_include
 include|#
 directive|include
@@ -185,6 +163,19 @@ argument_list|(
 name|HAVE_GETWD
 argument_list|)
 end_if
+
+begin_comment
+comment|/* Prototype in case the system headers doesn't provide it. */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|getwd
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -266,7 +257,9 @@ begin_function
 name|char
 modifier|*
 name|getpwd
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -374,8 +367,10 @@ name|getcwd
 argument_list|(
 name|p
 operator|=
-name|xmalloc
+name|XNEWVEC
 argument_list|(
+name|char
+argument_list|,
 name|s
 argument_list|)
 argument_list|,
@@ -465,7 +460,9 @@ begin_function
 name|char
 modifier|*
 name|getpwd
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -483,8 +480,10 @@ name|pwd
 operator|=
 name|getcwd
 argument_list|(
-name|xmalloc
+name|XNEWVEC
 argument_list|(
+name|char
+argument_list|,
 name|MAXPATHLEN
 operator|+
 literal|1

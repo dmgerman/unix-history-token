@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_msgbuf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -189,6 +183,12 @@ begin_include
 include|#
 directive|include
 file|<sys/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/syscallsubr.h>
 end_include
 
 begin_include
@@ -555,6 +555,12 @@ end_decl_stmt
 begin_decl_stmt
 name|u_long
 name|ofw_tba
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int
+name|tba_taken_over
 decl_stmt|;
 end_decl_stmt
 
@@ -1132,11 +1138,20 @@ name|td
 operator|->
 name|td_md
 operator|.
+name|md_spinlock_count
+operator|=
+literal|1
+expr_stmt|;
+name|td
+operator|->
+name|td_md
+operator|.
 name|md_saved_pil
 operator|=
 name|pil
 expr_stmt|;
 block|}
+else|else
 name|td
 operator|->
 name|td_md
@@ -1162,12 +1177,23 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+name|register_t
+name|pil
+decl_stmt|;
 name|td
 operator|=
 name|curthread
 expr_stmt|;
 name|critical_exit
 argument_list|()
+expr_stmt|;
+name|pil
+operator|=
+name|td
+operator|->
+name|td_md
+operator|.
+name|md_saved_pil
 expr_stmt|;
 name|td
 operator|->
@@ -1190,11 +1216,7 @@ name|wrpr
 argument_list|(
 name|pil
 argument_list|,
-name|td
-operator|->
-name|td_md
-operator|.
-name|md_saved_pil
+name|pil
 argument_list|,
 literal|0
 argument_list|)
@@ -1380,6 +1402,9 @@ case|case
 name|CPU_IMPL_SPARC64
 case|:
 case|case
+name|CPU_IMPL_SPARC64V
+case|:
+case|case
 name|CPU_IMPL_ULTRASPARCI
 case|:
 case|case
@@ -1449,6 +1474,9 @@ condition|)
 block|{
 case|case
 name|CPU_IMPL_SPARC64
+case|:
+case|case
+name|CPU_IMPL_SPARC64V
 case|:
 case|case
 name|CPU_IMPL_ULTRASPARCI
@@ -1606,9 +1634,13 @@ name|ver
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Do CPU-specific Initialization. 	 */
+comment|/* 	 * Do CPU-specific initialization. 	 */
 if|if
 condition|(
+name|cpu_impl
+operator|==
+name|CPU_IMPL_SPARC64V
+operator|||
 name|cpu_impl
 operator|>=
 name|CPU_IMPL_ULTRASPARCIII
@@ -2025,7 +2057,7 @@ name|kernel_tlb_slots
 operator|--
 expr_stmt|;
 block|}
-comment|/* 	 * Determine the TLB slot maxima, which are expected to be 	 * equal across all CPUs. 	 * NB: for Cheetah-class CPUs, these properties only refer 	 * to the t16s. 	 */
+comment|/* 	 * Determine the TLB slot maxima, which are expected to be 	 * equal across all CPUs. 	 * NB: for cheetah-class CPUs, these properties only refer 	 * to the t16s. 	 */
 if|if
 condition|(
 name|OF_getprop
@@ -2080,6 +2112,7 @@ argument_list|(
 literal|"sparc64_init: cannot determine number of iTLB slots"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Initialize and enable the caches.  Note that his may include 	 * applying workarounds. 	 */
 name|cache_init
 argument_list|(
 name|pc
@@ -2168,6 +2201,18 @@ expr_stmt|;
 name|cpu_block_zero
 operator|=
 name|spitfire_block_zero
+expr_stmt|;
+break|break;
+case|case
+name|CPU_IMPL_SPARC64V
+case|:
+name|cpu_block_copy
+operator|=
+name|zeus_block_copy
+expr_stmt|;
+name|cpu_block_zero
+operator|=
+name|zeus_block_zero
 expr_stmt|;
 break|break;
 block|}
@@ -2264,6 +2309,12 @@ name|kstack0
 expr_stmt|;
 name|thread0
 operator|.
+name|td_kstack_pages
+operator|=
+name|KSTACK_PAGES
+expr_stmt|;
+name|thread0
+operator|.
 name|td_pcb
 operator|=
 operator|(
@@ -2321,7 +2372,7 @@ argument_list|(
 name|pc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Take over the trap table via the PROM.  Using the PROM for this 	 * is necessary in order to set obp-control-relinquished to true 	 * within the PROM so obtaining /virtual-memory/translations doesn't 	 * trigger a fatal reset error or worse things further down the road. 	 * XXX it should be possible to use this soley instead of writing 	 * %tba in cpu_setregs().  Doing so causes a hang however. 	 */
+comment|/* 	 * Take over the trap table via the PROM.  Using the PROM for this 	 * is necessary in order to set obp-control-relinquished to true 	 * within the PROM so obtaining /virtual-memory/translations doesn't 	 * trigger a fatal reset error or worse things further down the road. 	 * XXX it should be possible to use this solely instead of writing 	 * %tba in cpu_setregs().  Doing so causes a hang however. 	 */
 name|sun4u_set_traptable
 argument_list|(
 name|tl0_base
@@ -2344,14 +2395,34 @@ name|msgbufinit
 argument_list|(
 name|msgbufp
 argument_list|,
-name|MSGBUF_SIZE
+name|msgbufsize
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Initialize mutexes. 	 */
 name|mutex_init
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Finish the interrupt initialization now that mutexes work and 	 * enable them. 	 */
 name|intr_init2
 argument_list|()
+expr_stmt|;
+name|wrpr
+argument_list|(
+name|pil
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|wrpr
+argument_list|(
+name|pstate
+argument_list|,
+literal|0
+argument_list|,
+name|PSTATE_KERNEL
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Finish pmap initialization now that we're ready for mutexes. 	 */
 name|PMAP_LOCK_INIT
@@ -4306,7 +4377,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
@@ -4398,14 +4469,13 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-name|u_long
-name|entry
+name|struct
+name|image_params
+modifier|*
+name|imgp
 parameter_list|,
 name|u_long
 name|stack
-parameter_list|,
-name|u_long
-name|ps_strings
 parameter_list|)
 block|{
 name|struct
@@ -4556,7 +4626,9 @@ name|tf
 operator|->
 name|tf_tnpc
 operator|=
-name|entry
+name|imgp
+operator|->
+name|entry_addr
 operator|+
 literal|4
 expr_stmt|;
@@ -4564,7 +4636,9 @@ name|tf
 operator|->
 name|tf_tpc
 operator|=
-name|entry
+name|imgp
+operator|->
+name|entry_addr
 expr_stmt|;
 name|tf
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* infback.c -- inflate using a call-back interface  * Copyright (C) 1995-2005 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* infback.c -- inflate using a call-back interface  * Copyright (C) 1995-2009 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -281,7 +281,7 @@ name|window
 expr_stmt|;
 name|state
 operator|->
-name|write
+name|wnext
 operator|=
 literal|0
 expr_stmt|;
@@ -783,7 +783,7 @@ name|from
 decl_stmt|;
 comment|/* where to copy match bytes from */
 name|code
-name|this
+name|here
 decl_stmt|;
 comment|/* current decoding table entry */
 name|code
@@ -1583,7 +1583,7 @@ init|;
 condition|;
 control|)
 block|{
-name|this
+name|here
 operator|=
 name|state
 operator|->
@@ -1603,7 +1603,7 @@ call|(
 name|unsigned
 call|)
 argument_list|(
-name|this
+name|here
 operator|.
 name|bits
 argument_list|)
@@ -1617,7 +1617,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|this
+name|here
 operator|.
 name|val
 operator|<
@@ -1626,14 +1626,14 @@ condition|)
 block|{
 name|NEEDBITS
 argument_list|(
-name|this
+name|here
 operator|.
 name|bits
 argument_list|)
 expr_stmt|;
 name|DROPBITS
 argument_list|(
-name|this
+name|here
 operator|.
 name|bits
 argument_list|)
@@ -1648,7 +1648,7 @@ name|have
 operator|++
 index|]
 operator|=
-name|this
+name|here
 operator|.
 name|val
 expr_stmt|;
@@ -1657,7 +1657,7 @@ else|else
 block|{
 if|if
 condition|(
-name|this
+name|here
 operator|.
 name|val
 operator|==
@@ -1666,7 +1666,7 @@ condition|)
 block|{
 name|NEEDBITS
 argument_list|(
-name|this
+name|here
 operator|.
 name|bits
 operator|+
@@ -1675,7 +1675,7 @@ argument_list|)
 expr_stmt|;
 name|DROPBITS
 argument_list|(
-name|this
+name|here
 operator|.
 name|bits
 argument_list|)
@@ -1743,7 +1743,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|this
+name|here
 operator|.
 name|val
 operator|==
@@ -1752,7 +1752,7 @@ condition|)
 block|{
 name|NEEDBITS
 argument_list|(
-name|this
+name|here
 operator|.
 name|bits
 operator|+
@@ -1761,7 +1761,7 @@ argument_list|)
 expr_stmt|;
 name|DROPBITS
 argument_list|(
-name|this
+name|here
 operator|.
 name|bits
 argument_list|)
@@ -1789,7 +1789,7 @@ else|else
 block|{
 name|NEEDBITS
 argument_list|(
-name|this
+name|here
 operator|.
 name|bits
 operator|+
@@ -1798,7 +1798,7 @@ argument_list|)
 expr_stmt|;
 name|DROPBITS
 argument_list|(
-name|this
+name|here
 operator|.
 name|bits
 argument_list|)
@@ -1890,7 +1890,38 @@ operator|==
 name|BAD
 condition|)
 break|break;
-comment|/* build code tables */
+comment|/* check for end-of-block code (better have one) */
+if|if
+condition|(
+name|state
+operator|->
+name|lens
+index|[
+literal|256
+index|]
+operator|==
+literal|0
+condition|)
+block|{
+name|strm
+operator|->
+name|msg
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+literal|"invalid code -- missing end-of-block"
+expr_stmt|;
+name|state
+operator|->
+name|mode
+operator|=
+name|BAD
+expr_stmt|;
+break|break;
+block|}
+comment|/* build code tables -- note: do not change the lenbits or distbits                values here (9 and 6) without reading the comments in inftrees.h                concerning the ENOUGH constants, which depend on those values */
 name|state
 operator|->
 name|next
@@ -2133,7 +2164,7 @@ init|;
 condition|;
 control|)
 block|{
-name|this
+name|here
 operator|=
 name|state
 operator|->
@@ -2153,7 +2184,7 @@ call|(
 name|unsigned
 call|)
 argument_list|(
-name|this
+name|here
 operator|.
 name|bits
 argument_list|)
@@ -2167,12 +2198,12 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|this
+name|here
 operator|.
 name|op
 operator|&&
 operator|(
-name|this
+name|here
 operator|.
 name|op
 operator|&
@@ -2184,7 +2215,7 @@ condition|)
 block|{
 name|last
 operator|=
-name|this
+name|here
 expr_stmt|;
 for|for
 control|(
@@ -2192,7 +2223,7 @@ init|;
 condition|;
 control|)
 block|{
-name|this
+name|here
 operator|=
 name|state
 operator|->
@@ -2230,7 +2261,7 @@ name|last
 operator|.
 name|bits
 operator|+
-name|this
+name|here
 operator|.
 name|bits
 argument_list|)
@@ -2252,7 +2283,7 @@ expr_stmt|;
 block|}
 name|DROPBITS
 argument_list|(
-name|this
+name|here
 operator|.
 name|bits
 argument_list|)
@@ -2264,14 +2295,14 @@ operator|=
 operator|(
 name|unsigned
 operator|)
-name|this
+name|here
 operator|.
 name|val
 expr_stmt|;
 comment|/* process literal */
 if|if
 condition|(
-name|this
+name|here
 operator|.
 name|op
 operator|==
@@ -2283,13 +2314,13 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
-name|this
+name|here
 operator|.
 name|val
 operator|>=
 literal|0x20
 operator|&&
-name|this
+name|here
 operator|.
 name|val
 operator|<
@@ -2299,7 +2330,7 @@ literal|"inflate:         literal '%c'\n"
 else|:
 literal|"inflate:         literal 0x%02x\n"
 operator|,
-name|this
+name|here
 operator|.
 name|val
 operator|)
@@ -2336,7 +2367,7 @@ block|}
 comment|/* process end of block */
 if|if
 condition|(
-name|this
+name|here
 operator|.
 name|op
 operator|&
@@ -2363,7 +2394,7 @@ block|}
 comment|/* invalid code */
 if|if
 condition|(
-name|this
+name|here
 operator|.
 name|op
 operator|&
@@ -2397,7 +2428,7 @@ call|(
 name|unsigned
 call|)
 argument_list|(
-name|this
+name|here
 operator|.
 name|op
 argument_list|)
@@ -2459,7 +2490,7 @@ init|;
 condition|;
 control|)
 block|{
-name|this
+name|here
 operator|=
 name|state
 operator|->
@@ -2479,7 +2510,7 @@ call|(
 name|unsigned
 call|)
 argument_list|(
-name|this
+name|here
 operator|.
 name|bits
 argument_list|)
@@ -2494,7 +2525,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|this
+name|here
 operator|.
 name|op
 operator|&
@@ -2506,7 +2537,7 @@ condition|)
 block|{
 name|last
 operator|=
-name|this
+name|here
 expr_stmt|;
 for|for
 control|(
@@ -2514,7 +2545,7 @@ init|;
 condition|;
 control|)
 block|{
-name|this
+name|here
 operator|=
 name|state
 operator|->
@@ -2552,7 +2583,7 @@ name|last
 operator|.
 name|bits
 operator|+
-name|this
+name|here
 operator|.
 name|bits
 argument_list|)
@@ -2574,14 +2605,14 @@ expr_stmt|;
 block|}
 name|DROPBITS
 argument_list|(
-name|this
+name|here
 operator|.
 name|bits
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|this
+name|here
 operator|.
 name|op
 operator|&
@@ -2613,7 +2644,7 @@ operator|=
 operator|(
 name|unsigned
 operator|)
-name|this
+name|here
 operator|.
 name|val
 expr_stmt|;
@@ -2626,7 +2657,7 @@ call|(
 name|unsigned
 call|)
 argument_list|(
-name|this
+name|here
 operator|.
 name|op
 argument_list|)

@@ -56,6 +56,35 @@ name|ATH_TIMEOUT
 value|1000
 end_define
 
+begin_comment
+comment|/*  * 802.11n requires more TX and RX buffers to do AMPDU.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATH_ENABLE_11N
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ATH_TXBUF
+value|512
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_RXBUF
+value|512
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1022,8 +1051,13 @@ comment|/* set/clr CCA with TDMA */
 name|sc_resetcal
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* reset cal state next trip */
+name|sc_rxslink
+range|:
+literal|1
+decl_stmt|;
+comment|/* do self-linked final descriptor */
 name|uint32_t
 name|sc_eerd
 decl_stmt|;
@@ -1391,6 +1425,18 @@ name|int
 name|sc_lastcalreset
 decl_stmt|;
 comment|/* last cal reset done */
+name|int
+name|sc_lastani
+decl_stmt|;
+comment|/* last ANI poll */
+name|int
+name|sc_lastshortcal
+decl_stmt|;
+comment|/* last short calibration */
+name|HAL_BOOL
+name|sc_doresetcal
+decl_stmt|;
+comment|/* Yes, we're doing a reset cal atm */
 name|HAL_NODE_STATS
 name|sc_halstats
 decl_stmt|;
@@ -1427,6 +1473,19 @@ name|u_int32_t
 name|sc_avgtsfdeltam
 decl_stmt|;
 comment|/* TDMA slot adjust (-) */
+name|uint16_t
+modifier|*
+name|sc_eepromdata
+decl_stmt|;
+comment|/* Local eeprom data, if AR9100 */
+name|int
+name|sc_txchainmask
+decl_stmt|;
+comment|/* currently configured TX chainmask */
+name|int
+name|sc_rxchainmask
+decl_stmt|;
+comment|/* currently configured RX chainmask */
 block|}
 struct|;
 end_struct
@@ -2448,6 +2507,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|ath_hal_ani_poll
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_chan
+parameter_list|)
+define|\
+value|((*(_ah)->ah_aniPoll)((_ah), (_chan)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ath_hal_mibevent
 parameter_list|(
 name|_ah
@@ -3154,7 +3226,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(ath_hal_getcapability(_ah, HAL_CAP_INTMIT, 0, NULL) == HAL_OK)
+value|(ath_hal_getcapability(_ah, HAL_CAP_INTMIT, HAL_CAP_INTMIT_PRESENT, NULL) == HAL_OK)
 end_define
 
 begin_define
@@ -3165,7 +3237,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(ath_hal_getcapability(_ah, HAL_CAP_INTMIT, 1, NULL) == HAL_OK)
+value|(ath_hal_getcapability(_ah, HAL_CAP_INTMIT, HAL_CAP_INTMIT_ENABLE, NULL) == HAL_OK)
 end_define
 
 begin_define
@@ -3178,7 +3250,7 @@ parameter_list|,
 name|_v
 parameter_list|)
 define|\
-value|ath_hal_setcapability(_ah, HAL_CAP_INTMIT, 1, _v, NULL)
+value|ath_hal_setcapability(_ah, HAL_CAP_INTMIT, HAL_CAP_INTMIT_ENABLE, _v, NULL)
 end_define
 
 begin_define
@@ -3192,6 +3264,65 @@ name|_c
 parameter_list|)
 define|\
 value|((*(_ah)->ah_getChanNoise)((_ah), (_c)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getrxchainmask
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_prxchainmask
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_RX_CHAINMASK, 0, _prxchainmask))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_gettxchainmask
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_ptxchainmask
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_TX_CHAINMASK, 0, _ptxchainmask))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_split4ktrans
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAP_CAP_SPLIT_4KB_TRANS, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_self_linked_final_rxdesc
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_RXDESC_SELFLINK, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_gtxto_supported
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_GTXTO, 0, NULL) == HAL_OK)
 end_define
 
 begin_define
@@ -3337,6 +3468,151 @@ name|_txqs
 parameter_list|)
 define|\
 value|((*(_ah)->ah_getTxIntrQueue)((_ah), (_txqs)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_gettxcompletionrates
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_ds
+parameter_list|,
+name|_rates
+parameter_list|,
+name|_tries
+parameter_list|)
+define|\
+value|((*(_ah)->ah_getTxCompletionRates)((_ah), (_ds), (_rates), (_tries)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_chaintxdesc
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_ds
+parameter_list|,
+name|_pktlen
+parameter_list|,
+name|_hdrlen
+parameter_list|,
+name|_type
+parameter_list|,
+name|_keyix
+parameter_list|, \
+name|_cipher
+parameter_list|,
+name|_delims
+parameter_list|,
+name|_seglen
+parameter_list|,
+name|_first
+parameter_list|,
+name|_last
+parameter_list|)
+define|\
+value|((*(_ah)->ah_chainTxDesc((_ah), (_ds), (_pktlen), (_hdrlen), \ 	(_type), (_keyix), (_cipher), (_delims), (_seglen), \ 	(_first), (_last))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_setupfirsttxdesc
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_ds
+parameter_list|,
+name|_aggrlen
+parameter_list|,
+name|_flags
+parameter_list|,
+name|_txpower
+parameter_list|, \
+name|_txr0
+parameter_list|,
+name|_txtr0
+parameter_list|,
+name|_antm
+parameter_list|,
+name|_rcr
+parameter_list|,
+name|_rcd
+parameter_list|)
+define|\
+value|((*(_ah)->ah_setupFirstTxDesc)((_ah), (_ds), (_aggrlen), (_flags), \ 	(_txpower), (_txr0), (_txtr0), (_antm), (_rcr), (_rcd)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_setuplasttxdesc
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_ds
+parameter_list|,
+name|_ds0
+parameter_list|)
+define|\
+value|((*(_ah)->ah_setupLastTxDesc)((_ah), (_ds), (_ds0)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_set11nratescenario
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_ds
+parameter_list|,
+name|_dur
+parameter_list|,
+name|_rt
+parameter_list|,
+name|_series
+parameter_list|,
+name|_ns
+parameter_list|,
+name|_flags
+parameter_list|)
+define|\
+value|((*(_ah)->ah_set11nRateScenario)((_ah), (_ds), (_dur), (_rt), \ 	(_series), (_ns), (_flags)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_set11naggrmiddle
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_ds
+parameter_list|,
+name|_num
+parameter_list|)
+define|\
+value|((*(_ah)->ah_set11nAggrMiddle((_ah), (_ds), (_num))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_set11nburstduration
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_ds
+parameter_list|,
+name|_dur
+parameter_list|)
+define|\
+value|((*(_ah)->ah_set11nBurstDuration)((_ah), (_ds), (_dur)))
 end_define
 
 begin_define

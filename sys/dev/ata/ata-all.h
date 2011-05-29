@@ -3,6 +3,12 @@ begin_comment
 comment|/*-  * Copyright (c) 1998 - 2008 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"opt_ata.h"
+end_include
+
 begin_if
 if|#
 directive|if
@@ -675,30 +681,6 @@ define|#
 directive|define
 name|ATA_SS_IPM_SLUMBER
 value|0x00000600
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATA_SS_CONWELL_MASK
-define|\
-value|(ATA_SS_DET_MASK|ATA_SS_SPD_MASK|ATA_SS_IPM_MASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATA_SS_CONWELL_GEN1
-define|\
-value|(ATA_SS_DET_PHY_ONLINE|ATA_SS_SPD_GEN1|ATA_SS_IPM_ACTIVE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATA_SS_CONWELL_GEN2
-define|\
-value|(ATA_SS_DET_PHY_ONLINE|ATA_SS_SPD_GEN2|ATA_SS_IPM_ACTIVE)
 end_define
 
 begin_define
@@ -2925,6 +2907,9 @@ decl_stmt|;
 name|u_int
 name|atapi
 decl_stmt|;
+name|u_int
+name|caps
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -3019,6 +3004,22 @@ define|#
 directive|define
 name|ATA_SATA
 value|0x80
+define|#
+directive|define
+name|ATA_DMA_BEFORE_CMD
+value|0x100
+define|#
+directive|define
+name|ATA_KNOWN_PRESENCE
+value|0x200
+define|#
+directive|define
+name|ATA_STATUS_IS_LONG
+value|0x400
+define|#
+directive|define
+name|ATA_PERIODIC_POLL
+value|0x800
 name|int
 name|pm_level
 decl_stmt|;
@@ -3127,8 +3128,17 @@ literal|16
 index|]
 decl_stmt|;
 comment|/* Current settings */
+name|int
+name|requestsense
+decl_stmt|;
+comment|/* CCB waiting for SENSE. */
 endif|#
 directive|endif
+name|struct
+name|callout
+name|poll_callout
+decl_stmt|;
+comment|/* Periodic status poll. */
 block|}
 struct|;
 end_struct
@@ -3403,6 +3413,18 @@ name|ata_mode2str
 parameter_list|(
 name|int
 name|mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ata_str2mode
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|str
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3793,6 +3815,9 @@ name|ata_sata_phy_check_events
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+name|int
+name|port
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -4928,7 +4928,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* 		 * We cannot continue because of error.  Exit if the 		 * program has not become a daemon.  Otherwise, block 		 * until the the user corrects the problem and issues SIGHUP. 		 */
+comment|/* 		 * We cannot continue because of error.  Exit if the 		 * program has not become a daemon.  Otherwise, block 		 * until the user corrects the problem and issues SIGHUP. 		 */
 if|if
 condition|(
 operator|!
@@ -5799,11 +5799,18 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|(
+operator|(
 name|rodent
 operator|.
 name|flags
 operator|&
 name|Emulate3Button
+operator|)
+operator|&&
+name|S_DELAYED
+argument_list|(
+name|mouse_button_state
+argument_list|)
 operator|)
 condition|?
 operator|&

@@ -27,12 +27,6 @@ directive|ifndef
 name|LOCORE
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
 begin_comment
 comment|/*  * Topology of a NUMA or HTT system.  *  * The top level topology is an array of pointers to groups.  Each group  * contains a bitmask of cpus in its group or subgroups.  It may also  * contain a pointer to an array of child groups.  *  * The bitmasks at non leaf groups may be used by consumers who support  * a smaller depth than the hardware provides.  *  * The topology may be omitted by systems where all CPUs are equal.  */
 end_comment
@@ -57,11 +51,11 @@ name|cpumask_t
 name|cg_mask
 decl_stmt|;
 comment|/* Mask of cpus in this group. */
-name|int8_t
+name|int32_t
 name|cg_count
 decl_stmt|;
 comment|/* Count of cpus in this group. */
-name|int8_t
+name|int16_t
 name|cg_children
 decl_stmt|;
 comment|/* Number of children groups. */
@@ -76,6 +70,15 @@ comment|/* Traversal modifiers. */
 block|}
 struct|;
 end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|cpu_group
+modifier|*
+name|cpu_group_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * Defines common resources for CPUs in the group.  The highest level  * resource should be used when multiple are shared.  */
@@ -149,6 +152,12 @@ end_comment
 begin_comment
 comment|/*  * Convenience routines for building topologies.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
 
 begin_function_decl
 name|struct
@@ -277,13 +286,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|cpumask_t
-name|idle_cpus_mask
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|cpumask_t
 name|hlt_cpus_mask
 decl_stmt|;
 end_decl_stmt
@@ -352,6 +354,123 @@ parameter_list|(
 name|x_cpu
 parameter_list|)
 value|((all_cpus& (1<< (x_cpu))) == 0)
+end_define
+
+begin_comment
+comment|/*  * Macros to iterate over non-absent CPUs.  CPU_FOREACH() takes an  * integer iterator and iterates over the available set of CPUs.  * CPU_FIRST() returns the id of the first non-absent CPU.  CPU_NEXT()  * returns the id of the next non-absent CPU.  It will wrap back to  * CPU_FIRST() once the end of the list is reached.  The iterators are  * currently implemented via inline functions.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_FOREACH
+parameter_list|(
+name|i
+parameter_list|)
+define|\
+value|for ((i) = 0; (i)<= mp_maxid; (i)++)				\ 		if (!CPU_ABSENT((i)))
+end_define
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|cpu_first
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+operator|!
+name|CPU_ABSENT
+argument_list|(
+name|i
+argument_list|)
+condition|)
+return|return
+operator|(
+name|i
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|cpu_next
+parameter_list|(
+name|int
+name|i
+parameter_list|)
+block|{
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+name|i
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+name|mp_maxid
+condition|)
+name|i
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|CPU_ABSENT
+argument_list|(
+name|i
+argument_list|)
+condition|)
+return|return
+operator|(
+name|i
+operator|)
+return|;
+block|}
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|CPU_FIRST
+parameter_list|()
+value|cpu_first()
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_NEXT
+parameter_list|(
+name|i
+parameter_list|)
+value|cpu_next((i))
 end_define
 
 begin_ifdef

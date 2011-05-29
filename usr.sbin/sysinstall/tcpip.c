@@ -214,7 +214,7 @@ literal|1
 block|,
 literal|"Host:"
 block|,
-literal|"Your fully-qualified hostname, e.g. foo.bar.com"
+literal|"Your fully-qualified hostname, e.g. foo.example.com"
 block|,
 name|hostname
 block|,
@@ -240,7 +240,7 @@ literal|1
 block|,
 literal|"Domain:"
 block|,
-literal|"The name of the domain that your machine is in, e.g. bar.com"
+literal|"The name of the domain that your machine is in, e.g. example.com"
 block|,
 name|domainname
 block|,
@@ -3465,11 +3465,6 @@ decl_stmt|,
 modifier|*
 name|ifa
 decl_stmt|;
-name|struct
-name|if_data
-modifier|*
-name|ifd
-decl_stmt|;
 name|char
 modifier|*
 name|network_dev
@@ -3657,6 +3652,11 @@ operator|)
 return|;
 block|}
 block|}
+name|close
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|freeifaddrs
 argument_list|(
 name|ifap
@@ -3824,6 +3824,22 @@ name|NULL
 operator|)
 return|;
 block|}
+name|devs
+operator|=
+name|deviceFind
+argument_list|(
+name|NULL
+argument_list|,
+name|DEVICE_TYPE_NETWORK
+argument_list|)
+expr_stmt|;
+name|cnt
+operator|=
+name|deviceCount
+argument_list|(
+name|devs
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(

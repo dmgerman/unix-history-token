@@ -668,6 +668,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|pthread_getthreadid_np
+value|_pthread_getthreadid_np
+end_define
+
+begin_define
+define|#
+directive|define
 name|pthread_join
 value|_pthread_join
 end_define

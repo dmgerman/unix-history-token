@@ -551,9 +551,9 @@ name|name
 parameter_list|,
 name|val
 parameter_list|,
-name|xor
+name|xorval
 parameter_list|)
-value|do {						\ 	__asm __volatile("wr %0, %1, %%" #name				\ 	    : : "r" (val), "rI" (xor));					\ } while (0)
+value|do {					\ 	__asm __volatile("wr %0, %1, %%" #name				\ 	    : : "r" (val), "rI" (xorval));				\ } while (0)
 end_define
 
 begin_define
@@ -575,14 +575,22 @@ name|name
 parameter_list|,
 name|val
 parameter_list|,
-name|xor
+name|xorval
 parameter_list|)
-value|do {					\ 	__asm __volatile("wrpr %0, %1, %%" #name			\ 	    : : "r" (val), "rI" (xor));					\ } while (0)
+value|do {					\ 	__asm __volatile("wrpr %0, %1, %%" #name			\ 	    : : "r" (val), "rI" (xorval));				\ } while (0)
 end_define
 
 begin_comment
-comment|/*  * Trick GAS/GCC into compiling access to STICK/STICK_COMPARE independently  * of the selected instruction set.  */
+comment|/*  * Trick GAS/GCC into compiling access to TICK/(S)TICK_COMPARE independently  * of the selected instruction set.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|rdtickcmpr
+parameter_list|()
+value|rd(asr23)
+end_define
 
 begin_define
 define|#
@@ -603,13 +611,25 @@ end_define
 begin_define
 define|#
 directive|define
+name|wrtickcmpr
+parameter_list|(
+name|val
+parameter_list|,
+name|xorval
+parameter_list|)
+value|wr(asr23, (val), (xorval))
+end_define
+
+begin_define
+define|#
+directive|define
 name|wrstick
 parameter_list|(
 name|val
 parameter_list|,
-name|xor
+name|xorval
 parameter_list|)
-value|wr(asr24, (val), (xor))
+value|wr(asr24, (val), (xorval))
 end_define
 
 begin_define
@@ -619,25 +639,25 @@ name|wrstickcmpr
 parameter_list|(
 name|val
 parameter_list|,
-name|xor
+name|xorval
 parameter_list|)
-value|wr(asr25, (val), (xor))
+value|wr(asr25, (val), (xorval))
 end_define
 
 begin_comment
-comment|/*  * Macro intended to be used instead of wr(asr23, val, xor) for writing to  * the TICK_COMPARE register in order to avoid a bug in BlackBird CPUs that  * can cause these writes to fail under certain condidtions which in turn  * causes the hardclock to stop.  The workaround is to read the TICK_COMPARE  * register back immediately after writing to it with these two instructions  * aligned to a quadword boundary in order to ensure that I$ misses won't  * split them up.  */
+comment|/*  * Macro intended to be used instead of wr(asr23, val, xorval) for writing to  * the TICK_COMPARE register in order to avoid a bug in BlackBird CPUs that  * can cause these writes to fail under certain conditions which in turn  * causes the hardclock to stop.  The workaround is to read the TICK_COMPARE  * register back immediately after writing to it with these two instructions  * aligned to a quadword boundary in order to ensure that I$ misses won't  * split them up.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|wrtickcmpr
+name|wrtickcmpr_bbwar
 parameter_list|(
 name|val
 parameter_list|,
-name|xor
+name|xorval
 parameter_list|)
-value|({						\ 	__asm __volatile(						\ 	"	ba,pt	%%xcc, 1f ;		"			\ 	"	 nop	 ;			"			\ 	"	.align	128 ;			"			\ 	"1:	wr	%0, %1, %%asr23 ;	"			\ 	"	rd	%%asr23, %%g0 ;		"			\ 	: : "r" (val), "rI" (xor));					\ })
+value|({				\ 	__asm __volatile(						\ 	"	ba,pt	%%xcc, 1f ;		"			\ 	"	 nop	 ;			"			\ 	"	.align	128 ;			"			\ 	"1:	wr	%0, %1, %%asr23 ;	"			\ 	"	rd	%%asr23, %%g0 ;		"			\ 	: : "r" (val), "rI" (xorval));					\ })
 end_define
 
 begin_function

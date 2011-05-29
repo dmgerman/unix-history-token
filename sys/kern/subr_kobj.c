@@ -226,7 +226,7 @@ value|if (kobj_mutex_inited) mtx_assert(&kobj_mtx,what);
 end_define
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_kern
 argument_list|,

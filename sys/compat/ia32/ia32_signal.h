@@ -3,6 +3,18 @@ begin_comment
 comment|/*-  * Copyright (c) 1999 Marcel Moolenaar  * Copyright (c) 2003 Peter Wemm  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_COMPAT_IA32_IA32_SIGNAL_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_COMPAT_IA32_IA32_SIGNAL_H
+end_define
+
 begin_struct
 struct|struct
 name|ia32_mcontext
@@ -272,7 +284,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMPAT_FREEBSD3
+name|COMPAT_43
 end_ifdef
 
 begin_struct
@@ -444,7 +456,7 @@ end_struct
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMPAT_FREEBSD3
+name|COMPAT_43
 end_ifdef
 
 begin_struct
@@ -509,6 +521,12 @@ name|ksiginfo
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|image_params
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -527,6 +545,21 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|char
+name|ia32_osigcode
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|lcall_tramp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|sz_ia32_sigcode
 decl_stmt|;
@@ -539,8 +572,21 @@ name|sz_freebsd4_ia32_sigcode
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
+name|int
+name|sz_ia32_osigcode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|sz_lcall_tramp
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
 name|void
 name|ia32_sendsig
 parameter_list|(
@@ -557,7 +603,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ia32_setregs
 parameter_list|(
@@ -566,17 +611,30 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-name|u_long
-name|entry
+name|struct
+name|image_params
+modifier|*
+name|imgp
 parameter_list|,
 name|u_long
 name|stack
-parameter_list|,
-name|u_long
-name|ps_strings
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|int
+name|setup_lcall_gate
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

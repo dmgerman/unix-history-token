@@ -16,7 +16,7 @@ name|_MACHINE_MMUVAR_H_
 end_define
 
 begin_comment
-comment|/*  * A PowerPC MMU implementation is declared with a kernel object and  * an associated method table, similar to a device driver.  *  * e.g.  *  * static mmu_method_t ppc8xx_methods[] = {  *	MMUMETHOD(mmu_change_wiring,		ppc8xx_mmu_change_wiring),  *	MMUMETHOD(mmu_clear_modify,		ppc8xx_mmu_clear_modify),  *	MMUMETHOD(mmu_clear_reference,		ppc8xx_mmu_clear_reference),  *  ...  *	MMUMETHOD(mmu_dev_direct_mapped,	ppc8xx_mmu_dev_direct_mapped),  *	{ 0, 0 }  * };  *  * static mmu_def_t ppc8xx_mmu = {  * 	"ppc8xx",  *	ppc8xx_methods,  *	sizeof(ppc8xx_mmu_softc),	// or 0 if no softc  * };  *  * MMU_DEF(ppc8xx_mmu);  */
+comment|/*  * A PowerPC MMU implementation is declared with a kernel object and  * an associated method table. The MMU_DEF macro is used to declare  * the class, and also links it to the global MMU class list.  *  * e.g.  *  * static mmu_method_t ppc8xx_methods[] = {  *	MMUMETHOD(mmu_change_wiring,		ppc8xx_mmu_change_wiring),  *	MMUMETHOD(mmu_clear_modify,		ppc8xx_mmu_clear_modify),  *	MMUMETHOD(mmu_clear_reference,		ppc8xx_mmu_clear_reference),  *  ...  *	MMUMETHOD(mmu_dev_direct_mapped,	ppc8xx_mmu_dev_direct_mapped),  *	{ 0, 0 }  * };  *  * MMU_DEF(ppc8xx, MMU_TYPE_8xx, ppc8xx_methods, sizeof(ppc8xx_mmu_softc));  *  * A single level of inheritance is supported in a similar fashion to  * kobj inheritance e.g.  *  * MMU_DEF_1(ppc860c, MMU_TYPE_860c, ppc860c_methods, 0, ppc8xx);  */
 end_comment
 
 begin_include
@@ -95,9 +95,47 @@ directive|define
 name|MMU_DEF
 parameter_list|(
 name|name
+parameter_list|,
+name|ident
+parameter_list|,
+name|methods
+parameter_list|,
+name|size
 parameter_list|)
-value|DATA_SET(mmu_set, name)
+define|\ 						\
+value|mmu_def_t name = {				\ 	ident, methods, size, NULL		\ };						\ DATA_SET(mmu_set, name)
 end_define
+
+begin_define
+define|#
+directive|define
+name|MMU_DEF_INHERIT
+parameter_list|(
+name|name
+parameter_list|,
+name|ident
+parameter_list|,
+name|methods
+parameter_list|,
+name|size
+parameter_list|,
+name|base1
+parameter_list|)
+define|\ 						\
+value|static kobj_class_t name ## _baseclasses[] =	\        	{&base1, NULL };			\ mmu_def_t name = {                              \ 	ident, methods, size, name ## _baseclasses	\ };                                              \ DATA_SET(mmu_set, name)
+end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|mmu_def_t name = {				\ 	ident, methods, size, name ## _baseclasses	\ };						 DATA_SET(mmu_set, name)
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Known MMU names  */

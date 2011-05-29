@@ -90,7 +90,7 @@ name|mfi_status_codes
 index|[]
 init|=
 block|{
-literal|"Command completed succesfully"
+literal|"Command completed successfully"
 block|,
 literal|"Invalid command"
 block|,
@@ -1274,6 +1274,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|prog
+operator|->
+name|progress
+operator|!=
+literal|0
+operator|&&
 name|prog
 operator|->
 name|elapsed_seconds

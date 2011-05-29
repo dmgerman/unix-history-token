@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpuregs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ddb.h"
 end_include
 
@@ -164,6 +158,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/timetc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -274,6 +274,12 @@ ifdef|#
 directive|ifdef
 name|SMP
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/smp.h>
+end_include
 
 begin_include
 include|#
@@ -496,6 +502,8 @@ block|{
 name|int
 name|i
 decl_stmt|,
+name|j
+decl_stmt|,
 name|cfe_mem_idx
 decl_stmt|,
 name|tmp
@@ -560,6 +568,30 @@ name|tmp
 operator|*
 literal|1024
 expr_stmt|;
+comment|/* 	 * XXX 	 * If we used vm_paddr_t consistently in pmap, etc., we could 	 * use 64-bit page numbers on !n64 systems, too, like i386 	 * does with PAE. 	 */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+if|if
+condition|(
+name|maxmem
+operator|==
+literal|0
+operator|||
+name|maxmem
+operator|>
+literal|0xffffffff
+condition|)
+name|maxmem
+operator|=
+literal|0xffffffff
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|CFE
@@ -656,7 +688,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"cfe_enummem: 0x%016jx/%llu.\n"
+literal|"cfe_enummem: 0x%016jx/%ju.\n"
 argument_list|,
 name|addr
 argument_list|,
@@ -679,7 +711,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Ignoring %llu bytes of memory at 0x%jx "
+literal|"Ignoring %ju bytes of memory at 0x%jx "
 literal|"that is above maxmem %dMB\n"
 argument_list|,
 name|len
@@ -713,7 +745,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Ignoring %llu bytes of memory "
+literal|"Ignoring %ju bytes of memory "
 literal|"that is above maxmem %dMB\n"
 argument_list|,
 operator|(
@@ -801,6 +833,29 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+name|i
+condition|;
+name|j
+operator|++
+control|)
+name|dump_avail
+index|[
+name|j
+index|]
+operator|=
+name|phys_avail
+index|[
+name|j
+index|]
+expr_stmt|;
 name|physmem
 operator|=
 name|realmem
@@ -833,7 +888,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|XTLB_MISS_EXC_VEC
+name|MIPS3_XTLB_MISS_EXC_VEC
 argument_list|,
 name|MipsTLBMissEnd
 operator|-
@@ -955,7 +1010,7 @@ expr_stmt|;
 name|config
 operator|&=
 operator|~
-name|CFG_K0_MASK
+name|MIPS3_CONFIG_K0_MASK
 expr_stmt|;
 name|config
 operator||=
@@ -1053,6 +1108,24 @@ block|}
 end_function
 
 begin_function
+name|struct
+name|cpu_group
+modifier|*
+name|platform_smp_topo
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|smp_topo_none
+argument_list|()
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 name|void
 name|platform_init_ap
 parameter_list|(
@@ -1060,6 +1133,11 @@ name|int
 name|cpuid
 parameter_list|)
 block|{
+name|int
+name|ipi_int_mask
+decl_stmt|,
+name|clock_int_mask
+decl_stmt|;
 name|KASSERT
 argument_list|(
 name|cpuid
@@ -1080,6 +1158,29 @@ expr_stmt|;
 name|sb_intr_init
 argument_list|(
 name|cpuid
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Unmask the clock and ipi interrupts. 	 */
+name|clock_int_mask
+operator|=
+name|hard_int_mask
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+name|ipi_int_mask
+operator|=
+name|hard_int_mask
+argument_list|(
+name|platform_ipi_intrnum
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|set_intr_mask
+argument_list|(
+name|ipi_int_mask
+operator||
+name|clock_int_mask
 argument_list|)
 expr_stmt|;
 block|}
@@ -1165,6 +1266,75 @@ comment|/* SMP */
 end_comment
 
 begin_function
+specifier|static
+name|u_int
+name|sb_get_timecount
+parameter_list|(
+name|struct
+name|timecounter
+modifier|*
+name|tc
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|u_int
+operator|)
+name|sb_zbbus_cycle_count
+argument_list|()
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|sb_timecounter_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+specifier|static
+name|struct
+name|timecounter
+name|sb_timecounter
+init|=
+block|{
+name|sb_get_timecount
+block|,
+name|NULL
+block|,
+operator|~
+literal|0u
+block|,
+literal|0
+block|,
+literal|"sibyte_zbbus_counter"
+block|,
+literal|2000
+block|}
+decl_stmt|;
+comment|/* 	 * The ZBbus cycle counter runs at half the cpu frequency. 	 */
+name|sb_timecounter
+operator|.
+name|tc_frequency
+operator|=
+name|sb_cpu_speed
+argument_list|()
+operator|/
+literal|2
+expr_stmt|;
+name|platform_timecounter
+operator|=
+operator|&
+name|sb_timecounter
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|platform_start
 parameter_list|(
@@ -1213,6 +1383,9 @@ name|sb_intr_init
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+name|sb_timecounter_init
+argument_list|()
 expr_stmt|;
 comment|/* Initialize pcpu stuff */
 name|mips_pcpu0_init

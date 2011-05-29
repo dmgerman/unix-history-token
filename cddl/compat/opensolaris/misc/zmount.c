@@ -69,6 +69,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<mnttab.h>
+end_include
+
 begin_function
 specifier|static
 name|void
@@ -329,6 +335,10 @@ argument_list|(
 name|mflag
 operator|==
 literal|0
+operator|||
+name|mflag
+operator|==
+name|MS_RDONLY
 argument_list|)
 expr_stmt|;
 name|assert
@@ -399,6 +409,27 @@ expr_stmt|;
 name|iovlen
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|mflag
+operator|&
+name|MS_RDONLY
+condition|)
+name|build_iovec
+argument_list|(
+operator|&
+name|iov
+argument_list|,
+operator|&
+name|iovlen
+argument_list|,
+literal|"ro"
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|build_iovec
 argument_list|(
@@ -487,6 +518,14 @@ argument_list|,
 literal|",/ "
 argument_list|)
 control|)
+block|{
+if|if
+condition|(
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|)
 name|build_iovec
 argument_list|(
 operator|&
@@ -506,6 +545,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 name|rv
 operator|=
 name|nmount

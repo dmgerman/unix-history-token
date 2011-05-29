@@ -186,6 +186,10 @@ name|KERNELDUMP_IA64_VERSION
 value|1
 define|#
 directive|define
+name|KERNELDUMP_MIPS_VERSION
+value|1
+define|#
+directive|define
 name|KERNELDUMP_POWERPC_VERSION
 value|1
 define|#

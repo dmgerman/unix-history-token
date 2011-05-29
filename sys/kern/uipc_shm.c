@@ -935,7 +935,7 @@ name|st_blksize
 expr_stmt|;
 name|sb
 operator|->
-name|st_atimespec
+name|st_atim
 operator|=
 name|shmfd
 operator|->
@@ -943,7 +943,7 @@ name|shm_atime
 expr_stmt|;
 name|sb
 operator|->
-name|st_ctimespec
+name|st_ctim
 operator|=
 name|shmfd
 operator|->
@@ -951,7 +951,7 @@ name|shm_ctime
 expr_stmt|;
 name|sb
 operator|->
-name|st_mtimespec
+name|st_mtim
 operator|=
 name|shmfd
 operator|->
@@ -959,7 +959,7 @@ name|shm_mtime
 expr_stmt|;
 name|sb
 operator|->
-name|st_birthtimespec
+name|st_birthtim
 operator|=
 name|shmfd
 operator|->
@@ -1163,13 +1163,13 @@ name|delta
 argument_list|)
 expr_stmt|;
 comment|/* Free the swap accounted for shm */
-name|swap_release_by_uid
+name|swap_release_by_cred
 argument_list|(
 name|delta
 argument_list|,
 name|object
 operator|->
-name|uip
+name|cred
 argument_list|)
 expr_stmt|;
 name|object
@@ -1256,9 +1256,6 @@ argument_list|,
 name|DEV_BSIZE
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_clear_dirty
 argument_list|(
 name|m
@@ -1269,9 +1266,6 @@ name|PAGE_SIZE
 operator|-
 name|base
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 block|}
 elseif|else
@@ -1324,13 +1318,13 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|swap_reserve_by_uid
+name|swap_reserve_by_cred
 argument_list|(
 name|delta
 argument_list|,
 name|object
 operator|->
-name|uip
+name|cred
 argument_list|)
 condition|)
 block|{
@@ -2252,6 +2246,8 @@ name|fp
 argument_list|,
 operator|&
 name|fd
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

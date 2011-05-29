@@ -132,6 +132,18 @@ name|idx
 operator|++
 control|)
 block|{
+name|TCHECK2
+argument_list|(
+operator|*
+operator|(
+name|pptr
+operator|+
+name|idx
+operator|)
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|EXTRACT_16BITS
@@ -186,6 +198,13 @@ name|len
 argument_list|)
 expr_stmt|;
 return|return;
+name|trunc
+label|:
+name|printf
+argument_list|(
+literal|"[|sip]"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

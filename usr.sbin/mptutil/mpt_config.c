@@ -123,16 +123,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|powerof2
-parameter_list|(
-name|x
-parameter_list|)
-value|((((x)-1)&(x))==0)
-end_define
-
 begin_function
 specifier|static
 name|long
@@ -329,19 +319,16 @@ condition|(
 name|error
 condition|)
 block|{
-name|errno
-operator|=
-name|error
-expr_stmt|;
-name|warn
+name|warnc
 argument_list|(
+name|error
+argument_list|,
 literal|"Unable to lookup volume device name"
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|error
 operator|)
 return|;
 block|}
@@ -379,6 +366,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Unable to lock volume %s"
@@ -390,8 +381,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|error
 operator|)
 return|;
 block|}
@@ -422,6 +412,8 @@ index|]
 decl_stmt|;
 name|int
 name|dfd
+decl_stmt|,
+name|error
 decl_stmt|;
 name|snprintf
 argument_list|(
@@ -457,6 +449,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Unable to lock disk %s"
@@ -468,8 +464,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|error
 operator|)
 return|;
 block|}
@@ -578,14 +573,9 @@ operator|>
 literal|0xff
 condition|)
 block|{
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|EINVAL
 operator|)
 return|;
 block|}
@@ -642,14 +632,9 @@ operator|)
 return|;
 block|}
 block|}
-name|errno
-operator|=
-name|ENOENT
-expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|ENOENT
 operator|)
 return|;
 block|}
@@ -714,25 +699,15 @@ operator|)
 return|;
 block|}
 block|}
-name|errno
-operator|=
-name|ENOENT
-expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|ENOENT
 operator|)
 return|;
 block|}
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|EINVAL
 operator|)
 return|;
 block|}
@@ -767,11 +742,14 @@ name|CONFIG_PAGE_RAID_PHYS_DISK_0
 modifier|*
 name|config_page
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|U32
 name|ActionData
 decl_stmt|;
-if|if
-condition|(
+name|error
+operator|=
 name|mpt_read_config_page_header
 argument_list|(
 name|fd
@@ -787,13 +765,14 @@ name|header
 argument_list|,
 name|NULL
 argument_list|)
-operator|<
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+name|error
 operator|)
 return|;
 if|if
@@ -814,14 +793,9 @@ operator|.
 name|PageVersion
 argument_list|)
 expr_stmt|;
-name|errno
-operator|=
-name|EOPNOTSUPP
-expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|EOPNOTSUPP
 operator|)
 return|;
 block|}
@@ -890,8 +864,8 @@ operator|->
 name|target
 expr_stmt|;
 comment|/* XXX: Enclosure info for PhysDiskSettings? */
-if|if
-condition|(
+name|error
+operator|=
 name|mpt_raid_action
 argument_list|(
 name|fd
@@ -929,13 +903,14 @@ name|NULL
 argument_list|,
 literal|1
 argument_list|)
-operator|<
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+name|error
 operator|)
 return|;
 operator|*
@@ -1047,6 +1022,8 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
+name|error
+decl_stmt|,
 name|fd
 decl_stmt|,
 name|i
@@ -1065,6 +1042,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mpt_open"
@@ -1072,7 +1053,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -1094,6 +1075,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to fetch volume list"
@@ -1101,7 +1086,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -1229,8 +1214,9 @@ operator|,
 name|i
 operator|++
 control|)
-if|if
-condition|(
+block|{
+name|error
+operator|=
 name|mpt_raid_action
 argument_list|(
 name|fd
@@ -1267,11 +1253,15 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
-name|warn
+name|warnc
 argument_list|(
+name|error
+argument_list|,
 literal|"Failed to delete volume %s"
 argument_list|,
 name|mpt_volume_name
@@ -1286,6 +1276,7 @@ name|VolumeID
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|ioc2
@@ -1942,6 +1933,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Unable to lookup drive %s"
@@ -1951,7 +1946,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -2023,6 +2018,8 @@ name|U8
 name|PhysDiskNum
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|i
 decl_stmt|;
 for|for
@@ -2076,6 +2073,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to create physical disk page for %s"
@@ -2089,7 +2090,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -2358,10 +2359,12 @@ name|size_t
 name|page_size
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|i
 decl_stmt|;
-if|if
-condition|(
+name|error
+operator|=
 name|mpt_read_config_page_header
 argument_list|(
 name|fd
@@ -2377,14 +2380,22 @@ name|header
 argument_list|,
 name|NULL
 argument_list|)
-operator|<
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
+block|{
+name|errno
+operator|=
+name|error
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|header
@@ -2442,6 +2453,17 @@ argument_list|,
 name|page_size
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vol
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 comment|/* Header */
 name|vol
 operator|->
@@ -2884,6 +2906,9 @@ name|volume_info
 modifier|*
 name|info
 decl_stmt|;
+name|long
+name|stripe_size
+decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
@@ -2893,14 +2918,11 @@ name|fd
 decl_stmt|,
 name|i
 decl_stmt|,
+name|quick
+decl_stmt|,
 name|raid_type
 decl_stmt|,
 name|verbose
-decl_stmt|,
-name|quick
-decl_stmt|;
-name|long
-name|stripe_size
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -2942,6 +2964,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mpt_open"
@@ -2949,7 +2975,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -3196,6 +3222,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to read volume list"
@@ -3203,7 +3233,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -3300,6 +3330,17 @@ name|info
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|info
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
 name|error
 operator|=
 name|parse_volume
@@ -3368,6 +3409,17 @@ argument_list|,
 name|verbose
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vol
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|errno
+operator|)
+return|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -3388,8 +3440,8 @@ block|}
 endif|#
 directive|endif
 comment|/* Send the new volume to the controller. */
-if|if
-condition|(
+name|error
+operator|=
 name|mpt_raid_action
 argument_list|(
 name|fd
@@ -3434,10 +3486,16 @@ name|NULL
 argument_list|,
 literal|1
 argument_list|)
-operator|<
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
+name|errno
+operator|=
+name|error
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to add volume"
@@ -3445,7 +3503,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -3544,6 +3602,8 @@ decl_stmt|,
 name|VolumeID
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|fd
 decl_stmt|;
 if|if
@@ -3578,6 +3638,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mpt_open"
@@ -3585,12 +3649,12 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
-if|if
-condition|(
+name|error
+operator|=
 name|mpt_lookup_volume
 argument_list|(
 name|fd
@@ -3606,12 +3670,16 @@ argument_list|,
 operator|&
 name|VolumeID
 argument_list|)
-operator|<
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
-name|warn
+name|warnc
 argument_list|(
+name|error
+argument_list|,
 literal|"Invalid volume %s"
 argument_list|,
 name|av
@@ -3622,7 +3690,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -3642,8 +3710,8 @@ operator|(
 name|errno
 operator|)
 return|;
-if|if
-condition|(
+name|error
+operator|=
 name|mpt_raid_action
 argument_list|(
 name|fd
@@ -3676,18 +3744,22 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
-name|warn
+name|warnc
 argument_list|(
+name|error
+argument_list|,
 literal|"Failed to delete volume"
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -3761,6 +3833,8 @@ decl_stmt|,
 name|VolumeID
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|i
 decl_stmt|,
 name|j
@@ -3772,8 +3846,8 @@ index|[
 literal|7
 index|]
 decl_stmt|;
-if|if
-condition|(
+name|error
+operator|=
 name|mpt_lookup_volume
 argument_list|(
 name|fd
@@ -3786,12 +3860,16 @@ argument_list|,
 operator|&
 name|VolumeID
 argument_list|)
-operator|<
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
-name|warn
+name|warnc
 argument_list|(
+name|error
+argument_list|,
 literal|"Invalid volume %s"
 argument_list|,
 name|name
@@ -3799,8 +3877,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|error
 operator|)
 return|;
 block|}
@@ -3825,8 +3902,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+name|errno
 operator|)
 return|;
 comment|/* 	 * Check for an existing pool other than pool 0 (used for 	 * global spares). 	 */
@@ -3897,6 +3973,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to fetch volume list"
@@ -3904,8 +3984,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|error
 operator|)
 return|;
 block|}
@@ -3969,8 +4048,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+name|errno
 operator|)
 return|;
 for|for
@@ -4080,8 +4158,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+name|error
 operator|)
 return|;
 name|info
@@ -4096,8 +4173,8 @@ operator|<<
 name|new_pool
 operator|)
 expr_stmt|;
-if|if
-condition|(
+name|error
+operator|=
 name|mpt_raid_action
 argument_list|(
 name|fd
@@ -4136,8 +4213,10 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|warnx
@@ -4156,8 +4235,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|error
 operator|)
 return|;
 block|}
@@ -4275,6 +4353,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mpt_open"
@@ -4282,7 +4364,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -4293,8 +4375,8 @@ operator|==
 literal|3
 condition|)
 block|{
-if|if
-condition|(
+name|error
+operator|=
 name|find_volume_spare_pool
 argument_list|(
 name|fd
@@ -4307,12 +4389,14 @@ argument_list|,
 operator|&
 name|pool
 argument_list|)
-operator|<
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -4410,6 +4494,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Unable to lookup drive %s"
@@ -4422,7 +4510,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -4463,6 +4551,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to create physical disk page"
@@ -4470,7 +4562,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -4503,6 +4595,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to fetch drive info"
@@ -4510,7 +4606,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -4568,14 +4664,16 @@ condition|(
 name|error
 condition|)
 block|{
-name|warn
+name|warnc
 argument_list|(
+name|error
+argument_list|,
 literal|"Failed to assign spare"
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -4672,6 +4770,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mpt_open"
@@ -4679,7 +4781,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -4760,6 +4862,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to fetch drive info"
@@ -4767,7 +4873,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -4807,6 +4913,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to delete physical disk page"
@@ -4814,7 +4924,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -4938,6 +5048,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mpt_open"
@@ -4945,7 +5059,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -5000,6 +5114,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Unable to lookup drive"
@@ -5007,7 +5125,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -5048,6 +5166,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to create physical disk page"
@@ -5055,7 +5177,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -5125,6 +5247,8 @@ modifier|*
 name|list
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|fd
 decl_stmt|;
 name|U8
@@ -5162,6 +5286,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mpt_open"
@@ -5169,7 +5297,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -5209,6 +5337,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to find drive %s"
@@ -5221,7 +5353,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -5248,6 +5380,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to fetch drive info"
@@ -5255,7 +5391,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -5271,6 +5407,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to delete physical disk page"
@@ -5278,7 +5418,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -5560,6 +5700,8 @@ decl_stmt|,
 name|VolumeID
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|fd
 decl_stmt|;
 if|if
@@ -5594,6 +5736,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mpt_open"
@@ -5601,12 +5747,12 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
-if|if
-condition|(
+name|error
+operator|=
 name|mpt_lookup_volume
 argument_list|(
 name|fd
@@ -5622,12 +5768,16 @@ argument_list|,
 operator|&
 name|VolumeID
 argument_list|)
-operator|<
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
-name|warn
+name|warnc
 argument_list|(
+name|error
+argument_list|,
 literal|"Invalid volume: %s"
 argument_list|,
 name|av
@@ -5638,7 +5788,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -5662,6 +5812,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get volume info"
@@ -5669,7 +5823,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}

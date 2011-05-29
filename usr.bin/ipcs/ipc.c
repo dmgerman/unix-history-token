@@ -486,6 +486,7 @@ name|size_t
 name|size
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|symn

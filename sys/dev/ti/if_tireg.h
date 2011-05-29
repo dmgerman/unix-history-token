@@ -3982,6 +3982,7 @@ decl_stmt|;
 name|u_int16_t
 name|ti_did
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|ti_name

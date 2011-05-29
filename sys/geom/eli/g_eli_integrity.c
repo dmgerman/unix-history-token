@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2005-2006 Pawel Jakub Dawidek<pjd@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2005-2011 Pawel Jakub Dawidek<pawel@dawidek.net>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -240,6 +240,11 @@ name|crp
 parameter_list|)
 block|{
 name|struct
+name|g_eli_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|struct
 name|bio
 modifier|*
 name|bp
@@ -369,6 +374,29 @@ operator|->
 name|crp_etype
 expr_stmt|;
 block|}
+name|sc
+operator|=
+name|bp
+operator|->
+name|bio_to
+operator|->
+name|geom
+operator|->
+name|softc
+expr_stmt|;
+name|g_eli_key_drop
+argument_list|(
+name|sc
+argument_list|,
+name|crp
+operator|->
+name|crp_desc
+operator|->
+name|crd_next
+operator|->
+name|crd_key
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Do we have all sectors already? 	 */
 if|if
 condition|(
@@ -394,11 +422,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|struct
-name|g_eli_softc
-modifier|*
-name|sc
-decl_stmt|;
 name|u_int
 name|i
 decl_stmt|,
@@ -428,16 +451,6 @@ decl_stmt|,
 name|corsize
 decl_stmt|;
 comment|/* 		 * Verify data integrity based on calculated and read HMACs. 		 */
-name|sc
-operator|=
-name|bp
-operator|->
-name|bio_to
-operator|->
-name|geom
-operator|->
-name|softc
-expr_stmt|;
 comment|/* Sectorsize of decrypted provider eg. 4096. */
 name|decr_secsize
 operator|=
@@ -807,6 +820,16 @@ operator|->
 name|bio_error
 argument_list|)
 expr_stmt|;
+name|atomic_subtract_int
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_inflight
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -957,6 +980,27 @@ operator|->
 name|crp_etype
 expr_stmt|;
 block|}
+name|sc
+operator|=
+name|bp
+operator|->
+name|bio_to
+operator|->
+name|geom
+operator|->
+name|softc
+expr_stmt|;
+name|g_eli_key_drop
+argument_list|(
+name|sc
+argument_list|,
+name|crp
+operator|->
+name|crp_desc
+operator|->
+name|crd_key
+argument_list|)
+expr_stmt|;
 comment|/* 	 * All sectors are already encrypted? 	 */
 if|if
 condition|(
@@ -1036,22 +1080,22 @@ operator|->
 name|bio_error
 argument_list|)
 expr_stmt|;
+name|atomic_subtract_int
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_inflight
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
-name|sc
-operator|=
-name|bp
-operator|->
-name|bio_to
-operator|->
-name|geom
-operator|->
-name|softc
-expr_stmt|;
 name|cp
 operator|=
 name|LIST_FIRST
@@ -1641,7 +1685,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is the main function responsible for cryptography (ie. communication  * with crypto(9) subsystem).  */
+comment|/*  * This is the main function responsible for cryptography (ie. communication  * with crypto(9) subsystem).  *  * BIO_READ:  *	g_eli_start -> g_eli_auth_read -> g_io_request -> g_eli_read_done -> G_ELI_AUTH_RUN -> g_eli_auth_read_done -> g_io_deliver  * BIO_WRITE:  *	g_eli_start -> G_ELI_AUTH_RUN -> g_eli_auth_write_done -> g_io_request -> g_eli_write_done -> g_io_deliver  */
 end_comment
 
 begin_function
@@ -2374,6 +2418,24 @@ name|CRD_F_IV_PRESENT
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|G_ELI_FLAG_FIRST_KEY
+operator|)
+operator|==
+literal|0
+condition|)
+name|crde
+operator|->
+name|crd_flags
+operator||=
+name|CRD_F_KEY_EXPLICIT
+expr_stmt|;
+if|if
+condition|(
 name|bp
 operator|->
 name|bio_cmd
@@ -2398,9 +2460,14 @@ name|crde
 operator|->
 name|crd_key
 operator|=
+name|g_eli_key_hold
+argument_list|(
 name|sc
-operator|->
-name|sc_ekey
+argument_list|,
+name|dstoff
+argument_list|,
+name|encr_secsize
+argument_list|)
 expr_stmt|;
 name|crde
 operator|->
@@ -2409,6 +2476,20 @@ operator|=
 name|sc
 operator|->
 name|sc_ekeylen
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_ealgo
+operator|==
+name|CRYPTO_AES_XTS
+condition|)
+name|crde
+operator|->
+name|crd_klen
+operator|<<=
+literal|1
 expr_stmt|;
 name|g_eli_crypto_ivgen
 argument_list|(

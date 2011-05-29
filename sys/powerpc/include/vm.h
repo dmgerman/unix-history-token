@@ -28,36 +28,57 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VM_MEMATTR_CACHING_INHIBIT
-value|((vm_memattr_t)PTE_I)
+name|VM_MEMATTR_DEFAULT
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|VM_MEMATTR_GUARD
-value|((vm_memattr_t)PTE_G)
+name|VM_MEMATTR_UNCACHEABLE
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|VM_MEMATTR_MEMORY_COHERENCE
-value|((vm_memattr_t)PTE_M)
+name|VM_MEMATTR_UNCACHED
+value|VM_MEMATTR_UNCACHEABLE
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MEMATTR_CACHEABLE
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MEMATTR_WRITE_COMBINING
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MEMATTR_WRITE_BACK
+value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_MEMATTR_WRITE_THROUGH
-value|((vm_memattr_t)PTE_W)
+value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|VM_MEMATTR_DEFAULT
-value|0
+name|VM_MEMATTR_PREFETCHABLE
+value|0x20
 end_define
 
 begin_endif

@@ -18,7 +18,7 @@ end_define
 begin_decl_stmt
 specifier|extern
 name|u_int
-name|hardclock_use_stick
+name|tick_et_use_stick
 decl_stmt|;
 end_decl_stmt
 
@@ -28,15 +28,6 @@ name|tick_clear
 parameter_list|(
 name|u_int
 name|cpu_impl
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|tick_start
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl

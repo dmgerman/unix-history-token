@@ -526,7 +526,7 @@ name|uintptr_t
 operator|)
 name|addr
 operator|<
-name|VM_MAX_ADDRESS
+name|VM_MAXUSER_ADDRESS
 condition|)
 return|return
 operator|(
@@ -565,7 +565,7 @@ name|uintptr_t
 operator|)
 name|addr
 operator|<
-name|VM_MAX_ADDRESS
+name|VM_MAXUSER_ADDRESS
 condition|)
 name|suword
 argument_list|(

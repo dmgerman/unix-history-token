@@ -1280,13 +1280,8 @@ name|vm_object_page_clean
 argument_list|(
 name|object
 argument_list|,
-name|OFF_TO_IDX
-argument_list|(
 name|offset
-argument_list|)
 argument_list|,
-name|OFF_TO_IDX
-argument_list|(
 name|offset
 operator|+
 name|vme
@@ -1296,9 +1291,6 @@ operator|-
 name|vme
 operator|->
 name|start
-operator|+
-name|PAGE_MASK
-argument_list|)
 argument_list|,
 name|OBJPC_SYNC
 argument_list|)

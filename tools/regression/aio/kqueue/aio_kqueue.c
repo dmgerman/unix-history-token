@@ -4,13 +4,43 @@ comment|/*-  * Copyright (C) 2005 IronPort Systems, Inc. All rights reserved.  *
 end_comment
 
 begin_comment
-comment|/*   * Note: it is a good idea to run this against a physical drive to   * exercise the physio fast path (ie. aio_kqueue /dev/<something safe>)  */
+comment|/*   * Prerequisities:  * - AIO support must be compiled into the kernel (see sys/<arch>/NOTES for  *   more details).  *  * Note: it is a good idea to run this against a physical drive to   * exercise the physio fast path (ie. aio_kqueue /dev/<something safe>)  */
 end_comment
 
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/event.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<aio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -34,25 +64,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/event.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
+file|<string.h>
 end_include
 
 begin_include
@@ -87,6 +99,7 @@ comment|/* #define DEBUG */
 end_comment
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|int
@@ -168,7 +181,7 @@ sizeof|sizeof
 argument_list|(
 name|PATH_TEMPLATE
 argument_list|)
-operator|-
+operator|+
 literal|1
 index|]
 decl_stmt|;
@@ -246,30 +259,19 @@ block|}
 if|if
 condition|(
 name|fd
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
-block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
 literal|"Can't open %s\n"
 argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-name|perror
-argument_list|(
-literal|""
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 for|for
 control|(
 name|run
@@ -320,8 +322,10 @@ expr|struct
 name|aiocb
 operator|*
 operator|)
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -329,18 +333,20 @@ name|aiocb
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
-argument_list|(
+if|if
+condition|(
 name|iocb
 index|[
 name|i
 index|]
-argument_list|,
-sizeof|sizeof
+operator|==
+name|NULL
+condition|)
+name|err
 argument_list|(
-expr|struct
-name|aiocb
-argument_list|)
+literal|1
+argument_list|,
+literal|"calloc"
 argument_list|)
 expr_stmt|;
 block|}
@@ -672,13 +678,11 @@ name|result
 operator|<
 literal|0
 condition|)
-block|{
 name|perror
 argument_list|(
 literal|"kevent error: "
 argument_list|)
 expr_stmt|;
-block|}
 name|kq_iocb
 operator|=
 name|kq_returned
@@ -747,24 +751,18 @@ init|;
 name|j
 operator|<
 name|MAX
-condition|;
-name|j
-operator|++
-control|)
-block|{
-if|if
-condition|(
+operator|&&
 name|iocb
 index|[
 name|j
 index|]
-operator|==
+operator|!=
 name|kq_iocb
-condition|)
-block|{
-break|break;
-block|}
-block|}
+condition|;
+name|j
+operator|++
+control|)
+empty_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -800,16 +798,11 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Return Result for %d is %d\n"
+literal|"Return Result for %d is %d\n\n"
 argument_list|,
 name|j
 argument_list|,
 name|result
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -826,7 +819,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"FAIL: run %d, operation %d, result %d (errno=%d) should be %d\n"
+literal|"FAIL: run %d, operation %d, result %d "
+literal|" (errno=%d) should be %d\n"
 argument_list|,
 name|run
 argument_list|,
@@ -843,12 +837,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 name|failed
-operator|=
-literal|1
+operator|++
 expr_stmt|;
 block|}
 else|else
-block|{
 name|printf
 argument_list|(
 literal|"PASS: run %d, left %d\n"
@@ -860,7 +852,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 name|free
 argument_list|(
 name|kq_iocb
@@ -880,47 +871,67 @@ name|i
 operator|++
 expr_stmt|;
 block|}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|MAX
+condition|;
+name|i
+operator|++
+control|)
+name|free
+argument_list|(
+name|iocb
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
 name|tmp_file
 condition|)
-block|{
 name|unlink
 argument_list|(
 name|pathname
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|failed
+operator|!=
+literal|0
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|"FAIL: Atleast one\n"
+literal|"FAIL: %d tests failed\n"
+argument_list|,
+name|failed
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"PASS: All tests passed\n"
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
+name|failed
+operator|==
+literal|0
+condition|?
+literal|0
+else|:
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"PASS: All\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 

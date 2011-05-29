@@ -719,20 +719,6 @@ name|__packed
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|rue_type
-block|{
-name|uint16_t
-name|rue_vid
-decl_stmt|;
-name|uint16_t
-name|rue_did
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_enum
 enum|enum
 block|{

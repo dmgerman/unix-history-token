@@ -21,6 +21,12 @@ directive|include
 file|<sys/uio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -57,6 +63,11 @@ modifier|*
 name|fname
 decl_stmt|;
 comment|/* pointer to filename of executable (system space) */
+name|char
+modifier|*
+name|fname_buf
+decl_stmt|;
+comment|/* pointer to optional malloc(M_TEMP) buffer */
 name|int
 name|stringspace
 decl_stmt|;
@@ -122,6 +133,11 @@ name|long
 name|entry_addr
 decl_stmt|;
 comment|/* entry address of target executable */
+name|unsigned
+name|long
+name|reloc_base
+decl_stmt|;
+comment|/* load address of image */
 name|char
 name|vmspace_destroyed
 decl_stmt|;
@@ -182,6 +198,23 @@ name|char
 modifier|*
 name|freepath
 decl_stmt|;
+name|unsigned
+name|long
+name|canary
+decl_stmt|;
+name|int
+name|canarylen
+decl_stmt|;
+name|unsigned
+name|long
+name|pagesizes
+decl_stmt|;
+name|int
+name|pagesizeslen
+decl_stmt|;
+name|vm_prot_t
+name|stack_prot
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -213,6 +246,17 @@ end_define
 
 begin_function_decl
 name|int
+name|exec_alloc_args
+parameter_list|(
+name|struct
+name|image_args
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|exec_check_permissions
 parameter_list|(
 name|struct
@@ -229,6 +273,17 @@ name|exec_copyout_strings
 parameter_list|(
 name|struct
 name|image_params
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|exec_free_args
+parameter_list|(
+name|struct
+name|image_args
 modifier|*
 parameter_list|)
 function_decl|;
@@ -257,9 +312,9 @@ name|struct
 name|thread
 modifier|*
 parameter_list|,
-name|u_long
-parameter_list|,
-name|u_long
+name|struct
+name|image_params
+modifier|*
 parameter_list|,
 name|u_long
 parameter_list|)

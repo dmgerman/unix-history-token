@@ -3419,8 +3419,6 @@ operator|*=
 name|find
 operator|.
 name|fp_mss
-operator|,
-literal|1
 expr_stmt|;
 elseif|else
 if|if

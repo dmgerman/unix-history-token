@@ -120,13 +120,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|tsd_lock
-value|__tsd_lock
-end_define
-
-begin_define
-define|#
-directive|define
 name|xprtlist_lock
 value|__xprtlist_lock
 end_define

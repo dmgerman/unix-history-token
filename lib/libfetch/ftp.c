@@ -379,6 +379,9 @@ operator|(
 name|u_int32_t
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 operator|&
 name|sin6
 operator|->
@@ -5954,6 +5957,11 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|--
+name|conn
+operator|->
+name|ref
+expr_stmt|;
 name|ftp_disconnect
 argument_list|(
 name|conn

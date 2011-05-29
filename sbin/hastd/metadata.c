@@ -306,6 +306,11 @@ argument_list|,
 literal|"Unable to allocate memory to read metadata"
 argument_list|)
 expr_stmt|;
+name|ebuf_free
+argument_list|(
+name|eb
+argument_list|)
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
@@ -421,6 +426,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|str
+operator|!=
+name|NULL
+operator|&&
 name|strcmp
 argument_list|(
 name|str
@@ -673,6 +682,11 @@ goto|goto
 name|fail
 goto|;
 block|}
+name|nv_free
+argument_list|(
+name|nv
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -747,6 +761,9 @@ decl_stmt|;
 name|ssize_t
 name|done
 decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
 name|buf
 operator|=
 name|calloc
@@ -780,6 +797,11 @@ literal|1
 operator|)
 return|;
 block|}
+name|ret
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|nv
 operator|=
 name|nv_alloc
@@ -966,7 +988,7 @@ literal|"Unable to create metadata."
 argument_list|)
 expr_stmt|;
 goto|goto
-name|fail
+name|end
 goto|;
 block|}
 name|res
@@ -1058,15 +1080,14 @@ literal|"Unable to write metadata"
 argument_list|)
 expr_stmt|;
 goto|goto
-name|fail
+name|end
 goto|;
 block|}
-return|return
-operator|(
+name|ret
+operator|=
 literal|0
-operator|)
-return|;
-name|fail
+expr_stmt|;
+name|end
 label|:
 name|free
 argument_list|(
@@ -1080,8 +1101,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|ret
 operator|)
 return|;
 block|}

@@ -445,10 +445,11 @@ index|[
 literal|32
 index|]
 decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
 name|int
 name|ifaceno
-decl_stmt|,
-name|len
 decl_stmt|;
 if|if
 condition|(
@@ -476,7 +477,9 @@ expr_stmt|;
 name|len
 operator|=
 sizeof|sizeof
+argument_list|(
 name|stats
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -486,7 +489,9 @@ argument_list|(
 name|oid
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|oid
+argument_list|)
 argument_list|,
 literal|"dev.iwi.%u.stats"
 argument_list|,
@@ -540,7 +545,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-60s[%lu]\n"
+literal|"%-60s[%u]\n"
 argument_list|,
 name|stat
 operator|->

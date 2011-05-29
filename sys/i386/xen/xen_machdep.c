@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/reboot.h>
 end_include
 
@@ -971,7 +977,9 @@ name|error
 decl_stmt|,
 name|i
 decl_stmt|;
-comment|/* window of vulnerability here? */
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 if|if
 condition|(
 name|__predict_true
@@ -979,9 +987,13 @@ argument_list|(
 name|gdtset
 argument_list|)
 condition|)
-name|critical_enter
-argument_list|()
+name|CRITICAL_ASSERT
+argument_list|(
+name|curthread
+argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|XPQ_IDX
 operator|=
 literal|0
@@ -1011,16 +1023,6 @@ literal|0
 block|if (__predict_true(gdtset)) 	for (i = _xpq_idx; i> 0;) { 		if (i>= 3) { 			CTR6(KTR_PMAP, "mmu:val: %lx ptr: %lx val: %lx " 			    "ptr: %lx val: %lx ptr: %lx", 			    (XPQ_QUEUE[i-1].val& 0xffffffff), 			    (XPQ_QUEUE[i-1].ptr& 0xffffffff), 			    (XPQ_QUEUE[i-2].val& 0xffffffff), 			    (XPQ_QUEUE[i-2].ptr& 0xffffffff), 			    (XPQ_QUEUE[i-3].val& 0xffffffff), 			    (XPQ_QUEUE[i-3].ptr& 0xffffffff)); 			    i -= 3; 		} else if (i == 2) { 			CTR4(KTR_PMAP, "mmu: val: %lx ptr: %lx val: %lx ptr: %lx", 			    (XPQ_QUEUE[i-1].val& 0xffffffff), 			    (XPQ_QUEUE[i-1].ptr& 0xffffffff), 			    (XPQ_QUEUE[i-2].val& 0xffffffff), 			    (XPQ_QUEUE[i-2].ptr& 0xffffffff)); 			i = 0; 		} else { 			CTR2(KTR_PMAP, "mmu: val: %lx ptr: %lx",  			    (XPQ_QUEUE[i-1].val& 0xffffffff), 			    (XPQ_QUEUE[i-1].ptr& 0xffffffff)); 			i = 0; 		} 	}
 endif|#
 directive|endif
-if|if
-condition|(
-name|__predict_true
-argument_list|(
-name|gdtset
-argument_list|)
-condition|)
-name|critical_exit
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|__predict_false
@@ -1086,11 +1088,31 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|__predict_true
+argument_list|(
+name|gdtset
+argument_list|)
+condition|)
+name|critical_enter
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
 name|XPQ_IDX
 operator|!=
 literal|0
 condition|)
 name|_xen_flush_queue
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|__predict_true
+argument_list|(
+name|gdtset
+argument_list|)
+condition|)
+name|critical_exit
 argument_list|()
 expr_stmt|;
 block|}
@@ -1879,17 +1901,6 @@ operator|=
 name|ma
 operator|>>
 name|PAGE_SHIFT
-expr_stmt|;
-name|printk
-argument_list|(
-literal|"xen_pt_pin(): mfn=%x\n"
-argument_list|,
-name|op
-operator|.
-name|arg1
-operator|.
-name|mfn
-argument_list|)
 expr_stmt|;
 name|xen_flush_queue
 argument_list|()
@@ -2868,17 +2879,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_struct_decl
+struct_decl|struct
+name|xenstore_domain_interface
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
+specifier|extern
 name|struct
-name|ringbuf_head
+name|xenstore_domain_interface
 modifier|*
 name|xen_store
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX move me */
-end_comment
 
 begin_decl_stmt
 name|char
@@ -3591,14 +3605,11 @@ name|pt_base
 expr_stmt|;
 name|IdlePDPTma
 operator|=
-name|xpmap_ptom
-argument_list|(
-name|VTOP
+name|VTOM
 argument_list|(
 name|startinfo
 operator|->
 name|pt_base
-argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -3651,16 +3662,13 @@ index|[
 name|i
 index|]
 operator|=
-name|xpmap_ptom
-argument_list|(
-name|VTOP
+name|VTOM
 argument_list|(
 name|IdlePTD
 operator|+
 name|i
 operator|*
 name|PAGE_SIZE
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|l2_pages
@@ -3872,12 +3880,9 @@ argument_list|)
 expr_stmt|;
 name|IdlePDPTnewma
 operator|=
-name|xpmap_ptom
-argument_list|(
-name|VTOP
+name|VTOM
 argument_list|(
 name|IdlePDPTnew
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|IdlePTDnew
@@ -3921,9 +3926,7 @@ index|[
 name|i
 index|]
 operator|=
-name|xpmap_ptom
-argument_list|(
-name|VTOP
+name|VTOM
 argument_list|(
 operator|(
 name|uint8_t
@@ -3934,7 +3937,6 @@ operator|+
 name|i
 operator|*
 name|PAGE_SIZE
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * L3 	 * 	 * Copy the 4 machine addresses of the new PTDs in to the PDPT 	 *  	 */
@@ -4233,12 +4235,9 @@ argument_list|)
 expr_stmt|;
 name|xen_pgdpt_pin
 argument_list|(
-name|xpmap_ptom
-argument_list|(
-name|VTOP
+name|VTOM
 argument_list|(
 name|IdlePDPTnew
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4315,12 +4314,9 @@ name|PT_SET_MA
 argument_list|(
 name|cur_space
 argument_list|,
-name|xpmap_ptom
-argument_list|(
-name|VTOP
+name|VTOM
 argument_list|(
 name|cur_space
-argument_list|)
 argument_list|)
 operator||
 name|PG_V
@@ -4351,12 +4347,9 @@ argument_list|)
 expr_stmt|;
 name|xen_pt_pin
 argument_list|(
-name|xpmap_ptom
-argument_list|(
-name|VTOP
+name|VTOM
 argument_list|(
 name|cur_space
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4379,12 +4372,9 @@ name|vm_paddr_t
 argument_list|)
 argument_list|)
 argument_list|,
-name|xpmap_ptom
-argument_list|(
-name|VTOP
+name|VTOM
 argument_list|(
 name|cur_space
-argument_list|)
 argument_list|)
 operator||
 name|PG_KERNEL
@@ -4487,7 +4477,7 @@ name|xen_store
 operator|=
 operator|(
 expr|struct
-name|ringbuf_head
+name|xenstore_domain_interface
 operator|*
 operator|)
 name|cur_space
@@ -4612,14 +4602,14 @@ if|#
 directive|if
 literal|0
 comment|/* add page table for KERNBASE */
-block|xen_queue_pt_update(IdlePTDma + KPTDI*sizeof(vm_paddr_t),  			    xpmap_ptom(VTOP(cur_space) | PG_KERNEL)); 	xen_flush_queue();
+block|xen_queue_pt_update(IdlePTDma + KPTDI*sizeof(vm_paddr_t),  			    VTOM(cur_space) | PG_KERNEL); 	xen_flush_queue();
 ifdef|#
 directive|ifdef
 name|PAE
-block|xen_queue_pt_update(pdir_shadow_ma[3] + KPTDI*sizeof(vm_paddr_t),  			    xpmap_ptom(VTOP(cur_space) | PG_V | PG_A));
+block|xen_queue_pt_update(pdir_shadow_ma[3] + KPTDI*sizeof(vm_paddr_t),  			    VTOM(cur_space) | PG_V | PG_A);
 else|#
 directive|else
-block|xen_queue_pt_update(pdir_shadow_ma + KPTDI*sizeof(vm_paddr_t),  			    xpmap_ptom(VTOP(cur_space) | PG_V | PG_A));
+block|xen_queue_pt_update(pdir_shadow_ma + KPTDI*sizeof(vm_paddr_t),  			    VTOM(cur_space) | PG_V | PG_A);
 endif|#
 directive|endif
 block|xen_flush_queue(); 	cur_space += PAGE_SIZE; 	printk("#6\n");
@@ -4717,12 +4707,9 @@ name|PT_SET_MA
 argument_list|(
 name|i
 argument_list|,
-name|xpmap_ptom
-argument_list|(
-name|VTOP
+name|VTOM
 argument_list|(
 name|i
-argument_list|)
 argument_list|)
 operator||
 name|PG_V
@@ -5248,6 +5235,101 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Perform a multicall and check that individual calls succeeded. */
+end_comment
+
+begin_function
+name|int
+name|HYPERVISOR_multicall
+parameter_list|(
+name|struct
+name|multicall_entry
+modifier|*
+name|call_list
+parameter_list|,
+name|int
+name|nr_calls
+parameter_list|)
+block|{
+name|int
+name|ret
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+comment|/* Perform the multicall. */
+name|PANIC_IF
+argument_list|(
+name|_HYPERVISOR_multicall
+argument_list|(
+name|call_list
+argument_list|,
+name|nr_calls
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Check the results of individual hypercalls. */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|nr_calls
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|unlikely
+argument_list|(
+name|call_list
+index|[
+name|i
+index|]
+operator|.
+name|result
+operator|<
+literal|0
+argument_list|)
+condition|)
+name|ret
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|unlikely
+argument_list|(
+name|ret
+operator|>
+literal|0
+argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"%d multicall(s) failed: cpu %d\n"
+argument_list|,
+name|ret
+argument_list|,
+name|smp_processor_id
+argument_list|()
+argument_list|)
+expr_stmt|;
+comment|/* If we didn't panic already, everything succeeded. */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/********** CODE WORTH KEEPING ABOVE HERE *****************/

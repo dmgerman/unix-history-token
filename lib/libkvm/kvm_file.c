@@ -192,7 +192,7 @@ parameter_list|,
 name|cnt
 parameter_list|)
 define|\
-value|(kvm_read(kd, addr, obj, (cnt)) != (cnt))
+value|(kvm_read(kd, addr, obj, (cnt)) != (ssize_t)(cnt))
 end_define
 
 begin_comment
@@ -204,30 +204,25 @@ specifier|static
 name|int
 name|kvm_deadfiles
 parameter_list|(
-name|kd
-parameter_list|,
-name|op
-parameter_list|,
-name|arg
-parameter_list|,
-name|allproc_o
-parameter_list|,
-name|nprocs
-parameter_list|)
 name|kvm_t
 modifier|*
 name|kd
-decl_stmt|;
+parameter_list|,
 name|int
 name|op
-decl_stmt|,
+name|__unused
+parameter_list|,
+name|int
 name|arg
-decl_stmt|,
-name|nprocs
-decl_stmt|;
+name|__unused
+parameter_list|,
 name|long
 name|allproc_o
-decl_stmt|;
+parameter_list|,
+name|int
+name|nprocs
+name|__unused
+parameter_list|)
 block|{
 name|struct
 name|proc
@@ -286,6 +281,10 @@ if|if
 condition|(
 name|buflen
 operator|<
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -297,6 +296,7 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|file
+argument_list|)
 argument_list|)
 condition|)
 return|return
@@ -376,7 +376,7 @@ name|kd
 operator|->
 name|program
 argument_list|,
-literal|"can't read proc at %x"
+literal|"can't read proc at %p"
 argument_list|,
 name|p
 argument_list|)
@@ -429,7 +429,7 @@ name|kd
 operator|->
 name|program
 argument_list|,
-literal|"can't read filedesc at %x"
+literal|"can't read filedesc at %p"
 argument_list|,
 name|p
 operator|->
@@ -532,7 +532,7 @@ name|kd
 operator|->
 name|program
 argument_list|,
-literal|"can't read ofiles at %x"
+literal|"can't read ofiles at %p"
 argument_list|,
 name|filed
 operator|.
@@ -629,6 +629,9 @@ if|if
 condition|(
 name|buflen
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -735,27 +738,20 @@ name|char
 modifier|*
 name|kvm_getfiles
 parameter_list|(
-name|kd
-parameter_list|,
-name|op
-parameter_list|,
-name|arg
-parameter_list|,
-name|cnt
-parameter_list|)
 name|kvm_t
 modifier|*
 name|kd
-decl_stmt|;
+parameter_list|,
 name|int
 name|op
-decl_stmt|,
+parameter_list|,
+name|int
 name|arg
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|cnt
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|mib
@@ -889,6 +885,9 @@ name|kd
 operator|->
 name|arglen
 operator|<
+operator|(
+name|int
+operator|)
 name|size
 condition|)
 name|kd
@@ -1201,6 +1200,9 @@ name|kd
 operator|->
 name|arglen
 operator|<
+operator|(
+name|int
+operator|)
 name|size
 condition|)
 name|kd

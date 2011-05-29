@@ -18683,6 +18683,8 @@ operator|->
 name|hscbs
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_COHERENT
 argument_list|,
 operator|&
 name|scb_data
@@ -19417,6 +19419,8 @@ operator|->
 name|sg_vaddr
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_COHERENT
 argument_list|,
 operator|&
 name|sg_map
@@ -21543,6 +21547,8 @@ operator|->
 name|qoutfifo
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_COHERENT
 argument_list|,
 operator|&
 name|ahc

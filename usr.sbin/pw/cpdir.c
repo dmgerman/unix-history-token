@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"pw.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pwupd.h"
 end_include
 
@@ -406,13 +412,11 @@ name|dst
 argument_list|,
 name|src
 argument_list|,
-operator|(
 name|st
 operator|.
 name|st_mode
 operator|&
-literal|0777
-operator|)
+name|_DEF_DIRMODE
 argument_list|,
 name|uid
 argument_list|,

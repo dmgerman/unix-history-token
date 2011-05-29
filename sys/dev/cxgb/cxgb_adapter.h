@@ -303,6 +303,14 @@ name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 name|struct
+name|callout
+name|link_check_ch
+decl_stmt|;
+name|struct
+name|task
+name|link_check_task
+decl_stmt|;
+name|struct
 name|task
 name|timer_reclaim_task
 decl_stmt|;
@@ -503,7 +511,7 @@ begin_define
 define|#
 directive|define
 name|RSPQ_Q_SIZE
-value|1024
+value|2048
 end_define
 
 begin_define
@@ -511,6 +519,20 @@ define|#
 directive|define
 name|TX_ETH_Q_SIZE
 value|1024
+end_define
+
+begin_define
+define|#
+directive|define
+name|TX_OFLD_Q_SIZE
+value|1024
+end_define
+
+begin_define
+define|#
+directive|define
+name|TX_CTRL_Q_SIZE
+value|256
 end_define
 
 begin_enum
@@ -624,6 +646,9 @@ decl_stmt|;
 name|uint32_t
 name|unhandled_irqs
 decl_stmt|;
+name|uint32_t
+name|starved
+decl_stmt|;
 name|bus_addr_t
 name|phys_addr
 decl_stmt|;
@@ -699,6 +724,9 @@ name|pidx
 decl_stmt|;
 name|uint32_t
 name|gen
+decl_stmt|;
+name|uint32_t
+name|db_pending
 decl_stmt|;
 name|bus_addr_t
 name|phys_addr
@@ -791,6 +819,9 @@ decl_stmt|;
 name|uint32_t
 name|unacked
 decl_stmt|;
+name|uint32_t
+name|db_pending
+decl_stmt|;
 name|struct
 name|tx_desc
 modifier|*
@@ -857,9 +888,6 @@ name|txq_watchdog
 decl_stmt|;
 name|uint64_t
 name|txq_coalesced
-decl_stmt|;
-name|uint32_t
-name|txq_drops
 decl_stmt|;
 name|uint32_t
 name|txq_skipped
@@ -1210,10 +1238,6 @@ decl_stmt|;
 comment|/* Tasks */
 name|struct
 name|task
-name|ext_intr_task
-decl_stmt|;
-name|struct
-name|task
 name|slow_intr_task
 decl_stmt|;
 name|struct
@@ -1353,6 +1377,9 @@ name|elmerlockbuf
 index|[
 name|ADAPTER_LOCK_NAME_LEN
 index|]
+decl_stmt|;
+name|int
+name|timestamp
 decl_stmt|;
 block|}
 struct|;
@@ -1951,6 +1978,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|t3_os_link_intr
+parameter_list|(
+name|struct
+name|port_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|t3_os_link_changed
 parameter_list|(
 name|adapter_t
@@ -2015,17 +2053,6 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|t3_os_ext_intr_handler
-parameter_list|(
-name|adapter_t
-modifier|*
-name|adapter
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2119,6 +2146,8 @@ name|t3_free_sge_resources
 parameter_list|(
 name|adapter_t
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2315,16 +2344,6 @@ name|p
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|CXGB_TICKS
-parameter_list|(
-name|a
-parameter_list|)
-value|((a)->params.linkpoll_period ? \     (hz * (a)->params.linkpoll_period) / 10 : \     (a)->params.stats_update_period * hz)
-end_define
 
 begin_comment
 comment|/*  * XXX figure out how we can return this to being private to sge  */

@@ -6248,11 +6248,22 @@ begin_comment
 comment|/* For backward source compatibility.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__SSE2__
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<emmintrin.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

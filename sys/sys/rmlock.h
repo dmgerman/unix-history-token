@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_lock.h>
 end_include
 
@@ -55,6 +61,13 @@ define|#
 directive|define
 name|RM_RECURSE
 value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|RM_SLEEPABLE
+value|0x00000004
 end_define
 
 begin_function_decl
@@ -181,7 +194,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|_rm_rlock_debug
 parameter_list|(
 name|struct
@@ -193,6 +206,9 @@ name|struct
 name|rm_priotracker
 modifier|*
 name|tracker
+parameter_list|,
+name|int
+name|trylock
 parameter_list|,
 specifier|const
 name|char
@@ -255,7 +271,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|_rm_rlock
 parameter_list|(
 name|struct
@@ -267,6 +283,9 @@ name|struct
 name|rm_priotracker
 modifier|*
 name|tracker
+parameter_list|,
+name|int
+name|trylock
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -347,7 +366,20 @@ parameter_list|,
 name|tracker
 parameter_list|)
 define|\
-value|_rm_rlock_debug((rm),(tracker), LOCK_FILE, LOCK_LINE )
+value|((void)_rm_rlock_debug((rm),(tracker), 0, LOCK_FILE, LOCK_LINE ))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rm_try_rlock
+parameter_list|(
+name|rm
+parameter_list|,
+name|tracker
+parameter_list|)
+define|\
+value|_rm_rlock_debug((rm),(tracker), 1, LOCK_FILE, LOCK_LINE )
 end_define
 
 begin_define
@@ -397,7 +429,19 @@ name|rm
 parameter_list|,
 name|tracker
 parameter_list|)
-value|_rm_rlock((rm),(tracker))
+value|((void)_rm_rlock((rm),(tracker), 0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rm_try_rlock
+parameter_list|(
+name|rm
+parameter_list|,
+name|tracker
+parameter_list|)
+value|_rm_rlock((rm),(tracker), 1)
 end_define
 
 begin_define

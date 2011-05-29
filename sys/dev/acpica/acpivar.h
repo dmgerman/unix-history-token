@@ -105,18 +105,6 @@ name|cdev
 modifier|*
 name|acpi_dev_t
 decl_stmt|;
-name|struct
-name|resource
-modifier|*
-name|acpi_irq
-decl_stmt|;
-name|int
-name|acpi_irq_rid
-decl_stmt|;
-name|void
-modifier|*
-name|acpi_irq_handle
-decl_stmt|;
 name|int
 name|acpi_enabled
 decl_stmt|;
@@ -125,6 +113,9 @@ name|acpi_sstate
 decl_stmt|;
 name|int
 name|acpi_sleep_disabled
+decl_stmt|;
+name|int
+name|acpi_resources_reserved
 decl_stmt|;
 name|struct
 name|sysctl_ctx_list
@@ -569,7 +560,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * Various features and capabilities for the acpi_get_features() method.  * In particular, these are used for the ACPI 3.0 _PDC and _OSC methods.  * See the Intel document titled "Processor Driver Capabilities Bit  * Definitions", number 302223-002.  */
+comment|/*  * Various features and capabilities for the acpi_get_features() method.  * In particular, these are used for the ACPI 3.0 _PDC and _OSC methods.  * See the Intel document titled "Intel Processor Vendor-Specific ACPI",  * number 302223-005.  */
 end_comment
 
 begin_define
@@ -669,6 +660,28 @@ end_define
 
 begin_comment
 comment|/* MP C1 support other than halt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_CAP_SMP_C3_NATIVE
+value|(1<< 9)
+end_define
+
+begin_comment
+comment|/* MP C2 and C3 support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_CAP_PX_HW_COORD
+value|(1<< 11)
+end_define
+
+begin_comment
+comment|/* Intel P-state HW coordination */
 end_comment
 
 begin_comment
@@ -924,6 +937,53 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Find the difference between two PM tick counts. */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|uint32_t
+name|acpi_TimerDelta
+parameter_list|(
+name|uint32_t
+name|end
+parameter_list|,
+name|uint32_t
+name|start
+parameter_list|)
+block|{
+if|if
+condition|(
+name|end
+operator|<
+name|start
+operator|&&
+operator|(
+name|AcpiGbl_FADT
+operator|.
+name|Flags
+operator|&
+name|ACPI_FADT_32BIT_TIMER
+operator|)
+operator|==
+literal|0
+condition|)
+name|end
+operator||=
+literal|0x01000000
+expr_stmt|;
+return|return
+operator|(
+name|end
+operator|-
+name|start
+operator|)
+return|;
+block|}
+end_function
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1126,19 +1186,6 @@ parameter_list|,
 name|ACPI_HANDLE
 modifier|*
 name|result
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|uint32_t
-name|acpi_TimerDelta
-parameter_list|(
-name|uint32_t
-name|end
-parameter_list|,
-name|uint32_t
-name|start
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1347,19 +1394,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|acpi_wake_init
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|int
-name|type
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|acpi_wake_set_enable
 parameter_list|(
 name|device_t
@@ -1463,6 +1497,21 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|BOOLEAN
+name|acpi_MatchHid
+parameter_list|(
+name|ACPI_HANDLE
+name|h
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|hid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1912,6 +1961,38 @@ name|consumer
 parameter_list|,
 name|int
 name|state
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|acpi_device_pwr_for_sleep
+parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
+name|device_t
+name|dev
+parameter_list|,
+name|int
+modifier|*
+name|dstate
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* APM emulation */
+end_comment
+
+begin_function_decl
+name|void
+name|acpi_apm_init
+parameter_list|(
+name|struct
+name|acpi_softc
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

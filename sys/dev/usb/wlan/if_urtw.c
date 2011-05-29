@@ -8176,7 +8176,7 @@ name|ifp
 operator|->
 name|if_snd
 argument_list|,
-name|IFQ_MAXLEN
+name|ifqmaxlen
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -8185,7 +8185,7 @@ name|if_snd
 operator|.
 name|ifq_drv_maxlen
 operator|=
-name|IFQ_MAXLEN
+name|ifqmaxlen
 expr_stmt|;
 name|IFQ_SET_READY
 argument_list|(
@@ -13203,15 +13203,6 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|ieee80211_node
-modifier|*
-name|ni
-init|=
-name|vap
-operator|->
-name|iv_bss
-decl_stmt|;
-name|struct
 name|ieee80211com
 modifier|*
 name|ic
@@ -13240,6 +13231,11 @@ name|URTW_VAP
 argument_list|(
 name|vap
 argument_list|)
+decl_stmt|;
+name|struct
+name|ieee80211_node
+modifier|*
+name|ni
 decl_stmt|;
 name|usb_error_t
 name|error
@@ -13322,6 +13318,15 @@ break|break;
 case|case
 name|IEEE80211_S_RUN
 case|:
+name|ni
+operator|=
+name|ieee80211_ref_node
+argument_list|(
+name|vap
+operator|->
+name|iv_bss
+argument_list|)
+expr_stmt|;
 comment|/* setting bssid.  */
 name|urtw_write32_m
 argument_list|(
@@ -13431,6 +13436,11 @@ argument_list|,
 literal|"could not control LED (%d)\n"
 argument_list|,
 name|error
+argument_list|)
+expr_stmt|;
+name|ieee80211_free_node
+argument_list|(
+name|ni
 argument_list|)
 expr_stmt|;
 break|break;
@@ -27464,6 +27474,16 @@ argument_list|,
 literal|1
 argument_list|,
 literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|urtw
 argument_list|,
 literal|1
 argument_list|)

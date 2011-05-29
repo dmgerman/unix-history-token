@@ -242,7 +242,7 @@ name|canbus_add_child
 parameter_list|(
 name|device_t
 parameter_list|,
-name|int
+name|u_int
 parameter_list|,
 specifier|const
 name|char
@@ -1025,7 +1025,7 @@ parameter_list|(
 name|device_t
 name|bus
 parameter_list|,
-name|int
+name|u_int
 name|order
 parameter_list|,
 specifier|const

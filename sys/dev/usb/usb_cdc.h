@@ -886,6 +886,10 @@ define|#
 directive|define
 name|UCDC_NCM_CAP_CRCMODE
 value|0x10
+define|#
+directive|define
+name|UCDC_NCM_CAP_MAX_DGRAM
+value|0x20
 block|}
 name|__packed
 struct|;
@@ -1053,7 +1057,7 @@ name|uWord
 name|wNdpOutAlignment
 decl_stmt|;
 name|uWord
-name|wReserved26
+name|wNtbOutMaxDatagrams
 decl_stmt|;
 block|}
 name|__packed

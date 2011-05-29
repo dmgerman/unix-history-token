@@ -2816,7 +2816,7 @@ name|PCN_TX_LIST_CNT
 operator|-
 literal|1
 expr_stmt|;
-comment|/* 	 * Do MII setup. 	 */
+comment|/* 	 * Do MII setup. 	 * See the comment in pcn_miibus_readreg() for why we can't 	 * universally pass MIIF_NOISOLATE here. 	 */
 name|sc
 operator|->
 name|pcn_extphyaddr
@@ -2824,9 +2824,9 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|mii_phy_probe
+name|error
+operator|=
+name|mii_attach
 argument_list|(
 name|dev
 argument_list|,
@@ -2835,22 +2835,34 @@ name|sc
 operator|->
 name|pcn_miibus
 argument_list|,
+name|ifp
+argument_list|,
 name|pcn_ifmedia_upd
 argument_list|,
 name|pcn_ifmedia_sts
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|MII_PHY_ANY
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"MII without any PHY!\n"
+literal|"attaching PHYs failed\n"
 argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|ENXIO
 expr_stmt|;
 goto|goto
 name|fail

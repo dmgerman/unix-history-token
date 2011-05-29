@@ -579,11 +579,22 @@ begin_define
 define|#
 directive|define
 name|HID5_970_DCBZ_SIZE_HI
-value|0x01000000
+value|0x00000080UL
 end_define
 
 begin_comment
 comment|/* dcbz does a 32-byte store */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HID4_970_DISABLE_LG_PG
+value|0x00000004ULL
+end_define
+
+begin_comment
+comment|/* disables large pages */
 end_comment
 
 begin_endif

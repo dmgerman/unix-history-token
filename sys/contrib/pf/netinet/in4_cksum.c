@@ -85,7 +85,7 @@ begin_define
 define|#
 directive|define
 name|REDUCE
-value|{l_util.l = sum; sum = l_util.s[0] + l_util.s[1]; ADDCARRY(sum);}
+value|{l_util.l = sum; sum = l_util.s[0] + l_util.s[1]; (void)ADDCARRY(sum);}
 end_define
 
 begin_function_decl

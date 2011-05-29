@@ -132,6 +132,7 @@ name|char
 modifier|*
 name|out
 parameter_list|,
+specifier|const
 name|CAST_KEY
 modifier|*
 name|key
@@ -147,6 +148,7 @@ name|CAST_LONG
 modifier|*
 name|data
 parameter_list|,
+specifier|const
 name|CAST_KEY
 modifier|*
 name|key
@@ -159,6 +161,7 @@ name|CAST_LONG
 modifier|*
 name|data
 parameter_list|,
+specifier|const
 name|CAST_KEY
 modifier|*
 name|key
@@ -181,6 +184,7 @@ parameter_list|,
 name|long
 name|length
 parameter_list|,
+specifier|const
 name|CAST_KEY
 modifier|*
 name|ks
@@ -211,6 +215,7 @@ parameter_list|,
 name|long
 name|length
 parameter_list|,
+specifier|const
 name|CAST_KEY
 modifier|*
 name|schedule
@@ -245,6 +250,7 @@ parameter_list|,
 name|long
 name|length
 parameter_list|,
+specifier|const
 name|CAST_KEY
 modifier|*
 name|schedule

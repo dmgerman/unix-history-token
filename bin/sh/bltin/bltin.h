@@ -31,6 +31,13 @@ directive|include
 file|"../output.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|FILE
+value|struct output
+end_define
+
 begin_undef
 undef|#
 directive|undef
@@ -115,6 +122,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|fwrite
+parameter_list|(
+name|ptr
+parameter_list|,
+name|size
+parameter_list|,
+name|nmemb
+parameter_list|,
+name|file
+parameter_list|)
+value|outbin(ptr, (size) * (nmemb), file)
+end_define
+
+begin_define
+define|#
+directive|define
 name|fflush
 value|flushout
 end_define
@@ -131,43 +154,32 @@ end_define
 begin_define
 define|#
 directive|define
-name|warnx1
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|{				\ 	char buf[64];					\ 	(void)snprintf(buf, sizeof(buf), a);		\ 	error("%s", buf);				\ }
+name|warnx
+value|warning
 end_define
 
 begin_define
 define|#
 directive|define
-name|warnx2
+name|warn
 parameter_list|(
-name|a
+name|fmt
 parameter_list|,
-name|b
-parameter_list|,
-name|c
+modifier|...
 parameter_list|)
-value|{				\ 	char buf[64];					\ 	(void)snprintf(buf, sizeof(buf), a, b);		\ 	error("%s", buf);				\ }
+value|warning(fmt ": %s", __VA_ARGS__, strerror(errno))
 end_define
 
 begin_define
 define|#
 directive|define
-name|warnx3
+name|errx
 parameter_list|(
-name|a
+name|exitstatus
 parameter_list|,
-name|b
-parameter_list|,
-name|c
+modifier|...
 parameter_list|)
-value|{				\ 	char buf[64];					\ 	(void)snprintf(buf, sizeof(buf), a, b, c);	\ 	error("%s", buf);				\ }
+value|error(__VA_ARGS__)
 end_define
 
 begin_else
@@ -208,6 +220,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_function_decl
 name|pointer
 name|stalloc
@@ -238,6 +256,16 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_function_decl
+name|pid_t
+name|getjobpgrp
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int

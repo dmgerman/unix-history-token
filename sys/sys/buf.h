@@ -664,12 +664,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_01000000
+name|B_NOCOPY
 value|0x01000000
 end_define
 
 begin_comment
-comment|/* Available flag. */
+comment|/* Don't copy-on-write this buf. */
 end_comment
 
 begin_define
@@ -861,6 +861,17 @@ end_define
 
 begin_comment
 comment|/* Background write waiting */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BV_INFREECNT
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* buf is counted in numfreebufs */
 end_comment
 
 begin_ifdef
@@ -2201,6 +2212,15 @@ parameter_list|(
 name|struct
 name|buf
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bd_speedup
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

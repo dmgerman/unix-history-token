@@ -417,10 +417,14 @@ index|[
 name|IEEE80211_AGGR_BAWMAX
 index|]
 decl_stmt|;
+name|void
+modifier|*
+name|rxa_private
+decl_stmt|;
 name|uint64_t
 name|rxa_pad
 index|[
-literal|4
+literal|3
 index|]
 decl_stmt|;
 block|}
@@ -508,9 +512,7 @@ specifier|const
 name|struct
 name|ieee80211_mcs_rates
 name|ieee80211_htrates
-index|[
-literal|16
-index|]
+index|[]
 decl_stmt|;
 end_decl_stmt
 

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License, Version 1.0 only  * (the "License").  You may not use this file except in compliance  * with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  */
+comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License (the "License").  * You may not use this file except in compliance with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  */
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2005 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_comment
@@ -27,17 +27,16 @@ directive|define
 name|_SYS_DEBUG_H
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
-
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/note.h>
 end_include
 
 begin_ifdef
@@ -90,7 +89,7 @@ name|ASSERT
 parameter_list|(
 name|EX
 parameter_list|)
-value|VERIFY(EX)
+value|((void)((EX) || assfail(#EX, __FILE__, __LINE__)))
 else|#
 directive|else
 define|#
@@ -126,7 +125,7 @@ name|ASSERT
 parameter_list|(
 name|EX
 parameter_list|)
-value|VERIFY(EX)
+value|((void)((EX) || assfail("EX", __FILE__, __LINE__)))
 else|#
 directive|else
 define|#
@@ -176,6 +175,52 @@ parameter_list|(
 name|x
 parameter_list|)
 value|ASSERT(x)
+endif|#
+directive|endif
+comment|/*  * IMPLY and EQUIV are assertions of the form:  *  *	if (a) then (b)  * and  *	if (a) then (b) *AND* if (b) then (a)  */
+ifdef|#
+directive|ifdef
+name|DEBUG
+define|#
+directive|define
+name|IMPLY
+parameter_list|(
+name|A
+parameter_list|,
+name|B
+parameter_list|)
+define|\
+value|((void)(((!(A)) || (B)) || \ 	    assfail("(" #A ") implies (" #B ")", __FILE__, __LINE__)))
+define|#
+directive|define
+name|EQUIV
+parameter_list|(
+name|A
+parameter_list|,
+name|B
+parameter_list|)
+define|\
+value|((void)((!!(A) == !!(B)) || \ 	    assfail("(" #A ") is equivalent to (" #B ")", __FILE__, __LINE__)))
+else|#
+directive|else
+define|#
+directive|define
+name|IMPLY
+parameter_list|(
+name|A
+parameter_list|,
+name|B
+parameter_list|)
+value|((void)0)
+define|#
+directive|define
+name|EQUIV
+parameter_list|(
+name|A
+parameter_list|,
+name|B
+parameter_list|)
+value|((void)0)
 endif|#
 directive|endif
 comment|/*  * ASSERT3() behaves like ASSERT() except that it is an explicit conditional,  * and prints out the values of the left and right hand expressions as part of  * the panic message to ease debugging.  The three variants imply the type  * of their arguments.  ASSERT3S() is for signed data types, ASSERT3U() is  * for unsigned, and ASSERT3P() is for pointers.  The VERIFY3*() macros  * have the same relationship as above.  */
@@ -261,7 +306,7 @@ name|y
 parameter_list|,
 name|z
 parameter_list|)
-value|VERIFY3S(x, y, z)
+value|VERIFY3_IMPL(x, y, z, int64_t)
 define|#
 directive|define
 name|ASSERT3U
@@ -272,7 +317,7 @@ name|y
 parameter_list|,
 name|z
 parameter_list|)
-value|VERIFY3U(x, y, z)
+value|VERIFY3_IMPL(x, y, z, uint64_t)
 define|#
 directive|define
 name|ASSERT3P
@@ -283,7 +328,7 @@ name|y
 parameter_list|,
 name|z
 parameter_list|)
-value|VERIFY3P(x, y, z)
+value|VERIFY3_IMPL(x, y, z, uintptr_t)
 else|#
 directive|else
 define|#

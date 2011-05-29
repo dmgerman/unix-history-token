@@ -4688,8 +4688,9 @@ name|printf
 argument_list|(
 literal|", MTU: %u"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|op
 operator|->
 name|ospf_db

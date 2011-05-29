@@ -4,11 +4,11 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: platform.h.in,v 1.48.84.2 2009/02/16 23:47:15 tbox Exp $ */
+comment|/* $Id: platform.h.in,v 1.48.84.4 2010-06-03 23:47:49 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -372,6 +372,10 @@ comment|/*  * Defined to<gssapi.h> or<gssapi/gssapi.h> for how to include  * the
 end_comment
 
 begin_comment
+comment|/*  * Defined to<krb5.h> or<krb5/krb5.h> for how to include  * the KRB5 header.  */
+end_comment
+
+begin_comment
 comment|/*  * Type used for resource limits.  */
 end_comment
 
@@ -439,11 +443,38 @@ begin_comment
 comment|/*  * If the "xaddq" operation (64bit xadd) is available on this architecture,  * ISC_PLATFORM_HAVEXADDQ will be defined.  */
 end_comment
 
+begin_comment
+comment|/*  * FreeBSD local modification, preserve this over upgrades  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__amd64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ISC_PLATFORM_HAVEXADDQ
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_undef
 undef|#
 directive|undef
 name|ISC_PLATFORM_HAVEXADDQ
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * If the "atomic swap" operation is available on this architecture,  * ISC_PLATFORM_HAVEATOMICSTORE" will be defined.  */

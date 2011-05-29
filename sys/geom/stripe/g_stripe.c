@@ -90,6 +90,16 @@ file|<geom/stripe/g_stripe.h>
 end_include
 
 begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|geom_stripe
+argument_list|,
+literal|"GEOM striping support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
 argument_list|(
@@ -4085,13 +4095,6 @@ operator|->
 name|md_name
 argument_list|)
 expr_stmt|;
-name|gp
-operator|->
-name|softc
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* for a moment */
 name|sc
 operator|=
 name|malloc
@@ -4851,7 +4854,8 @@ index|]
 operator|!=
 literal|'\0'
 operator|&&
-name|strcmp
+operator|!
+name|g_compare_names
 argument_list|(
 name|md
 operator|.
@@ -4861,8 +4865,6 @@ name|pp
 operator|->
 name|name
 argument_list|)
-operator|!=
-literal|0
 condition|)
 return|return
 operator|(

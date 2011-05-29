@@ -165,9 +165,9 @@ name|lastr
 decl_stmt|;
 comment|/* last read */
 name|struct
-name|uidinfo
+name|ucred
 modifier|*
-name|uip
+name|cred
 decl_stmt|;
 comment|/* tmp storage for creator ref */
 block|}
@@ -475,9 +475,6 @@ name|pmap_t
 name|pmap
 decl_stmt|;
 comment|/* (c) Physical map */
-name|vm_map_entry_t
-name|deferred_freelist
-decl_stmt|;
 define|#
 directive|define
 name|min_offset
@@ -488,6 +485,9 @@ directive|define
 name|max_offset
 value|header.end
 comment|/* (c) */
+name|int
+name|busy
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -506,6 +506,13 @@ end_define
 begin_comment
 comment|/* wire all future pages */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MAP_BUSY_WAKEUP
+value|0x02
+end_define
 
 begin_ifdef
 ifdef|#
@@ -663,6 +670,7 @@ name|caddr_t
 name|vm_maxsaddr
 decl_stmt|;
 comment|/* user VA at max stack growth */
+specifier|volatile
 name|int
 name|vm_refcnt
 decl_stmt|;
@@ -747,6 +755,27 @@ name|_vm_map_unlock
 parameter_list|(
 name|vm_map_t
 name|map
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_vm_map_unlock_and_wait
+parameter_list|(
+name|vm_map_t
+name|map
+parameter_list|,
+name|int
+name|timo
 parameter_list|,
 specifier|const
 name|char
@@ -878,21 +907,38 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|vm_map_unlock_and_wait
+name|void
+name|vm_map_wakeup
 parameter_list|(
 name|vm_map_t
 name|map
-parameter_list|,
-name|int
-name|timo
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|vm_map_wakeup
+name|vm_map_busy
+parameter_list|(
+name|vm_map_t
+name|map
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vm_map_unbusy
+parameter_list|(
+name|vm_map_t
+name|map
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vm_map_wait_busy
 parameter_list|(
 name|vm_map_t
 name|map
@@ -918,6 +964,19 @@ parameter_list|(
 name|map
 parameter_list|)
 value|_vm_map_unlock(map, LOCK_FILE, LOCK_LINE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|vm_map_unlock_and_wait
+parameter_list|(
+name|map
+parameter_list|,
+name|timo
+parameter_list|)
+define|\
+value|_vm_map_unlock_and_wait(map, timo, LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -1152,6 +1211,17 @@ begin_comment
 comment|/* Change the wiring as appropriate */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VM_FAULT_DIRTY
+value|2
+end_define
+
+begin_comment
+comment|/* Dirty the page; use w/VM_PROT_COPY */
+end_comment
+
 begin_comment
 comment|/*  * The following "find_space" options are supported by vm_map_find()  */
 end_comment
@@ -1188,6 +1258,31 @@ end_define
 begin_comment
 comment|/* find a superpage-aligned range */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|VMFS_TLB_ALIGNED_SPACE
+value|3
+end_define
+
+begin_comment
+comment|/* find a TLB entry aligned range */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * vm_map_wire and vm_map_unwire option flags  */
@@ -1235,6 +1330,17 @@ end_define
 
 begin_comment
 comment|/* region may have holes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_MAP_WIRE_WRITE
+value|4
+end_define
+
+begin_comment
+comment|/* Validate writable. */
 end_comment
 
 begin_ifdef
@@ -1368,9 +1474,9 @@ begin_function_decl
 name|void
 name|vm_map_init
 parameter_list|(
-name|struct
-name|vm_map
-modifier|*
+name|vm_map_t
+parameter_list|,
+name|pmap_t
 parameter_list|,
 name|vm_offset_t
 parameter_list|,
@@ -1692,7 +1798,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|long
 name|vmspace_swap_count
 parameter_list|(
 name|struct

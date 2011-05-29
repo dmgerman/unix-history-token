@@ -710,7 +710,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_VNET_UINT
 argument_list|(
 name|_net_inet_ip_fw
 argument_list|,
@@ -734,7 +734,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_VNET_UINT
 argument_list|(
 name|_net_inet_ip_fw
 argument_list|,
@@ -758,7 +758,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_VNET_UINT
 argument_list|(
 name|_net_inet_ip_fw
 argument_list|,
@@ -782,7 +782,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_VNET_UINT
 argument_list|(
 name|_net_inet_ip_fw
 argument_list|,
@@ -806,7 +806,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_VNET_UINT
 argument_list|(
 name|_net_inet_ip_fw
 argument_list|,
@@ -830,7 +830,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_VNET_UINT
 argument_list|(
 name|_net_inet_ip_fw
 argument_list|,
@@ -854,7 +854,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_VNET_UINT
 argument_list|(
 name|_net_inet_ip_fw
 argument_list|,
@@ -878,7 +878,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_VNET_UINT
 argument_list|(
 name|_net_inet_ip_fw
 argument_list|,
@@ -902,7 +902,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_VNET_UINT
 argument_list|(
 name|_net_inet_ip_fw
 argument_list|,
@@ -926,7 +926,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_VNET_UINT
 argument_list|(
 name|_net_inet_ip_fw
 argument_list|,
@@ -950,7 +950,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_VNET_UINT
 argument_list|(
 name|_net_inet_ip_fw
 argument_list|,
@@ -2078,7 +2078,7 @@ name|flags
 init|=
 name|pkt
 operator|->
-name|flags
+name|_flags
 operator|&
 operator|(
 name|TH_FIN
@@ -3763,19 +3763,14 @@ name|int
 name|flags
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-return|return
-name|NULL
-return|;
-else|#
-directive|else
 name|struct
 name|mbuf
 modifier|*
 name|m
+init|=
+name|NULL
 decl_stmt|;
+comment|/* stupid compiler */
 name|int
 name|len
 decl_stmt|,
@@ -4474,9 +4469,6 @@ operator|(
 name|m
 operator|)
 return|;
-endif|#
-directive|endif
-comment|/* __FreeBSD__ */
 block|}
 end_function
 
@@ -4961,7 +4953,7 @@ endif|#
 directive|endif
 name|done
 label|:
-name|callout_reset
+name|callout_reset_on
 argument_list|(
 operator|&
 name|V_ipfw_timeout
@@ -4973,6 +4965,8 @@ argument_list|,
 name|ipfw_tick
 argument_list|,
 name|vnetx
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|CURVNET_RESTORE
@@ -5107,7 +5101,7 @@ argument_list|,
 name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
-name|callout_reset
+name|callout_reset_on
 argument_list|(
 operator|&
 name|V_ipfw_timeout
@@ -5117,6 +5111,8 @@ argument_list|,
 name|ipfw_tick
 argument_list|,
 name|curvnet
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

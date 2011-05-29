@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* arsup.c - Archive support for MRI compatibility    Copyright 1992, 1994, 1995, 1996, 1997, 2000, 2002, 2003, 2004    Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* arsup.c - Archive support for MRI compatibility    Copyright 1992, 1994, 1995, 1996, 1997, 1999, 2000, 2001, 2002, 2003,    2004, 2007 Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -10,13 +10,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"arsup.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -28,13 +28,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"filenames.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bucomm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"filenames.h"
+file|"arsup.h"
 end_include
 
 begin_function_decl
@@ -100,6 +106,30 @@ name|verbose
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|bfd
+modifier|*
+name|obfd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|real_name
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|FILE
+modifier|*
+name|outfile
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -147,7 +177,7 @@ name|head
 operator|=
 name|arch
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 while|while
 condition|(
@@ -160,7 +190,7 @@ name|next
 operator|=
 name|head
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 name|function
 argument_list|(
@@ -219,7 +249,7 @@ name|head
 operator|=
 name|arch
 operator|->
-name|next
+name|archive_next
 init|;
 name|head
 condition|;
@@ -227,7 +257,7 @@ name|head
 operator|=
 name|head
 operator|->
-name|next
+name|archive_next
 control|)
 block|{
 if|if
@@ -292,13 +322,6 @@ block|}
 block|}
 block|}
 end_function
-
-begin_decl_stmt
-name|FILE
-modifier|*
-name|outfile
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 specifier|static
@@ -485,20 +508,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_decl_stmt
-name|bfd
-modifier|*
-name|obfd
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|real_name
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|void
@@ -716,7 +725,7 @@ operator|=
 operator|&
 name|element
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 name|element
 operator|=
@@ -769,15 +778,15 @@ name|NULL
 condition|)
 name|prev
 operator|->
-name|next
+name|archive_next
 operator|=
 name|abfd
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 name|abfd
 operator|->
-name|next
+name|archive_next
 operator|=
 name|obfd
 operator|->
@@ -950,7 +959,7 @@ else|else
 block|{
 name|abfd
 operator|->
-name|next
+name|archive_next
 operator|=
 name|obfd
 operator|->
@@ -1085,7 +1094,7 @@ name|prev
 operator|=
 name|member
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 name|found
 operator|=
@@ -1099,14 +1108,14 @@ operator|&
 operator|(
 name|member
 operator|->
-name|next
+name|archive_next
 operator|)
 expr_stmt|;
 name|member
 operator|=
 name|member
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 block|}
 if|if
@@ -1351,11 +1360,11 @@ name|abfd
 expr_stmt|;
 name|abfd
 operator|->
-name|next
+name|archive_next
 operator|=
 name|member
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 name|found
 operator|=
@@ -1371,7 +1380,7 @@ operator|&
 operator|(
 name|member
 operator|->
-name|next
+name|archive_next
 operator|)
 expr_stmt|;
 block|}
@@ -1379,7 +1388,7 @@ name|member
 operator|=
 name|member
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 block|}
 if|if
@@ -1541,7 +1550,7 @@ name|abfd
 operator|=
 name|abfd
 operator|->
-name|next
+name|archive_next
 control|)
 name|ar_directory_doer
 argument_list|(
@@ -1678,7 +1687,7 @@ name|member
 operator|=
 name|member
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 block|}
 if|if

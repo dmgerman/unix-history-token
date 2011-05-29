@@ -290,6 +290,9 @@ modifier|*
 name|dummy
 decl_stmt|;
 block|{
+name|intr_enable
+argument_list|()
+expr_stmt|;
 name|cninit_finish
 argument_list|()
 expr_stmt|;

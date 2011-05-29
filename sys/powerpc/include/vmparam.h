@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|USRSTACK
-value|VM_MAXUSER_ADDRESS
+value|SHAREDPAGE
 end_define
 
 begin_ifndef
@@ -133,39 +133,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Size of shared memory map  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SHMMAXPGS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|SHMMAXPGS
-value|1024
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * The time for a process to be blocked before being very swappable.  * This is a number of seconds which the system takes as being a non-trivial  * amount of real time.  You probably shouldn't change this;  * it is used in subtle ways (fractions and multiples of it are, that is, like  * half of a ``long time'', almost a long time, etc.)  * It is related to human patience and other factors which don't really  * change over time.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXSLP
-value|20
-end_define
-
-begin_comment
 comment|/*  * Would like to have MAX addresses = 0, but this doesn't (currently) work  */
 end_comment
 
@@ -178,6 +145,45 @@ argument_list|(
 name|LOCORE
 argument_list|)
 end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|VM_MIN_ADDRESS
+value|(0x0000000000000000UL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MAXUSER_ADDRESS
+value|(0x7ffffffffffff000UL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHAREDPAGE
+value|(VM_MAXUSER_ADDRESS - PAGE_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MAX_ADDRESS
+value|(0xffffffffffffffffUL)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -193,10 +199,39 @@ name|VM_MAXUSER_ADDRESS
 value|((vm_offset_t)0x7ffff000)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SHAREDPAGE
+value|(VM_MAXUSER_ADDRESS - PAGE_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MAX_ADDRESS
+value|VM_MAXUSER_ADDRESS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* LOCORE */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__powerpc64__
+end_ifndef
 
 begin_define
 define|#
@@ -217,6 +252,11 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* LOCORE */
 end_comment
@@ -224,39 +264,71 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VM_MAX_ADDRESS
-value|VM_MAXUSER_ADDRESS
+name|FREEBSD32_SHAREDPAGE
+value|(0x7ffff000 - PAGE_SIZE)
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|AIM
-argument_list|)
-end_if
+begin_define
+define|#
+directive|define
+name|FREEBSD32_USRSTACK
+value|FREEBSD32_SHAREDPAGE
+end_define
 
-begin_comment
-comment|/* AIM */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AIM
+end_ifdef
 
 begin_define
 define|#
 directive|define
 name|KERNBASE
-value|0x00100000
+value|0x00100000UL
 end_define
 
 begin_comment
 comment|/* start of kernel virtual */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|VM_MIN_KERNEL_ADDRESS
-value|((vm_offset_t)(KERNEL_SR<< ADDR_SR_SHFT))
+value|0xc000000000000000UL
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MAX_KERNEL_ADDRESS
+value|0xc0000001c7ffffffUL
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MAX_SAFE_KERNEL_ADDRESS
+value|VM_MAX_KERNEL_ADDRESS
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|VM_MIN_KERNEL_ADDRESS
+value|((vm_offset_t)KERNEL_SR<< ADDR_SR_SHFT)
 end_define
 
 begin_define
@@ -273,6 +345,11 @@ name|VM_MAX_KERNEL_ADDRESS
 value|(VM_MIN_KERNEL_ADDRESS + 3*SEGMENT_LENGTH - 1)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Use the direct-mapped BAT registers for UMA small allocs. This  * takes pressure off the small amount of available KVA.  */
 end_comment
@@ -287,6 +364,10 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* Book-E */
+end_comment
 
 begin_comment
 comment|/*  * Kernel CCSRBAR location. We make this the reset location.  */
@@ -406,14 +487,36 @@ comment|/* 1? */
 end_comment
 
 begin_comment
-comment|/*  * The physical address space is densely populated.  */
+comment|/*  * The physical address space is densely populated on 32-bit systems,  * but may not be on 64-bit ones.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|VM_PHYSSEG_SPARSE
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
 directive|define
 name|VM_PHYSSEG_DENSE
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Create three free page pools: VM_FREEPOOL_DEFAULT is the default pool  * from which physical pages are allocated and VM_FREEPOOL_DIRECT is  * the pool from which physical pages for small UMA objects are  * allocated.  */
@@ -475,6 +578,28 @@ directive|define
 name|VM_NFREEORDER
 value|11
 end_define
+
+begin_comment
+comment|/*  * Only one memory domain.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_NDOMAIN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VM_NDOMAIN
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Disable superpage reservations.  */
@@ -555,6 +680,68 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_KMEM_SIZE_SCALE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VM_KMEM_SIZE_SCALE
+value|(3)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_KMEM_SIZE_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VM_KMEM_SIZE_MAX
+value|0x1c0000000
+end_define
+
+begin_comment
+comment|/* 7 GB */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|ZERO_REGION_SIZE
+value|(64 * 1024)
+end_define
+
+begin_comment
+comment|/* 64KB */
+end_comment
 
 begin_endif
 endif|#

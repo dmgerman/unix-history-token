@@ -136,7 +136,7 @@ name|char
 modifier|*
 name|td_name
 decl_stmt|;
-comment|/* Pointer to the node this entry refers to. */
+comment|/* Pointer to the node this entry refers to.  In case this field 	 * is NULL, the node is a whiteout. */
 name|struct
 name|tmpfs_node
 modifier|*
@@ -400,9 +400,6 @@ block|{
 comment|/* The contents of regular files stored in a tmpfs 			 * file system are represented by a single anonymous 			 * memory object (aobj, for short).  The aobj provides 			 * direct access to any position within the file, 			 * because its contents are always mapped in a 			 * contiguous region of virtual memory.  It is a task 			 * of the memory management subsystem (see uvm(9)) to 			 * issue the required page ins or page outs whenever 			 * a position within the file is accessed. */
 name|vm_object_t
 name|tn_aobj
-decl_stmt|;
-name|size_t
-name|tn_aobj_pages
 decl_stmt|;
 block|}
 name|tn_reg
@@ -976,6 +973,36 @@ name|uio
 modifier|*
 parameter_list|,
 name|off_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|tmpfs_dir_whiteout_add
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+parameter_list|,
+name|struct
+name|componentname
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tmpfs_dir_whiteout_remove
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+parameter_list|,
+name|struct
+name|componentname
 modifier|*
 parameter_list|)
 function_decl|;

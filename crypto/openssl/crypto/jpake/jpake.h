@@ -392,6 +392,14 @@ value|100
 comment|/* Reason codes. */
 define|#
 directive|define
+name|JPAKE_R_G_TO_THE_X3_IS_NOT_LEGAL
+value|108
+define|#
+directive|define
+name|JPAKE_R_G_TO_THE_X4_IS_NOT_LEGAL
+value|109
+define|#
+directive|define
 name|JPAKE_R_G_TO_THE_X4_IS_ONE
 value|105
 define|#

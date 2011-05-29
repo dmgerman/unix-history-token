@@ -406,6 +406,8 @@ if|if
 condition|(
 operator|!
 name|tree
+operator|->
+name|levels
 condition|)
 block|{
 name|OPENSSL_free

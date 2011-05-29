@@ -7100,7 +7100,7 @@ block|if (*p& 01) {
 comment|/* Compressed protocol field */
 block|ptype = *p; 		if (eflag) 			printf("%02x ", ptype); 		p++; 		hdrlength += 1; 	} else {
 comment|/* Un-compressed protocol field */
-block|ptype = ntohs(*(u_int16_t *)p); 		if (eflag) 			printf("%04x ", ptype); 		p += 2; 		hdrlength += 2; 	}
+block|ptype = EXTRACT_16BITS(p); 		if (eflag) 			printf("%04x ", ptype); 		p += 2; 		hdrlength += 2; 	}
 else|#
 directive|else
 name|ptype
@@ -7191,8 +7191,9 @@ argument_list|)
 expr_stmt|;
 name|ptype
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|ph
 operator|->
 name|phdr_type

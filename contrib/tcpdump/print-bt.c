@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-bt.c,v 1.1.2.1 2008-09-25 21:50:04 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-bt.c,v 1.2 2008-09-25 21:45:50 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|"interface.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extract.h"
 end_include
 
 begin_include
@@ -196,8 +202,9 @@ argument_list|,
 name|length
 argument_list|,
 operator|(
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|hdr
 operator|->
 name|direction

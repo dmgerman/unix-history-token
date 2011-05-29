@@ -119,7 +119,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/**  * eloop_signal_handler - eloop signal event callback type  * @sig: Signal number  * @eloop_ctx: Registered callback context data (global user_data from  * eloop_init() call)  * @signal_ctx: Registered callback context data (user_data from  * eloop_register_signal(), eloop_register_signal_terminate(), or  * eloop_register_signal_reconfig() call)  */
+comment|/**  * eloop_signal_handler - eloop signal event callback type  * @sig: Signal number  * @signal_ctx: Registered callback context data (user_data from  * eloop_register_signal(), eloop_register_signal_terminate(), or  * eloop_register_signal_reconfig() call)  */
 end_comment
 
 begin_typedef
@@ -135,17 +135,13 @@ name|sig
 parameter_list|,
 name|void
 modifier|*
-name|eloop_ctx
-parameter_list|,
-name|void
-modifier|*
 name|signal_ctx
 parameter_list|)
 function_decl|;
 end_typedef
 
 begin_comment
-comment|/**  * eloop_init() - Initialize global event loop data  * @user_data: Pointer to global data passed as eloop_ctx to signal handlers  * Returns: 0 on success, -1 on failure  *  * This function must be called before any other eloop_* function. user_data  * can be used to configure a global (to the process) pointer that will be  * passed as eloop_ctx parameter to signal handlers.  */
+comment|/**  * eloop_init() - Initialize global event loop data  * Returns: 0 on success, -1 on failure  *  * This function must be called before any other eloop_* function.  */
 end_comment
 
 begin_function_decl
@@ -153,8 +149,6 @@ name|int
 name|eloop_init
 parameter_list|(
 name|void
-modifier|*
-name|user_data
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -365,7 +359,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * eloop_register_signal - Register handler for signals  * @sig: Signal number (e.g., SIGHUP)  * @handler: Callback function to be called when the signal is received  * @user_data: Callback context data (signal_ctx)  * Returns: 0 on success, -1 on failure  *  * Register a callback function that will be called when a signal is received.  * The callback function is actually called only after the system signal  * handler has returned. This means that the normal limits for sighandlers  * (i.e., only "safe functions" allowed) do not apply for the registered  * callback.  *  * Signals are 'global' events and there is no local eloop_data pointer like  * with other handlers. The global user_data pointer registered with  * eloop_init() will be used as eloop_ctx for signal handlers.  */
+comment|/**  * eloop_register_signal - Register handler for signals  * @sig: Signal number (e.g., SIGHUP)  * @handler: Callback function to be called when the signal is received  * @user_data: Callback context data (signal_ctx)  * Returns: 0 on success, -1 on failure  *  * Register a callback function that will be called when a signal is received.  * The callback function is actually called only after the system signal  * handler has returned. This means that the normal limits for sighandlers  * (i.e., only "safe functions" allowed) do not apply for the registered  * callback.  */
 end_comment
 
 begin_function_decl
@@ -386,7 +380,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * eloop_register_signal_terminate - Register handler for terminate signals  * @handler: Callback function to be called when the signal is received  * @user_data: Callback context data (signal_ctx)  * Returns: 0 on success, -1 on failure  *  * Register a callback function that will be called when a process termination  * signal is received. The callback function is actually called only after the  * system signal handler has returned. This means that the normal limits for  * sighandlers (i.e., only "safe functions" allowed) do not apply for the  * registered callback.  *  * Signals are 'global' events and there is no local eloop_data pointer like  * with other handlers. The global user_data pointer registered with  * eloop_init() will be used as eloop_ctx for signal handlers.  *  * This function is a more portable version of eloop_register_signal() since  * the knowledge of exact details of the signals is hidden in eloop  * implementation. In case of operating systems using signal(), this function  * registers handlers for SIGINT and SIGTERM.  */
+comment|/**  * eloop_register_signal_terminate - Register handler for terminate signals  * @handler: Callback function to be called when the signal is received  * @user_data: Callback context data (signal_ctx)  * Returns: 0 on success, -1 on failure  *  * Register a callback function that will be called when a process termination  * signal is received. The callback function is actually called only after the  * system signal handler has returned. This means that the normal limits for  * sighandlers (i.e., only "safe functions" allowed) do not apply for the  * registered callback.  *  * This function is a more portable version of eloop_register_signal() since  * the knowledge of exact details of the signals is hidden in eloop  * implementation. In case of operating systems using signal(), this function  * registers handlers for SIGINT and SIGTERM.  */
 end_comment
 
 begin_function_decl
@@ -404,7 +398,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * eloop_register_signal_reconfig - Register handler for reconfig signals  * @handler: Callback function to be called when the signal is received  * @user_data: Callback context data (signal_ctx)  * Returns: 0 on success, -1 on failure  *  * Register a callback function that will be called when a reconfiguration /  * hangup signal is received. The callback function is actually called only  * after the system signal handler has returned. This means that the normal  * limits for sighandlers (i.e., only "safe functions" allowed) do not apply  * for the registered callback.  *  * Signals are 'global' events and there is no local eloop_data pointer like  * with other handlers. The global user_data pointer registered with  * eloop_init() will be used as eloop_ctx for signal handlers.  *  * This function is a more portable version of eloop_register_signal() since  * the knowledge of exact details of the signals is hidden in eloop  * implementation. In case of operating systems using signal(), this function  * registers a handler for SIGHUP.  */
+comment|/**  * eloop_register_signal_reconfig - Register handler for reconfig signals  * @handler: Callback function to be called when the signal is received  * @user_data: Callback context data (signal_ctx)  * Returns: 0 on success, -1 on failure  *  * Register a callback function that will be called when a reconfiguration /  * hangup signal is received. The callback function is actually called only  * after the system signal handler has returned. This means that the normal  * limits for sighandlers (i.e., only "safe functions" allowed) do not apply  * for the registered callback.  *  * This function is a more portable version of eloop_register_signal() since  * the knowledge of exact details of the signals is hidden in eloop  * implementation. In case of operating systems using signal(), this function  * registers a handler for SIGHUP.  */
 end_comment
 
 begin_function_decl
@@ -483,20 +477,6 @@ name|eloop_wait_for_read_sock
 parameter_list|(
 name|int
 name|sock
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**  * eloop_get_user_data - Get global user data  * Returns: user_data pointer that was registered with eloop_init()  */
-end_comment
-
-begin_function_decl
-name|void
-modifier|*
-name|eloop_get_user_data
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -25,6 +25,30 @@ directive|include
 file|<sys/stdint.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|int64_t
+name|clock_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_CLOCK_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_empty
 empty|#include_next<sys/types.h>
 end_empty
@@ -41,6 +65,14 @@ typedef|typedef
 name|struct
 name|timespec
 name|timestruc_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|timespec
+name|timespec_t
 typedef|;
 end_typedef
 
@@ -142,6 +174,13 @@ begin_typedef
 typedef|typedef
 name|uint64_t
 name|pgcnt_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|u_int
+name|minor_t
 typedef|;
 end_typedef
 
@@ -285,14 +324,6 @@ begin_typedef
 typedef|typedef
 name|uint64_t
 name|upad64_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|struct
-name|timespec
-name|timespec_t
 typedef|;
 end_typedef
 

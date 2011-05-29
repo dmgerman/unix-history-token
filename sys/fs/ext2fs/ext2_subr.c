@@ -85,6 +85,12 @@ directive|ifdef
 name|KDB
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<fs/ext2fs/ext2_mount.h>
+end_include
+
 begin_function_decl
 name|void
 name|ext2_checkoverlap
@@ -374,7 +380,9 @@ name|vp
 operator|=
 name|ip
 operator|->
-name|i_devvp
+name|i_ump
+operator|->
+name|um_devvp
 expr_stmt|;
 comment|/* look for overlap */
 if|if

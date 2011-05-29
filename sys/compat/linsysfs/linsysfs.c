@@ -855,8 +855,6 @@ argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
-name|sub_dir
-operator|=
 name|pfs_create_dir
 argument_list|(
 name|dir

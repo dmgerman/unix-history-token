@@ -55,6 +55,10 @@ name|struct
 name|usb_device_request
 modifier|*
 name|req
+parameter_list|,
+name|uint16_t
+modifier|*
+name|plen
 parameter_list|)
 function_decl|;
 end_typedef
@@ -293,6 +297,33 @@ end_decl_stmt
 begin_comment
 comment|/* Message Transfer 								 * Protocol */
 end_comment
+
+begin_function_decl
+name|usb_error_t
+name|usb_temp_setup
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|usb_temp_device_desc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|usb_temp_unsetup
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

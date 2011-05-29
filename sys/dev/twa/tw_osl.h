@@ -40,8 +40,19 @@ end_define
 begin_define
 define|#
 directive|define
-name|TW_OSLI_MAX_NUM_IOS
+name|TW_OSLI_MAX_NUM_REQUESTS
 value|TW_CL_MAX_SIMULTANEOUS_REQUESTS
+end_define
+
+begin_comment
+comment|/* Reserve two command packets.  One for ioctls and one for AENs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TW_OSLI_MAX_NUM_IOS
+value|(TW_OSLI_MAX_NUM_REQUESTS - 2)
 end_define
 
 begin_define
@@ -50,10 +61,6 @@ directive|define
 name|TW_OSLI_MAX_NUM_AENS
 value|0x100
 end_define
-
-begin_comment
-comment|/* Disabled, doesn't work yet. #define TW_OSLI_DEFERRED_INTR_USED */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -214,30 +221,15 @@ begin_comment
 comment|/* owner sleeping on this cmd */
 end_comment
 
-begin_comment
-comment|/* Possible values of sc->state. */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|TW_OSLI_CTLR_STATE_OPEN
-value|(1<<0)
+name|TW_OSLI_REQ_FLAGS_FAILED
+value|(1<<7)
 end_define
 
 begin_comment
-comment|/* control device is open */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TW_OSLI_CTLR_STATE_SIMQ_FROZEN
-value|(1<<1)
-end_define
-
-begin_comment
-comment|/* simq frozen */
+comment|/* bus_dmamap_load() failed */
 end_comment
 
 begin_ifdef
@@ -322,6 +314,17 @@ name|req_handle
 decl_stmt|;
 comment|/* tag to track req b/w OSL& CL */
 name|struct
+name|mtx
+name|ioctl_wake_timeout_lock_handle
+decl_stmt|;
+comment|/* non-spin lock used to detect ioctl timeout */
+name|struct
+name|mtx
+modifier|*
+name|ioctl_wake_timeout_lock
+decl_stmt|;
+comment|/* ptr to above lock */
+name|struct
 name|twa_softc
 modifier|*
 name|ctlr
@@ -336,6 +339,10 @@ name|TW_UINT32
 name|length
 decl_stmt|;
 comment|/* length of buf being passed to CL */
+name|TW_UINT64
+name|deadline
+decl_stmt|;
+comment|/* request timeout (in absolute time) */
 comment|/* 	 * ptr to, and length of data passed to us from above, in case a buffer 	 * copy was done due to non-compliance to alignment requirements 	 */
 name|TW_VOID
 modifier|*
@@ -394,11 +401,11 @@ decl_stmt|;
 name|struct
 name|tw_osli_req_context
 modifier|*
-name|req_ctxt_buf
+name|req_ctx_buf
 decl_stmt|;
 comment|/* Controller state. */
-name|TW_UINT32
-name|state
+name|TW_UINT8
+name|open
 decl_stmt|;
 name|TW_UINT32
 name|flags
@@ -469,6 +476,17 @@ modifier|*
 name|sim_lock
 decl_stmt|;
 comment|/* ptr to sim lock */
+name|struct
+name|callout
+name|watchdog_callout
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* For command timout */
+name|TW_UINT32
+name|watchdog_index
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|TW_OSL_DEBUG

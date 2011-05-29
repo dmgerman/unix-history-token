@@ -85,6 +85,10 @@ name|uint64_t
 name|mt_failures
 decl_stmt|;
 comment|/* Number of allocation failures. */
+name|uint64_t
+name|mt_sleeps
+decl_stmt|;
+comment|/* Number of allocation sleeps. */
 comment|/* 	 * Caller-owned memory. 	 */
 name|void
 modifier|*

@@ -1289,7 +1289,7 @@ begin_if
 if|#
 directive|if
 name|DEBUG
-operator|==
+operator|>=
 literal|2
 end_if
 

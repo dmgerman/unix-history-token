@@ -162,7 +162,7 @@ begin_define
 define|#
 directive|define
 name|_POSIX_SEMAPHORES
-value|-1
+value|200112L
 end_define
 
 begin_define

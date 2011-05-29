@@ -272,6 +272,8 @@ argument_list|,
 name|O_RDONLY
 operator||
 name|O_NONBLOCK
+operator||
+name|O_DIRECTORY
 argument_list|)
 operator|)
 operator|==
@@ -741,6 +743,8 @@ argument_list|(
 name|name
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_DIRECTORY
 argument_list|)
 operator|)
 operator|==

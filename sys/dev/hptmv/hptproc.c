@@ -119,7 +119,7 @@ begin_define
 define|#
 directive|define
 name|FORMAL_HANDLER_ARGS
-value|struct sysctl_oid *oidp, void *arg1, int arg2, \ 	struct sysctl_req *req
+value|struct sysctl_oid *oidp, void *arg1,	\ 	intptr_t arg2, struct sysctl_req *req
 end_define
 
 begin_define

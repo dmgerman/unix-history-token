@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 2006 Peter Grehan<grehan@freebsd.org>  * Copryight 2005 Orlando Bassotto<orlando@break.net>  * Copryight 1998 Sean Eric Fagan  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright 2006 Peter Grehan<grehan@freebsd.org>  * Copyright 2005 Orlando Bassotto<orlando@break.net>  * Copyright 1998 Sean Eric Fagan  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -145,11 +145,48 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_comment
+comment|/* 32-bit compatibility */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"freebsd32_syscalls.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|syscallnames
+value|freebsd32_syscallnames
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* native 32-bit */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|"syscalls.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -402,7 +439,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/*    * FreeBSD has two special kinds of system call redirctions --    * SYS_syscall, and SYS___syscall.  The former is the old syscall()    * routine, basicly; the latter is for quad-aligned arguments.    */
+comment|/*    * FreeBSD has two special kinds of system call redirctions --    * SYS_syscall, and SYS___syscall.  The former is the old syscall()    * routine, basically; the latter is for quad-aligned arguments.    */
 name|regargs
 operator|=
 name|NARGREG
@@ -1144,7 +1181,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * And when the system call is done, we handle it here.  * Currently, no attempt is made to ensure that the system calls  * match -- this needs to be fixed (and is, in fact, why S_SCX includes  * the sytem call number instead of, say, an error status).  */
+comment|/*  * And when the system call is done, we handle it here.  * Currently, no attempt is made to ensure that the system calls  * match -- this needs to be fixed (and is, in fact, why S_SCX includes  * the system call number instead of, say, an error status).  */
 end_comment
 
 begin_function

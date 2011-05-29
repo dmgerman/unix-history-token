@@ -711,7 +711,8 @@ name|rd
 argument_list|,
 name|irv
 argument_list|)
-name|double
+name|U
+modifier|*
 name|d
 decl_stmt|;
 end_decl_stmt
@@ -755,7 +756,8 @@ end_else
 
 begin_expr_stmt
 operator|(
-name|double
+name|U
+operator|*
 name|d
 operator|,
 name|FPI
@@ -819,7 +821,10 @@ name|b
 operator|=
 name|d2b
 argument_list|(
+name|dval
+argument_list|(
 name|d
+argument_list|)
 argument_list|,
 operator|&
 name|e
@@ -1422,14 +1427,16 @@ name|mantbits
 parameter_list|(
 name|d
 parameter_list|)
-name|double
+name|U
+modifier|*
 name|d
 decl_stmt|;
 else|#
 directive|else
 function|mantbits
 parameter_list|(
-name|double
+name|U
+modifier|*
 name|d
 parameter_list|)
 endif|#
@@ -1713,16 +1720,17 @@ operator|*
 name|s1
 block|;
 name|double
-name|adj
-block|,
 name|adj0
-block|,
-name|rv
 block|,
 name|tol
 block|;
 name|Long
 name|L
+block|;
+name|U
+name|adj
+block|,
+name|rv
 block|;
 name|ULong
 operator|*
@@ -1828,7 +1836,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|malloc
+name|MALLOC
 argument_list|(
 name|strlen
 argument_list|(
@@ -1929,6 +1937,7 @@ end_expr_stmt
 begin_expr_stmt
 name|dval
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 operator|=
@@ -2882,6 +2891,7 @@ literal|1
 expr_stmt|;
 name|dval
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 operator|=
@@ -2895,6 +2905,7 @@ literal|9
 condition|)
 name|dval
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 operator|=
@@ -2907,6 +2918,7 @@ index|]
 operator|*
 name|dval
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 operator|+
@@ -2937,10 +2949,8 @@ if|if
 condition|(
 name|rvOK
 argument_list|(
-name|dval
-argument_list|(
+operator|&
 name|rv
-argument_list|)
 argument_list|,
 name|fpi
 argument_list|,
@@ -2992,10 +3002,8 @@ index|]
 operator|+
 name|mantbits
 argument_list|(
-name|dval
-argument_list|(
+operator|&
 name|rv
-argument_list|)
 argument_list|)
 operator|<=
 name|P
@@ -3005,6 +3013,7 @@ name|rounded_product
 argument_list|(
 name|dval
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 argument_list|,
@@ -3018,10 +3027,8 @@ if|if
 condition|(
 name|rvOK
 argument_list|(
-name|dval
-argument_list|(
+operator|&
 name|rv
-argument_list|)
 argument_list|,
 name|fpi
 argument_list|,
@@ -3078,6 +3085,7 @@ name|i
 expr_stmt|;
 name|dval
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 operator|*=
@@ -3094,16 +3102,19 @@ name|vax_ovfl_check
 label|:
 name|dval
 argument_list|(
+operator|&
 name|adj
 argument_list|)
 operator|=
 name|dval
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 expr_stmt|;
 name|word0
 argument_list|(
+operator|&
 name|adj
 argument_list|)
 operator|-=
@@ -3116,6 +3127,7 @@ name|rounded_product
 argument_list|(
 name|dval
 argument_list|(
+operator|&
 name|adj
 argument_list|)
 argument_list|,
@@ -3130,6 +3142,7 @@ condition|(
 operator|(
 name|word0
 argument_list|(
+operator|&
 name|adj
 argument_list|)
 operator|&
@@ -3153,6 +3166,7 @@ name|rv_notOK
 goto|;
 name|word0
 argument_list|(
+operator|&
 name|adj
 argument_list|)
 operator|+=
@@ -3162,11 +3176,13 @@ name|Exp_msk1
 expr_stmt|;
 name|dval
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 operator|=
 name|dval
 argument_list|(
+operator|&
 name|adj
 argument_list|)
 expr_stmt|;
@@ -3177,6 +3193,7 @@ name|rounded_product
 argument_list|(
 name|dval
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 argument_list|,
@@ -3192,10 +3209,8 @@ if|if
 condition|(
 name|rvOK
 argument_list|(
-name|dval
-argument_list|(
+operator|&
 name|rv
-argument_list|)
 argument_list|,
 name|fpi
 argument_list|,
@@ -3237,6 +3252,7 @@ name|rounded_quotient
 argument_list|(
 name|dval
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 argument_list|,
@@ -3251,10 +3267,8 @@ if|if
 condition|(
 name|rvOK
 argument_list|(
-name|dval
-argument_list|(
+operator|&
 name|rv
-argument_list|)
 argument_list|,
 name|fpi
 argument_list|,
@@ -3315,6 +3329,7 @@ literal|0
 condition|)
 name|dval
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 operator|*=
@@ -3342,9 +3357,11 @@ operator|>=
 operator|(
 literal|1
 operator|<<
+operator|(
 name|n_bigtens
 operator|-
 literal|1
+operator|)
 operator|)
 condition|)
 block|{
@@ -3354,6 +3371,7 @@ operator|(
 operator|(
 name|word0
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 operator|&
@@ -3367,6 +3385,7 @@ name|Bias
 expr_stmt|;
 name|word0
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 operator|&=
@@ -3375,6 +3394,7 @@ name|Exp_mask
 expr_stmt|;
 name|word0
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 operator||=
@@ -3384,6 +3404,7 @@ name|Exp_shift1
 expr_stmt|;
 name|dval
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 operator|*=
@@ -3398,9 +3419,11 @@ name|e1
 operator|-=
 literal|1
 operator|<<
+operator|(
 name|n_bigtens
 operator|-
 literal|1
+operator|)
 expr_stmt|;
 block|}
 name|e2
@@ -3409,6 +3432,7 @@ operator|(
 operator|(
 name|word0
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 operator|&
@@ -3422,6 +3446,7 @@ name|Bias
 expr_stmt|;
 name|word0
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 operator|&=
@@ -3430,6 +3455,7 @@ name|Exp_mask
 expr_stmt|;
 name|word0
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 operator||=
@@ -3462,6 +3488,7 @@ literal|1
 condition|)
 name|dval
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 operator|*=
@@ -3499,6 +3526,7 @@ literal|0
 condition|)
 name|dval
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 operator|/=
@@ -3526,9 +3554,11 @@ operator|>=
 operator|(
 literal|1
 operator|<<
+operator|(
 name|n_bigtens
 operator|-
 literal|1
+operator|)
 operator|)
 condition|)
 block|{
@@ -3538,6 +3568,7 @@ operator|(
 operator|(
 name|word0
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 operator|&
@@ -3551,6 +3582,7 @@ name|Bias
 expr_stmt|;
 name|word0
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 operator|&=
@@ -3559,6 +3591,7 @@ name|Exp_mask
 expr_stmt|;
 name|word0
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 operator||=
@@ -3568,6 +3601,7 @@ name|Exp_shift1
 expr_stmt|;
 name|dval
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 operator|*=
@@ -3582,9 +3616,11 @@ name|e1
 operator|-=
 literal|1
 operator|<<
+operator|(
 name|n_bigtens
 operator|-
 literal|1
+operator|)
 expr_stmt|;
 block|}
 name|e2
@@ -3593,6 +3629,7 @@ operator|(
 operator|(
 name|word0
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 operator|&
@@ -3606,6 +3643,7 @@ name|Bias
 expr_stmt|;
 name|word0
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 operator|&=
@@ -3614,6 +3652,7 @@ name|Exp_mask
 expr_stmt|;
 name|word0
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 operator||=
@@ -3646,6 +3685,7 @@ literal|1
 condition|)
 name|dval
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 operator|*=
@@ -3672,6 +3712,7 @@ name|d2b
 argument_list|(
 name|dval
 argument_list|(
+operator|&
 name|rv
 argument_list|)
 argument_list|,
@@ -4643,12 +4684,14 @@ name|STRTOG_Inexhi
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|bbbits
 operator|<
 name|nbits
 operator|&&
 operator|!
 name|denorm
+operator|)
 operator|||
 operator|!
 operator|(
@@ -4747,6 +4790,7 @@ condition|(
 operator|(
 name|dval
 argument_list|(
+operator|&
 name|adj
 argument_list|)
 operator|=
@@ -4815,6 +4859,7 @@ name|adj0
 operator|=
 name|dval
 argument_list|(
+operator|&
 name|adj
 argument_list|)
 operator|=
@@ -4827,6 +4872,7 @@ name|adj0
 operator|=
 name|dval
 argument_list|(
+operator|&
 name|adj
 argument_list|)
 operator|*=
@@ -4850,6 +4896,7 @@ if|if
 condition|(
 name|dval
 argument_list|(
+operator|&
 name|adj
 argument_list|)
 operator|<
@@ -4925,6 +4972,7 @@ block|}
 block|}
 name|dval
 argument_list|(
+operator|&
 name|adj
 argument_list|)
 operator|=
@@ -4938,7 +4986,7 @@ name|rve
 operator|+
 name|rvbits
 expr_stmt|;
-comment|/* adj *= ulp(dval(rv)); */
+comment|/* adj *= ulp(dval(&rv)); */
 comment|/* if (asub) rv -= adj; else rv += adj; */
 if|if
 condition|(
@@ -4978,6 +5026,7 @@ name|d2b
 argument_list|(
 name|dval
 argument_list|(
+operator|&
 name|adj
 argument_list|)
 argument_list|,
@@ -5261,6 +5310,7 @@ name|tol
 operator|=
 name|dval
 argument_list|(
+operator|&
 name|adj
 argument_list|)
 operator|*
@@ -5269,6 +5319,7 @@ expr_stmt|;
 comment|/*> max rel error */
 name|dval
 argument_list|(
+operator|&
 name|adj
 argument_list|)
 operator|=
@@ -5280,6 +5331,7 @@ if|if
 condition|(
 name|dval
 argument_list|(
+operator|&
 name|adj
 argument_list|)
 operator|<
@@ -5306,6 +5358,7 @@ if|if
 condition|(
 name|dval
 argument_list|(
+operator|&
 name|adj
 argument_list|)
 operator|>

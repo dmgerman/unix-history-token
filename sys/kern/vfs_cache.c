@@ -167,6 +167,8 @@ name|enter
 argument_list|,
 name|done
 argument_list|,
+name|done
+argument_list|,
 literal|"struct vnode *"
 argument_list|,
 literal|"char *"
@@ -184,6 +186,8 @@ argument_list|,
 name|namecache
 argument_list|,
 name|enter_negative
+argument_list|,
+name|done
 argument_list|,
 name|done
 argument_list|,
@@ -205,6 +209,8 @@ name|fullpath
 argument_list|,
 name|entry
 argument_list|,
+name|entry
+argument_list|,
 literal|"struct vnode *"
 argument_list|)
 expr_stmt|;
@@ -218,6 +224,8 @@ argument_list|,
 name|namecache
 argument_list|,
 name|fullpath
+argument_list|,
+name|hit
 argument_list|,
 name|hit
 argument_list|,
@@ -241,6 +249,8 @@ name|fullpath
 argument_list|,
 name|miss
 argument_list|,
+name|miss
+argument_list|,
 literal|"struct vnode *"
 argument_list|)
 expr_stmt|;
@@ -254,6 +264,8 @@ argument_list|,
 argument|namecache
 argument_list|,
 argument|fullpath
+argument_list|,
+argument|return
 argument_list|,
 argument|return
 argument_list|,
@@ -280,6 +292,8 @@ name|lookup
 argument_list|,
 name|hit
 argument_list|,
+name|hit
+argument_list|,
 literal|"struct vnode *"
 argument_list|,
 literal|"char *"
@@ -300,6 +314,10 @@ name|lookup
 argument_list|,
 name|hit_negative
 argument_list|,
+name|hit
+operator|-
+name|negative
+argument_list|,
 literal|"struct vnode *"
 argument_list|,
 literal|"char *"
@@ -315,6 +333,8 @@ argument_list|,
 name|namecache
 argument_list|,
 name|lookup
+argument_list|,
+name|miss
 argument_list|,
 name|miss
 argument_list|,
@@ -336,6 +356,8 @@ name|purge
 argument_list|,
 name|done
 argument_list|,
+name|done
+argument_list|,
 literal|"struct vnode *"
 argument_list|)
 expr_stmt|;
@@ -349,6 +371,8 @@ argument_list|,
 name|namecache
 argument_list|,
 name|purge_negative
+argument_list|,
+name|done
 argument_list|,
 name|done
 argument_list|,
@@ -368,6 +392,8 @@ name|purgevfs
 argument_list|,
 name|done
 argument_list|,
+name|done
+argument_list|,
 literal|"struct mount *"
 argument_list|)
 expr_stmt|;
@@ -381,6 +407,8 @@ argument_list|,
 name|namecache
 argument_list|,
 name|zap
+argument_list|,
+name|done
 argument_list|,
 name|done
 argument_list|,
@@ -401,6 +429,8 @@ argument_list|,
 name|namecache
 argument_list|,
 name|zap_negative
+argument_list|,
+name|done
 argument_list|,
 name|done
 argument_list|,
@@ -549,7 +579,7 @@ name|nchash
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Size of namecache hash table"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -570,7 +600,7 @@ end_comment
 begin_expr_stmt
 name|SYSCTL_ULONG
 argument_list|(
-name|_debug
+name|_vfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -583,7 +613,7 @@ name|ncnegfactor
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Ratio of negative namecache entries"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -596,7 +626,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number of cache entries allocated */
+comment|/* number of negative entries allocated */
 end_comment
 
 begin_expr_stmt
@@ -615,7 +645,7 @@ name|numneg
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of negative entries in namecache"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -647,7 +677,7 @@ name|numcache
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of namecache entries"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -679,27 +709,40 @@ name|numcachehv
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of namecache entries with vnodes held"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
+begin_decl_stmt
+specifier|static
+name|u_int
+name|ncsizefactor
+init|=
+literal|2
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_vfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ncsizefactor
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ncsizefactor
+argument_list|,
 literal|0
-end_if
-
-begin_comment
-unit|static u_long	numcachepl;
-comment|/* number of cache purge for leaf entries */
-end_comment
-
-begin_endif
-unit|SYSCTL_ULONG(_debug, OID_AUTO, numcachepl, CTLFLAG_RD,&numcachepl, 0, "");
-endif|#
-directive|endif
-end_endif
+argument_list|,
+literal|"Size factor for namecache"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|struct
@@ -861,7 +904,7 @@ name|doingcache
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"VFS namecache enabled"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -889,7 +932,7 @@ expr|struct
 name|namecache
 argument_list|)
 argument_list|,
-literal|""
+literal|"sizeof(struct namecache)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -927,9 +970,11 @@ parameter_list|,
 name|name
 parameter_list|,
 name|var
+parameter_list|,
+name|descr
 parameter_list|)
 define|\
-value|SYSCTL_ULONG(_vfs_cache, OID_AUTO, name, mode, var, 0, "");
+value|SYSCTL_ULONG(_vfs_cache, OID_AUTO, name, mode, var, 0, descr);
 end_define
 
 begin_expr_stmt
@@ -941,6 +986,8 @@ name|numneg
 argument_list|,
 operator|&
 name|numneg
+argument_list|,
+literal|"Number of negative cache entries"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -954,6 +1001,8 @@ name|numcache
 argument_list|,
 operator|&
 name|numcache
+argument_list|,
+literal|"Number of cache entries"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -974,6 +1023,8 @@ name|numcalls
 argument_list|,
 operator|&
 name|numcalls
+argument_list|,
+literal|"Number of cache lookups"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -994,6 +1045,8 @@ name|dothits
 argument_list|,
 operator|&
 name|dothits
+argument_list|,
+literal|"Number of '.' hits"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1014,6 +1067,8 @@ name|dotdothits
 argument_list|,
 operator|&
 name|dotdothits
+argument_list|,
+literal|"Number of '..' hits"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1034,6 +1089,8 @@ name|numchecks
 argument_list|,
 operator|&
 name|numchecks
+argument_list|,
+literal|"Number of checks in lookup"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1054,6 +1111,8 @@ name|nummiss
 argument_list|,
 operator|&
 name|nummiss
+argument_list|,
+literal|"Number of cache misses"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1074,6 +1133,8 @@ name|nummisszap
 argument_list|,
 operator|&
 name|nummisszap
+argument_list|,
+literal|"Number of cache misses we do not want to cache"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1094,6 +1155,8 @@ name|numposzaps
 argument_list|,
 operator|&
 name|numposzaps
+argument_list|,
+literal|"Number of cache hits (positive) we do not want to cache"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1114,6 +1177,8 @@ name|numposhits
 argument_list|,
 operator|&
 name|numposhits
+argument_list|,
+literal|"Number of cache hits (positive)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1134,6 +1199,8 @@ name|numnegzaps
 argument_list|,
 operator|&
 name|numnegzaps
+argument_list|,
+literal|"Number of cache hits (negative) we do not want to cache"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1154,6 +1221,8 @@ name|numneghits
 argument_list|,
 operator|&
 name|numneghits
+argument_list|,
+literal|"Number of cache hits (negative)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1174,6 +1243,8 @@ name|numupgrades
 argument_list|,
 operator|&
 name|numupgrades
+argument_list|,
+literal|"Number of updates of the cache after lookup (write lock + retry)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2079,7 +2150,7 @@ name|namecache
 modifier|*
 name|ncp
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|hash
 decl_stmt|;
 name|int
@@ -3149,7 +3220,7 @@ name|nchashhead
 modifier|*
 name|ncpp
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|hash
 decl_stmt|;
 name|int
@@ -3198,7 +3269,30 @@ argument_list|,
 name|vp
 argument_list|,
 operator|(
-literal|"cahe_enter: Adding a doomed vnode"
+literal|"cache_enter: Adding a doomed vnode"
+operator|)
+argument_list|)
+expr_stmt|;
+name|VNASSERT
+argument_list|(
+name|dvp
+operator|==
+name|NULL
+operator|||
+operator|(
+name|dvp
+operator|->
+name|v_iflag
+operator|&
+name|VI_DOOMED
+operator|)
+operator|==
+literal|0
+argument_list|,
+name|dvp
+argument_list|,
+operator|(
+literal|"cache_enter: Doomed vnode used as src"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3215,7 +3309,7 @@ name|numcache
 operator|>=
 name|desiredvnodes
 operator|*
-literal|2
+name|ncsizefactor
 condition|)
 return|return;
 name|flag
@@ -4887,9 +4981,11 @@ directive|define
 name|STATNODE
 parameter_list|(
 name|name
+parameter_list|,
+name|descr
 parameter_list|)
 define|\
-value|static u_int name;						\ 	SYSCTL_UINT(_vfs_cache, OID_AUTO, name, CTLFLAG_RD,&name, 0, "")
+value|static u_int name;						\ 	SYSCTL_UINT(_vfs_cache, OID_AUTO, name, CTLFLAG_RD,&name, 0, descr)
 end_define
 
 begin_decl_stmt
@@ -4928,6 +5024,8 @@ begin_expr_stmt
 name|STATNODE
 argument_list|(
 name|numfullpathcalls
+argument_list|,
+literal|"Number of fullpath search calls"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4936,6 +5034,8 @@ begin_expr_stmt
 name|STATNODE
 argument_list|(
 name|numfullpathfail1
+argument_list|,
+literal|"Number of fullpath search errors (ENOTDIR)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4944,6 +5044,8 @@ begin_expr_stmt
 name|STATNODE
 argument_list|(
 name|numfullpathfail2
+argument_list|,
+literal|"Number of fullpath search errors (VOP_VPTOCNP failures)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4952,6 +5054,8 @@ begin_expr_stmt
 name|STATNODE
 argument_list|(
 name|numfullpathfail4
+argument_list|,
+literal|"Number of fullpath search errors (ENOMEM)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4960,6 +5064,8 @@ begin_expr_stmt
 name|STATNODE
 argument_list|(
 name|numfullpathfound
+argument_list|,
+literal|"Number of successful fullpath calls"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

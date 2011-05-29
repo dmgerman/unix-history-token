@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_ACL_COMMON_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -190,6 +183,9 @@ name|gid_t
 name|group
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
+comment|/* !_KERNEL */
 name|void
 name|ksort
 parameter_list|(
@@ -222,9 +218,53 @@ modifier|*
 name|b
 parameter_list|)
 function_decl|;
-endif|#
-directive|endif
-comment|/* _KERNEL */
+name|int
+name|acl_trivial_create
+parameter_list|(
+name|mode_t
+name|mode
+parameter_list|,
+name|ace_t
+modifier|*
+modifier|*
+name|acl
+parameter_list|,
+name|int
+modifier|*
+name|count
+parameter_list|)
+function_decl|;
+name|void
+name|acl_trivial_access_masks
+parameter_list|(
+name|mode_t
+name|mode
+parameter_list|,
+name|uint32_t
+modifier|*
+name|allow0
+parameter_list|,
+name|uint32_t
+modifier|*
+name|deny1
+parameter_list|,
+name|uint32_t
+modifier|*
+name|deny2
+parameter_list|,
+name|uint32_t
+modifier|*
+name|owner
+parameter_list|,
+name|uint32_t
+modifier|*
+name|group
+parameter_list|,
+name|uint32_t
+modifier|*
+name|everyone
+parameter_list|)
+function_decl|;
 ifdef|#
 directive|ifdef
 name|__cplusplus

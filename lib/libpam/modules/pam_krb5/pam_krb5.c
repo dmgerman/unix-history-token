@@ -255,6 +255,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PAM_OPT_NO_USER_CHECK
+value|"no_user_check"
+end_define
+
+begin_define
+define|#
+directive|define
 name|PAM_OPT_REUSE_CCACHE
 value|"reuse_ccache"
 end_define
@@ -735,6 +742,22 @@ argument_list|(
 literal|"Got password"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|openpam_get_option
+argument_list|(
+name|pamh
+argument_list|,
+name|PAM_OPT_NO_USER_CHECK
+argument_list|)
+condition|)
+name|PAM_LOG
+argument_list|(
+literal|"Skipping local user check"
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 comment|/* Verify the local user exists (AFTER getting the password) */
 if|if
 condition|(
@@ -848,6 +871,7 @@ argument_list|(
 literal|"Done getpwnam()"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Get a TGT */
 name|memset
 argument_list|(
@@ -1504,6 +1528,13 @@ argument_list|(
 name|pamh
 argument_list|,
 name|PAM_OPT_NO_CCACHE
+argument_list|)
+operator|||
+name|openpam_get_option
+argument_list|(
+name|pamh
+argument_list|,
+name|PAM_OPT_NO_USER_CHECK
 argument_list|)
 condition|)
 return|return

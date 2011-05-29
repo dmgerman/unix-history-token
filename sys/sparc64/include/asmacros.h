@@ -22,7 +22,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Normal and alternate %g6 point to the pcb of the current process.  Normal,& alternate and interrupt %g7 point to per-cpu data.  */
+comment|/*  * Normal and alternate %g6 point to the pcb of the current process.  Normal,  * alternate and interrupt %g7 point to per-cpu data.  */
 end_comment
 
 begin_define
@@ -132,6 +132,27 @@ name|bits
 parameter_list|)
 define|\
 value|lduw	[r1], r2 ; \ 9:	andn	r2, bits, r3 ; \ 	casa	[r1] ASI_N, r2, r3 ; \ 	cmp	r2, r3 ; \ 	bne,pn	%icc, 9b ; \ 	 mov	r3, r2
+end_define
+
+begin_comment
+comment|/*  * Atomically clear a number of bits of an u_long in memory.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_CLEAR_LONG
+parameter_list|(
+name|r1
+parameter_list|,
+name|r2
+parameter_list|,
+name|r3
+parameter_list|,
+name|bits
+parameter_list|)
+define|\
+value|ldx	[r1], r2 ; \ 9:	andn	r2, bits, r3 ; \ 	casxa	[r1] ASI_N, r2, r3 ; \ 	cmp	r2, r3 ; \ 	bne,pn	%icc, 9b ; \ 	 mov	r3, r2
 end_define
 
 begin_define
@@ -254,6 +275,82 @@ begin_define
 define|#
 directive|define
 name|EMPTY
+end_define
+
+begin_comment
+comment|/*  * Generate atomic compare and swap, load and store instructions for the  * corresponding width and ASI (or not).  Note that we want to evaluate the  * macro args before concatenating, so that EMPTY really turns into nothing.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_LD
+parameter_list|(
+name|w
+parameter_list|,
+name|a
+parameter_list|)
+value|ld ## w ## a
+end_define
+
+begin_define
+define|#
+directive|define
+name|_ST
+parameter_list|(
+name|w
+parameter_list|,
+name|a
+parameter_list|)
+value|st ## w ## a
+end_define
+
+begin_define
+define|#
+directive|define
+name|_CAS
+parameter_list|(
+name|w
+parameter_list|,
+name|a
+parameter_list|)
+value|cas ## w ## a
+end_define
+
+begin_define
+define|#
+directive|define
+name|LD
+parameter_list|(
+name|w
+parameter_list|,
+name|a
+parameter_list|)
+value|_LD(w, a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ST
+parameter_list|(
+name|w
+parameter_list|,
+name|a
+parameter_list|)
+value|_ST(w, a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAS
+parameter_list|(
+name|w
+parameter_list|,
+name|a
+parameter_list|)
+value|_CAS(w, a)
 end_define
 
 begin_endif

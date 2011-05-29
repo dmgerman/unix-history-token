@@ -329,8 +329,6 @@ argument_list|,
 operator|&
 name|rid
 argument_list|,
-name|RF_SHAREABLE
-operator||
 name|RF_ACTIVE
 argument_list|)
 expr_stmt|;
@@ -503,8 +501,6 @@ argument_list|,
 operator|&
 name|rid
 argument_list|,
-name|RF_SHAREABLE
-operator||
 name|RF_ACTIVE
 argument_list|)
 expr_stmt|;

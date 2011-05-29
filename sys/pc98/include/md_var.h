@@ -40,7 +40,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The ad driver maps the IDE disk's actual geometry to the firmware's  * notion of geometry.  However, PC98 machines need to do something  * different sometimes, so override the hook so we can do so.  We have to  * have a knowledge that a device_t is a struct device * here to avoid  * including too many things from this file.  */
+comment|/*  * The ad driver maps the IDE disk's actual geometry to the firmware's  * notion of geometry.  However, PC98 machines need to do something  * different sometimes, so override the hook so we can do so.  */
 end_comment
 
 begin_struct_decl
@@ -49,20 +49,10 @@ name|disk
 struct_decl|;
 end_struct_decl
 
-begin_struct_decl
-struct_decl|struct
-name|device
-struct_decl|;
-end_struct_decl
-
 begin_function_decl
 name|void
-name|pc98_ad_firmware_geom_adjust
+name|pc98_ata_disk_firmware_geom_adjust
 parameter_list|(
-name|struct
-name|device
-modifier|*
-parameter_list|,
 name|struct
 name|disk
 modifier|*
@@ -73,13 +63,12 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|ad_firmware_geom_adjust
+name|ata_disk_firmware_geom_adjust
 parameter_list|(
-name|dev
-parameter_list|,
-name|dsk
+name|disk
 parameter_list|)
-value|pc98_ad_firmware_geom_adjust(dev, dsk)
+define|\
+value|pc98_ata_disk_firmware_geom_adjust(disk)
 end_define
 
 begin_endif

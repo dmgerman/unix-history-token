@@ -453,8 +453,15 @@ begin_comment
 comment|/* (i) supports multicast */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFF_CANTCONFIG
+value|0x10000
+end_define
+
 begin_comment
-comment|/*			0x10000		*/
+comment|/* (i) unconfigurable using ioctl(2) */
 end_comment
 
 begin_define
@@ -550,7 +557,7 @@ define|#
 directive|define
 name|IFF_CANTCHANGE
 define|\
-value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_DRV_RUNNING|IFF_DRV_OACTIVE|\ 	    IFF_SIMPLEX|IFF_MULTICAST|IFF_ALLMULTI|IFF_SMART|IFF_PROMISC|\ 	    IFF_DYING)
+value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_DRV_RUNNING|IFF_DRV_OACTIVE|\ 	    IFF_SIMPLEX|IFF_MULTICAST|IFF_ALLMULTI|IFF_SMART|IFF_PROMISC|\ 	    IFF_DYING|IFF_CANTCONFIG)
 end_define
 
 begin_comment
@@ -847,6 +854,17 @@ end_define
 
 begin_comment
 comment|/* can do IFCAP_TSO on VLANs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFCAP_LINKSTATE
+value|0x80000
+end_define
+
+begin_comment
+comment|/* the runtime link state is dynamic */
 end_comment
 
 begin_define
@@ -1420,43 +1438,6 @@ comment|/* array of structures returned */
 block|}
 struct|;
 end_struct
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-end_if
-
-begin_struct
-struct|struct
-name|ifconf32
-block|{
-name|int
-name|ifc_len
-decl_stmt|;
-comment|/* size of associated buffer */
-union|union
-block|{
-name|u_int
-name|ifcu_buf
-decl_stmt|;
-name|u_int
-name|ifcu_req
-decl_stmt|;
-block|}
-name|ifc_ifcu
-union|;
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * interface groups  */

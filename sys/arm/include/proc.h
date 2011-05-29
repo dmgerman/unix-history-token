@@ -58,8 +58,7 @@ decl_stmt|;
 name|int
 name|md_ptrace_addr
 decl_stmt|;
-name|void
-modifier|*
+name|register_t
 name|md_tp
 decl_stmt|;
 name|void
@@ -90,6 +89,13 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|KINFO_PROC_SIZE
+value|792
+end_define
 
 begin_endif
 endif|#

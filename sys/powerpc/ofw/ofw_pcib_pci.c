@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/intr_machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pcib_if.h"
 end_include
 
@@ -268,6 +274,41 @@ argument_list|(
 name|pcib_route_interrupt
 argument_list|,
 name|ofw_pcib_pci_route_interrupt
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|pcib_alloc_msi
+argument_list|,
+name|pcib_alloc_msi
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|pcib_release_msi
+argument_list|,
+name|pcib_release_msi
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|pcib_alloc_msix
+argument_list|,
+name|pcib_alloc_msix
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|pcib_release_msix
+argument_list|,
+name|pcib_release_msix
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|pcib_map_msi
+argument_list|,
+name|pcib_map_msi
 argument_list|)
 block|,
 comment|/* ofw_bus interface */
@@ -554,6 +595,9 @@ name|pintr
 decl_stmt|,
 name|mintr
 decl_stmt|;
+name|phandle_t
+name|iparent
+decl_stmt|;
 name|uint8_t
 name|maskbuf
 index|[
@@ -630,6 +674,9 @@ argument_list|(
 name|mintr
 argument_list|)
 argument_list|,
+operator|&
+name|iparent
+argument_list|,
 name|maskbuf
 argument_list|)
 condition|)
@@ -637,7 +684,12 @@ block|{
 comment|/* 			 * If we've found a mapping, return it and don't map 			 * it again on higher levels - that causes problems 			 * in some cases, and never seems to be required. 			 */
 return|return
 operator|(
+name|MAP_IRQ
+argument_list|(
+name|iparent
+argument_list|,
 name|mintr
+argument_list|)
 operator|)
 return|;
 block|}

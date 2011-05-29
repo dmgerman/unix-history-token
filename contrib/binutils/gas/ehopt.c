@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ehopt.c--optimize gcc exception frame information.    Copyright 1998, 2000, 2001, 2003 Free Software Foundation, Inc.    Written by Ian Lance Taylor<ian@cygnus.com>.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ehopt.c--optimize gcc exception frame information.    Copyright 1998, 2000, 2001, 2003, 2005 Free Software Foundation, Inc.    Written by Ian Lance Taylor<ian@cygnus.com>.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -99,17 +99,6 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* We should find the CIE at the start of the section.  */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|BFD_ASSEMBLER
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|MANY_SEGMENTS
-argument_list|)
 name|f
 operator|=
 name|seg_info
@@ -121,19 +110,6 @@ name|frchainP
 operator|->
 name|frch_root
 expr_stmt|;
-else|#
-directive|else
-name|f
-operator|=
-name|frchain_now
-operator|->
-name|frch_root
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|BFD_ASSEMBLER
 name|fix
 operator|=
 name|seg_info
@@ -145,15 +121,6 @@ name|frchainP
 operator|->
 name|fix_root
 expr_stmt|;
-else|#
-directive|else
-name|fix
-operator|=
-operator|*
-name|seg_fix_rootP
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* Look through the frags of the section to find the code alignment.  */
 comment|/* First make sure that the CIE Identifier Tag is 0/-1.  */
 if|if

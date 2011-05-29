@@ -1856,6 +1856,14 @@ name|int
 name|n
 parameter_list|)
 function_decl|;
+name|void
+name|dictCheckThreshold
+parameter_list|(
+name|FICL_DICT
+modifier|*
+name|dp
+parameter_list|)
+function_decl|;
 name|FICL_DICT
 modifier|*
 name|dictCreate

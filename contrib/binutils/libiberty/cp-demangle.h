@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Internal demangler interface for g++ V3 ABI.    Copyright (C) 2003, 2004 Free Software Foundation, Inc.    Written by Ian Lance Taylor<ian@wasabisystems.com>.     This file is part of the libiberty library, which is part of GCC.     This file is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     In addition to the permissions in the GNU General Public License, the    Free Software Foundation gives you unlimited permission to link the    compiled version of this file into combinations with other programs,    and to distribute those combinations without any restriction coming    from the use of this file.  (The General Public License restrictions    do apply in other respects; for example, they cover modification of    the file, and distribution when not linked into a combined    executable.)     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Internal demangler interface for g++ V3 ABI.    Copyright (C) 2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.    Written by Ian Lance Taylor<ian@wasabisystems.com>.     This file is part of the libiberty library, which is part of GCC.     This file is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     In addition to the permissions in the GNU General Public License, the    Free Software Foundation gives you unlimited permission to link the    compiled version of this file into combinations with other programs,    and to distribute those combinations without any restriction coming    from the use of this file.  (The General Public License restrictions    do apply in other respects; for example, they cover modification of    the file, and distribution when not linked into a combined    executable.)     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -53,11 +53,26 @@ block|,
 comment|/* Print as integer.  */
 name|D_PRINT_INT
 block|,
-comment|/* Print as long, with trailing `l'.  */
+comment|/* Print as unsigned integer, with trailing "u".  */
+name|D_PRINT_UNSIGNED
+block|,
+comment|/* Print as long, with trailing "l".  */
 name|D_PRINT_LONG
+block|,
+comment|/* Print as unsigned long, with trailing "ul".  */
+name|D_PRINT_UNSIGNED_LONG
+block|,
+comment|/* Print as long long, with trailing "ll".  */
+name|D_PRINT_LONG_LONG
+block|,
+comment|/* Print as unsigned long long, with trailing "ull".  */
+name|D_PRINT_UNSIGNED_LONG_LONG
 block|,
 comment|/* Print as bool.  */
 name|D_PRINT_BOOL
+block|,
+comment|/* Print as float--put value in square brackets.  */
+name|D_PRINT_FLOAT
 block|,
 comment|/* Print in usual way, but here to detect void.  */
 name|D_PRINT_VOID
@@ -179,6 +194,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* To avoid running past the ending '\0', don't:    - call d_peek_next_char if d_peek_char returned '\0'    - call d_advance with an 'i' that is too large    - call d_check_char(di, '\0')    Everything else is safe.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -214,11 +233,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|d_check_char
+parameter_list|(
+name|di
+parameter_list|,
+name|c
+parameter_list|)
+value|(d_peek_char(di) == c ? ((di)->n++, 1) : 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|d_next_char
 parameter_list|(
 name|di
 parameter_list|)
-value|(*((di)->n++))
+value|(d_peek_char(di) == '\0' ? '\0' : *((di)->n++))
 end_define
 
 begin_define
@@ -235,6 +266,42 @@ begin_comment
 comment|/* Functions and arrays in cp-demangle.c which are referenced by    functions in cp-demint.c.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IN_GLIBCPP_V3
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CP_STATIC_IF_GLIBCPP_V3
+value|static
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CP_STATIC_IF_GLIBCPP_V3
+value|extern
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IN_GLIBCPP_V3
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 specifier|const
@@ -245,6 +312,11 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -252,76 +324,77 @@ name|D_BUILTIN_TYPE_COUNT
 value|(26)
 end_define
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|CP_STATIC_IF_GLIBCPP_V3
 specifier|const
-name|struct
+expr|struct
 name|demangle_builtin_type_info
 name|cplus_demangle_builtin_types
 index|[
 name|D_BUILTIN_TYPE_COUNT
 index|]
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
+begin_function_decl
+name|CP_STATIC_IF_GLIBCPP_V3
 name|struct
 name|demangle_component
 modifier|*
 name|cplus_demangle_mangled_name
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|d_info
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
-specifier|extern
+begin_function_decl
+name|CP_STATIC_IF_GLIBCPP_V3
 name|struct
 name|demangle_component
 modifier|*
 name|cplus_demangle_type
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|d_info
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|cplus_demangle_init_info
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|size_t
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|d_info
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* cp-demangle.c needs to define this a little differently */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CP_STATIC_IF_GLIBCPP_V3
+end_undef
 
 end_unit
 

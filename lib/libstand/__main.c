@@ -39,7 +39,9 @@ end_function_decl
 begin_function
 name|void
 name|__main
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{ }
 end_function
 

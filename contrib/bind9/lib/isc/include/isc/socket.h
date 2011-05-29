@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: socket.h,v 1.85.58.3 2009/01/29 22:40:35 jinmei Exp $ */
+comment|/* $Id: socket.h,v 1.85.58.3 2009-01-29 22:40:35 jinmei Exp $ */
 end_comment
 
 begin_ifndef

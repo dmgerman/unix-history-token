@@ -23,7 +23,20 @@ begin_define
 define|#
 directive|define
 name|open64
-value|open
+parameter_list|(
+modifier|...
+parameter_list|)
+value|open(__VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|openat64
+parameter_list|(
+modifier|...
+parameter_list|)
+value|openat(__VA_ARGS__)
 end_define
 
 begin_endif

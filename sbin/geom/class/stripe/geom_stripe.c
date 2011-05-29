@@ -111,14 +111,12 @@ name|G_STRIPE_VERSION
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|intmax_t
-name|default_stripesize
-init|=
-literal|65536
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|GSTRIPE_STRIPESIZE
+value|"65536"
+end_define
 
 begin_function_decl
 specifier|static
@@ -191,8 +189,6 @@ name|stripe_main
 block|,
 name|G_NULL_OPTS
 block|,
-name|NULL
-block|,
 literal|"[-v] prov ..."
 block|}
 block|,
@@ -211,16 +207,13 @@ literal|'s'
 block|,
 literal|"stripesize"
 block|,
-operator|&
-name|default_stripesize
+name|GSTRIPE_STRIPESIZE
 block|,
 name|G_TYPE_NUMBER
 block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
-block|,
-name|NULL
 block|,
 literal|"[-hv] [-s stripesize] name prov prov ..."
 block|}
@@ -246,8 +239,6 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-name|NULL
-block|,
 literal|"[-fv] name ..."
 block|}
 block|,
@@ -259,8 +250,6 @@ block|,
 name|stripe_main
 block|,
 name|G_NULL_OPTS
-block|,
-name|NULL
 block|,
 literal|"prov ..."
 block|}
@@ -290,16 +279,13 @@ literal|'s'
 block|,
 literal|"stripesize"
 block|,
-operator|&
-name|default_stripesize
+name|GSTRIPE_STRIPESIZE
 block|,
 name|G_TYPE_NUMBER
 block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
-block|,
-name|NULL
 block|,
 literal|"[-hv] [-s stripesize] name prov prov ..."
 block|}
@@ -324,8 +310,6 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
-block|,
-name|NULL
 block|,
 literal|"[-fv] name ..."
 block|}
@@ -916,20 +900,24 @@ name|name
 argument_list|,
 name|_PATH_DEV
 argument_list|,
-name|strlen
+sizeof|sizeof
 argument_list|(
 name|_PATH_DEV
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 operator|==
 literal|0
 condition|)
 name|name
 operator|+=
-name|strlen
+sizeof|sizeof
 argument_list|(
 name|_PATH_DEV
 argument_list|)
+operator|-
+literal|1
 expr_stmt|;
 name|strlcpy
 argument_list|(

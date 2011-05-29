@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * wpa_supplicant - Internal WPA state machine definitions  * Copyright (c) 2004-2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * Internal WPA/RSN supplicant state machine definitions  * Copyright (c) 2004-2010, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_ifndef
@@ -15,11 +15,11 @@ directive|define
 name|WPA_I_H
 end_define
 
-begin_struct_decl
-struct_decl|struct
-name|rsn_pmksa_candidate
-struct_decl|;
-end_struct_decl
+begin_include
+include|#
+directive|include
+file|"utils/list.h"
+end_include
 
 begin_struct_decl
 struct_decl|struct
@@ -111,8 +111,7 @@ name|cur_pmksa
 decl_stmt|;
 comment|/* current PMKSA entry */
 name|struct
-name|rsn_pmksa_candidate
-modifier|*
+name|dl_list
 name|pmksa_candidates
 decl_stmt|;
 name|struct
@@ -247,6 +246,10 @@ name|int
 name|rsn_enabled
 decl_stmt|;
 comment|/* Whether RSN is enabled in configuration */
+name|int
+name|mfp
+decl_stmt|;
+comment|/* 0 = disabled, 1 = optional, 2 = mandatory */
 name|u8
 modifier|*
 name|assoc_wpa_ie
@@ -349,6 +352,21 @@ name|ETH_ALEN
 index|]
 decl_stmt|;
 comment|/* over-the-DS target AP */
+name|int
+name|set_ptk_after_assoc
+decl_stmt|;
+name|u8
+name|mdie_ft_capab
+decl_stmt|;
+comment|/* FT Capability and Policy from target AP MDIE */
+name|u8
+modifier|*
+name|assoc_resp_ies
+decl_stmt|;
+comment|/* MDIE and FTIE from (Re)Association Response */
+name|size_t
+name|assoc_resp_ies_len
+decl_stmt|;
 endif|#
 directive|endif
 comment|/* CONFIG_IEEE80211R */
@@ -367,6 +385,7 @@ name|wpa_sm
 modifier|*
 name|sm
 parameter_list|,
+name|enum
 name|wpa_states
 name|state
 parameter_list|)
@@ -401,6 +420,7 @@ end_function
 begin_function
 specifier|static
 specifier|inline
+name|enum
 name|wpa_states
 name|wpa_sm_get_state
 parameter_list|(
@@ -531,6 +551,7 @@ name|wpa_sm
 modifier|*
 name|sm
 parameter_list|,
+name|enum
 name|wpa_alg
 name|alg
 parameter_list|,
@@ -1177,6 +1198,54 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|wpa_sm_mark_authenticated
+parameter_list|(
+name|struct
+name|wpa_sm
+modifier|*
+name|sm
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|target_ap
+parameter_list|)
+block|{
+if|if
+condition|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|mark_authenticated
+condition|)
+return|return
+name|sm
+operator|->
+name|ctx
+operator|->
+name|mark_authenticated
+argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|ctx
+argument_list|,
+name|target_ap
+argument_list|)
+return|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+end_function
+
 begin_function_decl
 name|void
 name|wpa_eapol_key_send
@@ -1329,6 +1398,9 @@ name|struct
 name|wpa_ptk
 modifier|*
 name|ptk
+parameter_list|,
+name|size_t
+name|ptk_len
 parameter_list|)
 function_decl|;
 end_function_decl

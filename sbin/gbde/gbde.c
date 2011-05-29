@@ -3809,14 +3809,10 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|i
-operator|=
 name|modfind
 argument_list|(
 literal|"g_bde"
 argument_list|)
-operator|)
 operator|<
 literal|0
 condition|)

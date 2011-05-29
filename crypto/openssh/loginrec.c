@@ -537,7 +537,7 @@ name|int
 name|login_get_lastlog_time
 parameter_list|(
 specifier|const
-name|int
+name|uid_t
 name|uid
 parameter_list|)
 block|{
@@ -587,7 +587,7 @@ modifier|*
 name|li
 parameter_list|,
 specifier|const
-name|int
+name|uid_t
 name|uid
 parameter_list|)
 block|{
@@ -631,10 +631,13 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: Cannot find account for uid %i"
+literal|"%s: Cannot find account for uid %ld"
 argument_list|,
 name|__func__
 argument_list|,
+operator|(
+name|long
+operator|)
 name|uid
 argument_list|)
 expr_stmt|;
@@ -688,7 +691,7 @@ name|logininfo
 modifier|*
 name|login_alloc_entry
 parameter_list|(
-name|int
+name|pid_t
 name|pid
 parameter_list|,
 specifier|const
@@ -779,7 +782,7 @@ name|logininfo
 modifier|*
 name|li
 parameter_list|,
-name|int
+name|pid_t
 name|pid
 parameter_list|,
 specifier|const
@@ -1210,8 +1213,6 @@ condition|)
 name|audit_session_open
 argument_list|(
 name|li
-operator|->
-name|line
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1226,8 +1227,6 @@ condition|)
 name|audit_session_close
 argument_list|(
 name|li
-operator|->
-name|line
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1352,6 +1351,38 @@ return|;
 else|#
 directive|else
 comment|/* !USE_LASTLOG */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_UTMPX
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_SETUTXDB
+argument_list|)
+operator|&&
+expr|\
+name|defined
+argument_list|(
+name|UTXDB_LASTLOGIN
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_GETUTXUSER
+argument_list|)
+return|return
+operator|(
+name|utmpx_get_entry
+argument_list|(
+name|li
+argument_list|)
+operator|)
+return|;
+endif|#
+directive|endif
 if|#
 directive|if
 literal|1
@@ -2957,6 +2988,11 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2979,6 +3015,11 @@ argument_list|,
 name|tty
 argument_list|,
 name|UTMP_FILE
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -3125,6 +3166,11 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3147,6 +3193,11 @@ argument_list|,
 name|tty
 argument_list|,
 name|UTMP_FILE
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -3193,6 +3244,16 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|close
 argument_list|(
@@ -4935,7 +4996,7 @@ name|username
 argument_list|,
 name|utx
 operator|->
-name|ut_name
+name|ut_user
 argument_list|,
 name|MIN_SIZEOF
 argument_list|(
@@ -4945,7 +5006,7 @@ name|username
 argument_list|,
 name|utx
 operator|->
-name|ut_name
+name|ut_user
 argument_list|)
 argument_list|)
 operator|==
@@ -5776,7 +5837,7 @@ name|off_t
 call|)
 argument_list|(
 operator|(
-name|long
+name|u_long
 operator|)
 name|li
 operator|->
@@ -5816,6 +5877,12 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+operator|*
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -6445,7 +6512,26 @@ end_comment
 begin_if
 if|#
 directive|if
-literal|1
+name|defined
+argument_list|(
+name|USE_UTMPX
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_SETUTXDB
+argument_list|)
+operator|&&
+expr|\
+name|defined
+argument_list|(
+name|UTXDB_LASTLOGIN
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_GETUTXUSER
+argument_list|)
 end_if
 
 begin_function
@@ -6583,6 +6669,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* USE_UTMPX&& HAVE_SETUTXDB&& UTXDB_LASTLOGIN&& HAVE_GETUTXUSER */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -6729,7 +6819,7 @@ operator|.
 name|st_mode
 operator|&
 operator|(
-name|S_IRWXG
+name|S_IXGRP
 operator||
 name|S_IRWXO
 operator|)

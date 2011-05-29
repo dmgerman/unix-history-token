@@ -377,42 +377,6 @@ value|(((b[0]& 0x30)>> 2) | ((b[1]& 0x30)>> 4))
 end_define
 
 begin_comment
-comment|/* some macros */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSM_UNIT
-parameter_list|(
-name|dev
-parameter_list|)
-value|(dev2unit(dev)>> 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PSM_NBLOCKIO
-parameter_list|(
-name|dev
-parameter_list|)
-value|(dev2unit(dev)& 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PSM_MKMINOR
-parameter_list|(
-name|unit
-parameter_list|,
-name|block
-parameter_list|)
-value|(((unit)<< 1) | ((block) ? 0:1))
-end_define
-
-begin_comment
 comment|/* ring buffer */
 end_comment
 
@@ -946,17 +910,6 @@ name|devclass_t
 name|psm_devclass
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|PSM_SOFTC
-parameter_list|(
-name|unit
-parameter_list|)
-define|\
-value|((struct psm_softc*)devclass_get_softc(psm_devclass, unit))
-end_define
 
 begin_comment
 comment|/* driver state flags (state) */
@@ -4622,6 +4575,15 @@ operator|<=
 literal|0
 condition|)
 return|return;
+name|bus_delete_resource
+argument_list|(
+name|psmc
+argument_list|,
+name|SYS_RES_IRQ
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|bus_set_resource
 argument_list|(
 name|psm
@@ -4717,8 +4679,6 @@ argument_list|,
 operator|&
 name|rid
 argument_list|,
-name|RF_SHAREABLE
-operator||
 name|RF_ACTIVE
 argument_list|)
 expr_stmt|;
@@ -5002,7 +4962,7 @@ argument_list|,
 name|KBDC_ENABLE_AUX_PORT
 argument_list|)
 expr_stmt|;
-comment|/* 	 * NOTE: `test_aux_port()' is designed to return with zero if the aux 	 * port exists and is functioning. However, some controllers appears 	 * to respond with zero even when the aux port doesn't exist. (It may 	 * be that this is only the case when the controller DOES have the aux 	 * port but the port is not wired on the motherboard.) The keyboard 	 * controllers without the port, such as the original AT, are 	 * supporsed to return with an error code or simply time out. In any 	 * case, we have to continue probing the port even when the controller 	 * passes this test. 	 * 	 * XXX: some controllers erroneously return the error code 1, 2 or 3 	 * when it has the perfectly functional aux port. We have to ignore 	 * this error code. Even if the controller HAS error with the aux 	 * port, it will be detected later... 	 * XXX: another incompatible controller returns PSM_ACK (0xfa)... 	 */
+comment|/* 	 * NOTE: `test_aux_port()' is designed to return with zero if the aux 	 * port exists and is functioning. However, some controllers appears 	 * to respond with zero even when the aux port doesn't exist. (It may 	 * be that this is only the case when the controller DOES have the aux 	 * port but the port is not wired on the motherboard.) The keyboard 	 * controllers without the port, such as the original AT, are 	 * supposed to return with an error code or simply time out. In any 	 * case, we have to continue probing the port even when the controller 	 * passes this test. 	 * 	 * XXX: some controllers erroneously return the error code 1, 2 or 3 	 * when it has a perfectly functional aux port. We have to ignore 	 * this error code. Even if the controller HAS error with the aux 	 * port, it will be detected later... 	 * XXX: another incompatible controller returns PSM_ACK (0xfa)... 	 */
 switch|switch
 condition|(
 operator|(
@@ -5110,7 +5070,7 @@ operator|&
 name|PSM_CONFIG_NORESET
 condition|)
 block|{
-comment|/* 		 * Don't try to reset the pointing device.  It may possibly be 		 * left in the unknown state, though... 		 */
+comment|/* 		 * Don't try to reset the pointing device.  It may possibly be 		 * left in an unknown state, though... 		 */
 block|}
 else|else
 block|{
@@ -5195,7 +5155,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * both the aux port and the aux device is functioning, see if the 	 * device can be enabled. NOTE: when enabled, the device will start 	 * sending data; we shall immediately disable the device once we know 	 * the device can be enabled. 	 */
+comment|/* 	 * both the aux port and the aux device are functioning, see if the 	 * device can be enabled. NOTE: when enabled, the device will start 	 * sending data; we shall immediately disable the device once we know 	 * the device can be enabled. 	 */
 if|if
 condition|(
 operator|!
@@ -6015,8 +5975,6 @@ argument_list|,
 operator|&
 name|rid
 argument_list|,
-name|RF_SHAREABLE
-operator||
 name|RF_ACTIVE
 argument_list|)
 expr_stmt|;
@@ -6091,12 +6049,7 @@ argument_list|(
 operator|&
 name|psm_cdevsw
 argument_list|,
-name|PSM_MKMINOR
-argument_list|(
-name|unit
-argument_list|,
-name|FALSE
-argument_list|)
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -6111,6 +6064,14 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
+name|dev
+operator|->
+name|si_drv1
+operator|=
+name|sc
+expr_stmt|;
+name|sc
+operator|->
 name|bdev
 operator|=
 name|make_dev
@@ -6118,12 +6079,7 @@ argument_list|(
 operator|&
 name|psm_cdevsw
 argument_list|,
-name|PSM_MKMINOR
-argument_list|(
-name|unit
-argument_list|,
-name|TRUE
-argument_list|)
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -6135,6 +6091,14 @@ literal|"bpsm%d"
 argument_list|,
 name|unit
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|bdev
+operator|->
+name|si_drv1
+operator|=
+name|sc
 expr_stmt|;
 if|if
 condition|(
@@ -6378,14 +6342,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|int
-name|unit
-init|=
-name|PSM_UNIT
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 name|struct
 name|psm_softc
 modifier|*
@@ -6403,10 +6359,9 @@ decl_stmt|;
 comment|/* Get device data */
 name|sc
 operator|=
-name|PSM_SOFTC
-argument_list|(
-name|unit
-argument_list|)
+name|dev
+operator|->
+name|si_drv1
 expr_stmt|;
 if|if
 condition|(
@@ -6454,6 +6409,8 @@ name|devclass_get_device
 argument_list|(
 name|psm_devclass
 argument_list|,
+name|sc
+operator|->
 name|unit
 argument_list|)
 argument_list|)
@@ -6690,6 +6647,8 @@ name|LOG_ERR
 argument_list|,
 literal|"psm%d: unable to set the command byte (psmopen).\n"
 argument_list|,
+name|sc
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -6767,23 +6726,14 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|int
-name|unit
-init|=
-name|PSM_UNIT
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 name|struct
 name|psm_softc
 modifier|*
 name|sc
 init|=
-name|PSM_SOFTC
-argument_list|(
-name|unit
-argument_list|)
+name|dev
+operator|->
+name|si_drv1
 decl_stmt|;
 name|int
 name|stat
@@ -6891,6 +6841,8 @@ name|LOG_ERR
 argument_list|,
 literal|"psm%d: failed to disable the aux int (psmclose).\n"
 argument_list|,
+name|sc
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -6966,6 +6918,8 @@ name|LOG_ERR
 argument_list|,
 literal|"psm%d: failed to disable the device (psmclose).\n"
 argument_list|,
+name|sc
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -6993,6 +6947,8 @@ name|LOG_DEBUG
 argument_list|,
 literal|"psm%d: failed to get status (psmclose).\n"
 argument_list|,
+name|sc
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -7032,6 +6988,8 @@ name|LOG_ERR
 argument_list|,
 literal|"psm%d: failed to disable the aux port (psmclose).\n"
 argument_list|,
+name|sc
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -7094,6 +7052,8 @@ name|devclass_get_device
 argument_list|(
 name|psm_devclass
 argument_list|,
+name|sc
+operator|->
 name|unit
 argument_list|)
 argument_list|)
@@ -7539,19 +7499,14 @@ name|int
 name|flag
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|psm_softc
 modifier|*
 name|sc
 init|=
-name|PSM_SOFTC
-argument_list|(
-name|PSM_UNIT
-argument_list|(
 name|dev
-argument_list|)
-argument_list|)
+operator|->
+name|si_drv1
 decl_stmt|;
 name|u_char
 name|buf
@@ -7606,10 +7561,11 @@ condition|)
 block|{
 if|if
 condition|(
-name|PSM_NBLOCKIO
-argument_list|(
 name|dev
-argument_list|)
+operator|!=
+name|sc
+operator|->
+name|bdev
 condition|)
 block|{
 name|splx
@@ -8315,19 +8271,14 @@ name|int
 name|flag
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|psm_softc
 modifier|*
 name|sc
 init|=
-name|PSM_SOFTC
-argument_list|(
-name|PSM_UNIT
-argument_list|(
 name|dev
-argument_list|)
-argument_list|)
+operator|->
+name|si_drv1
 decl_stmt|;
 name|u_char
 name|buf
@@ -8526,13 +8477,9 @@ name|psm_softc
 modifier|*
 name|sc
 init|=
-name|PSM_SOFTC
-argument_list|(
-name|PSM_UNIT
-argument_list|(
 name|dev
-argument_list|)
-argument_list|)
+operator|->
+name|si_drv1
 decl_stmt|;
 name|mousemode_t
 name|mode
@@ -15155,7 +15102,6 @@ operator||
 name|MOUSE_BUTTON3DOWN
 block|}
 decl_stmt|;
-specifier|register
 name|struct
 name|psm_softc
 modifier|*
@@ -16444,13 +16390,9 @@ name|psm_softc
 modifier|*
 name|sc
 init|=
-name|PSM_SOFTC
-argument_list|(
-name|PSM_UNIT
-argument_list|(
 name|dev
-argument_list|)
-argument_list|)
+operator|->
+name|si_drv1
 decl_stmt|;
 name|int
 name|s
@@ -21781,6 +21723,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|bus_delete_resource
+argument_list|(
+name|me
+argument_list|,
+name|SYS_RES_IRQ
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|bus_set_resource
 argument_list|(
 name|psm
@@ -21927,7 +21878,7 @@ argument_list|,
 operator|&
 name|rid
 argument_list|,
-name|RF_SHAREABLE
+literal|0
 argument_list|)
 expr_stmt|;
 name|bus_release_resource
@@ -21980,9 +21931,6 @@ block|{
 name|device_t
 name|atkbdc
 decl_stmt|;
-name|int
-name|rid
-decl_stmt|;
 comment|/* find the keyboard controller, which may be on acpi* or isa* bus */
 name|atkbdc
 operator|=
@@ -22023,26 +21971,6 @@ argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
-else|else
-block|{
-comment|/* 		 * If we don't have the AT keyboard controller yet, 		 * just reserve the IRQ for later use... 		 * (See psmidentify() above.) 		 */
-name|rid
-operator|=
-literal|0
-expr_stmt|;
-name|bus_alloc_resource_any
-argument_list|(
-name|dev
-argument_list|,
-name|SYS_RES_IRQ
-argument_list|,
-operator|&
-name|rid
-argument_list|,
-name|RF_SHAREABLE
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0

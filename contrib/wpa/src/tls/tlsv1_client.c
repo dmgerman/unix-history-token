@@ -18,13 +18,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sha1.h"
+file|"crypto/sha1.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tls.h"
+file|"crypto/tls.h"
 end_include
 
 begin_include
@@ -2274,9 +2274,6 @@ modifier|*
 name|ciphers
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|EAP_FAST
 name|size_t
 name|count
 decl_stmt|;
@@ -2351,6 +2348,15 @@ index|]
 operator|=
 name|TLS_DH_anon_WITH_DES_CBC_SHA
 expr_stmt|;
+comment|/* 		 * Cisco AP (at least 350 and 1200 series) local authentication 		 * server does not know how to search cipher suites from the 		 * list and seem to require that the last entry in the list is 		 * the one that it wants to use. However, TLS specification 		 * requires the list to be in the client preference order. As a 		 * workaround, add anon-DH AES-128-SHA1 again at the end of the 		 * list to allow the Cisco code to find it. 		 */
+name|suites
+index|[
+name|count
+operator|++
+index|]
+operator|=
+name|TLS_DH_anon_WITH_AES_128_CBC_SHA
+expr_stmt|;
 name|conn
 operator|->
 name|num_cipher_suites
@@ -2361,16 +2367,6 @@ block|}
 return|return
 literal|0
 return|;
-else|#
-directive|else
-comment|/* EAP_FAST */
-return|return
-operator|-
-literal|1
-return|;
-endif|#
-directive|endif
-comment|/* EAP_FAST */
 block|}
 end_function
 

@@ -72,7 +72,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 end_ifdef
 
 begin_struct
@@ -142,7 +142,7 @@ name|ps
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 name|struct
 name|procfs_status32
 modifier|*
@@ -586,7 +586,7 @@ expr_stmt|;
 break|break;
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 case|case
 name|PIOCWAIT32
 case|:

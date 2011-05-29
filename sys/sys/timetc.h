@@ -121,6 +121,17 @@ name|timecounter
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|tc_min_ticktock_freq
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 				  * Minimal tc_ticktock() call frequency, 				  * required to handle counter wraps. 				  */
+end_comment
+
 begin_function_decl
 name|u_int64_t
 name|tc_getfrequency
@@ -157,6 +168,16 @@ end_function_decl
 begin_function_decl
 name|void
 name|tc_ticktock
+parameter_list|(
+name|int
+name|cnt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cpu_tick_calibration
 parameter_list|(
 name|void
 parameter_list|)

@@ -22,17 +22,40 @@ name|INTR_VECTORS
 value|256
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|device_t
-name|pic
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|MAX_PICS
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAP_IRQ
+parameter_list|(
+name|node
+parameter_list|,
+name|pin
+parameter_list|)
+value|powerpc_get_irq(node, pin)
+end_define
+
+begin_comment
+comment|/*  * Default base address for MSI messages on PowerPC  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSI_INTEL_ADDR_BASE
+value|0xfee00000
+end_define
 
 begin_decl_stmt
 specifier|extern
 name|device_t
-name|pic8259
+name|root_pic
 decl_stmt|;
 end_decl_stmt
 
@@ -50,9 +73,32 @@ end_decl_stmt
 
 begin_function_decl
 name|void
+name|intrcnt_add
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|u_long
+modifier|*
+modifier|*
+name|countp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|powerpc_register_pic
 parameter_list|(
 name|device_t
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
 parameter_list|,
 name|u_int
 parameter_list|)
@@ -60,10 +106,12 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|powerpc_register_8259
+name|u_int
+name|powerpc_get_irq
 parameter_list|(
-name|device_t
+name|uint32_t
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -123,6 +171,19 @@ name|powerpc_teardown_intr
 parameter_list|(
 name|void
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|powerpc_bind_intr
+parameter_list|(
+name|u_int
+name|irq
+parameter_list|,
+name|u_char
+name|cpu
 parameter_list|)
 function_decl|;
 end_function_decl

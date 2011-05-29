@@ -356,11 +356,13 @@ name|vnode
 modifier|*
 name|rootvp
 decl_stmt|;
+name|struct
 name|CodaFid
 name|rootfid
 init|=
 name|INVAL_FID
 decl_stmt|;
+name|struct
 name|CodaFid
 name|ctlfid
 init|=
@@ -980,11 +982,13 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+name|struct
 name|CodaFid
 name|VFid
 decl_stmt|;
 specifier|static
 specifier|const
+name|struct
 name|CodaFid
 name|invalfid
 init|=
@@ -1036,6 +1040,7 @@ name|invalfid
 argument_list|,
 sizeof|sizeof
 argument_list|(
+expr|struct
 name|CodaFid
 argument_list|)
 argument_list|)
@@ -1479,6 +1484,7 @@ name|td
 operator|->
 name|td_proc
 decl_stmt|;
+name|struct
 name|CodaFid
 name|VFid
 decl_stmt|;

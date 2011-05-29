@@ -3358,6 +3358,13 @@ name|BUS_SPACE_MAXSIZE
 value|0xFFFFFFFF
 end_define
 
+begin_define
+define|#
+directive|define
+name|BUS_SPACE_UNRESTRICTED
+value|(~0)
+end_define
+
 begin_include
 include|#
 directive|include

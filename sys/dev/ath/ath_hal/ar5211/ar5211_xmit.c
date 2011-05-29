@@ -2954,5 +2954,39 @@ return|return;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Retrieve the rate table from the given TX completion descriptor  */
+end_comment
+
+begin_function
+name|HAL_BOOL
+name|ar5211GetTxCompletionRates
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+specifier|const
+name|struct
+name|ath_desc
+modifier|*
+name|ds0
+parameter_list|,
+name|int
+modifier|*
+name|rates
+parameter_list|,
+name|int
+modifier|*
+name|tries
+parameter_list|)
+block|{
+return|return
+name|AH_FALSE
+return|;
+block|}
+end_function
+
 end_unit
 

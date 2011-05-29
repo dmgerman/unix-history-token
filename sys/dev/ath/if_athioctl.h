@@ -198,7 +198,7 @@ comment|/* rx failed 'cuz of PHY err */
 name|u_int32_t
 name|ast_rx_phy
 index|[
-literal|32
+literal|64
 index|]
 decl_stmt|;
 comment|/* rx PHY error per-code counts */
@@ -361,9 +361,72 @@ name|ast_tx_nofrag
 decl_stmt|;
 comment|/* tx dropped 'cuz no ath frag buffer */
 name|u_int32_t
+name|ast_be_missed
+decl_stmt|;
+comment|/* missed beacons */
+name|u_int32_t
+name|ast_ani_cal
+decl_stmt|;
+comment|/* ANI calibrations performed */
+name|u_int32_t
+name|ast_rx_agg
+decl_stmt|;
+comment|/* number of aggregate frames RX'ed */
+name|u_int32_t
+name|ast_rx_halfgi
+decl_stmt|;
+comment|/* RX half-GI */
+name|u_int32_t
+name|ast_rx_2040
+decl_stmt|;
+comment|/* RX 40mhz frame */
+name|u_int32_t
+name|ast_rx_pre_crc_err
+decl_stmt|;
+comment|/* RX pre-delimiter CRC error */
+name|u_int32_t
+name|ast_rx_post_crc_err
+decl_stmt|;
+comment|/* RX post-delimiter CRC error */
+name|u_int32_t
+name|ast_rx_decrypt_busy_err
+decl_stmt|;
+comment|/* RX decrypt engine busy error */
+name|u_int32_t
+name|ast_rx_hi_rx_chain
+decl_stmt|;
+name|u_int32_t
+name|ast_tx_htprotect
+decl_stmt|;
+comment|/* HT tx frames with protection */
+name|u_int32_t
+name|ast_rx_hitqueueend
+decl_stmt|;
+comment|/* RX hit descr queue end */
+name|u_int32_t
+name|ast_tx_timeout
+decl_stmt|;
+comment|/* Global TX timeout */
+name|u_int32_t
+name|ast_tx_cst
+decl_stmt|;
+comment|/* Carrier sense timeout */
+name|u_int32_t
+name|ast_tx_xtxop
+decl_stmt|;
+comment|/* tx exceeded TXOP */
+name|u_int32_t
+name|ast_tx_timerexpired
+decl_stmt|;
+comment|/* tx exceeded TX_TIMER */
+name|u_int32_t
+name|ast_tx_desccfgerr
+decl_stmt|;
+comment|/* tx desc cfg error */
+name|u_int32_t
 name|ast_pad
 index|[
-literal|14
+literal|13
 index|]
 decl_stmt|;
 block|}

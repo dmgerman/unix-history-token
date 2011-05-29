@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* compress.c -- compress a memory buffer  * Copyright (C) 1995-2003 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* compress.c -- compress a memory buffer  * Copyright (C) 1995-2005 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -315,7 +315,13 @@ operator|>>
 literal|14
 operator|)
 operator|+
-literal|11
+operator|(
+name|sourceLen
+operator|>>
+literal|25
+operator|)
+operator|+
+literal|13
 return|;
 block|}
 end_function

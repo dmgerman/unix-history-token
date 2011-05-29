@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -70,7 +76,7 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-name|int
+name|u_long
 name|i
 decl_stmt|,
 name|j
@@ -139,7 +145,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"BRK(0)=%x "
+literal|"BRK(0)=%p "
 argument_list|,
 name|sbrk
 argument_list|(
@@ -152,8 +158,10 @@ operator|=
 name|malloc
 argument_list|(
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|foo
+argument_list|)
 operator|*
 name|NBUCKETS
 argument_list|)
@@ -165,8 +173,10 @@ argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|foo
+argument_list|)
 operator|*
 name|NBUCKETS
 argument_list|)
@@ -250,7 +260,7 @@ index|[
 name|j
 index|]
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 block|}
@@ -320,7 +330,7 @@ index|[
 name|j
 index|]
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -343,7 +353,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"BRK(1)=%x "
+literal|"BRK(1)=%p "
 argument_list|,
 name|sbrk
 argument_list|(
@@ -386,13 +396,13 @@ index|[
 name|j
 index|]
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 block|}
 name|printf
 argument_list|(
-literal|"BRK(2)=%x NOPS=%lu NBUCKETS=%lu NSIZE=%lu\n"
+literal|"BRK(2)=%p NOPS=%lu NBUCKETS=%lu NSIZE=%lu\n"
 argument_list|,
 name|sbrk
 argument_list|(

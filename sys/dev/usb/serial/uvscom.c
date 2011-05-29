@@ -76,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/linker_set.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
 end_include
 
@@ -188,11 +182,11 @@ directive|include
 file|<dev/usb/serial/usb_serial.h>
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -1655,6 +1649,16 @@ goto|goto
 name|detach
 goto|;
 block|}
+name|ucom_set_pnpinfo_usb
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_super_ucom
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
 comment|/* start interrupt pipe */
 name|mtx_lock
 argument_list|(
@@ -1759,8 +1763,6 @@ operator|&
 name|sc
 operator|->
 name|sc_ucom
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|usbd_transfer_unsetup

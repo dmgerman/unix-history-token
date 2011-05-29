@@ -15704,16 +15704,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Allow the target to compare Y with X without leaking either into      a register.  */
-switch|switch
+if|if
 condition|(
 name|HAVE_stack_protect_test
 operator|!=
 literal|0
 condition|)
 block|{
-case|case
-literal|1
-case|:
 name|tmp
 operator|=
 name|gen_stack_protect_test
@@ -15735,10 +15732,11 @@ argument_list|(
 name|tmp
 argument_list|)
 expr_stmt|;
-break|break;
+goto|goto
+name|done
+goto|;
 block|}
-comment|/* FALLTHRU */
-default|default:
+block|}
 name|emit_cmp_and_jump_insns
 argument_list|(
 name|x
@@ -15756,8 +15754,8 @@ argument_list|,
 name|label
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
+name|done
+label|:
 comment|/* The noreturn predictor has been moved to the tree level.  The rtl-level      predictors estimate this branch about 20%, which isn't enough to get      things moved out of line.  Since this is the only extant case of adding      a noreturn function at the rtl level, it doesn't seem worth doing ought      except adding the prediction by hand.  */
 name|tmp
 operator|=

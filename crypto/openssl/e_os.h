@@ -334,10 +334,6 @@ parameter_list|,
 name|n
 parameter_list|)
 value|send((s),(b),(n),0)
-define|#
-directive|define
-name|EADDRINUSE
-value|WSAEADDRINUSE
 elif|#
 directive|elif
 name|defined

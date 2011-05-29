@@ -15,12 +15,25 @@ directive|define
 name|_LINUX_EMUL_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|EMUL_SHARED_HASXSTAT
+value|0x01
+end_define
+
 begin_struct
 struct|struct
 name|linux_emuldata_shared
 block|{
 name|int
 name|refs
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+name|int
+name|xstat
 decl_stmt|;
 name|pid_t
 name|group_pid
@@ -68,9 +81,9 @@ name|pdeath_signal
 decl_stmt|;
 comment|/* parent death signal */
 name|int
-name|used_requeue
+name|flags
 decl_stmt|;
-comment|/* uses deprecated futex op */
+comment|/* different emuldata flags */
 name|struct
 name|linux_robust_list_head
 modifier|*
@@ -181,6 +194,21 @@ name|EMUL_DONTLOCK
 value|0
 end_define
 
+begin_comment
+comment|/* emuldata flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_XDEPR_REQUEUEOP
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* uses deprecated 						   futex REQUEUE op*/
+end_comment
+
 begin_function_decl
 name|int
 name|linux_proc_init
@@ -214,11 +242,8 @@ begin_function_decl
 name|void
 name|linux_schedtail
 parameter_list|(
-name|void
-modifier|*
-parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -238,6 +263,19 @@ parameter_list|,
 name|struct
 name|image_params
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|linux_kill_threads
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

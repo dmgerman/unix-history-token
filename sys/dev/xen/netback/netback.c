@@ -1573,6 +1573,8 @@ block|{
 name|sctp_delayed_cksum
 argument_list|(
 name|m
+argument_list|,
+name|iphlen
 argument_list|)
 expr_stmt|;
 name|sw_csum
@@ -7528,6 +7530,8 @@ name|OID_AUTO
 argument_list|,
 literal|"txring"
 argument_list|,
+name|CTLTYPE_STRING
+operator||
 name|CTLFLAG_RD
 argument_list|,
 name|dev
@@ -7560,6 +7564,8 @@ name|OID_AUTO
 argument_list|,
 literal|"rxring"
 argument_list|,
+name|CTLTYPE_STRING
+operator||
 name|CTLFLAG_RD
 argument_list|,
 name|dev

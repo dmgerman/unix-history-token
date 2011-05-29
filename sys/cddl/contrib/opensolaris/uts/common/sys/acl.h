@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_ACL_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -134,13 +127,9 @@ comment|/* allow or deny */
 block|}
 name|ace_t
 typedef|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+ifndef|#
+directive|ifndef
 name|_KERNEL
-argument_list|)
 typedef|typedef
 name|struct
 name|acl_info
@@ -462,6 +451,10 @@ define|#
 directive|define
 name|ACE_ALL_PERMS
 value|(ACE_READ_DATA|ACE_LIST_DIRECTORY|ACE_WRITE_DATA| \     ACE_ADD_FILE|ACE_APPEND_DATA|ACE_ADD_SUBDIRECTORY|ACE_READ_NAMED_ATTRS| \     ACE_WRITE_NAMED_ATTRS|ACE_EXECUTE|ACE_DELETE_CHILD|ACE_READ_ATTRIBUTES| \     ACE_WRITE_ATTRIBUTES|ACE_DELETE|ACE_READ_ACL|ACE_WRITE_ACL| \     ACE_WRITE_OWNER|ACE_SYNCHRONIZE)
+define|#
+directive|define
+name|ACE_ALL_WRITE_PERMS
+value|(ACE_WRITE_DATA|ACE_APPEND_DATA| \     ACE_WRITE_ATTRIBUTES|ACE_WRITE_NAMED_ATTRS|ACE_WRITE_ACL| \     ACE_WRITE_OWNER|ACE_DELETE|ACE_DELETE_CHILD)
 define|#
 directive|define
 name|ACE_READ_PERMS

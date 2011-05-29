@@ -18,13 +18,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sha1.h"
+file|"wpabuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"wpabuf.h"
+file|"crypto/sha1.h"
 end_include
 
 begin_include

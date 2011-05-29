@@ -136,6 +136,12 @@ literal|"a backslash character"
 block|}
 block|,
 block|{
+literal|"CSBACK"
+block|,
+literal|"a backslash character in single quotes"
+block|}
+block|,
+block|{
 literal|"CSQUOTE"
 block|,
 literal|"single quote"
@@ -199,6 +205,12 @@ block|{
 literal|"CSPCL"
 block|,
 literal|"these terminate a word"
+block|}
+block|,
+block|{
+literal|"CIGN"
+block|,
+literal|"character should be ignored"
 block|}
 block|,
 block|{
@@ -1114,6 +1126,13 @@ argument_list|)
 expr_stmt|;
 name|add
 argument_list|(
+literal|"\\"
+argument_list|,
+literal|"CSBACK"
+argument_list|)
+expr_stmt|;
+name|add
+argument_list|(
 literal|"'"
 argument_list|,
 literal|"CENDQUOTE"
@@ -1165,16 +1184,9 @@ argument_list|)
 expr_stmt|;
 name|add
 argument_list|(
-literal|"'"
-argument_list|,
-literal|"CSQUOTE"
-argument_list|)
-expr_stmt|;
-name|add
-argument_list|(
 literal|"\""
 argument_list|,
-literal|"CDQUOTE"
+literal|"CIGN"
 argument_list|)
 expr_stmt|;
 name|add
@@ -1231,14 +1243,14 @@ argument_list|)
 expr_stmt|;
 name|add
 argument_list|(
-literal|"abcdefghijklmnopqrstucvwxyz"
+literal|"abcdefghijklmnopqrstuvwxyz"
 argument_list|,
 literal|"ISLOWER"
 argument_list|)
 expr_stmt|;
 name|add
 argument_list|(
-literal|"ABCDEFGHIJKLMNOPQRSTUCVWXYZ"
+literal|"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 argument_list|,
 literal|"ISUPPER"
 argument_list|)
@@ -1413,6 +1425,15 @@ index|[
 name|base
 operator|+
 name|CTLQUOTEMARK
+index|]
+operator|=
+literal|"CCTL"
+expr_stmt|;
+name|syntax
+index|[
+name|base
+operator|+
+name|CTLQUOTEEND
 index|]
 operator|=
 literal|"CCTL"
@@ -1631,17 +1652,17 @@ name|macro
 index|[]
 init|=
 block|{
-literal|"#define is_digit(c)\t((is_type+SYNBASE)[c]& ISDIGIT)"
+literal|"#define is_digit(c)\t((is_type+SYNBASE)[(int)c]& ISDIGIT)"
 block|,
 literal|"#define is_eof(c)\t((c) == PEOF)"
 block|,
-literal|"#define is_alpha(c)\t(((c)< CTLESC || (c)> CTLQUOTEMARK)&& isalpha((unsigned char) (c)))"
+literal|"#define is_alpha(c)\t((is_type+SYNBASE)[(int)c]& (ISUPPER|ISLOWER))"
 block|,
-literal|"#define is_name(c)\t(((c)< CTLESC || (c)> CTLQUOTEMARK)&& ((c) == '_' || isalpha((unsigned char) (c))))"
+literal|"#define is_name(c)\t((is_type+SYNBASE)[(int)c]& (ISUPPER|ISLOWER|ISUNDER))"
 block|,
-literal|"#define is_in_name(c)\t(((c)< CTLESC || (c)> CTLQUOTEMARK)&& ((c) == '_' || isalnum((unsigned char) (c))))"
+literal|"#define is_in_name(c)\t((is_type+SYNBASE)[(int)c]& (ISUPPER|ISLOWER|ISUNDER|ISDIGIT))"
 block|,
-literal|"#define is_special(c)\t((is_type+SYNBASE)[c]& (ISSPECL|ISDIGIT))"
+literal|"#define is_special(c)\t((is_type+SYNBASE)[(int)c]& (ISSPECL|ISDIGIT))"
 block|,
 name|NULL
 block|}

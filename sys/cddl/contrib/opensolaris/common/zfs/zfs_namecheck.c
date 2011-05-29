@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_comment
 comment|/*  * Common name validation routines for ZFS.  These routines are shared by the  * userland code as well as the ioctl() layer to ensure that we don't  * inadvertently expose a hole through direct ioctl()s that never gets tested.  * In userland, however, we want significantly more information about _why_ the  * name is invalid.  In the kernel, we only care whether it's valid or not.  * Each routine therefore takes a 'namecheck_err_t' which describes exactly why  * the name failed to validate.  *  * Each function returns 0 on success, -1 on error.  */
@@ -139,7 +132,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Snapshot names must be made up of alphanumeric characters plus the following  * characters:  *  * 	[-_.:]  */
+comment|/*  * Snapshot names must be made up of alphanumeric characters plus the following  * characters:  *  * 	[-_.: ]  */
 end_comment
 
 begin_function
@@ -1105,44 +1098,6 @@ literal|1
 operator|)
 return|;
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Check if the dataset name is private for internal usage.  * '$' is reserved for internal dataset names. e.g. "$MOS"  *  * Return 1 if the given name is used internally.  * Return 0 if it is not.  */
-end_comment
-
-begin_function
-name|int
-name|dataset_name_hidden
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|)
-block|{
-if|if
-condition|(
-name|strchr
-argument_list|(
-name|name
-argument_list|,
-literal|'$'
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 return|return
 operator|(
 literal|0

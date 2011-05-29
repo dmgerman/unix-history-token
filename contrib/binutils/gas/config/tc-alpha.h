@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This file is tc-alpha.h    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Written by Ken Raeburn<raeburn@cygnus.com>.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* This file is tc-alpha.h    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    2005, 2006    Free Software Foundation, Inc.    Written by Ken Raeburn<raeburn@cygnus.com>.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -96,35 +96,29 @@ name|alpha_reloc_tag
 struct_decl|;
 end_struct_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|alpha_force_relocation
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fix
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|alpha_fix_adjustable
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fix
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern
@@ -170,7 +164,7 @@ name|RELOC_REQUIRES_SYMBOL
 end_define
 
 begin_comment
-comment|/* Values passed to md_apply_fix3 don't include the symbol value.  */
+comment|/* Values passed to md_apply_fix don't include the symbol value.  */
 end_comment
 
 begin_define
@@ -289,32 +283,25 @@ name|md_number_to_chars
 value|number_to_chars_littleendian
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|tc_get_register
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-name|frame
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|alpha_frob_ecoff_data
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -326,19 +313,16 @@ parameter_list|)
 value|alpha_define_label (sym)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|alpha_define_label
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|symbolS
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -350,18 +334,15 @@ parameter_list|)
 value|alpha_cons_align (nbytes)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|alpha_cons_align
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -373,20 +354,17 @@ parameter_list|)
 value|alpha_handle_align (fragp)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|alpha_handle_align
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|frag
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -409,18 +387,15 @@ parameter_list|()
 value|alpha_frob_file_before_adjust ()
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|alpha_frob_file_before_adjust
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -434,7 +409,7 @@ name|DIFF_EXPR_OK
 end_define
 
 begin_comment
-comment|/* foo-. gets turned into PC relative relocs */
+comment|/* foo-. gets turned into PC relative relocs.  */
 end_comment
 
 begin_ifdef
@@ -450,22 +425,19 @@ name|md_elf_section_letter
 value|alpha_elf_section_letter
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|alpha_elf_section_letter
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -474,22 +446,19 @@ name|md_elf_section_flags
 value|alpha_elf_section_flags
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|flagword
 name|alpha_elf_section_flags
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|flagword
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -529,18 +498,15 @@ parameter_list|()
 value|alpha_before_fix ()
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|alpha_before_fix
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -555,18 +521,15 @@ name|md_end
 value|alpha_elf_md_end
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|alpha_elf_md_end
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -593,13 +556,13 @@ name|fix
 modifier|*
 name|next_reloc
 decl_stmt|;
-comment|/* next !lituse or !gpdisp */
+comment|/* Next !lituse or !gpdisp.  */
 name|struct
 name|alpha_reloc_tag
 modifier|*
 name|info
 decl_stmt|;
-comment|/* other members with same sequence */
+comment|/* Other members with same sequence.  */
 block|}
 struct|;
 end_struct
@@ -616,7 +579,7 @@ parameter_list|(
 name|FIX
 parameter_list|)
 define|\
-value|do {									\   FIX->tc_fix_data.next_reloc = (struct fix *) 0;			\   FIX->tc_fix_data.info = (struct alpha_reloc_tag *) 0;			\ } while (0)
+value|do {									\   FIX->tc_fix_data.next_reloc = NULL;					\   FIX->tc_fix_data.info = NULL;						\ } while (0)
 end_define
 
 begin_comment
@@ -678,7 +641,7 @@ begin_define
 define|#
 directive|define
 name|DWARF2_CIE_DATA_ALIGNMENT
-value|-8
+value|(-8)
 end_define
 
 end_unit

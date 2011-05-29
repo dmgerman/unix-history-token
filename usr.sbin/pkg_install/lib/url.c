@@ -432,6 +432,29 @@ argument_list|,
 name|fetchLastErrString
 argument_list|)
 expr_stmt|;
+comment|/* If the fetch fails, yank the package. */
+if|if
+condition|(
+name|keep_package
+operator|&&
+name|unlink
+argument_list|(
+name|pkg
+argument_list|)
+operator|<
+literal|0
+operator|&&
+name|Verbose
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"failed to remove partially fetched package: %s"
+argument_list|,
+name|pkg
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|NULL
 return|;

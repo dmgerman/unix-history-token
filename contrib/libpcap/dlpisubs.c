@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/dlpisubs.c,v 1.1.2.2 2008-04-04 19:39:05 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/dlpisubs.c,v 1.3 2008-12-02 16:40:19 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +41,28 @@ include|#
 directive|include
 file|"config.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DL_IPATM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DL_IPATM
+value|0x12
+end_define
+
+begin_comment
+comment|/* ATM Classical IP interface */
+end_comment
 
 begin_endif
 endif|#
@@ -87,6 +109,13 @@ end_comment
 begin_comment
 comment|/* 	 * Size of the buffer to allocate for packet data we read; this is 	 * what the value used to be - there's no particular reason why it 	 * should be tied to MAXDLBUF, but we'll leave it as this for now. 	 */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXDLBUF
+value|8192
+end_define
 
 begin_define
 define|#
@@ -195,6 +224,12 @@ directive|include
 file|"dlpisubs.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_BUFMOD_H
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -211,6 +246,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Get the packet statistics.  */
@@ -1281,6 +1321,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_BUFMOD_H
+end_ifdef
+
 begin_comment
 comment|/*  * Write stream error message to errbuf.  */
 end_comment
@@ -1321,6 +1367,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

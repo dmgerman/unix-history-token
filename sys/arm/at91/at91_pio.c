@@ -92,7 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/at91/at91rm92reg.h>
+file|<arm/at91/at91reg.h>
 end_include
 
 begin_include
@@ -169,6 +169,7 @@ name|off
 parameter_list|)
 block|{
 return|return
+operator|(
 name|bus_read_4
 argument_list|(
 name|sc
@@ -177,6 +178,7 @@ name|mem_res
 argument_list|,
 name|off
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1182,7 +1184,7 @@ name|uint32_t
 operator|*
 operator|)
 operator|(
-name|AT91RM92_BASE
+name|AT91_BASE
 operator|+
 name|pio
 operator|)
@@ -1254,7 +1256,7 @@ name|uint32_t
 operator|*
 operator|)
 operator|(
-name|AT91RM92_BASE
+name|AT91_BASE
 operator|+
 name|pio
 operator|)
@@ -1323,7 +1325,7 @@ name|uint32_t
 operator|*
 operator|)
 operator|(
-name|AT91RM92_BASE
+name|AT91_BASE
 operator|+
 name|pio
 operator|)
@@ -1360,7 +1362,7 @@ name|uint32_t
 operator|*
 operator|)
 operator|(
-name|AT91RM92_BASE
+name|AT91_BASE
 operator|+
 name|pio
 operator|)
@@ -1400,7 +1402,7 @@ name|uint32_t
 operator|*
 operator|)
 operator|(
-name|AT91RM92_BASE
+name|AT91_BASE
 operator|+
 name|pio
 operator|)
@@ -1460,7 +1462,7 @@ name|uint32_t
 operator|*
 operator|)
 operator|(
-name|AT91RM92_BASE
+name|AT91_BASE
 operator|+
 name|pio
 operator|)
@@ -1497,7 +1499,7 @@ name|uint32_t
 operator|*
 operator|)
 operator|(
-name|AT91RM92_BASE
+name|AT91_BASE
 operator|+
 name|pio
 operator|)
@@ -1534,7 +1536,7 @@ name|uint32_t
 operator|*
 operator|)
 operator|(
-name|AT91RM92_BASE
+name|AT91_BASE
 operator|+
 name|pio
 operator|)
@@ -1583,7 +1585,7 @@ name|uint32_t
 operator|*
 operator|)
 operator|(
-name|AT91RM92_BASE
+name|AT91_BASE
 operator|+
 name|pio
 operator|)
@@ -1638,7 +1640,7 @@ name|uint32_t
 operator|*
 operator|)
 operator|(
-name|AT91RM92_BASE
+name|AT91_BASE
 operator|+
 name|pio
 operator|)
@@ -1687,7 +1689,7 @@ name|uint32_t
 operator|*
 operator|)
 operator|(
-name|AT91RM92_BASE
+name|AT91_BASE
 operator|+
 name|pio
 operator|)

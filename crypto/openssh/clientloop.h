@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: clientloop.h,v 1.22 2008/06/12 15:19:17 djm Exp $ */
+comment|/* $OpenBSD: clientloop.h,v 1.25 2010/06/25 23:15:36 djm Exp $ */
 end_comment
 
 begin_comment
@@ -45,6 +45,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|u_int
 parameter_list|,
 name|u_int
 parameter_list|,
@@ -198,7 +200,7 @@ begin_define
 define|#
 directive|define
 name|SSHMUX_VER
-value|2
+value|4
 end_define
 
 begin_comment
@@ -241,59 +243,28 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SSHMUX_FLAG_TTY
-value|(1)
+name|SSHMUX_COMMAND_STDIO_FWD
+value|4
 end_define
 
 begin_comment
-comment|/* Request tty on open */
+comment|/* Open stdio fwd (ssh -W) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SSHMUX_FLAG_SUBSYS
-value|(1<<1)
+name|SSHMUX_COMMAND_FORWARD
+value|5
 end_define
 
 begin_comment
-comment|/* Subsystem request on open */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSHMUX_FLAG_X11_FWD
-value|(1<<2)
-end_define
-
-begin_comment
-comment|/* Request X11 forwarding */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSHMUX_FLAG_AGENT_FWD
-value|(1<<3)
-end_define
-
-begin_comment
-comment|/* Request agent forwarding */
+comment|/* Forward only, no command */
 end_comment
 
 begin_function_decl
 name|void
 name|muxserver_listen
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|muxserver_accept_control
 parameter_list|(
 name|void
 parameter_list|)
@@ -307,6 +278,18 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mux_exit_message
+parameter_list|(
+name|Channel
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

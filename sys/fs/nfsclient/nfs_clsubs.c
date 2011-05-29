@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -168,12 +174,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/nfsclient/nfs_lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in.h>
 end_include
 
@@ -201,7 +201,7 @@ name|enum
 name|nfsiod_state
 name|ncl_iodwant
 index|[
-name|NFS_MAXRAHEAD
+name|NFS_MAXASYNCDAEMON
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -213,7 +213,7 @@ name|nfsmount
 modifier|*
 name|ncl_iodmount
 index|[
-name|NFS_MAXRAHEAD
+name|NFS_MAXASYNCDAEMON
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -238,6 +238,13 @@ specifier|extern
 name|struct
 name|nfsstats
 name|newnfsstats
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|task
+name|ncl_nfsiodnew_task
 decl_stmt|;
 end_decl_stmt
 
@@ -522,7 +529,7 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-name|printf
+name|vprintf
 argument_list|(
 name|fmt
 argument_list|,
@@ -558,7 +565,7 @@ end_include
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfs
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -573,7 +580,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -632,6 +639,8 @@ name|nmp
 decl_stmt|;
 name|int
 name|timeo
+decl_stmt|,
+name|mustflush
 decl_stmt|;
 name|np
 operator|=
@@ -658,6 +667,14 @@ operator|->
 name|v_mount
 argument_list|)
 expr_stmt|;
+name|mustflush
+operator|=
+name|nfscl_mustflush
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+comment|/* must be before mtx_lock() */
 ifdef|#
 directive|ifdef
 name|NFS_ACDEBUG
@@ -860,6 +877,18 @@ name|n_attrstamp
 operator|)
 operator|>=
 name|timeo
+operator|&&
+operator|(
+name|mustflush
+operator|!=
+literal|0
+operator|||
+name|np
+operator|->
+name|n_attrstamp
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 name|newnfsstats
@@ -875,6 +904,18 @@ operator|->
 name|n_mtx
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NFS_ACDEBUG
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* ncl_printf() */
+endif|#
+directive|endif
 return|return
 operator|(
 name|ENOENT
@@ -1138,20 +1179,16 @@ operator|<
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-if|if
-condition|(
-name|add
-condition|)
-name|panic
+name|KASSERT
 argument_list|(
+operator|!
+name|add
+argument_list|,
+operator|(
 literal|"nfs getcookie add at<= 0"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 operator|&
@@ -1397,24 +1434,19 @@ argument_list|(
 name|vp
 argument_list|)
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|vp
 operator|->
 name|v_type
-operator|!=
+operator|==
 name|VDIR
-condition|)
-name|panic
-argument_list|(
+argument_list|,
+operator|(
 literal|"nfs: invaldir not dir"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|ncl_dircookie_lock
 argument_list|(
 name|np
@@ -1674,7 +1706,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NFS_MAXRAHEAD
+name|NFS_MAXASYNCDAEMON
 condition|;
 name|i
 operator|++
@@ -1695,6 +1727,18 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|TASK_INIT
+argument_list|(
+operator|&
+name|ncl_nfsiodnew_task
+argument_list|,
+literal|0
+argument_list|,
+name|ncl_nfsiodnew_tq
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|ncl_nhinit
 argument_list|()
 expr_stmt|;

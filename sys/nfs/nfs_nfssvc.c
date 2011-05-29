@@ -265,6 +265,21 @@ operator|->
 name|flag
 argument_list|)
 expr_stmt|;
+comment|/* Allow anyone to get the stats. */
+if|if
+condition|(
+operator|(
+name|uap
+operator|->
+name|flag
+operator|&
+operator|~
+name|NFSSVC_GETSTATS
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
 name|error
 operator|=
 name|priv_check
@@ -277,12 +292,15 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 name|error
 operator|=
 name|EINVAL
@@ -417,6 +435,8 @@ operator||
 name|NFSSVC_DUMPCLIENTS
 operator||
 name|NFSSVC_DUMPLOCKS
+operator||
+name|NFSSVC_BACKUPSTABLE
 operator|)
 operator|)
 operator|&&

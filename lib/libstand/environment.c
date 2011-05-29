@@ -115,7 +115,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Some notes:  *  * If the EV_VOLATILE flag is set, a copy of the variable is made.  * If EV_DYNAMIC is set, the the variable has been allocated with  * malloc and ownership transferred to the environment.  * If (value) is NULL, the variable is set but has no value.  */
+comment|/*  * Some notes:  *  * If the EV_VOLATILE flag is set, a copy of the variable is made.  * If EV_DYNAMIC is set, the variable has been allocated with  * malloc and ownership transferred to the environment.  * If (value) is NULL, the variable is set but has no value.  */
 end_comment
 
 begin_function
@@ -810,14 +810,17 @@ name|struct
 name|env_var
 modifier|*
 name|ev
+name|__unused
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 specifier|const
 name|void
 modifier|*
 name|value
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -836,6 +839,7 @@ name|struct
 name|env_var
 modifier|*
 name|ev
+name|__unused
 parameter_list|)
 block|{
 return|return

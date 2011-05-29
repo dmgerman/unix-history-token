@@ -1979,6 +1979,18 @@ argument_list|(
 name|ss
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|IEEE80211_SCAN_BGSCAN
+condition|)
+name|ic
+operator|->
+name|ic_flags_ext
+operator||=
+name|IEEE80211_FEXT_BGSCAN
+expr_stmt|;
 comment|/* NB: flush frames rx'd before 1st channel change */
 name|SCAN_PRIVATE
 argument_list|(
@@ -2066,6 +2078,9 @@ name|ss_scan_task
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+literal|1
+return|;
 block|}
 else|else
 block|{
@@ -2092,13 +2107,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-operator|(
-name|ic
-operator|->
-name|ic_flags
-operator|&
-name|IEEE80211_F_SCAN
-operator|)
+literal|0
 return|;
 block|}
 end_function

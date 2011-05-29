@@ -16,7 +16,7 @@ comment|/*-------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/* ------------------------------------------------------------------    This file is part of bzip2/libbzip2, a program and library for    lossless, block-sorting data compression.     bzip2/libbzip2 version 1.0.5 of 10 December 2007    Copyright (C) 1996-2007 Julian Seward<jseward@bzip.org>     Please read the WARNING, DISCLAIMER and PATENTS sections in the     README file.     This program is released under the terms of the license contained    in the file LICENSE.    ------------------------------------------------------------------ */
+comment|/* ------------------------------------------------------------------    This file is part of bzip2/libbzip2, a program and library for    lossless, block-sorting data compression.     bzip2/libbzip2 version 1.0.6 of 6 September 2010    Copyright (C) 1996-2010 Julian Seward<jseward@bzip.org>     Please read the WARNING, DISCLAIMER and PATENTS sections in the     README file.     This program is released under the terms of the license contained    in the file LICENSE.    ------------------------------------------------------------------ */
 end_comment
 
 begin_include
@@ -1979,6 +1979,22 @@ literal|1
 expr_stmt|;
 do|do
 block|{
+comment|/* Check that N doesn't get too big, so that es doesn't                   go negative.  The maximum value that can be                   RUNA/RUNB encoded is equal to the block size (post                   the initial RLE), viz, 900k, so bounding N at 2                   million should guard against overflow without                   rejecting any legitimate inputs. */
+if|if
+condition|(
+name|N
+operator|>=
+literal|2
+operator|*
+literal|1024
+operator|*
+literal|1024
+condition|)
+name|RETURN
+argument_list|(
+name|BZ_DATA_ERROR
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|nextSym
@@ -2713,6 +2729,48 @@ name|BZ_DATA_ERROR
 argument_list|)
 expr_stmt|;
 comment|/*-- Set up cftab to facilitate generation of T^(-1) --*/
+comment|/* Check: unzftab entries in range. */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<=
+literal|255
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|s
+operator|->
+name|unzftab
+index|[
+name|i
+index|]
+operator|<
+literal|0
+operator|||
+name|s
+operator|->
+name|unzftab
+index|[
+name|i
+index|]
+operator|>
+name|nblock
+condition|)
+name|RETURN
+argument_list|(
+name|BZ_DATA_ERROR
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Actually generate cftab. */
 name|s
 operator|->
 name|cftab
@@ -2780,6 +2838,7 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
+comment|/* Check: cftab entries in range. */
 for|for
 control|(
 name|i
@@ -2816,6 +2875,47 @@ name|nblock
 condition|)
 block|{
 comment|/* s->cftab[i] can legitimately be == nblock */
+name|RETURN
+argument_list|(
+name|BZ_DATA_ERROR
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/* Check: cftab entries non-descending. */
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<=
+literal|256
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|s
+operator|->
+name|cftab
+index|[
+name|i
+operator|-
+literal|1
+index|]
+operator|>
+name|s
+operator|->
+name|cftab
+index|[
+name|i
+index|]
+condition|)
+block|{
 name|RETURN
 argument_list|(
 name|BZ_DATA_ERROR

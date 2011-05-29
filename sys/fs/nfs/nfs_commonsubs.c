@@ -242,6 +242,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* undef */
@@ -253,6 +255,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* undef */
@@ -264,6 +268,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* undef */
@@ -275,6 +281,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_SHARED
 block|}
 block|,
 comment|/* Access */
@@ -286,6 +294,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Close */
@@ -297,6 +307,8 @@ block|,
 literal|0
 block|,
 literal|1
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Commit */
@@ -308,6 +320,8 @@ block|,
 literal|1
 block|,
 literal|1
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Create */
@@ -319,6 +333,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Delegpurge */
@@ -330,6 +346,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Delegreturn */
@@ -341,6 +359,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_SHARED
 block|}
 block|,
 comment|/* Getattr */
@@ -352,6 +372,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* GetFH */
@@ -363,6 +385,8 @@ block|,
 literal|1
 block|,
 literal|1
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Link */
@@ -374,6 +398,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Lock */
@@ -385,6 +411,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* LockT */
@@ -396,6 +424,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* LockU */
@@ -407,6 +437,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Lookup */
@@ -418,6 +450,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Lookupp */
@@ -429,6 +463,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* NVerify */
@@ -440,6 +476,8 @@ block|,
 literal|0
 block|,
 literal|1
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Open */
@@ -451,6 +489,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* OpenAttr */
@@ -462,6 +502,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* OpenConfirm */
@@ -473,6 +515,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* OpenDowngrade */
@@ -484,6 +528,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* PutFH */
@@ -495,6 +541,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* PutPubFH */
@@ -506,6 +554,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* PutRootFH */
@@ -517,6 +567,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_SHARED
 block|}
 block|,
 comment|/* Read */
@@ -528,6 +580,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_SHARED
 block|}
 block|,
 comment|/* Readdir */
@@ -539,6 +593,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_SHARED
 block|}
 block|,
 comment|/* ReadLink */
@@ -550,6 +606,8 @@ block|,
 literal|1
 block|,
 literal|1
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Remove */
@@ -561,6 +619,8 @@ block|,
 literal|1
 block|,
 literal|1
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Rename */
@@ -572,6 +632,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Renew */
@@ -583,6 +645,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* RestoreFH */
@@ -594,6 +658,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* SaveFH */
@@ -605,6 +671,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* SecInfo */
@@ -616,6 +684,8 @@ block|,
 literal|1
 block|,
 literal|1
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Setattr */
@@ -627,6 +697,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* SetClientID */
@@ -638,6 +710,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* SetClientIDConfirm */
@@ -649,6 +723,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Verify */
@@ -660,6 +736,8 @@ block|,
 literal|1
 block|,
 literal|1
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Write */
@@ -671,6 +749,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* ReleaseLockOwner */
@@ -9277,7 +9357,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Implement sleep locks for newnfs. The nfslock_usecnt allows for a  * shared lock and the NFSXXX_LOCK flag permits an exclusive lock.  * The first argument is a pointer to an nfsv4lock structure.  * The second argument is 1 iff a blocking lock is wanted.  * If this argument is 0, the call waits until no thread either wants nor  * holds an exclusive lock.  * It returns 1 if the lock was acquired, 0 otherwise.  * If several processes call this function concurrently wanting the exclusive  * lock, one will get the lock and the rest will return without getting the  * lock. (If the caller must have the lock, it simply calls this function in a  *  loop until the function returns 1 to indicate the lock was acquired.)  * Any usecnt must be decremented by calling nfsv4_relref() before  * calling nfsv4_lock(). It was done this way, so nfsv4_lock() could  * be called in a loop.  * The last argument is set to indicate if the call slept, iff not NULL.  */
+comment|/*  * Implement sleep locks for newnfs. The nfslock_usecnt allows for a  * shared lock and the NFSXXX_LOCK flag permits an exclusive lock.  * The first argument is a pointer to an nfsv4lock structure.  * The second argument is 1 iff a blocking lock is wanted.  * If this argument is 0, the call waits until no thread either wants nor  * holds an exclusive lock.  * It returns 1 if the lock was acquired, 0 otherwise.  * If several processes call this function concurrently wanting the exclusive  * lock, one will get the lock and the rest will return without getting the  * lock. (If the caller must have the lock, it simply calls this function in a  *  loop until the function returns 1 to indicate the lock was acquired.)  * Any usecnt must be decremented by calling nfsv4_relref() before  * calling nfsv4_lock(). It was done this way, so nfsv4_lock() could  * be called in a loop.  * The isleptp argument is set to indicate if the call slept, iff not NULL  * and the mp argument indicates to check for a forced dismount, iff not  * NULL.  */
 end_comment
 
 begin_function
@@ -9300,6 +9380,11 @@ parameter_list|,
 name|void
 modifier|*
 name|mutex
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+name|mp
 parameter_list|)
 block|{
 if|if
@@ -9374,6 +9459,36 @@ name|NFSV4LOCK_LOCKWANTED
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|mp
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|mp
+operator|->
+name|mnt_kern_flag
+operator|&
+name|MNTK_UNMOUNTF
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|lp
+operator|->
+name|nfslock_lock
+operator|&=
+operator|~
+name|NFSV4LOCK_LOCKWANTED
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|lp
 operator|->
 name|nfslock_lock
@@ -9550,7 +9665,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get a reference cnt.  * This function will wait for any exclusive lock to be released, but will  * not wait for threads that want the exclusive lock. If priority needs  * to be given to threads that need the exclusive lock, a call to nfsv4_lock()  * with the 2nd argument == 0 should be done before calling nfsv4_getref().  */
+comment|/*  * Get a reference cnt.  * This function will wait for any exclusive lock to be released, but will  * not wait for threads that want the exclusive lock. If priority needs  * to be given to threads that need the exclusive lock, a call to nfsv4_lock()  * with the 2nd argument == 0 should be done before calling nfsv4_getref().  * If the mp argument is not NULL, check for MNTK_UNMOUNTF being set and  * return without getting a refcnt for that case.  */
 end_comment
 
 begin_function
@@ -9570,6 +9685,11 @@ parameter_list|,
 name|void
 modifier|*
 name|mutex
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+name|mp
 parameter_list|)
 block|{
 if|if
@@ -9591,6 +9711,23 @@ operator|&
 name|NFSV4LOCK_LOCK
 condition|)
 block|{
+if|if
+condition|(
+name|mp
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|mp
+operator|->
+name|mnt_kern_flag
+operator|&
+name|MNTK_UNMOUNTF
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return;
 name|lp
 operator|->
 name|nfslock_lock
@@ -9628,11 +9765,119 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|mp
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|mp
+operator|->
+name|mnt_kern_flag
+operator|&
+name|MNTK_UNMOUNTF
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return;
 name|lp
 operator|->
 name|nfslock_usecnt
 operator|++
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Get a reference as above, but return failure instead of sleeping if  * an exclusive lock is held.  */
+end_comment
+
+begin_function
+name|APPLESTATIC
+name|int
+name|nfsv4_getref_nonblock
+parameter_list|(
+name|struct
+name|nfsv4lock
+modifier|*
+name|lp
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|(
+name|lp
+operator|->
+name|nfslock_lock
+operator|&
+name|NFSV4LOCK_LOCK
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|lp
+operator|->
+name|nfslock_usecnt
+operator|++
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Test for a lock. Return 1 if locked, 0 otherwise.  */
+end_comment
+
+begin_function
+name|APPLESTATIC
+name|int
+name|nfsv4_testlock
+parameter_list|(
+name|struct
+name|nfsv4lock
+modifier|*
+name|lp
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|(
+name|lp
+operator|->
+name|nfslock_lock
+operator|&
+name|NFSV4LOCK_LOCK
+operator|)
+operator|==
+literal|0
+operator|&&
+name|lp
+operator|->
+name|nfslock_usecnt
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
@@ -9924,6 +10169,11 @@ name|nfsrv_descript
 modifier|*
 name|nd
 parameter_list|,
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|,
 name|vnode_t
 name|vp
 parameter_list|,
@@ -9961,6 +10211,15 @@ name|isdgram
 parameter_list|,
 name|int
 name|reterr
+parameter_list|,
+name|int
+name|supports_nfsv4acls
+parameter_list|,
+name|int
+name|at_root
+parameter_list|,
+name|uint64_t
+name|mounted_on_fileno
 parameter_list|)
 block|{
 name|int
@@ -10010,9 +10269,6 @@ name|retnump
 decl_stmt|;
 name|u_int64_t
 name|uquad
-decl_stmt|;
-name|long
-name|fid
 decl_stmt|;
 name|struct
 name|statfs
@@ -10124,10 +10380,7 @@ name|error
 operator|=
 name|VFS_STATFS
 argument_list|(
-name|vnode_mount
-argument_list|(
-name|vp
-argument_list|)
+name|mp
 argument_list|,
 operator|&
 name|fs
@@ -10192,14 +10445,9 @@ operator|!=
 name|NULL
 operator|)
 operator|&&
-operator|!
-name|NFSHASNFS4ACL
-argument_list|(
-name|vnode_mount
-argument_list|(
-name|vp
-argument_list|)
-argument_list|)
+name|supports_nfsv4acls
+operator|==
+literal|0
 operator|)
 operator|)
 condition|)
@@ -10239,14 +10487,9 @@ operator|!=
 name|NULL
 operator|)
 operator|&&
-operator|!
-name|NFSHASNFS4ACL
-argument_list|(
-name|vnode_mount
-argument_list|(
-name|vp
-argument_list|)
-argument_list|)
+name|supports_nfsv4acls
+operator|==
+literal|0
 operator|)
 condition|)
 block|{
@@ -10266,20 +10509,21 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|NFSVOPLOCK
+if|if
+condition|(
+name|vn_lock
 argument_list|(
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
-operator||
-name|LK_RETRY
-argument_list|,
-name|p
+name|LK_SHARED
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+block|{
 name|error
 operator|=
-name|VOP_ACCESS
+name|VOP_ACCESSX
 argument_list|(
 name|vp
 argument_list|,
@@ -10311,14 +10555,18 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|NFSVOPUNLOCK
+name|VOP_UNLOCK
 argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|p
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|error
+operator|=
+name|NFSERR_PERM
 expr_stmt|;
 if|if
 condition|(
@@ -10434,14 +10682,9 @@ operator|!=
 name|NULL
 operator|)
 operator|&&
-operator|!
-name|NFSHASNFS4ACL
-argument_list|(
-name|vnode_mount
-argument_list|(
-name|vp
-argument_list|)
-argument_list|)
+name|supports_nfsv4acls
+operator|==
+literal|0
 operator|)
 condition|)
 block|{
@@ -10703,14 +10946,10 @@ operator|++
 operator|=
 name|txdr_unsigned
 argument_list|(
-name|vfs_statfs
-argument_list|(
-name|vnode_mount
-argument_list|(
-name|vp
-argument_list|)
-argument_list|)
+name|mp
 operator|->
+name|mnt_stat
+operator|.
 name|f_fsid
 operator|.
 name|val
@@ -10730,14 +10969,10 @@ name|tl
 operator|=
 name|txdr_unsigned
 argument_list|(
-name|vfs_statfs
-argument_list|(
-name|vnode_mount
-argument_list|(
-name|vp
-argument_list|)
-argument_list|)
+name|mp
 operator|->
+name|mnt_stat
+operator|.
 name|f_fsid
 operator|.
 name|val
@@ -11071,10 +11306,7 @@ condition|(
 operator|!
 name|VFS_QUOTACTL
 argument_list|(
-name|vnode_mount
-argument_list|(
-name|vp
-argument_list|)
+name|mp
 argument_list|,
 name|QCMD
 argument_list|(
@@ -11663,10 +11895,7 @@ condition|(
 operator|!
 name|VFS_QUOTACTL
 argument_list|(
-name|vnode_mount
-argument_list|(
-name|vp
-argument_list|)
+name|mp
 argument_list|,
 name|QCMD
 argument_list|(
@@ -11800,10 +12029,7 @@ condition|(
 operator|!
 name|VFS_QUOTACTL
 argument_list|(
-name|vnode_mount
-argument_list|(
-name|vp
-argument_list|)
+name|mp
 argument_list|,
 name|QCMD
 argument_list|(
@@ -11917,10 +12143,7 @@ condition|(
 operator|!
 name|VFS_QUOTACTL
 argument_list|(
-name|vnode_mount
-argument_list|(
-name|vp
-argument_list|)
+name|mp
 argument_list|,
 name|QCMD
 argument_list|(
@@ -12509,39 +12732,31 @@ argument_list|,
 name|NFSX_HYPER
 argument_list|)
 expr_stmt|;
-operator|*
-name|tl
-operator|++
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
-name|nfsrv_atroot
-argument_list|(
-name|vp
-argument_list|,
-operator|&
-name|fid
-argument_list|)
+name|at_root
+operator|!=
+literal|0
 condition|)
-operator|*
-name|tl
+name|uquad
 operator|=
-name|txdr_unsigned
-argument_list|(
-name|fid
-argument_list|)
+name|mounted_on_fileno
 expr_stmt|;
 else|else
-operator|*
-name|tl
+name|uquad
 operator|=
-name|txdr_unsigned
-argument_list|(
+operator|(
+name|u_int64_t
+operator|)
 name|vap
 operator|->
 name|va_fileid
+expr_stmt|;
+name|txdr_hyper
+argument_list|(
+name|uquad
+argument_list|,
+name|tl
 argument_list|)
 expr_stmt|;
 name|retnum

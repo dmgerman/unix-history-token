@@ -706,6 +706,16 @@ begin_comment
 comment|/* set true to use tabs for spacing, 					 * false uses all spaces */
 end_comment
 
+begin_decl_stmt
+name|int
+name|auto_typedefs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set true to recognize identifiers 					 * ending in "_t" like typedefs */
+end_comment
+
 begin_comment
 comment|/* -troff font state information */
 end_comment

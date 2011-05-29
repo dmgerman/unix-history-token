@@ -142,6 +142,34 @@ parameter_list|,
 name|ba
 parameter_list|)
 value|(bt_aton((str), (ba)) == 1? 0 : -1)
+define|#
+directive|define
+name|htobs
+parameter_list|(
+name|d
+parameter_list|)
+value|htole16(d)
+define|#
+directive|define
+name|htobl
+parameter_list|(
+name|d
+parameter_list|)
+value|htole32(d)
+define|#
+directive|define
+name|btohs
+parameter_list|(
+name|d
+parameter_list|)
+value|le16toh(d)
+define|#
+directive|define
+name|btohl
+parameter_list|(
+name|d
+parameter_list|)
+value|le32toh(d)
 comment|/*  * Interface to the outside world  */
 name|struct
 name|hostent

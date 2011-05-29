@@ -47,34 +47,11 @@ directive|include
 file|<ansidecl.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<stddef.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|size_t
-value|unsigned long
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * This array is designed for mapping upper and lower case letter  * together for a case independent comparison.  The mappings are  * based upon ascii character sequences.  */
@@ -1384,21 +1361,16 @@ begin_function
 name|int
 name|strcasecmp
 parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|s1
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 name|s2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|unsigned
@@ -1471,7 +1443,7 @@ return|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

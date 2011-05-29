@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: gzip.c,v 1.94 2009/04/12 10:31:14 lukem Exp $	*/
+comment|/*	$NetBSD: gzip.c,v 1.99 2011/03/23 12:59:44 tsutsui Exp $	*/
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|__RCSID
+name|__FBSDID
 argument_list|(
 literal|"$FreeBSD$"
 argument_list|)
@@ -45,7 +45,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * gzip.c -- GPL free gzip using zlib.  *  * RFC 1950 covers the zlib format  * RFC 1951 covers the deflate format  * RFC 1952 covers the gzip format  *  * TODO:  *	- use mmap where possible  *	- handle some signals better (remove outfile?)  *	- make bzip2/compress -v/-t/-l support work as well as possible  */
+comment|/*  * gzip.c -- GPL free gzip using zlib.  *  * RFC 1950 covers the zlib format  * RFC 1951 covers the deflate format  * RFC 1952 covers the gzip format  *  * TODO:  *	- use mmap where possible  *	- make bzip2/compress -v/-t/-l support work as well as possible  */
 end_comment
 
 begin_include
@@ -149,24 +149,6 @@ include|#
 directive|include
 file|<time.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PRIdOFF
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|PRIdOFF
-value|PRId64
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* what type of file are we dealing with */
@@ -544,7 +526,7 @@ name|char
 name|gzip_version
 index|[]
 init|=
-literal|"FreeBSD gzip 20090621"
+literal|"FreeBSD gzip 20110523"
 decl_stmt|;
 end_decl_stmt
 
@@ -732,6 +714,21 @@ begin_comment
 comment|/* verbose mode */
 end_comment
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|remove_file
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* file to be removed upon SIGINT */
+end_comment
+
 begin_else
 else|#
 directive|else
@@ -810,11 +807,21 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|NO_BZIP2_SUPPORT
-end_ifndef
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|NO_PACK_SUPPORT
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -1126,6 +1133,16 @@ name|void
 name|display_license
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|sigint_handler
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1723,7 +1740,6 @@ directive|endif
 name|int
 name|ch
 decl_stmt|;
-comment|/* XXX set up signals */
 ifndef|#
 directive|ifndef
 name|SMALL
@@ -1749,6 +1765,13 @@ name|argc
 argument_list|,
 operator|&
 name|argv
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|sigint_handler
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1802,7 +1825,7 @@ name|SMALL
 define|#
 directive|define
 name|OPT_LIST
-value|"123456789cdhltV"
+value|"123456789cdhlV"
 else|#
 directive|else
 define|#
@@ -2356,11 +2379,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|NO_BZIP2_SUPPORT
-end_ifndef
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|NO_PACK_SUPPORT
+argument_list|)
+end_if
 
 begin_comment
 comment|/* ... without an errno. */
@@ -4434,6 +4467,18 @@ comment|/* Z_BUF_ERROR goes with Z_FINISH... */
 case|case
 name|Z_BUF_ERROR
 case|:
+if|if
+condition|(
+name|z
+operator|.
+name|avail_out
+operator|>
+literal|0
+operator|&&
+operator|!
+name|done_reading
+condition|)
+continue|continue;
 case|case
 name|Z_STREAM_END
 case|:
@@ -5137,7 +5182,7 @@ argument_list|,
 operator|&
 name|sb
 operator|.
-name|st_atimespec
+name|st_atim
 argument_list|)
 expr_stmt|;
 name|TIMESPEC_TO_TIMEVAL
@@ -5151,7 +5196,7 @@ argument_list|,
 operator|&
 name|sb
 operator|.
-name|st_mtimespec
+name|st_mtim
 argument_list|)
 expr_stmt|;
 if|if
@@ -5537,7 +5582,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-comment|/* Must be gone alrady */
+comment|/* Must be gone already */
 return|return;
 if|if
 condition|(
@@ -5562,6 +5607,35 @@ return|return;
 name|unlink
 argument_list|(
 name|file
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|sigint_handler
+parameter_list|(
+name|int
+name|signo
+name|__unused
+parameter_list|)
+block|{
+if|if
+condition|(
+name|remove_file
+operator|!=
+name|NULL
+condition|)
+name|unlink
+argument_list|(
+name|remove_file
+argument_list|)
+expr_stmt|;
+name|_exit
+argument_list|(
+literal|2
 argument_list|)
 expr_stmt|;
 block|}
@@ -5750,17 +5824,12 @@ name|file
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
-if|if
-condition|(
-name|cflag
-operator|==
-literal|0
-condition|)
-block|{
 ifndef|#
 directive|ifndef
 name|SMALL
@@ -5773,10 +5842,41 @@ argument_list|,
 operator|&
 name|isb
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|maybe_warn
+argument_list|(
+literal|"couldn't stat: %s"
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|in
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
+if|if
+condition|(
+name|cflag
 operator|==
 literal|0
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|SMALL
 if|if
 condition|(
 name|isb
@@ -5792,8 +5892,7 @@ condition|)
 block|{
 name|maybe_warnx
 argument_list|(
-literal|"%s has %d other link%s -- "
-literal|"skipping"
+literal|"%s has %d other link%s -- skipping"
 argument_list|,
 name|file
 argument_list|,
@@ -5803,9 +5902,13 @@ name|st_nlink
 operator|-
 literal|1
 argument_list|,
+operator|(
 name|isb
 operator|.
 name|st_nlink
+operator|-
+literal|1
+operator|)
 operator|==
 literal|1
 condition|?
@@ -5820,10 +5923,11 @@ name|in
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
-block|}
 block|}
 if|if
 condition|(
@@ -5869,8 +5973,10 @@ name|in
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 endif|#
@@ -5952,8 +6058,10 @@ name|in
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 endif|#
@@ -6002,10 +6110,21 @@ name|stdin
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
+ifndef|#
+directive|ifndef
+name|SMALL
+name|remove_file
+operator|=
+name|outfile
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 name|out
@@ -6052,6 +6171,7 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|insize
 operator|==
 operator|-
@@ -6061,6 +6181,7 @@ operator|-
 literal|1
 else|:
 name|size
+operator|)
 return|;
 ifndef|#
 directive|ifndef
@@ -6100,18 +6221,20 @@ condition|)
 block|{
 name|maybe_warnx
 argument_list|(
-literal|"output file: %s wrong size (%"
-name|PRIdOFF
-literal|" != %"
-name|PRIdOFF
-literal|"), deleting"
+literal|"output file: %s wrong size (%ju != %ju), deleting"
 argument_list|,
 name|outfile
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|osb
 operator|.
 name|st_size
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|size
 argument_list|)
 expr_stmt|;
@@ -6128,6 +6251,10 @@ name|isb
 argument_list|,
 name|outfile
 argument_list|)
+expr_stmt|;
+name|remove_file
+operator|=
+name|NULL
 expr_stmt|;
 endif|#
 directive|endif
@@ -6156,7 +6283,9 @@ name|isb
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|size
+operator|)
 return|;
 ifndef|#
 directive|ifndef
@@ -6191,7 +6320,9 @@ name|outfile
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|size
+operator|)
 return|;
 endif|#
 directive|endif
@@ -6255,6 +6386,9 @@ decl_stmt|;
 ifndef|#
 directive|ifndef
 name|SMALL
+name|ssize_t
+name|rv
+decl_stmt|;
 name|time_t
 name|timestamp
 init|=
@@ -6447,9 +6581,6 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* timestamp */
-name|ssize_t
-name|rv
-decl_stmt|;
 name|rv
 operator|=
 name|pread
@@ -6810,6 +6941,15 @@ goto|goto
 name|lose
 goto|;
 block|}
+ifndef|#
+directive|ifndef
+name|SMALL
+name|remove_file
+operator|=
+name|outfile
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 name|zfd
@@ -7320,14 +7460,16 @@ condition|)
 block|{
 name|maybe_warnx
 argument_list|(
-literal|"stat gave different size: %"
-name|PRIdOFF
-literal|" != %"
-name|PRIdOFF
-literal|" (leaving original)"
+literal|"stat gave different size: %ju != %ju (leaving original)"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|size
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|osb
 operator|.
 name|st_size
@@ -7348,14 +7490,6 @@ operator|-
 literal|1
 return|;
 block|}
-name|unlink_input
-argument_list|(
-name|file
-argument_list|,
-operator|&
-name|isb
-argument_list|)
-expr_stmt|;
 ifndef|#
 directive|ifndef
 name|SMALL
@@ -7369,11 +7503,23 @@ argument_list|,
 name|outfile
 argument_list|)
 expr_stmt|;
+name|remove_file
+operator|=
+name|NULL
+expr_stmt|;
 endif|#
 directive|endif
 name|close
 argument_list|(
 name|ofd
+argument_list|)
+expr_stmt|;
+name|unlink_input
+argument_list|(
+name|file
+argument_list|,
+operator|&
+name|isb
 argument_list|)
 expr_stmt|;
 return|return
@@ -8262,6 +8408,26 @@ name|sb
 argument_list|)
 operator|!=
 literal|0
+operator|||
+operator|(
+name|fflag
+operator|==
+literal|0
+operator|&&
+name|cflag
+operator|==
+literal|0
+operator|&&
+name|lstat
+argument_list|(
+name|path
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|!=
+literal|0
+operator|)
 condition|)
 block|{
 comment|/* lets try<path>.gz if we're decompressing */
@@ -9542,7 +9708,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s (based on NetBSD gzip 20060927)\n"
+literal|"%s (based on NetBSD gzip 20091011)\n"
 argument_list|,
 name|gzip_version
 argument_list|)

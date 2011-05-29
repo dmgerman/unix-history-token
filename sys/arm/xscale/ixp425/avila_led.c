@@ -124,6 +124,9 @@ decl_stmt|;
 name|uint32_t
 name|reg
 decl_stmt|;
+name|IXP4XX_GPIO_LOCK
+argument_list|()
+expr_stmt|;
 name|reg
 operator|=
 name|GPIO_CONF_READ_4
@@ -155,6 +158,9 @@ name|IXP425_GPIO_GPOUTR
 argument_list|,
 name|reg
 argument_list|)
+expr_stmt|;
+name|IXP4XX_GPIO_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 end_function

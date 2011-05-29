@@ -372,66 +372,6 @@ value|0x7fffffff
 end_define
 
 begin_comment
-comment|/*  * Trace classes which can be assigned to particular use at compile time  * These must remain in high 22 as some assembly code counts on it  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KTR_CT1
-value|0x01000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|KTR_CT2
-value|0x02000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|KTR_CT3
-value|0x04000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|KTR_CT4
-value|0x08000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|KTR_CT5
-value|0x10000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|KTR_CT6
-value|0x20000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|KTR_CT7
-value|0x40000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|KTR_CT8
-value|0x80000000
-end_define
-
-begin_comment
 comment|/* Trace classes to compile in */
 end_comment
 
@@ -1184,7 +1124,7 @@ parameter_list|,
 name|v3
 parameter_list|)
 define|\
-value|CTR6(m,KTR_EFMT(egroup, ident, etype) a0 ", " a1 ", " a2, ", ", a3,\ 	     ident, edat, (v0), (v1), (v2), (v3))
+value|CTR6(m,KTR_EFMT(egroup, ident, etype) a0 ", " a1 ", " a2 ", " a3,\ 	     ident, edat, (v0), (v1), (v2), (v3))
 end_define
 
 begin_comment

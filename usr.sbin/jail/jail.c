@@ -2628,6 +2628,33 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
+comment|/* jail_set won't chdir along with its chroot, so do it here. */
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"path"
+argument_list|)
+operator|&&
+name|chdir
+argument_list|(
+name|value
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"chdir: %s"
+argument_list|,
+name|value
+argument_list|)
+expr_stmt|;
 comment|/* Check for repeat parameters */
 for|for
 control|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* s390-mkopc.c -- Generates opcode table out of s390-opc.txt    Copyright 2000, 2001 Free Software Foundation, Inc.    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).     This file is part of GDB, GAS, and the GNU binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* s390-mkopc.c -- Generates opcode table out of s390-opc.txt    Copyright 2000, 2001, 2003 Free Software Foundation, Inc.    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).     This file is part of GDB, GAS, and the GNU binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -51,6 +51,10 @@ block|,
 name|S390_OPCODE_Z900
 block|,
 name|S390_OPCODE_Z990
+block|,
+name|S390_OPCODE_Z9_109
+block|,
+name|S390_OPCODE_Z9_EC
 block|}
 enum|;
 end_enum
@@ -889,6 +893,38 @@ condition|)
 name|min_cpu
 operator|=
 name|S390_OPCODE_Z990
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|cpu_string
+argument_list|,
+literal|"z9-109"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|min_cpu
+operator|=
+name|S390_OPCODE_Z9_109
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|cpu_string
+argument_list|,
+literal|"z9-ec"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|min_cpu
+operator|=
+name|S390_OPCODE_Z9_EC
 expr_stmt|;
 else|else
 block|{

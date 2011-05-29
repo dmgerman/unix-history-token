@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ddb.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stdint.h>
 end_include
 
@@ -53,12 +59,6 @@ begin_include
 include|#
 directive|include
 file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/linker_set.h>
 end_include
 
 begin_include
@@ -192,6 +192,12 @@ begin_include
 include|#
 directive|include
 file|<dev/usb/usb_bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/usb/usb_pf.h>
 end_include
 
 begin_comment
@@ -426,6 +432,10 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Host Only Drivers */
+end_comment
+
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -485,7 +495,47 @@ name|DRIVER_MODULE
 argument_list|(
 name|usbus
 argument_list|,
+name|xhci
+argument_list|,
+name|usb_driver
+argument_list|,
+name|usb_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Device Only Drivers */
+end_comment
+
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|usbus
+argument_list|,
 name|at91_udp
+argument_list|,
+name|usb_driver
+argument_list|,
+name|usb_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|usbus
+argument_list|,
+name|musbotg
 argument_list|,
 name|usb_driver
 argument_list|,
@@ -539,6 +589,52 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usb_root_mount_rel
+parameter_list|(
+name|struct
+name|usb_bus
+modifier|*
+name|bus
+parameter_list|)
+block|{
+if|if
+condition|(
+name|bus
+operator|->
+name|bus_roothold
+operator|!=
+name|NULL
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+literal|"Releasing root mount hold %p\n"
+argument_list|,
+name|bus
+operator|->
+name|bus_roothold
+argument_list|)
+expr_stmt|;
+name|root_mount_rel
+argument_list|(
+name|bus
+operator|->
+name|bus_roothold
+argument_list|)
+expr_stmt|;
+name|bus
+operator|->
+name|bus_roothold
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -679,29 +775,11 @@ name|power_wdog
 argument_list|)
 expr_stmt|;
 comment|/* Let the USB explore process detach all devices. */
-if|if
-condition|(
-name|bus
-operator|->
-name|bus_roothold
-operator|!=
-name|NULL
-condition|)
-block|{
-name|root_mount_rel
+name|usb_root_mount_rel
 argument_list|(
 name|bus
-operator|->
-name|bus_roothold
 argument_list|)
 expr_stmt|;
-name|bus
-operator|->
-name|bus_roothold
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 name|USB_BUS_LOCK
 argument_list|(
 name|bus
@@ -801,6 +879,16 @@ operator|->
 name|control_xfer_proc
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_PF
+name|usbpf_detach
+argument_list|(
+name|bus
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -901,6 +989,9 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|DDB
 comment|/* 		 * The following three lines of code are only here to 		 * recover from DDB: 		 */
 name|usb_proc_rewakeup
 argument_list|(
@@ -926,17 +1017,24 @@ operator|->
 name|non_giant_callback_proc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|USB_BUS_UNLOCK
 argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_POWERD
 comment|/* 		 * First update the USB power state! 		 */
 name|usb_bus_powerd
 argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Explore the Root USB HUB. */
 call|(
 name|udev
@@ -955,29 +1053,11 @@ name|bus
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|bus
-operator|->
-name|bus_roothold
-operator|!=
-name|NULL
-condition|)
-block|{
-name|root_mount_rel
+name|usb_root_mount_rel
 argument_list|(
 name|bus
-operator|->
-name|bus_roothold
 argument_list|)
 expr_stmt|;
-name|bus
-operator|->
-name|bus_roothold
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1131,6 +1211,9 @@ argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DDB
 comment|/* 	 * The following line of code is only here to recover from 	 * DDB: 	 */
 name|usb_proc_rewakeup
 argument_list|(
@@ -1141,6 +1224,11 @@ name|explore_proc
 argument_list|)
 expr_stmt|;
 comment|/* recover from DDB */
+endif|#
+directive|endif
+if|#
+directive|if
+name|USB_HAVE_POWERD
 name|USB_BUS_UNLOCK
 argument_list|(
 name|bus
@@ -1156,6 +1244,8 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1293,6 +1383,23 @@ literal|"480Mbps Wireless USB v2.5\n"
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|USB_REV_3_0
+case|:
+name|speed
+operator|=
+name|USB_SPEED_SUPER
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|bus
+operator|->
+name|bdev
+argument_list|,
+literal|"5.0Gbps Super Speed USB v3.0\n"
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|device_printf
 argument_list|(
@@ -1301,6 +1408,11 @@ operator|->
 name|bdev
 argument_list|,
 literal|"Unsupported USB revision\n"
+argument_list|)
+expr_stmt|;
+name|usb_root_mount_rel
+argument_list|(
+name|bus
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1458,6 +1570,11 @@ name|err
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|usb_root_mount_rel
+argument_list|(
+name|bus
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* set softc - we are ready */
 name|device_set_softc
@@ -1529,6 +1646,16 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_PF
+name|usbpf_attach
+argument_list|(
+name|bus
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Initialise USB process messages */
 name|bus
 operator|->
@@ -1701,8 +1828,10 @@ name|USB_PRI_MED
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
+name|dev
+argument_list|,
 literal|"WARNING: Creation of USB Giant "
 literal|"callback process failed.\n"
 argument_list|)
@@ -1729,8 +1858,10 @@ name|USB_PRI_HIGH
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
+name|dev
+argument_list|,
 literal|"WARNING: Creation of USB non-Giant "
 literal|"callback process failed.\n"
 argument_list|)
@@ -1757,8 +1888,10 @@ name|USB_PRI_MED
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
+name|dev
+argument_list|,
 literal|"WARNING: Creation of USB explore "
 literal|"process failed.\n"
 argument_list|)
@@ -1785,8 +1918,10 @@ name|USB_PRI_MED
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
+name|dev
+argument_list|,
 literal|"WARNING: Creation of USB control transfer "
 literal|"process failed.\n"
 argument_list|)

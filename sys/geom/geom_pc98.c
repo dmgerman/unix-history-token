@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -88,6 +94,16 @@ include|#
 directive|include
 file|<geom/geom_slice.h>
 end_include
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|geom_pc98
+argument_list|,
+literal|"GEOM NEC PC9800 partitioning support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#

@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_ifdef
@@ -29,13 +29,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<err.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -149,16 +149,6 @@ name|av
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|powerof2
-parameter_list|(
-name|x
-parameter_list|)
-value|((((x)-1)&(x))==0)
-end_define
 
 begin_function
 specifier|static
@@ -627,6 +617,8 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
+name|error
+decl_stmt|,
 name|fd
 decl_stmt|;
 name|u_int
@@ -646,6 +638,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mfi_open"
@@ -653,7 +649,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -691,6 +687,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get volume list"
@@ -698,7 +698,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -825,6 +825,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to clear configuration"
@@ -832,7 +836,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -1437,6 +1441,26 @@ name|mfi_pd_info
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|info
+operator|->
+name|drives
+operator|==
+name|NULL
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
 name|info
 operator|->
 name|drive_count
@@ -1506,6 +1530,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to fetch drive info for drive %s"
@@ -1515,7 +1543,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -2566,6 +2594,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mfi_open"
@@ -2573,7 +2605,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -2921,6 +2953,24 @@ name|arrays
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|arrays
+operator|==
+name|NULL
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
 for|for
 control|(
 name|i
@@ -3039,6 +3089,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to read configuration"
@@ -3046,7 +3100,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -3105,6 +3159,26 @@ name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|state
+operator|.
+name|arrays
+operator|==
+name|NULL
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
 for|for
 control|(
 name|i
@@ -3205,6 +3279,26 @@ name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|state
+operator|.
+name|volumes
+operator|==
+name|NULL
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
 for|for
 control|(
 name|i
@@ -3365,6 +3459,24 @@ argument_list|,
 name|config_size
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|config
+operator|==
+name|NULL
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
 name|config
 operator|->
 name|size
@@ -3539,7 +3651,6 @@ argument_list|,
 name|config
 argument_list|)
 expr_stmt|;
-elseif|else
 endif|#
 directive|endif
 comment|/* Send the new config to the controller. */
@@ -3565,6 +3676,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to add volume"
@@ -3572,7 +3687,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -3684,6 +3799,8 @@ name|mfi_ld_info
 name|info
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|fd
 decl_stmt|;
 name|uint8_t
@@ -3790,6 +3907,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mfi_open"
@@ -3797,7 +3918,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -3838,6 +3959,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Invalid volume %s"
@@ -3850,7 +3975,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -3871,6 +3996,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get info for volume %d"
@@ -3880,7 +4009,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -3951,6 +4080,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to delete volume"
@@ -3958,7 +4091,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -4074,6 +4207,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mfi_open"
@@ -4081,7 +4218,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -4126,6 +4263,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to fetch drive info"
@@ -4133,7 +4274,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -4184,6 +4325,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Invalid volume %s"
@@ -4196,7 +4341,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -4214,6 +4359,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to read configuration"
@@ -4221,7 +4370,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -4245,6 +4394,24 @@ operator|->
 name|array_count
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|spare
+operator|==
+name|NULL
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
 name|bzero
 argument_list|(
 name|spare
@@ -4526,6 +4693,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to assign spare"
@@ -4533,7 +4704,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -4626,6 +4797,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mfi_open"
@@ -4633,7 +4808,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -4679,6 +4854,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to fetch info for drive %u"
@@ -4688,7 +4867,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -4749,6 +4928,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to delete spare"
@@ -4756,7 +4939,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -4972,6 +5155,8 @@ name|j
 index|]
 operator|.
 name|ref
+operator|.
+name|v
 operator|.
 name|device_id
 expr_stmt|;
@@ -5378,6 +5563,8 @@ name|sp
 operator|->
 name|ref
 operator|.
+name|v
+operator|.
 name|device_id
 argument_list|)
 expr_stmt|;
@@ -5453,6 +5640,8 @@ modifier|*
 name|config
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|fd
 decl_stmt|;
 if|if
@@ -5487,6 +5676,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mfi_open"
@@ -5494,7 +5687,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -5512,6 +5705,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get config"
@@ -5519,7 +5716,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -5590,6 +5787,8 @@ name|size_t
 name|len
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|fd
 decl_stmt|;
 if|if
@@ -5624,6 +5823,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mfi_open"
@@ -5631,7 +5834,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -5669,6 +5872,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to read debug command"
@@ -5676,17 +5883,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|errno
+name|error
 operator|==
 name|ENOENT
 condition|)
-name|errno
+name|error
 operator|=
 name|EOPNOTSUPP
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -5697,6 +5904,24 @@ argument_list|(
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|config
+operator|==
+name|NULL
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|sysctlbyname
@@ -5716,6 +5941,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to read debug command"
@@ -5723,7 +5952,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}

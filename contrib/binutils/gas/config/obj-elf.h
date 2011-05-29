@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ELF object file format.    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001,    2002, 2003 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* ELF object file format.    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001,    2002, 2003, 2004, 2006, 2007 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -47,12 +47,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"bfd.h"
-end_include
 
 begin_define
 define|#
@@ -224,7 +218,7 @@ begin_define
 define|#
 directive|define
 name|ELF_TARGET_SYMBOL_FIELDS
-value|int local:1;
+value|unsigned int local:1;
 end_define
 
 begin_comment
@@ -248,10 +242,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* #include "targ-cpu.h" */
-end_comment
 
 begin_ifndef
 ifndef|#
@@ -479,30 +469,6 @@ end_decl_stmt
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|obj_sec_set_private_data
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|obj_sec_set_private_data
-parameter_list|(
-name|B
-parameter_list|,
-name|S
-parameter_list|)
-define|\
-value|if (! BFD_SEND ((B), _new_section_hook, ((B), (S)))) \     as_fatal (_("can't allocate ELF private section data: %s"),	\ 	      bfd_errmsg (bfd_get_error ()))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|obj_frob_file
 end_ifndef
 
@@ -584,6 +550,34 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* If the target doesn't have special processing for labels, take care of    dwarf2 output at the object file level.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|tc_frob_label
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|"dwarf2dbg.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|obj_frob_label
+value|dwarf2_emit_label
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -610,6 +604,8 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1053,6 +1049,10 @@ directive|ifndef
 name|OBJ_MAYBE_ELF
 end_ifndef
 
+begin_comment
+comment|/* If OBJ_MAYBE_ELF then obj-multi.h will define obj_ecoff_set_ext.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1060,22 +1060,11 @@ name|obj_ecoff_set_ext
 value|elf_ecoff_set_ext
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
-end_ifdef
-
 begin_struct_decl
 struct_decl|struct
 name|ecoff_extr
 struct_decl|;
 end_struct_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|extern
@@ -1096,6 +1085,34 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|extern
+name|asection
+modifier|*
+name|elf_com_section_ptr
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|symbolS
+modifier|*
+name|elf_common_parse
+parameter_list|(
+name|int
+name|ignore
+name|ATTRIBUTE_UNUSED
+parameter_list|,
+name|symbolS
+modifier|*
+name|symbolP
+parameter_list|,
+name|addressT
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

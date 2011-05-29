@@ -125,15 +125,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|OF_halt
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|OF_reboot
 parameter_list|(
 name|void

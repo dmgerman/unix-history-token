@@ -66,6 +66,7 @@ comment|/* draft-ietf-pwe3-iana-allocation-04 */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|tok
 name|l2vpn_encaps_values

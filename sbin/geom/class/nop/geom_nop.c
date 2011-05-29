@@ -64,63 +64,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
-name|intmax_t
-name|error
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|intmax_t
-name|rfailprob
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|intmax_t
-name|wfailprob
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|intmax_t
-name|offset
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|intmax_t
-name|secsize
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|intmax_t
-name|size
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|g_command
 name|class_commands
@@ -142,8 +85,7 @@ literal|'e'
 block|,
 literal|"error"
 block|,
-operator|&
-name|error
+literal|"-1"
 block|,
 name|G_TYPE_NUMBER
 block|}
@@ -153,8 +95,7 @@ literal|'o'
 block|,
 literal|"offset"
 block|,
-operator|&
-name|offset
+literal|"0"
 block|,
 name|G_TYPE_NUMBER
 block|}
@@ -164,8 +105,7 @@ literal|'r'
 block|,
 literal|"rfailprob"
 block|,
-operator|&
-name|rfailprob
+literal|"-1"
 block|,
 name|G_TYPE_NUMBER
 block|}
@@ -175,8 +115,7 @@ literal|'s'
 block|,
 literal|"size"
 block|,
-operator|&
-name|size
+literal|"0"
 block|,
 name|G_TYPE_NUMBER
 block|}
@@ -186,8 +125,7 @@ literal|'S'
 block|,
 literal|"secsize"
 block|,
-operator|&
-name|secsize
+literal|"0"
 block|,
 name|G_TYPE_NUMBER
 block|}
@@ -197,16 +135,13 @@ literal|'w'
 block|,
 literal|"wfailprob"
 block|,
-operator|&
-name|wfailprob
+literal|"-1"
 block|,
 name|G_TYPE_NUMBER
 block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
-block|,
-name|NULL
 block|,
 literal|"[-v] [-e error] [-o offset] [-r rfailprob] [-s size] "
 literal|"[-S secsize] [-w wfailprob] dev ..."
@@ -225,8 +160,7 @@ literal|'e'
 block|,
 literal|"error"
 block|,
-operator|&
-name|error
+literal|"-1"
 block|,
 name|G_TYPE_NUMBER
 block|}
@@ -236,8 +170,7 @@ literal|'r'
 block|,
 literal|"rfailprob"
 block|,
-operator|&
-name|rfailprob
+literal|"-1"
 block|,
 name|G_TYPE_NUMBER
 block|}
@@ -247,16 +180,13 @@ literal|'w'
 block|,
 literal|"wfailprob"
 block|,
-operator|&
-name|wfailprob
+literal|"-1"
 block|,
 name|G_TYPE_NUMBER
 block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
-block|,
-name|NULL
 block|,
 literal|"[-v] [-e error] [-r rfailprob] [-w wfailprob] prov ..."
 block|}
@@ -282,8 +212,6 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-name|NULL
-block|,
 literal|"[-fv] prov ..."
 block|}
 block|,
@@ -295,8 +223,6 @@ block|,
 name|NULL
 block|,
 name|G_NULL_OPTS
-block|,
-name|NULL
 block|,
 literal|"[-v] prov ..."
 block|}

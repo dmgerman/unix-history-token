@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* inftrees.c -- generate Huffman trees for efficient decoding  * Copyright (C) 1995-2005 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* inftrees.c -- generate Huffman trees for efficient decoding  * Copyright (C) 1995-2010 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_include
@@ -28,7 +28,7 @@ name|char
 name|inflate_copyright
 index|[]
 init|=
-literal|" inflate 1.2.3 Copyright 1995-2005 Mark Adler "
+literal|" inflate 1.2.5 Copyright 1995-2010 Mark Adler "
 decl_stmt|;
 end_decl_stmt
 
@@ -42,6 +42,7 @@ end_comment
 
 begin_function
 name|int
+name|ZLIB_INTERNAL
 name|inflate_table
 parameter_list|(
 name|type
@@ -142,7 +143,7 @@ name|mask
 decl_stmt|;
 comment|/* mask for low root bits */
 name|code
-name|this
+name|here
 decl_stmt|;
 comment|/* table entry for duplication */
 name|code
@@ -334,9 +335,9 @@ literal|21
 block|,
 literal|16
 block|,
-literal|201
+literal|73
 block|,
-literal|196
+literal|195
 block|}
 decl_stmt|;
 specifier|static
@@ -582,7 +583,7 @@ literal|0
 condition|)
 block|{
 comment|/* no symbols to code at all */
-name|this
+name|here
 operator|.
 name|op
 operator|=
@@ -593,7 +594,7 @@ operator|)
 literal|64
 expr_stmt|;
 comment|/* invalid code marker */
-name|this
+name|here
 operator|.
 name|bits
 operator|=
@@ -603,7 +604,7 @@ name|char
 operator|)
 literal|1
 expr_stmt|;
-name|this
+name|here
 operator|.
 name|val
 operator|=
@@ -620,7 +621,7 @@ name|table
 operator|)
 operator|++
 operator|=
-name|this
+name|here
 expr_stmt|;
 comment|/* make a table to force an error */
 operator|*
@@ -630,7 +631,7 @@ name|table
 operator|)
 operator|++
 operator|=
-name|this
+name|here
 expr_stmt|;
 operator|*
 name|bits
@@ -649,8 +650,8 @@ operator|=
 literal|1
 init|;
 name|min
-operator|<=
-name|MAXBITS
+operator|<
+name|max
 condition|;
 name|min
 operator|++
@@ -817,7 +818,7 @@ name|short
 operator|)
 name|sym
 expr_stmt|;
-comment|/*        Create and fill in decoding tables.  In this loop, the table being        filled is at next and has curr index bits.  The code being used is huff        with length len.  That code is converted to an index by dropping drop        bits off of the bottom.  For codes where len is less than drop + curr,        those top drop + curr - len bits are incremented through all values to        fill the table with replicated entries.         root is the number of index bits for the root table.  When len exceeds        root, sub-tables are created pointed to by the root entry with an index        of the low root bits of huff.  This is saved in low to check for when a        new sub-table should be started.  drop is zero when the root table is        being filled, and drop is root when sub-tables are being filled.         When a new sub-table is needed, it is necessary to look ahead in the        code lengths to determine what size sub-table is needed.  The length        counts are used for this, and so count[] is decremented as codes are        entered in the tables.         used keeps track of how many table entries have been allocated from the        provided *table space.  It is checked when a LENS table is being made        against the space in *table, ENOUGH, minus the maximum space needed by        the worst case distance code, MAXD.  This should never happen, but the        sufficiency of ENOUGH has not been proven exhaustively, hence the check.        This assumes that when type == LENS, bits == 9.         sym increments through all symbols, and the loop terminates when        all codes of length max, i.e. all codes, have been processed.  This        routine permits incomplete codes, so another loop after this one fills        in the rest of the decoding tables with invalid code markers.      */
+comment|/*        Create and fill in decoding tables.  In this loop, the table being        filled is at next and has curr index bits.  The code being used is huff        with length len.  That code is converted to an index by dropping drop        bits off of the bottom.  For codes where len is less than drop + curr,        those top drop + curr - len bits are incremented through all values to        fill the table with replicated entries.         root is the number of index bits for the root table.  When len exceeds        root, sub-tables are created pointed to by the root entry with an index        of the low root bits of huff.  This is saved in low to check for when a        new sub-table should be started.  drop is zero when the root table is        being filled, and drop is root when sub-tables are being filled.         When a new sub-table is needed, it is necessary to look ahead in the        code lengths to determine what size sub-table is needed.  The length        counts are used for this, and so count[] is decremented as codes are        entered in the tables.         used keeps track of how many table entries have been allocated from the        provided *table space.  It is checked for LENS and DIST tables against        the constants ENOUGH_LENS and ENOUGH_DISTS to guard against changes in        the initial root table size constants.  See the comments in inftrees.h        for more information.         sym increments through all symbols, and the loop terminates when        all codes of length max, i.e. all codes, have been processed.  This        routine permits incomplete codes, so another loop after this one fills        in the rest of the decoding tables with invalid code markers.      */
 comment|/* set up for code type */
 switch|switch
 condition|(
@@ -939,15 +940,25 @@ comment|/* mask for comparing low */
 comment|/* check available table space */
 if|if
 condition|(
+operator|(
 name|type
 operator|==
 name|LENS
 operator|&&
 name|used
 operator|>=
-name|ENOUGH
-operator|-
-name|MAXD
+name|ENOUGH_LENS
+operator|)
+operator|||
+operator|(
+name|type
+operator|==
+name|DISTS
+operator|&&
+name|used
+operator|>=
+name|ENOUGH_DISTS
+operator|)
 condition|)
 return|return
 literal|1
@@ -960,7 +971,7 @@ condition|;
 control|)
 block|{
 comment|/* create table entry */
-name|this
+name|here
 operator|.
 name|bits
 operator|=
@@ -989,7 +1000,7 @@ operator|<
 name|end
 condition|)
 block|{
-name|this
+name|here
 operator|.
 name|op
 operator|=
@@ -999,7 +1010,7 @@ name|char
 operator|)
 literal|0
 expr_stmt|;
-name|this
+name|here
 operator|.
 name|val
 operator|=
@@ -1025,7 +1036,7 @@ operator|>
 name|end
 condition|)
 block|{
-name|this
+name|here
 operator|.
 name|op
 operator|=
@@ -1043,7 +1054,7 @@ index|]
 index|]
 argument_list|)
 expr_stmt|;
-name|this
+name|here
 operator|.
 name|val
 operator|=
@@ -1058,7 +1069,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|this
+name|here
 operator|.
 name|op
 operator|=
@@ -1073,7 +1084,7 @@ literal|64
 argument_list|)
 expr_stmt|;
 comment|/* end of block */
-name|this
+name|here
 operator|.
 name|val
 operator|=
@@ -1119,7 +1130,7 @@ operator|+
 name|fill
 index|]
 operator|=
-name|this
+name|here
 expr_stmt|;
 block|}
 do|while
@@ -1301,15 +1312,25 @@ name|curr
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|type
 operator|==
 name|LENS
 operator|&&
 name|used
 operator|>=
-name|ENOUGH
-operator|-
-name|MAXD
+name|ENOUGH_LENS
+operator|)
+operator|||
+operator|(
+name|type
+operator|==
+name|DISTS
+operator|&&
+name|used
+operator|>=
+name|ENOUGH_DISTS
+operator|)
 condition|)
 return|return
 literal|1
@@ -1377,7 +1398,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/*        Fill in rest of table for incomplete codes.  This loop is similar to the        loop above in incrementing huff for table indices.  It is assumed that        len is equal to curr + drop, so there is no loop needed to increment        through high index bits.  When the current sub-table is filled, the loop        drops back to the root table to fill in any remaining entries there.      */
-name|this
+name|here
 operator|.
 name|op
 operator|=
@@ -1388,7 +1409,7 @@ operator|)
 literal|64
 expr_stmt|;
 comment|/* invalid code marker */
-name|this
+name|here
 operator|.
 name|bits
 operator|=
@@ -1402,7 +1423,7 @@ operator|-
 name|drop
 argument_list|)
 expr_stmt|;
-name|this
+name|here
 operator|.
 name|val
 operator|=
@@ -1448,7 +1469,7 @@ operator|=
 operator|*
 name|table
 expr_stmt|;
-name|this
+name|here
 operator|.
 name|bits
 operator|=
@@ -1467,7 +1488,7 @@ operator|>>
 name|drop
 index|]
 operator|=
-name|this
+name|here
 expr_stmt|;
 comment|/* backwards increment the len-bit code huff */
 name|incr

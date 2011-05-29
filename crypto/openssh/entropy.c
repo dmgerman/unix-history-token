@@ -350,6 +350,13 @@ argument_list|(
 name|devnull
 argument_list|)
 expr_stmt|;
+name|closefrom
+argument_list|(
+name|STDERR_FILENO
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|original_uid
@@ -659,6 +666,9 @@ argument_list|(
 literal|"OpenSSL version mismatch. Built against %lx, you "
 literal|"have %lx"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|OPENSSL_VERSION_NUMBER
 argument_list|,
 name|SSLeay

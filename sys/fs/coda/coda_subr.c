@@ -494,6 +494,7 @@ name|cnode
 modifier|*
 name|coda_find
 parameter_list|(
+name|struct
 name|CodaFid
 modifier|*
 name|fid

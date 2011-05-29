@@ -151,7 +151,7 @@ begin_decl_stmt
 name|int
 name|isp_fabric_hysteresis
 init|=
-literal|3
+literal|5
 decl_stmt|;
 end_decl_stmt
 
@@ -1765,7 +1765,7 @@ operator|->
 name|isp_osinfo
 operator|.
 name|devq
-operator|==
+operator|!=
 name|NULL
 condition|)
 block|{
@@ -3526,6 +3526,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|QENTRY_LEN
+argument_list|,
+name|chan
 argument_list|)
 expr_stmt|;
 name|sp
@@ -3563,6 +3565,8 @@ argument_list|,
 name|QENTRY_LEN
 argument_list|,
 name|QENTRY_LEN
+argument_list|,
+name|chan
 argument_list|)
 expr_stmt|;
 name|isp_get_24xx_response
@@ -10702,7 +10706,7 @@ name|atio_private_data_t
 modifier|*
 name|atp
 decl_stmt|;
-comment|/* 	 * The firmware status (except for the QLTM_SVALID bit) 	 * indicates why this ATIO was sent to us. 	 * 	 * If QLTM_SVALID is set, the firware has recommended Sense Data. 	 * 	 * If the DISCONNECTS DISABLED bit is set in the flags field, 	 * we're still connected on the SCSI bus. 	 */
+comment|/* 	 * The firmware status (except for the QLTM_SVALID bit) 	 * indicates why this ATIO was sent to us. 	 * 	 * If QLTM_SVALID is set, the firmware has recommended Sense Data. 	 * 	 * If the DISCONNECTS DISABLED bit is set in the flags field, 	 * we're still connected on the SCSI bus. 	 */
 name|status
 operator|=
 name|aep
@@ -11082,7 +11086,7 @@ block|{
 name|size_t
 name|amt
 init|=
-name|imin
+name|ISP_MIN
 argument_list|(
 name|QLTM_SENSELEN
 argument_list|,
@@ -11347,14 +11351,12 @@ decl_stmt|;
 name|atio_private_data_t
 modifier|*
 name|atp
-init|=
-name|NULL
 decl_stmt|;
 name|inot_private_data_t
 modifier|*
 name|ntp
 decl_stmt|;
-comment|/* 	 * The firmware status (except for the QLTM_SVALID bit) 	 * indicates why this ATIO was sent to us. 	 * 	 * If QLTM_SVALID is set, the firware has recommended Sense Data. 	 */
+comment|/* 	 * The firmware status (except for the QLTM_SVALID bit) 	 * indicates why this ATIO was sent to us. 	 * 	 * If QLTM_SVALID is set, the firmware has recommended Sense Data. 	 */
 if|if
 condition|(
 operator|(
@@ -12220,21 +12222,6 @@ expr_stmt|;
 return|return;
 name|noresrc
 label|:
-if|if
-condition|(
-name|atp
-condition|)
-block|{
-name|isp_put_atpd
-argument_list|(
-name|isp
-argument_list|,
-name|tptr
-argument_list|,
-name|atp
-argument_list|)
-expr_stmt|;
-block|}
 name|ntp
 operator|=
 name|isp_get_ntpd
@@ -14823,7 +14810,7 @@ operator|(
 name|in_fcentry_e_t
 operator|*
 operator|)
-name|inot
+name|inp
 operator|)
 operator|->
 name|in_iid
@@ -15295,7 +15282,7 @@ operator|->
 name|in_vpidx
 argument_list|)
 decl_stmt|;
-comment|/* 		 * Note that we're just getting notification that an ELS was received 		 * (possibly with some associcated information sent upstream). This is 		 * *not* the same as being given the ELS frame to accept or reject. 		 */
+comment|/* 		 * Note that we're just getting notification that an ELS was received 		 * (possibly with some associated information sent upstream). This is 		 * *not* the same as being given the ELS frame to accept or reject. 		 */
 switch|switch
 condition|(
 name|inot
@@ -15492,9 +15479,26 @@ break|break;
 case|case
 name|PLOGI
 case|:
+case|case
+name|PRLI
+case|:
+comment|/* 			 * Treat PRLI the same as PLOGI and make a database entry for it. 			 */
+if|if
+condition|(
+name|inot
+operator|->
+name|in_status_subcode
+operator|==
+name|PLOGI
+condition|)
 name|msg
 operator|=
 literal|"PLOGI"
+expr_stmt|;
+else|else
+name|msg
+operator|=
+literal|"PRLI"
 expr_stmt|;
 if|if
 condition|(
@@ -15665,14 +15669,6 @@ name|nphdl
 argument_list|,
 name|portid
 argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|PRLI
-case|:
-name|msg
-operator|=
-literal|"PRLI"
 expr_stmt|;
 break|break;
 case|case
@@ -16531,7 +16527,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle task managment functions.  *  * We show up here with a notify structure filled out.  *  * The nt_lreserved tag points to the original queue entry  */
+comment|/*  * Handle task management functions.  *  * We show up here with a notify structure filled out.  *  * The nt_lreserved tag points to the original queue entry  */
 end_comment
 
 begin_function
@@ -17156,7 +17152,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find the associated private data and makr it as dead so  * we don't try to work on it any further.  */
+comment|/*  * Find the associated private data and mark it as dead so  * we don't try to work on it any further.  */
 end_comment
 
 begin_function
@@ -17980,6 +17976,76 @@ index|]
 init|=
 block|{
 literal|0x7f
+block|,
+literal|0x0
+block|,
+literal|0x5
+block|,
+literal|0x2
+block|,
+literal|32
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0x32
+block|,
+literal|'F'
+block|,
+literal|'R'
+block|,
+literal|'E'
+block|,
+literal|'E'
+block|,
+literal|'B'
+block|,
+literal|'S'
+block|,
+literal|'D'
+block|,
+literal|' '
+block|,
+literal|'S'
+block|,
+literal|'C'
+block|,
+literal|'S'
+block|,
+literal|'I'
+block|,
+literal|' '
+block|,
+literal|'N'
+block|,
+literal|'U'
+block|,
+literal|'L'
+block|,
+literal|'L'
+block|,
+literal|' '
+block|,
+literal|'D'
+block|,
+literal|'E'
+block|,
+literal|'V'
+block|,
+literal|'I'
+block|,
+literal|'C'
+block|,
+literal|'E'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'1'
 block|}
 decl_stmt|;
 specifier|const
@@ -17994,7 +18060,7 @@ literal|0
 block|,
 literal|0x0
 block|,
-literal|0x2
+literal|0x5
 block|,
 literal|0x2
 block|,
@@ -23243,7 +23309,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* 	 * Allocate a CCB, create a wildcard path for this bus/target and schedule a rescan. 	 */
+comment|/* 	 * Allocate a CCB, create a wildcard path for this target and schedule a rescan. 	 */
 name|ccb
 operator|=
 name|xpt_alloc_ccb_nowait
@@ -23269,7 +23335,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * xpt_rescan only honors wildcard in the target field.  	 * Scan the whole bus instead of target, which will then 	 * force a scan of all luns. 	 */
 if|if
 condition|(
 name|xpt_create_path
@@ -23290,7 +23355,7 @@ operator|->
 name|sim
 argument_list|)
 argument_list|,
-name|CAM_TARGET_WILDCARD
+name|tgt
 argument_list|,
 name|CAM_LUN_WILDCARD
 argument_list|)
@@ -23465,11 +23530,19 @@ name|isp_prt
 argument_list|(
 name|isp
 argument_list|,
+name|ISP_LOGSANCFG
+operator||
 name|ISP_LOGDEBUG0
 argument_list|,
-literal|"Chan %d GDT timer expired"
+literal|"Chan %d GDT timer expired @ %lu"
 argument_list|,
 name|chan
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|time_uptime
 argument_list|)
 expr_stmt|;
 for|for
@@ -23531,28 +23604,17 @@ if|if
 condition|(
 name|lp
 operator|->
-name|new_reserved
-operator|==
-literal|0
-condition|)
-block|{
-continue|continue;
-block|}
-name|lp
-operator|->
-name|new_reserved
-operator|-=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|lp
-operator|->
-name|new_reserved
+name|gone_timer
 operator|!=
 literal|0
 condition|)
 block|{
+name|lp
+operator|->
+name|gone_timer
+operator|-=
+literal|1
+expr_stmt|;
 name|more_to_do
 operator|++
 expr_stmt|;
@@ -23658,7 +23720,7 @@ name|ISP_LOGSANCFG
 operator||
 name|ISP_LOGDEBUG0
 argument_list|,
-literal|"Chan %d stopping Gone Device Timer"
+literal|"Chan %d Stopping Gone Device Timer"
 argument_list|,
 name|chan
 argument_list|)
@@ -23989,7 +24051,12 @@ condition|(
 name|lb
 operator|&&
 operator|(
-name|fc
+name|FCPARAM
+argument_list|(
+name|isp
+argument_list|,
+name|chan
+argument_list|)
 operator|->
 name|role
 operator|&
@@ -24374,32 +24441,35 @@ operator|*
 name|hz
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|msleep
+name|mtx_unlock
 argument_list|(
-operator|&
-name|isp_fabric_hysteresis
-argument_list|,
 operator|&
 name|isp
 operator|->
 name|isp_osinfo
 operator|.
 name|lock
+argument_list|)
+expr_stmt|;
+name|pause
+argument_list|(
+literal|"ispt"
 argument_list|,
-name|PRIBIO
-argument_list|,
-literal|"ispT"
-argument_list|,
-operator|(
 name|fc
 operator|->
 name|hysteresis
 operator|*
 name|hz
-operator|)
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|isp
+operator|->
+name|isp_osinfo
+operator|.
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -26162,11 +26232,7 @@ name|CAM_REQ_INVALID
 expr_stmt|;
 break|break;
 block|}
-name|xpt_done
-argument_list|(
-name|ccb
-argument_list|)
-expr_stmt|;
+comment|/* 		 * This is not a queued CCB, so the caller expects it to be 		 * complete when control is returned. 		 */
 break|break;
 block|}
 define|#
@@ -26658,6 +26724,10 @@ name|xport_specific
 operator|.
 name|fc
 decl_stmt|;
+name|unsigned
+name|int
+name|hdlidx
+decl_stmt|;
 name|cts
 operator|->
 name|protocol
@@ -26714,13 +26784,20 @@ name|fcp
 operator|->
 name|isp_gbspeed
 expr_stmt|;
+name|hdlidx
+operator|=
+name|fcp
+operator|->
+name|isp_dev_map
+index|[
+name|tgt
+index|]
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
-name|tgt
-operator|>
-literal|0
-operator|&&
-name|tgt
+name|hdlidx
 operator|<
 name|MAX_FC_TARG
 condition|)
@@ -26734,7 +26811,7 @@ name|fcp
 operator|->
 name|portdb
 index|[
-name|tgt
+name|hdlidx
 index|]
 decl_stmt|;
 name|fc
@@ -29111,7 +29188,12 @@ block|{
 comment|/* 			 * We don't do any simq freezing if we are only in target mode 			 */
 if|if
 condition|(
-name|fc
+name|FCPARAM
+argument_list|(
+name|isp
+argument_list|,
+name|bus
+argument_list|)
 operator|->
 name|role
 operator|&
@@ -29173,7 +29255,7 @@ name|ISP_LOGSANCFG
 operator||
 name|ISP_LOGDEBUG0
 argument_list|,
-literal|"starting Loop Down Timer @ %lu"
+literal|"Starting Loop Down Timer @ %lu"
 argument_list|,
 operator|(
 name|unsigned
@@ -29318,10 +29400,21 @@ name|reserved
 operator|=
 literal|0
 expr_stmt|;
+name|lp
+operator|->
+name|gone_timer
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|(
-name|fc
+name|FCPARAM
+argument_list|(
+name|isp
+argument_list|,
+name|bus
+argument_list|)
 operator|->
 name|role
 operator|&
@@ -29626,6 +29719,12 @@ expr_stmt|;
 name|lp
 operator|->
 name|reserved
+operator|=
+literal|0
+expr_stmt|;
+name|lp
+operator|->
+name|gone_timer
 operator|=
 literal|0
 expr_stmt|;
@@ -30114,7 +30213,7 @@ argument_list|,
 name|bus
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If this has a virtual target and we haven't marked it 		 * that we're going to have isp_gdt tell the OS it's gone, 		 * set the isp_gdt timer running on it. 		 * 		 * If it isn't marked that isp_gdt is going to get rid of it, 		 * announce that it's gone. 		 */
+comment|/* 		 * If this has a virtual target and we haven't marked it 		 * that we're going to have isp_gdt tell the OS it's gone, 		 * set the isp_gdt timer running on it. 		 * 		 * If it isn't marked that isp_gdt is going to get rid of it, 		 * announce that it's gone. 		 * 		 */
 if|if
 condition|(
 name|lp
@@ -30136,7 +30235,13 @@ literal|1
 expr_stmt|;
 name|lp
 operator|->
-name|new_reserved
+name|state
+operator|=
+name|FC_PORTDB_STATE_ZOMBIE
+expr_stmt|;
+name|lp
+operator|->
+name|gone_timer
 operator|=
 name|ISP_FC_PC
 argument_list|(
@@ -30146,12 +30251,6 @@ name|bus
 argument_list|)
 operator|->
 name|gone_device_time
-expr_stmt|;
-name|lp
-operator|->
-name|state
-operator|=
-name|FC_PORTDB_STATE_ZOMBIE
 expr_stmt|;
 if|if
 condition|(
@@ -30177,9 +30276,19 @@ name|ISP_LOGSANCFG
 operator||
 name|ISP_LOGDEBUG0
 argument_list|,
-literal|"Chan %d starting Gone Device Timer"
+literal|"Chan %d Starting Gone Device Timer with %u seconds time now %lu"
 argument_list|,
 name|bus
+argument_list|,
+name|lp
+operator|->
+name|gone_timer
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|time_uptime
 argument_list|)
 expr_stmt|;
 name|callout_reset
@@ -30508,7 +30617,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fc
+name|FCPARAM
+argument_list|(
+name|isp
+argument_list|,
+name|bus
+argument_list|)
 operator|->
 name|role
 operator|&
@@ -31672,7 +31786,7 @@ operator|->
 name|def_wwpn
 expr_stmt|;
 block|}
-comment|/* 	 * For channel zero just return what we have. For either ACIIVE or 	 * DEFAULT cases, we depend on default override of NVRAM values for 	 * channel zero. 	 */
+comment|/* 	 * For channel zero just return what we have. For either ACTIVE or 	 * DEFAULT cases, we depend on default override of NVRAM values for 	 * channel zero. 	 */
 if|if
 condition|(
 name|chan
@@ -31766,7 +31880,7 @@ operator|==
 literal|2
 condition|)
 block|{
-comment|/* 		 * The type 2 NAA fields for QLogic cards appear be laid out 		 * thusly: 		 *  		 * bits 63..60 NAA == 2 bits 59..57 unused/zero bit 56 		 * port (1) or node (0) WWN distinguishor bit 48 		 * physical port on dual-port chips (23XX/24XX) 		 *  		 * This is somewhat nutty, particularly since bit 48 is 		 * irrelevant as they assign seperate serial numbers to 		 * different physical ports anyway. 		 *  		 * We'll stick our channel number plus one first into bits 		 * 57..59 and thence into bits 52..55 which allows for 8 bits 		 * of channel which is comfortably more than our maximum 		 * (126) now. 		 */
+comment|/* 		 * The type 2 NAA fields for QLogic cards appear be laid out 		 * thusly: 		 *  		 * bits 63..60 NAA == 2 bits 59..57 unused/zero bit 56 		 * port (1) or node (0) WWN distinguishor bit 48 		 * physical port on dual-port chips (23XX/24XX) 		 *  		 * This is somewhat nutty, particularly since bit 48 is 		 * irrelevant as they assign separate serial numbers to 		 * different physical ports anyway. 		 *  		 * We'll stick our channel number plus one first into bits 		 * 57..59 and thence into bits 52..55 which allows for 8 bits 		 * of channel which is comfortably more than our maximum 		 * (126) now. 		 */
 name|seed
 operator|&=
 operator|~
@@ -31885,6 +31999,87 @@ name|isp
 operator|->
 name|isp_dev
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+name|vprintf
+argument_list|(
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|isp_xs_prt
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+name|isp
+parameter_list|,
+name|XS_T
+modifier|*
+name|xs
+parameter_list|,
+name|int
+name|level
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|va_list
+name|ap
+decl_stmt|;
+if|if
+condition|(
+name|level
+operator|!=
+name|ISP_LOGALL
+operator|&&
+operator|(
+name|level
+operator|&
+name|isp
+operator|->
+name|isp_dblev
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+return|return;
+block|}
+name|xpt_print_path
+argument_list|(
+name|xs
+operator|->
+name|ccb_h
+operator|.
+name|path
 argument_list|)
 expr_stmt|;
 name|va_start

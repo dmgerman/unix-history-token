@@ -634,6 +634,22 @@ argument_list|)
 block|}
 block|,
 comment|/* PJT_CLEANUP_PUSH_IMP */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_CANCEL_ENTER */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_CANCEL_LEAVE */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1621,6 +1637,32 @@ operator|*
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_macro
+name|STUB_FUNC1
+argument_list|(
+argument|_pthread_cancel_enter
+argument_list|,
+argument|PJT_CANCEL_ENTER
+argument_list|,
+argument|int
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC1
+argument_list|(
+argument|_pthread_cancel_leave
+argument_list|,
+argument|PJT_CANCEL_LEAVE
+argument_list|,
+argument|int
+argument_list|,
+argument|int
+argument_list|)
+end_macro
 
 begin_function
 specifier|static

@@ -51,6 +51,34 @@ directive|include
 file|<vm/vm_extern.h>
 end_include
 
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_SOLARIS
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|POINTER_IS_VALID
+parameter_list|(
+name|p
+parameter_list|)
+value|(!((uintptr_t)(p)& 0x3))
+end_define
+
+begin_define
+define|#
+directive|define
+name|POINTER_INVALIDATE
+parameter_list|(
+name|pp
+parameter_list|)
+value|(*(pp) = (void *)((uintptr_t)(*(pp)) | 0x1))
+end_define
+
 begin_define
 define|#
 directive|define
@@ -76,6 +104,13 @@ begin_define
 define|#
 directive|define
 name|KMC_NODEBUG
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|KMC_NOTOUCH
 value|0
 end_define
 
@@ -387,6 +422,18 @@ parameter_list|,
 name|size
 parameter_list|)
 value|zfs_kmem_free((buf), (size))
+end_define
+
+begin_define
+define|#
+directive|define
+name|kmem_cache_set_move
+parameter_list|(
+name|cache
+parameter_list|,
+name|movefunc
+parameter_list|)
+value|do { } while (0)
 end_define
 
 begin_endif

@@ -262,6 +262,9 @@ name|X509_NAME
 undef|#
 directive|undef
 name|X509_CERT_PAIR
+undef|#
+directive|undef
+name|X509_EXTENSIONS
 endif|#
 directive|endif
 define|#
@@ -681,6 +684,9 @@ operator|*
 name|extensions
 expr_stmt|;
 comment|/* [ 3 ] optional in v3 */
+name|ASN1_ENCODING
+name|enc
+decl_stmt|;
 block|}
 name|X509_CINF
 typedef|;

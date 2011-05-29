@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/syscall.h>
 end_include
 
@@ -279,7 +285,28 @@ operator|=
 name|SV_ABI_FREEBSD
 operator||
 name|SV_LP64
-block|}
+block|,
+operator|.
+name|sv_set_syscall_retval
+operator|=
+name|cpu_set_syscall_retval
+block|,
+operator|.
+name|sv_fetch_syscall_args
+operator|=
+name|NULL
+block|,
+comment|/* XXXKIB */
+operator|.
+name|sv_syscallnames
+operator|=
+name|syscallnames
+block|,
+operator|.
+name|sv_schedtail
+operator|=
+name|NULL
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -535,7 +562,28 @@ operator|=
 name|SV_ABI_FREEBSD
 operator||
 name|SV_ILP32
-block|}
+block|,
+operator|.
+name|sv_set_syscall_retval
+operator|=
+name|cpu_set_syscall_retval
+block|,
+operator|.
+name|sv_fetch_syscall_args
+operator|=
+name|NULL
+block|,
+comment|/* XXXKIB */
+operator|.
+name|sv_syscallnames
+operator|=
+name|syscallnames
+block|,
+operator|.
+name|sv_schedtail
+operator|=
+name|NULL
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -677,7 +725,6 @@ operator|*
 operator|)
 name|NULL
 decl_stmt|;
-empty_stmt|;
 name|Elf_Addr
 name|addr
 decl_stmt|;

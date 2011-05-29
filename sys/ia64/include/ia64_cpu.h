@@ -16,6 +16,30 @@ name|_MACHINE_IA64_CPU_H_
 end_define
 
 begin_comment
+comment|/*  * Local Interrupt ID.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IA64_LID_GET_SAPIC_ID
+parameter_list|(
+name|x
+parameter_list|)
+value|((u_int)((x)>> 16)& 0xffff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IA64_LID_SET_SAPIC_ID
+parameter_list|(
+name|x
+parameter_list|)
+value|((u_int)((x)& 0xffff)<< 16)
+end_define
+
+begin_comment
 comment|/*  * Definition of DCR bits.  */
 end_comment
 
@@ -877,7 +901,7 @@ name|__inline
 name|void
 name|ia64_fc
 parameter_list|(
-name|u_int64_t
+name|uint64_t
 name|va
 parameter_list|)
 block|{
@@ -891,7 +915,7 @@ name|__inline
 name|void
 name|ia64_fc_i
 parameter_list|(
-name|u_int64_t
+name|uint64_t
 name|va
 parameter_list|)
 block|{
@@ -923,14 +947,14 @@ end_comment
 begin_function
 specifier|static
 name|__inline
-name|u_int64_t
+name|uint64_t
 name|ia64_thash
 parameter_list|(
-name|u_int64_t
+name|uint64_t
 name|va
 parameter_list|)
 block|{
-name|u_int64_t
+name|uint64_t
 name|result
 decl_stmt|;
 asm|__asm __volatile("thash %0=%1" : "=r" (result) : "r" (va));
@@ -947,14 +971,14 @@ end_comment
 begin_function
 specifier|static
 name|__inline
-name|u_int64_t
+name|uint64_t
 name|ia64_ttag
 parameter_list|(
-name|u_int64_t
+name|uint64_t
 name|va
 parameter_list|)
 block|{
-name|u_int64_t
+name|uint64_t
 name|result
 decl_stmt|;
 asm|__asm __volatile("ttag %0=%1" : "=r" (result) : "r" (va));
@@ -971,14 +995,14 @@ end_comment
 begin_function
 specifier|static
 name|__inline
-name|u_int64_t
+name|uint64_t
 name|ia64_tpa
 parameter_list|(
-name|u_int64_t
+name|uint64_t
 name|va
 parameter_list|)
 block|{
-name|u_int64_t
+name|uint64_t
 name|result
 decl_stmt|;
 asm|__asm __volatile("tpa %0=%1" : "=r" (result) : "r" (va));
@@ -998,7 +1022,7 @@ name|__inline
 name|void
 name|ia64_ptc_e
 parameter_list|(
-name|u_int64_t
+name|uint64_t
 name|v
 parameter_list|)
 block|{
@@ -1016,10 +1040,10 @@ name|__inline
 name|void
 name|ia64_ptc_g
 parameter_list|(
-name|u_int64_t
+name|uint64_t
 name|va
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 name|log2size
 parameter_list|)
 block|{
@@ -1037,10 +1061,10 @@ name|__inline
 name|void
 name|ia64_ptc_ga
 parameter_list|(
-name|u_int64_t
+name|uint64_t
 name|va
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 name|log2size
 parameter_list|)
 block|{
@@ -1058,10 +1082,10 @@ name|__inline
 name|void
 name|ia64_ptc_l
 parameter_list|(
-name|u_int64_t
+name|uint64_t
 name|va
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 name|log2size
 parameter_list|)
 block|{
@@ -1248,13 +1272,13 @@ end_comment
 begin_function
 specifier|static
 name|__inline
-name|u_int64_t
+name|uint64_t
 name|ia64_get_psr
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_int64_t
+name|uint64_t
 name|result
 decl_stmt|;
 asm|__asm __volatile("mov %0=psr;;" : "=r" (result));
@@ -1276,7 +1300,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\ 								\
-value|static __inline u_int64_t					\ ia64_get_##name(void)						\ {								\ 	u_int64_t result;					\ 	__asm __volatile("mov %0=ar." #name : "=r" (result));	\ 	return result;						\ }								\ 								\ static __inline void						\ ia64_set_##name(u_int64_t v)					\ {								\ 	__asm __volatile("mov ar." #name "=%0;;" :: "r" (v));	\ }
+value|static __inline uint64_t					\ ia64_get_##name(void)						\ {								\ 	uint64_t result;					\ 	__asm __volatile("mov %0=ar." #name : "=r" (result));	\ 	return result;						\ }								\ 								\ static __inline void						\ ia64_set_##name(uint64_t v)					\ {								\ 	__asm __volatile("mov ar." #name "=%0;;" :: "r" (v));	\ }
 end_define
 
 begin_macro
@@ -1480,7 +1504,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\ 								\
-value|static __inline u_int64_t					\ ia64_get_##name(void)						\ {								\ 	u_int64_t result;					\ 	__asm __volatile("mov %0=cr." #name : "=r" (result));	\ 	return result;						\ }								\ 								\ static __inline void						\ ia64_set_##name(u_int64_t v)					\ {								\ 	__asm __volatile("mov cr." #name "=%0;;" :: "r" (v));	\ }
+value|static __inline uint64_t					\ ia64_get_##name(void)						\ {								\ 	uint64_t result;					\ 	__asm __volatile("mov %0=cr." #name : "=r" (result));	\ 	return result;						\ }								\ 								\ static __inline void						\ ia64_set_##name(uint64_t v)					\ {								\ 	__asm __volatile("mov cr." #name "=%0;;" :: "r" (v));	\ }
 end_define
 
 begin_macro
@@ -1675,10 +1699,10 @@ name|__inline
 name|void
 name|ia64_set_rr
 parameter_list|(
-name|u_int64_t
+name|uint64_t
 name|rrbase
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 name|v
 parameter_list|)
 block|{
@@ -1707,14 +1731,14 @@ end_comment
 begin_function
 unit|static
 name|__inline
-name|u_int64_t
+name|uint64_t
 name|ia64_get_cpuid
 parameter_list|(
 name|int
 name|i
 parameter_list|)
 block|{
-name|u_int64_t
+name|uint64_t
 name|result
 decl_stmt|;
 asm|__asm __volatile("mov %0=cpuid[%1]"
@@ -1764,31 +1788,25 @@ asm|__asm __volatile("rsm psr.dfh;; srlz.d");
 block|}
 end_function
 
-begin_function
-specifier|static
-name|__inline
-name|void
-name|ia64_srlz_d
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-asm|__asm __volatile("srlz.d");
-block|}
-end_function
+begin_comment
+comment|/*  * Avoid inline functions for the following so that they still work  * correctly when inlining is not enabled (e.g. -O0). Function calls  * need data serialization after setting psr, which results in a  * hazard.  */
+end_comment
 
-begin_function
-specifier|static
-name|__inline
-name|void
+begin_define
+define|#
+directive|define
+name|ia64_srlz_d
+parameter_list|()
+value|__asm __volatile("srlz.d")
+end_define
+
+begin_define
+define|#
+directive|define
 name|ia64_srlz_i
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-asm|__asm __volatile("srlz.i;;");
-block|}
-end_function
+parameter_list|()
+value|__asm __volatile("srlz.i;;")
+end_define
 
 begin_endif
 endif|#

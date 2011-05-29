@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/linker_set.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
 end_include
 
@@ -954,7 +948,7 @@ name|ifp
 operator|->
 name|if_snd
 argument_list|,
-name|IFQ_MAXLEN
+name|ifqmaxlen
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -963,7 +957,7 @@ name|if_snd
 operator|.
 name|ifq_drv_maxlen
 operator|=
-name|IFQ_MAXLEN
+name|ifqmaxlen
 expr_stmt|;
 name|IFQ_SET_READY
 argument_list|(
@@ -1007,7 +1001,7 @@ expr_stmt|;
 comment|/* device_xxx() depends on this */
 name|error
 operator|=
-name|mii_phy_probe
+name|mii_attach
 argument_list|(
 name|ue
 operator|->
@@ -1018,6 +1012,8 @@ name|ue
 operator|->
 name|ue_miibus
 argument_list|,
+name|ifp
+argument_list|,
 name|ue_ifmedia_upd
 argument_list|,
 name|ue
@@ -1025,6 +1021,14 @@ operator|->
 name|ue_methods
 operator|->
 name|ue_mii_sts
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|MII_PHY_ANY
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -1044,7 +1048,7 @@ name|ue
 operator|->
 name|ue_dev
 argument_list|,
-literal|"MII without any PHY\n"
+literal|"attaching PHYs failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1139,6 +1143,8 @@ name|OID_AUTO
 argument_list|,
 literal|"%parent"
 argument_list|,
+name|CTLTYPE_STRING
+operator||
 name|CTLFLAG_RD
 argument_list|,
 name|ue
@@ -2570,7 +2576,7 @@ condition|)
 block|{
 name|ifp
 operator|->
-name|if_ierrors
+name|if_iqdrops
 operator|++
 expr_stmt|;
 return|return

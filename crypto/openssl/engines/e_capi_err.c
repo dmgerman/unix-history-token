@@ -506,6 +506,15 @@ literal|"unsupported public key algorithm"
 block|}
 block|,
 block|{
+name|ERR_REASON
+argument_list|(
+name|CAPI_R_WIN32_ERROR
+argument_list|)
+block|,
+literal|"win32 error"
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL

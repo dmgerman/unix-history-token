@@ -128,6 +128,29 @@ directive|include
 file|<machine/resource.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sparc64__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/ofw/openfirm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/ofw_machdep.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -174,24 +197,6 @@ begin_include
 include|#
 directive|include
 file|<cam/scsi/scsi_message.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/pmap.h>
 end_include
 
 begin_comment
@@ -1257,7 +1262,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Simple power of two buddy-like allocator.  *  *  This simple code is not intended to be fast, but to  *  provide power of 2 aligned memory allocations.  *  Since the SCRIPTS processor only supplies 8 bit arithmetic,  *  this allocator allows simple and fast address calculations  *  from the SCRIPTS code. In addition, cache line alignment  *  is guaranteed for power of 2 cache line size.  *  *  This allocator has been developped for the Linux sym53c8xx  *  driver, since this O/S does not provide naturally aligned  *  allocations.  *  It has the advantage of allowing the driver to use private  *  pages of memory that will be useful if we ever need to deal  *  with IO MMUs for PCI.  */
+comment|/*  *  Simple power of two buddy-like allocator.  *  *  This simple code is not intended to be fast, but to  *  provide power of 2 aligned memory allocations.  *  Since the SCRIPTS processor only supplies 8 bit arithmetic,  *  this allocator allows simple and fast address calculations  *  from the SCRIPTS code. In addition, cache line alignment  *  is guaranteed for power of 2 cache line size.  *  *  This allocator has been developed for the Linux sym53c8xx  *  driver, since this O/S does not provide naturally aligned  *  allocations.  *  It has the advantage of allowing the driver to use private  *  pages of memory that will be useful if we ever need to deal  *  with IO MMUs for PCI.  */
 end_comment
 
 begin_define
@@ -7044,11 +7049,6 @@ name|sym_fw1a_scr
 modifier|*
 name|scripta0
 decl_stmt|;
-name|struct
-name|sym_fw1b_scr
-modifier|*
-name|scriptb0
-decl_stmt|;
 name|scripta0
 operator|=
 operator|(
@@ -7059,17 +7059,6 @@ operator|)
 name|np
 operator|->
 name|scripta0
-expr_stmt|;
-name|scriptb0
-operator|=
-operator|(
-expr|struct
-name|sym_fw1b_scr
-operator|*
-operator|)
-name|np
-operator|->
-name|scriptb0
 expr_stmt|;
 comment|/* 	 *  Fill variable parts in scripts. 	 */
 name|sym_fw_fill_data
@@ -7127,11 +7116,6 @@ name|sym_fw2a_scr
 modifier|*
 name|scripta0
 decl_stmt|;
-name|struct
-name|sym_fw2b_scr
-modifier|*
-name|scriptb0
-decl_stmt|;
 name|scripta0
 operator|=
 operator|(
@@ -7142,17 +7126,6 @@ operator|)
 name|np
 operator|->
 name|scripta0
-expr_stmt|;
-name|scriptb0
-operator|=
-operator|(
-expr|struct
-name|sym_fw2b_scr
-operator|*
-operator|)
-name|np
-operator|->
-name|scriptb0
 expr_stmt|;
 comment|/* 	 *  Fill variable parts in scripts. 	 */
 name|sym_fw_fill_data
@@ -9016,7 +8989,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *  Print something which allows to retrieve the controler type,  *  unit, target, lun concerned by a kernel message.  */
+comment|/*  *  Print something which allows to retrieve the controller type,  *  unit, target, lun concerned by a kernel message.  */
 end_comment
 
 begin_function
@@ -10740,6 +10713,22 @@ argument_list|,
 name|nvram
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__sparc64__
+name|np
+operator|->
+name|myaddr
+operator|=
+name|OF_getscsinitid
+argument_list|(
+name|np
+operator|->
+name|device
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 *  Get SCSI addr of host adapter (set by bios?). 	 */
 if|if
 condition|(
@@ -17062,7 +17051,7 @@ operator|&
 literal|0x7f
 expr_stmt|;
 block|}
-comment|/* 		 *  The data in the dma fifo has not been transfered to 		 *  the target -> add the amount to the rest 		 *  and clear the data. 		 *  Check the sstat2 register in case of wide transfer. 		 */
+comment|/* 		 *  The data in the dma fifo has not been transferred to 		 *  the target -> add the amount to the rest 		 *  and clear the data. 		 *  Check the sstat2 register in case of wide transfer. 		 */
 name|rest
 operator|+=
 name|delta
@@ -28921,7 +28910,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 *  Retreive the target and lun descriptors. 	 */
+comment|/* 	 *  Retrieve the target and lun descriptors. 	 */
 name|tp
 operator|=
 operator|&

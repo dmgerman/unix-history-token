@@ -1573,6 +1573,7 @@ name|connect_timeout
 parameter_list|(
 name|int
 name|sig
+name|__unused
 parameter_list|)
 block|{
 name|char

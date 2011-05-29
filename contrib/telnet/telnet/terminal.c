@@ -390,7 +390,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *		Send as much data as possible to the terminal.  *  *		Return value:  *			-1: No useful work done, data waiting to go out.  *			 0: No data was waiting, so nothing was done.  *			 1: All waiting data was written out.  *			 n: All data - n was written out.  */
+comment|/*  *		Send as much data as possible to the terminal, else exits if  *		it encounters a permanent failure when writing to the tty.  *  *		Return value:  *			-1: No useful work done, data waiting to go out.  *			 0: No data was waiting, so nothing was done.  *			 1: All waiting data was written out.  *			 n: All data - n was written out.  */
 end_comment
 
 begin_function
@@ -544,10 +544,68 @@ name|n
 operator|<
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EAGAIN
+operator|||
+name|errno
+operator|==
+name|EINTR
+condition|)
+block|{
 return|return
 operator|-
 literal|1
 return|;
+block|}
+else|else
+block|{
+name|ring_consumed
+argument_list|(
+operator|&
+name|ttyoring
+argument_list|,
+name|ring_full_count
+argument_list|(
+operator|&
+name|ttyoring
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|setconnmode
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|setcommandmode
+argument_list|()
+expr_stmt|;
+name|NetClose
+argument_list|(
+name|net
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Write error on local output.\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|n

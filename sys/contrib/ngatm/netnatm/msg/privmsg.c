@@ -526,6 +526,9 @@ name|b_rptr
 operator|+=
 name|ielen
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|UNI_SAVE_IERR
 argument_list|(
 name|cx
@@ -698,6 +701,9 @@ name|DEC_ILL
 case|:
 comment|/* illegal IE */
 comment|/* 			 * Unexpected but recognized. 			 * Q.2931 5.6.8.3 			 */
+operator|(
+name|void
+operator|)
 name|UNI_SAVE_IERR
 argument_list|(
 name|cx
@@ -730,6 +736,9 @@ operator|&
 name|UNIFL_ACCESS
 condition|)
 comment|/* this may be wrong: 5.6.8.2 */
+operator|(
+name|void
+operator|)
 name|UNI_SAVE_IERR
 argument_list|(
 name|cx
@@ -744,6 +753,9 @@ name|UNI_IERR_ACC
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|UNI_SAVE_IERR
 argument_list|(
 name|cx

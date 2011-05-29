@@ -273,10 +273,6 @@ name|chain_ss
 init|=
 name|NULL
 decl_stmt|;
-name|X509_NAME
-modifier|*
-name|xn
-decl_stmt|;
 name|int
 name|bad_chain
 init|=
@@ -502,13 +498,6 @@ condition|)
 break|break;
 comment|/* FIXME: If this happens, we should take 		                         * note of it and, if appropriate, use the 		                         * X509_V_ERR_CERT_CHAIN_TOO_LONG error 		                         * code later. 		                         */
 comment|/* If we are self signed, we break */
-name|xn
-operator|=
-name|X509_get_issuer_name
-argument_list|(
-name|x
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ctx
@@ -637,13 +626,6 @@ argument_list|,
 name|i
 operator|-
 literal|1
-argument_list|)
-expr_stmt|;
-name|xn
-operator|=
-name|X509_get_subject_name
-argument_list|(
-name|x
 argument_list|)
 expr_stmt|;
 if|if
@@ -844,13 +826,6 @@ name|num
 condition|)
 break|break;
 comment|/* If we are self signed, we break */
-name|xn
-operator|=
-name|X509_get_issuer_name
-argument_list|(
-name|x
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ctx
@@ -933,13 +908,6 @@ operator|++
 expr_stmt|;
 block|}
 comment|/* we now have our chain, lets check it... */
-name|xn
-operator|=
-name|X509_get_issuer_name
-argument_list|(
-name|x
-argument_list|)
-expr_stmt|;
 comment|/* Is last certificate looked up self signed? */
 if|if
 condition|(
@@ -4258,12 +4226,29 @@ name|error_depth
 operator|=
 name|n
 expr_stmt|;
+comment|/* Skip signature check for self signed certificates unless 		 * explicitly asked for. It doesn't add any security and 		 * just wastes time. 		 */
 if|if
 condition|(
 operator|!
 name|xs
 operator|->
 name|valid
+operator|&&
+operator|(
+name|xs
+operator|!=
+name|xi
+operator|||
+operator|(
+name|ctx
+operator|->
+name|param
+operator|->
+name|flags
+operator|&
+name|X509_V_FLAG_CHECK_SS_SIGNATURE
+operator|)
+operator|)
 condition|)
 block|{
 if|if
@@ -4325,7 +4310,6 @@ argument_list|)
 operator|<=
 literal|0
 condition|)
-comment|/* XXX  For the final trusted self-signed cert, 				 * this is a waste of time.  That check should 				 * optional so that e.g. 'openssl x509' can be 				 * used to detect invalid self-signatures, but 				 * we don't verify again and again in SSL 				 * handshakes and the like once the cert has 				 * been declared trusted. */
 block|{
 name|ctx
 operator|->
@@ -6204,7 +6188,7 @@ name|ctx
 operator|->
 name|param
 operator|->
-name|flags
+name|inh_flags
 operator||=
 name|X509_VP_FLAG_DEFAULT
 operator||

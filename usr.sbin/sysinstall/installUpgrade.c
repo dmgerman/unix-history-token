@@ -1755,8 +1755,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|saved_etc
-operator|&&
 name|chdir
 argument_list|(
 name|saved_etc

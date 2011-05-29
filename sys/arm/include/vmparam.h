@@ -128,6 +128,28 @@ value|9
 end_define
 
 begin_comment
+comment|/*  * Only one memory domain.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_NDOMAIN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VM_NDOMAIN
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Disable superpage reservations.  */
 end_comment
 
@@ -359,13 +381,6 @@ name|SGROWSIZ
 value|(128*1024)
 end_define
 
-begin_define
-define|#
-directive|define
-name|MAXSLP
-value|20
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -385,6 +400,17 @@ end_endif
 
 begin_comment
 comment|/* ARM_USE_SMALL_ALLOC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ZERO_REGION_SIZE
+value|(64 * 1024)
+end_define
+
+begin_comment
+comment|/* 64KB */
 end_comment
 
 begin_endif

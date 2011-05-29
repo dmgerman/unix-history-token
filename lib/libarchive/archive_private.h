@@ -195,7 +195,7 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|archive_finish
+name|archive_free
 function_decl|)
 parameter_list|(
 name|struct

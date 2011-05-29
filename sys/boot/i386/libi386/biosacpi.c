@@ -78,7 +78,7 @@ file|"actbl.h"
 end_include
 
 begin_comment
-comment|/*  * Detect ACPI and export information about the APCI BIOS into the  * environment.  */
+comment|/*  * Detect ACPI and export information about the ACPI BIOS into the  * environment.  */
 end_comment
 
 begin_function_decl
@@ -135,7 +135,6 @@ decl_stmt|;
 name|int
 name|revision
 decl_stmt|;
-comment|/* XXX check the BIOS datestamp */
 comment|/* locate and validate the RSDP */
 if|if
 condition|(
@@ -311,16 +310,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* XXX other tables? */
-name|setenv
-argument_list|(
-literal|"acpi_load"
-argument_list|,
-literal|"YES"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

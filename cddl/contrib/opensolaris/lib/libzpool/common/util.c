@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_include
@@ -430,7 +430,7 @@ name|nvlist_lookup_uint64_array
 argument_list|(
 name|nv
 argument_list|,
-name|ZPOOL_CONFIG_STATS
+name|ZPOOL_CONFIG_VDEV_STATS
 argument_list|,
 operator|(
 name|uint64_t

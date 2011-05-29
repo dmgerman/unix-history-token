@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2010, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/*  * Copyright (C) 2000 - 2011, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -47,6 +47,7 @@ value|256
 end_define
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|FileList
@@ -57,12 +58,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|FileCount
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 name|BOOLEAN
 name|AslToFile
 init|=
@@ -73,16 +69,6 @@ end_decl_stmt
 begin_comment
 comment|/* Local prototypes */
 end_comment
-
-begin_function_decl
-specifier|static
-name|void
-name|AslInitializeGlobals
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -102,12 +88,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|UINT8
+name|AslDetectSourceFileType
+parameter_list|(
+name|ASL_FILE_INFO
+modifier|*
+name|Info
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AslInitializeGlobals  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Re-initialize globals needed to restart the compiler. This  *              allows multiple files to be disassembled and/or compiled.  *  ******************************************************************************/
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|AslInitializeGlobals
 parameter_list|(
@@ -134,6 +131,10 @@ name|Gbl_CurrentLineOffset
 operator|=
 literal|0
 expr_stmt|;
+name|Gbl_InputFieldCount
+operator|=
+literal|0
+expr_stmt|;
 name|Gbl_LineBufPtr
 operator|=
 name|Gbl_CurrentLineBuffer
@@ -145,6 +146,14 @@ expr_stmt|;
 name|Gbl_NextError
 operator|=
 name|NULL
+expr_stmt|;
+name|Gbl_Signature
+operator|=
+name|NULL
+expr_stmt|;
+name|Gbl_FileType
+operator|=
+literal|0
 expr_stmt|;
 name|AslGbl_NextEvent
 operator|=
@@ -181,6 +190,33 @@ name|Filename
 operator|=
 name|NULL
 expr_stmt|;
+name|Gbl_Files
+index|[
+name|ASL_FILE_AML_OUTPUT
+index|]
+operator|.
+name|Handle
+operator|=
+name|NULL
+expr_stmt|;
+name|Gbl_Files
+index|[
+name|ASL_FILE_SOURCE_OUTPUT
+index|]
+operator|.
+name|Filename
+operator|=
+name|NULL
+expr_stmt|;
+name|Gbl_Files
+index|[
+name|ASL_FILE_SOURCE_OUTPUT
+index|]
+operator|.
+name|Handle
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_function
 
@@ -214,6 +250,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|Filename
+decl_stmt|;
+name|int
+name|FileCount
 decl_stmt|;
 name|FileCount
 operator|=
@@ -390,6 +429,156 @@ block|}
 end_function
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AslDetectSourceFileType  *  * PARAMETERS:  Info            - Name/Handle for the file (must be open)  *  * RETURN:      File Type  *  * DESCRIPTION: Determine the type of the input file. Either binary (contains  *              non-ASCII characters), ASL file, or an ACPI Data Table file.  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|UINT8
+name|AslDetectSourceFileType
+parameter_list|(
+name|ASL_FILE_INFO
+modifier|*
+name|Info
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|FileChar
+decl_stmt|;
+name|UINT8
+name|Type
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+comment|/* Check for 100% ASCII source file (comments are ignored) */
+name|Status
+operator|=
+name|FlCheckForAscii
+argument_list|(
+name|Info
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Non-ascii input file - %s\n"
+argument_list|,
+name|Info
+operator|->
+name|Filename
+argument_list|)
+expr_stmt|;
+name|Type
+operator|=
+name|ASL_INPUT_TYPE_BINARY
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
+comment|/*      * File is ASCII. Determine if this is an ASL file or an ACPI data      * table file.      */
+while|while
+condition|(
+name|fgets
+argument_list|(
+name|Gbl_CurrentLineBuffer
+argument_list|,
+name|ASL_LINE_BUFFER_SIZE
+argument_list|,
+name|Info
+operator|->
+name|Handle
+argument_list|)
+condition|)
+block|{
+comment|/* Uppercase the buffer for caseless compare */
+name|FileChar
+operator|=
+name|Gbl_CurrentLineBuffer
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|FileChar
+condition|)
+block|{
+operator|*
+name|FileChar
+operator|=
+operator|(
+name|char
+operator|)
+name|toupper
+argument_list|(
+operator|(
+name|int
+operator|)
+operator|*
+name|FileChar
+argument_list|)
+expr_stmt|;
+name|FileChar
+operator|++
+expr_stmt|;
+block|}
+comment|/* Presence of "DefinitionBlock" indicates actual ASL code */
+if|if
+condition|(
+name|strstr
+argument_list|(
+name|Gbl_CurrentLineBuffer
+argument_list|,
+literal|"DEFINITIONBLOCK"
+argument_list|)
+condition|)
+block|{
+comment|/* Appears to be an ASL file */
+name|Type
+operator|=
+name|ASL_INPUT_TYPE_ASCII_ASL
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
+block|}
+comment|/* Not an ASL source file, default to a data table source file */
+name|Type
+operator|=
+name|ASL_INPUT_TYPE_ASCII_DATA
+expr_stmt|;
+name|Cleanup
+label|:
+comment|/* Must seek back to the start of the file */
+name|fseek
+argument_list|(
+name|Info
+operator|->
+name|Handle
+argument_list|,
+literal|0
+argument_list|,
+name|SEEK_SET
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|Type
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AslDoOneFile  *  * PARAMETERS:  Filename        - Name of the file  *  * RETURN:      Status  *  * DESCRIPTION: Process a single file - either disassemble, compile, or both  *  ******************************************************************************/
 end_comment
 
@@ -426,7 +615,7 @@ operator|||
 name|Gbl_GetAllTables
 condition|)
 block|{
-comment|/* ACPI CA subsystem initialization */
+comment|/* ACPICA subsystem initialization */
 name|Status
 operator|=
 name|AdInitialize
@@ -526,6 +715,9 @@ comment|/* Shutdown compiler and ACPICA subsystem */
 name|AeClearErrorLog
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|AcpiTerminate
 argument_list|()
 expr_stmt|;
@@ -548,14 +740,82 @@ name|Filename
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|Gbl_Files
+index|[
+name|ASL_FILE_INPUT
+index|]
+operator|.
+name|Filename
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
 block|}
-comment|/*      * ASL Compilation (Optional)      */
+block|}
+comment|/*      * Open the input file. Here, this should be an ASCII source file,      * either an ASL file or a Data Table file      */
+name|Status
+operator|=
+name|FlOpenInputFile
+argument_list|(
+name|Gbl_Files
+index|[
+name|ASL_FILE_INPUT
+index|]
+operator|.
+name|Filename
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|Gbl_DoCompile
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
 condition|)
 block|{
-comment|/*          * If -p not specified, we will use the input filename as the          * output filename prefix          */
+name|AePrintErrorLog
+argument_list|(
+name|ASL_FILE_STDERR
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_ERROR
+operator|)
+return|;
+block|}
+comment|/* Determine input file type */
+name|Gbl_FileType
+operator|=
+name|AslDetectSourceFileType
+argument_list|(
+operator|&
+name|Gbl_Files
+index|[
+name|ASL_FILE_INPUT
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Gbl_FileType
+operator|==
+name|ASL_INPUT_TYPE_BINARY
+condition|)
+block|{
+return|return
+operator|(
+name|AE_ERROR
+operator|)
+return|;
+block|}
+comment|/*      * If -p not specified, we will use the input filename as the      * output filename prefix      */
 if|if
 condition|(
 name|Gbl_UseDefaultAmlFilename
@@ -571,7 +831,76 @@ operator|.
 name|Filename
 expr_stmt|;
 block|}
-comment|/* ACPI CA subsystem initialization (Must be re-initialized) */
+comment|/* Open the optional output files (listings, etc.) */
+name|Status
+operator|=
+name|FlOpenMiscOutputFiles
+argument_list|(
+name|Gbl_OutputFilenamePrefix
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AePrintErrorLog
+argument_list|(
+name|ASL_FILE_STDERR
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_ERROR
+operator|)
+return|;
+block|}
+comment|/*      * Compilation of ASL source versus DataTable source uses different      * compiler subsystems      */
+switch|switch
+condition|(
+name|Gbl_FileType
+condition|)
+block|{
+comment|/*      * Data Table Compilation      */
+case|case
+name|ASL_INPUT_TYPE_ASCII_DATA
+case|:
+name|Status
+operator|=
+name|DtDoCompile
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|Gbl_Signature
+condition|)
+block|{
+name|ACPI_FREE
+argument_list|(
+name|Gbl_Signature
+argument_list|)
+expr_stmt|;
+name|Gbl_Signature
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+name|AeClearErrorLog
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+comment|/*      * ASL Compilation (Optional)      */
+case|case
+name|ASL_INPUT_TYPE_ASCII_ASL
+case|:
+comment|/* ACPICA subsystem initialization */
 name|Status
 operator|=
 name|AdInitialize
@@ -596,6 +925,9 @@ operator|=
 name|CmDoCompile
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|AcpiTerminate
 argument_list|()
 expr_stmt|;
@@ -626,12 +958,38 @@ block|}
 name|AeClearErrorLog
 argument_list|()
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|AE_OK
 operator|)
 return|;
+case|case
+name|ASL_INPUT_TYPE_BINARY
+case|:
+name|AePrintErrorLog
+argument_list|(
+name|ASL_FILE_STDERR
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_ERROR
+operator|)
+return|;
+default|default:
+name|printf
+argument_list|(
+literal|"Unknown file type %X\n"
+argument_list|,
+name|Gbl_FileType
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_ERROR
+operator|)
+return|;
+block|}
 block|}
 end_function
 
@@ -646,15 +1004,20 @@ parameter_list|(
 name|char
 modifier|*
 name|Pathname
+parameter_list|,
+name|ASL_PATHNAME_CALLBACK
+name|PathCallback
 parameter_list|)
 block|{
 name|ACPI_STATUS
 name|Status
+init|=
+name|AE_OK
 decl_stmt|;
 name|char
 modifier|*
 modifier|*
-name|FileList
+name|WildcardList
 decl_stmt|;
 name|char
 modifier|*
@@ -693,7 +1056,7 @@ operator|)
 return|;
 block|}
 comment|/* Expand possible wildcard into a file list (Windows/DOS only) */
-name|FileList
+name|WildcardList
 operator|=
 name|AsDoWildcard
 argument_list|(
@@ -705,7 +1068,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|*
-name|FileList
+name|WildcardList
 condition|)
 block|{
 name|FullPathname
@@ -720,7 +1083,7 @@ operator|+
 name|strlen
 argument_list|(
 operator|*
-name|FileList
+name|WildcardList
 argument_list|)
 operator|+
 literal|1
@@ -739,7 +1102,7 @@ argument_list|(
 name|FullPathname
 argument_list|,
 operator|*
-name|FileList
+name|WildcardList
 argument_list|)
 expr_stmt|;
 comment|/*          * If -p not specified, we will use the input filename as the          * output filename prefix          */
@@ -753,27 +1116,17 @@ operator|=
 name|FullPathname
 expr_stmt|;
 block|}
+comment|/* Save status from all compiles */
 name|Status
-operator|=
-name|AslDoOneFile
+operator||=
+call|(
+modifier|*
+name|PathCallback
+call|)
 argument_list|(
 name|FullPathname
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|Status
-operator|)
-return|;
-block|}
 name|ACPI_FREE
 argument_list|(
 name|FullPathname
@@ -782,15 +1135,15 @@ expr_stmt|;
 name|ACPI_FREE
 argument_list|(
 operator|*
-name|FileList
+name|WildcardList
 argument_list|)
 expr_stmt|;
 operator|*
-name|FileList
+name|WildcardList
 operator|=
 name|NULL
 expr_stmt|;
-name|FileList
+name|WildcardList
 operator|++
 expr_stmt|;
 block|}
@@ -806,7 +1159,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|AE_OK
+name|Status
 operator|)
 return|;
 block|}

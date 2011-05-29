@@ -137,13 +137,7 @@ name|SUPPORTED_LINK_IRQ
 operator||
 name|SUPPORTED_MISC_IRQ
 operator|)
-block|,
-name|POLL_LINK_1ST_TIME
-init|=
-literal|1
-operator|<<
-literal|27
-block|}
+block|, }
 enum|;
 end_enum
 
@@ -295,7 +289,7 @@ literal|7
 block|,
 name|FW_VERSION_MINOR
 init|=
-literal|8
+literal|11
 block|,
 name|FW_VERSION_MICRO
 init|=
@@ -1093,6 +1087,11 @@ name|int
 name|jumbo_size
 decl_stmt|;
 comment|/* # of entries in jumbo free list */
+name|unsigned
+name|int
+name|jumbo_buf_size
+decl_stmt|;
+comment|/* buffer size of jumbo entry */
 name|unsigned
 name|int
 name|txq_size
@@ -3086,17 +3085,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|t3_phy_intr_handler
-parameter_list|(
-name|adapter_t
-modifier|*
-name|adapter
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|t3_link_changed
 parameter_list|(
@@ -3709,6 +3697,18 @@ end_function_decl
 begin_function_decl
 name|void
 name|t3b_pcs_reset
+parameter_list|(
+name|struct
+name|cmac
+modifier|*
+name|mac
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|t3c_pcs_force_los
 parameter_list|(
 name|struct
 name|cmac

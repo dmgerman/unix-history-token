@@ -285,7 +285,7 @@ name|progname
 operator|=
 literal|"ar"
 expr_stmt|;
-comment|/* Act like ranlib if our name ends in "ranlib"; this 	 * accomodates arm-freebsd7.1-ranlib, bsdranlib, etc. */
+comment|/* Act like ranlib if our name ends in "ranlib"; this 	 * accommodates arm-freebsd7.1-ranlib, bsdranlib, etc. */
 name|len
 operator|=
 name|strlen
@@ -334,7 +334,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"tV"
+literal|"tDV"
 argument_list|,
 name|longopts
 argument_list|,
@@ -355,6 +355,16 @@ case|case
 literal|'t'
 case|:
 comment|/* Ignored. */
+break|break;
+case|case
+literal|'D'
+case|:
+name|bsdar
+operator|->
+name|options
+operator||=
+name|AR_D
+expr_stmt|;
 break|break;
 case|case
 literal|'V'
@@ -528,7 +538,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abCcdfijlMmopqrSsTtuVvxz"
+literal|"abCcdDfijlMmopqrSsTtuVvxz"
 argument_list|,
 name|longopts
 argument_list|,
@@ -600,6 +610,16 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'D'
+case|:
+name|bsdar
+operator|->
+name|options
+operator||=
+name|AR_D
+expr_stmt|;
+break|break;
+case|case
 literal|'f'
 case|:
 case|case
@@ -615,12 +635,7 @@ break|break;
 case|case
 literal|'j'
 case|:
-name|bsdar
-operator|->
-name|options
-operator||=
-name|AR_J
-expr_stmt|;
+comment|/* ignored */
 break|break;
 case|case
 literal|'l'
@@ -764,12 +779,7 @@ break|break;
 case|case
 literal|'z'
 case|:
-name|bsdar
-operator|->
-name|options
-operator||=
-name|AR_Z
-expr_stmt|;
+comment|/* ignored */
 break|break;
 case|case
 name|OPTION_HELP
@@ -1020,6 +1030,23 @@ argument_list|,
 literal|"-C"
 argument_list|,
 literal|"x"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bsdar
+operator|->
+name|options
+operator|&
+name|AR_D
+condition|)
+name|only_mode
+argument_list|(
+name|bsdar
+argument_list|,
+literal|"-D"
+argument_list|,
+literal|"qr"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1455,7 +1482,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tar -q [-Tcjsvz] archive file ...\n"
+literal|"\tar -q [-TcDjsvz] archive file ...\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1465,7 +1492,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tar -r [-Tcjsuvz] archive file ...\n"
+literal|"\tar -r [-TcDjsuvz] archive file ...\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1475,7 +1502,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tar -r [-Tabcijsuvz] position archive file ...\n"
+literal|"\tar -r [-TabcDijsuvz] position archive file ...\n"
 argument_list|)
 expr_stmt|;
 operator|(

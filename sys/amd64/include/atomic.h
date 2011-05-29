@@ -108,7 +108,7 @@ modifier|*
 name|dst
 parameter_list|,
 name|u_int
-name|exp
+name|expect
 parameter_list|,
 name|u_int
 name|src
@@ -126,7 +126,7 @@ modifier|*
 name|dst
 parameter_list|,
 name|u_long
-name|exp
+name|expect
 parameter_list|,
 name|u_long
 name|src
@@ -250,11 +250,11 @@ parameter_list|,
 name|V
 parameter_list|)
 define|\
-value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(MPLOCKED OP			\ 	: "=m" (*p)					\ 	: CONS (V), "m" (*p));				\ }							\ 							\ static __inline void					\ atomic_##NAME##_barr_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(MPLOCKED OP			\ 	: "=m" (*p)					\ 	: CONS (V), "m" (*p)				\ 	: "memory");					\ }							\ struct __hack
+value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(MPLOCKED OP			\ 	: "=m" (*p)					\ 	: CONS (V), "m" (*p)				\ 	: "cc");					\ }							\ 							\ static __inline void					\ atomic_##NAME##_barr_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(MPLOCKED OP			\ 	: "=m" (*p)					\ 	: CONS (V), "m" (*p)				\ 	: "memory", "cc");				\ }							\ struct __hack
 end_define
 
 begin_comment
-comment|/*  * Atomic compare and set, used by the mutex functions  *  * if (*dst == exp) *dst = src (all 32 bit words)  *  * Returns 0 on failure, non-zero on success  */
+comment|/*  * Atomic compare and set, used by the mutex functions  *  * if (*dst == expect) *dst = src (all 32 bit words)  *  * Returns 0 on failure, non-zero on success  */
 end_comment
 
 begin_function
@@ -269,7 +269,7 @@ modifier|*
 name|dst
 parameter_list|,
 name|u_int
-name|exp
+name|expect
 parameter_list|,
 name|u_int
 name|src
@@ -308,7 +308,7 @@ operator|,
 comment|/* 2 */
 literal|"a"
 operator|(
-name|exp
+name|expect
 operator|)
 operator|,
 comment|/* 3 */
@@ -320,6 +320,8 @@ operator|)
 comment|/* 4 */
 operator|:
 literal|"memory"
+operator|,
+literal|"cc"
 block|)
 function|;
 end_function
@@ -344,7 +346,7 @@ modifier|*
 name|dst
 parameter_list|,
 name|u_long
-name|exp
+name|expect
 parameter_list|,
 name|u_long
 name|src
@@ -383,7 +385,7 @@ operator|,
 comment|/* 2 */
 literal|"a"
 operator|(
-name|exp
+name|expect
 operator|)
 operator|,
 comment|/* 3 */
@@ -395,6 +397,8 @@ operator|)
 comment|/* 4 */
 operator|:
 literal|"memory"
+operator|,
+literal|"cc"
 block|)
 function|;
 end_function
@@ -452,13 +456,12 @@ operator|(
 operator|*
 name|p
 operator|)
+comment|/* 2 */
+operator|:
+literal|"cc"
 block|)
 function|;
 end_function
-
-begin_comment
-comment|/* 2 */
-end_comment
 
 begin_return
 return|return
@@ -513,13 +516,12 @@ operator|(
 operator|*
 name|p
 operator|)
+comment|/* 2 */
+operator|:
+literal|"cc"
 block|)
 function|;
 end_function
-
-begin_comment
-comment|/* 2 */
-end_comment
 
 begin_return
 return|return
@@ -591,7 +593,7 @@ value|\ 	  "=m" (*p)
 comment|/* 1 */
 value|\ 	: "m" (*p)
 comment|/* 2 */
-value|\ 	: "memory");					\ 							\ 	return (res);					\ }							\ 							\
+value|\ 	: "memory", "cc");				\ 							\ 	return (res);					\ }							\ 							\
 comment|/*							\  * The XCHG instruction asserts LOCK automagically.	\  */
 value|\ static __inline void					\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(SOP				\ 	: "=m" (*p),
 comment|/* 0 */

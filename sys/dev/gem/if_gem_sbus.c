@@ -488,6 +488,13 @@ name|sc_dev
 operator|=
 name|dev
 expr_stmt|;
+comment|/* All known SBus models use a SERDES. */
+name|sc
+operator|->
+name|sc_flags
+operator|=
+name|GEM_SERDES
+expr_stmt|;
 if|if
 condition|(
 name|bus_alloc_resources

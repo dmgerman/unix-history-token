@@ -1433,8 +1433,6 @@ name|ledctl
 decl_stmt|,
 name|ctrl
 decl_stmt|,
-name|icr
-decl_stmt|,
 name|manc
 decl_stmt|;
 name|DEBUGFUNC
@@ -1690,8 +1688,6 @@ literal|0xFFFFFFFF
 argument_list|)
 expr_stmt|;
 comment|/* Clear any pending interrupt events. */
-name|icr
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw

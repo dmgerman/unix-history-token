@@ -57,7 +57,12 @@ comment|/* print out xpt scheduling */
 name|CAM_DEBUG_PERIPH
 init|=
 literal|0x20
+block|,
 comment|/* print out peripheral calls */
+name|CAM_DEBUG_PROBE
+init|=
+literal|0x40
+comment|/* print out probe actions */
 block|}
 name|cam_debug_flags
 typedef|;
@@ -157,6 +162,21 @@ define|\
 value|if (cam_dflags& (flag)) {			\ 		printf("cam_debug: ");			\  		printf printfargs;			\ 		if (cam_debug_delay != 0)		\ 			DELAY(cam_debug_delay);		\ 	}
 end_define
 
+begin_define
+define|#
+directive|define
+name|CAM_DEBUG_PATH_PRINT
+parameter_list|(
+name|flag
+parameter_list|,
+name|path
+parameter_list|,
+name|printfargs
+parameter_list|)
+define|\
+value|if (cam_dflags& (flag)) {			\ 		xpt_print(path, "cam_debug: ");		\  		printf printfargs;			\ 		if (cam_debug_delay != 0)		\ 			DELAY(cam_debug_delay);		\ 	}
+end_define
+
 begin_else
 else|#
 directive|else
@@ -199,6 +219,19 @@ parameter_list|(
 name|A
 parameter_list|,
 name|B
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAM_DEBUG_PATH_PRINT
+parameter_list|(
+name|A
+parameter_list|,
+name|B
+parameter_list|,
+name|C
 parameter_list|)
 end_define
 

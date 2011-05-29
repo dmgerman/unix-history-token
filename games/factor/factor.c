@@ -882,6 +882,9 @@ literal|1
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|BN_sqr
 argument_list|(
 name|bnfact
@@ -889,6 +892,13 @@ argument_list|,
 name|bnfact
 argument_list|,
 name|ctx
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"error in BN_sqr()"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1138,11 +1148,21 @@ argument_list|)
 expr_stmt|;
 name|newbase
 label|:
+if|if
+condition|(
+operator|!
 name|BN_add_word
 argument_list|(
 name|rbase
 argument_list|,
 literal|1
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"error in BN_add_word()"
 argument_list|)
 expr_stmt|;
 name|BN_set_word
@@ -1202,6 +1222,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|BN_gcd
 argument_list|(
 name|x
@@ -1211,6 +1234,13 @@ argument_list|,
 name|val
 argument_list|,
 name|ctx
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"error in BN_gcd()"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1314,11 +1344,21 @@ name|num
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
 name|BN_add_word
 argument_list|(
 name|i
 argument_list|,
 literal|1
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"error in BN_add_word()"
 argument_list|)
 expr_stmt|;
 block|}

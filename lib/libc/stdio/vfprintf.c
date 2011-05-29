@@ -695,6 +695,8 @@ name|ret
 decl_stmt|;
 name|FILE
 name|fake
+init|=
+name|FAKE_FILE
 decl_stmt|;
 name|unsigned
 name|char

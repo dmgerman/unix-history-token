@@ -47,17 +47,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -66,6 +55,20 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -2388,8 +2391,14 @@ begin_function
 specifier|static
 name|void
 name|defttymode
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
+name|struct
+name|termios
+name|def
+decl_stmt|;
 comment|/* Start with default tty settings. */
 if|if
 condition|(
@@ -2428,29 +2437,43 @@ name|dogettytab
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Don't rely on the driver too much, and initialize crucial 	 * things according to<sys/ttydefaults.h>.  Avoid clobbering 	 * the c_cc[] settings however, the console drivers might wish 	 * to leave their idea of the preferred VERASE key value 	 * there. 	 */
+name|cfmakesane
+argument_list|(
+operator|&
+name|def
+argument_list|)
+expr_stmt|;
 name|tmode
 operator|.
 name|c_iflag
 operator|=
-name|TTYDEF_IFLAG
+name|def
+operator|.
+name|c_iflag
 expr_stmt|;
 name|tmode
 operator|.
 name|c_oflag
 operator|=
-name|TTYDEF_OFLAG
+name|def
+operator|.
+name|c_oflag
 expr_stmt|;
 name|tmode
 operator|.
 name|c_lflag
 operator|=
-name|TTYDEF_LFLAG
+name|def
+operator|.
+name|c_lflag
 expr_stmt|;
 name|tmode
 operator|.
 name|c_cflag
 operator|=
-name|TTYDEF_CFLAG
+name|def
+operator|.
+name|c_cflag
 expr_stmt|;
 if|if
 condition|(
@@ -3898,7 +3921,9 @@ begin_function
 specifier|static
 name|void
 name|dogettytab
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* Read the database entry. */
 name|gettable

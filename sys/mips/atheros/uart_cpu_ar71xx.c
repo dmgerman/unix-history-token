@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mips/atheros/ar71xx_cpudef.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<mips/atheros/ar71xx_bus_space_reversed.h>
 end_include
 

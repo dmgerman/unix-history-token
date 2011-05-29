@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_watchdog.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -167,10 +173,6 @@ directive|include
 file|<sys/smp.h>
 end_include
 
-begin_comment
-comment|/* smp_active */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -182,6 +184,23 @@ include|#
 directive|include
 file|<sys/sysproto.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SW_WATCHDOG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/watchdog.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -329,6 +348,8 @@ argument_list|,
 name|debugger_on_panic
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|debugger_on_panic
@@ -340,6 +361,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.debugger_on_panic"
+argument_list|,
+operator|&
+name|debugger_on_panic
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -347,6 +379,7 @@ name|KDB_TRACE
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|int
 name|trace_on_panic
 init|=
@@ -360,6 +393,7 @@ directive|else
 end_else
 
 begin_decl_stmt
+specifier|static
 name|int
 name|trace_on_panic
 init|=
@@ -382,6 +416,8 @@ argument_list|,
 name|trace_on_panic
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|trace_on_panic
@@ -389,6 +425,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Print stack trace on kernel panic"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.trace_on_panic"
+argument_list|,
+operator|&
+name|trace_on_panic
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -403,6 +450,7 @@ comment|/* KDB */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sync_on_panic
 init|=
@@ -420,6 +468,8 @@ argument_list|,
 name|sync_on_panic
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|sync_on_panic
@@ -427,6 +477,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Do a sync before rebooting from a panic"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.sync_on_panic"
+argument_list|,
+operator|&
+name|sync_on_panic
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -520,17 +581,6 @@ begin_comment
 comment|/* Thread ID. */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|void
-name|boot
-argument_list|(
-name|int
-argument_list|)
-name|__dead2
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
@@ -612,8 +662,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|SHUTDOWN_PRI_FIRST
-operator|+
-literal|100
 argument_list|)
 expr_stmt|;
 name|EVENTHANDLER_REGISTER
@@ -750,7 +798,7 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-name|boot
+name|kern_reboot
 argument_list|(
 name|uap
 operator|->
@@ -826,7 +874,7 @@ block|}
 else|else
 block|{
 comment|/* No init(8) running, so simply reboot */
-name|boot
+name|kern_reboot
 argument_list|(
 name|RB_NOSYNC
 argument_list|)
@@ -1133,9 +1181,8 @@ comment|/*  * Shutdown the system cleanly to prepare for reboot, halt, or power 
 end_comment
 
 begin_function
-specifier|static
 name|void
-name|boot
+name|kern_reboot
 parameter_list|(
 name|int
 name|howto
@@ -1181,7 +1228,9 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"boot: not running on cpu 0"
+literal|"%s: not running on cpu 0"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1254,6 +1303,16 @@ name|waittime
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SW_WATCHDOG
+name|wdog_kern_pat
+argument_list|(
+name|WD_LASTVAL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|sync
 argument_list|(
 name|curthread
@@ -1362,6 +1421,16 @@ name|pbusy
 operator|=
 name|nbusy
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SW_WATCHDOG
+name|wdog_kern_pat
+argument_list|(
+name|WD_LASTVAL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|sync
 argument_list|(
 name|curthread
@@ -1830,10 +1899,6 @@ name|int
 name|howto
 parameter_list|)
 block|{
-comment|/* 	 * Disable interrupts on CPU0 in order to avoid fast handlers 	 * to preempt the stopping process and to deadlock against other 	 * CPUs. 	 */
-name|spinlock_enter
-argument_list|()
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"Rebooting...\n"
@@ -1845,6 +1910,23 @@ literal|1000000
 argument_list|)
 expr_stmt|;
 comment|/* wait 1 sec for printf's to complete and be read */
+comment|/* 	 * Acquiring smp_ipi_mtx here has a double effect: 	 * - it disables interrupts avoiding CPU0 preemption 	 *   by fast handlers (thus deadlocking  against other CPUs) 	 * - it avoids deadlocks against smp_rendezvous() or, more  	 *   generally, threads busy-waiting, with this spinlock held, 	 *   and waiting for responses by threads on other CPUs 	 *   (ie. smp_tlb_shootdown()). 	 * 	 * For the !SMP case it just needs to handle the former problem. 	 */
+ifdef|#
+directive|ifdef
+name|SMP
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|smp_ipi_mtx
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|spinlock_enter
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* cpu_boot(howto); */
 comment|/* doesn't do anything at the moment */
 name|cpu_reset
@@ -1854,26 +1936,6 @@ comment|/* NOTREACHED */
 comment|/* assuming reset worked */
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|u_int
-name|panic_cpu
-init|=
-name|NOCPU
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Panic is called on unresolvable fatal errors.  It prints "panic: mesg",  * and then reboots.  If we are called twice, then we avoid trying to sync  * the disks as this often leads to recursive panics.  */
@@ -1891,6 +1953,18 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|SMP
+specifier|static
+specifier|volatile
+name|u_int
+name|panic_cpu
+init|=
+name|NOCPU
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|thread
 modifier|*
@@ -2139,7 +2213,7 @@ expr_stmt|;
 name|critical_exit
 argument_list|()
 expr_stmt|;
-name|boot
+name|kern_reboot
 argument_list|(
 name|bootopt
 argument_list|)

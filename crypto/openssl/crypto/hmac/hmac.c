@@ -494,9 +494,6 @@ modifier|*
 name|len
 parameter_list|)
 block|{
-name|int
-name|j
-decl_stmt|;
 name|unsigned
 name|int
 name|i
@@ -508,15 +505,6 @@ index|[
 name|EVP_MAX_MD_SIZE
 index|]
 decl_stmt|;
-name|j
-operator|=
-name|EVP_MD_block_size
-argument_list|(
-name|ctx
-operator|->
-name|md
-argument_list|)
-expr_stmt|;
 name|EVP_DigestFinal_ex
 argument_list|(
 operator|&

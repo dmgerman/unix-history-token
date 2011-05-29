@@ -3552,6 +3552,25 @@ operator|->
 name|laddr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|->
+name|family
+operator|==
+name|AF_INET6
+operator|&&
+name|pos
+operator|>=
+literal|58
+condition|)
+name|pos
+operator|+=
+name|xprintf
+argument_list|(
+literal|" "
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|pos

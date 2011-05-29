@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kstat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/zfs_context.h>
 end_include
 
@@ -55,13 +61,123 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-comment|/*  * This is the locking strategy for the DMU.  Numbers in parenthesis are  * cases that use that lock order, referenced below:  *  * ARC is self-contained  * bplist is self-contained  * refcount is self-contained  * txg is self-contained (hopefully!)  * zst_lock  * zf_rwlock  *  * XXX try to improve evicting path?  *  * dp_config_rwlock> os_obj_lock> dn_struct_rwlock>  * 	dn_dbufs_mtx> hash_mutexes> db_mtx> dd_lock> leafs  *  * dp_config_rwlock  *    must be held before: everything  *    protects dd namespace changes  *    protects property changes globally  *    held from:  *    	dsl_dir_open/r:  *    	dsl_dir_create_sync/w:  *    	dsl_dir_sync_destroy/w:  *    	dsl_dir_rename_sync/w:  *    	dsl_prop_changed_notify/r:  *  * os_obj_lock  *   must be held before:  *   	everything except dp_config_rwlock  *   protects os_obj_next  *   held from:  *   	dmu_object_alloc: dn_dbufs_mtx, db_mtx, hash_mutexes, dn_struct_rwlock  *  * dn_struct_rwlock  *   must be held before:  *   	everything except dp_config_rwlock and os_obj_lock  *   protects structure of dnode (eg. nlevels)  *   	db_blkptr can change when syncing out change to nlevels  *   	dn_maxblkid  *   	dn_nlevels  *   	dn_*blksz*  *   	phys nlevels, maxblkid, physical blkptr_t's (?)  *   held from:  *   	callers of dbuf_read_impl, dbuf_hold[_impl], dbuf_prefetch  *   	dmu_object_info_from_dnode: dn_dirty_mtx (dn_datablksz)  *   	dmu_tx_count_free:  *   	dbuf_read_impl: db_mtx, dmu_zfetch()  *   	dmu_zfetch: zf_rwlock/r, zst_lock, dbuf_prefetch()  *   	dbuf_new_size: db_mtx  *   	dbuf_dirty: db_mtx  *	dbuf_findbp: (callers, phys? - the real need)  *	dbuf_create: dn_dbufs_mtx, hash_mutexes, db_mtx (phys?)  *	dbuf_prefetch: dn_dirty_mtx, hash_mutexes, db_mtx, dn_dbufs_mtx  *	dbuf_hold_impl: hash_mutexes, db_mtx, dn_dbufs_mtx, dbuf_findbp()  *	dnode_sync/w (increase_indirection): db_mtx (phys)  *	dnode_set_blksz/w: dn_dbufs_mtx (dn_*blksz*)  *	dnode_new_blkid/w: (dn_maxblkid)  *	dnode_free_range/w: dn_dirty_mtx (dn_maxblkid)  *	dnode_next_offset: (phys)  *  * dn_dbufs_mtx  *    must be held before:  *    	db_mtx, hash_mutexes  *    protects:  *    	dn_dbufs  *    	dn_evicted  *    held from:  *    	dmu_evict_user: db_mtx (dn_dbufs)  *    	dbuf_free_range: db_mtx (dn_dbufs)  *    	dbuf_remove_ref: db_mtx, callees:  *    		dbuf_hash_remove: hash_mutexes, db_mtx  *    	dbuf_create: hash_mutexes, db_mtx (dn_dbufs)  *    	dnode_set_blksz: (dn_dbufs)  *  * hash_mutexes (global)  *   must be held before:  *   	db_mtx  *   protects dbuf_hash_table (global) and db_hash_next  *   held from:  *   	dbuf_find: db_mtx  *   	dbuf_hash_insert: db_mtx  *   	dbuf_hash_remove: db_mtx  *  * db_mtx (meta-leaf)  *   must be held before:  *   	dn_mtx, dn_dirty_mtx, dd_lock (leaf mutexes)  *   protects:  *   	db_state  * 	db_holds  * 	db_buf  * 	db_changed  * 	db_data_pending  * 	db_dirtied  * 	db_link  * 	db_dirty_node (??)  * 	db_dirtycnt  * 	db_d.*  * 	db.*  *   held from:  * 	dbuf_dirty: dn_mtx, dn_dirty_mtx  * 	dbuf_dirty->dsl_dir_willuse_space: dd_lock  * 	dbuf_dirty->dbuf_new_block->dsl_dataset_block_freeable: dd_lock  * 	dbuf_undirty: dn_dirty_mtx (db_d)  * 	dbuf_write_done: dn_dirty_mtx (db_state)  * 	dbuf_*  * 	dmu_buf_update_user: none (db_d)  * 	dmu_evict_user: none (db_d) (maybe can eliminate)  *   	dbuf_find: none (db_holds)  *   	dbuf_hash_insert: none (db_holds)  *   	dmu_buf_read_array_impl: none (db_state, db_changed)  *   	dmu_sync: none (db_dirty_node, db_d)  *   	dnode_reallocate: none (db)  *  * dn_mtx (leaf)  *   protects:  *   	dn_dirty_dbufs  *   	dn_ranges  *   	phys accounting  * 	dn_allocated_txg  * 	dn_free_txg  * 	dn_assigned_txg  * 	dd_assigned_tx  * 	dn_notxholds  * 	dn_dirtyctx  * 	dn_dirtyctx_firstset  * 	(dn_phys copy fields?)  * 	(dn_phys contents?)  *   held from:  *   	dnode_*  *   	dbuf_dirty: none  *   	dbuf_sync: none (phys accounting)  *   	dbuf_undirty: none (dn_ranges, dn_dirty_dbufs)  *   	dbuf_write_done: none (phys accounting)  *   	dmu_object_info_from_dnode: none (accounting)  *   	dmu_tx_commit: none  *   	dmu_tx_hold_object_impl: none  *   	dmu_tx_try_assign: dn_notxholds(cv)  *   	dmu_tx_unassign: none  *  * dd_lock  *    must be held before:  *      ds_lock  *      ancestors' dd_lock  *    protects:  *    	dd_prop_cbs  *    	dd_sync_*  *    	dd_used_bytes  *    	dd_tempreserved  *    	dd_space_towrite  *    	dd_myname  *    	dd_phys accounting?  *    held from:  *    	dsl_dir_*  *    	dsl_prop_changed_notify: none (dd_prop_cbs)  *    	dsl_prop_register: none (dd_prop_cbs)  *    	dsl_prop_unregister: none (dd_prop_cbs)  *    	dsl_dataset_block_freeable: none (dd_sync_*)  *  * os_lock (leaf)  *   protects:  *   	os_dirty_dnodes  *   	os_free_dnodes  *   	os_dnodes  *   	os_downgraded_dbufs  *   	dn_dirtyblksz  *   	dn_dirty_link  *   held from:  *   	dnode_create: none (os_dnodes)  *   	dnode_destroy: none (os_dnodes)  *   	dnode_setdirty: none (dn_dirtyblksz, os_*_dnodes)  *   	dnode_free: none (dn_dirtyblksz, os_*_dnodes)  *  * ds_lock  *    protects:  *    	ds_user_ptr  *    	ds_user_evice_func  *    	ds_open_refcount  *    	ds_snapname  *    	ds_phys accounting  *	ds_reserved  *    held from:  *    	dsl_dataset_*  *  * dr_mtx (leaf)  *    protects:  *	dr_children  *    held from:  *	dbuf_dirty  *	dbuf_undirty  *	dbuf_sync_indirect  *	dnode_new_blkid  */
+comment|/*  * This is the locking strategy for the DMU.  Numbers in parenthesis are  * cases that use that lock order, referenced below:  *  * ARC is self-contained  * bplist is self-contained  * refcount is self-contained  * txg is self-contained (hopefully!)  * zst_lock  * zf_rwlock  *  * XXX try to improve evicting path?  *  * dp_config_rwlock> os_obj_lock> dn_struct_rwlock>  * 	dn_dbufs_mtx> hash_mutexes> db_mtx> dd_lock> leafs  *  * dp_config_rwlock  *    must be held before: everything  *    protects dd namespace changes  *    protects property changes globally  *    held from:  *    	dsl_dir_open/r:  *    	dsl_dir_create_sync/w:  *    	dsl_dir_sync_destroy/w:  *    	dsl_dir_rename_sync/w:  *    	dsl_prop_changed_notify/r:  *  * os_obj_lock  *   must be held before:  *   	everything except dp_config_rwlock  *   protects os_obj_next  *   held from:  *   	dmu_object_alloc: dn_dbufs_mtx, db_mtx, hash_mutexes, dn_struct_rwlock  *  * dn_struct_rwlock  *   must be held before:  *   	everything except dp_config_rwlock and os_obj_lock  *   protects structure of dnode (eg. nlevels)  *   	db_blkptr can change when syncing out change to nlevels  *   	dn_maxblkid  *   	dn_nlevels  *   	dn_*blksz*  *   	phys nlevels, maxblkid, physical blkptr_t's (?)  *   held from:  *   	callers of dbuf_read_impl, dbuf_hold[_impl], dbuf_prefetch  *   	dmu_object_info_from_dnode: dn_dirty_mtx (dn_datablksz)  *   	dmu_tx_count_free:  *   	dbuf_read_impl: db_mtx, dmu_zfetch()  *   	dmu_zfetch: zf_rwlock/r, zst_lock, dbuf_prefetch()  *   	dbuf_new_size: db_mtx  *   	dbuf_dirty: db_mtx  *	dbuf_findbp: (callers, phys? - the real need)  *	dbuf_create: dn_dbufs_mtx, hash_mutexes, db_mtx (phys?)  *	dbuf_prefetch: dn_dirty_mtx, hash_mutexes, db_mtx, dn_dbufs_mtx  *	dbuf_hold_impl: hash_mutexes, db_mtx, dn_dbufs_mtx, dbuf_findbp()  *	dnode_sync/w (increase_indirection): db_mtx (phys)  *	dnode_set_blksz/w: dn_dbufs_mtx (dn_*blksz*)  *	dnode_new_blkid/w: (dn_maxblkid)  *	dnode_free_range/w: dn_dirty_mtx (dn_maxblkid)  *	dnode_next_offset: (phys)  *  * dn_dbufs_mtx  *    must be held before:  *    	db_mtx, hash_mutexes  *    protects:  *    	dn_dbufs  *    	dn_evicted  *    held from:  *    	dmu_evict_user: db_mtx (dn_dbufs)  *    	dbuf_free_range: db_mtx (dn_dbufs)  *    	dbuf_remove_ref: db_mtx, callees:  *    		dbuf_hash_remove: hash_mutexes, db_mtx  *    	dbuf_create: hash_mutexes, db_mtx (dn_dbufs)  *    	dnode_set_blksz: (dn_dbufs)  *  * hash_mutexes (global)  *   must be held before:  *   	db_mtx  *   protects dbuf_hash_table (global) and db_hash_next  *   held from:  *   	dbuf_find: db_mtx  *   	dbuf_hash_insert: db_mtx  *   	dbuf_hash_remove: db_mtx  *  * db_mtx (meta-leaf)  *   must be held before:  *   	dn_mtx, dn_dirty_mtx, dd_lock (leaf mutexes)  *   protects:  *   	db_state  * 	db_holds  * 	db_buf  * 	db_changed  * 	db_data_pending  * 	db_dirtied  * 	db_link  * 	db_dirty_node (??)  * 	db_dirtycnt  * 	db_d.*  * 	db.*  *   held from:  * 	dbuf_dirty: dn_mtx, dn_dirty_mtx  * 	dbuf_dirty->dsl_dir_willuse_space: dd_lock  * 	dbuf_dirty->dbuf_new_block->dsl_dataset_block_freeable: dd_lock  * 	dbuf_undirty: dn_dirty_mtx (db_d)  * 	dbuf_write_done: dn_dirty_mtx (db_state)  * 	dbuf_*  * 	dmu_buf_update_user: none (db_d)  * 	dmu_evict_user: none (db_d) (maybe can eliminate)  *   	dbuf_find: none (db_holds)  *   	dbuf_hash_insert: none (db_holds)  *   	dmu_buf_read_array_impl: none (db_state, db_changed)  *   	dmu_sync: none (db_dirty_node, db_d)  *   	dnode_reallocate: none (db)  *  * dn_mtx (leaf)  *   protects:  *   	dn_dirty_dbufs  *   	dn_ranges  *   	phys accounting  * 	dn_allocated_txg  * 	dn_free_txg  * 	dn_assigned_txg  * 	dd_assigned_tx  * 	dn_notxholds  * 	dn_dirtyctx  * 	dn_dirtyctx_firstset  * 	(dn_phys copy fields?)  * 	(dn_phys contents?)  *   held from:  *   	dnode_*  *   	dbuf_dirty: none  *   	dbuf_sync: none (phys accounting)  *   	dbuf_undirty: none (dn_ranges, dn_dirty_dbufs)  *   	dbuf_write_done: none (phys accounting)  *   	dmu_object_info_from_dnode: none (accounting)  *   	dmu_tx_commit: none  *   	dmu_tx_hold_object_impl: none  *   	dmu_tx_try_assign: dn_notxholds(cv)  *   	dmu_tx_unassign: none  *  * dd_lock  *    must be held before:  *      ds_lock  *      ancestors' dd_lock  *    protects:  *    	dd_prop_cbs  *    	dd_sync_*  *    	dd_used_bytes  *    	dd_tempreserved  *    	dd_space_towrite  *    	dd_myname  *    	dd_phys accounting?  *    held from:  *    	dsl_dir_*  *    	dsl_prop_changed_notify: none (dd_prop_cbs)  *    	dsl_prop_register: none (dd_prop_cbs)  *    	dsl_prop_unregister: none (dd_prop_cbs)  *    	dsl_dataset_block_freeable: none (dd_sync_*)  *  * os_lock (leaf)  *   protects:  *   	os_dirty_dnodes  *   	os_free_dnodes  *   	os_dnodes  *   	os_downgraded_dbufs  *   	dn_dirtyblksz  *   	dn_dirty_link  *   held from:  *   	dnode_create: none (os_dnodes)  *   	dnode_destroy: none (os_dnodes)  *   	dnode_setdirty: none (dn_dirtyblksz, os_*_dnodes)  *   	dnode_free: none (dn_dirtyblksz, os_*_dnodes)  *  * ds_lock  *    protects:  *    	ds_objset  *    	ds_open_refcount  *    	ds_snapname  *    	ds_phys accounting  *	ds_phys userrefs zapobj  *	ds_reserved  *    held from:  *    	dsl_dataset_*  *  * dr_mtx (leaf)  *    protects:  *	dr_children  *    held from:  *	dbuf_dirty  *	dbuf_undirty  *	dbuf_sync_indirect  *	dnode_new_blkid  */
 struct_decl|struct
 name|objset
 struct_decl|;
 struct_decl|struct
 name|dmu_pool
 struct_decl|;
+typedef|typedef
+struct|struct
+name|dmu_xuio
+block|{
+name|int
+name|next
+decl_stmt|;
+name|int
+name|cnt
+decl_stmt|;
+name|struct
+name|arc_buf
+modifier|*
+modifier|*
+name|bufs
+decl_stmt|;
+name|iovec_t
+modifier|*
+name|iovp
+decl_stmt|;
+block|}
+name|dmu_xuio_t
+typedef|;
+typedef|typedef
+struct|struct
+name|xuio_stats
+block|{
+comment|/* loaned yet not returned arc_buf */
+name|kstat_named_t
+name|xuiostat_onloan_rbuf
+decl_stmt|;
+name|kstat_named_t
+name|xuiostat_onloan_wbuf
+decl_stmt|;
+comment|/* whether a copy is made when loaning out a read buffer */
+name|kstat_named_t
+name|xuiostat_rbuf_copied
+decl_stmt|;
+name|kstat_named_t
+name|xuiostat_rbuf_nocopy
+decl_stmt|;
+comment|/* whether a copy is made when assigning a write buffer */
+name|kstat_named_t
+name|xuiostat_wbuf_copied
+decl_stmt|;
+name|kstat_named_t
+name|xuiostat_wbuf_nocopy
+decl_stmt|;
+block|}
+name|xuio_stats_t
+typedef|;
+specifier|static
+name|xuio_stats_t
+name|xuio_stats
+init|=
+block|{
+block|{
+literal|"onloan_read_buf"
+block|,
+name|KSTAT_DATA_UINT64
+block|}
+block|,
+block|{
+literal|"onloan_write_buf"
+block|,
+name|KSTAT_DATA_UINT64
+block|}
+block|,
+block|{
+literal|"read_buf_copied"
+block|,
+name|KSTAT_DATA_UINT64
+block|}
+block|,
+block|{
+literal|"read_buf_nocopy"
+block|,
+name|KSTAT_DATA_UINT64
+block|}
+block|,
+block|{
+literal|"write_buf_copied"
+block|,
+name|KSTAT_DATA_UINT64
+block|}
+block|,
+block|{
+literal|"write_buf_nocopy"
+block|,
+name|KSTAT_DATA_UINT64
+block|}
+block|}
+decl_stmt|;
+define|#
+directive|define
+name|XUIOSTAT_INCR
+parameter_list|(
+name|stat
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|atomic_add_64(&xuio_stats.stat.value.ui64, (val))
+define|#
+directive|define
+name|XUIOSTAT_BUMP
+parameter_list|(
+name|stat
+parameter_list|)
+value|XUIOSTAT_INCR(stat, 1)
 ifdef|#
 directive|ifdef
 name|__cplusplus

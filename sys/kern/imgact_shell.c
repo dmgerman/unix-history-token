@@ -108,7 +108,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * At the time of this writing, MAXSHELLCMDLEN == PAGE_SIZE.  This is  * significant because the caller has only mapped in one page of the  * file we're reading.  This code should be changed to know how to  * read in the second page, but I'm not doing that just yet...  */
+comment|/*  * At the time of this writing, MAXSHELLCMDLEN == PAGE_SIZE.  This is  * significant because the caller has only mapped in one page of the  * file we're reading.  */
 end_comment
 
 begin_if
@@ -129,6 +129,22 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MAXSHELLCMDLEN must be at least MAXINTERP plus the size of the `#!'  * prefix and terminating newline.  */
+end_comment
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|MAXSHELLCMDLEN
+operator|>=
+name|MAXINTERP
+operator|+
+literal|3
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/**  * Shell interpreter image activator. An interpreter name beginning at  * imgp->args->begin_argv is the minimal successful exit requirement.  *  * If the given file is a shell-script, then the first line will start  * with the two characters `#!' (aka SHELLMAGIC), followed by the name  * of the shell-interpreter to run, followed by zero or more tokens.  *  * The interpreter is then started up such that it will see:  *    arg[0] -> The name of interpreter as specified after `#!' in the  *		first line of the script.  The interpreter name must  *		not be longer than MAXSHELLCMDLEN bytes.  *    arg[1] -> *If* there are any additional tokens on the first line,  *		then we add a new arg[1], which is a copy of the rest of  *		that line.  The copy starts at the first token after the  *		interpreter name.  We leave it to the interpreter to  *		parse the tokens in that value.  *    arg[x] -> the full pathname of the script.  This will either be  *		arg[2] or arg[1], depending on whether or not tokens  *		were found after the interpreter name.  *  arg[x+1] -> all the arguments that were specified on the original  *		command line.  *  * This processing is described in the execve(2) man page.  */
@@ -189,8 +205,6 @@ name|offset
 decl_stmt|;
 name|size_t
 name|length
-decl_stmt|,
-name|clength
 decl_stmt|;
 name|struct
 name|vattr
@@ -270,29 +284,20 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Copy shell name and arguments from image_header into a string 	 *	buffer.  Remember that the caller has mapped only the 	 *	first page of the file into memory. 	 */
-name|clength
-operator|=
-operator|(
-name|vattr
-operator|.
-name|va_size
-operator|>
-name|PAGE_SIZE
-operator|)
-condition|?
-name|PAGE_SIZE
-else|:
-name|vattr
-operator|.
-name|va_size
-expr_stmt|;
+comment|/* 	 * Copy shell name and arguments from image_header into a string 	 * buffer. 	 */
 name|maxp
 operator|=
 operator|&
 name|image_header
 index|[
-name|clength
+name|MIN
+argument_list|(
+name|vattr
+operator|.
+name|va_size
+argument_list|,
+name|MAXSHELLCMDLEN
+argument_list|)
 index|]
 expr_stmt|;
 name|ihp
@@ -389,13 +394,11 @@ operator|)
 return|;
 if|if
 condition|(
-operator|(
 name|interpe
 operator|-
 name|interpb
-operator|)
 operator|>=
-name|MAXSHELLCMDLEN
+name|MAXINTERP
 condition|)
 return|return
 operator|(
@@ -461,6 +464,17 @@ name|opte
 operator|=
 name|ihp
 expr_stmt|;
+if|if
+condition|(
+name|opte
+operator|==
+name|maxp
+condition|)
+return|return
+operator|(
+name|ENOEXEC
+operator|)
+return|;
 while|while
 condition|(
 operator|--
@@ -609,14 +623,14 @@ comment|/* bytes to delete */
 if|if
 condition|(
 name|offset
-operator|-
-name|length
 operator|>
 name|imgp
 operator|->
 name|args
 operator|->
 name|stringspace
+operator|+
+name|length
 condition|)
 block|{
 if|if
@@ -741,7 +755,7 @@ name|imgp
 operator|->
 name|args
 operator|->
-name|buf
+name|begin_argv
 argument_list|,
 name|length
 argument_list|)
@@ -752,7 +766,7 @@ name|imgp
 operator|->
 name|args
 operator|->
-name|buf
+name|begin_argv
 operator|+
 name|length
 operator|)
@@ -786,7 +800,7 @@ name|imgp
 operator|->
 name|args
 operator|->
-name|buf
+name|begin_argv
 operator|+
 name|offset
 argument_list|,
@@ -799,7 +813,7 @@ name|imgp
 operator|->
 name|args
 operator|->
-name|buf
+name|begin_argv
 operator|+
 name|offset
 operator|+
@@ -833,7 +847,7 @@ name|imgp
 operator|->
 name|args
 operator|->
-name|buf
+name|begin_argv
 operator|+
 name|offset
 argument_list|,
@@ -843,8 +857,7 @@ name|args
 operator|->
 name|stringspace
 argument_list|,
-operator|&
-name|length
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -853,25 +866,15 @@ name|error
 operator|==
 literal|0
 condition|)
-name|error
+name|imgp
+operator|->
+name|interpreter_name
 operator|=
-name|copystr
-argument_list|(
 name|imgp
 operator|->
 name|args
 operator|->
 name|begin_argv
-argument_list|,
-name|imgp
-operator|->
-name|interpreter_name
-argument_list|,
-name|MAXSHELLCMDLEN
-argument_list|,
-operator|&
-name|length
-argument_list|)
 expr_stmt|;
 if|if
 condition|(

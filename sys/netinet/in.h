@@ -1617,6 +1617,17 @@ begin_comment
 comment|/* SCTP */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IPPROTO_MH
+value|135
+end_define
+
+begin_comment
+comment|/* IPv6 Mobility Header */
+end_comment
+
 begin_comment
 comment|/* 101-254: Partly Unassigned */
 end_comment
@@ -1715,6 +1726,17 @@ end_define
 
 begin_comment
 comment|/* divert pseudo-protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_SEND
+value|259
+end_define
+
+begin_comment
+comment|/* SeND pseudo-protocol */
 end_comment
 
 begin_comment
@@ -3651,6 +3673,50 @@ parameter_list|,
 name|char
 modifier|*
 name|buf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* in libkern */
+end_comment
+
+begin_function_decl
+name|char
+modifier|*
+name|inet_ntop
+parameter_list|(
+name|int
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|socklen_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* in libkern */
+end_comment
+
+begin_function_decl
+name|int
+name|inet_pton
+parameter_list|(
+name|int
+name|af
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

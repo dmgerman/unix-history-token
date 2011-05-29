@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / shared MSCHAPV2 helper functions / RFC 2433 / RFC 2759  * Copyright (c) 2004-2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant / shared MSCHAPV2 helper functions / RFC 2433 / RFC 2759  * Copyright (c) 2004-2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_include
@@ -33,19 +33,13 @@ directive|include
 file|"crypto.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"rc4.h"
-end_include
-
 begin_comment
-comment|/**  * challenge_hash - ChallengeHash() - RFC 2759, Sect. 8.2  * @peer_challenge: 16-octet PeerChallenge (IN)  * @auth_challenge: 16-octet AuthenticatorChallenge (IN)  * @username: 0-to-256-char UserName (IN)  * @username_len: Length of username  * @challenge: 8-octet Challenge (OUT)  */
+comment|/**  * challenge_hash - ChallengeHash() - RFC 2759, Sect. 8.2  * @peer_challenge: 16-octet PeerChallenge (IN)  * @auth_challenge: 16-octet AuthenticatorChallenge (IN)  * @username: 0-to-256-char UserName (IN)  * @username_len: Length of username  * @challenge: 8-octet Challenge (OUT)  * Returns: 0 on success, -1 on failure  */
 end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|challenge_hash
 parameter_list|(
 specifier|const
@@ -134,6 +128,8 @@ index|]
 operator|=
 name|username_len
 expr_stmt|;
+if|if
+condition|(
 name|sha1_vector
 argument_list|(
 literal|3
@@ -144,7 +140,11 @@ name|len
 argument_list|,
 name|hash
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|os_memcpy
 argument_list|(
 name|challenge
@@ -154,15 +154,18 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/**  * nt_password_hash - NtPasswordHash() - RFC 2759, Sect. 8.3  * @password: 0-to-256-unicode-char Password (IN; ASCII)  * @password_len: Length of password  * @password_hash: 16-octet PasswordHash (OUT)  */
+comment|/**  * nt_password_hash - NtPasswordHash() - RFC 2759, Sect. 8.3  * @password: 0-to-256-unicode-char Password (IN; ASCII)  * @password_len: Length of password  * @password_hash: 16-octet PasswordHash (OUT)  * Returns: 0 on success, -1 on failure  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|nt_password_hash
 parameter_list|(
 specifier|const
@@ -251,6 +254,7 @@ name|pos
 operator|=
 name|buf
 expr_stmt|;
+return|return
 name|md4_vector
 argument_list|(
 literal|1
@@ -269,16 +273,16 @@ name|len
 argument_list|,
 name|password_hash
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/**  * hash_nt_password_hash - HashNtPasswordHash() - RFC 2759, Sect. 8.4  * @password_hash: 16-octet PasswordHash (IN)  * @password_hash_hash: 16-octet PasswordHashHash (OUT)  */
+comment|/**  * hash_nt_password_hash - HashNtPasswordHash() - RFC 2759, Sect. 8.4  * @password_hash: 16-octet PasswordHash (IN)  * @password_hash_hash: 16-octet PasswordHashHash (OUT)  * Returns: 0 on success, -1 on failure  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|hash_nt_password_hash
 parameter_list|(
 specifier|const
@@ -296,6 +300,7 @@ name|len
 init|=
 literal|16
 decl_stmt|;
+return|return
 name|md4_vector
 argument_list|(
 literal|1
@@ -308,7 +313,7 @@ name|len
 argument_list|,
 name|password_hash_hash
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 
@@ -409,11 +414,11 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * generate_nt_response - GenerateNTResponse() - RFC 2759, Sect. 8.1  * @auth_challenge: 16-octet AuthenticatorChallenge (IN)  * @peer_challenge: 16-octet PeerChallenge (IN)  * @username: 0-to-256-char UserName (IN)  * @username_len: Length of username  * @password: 0-to-256-unicode-char Password (IN; ASCII)  * @password_len: Length of password  * @response: 24-octet Response (OUT)  */
+comment|/**  * generate_nt_response - GenerateNTResponse() - RFC 2759, Sect. 8.1  * @auth_challenge: 16-octet AuthenticatorChallenge (IN)  * @peer_challenge: 16-octet PeerChallenge (IN)  * @username: 0-to-256-char UserName (IN)  * @username_len: Length of username  * @password: 0-to-256-unicode-char Password (IN; ASCII)  * @password_len: Length of password  * @response: 24-octet Response (OUT)  * Returns: 0 on success, -1 on failure  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|generate_nt_response
 parameter_list|(
 specifier|const
@@ -472,6 +477,8 @@ argument_list|,
 name|challenge
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|nt_password_hash
 argument_list|(
 name|password
@@ -480,7 +487,11 @@ name|password_len
 argument_list|,
 name|password_hash
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|challenge_response
 argument_list|(
 name|challenge
@@ -490,15 +501,18 @@ argument_list|,
 name|response
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/**  * generate_nt_response_pwhash - GenerateNTResponse() - RFC 2759, Sect. 8.1  * @auth_challenge: 16-octet AuthenticatorChallenge (IN)  * @peer_challenge: 16-octet PeerChallenge (IN)  * @username: 0-to-256-char UserName (IN)  * @username_len: Length of username  * @password_hash: 16-octet PasswordHash (IN)  * @response: 24-octet Response (OUT)  */
+comment|/**  * generate_nt_response_pwhash - GenerateNTResponse() - RFC 2759, Sect. 8.1  * @auth_challenge: 16-octet AuthenticatorChallenge (IN)  * @peer_challenge: 16-octet PeerChallenge (IN)  * @username: 0-to-256-char UserName (IN)  * @username_len: Length of username  * @password_hash: 16-octet PasswordHash (IN)  * @response: 24-octet Response (OUT)  * Returns: 0 on success, -1 on failure  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|generate_nt_response_pwhash
 parameter_list|(
 specifier|const
@@ -535,6 +549,8 @@ index|[
 literal|8
 index|]
 decl_stmt|;
+if|if
+condition|(
 name|challenge_hash
 argument_list|(
 name|peer_challenge
@@ -547,7 +563,11 @@ name|username_len
 argument_list|,
 name|challenge
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|challenge_response
 argument_list|(
 name|challenge
@@ -557,15 +577,18 @@ argument_list|,
 name|response
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/**  * generate_authenticator_response_pwhash - GenerateAuthenticatorResponse() - RFC 2759, Sect. 8.7  * @password_hash: 16-octet PasswordHash (IN)  * @nt_response: 24-octet NT-Response (IN)  * @peer_challenge: 16-octet PeerChallenge (IN)  * @auth_challenge: 16-octet AuthenticatorChallenge (IN)  * @username: 0-to-256-char UserName (IN)  * @username_len: Length of username  * @response: 20-octet AuthenticatorResponse (OUT) (note: this value is usually  * encoded as a 42-octet ASCII string (S=hexdump_of_response)  */
+comment|/**  * generate_authenticator_response_pwhash - GenerateAuthenticatorResponse() - RFC 2759, Sect. 8.7  * @password_hash: 16-octet PasswordHash (IN)  * @nt_response: 24-octet NT-Response (IN)  * @peer_challenge: 16-octet PeerChallenge (IN)  * @auth_challenge: 16-octet AuthenticatorChallenge (IN)  * @username: 0-to-256-char UserName (IN)  * @username_len: Length of username  * @response: 20-octet AuthenticatorResponse (OUT) (note: this value is usually  * encoded as a 42-octet ASCII string (S=hexdump_of_response)  * Returns: 0 on success, -1 on failure  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|generate_authenticator_response_pwhash
 parameter_list|(
 specifier|const
@@ -888,13 +911,21 @@ index|]
 operator|=
 name|magic2
 expr_stmt|;
+if|if
+condition|(
 name|hash_nt_password_hash
 argument_list|(
 name|password_hash
 argument_list|,
 name|password_hash_hash
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+if|if
+condition|(
 name|sha1_vector
 argument_list|(
 literal|3
@@ -905,7 +936,11 @@ name|len1
 argument_list|,
 name|response
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|challenge_hash
 argument_list|(
 name|peer_challenge
@@ -919,6 +954,7 @@ argument_list|,
 name|challenge
 argument_list|)
 expr_stmt|;
+return|return
 name|sha1_vector
 argument_list|(
 literal|3
@@ -929,16 +965,16 @@ name|len2
 argument_list|,
 name|response
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/**  * generate_authenticator_response - GenerateAuthenticatorResponse() - RFC 2759, Sect. 8.7  * @password: 0-to-256-unicode-char Password (IN; ASCII)  * @password_len: Length of password  * @nt_response: 24-octet NT-Response (IN)  * @peer_challenge: 16-octet PeerChallenge (IN)  * @auth_challenge: 16-octet AuthenticatorChallenge (IN)  * @username: 0-to-256-char UserName (IN)  * @username_len: Length of username  * @response: 20-octet AuthenticatorResponse (OUT) (note: this value is usually  * encoded as a 42-octet ASCII string (S=hexdump_of_response)  */
+comment|/**  * generate_authenticator_response - GenerateAuthenticatorResponse() - RFC 2759, Sect. 8.7  * @password: 0-to-256-unicode-char Password (IN; ASCII)  * @password_len: Length of password  * @nt_response: 24-octet NT-Response (IN)  * @peer_challenge: 16-octet PeerChallenge (IN)  * @auth_challenge: 16-octet AuthenticatorChallenge (IN)  * @username: 0-to-256-char UserName (IN)  * @username_len: Length of username  * @response: 20-octet AuthenticatorResponse (OUT) (note: this value is usually  * encoded as a 42-octet ASCII string (S=hexdump_of_response)  * Returns: 0 on success, -1 on failure  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|generate_authenticator_response
 parameter_list|(
 specifier|const
@@ -983,6 +1019,8 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+if|if
+condition|(
 name|nt_password_hash
 argument_list|(
 name|password
@@ -991,7 +1029,12 @@ name|password_len
 argument_list|,
 name|password_hash
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+return|return
 name|generate_authenticator_response_pwhash
 argument_list|(
 name|password_hash
@@ -1008,16 +1051,16 @@ name|nt_response
 argument_list|,
 name|response
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/**  * nt_challenge_response - NtChallengeResponse() - RFC 2433, Sect. A.5  * @challenge: 8-octet Challenge (IN)  * @password: 0-to-256-unicode-char Password (IN; ASCII)  * @password_len: Length of password  * @response: 24-octet Response (OUT)  */
+comment|/**  * nt_challenge_response - NtChallengeResponse() - RFC 2433, Sect. A.5  * @challenge: 8-octet Challenge (IN)  * @password: 0-to-256-unicode-char Password (IN; ASCII)  * @password_len: Length of password  * @response: 24-octet Response (OUT)  * Returns: 0 on success, -1 on failure  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|nt_challenge_response
 parameter_list|(
 specifier|const
@@ -1044,6 +1087,8 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+if|if
+condition|(
 name|nt_password_hash
 argument_list|(
 name|password
@@ -1052,7 +1097,11 @@ name|password_len
 argument_list|,
 name|password_hash
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|challenge_response
 argument_list|(
 name|challenge
@@ -1062,15 +1111,18 @@ argument_list|,
 name|response
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/**  * get_master_key - GetMasterKey() - RFC 3079, Sect. 3.4  * @password_hash_hash: 16-octet PasswordHashHash (IN)  * @nt_response: 24-octet NTResponse (IN)  * @master_key: 16-octet MasterKey (OUT)  */
+comment|/**  * get_master_key - GetMasterKey() - RFC 3079, Sect. 3.4  * @password_hash_hash: 16-octet PasswordHashHash (IN)  * @nt_response: 24-octet NTResponse (IN)  * @master_key: 16-octet MasterKey (OUT)  * Returns: 0 on success, -1 on failure  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|get_master_key
 parameter_list|(
 specifier|const
@@ -1206,6 +1258,8 @@ index|]
 operator|=
 name|magic1
 expr_stmt|;
+if|if
+condition|(
 name|sha1_vector
 argument_list|(
 literal|3
@@ -1216,7 +1270,11 @@ name|len
 argument_list|,
 name|hash
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|os_memcpy
 argument_list|(
 name|master_key
@@ -1226,15 +1284,18 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/**  * get_asymetric_start_key - GetAsymetricStartKey() - RFC 3079, Sect. 3.4  * @master_key: 16-octet MasterKey (IN)  * @session_key: 8-to-16 octet SessionKey (OUT)  * @session_key_len: SessionKeyLength (Length of session_key) (IN)  * @is_send: IsSend (IN, BOOLEAN)  * @is_server: IsServer (IN, BOOLEAN)  */
+comment|/**  * get_asymetric_start_key - GetAsymetricStartKey() - RFC 3079, Sect. 3.4  * @master_key: 16-octet MasterKey (IN)  * @session_key: 8-to-16 octet SessionKey (OUT)  * @session_key_len: SessionKeyLength (Length of session_key) (IN)  * @is_send: IsSend (IN, BOOLEAN)  * @is_server: IsServer (IN, BOOLEAN)  * Returns: 0 on success, -1 on failure  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|get_asymetric_start_key
 parameter_list|(
 specifier|const
@@ -1876,6 +1937,8 @@ index|]
 operator|=
 name|shs_pad2
 expr_stmt|;
+if|if
+condition|(
 name|sha1_vector
 argument_list|(
 literal|4
@@ -1886,7 +1949,11 @@ name|len
 argument_list|,
 name|digest
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 if|if
 condition|(
 name|session_key_len
@@ -1906,6 +1973,9 @@ argument_list|,
 name|session_key_len
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -2042,15 +2112,17 @@ operator|*
 literal|2
 argument_list|)
 expr_stmt|;
-name|rc4
+name|rc4_skip
 argument_list|(
-name|pw_block
-argument_list|,
-name|PWBLOCK_LEN
-argument_list|,
 name|password_hash
 argument_list|,
 literal|16
+argument_list|,
+literal|0
+argument_list|,
+name|pw_block
+argument_list|,
+name|PWBLOCK_LEN
 argument_list|)
 expr_stmt|;
 return|return
@@ -2094,6 +2166,8 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+if|if
+condition|(
 name|nt_password_hash
 argument_list|(
 name|old_password
@@ -2102,7 +2176,11 @@ name|old_password_len
 argument_list|,
 name|password_hash
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 if|if
 condition|(
 name|encrypt_pw_block_with_password_hash
@@ -2177,11 +2255,11 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * old_nt_password_hash_encrypted_with_new_nt_password_hash - OldNtPasswordHashEncryptedWithNewNtPasswordHash() - RFC 2759, Sect. 8.12  * @new_password: 0-to-256-unicode-char NewPassword (IN; ASCII)  * @new_password_len: Length of new_password  * @old_password: 0-to-256-unicode-char OldPassword (IN; ASCII)  * @old_password_len: Length of old_password  * @encrypted_password_hash: 16-octet EncryptedPasswordHash (OUT)  */
+comment|/**  * old_nt_password_hash_encrypted_with_new_nt_password_hash - OldNtPasswordHashEncryptedWithNewNtPasswordHash() - RFC 2759, Sect. 8.12  * @new_password: 0-to-256-unicode-char NewPassword (IN; ASCII)  * @new_password_len: Length of new_password  * @old_password: 0-to-256-unicode-char OldPassword (IN; ASCII)  * @old_password_len: Length of old_password  * @encrypted_password_hash: 16-octet EncryptedPasswordHash (OUT)  * Returns: 0 on success, -1 on failure  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|old_nt_password_hash_encrypted_with_new_nt_password_hash
 parameter_list|(
 specifier|const
@@ -2216,6 +2294,8 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+if|if
+condition|(
 name|nt_password_hash
 argument_list|(
 name|old_password
@@ -2224,7 +2304,7 @@ name|old_password_len
 argument_list|,
 name|old_password_hash
 argument_list|)
-expr_stmt|;
+operator|||
 name|nt_password_hash
 argument_list|(
 name|new_password
@@ -2233,7 +2313,11 @@ name|new_password_len
 argument_list|,
 name|new_password_hash
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|nt_password_hash_encrypted_with_block
 argument_list|(
 name|old_password_hash
@@ -2243,6 +2327,9 @@ argument_list|,
 name|encrypted_password_hash
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 

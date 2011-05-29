@@ -38,10 +38,10 @@ decl_stmt|;
 name|register_t
 name|lr
 decl_stmt|;
-name|int
+name|register_t
 name|cr
 decl_stmt|;
-name|int
+name|register_t
 name|xer
 decl_stmt|;
 name|register_t
@@ -53,7 +53,7 @@ decl_stmt|;
 name|register_t
 name|srr1
 decl_stmt|;
-name|int
+name|register_t
 name|exc
 decl_stmt|;
 union|union
@@ -64,7 +64,7 @@ comment|/* dar& dsisr are only filled on a DSI trap */
 name|register_t
 name|dar
 decl_stmt|;
-name|int
+name|register_t
 name|dsisr
 decl_stmt|;
 block|}
@@ -92,14 +92,14 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * This is to ensure alignment of the stackpointer  */
+comment|/*  * FRAMELEN is the size of the stack region used by the low-level trap  * handler. It is the size of its data (trapframe) plus the callframe  * header (sizeof(struct callframe) - 3 register widths). It must also  * be 16-byte aligned.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FRAMELEN
-value|roundup(sizeof(struct trapframe) + 8, 16)
+value|roundup(sizeof(struct trapframe) + \ 			    sizeof(struct callframe) - 3*sizeof(register_t), 16)
 end_define
 
 begin_define
@@ -115,6 +115,53 @@ end_define
 begin_comment
 comment|/*  * Call frame for PowerPC used during fork.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_struct
+struct|struct
+name|callframe
+block|{
+name|register_t
+name|cf_dummy_fp
+decl_stmt|;
+comment|/* dummy frame pointer */
+name|register_t
+name|cf_cr
+decl_stmt|;
+name|register_t
+name|cf_lr
+decl_stmt|;
+name|register_t
+name|cf_compiler
+decl_stmt|;
+name|register_t
+name|cf_linkeditor
+decl_stmt|;
+name|register_t
+name|cf_toc
+decl_stmt|;
+name|register_t
+name|cf_func
+decl_stmt|;
+name|register_t
+name|cf_arg0
+decl_stmt|;
+name|register_t
+name|cf_arg1
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_struct
 struct|struct
@@ -140,6 +187,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Definitions for syscalls */
@@ -174,7 +226,7 @@ name|MOREARGS
 parameter_list|(
 name|sp
 parameter_list|)
-value|((caddr_t)((int)(sp) + 8))
+value|((caddr_t)((uintptr_t)(sp) + \     sizeof(struct callframe) - 3*sizeof(register_t)))
 end_define
 
 begin_comment

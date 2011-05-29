@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* external.h  -- External COFF structures        Copyright 2001 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.        This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* external.h  -- External COFF structures        Copyright 2001, 2006 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.        This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -173,6 +173,7 @@ index|]
 decl_stmt|;
 comment|/* base of data used for this file 	*/
 block|}
+name|ATTRIBUTE_PACKED
 name|AOUTHDR
 typedef|;
 end_typedef
@@ -191,10 +192,80 @@ name|AOUTSZ
 value|28
 end_define
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|external_aouthdr64
+block|{
+name|char
+name|magic
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Type of file.			*/
+name|char
+name|vstamp
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Version stamp.			*/
+name|char
+name|tsize
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* Text size in bytes, padded to FW bdry*/
+name|char
+name|dsize
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* Initialized data "  ".		*/
+name|char
+name|bsize
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* Uninitialized data "   ".		*/
+name|char
+name|entry
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* Entry pt.				*/
+name|char
+name|text_start
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* Base of text used for this file. 	*/
+block|}
+name|AOUTHDR64
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|AOUTHDRSZ64
+value|24
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* not DO_NOT_DEFINE_AOUTHDR */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -625,6 +696,7 @@ literal|1
 index|]
 decl_stmt|;
 block|}
+name|ATTRIBUTE_PACKED
 struct|;
 end_struct
 
@@ -934,6 +1006,7 @@ name|x_tv
 struct|;
 comment|/* info about .tv section (in auxent of symbol .tv)) */
 block|}
+name|ATTRIBUTE_PACKED
 union|;
 end_union
 

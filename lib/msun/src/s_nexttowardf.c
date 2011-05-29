@@ -261,13 +261,13 @@ block|{
 comment|/* raise underflow flag */
 name|SET_FLOAT_WORD
 argument_list|(
-name|y
+name|x
 argument_list|,
 name|hx
 argument_list|)
 expr_stmt|;
 return|return
-name|y
+name|x
 return|;
 block|}
 block|}

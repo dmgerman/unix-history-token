@@ -180,6 +180,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR5416_EEP_MINOR_VER_10
+value|0xa
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR5416_EEP_MINOR_VER_16
 value|0x10
 end_define
@@ -196,6 +203,27 @@ define|#
 directive|define
 name|AR5416_EEP_MINOR_VER_19
 value|0x13
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR5416_EEP_MINOR_VER_20
+value|0x14
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR5416_EEP_MINOR_VER_21
+value|0x15
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR5416_EEP_MINOR_VER_22
+value|0x16
 end_define
 
 begin_comment
@@ -455,28 +483,32 @@ end_define
 begin_define
 define|#
 directive|define
-name|AR5416_OPFLAGS_5G_HT40
+name|AR5416_OPFLAGS_N_5G_HT40
 value|0x04
 end_define
+
+begin_comment
+comment|/* If set, disable 5G HT40 */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|AR5416_OPFLAGS_2G_HT40
+name|AR5416_OPFLAGS_N_2G_HT40
 value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
-name|AR5416_OPFLAGS_5G_HT20
+name|AR5416_OPFLAGS_N_5G_HT20
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|AR5416_OPFLAGS_2G_HT20
+name|AR5416_OPFLAGS_N_2G_HT20
 value|0x20
 end_define
 
@@ -676,6 +708,65 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * These are the secondary regulatory domain flags  * for regDmn[1].  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR5416_REGDMN_EN_FCC_MID
+value|0x01
+end_define
+
+begin_comment
+comment|/* 5.47 - 5.7GHz operation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR5416_REGDMN_EN_JAP_MID
+value|0x02
+end_define
+
+begin_comment
+comment|/* 5.47 - 5.7GHz operation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR5416_REGDMN_EN_FCC_DFS_HT40
+value|0x04
+end_define
+
+begin_comment
+comment|/* FCC HT40 + DFS operation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR5416_REGDMN_EN_JAP_HT40
+value|0x08
+end_define
+
+begin_comment
+comment|/* JP HT40 operation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR5416_REGDMN_EN_JAP_DFS_HT40
+value|0x10
+end_define
+
+begin_comment
+comment|/* JP HT40 + DFS operation */
+end_comment
+
+begin_comment
 comment|/*  * NB: The format in EEPROM has words 0 and 2 swapped (i.e. version  * and length are swapped).  We reverse their position after reading  * the data into host memory so the version field is at the same  * offset as in previous EEPROM layouts.  This makes utilities that  * inspect the EEPROM contents work without looking at the PCI device  * id which may or may not be reliable.  */
 end_comment
 
@@ -747,7 +838,7 @@ name|uint8_t
 name|rxGainType
 decl_stmt|;
 name|uint8_t
-name|dacHiPwrMode
+name|dacHiPwrMode_5G
 decl_stmt|;
 comment|/* use the DAC high power mode (MB91) */
 name|uint8_t
@@ -766,9 +857,18 @@ name|rcChainMask
 decl_stmt|;
 comment|/* "1" if the card is an HB93 1x2 */
 name|uint8_t
+name|desiredScaleCCK
+decl_stmt|;
+name|uint8_t
+name|pwr_table_offset
+decl_stmt|;
+name|uint8_t
+name|frac_n_5g
+decl_stmt|;
+name|uint8_t
 name|futureBase
 index|[
-literal|24
+literal|21
 index|]
 decl_stmt|;
 block|}
@@ -965,39 +1065,39 @@ comment|// 1
 define|#
 directive|define
 name|AR5416_EEP_FLAG_USEANT1
-value|0x01
+value|0x80
 comment|/* +1 configured antenna */
 define|#
 directive|define
 name|AR5416_EEP_FLAG_FORCEXPAON
-value|0x02
+value|0x40
 comment|/* force XPA bit for 5G */
 define|#
 directive|define
 name|AR5416_EEP_FLAG_LOCALBIAS
-value|0x04
+value|0x20
 comment|/* enable local bias */
 define|#
 directive|define
 name|AR5416_EEP_FLAG_FEMBANDSELECT
-value|0x08
+value|0x10
 comment|/* FEM band select used */
 define|#
 directive|define
 name|AR5416_EEP_FLAG_XLNABUFIN
-value|0x10
+value|0x08
 define|#
 directive|define
-name|AR5416_EEP_FLAG_XLNAISEL
-value|0x60
+name|AR5416_EEP_FLAG_XLNAISEL1
+value|0x04
 define|#
 directive|define
-name|AR5416_EEP_FLAG_XLNAISEL_S
-value|5
+name|AR5416_EEP_FLAG_XLNAISEL2
+value|0x02
 define|#
 directive|define
 name|AR5416_EEP_FLAG_XLNABUFMODE
-value|0x80
+value|0x01
 name|uint8_t
 name|miscBits
 decl_stmt|;

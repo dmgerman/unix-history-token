@@ -344,7 +344,8 @@ name|TWI_CWGR_DIV
 parameter_list|(
 name|rate
 parameter_list|)
-value|((at91_master_clock /(4*(rate))) - 2)
+define|\
+value|(at91_is_sam9() ? 				\ 	    ((at91_master_clock /(4*(rate))) - 3) :	\ 	    ((at91_master_clock /(4*(rate))) - 2))
 end_define
 
 begin_comment

@@ -628,10 +628,11 @@ name|hysteresis
 range|:
 literal|8
 decl_stmt|,
-name|role
+name|def_role
 range|:
 literal|2
 decl_stmt|,
+comment|/* default role */
 name|gdt_running
 range|:
 literal|1
@@ -729,9 +730,9 @@ name|simqfrozen
 range|:
 literal|3
 decl_stmt|,
-name|role
+name|def_role
 range|:
-literal|3
+literal|2
 decl_stmt|,
 name|iid
 range|:
@@ -1102,6 +1103,13 @@ parameter_list|)
 value|DELAY(x)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ISP_MIN
+value|imin
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1184,9 +1192,11 @@ parameter_list|,
 name|offset
 parameter_list|,
 name|size
+parameter_list|,
+name|chan
 parameter_list|)
 define|\
-value|switch (type) {							\ case SYNC_SFORDEV:						\ case SYNC_REQUEST:						\ 	bus_dmamap_sync(isp->isp_osinfo.cdmat,			\ 	   isp->isp_osinfo.cdmap, 				\ 	   BUS_DMASYNC_PREREAD | BUS_DMASYNC_PREWRITE);		\ 	break;							\ case SYNC_SFORCPU:						\ case SYNC_RESULT:						\ 	bus_dmamap_sync(isp->isp_osinfo.cdmat, 			\ 	   isp->isp_osinfo.cdmap,				\ 	   BUS_DMASYNC_POSTREAD | BUS_DMASYNC_POSTWRITE);	\ 	break;							\ case SYNC_REG:							\ 	bus_space_barrier(isp->isp_osinfo.bus_tag,		\ 	    isp->isp_osinfo.bus_handle, offset, size,		\ 	    BUS_SPACE_BARRIER_READ);				\ 	break;							\ default:							\ 	break;							\ }
+value|switch (type) {							\ case SYNC_SFORDEV:						\ {								\ 	struct isp_fc *fc = ISP_FC_PC(isp, chan);		\ 	bus_dmamap_sync(fc->tdmat, fc->tdmap,			\ 	   BUS_DMASYNC_PREREAD | BUS_DMASYNC_PREWRITE);		\ 	break;							\ }								\ case SYNC_REQUEST:						\ 	bus_dmamap_sync(isp->isp_osinfo.cdmat,			\ 	   isp->isp_osinfo.cdmap, 				\ 	   BUS_DMASYNC_PREREAD | BUS_DMASYNC_PREWRITE);		\ 	break;							\ case SYNC_SFORCPU:						\ {								\ 	struct isp_fc *fc = ISP_FC_PC(isp, chan);		\ 	bus_dmamap_sync(fc->tdmat, fc->tdmap,			\ 	   BUS_DMASYNC_POSTREAD | BUS_DMASYNC_POSTWRITE);	\ 	break;							\ }								\ case SYNC_RESULT:						\ 	bus_dmamap_sync(isp->isp_osinfo.cdmat, 			\ 	   isp->isp_osinfo.cdmap,				\ 	   BUS_DMASYNC_POSTREAD | BUS_DMASYNC_POSTWRITE);	\ 	break;							\ case SYNC_REG:							\ 	bus_space_barrier(isp->isp_osinfo.bus_tag,		\ 	    isp->isp_osinfo.bus_handle, offset, size,		\ 	    BUS_SPACE_BARRIER_READ | BUS_SPACE_BARRIER_WRITE);	\ 	break;							\ default:							\ 	break;							\ }
 end_define
 
 begin_define
@@ -1499,6 +1509,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|XS_SNSASC
+parameter_list|(
+name|ccb
+parameter_list|)
+value|((ccb)->sense_data.add_sense_code)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_SNSASCQ
+parameter_list|(
+name|ccb
+parameter_list|)
+value|((ccb)->sense_data.add_sense_code_qual)
+end_define
+
+begin_define
+define|#
+directive|define
 name|XS_TAG_P
 parameter_list|(
 name|ccb
@@ -1643,14 +1673,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|XS_SET_STATE_STAT
+name|XS_SENSE_VALID
 parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
+name|xs
 parameter_list|)
+value|(((xs)->ccb_h.status& CAM_AUTOSNS_VALID) != 0)
 end_define
 
 begin_define
@@ -1683,7 +1710,7 @@ parameter_list|,
 name|chan
 parameter_list|)
 define|\
-value|(IS_FC(isp)? ISP_FC_PC(isp, chan)->role : ISP_SPI_PC(isp, chan)->role)
+value|(IS_FC(isp)? ISP_FC_PC(isp, chan)->def_role : ISP_SPI_PC(isp, chan)->def_role)
 end_define
 
 begin_define
@@ -1698,7 +1725,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|if (IS_FC(isp)) { 				\ 		ISP_FC_PC(isp, chan)->role = val;	\ 	} else {					\ 		ISP_SPI_PC(isp, chan)->role = val;	\ 	}
+value|if (IS_FC(isp)) { 				\ 		ISP_FC_PC(isp, chan)->def_role = val;	\ 	} else {					\ 		ISP_SPI_PC(isp, chan)->def_role = val;	\ 	}
 end_define
 
 begin_define
@@ -2542,6 +2569,37 @@ parameter_list|(
 function_decl|3
 operator|,
 function_decl|4
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|void
+name|isp_xs_prt
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|XS_T
+modifier|*
+parameter_list|,
+name|int
+name|level
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__printflike
+parameter_list|(
+function_decl|4
+operator|,
+function_decl|5
 end_function_decl
 
 begin_empty_stmt

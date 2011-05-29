@@ -146,17 +146,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The time for a process to be blocked before being very swappable.  * This is a number of seconds which the system takes as being a non-trivial  * amount of real time.  You probably shouldn't change this;  * it is used in subtle ways (fractions and multiples of it are, that is, like  * half of a ``long time'', almost a long time, etc.)  * It is related to human patience and other factors which don't really  * change over time.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXSLP
-value|20
-end_define
-
-begin_comment
 comment|/*  * The physical address space is densely populated.  */
 end_comment
 
@@ -261,6 +250,28 @@ define|#
 directive|define
 name|VM_NFREEORDER
 value|11
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Only one memory domain.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_NDOMAIN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VM_NDOMAIN
+value|1
 end_define
 
 begin_endif
@@ -541,7 +552,7 @@ begin_define
 define|#
 directive|define
 name|VM_KMEM_SIZE_MAX
-value|(320 * 1024 * 1024)
+value|((VM_MAX_KERNEL_ADDRESS - \     VM_MIN_KERNEL_ADDRESS) * 2 / 5)
 end_define
 
 begin_endif
@@ -570,6 +581,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|ZERO_REGION_SIZE
+value|(64 * 1024)
+end_define
+
+begin_comment
+comment|/* 64KB */
+end_comment
 
 begin_endif
 endif|#

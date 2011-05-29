@@ -219,6 +219,8 @@ block|,
 literal|"_rtld_debug_state"
 block|,
 comment|/* On the 64-bit PowerPC, the linker symbol with the same name as      the C function points to a function descriptor, not to the entry      point.  The linker symbol whose name is the C function name      prefixed with a '.' points to the function's entry point.  So      when we look through this table, we ignore symbols that point      into the data section (thus skipping the descriptor's symbol),      and eventually try this one, giving us the real entry point      address.  */
+literal|".r_debug_state"
+block|,
 literal|"._dl_debug_state"
 block|,
 name|NULL

@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-isoclns.c,v 1.163 2007-03-02 09:16:19 hannes Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-isoclns.c,v 1.165 2008-08-16 13:38:15 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -107,6 +107,12 @@ begin_include
 include|#
 directive|include
 file|"oui.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"signature.h"
 end_include
 
 begin_comment
@@ -8478,7 +8484,6 @@ name|isis_iih_ptp_header
 modifier|*
 name|header_iih_ptp
 decl_stmt|;
-specifier|const
 name|struct
 name|isis_lsp_header
 modifier|*
@@ -8567,6 +8572,9 @@ name|i
 decl_stmt|,
 name|vendor_id
 decl_stmt|;
+name|int
+name|sigcheck
+decl_stmt|;
 name|packet_len
 operator|=
 name|length
@@ -8575,7 +8583,7 @@ name|optr
 operator|=
 name|p
 expr_stmt|;
-comment|/* initialize the _o_riginal pointer to the packet start -                  need it for parsing the checksum TLV */
+comment|/* initialize the _o_riginal pointer to the packet start -                  need it for parsing the checksum TLV and authentication                  TLV verification */
 name|isis_header
 operator|=
 operator|(
@@ -8623,7 +8631,6 @@ expr_stmt|;
 name|header_lsp
 operator|=
 operator|(
-specifier|const
 expr|struct
 name|isis_lsp_header
 operator|*
@@ -9588,6 +9595,43 @@ operator|-
 literal|12
 argument_list|)
 expr_stmt|;
+comment|/*          * Clear checksum and lifetime prior to signature verification.          */
+name|header_lsp
+operator|->
+name|checksum
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|header_lsp
+operator|->
+name|checksum
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|header_lsp
+operator|->
+name|remaining_lifetime
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|header_lsp
+operator|->
+name|remaining_lifetime
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
 name|printf
 argument_list|(
 literal|", PDU length: %u, Flags: [ %s"
@@ -10436,19 +10480,6 @@ break|break;
 case|case
 name|ISIS_TLV_MT_IS_REACH
 case|:
-while|while
-condition|(
-name|tmp
-operator|>=
-literal|2
-operator|+
-name|NODE_ID_LEN
-operator|+
-literal|3
-operator|+
-literal|1
-condition|)
-block|{
 name|mt_len
 operator|=
 name|isis_print_mtid
@@ -10476,6 +10507,19 @@ name|tmp
 operator|-=
 name|mt_len
 expr_stmt|;
+while|while
+condition|(
+name|tmp
+operator|>=
+literal|2
+operator|+
+name|NODE_ID_LEN
+operator|+
+literal|3
+operator|+
+literal|1
+condition|)
+block|{
 name|ext_is_len
 operator|=
 name|isis_print_ext_is_reach
@@ -11228,6 +11272,49 @@ condition|)
 name|printf
 argument_list|(
 literal|", (malformed subTLV) "
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_LIBCRYPTO
+name|sigcheck
+operator|=
+name|signature_verify
+argument_list|(
+name|optr
+argument_list|,
+name|length
+argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|tptr
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|sigcheck
+operator|=
+name|CANT_CHECK_SIGNATURE
+expr_stmt|;
+endif|#
+directive|endif
+name|printf
+argument_list|(
+literal|" (%s)"
+argument_list|,
+name|tok2str
+argument_list|(
+name|signature_check_values
+argument_list|,
+literal|"Unknown"
+argument_list|,
+name|sigcheck
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;

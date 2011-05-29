@@ -230,6 +230,50 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|USD_GETBASE
+parameter_list|(
+name|sd
+parameter_list|)
+value|(((sd)->sd_lobase) | (sd)->sd_hibase<< 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USD_SETBASE
+parameter_list|(
+name|sd
+parameter_list|,
+name|b
+parameter_list|)
+value|(sd)->sd_lobase = (b);  \ 				(sd)->sd_hibase = ((b)>> 24);
+end_define
+
+begin_define
+define|#
+directive|define
+name|USD_GETLIMIT
+parameter_list|(
+name|sd
+parameter_list|)
+value|(((sd)->sd_lolimit) | (sd)->sd_hilimit<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USD_SETLIMIT
+parameter_list|(
+name|sd
+parameter_list|,
+name|l
+parameter_list|)
+value|(sd)->sd_lolimit = (l); \ 				(sd)->sd_hilimit = ((l)>> 16);
+end_define
+
 begin_comment
 comment|/*  * Gate descriptors (e.g. indirect descriptors)  */
 end_comment
@@ -1069,6 +1113,17 @@ begin_comment
 comment|/* System Call Interrupt Vector */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IDT_DTRACE_RET
+value|0x92
+end_define
+
+begin_comment
+comment|/* DTrace pid provider Interrupt Vector */
+end_comment
+
 begin_comment
 comment|/*  * Entries in the Global Descriptor Table (GDT)  * Note that each 4 entries share a single 32 byte L1 cache line.  * Some of the fast syscall instructions require a specific order here.  */
 end_comment
@@ -1418,6 +1473,14 @@ ifdef|#
 directive|ifdef
 name|XEN
 end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|proc_ldt
+name|default_proc_ldt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

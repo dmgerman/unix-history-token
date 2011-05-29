@@ -1783,6 +1783,18 @@ break|break;
 case|case
 name|CFM_OPCODE_LTM
 case|:
+name|msg_ptr
+operator|.
+name|cfm_ltm
+operator|=
+operator|(
+specifier|const
+expr|struct
+name|cfm_ltm_t
+operator|*
+operator|)
+name|tptr
+expr_stmt|;
 name|printf
 argument_list|(
 literal|", Flags [%s]"
@@ -1855,6 +1867,18 @@ break|break;
 case|case
 name|CFM_OPCODE_LTR
 case|:
+name|msg_ptr
+operator|.
+name|cfm_ltr
+operator|=
+operator|(
+specifier|const
+expr|struct
+name|cfm_ltr_t
+operator|*
+operator|)
+name|tptr
+expr_stmt|;
 name|printf
 argument_list|(
 literal|", Flags [%s]"

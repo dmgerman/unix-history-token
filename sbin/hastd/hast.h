@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2009-2010 The FreeBSD Foundation  * All rights reserved.  *  * This software was developed by Pawel Jakub Dawidek under sponsorship from  * the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2009-2010 The FreeBSD Foundation  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>  * All rights reserved.  *  * This software was developed by Pawel Jakub Dawidek under sponsorship from  * the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -75,11 +75,15 @@ directive|include
 file|"proto.h"
 end_include
 
+begin_comment
+comment|/*  * Version history:  * 0 - initial version  * 1 - HIO_KEEPALIVE added  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|HAST_PROTO_VERSION
-value|0
+value|1
 end_define
 
 begin_define
@@ -225,6 +229,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|HIO_KEEPALIVE
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAST_USER
+value|"hast"
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAST_TIMEOUT
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAST_CONFIG
 value|"/etc/hast.conf"
 end_define
@@ -239,15 +264,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|HASTD_PORT
-value|8457
+name|HASTD_LISTEN_TCP4
+value|"tcp4://0.0.0.0:8457"
 end_define
 
 begin_define
 define|#
 directive|define
-name|HASTD_LISTEN
-value|"tcp4://0.0.0.0:8457"
+name|HASTD_LISTEN_TCP6
+value|"tcp6://[::]:8457"
 end_define
 
 begin_define
@@ -293,6 +318,44 @@ name|HAST_TOKEN_SIZE
 value|16
 end_define
 
+begin_comment
+comment|/* Number of seconds to sleep between reconnect retries or keepalive packets. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAST_KEEPALIVE
+value|10
+end_define
+
+begin_struct
+struct|struct
+name|hastd_listen
+block|{
+comment|/* Address to listen on. */
+name|char
+name|hl_addr
+index|[
+name|HAST_ADDRSIZE
+index|]
+decl_stmt|;
+comment|/* Protocol-specific data. */
+name|struct
+name|proto_conn
+modifier|*
+name|hl_conn
+decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|hastd_listen
+argument_list|)
+name|hl_next
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|hastd_config
@@ -310,19 +373,20 @@ name|proto_conn
 modifier|*
 name|hc_controlconn
 decl_stmt|;
-comment|/* Address to listen on. */
-name|char
-name|hc_listenaddr
-index|[
-name|HAST_ADDRSIZE
-index|]
-decl_stmt|;
-comment|/* Protocol-specific data. */
+comment|/* Incoming control connection. */
 name|struct
 name|proto_conn
 modifier|*
-name|hc_listenconn
+name|hc_controlin
 decl_stmt|;
+comment|/* List of addresses to listen on. */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|hastd_listen
+argument_list|)
+name|hc_listen
+expr_stmt|;
 comment|/* List of resources. */
 name|TAILQ_HEAD
 argument_list|(
@@ -353,6 +417,48 @@ begin_define
 define|#
 directive|define
 name|HAST_REPLICATION_ASYNC
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAST_COMPRESSION_NONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAST_COMPRESSION_HOLE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAST_COMPRESSION_LZF
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAST_CHECKSUM_NONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAST_CHECKSUM_CRC32
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAST_CHECKSUM_SHA256
 value|2
 end_define
 
@@ -389,6 +495,21 @@ decl_stmt|;
 comment|/* Maximum number of extents that are kept dirty. */
 name|int
 name|hr_keepdirty
+decl_stmt|;
+comment|/* Path to a program to execute on various events. */
+name|char
+name|hr_exec
+index|[
+name|PATH_MAX
+index|]
+decl_stmt|;
+comment|/* Compression algorithm. */
+name|int
+name|hr_compression
+decl_stmt|;
+comment|/* Checksum algorithm. */
+name|int
+name|hr_checksum
 decl_stmt|;
 comment|/* Path to local component. */
 name|char
@@ -433,6 +554,13 @@ index|[
 name|HAST_ADDRSIZE
 index|]
 decl_stmt|;
+comment|/* Local address to bind to for outgoing connections. */
+name|char
+name|hr_sourceaddr
+index|[
+name|HAST_ADDRSIZE
+index|]
+decl_stmt|;
 comment|/* Connection for incoming data. */
 name|struct
 name|proto_conn
@@ -452,6 +580,10 @@ name|hr_token
 index|[
 name|HAST_TOKEN_SIZE
 index|]
+decl_stmt|;
+comment|/* Connection timeout. */
+name|int
+name|hr_timeout
 decl_stmt|;
 comment|/* Resource unique identifier. */
 name|uint64_t
@@ -489,11 +621,23 @@ comment|/* PID of child worker process. 0 - no child. */
 name|pid_t
 name|hr_workerpid
 decl_stmt|;
-comment|/* Control connection between parent and child. */
+comment|/* Control commands from parent to child. */
 name|struct
 name|proto_conn
 modifier|*
 name|hr_ctrl
+decl_stmt|;
+comment|/* Events from child to parent. */
+name|struct
+name|proto_conn
+modifier|*
+name|hr_event
+decl_stmt|;
+comment|/* Connection requests from child to parent. */
+name|struct
+name|proto_conn
+modifier|*
+name|hr_conn
 decl_stmt|;
 comment|/* Activemap structure. */
 name|struct
@@ -504,6 +648,26 @@ decl_stmt|;
 comment|/* Locked used to synchronize access to hr_amp. */
 name|pthread_mutex_t
 name|hr_amp_lock
+decl_stmt|;
+comment|/* Number of BIO_READ requests. */
+name|uint64_t
+name|hr_stat_read
+decl_stmt|;
+comment|/* Number of BIO_WRITE requests. */
+name|uint64_t
+name|hr_stat_write
+decl_stmt|;
+comment|/* Number of BIO_DELETE requests. */
+name|uint64_t
+name|hr_stat_delete
+decl_stmt|;
+comment|/* Number of BIO_FLUSH requests. */
+name|uint64_t
+name|hr_stat_flush
+decl_stmt|;
+comment|/* Number of activemap updates. */
+name|uint64_t
+name|hr_stat_activemap_update
 decl_stmt|;
 comment|/* Next resource. */
 name|TAILQ_ENTRY
@@ -526,6 +690,9 @@ specifier|const
 name|char
 modifier|*
 name|config
+parameter_list|,
+name|bool
+name|exitonerror
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -22,7 +22,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/interrupt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/priority.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/runq.h>
 end_include
 
 begin_comment
@@ -33,14 +45,14 @@ begin_define
 define|#
 directive|define
 name|USB_PRI_HIGH
-value|PI_NET
+value|PI_SWI(SWI_NET)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USB_PRI_MED
-value|PI_DISK
+value|PI_SWI(SWI_CAMBIO)
 end_define
 
 begin_define

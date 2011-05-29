@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"err.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -76,6 +70,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"err.h"
+end_include
 
 begin_struct
 struct|struct

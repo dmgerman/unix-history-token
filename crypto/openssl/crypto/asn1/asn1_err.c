@@ -1570,6 +1570,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|ASN1_R_INVALID_OBJECT_ENCODING
+argument_list|)
+block|,
+literal|"invalid object encoding"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|ASN1_R_INVALID_SEPARATOR
 argument_list|)
 block|,

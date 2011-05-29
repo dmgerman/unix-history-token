@@ -275,12 +275,6 @@ decl_stmt|;
 name|device_t
 name|tl_miibus
 decl_stmt|;
-name|struct
-name|tl_type
-modifier|*
-name|tl_dinfo
-decl_stmt|;
-comment|/* ThunderLAN adapter info */
 name|u_int8_t
 name|tl_eeaddr
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2007, by Cisco Systems, Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2007, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -61,14 +61,23 @@ name|uint32_t
 name|sctp_ecn_enable
 decl_stmt|;
 name|uint32_t
-name|sctp_ecn_nonce
+name|sctp_fr_max_burst_default
 decl_stmt|;
 name|uint32_t
 name|sctp_strict_sacks
 decl_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|SCTP_WITH_NO_CSUM
+argument_list|)
 name|uint32_t
 name|sctp_no_csum_on_loopback
 decl_stmt|;
+endif|#
+directive|endif
 name|uint32_t
 name|sctp_strict_init
 decl_stmt|;
@@ -209,6 +218,10 @@ comment|/* JRS - Variable for default congestion control module */
 name|uint32_t
 name|sctp_default_cc_module
 decl_stmt|;
+comment|/* RS - Variable for default stream scheduling module */
+name|uint32_t
+name|sctp_default_ss_module
+decl_stmt|;
 name|uint32_t
 name|sctp_default_frag_interleave
 decl_stmt|;
@@ -220,6 +233,21 @@ name|sctp_mobility_fasthandoff
 decl_stmt|;
 name|uint32_t
 name|sctp_inits_include_nat_friendly
+decl_stmt|;
+name|uint32_t
+name|sctp_rttvar_bw
+decl_stmt|;
+name|uint32_t
+name|sctp_rttvar_rtt
+decl_stmt|;
+name|uint32_t
+name|sctp_rttvar_eqret
+decl_stmt|;
+name|uint32_t
+name|sctp_steady_step
+decl_stmt|;
+name|uint32_t
+name|sctp_use_dccc_ecn
 decl_stmt|;
 if|#
 directive|if
@@ -244,6 +272,12 @@ name|sctp_enable_sack_immediately
 decl_stmt|;
 name|uint32_t
 name|sctp_vtag_time_wait
+decl_stmt|;
+name|uint32_t
+name|sctp_buffer_splitting
+decl_stmt|;
+name|uint32_t
+name|sctp_initial_cwnd
 decl_stmt|;
 if|#
 directive|if
@@ -449,38 +483,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* ecn_nonce: Enable SCTP ECN Nonce */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_ECN_NONCE_DESC
-value|"Enable SCTP ECN Nonce"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_ECN_NONCE_MIN
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_ECN_NONCE_MAX
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_ECN_NONCE_DEFAULT
-value|0
-end_define
-
-begin_comment
 comment|/* strict_sacks: Enable SCTP Strict SACK checking */
 end_comment
 
@@ -623,7 +625,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_MAXBURST_MIN
-value|1
+value|0
 end_define
 
 begin_define
@@ -638,6 +640,38 @@ define|#
 directive|define
 name|SCTPCTL_MAXBURST_DEFAULT
 value|SCTP_DEF_MAX_BURST
+end_define
+
+begin_comment
+comment|/* fr_maxburst: Default max burst for sctp endpoints when fast retransmitting */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_FRMAXBURST_DESC
+value|"Default fr max burst for sctp endpoints"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_FRMAXBURST_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_FRMAXBURST_MAX
+value|0xFFFFFFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_FRMAXBURST_DEFAULT
+value|SCTP_DEF_FRMAX_BURST
 end_define
 
 begin_comment
@@ -673,7 +707,7 @@ value|SCTP_ASOC_MAX_CHUNKS_ON_QUEUE
 end_define
 
 begin_comment
-comment|/* tcbhashsize: Tuneable for Hash table sizes */
+comment|/* tcbhashsize: Tunable for Hash table sizes */
 end_comment
 
 begin_define
@@ -705,7 +739,7 @@ value|SCTP_TCBHASHSIZE
 end_define
 
 begin_comment
-comment|/* pcbhashsize: Tuneable for PCB Hash table sizes */
+comment|/* pcbhashsize: Tunable for PCB Hash table sizes */
 end_comment
 
 begin_define
@@ -769,14 +803,14 @@ value|SCTP_DEFAULT_SPLIT_POINT_MIN
 end_define
 
 begin_comment
-comment|/* chunkscale: Tuneable for Scaling of number of chunks and messages */
+comment|/* chunkscale: Tunable for Scaling of number of chunks and messages */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_CHUNKSCALE_DESC
-value|"Tuneable for Scaling of number of chunks and messages"
+value|"Tunable for Scaling of number of chunks and messages"
 end_define
 
 begin_define
@@ -801,14 +835,14 @@ value|SCTP_CHUNKQUEUE_SCALE
 end_define
 
 begin_comment
-comment|/* delayed_sack_time: Default delayed SACK timer in msec */
+comment|/* delayed_sack_time: Default delayed SACK timer in ms */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_DELAYED_SACK_TIME_DESC
-value|"Default delayed SACK timer in msec"
+value|"Default delayed SACK timer in ms"
 end_define
 
 begin_define
@@ -929,14 +963,14 @@ value|SCTP_DEF_ASOC_RESC_LIMIT
 end_define
 
 begin_comment
-comment|/* heartbeat_interval: Default heartbeat interval in msec */
+comment|/* heartbeat_interval: Default heartbeat interval in ms */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_HEARTBEAT_INTERVAL_DESC
-value|"Default heartbeat interval in msec"
+value|"Default heartbeat interval in ms"
 end_define
 
 begin_define
@@ -961,14 +995,14 @@ value|SCTP_HB_DEFAULT_MSEC
 end_define
 
 begin_comment
-comment|/* pmtu_raise_time: Default PMTU raise timer in sec */
+comment|/* pmtu_raise_time: Default PMTU raise timer in seconds */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_PMTU_RAISE_TIME_DESC
-value|"Default PMTU raise timer in sec"
+value|"Default PMTU raise timer in seconds"
 end_define
 
 begin_define
@@ -993,14 +1027,14 @@ value|SCTP_DEF_PMTU_RAISE_SEC
 end_define
 
 begin_comment
-comment|/* shutdown_guard_time: Default shutdown guard timer in sec */
+comment|/* shutdown_guard_time: Default shutdown guard timer in seconds */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_SHUTDOWN_GUARD_TIME_DESC
-value|"Default shutdown guard timer in sec"
+value|"Default shutdown guard timer in seconds"
 end_define
 
 begin_define
@@ -1025,14 +1059,14 @@ value|SCTP_DEF_MAX_SHUTDOWN_SEC
 end_define
 
 begin_comment
-comment|/* secret_lifetime: Default secret lifetime in sec */
+comment|/* secret_lifetime: Default secret lifetime in seconds */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_SECRET_LIFETIME_DESC
-value|"Default secret lifetime in sec"
+value|"Default secret lifetime in seconds"
 end_define
 
 begin_define
@@ -1057,14 +1091,14 @@ value|SCTP_DEFAULT_SECRET_LIFE_SEC
 end_define
 
 begin_comment
-comment|/* rto_max: Default maximum retransmission timeout in msec */
+comment|/* rto_max: Default maximum retransmission timeout in ms */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_RTO_MAX_DESC
-value|"Default maximum retransmission timeout in msec"
+value|"Default maximum retransmission timeout in ms"
 end_define
 
 begin_define
@@ -1089,14 +1123,14 @@ value|SCTP_RTO_UPPER_BOUND
 end_define
 
 begin_comment
-comment|/* rto_min: Default minimum retransmission timeout in msec */
+comment|/* rto_min: Default minimum retransmission timeout in ms */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_RTO_MIN_DESC
-value|"Default minimum retransmission timeout in msec"
+value|"Default minimum retransmission timeout in ms"
 end_define
 
 begin_define
@@ -1121,14 +1155,14 @@ value|SCTP_RTO_LOWER_BOUND
 end_define
 
 begin_comment
-comment|/* rto_initial: Default initial retransmission timeout in msec */
+comment|/* rto_initial: Default initial retransmission timeout in ms */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_RTO_INITIAL_DESC
-value|"Default initial retransmission timeout in msec"
+value|"Default initial retransmission timeout in ms"
 end_define
 
 begin_define
@@ -1153,14 +1187,14 @@ value|SCTP_RTO_INITIAL
 end_define
 
 begin_comment
-comment|/* init_rto_max: Default maximum retransmission timeout during association setup in msec */
+comment|/* init_rto_max: Default maximum retransmission timeout during association setup in ms */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_INIT_RTO_MAX_DESC
-value|"Default maximum retransmission timeout during association setup in msec"
+value|"Default maximum retransmission timeout during association setup in ms"
 end_define
 
 begin_define
@@ -1192,7 +1226,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_VALID_COOKIE_LIFE_DESC
-value|"Default cookie lifetime in sec"
+value|"Default cookie lifetime in seconds"
 end_define
 
 begin_define
@@ -1313,14 +1347,14 @@ value|SCTP_DEF_MAX_PATH_RTX
 end_define
 
 begin_comment
-comment|/* add_more_on_output: When space wise is it worthwhile to try to add more to a socket send buffer */
+comment|/* add_more_on_output: When space-wise is it worthwhile to try to add more to a socket send buffer */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_ADD_MORE_ON_OUTPUT_DESC
-value|"When space wise is it worthwhile to try to add more to a socket send buffer"
+value|"When space-wise is it worthwhile to try to add more to a socket send buffer"
 end_define
 
 begin_define
@@ -1384,28 +1418,28 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_CMT_ON_OFF_DESC
-value|"CMT on/off flag"
+value|"CMT settings"
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_CMT_ON_OFF_MIN
-value|0
+value|SCTP_CMT_OFF
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_CMT_ON_OFF_MAX
-value|1
+value|SCTP_CMT_MAX
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_CMT_ON_OFF_DEFAULT
-value|0
+value|SCTP_CMT_OFF
 end_define
 
 begin_comment
@@ -1821,7 +1855,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_HB_MAX_BURST_DEFAULT
-value|SCTP_DEF_MAX_BURST
+value|SCTP_DEF_HBMAX_BURST
 end_define
 
 begin_comment
@@ -2013,6 +2047,38 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_DEFAULT_CC_MODULE_DEFAULT
+value|0
+end_define
+
+begin_comment
+comment|/* RS - default stream scheduling module sysctl */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_DEFAULT_SS_MODULE_DESC
+value|"Default stream scheduling module"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_DEFAULT_SS_MODULE_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_DEFAULT_SS_MODULE_MAX
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_DEFAULT_SS_MODULE_DEFAULT
 value|0
 end_define
 
@@ -2209,7 +2275,7 @@ value|SCTPCTL_SACK_IMMEDIATELY_ENABLE_MIN
 end_define
 
 begin_comment
-comment|/* Enable sending of the SACK-IMMEDIATELY bit */
+comment|/* Enable sending of the NAT-FRIENDLY message */
 end_comment
 
 begin_define
@@ -2241,14 +2307,14 @@ value|SCTPCTL_NAT_FRIENDLY_INITS_MIN
 end_define
 
 begin_comment
-comment|/* Vtag tiem wait bits */
+comment|/* Vtag time wait in seconds */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_TIME_WAIT_DESC
-value|"Vtag time wait time 0 disables."
+value|"Vtag time wait time in seconds, 0 disables it."
 end_define
 
 begin_define
@@ -2271,6 +2337,226 @@ directive|define
 name|SCTPCTL_TIME_WAIT_DEFAULT
 value|SCTP_TIME_WAIT
 end_define
+
+begin_comment
+comment|/* Enable Send/Receive buffer splitting */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_BUFFER_SPLITTING_DESC
+value|"Enable send/receive buffer splitting."
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_BUFFER_SPLITTING_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_BUFFER_SPLITTING_MAX
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_BUFFER_SPLITTING_DEFAULT
+value|SCTPCTL_BUFFER_SPLITTING_MIN
+end_define
+
+begin_comment
+comment|/* Initial congestion window in MTU */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_INITIAL_CWND_DESC
+value|"Initial congestion window in MTUs"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_INITIAL_CWND_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_INITIAL_CWND_MAX
+value|0xffffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_INITIAL_CWND_DEFAULT
+value|3
+end_define
+
+begin_comment
+comment|/* rttvar smooth avg for bw calc  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RTTVAR_BW_DESC
+value|"Shift amount for bw smoothing on rtt calc"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RTTVAR_BW_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RTTVAR_BW_MAX
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RTTVAR_BW_DEFAULT
+value|4
+end_define
+
+begin_comment
+comment|/* rttvar smooth avg for bw calc  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RTTVAR_RTT_DESC
+value|"Shift amount for rtt smoothing on rtt calc"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RTTVAR_RTT_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RTTVAR_RTT_MAX
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RTTVAR_RTT_DEFAULT
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RTTVAR_EQRET_DESC
+value|"What to return when rtt and bw are unchanged"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RTTVAR_EQRET_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RTTVAR_EQRET_MAX
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RTTVAR_EQRET_DEFAULT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RTTVAR_STEADYS_DESC
+value|"How many the sames it takes to try step down of cwnd"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RTTVAR_STEADYS_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RTTVAR_STEADYS_MAX
+value|0xFFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RTTVAR_STEADYS_DEFAULT
+value|20
+end_define
+
+begin_comment
+comment|/* 0 means disable feature */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RTTVAR_DCCCECN_DESC
+value|"Enable for RTCC CC datacenter ECN"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RTTVAR_DCCCECN_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RTTVAR_DCCCECN_MAX
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RTTVAR_DCCCECN_DEFAULT
+value|1
+end_define
+
+begin_comment
+comment|/* 0 means disable feature */
+end_comment
 
 begin_if
 if|#

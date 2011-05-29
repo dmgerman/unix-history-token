@@ -301,6 +301,16 @@ name|SDHCI_QUIRK_FORCE_DMA
 block|}
 block|,
 block|{
+literal|0xe8221180
+block|,
+literal|0xffff
+block|,
+literal|"RICOH SD"
+block|,
+name|SDHCI_QUIRK_FORCE_DMA
+block|}
+block|,
+block|{
 literal|0x8034104c
 block|,
 literal|0xffff

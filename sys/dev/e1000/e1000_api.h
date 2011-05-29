@@ -246,6 +246,18 @@ end_function_decl
 
 begin_function_decl
 name|s32
+name|e1000_init_mbx_params
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s32
 name|e1000_get_bus_info
 parameter_list|(
 name|struct
@@ -744,7 +756,26 @@ end_function_decl
 
 begin_function_decl
 name|s32
-name|e1000_read_pba_num
+name|e1000_read_pba_string
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u8
+modifier|*
+name|pba_num
+parameter_list|,
+name|u32
+name|pba_num_size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s32
+name|e1000_read_pba_length
 parameter_list|(
 name|struct
 name|e1000_hw
@@ -753,7 +784,7 @@ name|hw
 parameter_list|,
 name|u32
 modifier|*
-name|part_num
+name|pba_num_size
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1660,7 +1660,7 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"%s: could not determine revision"
+literal|"%s: could not determine module-revision"
 argument_list|,
 name|__func__
 argument_list|)
@@ -4707,7 +4707,7 @@ index|]
 argument_list|,
 name|INTR_TYPE_MISC
 operator||
-name|INTR_FAST
+name|INTR_BRIDGE
 argument_list|,
 name|handler
 argument_list|,
@@ -7856,6 +7856,8 @@ argument_list|(
 name|mintr
 argument_list|)
 argument_list|,
+name|NULL
+argument_list|,
 name|maskbuf
 argument_list|)
 operator|!=
@@ -8019,17 +8021,19 @@ name|DMF_LOADED
 operator|)
 operator|==
 literal|0
-operator|||
+condition|)
+return|return;
+if|if
+condition|(
 operator|(
 name|op
 operator|&
-operator|~
-name|BUS_DMASYNC_POSTWRITE
+name|BUS_DMASYNC_POSTREAD
 operator|)
-operator|==
+operator|!=
 literal|0
 condition|)
-return|return;
+block|{
 name|s
 operator|=
 name|intr_disable
@@ -8065,18 +8069,12 @@ operator|(
 name|ASI_BLK_COMMIT_S
 operator|)
 block|)
-function|;
-end_function
-
-begin_expr_stmt
+empty_stmt|;
 name|membar
 argument_list|(
 name|Sync
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|wr
 argument_list|(
 name|fprs
@@ -8086,15 +8084,32 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|intr_restore
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
+
+begin_elseif
+elseif|else
+if|if
+condition|(
+operator|(
+name|op
+operator|&
+name|BUS_DMASYNC_PREWRITE
+operator|)
+operator|!=
+literal|0
+condition|)
+name|membar
+argument_list|(
+name|Sync
+argument_list|)
+expr_stmt|;
+end_elseif
 
 begin_function
 unit|}  static
@@ -11213,6 +11228,7 @@ name|bus
 parameter_list|,
 name|device_t
 name|child
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -11246,7 +11262,8 @@ name|device_t
 name|bus
 parameter_list|,
 name|device_t
-name|dev
+name|child
+name|__unused
 parameter_list|)
 block|{
 name|struct

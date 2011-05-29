@@ -596,6 +596,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|uint64_t
+name|memstat_get_sleeps
+parameter_list|(
+specifier|const
+name|struct
+name|memory_type
+modifier|*
+name|mtp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 modifier|*
 name|memstat_get_caller_pointer

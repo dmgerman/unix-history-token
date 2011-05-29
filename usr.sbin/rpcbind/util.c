@@ -978,7 +978,7 @@ name|freeit
 goto|;
 name|found
 label|:
-comment|/* 	 * Construct the new address using the the address from 	 * `bestif', and the port number from `serv_uaddr'. 	 */
+comment|/* 	 * Construct the new address using the address from 	 * `bestif', and the port number from `serv_uaddr'. 	 */
 name|serv_nbp
 operator|=
 name|uaddr2taddr

@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"crypto.h"
+file|"crypto/crypto.h"
 end_include
 
 begin_define

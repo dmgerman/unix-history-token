@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 1997 Jason R. Thorpe.  * All rights reserved.  *  * 
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -1064,12 +1064,7 @@ name|ifmr
 operator|->
 name|ifm_current
 operator|&
-operator|~
-operator|(
-name|IFM_NMASK
-operator||
-name|IFM_TMASK
-operator|)
+name|IFM_IMASK
 operator|)
 operator||
 name|IFM_TYPE
@@ -1084,27 +1079,6 @@ argument_list|)
 operator||
 name|subtype
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|ifr
-operator|.
-name|ifr_media
-operator|&
-name|IFM_TMASK
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|ifr
-operator|.
-name|ifr_media
-operator|&=
-operator|~
-name|IFM_GMASK
-expr_stmt|;
-block|}
 name|ifmr
 operator|->
 name|ifm_current
@@ -1795,6 +1769,17 @@ name|IFM_SHARED_OPTION_DESCRIPTIONS
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|ifmedia_description
+name|ifm_shared_option_aliases
+index|[]
+init|=
+name|IFM_SHARED_OPTION_ALIASES
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|ifmedia_type_to_subtype
@@ -1828,7 +1813,7 @@ decl_stmt|;
 block|}
 name|options
 index|[
-literal|3
+literal|4
 index|]
 struct|;
 struct|struct
@@ -1925,6 +1910,16 @@ block|}
 block|,
 block|{
 operator|&
+name|ifm_shared_option_aliases
+index|[
+literal|0
+index|]
+block|,
+literal|1
+block|}
+block|,
+block|{
+operator|&
 name|ifm_subtype_ethernet_option_descriptions
 index|[
 literal|0
@@ -2007,6 +2002,16 @@ literal|0
 index|]
 block|,
 literal|0
+block|}
+block|,
+block|{
+operator|&
+name|ifm_shared_option_aliases
+index|[
+literal|0
+index|]
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -2097,6 +2102,16 @@ block|}
 block|,
 block|{
 operator|&
+name|ifm_shared_option_aliases
+index|[
+literal|0
+index|]
+block|,
+literal|1
+block|}
+block|,
+block|{
+operator|&
 name|ifm_subtype_fddi_option_descriptions
 index|[
 literal|0
@@ -2179,6 +2194,16 @@ literal|0
 index|]
 block|,
 literal|0
+block|}
+block|,
+block|{
+operator|&
+name|ifm_shared_option_aliases
+index|[
+literal|0
+index|]
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -2285,6 +2310,16 @@ literal|0
 index|]
 block|,
 literal|0
+block|}
+block|,
+block|{
+operator|&
+name|ifm_shared_option_aliases
+index|[
+literal|0
+index|]
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -3489,6 +3524,10 @@ modifier|*
 name|ttos
 decl_stmt|;
 name|int
+name|seen_option
+init|=
+literal|0
+decl_stmt|,
 name|i
 decl_stmt|;
 comment|/* Find the top-level interface type. */
@@ -3646,9 +3685,27 @@ operator|->
 name|ifmt_word
 condition|)
 block|{
+if|if
+condition|(
+name|seen_option
+operator|==
+literal|0
+condition|)
 name|printf
 argument_list|(
-literal|" mediaopt %s"
+literal|" mediaopt "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s%s"
+argument_list|,
+name|seen_option
+operator|++
+condition|?
+literal|","
+else|:
+literal|""
 argument_list|,
 name|desc
 operator|->

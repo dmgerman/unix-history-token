@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-rsa.c,v 1.73 2008/07/02 12:03:51 dtucker Exp $ */
+comment|/* $OpenBSD: auth-rsa.c,v 1.79 2010/12/03 23:55:27 djm Exp $ */
 end_comment
 
 begin_comment
@@ -106,12 +106,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"auth-options.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"pathnames.h"
 end_include
 
@@ -131,6 +125,12 @@ begin_include
 include|#
 directive|include
 file|"key.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"auth-options.h"
 end_include
 
 begin_include
@@ -470,7 +470,7 @@ expr_stmt|;
 comment|/* Verify that the response is the original challenge. */
 if|if
 condition|(
-name|memcmp
+name|timingsafe_bcmp
 argument_list|(
 name|response
 argument_list|,
@@ -1020,6 +1020,15 @@ argument_list|,
 name|bits
 argument_list|)
 expr_stmt|;
+comment|/* Never accept a revoked key */
+if|if
+condition|(
+name|auth_key_is_revoked
+argument_list|(
+name|key
+argument_list|)
+condition|)
+break|break;
 comment|/* We have found the desired key. */
 comment|/* 		 * If our options do not allow this key to be used, 		 * do not send challenge. 		 */
 if|if
@@ -1035,6 +1044,11 @@ name|file
 argument_list|,
 name|linenum
 argument_list|)
+condition|)
+continue|continue;
+if|if
+condition|(
+name|key_is_cert_authority
 condition|)
 continue|continue;
 comment|/* break out, this key is allowed */

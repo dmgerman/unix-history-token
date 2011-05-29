@@ -802,6 +802,8 @@ condition|(
 name|old_state
 operator|<
 name|state
+operator|&&
+name|pci_do_power_suspend
 condition|)
 block|{
 name|error
@@ -841,11 +843,34 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_FAILURE
+name|ACPI_SUCCESS
 argument_list|(
 name|status
 argument_list|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"set ACPI power state D%d on %s\n"
+argument_list|,
+name|state
+argument_list|,
+name|acpi_name
+argument_list|(
+name|h
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|status
 operator|!=
 name|AE_NOT_FOUND
@@ -854,7 +879,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Failed to set ACPI power state D%d on %s: %s\n"
+literal|"failed to set ACPI power state D%d on %s: %s\n"
 argument_list|,
 name|state
 argument_list|,
@@ -874,6 +899,8 @@ condition|(
 name|old_state
 operator|>
 name|state
+operator|&&
+name|pci_do_power_resume
 condition|)
 name|error
 operator|=
@@ -1276,20 +1303,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-if|if
-condition|(
-name|pcib_get_bus
-argument_list|(
-name|dev
-argument_list|)
-operator|<
-literal|0
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 if|if
 condition|(
 name|acpi_get_handle

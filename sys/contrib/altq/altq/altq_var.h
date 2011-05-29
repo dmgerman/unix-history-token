@@ -577,44 +577,12 @@ begin_comment
 comment|/* ioctl cmd type */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-operator|(
-name|__FreeBSD__
-operator|<
-literal|3
-operator|)
-end_if
-
-begin_typedef
-typedef|typedef
-name|int
-name|ioctlcmd_t
-typedef|;
-end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_typedef
 typedef|typedef
 name|u_long
 name|ioctlcmd_t
 typedef|;
 end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * queue macros:  * the interface of TAILQ_LAST macro changed after the introduction  * of softupdate. redefine it here to make it work with pre-2.2.7.  */

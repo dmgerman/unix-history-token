@@ -8,7 +8,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_comment
@@ -107,15 +107,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|P2CROSS
+name|P2BOUNDARY
 parameter_list|(
-name|x
+name|off
 parameter_list|,
-name|y
+name|len
 parameter_list|,
 name|align
 parameter_list|)
-value|(((x) ^ (y))> (align) - 1)
+value|(((off) ^ ((off) + (len) - 1))> (align) - 1)
 end_define
 
 begin_comment
@@ -321,6 +321,50 @@ value|BF64_SET(x, low, len, ((val)>> (shift)) - (bias))
 end_define
 
 begin_comment
+comment|/*  * Macros to reverse byte order  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BSWAP_8
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BSWAP_16
+parameter_list|(
+name|x
+parameter_list|)
+value|((BSWAP_8(x)<< 8) | BSWAP_8((x)>> 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BSWAP_32
+parameter_list|(
+name|x
+parameter_list|)
+value|((BSWAP_16(x)<< 16) | BSWAP_16((x)>> 16))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BSWAP_64
+parameter_list|(
+name|x
+parameter_list|)
+value|((BSWAP_32(x)<< 32) | BSWAP_32((x)>> 32))
+end_define
+
+begin_comment
 comment|/*  * We currently support nine block sizes, from 512 bytes to 128K.  * We could go higher, but the benefits are near-zero and the cost  * of COWing a giant block to modify one byte would become excessive.  */
 end_comment
 
@@ -437,48 +481,8 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Each block is described by its DVAs, time of birth, checksum, etc.  * The word-by-word, bit-by-bit layout of the blkptr is as follows:  *  *	64	56	48	40	32	24	16	8	0  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 0	|		vdev1		| GRID  |	  ASIZE		|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 1	|G|			 offset1				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 2	|		vdev2		| GRID  |	  ASIZE		|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 3	|G|			 offset2				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 4	|		vdev3		| GRID  |	  ASIZE		|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 5	|G|			 offset3				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 6	|E| lvl | type	| cksum | comp	|     PSIZE	|     LSIZE	|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 7	|			padding					|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 8	|			padding					|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 9	|			padding					|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * a	|			birth txg				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * b	|			fill count				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * c	|			checksum[0]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * d	|			checksum[1]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * e	|			checksum[2]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * f	|			checksum[3]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  *  * Legend:  *  * vdev		virtual device ID  * offset	offset into virtual device  * LSIZE	logical size  * PSIZE	physical size (after compression)  * ASIZE	allocated size (including RAID-Z parity and gang block headers)  * GRID		RAID-Z layout information (reserved for future use)  * cksum	checksum function  * comp		compression function  * G		gang block indicator  * E		endianness  * type		DMU object type  * lvl		level of indirection  * birth txg	transaction group in which the block was born  * fill count	number of non-zero blocks under this bp  * checksum[4]	256-bit checksum of the data this bp describes  */
+comment|/*  * Each block is described by its DVAs, time of birth, checksum, etc.  * The word-by-word, bit-by-bit layout of the blkptr is as follows:  *  *	64	56	48	40	32	24	16	8	0  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 0	|		vdev1		| GRID  |	  ASIZE		|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 1	|G|			 offset1				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 2	|		vdev2		| GRID  |	  ASIZE		|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 3	|G|			 offset2				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 4	|		vdev3		| GRID  |	  ASIZE		|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 5	|G|			 offset3				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 6	|BDX|lvl| type	| cksum | comp	|     PSIZE	|     LSIZE	|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 7	|			padding					|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 8	|			padding					|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 9	|			physical birth txg			|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * a	|			logical birth txg			|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * b	|			fill count				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * c	|			checksum[0]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * d	|			checksum[1]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * e	|			checksum[2]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * f	|			checksum[3]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  *  * Legend:  *  * vdev		virtual device ID  * offset	offset into virtual device  * LSIZE	logical size  * PSIZE	physical size (after compression)  * ASIZE	allocated size (including RAID-Z parity and gang block headers)  * GRID		RAID-Z layout information (reserved for future use)  * cksum	checksum function  * comp		compression function  * G		gang block indicator  * B		byteorder (endianness)  * D		dedup  * X		unused  * lvl		level of indirection  * type		DMU object type  * phys birth	txg of block allocation; zero if same as logical birth txg  * log. birth	transaction group in which the block was logically born  * fill count	number of non-zero blocks under this bp  * checksum[4]	256-bit checksum of the data this bp describes  */
 end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|blkptr
-block|{
-name|dva_t
-name|blk_dva
-index|[
-literal|3
-index|]
-decl_stmt|;
-comment|/* 128-bit Data Virtual Address	*/
-name|uint64_t
-name|blk_prop
-decl_stmt|;
-comment|/* size, compression, type, etc	*/
-name|uint64_t
-name|blk_pad
-index|[
-literal|3
-index|]
-decl_stmt|;
-comment|/* Extra space for the future	*/
-name|uint64_t
-name|blk_birth
-decl_stmt|;
-comment|/* transaction group at birth	*/
-name|uint64_t
-name|blk_fill
-decl_stmt|;
-comment|/* fill count			*/
-name|zio_cksum_t
-name|blk_cksum
-decl_stmt|;
-comment|/* 256-bit checksum		*/
-block|}
-name|blkptr_t
-typedef|;
-end_typedef
 
 begin_define
 define|#
@@ -501,6 +505,50 @@ end_define
 begin_comment
 comment|/* Number of DVAs in a bp	*/
 end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|blkptr
+block|{
+name|dva_t
+name|blk_dva
+index|[
+name|SPA_DVAS_PER_BP
+index|]
+decl_stmt|;
+comment|/* Data Virtual Addresses */
+name|uint64_t
+name|blk_prop
+decl_stmt|;
+comment|/* size, compression, type, etc	    */
+name|uint64_t
+name|blk_pad
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Extra space for the future	    */
+name|uint64_t
+name|blk_phys_birth
+decl_stmt|;
+comment|/* txg when block was allocated	    */
+name|uint64_t
+name|blk_birth
+decl_stmt|;
+comment|/* transaction group at birth	    */
+name|uint64_t
+name|blk_fill
+decl_stmt|;
+comment|/* fill count			    */
+name|zio_cksum_t
+name|blk_cksum
+decl_stmt|;
+comment|/* 256-bit checksum		    */
+block|}
+name|blkptr_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * Macros to get and set fields in a bp or DVA.  */
@@ -759,6 +807,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|BP_GET_DEDUP
+parameter_list|(
+name|bp
+parameter_list|)
+value|BF64_GET((bp)->blk_prop, 62, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BP_SET_DEDUP
+parameter_list|(
+name|bp
+parameter_list|,
+name|x
+parameter_list|)
+value|BF64_SET((bp)->blk_prop, 62, 1, x)
+end_define
+
+begin_define
+define|#
+directive|define
 name|BP_GET_BYTEORDER
 parameter_list|(
 name|bp
@@ -776,6 +846,17 @@ parameter_list|,
 name|x
 parameter_list|)
 value|BF64_SET((bp)->blk_prop, 63, 1, x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BP_PHYSICAL_BIRTH
+parameter_list|(
+name|bp
+parameter_list|)
+define|\
+value|((bp)->blk_phys_birth ? (bp)->blk_phys_birth : (bp)->blk_birth)
 end_define
 
 begin_define
@@ -927,50 +1008,111 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|{						\ 	(bp)->blk_dva[0].dva_word[0] = 0;	\ 	(bp)->blk_dva[0].dva_word[1] = 0;	\ 	(bp)->blk_dva[1].dva_word[0] = 0;	\ 	(bp)->blk_dva[1].dva_word[1] = 0;	\ 	(bp)->blk_dva[2].dva_word[0] = 0;	\ 	(bp)->blk_dva[2].dva_word[1] = 0;	\ 	(bp)->blk_prop = 0;			\ 	(bp)->blk_pad[0] = 0;			\ 	(bp)->blk_pad[1] = 0;			\ 	(bp)->blk_pad[2] = 0;			\ 	(bp)->blk_birth = 0;			\ 	(bp)->blk_fill = 0;			\ 	ZIO_SET_CHECKSUM(&(bp)->blk_cksum, 0, 0, 0, 0);	\ }
+value|{						\ 	(bp)->blk_dva[0].dva_word[0] = 0;	\ 	(bp)->blk_dva[0].dva_word[1] = 0;	\ 	(bp)->blk_dva[1].dva_word[0] = 0;	\ 	(bp)->blk_dva[1].dva_word[1] = 0;	\ 	(bp)->blk_dva[2].dva_word[0] = 0;	\ 	(bp)->blk_dva[2].dva_word[1] = 0;	\ 	(bp)->blk_prop = 0;			\ 	(bp)->blk_pad[0] = 0;			\ 	(bp)->blk_pad[1] = 0;			\ 	(bp)->blk_phys_birth = 0;		\ 	(bp)->blk_birth = 0;			\ 	(bp)->blk_fill = 0;			\ 	ZIO_SET_CHECKSUM(&(bp)->blk_cksum, 0, 0, 0, 0);	\ }
+end_define
+
+begin_comment
+comment|/*  * Embedded checksum  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ZEC_MAGIC
+value|0x210da7ab10c7a11ULL
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|zio_eck
+block|{
+name|uint64_t
+name|zec_magic
+decl_stmt|;
+comment|/* for validation, endianness	*/
+name|zio_cksum_t
+name|zec_cksum
+decl_stmt|;
+comment|/* 256-bit checksum		*/
+block|}
+name|zio_eck_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * Gang block headers are self-checksumming and contain an array  * of block pointers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPA_GANGBLOCKSIZE
+value|SPA_MINBLOCKSIZE
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZBT_MAGIC
-value|0x210da7ab10c7a11ULL
+name|SPA_GBH_NBLKPTRS
+value|((SPA_GANGBLOCKSIZE - \ 	sizeof (zio_eck_t)) / sizeof (blkptr_t))
 end_define
 
-begin_comment
-comment|/* zio data bloc tail */
-end_comment
+begin_define
+define|#
+directive|define
+name|SPA_GBH_FILLER
+value|((SPA_GANGBLOCKSIZE - \ 	sizeof (zio_eck_t) - \ 	(SPA_GBH_NBLKPTRS * sizeof (blkptr_t))) /\ 	sizeof (uint64_t))
+end_define
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|zio_block_tail
+name|zio_gbh
 block|{
+name|blkptr_t
+name|zg_blkptr
+index|[
+name|SPA_GBH_NBLKPTRS
+index|]
+decl_stmt|;
 name|uint64_t
-name|zbt_magic
+name|zg_filler
+index|[
+name|SPA_GBH_FILLER
+index|]
 decl_stmt|;
-comment|/* for validation, endianness	*/
-name|zio_cksum_t
-name|zbt_cksum
+name|zio_eck_t
+name|zg_tail
 decl_stmt|;
-comment|/* 256-bit checksum		*/
 block|}
-name|zio_block_tail_t
+name|zio_gbh_phys_t
 typedef|;
 end_typedef
 
 begin_define
 define|#
 directive|define
-name|VDEV_SKIP_SIZE
-value|(8<< 10)
+name|VDEV_RAIDZ_MAXPARITY
+value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|VDEV_BOOT_HEADER_SIZE
+name|VDEV_PAD_SIZE
 value|(8<< 10)
+end_define
+
+begin_comment
+comment|/* 2 padding areas (vl_pad1 and vl_pad2) to skip */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDEV_SKIP_SIZE
+value|VDEV_PAD_SIZE * 2
 end_define
 
 begin_define
@@ -995,7 +1137,7 @@ parameter_list|(
 name|vd
 parameter_list|)
 define|\
-value|MAX((vd)->vdev_top->vdev_ashift, UBERBLOCK_SHIFT)
+value|MAX((vd)->v_top->v_ashift, UBERBLOCK_SHIFT)
 end_define
 
 begin_define
@@ -1032,67 +1174,6 @@ parameter_list|)
 value|(1ULL<< VDEV_UBERBLOCK_SHIFT(vd))
 end_define
 
-begin_comment
-comment|/* ZFS boot block */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VDEV_BOOT_MAGIC
-value|0x2f5b007b10cULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|VDEV_BOOT_VERSION
-value|1
-end_define
-
-begin_comment
-comment|/* version number	*/
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|vdev_boot_header
-block|{
-name|uint64_t
-name|vb_magic
-decl_stmt|;
-comment|/* VDEV_BOOT_MAGIC	*/
-name|uint64_t
-name|vb_version
-decl_stmt|;
-comment|/* VDEV_BOOT_VERSION	*/
-name|uint64_t
-name|vb_offset
-decl_stmt|;
-comment|/* start offset	(bytes) */
-name|uint64_t
-name|vb_size
-decl_stmt|;
-comment|/* size (bytes)		*/
-name|char
-name|vb_pad
-index|[
-name|VDEV_BOOT_HEADER_SIZE
-operator|-
-literal|4
-operator|*
-sizeof|sizeof
-argument_list|(
-name|uint64_t
-argument_list|)
-index|]
-decl_stmt|;
-block|}
-name|vdev_boot_header_t
-typedef|;
-end_typedef
-
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1105,11 +1186,11 @@ name|VDEV_PHYS_SIZE
 operator|-
 sizeof|sizeof
 argument_list|(
-name|zio_block_tail_t
+name|zio_eck_t
 argument_list|)
 index|]
 decl_stmt|;
-name|zio_block_tail_t
+name|zio_eck_t
 name|vp_zbt
 decl_stmt|;
 block|}
@@ -1123,16 +1204,19 @@ struct|struct
 name|vdev_label
 block|{
 name|char
-name|vl_pad
+name|vl_pad1
 index|[
-name|VDEV_SKIP_SIZE
+name|VDEV_PAD_SIZE
 index|]
 decl_stmt|;
-comment|/*   8K	*/
-name|vdev_boot_header_t
-name|vl_boot_header
+comment|/*  8K  */
+name|char
+name|vl_pad2
+index|[
+name|VDEV_PAD_SIZE
+index|]
 decl_stmt|;
-comment|/*   8K	*/
+comment|/*  8K  */
 name|vdev_phys_t
 name|vl_vdev_phys
 decl_stmt|;
@@ -1218,56 +1302,6 @@ name|VDEV_LABELS
 value|4
 end_define
 
-begin_comment
-comment|/*  * Gang block headers are self-checksumming and contain an array  * of block pointers.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPA_GANGBLOCKSIZE
-value|SPA_MINBLOCKSIZE
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPA_GBH_NBLKPTRS
-value|((SPA_GANGBLOCKSIZE - \ 	sizeof (zio_block_tail_t)) / sizeof (blkptr_t))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPA_GBH_FILLER
-value|((SPA_GANGBLOCKSIZE - \ 	sizeof (zio_block_tail_t) - \ 	(SPA_GBH_NBLKPTRS * sizeof (blkptr_t))) /\ 	sizeof (uint64_t))
-end_define
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|zio_gbh
-block|{
-name|blkptr_t
-name|zg_blkptr
-index|[
-name|SPA_GBH_NBLKPTRS
-index|]
-decl_stmt|;
-name|uint64_t
-name|zg_filler
-index|[
-name|SPA_GBH_FILLER
-index|]
-decl_stmt|;
-name|zio_block_tail_t
-name|zg_tail
-decl_stmt|;
-block|}
-name|zio_gbh_phys_t
-typedef|;
-end_typedef
-
 begin_enum
 enum|enum
 name|zio_checksum
@@ -1292,6 +1326,8 @@ name|ZIO_CHECKSUM_FLETCHER_4
 block|,
 name|ZIO_CHECKSUM_SHA256
 block|,
+name|ZIO_CHECKSUM_ZILOG2
+block|,
 name|ZIO_CHECKSUM_FUNCTIONS
 block|}
 enum|;
@@ -1301,7 +1337,7 @@ begin_define
 define|#
 directive|define
 name|ZIO_CHECKSUM_ON_VALUE
-value|ZIO_CHECKSUM_FLETCHER_2
+value|ZIO_CHECKSUM_FLETCHER_4
 end_define
 
 begin_define
@@ -1344,6 +1380,8 @@ block|,
 name|ZIO_COMPRESS_GZIP_8
 block|,
 name|ZIO_COMPRESS_GZIP_9
+block|,
+name|ZIO_COMPRESS_ZLE
 block|,
 name|ZIO_COMPRESS_FUNCTIONS
 block|}
@@ -1548,22 +1586,120 @@ name|SPA_VERSION_14
 value|14ULL
 end_define
 
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_15
+value|15ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_16
+value|16ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_17
+value|17ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_18
+value|18ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_19
+value|19ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_20
+value|20ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_21
+value|21ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_22
+value|22ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_23
+value|23ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_24
+value|24ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_25
+value|25ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_26
+value|26ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_27
+value|27ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_28
+value|28ULL
+end_define
+
 begin_comment
-comment|/*  * When bumping up SPA_VERSION, make sure GRUB ZFS understand the on-disk  * format change. Go to usr/src/grub/grub-0.95/stage2/{zfs-include/, fsys_zfs*},  * and do the appropriate changes.  */
+comment|/*  * When bumping up SPA_VERSION, make sure GRUB ZFS understands the on-disk  * format change. Go to usr/src/grub/grub-0.97/stage2/{zfs-include/, fsys_zfs*},  * and do the appropriate changes.  Also bump the version number in  * usr/src/grub/capability.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SPA_VERSION
-value|SPA_VERSION_14
+value|SPA_VERSION_28
 end_define
 
 begin_define
 define|#
 directive|define
 name|SPA_VERSION_STRING
-value|"14"
+value|"28"
 end_define
 
 begin_comment
@@ -1729,6 +1865,111 @@ define|#
 directive|define
 name|SPA_VERSION_PASSTHROUGH_X
 value|SPA_VERSION_14
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_USERSPACE
+value|SPA_VERSION_15
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_STMF_PROP
+value|SPA_VERSION_16
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_RAIDZ3
+value|SPA_VERSION_17
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_USERREFS
+value|SPA_VERSION_18
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_HOLES
+value|SPA_VERSION_19
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_ZLE_COMPRESSION
+value|SPA_VERSION_20
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_DEDUP
+value|SPA_VERSION_21
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_RECVD_PROPS
+value|SPA_VERSION_22
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_SLIM_ZIL
+value|SPA_VERSION_23
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_SA
+value|SPA_VERSION_24
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_SCAN
+value|SPA_VERSION_25
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_DIR_CLONES
+value|SPA_VERSION_26
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_DEADLISTS
+value|SPA_VERSION_26
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_FAST_SNAP
+value|SPA_VERSION_27
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_MULTI_REPLACE
+value|SPA_VERSION_28
 end_define
 
 begin_comment
@@ -1934,6 +2175,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ZPOOL_CONFIG_IS_LOG
+value|"is_log"
+end_define
+
+begin_define
+define|#
+directive|define
 name|ZPOOL_CONFIG_TIMESTAMP
 value|"timestamp"
 end_define
@@ -1972,6 +2220,20 @@ define|#
 directive|define
 name|ZPOOL_CONFIG_REMOVED
 value|"removed"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZPOOL_CONFIG_FRU
+value|"fru"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZPOOL_CONFIG_AUX_STATE
+value|"aux_state"
 end_define
 
 begin_define
@@ -2026,8 +2288,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|VDEV_TYPE_HOLE
+value|"hole"
+end_define
+
+begin_define
+define|#
+directive|define
 name|VDEV_TYPE_SPARE
 value|"spare"
+end_define
+
+begin_define
+define|#
+directive|define
+name|VDEV_TYPE_LOG
+value|"log"
+end_define
+
+begin_define
+define|#
+directive|define
+name|VDEV_TYPE_L2CACHE
+value|"l2cache"
 end_define
 
 begin_comment
@@ -2048,29 +2331,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ZPOOL_CACHE_DIR
-value|"/boot/zfs"
-end_define
-
-begin_define
-define|#
-directive|define
-name|ZPOOL_CACHE_FILE
-value|"zpool.cache"
-end_define
-
-begin_define
-define|#
-directive|define
-name|ZPOOL_CACHE_TMP
-value|".zpool.cache"
-end_define
-
-begin_define
-define|#
-directive|define
 name|ZPOOL_CACHE
-value|ZPOOL_CACHE_DIR "/" ZPOOL_CACHE_FILE
+value|"/boot/zfs/zpool.cache"
 end_define
 
 begin_comment
@@ -2455,6 +2717,24 @@ name|DNODE_FLAG_USED_BYTES
 value|(1<<0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|DNODE_FLAG_USERUSED_ACCOUNTED
+value|(1<<1)
+end_define
+
+begin_comment
+comment|/* Does dnode have a SA spill blkptr in bonus? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNODE_FLAG_SPILL_BLKPTR
+value|(1<<2)
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -2531,7 +2811,15 @@ name|uint8_t
 name|dn_bonus
 index|[
 name|DN_MAX_BONUSLEN
+operator|-
+sizeof|sizeof
+argument_list|(
+name|blkptr_t
+argument_list|)
 index|]
+decl_stmt|;
+name|blkptr_t
+name|dn_spill
 decl_stmt|;
 block|}
 name|dnode_phys_t
@@ -2602,9 +2890,9 @@ comment|/* zpl: */
 name|DMU_OT_ZNODE
 block|,
 comment|/* ZNODE */
-name|DMU_OT_ACL
+name|DMU_OT_OLDACL
 block|,
-comment|/* ACL */
+comment|/* Old ACL */
 name|DMU_OT_PLAIN_FILE_CONTENTS
 block|,
 comment|/* UINT8 */
@@ -2647,6 +2935,60 @@ comment|/* spa_his_phys_t */
 name|DMU_OT_POOL_PROPS
 block|,
 comment|/* ZAP */
+name|DMU_OT_DSL_PERMS
+block|,
+comment|/* ZAP */
+name|DMU_OT_ACL
+block|,
+comment|/* ACL */
+name|DMU_OT_SYSACL
+block|,
+comment|/* SYSACL */
+name|DMU_OT_FUID
+block|,
+comment|/* FUID table (Packed NVLIST UINT8) */
+name|DMU_OT_FUID_SIZE
+block|,
+comment|/* FUID table size UINT64 */
+name|DMU_OT_NEXT_CLONES
+block|,
+comment|/* ZAP */
+name|DMU_OT_SCAN_QUEUE
+block|,
+comment|/* ZAP */
+name|DMU_OT_USERGROUP_USED
+block|,
+comment|/* ZAP */
+name|DMU_OT_USERGROUP_QUOTA
+block|,
+comment|/* ZAP */
+name|DMU_OT_USERREFS
+block|,
+comment|/* ZAP */
+name|DMU_OT_DDT_ZAP
+block|,
+comment|/* ZAP */
+name|DMU_OT_DDT_STATS
+block|,
+comment|/* ZAP */
+name|DMU_OT_SA
+block|,
+comment|/* System attr */
+name|DMU_OT_SA_MASTER_NODE
+block|,
+comment|/* ZAP */
+name|DMU_OT_SA_ATTR_REGISTRATION
+block|,
+comment|/* ZAP */
+name|DMU_OT_SA_ATTR_LAYOUTS
+block|,
+comment|/* ZAP */
+name|DMU_OT_SCAN_XLATE
+block|,
+comment|/* ZAP */
+name|DMU_OT_DEDUP
+block|,
+comment|/* fake dedup BP from ddt_bp_create() */
 name|DMU_OT_NUMTYPES
 block|}
 name|dmu_object_type_t
@@ -2677,6 +3019,127 @@ block|}
 name|dmu_objset_type_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*  * header for all bonus and spill buffers.  * The header has a fixed portion with a variable number  * of "lengths" depending on the number of variable sized  * attribues which are determined by the "layout number"  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SA_MAGIC
+value|0x2F505A
+end_define
+
+begin_comment
+comment|/* ZFS SA */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|sa_hdr_phys
+block|{
+name|uint32_t
+name|sa_magic
+decl_stmt|;
+name|uint16_t
+name|sa_layout_info
+decl_stmt|;
+comment|/* Encoded with hdrsize and layout number */
+name|uint16_t
+name|sa_lengths
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* optional sizes for variable length attrs */
+comment|/* ... Data follows the lengths.  */
+block|}
+name|sa_hdr_phys_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * sa_hdr_phys -> sa_layout_info  *  * 16      10       0  * +--------+-------+  * | hdrsz  |layout |  * +--------+-------+  *  * Bits 0-10 are the layout number  * Bits 11-16 are the size of the header.  * The hdrsize is the number * 8  *  * For example.  * hdrsz of 1 ==> 8 byte header  *          2 ==> 16 byte header  *  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SA_HDR_LAYOUT_NUM
+parameter_list|(
+name|hdr
+parameter_list|)
+value|BF32_GET(hdr->sa_layout_info, 0, 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SA_HDR_SIZE
+parameter_list|(
+name|hdr
+parameter_list|)
+value|BF32_GET_SB(hdr->sa_layout_info, 10, 16, 3, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SA_HDR_LAYOUT_INFO_ENCODE
+parameter_list|(
+name|x
+parameter_list|,
+name|num
+parameter_list|,
+name|size
+parameter_list|)
+define|\
+value|{ \ 	BF32_SET_SB(x, 10, 6, 3, 0, size); \ 	BF32_SET(x, 0, 10, num); \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|SA_MODE_OFFSET
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SA_SIZE_OFFSET
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|SA_GEN_OFFSET
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|SA_UID_OFFSET
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|SA_GID_OFFSET
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|SA_PARENT_OFFSET
+value|40
+end_define
 
 begin_comment
 comment|/*  * Intent log header - this on disk structure holds fields to manage  * the log.  All fields are 64 bit to easily handle cross architectures.  */
@@ -2714,6 +3177,13 @@ name|zil_header_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|OBJSET_PHYS_SIZE
+value|2048
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -2728,15 +3198,20 @@ decl_stmt|;
 name|uint64_t
 name|os_type
 decl_stmt|;
+name|uint64_t
+name|os_flags
+decl_stmt|;
 name|char
 name|os_pad
 index|[
-literal|1024
+name|OBJSET_PHYS_SIZE
 operator|-
 sizeof|sizeof
 argument_list|(
 name|dnode_phys_t
 argument_list|)
+operator|*
+literal|3
 operator|-
 sizeof|sizeof
 argument_list|(
@@ -2747,7 +3222,15 @@ sizeof|sizeof
 argument_list|(
 name|uint64_t
 argument_list|)
+operator|*
+literal|2
 index|]
+decl_stmt|;
+name|dnode_phys_t
+name|os_userused_dnode
+decl_stmt|;
+name|dnode_phys_t
+name|os_groupused_dnode
 decl_stmt|;
 block|}
 name|objset_phys_t
@@ -3952,6 +4435,7 @@ name|vdev_list_t
 name|v_children
 decl_stmt|;
 comment|/* children of this vdev */
+specifier|const
 name|char
 modifier|*
 name|v_name
@@ -3973,6 +4457,12 @@ name|int
 name|v_nparity
 decl_stmt|;
 comment|/* # parity for raidz */
+name|struct
+name|vdev
+modifier|*
+name|v_top
+decl_stmt|;
+comment|/* parent vdev */
 name|int
 name|v_nchildren
 decl_stmt|;

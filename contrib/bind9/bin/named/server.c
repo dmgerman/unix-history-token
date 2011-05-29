@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: server.c,v 1.520.12.11 2009/12/24 00:17:47 each Exp $ */
+comment|/* $Id: server.c,v 1.520.12.21 2011-01-14 23:45:49 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -756,7 +756,7 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* RFC 3330 */
+comment|/* RFC 5735 and RFC 5737 */
 block|{
 literal|"0.IN-ADDR.ARPA"
 block|,
@@ -785,6 +785,20 @@ name|ISC_FALSE
 block|}
 block|,
 comment|/* TEST NET */
+block|{
+literal|"100.51.198.IN-ADDR.ARPA"
+block|,
+name|ISC_FALSE
+block|}
+block|,
+comment|/* TEST NET 2 */
+block|{
+literal|"113.0.203.IN-ADDR.ARPA"
+block|,
+name|ISC_FALSE
+block|}
+block|,
+comment|/* TEST NET 3 */
 block|{
 literal|"255.255.255.255.IN-ADDR.ARPA"
 block|,
@@ -840,6 +854,13 @@ name|ISC_FALSE
 block|}
 block|,
 comment|/* LINK LOCAL */
+comment|/* Example Prefix, RFC 3849. */
+block|{
+literal|"8.B.D.0.1.0.0.2.IP6.ARPA"
+block|,
+name|ISC_FALSE
+block|}
+block|,
 block|{
 name|NULL
 block|,
@@ -5429,6 +5450,58 @@ name|max_acache_size
 argument_list|)
 expr_stmt|;
 block|}
+name|CHECK
+argument_list|(
+name|configure_view_acl
+argument_list|(
+name|vconfig
+argument_list|,
+name|config
+argument_list|,
+literal|"allow-query"
+argument_list|,
+name|actx
+argument_list|,
+name|ns_g_mctx
+argument_list|,
+operator|&
+name|view
+operator|->
+name|queryacl
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|view
+operator|->
+name|queryacl
+operator|==
+name|NULL
+condition|)
+block|{
+name|CHECK
+argument_list|(
+name|configure_view_acl
+argument_list|(
+name|NULL
+argument_list|,
+name|ns_g_config
+argument_list|,
+literal|"allow-query"
+argument_list|,
+name|actx
+argument_list|,
+name|ns_g_mctx
+argument_list|,
+operator|&
+name|view
+operator|->
+name|queryacl
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Configure the zones. 	 */
 name|zonelist
 operator|=
@@ -7727,7 +7800,7 @@ argument_list|,
 operator|&
 name|view
 operator|->
-name|queryacl
+name|cacheacl
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7748,7 +7821,7 @@ argument_list|,
 operator|&
 name|view
 operator|->
-name|queryonacl
+name|cacheonacl
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7756,7 +7829,7 @@ if|if
 condition|(
 name|view
 operator|->
-name|queryonacl
+name|cacheonacl
 operator|==
 name|NULL
 condition|)
@@ -7777,7 +7850,7 @@ argument_list|,
 operator|&
 name|view
 operator|->
-name|queryonacl
+name|cacheonacl
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7843,7 +7916,7 @@ if|if
 condition|(
 name|view
 operator|->
-name|queryacl
+name|cacheacl
 operator|==
 name|NULL
 operator|&&
@@ -7862,14 +7935,14 @@ argument_list|,
 operator|&
 name|view
 operator|->
-name|queryacl
+name|cacheacl
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|view
 operator|->
-name|queryacl
+name|cacheacl
 operator|==
 name|NULL
 operator|&&
@@ -7894,7 +7967,7 @@ argument_list|,
 operator|&
 name|view
 operator|->
-name|queryacl
+name|cacheacl
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7912,7 +7985,7 @@ name|NULL
 operator|&&
 name|view
 operator|->
-name|queryacl
+name|cacheacl
 operator|!=
 name|NULL
 condition|)
@@ -7920,7 +7993,7 @@ name|dns_acl_attach
 argument_list|(
 name|view
 operator|->
-name|queryacl
+name|cacheacl
 argument_list|,
 operator|&
 name|view
@@ -7999,7 +8072,7 @@ if|if
 condition|(
 name|view
 operator|->
-name|queryacl
+name|cacheacl
 operator|==
 name|NULL
 condition|)
@@ -8027,28 +8100,11 @@ argument_list|,
 operator|&
 name|view
 operator|->
-name|queryacl
+name|cacheacl
 argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-block|{
-if|if
-condition|(
-name|view
-operator|->
-name|queryacl
-operator|!=
-name|NULL
-condition|)
-name|dns_acl_detach
-argument_list|(
-operator|&
-name|view
-operator|->
-name|queryacl
-argument_list|)
-expr_stmt|;
 name|CHECK
 argument_list|(
 name|dns_acl_none
@@ -8058,11 +8114,10 @@ argument_list|,
 operator|&
 name|view
 operator|->
-name|queryacl
+name|cacheacl
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* 	 * Configure sortlist, if set 	 */
 name|CHECK
@@ -22444,6 +22499,21 @@ operator|->
 name|fp
 argument_list|)
 expr_stmt|;
+name|dns_resolver_printbadcache
+argument_list|(
+name|dctx
+operator|->
+name|view
+operator|->
+name|view
+operator|->
+name|resolver
+argument_list|,
+name|dctx
+operator|->
+name|fp
+argument_list|)
+expr_stmt|;
 name|dns_db_detach
 argument_list|(
 operator|&
@@ -25326,20 +25396,11 @@ argument_list|(
 name|text
 argument_list|)
 condition|)
-block|{
-name|isc_task_endexclusive
-argument_list|(
-name|server
-operator|->
-name|task
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ISC_R_NOSPACE
 operator|)
 return|;
-block|}
 name|isc_buffer_add
 argument_list|(
 name|text
@@ -25984,20 +26045,11 @@ argument_list|(
 name|text
 argument_list|)
 condition|)
-block|{
-name|isc_task_endexclusive
-argument_list|(
-name|server
-operator|->
-name|task
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ISC_R_NOSPACE
 operator|)
 return|;
-block|}
 name|isc_buffer_add
 argument_list|(
 name|text

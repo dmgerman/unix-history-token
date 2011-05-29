@@ -986,7 +986,7 @@ name|p
 index|[
 literal|9
 index|]
-operator|==
+operator|>=
 name|p
 index|[
 literal|1
@@ -1041,6 +1041,24 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+comment|/* if major version number> 3 set minor to a value 			 * which will use the highest version 3 we support. 			 * If TLS 2.0 ever appears we will need to revise 			 * this.... 			 */
+elseif|else
+if|if
+condition|(
+name|p
+index|[
+literal|9
+index|]
+operator|>
+name|SSL3_VERSION_MAJOR
+condition|)
+name|v
+index|[
+literal|1
+index|]
+operator|=
+literal|0xff
+expr_stmt|;
 else|else
 name|v
 index|[

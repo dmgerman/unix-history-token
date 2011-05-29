@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2008  Internet Systems Consortium,
 end_comment
 
 begin_comment
-comment|/* $Id: app.c,v 1.60 2008/10/15 03:41:17 marka Exp $ */
+comment|/* $Id: app.c,v 1.60 2008-10-15 03:41:17 marka Exp $ */
 end_comment
 
 begin_comment

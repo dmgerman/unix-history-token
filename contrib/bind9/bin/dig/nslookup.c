@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007, 2009  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: nslookup.c,v 1.117.334.5 2009/10/20 01:11:22 marka Exp $ */
+comment|/* $Id: nslookup.c,v 1.117.334.5 2009-10-20 01:11:22 marka Exp $ */
 end_comment
 
 begin_include

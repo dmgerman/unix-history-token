@@ -4379,6 +4379,8 @@ operator|->
 name|crom_dma
 argument_list|,
 name|BUS_DMA_WAITOK
+operator||
+name|BUS_DMA_COHERENT
 argument_list|)
 expr_stmt|;
 if|if
@@ -4435,6 +4437,8 @@ operator|->
 name|sid_dma
 argument_list|,
 name|BUS_DMA_WAITOK
+operator||
+name|BUS_DMA_COHERENT
 argument_list|)
 expr_stmt|;
 if|if
@@ -12176,8 +12180,8 @@ name|fc
 operator|->
 name|dev
 argument_list|,
-literal|"too many cycle lost, "
-literal|"no cycle master presents?\n"
+literal|"too many cycles lost, "
+literal|"no cycle master present?\n"
 argument_list|)
 expr_stmt|;
 block|}

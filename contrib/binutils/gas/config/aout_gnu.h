@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This file is aout_gnu.h     Copyright 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* This file is aout_gnu.h     Copyright 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 2000, 2002    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -16,14 +16,14 @@ name|__A_OUT_GNU_H__
 end_define
 
 begin_comment
-comment|/* There are two main flavours of a.out, one which uses the standard    relocations, and one which uses extended relocations.     Today, the extended reloc uses are    TC_SPARC, TC_A29K     each must define the enum reloc_type  */
+comment|/* There are two main flavours of a.out, one which uses the standard    relocations, and one which uses extended relocations.     Today, the extended reloc uses are    TC_SPARC     each must define the enum reloc_type  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|USE_EXTENDED_RELOC
-value|(defined(TC_SPARC) || defined(TC_A29K))
+value|defined(TC_SPARC)
 end_define
 
 begin_if
@@ -32,11 +32,6 @@ directive|if
 name|defined
 argument_list|(
 name|TC_SPARC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|TC_A29K
 argument_list|)
 end_if
 
@@ -132,7 +127,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* TC_SPARC or TC_A29K */
+comment|/* TC_SPARC */
 end_comment
 
 begin_define

@@ -1326,6 +1326,8 @@ literal|0
 argument_list|,
 literal|0600
 argument_list|,
+literal|"%s"
+argument_list|,
 name|c
 argument_list|)
 expr_stmt|;

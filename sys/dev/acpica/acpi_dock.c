@@ -955,9 +955,6 @@ name|acpi_dock_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|ACPI_HANDLE
-name|h
-decl_stmt|;
 name|ACPI_SERIAL_ASSERT
 argument_list|(
 name|dock
@@ -966,13 +963,6 @@ expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|h
-operator|=
-name|acpi_get_handle
 argument_list|(
 name|dev
 argument_list|)
@@ -1543,10 +1533,6 @@ name|status
 decl_stmt|,
 name|err
 decl_stmt|;
-name|err
-operator|=
-literal|0
-expr_stmt|;
 name|dev
 operator|=
 operator|(

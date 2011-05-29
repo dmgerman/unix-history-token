@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end data structures for a.out (and similar) files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end data structures for a.out (and similar) files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007    Free Software Foundation, Inc.    Written by Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -532,7 +532,7 @@ parameter_list|,
 name|info
 parameter_list|)
 define|\
-value|(bfd_link_hash_traverse						\    (&(table)->root,							\     (bfd_boolean (*) PARAMS ((struct bfd_link_hash_entry *, PTR))) (func), \     (info)))
+value|(bfd_link_hash_traverse						\    (&(table)->root,							\     (bfd_boolean (*) (struct bfd_link_hash_entry *, void *)) (func),	\     (info)))
 end_define
 
 begin_comment
@@ -587,17 +587,15 @@ name|default_text_vma
 decl_stmt|;
 comment|/* Callback for setting the page and segment sizes, if they can't be      trivially determined from the architecture.  */
 name|bfd_boolean
-argument_list|(
-argument|*set_sizes
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|set_sizes
+function_decl|)
+parameter_list|(
 name|bfd
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* zmagic files only. For go32, the length of the exec header contributes      to the size of the text section in the file for alignment purposes but      does *not* get counted in the length of the text section. */
 name|unsigned
 name|char
@@ -605,172 +603,161 @@ name|exec_header_not_counted
 decl_stmt|;
 comment|/* Callback from the add symbols phase of the linker code to handle      a dynamic object.  */
 name|bfd_boolean
-argument_list|(
-argument|*add_dynamic_symbols
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|add_dynamic_symbols
+function_decl|)
+parameter_list|(
 name|bfd
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|bfd_link_info
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|external_nlist
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|bfd_size_type
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* Callback from the add symbols phase of the linker code to handle      adding a single symbol to the global linker hash table.  */
 name|bfd_boolean
-argument_list|(
-argument|*add_one_symbol
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|add_one_symbol
+function_decl|)
+parameter_list|(
+name|struct
 name|bfd_link_info
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|bfd
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|flagword
-operator|,
+parameter_list|,
 name|asection
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|bfd_vma
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|bfd_boolean
-operator|,
+parameter_list|,
 name|bfd_boolean
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|bfd_link_hash_entry
-operator|*
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* Called to handle linking a dynamic object.  */
 name|bfd_boolean
-argument_list|(
-argument|*link_dynamic_object
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|link_dynamic_object
+function_decl|)
+parameter_list|(
+name|struct
 name|bfd_link_info
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|bfd
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* Called for each global symbol being written out by the linker.      This should write out the dynamic symbol information.  */
 name|bfd_boolean
-argument_list|(
-argument|*write_dynamic_symbol
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|write_dynamic_symbol
+function_decl|)
+parameter_list|(
 name|bfd
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|bfd_link_info
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|aout_link_hash_entry
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* If this callback is not NULL, the linker calls it for each reloc.      RELOC is a pointer to the unswapped reloc.  If *SKIP is set to      TRUE, the reloc will be skipped.  *RELOCATION may be changed to      change the effects of the relocation.  */
 name|bfd_boolean
-argument_list|(
-argument|*check_dynamic_reloc
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|check_dynamic_reloc
+function_decl|)
+parameter_list|(
+name|struct
 name|bfd_link_info
-operator|*
+modifier|*
 name|info
-operator|,
+parameter_list|,
 name|bfd
-operator|*
+modifier|*
 name|input_bfd
-operator|,
+parameter_list|,
 name|asection
-operator|*
+modifier|*
 name|input_section
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|aout_link_hash_entry
-operator|*
+modifier|*
 name|h
-operator|,
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|reloc
-operator|,
+parameter_list|,
 name|bfd_byte
-operator|*
+modifier|*
 name|contents
-operator|,
+parameter_list|,
 name|bfd_boolean
-operator|*
+modifier|*
 name|skip
-operator|,
+parameter_list|,
 name|bfd_vma
-operator|*
+modifier|*
 name|relocation
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/* Called at the end of a link to finish up any dynamic linking      information.  */
 name|bfd_boolean
-argument_list|(
-argument|*finish_dynamic_link
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|finish_dynamic_link
+function_decl|)
+parameter_list|(
 name|bfd
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|bfd_link_info
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -797,73 +784,73 @@ block|{
 name|long
 name|a_info
 decl_stmt|;
-comment|/* Magic number and flags, packed */
+comment|/* Magic number and flags, packed.  */
 name|bfd_vma
 name|a_text
 decl_stmt|;
-comment|/* length of text, in bytes  */
+comment|/* Length of text, in bytes.  */
 name|bfd_vma
 name|a_data
 decl_stmt|;
-comment|/* length of data, in bytes  */
+comment|/* Length of data, in bytes.  */
 name|bfd_vma
 name|a_bss
 decl_stmt|;
-comment|/* length of uninitialized data area in mem */
+comment|/* Length of uninitialized data area in mem.  */
 name|bfd_vma
 name|a_syms
 decl_stmt|;
-comment|/* length of symbol table data in file */
+comment|/* Length of symbol table data in file.  */
 name|bfd_vma
 name|a_entry
 decl_stmt|;
-comment|/* start address */
+comment|/* Start address.  */
 name|bfd_vma
 name|a_trsize
 decl_stmt|;
-comment|/* length of text's relocation info, in bytes */
+comment|/* Length of text's relocation info, in bytes.  */
 name|bfd_vma
 name|a_drsize
 decl_stmt|;
-comment|/* length of data's relocation info, in bytes */
+comment|/* Length of data's relocation info, in bytes.  */
 comment|/* Added for i960 */
 name|bfd_vma
 name|a_tload
 decl_stmt|;
-comment|/* Text runtime load address */
+comment|/* Text runtime load address.  */
 name|bfd_vma
 name|a_dload
 decl_stmt|;
-comment|/* Data runtime load address */
+comment|/* Data runtime load address.  */
 name|unsigned
 name|char
 name|a_talign
 decl_stmt|;
-comment|/* Alignment of text segment */
+comment|/* Alignment of text segment.  */
 name|unsigned
 name|char
 name|a_dalign
 decl_stmt|;
-comment|/* Alignment of data segment */
+comment|/* Alignment of data segment.  */
 name|unsigned
 name|char
 name|a_balign
 decl_stmt|;
-comment|/* Alignment of bss segment */
+comment|/* Alignment of bss segment.  */
 name|char
 name|a_relaxable
 decl_stmt|;
-comment|/* Enough info for linker relax */
+comment|/* Enough info for linker relax.  */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/* Magic number is written< MSB> 3130292827262524232221201918171615141312111009080706050403020100< FLAGS>< MACHINE TYPE><  MAGIC NUMBER> */
+comment|/* Magic number is written< MSB>    3130292827262524232221201918171615141312111009080706050403020100< FLAGS>< MACHINE TYPE><  MAGIC NUMBER>  */
 end_comment
 
 begin_comment
-comment|/* Magic number for NetBSD is<MSB> 3130292827262524232221201918171615141312111009080706050403020100< FLAGS>< MACHINE TYPE><  MAGIC NUMBER> */
+comment|/* Magic number for NetBSD is<MSB>    3130292827262524232221201918171615141312111009080706050403020100< FLAGS>< MACHINE TYPE><  MAGIC NUMBER>  */
 end_comment
 
 begin_enum
@@ -894,7 +881,7 @@ operator|(
 literal|64
 operator|)
 block|,
-comment|/* ns32032 running ? */
+comment|/* NS32032 running ?  */
 name|M_NS32532
 init|=
 operator|(
@@ -903,7 +890,7 @@ operator|+
 literal|5
 operator|)
 block|,
-comment|/* ns32532 running mach */
+comment|/* NS32532 running mach.  */
 name|M_386
 init|=
 literal|100
@@ -912,107 +899,132 @@ name|M_29K
 init|=
 literal|101
 block|,
-comment|/* AMD 29000 */
+comment|/* AMD 29000.  */
 name|M_386_DYNIX
 init|=
 literal|102
 block|,
-comment|/* Sequent running dynix */
+comment|/* Sequent running dynix.  */
 name|M_ARM
 init|=
 literal|103
 block|,
-comment|/* Advanced Risc Machines ARM */
+comment|/* Advanced Risc Machines ARM.  */
 name|M_SPARCLET
 init|=
 literal|131
 block|,
-comment|/* SPARClet = M_SPARC + 128 */
+comment|/* SPARClet = M_SPARC + 128.  */
 name|M_386_NETBSD
 init|=
 literal|134
 block|,
-comment|/* NetBSD/i386 binary */
+comment|/* NetBSD/i386 binary.  */
 name|M_68K_NETBSD
 init|=
 literal|135
 block|,
-comment|/* NetBSD/m68k binary */
+comment|/* NetBSD/m68k binary.  */
 name|M_68K4K_NETBSD
 init|=
 literal|136
 block|,
-comment|/* NetBSD/m68k4k binary */
+comment|/* NetBSD/m68k4k binary.  */
 name|M_532_NETBSD
 init|=
 literal|137
 block|,
-comment|/* NetBSD/ns32k binary */
+comment|/* NetBSD/ns32k binary.  */
 name|M_SPARC_NETBSD
 init|=
 literal|138
 block|,
-comment|/* NetBSD/sparc binary */
+comment|/* NetBSD/sparc binary.  */
 name|M_PMAX_NETBSD
 init|=
 literal|139
 block|,
-comment|/* NetBSD/pmax (MIPS little-endian) binary */
+comment|/* NetBSD/pmax (MIPS little-endian) binary.  */
 name|M_VAX_NETBSD
 init|=
 literal|140
 block|,
-comment|/* NetBSD/vax binary */
+comment|/* NetBSD/vax binary.  */
 name|M_ALPHA_NETBSD
 init|=
 literal|141
 block|,
-comment|/* NetBSD/alpha binary */
+comment|/* NetBSD/alpha binary.  */
 name|M_ARM6_NETBSD
 init|=
 literal|143
 block|,
-comment|/* NetBSD/arm32 binary */
+comment|/* NetBSD/arm32 binary.  */
 name|M_SPARCLET_1
 init|=
 literal|147
 block|,
-comment|/* 0x93, reserved */
+comment|/* 0x93, reserved.  */
+name|M_POWERPC_NETBSD
+init|=
+literal|149
+block|,
+comment|/* NetBSD/powerpc (big-endian) binary.  */
 name|M_VAX4K_NETBSD
 init|=
 literal|150
 block|,
-comment|/* NetBSD/vax 4K pages binary */
+comment|/* NetBSD/vax 4K pages binary.  */
 name|M_MIPS1
 init|=
 literal|151
 block|,
-comment|/* MIPS R2000/R3000 binary */
+comment|/* MIPS R2000/R3000 binary.  */
 name|M_MIPS2
 init|=
 literal|152
 block|,
-comment|/* MIPS R4000/R6000 binary */
+comment|/* MIPS R4000/R6000 binary.  */
+name|M_88K_OPENBSD
+init|=
+literal|153
+block|,
+comment|/* OpenBSD/m88k binary.  */
+name|M_HPPA_OPENBSD
+init|=
+literal|154
+block|,
+comment|/* OpenBSD/hppa binary.  */
+name|M_SPARC64_NETBSD
+init|=
+literal|156
+block|,
+comment|/* NetBSD/sparc64 binary.  */
+name|M_X86_64_NETBSD
+init|=
+literal|157
+block|,
+comment|/* NetBSD/amd64 binary.  */
 name|M_SPARCLET_2
 init|=
 literal|163
 block|,
-comment|/* 0xa3, reserved */
+comment|/* 0xa3, reserved.  */
 name|M_SPARCLET_3
 init|=
 literal|179
 block|,
-comment|/* 0xb3, reserved */
+comment|/* 0xb3, reserved.  */
 name|M_SPARCLET_4
 init|=
 literal|195
 block|,
-comment|/* 0xc3, reserved */
+comment|/* 0xc3, reserved.  */
 name|M_HP200
 init|=
 literal|200
 block|,
-comment|/* HP 200 (68010) BSD binary */
+comment|/* HP 200 (68010) BSD binary.  */
 name|M_HP300
 init|=
 operator|(
@@ -1021,7 +1033,7 @@ operator|%
 literal|256
 operator|)
 block|,
-comment|/* HP 300 (68020+68881) BSD binary */
+comment|/* HP 300 (68020+68881) BSD binary.  */
 name|M_HPUX
 init|=
 operator|(
@@ -1030,18 +1042,18 @@ operator|%
 literal|256
 operator|)
 block|,
-comment|/* HP 200/300 HPUX binary */
+comment|/* HP 200/300 HPUX binary.  */
 name|M_SPARCLET_5
 init|=
 literal|211
 block|,
-comment|/* 0xd3, reserved */
+comment|/* 0xd3, reserved.  */
 name|M_SPARCLET_6
 init|=
 literal|227
 block|,
-comment|/* 0xe3, reserved */
-comment|/*  M_SPARCLET_7 = 243	/ * 0xf3, reserved */
+comment|/* 0xe3, reserved.  */
+comment|/*M_SPARCLET_7 = 243	 / * 0xf3, reserved.  */
 name|M_SPARCLITE_LE
 init|=
 literal|243
@@ -1287,12 +1299,12 @@ name|internal_exec
 modifier|*
 name|hdr
 decl_stmt|;
-comment|/* exec file header */
+comment|/* Exec file header.  */
 name|aout_symbol_type
 modifier|*
 name|symbols
 decl_stmt|;
-comment|/* symtab for input bfd */
+comment|/* Symtab for input bfd.  */
 comment|/* For ease, we do this.  */
 name|asection
 modifier|*
@@ -1407,7 +1419,8 @@ modifier|*
 name|sym_hashes
 decl_stmt|;
 comment|/* A pointer for shared library information.  */
-name|PTR
+name|void
+modifier|*
 name|dynamic_info
 decl_stmt|;
 comment|/* A mapping from local symbols to offsets into the global offset      table, used when linking on SunOS.  This is indexed by the symbol      index.  */
@@ -1452,7 +1465,7 @@ name|exec_hdr
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(adata(bfd).hdr)
+value|(adata (bfd).hdr)
 end_define
 
 begin_define
@@ -1462,7 +1475,7 @@ name|obj_aout_symbols
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(adata(bfd).symbols)
+value|(adata (bfd).symbols)
 end_define
 
 begin_define
@@ -1472,7 +1485,7 @@ name|obj_textsec
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(adata(bfd).textsec)
+value|(adata (bfd).textsec)
 end_define
 
 begin_define
@@ -1482,7 +1495,7 @@ name|obj_datasec
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(adata(bfd).datasec)
+value|(adata (bfd).datasec)
 end_define
 
 begin_define
@@ -1492,7 +1505,7 @@ name|obj_bsssec
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(adata(bfd).bsssec)
+value|(adata (bfd).bsssec)
 end_define
 
 begin_define
@@ -1502,7 +1515,7 @@ name|obj_sym_filepos
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(adata(bfd).sym_filepos)
+value|(adata (bfd).sym_filepos)
 end_define
 
 begin_define
@@ -1512,7 +1525,7 @@ name|obj_str_filepos
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(adata(bfd).str_filepos)
+value|(adata (bfd).str_filepos)
 end_define
 
 begin_define
@@ -1522,7 +1535,7 @@ name|obj_reloc_entry_size
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(adata(bfd).reloc_entry_size)
+value|(adata (bfd).reloc_entry_size)
 end_define
 
 begin_define
@@ -1532,7 +1545,7 @@ name|obj_symbol_entry_size
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(adata(bfd).symbol_entry_size)
+value|(adata (bfd).symbol_entry_size)
 end_define
 
 begin_define
@@ -1542,7 +1555,7 @@ name|obj_aout_subformat
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(adata(bfd).subformat)
+value|(adata (bfd).subformat)
 end_define
 
 begin_define
@@ -1552,7 +1565,7 @@ name|obj_aout_external_syms
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(adata(bfd).external_syms)
+value|(adata (bfd).external_syms)
 end_define
 
 begin_define
@@ -1562,7 +1575,7 @@ name|obj_aout_external_sym_count
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(adata(bfd).external_sym_count)
+value|(adata (bfd).external_sym_count)
 end_define
 
 begin_define
@@ -1572,7 +1585,7 @@ name|obj_aout_sym_window
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(adata(bfd).sym_window)
+value|(adata (bfd).sym_window)
 end_define
 
 begin_define
@@ -1582,7 +1595,7 @@ name|obj_aout_external_strings
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(adata(bfd).external_strings)
+value|(adata (bfd).external_strings)
 end_define
 
 begin_define
@@ -1592,7 +1605,7 @@ name|obj_aout_external_string_size
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(adata(bfd).external_string_size)
+value|(adata (bfd).external_string_size)
 end_define
 
 begin_define
@@ -1602,7 +1615,7 @@ name|obj_aout_string_window
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(adata(bfd).string_window)
+value|(adata (bfd).string_window)
 end_define
 
 begin_define
@@ -1612,7 +1625,7 @@ name|obj_aout_sym_hashes
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(adata(bfd).sym_hashes)
+value|(adata (bfd).sym_hashes)
 end_define
 
 begin_define
@@ -1622,7 +1635,7 @@ name|obj_aout_dynamic_info
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(adata(bfd).dynamic_info)
+value|(adata (bfd).dynamic_info)
 end_define
 
 begin_comment
@@ -1648,7 +1661,8 @@ struct|struct
 name|aout_section_data_struct
 block|{
 comment|/* The unswapped relocation entries for this section.  */
-name|PTR
+name|void
+modifier|*
 name|relocs
 decl_stmt|;
 block|}
@@ -1676,932 +1690,946 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|((s)->used_by_bfd = (PTR)&(v)->relocs)
+value|((s)->used_by_bfd = (void *)&(v)->relocs)
 end_define
 
 begin_comment
 comment|/* Prototype declarations for functions defined in aoutx.h.  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|bfd_boolean
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|squirt_out_relocs
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|asection *
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+name|asection
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|bfd_boolean
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|make_sections
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 specifier|const
 name|bfd_target
 modifier|*
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|some_aout_object_p
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|struct internal_exec *
-operator|,
-function_decl|const bfd_target *
-parameter_list|(
-function_decl|*
-end_function_decl
-
-begin_expr_stmt
-unit|)
-operator|(
+argument_list|)
+argument_list|(
 name|bfd
 operator|*
-operator|)
-end_expr_stmt
+argument_list|,
+expr|struct
+name|internal_exec
+operator|*
+argument_list|,
+specifier|const
+name|bfd_target
+operator|*
+call|(
+modifier|*
+call|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|bfd_boolean
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|mkobject
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|enum
 name|machine_type
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|machine_type
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(
-name|enum
+argument_list|)
+argument_list|(
+expr|enum
 name|bfd_architecture
-decl_stmt|,
+argument_list|,
 name|unsigned
 name|long
-decl_stmt|,
+argument_list|,
 name|bfd_boolean
-modifier|*
-decl_stmt|)
-end_function_decl
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|bfd_boolean
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|set_arch_mach
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|enum bfd_architecture
-operator|,
-function_decl|unsigned long
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+expr|enum
+name|bfd_architecture
+argument_list|,
+name|unsigned
+name|long
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|bfd_boolean
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|new_section_hook
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|asection *
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+name|asection
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|bfd_boolean
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|set_section_contents
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|sec_ptr
-operator|,
-function_decl|const PTR
-operator|,
-function_decl|file_ptr
-operator|,
-function_decl|bfd_size_type
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+name|sec_ptr
+argument_list|,
+specifier|const
+name|void
+operator|*
+argument_list|,
+name|file_ptr
+argument_list|,
+name|bfd_size_type
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|asymbol
 modifier|*
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|make_empty_symbol
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|bfd_boolean
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|translate_symbol_table
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|aout_symbol_type *
-operator|,
-function_decl|struct external_nlist *
-operator|,
-function_decl|bfd_size_type
-operator|,
-function_decl|char *
-operator|,
-function_decl|bfd_size_type
-operator|,
-function_decl|bfd_boolean
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+name|aout_symbol_type
+operator|*
+argument_list|,
+expr|struct
+name|external_nlist
+operator|*
+argument_list|,
+name|bfd_size_type
+argument_list|,
+name|char
+operator|*
+argument_list|,
+name|bfd_size_type
+argument_list|,
+name|bfd_boolean
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|bfd_boolean
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|slurp_symbol_table
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|bfd_boolean
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|write_syms
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|reclaim_symbol_table
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|long
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|get_symtab_upper_bound
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|long
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|canonicalize_symtab
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|asymbol **
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+name|asymbol
+operator|*
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|swap_ext_reloc_in
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|struct reloc_ext_external *
-operator|,
-function_decl|arelent *
-operator|,
-function_decl|asymbol **
-operator|,
-function_decl|bfd_size_type
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+expr|struct
+name|reloc_ext_external
+operator|*
+argument_list|,
+name|arelent
+operator|*
+argument_list|,
+name|asymbol
+operator|*
+operator|*
+argument_list|,
+name|bfd_size_type
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|swap_std_reloc_in
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|struct reloc_std_external *
-operator|,
-function_decl|arelent *
-operator|,
-function_decl|asymbol **
-operator|,
-function_decl|bfd_size_type
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+expr|struct
+name|reloc_std_external
+operator|*
+argument_list|,
+name|arelent
+operator|*
+argument_list|,
+name|asymbol
+operator|*
+operator|*
+argument_list|,
+name|bfd_size_type
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|reloc_howto_type
 modifier|*
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|reloc_type_lookup
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|bfd_reloc_code_real_type
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+name|bfd_reloc_code_real_type
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
+begin_decl_stmt
+specifier|extern
+name|reloc_howto_type
+modifier|*
+name|NAME
+argument_list|(
+name|aout
+argument_list|,
+name|reloc_name_lookup
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|bfd_boolean
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|slurp_reloc_table
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|sec_ptr
-operator|,
-function_decl|asymbol **
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+name|sec_ptr
+argument_list|,
+name|asymbol
+operator|*
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|long
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|canonicalize_reloc
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|sec_ptr
-operator|,
-function_decl|arelent **
-operator|,
-function_decl|asymbol **
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+name|sec_ptr
+argument_list|,
+name|arelent
+operator|*
+operator|*
+argument_list|,
+name|asymbol
+operator|*
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|long
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|get_reloc_upper_bound
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|sec_ptr
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+name|sec_ptr
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|reclaim_reloc
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|sec_ptr
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+name|sec_ptr
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|alent
 modifier|*
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|get_lineno
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|asymbol *
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+name|asymbol
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|print_symbol
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|PTR
-operator|,
-function_decl|asymbol *
-operator|,
-function_decl|bfd_print_symbol_type
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+name|void
+operator|*
+argument_list|,
+name|asymbol
+operator|*
+argument_list|,
+name|bfd_print_symbol_type
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|get_symbol_info
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|asymbol *
-operator|,
-function_decl|symbol_info *
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+name|asymbol
+operator|*
+argument_list|,
+name|symbol_info
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|bfd_boolean
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|find_nearest_line
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|asection *
-operator|,
-function_decl|asymbol **
-operator|,
-function_decl|bfd_vma
-operator|,
-function_decl|const char **
-operator|,
-function_decl|const char **
-operator|,
-function_decl|unsigned int *
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+name|asection
+operator|*
+argument_list|,
+name|asymbol
+operator|*
+operator|*
+argument_list|,
+name|bfd_vma
+argument_list|,
+specifier|const
+name|char
+operator|*
+operator|*
+argument_list|,
+specifier|const
+name|char
+operator|*
+operator|*
+argument_list|,
+name|unsigned
+name|int
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|long
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|read_minisymbols
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|bfd_boolean
-operator|,
-function_decl|PTR *
-operator|,
-function_decl|unsigned int *
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+name|bfd_boolean
+argument_list|,
+name|void
+operator|*
+operator|*
+argument_list|,
+name|unsigned
+name|int
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|asymbol
 modifier|*
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|minisymbol_to_symbol
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|bfd_boolean
-operator|,
-function_decl|const PTR
-operator|,
-function_decl|asymbol *
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+name|bfd_boolean
+argument_list|,
+specifier|const
+name|void
+operator|*
+argument_list|,
+name|asymbol
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|int
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|sizeof_headers
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|bfd_boolean
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+expr|struct
+name|bfd_link_info
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|bfd_boolean
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|adjust_sizes_and_vmas
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|bfd_size_type *
-operator|,
-function_decl|file_ptr *
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+name|bfd_size_type
+operator|*
+argument_list|,
+name|file_ptr
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|swap_exec_header_in
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|struct external_exec *
-operator|,
-function_decl|struct internal_exec *
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+expr|struct
+name|external_exec
+operator|*
+argument_list|,
+expr|struct
+name|internal_exec
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|swap_exec_header_out
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|struct internal_exec *
-operator|,
-function_decl|struct external_exec *
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+expr|struct
+name|internal_exec
+operator|*
+argument_list|,
+expr|struct
+name|external_exec
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|struct
 name|bfd_hash_entry
 modifier|*
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|link_hash_newfunc
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(struct bfd_hash_entry *
-operator|,
-function_decl|struct bfd_hash_table *
-operator|,
-function_decl|const char *
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
-specifier|extern
-name|bfd_boolean
-name|NAME
-parameter_list|(
-name|aout
-parameter_list|,
-name|link_hash_table_init
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(struct aout_link_hash_table *
-operator|,
-function_decl|bfd *
-operator|,
-function_decl|struct bfd_hash_entry *
-parameter_list|(
-function_decl|*
-end_function_decl
-
-begin_expr_stmt
-unit|)
-operator|(
+argument_list|)
+argument_list|(
 expr|struct
 name|bfd_hash_entry
 operator|*
-operator|,
+argument_list|,
 expr|struct
 name|bfd_hash_table
 operator|*
-operator|,
+argument_list|,
 specifier|const
 name|char
 operator|*
-operator|)
-end_expr_stmt
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
+begin_decl_stmt
+specifier|extern
+name|bfd_boolean
+name|NAME
+argument_list|(
+name|aout
+argument_list|,
+name|link_hash_table_init
+argument_list|)
+argument_list|(
+expr|struct
+name|aout_link_hash_table
+operator|*
+argument_list|,
+name|bfd
+operator|*
+argument_list|,
+expr|struct
+name|bfd_hash_entry
+operator|*
+call|(
+modifier|*
+call|)
+argument_list|(
+expr|struct
+name|bfd_hash_entry
+operator|*
+argument_list|,
+expr|struct
+name|bfd_hash_table
+operator|*
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
+argument_list|,
+name|unsigned
+name|int
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|struct
 name|bfd_link_hash_table
 modifier|*
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|link_hash_table_create
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
-specifier|extern
-name|bfd_boolean
-name|NAME
-parameter_list|(
-name|aout
-parameter_list|,
-name|link_add_symbols
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|struct bfd_link_info *
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
-specifier|extern
-name|bfd_boolean
-name|NAME
-parameter_list|(
-name|aout
-parameter_list|,
-name|final_link
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|struct bfd_link_info *
-operator|,
-function_decl|void
-parameter_list|(
-function_decl|*
-end_function_decl
-
-begin_expr_stmt
-unit|)
-operator|(
+argument_list|)
+argument_list|(
 name|bfd
 operator|*
-operator|,
-name|file_ptr
-operator|*
-operator|,
-name|file_ptr
-operator|*
-operator|,
-name|file_ptr
-operator|*
-operator|)
-end_expr_stmt
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|bfd_boolean
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
-name|bfd_free_cached_info
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-end_function_decl
+argument_list|,
+name|link_add_symbols
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+expr|struct
+name|bfd_link_info
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
+begin_decl_stmt
+specifier|extern
+name|bfd_boolean
+name|NAME
+argument_list|(
+name|aout
+argument_list|,
+name|final_link
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+expr|struct
+name|bfd_link_info
+operator|*
+argument_list|,
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+name|file_ptr
+operator|*
+argument_list|,
+name|file_ptr
+operator|*
+argument_list|,
+name|file_ptr
+operator|*
+argument_list|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bfd_boolean
+name|NAME
+argument_list|(
+name|aout
+argument_list|,
+name|bfd_free_cached_info
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|aout_32_find_inliner_info
+value|_bfd_nosymbols_find_inliner_info
+end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* Are these needed? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|aout_16_find_inliner_info
+value|_bfd_nosymbols_find_inliner_info
+end_define
+
+begin_define
+define|#
+directive|define
+name|aout_64_find_inliner_info
+value|_bfd_nosymbols_find_inliner_info
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* A.out uses the generic versions of these routines...  */
@@ -2667,6 +2695,25 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|aout_32_bfd_is_target_special_symbol
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|aout_32_bfd_is_target_special_symbol
+define|\
+value|((bfd_boolean (*) (bfd *, asymbol *)) bfd_false)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|WRITE_HEADERS
 end_ifndef
 
@@ -2681,10 +2728,10 @@ name|execp
 parameter_list|)
 define|\
 value|{									      \ 	bfd_size_type text_size;
-comment|/* dummy vars */
-value|\ 	file_ptr text_end;						      \ 	if (adata(abfd).magic == undecided_magic)			      \ 	  NAME(aout,adjust_sizes_and_vmas) (abfd,&text_size,&text_end);     \     									      \ 	execp->a_syms = bfd_get_symcount (abfd) * EXTERNAL_NLIST_SIZE;	      \ 	execp->a_entry = bfd_get_start_address (abfd);			      \     									      \ 	execp->a_trsize = ((obj_textsec (abfd)->reloc_count) *		      \ 			   obj_reloc_entry_size (abfd));		      \ 	execp->a_drsize = ((obj_datasec (abfd)->reloc_count) *		      \ 			   obj_reloc_entry_size (abfd));		      \ 	NAME(aout,swap_exec_header_out) (abfd, execp,&exec_bytes);	      \ 									      \ 	if (bfd_seek (abfd, (file_ptr) 0, SEEK_SET) != 0		      \ 	    || bfd_bwrite ((PTR)&exec_bytes, (bfd_size_type) EXEC_BYTES_SIZE, \ 			  abfd) != EXEC_BYTES_SIZE)			      \ 	  return FALSE;							      \
+comment|/* Dummy vars.  */
+value|\ 	file_ptr text_end;						      \        									      \ 	if (adata(abfd).magic == undecided_magic)			      \ 	  NAME (aout, adjust_sizes_and_vmas) (abfd,& text_size,& text_end); \     									      \ 	execp->a_syms = bfd_get_symcount (abfd) * EXTERNAL_NLIST_SIZE;	      \ 	execp->a_entry = bfd_get_start_address (abfd);			      \     									      \ 	execp->a_trsize = ((obj_textsec (abfd)->reloc_count) *		      \ 			   obj_reloc_entry_size (abfd));		      \ 	execp->a_drsize = ((obj_datasec (abfd)->reloc_count) *		      \ 			   obj_reloc_entry_size (abfd));		      \ 	NAME (aout, swap_exec_header_out) (abfd, execp,& exec_bytes);	      \ 									      \ 	if (bfd_seek (abfd, (file_ptr) 0, SEEK_SET) != 0		      \ 	    || bfd_bwrite (& exec_bytes, (bfd_size_type) EXEC_BYTES_SIZE,     \ 			  abfd) != EXEC_BYTES_SIZE)			      \ 	  return FALSE;							      \
 comment|/* Now write out reloc info, followed by syms and strings.  */
-value|\   									      \ 	if (bfd_get_outsymbols (abfd) != (asymbol **) NULL		      \&& bfd_get_symcount (abfd) != 0) 				      \ 	  {								      \ 	    if (bfd_seek (abfd, (file_ptr) (N_SYMOFF(*execp)), SEEK_SET) != 0)\ 	      return FALSE;						      \ 									      \ 	    if (! NAME(aout,write_syms) (abfd))				      \ 	      return FALSE;						      \ 	  }								      \ 									      \ 	if (bfd_seek (abfd, (file_ptr) (N_TRELOFF(*execp)), SEEK_SET) != 0)   \ 	  return FALSE;						      	      \ 	if (!NAME(aout,squirt_out_relocs) (abfd, obj_textsec (abfd)))         \ 	  return FALSE;						      	      \ 									      \ 	if (bfd_seek (abfd, (file_ptr) (N_DRELOFF(*execp)), SEEK_SET) != 0)   \ 	  return FALSE;						      	      \ 	if (!NAME(aout,squirt_out_relocs) (abfd, obj_datasec (abfd)))         \ 	  return FALSE;						      	      \       }
+value|\   									      \ 	if (bfd_get_outsymbols (abfd) != NULL				      \&& bfd_get_symcount (abfd) != 0) 				      \ 	  {								      \ 	    if (bfd_seek (abfd, (file_ptr) (N_SYMOFF(*execp)), SEEK_SET) != 0)\ 	      return FALSE;						      \ 									      \ 	    if (! NAME (aout, write_syms) (abfd))			      \ 	      return FALSE;						      \ 	  }								      \ 									      \ 	if (bfd_seek (abfd, (file_ptr) (N_TRELOFF (*execp)), SEEK_SET) != 0)  \ 	  return FALSE;						      	      \ 	if (!NAME (aout, squirt_out_relocs) (abfd, obj_textsec (abfd)))       \ 	  return FALSE;						      	      \ 									      \ 	if (bfd_seek (abfd, (file_ptr) (N_DRELOFF (*execp)), SEEK_SET) != 0)  \ 	  return FALSE;						      	      \ 	if (!NAME (aout, squirt_out_relocs) (abfd, obj_datasec (abfd)))       \ 	  return FALSE;						      	      \       }
 end_define
 
 begin_endif
@@ -2706,7 +2753,7 @@ parameter_list|,
 name|sec
 parameter_list|)
 define|\
-value|(((sec)->flags& (SEC_HAS_CONTENTS | SEC_READONLY)) ==		\       (SEC_HAS_CONTENTS | SEC_READONLY)					\&& obj_textsec (abfd) != NULL					\&& obj_datasec (abfd) != NULL					\&& (sec)->vma>= (obj_textsec (abfd)->vma +				\ 		     obj_textsec (abfd)->_cooked_size)			\&& ((sec)->vma + (sec)->_cooked_size)<= obj_datasec (abfd)->vma	\&& ((abfd)->flags& D_PAGED) != 0)
+value|(((sec)->flags& (SEC_HAS_CONTENTS | SEC_READONLY)) ==		\       (SEC_HAS_CONTENTS | SEC_READONLY)					\&& obj_textsec (abfd) != NULL					\&& obj_datasec (abfd) != NULL					\&& (sec)->vma>= (obj_textsec (abfd)->vma +				\ 		     obj_textsec (abfd)->size)				\&& ((sec)->vma + (sec)->size)<= obj_datasec (abfd)->vma		\&& ((abfd)->flags& D_PAGED) != 0)
 end_define
 
 begin_endif

@@ -223,7 +223,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|malloc
+name|MALLOC
 argument_list|(
 name|strlen
 argument_list|(
@@ -974,9 +974,11 @@ operator|>
 operator|(
 literal|1
 operator|<<
+operator|(
 name|kshift
 operator|-
 literal|2
+operator|)
 operator|)
 operator|-
 literal|1
@@ -1567,14 +1569,12 @@ literal|2
 operator|&&
 operator|(
 name|lostbits
-operator|&
-literal|1
-operator|)
 operator||
 name|x
 index|[
 literal|0
 index|]
+operator|)
 operator|&
 literal|1
 condition|)
@@ -1672,6 +1672,7 @@ operator|>
 name|k
 operator|||
 operator|(
+operator|(
 name|n
 operator|=
 name|nbits
@@ -1694,6 +1695,7 @@ operator|<
 literal|32
 operator|-
 name|n
+operator|)
 condition|)
 block|{
 name|rshift

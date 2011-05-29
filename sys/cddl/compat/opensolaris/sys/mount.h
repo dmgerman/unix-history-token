@@ -15,6 +15,12 @@ directive|define
 name|_OPENSOLARIS_SYS_MOUNT_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
 begin_empty
 empty|#include_next<sys/mount.h>
 end_empty

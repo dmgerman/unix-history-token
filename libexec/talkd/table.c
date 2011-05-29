@@ -143,13 +143,6 @@ name|tp
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|timezone
-name|txp
-decl_stmt|;
-end_decl_stmt
-
 begin_typedef
 typedef|typedef
 name|struct
@@ -226,8 +219,7 @@ argument_list|(
 operator|&
 name|tp
 argument_list|,
-operator|&
-name|txp
+name|NULL
 argument_list|)
 expr_stmt|;
 name|current_time
@@ -400,8 +392,7 @@ argument_list|(
 operator|&
 name|tp
 argument_list|,
-operator|&
-name|txp
+name|NULL
 argument_list|)
 expr_stmt|;
 name|current_time
@@ -595,8 +586,7 @@ argument_list|(
 operator|&
 name|tp
 argument_list|,
-operator|&
-name|txp
+name|NULL
 argument_list|)
 expr_stmt|;
 name|current_time

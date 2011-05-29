@@ -80,15 +80,39 @@ comment|/* PCI power management capabilities */
 name|uint8_t
 name|pp_status
 decl_stmt|;
-comment|/* config space address of PCI power status reg */
+comment|/* conf. space addr. of PM control/status reg */
 name|uint8_t
-name|pp_pmcsr
+name|pp_bse
 decl_stmt|;
-comment|/* config space address of PMCSR reg */
+comment|/* conf. space addr. of PM BSE reg */
 name|uint8_t
 name|pp_data
 decl_stmt|;
-comment|/* config space address of PCI power data reg */
+comment|/* conf. space addr. of PM data reg */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|pci_map
+block|{
+name|pci_addr_t
+name|pm_value
+decl_stmt|;
+comment|/* Raw BAR value */
+name|pci_addr_t
+name|pm_size
+decl_stmt|;
+name|uint8_t
+name|pm_reg
+decl_stmt|;
+name|STAILQ_ENTRY
+argument_list|(
+argument|pci_map
+argument_list|)
+name|pm_link
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -323,6 +347,10 @@ struct|struct
 name|pcicfg_ht
 block|{
 name|uint8_t
+name|ht_slave
+decl_stmt|;
+comment|/* Non-zero if device is an HT slave. */
+name|uint8_t
 name|ht_msimap
 decl_stmt|;
 comment|/* Offset of MSI mapping cap registers. */
@@ -353,17 +381,14 @@ modifier|*
 name|dev
 decl_stmt|;
 comment|/* device which owns this */
-name|uint32_t
-name|bar
-index|[
-name|PCI_MAXMAPS_0
-index|]
-decl_stmt|;
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|pci_map
+argument_list|)
+name|maps
+expr_stmt|;
 comment|/* BARs */
-name|uint32_t
-name|bios
-decl_stmt|;
-comment|/* BIOS mapping */
 name|uint16_t
 name|subvendor
 decl_stmt|;
@@ -1546,6 +1571,43 @@ begin_function
 specifier|static
 name|__inline
 name|int
+name|pci_find_cap
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|int
+name|capability
+parameter_list|,
+name|int
+modifier|*
+name|capreg
+parameter_list|)
+block|{
+return|return
+operator|(
+name|PCI_FIND_EXTCAP
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|capability
+argument_list|,
+name|capreg
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|int
 name|pci_find_extcap
 parameter_list|(
 name|device_t
@@ -1560,6 +1622,7 @@ name|capreg
 parameter_list|)
 block|{
 return|return
+operator|(
 name|PCI_FIND_EXTCAP
 argument_list|(
 name|device_get_parent
@@ -1573,6 +1636,7 @@ name|capability
 argument_list|,
 name|capreg
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1797,23 +1861,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Can be used by MD code to request the PCI bus to re-map an MSI or  * MSI-X message.  */
-end_comment
-
-begin_function_decl
-name|int
-name|pci_remap_msi_irq
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|u_int
-name|irq
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Can be used by drivers to manage the MSI-X table. */
 end_comment
 
@@ -1925,6 +1972,36 @@ name|uint32_t
 name|pci_generation
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|struct
+name|pci_map
+modifier|*
+name|pci_find_bar
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|int
+name|reg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pci_bar_enabled
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|struct
+name|pci_map
+modifier|*
+name|pm
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

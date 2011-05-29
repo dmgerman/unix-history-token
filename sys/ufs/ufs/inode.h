@@ -257,12 +257,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IN_RENAME
+name|IN_NEEDSYNC
 value|0x0010
 end_define
 
 begin_comment
-comment|/* Inode is being renamed. */
+comment|/* Inode requires fsync. */
 end_comment
 
 begin_define
@@ -274,17 +274,6 @@ end_define
 
 begin_comment
 comment|/* Modified, but don't write yet. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN_SPACECOUNTED
-value|0x0080
-end_define
-
-begin_comment
-comment|/* Blocks to be freed in free count. */
 end_comment
 
 begin_define
@@ -483,6 +472,16 @@ parameter_list|(
 name|vp
 parameter_list|)
 value|((vp)->v_mount->mnt_kern_flag& MNTK_ASYNC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DOINGSUJ
+parameter_list|(
+name|vp
+parameter_list|)
+value|((vp)->v_mount->mnt_kern_flag& MNTK_SUJ)
 end_define
 
 begin_comment

@@ -17,7 +17,7 @@ end_define
 
 begin_typedef
 typedef|typedef
-name|int
+name|register_t
 name|faultbuf
 index|[
 literal|25
@@ -44,6 +44,10 @@ name|register_t
 name|pcb_sp
 decl_stmt|;
 comment|/* stack pointer */
+name|register_t
+name|pcb_toc
+decl_stmt|;
+comment|/* toc pointer */
 name|register_t
 name|pcb_lr
 decl_stmt|;
@@ -118,16 +122,12 @@ decl_stmt|;
 name|register_t
 name|vscr
 decl_stmt|;
+comment|/* aligned at vector element 3 */
 block|}
 name|pcb_vec
-name|__attribute__
-argument_list|(
-operator|(
-name|aligned
+name|__aligned
 argument_list|(
 literal|16
-argument_list|)
-operator|)
 argument_list|)
 struct|;
 comment|/* Vector processor */
@@ -140,8 +140,12 @@ union|union
 block|{
 struct|struct
 block|{
+name|vm_offset_t
+name|usr_segm
+decl_stmt|;
+comment|/* Base address */
 name|register_t
-name|usr
+name|usr_vsid
 decl_stmt|;
 comment|/* USER_SR segment */
 block|}

@@ -222,6 +222,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|RTLD_DEFAULT_STACK_PF_EXEC
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTLD_DEFAULT_STACK_EXEC
+value|0
+end_define
+
 begin_endif
 endif|#
 directive|endif

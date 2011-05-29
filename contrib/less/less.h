@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1984-2009  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2011  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_define
@@ -1790,6 +1790,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SRCH_AFTER_TARGET
+value|(1<< 14)
+end_define
+
+begin_comment
+comment|/* Start search after the target line */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SRCH_REVERSE
 parameter_list|(
 name|t
@@ -2184,6 +2195,13 @@ define|#
 directive|define
 name|QUIT_ERROR
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|QUIT_INTERRUPT
+value|2
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ld.h -- general linker header file    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2002    Free Software Foundation, Inc.     This file is part of GLD, the Gnu Linker.     GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GLD; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* ld.h -- general linker header file    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004, 2005, 2006, 2007    Free Software Foundation, Inc.     This file is part of GLD, the Gnu Linker.     GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GLD; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -20,6 +20,218 @@ ifdef|#
 directive|ifdef
 name|HAVE_LOCALE_H
 end_ifdef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SEEK_CUR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SEEK_CUR
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SEEK_END
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SEEK_END
+value|2
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|C_ALLOCA
+argument_list|)
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|alloca
+end_undef
+
+begin_define
+define|#
+directive|define
+name|alloca
+value|__builtin_alloca
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_ALLOCA_H
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|C_ALLOCA
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<alloca.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|alloca
+end_ifndef
+
+begin_comment
+comment|/* predefined by HP cc +Olibcalls */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__hpux
+argument_list|)
+end_if
+
+begin_function_decl
+name|char
+modifier|*
+name|alloca
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+name|void
+modifier|*
+name|alloca
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __STDC__, __hpux */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* alloca */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_ALLOCA_H */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LOCALE_H
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ENABLE_NLS
+end_ifndef
+
+begin_comment
+comment|/* The Solaris version of locale.h always includes libintl.h.  If we have       been configured with --disable-nls then ENABLE_NLS will not be defined       and the dummy definitions of bindtextdomain (et al) below will conflict       with the defintions in libintl.h.  So we define these values to prevent       the bogus inclusion of libintl.h.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_LIBINTL_H
+end_define
+
+begin_define
+define|#
+directive|define
+name|_LIBGETTEXT_H
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -186,12 +398,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|"bin-bugs.h"
-end_include
-
 begin_comment
 comment|/* Look in this environment name for the linker to pretend to be */
 end_comment
@@ -254,8 +460,33 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* A wildcard specification.  This is only used in ldgram.y, but it    winds up in ldgram.h, so we need to define it outside.  */
+comment|/* A wildcard specification.  */
 end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|none
+block|,
+name|by_name
+block|,
+name|by_alignment
+block|,
+name|by_name_alignment
+block|,
+name|by_alignment_name
+block|}
+name|sort_type
+typedef|;
+end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|sort_type
+name|sort_section
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 struct|struct
@@ -271,7 +502,7 @@ name|name_list
 modifier|*
 name|exclude_name_list
 decl_stmt|;
-name|bfd_boolean
+name|sort_type
 name|sorted
 decl_stmt|;
 block|}
@@ -295,23 +526,47 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|map_symbol_def
+block|{
+name|struct
+name|bfd_link_hash_entry
+modifier|*
+name|entry
+decl_stmt|;
+name|struct
+name|map_symbol_def
+modifier|*
+name|next
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
-comment|/* Extra information we hold on sections */
+comment|/* The initial part of fat_user_section_struct has to be idential with    lean_user_section_struct.  */
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|user_section_struct
+name|fat_user_section_struct
 block|{
-comment|/* Pointer to the section where this data will go */
+comment|/* For input sections, when writing a map file: head / tail of a linked      list of hash table entries for symbols defined in this section.  */
 name|struct
-name|lang_input_statement_struct
+name|map_symbol_def
 modifier|*
-name|file
+name|map_symbol_def_head
+decl_stmt|;
+name|struct
+name|map_symbol_def
+modifier|*
+modifier|*
+name|map_symbol_def_tail
 decl_stmt|;
 block|}
-name|section_userdata_type
+name|fat_section_userdata_type
 typedef|;
 end_typedef
 
@@ -368,6 +623,73 @@ decl_stmt|;
 name|bfd_boolean
 name|relax
 decl_stmt|;
+comment|/* If TRUE, build MIPS embedded PIC relocation tables in the output      file.  */
+name|bfd_boolean
+name|embedded_relocs
+decl_stmt|;
+comment|/* If TRUE, force generation of a file with a .exe file.  */
+name|bfd_boolean
+name|force_exe_suffix
+decl_stmt|;
+comment|/* If TRUE, generate a cross reference report.  */
+name|bfd_boolean
+name|cref
+decl_stmt|;
+comment|/* If TRUE (which is the default), warn about mismatched input      files.  */
+name|bfd_boolean
+name|warn_mismatch
+decl_stmt|;
+comment|/* Warn on attempting to open an incompatible library during a library      search.  */
+name|bfd_boolean
+name|warn_search_mismatch
+decl_stmt|;
+comment|/* If TRUE (the default) check section addresses, once compute,      fpor overlaps.  */
+name|bfd_boolean
+name|check_section_addresses
+decl_stmt|;
+comment|/* If TRUE allow the linking of input files in an unknown architecture      assuming that the user knows what they are doing.  This was the old      behaviour of the linker.  The new default behaviour is to reject such      input files.  */
+name|bfd_boolean
+name|accept_unknown_input_arch
+decl_stmt|;
+comment|/* Big or little endian as set on command line.  */
+enum|enum
+block|{
+name|ENDIAN_UNSET
+init|=
+literal|0
+block|,
+name|ENDIAN_BIG
+block|,
+name|ENDIAN_LITTLE
+block|}
+name|endian
+enum|;
+comment|/* -Bsymbolic and -Bsymbolic-functions, as set on command line.  */
+enum|enum
+block|{
+name|symbolic_unset
+init|=
+literal|0
+block|,
+name|symbolic
+block|,
+name|symbolic_functions
+block|,     }
+name|symbolic
+enum|;
+comment|/* --dynamic-list, --dynamic-list-cpp-new, --dynamic-list-cpp-typeinfo      and --dynamic-list FILE, as set on command line.  */
+enum|enum
+block|{
+name|dynamic_list_unset
+init|=
+literal|0
+block|,
+name|dynamic_list_data
+block|,
+name|dynamic_list
+block|}
+name|dynamic_list
+enum|;
 comment|/* Name of runtime interpreter to invoke.  */
 name|char
 modifier|*
@@ -388,39 +710,6 @@ name|char
 modifier|*
 name|rpath_link
 decl_stmt|;
-comment|/* Big or little endian as set on command line.  */
-enum|enum
-block|{
-name|ENDIAN_UNSET
-init|=
-literal|0
-block|,
-name|ENDIAN_BIG
-block|,
-name|ENDIAN_LITTLE
-block|}
-name|endian
-enum|;
-comment|/* If TRUE, build MIPS embedded PIC relocation tables in the output      file.  */
-name|bfd_boolean
-name|embedded_relocs
-decl_stmt|;
-comment|/* If TRUE, force generation of a file with a .exe file.  */
-name|bfd_boolean
-name|force_exe_suffix
-decl_stmt|;
-comment|/* If TRUE, generate a cross reference report.  */
-name|bfd_boolean
-name|cref
-decl_stmt|;
-comment|/* If TRUE (which is the default), warn about mismatched input      files.  */
-name|bfd_boolean
-name|warn_mismatch
-decl_stmt|;
-comment|/* Remove unreferenced sections?  */
-name|bfd_boolean
-name|gc_sections
-decl_stmt|;
 comment|/* Name of shared object whose symbol table should be filtered with      this shared object.  From the --filter option.  */
 name|char
 modifier|*
@@ -437,13 +726,10 @@ name|char
 modifier|*
 name|version_exports_section
 decl_stmt|;
-comment|/* If TRUE (the default) check section addresses, once compute,      fpor overlaps.  */
-name|bfd_boolean
-name|check_section_addresses
-decl_stmt|;
-comment|/* If TRUE allow the linking of input files in an unknown architecture      assuming that the user knows what they are doing.  This was the old      behaviour of the linker.  The new default behaviour is to reject such      input files.  */
-name|bfd_boolean
-name|accept_unknown_input_arch
+comment|/* Default linker script.  */
+name|char
+modifier|*
+name|default_script
 decl_stmt|;
 block|}
 name|args_type
@@ -468,9 +754,6 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|bfd_size_type
-name|specified_data_size
-decl_stmt|;
 name|bfd_boolean
 name|magic_demand_paged
 decl_stmt|;
@@ -520,6 +803,21 @@ decl_stmt|;
 name|bfd_boolean
 name|text_read_only
 decl_stmt|;
+name|bfd_boolean
+name|stats
+decl_stmt|;
+comment|/* If set, orphan input sections will be mapped to separate output      sections.  */
+name|bfd_boolean
+name|unique_orphan_sections
+decl_stmt|;
+comment|/* If set, only search library directories explicitly selected      on the command line.  */
+name|bfd_boolean
+name|only_cmd_line_lib_dirs
+decl_stmt|;
+comment|/* The rpath separation character.  Usually ':'.  */
+name|char
+name|rpath_separator
+decl_stmt|;
 name|char
 modifier|*
 name|map_filename
@@ -528,13 +826,6 @@ name|FILE
 modifier|*
 name|map_file
 decl_stmt|;
-name|bfd_boolean
-name|stats
-decl_stmt|;
-comment|/* If set, orphan input sections will be mapped to separate output      sections.  */
-name|bfd_boolean
-name|unique_orphan_sections
-decl_stmt|;
 name|unsigned
 name|int
 name|split_by_reloc
@@ -542,9 +833,20 @@ decl_stmt|;
 name|bfd_size_type
 name|split_by_file
 decl_stmt|;
-comment|/* If set, only search library directories explicitly selected      on the command line.  */
-name|bfd_boolean
-name|only_cmd_line_lib_dirs
+name|bfd_size_type
+name|specified_data_size
+decl_stmt|;
+comment|/* The size of the hash table to use.  */
+name|bfd_size_type
+name|hash_table_size
+decl_stmt|;
+comment|/* The maximum page size for ELF.  */
+name|bfd_vma
+name|maxpagesize
+decl_stmt|;
+comment|/* The common page size for ELF.  */
+name|bfd_vma
+name|commonpagesize
 decl_stmt|;
 block|}
 name|ld_config_type
@@ -557,20 +859,6 @@ name|ld_config_type
 name|config
 decl_stmt|;
 end_decl_stmt
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|lang_first_phase_enum
-block|,
-name|lang_allocating_phase_enum
-block|,
-name|lang_final_phase_enum
-block|}
-name|lang_phase_type
-typedef|;
-end_typedef
 
 begin_decl_stmt
 specifier|extern
@@ -624,6 +912,20 @@ name|asection
 modifier|*
 parameter_list|,
 name|bfd_vma
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bfd_boolean
+name|handle_asneeded_cref
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|enum
+name|notice_asneeded_action
 parameter_list|)
 function_decl|;
 end_function_decl

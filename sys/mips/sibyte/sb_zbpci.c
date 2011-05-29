@@ -399,7 +399,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Reserve the the physical memory that is used to read/write to the 	 * pci config space but don't activate it. We are using a page worth 	 * of KVA as a window over this region. 	 */
+comment|/* 	 * Reserve the physical memory that is used to read/write to the 	 * pci config space but don't activate it. We are using a page worth 	 * of KVA as a window over this region. 	 */
 name|rid
 operator|=
 literal|1
@@ -1428,11 +1428,13 @@ argument_list|(
 name|va_page
 argument_list|)
 expr_stmt|;
-name|pmap_kenter
+name|pmap_kenter_attr
 argument_list|(
 name|va_page
 argument_list|,
 name|pa_page
+argument_list|,
+name|PTE_C_UNCACHED
 argument_list|)
 expr_stmt|;
 name|zbpci_config_space
@@ -1890,14 +1892,6 @@ end_decl_stmt
 begin_comment
 comment|/*  * The "zbpci" class inherits from the "pcib" base class. Therefore in  * addition to drivers that belong to the "zbpci" class we will also  * consider drivers belonging to the "pcib" when probing children of  * "zbpci".  */
 end_comment
-
-begin_expr_stmt
-name|DECLARE_CLASS
-argument_list|(
-name|pcib_driver
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|DEFINE_CLASS_1

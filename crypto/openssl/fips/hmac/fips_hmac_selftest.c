@@ -520,7 +520,7 @@ name|int
 name|FIPS_selftest_hmac
 parameter_list|()
 block|{
-name|int
+name|size_t
 name|n
 decl_stmt|;
 name|unsigned

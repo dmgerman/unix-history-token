@@ -22,7 +22,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<i386/apm_bios.h>
+file|<x86/apm_bios.h>
 end_include
 
 begin_comment

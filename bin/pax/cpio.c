@@ -2759,7 +2759,7 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/* 	 * skip padding. header + filename is aligned to 4 byte boundries 	 */
+comment|/* 	 * skip padding. header + filename is aligned to 4 byte boundaries 	 */
 if|if
 condition|(
 name|rd_skip
@@ -4517,7 +4517,7 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/* 	 * header + file name are aligned to 2 byte boundries, skip if needed 	 */
+comment|/* 	 * header + file name are aligned to 2 byte boundaries, skip if needed 	 */
 if|if
 condition|(
 name|rd_skip
@@ -4701,7 +4701,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/*  * bcpio_wr()  *	copy the data in the ARCHD to buffer in old binary cpio format  *	There is a real chance of field overflow with this critter. So we  *	always check the conversion is ok. nobody in his their right mind  *	should write an achive in this format...  * Return  *      0 if file has data to be written after the header, 1 if file has NO  *	data to write after the header, -1 if archive write failed  */
+comment|/*  * bcpio_wr()  *	copy the data in the ARCHD to buffer in old binary cpio format  *	There is a real chance of field overflow with this critter. So we  *	always check that the conversion is ok. nobody in their right mind  *	should write an archive in this format...  * Return  *      0 if file has data to be written after the header, 1 if file has NO  *	data to write after the header, -1 if archive write failed  */
 name|int
 name|bcpio_wr
 parameter_list|(

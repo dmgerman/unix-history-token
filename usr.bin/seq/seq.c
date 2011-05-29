@@ -1033,7 +1033,7 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
-comment|/* flags, width and precsision */
+comment|/* flags, width and precision */
 if|if
 condition|(
 name|isdigit
@@ -1339,7 +1339,7 @@ continue|continue;
 case|case
 literal|'x'
 case|:
-comment|/* hexidecimal number */
+comment|/* hexadecimal number */
 name|cp
 operator|++
 expr_stmt|;
@@ -1606,7 +1606,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * generate_format - create a format string  *  * XXX to be bug for bug compatable with Plan9 and GNU return "%g"  * when "%g" prints as "%e" (this way no width adjustments are made)  */
+comment|/*  * generate_format - create a format string  *  * XXX to be bug for bug compatible with Plan9 and GNU return "%g"  * when "%g" prints as "%e" (this way no width adjustments are made)  */
 end_comment
 
 begin_function

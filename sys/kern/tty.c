@@ -1026,7 +1026,6 @@ argument_list|,
 name|dev
 argument_list|)
 condition|)
-block|{
 name|tp
 operator|->
 name|t_termios
@@ -1035,9 +1034,7 @@ name|tp
 operator|->
 name|t_termios_init_out
 expr_stmt|;
-block|}
 else|else
-block|{
 name|tp
 operator|->
 name|t_termios
@@ -1046,7 +1043,6 @@ name|tp
 operator|->
 name|t_termios_init_in
 expr_stmt|;
-block|}
 name|ttydevsw_param
 argument_list|(
 name|tp
@@ -1056,6 +1052,28 @@ name|tp
 operator|->
 name|t_termios
 argument_list|)
+expr_stmt|;
+comment|/* Prevent modem control on callout devices and /dev/console. */
+if|if
+condition|(
+name|TTY_CALLOUT
+argument_list|(
+name|tp
+argument_list|,
+name|dev
+argument_list|)
+operator|||
+name|dev
+operator|==
+name|dev_console
+condition|)
+name|tp
+operator|->
+name|t_termios
+operator|.
+name|c_cflag
+operator||=
+name|CLOCAL
 expr_stmt|;
 name|ttydevsw_modem
 argument_list|(
@@ -1098,14 +1116,6 @@ block|}
 comment|/* Wait for Carrier Detect. */
 if|if
 condition|(
-operator|!
-name|TTY_CALLOUT
-argument_list|(
-name|tp
-argument_list|,
-name|dev
-argument_list|)
-operator|&&
 operator|(
 name|oflags
 operator|&
@@ -4503,6 +4513,12 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dev
+operator|!=
+name|NULL
+condition|)
 name|destroy_dev_sched_cb
 argument_list|(
 name|dev
@@ -8189,6 +8205,8 @@ name|fdp
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|ref
 decl_stmt|;
 comment|/* Validate the file descriptor. */
 if|if
@@ -8283,6 +8301,9 @@ name|f_vnode
 argument_list|,
 operator|&
 name|dev
+argument_list|,
+operator|&
+name|ref
 argument_list|)
 expr_stmt|;
 if|if
@@ -8452,6 +8473,8 @@ label|:
 name|dev_relthread
 argument_list|(
 name|dev
+argument_list|,
+name|ref
 argument_list|)
 expr_stmt|;
 name|done1
@@ -8766,12 +8789,16 @@ parameter_list|)
 block|{
 name|dev_console
 operator|=
-name|make_dev
+name|make_dev_credf
 argument_list|(
+name|MAKEDEV_ETERNAL
+argument_list|,
 operator|&
 name|ttyconsdev_cdevsw
 argument_list|,
 literal|0
+argument_list|,
+name|NULL
 argument_list|,
 name|UID_ROOT
 argument_list|,

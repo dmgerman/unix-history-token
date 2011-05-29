@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/linker_set.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
 end_include
 
@@ -232,11 +226,11 @@ define|\
 value|USS820_DCI_BUS2SC(USB_DMATAG_TO_XROOT((pc)->tag_parent)->bus)
 end_define
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -1421,6 +1415,43 @@ operator|=
 literal|0xFF
 expr_stmt|;
 block|}
+comment|/* reset TX FIFO */
+name|temp
+operator|=
+name|USS820_READ_1
+argument_list|(
+name|sc
+argument_list|,
+name|USS820_TXCON
+argument_list|)
+expr_stmt|;
+name|temp
+operator||=
+name|USS820_TXCON_TXCLR
+expr_stmt|;
+name|USS820_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|USS820_TXCON
+argument_list|,
+name|temp
+argument_list|)
+expr_stmt|;
+name|temp
+operator|&=
+operator|~
+name|USS820_TXCON_TXCLR
+expr_stmt|;
+name|USS820_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|USS820_TXCON
+argument_list|,
+name|temp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -6725,7 +6756,7 @@ block|,
 operator|.
 name|bDeviceProtocol
 operator|=
-name|UDPROTO_HSHUBSTT
+name|UDPROTO_FSHUB
 block|,
 operator|.
 name|bMaxPacketSize
@@ -6917,7 +6948,7 @@ block|,
 operator|.
 name|bInterfaceProtocol
 operator|=
-name|UIPROTO_HSHUBSTT
+literal|0
 block|, 	}
 block|,
 operator|.

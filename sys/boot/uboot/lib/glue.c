@@ -2491,6 +2491,7 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|syscall
 argument_list|(
 name|API_ENV_ENUM
@@ -2508,8 +2509,6 @@ operator|)
 operator|&
 name|env
 argument_list|)
-operator|!=
-literal|0
 condition|)
 return|return
 operator|(

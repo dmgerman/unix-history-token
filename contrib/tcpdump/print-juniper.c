@@ -3464,6 +3464,10 @@ argument_list|,
 name|l2info
 operator|.
 name|caplen
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -3549,6 +3553,10 @@ argument_list|,
 name|l2info
 operator|.
 name|caplen
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -3878,7 +3886,7 @@ expr_stmt|;
 comment|/* this DLT contains nothing but raw PPPoE frames,          * prepended with a type field*/
 if|if
 condition|(
-name|ether_encap_print
+name|ethertype_print
 argument_list|(
 name|extracted_ethertype
 argument_list|,
@@ -3897,9 +3905,6 @@ operator|.
 name|caplen
 operator|-
 name|ETHERTYPE_LEN
-argument_list|,
-operator|&
-name|extracted_ethertype
 argument_list|)
 operator|==
 literal|0
@@ -5105,6 +5110,10 @@ argument_list|,
 name|l2info
 operator|.
 name|caplen
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return

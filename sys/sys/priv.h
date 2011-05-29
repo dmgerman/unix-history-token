@@ -672,6 +672,17 @@ begin_comment
 comment|/* Can raise resources limits. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PRIV_PROC_SETLOGINCLASS
+value|163
+end_define
+
+begin_comment
+comment|/* Can call setloginclass(2). */
+end_comment
+
 begin_comment
 comment|/* System V IPC privileges.  */
 end_comment
@@ -2652,6 +2663,45 @@ comment|/* Can become the AFS daemon. */
 end_comment
 
 begin_comment
+comment|/*  * Resource Limits privileges.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_RCTL_GET_RACCT
+value|670
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRIV_RCTL_GET_RULES
+value|671
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRIV_RCTL_GET_LIMITS
+value|672
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRIV_RCTL_ADD_RULE
+value|673
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRIV_RCTL_REMOVE_RULE
+value|674
+end_define
+
+begin_comment
 comment|/*  * Track end of privilege list.  */
 end_comment
 
@@ -2659,7 +2709,7 @@ begin_define
 define|#
 directive|define
 name|_PRIV_HIGHEST
-value|662
+value|675
 end_define
 
 begin_comment
@@ -2683,7 +2733,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Privilege check interfaces, modeled after historic suser() interfacs, but  * with the addition of a specific privilege name.  No flags are currently  * defined for the API.  Historically, flags specified using the real uid  * instead of the effective uid, and whether or not the check should be  * allowed in jail.  */
+comment|/*  * Privilege check interfaces, modeled after historic suser() interfaces, but  * with the addition of a specific privilege name.  No flags are currently  * defined for the API.  Historically, flags specified using the real uid  * instead of the effective uid, and whether or not the check should be  * allowed in jail.  */
 end_comment
 
 begin_struct_decl

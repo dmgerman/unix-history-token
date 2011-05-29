@@ -404,6 +404,8 @@ index|[
 name|_1
 index|]
 operator|=
+literal|0x8000
+expr_stmt|;
 name|L
 index|[
 name|_2

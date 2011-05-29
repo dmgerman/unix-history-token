@@ -9,6 +9,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|tok
 name|af_values
@@ -18,6 +19,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|tok
 name|bsd_af_values

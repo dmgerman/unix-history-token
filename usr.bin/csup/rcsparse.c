@@ -1566,6 +1566,18 @@ argument_list|(
 name|revnum
 argument_list|)
 expr_stmt|;
+comment|/* 		 * XXX: The RCS file is corrupt, but lie and say it is ok. 		 * If it is actually broken, then the MD5 mismatch will 		 * trigger a fixup. 		 */
+if|if
+condition|(
+name|d
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* log string */
 name|asserttoken
 argument_list|(

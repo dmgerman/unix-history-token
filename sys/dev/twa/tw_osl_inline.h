@@ -99,19 +99,6 @@ define|\
 value|mtx_unlock_spin(lock)
 end_define
 
-begin_comment
-comment|/*  * Function name:	tw_osl_ctlr_ready  * Description:		CL calls this function to notify the OS Layer that it  *			is ready to accept new requests.  This function is  *			called only if a call to tw_osl_ctlr_busy has been  *			made previously.  We don't use this function as of now.  *  * Input:		ctlr_handle	-- ptr to controller handle  * Output:		None  * Return value:	None  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|tw_osl_ctlr_ready
-parameter_list|(
-name|ctlr_handle
-parameter_list|)
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef

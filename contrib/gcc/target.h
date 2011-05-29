@@ -902,6 +902,18 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+comment|/* Return true if vector alignment is reachable (by peeling N       interations) for the given type.  */
+name|bool
+function_decl|(
+modifier|*
+name|vector_alignment_reachable
+function_decl|)
+parameter_list|(
+name|tree
+parameter_list|,
+name|bool
+parameter_list|)
+function_decl|;
 block|}
 name|vectorize
 struct|;

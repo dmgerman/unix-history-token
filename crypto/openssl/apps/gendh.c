@@ -184,17 +184,6 @@ block|{
 name|BN_GENCB
 name|cb
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_ENGINE
-name|ENGINE
-modifier|*
-name|e
-init|=
-name|NULL
-decl_stmt|;
-endif|#
-directive|endif
 name|DH
 modifier|*
 name|dh
@@ -574,8 +563,6 @@ block|}
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_ENGINE
-name|e
-operator|=
 name|setup_engine
 argument_list|(
 name|bio_err

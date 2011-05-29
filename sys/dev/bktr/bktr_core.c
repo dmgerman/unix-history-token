@@ -2480,6 +2480,9 @@ argument_list|(
 name|bktr
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|BROOKTREE_ALLOC
 argument_list|,
 operator|(
@@ -8206,9 +8209,14 @@ argument_list|(
 name|bktr
 argument_list|)
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|temp
 operator|*
 name|PAGE_SIZE
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

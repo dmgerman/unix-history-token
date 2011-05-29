@@ -3518,34 +3518,6 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
-specifier|static
-name|SIG_FUNC_RET
-name|deadpeer
-parameter_list|(
-name|int
-name|sig
-name|__unused
-parameter_list|)
-block|{
-name|setcommandmode
-argument_list|()
-expr_stmt|;
-name|longjmp
-argument_list|(
-name|peerdied
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
-begin_function
 name|SIG_FUNC_RET
 name|intr
 parameter_list|(
@@ -3775,7 +3747,7 @@ name|signal
 argument_list|(
 name|SIGPIPE
 argument_list|,
-name|deadpeer
+name|SIG_IGN
 argument_list|)
 expr_stmt|;
 ifdef|#

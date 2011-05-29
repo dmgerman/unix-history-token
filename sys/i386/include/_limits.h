@@ -16,7 +16,7 @@ name|_MACHINE__LIMITS_H_
 end_define
 
 begin_comment
-comment|/*  * According to ANSI (section 2.2.4.2), the values below must be usable by  * #if preprocessing directives.  Additionally, the expression must have the  * same type as would an expression that is an object of the corresponding  * type converted according to the integral promotions.  The subtraction for  * INT_MIN, etc., is so the value is not unsigned; e.g., 0x80000000 is an  * unsigned int for 32-bit two's complement ANSI compilers (section 3.1.3.2).  * These numbers are for the default configuration of gcc.  They work for  * some other compilers as well, but this should not be depended on.  */
+comment|/*  * According to ANSI (section 2.2.4.2), the values below must be usable by  * #if preprocessing directives.  Additionally, the expression must have the  * same type as would an expression that is an object of the corresponding  * type converted according to the integral promotions.  The subtraction for  * INT_MIN, etc., is so the value is not unsigned; e.g., 0x80000000 is an  * unsigned int for 32-bit two's complement ANSI compilers (section 3.1.3.2).  */
 end_comment
 
 begin_define
@@ -100,7 +100,7 @@ begin_define
 define|#
 directive|define
 name|__UINT_MAX
-value|0xffffffffU
+value|0xffffffff
 end_define
 
 begin_comment
@@ -128,42 +128,6 @@ end_define
 begin_comment
 comment|/* min value for an int */
 end_comment
-
-begin_comment
-comment|/* Bad hack for gcc configured to give 64-bit longs. */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_LARGE_LONG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|__ULONG_MAX
-value|0xffffffffffffffffUL
-end_define
-
-begin_define
-define|#
-directive|define
-name|__LONG_MAX
-value|0x7fffffffffffffffL
-end_define
-
-begin_define
-define|#
-directive|define
-name|__LONG_MIN
-value|(-0x7fffffffffffffffL - 1)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -197,11 +161,6 @@ end_define
 begin_comment
 comment|/* min value for a long */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* max value for an unsigned long long */
@@ -317,35 +276,12 @@ begin_comment
 comment|/* min value for a quad_t */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_LARGE_LONG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|__LONG_BIT
-value|64
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|__LONG_BIT
 value|32
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -355,7 +291,7 @@ value|32
 end_define
 
 begin_comment
-comment|/*  * Minimum signal stack size. The current signal frame  * for i386 is 408 bytes large.  */
+comment|/* Minimum signal stack size. */
 end_comment
 
 begin_define

@@ -279,6 +279,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<openssl/comp.h>
+end_include
+
 begin_function
 name|void
 name|ERR_load_crypto_strings
@@ -425,6 +431,9 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|ERR_load_COMP_strings
+argument_list|()
+expr_stmt|;
 endif|#
 directive|endif
 block|}

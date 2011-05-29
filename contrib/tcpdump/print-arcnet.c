@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"extract.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"arcnet.h"
 end_include
 
@@ -590,8 +596,9 @@ name|arc_flag2
 expr_stmt|;
 name|seqid
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|ap
 operator|->
 name|arc_seqid2
@@ -612,8 +619,9 @@ name|arc_flag
 expr_stmt|;
 name|seqid
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|ap
 operator|->
 name|arc_seqid

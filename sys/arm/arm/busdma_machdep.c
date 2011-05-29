@@ -2919,6 +2919,15 @@ argument_list|,
 name|dmat
 operator|->
 name|maxsize
+operator|+
+operator|(
+operator|(
+name|vm_offset_t
+operator|)
+name|vaddr
+operator|&
+name|PAGE_MASK
+operator|)
 argument_list|)
 expr_stmt|;
 block|}

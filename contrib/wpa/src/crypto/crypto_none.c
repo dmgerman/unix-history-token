@@ -22,7 +22,7 @@ file|"crypto.h"
 end_include
 
 begin_function
-name|void
+name|int
 name|md4_vector
 parameter_list|(
 name|size_t
@@ -43,7 +43,11 @@ name|u8
 modifier|*
 name|mac
 parameter_list|)
-block|{ }
+block|{
+return|return
+literal|0
+return|;
+block|}
 end_function
 
 begin_function

@@ -537,15 +537,12 @@ parameter_list|(
 name|linker_file_t
 parameter_list|,
 name|caddr_t
-name|value
 parameter_list|,
 name|c_linker_sym_t
 modifier|*
-name|sym
 parameter_list|,
 name|long
 modifier|*
-name|diffp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -682,13 +679,10 @@ name|Elf_Addr
 name|elf_lookup
 parameter_list|(
 name|linker_file_t
-name|lf
 parameter_list|,
 name|Elf_Size
-name|symidx
 parameter_list|,
 name|int
-name|deps
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -837,7 +831,6 @@ name|int
 name|parse_dynamic
 parameter_list|(
 name|elf_file_t
-name|ef
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -848,7 +841,6 @@ name|int
 name|relocate_file
 parameter_list|(
 name|elf_file_t
-name|ef
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -859,7 +851,6 @@ name|int
 name|link_elf_preload_parse_symbols
 parameter_list|(
 name|elf_file_t
-name|ef
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -878,12 +869,10 @@ parameter_list|(
 name|struct
 name|r_debug
 modifier|*
-name|dummy_one
 parameter_list|,
 name|struct
 name|link_map
 modifier|*
-name|dummy_two
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -906,7 +895,7 @@ name|GDB_STATE
 parameter_list|(
 name|s
 parameter_list|)
-value|r_debug.r_state = s; r_debug_state(NULL, NULL);
+value|do {				\ 	r_debug.r_state = s; r_debug_state(NULL, NULL);	\ } while (0)
 end_define
 
 begin_comment
@@ -1222,6 +1211,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -1389,6 +1380,8 @@ expr_stmt|;
 if|if
 condition|(
 name|modptr
+operator|!=
+name|NULL
 condition|)
 name|modname
 operator|=
@@ -1431,7 +1424,9 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"link_elf_init: Can't create linker structures for kernel"
+literal|"%s: Can't create linker structures for kernel"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|ef
@@ -1473,6 +1468,8 @@ expr_stmt|;
 if|if
 condition|(
 name|dp
+operator|!=
+name|NULL
 condition|)
 name|parse_dynamic
 argument_list|(
@@ -1503,6 +1500,8 @@ expr_stmt|;
 if|if
 condition|(
 name|modptr
+operator|!=
+name|NULL
 condition|)
 block|{
 name|ef
@@ -1523,6 +1522,8 @@ expr_stmt|;
 if|if
 condition|(
 name|baseptr
+operator|!=
+name|NULL
 condition|)
 name|linker_kernel_file
 operator|->
@@ -1547,6 +1548,8 @@ expr_stmt|;
 if|if
 condition|(
 name|sizeptr
+operator|!=
+name|NULL
 condition|)
 name|linker_kernel_file
 operator|->
@@ -1665,7 +1668,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|pointer
 operator|=
@@ -1687,7 +1692,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|ssym
 operator|=
@@ -1718,7 +1725,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|esym
 operator|=
@@ -1786,7 +1795,9 @@ literal|"Symbols are corrupt!\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 name|strcnt
@@ -1838,7 +1849,9 @@ literal|"Symbols are corrupt!\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 name|ef
@@ -1871,7 +1884,9 @@ operator|=
 name|strcnt
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2064,7 +2079,9 @@ name|Elf_Sym
 argument_list|)
 condition|)
 return|return
+operator|(
 name|ENOEXEC
+operator|)
 return|;
 break|break;
 case|case
@@ -2147,7 +2164,9 @@ name|Elf_Rel
 argument_list|)
 condition|)
 return|return
+operator|(
 name|ENOEXEC
+operator|)
 return|;
 break|break;
 case|case
@@ -2245,7 +2264,9 @@ name|Elf_Rela
 argument_list|)
 condition|)
 return|return
+operator|(
 name|ENOEXEC
+operator|)
 return|;
 break|break;
 case|case
@@ -2270,7 +2291,9 @@ operator|!=
 name|DT_RELA
 condition|)
 return|return
+operator|(
 name|ENOEXEC
+operator|)
 return|;
 break|break;
 ifdef|#
@@ -2370,7 +2393,9 @@ operator|->
 name|strsz
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2443,6 +2468,8 @@ comment|/* Error just means there is no pcpu set to relocate. */
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -2457,7 +2484,7 @@ name|void
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/*      * Allocate space in the primary pcpu area.  Copy in our initialization      * from the data section and then initialize all per-cpu storage from      * that.      */
+comment|/* 	 * Allocate space in the primary pcpu area.  Copy in our 	 * initialization from the data section and then initialize 	 * all per-cpu storage from that. 	 */
 name|ef
 operator|->
 name|pcpu_base
@@ -2479,10 +2506,7 @@ name|ef
 operator|->
 name|pcpu_base
 operator|==
-operator|(
-name|Elf_Addr
-operator|)
-name|NULL
+literal|0
 condition|)
 return|return
 operator|(
@@ -2605,6 +2629,8 @@ comment|/* Error just means there is no vnet data set to relocate. */
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -2619,7 +2645,7 @@ name|void
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/*      * Allocate space in the primary vnet area.  Copy in our initialization      * from the data section and then initialize all per-vnet storage from      * that.      */
+comment|/* 	 * Allocate space in the primary vnet area.  Copy in our 	 * initialization from the data section and then initialize 	 * all per-vnet storage from that. 	 */
 name|ef
 operator|->
 name|vnet_base
@@ -2641,10 +2667,7 @@ name|ef
 operator|->
 name|vnet_base
 operator|==
-operator|(
-name|Elf_Addr
-operator|)
-name|NULL
+literal|0
 condition|)
 return|return
 operator|(
@@ -2756,7 +2779,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 name|type
 operator|=
@@ -2871,11 +2896,11 @@ name|lf
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
-block|}
 name|ef
 operator|=
 operator|(
@@ -3003,6 +3028,8 @@ directive|endif
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 block|{
 name|linker_file_unload
@@ -3013,7 +3040,9 @@ name|LINKER_UNLOAD_FORCE
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|link_elf_reloc_local
@@ -3060,7 +3089,7 @@ if|#
 directive|if
 literal|0
 comment|/* this will be more trouble than it's worth for now */
-block|for (dp = ef->dynamic; dp->d_tag != DT_NULL; dp++) { 	if (dp->d_tag != DT_NEEDED) 	    continue; 	modname = ef->strtab + dp->d_un.d_val; 	error = linker_load_module(modname, lf); 	if (error) 	    goto out;     }
+block|for (dp = ef->dynamic; dp->d_tag != DT_NULL; dp++) { 		if (dp->d_tag != DT_NEEDED) 			continue; 		modname = ef->strtab + dp->d_un.d_val; 		error = linker_load_module(modname, lf); 		if (error != 0) 			goto out;     }
 endif|#
 directive|endif
 name|error
@@ -3073,9 +3102,13 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 operator|(
 name|void
@@ -3262,9 +3295,13 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|vfslocked
 operator|=
@@ -3324,6 +3361,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 block|{
 name|firstpage
@@ -3336,7 +3375,7 @@ goto|;
 block|}
 endif|#
 directive|endif
-comment|/*      * Read the elf header from the file.      */
+comment|/* 	 * Read the elf header from the file. 	 */
 name|firstpage
 operator|=
 name|malloc
@@ -3348,21 +3387,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|firstpage
-operator|==
-name|NULL
-condition|)
-block|{
-name|error
-operator|=
-name|ENOMEM
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 name|hdr
 operator|=
 operator|(
@@ -3412,6 +3436,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
@@ -3550,7 +3576,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/*      * We rely on the program header being in the first page.  This is      * not strictly required by the ABI specification, but it seems to      * always true in practice.  And, it simplifies things considerably.      */
+comment|/* 	 * We rely on the program header being in the first page. 	 * This is not strictly required by the ABI specification, but 	 * it seems to always true in practice.  And, it simplifies 	 * things considerably. 	 */
 if|if
 condition|(
 operator|!
@@ -3608,7 +3634,7 @@ argument_list|,
 literal|"Unreadable program headers"
 argument_list|)
 expr_stmt|;
-comment|/*      * Scan the program header entries, and save key information.      *      * We rely on there being exactly two load segments, text and data,      * in that order.      */
+comment|/* 	 * Scan the program header entries, and save key information. 	 * 	 * We rely on there being exactly two load segments, text and data, 	 * in that order. 	 */
 name|phdr
 operator|=
 operator|(
@@ -3682,7 +3708,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 	     * XXX: We just trust they come in right order ?? 	     */
+comment|/* 			 * XXX: We just trust they come in right order ?? 			 */
 name|segs
 index|[
 name|nsegs
@@ -3769,7 +3795,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/*      * Allocate the entire address space of the object, to stake out our      * contiguous region, and to establish the base address for relocation.      */
+comment|/* 	 * Allocate the entire address space of the object, to stake 	 * out our contiguous region, and to establish the base 	 * address for relocation. 	 */
 name|base_offset
 operator|=
 name|trunc_page
@@ -3835,8 +3861,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|lf
+operator|==
+name|NULL
 condition|)
 block|{
 name|error
@@ -3934,6 +3961,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 block|{
 name|vm_object_deallocate
@@ -3968,22 +3997,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ef
-operator|->
-name|address
-condition|)
-block|{
-name|error
-operator|=
-name|ENOMEM
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 endif|#
 directive|endif
 name|mapbase
@@ -3992,7 +4005,7 @@ name|ef
 operator|->
 name|address
 expr_stmt|;
-comment|/*      * Read the text and data sections and zero the bss.      */
+comment|/* 	 * Read the text and data sections and zero the bss. 	 */
 for|for
 control|(
 name|i
@@ -4066,12 +4079,12 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
-block|{
 goto|goto
 name|out
 goto|;
-block|}
 name|bzero
 argument_list|(
 name|segbase
@@ -4101,7 +4114,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SPARSE_MAPPING
-comment|/* 	 * Wire down the pages 	 */
+comment|/* 		 * Wire down the pages 		 */
 name|error
 operator|=
 name|vm_map_wire
@@ -4234,6 +4247,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
@@ -4248,6 +4263,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
@@ -4265,6 +4282,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
@@ -4306,6 +4325,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
@@ -4314,7 +4335,7 @@ if|#
 directive|if
 literal|0
 comment|/* this will be more trouble than it's worth for now */
-block|for (dp = ef->dynamic; dp->d_tag != DT_NULL; dp++) { 	if (dp->d_tag != DT_NEEDED) 	    continue; 	modname = ef->strtab + dp->d_un.d_val; 	error = linker_load_module(modname, lf); 	if (error) 	    goto out;     }
+block|for (dp = ef->dynamic; dp->d_tag != DT_NULL; dp++) { 		if (dp->d_tag != DT_NEEDED) 			continue; 		modname = ef->strtab + dp->d_un.d_val; 		error = linker_load_module(modname, lf); 		if (error != 0) 			goto out;     }
 endif|#
 directive|endif
 name|error
@@ -4327,11 +4348,13 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
 goto|;
-comment|/* Try and load the symbol table if it's present.  (you can strip it!) */
+comment|/* 	 * Try and load the symbol table if it's present.  (you can 	 * strip it!) 	 */
 name|nbytes
 operator|=
 name|hdr
@@ -4370,21 +4393,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|shdr
-operator|==
-name|NULL
-condition|)
-block|{
-name|error
-operator|=
-name|ENOMEM
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 name|error
 operator|=
 name|vn_rdwr
@@ -4425,6 +4433,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
@@ -4539,29 +4549,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ef
-operator|->
-name|symbase
-operator|==
-name|NULL
-operator|||
-name|ef
-operator|->
-name|strbase
-operator|==
-name|NULL
-condition|)
-block|{
-name|error
-operator|=
-name|ENOMEM
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 name|error
 operator|=
 name|vn_rdwr
@@ -4604,6 +4591,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
@@ -4650,6 +4639,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
@@ -4702,6 +4693,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
@@ -4715,41 +4708,6 @@ name|lf
 expr_stmt|;
 name|out
 label|:
-if|if
-condition|(
-name|error
-operator|&&
-name|lf
-condition|)
-name|linker_file_unload
-argument_list|(
-name|lf
-argument_list|,
-name|LINKER_UNLOAD_FORCE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|shdr
-condition|)
-name|free
-argument_list|(
-name|shdr
-argument_list|,
-name|M_LINKER
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|firstpage
-condition|)
-name|free
-argument_list|(
-name|firstpage
-argument_list|,
-name|M_LINKER
-argument_list|)
-expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|nd
@@ -4779,8 +4737,53 @@ argument_list|(
 name|vfslocked
 argument_list|)
 expr_stmt|;
-return|return
+if|if
+condition|(
 name|error
+operator|!=
+literal|0
+operator|&&
+name|lf
+operator|!=
+name|NULL
+condition|)
+name|linker_file_unload
+argument_list|(
+name|lf
+argument_list|,
+name|LINKER_UNLOAD_FORCE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|shdr
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|shdr
+argument_list|,
+name|M_LINKER
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|firstpage
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|firstpage
+argument_list|,
+name|M_LINKER
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
 return|;
 block|}
 end_function
@@ -4899,6 +4902,8 @@ condition|(
 name|ef
 operator|->
 name|pcpu_base
+operator|!=
+literal|0
 condition|)
 block|{
 name|dpcpu_free
@@ -4929,6 +4934,8 @@ condition|(
 name|ef
 operator|->
 name|vnet_base
+operator|!=
+literal|0
 condition|)
 block|{
 name|vnet_data_free
@@ -4963,6 +4970,8 @@ operator|->
 name|gdb
 operator|.
 name|l_ld
+operator|!=
+name|NULL
 condition|)
 block|{
 name|GDB_STATE
@@ -5032,6 +5041,8 @@ condition|(
 name|ef
 operator|->
 name|object
+operator|!=
+name|NULL
 condition|)
 block|{
 name|vm_map_remove
@@ -5071,6 +5082,8 @@ condition|(
 name|ef
 operator|->
 name|address
+operator|!=
+name|NULL
 condition|)
 name|free
 argument_list|(
@@ -5088,6 +5101,8 @@ condition|(
 name|ef
 operator|->
 name|symbase
+operator|!=
+name|NULL
 condition|)
 name|free
 argument_list|(
@@ -5103,6 +5118,8 @@ condition|(
 name|ef
 operator|->
 name|strbase
+operator|!=
+name|NULL
 condition|)
 name|free
 argument_list|(
@@ -5118,6 +5135,8 @@ condition|(
 name|ef
 operator|->
 name|ctftab
+operator|!=
+name|NULL
 condition|)
 name|free
 argument_list|(
@@ -5133,6 +5152,8 @@ condition|(
 name|ef
 operator|->
 name|ctfoff
+operator|!=
+name|NULL
 condition|)
 name|free
 argument_list|(
@@ -5148,6 +5169,8 @@ condition|(
 name|ef
 operator|->
 name|typoff
+operator|!=
+name|NULL
 condition|)
 name|free
 argument_list|(
@@ -5175,6 +5198,8 @@ condition|(
 name|file
 operator|->
 name|filename
+operator|!=
+name|NULL
 condition|)
 name|preload_delete_name
 argument_list|(
@@ -5225,6 +5250,7 @@ name|r_info
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ef
 operator|->
 name|strtab
@@ -5232,11 +5258,13 @@ operator|+
 name|ref
 operator|->
 name|st_name
+operator|)
 return|;
 block|}
-else|else
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
@@ -5285,6 +5313,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rel
+operator|!=
+name|NULL
 condition|)
 block|{
 name|rellim
@@ -5359,7 +5389,9 @@ name|symname
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 name|rel
@@ -5377,6 +5409,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rela
+operator|!=
+name|NULL
 condition|)
 block|{
 name|relalim
@@ -5451,7 +5485,9 @@ name|symname
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 name|rela
@@ -5469,6 +5505,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rel
+operator|!=
+name|NULL
 condition|)
 block|{
 name|rellim
@@ -5543,7 +5581,9 @@ name|symname
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 name|rel
@@ -5561,6 +5601,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rela
+operator|!=
+name|NULL
 condition|)
 block|{
 name|relalim
@@ -5635,7 +5677,9 @@ name|symname
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 name|rela
@@ -5644,7 +5688,9 @@ expr_stmt|;
 block|}
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -5734,7 +5780,9 @@ name|g
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|h
+operator|)
 return|;
 block|}
 end_function
@@ -5808,7 +5856,9 @@ literal|"link_elf_lookup_symbol: missing symbol hash table\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 comment|/* First, search hashed global symbols */
@@ -5850,11 +5900,15 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"link_elf_lookup_symbol: corrupt symbol table\n"
+literal|"%s: corrupt symbol table\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 name|symp
@@ -5876,11 +5930,15 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"link_elf_lookup_symbol: corrupt symbol table\n"
+literal|"%s: corrupt symbol table\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 name|strp
@@ -5940,12 +5998,15 @@ operator|)
 name|symp
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
-else|else
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 name|symnum
@@ -5970,7 +6031,9 @@ operator|->
 name|ddbsymtab
 condition|)
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 comment|/* Exhaustive search */
 for|for
@@ -6055,17 +6118,22 @@ operator|)
 name|symp
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
-else|else
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 block|}
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 end_function
@@ -6163,7 +6231,9 @@ operator|->
 name|st_size
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -6177,7 +6247,9 @@ operator|->
 name|ddbsymtab
 condition|)
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 if|if
 condition|(
@@ -6236,11 +6308,15 @@ operator|->
 name|st_size
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 end_function
@@ -6436,7 +6512,9 @@ operator|)
 name|best
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -6527,15 +6605,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|setsym
-operator|==
-name|NULL
-condition|)
-return|return
-name|ENOMEM
-return|;
 comment|/* get address of first entry */
 name|snprintf
 argument_list|(
@@ -6565,6 +6634,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
@@ -6636,6 +6707,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
@@ -6689,6 +6762,8 @@ comment|/* and copy out */
 if|if
 condition|(
 name|startp
+operator|!=
+name|NULL
 condition|)
 operator|*
 name|startp
@@ -6698,6 +6773,8 @@ expr_stmt|;
 if|if
 condition|(
 name|stopp
+operator|!=
+name|NULL
 condition|)
 operator|*
 name|stopp
@@ -6707,6 +6784,8 @@ expr_stmt|;
 if|if
 condition|(
 name|countp
+operator|!=
+name|NULL
 condition|)
 operator|*
 name|countp
@@ -6723,7 +6802,9 @@ name|M_LINKER
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -6835,6 +6916,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -6950,6 +7033,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -6973,6 +7058,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -7017,11 +7104,13 @@ name|lf
 decl_stmt|;
 return|return
 operator|(
+operator|(
 name|Elf_Addr
 operator|)
 name|ef
 operator|->
 name|got
+operator|)
 return|;
 block|}
 end_function

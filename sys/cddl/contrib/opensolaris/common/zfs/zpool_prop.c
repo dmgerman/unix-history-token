@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2007, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_include
@@ -172,7 +172,7 @@ block|}
 block|}
 decl_stmt|;
 comment|/* string properties */
-name|register_string
+name|zprop_register_string
 argument_list|(
 name|ZPOOL_PROP_ALTROOT
 argument_list|,
@@ -189,7 +189,7 @@ argument_list|,
 literal|"ALTROOT"
 argument_list|)
 expr_stmt|;
-name|register_string
+name|zprop_register_string
 argument_list|(
 name|ZPOOL_PROP_BOOTFS
 argument_list|,
@@ -206,7 +206,7 @@ argument_list|,
 literal|"BOOTFS"
 argument_list|)
 expr_stmt|;
-name|register_string
+name|zprop_register_string
 argument_list|(
 name|ZPOOL_PROP_CACHEFILE
 argument_list|,
@@ -224,7 +224,7 @@ literal|"CACHEFILE"
 argument_list|)
 expr_stmt|;
 comment|/* readonly number properties */
-name|register_number
+name|zprop_register_number
 argument_list|(
 name|ZPOOL_PROP_SIZE
 argument_list|,
@@ -241,11 +241,11 @@ argument_list|,
 literal|"SIZE"
 argument_list|)
 expr_stmt|;
-name|register_number
+name|zprop_register_number
 argument_list|(
-name|ZPOOL_PROP_USED
+name|ZPOOL_PROP_FREE
 argument_list|,
-literal|"used"
+literal|"free"
 argument_list|,
 literal|0
 argument_list|,
@@ -255,14 +255,14 @@ name|ZFS_TYPE_POOL
 argument_list|,
 literal|"<size>"
 argument_list|,
-literal|"USED"
+literal|"FREE"
 argument_list|)
 expr_stmt|;
-name|register_number
+name|zprop_register_number
 argument_list|(
-name|ZPOOL_PROP_AVAILABLE
+name|ZPOOL_PROP_ALLOCATED
 argument_list|,
-literal|"available"
+literal|"allocated"
 argument_list|,
 literal|0
 argument_list|,
@@ -272,10 +272,10 @@ name|ZFS_TYPE_POOL
 argument_list|,
 literal|"<size>"
 argument_list|,
-literal|"AVAIL"
+literal|"ALLOC"
 argument_list|)
 expr_stmt|;
-name|register_number
+name|zprop_register_number
 argument_list|(
 name|ZPOOL_PROP_CAPACITY
 argument_list|,
@@ -292,7 +292,7 @@ argument_list|,
 literal|"CAP"
 argument_list|)
 expr_stmt|;
-name|register_number
+name|zprop_register_number
 argument_list|(
 name|ZPOOL_PROP_GUID
 argument_list|,
@@ -309,7 +309,7 @@ argument_list|,
 literal|"GUID"
 argument_list|)
 expr_stmt|;
-name|register_number
+name|zprop_register_number
 argument_list|(
 name|ZPOOL_PROP_HEALTH
 argument_list|,
@@ -326,8 +326,25 @@ argument_list|,
 literal|"HEALTH"
 argument_list|)
 expr_stmt|;
+name|zprop_register_number
+argument_list|(
+name|ZPOOL_PROP_DEDUPRATIO
+argument_list|,
+literal|"dedupratio"
+argument_list|,
+literal|0
+argument_list|,
+name|PROP_READONLY
+argument_list|,
+name|ZFS_TYPE_POOL
+argument_list|,
+literal|"<1.00x or higher if deduped>"
+argument_list|,
+literal|"DEDUP"
+argument_list|)
+expr_stmt|;
 comment|/* default number properties */
-name|register_number
+name|zprop_register_number
 argument_list|(
 name|ZPOOL_PROP_VERSION
 argument_list|,
@@ -344,8 +361,25 @@ argument_list|,
 literal|"VERSION"
 argument_list|)
 expr_stmt|;
+name|zprop_register_number
+argument_list|(
+name|ZPOOL_PROP_DEDUPDITTO
+argument_list|,
+literal|"dedupditto"
+argument_list|,
+literal|0
+argument_list|,
+name|PROP_DEFAULT
+argument_list|,
+name|ZFS_TYPE_POOL
+argument_list|,
+literal|"<threshold (min 100)>"
+argument_list|,
+literal|"DEDUPDITTO"
+argument_list|)
+expr_stmt|;
 comment|/* default index (boolean) properties */
-name|register_index
+name|zprop_register_index
 argument_list|(
 name|ZPOOL_PROP_DELEGATION
 argument_list|,
@@ -364,7 +398,7 @@ argument_list|,
 name|boolean_table
 argument_list|)
 expr_stmt|;
-name|register_index
+name|zprop_register_index
 argument_list|(
 name|ZPOOL_PROP_AUTOREPLACE
 argument_list|,
@@ -383,7 +417,7 @@ argument_list|,
 name|boolean_table
 argument_list|)
 expr_stmt|;
-name|register_index
+name|zprop_register_index
 argument_list|(
 name|ZPOOL_PROP_LISTSNAPS
 argument_list|,
@@ -402,8 +436,46 @@ argument_list|,
 name|boolean_table
 argument_list|)
 expr_stmt|;
+name|zprop_register_index
+argument_list|(
+name|ZPOOL_PROP_AUTOEXPAND
+argument_list|,
+literal|"autoexpand"
+argument_list|,
+literal|0
+argument_list|,
+name|PROP_DEFAULT
+argument_list|,
+name|ZFS_TYPE_POOL
+argument_list|,
+literal|"on | off"
+argument_list|,
+literal|"EXPAND"
+argument_list|,
+name|boolean_table
+argument_list|)
+expr_stmt|;
+name|zprop_register_index
+argument_list|(
+name|ZPOOL_PROP_READONLY
+argument_list|,
+literal|"readonly"
+argument_list|,
+literal|0
+argument_list|,
+name|PROP_DEFAULT
+argument_list|,
+name|ZFS_TYPE_POOL
+argument_list|,
+literal|"on | off"
+argument_list|,
+literal|"RDONLY"
+argument_list|,
+name|boolean_table
+argument_list|)
+expr_stmt|;
 comment|/* default index properties */
-name|register_index
+name|zprop_register_index
 argument_list|(
 name|ZPOOL_PROP_FAILUREMODE
 argument_list|,
@@ -423,7 +495,7 @@ name|failuremode_table
 argument_list|)
 expr_stmt|;
 comment|/* hidden properties */
-name|register_hidden
+name|zprop_register_hidden
 argument_list|(
 name|ZPOOL_PROP_NAME
 argument_list|,
@@ -643,6 +715,32 @@ argument_list|,
 name|index
 argument_list|,
 name|string
+argument_list|,
+name|ZFS_TYPE_POOL
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|uint64_t
+name|zpool_prop_random_value
+parameter_list|(
+name|zpool_prop_t
+name|prop
+parameter_list|,
+name|uint64_t
+name|seed
+parameter_list|)
+block|{
+return|return
+operator|(
+name|zprop_random_value
+argument_list|(
+name|prop
+argument_list|,
+name|seed
 argument_list|,
 name|ZFS_TYPE_POOL
 argument_list|)

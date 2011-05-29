@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: ncache.h,v 1.25.48.2 2009/12/30 23:47:31 tbox Exp $ */
+comment|/* $Id: ncache.h,v 1.25.48.4 2010-05-14 23:47:50 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -179,6 +179,32 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Search the negative caching rdataset for an rdataset with the  * specified name and type.  *  * Requires:  *\li	'ncacherdataset' is a valid negative caching rdataset.  *  *\li	'ncacherdataset' is not empty.  *  *\li	'name' is a valid name.  *  *\li	'type' is not SIG, or a meta-RR type.  *  *\li	'rdataset' is a valid disassociated rdataset.  *  * Ensures:  *\li	On a return of ISC_R_SUCCESS, 'rdataset' is bound to the found  *	rdataset.  *  * Returns:  *\li	#ISC_R_SUCCESS		- the rdataset was found.  *\li	#ISC_R_NOTFOUND		- the rdataset was not found.  *  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_ncache_getsigrdataset
+parameter_list|(
+name|dns_rdataset_t
+modifier|*
+name|ncacherdataset
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|,
+name|dns_rdatatype_t
+name|covers
+parameter_list|,
+name|dns_rdataset_t
+modifier|*
+name|rdataset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Similar to dns_ncache_getrdataset() but get the rrsig that matches.  */
 end_comment
 
 begin_function_decl

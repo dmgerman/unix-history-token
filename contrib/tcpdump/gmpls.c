@@ -66,6 +66,7 @@ comment|/* rfc3471 */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|tok
 name|gmpls_link_prot_values
@@ -134,6 +135,7 @@ comment|/* rfc3471 */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|tok
 name|gmpls_switch_cap_values
@@ -202,6 +204,7 @@ comment|/* rfc4205 */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|tok
 name|gmpls_switch_cap_tsc_indication_values
@@ -234,6 +237,7 @@ comment|/* rfc3471 */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|tok
 name|gmpls_encoding_values
@@ -320,6 +324,7 @@ comment|/* rfc3471 */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|tok
 name|gmpls_payload_values
@@ -695,6 +700,7 @@ comment|/*   * Link Type values used by LMP Service Discovery (specifically, the
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|tok
 name|lmp_sd_service_config_cpsa_link_type_values
@@ -727,6 +733,7 @@ comment|/*   * Signal Type values for SDH links used by LMP Service Discovery (s
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|tok
 name|lmp_sd_service_config_cpsa_signal_type_sdh_values
@@ -795,6 +802,7 @@ comment|/*   * Signal Type values for SONET links used by LMP Service Discovery 
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|tok
 name|lmp_sd_service_config_cpsa_signal_type_sonet_values
@@ -892,6 +900,7 @@ comment|/* experimental */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|tok
 name|diffserv_te_bc_values

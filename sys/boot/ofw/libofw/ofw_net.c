@@ -343,11 +343,6 @@ name|size_t
 name|len
 parameter_list|)
 block|{
-name|struct
-name|ether_header
-modifier|*
-name|eh
-decl_stmt|;
 name|size_t
 name|sendlen
 decl_stmt|;
@@ -360,6 +355,11 @@ name|defined
 argument_list|(
 name|NETIF_DEBUG
 argument_list|)
+name|struct
+name|ether_header
+modifier|*
+name|eh
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"netif_put: desc=0x%x pkt=0x%x len=%d\n"
@@ -1007,6 +1007,10 @@ modifier|*
 name|nif
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|BROKEN
+comment|/* dma-free freezes at least some Apple ethernet controllers */
 name|OF_call_method
 argument_list|(
 literal|"dma-free"
@@ -1022,6 +1026,8 @@ argument_list|,
 name|MAXPHYS
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|OF_close
 argument_list|(
 name|netinstance

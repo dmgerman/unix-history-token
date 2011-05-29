@@ -665,10 +665,6 @@ case|case
 name|IICBUS_IVAR_ADDR
 case|:
 operator|*
-operator|(
-name|uint32_t
-operator|*
-operator|)
 name|result
 operator|=
 name|devi
@@ -693,7 +689,7 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|int
+name|u_int
 name|order
 parameter_list|,
 specifier|const

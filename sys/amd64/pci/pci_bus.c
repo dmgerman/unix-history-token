@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -1335,6 +1341,13 @@ argument_list|(
 name|bus_alloc_resource
 argument_list|,
 name|legacy_pcib_alloc_resource
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_adjust_resource
+argument_list|,
+name|bus_generic_adjust_resource
 argument_list|)
 block|,
 name|DEVMETHOD

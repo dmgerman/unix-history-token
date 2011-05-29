@@ -608,6 +608,28 @@ begin_comment
 comment|/* master mode (1000baseT) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFM_ETH_RXPAUSE
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* receive PAUSE frames */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_ETH_TXPAUSE
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* transmit PAUSE frames */
+end_comment
+
 begin_comment
 comment|/*  * Token ring  */
 end_comment
@@ -1405,6 +1427,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IFM_FLOW
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* enable hardware flow control */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IFM_FLAG0
 value|0x01000000
 end_define
@@ -1539,6 +1572,17 @@ comment|/* Global options */
 end_comment
 
 begin_comment
+comment|/* Ethernet flow control mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_ETH_FMASK
+value|(IFM_FLOW | IFM_ETH_RXPAUSE | IFM_ETH_TXPAUSE)
+end_define
+
+begin_comment
 comment|/*  * Status bits  */
 end_comment
 
@@ -1583,7 +1627,7 @@ begin_define
 define|#
 directive|define
 name|IFM_STATUS_VALID_LIST
-value|{						\         IFM_AVALID,							\         0								\ }
+value|{						\ 	IFM_AVALID,							\ 	0								\ }
 end_define
 
 begin_comment
@@ -1637,7 +1681,7 @@ name|IFM_OPTIONS
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& (IFM_OMASK|IFM_GMASK))
+value|((x)& (IFM_OMASK | IFM_GMASK))
 end_define
 
 begin_define
@@ -1729,14 +1773,16 @@ begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_ETHERNET_ALIASES
-value|{					\ 	{ IFM_10_T,	"UTP" },					\ 	{ IFM_10_T,	"10UTP" },					\ 	{ IFM_10_2,	"BNC" },					\ 	{ IFM_10_2,	"10BNC" },					\ 	{ IFM_10_5,	"AUI" },					\ 	{ IFM_10_5,	"10AUI" },					\ 	{ IFM_100_TX,	"100TX" },					\ 	{ IFM_100_T4,	"100T4" },					\ 	{ IFM_100_VG,	"100VG" },					\ 	{ IFM_100_T2,	"100T2" },					\ 	{ IFM_10_STP,	"10STP" },					\ 	{ IFM_10_FL,	"10FL" },					\ 	{ IFM_1000_SX,	"1000SX" },					\ 	{ IFM_1000_LX,	"1000LX" },					\ 	{ IFM_1000_CX,	"1000CX" },					\ 	{ IFM_1000_T,	"1000baseTX" },					\ 	{ IFM_1000_T,	"1000TX" },					\ 	{ IFM_1000_T,	"1000T" },					\ 	{ IFM_2500_SX,	"2500SX" },					\ 	{ 0, NULL },							\ }
+value|{					\ 	{ IFM_10_T,	"10baseT" },					\ 	{ IFM_10_T,	"UTP" },					\ 	{ IFM_10_T,	"10UTP" },					\ 	{ IFM_10_2,	"BNC" },					\ 	{ IFM_10_2,	"10BNC" },					\ 	{ IFM_10_5,	"AUI" },					\ 	{ IFM_10_5,	"10AUI" },					\ 	{ IFM_100_TX,	"100TX" },					\ 	{ IFM_100_T4,	"100T4" },					\ 	{ IFM_100_VG,	"100VG" },					\ 	{ IFM_100_T2,	"100T2" },					\ 	{ IFM_10_STP,	"10STP" },					\ 	{ IFM_10_FL,	"10FL" },					\ 	{ IFM_1000_SX,	"1000SX" },					\ 	{ IFM_1000_LX,	"1000LX" },					\ 	{ IFM_1000_CX,	"1000CX" },					\ 	{ IFM_1000_T,	"1000baseTX" },					\ 	{ IFM_1000_T,	"1000TX" },					\ 	{ IFM_1000_T,	"1000T" },					\ 	{ IFM_2500_SX,	"2500SX" },					\ 									\
+comment|/*								\ 	 * Shorthands for common media+option combinations as announced	\ 	 * by miibus(4)							\ 	 */
+value|\ 	{ IFM_10_T | IFM_FDX,			"10baseT-FDX" },	\ 	{ IFM_10_T | IFM_FDX | IFM_FLOW,	"10baseT-FDX-flow" },	\ 	{ IFM_100_TX | IFM_FDX,			"100baseTX-FDX" },	\ 	{ IFM_100_TX | IFM_FDX | IFM_FLOW,	"100baseTX-FDX-flow" },	\ 	{ IFM_1000_T | IFM_FDX,			"1000baseT-FDX" },	\ 	{ IFM_1000_T | IFM_FDX | IFM_FLOW,	"1000baseT-FDX-flow" },	\ 	{ IFM_1000_T | IFM_FDX | IFM_FLOW | IFM_ETH_MASTER,		\ 	    "1000baseT-FDX-flow-master" },				\ 	{ IFM_1000_T | IFM_FDX | IFM_ETH_MASTER,			\ 	    "1000baseT-FDX-master" },					\ 	{ IFM_1000_T | IFM_ETH_MASTER,		"1000baseT-master" },	\ 									\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_ETHERNET_OPTION_DESCRIPTIONS
-value|{			\ 	{ 0, NULL },							\ }
+value|{			\ 	{ IFM_ETH_MASTER,	"master" },				\ 	{ IFM_ETH_RXPAUSE,	"rxpause" },				\ 	{ IFM_ETH_TXPAUSE,	"txpause" },				\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
@@ -1785,14 +1831,14 @@ begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_IEEE80211_DESCRIPTIONS
-value|{				\ 	{ IFM_IEEE80211_FH1, "FH/1Mbps" },				\ 	{ IFM_IEEE80211_FH2, "FH/2Mbps" },				\ 	{ IFM_IEEE80211_DS1, "DS/1Mbps" },				\ 	{ IFM_IEEE80211_DS2, "DS/2Mbps" },				\ 	{ IFM_IEEE80211_DS5, "DS/5.5Mbps" },				\ 	{ IFM_IEEE80211_DS11, "DS/11Mbps" },				\ 	{ IFM_IEEE80211_DS22, "DS/22Mbps" },				\ 	{ IFM_IEEE80211_OFDM6, "OFDM/6Mbps" },				\ 	{ IFM_IEEE80211_OFDM9, "OFDM/9Mbps" },				\ 	{ IFM_IEEE80211_OFDM12, "OFDM/12Mbps" },			\ 	{ IFM_IEEE80211_OFDM18, "OFDM/18Mbps" },			\ 	{ IFM_IEEE80211_OFDM24, "OFDM/24Mbps" },			\ 	{ IFM_IEEE80211_OFDM36, "OFDM/36Mbps" },			\ 	{ IFM_IEEE80211_OFDM48, "OFDM/48Mbps" },			\ 	{ IFM_IEEE80211_OFDM54, "OFDM/54Mbps" },			\ 	{ IFM_IEEE80211_OFDM72, "OFDM/72Mbps" },			\ 	{ IFM_IEEE80211_DS354k, "DS/354Kbps" },				\ 	{ IFM_IEEE80211_DS512k, "DS/512Kbps" },				\ 	{ IFM_IEEE80211_OFDM3, "OFDM/3Mbps" },				\ 	{ IFM_IEEE80211_OFDM4, "OFDM/4.5Mbps" },			\ 	{ IFM_IEEE80211_OFDM27, "OFDM/27Mbps" },			\ 	{ 0, NULL },							\ }
+value|{				\ 	{ IFM_IEEE80211_FH1, "FH/1Mbps" },				\ 	{ IFM_IEEE80211_FH2, "FH/2Mbps" },				\ 	{ IFM_IEEE80211_DS1, "DS/1Mbps" },				\ 	{ IFM_IEEE80211_DS2, "DS/2Mbps" },				\ 	{ IFM_IEEE80211_DS5, "DS/5.5Mbps" },				\ 	{ IFM_IEEE80211_DS11, "DS/11Mbps" },				\ 	{ IFM_IEEE80211_DS22, "DS/22Mbps" },				\ 	{ IFM_IEEE80211_OFDM6, "OFDM/6Mbps" },				\ 	{ IFM_IEEE80211_OFDM9, "OFDM/9Mbps" },				\ 	{ IFM_IEEE80211_OFDM12, "OFDM/12Mbps" },			\ 	{ IFM_IEEE80211_OFDM18, "OFDM/18Mbps" },			\ 	{ IFM_IEEE80211_OFDM24, "OFDM/24Mbps" },			\ 	{ IFM_IEEE80211_OFDM36, "OFDM/36Mbps" },			\ 	{ IFM_IEEE80211_OFDM48, "OFDM/48Mbps" },			\ 	{ IFM_IEEE80211_OFDM54, "OFDM/54Mbps" },			\ 	{ IFM_IEEE80211_OFDM72, "OFDM/72Mbps" },			\ 	{ IFM_IEEE80211_DS354k, "DS/354Kbps" },				\ 	{ IFM_IEEE80211_DS512k, "DS/512Kbps" },				\ 	{ IFM_IEEE80211_OFDM3, "OFDM/3Mbps" },				\ 	{ IFM_IEEE80211_OFDM4, "OFDM/4.5Mbps" },			\ 	{ IFM_IEEE80211_OFDM27, "OFDM/27Mbps" },			\ 	{ IFM_IEEE80211_MCS, "MCS" },					\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_IEEE80211_ALIASES
-value|{					\ 	{ IFM_IEEE80211_FH1, "FH1" },					\ 	{ IFM_IEEE80211_FH2, "FH2" },					\ 	{ IFM_IEEE80211_FH1, "FrequencyHopping/1Mbps" },		\ 	{ IFM_IEEE80211_FH2, "FrequencyHopping/2Mbps" },		\ 	{ IFM_IEEE80211_DS1, "DS1" },					\ 	{ IFM_IEEE80211_DS2, "DS2" },					\ 	{ IFM_IEEE80211_DS5, "DS5.5" },					\ 	{ IFM_IEEE80211_DS11, "DS11" },					\ 	{ IFM_IEEE80211_DS22, "DS22" },					\ 	{ IFM_IEEE80211_DS1, "DirectSequence/1Mbps" },			\ 	{ IFM_IEEE80211_DS2, "DirectSequence/2Mbps" },			\ 	{ IFM_IEEE80211_DS5, "DirectSequence/5.5Mbps" },		\ 	{ IFM_IEEE80211_DS11, "DirectSequence/11Mbps" },		\ 	{ IFM_IEEE80211_DS22, "DirectSequence/22Mbps" },		\ 	{ IFM_IEEE80211_OFDM6, "OFDM6" },				\ 	{ IFM_IEEE80211_OFDM9, "OFDM9" },				\ 	{ IFM_IEEE80211_OFDM12, "OFDM12" },				\ 	{ IFM_IEEE80211_OFDM18, "OFDM18" },				\ 	{ IFM_IEEE80211_OFDM24, "OFDM24" },				\ 	{ IFM_IEEE80211_OFDM36, "OFDM36" },				\ 	{ IFM_IEEE80211_OFDM48, "OFDM48" },				\ 	{ IFM_IEEE80211_OFDM54, "OFDM54" },				\ 	{ IFM_IEEE80211_OFDM72, "OFDM72" },				\ 	{ IFM_IEEE80211_DS1, "CCK1" },					\ 	{ IFM_IEEE80211_DS2, "CCK2" },					\ 	{ IFM_IEEE80211_DS5, "CCK5.5" },				\ 	{ IFM_IEEE80211_DS11, "CCK11" },				\ 	{ IFM_IEEE80211_DS354k, "DS354K" },				\ 	{ IFM_IEEE80211_DS354k, "DirectSequence/354Kbps" },		\ 	{ IFM_IEEE80211_DS512k, "DS512K" },				\ 	{ IFM_IEEE80211_DS512k, "DirectSequence/512Kbps" },		\ 	{ IFM_IEEE80211_OFDM3, "OFDM3" },				\ 	{ IFM_IEEE80211_OFDM4, "OFDM4.5" },				\ 	{ IFM_IEEE80211_OFDM27, "OFDM27" },				\ 	{ 0, NULL },							\ }
+value|{					\ 	{ IFM_IEEE80211_FH1, "FH1" },					\ 	{ IFM_IEEE80211_FH2, "FH2" },					\ 	{ IFM_IEEE80211_FH1, "FrequencyHopping/1Mbps" },		\ 	{ IFM_IEEE80211_FH2, "FrequencyHopping/2Mbps" },		\ 	{ IFM_IEEE80211_DS1, "DS1" },					\ 	{ IFM_IEEE80211_DS2, "DS2" },					\ 	{ IFM_IEEE80211_DS5, "DS5.5" },					\ 	{ IFM_IEEE80211_DS11, "DS11" },					\ 	{ IFM_IEEE80211_DS22, "DS22" },					\ 	{ IFM_IEEE80211_DS1, "DirectSequence/1Mbps" },			\ 	{ IFM_IEEE80211_DS2, "DirectSequence/2Mbps" },			\ 	{ IFM_IEEE80211_DS5, "DirectSequence/5.5Mbps" },		\ 	{ IFM_IEEE80211_DS11, "DirectSequence/11Mbps" },		\ 	{ IFM_IEEE80211_DS22, "DirectSequence/22Mbps" },		\ 	{ IFM_IEEE80211_OFDM6, "OFDM6" },				\ 	{ IFM_IEEE80211_OFDM9, "OFDM9" },				\ 	{ IFM_IEEE80211_OFDM12, "OFDM12" },				\ 	{ IFM_IEEE80211_OFDM18, "OFDM18" },				\ 	{ IFM_IEEE80211_OFDM24, "OFDM24" },				\ 	{ IFM_IEEE80211_OFDM36, "OFDM36" },				\ 	{ IFM_IEEE80211_OFDM48, "OFDM48" },				\ 	{ IFM_IEEE80211_OFDM54, "OFDM54" },				\ 	{ IFM_IEEE80211_OFDM72, "OFDM72" },				\ 	{ IFM_IEEE80211_DS1, "CCK1" },					\ 	{ IFM_IEEE80211_DS2, "CCK2" },					\ 	{ IFM_IEEE80211_DS5, "CCK5.5" },				\ 	{ IFM_IEEE80211_DS11, "CCK11" },				\ 	{ IFM_IEEE80211_DS354k, "DS354K" },				\ 	{ IFM_IEEE80211_DS354k, "DirectSequence/354Kbps" },		\ 	{ IFM_IEEE80211_DS512k, "DS512K" },				\ 	{ IFM_IEEE80211_DS512k, "DirectSequence/512Kbps" },		\ 	{ IFM_IEEE80211_OFDM3, "OFDM3" },				\ 	{ IFM_IEEE80211_OFDM4, "OFDM4.5" },				\ 	{ IFM_IEEE80211_OFDM27, "OFDM27" },				\ 	{ IFM_IEEE80211_MCS, "MCS" },					\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
@@ -1848,14 +1894,23 @@ begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_SHARED_ALIASES
-value|{					\ 	{ IFM_AUTO,	"auto" },					\ 	{ 0, NULL },							\ }
+value|{					\ 	{ IFM_AUTO,	"auto" },					\ 									\
+comment|/*								\ 	 * Shorthands for common media+option combinations as announced	\ 	 * by miibus(4)							\ 	 */
+value|\ 	{ IFM_AUTO | IFM_FLOW,	"auto-flow" },				\ 									\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
 define|#
 directive|define
 name|IFM_SHARED_OPTION_DESCRIPTIONS
-value|{				\ 	{ IFM_FDX,	"full-duplex" },				\ 	{ IFM_HDX,	"half-duplex" },				\ 	{ IFM_FLAG0,	"flag0" },					\ 	{ IFM_FLAG1,	"flag1" },					\ 	{ IFM_FLAG2,	"flag2" },					\ 	{ IFM_LOOP,	"hw-loopback" },				\ 	{ 0, NULL },							\ }
+value|{				\ 	{ IFM_FDX,	"full-duplex" },				\ 	{ IFM_HDX,	"half-duplex" },				\ 	{ IFM_FLOW,	"flowcontrol" },				\ 	{ IFM_FLAG0,	"flag0" },					\ 	{ IFM_FLAG1,	"flag1" },					\ 	{ IFM_FLAG2,	"flag2" },					\ 	{ IFM_LOOP,	"hw-loopback" },				\ 	{ 0, NULL },							\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFM_SHARED_OPTION_ALIASES
+value|{					\ 	{ IFM_FDX,	"fdx" },					\ 	{ IFM_HDX,	"hdx" },					\ 	{ IFM_FLOW,	"flow" },					\ 	{ IFM_LOOP,	"loop" },					\ 	{ IFM_LOOP,	"loopback" },					\ 	{ 0, NULL },							\ }
 end_define
 
 begin_comment

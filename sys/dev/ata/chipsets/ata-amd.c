@@ -620,6 +620,8 @@ condition|)
 block|{
 if|if
 condition|(
+name|ata_dma_check_80pin
+operator|&&
 name|mode
 operator|>
 name|ATA_UDMA2

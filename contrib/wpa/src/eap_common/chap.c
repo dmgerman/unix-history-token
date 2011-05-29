@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * CHAP-MD5 (RFC 1994)  * Copyright (c) 2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * CHAP-MD5 (RFC 1994)  * Copyright (c) 2007-2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_include
@@ -18,13 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"md5.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"crypto.h"
+file|"crypto/crypto.h"
 end_include
 
 begin_include
@@ -34,7 +28,7 @@ file|"chap.h"
 end_include
 
 begin_function
-name|void
+name|int
 name|chap_md5
 parameter_list|(
 name|u8
@@ -118,6 +112,7 @@ index|]
 operator|=
 name|challenge_len
 expr_stmt|;
+return|return
 name|md5_vector
 argument_list|(
 literal|3
@@ -128,7 +123,7 @@ name|len
 argument_list|,
 name|response
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 

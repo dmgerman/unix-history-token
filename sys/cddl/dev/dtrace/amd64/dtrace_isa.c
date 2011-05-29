@@ -85,6 +85,12 @@ directive|include
 file|<vm/pmap.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"regset.h"
+end_include
+
 begin_function_decl
 name|uint8_t
 name|dtrace_fuword8_nocheck
@@ -374,11 +380,6 @@ index|]
 operator|.
 name|cpuc_dtrace_flags
 decl_stmt|;
-name|struct
-name|amd64_frame
-modifier|*
-name|frame
-decl_stmt|;
 name|int
 name|ret
 init|=
@@ -398,10 +399,6 @@ expr_stmt|;
 while|while
 condition|(
 name|pc
-operator|!=
-literal|0
-operator|&&
-name|sp
 operator|!=
 literal|0
 condition|)
@@ -436,33 +433,43 @@ literal|0
 condition|)
 break|break;
 block|}
-name|frame
-operator|=
-operator|(
-expr|struct
-name|amd64_frame
-operator|*
-operator|)
+if|if
+condition|(
 name|sp
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+break|break;
 name|pc
 operator|=
-name|dtrace_fulword
+name|dtrace_fuword64
 argument_list|(
-operator|&
-name|frame
-operator|->
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|sp
+operator|+
+name|offsetof
+argument_list|(
+expr|struct
+name|amd64_frame
+argument_list|,
 name|f_retaddr
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|sp
 operator|=
-name|dtrace_fulword
+name|dtrace_fuword64
 argument_list|(
-operator|&
-name|frame
-operator|->
-name|f_frame
+operator|(
+name|void
+operator|*
+operator|)
+name|sp
 argument_list|)
 expr_stmt|;
 comment|/* 		 * This is totally bogus:  if we faulted, we're going to clear 		 * the fault and break.  This is to deal with the apparently 		 * broken Java stacks on x86. 		 */
@@ -518,6 +525,8 @@ name|uintptr_t
 name|pc
 decl_stmt|,
 name|sp
+decl_stmt|,
+name|fp
 decl_stmt|;
 specifier|volatile
 name|uint16_t
@@ -602,6 +611,12 @@ name|tf
 operator|->
 name|tf_rip
 expr_stmt|;
+name|fp
+operator|=
+name|tf
+operator|->
+name|tf_rbp
+expr_stmt|;
 name|sp
 operator|=
 name|tf
@@ -616,6 +631,7 @@ name|CPU_DTRACE_ENTRY
 argument_list|)
 condition|)
 block|{
+comment|/*  		 * In an entry probe.  The frame pointer has not yet been 		 * pushed (that happens in the function prologue).  The 		 * best approach is to add the current pc as a missing top 		 * of stack and back the pc up to the caller, which is stored 		 * at the current stack pointer address since the call  		 * instruction puts it there right before the branch. 		 */
 operator|*
 name|pcstack
 operator|++
@@ -637,7 +653,7 @@ condition|)
 return|return;
 name|pc
 operator|=
-name|dtrace_fulword
+name|dtrace_fuword64
 argument_list|(
 operator|(
 name|void
@@ -657,7 +673,7 @@ name|pcstack_limit
 argument_list|,
 name|pc
 argument_list|,
-name|sp
+name|fp
 argument_list|)
 expr_stmt|;
 name|ASSERT
@@ -721,6 +737,8 @@ decl_stmt|;
 name|uintptr_t
 name|pc
 decl_stmt|,
+name|fp
+decl_stmt|,
 name|sp
 decl_stmt|;
 name|int
@@ -768,6 +786,12 @@ name|tf
 operator|->
 name|tf_rip
 expr_stmt|;
+name|fp
+operator|=
+name|tf
+operator|->
+name|tf_rbp
+expr_stmt|;
 name|sp
 operator|=
 name|tf
@@ -782,12 +806,10 @@ name|CPU_DTRACE_ENTRY
 argument_list|)
 condition|)
 block|{
-name|n
-operator|++
-expr_stmt|;
+comment|/*  		 * In an entry probe.  The frame pointer has not yet been 		 * pushed (that happens in the function prologue).  The 		 * best approach is to add the current pc as a missing top 		 * of stack and back the pc up to the caller, which is stored 		 * at the current stack pointer address since the call  		 * instruction puts it there right before the branch. 		 */
 name|pc
 operator|=
-name|dtrace_fulword
+name|dtrace_fuword64
 argument_list|(
 operator|(
 name|void
@@ -795,6 +817,9 @@ operator|*
 operator|)
 name|sp
 argument_list|)
+expr_stmt|;
+name|n
+operator|++
 expr_stmt|;
 block|}
 name|n
@@ -807,7 +832,7 @@ literal|0
 argument_list|,
 name|pc
 argument_list|,
-name|sp
+name|fp
 argument_list|)
 expr_stmt|;
 return|return
@@ -817,12 +842,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
 
 begin_function
 name|void
@@ -840,15 +859,6 @@ name|int
 name|pcstack_limit
 parameter_list|)
 block|{
-name|klwp_t
-modifier|*
-name|lwp
-init|=
-name|ttolwp
-argument_list|(
-name|curthread
-argument_list|)
-decl_stmt|;
 name|proc_t
 modifier|*
 name|p
@@ -856,16 +866,16 @@ init|=
 name|curproc
 decl_stmt|;
 name|struct
-name|regs
+name|trapframe
 modifier|*
-name|rp
+name|tf
 decl_stmt|;
 name|uintptr_t
 name|pc
 decl_stmt|,
 name|sp
 decl_stmt|,
-name|oldcontext
+name|fp
 decl_stmt|;
 specifier|volatile
 name|uint16_t
@@ -885,11 +895,20 @@ index|]
 operator|.
 name|cpuc_dtrace_flags
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
+comment|/* XXX signal stack */
+name|uintptr_t
+name|oldcontext
+decl_stmt|;
 name|size_t
 name|s1
 decl_stmt|,
 name|s2
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|*
@@ -908,20 +927,16 @@ return|return;
 comment|/* 	 * If there's no user context we still need to zero the stack. 	 */
 if|if
 condition|(
-name|lwp
-operator|==
-name|NULL
-operator|||
 name|p
 operator|==
 name|NULL
 operator|||
 operator|(
-name|rp
+name|tf
 operator|=
-name|lwp
+name|curthread
 operator|->
-name|lwp_regs
+name|td_frame
 operator|)
 operator|==
 name|NULL
@@ -952,16 +967,26 @@ condition|)
 return|return;
 name|pc
 operator|=
-name|rp
+name|tf
 operator|->
-name|r_pc
+name|tf_rip
 expr_stmt|;
 name|sp
 operator|=
-name|rp
+name|tf
 operator|->
-name|r_fp
+name|tf_rsp
 expr_stmt|;
+name|fp
+operator|=
+name|tf
+operator|->
+name|tf_rbp
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
+comment|/* XXX signal stack */
 name|oldcontext
 operator|=
 name|lwp
@@ -992,6 +1017,8 @@ argument_list|(
 name|siginfo_t
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|DTRACE_CPUFLAG_ISSET
@@ -1025,49 +1052,21 @@ operator|<=
 literal|0
 condition|)
 return|return;
-if|if
-condition|(
-name|p
-operator|->
-name|p_model
-operator|==
-name|DATAMODEL_NATIVE
-condition|)
 name|pc
 operator|=
-name|dtrace_fulword
+name|dtrace_fuword64
 argument_list|(
 operator|(
 name|void
 operator|*
 operator|)
-name|rp
-operator|->
-name|r_sp
-argument_list|)
-expr_stmt|;
-else|else
-name|pc
-operator|=
-name|dtrace_fuword32
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|rp
-operator|->
-name|r_sp
+name|sp
 argument_list|)
 expr_stmt|;
 block|}
 while|while
 condition|(
 name|pc
-operator|!=
-literal|0
-operator|&&
-name|sp
 operator|!=
 literal|0
 condition|)
@@ -1085,7 +1084,7 @@ operator|*
 name|fpstack
 operator|++
 operator|=
-name|sp
+name|fp
 expr_stmt|;
 name|pcstack_limit
 operator|--
@@ -1097,6 +1096,17 @@ operator|<=
 literal|0
 condition|)
 break|break;
+if|if
+condition|(
+name|fp
+operator|==
+literal|0
+condition|)
+break|break;
+ifdef|#
+directive|ifdef
+name|notyet
+comment|/* XXX signal stack */
 if|if
 condition|(
 name|oldcontext
@@ -1166,37 +1176,40 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
+comment|/* XXX */
 block|{
-name|struct
-name|xframe
-modifier|*
-name|fr
-init|=
-operator|(
-expr|struct
-name|xframe
-operator|*
-operator|)
-name|sp
-decl_stmt|;
 name|pc
 operator|=
-name|dtrace_fulword
+name|dtrace_fuword64
 argument_list|(
-operator|&
-name|fr
-operator|->
-name|fr_savpc
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|fp
+operator|+
+name|offsetof
+argument_list|(
+expr|struct
+name|amd64_frame
+argument_list|,
+name|f_retaddr
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|sp
+name|fp
 operator|=
-name|dtrace_fulword
+name|dtrace_fuword64
 argument_list|(
-operator|&
-name|fr
-operator|->
-name|fr_savfp
+operator|(
+name|void
+operator|*
+operator|)
+name|fp
 argument_list|)
 expr_stmt|;
 block|}
@@ -1231,15 +1244,10 @@ operator|*
 name|pcstack
 operator|++
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -1588,18 +1596,12 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
-
 begin_function
 name|ulong_t
 name|dtrace_getreg
 parameter_list|(
 name|struct
-name|regs
+name|trapframe
 modifier|*
 name|rp
 parameter_list|,
@@ -1607,12 +1609,7 @@ name|uint_t
 name|reg
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__amd64
-argument_list|)
+comment|/* This table is dependent on reg.d. */
 name|int
 name|regmap
 index|[]
@@ -1620,60 +1617,60 @@ init|=
 block|{
 name|REG_GS
 block|,
-comment|/* GS */
+comment|/* 0  GS */
 name|REG_FS
 block|,
-comment|/* FS */
+comment|/* 1  FS */
 name|REG_ES
 block|,
-comment|/* ES */
+comment|/* 2  ES */
 name|REG_DS
 block|,
-comment|/* DS */
+comment|/* 3  DS */
 name|REG_RDI
 block|,
-comment|/* EDI */
+comment|/* 4  EDI */
 name|REG_RSI
 block|,
-comment|/* ESI */
+comment|/* 5  ESI */
 name|REG_RBP
 block|,
-comment|/* EBP */
+comment|/* 6  EBP, REG_FP */
 name|REG_RSP
 block|,
-comment|/* ESP */
+comment|/* 7  ESP */
 name|REG_RBX
 block|,
-comment|/* EBX */
+comment|/* 8  EBX, REG_R1 */
 name|REG_RDX
 block|,
-comment|/* EDX */
+comment|/* 9  EDX */
 name|REG_RCX
 block|,
-comment|/* ECX */
+comment|/* 10 ECX */
 name|REG_RAX
 block|,
-comment|/* EAX */
+comment|/* 11 EAX, REG_R0 */
 name|REG_TRAPNO
 block|,
-comment|/* TRAPNO */
+comment|/* 12 TRAPNO */
 name|REG_ERR
 block|,
-comment|/* ERR */
+comment|/* 13 ERR */
 name|REG_RIP
 block|,
-comment|/* EIP */
+comment|/* 14 EIP, REG_PC */
 name|REG_CS
 block|,
-comment|/* CS */
+comment|/* 15 CS */
 name|REG_RFL
 block|,
-comment|/* EFL */
+comment|/* 16 EFL, REG_PS */
 name|REG_RSP
 block|,
-comment|/* UESP */
+comment|/* 17 UESP, REG_SP */
 name|REG_SS
-comment|/* SS */
+comment|/* 18 SS */
 block|}
 decl_stmt|;
 if|if
@@ -1719,6 +1716,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* This is dependent on reg.d. */
 name|reg
 operator|-=
 name|SS
@@ -1738,7 +1736,7 @@ return|return
 operator|(
 name|rp
 operator|->
-name|r_rdi
+name|tf_rdi
 operator|)
 return|;
 case|case
@@ -1748,7 +1746,7 @@ return|return
 operator|(
 name|rp
 operator|->
-name|r_rsi
+name|tf_rsi
 operator|)
 return|;
 case|case
@@ -1758,7 +1756,7 @@ return|return
 operator|(
 name|rp
 operator|->
-name|r_rdx
+name|tf_rdx
 operator|)
 return|;
 case|case
@@ -1768,7 +1766,7 @@ return|return
 operator|(
 name|rp
 operator|->
-name|r_rcx
+name|tf_rcx
 operator|)
 return|;
 case|case
@@ -1778,7 +1776,7 @@ return|return
 operator|(
 name|rp
 operator|->
-name|r_r8
+name|tf_r8
 operator|)
 return|;
 case|case
@@ -1788,7 +1786,7 @@ return|return
 operator|(
 name|rp
 operator|->
-name|r_r9
+name|tf_r9
 operator|)
 return|;
 case|case
@@ -1798,7 +1796,7 @@ return|return
 operator|(
 name|rp
 operator|->
-name|r_rax
+name|tf_rax
 operator|)
 return|;
 case|case
@@ -1808,7 +1806,7 @@ return|return
 operator|(
 name|rp
 operator|->
-name|r_rbx
+name|tf_rbx
 operator|)
 return|;
 case|case
@@ -1818,7 +1816,7 @@ return|return
 operator|(
 name|rp
 operator|->
-name|r_rbp
+name|tf_rbp
 operator|)
 return|;
 case|case
@@ -1828,7 +1826,7 @@ return|return
 operator|(
 name|rp
 operator|->
-name|r_r10
+name|tf_r10
 operator|)
 return|;
 case|case
@@ -1838,7 +1836,7 @@ return|return
 operator|(
 name|rp
 operator|->
-name|r_r11
+name|tf_r11
 operator|)
 return|;
 case|case
@@ -1848,7 +1846,7 @@ return|return
 operator|(
 name|rp
 operator|->
-name|r_r12
+name|tf_r12
 operator|)
 return|;
 case|case
@@ -1858,7 +1856,7 @@ return|return
 operator|(
 name|rp
 operator|->
-name|r_r13
+name|tf_r13
 operator|)
 return|;
 case|case
@@ -1868,7 +1866,7 @@ return|return
 operator|(
 name|rp
 operator|->
-name|r_r14
+name|tf_r14
 operator|)
 return|;
 case|case
@@ -1878,7 +1876,7 @@ return|return
 operator|(
 name|rp
 operator|->
-name|r_r15
+name|tf_r15
 operator|)
 return|;
 case|case
@@ -1888,7 +1886,7 @@ return|return
 operator|(
 name|rp
 operator|->
-name|r_ds
+name|tf_ds
 operator|)
 return|;
 case|case
@@ -1898,7 +1896,7 @@ return|return
 operator|(
 name|rp
 operator|->
-name|r_es
+name|tf_es
 operator|)
 return|;
 case|case
@@ -1908,7 +1906,7 @@ return|return
 operator|(
 name|rp
 operator|->
-name|r_fs
+name|tf_fs
 operator|)
 return|;
 case|case
@@ -1918,7 +1916,7 @@ return|return
 operator|(
 name|rp
 operator|->
-name|r_gs
+name|tf_gs
 operator|)
 return|;
 case|case
@@ -1928,7 +1926,7 @@ return|return
 operator|(
 name|rp
 operator|->
-name|r_trapno
+name|tf_trapno
 operator|)
 return|;
 case|case
@@ -1938,7 +1936,7 @@ return|return
 operator|(
 name|rp
 operator|->
-name|r_err
+name|tf_err
 operator|)
 return|;
 case|case
@@ -1948,7 +1946,7 @@ return|return
 operator|(
 name|rp
 operator|->
-name|r_rip
+name|tf_rip
 operator|)
 return|;
 case|case
@@ -1958,7 +1956,7 @@ return|return
 operator|(
 name|rp
 operator|->
-name|r_cs
+name|tf_cs
 operator|)
 return|;
 case|case
@@ -1968,7 +1966,7 @@ return|return
 operator|(
 name|rp
 operator|->
-name|r_ss
+name|tf_ss
 operator|)
 return|;
 case|case
@@ -1978,7 +1976,7 @@ return|return
 operator|(
 name|rp
 operator|->
-name|r_rfl
+name|tf_rflags
 operator|)
 return|;
 case|case
@@ -1988,7 +1986,7 @@ return|return
 operator|(
 name|rp
 operator|->
-name|r_rsp
+name|tf_rsp
 operator|)
 return|;
 default|default:
@@ -2003,48 +2001,8 @@ literal|0
 operator|)
 return|;
 block|}
-else|#
-directive|else
-if|if
-condition|(
-name|reg
-operator|>
-name|SS
-condition|)
-block|{
-name|DTRACE_CPUFLAG_SET
-argument_list|(
-name|CPU_DTRACE_ILLOP
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-return|return
-operator|(
-operator|(
-operator|&
-name|rp
-operator|->
-name|r_gs
-operator|)
-index|[
-name|reg
-index|]
-operator|)
-return|;
-endif|#
-directive|endif
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static

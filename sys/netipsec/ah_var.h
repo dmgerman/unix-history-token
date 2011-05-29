@@ -134,13 +134,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|V_ah_enable
-value|VNET(ah_enable)
-end_define
-
 begin_expr_stmt
 name|VNET_DECLARE
 argument_list|(
@@ -150,13 +143,6 @@ name|ah_cleartos
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_ah_cleartos
-value|VNET(ah_cleartos)
-end_define
 
 begin_expr_stmt
 name|VNET_DECLARE
@@ -168,6 +154,20 @@ name|ahstat
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_ah_enable
+value|VNET(ah_enable)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ah_cleartos
+value|VNET(ah_cleartos)
+end_define
 
 begin_define
 define|#

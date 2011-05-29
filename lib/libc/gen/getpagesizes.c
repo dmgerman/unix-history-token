@@ -41,6 +41,18 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<link.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
+end_include
+
 begin_comment
 comment|/*  * Retrieves page size information from the system.  Specifically, returns the  * number of distinct page sizes that are supported by the system, if  * "pagesize" is NULL and "nelem" is 0.  Otherwise, assigns up to "nelem" of  * the system-supported page sizes to consecutive elements of the array  * referenced by "pagesize", and returns the number of such page sizes that it  * assigned to the array.  These page sizes are expressed in bytes.  *  * The implementation of this function does not directly or indirectly call  * malloc(3) or any other dynamic memory allocator that may itself call this  * function.  */
 end_comment
@@ -72,6 +84,8 @@ name|size_t
 name|size
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|i
 decl_stmt|;
 if|if
@@ -110,6 +124,20 @@ operator|==
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|_elf_aux_info
+argument_list|(
+name|AT_PAGESIZES
+argument_list|,
+name|ps
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ps
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|size
 operator|=
 sizeof|sizeof
@@ -117,6 +145,20 @@ argument_list|(
 name|ps
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+operator|||
+name|ps
+index|[
+literal|0
+index|]
+operator|==
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 name|sysctlbyname
@@ -142,6 +184,7 @@ operator|-
 literal|1
 operator|)
 return|;
+block|}
 comment|/* Count the number of page sizes that are supported. */
 name|nops
 operator|=

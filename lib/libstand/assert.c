@@ -58,7 +58,7 @@ name|func
 operator|==
 name|NULL
 condition|)
-name|printf
+name|panic
 argument_list|(
 literal|"Assertion failed: (%s), file %s, line %d.\n"
 argument_list|,
@@ -70,10 +70,9 @@ name|line
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|panic
 argument_list|(
-literal|"Assertion failed: (%s), function %s, file %s, line "
-literal|"%d.\n"
+literal|"Assertion failed: (%s), function %s, file %s, line %d.\n"
 argument_list|,
 name|expression
 argument_list|,
@@ -83,9 +82,6 @@ name|file
 argument_list|,
 name|line
 argument_list|)
-expr_stmt|;
-name|exit
-argument_list|()
 expr_stmt|;
 block|}
 end_function

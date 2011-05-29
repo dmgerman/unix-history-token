@@ -1669,7 +1669,7 @@ block|}
 comment|/* else case will caught higher up */
 block|}
 comment|/* we have added it to the cache so now pull 		 * it out again */
-name|CRYPTO_r_lock
+name|CRYPTO_w_lock
 argument_list|(
 name|CRYPTO_LOCK_X509_STORE
 argument_list|)
@@ -1713,7 +1713,7 @@ name|tmp
 operator|=
 name|NULL
 expr_stmt|;
-name|CRYPTO_r_unlock
+name|CRYPTO_w_unlock
 argument_list|(
 name|CRYPTO_LOCK_X509_STORE
 argument_list|)

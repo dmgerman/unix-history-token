@@ -420,7 +420,7 @@ value|1000
 end_define
 
 begin_comment
-comment|/*  * Frequency (MHz) and voltage (mV) settings.  Data from the  * Intel Pentium M Processor Datasheet (Order Number 252612), Table 5.  *  * Dothan processors have multiple VID#s with different settings for  * each VID#.  Since we can't uniquely identify this info  * without undisclosed methods from Intel, we can't support newer  * processors with this table method.  If ACPI Px states are supported,  * we get info from them.  */
+comment|/*  * Frequency (MHz) and voltage (mV) settings.  *  * Dothan processors have multiple VID#s with different settings for  * each VID#.  Since we can't uniquely identify this info  * without undisclosed methods from Intel, we can't support newer  * processors with this table method.  If ACPI Px states are supported,  * we get info from them.  *  * Data from the "Intel Pentium M Processor Datasheet",  * Order Number 252612-003, Table 5.  */
 end_comment
 
 begin_decl_stmt
@@ -1119,7 +1119,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Data from "Intel Pentium M Processor on 90nm Process with  * 2-MB L2 Cache Datasheet", Order Number 302189, Table 5.  */
+comment|/*  * Data from "Intel Pentium M Processor on 90nm Process with  * 2-MB L2 Cache Datasheet", Order Number 302189-008, Table 5.  */
 end_comment
 
 begin_decl_stmt
@@ -7104,11 +7104,13 @@ modifier|*
 name|features
 parameter_list|)
 block|{
-comment|/* Notify the ACPI CPU that we support direct access to MSRs */
+comment|/* 	 * Notify the ACPI CPU that we support direct access to MSRs. 	 * XXX C1 "I/O then Halt" seems necessary for some broken BIOS. 	 */
 operator|*
 name|features
 operator|=
 name|ACPI_CAP_PERF_MSRS
+operator||
+name|ACPI_CAP_C1_IO_HALT
 expr_stmt|;
 return|return
 operator|(
@@ -7865,7 +7867,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-literal|1
+name|strict
 argument_list|)
 expr_stmt|;
 if|if
@@ -7873,8 +7875,6 @@ condition|(
 name|error
 operator|!=
 literal|0
-operator|&&
-name|strict
 condition|)
 block|{
 if|if
@@ -7897,32 +7897,6 @@ name|freq
 argument_list|)
 expr_stmt|;
 continue|continue;
-block|}
-elseif|else
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-operator|&&
-name|bootverbose
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Can't check freq %u, "
-literal|"it may be invalid\n"
-argument_list|,
-name|sets
-index|[
-name|i
-index|]
-operator|.
-name|freq
-argument_list|)
-expr_stmt|;
 block|}
 name|table
 index|[
@@ -8270,7 +8244,11 @@ return|;
 comment|/* Figure out the bus clock. */
 name|freq
 operator|=
+name|atomic_load_acq_64
+argument_list|(
+operator|&
 name|tsc_freq
+argument_list|)
 operator|/
 literal|1000000
 expr_stmt|;

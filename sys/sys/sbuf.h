@@ -21,6 +21,31 @@ directive|include
 file|<sys/_types.h>
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|sbuf
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+name|sbuf_drain_func
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_comment
 comment|/*  * Structure definition  */
 end_comment
@@ -34,16 +59,25 @@ modifier|*
 name|s_buf
 decl_stmt|;
 comment|/* storage buffer */
+name|sbuf_drain_func
+modifier|*
+name|s_drain_func
+decl_stmt|;
+comment|/* drain function */
 name|void
 modifier|*
-name|s_unused
+name|s_drain_arg
 decl_stmt|;
-comment|/* binary compatibility. */
+comment|/* user-supplied drain argument */
 name|int
+name|s_error
+decl_stmt|;
+comment|/* current error code */
+name|ssize_t
 name|s_size
 decl_stmt|;
 comment|/* size of storage buffer */
-name|int
+name|ssize_t
 name|s_len
 decl_stmt|;
 comment|/* current length of string */
@@ -72,11 +106,6 @@ directive|define
 name|SBUF_FINISHED
 value|0x00020000
 comment|/* set by sbuf_finish() */
-define|#
-directive|define
-name|SBUF_OVERFLOWED
-value|0x00040000
-comment|/* sbuf overflowed */
 define|#
 directive|define
 name|SBUF_DYNSTRUCT
@@ -140,7 +169,7 @@ name|struct
 name|sbuf
 modifier|*
 parameter_list|,
-name|int
+name|ssize_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -275,6 +304,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|sbuf_set_drain
+parameter_list|(
+name|struct
+name|sbuf
+modifier|*
+parameter_list|,
+name|sbuf_drain_func
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|sbuf_trim
 parameter_list|(
@@ -287,8 +333,9 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sbuf_overflowed
+name|sbuf_error
 parameter_list|(
+specifier|const
 name|struct
 name|sbuf
 modifier|*
@@ -297,7 +344,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|sbuf_finish
 parameter_list|(
 name|struct
@@ -320,7 +367,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|ssize_t
 name|sbuf_len
 parameter_list|(
 name|struct
@@ -334,6 +381,7 @@ begin_function_decl
 name|int
 name|sbuf_done
 parameter_list|(
+specifier|const
 name|struct
 name|sbuf
 modifier|*

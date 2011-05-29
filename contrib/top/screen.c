@@ -466,20 +466,15 @@ name|STDERR
 value|2
 end_define
 
-begin_macro
+begin_function
+name|void
 name|init_termcap
-argument_list|(
-argument|interactive
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|interactive
+parameter_list|)
 name|int
 name|interactive
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -934,7 +929,7 @@ block|}
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_macro
 name|init_screen

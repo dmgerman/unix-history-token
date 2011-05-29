@@ -240,25 +240,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-specifier|static
-name|SYSCTL_NODE
-argument_list|(
-name|_vfs
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|ufs
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-literal|0
-argument_list|,
-literal|"UFS filesystem"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -303,6 +284,10 @@ operator|*
 literal|1024
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* NOTE: initial value. It is 						   tuned in ufsdirhash_init() */
+end_comment
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -1658,15 +1643,10 @@ literal|0
 expr_stmt|;
 name|dh
 operator|->
-name|dh_seqopt
-operator|=
-literal|0
-expr_stmt|;
-name|dh
-operator|->
 name|dh_seqoff
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 name|dh
 operator|->
@@ -1836,14 +1816,9 @@ name|DIRALIGN
 expr_stmt|;
 name|bmask
 operator|=
-name|VFSTOUFS
-argument_list|(
 name|vp
 operator|->
 name|v_mount
-argument_list|)
-operator|->
-name|um_mountp
 operator|->
 name|mnt_stat
 operator|.
@@ -2365,6 +2340,8 @@ decl_stmt|,
 name|offset
 decl_stmt|,
 name|prevoff
+decl_stmt|,
+name|seqoff
 decl_stmt|;
 name|int
 name|i
@@ -2512,14 +2489,9 @@ name|i_vnode
 expr_stmt|;
 name|bmask
 operator|=
-name|VFSTOUFS
-argument_list|(
 name|vp
 operator|->
 name|v_mount
-argument_list|)
-operator|->
-name|um_mountp
 operator|->
 name|mnt_stat
 operator|.
@@ -2536,6 +2508,12 @@ name|bp
 operator|=
 name|NULL
 expr_stmt|;
+name|seqoff
+operator|=
+name|dh
+operator|->
+name|dh_seqoff
+expr_stmt|;
 name|restart
 label|:
 name|slot
@@ -2551,12 +2529,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dh
-operator|->
-name|dh_seqopt
+name|seqoff
+operator|!=
+operator|-
+literal|1
 condition|)
 block|{
-comment|/* 		 * Sequential access optimisation. dh_seqoff contains the 		 * offset of the directory entry immediately following 		 * the last entry that was looked up. Check if this offset 		 * appears in the hash chain for the name we are looking for. 		 */
+comment|/* 		 * Sequential access optimisation. seqoff contains the 		 * offset of the directory entry immediately following 		 * the last entry that was looked up. Check if this offset 		 * appears in the hash chain for the name we are looking for. 		 */
 for|for
 control|(
 name|i
@@ -2591,32 +2570,27 @@ if|if
 condition|(
 name|offset
 operator|==
-name|dh
-operator|->
-name|dh_seqoff
+name|seqoff
 condition|)
 break|break;
 if|if
 condition|(
 name|offset
 operator|==
-name|dh
-operator|->
-name|dh_seqoff
+name|seqoff
 condition|)
 block|{
-comment|/* 			 * We found an entry with the expected offset. This 			 * is probably the entry we want, but if not, the 			 * code below will turn off seqopt and retry. 			 */
+comment|/* 			 * We found an entry with the expected offset. This 			 * is probably the entry we want, but if not, the 			 * code below will retry. 			 */
 name|slot
 operator|=
 name|i
 expr_stmt|;
 block|}
 else|else
-name|dh
-operator|->
-name|dh_seqopt
+name|seqoff
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 block|}
 for|for
@@ -2872,27 +2846,7 @@ operator|=
 name|prevoff
 expr_stmt|;
 block|}
-comment|/* Check for sequential access, and update offset. */
-if|if
-condition|(
-name|dh
-operator|->
-name|dh_seqopt
-operator|==
-literal|0
-operator|&&
-name|dh
-operator|->
-name|dh_seqoff
-operator|==
-name|offset
-condition|)
-name|dh
-operator|->
-name|dh_seqopt
-operator|=
-literal|1
-expr_stmt|;
+comment|/* Update offset. */
 name|dh
 operator|->
 name|dh_seqoff
@@ -2927,19 +2881,19 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 		 * When the name doesn't match in the seqopt case, go back 		 * and search normally. 		 */
+comment|/* 		 * When the name doesn't match in the sequential 		 * optimization case, go back and search normally. 		 */
 if|if
 condition|(
-name|dh
-operator|->
-name|dh_seqopt
+name|seqoff
+operator|!=
+operator|-
+literal|1
 condition|)
 block|{
-name|dh
-operator|->
-name|dh_seqopt
+name|seqoff
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 goto|goto
 name|restart
@@ -5652,6 +5606,26 @@ name|void
 name|ufsdirhash_init
 parameter_list|()
 block|{
+name|ufs_dirhashmaxmem
+operator|=
+name|lmax
+argument_list|(
+name|roundup
+argument_list|(
+name|hibufspace
+operator|/
+literal|64
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+argument_list|,
+literal|2
+operator|*
+literal|1024
+operator|*
+literal|1024
+argument_list|)
+expr_stmt|;
 name|ufsdirhash_zone
 operator|=
 name|uma_zcreate

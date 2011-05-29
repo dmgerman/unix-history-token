@@ -1,14 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* *********************************************************************************************** **        O.S   : FreeBSD **   FILE NAME  : arcmsr.h **        BY    : Erich Chen    **   Description: SCSI RAID Device Driver for  **                ARECA SATA RAID HOST Adapter **                [RAID controller:INTEL 331(PCI-X) 341(PCI-EXPRESS) chip set] *********************************************************************************************** ************************************************************************ ** Copyright (C) 2002 - 2005, Areca Technology Corporation All rights reserved. ** **     Web site: www.areca.com.tw **       E-mail: erich@areca.com.tw ** ** Redistribution and use in source and binary forms,with or without ** modification,are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice,this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice,this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES,INCLUDING,BUT NOT LIMITED TO,THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,INDIRECT, ** INCIDENTAL,SPECIAL,EXEMPLARY,OR CONSEQUENTIAL DAMAGES(INCLUDING,BUT ** NOT LIMITED TO,PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA,OR PROFITS; OR BUSINESS INTERRUPTION)HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY,WHETHER IN CONTRACT,STRICT LIABILITY,OR TORT **(INCLUDING NEGLIGENCE OR OTHERWISE)ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE,EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ************************************************************************** * $FreeBSD$ */
+comment|/* *********************************************************************************************** **        O.S   : FreeBSD **   FILE NAME  : arcmsr.h **        BY    : Erich Chen, Ching Huang **   Description: SCSI RAID Device Driver for  **                ARECA SATA/SAS RAID HOST Adapter **                [RAID controller:INTEL 331(PCI-X) 341(PCI-EXPRESS) chip set] *********************************************************************************************** ************************************************************************ ** Copyright (C) 2002 - 2010, Areca Technology Corporation All rights reserved. ** **     Web site: www.areca.com.tw **       E-mail: erich@areca.com.tw; ching2048@areca.com.tw ** ** Redistribution and use in source and binary forms,with or without ** modification,are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice,this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice,this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES,INCLUDING,BUT NOT LIMITED TO,THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,INDIRECT, ** INCIDENTAL,SPECIAL,EXEMPLARY,OR CONSEQUENTIAL DAMAGES(INCLUDING,BUT ** NOT LIMITED TO,PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA,OR PROFITS; OR BUSINESS INTERRUPTION)HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY,WHETHER IN CONTRACT,STRICT LIABILITY,OR TORT **(INCLUDING NEGLIGENCE OR OTHERWISE)ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE,EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ************************************************************************** * $FreeBSD$ */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|ARCMSR_DRIVER_VERSION
-value|"Driver Version 1.20.00.16 2009-10-10"
-end_define
 
 begin_define
 define|#
@@ -35,7 +28,7 @@ begin_define
 define|#
 directive|define
 name|ARCMSR_MAX_TARGETID
-value|16
+value|17
 end_define
 
 begin_comment
@@ -85,7 +78,7 @@ begin_define
 define|#
 directive|define
 name|ARCMSR_MAX_FREESRB_NUM
-value|320
+value|384
 end_define
 
 begin_define
@@ -289,8 +282,41 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCI_DEVICE_ID_ARECA_1200
+value|0x1200
+end_define
+
+begin_comment
+comment|/* Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID_ARECA_1201
+value|0x1201
+end_define
+
+begin_comment
+comment|/* Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCI_DEVICE_ID_ARECA_1210
 value|0x1210
+end_define
+
+begin_comment
+comment|/* Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID_ARECA_1212
+value|0x1212
 end_define
 
 begin_comment
@@ -311,6 +337,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCI_DEVICE_ID_ARECA_1222
+value|0x1222
+end_define
+
+begin_comment
+comment|/* Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCI_DEVICE_ID_ARECA_1230
 value|0x1230
 end_define
@@ -322,8 +359,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCI_DEVICE_ID_ARECA_1231
+value|0x1231
+end_define
+
+begin_comment
+comment|/* Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCI_DEVICE_ID_ARECA_1260
 value|0x1260
+end_define
+
+begin_comment
+comment|/* Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID_ARECA_1261
+value|0x1261
 end_define
 
 begin_comment
@@ -399,8 +458,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCI_DEVICE_ID_ARECA_1201
-value|0x1201
+name|PCI_DEVICE_ID_ARECA_1880
+value|0x1880
 end_define
 
 begin_comment
@@ -465,8 +524,41 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIDevVenIDARC1200
+value|0x120017D3
+end_define
+
+begin_comment
+comment|/* Vendor Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIDevVenIDARC1201
+value|0x120117D3
+end_define
+
+begin_comment
+comment|/* Vendor Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIDevVenIDARC1210
 value|0x121017D3
+end_define
+
+begin_comment
+comment|/* Vendor Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIDevVenIDARC1212
+value|0x121217D3
 end_define
 
 begin_comment
@@ -487,6 +579,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIDevVenIDARC1222
+value|0x122217D3
+end_define
+
+begin_comment
+comment|/* Vendor Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIDevVenIDARC1230
 value|0x123017D3
 end_define
@@ -498,8 +601,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIDevVenIDARC1231
+value|0x123117D3
+end_define
+
+begin_comment
+comment|/* Vendor Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIDevVenIDARC1260
 value|0x126017D3
+end_define
+
+begin_comment
+comment|/* Vendor Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIDevVenIDARC1261
+value|0x126117D3
 end_define
 
 begin_comment
@@ -575,8 +700,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCIDevVenIDARC1201
-value|0x120117D3
+name|PCIDevVenIDARC1880
+value|0x188017D3
 end_define
 
 begin_comment
@@ -751,6 +876,63 @@ begin_comment
 comment|/* ********************************************************************************** ** ********************************************************************************** */
 end_comment
 
+begin_struct
+struct|struct
+name|CMD_MESSAGE
+block|{
+name|u_int32_t
+name|HeaderLength
+decl_stmt|;
+name|u_int8_t
+name|Signature
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|u_int32_t
+name|Timeout
+decl_stmt|;
+name|u_int32_t
+name|ControlCode
+decl_stmt|;
+name|u_int32_t
+name|ReturnCode
+decl_stmt|;
+name|u_int32_t
+name|Length
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|CMD_MESSAGE_FIELD
+block|{
+name|struct
+name|CMD_MESSAGE
+name|cmdmessage
+decl_stmt|;
+comment|/* ioctl header */
+name|u_int8_t
+name|messagedatabuffer
+index|[
+literal|1032
+index|]
+decl_stmt|;
+comment|/* areca gui program does not accept more than 1031 byte */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/************************************************************************/
+end_comment
+
+begin_comment
+comment|/************************************************************************/
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -910,55 +1092,6 @@ begin_comment
 comment|/* ************************************************************************ **        IOCTL CONTROL CODE ************************************************************************ */
 end_comment
 
-begin_struct
-struct|struct
-name|CMD_MESSAGE
-block|{
-name|u_int32_t
-name|HeaderLength
-decl_stmt|;
-name|u_int8_t
-name|Signature
-index|[
-literal|8
-index|]
-decl_stmt|;
-name|u_int32_t
-name|Timeout
-decl_stmt|;
-name|u_int32_t
-name|ControlCode
-decl_stmt|;
-name|u_int32_t
-name|ReturnCode
-decl_stmt|;
-name|u_int32_t
-name|Length
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|CMD_MESSAGE_FIELD
-block|{
-name|struct
-name|CMD_MESSAGE
-name|cmdmessage
-decl_stmt|;
-comment|/* ioctl header */
-name|u_int8_t
-name|messagedatabuffer
-index|[
-literal|1032
-index|]
-decl_stmt|;
-comment|/* areca gui program does not accept more than 1031 byte */
-block|}
-struct|;
-end_struct
-
 begin_comment
 comment|/* ARECA IO CONTROL CODE*/
 end_comment
@@ -1049,6 +1182,13 @@ define|#
 directive|define
 name|ARCMSR_MESSAGE_RETURNCODE_3F
 value|0x0000003F
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_IOCTL_RETURNCODE_BUS_HANG_ON
+value|0x00000088
 end_define
 
 begin_comment
@@ -1367,6 +1507,245 @@ value|0x00010000
 end_define
 
 begin_comment
+comment|/*  ************************************************************************ **                SPEC. for Areca HBC adapter ************************************************************************ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBC_ISR_THROTTLING_LEVEL
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBC_ISR_MAX_DONE_QUEUE
+value|20
+end_define
+
+begin_comment
+comment|/* Host Interrupt Mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBCMU_UTILITY_A_ISR_MASK
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* When clear, the Utility_A interrupt routes to the host.*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBCMU_OUTBOUND_DOORBELL_ISR_MASK
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* When clear, the General Outbound Doorbell interrupt routes to the host.*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBCMU_OUTBOUND_POSTQUEUE_ISR_MASK
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* When clear, the Outbound Post List FIFO Not Empty interrupt routes to the host.*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBCMU_ALL_INTMASKENABLE
+value|0x0000000D
+end_define
+
+begin_comment
+comment|/* disable all ISR */
+end_comment
+
+begin_comment
+comment|/* Host Interrupt Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBCMU_UTILITY_A_ISR
+value|0x00000001
+end_define
+
+begin_comment
+comment|/*         ** Set when the Utility_A Interrupt bit is set in the Outbound Doorbell Register.          ** It clears by writing a 1 to the Utility_A bit in the Outbound Doorbell Clear Register or through automatic clearing (if enabled).         */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBCMU_OUTBOUND_DOORBELL_ISR
+value|0x00000004
+end_define
+
+begin_comment
+comment|/*         ** Set if Outbound Doorbell register bits 30:1 have a non-zero         ** value. This bit clears only when Outbound Doorbell bits         ** 30:1 are ALL clear. Only a write to the Outbound Doorbell         ** Clear register clears bits in the Outbound Doorbell register.         */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBCMU_OUTBOUND_POSTQUEUE_ISR
+value|0x00000008
+end_define
+
+begin_comment
+comment|/*         ** Set whenever the Outbound Post List Producer/Consumer         ** Register (FIFO) is not empty. It clears when the Outbound         ** Post List FIFO is empty.         */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBCMU_SAS_ALL_INT
+value|0x00000010
+end_define
+
+begin_comment
+comment|/*         ** This bit indicates a SAS interrupt from a source external to         ** the PCIe core. This bit is not maskable.         */
+end_comment
+
+begin_comment
+comment|/* DoorBell*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBCMU_DRV2IOP_DATA_WRITE_OK
+value|0x00000002
+end_define
+
+begin_comment
+comment|/**/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBCMU_DRV2IOP_DATA_READ_OK
+value|0x00000004
+end_define
+
+begin_comment
+comment|/**/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBCMU_DRV2IOP_MESSAGE_CMD_DONE
+value|0x00000008
+end_define
+
+begin_comment
+comment|/*inbound message 0 ready*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBCMU_DRV2IOP_POSTQUEUE_THROTTLING
+value|0x00000010
+end_define
+
+begin_comment
+comment|/*more than 12 request completed in a time*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBCMU_IOP2DRV_DATA_WRITE_OK
+value|0x00000002
+end_define
+
+begin_comment
+comment|/**/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBCMU_IOP2DRV_DATA_WRITE_DOORBELL_CLEAR
+value|0x00000002
+end_define
+
+begin_comment
+comment|/*outbound DATA WRITE isr door bell clear*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBCMU_IOP2DRV_DATA_READ_OK
+value|0x00000004
+end_define
+
+begin_comment
+comment|/**/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBCMU_IOP2DRV_DATA_READ_DOORBELL_CLEAR
+value|0x00000004
+end_define
+
+begin_comment
+comment|/*outbound DATA READ isr door bell clear*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBCMU_IOP2DRV_MESSAGE_CMD_DONE
+value|0x00000008
+end_define
+
+begin_comment
+comment|/*outbound message 0 ready*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBCMU_IOP2DRV_MESSAGE_CMD_DONE_DOORBELL_CLEAR
+value|0x00000008
+end_define
+
+begin_comment
+comment|/*outbound message cmd isr door bell clear*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBCMU_MESSAGE_FIRMWARE_OK
+value|0x80000000
+end_define
+
+begin_comment
+comment|/*ARCMSR_HBCMU_MESSAGE_FIRMWARE_OK*/
+end_comment
+
+begin_comment
 comment|/*  ************************************************************* **   structure for holding DMA address data  ************************************************************* */
 end_comment
 
@@ -1382,7 +1761,7 @@ comment|/* bit24 */
 end_comment
 
 begin_comment
-comment|/* ************************************************************************************************ **                            ARECA FIRMWARE SPEC ************************************************************************************************ **		Usage of IOP331 adapter **		(All In/Out is in IOP331's view) **		1. Message 0 --> InitThread message and retrun code **		2. Doorbell is used for RS-232 emulation **				inDoorBell :    bit0 -- data in ready            (DRIVER DATA WRITE OK) **								bit1 -- data out has been read   (DRIVER DATA READ OK) **				outDooeBell:    bit0 -- data out ready           (IOP331 DATA WRITE OK) **								bit1 -- data in has been read    (IOP331 DATA READ OK) **		3. Index Memory Usage **			offset 0xf00 : for RS232 out (request buffer) **			offset 0xe00 : for RS232 in  (scratch buffer) **			offset 0xa00 : for inbound message code msgcode_rwbuffer (driver send to IOP331) **			offset 0xa00 : for outbound message code msgcode_rwbuffer (IOP331 send to driver) **		4. RS-232 emulation **			Currently 128 byte buffer is used **			          1st u_int32_t : Data length (1--124) **			        Byte 4--127 : Max 124 bytes of data **		5. PostQ **		All SCSI Command must be sent through postQ: **		(inbound queue port)	Request frame must be 32 bytes aligned  **            #   bit27--bit31 => flag for post ccb  **			  #   bit0--bit26 => real address (bit27--bit31) of post arcmsr_cdb   **													bit31 : 0 : 256 bytes frame **															1 : 512 bytes frame **													bit30 : 0 : normal request **															1 : BIOS request **                                                  bit29 : reserved **                                                  bit28 : reserved **                                                  bit27 : reserved **  ------------------------------------------------------------------------------- **		(outbount queue port)	Request reply                           **            #   bit27--bit31 => flag for reply **			  #   bit0--bit26 => real address (bit27--bit31) of reply arcmsr_cdb  **													bit31 : must be 0 (for this type of reply) **													bit30 : reserved for BIOS handshake **													bit29 : reserved **													bit28 : 0 : no error, ignore AdapStatus/DevStatus/SenseData **															1 : Error, error code in AdapStatus/DevStatus/SenseData **													bit27 : reserved **		6. BIOS request **			All BIOS request is the same with request from PostQ **			Except : **				Request frame is sent from configuration space **								offset: 0x78 : Request Frame (bit30 == 1) **								offset: 0x18 : writeonly to generate IRQ to IOP331 **				Completion of request: **				                      (bit30 == 0, bit28==err flag) **		7. Definition of SGL entry (structure) **		8. Message1 Out - Diag Status Code (????) **		9. Message0 message code : **			0x00 : NOP **			0x01 : Get Config ->offset 0xa00 :for outbound message code msgcode_rwbuffer (IOP331 send to driver) **												Signature             0x87974060(4) **												Request len           0x00000200(4) **												numbers of queue      0x00000100(4) **												SDRAM Size            0x00000100(4)-->256 MB **												IDE Channels          0x00000008(4) **												vendor                40 bytes char **												model                  8 bytes char **												FirmVer               16 bytes char **												Device Map            16 bytes char **	 **					FirmwareVersion DWORD<== Added for checking of new firmware capability **			0x02 : Set Config ->offset 0xa00 : for inbound message code msgcode_rwbuffer (driver send to IOP331) **												Signature             0x87974063(4) **												UPPER32 of Request Frame  (4)-->Driver Only **			0x03 : Reset (Abort all queued Command) **			0x04 : Stop Background Activity **			0x05 : Flush Cache **			0x06 : Start Background Activity (re-start if background is halted) **			0x07 : Check If Host Command Pending (Novell May Need This Function) **			0x08 : Set controller time ->offset 0xa00 : for inbound message code msgcode_rwbuffer (driver to IOP331) **											byte 0 : 0xaa<-- signature **											byte 1 : 0x55<-- signature **											byte 2 : year (04) **											byte 3 : month (1..12) **											byte 4 : date (1..31) **											byte 5 : hour (0..23) **											byte 6 : minute (0..59) **											byte 7 : second (0..59) ************************************************************************************************ */
+comment|/* ************************************************************************************************ **                            ARECA FIRMWARE SPEC ************************************************************************************************ **		Usage of IOP331 adapter **		(All In/Out is in IOP331's view) **		1. Message 0 --> InitThread message and retrun code **		2. Doorbell is used for RS-232 emulation **				inDoorBell :    bit0 -- data in ready            (DRIVER DATA WRITE OK) **								bit1 -- data out has been read   (DRIVER DATA READ OK) **				outDooeBell:    bit0 -- data out ready           (IOP331 DATA WRITE OK) **								bit1 -- data in has been read    (IOP331 DATA READ OK) **		3. Index Memory Usage **			offset 0xf00 : for RS232 out (request buffer) **			offset 0xe00 : for RS232 in  (scratch buffer) **			offset 0xa00 : for inbound message code msgcode_rwbuffer (driver send to IOP331) **			offset 0xa00 : for outbound message code msgcode_rwbuffer (IOP331 send to driver) **		4. RS-232 emulation **			Currently 128 byte buffer is used **			          1st u_int32_t : Data length (1--124) **			        Byte 4--127 : Max 124 bytes of data **		5. PostQ **		All SCSI Command must be sent through postQ: **		(inbound queue port)	Request frame must be 32 bytes aligned  **            #   bit27--bit31 => flag for post ccb  **			  #   bit0--bit26 => real address (bit27--bit31) of post arcmsr_cdb   **													bit31 : 0 : 256 bytes frame **															1 : 512 bytes frame **													bit30 : 0 : normal request **															1 : BIOS request **                                                  bit29 : reserved **                                                  bit28 : reserved **                                                  bit27 : reserved **  ------------------------------------------------------------------------------- **		(outbount queue port)	Request reply                           **            #   bit27--bit31 => flag for reply **			  #   bit0--bit26 => real address (bit27--bit31) of reply arcmsr_cdb  **													bit31 : must be 0 (for this type of reply) **													bit30 : reserved for BIOS handshake **													bit29 : reserved **													bit28 : 0 : no error, ignore AdapStatus/DevStatus/SenseData **															1 : Error, error code in AdapStatus/DevStatus/SenseData **													bit27 : reserved **		6. BIOS request **			All BIOS request is the same with request from PostQ **			Except : **				Request frame is sent from configuration space **								offset: 0x78 : Request Frame (bit30 == 1) **								offset: 0x18 : writeonly to generate IRQ to IOP331 **				Completion of request: **				                      (bit30 == 0, bit28==err flag) **		7. Definition of SGL entry (structure) **		8. Message1 Out - Diag Status Code (????) **		9. Message0 message code : **			0x00 : NOP **			0x01 : Get Config ->offset 0xa00 :for outbound message code msgcode_rwbuffer (IOP331 send to driver) **												Signature             0x87974060(4) **												Request len           0x00000200(4) **												numbers of queue      0x00000100(4) **												SDRAM Size            0x00000100(4)-->256 MB **												IDE Channels          0x00000008(4) **												vendor                40 bytes char **												model                  8 bytes char **												FirmVer               16 bytes char **												Device Map            16 bytes char **	 **					FirmwareVersion DWORD<== Added for checking of new firmware capability **			0x02 : Set Config ->offset 0xa00 : for inbound message code msgcode_rwbuffer (driver send to IOP331) **												Signature             0x87974063(4) **												UPPER32 of Request Frame  (4)-->Driver Only **			0x03 : Reset (Abort all queued Command) **			0x04 : Stop Background Activity **			0x05 : Flush Cache **			0x06 : Start Background Activity (re-start if background is halted) **			0x07 : Check If Host Command Pending (Novell May Need This Function) **			0x08 : Set controller time ->offset 0xa00 : for inbound message code msgcode_rwbuffer (driver to IOP331) **											byte 0 : 0xaa<-- signature **											byte 1 : 0x55<-- signature **											byte 2 : year (04) **											byte 3 : month (1..12) **											byte 4 : date (1..31) **											byte 5 : hour (0..23) **											byte 6 : minute (0..59) **											byte 7 : second (0..59) **      ********************************************************************************* **      Porting Of LSI2108/2116 Based PCIE SAS/6G host raid adapter **      ==> Difference from IOP348 **<1> Message Register 0,1 (the same usage) Init Thread message and retrun code **           Inbound Message 0  (inbound_msgaddr0) : at offset 0xB0 (Scratchpad0) for inbound message code msgcode_rwbuffer (driver send to IOP) **           Inbound Message 1  (inbound_msgaddr1) : at offset 0xB4 (Scratchpad1) Out.... Diag Status Code  **           Outbound Message 0 (outbound_msgaddr0): at offset 0xB8 (Scratchpad3) Out.... Diag Status Code  **           Outbound Message 1 (outbound_msgaddr1): at offset 0xBC (Scratchpad2) for outbound message code msgcode_rwbuffer (IOP send to driver) **<A> use doorbell to generate interrupt ** **               inbound doorbell: bit3 --  inbound message 0 ready (driver to iop) **              outbound doorbell: bit3 -- outbound message 0 ready (iop to driver) ** **		        a. Message1: Out - Diag Status Code (????) ** **		        b. Message0: message code  **		        	    0x00 : NOP **		        	    0x01 : Get Config ->offset 0xB8 :for outbound message code msgcode_rwbuffer (IOP send to driver) **		        	    									Signature             0x87974060(4) **		        	    									Request len           0x00000200(4) **		        	    									numbers of queue      0x00000100(4) **		        	    									SDRAM Size            0x00000100(4)-->256 MB **		        	    									IDE Channels          0x00000008(4) **		        	    									vendor                40 bytes char **		        	    									model                  8 bytes char **		        	    									FirmVer               16 bytes char **                                      					Device Map            16 bytes char **                                      	                cfgVersion    ULONG<== Added for checking of new firmware capability **		        	    0x02 : Set Config ->offset 0xB0 :for inbound message code msgcode_rwbuffer (driver send to IOP) **		        	    									Signature             0x87974063(4) **		        	    									UPPER32 of Request Frame  (4)-->Driver Only **		        	    0x03 : Reset (Abort all queued Command) **		        	    0x04 : Stop Background Activity **		        	    0x05 : Flush Cache **		        	    0x06 : Start Background Activity (re-start if background is halted) **		        	    0x07 : Check If Host Command Pending (Novell May Need This Function) **		        	    0x08 : Set controller time ->offset 0xB0 : for inbound message code msgcode_rwbuffer (driver to IOP) **		        	            							byte 0 : 0xaa<-- signature **                                      					byte 1 : 0x55<-- signature **		        	            							byte 2 : year (04) **		        	            							byte 3 : month (1..12) **		        	            							byte 4 : date (1..31) **		        	            							byte 5 : hour (0..23) **		        	            							byte 6 : minute (0..59) **		        	            							byte 7 : second (0..59) ** **<2> Doorbell Register is used for RS-232 emulation **<A> different clear register **<B> different bit0 definition (bit0 is reserved) ** **           inbound doorbell        : at offset 0x20 **           inbound doorbell clear  : at offset 0x70 ** **           inbound doorbell        : bit0 -- reserved **                                     bit1 -- data in ready             (DRIVER DATA WRITE OK) **                                     bit2 -- data out has been read    (DRIVER DATA READ OK) **                                     bit3 -- inbound message 0 ready **                                     bit4 -- more than 12 request completed in a time ** **           outbound doorbell       : at offset 0x9C **           outbound doorbell clear : at offset 0xA0 ** **           outbound doorbell       : bit0 -- reserved **                                     bit1 -- data out ready            (IOP DATA WRITE OK) **                                     bit2 -- data in has been read     (IOP DATA READ OK) **                                     bit3 -- outbound message 0 ready ** **<3> Index Memory Usage (Buffer Area) **           COMPORT_IN     at  0x2000: message_wbuffer  --  128 bytes (to be sent to ROC) : for RS232 in  (scratch buffer) **           COMPORT_OUT    at  0x2100: message_rbuffer  --  128 bytes (to be sent to host): for RS232 out (request buffer) **           BIOS_CFG_AREA  at  0x2200: msgcode_rwbuffer -- 1024 bytes for outbound message code msgcode_rwbuffer (IOP send to driver) **           BIOS_CFG_AREA  at  0x2200: msgcode_rwbuffer -- 1024 bytes for  inbound message code msgcode_rwbuffer (driver send to IOP) ** **<4> PostQ (Command Post Address) **          All SCSI Command must be sent through postQ: **              inbound  queue port32 at offset 0x40 , 0x41, 0x42, 0x43 **              inbound  queue port64 at offset 0xC0 (lower)/0xC4 (upper) **              outbound queue port32 at offset 0x44 **              outbound queue port64 at offset 0xC8 (lower)/0xCC (upper) **<A> For 32bit queue, access low part is enough to send/receive request **                  i.e. write 0x40/0xC0, ROC will get the request with high part == 0, the **                  same for outbound queue port **<B> For 64bit queue, if 64bit instruction is supported, use 64bit instruction **                  to post inbound request in a single instruction, and use 64bit instruction **                  to retrieve outbound request in a single instruction. **                  If in 32bit environment, when sending inbound queue, write high part first **                  then write low part. For receiving outbound request, read high part first **                  then low part, to check queue empty, ONLY check high part to be 0xFFFFFFFF. **                  If high part is 0xFFFFFFFF, DO NOT read low part, this may corrupt the **                  consistency of the FIFO. Another way to check empty is to check status flag **                  at 0x30 bit3. **<C> Post Address IS NOT shifted (must be 16 bytes aligned) **                  For   BIOS, 16bytes aligned   is OK **                  For Driver, 32bytes alignment is recommended. **                  POST Command bit0 to bit3 is defined differently **                  ---------------------------- **                  bit0:1 for PULL mode (must be 1) **                  ---------------------------- **                  bit3/2/1: for arcmsr cdb size (arccdbsize) **                      000:<= 0x0080 (128) **                      001:<= 0x0100 (256) **                      010:<= 0x0180 (384) **                      011:<= 0x0200 (512) **                      100:<= 0x0280 (640) **                      101:<= 0x0300 (768) **                      110:<= 0x0300 (reserved) **                      111:<= 0x0300 (reserved) **                  ----------------------------- **                  if len> 0x300 the len always set as 0x300 **                  -----------------------------    **                  post addr = addr | ((len-1)>> 6) | 1 **                  ----------------------------- **                  page length in command buffer still required,  ** **                  if page length> 3,  **                     firmware will assume more request data need to be retrieved  ** **<D> Outbound Posting **                  bit0:0 , no error, 1 with error, refer to status buffer **                  bit1:0 , reserved (will be 0) **                  bit2:0 , reserved (will be 0) **                  bit3:0 , reserved (will be 0) **                  bit63-4: Completed command address ** **<E> BIOS support, no special support is required.  **                  LSI2108 support I/O register **                  All driver functionality is supported through I/O address ** **           For further spec, refer to **       \spec\lsi\2108 for Areca\2108\LSISAS2108_PG_NoEncryption.pdf : Chapter 8 (8-11/8-28) **       \spec\lsi\2108 for Areca\2108\SAS2108_RM_20.pdf              : for configuration space ************************************************************************************************ */
 end_comment
 
 begin_comment
@@ -1534,6 +1913,20 @@ name|ARCMSR_SRBREPLY_FLAG_ERROR
 value|0x10000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|ARCMSR_SRBREPLY_FLAG_ERROR_MODE0
+value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_SRBREPLY_FLAG_ERROR_MODE1
+value|0x00000001
+end_define
+
 begin_comment
 comment|/* outbound firmware ok */
 end_comment
@@ -1551,6 +1944,10 @@ end_comment
 
 begin_comment
 comment|/* size 8 bytes */
+end_comment
+
+begin_comment
+comment|/* 32bit Scatter-Gather list */
 end_comment
 
 begin_struct
@@ -1571,6 +1968,10 @@ end_struct
 
 begin_comment
 comment|/* size 12 bytes */
+end_comment
+
+begin_comment
+comment|/* 64bit Scatter-Gather list */
 end_comment
 
 begin_struct
@@ -1640,6 +2041,34 @@ begin_comment
 comment|/* ************************************************************************************************ **      FIRMWARE INFO ************************************************************************************************ */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ARCMSR_FW_MODEL_OFFSET
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_FW_VERS_OFFSET
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_FW_DEVMAP_OFFSET
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_FW_CFGVER_OFFSET
+value|25
+end_define
+
 begin_struct
 struct|struct
 name|FIRMWARE_INFO
@@ -1692,9 +2121,28 @@ literal|16
 index|]
 decl_stmt|;
 comment|/*21,84-99*/
+name|u_int32_t
+name|cfgVersion
+decl_stmt|;
+comment|/*25,100-103 Added for checking of new firmware capability*/
+name|char
+name|cfgSerial
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/*26,104-119*/
+name|u_int32_t
+name|cfgPicStatus
+decl_stmt|;
+comment|/*30,120-123*/
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*   (A) For cfgVersion in FIRMWARE_INFO **        if low BYTE (byte#0)>= 3 (version 3) **        then byte#1 report the capability of the firmware can xfer in a single request **         **        byte#1 **        0         256K **        1         512K **        2         1M **        3         2M **        4         4M **        5         8M **        6         16M **    (B) Byte offset 7 (Reserved1) of CDB is changed to msgPages **        Driver support new xfer method need to set this field to indicate **        large CDB block in 0x100 unit (we use 0x100 byte as one page) **        e.g. If the length of CDB including MSG header and SGL is 0x1508 **        driver need to set the msgPages to 0x16 **    (C) REQ_LEN_512BYTE must be used also to indicate SRB length **        e.g. CDB len      msgPages    REQ_LEN_512BYTE flag **<= 0x100     1               0 **<= 0x200     2               1 **<= 0x300     3               1 **<= 0x400     4               1 **             . **             . */
+end_comment
 
 begin_comment
 comment|/* ************************************************************************************************ **    size 0x1F8 (504) ************************************************************************************************ */
@@ -1761,9 +2209,9 @@ directive|define
 name|ARCMSR_CDB_FLAG_ORDEREDQ
 value|0x10
 name|u_int8_t
-name|Reserved1
+name|msgPages
 decl_stmt|;
-comment|/* 07h                             */
+comment|/* 07h                          */
 name|u_int32_t
 name|Context
 decl_stmt|;
@@ -1771,14 +2219,14 @@ comment|/* 08h   Address of this request */
 name|u_int32_t
 name|DataLength
 decl_stmt|;
-comment|/* 0ch   not used now            */
+comment|/* 0ch   not used now           */
 name|u_int8_t
 name|Cdb
 index|[
 literal|16
 index|]
 decl_stmt|;
-comment|/* 10h   SCSI CDB                */
+comment|/* 10h   SCSI CDB               */
 comment|/* 	******************************************************** 	**Device Status : the same from SCSI bus if error occur  	** SCSI bus status codes. 	******************************************************** 	*/
 name|u_int8_t
 name|DeviceStatus
@@ -1876,42 +2324,16 @@ name|struct
 name|ARCMSR_CDB
 name|arcmsr_cdb
 decl_stmt|;
-comment|/* 0-503 (size of CDB=504): arcmsr messenger scsi command descriptor size 504 bytes */
+comment|/* 0  -503 (size of CDB=504): arcmsr messenger scsi command descriptor size 504 bytes */
 name|u_int32_t
 name|cdb_shifted_phyaddr
 decl_stmt|;
 comment|/* 504-507 */
 name|u_int32_t
-name|reserved1
+name|arc_cdb_size
 decl_stmt|;
-comment|/* 508-511*/
+comment|/* 508-511 */
 comment|/*  ======================512+32 bytes============================  */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__x86_64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sparc64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__powerpc__
-argument_list|)
 name|union
 name|ccb
 modifier|*
@@ -1932,128 +2354,206 @@ name|u_int16_t
 name|srb_flags
 decl_stmt|;
 comment|/* 536-537 */
-define|#
-directive|define
-name|SRB_FLAG_READ
-value|0x0000
-define|#
-directive|define
-name|SRB_FLAG_WRITE
-value|0x0001
-define|#
-directive|define
-name|SRB_FLAG_ERROR
-value|0x0002
-define|#
-directive|define
-name|SRB_FLAG_FLUSHCACHE
-value|0x0004
-define|#
-directive|define
-name|SRB_FLAG_MASTER_ABORTED
-value|0x0008
 name|u_int16_t
-name|startdone
+name|srb_state
 decl_stmt|;
 comment|/* 538-539 */
-define|#
-directive|define
-name|ARCMSR_SRB_DONE
-value|0x0000
-define|#
-directive|define
-name|ARCMSR_SRB_START
-value|0x55AA
-define|#
-directive|define
-name|ARCMSR_SRB_ABORTED
-value|0xAA55
-define|#
-directive|define
-name|ARCMSR_SRB_ILLEGAL
-value|0xFFFF
-name|u_int32_t
-name|reserved2
-decl_stmt|;
-comment|/* 540-543 */
-else|#
-directive|else
-name|union
-name|ccb
-modifier|*
-name|pccb
-decl_stmt|;
-comment|/* 512-515 pointer of freebsd scsi command */
 name|struct
-name|AdapterControlBlock
-modifier|*
-name|acb
+name|callout
+name|ccb_callout
 decl_stmt|;
-comment|/* 516-519 */
-name|bus_dmamap_t
-name|dm_segs_dmamap
-decl_stmt|;
-comment|/* 520-523 */
-name|u_int16_t
-name|srb_flags
-decl_stmt|;
-comment|/* 524-525 */
-define|#
-directive|define
-name|SRB_FLAG_READ
-value|0x0000
-define|#
-directive|define
-name|SRB_FLAG_WRITE
-value|0x0001
-define|#
-directive|define
-name|SRB_FLAG_ERROR
-value|0x0002
-define|#
-directive|define
-name|SRB_FLAG_FLUSHCACHE
-value|0x0004
-define|#
-directive|define
-name|SRB_FLAG_MASTER_ABORTED
-value|0x0008
-name|u_int16_t
-name|startdone
-decl_stmt|;
-comment|/* 526-527 */
-define|#
-directive|define
-name|ARCMSR_SRB_DONE
-value|0x0000
-define|#
-directive|define
-name|ARCMSR_SRB_START
-value|0x55AA
-define|#
-directive|define
-name|ARCMSR_SRB_ABORTED
-value|0xAA55
-define|#
-directive|define
-name|ARCMSR_SRB_ILLEGAL
-value|0xFFFF
-name|u_int32_t
-name|reserved2
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* 528-531 532-535 536-539 540-543 */
-endif|#
-directive|endif
 comment|/*  ==========================================================  */
 block|}
 struct|;
 end_struct
 
 begin_comment
+comment|/*	srb_flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SRB_FLAG_READ
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SRB_FLAG_WRITE
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|SRB_FLAG_ERROR
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|SRB_FLAG_FLUSHCACHE
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|SRB_FLAG_MASTER_ABORTED
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|SRB_FLAG_DMAVALID
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|SRB_FLAG_DMACONSISTENT
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|SRB_FLAG_DMAWRITE
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
+name|SRB_FLAG_PKTBIND
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|SRB_FLAG_TIMER_START
+value|0x0080
+end_define
+
+begin_comment
+comment|/*	srb_state */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_SRB_DONE
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_SRB_UNBUILD
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_SRB_TIMEOUT
+value|0x1111
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_SRB_RETRY
+value|0x2222
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_SRB_START
+value|0x55AA
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_SRB_PENDING
+value|0xAA55
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_SRB_RESET
+value|0xA5A5
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_SRB_ABORTED
+value|0x5A5A
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_SRB_ILLEGAL
+value|0xFFFF
+end_define
+
+begin_comment
 comment|/* ********************************************************************* **                 Adapter Control Block ********************************************************************* */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACB_ADAPTER_TYPE_A
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* hba I IOP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACB_ADAPTER_TYPE_B
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* hbb M IOP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACB_ADAPTER_TYPE_C
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* hbc L IOP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACB_ADAPTER_TYPE_D
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* hbd A IOP */
 end_comment
 
 begin_struct
@@ -2064,26 +2564,6 @@ name|u_int32_t
 name|adapter_type
 decl_stmt|;
 comment|/* adapter A,B..... */
-define|#
-directive|define
-name|ACB_ADAPTER_TYPE_A
-value|0x00000001
-comment|/* hba I IOP */
-define|#
-directive|define
-name|ACB_ADAPTER_TYPE_B
-value|0x00000002
-comment|/* hbb M IOP */
-define|#
-directive|define
-name|ACB_ADAPTER_TYPE_C
-value|0x00000004
-comment|/* hbc P IOP */
-define|#
-directive|define
-name|ACB_ADAPTER_TYPE_D
-value|0x00000008
-comment|/* hbd A IOP */
 name|bus_space_tag_t
 name|btag
 index|[
@@ -2170,10 +2650,27 @@ name|unsigned
 name|long
 name|vir2phy_offset
 decl_stmt|;
+union|union
+block|{
 name|unsigned
 name|long
-name|srb_phyaddr
+name|phyaddr
 decl_stmt|;
+struct|struct
+block|{
+name|u_int32_t
+name|phyadd_low
+decl_stmt|;
+name|u_int32_t
+name|phyadd_high
+decl_stmt|;
+block|}
+name|B
+struct|;
+block|}
+name|srb_phyaddr
+union|;
+comment|//	unsigned long				srb_phyaddr;
 comment|/* Offset is used in making arc cdb physical to virtual calculations */
 name|u_int32_t
 name|outbound_int_enable
@@ -2195,57 +2692,6 @@ name|u_int16_t
 name|acb_flags
 decl_stmt|;
 comment|/*  */
-define|#
-directive|define
-name|ACB_F_SCSISTOPADAPTER
-value|0x0001
-define|#
-directive|define
-name|ACB_F_MSG_STOP_BGRB
-value|0x0002
-comment|/* stop RAID background rebuild */
-define|#
-directive|define
-name|ACB_F_MSG_START_BGRB
-value|0x0004
-comment|/* stop RAID background rebuild */
-define|#
-directive|define
-name|ACB_F_IOPDATA_OVERFLOW
-value|0x0008
-comment|/* iop ioctl data rqbuffer overflow */
-define|#
-directive|define
-name|ACB_F_MESSAGE_WQBUFFER_CLEARED
-value|0x0010
-comment|/* ioctl clear wqbuffer */
-define|#
-directive|define
-name|ACB_F_MESSAGE_RQBUFFER_CLEARED
-value|0x0020
-comment|/* ioctl clear rqbuffer */
-define|#
-directive|define
-name|ACB_F_MESSAGE_WQBUFFER_READ
-value|0x0040
-define|#
-directive|define
-name|ACB_F_BUS_RESET
-value|0x0080
-define|#
-directive|define
-name|ACB_F_IOP_INITED
-value|0x0100
-comment|/* iop init */
-define|#
-directive|define
-name|ACB_F_MAPFREESRB_FAILD
-value|0x0200
-comment|/* arcmsr_map_freesrb faild */
-define|#
-directive|define
-name|ACB_F_CAM_DEV_QFRZN
-value|0x0400
 name|struct
 name|CommandControlBlock
 modifier|*
@@ -2324,14 +2770,6 @@ name|ARCMSR_MAX_TARGETLUN
 index|]
 decl_stmt|;
 comment|/* id0 ..... id15,lun0...lun7 */
-define|#
-directive|define
-name|ARECA_RAID_GONE
-value|0x55
-define|#
-directive|define
-name|ARECA_RAID_GOOD
-value|0xaa
 name|u_int32_t
 name|num_resets
 decl_stmt|;
@@ -2354,6 +2792,9 @@ name|u_int32_t
 name|firm_ide_channels
 decl_stmt|;
 comment|/*4,16-19*/
+name|u_int32_t
+name|firm_cfg_version
+decl_stmt|;
 name|char
 name|firm_model
 index|[
@@ -2368,6 +2809,28 @@ literal|20
 index|]
 decl_stmt|;
 comment|/*17,68-83*/
+name|char
+name|device_map
+index|[
+literal|20
+index|]
+decl_stmt|;
+comment|/*21,84-99 */
+name|struct
+name|callout
+name|devmap_callout
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ARCMSR_DEBUG1
+name|u_int32_t
+name|pktRequestCount
+decl_stmt|;
+name|u_int32_t
+name|pktReturnCount
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -2375,6 +2838,744 @@ end_struct
 begin_comment
 comment|/* HW_DEVICE_EXTENSION */
 end_comment
+
+begin_comment
+comment|/* acb_flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACB_F_SCSISTOPADAPTER
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACB_F_MSG_STOP_BGRB
+value|0x0002
+end_define
+
+begin_comment
+comment|/* stop RAID background rebuild */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACB_F_MSG_START_BGRB
+value|0x0004
+end_define
+
+begin_comment
+comment|/* stop RAID background rebuild */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACB_F_IOPDATA_OVERFLOW
+value|0x0008
+end_define
+
+begin_comment
+comment|/* iop ioctl data rqbuffer overflow */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACB_F_MESSAGE_WQBUFFER_CLEARED
+value|0x0010
+end_define
+
+begin_comment
+comment|/* ioctl clear wqbuffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACB_F_MESSAGE_RQBUFFER_CLEARED
+value|0x0020
+end_define
+
+begin_comment
+comment|/* ioctl clear rqbuffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACB_F_MESSAGE_WQBUFFER_READ
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACB_F_BUS_RESET
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACB_F_IOP_INITED
+value|0x0100
+end_define
+
+begin_comment
+comment|/* iop init */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACB_F_MAPFREESRB_FAILD
+value|0x0200
+end_define
+
+begin_comment
+comment|/* arcmsr_map_freesrb faild */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACB_F_CAM_DEV_QFRZN
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACB_F_BUS_HANG_ON
+value|0x0800
+end_define
+
+begin_comment
+comment|/* need hardware reset bus */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACB_F_SRB_FUNCTION_POWER
+value|0x1000
+end_define
+
+begin_comment
+comment|/* devstate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARECA_RAID_GONE
+value|0x55
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARECA_RAID_GOOD
+value|0xaa
+end_define
+
+begin_comment
+comment|/* ********************************************************************* ** Message Unit structure ********************************************************************* */
+end_comment
+
+begin_struct
+struct|struct
+name|HBA_MessageUnit
+block|{
+name|u_int32_t
+name|resrved0
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/*0000 000F*/
+name|u_int32_t
+name|inbound_msgaddr0
+decl_stmt|;
+comment|/*0010 0013*/
+name|u_int32_t
+name|inbound_msgaddr1
+decl_stmt|;
+comment|/*0014 0017*/
+name|u_int32_t
+name|outbound_msgaddr0
+decl_stmt|;
+comment|/*0018 001B*/
+name|u_int32_t
+name|outbound_msgaddr1
+decl_stmt|;
+comment|/*001C 001F*/
+name|u_int32_t
+name|inbound_doorbell
+decl_stmt|;
+comment|/*0020 0023*/
+name|u_int32_t
+name|inbound_intstatus
+decl_stmt|;
+comment|/*0024 0027*/
+name|u_int32_t
+name|inbound_intmask
+decl_stmt|;
+comment|/*0028 002B*/
+name|u_int32_t
+name|outbound_doorbell
+decl_stmt|;
+comment|/*002C 002F*/
+name|u_int32_t
+name|outbound_intstatus
+decl_stmt|;
+comment|/*0030 0033*/
+name|u_int32_t
+name|outbound_intmask
+decl_stmt|;
+comment|/*0034 0037*/
+name|u_int32_t
+name|reserved1
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/*0038 003F*/
+name|u_int32_t
+name|inbound_queueport
+decl_stmt|;
+comment|/*0040 0043*/
+name|u_int32_t
+name|outbound_queueport
+decl_stmt|;
+comment|/*0044 0047*/
+name|u_int32_t
+name|reserved2
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/*0048 004F*/
+name|u_int32_t
+name|reserved3
+index|[
+literal|492
+index|]
+decl_stmt|;
+comment|/*0050 07FF ......local_buffer 492*/
+name|u_int32_t
+name|reserved4
+index|[
+literal|128
+index|]
+decl_stmt|;
+comment|/*0800 09FF                    128*/
+name|u_int32_t
+name|msgcode_rwbuffer
+index|[
+literal|256
+index|]
+decl_stmt|;
+comment|/*0a00 0DFF                    256*/
+name|u_int32_t
+name|message_wbuffer
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/*0E00 0E7F                     32*/
+name|u_int32_t
+name|reserved5
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/*0E80 0EFF                     32*/
+name|u_int32_t
+name|message_rbuffer
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/*0F00 0F7F                     32*/
+name|u_int32_t
+name|reserved6
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/*0F80 0FFF                     32*/
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* ********************************************************************* **  ********************************************************************* */
+end_comment
+
+begin_struct
+struct|struct
+name|HBB_DOORBELL
+block|{
+name|u_int8_t
+name|doorbell_reserved
+index|[
+name|ARCMSR_DRV2IOP_DOORBELL
+index|]
+decl_stmt|;
+comment|/*reserved */
+name|u_int32_t
+name|drv2iop_doorbell
+decl_stmt|;
+comment|/*offset 0x00020400:00,01,02,03: window of "instruction flags" from driver to iop */
+name|u_int32_t
+name|drv2iop_doorbell_mask
+decl_stmt|;
+comment|/*                  04,05,06,07: doorbell mask */
+name|u_int32_t
+name|iop2drv_doorbell
+decl_stmt|;
+comment|/*                  08,09,10,11: window of "instruction flags" from iop to driver */
+name|u_int32_t
+name|iop2drv_doorbell_mask
+decl_stmt|;
+comment|/*                  12,13,14,15: doorbell mask */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* ********************************************************************* **  ********************************************************************* */
+end_comment
+
+begin_struct
+struct|struct
+name|HBB_RWBUFFER
+block|{
+name|u_int8_t
+name|message_reserved0
+index|[
+name|ARCMSR_MSGCODE_RWBUFFER
+index|]
+decl_stmt|;
+comment|/*reserved */
+name|u_int32_t
+name|msgcode_rwbuffer
+index|[
+literal|256
+index|]
+decl_stmt|;
+comment|/*offset 0x0000fa00:   0,   1,   2,   3,...,1023: message code read write 1024bytes */
+name|u_int32_t
+name|message_wbuffer
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/*offset 0x0000fe00:1024,1025,1026,1027,...,1151: user space data to iop 128bytes */
+name|u_int32_t
+name|message_reserved1
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/*                  1152,1153,1154,1155,...,1279: message reserved*/
+name|u_int32_t
+name|message_rbuffer
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/*offset 0x0000ff00:1280,1281,1282,1283,...,1407: iop data to user space 128bytes */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* ********************************************************************* **  ********************************************************************* */
+end_comment
+
+begin_struct
+struct|struct
+name|HBB_MessageUnit
+block|{
+name|u_int32_t
+name|post_qbuffer
+index|[
+name|ARCMSR_MAX_HBB_POSTQUEUE
+index|]
+decl_stmt|;
+comment|/* post queue buffer for iop */
+name|u_int32_t
+name|done_qbuffer
+index|[
+name|ARCMSR_MAX_HBB_POSTQUEUE
+index|]
+decl_stmt|;
+comment|/* done queue buffer for iop */
+name|int32_t
+name|postq_index
+decl_stmt|;
+comment|/* post queue index */
+name|int32_t
+name|doneq_index
+decl_stmt|;
+comment|/* done queue index */
+name|struct
+name|HBB_DOORBELL
+modifier|*
+name|hbb_doorbell
+decl_stmt|;
+name|struct
+name|HBB_RWBUFFER
+modifier|*
+name|hbb_rwbuffer
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* ********************************************************************* **  ********************************************************************* */
+end_comment
+
+begin_struct
+struct|struct
+name|HBC_MessageUnit
+block|{
+name|u_int32_t
+name|message_unit_status
+decl_stmt|;
+comment|/*0000 0003*/
+name|u_int32_t
+name|slave_error_attribute
+decl_stmt|;
+comment|/*0004 0007*/
+name|u_int32_t
+name|slave_error_address
+decl_stmt|;
+comment|/*0008 000B*/
+name|u_int32_t
+name|posted_outbound_doorbell
+decl_stmt|;
+comment|/*000C 000F*/
+name|u_int32_t
+name|master_error_attribute
+decl_stmt|;
+comment|/*0010 0013*/
+name|u_int32_t
+name|master_error_address_low
+decl_stmt|;
+comment|/*0014 0017*/
+name|u_int32_t
+name|master_error_address_high
+decl_stmt|;
+comment|/*0018 001B*/
+name|u_int32_t
+name|hcb_size
+decl_stmt|;
+comment|/*001C 001F size of the PCIe window used for HCB_Mode accesses*/
+name|u_int32_t
+name|inbound_doorbell
+decl_stmt|;
+comment|/*0020 0023*/
+name|u_int32_t
+name|diagnostic_rw_data
+decl_stmt|;
+comment|/*0024 0027*/
+name|u_int32_t
+name|diagnostic_rw_address_low
+decl_stmt|;
+comment|/*0028 002B*/
+name|u_int32_t
+name|diagnostic_rw_address_high
+decl_stmt|;
+comment|/*002C 002F*/
+name|u_int32_t
+name|host_int_status
+decl_stmt|;
+comment|/*0030 0033 host interrupt status*/
+name|u_int32_t
+name|host_int_mask
+decl_stmt|;
+comment|/*0034 0037 host interrupt mask*/
+name|u_int32_t
+name|dcr_data
+decl_stmt|;
+comment|/*0038 003B*/
+name|u_int32_t
+name|dcr_address
+decl_stmt|;
+comment|/*003C 003F*/
+name|u_int32_t
+name|inbound_queueport
+decl_stmt|;
+comment|/*0040 0043 port32 host inbound queue port*/
+name|u_int32_t
+name|outbound_queueport
+decl_stmt|;
+comment|/*0044 0047 port32 host outbound queue port*/
+name|u_int32_t
+name|hcb_pci_address_low
+decl_stmt|;
+comment|/*0048 004B*/
+name|u_int32_t
+name|hcb_pci_address_high
+decl_stmt|;
+comment|/*004C 004F*/
+name|u_int32_t
+name|iop_int_status
+decl_stmt|;
+comment|/*0050 0053*/
+name|u_int32_t
+name|iop_int_mask
+decl_stmt|;
+comment|/*0054 0057*/
+name|u_int32_t
+name|iop_inbound_queue_port
+decl_stmt|;
+comment|/*0058 005B*/
+name|u_int32_t
+name|iop_outbound_queue_port
+decl_stmt|;
+comment|/*005C 005F*/
+name|u_int32_t
+name|inbound_free_list_index
+decl_stmt|;
+comment|/*0060 0063 inbound free list producer consumer index*/
+name|u_int32_t
+name|inbound_post_list_index
+decl_stmt|;
+comment|/*0064 0067 inbound post list producer consumer index*/
+name|u_int32_t
+name|outbound_free_list_index
+decl_stmt|;
+comment|/*0068 006B outbound free list producer consumer index*/
+name|u_int32_t
+name|outbound_post_list_index
+decl_stmt|;
+comment|/*006C 006F outbound post list producer consumer index*/
+name|u_int32_t
+name|inbound_doorbell_clear
+decl_stmt|;
+comment|/*0070 0073*/
+name|u_int32_t
+name|i2o_message_unit_control
+decl_stmt|;
+comment|/*0074 0077*/
+name|u_int32_t
+name|last_used_message_source_address_low
+decl_stmt|;
+comment|/*0078 007B*/
+name|u_int32_t
+name|last_used_message_source_address_high
+decl_stmt|;
+comment|/*007C 007F*/
+name|u_int32_t
+name|pull_mode_data_byte_count
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/*0080 008F pull mode data byte count0..count7*/
+name|u_int32_t
+name|message_dest_address_index
+decl_stmt|;
+comment|/*0090 0093*/
+name|u_int32_t
+name|done_queue_not_empty_int_counter_timer
+decl_stmt|;
+comment|/*0094 0097*/
+name|u_int32_t
+name|utility_A_int_counter_timer
+decl_stmt|;
+comment|/*0098 009B*/
+name|u_int32_t
+name|outbound_doorbell
+decl_stmt|;
+comment|/*009C 009F*/
+name|u_int32_t
+name|outbound_doorbell_clear
+decl_stmt|;
+comment|/*00A0 00A3*/
+name|u_int32_t
+name|message_source_address_index
+decl_stmt|;
+comment|/*00A4 00A7 message accelerator source address consumer producer index*/
+name|u_int32_t
+name|message_done_queue_index
+decl_stmt|;
+comment|/*00A8 00AB message accelerator completion queue consumer producer index*/
+name|u_int32_t
+name|reserved0
+decl_stmt|;
+comment|/*00AC 00AF*/
+name|u_int32_t
+name|inbound_msgaddr0
+decl_stmt|;
+comment|/*00B0 00B3 scratchpad0*/
+name|u_int32_t
+name|inbound_msgaddr1
+decl_stmt|;
+comment|/*00B4 00B7 scratchpad1*/
+name|u_int32_t
+name|outbound_msgaddr0
+decl_stmt|;
+comment|/*00B8 00BB scratchpad2*/
+name|u_int32_t
+name|outbound_msgaddr1
+decl_stmt|;
+comment|/*00BC 00BF scratchpad3*/
+name|u_int32_t
+name|inbound_queueport_low
+decl_stmt|;
+comment|/*00C0 00C3 port64 host inbound queue port low*/
+name|u_int32_t
+name|inbound_queueport_high
+decl_stmt|;
+comment|/*00C4 00C7 port64 host inbound queue port high*/
+name|u_int32_t
+name|outbound_queueport_low
+decl_stmt|;
+comment|/*00C8 00CB port64 host outbound queue port low*/
+name|u_int32_t
+name|outbound_queueport_high
+decl_stmt|;
+comment|/*00CC 00CF port64 host outbound queue port high*/
+name|u_int32_t
+name|iop_inbound_queue_port_low
+decl_stmt|;
+comment|/*00D0 00D3*/
+name|u_int32_t
+name|iop_inbound_queue_port_high
+decl_stmt|;
+comment|/*00D4 00D7*/
+name|u_int32_t
+name|iop_outbound_queue_port_low
+decl_stmt|;
+comment|/*00D8 00DB*/
+name|u_int32_t
+name|iop_outbound_queue_port_high
+decl_stmt|;
+comment|/*00DC 00DF*/
+name|u_int32_t
+name|message_dest_queue_port_low
+decl_stmt|;
+comment|/*00E0 00E3 message accelerator destination queue port low*/
+name|u_int32_t
+name|message_dest_queue_port_high
+decl_stmt|;
+comment|/*00E4 00E7 message accelerator destination queue port high*/
+name|u_int32_t
+name|last_used_message_dest_address_low
+decl_stmt|;
+comment|/*00E8 00EB last used message accelerator destination address low*/
+name|u_int32_t
+name|last_used_message_dest_address_high
+decl_stmt|;
+comment|/*00EC 00EF last used message accelerator destination address high*/
+name|u_int32_t
+name|message_done_queue_base_address_low
+decl_stmt|;
+comment|/*00F0 00F3 message accelerator completion queue base address low*/
+name|u_int32_t
+name|message_done_queue_base_address_high
+decl_stmt|;
+comment|/*00F4 00F7 message accelerator completion queue base address high*/
+name|u_int32_t
+name|host_diagnostic
+decl_stmt|;
+comment|/*00F8 00FB*/
+name|u_int32_t
+name|write_sequence
+decl_stmt|;
+comment|/*00FC 00FF*/
+name|u_int32_t
+name|reserved1
+index|[
+literal|34
+index|]
+decl_stmt|;
+comment|/*0100 0187*/
+name|u_int32_t
+name|reserved2
+index|[
+literal|1950
+index|]
+decl_stmt|;
+comment|/*0188 1FFF*/
+name|u_int32_t
+name|message_wbuffer
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/*2000 207F*/
+name|u_int32_t
+name|reserved3
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/*2080 20FF*/
+name|u_int32_t
+name|message_rbuffer
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/*2100 217F*/
+name|u_int32_t
+name|reserved4
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/*2180 21FF*/
+name|u_int32_t
+name|msgcode_rwbuffer
+index|[
+literal|256
+index|]
+decl_stmt|;
+comment|/*2200 23FF*/
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* ********************************************************************* **  ********************************************************************* */
+end_comment
+
+begin_struct
+struct|struct
+name|MessageUnit_UNION
+block|{
+union|union
+block|{
+name|struct
+name|HBA_MessageUnit
+name|hbamu
+decl_stmt|;
+name|struct
+name|HBB_MessageUnit
+name|hbbmu
+decl_stmt|;
+name|struct
+name|HBC_MessageUnit
+name|hbcmu
+decl_stmt|;
+block|}
+name|muu
+union|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* ************************************************************* ************************************************************* */
@@ -3938,283 +5139,6 @@ end_comment
 begin_comment
 comment|/* ****************************************************************************************************** **                 Messaging Unit (MU) of the Intel R 80331 I/O processor (80331) **  ================================================================================================== **	The Messaging Unit (MU) transfers data between the PCI system and the 80331  **  notifies the respective system when new data arrives. **	The PCI window for messaging transactions is always the first 4 Kbytes of the inbound translation. **	window defined by:  **                    1.Inbound ATU Base Address Register 0 (IABAR0)  **                    2.Inbound ATU Limit Register 0 (IALR0) **	All of the Messaging Unit errors are reported in the same manner as ATU errors.  **  Error conditions and status can be found in : **                                               1.ATUSR  **                                               2.ATUISR **==================================================================================================== **     Mechanism        Quantity               Assert PCI Interrupt Signals      Generate I/O Processor Interrupt **---------------------------------------------------------------------------------------------------- **  Message Registers      2 Inbound                   Optional                              Optional **                         2 Outbound                 **---------------------------------------------------------------------------------------------------- **  Doorbell Registers     1 Inbound                   Optional                              Optional **                         1 Outbound   **---------------------------------------------------------------------------------------------------- **  Circular Queues        4 Circular Queues           Under certain conditions              Under certain conditions **---------------------------------------------------------------------------------------------------- **  Index Registers     1004 32-bit Memory Locations   No                                    Optional **==================================================================================================== **     PCI Memory Map: First 4 Kbytes of the ATU Inbound PCI Address Space **==================================================================================================== **  0000H           Reserved **  0004H           Reserved **  0008H           Reserved **  000CH           Reserved **------------------------------------------------------------------------ **  0010H 			Inbound Message Register 0              ] **  0014H 			Inbound Message Register 1              ] **  0018H 			Outbound Message Register 0             ] **  001CH 			Outbound Message Register 1             ]   4 Message Registers **------------------------------------------------------------------------ **  0020H 			Inbound Doorbell Register               ] **  0024H 			Inbound Interrupt Status Register       ] **  0028H 			Inbound Interrupt Mask Register         ] **  002CH 			Outbound Doorbell Register              ] **  0030H 			Outbound Interrupt Status Register      ] **  0034H 			Outbound Interrupt Mask Register        ]   2 Doorbell Registers and 4 Interrupt Registers **------------------------------------------------------------------------ **  0038H 			Reserved **  003CH 			Reserved **------------------------------------------------------------------------ **  0040H 			Inbound Queue Port                      ] **  0044H 			Outbound Queue Port                     ]   2 Queue Ports **------------------------------------------------------------------------ **  0048H 			Reserved **  004CH 			Reserved **------------------------------------------------------------------------ **  0050H                                                   ] **    :                                                     ] **    :      Intel Xscale Microarchitecture Local Memory    ] **    :                                                     ] **  0FFCH                                                   ]   1004 Index Registers ******************************************************************************* */
 end_comment
-
-begin_struct
-struct|struct
-name|HBA_MessageUnit
-block|{
-name|u_int32_t
-name|resrved0
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/*0000 000F*/
-name|u_int32_t
-name|inbound_msgaddr0
-decl_stmt|;
-comment|/*0010 0013*/
-name|u_int32_t
-name|inbound_msgaddr1
-decl_stmt|;
-comment|/*0014 0017*/
-name|u_int32_t
-name|outbound_msgaddr0
-decl_stmt|;
-comment|/*0018 001B*/
-name|u_int32_t
-name|outbound_msgaddr1
-decl_stmt|;
-comment|/*001C 001F*/
-name|u_int32_t
-name|inbound_doorbell
-decl_stmt|;
-comment|/*0020 0023*/
-name|u_int32_t
-name|inbound_intstatus
-decl_stmt|;
-comment|/*0024 0027*/
-name|u_int32_t
-name|inbound_intmask
-decl_stmt|;
-comment|/*0028 002B*/
-name|u_int32_t
-name|outbound_doorbell
-decl_stmt|;
-comment|/*002C 002F*/
-name|u_int32_t
-name|outbound_intstatus
-decl_stmt|;
-comment|/*0030 0033*/
-name|u_int32_t
-name|outbound_intmask
-decl_stmt|;
-comment|/*0034 0037*/
-name|u_int32_t
-name|reserved1
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/*0038 003F*/
-name|u_int32_t
-name|inbound_queueport
-decl_stmt|;
-comment|/*0040 0043*/
-name|u_int32_t
-name|outbound_queueport
-decl_stmt|;
-comment|/*0044 0047*/
-name|u_int32_t
-name|reserved2
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/*0048 004F*/
-name|u_int32_t
-name|reserved3
-index|[
-literal|492
-index|]
-decl_stmt|;
-comment|/*0050 07FF ......local_buffer 492*/
-name|u_int32_t
-name|reserved4
-index|[
-literal|128
-index|]
-decl_stmt|;
-comment|/*0800 09FF                    128*/
-name|u_int32_t
-name|msgcode_rwbuffer
-index|[
-literal|256
-index|]
-decl_stmt|;
-comment|/*0a00 0DFF                    256*/
-name|u_int32_t
-name|message_wbuffer
-index|[
-literal|32
-index|]
-decl_stmt|;
-comment|/*0E00 0E7F                     32*/
-name|u_int32_t
-name|reserved5
-index|[
-literal|32
-index|]
-decl_stmt|;
-comment|/*0E80 0EFF                     32*/
-name|u_int32_t
-name|message_rbuffer
-index|[
-literal|32
-index|]
-decl_stmt|;
-comment|/*0F00 0F7F                     32*/
-name|u_int32_t
-name|reserved6
-index|[
-literal|32
-index|]
-decl_stmt|;
-comment|/*0F80 0FFF                     32*/
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* ********************************************************************* **  ********************************************************************* */
-end_comment
-
-begin_struct
-struct|struct
-name|HBB_DOORBELL
-block|{
-name|u_int8_t
-name|doorbell_reserved
-index|[
-literal|132096
-index|]
-decl_stmt|;
-comment|/*reserved */
-name|u_int32_t
-name|drv2iop_doorbell
-decl_stmt|;
-comment|/*offset 0x00020400:00,01,02,03: window of "instruction flags" from driver to iop */
-name|u_int32_t
-name|drv2iop_doorbell_mask
-decl_stmt|;
-comment|/*                  04,05,06,07: doorbell mask */
-name|u_int32_t
-name|iop2drv_doorbell
-decl_stmt|;
-comment|/*                  08,09,10,11: window of "instruction flags" from iop to driver */
-name|u_int32_t
-name|iop2drv_doorbell_mask
-decl_stmt|;
-comment|/*                  12,13,14,15: doorbell mask */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* ********************************************************************* **  ********************************************************************* */
-end_comment
-
-begin_struct
-struct|struct
-name|HBB_RWBUFFER
-block|{
-name|u_int8_t
-name|message_reserved0
-index|[
-literal|64000
-index|]
-decl_stmt|;
-comment|/*reserved */
-name|u_int32_t
-name|msgcode_rwbuffer
-index|[
-literal|256
-index|]
-decl_stmt|;
-comment|/*offset 0x0000fa00:   0,   1,   2,   3,...,1023: message code read write 1024bytes */
-name|u_int32_t
-name|message_wbuffer
-index|[
-literal|32
-index|]
-decl_stmt|;
-comment|/*offset 0x0000fe00:1024,1025,1026,1027,...,1151: user space data to iop 128bytes */
-name|u_int32_t
-name|message_reserved1
-index|[
-literal|32
-index|]
-decl_stmt|;
-comment|/*                  1152,1153,1154,1155,...,1279: message reserved*/
-name|u_int32_t
-name|message_rbuffer
-index|[
-literal|32
-index|]
-decl_stmt|;
-comment|/*offset 0x0000ff00:1280,1281,1282,1283,...,1407: iop data to user space 128bytes */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* ********************************************************************* **  ********************************************************************* */
-end_comment
-
-begin_struct
-struct|struct
-name|HBB_MessageUnit
-block|{
-name|u_int32_t
-name|post_qbuffer
-index|[
-name|ARCMSR_MAX_HBB_POSTQUEUE
-index|]
-decl_stmt|;
-comment|/* post queue buffer for iop */
-name|u_int32_t
-name|done_qbuffer
-index|[
-name|ARCMSR_MAX_HBB_POSTQUEUE
-index|]
-decl_stmt|;
-comment|/* done queue buffer for iop */
-name|int32_t
-name|postq_index
-decl_stmt|;
-comment|/* post queue index */
-name|int32_t
-name|doneq_index
-decl_stmt|;
-comment|/* done queue index */
-name|struct
-name|HBB_DOORBELL
-modifier|*
-name|hbb_doorbell
-decl_stmt|;
-name|struct
-name|HBB_RWBUFFER
-modifier|*
-name|hbb_rwbuffer
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* ********************************************************************* **  ********************************************************************* */
-end_comment
-
-begin_struct
-struct|struct
-name|MessageUnit_UNION
-block|{
-union|union
-block|{
-name|struct
-name|HBA_MessageUnit
-name|hbamu
-decl_stmt|;
-name|struct
-name|HBB_MessageUnit
-name|hbbmu
-decl_stmt|;
-block|}
-name|muu
-union|;
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/* ***************************************************************************** **                      Theory of MU Operation ***************************************************************************** **-------------------- **   inbound_msgaddr0: **   inbound_msgaddr1: **  outbound_msgaddr0: **  outbound_msgaddr1: **  .  The MU has four independent messaging mechanisms. **     There are four Message Registers that are similar to a combination of mailbox and doorbell registers.  **     Each holds a 32-bit value and generates an interrupt when written. **-------------------- **   inbound_doorbell: **  outbound_doorbell: **  .  The two Doorbell Registers support software interrupts.  **     When a bit is set in a Doorbell Register, an interrupt is generated. **-------------------- **  inbound_queueport: ** outbound_queueport: ** ** **  .  The Circular Queues support a message passing scheme that uses 4 circular queues.  **     The 4 circular queues are implemented in 80331 local memory.  **     Two queues are used for inbound messages and two are used for outbound messages.  **     Interrupts may be generated when the queue is written. **-------------------- ** local_buffer 0x0050 ....0x0FFF **  .  The Index Registers use a portion of the 80331 local memory to implement a large set of message registers.  **     When one of the Index Registers is written, an interrupt is generated and the address of the register written is captured. **     Interrupt status for all interrupts is recorded in the Inbound Interrupt Status Register and the Outbound Interrupt Status Register.  **     Each interrupt generated by the Messaging Unit can be masked. **-------------------- **  .  Multi-DWORD PCI burst accesses are not supported by the Messaging Unit,  **     with the exception of Multi-DWORD reads to the index registers.  **     In Conventional mode: the MU terminates   Multi-DWORD PCI transactions  **     (other than index register reads) with a disconnect at the next Qword boundary, with the exception of queue ports.  **     In PCI-X mode       : the MU terminates a Multi-DWORD PCI read transaction with a Split Response  **     and the data is returned through split completion transaction(s). **     however, when the burst request crosses into or through the range of  offsets 40h to 4Ch  **     (e.g., this includes the queue ports) the transaction is signaled target-abort immediately on the PCI bus.  **     In PCI-X mode, Multi-DWORD PCI writes is signaled a Single-Data-Phase Disconnect  **     which means that no data beyond the first Qword (Dword when the MU does not assert P_ACK64#) is written. **-------------------- **  .  All registers needed to configure and control the Messaging Unit are memory-mapped registers. **     The MU uses the first 4 Kbytes of the inbound translation window in the Address Translation Unit (ATU). **     This PCI address window is used for PCI transactions that access the 80331 local memory. **     The  PCI address of the inbound translation window is contained in the Inbound ATU Base Address Register. **-------------------- **  .  From the PCI perspective, the Messaging Unit is part of the Address Translation Unit. **     The Messaging Unit uses the PCI configuration registers of the ATU for control and status information. **     The Messaging Unit must observe all PCI control bits in the ATU Command Register and ATU Configuration Register. **     The Messaging Unit reports all PCI errors in the ATU Status Register. **-------------------- **  .  Parts of the Messaging Unit can be accessed as a 64-bit PCI device.  **     The register interface, message registers, doorbell registers,  **     and index registers returns a P_ACK64# in response to a P_REQ64# on the PCI interface.  **     Up to 1 Qword of data can be read or written per transaction (except Index Register reads).  **     The Inbound and Outbound Queue Ports are always 32-bit addresses and the MU does not assert P_ACK64# to offsets 40H and 44H. ************************************************************************** */

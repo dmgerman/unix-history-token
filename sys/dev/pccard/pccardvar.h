@@ -12,7 +12,7 @@ comment|/*-  * Copyright (c) 1997 Marc Horowitz.  All rights reserved.  *  * Red
 end_comment
 
 begin_comment
-comment|/*  * PCCARD_API_LEVEL.  When set to 5, we provide a 5.x compatable API  * for driver writers that have to share their code between 5.x and 6.x.  * The 5.x compatibility interfaces will be unsupported in 7.0, at which  * point we'll only support 6 and newer, etc.  */
+comment|/*  * PCCARD_API_LEVEL.  When set to 5, we provide a 5.x compatible API  * for driver writers that have to share their code between 5.x and 6.x.  * The 5.x compatibility interfaces will be unsupported in 7.0, at which  * point we'll only support 6 and newer, etc.  */
 end_comment
 
 begin_ifndef
@@ -668,7 +668,7 @@ block|,
 comment|/* CIS string for "Manufacturer" */
 name|PCCARD_IVAR_PRODUCT_STR
 block|,
-comment|/* CIS strnig for "Product" */
+comment|/* CIS string for "Product" */
 name|PCCARD_IVAR_CIS3_STR
 block|,
 name|PCCARD_IVAR_CIS4_STR
@@ -1005,7 +1005,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Defines to decoe the get_funce_disk return value.  See the PCMCIA standard  * for all the details of what these bits mean.  */
+comment|/*  * Defines to decode the get_funce_disk return value.  See the PCMCIA standard  * for all the details of what these bits mean.  */
 end_comment
 
 begin_define

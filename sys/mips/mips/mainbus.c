@@ -163,7 +163,7 @@ parameter_list|(
 name|device_t
 name|bus
 parameter_list|,
-name|int
+name|u_int
 name|order
 parameter_list|,
 specifier|const
@@ -630,7 +630,7 @@ operator|.
 name|rm_end
 operator|=
 operator|~
-literal|0u
+literal|0ul
 expr_stmt|;
 name|mem_rman
 operator|.
@@ -747,7 +747,7 @@ parameter_list|(
 name|device_t
 name|bus
 parameter_list|,
-name|int
+name|u_int
 name|order
 parameter_list|,
 specifier|const
@@ -1013,7 +1013,7 @@ block|{
 comment|/* 	 * If this is a memory resource, map it into the kernel. 	 */
 ifdef|#
 directive|ifdef
-name|TARGET_OCTEON
+name|CPU_CNMIPS
 name|uint64_t
 name|temp
 decl_stmt|;
@@ -1093,7 +1093,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|TARGET_OCTEON
+name|CPU_CNMIPS
 name|temp
 operator|=
 literal|0x0000000000000000

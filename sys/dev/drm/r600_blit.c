@@ -3364,7 +3364,7 @@ name|dev
 operator|->
 name|agp_buffer_map
 operator|->
-name|handle
+name|virtual
 operator|+
 name|dev_priv
 operator|->
@@ -3388,7 +3388,7 @@ name|dev
 operator|->
 name|agp_buffer_map
 operator|->
-name|handle
+name|virtual
 operator|+
 name|dev_priv
 operator|->
@@ -5590,7 +5590,7 @@ name|dev
 operator|->
 name|agp_buffer_map
 operator|->
-name|handle
+name|virtual
 operator|+
 name|dev_priv
 operator|->
@@ -5607,20 +5607,10 @@ operator|)
 expr_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"src=0x%016llx, dst=0x%016llx, size=%d\n"
+literal|"src=0x%016jx, dst=0x%016jx, size=%d\n"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|src_gpu_addr
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|dst_gpu_addr
 argument_list|,
 name|size_bytes
@@ -5859,7 +5849,7 @@ name|dev
 operator|->
 name|agp_buffer_map
 operator|->
-name|handle
+name|virtual
 operator|+
 name|dev_priv
 operator|->
@@ -6363,7 +6353,7 @@ name|dev
 operator|->
 name|agp_buffer_map
 operator|->
-name|handle
+name|virtual
 operator|+
 name|dev_priv
 operator|->
@@ -6832,7 +6822,7 @@ name|dev
 operator|->
 name|agp_buffer_map
 operator|->
-name|handle
+name|virtual
 operator|+
 name|dev_priv
 operator|->

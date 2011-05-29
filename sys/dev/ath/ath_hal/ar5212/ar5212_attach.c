@@ -252,6 +252,11 @@ name|ah_reqTxIntrDesc
 operator|=
 name|ar5212IntrReqTxDesc
 block|,
+operator|.
+name|ah_getTxCompletionRates
+operator|=
+name|ar5212GetTxCompletionRates
+block|,
 comment|/* RX Functions */
 operator|.
 name|ah_getRxDP
@@ -320,6 +325,11 @@ name|ar5212ProcRxDesc
 block|,
 operator|.
 name|ah_rxMonitor
+operator|=
+name|ar5212RxMonitor
+block|,
+operator|.
+name|ah_aniPoll
 operator|=
 name|ar5212AniPoll
 block|,
@@ -982,6 +992,16 @@ argument_list|,
 name|AH_TRUE
 argument_list|)
 expr_stmt|;
+comment|/* Set overridable ANI methods */
+name|AH5212
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_aniControl
+operator|=
+name|ar5212AniControl
+expr_stmt|;
 block|}
 end_function
 
@@ -1463,6 +1483,10 @@ name|st
 parameter_list|,
 name|HAL_BUS_HANDLE
 name|sh
+parameter_list|,
+name|uint16_t
+modifier|*
+name|eepromdata
 parameter_list|,
 name|HAL_STATUS
 modifier|*
@@ -4133,6 +4157,18 @@ name|halIntrMask
 operator|&=
 operator|~
 name|HAL_INT_TBTT
+expr_stmt|;
+name|pCap
+operator|->
+name|hal4kbSplitTransSupport
+operator|=
+name|AH_TRUE
+expr_stmt|;
+name|pCap
+operator|->
+name|halHasRxSelfLinkedTail
+operator|=
+name|AH_TRUE
 expr_stmt|;
 return|return
 name|AH_TRUE

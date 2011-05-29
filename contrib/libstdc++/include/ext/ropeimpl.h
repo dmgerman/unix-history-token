@@ -1872,6 +1872,7 @@ name|this
 expr_stmt|;
 name|__l
 operator|->
+name|template
 name|_Rope_RopeLeaf
 operator|<
 name|_CharT
@@ -1926,6 +1927,7 @@ name|this
 expr_stmt|;
 name|__c
 operator|->
+name|template
 name|_Rope_RopeConcatenation
 operator|<
 name|_CharT
@@ -1980,6 +1982,7 @@ name|this
 expr_stmt|;
 name|__f
 operator|->
+name|template
 name|_Rope_RopeFunction
 operator|<
 name|_CharT
@@ -2034,6 +2037,7 @@ name|this
 expr_stmt|;
 name|__ss
 operator|->
+name|template
 name|_Rope_RopeSubstring
 operator|<
 name|_CharT
@@ -2142,6 +2146,13 @@ operator|(
 name|_CharT
 operator|*
 operator|)
+name|_Rope_rep_base
+operator|<
+name|_CharT
+block|,
+name|_Alloc
+operator|>
+operator|::
 name|_Data_allocate
 argument_list|(
 name|_S_rounded_up_size
@@ -4114,6 +4125,13 @@ operator|(
 name|_CharT
 operator|*
 operator|)
+name|_Rope_rep_base
+operator|<
+name|_CharT
+operator|,
+name|_Alloc
+operator|>
+operator|::
 name|_Data_allocate
 argument_list|(
 name|_S_rounded_up_size

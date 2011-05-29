@@ -130,13 +130,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/ext2fs/ext2_extern.h>
+file|<fs/ext2fs/ext2fs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<fs/ext2fs/ext2fs.h>
+file|<fs/ext2fs/ext2_dinode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fs/ext2fs/ext2_extern.h>
 end_include
 
 begin_function_decl
@@ -407,29 +413,33 @@ name|ext2_opts
 index|[]
 init|=
 block|{
-literal|"from"
-block|,
-literal|"export"
-block|,
 literal|"acls"
 block|,
-literal|"noexec"
+literal|"async"
 block|,
 literal|"noatime"
-block|,
-literal|"union"
-block|,
-literal|"suiddir"
-block|,
-literal|"multilabel"
-block|,
-literal|"nosymfollow"
 block|,
 literal|"noclusterr"
 block|,
 literal|"noclusterw"
 block|,
+literal|"noexec"
+block|,
+literal|"export"
+block|,
 literal|"force"
+block|,
+literal|"from"
+block|,
+literal|"multilabel"
+block|,
+literal|"suiddir"
+block|,
+literal|"nosymfollow"
+block|,
+literal|"sync"
+block|,
+literal|"union"
 block|,
 name|NULL
 block|}
@@ -1638,7 +1648,7 @@ name|fs
 operator|->
 name|e2fs_first_inode
 operator|=
-name|E2FS_REV0_FIRST_INO
+name|EXT2_FIRSTINO
 expr_stmt|;
 name|fs
 operator|->
@@ -4851,15 +4861,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * Finish inode initialization now that aliasing has been resolved. 	 */
-name|ip
-operator|->
-name|i_devvp
-operator|=
-name|ump
-operator|->
-name|um_devvp
-expr_stmt|;
+comment|/* 	 * Finish inode initialization. 	 */
 comment|/* 	 * Set up a generation number for this inode if it does not 	 * already have one. This should only happen on old filesystems. 	 */
 if|if
 condition|(
@@ -4934,6 +4936,9 @@ name|fid
 modifier|*
 name|fhp
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|struct
 name|vnode
 modifier|*
@@ -4988,7 +4993,7 @@ name|ufhp
 operator|->
 name|ufid_ino
 operator|<
-name|ROOTINO
+name|EXT2_ROOTINO
 operator|||
 name|ufhp
 operator|->
@@ -5433,10 +5438,7 @@ name|VFS_VGET
 argument_list|(
 name|mp
 argument_list|,
-operator|(
-name|ino_t
-operator|)
-name|ROOTINO
+name|EXT2_ROOTINO
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,

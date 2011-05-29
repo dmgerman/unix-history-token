@@ -59,35 +59,6 @@ directive|include
 file|<sys/timetc.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|ct_debug
-value|bootverbose
-end_define
-
-begin_decl_stmt
-specifier|static
-name|int
-name|adjkerntz
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* local offset from GMT in seconds */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|wall_cmos_clock
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* wall CMOS clock assumed if != 0 */
-end_comment
-
 begin_decl_stmt
 name|int
 name|tz_minuteswest
@@ -101,29 +72,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This have traditionally been in machdep, but should probably be moved to  * kern.  */
+comment|/*  * The adjkerntz and wall_cmos_clock sysctls are in the "machdep" sysctl  * namespace because they were misplaced there originally.  */
 end_comment
 
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_machdep
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|wall_cmos_clock
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|wall_cmos_clock
-argument_list|,
-literal|0
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|int
+name|adjkerntz
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -195,7 +152,63 @@ name|sysctl_machdep_adjkerntz
 argument_list|,
 literal|"I"
 argument_list|,
-literal|""
+literal|"Local offset from UTC in seconds"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ct_debug
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|clocktime
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ct_debug
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable printing of clocktime debugging"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|wall_cmos_clock
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_machdep
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|wall_cmos_clock
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|wall_cmos_clock
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enables application of machdep.adjkerntz"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -587,30 +600,6 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-comment|/* XXX Dow sanity check. Dow is not used, so should we check it? */
-if|if
-condition|(
-name|ct
-operator|->
-name|dow
-operator|!=
-operator|-
-literal|1
-operator|&&
-name|ct
-operator|->
-name|dow
-operator|!=
-name|day_of_week
-argument_list|(
-name|days
-argument_list|)
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 comment|/* Add hours, minutes, seconds. */
 name|secs
 operator|=

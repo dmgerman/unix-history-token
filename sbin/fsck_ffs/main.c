@@ -69,19 +69,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
 end_include
 
 begin_include
@@ -94,6 +82,12 @@ begin_include
 include|#
 directive|include
 file|<sys/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -172,6 +166,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_include
@@ -305,7 +305,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:Bc:CdfFm:npry"
+literal|"b:Bc:CdEfFm:npry"
 argument_list|)
 operator|)
 operator|!=
@@ -394,6 +394,13 @@ case|case
 literal|'d'
 case|:
 name|debug
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'E'
+case|:
+name|Eflag
 operator|++
 expr_stmt|;
 break|break;
@@ -922,20 +929,24 @@ argument_list|(
 name|fsreadfd
 argument_list|)
 expr_stmt|;
+comment|/* Earlier background failed or journaled */
 if|if
 condition|(
 name|sblock
 operator|.
 name|fs_flags
 operator|&
+operator|(
 name|FS_NEEDSFSCK
+operator||
+name|FS_SUJ
+operator|)
 condition|)
 name|exit
 argument_list|(
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* Earlier background failed */
 if|if
 condition|(
 operator|(
@@ -1256,7 +1267,11 @@ name|sblock
 operator|.
 name|fs_flags
 operator|&
+operator|(
 name|FS_NEEDSFSCK
+operator||
+name|FS_SUJ
+operator|)
 condition|)
 block|{
 name|bkgrdflag
@@ -1746,6 +1761,101 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+comment|/* 	 * Determine if we can and should do journal recovery. 	 */
+if|if
+condition|(
+operator|(
+name|sblock
+operator|.
+name|fs_flags
+operator|&
+name|FS_SUJ
+operator|)
+operator|==
+name|FS_SUJ
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|sblock
+operator|.
+name|fs_flags
+operator|&
+name|FS_NEEDSFSCK
+operator|)
+operator|!=
+name|FS_NEEDSFSCK
+operator|&&
+name|skipclean
+condition|)
+block|{
+if|if
+condition|(
+name|preen
+operator|||
+name|reply
+argument_list|(
+literal|"USE JOURNAL"
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|suj_check
+argument_list|(
+name|filesys
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\n***** FILE SYSTEM MARKED CLEAN *****\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|chkdoreload
+argument_list|(
+name|mntp
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|4
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|printf
+argument_list|(
+literal|"** Skipping journal, falling through to full fsck\n\n"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 		 * Write the superblock so we don't try to recover the 		 * journal on another pass. 		 */
+name|sblock
+operator|.
+name|fs_mtime
+operator|=
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+name|sbdirty
+argument_list|()
+expr_stmt|;
 block|}
 comment|/* 	 * Cleared if any questions answered no. Used to decide if 	 * the superblock should be marked clean. 	 */
 name|resolved
@@ -2916,7 +3026,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-BFprfny] [-b block] [-c level] [-m mode] "
+literal|"usage: %s [-BEFprfny] [-b block] [-c level] [-m mode] "
 literal|"filesystem ...\n"
 argument_list|,
 name|getprogname

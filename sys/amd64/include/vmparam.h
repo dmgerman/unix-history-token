@@ -146,17 +146,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The time for a process to be blocked before being very swappable.  * This is a number of seconds which the system takes as being a non-trivial  * amount of real time.  You probably shouldn't change this;  * it is used in subtle ways (fractions and multiples of it are, that is, like  * half of a ``long time'', almost a long time, etc.)  * It is related to human patience and other factors which don't really  * change over time.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXSLP
-value|20
-end_define
-
-begin_comment
 comment|/*  * We provide a machine specific single page allocator through the use  * of the direct mapped segment.  This uses 2MB pages for reduced  * TLB pressure.  */
 end_comment
 
@@ -256,6 +245,28 @@ value|13
 end_define
 
 begin_comment
+comment|/*  * Only one memory domain.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_NDOMAIN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VM_NDOMAIN
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Enable superpage reservations: 1 level.  */
 end_comment
 
@@ -299,8 +310,26 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PA_LOCK_COUNT
+value|256
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Virtual addresses of things.  Derived from the page directory and  * page table indexes from pmap.h for precision.  *  * 0x0000000000000000 - 0x00007fffffffffff   user map  * 0x0000800000000000 - 0xffff7fffffffffff   does not exist (hole)  * 0xffff800000000000 - 0xffff804020100fff   recursive page table (512GB slot)  * 0xffff804020101000 - 0xfffffeffffffffff   unused  * 0xffffff0000000000 - 0xffffff7fffffffff   512GB direct map mappings  * 0xffffff8000000000 - 0xffffffffffffffff   512GB kernel map  *  * Within the kernel map:  *  * 0xffffffff80000000                        KERNBASE  */
+comment|/*  * Virtual addresses of things.  Derived from the page directory and  * page table indexes from pmap.h for precision.  *  * 0x0000000000000000 - 0x00007fffffffffff   user map  * 0x0000800000000000 - 0xffff7fffffffffff   does not exist (hole)  * 0xffff800000000000 - 0xffff804020100fff   recursive page table (512GB slot)  * 0xffff804020101000 - 0xfffffdffffffffff   unused  * 0xfffffe0000000000 - 0xfffffeffffffffff   1TB direct map  * 0xffffff0000000000 - 0xffffff7fffffffff   unused  * 0xffffff8000000000 - 0xffffffffffffffff   512GB kernel map  *  * Within the kernel map:  *  * 0xffffffff80000000                        KERNBASE  */
 end_comment
 
 begin_define
@@ -328,7 +357,7 @@ begin_define
 define|#
 directive|define
 name|DMAP_MAX_ADDRESS
-value|KVADDR(DMPML4I+1, 0, 0, 0)
+value|KVADDR(DMPML4I + NDMPML4E, 0, 0, 0)
 end_define
 
 begin_define
@@ -362,8 +391,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|SHAREDPAGE
+value|(VM_MAXUSER_ADDRESS - PAGE_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|USRSTACK
-value|VM_MAXUSER_ADDRESS
+value|SHAREDPAGE
 end_define
 
 begin_define
@@ -436,7 +472,7 @@ begin_define
 define|#
 directive|define
 name|VM_KMEM_SIZE_SCALE
-value|(3)
+value|(1)
 end_define
 
 begin_endif
@@ -487,6 +523,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|ZERO_REGION_SIZE
+value|(2 * 1024 * 1024)
+end_define
+
+begin_comment
+comment|/* 2MB */
+end_comment
 
 begin_endif
 endif|#

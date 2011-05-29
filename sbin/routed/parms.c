@@ -4581,7 +4581,7 @@ name|parmp
 operator|->
 name|parm_int_state
 operator|)
-operator|&&
+operator|&
 name|GROUP_IS_SOL_OUT
 operator|)
 operator|)
@@ -4619,7 +4619,7 @@ name|parmp
 operator|->
 name|parm_int_state
 operator|)
-operator|&&
+operator|&
 name|GROUP_IS_ADV_OUT
 operator|)
 operator|)

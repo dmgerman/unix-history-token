@@ -15,6 +15,13 @@ directive|define
 name|AES_H
 end_define
 
+begin_define
+define|#
+directive|define
+name|AES_BLOCK_SIZE
+value|16
+end_define
+
 begin_function_decl
 name|void
 modifier|*

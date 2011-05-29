@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: altq_rmclass.c,v 1.18 2003/11/06 06:32:53 kjc Exp $	*/
+comment|/*	$KAME: altq_rmclass.c,v 1.19 2005/04/13 03:44:25 suz Exp $	*/
 end_comment
 
 begin_comment
@@ -35,16 +35,6 @@ directive|include
 file|"opt_altq.h"
 end_include
 
-begin_if
-if|#
-directive|if
-operator|(
-name|__FreeBSD__
-operator|!=
-literal|2
-operator|)
-end_if
-
 begin_include
 include|#
 directive|include
@@ -62,11 +52,6 @@ include|#
 directive|include
 file|"opt_inet6.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

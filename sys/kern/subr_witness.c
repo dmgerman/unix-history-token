@@ -299,7 +299,7 @@ begin_define
 define|#
 directive|define
 name|WITNESS_PENDLIST
-value|512
+value|768
 end_define
 
 begin_comment
@@ -359,15 +359,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|CYCLEGRAPH_SBUF_SIZE
-value|8192
-end_define
-
-begin_define
-define|#
-directive|define
 name|FULLGRAPH_SBUF_SIZE
-value|32768
+value|512
 end_define
 
 begin_comment
@@ -1249,7 +1242,7 @@ specifier|static
 name|void
 name|witness_ddb_display
 parameter_list|(
-name|void
+name|int
 function_decl|(
 modifier|*
 function_decl|)
@@ -1270,7 +1263,7 @@ specifier|static
 name|void
 name|witness_ddb_display_descendants
 parameter_list|(
-name|void
+name|int
 function_decl|(
 modifier|*
 function_decl|)
@@ -1298,7 +1291,7 @@ specifier|static
 name|void
 name|witness_ddb_display_list
 parameter_list|(
-name|void
+name|int
 function_decl|(
 modifier|*
 name|prnt
@@ -1533,6 +1526,20 @@ name|struct
 name|lock_instance
 modifier|*
 name|instance
+parameter_list|,
+name|int
+function_decl|(
+modifier|*
+name|prnt
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2308,6 +2315,13 @@ block|,
 endif|#
 directive|endif
 block|{
+literal|"time lock"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|NULL
@@ -2698,6 +2712,41 @@ block|,
 name|NULL
 block|}
 block|,
+comment|/* 	 * VM 	 *  	 */
+block|{
+literal|"vm object"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"page lock"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"vm page queue mutex"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"pmap"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
 comment|/* 	 * kqueue/VFS interaction 	 */
 block|{
 literal|"kqueue"
@@ -2931,13 +2980,6 @@ block|}
 block|,
 block|{
 literal|"syscons video lock"
-block|,
-operator|&
-name|lock_class_mtx_spin
-block|}
-block|,
-block|{
-literal|"time lock"
 block|,
 operator|&
 name|lock_class_mtx_spin
@@ -4148,7 +4190,7 @@ specifier|static
 name|void
 name|witness_ddb_display_descendants
 parameter_list|(
-name|void
+name|int
 function_decl|(
 modifier|*
 name|prnt
@@ -4328,7 +4370,7 @@ specifier|static
 name|void
 name|witness_ddb_display_list
 parameter_list|(
-name|void
+name|int
 function_decl|(
 modifier|*
 name|prnt
@@ -4396,7 +4438,7 @@ specifier|static
 name|void
 name|witness_ddb_display
 parameter_list|(
-name|void
+name|int
 function_decl|(
 modifier|*
 name|prnt
@@ -5323,7 +5365,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we know that the the lock we are acquiring comes after 	 * the lock we most recently acquired in the lock order tree, 	 * then there is no need for any further checks. 	 */
+comment|/* 	 * If we know that the lock we are acquiring comes after 	 * the lock we most recently acquired in the lock order tree, 	 * then there is no need for any further checks. 	 */
 if|if
 condition|(
 name|isitmychild
@@ -7534,6 +7576,8 @@ name|ll_children
 index|[
 name|i
 index|]
+argument_list|,
+name|printf
 argument_list|)
 expr_stmt|;
 block|}
@@ -7772,6 +7816,8 @@ expr_stmt|;
 name|witness_list_lock
 argument_list|(
 name|lock1
+argument_list|,
+name|printf
 argument_list|)
 expr_stmt|;
 block|}
@@ -7892,6 +7938,8 @@ name|witness_list_locks
 argument_list|(
 operator|&
 name|lock_list
+argument_list|,
+name|printf
 argument_list|)
 expr_stmt|;
 block|}
@@ -9708,6 +9756,20 @@ name|struct
 name|lock_instance
 modifier|*
 name|instance
+parameter_list|,
+name|int
+function_decl|(
+modifier|*
+name|prnt
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
 parameter_list|)
 block|{
 name|struct
@@ -9721,7 +9783,7 @@ name|instance
 operator|->
 name|li_lock
 expr_stmt|;
-name|printf
+name|prnt
 argument_list|(
 literal|"%s %s %s"
 argument_list|,
@@ -9763,7 +9825,7 @@ name|lock
 operator|->
 name|lo_name
 condition|)
-name|printf
+name|prnt
 argument_list|(
 literal|" (%s)"
 argument_list|,
@@ -9774,7 +9836,7 @@ operator|->
 name|w_name
 argument_list|)
 expr_stmt|;
-name|printf
+name|prnt
 argument_list|(
 literal|" r = %d (%p) locked @ %s:%d\n"
 argument_list|,
@@ -9900,6 +9962,20 @@ name|lock_list_entry
 modifier|*
 modifier|*
 name|lock_list
+parameter_list|,
+name|int
+function_decl|(
+modifier|*
+name|prnt
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
 parameter_list|)
 block|{
 name|struct
@@ -9960,6 +10036,8 @@ name|ll_children
 index|[
 name|i
 index|]
+argument_list|,
+name|prnt
 argument_list|)
 expr_stmt|;
 name|nheld
@@ -9991,6 +10069,20 @@ name|struct
 name|thread
 modifier|*
 name|owner
+parameter_list|,
+name|int
+function_decl|(
+modifier|*
+name|prnt
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
 parameter_list|)
 block|{
 name|struct
@@ -10047,6 +10139,8 @@ condition|)
 name|witness_list_lock
 argument_list|(
 name|instance
+argument_list|,
+name|prnt
 argument_list|)
 expr_stmt|;
 block|}
@@ -10989,6 +11083,8 @@ operator|&
 name|td
 operator|->
 name|td_sleeplocks
+argument_list|,
+name|db_printf
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We only handle spinlocks if td == curthread.  This is somewhat broken 	 * if td is currently executing on some other CPU and holds spin locks 	 * as we won't display those locks.  If we had a MI way of getting 	 * the per-cpu data for a given cpu then we could use 	 * td->td_oncpu to get the list of spinlocks for this thread 	 * and "fix" this. 	 * 	 * That still wouldn't really fix this unless we locked the scheduler 	 * lock or stopped the other CPU to make sure it wasn't changing the 	 * list out from under us.  It is probably best to just not try to 	 * handle threads on other CPU's for now. 	 */
@@ -11011,6 +11107,8 @@ name|PCPU_PTR
 argument_list|(
 name|spinlocks
 argument_list|)
+argument_list|,
+name|db_printf
 argument_list|)
 expr_stmt|;
 block|}
@@ -12051,9 +12149,29 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+name|error
+operator|=
+name|sysctl_wire_old_buffer
+argument_list|(
+name|req
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|sb
 operator|=
-name|sbuf_new
+name|sbuf_new_for_sysctl
 argument_list|(
 name|NULL
 argument_list|,
@@ -12061,7 +12179,7 @@ name|NULL
 argument_list|,
 name|FULLGRAPH_SBUF_SIZE
 argument_list|,
-name|SBUF_FIXEDLEN
+name|req
 argument_list|)
 expr_stmt|;
 if|if
@@ -12123,51 +12241,12 @@ operator|&
 name|w_mtx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * While using SBUF_FIXEDLEN, check if the sbuf overflowed. 	 */
-if|if
-condition|(
-name|sbuf_overflowed
-argument_list|(
-name|sb
-argument_list|)
-condition|)
-block|{
-name|sbuf_delete
-argument_list|(
-name|sb
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"%s: sbuf overflowed, bump FULLGRAPH_SBUF_SIZE value\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Close the sbuf and return to userland. 	 */
+name|error
+operator|=
 name|sbuf_finish
 argument_list|(
 name|sb
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|SYSCTL_OUT
-argument_list|(
-name|req
-argument_list|,
-name|sbuf_data
-argument_list|(
-name|sb
-argument_list|)
-argument_list|,
-name|sbuf_len
-argument_list|(
-name|sb
-argument_list|)
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 name|sbuf_delete

@@ -1685,9 +1685,6 @@ operator|==
 literal|0
 condition|)
 block|{
-operator|(
-name|int
-operator|)
 name|sctp_skip_xinpcb_ifneed
 argument_list|(
 name|buf
@@ -2685,7 +2682,7 @@ name|p
 argument_list|(
 name|sctps_sendheartbeat
 argument_list|,
-literal|"\t\t%ju intput HB chunk%s\n"
+literal|"\t\t%ju output HB chunk%s\n"
 argument_list|)
 expr_stmt|;
 name|p

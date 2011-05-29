@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back end for NetBSD style core files    Copyright 1988, 1989, 1991, 1992, 1993, 1996, 1998, 1999, 2000, 2001,    2002, 2003, 2004    Free Software Foundation, Inc.    Written by Paul Kranenburg, EUR  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back end for NetBSD style core files    Copyright 1988, 1989, 1991, 1992, 1993, 1996, 1998, 1999, 2000, 2001,    2002, 2003, 2004, 2005, 2006, 2007    Free Software Foundation, Inc.    Written by Paul Kranenburg, EUR     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -28,7 +28,7 @@ file|"libaout.h"
 end_include
 
 begin_comment
-comment|/* BFD a.out internal data structures */
+comment|/* BFD a.out internal data structures.  */
 end_comment
 
 begin_include
@@ -56,8 +56,15 @@ file|<sys/core.h>
 end_include
 
 begin_comment
-comment|/*  * FIXME: On NetBSD/sparc CORE_FPU_OFFSET should be (sizeof (struct trapframe))  */
+comment|/* The machine ID for OpenBSD/sparc64 and older versions of    NetBSD/sparc64 overlaps with M_MIPS1.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|M_SPARC64_OPENBSD
+value|M_MIPS1
+end_define
 
 begin_comment
 comment|/* Offset of StackGhost cookie within `struct md_coredump' on    OpenBSD/sparc.  */
@@ -66,8 +73,26 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CORE_WCOOKIE_OFFSET
+name|SPARC_WCOOKIE_OFFSET
 value|344
+end_define
+
+begin_comment
+comment|/* Offset of StackGhost cookie within `struct md_coredump' on    OpenBSD/sparc64.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPARC64_WCOOKIE_OFFSET
+value|832
+end_define
+
+begin_define
+define|#
+directive|define
+name|netbsd_core_file_matches_executable_p
+value|generic_core_file_matches_executable_p
 end_define
 
 begin_struct
@@ -85,90 +110,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* forward declarations */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|bfd_target
-modifier|*
-name|netbsd_core_file_p
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|netbsd_core_file_failing_command
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|netbsd_core_file_failing_signal
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|netbsd_core_file_matches_executable_p
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|core_bfd
-operator|,
-name|bfd
-operator|*
-name|exec_bfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|swap_abort
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Handle NetBSD-style core dump file.  */
 end_comment
 
@@ -179,17 +120,16 @@ name|bfd_target
 modifier|*
 name|netbsd_core_file_p
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
-name|i
-decl_stmt|,
 name|val
+decl_stmt|;
+name|unsigned
+name|i
 decl_stmt|;
 name|file_ptr
 name|offset
@@ -197,9 +137,6 @@ decl_stmt|;
 name|asection
 modifier|*
 name|asect
-decl_stmt|,
-modifier|*
-name|asect2
 decl_stmt|;
 name|struct
 name|core
@@ -219,10 +156,6 @@ name|val
 operator|=
 name|bfd_bread
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|core
 argument_list|,
@@ -239,7 +172,7 @@ sizeof|sizeof
 name|core
 condition|)
 block|{
-comment|/* Too small to be a core file */
+comment|/* Too small to be a core file.  */
 name|bfd_set_error
 argument_list|(
 name|bfd_error_wrong_format
@@ -363,16 +296,9 @@ name|val
 operator|=
 name|bfd_bread
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|coreseg
 argument_list|,
-operator|(
-name|bfd_size_type
-operator|)
 sizeof|sizeof
 name|coreseg
 argument_list|,
@@ -490,11 +416,13 @@ break|break;
 block|}
 name|asect
 operator|=
-name|bfd_make_section_anyway
+name|bfd_make_section_anyway_with_flags
 argument_list|(
 name|abfd
 argument_list|,
 name|sname
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -508,13 +436,7 @@ name|punt
 goto|;
 name|asect
 operator|->
-name|flags
-operator|=
-name|flags
-expr_stmt|;
-name|asect
-operator|->
-name|_raw_size
+name|size
 operator|=
 name|coreseg
 operator|.
@@ -542,42 +464,84 @@ literal|2
 expr_stmt|;
 if|if
 condition|(
-name|CORE_GETMID
-argument_list|(
-name|core
-argument_list|)
-operator|==
-name|M_SPARC_NETBSD
-operator|&&
 name|CORE_GETFLAG
 argument_list|(
 name|coreseg
 argument_list|)
 operator|==
 name|CORE_CPU
+condition|)
+block|{
+name|bfd_size_type
+name|wcookie_offset
+decl_stmt|;
+switch|switch
+condition|(
+name|CORE_GETMID
+argument_list|(
+name|core
+argument_list|)
+condition|)
+block|{
+case|case
+name|M_SPARC_NETBSD
+case|:
+name|wcookie_offset
+operator|=
+name|SPARC_WCOOKIE_OFFSET
+expr_stmt|;
+break|break;
+case|case
+name|M_SPARC64_OPENBSD
+case|:
+name|wcookie_offset
+operator|=
+name|SPARC64_WCOOKIE_OFFSET
+expr_stmt|;
+break|break;
+default|default:
+name|wcookie_offset
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|wcookie_offset
+operator|>
+literal|0
 operator|&&
 name|coreseg
 operator|.
 name|c_size
 operator|>
-name|CORE_WCOOKIE_OFFSET
+name|wcookie_offset
 condition|)
 block|{
 comment|/* Truncate the .reg section.  */
 name|asect
 operator|->
-name|_raw_size
+name|size
 operator|=
-name|CORE_WCOOKIE_OFFSET
+name|wcookie_offset
 expr_stmt|;
 comment|/* And create the .wcookie section.  */
+name|flags
+operator|=
+name|SEC_ALLOC
+operator|+
+name|SEC_HAS_CONTENTS
+expr_stmt|;
 name|asect
 operator|=
-name|bfd_make_section_anyway
+name|bfd_make_section_anyway_with_flags
 argument_list|(
 name|abfd
 argument_list|,
 literal|".wcookie"
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -591,17 +555,13 @@ name|punt
 goto|;
 name|asect
 operator|->
-name|flags
+name|size
 operator|=
-name|SEC_ALLOC
-operator|+
-name|SEC_HAS_CONTENTS
-expr_stmt|;
-name|asect
-operator|->
-name|_raw_size
-operator|=
-literal|4
+name|coreseg
+operator|.
+name|c_size
+operator|-
+name|wcookie_offset
 expr_stmt|;
 name|asect
 operator|->
@@ -615,7 +575,7 @@ name|filepos
 operator|=
 name|offset
 operator|+
-name|CORE_WCOOKIE_OFFSET
+name|wcookie_offset
 expr_stmt|;
 name|asect
 operator|->
@@ -623,6 +583,7 @@ name|alignment_power
 operator|=
 literal|2
 expr_stmt|;
+block|}
 block|}
 name|offset
 operator|+=
@@ -630,89 +591,168 @@ name|coreseg
 operator|.
 name|c_size
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CORE_FPU_OFFSET
+block|}
+comment|/* Set architecture from machine ID.  */
 switch|switch
 condition|(
-name|CORE_GETFLAG
+name|CORE_GETMID
 argument_list|(
-name|coreseg
+name|core
 argument_list|)
 condition|)
 block|{
 case|case
-name|CORE_CPU
+name|M_ALPHA_NETBSD
 case|:
-comment|/* Hackish...  */
-name|asect
-operator|->
-name|_raw_size
-operator|=
-name|CORE_FPU_OFFSET
-expr_stmt|;
-name|asect2
-operator|=
-name|bfd_make_section_anyway
+name|bfd_default_set_arch_mach
 argument_list|(
 name|abfd
 argument_list|,
-literal|".reg2"
+name|bfd_arch_alpha
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|asect2
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|punt
-goto|;
-name|asect2
-operator|->
-name|_raw_size
-operator|=
-name|coreseg
-operator|.
-name|c_size
-operator|-
-name|CORE_FPU_OFFSET
-expr_stmt|;
-name|asect2
-operator|->
-name|vma
-operator|=
-literal|0
-expr_stmt|;
-name|asect2
-operator|->
-name|filepos
-operator|=
-name|asect
-operator|->
-name|filepos
-operator|+
-name|CORE_FPU_OFFSET
-expr_stmt|;
-name|asect2
-operator|->
-name|alignment_power
-operator|=
-literal|2
-expr_stmt|;
-name|asect2
-operator|->
-name|flags
-operator|=
-name|SEC_ALLOC
-operator|+
-name|SEC_HAS_CONTENTS
+break|break;
+case|case
+name|M_ARM6_NETBSD
+case|:
+name|bfd_default_set_arch_mach
+argument_list|(
+name|abfd
+argument_list|,
+name|bfd_arch_arm
+argument_list|,
+name|bfd_mach_arm_3
+argument_list|)
 expr_stmt|;
 break|break;
-block|}
-endif|#
-directive|endif
+case|case
+name|M_X86_64_NETBSD
+case|:
+name|bfd_default_set_arch_mach
+argument_list|(
+name|abfd
+argument_list|,
+name|bfd_arch_i386
+argument_list|,
+name|bfd_mach_x86_64
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|M_386_NETBSD
+case|:
+name|bfd_default_set_arch_mach
+argument_list|(
+name|abfd
+argument_list|,
+name|bfd_arch_i386
+argument_list|,
+name|bfd_mach_i386_i386
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|M_68K_NETBSD
+case|:
+case|case
+name|M_68K4K_NETBSD
+case|:
+name|bfd_default_set_arch_mach
+argument_list|(
+name|abfd
+argument_list|,
+name|bfd_arch_m68k
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|M_88K_OPENBSD
+case|:
+name|bfd_default_set_arch_mach
+argument_list|(
+name|abfd
+argument_list|,
+name|bfd_arch_m88k
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|M_HPPA_OPENBSD
+case|:
+name|bfd_default_set_arch_mach
+argument_list|(
+name|abfd
+argument_list|,
+name|bfd_arch_hppa
+argument_list|,
+name|bfd_mach_hppa11
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|M_POWERPC_NETBSD
+case|:
+name|bfd_default_set_arch_mach
+argument_list|(
+name|abfd
+argument_list|,
+name|bfd_arch_powerpc
+argument_list|,
+name|bfd_mach_ppc
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|M_SPARC_NETBSD
+case|:
+name|bfd_default_set_arch_mach
+argument_list|(
+name|abfd
+argument_list|,
+name|bfd_arch_sparc
+argument_list|,
+name|bfd_mach_sparc
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|M_SPARC64_NETBSD
+case|:
+case|case
+name|M_SPARC64_OPENBSD
+case|:
+name|bfd_default_set_arch_mach
+argument_list|(
+name|abfd
+argument_list|,
+name|bfd_arch_sparc
+argument_list|,
+name|bfd_mach_sparc_v9
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|M_VAX_NETBSD
+case|:
+case|case
+name|M_VAX4K_NETBSD
+case|:
+name|bfd_default_set_arch_mach
+argument_list|(
+name|abfd
+argument_list|,
+name|bfd_arch_vax
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 comment|/* OK, we believe you.  You're a core file (sure, sure).  */
 return|return
@@ -758,12 +798,10 @@ name|char
 modifier|*
 name|netbsd_core_file_failing_command
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/*return core_command (abfd);*/
 return|return
@@ -785,12 +823,10 @@ specifier|static
 name|int
 name|netbsd_core_file_failing_signal
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/*return core_signal (abfd);*/
 return|return
@@ -807,33 +843,6 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|bfd_boolean
-name|netbsd_core_file_matches_executable_p
-parameter_list|(
-name|core_bfd
-parameter_list|,
-name|exec_bfd
-parameter_list|)
-name|bfd
-modifier|*
-name|core_bfd
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|bfd
-modifier|*
-name|exec_bfd
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
-block|{
-return|return
-name|TRUE
-return|;
-comment|/* FIXME, We have no way of telling at this point */
-block|}
-end_function
-
 begin_escape
 end_escape
 
@@ -845,12 +854,14 @@ begin_function
 specifier|static
 name|void
 name|swap_abort
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
+comment|/* This way doesn't require any declaration for ANSI to fuck up.  */
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* This way doesn't require any declaration for ANSI to fuck up */
 block|}
 end_function
 
@@ -908,16 +919,16 @@ name|bfd_target_unknown_flavour
 block|,
 name|BFD_ENDIAN_UNKNOWN
 block|,
-comment|/* target byte order */
+comment|/* Target byte order.  */
 name|BFD_ENDIAN_UNKNOWN
 block|,
-comment|/* target headers byte order */
+comment|/* Target headers byte order.  */
 operator|(
 name|HAS_RELOC
 operator||
 name|EXEC_P
 operator||
-comment|/* object flags */
+comment|/* Object flags.  */
 name|HAS_LINENO
 operator||
 name|HAS_DEBUG
@@ -934,6 +945,7 @@ block|,
 operator|(
 name|SEC_HAS_CONTENTS
 operator||
+comment|/* Section flags.  */
 name|SEC_ALLOC
 operator||
 name|SEC_LOAD
@@ -941,16 +953,15 @@ operator||
 name|SEC_RELOC
 operator|)
 block|,
-comment|/* section flags */
 literal|0
 block|,
-comment|/* symbol prefix */
+comment|/* Symbol prefix.  */
 literal|' '
 block|,
-comment|/* ar_pad_char */
+comment|/* ar_pad_char.  */
 literal|16
 block|,
-comment|/* ar_max_namelen */
+comment|/* ar_max_namelen.  */
 name|NO_GET64
 block|,
 name|NO_GETS64
@@ -994,22 +1005,22 @@ name|NO_PUT
 block|,
 comment|/* 16 bit hdrs.  */
 block|{
-comment|/* bfd_check_format */
+comment|/* bfd_check_format.  */
 name|_bfd_dummy_target
 block|,
-comment|/* unknown format */
+comment|/* Unknown format.  */
 name|_bfd_dummy_target
 block|,
-comment|/* object file */
+comment|/* Object file.  */
 name|_bfd_dummy_target
 block|,
-comment|/* archive */
+comment|/* Archive.  */
 name|netbsd_core_file_p
-comment|/* a core file */
+comment|/* A core file.  */
 block|}
 block|,
 block|{
-comment|/* bfd_set_format */
+comment|/* bfd_set_format.  */
 name|bfd_false
 block|,
 name|bfd_false
@@ -1020,7 +1031,7 @@ name|bfd_false
 block|}
 block|,
 block|{
-comment|/* bfd_write_contents */
+comment|/* bfd_write_contents.  */
 name|bfd_false
 block|,
 name|bfd_false
@@ -1081,7 +1092,7 @@ operator|(
 name|PTR
 operator|)
 literal|0
-comment|/* backend_data */
+comment|/* Backend_data.  */
 block|}
 decl_stmt|;
 end_decl_stmt

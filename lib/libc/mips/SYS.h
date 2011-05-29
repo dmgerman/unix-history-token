@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: SYS.h,v 1.18 2003/10/29 12:28:33 pooka Exp $ */
+comment|/*	$NetBSD: SYS.h,v 1.19 2009/12/14 01:07:41 matt Exp $ */
 end_comment
 
 begin_comment
@@ -42,28 +42,46 @@ operator|.
 name|abicalls
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_o32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_o64
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|PIC_PROLOGUE
 parameter_list|(
 name|x
-parameter_list|,
-name|sr
 parameter_list|)
-value|.set noreorder; .cpload sr; .set reorder
+value|SETUP_GP
 end_define
 
 begin_define
 define|#
 directive|define
-name|PIC_CALL
+name|PIC_TAILCALL
 parameter_list|(
 name|l
-parameter_list|,
-name|sr
 parameter_list|)
-value|la sr, _C_LABEL(l); jr sr
+value|PTR_LA t9, _C_LABEL(l); jr t9
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIC_RETURN
+parameter_list|()
+value|j ra
 end_define
 
 begin_else
@@ -77,27 +95,73 @@ directive|define
 name|PIC_PROLOGUE
 parameter_list|(
 name|x
-parameter_list|,
-name|sr
 parameter_list|)
+value|SETUP_GP64(t3, x)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PIC_CALL
+name|PIC_TAILCALL
 parameter_list|(
 name|l
-parameter_list|,
-name|sr
 parameter_list|)
-value|j  _C_LABEL(l)
+value|PTR_LA t9, _C_LABEL(l); RESTORE_GP64; jr t9
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIC_RETURN
+parameter_list|()
+value|RESTORE_GP64; j ra
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PIC_PROLOGUE
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIC_TAILCALL
+parameter_list|(
+name|l
+parameter_list|)
+value|j  _C_LABEL(l)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIC_RETURN
+parameter_list|()
+value|j ra
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __ABICALLS__ */
+end_comment
 
 begin_define
 define|#
@@ -106,7 +170,7 @@ name|SYSTRAP
 parameter_list|(
 name|x
 parameter_list|)
-value|li v0, SYS_ ## x; syscall;
+value|li v0,SYS_ ## x; syscall;
 end_define
 
 begin_comment
@@ -151,7 +215,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|LEAF(__sys_ ## x);							\         .weak _C_LABEL(x);						\ 	_C_LABEL(x) = _C_LABEL(__CONCAT(__sys_,x));			\ 	.weak _C_LABEL(__CONCAT(_,x));					\ 	_C_LABEL(__CONCAT(_,x)) = _C_LABEL(__CONCAT(__sys_,x));		\ 	SYSTRAP(x);							\ 	j ra;								\ 	END(__sys_ ## x)
+value|LEAF(__sys_ ## x);							\ 	.weak _C_LABEL(x);						\ 	_C_LABEL(x) = _C_LABEL(__CONCAT(__sys_,x));			\ 	.weak _C_LABEL(__CONCAT(_,x));					\ 	_C_LABEL(__CONCAT(_,x)) = _C_LABEL(__CONCAT(__sys_,x));		\ 	SYSTRAP(x);							\ 	j ra;								\ 	END(__sys_ ## x)
 end_define
 
 begin_define
@@ -162,7 +226,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|LEAF(__sys_ ## x);							\         .weak _C_LABEL(x);						\ 	_C_LABEL(x) = _C_LABEL(__CONCAT(__sys_,x));			\ 	.weak _C_LABEL(__CONCAT(_,x));					\ 	_C_LABEL(__CONCAT(_,x)) = _C_LABEL(__CONCAT(__sys_,x));		\ 	PIC_PROLOGUE(x,t9);						\ 	SYSTRAP(x);							\ 	bne a3,zero,err;						\ 	j ra;								\ err:									\ 	PIC_CALL(__cerror,t9);						\ 	END(__sys_ ## x)
+value|LEAF(__sys_ ## x);							\ 	.weak _C_LABEL(x);						\ 	_C_LABEL(x) = _C_LABEL(__CONCAT(__sys_,x));			\ 	.weak _C_LABEL(__CONCAT(_,x));					\ 	_C_LABEL(__CONCAT(_,x)) = _C_LABEL(__CONCAT(__sys_,x));		\ 	PIC_PROLOGUE(__sys_ ## x);					\ 	SYSTRAP(x);							\ 	bne a3,zero,err;						\ 	PIC_RETURN();							\ err:									\ 	PIC_TAILCALL(__cerror);						\ END(__sys_ ## x)
 end_define
 
 end_unit

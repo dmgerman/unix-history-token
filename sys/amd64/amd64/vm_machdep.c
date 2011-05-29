@@ -414,7 +414,7 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-comment|/* Ensure that p1's pcb is up to date. */
+comment|/* Ensure that td1's pcb is up to date. */
 name|fpuexit
 argument_list|(
 name|td1
@@ -448,7 +448,7 @@ name|td_pcb
 operator|=
 name|pcb2
 expr_stmt|;
-comment|/* Copy p1's pcb */
+comment|/* Copy td1's pcb */
 name|bcopy
 argument_list|(
 name|td1
@@ -463,6 +463,16 @@ operator|*
 name|pcb2
 argument_list|)
 argument_list|)
+expr_stmt|;
+comment|/* Properly initialize pcb_save */
+name|pcb2
+operator|->
+name|pcb_save
+operator|=
+operator|&
+name|pcb2
+operator|->
+name|pcb_user_save
 expr_stmt|;
 comment|/* Point mdproc and then copy over td1's contents */
 name|mdp2
@@ -674,11 +684,12 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* New segment registers. */
+name|set_pcb_flags
+argument_list|(
 name|pcb2
-operator|->
-name|pcb_full_iret
-operator|=
-literal|1
+argument_list|,
+name|PCB_FULL_IRET
+argument_list|)
 expr_stmt|;
 comment|/* Copy the LDT, if necessary. */
 name|mdp1
@@ -955,6 +966,9 @@ name|pcb
 modifier|*
 name|pcb
 decl_stmt|;
+name|critical_enter
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|td
@@ -965,6 +979,9 @@ name|fpcurthread
 argument_list|)
 condition|)
 name|fpudrop
+argument_list|()
+expr_stmt|;
+name|critical_exit
 argument_list|()
 expr_stmt|;
 name|pcb
@@ -986,12 +1003,12 @@ block|{
 name|reset_dbregs
 argument_list|()
 expr_stmt|;
+name|clear_pcb_flags
+argument_list|(
 name|pcb
-operator|->
-name|pcb_flags
-operator|&=
-operator|~
+argument_list|,
 name|PCB_DBREGS
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -1129,6 +1146,19 @@ name|td_pcb
 operator|-
 literal|1
 expr_stmt|;
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_save
+operator|=
+operator|&
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_user_save
+expr_stmt|;
 block|}
 end_function
 
@@ -1210,7 +1240,7 @@ break|break;
 case|case
 name|ERESTART
 case|:
-comment|/* 		 * Reconstruct pc, we know that 'syscall' is 2 bytes, 		 * lcall $X,y is 7 bytes, int 0x80 is 2 bytes. 		 * We saved this in tf_err. 		 * We have to do a full context restore so that %r10 		 * (which was holding the value of %rcx) is restored 		 * for the next iteration. 		 * r10 restore is only required for freebsd/amd64 processes, 		 * but shall be innocent for any ia32 ABI. 		 */
+comment|/* 		 * Reconstruct pc, we know that 'syscall' is 2 bytes, 		 * lcall $X,y is 7 bytes, int 0x80 is 2 bytes. 		 * We saved this in tf_err. 		 * %r10 (which was holding the value of %rcx) is restored 		 * for the next iteration. 		 * %r10 restore is only required for freebsd/amd64 processes, 		 * but shall be innocent for any ia32 ABI. 		 */
 name|td
 operator|->
 name|td_frame
@@ -1234,14 +1264,6 @@ operator|->
 name|td_frame
 operator|->
 name|tf_rcx
-expr_stmt|;
-name|td
-operator|->
-name|td_pcb
-operator|->
-name|pcb_flags
-operator||=
-name|PCB_FULLCTX
 expr_stmt|;
 break|break;
 case|case
@@ -1361,18 +1383,30 @@ name|pcb2
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|clear_pcb_flags
+argument_list|(
 name|pcb2
-operator|->
-name|pcb_flags
-operator|&=
-operator|~
+argument_list|,
 name|PCB_FPUINITDONE
+operator||
+name|PCB_USERFPUINITDONE
+argument_list|)
 expr_stmt|;
 name|pcb2
 operator|->
-name|pcb_full_iret
+name|pcb_save
 operator|=
-literal|1
+operator|&
+name|pcb2
+operator|->
+name|pcb_user_save
+expr_stmt|;
+name|set_pcb_flags
+argument_list|(
+name|pcb2
+argument_list|,
+name|PCB_FULL_IRET
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Create a new fresh stack for the new thread. 	 */
 name|bcopy
@@ -1519,18 +1553,17 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 if|if
 condition|(
+name|SV_PROC_FLAG
+argument_list|(
 name|td
 operator|->
 name|td_proc
-operator|->
-name|p_sysent
-operator|->
-name|sv_flags
-operator|&
+argument_list|,
 name|SV_ILP32
+argument_list|)
 condition|)
 block|{
 comment|/* 	 	 * Set the trap frame to point at the beginning of the uts 		 * function. 		 */
@@ -1733,6 +1766,11 @@ modifier|*
 name|tls_base
 parameter_list|)
 block|{
+name|struct
+name|pcb
+modifier|*
+name|pcb
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -1747,25 +1785,28 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|COMPAT_IA32
-if|if
-condition|(
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_sysent
-operator|->
-name|sv_flags
-operator|&
-name|SV_ILP32
-condition|)
-block|{
+name|pcb
+operator|=
 name|td
 operator|->
 name|td_pcb
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD32
+if|if
+condition|(
+name|SV_PROC_FLAG
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|,
+name|SV_ILP32
+argument_list|)
+condition|)
+block|{
+name|pcb
 operator|->
 name|pcb_gsbase
 operator|=
@@ -1782,9 +1823,7 @@ return|;
 block|}
 endif|#
 directive|endif
-name|td
-operator|->
-name|td_pcb
+name|pcb
 operator|->
 name|pcb_fsbase
 operator|=
@@ -1793,13 +1832,12 @@ name|register_t
 operator|)
 name|tls_base
 expr_stmt|;
-name|td
-operator|->
-name|td_pcb
-operator|->
-name|pcb_full_iret
-operator|=
-literal|1
+name|set_pcb_flags
+argument_list|(
+name|pcb
+argument_list|,
+name|PCB_FULL_IRET
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1873,10 +1911,11 @@ block|{
 ifdef|#
 directive|ifdef
 name|SMP
+name|cpumask_t
+name|map
+decl_stmt|;
 name|u_int
 name|cnt
-decl_stmt|,
-name|map
 decl_stmt|;
 if|if
 condition|(

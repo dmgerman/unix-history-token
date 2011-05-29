@@ -18,7 +18,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/_sigset.h>
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/reg.h>
 end_include
 
 begin_define
@@ -251,6 +263,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PT_FOLLOW_FORK
+value|23
+end_define
+
+begin_define
+define|#
+directive|define
 name|PT_GETREGS
 value|33
 end_define
@@ -469,6 +488,31 @@ directive|define
 name|PL_FLAG_BOUND
 value|0x02
 comment|/* M:N bound thread */
+define|#
+directive|define
+name|PL_FLAG_SCE
+value|0x04
+comment|/* syscall enter point */
+define|#
+directive|define
+name|PL_FLAG_SCX
+value|0x08
+comment|/* syscall leave point */
+define|#
+directive|define
+name|PL_FLAG_EXEC
+value|0x10
+comment|/* exec(2) succeeded */
+define|#
+directive|define
+name|PL_FLAG_SI
+value|0x20
+comment|/* siginfo is valid */
+define|#
+directive|define
+name|PL_FLAG_FORKED
+value|0x40
+comment|/* new child */
 name|sigset_t
 name|pl_sigmask
 decl_stmt|;
@@ -477,6 +521,24 @@ name|sigset_t
 name|pl_siglist
 decl_stmt|;
 comment|/* LWP pending signal */
+name|struct
+name|__siginfo
+name|pl_siginfo
+decl_stmt|;
+comment|/* siginfo for signal */
+name|char
+name|pl_tdname
+index|[
+name|MAXCOMLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* LWP name */
+name|int
+name|pl_child_pid
+decl_stmt|;
+comment|/* New child pid */
 block|}
 struct|;
 end_struct
@@ -808,7 +870,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 end_ifdef
 
 begin_struct_decl

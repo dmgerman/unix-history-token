@@ -425,7 +425,7 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We have mapped the the PCI I/O windows in the early 	 * bootstrap phase. 	 */
+comment|/* 	 * We have mapped the PCI I/O windows in the early 	 * bootstrap phase. 	 */
 name|sc
 operator|->
 name|sc_iow_vaddr

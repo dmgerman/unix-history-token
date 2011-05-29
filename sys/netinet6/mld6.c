@@ -694,10 +694,11 @@ parameter_list|,
 name|zoneid
 parameter_list|)
 define|\
-value|(pin6)->s6_addr16[1] = htons((zoneid)& 0xFFFF)
+value|if (IN6_IS_SCOPE_LINKLOCAL(pin6) ||				\ 	    IN6_IS_ADDR_MC_INTFACELOCAL(pin6))				\ 		(pin6)->s6_addr16[1] = htons((zoneid)& 0xFFFF)
 end_define
 
 begin_comment
+unit|\
 comment|/*  * VIMAGE-wide globals.  */
 end_comment
 

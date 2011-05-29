@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_ZFS_CTLDIR_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -108,6 +101,13 @@ name|void
 name|zfsctl_fini
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+name|boolean_t
+name|zfsctl_is_node
+parameter_list|(
+name|vnode_t
+modifier|*
 parameter_list|)
 function_decl|;
 name|int
@@ -216,6 +216,10 @@ define|#
 directive|define
 name|ZFSCTL_INO_SNAPDIR
 value|0x2
+define|#
+directive|define
+name|ZFSCTL_INO_SHARES
+value|0x3
 ifdef|#
 directive|ifdef
 name|__cplusplus

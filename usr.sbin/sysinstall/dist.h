@@ -100,11 +100,19 @@ name|DIST_LOCAL
 value|0x00800
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__amd64__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__powerpc64__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -469,6 +477,36 @@ directive|define
 name|DIST_KERNEL_ALL
 value|0xFFFFF
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|GENERIC_KERNEL_NAME
+value|"GENERIC64"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|GENERIC_KERNEL_NAME
+value|"GENERIC"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Canned distribution sets */

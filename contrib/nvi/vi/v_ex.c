@@ -1737,6 +1737,16 @@ operator|==
 name|TERM_BS
 condition|)
 break|break;
+comment|/* If the user changed their mind, return. */
+if|if
+condition|(
+name|tp
+operator|->
+name|term
+operator|!=
+name|TERM_OK
+condition|)
+break|break;
 comment|/* Log the command. */
 if|if
 condition|(

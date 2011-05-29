@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdint.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -178,8 +172,10 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|warn
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"can't stat file id %d"
 argument_list|,
 name|fileid
@@ -188,7 +184,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%2d %4d %p %-8jx %s"
+literal|"%2d %4d %p %-8zx %s"
 argument_list|,
 name|stat
 operator|.
@@ -202,9 +198,6 @@ name|stat
 operator|.
 name|address
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
 name|stat
 operator|.
 name|size

@@ -15,12 +15,6 @@ directive|define
 name|_SYS_MUTEX_H_
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
-
 begin_include
 include|#
 directive|include
@@ -74,36 +68,6 @@ include|#
 directive|include
 file|<machine/cpufunc.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL_ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !LOCORE */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/mutex.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_comment
 comment|/*  * Mutex types and options passed to mtx_init().  MTX_QUIET and MTX_DUPOK  * can also be passed in.  */
@@ -244,40 +208,6 @@ directive|define
 name|MTX_DESTROYED
 value|(MTX_CONTESTED | MTX_UNOWNED)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
-
-begin_comment
-comment|/*  * XXX: Friendly reminder to fix things in MP code that is presently being  * XXX: worked on.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|mp_fixme
-parameter_list|(
-name|string
-parameter_list|)
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_comment
 comment|/*  * Prototypes  *  * NOTE: Functions prepended with `_' (underscore) are exported to other parts  *	 of the kernel via macros, thus allowing us to use the cpp LOCK_FILE  *	 and LOCK_LINE. These functions should not be called directly by any  *	 code using the API. Their macros cover their functionality.  *  * [See below for descriptions]  *  */
@@ -668,23 +598,17 @@ value|lock_object.lo_data
 end_define
 
 begin_comment
-comment|/*  * We define our machine-independent (unoptimized) mutex micro-operations  * here, if they are not already defined in the machine-dependent mutex.h   */
+comment|/* Very simple operations on mtx_lock. */
 end_comment
 
 begin_comment
 comment|/* Try to obtain mtx_lock once. */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_obtain_lock
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|_obtain_lock
+name|_mtx_obtain_lock
 parameter_list|(
 name|mp
 parameter_list|,
@@ -694,25 +618,14 @@ define|\
 value|atomic_cmpset_acq_ptr(&(mp)->mtx_lock, MTX_UNOWNED, (tid))
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Try to release mtx_lock if it is unrecursed and uncontested. */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_release_lock
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|_release_lock
+name|_mtx_release_lock
 parameter_list|(
 name|mp
 parameter_list|,
@@ -722,25 +635,14 @@ define|\
 value|atomic_cmpset_rel_ptr(&(mp)->mtx_lock, (tid), MTX_UNOWNED)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Release mtx_lock quickly, assuming we own it. */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_release_lock_quick
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|_release_lock_quick
+name|_mtx_release_lock_quick
 parameter_list|(
 name|mp
 parameter_list|)
@@ -748,25 +650,18 @@ define|\
 value|atomic_store_rel_ptr(&(mp)->mtx_lock, MTX_UNOWNED)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/*  * Obtain a sleep lock inline, or call the "hard" function if we can't get it  * easy.  */
+comment|/*  * Full lock operations that are suitable to be inlined in non-debug  * kernels.  If the lock cannot be acquired or released trivially then  * the work is deferred to another function.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_get_sleep_lock
-end_ifndef
+begin_comment
+comment|/* Lock a normal mutex. */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|_get_sleep_lock
+name|__mtx_lock
 parameter_list|(
 name|mp
 parameter_list|,
@@ -778,23 +673,12 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	if (!_obtain_lock((mp), _tid)) 					\ 		_mtx_lock_sleep((mp), _tid, (opts), (file), (line));	\ 	else								\               	LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS(LS_MTX_LOCK_ACQUIRE, \ 		    mp, 0, 0, (file), (line));				\ } while (0)
+value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	if (!_mtx_obtain_lock((mp), _tid))				\ 		_mtx_lock_sleep((mp), _tid, (opts), (file), (line));	\ 	else								\               	LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS(LS_MTX_LOCK_ACQUIRE, \ 		    mp, 0, 0, (file), (line));				\ } while (0)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/*  * Obtain a spin lock inline, or call the "hard" function if we can't get it  * easy. For spinlocks, we handle recursion inline (it turns out that function  * calls can be significantly expensive on some architectures).  * Since spin locks are not _too_ common, inlining this code is not too big   * a deal.  */
+comment|/*  * Lock a spin mutex.  For spinlocks, we handle recursion inline (it  * turns out that function calls can be significantly expensive on  * some architectures).  Since spin locks are not _too_ common,  * inlining this code is not too big a deal.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_get_spin_lock
-end_ifndef
 
 begin_ifdef
 ifdef|#
@@ -805,7 +689,7 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|_get_spin_lock
+name|__mtx_lock_spin
 parameter_list|(
 name|mp
 parameter_list|,
@@ -817,7 +701,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {	\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	spinlock_enter();						\ 	if (!_obtain_lock((mp), _tid)) {				\ 		if ((mp)->mtx_lock == _tid)				\ 			(mp)->mtx_recurse++;				\ 		else {							\ 			_mtx_lock_spin((mp), _tid, (opts), (file), (line)); \ 		}							\ 	} else 								\               	LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS(LS_MTX_SPIN_LOCK_ACQUIRE, \ 		    mp, 0, 0, (file), (line));				\ } while (0)
+value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	spinlock_enter();						\ 	if (!_mtx_obtain_lock((mp), _tid)) {				\ 		if ((mp)->mtx_lock == _tid)				\ 			(mp)->mtx_recurse++;				\ 		else							\ 			_mtx_lock_spin((mp), _tid, (opts), (file), (line)); \ 	} else 								\               	LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS(LS_MTX_SPIN_LOCK_ACQUIRE, \ 		    mp, 0, 0, (file), (line));				\ } while (0)
 end_define
 
 begin_else
@@ -832,7 +716,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_get_spin_lock
+name|__mtx_lock_spin
 parameter_list|(
 name|mp
 parameter_list|,
@@ -844,7 +728,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	spinlock_enter();						\ 	if ((mp)->mtx_lock == _tid)					\ 		(mp)->mtx_recurse++;					\ 	else {								\ 		KASSERT((mp)->mtx_lock == MTX_UNOWNED, ("corrupt spinlock")); \ 		(mp)->mtx_lock = _tid;				\ 	}								\ } while (0)
+value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	spinlock_enter();						\ 	if ((mp)->mtx_lock == _tid)					\ 		(mp)->mtx_recurse++;					\ 	else {								\ 		KASSERT((mp)->mtx_lock == MTX_UNOWNED, ("corrupt spinlock")); \ 		(mp)->mtx_lock = _tid;					\ 	}								\ } while (0)
 end_define
 
 begin_endif
@@ -856,25 +740,14 @@ begin_comment
 comment|/* SMP */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/*  * Release a sleep lock inline, or call the "hard" function if we can't do it  * easy.  */
+comment|/* Unlock a normal mutex. */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_rel_sleep_lock
-end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_rel_sleep_lock
+name|__mtx_unlock
 parameter_list|(
 name|mp
 parameter_list|,
@@ -886,23 +759,12 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	if (!_release_lock((mp), _tid))					\ 		_mtx_unlock_sleep((mp), (opts), (file), (line));	\ } while (0)
+value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	if (!_mtx_release_lock((mp), _tid))				\ 		_mtx_unlock_sleep((mp), (opts), (file), (line));	\ } while (0)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/*  * For spinlocks, we can handle everything inline, as it's pretty simple and  * a function call would be too expensive (at least on some architectures).  * Since spin locks are not _too_ common, inlining this code is not too big   * a deal.  *  * Since we always perform a spinlock_enter() when attempting to acquire a  * spin lock, we need to always perform a matching spinlock_exit() when  * releasing a spin lock.  This includes the recursion cases.  */
+comment|/*  * Unlock a spin mutex.  For spinlocks, we can handle everything  * inline, as it's pretty simple and a function call would be too  * expensive (at least on some architectures).  Since spin locks are  * not _too_ common, inlining this code is not too big a deal.  *  * Since we always perform a spinlock_enter() when attempting to acquire a  * spin lock, we need to always perform a matching spinlock_exit() when  * releasing a spin lock.  This includes the recursion cases.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_rel_spin_lock
-end_ifndef
 
 begin_ifdef
 ifdef|#
@@ -913,11 +775,11 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|_rel_spin_lock
+name|__mtx_unlock_spin
 parameter_list|(
 name|mp
 parameter_list|)
-value|do {						\ 	if (mtx_recursed((mp)))						\ 		(mp)->mtx_recurse--;					\ 	else {								\ 		LOCKSTAT_PROFILE_RELEASE_LOCK(LS_MTX_SPIN_UNLOCK_RELEASE, \ 			mp);						\ 		_release_lock_quick((mp));				\ 	}                                                               \ 	spinlock_exit();				                \ } while (0)
+value|do {					\ 	if (mtx_recursed((mp)))						\ 		(mp)->mtx_recurse--;					\ 	else {								\ 		LOCKSTAT_PROFILE_RELEASE_LOCK(LS_MTX_SPIN_UNLOCK_RELEASE, \ 			mp);						\ 		_mtx_release_lock_quick((mp));				\ 	}                                                               \ 	spinlock_exit();				                \ } while (0)
 end_define
 
 begin_else
@@ -932,11 +794,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_rel_spin_lock
+name|__mtx_unlock_spin
 parameter_list|(
 name|mp
 parameter_list|)
-value|do {						\ 	if (mtx_recursed((mp)))						\ 		(mp)->mtx_recurse--;					\ 	else								\ 		(mp)->mtx_lock = MTX_UNOWNED;				\ 	spinlock_exit();						\ } while (0)
+value|do {					\ 	if (mtx_recursed((mp)))						\ 		(mp)->mtx_recurse--;					\ 	else {								\ 		LOCKSTAT_PROFILE_RELEASE_LOCK(LS_MTX_SPIN_UNLOCK_RELEASE, \ 			mp);						\ 		(mp)->mtx_lock = MTX_UNOWNED;				\ 	}                                                               \ 	spinlock_exit();						\ } while (0)
 end_define
 
 begin_endif
@@ -947,11 +809,6 @@ end_endif
 begin_comment
 comment|/* SMP */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Exported lock manipulation interface.  *  * mtx_lock(m) locks MTX_DEF mutex `m'  *  * mtx_lock_spin(m) locks MTX_SPIN mutex `m'  *  * mtx_unlock(m) unlocks MTX_DEF mutex `m'  *  * mtx_unlock_spin(m) unlocks MTX_SPIN mutex `m'  *  * mtx_lock_spin_flags(m, opts) and mtx_lock_flags(m, opts) locks mutex `m'  *     and passes option flags `opts' to the "hard" function, if required.  *     With these routines, it is possible to pass flags such as MTX_QUIET  *     to the appropriate lock manipulation routines.  *  * mtx_trylock(m) attempts to acquire MTX_DEF mutex `m' but doesn't sleep if  *     it cannot. Rather, it returns 0 on failure and non-zero on success.  *     It does NOT handle recursion as we assume that if a caller is properly  *     using this part of the interface, he will know that the lock in question  *     is _not_ recursed.  *  * mtx_trylock_flags(m, opts) is used the same way as mtx_trylock() but accepts  *     relevant option flags `opts.'  *  * mtx_initialized(m) returns non-zero if the lock `m' has been initialized.  *  * mtx_owned(m) returns non-zero if the current thread owns the lock `m'  *  * mtx_recursed(m) returns non-zero if the lock `m' is presently recursed.  */
@@ -1253,7 +1110,7 @@ parameter_list|,
 name|opts
 parameter_list|)
 define|\
-value|_get_sleep_lock((m), curthread, (opts), LOCK_FILE, LOCK_LINE)
+value|__mtx_lock((m), curthread, (opts), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -1266,7 +1123,7 @@ parameter_list|,
 name|opts
 parameter_list|)
 define|\
-value|_rel_sleep_lock((m), curthread, (opts), LOCK_FILE, LOCK_LINE)
+value|__mtx_unlock((m), curthread, (opts), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -1279,7 +1136,7 @@ parameter_list|,
 name|opts
 parameter_list|)
 define|\
-value|_get_spin_lock((m), curthread, (opts), LOCK_FILE, LOCK_LINE)
+value|__mtx_lock_spin((m), curthread, (opts), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -1292,7 +1149,7 @@ parameter_list|,
 name|opts
 parameter_list|)
 define|\
-value|_rel_spin_lock((m))
+value|__mtx_unlock_spin((m))
 end_define
 
 begin_endif
@@ -1617,15 +1474,6 @@ end_endif
 
 begin_comment
 comment|/* _KERNEL */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !LOCORE */
 end_comment
 
 begin_endif

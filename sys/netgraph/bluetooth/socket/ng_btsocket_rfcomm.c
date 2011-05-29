@@ -136,6 +136,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netgraph/ng_message.h>
 end_include
 
@@ -987,7 +993,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_bluetooth_rfcomm_sockets_stream
 argument_list|,
@@ -1008,7 +1014,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_bluetooth_rfcomm_sockets_stream
 argument_list|,
@@ -2711,7 +2717,7 @@ name|l2so
 argument_list|)
 expr_stmt|;
 comment|/* we don't need new L2CAP socket */
-comment|/* 	 * Check if we already have the same DLCI the the same session 	 */
+comment|/* 	 * Check if we already have the same DLCI the same session 	 */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -5133,6 +5139,16 @@ name|so
 operator|->
 name|so_qlimit
 condition|)
+block|{
+name|CURVNET_SET
+argument_list|(
+name|pcb
+operator|->
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 name|so1
 operator|=
 name|sonewconn
@@ -5144,6 +5160,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
+block|}
 name|mtx_unlock
 argument_list|(
 operator|&

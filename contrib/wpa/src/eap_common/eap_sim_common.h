@@ -544,11 +544,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|EAP_AKA_PRIME
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|EAP_SERVER_AKA_PRIME
+argument_list|)
+end_if
 
 begin_function_decl
 name|void
@@ -728,7 +736,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* EAP_AKA_PRIME */
+comment|/* EAP_AKA_PRIME || EAP_SERVER_AKA_PRIME */
 end_comment
 
 begin_function
@@ -865,7 +873,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EAP_AKA_PRIME */
+comment|/* EAP_AKA_PRIME || EAP_SERVER_AKA_PRIME */
 end_comment
 
 begin_comment

@@ -423,7 +423,7 @@ operator|.
 name|ui64
 expr_stmt|;
 return|return
-name|sysctl_handle_quad
+name|sysctl_handle_64
 argument_list|(
 name|oidp
 argument_list|,
@@ -516,7 +516,7 @@ name|ksent
 operator|->
 name|name
 argument_list|,
-name|CTLTYPE_QUAD
+name|CTLTYPE_U64
 operator||
 name|CTLFLAG_RD
 argument_list|,

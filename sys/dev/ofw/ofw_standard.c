@@ -75,7 +75,7 @@ end_include
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|ofw_std_init
 parameter_list|(
 name|ofw_t
@@ -120,8 +120,7 @@ parameter_list|,
 name|int
 name|nreturns
 parameter_list|,
-name|unsigned
-name|long
+name|cell_t
 modifier|*
 name|returns
 parameter_list|)
@@ -384,8 +383,7 @@ parameter_list|,
 name|int
 name|nreturns
 parameter_list|,
-name|unsigned
-name|long
+name|cell_t
 modifier|*
 name|args_and_returns
 parameter_list|)
@@ -777,7 +775,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ofw_std_init
 parameter_list|(
 name|ofw_t
@@ -802,6 +800,11 @@ argument_list|)
 operator|)
 name|openfirm
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -827,7 +830,6 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -911,13 +913,11 @@ parameter_list|,
 name|int
 name|nreturns
 parameter_list|,
-name|unsigned
-name|long
+name|cell_t
 modifier|*
 name|returns
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -1056,7 +1056,6 @@ name|phandle_t
 name|node
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -1137,7 +1136,6 @@ name|phandle_t
 name|node
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -1218,7 +1216,6 @@ name|phandle_t
 name|node
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -1299,7 +1296,6 @@ name|ihandle_t
 name|instance
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -1385,7 +1381,6 @@ modifier|*
 name|propname
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -1490,7 +1485,6 @@ name|size_t
 name|buflen
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -1616,7 +1610,6 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -1738,7 +1731,6 @@ name|size_t
 name|len
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -1861,7 +1853,6 @@ name|size_t
 name|len
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -1968,7 +1959,6 @@ modifier|*
 name|device
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -2059,7 +2049,6 @@ name|size_t
 name|len
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -2168,7 +2157,6 @@ name|size_t
 name|len
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -2280,13 +2268,11 @@ parameter_list|,
 name|int
 name|nreturns
 parameter_list|,
-name|unsigned
-name|long
+name|cell_t
 modifier|*
 name|args_and_returns
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -2326,12 +2312,10 @@ block|, 	}
 struct|;
 name|cell_t
 modifier|*
-name|cp
-decl_stmt|;
-name|unsigned
-name|long
-modifier|*
 name|ap
+decl_stmt|,
+modifier|*
+name|cp
 decl_stmt|;
 name|int
 name|n
@@ -2513,7 +2497,6 @@ modifier|*
 name|device
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -2603,7 +2586,6 @@ name|ihandle_t
 name|instance
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -2628,6 +2610,8 @@ operator|)
 literal|"close"
 block|,
 literal|1
+block|,
+literal|0
 block|, 	}
 struct|;
 name|args
@@ -2668,7 +2652,6 @@ name|size_t
 name|len
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -2778,7 +2761,6 @@ name|size_t
 name|len
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -2883,7 +2865,6 @@ name|uint64_t
 name|pos
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -2995,7 +2976,6 @@ name|u_int
 name|align
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -3109,7 +3089,6 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -3137,6 +3116,8 @@ operator|)
 literal|"release"
 block|,
 literal|2
+block|,
+literal|0
 block|, 	}
 struct|;
 name|args
@@ -3180,7 +3161,6 @@ name|ofw_t
 name|ofw
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -3200,6 +3180,10 @@ operator|(
 name|cell_t
 operator|)
 literal|"enter"
+block|,
+literal|0
+block|,
+literal|0
 block|, 	}
 struct|;
 name|openfirmware
@@ -3225,7 +3209,6 @@ name|ofw_t
 name|ofw
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -3245,6 +3228,10 @@ operator|(
 name|cell_t
 operator|)
 literal|"exit"
+block|,
+literal|0
+block|,
+literal|0
 block|, 	}
 struct|;
 name|openfirmware

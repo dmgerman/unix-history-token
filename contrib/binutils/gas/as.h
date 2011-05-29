@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* as.h - global header file    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* as.h - global header file    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -17,19 +17,13 @@ value|1
 end_define
 
 begin_comment
-comment|/* I think this stuff is largely out of date.  xoxorich.  *  * CAPITALISED names are #defined.  * "lowercaseH" is #defined if "lowercase.h" has been #include-d.  * "lowercaseT" is a typedef of "lowercase" objects.  * "lowercaseP" is type "pointer to object of type 'lowercase'".  * "lowercaseS" is typedef struct ... lowercaseS.  *  * #define DEBUG to enable all the "know" assertion tests.  * #define SUSPECT when debugging hash code.  * #define COMMON as "extern" for all modules except one, where you #define  *	COMMON as "".  * If TEST is #defined, then we are testing a module: #define COMMON as "".  */
+comment|/* I think this stuff is largely out of date.  xoxorich.      CAPITALISED names are #defined.    "lowercaseH" is #defined if "lowercase.h" has been #include-d.    "lowercaseT" is a typedef of "lowercase" objects.    "lowercaseP" is type "pointer to object of type 'lowercase'".    "lowercaseS" is typedef struct ... lowercaseS.       #define DEBUG to enable all the "know" assertion tests.    #define SUSPECT when debugging hash code.    #define COMMON as "extern" for all modules except one, where you #define   	COMMON as "".    If TEST is #defined, then we are testing a module: #define COMMON as "".  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"config.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"bin-bugs.h"
 end_include
 
 begin_comment
@@ -183,6 +177,82 @@ comment|/* __GNUC__ */
 end_comment
 
 begin_comment
+comment|/* Prefer varargs for non-ANSI compiler, since some will barf if the    ellipsis definition is used with a no-arguments declaration.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_VARARGS_H
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_STDARG_H
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_STDARG_H
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|USE_STDARG
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|USE_STDARG
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_VARARGS_H
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|USE_VARARGS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Now, tend to the rest of the configuration.  */
 end_comment
 
@@ -290,6 +360,122 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ERRNO_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_STDARG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_VARARGS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<varargs.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|USE_STDARG
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|USE_VARARGS
+argument_list|)
+end_if
+
+begin_comment
+comment|/* Roll our own.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|va_alist
+value|REST
+end_define
+
+begin_define
+define|#
+directive|define
+name|va_dcl
+end_define
+
+begin_typedef
+typedef|typedef
+name|int
+modifier|*
+name|va_list
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|va_start
+parameter_list|(
+name|ARGS
+parameter_list|)
+value|ARGS =&REST
+end_define
+
+begin_define
+define|#
+directive|define
+name|va_end
+parameter_list|(
+name|ARGS
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -365,87 +551,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* Handle lossage with assert.h.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BROKEN_ASSERT
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<assert.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* BROKEN_ASSERT */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NDEBUG
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|assert
-parameter_list|(
-name|p
-parameter_list|)
-value|((p) ? 0 : (as_assert (__FILE__, __LINE__, __PRETTY_FUNCTION__), 0))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|assert
-parameter_list|(
-name|p
-parameter_list|)
-value|((p), 0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* BROKEN_ASSERT */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -453,7 +558,8 @@ name|assert
 parameter_list|(
 name|P
 parameter_list|)
-value|((P) ? 0 : (as_assert (__FILE__, __LINE__, __PRETTY_FUNCTION__), 0))
+define|\
+value|((void) ((P) ? 0 : (as_assert (__FILE__, __LINE__, __PRETTY_FUNCTION__), 0)))
 end_define
 
 begin_undef
@@ -470,11 +576,6 @@ parameter_list|()
 value|as_abort (__FILE__, __LINE__, __PRETTY_FUNCTION__)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Now GNU header files...  */
 end_comment
@@ -485,22 +586,11 @@ directive|include
 file|"ansidecl.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BFD_ASSEMBLER
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|"bfd.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -529,7 +619,7 @@ name|__MWERKS__
 end_ifndef
 
 begin_comment
-comment|/* Metrowerks C chokes on the "defined (inline)" */
+comment|/* Metrowerks C chokes on the "defined (inline)"  */
 end_comment
 
 begin_if
@@ -575,14 +665,72 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NEED_DECLARATION_STRSTR
+name|NEED_DECLARATION_ENVIRON
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|environ
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEED_DECLARATION_ERRNO
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEED_DECLARATION_FFS
 end_ifdef
 
 begin_function_decl
 specifier|extern
-name|char
-modifier|*
-name|strstr
+name|int
+name|ffs
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEED_DECLARATION_FREE
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|void
+name|free
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -622,13 +770,14 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NEED_DECLARATION_FREE
+name|NEED_DECLARATION_STRSTR
 end_ifdef
 
 begin_function_decl
 specifier|extern
-name|void
-name|free
+name|char
+modifier|*
+name|strstr
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -638,38 +787,31 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NEED_DECLARATION_ERRNO
-end_ifdef
+begin_if
+if|#
+directive|if
+operator|!
+name|HAVE_DECL_VSNPRINTF
+end_if
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NEED_DECLARATION_ENVIRON
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
+name|vsnprintf
+parameter_list|(
 name|char
 modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+specifier|const
+name|char
 modifier|*
-name|environ
-decl_stmt|;
-end_decl_stmt
+parameter_list|,
+name|va_list
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -843,15 +985,11 @@ directive|ifndef
 name|FOPEN_WB
 end_ifndef
 
-begin_if
-if|#
-directive|if
-name|defined
-name|GO32
-operator|||
-name|defined
-name|__MINGW32__
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_BINARY_FOPEN
+end_ifdef
 
 begin_include
 include|#
@@ -974,12 +1112,6 @@ begin_comment
 comment|/* These are assembler-wide concepts */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BFD_ASSEMBLER
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|bfd
@@ -1001,31 +1133,6 @@ name|bfd_signed_vma
 name|offsetT
 typedef|;
 end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|addressT
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|long
-name|offsetT
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Type of symbol value, etc.  For use in prototypes.  */
@@ -1057,7 +1164,7 @@ name|COMMON
 end_define
 
 begin_comment
-comment|/* declare our COMMONs storage here.  */
+comment|/* Declare our COMMONs storage here.  */
 end_comment
 
 begin_else
@@ -1073,7 +1180,7 @@ value|extern
 end_define
 
 begin_comment
-comment|/* our commons live elsewhere */
+comment|/* Our commons live elsewhere.  */
 end_comment
 
 begin_endif
@@ -1090,11 +1197,34 @@ begin_comment
 comment|/* COMMON now defined */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ENABLE_CHECKING
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ENABLE_CHECKING
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|ENABLE_CHECKING
+operator|||
+name|defined
+argument_list|(
 name|DEBUG
-end_ifdef
+argument_list|)
+end_if
 
 begin_ifndef
 ifndef|#
@@ -1113,7 +1243,7 @@ value|assert(p)
 end_define
 
 begin_comment
-comment|/* Verify our assumptions! */
+comment|/* Verify our assumptions!  */
 end_comment
 
 begin_endif
@@ -1140,7 +1270,7 @@ parameter_list|)
 end_define
 
 begin_comment
-comment|/* know() checks are no-op.ed */
+comment|/* know() checks are no-op.ed  */
 end_comment
 
 begin_endif
@@ -1166,159 +1296,6 @@ begin_comment
 comment|/* subsegs.c     Sub-segments. Also, segment(=expression type)s.*/
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BFD_ASSEMBLER
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MANY_SEGMENTS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"bfd.h"
-end_include
-
-begin_define
-define|#
-directive|define
-name|N_SEGMENTS
-value|40
-end_define
-
-begin_define
-define|#
-directive|define
-name|SEG_NORMAL
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)>= SEG_E0&& (x)<= SEG_E39)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SEG_LIST
-value|SEG_E0,SEG_E1,SEG_E2,SEG_E3,SEG_E4,SEG_E5,SEG_E6,SEG_E7,SEG_E8,SEG_E9,\ 		 SEG_E10,SEG_E11,SEG_E12,SEG_E13,SEG_E14,SEG_E15,SEG_E16,SEG_E17,SEG_E18,SEG_E19,\ 		 SEG_E20,SEG_E21,SEG_E22,SEG_E23,SEG_E24,SEG_E25,SEG_E26,SEG_E27,SEG_E28,SEG_E29,\ 		 SEG_E30,SEG_E31,SEG_E32,SEG_E33,SEG_E34,SEG_E35,SEG_E36,SEG_E37,SEG_E38,SEG_E39
-end_define
-
-begin_define
-define|#
-directive|define
-name|SEG_TEXT
-value|SEG_E0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SEG_DATA
-value|SEG_E1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SEG_BSS
-value|SEG_E2
-end_define
-
-begin_define
-define|#
-directive|define
-name|SEG_LAST
-value|SEG_E39
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|N_SEGMENTS
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|SEG_NORMAL
-parameter_list|(
-name|x
-parameter_list|)
-value|((x) == SEG_TEXT || (x) == SEG_DATA || (x) == SEG_BSS)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SEG_LIST
-value|SEG_TEXT,SEG_DATA,SEG_BSS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_typedef
-typedef|typedef
-enum|enum
-name|_segT
-block|{
-name|SEG_ABSOLUTE
-init|=
-literal|0
-block|,
-name|SEG_LIST
-block|,
-name|SEG_UNKNOWN
-block|,
-name|SEG_GOOF
-block|,
-comment|/* Only happens if AS has a logic error.  */
-comment|/* Invented so we don't crash printing */
-comment|/* error message involving weird segment.  */
-name|SEG_EXPR
-block|,
-comment|/* Intermediate expression values.  */
-name|SEG_DEBUG
-block|,
-comment|/* Debug segment */
-name|SEG_NTV
-block|,
-comment|/* Transfert vector preload segment */
-name|SEG_PTV
-block|,
-comment|/* Transfert vector postload segment */
-name|SEG_REGISTER
-comment|/* Mythical: a register-valued expression */
-block|}
-name|segT
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|SEG_MAXIMUM_ORDINAL
-value|(SEG_REGISTER)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_typedef
 typedef|typedef
 name|asection
@@ -1334,13 +1311,8 @@ name|SEG_NORMAL
 parameter_list|(
 name|SEG
 parameter_list|)
-value|((SEG) != absolute_section	\&& (SEG) != undefined_section	\&& (SEG) != reg_section	\&& (SEG) != expr_section)
+value|(   (SEG) != absolute_section	\&& (SEG) != undefined_section	\&& (SEG) != reg_section	\&& (SEG) != expr_section)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_typedef
 typedef|typedef
@@ -1350,7 +1322,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* What subseg we are accessing now? */
+comment|/* What subseg we are accessing now?  */
 end_comment
 
 begin_decl_stmt
@@ -1371,12 +1343,6 @@ name|now_seg
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BFD_ASSEMBLER
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -1386,62 +1352,6 @@ name|SEG
 parameter_list|)
 value|bfd_get_section_name (stdoutput, SEG)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|extern
-name|char
-specifier|const
-modifier|*
-specifier|const
-name|seg_name
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|segment_name
-parameter_list|(
-name|SEG
-parameter_list|)
-value|seg_name[(int) (SEG)]
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BFD_ASSEMBLER
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|section_alignment
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BFD_ASSEMBLER
-end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -1481,77 +1391,17 @@ name|undefined_section
 value|bfd_und_section_ptr
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|reg_section
-value|SEG_REGISTER
-end_define
-
-begin_define
-define|#
-directive|define
-name|expr_section
-value|SEG_EXPR
-end_define
-
-begin_define
-define|#
-directive|define
-name|text_section
-value|SEG_TEXT
-end_define
-
-begin_define
-define|#
-directive|define
-name|data_section
-value|SEG_DATA
-end_define
-
-begin_define
-define|#
-directive|define
-name|bss_section
-value|SEG_BSS
-end_define
-
-begin_define
-define|#
-directive|define
-name|absolute_section
-value|SEG_ABSOLUTE
-end_define
-
-begin_define
-define|#
-directive|define
-name|undefined_section
-value|SEG_UNKNOWN
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* relax() */
-end_comment
-
 begin_enum
 enum|enum
 name|_relax_state
 block|{
+comment|/* Dummy frag used by listing code.  */
+name|rs_dummy
+init|=
+literal|0
+block|,
 comment|/* Variable chars to be repeated fr_offset times.      Fr_symbol unused. Used with fr_offset == 0 for a      constant length frag.  */
 name|rs_fill
-init|=
-literal|1
 block|,
 comment|/* Align.  The fr_offset field holds the power of 2 to which to      align.  The fr_var field holds the number of characters in the      fill pattern.  The fr_subtype field holds the maximum number of      bytes to skip when aligning, or 0 if there is no maximum.  */
 name|rs_align
@@ -1573,7 +1423,7 @@ name|rs_broken_word
 block|,
 endif|#
 directive|endif
-comment|/* machine-specific relaxable (or similarly alterable) instruction */
+comment|/* Machine specific relaxable (or similarly alterable) instruction.  */
 name|rs_machine_dependent
 block|,
 comment|/* .space directive with expression operand that needs to be computed      later.  Similar to rs_org, but different.      fr_symbol: operand      1 variable char: fill character  */
@@ -1659,7 +1509,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* main program "as.c" (command arguments etc) */
+comment|/* main program "as.c" (command arguments etc).  */
 end_comment
 
 begin_decl_stmt
@@ -2032,82 +1882,6 @@ name|pseudo_typeS
 typedef|;
 end_typedef
 
-begin_comment
-comment|/* Prefer varargs for non-ANSI compiler, since some will barf if the    ellipsis definition is used with a no-arguments declaration.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_VARARGS_H
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-end_if
-
-begin_undef
-undef|#
-directive|undef
-name|HAVE_STDARG_H
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_STDARG_H
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|USE_STDARG
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|USE_STDARG
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|HAVE_VARARGS_H
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|USE_VARARGS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2356,28 +2130,12 @@ end_decl_stmt
 
 begin_function_decl
 name|void
-name|fprint_value
-parameter_list|(
-name|FILE
-modifier|*
-name|file
-parameter_list|,
-name|addressT
-name|value
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|sprint_value
 parameter_list|(
 name|char
 modifier|*
-name|buf
 parameter_list|,
 name|addressT
-name|value
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2396,6 +2154,48 @@ name|int
 name|had_warnings
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|as_warn_value_out_of_range
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|offsetT
+parameter_list|,
+name|offsetT
+parameter_list|,
+name|offsetT
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|unsigned
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|as_bad_value_out_of_range
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|offsetT
+parameter_list|,
+name|offsetT
+parameter_list|,
+name|offsetT
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|unsigned
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2426,14 +2226,11 @@ name|atof_ieee
 parameter_list|(
 name|char
 modifier|*
-name|str
 parameter_list|,
 name|int
-name|what_kind
 parameter_list|,
 name|LITTLENUM_TYPE
 modifier|*
-name|words
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2445,36 +2242,30 @@ name|input_scrub_include_file
 parameter_list|(
 name|char
 modifier|*
-name|filename
 parameter_list|,
 name|char
 modifier|*
-name|position
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|input_scrub_insert_line
 parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|line
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|input_scrub_insert_file
 parameter_list|(
 name|char
 modifier|*
-name|path
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2486,7 +2277,6 @@ name|input_scrub_new_file
 parameter_list|(
 name|char
 modifier|*
-name|filename
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2522,10 +2312,8 @@ parameter_list|)
 parameter_list|,
 name|char
 modifier|*
-name|to
 parameter_list|,
 name|int
-name|tolen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2536,13 +2324,10 @@ name|gen_to_words
 parameter_list|(
 name|LITTLENUM_TYPE
 modifier|*
-name|words
 parameter_list|,
 name|int
-name|precision
 parameter_list|,
 name|long
-name|exponent_bits
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2598,35 +2383,6 @@ name|app_pop
 parameter_list|(
 name|char
 modifier|*
-name|arg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|as_howmuch
-parameter_list|(
-name|FILE
-modifier|*
-name|stream
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|as_perror
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|gripe
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|filename
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2638,12 +2394,10 @@ parameter_list|(
 name|char
 modifier|*
 modifier|*
-name|namep
 parameter_list|,
 name|unsigned
 name|int
 modifier|*
-name|linep
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2699,10 +2453,22 @@ name|new_logical_line
 parameter_list|(
 name|char
 modifier|*
-name|fname
 parameter_list|,
 name|int
-name|line_number
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|new_logical_line_flags
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2721,10 +2487,8 @@ name|void
 name|subseg_change
 parameter_list|(
 name|segT
-name|seg
 parameter_list|,
 name|int
-name|subseg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2736,10 +2500,8 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|name
 parameter_list|,
 name|subsegT
-name|subseg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2751,10 +2513,8 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|name
 parameter_list|,
 name|subsegT
-name|subseg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2764,41 +2524,24 @@ name|void
 name|subseg_set
 parameter_list|(
 name|segT
-name|seg
 parameter_list|,
 name|subsegT
-name|subseg
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BFD_ASSEMBLER
-end_ifdef
-
-begin_function_decl
-name|segT
-name|subseg_get
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|int
 name|subseg_text_p
+parameter_list|(
+name|segT
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|seg_not_empty_p
 parameter_list|(
 name|segT
 parameter_list|)
@@ -2834,6 +2577,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|segT
+name|subseg_get
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_struct_decl
 struct_decl|struct
 name|expressionS
@@ -2854,12 +2610,6 @@ name|symbolS
 typedef|;
 end_typedef
 
-begin_struct_decl
-struct_decl|struct
-name|relax_type
-struct_decl|;
-end_struct_decl
-
 begin_typedef
 typedef|typedef
 name|struct
@@ -2867,12 +2617,6 @@ name|frag
 name|fragS
 typedef|;
 end_typedef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BFD_ASSEMBLER
-end_ifdef
 
 begin_comment
 comment|/* literal.c */
@@ -2893,11 +2637,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|int
@@ -2966,7 +2705,7 @@ comment|/* Before targ-*.h */
 end_comment
 
 begin_comment
-comment|/* this one starts the chain of target dependant headers */
+comment|/* This one starts the chain of target dependant headers.  */
 end_comment
 
 begin_include
@@ -3110,6 +2849,13 @@ name|flag_m68k_mri
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|DOLLAR_AMBIGU
+value|flag_m68k_mri
+end_define
+
 begin_else
 else|#
 directive|else
@@ -3155,6 +2901,24 @@ modifier|*
 name|found_comment_file
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DOLLAR_AMBIGU
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DOLLAR_AMBIGU
+value|0
+end_define
 
 begin_endif
 endif|#

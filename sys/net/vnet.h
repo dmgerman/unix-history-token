@@ -145,6 +145,56 @@ file|<sys/sx.h>
 end_include
 
 begin_comment
+comment|/*  * Location of the kernel's 'set_vnet' linker set.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|uintptr_t
+modifier|*
+name|__start_set_vnet
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|__GLOBL
+argument_list|(
+name|__start_set_vnet
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uintptr_t
+modifier|*
+name|__stop_set_vnet
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|__GLOBL
+argument_list|(
+name|__stop_set_vnet
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|VNET_START
+value|(uintptr_t)&__start_set_vnet
+end_define
+
+begin_define
+define|#
+directive|define
+name|VNET_STOP
+value|(uintptr_t)&__stop_set_vnet
+end_define
+
+begin_comment
 comment|/*  * Functions to allocate and destroy virtual network stacks.  */
 end_comment
 
@@ -186,6 +236,54 @@ begin_comment
 comment|/*  * Various macros -- get and set the current network stack, but also  * assertions.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INVARIANTS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VNET_DEBUG
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|VNET_ASSERT
+parameter_list|(
+name|exp
+parameter_list|,
+name|msg
+parameter_list|)
+value|do {					\ 	if (!(exp))							\ 		panic msg;						\ } while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|VNET_ASSERT
+parameter_list|(
+name|exp
+parameter_list|,
+name|msg
+parameter_list|)
+value|do {					\ } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -212,23 +310,12 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|VNET_ASSERT
-parameter_list|(
-name|condition
-parameter_list|)
-define|\
-value|if (!(condition)) {						\ 		printf("VNET_ASSERT @ %s:%d %s():\n",			\ 			__FILE__, __LINE__, __FUNCTION__);		\ 		panic(#condition);					\ 	}
-end_define
-
-begin_define
-define|#
-directive|define
 name|CURVNET_SET_QUIET
 parameter_list|(
 name|arg
 parameter_list|)
 define|\
-value|VNET_ASSERT((arg)->vnet_magic_n == VNET_MAGIC_N);		\ 	struct vnet *saved_vnet = curvnet;				\ 	const char *saved_vnet_lpush = curthread->td_vnet_lpush;	\ 	curvnet = arg;							\ 	curthread->td_vnet_lpush = __FUNCTION__;
+value|VNET_ASSERT((arg) != NULL&& (arg)->vnet_magic_n == VNET_MAGIC_N, \ 	    ("CURVNET_SET at %s:%d %s() curvnet=%p vnet=%p",		\ 	    __FILE__, __LINE__, __func__, curvnet, (arg)));		\ 	struct vnet *saved_vnet = curvnet;				\ 	const char *saved_vnet_lpush = curthread->td_vnet_lpush;	\ 	curvnet = arg;							\ 	curthread->td_vnet_lpush = __func__;
 end_define
 
 begin_define
@@ -258,7 +345,7 @@ directive|define
 name|CURVNET_RESTORE
 parameter_list|()
 define|\
-value|VNET_ASSERT(saved_vnet == NULL ||				\ 		    saved_vnet->vnet_magic_n == VNET_MAGIC_N);		\ 	curvnet = saved_vnet;						\ 	curthread->td_vnet_lpush = saved_vnet_lpush;
+value|VNET_ASSERT(curvnet != NULL&& (saved_vnet == NULL ||		\ 	    saved_vnet->vnet_magic_n == VNET_MAGIC_N),			\ 	    ("CURVNET_RESTORE at %s:%d %s() curvnet=%p saved_vnet=%p",	\ 	    __FILE__, __LINE__, __func__, curvnet, saved_vnet));	\ 	curvnet = saved_vnet;						\ 	curthread->td_vnet_lpush = saved_vnet_lpush;
 end_define
 
 begin_else
@@ -273,21 +360,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VNET_ASSERT
-parameter_list|(
-name|condition
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CURVNET_SET
+name|CURVNET_SET_QUIET
 parameter_list|(
 name|arg
 parameter_list|)
 define|\
-value|struct vnet *saved_vnet = curvnet;				\ 	curvnet = arg;
+value|VNET_ASSERT((arg) != NULL&& (arg)->vnet_magic_n == VNET_MAGIC_N, \ 	    ("CURVNET_SET at %s:%d %s() curvnet=%p vnet=%p",		\ 	    __FILE__, __LINE__, __func__, curvnet, (arg)));		\ 	struct vnet *saved_vnet = curvnet;				\ 	curvnet = arg;
 end_define
 
 begin_define
@@ -297,17 +375,18 @@ name|CURVNET_SET_VERBOSE
 parameter_list|(
 name|arg
 parameter_list|)
-value|CURVNET_SET(arg)
+define|\
+value|CURVNET_SET_QUIET(arg)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CURVNET_SET_QUIET
+name|CURVNET_SET
 parameter_list|(
 name|arg
 parameter_list|)
-value|CURVNET_SET(arg)
+value|CURVNET_SET_VERBOSE(arg)
 end_define
 
 begin_define
@@ -316,7 +395,7 @@ directive|define
 name|CURVNET_RESTORE
 parameter_list|()
 define|\
-value|curvnet = saved_vnet;
+value|VNET_ASSERT(curvnet != NULL&& (saved_vnet == NULL ||		\ 	    saved_vnet->vnet_magic_n == VNET_MAGIC_N),			\ 	    ("CURVNET_RESTORE at %s:%d %s() curvnet=%p saved_vnet=%p",	\ 	    __FILE__, __LINE__, __func__, curvnet, saved_vnet));	\ 	curvnet = saved_vnet;
 end_define
 
 begin_endif
@@ -474,23 +553,6 @@ end_define
 begin_comment
 comment|/*  * Virtual network stack memory allocator, which allows global variables to  * be automatically instantiated for each network stack instance.  */
 end_comment
-
-begin_asm
-asm|__asm__(
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__arm__
-argument_list|)
-asm|".section " VNET_SETNAME ", \"aw\", %progbits\n"
-else|#
-directive|else
-asm|".section " VNET_SETNAME ", \"aw\", @progbits\n"
-endif|#
-directive|endif
-asm|"\t.p2align " __XSTRING(CACHE_LINE_SHIFT) "\n" 	"\t.previous");
-end_asm
 
 begin_define
 define|#
@@ -734,7 +796,32 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLFLAG_VNET|(access), ptr, arg, 	\ 	    handler, fmt, descr)
+value|CTASSERT(((access)& CTLTYPE) != 0);				\ 	SYSCTL_OID(parent, nbr, name, CTLFLAG_VNET|(access), ptr, arg, 	\ 	    handler, fmt, descr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_VNET_OPAQUE
+parameter_list|(
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|ptr
+parameter_list|,
+name|len
+parameter_list|,
+name|fmt
+parameter_list|,    \
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_OPAQUE|CTLFLAG_VNET|(access), ptr, len, 		\ 	    vnet_sysctl_handle_opaque, fmt, descr)
 end_define
 
 begin_define
@@ -979,6 +1066,64 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * EVENTHANDLER(9) extensions.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_function_decl
+name|void
+name|vnet_global_eventhandler_iterator_func
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|VNET_GLOBAL_EVENTHANDLER_REGISTER_TAG
+parameter_list|(
+name|tag
+parameter_list|,
+name|name
+parameter_list|,
+name|func
+parameter_list|,
+name|arg
+parameter_list|,
+name|priority
+parameter_list|)
+define|\
+value|do {									\ 	if (IS_DEFAULT_VNET(curvnet)) {					\ 		(tag) = vimage_eventhandler_register(NULL, #name, func,	\ 		    arg, priority,					\ 		    vnet_global_eventhandler_iterator_func);		\ 	}								\ } while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VNET_GLOBAL_EVENTHANDLER_REGISTER
+parameter_list|(
+name|name
+parameter_list|,
+name|func
+parameter_list|,
+name|arg
+parameter_list|,
+name|priority
+parameter_list|)
+define|\
+value|do {									\ 	if (IS_DEFAULT_VNET(curvnet)) {					\ 		vimage_eventhandler_register(NULL, #name, func,		\ 		    arg, priority,					\ 		    vnet_global_eventhandler_iterator_func);		\ 	}								\ } while(0)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1004,7 +1149,9 @@ define|#
 directive|define
 name|VNET_ASSERT
 parameter_list|(
-name|condition
+name|exp
+parameter_list|,
+name|msg
 parameter_list|)
 end_define
 
@@ -1280,6 +1427,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|SYSCTL_VNET_OPAQUE
+parameter_list|(
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|ptr
+parameter_list|,
+name|len
+parameter_list|,
+name|fmt
+parameter_list|,    \
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_OPAQUE(parent, nbr, name, access, ptr, len, fmt, descr)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SYSCTL_VNET_STRING
 parameter_list|(
 name|parent
@@ -1406,6 +1578,46 @@ name|arg
 parameter_list|)
 define|\
 value|SYSUNINIT(ident, subsystem, order, func, arg)
+end_define
+
+begin_comment
+comment|/*  * Without VIMAGE revert to the default implementation.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VNET_GLOBAL_EVENTHANDLER_REGISTER_TAG
+parameter_list|(
+name|tag
+parameter_list|,
+name|name
+parameter_list|,
+name|func
+parameter_list|,
+name|arg
+parameter_list|,
+name|priority
+parameter_list|)
+define|\
+value|(tag) = eventhandler_register(NULL, #name, func, arg, priority)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VNET_GLOBAL_EVENTHANDLER_REGISTER
+parameter_list|(
+name|name
+parameter_list|,
+name|func
+parameter_list|,
+name|arg
+parameter_list|,
+name|priority
+parameter_list|)
+define|\
+value|eventhandler_register(NULL, #name, func, arg, priority)
 end_define
 
 begin_endif

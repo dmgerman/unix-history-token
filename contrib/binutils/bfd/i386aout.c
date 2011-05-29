@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for i386 a.out binaries.    Copyright 1990, 1991, 1992, 1994, 1996, 1997, 2001, 2002, 2003    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for i386 a.out binaries.    Copyright 1990, 1991, 1992, 1994, 1996, 1997, 2001, 2002, 2003, 2005,    2007 Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -34,7 +34,7 @@ name|N_TXTADDR
 parameter_list|(
 name|x
 parameter_list|)
-value|(N_MAGIC(x)==ZMAGIC ? 0x1020 : 0)
+value|(N_MAGIC (x) == ZMAGIC ? 0x1020 : 0)
 end_define
 
 begin_define
@@ -46,33 +46,6 @@ name|x
 parameter_list|)
 value|((x).a_text)
 end_define
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|N_DATADDR
-parameter_list|(
-name|x
-parameter_list|)
-value|(N_MAGIC(x)==OMAGIC? (N_TXTADDR(x)+(x).a_text) : (SEGMENT_SIZE + ((0x1020+(x).a_text-1)& ~(SEGMENT_SIZE-1))))
-end_define
-
-begin_define
-define|#
-directive|define
-name|NOSUBEXECB
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -126,13 +99,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -153,37 +126,6 @@ directive|include
 file|"libaout.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|i386aout_write_object_contents
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-specifier|static
-name|bfd_boolean
-name|MY
-parameter_list|(
-name|set_sizes
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
 comment|/* Set the machine type correctly.  */
 end_comment
@@ -193,12 +135,10 @@ specifier|static
 name|bfd_boolean
 name|i386aout_write_object_contents
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|external_exec
@@ -253,8 +193,26 @@ begin_define
 define|#
 directive|define
 name|MY_backend_data
-value|&MY(backend_data)
+value|& MY (backend_data)
 end_define
+
+begin_function_decl
+specifier|static
+specifier|const
+name|struct
+name|aout_backend_data
+name|MY
+parameter_list|(
+name|backend_data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_include
+include|#
+directive|include
+file|"aout-target.h"
+end_include
 
 begin_function_decl
 specifier|static
@@ -269,19 +227,19 @@ init|=
 block|{
 literal|0
 operator|,
-comment|/* zmagic contiguous */
+comment|/* Zmagic contiguous.  */
 function_decl|1
 operator|,
-comment|/* text incl header */
+comment|/* Text incl header.  */
 function_decl|0
 operator|,
-comment|/* entry is text address */
+comment|/* Entry is text address.  */
 function_decl|0
 operator|,
-comment|/* exec_hdr_flags */
+comment|/* Exec_hdr_flags.  */
 function_decl|0
 operator|,
-comment|/* text vma? */
+comment|/* Text vma?  */
 function_decl|MY
 parameter_list|(
 name|set_sizes
@@ -289,35 +247,29 @@ parameter_list|)
 operator|,
 function_decl|1
 operator|,
-comment|/* exec header not counted */
+comment|/* Exec header not counted.  */
 function_decl|0
 operator|,
-comment|/* add_dynamic_symbols */
+comment|/* Add_dynamic_symbols.  */
 function_decl|0
 operator|,
-comment|/* add_one_symbol */
+comment|/* Add_one_symbol.  */
 function_decl|0
 operator|,
-comment|/* link_dynamic_object */
+comment|/* Link_dynamic_object.  */
 function_decl|0
 operator|,
-comment|/* write_dynamic_symbol */
+comment|/* Write_dynamic_symbol.  */
 function_decl|0
 operator|,
-comment|/* check_dynamic_reloc */
+comment|/* Check_dynamic_reloc.  */
 function_decl|0
 end_function_decl
 
 begin_comment
-comment|/* finish_dynamic_link */
+comment|/* Finish_dynamic_link.  */
 end_comment
 
-begin_include
 unit|};
-include|#
-directive|include
-file|"aout-target.h"
-end_include
-
 end_unit
 

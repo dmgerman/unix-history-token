@@ -105,18 +105,6 @@ directive|include
 file|<vm/vm_extern.h>
 end_include
 
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|M_VMPGDATA
-argument_list|,
-literal|"vm_pgdata"
-argument_list|,
-literal|"XXX: VM pager private data"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 name|int
 name|cluster_pbuf_freecnt

@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"eap_sim_common.c"
+file|"eap_common/eap_sim_common.c"
 end_include
 
 begin_function

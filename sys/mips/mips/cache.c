@@ -127,7 +127,7 @@ expr_stmt|;
 break|break;
 ifdef|#
 directive|ifdef
-name|TARGET_OCTEON
+name|CPU_CNMIPS
 case|case
 literal|128
 case|:
@@ -317,7 +317,7 @@ expr_stmt|;
 break|break;
 ifdef|#
 directive|ifdef
-name|TARGET_OCTEON
+name|CPU_CNMIPS
 case|case
 literal|128
 case|:

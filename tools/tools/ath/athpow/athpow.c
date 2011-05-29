@@ -280,7 +280,7 @@ decl_stmt|;
 name|u_int16_t
 name|ratesArray
 index|[
-literal|16
+literal|37
 index|]
 decl_stmt|;
 name|u_int

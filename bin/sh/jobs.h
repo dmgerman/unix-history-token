@@ -128,6 +128,10 @@ name|char
 name|foreground
 decl_stmt|;
 comment|/* true if running in the foreground */
+name|char
+name|remembered
+decl_stmt|;
+comment|/* true if $! referenced */
 if|#
 directive|if
 name|JOBS
@@ -164,17 +168,6 @@ comment|/* PID of the group leader only */
 block|}
 enum|;
 end_enum
-
-begin_decl_stmt
-specifier|extern
-name|pid_t
-name|backgndpid
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* pid of last background process */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -355,6 +348,24 @@ end_function_decl
 begin_function_decl
 name|int
 name|stoppedjobs
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|backgndpidset
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|pid_t
+name|backgndpidval
 parameter_list|(
 name|void
 parameter_list|)

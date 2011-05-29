@@ -353,22 +353,6 @@ condition|)
 return|return
 literal|"-v"
 return|;
-elseif|else
-if|if
-condition|(
-name|cp
-operator|&&
-operator|!
-name|strcmp
-argument_list|(
-name|cp
-argument_list|,
-literal|"medium"
-argument_list|)
-condition|)
-return|return
-literal|"-V"
-return|;
 return|return
 literal|""
 return|;
@@ -819,7 +803,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"No USB devices found!"
+literal|"No USB devices found (try Options/Re-scan Devices)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1304,7 +1288,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Length of specified URL is %d characters. Allowable maximum is %d."
+literal|"Length of specified URL is %zu characters. Allowable maximum is %zu."
 argument_list|,
 name|urllen
 argument_list|,
@@ -2454,7 +2438,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Length of specified NFS path is %d characters. Allowable maximum is %d."
+literal|"Length of specified NFS path is %zu characters. Allowable maximum is %zu."
 argument_list|,
 name|pathlen
 argument_list|,
@@ -4134,26 +4118,6 @@ argument_list|(
 name|cp
 argument_list|,
 literal|"low"
-argument_list|)
-condition|)
-name|variable_set2
-argument_list|(
-name|VAR_CPIO_VERBOSITY
-argument_list|,
-literal|"medium"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|cp
-argument_list|,
-literal|"medium"
 argument_list|)
 condition|)
 name|variable_set2

@@ -1009,7 +1009,7 @@ condition|)
 break|break;
 name|DELAY
 argument_list|(
-literal|1
+literal|10
 argument_list|)
 expr_stmt|;
 block|}
@@ -3349,6 +3349,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|bootverbose
@@ -3365,8 +3367,6 @@ name|vendor_id
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|pnp_read_resources

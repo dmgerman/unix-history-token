@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-sparc.h - Macros and type defines for the sparc.    Copyright 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2,    or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public    License along with GAS; see the file COPYING.  If not, write    to the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* tc-sparc.h - Macros and type defines for the sparc.    Copyright 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2005, 2007    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2,    or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public    License along with GAS; see the file COPYING.  If not, write    to the Free Software Foundation, 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -16,22 +16,11 @@ name|TC_SPARC
 value|1
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
-end_ifdef
-
 begin_struct_decl
 struct_decl|struct
 name|frag
 struct_decl|;
 end_struct_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* This is used to set the default value for `target_big_endian'.  */
@@ -57,6 +46,67 @@ directive|define
 name|TARGET_ARCH
 value|bfd_arch_sparc
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TE_FreeBSD
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ELF_TARGET_FORMAT
+value|"elf32-sparc-freebsd"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELF64_TARGET_FORMAT
+value|"elf64-sparc-freebsd"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ELF_TARGET_FORMAT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ELF_TARGET_FORMAT
+value|"elf32-sparc"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ELF64_TARGET_FORMAT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ELF64_TARGET_FORMAT
+value|"elf64-sparc"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -92,38 +142,6 @@ directive|define
 name|MAX_RELOC_EXPANSION
 value|2
 end_define
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TE_SPARCAOUT
-end_ifdef
-
-begin_comment
-comment|/* Bi-endian support may eventually be unconditional, but until things are    working well it's only provided for targets that need it.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPARC_BIENDIAN
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Make it unconditional and check if -EL is valid after option parsing */
@@ -292,7 +310,7 @@ parameter_list|(
 name|FIX
 parameter_list|)
 define|\
-value|(!(FIX)->fx_pcrel				\    || (FIX)->fx_plt				\    || (sparc_pic_code				\&& S_IS_EXTERNAL ((FIX)->fx_addsy))	\    || TC_FORCE_RELOCATION (FIX))
+value|(!(FIX)->fx_pcrel				\    || (sparc_pic_code				\&& S_IS_EXTERNAL ((FIX)->fx_addsy))	\    || TC_FORCE_RELOCATION (FIX))
 end_define
 
 begin_endif
@@ -322,7 +340,7 @@ value|((FIX)->fx_r_type != BFD_RELOC_VTABLE_INHERIT				\&& (FIX)->fx_r_type != B
 end_define
 
 begin_comment
-comment|/* Values passed to md_apply_fix3 don't include the symbol value.  */
+comment|/* Values passed to md_apply_fix don't include the symbol value.  */
 end_comment
 
 begin_define
@@ -588,7 +606,6 @@ name|sparc_regname_to_dw2regnum
 name|PARAMS
 argument_list|(
 operator|(
-specifier|const
 name|char
 operator|*
 name|regname

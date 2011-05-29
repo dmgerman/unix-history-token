@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_SPACE_MAP_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -103,6 +96,11 @@ modifier|*
 name|sm_ops
 decl_stmt|;
 comment|/* space map block picker ops vector */
+name|avl_tree_t
+modifier|*
+name|sm_pp_root
+decl_stmt|;
+comment|/* picker-private AVL tree */
 name|void
 modifier|*
 name|sm_ppd
@@ -124,6 +122,10 @@ name|avl_node_t
 name|ss_node
 decl_stmt|;
 comment|/* AVL node */
+name|avl_node_t
+name|ss_pp_node
+decl_stmt|;
+comment|/* AVL picker-private node */
 name|uint64_t
 name|ss_start
 decl_stmt|;
@@ -134,6 +136,25 @@ decl_stmt|;
 comment|/* ending offset (non-inclusive) */
 block|}
 name|space_seg_t
+typedef|;
+typedef|typedef
+struct|struct
+name|space_ref
+block|{
+name|avl_node_t
+name|sr_node
+decl_stmt|;
+comment|/* AVL node */
+name|uint64_t
+name|sr_offset
+decl_stmt|;
+comment|/* offset (start or end) */
+name|int64_t
+name|sr_refcnt
+decl_stmt|;
+comment|/* associated reference count */
+block|}
+name|space_ref_t
 typedef|;
 typedef|typedef
 struct|struct
@@ -225,6 +246,28 @@ name|start
 parameter_list|,
 name|uint64_t
 name|size
+parameter_list|)
+function_decl|;
+name|uint64_t
+function_decl|(
+modifier|*
+name|smop_max
+function_decl|)
+parameter_list|(
+name|space_map_t
+modifier|*
+name|sm
+parameter_list|)
+function_decl|;
+name|boolean_t
+function_decl|(
+modifier|*
+name|smop_fragmented
+function_decl|)
+parameter_list|(
+name|space_map_t
+modifier|*
+name|sm
 parameter_list|)
 function_decl|;
 block|}
@@ -423,7 +466,7 @@ name|size
 parameter_list|)
 function_decl|;
 specifier|extern
-name|int
+name|boolean_t
 name|space_map_contains
 parameter_list|(
 name|space_map_t
@@ -469,34 +512,6 @@ parameter_list|,
 name|space_map_t
 modifier|*
 name|mdest
-parameter_list|)
-function_decl|;
-specifier|extern
-name|void
-name|space_map_excise
-parameter_list|(
-name|space_map_t
-modifier|*
-name|sm
-parameter_list|,
-name|uint64_t
-name|start
-parameter_list|,
-name|uint64_t
-name|size
-parameter_list|)
-function_decl|;
-specifier|extern
-name|void
-name|space_map_union
-parameter_list|(
-name|space_map_t
-modifier|*
-name|smd
-parameter_list|,
-name|space_map_t
-modifier|*
-name|sms
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -584,6 +599,15 @@ name|size
 parameter_list|)
 function_decl|;
 specifier|extern
+name|uint64_t
+name|space_map_maxsize
+parameter_list|(
+name|space_map_t
+modifier|*
+name|sm
+parameter_list|)
+function_decl|;
+specifier|extern
 name|void
 name|space_map_sync
 parameter_list|(
@@ -622,6 +646,74 @@ parameter_list|,
 name|dmu_tx_t
 modifier|*
 name|tx
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|space_map_ref_create
+parameter_list|(
+name|avl_tree_t
+modifier|*
+name|t
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|space_map_ref_destroy
+parameter_list|(
+name|avl_tree_t
+modifier|*
+name|t
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|space_map_ref_add_seg
+parameter_list|(
+name|avl_tree_t
+modifier|*
+name|t
+parameter_list|,
+name|uint64_t
+name|start
+parameter_list|,
+name|uint64_t
+name|end
+parameter_list|,
+name|int64_t
+name|refcnt
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|space_map_ref_add_map
+parameter_list|(
+name|avl_tree_t
+modifier|*
+name|t
+parameter_list|,
+name|space_map_t
+modifier|*
+name|sm
+parameter_list|,
+name|int64_t
+name|refcnt
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|space_map_ref_generate_map
+parameter_list|(
+name|avl_tree_t
+modifier|*
+name|t
+parameter_list|,
+name|space_map_t
+modifier|*
+name|sm
+parameter_list|,
+name|int64_t
+name|minref
 parameter_list|)
 function_decl|;
 ifdef|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: channels.h,v 1.98 2009/02/12 03:00:56 djm Exp $ */
+comment|/* $OpenBSD: channels.h,v 1.104 2010/05/14 23:29:23 djm Exp $ */
 end_comment
 
 begin_comment
@@ -176,8 +176,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SSH_CHANNEL_MAX_TYPE
+name|SSH_CHANNEL_MUX_LISTENER
 value|15
+end_define
+
+begin_comment
+comment|/* Listener for mux conn. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH_CHANNEL_MUX_CLIENT
+value|16
+end_define
+
+begin_comment
+comment|/* Conn. to mux slave */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH_CHANNEL_MAX_TYPE
+value|17
 end_define
 
 begin_struct_decl
@@ -192,6 +214,21 @@ name|struct
 name|Channel
 name|Channel
 typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+name|channel_open_fn
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
 end_typedef
 
 begin_typedef
@@ -356,6 +393,22 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Callbacks for mux channels back into client-specific code */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|mux_callback_fn
+parameter_list|(
+name|struct
+name|Channel
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|Channel
@@ -401,9 +454,9 @@ name|sock
 decl_stmt|;
 comment|/* sock fd */
 name|int
-name|ctl_fd
+name|ctl_chan
 decl_stmt|;
-comment|/* control fd (client sharing) */
+comment|/* control channel (multiplexed connections) */
 name|int
 name|isatty
 decl_stmt|;
@@ -423,7 +476,7 @@ comment|/* force close on iEOF */
 name|int
 name|delayed
 decl_stmt|;
-comment|/* fdset hack */
+comment|/* post-select handlers for newly created 				 * channels are delayed until the first call 				 * to a matching pre-select handler.  				 * this way post-select handlers are not 				 * accidenly called if a FD gets reused */
 name|Buffer
 name|input
 decl_stmt|;
@@ -483,7 +536,7 @@ name|ctype
 decl_stmt|;
 comment|/* type */
 comment|/* callback */
-name|channel_callback_fn
+name|channel_open_fn
 modifier|*
 name|open_confirm
 decl_stmt|;
@@ -527,6 +580,18 @@ comment|/* non-blocking connect */
 name|struct
 name|channel_connect
 name|connect_ctx
+decl_stmt|;
+comment|/* multiplexing protocol hook, called for each packet received */
+name|mux_callback_fn
+modifier|*
+name|mux_rcb
+decl_stmt|;
+name|void
+modifier|*
+name|mux_ctx
+decl_stmt|;
+name|int
+name|mux_pause
 decl_stmt|;
 block|}
 struct|;
@@ -689,6 +754,13 @@ define|#
 directive|define
 name|CHAN_EOF_RCVD
 value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHAN_LOCAL
+value|0x10
 end_define
 
 begin_define
@@ -872,7 +944,7 @@ name|channel_register_open_confirm
 parameter_list|(
 name|int
 parameter_list|,
-name|channel_callback_fn
+name|channel_open_fn
 modifier|*
 parameter_list|,
 name|void
@@ -1302,6 +1374,24 @@ modifier|*
 parameter_list|,
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Channel
+modifier|*
+name|channel_connect_stdio_fwd
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|u_short
+parameter_list|,
+name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

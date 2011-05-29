@@ -110,6 +110,13 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|int
+name|msgbufsize
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|msgbuftrigger
 decl_stmt|;
 end_decl_stmt

@@ -119,6 +119,9 @@ comment|/* A Microsoft LDM Metadata entry. */
 name|G_PART_ALIAS_MS_RESERVED
 block|,
 comment|/* A Microsoft Reserved part. entry. */
+name|G_PART_ALIAS_MS_NTFS
+block|,
+comment|/* A Microsoft NTFS partition entry */
 name|G_PART_ALIAS_NETBSD_CCD
 block|,
 comment|/* A NetBSD CCD partition entry. */
@@ -137,6 +140,15 @@ comment|/* A NetBSD swap partition entry. */
 name|G_PART_ALIAS_NETBSD_LFS
 block|,
 comment|/* A NetBSD LFS partition entry. */
+name|G_PART_ALIAS_EBR
+block|,
+comment|/* A EBR partition entry. */
+name|G_PART_ALIAS_MS_FAT32
+block|,
+comment|/* A Microsoft FAT32 partition entry. */
+name|G_PART_ALIAS_BIOS_BOOT
+block|,
+comment|/* A GRUB 2 boot partition entry. */
 comment|/* Keep the following last */
 name|G_PART_ALIAS_COUNT
 block|}
@@ -332,6 +344,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* Geometry is fixed. */
+name|int
+name|gpt_corrupt
+range|:
+literal|1
+decl_stmt|;
+comment|/* Table is corrupt. */
 block|}
 struct|;
 end_struct
@@ -492,6 +510,13 @@ name|G_PART_PARM_ATTRIB
 value|0x2000
 end_define
 
+begin_define
+define|#
+directive|define
+name|G_PART_PARM_FORCE
+value|0x4000
+end_define
+
 begin_struct
 struct|struct
 name|g_part_parms
@@ -561,6 +586,10 @@ specifier|const
 name|char
 modifier|*
 name|gpp_attrib
+decl_stmt|;
+name|unsigned
+name|int
+name|gpp_force
 decl_stmt|;
 block|}
 struct|;

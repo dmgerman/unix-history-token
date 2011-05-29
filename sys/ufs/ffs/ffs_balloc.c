@@ -324,6 +324,20 @@ operator|(
 name|EFBIG
 operator|)
 return|;
+if|if
+condition|(
+name|DOINGSOFTDEP
+argument_list|(
+name|vp
+argument_list|)
+condition|)
+name|softdep_prealloc
+argument_list|(
+name|vp
+argument_list|,
+name|MNT_WAIT
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If the next write will extend the file into a new block, 	 * and the file is currently composed of a fragment 	 * this fragment has to be extended to be a full block. 	 */
 name|lastlbn
 operator|=
@@ -2138,7 +2152,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * If we have failed part way through block allocation, we 	 * have to deallocate any indirect blocks that we have allocated. 	 * We have to fsync the file before we start to get rid of all 	 * of its dependencies so that we do not leave them dangling. 	 * We have to sync it at the end so that the soft updates code 	 * does not find any untracked changes. Although this is really 	 * slow, running out of disk space is not expected to be a common 	 * occurence. The error return from fsync is ignored as we already 	 * have an error to return to the user. 	 */
+comment|/* 	 * If we have failed part way through block allocation, we 	 * have to deallocate any indirect blocks that we have allocated. 	 * We have to fsync the file before we start to get rid of all 	 * of its dependencies so that we do not leave them dangling. 	 * We have to sync it at the end so that the soft updates code 	 * does not find any untracked changes. Although this is really 	 * slow, running out of disk space is not expected to be a common 	 * occurence. The error return from fsync is ignored as we already 	 * have an error to return to the user. 	 * 	 * XXX Still have to journal the free below 	 */
 operator|(
 name|void
 operator|)
@@ -2455,6 +2469,8 @@ argument_list|,
 name|ip
 operator|->
 name|i_number
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -2676,6 +2692,20 @@ operator|(
 name|EFBIG
 operator|)
 return|;
+if|if
+condition|(
+name|DOINGSOFTDEP
+argument_list|(
+name|vp
+argument_list|)
+condition|)
+name|softdep_prealloc
+argument_list|(
+name|vp
+argument_list|,
+name|MNT_WAIT
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Check for allocating external data. 	 */
 if|if
 condition|(
@@ -5221,7 +5251,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * If we have failed part way through block allocation, we 	 * have to deallocate any indirect blocks that we have allocated. 	 * We have to fsync the file before we start to get rid of all 	 * of its dependencies so that we do not leave them dangling. 	 * We have to sync it at the end so that the soft updates code 	 * does not find any untracked changes. Although this is really 	 * slow, running out of disk space is not expected to be a common 	 * occurence. The error return from fsync is ignored as we already 	 * have an error to return to the user. 	 */
+comment|/* 	 * If we have failed part way through block allocation, we 	 * have to deallocate any indirect blocks that we have allocated. 	 * We have to fsync the file before we start to get rid of all 	 * of its dependencies so that we do not leave them dangling. 	 * We have to sync it at the end so that the soft updates code 	 * does not find any untracked changes. Although this is really 	 * slow, running out of disk space is not expected to be a common 	 * occurence. The error return from fsync is ignored as we already 	 * have an error to return to the user. 	 * 	 * XXX Still have to journal the free below 	 */
 operator|(
 name|void
 operator|)
@@ -5538,6 +5568,8 @@ argument_list|,
 name|ip
 operator|->
 name|i_number
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}

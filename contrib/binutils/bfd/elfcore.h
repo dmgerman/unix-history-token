@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ELF core file support for BFD.    Copyright 1995, 1996, 1997, 1998, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ELF core file support for BFD.    Copyright 1995, 1996, 1997, 1998, 2000, 2001, 2002, 2003, 2005    Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_function
@@ -719,11 +719,8 @@ name|arch
 argument_list|,
 literal|0
 argument_list|)
-condition|)
-block|{
 comment|/* It's OK if this fails for the generic target.  */
-if|if
-condition|(
+operator|&&
 name|ebd
 operator|->
 name|elf_machine_code
@@ -733,7 +730,26 @@ condition|)
 goto|goto
 name|fail
 goto|;
-block|}
+comment|/* Let the backend double check the format and override global      information.  We do this before processing the program headers      to allow the correct machine (as opposed to just the default      machine) to be set, making it possible for grok_prstatus and      grok_psinfo to rely on the mach setting.  */
+if|if
+condition|(
+name|ebd
+operator|->
+name|elf_backend_object_p
+operator|!=
+name|NULL
+operator|&&
+operator|!
+name|ebd
+operator|->
+name|elf_backend_object_p
+argument_list|(
+name|abfd
+argument_list|)
+condition|)
+goto|goto
+name|wrong
+goto|;
 comment|/* Process each program header.  */
 for|for
 control|(
@@ -780,29 +796,6 @@ name|i_ehdrp
 operator|->
 name|e_entry
 expr_stmt|;
-comment|/* Let the backend double check the format and override global      information.  */
-if|if
-condition|(
-name|ebd
-operator|->
-name|elf_backend_object_p
-operator|&&
-operator|(
-operator|!
-call|(
-modifier|*
-name|ebd
-operator|->
-name|elf_backend_object_p
-call|)
-argument_list|(
-name|abfd
-argument_list|)
-operator|)
-condition|)
-goto|goto
-name|wrong
-goto|;
 name|bfd_preserve_finish
 argument_list|(
 name|abfd

@@ -98,8 +98,8 @@ value|19
 end_define
 
 begin_decl_stmt
-specifier|const
 specifier|static
+specifier|const
 name|CHAN_INFO_2GHZ
 name|chan2GHzData
 index|[]
@@ -4534,6 +4534,7 @@ argument_list|)
 operator|&
 name|AR_PHY_AGC_CONTROL_NF
 condition|)
+block|{
 name|HALDEBUG
 argument_list|(
 name|ah
@@ -4545,6 +4546,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+block|}
 name|nf
 operator|=
 name|ar5211GetNoiseFloor

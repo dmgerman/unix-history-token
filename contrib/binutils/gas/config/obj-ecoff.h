@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ECOFF object file format header file.    Copyright 1993, 1994, 1995, 1996, 1997, 1999, 2002    Free Software Foundation, Inc.    Contributed by Cygnus Support.    Written by Ian Lance Taylor<ian@cygnus.com>.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* ECOFF object file format header file.    Copyright 1993, 1994, 1995, 1996, 1997, 1999, 2002, 2004, 2005    Free Software Foundation, Inc.    Contributed by Cygnus Support.    Written by Ian Lance Taylor<ian@cygnus.com>.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -92,19 +92,6 @@ begin_comment
 comment|/* Set section VMAs and GP.  */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|void
-name|ecoff_frob_file_before_fix
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -116,19 +103,6 @@ end_define
 begin_comment
 comment|/* This is used to write the symbolic data in the format that BFD    expects it.  */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|ecoff_frob_file
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -166,8 +140,10 @@ directive|define
 name|obj_app_file
 parameter_list|(
 name|name
+parameter_list|,
+name|app
 parameter_list|)
-value|ecoff_new_file (name)
+value|ecoff_new_file (name, app)
 end_define
 
 begin_comment
@@ -219,22 +195,39 @@ name|obj_ecoff_set_ext
 value|ecoff_set_ext
 end_define
 
-begin_decl_stmt
+begin_function_decl
+specifier|extern
+name|void
+name|ecoff_frob_file_before_fix
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|ecoff_frob_file
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|void
 name|obj_ecoff_set_ext
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|symbolS
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|EXTR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

@@ -568,7 +568,7 @@ begin_define
 define|#
 directive|define
 name|DES_LONG
-value|unsigned long
+value|unsigned int
 end_define
 
 begin_endif
@@ -602,11 +602,33 @@ directive|define
 name|CONFIG_HEADER_BN_H
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|BN_LLONG
+end_undef
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|BN_LLONG
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Should we define BN_DIV2W here? */
@@ -620,16 +642,33 @@ begin_comment
 comment|/* The prime number generation stuff may not work when  * EIGHT_BIT but I don't care since I've only used this mode  * for debuging the bignum libraries */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
 name|SIXTY_FOUR_BIT_LONG
-end_undef
+end_define
 
 begin_undef
 undef|#
 directive|undef
-name|SIXTY_FOUR_BIT
+name|THIRTY_TWO_BIT
+end_undef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_undef
+undef|#
+directive|undef
+name|SIXTY_FOUR_BIT_LONG
 end_undef
 
 begin_define
@@ -637,6 +676,17 @@ define|#
 directive|define
 name|THIRTY_TWO_BIT
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_undef
+undef|#
+directive|undef
+name|SIXTY_FOUR_BIT
+end_undef
 
 begin_undef
 undef|#

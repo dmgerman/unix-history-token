@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2006-2007, by Cisco Systems, Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2006-2007, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -556,6 +556,14 @@ begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
 name|SCTP_M_SOCKOPT
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|SCTP_M_MCORE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1438,7 +1446,7 @@ value|if(m->m_flags& M_PKTHDR) { \                                      MH_ALIGN
 end_define
 
 begin_comment
-comment|/* We make it so if you have up to 4 threads  * writting based on the default size of  * the packet log 65 k, that would be  * 4 16k packets before we would hit  * a problem.  */
+comment|/* We make it so if you have up to 4 threads  * writing based on the default size of  * the packet log 65 k, that would be  * 4 16k packets before we would hit  * a problem.  */
 end_comment
 
 begin_define
@@ -1593,7 +1601,7 @@ value|(m->m_flags)
 end_define
 
 begin_comment
-comment|/* For BSD this just accesses the M_PKTHDR length  * so it operates on an mbuf with hdr flag. Other  * O/S's may have seperate packet header and mbuf  * chain pointers.. thus the macro.  */
+comment|/* For BSD this just accesses the M_PKTHDR length  * so it operates on an mbuf with hdr flag. Other  * O/S's may have separate packet header and mbuf  * chain pointers.. thus the macro.  */
 end_comment
 
 begin_define
@@ -1975,7 +1983,7 @@ parameter_list|,
 name|vrf_id
 parameter_list|)
 define|\
-value|{ \ 	int o_flgs = 0; \ 	if (stcb&& stcb->sctp_ep&& stcb->sctp_ep->sctp_socket) { \ 		o_flgs = IP_RAWOUTPUT | (stcb->sctp_ep->sctp_socket->so_options& SO_DONTROUTE); \ 	} else { \ 		o_flgs = IP_RAWOUTPUT; \ 	} \ 	result = ip_output(o_pak, NULL, ro, o_flgs, 0, NULL); \ }
+value|{ \ 	int o_flgs = IP_RAWOUTPUT; \ 	struct sctp_tcb *local_stcb = stcb; \ 	if (local_stcb&& \ 	    local_stcb->sctp_ep&& \ 	    local_stcb->sctp_ep->sctp_socket) \ 		o_flgs |= local_stcb->sctp_ep->sctp_socket->so_options& SO_DONTROUTE; \ 	result = ip_output(o_pak, NULL, ro, o_flgs, 0, NULL); \ }
 end_define
 
 begin_define
@@ -1996,7 +2004,7 @@ parameter_list|,
 name|vrf_id
 parameter_list|)
 define|\
-value|{ \  	if (stcb&& stcb->sctp_ep) \ 		result = ip6_output(o_pak, \ 				    ((struct in6pcb *)(stcb->sctp_ep))->in6p_outputopts, \ 				    (ro), 0, 0, ifp, NULL); \ 	else \ 		result = ip6_output(o_pak, NULL, (ro), 0, 0, ifp, NULL); \ }
+value|{ \ 	struct sctp_tcb *local_stcb = stcb; \ 	if (local_stcb&& local_stcb->sctp_ep) \ 		result = ip6_output(o_pak, \ 				    ((struct in6pcb *)(local_stcb->sctp_ep))->in6p_outputopts, \ 				    (ro), 0, 0, ifp, NULL); \ 	else \ 		result = ip6_output(o_pak, NULL, (ro), 0, 0, ifp, NULL); \ }
 end_define
 
 begin_function_decl

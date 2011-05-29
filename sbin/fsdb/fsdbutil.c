@@ -129,7 +129,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|printindir
 parameter_list|(
 name|ufs2_daddr_t
@@ -1252,7 +1252,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|printindir
 parameter_list|(
 name|ufs2_daddr_t
@@ -1292,6 +1292,25 @@ decl_stmt|;
 name|ufs2_daddr_t
 name|blkno
 decl_stmt|;
+if|if
+condition|(
+name|blk
+operator|==
+literal|0
+condition|)
+return|return;
+name|printf
+argument_list|(
+literal|"%jd (%d) =>\n"
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|blk
+argument_list|,
+name|level
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|level
@@ -1414,22 +1433,7 @@ name|blkno
 operator|==
 literal|0
 condition|)
-block|{
-if|if
-condition|(
-name|level
-operator|==
-literal|0
-condition|)
-name|putchar
-argument_list|(
-literal|'\n'
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
+continue|continue;
 name|j
 operator|=
 name|sprintf
@@ -1506,8 +1510,6 @@ argument_list|(
 literal|" =>\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|printindir
 argument_list|(
 name|blkno
@@ -1518,12 +1520,16 @@ literal|1
 argument_list|,
 name|bufp
 argument_list|)
-operator|==
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|charssofar
+operator|=
 literal|0
-condition|)
-return|return
-literal|0
-return|;
+expr_stmt|;
 block|}
 block|}
 if|if
@@ -1537,9 +1543,7 @@ argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
+return|return;
 block|}
 end_function
 
@@ -1742,15 +1746,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|DIP
-argument_list|(
-name|dp
-argument_list|,
-name|di_ib
-index|[
-literal|0
-index|]
-argument_list|)
+name|ndb
 operator|==
 literal|0
 condition|)
@@ -1799,8 +1795,6 @@ condition|;
 name|i
 operator|++
 control|)
-if|if
-condition|(
 name|printindir
 argument_list|(
 name|DIP
@@ -1817,10 +1811,7 @@ name|i
 argument_list|,
 name|bufp
 argument_list|)
-operator|==
-literal|0
-condition|)
-break|break;
+expr_stmt|;
 name|free
 argument_list|(
 name|bufp

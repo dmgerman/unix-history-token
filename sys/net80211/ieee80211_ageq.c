@@ -480,7 +480,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Age frames on the age queue.  Ages are stored as time  * deltas (in seconds) relative to the head so we can check  * and/or adjust only the head of the list.  If a frame's age  * exceeds the time quanta then remove it.  The list of removed  * frames is is returned to the caller joined by m_nextpkt.  */
+comment|/*  * Age frames on the age queue.  Ages are stored as time  * deltas (in seconds) relative to the head so we can check  * and/or adjust only the head of the list.  If a frame's age  * exceeds the time quanta then remove it.  The list of removed  * frames is returned to the caller joined by m_nextpkt.  */
 end_comment
 
 begin_function

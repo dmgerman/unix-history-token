@@ -166,31 +166,14 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/cc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip6.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -198,22 +181,11 @@ directive|include
 file|<netinet/in_pcb.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<netinet6/in6_pcb.h>
+file|<netinet/in_systm.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -236,6 +208,18 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<netinet/ip6.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/in6_pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet6/ip6_var.h>
 end_include
 
@@ -249,12 +233,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcp.h>
-end_include
 
 begin_include
 include|#
@@ -325,6 +303,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -345,6 +329,15 @@ name|td
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -856,6 +849,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_comment
 comment|/*  * Give the socket an address.  */
 end_comment
@@ -1056,6 +1055,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1228,6 +1236,9 @@ name|inp_vflag
 operator||=
 name|INP_IPV6
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 operator|(
@@ -1318,6 +1329,8 @@ name|out
 goto|;
 block|}
 block|}
+endif|#
+directive|endif
 name|error
 operator|=
 name|in6_pcbbind
@@ -1365,6 +1378,12 @@ end_endif
 begin_comment
 comment|/* INET6 */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_comment
 comment|/*  * Prepare to accept connections.  */
@@ -1566,6 +1585,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -1800,6 +1828,12 @@ end_endif
 begin_comment
 comment|/* INET6 */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_comment
 comment|/*  * Initiate connection to peer.  * Create a template for use in transmissions on this connection.  * Enter SYN_SENT state, and mark socket as connecting.  * Start keep-alive timer, and seed output sequence space.  * Send initial segment on connection.  */
@@ -2042,6 +2076,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2201,6 +2244,9 @@ expr_stmt|;
 name|TCPDEBUG1
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 name|IN6_IS_ADDR_V4MAPPED
@@ -2320,6 +2366,8 @@ goto|goto
 name|out
 goto|;
 block|}
+endif|#
+directive|endif
 name|inp
 operator|->
 name|inp_vflag
@@ -2553,8 +2601,14 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_comment
-comment|/*  * Accept a connection.  Essentially all the work is  * done at higher levels; just return the address  * of the peer, storing through addr.  */
+comment|/*  * Accept a connection.  Essentially all the work is done at higher levels;  * just return the address of the peer, storing through addr.  *  * The rationale for acquiring the tcbinfo lock here is somewhat complicated,  * and is described in detail in the commit log entry for r175612.  Acquiring  * it delays an accept(2) racing with sonewconn(), which inserts the socket  * before the inpcb address/port fields are initialized.  A better fix would  * prevent the socket from being placed in the listen queue until all fields  * are fully initialized.  */
 end_comment
 
 begin_function
@@ -2730,6 +2784,15 @@ name|error
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -3511,10 +3574,26 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-else|else
 endif|#
 directive|endif
 comment|/* INET6 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+else|else
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET
 name|error
 operator|=
 name|tcp_connect
@@ -3526,6 +3605,8 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|error
@@ -3736,10 +3817,26 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-else|else
 endif|#
 directive|endif
 comment|/* INET6 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+else|else
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET
 name|error
 operator|=
 name|tcp_connect
@@ -3751,6 +3848,8 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|error
@@ -4429,6 +4528,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|pr_usrreqs
@@ -4522,6 +4627,15 @@ name|tcp_usr_close
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -4631,6 +4745,12 @@ end_endif
 begin_comment
 comment|/* INET6 */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_comment
 comment|/*  * Common subroutine to open a TCP connection to remote host specified  * by struct sockaddr_in in mbuf *nam.  Call in_pcbbind to assign a local  * port number if needed.  Call in_pcbconnect_setup to do the routing and  * to choose a local host address (interface).  If there is an existing  * incarnation of the same connection in TIME-WAIT state and if the remote  * host was sending CC options and if the connection duration was< MSL, then  * truncate the previous TIME-WAIT state and proceed.  * Initialize connection parameters and enter SYN-SENT state.  */
@@ -4870,14 +4990,6 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|tp
-operator|->
-name|t_bw_rtseq
-operator|=
-name|tp
-operator|->
-name|iss
-expr_stmt|;
 name|tcp_sendseqinit
 argument_list|(
 name|tp
@@ -4888,6 +5000,15 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -5196,14 +5317,6 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|tp
-operator|->
-name|t_bw_rtseq
-operator|=
-name|tp
-operator|->
-name|iss
-expr_stmt|;
 name|tcp_sendseqinit
 argument_list|(
 name|tp
@@ -5459,10 +5572,9 @@ name|ti
 operator|->
 name|tcpi_snd_bwnd
 operator|=
-name|tp
-operator|->
-name|snd_bwnd
+literal|0
 expr_stmt|;
+comment|/* Unused, kept for compat. */
 name|ti
 operator|->
 name|tcpi_snd_nxt
@@ -5500,6 +5612,30 @@ operator|->
 name|tcpi_options
 operator||=
 name|TCPI_OPT_TOE
+expr_stmt|;
+name|ti
+operator|->
+name|tcpi_snd_rexmitpack
+operator|=
+name|tp
+operator|->
+name|t_sndrexmitpack
+expr_stmt|;
+name|ti
+operator|->
+name|tcpi_rcv_ooopack
+operator|=
+name|tp
+operator|->
+name|t_rcvoopack
+expr_stmt|;
+name|ti
+operator|->
+name|tcpi_snd_zerowin
+operator|=
+name|tp
+operator|->
+name|t_sndzerowin
 expr_stmt|;
 block|}
 end_function
@@ -5553,6 +5689,17 @@ decl_stmt|;
 name|struct
 name|tcp_info
 name|ti
+decl_stmt|;
+name|char
+name|buf
+index|[
+name|TCP_CA_NAME_MAX
+index|]
+decl_stmt|;
+name|struct
+name|cc_algo
+modifier|*
+name|algo
 decl_stmt|;
 name|error
 operator|=
@@ -5617,11 +5764,27 @@ name|sopt
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
 endif|#
 directive|endif
 comment|/* INET6 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+else|else
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET
+block|{
 name|INP_WUNLOCK
 argument_list|(
 name|inp
@@ -5636,9 +5799,6 @@ argument_list|,
 name|sopt
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 block|}
 endif|#
 directive|endif
@@ -5903,7 +6063,15 @@ name|t_flags
 operator||=
 name|TF_NOPUSH
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|tp
+operator|->
+name|t_flags
+operator|&
+name|TF_NOPUSH
+condition|)
 block|{
 name|tp
 operator|->
@@ -5912,6 +6080,15 @@ operator|&=
 operator|~
 name|TF_NOPUSH
 expr_stmt|;
+if|if
+condition|(
+name|TCPS_HAVEESTABLISHED
+argument_list|(
+name|tp
+operator|->
+name|t_state
+argument_list|)
+condition|)
 name|error
 operator|=
 name|tcp_output
@@ -6010,6 +6187,170 @@ expr_stmt|;
 name|error
 operator|=
 name|EINVAL
+expr_stmt|;
+break|break;
+case|case
+name|TCP_CONGESTION
+case|:
+name|INP_WUNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|sooptcopyin
+argument_list|(
+name|sopt
+argument_list|,
+operator|&
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+break|break;
+name|INP_WLOCK_RECHECK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Return EINVAL if we can't find the requested cc algo. 			 */
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+name|CC_LIST_RLOCK
+argument_list|()
+expr_stmt|;
+name|STAILQ_FOREACH
+argument_list|(
+argument|algo
+argument_list|,
+argument|&cc_list
+argument_list|,
+argument|entries
+argument_list|)
+block|{
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|buf
+argument_list|,
+name|algo
+operator|->
+name|name
+argument_list|,
+name|TCP_CA_NAME_MAX
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* We've found the requested algo. */
+name|error
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 					 * We hold a write lock over the tcb 					 * so it's safe to do these things 					 * without ordering concerns. 					 */
+if|if
+condition|(
+name|CC_ALGO
+argument_list|(
+name|tp
+argument_list|)
+operator|->
+name|cb_destroy
+operator|!=
+name|NULL
+condition|)
+name|CC_ALGO
+argument_list|(
+name|tp
+argument_list|)
+operator|->
+name|cb_destroy
+argument_list|(
+name|tp
+operator|->
+name|ccv
+argument_list|)
+expr_stmt|;
+name|CC_ALGO
+argument_list|(
+name|tp
+argument_list|)
+operator|=
+name|algo
+expr_stmt|;
+comment|/* 					 * If something goes pear shaped 					 * initialising the new algo, 					 * fall back to newreno (which 					 * does not require initialisation). 					 */
+if|if
+condition|(
+name|algo
+operator|->
+name|cb_init
+operator|!=
+name|NULL
+condition|)
+if|if
+condition|(
+name|algo
+operator|->
+name|cb_init
+argument_list|(
+name|tp
+operator|->
+name|ccv
+argument_list|)
+operator|>
+literal|0
+condition|)
+block|{
+name|CC_ALGO
+argument_list|(
+name|tp
+argument_list|)
+operator|=
+operator|&
+name|newreno_cc_algo
+expr_stmt|;
+comment|/* 							 * The only reason init 							 * should fail is 							 * because of malloc. 							 */
+name|error
+operator|=
+name|ENOMEM
+expr_stmt|;
+block|}
+break|break;
+comment|/* Break the STAILQ_FOREACH. */
+block|}
+block|}
+name|CC_LIST_RUNLOCK
+argument_list|()
+expr_stmt|;
+name|INP_WUNLOCK
+argument_list|(
+name|inp
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
@@ -6228,6 +6569,50 @@ name|ti
 argument_list|,
 sizeof|sizeof
 name|ti
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|TCP_CONGESTION
+case|:
+name|bzero
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|strlcpy
+argument_list|(
+name|buf
+argument_list|,
+name|CC_ALGO
+argument_list|(
+name|tp
+argument_list|)
+operator|->
+name|name
+argument_list|,
+name|TCP_CA_NAME_MAX
+argument_list|)
+expr_stmt|;
+name|INP_WUNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|sooptcopyout
+argument_list|(
+name|sopt
+argument_list|,
+name|buf
+argument_list|,
+name|TCP_CA_NAME_MAX
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7342,29 +7727,6 @@ if|if
 condition|(
 name|t_flags
 operator|&
-name|TF_NOPUSH
-condition|)
-block|{
-name|db_printf
-argument_list|(
-literal|"%sTF_NOPUSH"
-argument_list|,
-name|comma
-condition|?
-literal|", "
-else|:
-literal|""
-argument_list|)
-expr_stmt|;
-name|comma
-operator|=
-literal|1
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|t_flags
-operator|&
 name|TF_MORETOCOME
 condition|)
 block|{
@@ -7463,6 +7825,29 @@ block|{
 name|db_printf
 argument_list|(
 literal|"%sTF_FASTRECOVERY"
+argument_list|,
+name|comma
+condition|?
+literal|", "
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+name|comma
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|t_flags
+operator|&
+name|TF_CONGRECOVERY
+condition|)
+block|{
+name|db_printf
+argument_list|(
+literal|"%sTF_CONGRECOVERY"
 argument_list|,
 name|comma
 condition|?
@@ -7928,7 +8313,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"snd_wnd: %lu   snd_cwnd: %lu   snd_bwnd: %lu\n"
+literal|"snd_wnd: %lu   snd_cwnd: %lu\n"
 argument_list|,
 name|tp
 operator|->
@@ -7937,10 +8322,6 @@ argument_list|,
 name|tp
 operator|->
 name|snd_cwnd
-argument_list|,
-name|tp
-operator|->
-name|snd_bwnd
 argument_list|)
 expr_stmt|;
 name|db_print_indent
@@ -7950,16 +8331,12 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"snd_ssthresh: %lu   snd_bandwidth: %lu   snd_recover: "
+literal|"snd_ssthresh: %lu   snd_recover: "
 literal|"0x%08x\n"
 argument_list|,
 name|tp
 operator|->
 name|snd_ssthresh
-argument_list|,
-name|tp
-operator|->
-name|snd_bandwidth
 argument_list|,
 name|tp
 operator|->
@@ -7995,7 +8372,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"t_rttime: %u   t_rtsq: 0x%08x   t_bw_rtttime: %u\n"
+literal|"t_rttime: %u   t_rtsq: 0x%08x\n"
 argument_list|,
 name|tp
 operator|->
@@ -8004,10 +8381,6 @@ argument_list|,
 name|tp
 operator|->
 name|t_rtseq
-argument_list|,
-name|tp
-operator|->
-name|t_bw_rtttime
 argument_list|)
 expr_stmt|;
 name|db_print_indent
@@ -8017,12 +8390,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"t_bw_rtseq: 0x%08x   t_rxtcur: %d   t_maxseg: %u   "
-literal|"t_srtt: %d\n"
-argument_list|,
-name|tp
-operator|->
-name|t_bw_rtseq
+literal|"t_rxtcur: %d   t_maxseg: %u   t_srtt: %d\n"
 argument_list|,
 name|tp
 operator|->

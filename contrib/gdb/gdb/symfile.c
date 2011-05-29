@@ -4943,7 +4943,7 @@ decl_stmt|;
 operator|*
 name|sum
 operator|+=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|asec
 argument_list|)
@@ -5022,7 +5022,7 @@ block|{
 name|bfd_size_type
 name|size
 init|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|asec
 argument_list|)
@@ -9948,7 +9948,7 @@ condition|)
 block|{
 name|size
 operator|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|section
 argument_list|)
@@ -10015,7 +10015,7 @@ condition|)
 block|{
 name|size
 operator|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|section
 argument_list|)
@@ -10079,7 +10079,7 @@ name|a
 operator|->
 name|vma
 operator|+
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|a
 argument_list|)
@@ -10098,7 +10098,7 @@ name|b
 operator|->
 name|vma
 operator|+
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|b
 argument_list|)
@@ -10552,7 +10552,7 @@ argument_list|)
 expr_stmt|;
 name|size
 operator|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|osect
 operator|->
@@ -11592,7 +11592,7 @@ name|the_bfd_section
 decl_stmt|;
 name|size
 operator|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|osect
 operator|->
@@ -11837,7 +11837,7 @@ name|the_bfd_section
 decl_stmt|;
 name|size
 operator|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|osect
 operator|->

@@ -15,6 +15,12 @@ directive|define
 name|CTRL_IFACE_H
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CONFIG_NO_CTRL_IFACE
+end_ifndef
+
 begin_function_decl
 name|int
 name|hostapd_ctrl_iface_init
@@ -38,6 +44,56 @@ name|hapd
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* CONFIG_NO_CTRL_IFACE */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|hostapd_ctrl_iface_init
+parameter_list|(
+name|struct
+name|hostapd_data
+modifier|*
+name|hapd
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|hostapd_ctrl_iface_deinit
+parameter_list|(
+name|struct
+name|hostapd_data
+modifier|*
+name|hapd
+parameter_list|)
+block|{ }
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_NO_CTRL_IFACE */
+end_comment
 
 begin_endif
 endif|#

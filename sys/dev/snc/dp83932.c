@@ -840,7 +840,7 @@ name|ifp
 operator|->
 name|if_snd
 argument_list|,
-name|IFQ_MAXLEN
+name|ifqmaxlen
 argument_list|)
 expr_stmt|;
 comment|/* Initialize media goo. */

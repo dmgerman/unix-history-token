@@ -8,7 +8,7 @@ comment|/*  * Parts of this program are derived from the original FreeBSD iostat
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -507,6 +507,9 @@ decl_stmt|;
 name|devstat_select_mode
 name|select_mode
 decl_stmt|;
+name|float
+name|f
+decl_stmt|;
 name|int
 name|havelast
 init|=
@@ -704,12 +707,18 @@ case|:
 name|wflag
 operator|++
 expr_stmt|;
-name|waittime
+name|f
 operator|=
-name|atoi
+name|atof
 argument_list|(
 name|optarg
 argument_list|)
+expr_stmt|;
+name|waittime
+operator|=
+name|f
+operator|*
+literal|1000
 expr_stmt|;
 if|if
 condition|(
@@ -721,7 +730,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"wait time is< 1"
+literal|"wait time is< 1ms"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1305,13 +1314,19 @@ operator|*
 name|argv
 condition|)
 block|{
-name|waittime
+name|f
 operator|=
-name|atoi
+name|atof
 argument_list|(
 operator|*
 name|argv
 argument_list|)
+expr_stmt|;
+name|waittime
+operator|=
+name|f
+operator|*
+literal|1000
 expr_stmt|;
 comment|/* Let the user know he goofed, but keep going anyway */
 if|if
@@ -1323,9 +1338,11 @@ condition|)
 name|warnx
 argument_list|(
 literal|"discarding previous wait interval, using"
-literal|" %d instead"
+literal|" %g instead"
 argument_list|,
 name|waittime
+operator|/
+literal|1000.0
 argument_list|)
 expr_stmt|;
 name|wflag
@@ -1389,6 +1406,8 @@ condition|)
 name|waittime
 operator|=
 literal|1
+operator|*
+literal|1000
 expr_stmt|;
 comment|/* 	 * If the user specified a wait time, but not a count, we want to 	 * go on ad infinitum.  This can be redundant if the user uses the 	 * traditional method of specifying the wait, since in that case we 	 * already set count = -1 above.  Oh well. 	 */
 if|if
@@ -2148,9 +2167,11 @@ operator|<=
 literal|0
 condition|)
 break|break;
-name|sleep
+name|usleep
 argument_list|(
 name|waittime
+operator|*
+literal|1000
 argument_list|)
 expr_stmt|;
 name|havelast
@@ -2766,13 +2787,13 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"device     r/s   w/s    kr/s    kw/s wait svc_t  %%b  "
+literal|"device     r/s   w/s    kr/s    kw/s qlen svc_t  %%b  "
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"device     r/i   w/i    kr/i    kw/i wait svc_t  %%b  "
+literal|"device     r/i   w/i    kr/i    kw/i qlen svc_t  %%b  "
 argument_list|)
 expr_stmt|;
 if|if

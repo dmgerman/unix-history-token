@@ -3361,10 +3361,6 @@ name|kp
 operator|->
 name|name
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|buf
 argument_list|,
 name|pkg_checked
@@ -3375,14 +3371,8 @@ name|pkg_selected
 argument_list|,
 name|kp
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
-operator|(
 operator|&
 name|lists
-operator|)
 argument_list|,
 operator|&
 name|curr

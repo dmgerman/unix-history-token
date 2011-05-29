@@ -100,7 +100,7 @@ name|fid_len
 decl_stmt|;
 comment|/* length of data in bytes */
 name|u_short
-name|fid_reserved
+name|fid_data0
 decl_stmt|;
 comment|/* force longword alignment */
 name|char
@@ -1120,7 +1120,7 @@ begin_define
 define|#
 directive|define
 name|MNT_VISFLAGMASK
-value|(MNT_RDONLY	| MNT_SYNCHRONOUS | MNT_NOEXEC	| \ 			MNT_NOSUID	| MNT_UNION	| \ 			MNT_ASYNC	| MNT_EXRDONLY	| MNT_EXPORTED	| \ 			MNT_DEFEXPORTED	| MNT_EXPORTANON| MNT_EXKERB	| \ 			MNT_LOCAL	| MNT_USER	| MNT_QUOTA	| \ 			MNT_ROOTFS	| MNT_NOATIME	| MNT_NOCLUSTERR| \ 			MNT_NOCLUSTERW	| MNT_SUIDDIR	| MNT_SOFTDEP	| \ 			MNT_IGNORE	| MNT_EXPUBLIC	| MNT_NOSYMFOLLOW | \ 			MNT_GJOURNAL	| MNT_MULTILABEL | MNT_ACLS | MNT_NFS4ACLS)
+value|(MNT_RDONLY	| MNT_SYNCHRONOUS | MNT_NOEXEC	| \ 			MNT_NOSUID	| MNT_UNION	| \ 			MNT_ASYNC	| MNT_EXRDONLY	| MNT_EXPORTED	| \ 			MNT_DEFEXPORTED	| MNT_EXPORTANON| MNT_EXKERB	| \ 			MNT_LOCAL	| MNT_USER	| MNT_QUOTA	| \ 			MNT_ROOTFS	| MNT_NOATIME	| MNT_NOCLUSTERR| \ 			MNT_NOCLUSTERW	| MNT_SUIDDIR	| MNT_SOFTDEP	| \ 			MNT_IGNORE	| MNT_EXPUBLIC	| MNT_NOSYMFOLLOW | \ 			MNT_GJOURNAL	| MNT_MULTILABEL | MNT_ACLS	| \ 			MNT_NFS4ACLS)
 end_define
 
 begin_comment
@@ -1301,6 +1301,17 @@ end_define
 
 begin_comment
 comment|/* Allow shared locking for writes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNTK_SUJ
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* Softdep journaling enabled */
 end_comment
 
 begin_define
@@ -2514,6 +2525,9 @@ name|fid
 modifier|*
 name|fhp
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|struct
 name|vnode
 modifier|*
@@ -2838,10 +2852,12 @@ name|MP
 parameter_list|,
 name|FIDP
 parameter_list|,
+name|FLAGS
+parameter_list|,
 name|VPP
 parameter_list|)
 define|\
-value|(*(MP)->mnt_op->vfs_fhtovp)(MP, FIDP, VPP)
+value|(*(MP)->mnt_op->vfs_fhtovp)(MP, FIDP, FLAGS, VPP)
 end_define
 
 begin_define
@@ -2948,7 +2964,7 @@ name|VFS_UNLOCK_GIANT
 parameter_list|(
 name|locked
 parameter_list|)
-value|if ((locked)) mtx_unlock(&Giant);
+value|do					\ {									\ 	if ((locked))							\ 		mtx_unlock(&Giant);					\ } while (0)
 end_define
 
 begin_define
@@ -3599,8 +3615,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|vfs_allocate_syncvnode
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vfs_deallocate_syncvnode
 parameter_list|(
 name|struct
 name|mount
@@ -3737,6 +3764,24 @@ specifier|const
 name|char
 modifier|*
 name|from
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vfs_oexport_conv
+parameter_list|(
+specifier|const
+name|struct
+name|oexport_args
+modifier|*
+name|oexp
+parameter_list|,
+name|struct
+name|export_args
+modifier|*
+name|exp
 parameter_list|)
 function_decl|;
 end_function_decl

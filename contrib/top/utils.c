@@ -1402,7 +1402,9 @@ name|format_k2
 parameter_list|(
 name|amt
 parameter_list|)
-name|int
+name|unsigned
+name|long
+name|long
 name|amt
 decl_stmt|;
 block|{
@@ -1509,6 +1511,9 @@ name|p
 argument_list|,
 name|itoa
 argument_list|(
+operator|(
+name|int
+operator|)
 name|amt
 argument_list|)
 argument_list|)

@@ -493,7 +493,10 @@ condition|(
 name|jid
 operator|<
 literal|0
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|jail_errmsg
 index|[
@@ -514,6 +517,12 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+else|else
+block|{
 name|name
 operator|=
 name|strdup
@@ -536,6 +545,7 @@ argument_list|,
 name|JAIL_ERRMSGLEN
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|name
 return|;

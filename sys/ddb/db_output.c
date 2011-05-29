@@ -994,7 +994,7 @@ comment|/*  * Printing  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|db_printf
 parameter_list|(
 specifier|const
@@ -1022,6 +1022,9 @@ name|dca
 decl_stmt|;
 name|va_list
 name|listp
+decl_stmt|;
+name|int
+name|retval
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -1082,6 +1085,8 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
+name|retval
+operator|=
 name|kvprintf
 argument_list|(
 name|fmt
@@ -1122,6 +1127,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+return|return
+operator|(
+name|retval
+operator|)
+return|;
 block|}
 end_function
 

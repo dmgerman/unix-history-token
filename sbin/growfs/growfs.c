@@ -828,7 +828,7 @@ argument_list|(
 literal|"growfs"
 argument_list|)
 name|time_t
-name|utime
+name|modtime
 decl_stmt|;
 name|uint
 name|cylno
@@ -882,7 +882,7 @@ comment|/* FSIRAND */
 name|time
 argument_list|(
 operator|&
-name|utime
+name|modtime
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Get the cylinder summary into the memory. 	 */
@@ -1080,7 +1080,7 @@ name|fs_ncg
 operator|-
 literal|1
 argument_list|,
-name|utime
+name|modtime
 argument_list|,
 name|fsi
 argument_list|,
@@ -1221,7 +1221,7 @@ name|initcg
 argument_list|(
 name|cylno
 argument_list|,
-name|utime
+name|modtime
 argument_list|,
 name|fso
 argument_list|,
@@ -1312,7 +1312,7 @@ expr_stmt|;
 comment|/* 	 * Do all needed changes in the first cylinder group. 	 * allocate blocks in new location 	 */
 name|updcsloc
 argument_list|(
-name|utime
+name|modtime
 argument_list|,
 name|fsi
 argument_list|,
@@ -1477,7 +1477,7 @@ name|sblock
 operator|.
 name|fs_time
 operator|=
-name|utime
+name|modtime
 expr_stmt|;
 name|wtfs
 argument_list|(
@@ -1659,7 +1659,7 @@ name|int
 name|cylno
 parameter_list|,
 name|time_t
-name|utime
+name|modtime
 parameter_list|,
 name|int
 name|fso
@@ -1674,8 +1674,7 @@ argument_list|(
 literal|"initcg"
 argument_list|)
 specifier|static
-name|void
-modifier|*
+name|caddr_t
 name|iobuf
 decl_stmt|;
 name|long
@@ -1721,12 +1720,13 @@ argument_list|(
 name|sblock
 operator|.
 name|fs_bsize
+operator|*
+literal|3
 argument_list|)
 operator|)
 operator|==
 name|NULL
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|37
@@ -1734,7 +1734,6 @@ argument_list|,
 literal|"panic: cannot allocate I/O buffer"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Determine block bounds for cylinder group. 	 * Allow space for super block summary information in first 	 * cylinder group. 	 */
 name|cbase
 operator|=
@@ -1832,12 +1831,11 @@ operator|.
 name|fs_cgsize
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note that we do not set cg_initediblk at all. 	 * In this extension of a previous filesystem 	 * we have no inodes initialized for the cylinder 	 * group at all. The first access to that cylinder 	 * group will do the correct initialization. 	 */
 name|acg
 operator|.
 name|cg_time
 operator|=
-name|utime
+name|modtime
 expr_stmt|;
 name|acg
 operator|.
@@ -1858,6 +1856,34 @@ operator|=
 name|sblock
 operator|.
 name|fs_ipg
+expr_stmt|;
+name|acg
+operator|.
+name|cg_initediblk
+operator|=
+name|sblock
+operator|.
+name|fs_ipg
+operator|<
+literal|2
+operator|*
+name|INOPB
+argument_list|(
+operator|&
+name|sblock
+argument_list|)
+condition|?
+name|sblock
+operator|.
+name|fs_ipg
+else|:
+literal|2
+operator|*
+name|INOPB
+argument_list|(
+operator|&
+name|sblock
+argument_list|)
 expr_stmt|;
 name|acg
 operator|.
@@ -1959,6 +1985,12 @@ expr_stmt|;
 name|acg
 operator|.
 name|cg_niblk
+operator|=
+literal|0
+expr_stmt|;
+name|acg
+operator|.
+name|cg_initediblk
 operator|=
 literal|0
 expr_stmt|;
@@ -2237,6 +2269,10 @@ operator|=
 operator|(
 expr|struct
 name|ufs1_dinode
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|iobuf
@@ -2814,6 +2850,39 @@ name|acg
 operator|.
 name|cg_cs
 expr_stmt|;
+name|memcpy
+argument_list|(
+name|iobuf
+argument_list|,
+operator|&
+name|acg
+argument_list|,
+name|sblock
+operator|.
+name|fs_cgsize
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|iobuf
+operator|+
+name|sblock
+operator|.
+name|fs_cgsize
+argument_list|,
+literal|'\0'
+argument_list|,
+name|sblock
+operator|.
+name|fs_bsize
+operator|*
+literal|3
+operator|-
+name|sblock
+operator|.
+name|fs_cgsize
+argument_list|)
+expr_stmt|;
 name|wtfs
 argument_list|(
 name|fsbtodb
@@ -2833,13 +2902,10 @@ argument_list|,
 name|sblock
 operator|.
 name|fs_bsize
-argument_list|,
-operator|(
-name|char
 operator|*
-operator|)
-operator|&
-name|acg
+literal|3
+argument_list|,
+name|iobuf
 argument_list|,
 name|fso
 argument_list|,
@@ -3182,7 +3248,7 @@ argument_list|,
 name|fragnum
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Copy the block back immediately. 		 * 		 * XXX	If src is is from an indirect block we have 		 *	to implement copy on write here in case of 		 *	active snapshots. 		 */
+comment|/* 		 * Copy the block back immediately. 		 * 		 * XXX	If src is from an indirect block we have 		 *	to implement copy on write here in case of 		 *	active snapshots. 		 */
 name|ibuf
 operator|=
 name|malloc
@@ -3287,7 +3353,7 @@ name|int
 name|cylno
 parameter_list|,
 name|time_t
-name|utime
+name|modtime
 parameter_list|,
 name|int
 name|fsi
@@ -3568,7 +3634,7 @@ name|acg
 operator|.
 name|cg_time
 operator|=
-name|utime
+name|modtime
 expr_stmt|;
 if|if
 condition|(
@@ -4330,7 +4396,7 @@ name|void
 name|updcsloc
 parameter_list|(
 name|time_t
-name|utime
+name|modtime
 parameter_list|,
 name|int
 name|fsi
@@ -4552,7 +4618,7 @@ name|acg
 operator|.
 name|cg_time
 operator|=
-name|utime
+name|modtime
 expr_stmt|;
 comment|/* 	 * XXX	In the case of having active snapshots we may need much more 	 *	blocks for the copy on write. We need each block twice, and 	 *	also up to 8*3 blocks for indirect blocks for all possible 	 *	references. 	 */
 if|if

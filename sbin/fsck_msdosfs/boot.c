@@ -122,9 +122,6 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-operator|(
-name|size_t
-operator|)
 name|read
 argument_list|(
 name|dosfs

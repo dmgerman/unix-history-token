@@ -1254,9 +1254,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|TARGET_VECTOR_ALIGNMENT_REACHABLE
+define|\
+value|default_builtin_vector_alignment_reachable
+end_define
+
+begin_define
+define|#
+directive|define
 name|TARGET_VECTORIZE
 define|\
-value|{TARGET_VECTORIZE_BUILTIN_MASK_FOR_LOAD}
+value|{TARGET_VECTORIZE_BUILTIN_MASK_FOR_LOAD,				\    TARGET_VECTOR_ALIGNMENT_REACHABLE}
 end_define
 
 begin_define

@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/slb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/tlb.h>
 end_include
 
@@ -37,7 +43,7 @@ begin_define
 define|#
 directive|define
 name|CPUSAVE_LEN
-value|8
+value|9
 end_define
 
 begin_define
@@ -57,8 +63,46 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCPU_MD_AIM_FIELDS
+name|PCPU_MD_AIM32_FIELDS
 end_define
+
+begin_define
+define|#
+directive|define
+name|PCPU_MD_AIM64_FIELDS
+define|\
+value|struct slb	pc_slb[64];					\ 	struct slb	**pc_userslb;
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PCPU_MD_AIM_FIELDS
+value|PCPU_MD_AIM64_FIELDS
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PCPU_MD_AIM_FIELDS
+value|PCPU_MD_AIM32_FIELDS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -103,8 +147,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CPUSAVE_R28
+name|CPUSAVE_R27
 value|0
+end_define
+
+begin_comment
+comment|/* where r27 gets saved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUSAVE_R28
+value|1
 end_define
 
 begin_comment
@@ -115,7 +170,7 @@ begin_define
 define|#
 directive|define
 name|CPUSAVE_R29
-value|1
+value|2
 end_define
 
 begin_comment
@@ -126,7 +181,7 @@ begin_define
 define|#
 directive|define
 name|CPUSAVE_R30
-value|2
+value|3
 end_define
 
 begin_comment
@@ -137,7 +192,7 @@ begin_define
 define|#
 directive|define
 name|CPUSAVE_R31
-value|3
+value|4
 end_define
 
 begin_comment
@@ -148,7 +203,7 @@ begin_define
 define|#
 directive|define
 name|CPUSAVE_AIM_DAR
-value|4
+value|5
 end_define
 
 begin_comment
@@ -159,7 +214,7 @@ begin_define
 define|#
 directive|define
 name|CPUSAVE_AIM_DSISR
-value|5
+value|6
 end_define
 
 begin_comment
@@ -170,7 +225,7 @@ begin_define
 define|#
 directive|define
 name|CPUSAVE_BOOKE_DEAR
-value|4
+value|5
 end_define
 
 begin_comment
@@ -181,7 +236,7 @@ begin_define
 define|#
 directive|define
 name|CPUSAVE_BOOKE_ESR
-value|5
+value|6
 end_define
 
 begin_comment
@@ -192,7 +247,7 @@ begin_define
 define|#
 directive|define
 name|CPUSAVE_SRR0
-value|6
+value|7
 end_define
 
 begin_comment
@@ -203,7 +258,7 @@ begin_define
 define|#
 directive|define
 name|CPUSAVE_SRR1
-value|7
+value|8
 end_define
 
 begin_comment

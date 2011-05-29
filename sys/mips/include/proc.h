@@ -31,15 +31,35 @@ name|int
 name|md_flags
 decl_stmt|;
 comment|/* machine-dependent flags */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
+comment|/*  PHYSADDR_64_BIT */
+name|uint64_t
+name|md_upte
+index|[
+name|KSTACK_PAGES
+index|]
+decl_stmt|;
+comment|/* ptes for mapping u pcb */
+else|#
+directive|else
 name|int
 name|md_upte
 index|[
 name|KSTACK_PAGES
-operator|-
-literal|1
 index|]
 decl_stmt|;
-comment|/* ptes for mapping u pcb */
+endif|#
+directive|endif
 name|int
 name|md_ss_addr
 decl_stmt|;
@@ -67,9 +87,6 @@ name|int
 name|md_pc_spill
 decl_stmt|;
 comment|/* performance counter spill */
-name|vm_offset_t
-name|md_realstack
-decl_stmt|;
 name|void
 modifier|*
 name|md_tls
@@ -141,6 +158,36 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips_n64
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KINFO_PROC_SIZE
+value|1088
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|KINFO_PROC_SIZE
+value|816
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

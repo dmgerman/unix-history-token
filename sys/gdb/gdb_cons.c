@@ -437,7 +437,7 @@ name|gdbhack
 argument_list|,
 name|SI_SUB_RUN_SCHEDULER
 argument_list|,
-name|SI_ORDER_ANY
+name|SI_ORDER_MIDDLE
 argument_list|,
 name|oktousecallout
 argument_list|,

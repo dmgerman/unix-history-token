@@ -528,6 +528,37 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|ipsec
+argument_list|,
+literal|"Internet Protocol Security (IPsec)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPSEC_NAT_T
+end_ifdef
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|ipsec_natt
+argument_list|,
+literal|"UDP Encapsulation of IPsec ESP Packets ('NAT-T')"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
 name|_net_inet_ipsec
@@ -3129,7 +3160,7 @@ condition|(
 name|m
 operator|->
 name|m_len
-operator|<
+operator|>=
 sizeof|sizeof
 argument_list|(
 expr|struct

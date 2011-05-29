@@ -3550,6 +3550,7 @@ operator|->
 name|cn_cred
 argument_list|)
 expr_stmt|;
+comment|/* 	 * The calls to chgproccnt() are needed to compensate for change_ruid() 	 * calling chgproccnt(). 	 */
 name|chgproccnt
 argument_list|(
 name|cred

@@ -687,8 +687,11 @@ argument_list|,
 sizeof|sizeof
 name|buf
 argument_list|,
-literal|"%d\n"
+literal|"%ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|getpid
 argument_list|()
 argument_list|)

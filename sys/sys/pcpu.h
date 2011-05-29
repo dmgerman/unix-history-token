@@ -56,20 +56,28 @@ directive|include
 file|<machine/pcpu.h>
 end_include
 
-begin_struct_decl
-struct_decl|struct
-name|pcb
-struct_decl|;
-end_struct_decl
+begin_define
+define|#
+directive|define
+name|DPCPU_SETNAME
+value|"set_pcpu"
+end_define
 
-begin_struct_decl
-struct_decl|struct
-name|thread
-struct_decl|;
-end_struct_decl
+begin_define
+define|#
+directive|define
+name|DPCPU_SYMPREFIX
+value|"pcpu_entry_"
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_comment
-comment|/*  * Define a set for pcpu data.  *   * We don't use SET_DECLARE because it defines the set as 'a' when we  * want 'aw'.  GCC considers uninitialized data in a seperate section  * writable and there is no generic zero initializer that works for  * structs and scalars.  */
+comment|/*  * Define a set for pcpu data.  */
 end_comment
 
 begin_decl_stmt
@@ -80,6 +88,14 @@ name|__start_set_pcpu
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|__GLOBL
+argument_list|(
+name|__start_set_pcpu
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|extern
 name|uintptr_t
@@ -88,22 +104,13 @@ name|__stop_set_pcpu
 decl_stmt|;
 end_decl_stmt
 
-begin_asm
-asm|__asm__(
-if|#
-directive|if
-name|defined
+begin_expr_stmt
+name|__GLOBL
 argument_list|(
-name|__arm__
+name|__stop_set_pcpu
 argument_list|)
-asm|".section set_pcpu, \"aw\", %progbits\n"
-else|#
-directive|else
-asm|".section set_pcpu, \"aw\", @progbits\n"
-endif|#
-directive|endif
-asm|"\t.p2align " __XSTRING(CACHE_LINE_SHIFT) "\n" 	"\t.previous");
-end_asm
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Array of dynamic pcpu base offsets.  Indexed by id.  */
@@ -125,14 +132,14 @@ begin_define
 define|#
 directive|define
 name|DPCPU_START
-value|(uintptr_t)&__start_set_pcpu
+value|((uintptr_t)&__start_set_pcpu)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DPCPU_STOP
-value|(uintptr_t)&__stop_set_pcpu
+value|((uintptr_t)&__stop_set_pcpu)
 end_define
 
 begin_define
@@ -198,7 +205,7 @@ name|t
 parameter_list|,
 name|n
 parameter_list|)
-value|t DPCPU_NAME(n) __section("set_pcpu") __used
+value|t DPCPU_NAME(n) __section(DPCPU_SETNAME) __used
 end_define
 
 begin_comment
@@ -323,7 +330,52 @@ value|(*DPCPU_ID_PTR(i, n) = v)
 end_define
 
 begin_comment
-comment|/*   * XXXUPS remove as soon as we have per cpu variable  * linker sets and  can define rm_queue in _rm_lock.h */
+comment|/*  * Utility macros.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DPCPU_SUM
+parameter_list|(
+name|n
+parameter_list|)
+value|__extension__					\ ({									\ 	u_int _i;							\ 	__typeof(*DPCPU_PTR(n)) sum;					\ 									\ 	sum = 0;							\ 	CPU_FOREACH(_i) {						\ 		sum += *DPCPU_ID_PTR(_i, n);				\ 	}								\ 	sum;								\ })
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPCPU_VARSUM
+parameter_list|(
+name|n
+parameter_list|,
+name|var
+parameter_list|)
+value|__extension__				\ ({									\ 	u_int _i;							\ 	__typeof((DPCPU_PTR(n))->var) sum;				\ 									\ 	sum = 0;							\ 	CPU_FOREACH(_i) {						\ 		sum += (DPCPU_ID_PTR(_i, n))->var;			\ 	}								\ 	sum;								\ })
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPCPU_ZERO
+parameter_list|(
+name|n
+parameter_list|)
+value|do {						\ 	u_int _i;							\ 									\ 	CPU_FOREACH(_i) {						\ 		bzero(DPCPU_ID_PTR(_i, n), sizeof(*DPCPU_PTR(n)));	\ 	}								\ } while(0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
+begin_comment
+comment|/*   * XXXUPS remove as soon as we have per cpu variable  * linker sets and can define rm_queue in _rm_lock.h  */
 end_comment
 
 begin_struct
@@ -394,9 +446,11 @@ comment|/* Current pcb */
 name|uint64_t
 name|pc_switchtime
 decl_stmt|;
+comment|/* cpu_ticks() at last csw */
 name|int
 name|pc_switchticks
 decl_stmt|;
+comment|/* `ticks' at last csw */
 name|u_int
 name|pc_cpuid
 decl_stmt|;
@@ -429,7 +483,7 @@ index|[
 name|PCPU_NAME_LEN
 index|]
 decl_stmt|;
-comment|/* String name for KTR. */
+comment|/* String name for KTR */
 endif|#
 directive|endif
 name|struct
@@ -453,23 +507,31 @@ name|void
 modifier|*
 name|pc_netisr
 decl_stmt|;
-comment|/* netisr SWI cookie. */
-comment|/*  	 * Stuff for read mostly lock 	 *  	 * XXXUPS remove as soon as we have per cpu variable 	 * linker sets. 	 */
+comment|/* netisr SWI cookie */
+name|int
+name|pc_dnweight
+decl_stmt|;
+comment|/* vm_page_dontneed() */
+name|int
+name|pc_domain
+decl_stmt|;
+comment|/* Memory domain. */
+comment|/* 	 * Stuff for read mostly lock 	 * 	 * XXXUPS remove as soon as we have per cpu variable 	 * linker sets. 	 */
 name|struct
 name|rm_queue
 name|pc_rm_queue
 decl_stmt|;
-comment|/* 	 * Dynamic per-cpu data area. 	 */
 name|uintptr_t
 name|pc_dynamic
 decl_stmt|;
-comment|/* 	 * Keep MD fields last, so that CPU-specific variations on a 	 * single architecture don't result in offset variations of 	 * the machine-independent fields of the pcpu. Even though 	 * the pcpu structure is private to the kernel, some ports 	 * (e.g. lsof, part of gtop) define _KERNEL and include this 	 * header. While strictly speaking this is wrong, there's no 	 * reason not to keep the offsets of the MI fields contants. 	 * If only to make kernel debugging easier... 	 */
+comment|/* Dynamic per-cpu data area */
+comment|/* 	 * Keep MD fields last, so that CPU-specific variations on a 	 * single architecture don't result in offset variations of 	 * the machine-independent fields of the pcpu.  Even though 	 * the pcpu structure is private to the kernel, some ports 	 * (e.g., lsof, part of gtop) define _KERNEL and include this 	 * header.  While strictly speaking this is wrong, there's no 	 * reason not to keep the offsets of the MI fields constant 	 * if only to make kernel debugging easier. 	 */
 name|PCPU_MD_FIELDS
 expr_stmt|;
 block|}
 name|__aligned
 argument_list|(
-literal|128
+name|CACHE_LINE_SIZE
 argument_list|)
 struct|;
 end_struct
@@ -495,6 +557,18 @@ specifier|extern
 name|struct
 name|cpuhead
 name|cpuhead
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pcpu
+modifier|*
+name|cpuid_to_pcpu
+index|[
+name|MAXCPU
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -541,18 +615,6 @@ begin_comment
 comment|/*  * Machine dependent callouts.  cpu_pcpu_init() is responsible for  * initializing machine dependent fields of struct pcpu, and  * db_show_mdpcpu() is responsible for handling machine dependent  * fields for the DDB 'show pcpu' command.  */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pcpu
-modifier|*
-name|cpuid_to_pcpu
-index|[
-name|MAXCPU
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|void
 name|cpu_pcpu_init
@@ -579,48 +641,6 @@ name|struct
 name|pcpu
 modifier|*
 name|pcpu
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pcpu_destroy
-parameter_list|(
-name|struct
-name|pcpu
-modifier|*
-name|pcpu
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|pcpu
-modifier|*
-name|pcpu_find
-parameter_list|(
-name|u_int
-name|cpuid
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pcpu_init
-parameter_list|(
-name|struct
-name|pcpu
-modifier|*
-name|pcpu
-parameter_list|,
-name|int
-name|cpuid
-parameter_list|,
-name|size_t
-name|size
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -674,6 +694,48 @@ name|dpcpu
 parameter_list|,
 name|int
 name|cpuid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pcpu_destroy
+parameter_list|(
+name|struct
+name|pcpu
+modifier|*
+name|pcpu
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|pcpu
+modifier|*
+name|pcpu_find
+parameter_list|(
+name|u_int
+name|cpuid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pcpu_init
+parameter_list|(
+name|struct
+name|pcpu
+modifier|*
+name|pcpu
+parameter_list|,
+name|int
+name|cpuid
+parameter_list|,
+name|size_t
+name|size
 parameter_list|)
 function_decl|;
 end_function_decl

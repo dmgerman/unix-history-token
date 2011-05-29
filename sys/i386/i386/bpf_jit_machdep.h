@@ -949,6 +949,16 @@ comment|/* 5 is the size of the following jmp */
 value|\ 		emitm(&stream, ((t)<< 8) | 0x0f, 2);			\ 		emitm(&stream, stream.refs[stream.bpf_pc + ins->jt] -	\ 		    stream.refs[stream.bpf_pc] + 5, 4);			\ 		JMP(stream.refs[stream.bpf_pc + ins->jf] -		\ 		    stream.refs[stream.bpf_pc]);			\ 	} else if (ins->jt != 0) {					\ 		emitm(&stream, ((t)<< 8) | 0x0f, 2);			\ 		emitm(&stream, stream.refs[stream.bpf_pc + ins->jt] -	\ 		    stream.refs[stream.bpf_pc], 4);			\ 	} else {							\ 		emitm(&stream, ((f)<< 8) | 0x0f, 2);			\ 		emitm(&stream, stream.refs[stream.bpf_pc + ins->jf] -	\ 		    stream.refs[stream.bpf_pc], 4);			\ 	}								\ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|JUMP
+parameter_list|(
+name|off
+parameter_list|)
+value|do {							\ 	if ((off) != 0)							\ 		JMP(stream.refs[stream.bpf_pc + (off)] -		\ 		    stream.refs[stream.bpf_pc]);			\ } while (0)
+end_define
+
 begin_endif
 endif|#
 directive|endif

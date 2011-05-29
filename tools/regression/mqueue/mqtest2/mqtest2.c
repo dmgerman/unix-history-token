@@ -6,13 +6,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mqueue.h>
+file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -24,7 +30,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include

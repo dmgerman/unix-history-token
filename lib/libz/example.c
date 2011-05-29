@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* example.c -- usage example of the zlib compression library  * Copyright (C) 1995-2004 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* example.c -- usage example of the zlib compression library  * Copyright (C) 1995-2006 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -10,13 +10,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"zlib.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"zlib.h"
+file|<stdio.h>
 end_include
 
 begin_ifdef

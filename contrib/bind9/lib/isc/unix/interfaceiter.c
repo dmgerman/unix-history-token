@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007-2009  Internet Systems Consortium, 
 end_comment
 
 begin_comment
-comment|/* $Id: interfaceiter.c,v 1.44.120.2 2009/02/16 23:47:15 tbox Exp $ */
+comment|/* $Id: interfaceiter.c,v 1.44.120.2 2009-02-16 23:47:15 tbox Exp $ */
 end_comment
 
 begin_comment

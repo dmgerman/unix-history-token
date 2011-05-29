@@ -860,7 +860,7 @@ literal|'a'
 case|:
 name|printf
 argument_list|(
-literal|"-a deprecated, use -o readhead=<value>\n"
+literal|"-a deprecated, use -o readahead=<value>\n"
 argument_list|)
 expr_stmt|;
 name|build_iovec
@@ -1087,7 +1087,7 @@ literal|'L'
 case|:
 name|printf
 argument_list|(
-literal|"-i deprecated, use -o nolockd\n"
+literal|"-L deprecated, use -o nolockd\n"
 argument_list|)
 expr_stmt|;
 name|build_iovec
@@ -1477,7 +1477,7 @@ name|V4
 expr_stmt|;
 name|fstype
 operator|=
-literal|"newnfs"
+literal|"nfs"
 expr_stmt|;
 name|nfsproto
 operator|=
@@ -2025,37 +2025,14 @@ name|retrycnt
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * If the experimental nfs subsystem is loaded into the kernel 	 * and the regular one is not, use it. Otherwise, use it if the 	 * fstype is set to "newnfs", either via "mount -t newnfs ..." 	 * or by specifying an nfsv4 mount. 	 */
-if|if
-condition|(
-name|modfind
-argument_list|(
-literal|"nfscl"
-argument_list|)
-operator|>=
-literal|0
-operator|&&
-name|modfind
-argument_list|(
-literal|"nfs"
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|fstype
-operator|=
-literal|"newnfs"
-expr_stmt|;
-block|}
-elseif|else
+comment|/* 	 * If the fstye is "oldnfs", run the old NFS client unless the 	 * "nfsv4" option was specified. 	 */
 if|if
 condition|(
 name|strcmp
 argument_list|(
 name|fstype
 argument_list|,
-literal|"newnfs"
+literal|"nfs"
 argument_list|)
 operator|==
 literal|0
@@ -5086,6 +5063,10 @@ name|enum
 name|mountmode
 name|trymntmode
 decl_stmt|;
+name|sotype
+operator|=
+literal|0
+expr_stmt|;
 name|trymntmode
 operator|=
 name|mountmode

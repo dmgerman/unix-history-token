@@ -263,6 +263,17 @@ name|pthread_cleanup
 modifier|*
 name|newbuf
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|_PTHREAD_FORCED_UNWIND
+name|curthread
+operator|->
+name|unwind_disabled
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(

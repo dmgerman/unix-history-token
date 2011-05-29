@@ -287,6 +287,7 @@ modifier|*
 name|p
 parameter_list|,
 comment|/*out*/
+name|struct
 name|CodaFid
 modifier|*
 name|VFid
@@ -369,6 +370,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -496,6 +498,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -630,6 +633,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -757,6 +761,38 @@ operator|)
 operator|<<
 literal|16
 expr_stmt|;
+if|if
+condition|(
+name|iap
+operator|->
+name|vi
+operator|.
+name|in_size
+operator|>
+name|VC_MAXMSGSIZE
+operator|||
+name|iap
+operator|->
+name|vi
+operator|.
+name|out_size
+operator|>
+name|VC_MAXMSGSIZE
+condition|)
+block|{
+name|CODA_FREE
+argument_list|(
+name|inp
+argument_list|,
+name|coda_ioctl_size
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
 name|inp
 operator|->
 name|rwflag
@@ -943,6 +979,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -1059,6 +1096,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -1170,6 +1208,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -1275,6 +1314,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -1432,6 +1472,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -1517,6 +1558,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -1540,6 +1582,7 @@ modifier|*
 name|p
 parameter_list|,
 comment|/*out*/
+name|struct
 name|CodaFid
 modifier|*
 name|VFid
@@ -1675,6 +1718,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -1709,6 +1753,7 @@ modifier|*
 name|p
 parameter_list|,
 comment|/*out*/
+name|struct
 name|CodaFid
 modifier|*
 name|VFid
@@ -1866,6 +1911,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -1986,10 +2032,12 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|tfid
@@ -2117,10 +2165,12 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|tfid
@@ -2276,6 +2326,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -2304,6 +2355,7 @@ modifier|*
 name|p
 parameter_list|,
 comment|/*out*/
+name|struct
 name|CodaFid
 modifier|*
 name|VFid
@@ -2445,6 +2497,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -2565,6 +2618,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -2732,6 +2786,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -2893,6 +2948,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -2908,6 +2964,7 @@ modifier|*
 name|p
 parameter_list|,
 comment|/*out*/
+name|struct
 name|CodaFid
 modifier|*
 name|VFid

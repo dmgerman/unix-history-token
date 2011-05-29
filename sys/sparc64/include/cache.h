@@ -195,6 +195,13 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|dcache_color_ignore
+decl_stmt|;
+end_decl_stmt
+
 begin_struct_decl
 struct_decl|struct
 name|pcpu
@@ -333,6 +340,24 @@ specifier|extern
 name|icache_page_inval_t
 modifier|*
 name|icache_page_inval
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|cache_flush_t
+name|zeus_cache_flush
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|dcache_page_inval_t
+name|zeus_dcache_page_inval
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|icache_page_inval_t
+name|zeus_icache_page_inval
 decl_stmt|;
 end_decl_stmt
 

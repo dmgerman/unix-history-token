@@ -57,51 +57,27 @@ begin_comment
 comment|/* FIPS versions of DSA_sign() and DSA_verify().  * These include a tiny ASN1 encoder/decoder to handle the specific  * case of a DSA signature.  */
 end_comment
 
-begin_function
-name|int
-name|FIPS_dsa_size
-parameter_list|(
-name|DSA
-modifier|*
-name|r
-parameter_list|)
-block|{
-name|int
-name|ilen
-decl_stmt|;
-name|ilen
-operator|=
-name|BN_num_bytes
-argument_list|(
-name|r
-operator|->
-name|q
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ilen
-operator|>
-literal|20
-condition|)
-return|return
-operator|-
-literal|1
-return|;
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+unit|int FIPS_dsa_size(DSA *r) 	{ 	int ilen; 	ilen = BN_num_bytes(r->q); 	if (ilen> 20) 		return -1;
 comment|/* If MSB set need padding byte */
-name|ilen
-operator|++
-expr_stmt|;
+end_comment
+
+begin_comment
+unit|ilen ++;
 comment|/* Also need 2 bytes INTEGER header for r and s plus 	 * 2 bytes SEQUENCE header making 6 in total. 	 */
-return|return
-name|ilen
-operator|*
-literal|2
-operator|+
-literal|6
-return|;
-block|}
-end_function
+end_comment
+
+begin_endif
+unit|return ilen * 2 + 6; 	}
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Tiny ASN1 encoder for DSA_SIG structure. We can assume r, s smaller than  * 0x80 octets as by the DSA standards they will be less than 2^160  */

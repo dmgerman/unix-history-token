@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<crypto/rijndael/rijndael-api-fst.h>
 end_include
 
@@ -81,6 +87,16 @@ directive|define
 name|BDE_CLASS_NAME
 value|"BDE"
 end_define
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|geom_bde
+argument_list|,
+literal|"GEOM-based Disk Encryption"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static

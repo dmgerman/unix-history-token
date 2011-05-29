@@ -23,6 +23,42 @@ directive|define
 name|_LIBUSB20_INT_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_32BIT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|libusb20_pass_ptr
+parameter_list|(
+name|ptr
+parameter_list|)
+value|((uint64_t)(uintptr_t)(ptr))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|libusb20_pass_ptr
+parameter_list|(
+name|ptr
+parameter_list|)
+value|(ptr)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct_decl
 struct_decl|struct
 name|libusb20_device
@@ -662,6 +698,9 @@ name|MaxFrameCount
 parameter_list|,
 name|uint8_t
 name|ep_no
+parameter_list|,
+name|uint8_t
+name|pre_scale
 parameter_list|)
 function_decl|;
 end_typedef
@@ -793,11 +832,22 @@ name|priv_sc1
 decl_stmt|;
 comment|/* private client data */
 comment|/* 	 * Pointer to a list of buffer pointers: 	 */
+ifdef|#
+directive|ifdef
+name|COMPAT_32BIT
+name|uint64_t
+modifier|*
+name|ppBuffer
+decl_stmt|;
+else|#
+directive|else
 name|void
 modifier|*
 modifier|*
 name|ppBuffer
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Pointer to frame lengths, which are updated to actual length 	 * after the USB transfer completes: 	 */
 name|uint32_t
 modifier|*

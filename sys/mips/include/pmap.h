@@ -27,17 +27,39 @@ directive|include
 file|<machine/pte.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+end_if
+
+begin_comment
+comment|/* PHYSADDR_64BIT */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|VADDR
-parameter_list|(
-name|pdi
-parameter_list|,
-name|pti
-parameter_list|)
-value|((vm_offset_t)(((pdi)<<PDRSHIFT)|((pti)<<PAGE_SHIFT)))
+name|NKPT
+value|256
 end_define
+
+begin_comment
+comment|/* mem> 4G, vm_page_startup needs more KPTs */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -50,41 +72,10 @@ begin_comment
 comment|/* actual number of kernel page tables */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NKPDE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NKPDE
-value|255
-end_define
-
-begin_comment
-comment|/* addressable number of page tables/pde's */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|KPTDI
-value|(VM_MIN_KERNEL_ADDRESS>> SEGSHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NUSERPGTBLS
-value|(VM_MAXUSER_ADDRESS>> SEGSHIFT)
-end_define
 
 begin_ifndef
 ifndef|#
@@ -201,7 +192,7 @@ argument_list|)
 name|pm_pvlist
 expr_stmt|;
 comment|/* list of mappings in 						 * pmap */
-name|int
+name|cpumask_t
 name|pm_active
 decl_stmt|;
 comment|/* active on cpus */
@@ -272,19 +263,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|pd_entry_t
-name|pmap_segmap
-parameter_list|(
-name|pmap_t
-name|pmap
-parameter_list|,
-name|vm_offset_t
-name|va
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|vm_offset_t
 name|pmap_kextract
 parameter_list|(
@@ -302,6 +280,16 @@ parameter_list|(
 name|va
 parameter_list|)
 value|pmap_kextract(((vm_offset_t) (va)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|pmap_asid
+parameter_list|(
+name|pmap
+parameter_list|)
+value|(pmap)->pm_asid[PCPU_GET(cpuid)].asid
 end_define
 
 begin_decl_stmt
@@ -401,46 +389,6 @@ parameter_list|)
 value|mtx_unlock(&(pmap)->pm_mtx)
 end_define
 
-begin_define
-define|#
-directive|define
-name|PMAP_LGMEM_LOCK_INIT
-parameter_list|(
-name|sysmap
-parameter_list|)
-value|mtx_init(&(sysmap)->lock, "pmap-lgmem", \ 				    "per-cpu-map", (MTX_DEF| MTX_DUPOK))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PMAP_LGMEM_LOCK
-parameter_list|(
-name|sysmap
-parameter_list|)
-value|mtx_lock(&(sysmap)->lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PMAP_LGMEM_UNLOCK
-parameter_list|(
-name|sysmap
-parameter_list|)
-value|mtx_unlock(&(sysmap)->lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PMAP_LGMEM_DESTROY
-parameter_list|(
-name|sysmap
-parameter_list|)
-value|mtx_destroy(&(sysmap)->lock)
-end_define
-
 begin_comment
 comment|/*  * For each vm_page_t, there is a list of all currently valid virtual  * mappings of that page.  An entry is a pv_entry_t, the list is pv_table.  */
 end_comment
@@ -474,35 +422,11 @@ name|vm_page_t
 name|pv_ptem
 decl_stmt|;
 comment|/* VM page for pte */
-name|boolean_t
-name|pv_wired
-decl_stmt|;
-comment|/* whether this entry is wired */
 block|}
 typedef|*
 name|pv_entry_t
 typedef|;
 end_typedef
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|DIAGNOSTIC
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|PMAP_DIAGNOSTIC
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * physmem_desc[] is a superset of phys_avail[] and describes all the  * memory present in the system.  *  * phys_avail[] is similar but does not include the memory stolen by  * pmap_steal_memory().  *  * Each memory region is described by a pair of elements in the array  * so we can describe up to (PHYS_AVAIL_ENTRIES / 2) distinct memory  * regions.  */
@@ -517,7 +441,7 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|vm_offset_t
+name|vm_paddr_t
 name|phys_avail
 index|[
 name|PHYS_AVAIL_ENTRIES
@@ -529,7 +453,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|vm_offset_t
+name|vm_paddr_t
 name|physmem_desc
 index|[
 name|PHYS_AVAIL_ENTRIES
@@ -538,18 +462,6 @@ literal|2
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|ptvmmap
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* poor name! */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -567,30 +479,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|pd_entry_t
-modifier|*
-name|segbase
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|vm_paddr_t
-name|mips_wired_tlb_physmem_start
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|vm_paddr_t
-name|mips_wired_tlb_physmem_end
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|need_wired_tlb_page_pool
+name|dump_avail
+index|[
+name|PHYS_AVAIL_ENTRIES
+operator|+
+literal|2
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -640,7 +535,7 @@ name|void
 modifier|*
 name|pmap_mapdev
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
 name|vm_size_t
 parameter_list|)
@@ -669,31 +564,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|pmap_set_modified
-parameter_list|(
-name|vm_offset_t
-name|pa
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|page_is_managed
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pmap_page_is_free
-parameter_list|(
-name|vm_page_t
-name|m
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -707,6 +582,22 @@ name|va
 parameter_list|,
 name|vm_paddr_t
 name|pa
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pmap_kenter_attr
+parameter_list|(
+name|vm_offset_t
+name|va
+parameter_list|,
+name|vm_paddr_t
+name|pa
+parameter_list|,
+name|int
+name|attr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -756,22 +647,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|pmap_update_page
-parameter_list|(
-name|pmap_t
-name|pmap
-parameter_list|,
-name|vm_offset_t
-name|va
-parameter_list|,
-name|pt_entry_t
-name|pte
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|pmap_flush_pvcache
 parameter_list|(
 name|vm_page_t
@@ -780,137 +655,38 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * floating virtual pages (FPAGES)  *  * These are the reserved virtual memory areas which can be  * mapped to any physical memory.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FPAGES
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|FPAGES_SHARED
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSPACE
-value|((FPAGES * MAXCPU + FPAGES_SHARED)  * PAGE_SIZE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PMAP_FPAGE1
-value|0x00
-end_define
-
-begin_comment
-comment|/* Used by pmap_zero_page& 					 * pmap_copy_page */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PMAP_FPAGE2
-value|0x01
-end_define
-
-begin_comment
-comment|/* Used by pmap_copy_page */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PMAP_FPAGE3
-value|0x00
-end_define
-
-begin_comment
-comment|/* Used by pmap_zero_page_idle */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PMAP_FPAGE_KENTER_TEMP
-value|0x01
-end_define
-
-begin_comment
-comment|/* Used by coredump */
-end_comment
-
-begin_struct
-struct|struct
-name|fpage
-block|{
-name|vm_offset_t
-name|kva
-decl_stmt|;
-name|u_int
-name|state
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|sysmaps
-block|{
-name|struct
-name|mtx
-name|lock
-decl_stmt|;
-name|struct
-name|fpage
-name|fp
-index|[
-name|FPAGES
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_function_decl
-name|vm_offset_t
-name|pmap_map_fpage
+name|int
+name|pmap_emulate_modified
 parameter_list|(
-name|vm_paddr_t
-name|pa
+name|pmap_t
+name|pmap
 parameter_list|,
-name|struct
-name|fpage
-modifier|*
-name|fp
-parameter_list|,
-name|boolean_t
-name|check_unmaped
+name|vm_offset_t
+name|va
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|pmap_unmap_fpage
+name|pmap_grow_direct_page_cache
 parameter_list|(
-name|vm_paddr_t
-name|pa
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|vm_page_t
+name|pmap_alloc_direct_page
+parameter_list|(
+name|unsigned
+name|int
+name|index
 parameter_list|,
-name|struct
-name|fpage
-modifier|*
-name|fp
+name|int
+name|req
 parameter_list|)
 function_decl|;
 end_function_decl

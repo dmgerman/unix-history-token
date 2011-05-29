@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_msgbuf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -700,6 +694,10 @@ operator|&
 name|thread0
 argument_list|)
 expr_stmt|;
+comment|/* Do basic tuning, hz etc */
+name|init_param1
+argument_list|()
+expr_stmt|;
 name|freemempos
 operator|=
 operator|(
@@ -893,7 +891,7 @@ name|msgbufpv
 argument_list|,
 name|round_page
 argument_list|(
-name|MSGBUF_SIZE
+name|msgbufsize
 argument_list|)
 operator|/
 name|PAGE_SIZE
@@ -1183,7 +1181,7 @@ name|msgbufpv
 operator|.
 name|pv_pa
 argument_list|,
-name|MSGBUF_SIZE
+name|msgbufsize
 argument_list|,
 name|VM_PROT_READ
 operator||
@@ -1526,7 +1524,7 @@ name|msgbufinit
 argument_list|(
 name|msgbufp
 argument_list|,
-name|MSGBUF_SIZE
+name|msgbufsize
 argument_list|)
 expr_stmt|;
 name|mutex_init
@@ -1596,10 +1594,6 @@ operator|++
 index|]
 operator|=
 literal|0
-expr_stmt|;
-comment|/* Do basic tuning, hz etc */
-name|init_param1
-argument_list|()
 expr_stmt|;
 name|init_param2
 argument_list|(

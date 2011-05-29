@@ -42,7 +42,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_DEFAULT_XFER_MAX
+name|USB_CTRL_XFER_MAX
 value|2
 end_define
 
@@ -301,24 +301,27 @@ decl_stmt|;
 comment|/* generic clear stall 						 * messages */
 name|struct
 name|sx
-name|default_sx
-index|[
-literal|2
-index|]
+name|ctrl_sx
+decl_stmt|;
+name|struct
+name|sx
+name|enum_sx
+decl_stmt|;
+name|struct
+name|sx
+name|sr_sx
 decl_stmt|;
 name|struct
 name|mtx
-name|default_mtx
-index|[
-literal|1
-index|]
+name|device_mtx
 decl_stmt|;
 name|struct
 name|cv
-name|default_cv
-index|[
-literal|2
-index|]
+name|ctrlreq_cv
+decl_stmt|;
+name|struct
+name|cv
+name|ref_cv
 decl_stmt|;
 name|struct
 name|usb_interface
@@ -327,7 +330,7 @@ name|ifaces
 decl_stmt|;
 name|struct
 name|usb_endpoint
-name|default_ep
+name|ctrl_ep
 decl_stmt|;
 comment|/* Control Endpoint 0 */
 name|struct
@@ -376,9 +379,9 @@ comment|/* only if this is a hub */
 name|struct
 name|usb_xfer
 modifier|*
-name|default_xfer
+name|ctrl_xfer
 index|[
-name|USB_DEFAULT_XFER_MAX
+name|USB_CTRL_XFER_MAX
 index|]
 decl_stmt|;
 name|struct
@@ -412,7 +415,7 @@ comment|/* our generic symlink */
 name|struct
 name|cdev
 modifier|*
-name|default_dev
+name|ctrl_dev
 decl_stmt|;
 comment|/* Control Endpoint 0 device node */
 name|LIST_HEAD
@@ -467,6 +470,10 @@ name|device_index
 decl_stmt|;
 comment|/* device index in "bus->devices" */
 name|uint8_t
+name|controller_slot_id
+decl_stmt|;
+comment|/* controller specific value */
+name|uint8_t
 name|curr_config_index
 decl_stmt|;
 comment|/* current configuration index */
@@ -503,6 +510,10 @@ name|power_mode
 decl_stmt|;
 comment|/* see USB_POWER_XXX */
 name|uint8_t
+name|re_enumerate_wait
+decl_stmt|;
+comment|/* set if re-enum. is in progress */
+name|uint8_t
 name|ifaces_max
 decl_stmt|;
 comment|/* number of interfaces present */
@@ -517,7 +528,12 @@ name|flags
 decl_stmt|;
 name|struct
 name|usb_endpoint_descriptor
-name|default_ep_desc
+name|ctrl_ep_desc
+decl_stmt|;
+comment|/* for endpoint 0 */
+name|struct
+name|usb_endpoint_ss_comp_descriptor
+name|ctrl_ep_comp_desc
 decl_stmt|;
 comment|/* for endpoint 0 */
 name|struct
@@ -529,17 +545,17 @@ name|char
 modifier|*
 name|serial
 decl_stmt|;
-comment|/* serial number */
+comment|/* serial number, can be NULL */
 name|char
 modifier|*
 name|manufacturer
 decl_stmt|;
-comment|/* manufacturer string */
+comment|/* manufacturer string, can be NULL */
 name|char
 modifier|*
 name|product
 decl_stmt|;
-comment|/* product string */
+comment|/* product string, can be NULL */
 if|#
 directive|if
 name|USB_HAVE_COMPAT_LINUX
@@ -659,6 +675,21 @@ name|udev
 parameter_list|,
 name|uint8_t
 name|iface_index
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|usb_detach_device
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+parameter_list|,
+name|uint8_t
+parameter_list|,
+name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -810,11 +841,21 @@ parameter_list|(
 name|struct
 name|usb_device
 modifier|*
-name|udev
 parameter_list|,
 name|enum
 name|usb_dev_state
-name|state
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|enum
+name|usb_dev_state
+name|usb_get_device_state
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -833,6 +874,28 @@ end_function_decl
 begin_function_decl
 name|void
 name|usbd_enum_unlock
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|usbd_sr_lock
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|usbd_sr_unlock
 parameter_list|(
 name|struct
 name|usb_device

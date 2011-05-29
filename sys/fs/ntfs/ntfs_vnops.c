@@ -270,18 +270,6 @@ name|ntfs_vptofh
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|ntfs_prtactive
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 1 => print out reclaim of active vnodes */
-end_comment
-
 begin_comment
 comment|/*  * This is a noop, simply returning what one has been given.  */
 end_comment
@@ -956,16 +944,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
-name|struct
-name|vnode
-modifier|*
-name|vp
-init|=
-name|ap
-operator|->
-name|a_vp
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|NTFS_DEBUG
@@ -977,7 +955,9 @@ name|ip
 init|=
 name|VTONT
 argument_list|(
-name|vp
+name|ap
+operator|->
+name|a_vp
 argument_list|)
 decl_stmt|;
 endif|#
@@ -987,30 +967,14 @@ argument_list|(
 operator|(
 literal|"ntfs_inactive: vnode: %p, ntnode: %d\n"
 operator|,
-name|vp
+name|ap
+operator|->
+name|a_vp
 operator|,
 name|ip
 operator|->
 name|i_number
 operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ntfs_prtactive
-operator|&&
-name|vrefcnt
-argument_list|(
-name|vp
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|vprint
-argument_list|(
-literal|"ntfs_inactive: pushing active"
-argument_list|,
-name|vp
 argument_list|)
 expr_stmt|;
 comment|/* XXX since we don't support any filesystem changes 	 * right now, nothing more needs to be done 	 */
@@ -1085,24 +1049,6 @@ name|ip
 operator|->
 name|i_number
 operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ntfs_prtactive
-operator|&&
-name|vrefcnt
-argument_list|(
-name|vp
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|vprint
-argument_list|(
-literal|"ntfs_reclaim: pushing active"
-argument_list|,
-name|vp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Destroy the vm object and flush associated pages. 	 */

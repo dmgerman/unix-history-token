@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/* @(#) $Header: /tcpdump/master/tcpdump/ieee802_11.h,v 1.12 2007-07-22 19:59:06 guy Exp $ (LBL) */
 end_comment
 
@@ -310,6 +306,13 @@ end_comment
 begin_comment
 comment|/* RESERVED 			0xF  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CTRL_CONTROL_WRAPPER
+value|0x7
+end_define
 
 begin_define
 define|#
@@ -722,20 +725,6 @@ parameter_list|)
 value|((cap)& 0x0010)
 end_define
 
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|NOT_PRESENT
-block|,
-name|PRESENT
-block|,
-name|TRUNCATED
-block|}
-name|elem_status_t
-typedef|;
-end_typedef
-
 begin_struct
 struct|struct
 name|ssid_t
@@ -1049,8 +1038,8 @@ decl_stmt|;
 name|u_int16_t
 name|auth_trans_seq_num
 decl_stmt|;
-name|elem_status_t
-name|challenge_status
+name|int
+name|challenge_present
 decl_stmt|;
 name|struct
 name|challenge_t
@@ -1059,43 +1048,43 @@ decl_stmt|;
 name|u_int16_t
 name|capability_info
 decl_stmt|;
-name|elem_status_t
-name|ssid_status
+name|int
+name|ssid_present
 decl_stmt|;
 name|struct
 name|ssid_t
 name|ssid
 decl_stmt|;
-name|elem_status_t
-name|rates_status
+name|int
+name|rates_present
 decl_stmt|;
 name|struct
 name|rates_t
 name|rates
 decl_stmt|;
-name|elem_status_t
-name|ds_status
+name|int
+name|ds_present
 decl_stmt|;
 name|struct
 name|ds_t
 name|ds
 decl_stmt|;
-name|elem_status_t
-name|cf_status
+name|int
+name|cf_present
 decl_stmt|;
 name|struct
 name|cf_t
 name|cf
 decl_stmt|;
-name|elem_status_t
-name|fh_status
+name|int
+name|fh_present
 decl_stmt|;
 name|struct
 name|fh_t
 name|fh
 decl_stmt|;
-name|elem_status_t
-name|tim_status
+name|int
+name|tim_present
 decl_stmt|;
 name|struct
 name|tim_t

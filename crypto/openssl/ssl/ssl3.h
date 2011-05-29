@@ -80,6 +80,11 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/* Signalling cipher suite value: from draft-ietf-tls-renegotiation-03.txt */
+define|#
+directive|define
+name|SSL3_CK_SCSV
+value|0x030000FF
 define|#
 directive|define
 name|SSL3_CK_RSA_NULL_MD5
@@ -1054,6 +1059,33 @@ decl_stmt|;
 block|}
 name|tmp
 struct|;
+comment|/* Connection binding to prevent renegotiation attacks */
+name|unsigned
+name|char
+name|previous_client_finished
+index|[
+name|EVP_MAX_MD_SIZE
+index|]
+decl_stmt|;
+name|unsigned
+name|char
+name|previous_client_finished_len
+decl_stmt|;
+name|unsigned
+name|char
+name|previous_server_finished
+index|[
+name|EVP_MAX_MD_SIZE
+index|]
+decl_stmt|;
+name|unsigned
+name|char
+name|previous_server_finished_len
+decl_stmt|;
+name|int
+name|send_connection_binding
+decl_stmt|;
+comment|/* TODOEKR */
 block|}
 name|SSL3_STATE
 typedef|;

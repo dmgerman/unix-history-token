@@ -1217,6 +1217,8 @@ literal|"Bad boolean\n"
 argument_list|,
 literal|12
 argument_list|)
+operator|<=
+literal|0
 condition|)
 goto|goto
 name|end

@@ -826,12 +826,16 @@ argument_list|)
 expr_stmt|;
 name|random_dev
 operator|=
-name|make_dev
+name|make_dev_credf
 argument_list|(
+name|MAKEDEV_ETERNAL_KLD
+argument_list|,
 operator|&
 name|random_cdevsw
 argument_list|,
 name|RANDOM_MINOR
+argument_list|,
+name|NULL
 argument_list|,
 name|UID_ROOT
 argument_list|,

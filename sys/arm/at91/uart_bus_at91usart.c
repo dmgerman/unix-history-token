@@ -233,18 +233,6 @@ block|{
 case|case
 literal|0
 case|:
-ifdef|#
-directive|ifdef
-name|SKYEYE_WORKAROUNDS
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"USART0"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|device_set_desc
 argument_list|(
 name|dev
@@ -252,8 +240,6 @@ argument_list|,
 literal|"DBGU"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 		 * Setting sc_sysdev makes this device a 'system device' and 		 * indirectly makes it the system console. 		 */
 name|sc
 operator|->

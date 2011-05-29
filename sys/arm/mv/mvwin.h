@@ -291,76 +291,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|MV_GPIO_BASE
-value|(MV_BASE + 0x10100)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_GPIO_SIZE
-value|0x20
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_RTC_BASE
-value|(MV_BASE + 0x10300)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_RTC_SIZE
-value|0x08
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_TWSI0_BASE
-value|(MV_BASE + 0x11000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_TWSI1_BASE
-value|(MV_BASE + 0x11100)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_TWSI_SIZE
-value|0x20
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_UART0_BASE
-value|(MV_BASE + 0x12000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_UART1_BASE
-value|(MV_BASE + 0x12100)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_UART_SIZE
-value|0x20
-end_define
-
-begin_define
-define|#
-directive|define
 name|MV_MBUS_BRIDGE_BASE
 value|(MV_BASE + 0x20000)
 end_define
@@ -382,34 +312,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|MV_IC_BASE
-value|(MV_MBUS_BRIDGE_BASE + 0x200)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_IC_SIZE
-value|0x3C
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_TIMERS_BASE
-value|(MV_MBUS_BRIDGE_BASE + 0x300)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_TIMERS_SIZE
-value|0x30
-end_define
-
-begin_define
-define|#
-directive|define
 name|MV_PCI_BASE
 value|(MV_BASE + 0x30000)
 end_define
@@ -419,59 +321,6 @@ define|#
 directive|define
 name|MV_PCI_SIZE
 value|0x2000
-end_define
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SOC_MV_KIRKWOOD
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|MV_CESA_BASE
-value|(MV_BASE + 0x30000)
-end_define
-
-begin_comment
-comment|/* CESA,PCI don't coexist */
-end_comment
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|SOC_MV_ORION
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|SOC_MV_DISCOVERY
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|MV_CESA_BASE
-value|(MV_BASE + 0x90000)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|MV_CESA_SIZE
-value|0x10000
 end_define
 
 begin_define
@@ -543,146 +392,6 @@ directive|define
 name|MV_PCIE13_BASE
 value|(MV_PCIE_BASE + 0x4C000)
 end_define
-
-begin_define
-define|#
-directive|define
-name|MV_USB0_BASE
-value|(MV_BASE + 0x50000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_USB1_BASE
-value|(MV_USB0_BASE + 0x1000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_USB2_BASE
-value|(MV_USB0_BASE + 0x2000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_USB_SIZE
-value|0x1000
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_USB_AWR_BASE
-value|(MV_USB0_BASE + 0x320)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_IDMA_BASE
-value|(MV_BASE + 0x60000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_IDMA_SIZE
-value|0x1000
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_XOR_BASE
-value|(MV_BASE + 0x60000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_XOR_SIZE
-value|0x1000
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_ETH0_BASE
-value|(MV_BASE + 0x72000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_ETH1_BASE
-value|(MV_BASE + 0x76000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_ETH_SIZE
-value|0x2000
-end_define
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SOC_MV_ORION
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|SOC_MV_KIRKWOOD
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|MV_SATAHC_BASE
-value|(MV_BASE + 0x80000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_SATAHC_SIZE
-value|0x6000
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|SOC_MV_DISCOVERY
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|MV_SATAHC_BASE
-value|(MV_BASE + 0xA0000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_SATAHC_SIZE
-value|0x6000
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -822,16 +531,61 @@ name|MV_WIN_CESA_MAX
 value|4
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_MV_DISCOVERY
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_CESA_TARGET
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_CESA_ATTR
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_CESA_TARGET
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_CESA_ATTR
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|MV_WIN_USB_CTRL
 parameter_list|(
 name|n
-parameter_list|,
-name|m
 parameter_list|)
-value|(0x10 * (n) + (m) * 0x1000 + 0x0)
+value|(0x10 * (n) + 0x0)
 end_define
 
 begin_define
@@ -840,10 +594,8 @@ directive|define
 name|MV_WIN_USB_BASE
 parameter_list|(
 name|n
-parameter_list|,
-name|m
 parameter_list|)
-value|(0x10 * (n) + (m) * 0x1000 + 0x4)
+value|(0x10 * (n) + 0x4)
 end_define
 
 begin_define
@@ -1025,6 +777,150 @@ name|MV_XOR_NON_REMAP
 value|4
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_MV_DISCOVERY
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_PCIE_MEM_TARGET
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_PCIE_MEM_ATTR
+value|0xE8
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_PCIE_IO_TARGET
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_PCIE_IO_ATTR
+value|0xE0
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|SOC_MV_KIRKWOOD
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_PCIE_MEM_TARGET
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_PCIE_MEM_ATTR
+value|0xE8
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_PCIE_IO_TARGET
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_PCIE_IO_ATTR
+value|0xE0
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|SOC_MV_ORION
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_PCIE_MEM_TARGET
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_PCIE_MEM_ATTR
+value|0x59
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_PCIE_IO_TARGET
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_PCIE_IO_ATTR
+value|0x51
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_PCI_MEM_TARGET
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_PCI_MEM_ATTR
+value|0x59
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_PCI_IO_TARGET
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_PCI_IO_ATTR
+value|0x51
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -1120,7 +1016,7 @@ parameter_list|,
 name|base
 parameter_list|)
 define|\
-value|static __inline uint32_t						\ 	pre ## _ ## reg ## _read(int i)						\ 	{									\ 		return (bus_space_read_4(obio_tag, base, off(i)));		\ 	}
+value|static __inline uint32_t						\ 	pre ## _ ## reg ## _read(int i)						\ 	{									\ 		return (bus_space_read_4(fdtbus_bs_tag, base, off(i)));		\ 	}
 end_define
 
 begin_define
@@ -1137,7 +1033,22 @@ parameter_list|,
 name|base
 parameter_list|)
 define|\
-value|static  __inline uint32_t						\ 	pre ## _ ## reg ## _read(int i, int j)					\ 	{									\ 		return (bus_space_read_4(obio_tag, base, off(i, j)));		\ 	}									\  #define WIN_REG_BASE_IDX_RD(pre,reg,off)					\ 	static __inline uint32_t						\ 	pre ## _ ## reg ## _read(uint32_t base, int i)				\ 	{									\ 		return (bus_space_read_4(obio_tag, base, off(i)));		\ 	}
+value|static  __inline uint32_t						\ 	pre ## _ ## reg ## _read(int i, int j)					\ 	{									\ 		return (bus_space_read_4(fdtbus_bs_tag, base, off(i, j)));		\ 	}									\  #define WIN_REG_BASE_IDX_RD(pre,reg,off)					\ 	static __inline uint32_t						\ 	pre ## _ ## reg ## _read(uint32_t base, int i)				\ 	{									\ 		return (bus_space_read_4(fdtbus_bs_tag, base, off(i)));		\ 	}
+end_define
+
+begin_define
+define|#
+directive|define
+name|WIN_REG_BASE_IDX_RD2
+parameter_list|(
+name|pre
+parameter_list|,
+name|reg
+parameter_list|,
+name|off
+parameter_list|)
+define|\
+value|static __inline uint32_t						\ 	pre ## _ ## reg ## _read(uint32_t base, int i, int j)				\ 	{									\ 		return (bus_space_read_4(fdtbus_bs_tag, base, off(i, j)));		\ 	}
 end_define
 
 begin_define
@@ -1154,7 +1065,7 @@ parameter_list|,
 name|base
 parameter_list|)
 define|\
-value|static __inline void							\ 	pre ## _ ## reg ## _write(int i, uint32_t val)				\ 	{									\ 		bus_space_write_4(obio_tag, base, off(i), val);			\ 	}
+value|static __inline void							\ 	pre ## _ ## reg ## _write(int i, uint32_t val)				\ 	{									\ 		bus_space_write_4(fdtbus_bs_tag, base, off(i), val);			\ 	}
 end_define
 
 begin_define
@@ -1171,7 +1082,7 @@ parameter_list|,
 name|base
 parameter_list|)
 define|\
-value|static __inline void							\ 	pre ## _ ## reg ## _write(int i, int j, uint32_t val)			\ 	{									\ 		bus_space_write_4(obio_tag, base, off(i, j), val);		\ 	}
+value|static __inline void							\ 	pre ## _ ## reg ## _write(int i, int j, uint32_t val)			\ 	{									\ 		bus_space_write_4(fdtbus_bs_tag, base, off(i, j), val);		\ 	}
 end_define
 
 begin_define
@@ -1186,7 +1097,22 @@ parameter_list|,
 name|off
 parameter_list|)
 define|\
-value|static __inline void							\ 	pre ## _ ## reg ## _write(uint32_t base, int i, uint32_t val)		\ 	{									\ 		bus_space_write_4(obio_tag, base, off(i), val);			\ 	}
+value|static __inline void							\ 	pre ## _ ## reg ## _write(uint32_t base, int i, uint32_t val)		\ 	{									\ 		bus_space_write_4(fdtbus_bs_tag, base, off(i), val);			\ 	}
+end_define
+
+begin_define
+define|#
+directive|define
+name|WIN_REG_BASE_IDX_WR2
+parameter_list|(
+name|pre
+parameter_list|,
+name|reg
+parameter_list|,
+name|off
+parameter_list|)
+define|\
+value|static __inline void							\ 	pre ## _ ## reg ## _write(uint32_t base, int i, int j, uint32_t val)		\ 	{									\ 		bus_space_write_4(fdtbus_bs_tag, base, off(i, j), val);			\ 	}
 end_define
 
 begin_define
@@ -1203,7 +1129,7 @@ parameter_list|,
 name|base
 parameter_list|)
 define|\
-value|static __inline uint32_t						\ 	pre ## _ ## reg ## _read(void)						\ 	{									\ 		return (bus_space_read_4(obio_tag, base, off));			\ 	}
+value|static __inline uint32_t						\ 	pre ## _ ## reg ## _read(void)						\ 	{									\ 		return (bus_space_read_4(fdtbus_bs_tag, base, off));			\ 	}
 end_define
 
 begin_define
@@ -1218,7 +1144,7 @@ parameter_list|,
 name|off
 parameter_list|)
 define|\
-value|static __inline uint32_t						\ 	pre ## _ ## reg ## _read(uint32_t base)					\ 	{									\ 		return (bus_space_read_4(obio_tag, base, off));			\ 	}
+value|static __inline uint32_t						\ 	pre ## _ ## reg ## _read(uint32_t base)					\ 	{									\ 		return (bus_space_read_4(fdtbus_bs_tag, base, off));			\ 	}
 end_define
 
 begin_define
@@ -1235,7 +1161,7 @@ parameter_list|,
 name|base
 parameter_list|)
 define|\
-value|static __inline void							\ 	pre ## _ ## reg ## _write(uint32_t val)					\ 	{									\ 		bus_space_write_4(obio_tag, base, off, val);			\ 	}
+value|static __inline void							\ 	pre ## _ ## reg ## _write(uint32_t val)					\ 	{									\ 		bus_space_write_4(fdtbus_bs_tag, base, off, val);			\ 	}
 end_define
 
 begin_define
@@ -1250,7 +1176,7 @@ parameter_list|,
 name|off
 parameter_list|)
 define|\
-value|static __inline void							\ 	pre ## _ ## reg ## _write(uint32_t base, uint32_t val)			\ 	{									\ 		bus_space_write_4(obio_tag, base, off, val);			\ 	}
+value|static __inline void							\ 	pre ## _ ## reg ## _write(uint32_t base, uint32_t val)			\ 	{									\ 		bus_space_write_4(fdtbus_bs_tag, base, off, val);			\ 	}
 end_define
 
 begin_endif

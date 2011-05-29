@@ -65,6 +65,7 @@ end_define
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|tok
 name|gmpls_link_prot_values
@@ -74,6 +75,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|tok
 name|gmpls_switch_cap_values
@@ -83,6 +85,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|tok
 name|gmpls_switch_cap_tsc_indication_values
@@ -92,6 +95,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|tok
 name|gmpls_encoding_values
@@ -101,6 +105,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|tok
 name|gmpls_payload_values
@@ -110,6 +115,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|tok
 name|diffserv_te_bc_values
@@ -119,6 +125,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|tok
 name|lmp_sd_service_config_cpsa_link_type_values
@@ -128,6 +135,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|tok
 name|lmp_sd_service_config_cpsa_signal_type_sdh_values
@@ -137,6 +145,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|tok
 name|lmp_sd_service_config_cpsa_signal_type_sonet_values

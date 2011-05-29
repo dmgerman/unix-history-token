@@ -85,6 +85,18 @@ directive|include
 file|<mips/cavium/obiovar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<contrib/octeon-sdk/cvmx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<contrib/octeon-sdk/cvmx-interrupt.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -94,6 +106,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
+name|void
+name|obio_identify
+parameter_list|(
+name|driver_t
+modifier|*
+parameter_list|,
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|obio_probe
 parameter_list|(
@@ -103,6 +129,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|obio_attach
 parameter_list|(
@@ -111,20 +138,35 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * We need only one obio.  Any other device hanging off of it,  * shouldn't cause multiple of these to be found.  */
-end_comment
-
-begin_decl_stmt
+begin_function
 specifier|static
-name|int
-name|have_one
-init|=
+name|void
+name|obio_identify
+parameter_list|(
+name|driver_t
+modifier|*
+name|drv
+parameter_list|,
+name|device_t
+name|parent
+parameter_list|)
+block|{
+name|BUS_ADD_CHILD
+argument_list|(
+name|parent
+argument_list|,
 literal|0
-decl_stmt|;
-end_decl_stmt
+argument_list|,
+literal|"obio"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
+specifier|static
 name|int
 name|obio_probe
 parameter_list|(
@@ -134,27 +176,28 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|!
-name|have_one
-condition|)
-block|{
-name|have_one
-operator|=
-literal|1
-expr_stmt|;
-return|return
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+operator|!=
 literal|0
-return|;
-block|}
+condition|)
 return|return
 operator|(
 name|ENXIO
+operator|)
+return|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|obio_attach
 parameter_list|(
@@ -178,11 +221,15 @@ name|oba_st
 operator|=
 name|mips_bus_space_generic
 expr_stmt|;
+comment|/* 	 * XXX 	 * Here and elsewhere using RBR as a base address because it kind of 	 * is, but that feels pretty sloppy.  Should consider adding a define 	 * that's more semantic, at least. 	 */
 name|sc
 operator|->
 name|oba_addr
 operator|=
-name|OCTEON_MIO_UART0
+name|CVMX_MIO_UARTX_RBR
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -261,7 +308,7 @@ name|rm_descr
 operator|=
 literal|"OBIO IRQ"
 expr_stmt|;
-comment|/*  	 * This module is intended for UART purposes only and 	 * it's IRQ is 0  corresponding to IP2. 	 */
+comment|/*  	 * This module is intended for UART purposes only and 	 * manages IRQs for UART0 and UART1. 	 */
 if|if
 condition|(
 name|rman_init
@@ -281,9 +328,9 @@ name|sc
 operator|->
 name|oba_irq_rman
 argument_list|,
-literal|0
+name|CVMX_IRQ_UART0
 argument_list|,
-literal|0
+name|CVMX_IRQ_UART1
 argument_list|)
 operator|!=
 literal|0
@@ -402,6 +449,41 @@ block|{
 case|case
 name|SYS_RES_IRQ
 case|:
+switch|switch
+condition|(
+name|device_get_unit
+argument_list|(
+name|child
+argument_list|)
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|start
+operator|=
+name|end
+operator|=
+name|CVMX_IRQ_UART0
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|start
+operator|=
+name|end
+operator|=
+name|CVMX_IRQ_UART1
+expr_stmt|;
+break|break;
+default|default:
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|rm
 operator|=
 operator|&
@@ -435,14 +517,13 @@ name|octeon_uart_tag
 expr_stmt|;
 name|bh
 operator|=
+name|CVMX_MIO_UARTX_RBR
+argument_list|(
 name|device_get_unit
 argument_list|(
 name|child
 argument_list|)
-condition|?
-name|OCTEON_MIO_UART1
-else|:
-name|OCTEON_MIO_UART0
+argument_list|)
 expr_stmt|;
 name|start
 operator|=
@@ -599,6 +680,14 @@ name|obio_methods
 index|[]
 init|=
 block|{
+comment|/* Device methods */
+name|DEVMETHOD
+argument_list|(
+name|device_identify
+argument_list|,
+name|obio_identify
+argument_list|)
+block|,
 name|DEVMETHOD
 argument_list|(
 name|device_probe
@@ -613,6 +702,7 @@ argument_list|,
 name|obio_attach
 argument_list|)
 block|,
+comment|/* Bus methods */
 name|DEVMETHOD
 argument_list|(
 name|bus_alloc_resource
@@ -639,6 +729,13 @@ argument_list|(
 name|bus_teardown_intr
 argument_list|,
 name|bus_generic_teardown_intr
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_add_child
+argument_list|,
+name|bus_generic_add_child
 argument_list|)
 block|,
 block|{
@@ -681,7 +778,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|obio
 argument_list|,
-name|nexus
+name|ciu
 argument_list|,
 name|obio_driver
 argument_list|,

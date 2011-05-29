@@ -44,6 +44,12 @@ directive|include
 file|<sys/_task.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/_callout.h>
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|taskqueue
@@ -55,6 +61,30 @@ struct_decl|struct
 name|thread
 struct_decl|;
 end_struct_decl
+
+begin_struct
+struct|struct
+name|timeout_task
+block|{
+name|struct
+name|taskqueue
+modifier|*
+name|q
+decl_stmt|;
+name|struct
+name|task
+name|t
+decl_stmt|;
+name|struct
+name|callout
+name|c
+decl_stmt|;
+name|int
+name|f
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * A notification callback function which is called from  * taskqueue_enqueue().  The context argument is given in the call to  * taskqueue_create().  This function would normally be used to allow the  * queue to arrange to run itself later (e.g., by scheduling a software  * interrupt or waking a kernel thread).  */
@@ -152,6 +182,68 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|taskqueue_enqueue_timeout
+parameter_list|(
+name|struct
+name|taskqueue
+modifier|*
+name|queue
+parameter_list|,
+name|struct
+name|timeout_task
+modifier|*
+name|timeout_task
+parameter_list|,
+name|int
+name|ticks
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|taskqueue_cancel
+parameter_list|(
+name|struct
+name|taskqueue
+modifier|*
+name|queue
+parameter_list|,
+name|struct
+name|task
+modifier|*
+name|task
+parameter_list|,
+name|u_int
+modifier|*
+name|pendp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|taskqueue_cancel_timeout
+parameter_list|(
+name|struct
+name|taskqueue
+modifier|*
+name|queue
+parameter_list|,
+name|struct
+name|timeout_task
+modifier|*
+name|timeout_task
+parameter_list|,
+name|u_int
+modifier|*
+name|pendp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|taskqueue_drain
 parameter_list|(
@@ -164,6 +256,23 @@ name|struct
 name|task
 modifier|*
 name|task
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|taskqueue_drain_timeout
+parameter_list|(
+name|struct
+name|taskqueue
+modifier|*
+name|queue
+parameter_list|,
+name|struct
+name|timeout_task
+modifier|*
+name|timeout_task
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -279,6 +388,52 @@ parameter_list|)
 value|do {	\ 	(task)->ta_pending = 0;				\ 	(task)->ta_priority = (priority);		\ 	(task)->ta_func = (func);			\ 	(task)->ta_context = (context);			\ } while (0)
 end_define
 
+begin_function_decl
+name|void
+name|_timeout_task_init
+parameter_list|(
+name|struct
+name|taskqueue
+modifier|*
+name|queue
+parameter_list|,
+name|struct
+name|timeout_task
+modifier|*
+name|timeout_task
+parameter_list|,
+name|int
+name|priority
+parameter_list|,
+name|task_fn_t
+name|func
+parameter_list|,
+name|void
+modifier|*
+name|context
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|TIMEOUT_TASK_INIT
+parameter_list|(
+name|queue
+parameter_list|,
+name|timeout_task
+parameter_list|,
+name|priority
+parameter_list|,
+name|func
+parameter_list|,
+name|context
+parameter_list|)
+define|\
+value|_timeout_task_init(queue, timeout_task, priority, func, context);
+end_define
+
 begin_comment
 comment|/*  * Declare a reference to a taskqueue.  */
 end_comment
@@ -312,7 +467,7 @@ parameter_list|,
 name|init
 parameter_list|)
 define|\ 									\
-value|struct taskqueue *taskqueue_##name;					\ 									\ static void								\ taskqueue_define_##name(void *arg)					\ {									\ 	taskqueue_##name =						\ 	    taskqueue_create(#name, M_NOWAIT, (enqueue), (context));	\ 	init;								\ }									\ 									\ SYSINIT(taskqueue_##name, SI_SUB_CONFIGURE, SI_ORDER_SECOND,		\ 	taskqueue_define_##name, NULL);					\ 									\ struct __hack
+value|struct taskqueue *taskqueue_##name;					\ 									\ static void								\ taskqueue_define_##name(void *arg)					\ {									\ 	taskqueue_##name =						\ 	    taskqueue_create(#name, M_WAITOK, (enqueue), (context));	\ 	init;								\ }									\ 									\ SYSINIT(taskqueue_##name, SI_SUB_CONFIGURE, SI_ORDER_SECOND,		\ 	taskqueue_define_##name, NULL);					\ 									\ struct __hack
 end_define
 
 begin_define
@@ -344,7 +499,7 @@ parameter_list|,
 name|init
 parameter_list|)
 define|\ 									\
-value|struct taskqueue *taskqueue_##name;					\ 									\ static void								\ taskqueue_define_##name(void *arg)					\ {									\ 	taskqueue_##name =						\ 	    taskqueue_create_fast(#name, M_NOWAIT, (enqueue),		\ 	    (context));							\ 	init;								\ }									\ 									\ SYSINIT(taskqueue_##name, SI_SUB_CONFIGURE, SI_ORDER_SECOND,		\ 	taskqueue_define_##name, NULL);					\ 									\ struct __hack
+value|struct taskqueue *taskqueue_##name;					\ 									\ static void								\ taskqueue_define_##name(void *arg)					\ {									\ 	taskqueue_##name =						\ 	    taskqueue_create_fast(#name, M_WAITOK, (enqueue),		\ 	    (context));							\ 	init;								\ }									\ 									\ SYSINIT(taskqueue_##name, SI_SUB_CONFIGURE, SI_ORDER_SECOND,		\ 	taskqueue_define_##name, NULL);					\ 									\ struct __hack
 end_define
 
 begin_define

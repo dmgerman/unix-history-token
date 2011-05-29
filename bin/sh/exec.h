@@ -104,6 +104,32 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* action to find_command() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DO_ERR
+value|0x01
+end_define
+
+begin_comment
+comment|/* prints errors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DO_NOFUNC
+value|0x02
+end_define
+
+begin_comment
+comment|/* don't return shell functions, for command */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 specifier|const
@@ -237,15 +263,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|deletefuncs
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|addcmdentry
 parameter_list|(
 specifier|const
@@ -321,7 +338,7 @@ begin_function_decl
 name|void
 name|clearcmdentry
 parameter_list|(
-name|int
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

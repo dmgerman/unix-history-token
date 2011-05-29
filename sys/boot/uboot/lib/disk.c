@@ -653,7 +653,7 @@ operator|!
 name|found
 condition|)
 block|{
-name|printf
+name|debugf
 argument_list|(
 literal|"No storage devices\n"
 argument_list|)

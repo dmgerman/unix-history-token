@@ -32,6 +32,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"opt_ofed.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_rwlock.h>
 end_include
 
@@ -162,6 +168,10 @@ name|mbuf
 modifier|*
 name|la_hold
 decl_stmt|;
+name|int
+name|la_numheld
+decl_stmt|;
+comment|/* # of packets currently held */
 name|time_t
 name|la_expire
 decl_stmt|;
@@ -201,6 +211,18 @@ index|[
 literal|3
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|OFED
+name|uint8_t
+name|mac8
+index|[
+literal|20
+index|]
+decl_stmt|;
+comment|/* IB needs 20 bytes. */
+endif|#
+directive|endif
 block|}
 name|ll_addr
 union|;
@@ -352,7 +374,7 @@ name|lle
 parameter_list|)
 value|do {				\ 	if ((lle)->lle_refcnt<= 1)				\ 		(lle)->lle_tbl->llt_free((lle)->lle_tbl, (lle));\ 	else {							\ 		(lle)->lle_refcnt--;				\ 		LLE_WUNLOCK(lle);				\ 	}							\
 comment|/* guard against invalid refs */
-value|\ 	lle = 0;						\ } while (0)
+value|\ 	lle = NULL;						\ } while (0)
 end_define
 
 begin_define
@@ -362,9 +384,7 @@ name|LLE_FREE
 parameter_list|(
 name|lle
 parameter_list|)
-value|do {					\ 	LLE_WLOCK(lle);						\ 	if ((lle)->lle_refcnt<= 1)				\ 		(lle)->lle_tbl->llt_free((lle)->lle_tbl, (lle));\ 	else {							\ 		(lle)->lle_refcnt--;				\ 		LLE_WUNLOCK(lle);				\ 	}							\
-comment|/* guard against invalid refs */
-value|\ 	lle = NULL;						\ } while (0)
+value|do {					\ 	LLE_WLOCK(lle);						\ 	LLE_FREE_LOCKED(lle);					\ } while (0)
 end_define
 
 begin_define
@@ -522,6 +542,9 @@ name|struct
 name|sockaddr
 modifier|*
 name|mask
+parameter_list|,
+name|u_int
+name|flags
 parameter_list|)
 function_decl|;
 name|struct
@@ -747,18 +770,23 @@ parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|lltable_drain
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|void		lltable_drain(int);
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int
@@ -774,7 +802,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|size_t
 name|llentry_free
 parameter_list|(
 name|struct
@@ -798,7 +826,7 @@ name|lltable
 modifier|*
 parameter_list|,
 name|struct
-name|sockaddr
+name|sockaddr_storage
 modifier|*
 parameter_list|,
 name|struct

@@ -172,7 +172,7 @@ modifier|*
 name|next_hop
 decl_stmt|;
 comment|/* forward address		*/
-comment|/* 	 * On return, it points to the matching rule. 	 * On entry, rule.slot> 0 means the info is valid and 	 * contains the the starting rule for an ipfw search. 	 * If chain_id == chain->id&& slot>0 then jump to that slot. 	 * Otherwise, we locate the first rule>= rulenum:rule_id 	 */
+comment|/* 	 * On return, it points to the matching rule. 	 * On entry, rule.slot> 0 means the info is valid and 	 * contains the starting rule for an ipfw search. 	 * If chain_id == chain->id&& slot>0 then jump to that slot. 	 * Otherwise, we locate the first rule>= rulenum:rule_id 	 */
 name|struct
 name|ipfw_rule_ref
 name|rule
@@ -838,6 +838,10 @@ name|uint32_t
 name|id
 decl_stmt|;
 comment|/* ruleset id */
+name|uint32_t
+name|gencnt
+decl_stmt|;
+comment|/* generation count */
 block|}
 struct|;
 end_struct
@@ -1120,6 +1124,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ipfw_destroy_tables
+parameter_list|(
+name|struct
+name|ip_fw_chain
+modifier|*
+name|ch
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ipfw_flush_table
 parameter_list|(
@@ -1130,18 +1146,6 @@ name|ch
 parameter_list|,
 name|uint16_t
 name|tbl
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ipfw_flush_tables
-parameter_list|(
-name|struct
-name|ip_fw_chain
-modifier|*
-name|ch
 parameter_list|)
 function_decl|;
 end_function_decl

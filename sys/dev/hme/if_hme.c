@@ -49,7 +49,7 @@ begin_define
 define|#
 directive|define
 name|KTR_HME
-value|KTR_CT2
+value|KTR_SPARE2
 end_define
 
 begin_comment
@@ -984,7 +984,7 @@ operator|(
 name|ENOSPC
 operator|)
 return|;
-comment|/* 	 * HME common initialization. 	 * 	 * hme_softc fields that must be initialized by the front-end: 	 * 	 * the DMA bus tag: 	 *	sc_dmatag 	 * 	 * the bus handles, tags and offsets (splitted for SBus compatability): 	 *	sc_seb{t,h,o}	(Shared Ethernet Block registers) 	 *	sc_erx{t,h,o}	(Receiver Unit registers) 	 *	sc_etx{t,h,o}	(Transmitter Unit registers) 	 *	sc_mac{t,h,o}	(MAC registers) 	 *	sc_mif{t,h,o}	(Management Interface registers) 	 * 	 * the maximum bus burst size: 	 *	sc_burst 	 * 	 */
+comment|/* 	 * HME common initialization. 	 * 	 * hme_softc fields that must be initialized by the front-end: 	 * 	 * the DMA bus tag: 	 *	sc_dmatag 	 * 	 * the bus handles, tags and offsets (splitted for SBus compatibility): 	 *	sc_seb{t,h,o}	(Shared Ethernet Block registers) 	 *	sc_erx{t,h,o}	(Receiver Unit registers) 	 *	sc_etx{t,h,o}	(Transmitter Unit registers) 	 *	sc_mac{t,h,o}	(MAC registers) 	 *	sc_mif{t,h,o}	(Management Interface registers) 	 * 	 * the maximum bus burst size: 	 *	sc_burst 	 * 	 */
 name|callout_init_mtx
 argument_list|(
 operator|&
@@ -1603,12 +1603,10 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
+comment|/* 	 * DP83840A used with HME chips don't advertise their media 	 * capabilities themselves properly so force writing the ANAR 	 * according to the BMSR in mii_phy_setmedia().  	 */
 name|error
 operator|=
-name|mii_phy_probe
+name|mii_attach
 argument_list|(
 name|sc
 operator|->
@@ -1619,24 +1617,71 @@ name|sc
 operator|->
 name|sc_miibus
 argument_list|,
+name|ifp
+argument_list|,
 name|hme_mediachange
 argument_list|,
 name|hme_mediastatus
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|HME_PHYAD_EXTERNAL
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+name|MIIF_FORCEANEG
 argument_list|)
-operator|)
+expr_stmt|;
+name|i
+operator|=
+name|mii_attach
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_miibus
+argument_list|,
+name|ifp
+argument_list|,
+name|hme_mediachange
+argument_list|,
+name|hme_mediastatus
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|HME_PHYAD_INTERNAL
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+name|MIIF_FORCEANEG
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+operator|&&
+name|i
 operator|!=
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"phy probe failed: %d\n"
-argument_list|,
-name|error
+literal|"attaching PHYs failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -7018,22 +7063,6 @@ decl_stmt|;
 name|u_int32_t
 name|v
 decl_stmt|;
-comment|/* We can at most have two PHYs. */
-if|if
-condition|(
-name|phy
-operator|!=
-name|HME_PHYAD_EXTERNAL
-operator|&&
-name|phy
-operator|!=
-name|HME_PHYAD_INTERNAL
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|sc
 operator|=
 name|device_get_softc
@@ -7214,22 +7243,6 @@ decl_stmt|;
 name|u_int32_t
 name|v
 decl_stmt|;
-comment|/* We can at most have two PHYs. */
-if|if
-condition|(
-name|phy
-operator|!=
-name|HME_PHYAD_EXTERNAL
-operator|&&
-name|phy
-operator|!=
-name|HME_PHYAD_INTERNAL
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|sc
 operator|=
 name|device_get_softc
@@ -7766,7 +7779,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If both PHYs are present reset them. This is required for 	 * unisolating the previously isolated PHY when switching PHYs. 	 * As the above hme_mifinit() call will set the MII drivers in 	 * the XIF configuration register accoring to the currently 	 * selected media, there should be no window during which the 	 * data paths of both transceivers are open at the same time, 	 * even if the PHY device drivers use MIIF_NOISOLATE. 	 */
+comment|/* 	 * If both PHYs are present reset them. This is required for 	 * unisolating the previously isolated PHY when switching PHYs. 	 * As the above hme_mifinit() call will set the MII drivers in 	 * the XIF configuration register according to the currently 	 * selected media, there should be no window during which the 	 * data paths of both transceivers are open at the same time, 	 * even if the PHY device drivers use MIIF_NOISOLATE. 	 */
 if|if
 condition|(
 name|sc
@@ -7797,7 +7810,7 @@ argument|&sc->sc_mii->mii_phys
 argument_list|,
 argument|mii_list
 argument_list|)
-name|mii_phy_reset
+name|PHY_RESET
 argument_list|(
 name|child
 argument_list|)

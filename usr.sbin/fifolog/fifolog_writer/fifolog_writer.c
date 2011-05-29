@@ -408,7 +408,7 @@ name|buf
 operator|!=
 literal|'\0'
 condition|)
-name|fifolog_write_bytes_poll
+name|fifolog_write_record_poll
 argument_list|(
 name|f
 argument_list|,
@@ -429,9 +429,6 @@ name|i
 operator|==
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
 name|fifolog_write_poll
 argument_list|(
 name|f
@@ -440,10 +437,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|fifolog_write_flush
+name|fifolog_write_close
 argument_list|(
 name|f
 argument_list|)

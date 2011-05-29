@@ -120,7 +120,7 @@ comment|/*  * Priorities.  Note that with 64 run queues, differences less than 4
 end_comment
 
 begin_comment
-comment|/*  * Priorities range from 0 to 255, but differences of less then 4 (RQ_PPQ)  * are insignificant.  Ranges are as follows:  *  * Interrupt threads:		0 - 63  * Top half kernel threads:	64 - 127  * Realtime user threads:	128 - 159  * Time sharing user threads:	160 - 223  * Idle user threads:		224 - 255  *  * XXX If/When the specific interrupt thread and top half thread ranges  * disappear, a larger range can be used for user processes.  */
+comment|/*  * Priorities range from 0 to 255, but differences of less then 4 (RQ_PPQ)  * are insignificant.  Ranges are as follows:  *  * Interrupt threads:		0 - 47  * Realtime user threads:	48 - 79  * Top half kernel threads:	80 - 119  * Time sharing user threads:	120 - 223  * Idle user threads:		224 - 255  *  * XXX If/When the specific interrupt thread and top half thread ranges  * disappear, a larger range can be used for user processes.  */
 end_comment
 
 begin_define
@@ -156,7 +156,7 @@ begin_define
 define|#
 directive|define
 name|PRI_MAX_ITHD
-value|(PRI_MIN_KERN - 1)
+value|(PRI_MIN_REALTIME - 1)
 end_define
 
 begin_define
@@ -176,71 +176,74 @@ end_define
 begin_define
 define|#
 directive|define
-name|PI_TTYHIGH
+name|PI_NET
 value|(PRI_MIN_ITHD + 8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PI_TAPE
+name|PI_DISK
 value|(PRI_MIN_ITHD + 12)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PI_NET
+name|PI_TTY
 value|(PRI_MIN_ITHD + 16)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PI_DISK
+name|PI_DULL
 value|(PRI_MIN_ITHD + 20)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PI_TTYLOW
+name|PI_SOFT
 value|(PRI_MIN_ITHD + 24)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PI_DISKLOW
-value|(PRI_MIN_ITHD + 28)
+name|PI_SWI
+parameter_list|(
+name|x
+parameter_list|)
+value|(PI_SOFT + (x) * RQ_PPQ)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PI_DULL
-value|(PRI_MIN_ITHD + 32)
+name|PRI_MIN_REALTIME
+value|(48)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PI_SOFT
-value|(PRI_MIN_ITHD + 36)
+name|PRI_MAX_REALTIME
+value|(PRI_MIN_KERN - 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRI_MIN_KERN
-value|(64)
+value|(80)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRI_MAX_KERN
-value|(PRI_MIN_REALTIME - 1)
+value|(PRI_MIN_TIMESHARE - 1)
 end_define
 
 begin_define
@@ -302,43 +305,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCONFIG
+name|PLOCK
 value|(PRI_MIN_KERN + 32)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PLOCK
+name|PPAUSE
 value|(PRI_MIN_KERN + 36)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PPAUSE
-value|(PRI_MIN_KERN + 40)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PRI_MIN_REALTIME
-value|(128)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PRI_MAX_REALTIME
-value|(PRI_MIN_TIMESHARE - 1)
-end_define
-
-begin_define
-define|#
-directive|define
 name|PRI_MIN_TIMESHARE
-value|(160)
+value|(120)
 end_define
 
 begin_define
@@ -368,6 +350,43 @@ directive|define
 name|PRI_MAX_IDLE
 value|(PRI_MAX)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_comment
+comment|/* Other arguments for kern_yield(9). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRI_USER
+value|-2
+end_define
+
+begin_comment
+comment|/* Change to current user priority. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRI_UNCHANGED
+value|-1
+end_define
+
+begin_comment
+comment|/* Do not change priority. */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct

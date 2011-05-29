@@ -73,6 +73,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
 begin_decl_stmt
 name|int
 name|ath_hal_debug
@@ -9169,7 +9175,7 @@ end_function
 
 begin_function
 name|void
-name|HALDEBUG
+name|DO_HALDEBUG
 parameter_list|(
 name|struct
 name|ath_hal
@@ -9186,13 +9192,6 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-block|{
-if|if
-condition|(
-name|ath_hal_debug
-operator|&
-name|mask
-condition|)
 block|{
 name|__va_list
 name|ap
@@ -9218,7 +9217,6 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 

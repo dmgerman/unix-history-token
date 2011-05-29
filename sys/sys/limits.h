@@ -408,6 +408,10 @@ begin_if
 if|#
 directive|if
 name|__XSI_VISIBLE
+operator|||
+name|__POSIX_VISIBLE
+operator|>=
+literal|200809
 end_if
 
 begin_define

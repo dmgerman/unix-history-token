@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: clientloop.c,v 1.213 2009/07/05 19:28:33 stevesk Exp $ */
+comment|/* $OpenBSD: clientloop.c,v 1.231 2011/01/16 12:05:59 djm Exp $ */
 end_comment
 
 begin_comment
@@ -337,6 +337,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* XXX use mux_client_cleanup() instead */
+end_comment
+
+begin_comment
 comment|/*  * Name of the host we are connecting to.  This is the name given on the  * command line, or the HostName specified for the user-supplied name in a  * configuration file.  */
 end_comment
 
@@ -345,6 +349,17 @@ specifier|extern
 name|char
 modifier|*
 name|host
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Force TTY allocation */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|force_tty_flag
 decl_stmt|;
 end_decl_stmt
 
@@ -386,11 +401,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Common data for the client loop code. */
+comment|/* Time when backgrounded control master using ControlPersist should exit */
 end_comment
 
 begin_decl_stmt
 specifier|static
+name|time_t
+name|control_persist_exit_time
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Common data for the client loop code. */
+end_comment
+
+begin_decl_stmt
 specifier|volatile
 name|sig_atomic_t
 name|quit_pending
@@ -537,13 +564,22 @@ begin_decl_stmt
 specifier|static
 name|int
 name|session_closed
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* In SSH2: login session closed. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|x11_refuse_time
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* If>0, refuse x11 opens after this time. */
 end_comment
 
 begin_function_decl
@@ -562,6 +598,14 @@ name|session_ident
 init|=
 operator|-
 literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|session_resumed
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -848,6 +892,106 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Sets control_persist_exit_time to the absolute time when the  * backgrounded control master should exit due to expiry of the  * ControlPersist timeout.  Sets it to 0 if we are not a backgrounded  * control master process, or if there is no ControlPersist timeout.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|set_control_persist_exit_time
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|muxserver_sock
+operator|==
+operator|-
+literal|1
+operator|||
+operator|!
+name|options
+operator|.
+name|control_persist
+operator|||
+name|options
+operator|.
+name|control_persist_timeout
+operator|==
+literal|0
+condition|)
+comment|/* not using a ControlPersist timeout */
+name|control_persist_exit_time
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|channel_still_open
+argument_list|()
+condition|)
+block|{
+comment|/* some client connections are still open */
+if|if
+condition|(
+name|control_persist_exit_time
+operator|>
+literal|0
+condition|)
+name|debug2
+argument_list|(
+literal|"%s: cancel scheduled exit"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|control_persist_exit_time
+operator|=
+literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|control_persist_exit_time
+operator|<=
+literal|0
+condition|)
+block|{
+comment|/* a client connection has recently closed */
+name|control_persist_exit_time
+operator|=
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+operator|+
+operator|(
+name|time_t
+operator|)
+name|options
+operator|.
+name|control_persist_timeout
+expr_stmt|;
+name|debug2
+argument_list|(
+literal|"%s: schedule exit in %d seconds"
+argument_list|,
+name|__func__
+argument_list|,
+name|options
+operator|.
+name|control_persist_timeout
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* else we are already counting down to the timeout */
+block|}
+end_function
+
 begin_define
 define|#
 directive|define
@@ -871,6 +1015,9 @@ name|xauth_path
 parameter_list|,
 name|u_int
 name|trusted
+parameter_list|,
+name|u_int
+name|timeout
 parameter_list|,
 name|char
 modifier|*
@@ -942,6 +1089,9 @@ decl_stmt|;
 name|struct
 name|stat
 name|st
+decl_stmt|;
+name|u_int
+name|now
 decl_stmt|;
 name|xauthdir
 operator|=
@@ -1070,11 +1220,9 @@ argument_list|(
 name|MAXPATHLEN
 argument_list|)
 expr_stmt|;
-name|strlcpy
+name|mktemp_proto
 argument_list|(
 name|xauthdir
-argument_list|,
-literal|"/tmp/ssh-XXXXXXXXXX"
 argument_list|,
 name|MAXPATHLEN
 argument_list|)
@@ -1115,7 +1263,7 @@ argument_list|)
 argument_list|,
 literal|"%s -f %s generate %s "
 name|SSH_X11_PROTO
-literal|" untrusted timeout 1200 2>"
+literal|" untrusted timeout %u 2>"
 name|_PATH_DEVNULL
 argument_list|,
 name|xauth_path
@@ -1123,6 +1271,8 @@ argument_list|,
 name|xauthfile
 argument_list|,
 name|display
+argument_list|,
+name|timeout
 argument_list|)
 expr_stmt|;
 name|debug2
@@ -1145,6 +1295,42 @@ name|generated
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|x11_refuse_time
+operator|==
+literal|0
+condition|)
+block|{
+name|now
+operator|=
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|UINT_MAX
+operator|-
+name|timeout
+operator|<
+name|now
+condition|)
+name|x11_refuse_time
+operator|=
+name|UINT_MAX
+expr_stmt|;
+else|else
+name|x11_refuse_time
+operator|=
+name|now
+operator|+
+name|timeout
+expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* 		 * When in untrusted mode, we read the cookie only if it was 		 * successfully generated as an untrusted one in the step 		 * above. 		 */
@@ -1847,7 +2033,9 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"Timeout, server not responding."
+literal|"Timeout, server %s not responding."
+argument_list|,
+name|host
 argument_list|)
 expr_stmt|;
 name|cleanup_exit
@@ -1923,6 +2111,9 @@ name|tv
 decl_stmt|,
 modifier|*
 name|tvp
+decl_stmt|;
+name|int
+name|timeout_secs
 decl_stmt|;
 name|int
 name|ret
@@ -2108,32 +2299,68 @@ operator|*
 name|writesetp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|muxserver_sock
-operator|!=
-operator|-
-literal|1
-condition|)
-name|FD_SET
-argument_list|(
-name|muxserver_sock
-argument_list|,
-operator|*
-name|readsetp
-argument_list|)
+comment|/* 	 * Wait for something to happen.  This will suspend the process until 	 * some selected descriptor can be read, written, or has some other 	 * event pending, or a timeout expires. 	 */
+name|timeout_secs
+operator|=
+name|INT_MAX
 expr_stmt|;
-comment|/* 	 * Wait for something to happen.  This will suspend the process until 	 * some selected descriptor can be read, written, or has some other 	 * event pending. 	 */
+comment|/* we use INT_MAX to mean no timeout */
 if|if
 condition|(
 name|options
 operator|.
 name|server_alive_interval
-operator|==
+operator|>
 literal|0
-operator|||
-operator|!
+operator|&&
 name|compat20
+condition|)
+name|timeout_secs
+operator|=
+name|options
+operator|.
+name|server_alive_interval
+expr_stmt|;
+name|set_control_persist_exit_time
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|control_persist_exit_time
+operator|>
+literal|0
+condition|)
+block|{
+name|timeout_secs
+operator|=
+name|MIN
+argument_list|(
+name|timeout_secs
+argument_list|,
+name|control_persist_exit_time
+operator|-
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|timeout_secs
+operator|<
+literal|0
+condition|)
+name|timeout_secs
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|timeout_secs
+operator|==
+name|INT_MAX
 condition|)
 name|tvp
 operator|=
@@ -2145,9 +2372,7 @@ name|tv
 operator|.
 name|tv_sec
 operator|=
-name|options
-operator|.
-name|server_alive_interval
+name|timeout_secs
 expr_stmt|;
 name|tv
 operator|.
@@ -2351,7 +2576,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 name|leave_raw_mode
-argument_list|()
+argument_list|(
+name|force_tty_flag
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Free (and clear) the buffer to reduce the amount of data that gets 	 * written to swap. 	 */
 name|buffer_free
@@ -2400,7 +2627,9 @@ name|berr
 argument_list|)
 expr_stmt|;
 name|enter_raw_mode
-argument_list|()
+argument_list|(
+name|force_tty_flag
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -2629,7 +2858,7 @@ name|SYSLOG_LEVEL_ERROR
 operator|&&
 name|c
 operator|->
-name|ctl_fd
+name|ctl_chan
 operator|!=
 operator|-
 literal|1
@@ -3054,7 +3283,9 @@ operator|=
 name|NULL
 expr_stmt|;
 name|leave_raw_mode
-argument_list|()
+argument_list|(
+name|force_tty_flag
+argument_list|)
 expr_stmt|;
 name|handler
 operator|=
@@ -3319,6 +3550,7 @@ name|s
 argument_list|)
 condition|)
 empty_stmt|;
+comment|/* XXX update list of forwards in options */
 if|if
 condition|(
 name|delete
@@ -3521,7 +3753,9 @@ name|handler
 argument_list|)
 expr_stmt|;
 name|enter_raw_mode
-argument_list|()
+argument_list|(
+name|force_tty_flag
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3777,7 +4011,7 @@ name|c
 operator|&&
 name|c
 operator|->
-name|ctl_fd
+name|ctl_chan
 operator|!=
 operator|-
 literal|1
@@ -3818,7 +4052,7 @@ name|c
 operator|&&
 name|c
 operator|->
-name|ctl_fd
+name|ctl_chan
 operator|!=
 operator|-
 literal|1
@@ -3979,7 +4213,7 @@ name|c
 operator|&&
 name|c
 operator|->
-name|ctl_fd
+name|ctl_chan
 operator|!=
 operator|-
 literal|1
@@ -3990,7 +4224,9 @@ goto|;
 comment|/* 				 * Detach the program (continue to serve 				 * connections, but put in background and no 				 * more new connections). 				 */
 comment|/* Restore tty modes. */
 name|leave_raw_mode
-argument_list|()
+argument_list|(
+name|force_tty_flag
+argument_list|)
 expr_stmt|;
 comment|/* Stop listening for new connections. */
 name|channel_stop_listening
@@ -4139,7 +4375,7 @@ name|c
 operator|&&
 name|c
 operator|->
-name|ctl_fd
+name|ctl_chan
 operator|!=
 operator|-
 literal|1
@@ -4279,7 +4515,7 @@ name|c
 operator|&&
 name|c
 operator|->
-name|ctl_fd
+name|ctl_chan
 operator|!=
 operator|-
 literal|1
@@ -4961,7 +5197,9 @@ operator|=
 literal|1
 expr_stmt|;
 name|leave_raw_mode
-argument_list|()
+argument_list|(
+name|force_tty_flag
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -5082,22 +5320,6 @@ argument_list|(
 name|connection_in
 argument_list|,
 name|connection_out
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|muxserver_sock
-operator|!=
-operator|-
-literal|1
-condition|)
-name|max_fd
-operator|=
-name|MAX
-argument_list|(
-name|max_fd
-argument_list|,
-name|muxserver_sock
 argument_list|)
 expr_stmt|;
 if|if
@@ -5316,7 +5538,9 @@ condition|(
 name|have_pty
 condition|)
 name|enter_raw_mode
-argument_list|()
+argument_list|(
+name|force_tty_flag
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -5526,32 +5750,6 @@ argument_list|(
 name|readset
 argument_list|)
 expr_stmt|;
-comment|/* Accept control connections.  */
-if|if
-condition|(
-name|muxserver_sock
-operator|!=
-operator|-
-literal|1
-operator|&&
-name|FD_ISSET
-argument_list|(
-name|muxserver_sock
-argument_list|,
-name|readset
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|muxserver_accept_control
-argument_list|()
-condition|)
-name|quit_pending
-operator|=
-literal|1
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|quit_pending
@@ -5576,6 +5774,44 @@ name|writeset
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|session_resumed
+condition|)
+block|{
+name|connection_in
+operator|=
+name|packet_get_connection_in
+argument_list|()
+expr_stmt|;
+name|connection_out
+operator|=
+name|packet_get_connection_out
+argument_list|()
+expr_stmt|;
+name|max_fd
+operator|=
+name|MAX
+argument_list|(
+name|max_fd
+argument_list|,
+name|connection_out
+argument_list|)
+expr_stmt|;
+name|max_fd
+operator|=
+name|MAX
+argument_list|(
+name|max_fd
+argument_list|,
+name|connection_in
+argument_list|)
+expr_stmt|;
+name|session_resumed
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* 		 * Send as much buffered packet data as possible to the 		 * sender. 		 */
 if|if
 condition|(
@@ -5589,6 +5825,32 @@ condition|)
 name|packet_write_poll
 argument_list|()
 expr_stmt|;
+comment|/* 		 * If we are a backgrounded control master, and the 		 * timeout has expired without any active client 		 * connections, then quit. 		 */
+if|if
+condition|(
+name|control_persist_exit_time
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+operator|>=
+name|control_persist_exit_time
+condition|)
+block|{
+name|debug
+argument_list|(
+literal|"ControlPersist timeout expired"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
 block|}
 if|if
 condition|(
@@ -5637,6 +5899,12 @@ argument_list|(
 literal|"disconnected by user"
 argument_list|)
 expr_stmt|;
+name|packet_put_cstring
+argument_list|(
+literal|""
+argument_list|)
+expr_stmt|;
+comment|/* language tag */
 name|packet_send
 argument_list|()
 expr_stmt|;
@@ -5652,7 +5920,9 @@ condition|(
 name|have_pty
 condition|)
 name|leave_raw_mode
-argument_list|()
+argument_list|(
+name|force_tty_flag
+argument_list|)
 expr_stmt|;
 comment|/* restore blocking io */
 if|if
@@ -5784,7 +6054,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Output any buffered data for stdout. */
-while|while
+if|if
 condition|(
 name|buffer_len
 argument_list|(
@@ -5797,8 +6067,10 @@ condition|)
 block|{
 name|len
 operator|=
-name|write
+name|atomicio
 argument_list|(
+name|vwrite
+argument_list|,
 name|fileno
 argument_list|(
 name|stdout
@@ -5820,17 +6092,26 @@ expr_stmt|;
 if|if
 condition|(
 name|len
-operator|<=
+operator|<
 literal|0
+operator|||
+operator|(
+name|u_int
+operator|)
+name|len
+operator|!=
+name|buffer_len
+argument_list|(
+operator|&
+name|stdout_buffer
+argument_list|)
 condition|)
-block|{
 name|error
 argument_list|(
 literal|"Write failed flushing stdout buffer."
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
+else|else
 name|buffer_consume
 argument_list|(
 operator|&
@@ -5841,7 +6122,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Output any buffered data for stderr. */
-while|while
+if|if
 condition|(
 name|buffer_len
 argument_list|(
@@ -5854,8 +6135,10 @@ condition|)
 block|{
 name|len
 operator|=
-name|write
+name|atomicio
 argument_list|(
+name|vwrite
+argument_list|,
 name|fileno
 argument_list|(
 name|stderr
@@ -5877,17 +6160,26 @@ expr_stmt|;
 if|if
 condition|(
 name|len
-operator|<=
+operator|<
 literal|0
+operator|||
+operator|(
+name|u_int
+operator|)
+name|len
+operator|!=
+name|buffer_len
+argument_list|(
+operator|&
+name|stderr_buffer
+argument_list|)
 condition|)
-block|{
 name|error
 argument_list|(
 literal|"Write failed flushing stderr buffer."
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
+else|else
 name|buffer_consume
 argument_list|(
 operator|&
@@ -5968,8 +6260,18 @@ name|verbose
 argument_list|(
 literal|"Transferred: sent %llu, received %llu bytes, in %.1f seconds"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|obytes
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|ibytes
 argument_list|,
 name|total_time
@@ -6464,6 +6766,30 @@ name|error
 argument_list|(
 literal|"Warning: this is probably a break-in attempt by a "
 literal|"malicious server."
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+if|if
+condition|(
+name|x11_refuse_time
+operator|!=
+literal|0
+operator|&&
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+operator|>=
+name|x11_refuse_time
+condition|)
+block|{
+name|verbose
+argument_list|(
+literal|"Rejected X11 connection after ForwardX11Timeout "
+literal|"expired"
 argument_list|)
 expr_stmt|;
 return|return
@@ -7293,11 +7619,35 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|c
+operator|->
+name|ctl_chan
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|mux_exit_message
+argument_list|(
+name|c
+argument_list|,
+name|exitval
+argument_list|)
+expr_stmt|;
+name|success
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|id
 operator|==
 name|session_ident
 condition|)
 block|{
+comment|/* Record exit value of local session */
 name|success
 operator|=
 literal|1
@@ -7307,47 +7657,17 @@ operator|=
 name|exitval
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|c
-operator|->
-name|ctl_fd
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"client_input_channel_req: unexpected channel %d"
-argument_list|,
-name|session_ident
-argument_list|)
-expr_stmt|;
-block|}
 else|else
 block|{
-name|atomicio
+comment|/* Probably for a mux channel that has already closed */
+name|debug
 argument_list|(
-name|vwrite
+literal|"%s: no sink for exit-status on channel %d"
 argument_list|,
-name|c
-operator|->
-name|ctl_fd
+name|__func__
 argument_list|,
-operator|&
-name|exitval
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|exitval
+name|id
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|success
-operator|=
-literal|1
 expr_stmt|;
 block|}
 name|packet_check_eom
@@ -7357,6 +7677,10 @@ block|}
 if|if
 condition|(
 name|reply
+operator|&&
+name|c
+operator|!=
+name|NULL
 condition|)
 block|{
 name|packet_start
@@ -7539,6 +7863,19 @@ argument_list|,
 name|id
 argument_list|)
 expr_stmt|;
+name|packet_set_interactive
+argument_list|(
+name|want_tty
+argument_list|,
+name|options
+operator|.
+name|ip_qos_interactive
+argument_list|,
+name|options
+operator|.
+name|ip_qos_bulk
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|want_tty
@@ -7591,7 +7928,7 @@ name|id
 argument_list|,
 literal|"PTY allocation"
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 name|packet_put_cstring
@@ -8340,7 +8677,9 @@ name|i
 parameter_list|)
 block|{
 name|leave_raw_mode
-argument_list|()
+argument_list|(
+name|force_tty_flag
+argument_list|)
 expr_stmt|;
 name|leave_non_blocking
 argument_list|()
@@ -8364,6 +8703,9 @@ name|options
 operator|.
 name|control_path
 argument_list|)
+expr_stmt|;
+name|ssh_kill_proxy_command
+argument_list|()
 expr_stmt|;
 name|_exit
 argument_list|(

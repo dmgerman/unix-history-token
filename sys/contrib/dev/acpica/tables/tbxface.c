@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2010, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/*  * Copyright (C) 2000 - 2011, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -79,7 +79,7 @@ parameter_list|)
 block|{
 name|AcpiGbl_RootTableList
 operator|.
-name|Size
+name|MaxTableCount
 operator|=
 name|InitialTableCount
 expr_stmt|;
@@ -185,7 +185,7 @@ name|InitialTableArray
 expr_stmt|;
 name|AcpiGbl_RootTableList
 operator|.
-name|Size
+name|MaxTableCount
 operator|=
 name|InitialTableCount
 expr_stmt|;
@@ -267,6 +267,9 @@ decl_stmt|;
 name|ACPI_SIZE
 name|NewSize
 decl_stmt|;
+name|ACPI_SIZE
+name|CurrentSize
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|AcpiReallocateRootTable
@@ -288,23 +291,33 @@ name|AE_SUPPORT
 argument_list|)
 expr_stmt|;
 block|}
-name|NewSize
+comment|/*      * Get the current size of the root table and add the default      * increment to create the new table size.      */
+name|CurrentSize
 operator|=
-operator|(
 operator|(
 name|ACPI_SIZE
 operator|)
 name|AcpiGbl_RootTableList
 operator|.
-name|Count
-operator|+
-name|ACPI_ROOT_TABLE_SIZE_INCREMENT
-operator|)
+name|CurrentTableCount
 operator|*
 sizeof|sizeof
 argument_list|(
 name|ACPI_TABLE_DESC
 argument_list|)
+expr_stmt|;
+name|NewSize
+operator|=
+name|CurrentSize
+operator|+
+operator|(
+name|ACPI_ROOT_TABLE_SIZE_INCREMENT
+operator|*
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_DESC
+argument_list|)
+operator|)
 expr_stmt|;
 comment|/* Create new array and copy the old array */
 name|Tables
@@ -334,22 +347,25 @@ name|AcpiGbl_RootTableList
 operator|.
 name|Tables
 argument_list|,
-name|NewSize
+name|CurrentSize
 argument_list|)
 expr_stmt|;
+comment|/*      * Update the root table descriptor. The new size will be the current      * number of tables plus the increment, independent of the reserved      * size of the original table list.      */
 name|AcpiGbl_RootTableList
 operator|.
-name|Size
+name|Tables
 operator|=
-name|AcpiGbl_RootTableList
-operator|.
-name|Count
+name|Tables
 expr_stmt|;
 name|AcpiGbl_RootTableList
 operator|.
-name|Tables
+name|MaxTableCount
 operator|=
-name|Tables
+name|AcpiGbl_RootTableList
+operator|.
+name|CurrentTableCount
+operator|+
+name|ACPI_ROOT_TABLE_SIZE_INCREMENT
 expr_stmt|;
 name|AcpiGbl_RootTableList
 operator|.
@@ -435,7 +451,7 @@ name|i
 operator|<
 name|AcpiGbl_RootTableList
 operator|.
-name|Count
+name|CurrentTableCount
 condition|;
 name|i
 operator|++
@@ -668,7 +684,7 @@ name|i
 operator|<
 name|AcpiGbl_RootTableList
 operator|.
-name|Count
+name|CurrentTableCount
 condition|;
 name|i
 operator|++
@@ -815,7 +831,7 @@ name|TableIndex
 operator|>=
 name|AcpiGbl_RootTableList
 operator|.
-name|Count
+name|CurrentTableCount
 condition|)
 block|{
 operator|(
@@ -935,6 +951,10 @@ decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
+name|ACPI_TABLE_HEADER
+modifier|*
+name|NewDsdt
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|TbLoadNamespace
@@ -948,13 +968,13 @@ argument_list|(
 name|ACPI_MTX_TABLES
 argument_list|)
 expr_stmt|;
-comment|/*      * Load the namespace. The DSDT is required, but any SSDT and PSDT tables      * are optional.      */
+comment|/*      * Load the namespace. The DSDT is required, but any SSDT and      * PSDT tables are optional. Verify the DSDT.      */
 if|if
 condition|(
 operator|!
 name|AcpiGbl_RootTableList
 operator|.
-name|Count
+name|CurrentTableCount
 operator|||
 operator|!
 name|ACPI_COMPARE_NAME
@@ -997,36 +1017,56 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
-comment|/* A valid DSDT is required */
-name|Status
+comment|/*      * Save the DSDT pointer for simple access. This is the mapped memory      * address. We must take care here because the address of the .Tables      * array can change dynamically as tables are loaded at run-time. Note:      * .Pointer field is not validated until after call to AcpiTbVerifyTable.      */
+name|AcpiGbl_DSDT
 operator|=
-name|AcpiTbVerifyTable
-argument_list|(
-operator|&
 name|AcpiGbl_RootTableList
 operator|.
 name|Tables
 index|[
 name|ACPI_TABLE_INDEX_DSDT
 index|]
+operator|.
+name|Pointer
+expr_stmt|;
+comment|/*      * Optionally copy the entire DSDT to local memory (instead of simply      * mapping it.) There are some BIOSs that corrupt or replace the original      * DSDT, creating the need for this option. Default is FALSE, do not copy      * the DSDT.      */
+if|if
+condition|(
+name|AcpiGbl_CopyDsdtLocally
+condition|)
+block|{
+name|NewDsdt
+operator|=
+name|AcpiTbCopyDsdt
+argument_list|(
+name|ACPI_TABLE_INDEX_DSDT
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
+name|NewDsdt
 condition|)
 block|{
-name|Status
+name|AcpiGbl_DSDT
 operator|=
-name|AE_NO_ACPI_TABLES
+name|NewDsdt
 expr_stmt|;
-goto|goto
-name|UnlockAndExit
-goto|;
 block|}
+block|}
+comment|/*      * Save the original DSDT header for detection of table corruption      * and/or replacement of the DSDT from outside the OS.      */
+name|ACPI_MEMCPY
+argument_list|(
+operator|&
+name|AcpiGbl_OriginalDsdtHeader
+argument_list|,
+name|AcpiGbl_DSDT
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_HEADER
+argument_list|)
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1078,7 +1118,7 @@ name|i
 operator|<
 name|AcpiGbl_RootTableList
 operator|.
-name|Count
+name|CurrentTableCount
 condition|;
 operator|++
 name|i

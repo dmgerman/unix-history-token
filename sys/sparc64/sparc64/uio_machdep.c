@@ -86,11 +86,17 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cache.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/tlb.h>
 end_include
 
 begin_comment
-comment|/*  * Implement uiomove(9) from physical memory using a combination  * of the direct mapping and sf_bufs to reduce the creation and  * destruction of ephemeral mappings.    */
+comment|/*  * Implement uiomove(9) from physical memory using a combination  * of the direct mapping and sf_bufs to reduce the creation and  * destruction of ephemeral mappings.  */
 end_comment
 
 begin_function
@@ -295,6 +301,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|dcache_color_ignore
+operator|==
+literal|0
+operator|&&
 name|m
 operator|->
 name|md
@@ -360,18 +370,7 @@ block|{
 case|case
 name|UIO_USERSPACE
 case|:
-if|if
-condition|(
-name|ticks
-operator|-
-name|PCPU_GET
-argument_list|(
-name|switchticks
-argument_list|)
-operator|>=
-name|hogticks
-condition|)
-name|uio_yield
+name|maybe_yield
 argument_list|()
 expr_stmt|;
 if|if

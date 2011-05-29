@@ -1169,7 +1169,17 @@ name|FS_DOSOFTDEP
 condition|)
 name|printf
 argument_list|(
-literal|"soft-updates "
+literal|"soft-updates%s "
+argument_list|,
+operator|(
+name|fsflags
+operator|&
+name|FS_SUJ
+operator|)
+condition|?
+literal|"+journal"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 if|if
@@ -1249,6 +1259,17 @@ argument_list|(
 literal|"nfsv4acls "
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fsflags
+operator|&
+name|FS_TRIM
+condition|)
+name|printf
+argument_list|(
+literal|"trim "
+argument_list|)
+expr_stmt|;
 name|fsflags
 operator|&=
 operator|~
@@ -1270,6 +1291,10 @@ operator||
 name|FS_FLAGS_UPDATED
 operator||
 name|FS_NFS4ACLS
+operator||
+name|FS_SUJ
+operator||
+name|FS_TRIM
 operator|)
 expr_stmt|;
 if|if
@@ -2228,7 +2253,20 @@ name|fs_avgfpdir
 argument_list|)
 expr_stmt|;
 comment|/* -i is dumb */
-comment|/* -j..l unimplemented */
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_flags
+operator|&
+name|FS_SUJ
+condition|)
+name|printf
+argument_list|(
+literal|"-j "
+argument_list|)
+expr_stmt|;
+comment|/* -k..l unimplemented */
 name|printf
 argument_list|(
 literal|"-m %d "
@@ -2293,6 +2331,19 @@ name|fs
 operator|->
 name|fs_size
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_flags
+operator|&
+name|FS_TRIM
+condition|)
+name|printf
+argument_list|(
+literal|"-t "
 argument_list|)
 expr_stmt|;
 name|printf

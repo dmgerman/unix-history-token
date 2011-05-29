@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: servconf.h,v 1.87 2009/01/22 10:02:34 djm Exp $ */
+comment|/* $OpenBSD: servconf.h,v 1.95 2010/11/13 23:27:50 djm Exp $ */
 end_comment
 
 begin_comment
@@ -94,6 +94,17 @@ end_define
 
 begin_comment
 comment|/* Max # hostkeys. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_HOSTCERTS
+value|256
+end_define
+
+begin_comment
+comment|/* Max # host certificates. */
 end_comment
 
 begin_define
@@ -236,6 +247,18 @@ decl_stmt|;
 comment|/* Number of files for host keys. */
 name|char
 modifier|*
+name|host_cert_files
+index|[
+name|MAX_HOSTCERTS
+index|]
+decl_stmt|;
+comment|/* Files containing host certs. */
+name|int
+name|num_host_cert_files
+decl_stmt|;
+comment|/* Number of files for host certs. */
+name|char
+modifier|*
 name|pid_file
 decl_stmt|;
 comment|/* Where to put our pid */
@@ -296,6 +319,14 @@ name|int
 name|tcp_keep_alive
 decl_stmt|;
 comment|/* If true, set SO_KEEPALIVE. */
+name|int
+name|ip_qos_interactive
+decl_stmt|;
+comment|/* IP ToS/DSCP/class for interactive */
+name|int
+name|ip_qos_bulk
+decl_stmt|;
+comment|/* IP ToS/DSCP/class for bulk traffic */
 name|char
 modifier|*
 name|ciphers
@@ -306,6 +337,11 @@ modifier|*
 name|macs
 decl_stmt|;
 comment|/* Supported SSH2 macs. */
+name|char
+modifier|*
+name|kex_algorithms
+decl_stmt|;
+comment|/* SSH2 kex methods in order of preference. */
 name|int
 name|protocol
 decl_stmt|;
@@ -535,6 +571,18 @@ name|char
 modifier|*
 name|chroot_directory
 decl_stmt|;
+name|char
+modifier|*
+name|revoked_keys_file
+decl_stmt|;
+name|char
+modifier|*
+name|trusted_user_ca_keys
+decl_stmt|;
+name|char
+modifier|*
+name|authorized_principals_file
+decl_stmt|;
 block|}
 name|ServerOptions
 typedef|;
@@ -679,6 +727,18 @@ name|void
 name|dump_config
 parameter_list|(
 name|ServerOptions
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|derelativise_path
+parameter_list|(
+specifier|const
+name|char
 modifier|*
 parameter_list|)
 function_decl|;

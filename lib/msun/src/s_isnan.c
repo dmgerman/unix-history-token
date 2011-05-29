@@ -33,7 +33,7 @@ end_endif
 
 begin_function
 name|int
-name|isnanf
+name|__isnanf
 parameter_list|(
 name|float
 name|f
@@ -126,6 +126,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__isnanf
+argument_list|,
+name|isnanf
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

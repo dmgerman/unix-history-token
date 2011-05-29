@@ -285,6 +285,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|bool
+name|default_builtin_vector_alignment_reachable
+parameter_list|(
+name|tree
+parameter_list|,
+name|bool
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* These are here, and not in hooks.[ch], because not all users of    hooks.h include tm.h, and thus we don't have CUMULATIVE_ARGS.  */
 end_comment

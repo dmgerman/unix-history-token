@@ -1245,19 +1245,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|vr_phyaddr
-operator|!=
-name|phy
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* Set the register address. */
 name|CSR_WRITE_1
 argument_list|(
@@ -1378,19 +1365,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|vr_phyaddr
-operator|!=
-name|phy
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* Set the register address and data to write. */
 name|CSR_WRITE_1
 argument_list|(
@@ -3019,6 +2993,8 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
+name|phy
+decl_stmt|,
 name|pmc
 decl_stmt|;
 name|sc
@@ -3465,7 +3441,7 @@ name|vr_revid
 operator|>=
 name|REV_ID_VT6102_A
 operator|&&
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
@@ -3514,7 +3490,7 @@ directive|endif
 comment|/* 	 * Windows may put the chip in suspend mode when it 	 * shuts down. Be sure to kick it in the head to wake it 	 * up again. 	 */
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
@@ -3839,7 +3815,7 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* Save PHY address. */
+comment|/* Do MII setup. */
 if|if
 condition|(
 name|sc
@@ -3848,16 +3824,12 @@ name|vr_revid
 operator|>=
 name|REV_ID_VT6105_A0
 condition|)
-name|sc
-operator|->
-name|vr_phyaddr
+name|phy
 operator|=
 literal|1
 expr_stmt|;
 else|else
-name|sc
-operator|->
-name|vr_phyaddr
+name|phy
 operator|=
 name|CSR_READ_1
 argument_list|(
@@ -3868,10 +3840,9 @@ argument_list|)
 operator|&
 name|VR_PHYADDR_MASK
 expr_stmt|;
-comment|/* Do MII setup. */
-if|if
-condition|(
-name|mii_phy_probe
+name|error
+operator|=
+name|mii_attach
 argument_list|(
 name|dev
 argument_list|,
@@ -3880,22 +3851,34 @@ name|sc
 operator|->
 name|vr_miibus
 argument_list|,
+name|ifp
+argument_list|,
 name|vr_ifmedia_upd
 argument_list|,
 name|vr_ifmedia_sts
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|phy
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"MII without any phy!\n"
+literal|"attaching PHYs failed\n"
 argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|ENXIO
 expr_stmt|;
 goto|goto
 name|fail
@@ -7732,15 +7715,14 @@ operator|.
 name|num_restart
 operator|++
 expr_stmt|;
-name|vr_stop
-argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-name|vr_reset
-argument_list|(
-name|sc
-argument_list|)
+operator|->
+name|vr_ifp
+operator|->
+name|if_drv_flags
+operator|&=
+operator|~
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|vr_init_locked
 argument_list|(
@@ -9889,6 +9871,19 @@ operator|->
 name|vr_miibus
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return;
 comment|/* Cancel pending I/O and free all RX/TX buffers. */
 name|vr_stop
 argument_list|(
@@ -10437,13 +10432,6 @@ operator|->
 name|vr_miibus
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mii
-operator|->
-name|mii_instance
-condition|)
-block|{
 name|LIST_FOREACH
 argument_list|(
 argument|miisc
@@ -10452,12 +10440,11 @@ argument|&mii->mii_phys
 argument_list|,
 argument|mii_list
 argument_list|)
-name|mii_phy_reset
+name|PHY_RESET
 argument_list|(
 name|miisc
 argument_list|)
 expr_stmt|;
-block|}
 name|error
 operator|=
 name|mii_mediachg
@@ -11126,6 +11113,13 @@ operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&=
+operator|~
+name|IFF_DRV_RUNNING
+expr_stmt|;
 name|vr_init_locked
 argument_list|(
 name|sc
@@ -11145,15 +11139,12 @@ argument_list|,
 literal|"watchdog timeout\n"
 argument_list|)
 expr_stmt|;
-name|vr_stop
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|vr_reset
-argument_list|(
-name|sc
-argument_list|)
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&=
+operator|~
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|vr_init_locked
 argument_list|(
@@ -12108,7 +12099,7 @@ name|vr_revid
 operator|<
 name|REV_ID_VT6102_A
 operator|||
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->

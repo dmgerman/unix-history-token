@@ -508,6 +508,10 @@ name|request
 operator|->
 name|handle
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 name|map
 operator|->
 name|handle

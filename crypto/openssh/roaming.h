@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: roaming.h,v 1.4 2009/06/27 09:32:43 andreas Exp $ */
+comment|/* $OpenBSD: roaming.h,v 1.5 2009/10/24 11:11:58 andreas Exp $ */
 end_comment
 
 begin_comment
@@ -26,12 +26,35 @@ name|DEFAULT_ROAMBUF
 value|65536
 end_define
 
+begin_define
+define|#
+directive|define
+name|ROAMING_REQUEST
+value|"roaming@appgate.com"
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|roaming_enabled
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|resume_in_progress
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|request_roaming
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
@@ -56,6 +79,29 @@ name|void
 name|add_recv_bytes
 parameter_list|(
 name|u_int64_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|wait_for_roaming_reconnect
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|roaming_reply
+parameter_list|(
+name|int
+parameter_list|,
+name|u_int32_t
+parameter_list|,
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -168,6 +214,20 @@ name|int
 parameter_list|,
 name|u_int64_t
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|calculate_new_key
+parameter_list|(
+name|u_int64_t
+modifier|*
+parameter_list|,
+name|u_int64_t
+parameter_list|,
+name|u_int64_t
 parameter_list|)
 function_decl|;
 end_function_decl

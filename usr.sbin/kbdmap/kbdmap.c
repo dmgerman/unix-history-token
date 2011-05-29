@@ -901,6 +901,11 @@ argument_list|,
 name|sysconfig
 argument_list|)
 expr_stmt|;
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 return|return
 name|fnt
 return|;
@@ -1355,7 +1360,7 @@ operator|&
 name|dialog
 argument_list|,
 literal|"/usr/bin/dialog --clear --title \"Keyboard Menu\" "
-literal|"--menu \"%s\" -1 -1 10"
+literal|"--menu \"%s\" 0 0 0"
 argument_list|,
 name|menu
 argument_list|)

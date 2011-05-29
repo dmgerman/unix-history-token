@@ -671,8 +671,6 @@ name|E1000_SUCCESS
 decl_stmt|;
 name|u32
 name|ctrl
-decl_stmt|,
-name|icr
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -792,8 +790,6 @@ argument_list|,
 literal|0xffffffff
 argument_list|)
 expr_stmt|;
-name|icr
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw

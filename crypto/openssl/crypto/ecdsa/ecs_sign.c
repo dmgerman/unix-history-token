@@ -30,6 +30,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<openssl/rand.h>
+end_include
+
 begin_function
 name|ECDSA_SIG
 modifier|*
@@ -233,6 +239,13 @@ name|ECDSA_SIG
 modifier|*
 name|s
 decl_stmt|;
+name|RAND_seed
+argument_list|(
+name|dgst
+argument_list|,
+name|dlen
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|ECDSA_do_sign_ex

@@ -221,7 +221,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|char
 modifier|*
 name|fc_replace
@@ -309,6 +309,10 @@ condition|)
 block|{
 comment|/*&& isatty(2) ??? */
 comment|/* 			 * turn editing on 			 */
+name|char
+modifier|*
+name|term
+decl_stmt|;
 name|INTOFF
 expr_stmt|;
 if|if
@@ -373,6 +377,32 @@ condition|)
 goto|goto
 name|bad
 goto|;
+name|term
+operator|=
+name|lookupvar
+argument_list|(
+literal|"TERM"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|term
+condition|)
+name|setenv
+argument_list|(
+literal|"TERM"
+argument_list|,
+name|term
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
+name|unsetenv
+argument_list|(
+literal|"TERM"
+argument_list|)
+expr_stmt|;
 name|el
 operator|=
 name|el_init
@@ -415,6 +445,19 @@ argument_list|,
 name|EL_PROMPT
 argument_list|,
 name|getprompt
+argument_list|)
+expr_stmt|;
+name|el_set
+argument_list|(
+name|el
+argument_list|,
+name|EL_ADDFN
+argument_list|,
+literal|"sh-complete"
+argument_list|,
+literal|"Filename completion"
+argument_list|,
+name|_el_fn_sh_complete
 argument_list|)
 expr_stmt|;
 block|}
@@ -484,6 +527,19 @@ argument_list|,
 name|EL_EDITOR
 argument_list|,
 literal|"emacs"
+argument_list|)
+expr_stmt|;
+name|el_set
+argument_list|(
+name|el
+argument_list|,
+name|EL_BIND
+argument_list|,
+literal|"^I"
+argument_list|,
+literal|"sh-complete"
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|el_source
@@ -599,7 +655,53 @@ argument_list|,
 name|histsize
 argument_list|)
 expr_stmt|;
+name|history
+argument_list|(
+name|hist
+argument_list|,
+operator|&
+name|he
+argument_list|,
+name|H_SETUNIQUE
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|setterm
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|term
+parameter_list|)
+block|{
+if|if
+condition|(
+name|rootshell
+operator|&&
+name|el
+operator|!=
+name|NULL
+operator|&&
+name|term
+operator|!=
+name|NULL
+condition|)
+name|el_set
+argument_list|(
+name|el
+argument_list|,
+name|EL_TERMINAL
+argument_list|,
+name|term
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -851,6 +953,10 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
+name|savehandler
+operator|=
+name|handler
+expr_stmt|;
 comment|/* 	 * If executing... 	 */
 if|if
 condition|(
@@ -873,10 +979,6 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 		 * Catch interrupts to reset active counter and 		 * cleanup temp files. 		 */
-name|savehandler
-operator|=
-name|handler
-expr_stmt|;
 if|if
 condition|(
 name|setjmp
@@ -1129,7 +1231,7 @@ break|break;
 default|default:
 name|error
 argument_list|(
-literal|"too many args"
+literal|"too many arguments"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1249,7 +1351,7 @@ argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
-literal|"can't allocate stdio buffer for temp"
+literal|"Out of space"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1530,6 +1632,10 @@ name|displayhist
 operator|=
 literal|0
 expr_stmt|;
+name|handler
+operator|=
+name|savehandler
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1537,7 +1643,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|char
 modifier|*
 name|fc_replace
@@ -1599,16 +1705,9 @@ operator|==
 literal|0
 condition|)
 block|{
-while|while
-condition|(
-operator|*
-name|r
-condition|)
-name|STPUTC
+name|STPUTS
 argument_list|(
-operator|*
 name|r
-operator|++
 argument_list|,
 name|dest
 argument_list|)
@@ -1635,8 +1734,10 @@ name|dest
 argument_list|)
 expr_stmt|;
 block|}
-name|STACKSTRNUL
+name|STPUTC
 argument_list|(
+literal|'\0'
+argument_list|,
 name|dest
 argument_list|)
 expr_stmt|;

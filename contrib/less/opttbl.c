@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2009  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2011  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -1113,9 +1113,9 @@ block|,
 operator|&
 name|a_optname
 block|,
-name|BOOL
+name|TRIPLE
 block|,
-name|OPT_OFF
+name|OPT_ONPLUS
 block|,
 operator|&
 name|how_search
@@ -1127,7 +1127,7 @@ literal|"Search includes displayed screen"
 block|,
 literal|"Search skips displayed screen"
 block|,
-name|NULL
+literal|"Search includes all of displayed screen"
 block|}
 block|}
 block|,
@@ -1434,7 +1434,7 @@ block|,
 block|{
 literal|"Target line: "
 block|,
-literal|"0123456789."
+literal|"0123456789.-"
 block|,
 name|NULL
 block|}
@@ -2150,7 +2150,7 @@ block|}
 block|}
 block|,
 block|{
-literal|'.'
+name|OLETTER_NONE
 block|,
 operator|&
 name|keypad_optname
@@ -2176,7 +2176,7 @@ block|}
 block|}
 block|,
 block|{
-literal|'.'
+name|OLETTER_NONE
 block|,
 operator|&
 name|oldbot_optname
@@ -2200,7 +2200,7 @@ block|}
 block|}
 block|,
 block|{
-literal|'.'
+name|OLETTER_NONE
 block|,
 operator|&
 name|follow_optname
@@ -2215,9 +2215,9 @@ block|,
 name|NULL
 block|,
 block|{
-literal|"F command Follows file descriptor"
+literal|"F command follows file descriptor"
 block|,
-literal|"F command Follows file name"
+literal|"F command follows file name"
 block|,
 name|NULL
 block|}

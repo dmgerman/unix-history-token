@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Hex character manipulation support.    Copyright (C) 1995, 2001 Free Software Foundation, Inc.  This file is part of the libiberty library. Libiberty is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  Libiberty is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for more details.  You should have received a copy of the GNU Library General Public License along with libiberty; see the file COPYING.LIB.  If not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Hex character manipulation support.    Copyright (C) 1995, 2001 Free Software Foundation, Inc.  This file is part of the libiberty library. Libiberty is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  Libiberty is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for more details.  You should have received a copy of the GNU Library General Public License along with libiberty; see the file COPYING.LIB.  If not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -12,6 +12,23 @@ end_include
 begin_comment
 comment|/* for EOF */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -50,7 +67,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  @deftypefn Extension void hex_init (void)  Initializes the array mapping the current character set to corresponding hex values.  This function must be called before any call to @code{hex_p} or @code{hex_value}.  If you fail to call it, a default ASCII-based table will normally be used on ASCII systems.  @end deftypefn  @deftypefn Extension int hex_p (int @var{c})  Evaluates to non-zero if the given character is a valid hex character, or zero if it is not.  Note that the value you pass will be cast to @code{unsigned char} within the macro.  @end deftypefn  @deftypefn Extension unsigned int hex_value (int @var{c})  Returns the numeric equivalent of the given character when interpreted as a hexidecimal digit.  The result is undefined if you pass an invalid hex digit.  Note that the value you pass will be cast to @code{unsigned char} within the macro.  The @code{hex_value} macro returns @code{unsigned int}, rather than signed @code{int}, to make it easier to use in parsing addresses from hex dump files: a signed @code{int} would be sign-extended when converted to a wider unsigned type --- like @code{bfd_vma}, on some systems.  @end deftypefn  @undocumented _hex_array_size @undocumented _hex_bad @undocumented _hex_value  */
+comment|/*  @deftypefn Extension void hex_init (void)  Initializes the array mapping the current character set to corresponding hex values.  This function must be called before any call to @code{hex_p} or @code{hex_value}.  If you fail to call it, a default ASCII-based table will normally be used on ASCII systems.  @end deftypefn  @deftypefn Extension int hex_p (int @var{c})  Evaluates to non-zero if the given character is a valid hex character, or zero if it is not.  Note that the value you pass will be cast to @code{unsigned char} within the macro.  @end deftypefn  @deftypefn Extension {unsigned int} hex_value (int @var{c})  Returns the numeric equivalent of the given character when interpreted as a hexadecimal digit.  The result is undefined if you pass an invalid hex digit.  Note that the value you pass will be cast to @code{unsigned char} within the macro.  The @code{hex_value} macro returns @code{unsigned int}, rather than signed @code{int}, to make it easier to use in parsing addresses from hex dump files: a signed @code{int} would be sign-extended when converted to a wider unsigned type --- like @code{bfd_vma}, on some systems.  @end deftypefn  @undocumented _hex_array_size @undocumented _hex_bad @undocumented _hex_value  */
 end_comment
 
 begin_comment
@@ -656,7 +673,9 @@ end_comment
 begin_function
 name|void
 name|hex_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 ifndef|#
 directive|ifndef

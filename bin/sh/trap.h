@@ -111,5 +111,15 @@ name|__dead2
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|exitshell_savedstatus
+argument_list|(
+name|void
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

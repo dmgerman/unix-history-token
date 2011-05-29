@@ -499,7 +499,7 @@ index|]
 name|__attribute__
 argument_list|(
 operator|(
-name|__unused__
+name|__used__
 operator|)
 argument_list|)
 init|=
@@ -521,7 +521,7 @@ index|]
 name|__attribute__
 argument_list|(
 operator|(
-name|__unused__
+name|__used__
 operator|,
 name|aligned
 argument_list|(
@@ -560,7 +560,7 @@ index|]
 name|__attribute__
 argument_list|(
 operator|(
-name|__unused__
+name|__used__
 operator|,
 name|section
 argument_list|(
@@ -632,6 +632,8 @@ index|]
 name|__attribute__
 argument_list|(
 operator|(
+name|used
+operator|,
 name|aligned
 argument_list|(
 sizeof|sizeof
@@ -669,6 +671,8 @@ index|]
 name|__attribute__
 argument_list|(
 operator|(
+name|used
+operator|,
 name|section
 argument_list|(
 literal|".dtors"
@@ -724,6 +728,8 @@ index|[]
 name|__attribute__
 argument_list|(
 operator|(
+name|used
+operator|,
 name|section
 argument_list|(
 name|EH_FRAME_SECTION_NAME
@@ -768,7 +774,7 @@ index|[]
 name|__attribute__
 argument_list|(
 operator|(
-name|unused
+name|used
 operator|,
 name|section
 argument_list|(
@@ -1099,7 +1105,7 @@ index|[]
 name|__attribute__
 argument_list|(
 operator|(
-name|__unused__
+name|__used__
 operator|,
 name|section
 argument_list|(
@@ -1290,7 +1296,7 @@ index|[]
 name|__attribute__
 argument_list|(
 operator|(
-name|__unused__
+name|__used__
 operator|,
 name|section
 argument_list|(
@@ -1663,7 +1669,7 @@ index|]
 name|__attribute__
 argument_list|(
 operator|(
-name|__unused__
+name|__used__
 operator|)
 argument_list|)
 init|=
@@ -1685,6 +1691,8 @@ index|]
 name|__attribute__
 argument_list|(
 operator|(
+name|used
+operator|,
 name|aligned
 argument_list|(
 sizeof|sizeof
@@ -1719,6 +1727,8 @@ index|]
 name|__attribute__
 argument_list|(
 operator|(
+name|used
+operator|,
 name|section
 argument_list|(
 literal|".ctors"
@@ -1782,7 +1792,7 @@ index|]
 name|__attribute__
 argument_list|(
 operator|(
-name|unused
+name|used
 operator|,
 name|aligned
 argument_list|(
@@ -1818,7 +1828,7 @@ index|]
 name|__attribute__
 argument_list|(
 operator|(
-name|unused
+name|used
 operator|,
 name|section
 argument_list|(
@@ -1929,7 +1939,7 @@ index|[]
 name|__attribute__
 argument_list|(
 operator|(
-name|unused
+name|used
 operator|,
 name|section
 argument_list|(
@@ -1982,7 +1992,7 @@ index|]
 name|__attribute__
 argument_list|(
 operator|(
-name|unused
+name|used
 operator|,
 name|section
 argument_list|(

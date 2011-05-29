@@ -578,9 +578,6 @@ modifier|*
 name|kd
 parameter_list|)
 block|{
-name|u_long
-name|pa
-decl_stmt|;
 name|struct
 name|vmstate
 modifier|*
@@ -851,6 +848,9 @@ argument_list|,
 name|off
 argument_list|)
 operator|!=
+operator|(
+name|ssize_t
+operator|)
 name|vmst
 operator|->
 name|hdr
@@ -962,6 +962,9 @@ argument_list|,
 name|off
 argument_list|)
 operator|!=
+operator|(
+name|ssize_t
+operator|)
 name|vmst
 operator|->
 name|hdr
@@ -1057,9 +1060,6 @@ name|pte
 decl_stmt|;
 name|u_long
 name|pteindex
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|uint64_t
 name|a
@@ -1276,9 +1276,6 @@ name|pte
 decl_stmt|;
 name|u_long
 name|pteindex
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|u_long
 name|a

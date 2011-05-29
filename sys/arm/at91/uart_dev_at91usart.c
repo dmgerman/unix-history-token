@@ -567,7 +567,13 @@ argument_list|,
 name|mr
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set the baud rate 	 */
+comment|/* 	 * Set the baud rate (only if we know our master clock rate) 	 */
+if|if
+condition|(
+name|DEFAULT_RCLK
+operator|!=
+literal|0
+condition|)
 name|WR4
 argument_list|(
 name|bas
@@ -1147,12 +1153,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SKYEYE_WORKAROUNDS
-end_ifndef
-
 begin_function
 specifier|static
 name|void
@@ -1197,11 +1197,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|int
@@ -1213,17 +1208,12 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|SKYEYE_WORKAROUNDS
 name|int
 name|err
 decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-endif|#
-directive|endif
 name|uint32_t
 name|cr
 decl_stmt|;
@@ -1298,9 +1288,6 @@ argument_list|,
 literal|0xffffffff
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SKYEYE_WORKAROUNDS
 comment|/* 	 * Allocate DMA tags and maps 	 */
 name|err
 operator|=
@@ -1528,8 +1515,6 @@ literal|1
 index|]
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* 	 * Prime the pump with the RX buffer.  We use two 64 byte bounce 	 * buffers here to avoid data overflow. 	 */
 comment|/* Turn on rx and tx */
 name|cr
@@ -1717,9 +1702,6 @@ argument_list|,
 name|USART_CSR_RXBRK
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SKYEYE_WORKAROUNDS
 name|errout
 label|:
 empty_stmt|;
@@ -1729,15 +1711,6 @@ operator|(
 name|err
 operator|)
 return|;
-else|#
-directive|else
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -1752,14 +1725,9 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|SKYEYE_WORKAROUNDS
 name|bus_addr_t
 name|addr
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|at91_usart_softc
 modifier|*
@@ -1774,9 +1742,6 @@ operator|*
 operator|)
 name|sc
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SKYEYE_WORKAROUNDS
 if|if
 condition|(
 name|bus_dmamap_load
@@ -1825,8 +1790,6 @@ argument_list|,
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|uart_lock
 argument_list|(
 name|sc
@@ -1840,9 +1803,6 @@ name|sc_txbusy
 operator|=
 literal|1
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SKYEYE_WORKAROUNDS
 comment|/* 	 * Setup the PDC to transfer the data and interrupt us when it 	 * is done.  We've already requested the interrupt. 	 */
 name|WR4
 argument_list|(
@@ -1901,54 +1861,6 @@ operator|->
 name|sc_hwmtx
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-for|for
-control|(
-name|int
-name|i
-init|=
-literal|0
-init|;
-name|i
-operator|<
-name|sc
-operator|->
-name|sc_txdatasz
-condition|;
-name|i
-operator|++
-control|)
-name|at91_usart_putc
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_bas
-argument_list|,
-name|sc
-operator|->
-name|sc_txbuf
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-comment|/* 	 * XXX: Gross hack : Skyeye doesn't raise an interrupt once the 	 * transfer is done, so simulate it. 	 */
-name|WR4
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_bas
-argument_list|,
-name|USART_IER
-argument_list|,
-name|USART_CSR_TXRDY
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -3178,6 +3090,13 @@ break|break;
 case|case
 name|UART_IOCTL_BAUD
 case|:
+comment|/* only if we know our master clock rate */
+if|if
+condition|(
+name|DEFAULT_RCLK
+operator|!=
+literal|0
+condition|)
 name|WR4
 argument_list|(
 operator|&

@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -100,6 +106,16 @@ include|#
 directive|include
 file|<machine/endian.h>
 end_include
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|geom_sunlabel
+argument_list|,
+literal|"GEOM Sun/Solaris partitioning support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#

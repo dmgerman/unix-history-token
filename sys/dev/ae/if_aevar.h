@@ -305,9 +305,6 @@ name|struct
 name|mtx
 name|mtx
 decl_stmt|;
-name|int
-name|phyaddr
-decl_stmt|;
 name|uint8_t
 name|eaddr
 index|[
@@ -328,10 +325,6 @@ comment|/* Tasks. */
 name|struct
 name|task
 name|int_task
-decl_stmt|;
-name|struct
-name|task
-name|tx_task
 decl_stmt|;
 name|struct
 name|task

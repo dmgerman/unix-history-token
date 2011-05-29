@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/_timespec.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_types.h>
 end_include
 
@@ -246,30 +252,6 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_TIME_T_DECLARED
-end_ifndef
-
-begin_typedef
-typedef|typedef
-name|__time_t
-name|time_t
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|_TIME_T_DECLARED
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|_UID_T_DECLARED
 end_ifndef
 
@@ -304,31 +286,13 @@ name|__BSD_VISIBLE
 end_if
 
 begin_comment
-comment|/*  * XXX we need this for struct timespec.  We get miscellaneous namespace  * pollution with it.  */
+comment|/*  * XXX We get miscellaneous namespace pollution with this.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/time.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|!
-name|__BSD_VISIBLE
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/_timespec.h>
 end_include
 
 begin_endif
@@ -380,17 +344,17 @@ decl_stmt|;
 comment|/* file size, in bytes */
 name|struct
 name|timespec
-name|st_atimespec
+name|st_atim
 decl_stmt|;
 comment|/* time of last access */
 name|struct
 name|timespec
-name|st_mtimespec
+name|st_mtim
 decl_stmt|;
 comment|/* time of last data modification */
 name|struct
 name|timespec
-name|st_ctimespec
+name|st_ctim
 decl_stmt|;
 comment|/* time of last file status change */
 name|__int32_t
@@ -454,52 +418,21 @@ name|__dev_t
 name|st_rdev
 decl_stmt|;
 comment|/* device type */
-if|#
-directive|if
-name|__BSD_VISIBLE
 name|struct
 name|timespec
-name|st_atimespec
+name|st_atim
 decl_stmt|;
 comment|/* time of last access */
 name|struct
 name|timespec
-name|st_mtimespec
+name|st_mtim
 decl_stmt|;
 comment|/* time of last data modification */
 name|struct
 name|timespec
-name|st_ctimespec
+name|st_ctim
 decl_stmt|;
 comment|/* time of last file status change */
-else|#
-directive|else
-name|time_t
-name|st_atime
-decl_stmt|;
-comment|/* time of last access */
-name|long
-name|__st_atimensec
-decl_stmt|;
-comment|/* nsec of last access */
-name|time_t
-name|st_mtime
-decl_stmt|;
-comment|/* time of last data modification */
-name|long
-name|__st_mtimensec
-decl_stmt|;
-comment|/* nsec of last data modification */
-name|time_t
-name|st_ctime
-decl_stmt|;
-comment|/* time of last file status change */
-name|long
-name|__st_ctimensec
-decl_stmt|;
-comment|/* nsec of last file status change */
-endif|#
-directive|endif
 name|off_t
 name|st_size
 decl_stmt|;
@@ -523,15 +456,12 @@ comment|/* file generation number */
 name|__int32_t
 name|st_lspare
 decl_stmt|;
-if|#
-directive|if
-name|__BSD_VISIBLE
 name|struct
 name|timespec
-name|st_birthtimespec
+name|st_birthtim
 decl_stmt|;
 comment|/* time of file creation */
-comment|/* 	 * Explicitly pad st_birthtimespec to 16 bytes so that the size of 	 * struct stat is backwards compatible.  We use bitfields instead 	 * of an array of chars so that this doesn't require a C99 compiler 	 * to compile if the size of the padding is 0.  We use 2 bitfields 	 * to cover up to 64 bits on 32-bit machines.  We assume that 	 * CHAR_BIT is 8... 	 */
+comment|/* 	 * Explicitly pad st_birthtim to 16 bytes so that the size of 	 * struct stat is backwards compatible.  We use bitfields instead 	 * of an array of chars so that this doesn't require a C99 compiler 	 * to compile if the size of the padding is 0.  We use 2 bitfields 	 * to cover up to 64 bits on 32-bit machines.  We assume that 	 * CHAR_BIT is 8... 	 */
 name|unsigned
 name|int
 range|:
@@ -576,62 +506,6 @@ name|timespec
 argument_list|)
 operator|)
 decl_stmt|;
-else|#
-directive|else
-name|time_t
-name|st_birthtime
-decl_stmt|;
-comment|/* time of file creation */
-name|long
-name|st_birthtimensec
-decl_stmt|;
-comment|/* nsec of file creation */
-name|unsigned
-name|int
-range|:
-operator|(
-literal|8
-operator|/
-literal|2
-operator|)
-operator|*
-operator|(
-literal|16
-operator|-
-operator|(
-name|int
-operator|)
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|__timespec
-argument_list|)
-operator|)
-decl_stmt|;
-name|unsigned
-name|int
-range|:
-operator|(
-literal|8
-operator|/
-literal|2
-operator|)
-operator|*
-operator|(
-literal|16
-operator|-
-operator|(
-name|int
-operator|)
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|__timespec
-argument_list|)
-operator|)
-decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -676,17 +550,17 @@ decl_stmt|;
 comment|/* device type */
 name|struct
 name|timespec
-name|st_atimespec
+name|st_atim
 decl_stmt|;
 comment|/* time of last access */
 name|struct
 name|timespec
-name|st_mtimespec
+name|st_mtim
 decl_stmt|;
 comment|/* time of last data modification */
 name|struct
 name|timespec
-name|st_ctimespec
+name|st_ctim
 decl_stmt|;
 comment|/* time of last file status change */
 name|off_t
@@ -711,7 +585,7 @@ decl_stmt|;
 comment|/* file generation number */
 name|struct
 name|timespec
-name|st_birthtimespec
+name|st_birthtim
 decl_stmt|;
 comment|/* time of file creation */
 comment|/* 	 * See above about the following padding. 	 */
@@ -768,6 +642,33 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|st_atime
+value|st_atim.tv_sec
+end_define
+
+begin_define
+define|#
+directive|define
+name|st_mtime
+value|st_mtim.tv_sec
+end_define
+
+begin_define
+define|#
+directive|define
+name|st_ctime
+value|st_ctim.tv_sec
+end_define
+
 begin_if
 if|#
 directive|if
@@ -777,35 +678,66 @@ end_if
 begin_define
 define|#
 directive|define
-name|st_atime
-value|st_atimespec.tv_sec
-end_define
-
-begin_define
-define|#
-directive|define
-name|st_mtime
-value|st_mtimespec.tv_sec
-end_define
-
-begin_define
-define|#
-directive|define
-name|st_ctime
-value|st_ctimespec.tv_sec
-end_define
-
-begin_define
-define|#
-directive|define
 name|st_birthtime
-value|st_birthtimespec.tv_sec
+value|st_birthtim.tv_sec
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* For compatibility. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_define
+define|#
+directive|define
+name|st_atimespec
+value|st_atim
+end_define
+
+begin_define
+define|#
+directive|define
+name|st_mtimespec
+value|st_mtim
+end_define
+
+begin_define
+define|#
+directive|define
+name|st_ctimespec
+value|st_ctim
+end_define
+
+begin_define
+define|#
+directive|define
+name|st_birthtimespec
+value|st_birthtim
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_KERNEL */
+end_comment
 
 begin_define
 define|#

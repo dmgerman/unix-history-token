@@ -105,10 +105,6 @@ directive|define
 name|CS_NO_IRQ
 value|0x1
 name|int
-name|nic_addr
-decl_stmt|;
-comment|/* Base IO address of card */
-name|int
 name|send_cmd
 decl_stmt|;
 name|int

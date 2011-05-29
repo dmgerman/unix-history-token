@@ -2911,7 +2911,6 @@ name|got_bus
 operator|=
 literal|1
 expr_stmt|;
-empty_stmt|;
 name|opt
 operator|->
 name|got_addr

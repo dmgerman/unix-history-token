@@ -666,6 +666,12 @@ name|mine
 operator|->
 name|buffer
 expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 name|bytes_read
 operator|=
 name|read
@@ -690,6 +696,14 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EINTR
+condition|)
+continue|continue;
+elseif|else
 if|if
 condition|(
 name|mine
@@ -730,6 +744,7 @@ operator|(
 name|bytes_read
 operator|)
 return|;
+block|}
 block|}
 end_function
 

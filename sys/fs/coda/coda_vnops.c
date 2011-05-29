@@ -1847,6 +1847,14 @@ operator|.
 name|in_size
 operator|>
 name|VC_MAXDATASIZE
+operator|||
+name|iap
+operator|->
+name|vi
+operator|.
+name|out_size
+operator|>
+name|VC_MAXDATASIZE
 condition|)
 block|{
 name|NDFREE
@@ -3384,6 +3392,7 @@ name|cnp
 operator|->
 name|cn_namelen
 decl_stmt|;
+name|struct
 name|CodaFid
 name|VFid
 decl_stmt|;
@@ -3918,6 +3927,7 @@ name|cnp
 operator|->
 name|cn_namelen
 decl_stmt|;
+name|struct
 name|CodaFid
 name|VFid
 decl_stmt|;
@@ -5178,6 +5188,7 @@ name|cnode
 modifier|*
 name|cp
 decl_stmt|;
+name|struct
 name|CodaFid
 name|VFid
 decl_stmt|;
@@ -6246,26 +6257,6 @@ block|}
 endif|#
 directive|endif
 block|}
-else|else
-block|{
-if|if
-condition|(
-name|prtactive
-operator|&&
-name|vp
-operator|->
-name|v_usecount
-operator|!=
-literal|0
-condition|)
-name|vprint
-argument_list|(
-literal|"coda_reclaim: pushing active"
-argument_list|,
-name|vp
-argument_list|)
-expr_stmt|;
-block|}
 name|cache_purge
 argument_list|(
 name|vp
@@ -6843,6 +6834,7 @@ name|cnode
 modifier|*
 name|make_coda_node
 parameter_list|(
+name|struct
 name|CodaFid
 modifier|*
 name|fid

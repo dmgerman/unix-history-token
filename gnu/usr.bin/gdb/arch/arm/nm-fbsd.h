@@ -56,7 +56,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NM_NBSD_H */
+comment|/* NM_FBSD_H */
 end_comment
 
 end_unit

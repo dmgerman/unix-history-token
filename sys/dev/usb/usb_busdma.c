@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/linker_set.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
 end_include
 
@@ -1429,6 +1423,10 @@ operator|(
 name|align
 operator|==
 literal|1
+operator|&&
+name|size
+operator|>
+literal|1
 operator|)
 condition|?
 operator|(
@@ -1448,6 +1446,10 @@ operator|(
 name|align
 operator|==
 literal|1
+operator|&&
+name|size
+operator|>
+name|USB_PAGE_SIZE
 operator|)
 condition|?
 name|USB_PAGE_SIZE

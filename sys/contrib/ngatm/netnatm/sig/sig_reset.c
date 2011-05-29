@@ -1135,6 +1135,9 @@ name|connid
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|UNI_SAVE_IERR
 argument_list|(
 operator|&
@@ -2428,6 +2431,9 @@ name|connid
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|UNI_SAVE_IERR
 argument_list|(
 operator|&

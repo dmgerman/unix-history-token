@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/linker_set.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
 end_include
 
@@ -198,11 +192,11 @@ directive|include
 file|<dev/usb/serial/uftdi_reg.h>
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -270,17 +264,6 @@ directive|define
 name|UFTDI_IFACE_INDEX
 value|0
 end_define
-
-begin_define
-define|#
-directive|define
-name|UFTDI_IBUFSIZE
-value|64
-end_define
-
-begin_comment
-comment|/* bytes, maximum number of bytes per 					 * frame */
-end_comment
 
 begin_define
 define|#
@@ -703,8 +686,9 @@ block|,
 operator|.
 name|bufsize
 operator|=
-name|UFTDI_IBUFSIZE
+literal|0
 block|,
+comment|/* use wMaxPacketSize */
 operator|.
 name|flags
 operator|=
@@ -936,6 +920,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|uftdi
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -979,6 +973,24 @@ argument_list|(
 name|DRESDENELEKTRONIK
 argument_list|,
 name|WIRELESSHANDHELDTERMINAL
+argument_list|,
+literal|8U232AM
+argument_list|)
+block|,
+name|UFTDI_DEV
+argument_list|(
+name|FALCOM
+argument_list|,
+name|TWIST
+argument_list|,
+literal|8U232AM
+argument_list|)
+block|,
+name|UFTDI_DEV
+argument_list|(
+name|FTDI
+argument_list|,
+name|GAMMASCOUT
 argument_list|,
 literal|8U232AM
 argument_list|)
@@ -1095,7 +1107,25 @@ name|UFTDI_DEV
 argument_list|(
 name|FTDI
 argument_list|,
+name|USB_UIRT
+argument_list|,
+literal|8U232AM
+argument_list|)
+block|,
+name|UFTDI_DEV
+argument_list|(
+name|FTDI
+argument_list|,
 name|USBSERIAL
+argument_list|,
+literal|8U232AM
+argument_list|)
+block|,
+name|UFTDI_DEV
+argument_list|(
+name|FTDI
+argument_list|,
+name|KBS
 argument_list|,
 literal|8U232AM
 argument_list|)
@@ -1267,6 +1297,15 @@ argument_list|(
 name|BBELECTRONICS
 argument_list|,
 name|USOTL4
+argument_list|,
+literal|8U232AM
+argument_list|)
+block|,
+name|UFTDI_DEV
+argument_list|(
+name|MATRIXORBITAL
+argument_list|,
+name|MOUA
 argument_list|,
 literal|8U232AM
 argument_list|)
@@ -1672,6 +1711,16 @@ goto|goto
 name|detach
 goto|;
 block|}
+name|ucom_set_pnpinfo_usb
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_super_ucom
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1723,8 +1772,6 @@ operator|&
 name|sc
 operator|->
 name|sc_ucom
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|usbd_transfer_unsetup

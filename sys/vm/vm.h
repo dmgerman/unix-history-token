@@ -345,7 +345,7 @@ end_function_decl
 
 begin_struct_decl
 struct_decl|struct
-name|uidinfo
+name|ucred
 struct_decl|;
 end_struct_decl
 
@@ -361,15 +361,15 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|swap_reserve_by_uid
+name|swap_reserve_by_cred
 parameter_list|(
 name|vm_ooffset_t
 name|incr
 parameter_list|,
 name|struct
-name|uidinfo
+name|ucred
 modifier|*
-name|uip
+name|cred
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -396,15 +396,15 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|swap_release_by_uid
+name|swap_release_by_cred
 parameter_list|(
 name|vm_ooffset_t
 name|decr
 parameter_list|,
 name|struct
-name|uidinfo
+name|ucred
 modifier|*
-name|uip
+name|cred
 parameter_list|)
 function_decl|;
 end_function_decl

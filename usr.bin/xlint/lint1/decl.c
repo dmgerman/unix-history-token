@@ -3266,7 +3266,7 @@ argument_list|)
 expr_stmt|;
 name|a
 operator|=
-name|ALIGN
+name|LINT_ALIGN
 argument_list|(
 literal|1
 argument_list|)
@@ -3300,7 +3300,7 @@ if|if
 condition|(
 name|a
 operator|>
-name|ALIGN
+name|LINT_ALIGN
 argument_list|(
 literal|1
 argument_list|)
@@ -3310,7 +3310,7 @@ condition|)
 block|{
 name|a
 operator|=
-name|ALIGN
+name|LINT_ALIGN
 argument_list|(
 literal|1
 argument_list|)
@@ -3327,7 +3327,7 @@ name|CHAR_BIT
 operator|||
 name|a
 operator|>
-name|ALIGN
+name|LINT_ALIGN
 argument_list|(
 literal|1
 argument_list|)

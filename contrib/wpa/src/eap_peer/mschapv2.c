@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ms_funcs.h"
+file|"crypto/ms_funcs.h"
 end_include
 
 begin_include
@@ -95,7 +95,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|mschapv2_derive_response
 parameter_list|(
 specifier|const
@@ -356,16 +356,24 @@ condition|(
 name|pwhash
 condition|)
 block|{
+if|if
+condition|(
 name|hash_nt_password_hash
 argument_list|(
 name|password
 argument_list|,
 name|password_hash_hash
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 block|}
 else|else
 block|{
+if|if
+condition|(
 name|nt_password_hash
 argument_list|(
 name|password
@@ -374,14 +382,18 @@ name|password_len
 argument_list|,
 name|password_hash
 argument_list|)
-expr_stmt|;
+operator|||
 name|hash_nt_password_hash
 argument_list|(
 name|password_hash
 argument_list|,
 name|password_hash_hash
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 block|}
 name|get_master_key
 argument_list|(
@@ -403,6 +415,9 @@ argument_list|,
 name|MSCHAPV2_MASTER_KEY_LEN
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 

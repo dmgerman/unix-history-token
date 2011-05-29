@@ -598,7 +598,7 @@ name|refcount
 operator|=
 literal|0
 expr_stmt|;
-name|atomic_set_rel_32
+name|atomic_store_rel_32
 argument_list|(
 operator|&
 name|dev

@@ -432,7 +432,6 @@ argument_list|(
 name|str
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 name|arg
 operator|=
 name|aa

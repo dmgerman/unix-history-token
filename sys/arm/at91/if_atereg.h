@@ -19,6 +19,10 @@ directive|define
 name|ARM_AT91_IF_ATEREG_H
 end_define
 
+begin_comment
+comment|/* deines begining ETHB_ are EMACB (newer SAM9 hardware) versions only */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -96,8 +100,15 @@ begin_comment
 comment|/* EMAC Receive Buffer Queue Pointer */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ETHB_TBQP
+value|0x1c
+end_define
+
 begin_comment
-comment|/*	0x1c		   reserved */
+comment|/*  reserved */
 end_comment
 
 begin_define
@@ -490,6 +501,28 @@ begin_comment
 comment|/* EMAC Specific Address 4 High */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ETHB_TID
+value|0xb8
+end_define
+
+begin_comment
+comment|/* EMAC Type ID Checking */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHB_UIO
+value|0xC0
+end_define
+
+begin_comment
+comment|/* EMAC User I/O Reg */
+end_comment
+
 begin_comment
 comment|/* ETH_CTL */
 end_comment
@@ -591,6 +624,28 @@ end_define
 
 begin_comment
 comment|/* BP: Back Pressure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHB_CTL_TGO
+value|(1U<< 9)
+end_define
+
+begin_comment
+comment|/* TGO: Transmitter Start */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHB_CTL_TSTP
+value|(1U<< 10)
+end_define
+
+begin_comment
+comment|/* TSTP: Transmitter Stop */
 end_comment
 
 begin_comment
@@ -764,6 +819,116 @@ end_define
 
 begin_comment
 comment|/* RMII: Reduce MII */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHB_CFG_JBO
+value|(1U<< 3)
+end_define
+
+begin_comment
+comment|/* JBO: Jumbo Frames */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHB_CFG_PAE
+value|(1U<< 13)
+end_define
+
+begin_comment
+comment|/* PAE: Pause Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHB_CFG_RBOF_0
+value|(0U<< 14)
+end_define
+
+begin_comment
+comment|/* RBOF: Rx Buffer Offset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHB_CFG_RBOF_1
+value|(1U<< 14)
+end_define
+
+begin_comment
+comment|/* RBOF: Rx Buffer Offset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHB_CFG_RBOF_2
+value|(3U<< 14)
+end_define
+
+begin_comment
+comment|/* RBOF: Rx Buffer Offset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHB_CFG_RBOF_3
+value|(3U<< 14)
+end_define
+
+begin_comment
+comment|/* RBOF: Rx Buffer Offset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHB_CFG_RCLE
+value|(1U<< 16)
+end_define
+
+begin_comment
+comment|/* RCLE: Rx Length Check Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHB_CFG_DRFC
+value|(1U<< 17)
+end_define
+
+begin_comment
+comment|/* DRFC: Discard Rx FCS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHB_CFG_RHD
+value|(1U<< 18)
+end_define
+
+begin_comment
+comment|/* RHD: RX TX'ed frame in half-duplex */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHB_CFG_IFCS
+value|(1U<< 19)
+end_define
+
+begin_comment
+comment|/* IFCS: Ignore bad RX FCS */
 end_comment
 
 begin_comment
@@ -1084,6 +1249,32 @@ comment|/* ABT: Abort */
 end_comment
 
 begin_comment
+comment|/* ETHB_UIO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHB_UIO_RMII
+value|(1U<< 0)
+end_define
+
+begin_comment
+comment|/* RMII: Reduce MII */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHB_UIO_CLKE
+value|(1U<< 1)
+end_define
+
+begin_comment
+comment|/* CLKE: Clock Enable */
+end_comment
+
+begin_comment
 comment|/* ETH_MAN */
 end_comment
 
@@ -1176,6 +1367,10 @@ define|#
 directive|define
 name|ETH_WRAP_BIT
 value|(1U<< 1)
+define|#
+directive|define
+name|ETH_ADR_MASK
+value|~(EHT_CPU_OWNER | ETH_WRAP_BIT)
 name|uint32_t
 name|status
 decl_stmt|;
@@ -1183,6 +1378,16 @@ define|#
 directive|define
 name|ETH_LEN_MASK
 value|0x7ff
+define|#
+directive|define
+name|ETH_BUF_FIRST
+value|(1U<< 14)
+comment|/* Packet matched addr 4 */
+define|#
+directive|define
+name|ETH_BUF_LAST
+value|(1U<< 15)
+comment|/* Packet matched addr 4 */
 define|#
 directive|define
 name|ETH_MAC_LOCAL_4
@@ -1230,6 +1435,60 @@ value|(1U<< 31)
 comment|/* Global all ones bcast addr */
 block|}
 name|eth_rx_desc_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|uint32_t
+name|addr
+decl_stmt|;
+name|uint32_t
+name|status
+decl_stmt|;
+define|#
+directive|define
+name|ETHB_TX_LEN_MASK
+value|0x7ff
+define|#
+directive|define
+name|ETHB_TX_BUF_LAST
+value|(1U<< 15)
+comment|/* Last buffer in packet */
+define|#
+directive|define
+name|ETHB_TX_NOCRC
+value|(1U<< 16)
+comment|/* Don't xmit CRC*/
+define|#
+directive|define
+name|ETHB_TX_BUFE
+value|(1U<< 27)
+comment|/* Buffers exhausted mid frame */
+define|#
+directive|define
+name|ETHB_TX_TUND
+value|(1U<< 28)
+comment|/* Transmit Underrun  */
+define|#
+directive|define
+name|ETHB_TX_RTRYE
+value|(1U<< 29)
+comment|/* Re-try limit exceeded */
+define|#
+directive|define
+name|ETHB_TX_WRAP
+value|(1U<< 30)
+comment|/* Last descritor in list */
+define|#
+directive|define
+name|ETHB_TX_USED
+value|(1U<< 31)
+comment|/* Packet Transmitted */
+block|}
+name|eth_tx_desc_t
 typedef|;
 end_typedef
 

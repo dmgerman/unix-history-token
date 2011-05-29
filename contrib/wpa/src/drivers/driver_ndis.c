@@ -179,7 +179,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ieee802_11_defs.h"
+file|"common/ieee802_11_defs.h"
 end_include
 
 begin_include
@@ -309,6 +309,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|u8
+name|pae_group_addr
+index|[
+name|ETH_ALEN
+index|]
+init|=
+block|{
+literal|0x01
+block|,
+literal|0x80
+block|,
+literal|0xc2
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x03
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* FIX: to be removed once this can be compiled with the complete NDIS  * header files */
 end_comment
@@ -318,6 +343,13 @@ ifndef|#
 directive|ifndef
 name|OID_802_11_BSSID
 end_ifndef
+
+begin_define
+define|#
+directive|define
+name|OID_802_3_MULTICAST_LIST
+value|0x01010103
+end_define
 
 begin_define
 define|#
@@ -1358,6 +1390,174 @@ end_endif
 
 begin_comment
 comment|/* OID_802_11_CAPABILITY */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OID_DOT11_CURRENT_OPERATION_MODE
+end_ifndef
+
+begin_comment
+comment|/* Native 802.11 OIDs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OID_DOT11_NDIS_START
+value|0x0D010300
+end_define
+
+begin_define
+define|#
+directive|define
+name|OID_DOT11_CURRENT_OPERATION_MODE
+value|(OID_DOT11_NDIS_START + 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OID_DOT11_SCAN_REQUEST
+value|(OID_DOT11_NDIS_START + 11)
+end_define
+
+begin_typedef
+typedef|typedef
+enum|enum
+name|_DOT11_BSS_TYPE
+block|{
+name|dot11_BSS_type_infrastructure
+init|=
+literal|1
+block|,
+name|dot11_BSS_type_independent
+init|=
+literal|2
+block|,
+name|dot11_BSS_type_any
+init|=
+literal|3
+block|}
+name|DOT11_BSS_TYPE
+operator|,
+typedef|*
+name|PDOT11_BSS_TYPE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|UCHAR
+name|DOT11_MAC_ADDRESS
+index|[
+literal|6
+index|]
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|DOT11_MAC_ADDRESS
+modifier|*
+name|PDOT11_MAC_ADDRESS
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+name|_DOT11_SCAN_TYPE
+block|{
+name|dot11_scan_type_active
+init|=
+literal|1
+block|,
+name|dot11_scan_type_passive
+init|=
+literal|2
+block|,
+name|dot11_scan_type_auto
+init|=
+literal|3
+block|,
+name|dot11_scan_type_forced
+init|=
+literal|0x80000000
+block|}
+name|DOT11_SCAN_TYPE
+operator|,
+typedef|*
+name|PDOT11_SCAN_TYPE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_DOT11_SCAN_REQUEST_V2
+block|{
+name|DOT11_BSS_TYPE
+name|dot11BSSType
+decl_stmt|;
+name|DOT11_MAC_ADDRESS
+name|dot11BSSID
+decl_stmt|;
+name|DOT11_SCAN_TYPE
+name|dot11ScanType
+decl_stmt|;
+name|BOOLEAN
+name|bRestrictedScan
+decl_stmt|;
+name|ULONG
+name|udot11SSIDsOffset
+decl_stmt|;
+name|ULONG
+name|uNumOfdot11SSIDs
+decl_stmt|;
+name|BOOLEAN
+name|bUseRequestIE
+decl_stmt|;
+name|ULONG
+name|uRequestIDsOffset
+decl_stmt|;
+name|ULONG
+name|uNumOfRequestIDs
+decl_stmt|;
+name|ULONG
+name|uPhyTypeInfosOffset
+decl_stmt|;
+name|ULONG
+name|uNumOfPhyTypeInfos
+decl_stmt|;
+name|ULONG
+name|uIEsOffset
+decl_stmt|;
+name|ULONG
+name|uIEsLength
+decl_stmt|;
+name|UCHAR
+name|ucBuffer
+index|[
+literal|1
+index|]
+decl_stmt|;
+block|}
+name|DOT11_SCAN_REQUEST_V2
+operator|,
+typedef|*
+name|PDOT11_SCAN_REQUEST_V2
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* OID_DOT11_CURRENT_OPERATION_MODE */
 end_comment
 
 begin_ifdef
@@ -2640,47 +2840,14 @@ name|wired
 condition|)
 block|{
 comment|/* 		 * Report PAE group address as the "BSSID" for wired 		 * connection. 		 */
+name|os_memcpy
+argument_list|(
 name|bssid
-index|[
-literal|0
-index|]
-operator|=
-literal|0x01
-expr_stmt|;
-name|bssid
-index|[
-literal|1
-index|]
-operator|=
-literal|0x80
-expr_stmt|;
-name|bssid
-index|[
-literal|2
-index|]
-operator|=
-literal|0xc2
-expr_stmt|;
-name|bssid
-index|[
-literal|3
-index|]
-operator|=
-literal|0x00
-expr_stmt|;
-name|bssid
-index|[
-literal|4
-index|]
-operator|=
-literal|0x00
-expr_stmt|;
-name|bssid
-index|[
-literal|5
-index|]
-operator|=
-literal|0x03
+argument_list|,
+name|pae_group_addr
+argument_list|,
+name|ETH_ALEN
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -3071,36 +3238,6 @@ end_function
 
 begin_function
 specifier|static
-name|int
-name|wpa_driver_ndis_set_wpa
-parameter_list|(
-name|void
-modifier|*
-name|priv
-parameter_list|,
-name|int
-name|enabled
-parameter_list|)
-block|{
-name|wpa_printf
-argument_list|(
-name|MSG_DEBUG
-argument_list|,
-literal|"%s: enabled=%d"
-argument_list|,
-name|__func__
-argument_list|,
-name|enabled
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
 name|void
 name|wpa_driver_ndis_scan_timeout
 parameter_list|(
@@ -3135,19 +3272,127 @@ end_function
 begin_function
 specifier|static
 name|int
+name|wpa_driver_ndis_scan_native80211
+parameter_list|(
+name|struct
+name|wpa_driver_ndis_data
+modifier|*
+name|drv
+parameter_list|,
+name|struct
+name|wpa_driver_scan_params
+modifier|*
+name|params
+parameter_list|)
+block|{
+name|DOT11_SCAN_REQUEST_V2
+name|req
+decl_stmt|;
+name|int
+name|res
+decl_stmt|;
+name|os_memset
+argument_list|(
+operator|&
+name|req
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|req
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|req
+operator|.
+name|dot11BSSType
+operator|=
+name|dot11_BSS_type_any
+expr_stmt|;
+name|os_memset
+argument_list|(
+name|req
+operator|.
+name|dot11BSSID
+argument_list|,
+literal|0xff
+argument_list|,
+name|ETH_ALEN
+argument_list|)
+expr_stmt|;
+name|req
+operator|.
+name|dot11ScanType
+operator|=
+name|dot11_scan_type_auto
+expr_stmt|;
+name|res
+operator|=
+name|ndis_set_oid
+argument_list|(
+name|drv
+argument_list|,
+name|OID_DOT11_SCAN_REQUEST
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|req
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|req
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|eloop_cancel_timeout
+argument_list|(
+name|wpa_driver_ndis_scan_timeout
+argument_list|,
+name|drv
+argument_list|,
+name|drv
+operator|->
+name|ctx
+argument_list|)
+expr_stmt|;
+name|eloop_register_timeout
+argument_list|(
+literal|7
+argument_list|,
+literal|0
+argument_list|,
+name|wpa_driver_ndis_scan_timeout
+argument_list|,
+name|drv
+argument_list|,
+name|drv
+operator|->
+name|ctx
+argument_list|)
+expr_stmt|;
+return|return
+name|res
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|wpa_driver_ndis_scan
 parameter_list|(
 name|void
 modifier|*
 name|priv
 parameter_list|,
-specifier|const
-name|u8
+name|struct
+name|wpa_driver_scan_params
 modifier|*
-name|ssid
-parameter_list|,
-name|size_t
-name|ssid_len
+name|params
 parameter_list|)
 block|{
 name|struct
@@ -3160,6 +3405,20 @@ decl_stmt|;
 name|int
 name|res
 decl_stmt|;
+if|if
+condition|(
+name|drv
+operator|->
+name|native80211
+condition|)
+return|return
+name|wpa_driver_ndis_scan_native80211
+argument_list|(
+name|drv
+argument_list|,
+name|params
+argument_list|)
+return|;
 if|if
 condition|(
 operator|!
@@ -3242,6 +3501,103 @@ argument_list|)
 expr_stmt|;
 return|return
 name|res
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|const
+name|u8
+modifier|*
+name|wpa_scan_get_ie
+parameter_list|(
+specifier|const
+name|struct
+name|wpa_scan_res
+modifier|*
+name|res
+parameter_list|,
+name|u8
+name|ie
+parameter_list|)
+block|{
+specifier|const
+name|u8
+modifier|*
+name|end
+decl_stmt|,
+modifier|*
+name|pos
+decl_stmt|;
+name|pos
+operator|=
+operator|(
+specifier|const
+name|u8
+operator|*
+operator|)
+operator|(
+name|res
+operator|+
+literal|1
+operator|)
+expr_stmt|;
+name|end
+operator|=
+name|pos
+operator|+
+name|res
+operator|->
+name|ie_len
+expr_stmt|;
+while|while
+condition|(
+name|pos
+operator|+
+literal|1
+operator|<
+name|end
+condition|)
+block|{
+if|if
+condition|(
+name|pos
+operator|+
+literal|2
+operator|+
+name|pos
+index|[
+literal|1
+index|]
+operator|>
+name|end
+condition|)
+break|break;
+if|if
+condition|(
+name|pos
+index|[
+literal|0
+index|]
+operator|==
+name|ie
+condition|)
+return|return
+name|pos
+return|;
+name|pos
+operator|+=
+literal|2
+operator|+
+name|pos
+index|[
+literal|1
+index|]
+expr_stmt|;
+block|}
+return|return
+name|NULL
 return|;
 block|}
 end_function
@@ -4230,10 +4586,16 @@ specifier|static
 name|int
 name|wpa_driver_ndis_set_key
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|ifname
+parameter_list|,
 name|void
 modifier|*
 name|priv
 parameter_list|,
+name|enum
 name|wpa_alg
 name|alg
 parameter_list|,
@@ -4846,6 +5208,10 @@ expr_stmt|;
 name|wpa_driver_ndis_set_key
 argument_list|(
 name|drv
+operator|->
+name|ifname
+argument_list|,
+name|drv
 argument_list|,
 name|WPA_ALG_WEP
 argument_list|,
@@ -4901,7 +5267,7 @@ name|params
 operator|->
 name|auth_alg
 operator|&
-name|AUTH_ALG_SHARED_KEY
+name|WPA_AUTH_ALG_SHARED
 condition|)
 block|{
 if|if
@@ -4910,7 +5276,7 @@ name|params
 operator|->
 name|auth_alg
 operator|&
-name|AUTH_ALG_OPEN_SYSTEM
+name|WPA_AUTH_ALG_OPEN
 condition|)
 name|auth_mode
 operator|=
@@ -13170,6 +13536,57 @@ end_function
 
 begin_function
 specifier|static
+name|int
+name|ndis_add_multicast
+parameter_list|(
+name|struct
+name|wpa_driver_ndis_data
+modifier|*
+name|drv
+parameter_list|)
+block|{
+if|if
+condition|(
+name|ndis_set_oid
+argument_list|(
+name|drv
+argument_list|,
+name|OID_802_3_MULTICAST_LIST
+argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+name|pae_group_addr
+argument_list|,
+name|ETH_ALEN
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"NDIS: Failed to add PAE group address "
+literal|"to the multicast list"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|void
 modifier|*
 name|wpa_driver_ndis_init
@@ -13541,6 +13958,15 @@ operator|<
 literal|0
 condition|)
 block|{
+name|char
+name|buf
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|int
+name|res
+decl_stmt|;
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
@@ -13555,13 +13981,53 @@ name|mode
 argument_list|)
 expr_stmt|;
 comment|/* Try to continue anyway */
+name|res
+operator|=
+name|ndis_get_oid
+argument_list|(
+name|drv
+argument_list|,
+name|OID_DOT11_CURRENT_OPERATION_MODE
+argument_list|,
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|res
+operator|>
+literal|0
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_INFO
+argument_list|,
+literal|"NDIS: The driver seems to use "
+literal|"Native 802.11 OIDs. These are not yet "
+literal|"fully supported."
+argument_list|)
+expr_stmt|;
+name|drv
+operator|->
+name|native80211
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 operator|!
 name|drv
 operator|->
 name|has_capability
-operator|&&
+operator|||
 name|drv
 operator|->
 name|capa
@@ -13571,6 +14037,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 			 * Note: This will also happen with NDIS 6 drivers with 			 * Vista. 			 */
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
@@ -13585,6 +14052,25 @@ operator|->
 name|wired
 operator|=
 literal|1
+expr_stmt|;
+name|drv
+operator|->
+name|capa
+operator|.
+name|flags
+operator||=
+name|WPA_DRIVER_FLAGS_WIRED
+expr_stmt|;
+name|drv
+operator|->
+name|has_capability
+operator|=
+literal|1
+expr_stmt|;
+name|ndis_add_multicast
+argument_list|(
+name|drv
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -14976,8 +15462,6 @@ name|wpa_driver_ndis_get_bssid
 block|,
 name|wpa_driver_ndis_get_ssid
 block|,
-name|wpa_driver_ndis_set_wpa
-block|,
 name|wpa_driver_ndis_set_key
 block|,
 name|wpa_driver_ndis_init
@@ -14990,22 +15474,11 @@ block|,
 name|NULL
 comment|/* set_countermeasures */
 block|,
-name|NULL
-comment|/* set_drop_unencrypted */
-block|,
-name|wpa_driver_ndis_scan
-block|,
-name|NULL
-comment|/* get_scan_results */
-block|,
 name|wpa_driver_ndis_deauthenticate
 block|,
 name|wpa_driver_ndis_disassociate
 block|,
 name|wpa_driver_ndis_associate
-block|,
-name|NULL
-comment|/* set_auth_alg */
 block|,
 name|wpa_driver_ndis_add_pmkid
 block|,
@@ -15060,12 +15533,6 @@ block|,
 name|wpa_driver_ndis_get_scan_results
 block|,
 name|NULL
-comment|/* set_probe_req_ie */
-block|,
-name|NULL
-comment|/* set_mode */
-block|,
-name|NULL
 comment|/* set_country */
 block|,
 name|NULL
@@ -15078,6 +15545,161 @@ name|NULL
 comment|/* init2 */
 block|,
 name|wpa_driver_ndis_get_interfaces
+block|,
+name|wpa_driver_ndis_scan
+block|,
+name|NULL
+comment|/* authenticate */
+block|,
+name|NULL
+comment|/* set_beacon */
+block|,
+name|NULL
+comment|/* hapd_init */
+block|,
+name|NULL
+comment|/* hapd_deinit */
+block|,
+name|NULL
+comment|/* set_ieee8021x */
+block|,
+name|NULL
+comment|/* set_privacy */
+block|,
+name|NULL
+comment|/* get_seqnum */
+block|,
+name|NULL
+comment|/* flush */
+block|,
+name|NULL
+comment|/* set_generic_elem */
+block|,
+name|NULL
+comment|/* read_sta_data */
+block|,
+name|NULL
+comment|/* hapd_send_eapol */
+block|,
+name|NULL
+comment|/* sta_deauth */
+block|,
+name|NULL
+comment|/* sta_disassoc */
+block|,
+name|NULL
+comment|/* sta_remove */
+block|,
+name|NULL
+comment|/* hapd_get_ssid */
+block|,
+name|NULL
+comment|/* hapd_set_ssid */
+block|,
+name|NULL
+comment|/* hapd_set_countermeasures */
+block|,
+name|NULL
+comment|/* sta_add */
+block|,
+name|NULL
+comment|/* get_inact_sec */
+block|,
+name|NULL
+comment|/* sta_clear_stats */
+block|,
+name|NULL
+comment|/* set_freq */
+block|,
+name|NULL
+comment|/* set_rts */
+block|,
+name|NULL
+comment|/* set_frag */
+block|,
+name|NULL
+comment|/* sta_set_flags */
+block|,
+name|NULL
+comment|/* set_rate_sets */
+block|,
+name|NULL
+comment|/* set_cts_protect */
+block|,
+name|NULL
+comment|/* set_preamble */
+block|,
+name|NULL
+comment|/* set_short_slot_time */
+block|,
+name|NULL
+comment|/* set_tx_queue_params */
+block|,
+name|NULL
+comment|/* valid_bss_mask */
+block|,
+name|NULL
+comment|/* if_add */
+block|,
+name|NULL
+comment|/* if_remove */
+block|,
+name|NULL
+comment|/* set_sta_vlan */
+block|,
+name|NULL
+comment|/* commit */
+block|,
+name|NULL
+comment|/* send_ether */
+block|,
+name|NULL
+comment|/* set_radius_acl_auth */
+block|,
+name|NULL
+comment|/* set_radius_acl_expire */
+block|,
+name|NULL
+comment|/* set_ht_params */
+block|,
+name|NULL
+comment|/* set_ap_wps_ie */
+block|,
+name|NULL
+comment|/* set_supp_port */
+block|,
+name|NULL
+comment|/* set_wds_sta */
+block|,
+name|NULL
+comment|/* send_action */
+block|,
+name|NULL
+comment|/* remain_on_channel */
+block|,
+name|NULL
+comment|/* cancel_remain_on_channel */
+block|,
+name|NULL
+comment|/* probe_req_report */
+block|,
+name|NULL
+comment|/* disable_11b_rates */
+block|,
+name|NULL
+comment|/* deinit_ap */
+block|,
+name|NULL
+comment|/* suspend */
+block|,
+name|NULL
+comment|/* resume */
+block|,
+name|NULL
+comment|/* signal_monitor */
+block|,
+name|NULL
+comment|/* send_frame */
 block|}
 decl_stmt|;
 end_decl_stmt

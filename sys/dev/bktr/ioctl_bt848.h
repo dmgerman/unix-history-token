@@ -459,7 +459,8 @@ decl_stmt|;
 name|short
 name|count
 decl_stmt|;
-name|u_char
+name|unsigned
+name|char
 name|bytes
 index|[
 literal|256
@@ -833,7 +834,7 @@ begin_define
 define|#
 directive|define
 name|BT848_I2CWR
-value|_IOWR('x', 57, u_long)
+value|_IOWR('x', 57, unsigned long)
 end_define
 
 begin_comment
@@ -1041,7 +1042,8 @@ begin_struct
 struct|struct
 name|meteor_pixfmt
 block|{
-name|u_int
+name|unsigned
+name|int
 name|index
 decl_stmt|;
 comment|/* Index in supported pixfmt list     */
@@ -1049,11 +1051,13 @@ name|METEOR_PIXTYPE
 name|type
 decl_stmt|;
 comment|/* What's the board gonna feed us     */
-name|u_int
+name|unsigned
+name|int
 name|Bpp
 decl_stmt|;
 comment|/* Bytes per pixel                    */
-name|u_long
+name|unsigned
+name|long
 name|masks
 index|[
 literal|3

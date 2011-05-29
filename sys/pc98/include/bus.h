@@ -238,11 +238,11 @@ name|bus_space_tag
 block|{
 define|#
 directive|define
-name|BUS_SPACE_IO
+name|BUS_SPACE_TAG_IO
 value|0
 define|#
 directive|define
-name|BUS_SPACE_MEM
+name|BUS_SPACE_TAG_MEM
 value|1
 name|u_int
 name|bs_tag
@@ -335,14 +335,14 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|I386_BUS_SPACE_IO
+name|X86_BUS_SPACE_IO
 value|(&SBUS_io_space_tag)
 end_define
 
 begin_define
 define|#
 directive|define
-name|I386_BUS_SPACE_MEM
+name|X86_BUS_SPACE_MEM
 value|(&SBUS_mem_space_tag)
 end_define
 

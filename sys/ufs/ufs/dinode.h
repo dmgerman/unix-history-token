@@ -384,13 +384,17 @@ name|u_int64_t
 name|di_modrev
 decl_stmt|;
 comment|/* 232: i_modrev for NFSv4 */
-name|int64_t
+name|ino_t
+name|di_freelink
+decl_stmt|;
+comment|/* 240: SUJ: Next unlinked inode. */
+name|uint32_t
 name|di_spare
 index|[
-literal|2
+literal|3
 index|]
 decl_stmt|;
-comment|/* 240: Reserved; currently unused */
+comment|/* 244: Reserved; currently unused */
 block|}
 struct|;
 end_struct
@@ -422,18 +426,10 @@ name|int16_t
 name|di_nlink
 decl_stmt|;
 comment|/*   2: File link count. */
-union|union
-block|{
-name|u_int16_t
-name|oldids
-index|[
-literal|2
-index|]
+name|ino_t
+name|di_freelink
 decl_stmt|;
-comment|/*   4: Ffs: old user and group ids. */
-block|}
-name|di_u
-union|;
+comment|/*   4: SUJ: Next unlinked inode. */
 name|u_int64_t
 name|di_size
 decl_stmt|;
@@ -503,20 +499,6 @@ comment|/* 120: i_modrev for NFSv4 */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|di_ogid
-value|di_u.oldids[1]
-end_define
-
-begin_define
-define|#
-directive|define
-name|di_ouid
-value|di_u.oldids[0]
-end_define
 
 begin_endif
 endif|#

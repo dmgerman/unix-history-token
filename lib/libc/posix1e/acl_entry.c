@@ -106,7 +106,6 @@ expr_stmt|;
 comment|/* 	 * +1, because we are checking if there is space left for one more 	 * entry. 	 */
 if|if
 condition|(
-operator|(
 name|acl_int
 operator|->
 name|acl_cnt
@@ -114,15 +113,6 @@ operator|+
 literal|1
 operator|>=
 name|ACL_MAX_ENTRIES
-operator|)
-operator|||
-operator|(
-name|acl_int
-operator|->
-name|acl_cnt
-operator|<
-literal|0
-operator|)
 condition|)
 block|{
 name|errno
@@ -271,7 +261,6 @@ name|ats_acl
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|acl_int
 operator|->
 name|acl_cnt
@@ -279,15 +268,6 @@ operator|+
 literal|1
 operator|>=
 name|ACL_MAX_ENTRIES
-operator|)
-operator|||
-operator|(
-name|acl_int
-operator|->
-name|acl_cnt
-operator|<
-literal|0
-operator|)
 condition|)
 block|{
 name|errno

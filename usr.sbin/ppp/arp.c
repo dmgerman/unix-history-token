@@ -460,6 +460,8 @@ operator||
 name|RTF_HOST
 operator||
 name|RTF_STATIC
+operator||
+name|RTF_LLDATA
 expr_stmt|;
 name|arpmsg
 operator|.

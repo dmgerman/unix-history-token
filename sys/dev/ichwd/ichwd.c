@@ -390,9 +390,657 @@ literal|10
 block|}
 block|,
 block|{
+name|DEVICEID_PCH
+block|,
+literal|"Intel PCH watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PCHM
+block|,
+literal|"Intel PCH watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_P55
+block|,
+literal|"Intel P55 watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PM55
+block|,
+literal|"Intel PM55 watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
 name|DEVICEID_H55
 block|,
 literal|"Intel H55 watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_QM57
+block|,
+literal|"Intel QM57 watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_H57
+block|,
+literal|"Intel H57 watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_HM55
+block|,
+literal|"Intel HM55 watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_Q57
+block|,
+literal|"Intel Q57 watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_HM57
+block|,
+literal|"Intel HM57 watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PCHMSFF
+block|,
+literal|"Intel PCHMSFF watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_QS57
+block|,
+literal|"Intel QS57 watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_3400
+block|,
+literal|"Intel 3400 watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_3420
+block|,
+literal|"Intel 3420 watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_3450
+block|,
+literal|"Intel 3450 watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT0
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT1
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT2
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT3
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT4
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT5
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT6
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT7
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT8
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT9
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT10
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT11
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT12
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT13
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT14
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT15
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT16
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT17
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT18
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT19
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT20
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT21
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT22
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT23
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT23
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT25
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT26
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT27
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT28
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT29
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT30
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT31
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PATSBURG_LPC1
+block|,
+literal|"Intel Patsburg watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PATSBURG_LPC2
+block|,
+literal|"Intel Patsburg watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT0
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT1
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT2
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT3
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT4
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT5
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT6
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT7
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT8
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT9
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT10
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT11
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT12
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT13
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT14
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT15
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT16
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT17
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT18
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT19
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT20
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT21
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT22
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT23
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT24
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT25
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT26
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT27
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT28
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT29
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT30
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PPT31
+block|,
+literal|"Intel Panther Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_DH89XXCC_LPC
+block|,
+literal|"Intel DH89xxCC watchdog timer"
 block|,
 literal|10
 block|}
@@ -640,6 +1288,41 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Check if the watchdog SMI triggering is enabled.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|ichwd_smi_is_enabled
+parameter_list|(
+name|struct
+name|ichwd_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|ichwd_read_smi_4
+argument_list|(
+name|sc
+argument_list|,
+name|SMI_EN
+argument_list|)
+operator|&
+name|SMI_TCO_EN
+operator|)
+operator|!=
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Reset the watchdog status bits.  */
 end_comment
 
@@ -665,14 +1348,14 @@ argument_list|,
 name|TCO_TIMEOUT
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX The datasheet says that TCO_SECOND_TO_STS must be cleared 	 * before TCO_BOOT_STS, not the other way around. 	 */
+comment|/* 	 * According to Intel's docs, clearing SECOND_TO_STS and BOOT_STS must 	 * be done in two separate operations. 	 */
 name|ichwd_write_tco_2
 argument_list|(
 name|sc
 argument_list|,
 name|TCO2_STS
 argument_list|,
-name|TCO_BOOT_STS
+name|TCO_SECOND_TO_STS
 argument_list|)
 expr_stmt|;
 name|ichwd_write_tco_2
@@ -681,7 +1364,7 @@ name|sc
 argument_list|,
 name|TCO2_STS
 argument_list|,
-name|TCO_SECOND_TO_STS
+name|TCO_BOOT_STS
 argument_list|)
 expr_stmt|;
 block|}
@@ -881,16 +1564,15 @@ name|int
 name|timeout
 parameter_list|)
 block|{
-comment|/* 	 * If the datasheets are to be believed, the minimum value 	 * actually varies from chipset to chipset - 4 for ICH5 and 2 for 	 * all other chipsets.  I suspect this is a bug in the ICH5 	 * datasheet and that the minimum is uniformly 2, but I'd rather 	 * err on the side of caution. 	 */
 if|if
 condition|(
 name|timeout
 operator|<
-literal|4
+name|TCO_RLD_TMR_MIN
 condition|)
 name|timeout
 operator|=
-literal|4
+name|TCO_RLD_TMR_MIN
 expr_stmt|;
 if|if
 condition|(
@@ -913,17 +1595,22 @@ argument_list|)
 decl_stmt|;
 name|tmr_val8
 operator|&=
-literal|0xc0
+operator|(
+operator|~
+name|TCO_RLD1_TMR_MAX
+operator|&
+literal|0xff
+operator|)
 expr_stmt|;
 if|if
 condition|(
 name|timeout
 operator|>
-literal|0xbf
+name|TCO_RLD1_TMR_MAX
 condition|)
 name|timeout
 operator|=
-literal|0xbf
+name|TCO_RLD1_TMR_MAX
 expr_stmt|;
 name|tmr_val8
 operator||=
@@ -953,17 +1640,22 @@ argument_list|)
 decl_stmt|;
 name|tmr_val16
 operator|&=
-literal|0xfc00
+operator|(
+operator|~
+name|TCO_RLD2_TMR_MAX
+operator|&
+literal|0xffff
+operator|)
 expr_stmt|;
 if|if
 condition|(
 name|timeout
 operator|>
-literal|0x03ff
+name|TCO_RLD2_TMR_MAX
 condition|)
 name|timeout
 operator|=
-literal|0x03ff
+name|TCO_RLD2_TMR_MAX
 expr_stmt|;
 name|tmr_val16
 operator||=
@@ -1960,7 +2652,29 @@ operator|->
 name|ich_version
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX we should check the status registers (specifically, the 	 * TCO_SECOND_TO_STS bit in the TCO2_STS register) to see if we 	 * just came back from a watchdog-induced reset, and let the user 	 * know. 	 */
+comment|/* 	 * Determine if we are coming up after a watchdog-induced reset.  Some 	 * BIOSes may clear this bit at bootup, preventing us from reporting 	 * this case on such systems.  We clear this bit in ichwd_sts_reset(). 	 */
+if|if
+condition|(
+operator|(
+name|ichwd_read_tco_2
+argument_list|(
+name|sc
+argument_list|,
+name|TCO2_STS
+argument_list|)
+operator|&
+name|TCO_SECOND_TO_STS
+operator|)
+operator|!=
+literal|0
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"resuming after hardware watchdog timeout\n"
+argument_list|)
+expr_stmt|;
 comment|/* reset the watchdog status registers */
 name|ichwd_sts_reset
 argument_list|(
@@ -1990,6 +2704,15 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* disable the SMI handler */
+name|sc
+operator|->
+name|smi_enabled
+operator|=
+name|ichwd_smi_is_enabled
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ichwd_smi_disable
 argument_list|(
 name|sc
@@ -2125,6 +2848,14 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* enable the SMI handler */
+if|if
+condition|(
+name|sc
+operator|->
+name|smi_enabled
+operator|!=
+literal|0
+condition|)
 name|ichwd_smi_enable
 argument_list|(
 name|sc

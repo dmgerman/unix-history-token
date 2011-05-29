@@ -108,7 +108,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|disable_intr
+name|ia64_disable_intr
 parameter_list|(
 name|void
 parameter_list|)
@@ -121,7 +121,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|enable_intr
+name|ia64_enable_intr
 parameter_list|(
 name|void
 parameter_list|)
@@ -143,7 +143,7 @@ name|register_t
 name|psr
 decl_stmt|;
 asm|__asm __volatile ("mov %0=psr;;" : "=r"(psr));
-name|disable_intr
+name|ia64_disable_intr
 argument_list|()
 expr_stmt|;
 return|return
@@ -176,7 +176,7 @@ if|if
 condition|(
 name|ie
 condition|)
-name|enable_intr
+name|ia64_enable_intr
 argument_list|()
 expr_stmt|;
 block|}

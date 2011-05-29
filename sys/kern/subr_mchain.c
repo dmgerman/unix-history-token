@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/endian.h>
 end_include
 
@@ -64,6 +70,16 @@ include|#
 directive|include
 file|<sys/mchain.h>
 end_include
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|libmchain
+argument_list|,
+literal|"mchain library"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|MODULE_VERSION
@@ -433,7 +449,7 @@ name|mbchain
 modifier|*
 name|mbp
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|x
 parameter_list|)
 block|{
@@ -468,7 +484,7 @@ name|mbchain
 modifier|*
 name|mbp
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|x
 parameter_list|)
 block|{
@@ -510,7 +526,7 @@ name|mbchain
 modifier|*
 name|mbp
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|x
 parameter_list|)
 block|{
@@ -552,7 +568,7 @@ name|mbchain
 modifier|*
 name|mbp
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|x
 parameter_list|)
 block|{
@@ -594,7 +610,7 @@ name|mbchain
 modifier|*
 name|mbp
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|x
 parameter_list|)
 block|{
@@ -1544,7 +1560,7 @@ name|mdchain
 modifier|*
 name|mdp
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|x
 parameter_list|)
@@ -1573,7 +1589,7 @@ name|mdchain
 modifier|*
 name|mdp
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|x
 parameter_list|)
@@ -1605,12 +1621,12 @@ name|mdchain
 modifier|*
 name|mdp
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|x
 parameter_list|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|v
 decl_stmt|;
 name|int
@@ -1653,12 +1669,12 @@ name|mdchain
 modifier|*
 name|mdp
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|x
 parameter_list|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|v
 decl_stmt|;
 name|int
@@ -1701,7 +1717,7 @@ name|mdchain
 modifier|*
 name|mdp
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|x
 parameter_list|)
@@ -1733,12 +1749,12 @@ name|mdchain
 modifier|*
 name|mdp
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|x
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|v
 decl_stmt|;
 name|int
@@ -1783,12 +1799,12 @@ name|mdchain
 modifier|*
 name|mdp
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|x
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|v
 decl_stmt|;
 name|int

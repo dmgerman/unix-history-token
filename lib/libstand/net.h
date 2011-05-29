@@ -85,7 +85,7 @@ begin_define
 define|#
 directive|define
 name|MAXTMO
-value|20
+value|120
 end_define
 
 begin_comment

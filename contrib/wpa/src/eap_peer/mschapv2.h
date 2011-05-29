@@ -62,7 +62,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|mschapv2_derive_response
 parameter_list|(
 specifier|const

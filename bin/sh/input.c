@@ -334,7 +334,7 @@ comment|/* buffer for top level input file */
 end_comment
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|struct
 name|parsefile
 modifier|*
@@ -383,7 +383,7 @@ comment|/* cookie for editline package */
 end_comment
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|pushfile
 parameter_list|(
@@ -448,12 +448,6 @@ block|{
 name|popallfiles
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|exception
-operator|!=
-name|EXSHELLPROC
-condition|)
 name|parselleft
 operator|=
 name|parsenleft
@@ -461,18 +455,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* clear input buffer */
-block|}
-end_block
-
-begin_macro
-name|SHELLPROC
-end_macro
-
-begin_block
-block|{
-name|popallfiles
-argument_list|()
-expr_stmt|;
 block|}
 end_block
 
@@ -1700,7 +1682,7 @@ comment|/*  * To handle the "." command, a stack of input files is used.  Pushfi
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|pushfile
 parameter_list|(

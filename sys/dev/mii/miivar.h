@@ -26,7 +26,7 @@ file|<sys/queue.h>
 end_include
 
 begin_comment
-comment|/*  * Media Independent Interface configuration defintions.  */
+comment|/*  * Media Independent Interface data structure defintions  */
 end_comment
 
 begin_struct_decl
@@ -122,14 +122,14 @@ argument|mii_softc
 argument_list|)
 name|mii_phys
 expr_stmt|;
-name|int
+name|u_int
 name|mii_instance
 decl_stmt|;
 comment|/* 	 * PHY driver fills this in with active media status. 	 */
-name|int
+name|u_int
 name|mii_media_status
 decl_stmt|;
-name|int
+name|u_int
 name|mii_media_active
 decl_stmt|;
 comment|/* 	 * Calls from MII layer into network interface driver. 	 */
@@ -155,15 +155,17 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * This call is used by the MII layer to call into the PHY driver  * to perform a `service request'.  */
+comment|/*  * Functions provided by the PHY to perform various functions.  */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
+struct|struct
+name|mii_phy_funcs
+block|{
 name|int
 function_decl|(
 modifier|*
-name|mii_downcall_t
+name|pf_service
 function_decl|)
 parameter_list|(
 name|struct
@@ -177,7 +179,31 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-end_typedef
+name|void
+function_decl|(
+modifier|*
+name|pf_status
+function_decl|)
+parameter_list|(
+name|struct
+name|mii_softc
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|pf_reset
+function_decl|)
+parameter_list|(
+name|struct
+name|mii_softc
+modifier|*
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Requests that can be made to the downcall.  */
@@ -235,49 +261,72 @@ argument_list|)
 name|mii_list
 expr_stmt|;
 comment|/* entry on parent's PHY list */
-name|int
+name|uint32_t
+name|mii_mpd_oui
+decl_stmt|;
+comment|/* the PHY's OUI (MII_OUI())*/
+name|uint32_t
+name|mii_mpd_model
+decl_stmt|;
+comment|/* the PHY's model (MII_MODEL())*/
+name|uint32_t
+name|mii_mpd_rev
+decl_stmt|;
+comment|/* the PHY's revision (MII_REV())*/
+name|u_int
+name|mii_capmask
+decl_stmt|;
+comment|/* capability mask for BMSR */
+name|u_int
 name|mii_phy
 decl_stmt|;
 comment|/* our MII address */
-name|int
+name|u_int
+name|mii_offset
+decl_stmt|;
+comment|/* first PHY, second PHY, etc. */
+name|u_int
 name|mii_inst
 decl_stmt|;
 comment|/* instance for ifmedia */
-name|mii_downcall_t
-name|mii_service
+comment|/* Our PHY functions. */
+specifier|const
+name|struct
+name|mii_phy_funcs
+modifier|*
+name|mii_funcs
 decl_stmt|;
-comment|/* our downcall */
 name|struct
 name|mii_data
 modifier|*
 name|mii_pdata
 decl_stmt|;
 comment|/* pointer to parent's mii_data */
-name|int
+name|u_int
 name|mii_flags
 decl_stmt|;
 comment|/* misc. flags; see below */
-name|int
+name|u_int
 name|mii_capabilities
 decl_stmt|;
 comment|/* capabilities from BMSR */
-name|int
+name|u_int
 name|mii_extcapabilities
 decl_stmt|;
 comment|/* extended capabilities */
-name|int
+name|u_int
 name|mii_ticks
 decl_stmt|;
 comment|/* MII_TICK counter */
-name|int
+name|u_int
 name|mii_anegticks
 decl_stmt|;
 comment|/* ticks before retrying aneg */
-name|int
+name|u_int
 name|mii_media_active
 decl_stmt|;
 comment|/* last active media */
-name|int
+name|u_int
 name|mii_media_status
 decl_stmt|;
 comment|/* last active status */
@@ -301,7 +350,7 @@ begin_define
 define|#
 directive|define
 name|MIIF_INITDONE
-value|0x0001
+value|0x00000001
 end_define
 
 begin_comment
@@ -312,29 +361,51 @@ begin_define
 define|#
 directive|define
 name|MIIF_NOISOLATE
-value|0x0002
+value|0x00000002
 end_define
 
 begin_comment
 comment|/* do not isolate the PHY */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
 name|MIIF_NOLOOP
-value|0x0004
+value|0x00000004
 end_define
 
 begin_comment
 comment|/* no loopback capability */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|MIIF_DOINGAUTO
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* doing autonegotiation (mii_softc) */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MIIF_AUTOTSLEEP
-value|0x0010
+value|0x00000010
 end_define
 
 begin_comment
@@ -345,7 +416,7 @@ begin_define
 define|#
 directive|define
 name|MIIF_HAVEFIBER
-value|0x0020
+value|0x00000020
 end_define
 
 begin_comment
@@ -356,7 +427,7 @@ begin_define
 define|#
 directive|define
 name|MIIF_HAVE_GTCR
-value|0x0040
+value|0x00000040
 end_define
 
 begin_comment
@@ -367,7 +438,7 @@ begin_define
 define|#
 directive|define
 name|MIIF_IS_1000X
-value|0x0080
+value|0x00000080
 end_define
 
 begin_comment
@@ -378,7 +449,7 @@ begin_define
 define|#
 directive|define
 name|MIIF_DOPAUSE
-value|0x0100
+value|0x00000100
 end_define
 
 begin_comment
@@ -389,7 +460,7 @@ begin_define
 define|#
 directive|define
 name|MIIF_IS_HPNA
-value|0x0200
+value|0x00000200
 end_define
 
 begin_comment
@@ -400,11 +471,99 @@ begin_define
 define|#
 directive|define
 name|MIIF_FORCEANEG
-value|0x0400
+value|0x00000400
 end_define
 
 begin_comment
 comment|/* force auto-negotiation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIIF_NOMANPAUSE
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* no manual PAUSE selection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIIF_FORCEPAUSE
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* force PAUSE advertisement */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIIF_MACPRIV0
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* private to the MAC driver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIIF_MACPRIV1
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* private to the MAC driver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIIF_MACPRIV2
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* private to the MAC driver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIIF_PHYPRIV0
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* private to the PHY driver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIIF_PHYPRIV1
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* private to the PHY driver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIIF_PHYPRIV2
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* private to the PHY driver */
 end_comment
 
 begin_comment
@@ -433,6 +592,24 @@ value|(MIIF_NOISOLATE|MIIF_NOLOOP|MIIF_AUTOTSLEEP)
 end_define
 
 begin_comment
+comment|/*  * Special `locators' passed to mii_attach().  If one of these is not  * an `any' value, we look for *that* PHY and configure it.  If both  * are not `any', that is an error, and mii_attach() will fail.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MII_OFFSET_ANY
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_PHY_ANY
+value|-1
+end_define
+
+begin_comment
 comment|/*  * Used to attach a PHY to a parent.  */
 end_comment
 
@@ -446,22 +623,26 @@ modifier|*
 name|mii_data
 decl_stmt|;
 comment|/* pointer to parent data */
-name|int
+name|u_int
 name|mii_phyno
 decl_stmt|;
 comment|/* MII address */
-name|int
+name|u_int
+name|mii_offset
+decl_stmt|;
+comment|/* first PHY, second PHY, etc. */
+name|uint32_t
 name|mii_id1
 decl_stmt|;
 comment|/* PHY ID register 1 */
-name|int
+name|uint32_t
 name|mii_id2
 decl_stmt|;
 comment|/* PHY ID register 2 */
-name|int
+name|u_int
 name|mii_capmask
 decl_stmt|;
-comment|/* capability mask from BMSR */
+comment|/* capability mask for BMSR */
 block|}
 struct|;
 end_struct
@@ -482,11 +663,11 @@ begin_struct
 struct|struct
 name|mii_phydesc
 block|{
-name|u_int32_t
+name|uint32_t
 name|mpd_oui
 decl_stmt|;
 comment|/* the PHY's OUI */
-name|u_int32_t
+name|uint32_t
 name|mpd_model
 decl_stmt|;
 comment|/* the PHY's model */
@@ -527,15 +708,15 @@ begin_struct
 struct|struct
 name|mii_media
 block|{
-name|int
+name|u_int
 name|mm_bmcr
 decl_stmt|;
 comment|/* BMCR settings for this media */
-name|int
+name|u_int
 name|mm_anar
 decl_stmt|;
 comment|/* ANAR settings for this media */
-name|int
+name|u_int
 name|mm_gtcr
 decl_stmt|;
 comment|/* 100base-T2 or 1000base-T CR */
@@ -654,6 +835,82 @@ define|\
 value|MIIBUS_WRITEREG((p)->mii_dev, (p)->mii_phy, (r), (v))
 end_define
 
+begin_define
+define|#
+directive|define
+name|PHY_SERVICE
+parameter_list|(
+name|p
+parameter_list|,
+name|d
+parameter_list|,
+name|o
+parameter_list|)
+define|\
+value|(*(p)->mii_funcs->pf_service)((p), (d), (o))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHY_STATUS
+parameter_list|(
+name|p
+parameter_list|)
+define|\
+value|(*(p)->mii_funcs->pf_status)(p)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHY_RESET
+parameter_list|(
+name|p
+parameter_list|)
+define|\
+value|(*(p)->mii_funcs->pf_reset)(p)
+end_define
+
+begin_enum
+enum|enum
+name|miibus_device_ivars
+block|{
+name|MIIBUS_IVAR_FLAGS
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * Simplified accessors for miibus  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIIBUS_ACCESSOR
+parameter_list|(
+name|var
+parameter_list|,
+name|ivar
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|__BUS_ACCESSOR(miibus, var, MIIBUS, ivar, type)
+end_define
+
+begin_macro
+name|MIIBUS_ACCESSOR
+argument_list|(
+argument|flags
+argument_list|,
+argument|FLAGS
+argument_list|,
+argument|u_int
+argument_list|)
+end_macro
+
 begin_decl_stmt
 specifier|extern
 name|devclass_t
@@ -697,8 +954,27 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mii_anar
+name|mii_attach
 parameter_list|(
+name|device_t
+parameter_list|,
+name|device_t
+modifier|*
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|ifm_change_cb_t
+parameter_list|,
+name|ifm_stat_cb_t
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -749,33 +1025,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|mii_phy_probe
-parameter_list|(
-name|device_t
-parameter_list|,
-name|device_t
-modifier|*
-parameter_list|,
-name|ifm_change_cb_t
-parameter_list|,
-name|ifm_stat_cb_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|mii_add_media
-parameter_list|(
-name|struct
-name|mii_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|mii_phy_add_media
 parameter_list|(
@@ -810,6 +1059,17 @@ end_function_decl
 begin_function_decl
 name|void
 name|mii_phy_down
+parameter_list|(
+name|struct
+name|mii_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
+name|mii_phy_flowstatus
 parameter_list|(
 name|struct
 name|mii_softc
@@ -933,6 +1193,28 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|mii_phy_dev_attach
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|u_int
+name|flags
+parameter_list|,
+specifier|const
+name|struct
+name|mii_phy_funcs
+modifier|*
+name|mpf
+parameter_list|,
+name|int
+name|add_media
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ukphy_status
 parameter_list|(
 name|struct
@@ -941,6 +1223,49 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|u_int
+name|mii_oui
+parameter_list|(
+name|u_int
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|MII_OUI
+parameter_list|(
+name|id1
+parameter_list|,
+name|id2
+parameter_list|)
+value|mii_oui(id1, id2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL
+parameter_list|(
+name|id2
+parameter_list|)
+value|(((id2)& IDR2_MODEL)>> 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_REV
+parameter_list|(
+name|id2
+parameter_list|)
+value|((id2)& IDR2_REV)
+end_define
 
 begin_endif
 endif|#

@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/racct.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/resourcevar.h>
 end_include
 
@@ -386,6 +392,23 @@ name|proc
 argument_list|,
 name|RLIMIT_DATA
 argument_list|)
+operator|||
+name|racct_set
+argument_list|(
+name|imgp
+operator|->
+name|proc
+argument_list|,
+name|RACCT_DATA
+argument_list|,
+name|a_out
+operator|->
+name|a_data
+operator|+
+name|bss_size
+argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|PROC_UNLOCK
@@ -855,20 +878,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* Indicate that this file should not be modified */
-name|mp_fixme
-argument_list|(
-literal|"Unlocked v_flag access"
-argument_list|)
-expr_stmt|;
-name|imgp
-operator|->
-name|vp
-operator|->
-name|v_vflag
-operator||=
-name|VV_TEXT
-expr_stmt|;
 block|}
 comment|/* Fill in process VM information */
 name|vmspace

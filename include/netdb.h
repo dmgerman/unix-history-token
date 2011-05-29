@@ -152,6 +152,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_PATH_SERVICES_DB
+value|"/var/db/services.db"
+end_define
+
+begin_define
+define|#
+directive|define
 name|h_errno
 value|(*__h_errno())
 end_define

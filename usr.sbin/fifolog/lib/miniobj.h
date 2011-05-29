@@ -13,7 +13,7 @@ parameter_list|,
 name|type_magic
 parameter_list|)
 define|\
-value|do {								\ 		(to) = calloc(sizeof *(to), 1);				\ 		assert((to) != NULL);					\ 		(to)->magic = (type_magic);				\ 	} while (0)
+value|do {								\ 		(to) = calloc(sizeof *(to), 1);				\ 		if ((to) != NULL)					\ 			(to)->magic = (type_magic);			\ 	} while (0)
 end_define
 
 begin_define
@@ -25,6 +25,19 @@ name|to
 parameter_list|)
 define|\
 value|do {								\ 		(to)->magic = (0);					\ 		free(to);						\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VALID_OBJ
+parameter_list|(
+name|ptr
+parameter_list|,
+name|type_magic
+parameter_list|)
+define|\
+value|((ptr) != NULL&& (ptr)->magic == (type_magic))
 end_define
 
 begin_define
@@ -51,6 +64,19 @@ name|type_magic
 parameter_list|)
 define|\
 value|do {								\ 		assert((ptr) != NULL);					\ 		assert((ptr)->magic == type_magic);			\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHECK_OBJ_ORNULL
+parameter_list|(
+name|ptr
+parameter_list|,
+name|type_magic
+parameter_list|)
+define|\
+value|do {								\ 		if ((ptr) != NULL)					\ 			assert((ptr)->magic == type_magic);		\ 	} while (0)
 end_define
 
 begin_define

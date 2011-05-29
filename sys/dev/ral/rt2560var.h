@@ -224,32 +224,6 @@ end_struct
 
 begin_struct
 struct|struct
-name|rt2560_node
-block|{
-name|struct
-name|ieee80211_node
-name|ni
-decl_stmt|;
-name|struct
-name|ieee80211_amrr_node
-name|amrr
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|RT2560_NODE
-parameter_list|(
-name|ni
-parameter_list|)
-value|((struct rt2560_node *)(ni))
-end_define
-
-begin_struct
-struct|struct
 name|rt2560_vap
 block|{
 name|struct
@@ -259,10 +233,6 @@ decl_stmt|;
 name|struct
 name|ieee80211_beacon_offsets
 name|ral_bo
-decl_stmt|;
-name|struct
-name|ieee80211_amrr
-name|amrr
 decl_stmt|;
 name|int
 function_decl|(

@@ -88,12 +88,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/linker_set.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
 end_include
 
@@ -815,6 +809,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|udav
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -871,11 +875,11 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -1000,6 +1004,30 @@ argument_list|(
 argument|USB_VENDOR_COREGA
 argument_list|,
 argument|USB_PRODUCT_COREGA_FETHER_USB_TXC
+argument_list|,
+literal|0
+argument_list|)
+block|}
+block|,
+comment|/* ShanTou AMD8515 USB NIC */
+block|{
+name|USB_VPI
+argument_list|(
+argument|USB_VENDOR_SHANTOU
+argument_list|,
+argument|USB_PRODUCT_SHANTOU_ADM8515
+argument_list|,
+literal|0
+argument_list|)
+block|}
+block|,
+comment|/* Kontron AG USB Ethernet */
+block|{
+name|USB_VPI
+argument_list|(
+argument|USB_VENDOR_KONTRON
+argument_list|,
+argument|USB_PRODUCT_KONTRON_DM9601
 argument_list|,
 literal|0
 argument_list|)
@@ -3166,6 +3194,11 @@ argument_list|(
 name|sc
 argument_list|)
 decl_stmt|;
+name|struct
+name|mii_softc
+modifier|*
+name|miisc
+decl_stmt|;
 name|UDAV_LOCK_ASSERT
 argument_list|(
 name|sc
@@ -3180,18 +3213,6 @@ operator|&=
 operator|~
 name|UDAV_FLAG_LINK
 expr_stmt|;
-if|if
-condition|(
-name|mii
-operator|->
-name|mii_instance
-condition|)
-block|{
-name|struct
-name|mii_softc
-modifier|*
-name|miisc
-decl_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|miisc
@@ -3200,12 +3221,11 @@ argument|&mii->mii_phys
 argument_list|,
 argument|mii_list
 argument_list|)
-name|mii_phy_reset
+name|PHY_RESET
 argument_list|(
 name|miisc
 argument_list|)
 expr_stmt|;
-block|}
 name|mii_mediachg
 argument_list|(
 name|mii

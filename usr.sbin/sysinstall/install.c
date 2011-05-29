@@ -1484,10 +1484,6 @@ modifier|*
 name|self
 parameter_list|)
 block|{
-name|struct
-name|stat
-name|sb
-decl_stmt|;
 name|int
 name|need_eject
 decl_stmt|;
@@ -2664,7 +2660,11 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|,
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_SLICES
+name|int
 name|tries
 init|=
 literal|0
@@ -2674,6 +2674,8 @@ modifier|*
 modifier|*
 name|devs
 decl_stmt|;
+endif|#
+directive|endif
 name|variable_set2
 argument_list|(
 name|SYSTEM_STATE
@@ -2691,10 +2693,10 @@ directive|ifdef
 name|WITH_SLICES
 name|msgConfirm
 argument_list|(
-literal|"In the next menu, you will need to set up a DOS-style (\"fdisk\") partitioning\n"
+literal|"In the next menu, you will need to set up an MBR partitioning\n"
 literal|"scheme for your hard disk.  If you simply wish to devote all disk space\n"
-literal|"to FreeBSD (overwriting anything else that might be on the disk(s) selected)\n"
-literal|"then use the (A)ll command to select the default partitioning scheme followed\n"
+literal|"to FreeBSD (overwriting anything else that might be on the disk selected)\n"
+literal|"then use the (A)ll command to create a single partition followed\n"
 literal|"by a (Q)uit.  If you wish to allocate only free space to FreeBSD, move to a\n"
 literal|"partition marked \"unused\" and use the (C)reate command."
 argument_list|)
@@ -2746,7 +2748,7 @@ goto|;
 block|}
 name|msgConfirm
 argument_list|(
-literal|"Now you need to create BSD partitions inside of the fdisk partition(s)\n"
+literal|"Now you need to create BSD partitions inside of the MBR partition(s)\n"
 literal|"just created.  If you have a reasonable amount of disk space (1GB or more)\n"
 literal|"and don't have any special requirements, simply use the (A)uto command to\n"
 literal|"allocate space automatically.  If you have more specific needs or just don't\n"
@@ -2808,8 +2810,7 @@ argument_list|(
 literal|"Installation completed with some errors.  You may wish to\n"
 literal|"scroll through the debugging messages on VTY1 with the\n"
 literal|"scroll-lock feature.  You can also choose \"No\" at the next\n"
-literal|"prompt and go back into the installation menus to retry\n"
-literal|"whichever operations have failed."
+literal|"prompt and reboot and try the installation again."
 argument_list|)
 expr_stmt|;
 return|return
@@ -2852,7 +2853,7 @@ condition|(
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"Would you like to configure any Ethernet or SLIP/PPP network devices?"
+literal|"Would you like to configure any Ethernet or PLIP network devices?"
 argument_list|)
 condition|)
 block|{
@@ -3132,7 +3133,7 @@ operator|!
 name|msgYesNo
 argument_list|(
 literal|"The FreeBSD package collection is a collection of thousands of ready-to-run\n"
-literal|"applications, from text editors to games to WEB servers and more.  Would you\n"
+literal|"applications, from text editors to games to Web servers and more.  Would you\n"
 literal|"like to browse the collection now?"
 argument_list|)
 condition|)
@@ -3415,6 +3416,15 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+name|FALSE
+condition|)
+return|return
+name|DITEM_FAILURE
+return|;
 comment|/* When running as init, *now* it's safe to grab the rc.foo vars */
 name|installEnvironment
 argument_list|()
@@ -3466,6 +3476,12 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+else|else
+name|dmenuExit
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 name|configRC_conf
 argument_list|()
 expr_stmt|;
@@ -3483,8 +3499,38 @@ parameter_list|)
 block|{
 name|FILE
 modifier|*
+name|orig
+decl_stmt|,
+modifier|*
+name|new
+decl_stmt|;
+name|char
+name|buf
+index|[
+literal|1024
+index|]
+decl_stmt|;
+name|char
+modifier|*
+name|pos
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+name|FILE
+modifier|*
 name|fp
 decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|__ia64__
@@ -3557,6 +3603,137 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* Fixup /etc/ttys to start a getty on the serial port. 	  This way after a serial installation you can login via 	  the serial port */
+if|if
+condition|(
+operator|!
+name|OnVTY
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+operator|(
+name|orig
+operator|=
+name|fopen
+argument_list|(
+literal|"/etc/ttys"
+argument_list|,
+literal|"r"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
+operator|(
+name|new
+operator|=
+name|fopen
+argument_list|(
+literal|"/etc/ttys.tmp"
+argument_list|,
+literal|"w"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+operator|)
+condition|)
+block|{
+while|while
+condition|(
+name|fgets
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+name|orig
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|strstr
+argument_list|(
+name|buf
+argument_list|,
+literal|"ttyu0"
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|pos
+operator|=
+name|strstr
+argument_list|(
+name|buf
+argument_list|,
+literal|"off"
+argument_list|)
+operator|)
+condition|)
+block|{
+operator|*
+name|pos
+operator|++
+operator|=
+literal|'o'
+expr_stmt|;
+operator|*
+name|pos
+operator|++
+operator|=
+literal|'n'
+expr_stmt|;
+operator|*
+name|pos
+operator|++
+operator|=
+literal|' '
+expr_stmt|;
+block|}
+block|}
+name|fputs
+argument_list|(
+name|buf
+argument_list|,
+name|new
+argument_list|)
+expr_stmt|;
+block|}
+name|fclose
+argument_list|(
+name|orig
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|new
+argument_list|)
+expr_stmt|;
+name|rename
+argument_list|(
+literal|"/etc/ttys.tmp"
+argument_list|,
+literal|"/etc/ttys"
+argument_list|)
+expr_stmt|;
+name|unlink
+argument_list|(
+literal|"/etc/ttys.tmp"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* BOGON #2: We leave /etc in a bad state */
 name|chmod
 argument_list|(
@@ -3620,7 +3797,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__ia64__
-comment|/* Move /boot to the the EFI partition and make /boot a link to it. */
+comment|/* Move /boot to the EFI partition and make /boot a link to it. */
 name|efi_mntpt
 operator|=
 operator|(
@@ -3713,7 +3890,9 @@ argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
-literal|"mv /boot/GENERIC /boot/kernel"
+literal|"mv /boot/"
+name|GENERIC_KERNEL_NAME
+literal|" /boot/kernel"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4980,12 +5159,6 @@ operator|->
 name|private_data
 condition|)
 block|{
-name|char
-name|bootdir
-index|[
-name|FILENAME_MAX
-index|]
-decl_stmt|;
 name|PartInfo
 modifier|*
 name|pi
@@ -4997,10 +5170,6 @@ operator|)
 name|c1
 operator|->
 name|private_data
-decl_stmt|;
-name|char
-modifier|*
-name|p
 decl_stmt|;
 name|sprintf
 argument_list|(
@@ -5287,10 +5456,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|getpid
-argument_list|()
-operator|!=
-literal|1
+operator|!
+name|RunningAsInit
 condition|)
 name|variable_set2
 argument_list|(

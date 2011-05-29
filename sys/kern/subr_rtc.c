@@ -85,6 +85,14 @@ name|clock_res
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|timespec
+name|clock_adj
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* XXX: should be kern. now, it's no longer machdep.  */
 end_comment
@@ -112,7 +120,7 @@ name|disable_rtc_set
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Disallow adjusting time-of-day clock"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -147,7 +155,6 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -162,16 +169,12 @@ name|clock_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 return|return;
 block|}
-else|else
-block|{
 if|if
 condition|(
 name|bootverbose
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|clock_dev
@@ -187,8 +190,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-block|}
 name|clock_dev
 operator|=
 name|dev
@@ -197,22 +198,56 @@ name|clock_res
 operator|=
 name|res
 expr_stmt|;
+name|clock_adj
+operator|.
+name|tv_sec
+operator|=
+name|res
+operator|/
+literal|2
+operator|/
+literal|1000000
+expr_stmt|;
+name|clock_adj
+operator|.
+name|tv_nsec
+operator|=
+name|res
+operator|/
+literal|2
+operator|%
+literal|1000000
+operator|*
+literal|1000
+expr_stmt|;
 if|if
 condition|(
 name|bootverbose
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
 literal|"registered as a time-of-day clock "
-literal|"(resolution %ldus)\n"
+literal|"(resolution %ldus, adjustment %jd.%09jds)\n"
 argument_list|,
 name|res
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|clock_adj
+operator|.
+name|tv_sec
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|clock_adj
+operator|.
+name|tv_nsec
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -234,8 +269,6 @@ parameter_list|)
 block|{
 name|struct
 name|timespec
-name|ref
-decl_stmt|,
 name|ts
 decl_stmt|;
 name|int
@@ -322,6 +355,15 @@ operator|+=
 name|utc_offset
 argument_list|()
 expr_stmt|;
+name|timespecadd
+argument_list|(
+operator|&
+name|ts
+argument_list|,
+operator|&
+name|clock_adj
+argument_list|)
+expr_stmt|;
 name|tc_setclock
 argument_list|(
 operator|&
@@ -338,13 +380,13 @@ operator|>
 literal|0
 condition|)
 block|{
-name|ref
+name|ts
 operator|.
 name|tv_sec
 operator|=
 name|base
 expr_stmt|;
-name|ref
+name|ts
 operator|.
 name|tv_nsec
 operator|=
@@ -353,7 +395,7 @@ expr_stmt|;
 name|tc_setclock
 argument_list|(
 operator|&
-name|ref
+name|ts
 argument_list|)
 expr_stmt|;
 block|}
@@ -393,6 +435,15 @@ operator|&
 name|ts
 argument_list|)
 expr_stmt|;
+name|timespecadd
+argument_list|(
+operator|&
+name|ts
+argument_list|,
+operator|&
+name|clock_adj
+argument_list|)
+expr_stmt|;
 name|ts
 operator|.
 name|tv_sec
@@ -417,7 +468,6 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"warning: clock_settime failed (%d), time-of-day clock "
@@ -426,8 +476,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 block|}
 end_function
 

@@ -266,6 +266,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|jflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* enable soft updates journaling for filesys */
+end_comment
+
+begin_decl_stmt
+name|int
 name|Xflag
 init|=
 literal|0
@@ -307,6 +317,16 @@ comment|/* do not create .snap directory */
 end_comment
 
 begin_decl_stmt
+name|int
+name|tflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* enable TRIM */
+end_comment
+
+begin_decl_stmt
 name|intmax_t
 name|fssize
 decl_stmt|;
@@ -317,7 +337,7 @@ comment|/* file system size */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|sectorsize
 decl_stmt|;
 end_decl_stmt
@@ -337,7 +357,7 @@ comment|/* bytes/sector in hardware */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|fsize
 init|=
 literal|0
@@ -349,7 +369,7 @@ comment|/* fragment size */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|bsize
 init|=
 literal|0
@@ -361,7 +381,7 @@ comment|/* block size */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|maxbsize
 init|=
 literal|0
@@ -373,7 +393,7 @@ comment|/* maximum clustering */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|maxblkspercg
 init|=
 name|MAXBLKSPERCG
@@ -409,7 +429,7 @@ comment|/* optimization preference (space or time) */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|density
 decl_stmt|;
 end_decl_stmt
@@ -419,7 +439,7 @@ comment|/* number of bytes per inode */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|maxcontig
 init|=
 literal|0
@@ -431,7 +451,7 @@ comment|/* max contiguous blocks to allocate */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|maxbpg
 decl_stmt|;
 end_decl_stmt
@@ -441,7 +461,7 @@ comment|/* maximum blocks per file in a cyl group */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|avgfilesize
 init|=
 name|AVFILESIZ
@@ -453,7 +473,7 @@ comment|/* expected average file size */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|avgfilesperdir
 init|=
 name|AFPDIR
@@ -603,6 +623,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|expand_number_int
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|int
+modifier|*
+name|num
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|ufs2_daddr_t
 name|part_ofs
@@ -687,7 +724,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"EJL:NO:RS:T:UXa:b:c:d:e:f:g:h:i:lm:no:r:s:"
+literal|"EJL:NO:RS:T:UXa:b:c:d:e:f:g:h:i:jlm:no:p:r:s:t"
 argument_list|)
 operator|)
 operator|!=
@@ -833,7 +870,7 @@ literal|'S'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -870,6 +907,14 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
+literal|'j'
+case|:
+name|jflag
+operator|=
+literal|1
+expr_stmt|;
+comment|/* fall through to enable soft updates */
+case|case
 literal|'U'
 case|:
 name|Uflag
@@ -889,7 +934,7 @@ literal|'a'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -922,7 +967,7 @@ literal|'b'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -985,7 +1030,7 @@ literal|'c'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -1018,7 +1063,7 @@ literal|'d'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -1051,7 +1096,7 @@ literal|'e'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -1084,7 +1129,7 @@ literal|'f'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -1117,7 +1162,7 @@ literal|'g'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -1150,7 +1195,7 @@ literal|'h'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -1183,7 +1228,7 @@ literal|'i'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -1411,6 +1456,14 @@ literal|"%s: bad file system size"
 argument_list|,
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'t'
+case|:
+name|tflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -2155,11 +2208,43 @@ operator|&
 name|disk
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|jflag
+condition|)
 name|exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|execlp
+argument_list|(
+literal|"tunefs"
+argument_list|,
+literal|"newfs"
+argument_list|,
+literal|"-j"
+argument_list|,
+literal|"enable"
+argument_list|,
+name|special
+argument_list|,
+name|NULL
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"Cannot enable soft updates journaling, tunefs"
+argument_list|)
+expr_stmt|;
+comment|/* NOT REACHED */
 block|}
 end_function
 
@@ -2666,6 +2751,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"\t-j enable soft updates journaling\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"\t-l enable multilabel MAC\n"
 argument_list|)
 expr_stmt|;
@@ -2711,11 +2803,98 @@ argument_list|,
 literal|"\t-s file system size (sectors)\n"
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-t enable TRIM\n"
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|expand_number_int
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|int
+modifier|*
+name|num
+parameter_list|)
+block|{
+name|int64_t
+name|num64
+decl_stmt|;
+name|int
+name|rval
+decl_stmt|;
+name|rval
+operator|=
+name|expand_number
+argument_list|(
+name|buf
+argument_list|,
+operator|&
+name|num64
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rval
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|rval
+operator|)
+return|;
+if|if
+condition|(
+name|num64
+operator|>
+name|INT_MAX
+operator|||
+name|num64
+operator|<
+name|INT_MIN
+condition|)
+block|{
+name|errno
+operator|=
+name|ERANGE
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+operator|*
+name|num
+operator|=
+operator|(
+name|int
+operator|)
+name|num64
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

@@ -1097,6 +1097,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * Cancellation behavior:  *   If thread is canceled, no socket is created.  */
+end_comment
+
 begin_function
 name|int
 name|__accept
@@ -1146,6 +1150,11 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+name|ret
+operator|==
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -1218,6 +1227,8 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -1238,6 +1249,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * Cancellation behavior:  *   According to manual of close(), the file descriptor is always deleted.  *   Here, thread is only canceled after the system call, so the file  *   descriptor is always deleted despite whether the thread is canceled  *   or not.  */
+end_comment
+
 begin_function
 name|int
 name|__close
@@ -1257,9 +1272,11 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|_thr_cancel_enter
+name|_thr_cancel_enter2
 argument_list|(
 name|curthread
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ret
@@ -1272,6 +1289,8 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -1291,6 +1310,10 @@ name|connect
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Cancellation behavior:  *   If the thread is canceled, connection is not made.  */
+end_comment
 
 begin_function
 name|int
@@ -1339,6 +1362,11 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+name|ret
+operator|==
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -1358,6 +1386,10 @@ name|creat
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Cancellation behavior:  *   If thread is canceled, file is not created.  */
+end_comment
 
 begin_function
 name|int
@@ -1400,6 +1432,11 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+name|ret
+operator|==
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -1417,6 +1454,10 @@ name|fcntl
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Cancellation behavior:  *   According to specification, only F_SETLKW is a cancellation point.  *   Thread is only canceled at start, or canceled if the system call  *   is failure, this means the function does not generate side effect  *   if it is canceled.  */
+end_comment
 
 begin_function
 name|int
@@ -1445,11 +1486,6 @@ decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;
-name|_thr_cancel_enter
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 name|va_start
 argument_list|(
 name|ap
@@ -1457,14 +1493,44 @@ argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
-switch|switch
+if|if
 condition|(
 name|cmd
+operator|==
+name|F_OSETLKW
+operator|||
+name|cmd
+operator|==
+name|F_SETLKW
 condition|)
 block|{
-case|case
-name|F_DUPFD
-case|:
+name|_thr_cancel_enter
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SYSCALL_COMPAT
+name|ret
+operator|=
+name|__fcntl_compat
+argument_list|(
+name|fd
+argument_list|,
+name|cmd
+argument_list|,
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|void
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|ret
 operator|=
 name|__sys_fcntl
@@ -1477,51 +1543,26 @@ name|va_arg
 argument_list|(
 name|ap
 argument_list|,
-name|int
+name|void
+operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
-break|break;
-case|case
-name|F_SETFD
-case|:
-case|case
-name|F_SETFL
-case|:
+endif|#
+directive|endif
+name|_thr_cancel_leave
+argument_list|(
+name|curthread
+argument_list|,
 name|ret
-operator|=
-name|__sys_fcntl
-argument_list|(
-name|fd
-argument_list|,
-name|cmd
-argument_list|,
-name|va_arg
-argument_list|(
-name|ap
-argument_list|,
-name|int
-argument_list|)
+operator|==
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
-break|break;
-case|case
-name|F_GETFD
-case|:
-case|case
-name|F_GETFL
-case|:
-name|ret
-operator|=
-name|__sys_fcntl
-argument_list|(
-name|fd
-argument_list|,
-name|cmd
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
+block|}
+else|else
+block|{
 ifdef|#
 directive|ifdef
 name|SYSCALL_COMPAT
@@ -1569,11 +1610,6 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-name|_thr_cancel_leave
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ret
@@ -1591,6 +1627,10 @@ name|fsync
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Cancellation behavior:  *   Thread may be canceled after system call.  */
+end_comment
 
 begin_function
 name|int
@@ -1611,9 +1651,11 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|_thr_cancel_enter
+name|_thr_cancel_enter2
 argument_list|(
 name|curthread
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ret
@@ -1626,6 +1668,8 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -1645,6 +1689,10 @@ name|msync
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Cancellation behavior:  *   Thread may be canceled after system call.  */
+end_comment
 
 begin_function
 name|int
@@ -1672,9 +1720,11 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|_thr_cancel_enter
+name|_thr_cancel_enter2
 argument_list|(
 name|curthread
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ret
@@ -1691,6 +1741,8 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -1753,6 +1805,8 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -1773,6 +1827,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * Cancellation behavior:  *   If the thread is canceled, file is not opened.  */
+end_comment
+
 begin_function
 name|int
 name|__open
@@ -1807,11 +1865,6 @@ decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;
-name|_thr_cancel_enter
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 comment|/* Check if the file is being created: */
 if|if
 condition|(
@@ -1843,6 +1896,11 @@ name|ap
 argument_list|)
 expr_stmt|;
 block|}
+name|_thr_cancel_enter
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|__sys_open
@@ -1857,6 +1915,11 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+name|ret
+operator|==
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -1874,6 +1937,10 @@ name|openat
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Cancellation behavior:  *   If the thread is canceled, file is not opened.  */
+end_comment
 
 begin_function
 name|int
@@ -1912,11 +1979,6 @@ decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;
-name|_thr_cancel_enter
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 comment|/* Check if the file is being created: */
 if|if
 condition|(
@@ -1948,6 +2010,11 @@ name|ap
 argument_list|)
 expr_stmt|;
 block|}
+name|_thr_cancel_enter
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|__sys_openat
@@ -1964,6 +2031,11 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+name|ret
+operator|==
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -1981,6 +2053,10 @@ name|poll
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Cancellation behavior:  *   Thread may be canceled at start, but if the system call returns something,  *   the thread is not canceled.  */
+end_comment
 
 begin_function
 name|int
@@ -2029,6 +2105,11 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+name|ret
+operator|==
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -2046,6 +2127,10 @@ name|pselect
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Cancellation behavior:  *   Thread may be canceled at start, but if the system call returns something,  *   the thread is not canceled.  */
+end_comment
 
 begin_function
 name|int
@@ -2114,6 +2199,11 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+name|ret
+operator|==
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -2133,6 +2223,10 @@ name|read
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Cancellation behavior:  *   Thread may be canceled at start, but if the system call got some data,   *   the thread is not canceled.  */
+end_comment
 
 begin_function
 name|ssize_t
@@ -2179,6 +2273,11 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+name|ret
+operator|==
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -2196,6 +2295,10 @@ name|readv
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Cancellation behavior:  *   Thread may be canceled at start, but if the system call got some data,   *   the thread is not canceled.  */
+end_comment
 
 begin_function
 name|ssize_t
@@ -2244,6 +2347,11 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+name|ret
+operator|==
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -2261,6 +2369,10 @@ name|recvfrom
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Cancellation behavior:  *   Thread may be canceled at start, but if the system call got some data,   *   the thread is not canceled.  */
+end_comment
 
 begin_function
 name|ssize_t
@@ -2325,6 +2437,11 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+name|ret
+operator|==
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -2344,6 +2461,10 @@ name|recvmsg
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Cancellation behavior:  *   Thread may be canceled at start, but if the system call got some data,   *   the thread is not canceled.  */
+end_comment
 
 begin_function
 name|ssize_t
@@ -2391,6 +2512,11 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+name|ret
+operator|==
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -2410,6 +2536,10 @@ name|select
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Cancellation behavior:  *   Thread may be canceled at start, but if the system call returns something,  *   the thread is not canceled.  */
+end_comment
 
 begin_function
 name|int
@@ -2470,6 +2600,11 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+name|ret
+operator|==
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -2487,6 +2622,10 @@ name|sendmsg
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Cancellation behavior:  *   Thread may be canceled at start, but if the system call sent  *   data, the thread is not canceled.  */
+end_comment
 
 begin_function
 name|ssize_t
@@ -2535,6 +2674,10 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+name|ret
+operator|<=
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2554,6 +2697,10 @@ name|sendto
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Cancellation behavior:  *   Thread may be canceled at start, but if the system call sent some  *   data, the thread is not canceled.  */
+end_comment
 
 begin_function
 name|ssize_t
@@ -2619,6 +2766,10 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+name|ret
+operator|<=
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2676,6 +2827,8 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -2732,6 +2885,8 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -2749,6 +2904,10 @@ name|tcdrain
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Cancellation behavior:  *   If thread is canceled, the system call is not completed,  *   this means not all bytes were drained.  */
+end_comment
 
 begin_function
 name|int
@@ -2784,6 +2943,11 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+name|ret
+operator|==
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -2838,6 +3002,8 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -2857,6 +3023,10 @@ name|wait
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Cancellation behavior:  *   Thread may be canceled at start, but if the system call returns  *   a child pid, the thread is not canceled.  */
+end_comment
 
 begin_function
 name|pid_t
@@ -2893,6 +3063,10 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+name|ret
+operator|<=
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2910,6 +3084,10 @@ name|wait3
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Cancellation behavior:  *   Thread may be canceled at start, but if the system call returns  *   a child pid, the thread is not canceled.  */
+end_comment
 
 begin_function
 name|pid_t
@@ -2960,6 +3138,10 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+name|ret
+operator|<=
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2979,6 +3161,10 @@ name|wait4
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Cancellation behavior:  *   Thread may be canceled at start, but if the system call returns  *   a child pid, the thread is not canceled.  */
+end_comment
 
 begin_function
 name|pid_t
@@ -3032,6 +3218,10 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+name|ret
+operator|<=
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -3049,6 +3239,10 @@ name|waitpid
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Cancellation behavior:  *   Thread may be canceled at start, but if the system call returns  *   a child pid, the thread is not canceled.  */
+end_comment
 
 begin_function
 name|pid_t
@@ -3095,6 +3289,10 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+name|ret
+operator|<=
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -3112,6 +3310,10 @@ name|write
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Cancellation behavior:  *   Thread may be canceled at start, but if the thread wrote some data,  *   it is not canceled.  */
+end_comment
 
 begin_function
 name|ssize_t
@@ -3159,6 +3361,12 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+operator|(
+name|ret
+operator|<=
+literal|0
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3176,6 +3384,10 @@ name|writev
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Cancellation behavior:  *   Thread may be canceled at start, but if the thread wrote some data,  *   it is not canceled.  */
+end_comment
 
 begin_function
 name|ssize_t
@@ -3224,6 +3436,12 @@ expr_stmt|;
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+operator|(
+name|ret
+operator|<=
+literal|0
+operator|)
 argument_list|)
 expr_stmt|;
 return|return

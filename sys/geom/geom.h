@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sbuf.h>
 end_include
 
@@ -822,6 +828,38 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* BIO_GETATTR("GEOM::setstate") argument values. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|G_STATE_FAILED
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_STATE_REBUILD
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_STATE_RESYNC
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_STATE_ACTIVE
+value|3
+end_define
+
+begin_comment
 comment|/* geom_dev.c */
 end_comment
 
@@ -1033,6 +1071,23 @@ name|struct
 name|g_provider
 modifier|*
 name|pp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|g_compare_names
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|namea
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|nameb
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1818,6 +1873,10 @@ decl_stmt|;
 name|off_t
 name|length
 decl_stmt|;
+name|struct
+name|dumperinfo
+name|di
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1966,6 +2025,19 @@ name|g_topology_assert_not
 parameter_list|()
 define|\
 value|do {							\ 		sx_assert(&topology_lock, SX_UNLOCKED);		\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|g_topology_sleep
+parameter_list|(
+name|chan
+parameter_list|,
+name|timo
+parameter_list|)
+define|\
+value|sx_sleep(chan,&topology_lock, 0, "gtopol", timo)
 end_define
 
 begin_define

@@ -283,6 +283,10 @@ name|int
 name|ch
 decl_stmt|,
 name|cnt
+decl_stmt|,
+name|pflag
+init|=
+literal|0
 decl_stmt|;
 name|char
 modifier|*
@@ -306,7 +310,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"d:t:"
+literal|"d:pt:"
 argument_list|)
 operator|)
 operator|!=
@@ -324,6 +328,14 @@ case|:
 name|odate
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+name|pflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -608,6 +620,27 @@ argument_list|)
 operator|+
 literal|.5
 expr_stmt|;
+if|if
+condition|(
+name|pflag
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%1.0f\n"
+argument_list|,
+name|today
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 operator|(
 name|void
 operator|)
@@ -1145,7 +1178,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-d yyyy.mm.dd] [-t hh:mm:ss]\n"
+literal|"Usage: %s [-p] [-d yyyy.mm.dd] [-t hh:mm:ss]\n"
 argument_list|,
 name|progname
 argument_list|)

@@ -2036,14 +2036,6 @@ argument_list|(
 name|sb
 argument_list|)
 expr_stmt|;
-comment|/* Remove all packet headers and mbuf tags to get a pure data chain. */
-name|m_demote
-argument_list|(
-name|m
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 name|sbcompress
 argument_list|(
 name|sb

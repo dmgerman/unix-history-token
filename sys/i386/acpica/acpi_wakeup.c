@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<x86/mca.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/segments.h>
 end_include
 
@@ -129,6 +135,12 @@ begin_include
 include|#
 directive|include
 file|"acpi_wakecode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"acpi_wakedata.h"
 end_include
 
 begin_comment
@@ -898,6 +910,9 @@ block|}
 else|else
 block|{
 comment|/* Execute Wakeup */
+name|mca_resume
+argument_list|()
+expr_stmt|;
 name|intr_resume
 argument_list|()
 expr_stmt|;

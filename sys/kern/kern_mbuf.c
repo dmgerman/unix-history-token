@@ -902,7 +902,7 @@ name|uma_zone_t
 parameter_list|,
 name|int
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|,
 name|int
@@ -1352,7 +1352,7 @@ parameter_list|,
 name|int
 name|bytes
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|flags
 parameter_list|,

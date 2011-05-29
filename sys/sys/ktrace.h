@@ -172,16 +172,6 @@ parameter_list|)
 value|do {						\ 	if (KTRCHECKDRAIN(td))						\ 		ktruserret(td);						\ } while (0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|KTRPROCEXIT
-parameter_list|(
-name|td
-parameter_list|)
-value|do {						\ 	if (KTRCHECKDRAIN(td))						\ 		ktrprocexit(td);					\ } while (0)
-end_define
-
 begin_comment
 comment|/*  * ktrace record types  */
 end_comment
@@ -384,6 +374,10 @@ name|KTR_STRUCT
 value|8
 end_define
 
+begin_comment
+comment|/* 	 * record contains null-terminated struct name followed by 	 * struct contents 	 */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|sockaddr
@@ -393,6 +387,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|stat
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|sysentvec
 struct_decl|;
 end_struct_decl
 
@@ -410,6 +410,40 @@ end_define
 begin_comment
 comment|/* record contains null-terminated MIB name */
 end_comment
+
+begin_comment
+comment|/*  * KTR_PROCCTOR - trace process creation (multiple ABI support)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KTR_PROCCTOR
+value|10
+end_define
+
+begin_struct
+struct|struct
+name|ktr_proc_ctor
+block|{
+name|u_int
+name|sv_flags
+decl_stmt|;
+comment|/* struct sysentvec sv_flags copy */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * KTR_PROCDTOR - trace process destruction (multiple ABI support)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KTR_PROCDTOR
+value|11
+end_define
 
 begin_comment
 comment|/*  * KTR_DROP - If this bit is set in ktr_type, then at least one event  * between the previous record and this record was dropped.  */
@@ -496,6 +530,20 @@ name|KTRFAC_SYSCTL
 value|(1<<KTR_SYSCTL)
 end_define
 
+begin_define
+define|#
+directive|define
+name|KTRFAC_PROCCTOR
+value|(1<<KTR_PROCCTOR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KTRFAC_PROCDTOR
+value|(1<<KTR_PROCDTOR)
+end_define
+
 begin_comment
 comment|/*  * trace flags (also in p_traceflags)  */
 end_comment
@@ -538,14 +586,6 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mtx
-name|ktrace_mtx
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 name|void
@@ -647,10 +687,57 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ktrprocctor
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ktrprocexec
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
+name|vnode
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ktrprocexit
 parameter_list|(
 name|struct
 name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ktrprocfork
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+parameter_list|,
+name|struct
+name|proc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -675,8 +762,6 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|size_t
-parameter_list|,
 name|void
 modifier|*
 parameter_list|,
@@ -693,7 +778,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|ktrstruct("sockaddr", 8, (s), ((struct sockaddr *)(s))->sa_len)
+value|ktrstruct("sockaddr", (s), ((struct sockaddr *)(s))->sa_len)
 end_define
 
 begin_define
@@ -704,7 +789,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|ktrstruct("stat", 4, (s), sizeof(struct stat))
+value|ktrstruct("stat", (s), sizeof(struct stat))
 end_define
 
 begin_else

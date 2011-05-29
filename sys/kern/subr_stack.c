@@ -82,6 +82,22 @@ directive|include
 file|<sys/systm.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|stack
+argument_list|,
+literal|"Support for capturing kernel stack"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -117,12 +133,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DDB
-end_ifdef
-
 begin_function_decl
 specifier|static
 name|int
@@ -143,11 +153,6 @@ name|offset
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|struct
@@ -523,12 +528,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DDB
-end_ifdef
-
 begin_function
 name|void
 name|stack_print_ddb
@@ -620,6 +619,12 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DDB
+end_ifdef
 
 begin_function
 name|void
@@ -1382,12 +1387,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DDB
-end_ifdef
-
 begin_function
 specifier|static
 name|int
@@ -1489,11 +1488,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

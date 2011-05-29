@@ -338,7 +338,27 @@ operator||
 name|SV_IA32
 operator||
 name|SV_ILP32
-block|}
+block|,
+operator|.
+name|sv_set_syscall_retval
+operator|=
+name|cpu_set_syscall_retval
+block|,
+operator|.
+name|sv_fetch_syscall_args
+operator|=
+name|cpu_fetch_syscall_args
+block|,
+operator|.
+name|sv_syscallnames
+operator|=
+name|NULL
+block|,
+operator|.
+name|sv_schedtail
+operator|=
+name|NULL
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -490,7 +510,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|DECLARE_MODULE
+name|DECLARE_MODULE_TIED
 argument_list|(
 name|ibcs2
 argument_list|,

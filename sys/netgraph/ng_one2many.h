@@ -118,6 +118,17 @@ begin_comment
 comment|/* send packets to all many hooks */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NG_ONE2MANY_XMIT_FAILOVER
+value|3
+end_define
+
+begin_comment
+comment|/* send packets to first active "many" */
+end_comment
+
 begin_comment
 comment|/* Algorithms for detecting link failure (XXX only one so far) */
 end_comment

@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_msgbuf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -266,19 +260,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arm/at91/at91var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/at91/at91rm92reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<arm/at91/at91_piovar.h>
+file|<arm/at91/at91sam9g20reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<arm/at91/at91_pio_rm9200.h>
+file|<arm/at91/at91board.h>
 end_include
 
 begin_define
@@ -524,11 +524,10 @@ comment|/* Static device mappings. */
 end_comment
 
 begin_decl_stmt
-specifier|static
 specifier|const
 name|struct
 name|pmap_devmap
-name|at91rm9200_devmap
+name|at91_devmap
 index|[]
 init|=
 block|{
@@ -539,7 +538,7 @@ literal|0xdff00000
 block|,
 literal|0xfff00000
 block|,
-literal|0x100000
+literal|0x00100000
 block|,
 name|VM_PROT_READ
 operator||
@@ -548,14 +547,15 @@ block|,
 name|PTE_NOCACHE
 block|, 	}
 block|,
-comment|/* 	 * We can't just map the OHCI registers VA == PA, because 	 * AT91RM92_OHCI_BASE belongs to the userland address space. 	 * We could just choose a different virtual address, but a better 	 * solution would probably be to just use pmap_mapdev() to allocate 	 * KVA, as we don't need the OHCI controller before the vm 	 * initialization is done. However, the AT91 resource allocation 	 * system doesn't know how to use pmap_mapdev() yet. 	 */
+comment|/* We can't just map the OHCI registers VA == PA, because 	 * AT91xx_xxx_BASE belongs to the userland address space. 	 * We could just choose a different virtual address, but a better 	 * solution would probably be to just use pmap_mapdev() to allocate 	 * KVA, as we don't need the OHCI controller before the vm 	 * initialization is done. However, the AT91 resource allocation 	 * system doesn't know how to use pmap_mapdev() yet. 	 * Care must be taken to ensure PA and VM address do not overlap 	 * between entries. 	 */
 block|{
 comment|/* 		 * Add the ohci controller, and anything else that might be 		 * on this chip select for a VA/PA mapping. 		 */
+comment|/* Internal Memory 1MB  */
 name|AT91RM92_OHCI_BASE
 block|,
 name|AT91RM92_OHCI_PA_BASE
 block|,
-name|AT91RM92_OHCI_SIZE
+literal|0x00100000
 block|,
 name|VM_PROT_READ
 operator||
@@ -565,12 +565,43 @@ name|PTE_NOCACHE
 block|, 	}
 block|,
 block|{
-comment|/* CompactFlash controller. */
+comment|/* CompactFlash controller. Portion of EBI CS4 1MB */
 name|AT91RM92_CF_BASE
 block|,
 name|AT91RM92_CF_PA_BASE
 block|,
-name|AT91RM92_CF_SIZE
+literal|0x00100000
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, 	}
+block|,
+comment|/* The next two should be good for the 9260, 9261 and 9G20 since 	 * addresses mapping is the same. */
+block|{
+comment|/* Internal Memory 1MB  */
+name|AT91SAM9G20_OHCI_BASE
+block|,
+name|AT91SAM9G20_OHCI_PA_BASE
+block|,
+literal|0x00100000
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, 	}
+block|,
+block|{
+comment|/* EBI CS3 256MB */
+name|AT91SAM9G20_NAND_BASE
+block|,
+name|AT91SAM9G20_NAND_PA_BASE
+block|,
+name|AT91SAM9G20_NAND_SIZE
 block|,
 name|VM_PROT_READ
 operator||
@@ -589,7 +620,7 @@ block|,
 literal|0
 block|,
 literal|0
-block|, 	}
+block|, }
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -610,7 +641,7 @@ name|uint32_t
 operator|*
 operator|)
 operator|(
-name|AT91RM92_BASE
+name|AT91_BASE
 operator|+
 name|AT91RM92_SDRAMC_BASE
 operator|)
@@ -629,6 +660,24 @@ name|cols
 decl_stmt|,
 name|bw
 decl_stmt|;
+if|if
+condition|(
+name|at91_is_rm92
+argument_list|()
+condition|)
+block|{
+name|SDRAMC
+operator|=
+operator|(
+name|uint32_t
+operator|*
+operator|)
+operator|(
+name|AT91_BASE
+operator|+
+name|AT91RM92_SDRAMC_BASE
+operator|)
+expr_stmt|;
 name|cr
 operator|=
 name|SDRAMC
@@ -646,18 +695,6 @@ name|AT91RM92_SDRAMC_MR
 operator|/
 literal|4
 index|]
-expr_stmt|;
-name|bw
-operator|=
-operator|(
-name|mr
-operator|&
-name|AT91RM92_SDRAMC_MR_DBW_16
-operator|)
-condition|?
-literal|1
-else|:
-literal|2
 expr_stmt|;
 name|banks
 operator|=
@@ -695,6 +732,101 @@ operator|)
 operator|+
 literal|8
 expr_stmt|;
+name|bw
+operator|=
+operator|(
+name|mr
+operator|&
+name|AT91RM92_SDRAMC_MR_DBW_16
+operator|)
+condition|?
+literal|1
+else|:
+literal|2
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* This should be good for the 9260, 9261 and 9G20 as addresses 		 * and registers are the same */
+name|SDRAMC
+operator|=
+operator|(
+name|uint32_t
+operator|*
+operator|)
+operator|(
+name|AT91_BASE
+operator|+
+name|AT91SAM9G20_SDRAMC_BASE
+operator|)
+expr_stmt|;
+name|cr
+operator|=
+name|SDRAMC
+index|[
+name|AT91SAM9G20_SDRAMC_CR
+operator|/
+literal|4
+index|]
+expr_stmt|;
+name|mr
+operator|=
+name|SDRAMC
+index|[
+name|AT91SAM9G20_SDRAMC_MR
+operator|/
+literal|4
+index|]
+expr_stmt|;
+name|banks
+operator|=
+operator|(
+name|cr
+operator|&
+name|AT91SAM9G20_SDRAMC_CR_NB_4
+operator|)
+condition|?
+literal|2
+else|:
+literal|1
+expr_stmt|;
+name|rows
+operator|=
+operator|(
+operator|(
+name|cr
+operator|&
+name|AT91SAM9G20_SDRAMC_CR_NR_MASK
+operator|)
+operator|>>
+literal|2
+operator|)
+operator|+
+literal|11
+expr_stmt|;
+name|cols
+operator|=
+operator|(
+name|cr
+operator|&
+name|AT91SAM9G20_SDRAMC_CR_NC_MASK
+operator|)
+operator|+
+literal|8
+expr_stmt|;
+name|bw
+operator|=
+operator|(
+name|cr
+operator|&
+name|AT91SAM9G20_SDRAMC_CR_DBW_16
+operator|)
+condition|?
+literal|1
+else|:
+literal|2
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|1
@@ -791,6 +923,10 @@ argument_list|,
 operator|&
 name|thread0
 argument_list|)
+expr_stmt|;
+comment|/* Do basic tuning, hz etc */
+name|init_param1
+argument_list|()
 expr_stmt|;
 name|freemempos
 operator|=
@@ -1008,7 +1144,7 @@ name|msgbufpv
 argument_list|,
 name|round_page
 argument_list|(
-name|MSGBUF_SIZE
+name|msgbufsize
 argument_list|)
 operator|/
 name|PAGE_SIZE
@@ -1320,7 +1456,7 @@ name|msgbufpv
 operator|.
 name|pv_pa
 argument_list|,
-name|MSGBUF_SIZE
+name|msgbufsize
 argument_list|,
 name|VM_PROT_READ
 operator||
@@ -1375,7 +1511,7 @@ name|pmap_devmap_bootstrap
 argument_list|(
 name|l1pagetable
 argument_list|,
-name|at91rm9200_devmap
+name|at91_devmap
 argument_list|)
 expr_stmt|;
 name|cpu_domains
@@ -1416,6 +1552,23 @@ argument_list|)
 expr_stmt|;
 name|cninit
 argument_list|()
+expr_stmt|;
+comment|/* Get chip id so device drivers know about differences */
+name|at91_chip_id
+operator|=
+operator|*
+operator|(
+specifier|volatile
+name|uint32_t
+operator|*
+operator|)
+operator|(
+name|AT91_BASE
+operator|+
+name|AT91_DBGU_BASE
+operator|+
+name|DBGU_C1R
+operator|)
 expr_stmt|;
 name|memsize
 operator|=
@@ -1643,7 +1796,7 @@ name|msgbufinit
 argument_list|(
 name|msgbufp
 argument_list|,
-name|MSGBUF_SIZE
+name|msgbufsize
 argument_list|)
 expr_stmt|;
 name|mutex_init
@@ -1713,10 +1866,6 @@ operator|++
 index|]
 operator|=
 literal|0
-expr_stmt|;
-comment|/* Do basic tuning, hz etc */
-name|init_param1
-argument_list|()
 expr_stmt|;
 name|init_param2
 argument_list|(

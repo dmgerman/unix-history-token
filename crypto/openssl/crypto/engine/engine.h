@@ -748,6 +748,9 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+ifdef|#
+directive|ifdef
+name|OPENSSL_SYS_WIN32
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_CAPIENG
@@ -757,6 +760,8 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* Get and set global flags (ENGINE_TABLE_FLAG_***) for the implementation  * "registry" handling. */
@@ -2399,6 +2404,10 @@ define|#
 directive|define
 name|ENGINE_R_ENGINES_SECTION_ERROR
 value|148
+define|#
+directive|define
+name|ENGINE_R_ENGINE_CONFIGURATION_ERROR
+value|101
 define|#
 directive|define
 name|ENGINE_R_ENGINE_IS_NOT_IN_LIST

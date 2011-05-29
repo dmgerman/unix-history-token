@@ -39,7 +39,7 @@ name|fspec
 decl_stmt|;
 comment|/* block special device to mount */
 name|struct
-name|export_args
+name|oexport_args
 name|export
 decl_stmt|;
 comment|/* network export information */
@@ -119,6 +119,28 @@ struct_decl|struct
 name|ufs_extattr_per_mount
 struct_decl|;
 end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|jblocks
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|inodedep
+struct_decl|;
+end_struct_decl
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|inodedeplst
+argument_list|,
+name|inodedep
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* This structure describes the UFS specific mount structure data. */
@@ -204,6 +226,32 @@ modifier|*
 name|softdep_worklist_tail
 decl_stmt|;
 comment|/* Tail pointer for above */
+name|struct
+name|workhead
+name|softdep_journal_pending
+decl_stmt|;
+comment|/* journal work queue */
+name|struct
+name|worklist
+modifier|*
+name|softdep_journal_tail
+decl_stmt|;
+comment|/* Tail pointer for above */
+name|struct
+name|jblocks
+modifier|*
+name|softdep_jblocks
+decl_stmt|;
+comment|/* Journal block information */
+name|struct
+name|inodedeplst
+name|softdep_unlinked
+decl_stmt|;
+comment|/* Unlinked inodes */
+name|int
+name|softdep_on_journal
+decl_stmt|;
+comment|/* Items on the journal list */
 name|int
 name|softdep_on_worklist
 decl_stmt|;
@@ -267,6 +315,10 @@ name|int64_t
 name|um_savedmaxfilesize
 decl_stmt|;
 comment|/* XXX - limit maxfilesize */
+name|int
+name|um_candelete
+decl_stmt|;
+comment|/* devvp supports TRIM */
 name|int
 function_decl|(
 modifier|*
@@ -414,6 +466,17 @@ name|inode
 modifier|*
 parameter_list|)
 function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|um_snapgone
+function_decl|)
+parameter_list|(
+name|struct
+name|inode
+modifier|*
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -539,6 +602,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|UFS_SNAPGONE
+parameter_list|(
+name|aa
+parameter_list|)
+value|((aa)->i_ump->um_snapgone(aa))
+end_define
+
+begin_define
+define|#
+directive|define
 name|UFS_LOCK
 parameter_list|(
 name|aa
@@ -608,6 +681,17 @@ end_define
 
 begin_comment
 comment|/* Q_QUOTAOFF in progress */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QTF_64BIT
+value|0x04
+end_define
+
+begin_comment
+comment|/* 64-bit quota file */
 end_comment
 
 begin_comment

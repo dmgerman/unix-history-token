@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-jpake.c,v 1.3 2009/03/05 07:18:19 djm Exp $ */
+comment|/* $OpenBSD: auth2-jpake.c,v 1.4 2010/08/31 11:54:45 djm Exp $ */
 end_comment
 
 begin_comment
@@ -640,6 +640,41 @@ operator|->
 name|dsa
 operator|->
 name|priv_key
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|KEY_ECDSA
+case|:
+if|if
+condition|(
+name|EC_KEY_get0_private_key
+argument_list|(
+name|k
+operator|->
+name|ecdsa
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: ECDSA key missing priv_key"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|buffer_put_bignum2
+argument_list|(
+operator|&
+name|b
+argument_list|,
+name|EC_KEY_get0_private_key
+argument_list|(
+name|k
+operator|->
+name|ecdsa
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;

@@ -523,16 +523,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|maybe_assemble_visibility
-parameter_list|(
-name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -7893,10 +7883,7 @@ name|decl
 argument_list|)
 condition|)
 return|return;
-if|if
-condition|(
-name|flag_unit_at_a_time
-condition|)
+comment|/* We want to output external symbols at very last to check if they      are references or not.  */
 name|pending_assemble_externals
 operator|=
 name|tree_cons
@@ -7906,12 +7893,6 @@ argument_list|,
 name|decl
 argument_list|,
 name|pending_assemble_externals
-argument_list|)
-expr_stmt|;
-else|else
-name|assemble_external_real
-argument_list|(
-name|decl
 argument_list|)
 expr_stmt|;
 endif|#
@@ -20066,8 +20047,7 @@ comment|/* A helper function to call assemble_visibility when needed for a decl.
 end_comment
 
 begin_function
-specifier|static
-name|void
+name|int
 name|maybe_assemble_visibility
 parameter_list|(
 name|tree
@@ -20089,6 +20069,7 @@ name|vis
 operator|!=
 name|VISIBILITY_DEFAULT
 condition|)
+block|{
 name|targetm
 operator|.
 name|asm_out
@@ -20100,6 +20081,14 @@ argument_list|,
 name|vis
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+else|else
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -24567,6 +24556,55 @@ argument_list|,
 name|output_object_block_htab
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Emit text to declare externally defined symbols. It is needed to    properly support non-default visibility.  */
+end_comment
+
+begin_function
+name|void
+name|default_elf_asm_output_external
+parameter_list|(
+name|FILE
+modifier|*
+name|file
+name|ATTRIBUTE_UNUSED
+parameter_list|,
+name|tree
+name|decl
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+name|ATTRIBUTE_UNUSED
+parameter_list|)
+block|{
+comment|/* We output the name if and only if TREE_SYMBOL_REFERENCED is      set in order to avoid putting out names that are never really      used. */
+if|if
+condition|(
+name|TREE_SYMBOL_REFERENCED
+argument_list|(
+name|DECL_ASSEMBLER_NAME
+argument_list|(
+name|decl
+argument_list|)
+argument_list|)
+operator|&&
+name|targetm
+operator|.
+name|binds_local_p
+argument_list|(
+name|decl
+argument_list|)
+condition|)
+name|maybe_assemble_visibility
+argument_list|(
+name|decl
 argument_list|)
 expr_stmt|;
 block|}

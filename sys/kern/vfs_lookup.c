@@ -186,6 +186,8 @@ name|lookup
 argument_list|,
 name|entry
 argument_list|,
+name|entry
+argument_list|,
 literal|"struct vnode *"
 argument_list|,
 literal|"char *"
@@ -203,6 +205,8 @@ argument_list|,
 argument|namei
 argument_list|,
 argument|lookup
+argument_list|,
+argument|return
 argument_list|,
 argument|return
 argument_list|,
@@ -250,9 +254,6 @@ name|dummy
 name|__unused
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
 name|namei_zone
 operator|=
 name|uma_zcreate
@@ -274,8 +275,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
 name|getnewvnode
 argument_list|(
 literal|"crossmp"
@@ -289,20 +288,23 @@ operator|&
 name|vp_crossmp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-name|panic
+name|vn_lock
 argument_list|(
-literal|"nameiinit: getnewvnode"
+name|vp_crossmp
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 name|VN_LOCK_ASHARE
 argument_list|(
 name|vp_crossmp
+argument_list|)
+expr_stmt|;
+name|VOP_UNLOCK
+argument_list|(
+name|vp_crossmp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -4210,7 +4212,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Check for degenerate name (e.g. / or "") 	 * which is a way of talking about a directory, 	 * e.g. like "/." or ".". 	 */
+comment|/* 	 * Check for "" which represents the root directory after slash 	 * removal. 	 */
 if|if
 condition|(
 name|cnp
@@ -4223,42 +4225,33 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-if|if
-condition|(
+comment|/* 		 * Support only LOOKUP for "/" because lookup() 		 * can't succeed for CREATE, DELETE and RENAME. 		 */
+name|KASSERT
+argument_list|(
 name|cnp
 operator|->
 name|cn_nameiop
-operator|!=
+operator|==
 name|LOOKUP
-operator|||
-name|wantparent
-condition|)
-block|{
-name|error
-operator|=
-name|EISDIR
+argument_list|,
+operator|(
+literal|"nameiop must be LOOKUP"
+operator|)
+argument_list|)
 expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|dp
 operator|->
 name|v_type
-operator|!=
+operator|==
 name|VDIR
-condition|)
-block|{
-name|error
-operator|=
-name|ENOTDIR
+argument_list|,
+operator|(
+literal|"dp is not a directory"
+operator|)
+argument_list|)
 expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
 if|if
 condition|(
 operator|!

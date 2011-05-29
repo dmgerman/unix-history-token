@@ -7,6 +7,10 @@ begin_comment
 comment|/*-  * test(1); version 7-like  --  author Erik Baalbergen  * modified by Eric Gisin to be used as built-in.  * modified by Arnold Robbins to add SVR3 compatibility  * (-x -c -b -p -u -g -k) plus Korn's -L -nt -ot -ef and new -S (socket).  * modified by J.T. Conklin for NetBSD.  *  * This program is in the Public Domain.  */
 end_comment
 
+begin_comment
+comment|/*  * Important: This file is used both as a standalone program /bin/test and  * as a builtin for /bin/sh (#define SHELL).  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -496,6 +500,14 @@ name|BINOP
 block|}
 block|,
 block|{
+literal|"=="
+block|,
+name|STREQ
+block|,
+name|BINOP
+block|}
+block|,
+block|{
 literal|"!="
 block|,
 name|STRNE
@@ -910,7 +922,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|argv
 index|[
@@ -2881,13 +2893,13 @@ if|if
 condition|(
 name|b1
 operator|.
-name|st_mtimespec
+name|st_mtim
 operator|.
 name|tv_sec
 operator|>
 name|b2
 operator|.
-name|st_mtimespec
+name|st_mtim
 operator|.
 name|tv_sec
 condition|)
@@ -2898,13 +2910,13 @@ if|if
 condition|(
 name|b1
 operator|.
-name|st_mtimespec
+name|st_mtim
 operator|.
 name|tv_sec
 operator|<
 name|b2
 operator|.
-name|st_mtimespec
+name|st_mtim
 operator|.
 name|tv_sec
 condition|)
@@ -2915,13 +2927,13 @@ return|return
 operator|(
 name|b1
 operator|.
-name|st_mtimespec
+name|st_mtim
 operator|.
 name|tv_nsec
 operator|>
 name|b2
 operator|.
-name|st_mtimespec
+name|st_mtim
 operator|.
 name|tv_nsec
 operator|)

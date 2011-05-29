@@ -171,13 +171,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfsclient/nfs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<nfsclient/nfsnode.h>
+file|<nfs/nfs_lock.h>
 end_include
 
 begin_include
@@ -3455,7 +3449,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 operator|&
 name|host
@@ -3483,7 +3477,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 operator|&
 name|host
@@ -4219,7 +4213,7 @@ block|{
 case|case
 name|AF_INET
 case|:
-name|__rpc_inet_ntop
+name|inet_ntop
 argument_list|(
 name|AF_INET
 argument_list|,
@@ -4249,7 +4243,7 @@ name|INET6
 case|case
 name|AF_INET6
 case|:
-name|__rpc_inet_ntop
+name|inet_ntop
 argument_list|(
 name|AF_INET6
 argument_list|,
@@ -7501,6 +7495,8 @@ name|fhp
 operator|->
 name|fh_fid
 argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
 operator|&
 name|vs
 operator|->
@@ -10697,7 +10693,7 @@ name|MODULE_DEPEND
 argument_list|(
 name|nfslockd
 argument_list|,
-name|nfs
+name|nfslock
 argument_list|,
 literal|1
 argument_list|,

@@ -556,6 +556,9 @@ block|{
 name|u_char
 name|byte
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|uni_msg_ensure
 argument_list|(
 name|msg
@@ -2779,6 +2782,9 @@ block|{
 name|u_char
 name|byte
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|uni_msg_ensure
 argument_list|(
 name|msg

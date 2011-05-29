@@ -215,30 +215,8 @@ name|ALC_PROC_DEFAULT
 value|(ALC_RX_RING_CNT / 4)
 end_define
 
-begin_define
-define|#
-directive|define
-name|ALC_JUMBO_FRAMELEN
-value|(9 * 1024)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ALC_JUMBO_MTU
-define|\
-value|(ALC_JUMBO_FRAMELEN - sizeof(struct ether_vlan_header) - ETHER_CRC_LEN)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ALC_MAX_FRAMELEN
-value|(ETHER_MAX_LEN + ETHER_VLAN_ENCAP_LEN)
-end_define
-
 begin_comment
-comment|/*  * The number of bits reserved for MSS in AR8121/AR8132 controllers  * are 13 bits. This limits the maximum interface MTU size in TSO  * case(8191 + sizeof(struct ip) + sizeof(struct tcphdr)) as upper  * stack should not generate TCP segments with MSS greater than the  * limit. Also Atheros says that maximum MTU for TSO is 6KB.  */
+comment|/*  * The number of bits reserved for MSS in AR813x/AR815x controllers  * are 13 bits. This limits the maximum interface MTU size in TSO  * case(8191 + sizeof(struct ip) + sizeof(struct tcphdr)) as upper  * stack should not generate TCP segments with MSS greater than the  * limit. Also Atheros says that maximum MTU for TSO is 6KB.  */
 end_comment
 
 begin_define
@@ -593,6 +571,28 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|alc_ident
+block|{
+name|uint16_t
+name|vendorid
+decl_stmt|;
+name|uint16_t
+name|deviceid
+decl_stmt|;
+name|uint32_t
+name|max_framelen
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Software state per device.  */
 end_comment
@@ -645,6 +645,11 @@ index|[
 name|ALC_MSI_MESSAGES
 index|]
 decl_stmt|;
+name|struct
+name|alc_ident
+modifier|*
+name|alc_ident
+decl_stmt|;
 name|int
 name|alc_rev
 decl_stmt|;
@@ -670,6 +675,12 @@ name|uint32_t
 name|alc_rcb
 decl_stmt|;
 name|int
+name|alc_expcap
+decl_stmt|;
+name|int
+name|alc_pmcap
+decl_stmt|;
+name|int
 name|alc_flags
 decl_stmt|;
 define|#
@@ -688,6 +699,10 @@ define|#
 directive|define
 name|ALC_FLAG_MSIX
 value|0x0008
+define|#
+directive|define
+name|ALC_FLAG_PM
+value|0x0010
 define|#
 directive|define
 name|ALC_FLAG_FASTETHER
@@ -710,8 +725,16 @@ name|ALC_FLAG_SMB_BUG
 value|0x0200
 define|#
 directive|define
-name|ALC_FLAG_DETACH
-value|0x4000
+name|ALC_FLAG_L0S
+value|0x0400
+define|#
+directive|define
+name|ALC_FLAG_L1S
+value|0x0800
+define|#
+directive|define
+name|ALC_FLAG_APS
+value|0x1000
 define|#
 directive|define
 name|ALC_FLAG_LINK
@@ -757,10 +780,6 @@ decl_stmt|;
 name|struct
 name|task
 name|alc_int_task
-decl_stmt|;
-name|struct
-name|task
-name|alc_tx_task
 decl_stmt|;
 name|struct
 name|taskqueue

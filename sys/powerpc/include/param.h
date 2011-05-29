@@ -16,7 +16,7 @@ name|_POWERPC_INCLUDE_PARAM_H_
 end_define
 
 begin_comment
-comment|/*  * Machine dependent constants for PowerPC (32-bit only currently)  */
+comment|/*  * Machine dependent constants for PowerPC  */
 end_comment
 
 begin_include
@@ -59,6 +59,24 @@ directive|ifndef
 name|MACHINE_ARCH
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MACHINE_ARCH
+value|"powerpc64"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -71,12 +89,46 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|MID_MACHINE
 value|MID_POWERPC
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MACHINE_ARCH32
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MACHINE_ARCH32
+value|"powerpc"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -96,7 +148,7 @@ begin_define
 define|#
 directive|define
 name|MAXCPU
-value|2
+value|8
 end_define
 
 begin_else
@@ -150,7 +202,7 @@ name|p
 parameter_list|,
 name|t
 parameter_list|)
-value|((((unsigned)(p))& (sizeof (t) - 1)) == 0)
+value|((((uintptr_t)(p))& (sizeof (t) - 1)) == 0)
 end_define
 
 begin_comment
@@ -182,7 +234,7 @@ begin_define
 define|#
 directive|define
 name|PAGE_SIZE
-value|(1<< PAGE_SHIFT)
+value|(1L<< PAGE_SHIFT)
 end_define
 
 begin_comment
@@ -193,7 +245,7 @@ begin_define
 define|#
 directive|define
 name|PAGE_MASK
-value|(PAGE_SIZE - 1)
+value|(vm_offset_t)(PAGE_SIZE - 1)
 end_define
 
 begin_define
@@ -285,26 +337,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|trunc_4mpage
-parameter_list|(
-name|x
-parameter_list|)
-value|((unsigned)(x)& ~PDRMASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|round_4mpage
-parameter_list|(
-name|x
-parameter_list|)
-value|((((unsigned)(x)) + PDRMASK)& ~PDRMASK)
-end_define
-
-begin_define
-define|#
-directive|define
 name|atop
 parameter_list|(
 name|x
@@ -329,7 +361,7 @@ name|powerpc_btop
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x)>> PAGE_SHIFT)
+value|((unsigned long)(x)>> PAGE_SHIFT)
 end_define
 
 begin_define
@@ -339,7 +371,7 @@ name|powerpc_ptob
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x)<< PAGE_SHIFT)
+value|((unsigned long)(x)<< PAGE_SHIFT)
 end_define
 
 begin_define
@@ -349,7 +381,7 @@ name|pgtok
 parameter_list|(
 name|x
 parameter_list|)
-value|((x) * (PAGE_SIZE / 1024))
+value|((x) * (PAGE_SIZE / 1024UL))
 end_define
 
 begin_endif

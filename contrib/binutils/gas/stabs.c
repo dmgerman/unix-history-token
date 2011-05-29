@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generic stabs parsing for gas.    Copyright 1989, 1990, 1991, 1993, 1995, 1996, 1997, 1998, 2000, 2001    Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generic stabs parsing for gas.    Copyright 1989, 1990, 1991, 1993, 1995, 1996, 1997, 1998, 2000, 2001    2002, 2003, 2004, 2005 Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -282,9 +282,6 @@ name|stab_string_size
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|BFD_ASSEMBLER
 name|bfd_set_section_flags
 argument_list|(
 name|stdoutput
@@ -313,8 +310,6 @@ argument_list|(
 name|stabstr_secname
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 if|if
 condition|(
@@ -459,12 +454,8 @@ name|undefined_section
 argument_list|,
 literal|0
 argument_list|,
-operator|(
-expr|struct
-name|frag
-operator|*
-operator|)
-name|NULL
+operator|&
+name|zero_address_frag
 argument_list|)
 expr_stmt|;
 if|if
@@ -479,14 +470,6 @@ literal|'n'
 condition|)
 block|{
 comment|/* Pick up the value from the input line.  */
-name|symbol_set_frag
-argument_list|(
-name|symbol
-argument_list|,
-operator|&
-name|zero_address_frag
-argument_list|)
-expr_stmt|;
 name|pseudo_set
 argument_list|(
 name|symbol
@@ -1028,9 +1011,6 @@ operator|->
 name|hadone
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|BFD_ASSEMBLER
 name|bfd_set_section_flags
 argument_list|(
 name|stdoutput
@@ -1044,8 +1024,6 @@ operator||
 name|SEC_DEBUGGING
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|INIT_STAB_SECTION

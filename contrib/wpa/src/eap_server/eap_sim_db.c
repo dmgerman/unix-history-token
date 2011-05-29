@@ -4404,7 +4404,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|EAP_AKA_PRIME
+name|EAP_SERVER_AKA_PRIME
 end_ifdef
 
 begin_comment
@@ -4538,7 +4538,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EAP_AKA_PRIME */
+comment|/* EAP_SERVER_AKA_PRIME */
 end_comment
 
 begin_comment

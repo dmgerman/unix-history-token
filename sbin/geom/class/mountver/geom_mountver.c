@@ -83,8 +83,6 @@ block|{
 name|G_OPT_SENTINEL
 block|}
 block|,
-name|NULL
-block|,
 literal|"[-v] dev ..."
 block|}
 block|,
@@ -108,8 +106,6 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
-block|,
-name|NULL
 block|,
 literal|"[-fv] prov ..."
 block|}

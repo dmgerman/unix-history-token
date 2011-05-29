@@ -2318,6 +2318,8 @@ literal|0x80000000
 operator|&&
 name|OPENSSL_isservice
 argument_list|()
+operator|>
+literal|0
 condition|)
 block|{
 name|HANDLE

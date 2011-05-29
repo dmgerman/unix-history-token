@@ -283,7 +283,7 @@ value|0x0010
 end_define
 
 begin_comment
-comment|/* Remote fault condition occured */
+comment|/* Remote fault condition occurred */
 end_comment
 
 begin_define
@@ -1118,7 +1118,7 @@ comment|/* Vendor-specific PHY registers */
 end_comment
 
 begin_comment
-comment|/* 100baseTX status extention register */
+comment|/* 100baseTX status extension register */
 end_comment
 
 begin_define
@@ -1217,7 +1217,7 @@ comment|/* premature end of stream error */
 end_comment
 
 begin_comment
-comment|/* 1000BT status extention register #2 */
+comment|/* 1000BT status extension register #2 */
 end_comment
 
 begin_define
@@ -1323,7 +1323,7 @@ value|0x0080
 end_define
 
 begin_comment
-comment|/* carrier extention err detected */
+comment|/* carrier extension err detected */
 end_comment
 
 begin_define
@@ -2489,7 +2489,7 @@ comment|/* blink rate 0=10hz, 1=5hz */
 end_comment
 
 begin_comment
-comment|/* Auxilliary control and status register */
+comment|/* Auxiliary control and status register */
 end_comment
 
 begin_define

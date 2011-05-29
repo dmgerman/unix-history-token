@@ -15,6 +15,12 @@ directive|define
 name|_NFSCLIENT_NFSMOUNT_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<nfs/nfs_mountcommon.h>
+end_include
+
 begin_comment
 comment|/*  * Mount structure.  * One allocated on every NFS mount.  * Holds NFS specific information for mount.  */
 end_comment
@@ -24,23 +30,10 @@ struct|struct
 name|nfsmount
 block|{
 name|struct
-name|mtx
-name|nm_mtx
+name|nfsmount_common
+name|nm_com
 decl_stmt|;
-name|int
-name|nm_flag
-decl_stmt|;
-comment|/* Flags for soft/hard... */
-name|int
-name|nm_state
-decl_stmt|;
-comment|/* Internal state flags */
-name|struct
-name|mount
-modifier|*
-name|nm_mountp
-decl_stmt|;
-comment|/* Vfs structure for this filesystem */
+comment|/* Common fields for nlm */
 name|int
 name|nm_numgrps
 decl_stmt|;
@@ -61,14 +54,6 @@ name|nfssockreq
 name|nm_sockreq
 decl_stmt|;
 comment|/* Socket Info */
-name|int
-name|nm_timeo
-decl_stmt|;
-comment|/* Init timer for NFSMNT_DUMBTIMR */
-name|int
-name|nm_retry
-decl_stmt|;
-comment|/* Max retries */
 name|int
 name|nm_timeouts
 decl_stmt|;
@@ -243,6 +228,69 @@ define|#
 directive|define
 name|nm_krbname
 value|nm_name
+end_define
+
+begin_define
+define|#
+directive|define
+name|nm_mtx
+value|nm_com.nmcom_mtx
+end_define
+
+begin_define
+define|#
+directive|define
+name|nm_flag
+value|nm_com.nmcom_flag
+end_define
+
+begin_define
+define|#
+directive|define
+name|nm_state
+value|nm_com.nmcom_state
+end_define
+
+begin_define
+define|#
+directive|define
+name|nm_mountp
+value|nm_com.nmcom_mountp
+end_define
+
+begin_define
+define|#
+directive|define
+name|nm_timeo
+value|nm_com.nmcom_timeo
+end_define
+
+begin_define
+define|#
+directive|define
+name|nm_retry
+value|nm_com.nmcom_retry
+end_define
+
+begin_define
+define|#
+directive|define
+name|nm_hostname
+value|nm_com.nmcom_hostname
+end_define
+
+begin_define
+define|#
+directive|define
+name|nm_getinfo
+value|nm_com.nmcom_getinfo
+end_define
+
+begin_define
+define|#
+directive|define
+name|nm_vinvalbuf
+value|nm_com.nmcom_vinvalbuf
 end_define
 
 begin_define

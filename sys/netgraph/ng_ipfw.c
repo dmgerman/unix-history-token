@@ -842,9 +842,14 @@ name|item
 parameter_list|)
 block|{
 name|struct
-name|ipfw_rule_ref
+name|m_tag
 modifier|*
 name|tag
+decl_stmt|;
+name|struct
+name|ipfw_rule_ref
+modifier|*
+name|r
 decl_stmt|;
 name|struct
 name|mbuf
@@ -865,11 +870,6 @@ argument_list|)
 expr_stmt|;
 name|tag
 operator|=
-operator|(
-expr|struct
-name|ipfw_rule_ref
-operator|*
-operator|)
 name|m_tag_locate
 argument_list|(
 name|m
@@ -901,9 +901,22 @@ return|;
 comment|/* XXX: find smth better */
 block|}
 empty_stmt|;
+name|r
+operator|=
+operator|(
+expr|struct
+name|ipfw_rule_ref
+operator|*
+operator|)
+operator|(
+name|tag
+operator|+
+literal|1
+operator|)
+expr_stmt|;
 if|if
 condition|(
-name|tag
+name|r
 operator|->
 name|info
 operator|&
@@ -1063,26 +1076,12 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-if|if
-condition|(
-name|tee
-operator|==
-literal|0
-condition|)
-name|m_freem
-argument_list|(
-operator|*
-name|m0
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ESRCH
 operator|)
 return|;
 comment|/* no hook associated with this rule */
-block|}
 comment|/* 	 * We have two modes: in normal mode we add a tag to packet, which is 	 * important to return packet back to IP stack. In tee mode we make 	 * a copy of a packet and forward it into netgraph without a tag. 	 */
 if|if
 condition|(
@@ -1172,7 +1171,14 @@ expr_stmt|;
 name|r
 operator|->
 name|info
-operator|=
+operator|&=
+name|IPFW_ONEPASS
+expr_stmt|;
+comment|/* keep this info */
+name|r
+operator|->
+name|info
+operator||=
 name|dir
 condition|?
 name|IPFW_INFO_IN

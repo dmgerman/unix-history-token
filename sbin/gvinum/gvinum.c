@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<paths.h>
 end_include
 
@@ -3530,6 +3536,10 @@ name|flags
 decl_stmt|,
 name|i
 decl_stmt|;
+name|flags
+operator|=
+literal|0
+expr_stmt|;
 name|optreset
 operator|=
 literal|1
@@ -7389,6 +7399,8 @@ expr_stmt|;
 name|fprintf
 argument_list|(
 name|of
+argument_list|,
+literal|"%s"
 argument_list|,
 name|buf
 argument_list|)

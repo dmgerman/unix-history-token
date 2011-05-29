@@ -204,6 +204,7 @@ name|DEBUGOUT
 parameter_list|(
 name|S
 parameter_list|)
+value|do {} while (0)
 end_define
 
 begin_define
@@ -215,6 +216,7 @@ name|S
 parameter_list|,
 name|A
 parameter_list|)
+value|do {} while (0)
 end_define
 
 begin_define
@@ -228,6 +230,7 @@ name|A
 parameter_list|,
 name|B
 parameter_list|)
+value|do {} while (0)
 end_define
 
 begin_define
@@ -243,6 +246,7 @@ name|B
 parameter_list|,
 name|C
 parameter_list|)
+value|do {} while (0)
 end_define
 
 begin_define
@@ -266,6 +270,7 @@ name|F
 parameter_list|,
 name|G
 parameter_list|)
+value|do {} while (0)
 end_define
 
 begin_define

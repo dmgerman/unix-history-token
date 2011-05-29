@@ -286,6 +286,15 @@ begin_comment
 comment|/* count of how many (netid, uaddr) pairs */
 end_comment
 
+begin_decl_stmt
+name|char
+name|localhost
+index|[]
+init|=
+literal|"localhost"
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|create_service
@@ -2797,25 +2806,11 @@ name|struct
 name|netbuf
 name|servaddr
 decl_stmt|;
-name|SVCXPRT
-modifier|*
-name|transp
-init|=
-name|NULL
-decl_stmt|;
 name|int
 name|aicode
 decl_stmt|;
 name|int
 name|nhostsbak
-decl_stmt|;
-name|int
-name|r
-decl_stmt|;
-name|int
-name|registered
-init|=
-literal|0
 decl_stmt|;
 name|u_int32_t
 name|host_addr
@@ -3514,12 +3509,6 @@ name|name
 index|[]
 init|=
 literal|"NFS NLM"
-decl_stmt|;
-name|char
-name|localhost
-index|[]
-init|=
-literal|"localhost"
 decl_stmt|;
 comment|/* 	 * !!! 	 * The my_id structure isn't used by the SM_UNMON_ALL call, as far 	 * as I know.  Leave it empty for now. 	 */
 name|memset

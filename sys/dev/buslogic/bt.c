@@ -4172,10 +4172,6 @@ block|{
 if|if
 condition|(
 name|bio_index
-operator|>=
-literal|0
-operator|&&
-name|bio_index
 operator|<
 name|BT_NUM_ISAPORTS
 condition|)

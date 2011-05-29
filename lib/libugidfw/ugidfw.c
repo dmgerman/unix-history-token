@@ -6093,6 +6093,8 @@ name|errstr
 argument_list|,
 name|buflen
 argument_list|,
+literal|"%s"
+argument_list|,
 name|strerror
 argument_list|(
 name|errno
@@ -6202,6 +6204,8 @@ argument_list|(
 name|errstr
 argument_list|,
 name|buflen
+argument_list|,
+literal|"%s"
 argument_list|,
 name|strerror
 argument_list|(

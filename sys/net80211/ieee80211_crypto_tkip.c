@@ -1418,6 +1418,16 @@ name|wk_keyrsc
 index|[
 name|tid
 index|]
+operator|&&
+operator|(
+name|k
+operator|->
+name|wk_flags
+operator|&
+name|IEEE80211_KEY_NOREPLAY
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* 		 * Replay violation; notify upper layer. 		 */

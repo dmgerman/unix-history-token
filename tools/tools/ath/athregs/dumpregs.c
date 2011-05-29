@@ -61,6 +61,12 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1946,6 +1952,7 @@ end_function
 begin_function
 specifier|static
 name|__inline
+name|int
 name|match
 parameter_list|(
 specifier|const

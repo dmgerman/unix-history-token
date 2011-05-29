@@ -45,10 +45,20 @@ directive|define
 name|IIC_M_RD
 value|0x0001
 comment|/* read vs write */
+define|#
+directive|define
+name|IIC_M_NOSTOP
+value|0x0002
+comment|/* do not send a I2C stop after message */
+define|#
+directive|define
+name|IIC_M_NOSTART
+value|0x0004
+comment|/* do not send a I2C start before message */
 name|uint16_t
 name|len
 decl_stmt|;
-comment|/* msg legnth */
+comment|/* msg length */
 name|uint8_t
 modifier|*
 name|buf

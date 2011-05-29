@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: mailwrapper.c,v 1.16 2004/07/06 03:38:14 millert Exp $	*/
+comment|/*	$OpenBSD: mailwrapper.c,v 1.18 2007/11/06 14:39:19 otto Exp $	*/
 end_comment
 
 begin_comment
@@ -172,12 +172,12 @@ name|al
 operator|->
 name|argv
 operator|=
-name|malloc
+name|calloc
 argument_list|(
 name|al
 operator|->
 name|maxc
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|char
@@ -192,7 +192,7 @@ name|err
 argument_list|(
 name|EX_TEMPFAIL
 argument_list|,
-literal|"malloc"
+literal|"calloc"
 argument_list|)
 expr_stmt|;
 block|}
@@ -580,6 +580,10 @@ argument_list|,
 name|WS
 argument_list|)
 operator|)
+operator|==
+name|NULL
+operator|||
+name|cp
 operator|==
 name|NULL
 condition|)

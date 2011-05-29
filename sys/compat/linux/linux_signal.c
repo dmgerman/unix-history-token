@@ -2198,6 +2198,8 @@ parameter_list|)
 block|{
 name|int
 name|error
+decl_stmt|,
+name|sig
 decl_stmt|;
 name|l_timeval
 name|ltv
@@ -2349,7 +2351,8 @@ name|printf
 argument_list|(
 name|LMSG
 argument_list|(
-literal|"linux_rt_sigtimedwait: incoming timeout (%d/%d)\n"
+literal|"linux_rt_sigtimedwait: "
+literal|"incoming timeout (%d/%d)\n"
 argument_list|)
 argument_list|,
 name|ltv
@@ -2461,7 +2464,8 @@ name|printf
 argument_list|(
 name|LMSG
 argument_list|(
-literal|"linux_rt_sigtimedwait: converted timeout (%jd/%ld)\n"
+literal|"linux_rt_sigtimedwait: "
+literal|"converted timeout (%jd/%ld)\n"
 argument_list|)
 argument_list|,
 operator|(
@@ -2522,7 +2526,8 @@ name|printf
 argument_list|(
 name|LMSG
 argument_list|(
-literal|"linux_rt_sigtimedwait: sigtimedwait returning (%d)\n"
+literal|"linux_rt_sigtimedwait: "
+literal|"sigtimedwait returning (%d)\n"
 argument_list|)
 argument_list|,
 name|error
@@ -2539,6 +2544,15 @@ operator|(
 name|error
 operator|)
 return|;
+name|sig
+operator|=
+name|BSD_TO_LINUX_SIGNAL
+argument_list|(
+name|info
+operator|.
+name|ksi_signo
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|args
@@ -2559,13 +2573,16 @@ name|linfo
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|linfo
-operator|.
-name|lsi_signo
-operator|=
+name|ksiginfo_to_lsiginfo
+argument_list|(
+operator|&
 name|info
-operator|.
-name|ksi_signo
+argument_list|,
+operator|&
+name|linfo
+argument_list|,
+name|sig
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -2585,48 +2602,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Repost if we got an error. */
 if|if
 condition|(
 name|error
-operator|&&
-name|info
-operator|.
-name|ksi_signo
+operator|==
+literal|0
 condition|)
-block|{
-name|PROC_LOCK
-argument_list|(
-name|td
-operator|->
-name|td_proc
-argument_list|)
-expr_stmt|;
-name|tdsignal
-argument_list|(
-name|td
-operator|->
-name|td_proc
-argument_list|,
-name|td
-argument_list|,
-name|info
-operator|.
-name|ksi_signo
-argument_list|,
-operator|&
-name|info
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|td
-operator|->
-name|td_proc
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 name|td
 operator|->
 name|td_retval
@@ -2634,9 +2615,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|info
-operator|.
-name|ksi_signo
+name|sig
 expr_stmt|;
 return|return
 operator|(
@@ -2714,7 +2693,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -3025,11 +3006,9 @@ name|cr_ruid
 expr_stmt|;
 name|error
 operator|=
-name|tdsignal
+name|pksignal
 argument_list|(
 name|p
-argument_list|,
-name|NULL
 argument_list|,
 name|ksi
 operator|.
@@ -3343,6 +3322,41 @@ operator|->
 name|ksi_uid
 expr_stmt|;
 break|break;
+block|}
+if|if
+condition|(
+name|sig
+operator|>=
+name|LINUX_SIGRTMIN
+condition|)
+block|{
+name|lsi
+operator|->
+name|lsi_int
+operator|=
+name|ksi
+operator|->
+name|ksi_info
+operator|.
+name|si_value
+operator|.
+name|sival_int
+expr_stmt|;
+name|lsi
+operator|->
+name|lsi_ptr
+operator|=
+name|PTROUT
+argument_list|(
+name|ksi
+operator|->
+name|ksi_info
+operator|.
+name|si_value
+operator|.
+name|sival_ptr
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function

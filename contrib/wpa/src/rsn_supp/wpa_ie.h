@@ -119,6 +119,24 @@ decl_stmt|;
 name|size_t
 name|mdie_len
 decl_stmt|;
+specifier|const
+name|u8
+modifier|*
+name|ftie
+decl_stmt|;
+name|size_t
+name|ftie_len
+decl_stmt|;
+specifier|const
+name|u8
+modifier|*
+name|reassoc_deadline
+decl_stmt|;
+specifier|const
+name|u8
+modifier|*
+name|key_lifetime
+decl_stmt|;
 endif|#
 directive|endif
 comment|/* CONFIG_IEEE80211R */

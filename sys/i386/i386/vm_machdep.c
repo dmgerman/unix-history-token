@@ -548,14 +548,6 @@ name|mdproc
 modifier|*
 name|mdp2
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEV_NPX
-name|register_t
-name|savecrit
-decl_stmt|;
-endif|#
-directive|endif
 name|p1
 operator|=
 name|td1
@@ -677,7 +669,7 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-comment|/* Ensure that p1's pcb is up to date. */
+comment|/* Ensure that td1's pcb is up to date. */
 if|if
 condition|(
 name|td1
@@ -696,9 +688,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEV_NPX
-name|savecrit
-operator|=
-name|intr_disable
+name|critical_enter
 argument_list|()
 expr_stmt|;
 if|if
@@ -712,7 +702,6 @@ name|td1
 condition|)
 name|npxsave
 argument_list|(
-operator|&
 name|td1
 operator|->
 name|td_pcb
@@ -720,10 +709,8 @@ operator|->
 name|pcb_save
 argument_list|)
 expr_stmt|;
-name|intr_restore
-argument_list|(
-name|savecrit
-argument_list|)
+name|critical_exit
+argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
@@ -755,7 +742,7 @@ name|td_pcb
 operator|=
 name|pcb2
 expr_stmt|;
-comment|/* Copy p1's pcb */
+comment|/* Copy td1's pcb */
 name|bcopy
 argument_list|(
 name|td1
@@ -770,6 +757,16 @@ operator|*
 name|pcb2
 argument_list|)
 argument_list|)
+expr_stmt|;
+comment|/* Properly initialize pcb_save */
+name|pcb2
+operator|->
+name|pcb_save
+operator|=
+operator|&
+name|pcb2
+operator|->
+name|pcb_user_save
 expr_stmt|;
 comment|/* Point mdproc and then copy over td1's contents */
 name|mdp2
@@ -1231,6 +1228,9 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEV_NPX
+name|critical_enter
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|td
@@ -1241,6 +1241,9 @@ name|fpcurthread
 argument_list|)
 condition|)
 name|npxdrop
+argument_list|()
+expr_stmt|;
+name|critical_exit
 argument_list|()
 expr_stmt|;
 endif|#
@@ -1420,6 +1423,19 @@ operator|->
 name|pcb_ext
 operator|=
 name|NULL
+expr_stmt|;
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_save
+operator|=
+operator|&
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_user_save
 expr_stmt|;
 block|}
 end_function
@@ -1639,10 +1655,19 @@ name|pcb_flags
 operator|&=
 operator|~
 operator|(
-name|PCB_NPXTRAP
-operator||
 name|PCB_NPXINITDONE
+operator||
+name|PCB_NPXUSERINITDONE
 operator|)
+expr_stmt|;
+name|pcb2
+operator|->
+name|pcb_save
+operator|=
+operator|&
+name|pcb2
+operator|->
+name|pcb_user_save
 expr_stmt|;
 comment|/* 	 * Create a new fresh stack for the new thread. 	 */
 name|bcopy
@@ -2173,10 +2198,11 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|SMP
+name|cpumask_t
+name|map
+decl_stmt|;
 name|u_int
 name|cnt
-decl_stmt|,
-name|map
 decl_stmt|;
 if|if
 condition|(
@@ -3450,7 +3476,7 @@ name|sf_buf_alloc_want
 operator|>
 literal|0
 condition|)
-name|wakeup_one
+name|wakeup
 argument_list|(
 operator|&
 name|sf_buf_freelist

@@ -48,6 +48,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mutex.h>
 end_include
 
@@ -74,6 +86,16 @@ include|#
 directive|include
 file|<sys/sched.h>
 end_include
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|kposix_priority_scheduling
+argument_list|,
+literal|"POSIX P1003.1B realtime extensions"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* ksched: Real-time extension to support POSIX priority scheduling.  */

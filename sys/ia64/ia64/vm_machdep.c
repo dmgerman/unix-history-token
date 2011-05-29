@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -130,12 +136,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm_kern.h>
 end_include
 
@@ -155,12 +155,6 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_extern.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/include/psl.h>
 end_include
 
 begin_function
@@ -1634,12 +1628,15 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
-if|#
-directive|if
+if|if
+condition|(
+name|busdma_swi_pending
+operator|!=
 literal|0
-block|if (busdma_swi_pending != 0) 		busdma_swi();
-endif|#
-directive|endif
+condition|)
+name|busdma_swi
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

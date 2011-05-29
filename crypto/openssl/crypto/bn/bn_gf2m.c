@@ -2093,6 +2093,8 @@ operator|=
 name|b
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|bn_wexpand
 argument_list|(
 name|r
@@ -2101,7 +2103,12 @@ name|at
 operator|->
 name|top
 argument_list|)
-expr_stmt|;
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 for|for
 control|(
 name|i

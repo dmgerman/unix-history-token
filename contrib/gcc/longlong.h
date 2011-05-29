@@ -806,7 +806,7 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("subl %5,%1\n\tsbbl %3,%0"					\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "0" ((USItype) (ah)),					\ 	     "g" ((USItype) (bh)),					\ 	     "1" ((USItype) (al)),					\ 	     "g" ((USItype) (bl)))
+value|__asm__ ("subl %5,%1\n\tsbbl %3,%0"					\ 	   : "=r" (sh),							\ 	     "=&r" (sl)							\ 	   : "0" ((USItype) (ah)),					\ 	     "g" ((USItype) (bh)),					\ 	     "1" ((USItype) (al)),					\ 	     "g" ((USItype) (bl)))
 end_define
 
 begin_define
@@ -823,7 +823,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|__asm__ ("mull %3"							\ 	   : "=a" ((USItype) (w0)),					\ 	     "=d" ((USItype) (w1))					\ 	   : "%0" ((USItype) (u)),					\ 	     "rm" ((USItype) (v)))
+value|__asm__ ("mull %3"							\ 	   : "=a" (w0),							\ 	     "=d" (w1)							\ 	   : "%0" ((USItype) (u)),					\ 	     "rm" ((USItype) (v)))
 end_define
 
 begin_define
@@ -842,7 +842,7 @@ parameter_list|,
 name|dv
 parameter_list|)
 define|\
-value|__asm__ ("divl %4"							\ 	   : "=a" ((USItype) (q)),					\ 	     "=d" ((USItype) (r))					\ 	   : "0" ((USItype) (n0)),					\ 	     "1" ((USItype) (n1)),					\ 	     "rm" ((USItype) (dv)))
+value|__asm__ ("divl %4"							\ 	   : "=a" (q),							\ 	     "=d" (r)							\ 	   : "0" ((USItype) (n0)),					\ 	     "1" ((USItype) (n1)),					\ 	     "rm" ((USItype) (dv)))
 end_define
 
 begin_define

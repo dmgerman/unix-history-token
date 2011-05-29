@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/linker_set.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
 end_include
 
@@ -216,11 +210,11 @@ directive|include
 file|<dev/usb/quirk/usb_quirk.h>
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -2718,22 +2712,6 @@ if|if
 condition|(
 name|uaa
 operator|->
-name|use_generic
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* give Mouse and Keyboard drivers a try first */
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
-if|if
-condition|(
-name|uaa
-operator|->
 name|info
 operator|.
 name|bInterfaceClass
@@ -2992,6 +2970,10 @@ name|sc
 operator|->
 name|sc_repdesc_ptr
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|uhid_graphire_report_descr
 expr_stmt|;
@@ -3085,6 +3067,10 @@ name|sc
 operator|->
 name|sc_repdesc_ptr
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|uhid_graphire3_4x5_report_descr
 expr_stmt|;
@@ -3144,6 +3130,10 @@ name|sc
 operator|->
 name|sc_repdesc_ptr
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|uhid_xb360gp_report_descr
 expr_stmt|;
@@ -3644,6 +3634,16 @@ argument_list|,
 literal|1
 argument_list|,
 literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|uhid
 argument_list|,
 literal|1
 argument_list|)

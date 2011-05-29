@@ -418,14 +418,6 @@ begin_decl_stmt
 specifier|extern
 name|void
 modifier|*
-name|softclock_ih
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-modifier|*
 name|vm_ih
 decl_stmt|;
 end_decl_stmt
@@ -771,6 +763,20 @@ name|mask
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|_intr_drain
+parameter_list|(
+name|int
+name|irq
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Linux compat only. */
+end_comment
 
 begin_function_decl
 name|int

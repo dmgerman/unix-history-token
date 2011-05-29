@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -348,32 +348,6 @@ return|;
 block|}
 end_function
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function
-name|uint32_t
-name|sctp_calculate_cksum
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|,
-name|uint32_t
-name|offset
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
 begin_endif
 endif|#
 directive|endif
@@ -391,38 +365,27 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+parameter_list|,
+name|uint32_t
+name|offset
 parameter_list|)
 block|{
-name|struct
-name|ip
-modifier|*
-name|ip
-decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SCTP_WITH_NO_CSUM
+argument_list|)
+name|panic
+argument_list|(
+literal|"sctp_delayed_cksum() called when using no SCTP CRC."
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|uint32_t
 name|checksum
 decl_stmt|;
-name|uint32_t
-name|offset
-decl_stmt|;
-name|ip
-operator|=
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|ip
-operator|*
-argument_list|)
-expr_stmt|;
-name|offset
-operator|=
-name|ip
-operator|->
-name|ip_hl
-operator|<<
-literal|2
-expr_stmt|;
 name|checksum
 operator|=
 name|sctp_calculate_cksum
@@ -473,7 +436,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"delayed m_pullup, m->len: %d  off: %d  p: %d\n"
+literal|"sctp_delayed_cksum(): m->len: %d,  off: %d.\n"
 argument_list|,
 operator|(
 name|uint32_t
@@ -483,10 +446,6 @@ operator|->
 name|m_len
 argument_list|,
 name|offset
-argument_list|,
-name|ip
-operator|->
-name|ip_p
 argument_list|)
 expr_stmt|;
 comment|/* 		 * XXX this shouldn't happen, but if it does, the correct 		 * behavior may be to insert the checksum in the appropriate 		 * next mbuf in the chain. 		 */
@@ -507,6 +466,8 @@ operator|)
 operator|=
 name|checksum
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

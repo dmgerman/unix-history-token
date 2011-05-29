@@ -345,6 +345,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CAS_SATURN_PCFG
+value|0x106c
+end_define
+
+begin_comment
+comment|/* internal MACPHY pin configuration */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CAS_CAW_RX_WGHT_MASK
 value|0x00000003
 end_define
@@ -1162,6 +1173,116 @@ end_define
 
 begin_comment
 comment|/* INT[B-D] enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAS_SATURN_PCFG_TLA
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* PHY activity LED */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAS_SATURN_PCFG_FLA
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* PHY 10MBit/sec LED */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAS_SATURN_PCFG_CLA
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* PHY 100MBit/sec LED */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAS_SATURN_PCFG_LLA
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* PHY 1000MBit/sec LED */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAS_SATURN_PCFG_RLA
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* PHY full-duplex LED */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAS_SATURN_PCFG_PDS
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* PHY debug mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAS_SATURN_PCFG_MTP
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* test point select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAS_SATURN_PCFG_GMO
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* GMII observe */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAS_SATURN_PCFG_FSI
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* freeze GMII/SERDES */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAS_SATURN_PCFG_LAD
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* MAC LED control active low */
 end_comment
 
 begin_comment

@@ -223,6 +223,10 @@ name|vmf_ss
 value|ss.r_w.r_x
 define|#
 directive|define
+name|vmf_bp
+value|ebp.r_w.r_x
+define|#
+directive|define
 name|vmf_sp
 value|esp.r_w.r_x
 define|#
@@ -245,7 +249,7 @@ begin_define
 define|#
 directive|define
 name|VM86_PMAPSIZE
-value|3
+value|24
 end_define
 
 begin_define

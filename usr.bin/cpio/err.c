@@ -77,13 +77,21 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"cpio.h"
+file|"err.h"
 end_include
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|progname
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
 name|void
-name|cpio_vwarnc
+name|vwarnc
 parameter_list|(
 name|int
 name|code
@@ -103,7 +111,7 @@ name|stderr
 argument_list|,
 literal|"%s: "
 argument_list|,
-name|cpio_progname
+name|progname
 argument_list|)
 expr_stmt|;
 name|vfprintf
@@ -145,7 +153,7 @@ end_function
 
 begin_function
 name|void
-name|cpio_warnc
+name|warnc
 parameter_list|(
 name|int
 name|code
@@ -168,7 +176,7 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-name|cpio_vwarnc
+name|vwarnc
 argument_list|(
 name|code
 argument_list|,
@@ -187,7 +195,7 @@ end_function
 
 begin_function
 name|void
-name|cpio_errc
+name|errc
 parameter_list|(
 name|int
 name|eval
@@ -213,7 +221,7 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-name|cpio_vwarnc
+name|vwarnc
 argument_list|(
 name|code
 argument_list|,

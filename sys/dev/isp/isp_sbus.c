@@ -78,7 +78,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ofw/openfirm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/ofw_machdep.h>
 end_include
 
 begin_include
@@ -914,7 +926,7 @@ name|isp
 argument_list|,
 literal|0
 argument_list|,
-name|role
+name|def_role
 argument_list|,
 name|role
 argument_list|)
@@ -1238,10 +1250,12 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* 		 * XXX: should be a way to get properties w/o having 		 * XXX: to call OF_xxx functions 		 */
 name|default_id
 operator|=
-literal|7
+name|OF_getscsinitid
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 block|}
 name|ISP_SPI_PC
@@ -1961,6 +1975,9 @@ argument_list|,
 name|offset
 argument_list|,
 literal|2
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2528,6 +2545,8 @@ operator|&
 name|base
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_COHERENT
 argument_list|,
 operator|&
 name|isp

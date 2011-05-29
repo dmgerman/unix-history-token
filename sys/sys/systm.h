@@ -74,7 +74,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* boot() has been called. */
+comment|/* kern_reboot() has been called. */
 end_comment
 
 begin_decl_stmt
@@ -467,6 +467,19 @@ name|kenvp
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|void
+modifier|*
+name|zero_region
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* address space maps to a zeroed page	*/
+end_comment
+
 begin_comment
 comment|/*  * General function declarations.  */
 end_comment
@@ -534,6 +547,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|_jmp_buf
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|trapframe
 struct_decl|;
 end_struct_decl
 
@@ -637,7 +656,7 @@ name|type
 parameter_list|,
 name|u_long
 modifier|*
-name|hashmark
+name|hashmask
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -829,16 +848,6 @@ name|init_param2
 parameter_list|(
 name|long
 name|physpages
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|init_param3
-parameter_list|(
-name|long
-name|kmempages
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1874,10 +1883,33 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|hardclock_anycpu
+parameter_list|(
+name|int
+name|cnt
+parameter_list|,
+name|int
+name|usermode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|hardclock_cpu
 parameter_list|(
 name|int
 name|usermode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|hardclock_sync
+parameter_list|(
+name|int
+name|cpu
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1911,6 +1943,15 @@ name|usermode
 parameter_list|,
 name|uintfptr_t
 name|pc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|hardclockintr
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1954,6 +1995,31 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|cpu_idleclock
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cpu_activeclock
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|cpu_disable_deep_sleep
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|int
@@ -2291,6 +2357,24 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|cpu_initclocks_bsp
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cpu_initclocks_ap
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|usrinfoinit
 parameter_list|(
 name|void
@@ -2301,6 +2385,16 @@ end_function_decl
 begin_comment
 comment|/* Finalize the world */
 end_comment
+
+begin_decl_stmt
+name|void
+name|kern_reboot
+argument_list|(
+name|int
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void
@@ -2995,6 +3089,21 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|alloc_unr_specific
+parameter_list|(
+name|struct
+name|unrhdr
+modifier|*
+name|uh
+parameter_list|,
+name|u_int
+name|item
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|alloc_unrl
 parameter_list|(
 name|struct
@@ -3021,7 +3130,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * This is about as magic as it gets.  fortune(1) has got similar code  * for reversing bits in a word.  Who thinks up this stuff??  *  * Yes, it does appear to be consistently faster than:  * while (i = ffs(m)) {  *	m>>= i;  *	bits++;  * }  * and  * while (lsb = (m& -m)) {	// This is magic too  * 	m&= ~lsb;		// or: m ^= lsb  *	bits++;  * }  * Both of these latter forms do some very strange things on gcc-3.1 with  * -mcpu=pentiumpro and/or -march=pentiumpro and/or -O or -O2.  * There is probably an SSE or MMX popcnt instruction.  *  * I wonder if this should be in libkern?  *  * XXX Stop the presses!  Another one:  * static __inline u_int32_t  * popcnt1(u_int32_t v)  * {  *	v -= ((v>> 1)& 0x55555555);  *	v = (v& 0x33333333) + ((v>> 2)& 0x33333333);  *	v = (v + (v>> 4))& 0x0F0F0F0F;  *	return (v * 0x01010101)>> 24;  * }  * The downside is that it has a multiply.  With a pentium3 with  * -mcpu=pentiumpro and -march=pentiumpro then gcc-3.1 will use  * an imull, and in that case it is faster.  In most other cases  * it appears slightly slower.  *  * Another variant (also from fortune):  * #define BITCOUNT(x) (((BX_(x)+(BX_(x)>>4))& 0x0F0F0F0F) % 255)  * #define  BX_(x)     ((x) - (((x)>>1)&0x77777777)            \  *                          - (((x)>>2)&0x33333333)            \  *                          - (((x)>>3)&0x11111111))  */
+comment|/*  * Population count algorithm using SWAR approach  * - "SIMD Within A Register".  */
 end_comment
 
 begin_function

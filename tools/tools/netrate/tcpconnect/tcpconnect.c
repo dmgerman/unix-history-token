@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -353,7 +359,7 @@ name|argc
 operator|!=
 literal|2
 condition|)
-name|err
+name|errx
 argument_list|(
 operator|-
 literal|1
@@ -460,18 +466,26 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%llu count\n"
+literal|"%ju count\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|counter
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%llu connections/second\n"
+literal|"%ju connections/second\n"
 argument_list|,
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 name|counter
 operator|/
 name|SECONDS
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

@@ -17085,8 +17085,8 @@ literal|0x475
 argument_list|)
 operator|)
 expr_stmt|;
-endif|#
-directive|endif
+else|#
+directive|else
 comment|/* ASR_IOCTL_COMPAT */
 name|bzero
 argument_list|(
@@ -17099,6 +17099,9 @@ name|Info
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* ASR_IOCTL_COMPAT */
 name|Info
 operator|.
 name|processorFamily

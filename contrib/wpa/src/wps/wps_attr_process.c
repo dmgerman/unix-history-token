@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sha256.h"
+file|"crypto/sha256.h"
 end_include
 
 begin_include
@@ -713,6 +713,34 @@ literal|"WPS: Credential did not include "
 literal|"Network Key"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cred
+operator|->
+name|auth_type
+operator|==
+name|WPS_AUTH_OPEN
+operator|&&
+name|cred
+operator|->
+name|encr_type
+operator|==
+name|WPS_ENCR_NONE
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"WPS: Workaround - Allow "
+literal|"missing mandatory Network Key attribute "
+literal|"for open network"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 return|return
 operator|-
 literal|1

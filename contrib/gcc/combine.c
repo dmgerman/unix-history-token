@@ -59535,7 +59535,7 @@ argument_list|(
 name|note
 argument_list|)
 argument_list|,
-name|REG_NOTE_KIND
+name|GET_MODE
 argument_list|(
 name|note
 argument_list|)

@@ -806,6 +806,12 @@ expr_stmt|;
 name|_initialize_corelow
 argument_list|()
 expr_stmt|;
+name|_initialize_solib
+argument_list|()
+expr_stmt|;
+name|_initialize_svr4_solib
+argument_list|()
+expr_stmt|;
 name|_initialize_ser_hardwire
 argument_list|()
 expr_stmt|;
@@ -833,10 +839,7 @@ expr_stmt|;
 name|_initialize_inftarg
 argument_list|()
 expr_stmt|;
-name|_initialize_solib
-argument_list|()
-expr_stmt|;
-name|_initialize_svr4_solib
+name|_initialize_thread_db
 argument_list|()
 expr_stmt|;
 if|#

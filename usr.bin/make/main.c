@@ -63,12 +63,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/time.h>
 end_include
 
@@ -2731,11 +2725,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|errc
+name|errx
 argument_list|(
 literal|2
-argument_list|,
-name|EAGAIN
 argument_list|,
 literal|"Invalid value for recursion level (%d)."
 argument_list|,
@@ -2751,11 +2743,9 @@ operator|>
 name|MKLVL_MAXVAL
 condition|)
 block|{
-name|errc
+name|errx
 argument_list|(
 literal|2
-argument_list|,
-name|EAGAIN
 argument_list|,
 literal|"Max recursion level (%d) exceeded."
 argument_list|,
@@ -3626,7 +3616,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* 	 * Prior to 7.0, FreeBSD/pc98 kernel used to set the 	 * utsname.machine to "i386", and MACHINE was defined as 	 * "i386", so it could not be distinguished from FreeBSD/i386. 	 * Therefore, we had to check machine.ispc98 and adjust the 	 * MACHINE variable.  NOTE: The code is still here to be able 	 * to compile new make binary on old FreeBSD/pc98 systems, and 	 * have the MACHINE variable set properly. 	 */
+comment|/* 	 * Get the name of this type of MACHINE from utsname 	 * so we can share an executable for similar machines. 	 * (i.e. m68k: amiga hp300, mac68k, sun3, ...) 	 * 	 * Note that both MACHINE and MACHINE_ARCH are decided at 	 * run-time. 	 */
 if|if
 condition|(
 operator|(
@@ -3637,56 +3627,6 @@ argument_list|(
 literal|"MACHINE"
 argument_list|)
 operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|int
-name|ispc98
-decl_stmt|;
-name|size_t
-name|len
-decl_stmt|;
-name|len
-operator|=
-sizeof|sizeof
-argument_list|(
-name|ispc98
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|sysctlbyname
-argument_list|(
-literal|"machdep.ispc98"
-argument_list|,
-operator|&
-name|ispc98
-argument_list|,
-operator|&
-name|len
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|ispc98
-condition|)
-name|machine
-operator|=
-literal|"pc98"
-expr_stmt|;
-block|}
-block|}
-comment|/* 	 * Get the name of this type of MACHINE from utsname 	 * so we can share an executable for similar machines. 	 * (i.e. m68k: amiga hp300, mac68k, sun3, ...) 	 * 	 * Note that both MACHINE and MACHINE_ARCH are decided at 	 * run-time. 	 */
-if|if
-condition|(
-name|machine
 operator|==
 name|NULL
 condition|)
@@ -3779,21 +3719,6 @@ condition|)
 name|machine_cpu
 operator|=
 literal|"i386"
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|machine_arch
-argument_list|,
-literal|"alpha"
-argument_list|)
-condition|)
-name|machine_cpu
-operator|=
-literal|"ev4"
 expr_stmt|;
 else|else
 name|machine_cpu

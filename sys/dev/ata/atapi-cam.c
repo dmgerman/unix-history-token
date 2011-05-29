@@ -4400,6 +4400,9 @@ name|struct
 name|atapi_hcb
 modifier|*
 name|hcb
+decl_stmt|,
+modifier|*
+name|thcb
 decl_stmt|;
 if|if
 condition|(
@@ -4416,13 +4419,15 @@ operator|->
 name|state_lock
 argument_list|)
 expr_stmt|;
-name|TAILQ_FOREACH
+name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|hcb
 argument_list|,
 argument|&scp->pending_hcbs
 argument_list|,
 argument|chain
+argument_list|,
+argument|thcb
 argument_list|)
 block|{
 name|free_hcb_and_ccb_done

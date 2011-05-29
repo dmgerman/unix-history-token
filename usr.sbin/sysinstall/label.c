@@ -127,7 +127,7 @@ begin_define
 define|#
 directive|define
 name|ROOT_MIN_SIZE
-value|128
+value|280
 end_define
 
 begin_else
@@ -139,7 +139,7 @@ begin_define
 define|#
 directive|define
 name|ROOT_MIN_SIZE
-value|118
+value|180
 end_define
 
 begin_endif
@@ -201,7 +201,7 @@ begin_define
 define|#
 directive|define
 name|ROOT_DEFAULT_SIZE
-value|512
+value|1024
 end_define
 
 begin_define
@@ -215,14 +215,14 @@ begin_define
 define|#
 directive|define
 name|VAR_DEFAULT_SIZE
-value|1024
+value|4096
 end_define
 
 begin_define
 define|#
 directive|define
 name|TMP_DEFAULT_SIZE
-value|512
+value|1024
 end_define
 
 begin_define
@@ -240,7 +240,7 @@ begin_define
 define|#
 directive|define
 name|ROOT_NOMINAL_SIZE
-value|256
+value|512
 end_define
 
 begin_define
@@ -254,7 +254,7 @@ begin_define
 define|#
 directive|define
 name|VAR_NOMINAL_SIZE
-value|128
+value|512
 end_define
 
 begin_define
@@ -4813,6 +4813,10 @@ decl_stmt|;
 name|daddr_t
 name|size
 decl_stmt|;
+name|long
+name|double
+name|dsize
+decl_stmt|;
 name|struct
 name|chunk
 modifier|*
@@ -4903,16 +4907,14 @@ operator|!
 name|val
 operator|||
 operator|(
-name|size
+name|dsize
 operator|=
-name|strtoimax
+name|strtold
 argument_list|(
 name|val
 argument_list|,
 operator|&
 name|cp
-argument_list|,
-literal|0
 argument_list|)
 operator|)
 operator|<=
@@ -4941,8 +4943,15 @@ operator|==
 literal|'M'
 condition|)
 name|size
-operator|*=
+operator|=
+call|(
+name|daddr_t
+call|)
+argument_list|(
+name|dsize
+operator|*
 name|ONE_MEG
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -4956,8 +4965,15 @@ operator|==
 literal|'G'
 condition|)
 name|size
-operator|*=
+operator|=
+call|(
+name|daddr_t
+call|)
+argument_list|(
+name|dsize
+operator|*
 name|ONE_GIG
+argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
@@ -4974,7 +4990,12 @@ operator|==
 literal|'C'
 condition|)
 name|size
-operator|*=
+operator|=
+operator|(
+name|daddr_t
+operator|)
+name|dsize
+operator|*
 operator|(
 name|label_chunk_info
 index|[
@@ -5001,11 +5022,29 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
+else|else
+name|size
+operator|=
+operator|(
+name|daddr_t
+operator|)
+name|dsize
+expr_stmt|;
+block|}
+else|else
+block|{
+name|size
+operator|=
+operator|(
+name|daddr_t
+operator|)
+name|dsize
+expr_stmt|;
 block|}
 if|if
 condition|(
 name|size
-operator|<=
+operator|<
 name|FS_MIN_SIZE
 condition|)
 block|{
@@ -8245,6 +8284,26 @@ operator|.
 name|softupdates
 operator|=
 name|soft
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|typ
+argument_list|,
+literal|"ufs1"
+argument_list|)
+condition|)
+name|pi
+operator|->
+name|newfs_data
+operator|.
+name|newfs_ufs
+operator|.
+name|ufs1
+operator|=
+name|TRUE
 expr_stmt|;
 block|}
 block|}

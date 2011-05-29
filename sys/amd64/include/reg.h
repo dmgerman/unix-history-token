@@ -15,6 +15,32 @@ directive|define
 name|_MACHINE_REG_H_
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_STANDALONE
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"opt_compat.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Register set accessible via /proc/$pid/regs and PT_{SET,GET}REGS.  */
 end_comment
@@ -263,7 +289,7 @@ name|DBREG_DR7_MASK
 parameter_list|(
 name|i
 parameter_list|)
-value|((u_long)0xf<< ((i) * 4 + 16) | 0x3<< (i) * 2)
+value|(0xful<< ((i) * 4 + 16) | 0x3<< (i) * 2)
 end_define
 
 begin_define
@@ -345,6 +371,29 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|COMPAT_FREEBSD32
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/fpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<compat/ia32/ia32_reg.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|_KERNEL
 end_ifdef
 
@@ -358,6 +407,21 @@ name|fill_regs
 parameter_list|(
 name|struct
 name|thread
+modifier|*
+parameter_list|,
+name|struct
+name|reg
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|fill_frame_regs
+parameter_list|(
+name|struct
+name|trapframe
 modifier|*
 parameter_list|,
 name|struct

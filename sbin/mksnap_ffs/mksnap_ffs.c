@@ -515,6 +515,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|*
+name|errmsg
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 name|nmount
@@ -530,17 +535,40 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+name|errmsg
+index|[
+sizeof|sizeof
+argument_list|(
+name|errmsg
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Cannot create snapshot %s: %s"
+literal|"Cannot create snapshot %s%s%s"
 argument_list|,
 name|snapname
+argument_list|,
+operator|*
+name|errmsg
+operator|!=
+literal|'\0'
+condition|?
+literal|": "
+else|:
+literal|""
 argument_list|,
 name|errmsg
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(

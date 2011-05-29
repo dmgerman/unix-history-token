@@ -1824,9 +1824,10 @@ argument_list|(
 name|IFT_ETHER
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mii_phy_probe
+comment|/* Only one PHY at address 0 in this device. */
+name|err
+operator|=
+name|mii_attach
 argument_list|(
 name|dev
 argument_list|,
@@ -1835,22 +1836,34 @@ name|sc
 operator|->
 name|miibus
 argument_list|,
+name|ifp
+argument_list|,
 name|ece_ifmedia_upd
 argument_list|,
 name|ece_ifmedia_sts
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+literal|0
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Cannot find my PHY.\n"
+literal|"attaching PHYs failed\n"
 argument_list|)
-expr_stmt|;
-name|err
-operator|=
-name|ENXIO
 expr_stmt|;
 goto|goto
 name|out
@@ -9271,18 +9284,6 @@ name|ece_softc
 modifier|*
 name|sc
 decl_stmt|;
-comment|/* Only one phy in this device. */
-if|if
-condition|(
-name|phy
-operator|>
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|sc
 operator|=
 name|device_get_softc

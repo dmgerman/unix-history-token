@@ -16,7 +16,7 @@ name|_MACHINE_LSU_H_
 end_define
 
 begin_comment
-comment|/*  * Definitions for the Load-Store-Unit Control Register. This is called  * Data Cache Unit Control Register (DCUCR) for UltraSPARC-III.  */
+comment|/*  * Definitions for the Load-Store-Unit Control Register. This is called  * Data Cache Unit Control Register (DCUCR) for UltraSPARC-III and greater.  */
 end_comment
 
 begin_define
@@ -207,6 +207,88 @@ define|#
 directive|define
 name|LSU_CP
 value|(1UL<< 49)
+end_define
+
+begin_comment
+comment|/* The following bit is valid for the UltraSPARC-IV only. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LSU_WIH
+value|(1UL<< 4)
+end_define
+
+begin_comment
+comment|/* The following bits are valid for the UltraSPARC-IV+ only. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LSU_PPS_SHIFT
+value|50
+end_define
+
+begin_define
+define|#
+directive|define
+name|LSU_PPS_BITS
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|LSU_PPS_MASK
+value|(((1UL<< LSU_PPS_BITS) - 1)<< LSU_PPS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LSU_IPS_SHIFT
+value|52
+end_define
+
+begin_define
+define|#
+directive|define
+name|LSU_IPS_BITS
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|LSU_IPS_MASK
+value|(((1UL<< LSU_IPS_BITS) - 1)<< LSU_IPS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LSU_PCM
+value|(1UL<< 54)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LSU_WCE
+value|(1UL<< 55)
+end_define
+
+begin_comment
+comment|/* The following bit is valid for the SPARC64 V, VI, VII and VIIIfx only. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LSU_WEAK_SPCA
+value|(1UL<< 41)
 end_define
 
 begin_endif

@@ -124,6 +124,27 @@ name|WPS_MGMT_KEY_ID_LEN
 value|16
 end_define
 
+begin_define
+define|#
+directive|define
+name|WPS_OOB_DEVICE_PASSWORD_ATTR_LEN
+value|54
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPS_OOB_DEVICE_PASSWORD_LEN
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPS_OOB_PUBKEY_HASH_LEN
+value|20
+end_define
+
 begin_comment
 comment|/* Attribute Types */
 end_comment
@@ -436,7 +457,7 @@ name|ATTR_PRIMARY_DEV_TYPE
 init|=
 literal|0x1054
 block|,
-name|ATTR_SECONDARY_DEV_TYP_ELIST
+name|ATTR_SECONDARY_DEV_TYPE_LIST
 init|=
 literal|0x1055
 block|,
@@ -916,36 +937,6 @@ literal|4
 block|}
 enum|;
 end_enum
-
-begin_comment
-comment|/* Primary Device Type */
-end_comment
-
-begin_struct
-struct|struct
-name|wps_dev_type
-block|{
-name|u8
-name|categ_id
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|u8
-name|oui
-index|[
-literal|4
-index|]
-decl_stmt|;
-name|u8
-name|sub_categ_id
-index|[
-literal|2
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_define
 define|#

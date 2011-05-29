@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"crypto/tls.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"eap_i.h"
 end_include
 
@@ -31,12 +37,6 @@ begin_include
 include|#
 directive|include
 file|"eap_config.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tls.h"
 end_include
 
 begin_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: packet.h,v 1.52 2009/06/27 09:29:06 andreas Exp $ */
+comment|/* $OpenBSD: packet.h,v 1.55 2010/11/13 23:27:50 djm Exp $ */
 end_comment
 
 begin_comment
@@ -30,6 +30,23 @@ include|#
 directive|include
 file|<openssl/bn.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_HAS_ECC
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<openssl/ec.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -146,6 +163,10 @@ name|void
 name|packet_set_interactive
 parameter_list|(
 name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -237,6 +258,32 @@ name|value
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_HAS_ECC
+end_ifdef
+
+begin_function_decl
+name|void
+name|packet_put_ecpoint
+parameter_list|(
+specifier|const
+name|EC_GROUP
+modifier|*
+parameter_list|,
+specifier|const
+name|EC_POINT
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -403,6 +450,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_HAS_ECC
+end_ifdef
+
+begin_function_decl
+name|void
+name|packet_get_ecpoint
+parameter_list|(
+specifier|const
+name|EC_GROUP
+modifier|*
+parameter_list|,
+name|EC_POINT
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|void
 modifier|*
@@ -419,6 +491,18 @@ begin_function_decl
 name|void
 modifier|*
 name|packet_get_string
+parameter_list|(
+name|u_int
+modifier|*
+name|length_ptr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|packet_get_cstring
 parameter_list|(
 name|u_int
 modifier|*

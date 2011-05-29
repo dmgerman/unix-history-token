@@ -2133,14 +2133,12 @@ name|nfsrv_useacl
 operator|==
 literal|0
 operator|||
-operator|!
-name|NFSHASNFS4ACL
-argument_list|(
-name|vnode_mount
+name|nfs_supportsnfsv4acls
 argument_list|(
 name|vp
 argument_list|)
-argument_list|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(

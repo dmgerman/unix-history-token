@@ -257,7 +257,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|uintptr_t
+name|CORE_ADDR
 name|kgdb_lookup
 parameter_list|(
 specifier|const

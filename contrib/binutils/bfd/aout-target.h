@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Define a target vector and some small routines for a variant of a.out.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Define a target vector and some small routines for a variant of a.out.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003, 2004, 2005, 2007    Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -43,27 +43,45 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|reloc_howto_type
 modifier|*
 name|NAME
-parameter_list|(
+argument_list|(
 name|aout
-parameter_list|,
+argument_list|,
 name|reloc_type_lookup
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|bfd_reloc_code_real_type
-end_function_decl
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+name|bfd_reloc_code_real_type
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
+begin_decl_stmt
+specifier|extern
+name|reloc_howto_type
+modifier|*
+name|NAME
+argument_list|(
+name|aout
+argument_list|,
+name|reloc_name_lookup
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Set parameters about this a.out file that are machine-dependent.    This routine is called from some_aout_object_p just before it returns.  */
@@ -75,25 +93,6 @@ directive|ifndef
 name|MY_callback
 end_ifndef
 
-begin_function_decl
-specifier|static
-specifier|const
-name|bfd_target
-modifier|*
-name|MY
-parameter_list|(
-name|callback
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
 begin_function
 specifier|static
 specifier|const
@@ -104,12 +103,10 @@ function|(
 name|callback
 function|)
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|internal_exec
@@ -129,13 +126,13 @@ name|unsigned
 name|long
 name|arch_align
 decl_stmt|;
-comment|/* Calculate the file positions of the parts of a newly read aout header */
+comment|/* Calculate the file positions of the parts of a newly read aout header.  */
 name|obj_textsec
 argument_list|(
 name|abfd
 argument_list|)
 operator|->
-name|_raw_size
+name|size
 operator|=
 name|N_TXTSIZE
 argument_list|(
@@ -143,7 +140,7 @@ operator|*
 name|execp
 argument_list|)
 expr_stmt|;
-comment|/* The virtual memory addresses of the sections */
+comment|/* The virtual memory addresses of the sections.  */
 name|obj_textsec
 argument_list|(
 name|abfd
@@ -302,7 +299,7 @@ argument_list|)
 operator|->
 name|vma
 expr_stmt|;
-comment|/* The file offsets of the sections */
+comment|/* The file offsets of the sections.  */
 name|obj_textsec
 argument_list|(
 name|abfd
@@ -329,7 +326,7 @@ operator|*
 name|execp
 argument_list|)
 expr_stmt|;
-comment|/* The file offsets of the relocation info */
+comment|/* The file offsets of the relocation info.  */
 name|obj_textsec
 argument_list|(
 name|abfd
@@ -437,7 +434,7 @@ argument_list|(
 name|abfd
 argument_list|)
 expr_stmt|;
-comment|/* Now that we know the architecture, set the alignments of the      sections.  This is normally done by NAME(aout,new_section_hook),      but when the initial sections were created the architecture had      not yet been set.  However, for backward compatibility, we don't      set the alignment power any higher than as required by the size      of the section.  */
+comment|/* Now that we know the architecture, set the alignments of the      sections.  This is normally done by NAME (aout,new_section_hook),      but when the initial sections were created the architecture had      not yet been set.  However, for backward compatibility, we don't      set the alignment power any higher than as required by the size      of the section.  */
 name|arch_align_power
 operator|=
 name|bfd_get_arch_info
@@ -463,7 +460,7 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|->
-name|_raw_size
+name|size
 argument_list|,
 name|arch_align
 argument_list|)
@@ -473,7 +470,7 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|->
-name|_raw_size
+name|size
 operator|)
 operator|&&
 operator|(
@@ -484,7 +481,7 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|->
-name|_raw_size
+name|size
 argument_list|,
 name|arch_align
 argument_list|)
@@ -494,7 +491,7 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|->
-name|_raw_size
+name|size
 operator|)
 operator|&&
 operator|(
@@ -505,7 +502,7 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|->
-name|_raw_size
+name|size
 argument_list|,
 name|arch_align
 argument_list|)
@@ -515,7 +512,7 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|->
-name|_raw_size
+name|size
 operator|)
 condition|)
 block|{
@@ -548,12 +545,6 @@ name|arch_align_power
 expr_stmt|;
 block|}
 comment|/* Don't set sizes now -- can't be sure until we know arch& mach.      Sizes get set in set_sizes callback, later.  */
-if|#
-directive|if
-literal|0
-block|adata(abfd).page_size = TARGET_PAGE_SIZE;   adata(abfd).segment_size = SEGMENT_SIZE;   adata(abfd).exec_bytes_size = EXEC_BYTES_SIZE;
-endif|#
-directive|endif
 return|return
 name|abfd
 operator|->
@@ -574,27 +565,8 @@ name|MY_object_p
 end_ifndef
 
 begin_comment
-comment|/* Finish up the reading of an a.out file header */
+comment|/* Finish up the reading of an a.out file header.  */
 end_comment
-
-begin_function_decl
-specifier|static
-specifier|const
-name|bfd_target
-modifier|*
-name|MY
-parameter_list|(
-name|object_p
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
 
 begin_function
 specifier|static
@@ -606,23 +578,21 @@ function|(
 name|object_p
 function|)
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|external_exec
 name|exec_bytes
 decl_stmt|;
-comment|/* Raw exec header from file */
+comment|/* Raw exec header from file.  */
 name|struct
 name|internal_exec
 name|exec
 decl_stmt|;
-comment|/* Cleaned-up exec header */
+comment|/* Cleaned-up exec header.  */
 specifier|const
 name|bfd_target
 modifier|*
@@ -638,7 +608,8 @@ condition|(
 name|bfd_bread
 argument_list|(
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 operator|&
 name|exec_bytes
@@ -698,7 +669,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* SWAP_MAGIC */
 if|if
 condition|(
 name|N_BADMAG
@@ -749,7 +719,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SWAP_MAGIC
-comment|/* swap_exec_header_in read in a_info with the wrong byte order */
+comment|/* Swap_exec_header_in read in a_info with the wrong byte order.  */
 name|exec
 operator|.
 name|a_info
@@ -763,7 +733,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* SWAP_MAGIC */
 name|target
 operator|=
 name|NAME
@@ -787,7 +756,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ENTRY_CAN_BE_ZERO
-comment|/* The NEWSOS3 entry-point is/was 0, which (amongst other lossage)    * means that it isn't obvious if EXEC_P should be set.    * All of the following must be true for an executable:    * There must be no relocations, the bfd can be neither an    * archive nor an archive element, and the file must be executable.  */
+comment|/* The NEWSOS3 entry-point is/was 0, which (amongst other lossage)      means that it isn't obvious if EXEC_P should be set.      All of the following must be true for an executable:      There must be no relocations, the bfd can be neither an      archive nor an archive element, and the file must be executable.  */
 if|if
 condition|(
 name|exec
@@ -870,7 +839,7 @@ begin_define
 define|#
 directive|define
 name|MY_object_p
-value|MY(object_p)
+value|MY (object_p)
 end_define
 
 begin_endif
@@ -884,23 +853,6 @@ directive|ifndef
 name|MY_mkobject
 end_ifndef
 
-begin_function_decl
-specifier|static
-name|bfd_boolean
-name|MY
-parameter_list|(
-name|mkobject
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
 begin_function
 specifier|static
 name|bfd_boolean
@@ -909,38 +861,21 @@ function|(
 name|mkobject
 function|)
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
-if|if
-condition|(
-operator|!
+return|return
 name|NAME
 argument_list|(
 name|aout
 argument_list|,
 name|mkobject
-argument_list|)
 argument_list|(
 name|abfd
 argument_list|)
-condition|)
-return|return
-name|FALSE
-return|;
-if|#
-directive|if
-literal|0
-comment|/* Sizes get set in set_sizes callback, later, after we know 	 the architecture and machine.  */
-block|adata(abfd).page_size = TARGET_PAGE_SIZE;   adata(abfd).segment_size = SEGMENT_SIZE;   adata(abfd).exec_bytes_size = EXEC_BYTES_SIZE;
-endif|#
-directive|endif
-return|return
-name|TRUE
+argument_list|)
 return|;
 block|}
 end_function
@@ -949,7 +884,7 @@ begin_define
 define|#
 directive|define
 name|MY_mkobject
-value|MY(mkobject)
+value|MY (mkobject)
 end_define
 
 begin_endif
@@ -967,60 +902,29 @@ begin_comment
 comment|/* Copy private section data.  This actually does nothing with the    sections.  It copies the subformat field.  We copy it here, because    we need to know whether this is a QMAGIC file before we set the    section contents, and copy_private_bfd_data is not called until    after the section contents have been set.  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|MY_bfd_copy_private_section_data
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-name|bfd
-operator|*
-operator|,
-name|asection
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|bfd_boolean
 name|MY_bfd_copy_private_section_data
 parameter_list|(
+name|bfd
+modifier|*
 name|ibfd
 parameter_list|,
+name|asection
+modifier|*
 name|isec
+name|ATTRIBUTE_UNUSED
 parameter_list|,
+name|bfd
+modifier|*
 name|obfd
 parameter_list|,
+name|asection
+modifier|*
 name|osec
+name|ATTRIBUTE_UNUSED
 parameter_list|)
-name|bfd
-modifier|*
-name|ibfd
-decl_stmt|;
-name|asection
-modifier|*
-name|isec
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|bfd
-modifier|*
-name|obfd
-decl_stmt|;
-name|asection
-modifier|*
-name|osec
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
 block|{
 if|if
 condition|(
@@ -1069,23 +973,6 @@ directive|ifndef
 name|MY_write_object_contents
 end_ifndef
 
-begin_function_decl
-specifier|static
-name|bfd_boolean
-name|MY
-parameter_list|(
-name|write_object_contents
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
 begin_function
 specifier|static
 name|bfd_boolean
@@ -1094,12 +981,10 @@ function|(
 name|write_object_contents
 function|)
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|external_exec
@@ -1139,7 +1024,7 @@ begin_define
 define|#
 directive|define
 name|MY_write_object_contents
-value|MY(write_object_contents)
+value|MY (write_object_contents)
 end_define
 
 begin_endif
@@ -1153,23 +1038,6 @@ directive|ifndef
 name|MY_set_sizes
 end_ifndef
 
-begin_function_decl
-specifier|static
-name|bfd_boolean
-name|MY
-parameter_list|(
-name|set_sizes
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
 begin_function
 specifier|static
 name|bfd_boolean
@@ -1178,12 +1046,10 @@ function|(
 name|set_sizes
 function|)
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|adata
 argument_list|(
@@ -1247,7 +1113,7 @@ begin_define
 define|#
 directive|define
 name|MY_set_sizes
-value|MY(set_sizes)
+value|MY (set_sizes)
 end_define
 
 begin_endif
@@ -1480,7 +1346,7 @@ function_decl|MY_exec_hdr_flags
 operator|,
 function_decl|0
 operator|,
-comment|/* text vma? */
+comment|/* Text vma?  */
 function_decl|MY_set_sizes
 operator|,
 function_decl|MY_exec_header_not_counted
@@ -1503,7 +1369,7 @@ unit|};
 define|#
 directive|define
 name|MY_backend_data
-value|&MY(backend_data)
+value|&MY (backend_data)
 end_define
 
 begin_endif
@@ -1521,58 +1387,27 @@ begin_comment
 comment|/* Callback for the final_link routine to set the section offsets.  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|void
-name|MY_final_link_callback
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|file_ptr
-operator|*
-operator|,
-name|file_ptr
-operator|*
-operator|,
-name|file_ptr
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
 name|MY_final_link_callback
 parameter_list|(
-name|abfd
-parameter_list|,
-name|ptreloff
-parameter_list|,
-name|pdreloff
-parameter_list|,
-name|psymoff
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|file_ptr
 modifier|*
 name|ptreloff
-decl_stmt|;
+parameter_list|,
 name|file_ptr
 modifier|*
 name|pdreloff
-decl_stmt|;
+parameter_list|,
 name|file_ptr
 modifier|*
 name|psymoff
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|internal_exec
@@ -1629,42 +1464,20 @@ begin_comment
 comment|/* Final link routine.  We need to use a call back to get the correct    offsets in the output file.  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|MY_bfd_final_link
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-expr|struct
-name|bfd_link_info
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|bfd_boolean
 name|MY_bfd_final_link
 parameter_list|(
-name|abfd
-parameter_list|,
-name|info
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|NAME
@@ -1998,7 +1811,7 @@ define|#
 directive|define
 name|MY_bfd_debug_info_accumulate
 define|\
-value|(void (*) PARAMS ((bfd*, struct bfd_section *))) bfd_void
+value|(void (*) (bfd *, struct bfd_section *)) bfd_void
 end_define
 
 begin_endif
@@ -2016,7 +1829,7 @@ begin_define
 define|#
 directive|define
 name|MY_core_file_failing_command
-value|NAME(aout,core_file_failing_command)
+value|NAME (aout, core_file_failing_command)
 end_define
 
 begin_endif
@@ -2034,7 +1847,7 @@ begin_define
 define|#
 directive|define
 name|MY_core_file_failing_signal
-value|NAME(aout,core_file_failing_signal)
+value|NAME (aout, core_file_failing_signal)
 end_define
 
 begin_endif
@@ -2052,7 +1865,7 @@ begin_define
 define|#
 directive|define
 name|MY_core_file_matches_executable_p
-value|NAME(aout,core_file_matches_executable_p)
+value|NAME (aout, core_file_matches_executable_p)
 end_define
 
 begin_endif
@@ -2070,7 +1883,7 @@ begin_define
 define|#
 directive|define
 name|MY_set_section_contents
-value|NAME(aout,set_section_contents)
+value|NAME (aout, set_section_contents)
 end_define
 
 begin_endif
@@ -2088,7 +1901,7 @@ begin_define
 define|#
 directive|define
 name|MY_get_section_contents
-value|NAME(aout,get_section_contents)
+value|NAME (aout, get_section_contents)
 end_define
 
 begin_endif
@@ -2124,7 +1937,7 @@ begin_define
 define|#
 directive|define
 name|MY_new_section_hook
-value|NAME(aout,new_section_hook)
+value|NAME (aout, new_section_hook)
 end_define
 
 begin_endif
@@ -2142,7 +1955,7 @@ begin_define
 define|#
 directive|define
 name|MY_get_symtab_upper_bound
-value|NAME(aout,get_symtab_upper_bound)
+value|NAME (aout, get_symtab_upper_bound)
 end_define
 
 begin_endif
@@ -2160,7 +1973,7 @@ begin_define
 define|#
 directive|define
 name|MY_canonicalize_symtab
-value|NAME(aout,canonicalize_symtab)
+value|NAME (aout, canonicalize_symtab)
 end_define
 
 begin_endif
@@ -2178,7 +1991,7 @@ begin_define
 define|#
 directive|define
 name|MY_get_reloc_upper_bound
-value|NAME(aout,get_reloc_upper_bound)
+value|NAME (aout,get_reloc_upper_bound)
 end_define
 
 begin_endif
@@ -2196,7 +2009,7 @@ begin_define
 define|#
 directive|define
 name|MY_canonicalize_reloc
-value|NAME(aout,canonicalize_reloc)
+value|NAME (aout, canonicalize_reloc)
 end_define
 
 begin_endif
@@ -2214,7 +2027,7 @@ begin_define
 define|#
 directive|define
 name|MY_make_empty_symbol
-value|NAME(aout,make_empty_symbol)
+value|NAME (aout, make_empty_symbol)
 end_define
 
 begin_endif
@@ -2232,7 +2045,7 @@ begin_define
 define|#
 directive|define
 name|MY_print_symbol
-value|NAME(aout,print_symbol)
+value|NAME (aout, print_symbol)
 end_define
 
 begin_endif
@@ -2250,7 +2063,7 @@ begin_define
 define|#
 directive|define
 name|MY_get_symbol_info
-value|NAME(aout,get_symbol_info)
+value|NAME (aout, get_symbol_info)
 end_define
 
 begin_endif
@@ -2268,7 +2081,7 @@ begin_define
 define|#
 directive|define
 name|MY_get_lineno
-value|NAME(aout,get_lineno)
+value|NAME (aout, get_lineno)
 end_define
 
 begin_endif
@@ -2286,7 +2099,7 @@ begin_define
 define|#
 directive|define
 name|MY_set_arch_mach
-value|NAME(aout,set_arch_mach)
+value|NAME (aout, set_arch_mach)
 end_define
 
 begin_endif
@@ -2304,7 +2117,25 @@ begin_define
 define|#
 directive|define
 name|MY_find_nearest_line
-value|NAME(aout,find_nearest_line)
+value|NAME (aout, find_nearest_line)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MY_find_inliner_info
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MY_find_inliner_info
+value|_bfd_nosymbols_find_inliner_info
 end_define
 
 begin_endif
@@ -2322,7 +2153,7 @@ begin_define
 define|#
 directive|define
 name|MY_sizeof_headers
-value|NAME(aout,sizeof_headers)
+value|NAME (aout, sizeof_headers)
 end_define
 
 begin_endif
@@ -2406,6 +2237,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|MY_bfd_is_group_section
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MY_bfd_is_group_section
+value|bfd_generic_is_group_section
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|MY_bfd_discard_group
 end_ifndef
 
@@ -2424,6 +2273,25 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|MY_section_already_linked
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MY_section_already_linked
+define|\
+value|_bfd_generic_section_already_linked
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|MY_bfd_reloc_type_lookup
 end_ifndef
 
@@ -2431,7 +2299,25 @@ begin_define
 define|#
 directive|define
 name|MY_bfd_reloc_type_lookup
-value|NAME(aout,reloc_type_lookup)
+value|NAME (aout, reloc_type_lookup)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MY_bfd_reloc_name_lookup
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MY_bfd_reloc_name_lookup
+value|NAME (aout, reloc_name_lookup)
 end_define
 
 begin_endif
@@ -2467,7 +2353,7 @@ begin_define
 define|#
 directive|define
 name|MY_read_minisymbols
-value|NAME(aout,read_minisymbols)
+value|NAME (aout, read_minisymbols)
 end_define
 
 begin_endif
@@ -2485,7 +2371,7 @@ begin_define
 define|#
 directive|define
 name|MY_minisymbol_to_symbol
-value|NAME(aout,minisymbol_to_symbol)
+value|NAME (aout, minisymbol_to_symbol)
 end_define
 
 begin_endif
@@ -2503,7 +2389,7 @@ begin_define
 define|#
 directive|define
 name|MY_bfd_link_hash_table_create
-value|NAME(aout,link_hash_table_create)
+value|NAME (aout, link_hash_table_create)
 end_define
 
 begin_endif
@@ -2539,7 +2425,7 @@ begin_define
 define|#
 directive|define
 name|MY_bfd_link_add_symbols
-value|NAME(aout,link_add_symbols)
+value|NAME (aout, link_add_symbols)
 end_define
 
 begin_endif
@@ -2640,6 +2526,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|MY_bfd_copy_private_header_data
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MY_bfd_copy_private_header_data
+value|_bfd_generic_bfd_copy_private_header_data
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|MY_bfd_print_private_bfd_data
 end_ifndef
 
@@ -2694,6 +2598,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|MY_bfd_is_target_special_symbol
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MY_bfd_is_target_special_symbol
+value|((bfd_boolean (*) (bfd *, asymbol *)) bfd_false)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|MY_bfd_free_cached_info
 end_ifndef
 
@@ -2701,7 +2623,7 @@ begin_define
 define|#
 directive|define
 name|MY_bfd_free_cached_info
-value|NAME(aout,bfd_free_cached_info)
+value|NAME (aout, bfd_free_cached_info)
 end_define
 
 begin_endif
@@ -2768,6 +2690,25 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|MY_get_synthetic_symtab
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MY_get_synthetic_symtab
+define|\
+value|_bfd_nodynamic_get_synthetic_symtab
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|MY_get_dynamic_reloc_upper_bound
 end_ifndef
 
@@ -2804,7 +2745,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Aout symbols normally have leading underscores */
+comment|/* Aout symbols normally have leading underscores.  */
 end_comment
 
 begin_ifndef
@@ -2826,7 +2767,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Aout archives normally use spaces for padding */
+comment|/* Aout archives normally use spaces for padding.  */
 end_comment
 
 begin_ifndef
@@ -2864,7 +2805,7 @@ init|=
 block|{
 name|TARGETNAME
 operator|,
-comment|/* name */
+comment|/* Name.  */
 function_decl|bfd_target_aout_flavour
 operator|,
 ifdef|#
@@ -2872,23 +2813,23 @@ directive|ifdef
 name|TARGET_IS_BIG_ENDIAN_P
 function_decl|BFD_ENDIAN_BIG
 operator|,
-comment|/* target byte order (big) */
+comment|/* Target byte order (big).  */
 function_decl|BFD_ENDIAN_BIG
 operator|,
-comment|/* target headers byte order (big) */
+comment|/* Target headers byte order (big).  */
 else|#
 directive|else
 function_decl|BFD_ENDIAN_LITTLE
 operator|,
-comment|/* target byte order (little) */
+comment|/* Target byte order (little).  */
 function_decl|BFD_ENDIAN_LITTLE
 operator|,
-comment|/* target headers byte order (little) */
+comment|/* Target headers byte order (little).  */
 endif|#
 directive|endif
 parameter_list|(
 function_decl|HAS_RELOC | EXEC_P |
-comment|/* object flags */
+comment|/* Object flags.  */
 function_decl|HAS_LINENO | HAS_DEBUG |    HAS_SYMS | HAS_LOCALS | DYNAMIC | WP_TEXT | D_PAGED
 end_function_decl
 
@@ -2916,10 +2857,10 @@ name|MY_symbol_leading_char
 operator|,
 name|AR_PAD_CHAR
 operator|,
-comment|/* ar_pad_char */
+comment|/* AR_pad_char.  */
 literal|15
 operator|,
-comment|/* ar_max_namelen */
+comment|/* AR_max_namelen.  */
 ifdef|#
 directive|ifdef
 name|TARGET_IS_BIG_ENDIAN_P
@@ -2941,7 +2882,7 @@ name|bfd_getb_signed_16
 operator|,
 name|bfd_putb16
 operator|,
-comment|/* data */
+comment|/* Data.  */
 name|bfd_getb64
 operator|,
 name|bfd_getb_signed_64
@@ -2960,7 +2901,7 @@ name|bfd_getb_signed_16
 operator|,
 name|bfd_putb16
 operator|,
-comment|/* hdrs */
+comment|/* Headers.  */
 else|#
 directive|else
 name|bfd_getl64
@@ -2981,7 +2922,7 @@ name|bfd_getl_signed_16
 operator|,
 name|bfd_putl16
 operator|,
-comment|/* data */
+comment|/* Data.  */
 name|bfd_getl64
 operator|,
 name|bfd_getl_signed_64
@@ -3000,7 +2941,7 @@ name|bfd_getl_signed_16
 operator|,
 name|bfd_putl16
 operator|,
-comment|/* hdrs */
+comment|/* Headers.  */
 endif|#
 directive|endif
 block|{
@@ -3008,7 +2949,7 @@ name|_bfd_dummy_target
 block|,
 name|MY_object_p
 block|,
-comment|/* bfd_check_format */
+comment|/* bfd_check_format.  */
 name|bfd_generic_archive_p
 block|,
 name|MY_core_file_p
@@ -3019,7 +2960,7 @@ name|bfd_false
 block|,
 name|MY_mkobject
 block|,
-comment|/* bfd_set_format */
+comment|/* bfd_set_format.  */
 name|_bfd_generic_mkarchive
 block|,
 name|bfd_false
@@ -3030,7 +2971,7 @@ name|bfd_false
 block|,
 name|MY_write_object_contents
 block|,
-comment|/* bfd_write_contents */
+comment|/* bfd_write_contents.  */
 name|_bfd_write_archive_contents
 block|,
 name|bfd_false
@@ -3081,12 +3022,9 @@ argument_list|(
 name|MY
 argument_list|)
 operator|,
-comment|/* Alternative_target */
+comment|/* Alternative_target.  */
 name|NULL
 operator|,
-operator|(
-name|PTR
-operator|)
 name|MY_backend_data
 end_expr_stmt
 

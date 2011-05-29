@@ -32,7 +32,7 @@ begin_define
 define|#
 directive|define
 name|PSL_UCLE
-value|0x04000000
+value|0x04000000UL
 end_define
 
 begin_comment
@@ -43,7 +43,7 @@ begin_define
 define|#
 directive|define
 name|PSL_SPE
-value|0x02000000
+value|0x02000000UL
 end_define
 
 begin_comment
@@ -54,7 +54,7 @@ begin_define
 define|#
 directive|define
 name|PSL_WE
-value|0x00040000
+value|0x00040000UL
 end_define
 
 begin_comment
@@ -65,7 +65,7 @@ begin_define
 define|#
 directive|define
 name|PSL_CE
-value|0x00020000
+value|0x00020000UL
 end_define
 
 begin_comment
@@ -76,7 +76,7 @@ begin_define
 define|#
 directive|define
 name|PSL_EE
-value|0x00008000
+value|0x00008000UL
 end_define
 
 begin_comment
@@ -87,7 +87,7 @@ begin_define
 define|#
 directive|define
 name|PSL_PR
-value|0x00004000
+value|0x00004000UL
 end_define
 
 begin_comment
@@ -98,7 +98,7 @@ begin_define
 define|#
 directive|define
 name|PSL_FP
-value|0x00002000
+value|0x00002000UL
 end_define
 
 begin_comment
@@ -109,7 +109,7 @@ begin_define
 define|#
 directive|define
 name|PSL_ME
-value|0x00001000
+value|0x00001000UL
 end_define
 
 begin_comment
@@ -120,7 +120,7 @@ begin_define
 define|#
 directive|define
 name|PSL_FE0
-value|0x00000800
+value|0x00000800UL
 end_define
 
 begin_comment
@@ -131,7 +131,7 @@ begin_define
 define|#
 directive|define
 name|PSL_UBLE
-value|0x00000400
+value|0x00000400UL
 end_define
 
 begin_comment
@@ -142,7 +142,7 @@ begin_define
 define|#
 directive|define
 name|PSL_DE
-value|0x00000200
+value|0x00000200UL
 end_define
 
 begin_comment
@@ -153,7 +153,7 @@ begin_define
 define|#
 directive|define
 name|PSL_FE1
-value|0x00000100
+value|0x00000100UL
 end_define
 
 begin_comment
@@ -164,7 +164,7 @@ begin_define
 define|#
 directive|define
 name|PSL_IS
-value|0x00000020
+value|0x00000020UL
 end_define
 
 begin_comment
@@ -175,7 +175,7 @@ begin_define
 define|#
 directive|define
 name|PSL_DS
-value|0x00000010
+value|0x00000010UL
 end_define
 
 begin_comment
@@ -186,11 +186,22 @@ begin_define
 define|#
 directive|define
 name|PSL_PMM
-value|0x00000004
+value|0x00000004UL
 end_define
 
 begin_comment
 comment|/* Performance monitor mark */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_FE_DFLT
+value|0x00000000UL
+end_define
+
+begin_comment
+comment|/* default == none */
 end_comment
 
 begin_comment
@@ -231,11 +242,44 @@ begin_comment
 comment|/*  * Machine State Register (MSR)  *  * The PowerPC 601 does not implement the following bits:  *  *	VEC, POW, ILE, BE, RI, LE[*]  *  * [*] Little-endian mode on the 601 is implemented in the HID0 register.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PSL_SF
+value|0x8000000000000000UL
+end_define
+
+begin_comment
+comment|/* 64-bit addressing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_HV
+value|0x1000000000000000UL
+end_define
+
+begin_comment
+comment|/* hyper-privileged mode */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|PSL_VEC
-value|0x02000000
+value|0x02000000UL
 end_define
 
 begin_comment
@@ -246,7 +290,7 @@ begin_define
 define|#
 directive|define
 name|PSL_POW
-value|0x00040000
+value|0x00040000UL
 end_define
 
 begin_comment
@@ -257,7 +301,7 @@ begin_define
 define|#
 directive|define
 name|PSL_ILE
-value|0x00010000
+value|0x00010000UL
 end_define
 
 begin_comment
@@ -268,7 +312,7 @@ begin_define
 define|#
 directive|define
 name|PSL_EE
-value|0x00008000
+value|0x00008000UL
 end_define
 
 begin_comment
@@ -279,7 +323,7 @@ begin_define
 define|#
 directive|define
 name|PSL_PR
-value|0x00004000
+value|0x00004000UL
 end_define
 
 begin_comment
@@ -290,7 +334,7 @@ begin_define
 define|#
 directive|define
 name|PSL_FP
-value|0x00002000
+value|0x00002000UL
 end_define
 
 begin_comment
@@ -301,7 +345,7 @@ begin_define
 define|#
 directive|define
 name|PSL_ME
-value|0x00001000
+value|0x00001000UL
 end_define
 
 begin_comment
@@ -312,7 +356,7 @@ begin_define
 define|#
 directive|define
 name|PSL_FE0
-value|0x00000800
+value|0x00000800UL
 end_define
 
 begin_comment
@@ -323,7 +367,7 @@ begin_define
 define|#
 directive|define
 name|PSL_SE
-value|0x00000400
+value|0x00000400UL
 end_define
 
 begin_comment
@@ -334,7 +378,7 @@ begin_define
 define|#
 directive|define
 name|PSL_BE
-value|0x00000200
+value|0x00000200UL
 end_define
 
 begin_comment
@@ -345,7 +389,7 @@ begin_define
 define|#
 directive|define
 name|PSL_FE1
-value|0x00000100
+value|0x00000100UL
 end_define
 
 begin_comment
@@ -356,7 +400,7 @@ begin_define
 define|#
 directive|define
 name|PSL_IP
-value|0x00000040
+value|0x00000040UL
 end_define
 
 begin_comment
@@ -367,7 +411,7 @@ begin_define
 define|#
 directive|define
 name|PSL_IR
-value|0x00000020
+value|0x00000020UL
 end_define
 
 begin_comment
@@ -378,7 +422,7 @@ begin_define
 define|#
 directive|define
 name|PSL_DR
-value|0x00000010
+value|0x00000010UL
 end_define
 
 begin_comment
@@ -388,8 +432,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PSL_PMM
+value|0x00000004UL
+end_define
+
+begin_comment
+comment|/* performance monitor mark */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PSL_RI
-value|0x00000002
+value|0x00000002UL
 end_define
 
 begin_comment
@@ -400,7 +455,7 @@ begin_define
 define|#
 directive|define
 name|PSL_LE
-value|0x00000001
+value|0x00000001UL
 end_define
 
 begin_comment
@@ -491,12 +546,35 @@ name|PSL_MBZ
 value|0
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PSL_KERNSET
+value|(PSL_SF | PSL_EE | PSL_ME | PSL_IR | PSL_DR | PSL_RI)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|PSL_KERNSET
 value|(PSL_EE | PSL_ME | PSL_IR | PSL_DR | PSL_RI)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

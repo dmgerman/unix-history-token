@@ -160,6 +160,10 @@ name|fd
 decl_stmt|,
 name|fdmax
 decl_stmt|;
+name|char
+modifier|*
+name|arg
+decl_stmt|;
 name|mediaClose
 argument_list|()
 expr_stmt|;
@@ -189,6 +193,19 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|RunningAsInit
+condition|)
+name|arg
+operator|=
+literal|"-restart -fakeInit"
+expr_stmt|;
+else|else
+name|arg
+operator|=
+literal|"-restart"
+expr_stmt|;
 name|ret
 operator|=
 name|execl
@@ -197,12 +214,8 @@ name|StartName
 argument_list|,
 name|StartName
 argument_list|,
-literal|"-restart"
+name|arg
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -558,10 +571,7 @@ expr_stmt|;
 comment|/* Are we running as init? */
 if|if
 condition|(
-name|getpid
-argument_list|()
-operator|==
-literal|1
+name|RunningAsInit
 condition|)
 block|{
 name|struct
@@ -571,10 +581,6 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
-name|RunningAsInit
-operator|=
-literal|1
-expr_stmt|;
 name|setsid
 argument_list|()
 expr_stmt|;
@@ -2379,7 +2385,7 @@ literal|"sh"
 argument_list|,
 literal|"-sh"
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|msgDebug

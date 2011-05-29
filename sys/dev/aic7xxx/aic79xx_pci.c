@@ -1199,7 +1199,7 @@ name|error
 operator|)
 return|;
 comment|/* 	 * Find the PCI-X cap pointer.  If we don't find it, 	 * pcix_ptr will be 0. 	 */
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|ahd
 operator|->

@@ -16389,6 +16389,8 @@ name|sr_flags
 operator|=
 name|IEEE80211_IOC_SCAN_ACTIVE
 operator||
+name|IEEE80211_IOC_SCAN_BGSCAN
+operator||
 name|IEEE80211_IOC_SCAN_NOPICK
 operator||
 name|IEEE80211_IOC_SCAN_ONCE
@@ -16421,7 +16423,7 @@ argument_list|(
 name|sr
 argument_list|)
 expr_stmt|;
-comment|/* NB: only root can trigger a scan so ignore errors */
+comment|/* 	 * NB: only root can trigger a scan so ignore errors. Also ignore 	 * possible errors from net80211, even if no new scan could be 	 * started there might still be a valid scan cache. 	 */
 if|if
 condition|(
 name|ioctl
@@ -16433,7 +16435,7 @@ argument_list|,
 operator|&
 name|ireq
 argument_list|)
-operator|>=
+operator|==
 literal|0
 condition|)
 block|{
@@ -23221,6 +23223,9 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|LINE_BREAK
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 if|if
@@ -25933,7 +25938,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: cannot parse addres"
+literal|"%s: cannot parse address"
 argument_list|,
 name|arg
 argument_list|)

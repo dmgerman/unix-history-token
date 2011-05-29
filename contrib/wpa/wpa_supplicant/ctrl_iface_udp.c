@@ -48,7 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"wpa_ctrl.h"
+file|"common/wpa_ctrl.h"
 end_include
 
 begin_define

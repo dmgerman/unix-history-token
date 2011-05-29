@@ -60,12 +60,37 @@ begin_define
 define|#
 directive|define
 name|__FreeBSD_version
-value|900009
+value|900038
 end_define
 
 begin_comment
 comment|/* Master, propagated to newvers */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|P_OSREL_SIGSEGV
+value|700004
+end_define
+
+begin_define
+define|#
+directive|define
+name|P_OSREL_MAP_ANON
+value|800104
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -85,7 +110,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Machine-independent constants (some used in following include files).  * Redefined constants are from POSIX 1003.1 limits file.  *  * MAXCOMLEN should be>= sizeof(ac_comm) (see<acct.h>)  * MAXLOGNAME should be == UT_NAMESIZE+1 (see<utmp.h>)  */
+comment|/*  * Machine-independent constants (some used in following include files).  * Redefined constants are from POSIX 1003.1 limits file.  *  * MAXCOMLEN should be>= sizeof(ac_comm) (see<acct.h>)  */
 end_comment
 
 begin_include
@@ -109,7 +134,7 @@ begin_define
 define|#
 directive|define
 name|MAXINTERP
-value|32
+value|PATH_MAX
 end_define
 
 begin_comment

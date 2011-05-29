@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001-2008, by Cisco Systems, Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2001-2008, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -135,28 +135,6 @@ name|SCTP_AUDIT_SIZE
 value|256
 end_define
 
-begin_comment
-comment|/* temporary disabled since it does not work with VNET. */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|SCTP_USE_THREAD_BASED_ITERATOR
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -169,6 +147,13 @@ define|#
 directive|define
 name|SCTP_KTHREAD_PAGES
 value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_MCORE_NAME
+value|"sctp_core_worker"
 end_define
 
 begin_comment
@@ -1398,13 +1383,6 @@ name|MAX_TSN
 value|0xffffffff
 end_define
 
-begin_define
-define|#
-directive|define
-name|MAX_SEQ
-value|0xffff
-end_define
-
 begin_comment
 comment|/* how many executions every N tick's */
 end_comment
@@ -1450,14 +1428,46 @@ value|1
 end_define
 
 begin_comment
-comment|/* default max I can burst out after a fast retransmit */
+comment|/* default max I can burst out after a fast retransmit, 0 disables it */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTP_DEF_MAX_BURST
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_DEF_HBMAX_BURST
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_DEF_FRMAX_BURST
+value|4
+end_define
+
+begin_comment
+comment|/* RTO calculation flag to say if it  * is safe to determine local lan or not.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_RTT_FROM_NON_DATA
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_RTT_FROM_DATA
+value|1
 end_define
 
 begin_comment
@@ -1523,24 +1533,6 @@ define|#
 directive|define
 name|SCTP_DATAGRAM_ACKED
 value|10010
-end_define
-
-begin_comment
-comment|/* EY  * If a tsn is nr-gapped, its first tagged as NR_MARKED and then NR_ACKED  * When yet another nr-sack is received, if a particular TSN's sent tag  * is observed to be NR_ACKED after gap-ack info is processed, this implies  * that particular TSN is reneged */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_DATAGRAM_NR_ACKED
-value|10020
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_DATAGRAM_NR_MARKED
-value|20005
 end_define
 
 begin_define
@@ -1848,17 +1840,6 @@ define|#
 directive|define
 name|SCTP_ECN_CAPABLE
 value|0x8000
-end_define
-
-begin_comment
-comment|/* ECN Nonce: draft-ladha-sctp-ecn-nonce */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_ECN_NONCE_SUPPORTED
-value|0x8001
 end_define
 
 begin_comment
@@ -2198,6 +2179,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCTP_STATE_IN_ACCEPT_QUEUE
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCTP_STATE_MASK
 value|0x007f
 end_define
@@ -2340,13 +2328,6 @@ name|SCTP_ADDR_PF
 value|0x800
 end_define
 
-begin_define
-define|#
-directive|define
-name|SCTP_REACHABLE_MASK
-value|0x203
-end_define
-
 begin_comment
 comment|/* bound address types (e.g. valid address types to allow) */
 end_comment
@@ -2428,43 +2409,6 @@ begin_define
 define|#
 directive|define
 name|SCTP_MAPPING_ARRAY_INCR
-value|32
-end_define
-
-begin_comment
-comment|/* EY 05/13/08 - nr_sack version of the previous 3 constants */
-end_comment
-
-begin_comment
-comment|/* Maximum the nr mapping array will  grow to (TSN mapping array) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_NR_MAPPING_ARRAY
-value|512
-end_define
-
-begin_comment
-comment|/* size of the inital malloc on the nr mapping array */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_INITIAL_NR_MAPPING_ARRAY
-value|16
-end_define
-
-begin_comment
-comment|/* how much we grow the nr mapping array each call */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_NR_MAPPING_ARRAY_INCR
 value|32
 end_define
 
@@ -2646,13 +2590,6 @@ define|#
 directive|define
 name|SCTP_TIMER_TYPE_INPKILL
 value|15
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_TIMER_TYPE_ITERATOR
-value|16
 end_define
 
 begin_define
@@ -2901,23 +2838,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTP_RTO_UPPER_BOUND_SEC
-value|60
-end_define
-
-begin_comment
-comment|/* for the init timer */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SCTP_RTO_LOWER_BOUND
-value|(1000)
+value|(300)
 end_define
 
 begin_comment
-comment|/* 1 sec in ms */
+comment|/* 0.3 sec is ms */
 end_comment
 
 begin_define
@@ -4229,6 +4155,13 @@ name|SCTP_CALLED_AFTER_CMPSET_OFCLOSE
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_CALLED_FROM_INPKILL_TIMER
+value|2
+end_define
+
 begin_comment
 comment|/* second argument */
 end_comment
@@ -4285,21 +4218,55 @@ comment|/* modular comparison */
 end_comment
 
 begin_comment
-comment|/* True if a> b (mod = M) */
+comment|/* See RFC 1982 for details. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|compare_with_wrap
+name|SCTP_SSN_GT
 parameter_list|(
 name|a
 parameter_list|,
 name|b
-parameter_list|,
-name|M
 parameter_list|)
-value|(((a> b)&& ((a - b)< ((M>> 1) + 1))) || \               ((b> a)&& ((b - a)> ((M>> 1) + 1))))
+value|(((a< b)&& ((uint16_t)(b - a)> (1U<<15))) || \                            ((a> b)&& ((uint16_t)(a - b)< (1U<<15))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_SSN_GE
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(SCTP_SSN_GT(a, b) || (a == b))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_TSN_GT
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((a< b)&& ((uint32_t)(b - a)> (1U<<31))) || \                            ((a> b)&& ((uint32_t)(a - b)< (1U<<31))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_TSN_GE
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(SCTP_TSN_GT(a, b) || (a == b))
 end_define
 
 begin_comment
@@ -4340,6 +4307,20 @@ parameter_list|,
 name|gap
 parameter_list|)
 value|(arry[(gap>> 3)]&= ((~(0x01<< ((gap& 0x07))))& 0xff))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_CALC_TSN_TO_GAP
+parameter_list|(
+name|gap
+parameter_list|,
+name|tsn
+parameter_list|,
+name|mapping_tsn
+parameter_list|)
+value|do { \ 	                if (tsn>= mapping_tsn) { \ 						gap = tsn - mapping_tsn; \ 					} else { \ 						gap = (MAX_TSN - mapping_tsn) + tsn + 1; \ 					} \                   } while(0)
 end_define
 
 begin_define
@@ -4387,6 +4368,56 @@ define|#
 directive|define
 name|SCTP_TIME_WAIT
 value|60
+end_define
+
+begin_comment
+comment|/* How many micro seconds is the cutoff from  * local lan type rtt's  */
+end_comment
+
+begin_comment
+comment|/*   * We allow 900us for the rtt.   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_LOCAL_LAN_RTT
+value|900
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_LAN_UNKNOWN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_LAN_LOCAL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_LAN_INTERNET
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_SEND_BUFFER_SPLITTING
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_RECV_BUFFER_SPLITTING
+value|0x00000002
 end_define
 
 begin_comment
@@ -4487,6 +4518,16 @@ argument_list|(
 name|_KERNEL
 argument_list|)
 end_if
+
+begin_define
+define|#
+directive|define
+name|SCTP_GETTIME_TIMESPEC
+parameter_list|(
+name|x
+parameter_list|)
+value|(getnanouptime(x))
+end_define
 
 begin_define
 define|#

@@ -295,6 +295,25 @@ end_define
 begin_define
 define|#
 directive|define
+name|DECLARE_MODULE_WITH_MAXVER
+parameter_list|(
+name|name
+parameter_list|,
+name|data
+parameter_list|,
+name|sub
+parameter_list|,
+name|order
+parameter_list|,
+name|maxver
+parameter_list|)
+define|\
+value|MODULE_DEPEND(name, kernel, __FreeBSD_version,			\ 	    __FreeBSD_version, maxver);			\ 	MODULE_METADATA(_md_##name, MDT_MODULE,&data, #name);		\ 	SYSINIT(name##module, sub, order, module_register_init,&data);	\ 	struct __hack
+end_define
+
+begin_define
+define|#
+directive|define
 name|DECLARE_MODULE
 parameter_list|(
 name|name
@@ -306,7 +325,28 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|MODULE_DEPEND(name, kernel, __FreeBSD_version,			\ 	    __FreeBSD_version, MODULE_KERNEL_MAXVER);			\ 	MODULE_METADATA(_md_##name, MDT_MODULE,&data, #name);		\ 	SYSINIT(name##module, sub, order, module_register_init,&data);	\ 	struct __hack
+value|DECLARE_MODULE_WITH_MAXVER(name, data, sub, order, MODULE_KERNEL_MAXVER)
+end_define
+
+begin_comment
+comment|/*  * The module declared with DECLARE_MODULE_TIED can only be loaded  * into the kernel with exactly the same __FreeBSD_version.  *  * Use it for modules that use kernel interfaces that are not stable  * even on STABLE/X branches.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECLARE_MODULE_TIED
+parameter_list|(
+name|name
+parameter_list|,
+name|data
+parameter_list|,
+name|sub
+parameter_list|,
+name|order
+parameter_list|)
+define|\
+value|DECLARE_MODULE_WITH_MAXVER(name, data, sub, order, __FreeBSD_version)
 end_define
 
 begin_define

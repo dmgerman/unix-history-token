@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: glob.h,v 1.10 2005/12/13 00:35:22 millert Exp $	*/
+comment|/*	$OpenBSD: glob.h,v 1.11 2010/09/24 13:32:55 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -37,6 +37,12 @@ argument_list|(
 name|GLOB_HAS_GL_MATCHC
 argument_list|)
 operator|||
+operator|!
+name|defined
+argument_list|(
+name|GLOB_HAS_GL_STATV
+argument_list|)
+operator|||
 expr|\
 operator|!
 name|defined
@@ -66,6 +72,12 @@ define|#
 directive|define
 name|_GLOB_H_
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
 
 begin_struct_decl
 struct_decl|struct
@@ -99,6 +111,13 @@ modifier|*
 name|gl_pathv
 decl_stmt|;
 comment|/* List of paths matching pattern. */
+name|struct
+name|stat
+modifier|*
+modifier|*
+name|gl_statv
+decl_stmt|;
+comment|/* Stat entries corresponding to gl_pathv */
 comment|/* Copy of errfunc parameter to glob. */
 name|int
 function_decl|(
@@ -260,10 +279,6 @@ begin_comment
 comment|/* Disable backslash escaping. */
 end_comment
 
-begin_comment
-comment|/* Error values returned by glob(3) */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -307,13 +322,6 @@ end_define
 begin_comment
 comment|/* Function not supported. */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|GLOB_ABEND
-value|GLOB_ABORTED
-end_define
 
 begin_define
 define|#
@@ -392,6 +400,28 @@ begin_comment
 comment|/* Limit pattern match output to ARG_MAX */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|GLOB_KEEPSTAT
+value|0x4000
+end_define
+
+begin_comment
+comment|/* Retain stat data for paths in gl_statv. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLOB_ABEND
+value|GLOB_ABORTED
+end_define
+
+begin_comment
+comment|/* backward compatibility */
+end_comment
+
 begin_function_decl
 name|int
 name|glob
@@ -445,7 +475,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !defined(HAVE_GLOB_H) || !defined(GLOB_HAS_ALTDIRFUNC)  || 	  !defined(GLOB_HAS_GL_MATCHC */
+comment|/* !defined(HAVE_GLOB_H) || !defined(GLOB_HAS_ALTDIRFUNC)  || 	  !defined(GLOB_HAS_GL_MATCHC) || !defined(GLOH_HAS_GL_STATV) */
 end_comment
 
 end_unit

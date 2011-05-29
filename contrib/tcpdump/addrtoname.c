@@ -319,6 +319,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|hnamemem
 name|hnametable
@@ -329,6 +330,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|hnamemem
 name|tporttable
@@ -339,6 +341,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|hnamemem
 name|uporttable
@@ -349,6 +352,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|hnamemem
 name|eprototable
@@ -359,6 +363,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|hnamemem
 name|dnaddrtable
@@ -369,6 +374,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|hnamemem
 name|ipxsaptable
@@ -601,6 +607,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|h6namemem
 name|h6nametable
@@ -657,6 +664,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|enamemem
 name|enametable
@@ -667,6 +675,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|enamemem
 name|nsaptable
@@ -677,6 +686,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|enamemem
 name|bytestringtable
@@ -711,6 +721,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|protoidmem
 name|protoidtable
@@ -1364,6 +1375,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|hex
 index|[]
@@ -2653,6 +2665,17 @@ name|tp
 decl_stmt|;
 if|if
 condition|(
+name|len
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|"<empty>"
+operator|)
+return|;
+if|if
+condition|(
 name|type
 operator|==
 name|LINKADDR_ETHER
@@ -2661,28 +2684,28 @@ name|len
 operator|==
 name|ETHER_ADDR_LEN
 condition|)
-block|{
 return|return
+operator|(
 name|etheraddr_string
 argument_list|(
 name|ep
 argument_list|)
+operator|)
 return|;
-block|}
 if|if
 condition|(
 name|type
 operator|==
 name|LINKADDR_FRELAY
 condition|)
-block|{
 return|return
+operator|(
 name|q922_string
 argument_list|(
 name|ep
 argument_list|)
+operator|)
 return|;
-block|}
 name|tp
 operator|=
 name|lookup_bytestring
@@ -4125,6 +4148,7 @@ end_function
 
 begin_struct
 specifier|static
+specifier|const
 struct|struct
 name|protoidlist
 block|{
@@ -4266,6 +4290,7 @@ name|protoidmem
 modifier|*
 name|tp
 decl_stmt|;
+specifier|const
 name|struct
 name|protoidlist
 modifier|*
@@ -4422,6 +4447,7 @@ end_function
 
 begin_struct
 specifier|static
+specifier|const
 struct|struct
 name|etherlist
 block|{
@@ -4494,6 +4520,7 @@ name|void
 parameter_list|)
 block|{
 specifier|register
+specifier|const
 name|struct
 name|etherlist
 modifier|*
@@ -4676,6 +4703,7 @@ end_function
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|ipxsap_db

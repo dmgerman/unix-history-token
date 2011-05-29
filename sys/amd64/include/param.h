@@ -73,6 +73,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MACHINE_ARCH32
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MACHINE_ARCH32
+value|"i386"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if

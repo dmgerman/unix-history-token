@@ -724,7 +724,7 @@ comment|/* physical address of "Idle" state directory */
 end_comment
 
 begin_comment
-comment|/*  * virtual address to page table entry and  * to physical address.  * Note: these work recursively, thus vtopte of a pte will give  * the corresponding pde that in turn maps it.  */
+comment|/*  * Translate a virtual address to the kernel virtual address of its page table  * entry (PTE).  This can be used recursively.  If the address of a PTE as  * previously returned by this macro is itself given as the argument, then the  * address of the page directory entry (PDE) that maps the PTE will be  * returned.  *  * This macro may be used before pmap_bootstrap() is called.  */
 end_comment
 
 begin_define
@@ -737,6 +737,10 @@ parameter_list|)
 value|(PTmap + i386_btop(va))
 end_define
 
+begin_comment
+comment|/*  * Translate a virtual address to its physical address.  *  * This macro may be used before pmap_bootstrap() is called.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -747,11 +751,14 @@ parameter_list|)
 value|pmap_kextract((vm_offset_t)(va))
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|XEN
-end_ifdef
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -809,6 +816,16 @@ parameter_list|(
 name|m
 parameter_list|)
 value|xpmap_ptom(VM_PAGE_TO_PHYS((m)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VTOM
+parameter_list|(
+name|va
+parameter_list|)
+value|xpmap_ptom(VTOP(va))
 end_define
 
 begin_function
@@ -1004,13 +1021,6 @@ block|{
 name|pt_entry_t
 name|r
 decl_stmt|;
-name|v
-operator|=
-name|xpmap_ptom
-argument_list|(
-name|v
-argument_list|)
-expr_stmt|;
 name|r
 operator|=
 operator|*
@@ -1129,7 +1139,7 @@ argument_list|)
 end_elif
 
 begin_comment
-comment|/*  * KPTmap is a linear mapping of the kernel page table.  It differs from the  * recursive mapping in two ways: (1) it only provides access to kernel page  * table pages, and not user page table pages, and (2) it provides access to  * a kernel page table page after the corresponding virtual addresses have  * been promoted to a 2/4MB page mapping.  */
+comment|/*  * KPTmap is a linear mapping of the kernel page table.  It differs from the  * recursive mapping in two ways: (1) it only provides access to kernel page  * table pages, and not user page table pages, and (2) it provides access to  * a kernel page table page after the corresponding virtual addresses have  * been promoted to a 2/4MB page mapping.  *  * KPTmap is first initialized by locore to support just NPKT page table  * pages.  Later, it is reinitialized by pmap_bootstrap() to allow for  * expansion of the kernel page table.  */
 end_comment
 
 begin_decl_stmt
@@ -1141,7 +1151,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *	Routine:	pmap_kextract  *	Function:  *		Extract the physical page address associated  *		kernel virtual address.  */
+comment|/*  * Extract from the kernel page table the physical address that is mapped by  * the given virtual address "va".  *  * This function may be used before pmap_bootstrap() is called.  */
 end_comment
 
 begin_function
@@ -1223,6 +1233,21 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|XEN
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -1718,7 +1743,7 @@ argument_list|)
 name|pm_pvchunk
 expr_stmt|;
 comment|/* list of mappings in pmap */
-name|u_int
+name|cpumask_t
 name|pm_active
 decl_stmt|;
 comment|/* active on cpus */
@@ -2049,6 +2074,10 @@ parameter_list|)
 value|pmap_unmapdev((va), (sz))
 end_define
 
+begin_comment
+comment|/*  * Only the following functions or macros may be used before pmap_bootstrap()  * is called: pmap_kenter(), pmap_kextract(), pmap_kremove(), vtophys(), and  * vtopte().  */
+end_comment
+
 begin_function_decl
 name|void
 name|pmap_bootstrap
@@ -2258,11 +2287,27 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|pmap_invalidate_cache_pages
+parameter_list|(
+name|vm_page_t
+modifier|*
+name|pages
+parameter_list|,
+name|int
+name|count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|pmap_invalidate_cache_range
 parameter_list|(
 name|vm_offset_t
+name|sva
 parameter_list|,
 name|vm_offset_t
+name|eva
 parameter_list|)
 function_decl|;
 end_function_decl

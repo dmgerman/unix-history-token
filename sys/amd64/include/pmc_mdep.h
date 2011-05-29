@@ -61,8 +61,14 @@ directive|include
 file|<dev/hwpmc/hwpmc_tsc.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/hwpmc/hwpmc_uncore.h>
+end_include
+
 begin_comment
-comment|/*  * Intel processors implementing V2 and later of the Intel performance  * measurement architecture have PMCs of the following classes: TSC,  * IAF and IAP.  */
+comment|/*  * Intel processors implementing V2 and later of the Intel performance  * measurement architecture have PMCs of the following classes: TSC,  * IAF, IAP, UCF and UCP.  */
 end_comment
 
 begin_define
@@ -100,8 +106,22 @@ name|PMC_MDEP_CLASS_INDEX_IAF
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|PMC_MDEP_CLASS_INDEX_UCP
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_MDEP_CLASS_INDEX_UCF
+value|4
+end_define
+
 begin_comment
-comment|/*  * On the amd64 platform we support the following PMCs.  *  * TSC		The timestamp counter  * K8		AMD Athlon64 and Opteron PMCs in 64 bit mode.  * PIV		Intel P4/HTT and P4/EMT64  * IAP		Intel Core/Core2/Atom CPUs in 64 bits mode.  * IAF		Intel fixed-function PMCs in Core2 and later CPUs.  */
+comment|/*  * On the amd64 platform we support the following PMCs.  *  * TSC		The timestamp counter  * K8		AMD Athlon64 and Opteron PMCs in 64 bit mode.  * PIV		Intel P4/HTT and P4/EMT64  * IAP		Intel Core/Core2/Atom CPUs in 64 bits mode.  * IAF		Intel fixed-function PMCs in Core2 and later CPUs.  * UCP		Intel Uncore programmable PMCs.  * UCF		Intel Uncore fixed-function PMCs.  */
 end_comment
 
 begin_union
@@ -119,6 +139,14 @@ decl_stmt|;
 name|struct
 name|pmc_md_iap_op_pmcallocate
 name|pm_iap
+decl_stmt|;
+name|struct
+name|pmc_md_ucf_op_pmcallocate
+name|pm_ucf
+decl_stmt|;
+name|struct
+name|pmc_md_ucp_op_pmcallocate
+name|pm_ucp
 decl_stmt|;
 name|struct
 name|pmc_md_p4_op_pmcallocate
@@ -173,6 +201,14 @@ decl_stmt|;
 name|struct
 name|pmc_md_iap_pmc
 name|pm_iap
+decl_stmt|;
+name|struct
+name|pmc_md_ucf_pmc
+name|pm_ucf
+decl_stmt|;
+name|struct
+name|pmc_md_ucp_pmc
+name|pm_ucp
 decl_stmt|;
 name|struct
 name|pmc_md_p4_pmc

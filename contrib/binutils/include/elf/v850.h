@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* V850 ELF support for BFD.    Copyright 1997, 1998, 2000, 2002, 2003 Free Software Foundation, Inc.    Created by Michael Meissner, Cygnus Support<meissner@cygnus.com>     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* V850 ELF support for BFD.    Copyright 1997, 1998, 2000, 2002, 2003, 2004, 2007    Free Software Foundation, Inc.    Created by Michael Meissner, Cygnus Support<meissner@cygnus.com>     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -75,7 +75,7 @@ begin_define
 define|#
 directive|define
 name|V850_OTHER_SDA
-value|0x01
+value|0x10
 end_define
 
 begin_comment
@@ -86,7 +86,7 @@ begin_define
 define|#
 directive|define
 name|V850_OTHER_ZDA
-value|0x02
+value|0x20
 end_define
 
 begin_comment
@@ -97,22 +97,11 @@ begin_define
 define|#
 directive|define
 name|V850_OTHER_TDA
-value|0x04
+value|0x40
 end_define
 
 begin_comment
 comment|/* Symbol had TDA relocations.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|V850_OTHER_TDA_BYTE
-value|0x08
-end_define
-
-begin_comment
-comment|/* Symbol had TDA byte relocations.  */
 end_comment
 
 begin_define
@@ -459,6 +448,19 @@ argument_list|,
 literal|28
 argument_list|)
 end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_V850_LO16_SPLIT_OFFSET
+argument_list|,
+literal|29
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* For ld.bu */
+end_comment
 
 begin_macro
 name|END_RELOC_NUMBERS

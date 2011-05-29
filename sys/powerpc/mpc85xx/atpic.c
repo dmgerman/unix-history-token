@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/intr.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/intr_machdep.h>
 end_include
 
@@ -86,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<powerpc/mpc85xx/ocpbus.h>
+file|<powerpc/mpc85xx/mpc85xx.h>
 end_include
 
 begin_include
@@ -572,9 +566,9 @@ parameter_list|)
 block|{
 name|atpic_dispatch
 argument_list|(
-name|pic8259
-argument_list|,
 name|arg
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -678,10 +672,7 @@ name|SYS_RES_IRQ
 argument_list|,
 literal|0
 argument_list|,
-name|PIC_IRQ_EXT
-argument_list|(
-literal|0
-argument_list|)
+literal|16
 argument_list|,
 literal|1
 argument_list|)
@@ -1051,7 +1042,7 @@ name|NULL
 argument_list|,
 name|atpic_intr
 argument_list|,
-name|NULL
+name|dev
 argument_list|,
 operator|&
 name|sc
@@ -1080,9 +1071,17 @@ argument_list|,
 name|ATPIC_MASTER
 argument_list|)
 expr_stmt|;
-name|powerpc_register_8259
+name|powerpc_register_pic
 argument_list|(
 name|dev
+argument_list|,
+literal|0
+argument_list|,
+literal|16
+argument_list|,
+literal|0
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 return|return
@@ -1544,17 +1543,6 @@ name|ATPIC_SLAVE
 index|]
 argument_list|)
 expr_stmt|;
-name|atpic_write
-argument_list|(
-name|sc
-argument_list|,
-name|ATPIC_SLAVE
-argument_list|,
-literal|0
-argument_list|,
-name|OCW2_EOI
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -1586,17 +1574,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|atpic_write
-argument_list|(
-name|sc
-argument_list|,
-name|ATPIC_MASTER
-argument_list|,
-literal|0
-argument_list|,
-name|OCW2_EOI
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

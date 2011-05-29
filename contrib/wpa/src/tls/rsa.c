@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"crypto.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"asn1.h"
 end_include
 

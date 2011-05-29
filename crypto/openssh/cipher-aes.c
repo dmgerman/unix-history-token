@@ -267,7 +267,7 @@ name|u_char
 modifier|*
 name|src
 parameter_list|,
-name|u_int
+name|LIBCRYPTO_EVP_INL_TYPE
 name|len
 parameter_list|)
 block|{

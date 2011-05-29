@@ -18,8 +18,55 @@ end_define
 begin_include
 include|#
 directive|include
-file|<xen/interface/io/blkif.h>
+file|<xen/blkif.h>
 end_include
+
+begin_comment
+comment|/**  * The maximum number of outstanding requests blocks (request headers plus  * additional segment blocks) we will allow in a negotiated block-front/back  * communication channel.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XBF_MAX_REQUESTS
+value|256
+end_define
+
+begin_comment
+comment|/**  * The maximum mapped region size per request we will allow in a negotiated  * block-front/back communication channel.  *  * \note We reserve a segement from the maximum supported by the transport to  *       guarantee we can handle an unaligned transfer without the need to  *       use a bounce buffer..  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XBF_MAX_REQUEST_SIZE
+define|\
+value|MIN(MAXPHYS, (BLKIF_MAX_SEGMENTS_PER_REQUEST - 1) * PAGE_SIZE)
+end_define
+
+begin_comment
+comment|/**  * The maximum number of segments (within a request header and accompanying  * segment blocks) per request we will allow in a negotiated block-front/back  * communication channel.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XBF_MAX_SEGMENTS_PER_REQUEST
+define|\
+value|(MIN(BLKIF_MAX_SEGMENTS_PER_REQUEST,	\ 	     (XBF_MAX_REQUEST_SIZE / PAGE_SIZE) + 1))
+end_define
+
+begin_comment
+comment|/**  * The maximum number of shared memory ring pages we will allow in a  * negotiated block-front/back communication channel.  Allow enough  * ring space for all requests to be  XBF_MAX_REQUEST_SIZE'd.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XBF_MAX_RING_PAGES
+define|\
+value|BLKIF_RING_PAGES(BLKIF_SEGS_TO_BLOCKS(XBF_MAX_SEGMENTS_PER_REQUEST) \ 		       * XBF_MAX_REQUESTS)
+end_define
 
 begin_struct
 struct|struct
@@ -114,8 +161,12 @@ value|((1<<2)|(1<<3)|(1<<4)|(1<<5))
 name|bus_dmamap_t
 name|map
 decl_stmt|;
-name|blkif_request_t
-name|req
+name|uint64_t
+name|id
+decl_stmt|;
+name|grant_ref_t
+modifier|*
+name|sg_refs
 decl_stmt|;
 name|struct
 name|bio
@@ -131,6 +182,9 @@ name|data
 decl_stmt|;
 name|size_t
 name|datalen
+decl_stmt|;
+name|u_int
+name|nseg
 decl_stmt|;
 name|int
 name|operation
@@ -155,13 +209,6 @@ function_decl|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|BLK_RING_SIZE
-value|__RING_SIZE((blkif_sring_t *)0, PAGE_SIZE)
-end_define
 
 begin_define
 define|#
@@ -291,8 +338,26 @@ decl_stmt|;
 name|int
 name|connected
 decl_stmt|;
-name|int
+name|u_int
+name|ring_pages
+decl_stmt|;
+name|uint32_t
+name|max_requests
+decl_stmt|;
+name|uint32_t
+name|max_request_segments
+decl_stmt|;
+name|uint32_t
+name|max_request_blocks
+decl_stmt|;
+name|uint32_t
+name|max_request_size
+decl_stmt|;
+name|grant_ref_t
 name|ring_ref
+index|[
+name|XBF_MAX_RING_PAGES
+index|]
 decl_stmt|;
 name|blkif_front_ring_t
 name|ring
@@ -300,11 +365,6 @@ decl_stmt|;
 name|unsigned
 name|int
 name|irq
-decl_stmt|;
-name|struct
-name|xlbd_major_info
-modifier|*
-name|mi
 decl_stmt|;
 name|struct
 name|gnttab_free_callback
@@ -358,10 +418,8 @@ name|xb_io_lock
 decl_stmt|;
 name|struct
 name|xb_command
+modifier|*
 name|shadow
-index|[
-name|BLK_RING_SIZE
-index|]
 decl_stmt|;
 block|}
 struct|;
@@ -376,7 +434,7 @@ name|xb_softc
 modifier|*
 parameter_list|,
 name|blkif_sector_t
-name|capacity
+name|sectors
 parameter_list|,
 name|int
 name|device
@@ -384,7 +442,8 @@ parameter_list|,
 name|uint16_t
 name|vdisk_info
 parameter_list|,
-name|uint16_t
+name|unsigned
+name|long
 name|sector_size
 parameter_list|)
 function_decl|;
@@ -449,7 +508,7 @@ parameter_list|,
 name|index
 parameter_list|)
 define|\
-value|static __inline void						\ 	xb_initq_ ## name (struct xb_softc *sc)				\ 	{								\ 		TAILQ_INIT(&sc->cm_ ## name);				\ 		XBQ_INIT(sc, index);					\ 	}								\ 	static __inline void						\ 	xb_enqueue_ ## name (struct xb_command *cm)			\ 	{								\ 		if ((cm->cm_flags& XB_ON_XBQ_MASK) != 0) {		\ 			printf("command %p is on another queue, "	\ 			    "flags = %#x\n", cm, cm->cm_flags);		\ 			panic("command is on another queue");		\ 		}							\ 		TAILQ_INSERT_TAIL(&cm->cm_sc->cm_ ## name, cm, cm_link); \ 		cm->cm_flags |= XB_ON_ ## index;			\ 		XBQ_ADD(cm->cm_sc, index);				\ 	}								\ 	static __inline void						\ 	xb_requeue_ ## name (struct xb_command *cm)			\ 	{								\ 		if ((cm->cm_flags& XB_ON_XBQ_MASK) != 0) {		\ 			printf("command %p is on another queue, "	\ 			    "flags = %#x\n", cm, cm->cm_flags);		\ 			panic("command is on another queue");		\ 		}							\ 		TAILQ_INSERT_HEAD(&cm->cm_sc->cm_ ## name, cm, cm_link); \ 		cm->cm_flags |= XB_ON_ ## index;			\ 		XBQ_ADD(cm->cm_sc, index);				\ 	}								\ 	static __inline struct xb_command *				\ 	xb_dequeue_ ## name (struct xb_softc *sc)			\ 	{								\ 		struct xb_command *cm;					\ 									\ 		if ((cm = TAILQ_FIRST(&sc->cm_ ## name)) != NULL) {	\ 			if ((cm->cm_flags& XB_ON_ ## index) == 0) {	\ 				printf("command %p not in queue, "	\ 				    "flags = %#x, bit = %#x\n", cm,	\ 				    cm->cm_flags, XB_ON_ ## index);	\ 				panic("command not in queue");		\ 			}						\ 			TAILQ_REMOVE(&sc->cm_ ## name, cm, cm_link);	\ 			cm->cm_flags&= ~XB_ON_ ## index;		\ 			XBQ_REMOVE(sc, index);				\ 		}							\ 		return (cm);						\ 	}								\ 	static __inline void						\ 	xb_remove_ ## name (struct xb_command *cm)			\ 	{								\ 		if ((cm->cm_flags& XB_ON_ ## index) == 0) {		\ 			printf("command %p not in queue, flags = %#x, " \ 			    "bit = %#x\n", cm, cm->cm_flags,		\ 			    XB_ON_ ## index);				\ 			panic("command not in queue");			\ 		}							\ 		TAILQ_REMOVE(&cm->cm_sc->cm_ ## name, cm, cm_link);	\ 		cm->cm_flags&= ~XB_ON_ ## index;			\ 		XBQ_REMOVE(cm->cm_sc, index);				\ 	}								\ struct hack
+value|static __inline void						\ 	xb_initq_ ## name (struct xb_softc *sc)				\ 	{								\ 		TAILQ_INIT(&sc->cm_ ## name);				\ 		XBQ_INIT(sc, index);					\ 	}								\ 	static __inline void						\ 	xb_enqueue_ ## name (struct xb_command *cm)			\ 	{								\ 		if ((cm->cm_flags& XB_ON_XBQ_MASK) != 0) {		\ 			printf("command %p is on another queue, "	\ 			    "flags = %#x\n", cm, cm->cm_flags);		\ 			panic("command is on another queue");		\ 		}							\ 		TAILQ_INSERT_TAIL(&cm->cm_sc->cm_ ## name, cm, cm_link); \ 		cm->cm_flags |= XB_ON_ ## index;			\ 		XBQ_ADD(cm->cm_sc, index);				\ 	}								\ 	static __inline void						\ 	xb_requeue_ ## name (struct xb_command *cm)			\ 	{								\ 		if ((cm->cm_flags& XB_ON_XBQ_MASK) != 0) {		\ 			printf("command %p is on another queue, "	\ 			    "flags = %#x\n", cm, cm->cm_flags);		\ 			panic("command is on another queue");		\ 		}							\ 		TAILQ_INSERT_HEAD(&cm->cm_sc->cm_ ## name, cm, cm_link); \ 		cm->cm_flags |= XB_ON_ ## index;			\ 		XBQ_ADD(cm->cm_sc, index);				\ 	}								\ 	static __inline struct xb_command *				\ 	xb_dequeue_ ## name (struct xb_softc *sc)			\ 	{								\ 		struct xb_command *cm;					\ 									\ 		if ((cm = TAILQ_FIRST(&sc->cm_ ## name)) != NULL) {	\ 			if ((cm->cm_flags& XB_ON_XBQ_MASK) !=		\ 			     XB_ON_ ## index) {				\ 				printf("command %p not in queue, "	\ 				    "flags = %#x, bit = %#x\n", cm,	\ 				    cm->cm_flags, XB_ON_ ## index);	\ 				panic("command not in queue");		\ 			}						\ 			TAILQ_REMOVE(&sc->cm_ ## name, cm, cm_link);	\ 			cm->cm_flags&= ~XB_ON_ ## index;		\ 			XBQ_REMOVE(sc, index);				\ 		}							\ 		return (cm);						\ 	}								\ 	static __inline void						\ 	xb_remove_ ## name (struct xb_command *cm)			\ 	{								\ 		if ((cm->cm_flags& XB_ON_XBQ_MASK) != XB_ON_ ## index){\ 			printf("command %p not in queue, flags = %#x, " \ 			    "bit = %#x\n", cm, cm->cm_flags,		\ 			    XB_ON_ ## index);				\ 			panic("command not in queue");			\ 		}							\ 		TAILQ_REMOVE(&cm->cm_sc->cm_ ## name, cm, cm_link);	\ 		cm->cm_flags&= ~XB_ON_ ## index;			\ 		XBQ_REMOVE(cm->cm_sc, index);				\ 	}								\ struct hack
 end_define
 
 begin_expr_stmt

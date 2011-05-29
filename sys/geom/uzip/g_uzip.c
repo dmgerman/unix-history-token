@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<geom/geom.h>
 end_include
 
@@ -82,6 +88,16 @@ include|#
 directive|include
 file|<net/zlib.h>
 end_include
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|geom_uzip
+argument_list|,
+literal|"GEOM uzip read-only compressed disks support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_undef
 undef|#

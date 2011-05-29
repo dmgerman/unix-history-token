@@ -857,7 +857,7 @@ argument_list|)
 block|,
 name|SIR_SCRIPT_STOPPED
 block|,
-comment|/* 	 *  Start the next job. 	 * 	 *  @DSA     = start point for this job. 	 *  SCRATCHA = address of this job in the start queue. 	 * 	 *  We will restore startpos with SCRATCHA if we fails the  	 *  arbitration or if it is the idle job. 	 * 	 *  The below GETJOB_BEGIN to GETJOB_END section of SCRIPTS  	 *  is a critical path. If it is partially executed, it then  	 *  may happen that the job address is not yet in the DSA  	 *  and the the next queue position points to the next JOB. 	 */
+comment|/* 	 *  Start the next job. 	 * 	 *  @DSA     = start point for this job. 	 *  SCRATCHA = address of this job in the start queue. 	 * 	 *  We will restore startpos with SCRATCHA if we fails the  	 *  arbitration or if it is the idle job. 	 * 	 *  The below GETJOB_BEGIN to GETJOB_END section of SCRIPTS  	 *  is a critical path. If it is partially executed, it then  	 *  may happen that the job address is not yet in the DSA  	 *  and the next queue position points to the next JOB. 	 */
 block|}
 comment|/*-------------------------< GETJOB_BEGIN>---------------------*/
 block|,
@@ -2887,7 +2887,7 @@ argument_list|)
 block|,
 literal|0
 block|,
-comment|/* 	 *  It shall be a tagged command. 	 *  Read SIMPLE+TAG. 	 *  The C code will deal with errors. 	 *  Agressive optimization, is'nt it? :) 	 */
+comment|/* 	 *  It shall be a tagged command. 	 *  Read SIMPLE+TAG. 	 *  The C code will deal with errors. 	 *  Aggressive optimization, isn't it? :) 	 */
 name|SCR_MOVE_ABS
 argument_list|(
 literal|2
@@ -2953,7 +2953,7 @@ argument_list|(
 name|dsa
 argument_list|)
 block|,
-comment|/* 	 *  The SIDL still contains the TAG value. 	 *  Agressive optimization, isn't it? :):) 	 */
+comment|/* 	 *  The SIDL still contains the TAG value. 	 *  Aggressive optimization, isn't it? :):) 	 */
 name|SCR_REG_SFBR
 argument_list|(
 name|sidl
@@ -3793,7 +3793,7 @@ block|, }
 comment|/*-------------------------< SEL_FOR_ABORT>--------------------*/
 block|,
 block|{
-comment|/* 	 *  We are jumped here by the C code, if we have  	 *  some target to reset or some disconnected  	 *  job to abort. Since error recovery is a serious  	 *  busyness, we will really reset the SCSI BUS, if  	 *  case of a SCSI interrupt occuring in this path. 	 */
+comment|/* 	 *  We are jumped here by the C code, if we have  	 *  some target to reset or some disconnected  	 *  job to abort. Since error recovery is a serious  	 *  busyness, we will really reset the SCSI BUS, if  	 *  case of a SCSI interrupt occurring in this path. 	 */
 comment|/* 	 *  Set initiator mode. 	 */
 name|SCR_CLR
 argument_list|(
@@ -4106,7 +4106,7 @@ argument_list|(
 name|msg_weird_seen
 argument_list|)
 block|,
-comment|/* 	 *  We donnot handle extended messages from SCRIPTS. 	 *  Read the amount of data correponding to the  	 *  message length and call the C code. 	 */
+comment|/* 	 *  We donnot handle extended messages from SCRIPTS. 	 *  Read the amount of data corresponding to the  	 *  message length and call the C code. 	 */
 name|SCR_COPY
 argument_list|(
 literal|1

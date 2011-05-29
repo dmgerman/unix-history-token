@@ -4117,8 +4117,13 @@ expr_stmt|;
 comment|/* read back last byte to flush WC buffers */
 name|rb
 operator|=
-name|readl
-argument_list|(
+operator|*
+operator|(
+specifier|volatile
+name|u_int32_t
+operator|*
+operator|)
+operator|(
 operator|(
 operator|(
 name|vm_offset_t
@@ -4140,7 +4145,7 @@ argument_list|(
 name|uint32_t
 argument_list|)
 operator|)
-argument_list|)
+operator|)
 expr_stmt|;
 return|return
 literal|0
@@ -4389,7 +4394,7 @@ name|dev
 operator|->
 name|agp_buffer_map
 operator|->
-name|handle
+name|virtual
 operator|+
 name|buf
 operator|->

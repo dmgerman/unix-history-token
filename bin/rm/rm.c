@@ -321,7 +321,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|argv
 index|[
@@ -1729,7 +1729,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * rm_overwrite --  *	Overwrite the file 3 times with varying bit patterns.  *  * XXX  * This is a cheap way to *really* delete files.  Note that only regular  * files are deleted, directories (and therefore names) will remain.  * Also, this assumes a fixed-block file system (like FFS, or a V7 or a  * System V file system).  In a logging file system, you'll have to have  * kernel support.  */
+comment|/*  * rm_overwrite --  *	Overwrite the file 3 times with varying bit patterns.  *  * XXX  * This is a cheap way to *really* delete files.  Note that only regular  * files are deleted, directories (and therefore names) will remain.  * Also, this assumes a fixed-block file system (like FFS, or a V7 or a  * System V file system).  In a logging or COW file system, you'll have to  * have kernel support.  */
 end_comment
 
 begin_function

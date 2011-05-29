@@ -54,12 +54,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/linker_set.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/lock.h>
 end_include
 
@@ -470,7 +464,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_UINT
 argument_list|(
 name|_debug_sx
 argument_list|,
@@ -491,7 +485,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_UINT
 argument_list|(
 name|_debug_sx
 argument_list|,
@@ -762,7 +756,7 @@ name|sargs
 init|=
 name|arg
 decl_stmt|;
-name|sx_init
+name|sx_init_flags
 argument_list|(
 name|sargs
 operator|->
@@ -771,6 +765,10 @@ argument_list|,
 name|sargs
 operator|->
 name|sa_desc
+argument_list|,
+name|sargs
+operator|->
+name|sa_flags
 argument_list|)
 expr_stmt|;
 block|}
@@ -2456,7 +2454,7 @@ name|lo_flags
 operator|&
 name|SX_NOADAPTIVE
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
 block|{

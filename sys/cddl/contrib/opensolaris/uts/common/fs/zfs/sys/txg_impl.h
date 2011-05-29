@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_TXG_IMPL_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -68,6 +61,13 @@ index|[
 name|TXG_SIZE
 index|]
 decl_stmt|;
+name|list_t
+name|tc_callbacks
+index|[
+name|TXG_SIZE
+index|]
+decl_stmt|;
+comment|/* commit cb list */
 name|char
 name|tc_pad
 index|[
@@ -89,9 +89,6 @@ name|kmutex_t
 name|tx_sync_lock
 decl_stmt|;
 comment|/* protects tx_state_t */
-name|krwlock_t
-name|tx_suspend
-decl_stmt|;
 name|uint64_t
 name|tx_open_txg
 decl_stmt|;
@@ -151,10 +148,11 @@ name|kthread_t
 modifier|*
 name|tx_quiesce_thread
 decl_stmt|;
-name|kthread_t
+name|taskq_t
 modifier|*
-name|tx_timelimit_thread
+name|tx_commit_cb_taskq
 decl_stmt|;
+comment|/* commit callback taskq */
 block|}
 name|tx_state_t
 typedef|;

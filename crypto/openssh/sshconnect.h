@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect.h,v 1.25 2009/05/27 06:38:16 andreas Exp $ */
+comment|/* $OpenBSD: sshconnect.h,v 1.27 2010/11/29 23:45:51 djm Exp $ */
 end_comment
 
 begin_comment
@@ -68,6 +68,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ssh_kill_proxy_command
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ssh_login
 parameter_list|(
 name|Sensitive
@@ -80,6 +89,8 @@ parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
+parameter_list|,
+name|u_short
 parameter_list|,
 name|struct
 name|passwd
@@ -118,6 +129,30 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|get_hostfile_hostname_ipaddr
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|u_short
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ssh_kex
 parameter_list|(
 name|char
@@ -140,6 +175,8 @@ parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
+parameter_list|,
+name|u_short
 parameter_list|)
 function_decl|;
 end_function_decl

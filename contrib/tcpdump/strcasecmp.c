@@ -61,6 +61,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_char
 name|charmap
 index|[]
@@ -602,6 +603,7 @@ end_function
 begin_block
 block|{
 specifier|register
+specifier|const
 name|u_char
 modifier|*
 name|cm
@@ -703,6 +705,7 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
+specifier|const
 name|u_char
 modifier|*
 name|cm

@@ -239,12 +239,6 @@ directive|include
 file|"err.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"matching.h"
-end_include
-
 begin_comment
 comment|/*  * Per POSIX.1-1988, tar defaults to reading/writing archives to/from  * the default tape device for the system.  Pick something reasonable here.  */
 end_comment
@@ -764,6 +758,9 @@ operator|&
 name|now
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|HAVE_SETLOCALE
 if|if
 condition|(
 name|setlocale
@@ -782,6 +779,8 @@ argument_list|,
 literal|"Failed to set default locale"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined

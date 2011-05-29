@@ -15,11 +15,17 @@ directive|define
 name|_OPENSOLARIS_SYS_MISC_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/limits.h>
+end_include
+
 begin_define
 define|#
 directive|define
 name|MAXUID
-value|2147483647
+value|UID_MAX
 end_define
 
 begin_define
@@ -78,13 +84,37 @@ name|_FIO_SEEK_HOLE
 value|FIOSEEKHOLE
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_struct
 struct|struct
 name|opensolaris_utsname
 block|{
 name|char
 modifier|*
+name|sysname
+decl_stmt|;
+name|char
+modifier|*
 name|nodename
+decl_stmt|;
+name|char
+modifier|*
+name|release
+decl_stmt|;
+name|char
+name|version
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|char
+modifier|*
+name|machine
 decl_stmt|;
 block|}
 struct|;
@@ -107,6 +137,11 @@ name|opensolaris_utsname
 name|utsname
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

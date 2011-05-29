@@ -569,6 +569,11 @@ modifier|*
 name|edesc
 decl_stmt|;
 name|struct
+name|usb_endpoint_ss_comp_descriptor
+modifier|*
+name|ecomp
+decl_stmt|;
+name|struct
 name|usb_pipe_methods
 modifier|*
 name|methods
@@ -676,6 +681,11 @@ modifier|*
 name|bsd_priv_sc
 decl_stmt|;
 comment|/* device specific information */
+name|char
+modifier|*
+name|pnpinfo
+decl_stmt|;
+comment|/* additional PnP-info for this interface */
 name|uint8_t
 name|num_altsetting
 decl_stmt|;
@@ -749,6 +759,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* set if the endpoint belonging to 					 * this USB transfer should be stalled 					 * before starting this transfer! */
+name|uint8_t
+name|pre_scale_frames
+range|:
+literal|1
+decl_stmt|;
+comment|/* "usb_config->frames" is 					 * assumed to give the 					 * buffering time in 					 * milliseconds and is 					 * converted into the nearest 					 * number of frames when the 					 * USB transfer is setup. This 					 * option only has effect for 					 * ISOCHRONOUS transfers. 					 */
 block|}
 struct|;
 end_struct
@@ -1243,10 +1259,6 @@ comment|/* host or device mode */
 name|uint8_t
 name|port
 decl_stmt|;
-name|uint8_t
-name|use_generic
-decl_stmt|;
-comment|/* hint for generic drivers */
 name|uint8_t
 name|dev_state
 decl_stmt|;
@@ -1746,6 +1758,26 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|usb_error_t
+name|usbd_set_pnpinfo
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+name|udev
+parameter_list|,
+name|uint8_t
+name|iface_index
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|pnpinfo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|const
 name|struct
 name|usb_device_id
@@ -2107,12 +2139,42 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
+name|usbd_filter_power_mode
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+name|udev
+parameter_list|,
+name|uint8_t
+name|power_mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint8_t
 name|usbd_device_attached
 parameter_list|(
 name|struct
 name|usb_device
 modifier|*
 name|udev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|usb_frlength_t
+name|usbd_xfer_old_frame_length
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|,
+name|usb_frcount_t
+name|frindex
 parameter_list|)
 function_decl|;
 end_function_decl

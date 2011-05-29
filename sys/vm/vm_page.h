@@ -26,7 +26,7 @@ file|<vm/pmap.h>
 end_include
 
 begin_comment
-comment|/*  *	Management of resident (logical) pages.  *  *	A small structure is kept for each resident  *	page, indexed by page number.  Each structure  *	is an element of several lists:  *  *		A hash table bucket used to quickly  *		perform object/offset lookups  *  *		A list of all pages for a given object,  *		so they can be quickly deactivated at  *		time of deallocation.  *  *		An ordered list of pages due for pageout.  *  *	In addition, the structure contains the object  *	and offset to which this page belongs (for pageout),  *	and sundry status bits.  *  *	Fields in this structure are locked either by the lock on the  *	object that the page belongs to (O) or by the lock on the page  *	queues (P).  */
+comment|/*  *	Management of resident (logical) pages.  *  *	A small structure is kept for each resident  *	page, indexed by page number.  Each structure  *	is an element of several lists:  *  *		A hash table bucket used to quickly  *		perform object/offset lookups  *  *		A list of all pages for a given object,  *		so they can be quickly deactivated at  *		time of deallocation.  *  *		An ordered list of pages due for pageout.  *  *	In addition, the structure contains the object  *	and offset to which this page belongs (for pageout),  *	and sundry status bits.  *  *	Fields in this structure are locked either by the lock on the  *	object that the page belongs to (O), its corresponding page lock (P),  *	or by the lock on the page queues (Q).  *	  */
 end_comment
 
 begin_expr_stmt
@@ -49,7 +49,7 @@ argument|vm_page
 argument_list|)
 name|pageq
 expr_stmt|;
-comment|/* queue info for FIFO queue or free list (P) */
+comment|/* queue info for FIFO queue or free list (Q) */
 name|TAILQ_ENTRY
 argument_list|(
 argument|vm_page
@@ -89,7 +89,7 @@ comment|/* machine dependant stuff */
 name|uint8_t
 name|queue
 decl_stmt|;
-comment|/* page queue index */
+comment|/* page queue index (P,Q) */
 name|int8_t
 name|segind
 decl_stmt|;
@@ -107,7 +107,7 @@ decl_stmt|;
 name|u_short
 name|cow
 decl_stmt|;
-comment|/* page cow mapping count */
+comment|/* page cow mapping count (P) */
 name|u_int
 name|wire_count
 decl_stmt|;
@@ -115,7 +115,7 @@ comment|/* wired down maps refs (P) */
 name|short
 name|hold_count
 decl_stmt|;
-comment|/* page hold count */
+comment|/* page hold count (P) */
 name|u_short
 name|oflags
 decl_stmt|;
@@ -123,7 +123,7 @@ comment|/* page flags (O) */
 name|u_char
 name|act_count
 decl_stmt|;
-comment|/* page usage count */
+comment|/* page usage count (O) */
 name|u_char
 name|busy
 decl_stmt|;
@@ -142,7 +142,7 @@ comment|/* map of valid DEV_BSIZE chunks (O) */
 name|u_char
 name|dirty
 decl_stmt|;
-comment|/* map of dirty DEV_BSIZE chunks */
+comment|/* map of dirty DEV_BSIZE chunks (O) */
 elif|#
 directive|elif
 name|PAGE_SIZE
@@ -155,7 +155,7 @@ comment|/* map of valid DEV_BSIZE chunks (O) */
 name|u_short
 name|dirty
 decl_stmt|;
-comment|/* map of dirty DEV_BSIZE chunks */
+comment|/* map of dirty DEV_BSIZE chunks (O) */
 elif|#
 directive|elif
 name|PAGE_SIZE
@@ -168,7 +168,7 @@ comment|/* map of valid DEV_BSIZE chunks (O) */
 name|u_int
 name|dirty
 decl_stmt|;
-comment|/* map of dirty DEV_BSIZE chunks */
+comment|/* map of dirty DEV_BSIZE chunks (O) */
 elif|#
 directive|elif
 name|PAGE_SIZE
@@ -181,7 +181,7 @@ comment|/* map of valid DEV_BSIZE chunks (O) */
 name|u_long
 name|dirty
 decl_stmt|;
-comment|/* map of dirty DEV_BSIZE chunks */
+comment|/* map of dirty DEV_BSIZE chunks (O) */
 endif|#
 directive|endif
 block|}
@@ -217,17 +217,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VPO_CLEANCHK
-value|0x0100
-end_define
-
-begin_comment
-comment|/* page will be checked for cleaning */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|VPO_SWAPINPROG
 value|0x0200
 end_define
@@ -251,95 +240,35 @@ begin_define
 define|#
 directive|define
 name|PQ_NONE
-value|0
+value|255
 end_define
 
 begin_define
 define|#
 directive|define
 name|PQ_INACTIVE
-value|1
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
 name|PQ_ACTIVE
-value|2
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|PQ_HOLD
-value|3
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|PQ_COUNT
-value|4
-end_define
-
-begin_comment
-comment|/* Returns the real queue a page is on. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VM_PAGE_GETQUEUE
-parameter_list|(
-name|m
-parameter_list|)
-value|((m)->queue)
-end_define
-
-begin_comment
-comment|/* Returns the well known queue a page is on. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VM_PAGE_GETKNOWNQUEUE2
-parameter_list|(
-name|m
-parameter_list|)
-value|VM_PAGE_GETQUEUE(m)
-end_define
-
-begin_comment
-comment|/* Returns true if the page is in the named well known queue. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VM_PAGE_INQUEUE2
-parameter_list|(
-name|m
-parameter_list|,
-name|q
-parameter_list|)
-value|(VM_PAGE_GETKNOWNQUEUE2(m) == (q))
-end_define
-
-begin_comment
-comment|/* Sets the queue a page is on. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VM_PAGE_SETQUEUE2
-parameter_list|(
-name|m
-parameter_list|,
-name|q
-parameter_list|)
-value|(VM_PAGE_GETQUEUE(m) = (q))
+value|3
 end_define
 
 begin_struct
@@ -405,6 +334,188 @@ name|vm_page_queue_free_lock
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vpglocks
+name|pa_lock
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|PDRSHIFT
+value|PDR_SHIFT
+end_define
+
+begin_elif
+elif|#
+directive|elif
+operator|!
+name|defined
+argument_list|(
+name|PDRSHIFT
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|PDRSHIFT
+value|21
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|pa_index
+parameter_list|(
+name|pa
+parameter_list|)
+value|((pa)>> PDRSHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PA_LOCKPTR
+parameter_list|(
+name|pa
+parameter_list|)
+value|&pa_lock[pa_index((pa)) % PA_LOCK_COUNT].data
+end_define
+
+begin_define
+define|#
+directive|define
+name|PA_LOCKOBJPTR
+parameter_list|(
+name|pa
+parameter_list|)
+value|((struct lock_object *)PA_LOCKPTR((pa)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PA_LOCK
+parameter_list|(
+name|pa
+parameter_list|)
+value|mtx_lock(PA_LOCKPTR(pa))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PA_TRYLOCK
+parameter_list|(
+name|pa
+parameter_list|)
+value|mtx_trylock(PA_LOCKPTR(pa))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PA_UNLOCK
+parameter_list|(
+name|pa
+parameter_list|)
+value|mtx_unlock(PA_LOCKPTR(pa))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PA_UNLOCK_COND
+parameter_list|(
+name|pa
+parameter_list|)
+define|\
+value|do {		   			\ 		if ((pa) != 0) {		\ 			PA_UNLOCK((pa));	\ 			(pa) = 0;		\ 		}				\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PA_LOCK_ASSERT
+parameter_list|(
+name|pa
+parameter_list|,
+name|a
+parameter_list|)
+value|mtx_assert(PA_LOCKPTR(pa), (a))
+end_define
+
+begin_define
+define|#
+directive|define
+name|vm_page_lockptr
+parameter_list|(
+name|m
+parameter_list|)
+value|(PA_LOCKPTR(VM_PAGE_TO_PHYS((m))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|vm_page_lock
+parameter_list|(
+name|m
+parameter_list|)
+value|mtx_lock(vm_page_lockptr((m)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|vm_page_unlock
+parameter_list|(
+name|m
+parameter_list|)
+value|mtx_unlock(vm_page_lockptr((m)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|vm_page_trylock
+parameter_list|(
+name|m
+parameter_list|)
+value|mtx_trylock(vm_page_lockptr((m)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|vm_page_lock_assert
+parameter_list|(
+name|m
+parameter_list|,
+name|a
+parameter_list|)
+value|mtx_assert(vm_page_lockptr((m)), (a))
+end_define
+
 begin_define
 define|#
 directive|define
@@ -413,7 +524,7 @@ value|vm_page_queue_free_lock.data
 end_define
 
 begin_comment
-comment|/*  * These are the flags defined for vm_page.  *  * Note: PG_UNMANAGED (used by OBJT_PHYS) indicates that the page is  * 	 not under PV management but otherwise should be treated as a  *	 normal page.  Pages not under PV management cannot be paged out  *	 via the object/vm_page_t because there is no knowledge of their  *	 pte mappings, nor can they be removed from their objects via   *	 the object, and such pages are also not on any PQ queue.  */
+comment|/*  * These are the flags defined for vm_page.  *  * Note: PG_UNMANAGED (used by OBJT_PHYS) indicates that the page is  * 	 not under PV management but otherwise should be treated as a  *	 normal page.  Pages not under PV management cannot be paged out  *	 via the object/vm_page_t because there is no knowledge of their  *	 pte mappings, nor can they be removed from their objects via   *	 the object, and such pages are also not on any PQ queue.  *  * PG_REFERENCED may be cleared only if the object containing the page is  * locked.  *  * PG_WRITEABLE is set exclusively on managed pages by pmap_enter().  When it  * does so, the page must be VPO_BUSY.  */
 end_comment
 
 begin_define
@@ -573,6 +684,12 @@ end_include
 begin_comment
 comment|/*  * Each pageable resident page falls into one of five lists:  *  *	free  *		Available for allocation now.  *  *	cache  *		Almost available for allocation. Still associated with  *		an object, but clean and immediately freeable.  *  *	hold  *		Will become free after a pending I/O operation  *		completes.  *  * The following lists are LRU sorted:  *  *	inactive  *		Low activity, candidates for reclamation.  *		This is the list of pages that should be  *		paged out next.  *  *	active  *		Pages that are "active" i.e. they have been  *		recently referenced.  *  */
 end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|vnode
+struct_decl|;
+end_struct_decl
 
 begin_decl_stmt
 specifier|extern
@@ -869,7 +986,7 @@ value|0x0080
 end_define
 
 begin_comment
-comment|/* vm_page_grab() only */
+comment|/* Mandatory with vm_page_grab() */
 end_comment
 
 begin_define
@@ -915,6 +1032,34 @@ end_define
 begin_comment
 comment|/* Fail if the page is cached */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_ALLOC_IGN_SBUSY
+value|0x1000
+end_define
+
+begin_comment
+comment|/* vm_page_grab() only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_ALLOC_COUNT_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_ALLOC_COUNT
+parameter_list|(
+name|count
+parameter_list|)
+value|((count)<< VM_ALLOC_COUNT_SHIFT)
+end_define
 
 begin_function_decl
 name|void
@@ -1078,6 +1223,28 @@ end_function_decl
 
 begin_function_decl
 name|vm_page_t
+name|vm_page_alloc_freelist
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|vnode
+modifier|*
+name|vm_page_alloc_init
+parameter_list|(
+name|vm_page_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|vm_page_t
 name|vm_page_grab
 parameter_list|(
 name|vm_object_t
@@ -1170,6 +1337,30 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|vm_page_t
+name|vm_page_find_least
+parameter_list|(
+name|vm_object_t
+parameter_list|,
+name|vm_pindex_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|vm_page_t
+name|vm_page_getfake
+parameter_list|(
+name|vm_paddr_t
+name|paddr
+parameter_list|,
+name|vm_memattr_t
+name|memattr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|vm_page_insert
 parameter_list|(
@@ -1189,6 +1380,50 @@ parameter_list|(
 name|vm_object_t
 parameter_list|,
 name|vm_pindex_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|vm_page_t
+name|vm_page_next
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vm_page_pa_tryrelock
+parameter_list|(
+name|pmap_t
+parameter_list|,
+name|vm_paddr_t
+parameter_list|,
+name|vm_paddr_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|vm_page_t
+name|vm_page_prev
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vm_page_putfake
+parameter_list|(
+name|vm_page_t
+name|m
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1279,11 +1514,41 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|vm_page_unhold_pages
+parameter_list|(
+name|vm_page_t
+modifier|*
+name|ma
+parameter_list|,
+name|int
+name|count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vm_page_unwire
 parameter_list|(
 name|vm_page_t
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vm_page_updatefake
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|,
+name|vm_paddr_t
+name|paddr
+parameter_list|,
+name|vm_memattr_t
+name|memattr
 parameter_list|)
 function_decl|;
 end_function_decl

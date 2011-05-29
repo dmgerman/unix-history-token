@@ -244,10 +244,10 @@ if|if
 condition|(
 name|ix
 operator|<
-literal|0x3e400000
+literal|0x3e500000
 condition|)
 block|{
-comment|/* if |x|< 2**-27 */
+comment|/* if |x|< 2**-26 */
 if|if
 condition|(
 name|huge

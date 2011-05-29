@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* inftrees.h -- header to use inftrees.c  * Copyright (C) 1995-2005 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* inftrees.h -- header to use inftrees.c  * Copyright (C) 1995-2005, 2010 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -40,25 +40,32 @@ comment|/* op values as set by inflate_table():     00000000 - literal     0000t
 end_comment
 
 begin_comment
-comment|/* Maximum size of dynamic tree.  The maximum found in a long but non-    exhaustive search was 1444 code structures (852 for length/literals    and 592 for distances, the latter actually the result of an    exhaustive search).  The true maximum is not known, but the value    below is more than safe. */
+comment|/* Maximum size of the dynamic table.  The maximum number of code structures is    1444, which is the sum of 852 for literal/length codes and 592 for distance    codes.  These values were found by exhaustive searches using the program    examples/enough.c found in the zlib distribtution.  The arguments to that    program are the number of symbols, the initial root table size, and the    maximum bit length of a code.  "enough 286 9 15" for literal/length codes    returns returns 852, and "enough 30 6 15" for distance codes returns 592.    The initial root table size (9 or 6) is found in the fifth argument of the    inflate_table() calls in inflate.c and infback.c.  If the root table size is    changed, then these maximum sizes would be need to be recalculated and    updated. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ENOUGH
-value|2048
+name|ENOUGH_LENS
+value|852
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAXD
+name|ENOUGH_DISTS
 value|592
 end_define
 
+begin_define
+define|#
+directive|define
+name|ENOUGH
+value|(ENOUGH_LENS+ENOUGH_DISTS)
+end_define
+
 begin_comment
-comment|/* Type of code to build for inftable() */
+comment|/* Type of code to build for inflate_table() */
 end_comment
 
 begin_typedef
@@ -76,8 +83,8 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
-specifier|extern
 name|int
+name|ZLIB_INTERNAL
 name|inflate_table
 name|OF
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1983, 1988, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1983, 1988, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_if
@@ -348,6 +348,8 @@ name|int
 name|udp_done
 decl_stmt|,
 name|tcp_done
+decl_stmt|,
+name|sdp_done
 decl_stmt|;
 end_decl_stmt
 
@@ -367,6 +369,11 @@ name|pcblist_sysctl
 parameter_list|(
 name|int
 name|proto
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
 parameter_list|,
 name|char
 modifier|*
@@ -425,6 +432,23 @@ literal|"net.inet.raw.pcblist"
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|name
+argument_list|,
+literal|"sdp"
+argument_list|,
+literal|3
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|mibvar
+operator|=
+literal|"net.inet.sdp.pcblist"
+expr_stmt|;
 name|len
 operator|=
 literal|0
@@ -1564,6 +1588,20 @@ directive|ifdef
 name|INET6
 if|if
 condition|(
+name|strncmp
+argument_list|(
+name|name
+argument_list|,
+literal|"sdp"
+argument_list|,
+literal|3
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|tcp_done
 operator|!=
 literal|0
@@ -1574,6 +1612,22 @@ name|tcp_done
 operator|=
 literal|1
 expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|sdp_done
+operator|!=
+literal|0
+condition|)
+return|return;
+else|else
+name|sdp_done
+operator|=
+literal|1
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|istcp
@@ -1614,6 +1668,8 @@ operator|!
 name|pcblist_sysctl
 argument_list|(
 name|proto
+argument_list|,
+name|name
 argument_list|,
 operator|&
 name|buf
@@ -2046,7 +2102,18 @@ name|Aflag
 condition|)
 name|printf
 argument_list|(
-literal|"%-8.8s "
+literal|"%-*s "
+argument_list|,
+literal|2
+operator|*
+operator|(
+name|int
+operator|)
+sizeof|sizeof
+argument_list|(
+name|void
+operator|*
+argument_list|)
 argument_list|,
 literal|"Tcpcb"
 argument_list|)
@@ -2057,13 +2124,53 @@ name|Lflag
 condition|)
 name|printf
 argument_list|(
-literal|"%-5.5s %-14.14s %-22.22s\n"
+operator|(
+name|Aflag
+operator|&&
+operator|!
+name|Wflag
+operator|)
+condition|?
+literal|"%-5.5s %-14.14s %-18.18s"
+else|:
+literal|"%-5.5s %-14.14s %-22.22s"
 argument_list|,
 literal|"Proto"
 argument_list|,
 literal|"Listen"
 argument_list|,
 literal|"Local Address"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|Tflag
+condition|)
+name|printf
+argument_list|(
+operator|(
+name|Aflag
+operator|&&
+operator|!
+name|Wflag
+operator|)
+condition|?
+literal|"%-5.5s %-6.6s %-6.6s %-6.6s %-18.18s %s"
+else|:
+literal|"%-5.5s %-6.6s %-6.6s %-6.6s %-22.22s %s"
+argument_list|,
+literal|"Proto"
+argument_list|,
+literal|"Rexmit"
+argument_list|,
+literal|"OOORcv"
+argument_list|,
+literal|"0-win"
+argument_list|,
+literal|"Local Address"
+argument_list|,
+literal|"Foreign Address"
 argument_list|)
 expr_stmt|;
 else|else
@@ -2077,9 +2184,9 @@ operator|!
 name|Wflag
 operator|)
 condition|?
-literal|"%-5.5s %-6.6s %-6.6s  %-18.18s %-18.18s"
+literal|"%-5.5s %-6.6s %-6.6s %-18.18s %-18.18s"
 else|:
-literal|"%-5.5s %-6.6s %-6.6s  %-22.22s %-22.22s"
+literal|"%-5.5s %-6.6s %-6.6s %-22.22s %-22.22s"
 argument_list|,
 literal|"Proto"
 argument_list|,
@@ -2094,12 +2201,23 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|xflag
+condition|)
+name|printf
+argument_list|(
+literal|" (state)"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|xflag
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s "
+literal|" %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s"
 argument_list|,
 literal|"R-MBUF"
 argument_list|,
@@ -2128,7 +2246,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%7.7s %7.7s %7.7s %7.7s %7.7s %7.7s %s\n"
+literal|" %7.7s %7.7s %7.7s %7.7s %7.7s %7.7s"
 argument_list|,
 literal|"rexmt"
 argument_list|,
@@ -2141,18 +2259,14 @@ argument_list|,
 literal|"delack"
 argument_list|,
 literal|"rcvtime"
-argument_list|,
-literal|"(state)"
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|printf
+name|putchar
 argument_list|(
-literal|"(state)\n"
+literal|'\n'
 argument_list|)
 expr_stmt|;
-block|}
 name|first
 operator|=
 literal|0
@@ -2180,7 +2294,18 @@ name|istcp
 condition|)
 name|printf
 argument_list|(
-literal|"%8lx "
+literal|"%*lx "
+argument_list|,
+literal|2
+operator|*
+operator|(
+name|int
+operator|)
+sizeof|sizeof
+argument_list|(
+name|void
+operator|*
+argument_list|)
 argument_list|,
 operator|(
 name|u_long
@@ -2193,7 +2318,18 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%8lx "
+literal|"%*lx "
+argument_list|,
+literal|2
+operator|*
+operator|(
+name|int
+operator|)
+sizeof|sizeof
+argument_list|(
+name|void
+operator|*
+argument_list|)
 argument_list|,
 operator|(
 name|u_long
@@ -2304,6 +2440,34 @@ argument_list|(
 literal|"%-14.14s "
 argument_list|,
 name|buf1
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|Tflag
+condition|)
+block|{
+if|if
+condition|(
+name|istcp
+condition|)
+name|printf
+argument_list|(
+literal|"%6u %6u %6u "
+argument_list|,
+name|tp
+operator|->
+name|t_sndrexmitpack
+argument_list|,
+name|tp
+operator|->
+name|t_rcvoopack
+argument_list|,
+name|tp
+operator|->
+name|t_sndzerowin
 argument_list|)
 expr_stmt|;
 block|}
@@ -2706,94 +2870,9 @@ condition|(
 name|xflag
 condition|)
 block|{
-if|if
-condition|(
-name|Lflag
-condition|)
 name|printf
 argument_list|(
-literal|"%21s %6u %6u %6u %6u %6u %6u %6u %6u %6u %6u %6u %6u "
-argument_list|,
-literal|" "
-argument_list|,
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_mcnt
-argument_list|,
-name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_mcnt
-argument_list|,
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_ccnt
-argument_list|,
-name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_ccnt
-argument_list|,
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_hiwat
-argument_list|,
-name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_hiwat
-argument_list|,
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_lowat
-argument_list|,
-name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_lowat
-argument_list|,
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_mbcnt
-argument_list|,
-name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_mbcnt
-argument_list|,
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_mbmax
-argument_list|,
-name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_mbmax
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"%6u %6u %6u %6u %6u %6u %6u %6u %6u %6u %6u %6u "
+literal|"%6u %6u %6u %6u %6u %6u %6u %6u %6u %6u %6u %6u"
 argument_list|,
 name|so
 operator|->
@@ -2876,7 +2955,7 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|"%4d.%02d %4d.%02d %4d.%02d %4d.%02d %4d.%02d %4d.%02d "
+literal|" %4d.%02d %4d.%02d %4d.%02d %4d.%02d %4d.%02d %4d.%02d"
 argument_list|,
 name|timer
 operator|->
@@ -2976,13 +3055,18 @@ literal|10
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 if|if
 condition|(
 name|istcp
 operator|&&
 operator|!
 name|Lflag
+operator|&&
+operator|!
+name|xflag
+operator|&&
+operator|!
+name|Tflag
 condition|)
 block|{
 if|if
@@ -3780,6 +3864,20 @@ argument_list|(
 name|tcps_sc_recvcookie
 argument_list|,
 literal|"\t%lu cookie%s received\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_hc_added
+argument_list|,
+literal|"\t%lu hostcache entrie%s added\n"
+argument_list|)
+expr_stmt|;
+name|p1a
+argument_list|(
+name|tcps_hc_bucketoverflow
+argument_list|,
+literal|"\t\t%lu bucket overflow\n"
 argument_list|)
 expr_stmt|;
 name|p

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_FS_ZFS_DIR_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -92,6 +85,11 @@ directive|define
 name|ZCIEXACT
 value|0x0040
 comment|/* c-i requires c-s match (rename) */
+define|#
+directive|define
+name|ZHAVELOCK
+value|0x0080
+comment|/* z_name_lock is already held */
 comment|/* mknode flags */
 define|#
 directive|define
@@ -103,11 +101,6 @@ directive|define
 name|IS_XATTR
 value|0x02
 comment|/* create an extended attribute node */
-define|#
-directive|define
-name|IS_REPLAY
-value|0x04
-comment|/* we are replaying intent log */
 specifier|extern
 name|int
 name|zfs_dirent_lock
@@ -223,13 +216,7 @@ name|znode_t
 modifier|*
 modifier|*
 parameter_list|,
-name|int
-parameter_list|,
-name|zfs_acl_t
-modifier|*
-parameter_list|,
-name|zfs_fuid_info_t
-modifier|*
+name|zfs_acl_ids_t
 modifier|*
 parameter_list|)
 function_decl|;

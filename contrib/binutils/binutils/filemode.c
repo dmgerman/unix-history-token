@@ -1,10 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* filemode.c -- make a string describing file modes    Copyright 1985, 1990, 1991, 1994, 1995, 1997, 2003    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* filemode.c -- make a string describing file modes    Copyright 1985, 1990, 1991, 1994, 1995, 1997, 1999, 2002, 2003, 2005,    2007 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_escape
 end_escape
+
+begin_include
+include|#
+directive|include
+file|"sysdep.h"
+end_include
 
 begin_include
 include|#
@@ -46,22 +52,6 @@ end_function_decl
 begin_comment
 comment|/* filemodestring - fill in string STR with an ls-style ASCII    representation of the st_mode field of file stats block STATP.    10 characters are stored in STR; no terminating null is added.    The characters stored in STR are:     0	File type.  'd' for directory, 'c' for character 	special, 'b' for block special, 'm' for multiplex, 	'l' for symbolic link, 's' for socket, 'p' for fifo, 	'-' for any other file type     1	'r' if the owner may read, '-' otherwise.     2	'w' if the owner may write, '-' otherwise.     3	'x' if the owner may execute, 's' if the file is 	set-user-id, '-' otherwise. 	'S' if the file is set-user-id, but the execute 	bit isn't set.     4	'r' if group members may read, '-' otherwise.     5	'w' if group members may write, '-' otherwise.     6	'x' if group members may execute, 's' if the file is 	set-group-id, '-' otherwise. 	'S' if it is set-group-id but not executable.     7	'r' if any user may read, '-' otherwise.     8	'w' if any user may write, '-' otherwise.     9	'x' if any user may execute, 't' if the file is "sticky" 	(will be retained in swap space after execution), '-' 	otherwise. 	'T' if the file is sticky but not executable.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* This is not used; only mode_string is used.  */
-end_comment
-
-begin_endif
-unit|void filemodestring (struct stat *statp, char *str) {   mode_string ((unsigned long) statp->st_mode, str); }
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Get definitions for the file permission bits.  */

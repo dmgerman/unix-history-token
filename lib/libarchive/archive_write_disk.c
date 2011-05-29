@@ -1194,7 +1194,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|_archive_write_finish
+name|_archive_write_free
 parameter_list|(
 name|struct
 name|archive
@@ -1427,9 +1427,9 @@ name|_archive_write_close
 expr_stmt|;
 name|av
 operator|.
-name|archive_finish
+name|archive_free
 operator|=
-name|_archive_write_finish
+name|_archive_write_free
 expr_stmt|;
 name|av
 operator|.
@@ -5738,7 +5738,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|_archive_write_finish
+name|_archive_write_free
 parameter_list|(
 name|struct
 name|archive

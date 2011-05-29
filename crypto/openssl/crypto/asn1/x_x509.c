@@ -44,9 +44,13 @@ file|<openssl/x509v3.h>
 end_include
 
 begin_expr_stmt
-name|ASN1_SEQUENCE
+name|ASN1_SEQUENCE_enc
 argument_list|(
 name|X509_CINF
+argument_list|,
+name|enc
+argument_list|,
+literal|0
 argument_list|)
 operator|=
 block|{
@@ -148,8 +152,10 @@ argument_list|,
 literal|3
 argument_list|)
 block|}
-name|ASN1_SEQUENCE_END
+name|ASN1_SEQUENCE_END_enc
 argument_list|(
+argument|X509_CINF
+argument_list|,
 argument|X509_CINF
 argument_list|)
 name|IMPLEMENT_ASN1_FUNCTIONS

@@ -89,6 +89,12 @@ directive|include
 file|<mips/atheros/ar71xxreg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<mips/atheros/ar71xx_setup.h>
+end_include
+
 begin_undef
 undef|#
 directive|undef
@@ -161,7 +167,7 @@ name|apb_add_child
 parameter_list|(
 name|device_t
 parameter_list|,
-name|int
+name|u_int
 parameter_list|,
 specifier|const
 name|char
@@ -1675,6 +1681,40 @@ name|irq
 operator|)
 condition|)
 block|{
+switch|switch
+condition|(
+name|ar71xx_soc
+condition|)
+block|{
+case|case
+name|AR71XX_SOC_AR7240
+case|:
+case|case
+name|AR71XX_SOC_AR7241
+case|:
+case|case
+name|AR71XX_SOC_AR7242
+case|:
+comment|/* Ack/clear the irq on status register for AR724x */
+name|ATH_WRITE_REG
+argument_list|(
+name|AR71XX_MISC_INTR_STATUS
+argument_list|,
+name|reg
+operator|&
+operator|~
+operator|(
+literal|1
+operator|<<
+name|irq
+operator|)
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+comment|/* fallthrough */
+break|break;
+block|}
 name|event
 operator|=
 name|sc
@@ -1951,7 +1991,7 @@ parameter_list|(
 name|device_t
 name|bus
 parameter_list|,
-name|int
+name|u_int
 name|order
 parameter_list|,
 specifier|const

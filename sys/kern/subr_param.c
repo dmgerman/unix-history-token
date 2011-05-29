@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_msgbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_maxusers.h"
 end_include
 
@@ -62,7 +68,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/msgbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/pmap.h>
 end_include
 
 begin_comment
@@ -80,22 +104,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__amd64__
+name|__mips__
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sparc64__
+name|__arm__
 argument_list|)
 end_if
 
@@ -103,7 +117,7 @@ begin_define
 define|#
 directive|define
 name|HZ
-value|1000
+value|100
 end_define
 
 begin_else
@@ -115,7 +129,7 @@ begin_define
 define|#
 directive|define
 name|HZ
-value|100
+value|1000
 end_define
 
 begin_endif
@@ -282,6 +296,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* per-proc open files limit */
+end_comment
+
+begin_decl_stmt
+name|int
+name|msgbufsize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* size of kernel message buffer */
 end_comment
 
 begin_decl_stmt
@@ -496,6 +520,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Number of swap buffers"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|msgbufsize
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|msgbufsize
+argument_list|,
+literal|0
+argument_list|,
+literal|"Size of the kernel message buffer"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -756,6 +801,9 @@ comment|/* Plex86 */
 literal|"Bochs"
 block|,
 comment|/* Bochs */
+literal|"Xen"
+block|,
+comment|/* Xen */
 name|NULL
 block|}
 decl_stmt|;
@@ -1042,6 +1090,18 @@ operator|&
 name|maxbcache
 argument_list|)
 expr_stmt|;
+name|msgbufsize
+operator|=
+name|MSGBUF_SIZE
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.msgbufsize"
+argument_list|,
+operator|&
+name|msgbufsize
+argument_list|)
+expr_stmt|;
 name|maxtsiz
 operator|=
 name|MAXTSIZ
@@ -1298,28 +1358,13 @@ operator|&
 name|ncallout
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Boot time overrides that are scaled against the kmem map  */
-end_comment
-
-begin_function
-name|void
-name|init_param3
-parameter_list|(
-name|long
-name|kmempages
-parameter_list|)
-block|{
-comment|/* 	 * The default for maxpipekva is max(5% of the kmem map, 512KB). 	 * See sys_pipe.c for more details. 	 */
+comment|/* 	 * The default for maxpipekva is min(1/64 of the kernel address space, 	 * max(1/64 of main memory, 512KB)).  See sys_pipe.c for more details. 	 */
 name|maxpipekva
 operator|=
 operator|(
-name|kmempages
+name|physpages
 operator|/
-literal|20
+literal|64
 operator|)
 operator|*
 name|PAGE_SIZE
@@ -1337,6 +1382,28 @@ operator|=
 literal|512
 operator|*
 literal|1024
+expr_stmt|;
+if|if
+condition|(
+name|maxpipekva
+operator|>
+operator|(
+name|VM_MAX_KERNEL_ADDRESS
+operator|-
+name|VM_MIN_KERNEL_ADDRESS
+operator|)
+operator|/
+literal|64
+condition|)
+name|maxpipekva
+operator|=
+operator|(
+name|VM_MAX_KERNEL_ADDRESS
+operator|-
+name|VM_MIN_KERNEL_ADDRESS
+operator|)
+operator|/
+literal|64
 expr_stmt|;
 name|TUNABLE_LONG_FETCH
 argument_list|(

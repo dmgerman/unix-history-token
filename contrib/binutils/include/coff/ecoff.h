@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generic ECOFF support.    This does not include symbol information, found in sym.h and    symconst.h.     Copyright 2001, 2002, 2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generic ECOFF support.    This does not include symbol information, found in sym.h and    symconst.h.     Copyright 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -92,6 +92,17 @@ define|#
 directive|define
 name|ALPHA_MAGIC_BSD
 value|0x185
+end_define
+
+begin_comment
+comment|/* A compressed version of an ALPHA_MAGIC file created by DEC's tools.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ALPHA_MAGIC_COMPRESSED
+value|0x188
 end_define
 
 begin_comment
@@ -1420,42 +1431,6 @@ comment|/* The swapped FDR information.  Currently this is never NULL, but      
 name|FDR
 modifier|*
 name|fdr
-decl_stmt|;
-comment|/* When relaxing MIPS embedded PIC code, we may need to adjust      symbol values when they are output.  This is a linked list of      structures indicating how values should be adjusted.  There is no      requirement that the entries be in any order, or that they not      overlap.  This field is normally NULL, in which case no      adjustments need to be made.  */
-name|struct
-name|ecoff_value_adjust
-modifier|*
-name|adjust
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* This structure describes how to adjust symbol values when    outputting MIPS embedded PIC code.  These adjustments only apply to    the internal symbols, as the external symbol values will come from    the hash table and have already been adjusted.  */
-end_comment
-
-begin_struct
-struct|struct
-name|ecoff_value_adjust
-block|{
-comment|/* Next entry on adjustment list.  */
-name|struct
-name|ecoff_value_adjust
-modifier|*
-name|next
-decl_stmt|;
-comment|/* Starting VMA of adjustment.  This is the VMA in the ECOFF file,      not the offset from the start of the section.  Thus it should      indicate a particular section.  */
-name|bfd_vma
-name|start
-decl_stmt|;
-comment|/* Ending VMA of adjustment.  */
-name|bfd_vma
-name|end
-decl_stmt|;
-comment|/* Adjustment.  This should be added to the value of the symbol, or      FDR.  This is zero for the last entry in the array.  */
-name|long
-name|adjust
 decl_stmt|;
 block|}
 struct|;

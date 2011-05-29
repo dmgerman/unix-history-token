@@ -118,6 +118,31 @@ asm|__asm __volatile ("mtmsr %0; isync" :: "r"(value));
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|mtmsrd
+parameter_list|(
+name|register_t
+name|value
+parameter_list|)
+block|{
+asm|__asm __volatile ("mtmsrd %0; isync" :: "r"(value));
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|__inline
@@ -138,6 +163,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__powerpc64__
+end_ifndef
 
 begin_function
 specifier|static
@@ -170,6 +201,32 @@ name|register_t
 name|value
 decl_stmt|;
 asm|__asm __volatile ("mfsrin %0,%1" : "=r"(value) : "r"(va));
+return|return
+operator|(
+name|value
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+name|__inline
+name|register_t
+name|mfctrl
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|register_t
+name|value
+decl_stmt|;
+asm|__asm __volatile ("mfspr %0,136" : "=r"(value));
 return|return
 operator|(
 name|value
@@ -246,6 +303,12 @@ block|{
 name|u_quad_t
 name|tb
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+asm|__asm __volatile ("mftb %0" : "=r"(tb));
+else|#
+directive|else
 name|uint32_t
 modifier|*
 name|tbup
@@ -295,6 +358,8 @@ name|TBR_TBU
 argument_list|)
 condition|)
 do|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|tb

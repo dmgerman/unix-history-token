@@ -448,6 +448,11 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|temp
+decl_stmt|;
 comment|/* 	 * Attach - attaches the target process for debugging 	 * by the calling process. 	 */
 if|if
 condition|(
@@ -737,7 +742,11 @@ operator|->
 name|p_flag
 operator|&=
 operator|~
+operator|(
 name|P_TRACED
+operator||
+name|P_STOPPED_TRACE
+operator|)
 expr_stmt|;
 comment|/* remove pending SIGTRAP, else the process will die */
 name|sigqueue_delete_proc
@@ -746,6 +755,19 @@ name|p
 argument_list|,
 name|SIGTRAP
 argument_list|)
+expr_stmt|;
+name|FOREACH_THREAD_IN_PROC
+argument_list|(
+argument|p
+argument_list|,
+argument|temp
+argument_list|)
+name|temp
+operator|->
+name|td_dbgflags
+operator|&=
+operator|~
+name|TDB_SUSPEND
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
@@ -830,11 +852,6 @@ operator|~
 name|P_WAITED
 expr_stmt|;
 comment|/* XXX ? */
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|sx_xunlock
 argument_list|(
 operator|&
@@ -864,20 +881,22 @@ name|p
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
 name|PROC_UNLOCK
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 break|break;
 comment|/* 	 * Run.  Let the target process continue running until a breakpoint 	 * or some other trap. 	 */
 case|case
@@ -891,11 +910,6 @@ operator|~
 name|P_STOPPED_SIG
 expr_stmt|;
 comment|/* this uses SIGSTOP */
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 break|break;
 comment|/* 	 * Wait for the target process to stop. 	 * If the target is not being traced then just wait 	 * to enter 	 */
 case|case
@@ -1045,6 +1059,11 @@ argument_list|)
 expr_stmt|;
 comment|/* If it can run, let it do so. */
 name|PROC_SUNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
 argument_list|(
 name|p
 argument_list|)

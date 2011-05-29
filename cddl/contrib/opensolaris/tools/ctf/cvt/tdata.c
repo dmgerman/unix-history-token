@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_comment
 comment|/*  * Routines for manipulating tdesc and tdata structures  */
@@ -194,7 +187,15 @@ case|:
 case|case
 name|UNION
 case|:
-comment|/* 			 * Unnamed structures, which cannot have forward 			 * declarations pointing to them.  We can therefore 			 * incorporate the name of the first member into 			 * the hash value. 			 */
+comment|/* 			 * Unnamed structures, which cannot have forward 			 * declarations pointing to them.  We can therefore 			 * incorporate the name of the first member into 			 * the hash value, assuming there are any. 			 */
+if|if
+condition|(
+name|tdp
+operator|->
+name|t_members
+operator|!=
+name|NULL
+condition|)
 name|name
 operator|=
 name|tdp

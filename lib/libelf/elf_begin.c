@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"_libelf.h"
 end_include
 
@@ -455,17 +461,26 @@ comment|/*FALLTHROUGH*/
 case|case
 name|ELF_C_READ
 case|:
-comment|/* 		 * Descriptor `a' could be for a regular ELF file, or 		 * for an ar(1) archive. 		 */
+comment|/* 		 * Descriptor `a' could be for a regular ELF file, or 		 * for an ar(1) archive.  If descriptor `a' was opened 		 * using a valid file descriptor, we need to check if 		 * the passed in `fd' value matches the original one. 		 */
 if|if
 condition|(
 name|a
 operator|&&
 operator|(
+operator|(
+name|a
+operator|->
+name|e_fd
+operator|!=
+operator|-
+literal|1
+operator|&&
 name|a
 operator|->
 name|e_fd
 operator|!=
 name|fd
+operator|)
 operator|||
 name|c
 operator|!=
@@ -531,7 +546,9 @@ name|e
 operator|=
 name|_libelf_ar_open_member
 argument_list|(
-name|fd
+name|a
+operator|->
+name|e_fd
 argument_list|,
 name|c
 argument_list|,

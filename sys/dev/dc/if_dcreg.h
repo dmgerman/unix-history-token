@@ -2182,16 +2182,16 @@ begin_struct
 struct|struct
 name|dc_desc
 block|{
-name|u_int32_t
+name|uint32_t
 name|dc_status
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|dc_ctl
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|dc_ptr1
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|dc_ptr2
 decl_stmt|;
 block|}
@@ -2653,9 +2653,33 @@ parameter_list|)
 value|(x) = (x + 1) % y
 end_define
 
+begin_define
+define|#
+directive|define
+name|DC_LIST_ALIGN
+value|(sizeof(struct dc_desc))
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_RXBUF_ALIGN
+value|4
+end_define
+
 begin_comment
 comment|/* Macros to easily get the DMA address of a descriptor. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_ADDR_LO
+parameter_list|(
+name|x
+parameter_list|)
+value|((uint64_t)(x)& 0xFFFFFFFF)
+end_define
 
 begin_define
 define|#
@@ -2666,7 +2690,8 @@ name|sc
 parameter_list|,
 name|i
 parameter_list|)
-value|(sc->dc_laddr +				\     (uintptr_t)(sc->dc_ldata->dc_rx_list + i) - (uintptr_t)sc->dc_ldata)
+define|\
+value|(DC_ADDR_LO(sc->dc_ldata.dc_rx_list_paddr + (sizeof(struct dc_desc) * i)))
 end_define
 
 begin_define
@@ -2678,7 +2703,8 @@ name|sc
 parameter_list|,
 name|i
 parameter_list|)
-value|(sc->dc_laddr +				\     (uintptr_t)(sc->dc_ldata->dc_tx_list + i) - (uintptr_t)sc->dc_ldata)
+define|\
+value|(DC_ADDR_LO(sc->dc_ldata.dc_tx_list_paddr + (sizeof(struct dc_desc) * i)))
 end_define
 
 begin_if
@@ -2725,21 +2751,37 @@ name|dc_list_data
 block|{
 name|struct
 name|dc_desc
+modifier|*
 name|dc_rx_list
-index|[
-name|DC_RX_LIST_CNT
-index|]
+decl_stmt|;
+name|bus_addr_t
+name|dc_rx_list_paddr
 decl_stmt|;
 name|struct
 name|dc_desc
+modifier|*
 name|dc_tx_list
-index|[
-name|DC_TX_LIST_CNT
-index|]
+decl_stmt|;
+name|bus_addr_t
+name|dc_tx_list_paddr
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|DC_RX_LIST_SZ
+value|((sizeof(struct dc_desc) * DC_RX_LIST_CNT))
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_TX_LIST_SZ
+value|((sizeof(struct dc_desc) * DC_TX_LIST_CNT))
+end_define
 
 begin_struct
 struct|struct
@@ -2773,15 +2815,18 @@ index|[
 name|DC_TX_LIST_CNT
 index|]
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|dc_sbuf
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|dc_pad
 index|[
 name|DC_MIN_FRAMELEN
 index|]
+decl_stmt|;
+name|int
+name|dc_tx_pkts
 decl_stmt|;
 name|int
 name|dc_tx_first
@@ -2809,18 +2854,18 @@ block|{
 name|int
 name|dc_media
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|dc_gp_ptr
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|dc_gp_len
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|dc_reset_ptr
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|dc_reset_len
 decl_stmt|;
 name|struct
@@ -2836,10 +2881,10 @@ begin_struct
 struct|struct
 name|dc_type
 block|{
-name|u_int32_t
+name|uint32_t
 name|dc_devid
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|dc_minrev
 decl_stmt|;
 name|char
@@ -2854,22 +2899,22 @@ begin_struct
 struct|struct
 name|dc_mii_frame
 block|{
-name|u_int8_t
+name|uint8_t
 name|mii_stdelim
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|mii_opcode
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|mii_phyaddr
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|mii_regaddr
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|mii_turnaround
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|mii_data
 decl_stmt|;
 block|}
@@ -3825,23 +3870,25 @@ name|dc_btag
 decl_stmt|;
 comment|/* bus space tag */
 name|bus_dma_tag_t
-name|dc_ltag
+name|dc_ptag
 decl_stmt|;
-comment|/* tag for descriptor ring */
-name|bus_dmamap_t
-name|dc_lmap
-decl_stmt|;
-comment|/* map for descriptor ring */
-name|u_int32_t
-name|dc_laddr
-decl_stmt|;
-comment|/* DMA address of dc_ldata */
-name|bus_dma_tag_t
-name|dc_mtag
-decl_stmt|;
-comment|/* tag for mbufs */
+comment|/* parent DMA tag */
 name|bus_dmamap_t
 name|dc_sparemap
+decl_stmt|;
+name|bus_dma_tag_t
+name|dc_rx_ltag
+decl_stmt|;
+comment|/* tag for RX descriptors */
+name|bus_dmamap_t
+name|dc_rx_lmap
+decl_stmt|;
+name|bus_dma_tag_t
+name|dc_tx_ltag
+decl_stmt|;
+comment|/* tag for TX descriptors */
+name|bus_dmamap_t
+name|dc_tx_lmap
 decl_stmt|;
 name|bus_dma_tag_t
 name|dc_stag
@@ -3851,10 +3898,18 @@ name|bus_dmamap_t
 name|dc_smap
 decl_stmt|;
 comment|/* map for the setup frame */
-name|u_int32_t
+name|bus_addr_t
 name|dc_saddr
 decl_stmt|;
 comment|/* DMA address of setup frame */
+name|bus_dma_tag_t
+name|dc_rx_mtag
+decl_stmt|;
+comment|/* tag for RX mbufs */
+name|bus_dma_tag_t
+name|dc_tx_mtag
+decl_stmt|;
+comment|/* tag for TX mbufs */
 name|void
 modifier|*
 name|dc_intrhand
@@ -3879,16 +3934,16 @@ comment|/* adapter info */
 name|device_t
 name|dc_miibus
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|dc_type
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|dc_pmode
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|dc_link
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|dc_cachesize
 decl_stmt|;
 name|int
@@ -3908,13 +3963,19 @@ decl_stmt|;
 name|int
 name|dc_if_media
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|dc_flags
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|dc_txthresh
 decl_stmt|;
-name|u_int8_t
+name|uint32_t
+name|dc_eaddr
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|uint8_t
 modifier|*
 name|dc_srom
 decl_stmt|;
@@ -3925,7 +3986,6 @@ name|dc_mi
 decl_stmt|;
 name|struct
 name|dc_list_data
-modifier|*
 name|dc_ldata
 decl_stmt|;
 name|struct
@@ -4102,13 +4162,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DC_TX_ONE
-value|0x00008000
-end_define
-
-begin_define
-define|#
-directive|define
 name|DC_TX_ALIGN
 value|0x00010000
 end_define
@@ -4169,13 +4222,6 @@ define|#
 directive|define
 name|DC_TIMEOUT
 value|1000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ETHER_ALIGN
-value|2
 end_define
 
 begin_comment
@@ -4992,6 +5038,16 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DC_ROM_SIZE
+parameter_list|(
+name|bits
+parameter_list|)
+value|(2<< (bits))
+end_define
+
+begin_define
+define|#
+directive|define
 name|DC_IB_CTLRCNT
 value|0x13
 end_define
@@ -5014,16 +5070,16 @@ begin_struct
 struct|struct
 name|dc_info_leaf
 block|{
-name|u_int16_t
+name|uint16_t
 name|dc_conntype
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|dc_blkcnt
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|dc_rsvd
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|dc_infoblk
 decl_stmt|;
 block|}
@@ -5209,13 +5265,13 @@ begin_struct
 struct|struct
 name|dc_leaf_hdr
 block|{
-name|u_int16_t
+name|uint16_t
 name|dc_mtype
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|dc_mcnt
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|dc_rsvd
 decl_stmt|;
 block|}
@@ -5226,10 +5282,10 @@ begin_struct
 struct|struct
 name|dc_eblock_hdr
 block|{
-name|u_int8_t
+name|uint8_t
 name|dc_len
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|dc_type
 decl_stmt|;
 block|}
@@ -5244,7 +5300,7 @@ name|struct
 name|dc_eblock_hdr
 name|dc_sia_hdr
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|dc_sia_code
 decl_stmt|;
 union|union
@@ -5253,20 +5309,20 @@ struct|struct
 name|dc_sia_ext
 block|{
 comment|/* if (dc_sia_code& DC_SIA_CODE_EXT) */
-name|u_int8_t
+name|uint8_t
 name|dc_sia_mediaspec
 index|[
 literal|6
 index|]
 decl_stmt|;
 comment|/* CSR13, CSR14, CSR15 */
-name|u_int8_t
+name|uint8_t
 name|dc_sia_gpio_ctl
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|dc_sia_gpio_dat
 index|[
 literal|2
@@ -5278,13 +5334,13 @@ struct|;
 struct|struct
 name|dc_sia_noext
 block|{
-name|u_int8_t
+name|uint8_t
 name|dc_sia_gpio_ctl
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|dc_sia_gpio_dat
 index|[
 literal|2
@@ -5347,15 +5403,15 @@ name|struct
 name|dc_eblock_hdr
 name|dc_mii_hdr
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|dc_mii_phynum
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|dc_gpr_len
 decl_stmt|;
-comment|/*	u_int16_t		dc_gpr_dat[n]; */
-comment|/*	u_int8_t		dc_reset_len; */
-comment|/*	u_int16_t		dc_reset_dat[n]; */
+comment|/*	uint16_t		dc_gpr_dat[n]; */
+comment|/*	uint8_t			dc_reset_len; */
+comment|/*	uint16_t		dc_reset_dat[n]; */
 comment|/* There are other fields after these, but we don't  * care about them since they can be determined by looking  * at the PHY.  */
 block|}
 struct|;
@@ -5369,22 +5425,22 @@ name|struct
 name|dc_eblock_hdr
 name|dc_sym_hdr
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|dc_sym_code
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|dc_sym_gpio_ctl
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|dc_sym_gpio_dat
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|dc_sym_cmd
 index|[
 literal|2
@@ -5437,10 +5493,10 @@ name|struct
 name|dc_eblock_hdr
 name|dc_reset_hdr
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|dc_reset_len
 decl_stmt|;
-comment|/*	u_int16_t		dc_reset_dat[n]; */
+comment|/*	uint16_t		dc_reset_dat[n]; */
 block|}
 struct|;
 end_struct

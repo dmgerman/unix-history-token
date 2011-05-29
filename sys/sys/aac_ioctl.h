@@ -357,7 +357,7 @@ comment|/* Just guessing */
 end_comment
 
 begin_comment
-comment|/* Do the native version of the ioctls.  Since the BSD encoding scheme  * conflicts with the 'standard' AAC encoding scheme, the resulting numbers  * will be different.  The '8' comes from the fact that the previous scheme  * used 12 bits for the number, with the the 12th bit being the only set  * bit above bit 8.  Thus the value of 8, with the lower 8 bits holding the  * command number.  9 is used for the odd overflow case.  */
+comment|/* Do the native version of the ioctls.  Since the BSD encoding scheme  * conflicts with the 'standard' AAC encoding scheme, the resulting numbers  * will be different.  The '8' comes from the fact that the previous scheme  * used 12 bits for the number, with the 12th bit being the only set  * bit above bit 8.  Thus the value of 8, with the lower 8 bits holding the  * command number.  9 is used for the odd overflow case.  */
 end_comment
 
 begin_define

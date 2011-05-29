@@ -252,7 +252,7 @@ end_ifdef
 begin_function_decl
 specifier|extern
 name|void
-name|HALDEBUG
+name|DO_HALDEBUG
 parameter_list|(
 name|struct
 name|ath_hal
@@ -328,7 +328,6 @@ name|AH_DEBUG
 end_ifdef
 
 begin_decl_stmt
-specifier|static
 name|int
 name|ath_hal_debug
 init|=
@@ -376,6 +375,36 @@ end_endif
 begin_comment
 comment|/* AH_DEBUG */
 end_comment
+
+begin_decl_stmt
+name|int
+name|ath_hal_ar5416_biasadj
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_ath_hal
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ar5416_biasadj
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ath_hal_ar5416_biasadj
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable 2ghz AR5416 direction sensitivity"
+literal|" bias adjust"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* NB: these are deprecated; they exist for now for compatibility */
@@ -634,9 +663,20 @@ directive|ifdef
 name|AH_DEBUG
 end_ifdef
 
+begin_comment
+comment|/* This must match the definition in ath_hal/ah_debug.h */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_DEBUG_UNMASKABLE
+value|0xf0000000
+end_define
+
 begin_function
 name|void
-name|HALDEBUG
+name|DO_HALDEBUG
 parameter_list|(
 name|struct
 name|ath_hal
@@ -656,9 +696,17 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|(
+name|mask
+operator|==
+name|HAL_DEBUG_UNMASKABLE
+operator|)
+operator|||
+operator|(
 name|ath_hal_debug
 operator|&
 name|mask
+operator|)
 condition|)
 block|{
 name|__va_list
@@ -688,6 +736,12 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_undef
+undef|#
+directive|undef
+name|HAL_DEBUG_UNMASKABLE
+end_undef
 
 begin_endif
 endif|#
@@ -759,14 +813,39 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
-modifier|*
 name|ath_hal_logfile
+index|[
+name|MAXPATHLEN
+index|]
 init|=
 literal|"/tmp/ath_hal.log"
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_STRING
+argument_list|(
+name|_hw_ath_hal
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|alq_logfile
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ath_hal_logfile
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|kernelname
+argument_list|)
+argument_list|,
+literal|"Name of ALQ logfile"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static

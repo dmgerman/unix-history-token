@@ -105,7 +105,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|int
+name|long
 name|word
 typedef|;
 end_typedef
@@ -220,7 +220,7 @@ comment|/* 		 * Copy forward. 		 */
 name|t
 operator|=
 operator|(
-name|int
+name|size_t
 operator|)
 name|src
 expr_stmt|;
@@ -231,7 +231,7 @@ operator|(
 name|t
 operator||
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|dst
 operator|)
@@ -246,7 +246,7 @@ operator|(
 name|t
 operator|^
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|dst
 operator|)
@@ -336,7 +336,7 @@ expr_stmt|;
 name|t
 operator|=
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|src
 expr_stmt|;
@@ -346,7 +346,7 @@ operator|(
 name|t
 operator||
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|dst
 operator|)
@@ -360,7 +360,7 @@ operator|(
 name|t
 operator|^
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|dst
 operator|)

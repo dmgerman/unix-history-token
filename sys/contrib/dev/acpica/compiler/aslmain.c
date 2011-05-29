@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2010, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/*  * Copyright (C) 2000 - 2011, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|<contrib/dev/acpica/include/acapps.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acdisasm.h>
 end_include
 
 begin_ifdef
@@ -174,7 +180,7 @@ begin_define
 define|#
 directive|define
 name|ASL_SUPPORTED_OPTIONS
-value|"@:2b:cd^e:fgh^i^I:l^o:p:r:s:t:v:w:x:"
+value|"@:2b:c:d^e:fgh^i^I:l^no:p:r:s:t:T:v:w:x:z"
 end_define
 
 begin_comment
@@ -261,7 +267,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  -t<a|c>        Create AML in assembler or C hex table (*.hex)\n"
+literal|"  -t<a|c|s>      Create AML in assembler, C, or ASL hex table (*.hex)\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -291,12 +297,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"  -cr            Disable Resource Descriptor error checking\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"  -r<Revision>   Override table header Revision (1-255)\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nListings:\n"
+literal|"\nASL Listing Files:\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -316,12 +327,32 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"\nACPI Data Tables:\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  -T<Sig>|ALL|* Create table template file(s) for<Sig>\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  -vt            Create verbose templates (full disassembly)\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"\nAML Disassembler:\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
 literal|"  -d  [file]     Disassemble or decode binary ACPI table to file (*.dsl)\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  -da [f1,f2]    Disassemble multiple tables from single namespace\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -367,6 +398,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"  -hr            Display ACPI reserved method names\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  -ht            Display currently supported ACPI table names\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -449,7 +485,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  -c             Parse only, no output generation\n"
+literal|"  -n             Parse only, no output generation\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -460,6 +496,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"  -x<level>      Set debug level for trace output\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  -z             Do not insert new compiler ID for DataTables\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -479,9 +520,16 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
+literal|"%s\n"
+argument_list|,
+name|ASL_COMPLIANCE
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"Usage:    %s [Options] [Files]\n\n"
 argument_list|,
-name|CompilerName
+name|ASL_INVOCATION_NAME
 argument_list|)
 expr_stmt|;
 name|Options
@@ -838,6 +886,9 @@ block|{
 name|int
 name|j
 decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 comment|/* Get the command line options */
 while|while
 condition|(
@@ -921,6 +972,10 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* same as yydebug */
+name|DtParserdebug
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 literal|'p'
@@ -930,6 +985,10 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* same as yydebug */
+name|DtParserdebug
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 literal|'t'
@@ -959,11 +1018,37 @@ break|break;
 case|case
 literal|'c'
 case|:
-comment|/* Parse only */
-name|Gbl_ParseOnlyFlag
+switch|switch
+condition|(
+name|AcpiGbl_Optarg
+index|[
+literal|0
+index|]
+condition|)
+block|{
+case|case
+literal|'r'
+case|:
+name|Gbl_NoResourceChecking
 operator|=
 name|TRUE
 expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"Unknown option: -c%s\n"
+argument_list|,
+name|AcpiGbl_Optarg
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 break|break;
 case|case
 literal|'d'
@@ -982,6 +1067,18 @@ case|:
 name|Gbl_DoCompile
 operator|=
 name|FALSE
+expr_stmt|;
+break|break;
+case|case
+literal|'a'
+case|:
+name|Gbl_DoCompile
+operator|=
+name|FALSE
+expr_stmt|;
+name|Gbl_DisassembleAll
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -1011,10 +1108,35 @@ break|break;
 case|case
 literal|'e'
 case|:
-name|Gbl_ExternalFilename
+name|Status
 operator|=
+name|AcpiDmAddToExternalFileList
+argument_list|(
 name|AcpiGbl_Optarg
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Could not add %s to external list\n"
+argument_list|,
+name|AcpiGbl_Optarg
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 break|break;
 case|case
 literal|'f'
@@ -1083,6 +1205,17 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+case|case
+literal|'t'
+case|:
+name|UtDisplaySupportedTables
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 default|default:
 name|printf
 argument_list|(
@@ -1098,7 +1231,6 @@ literal|1
 operator|)
 return|;
 block|}
-break|break;
 case|case
 literal|'I'
 case|:
@@ -1289,6 +1421,15 @@ return|;
 block|}
 break|break;
 case|case
+literal|'n'
+case|:
+comment|/* Parse only */
+name|Gbl_ParseOnlyFlag
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
 literal|'p'
 case|:
 comment|/* Override default AML output filename */
@@ -1392,6 +1533,14 @@ operator|=
 name|HEX_OUTPUT_C
 expr_stmt|;
 break|break;
+case|case
+literal|'s'
+case|:
+name|Gbl_HexOutputFlag
+operator|=
+name|HEX_OUTPUT_ASL
+expr_stmt|;
+break|break;
 default|default:
 name|printf
 argument_list|(
@@ -1407,6 +1556,18 @@ literal|1
 operator|)
 return|;
 block|}
+break|break;
+case|case
+literal|'T'
+case|:
+name|Gbl_DoTemplates
+operator|=
+name|TRUE
+expr_stmt|;
+name|Gbl_TemplateSignature
+operator|=
+name|AcpiGbl_Optarg
+expr_stmt|;
 break|break;
 case|case
 literal|'v'
@@ -1459,6 +1620,14 @@ case|:
 name|Gbl_DoSignon
 operator|=
 name|FALSE
+expr_stmt|;
+break|break;
+case|case
+literal|'t'
+case|:
+name|Gbl_VerboseTemplates
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 default|default:
@@ -1544,6 +1713,14 @@ literal|16
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'z'
+case|:
+name|Gbl_UseOriginalCompilerId
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
 default|default:
 return|return
 operator|(
@@ -1583,6 +1760,9 @@ name|BadCommandLine
 init|=
 literal|0
 decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 comment|/* Minimum command line contains at least the command and an input file */
 if|if
 condition|(
@@ -1591,9 +1771,12 @@ operator|<
 literal|2
 condition|)
 block|{
-name|AslCompilerSignon
+name|printf
 argument_list|(
-name|ASL_FILE_STDOUT
+name|ACPI_COMMON_SIGNON
+argument_list|(
+name|ASL_COMPILER_NAME
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|Usage
@@ -1617,6 +1800,39 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Gbl_DoTemplates
+condition|)
+block|{
+name|Status
+operator|=
+name|DtCreateTemplates
+argument_list|(
+name|Gbl_TemplateSignature
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|exit
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Next parameter must be the input filename */
 if|if
 condition|(
@@ -1648,9 +1864,12 @@ condition|(
 name|Gbl_DoSignon
 condition|)
 block|{
-name|AslCompilerSignon
+name|printf
 argument_list|(
-name|ASL_FILE_STDOUT
+name|ACPI_COMMON_SIGNON
+argument_list|(
+name|ASL_COMPILER_NAME
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1704,8 +1923,15 @@ name|ACPI_STATUS
 name|Status
 decl_stmt|;
 name|int
-name|Index
+name|Index1
 decl_stmt|;
+name|int
+name|Index2
+decl_stmt|;
+name|AcpiGbl_ExternalFileList
+operator|=
+name|NULL
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|_DEBUG
@@ -1727,7 +1953,9 @@ comment|/* Init and command line */
 name|AslInitialize
 argument_list|()
 expr_stmt|;
-name|Index
+name|Index1
+operator|=
+name|Index2
 operator|=
 name|AslCommandLine
 argument_list|(
@@ -1770,12 +1998,16 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* Process each pathname/filename in the list, with possible wildcards */
+if|if
+condition|(
+name|Gbl_DisassembleAll
+condition|)
+block|{
 while|while
 condition|(
 name|argv
 index|[
-name|Index
+name|Index1
 index|]
 condition|)
 block|{
@@ -1785,8 +2017,10 @@ name|AslDoOnePathname
 argument_list|(
 name|argv
 index|[
-name|Index
+name|Index1
 index|]
+argument_list|,
+name|AcpiDmAddToExternalFileList
 argument_list|)
 expr_stmt|;
 if|if
@@ -1804,8 +2038,58 @@ literal|1
 operator|)
 return|;
 block|}
-name|Index
+name|Index1
 operator|++
+expr_stmt|;
+block|}
+block|}
+comment|/* Process each pathname/filename in the list, with possible wildcards */
+while|while
+condition|(
+name|argv
+index|[
+name|Index2
+index|]
+condition|)
+block|{
+name|Status
+operator|=
+name|AslDoOnePathname
+argument_list|(
+name|argv
+index|[
+name|Index2
+index|]
+argument_list|,
+name|AslDoOneFile
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+name|Index2
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|AcpiGbl_ExternalFileList
+condition|)
+block|{
+name|AcpiDmClearExternalFileList
+argument_list|()
 expr_stmt|;
 block|}
 return|return

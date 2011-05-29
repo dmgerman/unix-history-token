@@ -121,6 +121,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|bit_SSSE3
+value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
 name|bit_CMPXCHG16B
 value|(1<< 13)
 end_define
@@ -226,6 +233,10 @@ init|=
 literal|0
 decl_stmt|,
 name|has_sse3
+init|=
+literal|0
+decl_stmt|,
+name|has_ssse3
 init|=
 literal|0
 decl_stmt|,
@@ -434,6 +445,16 @@ operator|&
 name|bit_SSE3
 operator|)
 expr_stmt|;
+name|has_ssse3
+operator|=
+operator|!
+operator|!
+operator|(
+name|ecx
+operator|&
+name|bit_SSSE3
+operator|)
+expr_stmt|;
 comment|/* We don't care for extended family.  */
 name|family
 operator|=
@@ -597,6 +618,15 @@ condition|(
 name|arch
 condition|)
 block|{
+if|if
+condition|(
+name|has_ssse3
+condition|)
+name|cpu
+operator|=
+literal|"core2"
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|has_sse3
@@ -793,6 +823,14 @@ operator|=
 literal|"generic"
 expr_stmt|;
 block|}
+break|break;
+case|case
+name|PROCESSOR_GEODE
+case|:
+name|cpu
+operator|=
+literal|"geode"
+expr_stmt|;
 break|break;
 case|case
 name|PROCESSOR_K6

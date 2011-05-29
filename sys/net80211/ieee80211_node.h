@@ -555,6 +555,34 @@ name|int8_t
 name|ni_noise
 decl_stmt|;
 comment|/* noise floor */
+comment|/* mimo statistics */
+name|uint32_t
+name|ni_mimo_rssi_ctl
+index|[
+name|IEEE80211_MAX_CHAINS
+index|]
+decl_stmt|;
+name|uint32_t
+name|ni_mimo_rssi_ext
+index|[
+name|IEEE80211_MAX_CHAINS
+index|]
+decl_stmt|;
+name|uint8_t
+name|ni_mimo_noise_ctl
+index|[
+name|IEEE80211_MAX_CHAINS
+index|]
+decl_stmt|;
+name|uint8_t
+name|ni_mimo_noise_ext
+index|[
+name|IEEE80211_MAX_CHAINS
+index|]
+decl_stmt|;
+name|uint8_t
+name|ni_mimo_chains
+decl_stmt|;
 comment|/* header */
 name|uint8_t
 name|ni_macaddr
@@ -748,10 +776,15 @@ modifier|*
 name|ni_wdsvap
 decl_stmt|;
 comment|/* associated WDS vap */
+name|void
+modifier|*
+name|ni_rctls
+decl_stmt|;
+comment|/* private ratectl state */
 name|uint64_t
 name|ni_spare
 index|[
-literal|4
+literal|3
 index|]
 decl_stmt|;
 block|}

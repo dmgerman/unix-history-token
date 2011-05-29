@@ -206,7 +206,7 @@ literal|"deauth"
 block|,
 literal|"action"
 block|,
-literal|"reserved#14"
+literal|"action_noack"
 block|,
 literal|"reserved#15"
 block|}
@@ -931,6 +931,10 @@ name|ucastrate
 operator|=
 name|IEEE80211_FIXED_RATE_NONE
 expr_stmt|;
+comment|/* 		 * Setting the management rate to MCS 0 assumes that the 		 * BSS Basic rate set is empty and the BSS Basic MCS set 		 * is not. 		 * 		 * Since we're not checking this, default to the lowest 		 * defined rate for this mode. 		 * 		 * At least one 11n AP (DLINK DIR-825) is reported to drop 		 * some MCS management traffic (eg BA response frames.) 		 * 		 * See also: 9.6.0 of the 802.11n-2009 specification. 		 */
+ifdef|#
+directive|ifdef
+name|NOTYET
 if|if
 condition|(
 name|i
@@ -1008,6 +1012,44 @@ operator|&
 name|IEEE80211_RATE_VAL
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+name|vap
+operator|->
+name|iv_txparms
+index|[
+name|i
+index|]
+operator|.
+name|mgmtrate
+operator|=
+name|rs
+operator|->
+name|rs_rates
+index|[
+literal|0
+index|]
+operator|&
+name|IEEE80211_RATE_VAL
+expr_stmt|;
+name|vap
+operator|->
+name|iv_txparms
+index|[
+name|i
+index|]
+operator|.
+name|mcastrate
+operator|=
+name|rs
+operator|->
+name|rs_rates
+index|[
+literal|0
+index|]
+operator|&
+name|IEEE80211_RATE_VAL
+expr_stmt|;
 name|vap
 operator|->
 name|iv_txparms
@@ -5205,6 +5247,15 @@ operator|>
 literal|1
 condition|)
 return|return;
+comment|/* 	 * Clear the wme cap_info field so a qoscount from a previous 	 * vap doesn't confuse later code which only parses the beacon 	 * field and updates hardware when said field changes. 	 * Otherwise the hardware is programmed with defaults, not what 	 * the beacon actually announces. 	 */
+name|wme
+operator|->
+name|wme_wmeChanParams
+operator|.
+name|cap_info
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Select mode; we can be called early in which case we 	 * always use auto mode.  We know we'll be called when 	 * entering the RUN state with bsschan setup properly 	 * so state will eventually get set correctly 	 */
 if|if
 condition|(
@@ -7596,16 +7647,6 @@ operator|->
 name|iv_swbmiss_task
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|vap
-operator|->
-name|iv_bmiss_count
-operator|==
-literal|0
-condition|)
-comment|/* don't re-arm timer */
-return|return;
 block|}
 else|else
 name|vap

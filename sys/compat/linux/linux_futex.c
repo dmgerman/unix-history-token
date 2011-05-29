@@ -117,6 +117,12 @@ directive|include
 file|<sys/sx.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/umtx.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -160,13 +166,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<compat/linux/linux_futex.h>
+file|<compat/linux/linux_emul.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<compat/linux/linux_emul.h>
+file|<compat/linux/linux_futex.h>
 end_include
 
 begin_include
@@ -239,8 +245,16 @@ name|uint32_t
 modifier|*
 name|f_uaddr
 decl_stmt|;
+comment|/* user-supplied value, for debug */
+name|struct
+name|umtx_key
+name|f_key
+decl_stmt|;
 name|uint32_t
 name|f_refcount
+decl_stmt|;
+name|uint32_t
+name|f_bitset
 decl_stmt|;
 name|LIST_ENTRY
 argument_list|(
@@ -294,7 +308,7 @@ name|FUTEX_INIT
 parameter_list|(
 name|f
 parameter_list|)
-value|sx_init_flags(&(f)->f_lck, "ftlk", 0)
+value|sx_init_flags(&(f)->f_lck, "ftlk", SX_DUPOK)
 end_define
 
 begin_define
@@ -377,6 +391,17 @@ end_define
 
 begin_comment
 comment|/* return EINVAL if futex exists */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FUTEX_SHARED
+value|0x8
+end_define
+
+begin_comment
+comment|/* shared futex */
 end_comment
 
 begin_comment
@@ -585,11 +610,12 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-name|LINUX_CTR2
+name|LINUX_CTR3
 argument_list|(
 name|sys_futex
 argument_list|,
-literal|"futex_put destroy uaddr %p ref %d"
+literal|"futex_put destroy uaddr %p ref %d "
+literal|"shared %d"
 argument_list|,
 name|f
 operator|->
@@ -598,6 +624,20 @@ argument_list|,
 name|f
 operator|->
 name|f_refcount
+argument_list|,
+name|f
+operator|->
+name|f_key
+operator|.
+name|shared
+argument_list|)
+expr_stmt|;
+name|umtx_key_release
+argument_list|(
+operator|&
+name|f
+operator|->
+name|f_key
 argument_list|)
 expr_stmt|;
 name|FUTEX_DESTROY
@@ -614,11 +654,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|LINUX_CTR2
+name|LINUX_CTR3
 argument_list|(
 name|sys_futex
 argument_list|,
-literal|"futex_put uaddr %p ref %d"
+literal|"futex_put uaddr %p ref %d shared %d"
 argument_list|,
 name|f
 operator|->
@@ -627,6 +667,12 @@ argument_list|,
 name|f
 operator|->
 name|f_refcount
+argument_list|,
+name|f
+operator|->
+name|f_key
+operator|.
+name|shared
 argument_list|)
 expr_stmt|;
 name|FUTEXES_UNLOCK
@@ -666,6 +712,13 @@ decl_stmt|,
 modifier|*
 name|tmpf
 decl_stmt|;
+name|struct
+name|umtx_key
+name|key
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 operator|*
 name|newf
 operator|=
@@ -673,6 +726,37 @@ name|tmpf
 operator|=
 name|NULL
 expr_stmt|;
+name|error
+operator|=
+name|umtx_key_get
+argument_list|(
+name|uaddr
+argument_list|,
+name|TYPE_FUTEX
+argument_list|,
+operator|(
+name|flags
+operator|&
+name|FUTEX_SHARED
+operator|)
+condition|?
+name|AUTO_SHARE
+else|:
+name|THREAD_SHARE
+argument_list|,
+operator|&
+name|key
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|retry
 label|:
 name|FUTEXES_LOCK
@@ -688,11 +772,16 @@ argument_list|)
 block|{
 if|if
 condition|(
+name|umtx_key_match
+argument_list|(
+operator|&
 name|f
 operator|->
-name|f_uaddr
-operator|==
-name|uaddr
+name|f_key
+argument_list|,
+operator|&
+name|key
+argument_list|)
 condition|)
 block|{
 if|if
@@ -729,6 +818,12 @@ condition|)
 block|{
 name|FUTEXES_UNLOCK
 expr_stmt|;
+name|umtx_key_release
+argument_list|(
+operator|&
+name|key
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
@@ -743,6 +838,12 @@ name|f_refcount
 expr_stmt|;
 name|FUTEXES_UNLOCK
 expr_stmt|;
+name|umtx_key_release
+argument_list|(
+operator|&
+name|key
+argument_list|)
+expr_stmt|;
 name|FUTEX_LOCK
 argument_list|(
 name|f
@@ -753,17 +854,23 @@ name|newf
 operator|=
 name|f
 expr_stmt|;
-name|LINUX_CTR2
+name|LINUX_CTR3
 argument_list|(
 name|sys_futex
 argument_list|,
-literal|"futex_get uaddr %p ref %d"
+literal|"futex_get uaddr %p ref %d shared %d"
 argument_list|,
 name|uaddr
 argument_list|,
 name|f
 operator|->
 name|f_refcount
+argument_list|,
+name|f
+operator|->
+name|f_key
+operator|.
+name|shared
 argument_list|)
 expr_stmt|;
 return|return
@@ -781,6 +888,12 @@ name|FUTEX_DONTCREATE
 condition|)
 block|{
 name|FUTEXES_UNLOCK
+expr_stmt|;
+name|umtx_key_release
+argument_list|(
+operator|&
+name|key
+argument_list|)
 expr_stmt|;
 name|LINUX_CTR1
 argument_list|(
@@ -831,9 +944,21 @@ name|uaddr
 expr_stmt|;
 name|tmpf
 operator|->
+name|f_key
+operator|=
+name|key
+expr_stmt|;
+name|tmpf
+operator|->
 name|f_refcount
 operator|=
 literal|1
+expr_stmt|;
+name|tmpf
+operator|->
+name|f_bitset
+operator|=
+name|FUTEX_BITSET_MATCH_ANY
 expr_stmt|;
 name|FUTEX_INIT
 argument_list|(
@@ -870,17 +995,23 @@ argument_list|)
 expr_stmt|;
 name|FUTEXES_UNLOCK
 expr_stmt|;
-name|LINUX_CTR2
+name|LINUX_CTR3
 argument_list|(
 name|sys_futex
 argument_list|,
-literal|"futex_get uaddr %p ref %d new"
+literal|"futex_get uaddr %p ref %d shared %d new"
 argument_list|,
 name|uaddr
 argument_list|,
 name|tmpf
 operator|->
 name|f_refcount
+argument_list|,
+name|tmpf
+operator|->
+name|f_key
+operator|.
+name|shared
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1050,8 +1181,7 @@ name|waiting_proc
 modifier|*
 name|wp
 parameter_list|,
-name|unsigned
-name|long
+name|int
 name|timeout
 parameter_list|)
 block|{
@@ -1067,7 +1197,7 @@ name|LINUX_CTR4
 argument_list|(
 name|sys_futex
 argument_list|,
-literal|"futex_sleep enter uaddr %p wp %p timo %ld ref %d"
+literal|"futex_sleep enter uaddr %p wp %p timo %d ref %d"
 argument_list|,
 name|f
 operator|->
@@ -1212,6 +1342,9 @@ name|f
 parameter_list|,
 name|int
 name|n
+parameter_list|,
+name|uint32_t
+name|bitset
 parameter_list|)
 block|{
 name|struct
@@ -1227,6 +1360,17 @@ name|count
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|bitset
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|FUTEX_ASSERT_LOCKED
 argument_list|(
 name|f
@@ -1260,6 +1404,21 @@ operator|->
 name|f_refcount
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Unless we find a matching bit in 		 * the bitset, continue searching. 		 */
+if|if
+condition|(
+operator|!
+operator|(
+name|wp
+operator|->
+name|wp_futex
+operator|->
+name|f_bitset
+operator|&
+name|bitset
+operator|)
+condition|)
+continue|continue;
 name|wp
 operator|->
 name|wp_flags
@@ -1505,27 +1664,18 @@ name|struct
 name|l_timespec
 modifier|*
 name|ts
+parameter_list|,
+name|uint32_t
+name|bitset
 parameter_list|)
 block|{
 name|struct
 name|l_timespec
 name|timeout
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|}
 decl_stmt|;
 name|struct
 name|timeval
 name|tv
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|}
 decl_stmt|;
 name|int
 name|timeout_hz
@@ -1533,6 +1683,23 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+if|if
+condition|(
+name|bitset
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+name|f
+operator|->
+name|f_bitset
+operator|=
+name|bitset
+expr_stmt|;
 if|if
 condition|(
 name|ts
@@ -1564,23 +1731,32 @@ operator|(
 name|error
 operator|)
 return|;
-block|}
+name|TIMESPEC_TO_TIMEVAL
+argument_list|(
+operator|&
 name|tv
-operator|.
-name|tv_usec
-operator|=
+argument_list|,
+operator|&
 name|timeout
-operator|.
-name|tv_sec
-operator|*
-literal|1000000
-operator|+
-name|timeout
-operator|.
-name|tv_nsec
-operator|/
-literal|1000
+argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|itimerfix
+argument_list|(
+operator|&
+name|tv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|timeout_hz
 operator|=
 name|tvtohz
@@ -1589,54 +1765,11 @@ operator|&
 name|tv
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|timeout
-operator|.
-name|tv_sec
-operator|==
-literal|0
-operator|&&
-name|timeout
-operator|.
-name|tv_nsec
-operator|==
-literal|0
-condition|)
+block|}
+else|else
 name|timeout_hz
 operator|=
 literal|0
-expr_stmt|;
-comment|/* 	 * If the user process requests a non null timeout, 	 * make sure we do not turn it into an infinite 	 * timeout because timeout_hz gets null. 	 * 	 * We use a minimal timeout of 1/hz. Maybe it would 	 * make sense to just return ETIMEDOUT without sleeping. 	 */
-if|if
-condition|(
-operator|(
-operator|(
-name|timeout
-operator|.
-name|tv_sec
-operator|!=
-literal|0
-operator|)
-operator|||
-operator|(
-name|timeout
-operator|.
-name|tv_nsec
-operator|!=
-literal|0
-operator|)
-operator|)
-operator|&&
-operator|(
-name|timeout_hz
-operator|==
-literal|0
-operator|)
-condition|)
-name|timeout_hz
-operator|=
-literal|1
 expr_stmt|;
 name|error
 operator|=
@@ -1780,7 +1913,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* XXX: linux verifies access here and returns EFAULT */
+comment|/* XXX: Linux verifies access here and returns EFAULT */
 switch|switch
 condition|(
 name|op
@@ -1976,13 +2109,15 @@ name|args
 parameter_list|)
 block|{
 name|int
-name|op_ret
+name|clockrt
 decl_stmt|,
-name|val
+name|nrwake
+decl_stmt|,
+name|op_ret
 decl_stmt|,
 name|ret
 decl_stmt|,
-name|nrwake
+name|val
 decl_stmt|;
 name|struct
 name|linux_emuldata
@@ -2004,22 +2139,86 @@ name|f2
 decl_stmt|;
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
-comment|/* 	 * Our implementation provides only privates futexes. Most of the apps 	 * should use private futexes but don't claim so. Therefore we treat 	 * all futexes as private by clearing the FUTEX_PRIVATE_FLAG. It works 	 * in most cases (ie. when futexes are not shared on file descriptor 	 * or between different processes.). 	 */
+name|uint32_t
+name|flags
+decl_stmt|;
+if|if
+condition|(
+name|args
+operator|->
+name|op
+operator|&
+name|LINUX_FUTEX_PRIVATE_FLAG
+condition|)
+block|{
+name|flags
+operator|=
+literal|0
+expr_stmt|;
+name|args
+operator|->
+name|op
+operator|&=
+operator|~
+name|LINUX_FUTEX_PRIVATE_FLAG
+expr_stmt|;
+block|}
+else|else
+name|flags
+operator|=
+name|FUTEX_SHARED
+expr_stmt|;
+comment|/* 	 * Currently support for switching between CLOCK_MONOTONIC and 	 * CLOCK_REALTIME is not present. However Linux forbids the use of 	 * FUTEX_CLOCK_REALTIME with any op except FUTEX_WAIT_BITSET and 	 * FUTEX_WAIT_REQUEUE_PI. 	 */
+name|clockrt
+operator|=
+name|args
+operator|->
+name|op
+operator|&
+name|LINUX_FUTEX_CLOCK_REALTIME
+expr_stmt|;
 name|args
 operator|->
 name|op
 operator|=
-operator|(
 name|args
 operator|->
 name|op
 operator|&
 operator|~
-name|LINUX_FUTEX_PRIVATE_FLAG
+name|LINUX_FUTEX_CLOCK_REALTIME
+expr_stmt|;
+if|if
+condition|(
+name|clockrt
+operator|&&
+name|args
+operator|->
+name|op
+operator|!=
+name|LINUX_FUTEX_WAIT_BITSET
+operator|&&
+name|args
+operator|->
+name|op
+operator|!=
+name|LINUX_FUTEX_WAIT_REQUEUE_PI
+condition|)
+return|return
+operator|(
+name|ENOSYS
 operator|)
+return|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+name|f
+operator|=
+name|f2
+operator|=
+name|NULL
 expr_stmt|;
 switch|switch
 condition|(
@@ -2031,11 +2230,25 @@ block|{
 case|case
 name|LINUX_FUTEX_WAIT
 case|:
-name|LINUX_CTR2
+name|args
+operator|->
+name|val3
+operator|=
+name|FUTEX_BITSET_MATCH_ANY
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+name|LINUX_FUTEX_WAIT_BITSET
+case|:
+name|LINUX_CTR3
 argument_list|(
 name|sys_futex
 argument_list|,
-literal|"WAIT val %d uaddr %p"
+literal|"WAIT uaddr %p val %d val3 %d"
+argument_list|,
+name|args
+operator|->
+name|uaddr
 argument_list|,
 name|args
 operator|->
@@ -2043,7 +2256,7 @@ name|val
 argument_list|,
 name|args
 operator|->
-name|uaddr
+name|val3
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2062,8 +2275,12 @@ name|ARGS
 argument_list|(
 name|sys_futex
 argument_list|,
-literal|"futex_wait val %d uaddr %p"
+literal|"futex_wait uaddr %p val %d val3 %d"
 argument_list|)
+argument_list|,
+name|args
+operator|->
+name|uaddr
 argument_list|,
 name|args
 operator|->
@@ -2071,7 +2288,7 @@ name|val
 argument_list|,
 name|args
 operator|->
-name|uaddr
+name|val3
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2090,6 +2307,8 @@ argument_list|,
 operator|&
 name|f
 argument_list|,
+name|flags
+operator||
 name|FUTEX_CREATE_WP
 argument_list|)
 expr_stmt|;
@@ -2155,11 +2374,11 @@ operator|->
 name|val
 condition|)
 block|{
-name|LINUX_CTR3
+name|LINUX_CTR4
 argument_list|(
 name|sys_futex
 argument_list|,
-literal|"WAIT uaddr %p val %d != uval %d"
+literal|"WAIT uaddr %p val %d != uval %d val3 %d"
 argument_list|,
 name|args
 operator|->
@@ -2170,6 +2389,10 @@ operator|->
 name|val
 argument_list|,
 name|val
+argument_list|,
+name|args
+operator|->
+name|val3
 argument_list|)
 expr_stmt|;
 name|futex_put
@@ -2196,17 +2419,35 @@ argument_list|,
 name|args
 operator|->
 name|timeout
+argument_list|,
+name|args
+operator|->
+name|val3
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|LINUX_FUTEX_WAKE
 case|:
-name|LINUX_CTR2
+name|args
+operator|->
+name|val3
+operator|=
+name|FUTEX_BITSET_MATCH_ANY
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+name|LINUX_FUTEX_WAKE_BITSET
+case|:
+name|LINUX_CTR3
 argument_list|(
 name|sys_futex
 argument_list|,
-literal|"WAKE val %d uaddr %p"
+literal|"WAKE uaddr %p val % d val3 %d"
+argument_list|,
+name|args
+operator|->
+name|uaddr
 argument_list|,
 name|args
 operator|->
@@ -2214,10 +2455,9 @@ name|val
 argument_list|,
 name|args
 operator|->
-name|uaddr
+name|val3
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX: Linux is able to cope with different addresses 		 * corresponding to the same mapped memory in the sleeping 		 * and waker process(es). 		 */
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -2234,8 +2474,12 @@ name|ARGS
 argument_list|(
 name|sys_futex
 argument_list|,
-literal|"futex_wake val %d uaddr %p"
+literal|"futex_wake uaddr %p val %d val3 %d"
 argument_list|)
+argument_list|,
+name|args
+operator|->
+name|uaddr
 argument_list|,
 name|args
 operator|->
@@ -2243,7 +2487,7 @@ name|val
 argument_list|,
 name|args
 operator|->
-name|uaddr
+name|val3
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2261,6 +2505,8 @@ argument_list|,
 operator|&
 name|f
 argument_list|,
+name|flags
+operator||
 name|FUTEX_DONTCREATE
 argument_list|)
 expr_stmt|;
@@ -2309,6 +2555,10 @@ argument_list|,
 name|args
 operator|->
 name|val
+argument_list|,
+name|args
+operator|->
+name|val3
 argument_list|)
 expr_stmt|;
 name|futex_put
@@ -2425,16 +2675,18 @@ operator|)
 return|;
 name|error
 operator|=
-name|futex_get0
+name|futex_get
 argument_list|(
 name|args
 operator|->
 name|uaddr
 argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|f
 argument_list|,
-literal|0
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -2446,18 +2698,22 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 		 * To avoid deadlocks return EINVAL if second futex 		 * exists at this time. Otherwise create the new futex 		 * and ignore false positive LOR which thus happens. 		 * 		 * Glibc fall back to FUTEX_WAKE in case of any error 		 * returned by FUTEX_CMP_REQUEUE. 		 */
+comment|/* 		 * To avoid deadlocks return EINVAL if second futex 		 * exists at this time. 		 * 		 * Glibc fall back to FUTEX_WAKE in case of any error 		 * returned by FUTEX_CMP_REQUEUE. 		 */
 name|error
 operator|=
-name|futex_get0
+name|futex_get
 argument_list|(
 name|args
 operator|->
 name|uaddr2
 argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|f2
 argument_list|,
+name|flags
+operator||
 name|FUTEX_DONTEXISTS
 argument_list|)
 expr_stmt|;
@@ -2696,16 +2952,18 @@ endif|#
 directive|endif
 name|error
 operator|=
-name|futex_get0
+name|futex_get
 argument_list|(
 name|args
 operator|->
 name|uaddr
 argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|f
 argument_list|,
-literal|0
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -2729,16 +2987,18 @@ name|uaddr2
 condition|)
 name|error
 operator|=
-name|futex_get0
+name|futex_get
 argument_list|(
 name|args
 operator|->
 name|uaddr2
 argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|f2
 argument_list|,
-literal|0
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -2853,6 +3113,10 @@ argument_list|,
 name|args
 operator|->
 name|val
+argument_list|,
+name|args
+operator|->
+name|val3
 argument_list|)
 expr_stmt|;
 if|if
@@ -2892,6 +3156,10 @@ argument_list|(
 name|f2
 argument_list|,
 name|nrwake
+argument_list|,
+name|args
+operator|->
+name|val3
 argument_list|)
 expr_stmt|;
 else|else
@@ -2902,6 +3170,10 @@ argument_list|(
 name|f
 argument_list|,
 name|nrwake
+argument_list|,
+name|args
+operator|->
+name|val3
 argument_list|)
 expr_stmt|;
 name|ret
@@ -2943,6 +3215,14 @@ case|case
 name|LINUX_FUTEX_LOCK_PI
 case|:
 comment|/* not yet implemented */
+name|linux_msg
+argument_list|(
+name|td
+argument_list|,
+literal|"linux_sys_futex: "
+literal|"op LINUX_FUTEX_LOCK_PI not implemented\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOSYS
@@ -2952,6 +3232,14 @@ case|case
 name|LINUX_FUTEX_UNLOCK_PI
 case|:
 comment|/* not yet implemented */
+name|linux_msg
+argument_list|(
+name|td
+argument_list|,
+literal|"linux_sys_futex: "
+literal|"op LINUX_FUTEX_UNLOCK_PI not implemented\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOSYS
@@ -2961,6 +3249,14 @@ case|case
 name|LINUX_FUTEX_TRYLOCK_PI
 case|:
 comment|/* not yet implemented */
+name|linux_msg
+argument_list|(
+name|td
+argument_list|,
+literal|"linux_sys_futex: "
+literal|"op LINUX_FUTEX_TRYLOCK_PI not implemented\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOSYS
@@ -2983,36 +3279,30 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|em
 operator|->
-name|used_requeue
+name|flags
+operator|&
+name|LINUX_XDEPR_REQUEUEOP
+operator|)
 operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|linux_msg
 argument_list|(
-literal|"linux(%s (%d)) sys_futex: "
+name|td
+argument_list|,
+literal|"linux_sys_futex: "
 literal|"unsupported futex_requeue op\n"
-argument_list|,
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_comm
-argument_list|,
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_pid
 argument_list|)
 expr_stmt|;
 name|em
 operator|->
-name|used_requeue
-operator|=
-literal|1
+name|flags
+operator||=
+name|LINUX_XDEPR_REQUEUEOP
 expr_stmt|;
 block|}
 return|return
@@ -3020,9 +3310,45 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-default|default:
-name|printf
+case|case
+name|LINUX_FUTEX_WAIT_REQUEUE_PI
+case|:
+comment|/* not yet implemented */
+name|linux_msg
 argument_list|(
+name|td
+argument_list|,
+literal|"linux_sys_futex: "
+literal|"op FUTEX_WAIT_REQUEUE_PI not implemented\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOSYS
+operator|)
+return|;
+case|case
+name|LINUX_FUTEX_CMP_REQUEUE_PI
+case|:
+comment|/* not yet implemented */
+name|linux_msg
+argument_list|(
+name|td
+argument_list|,
+literal|"linux_sys_futex: "
+literal|"op LINUX_FUTEX_CMP_REQUEUE_PI not implemented\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOSYS
+operator|)
+return|;
+default|default:
+name|linux_msg
+argument_list|(
+name|td
+argument_list|,
 literal|"linux_sys_futex: unknown op %d\n"
 argument_list|,
 name|args
@@ -3497,6 +3823,8 @@ operator|&
 name|f
 argument_list|,
 name|FUTEX_DONTCREATE
+operator||
+name|FUTEX_SHARED
 argument_list|)
 expr_stmt|;
 if|if
@@ -3520,6 +3848,8 @@ argument_list|(
 name|f
 argument_list|,
 literal|1
+argument_list|,
+name|FUTEX_BITSET_MATCH_ANY
 argument_list|)
 expr_stmt|;
 name|futex_put

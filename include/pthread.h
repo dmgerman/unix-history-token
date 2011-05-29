@@ -261,7 +261,7 @@ begin_define
 define|#
 directive|define
 name|PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP
-value|NULL
+value|((pthread_mutex_t)1)
 end_define
 
 begin_define
@@ -1225,9 +1225,23 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pthread_rwlockattr_init
+name|pthread_rwlockattr_destroy
 parameter_list|(
 name|pthread_rwlockattr_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pthread_rwlockattr_getkind_np
+parameter_list|(
+specifier|const
+name|pthread_rwlockattr_t
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1249,7 +1263,17 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pthread_rwlockattr_setpshared
+name|pthread_rwlockattr_init
+parameter_list|(
+name|pthread_rwlockattr_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pthread_rwlockattr_setkind_np
 parameter_list|(
 name|pthread_rwlockattr_t
 modifier|*
@@ -1261,10 +1285,12 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pthread_rwlockattr_destroy
+name|pthread_rwlockattr_setpshared
 parameter_list|(
 name|pthread_rwlockattr_t
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

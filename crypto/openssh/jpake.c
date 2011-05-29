@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: jpake.c,v 1.2 2009/03/05 07:18:19 djm Exp $ */
+comment|/* $OpenBSD: jpake.c,v 1.6 2010/09/20 04:54:07 djm Exp $ */
 end_comment
 
 begin_comment
@@ -105,6 +105,12 @@ begin_include
 include|#
 directive|include
 file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"misc.h"
 end_include
 
 begin_include
@@ -1175,6 +1181,26 @@ if|if
 condition|(
 name|BN_cmp
 argument_list|(
+name|theirpub1
+argument_list|,
+name|grp
+operator|->
+name|p
+argument_list|)
+operator|>=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: theirpub1>= p"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|BN_cmp
+argument_list|(
 name|theirpub2
 argument_list|,
 name|BN_value_one
@@ -1186,6 +1212,26 @@ condition|)
 name|fatal
 argument_list|(
 literal|"%s: theirpub2<= 1"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|BN_cmp
+argument_list|(
+name|theirpub2
+argument_list|,
+name|grp
+operator|->
+name|p
+argument_list|)
+operator|>=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: theirpub2>= p"
 argument_list|,
 name|__func__
 argument_list|)
@@ -1786,6 +1832,26 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|BN_cmp
+argument_list|(
+name|step2_val
+argument_list|,
+name|grp
+operator|->
+name|p
+argument_list|)
+operator|>=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: step2_val>= p"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* 	 * theirpriv2_s_proof is calculated with a different generator: 	 * tmp = g^(mypriv1+mypriv2+theirpub1) = g^mypub1*g^mypub2*g^theirpub1 	 * Calculate it here so we can check the signature. 	 */
 if|if
 condition|(
@@ -2161,7 +2227,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|memcmp
+name|timingsafe_bcmp
 argument_list|(
 name|peer_confirm_hash
 argument_list|,

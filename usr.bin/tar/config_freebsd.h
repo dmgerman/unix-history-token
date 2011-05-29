@@ -30,6 +30,12 @@ name|HAVE_CHROOT
 value|1
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|HAVE_DIRECT_H
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -85,12 +91,24 @@ name|HAVE_GRP_H
 value|1
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|HAVE_IO_H
+end_undef
+
 begin_define
 define|#
 directive|define
 name|HAVE_LANGINFO_H
 value|1
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_LIBACL
+end_undef
 
 begin_define
 define|#
@@ -125,17 +143,18 @@ name|HAVE_LOCALE_H
 value|1
 end_define
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|450002
-end_if
+begin_define
+define|#
+directive|define
+name|HAVE_MBTOWC
+value|1
+end_define
 
-begin_comment
-comment|/* nl_langinfo introduced */
-end_comment
+begin_undef
+undef|#
+directive|undef
+name|HAVE_NDIR_H
+end_undef
 
 begin_define
 define|#
@@ -143,11 +162,6 @@ directive|define
 name|HAVE_NL_LANGINFO
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -180,7 +194,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_SIGACTION
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_SIGNAL_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_STDARG_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_STDINT_H
 value|1
 end_define
 
@@ -198,6 +233,12 @@ name|HAVE_STRING_H
 value|1
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|HAVE_STRNCPY_S
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -205,16 +246,48 @@ name|HAVE_STRUCT_STAT_ST_FLAGS
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_STAT_ST_MTIMESPEC_TV_NSEC
+value|1
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_STRUCT_STAT_ST_MTIME_N
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_STRUCT_STAT_ST_MTIME_USEC
+end_undef
+
 begin_undef
 undef|#
 directive|undef
 name|HAVE_STRUCT_STAT_ST_MTIM_TV_NSEC
 end_undef
 
+begin_undef
+undef|#
+directive|undef
+name|HAVE_STRUCT_STAT_ST_UMTIME
+end_undef
+
 begin_define
 define|#
 directive|define
-name|HAVE_STRUCT_STAT_ST_MTIMESPEC_TV_NSEC
+name|HAVE_SYS_CDEFS_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_DIR_H
 value|1
 end_define
 
@@ -224,6 +297,12 @@ directive|define
 name|HAVE_SYS_IOCTL_H
 value|1
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_SYS_NDIR_H
+end_undef
 
 begin_define
 define|#
@@ -242,13 +321,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_TIME_H
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|HAVE_SYS_TYPES_H
 value|1
 end_define
@@ -256,7 +328,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_UINTMAX_T
+name|HAVE_TIME_H
 value|1
 end_define
 
@@ -270,12 +342,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_UNSIGNED_LONG_LONG
-end_define
-
-begin_define
-define|#
-directive|define
 name|HAVE_WCTYPE_H
 value|1
 end_define
@@ -283,7 +349,7 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|MAJOR_IN_MKDEV
+name|HAVE_WINDOWS_H
 end_undef
 
 end_unit

@@ -27,6 +27,39 @@ directive|include
 file|"ah_eeprom_v14.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|_BYTE_ORDER
+operator|==
+name|_BIG_ENDIAN
+end_if
+
+begin_define
+define|#
+directive|define
+name|__BIG_ENDIAN_BITFIELD
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|AR9285_RDEXT_DEFAULT
+value|0x1F
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR5416_4K_EEP_PD_GAIN_BOUNDARY_DEFAULT
+value|58
+end_define
+
 begin_undef
 undef|#
 directive|undef
@@ -218,7 +251,7 @@ index|[
 name|AR5416_4K_MAX_CHAINS
 index|]
 decl_stmt|;
-comment|// 12
+comment|// 4
 name|uint32_t
 name|antCtrlCommon
 decl_stmt|;
@@ -312,27 +345,55 @@ name|uint8_t
 name|pdGainOverlap
 decl_stmt|;
 comment|// 1
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint8_t
-name|ob
+name|ob_1
+range|:
+literal|4
+decl_stmt|,
+name|ob_0
+range|:
+literal|4
 decl_stmt|;
 comment|// 1
 name|uint8_t
-name|db
+name|db1_1
+range|:
+literal|4
+decl_stmt|,
+name|db1_0
+range|:
+literal|4
 decl_stmt|;
 comment|// 1
+else|#
+directive|else
+name|uint8_t
+name|ob_0
+range|:
+literal|4
+decl_stmt|,
+name|ob_1
+range|:
+literal|4
+decl_stmt|;
+name|uint8_t
+name|db1_0
+range|:
+literal|4
+decl_stmt|,
+name|db1_1
+range|:
+literal|4
+decl_stmt|;
+endif|#
+directive|endif
 name|uint8_t
 name|xpaBiasLvl
 decl_stmt|;
 comment|// 1
-if|#
-directive|if
-literal|0
-block|uint8_t		pwrDecreaseFor2Chain;
-comment|// 1
-block|uint8_t		pwrDecreaseFor3Chain;
-comment|// 1 -> 48 B
-endif|#
-directive|endif
 name|uint8_t
 name|txFrameToDataStart
 decl_stmt|;
@@ -377,72 +438,177 @@ name|AR5416_4K_MAX_CHAINS
 index|]
 decl_stmt|;
 comment|// 1
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint8_t
-name|ob_ch1
+name|db2_1
+range|:
+literal|4
+decl_stmt|,
+name|db2_0
+range|:
+literal|4
 decl_stmt|;
-comment|// 1 -> ob and db become chain specific from AR9280
+comment|// 1
+else|#
+directive|else
 name|uint8_t
-name|db_ch1
+name|db2_0
+range|:
+literal|4
+decl_stmt|,
+name|db2_1
+range|:
+literal|4
+decl_stmt|;
+comment|// 1
+endif|#
+directive|endif
+name|uint8_t
+name|version
+decl_stmt|;
+comment|// 1
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
+name|uint8_t
+name|ob_3
+range|:
+literal|4
+decl_stmt|,
+name|ob_2
+range|:
+literal|4
 decl_stmt|;
 comment|// 1
 name|uint8_t
-name|flagBits
+name|antdiv_ctl1
+range|:
+literal|4
+decl_stmt|,
+name|ob_4
+range|:
+literal|4
 decl_stmt|;
 comment|// 1
-define|#
-directive|define
-name|AR5416_EEP_FLAG_USEANT1
-value|0x01
-comment|/* +1 configured antenna */
-define|#
-directive|define
-name|AR5416_EEP_FLAG_FORCEXPAON
-value|0x02
-comment|/* force XPA bit for 5G */
-define|#
-directive|define
-name|AR5416_EEP_FLAG_LOCALBIAS
-value|0x04
-comment|/* enable local bias */
-define|#
-directive|define
-name|AR5416_EEP_FLAG_FEMBANDSELECT
-value|0x08
-comment|/* FEM band select used */
-define|#
-directive|define
-name|AR5416_EEP_FLAG_XLNABUFIN
-value|0x10
-define|#
-directive|define
-name|AR5416_EEP_FLAG_XLNAISEL
-value|0x60
-define|#
-directive|define
-name|AR5416_EEP_FLAG_XLNAISEL_S
-value|5
-define|#
-directive|define
-name|AR5416_EEP_FLAG_XLNABUFMODE
-value|0x80
 name|uint8_t
-name|miscBits
+name|db1_3
+range|:
+literal|4
+decl_stmt|,
+name|db1_2
+range|:
+literal|4
 decl_stmt|;
-comment|// [0..1]: bb_tx_dac_scale_cck
-name|uint16_t
-name|xpaBiasLvlFreq
-index|[
-literal|3
-index|]
+comment|// 1
+name|uint8_t
+name|antdiv_ctl2
+range|:
+literal|4
+decl_stmt|,
+name|db1_4
+range|:
+literal|4
 decl_stmt|;
-comment|// 6
+comment|// 1
+name|uint8_t
+name|db2_2
+range|:
+literal|4
+decl_stmt|,
+name|db2_3
+range|:
+literal|4
+decl_stmt|;
+comment|// 1
+name|uint8_t
+name|reserved
+range|:
+literal|4
+decl_stmt|,
+name|db2_4
+range|:
+literal|4
+decl_stmt|;
+comment|// 1
+else|#
+directive|else
+name|uint8_t
+name|ob_2
+range|:
+literal|4
+decl_stmt|,
+name|ob_3
+range|:
+literal|4
+decl_stmt|;
+name|uint8_t
+name|ob_4
+range|:
+literal|4
+decl_stmt|,
+name|antdiv_ctl1
+range|:
+literal|4
+decl_stmt|;
+name|uint8_t
+name|db1_2
+range|:
+literal|4
+decl_stmt|,
+name|db1_3
+range|:
+literal|4
+decl_stmt|;
+name|uint8_t
+name|db1_4
+range|:
+literal|4
+decl_stmt|,
+name|antdiv_ctl2
+range|:
+literal|4
+decl_stmt|;
+name|uint8_t
+name|db2_2
+range|:
+literal|4
+decl_stmt|,
+name|db2_3
+range|:
+literal|4
+decl_stmt|;
+name|uint8_t
+name|db2_4
+range|:
+literal|4
+decl_stmt|,
+name|reserved
+range|:
+literal|4
+decl_stmt|;
+endif|#
+directive|endif
+name|uint8_t
+name|tx_diversity
+decl_stmt|;
+name|uint8_t
+name|flc_pwr_thresh
+decl_stmt|;
+name|uint8_t
+name|bb_scale_smrt_antenna
+decl_stmt|;
+define|#
+directive|define
+name|EEP_4K_BB_DESIRED_SCALE_MASK
+value|0x1f
 name|uint8_t
 name|futureModal
 index|[
-literal|2
+literal|1
 index|]
 decl_stmt|;
-comment|// 2
 name|SPUR_CHAN
 name|spurChans
 index|[
@@ -613,9 +779,6 @@ decl_stmt|;
 comment|/* XXX these are dynamically calculated for use by shared code */
 name|int8_t
 name|ee_antennaGainMax
-index|[
-literal|2
-index|]
 decl_stmt|;
 block|}
 name|HAL_EEPROM_v4k

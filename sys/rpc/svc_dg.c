@@ -377,13 +377,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|CURVNET_SET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -402,9 +395,6 @@ name|svc_dg_str
 argument_list|,
 name|svc_dg_err1
 argument_list|)
-expr_stmt|;
-name|CURVNET_RESTORE
-argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -471,9 +461,6 @@ argument_list|,
 name|svc_dg_err2
 argument_list|)
 expr_stmt|;
-name|CURVNET_RESTORE
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -525,6 +512,13 @@ name|xp_ops
 operator|=
 operator|&
 name|svc_dg_ops
+expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+argument_list|)
 expr_stmt|;
 name|error
 operator|=

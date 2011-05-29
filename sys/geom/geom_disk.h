@@ -220,6 +220,24 @@ index|[
 name|DISK_IDENT_SIZE
 index|]
 decl_stmt|;
+name|char
+name|d_descr
+index|[
+name|DISK_IDENT_SIZE
+index|]
+decl_stmt|;
+name|uint16_t
+name|d_hba_vendor
+decl_stmt|;
+name|uint16_t
+name|d_hba_device
+decl_stmt|;
+name|uint16_t
+name|d_hba_subvendor
+decl_stmt|;
+name|uint16_t
+name|d_hba_subdevice
+decl_stmt|;
 comment|/* Fields private to the driver */
 name|void
 modifier|*

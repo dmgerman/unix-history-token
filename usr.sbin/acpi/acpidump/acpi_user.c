@@ -488,7 +488,10 @@ literal|0
 condition|)
 name|len
 operator|=
-name|ACPI_RSDP_REV0_SIZE
+sizeof|sizeof
+argument_list|(
+name|ACPI_RSDP_COMMON
+argument_list|)
 expr_stmt|;
 else|else
 name|len

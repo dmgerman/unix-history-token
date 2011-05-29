@@ -2334,7 +2334,7 @@ comment|/* read commands */
 name|char
 name|linename
 index|[
-literal|10
+literal|20
 index|]
 decl_stmt|;
 name|char
@@ -2347,9 +2347,14 @@ decl_stmt|;
 name|lineno
 operator|++
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|linename
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|linename
+argument_list|)
 argument_list|,
 literal|"Line %d"
 argument_list|,
@@ -2533,7 +2538,7 @@ literal|0
 condition|)
 block|{
 comment|/* Tell the user that we could not find a usable */
-comment|/* Winsock DLL.                                  */
+comment|/* Winsock DLL.				  */
 name|printf
 argument_list|(
 literal|"WSAStartup failed with error: %d\n"

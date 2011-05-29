@@ -164,6 +164,9 @@ modifier|*
 name|prop
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|mfi_dcmd_command
@@ -190,6 +193,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get patrol read properties"
@@ -197,8 +204,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|error
 operator|)
 return|;
 block|}
@@ -254,6 +260,8 @@ name|uint32_t
 name|at
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|fd
 decl_stmt|;
 name|u_int
@@ -273,6 +281,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mfi_open"
@@ -280,7 +292,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -298,8 +310,8 @@ operator|&
 name|at
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|error
+operator|=
 name|patrol_get_props
 argument_list|(
 name|fd
@@ -307,12 +319,14 @@ argument_list|,
 operator|&
 name|prop
 argument_list|)
-operator|<
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 name|printf
@@ -459,6 +473,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get patrol read properties"
@@ -466,7 +484,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -563,6 +581,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get drive list"
@@ -570,7 +592,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -628,6 +650,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to fetch info for drive %u"
@@ -644,7 +670,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -735,6 +761,8 @@ name|av
 parameter_list|)
 block|{
 name|int
+name|error
+decl_stmt|,
 name|fd
 decl_stmt|;
 name|fd
@@ -751,6 +779,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mfi_open"
@@ -758,7 +790,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -784,6 +816,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to start patrol read"
@@ -791,7 +827,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -835,6 +871,8 @@ name|av
 parameter_list|)
 block|{
 name|int
+name|error
+decl_stmt|,
 name|fd
 decl_stmt|;
 name|fd
@@ -851,6 +889,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mfi_open"
@@ -858,7 +900,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -884,6 +926,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to stop patrol read"
@@ -891,7 +937,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -944,6 +990,11 @@ decl_stmt|;
 name|time_t
 name|now
 decl_stmt|;
+name|int
+name|error
+decl_stmt|,
+name|fd
+decl_stmt|;
 name|uint32_t
 name|at
 decl_stmt|,
@@ -957,9 +1008,6 @@ name|cp
 decl_stmt|;
 name|uint8_t
 name|op_mode
-decl_stmt|;
-name|int
-name|fd
 decl_stmt|;
 name|exec_freq
 operator|=
@@ -1023,7 +1071,7 @@ index|[
 literal|2
 index|]
 argument_list|,
-literal|"continously"
+literal|"continuously"
 argument_list|)
 operator|==
 literal|0
@@ -1205,6 +1253,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mfi_open"
@@ -1212,12 +1264,12 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
-if|if
-condition|(
+name|error
+operator|=
 name|patrol_get_props
 argument_list|(
 name|fd
@@ -1225,12 +1277,14 @@ argument_list|,
 operator|&
 name|prop
 argument_list|)
-operator|<
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 name|prop
@@ -1342,6 +1396,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to set patrol read properties"
@@ -1349,7 +1407,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}

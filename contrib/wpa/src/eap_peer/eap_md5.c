@@ -301,7 +301,7 @@ name|ret
 operator|->
 name|decision
 operator|=
-name|DECISION_UNCOND_SUCC
+name|DECISION_COND_SUCC
 expr_stmt|;
 name|ret
 operator|->

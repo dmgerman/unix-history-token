@@ -287,6 +287,11 @@ name|ah_reqTxIntrDesc
 operator|=
 name|ar5210IntrReqTxDesc
 block|,
+operator|.
+name|ah_getTxCompletionRates
+operator|=
+name|ar5210GetTxCompletionRates
+block|,
 comment|/* RX Functions */
 operator|.
 name|ah_getRxDP
@@ -355,6 +360,11 @@ name|ar5210ProcRxDesc
 block|,
 operator|.
 name|ah_rxMonitor
+operator|=
+name|ar5210RxMonitor
+block|,
+operator|.
+name|ah_aniPoll
 operator|=
 name|ar5210AniPoll
 block|,
@@ -697,6 +707,10 @@ name|st
 parameter_list|,
 name|HAL_BUS_HANDLE
 name|sh
+parameter_list|,
+name|uint16_t
+modifier|*
+name|eepromdata
 parameter_list|,
 name|HAL_STATUS
 modifier|*
@@ -1655,6 +1669,18 @@ operator||
 name|HAL_INT_TX
 operator||
 name|HAL_INT_FATAL
+expr_stmt|;
+name|pCap
+operator|->
+name|hal4kbSplitTransSupport
+operator|=
+name|AH_TRUE
+expr_stmt|;
+name|pCap
+operator|->
+name|halHasRxSelfLinkedTail
+operator|=
+name|AH_TRUE
 expr_stmt|;
 name|ahpriv
 operator|->

@@ -76,23 +76,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EXSHELLPROC
+name|EXEXEC
 value|2
 end_define
 
 begin_comment
-comment|/* execute a shell procedure */
+comment|/* command execution failed */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EXEXEC
+name|EXEXIT
 value|3
 end_define
 
 begin_comment
-comment|/* command execution failed */
+comment|/* call exitshell(exitstatus) */
 end_comment
 
 begin_comment
@@ -187,6 +187,28 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|warning
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__printflike
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|2
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_decl_stmt
 name|void

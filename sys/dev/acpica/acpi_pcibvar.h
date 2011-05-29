@@ -95,10 +95,17 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|acpi_pcib_resume
+name|acpi_pcib_power_for_sleep
 parameter_list|(
 name|device_t
+name|pcib
+parameter_list|,
+name|device_t
 name|dev
+parameter_list|,
+name|int
+modifier|*
+name|pstate
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -916,6 +916,8 @@ name|SA
 operator|)
 operator|&
 name|ipaddr
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1613,7 +1615,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ifa_ifwithaddr
+name|ifa_ifwithaddr_check
 argument_list|(
 operator|(
 name|SA
@@ -1622,7 +1624,7 @@ operator|&
 name|ipaddr
 argument_list|)
 operator|==
-name|NULL
+literal|0
 condition|)
 continue|continue;
 name|cp

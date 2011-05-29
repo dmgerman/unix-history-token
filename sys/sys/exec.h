@@ -185,7 +185,7 @@ value|static int __CONCAT(name,_modevent)(module_t mod, int type, \ 	    void *d
 comment|/* printf(#name " module loaded\n"); */
 value|\ 			error = exec_register(exec); \ 			if (error) \ 				printf(__XSTRING(name) "register failed\n"); \ 			break; \ 		case MOD_UNLOAD: \
 comment|/* printf(#name " module unloaded\n"); */
-value|\ 			error = exec_unregister(exec); \ 			if (error) \ 				printf(__XSTRING(name) " unregister failed\n");\ 			break; \ 		default: \ 			error = EOPNOTSUPP; \ 			break; \ 		} \ 		return error; \ 	} \ 	static moduledata_t __CONCAT(name,_mod) = { \ 		__XSTRING(name), \ 		__CONCAT(name,_modevent), \ 		(void *)& execsw_arg \ 	}; \ 	DECLARE_MODULE(name, __CONCAT(name,_mod), SI_SUB_EXEC, SI_ORDER_ANY)
+value|\ 			error = exec_unregister(exec); \ 			if (error) \ 				printf(__XSTRING(name) " unregister failed\n");\ 			break; \ 		default: \ 			error = EOPNOTSUPP; \ 			break; \ 		} \ 		return error; \ 	} \ 	static moduledata_t __CONCAT(name,_mod) = { \ 		__XSTRING(name), \ 		__CONCAT(name,_modevent), \ 		(void *)& execsw_arg \ 	}; \ 	DECLARE_MODULE_TIED(name, __CONCAT(name,_mod), SI_SUB_EXEC, \ 	    SI_ORDER_ANY)
 end_define
 
 begin_endif

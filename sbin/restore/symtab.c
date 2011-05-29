@@ -1980,7 +1980,7 @@ name|vprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"Check pointing the restore\n"
+literal|"Checkpointing the restore\n"
 argument_list|)
 expr_stmt|;
 if|if

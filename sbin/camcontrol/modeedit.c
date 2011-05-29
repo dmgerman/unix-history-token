@@ -1798,6 +1798,10 @@ operator|&
 name|namelist
 argument_list|)
 expr_stmt|;
+name|c
+operator|=
+literal|'\0'
+expr_stmt|;
 name|depth
 operator|=
 literal|0

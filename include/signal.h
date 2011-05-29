@@ -238,9 +238,11 @@ parameter_list|,
 specifier|const
 name|__sigset_t
 modifier|*
+name|__restrict
 parameter_list|,
 name|__sigset_t
 modifier|*
+name|__restrict
 parameter_list|)
 function_decl|;
 end_function_decl

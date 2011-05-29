@@ -65,12 +65,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/linker_set.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
 end_include
 
@@ -727,6 +721,8 @@ operator|&
 name|up
 operator|->
 name|up_ptr
+argument_list|,
+literal|"%s"
 argument_list|,
 name|pmesg
 argument_list|)
@@ -1521,7 +1517,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb_proc_rewakeup  *  * This function is called to re-wakeup the the given USB  * process. This usually happens after that the USB system has been in  * polling mode, like during a panic. This function must be called  * having "up->up_mtx" locked.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_proc_rewakeup  *  * This function is called to re-wakeup the given USB  * process. This usually happens after that the USB system has been in  * polling mode, like during a panic. This function must be called  * having "up->up_mtx" locked.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function

@@ -15,6 +15,28 @@ directive|define
 name|_MACHINE_ALTIVEC_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|ALTIVEC_VSCR_NJ
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* Enable non-Java mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ALTIVEC_VSCR_SAT
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Saturation status bit */
+end_comment
+
 begin_function_decl
 name|void
 name|enable_vec

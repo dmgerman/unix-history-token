@@ -973,6 +973,7 @@ name|num
 operator|=
 literal|0
 expr_stmt|;
+comment|/* fall-through */
 case|case
 name|EVP_CIPH_CBC_MODE
 case|:

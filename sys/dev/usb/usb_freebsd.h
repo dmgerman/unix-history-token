@@ -37,6 +37,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|USB_HAVE_DEVCTL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|USB_HAVE_BUSDMA
 value|1
 end_define
@@ -86,6 +93,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|USB_HAVE_PF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|USB_TD_GET_PROC
 parameter_list|(
 name|td
@@ -103,6 +117,34 @@ parameter_list|)
 value|(td)->p_pgid
 end_define
 
+begin_if
+if|#
+directive|if
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|USB_HOST_ALIGN
+argument_list|)
+operator|)
+operator|||
+operator|(
+name|USB_HOST_ALIGN
+operator|<=
+literal|0
+operator|)
+end_if
+
+begin_comment
+comment|/* Use default value. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|USB_HOST_ALIGN
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -113,6 +155,41 @@ end_define
 begin_comment
 comment|/* bytes, must be power of two */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Sanity check for USB_HOST_ALIGN: Verify power of two. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+operator|(
+operator|-
+name|USB_HOST_ALIGN
+operator|)
+operator|&
+name|USB_HOST_ALIGN
+operator|)
+operator|!=
+name|USB_HOST_ALIGN
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"USB_HOST_ALIGN is not power of two."
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -208,24 +285,6 @@ end_define
 begin_comment
 comment|/* bytes */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|USB_DEBUG
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|USB_DEBUG
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_typedef
 typedef|typedef

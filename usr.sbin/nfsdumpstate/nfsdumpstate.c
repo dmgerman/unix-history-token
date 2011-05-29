@@ -296,7 +296,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ol"
+literal|"ol:"
 argument_list|)
 operator|)
 operator|!=

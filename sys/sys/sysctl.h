@@ -110,12 +110,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CTLTYPE_QUAD
+name|CTLTYPE_S64
 value|4
 end_define
 
 begin_comment
-comment|/* name describes a 64-bit number */
+comment|/* name describes a signed 64-bit number */
 end_comment
 
 begin_define
@@ -176,6 +176,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CTLTYPE_U64
+value|9
+end_define
+
+begin_comment
+comment|/* name describes an unsigned 64-bit number */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CTLFLAG_RD
 value|0x80000000
 end_define
@@ -201,17 +212,6 @@ directive|define
 name|CTLFLAG_RW
 value|(CTLFLAG_RD|CTLFLAG_WR)
 end_define
-
-begin_define
-define|#
-directive|define
-name|CTLFLAG_NOLOCK
-value|0x20000000
-end_define
-
-begin_comment
-comment|/* XXX Don't Lock */
-end_comment
 
 begin_define
 define|#
@@ -319,6 +319,17 @@ name|CTLFLAG_RDTUN
 value|(CTLFLAG_RD|CTLFLAG_TUN)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CTLFLAG_DYING
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* oid is being removed */
+end_comment
+
 begin_comment
 comment|/*  * Secure level.   Note that CTLFLAG_SECURE == CTLFLAG_SECURE1.    *  * Secure when the securelevel is raised to at least N.  */
 end_comment
@@ -379,11 +390,17 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/linker_set.h>
+end_include
+
 begin_define
 define|#
 directive|define
 name|SYSCTL_HANDLER_ARGS
-value|struct sysctl_oid *oidp, void *arg1, int arg2, \ 	struct sysctl_req *req
+value|struct sysctl_oid *oidp, void *arg1,	\ 	intptr_t arg2, struct sysctl_req *req
 end_define
 
 begin_comment
@@ -393,24 +410,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|REQ_UNLOCKED
-value|0
-end_define
-
-begin_comment
-comment|/* not locked and not wired */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REQ_LOCKED
+name|REQ_UNWIRED
 value|1
 end_define
-
-begin_comment
-comment|/* locked and not wired */
-end_comment
 
 begin_define
 define|#
@@ -418,10 +420,6 @@ directive|define
 name|REQ_WIRED
 value|2
 end_define
-
-begin_comment
-comment|/* locked and wired */
-end_comment
 
 begin_comment
 comment|/* definitions for sysctl_req 'flags' member */
@@ -438,6 +436,11 @@ operator|||
 name|defined
 argument_list|(
 name|__ia64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__powerpc64__
 argument_list|)
 end_if
 
@@ -474,7 +477,7 @@ comment|/* used for access checking */
 name|int
 name|lock
 decl_stmt|;
-comment|/* locking/wiring state */
+comment|/* wiring state */
 name|void
 modifier|*
 name|oldptr
@@ -577,7 +580,7 @@ name|void
 modifier|*
 name|oid_arg1
 decl_stmt|;
-name|int
+name|intptr_t
 name|oid_arg2
 decl_stmt|;
 specifier|const
@@ -601,6 +604,9 @@ name|oid_fmt
 decl_stmt|;
 name|int
 name|oid_refcnt
+decl_stmt|;
+name|u_int
+name|oid_running
 decl_stmt|;
 specifier|const
 name|char
@@ -668,16 +674,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sysctl_handle_quad
-parameter_list|(
-name|SYSCTL_HANDLER_ARGS
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|sysctl_handle_intptr
+name|sysctl_handle_64
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
@@ -860,6 +857,208 @@ define|\
 value|sysctl_##parent##_##name##_children
 end_define
 
+begin_comment
+comment|/*  * These macros provide type safety for sysctls.  SYSCTL_ALLOWED_TYPES()  * defines a transparent union of the allowed types.  SYSCTL_ASSERT_TYPE()  * and SYSCTL_ADD_ASSERT_TYPE() use the transparent union to assert that  * the pointer matches the allowed types.  *  * The allow_0 member allows a literal 0 to be passed for ptr.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_ALLOWED_TYPES
+parameter_list|(
+name|type
+parameter_list|,
+name|decls
+parameter_list|)
+define|\
+value|union sysctl_##type {					\ 		long allow_0;					\ 		decls						\ 	} __attribute__((__transparent_union__));		\ 								\ 	static inline void *					\ 	__sysctl_assert_##type(union sysctl_##type ptr)		\ 	{							\ 		return (ptr.a);					\ 	}							\ 	struct __hack
+end_define
+
+begin_macro
+name|SYSCTL_ALLOWED_TYPES
+argument_list|(
+argument|INT
+argument_list|,
+argument|int *a;
+argument_list|)
+end_macro
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_macro
+name|SYSCTL_ALLOWED_TYPES
+argument_list|(
+argument|UINT
+argument_list|,
+argument|unsigned int *a;
+argument_list|)
+end_macro
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_macro
+name|SYSCTL_ALLOWED_TYPES
+argument_list|(
+argument|LONG
+argument_list|,
+argument|long *a;
+argument_list|)
+end_macro
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_macro
+name|SYSCTL_ALLOWED_TYPES
+argument_list|(
+argument|ULONG
+argument_list|,
+argument|unsigned long *a;
+argument_list|)
+end_macro
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_macro
+name|SYSCTL_ALLOWED_TYPES
+argument_list|(
+argument|INT64
+argument_list|,
+argument|int64_t *a; long long *b;
+argument_list|)
+end_macro
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_macro
+name|SYSCTL_ALLOWED_TYPES
+argument_list|(
+argument|UINT64
+argument_list|,
+argument|uint64_t *a; unsigned long long *b;
+argument_list|)
+end_macro
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_ADD_ASSERT_TYPE
+parameter_list|(
+name|type
+parameter_list|,
+name|ptr
+parameter_list|)
+define|\
+value|__sysctl_assert_ ## type (ptr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_ASSERT_TYPE
+parameter_list|(
+name|type
+parameter_list|,
+name|ptr
+parameter_list|,
+name|parent
+parameter_list|,
+name|name
+parameter_list|)
+define|\
+value|_SYSCTL_ASSERT_TYPE(type, ptr, __LINE__, parent##_##name)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_ADD_ASSERT_TYPE
+parameter_list|(
+name|type
+parameter_list|,
+name|ptr
+parameter_list|)
+value|ptr
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_ASSERT_TYPE
+parameter_list|(
+name|type
+parameter_list|,
+name|ptr
+parameter_list|,
+name|parent
+parameter_list|,
+name|name
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|_SYSCTL_ASSERT_TYPE
+parameter_list|(
+name|t
+parameter_list|,
+name|p
+parameter_list|,
+name|l
+parameter_list|,
+name|id
+parameter_list|)
+define|\
+value|__SYSCTL_ASSERT_TYPE(t, p, l, id)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__SYSCTL_ASSERT_TYPE
+parameter_list|(
+name|type
+parameter_list|,
+name|ptr
+parameter_list|,
+name|line
+parameter_list|,
+name|id
+parameter_list|)
+define|\
+value|static inline void						\ 	sysctl_assert_##line##_##id(void)				\ 	{								\ 		(void)__sysctl_assert_##type(ptr);			\ 	}								\ 	struct __hack
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -924,7 +1123,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|static struct sysctl_oid sysctl__##parent##_##name = {		 \&sysctl_##parent##_children, { NULL }, nbr, kind,	 \ 		a1, a2, #name, handler, fmt, 0, __DESCR(descr) };     \ 	DATA_SET(sysctl_set, sysctl__##parent##_##name)
+value|static struct sysctl_oid sysctl__##parent##_##name = {		 \&sysctl_##parent##_children, { NULL }, nbr, kind,	 \ 		a1, a2, #name, handler, fmt, 0, 0, __DESCR(descr) };	 \ 	DATA_SET(sysctl_set, sysctl__##parent##_##name)
 end_define
 
 begin_define
@@ -1080,7 +1279,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|CTLFLAG_MPSAFE|(access), \ 		ptr, val, sysctl_handle_int, "I", descr)
+value|SYSCTL_ASSERT_TYPE(INT, ptr, parent, name);			\ 	SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_INT | CTLFLAG_MPSAFE | (access),			\ 	    ptr, val, sysctl_handle_int, "I", descr)
 end_define
 
 begin_define
@@ -1105,7 +1304,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_INT|CTLFLAG_MPSAFE|(access),	    \ 	ptr, val, sysctl_handle_int, "I", __DESCR(descr))
+value|sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_INT | CTLFLAG_MPSAFE | (access),			\ 	    SYSCTL_ADD_ASSERT_TYPE(INT, ptr), val,			\ 	    sysctl_handle_int, "I", __DESCR(descr))
 end_define
 
 begin_comment
@@ -1132,7 +1331,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_UINT|CTLFLAG_MPSAFE|(access), \ 		ptr, val, sysctl_handle_int, "IU", descr)
+value|SYSCTL_ASSERT_TYPE(UINT, ptr, parent, name);			\ 	SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_UINT | CTLFLAG_MPSAFE | (access),			\ 	    ptr, val, sysctl_handle_int, "IU", descr)
 end_define
 
 begin_define
@@ -1157,55 +1356,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_UINT|CTLFLAG_MPSAFE|(access),	    \ 	ptr, val, sysctl_handle_int, "IU", __DESCR(descr))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYSCTL_XINT
-parameter_list|(
-name|parent
-parameter_list|,
-name|nbr
-parameter_list|,
-name|name
-parameter_list|,
-name|access
-parameter_list|,
-name|ptr
-parameter_list|,
-name|val
-parameter_list|,
-name|descr
-parameter_list|)
-define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_UINT|CTLFLAG_MPSAFE|(access), \ 		ptr, val, sysctl_handle_int, "IX", descr)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYSCTL_ADD_XINT
-parameter_list|(
-name|ctx
-parameter_list|,
-name|parent
-parameter_list|,
-name|nbr
-parameter_list|,
-name|name
-parameter_list|,
-name|access
-parameter_list|,
-name|ptr
-parameter_list|,
-name|val
-parameter_list|,
-name|descr
-parameter_list|)
-define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_UINT|CTLFLAG_MPSAFE|(access),	    \ 	ptr, val, sysctl_handle_int, "IX", __DESCR(descr))
+value|sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_UINT | CTLFLAG_MPSAFE | (access),			\ 	    SYSCTL_ADD_ASSERT_TYPE(UINT, ptr), val,			\ 	    sysctl_handle_int, "IU", __DESCR(descr))
 end_define
 
 begin_comment
@@ -1232,7 +1383,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_LONG|CTLFLAG_MPSAFE|(access), \ 		ptr, val, sysctl_handle_long, "L", descr)
+value|SYSCTL_ASSERT_TYPE(LONG, ptr, parent, name);			\ 	SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_LONG | CTLFLAG_MPSAFE | (access),			\ 	    ptr, val, sysctl_handle_long, "L", descr)
 end_define
 
 begin_define
@@ -1255,7 +1406,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_LONG|CTLFLAG_MPSAFE|(access),	    \ 	ptr, 0, sysctl_handle_long, "L", __DESCR(descr))
+value|sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_LONG | CTLFLAG_MPSAFE | (access),			\ 	    SYSCTL_ADD_ASSERT_TYPE(LONG, ptr), 0,			\ 	    sysctl_handle_long,	"L", __DESCR(descr))
 end_define
 
 begin_comment
@@ -1282,7 +1433,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_ULONG|CTLFLAG_MPSAFE|(access), \ 		ptr, val, sysctl_handle_long, "LU", __DESCR(descr))
+value|SYSCTL_ASSERT_TYPE(ULONG, ptr, parent, name);			\ 	SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_ULONG | CTLFLAG_MPSAFE | (access),			\ 	    ptr, val, sysctl_handle_long, "LU", descr)
 end_define
 
 begin_define
@@ -1305,53 +1456,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_ULONG|CTLFLAG_MPSAFE|(access),	    \ 	ptr, 0, sysctl_handle_long, "LU", __DESCR(descr))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYSCTL_XLONG
-parameter_list|(
-name|parent
-parameter_list|,
-name|nbr
-parameter_list|,
-name|name
-parameter_list|,
-name|access
-parameter_list|,
-name|ptr
-parameter_list|,
-name|val
-parameter_list|,
-name|descr
-parameter_list|)
-define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_ULONG|CTLFLAG_MPSAFE|(access), \ 		ptr, val, sysctl_handle_long, "LX", __DESCR(descr))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYSCTL_ADD_XLONG
-parameter_list|(
-name|ctx
-parameter_list|,
-name|parent
-parameter_list|,
-name|nbr
-parameter_list|,
-name|name
-parameter_list|,
-name|access
-parameter_list|,
-name|ptr
-parameter_list|,
-name|descr
-parameter_list|)
-define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_ULONG|CTLFLAG_MPSAFE|(access),	    \ 	ptr, 0, sysctl_handle_long, "LX", __DESCR(descr))
+value|sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_ULONG | CTLFLAG_MPSAFE | (access),			\ 	    SYSCTL_ADD_ASSERT_TYPE(ULONG, ptr), 0,			\ 	    sysctl_handle_long, "LU", __DESCR(descr))
 end_define
 
 begin_comment
@@ -1378,7 +1483,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_QUAD|CTLFLAG_MPSAFE|(access), \ 		ptr, val, sysctl_handle_quad, "Q", __DESCR(descr))
+value|SYSCTL_ASSERT_TYPE(INT64, ptr, parent, name);			\ 	SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_S64 | CTLFLAG_MPSAFE | (access),			\ 	    ptr, val, sysctl_handle_64, "Q", descr)
 end_define
 
 begin_define
@@ -1401,7 +1506,53 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_QUAD|CTLFLAG_MPSAFE|(access),	    \ 	ptr, 0, sysctl_handle_quad, "Q", __DESCR(descr))
+value|sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_S64 | CTLFLAG_MPSAFE | (access),			\ 	    SYSCTL_ADD_ASSERT_TYPE(INT64, ptr), 0,			\ 	    sysctl_handle_64, "Q", __DESCR(descr))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_UQUAD
+parameter_list|(
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|ptr
+parameter_list|,
+name|val
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_ASSERT_TYPE(UINT64, ptr, parent, name);			\ 	SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_U64 | CTLFLAG_MPSAFE | (access),			\ 	    ptr, val, sysctl_handle_64, "QU", descr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_ADD_UQUAD
+parameter_list|(
+name|ctx
+parameter_list|,
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|ptr
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_U64 | CTLFLAG_MPSAFE | (access),			\ 	    SYSCTL_ADD_ASSERT_TYPE(UINT64, ptr), 0,			\ 	    sysctl_handle_64, "QU", __DESCR(descr))
 end_define
 
 begin_comment
@@ -1540,7 +1691,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, (access), \ 		ptr, arg, handler, fmt, descr)
+value|CTASSERT(((access)& CTLTYPE) != 0);				\ 	SYSCTL_OID(parent, nbr, name, (access), \ 		ptr, arg, handler, fmt, descr)
 end_define
 
 begin_define
@@ -2156,7 +2307,7 @@ begin_define
 define|#
 directive|define
 name|CTL_KERN_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "ostype", CTLTYPE_STRING }, \ 	{ "osrelease", CTLTYPE_STRING }, \ 	{ "osrevision", CTLTYPE_INT }, \ 	{ "version", CTLTYPE_STRING }, \ 	{ "maxvnodes", CTLTYPE_INT }, \ 	{ "maxproc", CTLTYPE_INT }, \ 	{ "maxfiles", CTLTYPE_INT }, \ 	{ "argmax", CTLTYPE_INT }, \ 	{ "securelevel", CTLTYPE_INT }, \ 	{ "hostname", CTLTYPE_STRING }, \ 	{ "hostid", CTLTYPE_UINT }, \ 	{ "clockrate", CTLTYPE_STRUCT }, \ 	{ "vnode", CTLTYPE_STRUCT }, \ 	{ "proc", CTLTYPE_STRUCT }, \ 	{ "file", CTLTYPE_STRUCT }, \ 	{ "profiling", CTLTYPE_NODE }, \ 	{ "posix1version", CTLTYPE_INT }, \ 	{ "ngroups", CTLTYPE_INT }, \ 	{ "job_control", CTLTYPE_INT }, \ 	{ "saved_ids", CTLTYPE_INT }, \ 	{ "boottime", CTLTYPE_STRUCT }, \ 	{ "nisdomainname", CTLTYPE_STRING }, \ 	{ "update", CTLTYPE_INT }, \ 	{ "osreldate", CTLTYPE_INT }, \ 	{ "ntp_pll", CTLTYPE_NODE }, \ 	{ "bootfile", CTLTYPE_STRING }, \ 	{ "maxfilesperproc", CTLTYPE_INT }, \ 	{ "maxprocperuid", CTLTYPE_INT }, \ 	{ "ipc", CTLTYPE_NODE }, \ 	{ "dummy", CTLTYPE_INT }, \ 	{ "ps_strings", CTLTYPE_INT }, \ 	{ "usrstack", CTLTYPE_INT }, \ 	{ "logsigexit", CTLTYPE_INT }, \ 	{ "iov_max", CTLTYPE_INT }, \ 	{ "hostuuid", CTLTYPE_STRING }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "ostype", CTLTYPE_STRING }, \ 	{ "osrelease", CTLTYPE_STRING }, \ 	{ "osrevision", CTLTYPE_INT }, \ 	{ "version", CTLTYPE_STRING }, \ 	{ "maxvnodes", CTLTYPE_INT }, \ 	{ "maxproc", CTLTYPE_INT }, \ 	{ "maxfiles", CTLTYPE_INT }, \ 	{ "argmax", CTLTYPE_INT }, \ 	{ "securelevel", CTLTYPE_INT }, \ 	{ "hostname", CTLTYPE_STRING }, \ 	{ "hostid", CTLTYPE_UINT }, \ 	{ "clockrate", CTLTYPE_STRUCT }, \ 	{ "vnode", CTLTYPE_STRUCT }, \ 	{ "proc", CTLTYPE_STRUCT }, \ 	{ "file", CTLTYPE_STRUCT }, \ 	{ "profiling", CTLTYPE_NODE }, \ 	{ "posix1version", CTLTYPE_INT }, \ 	{ "ngroups", CTLTYPE_INT }, \ 	{ "job_control", CTLTYPE_INT }, \ 	{ "saved_ids", CTLTYPE_INT }, \ 	{ "boottime", CTLTYPE_STRUCT }, \ 	{ "nisdomainname", CTLTYPE_STRING }, \ 	{ "update", CTLTYPE_INT }, \ 	{ "osreldate", CTLTYPE_INT }, \ 	{ "ntp_pll", CTLTYPE_NODE }, \ 	{ "bootfile", CTLTYPE_STRING }, \ 	{ "maxfilesperproc", CTLTYPE_INT }, \ 	{ "maxprocperuid", CTLTYPE_INT }, \ 	{ "ipc", CTLTYPE_NODE }, \ 	{ "dummy", CTLTYPE_INT }, \ 	{ "ps_strings", CTLTYPE_INT }, \ 	{ "usrstack", CTLTYPE_INT }, \ 	{ "logsigexit", CTLTYPE_INT }, \ 	{ "iov_max", CTLTYPE_INT }, \ 	{ "hostuuid", CTLTYPE_STRING }, \ 	{ "arc4rand", CTLTYPE_OPAQUE }, \ }
 end_define
 
 begin_comment
@@ -3445,7 +3596,7 @@ name|void
 modifier|*
 name|arg1
 parameter_list|,
-name|int
+name|intptr_t
 name|arg2
 parameter_list|,
 name|int
@@ -3466,6 +3617,29 @@ specifier|const
 name|char
 modifier|*
 name|descr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sysctl_remove_name
+parameter_list|(
+name|struct
+name|sysctl_oid
+modifier|*
+name|parent
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|del
+parameter_list|,
+name|int
+name|recurse
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3782,6 +3956,34 @@ name|req
 parameter_list|,
 name|size_t
 name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_struct_decl
+struct_decl|struct
+name|sbuf
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|struct
+name|sbuf
+modifier|*
+name|sbuf_new_for_sysctl
+parameter_list|(
+name|struct
+name|sbuf
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|sysctl_req
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

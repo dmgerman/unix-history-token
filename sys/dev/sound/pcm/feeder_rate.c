@@ -547,7 +547,6 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 name|feeder_rate_presets
 index|[]

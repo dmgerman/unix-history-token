@@ -55,6 +55,13 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|libusb_device_handle
+value|libusb20_device
+end_define
+
 begin_include
 include|#
 directive|include
@@ -608,6 +615,9 @@ literal|0
 init|;
 name|i
 operator|!=
+operator|(
+name|int
+operator|)
 name|nfds
 condition|;
 name|i
@@ -659,6 +669,9 @@ literal|0
 init|;
 name|i
 operator|!=
+operator|(
+name|int
+operator|)
 name|nfds
 condition|;
 name|i
@@ -808,6 +821,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
+name|uint8_t
+name|flags
+decl_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -861,6 +877,13 @@ name|sxfer
 argument_list|)
 operator|)
 expr_stmt|;
+comment|/* Allow the callback to free the transfer itself. */
+name|flags
+operator|=
+name|uxfer
+operator|->
+name|flags
+expr_stmt|;
 if|if
 condition|(
 name|uxfer
@@ -878,25 +901,9 @@ argument_list|(
 name|uxfer
 argument_list|)
 expr_stmt|;
+comment|/* Check if the USB transfer should be automatically freed. */
 if|if
 condition|(
-name|uxfer
-operator|->
-name|flags
-operator|&
-name|LIBUSB_TRANSFER_FREE_BUFFER
-condition|)
-name|free
-argument_list|(
-name|uxfer
-operator|->
-name|buffer
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|uxfer
-operator|->
 name|flags
 operator|&
 name|LIBUSB_TRANSFER_FREE_TRANSFER

@@ -233,6 +233,16 @@ directive|include
 file|<vm/uma.h>
 end_include
 
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|audit
+argument_list|,
+literal|"BSM audit support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|uma_zone_t

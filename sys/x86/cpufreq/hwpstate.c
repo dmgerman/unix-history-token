@@ -479,7 +479,9 @@ name|OID_AUTO
 argument_list|,
 name|hwpstate_verbose
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|hwpstate_verbose
@@ -487,6 +489,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Debug hwpstate"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.hwpstate_verbose"
+argument_list|,
+operator|&
+name|hwpstate_verbose
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -640,11 +653,6 @@ name|int
 name|pstate
 parameter_list|)
 block|{
-name|struct
-name|pcpu
-modifier|*
-name|pc
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -690,57 +698,27 @@ name|id
 operator|=
 name|limit
 expr_stmt|;
+comment|/* 	 * We are going to the same Px-state on all cpus. 	 * Probably should take _PSD into account. 	 */
 name|error
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * We are going to the same Px-state on all cpus. 	 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|mp_ncpus
-condition|;
-name|i
-operator|++
-control|)
-block|{
-comment|/* Find each cpu. */
-name|pc
-operator|=
-name|pcpu_find
+name|CPU_FOREACH
 argument_list|(
-name|i
+argument|i
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|pc
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
+block|{
+comment|/* Bind to each cpu. */
 name|thread_lock
 argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
-comment|/* Bind to each cpu. */
 name|sched_bind
 argument_list|(
 name|curthread
 argument_list|,
-name|pc
-operator|->
-name|pc_cpuid
+name|i
 argument_list|)
 expr_stmt|;
 name|thread_unlock
@@ -851,6 +829,7 @@ operator|=
 name|ENXIO
 expr_stmt|;
 block|}
+block|}
 name|thread_lock
 argument_list|(
 name|curthread
@@ -866,7 +845,6 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|error

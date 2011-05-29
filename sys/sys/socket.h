@@ -673,6 +673,17 @@ begin_comment
 comment|/* use this FIB to route */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SO_USER_COOKIE
+value|0x1015
+end_define
+
+begin_comment
+comment|/* user cookie (dummynet etc.) */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -2449,7 +2460,7 @@ parameter_list|,
 name|cmsg
 parameter_list|)
 define|\
-value|((char *)(cmsg) == NULL ? CMSG_FIRSTHDR(mhdr) : \ 	    ((char *)(cmsg) + _ALIGN(((struct cmsghdr *)(cmsg))->cmsg_len) + \ 	  _ALIGN(sizeof(struct cmsghdr))> \ 	    (char *)(mhdr)->msg_control + (mhdr)->msg_controllen) ? \ 	    (struct cmsghdr *)0 : \ 	    (struct cmsghdr *)((char *)(cmsg) + \ 	    _ALIGN(((struct cmsghdr *)(cmsg))->cmsg_len)))
+value|((char *)(cmsg) == NULL ? CMSG_FIRSTHDR(mhdr) : \ 	    ((char *)(cmsg) + _ALIGN(((struct cmsghdr *)(cmsg))->cmsg_len) + \ 	  _ALIGN(sizeof(struct cmsghdr))> \ 	    (char *)(mhdr)->msg_control + (mhdr)->msg_controllen) ? \ 	    (struct cmsghdr *)0 : \ 	    (struct cmsghdr *)(void *)((char *)(cmsg) + \ 	    _ALIGN(((struct cmsghdr *)(cmsg))->cmsg_len)))
 end_define
 
 begin_comment

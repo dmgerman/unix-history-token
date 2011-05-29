@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 Chris D. Faulhaber  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR THE VOICES IN HIS HEAD BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2001 Chris D. Faulhaber  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -44,30 +44,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"acl_support.h"
 end_include
 
 begin_comment
-comment|/*  * These two routines from sys/kern/subr_acl_nfs4.c are used by both kernel  * and libc.  */
+comment|/*  * These routines from sys/kern/subr_acl_nfs4.c are used by both kernel  * and libc.  */
 end_comment
-
-begin_function_decl
-name|void
-name|acl_nfs4_sync_acl_from_mode
-parameter_list|(
-name|struct
-name|acl
-modifier|*
-name|aclp
-parameter_list|,
-name|mode_t
-name|mode
-parameter_list|,
-name|int
-name|file_owner_id
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
@@ -86,6 +74,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|acl_nfs4_trivial_from_mode_libc
+parameter_list|(
+name|struct
+name|acl
+modifier|*
+name|aclp
+parameter_list|,
+name|int
+name|file_owner_id
+parameter_list|,
+name|int
+name|canonical_six
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|acl_t
@@ -96,7 +102,7 @@ name|acl_t
 name|aclp
 parameter_list|,
 name|int
-name|recalculate_mask
+name|canonical_six
 parameter_list|)
 block|{
 name|acl_t
@@ -104,6 +110,8 @@ name|newacl
 decl_stmt|;
 name|mode_t
 name|mode
+init|=
+literal|0
 decl_stmt|;
 name|newacl
 operator|=
@@ -149,7 +157,7 @@ name|ats_acl
 operator|)
 argument_list|)
 expr_stmt|;
-name|acl_nfs4_sync_acl_from_mode
+name|acl_nfs4_trivial_from_mode_libc
 argument_list|(
 operator|&
 operator|(
@@ -160,8 +168,7 @@ operator|)
 argument_list|,
 name|mode
 argument_list|,
-operator|-
-literal|1
+name|canonical_six
 argument_list|)
 expr_stmt|;
 return|return
@@ -536,7 +543,7 @@ name|_nfs4_acl_strip_np
 argument_list|(
 name|aclp
 argument_list|,
-name|recalculate_mask
+literal|0
 argument_list|)
 operator|)
 return|;
@@ -652,14 +659,91 @@ return|;
 case|case
 name|ACL_BRAND_NFS4
 case|:
-comment|/* 		 * Calculate trivial ACL - using acl_strip_np - and compare 		 * with the original. 		 */
+comment|/* 		 * If the ACL has more than canonical six entries, 		 * it's non trivial by definition. 		 */
+if|if
+condition|(
+name|aclp
+operator|->
+name|ats_acl
+operator|.
+name|acl_cnt
+operator|>
+literal|6
+condition|)
+block|{
+operator|*
+name|trivialp
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/* 		 * Calculate trivial ACL - using acl_strip_np(3) - and compare 		 * with the original. 		 */
 name|tmpacl
 operator|=
-name|acl_strip_np
+name|_nfs4_acl_strip_np
 argument_list|(
 name|aclp
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tmpacl
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+name|differs
+operator|=
+name|_acl_differs
+argument_list|(
+name|aclp
+argument_list|,
+name|tmpacl
+argument_list|)
+expr_stmt|;
+name|acl_free
+argument_list|(
+name|tmpacl
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|differs
+operator|==
+literal|0
+condition|)
+block|{
+operator|*
+name|trivialp
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/* 		 * Try again with an old-style, "canonical six" trivial ACL. 		 */
+name|tmpacl
+operator|=
+name|_nfs4_acl_strip_np
+argument_list|(
+name|aclp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if

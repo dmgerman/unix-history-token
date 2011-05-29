@@ -48,24 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/rsa.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/dsa.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/dh.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<openssl/hmac.h>
 end_include
 
@@ -129,6 +111,24 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_include
+include|#
+directive|include
+file|<openssl/rsa.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/dsa.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/dh.h>
+end_include
 
 begin_include
 include|#
@@ -2608,9 +2608,10 @@ block|,
 literal|0x68
 block|}
 decl_stmt|;
-name|int
+name|size_t
 name|i
-decl_stmt|,
+decl_stmt|;
+name|int
 name|n
 decl_stmt|;
 name|key
@@ -2817,6 +2818,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -2837,6 +2839,39 @@ expr_stmt|;
 return|return
 name|msg
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|test_msg
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|msg
+parameter_list|,
+name|int
+name|result
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"%s...%s\n"
+argument_list|,
+name|msg
+argument_list|,
+name|result
+condition|?
+literal|"successful"
+else|:
+name|Fail
+argument_list|(
+literal|"Failed!"
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3251,62 +3286,37 @@ argument_list|(
 literal|"1. Non-Approved cryptographic operation test...\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|test_msg
 argument_list|(
 literal|"\ta. Included algorithm (D-H)..."
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 name|dh_test
 argument_list|()
-condition|?
-literal|"successful\n"
-else|:
-name|Fail
-argument_list|(
-literal|"FAILED!\n"
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Power-up self test     */
 name|ERR_clear_error
 argument_list|()
 expr_stmt|;
-name|printf
+name|test_msg
 argument_list|(
-literal|"2. Automatic power-up self test..."
+literal|"2. Automatic power-up self test"
+argument_list|,
+name|FIPS_mode_set
+argument_list|(
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
-name|FIPS_mode_set
-argument_list|(
-literal|1
-argument_list|)
-condition|)
-block|{
-name|do_print_errors
+name|FIPS_mode
 argument_list|()
-expr_stmt|;
-name|printf
-argument_list|(
-name|Fail
-argument_list|(
-literal|"FAILED!\n"
-argument_list|)
-argument_list|)
-expr_stmt|;
+condition|)
 name|exit
 argument_list|(
 literal|1
-argument_list|)
-expr_stmt|;
-block|}
-name|printf
-argument_list|(
-literal|"successful\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3331,235 +3341,115 @@ name|FIPS_rng_stick
 argument_list|()
 expr_stmt|;
 comment|/* AES encryption/decryption     */
-name|printf
+name|test_msg
 argument_list|(
-literal|"3. AES encryption/decryption..."
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+literal|"3. AES encryption/decryption"
+argument_list|,
 name|FIPS_aes_test
 argument_list|()
-condition|?
-literal|"successful\n"
-else|:
-name|Fail
-argument_list|(
-literal|"FAILED!\n"
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* RSA key generation and encryption/decryption     */
-name|printf
+name|test_msg
 argument_list|(
-literal|"4. RSA key generation and encryption/decryption..."
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+literal|"4. RSA key generation and encryption/decryption"
+argument_list|,
 name|FIPS_rsa_test
 argument_list|(
 name|bad_rsa
 argument_list|)
-condition|?
-literal|"successful\n"
-else|:
-name|Fail
-argument_list|(
-literal|"FAILED!\n"
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* DES-CBC encryption/decryption     */
-name|printf
+name|test_msg
 argument_list|(
-literal|"5. DES-ECB encryption/decryption..."
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+literal|"5. DES-ECB encryption/decryption"
+argument_list|,
 name|FIPS_des3_test
 argument_list|()
-condition|?
-literal|"successful\n"
-else|:
-name|Fail
-argument_list|(
-literal|"FAILED!\n"
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* DSA key generation and signature validation     */
-name|printf
+name|test_msg
 argument_list|(
-literal|"6. DSA key generation and signature validation..."
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+literal|"6. DSA key generation and signature validation"
+argument_list|,
 name|FIPS_dsa_test
 argument_list|(
 name|bad_dsa
 argument_list|)
-condition|?
-literal|"successful\n"
-else|:
-name|Fail
-argument_list|(
-literal|"FAILED!\n"
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* SHA-1 hash     */
-name|printf
+name|test_msg
 argument_list|(
-literal|"7a. SHA-1 hash..."
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+literal|"7a. SHA-1 hash"
+argument_list|,
 name|FIPS_sha1_test
 argument_list|()
-condition|?
-literal|"successful\n"
-else|:
-name|Fail
-argument_list|(
-literal|"FAILED!\n"
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* SHA-256 hash     */
-name|printf
+name|test_msg
 argument_list|(
-literal|"7b. SHA-256 hash..."
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+literal|"7b. SHA-256 hash"
+argument_list|,
 name|FIPS_sha256_test
 argument_list|()
-condition|?
-literal|"successful\n"
-else|:
-name|Fail
-argument_list|(
-literal|"FAILED!\n"
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* SHA-512 hash     */
-name|printf
+name|test_msg
 argument_list|(
-literal|"7c. SHA-512 hash..."
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+literal|"7c. SHA-512 hash"
+argument_list|,
 name|FIPS_sha512_test
 argument_list|()
-condition|?
-literal|"successful\n"
-else|:
-name|Fail
-argument_list|(
-literal|"FAILED!\n"
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* HMAC-SHA-1 hash     */
-name|printf
+name|test_msg
 argument_list|(
-literal|"7d. HMAC-SHA-1 hash..."
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+literal|"7d. HMAC-SHA-1 hash"
+argument_list|,
 name|FIPS_hmac_sha1_test
 argument_list|()
-condition|?
-literal|"successful\n"
-else|:
-name|Fail
-argument_list|(
-literal|"FAILED!\n"
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* HMAC-SHA-224 hash     */
-name|printf
+name|test_msg
 argument_list|(
-literal|"7e. HMAC-SHA-224 hash..."
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+literal|"7e. HMAC-SHA-224 hash"
+argument_list|,
 name|FIPS_hmac_sha224_test
 argument_list|()
-condition|?
-literal|"successful\n"
-else|:
-name|Fail
-argument_list|(
-literal|"FAILED!\n"
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* HMAC-SHA-256 hash     */
-name|printf
+name|test_msg
 argument_list|(
-literal|"7f. HMAC-SHA-256 hash..."
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+literal|"7f. HMAC-SHA-256 hash"
+argument_list|,
 name|FIPS_hmac_sha256_test
 argument_list|()
-condition|?
-literal|"successful\n"
-else|:
-name|Fail
-argument_list|(
-literal|"FAILED!\n"
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* HMAC-SHA-384 hash     */
-name|printf
+name|test_msg
 argument_list|(
-literal|"7g. HMAC-SHA-384 hash..."
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+literal|"7g. HMAC-SHA-384 hash"
+argument_list|,
 name|FIPS_hmac_sha384_test
 argument_list|()
-condition|?
-literal|"successful\n"
-else|:
-name|Fail
-argument_list|(
-literal|"FAILED!\n"
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* HMAC-SHA-512 hash     */
-name|printf
+name|test_msg
 argument_list|(
-literal|"7h. HMAC-SHA-512 hash..."
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+literal|"7h. HMAC-SHA-512 hash"
+argument_list|,
 name|FIPS_hmac_sha512_test
 argument_list|()
-condition|?
-literal|"successful\n"
-else|:
-name|Fail
-argument_list|(
-literal|"FAILED!\n"
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Non-Approved cryptographic operation     */
@@ -3570,38 +3460,32 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\ta. Included algorithm (D-H)..."
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+literal|"\ta. Included algorithm (D-H)...%s\n"
+argument_list|,
 name|dh_test
 argument_list|()
 condition|?
-literal|"successful as expected\n"
+literal|"successful as expected"
 else|:
 name|Fail
 argument_list|(
-literal|"failed INCORRECTLY!\n"
+literal|"failed INCORRECTLY!"
 argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Zeroization     */
 name|printf
 argument_list|(
-literal|"9. Zero-ization...\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+literal|"9. Zero-ization...\n\t%s\n"
+argument_list|,
 name|Zeroize
 argument_list|()
 condition|?
-literal|"\tsuccessful as expected\n"
+literal|"successful as expected"
 else|:
 name|Fail
 argument_list|(
-literal|"\tfailed INCORRECTLY!\n"
+literal|"failed INCORRECTLY!"
 argument_list|)
 argument_list|)
 expr_stmt|;

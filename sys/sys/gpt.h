@@ -112,6 +112,18 @@ define|#
 directive|define
 name|GPT_ENT_ATTR_PLATFORM
 value|(1ULL<< 0)
+define|#
+directive|define
+name|GPT_ENT_ATTR_BOOTME
+value|(1ULL<< 59)
+define|#
+directive|define
+name|GPT_ENT_ATTR_BOOTONCE
+value|(1ULL<< 58)
+define|#
+directive|define
+name|GPT_ENT_ATTR_BOOTFAILED
+value|(1ULL<< 57)
 name|uint16_t
 name|ent_name
 index|[
@@ -376,6 +388,18 @@ directive|define
 name|GPT_ENT_TYPE_NETBSD_CGD
 define|\
 value|{0x2db519ec,0xb10f,0x11dc,0xb9,0x9b,{0x00,0x19,0xd1,0x87,0x96,0x48}}
+end_define
+
+begin_comment
+comment|/*  * Boot partition used by GRUB 2.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GPT_ENT_TYPE_BIOS_BOOT
+define|\
+value|{0x21686148,0x6449,0x6e6f,0x74,0x4e,{0x65,0x65,0x64,0x45,0x46,0x49}}
 end_define
 
 begin_endif

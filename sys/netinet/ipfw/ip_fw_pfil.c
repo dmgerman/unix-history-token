@@ -1014,6 +1014,16 @@ break|break;
 case|case
 name|IP_FW_NAT
 case|:
+comment|/* honor one-pass in case of successful nat */
+if|if
+condition|(
+name|V_fw_one_pass
+condition|)
+break|break;
+comment|/* ret is already 0 */
+goto|goto
+name|again
+goto|;
 case|case
 name|IP_FW_REASS
 case|:

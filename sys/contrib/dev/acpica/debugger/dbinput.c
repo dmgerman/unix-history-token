@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2010, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/*  * Copyright (C) 2000 - 2011, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -106,9 +106,7 @@ specifier|static
 name|void
 name|AcpiDbDisplayHelp
 parameter_list|(
-name|char
-modifier|*
-name|HelpType
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -165,6 +163,8 @@ name|CMD_GPE
 block|,
 name|CMD_GPES
 block|,
+name|CMD_HANDLERS
+block|,
 name|CMD_HELP
 block|,
 name|CMD_HELP2
@@ -200,6 +200,8 @@ block|,
 name|CMD_OBJECT
 block|,
 name|CMD_OPEN
+block|,
+name|CMD_OSI
 block|,
 name|CMD_OWNER
 block|,
@@ -386,6 +388,12 @@ literal|0
 block|}
 block|,
 block|{
+literal|"HANDLERS"
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"HELP"
 block|,
 literal|0
@@ -491,6 +499,12 @@ block|{
 literal|"OPEN"
 block|,
 literal|1
+block|}
+block|,
+block|{
+literal|"OSI"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -611,7 +625,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayHelp  *  * PARAMETERS:  HelpType        - Subcommand (optional)  *  * RETURN:      None  *  * DESCRIPTION: Print a usage message.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayHelp  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Print a usage message.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -619,397 +633,322 @@ specifier|static
 name|void
 name|AcpiDbDisplayHelp
 parameter_list|(
-name|char
-modifier|*
-name|HelpType
+name|void
 parameter_list|)
 block|{
-name|AcpiUtStrupr
-argument_list|(
-name|HelpType
-argument_list|)
-expr_stmt|;
-comment|/* No parameter, just give the overview */
-if|if
-condition|(
-operator|!
-name|HelpType
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"ACPI CA Debugger Commands\n\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"The following classes of commands are available.  Help is available for\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"each class by entering \"Help<ClassName>\"\n\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"    [GENERAL]       General-Purpose Commands\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"    [NAMESPACE]     Namespace Access Commands\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"    [METHOD]        Control Method Execution Commands\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"    [STATISTICS]    Statistical Information\n"
-argument_list|)
-expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"    [FILE]          File I/O Commands\n"
+literal|"\nGeneral-Purpose Commands:\n"
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
-comment|/*      * Parameter is the command class      *      * The idea here is to keep each class of commands smaller than a screenful      */
-switch|switch
-condition|(
-name|HelpType
-index|[
-literal|0
-index|]
-condition|)
-block|{
-case|case
-literal|'G'
-case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\nGeneral-Purpose Commands\n\n"
+literal|"  Allocations                         Display list of current memory allocations\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Allocations                         Display list of current memory allocations\n"
+literal|"  Dump<Address>|<Namepath>\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Dump<Address>|<Namepath>\n"
+literal|"       [Byte|Word|Dword|Qword]        Display ACPI objects or memory\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"     [Byte|Word|Dword|Qword]        Display ACPI objects or memory\n"
+literal|"  EnableAcpi                          Enable ACPI (hardware) mode\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"EnableAcpi                          Enable ACPI (hardware) mode\n"
+literal|"  Handlers                            Info about global handlers\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Help                                This help screen\n"
+literal|"  Help                                This help screen\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"History                             Display command history buffer\n"
+literal|"  History                             Display command history buffer\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Level [<DebugLevel>] [console]      Get/Set debug level for file or console\n"
+literal|"  Level [<DebugLevel>] [console]      Get/Set debug level for file or console\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Locks                               Current status of internal mutexes\n"
+literal|"  Locks                               Current status of internal mutexes\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Quit or Exit                        Exit this command\n"
+literal|"  Osi [Install|Remove<name>]         Display or modify global _OSI list\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Stats [Allocations|Memory|Misc\n"
+literal|"  Quit or Exit                        Exit this command\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"      |Objects|Sizes|Stack|Tables]  Display namespace and memory statistics\n"
+literal|"  Stats [Allocations|Memory|Misc|\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Tables                              Display info about loaded ACPI tables\n"
+literal|"        Objects|Sizes|Stack|Tables]   Display namespace and memory statistics\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Unload<TableSig> [Instance]        Unload an ACPI table\n"
+literal|"     Allocations                      Display list of current memory allocations\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"!<CommandNumber>                   Execute command from history buffer\n"
+literal|"     Memory                           Dump internal memory lists\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"!!                                  Execute last command again\n"
+literal|"     Misc                             Namespace search and mutex stats\n"
 argument_list|)
 expr_stmt|;
-return|return;
-case|case
-literal|'S'
-case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\nStats Subcommands\n\n"
+literal|"     Objects                          Summary of namespace objects\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Allocations                         Display list of current memory allocations\n"
+literal|"     Sizes                            Sizes for each of the internal objects\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Memory                              Dump internal memory lists\n"
+literal|"     Stack                            Display CPU stack usage\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Misc                                Namespace search and mutex stats\n"
+literal|"     Tables                           Info about current ACPI table(s)\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Objects                             Summary of namespace objects\n"
+literal|"  Tables                              Display info about loaded ACPI tables\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Sizes                               Sizes for each of the internal objects\n"
+literal|"  Unload<TableSig> [Instance]        Unload an ACPI table\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Stack                               Display CPU stack usage\n"
+literal|"  !<CommandNumber>                   Execute command from history buffer\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Tables                              Info about current ACPI table(s)\n"
+literal|"  !!                                  Execute last command again\n"
 argument_list|)
 expr_stmt|;
-return|return;
-case|case
-literal|'N'
-case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\nNamespace Access Commands\n\n"
+literal|"\nNamespace Access Commands:\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Businfo                             Display system bus info\n"
+literal|"  Businfo                             Display system bus info\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Disassemble<Method>                Disassemble a control method\n"
+literal|"  Disassemble<Method>                Disassemble a control method\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Event<F|G><Value>                 Generate AcpiEvent (Fixed/GPE)\n"
+literal|"  Event<F|G><Value>                 Generate AcpiEvent (Fixed/GPE)\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Find<AcpiName>  (? is wildcard)    Find ACPI name(s) with wildcards\n"
+literal|"  Find<AcpiName>  (? is wildcard)    Find ACPI name(s) with wildcards\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Gpe<GpeNum><GpeBlock>             Simulate a GPE\n"
+literal|"  Gpe<GpeNum><GpeBlock>             Simulate a GPE\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Gpes                                Display info on all GPEs\n"
+literal|"  Gpes                                Display info on all GPEs\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Integrity                           Validate namespace integrity\n"
+literal|"  Integrity                           Validate namespace integrity\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Methods                             Display list of loaded control methods\n"
+literal|"  Methods                             Display list of loaded control methods\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Namespace [Object] [Depth]          Display loaded namespace tree/subtree\n"
+literal|"  Namespace [Object] [Depth]          Display loaded namespace tree/subtree\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Notify<Object><Value>             Send a notification on Object\n"
+literal|"  Notify<Object><Value>             Send a notification on Object\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Objects<ObjectType>                Display all objects of the given type\n"
+literal|"  Objects<ObjectType>                Display all objects of the given type\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Owner<OwnerId> [Depth]             Display loaded namespace by object owner\n"
+literal|"  Owner<OwnerId> [Depth]             Display loaded namespace by object owner\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Predefined                          Check all predefined names\n"
+literal|"  Predefined                          Check all predefined names\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Prefix [<NamePath>]                 Set or Get current execution prefix\n"
+literal|"  Prefix [<NamePath>]                 Set or Get current execution prefix\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"References<Addr>                   Find all references to object at addr\n"
+literal|"  References<Addr>                   Find all references to object at addr\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Resources<Device>                  Get and display Device resources\n"
+literal|"  Resources<Device>                  Get and display Device resources\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Set N<NamedObject><Value>         Set value for named integer\n"
+literal|"  Set N<NamedObject><Value>         Set value for named integer\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Sleep<SleepState>                  Simulate sleep/wake sequence\n"
+literal|"  Sleep<SleepState>                  Simulate sleep/wake sequence\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Terminate                           Delete namespace and all internal objects\n"
+literal|"  Terminate                           Delete namespace and all internal objects\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Type<Object>                       Display object type\n"
+literal|"  Type<Object>                       Display object type\n"
 argument_list|)
 expr_stmt|;
-return|return;
-case|case
-literal|'M'
-case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\nControl Method Execution Commands\n\n"
+literal|"\nControl Method Execution Commands:\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Arguments (or Args)                 Display method arguments\n"
+literal|"  Arguments (or Args)                 Display method arguments\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Breakpoint<AmlOffset>              Set an AML execution breakpoint\n"
+literal|"  Breakpoint<AmlOffset>              Set an AML execution breakpoint\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Call                                Run to next control method invocation\n"
+literal|"  Call                                Run to next control method invocation\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Debug<Namepath> [Arguments]        Single Step a control method\n"
+literal|"  Debug<Namepath> [Arguments]        Single Step a control method\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Execute<Namepath> [Arguments]      Execute control method\n"
+literal|"  Execute<Namepath> [Arguments]      Execute control method\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Go                                  Allow method to run to completion\n"
+literal|"  Go                                  Allow method to run to completion\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Information                         Display info about the current method\n"
+literal|"  Information                         Display info about the current method\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Into                                Step into (not over) a method call\n"
+literal|"  Into                                Step into (not over) a method call\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"List [# of Aml Opcodes]             Display method ASL statements\n"
+literal|"  List [# of Aml Opcodes]             Display method ASL statements\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Locals                              Display method local variables\n"
+literal|"  Locals                              Display method local variables\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Results                             Display method result stack\n"
+literal|"  Results                             Display method result stack\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Set<A|L><#><Value>               Set method data (Arguments/Locals)\n"
+literal|"  Set<A|L><#><Value>               Set method data (Arguments/Locals)\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Stop                                Terminate control method\n"
+literal|"  Stop                                Terminate control method\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Thread<Threads><Loops><NamePath>   Spawn threads to execute method(s)\n"
+literal|"  Thread<Threads><Loops><NamePath>   Spawn threads to execute method(s)\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Trace<method name>                 Trace method execution\n"
+literal|"  Trace<method name>                 Trace method execution\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Tree                                Display control method calling tree\n"
+literal|"  Tree                                Display control method calling tree\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -1017,41 +956,26 @@ argument_list|(
 literal|"<Enter>                             Single step next AML opcode (over calls)\n"
 argument_list|)
 expr_stmt|;
-return|return;
-case|case
-literal|'F'
-case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\nFile I/O Commands\n\n"
+literal|"\nFile I/O Commands:\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Close                               Close debug output file\n"
+literal|"  Close                               Close debug output file\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Open<Output Filename>              Open a file for debug output\n"
+literal|"  Load<Input Filename>               Load ACPI table from a file\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Load<Input Filename>               Load ACPI table from a file\n"
+literal|"  Open<Output Filename>              Open a file for debug output\n"
 argument_list|)
 expr_stmt|;
-return|return;
-default|default:
-name|AcpiOsPrintf
-argument_list|(
-literal|"Unrecognized Command Class: %s\n"
-argument_list|,
-name|HelpType
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 block|}
 end_function
 
@@ -1140,6 +1064,43 @@ operator|)
 return|;
 block|}
 block|}
+if|if
+condition|(
+operator|*
+name|String
+operator|==
+literal|'"'
+condition|)
+block|{
+comment|/* This is a quoted string, scan until closing quote */
+name|String
+operator|++
+expr_stmt|;
+name|Start
+operator|=
+name|String
+expr_stmt|;
+comment|/* Find end of token */
+while|while
+condition|(
+operator|*
+name|String
+operator|&&
+operator|(
+operator|*
+name|String
+operator|!=
+literal|'"'
+operator|)
+condition|)
+block|{
+name|String
+operator|++
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
 name|Start
 operator|=
 name|String
@@ -1161,6 +1122,7 @@ block|{
 name|String
 operator|++
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -1500,7 +1462,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%d parameters entered, [%s] requires %d parameters\n"
+literal|"%u parameters entered, [%s] requires %u parameters\n"
 argument_list|,
 name|ParamCount
 argument_list|,
@@ -1793,18 +1755,20 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
+name|CMD_HANDLERS
+case|:
+name|AcpiDbDisplayHandlers
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
 name|CMD_HELP
 case|:
 case|case
 name|CMD_HELP2
 case|:
 name|AcpiDbDisplayHelp
-argument_list|(
-name|AcpiGbl_DbArgs
-index|[
-literal|1
-index|]
-argument_list|)
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
@@ -2160,6 +2124,23 @@ argument_list|(
 name|AcpiGbl_DbArgs
 index|[
 literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CMD_OSI
+case|:
+name|AcpiDbDisplayInterfaces
+argument_list|(
+name|AcpiGbl_DbArgs
+index|[
+literal|1
+index|]
+argument_list|,
+name|AcpiGbl_DbArgs
+index|[
+literal|2
 index|]
 argument_list|)
 expr_stmt|;

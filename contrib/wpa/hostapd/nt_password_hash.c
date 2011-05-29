@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ms_funcs.h"
+file|"crypto/ms_funcs.h"
 end_include
 
 begin_function
@@ -150,6 +150,8 @@ operator|=
 name|buf
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|nt_password_hash
 argument_list|(
 operator|(
@@ -165,7 +167,11 @@ argument_list|)
 argument_list|,
 name|password_hash
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 for|for
 control|(
 name|i

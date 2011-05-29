@@ -141,7 +141,7 @@ value|"init.c.new"
 end_define
 
 begin_comment
-comment|/*  * A text structure is basicly just a string that grows as more characters  * are added onto the end of it.  It is implemented as a linked list of  * blocks of characters.  The routines addstr and addchar append a string  * or a single character, respectively, to a text structure.  Writetext  * writes the contents of a text structure to a file.  */
+comment|/*  * A text structure is basically just a string that grows as more characters  * are added onto the end of it.  It is implemented as a linked list of  * blocks of characters.  The routines addstr and addchar append a string  * or a single character, respectively, to a text structure.  Writetext  * writes the contents of a text structure to a file.  */
 end_comment
 
 begin_define
@@ -258,15 +258,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-name|shellproc
-index|[]
-init|=
-literal|"\ /*\n\  * This routine is called to initialize the shell to run a shell procedure.\n\  */\n"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|event
 name|event
@@ -297,24 +288,6 @@ block|,
 literal|"reset"
 block|,
 name|reset
-block|,
-block|{
-name|NULL
-block|,
-literal|0
-block|,
-name|NULL
-block|,
-name|NULL
-block|}
-block|}
-block|,
-block|{
-literal|"SHELLPROC"
-block|,
-literal|"initshellproc"
-block|,
-name|shellproc
 block|,
 block|{
 name|NULL

@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/linker_set.h>
+file|<sys/eventhandler.h>
 end_include
 
 begin_include
@@ -117,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/stdarg.h>
 end_include
 
 begin_ifdef
@@ -163,6 +169,16 @@ end_include
 begin_comment
 comment|/*-  * This file implements core functions for virtual network stacks:  *  * - Virtual network stack management functions.  *  * - Virtual network stack memory allocator, which virtualizes global  *   variables in the network stack  *  * - Virtualized SYSINIT's/SYSUNINIT's, which allow network stack subsystems  *   to register startup/shutdown events to be run for each virtual network  *   stack instance.  */
 end_comment
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|vimage
+argument_list|,
+literal|"VIMAGE kernel virtualization"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|MALLOC_DEFINE
@@ -228,40 +244,6 @@ end_decl_stmt
 begin_comment
 comment|/*  * The virtual network stack allocator provides storage for virtualized  * global variables.  These variables are defined/declared using the  * VNET_DEFINE()/VNET_DECLARE() macros, which place them in the 'set_vnet'  * linker set.  The details of the implementation are somewhat subtle, but  * allow the majority of most network subsystems to maintain  * virtualization-agnostic.  *  * The virtual network stack allocator handles variables in the base kernel  * vs. modules in similar but different ways.  In both cases, virtualized  * global variables are marked as such by being declared to be part of the  * vnet linker set.  These "master" copies of global variables serve two  * functions:  *  * (1) They contain static initialization or "default" values for global  *     variables which will be propagated to each virtual network stack  *     instance when created.  As with normal global variables, they default  *     to zero-filled.  *  * (2) They act as unique global names by which the variable can be referred  *     to, regardless of network stack instance.  The single global symbol  *     will be used to calculate the location of a per-virtual instance  *     variable at run-time.  *  * Each virtual network stack instance has a complete copy of each  * virtualized global variable, stored in a malloc'd block of memory  * referred to by vnet->vnet_data_mem.  Critical to the design is that each  * per-instance memory block is laid out identically to the master block so  * that the offset of each global variable is the same across all blocks.  To  * optimize run-time access, a precalculated 'base' address,  * vnet->vnet_data_base, is stored in each vnet, and is the amount that can  * be added to the address of a 'master' instance of a variable to get to the  * per-vnet instance.  *  * Virtualized global variables are handled in a similar manner, but as each  * module has its own 'set_vnet' linker set, and we want to keep all  * virtualized globals togther, we reserve space in the kernel's linker set  * for potential module variables using a per-vnet character array,  * 'modspace'.  The virtual network stack allocator maintains a free list to  * track what space in the array is free (all, initially) and as modules are  * linked, allocates portions of the space to specific globals.  The kernel  * module linker queries the virtual network stack allocator and will  * bind references of the global to the location during linking.  It also  * calls into the virtual network stack allocator, once the memory is  * initialized, in order to propagate the new static initializations to all  * existing virtual network stack instances so that the soon-to-be executing  * module will find every network stack instance with proper default values.  */
 end_comment
-
-begin_comment
-comment|/*  * Location of the kernel's 'set_vnet' linker set.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|uintptr_t
-modifier|*
-name|__start_set_vnet
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|uintptr_t
-modifier|*
-name|__stop_set_vnet
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|VNET_START
-value|(uintptr_t)&__start_set_vnet
-end_define
-
-begin_define
-define|#
-directive|define
-name|VNET_STOP
-value|(uintptr_t)&__stop_set_vnet
-end_define
 
 begin_comment
 comment|/*  * Number of bytes of data in the 'set_vnet' linker set, and hence the total  * size of all kernel virtualized global variables, and the malloc(9) type  * that will be used to allocate it.  */
@@ -481,6 +463,8 @@ name|vnet_alloc
 argument_list|,
 name|entry
 argument_list|,
+name|entry
+argument_list|,
 literal|"int"
 argument_list|)
 expr_stmt|;
@@ -494,6 +478,8 @@ argument_list|,
 name|functions
 argument_list|,
 name|vnet_alloc
+argument_list|,
+name|alloc
 argument_list|,
 name|alloc
 argument_list|,
@@ -512,6 +498,8 @@ argument_list|,
 argument|functions
 argument_list|,
 argument|vnet_alloc
+argument_list|,
+argument|return
 argument_list|,
 argument|return
 argument_list|,
@@ -536,6 +524,8 @@ name|vnet_destroy
 argument_list|,
 name|entry
 argument_list|,
+name|entry
+argument_list|,
 literal|"int"
 argument_list|,
 literal|"struct vnet *"
@@ -553,6 +543,8 @@ argument_list|,
 argument|vnet_destroy
 argument_list|,
 argument|return
+argument_list|,
+argument|entry
 argument_list|,
 literal|"int"
 argument_list|)
@@ -1107,7 +1099,7 @@ name|df
 operator|->
 name|vnd_len
 operator|=
-name|VNET_MODSIZE
+name|VNET_MODMIN
 expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
@@ -2232,6 +2224,77 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * EVENTHANDLER(9) extensions.  */
+end_comment
+
+begin_comment
+comment|/*  * Invoke the eventhandler function originally registered with the possibly  * registered argument for all virtual network stack instances.  *  * This iterator can only be used for eventhandlers that do not take any  * additional arguments, as we do ignore the variadic arguments from the  * EVENTHANDLER_INVOKE() call.  */
+end_comment
+
+begin_function
+name|void
+name|vnet_global_eventhandler_iterator_func
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|VNET_ITERATOR_DECL
+argument_list|(
+name|vnet_iter
+argument_list|)
+expr_stmt|;
+name|struct
+name|eventhandler_entry_vimage
+modifier|*
+name|v_ee
+decl_stmt|;
+comment|/* 	 * There is a bug here in that we should actually cast things to 	 * (struct eventhandler_entry_ ## name *)  but that's not easily 	 * possible in here so just re-using the variadic version we 	 * defined for the generic vimage case. 	 */
+name|v_ee
+operator|=
+name|arg
+expr_stmt|;
+name|VNET_LIST_RLOCK
+argument_list|()
+expr_stmt|;
+name|VNET_FOREACH
+argument_list|(
+argument|vnet_iter
+argument_list|)
+block|{
+name|CURVNET_SET
+argument_list|(
+name|vnet_iter
+argument_list|)
+expr_stmt|;
+operator|(
+operator|(
+name|vimage_iterator_func_t
+operator|)
+name|v_ee
+operator|->
+name|func
+operator|)
+operator|(
+name|v_ee
+operator|->
+name|ee_arg
+operator|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
+block|}
+name|VNET_LIST_RUNLOCK
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2531,6 +2594,10 @@ end_endif
 
 begin_comment
 comment|/* VNET_DEBUG */
+end_comment
+
+begin_comment
+comment|/*  * DDB(4).  */
 end_comment
 
 begin_ifdef

@@ -40,6 +40,17 @@ name|ccb
 union_decl|;
 end_union_decl
 
+begin_define
+define|#
+directive|define
+name|SID_DMA
+value|0x10
+end_define
+
+begin_comment
+comment|/* Abuse inq_flags bit to track enabled DMA. */
+end_comment
+
 begin_struct
 struct|struct
 name|ata_cmd

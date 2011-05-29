@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_types.h>
 end_include
 
@@ -184,6 +190,7 @@ directive|endif
 end_endif
 
 begin_function_decl
+name|__BEGIN_DECLS
 name|int
 name|thr_create
 parameter_list|(
@@ -304,6 +311,10 @@ name|name
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#

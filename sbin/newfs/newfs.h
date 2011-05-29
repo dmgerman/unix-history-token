@@ -17,14 +17,14 @@ begin_define
 define|#
 directive|define
 name|DFL_FRAGSIZE
-value|2048
+value|4096
 end_define
 
 begin_define
 define|#
 directive|define
 name|DFL_BLKSIZE
-value|16384
+value|32768
 end_define
 
 begin_comment
@@ -183,6 +183,17 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|tflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* enable TRIM */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|intmax_t
 name|fssize
 decl_stmt|;
@@ -194,7 +205,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int64_t
+name|int
 name|sectorsize
 decl_stmt|;
 end_decl_stmt
@@ -216,7 +227,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int64_t
+name|int
 name|fsize
 decl_stmt|;
 end_decl_stmt
@@ -227,7 +238,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int64_t
+name|int
 name|bsize
 decl_stmt|;
 end_decl_stmt
@@ -238,7 +249,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int64_t
+name|int
 name|maxbsize
 decl_stmt|;
 end_decl_stmt
@@ -249,7 +260,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int64_t
+name|int
 name|maxblkspercg
 decl_stmt|;
 end_decl_stmt
@@ -282,7 +293,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int64_t
+name|int
 name|density
 decl_stmt|;
 end_decl_stmt
@@ -293,7 +304,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int64_t
+name|int
 name|maxcontig
 decl_stmt|;
 end_decl_stmt
@@ -304,7 +315,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int64_t
+name|int
 name|maxbpg
 decl_stmt|;
 end_decl_stmt
@@ -315,7 +326,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int64_t
+name|int
 name|avgfilesize
 decl_stmt|;
 end_decl_stmt
@@ -326,7 +337,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int64_t
+name|int
 name|avgfilesperdir
 decl_stmt|;
 end_decl_stmt

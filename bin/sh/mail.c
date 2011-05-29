@@ -120,7 +120,7 @@ value|10
 end_define
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|int
 name|nmboxes
 decl_stmt|;
@@ -131,7 +131,7 @@ comment|/* number of mailboxes */
 end_comment
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|time_t
 name|mailtime
 index|[

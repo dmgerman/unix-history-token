@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -108,63 +101,6 @@ block|}
 return|return
 operator|(
 name|data
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Same as above, but for strdup()  */
-end_comment
-
-begin_function
-name|char
-modifier|*
-name|safe_strdup
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|str
-parameter_list|)
-block|{
-name|char
-modifier|*
-name|ret
-decl_stmt|;
-if|if
-condition|(
-operator|(
-name|ret
-operator|=
-name|strdup
-argument_list|(
-name|str
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"internal error: out of memory\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|ret
 operator|)
 return|;
 block|}

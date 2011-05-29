@@ -71,6 +71,12 @@ directive|include
 file|<sys/dtrace_bsd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -81,23 +87,19 @@ end_define
 begin_define
 define|#
 directive|define
-name|KDTRACE_PROC_ZERO
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
 name|KDTRACE_THREAD_SIZE
 value|256
 end_define
 
-begin_define
-define|#
-directive|define
-name|KDTRACE_THREAD_ZERO
-value|64
-end_define
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|kdtrace_hooks
+argument_list|,
+literal|"Kernel DTrace hooks which are required to load DTrace kernel modules"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|MALLOC_DEFINE
@@ -155,15 +157,8 @@ argument_list|,
 name|M_KDTRACE
 argument_list|,
 name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|p
-operator|->
-name|p_dtrace
-argument_list|,
-name|KDTRACE_PROC_ZERO
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 block|}
@@ -257,15 +252,8 @@ argument_list|,
 name|M_KDTRACE
 argument_list|,
 name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|td
-operator|->
-name|td_dtrace
-argument_list|,
-name|KDTRACE_THREAD_ZERO
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 block|}

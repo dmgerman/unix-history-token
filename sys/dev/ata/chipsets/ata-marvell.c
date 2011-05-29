@@ -1002,6 +1002,8 @@ expr_stmt|;
 comment|/* Check for 80pin cable present. */
 if|if
 condition|(
+name|ata_dma_check_80pin
+operator|&&
 name|mode
 operator|>
 name|ATA_UDMA2
@@ -2160,6 +2162,9 @@ comment|/* do we have any PHY events ? */
 name|ata_sata_phy_check_events
 argument_list|(
 name|dev
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -3729,6 +3734,13 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+else|else
+name|ch
+operator|->
+name|devices
+operator|=
+literal|0
+expr_stmt|;
 comment|/* enable EDMA machinery */
 name|ATA_OUTL
 argument_list|(
@@ -3945,11 +3957,6 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|ata_dmainit
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 comment|/* note start and stop are not used here */
 name|ch
 operator|->
@@ -4009,6 +4016,11 @@ operator|=
 literal|64
 operator|*
 name|DEV_BSIZE
+expr_stmt|;
+name|ata_dmainit
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 block|}
 end_function

@@ -88,7 +88,7 @@ begin_define
 define|#
 directive|define
 name|BIGRAM_MIN
-value|(UCHAR_MAX - CHAR_MAX)
+value|(UCHAR_MAX - SCHAR_MAX)
 end_define
 
 begin_define
@@ -113,11 +113,11 @@ begin_define
 define|#
 directive|define
 name|ASCII_MAX
-value|CHAR_MAX
+value|SCHAR_MAX
 end_define
 
 begin_comment
-comment|/* #define TO7BIT(x)     (x = ( ((u_char)x)& CHAR_MAX )) */
+comment|/* #define TO7BIT(x)     (x = ( ((u_char)x)& SCHAR_MAX )) */
 end_comment
 
 begin_define
@@ -127,7 +127,7 @@ name|TO7BIT
 parameter_list|(
 name|x
 parameter_list|)
-value|(x = x& CHAR_MAX )
+value|(x = x& SCHAR_MAX )
 end_define
 
 begin_if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 John D. Polstra.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2000, 2001, 2008, 2011, David E. O'Brien  * Copyright (c) 1998 John D. Polstra.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -2229,6 +2229,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SHT_MIPS_DWARF
+value|0x7000001e
+end_define
+
+begin_comment
+comment|/* MIPS gcc uses MIPS_DWARF */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SHT_HIPROC
 value|0x7fffffff
 end_define
@@ -2514,6 +2525,13 @@ define|#
 directive|define
 name|PT_GNU_EH_FRAME
 value|0x6474e550
+end_define
+
+begin_define
+define|#
+directive|define
+name|PT_GNU_STACK
+value|0x6474e551
 end_define
 
 begin_define
@@ -3030,7 +3048,7 @@ value|32
 end_define
 
 begin_comment
-comment|/* Values greater than or equal to DT_ENCODING 				   and less than DT_LOOS follow the rules for 				   the interpretation of the d_un union 				   as follows: even == 'd_ptr', even == 'd_val' 				   or none */
+comment|/* Values greater than or equal to DT_ENCODING 				   and less than DT_LOOS follow the rules for 				   the interpretation of the d_un union 				   as follows: even == 'd_ptr', odd == 'd_val' 				   or none */
 end_comment
 
 begin_define
@@ -3590,6 +3608,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DF_1_LOADFLTR
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* Immediate loading of filtees */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DF_1_NOOPEN
 value|0x00000040
 end_define
@@ -3644,6 +3673,17 @@ end_define
 
 begin_comment
 comment|/* Process state info. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_THRMISC
+value|7
+end_define
+
+begin_comment
+comment|/* Thread miscellaneous info. */
 end_comment
 
 begin_comment
@@ -6216,6 +6256,129 @@ define|#
 directive|define
 name|R_PPC_SECTOFF_HA
 value|36
+end_define
+
+begin_comment
+comment|/*  * 64-bit relocations  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_PPC64_ADDR64
+value|38
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_PPC64_ADDR16_HIGHER
+value|39
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_PPC64_ADDR16_HIGHERA
+value|40
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_PPC64_ADDR16_HIGHEST
+value|41
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_PPC64_ADDR16_HIGHESTA
+value|42
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_PPC64_UADDR64
+value|43
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_PPC64_REL64
+value|44
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_PPC64_PLT64
+value|45
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_PPC64_PLTREL64
+value|46
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_PPC64_TOC16
+value|47
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_PPC64_TOC16_LO
+value|48
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_PPC64_TOC16_HI
+value|49
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_PPC64_TOC16_HA
+value|50
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_PPC64_TOC
+value|51
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_PPC64_DTPMOD64
+value|68
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_PPC64_TPREL64
+value|73
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_PPC64_DTPREL64
+value|78
 end_define
 
 begin_comment

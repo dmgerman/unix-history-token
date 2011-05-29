@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/linker_set.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
 end_include
 
@@ -550,6 +544,16 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|usb_linux
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1713,7 +1717,7 @@ index|]
 condition|)
 block|{
 comment|/* we are ready! */
-name|TAILQ_INSERT_HEAD
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|uhe
@@ -3647,6 +3651,14 @@ name|iface_index
 operator|-
 literal|1
 expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|p_uhe
+operator|->
+name|bsd_urb_list
+argument_list|)
+expr_stmt|;
 name|p_uhe
 operator|++
 expr_stmt|;
@@ -3975,7 +3987,7 @@ name|bcopy
 argument_list|(
 name|udev
 operator|->
-name|default_ep
+name|ctrl_ep
 operator|.
 name|edesc
 argument_list|,

@@ -240,6 +240,10 @@ operator|->
 name|mnt_kern_flag
 operator||=
 name|MNTK_MPSAFE
+operator||
+name|MNTK_LOOKUP_SHARED
+operator||
+name|MNTK_EXTENDED_SHARED
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -604,6 +608,8 @@ operator|->
 name|dm_rootdir
 argument_list|,
 name|mp
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|,
 operator|&
 name|vp

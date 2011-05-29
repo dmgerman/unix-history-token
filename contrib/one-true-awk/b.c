@@ -4632,7 +4632,7 @@ end_ifndef
 begin_function
 name|int
 function|(
-name|isblank
+name|xisblank
 function|)
 parameter_list|(
 name|int
@@ -4698,6 +4698,20 @@ block|,
 name|isalpha
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|HAS_ISBLANK
+block|{
+literal|"blank"
+block|,
+literal|5
+block|,
+name|isspace
+block|}
+block|,
+comment|/* was isblank */
+else|#
+directive|else
 block|{
 literal|"blank"
 block|,
@@ -4706,6 +4720,8 @@ block|,
 name|isblank
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"cntrl"
 block|,

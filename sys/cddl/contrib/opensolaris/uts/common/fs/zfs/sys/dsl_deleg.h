@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2007, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_DSL_DELEG_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -116,6 +109,34 @@ define|#
 directive|define
 name|ZFS_DELEG_PERM_VSCAN
 value|"vscan"
+define|#
+directive|define
+name|ZFS_DELEG_PERM_USERQUOTA
+value|"userquota"
+define|#
+directive|define
+name|ZFS_DELEG_PERM_GROUPQUOTA
+value|"groupquota"
+define|#
+directive|define
+name|ZFS_DELEG_PERM_USERUSED
+value|"userused"
+define|#
+directive|define
+name|ZFS_DELEG_PERM_GROUPUSED
+value|"groupused"
+define|#
+directive|define
+name|ZFS_DELEG_PERM_HOLD
+value|"hold"
+define|#
+directive|define
+name|ZFS_DELEG_PERM_RELEASE
+value|"release"
+define|#
+directive|define
+name|ZFS_DELEG_PERM_DIFF
+value|"diff"
 comment|/*  * Note: the names of properties that are marked delegatable are also  * valid delegated permissions  */
 name|int
 name|dsl_deleg_get
@@ -154,6 +175,24 @@ specifier|const
 name|char
 modifier|*
 name|ddname
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|perm
+parameter_list|,
+name|cred_t
+modifier|*
+name|cr
+parameter_list|)
+function_decl|;
+name|int
+name|dsl_deleg_access_impl
+parameter_list|(
+name|struct
+name|dsl_dataset
+modifier|*
+name|ds
 parameter_list|,
 specifier|const
 name|char

@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2010, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/*  * Copyright (C) 2000 - 2011, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -104,7 +104,7 @@ value|0x7F
 end_define
 
 begin_comment
-comment|/*  * Architecture-specific ACPICA Subsystem Data Types  *  * The goal of these types is to provide source code portability across  * 16-bit, 32-bit, and 64-bit targets.  *  * 1) The following types are of fixed size for all targets (16/32/64):  *  * BOOLEAN      Logical boolean  *  * UINT8        8-bit  (1 byte) unsigned value  * UINT16       16-bit (2 byte) unsigned value  * UINT32       32-bit (4 byte) unsigned value  * UINT64       64-bit (8 byte) unsigned value  *  * INT16        16-bit (2 byte) signed value  * INT32        32-bit (4 byte) signed value  * INT64        64-bit (8 byte) signed value  *  * COMPILER_DEPENDENT_UINT64/INT64 - These types are defined in the  * compiler-dependent header(s) and were introduced because there is no common  * 64-bit integer type across the various compilation models, as shown in  * the table below.  *  * Datatype  LP64 ILP64 LLP64 ILP32 LP32 16bit  * char      8    8     8     8     8    8  * short     16   16    16    16    16   16  * _int32         32  * int       32   64    32    32    16   16  * long      64   64    32    32    32   32  * long long            64    64  * pointer   64   64    64    32    32   32  *  * Note: ILP64 and LP32 are currently not supported.  *  *  * 2) These types represent the native word size of the target mode of the  * processor, and may be 16-bit, 32-bit, or 64-bit as required. They are  * usually used for memory allocation, efficient loop counters, and array  * indexes. The types are similar to the size_t type in the C library and are  * required because there is no C type that consistently represents the native  * data width. ACPI_SIZE is needed because there is no guarantee that a  * kernel-level C library is present.  *  * ACPI_SIZE        16/32/64-bit unsigned value  * ACPI_NATIVE_INT  16/32/64-bit signed value  *  */
+comment|/*  * Architecture-specific ACPICA Subsystem Data Types  *  * The goal of these types is to provide source code portability across  * 16-bit, 32-bit, and 64-bit targets.  *  * 1) The following types are of fixed size for all targets (16/32/64):  *  * BOOLEAN      Logical boolean  *  * UINT8        8-bit  (1 byte) unsigned value  * UINT16       16-bit (2 byte) unsigned value  * UINT32       32-bit (4 byte) unsigned value  * UINT64       64-bit (8 byte) unsigned value  *  * INT16        16-bit (2 byte) signed value  * INT32        32-bit (4 byte) signed value  * INT64        64-bit (8 byte) signed value  *  * COMPILER_DEPENDENT_UINT64/INT64 - These types are defined in the  * compiler-dependent header(s) and were introduced because there is no common  * 64-bit integer type across the various compilation models, as shown in  * the table below.  *  * Datatype  LP64 ILP64 LLP64 ILP32 LP32 16bit  * char      8    8     8     8     8    8  * short     16   16    16    16    16   16  * _int32         32  * int       32   64    32    32    16   16  * long      64   64    32    32    32   32  * long long            64    64  * pointer   64   64    64    32    32   32  *  * Note: ILP64 and LP32 are currently not supported.  *  *  * 2) These types represent the native word size of the target mode of the  * processor, and may be 16-bit, 32-bit, or 64-bit as required. They are  * usually used for memory allocation, efficient loop counters, and array  * indexes. The types are similar to the size_t type in the C library and are  * required because there is no C type that consistently represents the native  * data width. ACPI_SIZE is needed because there is no guarantee that a  * kernel-level C library is present.  *  * ACPI_SIZE        16/32/64-bit unsigned value  * ACPI_NATIVE_INT  16/32/64-bit signed value  */
 end_comment
 
 begin_comment
@@ -152,6 +152,17 @@ end_typedef
 begin_comment
 comment|/*! [End] no source code translation !*/
 end_comment
+
+begin_comment
+comment|/*  * Value returned by AcpiOsGetThreadId. There is no standard "thread_id"  * across operating systems or even the various UNIX systems. Since ACPICA  * only needs the thread ID as a unique thread identifier, we use a UINT64  * as the only common data type - it will accommodate any type of pointer or  * any type of integer. It is up to the host-dependent OSL to cast the  * native thread ID type to a UINT64 (in AcpiOsGetThreadId).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_THREAD_ID
+value|UINT64
+end_define
 
 begin_comment
 comment|/*******************************************************************************  *  * Types specific to 64-bit targets  *  ******************************************************************************/
@@ -369,28 +380,6 @@ end_endif
 begin_comment
 comment|/*******************************************************************************  *  * OS-dependent types  *  * If the defaults below are not appropriate for the host system, they can  * be defined in the OS-specific header, and this will take precedence.  *  ******************************************************************************/
 end_comment
-
-begin_comment
-comment|/* Value returned by AcpiOsGetThreadId */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ACPI_THREAD_ID
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ACPI_THREAD_ID
-value|ACPI_SIZE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Flags for AcpiOsAcquireLock/AcpiOsReleaseLock */
@@ -948,38 +937,6 @@ directive|define
 name|ACPI_OWNER_ID_MAX
 value|0xFF
 end_define
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|uint64_struct
-block|{
-name|UINT32
-name|Lo
-decl_stmt|;
-name|UINT32
-name|Hi
-decl_stmt|;
-block|}
-name|UINT64_STRUCT
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-union|union
-name|uint64_overlay
-block|{
-name|UINT64
-name|Full
-decl_stmt|;
-name|UINT64_STRUCT
-name|Part
-decl_stmt|;
-block|}
-name|UINT64_OVERLAY
-typedef|;
-end_typedef
 
 begin_define
 define|#
@@ -2168,6 +2125,10 @@ name|ACPI_NUM_GPE
 value|256
 end_define
 
+begin_comment
+comment|/* Actions for AcpiSetGpe, AcpiGpeWakeup, AcpiHwLowSetGpe */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2182,22 +2143,57 @@ name|ACPI_GPE_DISABLE
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_CONDITIONAL_ENABLE
+value|2
+end_define
+
 begin_comment
-comment|/*  * GPE info flags - Per GPE  * +-+-+-+---+---+-+  * |7|6|5|4:3|2:1|0|  * +-+-+-+---+---+-+  *  | | |  |   |  |  *  | | |  |   |  +--- Interrupt type: Edge or Level Triggered  *  | | |  |   +--- Type: Wake-only, Runtime-only, or wake/runtime  *  | | |  +--- Type of dispatch -- to method, handler, or none  *  | | +--- Enabled for runtime?  *  | +--- Enabled for wake?  *  +--- Unused  */
+comment|/*  * GPE info flags - Per GPE  * +-------+-+-+---+  * |  7:4  |3|2|1:0|  * +-------+-+-+---+  *     |    | |  |  *     |    | |  +-- Type of dispatch:to method, handler, notify, or none  *     |    | +----- Interrupt type: edge or level triggered  *     |    +------- Is a Wake GPE  *     +------------<Reserved>  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_GPE_XRUPT_TYPE_MASK
+name|ACPI_GPE_DISPATCH_NONE
+value|(UINT8) 0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_DISPATCH_METHOD
 value|(UINT8) 0x01
 end_define
 
 begin_define
 define|#
 directive|define
+name|ACPI_GPE_DISPATCH_HANDLER
+value|(UINT8) 0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_DISPATCH_NOTIFY
+value|(UINT8) 0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_DISPATCH_MASK
+value|(UINT8) 0x03
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_GPE_LEVEL_TRIGGERED
-value|(UINT8) 0x01
+value|(UINT8) 0x04
 end_define
 
 begin_define
@@ -2210,152 +2206,19 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_GPE_TYPE_MASK
-value|(UINT8) 0x06
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_TYPE_WAKE_RUN
-value|(UINT8) 0x06
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_TYPE_WAKE
-value|(UINT8) 0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_TYPE_RUNTIME
+name|ACPI_GPE_XRUPT_TYPE_MASK
 value|(UINT8) 0x04
 end_define
 
-begin_comment
-comment|/* Default */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|ACPI_GPE_DISPATCH_MASK
-value|(UINT8) 0x18
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_DISPATCH_HANDLER
+name|ACPI_GPE_CAN_WAKE
 value|(UINT8) 0x08
 end_define
 
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_DISPATCH_METHOD
-value|(UINT8) 0x10
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_DISPATCH_NOT_USED
-value|(UINT8) 0x00
-end_define
-
-begin_comment
-comment|/* Default */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_RUN_ENABLE_MASK
-value|(UINT8) 0x20
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_RUN_ENABLED
-value|(UINT8) 0x20
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_RUN_DISABLED
-value|(UINT8) 0x00
-end_define
-
-begin_comment
-comment|/* Default */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_WAKE_ENABLE_MASK
-value|(UINT8) 0x40
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_WAKE_ENABLED
-value|(UINT8) 0x40
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_WAKE_DISABLED
-value|(UINT8) 0x00
-end_define
-
-begin_comment
-comment|/* Default */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_ENABLE_MASK
-value|(UINT8) 0x60
-end_define
-
-begin_comment
-comment|/* Both run/wake */
-end_comment
-
 begin_comment
 comment|/*  * Flags for GPE and Lock interfaces  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_EVENT_WAKE_ENABLE
-value|0x2
-end_define
-
-begin_comment
-comment|/* AcpiGpeEnable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_EVENT_WAKE_DISABLE
-value|0x2
-end_define
-
-begin_comment
-comment|/* AcpiGpeDisable */
 end_comment
 
 begin_define
@@ -2481,15 +2344,48 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_ADR_SPACE_DATA_TABLE
-value|(ACPI_ADR_SPACE_TYPE) 8
+name|ACPI_NUM_PREDEFINED_REGIONS
+value|8
 end_define
+
+begin_comment
+comment|/*  * Special Address Spaces  *  * Note: A Data Table region is a special type of operation region  * that has its own AML opcode. However, internally, the AML  * interpreter simply creates an operation region with an an address  * space type of ACPI_ADR_SPACE_DATA_TABLE.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_ADR_SPACE_DATA_TABLE
+value|(ACPI_ADR_SPACE_TYPE) 0x7E
+end_define
+
+begin_comment
+comment|/* Internal to ACPICA only */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_ADR_SPACE_FIXED_HARDWARE
-value|(ACPI_ADR_SPACE_TYPE) 127
+value|(ACPI_ADR_SPACE_TYPE) 0x7F
+end_define
+
+begin_comment
+comment|/* Values for _REG connection code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_REG_DISCONNECT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_REG_CONNECT
+value|1
 end_define
 
 begin_comment
@@ -3113,12 +3009,71 @@ end_comment
 
 begin_typedef
 typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|ACPI_GBL_EVENT_HANDLER
+function_decl|)
+parameter_list|(
+name|UINT32
+name|EventType
+parameter_list|,
+name|ACPI_HANDLE
+name|Device
+parameter_list|,
+name|UINT32
+name|EventNumber
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|ACPI_EVENT_TYPE_GPE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EVENT_TYPE_FIXED
+value|1
+end_define
+
+begin_typedef
+typedef|typedef
 name|UINT32
 function_decl|(
 modifier|*
 name|ACPI_EVENT_HANDLER
 function_decl|)
 parameter_list|(
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|UINT32
+function_decl|(
+modifier|*
+name|ACPI_GPE_HANDLER
+function_decl|)
+parameter_list|(
+name|ACPI_HANDLE
+name|GpeDevice
+parameter_list|,
+name|UINT32
+name|GpeNumber
+parameter_list|,
 name|void
 modifier|*
 name|Context
@@ -3355,7 +3310,7 @@ name|ACPI_WALK_CALLBACK
 function_decl|)
 parameter_list|(
 name|ACPI_HANDLE
-name|ObjHandle
+name|Object
 parameter_list|,
 name|UINT32
 name|NestingLevel
@@ -3368,6 +3323,23 @@ name|void
 modifier|*
 modifier|*
 name|ReturnValue
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|UINT32
+function_decl|(
+modifier|*
+name|ACPI_INTERFACE_HANDLER
+function_decl|)
+parameter_list|(
+name|ACPI_STRING
+name|InterfaceName
+parameter_list|,
+name|UINT32
+name|Supported
 parameter_list|)
 function_decl|;
 end_typedef
@@ -3388,6 +3360,17 @@ define|#
 directive|define
 name|ACPI_INTERRUPT_HANDLED
 value|0x01
+end_define
+
+begin_comment
+comment|/* GPE handler return values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_REENABLE_GPE
+value|0x80
 end_define
 
 begin_comment

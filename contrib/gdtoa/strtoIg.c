@@ -330,6 +330,7 @@ name|wds
 operator|>
 name|nw
 operator|||
+operator|(
 name|nb1
 operator|&&
 name|b1
@@ -342,6 +343,7 @@ operator|&
 literal|1L
 operator|<<
 name|nb1
+operator|)
 condition|)
 block|{
 if|if

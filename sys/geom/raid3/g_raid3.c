@@ -120,6 +120,16 @@ file|<geom/raid3/g_raid3.h>
 end_include
 
 begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|geom_raid3
+argument_list|,
+literal|"GEOM RAID-3 functionality"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
 argument_list|(
@@ -14912,6 +14922,28 @@ name|error
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|md
+operator|->
+name|md_sectorsize
+operator|>
+name|MAXPHYS
+condition|)
+block|{
+name|G_RAID3_DEBUG
+argument_list|(
+literal|0
+argument_list|,
+literal|"The blocksize is too big."
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
 return|return
 operator|(
 literal|0
@@ -17463,7 +17495,8 @@ index|]
 operator|!=
 literal|'\0'
 operator|&&
-name|strcmp
+operator|!
+name|g_compare_names
 argument_list|(
 name|md
 operator|.
@@ -17473,8 +17506,6 @@ name|pp
 operator|->
 name|name
 argument_list|)
-operator|!=
-literal|0
 condition|)
 return|return
 operator|(

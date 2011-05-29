@@ -1597,6 +1597,7 @@ comment|/* create fields from current record */
 block|{
 comment|/* this relies on having fields[] the same length as $0 */
 comment|/* the fields are all stored in this one array with \0's */
+comment|/* possibly with a final trailing \0 not associated with any field */
 name|char
 modifier|*
 name|r
@@ -1682,12 +1683,13 @@ name|malloc
 argument_list|(
 name|n
 operator|+
-literal|1
+literal|2
 argument_list|)
 operator|)
 operator|==
 name|NULL
 condition|)
+comment|/* possibly 2 final \0s */
 name|FATAL
 argument_list|(
 literal|"out of space for fields in fldbld %d"

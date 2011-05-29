@@ -105,6 +105,12 @@ modifier|*
 name|f_warn
 decl_stmt|;
 comment|/* warning message */
+specifier|const
+name|char
+modifier|*
+name|f_objprefix
+decl_stmt|;
+comment|/* prefix string for object name */
 block|}
 struct|;
 end_struct
@@ -365,6 +371,13 @@ name|char
 modifier|*
 name|o_file
 decl_stmt|;
+name|int
+name|o_flags
+decl_stmt|;
+define|#
+directive|define
+name|OL_ALIAS
+value|1
 name|SLIST_ENTRY
 argument_list|(
 argument|opt_list
@@ -642,6 +655,16 @@ end_function_decl
 begin_function_decl
 name|void
 name|cfgfile_removeall
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|FILE
+modifier|*
+name|open_makefile_template
 parameter_list|(
 name|void
 parameter_list|)

@@ -406,6 +406,11 @@ name|argv
 argument_list|)
 expr_stmt|;
 block|}
+name|fclose
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

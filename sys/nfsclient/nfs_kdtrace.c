@@ -2136,7 +2136,7 @@ name|MODULE_DEPEND
 argument_list|(
 name|dtnfsclient
 argument_list|,
-name|nfs
+name|oldnfs
 argument_list|,
 literal|1
 argument_list|,

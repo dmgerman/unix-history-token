@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -492,6 +485,12 @@ block|{
 name|EDT_OVERSION
 block|,
 literal|"Client requested deprecated version of library"
+block|}
+block|,
+block|{
+name|EDT_ENABLING_ERR
+block|,
+literal|"Failed to enable probe"
 block|}
 block|}
 struct|;

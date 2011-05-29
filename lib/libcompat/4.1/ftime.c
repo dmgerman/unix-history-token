@@ -50,13 +50,11 @@ begin_function
 name|int
 name|ftime
 parameter_list|(
-name|tbp
-parameter_list|)
 name|struct
 name|timeb
 modifier|*
 name|tbp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|timezone

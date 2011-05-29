@@ -1325,10 +1325,24 @@ operator|!=
 name|lro
 operator|->
 name|next_seq
+operator|||
+operator|(
+name|tcp_data_len
+operator|==
+literal|0
+operator|&&
+name|lro
+operator|->
+name|ack_seq
+operator|==
+name|tcp
+operator|->
+name|th_ack
+operator|)
 argument_list|)
 condition|)
 block|{
-comment|/* out of order packet */
+comment|/* out of order packet or dup ack */
 name|SLIST_REMOVE
 argument_list|(
 operator|&

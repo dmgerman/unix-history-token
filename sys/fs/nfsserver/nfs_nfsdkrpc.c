@@ -121,7 +121,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfsd
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -145,7 +145,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfsd
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -175,7 +175,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfsd
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -205,7 +205,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfsd
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -259,6 +259,15 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|newnfs_numnfsd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|proc
+modifier|*
+name|nfsd_master_proc
 decl_stmt|;
 end_decl_stmt
 
@@ -1789,6 +1798,10 @@ condition|(
 name|terminating
 condition|)
 block|{
+name|nfsd_master_proc
+operator|=
+name|NULL
+expr_stmt|;
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -1816,7 +1829,7 @@ literal|"nfsd"
 argument_list|,
 name|SYSCTL_STATIC_CHILDREN
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfsd
 argument_list|)
 argument_list|)
 expr_stmt|;

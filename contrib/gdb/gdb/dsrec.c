@@ -327,7 +327,7 @@ decl_stmt|;
 name|bfd_size_type
 name|size
 init|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|s
 argument_list|)

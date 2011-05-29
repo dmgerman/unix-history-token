@@ -47,11 +47,27 @@ directive|include
 file|<sys/smp.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|HWPMC_HOOKS
 end_ifdef
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|hwpmc_hooks
+argument_list|,
+literal|"Kernel support for HW PMC"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#

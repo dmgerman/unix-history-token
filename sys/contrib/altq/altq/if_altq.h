@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: if_altq.h,v 1.11 2003/07/10 12:07:50 kjc Exp $	*/
+comment|/*	$KAME: if_altq.h,v 1.12 2005/04/13 03:44:25 suz Exp $	*/
 end_comment
 
 begin_comment
@@ -23,20 +23,11 @@ directive|define
 name|_ALTQ_IF_ALTQ_H_
 end_define
 
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD_version
-operator|>=
-literal|500000
-operator|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -136,18 +127,9 @@ decl_stmt|;
 name|int
 name|ifq_drops
 decl_stmt|;
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD_version
-operator|>=
-literal|500000
-operator|)
 name|struct
 name|mtx
 name|ifq_mtx

@@ -441,10 +441,6 @@ name|int
 name|tx_doneqid
 decl_stmt|;
 comment|/* tx completed qid */
-name|int
-name|sc_phy
-decl_stmt|;
-comment|/* PHY id */
 name|struct
 name|ifmib_iso_8802_3
 name|mibdata
@@ -1798,7 +1794,7 @@ name|if_snd
 operator|.
 name|ifq_drv_maxlen
 operator|=
-name|IFQ_MAXLEN
+name|ifqmaxlen
 expr_stmt|;
 name|IFQ_SET_READY
 argument_list|(
@@ -3568,6 +3564,8 @@ decl_stmt|,
 name|macbase
 decl_stmt|,
 name|miibase
+decl_stmt|,
+name|phy
 decl_stmt|;
 comment|/* 	 * Setup NEP ID, MAC, and MII bindings.  We allow override 	 * via hints to handle unexpected board configs. 	 */
 if|if
@@ -3714,9 +3712,7 @@ argument_list|,
 literal|"phy"
 argument_list|,
 operator|&
-name|sc
-operator|->
-name|sc_phy
+name|phy
 argument_list|,
 literal|0
 argument_list|,
@@ -3725,9 +3721,7 @@ operator|-
 literal|1
 argument_list|)
 condition|)
-name|sc
-operator|->
-name|sc_phy
+name|phy
 operator|=
 name|npeconfig
 index|[
@@ -3857,10 +3851,10 @@ return|return
 name|error
 return|;
 block|}
-comment|/* probe for PHY */
-if|if
-condition|(
-name|mii_phy_probe
+comment|/* attach PHY */
+name|error
+operator|=
+name|mii_attach
 argument_list|(
 name|dev
 argument_list|,
@@ -3869,25 +3863,39 @@ name|sc
 operator|->
 name|sc_mii
 argument_list|,
+name|sc
+operator|->
+name|sc_ifp
+argument_list|,
 name|npe_ifmedia_update
 argument_list|,
 name|npe_ifmedia_status
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|phy
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"cannot find PHY %d.\n"
-argument_list|,
-name|sc
-operator|->
-name|sc_phy
+literal|"attaching PHYs failed\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|ENXIO
+name|error
 return|;
 block|}
 name|error
@@ -8799,18 +8807,6 @@ decl_stmt|;
 name|uint32_t
 name|v
 decl_stmt|;
-if|if
-condition|(
-name|phy
-operator|!=
-name|sc
-operator|->
-name|sc_phy
-condition|)
-comment|/* XXX no auto-detect */
-return|return
-literal|0xffff
-return|;
 name|v
 operator|=
 operator|(
@@ -8908,20 +8904,6 @@ decl_stmt|;
 name|uint32_t
 name|v
 decl_stmt|;
-if|if
-condition|(
-name|phy
-operator|!=
-name|sc
-operator|->
-name|sc_phy
-condition|)
-comment|/* XXX */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|v
 operator|=
 operator|(

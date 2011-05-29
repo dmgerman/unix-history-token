@@ -1021,7 +1021,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Set Antenna Configuration (legacy operation).  *  * The RX antenna can be selected using the the bitmask  * ant (bit 0 = antenna 1, bit 1 = antenna 2, etc.)  * (diversity?XXX)  */
+comment|/*  * Set Antenna Configuration (legacy operation).  *  * The RX antenna can be selected using the bitmask  * ant (bit 0 = antenna 1, bit 1 = antenna 2, etc.)  * (diversity?XXX)  */
 end_comment
 
 begin_typedef

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: adb.c,v 1.243.42.4 2009/02/03 22:34:28 jinmei Exp $ */
+comment|/* $Id: adb.c,v 1.243.42.6 2010-08-11 23:45:49 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -472,9 +472,6 @@ decl_stmt|;
 name|isc_task_t
 modifier|*
 name|task
-decl_stmt|;
-name|isc_boolean_t
-name|overmem
 decl_stmt|;
 name|isc_interval_t
 name|tick_interval
@@ -1229,6 +1226,8 @@ name|dec_entry_refcnt
 parameter_list|(
 name|dns_adb_t
 modifier|*
+parameter_list|,
+name|isc_boolean_t
 parameter_list|,
 name|dns_adbentry_t
 modifier|*
@@ -3668,9 +3667,12 @@ name|e
 decl_stmt|;
 if|if
 condition|(
+name|isc_mem_isovermem
+argument_list|(
 name|adb
 operator|->
-name|overmem
+name|mctx
+argument_list|)
 condition|)
 block|{
 for|for
@@ -4423,6 +4425,16 @@ name|result
 init|=
 name|ISC_FALSE
 decl_stmt|;
+name|isc_boolean_t
+name|overmem
+init|=
+name|isc_mem_isovermem
+argument_list|(
+name|adb
+operator|->
+name|mctx
+argument_list|)
+decl_stmt|;
 name|addr_bucket
 operator|=
 name|DNS_ADB_INVALIDBUCKET
@@ -4521,6 +4533,8 @@ operator|=
 name|dec_entry_refcnt
 argument_list|(
 name|adb
+argument_list|,
+name|overmem
 argument_list|,
 name|entry
 argument_list|,
@@ -5783,6 +5797,9 @@ name|dns_adb_t
 modifier|*
 name|adb
 parameter_list|,
+name|isc_boolean_t
+name|overmem
+parameter_list|,
 name|dns_adbentry_t
 modifier|*
 name|entry
@@ -5863,8 +5880,6 @@ name|expires
 operator|==
 literal|0
 operator|||
-name|adb
-operator|->
 name|overmem
 operator|||
 operator|(
@@ -8764,9 +8779,12 @@ decl_stmt|;
 name|isc_boolean_t
 name|overmem
 init|=
+name|isc_mem_isovermem
+argument_list|(
 name|adb
 operator|->
-name|overmem
+name|mctx
+argument_list|)
 decl_stmt|;
 name|int
 name|scans
@@ -9733,12 +9751,6 @@ expr_stmt|;
 name|adb
 operator|->
 name|shutting_down
-operator|=
-name|ISC_FALSE
-expr_stmt|;
-name|adb
-operator|->
-name|overmem
 operator|=
 name|ISC_FALSE
 expr_stmt|;
@@ -12045,6 +12057,9 @@ name|dns_adb_t
 modifier|*
 name|adb
 decl_stmt|;
+name|isc_boolean_t
+name|overmem
+decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|findp
@@ -12129,6 +12144,15 @@ name|lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The find doesn't exist on any list, and nothing is locked. 	 * Return the find to the memory pool, and decrement the adb's 	 * reference count. 	 */
+name|overmem
+operator|=
+name|isc_mem_isovermem
+argument_list|(
+name|adb
+operator|->
+name|mctx
+argument_list|)
+expr_stmt|;
 name|ai
 operator|=
 name|ISC_LIST_HEAD
@@ -12181,6 +12205,8 @@ argument_list|(
 name|dec_entry_refcnt
 argument_list|(
 name|adb
+argument_list|,
+name|overmem
 argument_list|,
 name|entry
 argument_list|,
@@ -16416,6 +16442,9 @@ name|want_check_exit
 init|=
 name|ISC_FALSE
 decl_stmt|;
+name|isc_boolean_t
+name|overmem
+decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|DNS_ADB_VALID
@@ -16469,6 +16498,15 @@ name|addrp
 operator|=
 name|NULL
 expr_stmt|;
+name|overmem
+operator|=
+name|isc_mem_isovermem
+argument_list|(
+name|adb
+operator|->
+name|mctx
+argument_list|)
+expr_stmt|;
 name|bucket
 operator|=
 name|addr
@@ -16501,6 +16539,8 @@ operator|=
 name|dec_entry_refcnt
 argument_list|(
 name|adb
+argument_list|,
+name|overmem
 argument_list|,
 name|entry
 argument_list|,
@@ -16836,6 +16876,7 @@ name|int
 name|mark
 parameter_list|)
 block|{
+comment|/* 	 * We're going to change the way to handle overmem condition: use 	 * isc_mem_isovermem() instead of storing the state via this callback, 	 * since the latter way tends to cause race conditions. 	 * To minimize the change, and in case we re-enable the callback 	 * approach, however, keep this function at the moment. 	 */
 name|dns_adb_t
 modifier|*
 name|adb
@@ -16874,48 +16915,6 @@ condition|?
 literal|"high"
 else|:
 literal|"low"
-argument_list|)
-expr_stmt|;
-comment|/* 	 * We can't use adb->lock as there is potential for water 	 * to be called when adb->lock is held. 	 */
-name|LOCK
-argument_list|(
-operator|&
-name|adb
-operator|->
-name|overmemlock
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|adb
-operator|->
-name|overmem
-operator|!=
-name|overmem
-condition|)
-block|{
-name|adb
-operator|->
-name|overmem
-operator|=
-name|overmem
-expr_stmt|;
-name|isc_mem_waterack
-argument_list|(
-name|adb
-operator|->
-name|mctx
-argument_list|,
-name|mark
-argument_list|)
-expr_stmt|;
-block|}
-name|UNLOCK
-argument_list|(
-operator|&
-name|adb
-operator|->
-name|overmemlock
 argument_list|)
 expr_stmt|;
 block|}

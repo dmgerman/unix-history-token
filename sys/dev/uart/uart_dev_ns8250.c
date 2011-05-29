@@ -1031,6 +1031,7 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+comment|/* 	 * Bit 6 of the MCR (= 0x40) appears to be 1 for the Sun1699 	 * chip, but otherwise doesn't seem to have a function. In 	 * other words, uart(4) works regardless. Ignore that bit so 	 * the probe succeeds. 	 */
 name|val
 operator|=
 name|uart_getreg
@@ -1044,7 +1045,7 @@ if|if
 condition|(
 name|val
 operator|&
-literal|0xe0
+literal|0xa0
 condition|)
 return|return
 operator|(
@@ -2932,14 +2933,6 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|(
-name|sc
-operator|->
-name|sc_leaving
-operator|)
-condition|?
-literal|0
-else|:
 name|ipend
 operator|)
 return|;
@@ -3307,7 +3300,7 @@ goto|goto
 name|describe
 goto|;
 block|}
-comment|/* 	 * We should have a sufficiently clean "pipe" to determine the 	 * size of the FIFOs. We send as much characters as is reasonable 	 * and wait for the the overflow bit in the LSR register to be 	 * asserted, counting the characters as we send them. Based on 	 * that count we know the FIFO size. 	 */
+comment|/* 	 * We should have a sufficiently clean "pipe" to determine the 	 * size of the FIFOs. We send as much characters as is reasonable 	 * and wait for the overflow bit in the LSR register to be 	 * asserted, counting the characters as we send them. Based on 	 * that count we know the FIFO size. 	 */
 do|do
 block|{
 name|uart_setreg

@@ -5116,28 +5116,11 @@ name|mpt
 parameter_list|)
 block|{
 name|int
+name|error
+decl_stmt|,
 name|i
 decl_stmt|,
 name|pp1val
-init|=
-operator|(
-operator|(
-literal|1
-operator|<<
-name|mpt
-operator|->
-name|mpt_ini_id
-operator|)
-operator|<<
-literal|16
-operator|)
-operator||
-name|mpt
-operator|->
-name|mpt_ini_id
-decl_stmt|;
-name|int
-name|error
 decl_stmt|;
 name|mpt
 operator|->
@@ -5150,6 +5133,24 @@ operator|->
 name|mpt_tag_enable
 operator|=
 literal|0
+expr_stmt|;
+name|pp1val
+operator|=
+operator|(
+operator|(
+literal|1
+operator|<<
+name|mpt
+operator|->
+name|mpt_ini_id
+operator|)
+operator|<<
+name|MPI_SCSIPORTPAGE1_CFG_SHIFT_PORT_RESPONSE_ID
+operator|)
+operator||
+name|mpt
+operator|->
+name|mpt_ini_id
 expr_stmt|;
 if|if
 condition|(
@@ -5769,11 +5770,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|MPT_UNLOCK
-argument_list|(
-name|mpt
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|mpt
@@ -5858,6 +5854,11 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|MPT_UNLOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -11979,6 +11980,25 @@ expr_stmt|;
 break|break;
 block|}
 case|case
+name|MPI_EVENT_IR_RESYNC_UPDATE
+case|:
+name|mpt_prt
+argument_list|(
+name|mpt
+argument_list|,
+literal|"IR resync update %d completed\n"
+argument_list|,
+operator|(
+name|data0
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xff
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|MPI_EVENT_EVENT_CHANGE
 case|:
 case|case
@@ -13994,10 +14014,6 @@ name|union
 name|ccb
 modifier|*
 name|ccb
-init|=
-name|tgt
-operator|->
-name|ccb
 decl_stmt|;
 name|uint32_t
 name|ct_id
@@ -14189,7 +14205,7 @@ argument_list|(
 literal|0x000ffff
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Dork with the reply frame so that the reponse to it 		 * will be correct. 		 */
+comment|/* 		 * Dork with the reply frame so that the response to it 		 * will be correct. 		 */
 name|rp
 operator|->
 name|Rctl_Did
@@ -14705,7 +14721,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* XXX Handle SPI-Packet and FCP-2 reponse info. */
+comment|/* XXX Handle SPI-Packet and FCP-2 response info. */
 name|mpt_set_ccb_status
 argument_list|(
 name|ccb
@@ -16654,6 +16670,20 @@ operator|.
 name|MaxDevices
 operator|-
 literal|1
+expr_stmt|;
+name|cpi
+operator|->
+name|maxio
+operator|=
+operator|(
+name|mpt
+operator|->
+name|max_cam_seg_cnt
+operator|-
+literal|1
+operator|)
+operator|*
+name|PAGE_SIZE
 expr_stmt|;
 comment|/* 		 * FC cards report MAX_DEVICES of 512, but 		 * the MSG_SCSI_IO_REQUEST target id field 		 * is only 8 bits. Until we fix the driver 		 * to support 'channels' for bus overflow, 		 * just limit it. 		 */
 if|if
@@ -19643,7 +19673,7 @@ operator||
 name|fc_els_handler_id
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Okay, set up ELS buffer pointers. ELS buffer pointers 	 * consist of a TE SGL element (with details length of zero) 	 * followe by a SIMPLE SGL element which holds the address 	 * of the buffer. 	 */
+comment|/* 	 * Okay, set up ELS buffer pointers. ELS buffer pointers 	 * consist of a TE SGL element (with details length of zero) 	 * followed by a SIMPLE SGL element which holds the address 	 * of the buffer. 	 */
 name|tep
 operator|=
 operator|(
@@ -23815,20 +23845,6 @@ name|uint8_t
 modifier|*
 name|cdbp
 decl_stmt|;
-comment|/* 	 * First, DMA sync the received command- 	 * which is in the *request* * phys area. 	 * 	 * XXX: We could optimize this for a range 	 */
-name|bus_dmamap_sync
-argument_list|(
-name|mpt
-operator|->
-name|request_dmat
-argument_list|,
-name|mpt
-operator|->
-name|request_dmap
-argument_list|,
-name|BUS_DMASYNC_POSTREAD
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Stash info for the current command where we can get at it later. 	 */
 name|vbuf
 operator|=

@@ -12,7 +12,7 @@ name|__sctp_lock_bsd_h__
 end_define
 
 begin_comment
-comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -116,6 +116,86 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCTP_MCORE_QLOCK_INIT
+parameter_list|(
+name|cpstr
+parameter_list|)
+value|do { \ 		mtx_init(&(cpstr)->que_mtx,	      \ 			 "sctp-mcore_queue","queue_lock",	\ 			 MTX_DEF|MTX_DUPOK);		\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_MCORE_QLOCK
+parameter_list|(
+name|cpstr
+parameter_list|)
+value|do { \ 		mtx_lock(&(cpstr)->que_mtx);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_MCORE_QUNLOCK
+parameter_list|(
+name|cpstr
+parameter_list|)
+value|do { \ 		mtx_unlock(&(cpstr)->que_mtx);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_MCORE_QDESTROY
+parameter_list|(
+name|cpstr
+parameter_list|)
+value|do { \ 	if(mtx_owned(&(cpstr)->core_mtx)) {	\ 		mtx_unlock(&(cpstr)->que_mtx);	\         } \ 	mtx_destroy(&(cpstr)->que_mtx);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_MCORE_LOCK_INIT
+parameter_list|(
+name|cpstr
+parameter_list|)
+value|do { \ 		mtx_init(&(cpstr)->core_mtx,	      \ 			 "sctp-cpulck","cpu_proc_lock",	\ 			 MTX_DEF|MTX_DUPOK);		\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_MCORE_LOCK
+parameter_list|(
+name|cpstr
+parameter_list|)
+value|do { \ 		mtx_lock(&(cpstr)->core_mtx);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_MCORE_UNLOCK
+parameter_list|(
+name|cpstr
+parameter_list|)
+value|do { \ 		mtx_unlock(&(cpstr)->core_mtx);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_MCORE_DESTROY
+parameter_list|(
+name|cpstr
+parameter_list|)
+value|do { \ 	if(mtx_owned(&(cpstr)->core_mtx)) {	\ 		mtx_unlock(&(cpstr)->core_mtx);	\         } \ 	mtx_destroy(&(cpstr)->core_mtx);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCTP_INP_INFO_WLOCK
 parameter_list|()
 value|do { 					\             rw_wlock(&SCTP_BASE_INFO(ipi_ep_mtx));                         \ } while (0)
@@ -192,7 +272,7 @@ directive|define
 name|SCTP_IPI_ITERATOR_WQ_INIT
 parameter_list|()
 define|\
-value|mtx_init(&SCTP_BASE_INFO(ipi_iterator_wq_mtx), "sctp-it-wq", "sctp_it_wq", MTX_DEF)
+value|mtx_init(&sctp_it_ctl.ipi_iterator_wq_mtx, "sctp-it-wq", "sctp_it_wq", MTX_DEF)
 end_define
 
 begin_define
@@ -201,7 +281,7 @@ directive|define
 name|SCTP_IPI_ITERATOR_WQ_DESTROY
 parameter_list|()
 define|\
-value|mtx_destroy(&SCTP_BASE_INFO(ipi_iterator_wq_mtx))
+value|mtx_destroy(&sctp_it_ctl.ipi_iterator_wq_mtx)
 end_define
 
 begin_define
@@ -209,7 +289,7 @@ define|#
 directive|define
 name|SCTP_IPI_ITERATOR_WQ_LOCK
 parameter_list|()
-value|do { 					\              mtx_lock(&SCTP_BASE_INFO(ipi_iterator_wq_mtx));                \ } while (0)
+value|do { 					\              mtx_lock(&sctp_it_ctl.ipi_iterator_wq_mtx);                \ } while (0)
 end_define
 
 begin_define
@@ -217,7 +297,7 @@ define|#
 directive|define
 name|SCTP_IPI_ITERATOR_WQ_UNLOCK
 parameter_list|()
-value|mtx_unlock(&SCTP_BASE_INFO(ipi_iterator_wq_mtx))
+value|mtx_unlock(&sctp_it_ctl.ipi_iterator_wq_mtx)
 end_define
 
 begin_define
@@ -331,6 +411,36 @@ name|_inp
 parameter_list|)
 define|\
 value|mtx_destroy(&(_inp)->inp_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_INP_LOCK_CONTENDED
+parameter_list|(
+name|_inp
+parameter_list|)
+value|((_inp)->inp_mtx.mtx_lock& MTX_CONTESTED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_INP_READ_CONTENDED
+parameter_list|(
+name|_inp
+parameter_list|)
+value|((_inp)->inp_rdata_mtx.mtx_lock& MTX_CONTESTED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_ASOC_CREATE_LOCK_CONTENDED
+parameter_list|(
+name|_inp
+parameter_list|)
+value|((_inp)->inp_create_mtx.mtx_lock& MTX_CONTESTED)
 end_define
 
 begin_define
@@ -661,7 +771,7 @@ directive|define
 name|SCTP_ITERATOR_LOCK_INIT
 parameter_list|()
 define|\
-value|mtx_init(&SCTP_BASE_INFO(it_mtx), "sctp-it", "iterator", MTX_DEF)
+value|mtx_init(&sctp_it_ctl.it_mtx, "sctp-it", "iterator", MTX_DEF)
 end_define
 
 begin_ifdef
@@ -676,7 +786,7 @@ directive|define
 name|SCTP_ITERATOR_LOCK
 parameter_list|()
 define|\
-value|do {								\ 		if (mtx_owned(&SCTP_BASE_INFO(it_mtx)))			\ 			panic("Iterator Lock");				\ 		mtx_lock(&SCTP_BASE_INFO(it_mtx));				\ 	} while (0)
+value|do {								\ 		if (mtx_owned(&sctp_it_ctl.it_mtx))			\ 			panic("Iterator Lock");				\ 		mtx_lock(&sctp_it_ctl.it_mtx);				\ 	} while (0)
 end_define
 
 begin_else
@@ -690,7 +800,7 @@ directive|define
 name|SCTP_ITERATOR_LOCK
 parameter_list|()
 define|\
-value|do {								\ 		mtx_lock(&SCTP_BASE_INFO(it_mtx));				\ 	} while (0)
+value|do {								\ 		mtx_lock(&sctp_it_ctl.it_mtx);				\ 	} while (0)
 end_define
 
 begin_endif
@@ -703,7 +813,7 @@ define|#
 directive|define
 name|SCTP_ITERATOR_UNLOCK
 parameter_list|()
-value|mtx_unlock(&SCTP_BASE_INFO(it_mtx))
+value|mtx_unlock(&sctp_it_ctl.it_mtx)
 end_define
 
 begin_define
@@ -711,7 +821,39 @@ define|#
 directive|define
 name|SCTP_ITERATOR_LOCK_DESTROY
 parameter_list|()
-value|mtx_destroy(&SCTP_BASE_INFO(it_mtx))
+value|mtx_destroy(&sctp_it_ctl.it_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_WQ_ADDR_INIT
+parameter_list|()
+value|do { \         mtx_init(&SCTP_BASE_INFO(wq_addr_mtx), "sctp-addr-wq","sctp_addr_wq",MTX_DEF); \  } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_WQ_ADDR_DESTROY
+parameter_list|()
+value|do  { \         if(mtx_owned(&SCTP_BASE_INFO(wq_addr_mtx))) { \              mtx_unlock(&SCTP_BASE_INFO(wq_addr_mtx)); \         } \ 	    mtx_destroy(&SCTP_BASE_INFO(wq_addr_mtx)); \       }  while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_WQ_ADDR_LOCK
+parameter_list|()
+value|do { \              mtx_lock(&SCTP_BASE_INFO(wq_addr_mtx));  \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_WQ_ADDR_UNLOCK
+parameter_list|()
+value|do { \ 		mtx_unlock(&SCTP_BASE_INFO(wq_addr_mtx)); \ } while (0)
 end_define
 
 begin_define

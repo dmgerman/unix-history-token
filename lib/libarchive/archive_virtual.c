@@ -89,13 +89,44 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|archive_write_free
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|a
+parameter_list|)
+block|{
+return|return
+operator|(
+call|(
+name|a
+operator|->
+name|vtable
+operator|->
+name|archive_free
+call|)
+argument_list|(
+name|a
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_if
 if|#
 directive|if
-name|ARCHIVE_API_VERSION
-operator|>
-literal|1
+name|ARCHIVE_VERSION_NUMBER
+operator|<
+literal|4000000
 end_if
+
+begin_comment
+comment|/* For backwards compatibility; will be removed with libarchive 4.0. */
+end_comment
 
 begin_function
 name|int
@@ -114,7 +145,7 @@ name|a
 operator|->
 name|vtable
 operator|->
-name|archive_finish
+name|archive_free
 call|)
 argument_list|(
 name|a
@@ -124,18 +155,14 @@ return|;
 block|}
 end_function
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* Temporarily allow library to compile with either 1.x or 2.0 API. */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
-name|void
-name|archive_write_finish
+name|int
+name|archive_read_free
 parameter_list|(
 name|struct
 name|archive
@@ -143,27 +170,34 @@ modifier|*
 name|a
 parameter_list|)
 block|{
+return|return
+operator|(
 call|(
-name|void
-call|)
-argument_list|(
 name|a
 operator|->
 name|vtable
 operator|->
-name|archive_finish
-argument_list|)
+name|archive_free
+call|)
 argument_list|(
 name|a
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_if
+if|#
+directive|if
+name|ARCHIVE_VERSION_NUMBER
+operator|<
+literal|4000000
+end_if
+
+begin_comment
+comment|/* For backwards compatibility; will be removed with libarchive 4.0. */
+end_comment
 
 begin_function
 name|int
@@ -182,7 +216,7 @@ name|a
 operator|->
 name|vtable
 operator|->
-name|archive_finish
+name|archive_free
 call|)
 argument_list|(
 name|a
@@ -191,6 +225,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -258,22 +297,8 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|ARCHIVE_API_VERSION
-operator|>
-literal|1
-end_if
-
 begin_function
 name|ssize_t
-else|#
-directive|else
-comment|/* Temporarily allow library to compile with either 1.x or 2.0 API. */
-name|int
-endif|#
-directive|endif
 name|archive_write_data
 parameter_list|(
 name|struct

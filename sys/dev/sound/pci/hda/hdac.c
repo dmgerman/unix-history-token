@@ -295,6 +295,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_INTEL_CPT
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x1c20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_INTEL_PATSBURG
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x1d20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_INTEL_PPT1
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x1e20)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_INTEL_82801F
 value|HDA_MODEL_CONSTRUCT(INTEL, 0x2668)
 end_define
@@ -346,6 +367,13 @@ define|#
 directive|define
 name|HDA_INTEL_PCH
 value|HDA_MODEL_CONSTRUCT(INTEL, 0x3b56)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_INTEL_PCH2
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x3b57)
 end_define
 
 begin_define
@@ -655,6 +683,24 @@ define|#
 directive|define
 name|HDA_ATI_ALL
 value|HDA_MODEL_CONSTRUCT(ATI, 0xffff)
+end_define
+
+begin_comment
+comment|/* RDC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RDC_VENDORID
+value|0x17f3
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_RDC_M3010
+value|HDA_MODEL_CONSTRUCT(RDC, 0x3010)
 end_define
 
 begin_comment
@@ -2245,6 +2291,30 @@ index|[]
 init|=
 block|{
 block|{
+name|HDA_INTEL_CPT
+block|,
+literal|"Intel Cougar Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_INTEL_PATSBURG
+block|,
+literal|"Intel Patsburg"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_INTEL_PPT1
+block|,
+literal|"Intel Panther Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|HDA_INTEL_82801F
 block|,
 literal|"Intel 82801F"
@@ -2303,7 +2373,15 @@ block|,
 block|{
 name|HDA_INTEL_PCH
 block|,
-literal|"Intel PCH"
+literal|"Intel 5 Series/3400 Series"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_INTEL_PCH2
+block|,
+literal|"Intel 5 Series/3400 Series"
 block|,
 literal|0
 block|}
@@ -2600,6 +2678,14 @@ block|{
 name|HDA_ATI_RV770
 block|,
 literal|"ATI RV770"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_RDC_M3010
+block|,
+literal|"RDC M3010"
 block|,
 literal|0
 block|}
@@ -3327,8 +3413,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_ALC270
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0270)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_ALC272
 value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0272)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC273
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0273)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC275
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0275)
 end_define
 
 begin_define
@@ -3350,6 +3457,13 @@ define|#
 directive|define
 name|HDA_CODEC_ALC663
 value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0663)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC665
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0665)
 end_define
 
 begin_define
@@ -3413,6 +3527,13 @@ define|#
 directive|define
 name|HDA_CODEC_ALC889
 value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0889)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC892
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0892)
 end_define
 
 begin_define
@@ -4069,6 +4190,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_CX20583
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x5067)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CX20585
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x5069)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_CXXXXX
 value|HDA_CODEC_CONSTRUCT(CONEXANT, 0xffff)
 end_define
@@ -4473,6 +4608,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_NVIDIAGT220
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x000a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIAGT21X
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x000b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIAMCP89
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x000c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIAGT240
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x000d)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_NVIDIAMCP67
 value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0067)
 end_define
@@ -4498,36 +4661,50 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HDA_CODEC_INTELG45_1
+name|HDA_CODEC_INTELIP
+value|HDA_CODEC_CONSTRUCT(INTEL, 0x0054)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_INTELBL
 value|HDA_CODEC_CONSTRUCT(INTEL, 0x2801)
 end_define
 
 begin_define
 define|#
 directive|define
-name|HDA_CODEC_INTELG45_2
+name|HDA_CODEC_INTELCA
 value|HDA_CODEC_CONSTRUCT(INTEL, 0x2802)
 end_define
 
 begin_define
 define|#
 directive|define
-name|HDA_CODEC_INTELG45_3
+name|HDA_CODEC_INTELEL
 value|HDA_CODEC_CONSTRUCT(INTEL, 0x2803)
 end_define
 
 begin_define
 define|#
 directive|define
-name|HDA_CODEC_INTELG45_4
-value|HDA_CODEC_CONSTRUCT(INTEL, 0x29fb)
+name|HDA_CODEC_INTELIP2
+value|HDA_CODEC_CONSTRUCT(INTEL, 0x2804)
 end_define
 
 begin_define
 define|#
 directive|define
-name|HDA_CODEC_INTELQ57
-value|HDA_CODEC_CONSTRUCT(INTEL, 0x0054)
+name|HDA_CODEC_INTELCPT
+value|HDA_CODEC_CONSTRUCT(INTEL, 0x2805)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_INTELCL
+value|HDA_CODEC_CONSTRUCT(INTEL, 0x29fb)
 end_define
 
 begin_define
@@ -4601,9 +4778,27 @@ literal|"Realtek ALC269"
 block|}
 block|,
 block|{
+name|HDA_CODEC_ALC270
+block|,
+literal|"Realtek ALC270"
+block|}
+block|,
+block|{
 name|HDA_CODEC_ALC272
 block|,
 literal|"Realtek ALC272"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC273
+block|,
+literal|"Realtek ALC273"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC275
+block|,
+literal|"Realtek ALC275"
 block|}
 block|,
 block|{
@@ -4622,6 +4817,12 @@ block|{
 name|HDA_CODEC_ALC663
 block|,
 literal|"Realtek ALC663"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC665
+block|,
+literal|"Realtek ALC665"
 block|}
 block|,
 block|{
@@ -4676,6 +4877,12 @@ block|{
 name|HDA_CODEC_ALC889
 block|,
 literal|"Realtek ALC889"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC892
+block|,
+literal|"Realtek ALC892"
 block|}
 block|,
 block|{
@@ -5117,6 +5324,18 @@ literal|"Conexant CX20582 (Pebble)"
 block|}
 block|,
 block|{
+name|HDA_CODEC_CX20583
+block|,
+literal|"Conexant CX20583 (Pebble HSF)"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CX20585
+block|,
+literal|"Conexant CX20585"
+block|}
+block|,
+block|{
 name|HDA_CODEC_VT1708_8
 block|,
 literal|"VIA VT1708_8"
@@ -5447,33 +5666,69 @@ literal|"NVidia MCP7A HDMI"
 block|}
 block|,
 block|{
-name|HDA_CODEC_INTELG45_1
+name|HDA_CODEC_NVIDIAGT220
 block|,
-literal|"Intel G45 HDMI"
+literal|"NVidia GT220 HDMI"
 block|}
 block|,
 block|{
-name|HDA_CODEC_INTELG45_2
+name|HDA_CODEC_NVIDIAGT21X
 block|,
-literal|"Intel G45 HDMI"
+literal|"NVidia GT21x HDMI"
 block|}
 block|,
 block|{
-name|HDA_CODEC_INTELG45_3
+name|HDA_CODEC_NVIDIAMCP89
 block|,
-literal|"Intel G45 HDMI"
+literal|"NVidia MCP89 HDMI"
 block|}
 block|,
 block|{
-name|HDA_CODEC_INTELG45_4
+name|HDA_CODEC_NVIDIAGT240
 block|,
-literal|"Intel G45 HDMI"
+literal|"NVidia GT240 HDMI"
 block|}
 block|,
 block|{
-name|HDA_CODEC_INTELQ57
+name|HDA_CODEC_INTELIP
 block|,
-literal|"Intel Q57 HDMI"
+literal|"Intel Ibex Peak HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_INTELBL
+block|,
+literal|"Intel Bearlake HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_INTELCA
+block|,
+literal|"Intel Cantiga HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_INTELEL
+block|,
+literal|"Intel Eaglelake HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_INTELIP2
+block|,
+literal|"Intel Ibex Peak HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_INTELCPT
+block|,
+literal|"Intel Cougar Point HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_INTELCL
+block|,
+literal|"Intel Crestline HDMI"
 block|}
 block|,
 block|{
@@ -22233,13 +22488,6 @@ argument_list|(
 name|sc
 operator|->
 name|lock
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|sc
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 return|return

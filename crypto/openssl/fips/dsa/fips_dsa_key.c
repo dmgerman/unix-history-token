@@ -109,6 +109,7 @@ function_decl|;
 end_function_decl
 
 begin_function
+specifier|static
 name|int
 name|fips_check_dsa
 parameter_list|(

@@ -483,22 +483,11 @@ argument_list|)
 argument_list|,
 name|M_NETGRAPH
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|priv
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
 comment|/* Initialize to default encapsulation method - ietf-ip */
 name|priv
 operator|->
@@ -1904,6 +1893,8 @@ block|}
 else|else
 name|panic
 argument_list|(
+literal|"%s"
+argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
@@ -2113,6 +2104,8 @@ expr_stmt|;
 else|else
 name|panic
 argument_list|(
+literal|"%s"
+argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;

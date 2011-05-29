@@ -536,6 +536,10 @@ name|task
 name|sc_wmetask
 decl_stmt|;
 comment|/* set wme parameters */
+name|struct
+name|task
+name|sc_monitortask
+decl_stmt|;
 name|unsigned
 name|int
 name|sc_softled

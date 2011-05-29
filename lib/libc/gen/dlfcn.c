@@ -24,6 +24,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/mman.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dlfcn.h>
 end_include
 
@@ -41,7 +47,6 @@ end_include
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 name|sorry
 index|[]
@@ -143,7 +148,6 @@ name|dlerror
 end_pragma
 
 begin_function
-specifier|const
 name|char
 modifier|*
 name|dlerror
@@ -533,6 +537,62 @@ modifier|*
 name|locks
 parameter_list|)
 block|{ }
+end_function
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|_rtld_addr_phdr
+end_pragma
+
+begin_function
+name|int
+name|_rtld_addr_phdr
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|addr
+parameter_list|,
+name|struct
+name|dl_phdr_info
+modifier|*
+name|phdr_info
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|_rtld_get_stack_prot
+end_pragma
+
+begin_function
+name|int
+name|_rtld_get_stack_prot
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|PROT_EXEC
+operator||
+name|PROT_READ
+operator||
+name|PROT_WRITE
+operator|)
+return|;
+block|}
 end_function
 
 end_unit

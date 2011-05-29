@@ -1159,7 +1159,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* build inital priority table */
+comment|/* build initial priority table */
 name|aqm_reset
 argument_list|(
 name|sc
@@ -3094,7 +3094,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		      * The event is triggered by more than 1 queue, 		      * the queue search will start from the beginning 		      * or the middle of the priority table. 		      * 		      * The search will end when all the bits of the interrupt 		      * register are cleared. There is no need to maintain 		      * a seperate value and test it at each iteration. 		      */
+comment|/* 		      * The event is triggered by more than 1 queue, 		      * the queue search will start from the beginning 		      * or the middle of the priority table. 		      * 		      * The search will end when all the bits of the interrupt 		      * register are cleared. There is no need to maintain 		      * a separate value and test it at each iteration. 		      */
 if|if
 condition|(
 name|intRegVal

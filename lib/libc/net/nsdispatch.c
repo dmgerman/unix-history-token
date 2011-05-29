@@ -3353,6 +3353,10 @@ name|cache_flag
 operator|=
 literal|0
 expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|va_start
 argument_list|(
 name|ap
@@ -3380,6 +3384,10 @@ block|}
 else|#
 directive|else
 comment|/* NS_CACHING */
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|va_start
 argument_list|(
 name|ap

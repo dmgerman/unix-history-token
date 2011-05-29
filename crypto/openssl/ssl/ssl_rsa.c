@@ -3134,7 +3134,7 @@ goto|;
 block|}
 name|x
 operator|=
-name|PEM_read_bio_X509
+name|PEM_read_bio_X509_AUX
 argument_list|(
 name|in
 argument_list|,

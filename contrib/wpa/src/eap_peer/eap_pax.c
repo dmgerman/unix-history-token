@@ -18,25 +18,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"eap_peer/eap_i.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"eap_common/eap_pax_common.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sha1.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"crypto.h"
+file|"eap_i.h"
 end_include
 
 begin_comment

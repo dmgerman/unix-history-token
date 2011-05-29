@@ -316,16 +316,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|pim6_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|register_send
 parameter_list|(
@@ -449,11 +439,6 @@ operator|=
 name|rip6_ctloutput
 block|,
 operator|.
-name|pr_init
-operator|=
-name|pim6_init
-block|,
-operator|.
 name|pr_usrreqs
 operator|=
 operator|&
@@ -490,6 +475,8 @@ name|int
 argument_list|,
 name|ip6_mrouter_ver
 argument_list|)
+operator|=
+literal|0
 expr_stmt|;
 end_expr_stmt
 
@@ -824,6 +811,8 @@ name|u_int
 argument_list|,
 name|mrt6debug
 argument_list|)
+operator|=
+literal|0
 expr_stmt|;
 end_expr_stmt
 
@@ -1305,27 +1294,6 @@ name|caddr_t
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function
-specifier|static
-name|void
-name|pim6_init
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-name|V_mrt6debug
-operator|=
-literal|0
-expr_stmt|;
-comment|/* debug level */
-endif|#
-directive|endif
-block|}
-end_function
 
 begin_comment
 comment|/*  * Handle MRT setsockopt commands to modify the multicast routing tables.  */
@@ -2054,17 +2022,9 @@ name|int
 name|cmd
 parameter_list|)
 block|{
-name|V_ip6_mrouter_ver
-operator|=
-literal|0
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MRT6DEBUG
-name|V_mrt6debug
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|V_mrt6debug

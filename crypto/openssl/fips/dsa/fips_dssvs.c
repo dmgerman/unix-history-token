@@ -204,6 +204,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|primes
 parameter_list|()
@@ -320,6 +321,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pqg
 parameter_list|()
@@ -566,6 +568,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pqgver
 parameter_list|()
@@ -675,6 +678,13 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|fputs
+argument_list|(
+name|buf
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -853,50 +863,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|pbn
-argument_list|(
-literal|"P"
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-name|pbn
-argument_list|(
-literal|"Q"
-argument_list|,
-name|q
-argument_list|)
-expr_stmt|;
-name|pbn
-argument_list|(
-literal|"G"
-argument_list|,
-name|g
-argument_list|)
-expr_stmt|;
-name|pv
-argument_list|(
-literal|"Seed"
-argument_list|,
-name|seed
-argument_list|,
-literal|20
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"c = %d\n"
-argument_list|,
-name|counter
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"H = %lx\n"
-argument_list|,
-name|h
-argument_list|)
-expr_stmt|;
 name|dsa
 operator|=
 name|FIPS_dsa_new
@@ -983,7 +949,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"Result = T\n"
+literal|"Result = P\n"
 argument_list|)
 expr_stmt|;
 name|BN_free
@@ -1202,6 +1168,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|keyver
 parameter_list|()
@@ -1616,7 +1583,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"Result = T\n"
+literal|"Result = P\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1680,6 +1647,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|keypair
 parameter_list|()
@@ -1922,6 +1890,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|siggen
 parameter_list|()
@@ -2309,6 +2278,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sigver
 parameter_list|()

@@ -190,6 +190,40 @@ name|prpsinfo_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|THRMISC_VERSION
+value|1
+end_define
+
+begin_comment
+comment|/* Current version of thrmisc_t */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|thrmisc
+block|{
+name|char
+name|pr_tname
+index|[
+name|MAXCOMLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* Thread name, null terminated (1) */
+name|u_int
+name|_pad
+decl_stmt|;
+comment|/* Convenience pad, 0-filled (1) */
+block|}
+name|thrmisc_t
+typedef|;
+end_typedef
+
 begin_typedef
 typedef|typedef
 name|uint64_t

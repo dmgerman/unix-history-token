@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MC68k ELF support for BFD.    Copyright 1998, 1999, 2000 Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* MC68k ELF support for BFD.    Copyright 1998, 1999, 2000, 2002, 2005, 2006 Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -360,18 +360,167 @@ argument|R_68K_max
 argument_list|)
 end_macro
 
+begin_comment
+comment|/* We use the top 24 bits to encode information about the    architecture variant.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|EF_CPU32
+name|EF_M68K_CPU32
 value|0x00810000
 end_define
 
 begin_define
 define|#
 directive|define
-name|EF_M68000
+name|EF_M68K_M68000
 value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|EF_M68K_CFV4E
+value|0x00008000
+end_define
+
+begin_define
+define|#
+directive|define
+name|EF_M68K_FIDO
+value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|EF_M68K_ARCH_MASK
+define|\
+value|(EF_M68K_M68000 | EF_M68K_CPU32 | EF_M68K_CFV4E | EF_M68K_FIDO)
+end_define
+
+begin_comment
+comment|/* We use the bottom 8 bits to encode information about the    coldfire variant.  If we use any of these bits, the top 24 bits are    either 0 or EF_M68K_CFV4E.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_M68K_CF_ISA_MASK
+value|0x0F
+end_define
+
+begin_comment
+comment|/* Which ISA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_M68K_CF_ISA_A_NODIV
+value|0x01
+end_define
+
+begin_comment
+comment|/* ISA A except for div */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_M68K_CF_ISA_A
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|EF_M68K_CF_ISA_A_PLUS
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|EF_M68K_CF_ISA_B_NOUSP
+value|0x04
+end_define
+
+begin_comment
+comment|/* ISA_B except for USP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_M68K_CF_ISA_B
+value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|EF_M68K_CF_ISA_C
+value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|EF_M68K_CF_MAC_MASK
+value|0x30
+end_define
+
+begin_define
+define|#
+directive|define
+name|EF_M68K_CF_MAC
+value|0x10
+end_define
+
+begin_comment
+comment|/* MAC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_M68K_CF_EMAC
+value|0x20
+end_define
+
+begin_comment
+comment|/* EMAC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_M68K_CF_EMAC_B
+value|0x30
+end_define
+
+begin_comment
+comment|/* EMAC_B */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_M68K_CF_FLOAT
+value|0x40
+end_define
+
+begin_comment
+comment|/* Has float insns */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_M68K_CF_MASK
+value|0xFF
 end_define
 
 begin_endif

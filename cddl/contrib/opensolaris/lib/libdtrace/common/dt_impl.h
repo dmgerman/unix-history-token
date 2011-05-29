@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_DT_IMPL_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -106,6 +99,26 @@ include|#
 directive|include
 file|<gelf.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<synch.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -502,6 +515,10 @@ name|caddr_t
 name|dm_reloc_offset
 decl_stmt|;
 comment|/* Symbol relocation offset. */
+name|uintptr_t
+modifier|*
+name|dm_sec_offsets
+decl_stmt|;
 endif|#
 directive|endif
 block|}
@@ -1873,7 +1890,10 @@ name|EDT_BADAGGVAR
 block|,
 comment|/* invalid aggregation variable identifier */
 name|EDT_OVERSION
+block|,
 comment|/* client is requesting deprecated version */
+name|EDT_ENABLING_ERR
+comment|/* failed to enable probe */
 block|}
 enum|;
 comment|/*  * Interfaces for parsing and comparing DTrace attribute tuples, which describe  * stability and architectural binding information.  The dtrace_attribute_t  * structure and associated constant definitions are found in<sys/dtrace.h>.  */
@@ -2333,6 +2353,16 @@ modifier|*
 parameter_list|)
 function_decl|;
 specifier|extern
+name|uint64_t
+name|dt_stddev
+parameter_list|(
+name|uint64_t
+modifier|*
+parameter_list|,
+name|uint64_t
+parameter_list|)
+function_decl|;
+specifier|extern
 name|int
 name|dt_rw_read_held
 parameter_list|(
@@ -2357,13 +2387,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 specifier|extern
-name|uint64_t
-name|dt_stddev
+name|int
+name|dt_options_load
 parameter_list|(
-name|uint64_t
+name|dtrace_hdl_t
 modifier|*
-parameter_list|,
-name|uint64_t
 parameter_list|)
 function_decl|;
 define|#
@@ -2394,14 +2422,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|dt_mutex_held(x)
-specifier|extern
-name|int
-name|dt_options_load
-parameter_list|(
-name|dtrace_hdl_t
-modifier|*
-parameter_list|)
-function_decl|;
 specifier|extern
 name|void
 name|dt_dprintf

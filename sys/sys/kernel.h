@@ -230,6 +230,11 @@ init|=
 literal|0x2100000
 block|,
 comment|/* CPU resource(s)*/
+name|SI_SUB_RACCT
+init|=
+literal|0x2110000
+block|,
+comment|/* resource accounting */
 name|SI_SUB_RANDOM
 init|=
 literal|0x2120000
@@ -530,6 +535,11 @@ init|=
 literal|0xf000000
 block|,
 comment|/* start the APs*/
+name|SI_SUB_RACCTD
+init|=
+literal|0xf100000
+block|,
+comment|/* start raccd*/
 name|SI_SUB_RUN_SCHEDULER
 init|=
 literal|0xfffffff

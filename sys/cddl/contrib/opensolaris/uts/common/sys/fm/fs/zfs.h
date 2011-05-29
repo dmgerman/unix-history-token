@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_FM_FS_ZFS_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_ifdef
 ifdef|#
@@ -132,6 +125,10 @@ name|FM_EREPORT_PAYLOAD_ZFS_VDEV_DEVID
 value|"vdev_devid"
 define|#
 directive|define
+name|FM_EREPORT_PAYLOAD_ZFS_VDEV_FRU
+value|"vdev_fru"
+define|#
+directive|define
 name|FM_EREPORT_PAYLOAD_ZFS_PARENT_GUID
 value|"parent_guid"
 define|#
@@ -180,6 +177,54 @@ name|FM_EREPORT_PAYLOAD_ZFS_PREV_STATE
 value|"prev_state"
 define|#
 directive|define
+name|FM_EREPORT_PAYLOAD_ZFS_CKSUM_EXPECTED
+value|"cksum_expected"
+define|#
+directive|define
+name|FM_EREPORT_PAYLOAD_ZFS_CKSUM_ACTUAL
+value|"cksum_actual"
+define|#
+directive|define
+name|FM_EREPORT_PAYLOAD_ZFS_CKSUM_ALGO
+value|"cksum_algorithm"
+define|#
+directive|define
+name|FM_EREPORT_PAYLOAD_ZFS_CKSUM_BYTESWAP
+value|"cksum_byteswap"
+define|#
+directive|define
+name|FM_EREPORT_PAYLOAD_ZFS_BAD_OFFSET_RANGES
+value|"bad_ranges"
+define|#
+directive|define
+name|FM_EREPORT_PAYLOAD_ZFS_BAD_RANGE_MIN_GAP
+value|"bad_ranges_min_gap"
+define|#
+directive|define
+name|FM_EREPORT_PAYLOAD_ZFS_BAD_RANGE_SETS
+value|"bad_range_sets"
+define|#
+directive|define
+name|FM_EREPORT_PAYLOAD_ZFS_BAD_RANGE_CLEARS
+value|"bad_range_clears"
+define|#
+directive|define
+name|FM_EREPORT_PAYLOAD_ZFS_BAD_SET_BITS
+value|"bad_set_bits"
+define|#
+directive|define
+name|FM_EREPORT_PAYLOAD_ZFS_BAD_CLEARED_BITS
+value|"bad_cleared_bits"
+define|#
+directive|define
+name|FM_EREPORT_PAYLOAD_ZFS_BAD_SET_HISTOGRAM
+value|"bad_set_histogram"
+define|#
+directive|define
+name|FM_EREPORT_PAYLOAD_ZFS_BAD_CLEARED_HISTOGRAM
+value|"bad_cleared_histogram"
+define|#
+directive|define
 name|FM_EREPORT_FAILMODE_WAIT
 value|"wait"
 define|#
@@ -198,6 +243,10 @@ define|#
 directive|define
 name|FM_RESOURCE_AUTOREPLACE
 value|"autoreplace"
+define|#
+directive|define
+name|FM_RESOURCE_STATECHANGE
+value|"statechange"
 ifdef|#
 directive|ifdef
 name|__cplusplus

@@ -2996,15 +2996,6 @@ end_endif
 
 begin_function_decl
 name|void
-name|icmp6_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|icmp6_paramerror
 parameter_list|(
 name|struct

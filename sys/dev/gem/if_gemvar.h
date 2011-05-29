@@ -343,10 +343,6 @@ name|bus_dmamap_t
 name|sc_dmamap
 decl_stmt|;
 comment|/* bus DMA handle */
-name|int
-name|sc_phyad
-decl_stmt|;
-comment|/* PHY to use or -1 for any */
 name|u_int
 name|sc_variant
 decl_stmt|;

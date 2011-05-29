@@ -1645,7 +1645,7 @@ operator|->
 name|events_mask_supported
 condition|)
 block|{
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|sc
 operator|->
@@ -1700,7 +1700,7 @@ name|events_availmask
 operator|=
 literal|0xffffffff
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|sc
 operator|->
@@ -1841,7 +1841,7 @@ name|OID_AUTO
 argument_list|,
 literal|"thermal"
 argument_list|,
-name|CTLTYPE_STRING
+name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RD
 argument_list|,
@@ -3471,12 +3471,6 @@ operator|->
 name|cmos_handle
 condition|)
 block|{
-name|val
-operator|=
-name|val_ec
-operator|&
-name|IBM_EC_MASK_VOL
-expr_stmt|;
 name|Args
 operator|.
 name|Count

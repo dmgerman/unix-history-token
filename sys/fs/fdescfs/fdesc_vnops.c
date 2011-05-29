@@ -1437,7 +1437,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * XXX Kludge: set td->td_proc->p_dupfd to contain the value of the the file 	 * descriptor being sought for duplication. The error return ensures 	 * that the vnode for this device will be released by vn_open. Open 	 * will detect this special error and take the actions in dupfdopen. 	 * Other callers of vn_open or VOP_OPEN will simply report the 	 * error. 	 */
+comment|/* 	 * XXX Kludge: set td->td_proc->p_dupfd to contain the value of the file 	 * descriptor being sought for duplication. The error return ensures 	 * that the vnode for this device will be released by vn_open. Open 	 * will detect this special error and take the actions in dupfdopen. 	 * Other callers of vn_open or VOP_OPEN will simply report the 	 * error. 	 */
 name|ap
 operator|->
 name|a_td
@@ -1962,18 +1962,6 @@ name|off
 decl_stmt|,
 name|fcnt
 decl_stmt|;
-comment|/* 	 * We don't allow exporting fdesc mounts, and currently local 	 * requests do not need cookies. 	 */
-if|if
-condition|(
-name|ap
-operator|->
-name|a_ncookies
-condition|)
-name|panic
-argument_list|(
-literal|"fdesc_readdir: not hungry"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|VTOFDESC
@@ -1991,6 +1979,21 @@ name|panic
 argument_list|(
 literal|"fdesc_readdir: not dir"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ap
+operator|->
+name|a_ncookies
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|ap
+operator|->
+name|a_ncookies
+operator|=
+literal|0
 expr_stmt|;
 name|off
 operator|=
@@ -2085,6 +2088,16 @@ operator|>=
 name|UIO_MX
 condition|)
 block|{
+name|bzero
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|dp
+argument_list|,
+name|UIO_MX
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|i
@@ -2098,16 +2111,6 @@ case|case
 literal|1
 case|:
 comment|/* `..' */
-name|bzero
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|dp
-argument_list|,
-name|UIO_MX
-argument_list|)
-expr_stmt|;
 name|dp
 operator|->
 name|d_fileno
@@ -2173,26 +2176,7 @@ index|]
 operator|==
 name|NULL
 condition|)
-block|{
-name|FILEDESC_SUNLOCK
-argument_list|(
-name|fdp
-argument_list|)
-expr_stmt|;
-goto|goto
-name|done
-goto|;
-block|}
-name|bzero
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|dp
-argument_list|,
-name|UIO_MX
-argument_list|)
-expr_stmt|;
+break|break;
 name|dp
 operator|->
 name|d_namlen
@@ -2230,7 +2214,16 @@ name|FD_DESC
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * And ship to userland 		 */
+if|if
+condition|(
+name|dp
+operator|->
+name|d_namlen
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 			 * And ship to userland 			 */
 name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdp
@@ -2259,6 +2252,7 @@ argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
+block|}
 name|i
 operator|++
 expr_stmt|;

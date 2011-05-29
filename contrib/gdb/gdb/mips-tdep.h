@@ -224,7 +224,7 @@ literal|37
 block|,
 name|MIPS_EMBED_FP0_REGNUM
 init|=
-literal|38
+literal|40
 block|}
 enum|;
 end_enum

@@ -141,6 +141,10 @@ name|priv_check
 argument_list|,
 name|priv_ok
 argument_list|,
+name|priv
+operator|-
+name|ok
+argument_list|,
 literal|"int"
 argument_list|)
 expr_stmt|;
@@ -156,6 +160,10 @@ argument_list|,
 name|priv_check
 argument_list|,
 name|priv_err
+argument_list|,
+name|priv
+operator|-
+name|err
 argument_list|,
 literal|"int"
 argument_list|)

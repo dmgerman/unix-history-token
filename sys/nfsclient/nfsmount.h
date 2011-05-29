@@ -18,6 +18,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nfs/nfs_mountcommon.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpc/types.h>
 end_include
 
@@ -48,23 +60,10 @@ struct|struct
 name|nfsmount
 block|{
 name|struct
-name|mtx
-name|nm_mtx
+name|nfsmount_common
+name|nm_com
 decl_stmt|;
-name|int
-name|nm_flag
-decl_stmt|;
-comment|/* Flags for soft/hard... */
-name|int
-name|nm_state
-decl_stmt|;
-comment|/* Internal state flags */
-name|struct
-name|mount
-modifier|*
-name|nm_mountp
-decl_stmt|;
-comment|/* Vfs structure for this filesystem */
+comment|/* Common fields for nlm */
 name|int
 name|nm_numgrps
 decl_stmt|;
@@ -98,14 +97,6 @@ modifier|*
 name|nm_nam
 decl_stmt|;
 comment|/* Addr of server */
-name|int
-name|nm_timeo
-decl_stmt|;
-comment|/* Init timer for NFSMNT_DUMBTIMR */
-name|int
-name|nm_retry
-decl_stmt|;
-comment|/* Max retries */
 name|int
 name|nm_deadthresh
 decl_stmt|;
@@ -190,13 +181,6 @@ name|int
 name|nm_tprintf_delay
 decl_stmt|;
 comment|/* interval for messages */
-name|char
-name|nm_hostname
-index|[
-name|MNAMELEN
-index|]
-decl_stmt|;
-comment|/* server's name */
 name|int
 name|nm_secflavor
 decl_stmt|;
@@ -245,6 +229,69 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|nm_mtx
+value|nm_com.nmcom_mtx
+end_define
+
+begin_define
+define|#
+directive|define
+name|nm_flag
+value|nm_com.nmcom_flag
+end_define
+
+begin_define
+define|#
+directive|define
+name|nm_state
+value|nm_com.nmcom_state
+end_define
+
+begin_define
+define|#
+directive|define
+name|nm_mountp
+value|nm_com.nmcom_mountp
+end_define
+
+begin_define
+define|#
+directive|define
+name|nm_timeo
+value|nm_com.nmcom_timeo
+end_define
+
+begin_define
+define|#
+directive|define
+name|nm_retry
+value|nm_com.nmcom_retry
+end_define
+
+begin_define
+define|#
+directive|define
+name|nm_hostname
+value|nm_com.nmcom_hostname
+end_define
+
+begin_define
+define|#
+directive|define
+name|nm_getinfo
+value|nm_com.nmcom_getinfo
+end_define
+
+begin_define
+define|#
+directive|define
+name|nm_vinvalbuf
+value|nm_com.nmcom_vinvalbuf
+end_define
 
 begin_if
 if|#

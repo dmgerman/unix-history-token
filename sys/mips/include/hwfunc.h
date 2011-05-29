@@ -219,13 +219,28 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return the number of processors available on this platform.  */
+comment|/*  * Return the cpumask of available processors.  */
 end_comment
 
 begin_function_decl
 specifier|extern
-name|int
-name|platform_num_processors
+name|cpumask_t
+name|platform_cpu_mask
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Return the topology of processors on this platform  */
+end_comment
+
+begin_function_decl
+name|struct
+name|cpu_group
+modifier|*
+name|platform_smp_topo
 parameter_list|(
 name|void
 parameter_list|)

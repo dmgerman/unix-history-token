@@ -252,8 +252,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|DEVICEID_MRVL_436D
+value|0x436D
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_MRVL_4370
+value|0x4370
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEVICEID_MRVL_4380
 value|0x4380
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_MRVL_4381
+value|0x4381
 end_define
 
 begin_comment
@@ -1736,6 +1757,21 @@ end_define
 
 begin_comment
 comment|/* PCI-X 133MHz Bus */
+end_comment
+
+begin_comment
+comment|/* PCI_OUR_REG_3	32 bit	Our Register 3 (Yukon-ECU only) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_CLK_MACSEC_DIS
+value|BIT_17
+end_define
+
+begin_comment
+comment|/* Disable Clock MACSec. */
 end_comment
 
 begin_comment
@@ -4207,7 +4243,7 @@ value|0x0c58
 end_define
 
 begin_comment
-comment|/*  8 bit Rx Upper Pause Thr (Yukon-EC_U) */
+comment|/* 16 bit Rx Upper Pause Thr (Yukon-EC_U) */
 end_comment
 
 begin_define
@@ -4218,7 +4254,7 @@ value|0x0c5a
 end_define
 
 begin_comment
-comment|/*  8 bit Rx Lower Pause Thr (Yukon-EC_U) */
+comment|/* 16 bit Rx Lower Pause Thr (Yukon-EC_U) */
 end_comment
 
 begin_define
@@ -4579,6 +4615,17 @@ end_define
 
 begin_comment
 comment|/* 32 bit ASF SMB Control/Status/Data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B28_Y2_CPU_WDOG
+value|0x0e48
+end_define
+
+begin_comment
+comment|/* 32 bit Watchdog Register */
 end_comment
 
 begin_define
@@ -5824,6 +5871,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|Y2_IS_PSM_ACK
+value|BIT_7
+end_define
+
+begin_comment
+comment|/* PSM Ack (Yukon Optima) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Y2_IS_PTP_TIST
+value|BIT_6
+end_define
+
+begin_comment
+comment|/* PTP TIme Stamp (Yukon Optima) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Y2_IS_PHY_QLNK
+value|BIT_5
+end_define
+
+begin_comment
+comment|/* PHY Quick Link (Yukon Optima) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|Y2_IS_IRQ_PHY1
 value|BIT_4
 end_define
@@ -6334,6 +6414,24 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CHIP_ID_YUKON_UNKNOWN
+value|0xbb
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIP_ID_YUKON_OPT
+value|0xbc
+end_define
+
+begin_comment
+comment|/* Chip ID for YUKON-2 Optima */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CHIP_REV_YU_XL_A0
 value|0
 end_define
@@ -6453,6 +6551,39 @@ end_define
 
 begin_comment
 comment|/* Chip Rev. for Yukon-2 EX B0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIP_REV_YU_SU_A0
+value|0
+end_define
+
+begin_comment
+comment|/* Chip Rev. for Yukon-2 SUPR A0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIP_REV_YU_SU_B0
+value|1
+end_define
+
+begin_comment
+comment|/* Chip Rev. for Yukon-2 SUPR B0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIP_REV_YU_SU_B1
+value|3
+end_define
+
+begin_comment
+comment|/* Chip Rev. for Yukon-2 SUPR B1 */
 end_comment
 
 begin_comment
@@ -14083,6 +14214,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|GMF_RX_MACSEC_FLUSH_ON
+value|BIT_23
+end_define
+
+begin_define
+define|#
+directive|define
+name|GMF_RX_MACSEC_FLUSH_OFF
+value|BIT_22
+end_define
+
+begin_define
+define|#
+directive|define
 name|GMF_RX_OVER_ON
 value|BIT_19
 end_define
@@ -17517,6 +17662,9 @@ name|uint16_t
 name|msk_vtag
 decl_stmt|;
 comment|/* VLAN tag id. */
+name|uint32_t
+name|msk_csum
+decl_stmt|;
 block|}
 struct|;
 end_struct

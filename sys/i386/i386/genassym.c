@@ -211,7 +211,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfsclient/nfsdiskless.h>
+file|<nfs/nfsdiskless.h>
 end_include
 
 begin_ifdef
@@ -223,7 +223,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<machine/apicreg.h>
+file|<x86/apicreg.h>
 end_include
 
 begin_endif
@@ -966,6 +966,22 @@ expr|struct
 name|pcb
 argument_list|,
 name|pcb_dr7
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ASSYM
+argument_list|(
+name|PCB_USERFPU
+argument_list|,
+name|offsetof
+argument_list|(
+expr|struct
+name|pcb
+argument_list|,
+name|pcb_user_save
 argument_list|)
 argument_list|)
 expr_stmt|;

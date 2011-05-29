@@ -2079,6 +2079,9 @@ operator|.
 name|epref
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|UNI_SAVE_IERR
 argument_list|(
 operator|&
@@ -3070,6 +3073,9 @@ operator|->
 name|epref
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|UNI_SAVE_IERR
 argument_list|(
 operator|&
@@ -3969,6 +3975,9 @@ operator|->
 name|epref
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|UNI_SAVE_IERR
 argument_list|(
 operator|&
@@ -5475,6 +5484,9 @@ operator|->
 name|epref
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|UNI_SAVE_IERR
 argument_list|(
 operator|&
@@ -14197,6 +14209,9 @@ operator|.
 name|epref
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|UNI_SAVE_IERR
 argument_list|(
 operator|&
@@ -14425,6 +14440,9 @@ operator|.
 name|epref
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|UNI_SAVE_IERR
 argument_list|(
 operator|&
@@ -14910,6 +14928,9 @@ operator|.
 name|epref
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|UNI_SAVE_IERR
 argument_list|(
 operator|&

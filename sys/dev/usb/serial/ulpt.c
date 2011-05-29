@@ -76,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/linker_set.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
 end_include
 
@@ -212,11 +206,11 @@ directive|include
 file|<dev/usb/usb_process.h>
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -3107,15 +3101,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MODULE_DEPEND
+name|MODULE_VERSION
 argument_list|(
 name|ulpt
-argument_list|,
-name|ucom
-argument_list|,
-literal|1
-argument_list|,
-literal|1
 argument_list|,
 literal|1
 argument_list|)

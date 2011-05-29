@@ -552,6 +552,12 @@ end_undef
 begin_undef
 undef|#
 directive|undef
+name|pthread_getthreadid_np
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|pthread_join
 end_undef
 

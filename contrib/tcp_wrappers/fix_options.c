@@ -135,22 +135,17 @@ begin_comment
 comment|/* fix_options - get rid of IP-level socket options */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|fix_options
-argument_list|(
-argument|request
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|request
+parameter_list|)
 name|struct
 name|request_info
 modifier|*
 name|request
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -513,7 +508,7 @@ block|}
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 end_unit
 

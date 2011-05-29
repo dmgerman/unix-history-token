@@ -15,13 +15,6 @@ directive|define
 name|_MACHINE_LBC_H_
 end_define
 
-begin_define
-define|#
-directive|define
-name|LBC_IVAR_DEVTYPE
-value|1
-end_define
-
 begin_comment
 comment|/* Maximum number of devices on Local Bus */
 end_comment
@@ -31,24 +24,6 @@ define|#
 directive|define
 name|LBC_DEV_MAX
 value|8
-end_define
-
-begin_comment
-comment|/* Device types. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LBC_DEVTYPE_CFI
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|LBC_DEVTYPE_RTC
-value|2
 end_define
 
 begin_comment
@@ -180,57 +155,105 @@ end_define
 
 begin_struct
 struct|struct
-name|lbc_resource
+name|lbc_bank
 block|{
+name|u_long
+name|pa
+decl_stmt|;
+comment|/* physical addr of the bank */
+name|u_long
+name|size
+decl_stmt|;
+comment|/* bank size */
+name|vm_offset_t
+name|va
+decl_stmt|;
+comment|/* VA of the bank */
+comment|/* 	 * XXX the following bank attributes do not have properties specified 	 * in the LBC DTS bindings yet (11.2009), so they are mainly a 	 * placeholder for future extensions. 	 */
 name|int
-name|lbr_devtype
+name|width
 decl_stmt|;
-comment|/* LBC device type */
-name|int
-name|lbr_unit
-decl_stmt|;
-comment|/* Resource table entry number */
-name|vm_paddr_t
-name|lbr_base_addr
-decl_stmt|;
-comment|/* Device mem region base address */
-name|size_t
-name|lbr_size
-decl_stmt|;
-comment|/* Device mem region size */
-name|int
-name|lbr_port_size
-decl_stmt|;
-comment|/* Data bus width */
+comment|/* data bus width */
 name|uint8_t
-name|lbr_msel
+name|msel
 decl_stmt|;
-comment|/* LBC machine select */
+comment|/* machine select */
 name|uint8_t
-name|lbr_decc
+name|atom
 decl_stmt|;
-comment|/* Data error checking mode */
+comment|/* atomic op mode */
 name|uint8_t
-name|lbr_atom
+name|wp
 decl_stmt|;
-comment|/* Atomic operation mode */
+comment|/* write protect */
 name|uint8_t
-name|lbr_wp
+name|decc
 decl_stmt|;
-comment|/* Write protect */
+comment|/* data error checking */
 block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|struct
-name|lbc_resource
-name|mpc85xx_lbc_resources
-index|[]
+begin_struct
+struct|struct
+name|lbc_softc
+block|{
+name|device_t
+name|sc_dev
 decl_stmt|;
-end_decl_stmt
+name|struct
+name|resource
+modifier|*
+name|sc_res
+decl_stmt|;
+name|bus_space_handle_t
+name|sc_bsh
+decl_stmt|;
+name|bus_space_tag_t
+name|sc_bst
+decl_stmt|;
+name|int
+name|sc_rid
+decl_stmt|;
+name|struct
+name|rman
+name|sc_rman
+decl_stmt|;
+name|int
+name|sc_addr_cells
+decl_stmt|;
+name|int
+name|sc_size_cells
+decl_stmt|;
+name|struct
+name|lbc_bank
+name|sc_banks
+index|[
+name|LBC_DEV_MAX
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|lbc_devinfo
+block|{
+name|struct
+name|ofw_bus_devinfo
+name|di_ofw
+decl_stmt|;
+name|struct
+name|resource_list
+name|di_res
+decl_stmt|;
+name|int
+name|di_bank
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_endif
 endif|#

@@ -16,7 +16,7 @@ name|_MACHINE_WSTATE_H_
 end_define
 
 begin_comment
-comment|/*  * Window state register bits.  *  * There really are no bits per se, just the two fields WSTATE.NORMAL  * and WSTATE.OTHER.  The rest is up to software.  *  * We use WSTATE_NORMAL to represent user mode or kernel mode saves  * (whichever is currently in effect) and WSTATE_OTHER to represent  * user mode saves (only).  *  * We use the low bit to suggest 32-bit mode, with the next bit set  * once we succeed in saving in some mode.  That is, if the WSTATE_ASSUME  * bit is set, the spill or fill handler we use will be one that makes  * an assumption about the proper window-save mode.  If the spill or  * fill fails with an alignment fault, the spill or fill op should  * take the `assume' bit away retry the instruction that caused the  * spill or fill.  This will use the new %wstate, which will test for  * which mode to use.  The alignment fault code helps us out here by  * resuming the spill vector at offset +70, where we are allowed to  * execute two instructions (i.e., write to %wstate and RETRY).  *  * If the ASSUME bit is not set when the alignment fault occurs, the  * given stack pointer is hopelessly wrong (and the spill, if it is a  * spill, should be done as a sort of "panic spill") -- so those two  * instructions will be a branch sequence.  *  * Note that locore.s assumes this same bit layout (since the translation  * from "bits" to "{spill,fill}_N_{normal,other}" is done in hardware).  *  * The value 0 is preferred for unknown to make it easy to start in  * unknown state and continue in whichever state unknown succeeds in --  * a successful "other" save, for instance, can just set %wstate to  * ASSUMExx<< USERSHIFT and thus leave the kernel state "unknown".  *  * We also need values for managing the somewhat tricky transition from  * user to kernel and back, so we use the one remaining free bit to mean  * "although this looks like kernel mode, the window(s) involved are  * user windows and should be saved ASI_AIUP".  Everything else is  * otherwise the same, but we need not bother with assumptions in this  * mode (we expect it to apply to at most one window spill or fill),  * i.e., WSTATE_TRANSITION can ignore WSTATE_ASSUME if it likes.  */
+comment|/*  * Window state register bits  *  * There really are no bits per se, just the two fields WSTATE.NORMAL  * and WSTATE.OTHER.  The rest is up to software.  *  * We use WSTATE_NORMAL to represent user mode or kernel mode saves  * (whichever is currently in effect) and WSTATE_OTHER to represent  * user mode saves (only).  *  * Note that locore.s assumes this same bit layout (since the translation  * from "bits" to "{spill,fill}_N_{normal,other}" is done in hardware).  */
 end_comment
 
 begin_define
@@ -101,6 +101,24 @@ name|WSTATE_NESTED
 comment|/* if set, spill must not fault */
 define|\
 value|(WSTATE_TRANSITION<< WSTATE_OTHER_SHIFT)
+end_define
+
+begin_comment
+comment|/* Values used by the PROM and (Open)Solaris */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WSTATE_PROM_KMIX
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|WSTATE_PROM_MASK
+value|7
 end_define
 
 begin_endif

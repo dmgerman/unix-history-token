@@ -447,19 +447,19 @@ begin_comment
 comment|/* number of userland PD entries */
 end_comment
 
+begin_comment
+comment|/*  * NDMPML4E is the number of PML4 entries that are used to implement the  * direct map.  It must be a power of two.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NDMPML4E
-value|1
+value|2
 end_define
 
 begin_comment
-comment|/* number of dmap PML4 slots */
-end_comment
-
-begin_comment
-comment|/*  * The *PDI values control the layout of virtual memory  */
+comment|/*  * The *PDI values control the layout of virtual memory.  The starting address  * of the direct map, which is controlled by DMPML4I, must be a multiple of  * its size.  (See the PHYS_TO_DMAP() and DMAP_TO_PHYS() macros.)  */
 end_comment
 
 begin_define
@@ -488,11 +488,11 @@ begin_define
 define|#
 directive|define
 name|DMPML4I
-value|(KPML4I-1)
+value|rounddown(KPML4I - NDMPML4E, NDMPML4E)
 end_define
 
 begin_comment
-comment|/* Next 512GB down for direct map */
+comment|/* Below KVM */
 end_comment
 
 begin_define
@@ -683,6 +683,17 @@ directive|define
 name|PML4pml4e
 value|((pd_entry_t *)(addr_PML4pml4e))
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|u_int64_t
+name|KPDPphys
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* physical address of kernel level 3 */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -929,7 +940,7 @@ argument_list|)
 name|pm_pvchunk
 expr_stmt|;
 comment|/* list of mappings in pmap */
-name|u_int
+name|cpumask_t
 name|pm_active
 decl_stmt|;
 comment|/* active on cpus */
@@ -1243,6 +1254,22 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|pmap_demote_DMAP
+parameter_list|(
+name|vm_paddr_t
+name|base
+parameter_list|,
+name|vm_size_t
+name|len
+parameter_list|,
+name|boolean_t
+name|invalidate
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|pmap_init_pat
 parameter_list|(
 name|void
@@ -1405,6 +1432,33 @@ name|void
 name|pmap_invalidate_cache
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pmap_invalidate_cache_pages
+parameter_list|(
+name|vm_page_t
+modifier|*
+name|pages
+parameter_list|,
+name|int
+name|count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pmap_invalidate_cache_range
+parameter_list|(
+name|vm_offset_t
+name|sva
+parameter_list|,
+name|vm_offset_t
+name|eva
 parameter_list|)
 function_decl|;
 end_function_decl

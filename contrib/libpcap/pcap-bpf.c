@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-bpf.c,v 1.99.2.17 2008-09-16 18:43:02 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-bpf.c,v 1.116 2008-09-16 18:42:29 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,26 +79,35 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/timeb.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/socket.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
+begin_comment
+comment|/*  *<net/bpf.h> defines ioctls, but doesn't include<sys/ioccom.h>.  *  * We include<sys/ioctl.h> as it might be necessary to declare ioctl();  * at least on *BSD and Mac OS X, it also defines various SIOC ioctls -  * we could include<sys/sockio.h>, but if we're already including  *<sys/ioctl.h>, which includes<sys/sockio.h> on those platforms,  * there's not much point in doing so.  *  * If we have<sys/ioccom.h>, we include it as well, to handle systems  * such as Solaris which don't arrange to include<sys/ioccom.h> if you  * include<sys/ioctl.h>  */
+end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_IOCCOM_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ioccom.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -312,6 +321,18 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|int
+name|bpf_load
+parameter_list|(
+name|char
+modifier|*
+name|errbuf
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_else
 else|#
 directive|else
@@ -340,6 +361,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -420,6 +447,27 @@ end_endif
 
 begin_comment
 comment|/* HAVE_DAG_API */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SNF_API
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"pcap-snf.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_SNF_API */
 end_comment
 
 begin_ifdef
@@ -818,9 +866,11 @@ operator|->
 name|md
 operator|.
 name|timeout
-operator|>
+operator|>=
 literal|0
 condition|)
+block|{
+comment|/* 			 * Timeout is non-negative, so we're not already 			 * in non-blocking mode; set it to the 2's 			 * complement, to make it negative, as an 			 * indication that we're in non-blocking mode. 			 */
 name|p
 operator|->
 name|md
@@ -839,7 +889,9 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-elseif|else
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|p
@@ -850,6 +902,8 @@ name|timeout
 operator|<
 literal|0
 condition|)
+block|{
+comment|/* 			 * Timeout is negative, so we're not already 			 * in blocking mode; reverse the previous 			 * operation, to make the timeout non-negative 			 * again. 			 */
 name|p
 operator|->
 name|md
@@ -869,6 +923,8 @@ operator|*
 operator|-
 literal|1
 expr_stmt|;
+block|}
+block|}
 return|return
 operator|(
 literal|0
@@ -1802,6 +1858,31 @@ return|;
 endif|#
 directive|endif
 comment|/* HAVE_DAG_API */
+ifdef|#
+directive|ifdef
+name|HAVE_SNF_API
+if|if
+condition|(
+name|strstr
+argument_list|(
+name|device
+argument_list|,
+literal|"snf"
+argument_list|)
+condition|)
+return|return
+operator|(
+name|snf_create
+argument_list|(
+name|device
+argument_list|,
+name|ebuf
+argument_list|)
+operator|)
+return|;
+endif|#
+directive|endif
+comment|/* HAVE_SNF_API */
 name|p
 operator|=
 name|pcap_create_common
@@ -2260,7 +2341,7 @@ name|PCAP_ERROR
 operator|)
 return|;
 block|}
-comment|/* 		 * OK, for real Ethernet devices, add DLT_DOCSIS to the 		 * list, so that an application can let you choose it, 		 * in case you're capturing DOCSIS traffic that a Cisco 		 * Cable Modem Termination System is putting out onto 		 * an Ethernet (it doesn't put an Ethernet header onto 		 * the wire, it puts raw DOCSIS frames out on the wire 		 * inside the low-level Ethernet framing). 		 * 		 * A "real Ethernet device" is defined here as a device 		 * that has a link-layer type of DLT_EN10MB and that has 		 * no alternate link-layer types; that's done to exclude 		 * 802.11 interfaces (which might or might not be the 		 * right thing to do, but I suspect it is - Ethernet<-> 		 * 802.11 bridges would probably badly mishandle frames 		 * that don't have Ethernet headers). 		 */
+comment|/* 		 * OK, for real Ethernet devices, add DLT_DOCSIS to the 		 * list, so that an application can let you choose it, 		 * in case you're capturing DOCSIS traffic that a Cisco 		 * Cable Modem Termination System is putting out onto 		 * an Ethernet (it doesn't put an Ethernet header onto 		 * the wire, it puts raw DOCSIS frames out on the wire 		 * inside the low-level Ethernet framing). 		 * 		 * A "real Ethernet device" is defined here as a device 		 * that has a link-layer type of DLT_EN10MB and that has 		 * no alternate link-layer types; that's done to exclude 		 * 802.11 interfaces (which might or might not be the 		 * right thing to do, but I suspect it is - Ethernet<-> 		 * 802.11 bridges would probably badly mishandle frames 		 * that don't have Ethernet headers). 		 * 		 * On Solaris with BPF, Ethernet devices also offer 		 * DLT_IPNET, so we, if DLT_IPNET is defined, we don't 		 * treat it as an indication that the device isn't an 		 * Ethernet. 		 */
 if|if
 condition|(
 name|v
@@ -2298,6 +2379,20 @@ name|i
 index|]
 operator|!=
 name|DLT_EN10MB
+ifdef|#
+directive|ifdef
+name|DLT_IPNET
+operator|&&
+name|bdlp
+operator|->
+name|bfl_list
+index|[
+name|i
+index|]
+operator|!=
+name|DLT_IPNET
+endif|#
+directive|endif
 condition|)
 block|{
 name|is_ethernet
@@ -2968,6 +3063,12 @@ name|s
 operator|.
 name|bs_drop
 expr_stmt|;
+name|ps
+operator|->
+name|ps_ifdrop
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3193,6 +3294,26 @@ operator|(
 literal|0
 operator|)
 return|;
+case|case
+name|ENXIO
+case|:
+comment|/* 				 * The device on which we're capturing 				 * went away. 				 * 				 * XXX - we should really return 				 * PCAP_ERROR_IFACE_NOT_UP, but 				 * pcap_dispatch() etc. aren't 				 * defined to retur that. 				 */
+name|snprintf
+argument_list|(
+name|p
+operator|->
+name|errbuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"The interface went down"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|PCAP_ERROR
+operator|)
+return|;
 if|#
 directive|if
 name|defined
@@ -3204,6 +3325,18 @@ operator|!
 name|defined
 argument_list|(
 name|BSD
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__svr4__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__SVR4
 argument_list|)
 comment|/* 			 * Due to a SunOS bug, after 2^31 bytes, the kernel 			 * file offset overflows and read fails with EINVAL. 			 * The lseek() to 0 will fix things. 			 */
 case|case
@@ -3886,6 +4019,12 @@ argument_list|,
 name|errstr
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|odm_terminate
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|PCAP_ERROR
@@ -3927,6 +4066,13 @@ condition|)
 block|{
 if|if
 condition|(
+name|errbuf
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
 name|odm_err_msg
 argument_list|(
 name|odmerrno
@@ -3953,6 +4099,7 @@ argument_list|,
 name|errstr
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|PCAP_ERROR
@@ -3966,6 +4113,13 @@ argument_list|()
 operator|==
 operator|-
 literal|1
+condition|)
+block|{
+if|if
+condition|(
+name|errbuf
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -3996,6 +4150,7 @@ argument_list|,
 name|errstr
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|PCAP_ERROR
@@ -4109,6 +4264,14 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|bpf_odmcleanup
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|PCAP_ERROR
@@ -4168,6 +4331,14 @@ name|pcap_strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|bpf_odmcleanup
+argument_list|(
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -4598,7 +4769,7 @@ name|p
 operator|->
 name|md
 operator|.
-name|must_clear
+name|must_do_on_close
 operator|!=
 literal|0
 condition|)
@@ -4613,7 +4784,7 @@ name|p
 operator|->
 name|md
 operator|.
-name|must_clear
+name|must_do_on_close
 operator|&
 name|MUST_CLEAR_RFMON
 condition|)
@@ -4827,7 +4998,7 @@ name|p
 operator|->
 name|md
 operator|.
-name|must_clear
+name|must_do_on_close
 operator|=
 literal|0
 expr_stmt|;
@@ -5096,13 +5267,24 @@ name|err
 operator|=
 name|PCAP_ERROR_NO_SUCH_DEVICE
 expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|p
 operator|->
 name|errbuf
 argument_list|,
-literal|""
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"SIOCGIFFLAGS on %s failed: %s"
+argument_list|,
+name|ifr
+operator|.
+name|ifr_name
+argument_list|,
+name|pcap_strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5127,13 +5309,20 @@ name|err
 operator|=
 name|PCAP_ERROR_NO_SUCH_DEVICE
 expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|p
 operator|->
 name|errbuf
 argument_list|,
-literal|""
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"socket() failed: %s"
+argument_list|,
+name|pcap_strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5146,13 +5335,20 @@ block|}
 endif|#
 directive|endif
 comment|/* 		 * No such device. 		 */
-name|strcpy
+name|snprintf
 argument_list|(
 name|p
 operator|->
 name|errbuf
 argument_list|,
-literal|""
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"BIOCSETIF failed: %s"
+argument_list|,
+name|pcap_strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5209,6 +5405,17 @@ return|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*  * Default capture buffer size.  * 32K isn't very much for modern machines with fast networks; we  * pick .5M, as that's the maximum on at least some systems with BPF.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_BUFSIZE
+value|524288
+end_define
 
 begin_function
 specifier|static
@@ -5697,13 +5904,20 @@ name|status
 operator|=
 name|PCAP_ERROR_NO_SUCH_DEVICE
 expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|p
 operator|->
 name|errbuf
 argument_list|,
-literal|""
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"SIOCGIFFLAGS failed: %s"
+argument_list|,
+name|pcap_strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5725,13 +5939,20 @@ name|status
 operator|=
 name|PCAP_ERROR_NO_SUCH_DEVICE
 expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|p
 operator|->
 name|errbuf
 argument_list|,
-literal|""
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"socket() failed: %s"
+argument_list|,
+name|pcap_strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5970,11 +6191,11 @@ operator|)
 operator|||
 name|v
 operator|<
-literal|32768
+name|DEFAULT_BUFSIZE
 condition|)
 name|v
 operator|=
-literal|32768
+name|DEFAULT_BUFSIZE
 expr_stmt|;
 block|}
 ifndef|#
@@ -6407,7 +6628,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 			 * No buffer size was explicitly specified. 			 * 			 * Try finding a good size for the buffer; 32768 may 			 * be too big, so keep cutting it in half until we 			 * find a size that works, or run out of sizes to try. 			 * If the default is larger, don't make it smaller. 			 */
+comment|/* 			 * No buffer size was explicitly specified. 			 * 			 * Try finding a good size for the buffer; 			 * DEFAULT_BUFSIZE may be too big, so keep 			 * cutting it in half until we find a size 			 * that works, or run out of sizes to try. 			 * If the default is larger, don't make it smaller. 			 */
 if|if
 condition|(
 operator|(
@@ -6429,11 +6650,11 @@ operator|)
 operator|||
 name|v
 operator|<
-literal|32768
+name|DEFAULT_BUFSIZE
 condition|)
 name|v
 operator|=
-literal|32768
+name|DEFAULT_BUFSIZE
 expr_stmt|;
 for|for
 control|(
@@ -7215,11 +7436,109 @@ condition|)
 block|{
 endif|#
 directive|endif
-comment|/* 		 * XXX - is this seconds/nanoseconds in AIX? 		 * (Treating it as such doesn't fix the timeout 		 * problem described below.) 		 */
+comment|/* 		 * XXX - is this seconds/nanoseconds in AIX? 		 * (Treating it as such doesn't fix the timeout 		 * problem described below.) 		 * 		 * XXX - Mac OS X 10.6 mishandles BIOCSRTIMEOUT in 		 * 64-bit userland - it takes, as an argument, a 		 * "struct BPF_TIMEVAL", which has 32-bit tv_sec 		 * and tv_usec, rather than a "struct timeval". 		 * 		 * If this platform defines "struct BPF_TIMEVAL", 		 * we check whether the structure size in BIOCSRTIMEOUT 		 * is that of a "struct timeval" and, if not, we use 		 * a "struct BPF_TIMEVAL" rather than a "struct timeval". 		 * (That way, if the bug is fixed in a future release, 		 * we will still do the right thing.) 		 */
 name|struct
 name|timeval
 name|to
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_STRUCT_BPF_TIMEVAL
+name|struct
+name|BPF_TIMEVAL
+name|bpf_to
+decl_stmt|;
+if|if
+condition|(
+name|IOCPARM_LEN
+argument_list|(
+name|BIOCSRTIMEOUT
+argument_list|)
+operator|!=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|timeval
+argument_list|)
+condition|)
+block|{
+name|bpf_to
+operator|.
+name|tv_sec
+operator|=
+name|p
+operator|->
+name|md
+operator|.
+name|timeout
+operator|/
+literal|1000
+expr_stmt|;
+name|bpf_to
+operator|.
+name|tv_usec
+operator|=
+operator|(
+name|p
+operator|->
+name|md
+operator|.
+name|timeout
+operator|*
+literal|1000
+operator|)
+operator|%
+literal|1000000
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|p
+operator|->
+name|fd
+argument_list|,
+name|BIOCSRTIMEOUT
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|bpf_to
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|p
+operator|->
+name|errbuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"BIOCSRTIMEOUT: %s"
+argument_list|,
+name|pcap_strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|status
+operator|=
+name|PCAP_ERROR
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
+block|}
+else|else
+block|{
+endif|#
+directive|endif
 name|to
 operator|.
 name|tv_sec
@@ -7292,6 +7611,12 @@ goto|goto
 name|bad
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|HAVE_STRUCT_BPF_TIMEVAL
+block|}
+endif|#
+directive|endif
 block|}
 ifdef|#
 directive|ifdef
@@ -7801,6 +8126,29 @@ return|;
 endif|#
 directive|endif
 comment|/* HAVE_DAG_API */
+ifdef|#
+directive|ifdef
+name|HAVE_SNF_API
+if|if
+condition|(
+name|snf_platform_finddevs
+argument_list|(
+name|alldevsp
+argument_list|,
+name|errbuf
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+endif|#
+directive|endif
+comment|/* HAVE_SNF_API */
 return|return
 operator|(
 literal|0
@@ -8331,7 +8679,7 @@ name|p
 operator|->
 name|md
 operator|.
-name|must_clear
+name|must_do_on_close
 operator||=
 name|MUST_CLEAR_RFMON
 expr_stmt|;
@@ -8505,7 +8853,7 @@ name|defined
 argument_list|(
 name|BIOCGDLTLIST
 argument_list|)
-comment|/*  * Remove DLT_EN10MB from the list of DLT_ values.  */
+comment|/*  * Remove DLT_EN10MB from the list of DLT_ values, as we're in monitor mode,  * and DLT_EN10MB isn't supported in monitor mode.  */
 specifier|static
 name|void
 name|remove_en
@@ -8587,7 +8935,7 @@ operator|=
 name|j
 expr_stmt|;
 block|}
-comment|/*  * Remove DLT_EN10MB from the list of DLT_ values, and look for the  * best 802.11 link-layer type in that list and return it.  * Radiotap is better than anything else; 802.11 with any other radio  * header is better than 802.11 with no radio header.  */
+comment|/*  * Remove 802.11 link-layer types from the list of DLT_ values, as  * we're not in monitor mode, and those DLT_ values will switch us  * to monitor mode.  */
 specifier|static
 name|void
 name|remove_802_11

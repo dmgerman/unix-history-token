@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* HPPA ELF support for BFD.    Copyright 1993, 1994, 1995, 1998, 1999, 2000    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* HPPA ELF support for BFD.    Copyright 1993, 1994, 1995, 1998, 1999, 2000, 2005, 2006    Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -196,6 +196,17 @@ value|0x70000003
 end_define
 
 begin_comment
+comment|/* DLKM special section.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_PARISC_DLKM
+value|0x70000004
+end_define
+
+begin_comment
 comment|/* These are strictly for compatibility with the older elf32-hppa    implementation.  Hopefully we can eliminate them in the future.  */
 end_comment
 
@@ -207,7 +218,7 @@ begin_define
 define|#
 directive|define
 name|SHT_PARISC_SYMEXTN
-value|SHT_LOPROC+8
+value|SHT_LOPROC + 8
 end_define
 
 begin_comment
@@ -218,7 +229,7 @@ begin_define
 define|#
 directive|define
 name|SHT_PARISC_STUBS
-value|SHT_LOPROC+9
+value|SHT_LOPROC + 9
 end_define
 
 begin_comment
@@ -256,6 +267,17 @@ define|#
 directive|define
 name|SHF_PARISC_SHORT
 value|0x20000000
+end_define
+
+begin_comment
+comment|/* Section is weak ordered.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHF_PARISC_WEAKORDER
+value|0x10000000
 end_define
 
 begin_comment
@@ -1035,32 +1057,6 @@ end_comment
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
-argument|R_PARISC_DIR64WR
-argument_list|,
-literal|81
-argument_list|)
-end_macro
-
-begin_comment
-comment|/*		64-bit doubleword          RR(symbol, addend) 		  */
-end_comment
-
-begin_macro
-name|RELOC_NUMBER
-argument_list|(
-argument|R_PARISC_DIR64DR
-argument_list|,
-literal|82
-argument_list|)
-end_macro
-
-begin_comment
-comment|/*		64-bit doubleword          RR(symbol, addend) 		  */
-end_comment
-
-begin_macro
-name|RELOC_NUMBER
-argument_list|(
 argument|R_PARISC_DIR14WR
 argument_list|,
 literal|83
@@ -1766,11 +1762,161 @@ argument_list|)
 end_macro
 
 begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_PARISC_TLS_GD21L
+argument_list|,
+literal|234
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_PARISC_TLS_GD14R
+argument_list|,
+literal|235
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_PARISC_TLS_GDCALL
+argument_list|,
+literal|236
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_PARISC_TLS_LDM21L
+argument_list|,
+literal|237
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_PARISC_TLS_LDM14R
+argument_list|,
+literal|238
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_PARISC_TLS_LDMCALL
+argument_list|,
+literal|239
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_PARISC_TLS_LDO21L
+argument_list|,
+literal|240
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_PARISC_TLS_LDO14R
+argument_list|,
+literal|241
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_PARISC_TLS_DTPMOD32
+argument_list|,
+literal|242
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_PARISC_TLS_DTPMOD64
+argument_list|,
+literal|243
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_PARISC_TLS_DTPOFF32
+argument_list|,
+literal|244
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_PARISC_TLS_DTPOFF64
+argument_list|,
+literal|245
+argument_list|)
+end_macro
+
+begin_macro
 name|END_RELOC_NUMBERS
 argument_list|(
 argument|R_PARISC_UNIMPLEMENTED
 argument_list|)
 end_macro
+
+begin_define
+define|#
+directive|define
+name|R_PARISC_TLS_LE21L
+value|R_PARISC_TPREL21L
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_PARISC_TLS_LE14R
+value|R_PARISC_TPREL14R
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_PARISC_TLS_IE21L
+value|R_PARISC_LTOFF_TP21L
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_PARISC_TLS_IE14R
+value|R_PARISC_LTOFF_TP14R
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_PARISC_TLS_TPREL32
+value|R_PARISC_TPREL32
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_PARISC_TLS_TPREL64
+value|R_PARISC_TPREL64
+end_define
 
 begin_ifndef
 ifndef|#
@@ -1808,8 +1954,164 @@ end_define
 begin_define
 define|#
 directive|define
-name|PF_PARISC_SBP
+name|PT_PARISC_WEAKORDER
+value|0x70000002
+end_define
+
+begin_comment
+comment|/* Flag bits in sh_flags of ElfXX_Shdr.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHF_HP_TLS
+value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHF_HP_NEAR_SHARED
+value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHF_HP_FAR_SHARED
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHF_HP_COMDAT
 value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHF_HP_CONST
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* Reserved section header indices.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHN_TLS_COMMON
+value|(SHN_LOOS + 0x0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHN_NS_COMMON
+value|(SHN_LOOS + 0x1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHN_FS_COMMON
+value|(SHN_LOOS + 0x2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHN_NS_UNDEF
+value|(SHN_LOOS + 0x3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHN_FS_UNDEF
+value|(SHN_LOOS + 0x4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHN_HP_EXTERN
+value|(SHN_LOOS + 0x5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHN_HP_EXTHINT
+value|(SHN_LOOS + 0x6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHN_HP_UNDEF_BIND_IMM
+value|(SHN_LOOS + 0x7)
+end_define
+
+begin_comment
+comment|/* Values of sh_type in ElfXX_Shdr.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_HP_OVLBITS
+value|(SHT_LOOS + 0x0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHT_HP_DLKM
+value|(SHT_LOOS + 0x1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHT_HP_COMDAT
+value|(SHT_LOOS + 0x2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHT_HP_OBJDICT
+value|(SHT_LOOS + 0x3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHT_HP_ANNOT
+value|(SHT_LOOS + 0x4)
+end_define
+
+begin_comment
+comment|/* Flag bits in p_flags of ElfXX_Phdr.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PF_HP_CODE
+value|0x00040000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_HP_MODIFY
+value|0x00080000
 end_define
 
 begin_define
@@ -1836,22 +2138,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|PF_HP_CODE
+name|PF_HP_LAZYSWAP
+value|0x00800000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_HP_CODE_DEPR
 value|0x01000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PF_HP_MODIFY
+name|PF_HP_MODIFY_DEPR
 value|0x02000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PF_HP_LAZYSWAP
+name|PF_HP_LAZYSWAP_DEPR
 value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_PARISC_SBP
+value|0x08000000
 end_define
 
 begin_define
@@ -1963,6 +2279,83 @@ name|DT_HP_GST_HASHVAL
 value|(OLD_DT_LOOS + 0xc)
 end_define
 
+begin_define
+define|#
+directive|define
+name|DT_HP_EPLTREL
+value|(OLD_DT_LOOS + 0xd)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_HP_EPLTRELSZ
+value|(OLD_DT_LOOS + 0xe)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_HP_FILTERED
+value|(OLD_DT_LOOS + 0xf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_HP_FILTER_TLS
+value|(OLD_DT_LOOS + 0x10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_HP_COMPAT_FILTERED
+value|(OLD_DT_LOOS + 0x11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_HP_LAZYLOAD
+value|(OLD_DT_LOOS + 0x12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_HP_BIND_NOW_COUNT
+value|(OLD_DT_LOOS + 0x13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_PLT
+value|(OLD_DT_LOOS + 0x14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_PLT_SIZE
+value|(OLD_DT_LOOS + 0x15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_DLT
+value|(OLD_DT_LOOS + 0x16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_DLT_SIZE
+value|(OLD_DT_LOOS + 0x17)
+end_define
+
 begin_comment
 comment|/* Values for DT_HP_DLD_FLAGS.  */
 end_comment
@@ -1971,7 +2364,7 @@ begin_define
 define|#
 directive|define
 name|DT_HP_DEBUG_PRIVATE
-value|0x0001
+value|0x00001
 end_define
 
 begin_comment
@@ -1982,7 +2375,7 @@ begin_define
 define|#
 directive|define
 name|DT_HP_DEBUG_CALLBACK
-value|0x0002
+value|0x00002
 end_define
 
 begin_comment
@@ -1993,7 +2386,7 @@ begin_define
 define|#
 directive|define
 name|DT_HP_DEBUG_CALLBACK_BOR
-value|0x0004
+value|0x00004
 end_define
 
 begin_comment
@@ -2004,7 +2397,7 @@ begin_define
 define|#
 directive|define
 name|DT_HP_NO_ENVVAR
-value|0x0008
+value|0x00008
 end_define
 
 begin_comment
@@ -2015,7 +2408,7 @@ begin_define
 define|#
 directive|define
 name|DT_HP_BIND_NOW
-value|0x0010
+value|0x00010
 end_define
 
 begin_comment
@@ -2026,7 +2419,7 @@ begin_define
 define|#
 directive|define
 name|DT_HP_BIND_NONFATAL
-value|0x0020
+value|0x00020
 end_define
 
 begin_comment
@@ -2037,7 +2430,7 @@ begin_define
 define|#
 directive|define
 name|DT_HP_BIND_VERBOSE
-value|0x0040
+value|0x00040
 end_define
 
 begin_comment
@@ -2048,7 +2441,7 @@ begin_define
 define|#
 directive|define
 name|DT_HP_BIND_RESTRICTED
-value|0x0080
+value|0x00080
 end_define
 
 begin_comment
@@ -2059,7 +2452,7 @@ begin_define
 define|#
 directive|define
 name|DT_HP_BIND_SYMBOLIC
-value|0x0100
+value|0x00100
 end_define
 
 begin_comment
@@ -2070,7 +2463,7 @@ begin_define
 define|#
 directive|define
 name|DT_HP_RPATH_FIRST
-value|0x0200
+value|0x00200
 end_define
 
 begin_comment
@@ -2081,11 +2474,77 @@ begin_define
 define|#
 directive|define
 name|DT_HP_BIND_DEPTH_FIRST
-value|0x0400
+value|0x00400
 end_define
 
 begin_comment
 comment|/* Bind depth-first */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_HP_GST
+value|0x00800
+end_define
+
+begin_comment
+comment|/* Dld global sym table */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_HP_SHLIB_FIXED
+value|0x01000
+end_define
+
+begin_comment
+comment|/* shared vtable support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_HP_MERGE_SHLIB_SEG
+value|0x02000
+end_define
+
+begin_comment
+comment|/* merge shlib data segs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_HP_NODELETE
+value|0x04000
+end_define
+
+begin_comment
+comment|/* never unload */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_HP_GROUP
+value|0x08000
+end_define
+
+begin_comment
+comment|/* bind only within group */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_HP_PROTECT_LINKAGE_TABLE
+value|0x10000
+end_define
+
+begin_comment
+comment|/* protected linkage table */
 end_comment
 
 begin_comment
@@ -2176,6 +2635,45 @@ name|PT_HP_FASTBIND
 value|(PT_LOOS + 0x11)
 end_define
 
+begin_define
+define|#
+directive|define
+name|PT_HP_OPT_ANNOT
+value|(PT_LOOS + 0x12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PT_HP_HSL_ANNOT
+value|(PT_LOOS + 0x13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PT_HP_STACK
+value|(PT_LOOS + 0x14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PT_HP_CORE_UTSNAME
+value|(PT_LOOS + 0x15)
+end_define
+
+begin_comment
+comment|/* Binding information.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STB_HP_ALIAS
+value|(STB_LOOS + 0x0)
+end_define
+
 begin_comment
 comment|/* Additional symbol types.  */
 end_comment
@@ -2192,6 +2690,59 @@ define|#
 directive|define
 name|STT_HP_STUB
 value|(STT_LOOS + 0x2)
+end_define
+
+begin_comment
+comment|/* Note types.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_HP_COMPILER
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NT_HP_COPYRIGHT
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|NT_HP_VERSION
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|NT_HP_SRCFILE_INFO
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|NT_HP_LINKER
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|NT_HP_INSTRUMENTED
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|NT_HP_UX_OPTIONS
+value|7
 end_define
 
 begin_endif

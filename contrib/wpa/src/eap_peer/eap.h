@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"defs.h"
+file|"common/defs.h"
 end_include
 
 begin_include

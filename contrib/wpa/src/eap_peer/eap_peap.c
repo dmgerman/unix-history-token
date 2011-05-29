@@ -24,6 +24,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|"crypto/tls.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"eap_common/eap_tlv_common.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"eap_common/eap_peap_common.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"eap_i.h"
 end_include
 
@@ -37,24 +55,6 @@ begin_include
 include|#
 directive|include
 file|"eap_config.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tls.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"eap_common/eap_tlv_common.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"eap_common/eap_peap_common.h"
 end_include
 
 begin_include
@@ -5037,7 +5037,7 @@ literal|"ver=%d)"
 argument_list|,
 name|flags
 operator|&
-name|EAP_PEAP_VERSION_MASK
+name|EAP_TLS_VERSION_MASK
 argument_list|,
 name|data
 operator|->
@@ -5049,7 +5049,7 @@ condition|(
 operator|(
 name|flags
 operator|&
-name|EAP_PEAP_VERSION_MASK
+name|EAP_TLS_VERSION_MASK
 operator|)
 operator|<
 name|data
@@ -5062,7 +5062,7 @@ name|peap_version
 operator|=
 name|flags
 operator|&
-name|EAP_PEAP_VERSION_MASK
+name|EAP_TLS_VERSION_MASK
 expr_stmt|;
 if|if
 condition|(

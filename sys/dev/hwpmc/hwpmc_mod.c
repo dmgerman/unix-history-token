@@ -5136,7 +5136,7 @@ name|PMC_STATE_RUNNING
 condition|)
 continue|continue;
 comment|/* increment PMC runcount */
-name|atomic_add_rel_32
+name|atomic_add_rel_int
 argument_list|(
 operator|&
 name|pm
@@ -5627,7 +5627,7 @@ name|adjri
 argument_list|)
 expr_stmt|;
 comment|/* reduce this PMC's runcount */
-name|atomic_subtract_rel_32
+name|atomic_subtract_rel_int
 argument_list|(
 operator|&
 name|pm
@@ -10316,8 +10316,7 @@ operator|->
 name|po_sscount
 operator|++
 expr_stmt|;
-block|}
-comment|/* 	 * Log mapping information for all existing processes in the 	 * system.  Subsequent mappings are logged as they happen; 	 * see pmc_process_mmap(). 	 */
+comment|/* 		 * Log mapping information for all existing processes in the 		 * system.  Subsequent mappings are logged as they happen; 		 * see pmc_process_mmap(). 		 */
 if|if
 condition|(
 name|po
@@ -10338,6 +10337,7 @@ name|po_logprocmaps
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * Move to the CPU associated with this 	 * PMC, and start the hardware. 	 */
 name|pmc_save_cpu_binding
@@ -12333,11 +12333,6 @@ condition|)
 break|break;
 block|}
 block|}
-if|if
-condition|(
-name|error
-condition|)
-break|break;
 comment|/* 		 * Look for valid values for 'pm_flags' 		 */
 if|if
 condition|(
@@ -14898,31 +14893,16 @@ name|td
 operator|=
 name|curthread
 expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
+comment|/* 	 * If there is multiple PMCs for the same interrupt ignore new post 	 */
+if|if
+condition|(
 name|td
 operator|->
 name|td_pflags
 operator|&
 name|TDP_CALLCHAIN
-operator|)
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"[pmc,%d] thread %p already marked for callchain capture"
-operator|,
-name|__LINE__
-operator|,
-operator|(
-name|void
-operator|*
-operator|)
-name|td
-operator|)
-argument_list|)
-expr_stmt|;
+condition|)
+return|return;
 comment|/* 	 * Mark this thread as needing callchain capture. 	 * `td->td_pflags' will be safe to touch because this thread 	 * was in user space when it was interrupted. 	 */
 name|td
 operator|->
@@ -15159,7 +15139,7 @@ name|pm_runcount
 operator|)
 argument_list|)
 expr_stmt|;
-name|atomic_add_rel_32
+name|atomic_add_rel_int
 argument_list|(
 operator|&
 name|pm
@@ -15329,7 +15309,7 @@ expr_stmt|;
 name|done
 label|:
 comment|/* mark CPU as needing processing */
-name|atomic_set_rel_int
+name|atomic_set_int
 argument_list|(
 operator|&
 name|pmc_cpumask
@@ -15710,7 +15690,7 @@ name|PMC_SAMPLE_INUSE
 condition|)
 block|{
 comment|/* Need a rescan at a later time. */
-name|atomic_set_rel_int
+name|atomic_set_int
 argument_list|(
 operator|&
 name|pmc_cpumask
@@ -15910,7 +15890,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* mark entry as free */
-name|atomic_subtract_rel_32
+name|atomic_subtract_rel_int
 argument_list|(
 operator|&
 name|pm
@@ -16552,7 +16532,7 @@ name|pm
 argument_list|)
 expr_stmt|;
 block|}
-name|atomic_subtract_rel_32
+name|atomic_subtract_rel_int
 argument_list|(
 operator|&
 name|pm
@@ -18147,13 +18127,9 @@ literal|"cleanup"
 argument_list|)
 expr_stmt|;
 comment|/* switch off sampling */
-name|atomic_store_rel_int
-argument_list|(
-operator|&
 name|pmc_cpumask
-argument_list|,
+operator|=
 literal|0
-argument_list|)
 expr_stmt|;
 name|pmc_intr
 operator|=

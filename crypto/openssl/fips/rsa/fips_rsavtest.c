@@ -65,12 +65,6 @@ directive|include
 file|<openssl/bn.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<openssl/rsa.h>
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -107,6 +101,12 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_include
+include|#
+directive|include
+file|<openssl/rsa.h>
+end_include
 
 begin_include
 include|#

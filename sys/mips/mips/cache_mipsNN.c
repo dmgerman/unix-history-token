@@ -136,7 +136,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|TARGET_OCTEON
+name|CPU_CNMIPS
 end_ifdef
 
 begin_define
@@ -848,8 +848,7 @@ name|vm_size_t
 name|size
 parameter_list|)
 block|{
-name|unsigned
-name|int
+name|vm_offset_t
 name|eva
 decl_stmt|,
 name|tmpva
@@ -1015,8 +1014,7 @@ name|vm_size_t
 name|size
 parameter_list|)
 block|{
-name|unsigned
-name|int
+name|vm_offset_t
 name|eva
 decl_stmt|,
 name|tmpva
@@ -1472,8 +1470,7 @@ name|vm_size_t
 name|size
 parameter_list|)
 block|{
-name|unsigned
-name|int
+name|vm_offset_t
 name|eva
 decl_stmt|,
 name|tmpva
@@ -1628,8 +1625,7 @@ name|vm_size_t
 name|size
 parameter_list|)
 block|{
-name|unsigned
-name|int
+name|vm_offset_t
 name|eva
 decl_stmt|,
 name|tmpva
@@ -2132,7 +2128,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|TARGET_OCTEON
+name|CPU_CNMIPS
 end_ifdef
 
 begin_function

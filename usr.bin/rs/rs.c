@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -83,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -575,6 +581,9 @@ modifier|*
 name|ep
 decl_stmt|;
 name|int
+name|c
+decl_stmt|;
+name|int
 name|multisep
 init|=
 operator|(
@@ -605,6 +614,8 @@ name|skip
 operator|--
 condition|)
 block|{
+name|c
+operator|=
 name|getline
 argument_list|()
 expr_stmt|;
@@ -619,6 +630,13 @@ argument_list|(
 name|curline
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|c
+operator|==
+name|EOF
+condition|)
+return|return;
 block|}
 name|getline
 argument_list|()
@@ -1673,7 +1691,7 @@ begin_define
 define|#
 directive|define
 name|BSIZE
-value|2048
+value|(LINE_MAX * 2)
 end_define
 
 begin_decl_stmt
@@ -1684,10 +1702,6 @@ name|BSIZE
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* two screenfuls should do */
-end_comment
 
 begin_function
 name|int
@@ -1781,7 +1795,9 @@ name|endblock
 operator|-
 name|curline
 operator|<
-name|BUFSIZ
+name|LINE_MAX
+operator|+
+literal|1
 condition|)
 block|{
 comment|/* need storage */
@@ -1826,11 +1842,8 @@ name|curline
 operator|,
 name|i
 operator|=
-literal|1
+literal|0
 init|;
-name|i
-operator|<
-name|BUFSIZ
 condition|;
 operator|*
 name|p
@@ -1841,6 +1854,7 @@ operator|,
 name|i
 operator|++
 control|)
+block|{
 if|if
 condition|(
 operator|(
@@ -1851,12 +1865,31 @@ argument_list|()
 operator|)
 operator|==
 name|EOF
-operator|||
+condition|)
+break|break;
+if|if
+condition|(
+name|i
+operator|>=
+name|LINE_MAX
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"maximum line length (%d) exceeded"
+argument_list|,
+name|LINE_MAX
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|c
 operator|==
 literal|'\n'
 condition|)
 break|break;
+block|}
 operator|*
 name|p
 operator|=
@@ -1865,8 +1898,6 @@ expr_stmt|;
 name|curlen
 operator|=
 name|i
-operator|-
-literal|1
 expr_stmt|;
 return|return
 operator|(

@@ -499,6 +499,7 @@ comment|/* NOTE: These should not be accessed directly from outside this  * libr
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|SHA512_Last
 parameter_list|(
@@ -509,6 +510,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|SHA256_Transform
 parameter_list|(
@@ -523,6 +525,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|SHA512_Transform
 parameter_list|(
@@ -1143,6 +1146,7 @@ value|s0 = W256[(j+1)&0x0f]; \ 	s0 = sigma0_256(s0); \ 	s1 = W256[(j+14)&0x0f]; 
 end_define
 
 begin_function
+specifier|static
 name|void
 name|SHA256_Transform
 parameter_list|(
@@ -1706,6 +1710,7 @@ comment|/* SHA2_UNROLL_TRANSFORM */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|SHA256_Transform
 parameter_list|(
@@ -3181,6 +3186,7 @@ value|s0 = W512[(j+1)&0x0f]; \ 	s0 = sigma0_512(s0); \ 	s1 = W512[(j+14)&0x0f]; 
 end_define
 
 begin_function
+specifier|static
 name|void
 name|SHA512_Transform
 parameter_list|(
@@ -3741,6 +3747,7 @@ comment|/* SHA2_UNROLL_TRANSFORM */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|SHA512_Transform
 parameter_list|(
@@ -4549,6 +4556,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|SHA512_Last
 parameter_list|(

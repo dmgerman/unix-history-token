@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -185,7 +185,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* We add 96 bytes to the size of sctp_sndrcvinfo.  * This makes the current structure 128 bytes long  * which is nicely 64 bit aligned but also has room  * for us to add more and keep ABI compatability.  * For example, already we have the sctp_extrcvinfo  * when enabled which is 48 bytes.  */
+comment|/* We add 96 bytes to the size of sctp_sndrcvinfo.  * This makes the current structure 128 bytes long  * which is nicely 64 bit aligned but also has room  * for us to add more and keep ABI compatibility.  * For example, already we have the sctp_extrcvinfo  * when enabled which is 48 bytes.  */
 end_comment
 
 begin_comment
@@ -777,27 +777,6 @@ name|SCTP_ADDR_CONFIRMED
 value|0x0006
 end_define
 
-begin_comment
-comment|/*  * CAUTION: these are user exposed SCTP addr reachability states must be  * compatible with SCTP_ADDR states in sctp_constants.h  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SCTP_ACTIVE
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|SCTP_ACTIVE
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -808,23 +787,6 @@ end_define
 begin_comment
 comment|/* SCTP_ADDR_REACHABLE */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SCTP_INACTIVE
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|SCTP_INACTIVE
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -837,23 +799,6 @@ begin_comment
 comment|/* SCTP_ADDR_NOT_REACHABLE */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SCTP_UNCONFIRMED
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|SCTP_UNCONFIRMED
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -863,34 +808,6 @@ end_define
 
 begin_comment
 comment|/* SCTP_ADDR_UNCONFIRMED */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SCTP_NOHEARTBEAT
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|SCTP_NOHEARTBEAT
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|SCTP_NOHEARTBEAT
-value|0x0040
-end_define
-
-begin_comment
-comment|/* SCTP_ADDR_NOHB */
 end_comment
 
 begin_comment
@@ -1050,7 +967,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* compatable old spelling */
+comment|/* compatible old spelling */
 end_comment
 
 begin_struct
@@ -1336,7 +1253,7 @@ name|struct
 name|sctp_adaptation_event
 name|sn_adaptation_event
 decl_stmt|;
-comment|/* compatability same as above */
+comment|/* compatibility same as above */
 name|struct
 name|sctp_adaption_event
 name|sn_adaption_event
@@ -1449,12 +1366,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP__NOTIFICATIONS_STOPPED_EVENT
+name|SCTP_NOTIFICATIONS_STOPPED_EVENT
 value|0x000b
 end_define
 
 begin_comment
-comment|/* we dont send this */
+comment|/* we don't send this */
 end_comment
 
 begin_comment
@@ -1906,6 +1823,38 @@ end_struct
 
 begin_struct
 struct|struct
+name|sctp_cc_option
+block|{
+name|int
+name|option
+decl_stmt|;
+name|struct
+name|sctp_assoc_value
+name|aid_value
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|sctp_stream_value
+block|{
+name|sctp_assoc_t
+name|assoc_id
+decl_stmt|;
+name|uint16_t
+name|stream_id
+decl_stmt|;
+name|uint16_t
+name|stream_value
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|sctp_assoc_ids
 block|{
 name|uint32_t
@@ -1931,6 +1880,38 @@ name|sack_delay
 decl_stmt|;
 name|uint32_t
 name|sack_freq
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|sctp_timeouts
+block|{
+name|sctp_assoc_t
+name|stimo_assoc_id
+decl_stmt|;
+name|uint32_t
+name|stimo_init
+decl_stmt|;
+name|uint32_t
+name|stimo_data
+decl_stmt|;
+name|uint32_t
+name|stimo_sack
+decl_stmt|;
+name|uint32_t
+name|stimo_shutdown
+decl_stmt|;
+name|uint32_t
+name|stimo_heartbeat
+decl_stmt|;
+name|uint32_t
+name|stimo_cookie
+decl_stmt|;
+name|uint32_t
+name|stimo_shutdownack
 decl_stmt|;
 block|}
 struct|;
@@ -2960,7 +2941,7 @@ decl_stmt|;
 name|uint32_t
 name|sctps_earlyfrstrtmr
 decl_stmt|;
-comment|/* otheres */
+comment|/* others */
 name|uint32_t
 name|sctps_hdrops
 decl_stmt|;
@@ -2999,11 +2980,11 @@ comment|/* nagle allowed sending      */
 name|uint32_t
 name|sctps_naglequeued
 decl_stmt|;
-comment|/* nagle does't allow sending */
+comment|/* nagle doesn't allow sending */
 name|uint32_t
 name|sctps_maxburstqueued
 decl_stmt|;
-comment|/* max burst dosn't allow sending */
+comment|/* max burst doesn't allow sending */
 name|uint32_t
 name|sctps_ifnomemqueued
 decl_stmt|;
@@ -3062,8 +3043,8 @@ decl_stmt|;
 comment|/* number of sends with 						 * sinfo_flags !=0 */
 name|uint32_t
 name|sctps_sends_with_unord
-comment|/* number of undordered sends */
 decl_stmt|;
+comment|/* number of unordered sends */
 name|uint32_t
 name|sctps_sends_with_eof
 decl_stmt|;
@@ -3095,7 +3076,7 @@ comment|/* Number of cached stream oq's used */
 name|uint32_t
 name|sctps_left_abandon
 decl_stmt|;
-comment|/* Number of unread message abandonded 					 * by close */
+comment|/* Number of unread messages abandoned 					 * by close */
 name|uint32_t
 name|sctps_send_burst_avoid
 decl_stmt|;
@@ -3109,9 +3090,13 @@ name|sctps_fwdtsn_map_over
 decl_stmt|;
 comment|/* number of map array over-runs via 					 * fwd-tsn's */
 name|uint32_t
+name|sctps_queue_upd_ecne
+decl_stmt|;
+comment|/* Number of times we queued or 					 * updated an ECN chunk on send queue */
+name|uint32_t
 name|sctps_reserved
 index|[
-literal|32
+literal|31
 index|]
 decl_stmt|;
 comment|/* Future ABI compat - remove int's 					 * from here when adding new */
@@ -3139,6 +3124,54 @@ parameter_list|)
 value|SCTP_STAT_DECR_BY(_x,1)
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|SMP
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|SCTP_USE_PERCPU_STAT
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SCTP_STAT_INCR_BY
+parameter_list|(
+name|_x
+parameter_list|,
+name|_d
+parameter_list|)
+value|(SCTP_BASE_STATS[PCPU_GET(cpuid)]._x += _d)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_STAT_DECR_BY
+parameter_list|(
+name|_x
+parameter_list|,
+name|_d
+parameter_list|)
+value|(SCTP_BASE_STATS[PCPU_GET(cpuid)]._x -= _d)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -3162,6 +3195,11 @@ name|_d
 parameter_list|)
 value|atomic_subtract_int(&SCTP_BASE_STAT(_x), _d)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* The following macros are for handling MIB values, */
@@ -3274,6 +3312,76 @@ decl_stmt|;
 block|}
 union|;
 end_union
+
+begin_comment
+comment|/***********************************/
+end_comment
+
+begin_comment
+comment|/* And something for us old timers */
+end_comment
+
+begin_comment
+comment|/***********************************/
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ntohll
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/endian.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|ntohll
+parameter_list|(
+name|x
+parameter_list|)
+value|be64toh(x)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|htonll
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/endian.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|htonll
+parameter_list|(
+name|x
+parameter_list|)
+value|htobe64(x)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/***********************************/
+end_comment
 
 begin_struct
 struct|struct
@@ -3644,9 +3752,6 @@ name|control
 parameter_list|,
 name|int
 name|flags
-parameter_list|,
-name|int
-name|use_rcvinfo
 parameter_list|,
 name|struct
 name|sctp_sndrcvinfo

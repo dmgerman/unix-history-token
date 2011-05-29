@@ -1230,6 +1230,13 @@ argument_list|)
 block|,
 name|UPGT_DEV
 argument_list|(
+name|NETGEAR
+argument_list|,
+name|WG111V2_2
+argument_list|)
+block|,
+name|UPGT_DEV
+argument_list|(
 name|INTERSIL
 argument_list|,
 name|PRISM_GT
@@ -1240,6 +1247,13 @@ argument_list|(
 name|SMC
 argument_list|,
 literal|2862WG
+argument_list|)
+block|,
+name|UPGT_DEV
+argument_list|(
+name|USR
+argument_list|,
+name|USR5422
 argument_list|)
 block|,
 name|UPGT_DEV
@@ -1951,7 +1965,7 @@ name|ifp
 operator|->
 name|if_snd
 argument_list|,
-name|IFQ_MAXLEN
+name|ifqmaxlen
 argument_list|)
 expr_stmt|;
 name|IFQ_SET_READY
@@ -3501,10 +3515,6 @@ name|struct
 name|ieee80211_node
 modifier|*
 name|ni
-init|=
-name|vap
-operator|->
-name|iv_bss
 decl_stmt|;
 name|struct
 name|upgt_data
@@ -3817,6 +3827,15 @@ break|break;
 case|case
 name|IEEE80211_S_RUN
 case|:
+name|ni
+operator|=
+name|ieee80211_ref_node
+argument_list|(
+name|vap
+operator|->
+name|iv_bss
+argument_list|)
+expr_stmt|;
 comment|/* XXX monitor mode isn't tested yet.  */
 if|if
 condition|(
@@ -4007,6 +4026,11 @@ name|UPGT_FILTER_UNKNOWN3
 argument_list|)
 expr_stmt|;
 block|}
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 name|device_printf

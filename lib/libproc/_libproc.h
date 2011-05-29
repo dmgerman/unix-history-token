@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<rtld_db.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"libproc.h"
 end_include
 
@@ -59,9 +65,71 @@ name|int
 name|status
 decl_stmt|;
 comment|/* Process status (PS_*). */
+name|int
+name|wstat
+decl_stmt|;
+comment|/* Process wait status. */
+name|rd_agent_t
+modifier|*
+name|rdap
+decl_stmt|;
+comment|/* librtld_db agent */
+name|rd_loadobj_t
+modifier|*
+name|rdobjs
+decl_stmt|;
+name|size_t
+name|rdobjsz
+decl_stmt|;
+name|size_t
+name|nobjs
+decl_stmt|;
+name|struct
+name|lwpstatus
+name|lwps
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DPRINTF
+parameter_list|(
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+value|warn(fmt, __VA_ARGS__)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DPRINTF
+parameter_list|(
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

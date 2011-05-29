@@ -496,7 +496,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create object from file, return created obj upon success, or NULL  * when an error occurs or the member is not newer than existing  * one while -u is specifed.  */
+comment|/*  * Create object from file, return created obj upon success, or NULL  * when an error occurs or the member is not newer than existing  * one while -u is specified.  */
 end_comment
 
 begin_function
@@ -816,6 +816,45 @@ condition|)
 goto|goto
 name|giveup
 goto|;
+comment|/* 	 * When option '-D' is specified, mtime and UID / GID from the file 	 * will be replaced with 0, and file mode with 644. This ensures that  	 * checksums will match for two archives containing the exact same 	 * files. 	 */
+if|if
+condition|(
+name|bsdar
+operator|->
+name|options
+operator|&
+name|AR_D
+condition|)
+block|{
+name|obj
+operator|->
+name|uid
+operator|=
+literal|0
+expr_stmt|;
+name|obj
+operator|->
+name|gid
+operator|=
+literal|0
+expr_stmt|;
+name|obj
+operator|->
+name|mtime
+operator|=
+literal|0
+expr_stmt|;
+name|obj
+operator|->
+name|md
+operator|=
+name|S_IFREG
+operator||
+literal|0644
+expr_stmt|;
+block|}
+else|else
+block|{
 name|obj
 operator|->
 name|uid
@@ -834,12 +873,21 @@ name|st_gid
 expr_stmt|;
 name|obj
 operator|->
+name|mtime
+operator|=
+name|sb
+operator|.
+name|st_mtime
+expr_stmt|;
+name|obj
+operator|->
 name|md
 operator|=
 name|sb
 operator|.
 name|st_mode
 expr_stmt|;
+block|}
 name|obj
 operator|->
 name|size
@@ -847,14 +895,6 @@ operator|=
 name|sb
 operator|.
 name|st_size
-expr_stmt|;
-name|obj
-operator|->
-name|mtime
-operator|=
-name|sb
-operator|.
-name|st_mtime
 expr_stmt|;
 name|obj
 operator|->
@@ -1074,7 +1114,7 @@ name|obj
 operator|==
 name|pos
 condition|)
-comment|/* 		 * If the object to move happens to be the posistion obj, 		 * or if there is not a pos obj, move it to tail. 		 */
+comment|/* 		 * If the object to move happens to be the position obj, 		 * or if there is not a pos obj, move it to tail. 		 */
 goto|goto
 name|tail
 goto|;
@@ -1229,7 +1269,7 @@ argument_list|,
 literal|"archive_read_new failed"
 argument_list|)
 expr_stmt|;
-name|archive_read_support_compression_all
+name|archive_read_support_compression_none
 argument_list|(
 name|a
 argument_list|)
@@ -1338,16 +1378,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * Remember the compression mode of existing archive. 		 * If neither -j nor -z is specified, this mode will 		 * be used for resulting archive. 		 */
-name|bsdar
-operator|->
-name|compression
-operator|=
-name|archive_compression
-argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
 name|name
 operator|=
 name|archive_entry_pathname
@@ -1796,13 +1826,6 @@ name|sb
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* By default, no compression is assumed. */
-name|bsdar
-operator|->
-name|compression
-operator|=
-name|ARCHIVE_COMPRESSION_NONE
-expr_stmt|;
 comment|/* 	 * Test if the specified archive exists, to figure out 	 * whether we are creating one here. 	 */
 if|if
 condition|(
@@ -1937,7 +1960,7 @@ operator|==
 literal|'A'
 condition|)
 block|{
-comment|/* 		 * Read objects from the target archive of ADDLIB command. 		 * If there are members spcified in argv, read those members 		 * only, otherwise the entire archive will be read. 		 */
+comment|/* 		 * Read objects from the target archive of ADDLIB command. 		 * If there are members specified in argv, read those members 		 * only, otherwise the entire archive will be read. 		 */
 name|read_objs
 argument_list|(
 name|bsdar
@@ -2001,7 +2024,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* 		 * If can't find `pos' specified by user, 		 * sliently insert objects at tail. 		 */
+comment|/* 		 * If can't find `pos' specified by user, 		 * silently insert objects at tail. 		 */
 if|if
 condition|(
 name|pos
@@ -2927,63 +2950,6 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
-comment|/* The compression mode of the existing archive is used 	 * for the result archive or if creating a new archive, we 	 * do not compress archive by default. This default behavior can 	 * be overrided by compression mode specified explicitly 	 * through command line option `-j' or `-z'. 	 */
-if|if
-condition|(
-name|bsdar
-operator|->
-name|options
-operator|&
-name|AR_J
-condition|)
-name|bsdar
-operator|->
-name|compression
-operator|=
-name|ARCHIVE_COMPRESSION_BZIP2
-expr_stmt|;
-if|if
-condition|(
-name|bsdar
-operator|->
-name|options
-operator|&
-name|AR_Z
-condition|)
-name|bsdar
-operator|->
-name|compression
-operator|=
-name|ARCHIVE_COMPRESSION_GZIP
-expr_stmt|;
-if|if
-condition|(
-name|bsdar
-operator|->
-name|compression
-operator|==
-name|ARCHIVE_COMPRESSION_BZIP2
-condition|)
-name|archive_write_set_compression_bzip2
-argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|bsdar
-operator|->
-name|compression
-operator|==
-name|ARCHIVE_COMPRESSION_GZIP
-condition|)
-name|archive_write_set_compression_gzip
-argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
-else|else
 name|archive_write_set_compression_none
 argument_list|(
 name|a
@@ -3040,6 +3006,18 @@ argument_list|,
 literal|"/"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|bsdar
+operator|->
+name|options
+operator|&
+name|AR_D
+operator|)
+operator|==
+literal|0
+condition|)
 name|archive_entry_set_mtime
 argument_list|(
 name|entry
@@ -3458,7 +3436,7 @@ operator|!=
 name|ELF_K_ELF
 condition|)
 block|{
-comment|/* Sliently ignore non-elf member. */
+comment|/* Silently ignore non-elf member. */
 name|elf_end
 argument_list|(
 name|e

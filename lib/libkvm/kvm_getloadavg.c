@@ -110,6 +110,9 @@ index|[]
 init|=
 block|{
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_averunnable"
 block|}
 block|,
@@ -118,6 +121,9 @@ directive|define
 name|X_AVERUNNABLE
 value|0
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_fscale"
 block|}
 block|,
@@ -126,6 +132,9 @@ directive|define
 name|X_FSCALE
 value|1
 block|{
+operator|.
+name|n_name
+operator|=
 literal|""
 block|}
 block|, }
@@ -140,23 +149,17 @@ begin_function
 name|int
 name|kvm_getloadavg
 parameter_list|(
-name|kd
-parameter_list|,
-name|loadavg
-parameter_list|,
-name|nelem
-parameter_list|)
 name|kvm_t
 modifier|*
 name|kd
-decl_stmt|;
+parameter_list|,
 name|double
 name|loadavg
 index|[]
-decl_stmt|;
+parameter_list|,
 name|int
 name|nelem
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|loadavg
@@ -318,6 +321,10 @@ name|MIN
 argument_list|(
 name|nelem
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|loadinfo
@@ -328,6 +335,7 @@ operator|/
 sizeof|sizeof
 argument_list|(
 name|fixpt_t
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;

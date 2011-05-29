@@ -51,6 +51,7 @@ name|char
 modifier|*
 name|out
 parameter_list|,
+specifier|const
 name|CAST_KEY
 modifier|*
 name|ks

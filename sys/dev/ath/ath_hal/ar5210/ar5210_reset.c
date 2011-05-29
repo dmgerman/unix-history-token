@@ -2456,6 +2456,7 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
+block|{
 name|HALDEBUG
 argument_list|(
 name|ah
@@ -2467,6 +2468,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Rewrite our AGC values we stored off earlier (return AGC to normal operation) */
 name|OS_REG_WRITE
 argument_list|(

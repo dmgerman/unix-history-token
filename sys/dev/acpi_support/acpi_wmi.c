@@ -740,6 +740,21 @@ argument_list|,
 name|acpi_wmi_detach
 argument_list|)
 block|,
+comment|/* bus interface */
+name|DEVMETHOD
+argument_list|(
+name|bus_add_child
+argument_list|,
+name|bus_generic_add_child
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_print_child
+argument_list|,
+name|bus_generic_print_child
+argument_list|)
+block|,
 comment|/* acpi_wmi interface */
 name|DEVMETHOD
 argument_list|(
@@ -878,8 +893,6 @@ index|[]
 init|=
 block|{
 literal|"PNP0C14"
-block|,
-literal|"PNP0c14"
 block|,
 name|NULL
 block|}
@@ -1238,6 +1251,26 @@ argument_list|(
 name|acpi_wmi
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+condition|)
+block|{
+name|bus_generic_probe
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+name|bus_generic_attach
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|ret

@@ -1,22 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generic BFD support for file formats.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generic BFD support for file formats.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1999, 2000, 2001, 2002,    2003, 2005, 2007 Free Software Foundation, Inc.    Written by Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
-comment|/* SECTION 	File formats  	A format is a BFD concept of high level file contents type. The 	formats supported by BFD are:  	o<<bfd_object>>  	The BFD may contain data, symbols, relocations and debug info.  	o<<bfd_archive>>  	The BFD contains other BFDs and an optional index.  	o<<bfd_core>>  	The BFD contains the result of an executable core dump.  */
+comment|/* SECTION 	File formats  	A format is a BFD concept of high level file contents type. The 	formats supported by BFD are:  	o<<bfd_object>>  	The BFD may contain data, symbols, relocations and debug info.  	o<<bfd_archive>>  	The BFD contains other BFDs and an optional index.  	o<<bfd_core>>  	The BFD contains the result of an executable core dump.  SUBSECTION 	File format functions */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"bfd.h"
-end_include
 
 begin_include
 include|#
 directive|include
 file|"sysdep.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bfd.h"
 end_include
 
 begin_include
@@ -317,6 +317,21 @@ argument_list|(
 name|matching_vector
 argument_list|)
 expr_stmt|;
+comment|/* If the file was opened for update, then `output_has_begun' 	     some time ago when the file was created.  Do not recompute 	     sections sizes or alignments in _bfd_set_section_contents. 	     We can not set this flag until after checking the format, 	     because it will interfere with creation of BFD sections.  */
+if|if
+condition|(
+name|abfd
+operator|->
+name|direction
+operator|==
+name|both_direction
+condition|)
+name|abfd
+operator|->
+name|output_has_begun
+operator|=
+name|TRUE
+expr_stmt|;
 return|return
 name|TRUE
 return|;
@@ -389,6 +404,7 @@ decl_stmt|;
 name|bfd_error_type
 name|err
 decl_stmt|;
+comment|/* Don't check the default target twice.  */
 if|if
 condition|(
 operator|*
@@ -396,6 +412,18 @@ name|target
 operator|==
 operator|&
 name|binary_vec
+operator|||
+operator|(
+operator|!
+name|abfd
+operator|->
+name|target_defaulted
+operator|&&
+operator|*
+name|target
+operator|==
+name|save_targ
+operator|)
 condition|)
 continue|continue;
 name|abfd
@@ -496,13 +524,6 @@ expr_stmt|;
 name|match_count
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|GNU960
-comment|/* Big- and little-endian b.out archives look the same, but it 	     doesn't matter: there is no difference in their headers, and 	     member file byte orders will (I hope) be handled appropriately 	     by bfd.  Ditto for big and little coff archives.  And the 4 	     coff/b.out object formats are unambiguous.  So accept the 	     first match we find.  */
-break|break;
-endif|#
-directive|endif
 block|}
 elseif|else
 if|if
@@ -742,6 +763,21 @@ name|free
 argument_list|(
 name|matching_vector
 argument_list|)
+expr_stmt|;
+comment|/* If the file was opened for update, then `output_has_begun' 	 some time ago when the file was created.  Do not recompute 	 sections sizes or alignments in _bfd_set_section_contents. 	 We can not set this flag until after checking the format, 	 because it will interfere with creation of BFD sections.  */
+if|if
+condition|(
+name|abfd
+operator|->
+name|direction
+operator|==
+name|both_direction
+condition|)
+name|abfd
+operator|->
+name|output_has_begun
+operator|=
+name|TRUE
 expr_stmt|;
 return|return
 name|TRUE

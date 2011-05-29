@@ -2058,6 +2058,9 @@ decl_stmt|;
 name|u_int
 name|tags
 decl_stmt|;
+name|u_int
+name|caps
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2110,6 +2113,12 @@ name|cam_path
 modifier|*
 name|path
 decl_stmt|;
+name|struct
+name|cdev
+modifier|*
+name|led
+decl_stmt|;
+comment|/* Activity led led(4) cdev. */
 name|int
 name|quirks
 decl_stmt|;
@@ -2179,9 +2188,9 @@ comment|/* Number of tagged slots */
 name|int
 name|numhslots
 decl_stmt|;
-comment|/* Number of holden slots */
+comment|/* Number of held slots */
 name|int
-name|readlog
+name|recoverycmd
 decl_stmt|;
 comment|/* Our READ LOG active */
 name|int

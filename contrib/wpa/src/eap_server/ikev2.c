@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"dh_groups.h"
+file|"crypto/dh_groups.h"
 end_include
 
 begin_include

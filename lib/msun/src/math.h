@@ -431,7 +431,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|((sizeof (x) == sizeof (float)) ? isnanf(x)		\     : (sizeof (x) == sizeof (double)) ? isnan(x)	\     : __isnanl(x))
+value|((sizeof (x) == sizeof (float)) ? __isnanf(x)	\     : (sizeof (x) == sizeof (double)) ? isnan(x)	\     : __isnanl(x))
 end_define
 
 begin_define
@@ -961,6 +961,16 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|__isnanf
+argument_list|(
+name|float
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|__isnanl
 argument_list|(
 name|long
@@ -1437,6 +1447,15 @@ end_function_decl
 begin_function_decl
 name|double
 name|log1p
+parameter_list|(
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|double
+name|log2
 parameter_list|(
 name|double
 parameter_list|)
@@ -2052,6 +2071,15 @@ end_function_decl
 begin_function_decl
 name|float
 name|log1pf
+parameter_list|(
+name|float
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|float
+name|log2f
 parameter_list|(
 name|float
 parameter_list|)
@@ -2697,17 +2725,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|long double	cbrtl(long double);
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+name|long
+name|double
+name|cbrtl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|long

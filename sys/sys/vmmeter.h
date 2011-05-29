@@ -16,6 +16,17 @@ name|_SYS_VMMETER_H_
 end_define
 
 begin_comment
+comment|/*  * This value is used by ps(1) to change sleep state flag from 'S' to  * 'I' and by the sched process to set the alarm clock.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXSLP
+value|20
+end_define
+
+begin_comment
 comment|/*  * System wide statistics counters.  * Locking:  *      a - locked by atomic operations  *      c - constant after initialization  *      f - locked by vm_page_queue_free_mtx  *      p - locked by being in the PCPU and atomicity respect to interrupts  *      q - locked by vm_page_queue_mtx  */
 end_comment
 
@@ -116,7 +127,7 @@ comment|/* (q) pages analyzed by daemon */
 name|u_int
 name|v_tcached
 decl_stmt|;
-comment|/* (q) total pages cached */
+comment|/* (p) total pages cached */
 name|u_int
 name|v_dfree
 decl_stmt|;
@@ -124,7 +135,7 @@ comment|/* (q) pages freed by daemon */
 name|u_int
 name|v_pfree
 decl_stmt|;
-comment|/* (q) pages freed by exiting processes */
+comment|/* (p) pages freed by exiting processes */
 name|u_int
 name|v_tfree
 decl_stmt|;

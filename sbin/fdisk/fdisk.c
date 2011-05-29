@@ -140,8 +140,29 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|NOSECTORS
+name|NO_DISK_SECTORS
 value|((u_int32_t)-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO_TRACK_CYLINDERS
+value|1023
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO_TRACK_HEADS
+value|255
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO_TRACK_SECTORS
+value|63
 end_define
 
 begin_define
@@ -175,8 +196,10 @@ parameter_list|,
 name|ans
 parameter_list|,
 name|tmp
+parameter_list|,
+name|maxval
 parameter_list|)
-value|if (decimal(str,&tmp, ans)) ans = tmp
+value|if (decimal(str,&tmp, ans, maxval)) ans = tmp
 end_define
 
 begin_define
@@ -1393,6 +1416,9 @@ name|num
 parameter_list|,
 name|int
 name|deflt
+parameter_list|,
+name|uint32_t
+name|maxval
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3004,6 +3030,8 @@ operator|->
 name|dp_typ
 argument_list|,
 name|tmp
+argument_list|,
+literal|255
 argument_list|)
 expr_stmt|;
 name|Decimal
@@ -3015,6 +3043,8 @@ operator|->
 name|dp_start
 argument_list|,
 name|tmp
+argument_list|,
+name|NO_DISK_SECTORS
 argument_list|)
 expr_stmt|;
 name|Decimal
@@ -3026,6 +3056,8 @@ operator|->
 name|dp_size
 argument_list|,
 name|tmp
+argument_list|,
+name|NO_DISK_SECTORS
 argument_list|)
 expr_stmt|;
 if|if
@@ -3099,6 +3131,8 @@ argument_list|,
 name|tcyl
 argument_list|,
 name|tmp
+argument_list|,
+name|NO_TRACK_CYLINDERS
 argument_list|)
 expr_stmt|;
 name|Decimal
@@ -3108,6 +3142,8 @@ argument_list|,
 name|thd
 argument_list|,
 name|tmp
+argument_list|,
+name|NO_TRACK_HEADS
 argument_list|)
 expr_stmt|;
 name|Decimal
@@ -3117,6 +3153,8 @@ argument_list|,
 name|tsec
 argument_list|,
 name|tmp
+argument_list|,
+name|NO_TRACK_SECTORS
 argument_list|)
 expr_stmt|;
 name|partp
@@ -3180,6 +3218,8 @@ argument_list|,
 name|tcyl
 argument_list|,
 name|tmp
+argument_list|,
+name|NO_TRACK_CYLINDERS
 argument_list|)
 expr_stmt|;
 name|Decimal
@@ -3189,6 +3229,8 @@ argument_list|,
 name|thd
 argument_list|,
 name|tmp
+argument_list|,
+name|NO_TRACK_HEADS
 argument_list|)
 expr_stmt|;
 name|Decimal
@@ -3198,6 +3240,8 @@ argument_list|,
 name|tsec
 argument_list|,
 name|tmp
+argument_list|,
+name|NO_TRACK_SECTORS
 argument_list|)
 expr_stmt|;
 name|partp
@@ -3454,6 +3498,8 @@ argument_list|,
 name|new
 argument_list|,
 name|tmp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3584,6 +3630,8 @@ argument_list|,
 name|dos_cyls
 argument_list|,
 name|tmp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|Decimal
@@ -3593,6 +3641,8 @@ argument_list|,
 name|dos_heads
 argument_list|,
 name|tmp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|Decimal
@@ -3602,6 +3652,8 @@ argument_list|,
 name|dos_sectors
 argument_list|,
 name|tmp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|dos_cylsecs
@@ -4845,13 +4897,18 @@ name|num
 parameter_list|,
 name|int
 name|deflt
+parameter_list|,
+name|uint32_t
+name|maxval
 parameter_list|)
 block|{
-name|int
+name|long
+name|long
 name|acc
 init|=
 literal|0
-decl_stmt|,
+decl_stmt|;
+name|int
 name|c
 decl_stmt|;
 name|char
@@ -4971,6 +5028,17 @@ name|c
 operator|>=
 literal|'0'
 condition|)
+block|{
+if|if
+condition|(
+name|maxval
+operator|>
+literal|0
+operator|&&
+name|acc
+operator|<=
+name|maxval
+condition|)
 name|acc
 operator|=
 name|acc
@@ -4981,6 +5049,7 @@ name|c
 operator|-
 literal|'0'
 expr_stmt|;
+block|}
 else|else
 break|break;
 block|}
@@ -5022,6 +5091,33 @@ operator|!
 name|c
 condition|)
 block|{
+if|if
+condition|(
+name|maxval
+operator|>
+literal|0
+operator|&&
+name|acc
+operator|>
+name|maxval
+condition|)
+block|{
+name|acc
+operator|=
+name|maxval
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s exceeds maximum value allowed for "
+literal|"this field. The value has been reduced "
+literal|"to %lld\n"
+argument_list|,
+name|lbuf
+argument_list|,
+name|acc
+argument_list|)
+expr_stmt|;
+block|}
 operator|*
 name|num
 operator|=
@@ -5680,7 +5776,7 @@ name|str
 argument_list|)
 expr_stmt|;
 return|return
-name|NOSECTORS
+name|NO_DISK_SECTORS
 return|;
 block|}
 if|if
@@ -5744,7 +5840,7 @@ name|end
 argument_list|)
 expr_stmt|;
 return|return
-name|NOSECTORS
+name|NO_DISK_SECTORS
 return|;
 block|}
 return|return
@@ -6036,7 +6132,7 @@ name|partp
 operator|->
 name|dp_start
 operator|==
-name|NOSECTORS
+name|NO_DISK_SECTORS
 condition|)
 break|break;
 block|}
@@ -6129,7 +6225,7 @@ name|partp
 operator|->
 name|dp_size
 operator|==
-name|NOSECTORS
+name|NO_DISK_SECTORS
 condition|)
 break|break;
 block|}
@@ -7190,7 +7286,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Try figuring out the root device's canonical disk name.  * The following choices are considered:  *   /dev/ad0s1a     => /dev/ad0  *   /dev/da0a       => /dev/da0  *   /dev/vinum/root => /dev/vinum/root  */
+comment|/*  * Try figuring out the root device's canonical disk name.  * The following choices are considered:  *   /dev/ad0s1a     => /dev/ad0  *   /dev/da0a       => /dev/da0  *   /dev/vinum/root => /dev/vinum/root  * A ".eli" part is removed if it exists (see geli(8)).  * A ".journal" ending is removed if it exists (see gjournal(8)).  */
 end_comment
 
 begin_function
@@ -7220,6 +7316,11 @@ name|NMATCHES
 index|]
 decl_stmt|;
 name|char
+name|dev
+index|[
+name|PATH_MAX
+index|]
+decl_stmt|,
 modifier|*
 name|s
 decl_stmt|;
@@ -7256,7 +7357,7 @@ argument_list|(
 operator|&
 name|re
 argument_list|,
-literal|"^(/dev/[a-z/]+[0-9]+)([sp][0-9]+)?[a-h]?$"
+literal|"^(/dev/[a-z/]+[0-9]*)([sp][0-9]+)?[a-h]?(\\.journal)?$"
 argument_list|,
 name|REG_EXTENDED
 argument_list|)
@@ -7273,6 +7374,53 @@ argument_list|,
 name|rv
 argument_list|)
 expr_stmt|;
+name|strlcpy
+argument_list|(
+name|dev
+argument_list|,
+name|rootfs
+operator|.
+name|f_mntfromname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|s
+operator|=
+name|strstr
+argument_list|(
+name|dev
+argument_list|,
+literal|".eli"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|memmove
+argument_list|(
+name|s
+argument_list|,
+name|s
+operator|+
+literal|4
+argument_list|,
+name|strlen
+argument_list|(
+name|s
+operator|+
+literal|4
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -7283,9 +7431,7 @@ argument_list|(
 operator|&
 name|re
 argument_list|,
-name|rootfs
-operator|.
-name|f_mntfromname
+name|dev
 argument_list|,
 name|NMATCHES
 argument_list|,

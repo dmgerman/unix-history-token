@@ -169,11 +169,6 @@ value|0x04
 comment|/* needs user structure */
 define|#
 directive|define
-name|DSIZ
-value|0x08
-comment|/* field size is dynamic*/
-define|#
-directive|define
 name|INF127
 value|0x10
 comment|/* values>127 displayed as 127 */
@@ -196,7 +191,7 @@ name|varent
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* sizing routine*/
+comment|/* sizing routine */
 name|int
 function_decl|(
 modifier|*

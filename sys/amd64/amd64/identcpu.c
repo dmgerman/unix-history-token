@@ -221,8 +221,106 @@ literal|"amd64"
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SCTL_MASK32
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|adaptive_machine_arch
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+name|int
+name|sysctl_hw_machine
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|SCTL_MASK32
+specifier|static
+specifier|const
+name|char
+name|machine32
+index|[]
+init|=
+literal|"i386"
+decl_stmt|;
+endif|#
+directive|endif
+name|int
+name|error
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SCTL_MASK32
+if|if
+condition|(
+operator|(
+name|req
+operator|->
+name|flags
+operator|&
+name|SCTL_MASK32
+operator|)
+operator|!=
+literal|0
+operator|&&
+name|adaptive_machine_arch
+condition|)
+name|error
+operator|=
+name|SYSCTL_OUT
+argument_list|(
+name|req
+argument_list|,
+name|machine32
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|machine32
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
+name|error
+operator|=
+name|SYSCTL_OUT
+argument_list|(
+name|req
+argument_list|,
+name|machine
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|machine
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
+
 begin_expr_stmt
-name|SYSCTL_STRING
+name|SYSCTL_PROC
 argument_list|(
 name|_hw
 argument_list|,
@@ -230,11 +328,17 @@ name|HW_MACHINE
 argument_list|,
 name|machine
 argument_list|,
+name|CTLTYPE_STRING
+operator||
 name|CTLFLAG_RD
 argument_list|,
-name|machine
+name|NULL
 argument_list|,
 literal|0
+argument_list|,
+name|sysctl_hw_machine
+argument_list|,
+literal|"A"
 argument_list|,
 literal|"Machine class"
 argument_list|)
@@ -298,6 +402,13 @@ literal|"CPU instruction clock rate"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|eventhandler_tag
+name|tsc_post_tag
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -632,6 +743,13 @@ block|{
 case|case
 name|CPUCLASS_K8
 case|:
+if|if
+condition|(
+name|tsc_freq
+operator|!=
+literal|0
+condition|)
+block|{
 name|hw_clockrate
 operator|=
 operator|(
@@ -673,6 +791,7 @@ operator|%
 literal|100
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"K8"
@@ -732,13 +851,34 @@ condition|)
 block|{
 name|printf
 argument_list|(
+literal|"  Family = %x"
+argument_list|,
+name|CPUID_TO_FAMILY
+argument_list|(
+name|cpu_id
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  Model = %x"
+argument_list|,
+name|CPUID_TO_MODEL
+argument_list|(
+name|cpu_id
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"  Stepping = %u"
 argument_list|,
 name|cpu_id
 operator|&
-literal|0xf
+name|CPUID_STEPPING
 argument_list|)
 expr_stmt|;
+comment|/* 		 * AMD CPUID Specification 		 * http://support.amd.com/us/Embedded_TechDocs/25481.pdf 		 * 		 * Intel Processor Identification and CPUID Instruction 		 * http://www.intel.com/assets/pdf/appnote/241618.pdf 		 */
 if|if
 condition|(
 name|cpu_high
@@ -835,7 +975,8 @@ argument_list|,
 literal|"\020"
 literal|"\001SSE3"
 comment|/* SSE3 */
-literal|"\002<b1>"
+literal|"\002PCLMULQDQ"
+comment|/* Carry-Less Mul Quadword */
 literal|"\003DTES64"
 comment|/* 64-bit Debug Trace */
 literal|"\004MON"
@@ -855,7 +996,8 @@ comment|/* SSSE3 */
 literal|"\013CNXT-ID"
 comment|/* L1 context ID available */
 literal|"\014<b11>"
-literal|"\015<b12>"
+literal|"\015FMA"
+comment|/* Fused Multiply Add */
 literal|"\016CX16"
 comment|/* CMPXCHG16B Instruction */
 literal|"\017xTPR"
@@ -863,27 +1005,38 @@ comment|/* Send Task Priority Messages*/
 literal|"\020PDCM"
 comment|/* Perf/Debug Capability MSR */
 literal|"\021<b16>"
-literal|"\022<b17>"
+literal|"\022PCID"
+comment|/* Process-context Identifiers*/
 literal|"\023DCA"
 comment|/* Direct Cache Access */
 literal|"\024SSE4.1"
+comment|/* SSE 4.1 */
 literal|"\025SSE4.2"
+comment|/* SSE 4.2 */
 literal|"\026x2APIC"
 comment|/* xAPIC Extensions */
 literal|"\027MOVBE"
+comment|/* MOVBE Instruction */
 literal|"\030POPCNT"
-literal|"\031<b24>"
-literal|"\032<b25>"
+comment|/* POPCNT Instruction */
+literal|"\031TSCDLT"
+comment|/* TSC-Deadline Timer */
+literal|"\032AESNI"
+comment|/* AES Crypto */
 literal|"\033XSAVE"
+comment|/* XSAVE/XRSTOR States */
 literal|"\034OSXSAVE"
-literal|"\035<b28>"
-literal|"\036<b29>"
+comment|/* OS-Enabled State Management*/
+literal|"\035AVX"
+comment|/* Advanced Vector Extensions */
+literal|"\036F16C"
+comment|/* Half-precision conversions */
 literal|"\037<b30>"
-literal|"\040<b31>"
+literal|"\040HV"
+comment|/* Hypervisor */
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * AMD64 Architecture Programmer's Manual Volume 3: 			 * General-Purpose and System Instructions 			 * http://www.amd.com/us-en/assets/content_type/white_papers_and_tech_docs/24594.pdf 			 * 			 * IA-32 Intel Architecture Software Developer's Manual, 			 * Volume 2A: Instruction Set Reference, A-M 			 * ftp://download.intel.com/design/Pentium4/manuals/25366617.pdf 			 */
 if|if
 condition|(
 name|amd_feature
@@ -1002,21 +1155,26 @@ literal|"\012OSVW"
 comment|/* OS visible workaround */
 literal|"\013IBS"
 comment|/* Instruction based sampling */
-literal|"\014SSE5"
-comment|/* SSE5 */
+literal|"\014XOP"
+comment|/* XOP extended instructions */
 literal|"\015SKINIT"
 comment|/* SKINIT/STGI */
 literal|"\016WDT"
 comment|/* Watchdog timer */
 literal|"\017<b14>"
-literal|"\020<b15>"
-literal|"\021<b16>"
+literal|"\020LWP"
+comment|/* Lightweight Profiling */
+literal|"\021FMA4"
+comment|/* 4-operand FMA instructions */
 literal|"\022<b17>"
 literal|"\023<b18>"
-literal|"\024<b19>"
+literal|"\024NodeId"
+comment|/* NodeId MSR support */
 literal|"\025<b20>"
-literal|"\026<b21>"
-literal|"\027<b22>"
+literal|"\026TBM"
+comment|/* Trailing Bit Manipulation */
+literal|"\027Topology"
+comment|/* Topology Extensions */
 literal|"\030<b23>"
 literal|"\031<b24>"
 literal|"\032<b25>"
@@ -1031,9 +1189,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|cpu_vendor_id
-operator|==
-name|CPU_VENDOR_CENTAUR
+name|via_feature_rng
+operator|!=
+literal|0
+operator|||
+name|via_feature_xcrypt
+operator|!=
+literal|0
 condition|)
 name|print_via_padlock_info
 argument_list|()
@@ -1056,131 +1218,26 @@ operator|~
 name|CPUID_HTT
 expr_stmt|;
 comment|/* 			 * If this CPU supports P-state invariant TSC then 			 * mention the capability. 			 */
-switch|switch
+if|if
 condition|(
-name|cpu_vendor_id
+name|tsc_is_invariant
 condition|)
 block|{
-case|case
-name|CPU_VENDOR_AMD
-case|:
-if|if
-condition|(
-operator|(
-name|amd_pminfo
-operator|&
-name|AMDPM_TSC_INVARIANT
-operator|)
-operator|||
-name|CPUID_TO_FAMILY
-argument_list|(
-name|cpu_id
-argument_list|)
-operator|>=
-literal|0x10
-operator|||
-name|cpu_id
-operator|==
-literal|0x60fb2
-condition|)
-name|tsc_is_invariant
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-name|CPU_VENDOR_INTEL
-case|:
-if|if
-condition|(
-operator|(
-name|amd_pminfo
-operator|&
-name|AMDPM_TSC_INVARIANT
-operator|)
-operator|||
-operator|(
-name|CPUID_TO_FAMILY
-argument_list|(
-name|cpu_id
-argument_list|)
-operator|==
-literal|0x6
-operator|&&
-name|CPUID_TO_MODEL
-argument_list|(
-name|cpu_id
-argument_list|)
-operator|>=
-literal|0xe
-operator|)
-operator|||
-operator|(
-name|CPUID_TO_FAMILY
-argument_list|(
-name|cpu_id
-argument_list|)
-operator|==
-literal|0xf
-operator|&&
-name|CPUID_TO_MODEL
-argument_list|(
-name|cpu_id
-argument_list|)
-operator|>=
-literal|0x3
-operator|)
-condition|)
-name|tsc_is_invariant
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-name|CPU_VENDOR_CENTAUR
-case|:
-if|if
-condition|(
-name|CPUID_TO_FAMILY
-argument_list|(
-name|cpu_id
-argument_list|)
-operator|==
-literal|0x6
-operator|&&
-name|CPUID_TO_MODEL
-argument_list|(
-name|cpu_id
-argument_list|)
-operator|>=
-literal|0xf
-operator|&&
-operator|(
-name|rdmsr
-argument_list|(
-literal|0x1203
-argument_list|)
-operator|&
-literal|0x100000000ULL
-operator|)
-operator|==
-literal|0
-condition|)
-name|tsc_is_invariant
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-block|}
-if|if
-condition|(
-name|tsc_is_invariant
-condition|)
 name|printf
 argument_list|(
 literal|"\n  TSC: P-state invariant"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tsc_perf_stat
+condition|)
+name|printf
+argument_list|(
+literal|", performance statistics"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* Avoid ugly blank lines: only print newline when we have to. */
@@ -1269,6 +1326,7 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
+name|__unused
 parameter_list|,
 specifier|const
 name|struct
@@ -1280,14 +1338,12 @@ name|int
 name|status
 parameter_list|)
 block|{
-comment|/* 	 * If there was an error during the transition or 	 * TSC is P-state invariant, don't do anything. 	 */
+comment|/* If there was an error during the transition, don't do anything. */
 if|if
 condition|(
 name|status
 operator|!=
 literal|0
-operator|||
-name|tsc_is_invariant
 condition|)
 return|return;
 comment|/* Total setting for this level gives the new frequency in MHz. */
@@ -1302,8 +1358,25 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
-name|EVENTHANDLER_DEFINE
+begin_function
+specifier|static
+name|void
+name|hook_tsc_freq
+parameter_list|(
+name|void
+modifier|*
+name|arg
+name|__unused
+parameter_list|)
+block|{
+if|if
+condition|(
+name|tsc_is_invariant
+condition|)
+return|return;
+name|tsc_post_tag
+operator|=
+name|EVENTHANDLER_REGISTER
 argument_list|(
 name|cpufreq_post_change
 argument_list|,
@@ -1312,6 +1385,23 @@ argument_list|,
 name|NULL
 argument_list|,
 name|EVENTHANDLER_PRI_ANY
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|hook_tsc_freq
+argument_list|,
+name|SI_SUB_CONFIGURE
+argument_list|,
+name|SI_ORDER_ANY
+argument_list|,
+name|hook_tsc_freq
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2372,57 +2462,6 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* Check for supported models. */
-switch|switch
-condition|(
-name|cpu_id
-operator|&
-literal|0xff0
-condition|)
-block|{
-case|case
-literal|0x690
-case|:
-if|if
-condition|(
-operator|(
-name|cpu_id
-operator|&
-literal|0xf
-operator|)
-operator|<
-literal|3
-condition|)
-return|return;
-case|case
-literal|0x6a0
-case|:
-case|case
-literal|0x6d0
-case|:
-case|case
-literal|0x6f0
-case|:
-break|break;
-default|default:
-return|return;
-block|}
-name|do_cpuid
-argument_list|(
-literal|0xc0000000
-argument_list|,
-name|regs
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|regs
-index|[
-literal|0
-index|]
-operator|>=
-literal|0xc0000001
-condition|)
 name|do_cpuid
 argument_list|(
 literal|0xc0000001
@@ -2430,8 +2469,6 @@ argument_list|,
 name|regs
 argument_list|)
 expr_stmt|;
-else|else
-return|return;
 name|printf
 argument_list|(
 literal|"\n  VIA Padlock Features=0x%b"

@@ -221,12 +221,6 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|__sparc64__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
 name|__arm__
 argument_list|)
 operator|&&

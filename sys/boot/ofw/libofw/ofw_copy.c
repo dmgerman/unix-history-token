@@ -154,6 +154,10 @@ name|last_dest
 operator|+
 name|last_len
 operator|)
+operator|&&
+name|dest
+operator|>=
+name|last_dest
 condition|)
 block|{
 name|nlen
@@ -262,6 +266,14 @@ name|ENOMEM
 operator|)
 return|;
 block|}
+comment|/* 	 * We only do virtual memory management when real_mode is false. 	 */
+if|if
+condition|(
+name|real_mode
+operator|==
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 name|OF_call_method
@@ -334,6 +346,7 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+block|}
 block|}
 name|last_dest
 operator|=

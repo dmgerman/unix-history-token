@@ -1753,12 +1753,8 @@ argument_list|,
 name|siba_pcib_route_interrupt
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
+name|KOBJMETHOD_END
 block|}
-block|, }
 decl_stmt|;
 end_decl_stmt
 

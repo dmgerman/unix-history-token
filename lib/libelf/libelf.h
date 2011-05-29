@@ -154,6 +154,9 @@ name|ELF_T_WORD
 block|,
 name|ELF_T_XWORD
 block|,
+name|ELF_T_GNUHASH
+block|,
+comment|/* GNU style hash tables. */
 name|ELF_T_NUM
 block|}
 name|Elf_Type
@@ -171,7 +174,7 @@ begin_define
 define|#
 directive|define
 name|ELF_T_LAST
-value|ELF_T_XWORD
+value|ELF_T_GNUHASH
 end_define
 
 begin_comment
@@ -681,6 +684,21 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|elf_getphdrnum
+parameter_list|(
+name|Elf
+modifier|*
+name|_elf
+parameter_list|,
+name|size_t
+modifier|*
+name|_dst
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|elf_getphnum
 parameter_list|(
 name|Elf
@@ -693,6 +711,10 @@ name|_dst
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Deprecated */
+end_comment
 
 begin_function_decl
 name|Elf_Scn
@@ -711,7 +733,41 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|elf_getshdrnum
+parameter_list|(
+name|Elf
+modifier|*
+name|_elf
+parameter_list|,
+name|size_t
+modifier|*
+name|_dst
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|elf_getshnum
+parameter_list|(
+name|Elf
+modifier|*
+name|_elf
+parameter_list|,
+name|size_t
+modifier|*
+name|_dst
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Deprecated */
+end_comment
+
+begin_function_decl
+name|int
+name|elf_getshdrstrndx
 parameter_list|(
 name|Elf
 modifier|*
@@ -738,6 +794,10 @@ name|_dst
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Deprecated */
+end_comment
 
 begin_function_decl
 name|unsigned

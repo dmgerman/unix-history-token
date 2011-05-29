@@ -643,7 +643,7 @@ block|{
 comment|/* minimum header length */
 name|IPSTAT_INC
 argument_list|(
-name|ips_badlen
+name|ips_badhlen
 argument_list|)
 expr_stmt|;
 goto|goto

@@ -665,7 +665,7 @@ name|x
 argument_list|,
 name|pk
 argument_list|,
-name|EVP_md5
+name|EVP_sha1
 argument_list|()
 argument_list|)
 condition|)

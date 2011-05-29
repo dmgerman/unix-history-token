@@ -236,6 +236,8 @@ index|[
 name|_1
 index|]
 operator|=
+literal|0x80000000
+expr_stmt|;
 name|L
 index|[
 name|_2

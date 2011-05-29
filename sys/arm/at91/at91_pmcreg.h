@@ -339,7 +339,7 @@ begin_define
 define|#
 directive|define
 name|PMC_SCER_PCK1
-value|(1UL<< 10)
+value|(1UL<< 9)
 end_define
 
 begin_comment
@@ -350,7 +350,7 @@ begin_define
 define|#
 directive|define
 name|PMC_SCER_PCK2
-value|(1UL<< 11)
+value|(1UL<< 10)
 end_define
 
 begin_comment
@@ -361,11 +361,33 @@ begin_define
 define|#
 directive|define
 name|PMC_SCER_PCK3
-value|(1UL<< 12)
+value|(1UL<< 11)
 end_define
 
 begin_comment
 comment|/* PCK3: Programmable Clock out en */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_SCER_UHP_SAM9
+value|(1UL<< 6)
+end_define
+
+begin_comment
+comment|/* UHP: USB Host Port Clock Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_SCER_UDP_SAM9
+value|(1UL<< 7)
+end_define
+
+begin_comment
+comment|/* UDP: USB Device Port Clock Enable */
 end_comment
 
 begin_comment
@@ -449,6 +471,53 @@ end_define
 begin_comment
 comment|/* Main Clock Frequency */
 end_comment
+
+begin_comment
+comment|/* PMC Clock Generator Master Clock Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_MCKR_PDIV
+value|(1<< 12)
+end_define
+
+begin_comment
+comment|/* SAM9G20 Only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_MCKR_PLLADIV2
+value|(1<< 12)
+end_define
+
+begin_comment
+comment|/* SAM9G45 Only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_MCKR_CSS_MASK
+value|(3<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_MCKR_MDIV_MASK
+value|(3<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_MCKR_PRES_MASK
+value|(7<< 2)
+end_define
 
 begin_comment
 comment|/* PMC Interrupt Enable Register */

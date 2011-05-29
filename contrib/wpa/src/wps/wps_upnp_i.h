@@ -15,6 +15,18 @@ directive|define
 name|WPS_UPNP_I_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"utils/list.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"http.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -91,17 +103,16 @@ name|UPNP_WPS_DEVICE_EVENT_FILE
 value|"wps_event"
 end_define
 
-begin_struct_decl
-struct_decl|struct
-name|web_connection
-struct_decl|;
-end_struct_decl
+begin_define
+define|#
+directive|define
+name|MULTICAST_MAX_READ
+value|1600
+end_define
 
-begin_struct_decl
-struct_decl|struct
-name|subscription
-struct_decl|;
-end_struct_decl
+begin_comment
+comment|/* max bytes we'll read for UPD request */
+end_comment
 
 begin_struct_decl
 struct_decl|struct
@@ -109,56 +120,11 @@ name|upnp_wps_device_sm
 struct_decl|;
 end_struct_decl
 
-begin_enum
-enum|enum
-name|http_reply_code
-block|{
-name|HTTP_OK
-init|=
-literal|200
-block|,
-name|HTTP_BAD_REQUEST
-init|=
-literal|400
-block|,
-name|UPNP_INVALID_ACTION
-init|=
-literal|401
-block|,
-name|UPNP_INVALID_ARGS
-init|=
-literal|402
-block|,
-name|HTTP_PRECONDITION_FAILED
-init|=
-literal|412
-block|,
-name|HTTP_INTERNAL_SERVER_ERROR
-init|=
-literal|500
-block|,
-name|HTTP_UNIMPLEMENTED
-init|=
-literal|501
-block|,
-name|UPNP_ACTION_FAILED
-init|=
-literal|501
-block|,
-name|UPNP_ARG_VALUE_INVALID
-init|=
-literal|600
-block|,
-name|UPNP_ARG_VALUE_OUT_OF_RANGE
-init|=
-literal|601
-block|,
-name|UPNP_OUT_OF_MEMORY
-init|=
-literal|603
-block|}
-enum|;
-end_enum
+begin_struct_decl
+struct_decl|struct
+name|wps_registrar
+struct_decl|;
+end_struct_decl
 
 begin_enum
 enum|enum
@@ -187,23 +153,10 @@ begin_struct
 struct|struct
 name|advertisement_state_machine
 block|{
-comment|/* double-linked list */
 name|struct
-name|advertisement_state_machine
-modifier|*
-name|next
+name|dl_list
+name|list
 decl_stmt|;
-name|struct
-name|advertisement_state_machine
-modifier|*
-name|prev
-decl_stmt|;
-name|struct
-name|upnp_wps_device_sm
-modifier|*
-name|sm
-decl_stmt|;
-comment|/* parent */
 name|enum
 name|advertisement_type_enum
 name|type
@@ -231,23 +184,10 @@ begin_struct
 struct|struct
 name|subscr_addr
 block|{
-comment|/* double linked list */
 name|struct
-name|subscr_addr
-modifier|*
-name|next
+name|dl_list
+name|list
 decl_stmt|;
-name|struct
-name|subscr_addr
-modifier|*
-name|prev
-decl_stmt|;
-name|struct
-name|subscription
-modifier|*
-name|s
-decl_stmt|;
-comment|/* parent */
 name|char
 modifier|*
 name|domain_and_port
@@ -275,16 +215,9 @@ begin_struct
 struct|struct
 name|subscription
 block|{
-comment|/* double linked list */
 name|struct
-name|subscription
-modifier|*
-name|next
-decl_stmt|;
-name|struct
-name|subscription
-modifier|*
-name|prev
+name|dl_list
+name|list
 decl_stmt|;
 name|struct
 name|upnp_wps_device_sm
@@ -309,30 +242,35 @@ index|]
 decl_stmt|;
 comment|/* Linked list of address alternatives (rotate through on failure) */
 name|struct
-name|subscr_addr
-modifier|*
+name|dl_list
 name|addr_list
 decl_stmt|;
-name|int
-name|n_addr
-decl_stmt|;
-comment|/* Number of addresses in list */
 name|struct
-name|wps_event_
-modifier|*
+name|dl_list
 name|event_queue
 decl_stmt|;
 comment|/* Queued event messages. */
-name|int
-name|n_queue
-decl_stmt|;
-comment|/* How many events are queued */
 name|struct
 name|wps_event_
 modifier|*
 name|current_event
 decl_stmt|;
 comment|/* non-NULL if being sent (not in q) 					   */
+comment|/* Information from SetSelectedRegistrar action */
+name|u8
+name|selected_registrar
+decl_stmt|;
+name|u16
+name|dev_password_id
+decl_stmt|;
+name|u16
+name|config_methods
+decl_stmt|;
+name|struct
+name|wps_registrar
+modifier|*
+name|reg
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -372,16 +310,6 @@ name|int
 name|started
 decl_stmt|;
 comment|/* nonzero if we are active */
-name|char
-modifier|*
-name|net_if
-decl_stmt|;
-comment|/* network interface we use */
-name|char
-modifier|*
-name|mac_addr_text
-decl_stmt|;
-comment|/* mac addr of network i.f. we use */
 name|u8
 name|mac_addr
 index|[
@@ -419,47 +347,23 @@ name|advertisement_state_machine
 name|advertisement
 decl_stmt|;
 name|struct
-name|advertisement_state_machine
-modifier|*
+name|dl_list
 name|msearch_replies
 decl_stmt|;
-name|int
-name|n_msearch_replies
-decl_stmt|;
-comment|/* no. of pending M-SEARCH replies */
 name|int
 name|web_port
 decl_stmt|;
 comment|/* our port that others get xml files from */
-name|int
-name|web_sd
-decl_stmt|;
-comment|/* socket to listen for web requests */
-name|int
-name|web_sd_registered
-decl_stmt|;
-comment|/* nonzero if we must cancel registration */
 name|struct
-name|web_connection
+name|http_server
 modifier|*
-name|web_connections
+name|web_srv
 decl_stmt|;
-comment|/* linked list */
-name|int
-name|n_web_connections
-decl_stmt|;
-comment|/* no. of pending web connections */
 comment|/* Note: subscriptions are kept in expiry order */
 name|struct
-name|subscription
-modifier|*
+name|dl_list
 name|subscriptions
 decl_stmt|;
-comment|/* linked list */
-name|int
-name|n_subscriptions
-decl_stmt|;
-comment|/* no of current subscriptions */
 name|int
 name|event_send_all_queued
 decl_stmt|;
@@ -505,6 +409,7 @@ name|upnp_wps_device_sm
 modifier|*
 name|sm
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|callback_urls
@@ -529,18 +434,6 @@ name|uuid
 index|[
 name|UUID_LEN
 index|]
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|subscription_unlink
-parameter_list|(
-name|struct
-name|subscription
-modifier|*
-name|s
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -593,6 +486,33 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|get_netif_info
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|net_if
+parameter_list|,
+name|unsigned
+modifier|*
+name|ip_addr
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|ip_addr_text
+parameter_list|,
+name|u8
+name|mac
+index|[
+name|ETH_ALEN
+index|]
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* wps_upnp_ssdp.c */
 end_comment
@@ -629,6 +549,9 @@ name|struct
 name|upnp_wps_device_sm
 modifier|*
 name|sm
+parameter_list|,
+name|int
+name|send_byebye
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -659,11 +582,31 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ssdp_listener_open
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|add_ssdp_network
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|net_if
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ssdp_open_multicast_sock
+parameter_list|(
+name|u32
+name|ip_addr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -683,18 +626,6 @@ end_function_decl
 begin_comment
 comment|/* wps_upnp_web.c */
 end_comment
-
-begin_function_decl
-name|void
-name|web_connection_stop
-parameter_list|(
-name|struct
-name|web_connection
-modifier|*
-name|c
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|int
@@ -744,18 +675,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|event_delete
-parameter_list|(
-name|struct
-name|wps_event_
-modifier|*
-name|e
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|event_delete_all
 parameter_list|(
 name|struct
@@ -786,6 +705,45 @@ name|struct
 name|upnp_wps_device_sm
 modifier|*
 name|sm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* wps_upnp_ap.c */
+end_comment
+
+begin_function_decl
+name|int
+name|upnp_er_set_selected_registrar
+parameter_list|(
+name|struct
+name|wps_registrar
+modifier|*
+name|reg
+parameter_list|,
+name|struct
+name|subscription
+modifier|*
+name|s
+parameter_list|,
+specifier|const
+name|struct
+name|wpabuf
+modifier|*
+name|msg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|upnp_er_remove_notification
+parameter_list|(
+name|struct
+name|subscription
+modifier|*
+name|s
 parameter_list|)
 function_decl|;
 end_function_decl

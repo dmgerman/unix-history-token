@@ -455,7 +455,7 @@ name|X86BIOS_PHYSTOSEG
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)>> 4)& 0xffff)
+value|(((x)>> 4)& 0xff00)
 end_define
 
 begin_define
@@ -465,7 +465,7 @@ name|X86BIOS_PHYSTOOFF
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& 0x000f)
+value|((x)& 0x0fff)
 end_define
 
 begin_function_decl
@@ -480,6 +480,9 @@ name|offset
 parameter_list|,
 name|size_t
 name|size
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -584,6 +587,19 @@ name|x86bios_offset
 parameter_list|(
 name|uint32_t
 name|offset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|x86bios_set_intr
+parameter_list|(
+name|int
+name|intno
+parameter_list|,
+name|uint32_t
+name|saddr
 parameter_list|)
 function_decl|;
 end_function_decl

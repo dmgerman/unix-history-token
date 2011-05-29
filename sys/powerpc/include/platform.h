@@ -65,6 +65,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|vm_offset_t
+name|platform_real_maxaddr
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|u_long
 name|platform_timebase_freq
 parameter_list|(

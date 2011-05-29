@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readconf.h,v 1.79 2009/06/27 09:35:06 andreas Exp $ */
+comment|/* $OpenBSD: readconf.h,v 1.88 2010/11/13 23:27:50 djm Exp $ */
 end_comment
 
 begin_comment
@@ -45,6 +45,10 @@ name|int
 name|connect_port
 decl_stmt|;
 comment|/* Port to connect on connect_host. */
+name|int
+name|allocated_port
+decl_stmt|;
+comment|/* Dynamically allocated listen port */
 block|}
 name|Forward
 typedef|;
@@ -73,6 +77,10 @@ name|int
 name|forward_x11
 decl_stmt|;
 comment|/* Forward X11 display. */
+name|int
+name|forward_x11_timeout
+decl_stmt|;
+comment|/* Expiration for Cookies */
 name|int
 name|forward_x11_trusted
 decl_stmt|;
@@ -163,6 +171,14 @@ name|int
 name|tcp_keep_alive
 decl_stmt|;
 comment|/* Set SO_KEEPALIVE. */
+name|int
+name|ip_qos_interactive
+decl_stmt|;
+comment|/* IP ToS/DSCP/class for interactive */
+name|int
+name|ip_qos_bulk
+decl_stmt|;
+comment|/* IP ToS/DSCP/class for bulk traffic */
 name|LogLevel
 name|log_level
 decl_stmt|;
@@ -205,6 +221,11 @@ modifier|*
 name|hostkeyalgorithms
 decl_stmt|;
 comment|/* SSH2 server key types in order of preference. */
+name|char
+modifier|*
+name|kex_algorithms
+decl_stmt|;
+comment|/* SSH2 kex methods in order of preference. */
 name|int
 name|protocol
 decl_stmt|;
@@ -262,9 +283,9 @@ decl_stmt|;
 comment|/* local socket address for connection to sshd */
 name|char
 modifier|*
-name|smartcard_device
+name|pkcs11_provider
 decl_stmt|;
-comment|/* Smartcard reader device */
+comment|/* PKCS#11 provider */
 name|int
 name|verify_host_key_dns
 decl_stmt|;
@@ -292,20 +313,16 @@ name|int
 name|num_local_forwards
 decl_stmt|;
 name|Forward
+modifier|*
 name|local_forwards
-index|[
-name|SSH_MAX_FORWARDS_PER_DIRECTION
-index|]
 decl_stmt|;
 comment|/* Remote TCP/IP forward requests. */
 name|int
 name|num_remote_forwards
 decl_stmt|;
 name|Forward
+modifier|*
 name|remote_forwards
-index|[
-name|SSH_MAX_FORWARDS_PER_DIRECTION
-index|]
 decl_stmt|;
 name|int
 name|clear_forwardings
@@ -345,6 +362,14 @@ decl_stmt|;
 name|int
 name|control_master
 decl_stmt|;
+name|int
+name|control_persist
+decl_stmt|;
+comment|/* ControlPersist flag */
+name|int
+name|control_persist_timeout
+decl_stmt|;
+comment|/* ControlPersist timeout (seconds) */
 name|int
 name|hash_known_hosts
 decl_stmt|;

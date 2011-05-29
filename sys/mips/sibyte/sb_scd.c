@@ -65,30 +65,31 @@ directive|include
 file|"sb_scd.h"
 end_include
 
-begin_function_decl
-specifier|extern
-name|void
+begin_comment
+comment|/*  * We compile a 32-bit kernel to run on the SB-1 processor which is a 64-bit  * processor. It has some registers that must be accessed using 64-bit load  * and store instructions.  *  * We use the mips_ld() and mips_sd() functions to do this for us.  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|sb_store64
 parameter_list|(
-name|uint32_t
 name|addr
 parameter_list|,
-name|uint64_t
 name|val
 parameter_list|)
-function_decl|;
-end_function_decl
+value|mips3_sd((uint64_t *)(uintptr_t)(addr), (val))
+end_define
 
-begin_function_decl
-specifier|extern
-name|uint64_t
+begin_define
+define|#
+directive|define
 name|sb_load64
 parameter_list|(
-name|uint32_t
 name|addr
 parameter_list|)
-function_decl|;
-end_function_decl
+value|mips3_ld((uint64_t *)(uintptr_t)(addr))
+end_define
 
 begin_comment
 comment|/*  * System Control and Debug (SCD) unit on the Sibyte ZBbus.  */
@@ -144,6 +145,13 @@ parameter_list|(
 name|x
 parameter_list|)
 value|GET_VAL_64((x), 7, 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZBBUS_CYCLE_COUNT_ADDR
+value|MIPS_PHYS_TO_KSEG1(0x10030000)
 end_define
 
 begin_define
@@ -227,6 +235,24 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|uint64_t
+name|sb_zbbus_cycle_count
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|sb_load64
+argument_list|(
+name|ZBBUS_CYCLE_COUNT_ADDR
+argument_list|)
+operator|)
+return|;
 block|}
 end_function
 
@@ -352,7 +378,7 @@ name|int
 name|src
 parameter_list|)
 block|{
-name|uint32_t
+name|int
 name|regaddr
 decl_stmt|;
 name|uint64_t
@@ -399,7 +425,7 @@ name|int
 name|src
 parameter_list|)
 block|{
-name|uint32_t
+name|int
 name|regaddr
 decl_stmt|;
 name|uint64_t
@@ -449,7 +475,7 @@ name|uint64_t
 name|val
 parameter_list|)
 block|{
-name|uint32_t
+name|int
 name|regaddr
 decl_stmt|;
 name|regaddr
@@ -477,7 +503,7 @@ name|int
 name|cpu
 parameter_list|)
 block|{
-name|uint32_t
+name|int
 name|regaddr
 decl_stmt|;
 name|uint64_t
@@ -519,7 +545,7 @@ name|int
 name|intrnum
 parameter_list|)
 block|{
-name|uint32_t
+name|int
 name|regaddr
 decl_stmt|;
 name|regaddr
@@ -552,7 +578,7 @@ name|int
 name|intsrc
 parameter_list|)
 block|{
-name|uint32_t
+name|int
 name|regaddr
 decl_stmt|;
 name|regaddr
@@ -681,7 +707,7 @@ name|uint64_t
 name|val
 parameter_list|)
 block|{
-name|uint32_t
+name|int
 name|regaddr
 decl_stmt|;
 name|regaddr
@@ -712,7 +738,7 @@ name|uint64_t
 name|val
 parameter_list|)
 block|{
-name|uint32_t
+name|int
 name|regaddr
 decl_stmt|;
 name|regaddr
@@ -733,19 +759,26 @@ block|}
 end_function
 
 begin_function
-name|int
-name|platform_num_processors
+name|cpumask_t
+name|platform_cpu_mask
 parameter_list|(
 name|void
 parameter_list|)
 block|{
 return|return
 operator|(
+operator|~
+literal|0U
+operator|>>
+operator|(
+literal|32
+operator|-
 name|SYSREV_NUM_PROCESSORS
 argument_list|(
 name|sb_read_sysrev
 argument_list|()
 argument_list|)
+operator|)
 operator|)
 return|;
 block|}

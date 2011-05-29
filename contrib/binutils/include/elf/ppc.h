@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* PPC ELF support for BFD.    Copyright 1995, 1996, 1998, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.     By Michael Meissner, Cygnus Support,<meissner@cygnus.com>, from information    in the System V Application Binary Interface, PowerPC Processor Supplement    and the PowerPC Embedded Application Binary Interface (eabi).  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* PPC ELF support for BFD.    Copyright 1995, 1996, 1998, 2000, 2001, 2002, 2003, 2005    Free Software Foundation, Inc.     By Michael Meissner, Cygnus Support,<meissner@cygnus.com>, from information    in the System V Application Binary Interface, PowerPC Processor Supplement    and the PowerPC Embedded Application Binary Interface (eabi).  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -783,22 +783,76 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* Fake relocations for branch stubs. This will keep them    together.  */
+comment|/* Fake relocations for branch stubs, only used internally by ld.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|R_PPC_RELAX32
-value|251
+value|245
 end_define
 
 begin_define
 define|#
 directive|define
 name|R_PPC_RELAX32PC
-value|252
+value|246
 end_define
+
+begin_define
+define|#
+directive|define
+name|R_PPC_RELAX32_PLT
+value|247
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_PPC_RELAX32PC_PLT
+value|248
+end_define
+
+begin_comment
+comment|/* These are GNU extensions used in PIC code sequences.  */
+end_comment
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_PPC_REL16
+argument_list|,
+literal|249
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_PPC_REL16_LO
+argument_list|,
+literal|250
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_PPC_REL16_HI
+argument_list|,
+literal|251
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_PPC_REL16_HA
+argument_list|,
+literal|252
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* These are GNU extensions to enable C++ vtable garbage collection.  */
@@ -835,14 +889,11 @@ literal|255
 argument_list|)
 end_macro
 
-begin_macro
+begin_expr_stmt
 name|END_RELOC_NUMBERS
 argument_list|(
-argument|R_PPC_max
+name|R_PPC_max
 argument_list|)
-end_macro
-
-begin_define
 define|#
 directive|define
 name|IS_PPC_TLS_RELOC
@@ -851,74 +902,51 @@ name|R
 parameter_list|)
 define|\
 value|((R)>= R_PPC_TLS&& (R)<= R_PPC_GOT_DTPREL16_HA)
-end_define
-
-begin_comment
+comment|/* Specify the value of _GLOBAL_OFFSET_TABLE_.  */
+define|#
+directive|define
+name|DT_PPC_GOT
+value|DT_LOPROC
 comment|/* Processor specific flags for the ELF header e_flags field.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|EF_PPC_EMB
 value|0x80000000
-end_define
-
-begin_comment
 comment|/* PowerPC embedded flag.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|EF_PPC_RELOCATABLE
 value|0x00010000
-end_define
-
-begin_comment
 comment|/* PowerPC -mrelocatable flag.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|EF_PPC_RELOCATABLE_LIB
 value|0x00008000
-end_define
-
-begin_comment
 comment|/* PowerPC -mrelocatable-lib flag.  */
-end_comment
-
-begin_comment
 comment|/* Processor specific section headers, sh_type field.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|SHT_ORDERED
 value|SHT_HIPROC
-end_define
-
-begin_comment
 comment|/* Link editor is to sort the \ 						   entries in this section \ 						   based on the address \ 						   specified in the associated \ 						   symbol table entry.  */
-end_comment
-
-begin_comment
 comment|/* Processor specific section flags, sh_flags field.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|SHF_EXCLUDE
 value|0x80000000
-end_define
-
-begin_comment
 comment|/* Link editor is to exclude \ 						   this section from executable \ 						   and shared objects that it \ 						   builds when those objects \ 						   are not to be furhter \ 						   relocated.  */
-end_comment
+comment|/* Object attribute tags.  */
+expr|enum
+block|{
+comment|/* 0-3 are generic.  */
+name|Tag_GNU_Power_ABI_FP
+operator|=
+literal|4
+block|,
+comment|/* Value 1 for hard-float, 2 for 			       soft-float; 0 for not tagged or not 			       using any ABIs affected by the 			       differences.  */
+block|}
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

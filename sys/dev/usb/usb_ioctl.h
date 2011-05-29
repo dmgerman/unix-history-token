@@ -66,10 +66,20 @@ begin_struct
 struct|struct
 name|usb_read_dir
 block|{
+ifdef|#
+directive|ifdef
+name|COMPAT_32BIT
+name|uint64_t
+name|urd_data
+decl_stmt|;
+else|#
+directive|else
 name|void
 modifier|*
 name|urd_data
 decl_stmt|;
+endif|#
+directive|endif
 name|uint32_t
 name|urd_startentry
 decl_stmt|;
@@ -84,10 +94,20 @@ begin_struct
 struct|struct
 name|usb_ctl_request
 block|{
+ifdef|#
+directive|ifdef
+name|COMPAT_32BIT
+name|uint64_t
+name|ucr_data
+decl_stmt|;
+else|#
+directive|else
 name|void
 modifier|*
 name|ucr_data
 decl_stmt|;
+endif|#
+directive|endif
 name|uint16_t
 name|ucr_flags
 decl_stmt|;
@@ -125,10 +145,20 @@ begin_struct
 struct|struct
 name|usb_gen_descriptor
 block|{
+ifdef|#
+directive|ifdef
+name|COMPAT_32BIT
+name|uint64_t
+name|ugd_data
+decl_stmt|;
+else|#
+directive|else
 name|void
 modifier|*
 name|ugd_data
 decl_stmt|;
+endif|#
+directive|endif
 name|uint16_t
 name|ugd_lang_id
 decl_stmt|;
@@ -344,6 +374,17 @@ struct|struct
 name|usb_fs_endpoint
 block|{
 comment|/* 	 * NOTE: isochronous USB transfer only use one buffer, but can have 	 * multiple frame lengths ! 	 */
+ifdef|#
+directive|ifdef
+name|COMPAT_32BIT
+name|uint64_t
+name|ppBuffer
+decl_stmt|;
+name|uint64_t
+name|pLength
+decl_stmt|;
+else|#
+directive|else
 name|void
 modifier|*
 modifier|*
@@ -355,6 +396,8 @@ modifier|*
 name|pLength
 decl_stmt|;
 comment|/* pointer to frame lengths, updated 					 * to actual length */
+endif|#
+directive|endif
 name|uint32_t
 name|nFrames
 decl_stmt|;
@@ -412,11 +455,21 @@ struct|struct
 name|usb_fs_init
 block|{
 comment|/* userland pointer to endpoints structure */
+ifdef|#
+directive|ifdef
+name|COMPAT_32BIT
+name|uint64_t
+name|pEndpoints
+decl_stmt|;
+else|#
+directive|else
 name|struct
 name|usb_fs_endpoint
 modifier|*
 name|pEndpoints
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* maximum number of endpoints */
 name|uint8_t
 name|ep_index_max
@@ -451,10 +504,16 @@ decl_stmt|;
 define|#
 directive|define
 name|USB_FS_MAX_FRAMES
-value|(1<< 12)
+value|(1U<< 12)
+define|#
+directive|define
+name|USB_FS_MAX_FRAMES_PRE_SCALE
+value|(1U<< 31)
+comment|/* for ISOCHRONOUS transfers */
 name|uint32_t
 name|max_frames
 decl_stmt|;
+comment|/* read and write */
 name|uint16_t
 name|max_packet_length
 decl_stmt|;

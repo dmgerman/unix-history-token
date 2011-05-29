@@ -455,7 +455,6 @@ operator|==
 literal|'\0'
 operator|)
 return|;
-break|break;
 case|case
 literal|'?'
 case|:
@@ -531,7 +530,6 @@ operator|(
 literal|0
 operator|)
 return|;
-break|break;
 case|case
 literal|'['
 case|:
@@ -863,7 +861,24 @@ operator|~
 name|PATHMATCH_NO_ANCHOR_START
 expr_stmt|;
 block|}
-comment|/* Certain patterns anchor implicitly. */
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'/'
+operator|&&
+operator|*
+name|s
+operator|!=
+literal|'/'
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* Certain patterns and file names anchor implicitly. */
 if|if
 condition|(
 operator|*
@@ -875,7 +890,33 @@ operator|*
 name|p
 operator|==
 literal|'/'
+operator|||
+operator|*
+name|p
+operator|==
+literal|'/'
 condition|)
+block|{
+while|while
+condition|(
+operator|*
+name|p
+operator|==
+literal|'/'
+condition|)
+operator|++
+name|p
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|s
+operator|==
+literal|'/'
+condition|)
+operator|++
+name|s
+expr_stmt|;
 return|return
 operator|(
 name|pm
@@ -888,6 +929,7 @@ name|flags
 argument_list|)
 operator|)
 return|;
+block|}
 comment|/* If start is unanchored, try to match start of each path element. */
 if|if
 condition|(

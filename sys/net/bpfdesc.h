@@ -147,6 +147,10 @@ name|bd_direction
 decl_stmt|;
 comment|/* select packet direction */
 name|int
+name|bd_tstamp
+decl_stmt|;
+comment|/* select time stamping function */
+name|int
 name|bd_feedback
 decl_stmt|;
 comment|/* true to feed back sent packets */
@@ -217,6 +221,10 @@ name|u_int64_t
 name|bd_zcopy
 decl_stmt|;
 comment|/* number of zero copy operations */
+name|u_char
+name|bd_compat32
+decl_stmt|;
+comment|/* 32-bit stream on LP64 system */
 block|}
 struct|;
 end_struct

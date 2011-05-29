@@ -130,12 +130,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FXP_CSR_FLOWCONTROL
+name|FXP_CSR_FC_THRESH
 value|0x19
 end_define
 
 begin_comment
-comment|/* flow control (2 bytes) */
+comment|/* flow control (1 byte) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_CSR_FC_STATUS
+value|0x1A
+end_define
+
+begin_comment
+comment|/* flow control status (1 byte) */
 end_comment
 
 begin_define
@@ -2037,7 +2048,31 @@ name|uint32_t
 name|rx_shortframes
 decl_stmt|;
 name|uint32_t
+name|tx_pause
+decl_stmt|;
+name|uint32_t
+name|rx_pause
+decl_stmt|;
+name|uint32_t
+name|rx_controls
+decl_stmt|;
+name|uint16_t
+name|tx_tco
+decl_stmt|;
+name|uint16_t
+name|rx_tco
+decl_stmt|;
+name|uint32_t
 name|completion_status
+decl_stmt|;
+name|uint32_t
+name|reserved0
+decl_stmt|;
+name|uint32_t
+name|reserved1
+decl_stmt|;
+name|uint32_t
+name|reserved2
 decl_stmt|;
 block|}
 struct|;

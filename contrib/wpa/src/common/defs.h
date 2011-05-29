@@ -323,9 +323,16 @@ name|WPA_AUTH_ALG_LEAP
 value|BIT(2)
 end_define
 
-begin_typedef
-typedef|typedef
+begin_define
+define|#
+directive|define
+name|WPA_AUTH_ALG_FT
+value|BIT(3)
+end_define
+
+begin_enum
 enum|enum
+name|wpa_alg
 block|{
 name|WPA_ALG_NONE
 block|,
@@ -339,13 +346,16 @@ name|WPA_ALG_IGTK
 block|,
 name|WPA_ALG_PMK
 block|}
-name|wpa_alg
-typedef|;
-end_typedef
+enum|;
+end_enum
 
-begin_typedef
-typedef|typedef
+begin_comment
+comment|/**  * enum wpa_cipher - Cipher suites  */
+end_comment
+
+begin_enum
 enum|enum
+name|wpa_cipher
 block|{
 name|CIPHER_NONE
 block|,
@@ -357,13 +367,16 @@ name|CIPHER_CCMP
 block|,
 name|CIPHER_WEP104
 block|}
-name|wpa_cipher
-typedef|;
-end_typedef
+enum|;
+end_enum
 
-begin_typedef
-typedef|typedef
+begin_comment
+comment|/**  * enum wpa_key_mgmt - Key management suites  */
+end_comment
+
+begin_enum
 enum|enum
+name|wpa_key_mgmt
 block|{
 name|KEY_MGMT_802_1X
 block|,
@@ -385,17 +398,16 @@ name|KEY_MGMT_PSK_SHA256
 block|,
 name|KEY_MGMT_WPS
 block|}
-name|wpa_key_mgmt
-typedef|;
-end_typedef
+enum|;
+end_enum
 
 begin_comment
 comment|/**  * enum wpa_states - wpa_supplicant state  *  * These enumeration values are used to indicate the current wpa_supplicant  * state (wpa_s->wpa_state). The current state can be retrieved with  * wpa_supplicant_get_state() function and the state can be changed by calling  * wpa_supplicant_set_state(). In WPA state machine (wpa.c and preauth.c), the  * wrapper functions wpa_sm_get_state() and wpa_sm_set_state() should be used  * to access the state variable.  */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_enum
 enum|enum
+name|wpa_states
 block|{
 comment|/** 	 * WPA_DISCONNECTED - Disconnected state 	 * 	 * This state indicates that client is not associated, but is likely to 	 * start looking for an access point. This state is entered when a 	 * connection is lost. 	 */
 name|WPA_DISCONNECTED
@@ -405,6 +417,9 @@ name|WPA_INACTIVE
 block|,
 comment|/** 	 * WPA_SCANNING - Scanning for a network 	 * 	 * This state is entered when wpa_supplicant starts scanning for a 	 * network. 	 */
 name|WPA_SCANNING
+block|,
+comment|/** 	 * WPA_AUTHENTICATING - Trying to authenticate with a BSS/SSID 	 * 	 * This state is entered when wpa_supplicant has found a suitable BSS 	 * to authenticate with and the driver is configured to try to 	 * authenticate with this BSS. This state is used only with drivers 	 * that use wpa_supplicant as the SME. 	 */
+name|WPA_AUTHENTICATING
 block|,
 comment|/** 	 * WPA_ASSOCIATING - Trying to associate with a BSS/SSID 	 * 	 * This state is entered when wpa_supplicant has found a suitable BSS 	 * to associate with and the driver is configured to try to associate 	 * with this BSS in ap_scan=1 mode. When using ap_scan=2 mode, this 	 * state is entered when the driver is configured to try to associate 	 * with a network using the configured SSID and security policy. 	 */
 name|WPA_ASSOCIATING
@@ -421,9 +436,8 @@ block|,
 comment|/** 	 * WPA_COMPLETED - All authentication completed 	 * 	 * This state is entered when the full authentication process is 	 * completed. In case of WPA2, this happens when the 4-Way Handshake is 	 * successfully completed. With WPA, this state is entered after the 	 * Group Key Handshake; with IEEE 802.1X (non-WPA) connection is 	 * completed after dynamic keys are received (or if not used, after 	 * the EAP authentication has been completed). With static WEP keys and 	 * plaintext connections, this state is entered when an association 	 * has been completed. 	 * 	 * This state indicates that the supplicant has completed its 	 * processing for the association phase and that data connection is 	 * fully configured. 	 */
 name|WPA_COMPLETED
 block|}
-name|wpa_states
-typedef|;
-end_typedef
+enum|;
+end_enum
 
 begin_define
 define|#
@@ -466,6 +480,48 @@ directive|define
 name|MLME_SETPROTECTION_KEY_TYPE_PAIRWISE
 value|1
 end_define
+
+begin_comment
+comment|/**  * enum mfp_options - Management frame protection (IEEE 802.11w) options  */
+end_comment
+
+begin_enum
+enum|enum
+name|mfp_options
+block|{
+name|NO_MGMT_FRAME_PROTECTION
+init|=
+literal|0
+block|,
+name|MGMT_FRAME_PROTECTION_OPTIONAL
+init|=
+literal|1
+block|,
+name|MGMT_FRAME_PROTECTION_REQUIRED
+init|=
+literal|2
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/**  * enum hostapd_hw_mode - Hardware mode  */
+end_comment
+
+begin_enum
+enum|enum
+name|hostapd_hw_mode
+block|{
+name|HOSTAPD_MODE_IEEE80211B
+block|,
+name|HOSTAPD_MODE_IEEE80211G
+block|,
+name|HOSTAPD_MODE_IEEE80211A
+block|,
+name|NUM_HOSTAPD_MODES
+block|}
+enum|;
+end_enum
 
 begin_endif
 endif|#

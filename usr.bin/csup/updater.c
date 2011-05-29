@@ -4625,10 +4625,6 @@ operator|)
 return|;
 name|error
 operator|=
-literal|0
-expr_stmt|;
-name|error
-operator|=
 name|updater_rcsedit
 argument_list|(
 name|up

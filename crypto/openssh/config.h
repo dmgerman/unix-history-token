@@ -8,6 +8,14 @@ comment|/* config.h.in.  Generated from configure.ac by autoheader.  */
 end_comment
 
 begin_comment
+comment|/* Define if building universal (internal helper macro) */
+end_comment
+
+begin_comment
+comment|/* #undef AC_APPLE_UNIVERSAL_BUILD */
+end_comment
+
+begin_comment
 comment|/* Define if you have a getaddrinfo that fails for the all-zeros IPv6 address    */
 end_comment
 
@@ -219,14 +227,6 @@ comment|/* #undef CONF_LASTLOG_FILE */
 end_comment
 
 begin_comment
-comment|/* Define if you want to specify the path to your utmpx file */
-end_comment
-
-begin_comment
-comment|/* #undef CONF_UTMPX_FILE */
-end_comment
-
-begin_comment
 comment|/* Define if you want to specify the path to your utmp file */
 end_comment
 
@@ -340,6 +340,20 @@ value|1
 end_define
 
 begin_comment
+comment|/* Enable for PKCS#11 support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENABLE_PKCS11
+end_define
+
+begin_comment
+comment|/**/
+end_comment
+
+begin_comment
 comment|/* Builtin PRNG command timeout */
 end_comment
 
@@ -349,6 +363,14 @@ directive|define
 name|ENTROPY_TIMEOUT_MSEC
 value|200
 end_define
+
+begin_comment
+comment|/* File names may not contain backslash characters */
+end_comment
+
+begin_comment
+comment|/* #undef FILESYSTEM_NO_BACKSLASH */
+end_comment
 
 begin_comment
 comment|/* fsid_t has member val */
@@ -406,6 +428,14 @@ directive|define
 name|GLOB_HAS_GL_MATCHC
 value|1
 end_define
+
+begin_comment
+comment|/* Define if your system glob() function has gl_statv options in glob_t */
+end_comment
+
+begin_comment
+comment|/* #undef GLOB_HAS_GL_STATV */
+end_comment
 
 begin_comment
 comment|/* Define this if you want GSSAPI support in the version 2 protocol */
@@ -588,6 +618,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_BINDRESVPORT_SA
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `BN_is_prime_ex' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_BN_IS_PRIME_EX
 value|1
 end_define
 
@@ -890,6 +931,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_DIRNAME
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `DSA_generate_parameters_ex' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DSA_GENERATE_PARAMETERS_EX
 value|1
 end_define
 
@@ -1351,6 +1403,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `getutxuser' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETUTXUSER
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `get_default_context_with_level' function. */
 end_comment
 
@@ -1377,6 +1440,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_GLOB_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `group_from_gid' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GROUP_FROM_GID
 value|1
 end_define
 
@@ -1593,11 +1667,30 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have isblank(3C). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ISBLANK
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<lastlog.h> header file. */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_LASTLOG_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<libaudit.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBAUDIT_H */
 end_comment
 
 begin_comment
@@ -1644,6 +1737,14 @@ comment|/* #undef HAVE_LIBIAF */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `network' library (-lnetwork). */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBNETWORK */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `nsl' library (-lnsl). */
 end_comment
 
@@ -1661,14 +1762,6 @@ directive|define
 name|HAVE_LIBPAM
 value|1
 end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `sectok' library (-lsectok). */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBSECTOK */
-end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `socket' library (-lsocket). */
@@ -2242,6 +2335,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `RSA_generate_key_ex' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_RSA_GENERATE_KEY_EX
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `RSA_get_default_method' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_RSA_GET_DEFAULT_METHOD
+value|1
+end_define
+
+begin_comment
 comment|/* define if you have sa_family_t data type */
 end_comment
 
@@ -2251,14 +2366,6 @@ directive|define
 name|HAVE_SA_FAMILY_T
 value|1
 end_define
-
-begin_comment
-comment|/* Define to 1 if you have the<sectok.h> header file. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_SECTOK_H */
-end_comment
 
 begin_comment
 comment|/* Define if you have SecureWare-based protected password database */
@@ -2340,6 +2447,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `setgroupent' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETGROUPENT
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `setgroups' function. */
 end_comment
 
@@ -2368,6 +2486,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_SETLUID */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `setpassent' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETPASSENT
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `setpcred' function. */
@@ -2461,6 +2590,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_SETUTENT */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `setutxdb' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETUTXDB
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `setutxent' function. */
@@ -2775,6 +2915,17 @@ comment|/* #undef HAVE_STRNVIS */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `strptime' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRPTIME
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `strsep' function. */
 end_comment
 
@@ -2852,7 +3003,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if `sin6_scope_id' is member of `struct sockaddr_in6'. */
+comment|/* Define to 1 if `sin6_scope_id' is a member of `struct sockaddr_in6'. */
 end_comment
 
 begin_define
@@ -2874,7 +3025,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if `st_blksize' is member of `struct stat'. */
+comment|/* Define to 1 if `st_blksize' is a member of `struct stat'. */
 end_comment
 
 begin_define
@@ -3244,6 +3395,14 @@ comment|/* #undef HAVE_TIME_IN_UTMPX */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `timingsafe_bcmp' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_TIMINGSAFE_BCMP */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<tmpdir.h> header file. */
 end_comment
 
@@ -3386,6 +3545,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_USERSEC_H */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `user_from_uid' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_USER_FROM_UID
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<util.h> header file. */
@@ -3742,6 +3912,14 @@ comment|/* #undef LINK_OPNOTSUPP_ERRNO */
 end_comment
 
 begin_comment
+comment|/* Adjust Linux out-of-memory killer */
+end_comment
+
+begin_comment
+comment|/* #undef LINUX_OOM_ADJUST */
+end_comment
+
+begin_comment
 comment|/* max value of long long calculated by configure */
 end_comment
 
@@ -3892,6 +4070,17 @@ comment|/* #undef OPENSSL_EVP_DIGESTUPDATE_VOID */
 end_comment
 
 begin_comment
+comment|/* libcrypto includes complete ECC support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPENSSL_HAS_ECC
+value|1
+end_define
+
+begin_comment
 comment|/* libcrypto is missing AES 192 and 256 bit functions */
 end_comment
 
@@ -3952,6 +4141,17 @@ define|#
 directive|define
 name|PACKAGE_TARNAME
 value|"openssh"
+end_define
+
+begin_comment
+comment|/* Define to the home page for this package. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKAGE_URL
+value|""
 end_define
 
 begin_comment
@@ -4090,14 +4290,6 @@ end_comment
 
 begin_comment
 comment|/* #undef SKEYCHALLENGE_4ARG */
-end_comment
-
-begin_comment
-comment|/* Define if you want smartcard support */
-end_comment
-
-begin_comment
-comment|/* #undef SMARTCARD */
 end_comment
 
 begin_comment
@@ -4292,11 +4484,11 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you want smartcard support using OpenSC */
+comment|/* Use Linux audit module */
 end_comment
 
 begin_comment
-comment|/* #undef USE_OPENSC */
+comment|/* #undef USE_LINUX_AUDIT */
 end_comment
 
 begin_comment
@@ -4330,19 +4522,19 @@ comment|/* #undef USE_PIPES */
 end_comment
 
 begin_comment
-comment|/* Define if you want smartcard support using sectok */
-end_comment
-
-begin_comment
-comment|/* #undef USE_SECTOK */
-end_comment
-
-begin_comment
 comment|/* Define if you have Solaris process contracts */
 end_comment
 
 begin_comment
 comment|/* #undef USE_SOLARIS_PROCESS_CONTRACTS */
+end_comment
+
+begin_comment
+comment|/* Define if you have Solaris projects */
+end_comment
+
+begin_comment
+comment|/* #undef USE_SOLARIS_PROJECTS */
 end_comment
 
 begin_comment
@@ -4402,7 +4594,7 @@ comment|/* #undef WITH_SELINUX */
 end_comment
 
 begin_comment
-comment|/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most    significant byte first (like Motorola and SPARC, unlike Intel and VAX). */
+comment|/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most    significant byte first (like Motorola and SPARC, unlike Intel). */
 end_comment
 
 begin_if

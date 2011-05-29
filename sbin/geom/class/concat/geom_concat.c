@@ -176,8 +176,6 @@ name|concat_main
 block|,
 name|G_NULL_OPTS
 block|,
-name|NULL
-block|,
 literal|"[-v] prov ..."
 block|}
 block|,
@@ -191,8 +189,6 @@ block|,
 name|NULL
 block|,
 name|G_NULL_OPTS
-block|,
-name|NULL
 block|,
 literal|"[-v] name prov ..."
 block|}
@@ -218,8 +214,6 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-name|NULL
-block|,
 literal|"[-fv] name ..."
 block|}
 block|,
@@ -231,8 +225,6 @@ block|,
 name|concat_main
 block|,
 name|G_NULL_OPTS
-block|,
-name|NULL
 block|,
 literal|"prov ..."
 block|}
@@ -260,8 +252,6 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-name|NULL
-block|,
 literal|"[-hv] name prov ..."
 block|}
 block|,
@@ -285,8 +275,6 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
-block|,
-name|NULL
 block|,
 literal|"[-fv] name ..."
 block|}
@@ -681,20 +669,24 @@ name|name
 argument_list|,
 name|_PATH_DEV
 argument_list|,
-name|strlen
+sizeof|sizeof
 argument_list|(
 name|_PATH_DEV
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 operator|==
 literal|0
 condition|)
 name|name
 operator|+=
-name|strlen
+sizeof|sizeof
 argument_list|(
 name|_PATH_DEV
 argument_list|)
+operator|-
+literal|1
 expr_stmt|;
 name|strlcpy
 argument_list|(

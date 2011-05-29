@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/linker_set.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
 end_include
 
@@ -3765,18 +3759,6 @@ literal|0
 argument_list|)
 block|}
 block|,
-comment|/* "High Tech Computer Corp" */
-block|{
-name|USB_VPI
-argument_list|(
-argument|USB_VENDOR_HTC
-argument_list|,
-literal|0x0bce
-argument_list|,
-literal|0
-argument_list|)
-block|}
-block|,
 comment|/**/
 block|{
 name|USB_VPI
@@ -3808,6 +3790,18 @@ argument_list|(
 argument|USB_VENDOR_HTC
 argument_list|,
 argument|USB_PRODUCT_HTC_WINMOBILE
+argument_list|,
+literal|0
+argument_list|)
+block|}
+block|,
+comment|/* High Tech Computer Wizard Smartphone */
+block|{
+name|USB_VPI
+argument_list|(
+argument|USB_VENDOR_HTC
+argument_list|,
+argument|USB_PRODUCT_HTC_WIZARD
 argument_list|,
 literal|0
 argument_list|)
@@ -6182,6 +6176,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|uipaq
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|int
@@ -6565,6 +6569,16 @@ goto|goto
 name|detach
 goto|;
 block|}
+name|ucom_set_pnpinfo_usb
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_super_ucom
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -6614,8 +6628,6 @@ operator|&
 name|sc
 operator|->
 name|sc_ucom
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|usbd_transfer_unsetup

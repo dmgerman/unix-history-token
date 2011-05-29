@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/libpcap/ppp.h,v 1.12 2005/02/08 19:52:19 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/libpcap/ppp.h,v 1.12 2005-02-08 19:52:19 guy Exp $ (LBL) */
 end_comment
 
 begin_comment

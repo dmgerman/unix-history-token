@@ -96,7 +96,7 @@ operator|>=
 literal|602102
 return|return
 operator|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 operator|->
@@ -1340,6 +1340,9 @@ name|DRM_DEBUG
 argument_list|(
 literal|"agp_bind, page_size=%x\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;

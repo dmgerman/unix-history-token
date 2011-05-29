@@ -496,10 +496,7 @@ name|on
 decl_stmt|;
 if|if
 condition|(
-name|getpid
-argument_list|()
-operator|==
-literal|1
+name|RunningAsInit
 condition|)
 block|{
 name|DebugFD

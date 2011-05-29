@@ -629,7 +629,7 @@ name|iso8859_7tab
 index|[]
 init|=
 block|{
-comment|/* 	 * The greek alphabet; you'll need an 8859-7 font in order 	 * to see the actual characters. 	 * This table does not implement: 	 * - the special sequences for the seven diphthongs, 	 * - the punctuation differences. 	 * Implementing these features would introduce too many 	 * special-cases in the program's main loop. 	 * The diphtong sequences are: 	 * alpha iota		.-.- 	 * alpha upsilon	..-- 	 * epsilon upsilon	---. 	 * eta upsilon		...- 	 * omikron iota		---.. 	 * omikron upsilon	..- 	 * upsilon iota		.--- 	 * The different punctuation symbols are: 	 * ;	..-.- 	 * !	--..-- 	 */
+comment|/* 	 * The Greek alphabet; you'll need an ISO8859-7 font in order 	 * to see the actual characters. 	 * This table does not implement: 	 * - the special sequences for the seven diphthongs, 	 * - the punctuation differences. 	 * Implementing these features would introduce too many 	 * special-cases in the program's main loop. 	 * The diphthong sequences are: 	 * alpha iota		.-.- 	 * alpha upsilon	..-- 	 * epsilon upsilon	---. 	 * eta upsilon		...- 	 * omicron iota		---.. 	 * omicron upsilon	..- 	 * upsilon iota		.--- 	 * The different punctuation symbols are: 	 * ;	..-.- 	 * !	--..-- 	 */
 block|{
 literal|'á'
 block|,
@@ -727,14 +727,14 @@ block|,
 literal|".."
 block|}
 block|,
-comment|/* iota with diairesis */
+comment|/* iota with diaeresis */
 block|{
 literal|'À'
 block|,
 literal|".."
 block|}
 block|,
-comment|/* iota with acute and diairesis */
+comment|/* iota with acute and diaeresis */
 block|{
 literal|'ê'
 block|,
@@ -748,7 +748,7 @@ block|,
 literal|".-.."
 block|}
 block|,
-comment|/* lamda */
+comment|/* lambda */
 block|{
 literal|'ì'
 block|,
@@ -839,14 +839,14 @@ block|,
 literal|"-.--"
 block|}
 block|,
-comment|/* upsilon and diairesis */
+comment|/* upsilon and diaeresis */
 block|{
 literal|'à'
 block|,
 literal|"-.--"
 block|}
 block|,
-comment|/* upsilon with acute and diairesis */
+comment|/* upsilon with acute and diaeresis */
 block|{
 literal|'ö'
 block|,
@@ -900,7 +900,7 @@ name|koi8rtab
 index|[]
 init|=
 block|{
-comment|/* 	 * the cyrillic alphabet; you'll need a KOI8R font in order 	 * to see the actual characters 	 */
+comment|/* 	 * The Cyrillic alphabet; you'll need a KOI8-R font in order 	 * to see the actual characters 	 */
 block|{
 literal|'Á'
 block|,

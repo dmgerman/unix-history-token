@@ -43,6 +43,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * At least on HP-UX:  *  *	1) getrpcbynumber() is declared in<netdb.h>, not any of the RPC  *	   header files  *  * and  *  *	2) if _XOPEN_SOURCE_EXTENDED is defined,<netdb.h> doesn't declare  *	   it  *  * so we undefine it.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|_XOPEN_SOURCE_EXTENDED
+end_undef
+
 begin_include
 include|#
 directive|include

@@ -15,6 +15,12 @@ directive|define
 name|_OPENSOLARIS_SYS_SYSTM_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -24,12 +30,6 @@ end_include
 begin_empty
 empty|#include_next<sys/systm.h>
 end_empty
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_include
 include|#
@@ -66,34 +66,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|pause("soldelay", (x))
-end_define
-
-begin_define
-define|#
-directive|define
-name|xcopyin
-parameter_list|(
-name|u
-parameter_list|,
-name|k
-parameter_list|,
-name|s
-parameter_list|)
-value|copyin(u, k, s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|xcopyout
-parameter_list|(
-name|k
-parameter_list|,
-name|u
-parameter_list|,
-name|s
-parameter_list|)
-value|copyout(k, u, s)
 end_define
 
 begin_endif

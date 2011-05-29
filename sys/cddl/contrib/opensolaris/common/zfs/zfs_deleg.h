@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2007, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2010 Nexenta Systems, Inc. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_ZFS_DELEG_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -88,6 +81,8 @@ name|ZFS_DELEG_NOTE_PROMOTE
 block|,
 name|ZFS_DELEG_NOTE_RENAME
 block|,
+name|ZFS_DELEG_NOTE_SEND
+block|,
 name|ZFS_DELEG_NOTE_RECEIVE
 block|,
 name|ZFS_DELEG_NOTE_ALLOW
@@ -97,6 +92,20 @@ block|,
 name|ZFS_DELEG_NOTE_MOUNT
 block|,
 name|ZFS_DELEG_NOTE_SHARE
+block|,
+name|ZFS_DELEG_NOTE_USERQUOTA
+block|,
+name|ZFS_DELEG_NOTE_GROUPQUOTA
+block|,
+name|ZFS_DELEG_NOTE_USERUSED
+block|,
+name|ZFS_DELEG_NOTE_GROUPUSED
+block|,
+name|ZFS_DELEG_NOTE_HOLD
+block|,
+name|ZFS_DELEG_NOTE_RELEASE
+block|,
+name|ZFS_DELEG_NOTE_DIFF
 block|,
 name|ZFS_DELEG_NOTE_NONE
 block|}

@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_comment
 comment|/*  * DTrace D Language Compiler  *  * The code in this source file implements the main engine for the D language  * compiler.  The driver routine for the compiler is dt_compile(), below.  The  * compiler operates on either stdio FILEs or in-memory strings as its input  * and can produce either dtrace_prog_t structures from a D program or a single  * dtrace_difo_t structure from a D expression.  Multiple entry points are  * provided as wrappers around dt_compile() for the various input/output pairs.  * The compiler itself is implemented across the following source files:  *  * dt_lex.l - lex scanner  * dt_grammar.y - yacc grammar  * dt_parser.c - parse tree creation and semantic checking  * dt_decl.c - declaration stack processing  * dt_xlator.c - D translator lookup and creation  * dt_ident.c - identifier and symbol table routines  * dt_pragma.c - #pragma processing and D pragmas  * dt_printf.c - D printf() and printa() argument checking and processing  * dt_cc.c - compiler driver and dtrace_prog_t construction  * dt_cg.c - DIF code generator  * dt_as.c - DIF assembler  * dt_dof.c - dtrace_prog_t -> DOF conversion  *  * Several other source files provide collections of utility routines used by  * these major files.  The compiler itself is implemented in multiple passes:  *  * (1) The input program is scanned and parsed by dt_lex.l and dt_grammar.y  *     and parse tree nodes are constructed using the routines in dt_parser.c.  *     This node construction pass is described further in dt_parser.c.  *  * (2) The parse tree is "cooked" by assigning each clause a context (see the  *     routine dt_setcontext(), below) based on its probe description and then  *     recursively descending the tree performing semantic checking.  The cook  *     routines are also implemented in dt_parser.c and described there.  *  * (3) For actions that are DIF expression statements, the DIF code generator  *     and assembler are invoked to create a finished DIFO for the statement.  *  * (4) The dtrace_prog_t data structures for the program clauses and actions  *     are built, containing pointers to any DIFOs created in step (3).  *  * (5) The caller invokes a routine in dt_dof.c to convert the finished program  *     into DOF format for use in anonymous tracing or enabling in the kernel.  *  * In the implementation, steps 2-4 are intertwined in that they are performed  * in order for each clause as part of a loop that executes over the clauses.  *  * The D compiler currently implements nearly no optimization.  The compiler  * implements integer constant folding as part of pass (1), and a set of very  * simple peephole optimizations as part of pass (3).  As with any C compiler,  * a large number of optimizations are possible on both the intermediate data  * structures and the generated DIF code.  These possibilities should be  * investigated in the context of whether they will have any substantive effect  * on the overall DTrace probe effect before they are undertaken.  */
@@ -10391,30 +10384,16 @@ name|NULL
 operator|)
 return|;
 comment|/* errno is set for us */
-operator|(
-name|void
-operator|)
-name|ctf_discard
-argument_list|(
+if|if
+condition|(
 name|dtp
 operator|->
-name|dt_cdefs
+name|dt_globals
 operator|->
-name|dm_ctfp
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|ctf_discard
-argument_list|(
-name|dtp
-operator|->
-name|dt_ddefs
-operator|->
-name|dm_ctfp
-argument_list|)
-expr_stmt|;
+name|dh_nelems
+operator|!=
+literal|0
+condition|)
 operator|(
 name|void
 operator|)
@@ -10429,6 +10408,16 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dtp
+operator|->
+name|dt_tls
+operator|->
+name|dh_nelems
+operator|!=
+literal|0
+condition|)
 operator|(
 name|void
 operator|)

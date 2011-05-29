@@ -80,6 +80,8 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
+literal|"%s"
+argument_list|,
 name|p
 operator|->
 name|p_sysent
@@ -91,6 +93,8 @@ else|else
 name|sbuf_printf
 argument_list|(
 name|sb
+argument_list|,
+literal|"%s"
 argument_list|,
 name|none
 argument_list|)

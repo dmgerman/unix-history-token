@@ -226,10 +226,6 @@ modifier|*
 name|vu_fifoinfo
 decl_stmt|;
 comment|/* v fifo (VFIFO) */
-name|int
-name|vu_yield
-decl_stmt|;
-comment|/*   yield count (VMARKER) */
 block|}
 name|v_un
 union|;
@@ -391,13 +387,6 @@ define|#
 directive|define
 name|v_fifoinfo
 value|v_un.vu_fifoinfo
-end_define
-
-begin_define
-define|#
-directive|define
-name|v_yield
-value|v_un.vu_yield
 end_define
 
 begin_comment
@@ -687,6 +676,17 @@ end_define
 
 begin_comment
 comment|/* unlinked, stop syncing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VV_ETERNALDEV
+value|0x0008
+end_define
+
+begin_comment
+comment|/* device that is never destroyed */
 end_comment
 
 begin_define
@@ -1610,17 +1610,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|prtactive
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* nonzero to call vprint() */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|struct
 name|vattr
 name|va_null
@@ -1690,8 +1679,7 @@ name|VN_LOCK_AREC
 parameter_list|(
 name|vp
 parameter_list|)
-define|\
-value|((vp)->v_vnlock->lock_object.lo_flags |= LO_RECURSABLE)
+value|lockallowrecurse((vp)->v_vnlock)
 end_define
 
 begin_define
@@ -1701,8 +1689,7 @@ name|VN_LOCK_ASHARE
 parameter_list|(
 name|vp
 parameter_list|)
-define|\
-value|((vp)->v_vnlock->lock_object.lo_flags&= ~LK_NOSHARE)
+value|lockallowshare((vp)->v_vnlock)
 end_define
 
 begin_endif
@@ -2154,6 +2141,7 @@ name|vp
 parameter_list|,
 name|str
 parameter_list|)
+value|((void)0)
 end_define
 
 begin_define
@@ -2165,6 +2153,7 @@ name|vp
 parameter_list|,
 name|str
 parameter_list|)
+value|((void)0)
 end_define
 
 begin_define
@@ -2176,6 +2165,7 @@ name|vp
 parameter_list|,
 name|str
 parameter_list|)
+value|((void)0)
 end_define
 
 begin_if
@@ -2209,6 +2199,7 @@ name|vp
 parameter_list|,
 name|str
 parameter_list|)
+value|((void)0)
 end_define
 
 begin_if
@@ -2242,6 +2233,7 @@ name|vp
 parameter_list|,
 name|str
 parameter_list|)
+value|((void)0)
 end_define
 
 begin_endif
@@ -3425,6 +3417,31 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|vn_rlimit_fsize
+parameter_list|(
+specifier|const
+name|struct
+name|vnode
+modifier|*
+name|vn
+parameter_list|,
+specifier|const
+name|struct
+name|uio
+modifier|*
+name|uio
+parameter_list|,
+specifier|const
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|vn_stat
 parameter_list|(
 name|struct
@@ -3850,6 +3867,30 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|vop_stdadvlockpurge
+parameter_list|(
+name|struct
+name|vop_advlockpurge_args
+modifier|*
+name|ap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vop_stdallocate
+parameter_list|(
+name|struct
+name|vop_allocate_args
+modifier|*
+name|ap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|vop_stdpathconf
 parameter_list|(
 name|struct
@@ -4201,6 +4242,18 @@ parameter_list|(
 name|void
 modifier|*
 name|a
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vop_rename_fail
+parameter_list|(
+name|struct
+name|vop_rename_args
+modifier|*
+name|ap
 parameter_list|)
 function_decl|;
 end_function_decl

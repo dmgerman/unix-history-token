@@ -233,6 +233,26 @@ name|Maxmem
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|busdma_swi_pending
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|void
+modifier|*
+name|acpi_find_table
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|sig
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|void
 name|busdma_swi

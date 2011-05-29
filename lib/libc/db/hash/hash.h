@@ -324,11 +324,11 @@ begin_define
 define|#
 directive|define
 name|MAX_BSIZE
-value|65536
+value|32768
 end_define
 
 begin_comment
-comment|/* 2^16 */
+comment|/* 2^15 but should be 65536 */
 end_comment
 
 begin_define

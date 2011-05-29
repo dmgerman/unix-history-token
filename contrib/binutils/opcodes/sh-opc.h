@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for SH opcodes.    Copyright 1993, 1994, 1995, 1997, 1999, 2000, 2003    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for SH opcodes.    Copyright 1993, 1994, 1995, 1997, 1999, 2000, 2001, 2002, 2003, 2004,    2005 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"bfd.h"
+end_include
 
 begin_typedef
 typedef|typedef
@@ -118,6 +124,42 @@ block|,
 name|PPIC
 block|,
 name|REPEAT
+block|,
+name|IMM0_3c
+block|,
+comment|/* xxxx 0iii */
+name|IMM0_3s
+block|,
+comment|/* xxxx 1iii */
+name|IMM0_3Uc
+block|,
+comment|/* 0iii xxxx */
+name|IMM0_3Us
+block|,
+comment|/* 1iii xxxx */
+name|IMM0_20_4
+block|,
+name|IMM0_20
+block|,
+comment|/* follows IMM0_20_4 */
+name|IMM0_20BY8
+block|,
+comment|/* follows IMM0_20_4 */
+name|DISP0_12
+block|,
+name|DISP0_12BY2
+block|,
+name|DISP0_12BY4
+block|,
+name|DISP0_12BY8
+block|,
+name|DISP1_12
+block|,
+name|DISP1_12BY2
+block|,
+name|DISP1_12BY4
+block|,
+name|DISP1_12BY8
 block|}
 name|sh_nibble_type
 typedef|;
@@ -184,6 +226,16 @@ block|,
 name|A_SR
 block|,
 name|A_VBR
+block|,
+name|A_TBR
+block|,
+name|A_DISP_TBR
+block|,
+name|A_DISP2_TBR
+block|,
+name|A_DEC_R15
+block|,
+name|A_INC_R15
 block|,
 name|A_MOD
 block|,
@@ -337,130 +389,595 @@ name|sh_dsp_reg_nums
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* Return a mask with bits LO to HI (inclusive) set.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MASK
+parameter_list|(
+name|LO
+parameter_list|,
+name|HI
+parameter_list|)
+value|(  LO< 1   ? ((1<< (HI + 1)) - 1) \ 		      : HI> 30  ? (-1<< LO) \ 		      : LO == HI ? (1<< LO) \ 		      :            (((1<< (HI + 1)) - 1)& (-1<< LO)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh1_base
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh2_base
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh2a_sh3_base
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh3_base
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh2a_sh4_base
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh4_base
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh4a_base
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh2a_base
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh_base_mask
+value|MASK (0, 7)
+end_define
+
+begin_comment
+comment|/* Bits 8 ... 24 are currently free.  */
+end_comment
+
+begin_comment
+comment|/* This is an annotation on instruction types, but we    abuse the arch field in instructions to denote it.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|arch_op32
+value|(1<< 25)
+end_define
+
+begin_comment
+comment|/* This is a 32-bit opcode.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|arch_opann_mask
+value|MASK (25, 25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh_no_mmu
+value|(1<< 26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh_has_mmu
+value|(1<< 27)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh_mmu_mask
+value|MASK (26, 27)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh_no_co
+value|(1<< 28)
+end_define
+
+begin_comment
+comment|/* Neither FPU nor DSP co-processor.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|arch_sh_sp_fpu
+value|(1<< 29)
+end_define
+
+begin_comment
+comment|/* Single precision FPU.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|arch_sh_dp_fpu
+value|(1<< 30)
+end_define
+
+begin_comment
+comment|/* Double precision FPU.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|arch_sh_has_dsp
+value|(1<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh_co_mask
+value|MASK (28, 31)
+end_define
+
 begin_define
 define|#
 directive|define
 name|arch_sh1
-value|0x0001
+value|(arch_sh1_base     |arch_sh_no_mmu |arch_sh_no_co)
 end_define
 
 begin_define
 define|#
 directive|define
 name|arch_sh2
-value|0x0002
+value|(arch_sh2_base     |arch_sh_no_mmu |arch_sh_no_co)
 end_define
 
 begin_define
 define|#
 directive|define
-name|arch_sh3
-value|0x0004
+name|arch_sh2a
+value|(arch_sh2a_base    |arch_sh_no_mmu |arch_sh_dp_fpu)
 end_define
 
 begin_define
 define|#
 directive|define
-name|arch_sh3e
-value|0x0008
-end_define
-
-begin_define
-define|#
-directive|define
-name|arch_sh4
-value|0x0010
+name|arch_sh2a_nofpu
+value|(arch_sh2a_base    |arch_sh_no_mmu |arch_sh_no_co)
 end_define
 
 begin_define
 define|#
 directive|define
 name|arch_sh2e
-value|0x0020
-end_define
-
-begin_define
-define|#
-directive|define
-name|arch_sh4a
-value|0x0040
+value|(arch_sh2_base     |arch_sh_no_mmu |arch_sh_sp_fpu)
 end_define
 
 begin_define
 define|#
 directive|define
 name|arch_sh_dsp
-value|0x0100
+value|(arch_sh2_base     |arch_sh_no_mmu |arch_sh_has_dsp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh3_nommu
+value|(arch_sh3_base     |arch_sh_no_mmu |arch_sh_no_co)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh3
+value|(arch_sh3_base     |arch_sh_has_mmu|arch_sh_no_co)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh3e
+value|(arch_sh3_base     |arch_sh_has_mmu|arch_sh_sp_fpu)
 end_define
 
 begin_define
 define|#
 directive|define
 name|arch_sh3_dsp
-value|0x0200
+value|(arch_sh3_base     |arch_sh_has_mmu|arch_sh_has_dsp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh4
+value|(arch_sh4_base     |arch_sh_has_mmu|arch_sh_dp_fpu)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh4a
+value|(arch_sh4a_base    |arch_sh_has_mmu|arch_sh_dp_fpu)
 end_define
 
 begin_define
 define|#
 directive|define
 name|arch_sh4al_dsp
-value|0x0400
+value|(arch_sh4a_base    |arch_sh_has_mmu|arch_sh_has_dsp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|arch_sh4_nofpu
-value|0x1000
+value|(arch_sh4_base     |arch_sh_has_mmu|arch_sh_no_co)
 end_define
 
 begin_define
 define|#
 directive|define
 name|arch_sh4a_nofpu
-value|0x2000
+value|(arch_sh4a_base    |arch_sh_has_mmu|arch_sh_no_co)
 end_define
 
 begin_define
 define|#
 directive|define
-name|arch_sh1_up
-value|(arch_sh1 | arch_sh2_up)
+name|arch_sh4_nommu_nofpu
+value|(arch_sh4_base     |arch_sh_no_mmu |arch_sh_no_co)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh2a_nofpu_or_sh4_nommu_nofpu
+value|(arch_sh2a_sh4_base|arch_sh_no_mmu |arch_sh_no_co)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh2a_nofpu_or_sh3_nommu
+value|(arch_sh2a_sh3_base|arch_sh_no_mmu |arch_sh_no_co)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh2a_or_sh3e
+value|(arch_sh2a_sh4_base|arch_sh_no_mmu |arch_sh_sp_fpu)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh2a_or_sh4
+value|(arch_sh2a_sh4_base|arch_sh_no_mmu |arch_sh_dp_fpu)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SH_MERGE_ARCH_SET
+parameter_list|(
+name|SET1
+parameter_list|,
+name|SET2
+parameter_list|)
+value|((SET1)& (SET2))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SH_VALID_BASE_ARCH_SET
+parameter_list|(
+name|SET
+parameter_list|)
+value|(((SET)& arch_sh_base_mask) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SH_VALID_MMU_ARCH_SET
+parameter_list|(
+name|SET
+parameter_list|)
+value|(((SET)& arch_sh_mmu_mask) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SH_VALID_CO_ARCH_SET
+parameter_list|(
+name|SET
+parameter_list|)
+value|(((SET)& arch_sh_co_mask) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SH_VALID_ARCH_SET
+parameter_list|(
+name|SET
+parameter_list|)
+define|\
+value|(SH_VALID_BASE_ARCH_SET (SET) \&& SH_VALID_MMU_ARCH_SET (SET) \&& SH_VALID_CO_ARCH_SET (SET))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SH_MERGE_ARCH_SET_VALID
+parameter_list|(
+name|SET1
+parameter_list|,
+name|SET2
+parameter_list|)
+define|\
+value|SH_VALID_ARCH_SET (SH_MERGE_ARCH_SET (SET1, SET2))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SH_ARCH_SET_HAS_FPU
+parameter_list|(
+name|SET
+parameter_list|)
+define|\
+value|(((SET)& (arch_sh_sp_fpu | arch_sh_dp_fpu)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SH_ARCH_SET_HAS_DSP
+parameter_list|(
+name|SET
+parameter_list|)
+define|\
+value|(((SET)& arch_sh_has_dsp) != 0)
+end_define
+
+begin_comment
+comment|/* This is returned from the functions below when an error occurs    (in addition to a call to BFD_FAIL). The value should allow    the tools to continue to function in most cases - there may    be some confusion between DSP and FPU etc.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SH_ARCH_UNKNOWN_ARCH
+value|0xffffffff
+end_define
+
+begin_comment
+comment|/* These are defined in bfd/cpu-sh.c .  */
+end_comment
+
+begin_function_decl
+name|unsigned
+name|int
+name|sh_get_arch_from_bfd_mach
+parameter_list|(
+name|unsigned
+name|long
+name|mach
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|unsigned
+name|int
+name|sh_get_arch_up_from_bfd_mach
+parameter_list|(
+name|unsigned
+name|long
+name|mach
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|unsigned
+name|long
+name|sh_get_bfd_mach_from_arch_set
+parameter_list|(
+name|unsigned
+name|int
+name|arch_set
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bfd_boolean
+name|sh_merge_bfd_arch
+parameter_list|(
+name|bfd
+modifier|*
+name|ibfd
+parameter_list|,
+name|bfd
+modifier|*
+name|obfd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Below are the 'architecture sets'.    They describe the following inheritance graph:                     SH1                  |                 SH2    .------------'|`--------------------------------.   /              |                                  \ SH-DSP          SH3-nommu/SH2A-nofpu               SH2E  |               |          |`--------------------. |  |               |          |                      \|  |              SH3-nommu  SH4-nm-nf/SH2A-nofpu    SH3E/SH2A  |               |\         |          |      \     |    |  |               | `------. |     SH2A-nofpu   `----+---.|  |               |         \|            \          |   SH4/SH2A  |              SH3     SH4-nommu-nofpu   `---------+--. |   |  |              /|\         |                       |   \|   |  | .-----------' | `--------+---------------------. |  SH2A  |  |/              |          /                      \|        |  |               | .-------'                        |        |  |               |/                                 |        | SH3-dsp         SH4-nofpu                          SH3E      |  |               |`-------------------------------. | .-----'  |               |                                 \|/  |              SH4A-nofpu                         SH4  | .------------' `-------------------------------. |  |/                                                \| SH4AL-dsp                                          SH4A */
+end_comment
+
+begin_comment
+comment|/* Central branches.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|arch_sh_up
+value|(arch_sh1 \ 		| arch_sh2_up)
 end_define
 
 begin_define
 define|#
 directive|define
 name|arch_sh2_up
-value|(arch_sh2 | arch_sh2e_up | arch_sh3_up | arch_sh_dsp)
+value|(arch_sh2 \ 		| arch_sh2e_up \ 		| arch_sh2a_nofpu_or_sh3_nommu_up \ 		| arch_sh_dsp_up)
 end_define
 
 begin_define
 define|#
 directive|define
-name|arch_sh2e_up
-value|(arch_sh2e | arch_sh3e_up)
+name|arch_sh2a_nofpu_or_sh3_nommu_up
+value|(arch_sh2a_nofpu_or_sh3_nommu \ 		| arch_sh2a_nofpu_or_sh4_nommu_nofpu_up \ 		| arch_sh2a_or_sh3e_up \ 		| arch_sh3_nommu_up)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh2a_nofpu_or_sh4_nommu_nofpu_up
+value|(arch_sh2a_nofpu_or_sh4_nommu_nofpu \ 		| arch_sh2a_nofpu_up \ 		| arch_sh2a_or_sh4_up \ 		| arch_sh4_nommu_nofpu_up)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh2a_nofpu_up
+value|(arch_sh2a_nofpu \ 		| arch_sh2a_up)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh3_nommu_up
+value|(arch_sh3_nommu \ 		| arch_sh3_up \ 		| arch_sh4_nommu_nofpu_up)
 end_define
 
 begin_define
 define|#
 directive|define
 name|arch_sh3_up
-value|(arch_sh3 | arch_sh3e_up | arch_sh3_dsp_up \ 		      | arch_sh4_nofp_up)
+value|(arch_sh3 \ 		| arch_sh3e_up \ 		| arch_sh3_dsp_up \ 		| arch_sh4_nofpu_up)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh4_nommu_nofpu_up
+value|(arch_sh4_nommu_nofpu \ 		| arch_sh4_nofpu_up)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh4_nofpu_up
+value|(arch_sh4_nofpu \ 		| arch_sh4_up \ 		| arch_sh4a_nofpu_up)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh4a_nofpu_up
+value|(arch_sh4a_nofpu \ 		| arch_sh4a_up \ 		| arch_sh4al_dsp_up)
+end_define
+
+begin_comment
+comment|/* Right branches.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|arch_sh2e_up
+value|(arch_sh2e \ 		| arch_sh2a_or_sh3e_up)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh2a_or_sh3e_up
+value|(arch_sh2a_or_sh3e \ 		| arch_sh2a_or_sh4_up \ 		| arch_sh3e_up)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh2a_or_sh4_up
+value|(arch_sh2a_or_sh4 \ 		| arch_sh2a_up \ 		| arch_sh4_up)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arch_sh2a_up
+value|(arch_sh2a)
 end_define
 
 begin_define
 define|#
 directive|define
 name|arch_sh3e_up
-value|(arch_sh3e | arch_sh4_up)
+value|(arch_sh3e \ 		| arch_sh4_up)
 end_define
 
 begin_define
 define|#
 directive|define
 name|arch_sh4_up
-value|(arch_sh4 | arch_sh4a_up)
+value|(arch_sh4 \ 		| arch_sh4a_up)
 end_define
 
 begin_define
@@ -470,18 +987,22 @@ name|arch_sh4a_up
 value|(arch_sh4a)
 end_define
 
+begin_comment
+comment|/* Left branch.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|arch_sh_dsp_up
-value|(arch_sh_dsp | arch_sh3_dsp_up)
+value|(arch_sh_dsp  \ 		| arch_sh3_dsp_up)
 end_define
 
 begin_define
 define|#
 directive|define
 name|arch_sh3_dsp_up
-value|(arch_sh3_dsp | arch_sh4al_dsp_up)
+value|(arch_sh3_dsp \ 		| arch_sh4al_dsp_up)
 end_define
 
 begin_define
@@ -489,20 +1010,6 @@ define|#
 directive|define
 name|arch_sh4al_dsp_up
 value|(arch_sh4al_dsp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|arch_sh4_nofp_up
-value|(arch_sh4_nofpu | arch_sh4_up | arch_sh4a_nofp_up)
-end_define
-
-begin_define
-define|#
-directive|define
-name|arch_sh4a_nofp_up
-value|(arch_sh4a_nofpu | arch_sh4a_up | arch_sh4al_dsp_up)
 end_define
 
 begin_typedef
@@ -522,9 +1029,10 @@ decl_stmt|;
 name|sh_nibble_type
 name|nibbles
 index|[
-literal|5
+literal|9
 index|]
 decl_stmt|;
+name|unsigned
 name|int
 name|arch
 decl_stmt|;
@@ -564,7 +1072,7 @@ block|,
 name|IMM0_8
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0011nnnnmmmm1100 add<REG_M>,<REG_N> */
@@ -587,7 +1095,7 @@ block|,
 name|HEX_C
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0011nnnnmmmm1110 addc<REG_M>,<REG_N>*/
@@ -610,7 +1118,7 @@ block|,
 name|HEX_E
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0011nnnnmmmm1111 addv<REG_M>,<REG_N>*/
@@ -633,7 +1141,7 @@ block|,
 name|HEX_F
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 11001001i8*1.... and #<imm>,R0       */
@@ -654,7 +1162,7 @@ block|,
 name|IMM0_8
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0010nnnnmmmm1001 and<REG_M>,<REG_N> */
@@ -677,7 +1185,7 @@ block|,
 name|HEX_9
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 11001101i8*1.... and.b #<imm>,@(R0,GBR)*/
@@ -698,7 +1206,7 @@ block|,
 name|IMM0_8
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 1010i12......... bra<bdisp12>       */
@@ -715,7 +1223,7 @@ block|,
 name|BRANCH_12
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 1011i12......... bsr<bdisp12>       */
@@ -732,7 +1240,7 @@ block|,
 name|BRANCH_12
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 10001001i8p1.... bt<bdisp8>         */
@@ -751,7 +1259,7 @@ block|,
 name|BRANCH_8
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 10001011i8p1.... bf<bdisp8>         */
@@ -770,7 +1278,7 @@ block|,
 name|BRANCH_8
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 10001101i8p1.... bt.s<bdisp8>       */
@@ -888,7 +1396,7 @@ block|,
 name|HEX_8
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0000000001001000 clrs                */
@@ -909,7 +1417,7 @@ block|,
 name|HEX_8
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0000000000001000 clrt                */
@@ -930,7 +1438,7 @@ block|,
 name|HEX_8
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 10001000i8*1.... cmp/eq #<imm>,R0    */
@@ -951,7 +1459,7 @@ block|,
 name|IMM0_8
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0011nnnnmmmm0000 cmp/eq<REG_M>,<REG_N>*/
@@ -974,7 +1482,7 @@ block|,
 name|HEX_0
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0011nnnnmmmm0011 cmp/ge<REG_M>,<REG_N>*/
@@ -997,7 +1505,7 @@ block|,
 name|HEX_3
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0011nnnnmmmm0111 cmp/gt<REG_M>,<REG_N>*/
@@ -1020,7 +1528,7 @@ block|,
 name|HEX_7
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0011nnnnmmmm0110 cmp/hi<REG_M>,<REG_N>*/
@@ -1043,7 +1551,7 @@ block|,
 name|HEX_6
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0011nnnnmmmm0010 cmp/hs<REG_M>,<REG_N>*/
@@ -1066,7 +1574,7 @@ block|,
 name|HEX_2
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00010101 cmp/pl<REG_N>      */
@@ -1087,7 +1595,7 @@ block|,
 name|HEX_5
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00010001 cmp/pz<REG_N>      */
@@ -1108,7 +1616,7 @@ block|,
 name|HEX_1
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0010nnnnmmmm1100 cmp/str<REG_M>,<REG_N>*/
@@ -1131,7 +1639,7 @@ block|,
 name|HEX_C
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0010nnnnmmmm0111 div0s<REG_M>,<REG_N>*/
@@ -1154,7 +1662,7 @@ block|,
 name|HEX_7
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0000000000011001 div0u               */
@@ -1175,7 +1683,7 @@ block|,
 name|HEX_9
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0011nnnnmmmm0100 div1<REG_M>,<REG_N>*/
@@ -1198,7 +1706,7 @@ block|,
 name|HEX_4
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0110nnnnmmmm1110 exts.b<REG_M>,<REG_N>*/
@@ -1221,7 +1729,7 @@ block|,
 name|HEX_E
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0110nnnnmmmm1111 exts.w<REG_M>,<REG_N>*/
@@ -1244,7 +1752,7 @@ block|,
 name|HEX_F
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0110nnnnmmmm1100 extu.b<REG_M>,<REG_N>*/
@@ -1267,7 +1775,7 @@ block|,
 name|HEX_C
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0110nnnnmmmm1101 extu.w<REG_M>,<REG_N>*/
@@ -1290,7 +1798,7 @@ block|,
 name|HEX_D
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0000nnnn11100011 icbi @<REG_N>       */
@@ -1311,7 +1819,7 @@ block|,
 name|HEX_3
 block|}
 block|,
-name|arch_sh4a_nofp_up
+name|arch_sh4a_nofpu_up
 block|}
 block|,
 comment|/* 0100nnnn00101011 jmp @<REG_N>        */
@@ -1332,7 +1840,7 @@ block|,
 name|HEX_B
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00001011 jsr @<REG_N>        */
@@ -1353,7 +1861,7 @@ block|,
 name|HEX_B
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00001110 ldc<REG_N>,SR      */
@@ -1376,7 +1884,7 @@ block|,
 name|HEX_E
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00011110 ldc<REG_N>,GBR     */
@@ -1399,7 +1907,53 @@ block|,
 name|HEX_E
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
+block|}
+block|,
+comment|/* 0100nnnn00111010 ldc<REG_N>,SGR     */
+block|{
+literal|"ldc"
+block|,
+block|{
+name|A_REG_N
+block|,
+name|A_SGR
+block|}
+block|,
+block|{
+name|HEX_4
+block|,
+name|REG_N
+block|,
+name|HEX_3
+block|,
+name|HEX_A
+block|}
+block|,
+name|arch_sh4_nommu_nofpu_up
+block|}
+block|,
+comment|/* 0100mmmm01001010 ldc<REG_M>,TBR     */
+block|{
+literal|"ldc"
+block|,
+block|{
+name|A_REG_M
+block|,
+name|A_TBR
+block|}
+block|,
+block|{
+name|HEX_4
+block|,
+name|REG_M
+block|,
+name|HEX_4
+block|,
+name|HEX_A
+block|}
+block|,
+name|arch_sh2a_nofpu_up
 block|}
 block|,
 comment|/* 0100nnnn00101110 ldc<REG_N>,VBR     */
@@ -1422,7 +1976,7 @@ block|,
 name|HEX_E
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn01011110 ldc<REG_N>,MOD     */
@@ -1514,7 +2068,7 @@ block|,
 name|HEX_E
 block|}
 block|,
-name|arch_sh3_up
+name|arch_sh3_nommu_up
 block|}
 block|,
 comment|/* 0100nnnn01001110 ldc<REG_N>,SPC     */
@@ -1537,7 +2091,7 @@ block|,
 name|HEX_E
 block|}
 block|,
-name|arch_sh3_up
+name|arch_sh3_nommu_up
 block|}
 block|,
 comment|/* 0100nnnn11111010 ldc<REG_N>,DBR     */
@@ -1560,7 +2114,7 @@ block|,
 name|HEX_A
 block|}
 block|,
-name|arch_sh4_nofp_up
+name|arch_sh4_nommu_nofpu_up
 block|}
 block|,
 comment|/* 0100nnnn1xxx1110 ldc<REG_N>,Rn_BANK */
@@ -1583,7 +2137,7 @@ block|,
 name|HEX_E
 block|}
 block|,
-name|arch_sh3_up
+name|arch_sh3_nommu_up
 block|}
 block|,
 comment|/* 0100nnnn00000111 ldc.l @<REG_N>+,SR  */
@@ -1606,7 +2160,7 @@ block|,
 name|HEX_7
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00010111 ldc.l @<REG_N>+,GBR */
@@ -1629,7 +2183,7 @@ block|,
 name|HEX_7
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00100111 ldc.l @<REG_N>+,VBR */
@@ -1652,7 +2206,30 @@ block|,
 name|HEX_7
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
+block|}
+block|,
+comment|/* 0100nnnn00110110 ldc.l @<REG_N>+,SGR */
+block|{
+literal|"ldc.l"
+block|,
+block|{
+name|A_INC_N
+block|,
+name|A_SGR
+block|}
+block|,
+block|{
+name|HEX_4
+block|,
+name|REG_N
+block|,
+name|HEX_3
+block|,
+name|HEX_6
+block|}
+block|,
+name|arch_sh4_nommu_nofpu_up
 block|}
 block|,
 comment|/* 0100nnnn01010111 ldc.l @<REG_N>+,MOD */
@@ -1744,7 +2321,7 @@ block|,
 name|HEX_7
 block|}
 block|,
-name|arch_sh3_up
+name|arch_sh3_nommu_up
 block|}
 block|,
 comment|/* 0100nnnn01000111 ldc.l @<REG_N>+,SPC */
@@ -1767,7 +2344,7 @@ block|,
 name|HEX_7
 block|}
 block|,
-name|arch_sh3_up
+name|arch_sh3_nommu_up
 block|}
 block|,
 comment|/* 0100nnnn11110110 ldc.l @<REG_N>+,DBR */
@@ -1790,10 +2367,10 @@ block|,
 name|HEX_6
 block|}
 block|,
-name|arch_sh4_nofp_up
+name|arch_sh4_nommu_nofpu_up
 block|}
 block|,
-comment|/* 0100nnnn1xxx0111 ldc.l<REG_N>,Rn_BANK */
+comment|/* 0100nnnn1xxx0111 ldc.l @<REG_N>+,Rn_BANK */
 block|{
 literal|"ldc.l"
 block|,
@@ -1813,7 +2390,7 @@ block|,
 name|HEX_7
 block|}
 block|,
-name|arch_sh3_up
+name|arch_sh3_nommu_up
 block|}
 block|,
 comment|/* 0100mmmm00110100 ldrc<REG_M>        */
@@ -1914,7 +2491,7 @@ block|,
 name|HEX_A
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00011010 lds<REG_N>,MACL    */
@@ -1937,7 +2514,7 @@ block|,
 name|HEX_A
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00101010 lds<REG_N>,PR      */
@@ -1960,7 +2537,7 @@ block|,
 name|HEX_A
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn01101010 lds<REG_N>,DSR	*/
@@ -2167,7 +2744,7 @@ block|,
 name|HEX_6
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00010110 lds.l @<REG_N>+,MACL*/
@@ -2190,7 +2767,7 @@ block|,
 name|HEX_6
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00100110 lds.l @<REG_N>+,PR  */
@@ -2213,7 +2790,7 @@ block|,
 name|HEX_6
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn01100110 lds.l @<REG_N>+,DSR	*/
@@ -2441,7 +3018,7 @@ block|,
 name|HEX_F
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 1110nnnni8*1.... mov #<imm>,<REG_N>  */
@@ -2462,7 +3039,7 @@ block|,
 name|IMM0_8
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0110nnnnmmmm0011 mov<REG_M>,<REG_N> */
@@ -2485,7 +3062,7 @@ block|,
 name|HEX_3
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0000nnnnmmmm0100 mov.b<REG_M>,@(R0,<REG_N>)*/
@@ -2508,7 +3085,7 @@ block|,
 name|HEX_4
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0010nnnnmmmm0100 mov.b<REG_M>,@-<REG_N>*/
@@ -2531,7 +3108,7 @@ block|,
 name|HEX_4
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0010nnnnmmmm0000 mov.b<REG_M>,@<REG_N>*/
@@ -2554,7 +3131,7 @@ block|,
 name|HEX_0
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 10000100mmmmi4*1 mov.b @(<disp>,<REG_M>),R0*/
@@ -2577,7 +3154,7 @@ block|,
 name|IMM0_4
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 11000100i8*1.... mov.b @(<disp>,GBR),R0*/
@@ -2598,7 +3175,7 @@ block|,
 name|IMM0_8
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0000nnnnmmmm1100 mov.b @(R0,<REG_M>),<REG_N>*/
@@ -2621,7 +3198,7 @@ block|,
 name|HEX_C
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0110nnnnmmmm0100 mov.b @<REG_M>+,<REG_N>*/
@@ -2644,7 +3221,7 @@ block|,
 name|HEX_4
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0110nnnnmmmm0000 mov.b @<REG_M>,<REG_N>*/
@@ -2667,7 +3244,7 @@ block|,
 name|HEX_0
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 10000000mmmmi4*1 mov.b R0,@(<disp>,<REG_M>)*/
@@ -2690,7 +3267,7 @@ block|,
 name|IMM1_4
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 11000000i8*1.... mov.b R0,@(<disp>,GBR)*/
@@ -2711,7 +3288,111 @@ block|,
 name|IMM1_8
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
+block|}
+block|,
+comment|/* 0100nnnn10001011 mov.b R0,@<REG_N>+ */
+block|{
+literal|"mov.b"
+block|,
+block|{
+name|A_R0
+block|,
+name|A_INC_N
+block|}
+block|,
+block|{
+name|HEX_4
+block|,
+name|REG_N
+block|,
+name|HEX_8
+block|,
+name|HEX_B
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0100nnnn11001011 mov.b @-<REG_M>,R0 */
+block|{
+literal|"mov.b"
+block|,
+block|{
+name|A_DEC_M
+block|,
+name|A_R0
+block|}
+block|,
+block|{
+name|HEX_4
+block|,
+name|REG_M
+block|,
+name|HEX_C
+block|,
+name|HEX_B
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0011nnnnmmmm0001 0000dddddddddddd mov.b<REG_M>,@(<DISP12>,<REG_N>) */
+block|{
+literal|"mov.b"
+block|,
+block|{
+name|A_REG_M
+block|,
+name|A_DISP_REG_N
+block|}
+block|,
+block|{
+name|HEX_3
+block|,
+name|REG_N
+block|,
+name|REG_M
+block|,
+name|HEX_1
+block|,
+name|HEX_0
+block|,
+name|DISP1_12
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+operator||
+name|arch_op32
+block|}
+block|,
+comment|/* 0011nnnnmmmm0001 0100dddddddddddd mov.b @(<DISP12>,<REG_M>),<REG_N> */
+block|{
+literal|"mov.b"
+block|,
+block|{
+name|A_DISP_REG_M
+block|,
+name|A_REG_N
+block|}
+block|,
+block|{
+name|HEX_3
+block|,
+name|REG_N
+block|,
+name|REG_M
+block|,
+name|HEX_1
+block|,
+name|HEX_4
+block|,
+name|DISP0_12
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+operator||
+name|arch_op32
 block|}
 block|,
 comment|/* 0001nnnnmmmmi4*4 mov.l<REG_M>,@(<disp>,<REG_N>)*/
@@ -2734,7 +3415,7 @@ block|,
 name|IMM1_4BY4
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0000nnnnmmmm0110 mov.l<REG_M>,@(R0,<REG_N>)*/
@@ -2757,7 +3438,7 @@ block|,
 name|HEX_6
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0010nnnnmmmm0110 mov.l<REG_M>,@-<REG_N>*/
@@ -2780,7 +3461,7 @@ block|,
 name|HEX_6
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0010nnnnmmmm0010 mov.l<REG_M>,@<REG_N>*/
@@ -2803,7 +3484,7 @@ block|,
 name|HEX_2
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0101nnnnmmmmi4*4 mov.l @(<disp>,<REG_M>),<REG_N>*/
@@ -2826,7 +3507,7 @@ block|,
 name|IMM0_4BY4
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 11000110i8*4.... mov.l @(<disp>,GBR),R0*/
@@ -2847,7 +3528,7 @@ block|,
 name|IMM0_8BY4
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 1101nnnni8p4.... mov.l @(<disp>,PC),<REG_N>*/
@@ -2868,7 +3549,7 @@ block|,
 name|PCRELIMM_8BY4
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0000nnnnmmmm1110 mov.l @(R0,<REG_M>),<REG_N>*/
@@ -2891,7 +3572,7 @@ block|,
 name|HEX_E
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0110nnnnmmmm0110 mov.l @<REG_M>+,<REG_N>*/
@@ -2914,7 +3595,7 @@ block|,
 name|HEX_6
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0110nnnnmmmm0010 mov.l @<REG_M>,<REG_N>*/
@@ -2937,7 +3618,7 @@ block|,
 name|HEX_2
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 11000010i8*4.... mov.l R0,@(<disp>,GBR)*/
@@ -2958,7 +3639,111 @@ block|,
 name|IMM1_8BY4
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
+block|}
+block|,
+comment|/* 0100nnnn10101011 mov.l R0,@<REG_N>+ */
+block|{
+literal|"mov.l"
+block|,
+block|{
+name|A_R0
+block|,
+name|A_INC_N
+block|}
+block|,
+block|{
+name|HEX_4
+block|,
+name|REG_N
+block|,
+name|HEX_A
+block|,
+name|HEX_B
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0100nnnn11001011 mov.l @-<REG_M>,R0 */
+block|{
+literal|"mov.l"
+block|,
+block|{
+name|A_DEC_M
+block|,
+name|A_R0
+block|}
+block|,
+block|{
+name|HEX_4
+block|,
+name|REG_M
+block|,
+name|HEX_E
+block|,
+name|HEX_B
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0011nnnnmmmm0001 0010dddddddddddd mov.l<REG_M>,@(<DISP12>,<REG_N>) */
+block|{
+literal|"mov.l"
+block|,
+block|{
+name|A_REG_M
+block|,
+name|A_DISP_REG_N
+block|}
+block|,
+block|{
+name|HEX_3
+block|,
+name|REG_N
+block|,
+name|REG_M
+block|,
+name|HEX_1
+block|,
+name|HEX_2
+block|,
+name|DISP1_12BY4
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+operator||
+name|arch_op32
+block|}
+block|,
+comment|/* 0011nnnnmmmm0001 0110dddddddddddd mov.l @(<DISP12>,<REG_M>),<REG_N> */
+block|{
+literal|"mov.l"
+block|,
+block|{
+name|A_DISP_REG_M
+block|,
+name|A_REG_N
+block|}
+block|,
+block|{
+name|HEX_3
+block|,
+name|REG_N
+block|,
+name|REG_M
+block|,
+name|HEX_1
+block|,
+name|HEX_6
+block|,
+name|DISP0_12BY4
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+operator||
+name|arch_op32
 block|}
 block|,
 comment|/* 0000nnnnmmmm0101 mov.w<REG_M>,@(R0,<REG_N>)*/
@@ -2981,7 +3766,7 @@ block|,
 name|HEX_5
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0010nnnnmmmm0101 mov.w<REG_M>,@-<REG_N>*/
@@ -3004,7 +3789,7 @@ block|,
 name|HEX_5
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0010nnnnmmmm0001 mov.w<REG_M>,@<REG_N>*/
@@ -3027,7 +3812,7 @@ block|,
 name|HEX_1
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 10000101mmmmi4*2 mov.w @(<disp>,<REG_M>),R0*/
@@ -3050,7 +3835,7 @@ block|,
 name|IMM0_4BY2
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 11000101i8*2.... mov.w @(<disp>,GBR),R0*/
@@ -3071,7 +3856,7 @@ block|,
 name|IMM0_8BY2
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 1001nnnni8p2.... mov.w @(<disp>,PC),<REG_N>*/
@@ -3092,7 +3877,7 @@ block|,
 name|PCRELIMM_8BY2
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0000nnnnmmmm1101 mov.w @(R0,<REG_M>),<REG_N>*/
@@ -3115,7 +3900,7 @@ block|,
 name|HEX_D
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0110nnnnmmmm0101 mov.w @<REG_M>+,<REG_N>*/
@@ -3138,7 +3923,7 @@ block|,
 name|HEX_5
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0110nnnnmmmm0001 mov.w @<REG_M>,<REG_N>*/
@@ -3161,7 +3946,7 @@ block|,
 name|HEX_1
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 10000001mmmmi4*2 mov.w R0,@(<disp>,<REG_M>)*/
@@ -3184,7 +3969,7 @@ block|,
 name|IMM1_4BY2
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 11000001i8*2.... mov.w R0,@(<disp>,GBR)*/
@@ -3205,7 +3990,111 @@ block|,
 name|IMM1_8BY2
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
+block|}
+block|,
+comment|/* 0100nnnn10011011 mov.w R0,@<REG_N>+ */
+block|{
+literal|"mov.w"
+block|,
+block|{
+name|A_R0
+block|,
+name|A_INC_N
+block|}
+block|,
+block|{
+name|HEX_4
+block|,
+name|REG_N
+block|,
+name|HEX_9
+block|,
+name|HEX_B
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0100nnnn11011011 mov.w @-<REG_M>,R0 */
+block|{
+literal|"mov.w"
+block|,
+block|{
+name|A_DEC_M
+block|,
+name|A_R0
+block|}
+block|,
+block|{
+name|HEX_4
+block|,
+name|REG_M
+block|,
+name|HEX_D
+block|,
+name|HEX_B
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0011nnnnmmmm0001 0001dddddddddddd mov.w<REG_M>,@(<DISP12>,<REG_N>) */
+block|{
+literal|"mov.w"
+block|,
+block|{
+name|A_REG_M
+block|,
+name|A_DISP_REG_N
+block|}
+block|,
+block|{
+name|HEX_3
+block|,
+name|REG_N
+block|,
+name|REG_M
+block|,
+name|HEX_1
+block|,
+name|HEX_1
+block|,
+name|DISP1_12BY2
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+operator||
+name|arch_op32
+block|}
+block|,
+comment|/* 0011nnnnmmmm0001 0101dddddddddddd mov.w @(<DISP12>,<REG_M>),<REG_N> */
+block|{
+literal|"mov.w"
+block|,
+block|{
+name|A_DISP_REG_M
+block|,
+name|A_REG_N
+block|}
+block|,
+block|{
+name|HEX_3
+block|,
+name|REG_N
+block|,
+name|REG_M
+block|,
+name|HEX_1
+block|,
+name|HEX_5
+block|,
+name|DISP0_12BY2
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+operator||
+name|arch_op32
 block|}
 block|,
 comment|/* 11000111i8p4.... mova @(<disp>,PC),R0*/
@@ -3226,7 +4115,7 @@ block|,
 name|PCRELIMM_8BY4
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0000nnnn11000011 movca.l R0,@<REG_N> */
@@ -3249,7 +4138,7 @@ block|,
 name|HEX_3
 block|}
 block|,
-name|arch_sh4_nofp_up
+name|arch_sh4_nommu_nofpu_up
 block|}
 block|,
 comment|/* 0000nnnn01110011 movco.l r0,@<REG_N> */
@@ -3272,7 +4161,7 @@ block|,
 name|HEX_3
 block|}
 block|,
-name|arch_sh4a_nofp_up
+name|arch_sh4a_nofpu_up
 block|}
 block|,
 comment|/* 0000mmmm01100011 movli.l @<REG_M>,r0 */
@@ -3295,7 +4184,7 @@ block|,
 name|HEX_3
 block|}
 block|,
-name|arch_sh4a_nofp_up
+name|arch_sh4a_nofpu_up
 block|}
 block|,
 comment|/* 0000nnnn00101001 movt<REG_N>        */
@@ -3316,7 +4205,7 @@ block|,
 name|HEX_9
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100mmmm10101001 movua.l @<REG_M>,r0 */
@@ -3339,7 +4228,7 @@ block|,
 name|HEX_9
 block|}
 block|,
-name|arch_sh4a_nofp_up
+name|arch_sh4a_nofpu_up
 block|}
 block|,
 comment|/* 0100mmmm11101001 movua.l @<REG_M>+,r0 */
@@ -3362,7 +4251,7 @@ block|,
 name|HEX_9
 block|}
 block|,
-name|arch_sh4a_nofp_up
+name|arch_sh4a_nofpu_up
 block|}
 block|,
 comment|/* 0010nnnnmmmm1111 muls.w<REG_M>,<REG_N>*/
@@ -3385,7 +4274,7 @@ block|,
 name|HEX_F
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0010nnnnmmmm1111 muls<REG_M>,<REG_N>*/
@@ -3408,7 +4297,7 @@ block|,
 name|HEX_F
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0000nnnnmmmm0111 mul.l<REG_M>,<REG_N>*/
@@ -3454,7 +4343,7 @@ block|,
 name|HEX_E
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0010nnnnmmmm1110 mulu<REG_M>,<REG_N>*/
@@ -3477,7 +4366,7 @@ block|,
 name|HEX_E
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0110nnnnmmmm1011 neg<REG_M>,<REG_N> */
@@ -3500,7 +4389,7 @@ block|,
 name|HEX_B
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0110nnnnmmmm1010 negc<REG_M>,<REG_N>*/
@@ -3523,7 +4412,7 @@ block|,
 name|HEX_A
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0000000000001001 nop                 */
@@ -3544,7 +4433,7 @@ block|,
 name|HEX_9
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0110nnnnmmmm0111 not<REG_M>,<REG_N> */
@@ -3567,7 +4456,7 @@ block|,
 name|HEX_7
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0000nnnn10010011 ocbi @<REG_N>       */
@@ -3588,7 +4477,7 @@ block|,
 name|HEX_3
 block|}
 block|,
-name|arch_sh4_nofp_up
+name|arch_sh4_nommu_nofpu_up
 block|}
 block|,
 comment|/* 0000nnnn10100011 ocbp @<REG_N>       */
@@ -3609,7 +4498,7 @@ block|,
 name|HEX_3
 block|}
 block|,
-name|arch_sh4_nofp_up
+name|arch_sh4_nommu_nofpu_up
 block|}
 block|,
 comment|/* 0000nnnn10110011 ocbwb @<REG_N>      */
@@ -3630,7 +4519,7 @@ block|,
 name|HEX_3
 block|}
 block|,
-name|arch_sh4_nofp_up
+name|arch_sh4_nommu_nofpu_up
 block|}
 block|,
 comment|/* 11001011i8*1.... or #<imm>,R0        */
@@ -3651,7 +4540,7 @@ block|,
 name|IMM0_8
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0010nnnnmmmm1011 or<REG_M>,<REG_N>  */
@@ -3674,7 +4563,7 @@ block|,
 name|HEX_B
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 11001111i8*1.... or.b #<imm>,@(R0,GBR)*/
@@ -3695,7 +4584,7 @@ block|,
 name|IMM0_8
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0000nnnn10000011 pref @<REG_N>       */
@@ -3716,7 +4605,7 @@ block|,
 name|HEX_3
 block|}
 block|,
-name|arch_sh4_nofp_up
+name|arch_sh2a_nofpu_or_sh4_nommu_nofpu_up
 block|}
 block|,
 comment|/* 0000nnnn11010011 prefi @<REG_N>      */
@@ -3737,7 +4626,7 @@ block|,
 name|HEX_3
 block|}
 block|,
-name|arch_sh4a_nofp_up
+name|arch_sh4a_nofpu_up
 block|}
 block|,
 comment|/* 0100nnnn00100100 rotcl<REG_N>       */
@@ -3758,7 +4647,7 @@ block|,
 name|HEX_4
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00100101 rotcr<REG_N>       */
@@ -3779,7 +4668,7 @@ block|,
 name|HEX_5
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00000100 rotl<REG_N>        */
@@ -3800,7 +4689,7 @@ block|,
 name|HEX_4
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00000101 rotr<REG_N>        */
@@ -3821,7 +4710,7 @@ block|,
 name|HEX_5
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0000000000101011 rte                 */
@@ -3842,7 +4731,7 @@ block|,
 name|HEX_B
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0000000000001011 rts                 */
@@ -3863,7 +4752,7 @@ block|,
 name|HEX_B
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0000000010011000 setdmx              */
@@ -3926,7 +4815,7 @@ block|,
 name|HEX_8
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0000000000011000 sett                */
@@ -3947,7 +4836,7 @@ block|,
 name|HEX_8
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00010100 setrc<REG_N>       */
@@ -4060,7 +4949,7 @@ block|,
 name|HEX_C
 block|}
 block|,
-name|arch_sh3_up
+name|arch_sh2a_nofpu_or_sh3_nommu_up
 block|}
 block|,
 comment|/* 0100nnnnmmmm1101 shld<REG_M>,<REG_N>*/
@@ -4083,7 +4972,7 @@ block|,
 name|HEX_D
 block|}
 block|,
-name|arch_sh3_up
+name|arch_sh2a_nofpu_or_sh3_nommu_up
 block|}
 block|,
 comment|/* 0100nnnn00100000 shal<REG_N>        */
@@ -4104,7 +4993,7 @@ block|,
 name|HEX_0
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00100001 shar<REG_N>        */
@@ -4125,7 +5014,7 @@ block|,
 name|HEX_1
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00000000 shll<REG_N>        */
@@ -4146,7 +5035,7 @@ block|,
 name|HEX_0
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00101000 shll16<REG_N>      */
@@ -4167,7 +5056,7 @@ block|,
 name|HEX_8
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00001000 shll2<REG_N>       */
@@ -4188,7 +5077,7 @@ block|,
 name|HEX_8
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00011000 shll8<REG_N>       */
@@ -4209,7 +5098,7 @@ block|,
 name|HEX_8
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00000001 shlr<REG_N>        */
@@ -4230,7 +5119,7 @@ block|,
 name|HEX_1
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00101001 shlr16<REG_N>      */
@@ -4251,7 +5140,7 @@ block|,
 name|HEX_9
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00001001 shlr2<REG_N>       */
@@ -4272,7 +5161,7 @@ block|,
 name|HEX_9
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00011001 shlr8<REG_N>       */
@@ -4293,7 +5182,7 @@ block|,
 name|HEX_9
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0000000000011011 sleep               */
@@ -4314,7 +5203,7 @@ block|,
 name|HEX_B
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0000nnnn00000010 stc SR,<REG_N>      */
@@ -4337,7 +5226,7 @@ block|,
 name|HEX_2
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0000nnnn00010010 stc GBR,<REG_N>     */
@@ -4360,7 +5249,7 @@ block|,
 name|HEX_2
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0000nnnn00100010 stc VBR,<REG_N>     */
@@ -4383,7 +5272,7 @@ block|,
 name|HEX_2
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0000nnnn01010010 stc MOD,<REG_N>     */
@@ -4475,7 +5364,7 @@ block|,
 name|HEX_2
 block|}
 block|,
-name|arch_sh3_up
+name|arch_sh3_nommu_up
 block|}
 block|,
 comment|/* 0000nnnn01000010 stc SPC,<REG_N>     */
@@ -4498,7 +5387,7 @@ block|,
 name|HEX_2
 block|}
 block|,
-name|arch_sh3_up
+name|arch_sh3_nommu_up
 block|}
 block|,
 comment|/* 0000nnnn00111010 stc SGR,<REG_N>     */
@@ -4521,7 +5410,7 @@ block|,
 name|HEX_A
 block|}
 block|,
-name|arch_sh4_nofp_up
+name|arch_sh4_nommu_nofpu_up
 block|}
 block|,
 comment|/* 0000nnnn11111010 stc DBR,<REG_N>     */
@@ -4544,7 +5433,7 @@ block|,
 name|HEX_A
 block|}
 block|,
-name|arch_sh4_nofp_up
+name|arch_sh4_nommu_nofpu_up
 block|}
 block|,
 comment|/* 0000nnnn1xxx0010 stc Rn_BANK,<REG_N> */
@@ -4567,7 +5456,30 @@ block|,
 name|HEX_2
 block|}
 block|,
-name|arch_sh3_up
+name|arch_sh3_nommu_up
+block|}
+block|,
+comment|/* 0000nnnn01001010 stc TBR,<REG_N> */
+block|{
+literal|"stc"
+block|,
+block|{
+name|A_TBR
+block|,
+name|A_REG_N
+block|}
+block|,
+block|{
+name|HEX_0
+block|,
+name|REG_N
+block|,
+name|HEX_4
+block|,
+name|HEX_A
+block|}
+block|,
+name|arch_sh2a_nofpu_up
 block|}
 block|,
 comment|/* 0100nnnn00000011 stc.l SR,@-<REG_N>  */
@@ -4590,7 +5502,7 @@ block|,
 name|HEX_3
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00100011 stc.l VBR,@-<REG_N> */
@@ -4613,7 +5525,7 @@ block|,
 name|HEX_3
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn01010011 stc.l MOD,@-<REG_N> */
@@ -4705,7 +5617,7 @@ block|,
 name|HEX_3
 block|}
 block|,
-name|arch_sh3_up
+name|arch_sh3_nommu_up
 block|}
 block|,
 comment|/* 0100nnnn01000011 stc.l SPC,@-<REG_N> */
@@ -4728,7 +5640,7 @@ block|,
 name|HEX_3
 block|}
 block|,
-name|arch_sh3_up
+name|arch_sh3_nommu_up
 block|}
 block|,
 comment|/* 0100nnnn00010011 stc.l GBR,@-<REG_N> */
@@ -4751,7 +5663,7 @@ block|,
 name|HEX_3
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00110010 stc.l SGR,@-<REG_N> */
@@ -4774,7 +5686,7 @@ block|,
 name|HEX_2
 block|}
 block|,
-name|arch_sh4_nofp_up
+name|arch_sh4_nommu_nofpu_up
 block|}
 block|,
 comment|/* 0100nnnn11110010 stc.l DBR,@-<REG_N> */
@@ -4797,7 +5709,7 @@ block|,
 name|HEX_2
 block|}
 block|,
-name|arch_sh4_nofp_up
+name|arch_sh4_nommu_nofpu_up
 block|}
 block|,
 comment|/* 0100nnnn1xxx0011 stc.l Rn_BANK,@-<REG_N> */
@@ -4820,7 +5732,7 @@ block|,
 name|HEX_3
 block|}
 block|,
-name|arch_sh3_up
+name|arch_sh3_nommu_up
 block|}
 block|,
 comment|/* 0000nnnn00001010 sts MACH,<REG_N>    */
@@ -4843,7 +5755,7 @@ block|,
 name|HEX_A
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0000nnnn00011010 sts MACL,<REG_N>    */
@@ -4866,7 +5778,7 @@ block|,
 name|HEX_A
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0000nnnn00101010 sts PR,<REG_N>      */
@@ -4889,7 +5801,7 @@ block|,
 name|HEX_A
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0000nnnn01101010 sts DSR,<REG_N>	*/
@@ -5096,7 +6008,7 @@ block|,
 name|HEX_2
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00010010 sts.l MACL,@-<REG_N>*/
@@ -5119,7 +6031,7 @@ block|,
 name|HEX_2
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00100010 sts.l PR,@-<REG_N>  */
@@ -5142,7 +6054,7 @@ block|,
 name|HEX_2
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn01100110 sts.l DSR,@-<REG_N>	*/
@@ -5349,7 +6261,7 @@ block|,
 name|HEX_8
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0011nnnnmmmm1010 subc<REG_M>,<REG_N>*/
@@ -5372,7 +6284,7 @@ block|,
 name|HEX_A
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0011nnnnmmmm1011 subv<REG_M>,<REG_N>*/
@@ -5395,7 +6307,7 @@ block|,
 name|HEX_B
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0110nnnnmmmm1000 swap.b<REG_M>,<REG_N>*/
@@ -5418,7 +6330,7 @@ block|,
 name|HEX_8
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0110nnnnmmmm1001 swap.w<REG_M>,<REG_N>*/
@@ -5441,7 +6353,7 @@ block|,
 name|HEX_9
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0000000010101011 synco               */
@@ -5462,7 +6374,7 @@ block|,
 name|HEX_B
 block|}
 block|,
-name|arch_sh4a_nofp_up
+name|arch_sh4a_nofpu_up
 block|}
 block|,
 comment|/* 0100nnnn00011011 tas.b @<REG_N>      */
@@ -5483,7 +6395,7 @@ block|,
 name|HEX_B
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 11000011i8*1.... trapa #<imm>        */
@@ -5502,7 +6414,7 @@ block|,
 name|IMM0_8
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 11001000i8*1.... tst #<imm>,R0       */
@@ -5523,7 +6435,7 @@ block|,
 name|IMM0_8
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0010nnnnmmmm1000 tst<REG_M>,<REG_N> */
@@ -5546,7 +6458,7 @@ block|,
 name|HEX_8
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 11001100i8*1.... tst.b #<imm>,@(R0,GBR)*/
@@ -5567,7 +6479,7 @@ block|,
 name|IMM0_8
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 11001010i8*1.... xor #<imm>,R0       */
@@ -5588,7 +6500,7 @@ block|,
 name|IMM0_8
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0010nnnnmmmm1010 xor<REG_M>,<REG_N> */
@@ -5611,7 +6523,7 @@ block|,
 name|HEX_A
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 11001110i8*1.... xor.b #<imm>,@(R0,GBR)*/
@@ -5632,7 +6544,7 @@ block|,
 name|IMM0_8
 block|}
 block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0010nnnnmmmm1101 xtrct<REG_M>,<REG_N>*/
@@ -5655,30 +6567,7 @@ block|,
 name|HEX_D
 block|}
 block|,
-name|arch_sh1_up
-block|}
-block|,
-comment|/* 0000nnnnmmmm0111 mul.l<REG_M>,<REG_N>*/
-block|{
-literal|"mul.l"
-block|,
-block|{
-name|A_REG_M
-block|,
-name|A_REG_N
-block|}
-block|,
-block|{
-name|HEX_0
-block|,
-name|REG_N
-block|,
-name|REG_M
-block|,
-name|HEX_7
-block|}
-block|,
-name|arch_sh1_up
+name|arch_sh_up
 block|}
 block|,
 comment|/* 0100nnnn00010000 dt<REG_N>          */
@@ -6789,7 +7678,7 @@ block|,
 name|arch_sh4al_dsp_up
 block|}
 block|,
-comment|/* nnmm000011 movy.w @<REG_Ayx>+r8,<DSP_REG_YX> */
+comment|/* nnmm000011 movy.w @<REG_Ayx>+r9,<DSP_REG_YX> */
 block|{
 literal|"movy.w"
 block|,
@@ -6858,7 +7747,7 @@ block|,
 name|arch_sh4al_dsp_up
 block|}
 block|,
-comment|/* nnmm010011 movy.w<DSP_REG_AY>,@<REG_Ayx>+r8 */
+comment|/* nnmm010011 movy.w<DSP_REG_AY>,@<REG_Ayx>+r9 */
 block|{
 literal|"movy.w"
 block|,
@@ -6927,7 +7816,7 @@ block|,
 name|arch_sh4al_dsp_up
 block|}
 block|,
-comment|/* nnmm100011 movy.l @<REG_Ayx>+r8,<DSP_REG_YX> */
+comment|/* nnmm100011 movy.l @<REG_Ayx>+r9,<DSP_REG_YX> */
 block|{
 literal|"movy.l"
 block|,
@@ -6996,7 +7885,7 @@ block|,
 name|arch_sh4al_dsp_up
 block|}
 block|,
-comment|/* nnmm110011 movy.l<DSP_REG_AY>,@<REG_Ayx>+r8 */
+comment|/* nnmm110011 movy.l<DSP_REG_AY>,@<REG_Ayx>+r9 */
 block|{
 literal|"movy.l"
 block|,
@@ -8073,7 +8962,7 @@ block|,
 name|HEX_D
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh2a_or_sh4_up
 block|}
 block|,
 comment|/* 1111nnnnmmmm0000 fadd<F_REG_M>,<F_REG_N>*/
@@ -8119,7 +9008,7 @@ block|,
 name|HEX_0
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh2a_or_sh4_up
 block|}
 block|,
 comment|/* 1111nnnnmmmm0100 fcmp/eq<F_REG_M>,<F_REG_N>*/
@@ -8165,7 +9054,7 @@ block|,
 name|HEX_4
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh2a_or_sh4_up
 block|}
 block|,
 comment|/* 1111nnnnmmmm0101 fcmp/gt<F_REG_M>,<F_REG_N>*/
@@ -8211,7 +9100,7 @@ block|,
 name|HEX_5
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh2a_or_sh4_up
 block|}
 block|,
 comment|/* 1111nnn010111101 fcnvds<D_REG_N>,FPUL*/
@@ -8234,7 +9123,7 @@ block|,
 name|HEX_D
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh2a_or_sh4_up
 block|}
 block|,
 comment|/* 1111nnn010101101 fcnvsd FPUL,<D_REG_N>*/
@@ -8257,7 +9146,7 @@ block|,
 name|HEX_D
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh2a_or_sh4_up
 block|}
 block|,
 comment|/* 1111nnnnmmmm0011 fdiv<F_REG_M>,<F_REG_N>*/
@@ -8303,7 +9192,7 @@ block|,
 name|HEX_3
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh2a_or_sh4_up
 block|}
 block|,
 comment|/* 1111nnmm11101101 fipr<V_REG_M>,<V_REG_N>*/
@@ -8437,7 +9326,7 @@ block|,
 name|HEX_D
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh2a_or_sh4_up
 block|}
 block|,
 comment|/* 1111nnnnmmmm1110 fmac FR0,<F_REG_M>,<F_REG_N>*/
@@ -8508,7 +9397,7 @@ block|,
 name|HEX_C
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh2a_or_sh4_up
 block|}
 block|,
 comment|/* 1111nnnnmmmm1000 fmov @<REG_M>,<F_REG_N>*/
@@ -8554,7 +9443,7 @@ block|,
 name|HEX_8
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh2a_or_sh4_up
 block|}
 block|,
 comment|/* 1111nnnnmmmm1010 fmov<F_REG_M>,@<REG_N>*/
@@ -8600,7 +9489,7 @@ block|,
 name|HEX_A
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh2a_or_sh4_up
 block|}
 block|,
 comment|/* 1111nnnnmmmm1001 fmov @<REG_M>+,<F_REG_N>*/
@@ -8646,7 +9535,7 @@ block|,
 name|HEX_9
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh2a_or_sh4_up
 block|}
 block|,
 comment|/* 1111nnnnmmmm1011 fmov<F_REG_M>,@-<REG_N>*/
@@ -8692,7 +9581,7 @@ block|,
 name|HEX_B
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh2a_or_sh4_up
 block|}
 block|,
 comment|/* 1111nnnnmmmm0110 fmov @(R0,<REG_M>),<F_REG_N>*/
@@ -8738,7 +9627,7 @@ block|,
 name|HEX_6
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh2a_or_sh4_up
 block|}
 block|,
 comment|/* 1111nnnnmmmm0111 fmov<F_REG_M>,@(R0,<REG_N>)*/
@@ -8784,7 +9673,7 @@ block|,
 name|HEX_7
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh2a_or_sh4_up
 block|}
 block|,
 comment|/* 1111nnn1mmmm1000 fmov.d @<REG_M>,<DX_REG_N>*/
@@ -8807,7 +9696,7 @@ block|,
 name|HEX_8
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh2a_or_sh4_up
 block|}
 block|,
 comment|/* 1111nnnnmmm11010 fmov.d<DX_REG_M>,@<REG_N>*/
@@ -8830,7 +9719,7 @@ block|,
 name|HEX_A
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh2a_or_sh4_up
 block|}
 block|,
 comment|/* 1111nnn1mmmm1001 fmov.d @<REG_M>+,<DX_REG_N>*/
@@ -8853,7 +9742,7 @@ block|,
 name|HEX_9
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh2a_or_sh4_up
 block|}
 block|,
 comment|/* 1111nnnnmmm11011 fmov.d<DX_REG_M>,@-<REG_N>*/
@@ -8876,7 +9765,7 @@ block|,
 name|HEX_B
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh2a_or_sh4_up
 block|}
 block|,
 comment|/* 1111nnn1mmmm0110 fmov.d @(R0,<REG_M>),<DX_REG_N>*/
@@ -8899,7 +9788,7 @@ block|,
 name|HEX_6
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh2a_or_sh4_up
 block|}
 block|,
 comment|/* 1111nnnnmmm10111 fmov.d<DX_REG_M>,@(R0,<REG_N>)*/
@@ -8922,7 +9811,65 @@ block|,
 name|HEX_7
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh2a_or_sh4_up
+block|}
+block|,
+comment|/* 0011nnnnmmmm0001 0011dddddddddddd fmov.d<DX_REG_M>,@(<DISP12>,<REG_N>) */
+block|{
+literal|"fmov.d"
+block|,
+block|{
+name|DX_REG_M
+block|,
+name|A_DISP_REG_N
+block|}
+block|,
+block|{
+name|HEX_3
+block|,
+name|REG_N
+block|,
+name|REG_M
+block|,
+name|HEX_1
+block|,
+name|HEX_3
+block|,
+name|DISP1_12BY8
+block|}
+block|,
+name|arch_sh2a_up
+operator||
+name|arch_op32
+block|}
+block|,
+comment|/* 0011nnnnmmmm0001 0111dddddddddddd fmov.d @(<DISP12>,<REG_M>),<DX_REG_N> */
+block|{
+literal|"fmov.d"
+block|,
+block|{
+name|A_DISP_REG_M
+block|,
+name|DX_REG_N
+block|}
+block|,
+block|{
+name|HEX_3
+block|,
+name|REG_N
+block|,
+name|REG_M
+block|,
+name|HEX_1
+block|,
+name|HEX_7
+block|,
+name|DISP0_12BY8
+block|}
+block|,
+name|arch_sh2a_up
+operator||
+name|arch_op32
 block|}
 block|,
 comment|/* 1111nnnnmmmm1000 fmov.s @<REG_M>,<F_REG_N>*/
@@ -9063,6 +10010,64 @@ block|,
 name|arch_sh2e_up
 block|}
 block|,
+comment|/* 0011nnnnmmmm0001 0011dddddddddddd fmov.s<F_REG_M>,@(<DISP12>,<REG_N>) */
+block|{
+literal|"fmov.s"
+block|,
+block|{
+name|F_REG_M
+block|,
+name|A_DISP_REG_N
+block|}
+block|,
+block|{
+name|HEX_3
+block|,
+name|REG_N
+block|,
+name|REG_M
+block|,
+name|HEX_1
+block|,
+name|HEX_3
+block|,
+name|DISP1_12BY4
+block|}
+block|,
+name|arch_sh2a_up
+operator||
+name|arch_op32
+block|}
+block|,
+comment|/* 0011nnnnmmmm0001 0111dddddddddddd fmov.s @(<DISP12>,<REG_M>),<F_REG_N> */
+block|{
+literal|"fmov.s"
+block|,
+block|{
+name|A_DISP_REG_M
+block|,
+name|F_REG_N
+block|}
+block|,
+block|{
+name|HEX_3
+block|,
+name|REG_N
+block|,
+name|REG_M
+block|,
+name|HEX_1
+block|,
+name|HEX_7
+block|,
+name|DISP0_12BY4
+block|}
+block|,
+name|arch_sh2a_up
+operator||
+name|arch_op32
+block|}
+block|,
 comment|/* 1111nnnnmmmm0010 fmul<F_REG_M>,<F_REG_N>*/
 block|{
 literal|"fmul"
@@ -9106,7 +10111,7 @@ block|,
 name|HEX_2
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh2a_or_sh4_up
 block|}
 block|,
 comment|/* 1111nnnn01001101 fneg<F_REG_N>     */
@@ -9148,7 +10153,7 @@ block|,
 name|HEX_D
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh2a_or_sh4_up
 block|}
 block|,
 comment|/* 1111011111111101 fpchg               */
@@ -9234,7 +10239,7 @@ block|,
 name|HEX_D
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh2a_or_sh4_up
 block|}
 block|,
 comment|/* 1111nnnn01101101 fsqrt<F_REG_N>    */
@@ -9255,7 +10260,7 @@ block|,
 name|HEX_D
 block|}
 block|,
-name|arch_sh3e_up
+name|arch_sh2a_or_sh3e_up
 block|}
 block|,
 comment|/* 1111nnn001101101 fsqrt<D_REG_N>    */
@@ -9276,7 +10281,7 @@ block|,
 name|HEX_D
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh2a_or_sh4_up
 block|}
 block|,
 comment|/* 1111nnnn01111101 fsrra<F_REG_N>    */
@@ -9366,7 +10371,7 @@ block|,
 name|HEX_1
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh2a_or_sh4_up
 block|}
 block|,
 comment|/* 1111nnnn00111101 ftrc<F_REG_N>,FPUL*/
@@ -9412,7 +10417,7 @@ block|,
 name|HEX_D
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh2a_or_sh4_up
 block|}
 block|,
 comment|/* 1111nn0111111101 ftrv XMTRX_M4,<V_REG_n>*/
@@ -9436,6 +10441,936 @@ name|HEX_D
 block|}
 block|,
 name|arch_sh4_up
+block|}
+block|,
+comment|/* 10000110nnnn0iii bclr #<imm>,<REG_N> */
+block|{
+literal|"bclr"
+block|,
+block|{
+name|A_IMM
+block|,
+name|A_REG_N
+block|}
+block|,
+block|{
+name|HEX_8
+block|,
+name|HEX_6
+block|,
+name|REG_N
+block|,
+name|IMM0_3c
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0011nnnn0iii1001 0000dddddddddddd bclr.b #<imm>,@(<DISP12>,<REG_N>) */
+block|{
+literal|"bclr.b"
+block|,
+block|{
+name|A_IMM
+block|,
+name|A_DISP_REG_N
+block|}
+block|,
+block|{
+name|HEX_3
+block|,
+name|REG_N
+block|,
+name|IMM0_3Uc
+block|,
+name|HEX_9
+block|,
+name|HEX_0
+block|,
+name|DISP1_12
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+operator||
+name|arch_op32
+block|}
+block|,
+comment|/* 10000111nnnn1iii bld #<imm>,<REG_N> */
+block|{
+literal|"bld"
+block|,
+block|{
+name|A_IMM
+block|,
+name|A_REG_N
+block|}
+block|,
+block|{
+name|HEX_8
+block|,
+name|HEX_7
+block|,
+name|REG_N
+block|,
+name|IMM0_3s
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0011nnnn0iii1001 0011dddddddddddd bld.b #<imm>,@(<DISP12>,<REG_N>) */
+block|{
+literal|"bld.b"
+block|,
+block|{
+name|A_IMM
+block|,
+name|A_DISP_REG_N
+block|}
+block|,
+block|{
+name|HEX_3
+block|,
+name|REG_N
+block|,
+name|IMM0_3Uc
+block|,
+name|HEX_9
+block|,
+name|HEX_3
+block|,
+name|DISP1_12
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+operator||
+name|arch_op32
+block|}
+block|,
+comment|/* 10000110nnnn1iii bset #<imm>,<REG_N> */
+block|{
+literal|"bset"
+block|,
+block|{
+name|A_IMM
+block|,
+name|A_REG_N
+block|}
+block|,
+block|{
+name|HEX_8
+block|,
+name|HEX_6
+block|,
+name|REG_N
+block|,
+name|IMM0_3s
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0011nnnn0iii1001 0001dddddddddddd bset.b #<imm>,@(<DISP12>,<REG_N>) */
+block|{
+literal|"bset.b"
+block|,
+block|{
+name|A_IMM
+block|,
+name|A_DISP_REG_N
+block|}
+block|,
+block|{
+name|HEX_3
+block|,
+name|REG_N
+block|,
+name|IMM0_3Uc
+block|,
+name|HEX_9
+block|,
+name|HEX_1
+block|,
+name|DISP1_12
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+operator||
+name|arch_op32
+block|}
+block|,
+comment|/* 10000111nnnn0iii bst #<imm>,<REG_N> */
+block|{
+literal|"bst"
+block|,
+block|{
+name|A_IMM
+block|,
+name|A_REG_N
+block|}
+block|,
+block|{
+name|HEX_8
+block|,
+name|HEX_7
+block|,
+name|REG_N
+block|,
+name|IMM0_3c
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0011nnnn0iii1001 0010dddddddddddd bst.b #<imm>,@(<DISP12>,<REG_N>) */
+block|{
+literal|"bst.b"
+block|,
+block|{
+name|A_IMM
+block|,
+name|A_DISP_REG_N
+block|}
+block|,
+block|{
+name|HEX_3
+block|,
+name|REG_N
+block|,
+name|IMM0_3Uc
+block|,
+name|HEX_9
+block|,
+name|HEX_2
+block|,
+name|DISP1_12
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+operator||
+name|arch_op32
+block|}
+block|,
+comment|/* 0100nnnn10010001 clips.b<REG_N> */
+block|{
+literal|"clips.b"
+block|,
+block|{
+name|A_REG_N
+block|}
+block|,
+block|{
+name|HEX_4
+block|,
+name|REG_N
+block|,
+name|HEX_9
+block|,
+name|HEX_1
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0100nnnn10010101 clips.w<REG_N> */
+block|{
+literal|"clips.w"
+block|,
+block|{
+name|A_REG_N
+block|}
+block|,
+block|{
+name|HEX_4
+block|,
+name|REG_N
+block|,
+name|HEX_9
+block|,
+name|HEX_5
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0100nnnn10000001 clipu.b<REG_N> */
+block|{
+literal|"clipu.b"
+block|,
+block|{
+name|A_REG_N
+block|}
+block|,
+block|{
+name|HEX_4
+block|,
+name|REG_N
+block|,
+name|HEX_8
+block|,
+name|HEX_1
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0100nnnn10000101 clipu.w<REG_N> */
+block|{
+literal|"clipu.w"
+block|,
+block|{
+name|A_REG_N
+block|}
+block|,
+block|{
+name|HEX_4
+block|,
+name|REG_N
+block|,
+name|HEX_8
+block|,
+name|HEX_5
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0100nnnn10010100 divs R0,<REG_N> */
+block|{
+literal|"divs"
+block|,
+block|{
+name|A_R0
+block|,
+name|A_REG_N
+block|}
+block|,
+block|{
+name|HEX_4
+block|,
+name|REG_N
+block|,
+name|HEX_9
+block|,
+name|HEX_4
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0100nnnn10000100 divu R0,<REG_N> */
+block|{
+literal|"divu"
+block|,
+block|{
+name|A_R0
+block|,
+name|A_REG_N
+block|}
+block|,
+block|{
+name|HEX_4
+block|,
+name|REG_N
+block|,
+name|HEX_8
+block|,
+name|HEX_4
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0100mmmm01001011 jsr/n @<REG_M>  */
+block|{
+literal|"jsr/n"
+block|,
+block|{
+name|A_IND_M
+block|}
+block|,
+block|{
+name|HEX_4
+block|,
+name|REG_M
+block|,
+name|HEX_4
+block|,
+name|HEX_B
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 10000011dddddddd jsr/n @@(<disp>,TBR) */
+block|{
+literal|"jsr/n"
+block|,
+block|{
+name|A_DISP2_TBR
+block|}
+block|,
+block|{
+name|HEX_8
+block|,
+name|HEX_3
+block|,
+name|IMM0_8BY4
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0100mmmm11100101 ldbank @<REG_M>,R0 */
+block|{
+literal|"ldbank"
+block|,
+block|{
+name|A_IND_M
+block|,
+name|A_R0
+block|}
+block|,
+block|{
+name|HEX_4
+block|,
+name|REG_M
+block|,
+name|HEX_E
+block|,
+name|HEX_5
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0100mmmm11110001 movml.l<REG_M>,@-R15 */
+block|{
+literal|"movml.l"
+block|,
+block|{
+name|A_REG_M
+block|,
+name|A_DEC_R15
+block|}
+block|,
+block|{
+name|HEX_4
+block|,
+name|REG_M
+block|,
+name|HEX_F
+block|,
+name|HEX_1
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0100mmmm11110101 movml.l @R15+,<REG_M> */
+block|{
+literal|"movml.l"
+block|,
+block|{
+name|A_INC_R15
+block|,
+name|A_REG_M
+block|}
+block|,
+block|{
+name|HEX_4
+block|,
+name|REG_M
+block|,
+name|HEX_F
+block|,
+name|HEX_5
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0100mmmm11110000 movml.l<REG_M>,@-R15 */
+block|{
+literal|"movmu.l"
+block|,
+block|{
+name|A_REG_M
+block|,
+name|A_DEC_R15
+block|}
+block|,
+block|{
+name|HEX_4
+block|,
+name|REG_M
+block|,
+name|HEX_F
+block|,
+name|HEX_0
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0100mmmm11110100 movml.l @R15+,<REG_M> */
+block|{
+literal|"movmu.l"
+block|,
+block|{
+name|A_INC_R15
+block|,
+name|A_REG_M
+block|}
+block|,
+block|{
+name|HEX_4
+block|,
+name|REG_M
+block|,
+name|HEX_F
+block|,
+name|HEX_4
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0000nnnn00111001 movrt<REG_N> */
+block|{
+literal|"movrt"
+block|,
+block|{
+name|A_REG_N
+block|}
+block|,
+block|{
+name|HEX_0
+block|,
+name|REG_N
+block|,
+name|HEX_3
+block|,
+name|HEX_9
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0100nnnn10000000 mulr R0,<REG_N> */
+block|{
+literal|"mulr"
+block|,
+block|{
+name|A_R0
+block|,
+name|A_REG_N
+block|}
+block|,
+block|{
+name|HEX_4
+block|,
+name|REG_N
+block|,
+name|HEX_8
+block|,
+name|HEX_0
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0000000001101000 nott */
+block|{
+literal|"nott"
+block|,
+block|{
+name|A_END
+block|}
+block|,
+block|{
+name|HEX_0
+block|,
+name|HEX_0
+block|,
+name|HEX_6
+block|,
+name|HEX_8
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0000000001011011 resbank */
+block|{
+literal|"resbank"
+block|,
+block|{
+name|A_END
+block|}
+block|,
+block|{
+name|HEX_0
+block|,
+name|HEX_0
+block|,
+name|HEX_5
+block|,
+name|HEX_B
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0000000001101011 rts/n */
+block|{
+literal|"rts/n"
+block|,
+block|{
+name|A_END
+block|}
+block|,
+block|{
+name|HEX_0
+block|,
+name|HEX_0
+block|,
+name|HEX_6
+block|,
+name|HEX_B
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0000mmmm01111011 rtv/n<REG_M>*/
+block|{
+literal|"rtv/n"
+block|,
+block|{
+name|A_REG_M
+block|}
+block|,
+block|{
+name|HEX_0
+block|,
+name|REG_M
+block|,
+name|HEX_7
+block|,
+name|HEX_B
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0100nnnn11100001 stbank R0,@<REG_N>*/
+block|{
+literal|"stbank"
+block|,
+block|{
+name|A_R0
+block|,
+name|A_IND_N
+block|}
+block|,
+block|{
+name|HEX_4
+block|,
+name|REG_N
+block|,
+name|HEX_E
+block|,
+name|HEX_1
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+block|}
+block|,
+comment|/* 0011nnnn0iii1001 0100dddddddddddd band.b #<imm>,@(<DISP12>,<REG_N>) */
+block|{
+literal|"band.b"
+block|,
+block|{
+name|A_IMM
+block|,
+name|A_DISP_REG_N
+block|}
+block|,
+block|{
+name|HEX_3
+block|,
+name|REG_N
+block|,
+name|IMM0_3Uc
+block|,
+name|HEX_9
+block|,
+name|HEX_4
+block|,
+name|DISP1_12
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+operator||
+name|arch_op32
+block|}
+block|,
+comment|/* 0011nnnn0iii1001 1100dddddddddddd bandnot.b #<imm>,@(<DISP12>,<REG_N>) */
+block|{
+literal|"bandnot.b"
+block|,
+block|{
+name|A_IMM
+block|,
+name|A_DISP_REG_N
+block|}
+block|,
+block|{
+name|HEX_3
+block|,
+name|REG_N
+block|,
+name|IMM0_3Uc
+block|,
+name|HEX_9
+block|,
+name|HEX_C
+block|,
+name|DISP1_12
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+operator||
+name|arch_op32
+block|}
+block|,
+comment|/* 0011nnnn0iii1001 1011dddddddddddd bldnot.b #<imm>,@(<DISP12>,<REG_N>) */
+block|{
+literal|"bldnot.b"
+block|,
+block|{
+name|A_IMM
+block|,
+name|A_DISP_REG_N
+block|}
+block|,
+block|{
+name|HEX_3
+block|,
+name|REG_N
+block|,
+name|IMM0_3Uc
+block|,
+name|HEX_9
+block|,
+name|HEX_B
+block|,
+name|DISP1_12
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+operator||
+name|arch_op32
+block|}
+block|,
+comment|/* 0011nnnn0iii1001 0101dddddddddddd bor.b #<imm>,@(<DISP12>,<REG_N>) */
+block|{
+literal|"bor.b"
+block|,
+block|{
+name|A_IMM
+block|,
+name|A_DISP_REG_N
+block|}
+block|,
+block|{
+name|HEX_3
+block|,
+name|REG_N
+block|,
+name|IMM0_3Uc
+block|,
+name|HEX_9
+block|,
+name|HEX_5
+block|,
+name|DISP1_12
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+operator||
+name|arch_op32
+block|}
+block|,
+comment|/* 0011nnnn0iii1001 1101dddddddddddd bornot.b #<imm>,@(<DISP12>,<REG_N>) */
+block|{
+literal|"bornot.b"
+block|,
+block|{
+name|A_IMM
+block|,
+name|A_DISP_REG_N
+block|}
+block|,
+block|{
+name|HEX_3
+block|,
+name|REG_N
+block|,
+name|IMM0_3Uc
+block|,
+name|HEX_9
+block|,
+name|HEX_D
+block|,
+name|DISP1_12
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+operator||
+name|arch_op32
+block|}
+block|,
+comment|/* 0011nnnn0iii1001 0110dddddddddddd bxor.b #<imm>,@(<DISP12>,<REG_N>) */
+block|{
+literal|"bxor.b"
+block|,
+block|{
+name|A_IMM
+block|,
+name|A_DISP_REG_N
+block|}
+block|,
+block|{
+name|HEX_3
+block|,
+name|REG_N
+block|,
+name|IMM0_3Uc
+block|,
+name|HEX_9
+block|,
+name|HEX_6
+block|,
+name|DISP1_12
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+operator||
+name|arch_op32
+block|}
+block|,
+comment|/* 0000nnnniiii0000 iiiiiiiiiiiiiiii movi20 #<imm>,<REG_N> */
+block|{
+literal|"movi20"
+block|,
+block|{
+name|A_IMM
+block|,
+name|A_REG_N
+block|}
+block|,
+block|{
+name|HEX_0
+block|,
+name|REG_N
+block|,
+name|IMM0_20_4
+block|,
+name|HEX_0
+block|,
+name|IMM0_20
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+operator||
+name|arch_op32
+block|}
+block|,
+comment|/* 0000nnnniiii0001 iiiiiiiiiiiiiiii movi20s #<imm>,<REG_N> */
+block|{
+literal|"movi20s"
+block|,
+block|{
+name|A_IMM
+block|,
+name|A_REG_N
+block|}
+block|,
+block|{
+name|HEX_0
+block|,
+name|REG_N
+block|,
+name|IMM0_20_4
+block|,
+name|HEX_1
+block|,
+name|IMM0_20BY8
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+operator||
+name|arch_op32
+block|}
+block|,
+comment|/* 0011nnnnmmmm0001 1000dddddddddddd movu.b @(<DISP12>,<REG_M>),<REG_N> */
+block|{
+literal|"movu.b"
+block|,
+block|{
+name|A_DISP_REG_M
+block|,
+name|A_REG_N
+block|}
+block|,
+block|{
+name|HEX_3
+block|,
+name|REG_N
+block|,
+name|REG_M
+block|,
+name|HEX_1
+block|,
+name|HEX_8
+block|,
+name|DISP0_12
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+operator||
+name|arch_op32
+block|}
+block|,
+comment|/* 0011nnnnmmmm0001 1001dddddddddddd movu.w @(<DISP12>,<REG_M>),<REG_N> */
+block|{
+literal|"movu.w"
+block|,
+block|{
+name|A_DISP_REG_M
+block|,
+name|A_REG_N
+block|}
+block|,
+block|{
+name|HEX_3
+block|,
+name|REG_N
+block|,
+name|REG_M
+block|,
+name|HEX_1
+block|,
+name|HEX_9
+block|,
+name|DISP0_12BY2
+block|}
+block|,
+name|arch_sh2a_nofpu_up
+operator||
+name|arch_op32
 block|}
 block|,
 block|{

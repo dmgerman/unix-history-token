@@ -117,16 +117,6 @@ name|G_JOURNAL_VERSION
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|intmax_t
-name|default_jsize
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
@@ -198,8 +188,6 @@ name|journal_main
 block|,
 name|G_NULL_OPTS
 block|,
-name|NULL
-block|,
 literal|"[-v] prov ..."
 block|}
 block|,
@@ -211,8 +199,6 @@ block|,
 name|journal_main
 block|,
 name|G_NULL_OPTS
-block|,
-name|NULL
 block|,
 literal|"prov ..."
 block|}
@@ -260,16 +246,13 @@ literal|'s'
 block|,
 literal|"jsize"
 block|,
-operator|&
-name|default_jsize
+literal|"-1"
 block|,
 name|G_TYPE_NUMBER
 block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
-block|,
-name|NULL
 block|,
 literal|"[-cfhv] [-s jsize] dataprov [jprov]"
 block|}
@@ -295,8 +278,6 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-name|NULL
-block|,
 literal|"[-fv] name ..."
 block|}
 block|,
@@ -308,8 +289,6 @@ block|,
 name|NULL
 block|,
 name|G_NULL_OPTS
-block|,
-name|NULL
 block|,
 literal|"[-v]"
 block|}
@@ -1181,20 +1160,24 @@ name|str
 argument_list|,
 name|_PATH_DEV
 argument_list|,
-name|strlen
+sizeof|sizeof
 argument_list|(
 name|_PATH_DEV
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 operator|==
 literal|0
 condition|)
 name|str
 operator|+=
-name|strlen
+sizeof|sizeof
 argument_list|(
 name|_PATH_DEV
 argument_list|)
+operator|-
+literal|1
 expr_stmt|;
 name|strlcpy
 argument_list|(

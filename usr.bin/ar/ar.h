@@ -149,6 +149,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR_D
+value|0x1000
+end_define
+
+begin_comment
+comment|/* insert dummy mode, mtime, uid and gid */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DEF_BLKSZ
 value|10240
 end_define
@@ -261,10 +272,6 @@ name|char
 name|mode
 decl_stmt|;
 comment|/* program mode */
-name|char
-name|compression
-decl_stmt|;
-comment|/* compression mode */
 name|int
 name|options
 decl_stmt|;

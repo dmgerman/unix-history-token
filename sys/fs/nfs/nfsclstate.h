@@ -253,6 +253,13 @@ name|NFSCLFLAGS_GOTDELEG
 value|0x0100
 end_define
 
+begin_define
+define|#
+directive|define
+name|NFSCLFLAGS_RECVRINPROG
+value|0x0200
+end_define
+
 begin_struct
 struct|struct
 name|nfsclowner
@@ -428,6 +435,13 @@ name|NFSCLDL_MODTIMESET
 value|0x20
 end_define
 
+begin_define
+define|#
+directive|define
+name|NFSCLDL_DELEGRET
+value|0x40
+end_define
+
 begin_comment
 comment|/*  * MALLOC'd to the correct length to accommodate the file handle.  */
 end_comment
@@ -506,6 +520,13 @@ define|#
 directive|define
 name|NFSCLOPEN_DOOPENDOWNGRADE
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSCLOPEN_SETCRED
+value|3
 end_define
 
 begin_struct

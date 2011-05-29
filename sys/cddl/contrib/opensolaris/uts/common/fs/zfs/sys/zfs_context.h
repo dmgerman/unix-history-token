@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_ZFS_CONTEXT_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_ifdef
 ifdef|#
@@ -104,6 +97,12 @@ file|<sys/systm.h>
 include|#
 directive|include
 file|<sys/list.h>
+include|#
+directive|include
+file|<sys/zfs_debug.h>
+include|#
+directive|include
+file|<sys/sysevent.h>
 include|#
 directive|include
 file|<sys/uio.h>
@@ -193,7 +192,7 @@ directive|include
 file|<sys/osd.h>
 include|#
 directive|include
-file|<sys/zfs_debug.h>
+file|<sys/sysevent/dev.h>
 include|#
 directive|include
 file|<sys/sysevent/eventdefs.h>
@@ -203,6 +202,9 @@ file|<sys/u8_textprep.h>
 include|#
 directive|include
 file|<sys/fm/util.h>
+include|#
+directive|include
+file|<sys/sunddi.h>
 include|#
 directive|include
 file|<machine/stdarg.h>
@@ -319,6 +321,13 @@ parameter_list|,
 modifier|...
 parameter_list|)
 value|do {					\ 	if (((lvl)& 0xff)<= zfs_debug_level) {			\ 		mtx_lock(&zfs_debug_mtx);				\ 		printf("%s:%u[%d]: ", __func__, __LINE__, (lvl));	\ 		printf(__VA_ARGS__);					\ 		printf("\n");						\ 		if ((lvl)& 0x100)					\ 			kdb_backtrace();				\ 		mtx_unlock(&zfs_debug_mtx);				\ 	}								\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sys_shutdown
+value|rebooting
 end_define
 
 begin_endif

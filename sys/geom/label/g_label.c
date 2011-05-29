@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<geom/geom.h>
 end_include
 
@@ -88,6 +94,16 @@ include|#
 directive|include
 file|<geom/label/g_label.h>
 end_include
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|geom_label
+argument_list|,
+literal|"GEOM labeling support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_DECL
@@ -444,7 +460,7 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-comment|/* Check is the label starts from ../ */
+comment|/* Check if the label starts from ../ */
 if|if
 condition|(
 name|strncmp
@@ -463,7 +479,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Check is the label contains /../ */
+comment|/* Check if the label contains /../ */
 if|if
 condition|(
 name|strstr
@@ -480,7 +496,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Check is the label ends at ../ */
+comment|/* Check if the label ends at ../ */
 if|if
 condition|(
 operator|(
@@ -609,6 +625,21 @@ argument_list|,
 name|label
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|req
+operator|!=
+name|NULL
+condition|)
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"Label name %s is invalid."
+argument_list|,
+name|label
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -663,6 +694,19 @@ condition|(
 name|pp2
 operator|==
 name|NULL
+condition|)
+continue|continue;
+if|if
+condition|(
+operator|(
+name|pp2
+operator|->
+name|flags
+operator|&
+name|G_PF_ORPHAN
+operator|)
+operator|!=
+literal|0
 condition|)
 continue|continue;
 if|if
@@ -951,26 +995,24 @@ operator|)
 return|;
 block|}
 block|}
-else|else
-block|{
+elseif|else
+if|if
+condition|(
+name|pp
+operator|!=
+name|NULL
+condition|)
 name|G_LABEL_DEBUG
 argument_list|(
 literal|1
 argument_list|,
 literal|"Label %s removed."
 argument_list|,
-name|LIST_FIRST
-argument_list|(
-operator|&
-name|gp
-operator|->
-name|provider
-argument_list|)
+name|pp
 operator|->
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 name|g_slice_spoiled
 argument_list|(
 name|LIST_FIRST
@@ -1668,7 +1710,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"Invalid number of argument."
+literal|"Invalid number of arguments."
 argument_list|)
 expr_stmt|;
 return|return;

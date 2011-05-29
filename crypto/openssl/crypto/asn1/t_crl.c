@@ -172,8 +172,6 @@ name|l
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|n
 decl_stmt|;
 name|char
 modifier|*
@@ -329,13 +327,6 @@ argument_list|(
 name|out
 argument_list|,
 literal|"\n"
-argument_list|)
-expr_stmt|;
-name|n
-operator|=
-name|X509_CRL_get_ext_count
-argument_list|(
-name|x
 argument_list|)
 expr_stmt|;
 name|X509V3_extensions_print

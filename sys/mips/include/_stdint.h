@@ -63,16 +63,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|INT64_C
-parameter_list|(
-name|c
-parameter_list|)
-value|(c ## LL)
-end_define
-
-begin_define
-define|#
-directive|define
 name|UINT8_C
 parameter_list|(
 name|c
@@ -100,6 +90,47 @@ parameter_list|)
 value|(c ## U)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips_n64
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|INT64_C
+parameter_list|(
+name|c
+parameter_list|)
+value|(c ## L)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UINT64_C
+parameter_list|(
+name|c
+parameter_list|)
+value|(c ## UL)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|INT64_C
+parameter_list|(
+name|c
+parameter_list|)
+value|(c ## LL)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -110,6 +141,11 @@ parameter_list|)
 value|(c ## ULL)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -117,7 +153,7 @@ name|INTMAX_C
 parameter_list|(
 name|c
 parameter_list|)
-value|(c ## LL)
+value|INT64_C(c)
 end_define
 
 begin_define
@@ -127,7 +163,7 @@ name|UINTMAX_C
 parameter_list|(
 name|c
 parameter_list|)
-value|(c ## ULL)
+value|UINT64_C(c)
 end_define
 
 begin_endif
@@ -187,7 +223,7 @@ begin_define
 define|#
 directive|define
 name|INT64_MIN
-value|(-0x7fffffffffffffffLL-1)
+value|(-INT64_C(0x7fffffffffffffff)-1)
 end_define
 
 begin_comment
@@ -219,7 +255,7 @@ begin_define
 define|#
 directive|define
 name|INT64_MAX
-value|0x7fffffffffffffffLL
+value|INT64_C(0x7fffffffffffffff)
 end_define
 
 begin_comment
@@ -244,14 +280,14 @@ begin_define
 define|#
 directive|define
 name|UINT32_MAX
-value|0xffffffffU
+value|0xffffffff
 end_define
 
 begin_define
 define|#
 directive|define
 name|UINT64_MAX
-value|0xffffffffffffffffULL
+value|UINT64_C(0xffffffffffffffff)
 end_define
 
 begin_comment
@@ -458,6 +494,38 @@ begin_comment
 comment|/*  * ISO/IEC 9899:1999  * 7.18.2.4  Limits of integer types capable of holding object pointers  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips_n64
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|INTPTR_MIN
+value|INT64_MIN
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTPTR_MAX
+value|INT64_MAX
+end_define
+
+begin_define
+define|#
+directive|define
+name|UINTPTR_MAX
+value|UINT64_MAX
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -478,6 +546,11 @@ directive|define
 name|UINTPTR_MAX
 value|UINT32_MAX
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * ISO/IEC 9899:1999  * 7.18.2.5  Limits of greatest-width integer types  */
@@ -508,6 +581,46 @@ begin_comment
 comment|/*  * ISO/IEC 9899:1999  * 7.18.3  Limits of other integer types  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips_n64
+end_ifdef
+
+begin_comment
+comment|/* Limits of ptrdiff_t. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTRDIFF_MIN
+value|INT64_MIN
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTRDIFF_MAX
+value|INT64_MAX
+end_define
+
+begin_comment
+comment|/* Limit of size_t. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIZE_MAX
+value|UINT64_MAX
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_comment
 comment|/* Limits of ptrdiff_t. */
 end_comment
@@ -527,6 +640,22 @@ value|INT32_MAX
 end_define
 
 begin_comment
+comment|/* Limit of size_t. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIZE_MAX
+value|UINT32_MAX
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Limits of sig_atomic_t. */
 end_comment
 
@@ -542,17 +671,6 @@ define|#
 directive|define
 name|SIG_ATOMIC_MAX
 value|INT32_MAX
-end_define
-
-begin_comment
-comment|/* Limit of size_t. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIZE_MAX
-value|UINT32_MAX
 end_define
 
 begin_ifndef

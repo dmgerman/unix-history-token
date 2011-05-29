@@ -116,11 +116,15 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* XXX use a define common with other hash stuff ! */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|AH_ALEN_MAX
-value|20
+value|64
 end_define
 
 begin_comment
@@ -195,6 +199,18 @@ function_decl|)
 parameter_list|(
 name|u_int8_t
 modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|reinit
+function_decl|)
+parameter_list|(
+name|caddr_t
+parameter_list|,
+name|u_int8_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -331,6 +347,14 @@ specifier|extern
 name|struct
 name|enc_xform
 name|enc_xform_rijndael128
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|enc_xform
+name|enc_xform_aes_xts
 decl_stmt|;
 end_decl_stmt
 

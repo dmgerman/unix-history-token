@@ -388,6 +388,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|cfmakesane
+parameter_list|(
+name|struct
+name|termios
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|cfsetspeed
 parameter_list|(

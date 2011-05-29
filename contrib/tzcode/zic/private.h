@@ -72,7 +72,7 @@ begin_define
 define|#
 directive|define
 name|GRANDPARENTED
-value|"Local time zone must be set--see zic manual page"
+value|"Local time zone must be set--use tzsetup"
 end_define
 
 begin_comment

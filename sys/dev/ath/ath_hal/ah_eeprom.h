@@ -392,6 +392,9 @@ comment|/* uint8_t* */
 name|AR_EEP_TXGAIN_TYPE
 block|,
 comment|/* uint8_t* */
+name|AR_EEP_DAC_HPWR_5G
+block|,
+comment|/* uint8_t* */
 name|AR_EEP_OL_PWRCTRL
 block|,
 comment|/* use ath_hal_eepromGetFlag */
@@ -407,6 +410,18 @@ comment|/* int8_t* */
 name|AR_EEP_WRITEPROTECT
 block|,
 comment|/* use ath_hal_eepromGetFlag */
+name|AR_EEP_PWR_TABLE_OFFSET
+block|,
+comment|/* int8_t* */
+name|AR_EEP_PWDCLKIND
+block|,
+comment|/* uint8_t* */
+name|AR_EEP_TEMPSENSE_SLOPE
+block|,
+comment|/* int8_t* */
+name|AR_EEP_TEMPSENSE_SLOPE_PAL_ON
+block|,
+comment|/* int8_t* */
 block|}
 enum|;
 end_enum
@@ -574,6 +589,18 @@ end_function_decl
 begin_function_decl
 name|HAL_STATUS
 name|ath_hal_v4kEepromAttach
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|HAL_STATUS
+name|ath_hal_9287EepromAttach
 parameter_list|(
 name|struct
 name|ath_hal

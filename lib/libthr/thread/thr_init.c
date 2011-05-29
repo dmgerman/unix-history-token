@@ -207,10 +207,10 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|umutex
+name|urwlock
 name|_thr_atfork_lock
 init|=
-name|DEFAULT_UMUTEX
+name|DEFAULT_URWLOCK
 decl_stmt|;
 end_decl_stmt
 
@@ -322,6 +322,30 @@ operator|.
 name|m_type
 operator|=
 name|PTHREAD_MUTEX_DEFAULT
+block|,
+operator|.
+name|m_protocol
+operator|=
+name|PTHREAD_PRIO_NONE
+block|,
+operator|.
+name|m_ceiling
+operator|=
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|pthread_mutex_attr
+name|_pthread_mutexattr_adaptive_default
+init|=
+block|{
+operator|.
+name|m_type
+operator|=
+name|PTHREAD_MUTEX_ADAPTIVE_NP
 block|,
 operator|.
 name|m_protocol
@@ -457,10 +481,10 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|umutex
+name|urwlock
 name|_thr_list_lock
 init|=
-name|DEFAULT_UMUTEX
+name|DEFAULT_URWLOCK
 decl_stmt|;
 end_decl_stmt
 
@@ -1431,7 +1455,23 @@ argument_list|(
 argument|__pthread_cleanup_push_imp
 argument_list|)
 block|}
+block|,
 comment|/* PJT_CLEANUP_PUSH_IMP */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_cancel_enter
+argument_list|)
+block|}
+block|,
+comment|/* PJT_CANCEL_ENTER */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_cancel_leave
+argument_list|)
+block|}
+comment|/* PJT_CANCEL_LEAVE */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1499,11 +1539,6 @@ decl_stmt|,
 name|first
 init|=
 literal|0
-decl_stmt|;
-name|sigset_t
-name|sigset
-decl_stmt|,
-name|oldset
 decl_stmt|;
 comment|/* Check if this function has already been called: */
 if|if
@@ -1722,52 +1757,12 @@ condition|(
 name|first
 condition|)
 block|{
-name|SIGFILLSET
-argument_list|(
-name|sigset
-argument_list|)
-expr_stmt|;
-name|SIGDELSET
-argument_list|(
-name|sigset
-argument_list|,
-name|SIGTRAP
-argument_list|)
-expr_stmt|;
-name|__sys_sigprocmask
-argument_list|(
-name|SIG_SETMASK
-argument_list|,
-operator|&
-name|sigset
-argument_list|,
-operator|&
-name|oldset
-argument_list|)
-expr_stmt|;
-name|_thr_signal_init
-argument_list|()
-expr_stmt|;
 name|_thr_initial
 operator|=
 name|curthread
 expr_stmt|;
-name|SIGDELSET
-argument_list|(
-name|oldset
-argument_list|,
-name|SIGCANCEL
-argument_list|)
-expr_stmt|;
-name|__sys_sigprocmask
-argument_list|(
-name|SIG_SETMASK
-argument_list|,
-operator|&
-name|oldset
-argument_list|,
-name|NULL
-argument_list|)
+name|_thr_signal_init
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1963,6 +1958,17 @@ name|sched_param
 operator|.
 name|sched_priority
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_PTHREAD_FORCED_UNWIND
+name|thread
+operator|->
+name|unwind_stackend
+operator|=
+name|_usrstack
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Others cleared to zero by thr_alloc() */
 block|}
 end_function
@@ -2012,7 +2018,7 @@ operator|&
 name|_keytable_lock
 argument_list|)
 expr_stmt|;
-name|_thr_umutex_init
+name|_thr_urwlock_init
 argument_list|(
 operator|&
 name|_thr_atfork_lock
@@ -2031,6 +2037,12 @@ name|_thr_spinlock_init
 argument_list|()
 expr_stmt|;
 name|_thr_list_init
+argument_list|()
+expr_stmt|;
+name|_thr_wake_addr_init
+argument_list|()
+expr_stmt|;
+name|_sleepq_init
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Avoid reinitializing some things if they don't need to be, 	 * e.g. after a fork(). 	 */

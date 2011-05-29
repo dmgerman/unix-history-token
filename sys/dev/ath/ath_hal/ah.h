@@ -26,6 +26,24 @@ file|"ah_osdep.h"
 end_include
 
 begin_comment
+comment|/*  * The maximum number of TX/RX chains supported.  * This is intended to be used by various statistics gathering operations  * (NF, RSSI, EVM).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AH_MIMO_MAX_CHAINS
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|AH_MIMO_MAX_EVM_PILOTS
+value|6
+end_define
+
+begin_comment
 comment|/*  * __ahdecl is analogous to _cdecl; it defines the calling  * convention used within the HAL.  For most systems this  * can just default to be empty and the compiler will (should)  * use _cdecl.  For systems where _cdecl is not compatible this  * must be defined.  See linux/ah_osdep.h for an example.  */
 end_comment
 
@@ -298,56 +316,127 @@ init|=
 literal|28
 block|,
 comment|/* 11d beacon support for changing cc */
-name|HAL_CAP_INTMIT
-init|=
-literal|29
-block|,
-comment|/* interference mitigation */
-name|HAL_CAP_RXORN_FATAL
+name|HAL_CAP_HT
 init|=
 literal|30
 block|,
-comment|/* HAL_INT_RXORN treated as fatal */
-name|HAL_CAP_HT
+comment|/* hardware can support HT */
+name|HAL_CAP_GTXTO
 init|=
 literal|31
 block|,
-comment|/* hardware can support HT */
-name|HAL_CAP_TX_CHAINMASK
+comment|/* hardware supports global tx timeout */
+name|HAL_CAP_FAST_CC
 init|=
 literal|32
+block|,
+comment|/* hardware supports fast channel change */
+name|HAL_CAP_TX_CHAINMASK
+init|=
+literal|33
 block|,
 comment|/* mask of TX chains supported */
 name|HAL_CAP_RX_CHAINMASK
 init|=
-literal|33
-block|,
-comment|/* mask of RX chains supported */
-name|HAL_CAP_RXTSTAMP_PREC
-init|=
 literal|34
 block|,
+comment|/* mask of RX chains supported */
+name|HAL_CAP_NUM_GPIO_PINS
+init|=
+literal|36
+block|,
+comment|/* number of GPIO pins */
+name|HAL_CAP_CST
+init|=
+literal|38
+block|,
+comment|/* hardware supports carrier sense timeout */
+name|HAL_CAP_RTS_AGGR_LIMIT
+init|=
+literal|42
+block|,
+comment|/* aggregation limit with RTS */
+name|HAL_CAP_4ADDR_AGGR
+init|=
+literal|43
+block|,
+comment|/* hardware is capable of 4addr aggregation */
+name|HAL_CAP_AUTO_SLEEP
+init|=
+literal|48
+block|,
+comment|/* hardware can go to network sleep 					   automatically after waking up to receive TIM */
+name|HAL_CAP_MBSSID_AGGR_SUPPORT
+init|=
+literal|49
+block|,
+comment|/* Support for mBSSID Aggregation */
+name|HAL_CAP_SPLIT_4KB_TRANS
+init|=
+literal|50
+block|,
+comment|/* hardware supports descriptors straddling a 4k page boundary */
+name|HAL_CAP_REG_FLAG
+init|=
+literal|51
+block|,
+comment|/* Regulatory domain flags */
+name|HAL_CAP_BT_COEX
+init|=
+literal|60
+block|,
+comment|/* hardware is capable of bluetooth coexistence */
+name|HAL_CAP_HT20_SGI
+init|=
+literal|96
+block|,
+comment|/* hardware supports HT20 short GI */
+name|HAL_CAP_RXTSTAMP_PREC
+init|=
+literal|100
+block|,
 comment|/* rx desc tstamp precision (bits) */
+comment|/* The following are private to the FreeBSD HAL (224 onward) */
+name|HAL_CAP_INTMIT
+init|=
+literal|229
+block|,
+comment|/* interference mitigation */
+name|HAL_CAP_RXORN_FATAL
+init|=
+literal|230
+block|,
+comment|/* HAL_INT_RXORN treated as fatal */
 name|HAL_CAP_BB_HANG
 init|=
-literal|35
+literal|235
 block|,
 comment|/* can baseband hang */
 name|HAL_CAP_MAC_HANG
 init|=
-literal|36
+literal|236
 block|,
 comment|/* can MAC hang */
 name|HAL_CAP_INTRMASK
 init|=
-literal|37
+literal|237
 block|,
 comment|/* bitmask of supported interrupts */
 name|HAL_CAP_BSSIDMATCH
 init|=
-literal|38
+literal|238
 block|,
 comment|/* hardware has disable bssid match */
+name|HAL_CAP_STREAMS
+init|=
+literal|239
+block|,
+comment|/* how many 802.11n spatial streams are available */
+name|HAL_CAP_RXDESC_SELFLINK
+init|=
+literal|242
+block|,
+comment|/* support a self-linked tail RX descriptor */
 block|}
 name|HAL_CAPABILITY_TYPE
 typedef|;
@@ -418,6 +507,11 @@ init|=
 literal|4
 block|,
 comment|/* u-apsd power save xmit q */
+name|HAL_TX_QUEUE_PSPOLL
+init|=
+literal|5
+block|,
+comment|/* power save poll xmit q */
 block|}
 name|HAL_TX_QUEUE
 typedef|;
@@ -728,6 +822,7 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
+comment|/* 	 * These bits correspond to AR_RX_FILTER for all chips. 	 * Not all bits are supported by all chips. 	 */
 name|HAL_RX_FILTER_UCAST
 init|=
 literal|0x00000001
@@ -768,19 +863,35 @@ init|=
 literal|0x00000100
 block|,
 comment|/* Allow phy errors */
-name|HAL_RX_FILTER_PHYRADAR
-init|=
-literal|0x00000200
-block|,
-comment|/* Allow phy radar errors */
 name|HAL_RX_FILTER_COMPBAR
 init|=
 literal|0x00000400
 block|,
 comment|/* Allow compressed BAR */
-name|HAL_RX_FILTER_BSSID
+name|HAL_RX_FILTER_COMP_BA
 init|=
 literal|0x00000800
+block|,
+comment|/* Allow compressed blockack */
+name|HAL_RX_FILTER_PHYRADAR
+init|=
+literal|0x00002000
+block|,
+comment|/* Allow phy radar errors */
+name|HAL_RX_FILTER_PSPOLL
+init|=
+literal|0x00004000
+block|,
+comment|/* Allow PS-POLL frames */
+name|HAL_RX_FILTER_MCAST_BCAST_ALL
+init|=
+literal|0x00008000
+block|,
+comment|/* Allow all mcast/bcast frames */
+comment|/* 	 * Magic RX filter flags that aren't targetting hardware bits 	 * but instead the HAL sets individual bits - eg PHYERR will result 	 * in OFDM/CCK timing error frames being received. 	 */
+name|HAL_RX_FILTER_BSSID
+init|=
+literal|0x40000000
 block|,
 comment|/* Disable BSSID match */
 block|}
@@ -849,6 +960,10 @@ comment|/* Non-common mapping */
 name|HAL_INT_TXDESC
 init|=
 literal|0x00000080
+block|,
+name|HAL_INT_TIM_TIMER
+init|=
+literal|0x00000100
 block|,
 name|HAL_INT_TXURN
 init|=
@@ -1781,6 +1896,161 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
+comment|/*  * This is a channel survey sample entry.  *  * The AR5212 ANI routines fill these samples. The ANI code then uses it  * when calculating listen time; it is also exported via a diagnostic  * API.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|uint32_t
+name|seq_num
+decl_stmt|;
+name|uint32_t
+name|tx_busy
+decl_stmt|;
+name|uint32_t
+name|rx_busy
+decl_stmt|;
+name|uint32_t
+name|chan_busy
+decl_stmt|;
+name|uint32_t
+name|cycle_count
+decl_stmt|;
+block|}
+name|HAL_SURVEY_SAMPLE
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * This provides 3.2 seconds of sample space given an  * ANI time of 1/10th of a second. This may not be enough!  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHANNEL_SURVEY_SAMPLE_COUNT
+value|32
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|HAL_SURVEY_SAMPLE
+name|samples
+index|[
+name|CHANNEL_SURVEY_SAMPLE_COUNT
+index|]
+decl_stmt|;
+name|uint32_t
+name|cur_sample
+decl_stmt|;
+comment|/* current sample in sequence */
+name|uint32_t
+name|cur_seq
+decl_stmt|;
+comment|/* current sequence number */
+block|}
+name|HAL_CHANNEL_SURVEY
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * ANI commands.  *  * These are used both internally and externally via the diagnostic  * API.  *  * Note that this is NOT the ANI commands being used via the INTMIT  * capability - that has a different mapping for some reason.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_ANI_PRESENT
+init|=
+literal|0
+block|,
+comment|/* is ANI support present */
+name|HAL_ANI_NOISE_IMMUNITY_LEVEL
+init|=
+literal|1
+block|,
+comment|/* set level */
+name|HAL_ANI_OFDM_WEAK_SIGNAL_DETECTION
+init|=
+literal|2
+block|,
+comment|/* enable/disable */
+name|HAL_ANI_CCK_WEAK_SIGNAL_THR
+init|=
+literal|3
+block|,
+comment|/* enable/disable */
+name|HAL_ANI_FIRSTEP_LEVEL
+init|=
+literal|4
+block|,
+comment|/* set level */
+name|HAL_ANI_SPUR_IMMUNITY_LEVEL
+init|=
+literal|5
+block|,
+comment|/* set level */
+name|HAL_ANI_MODE
+init|=
+literal|6
+block|,
+comment|/* 0 => manual, 1 => auto (XXX do not change) */
+name|HAL_ANI_PHYERR_RESET
+init|=
+literal|7
+block|,
+comment|/* reset phy error stats */
+block|}
+name|HAL_ANI_CMD
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * This is the layout of the ANI INTMIT capability.  *  * Notice that the command values differ to HAL_ANI_CMD.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_CAP_INTMIT_PRESENT
+init|=
+literal|0
+block|,
+name|HAL_CAP_INTMIT_ENABLE
+init|=
+literal|1
+block|,
+name|HAL_CAP_INTMIT_NOISE_IMMUNITY_LEVEL
+init|=
+literal|2
+block|,
+name|HAL_CAP_INTMIT_OFDM_WEAK_SIGNAL_LEVEL
+init|=
+literal|3
+block|,
+name|HAL_CAP_INTMIT_CCK_WEAK_SIGNAL_THR
+init|=
+literal|4
+block|,
+name|HAL_CAP_INTMIT_FIRSTEP_LEVEL
+init|=
+literal|5
+block|,
+name|HAL_CAP_INTMIT_SPUR_IMMUNITY_LEVEL
+init|=
+literal|6
+block|}
+name|HAL_CAP_INTMIT_CMD
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Hardware Access Layer (HAL) API.  *  * Clients of the HAL call ath_hal_attach to obtain a reference to an  * ath_hal structure for use with the device.  Hardware-related operations  * that follow must call back into the HAL through interface, supplying  * the reference as the first parameter.  Note that before using the  * reference returned by ath_hal_attach the caller should verify the  * ABI version number.  */
 end_comment
 
@@ -1835,6 +2105,11 @@ name|uint16_t
 name|ah_analog2GhzRev
 decl_stmt|;
 comment|/* 2GHz radio revision */
+name|uint16_t
+modifier|*
+name|ah_eepromdata
+decl_stmt|;
+comment|/* eeprom buffer, if needed */
 specifier|const
 name|HAL_RATE_TABLE
 modifier|*
@@ -2419,6 +2694,32 @@ name|ath_desc
 modifier|*
 parameter_list|)
 function_decl|;
+name|HAL_BOOL
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_getTxCompletionRates
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ath_desc
+modifier|*
+name|ds
+parameter_list|,
+name|int
+modifier|*
+name|rates
+parameter_list|,
+name|int
+modifier|*
+name|tries
+parameter_list|)
+function_decl|;
 comment|/* Receive Functions */
 name|uint32_t
 name|__ahdecl
@@ -2647,6 +2948,23 @@ name|void
 name|__ahdecl
 function_decl|(
 modifier|*
+name|ah_aniPoll
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_channel
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
 name|ah_procMibEvent
 function_decl|)
 parameter_list|(
@@ -2657,6 +2975,27 @@ parameter_list|,
 specifier|const
 name|HAL_NODE_STATS
 modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_rxAntCombDiversity
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|struct
+name|ath_rx_status
+modifier|*
+parameter_list|,
+name|unsigned
+name|long
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 comment|/* Misc Functions */
@@ -3414,6 +3753,226 @@ name|ath_hal
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* 802.11n Functions */
+name|HAL_BOOL
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_chainTxDesc
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|struct
+name|ath_desc
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
+parameter_list|,
+name|HAL_PKT_TYPE
+parameter_list|,
+name|u_int
+parameter_list|,
+name|HAL_CIPHER
+parameter_list|,
+name|uint8_t
+parameter_list|,
+name|u_int
+parameter_list|,
+name|HAL_BOOL
+parameter_list|,
+name|HAL_BOOL
+parameter_list|)
+function_decl|;
+name|HAL_BOOL
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_setupFirstTxDesc
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|struct
+name|ath_desc
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+name|HAL_BOOL
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_setupLastTxDesc
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|struct
+name|ath_desc
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ath_desc
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_set11nRateScenario
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|struct
+name|ath_desc
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
+parameter_list|,
+name|HAL_11N_RATE_SERIES
+index|[]
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_set11nAggrMiddle
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|struct
+name|ath_desc
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_clr11nAggr
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|struct
+name|ath_desc
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_set11nBurstDuration
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|struct
+name|ath_desc
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+name|uint32_t
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_get11nExtBusy
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_set11nMac2040
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|HAL_HT_MACMODE
+parameter_list|)
+function_decl|;
+name|HAL_HT_RXCLEAR
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_get11nRxClear
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_set11nRxClear
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|HAL_HT_RXCLEAR
+parameter_list|)
+function_decl|;
 comment|/* Interrupt functions */
 name|HAL_BOOL
 name|__ahdecl
@@ -3513,6 +4072,10 @@ parameter_list|,
 name|HAL_BUS_TAG
 parameter_list|,
 name|HAL_BUS_HANDLE
+parameter_list|,
+name|uint16_t
+modifier|*
+name|eepromdata
 parameter_list|,
 name|HAL_STATUS
 modifier|*
@@ -3673,6 +4236,38 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Fetch the ctl/ext noise floor values reported by a MIMO  * radio. Returns 1 for valid results, 0 for invalid channel.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|__ahdecl
+name|ath_hal_get_mimo_chan_noise
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_channel
+modifier|*
+name|chan
+parameter_list|,
+name|int16_t
+modifier|*
+name|nf_ctl
+parameter_list|,
+name|int16_t
+modifier|*
+name|nf_ext
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Calibrate noise floor data following a channel scan or similar.  * This must be called prior retrieving noise floor data.  */
 end_comment
 
@@ -3708,7 +4303,70 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Calculate the transmit duration of a frame.  */
+comment|/*  * Calculate the packet TX time for a legacy or 11n frame  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|uint32_t
+name|__ahdecl
+name|ath_hal_pkt_txtime
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+specifier|const
+name|HAL_RATE_TABLE
+modifier|*
+name|rates
+parameter_list|,
+name|uint32_t
+name|frameLen
+parameter_list|,
+name|uint16_t
+name|rateix
+parameter_list|,
+name|HAL_BOOL
+name|isht40
+parameter_list|,
+name|HAL_BOOL
+name|shortPreamble
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Calculate the duration of an 11n frame.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|uint32_t
+name|__ahdecl
+name|ath_computedur_ht
+parameter_list|(
+name|uint32_t
+name|frameLen
+parameter_list|,
+name|uint16_t
+name|rate
+parameter_list|,
+name|int
+name|streams
+parameter_list|,
+name|HAL_BOOL
+name|isht40
+parameter_list|,
+name|HAL_BOOL
+name|isShortGI
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Calculate the transmit duration of a legacy frame.  */
 end_comment
 
 begin_function_decl

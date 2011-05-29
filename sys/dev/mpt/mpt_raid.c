@@ -2738,6 +2738,7 @@ literal|1
 expr_stmt|;
 name|wakeup
 argument_list|(
+operator|&
 name|mpt
 operator|->
 name|raid_volumes
@@ -7845,7 +7846,7 @@ argument_list|,
 literal|"volume resync priority (0 == NC, 1 - 255)"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,

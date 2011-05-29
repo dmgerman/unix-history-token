@@ -69,11 +69,26 @@ define|#
 directive|define
 name|WPA_EVENT_EAP_STARTED
 value|"CTRL-EVENT-EAP-STARTED "
+comment|/** EAP method proposed by the server */
+define|#
+directive|define
+name|WPA_EVENT_EAP_PROPOSED_METHOD
+value|"CTRL-EVENT-EAP-PROPOSED-METHOD "
 comment|/** EAP method selected */
 define|#
 directive|define
 name|WPA_EVENT_EAP_METHOD
 value|"CTRL-EVENT-EAP-METHOD "
+comment|/** EAP peer certificate from TLS */
+define|#
+directive|define
+name|WPA_EVENT_EAP_PEER_CERT
+value|"CTRL-EVENT-EAP-PEER-CERT "
+comment|/** EAP TLS certificate chain validation error */
+define|#
+directive|define
+name|WPA_EVENT_EAP_TLS_CERT_ERROR
+value|"CTRL-EVENT-EAP-TLS-CERT-ERROR "
 comment|/** EAP authentication completed successfully */
 define|#
 directive|define
@@ -89,6 +104,16 @@ define|#
 directive|define
 name|WPA_EVENT_SCAN_RESULTS
 value|"CTRL-EVENT-SCAN-RESULTS "
+comment|/** A new BSS entry was added (followed by BSS entry id and BSSID) */
+define|#
+directive|define
+name|WPA_EVENT_BSS_ADDED
+value|"CTRL-EVENT-BSS-ADDED "
+comment|/** A BSS entry was removed (followed by BSS entry id and BSSID) */
+define|#
+directive|define
+name|WPA_EVENT_BSS_REMOVED
+value|"CTRL-EVENT-BSS-REMOVED "
 comment|/** WPS overlap detected in PBC mode */
 define|#
 directive|define
@@ -134,6 +159,27 @@ define|#
 directive|define
 name|WPS_EVENT_TIMEOUT
 value|"WPS-TIMEOUT "
+define|#
+directive|define
+name|WPS_EVENT_ENROLLEE_SEEN
+value|"WPS-ENROLLEE-SEEN "
+comment|/* WPS ER events */
+define|#
+directive|define
+name|WPS_EVENT_ER_AP_ADD
+value|"WPS-ER-AP-ADD "
+define|#
+directive|define
+name|WPS_EVENT_ER_AP_REMOVE
+value|"WPS-ER-AP-REMOVE "
+define|#
+directive|define
+name|WPS_EVENT_ER_ENROLLEE_ADD
+value|"WPS-ER-ENROLLEE-ADD "
+define|#
+directive|define
+name|WPS_EVENT_ER_ENROLLEE_REMOVE
+value|"WPS-ER-ENROLLEE-REMOVE "
 comment|/* hostapd control interface - fixed message prefixes */
 define|#
 directive|define
@@ -151,6 +197,26 @@ define|#
 directive|define
 name|WPS_EVENT_AP_SETUP_LOCKED
 value|"WPS-AP-SETUP-LOCKED "
+define|#
+directive|define
+name|WPS_EVENT_AP_SETUP_UNLOCKED
+value|"WPS-AP-SETUP-UNLOCKED "
+define|#
+directive|define
+name|WPS_EVENT_AP_PIN_ENABLED
+value|"WPS-AP-PIN-ENABLED "
+define|#
+directive|define
+name|WPS_EVENT_AP_PIN_DISABLED
+value|"WPS-AP-PIN-DISABLED "
+define|#
+directive|define
+name|AP_STA_CONNECTED
+value|"AP-STA-CONNECTED "
+define|#
+directive|define
+name|AP_STA_DISCONNECTED
+value|"AP-STA-DISCONNECTED "
 comment|/* wpa_supplicant/hostapd control interface access */
 comment|/**  * wpa_ctrl_open - Open a control interface to wpa_supplicant/hostapd  * @ctrl_path: Path for UNIX domain sockets; ignored if UDP sockets are used.  * Returns: Pointer to abstract control interface data or %NULL on failure  *  * This function is used to open a control interface to wpa_supplicant/hostapd.  * ctrl_path is usually /var/run/wpa_supplicant or /var/run/hostapd. This path  * is configured in wpa_supplicant/hostapd and other programs using the control  * interface need to use matching path configuration.  */
 name|struct

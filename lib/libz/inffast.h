@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* inffast.h -- header to use inffast.c  * Copyright (C) 1995-2003 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* inffast.h -- header to use inffast.c  * Copyright (C) 1995-2003, 2010 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -9,6 +9,7 @@ end_comment
 
 begin_decl_stmt
 name|void
+name|ZLIB_INTERNAL
 name|inflate_fast
 name|OF
 argument_list|(

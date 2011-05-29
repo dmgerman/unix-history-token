@@ -56,6 +56,16 @@ directive|include
 file|<net80211/_ieee80211.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_ah.h"
+end_include
+
+begin_comment
+comment|/* needed for AH_SUPPORT_AR5416 */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -287,6 +297,10 @@ name|HAL_BUS_TAG
 parameter_list|,
 name|HAL_BUS_HANDLE
 parameter_list|,
+name|uint16_t
+modifier|*
+name|eepromdata
+parameter_list|,
 name|HAL_STATUS
 modifier|*
 name|error
@@ -463,6 +477,11 @@ directive|define
 name|CHANNEL_ANI_SETUP
 value|0x04
 comment|/* ANI state setup */
+define|#
+directive|define
+name|CHANNEL_MIMO_NF_VALID
+value|0x04
+comment|/* Mimo NF values are valid */
 name|uint8_t
 name|calValid
 decl_stmt|;
@@ -479,6 +498,24 @@ decl_stmt|;
 name|int16_t
 name|noiseFloorAdjust
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|AH_SUPPORT_AR5416
+name|int16_t
+name|noiseFloorCtl
+index|[
+name|AH_MIMO_MAX_CHAINS
+index|]
+decl_stmt|;
+name|int16_t
+name|noiseFloorExt
+index|[
+name|AH_MIMO_MAX_CHAINS
+index|]
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* AH_SUPPORT_AR5416 */
 name|uint16_t
 name|mainSpur
 decl_stmt|;
@@ -616,6 +653,10 @@ name|halHTSupport
 range|:
 literal|1
 decl_stmt|,
+name|halHTSGI20Support
+range|:
+literal|1
+decl_stmt|,
 name|halRfSilentSupport
 range|:
 literal|1
@@ -669,6 +710,10 @@ name|halRifsTxSupport
 range|:
 literal|1
 decl_stmt|,
+name|hal4AddrAggrSupport
+range|:
+literal|1
+decl_stmt|,
 name|halExtChanDfsSupport
 range|:
 literal|1
@@ -688,7 +733,20 @@ decl_stmt|,
 name|halBssidMatchSupport
 range|:
 literal|1
+decl_stmt|,
+name|hal4kbSplitTransSupport
+range|:
+literal|1
+decl_stmt|,
+name|halHasRxSelfLinkedTail
+range|:
+literal|1
+decl_stmt|,
+name|halSupportsFastClock5GHz
+range|:
+literal|1
 decl_stmt|;
+comment|/* Hardware supports 5ghz fast clock; check eeprom/channel before using */
 name|uint32_t
 name|halWirelessModes
 decl_stmt|;
@@ -731,6 +789,12 @@ name|halNumAntCfg5GHz
 decl_stmt|;
 name|uint32_t
 name|halIntrMask
+decl_stmt|;
+name|uint8_t
+name|halTxStreams
+decl_stmt|;
+name|uint8_t
+name|halRxStreams
 decl_stmt|;
 block|}
 name|HAL_CAPABILITIES
@@ -906,7 +970,7 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
-name|HAL_BOOL
+name|HAL_STATUS
 function_decl|(
 modifier|*
 name|ah_eepromSet
@@ -1040,6 +1104,10 @@ name|HAL_REG_DOMAIN
 name|ah_currentRD
 decl_stmt|;
 comment|/* EEPROM regulatory domain */
+name|HAL_REG_DOMAIN
+name|ah_currentRDext
+decl_stmt|;
+comment|/* EEPROM extended regdomain flags */
 name|HAL_CHANNEL_INTERNAL
 name|ah_channels
 index|[
@@ -1645,41 +1713,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|HAL_ANI_PRESENT
-block|,
-comment|/* is ANI support present */
-name|HAL_ANI_NOISE_IMMUNITY_LEVEL
-block|,
-comment|/* set level */
-name|HAL_ANI_OFDM_WEAK_SIGNAL_DETECTION
-block|,
-comment|/* enable/disable */
-name|HAL_ANI_CCK_WEAK_SIGNAL_THR
-block|,
-comment|/* enable/disable */
-name|HAL_ANI_FIRSTEP_LEVEL
-block|,
-comment|/* set level */
-name|HAL_ANI_SPUR_IMMUNITY_LEVEL
-block|,
-comment|/* set level */
-name|HAL_ANI_MODE
-init|=
-literal|6
-block|,
-comment|/* 0 => manual, 1 => auto (XXX do not change) */
-name|HAL_ANI_PHYERR_RESET
-block|,
-comment|/* reset phy error stats */
-block|}
-name|HAL_ANI_CMD
-typedef|;
-end_typedef
-
 begin_define
 define|#
 directive|define
@@ -1850,6 +1883,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|OS_REG_RMW
+parameter_list|(
+name|_a
+parameter_list|,
+name|_r
+parameter_list|,
+name|_set
+parameter_list|,
+name|_clr
+parameter_list|)
+define|\
+value|OS_REG_WRITE(_a, _r, (OS_REG_READ(_a, _r)& ~(_clr)) | (_set))
+end_define
+
+begin_define
+define|#
+directive|define
 name|OS_REG_RMW_FIELD
 parameter_list|(
 name|_a
@@ -1895,6 +1945,27 @@ value|OS_REG_WRITE(_a, _r, OS_REG_READ(_a, _r)&~ (_f))
 end_define
 
 begin_comment
+comment|/* Analog register writes may require a delay between each one (eg Merlin?) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OS_A_REG_RMW_FIELD
+parameter_list|(
+name|_a
+parameter_list|,
+name|_r
+parameter_list|,
+name|_f
+parameter_list|,
+name|_v
+parameter_list|)
+define|\
+value|do { OS_REG_WRITE(_a, _r, (OS_REG_READ(_a, _r)&~ (_f)) | (((_v)<< _f##_S)& (_f))) ; OS_DELAY(100); } while (0)
+end_define
+
+begin_comment
 comment|/* system-configurable parameters */
 end_comment
 
@@ -1931,6 +2002,17 @@ begin_comment
 comment|/* in TU's */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|ath_hal_ar5416_biasadj
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 1 or 0 */
+end_comment
+
 begin_comment
 comment|/* wait for the register contents to have the specified value */
 end_comment
@@ -1952,6 +2034,30 @@ name|mask
 parameter_list|,
 name|uint32_t
 name|val
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|HAL_BOOL
+name|ath_hal_waitfor
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|u_int
+name|reg
+parameter_list|,
+name|uint32_t
+name|mask
+parameter_list|,
+name|uint32_t
+name|val
+parameter_list|,
+name|uint32_t
+name|timeout
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2096,10 +2202,25 @@ name|ath_hal_debug
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|HALDEBUG
+parameter_list|(
+name|_ah
+parameter_list|,
+name|__m
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|do {							\ 		if ((__m) == HAL_DEBUG_UNMASKABLE ||		\ 		    (ath_hal_debug& (__m))) {			\ 			DO_HALDEBUG((_ah), (__m), __VA_ARGS__);	\ 		}						\ 	} while(0);
+end_define
+
 begin_function_decl
 specifier|extern
 name|void
-name|HALDEBUG
+name|DO_HALDEBUG
 parameter_list|(
 name|struct
 name|ath_hal
@@ -2524,146 +2645,14 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Diagnostic interface.  This is an open-ended interface that  * is opaque to applications.  Diagnostic programs use this to  * retrieve internal data structures, etc.  There is no guarantee  * that calling conventions for calls other than HAL_DIAG_REVS  * are stable between HAL releases; a diagnostic application must  * use the HAL revision information to deal with ABI/API differences.  *  * NB: do not renumber these, certain codes are publicly used.  */
+comment|/* The diagnostic codes used to be internally defined here -adrian */
 end_comment
 
-begin_enum
-enum|enum
-block|{
-name|HAL_DIAG_REVS
-init|=
-literal|0
-block|,
-comment|/* MAC/PHY/Radio revs */
-name|HAL_DIAG_EEPROM
-init|=
-literal|1
-block|,
-comment|/* EEPROM contents */
-name|HAL_DIAG_EEPROM_EXP_11A
-init|=
-literal|2
-block|,
-comment|/* EEPROM 5112 power exp for 11a */
-name|HAL_DIAG_EEPROM_EXP_11B
-init|=
-literal|3
-block|,
-comment|/* EEPROM 5112 power exp for 11b */
-name|HAL_DIAG_EEPROM_EXP_11G
-init|=
-literal|4
-block|,
-comment|/* EEPROM 5112 power exp for 11g */
-name|HAL_DIAG_ANI_CURRENT
-init|=
-literal|5
-block|,
-comment|/* ANI current channel state */
-name|HAL_DIAG_ANI_OFDM
-init|=
-literal|6
-block|,
-comment|/* ANI OFDM timing error stats */
-name|HAL_DIAG_ANI_CCK
-init|=
-literal|7
-block|,
-comment|/* ANI CCK timing error stats */
-name|HAL_DIAG_ANI_STATS
-init|=
-literal|8
-block|,
-comment|/* ANI statistics */
-name|HAL_DIAG_RFGAIN
-init|=
-literal|9
-block|,
-comment|/* RfGain GAIN_VALUES */
-name|HAL_DIAG_RFGAIN_CURSTEP
-init|=
-literal|10
-block|,
-comment|/* RfGain GAIN_OPTIMIZATION_STEP */
-name|HAL_DIAG_PCDAC
-init|=
-literal|11
-block|,
-comment|/* PCDAC table */
-name|HAL_DIAG_TXRATES
-init|=
-literal|12
-block|,
-comment|/* Transmit rate table */
-name|HAL_DIAG_REGS
-init|=
-literal|13
-block|,
-comment|/* Registers */
-name|HAL_DIAG_ANI_CMD
-init|=
-literal|14
-block|,
-comment|/* ANI issue command (XXX do not change!) */
-name|HAL_DIAG_SETKEY
-init|=
-literal|15
-block|,
-comment|/* Set keycache backdoor */
-name|HAL_DIAG_RESETKEY
-init|=
-literal|16
-block|,
-comment|/* Reset keycache backdoor */
-name|HAL_DIAG_EEREAD
-init|=
-literal|17
-block|,
-comment|/* Read EEPROM word */
-name|HAL_DIAG_EEWRITE
-init|=
-literal|18
-block|,
-comment|/* Write EEPROM word */
-comment|/* 19-26 removed, do not reuse */
-name|HAL_DIAG_RDWRITE
-init|=
-literal|27
-block|,
-comment|/* Write regulatory domain */
-name|HAL_DIAG_RDREAD
-init|=
-literal|28
-block|,
-comment|/* Get regulatory domain */
-name|HAL_DIAG_FATALERR
-init|=
-literal|29
-block|,
-comment|/* Read cached interrupt state */
-name|HAL_DIAG_11NCOMPAT
-init|=
-literal|30
-block|,
-comment|/* 11n compatibility tweaks */
-name|HAL_DIAG_ANI_PARAMS
-init|=
-literal|31
-block|,
-comment|/* ANI noise immunity parameters */
-name|HAL_DIAG_CHECK_HANGS
-init|=
-literal|32
-block|,
-comment|/* check h/w hangs */
-name|HAL_DIAG_SETREGS
-init|=
-literal|33
-block|,
-comment|/* write registers */
-block|}
-enum|;
-end_enum
+begin_include
+include|#
+directive|include
+file|"ah_diagcodes.h"
+end_include
 
 begin_enum
 enum|enum
@@ -3322,6 +3311,109 @@ end_define
 begin_comment
 comment|/* ACK+FCS */
 end_comment
+
+begin_comment
+comment|/* Generic EEPROM board value functions */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|HAL_BOOL
+name|ath_ee_getLowerUpperIndex
+parameter_list|(
+name|uint8_t
+name|target
+parameter_list|,
+name|uint8_t
+modifier|*
+name|pList
+parameter_list|,
+name|uint16_t
+name|listSize
+parameter_list|,
+name|uint16_t
+modifier|*
+name|indexL
+parameter_list|,
+name|uint16_t
+modifier|*
+name|indexR
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|HAL_BOOL
+name|ath_ee_FillVpdTable
+parameter_list|(
+name|uint8_t
+name|pwrMin
+parameter_list|,
+name|uint8_t
+name|pwrMax
+parameter_list|,
+name|uint8_t
+modifier|*
+name|pPwrList
+parameter_list|,
+name|uint8_t
+modifier|*
+name|pVpdList
+parameter_list|,
+name|uint16_t
+name|numIntercepts
+parameter_list|,
+name|uint8_t
+modifier|*
+name|pRetVpdList
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int16_t
+name|ath_ee_interpolate
+parameter_list|(
+name|uint16_t
+name|target
+parameter_list|,
+name|uint16_t
+name|srcLeft
+parameter_list|,
+name|uint16_t
+name|srcRight
+parameter_list|,
+name|int16_t
+name|targetLeft
+parameter_list|,
+name|int16_t
+name|targetRight
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Whether 5ghz fast clock is needed */
+end_comment
+
+begin_comment
+comment|/*  * The chipset (Merlin, AR9300/later) should set the capability flag below;  * this flag simply says that the hardware can do it, not that the EEPROM  * says it can.  *  * Merlin 2.0/2.1 chips with an EEPROM version> 16 do 5ghz fast clock  *   if the relevant eeprom flag is set.  * Merlin 2.0/2.1 chips with an EEPROM version<= 16 do 5ghz fast clock  *   by default.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IS_5GHZ_FAST_CLOCK_EN
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_c
+parameter_list|)
+define|\
+value|(IEEE80211_IS_CHAN_5GHZ(_c)&& \ 	 AH_PRIVATE((_ah))->ah_caps.halSupportsFastClock5GHz&& \ 	ath_hal_eepromGetFlag((_ah), AR_EEP_FSTCLK_5G))
+end_define
 
 begin_endif
 endif|#

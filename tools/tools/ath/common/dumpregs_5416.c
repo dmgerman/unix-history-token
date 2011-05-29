@@ -2200,6 +2200,13 @@ argument_list|,
 literal|"EXTRCCNT"
 argument_list|)
 block|,
+name|DEFBASIC
+argument_list|(
+name|AR_PHY_TURBO
+argument_list|,
+literal|"PHYTURBO"
+argument_list|)
+block|,
 name|DEFVOID
 argument_list|(
 name|AR_PHY_ADC_SERIAL_CTL

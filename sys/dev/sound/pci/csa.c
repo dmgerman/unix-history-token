@@ -609,7 +609,7 @@ expr_stmt|;
 comment|/* XXX */
 name|btag
 operator|=
-name|I386_BUS_SPACE_IO
+name|X86_BUS_SPACE_IO
 expr_stmt|;
 name|control
 operator|=

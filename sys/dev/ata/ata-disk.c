@@ -158,6 +158,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/pci/pcivar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ata_if.h>
 end_include
 
@@ -178,7 +184,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|ad_get_geometry
 parameter_list|(
 name|device_t
@@ -261,16 +267,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ad_firmware_geom_adjust
+name|ata_disk_firmware_geom_adjust
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ad_firmware_geom_adjust
+name|ata_disk_firmware_geom_adjust
 parameter_list|(
-name|dev
-parameter_list|,
 name|disk
 parameter_list|)
 end_define
@@ -406,6 +410,9 @@ name|ad_softc
 modifier|*
 name|adp
 decl_stmt|;
+name|device_t
+name|parent
+decl_stmt|;
 comment|/* check that we have a virgin disk to attach */
 if|if
 condition|(
@@ -459,11 +466,16 @@ name|adp
 argument_list|)
 expr_stmt|;
 comment|/* get device geometry into internal structs */
+if|if
+condition|(
 name|ad_get_geometry
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|ENXIO
+return|;
 comment|/* set the max size if configured */
 if|if
 condition|(
@@ -734,6 +746,130 @@ name|d_ident
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|strlcpy
+argument_list|(
+name|adp
+operator|->
+name|disk
+operator|->
+name|d_descr
+argument_list|,
+name|atadev
+operator|->
+name|param
+operator|.
+name|model
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|adp
+operator|->
+name|disk
+operator|->
+name|d_descr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|parent
+operator|=
+name|device_get_parent
+argument_list|(
+name|ch
+operator|->
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|parent
+operator|!=
+name|NULL
+operator|&&
+name|device_get_parent
+argument_list|(
+name|parent
+argument_list|)
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|device_get_devclass
+argument_list|(
+name|parent
+argument_list|)
+operator|==
+name|devclass_find
+argument_list|(
+literal|"atapci"
+argument_list|)
+operator|||
+name|device_get_devclass
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|parent
+argument_list|)
+argument_list|)
+operator|==
+name|devclass_find
+argument_list|(
+literal|"pci"
+argument_list|)
+operator|)
+condition|)
+block|{
+name|adp
+operator|->
+name|disk
+operator|->
+name|d_hba_vendor
+operator|=
+name|pci_get_vendor
+argument_list|(
+name|parent
+argument_list|)
+expr_stmt|;
+name|adp
+operator|->
+name|disk
+operator|->
+name|d_hba_device
+operator|=
+name|pci_get_device
+argument_list|(
+name|parent
+argument_list|)
+expr_stmt|;
+name|adp
+operator|->
+name|disk
+operator|->
+name|d_hba_subvendor
+operator|=
+name|pci_get_subvendor
+argument_list|(
+name|parent
+argument_list|)
+expr_stmt|;
+name|adp
+operator|->
+name|disk
+operator|->
+name|d_hba_subdevice
+operator|=
+name|pci_get_subdevice
+argument_list|(
+name|parent
+argument_list|)
+expr_stmt|;
+block|}
+name|ata_disk_firmware_geom_adjust
+argument_list|(
+name|adp
+operator|->
+name|disk
+argument_list|)
+expr_stmt|;
 name|disk_create
 argument_list|(
 name|adp
@@ -753,15 +889,6 @@ name|device_get_unit
 argument_list|(
 name|dev
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|ad_firmware_geom_adjust
-argument_list|(
-name|dev
-argument_list|,
-name|adp
-operator|->
-name|disk
 argument_list|)
 expr_stmt|;
 name|bus_generic_attach
@@ -898,7 +1025,7 @@ name|M_TEMP
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* detroy disk from the system so we dont get any further requests */
+comment|/* destroy disk from the system so we don't get any further requests */
 name|disk_destroy
 argument_list|(
 name|adp
@@ -906,13 +1033,13 @@ operator|->
 name|disk
 argument_list|)
 expr_stmt|;
-comment|/* fail requests on the queue and any thats "in flight" for this device */
+comment|/* fail requests on the queue and any that's "in flight" for this device */
 name|ata_fail_requests
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* dont leave anything behind */
+comment|/* don't leave anything behind */
 name|device_set_ivars
 argument_list|(
 name|dev
@@ -2095,6 +2222,13 @@ name|secsperint
 operator|*
 name|DEV_BSIZE
 expr_stmt|;
+else|else
+name|atadev
+operator|->
+name|max_iosize
+operator|=
+name|DEV_BSIZE
+expr_stmt|;
 block|}
 else|else
 name|atadev
@@ -2108,7 +2242,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ad_get_geometry
 parameter_list|(
 name|device_t
@@ -2278,6 +2412,20 @@ operator|<<
 literal|16
 operator|)
 expr_stmt|;
+comment|/* This device exists, but has no size.  Filter out this bogus device. */
+if|if
+condition|(
+operator|!
+name|lbasize
+operator|&&
+operator|!
+name|adp
+operator|->
+name|total_secs
+condition|)
+return|return
+name|ENXIO
+return|;
 comment|/* does this device need oldstyle CHS addressing */
 if|if
 condition|(
@@ -2400,6 +2548,9 @@ name|total_secs
 operator|=
 name|lbasize48
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -2793,7 +2944,7 @@ index|[
 literal|64
 index|]
 decl_stmt|;
-comment|/* try to seperate the ATA model string into vendor and model parts */
+comment|/* try to separate the ATA model string into vendor and model parts */
 if|if
 condition|(
 operator|(

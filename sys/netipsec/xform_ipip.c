@@ -1498,12 +1498,25 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 name|u_int8_t
 name|itos
 decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET
 name|struct
 name|ip
 modifier|*
@@ -1806,13 +1819,14 @@ name|ip_newid
 argument_list|()
 expr_stmt|;
 comment|/* If the inner protocol is IP... */
-if|if
+switch|switch
 condition|(
 name|tp
-operator|==
-name|IPVERSION
 condition|)
 block|{
+case|case
+name|IPVERSION
+case|:
 comment|/* Save ECN notification */
 name|m_copydata
 argument_list|(
@@ -1918,21 +1932,17 @@ operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;
-block|}
+break|break;
 ifdef|#
 directive|ifdef
 name|INET6
-elseif|else
-if|if
-condition|(
-name|tp
-operator|==
+case|case
 operator|(
 name|IPV6_VERSION
 operator|>>
 literal|4
 operator|)
-condition|)
+case|:
 block|{
 name|u_int32_t
 name|itos32
@@ -1989,12 +1999,12 @@ name|ip_off
 operator|=
 literal|0
 expr_stmt|;
+break|break;
 block|}
 endif|#
 directive|endif
 comment|/* INET6 */
-else|else
-block|{
+default|default:
 goto|goto
 name|nofamily
 goto|;
@@ -2278,16 +2288,17 @@ name|sin6
 operator|.
 name|sin6_addr
 expr_stmt|;
+switch|switch
+condition|(
+name|tp
+condition|)
+block|{
 ifdef|#
 directive|ifdef
 name|INET
-if|if
-condition|(
-name|tp
-operator|==
+case|case
 name|IPVERSION
-condition|)
-block|{
+case|:
 comment|/* Save ECN notification */
 name|m_copydata
 argument_list|(
@@ -2326,21 +2337,17 @@ name|ip6_nxt
 operator|=
 name|IPPROTO_IPIP
 expr_stmt|;
-block|}
-elseif|else
+break|break;
 endif|#
 directive|endif
 comment|/* INET */
-if|if
-condition|(
-name|tp
-operator|==
+case|case
 operator|(
 name|IPV6_VERSION
 operator|>>
 literal|4
 operator|)
-condition|)
+case|:
 block|{
 name|u_int32_t
 name|itos32
@@ -2392,8 +2399,7 @@ operator|=
 name|IPPROTO_IPV6
 expr_stmt|;
 block|}
-else|else
-block|{
+default|default:
 goto|goto
 name|nofamily
 goto|;
@@ -2592,6 +2598,20 @@ directive|ifdef
 name|IPSEC
 end_ifdef
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+end_if
+
 begin_function
 specifier|static
 name|int
@@ -2720,6 +2740,21 @@ name|inetdomain
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET || INET6 */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -2771,11 +2806,28 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|INET6
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -2834,6 +2886,19 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* INET6&& INET */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+end_if
+
+begin_comment
 comment|/*  * Check the encapsulated packet to see if we want it  */
 end_comment
 
@@ -2880,6 +2945,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -2896,6 +2970,9 @@ argument_list|)
 expr_stmt|;
 comment|/* attach to encapsulation framework */
 comment|/* XXX save return cookie for detach on module remove */
+ifdef|#
+directive|ifdef
+name|INET
 operator|(
 name|void
 operator|)
@@ -2914,9 +2991,19 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
 name|INET6
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|INET
+argument_list|)
 operator|(
 name|void
 operator|)

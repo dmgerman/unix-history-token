@@ -712,12 +712,6 @@ name|type
 operator|=
 name|e1000_bus_type_pci_express
 expr_stmt|;
-name|bus
-operator|->
-name|speed
-operator|=
-name|e1000_bus_speed_2500
-expr_stmt|;
 name|ret_val
 operator|=
 name|e1000_read_pcie_cap_reg
@@ -734,13 +728,58 @@ if|if
 condition|(
 name|ret_val
 condition|)
+block|{
 name|bus
 operator|->
 name|width
 operator|=
 name|e1000_bus_width_unknown
 expr_stmt|;
+name|bus
+operator|->
+name|speed
+operator|=
+name|e1000_bus_speed_unknown
+expr_stmt|;
+block|}
 else|else
+block|{
+switch|switch
+condition|(
+name|pcie_link_status
+operator|&
+name|PCIE_LINK_SPEED_MASK
+condition|)
+block|{
+case|case
+name|PCIE_LINK_SPEED_2500
+case|:
+name|bus
+operator|->
+name|speed
+operator|=
+name|e1000_bus_speed_2500
+expr_stmt|;
+break|break;
+case|case
+name|PCIE_LINK_SPEED_5000
+case|:
+name|bus
+operator|->
+name|speed
+operator|=
+name|e1000_bus_speed_5000
+expr_stmt|;
+break|break;
+default|default:
+name|bus
+operator|->
+name|speed
+operator|=
+name|e1000_bus_speed_unknown
+expr_stmt|;
+break|break;
+block|}
 name|bus
 operator|->
 name|width
@@ -759,6 +798,7 @@ operator|>>
 name|PCIE_LINK_WIDTH_SHIFT
 operator|)
 expr_stmt|;
+block|}
 name|mac
 operator|->
 name|ops
@@ -1182,6 +1222,64 @@ argument_list|(
 literal|"e1000_check_alt_mac_addr_generic"
 argument_list|)
 expr_stmt|;
+name|ret_val
+operator|=
+name|hw
+operator|->
+name|nvm
+operator|.
+name|ops
+operator|.
+name|read
+argument_list|(
+name|hw
+argument_list|,
+name|NVM_COMPAT
+argument_list|,
+literal|1
+argument_list|,
+operator|&
+name|nvm_data
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+goto|goto
+name|out
+goto|;
+comment|/* Check for LOM (vs. NIC) or one of two valid mezzanine cards */
+if|if
+condition|(
+operator|!
+operator|(
+operator|(
+name|nvm_data
+operator|&
+name|NVM_COMPAT_LOM
+operator|)
+operator|||
+operator|(
+name|hw
+operator|->
+name|device_id
+operator|==
+name|E1000_DEV_ID_82571EB_SERDES_DUAL
+operator|)
+operator|||
+operator|(
+name|hw
+operator|->
+name|device_id
+operator|==
+name|E1000_DEV_ID_82571EB_SERDES_QUAD
+operator|)
+operator|)
+condition|)
+goto|goto
+name|out
+goto|;
 name|ret_val
 operator|=
 name|hw
@@ -2549,7 +2647,7 @@ goto|;
 block|}
 name|DEBUGOUT
 argument_list|(
-literal|"NOT RXing /C/, disable AutoNeg and force link.\n"
+literal|"NOT Rx'ing /C/, disable AutoNeg and force link.\n"
 argument_list|)
 expr_stmt|;
 comment|/* Disable auto-negotiation in the TXCW register */
@@ -2638,7 +2736,7 @@ block|{
 comment|/* 		 * If we are forcing link and we are receiving /C/ ordered 		 * sets, re-enable auto-negotiation in the TXCW register 		 * and disable forced link in the Device Control register 		 * in an attempt to auto-negotiate with our link partner. 		 */
 name|DEBUGOUT
 argument_list|(
-literal|"RXing /C/, enable AutoNeg and stop forcing link.\n"
+literal|"Rx'ing /C/, enable AutoNeg and stop forcing link.\n"
 argument_list|)
 expr_stmt|;
 name|E1000_WRITE_REG
@@ -2795,7 +2893,7 @@ goto|;
 block|}
 name|DEBUGOUT
 argument_list|(
-literal|"NOT RXing /C/, disable AutoNeg and force link.\n"
+literal|"NOT Rx'ing /C/, disable AutoNeg and force link.\n"
 argument_list|)
 expr_stmt|;
 comment|/* Disable auto-negotiation in the TXCW register */
@@ -2884,7 +2982,7 @@ block|{
 comment|/* 		 * If we are forcing link and we are receiving /C/ ordered 		 * sets, re-enable auto-negotiation in the TXCW register 		 * and disable forced link in the Device Control register 		 * in an attempt to auto-negotiate with our link partner. 		 */
 name|DEBUGOUT
 argument_list|(
-literal|"RXing /C/, enable AutoNeg and stop forcing link.\n"
+literal|"Rx'ing /C/, enable AutoNeg and stop forcing link.\n"
 argument_list|)
 expr_stmt|;
 name|E1000_WRITE_REG

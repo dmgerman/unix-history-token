@@ -184,6 +184,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"    show progress             - display status of active operations\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"    fail<drive>              - fail a physical drive\n"
 argument_list|)
 expr_stmt|;
@@ -511,6 +518,8 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
 operator|(
 operator|*
 name|cmd
@@ -522,7 +531,13 @@ name|ac
 argument_list|,
 name|av
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+else|else
 return|return
 operator|(
 literal|0
@@ -542,7 +557,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}

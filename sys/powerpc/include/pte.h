@@ -299,6 +299,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LPTE_AVPN_MASK
+value|0xFFFFFFFFFFFFFF80ULL
+end_define
+
+begin_define
+define|#
+directive|define
 name|LPTE_API
 value|0x0000000000000F80ULL
 end_define
@@ -307,6 +314,13 @@ begin_define
 define|#
 directive|define
 name|LPTE_LOCKED
+value|0x0000000000000040ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|LPTE_WIRED
 value|0x0000000000000008ULL
 end_define
 
@@ -527,7 +541,7 @@ begin_define
 define|#
 directive|define
 name|ADDR_PIDX
-value|0x0ffff000
+value|0x0ffff000UL
 end_define
 
 begin_define
@@ -555,7 +569,7 @@ begin_define
 define|#
 directive|define
 name|ADDR_POFF
-value|0x00000fff
+value|0x00000fffUL
 end_define
 
 begin_comment
@@ -792,7 +806,7 @@ begin_define
 define|#
 directive|define
 name|PTBL_MASK
-value|((PDIR_SIZE - 1)& ~PAGE_MASK)
+value|((PDIR_SIZE - 1)& ~((1<< PAGE_SHIFT) - 1))
 end_define
 
 begin_define

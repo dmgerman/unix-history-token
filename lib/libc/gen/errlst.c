@@ -66,7 +66,7 @@ name|sys_errlist
 index|[]
 init|=
 block|{
-literal|"Undefined error: 0"
+literal|"No error: 0"
 block|,
 comment|/*  0 - ENOERROR */
 literal|"Operation not permitted"
@@ -357,6 +357,9 @@ comment|/* 92 - EPROTO */
 literal|"Capabilities insufficient"
 block|,
 comment|/* 93 - ENOTCAPABLE */
+literal|"Not permitted in capability mode"
+block|,
+comment|/* 94 - ECAPMODE */
 block|}
 decl_stmt|;
 end_decl_stmt

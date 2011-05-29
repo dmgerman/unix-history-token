@@ -8482,7 +8482,12 @@ argument|} }  void pf_send_icmp(struct mbuf *m, u_int8_t type, u_int8_t code, sa
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
+ifdef|#
+directive|ifdef
+name|INET
 argument|struct ip *ip;
+endif|#
+directive|endif
 endif|#
 directive|endif
 ifdef|#
@@ -20100,7 +20105,9 @@ argument|m0->m_pkthdr.csum_flags |= CSUM_IP; 	sw_csum = m0->m_pkthdr.csum_flags&
 comment|/* 		 * XXX: in_delayed_cksum assumes HBO for ip->ip_len (at least) 		 */
 argument|NTOHS(ip->ip_len); 		NTOHS(ip->ip_off);
 comment|/* XXX: needed? */
-argument|in_delayed_cksum(m0); 		HTONS(ip->ip_len); 		HTONS(ip->ip_off); 		sw_csum&= ~CSUM_DELAY_DATA; 	} 	m0->m_pkthdr.csum_flags&= ifp->if_hwassist;  	if (ntohs(ip->ip_len)<= ifp->if_mtu || 	    (ifp->if_hwassist& CSUM_FRAGMENT&& 		((ip->ip_off& htons(IP_DF)) ==
+argument|in_delayed_cksum(m0); 		HTONS(ip->ip_len); 		HTONS(ip->ip_off); 		sw_csum&= ~CSUM_DELAY_DATA; 	} 	m0->m_pkthdr.csum_flags&= ifp->if_hwassist;  	if (ntohs(ip->ip_len)<= ifp->if_mtu || 	    (m0->m_pkthdr.csum_flags& ifp->if_hwassist& CSUM_TSO) !=
+literal|0
+argument||| 	    (ifp->if_hwassist& CSUM_FRAGMENT&& 		((ip->ip_off& htons(IP_DF)) ==
 literal|0
 argument|))) {
 comment|/* 		 * ip->ip_len = htons(ip->ip_len); 		 * ip->ip_off = htons(ip->ip_off); 		 */
@@ -20145,7 +20152,7 @@ argument|if (m0->m_pkthdr.csum_flags& M_TCPV4_CSUM_OUT) 			KMOD_TCPSTAT_INC(tcps
 endif|#
 directive|endif
 comment|/* 	 * Too large for interface; fragment if possible. 	 * Must be able to put at least 8 bytes per fragment. 	 */
-argument|if (ip->ip_off& htons(IP_DF)) { 		KMOD_IPSTAT_INC(ips_cantfrag); 		if (r->rt != PF_DUPTO) {
+argument|if (ip->ip_off& htons(IP_DF) || (m0->m_pkthdr.csum_flags& CSUM_TSO)) { 		KMOD_IPSTAT_INC(ips_cantfrag); 		if (r->rt != PF_DUPTO) {
 ifdef|#
 directive|ifdef
 name|__FreeBSD__

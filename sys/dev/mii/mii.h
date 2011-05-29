@@ -4,7 +4,7 @@ comment|/*	$NetBSD: mii.h,v 1.9 2001/05/31 03:07:14 thorpej Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997 Manuel Bouyer.  All rights reserved.  *  * Modification to match BSD/OS 3.0 MII interface by Jason R. Thorpe,  * Numerical Aerospace Simulation Facility, NASA Ames Research Center.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Manuel Bouyer.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997 Manuel Bouyer.  All rights reserved.  *  * Modification to match BSD/OS 3.0 MII interface by Jason R. Thorpe,  * Numerical Aerospace Simulation Facility, NASA Ames Research Center.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -406,30 +406,15 @@ begin_comment
 comment|/* Extended capability */
 end_comment
 
-begin_comment
-comment|/*  * Note that the EXTSTAT bit indicates that there is extended status  * info available in register 15, but 802.3 section 22.2.4.3 also  * states that that all 1000 Mb/s capable PHYs will set this bit to 1.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_define
 define|#
 directive|define
-name|BMSR_MEDIAMASK
-value|(BMSR_100T4|BMSR_100TXFDX|BMSR_100TXHDX|BMSR_10TFDX| \ 			 BMSR_10THDX|BMSR_ANEG)
+name|BMSR_DEFCAPMASK
+value|0xffffffff
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
 begin_comment
-comment|/* NetBSD uses: */
+comment|/*  * Note that the EXTSTAT bit indicates that there is extended status  * info available in register 15, but 802.3 section 22.2.4.3 also  * states that that all 1000 Mb/s capable PHYs will set this bit to 1.  */
 end_comment
 
 begin_define
@@ -438,11 +423,6 @@ directive|define
 name|BMSR_MEDIAMASK
 value|(BMSR_100T4|BMSR_100TXFDX|BMSR_100TXHDX| \ 			 BMSR_10TFDX|BMSR_10THDX|BMSR_100T2FDX|BMSR_100T2HDX)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Convert BMSR media capabilities to ANAR bits for autonegotiation.  * Note the shift chopps off the BMSR_ANEG bit.  */
@@ -512,38 +492,6 @@ end_define
 begin_comment
 comment|/* vendor revision */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MII_OUI
-parameter_list|(
-name|id1
-parameter_list|,
-name|id2
-parameter_list|)
-value|(((id1)<< 6) | ((id2)>> 10))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MII_MODEL
-parameter_list|(
-name|id2
-parameter_list|)
-value|(((id2)& IDR2_MODEL)>> 4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MII_REV
-parameter_list|(
-name|id2
-parameter_list|)
-value|((id2)& IDR2_REV)
-end_define
 
 begin_define
 define|#
@@ -669,6 +617,34 @@ end_define
 begin_comment
 comment|/* protocol selector CSMA/CD */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ANAR_PAUSE_NONE
+value|(0<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ANAR_PAUSE_SYM
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ANAR_PAUSE_ASYM
+value|(2<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ANAR_PAUSE_TOWARDS
+value|(3<< 10)
+end_define
 
 begin_define
 define|#
@@ -844,6 +820,41 @@ end_define
 begin_comment
 comment|/* protocol selector CSMA/CD */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ANLPAR_PAUSE_MASK
+value|(3<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ANLPAR_PAUSE_NONE
+value|(0<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ANLPAR_PAUSE_SYM
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ANLPAR_PAUSE_ASYM
+value|(2<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ANLPAR_PAUSE_TOWARDS
+value|(3<< 10)
+end_define
 
 begin_define
 define|#

@@ -223,6 +223,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 		 * Ensure that at least one execute bit is on. Otherwise, 		 * a privileged user will always succeed, and we don't want 		 * this to happen unless the file really is executable. 		 */
 if|if
 condition|(
 operator|(
@@ -230,6 +231,23 @@ name|accmode
 operator|&
 name|VEXEC
 operator|)
+operator|&&
+operator|(
+name|acl_posix1e_acl_to_mode
+argument_list|(
+name|acl
+argument_list|)
+operator|&
+operator|(
+name|S_IXUSR
+operator||
+name|S_IXGRP
+operator||
+name|S_IXOTH
+operator|)
+operator|)
+operator|!=
+literal|0
 operator|&&
 operator|!
 name|priv_check_cred
@@ -2045,12 +2063,6 @@ operator|->
 name|acl_cnt
 operator|>
 name|ACL_MAX_ENTRIES
-operator|||
-name|acl
-operator|->
-name|acl_cnt
-operator|<
-literal|0
 condition|)
 return|return
 operator|(

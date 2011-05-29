@@ -1226,7 +1226,7 @@ operator|++
 init|;
 name|i
 operator|<
-name|MWL_MBSS_STA_MAX
+name|MWL_MBSS_MAX
 condition|;
 name|i
 operator|++

@@ -1331,10 +1331,6 @@ operator|<=
 literal|199506
 end_if
 
-begin_comment
-comment|/* size for cuserid(3); UT_NAMESIZE + 1, see<utmp.h> */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1343,7 +1339,7 @@ value|17
 end_define
 
 begin_comment
-comment|/* legacy */
+comment|/* size for cuserid(3); MAXLOGNAME, legacy */
 end_comment
 
 begin_endif

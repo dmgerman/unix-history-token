@@ -2819,14 +2819,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
 begin_comment
-comment|/*  * Clean out the cache. Called when the last nfsd terminates.  */
+comment|/*  * Clean out the cache. Called when nfsserver module is unloaded.  */
 end_comment
 
 begin_function
@@ -2930,15 +2924,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* notdef */
-end_comment
 
 begin_comment
 comment|/*  * The basic rule is to get rid of entries that are expired.  */

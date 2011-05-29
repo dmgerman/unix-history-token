@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/atomic.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pte.h>
 end_include
 
@@ -524,7 +530,7 @@ parameter_list|)
 block|{
 name|struct
 name|nlist
-name|nlist
+name|nl
 index|[
 literal|2
 index|]
@@ -659,7 +665,7 @@ literal|1
 operator|)
 return|;
 comment|/* 	 * At this point we've got enough information to use kvm_read() for 	 * direct mapped (ie region 6 and region 7) address, such as symbol 	 * addresses/values. 	 */
-name|nlist
+name|nl
 index|[
 literal|0
 index|]
@@ -668,7 +674,7 @@ name|n_name
 operator|=
 literal|"ia64_kptdir"
 expr_stmt|;
-name|nlist
+name|nl
 index|[
 literal|1
 index|]
@@ -683,7 +689,7 @@ name|kvm_nlist
 argument_list|(
 name|kd
 argument_list|,
-name|nlist
+name|nl
 argument_list|)
 operator|!=
 literal|0
@@ -714,7 +720,7 @@ argument_list|(
 name|kd
 argument_list|,
 operator|(
-name|nlist
+name|nl
 index|[
 literal|0
 index|]

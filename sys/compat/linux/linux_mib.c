@@ -204,6 +204,56 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_function_decl
+specifier|static
+name|int
+name|linux_set_osname
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|char
+modifier|*
+name|osname
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|linux_set_osrelease
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|char
+modifier|*
+name|osrelease
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|linux_set_oss_version
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|oss_version
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|int
@@ -2312,6 +2362,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|linux_set_osname
 parameter_list|(
@@ -2496,6 +2547,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|linux_set_osrelease
 parameter_list|(
@@ -2641,6 +2693,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|linux_set_oss_version
 parameter_list|(

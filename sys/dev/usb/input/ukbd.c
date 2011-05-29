@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/linker_set.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
 end_include
 
@@ -278,11 +272,11 @@ directive|include
 file|<dev/kbd/kbdtables.h>
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -388,13 +382,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|UPROTO_BOOT_KEYBOARD
-value|1
-end_define
 
 begin_define
 define|#
@@ -3188,8 +3175,8 @@ name|apple_fn
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 name|DPRINTF
 argument_list|(
@@ -3503,8 +3490,8 @@ argument_list|(
 name|xfer
 argument_list|)
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 if|if
 condition|(
@@ -3752,7 +3739,7 @@ default|default:
 comment|/* Error */
 name|DPRINTFN
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 literal|"error=%s\n"
 argument_list|,
@@ -3982,7 +3969,7 @@ name|info
 operator|.
 name|bInterfaceProtocol
 operator|==
-name|UPROTO_BOOT_KEYBOARD
+name|UIPROTO_BOOT_KEYBOARD
 operator|)
 condition|)
 block|{
@@ -4003,7 +3990,7 @@ return|;
 else|else
 return|return
 operator|(
-name|BUS_PROBE_GENERIC
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
@@ -4099,7 +4086,7 @@ expr_stmt|;
 else|else
 name|error
 operator|=
-name|BUS_PROBE_GENERIC
+name|BUS_PROBE_DEFAULT
 expr_stmt|;
 block|}
 else|else
@@ -4482,6 +4469,11 @@ literal|0
 condition|)
 block|{
 name|uint8_t
+name|apple_keys
+init|=
+literal|0
+decl_stmt|;
+name|uint8_t
 name|temp_id
 decl_stmt|;
 comment|/* investigate if this is an Apple Keyboard */
@@ -4513,9 +4505,7 @@ operator|&
 name|flags
 argument_list|,
 operator|&
-name|sc
-operator|->
-name|sc_kbd_id
+name|temp_id
 argument_list|)
 condition|)
 block|{
@@ -4533,6 +4523,24 @@ name|UKBD_FLAG_APPLE_EJECT
 operator||
 name|UKBD_FLAG_APPLE_SWAP
 expr_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|1
+argument_list|,
+literal|"Found Apple eject-key\n"
+argument_list|)
+expr_stmt|;
+name|apple_keys
+operator|=
+literal|1
+expr_stmt|;
+name|sc
+operator|->
+name|sc_kbd_id
+operator|=
+name|temp_id
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|hid_locate
@@ -4576,27 +4584,31 @@ operator|->
 name|sc_flags
 operator||=
 name|UKBD_FLAG_APPLE_FN
-operator||
-name|UKBD_FLAG_APPLE_SWAP
 expr_stmt|;
-if|if
-condition|(
-name|temp_id
-operator|!=
+name|DPRINTFN
+argument_list|(
+literal|1
+argument_list|,
+literal|"Found Apple FN-key\n"
+argument_list|)
+expr_stmt|;
+name|apple_keys
+operator|=
+literal|1
+expr_stmt|;
 name|sc
 operator|->
 name|sc_kbd_id
-condition|)
-block|{
-name|DPRINTF
-argument_list|(
-literal|"HID IDs mismatch\n"
-argument_list|)
+operator|=
+name|temp_id
 expr_stmt|;
 block|}
-block|}
-block|}
-else|else
+if|if
+condition|(
+name|apple_keys
+operator|==
+literal|0
+condition|)
 block|{
 comment|/*  			 * Assume the first HID ID contains the 			 * keyboard data 			 */
 name|hid_report_size
@@ -9030,6 +9042,16 @@ argument_list|,
 literal|1
 argument_list|,
 literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|ukbd
 argument_list|,
 literal|1
 argument_list|)

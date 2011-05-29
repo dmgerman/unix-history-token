@@ -148,10 +148,6 @@ block|{
 name|u_int8_t
 name|opcode
 decl_stmt|;
-define|#
-directive|define
-name|MOVE_MEDIUM
-value|0xa5
 name|u_int8_t
 name|byte2
 decl_stmt|;
@@ -207,10 +203,6 @@ block|{
 name|u_int8_t
 name|opcode
 decl_stmt|;
-define|#
-directive|define
-name|POSITION_TO_ELEMENT
-value|0x2b
 name|u_int8_t
 name|byte2
 decl_stmt|;
@@ -259,10 +251,6 @@ block|{
 name|u_int8_t
 name|opcode
 decl_stmt|;
-define|#
-directive|define
-name|READ_ELEMENT_STATUS
-value|0xb8
 name|u_int8_t
 name|byte2
 decl_stmt|;
@@ -313,10 +301,6 @@ block|{
 name|u_int8_t
 name|opcode
 decl_stmt|;
-define|#
-directive|define
-name|REQUEST_VOLUME_ELEMENT_ADDRESS
-value|0xb5
 name|u_int8_t
 name|byte2
 decl_stmt|;

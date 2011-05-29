@@ -560,6 +560,10 @@ name|ic_htcaps
 decl_stmt|;
 comment|/* HT capabilities */
 name|uint32_t
+name|ic_htextcaps
+decl_stmt|;
+comment|/* HT extended capabilities */
+name|uint32_t
 name|ic_cryptocaps
 decl_stmt|;
 comment|/* crypto capabilities */
@@ -782,6 +786,14 @@ name|int
 name|ic_lastnonht
 decl_stmt|;
 comment|/* last time non-HT sta noted */
+name|uint8_t
+name|ic_rxstream
+decl_stmt|;
+comment|/* # RX streams */
+name|uint8_t
+name|ic_txstream
+decl_stmt|;
+comment|/* # TX streams */
 comment|/* optional state for Atheros SuperG protocol extensions */
 name|struct
 name|ieee80211_superg
@@ -1384,7 +1396,7 @@ function_decl|;
 name|uint64_t
 name|ic_spare
 index|[
-literal|8
+literal|7
 index|]
 decl_stmt|;
 block|}
@@ -1500,6 +1512,10 @@ name|uint32_t
 name|iv_htcaps
 decl_stmt|;
 comment|/* HT capabilities */
+name|uint32_t
+name|iv_htextcaps
+decl_stmt|;
+comment|/* HT extended capabilities */
 name|enum
 name|ieee80211_opmode
 name|iv_opmode
@@ -1912,6 +1928,17 @@ modifier|*
 name|iv_as
 decl_stmt|;
 comment|/* private aclator state */
+specifier|const
+name|struct
+name|ieee80211_ratectl
+modifier|*
+name|iv_rate
+decl_stmt|;
+name|void
+modifier|*
+name|iv_rs
+decl_stmt|;
+comment|/* private ratectl state */
 name|struct
 name|ieee80211_tdma_state
 modifier|*
@@ -2137,7 +2164,7 @@ function_decl|;
 name|uint64_t
 name|iv_spare
 index|[
-literal|8
+literal|6
 index|]
 decl_stmt|;
 block|}
@@ -2971,7 +2998,7 @@ define|#
 directive|define
 name|IEEE80211_FHT_BITS
 define|\
-value|"\20\1NONHT_PR" \ 	"\23GF\24HT\25AMDPU_TX\26AMPDU_TX" \ 	"\27AMSDU_TX\30AMSDU_RX\31USEHT40\32PUREN\33SHORTGI20\34SHORTGI40" \ 	"\35HTCOMPAT\36RIFS\37STBC_TX\40STBC_RX"
+value|"\20\1NONHT_PR" \ 	"\23GF\24HT\25AMPDU_TX\26AMPDU_TX" \ 	"\27AMSDU_TX\30AMSDU_RX\31USEHT40\32PUREN\33SHORTGI20\34SHORTGI40" \ 	"\35HTCOMPAT\36RIFS\37STBC_TX\40STBC_RX"
 end_define
 
 begin_define
@@ -3342,6 +3369,50 @@ end_define
 
 begin_comment
 comment|/* CAPABILITY: RIFS support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_HTC_RXUNEQUAL
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* CAPABILITY: RX unequal MCS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_HTC_RXMCS32
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* CAPABILITY: MCS32 support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_HTC_TXUNEQUAL
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* CAPABILITY: TX unequal MCS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_HTC_TXMCS32
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* CAPABILITY: MCS32 suport */
 end_comment
 
 begin_define
@@ -4664,6 +4735,7 @@ begin_function_decl
 name|void
 name|ieee80211_note
 parameter_list|(
+specifier|const
 name|struct
 name|ieee80211vap
 modifier|*
@@ -4681,6 +4753,7 @@ begin_function_decl
 name|void
 name|ieee80211_note_mac
 parameter_list|(
+specifier|const
 name|struct
 name|ieee80211vap
 modifier|*
@@ -4705,6 +4778,7 @@ begin_function_decl
 name|void
 name|ieee80211_note_frame
 parameter_list|(
+specifier|const
 name|struct
 name|ieee80211vap
 modifier|*
@@ -4879,6 +4953,7 @@ begin_function_decl
 name|void
 name|ieee80211_discard_frame
 parameter_list|(
+specifier|const
 name|struct
 name|ieee80211vap
 modifier|*
@@ -4907,6 +4982,7 @@ begin_function_decl
 name|void
 name|ieee80211_discard_ie
 parameter_list|(
+specifier|const
 name|struct
 name|ieee80211vap
 modifier|*
@@ -4935,6 +5011,7 @@ begin_function_decl
 name|void
 name|ieee80211_discard_mac
 parameter_list|(
+specifier|const
 name|struct
 name|ieee80211vap
 modifier|*

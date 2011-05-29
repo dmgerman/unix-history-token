@@ -2030,8 +2030,6 @@ modifier|*
 name|qpatnext
 decl_stmt|;
 name|int
-name|c
-decl_stmt|,
 name|err
 decl_stmt|;
 name|size_t
@@ -2040,6 +2038,8 @@ decl_stmt|;
 name|Char
 modifier|*
 name|bufnext
+decl_stmt|,
+name|c
 decl_stmt|,
 name|patbuf
 index|[

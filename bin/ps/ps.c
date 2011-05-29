@@ -1327,7 +1327,7 @@ block|{
 case|case
 literal|'A'
 case|:
-comment|/* 			 * Exactly the same as `-ax'.   This has been 			 * added for compatability with SUSv3, but for 			 * now it will not be described in the man page. 			 */
+comment|/* 			 * Exactly the same as `-ax'.   This has been 			 * added for compatibility with SUSv3, but for 			 * now it will not be described in the man page. 			 */
 name|nselectors
 operator|++
 expr_stmt|;
@@ -5485,9 +5485,9 @@ if|if
 condition|(
 name|v
 operator|->
-name|flag
-operator|&
-name|DSIZ
+name|sproc
+operator|!=
+name|NULL
 condition|)
 block|{
 name|v
@@ -5572,14 +5572,11 @@ name|var
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
 name|v
 operator|->
-name|flag
-operator|&
-name|DSIZ
-operator|)
+name|sproc
+operator|==
+name|NULL
 condition|)
 continue|continue;
 name|i

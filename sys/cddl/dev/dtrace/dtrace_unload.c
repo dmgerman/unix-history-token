@@ -58,6 +58,11 @@ argument_list|(
 name|dtrace_dev
 argument_list|)
 expr_stmt|;
+name|destroy_dev
+argument_list|(
+name|helper_dev
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|mutex_enter

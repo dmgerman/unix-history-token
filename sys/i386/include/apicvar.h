@@ -108,8 +108,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|APIC_IPI_INTS
+name|APIC_CMC_INT
 value|(APIC_LOCAL_INTS + 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_IPI_INTS
+value|(APIC_LOCAL_INTS + 3)
 end_define
 
 begin_define
@@ -209,22 +216,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|IPI_STATCLOCK
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPI_PROFCLOCK
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
 name|IPI_BITMAP_LAST
-value|IPI_PROFCLOCK
+value|IPI_HARDCLOCK
 end_define
 
 begin_define
@@ -296,8 +289,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|APIC_IPI_INTS
+name|APIC_CMC_INT
 value|(APIC_LOCAL_INTS + 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_IPI_INTS
+value|(APIC_LOCAL_INTS + 3)
 end_define
 
 begin_define
@@ -397,22 +397,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|IPI_STATCLOCK
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPI_PROFCLOCK
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
 name|IPI_BITMAP_LAST
-value|IPI_PROFCLOCK
+value|IPI_HARDCLOCK
 end_define
 
 begin_define
@@ -512,8 +498,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|LVT_CMCI
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
 name|LVT_MAX
-value|LVT_THERMAL
+value|LVT_CMCI
 end_define
 
 begin_ifndef
@@ -577,19 +570,6 @@ directive|define
 name|APIC_BUS_MAX
 value|APIC_BUS_PCI
 end_define
-
-begin_enum
-enum|enum
-name|lapic_clock
-block|{
-name|LAPIC_CLOCK_NONE
-block|,
-name|LAPIC_CLOCK_HARDCLOCK
-block|,
-name|LAPIC_CLOCK_ALL
-block|}
-enum|;
-end_enum
 
 begin_comment
 comment|/*  * An APIC enumerator is a psuedo bus driver that enumerates APIC's including  * CPU's and I/O APIC's.  */
@@ -685,6 +665,16 @@ decl_stmt|,
 name|IDTVEC
 argument_list|(
 name|apic_isr7
+argument_list|)
+decl_stmt|,
+name|IDTVEC
+argument_list|(
+name|cmcint
+argument_list|)
+decl_stmt|,
+name|IDTVEC
+argument_list|(
+name|errorint
 argument_list|)
 decl_stmt|,
 name|IDTVEC
@@ -1036,6 +1026,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|lapic_enable_cmc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|lapic_enable_pmc
 parameter_list|(
@@ -1047,15 +1046,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|lapic_eoi
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|u_int
-name|lapic_error
 parameter_list|(
 name|void
 parameter_list|)
@@ -1123,6 +1113,24 @@ name|lapic_ipi_wait
 parameter_list|(
 name|int
 name|delay
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|lapic_handle_cmc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|lapic_handle_error
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1261,18 +1269,6 @@ name|lapic_setup
 parameter_list|(
 name|int
 name|boot
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|enum
-name|lapic_clock
-name|lapic_setup_clock
-parameter_list|(
-name|enum
-name|lapic_clock
-name|srcsdes
 parameter_list|)
 function_decl|;
 end_function_decl

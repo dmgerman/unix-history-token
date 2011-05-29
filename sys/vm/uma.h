@@ -815,11 +815,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Sets a high limit on the number of items allowed in a zone  *  * Arguments:  *	zone  The zone to limit  *  * Returns:  *	Nothing  */
+comment|/*  * Sets a high limit on the number of items allowed in a zone  *  * Arguments:  *	zone  The zone to limit  *	nitems  The requested upper limit on the number of items allowed  *  * Returns:  *	int  The effective value of nitems after rounding up based on page size  */
 end_comment
 
 begin_function_decl
-name|void
+name|int
 name|uma_zone_set_max
 parameter_list|(
 name|uma_zone_t
@@ -827,6 +827,34 @@ name|zone
 parameter_list|,
 name|int
 name|nitems
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Obtains the effective limit on the number of items in a zone  *  * Arguments:  *	zone  The zone to obtain the effective limit from  *  * Return:  *	0  No limit  *	int  The effective limit of the zone  */
+end_comment
+
+begin_function_decl
+name|int
+name|uma_zone_get_max
+parameter_list|(
+name|uma_zone_t
+name|zone
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Obtains the approximate current number of items allocated from a zone  *  * Arguments:  *	zone  The zone to obtain the current allocation count from  *  * Return:  *	int  The approximate current number of items allocated from the zone  */
+end_comment
+
+begin_function_decl
+name|int
+name|uma_zone_get_cur
+parameter_list|(
+name|uma_zone_t
+name|zone
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1173,9 +1201,13 @@ name|uth_fails
 decl_stmt|;
 comment|/* Zone: number of alloc failures. */
 name|u_int64_t
+name|uth_sleeps
+decl_stmt|;
+comment|/* Zone: number of alloc sleeps. */
+name|u_int64_t
 name|_uth_reserved1
 index|[
-literal|3
+literal|2
 index|]
 decl_stmt|;
 comment|/* Reserved. */

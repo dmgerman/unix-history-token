@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* IEEE floating point support declarations, for GDB, the GNU Debugger.    Copyright 1991, 1994, 1995, 1997, 2000, 2003 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* IEEE floating point support declarations, for GDB, the GNU Debugger.    Copyright 1991, 1994, 1995, 1997, 2000, 2003, 2005    Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_if
@@ -31,7 +31,7 @@ comment|/* A floatformat consists of a sign bit, an exponent and a mantissa.  On
 end_comment
 
 begin_comment
-comment|/* What is the order of the bytes. */
+comment|/* What is the order of the bytes?  */
 end_comment
 
 begin_enum
@@ -46,6 +46,9 @@ name|floatformat_big
 block|,
 comment|/* Little endian byte order but big endian word order.      EX: 1.2345678e10 => e0 fe 06 42 00 00 80 c5 */
 name|floatformat_littlebyte_bigword
+block|,
+comment|/* VAX byte order.  Little endian byte order with 16-bit words.  The      following example is an illustration of the byte order only; VAX      doesn't have a fully IEEE compliant floating-point format.      EX: 1.2345678e10 => 80 c5 00 00 06 42 e0 fe */
+name|floatformat_vax
 block|}
 enum|;
 end_enum
@@ -117,25 +120,23 @@ name|name
 decl_stmt|;
 comment|/* Validator method.  */
 name|int
-argument_list|(
-argument|*is_valid
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|is_valid
+function_decl|)
+parameter_list|(
 specifier|const
-expr|struct
+name|struct
 name|floatformat
-operator|*
+modifier|*
 name|fmt
-operator|,
+parameter_list|,
 specifier|const
-name|char
-operator|*
+name|void
+modifier|*
 name|from
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -190,6 +191,37 @@ specifier|const
 name|struct
 name|floatformat
 name|floatformat_ieee_double_littlebyte_bigword
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* floatformats for VAX.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|floatformat
+name|floatformat_vax_f
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|floatformat
+name|floatformat_vax_d
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|floatformat
+name|floatformat_vax_g
 decl_stmt|;
 end_decl_stmt
 
@@ -304,81 +336,72 @@ begin_comment
 comment|/* Convert from FMT to a double.    FROM is the address of the extended float.    Store the double in *TO.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|floatformat_to_double
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
-expr|struct
+name|struct
 name|floatformat
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
-name|char
-operator|*
-operator|,
+name|void
+modifier|*
+parameter_list|,
 name|double
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* The converse: convert the double *FROM to FMT    and store where TO points.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|floatformat_from_double
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
-expr|struct
+name|struct
 name|floatformat
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|double
-operator|*
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Return non-zero iff the data at FROM is a valid number in format FMT.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|floatformat_is_valid
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
-expr|struct
+name|struct
 name|floatformat
-operator|*
+modifier|*
 name|fmt
-operator|,
+parameter_list|,
 specifier|const
-name|char
-operator|*
+name|void
+modifier|*
 name|from
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

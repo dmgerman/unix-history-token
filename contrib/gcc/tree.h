@@ -14453,6 +14453,21 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Given an expression EXP that may be a COMPONENT_REF or an ARRAY_REF,    look for whether EXP or any nested component-refs within EXP is marked    as PACKED.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|bool
+name|contains_packed_reference
+parameter_list|(
+name|tree
+name|exp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Return 1 if T is an expression that get_inner_reference handles.  */
 end_comment
 

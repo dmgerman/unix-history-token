@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* AVR ELF support for BFD.    Copyright 1999, 2000 Free Software Foundation, Inc.    Contributed by Denis Chertykov<denisc@overta.ru>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* AVR ELF support for BFD.    Copyright 1999, 2000, 2004, 2006 Free Software Foundation, Inc.    Contributed by Denis Chertykov<denisc@overta.ru>     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation, Inc.,    51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -30,6 +30,17 @@ define|#
 directive|define
 name|EF_AVR_MACH
 value|0xf
+end_define
+
+begin_comment
+comment|/* If bit #7 is set, it is assumed that the elf file uses local symbols    as reference for the relocations so that linker relaxation is possible.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_AVR_LINKRELAX_PREPARED
+value|0x80
 end_define
 
 begin_define
@@ -65,6 +76,13 @@ define|#
 directive|define
 name|E_AVR_MACH_AVR5
 value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|E_AVR_MACH_AVR6
+value|6
 end_define
 
 begin_comment
@@ -246,6 +264,69 @@ argument_list|(
 argument|R_AVR_CALL
 argument_list|,
 literal|18
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_AVR_LDI
+argument_list|,
+literal|19
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_AVR_6
+argument_list|,
+literal|20
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_AVR_6_ADIW
+argument_list|,
+literal|21
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_AVR_MS8_LDI
+argument_list|,
+literal|22
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_AVR_MS8_LDI_NEG
+argument_list|,
+literal|23
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_AVR_LO8_LDI_GS
+argument_list|,
+literal|24
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_AVR_HI8_LDI_GS
+argument_list|,
+literal|25
 argument_list|)
 end_macro
 

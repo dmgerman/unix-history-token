@@ -1219,6 +1219,17 @@ begin_comment
 comment|/* Capabilities insufficient */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ECAPMODE
+value|94
+end_define
+
+begin_comment
+comment|/* Not permitted in capability mode */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -1238,7 +1249,7 @@ begin_define
 define|#
 directive|define
 name|ELAST
-value|93
+value|94
 end_define
 
 begin_comment

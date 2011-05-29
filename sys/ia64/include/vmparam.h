@@ -16,17 +16,6 @@ name|_MACHINE_VMPARAM_H_
 end_define
 
 begin_comment
-comment|/*  * USRSTACK is the top (end) of the user stack.  Immediately above the user  * stack resides the syscall gateway page.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USRSTACK
-value|VM_MAX_ADDRESS
-end_define
-
-begin_comment
 comment|/*  * Virtual memory related constants, all in bytes  */
 end_comment
 
@@ -163,17 +152,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The time for a process to be blocked before being very swappable.  * This is a number of seconds which the system takes as being a non-trivial  * amount of real time.  You probably shouldn't change this;  * it is used in subtle ways (fractions and multiples of it are, that is, like  * half of a ``long time'', almost a long time, etc.)  * It is related to human patience and other factors which don't really  * change over time.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXSLP
-value|20
-end_define
-
-begin_comment
 comment|/*  * We need region 7 virtual addresses for pagetables.  */
 end_comment
 
@@ -266,6 +244,28 @@ value|16
 end_define
 
 begin_comment
+comment|/*  * Only one memory domain.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_NDOMAIN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VM_NDOMAIN
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Disable superpage reservations.  */
 end_comment
 
@@ -287,6 +287,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|IA64_VM_MINKERN_REGION
+value|4
+end_define
+
 begin_comment
 comment|/*  * Manipulating region bits of an address.  */
 end_comment
@@ -298,7 +305,7 @@ name|IA64_RR_BASE
 parameter_list|(
 name|n
 parameter_list|)
-value|(((u_int64_t) (n))<< 61)
+value|(((uint64_t) (n))<< 61)
 end_define
 
 begin_define
@@ -314,6 +321,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|IA64_PHYS_TO_RR6
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) | IA64_RR_BASE(6))
+end_define
+
+begin_define
+define|#
+directive|define
 name|IA64_PHYS_TO_RR7
 parameter_list|(
 name|x
@@ -322,57 +339,80 @@ value|((x) | IA64_RR_BASE(7))
 end_define
 
 begin_comment
-comment|/*  * Page size of the identity mappings in region 7.  */
+comment|/*  * The Itanium architecture defines that all implementations support at  * least 51 virtual address bits (i.e. IMPL_VA_MSB=50). The unimplemented  * bits are sign-extended from VA{IMPL_VA_MSB}. As such, there's a gap in  * the virtual address range, which extends at most from 0x0004000000000000  * to 0x1ffbffffffffffff. We define the top half of a region in terms of  * this worst-case gap.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOG2_ID_PAGE_SIZE
-end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LOG2_ID_PAGE_SIZE
-value|28
+name|IA64_REGION_GAP_START
+value|0x0004000000000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IA64_REGION_GAP_EXTEND
+value|0x1ffc000000000000
 end_define
 
 begin_comment
-comment|/* 256M */
+comment|/*  * Parameters for Pre-Boot Virtual Memory (PBVM).  * The kernel, its modules and metadata are loaded in the PBVM by the loader.  * The PBVM consists of pages for which the mapping is maintained in a page  * table. The page table is at least 1 EFI page large (i.e. 4KB), but can be  * larger to accommodate more PBVM. The maximum page table size is 1MB. With  * 8 bytes per page table entry, this means that the PBVM has at least 512  * pages and at most 128K pages.  * The GNU toolchain (in particular GNU ld) does not support an alignment  * larger than 64K. This means that we cannot guarantee page alignment for  * a page size that's larger than 64K. We do want to have text and data in  * different pages, which means that the maximum usable page size is 64KB.  * Consequently:  * The maximum total PBVM size is 8GB -- enough for a DVD image. A page table  * of a single EFI page (4KB) allows for 32MB of PBVM.  *  * The kernel is given the PA and size of the page table that provides the  * mapping of the PBVM. The page table itself is assumed to be mapped at a  * known virtual address and using a single translation wired into the CPU.  * As such, the page table is assumed to be a power of 2 and naturally aligned.  * The kernel also assumes that a good portion of the kernel text is mapped  * and wired into the CPU, but does not assume that the mapping covers the  * whole of PBVM.  */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
-name|IA64_ID_PAGE_SHIFT
-value|(LOG2_ID_PAGE_SIZE)
+name|IA64_PBVM_RR
+value|IA64_VM_MINKERN_REGION
 end_define
 
 begin_define
 define|#
 directive|define
-name|IA64_ID_PAGE_SIZE
-value|(1<<(LOG2_ID_PAGE_SIZE))
+name|IA64_PBVM_BASE
+define|\
+value|(IA64_RR_BASE(IA64_PBVM_RR) + IA64_REGION_GAP_EXTEND)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IA64_ID_PAGE_MASK
-value|(IA64_ID_PAGE_SIZE-1)
+name|IA64_PBVM_PGTBL_MAXSZ
+value|1048576
 end_define
 
 begin_define
 define|#
 directive|define
-name|IA64_BACKINGSTORE
-value|IA64_RR_BASE(4)
+name|IA64_PBVM_PGTBL
+define|\
+value|(IA64_RR_BASE(IA64_PBVM_RR + 1) - IA64_PBVM_PGTBL_MAXSZ)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IA64_PBVM_PAGE_SHIFT
+value|16
+end_define
+
+begin_comment
+comment|/* 64KB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IA64_PBVM_PAGE_SIZE
+value|(1<< IA64_PBVM_PAGE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IA64_PBVM_PAGE_MASK
+value|(IA64_PBVM_PAGE_SIZE - 1)
 end_define
 
 begin_comment
@@ -393,43 +433,55 @@ end_define
 begin_define
 define|#
 directive|define
-name|VM_MAX_ADDRESS
-value|IA64_RR_BASE(5)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_GATEWAY_SIZE
-value|PAGE_SIZE
-end_define
-
-begin_define
-define|#
-directive|define
 name|VM_MAXUSER_ADDRESS
-value|(VM_MAX_ADDRESS + VM_GATEWAY_SIZE)
+value|IA64_RR_BASE(IA64_VM_MINKERN_REGION)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_MIN_KERNEL_ADDRESS
-value|VM_MAXUSER_ADDRESS
+value|IA64_RR_BASE(IA64_VM_MINKERN_REGION + 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_MAX_KERNEL_ADDRESS
-value|(IA64_RR_BASE(6) - 1)
+define|\
+value|(VM_MIN_KERNEL_ADDRESS + IA64_REGION_GAP_START - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MAX_ADDRESS
+value|~0UL
 end_define
 
 begin_define
 define|#
 directive|define
 name|KERNBASE
-value|VM_MAX_ADDRESS
+value|VM_MAXUSER_ADDRESS
+end_define
+
+begin_comment
+comment|/*  * USRSTACK is the top (end) of the user stack.  Immediately above the user  * stack resides the syscall gateway page.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USRSTACK
+value|VM_MAXUSER_ADDRESS
+end_define
+
+begin_define
+define|#
+directive|define
+name|IA64_BACKINGSTORE
+value|(USRSTACK - (2 * MAXSSIZ) - PAGE_SIZE)
 end_define
 
 begin_comment
@@ -501,6 +553,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|ZERO_REGION_SIZE
+value|(2 * 1024 * 1024)
+end_define
+
+begin_comment
+comment|/* 2MB */
+end_comment
 
 begin_endif
 endif|#

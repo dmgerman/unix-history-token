@@ -63,6 +63,36 @@ directive|include
 file|"rtld.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips_n64
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|GOT1_MASK
+value|0x8000000000000000UL
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|GOT1_MASK
+value|0x80000000UL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|void
 name|init_pltgot
@@ -94,18 +124,30 @@ operator|)
 operator|&
 name|_rtld_bind_start
 expr_stmt|;
-comment|/* XXX only if obj->pltgot[1]& 0x80000000 ?? */
+if|if
+condition|(
 name|obj
 operator|->
 name|pltgot
 index|[
 literal|1
 index|]
-operator||=
+operator|&
+literal|0x80000000
+condition|)
+name|obj
+operator|->
+name|pltgot
+index|[
+literal|1
+index|]
+operator|=
 operator|(
 name|Elf_Addr
 operator|)
 name|obj
+operator||
+name|GOT1_MASK
 expr_stmt|;
 block|}
 block|}
@@ -143,16 +185,14 @@ begin_comment
 comment|/*  * It is possible for the compiler to emit relocations for unaligned data.  * We handle this situation with these inlines.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|ELFSIZE
-operator|==
-literal|64
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips_n64
+end_ifdef
 
 begin_comment
-comment|/*  * ELF64 MIPS encodes the relocs uniquely.  The first 32-bits of info contain  * the symbol index.  The top 32-bits contain three relocation types encoded  * in big-endian integer with first relocation in LSB.  This means for little  * endian we have to byte swap that interger (r_type).  */
+comment|/*  * ELF64 MIPS encodes the relocs uniquely.  The first 32-bits of info contain  * the symbol index.  The top 32-bits contain three relocation types encoded  * in big-endian integer with first relocation in LSB.  This means for little  * endian we have to byte swap that integer (r_type).  */
 end_comment
 
 begin_define
@@ -282,11 +322,9 @@ literal|0
 argument_list|)
 condition|)
 block|{
-if|#
-directive|if
-name|ELFSIZE
-operator|==
-literal|64
+ifdef|#
+directive|ifdef
+name|__mips_n64
 if|if
 condition|(
 name|len
@@ -429,11 +467,9 @@ literal|0
 argument_list|)
 condition|)
 block|{
-if|#
-directive|if
-name|ELFSIZE
-operator|==
-literal|64
+ifdef|#
+directive|ifdef
+name|__mips_n64
 if|if
 condition|(
 name|len
@@ -727,7 +763,7 @@ index|[
 literal|1
 index|]
 operator|&
-literal|0x80000000
+name|GOT1_MASK
 operator|)
 condition|?
 literal|2
@@ -906,11 +942,9 @@ name|val
 init|=
 name|old
 decl_stmt|;
-if|#
-directive|if
-name|ELFSIZE
-operator|==
-literal|64
+ifdef|#
+directive|ifdef
+name|__mips_n64
 name|assert
 argument_list|(
 name|r_type
@@ -1082,6 +1116,8 @@ argument_list|,
 name|SYMLOOK_IN_PLT
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1187,6 +1223,10 @@ parameter_list|,
 name|Obj_Entry
 modifier|*
 name|obj_rtld
+parameter_list|,
+name|RtldLockState
+modifier|*
+name|lockstate
 parameter_list|)
 block|{
 specifier|const
@@ -1310,7 +1350,7 @@ index|[
 literal|1
 index|]
 operator|&
-literal|0x80000000
+name|GOT1_MASK
 operator|)
 condition|?
 literal|2
@@ -1472,6 +1512,8 @@ argument_list|,
 name|false
 argument_list|,
 name|NULL
+argument_list|,
+name|lockstate
 argument_list|)
 expr_stmt|;
 if|if
@@ -1666,6 +1708,8 @@ argument_list|,
 name|false
 argument_list|,
 name|NULL
+argument_list|,
+name|lockstate
 argument_list|)
 expr_stmt|;
 if|if
@@ -2194,6 +2238,10 @@ parameter_list|(
 name|Obj_Entry
 modifier|*
 name|obj
+parameter_list|,
+name|RtldLockState
+modifier|*
+name|lockstate
 parameter_list|)
 block|{
 comment|/* Do nothing */

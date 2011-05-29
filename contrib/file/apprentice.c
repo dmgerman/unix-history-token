@@ -461,6 +461,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPILE_ONLY
+end_ifndef
+
 begin_function_decl
 name|private
 name|void
@@ -517,6 +523,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|private
 name|char
@@ -535,6 +546,12 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPILE_ONLY
+end_ifndef
 
 begin_function_decl
 name|private
@@ -559,6 +576,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|private
@@ -1691,20 +1713,30 @@ name|nmagic
 init|=
 literal|0
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|COMPILE_ONLY
 name|struct
 name|mlist
 modifier|*
 name|ml
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|rv
 init|=
 operator|-
 literal|1
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|COMPILE_ONLY
 name|int
 name|mapped
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|magicsize
@@ -1992,12 +2024,12 @@ name|prev
 operator|=
 name|ml
 expr_stmt|;
-return|return
-literal|0
-return|;
 endif|#
 directive|endif
 comment|/* COMPILE_ONLY */
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -9894,6 +9926,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPILE_ONLY
+end_ifndef
+
 begin_comment
 comment|/*  * handle a compiled file.  */
 end_comment
@@ -10461,6 +10499,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* COMPILE_ONLY */
+end_comment
+
 begin_decl_stmt
 name|private
 specifier|const
@@ -10979,6 +11026,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPILE_ONLY
+end_ifndef
+
 begin_comment
 comment|/*  * Byteswap an mmap'ed file if needed  */
 end_comment
@@ -11461,6 +11514,15 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* COMPILE_ONLY */
+end_comment
 
 end_unit
 

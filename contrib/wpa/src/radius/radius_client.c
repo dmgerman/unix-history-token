@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * hostapd / RADIUS client  * Copyright (c) 2002-2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * RADIUS client  * Copyright (c) 2002-2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_include
@@ -37,6 +37,10 @@ begin_comment
 comment|/* Defaults for RADIUS retransmit values (exponential backoff) */
 end_comment
 
+begin_comment
+comment|/**  * RADIUS_CLIENT_FIRST_WAIT - RADIUS client timeout for first retry in seconds  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -45,7 +49,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* seconds */
+comment|/**  * RADIUS_CLIENT_MAX_WAIT - RADIUS client maximum retry timeout in seconds  */
 end_comment
 
 begin_define
@@ -56,7 +60,7 @@ value|120
 end_define
 
 begin_comment
-comment|/* seconds */
+comment|/**  * RADIUS_CLIENT_MAX_RETRIES - RADIUS client maximum retries  *  * Maximum number of retransmit attempts before the entry is removed from  * retransmit list.  */
 end_comment
 
 begin_define
@@ -67,7 +71,7 @@ value|10
 end_define
 
 begin_comment
-comment|/* maximum number of retransmit attempts 				      * before entry is removed from retransmit 				      * list */
+comment|/**  * RADIUS_CLIENT_MAX_ENTRIES - RADIUS client maximum pending messages  *  * Maximum number of entries in retransmit list (oldest entries will be  * removed, if this limit is exceeded).  */
 end_comment
 
 begin_define
@@ -78,7 +82,7 @@ value|30
 end_define
 
 begin_comment
-comment|/* maximum number of entries in retransmit 				      * list (oldest will be removed, if this 				      * limit is exceeded) */
+comment|/**  * RADIUS_CLIENT_NUM_FAILOVER - RADIUS client failover point  *  * The number of failed retry attempts after which the RADIUS server will be  * changed (if one of more backup servers are configured).  */
 end_comment
 
 begin_define
@@ -89,13 +93,14 @@ value|4
 end_define
 
 begin_comment
-comment|/* try to change RADIUS server after this 				      * many failed retry attempts */
+comment|/**  * struct radius_rx_handler - RADIUS client RX handler  *  * This data structure is used internally inside the RADIUS client module to  * store registered RX handlers. These handlers are registered by calls to  * radius_client_register() and unregistered when the RADIUS client is  * deinitialized with a call to radius_client_deinit().  */
 end_comment
 
 begin_struct
 struct|struct
 name|radius_rx_handler
 block|{
+comment|/** 	 * handler - Received RADIUS message handler 	 */
 name|RadiusRxResult
 function_decl|(
 modifier|*
@@ -125,6 +130,7 @@ modifier|*
 name|data
 parameter_list|)
 function_decl|;
+comment|/** 	 * data - Context data for the handler 	 */
 name|void
 modifier|*
 name|data
@@ -134,52 +140,63 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* RADIUS message retransmit list */
+comment|/**  * struct radius_msg_list - RADIUS client message retransmit list  *  * This data structure is used internally inside the RADIUS client module to  * store pending RADIUS requests that may still need to be retransmitted.  */
 end_comment
 
 begin_struct
 struct|struct
 name|radius_msg_list
 block|{
+comment|/** 	 * addr - STA/client address 	 * 	 * This is used to find RADIUS messages for the same STA. 	 */
 name|u8
 name|addr
 index|[
 name|ETH_ALEN
 index|]
 decl_stmt|;
-comment|/* STA/client address; used to find RADIUS messages 			    * for the same STA. */
+comment|/** 	 * msg - RADIUS message 	 */
 name|struct
 name|radius_msg
 modifier|*
 name|msg
 decl_stmt|;
+comment|/** 	 * msg_type - Message type 	 */
 name|RadiusType
 name|msg_type
 decl_stmt|;
+comment|/** 	 * first_try - Time of the first transmission attempt 	 */
 name|os_time_t
 name|first_try
 decl_stmt|;
+comment|/** 	 * next_try - Time for the next transmission attempt 	 */
 name|os_time_t
 name|next_try
 decl_stmt|;
+comment|/** 	 * attempts - Number of transmission attempts 	 */
 name|int
 name|attempts
 decl_stmt|;
+comment|/** 	 * next_wait - Next retransmission wait time in seconds 	 */
 name|int
 name|next_wait
 decl_stmt|;
+comment|/** 	 * last_attempt - Time of the last transmission attempt 	 */
 name|struct
 name|os_time
 name|last_attempt
 decl_stmt|;
+comment|/** 	 * shared_secret - Shared secret with the target RADIUS server 	 */
+specifier|const
 name|u8
 modifier|*
 name|shared_secret
 decl_stmt|;
+comment|/** 	 * shared_secret_len - shared_secret length in octets 	 */
 name|size_t
 name|shared_secret_len
 decl_stmt|;
 comment|/* TODO: server config with failover to backup server(s) */
+comment|/** 	 * next - Next message in the list 	 */
 name|struct
 name|radius_msg_list
 modifier|*
@@ -189,65 +206,80 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/**  * struct radius_client_data - Internal RADIUS client data  *  * This data structure is used internally inside the RADIUS client module.  * External users allocate this by calling radius_client_init() and free it by  * calling radius_client_deinit(). The pointer to this opaque data is used in  * calls to other functions as an identifier for the RADIUS client instance.  */
+end_comment
+
 begin_struct
 struct|struct
 name|radius_client_data
 block|{
+comment|/** 	 * ctx - Context pointer for hostapd_logger() callbacks 	 */
 name|void
 modifier|*
 name|ctx
 decl_stmt|;
+comment|/** 	 * conf - RADIUS client configuration (list of RADIUS servers to use) 	 */
 name|struct
 name|hostapd_radius_servers
 modifier|*
 name|conf
 decl_stmt|;
+comment|/** 	 * auth_serv_sock - IPv4 socket for RADIUS authentication messages 	 */
 name|int
 name|auth_serv_sock
 decl_stmt|;
-comment|/* socket for authentication RADIUS messages */
+comment|/** 	 * acct_serv_sock - IPv4 socket for RADIUS accounting messages 	 */
 name|int
 name|acct_serv_sock
 decl_stmt|;
-comment|/* socket for accounting RADIUS messages */
+comment|/** 	 * auth_serv_sock6 - IPv6 socket for RADIUS authentication messages 	 */
 name|int
 name|auth_serv_sock6
 decl_stmt|;
+comment|/** 	 * acct_serv_sock6 - IPv6 socket for RADIUS accounting messages 	 */
 name|int
 name|acct_serv_sock6
 decl_stmt|;
+comment|/** 	 * auth_sock - Currently used socket for RADIUS authentication server 	 */
 name|int
 name|auth_sock
 decl_stmt|;
-comment|/* currently used socket */
+comment|/** 	 * acct_sock - Currently used socket for RADIUS accounting server 	 */
 name|int
 name|acct_sock
 decl_stmt|;
-comment|/* currently used socket */
+comment|/** 	 * auth_handlers - Authentication message handlers 	 */
 name|struct
 name|radius_rx_handler
 modifier|*
 name|auth_handlers
 decl_stmt|;
+comment|/** 	 * num_auth_handlers - Number of handlers in auth_handlers 	 */
 name|size_t
 name|num_auth_handlers
 decl_stmt|;
+comment|/** 	 * acct_handlers - Accounting message handlers 	 */
 name|struct
 name|radius_rx_handler
 modifier|*
 name|acct_handlers
 decl_stmt|;
+comment|/** 	 * num_acct_handlers - Number of handlers in acct_handlers 	 */
 name|size_t
 name|num_acct_handlers
 decl_stmt|;
+comment|/** 	 * msgs - Pending outgoing RADIUS messages 	 */
 name|struct
 name|radius_msg_list
 modifier|*
 name|msgs
 decl_stmt|;
+comment|/** 	 * num_msgs - Number of pending messages in the msgs list 	 */
 name|size_t
 name|num_msgs
 decl_stmt|;
+comment|/** 	 * next_radius_identifier - Next RADIUS message identifier to use 	 */
 name|u8
 name|next_radius_identifier
 decl_stmt|;
@@ -334,17 +366,14 @@ expr_stmt|;
 name|os_free
 argument_list|(
 name|req
-operator|->
-name|msg
-argument_list|)
-expr_stmt|;
-name|os_free
-argument_list|(
-name|req
 argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * radius_client_register - Register a RADIUS client RX handler  * @radius: RADIUS client context from radius_client_init()  * @msg_type: RADIUS client type (RADIUS_AUTH or RADIUS_ACCT)  * @handler: Handler for received RADIUS messages  * @data: Context pointer for handler callbacks  * Returns: 0 on success, -1 on failure  *  * This function is used to register a handler for processing received RADIUS  * authentication and accounting messages. The handler() callback function will  * be called whenever a RADIUS message is received from the active server.  *  * There can be multiple registered RADIUS message handlers. The handlers will  * be called in order until one of them indicates that it has processed or  * queued the message.  */
+end_comment
 
 begin_function
 name|int
@@ -646,6 +675,11 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|struct
+name|wpabuf
+modifier|*
+name|buf
+decl_stmt|;
 if|if
 condition|(
 name|entry
@@ -763,11 +797,12 @@ name|HOSTAPD_LEVEL_DEBUG
 argument_list|,
 literal|"Resending RADIUS message (id=%d)"
 argument_list|,
+name|radius_msg_get_hdr
+argument_list|(
 name|entry
 operator|->
 name|msg
-operator|->
-name|hdr
+argument_list|)
 operator|->
 name|identifier
 argument_list|)
@@ -780,23 +815,30 @@ operator|->
 name|last_attempt
 argument_list|)
 expr_stmt|;
+name|buf
+operator|=
+name|radius_msg_get_buf
+argument_list|(
+name|entry
+operator|->
+name|msg
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|send
 argument_list|(
 name|s
 argument_list|,
-name|entry
-operator|->
-name|msg
-operator|->
+name|wpabuf_head
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
-name|entry
-operator|->
-name|msg
-operator|->
-name|buf_used
+name|wpabuf_len
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|0
 argument_list|)
@@ -1625,6 +1667,7 @@ parameter_list|,
 name|RadiusType
 name|msg_type
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|shared_secret
@@ -1658,11 +1701,6 @@ argument_list|(
 name|msg
 argument_list|)
 expr_stmt|;
-name|os_free
-argument_list|(
-name|msg
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 name|entry
@@ -1689,11 +1727,6 @@ literal|"Failed to add RADIUS packet into retransmit list\n"
 argument_list|)
 expr_stmt|;
 name|radius_msg_free
-argument_list|(
-name|msg
-argument_list|)
-expr_stmt|;
-name|os_free
 argument_list|(
 name|msg
 argument_list|)
@@ -2010,6 +2043,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/**  * radius_client_send - Send a RADIUS request  * @radius: RADIUS client context from radius_client_init()  * @msg: RADIUS message to be sent  * @msg_type: Message type (RADIUS_AUTH, RADIUS_ACCT, RADIUS_ACCT_INTERIM)  * @addr: MAC address of the device related to this message or %NULL  * Returns: 0 on success, -1 on failure  *  * This function is used to transmit a RADIUS authentication (RADIUS_AUTH) or  * accounting request (RADIUS_ACCT or RADIUS_ACCT_INTERIM). The only difference  * between accounting and interim accounting messages is that the interim  * message will override any pending interim accounting updates while a new  * accounting message does not remove any pending messages.  *  * The message is added on the retransmission queue and will be retransmitted  * automatically until a response is received or maximum number of retries  * (RADIUS_CLIENT_MAX_RETRIES) is reached.  *  * The related device MAC address can be used to identify pending messages that  * can be removed with radius_client_flush_auth() or with interim accounting  * updates.  */
+end_comment
+
 begin_function
 name|int
 name|radius_client_send
@@ -2042,6 +2079,7 @@ name|radius
 operator|->
 name|conf
 decl_stmt|;
+specifier|const
 name|u8
 modifier|*
 name|shared_secret
@@ -2057,6 +2095,11 @@ name|int
 name|s
 decl_stmt|,
 name|res
+decl_stmt|;
+name|struct
+name|wpabuf
+modifier|*
+name|buf
 decl_stmt|;
 if|if
 condition|(
@@ -2262,19 +2305,28 @@ argument_list|(
 name|msg
 argument_list|)
 expr_stmt|;
+name|buf
+operator|=
+name|radius_msg_get_buf
+argument_list|(
+name|msg
+argument_list|)
+expr_stmt|;
 name|res
 operator|=
 name|send
 argument_list|(
 name|s
 argument_list|,
-name|msg
-operator|->
+name|wpabuf_head
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
-name|msg
-operator|->
-name|buf_used
+name|wpabuf_len
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|0
 argument_list|)
@@ -2372,6 +2424,11 @@ name|struct
 name|radius_msg
 modifier|*
 name|msg
+decl_stmt|;
+name|struct
+name|radius_hdr
+modifier|*
+name|hdr
 decl_stmt|;
 name|struct
 name|radius_rx_handler
@@ -2546,6 +2603,13 @@ operator|++
 expr_stmt|;
 return|return;
 block|}
+name|hdr
+operator|=
+name|radius_msg_get_hdr
+argument_list|(
+name|msg
+argument_list|)
+expr_stmt|;
 name|hostapd_logger
 argument_list|(
 name|radius
@@ -2574,8 +2638,6 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|msg
-operator|->
 name|hdr
 operator|->
 name|code
@@ -2656,16 +2718,15 @@ name|RADIUS_ACCT
 operator|)
 operator|)
 operator|&&
+name|radius_msg_get_hdr
+argument_list|(
 name|req
 operator|->
 name|msg
-operator|->
-name|hdr
+argument_list|)
 operator|->
 name|identifier
 operator|==
-name|msg
-operator|->
 name|hdr
 operator|->
 name|identifier
@@ -2706,8 +2767,6 @@ literal|"id=%d) - dropping packet"
 argument_list|,
 name|msg_type
 argument_list|,
-name|msg
-operator|->
 name|hdr
 operator|->
 name|identifier
@@ -2873,11 +2932,6 @@ argument_list|(
 name|msg
 argument_list|)
 expr_stmt|;
-name|os_free
-argument_list|(
-name|msg
-argument_list|)
-expr_stmt|;
 comment|/* continue */
 case|case
 name|RADIUS_RX_QUEUED
@@ -2936,14 +2990,10 @@ literal|"(type=%d code=%d id=%d)%s - dropping packet"
 argument_list|,
 name|msg_type
 argument_list|,
-name|msg
-operator|->
 name|hdr
 operator|->
 name|code
 argument_list|,
-name|msg
-operator|->
 name|hdr
 operator|->
 name|identifier
@@ -2967,13 +3017,12 @@ argument_list|(
 name|msg
 argument_list|)
 expr_stmt|;
-name|os_free
-argument_list|(
-name|msg
-argument_list|)
-expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * radius_client_get_id - Get an identifier for a new RADIUS message  * @radius: RADIUS client context from radius_client_init()  * Returns: Allocated identifier  *  * This function is used to fetch a unique (among pending requests) identifier  * for a new RADIUS message.  */
+end_comment
 
 begin_function
 name|u8
@@ -3022,11 +3071,12 @@ condition|)
 block|{
 if|if
 condition|(
+name|radius_msg_get_hdr
+argument_list|(
 name|entry
 operator|->
 name|msg
-operator|->
-name|hdr
+argument_list|)
 operator|->
 name|identifier
 operator|==
@@ -3111,6 +3161,10 @@ name|id
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * radius_client_flush - Flush all pending RADIUS client messages  * @radius: RADIUS client context from radius_client_init()  * @only_auth: Whether only authentication messages are removed  */
+end_comment
 
 begin_function
 name|void
@@ -3255,6 +3309,7 @@ name|radius_client_data
 modifier|*
 name|radius
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|shared_secret
@@ -4322,6 +4377,85 @@ end_function
 begin_function
 specifier|static
 name|int
+name|radius_client_disable_pmtu_discovery
+parameter_list|(
+name|int
+name|s
+parameter_list|)
+block|{
+name|int
+name|r
+init|=
+operator|-
+literal|1
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IP_MTU_DISCOVER
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|IP_PMTUDISC_DONT
+argument_list|)
+comment|/* Turn off Path MTU discovery on IPv4/UDP sockets. */
+name|int
+name|action
+init|=
+name|IP_PMTUDISC_DONT
+decl_stmt|;
+name|r
+operator|=
+name|setsockopt
+argument_list|(
+name|s
+argument_list|,
+name|IPPROTO_IP
+argument_list|,
+name|IP_MTU_DISCOVER
+argument_list|,
+operator|&
+name|action
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|action
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|==
+operator|-
+literal|1
+condition|)
+name|wpa_printf
+argument_list|(
+name|MSG_ERROR
+argument_list|,
+literal|"Failed to set IP_MTU_DISCOVER: "
+literal|"%s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+name|r
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|radius_client_init_auth
 parameter_list|(
 name|struct
@@ -4371,9 +4505,18 @@ literal|"socket[PF_INET,SOCK_DGRAM]"
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|radius_client_disable_pmtu_discovery
+argument_list|(
+name|radius
+operator|->
+name|auth_serv_sock
+argument_list|)
+expr_stmt|;
 name|ok
 operator|++
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|CONFIG_IPV6
@@ -4579,9 +4722,18 @@ literal|"socket[PF_INET,SOCK_DGRAM]"
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|radius_client_disable_pmtu_discovery
+argument_list|(
+name|radius
+operator|->
+name|acct_serv_sock
+argument_list|)
+expr_stmt|;
 name|ok
 operator|++
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|CONFIG_IPV6
@@ -4735,6 +4887,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * radius_client_init - Initialize RADIUS client  * @ctx: Callback context to be used in hostapd_logger() calls  * @conf: RADIUS client configuration (RADIUS servers)  * Returns: Pointer to private RADIUS client context or %NULL on failure  *  * The caller is responsible for keeping the configuration data available for  * the lifetime of the RADIUS client, i.e., until radius_client_deinit() is  * called for the returned context pointer.  */
+end_comment
+
 begin_function
 name|struct
 name|radius_client_data
@@ -4884,6 +5040,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * radius_client_deinit - Deinitialize RADIUS client  * @radius: RADIUS client context from radius_client_init()  */
+end_comment
+
 begin_function
 name|void
 name|radius_client_deinit
@@ -4930,6 +5090,42 @@ operator|->
 name|acct_serv_sock
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_IPV6
+if|if
+condition|(
+name|radius
+operator|->
+name|auth_serv_sock6
+operator|>=
+literal|0
+condition|)
+name|eloop_unregister_read_sock
+argument_list|(
+name|radius
+operator|->
+name|auth_serv_sock6
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|radius
+operator|->
+name|acct_serv_sock6
+operator|>=
+literal|0
+condition|)
+name|eloop_unregister_read_sock
+argument_list|(
+name|radius
+operator|->
+name|acct_serv_sock6
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_IPV6 */
 name|eloop_cancel_timeout
 argument_list|(
 name|radius_retry_primary_timer
@@ -4968,6 +5164,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * radius_client_flush_auth - Flush pending RADIUS messages for an address  * @radius: RADIUS client context from radius_client_init()  * @addr: MAC address of the related device  *  * This function can be used to remove pending RADIUS authentication messages  * that are related to a specific device. The addr parameter is matched with  * the one used in radius_client_send() call that was used to transmit the  * authentication request.  */
+end_comment
+
 begin_function
 name|void
 name|radius_client_flush_auth
@@ -4977,6 +5177,7 @@ name|radius_client_data
 modifier|*
 name|radius
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|addr
@@ -5439,6 +5640,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * radius_client_get_mib - Get RADIUS client MIB information  * @radius: RADIUS client context from radius_client_init()  * @buf: Buffer for returning MIB data in text format  * @buflen: Maximum buf length in octets  * Returns: Number of octets written into the buffer  */
+end_comment
+
 begin_function
 name|int
 name|radius_client_get_mib
@@ -5600,250 +5805,6 @@ block|}
 block|}
 return|return
 name|count
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|radius_servers_diff
-parameter_list|(
-name|struct
-name|hostapd_radius_server
-modifier|*
-name|nserv
-parameter_list|,
-name|struct
-name|hostapd_radius_server
-modifier|*
-name|oserv
-parameter_list|,
-name|int
-name|num
-parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|num
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|hostapd_ip_diff
-argument_list|(
-operator|&
-name|nserv
-index|[
-name|i
-index|]
-operator|.
-name|addr
-argument_list|,
-operator|&
-name|oserv
-index|[
-name|i
-index|]
-operator|.
-name|addr
-argument_list|)
-operator|||
-name|nserv
-index|[
-name|i
-index|]
-operator|.
-name|port
-operator|!=
-name|oserv
-index|[
-name|i
-index|]
-operator|.
-name|port
-operator|||
-name|nserv
-index|[
-name|i
-index|]
-operator|.
-name|shared_secret_len
-operator|!=
-name|oserv
-index|[
-name|i
-index|]
-operator|.
-name|shared_secret_len
-operator|||
-name|os_memcmp
-argument_list|(
-name|nserv
-index|[
-name|i
-index|]
-operator|.
-name|shared_secret
-argument_list|,
-name|oserv
-index|[
-name|i
-index|]
-operator|.
-name|shared_secret
-argument_list|,
-name|nserv
-index|[
-name|i
-index|]
-operator|.
-name|shared_secret_len
-argument_list|)
-operator|!=
-literal|0
-condition|)
-return|return
-literal|1
-return|;
-block|}
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_function
-name|struct
-name|radius_client_data
-modifier|*
-name|radius_client_reconfig
-parameter_list|(
-name|struct
-name|radius_client_data
-modifier|*
-name|old
-parameter_list|,
-name|void
-modifier|*
-name|ctx
-parameter_list|,
-name|struct
-name|hostapd_radius_servers
-modifier|*
-name|oldconf
-parameter_list|,
-name|struct
-name|hostapd_radius_servers
-modifier|*
-name|newconf
-parameter_list|)
-block|{
-name|radius_client_flush
-argument_list|(
-name|old
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|newconf
-operator|->
-name|retry_primary_interval
-operator|!=
-name|oldconf
-operator|->
-name|retry_primary_interval
-operator|||
-name|newconf
-operator|->
-name|num_auth_servers
-operator|!=
-name|oldconf
-operator|->
-name|num_auth_servers
-operator|||
-name|newconf
-operator|->
-name|num_acct_servers
-operator|!=
-name|oldconf
-operator|->
-name|num_acct_servers
-operator|||
-name|radius_servers_diff
-argument_list|(
-name|newconf
-operator|->
-name|auth_servers
-argument_list|,
-name|oldconf
-operator|->
-name|auth_servers
-argument_list|,
-name|newconf
-operator|->
-name|num_auth_servers
-argument_list|)
-operator|||
-name|radius_servers_diff
-argument_list|(
-name|newconf
-operator|->
-name|acct_servers
-argument_list|,
-name|oldconf
-operator|->
-name|acct_servers
-argument_list|,
-name|newconf
-operator|->
-name|num_acct_servers
-argument_list|)
-condition|)
-block|{
-name|hostapd_logger
-argument_list|(
-name|ctx
-argument_list|,
-name|NULL
-argument_list|,
-name|HOSTAPD_MODULE_RADIUS
-argument_list|,
-name|HOSTAPD_LEVEL_DEBUG
-argument_list|,
-literal|"Reconfiguring RADIUS client"
-argument_list|)
-expr_stmt|;
-name|radius_client_deinit
-argument_list|(
-name|old
-argument_list|)
-expr_stmt|;
-return|return
-name|radius_client_init
-argument_list|(
-name|ctx
-argument_list|,
-name|newconf
-argument_list|)
-return|;
-block|}
-return|return
-name|old
 return|;
 block|}
 end_function
