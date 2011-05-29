@@ -496,6 +496,16 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+name|frac_excess
+operator|<
+literal|0
+condition|)
+name|frac_excess
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
 name|sensor
 operator|->
 name|sensor
