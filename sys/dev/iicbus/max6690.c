@@ -1542,6 +1542,8 @@ expr_stmt|;
 return|return
 operator|(
 name|temp
+operator|+
+name|FCU_ZERO_C_TO_K
 operator|)
 return|;
 block|}
@@ -1567,11 +1569,6 @@ name|struct
 name|max6690_sensor
 modifier|*
 name|sens
-decl_stmt|;
-name|int
-name|value
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|error
@@ -1601,7 +1598,7 @@ index|[
 name|arg2
 index|]
 expr_stmt|;
-name|value
+name|temp
 operator|=
 name|max6690_sensor_read
 argument_list|(
@@ -1610,7 +1607,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|value
+name|temp
 operator|<
 literal|0
 condition|)
@@ -1619,12 +1616,6 @@ operator|(
 name|EIO
 operator|)
 return|;
-name|temp
-operator|=
-name|value
-operator|+
-name|FCU_ZERO_C_TO_K
-expr_stmt|;
 name|error
 operator|=
 name|sysctl_handle_int
