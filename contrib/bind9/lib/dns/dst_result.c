@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2008  Internet Systems Consortium,
 end_comment
 
 begin_comment
-comment|/*%  * Principal Author: Brian Wellington  * $Id: dst_result.c,v 1.7 2008/04/01 23:47:10 tbox Exp $  */
+comment|/*%  * Principal Author: Brian Wellington  * $Id: dst_result.c,v 1.7 2008-04-01 23:47:10 tbox Exp $  */
 end_comment
 
 begin_include

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007, 2009  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: entropy.c,v 1.80.332.2 2009/02/16 23:47:15 tbox Exp $ */
+comment|/* $Id: entropy.c,v 1.80.332.2 2009-02-16 23:47:15 tbox Exp $ */
 end_comment
 
 begin_comment

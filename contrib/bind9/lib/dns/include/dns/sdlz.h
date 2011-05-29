@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 2002 Stichting NLnet, Netherlands, stichting@nlnet.n
 end_comment
 
 begin_comment
-comment|/* $Id: sdlz.h,v 1.7.332.2 2009/01/18 23:47:41 tbox Exp $ */
+comment|/* $Id: sdlz.h,v 1.7.332.2 2009-01-18 23:47:41 tbox Exp $ */
 end_comment
 
 begin_comment

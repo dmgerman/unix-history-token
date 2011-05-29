@@ -2070,6 +2070,10 @@ modifier|*
 parameter_list|,
 name|void
 modifier|*
+parameter_list|,
+name|struct
+name|mount
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2110,6 +2114,10 @@ name|int
 modifier|*
 parameter_list|,
 name|void
+modifier|*
+parameter_list|,
+name|struct
+name|mount
 modifier|*
 parameter_list|)
 function_decl|;

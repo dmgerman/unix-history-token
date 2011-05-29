@@ -3564,6 +3564,7 @@ return|return;
 block|}
 block|}
 else|else
+block|{
 name|dst_key_attach
 argument_list|(
 name|dstkey
@@ -3572,6 +3573,13 @@ operator|&
 name|sig0key
 argument_list|)
 expr_stmt|;
+name|dst_key_free
+argument_list|(
+operator|&
+name|dstkey
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

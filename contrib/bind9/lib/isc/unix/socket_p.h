@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2008  Internet Systems Consortium,
 end_comment
 
 begin_comment
-comment|/* $Id: socket_p.h,v 1.13 2008/06/23 23:47:11 tbox Exp $ */
+comment|/* $Id: socket_p.h,v 1.13 2008-06-23 23:47:11 tbox Exp $ */
 end_comment
 
 begin_ifndef

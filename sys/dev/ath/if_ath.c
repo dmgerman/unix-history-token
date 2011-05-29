@@ -3479,19 +3479,52 @@ comment|/* A-MSDU tx/rx */
 operator||
 name|IEEE80211_HTCAP_MAXAMSDU_3839
 comment|/* max A-MSDU length */
-comment|/* At the present time, the hardware doesn't support short-GI in 20mhz mode */
-if|#
-directive|if
-literal|0
-expr|| IEEE80211_HTCAP_SHORTGI20
-comment|/* short GI in 20MHz */
-endif|#
-directive|endif
 operator||
 name|IEEE80211_HTCAP_SMPS_OFF
 expr_stmt|;
 comment|/* SM power save off */
 empty_stmt|;
+comment|/* 		 * Enable short-GI for HT20 only if the hardware 		 * advertises support. 		 * Notably, anything earlier than the AR9287 doesn't. 		 */
+if|if
+condition|(
+operator|(
+name|ath_hal_getcapability
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_CAP_HT20_SGI
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+operator|==
+name|HAL_OK
+operator|)
+operator|&&
+operator|(
+name|wmodes
+operator|&
+name|HAL_MODE_HT20
+operator|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"[HT] enabling short-GI in 20MHz mode\n"
+argument_list|)
+expr_stmt|;
+name|ic
+operator|->
+name|ic_htcaps
+operator||=
+name|IEEE80211_HTCAP_SHORTGI20
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|wmodes

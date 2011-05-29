@@ -17,7 +17,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: key_25.h,v 1.19 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: key_25.h,v 1.19 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment

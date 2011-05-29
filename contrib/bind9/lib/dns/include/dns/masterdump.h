@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: masterdump.h,v 1.42 2008/09/24 02:46:23 marka Exp $ */
+comment|/* $Id: masterdump.h,v 1.42.602.1 2011-05-27 00:19:19 each Exp $ */
 end_comment
 
 begin_ifndef
@@ -813,18 +813,6 @@ parameter_list|,
 name|isc_mem_t
 modifier|*
 name|mctx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|const
-name|char
-modifier|*
-name|dns_trust_totext
-parameter_list|(
-name|dns_trust_t
-name|trust
 parameter_list|)
 function_decl|;
 end_function_decl

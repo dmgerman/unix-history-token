@@ -21,7 +21,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: ns_2.h,v 1.27 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: ns_2.h,v 1.27 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_typedef

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: ondestroy.c,v 1.16 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: ondestroy.c,v 1.16 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment

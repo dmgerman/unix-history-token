@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: zoneconf.c,v 1.147.50.2 2009/01/29 23:47:44 tbox Exp $ */
+comment|/* $Id: zoneconf.c,v 1.147.50.2 2009-01-29 23:47:44 tbox Exp $ */
 end_comment
 
 begin_comment

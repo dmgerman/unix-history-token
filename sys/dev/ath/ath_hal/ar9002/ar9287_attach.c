@@ -2061,6 +2061,7 @@ name|halPSPollBroken
 operator|=
 name|AH_FALSE
 expr_stmt|;
+comment|/* Hardware supports (at least) single-stream STBC TX/RX */
 name|pCap
 operator|->
 name|halRxStbcSupport
@@ -2070,6 +2071,13 @@ expr_stmt|;
 name|pCap
 operator|->
 name|halTxStbcSupport
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Hardware supports short-GI w/ 20MHz */
+name|pCap
+operator|->
+name|halHTSGI20Support
 operator|=
 literal|1
 expr_stmt|;

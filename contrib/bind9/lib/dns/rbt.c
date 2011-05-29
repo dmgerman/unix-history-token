@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007-2009  Internet Systems Consortium, 
 end_comment
 
 begin_comment
-comment|/* $Id: rbt.c,v 1.142.50.3 2009/10/20 05:06:04 marka Exp $ */
+comment|/* $Id: rbt.c,v 1.142.50.3 2009-10-20 05:06:04 marka Exp $ */
 end_comment
 
 begin_comment
