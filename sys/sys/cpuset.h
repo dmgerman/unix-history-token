@@ -230,12 +230,6 @@ parameter_list|)
 value|do {				\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		(d)->__bits[__i]&= ~(s)->__bits[__i];	\ } while (0)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -297,15 +291,6 @@ name|t
 parameter_list|)
 value|do {				\ 	__size_t __i;						\ 	for (__i = 0; __i< _NCPUWORDS; __i++)			\ 		atomic_store_rel_long(&(t)->__bits[__i],	\ 		    (f)->__bits[__i]);				\ } while (0)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !_KERNEL */
-end_comment
 
 begin_comment
 comment|/*  * Valid cpulevel_t values.  */
