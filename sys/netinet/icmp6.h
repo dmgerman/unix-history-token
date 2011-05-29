@@ -1410,6 +1410,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|ND_OPT_ROUTE_INFO
+value|24
+end_define
+
+begin_comment
+comment|/* RFC 4191 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ND_OPT_RDNSS
 value|25
 end_define
@@ -1427,17 +1438,6 @@ end_define
 
 begin_comment
 comment|/* RFC 6016 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ND_OPT_ROUTE_INFO
-value|200
-end_define
-
-begin_comment
-comment|/* draft-ietf-ipngwg-router-preference, not officially assigned yet */
 end_comment
 
 begin_struct
