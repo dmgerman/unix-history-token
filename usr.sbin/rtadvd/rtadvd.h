@@ -307,6 +307,137 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RDNSS
+end_ifdef
+
+begin_struct
+struct|struct
+name|rdnss_addr
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|rdnss_addr
+argument_list|)
+name|ra_next
+expr_stmt|;
+name|struct
+name|in6_addr
+name|ra_dns
+decl_stmt|;
+comment|/* DNS server entry */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|rdnss
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|rdnss
+argument_list|)
+name|rd_next
+expr_stmt|;
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|rdnss_addr
+argument_list|)
+name|rd_list
+expr_stmt|;
+comment|/* list of DNS servers */
+name|int
+name|rd_cnt
+decl_stmt|;
+comment|/* number of DNS servers */
+name|u_int32_t
+name|rd_ltime
+decl_stmt|;
+comment|/* number of seconds valid */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The maximum length of a domain name in a DNS search list is calculated  * by a domain name + length fields per 63 octets + a zero octet at  * the tail and adding 8 octet boundary padding.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_DNAME_LABELENC_MAXLEN
+define|\
+value|(NI_MAXHOST + (NI_MAXHOST / 64 + 1) + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNAME_LABELENC_MAXLEN
+define|\
+value|(_DNAME_LABELENC_MAXLEN + 8 - _DNAME_LABELENC_MAXLEN % 8)
+end_define
+
+begin_struct
+struct|struct
+name|dnssl_addr
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|dnssl_addr
+argument_list|)
+name|da_next
+expr_stmt|;
+name|int
+name|da_len
+decl_stmt|;
+comment|/* length of entry */
+name|char
+name|da_dom
+index|[
+name|DNAME_LABELENC_MAXLEN
+index|]
+decl_stmt|;
+comment|/* search domain name entry */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|dnssl
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|dnssl
+argument_list|)
+name|dn_next
+expr_stmt|;
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|dnssl_addr
+argument_list|)
+name|dn_list
+expr_stmt|;
+comment|/* list of search domains */
+name|u_int32_t
+name|dn_ltime
+decl_stmt|;
+comment|/* number of seconds valid */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|soliciter
@@ -426,6 +557,27 @@ name|int
 name|pfxs
 decl_stmt|;
 comment|/* number of prefixes */
+ifdef|#
+directive|ifdef
+name|RDNSS
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|rdnss
+argument_list|)
+name|rdnss
+expr_stmt|;
+comment|/* DNS server list */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|dnssl
+argument_list|)
+name|dnssl
+expr_stmt|;
+comment|/* search domain list */
+endif|#
+directive|endif
 name|long
 name|clockskew
 decl_stmt|;

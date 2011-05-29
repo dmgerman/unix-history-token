@@ -120,5 +120,19 @@ name|MAXROUTE
 value|100
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAXRDNSSENT
+value|100
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXDNSSLENT
+value|100
+end_define
+
 end_unit
 

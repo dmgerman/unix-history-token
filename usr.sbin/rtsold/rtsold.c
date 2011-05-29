@@ -236,6 +236,15 @@ name|otherconf_script
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+modifier|*
+name|resolvconf_script
+init|=
+literal|"/sbin/resolvconf"
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* protocol constants */
 end_comment
@@ -539,13 +548,13 @@ literal|1
 expr_stmt|;
 name|opts
 operator|=
-literal|"adDFO:"
+literal|"adDFO:R:"
 expr_stmt|;
 block|}
 else|else
 name|opts
 operator|=
-literal|"adDfFm1O:"
+literal|"adDfFm1O:R:"
 expr_stmt|;
 while|while
 condition|(
@@ -631,6 +640,14 @@ case|case
 literal|'O'
 case|:
 name|otherconf_script
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'R'
+case|:
+name|resolvconf_script
 operator|=
 name|optarg
 expr_stmt|;
