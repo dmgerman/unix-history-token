@@ -48,7 +48,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"yp.h"
+file|<rpc/rpc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<rpc/rpc_com.h>
 end_include
 
 begin_include
@@ -153,31 +159,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"yp_extern.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netconfig.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<rpc/rpc.h>
+file|<netdb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<rpc/rpc_com.h>
+file|"yp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"yp_extern.h"
 end_include
 
 begin_ifndef
@@ -244,26 +244,26 @@ begin_comment
 comment|/* States a server can be in wrt request */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/* Set when a request is serviced */
+end_comment
+
+begin_enum
+specifier|static
+enum|enum
+name|rpcsvcstate
+block|{
 name|_IDLE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
+init|=
+literal|0
+block|,
 name|_SERVED
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
+block|,
 name|_SERVING
-value|2
-end_define
+block|, }
+name|_rpcsvcstate
+enum|;
+end_enum
 
 begin_function_decl
 specifier|extern
@@ -306,15 +306,22 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|_rpcsvcstate
+name|char
+name|securenets_path
+index|[
+name|MAXPATHLEN
+index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Set when a request is serviced */
-end_comment
+begin_decl_stmt
+name|enum
+name|yp_snf_format
+name|securenets_format
+init|=
+name|YP_SNF_NATIVE
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -334,9 +341,15 @@ name|_PATH_YP
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*int debug = 0;*/
-end_comment
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|servname
+init|=
+literal|"0"
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -352,10 +365,28 @@ name|resfd
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|debug
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|pid_t
+name|yp_pid
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|socklistent
 block|{
+name|SLIST_ENTRY
+argument_list|(
+argument|socklistent
+argument_list|)
+name|sle_next
+expr_stmt|;
 name|int
 name|sle_sock
 decl_stmt|;
@@ -363,12 +394,6 @@ name|struct
 name|sockaddr_storage
 name|sle_ss
 decl_stmt|;
-name|SLIST_ENTRY
-argument_list|(
-argument|socklistent
-argument_list|)
-name|sle_next
-expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -393,17 +418,17 @@ begin_struct
 struct|struct
 name|bindaddrlistent
 block|{
-specifier|const
-name|char
-modifier|*
-name|ble_hostname
-decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(
 argument|bindaddrlistent
 argument_list|)
 name|ble_next
 expr_stmt|;
+specifier|const
+name|char
+modifier|*
+name|ble_hostname
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -423,16 +448,6 @@ name|ble_head
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|servname
-init|=
-literal|"0"
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 specifier|static
@@ -500,12 +515,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_decl_stmt
-name|pid_t
-name|yp_pid
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 specifier|static
@@ -744,13 +753,14 @@ name|saved_errno
 operator|=
 name|errno
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|sig
-operator|==
-name|SIGHUP
 condition|)
 block|{
+case|case
+name|SIGHUP
+case|:
 name|load_securenets
 argument_list|()
 expr_stmt|;
@@ -762,19 +772,10 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-name|errno
-operator|=
-name|saved_errno
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-name|sig
-operator|==
+break|break;
+case|case
 name|SIGCHLD
-condition|)
-block|{
+case|:
 while|while
 condition|(
 name|wait3
@@ -792,9 +793,8 @@ condition|)
 name|children
 operator|--
 expr_stmt|;
-block|}
-else|else
-block|{
+break|break;
+default|default:
 name|unregister
 argument_list|()
 expr_stmt|;
@@ -824,12 +824,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ypserv [-h] [-d] [-n] [-p path] [-P port]\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
+literal|"usage: ypserv "
+literal|"[-d] [-h hostname] [-n] [-p ypdir] [-P port] [-S]\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1160,8 +1156,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 for|for
@@ -1234,8 +1232,10 @@ name|res0
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -1306,8 +1306,10 @@ name|sock
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 block|}
@@ -1365,8 +1367,10 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|memset
@@ -1486,8 +1490,10 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|memset
@@ -1513,11 +1519,9 @@ name|sle_ss
 expr_stmt|;
 name|slen
 operator|=
-sizeof|sizeof
-argument_list|(
-operator|*
 name|sap
-argument_list|)
+operator|->
+name|sa_len
 expr_stmt|;
 name|error
 operator|=
@@ -1557,8 +1561,10 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|error
@@ -1567,7 +1573,9 @@ name|getnameinfo
 argument_list|(
 name|sap
 argument_list|,
-name|slen
+name|sap
+operator|->
+name|sa_len
 argument_list|,
 name|NULL
 argument_list|,
@@ -1577,8 +1585,6 @@ name|sname
 argument_list|,
 name|NI_MAXSERV
 argument_list|,
-name|NI_NUMERICHOST
-operator||
 name|NI_NUMERICSERV
 argument_list|)
 expr_stmt|;
@@ -1591,9 +1597,9 @@ name|_msgout
 argument_list|(
 literal|"getnameinfo(): %s"
 argument_list|,
-name|strerror
+name|gai_strerror
 argument_list|(
-name|errno
+name|error
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1608,8 +1614,10 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|servname
@@ -1656,8 +1664,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|memset
@@ -1856,6 +1866,15 @@ name|sle_head
 argument_list|)
 operator|)
 condition|)
+block|{
+name|slep
+operator|=
+name|SLIST_FIRST
+argument_list|(
+operator|&
+name|sle_head
+argument_list|)
+expr_stmt|;
 name|SLIST_REMOVE_HEAD
 argument_list|(
 operator|&
@@ -1864,6 +1883,12 @@ argument_list|,
 name|sle_next
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|slep
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Register RPC service to rpcbind by using AI_PASSIVE address. 	 */
 name|hints
 operator|.
@@ -1902,8 +1927,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|svcaddr
@@ -1964,7 +1991,9 @@ name|res0
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2039,7 +2068,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dh:np:P:"
+literal|"dh:np:P:S"
 argument_list|)
 operator|)
 operator|!=
@@ -2132,9 +2161,22 @@ operator|=
 name|optarg
 expr_stmt|;
 break|break;
+case|case
+literal|'S'
+case|:
+name|securenets_format
+operator|=
+name|YP_SNF_SOLARIS
+expr_stmt|;
+break|break;
 default|default:
 name|usage
 argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -2196,6 +2238,22 @@ name|ble_next
 argument_list|)
 expr_stmt|;
 block|}
+name|snprintf
+argument_list|(
+name|securenets_path
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|securenets_path
+argument_list|)
+argument_list|,
+literal|"%s/%s"
+argument_list|,
+name|yp_dir
+argument_list|,
+name|SECURENETS_FNAME
+argument_list|)
+expr_stmt|;
 name|load_securenets
 argument_list|()
 expr_stmt|;
@@ -2292,7 +2350,6 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-block|{
 name|err
 argument_list|(
 literal|1
@@ -2300,7 +2357,6 @@ argument_list|,
 literal|"cannot fork"
 argument_list|)
 expr_stmt|;
-block|}
 name|openlog
 argument_list|(
 literal|"ypserv"
@@ -2317,7 +2373,7 @@ literal|0
 expr_stmt|;
 name|_rpcaf
 operator|=
-name|AF_INET
+literal|0
 expr_stmt|;
 name|_rpcfd
 operator|=
@@ -2384,7 +2440,6 @@ if|if
 condition|(
 name|_rpcpmstart
 condition|)
-block|{
 if|if
 condition|(
 name|si
@@ -2393,17 +2448,6 @@ name|si_socktype
 operator|!=
 name|_rpcfdtype
 operator|||
-name|si
-operator|.
-name|si_af
-operator|!=
-name|_rpcaf
-condition|)
-continue|continue;
-block|}
-elseif|else
-if|if
-condition|(
 name|si
 operator|.
 name|si_af
@@ -2460,6 +2504,15 @@ name|ble_head
 argument_list|)
 operator|)
 condition|)
+block|{
+name|blep
+operator|=
+name|SLIST_FIRST
+argument_list|(
+operator|&
+name|ble_head
+argument_list|)
+expr_stmt|;
 name|SLIST_REMOVE_HEAD
 argument_list|(
 operator|&
@@ -2468,6 +2521,12 @@ argument_list|,
 name|ble_next
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|blep
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ntrans
@@ -2581,17 +2640,17 @@ expr_stmt|;
 name|yp_svc_run
 argument_list|()
 expr_stmt|;
+comment|/* NOTREACHED */
 name|_msgout
 argument_list|(
 literal|"svc_run returned"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
+operator|(
 literal|1
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
+operator|)
+return|;
 block|}
 end_function
 
