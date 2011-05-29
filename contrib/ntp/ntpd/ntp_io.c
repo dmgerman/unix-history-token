@@ -7379,12 +7379,28 @@ block|{
 ifdef|#
 directive|ifdef
 name|MCAST
+ifdef|#
+directive|ifdef
+name|IP_MULTICAST_LOOP
 comment|/*u_char*/
 name|TYPEOF_IP_MULTICAST_LOOP
 name|off
 init|=
 literal|0
 decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|IPV6_MULTICAST_LOOP
+name|u_int
+name|off6
+init|=
+literal|0
+decl_stmt|;
+comment|/* RFC 3493, 5.2. defines type unsigned int */
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|maddr
@@ -7641,11 +7657,11 @@ name|char
 operator|*
 operator|)
 operator|&
-name|off
+name|off6
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|off
+name|off6
 argument_list|)
 argument_list|)
 operator|==
@@ -7657,7 +7673,7 @@ name|netsyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"setsockopt IP_MULTICAST_LOOP failure: %m on socket %d, addr %s for multicast address %s"
+literal|"setsockopt IPV6_MULTICAST_LOOP failure: %m on socket %d, addr %s for multicast address %s"
 argument_list|,
 name|iface
 operator|->
