@@ -341,6 +341,9 @@ name|nsens
 decl_stmt|,
 name|nsens_zone
 decl_stmt|;
+name|int
+name|temp
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -357,9 +360,7 @@ argument_list|,
 argument|entries
 argument_list|)
 block|{
-name|sensor
-operator|->
-name|last_val
+name|temp
 operator|=
 name|sensor
 operator|->
@@ -371,6 +372,19 @@ name|sensor
 operator|->
 name|sensor
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|temp
+operator|>
+literal|0
+condition|)
+comment|/* Use the previous temp in case of error */
+name|sensor
+operator|->
+name|last_val
+operator|=
+name|temp
 expr_stmt|;
 if|if
 condition|(
