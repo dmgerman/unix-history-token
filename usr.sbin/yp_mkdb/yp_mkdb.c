@@ -108,17 +108,14 @@ file|"ypxfr_extern.h"
 end_include
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|yp_dir
 init|=
-literal|""
+name|_PATH_YP
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* No particular default needed. */
-end_comment
 
 begin_decl_stmt
 name|int

@@ -277,7 +277,7 @@ name|char
 modifier|*
 name|yp_dir
 init|=
-literal|"/var/yp/"
+name|_PATH_YP
 decl_stmt|;
 end_decl_stmt
 
