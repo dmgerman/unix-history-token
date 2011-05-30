@@ -1580,6 +1580,12 @@ name|NCHAN
 index|]
 decl_stmt|;
 name|struct
+name|l2t_data
+modifier|*
+name|l2t
+decl_stmt|;
+comment|/* L2 table */
+name|struct
 name|tid_info
 name|tids
 decl_stmt|;
