@@ -33,12 +33,6 @@ directive|include
 file|"math.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|INLINE_REM_PIO2L
-end_define
-
 begin_include
 include|#
 directive|include
