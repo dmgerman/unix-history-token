@@ -2678,6 +2678,16 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|TAILQ_INSERT_TAIL
+argument_list|(
+operator|&
+name|sm_sl_head
+argument_list|,
+name|smp
+argument_list|,
+name|sm_next
+argument_list|)
+expr_stmt|;
 block|}
 name|TAILQ_CONCAT
 argument_list|(
