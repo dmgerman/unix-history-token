@@ -260,6 +260,7 @@ name|void
 parameter_list|)
 block|{
 return|return
+operator|(
 name|socket
 argument_list|(
 name|PF_ROUTE
@@ -268,6 +269,7 @@ name|SOCK_RAW
 argument_list|,
 literal|0
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -506,7 +508,9 @@ break|break;
 block|}
 block|}
 return|return
+operator|(
 name|ret
+operator|)
 return|;
 block|}
 end_function
@@ -574,8 +578,10 @@ operator|>
 name|lim
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 switch|switch
 condition|(
@@ -663,7 +669,9 @@ block|}
 break|break;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
