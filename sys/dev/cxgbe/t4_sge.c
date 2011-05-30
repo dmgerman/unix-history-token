@@ -13330,7 +13330,7 @@ name|r3
 operator|=
 name|wr
 operator|->
-name|r4
+name|type
 operator|=
 literal|0
 expr_stmt|;
