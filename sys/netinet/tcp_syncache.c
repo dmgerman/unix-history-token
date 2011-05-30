@@ -2983,6 +2983,12 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+name|INP_HASH_WLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|)
+expr_stmt|;
 comment|/* Insert new socket into PCB hash list. */
 name|inp
 operator|->
@@ -3158,6 +3164,12 @@ name|M_TCPLOG
 argument_list|)
 expr_stmt|;
 block|}
+name|INP_HASH_WUNLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|)
+expr_stmt|;
 goto|goto
 name|abort
 goto|;
@@ -3397,6 +3409,12 @@ name|M_TCPLOG
 argument_list|)
 expr_stmt|;
 block|}
+name|INP_HASH_WUNLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|)
+expr_stmt|;
 goto|goto
 name|abort
 goto|;
@@ -3639,6 +3657,12 @@ name|M_TCPLOG
 argument_list|)
 expr_stmt|;
 block|}
+name|INP_HASH_WUNLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|)
+expr_stmt|;
 goto|goto
 name|abort
 goto|;
@@ -3647,6 +3671,12 @@ block|}
 endif|#
 directive|endif
 comment|/* INET */
+name|INP_HASH_WUNLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|)
+expr_stmt|;
 name|tp
 operator|=
 name|intotcpcb

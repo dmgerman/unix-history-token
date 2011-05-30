@@ -752,14 +752,14 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*-  * Global data structure for each high-level protocol (UDP, TCP, ...) in both  * IPv4 and IPv6.  Holds inpcb lists and information for managing them.  *  * Each pcbinfo is protected by ipi_lock, covering mutable global fields (such  * as the global pcb list) and hashed lookup tables.  The lock order is:  *  *    ipi_lock (before) inpcb locks  *  * Locking key:  *  * (c) Constant or nearly constant after initialisation  * (g) Locked by ipi_lock  * (h) Read using either ipi_lock or inpcb lock; write requires both.  * (x) Synchronisation properties poorly defined  */
+comment|/*-  * Global data structure for each high-level protocol (UDP, TCP, ...) in both  * IPv4 and IPv6.  Holds inpcb lists and information for managing them.  *  * Each pcbinfo is protected by two locks: ipi_lock and ipi_hash_lock,  * the former covering mutable global fields (such as the global pcb list),  * and the latter covering the hashed lookup tables.  The lock order is:  *  *    ipi_lock (before) inpcb locks (before) ipi_hash_lock  *  * Locking key:  *  * (c) Constant or nearly constant after initialisation  * (g) Locked by ipi_lock  * (h) Read using either ipi_hash_lock or inpcb lock; write requires both.  * (x) Synchronisation properties poorly defined  */
 end_comment
 
 begin_struct
 struct|struct
 name|inpcbinfo
 block|{
-comment|/* 	 * Global lock protecting global inpcb list, inpcb count, hash tables, 	 * etc. 	 */
+comment|/* 	 * Global lock protecting global inpcb list, inpcb count, etc. 	 */
 name|struct
 name|rwlock
 name|ipi_lock
@@ -800,28 +800,33 @@ modifier|*
 name|ipi_zone
 decl_stmt|;
 comment|/* (c) */
+comment|/* 	 * Global lock protecting hash lookup tables. 	 */
+name|struct
+name|rwlock
+name|ipi_hash_lock
+decl_stmt|;
 comment|/* 	 * Global hash of inpcbs, hashed by local and foreign addresses and 	 * port numbers. 	 */
 name|struct
 name|inpcbhead
 modifier|*
 name|ipi_hashbase
 decl_stmt|;
-comment|/* (g) */
+comment|/* (h) */
 name|u_long
 name|ipi_hashmask
 decl_stmt|;
-comment|/* (g) */
+comment|/* (h) */
 comment|/* 	 * Global hash of inpcbs, hashed by only local port number. 	 */
 name|struct
 name|inpcbporthead
 modifier|*
 name|ipi_porthashbase
 decl_stmt|;
-comment|/* (g) */
+comment|/* (h) */
 name|u_long
 name|ipi_porthashmask
 decl_stmt|;
-comment|/* (g) */
+comment|/* (h) */
 comment|/* 	 * Pointer to network stack instance 	 */
 name|struct
 name|vnet
@@ -1372,6 +1377,89 @@ end_define
 begin_define
 define|#
 directive|define
+name|INP_HASH_LOCK_INIT
+parameter_list|(
+name|ipi
+parameter_list|,
+name|d
+parameter_list|)
+define|\
+value|rw_init_flags(&(ipi)->ipi_hash_lock, (d), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_HASH_LOCK_DESTROY
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_destroy(&(ipi)->ipi_hash_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_HASH_RLOCK
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_rlock(&(ipi)->ipi_hash_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_HASH_WLOCK
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_wlock(&(ipi)->ipi_hash_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_HASH_RUNLOCK
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_runlock(&(ipi)->ipi_hash_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_HASH_WUNLOCK
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_wunlock(&(ipi)->ipi_hash_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_HASH_LOCK_ASSERT
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_assert(&(ipi)->ipi_hash_lock, \ 					    RA_LOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_HASH_WLOCK_ASSERT
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_assert(&(ipi)->ipi_hash_lock, \ 					    RA_WLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
 name|INP_PCBHASH
 parameter_list|(
 name|faddr
@@ -1806,11 +1894,48 @@ begin_comment
 comment|/* cached rtentry is valid */
 end_comment
 
+begin_comment
+comment|/*  * Flags passed to in_pcblookup*() functions.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|INPLOOKUP_WILDCARD
-value|1
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Allow wildcard sockets. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INPLOOKUP_RLOCKPCB
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Return inpcb read-locked. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INPLOOKUP_WLOCKPCB
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* Return inpcb write-locked. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INPLOOKUP_MASK
+value|(INPLOOKUP_WILDCARD | INPLOOKUP_RLOCKPCB | \ 			    INPLOOKUP_WLOCKPCB)
 end_define
 
 begin_define
@@ -2365,7 +2490,7 @@ begin_function_decl
 name|struct
 name|inpcb
 modifier|*
-name|in_pcblookup_hash
+name|in_pcblookup
 parameter_list|(
 name|struct
 name|inpcbinfo
