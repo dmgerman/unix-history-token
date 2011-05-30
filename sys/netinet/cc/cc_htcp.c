@@ -469,14 +469,7 @@ value|VNET(htcp_rtt_scaling)
 end_define
 
 begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_HTCP
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_HTCP

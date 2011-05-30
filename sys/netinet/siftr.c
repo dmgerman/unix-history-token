@@ -473,14 +473,7 @@ value|((X)& 0x000000FF)
 end_define
 
 begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_SIFTR
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_SIFTR
@@ -493,14 +486,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_SIFTR_PKTNODE
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_SIFTR_PKTNODE
@@ -513,14 +499,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_SIFTR_HASHNODE
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_SIFTR_HASHNODE
