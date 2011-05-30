@@ -157,12 +157,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ypxfrd_extern.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/wait.h>
 end_include
 
@@ -170,6 +164,18 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ypxfrd_extern.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"yp_extern.h"
 end_include
 
 begin_ifndef
@@ -272,6 +278,7 @@ comment|/* Set when a request is serviced */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|progname
@@ -281,11 +288,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|yp_dir
 init|=
-literal|"/var/yp/"
+name|_PATH_YP
 decl_stmt|;
 end_decl_stmt
 

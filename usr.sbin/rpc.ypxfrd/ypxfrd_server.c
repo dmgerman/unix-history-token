@@ -89,6 +89,12 @@ directive|include
 file|"ypxfrd_extern.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"yp_extern.h"
+end_include
+
 begin_decl_stmt
 name|int
 name|forked

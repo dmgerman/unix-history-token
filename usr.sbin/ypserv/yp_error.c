@@ -64,14 +64,6 @@ name|_rpcpmstart
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|progname
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void

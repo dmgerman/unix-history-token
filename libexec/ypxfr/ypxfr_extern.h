@@ -67,6 +67,7 @@ end_endif
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|yp_dir

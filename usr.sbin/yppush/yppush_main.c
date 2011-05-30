@@ -132,15 +132,6 @@ file|"yppush_extern.h"
 end_include
 
 begin_decl_stmt
-name|char
-modifier|*
-name|progname
-init|=
-literal|"yppush"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|debug
 init|=
@@ -157,6 +148,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|progname
+init|=
+literal|"yppush"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|yp_dir

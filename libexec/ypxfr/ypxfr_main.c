@@ -120,6 +120,7 @@ file|"ypxfr_extern.h"
 end_include
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|progname
@@ -129,6 +130,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|yp_dir

@@ -143,35 +143,50 @@ directive|include
 file|"tcpd.h"
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|extern
 name|int
 name|hosts_ctl
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
-specifier|extern
-name|int
-name|debug
+name|char
+name|securenets_path
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|enum
+name|yp_snf_format
+name|securenets_format
+init|=
+name|YP_SNF_NATIVE
 decl_stmt|;
 end_decl_stmt
 
@@ -437,6 +452,9 @@ block|{
 name|int
 name|error
 decl_stmt|;
+name|int
+name|plen
+decl_stmt|;
 name|char
 name|host
 index|[
@@ -496,10 +514,17 @@ name|error
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|else
+name|mask2prefixlen
+argument_list|(
+name|sap
+argument_list|,
+operator|&
+name|plen
+argument_list|)
+expr_stmt|;
 name|yp_error
 argument_list|(
-literal|"sockaddr: %d/%s/%s"
+literal|"sockaddr: %d:[%s]:%s(/%d)"
 argument_list|,
 name|sap
 operator|->
@@ -508,6 +533,8 @@ argument_list|,
 name|host
 argument_list|,
 name|serv
+argument_list|,
+name|plen
 argument_list|)
 expr_stmt|;
 block|}
@@ -852,11 +879,6 @@ operator|->
 name|ai_next
 control|)
 block|{
-name|struct
-name|sockaddr
-modifier|*
-name|sap
-decl_stmt|;
 name|snp
 operator|=
 name|malloc
@@ -868,6 +890,34 @@ name|snp
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|snp
+operator|==
+name|NULL
+condition|)
+block|{
+name|yp_error
+argument_list|(
+literal|"malloc failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|freeaddrinfo
+argument_list|(
+name|res0
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 name|memset
 argument_list|(
 name|snp
@@ -1005,10 +1055,12 @@ block|{
 name|int
 name|nitems
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|col_host
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|col_mask
@@ -1257,7 +1309,7 @@ name|yp_error
 argument_list|(
 literal|"line %d: "
 literal|"badly formatted securenets entry: "
-literal|"%s: %s: %s"
+literal|"%s: %s"
 argument_list|,
 name|line
 argument_list|,
@@ -1436,7 +1488,7 @@ name|yp_error
 argument_list|(
 literal|"line %d: "
 literal|"badly formatted securenets entry: "
-literal|"%s: %s: %s"
+literal|"%s: %s"
 argument_list|,
 name|line
 argument_list|,
@@ -1972,7 +2024,7 @@ name|sockaddr_storage
 argument_list|)
 index|]
 decl_stmt|;
-name|size_t
+name|ssize_t
 name|len
 decl_stmt|;
 name|int
@@ -2772,12 +2824,14 @@ operator|(
 name|yp_testflag
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
 name|map
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)

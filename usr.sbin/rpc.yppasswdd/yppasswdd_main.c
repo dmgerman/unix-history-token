@@ -319,40 +319,22 @@ comment|/* Set when a request is serviced */
 end_comment
 
 begin_decl_stmt
-specifier|static
+specifier|const
 name|char
-name|_progname
-index|[]
+modifier|*
+name|progname
 init|=
 literal|"rpc.yppasswdd"
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-modifier|*
-name|progname
-init|=
-name|_progname
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|_yp_dir
-index|[]
-init|=
-name|_PATH_YP
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|yp_dir
 init|=
-name|_yp_dir
+name|_PATH_YP
 decl_stmt|;
 end_decl_stmt
 

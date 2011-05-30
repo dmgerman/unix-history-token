@@ -179,6 +179,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|progname
@@ -187,6 +188,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|yp_dir
@@ -688,9 +690,11 @@ specifier|extern
 name|int
 name|yp_testflag
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -703,6 +707,16 @@ begin_function_decl
 specifier|extern
 name|int
 name|load_securenets
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|show_securenets
 parameter_list|(
 name|void
 parameter_list|)

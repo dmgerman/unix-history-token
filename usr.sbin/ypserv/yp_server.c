@@ -97,6 +97,16 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|nullbuf
+index|[]
+init|=
+literal|""
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -107,22 +117,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|MASTER_SZ
-value|sizeof(MASTER_STRING) - 1
-end_define
-
-begin_define
-define|#
-directive|define
 name|ORDER_STRING
 value|"YP_LAST_MODIFIED"
-end_define
-
-begin_define
-define|#
-directive|define
-name|ORDER_SZ
-value|sizeof(ORDER_STRING) - 1
 end_define
 
 begin_function
@@ -199,6 +195,10 @@ name|rval
 init|=
 literal|0
 decl_stmt|;
+name|argp
+operator|=
+name|NULL
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DB_CACHE
@@ -469,7 +469,7 @@ name|val
 operator|.
 name|valdat_val
 operator|=
-literal|""
+name|nullbuf
 expr_stmt|;
 name|result
 operator|.
@@ -900,7 +900,7 @@ name|key
 operator|.
 name|keydat_val
 operator|=
-literal|""
+name|nullbuf
 expr_stmt|;
 name|result
 operator|.
@@ -1083,7 +1083,7 @@ name|key
 operator|.
 name|keydat_val
 operator|=
-literal|""
+name|nullbuf
 expr_stmt|;
 name|result
 operator|.
@@ -2009,6 +2009,10 @@ name|rval
 init|=
 literal|0
 decl_stmt|;
+name|argp
+operator|=
+name|NULL
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DB_CACHE
@@ -2232,7 +2236,7 @@ name|key
 operator|.
 name|keydat_val
 operator|=
-literal|""
+name|nullbuf
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2523,13 +2527,24 @@ index|[
 name|YPMAXRECORD
 index|]
 decl_stmt|;
+name|char
+name|keybuf
+index|[]
+init|=
+name|MASTER_STRING
+decl_stmt|;
 name|keydat
 name|key
 init|=
 block|{
-name|MASTER_SZ
+sizeof|sizeof
+argument_list|(
+name|keybuf
+argument_list|)
+operator|-
+literal|1
 block|,
-name|MASTER_STRING
+name|keybuf
 block|}
 decl_stmt|;
 name|valdat
@@ -2539,7 +2554,7 @@ name|result
 operator|.
 name|peer
 operator|=
-literal|""
+name|nullbuf
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2713,7 +2728,7 @@ name|result
 operator|.
 name|peer
 operator|=
-literal|""
+name|nullbuf
 expr_stmt|;
 return|return
 operator|(
@@ -2740,13 +2755,24 @@ specifier|static
 name|ypresp_order
 name|result
 decl_stmt|;
+name|char
+name|keybuf
+index|[]
+init|=
+name|ORDER_STRING
+decl_stmt|;
 name|keydat
 name|key
 init|=
 block|{
-name|ORDER_SZ
+sizeof|sizeof
+argument_list|(
+name|keybuf
+argument_list|)
+operator|-
+literal|1
 block|,
-name|ORDER_STRING
+name|keybuf
 block|}
 decl_stmt|;
 name|valdat
@@ -3556,7 +3582,7 @@ name|val
 operator|.
 name|valdat_val
 operator|=
-literal|""
+name|nullbuf
 expr_stmt|;
 name|result
 operator|.
@@ -3694,7 +3720,7 @@ name|key
 operator|.
 name|keydat_val
 operator|=
-literal|""
+name|nullbuf
 expr_stmt|;
 name|result
 operator|.
@@ -3842,7 +3868,7 @@ name|key
 operator|.
 name|keydat_val
 operator|=
-literal|""
+name|nullbuf
 expr_stmt|;
 name|result
 operator|.
@@ -4025,7 +4051,7 @@ name|yp_resp_map_parmstype
 operator|.
 name|peer
 operator|=
-literal|""
+name|nullbuf
 expr_stmt|;
 if|if
 condition|(
@@ -4175,6 +4201,14 @@ name|ypresponse
 name|result
 decl_stmt|;
 comment|/* 	 * Not implemented. 	 */
+name|argp
+operator|=
+name|NULL
+expr_stmt|;
+name|rqstp
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 operator|&
@@ -4201,6 +4235,14 @@ name|ypresponse
 name|result
 decl_stmt|;
 comment|/* 	 * Not implemented. 	 */
+name|argp
+operator|=
+name|NULL
+expr_stmt|;
+name|rqstp
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 operator|&
@@ -4227,6 +4269,14 @@ name|ypresponse
 name|result
 decl_stmt|;
 comment|/* 	 * Not implemented. 	 */
+name|argp
+operator|=
+name|NULL
+expr_stmt|;
+name|rqstp
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 operator|&
