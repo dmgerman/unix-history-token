@@ -8,7 +8,7 @@ comment|/*	$KAME: config.c,v 1.84 2003/08/05 12:34:23 itojun Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1998 WIDE Project.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -671,9 +671,6 @@ name|route
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|RDNSS
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -690,8 +687,6 @@ operator|->
 name|dnssl
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* check if we are allowed to forward packets (if not determined) */
 if|if
 condition|(
@@ -3094,9 +3089,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|RDNSS
 comment|/* DNS server and DNS search list information */
 for|for
 control|(
@@ -3813,8 +3805,6 @@ name|dnssl
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* okey */
 name|tmp
 operator|->
@@ -5247,9 +5237,6 @@ name|rti
 decl_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|RDNSS
 name|struct
 name|nd_opt_rdnss
 modifier|*
@@ -5273,8 +5260,6 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|prefix
 modifier|*
@@ -5420,9 +5405,6 @@ literal|8
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|RDNSS
 name|TAILQ_FOREACH
 argument_list|(
 argument|rdn
@@ -5522,8 +5504,6 @@ operator|+=
 name|len
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* allocate memory for the packet */
 if|if
 condition|(
@@ -6191,9 +6171,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|RDNSS
 name|TAILQ_FOREACH
 argument_list|(
 argument|rdn
@@ -6466,8 +6443,6 @@ name|nd_opt_dnssl_len
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 return|return;
 block|}
 end_function

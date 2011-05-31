@@ -220,7 +220,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Check validity of a Prefix Control Operation(PCO).  * Return 0 on success, 1 on failure.  */
+comment|/*  * Check validity of a Prefix Control Operation(PCO).  * return 0 on success, 1 on failure.  */
 end_comment
 
 begin_function
@@ -288,7 +288,9 @@ name|rpm_len
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 comment|/* rpm->rpm_code must be valid value */
@@ -324,7 +326,9 @@ name|rpm_code
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 comment|/* rpm->rpm_matchlen must be 0 to 128 inclusive */
@@ -351,7 +355,9 @@ name|rpm_matchlen
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 comment|/* 	 * rpu->rpu_uselen, rpu->rpu_keeplen, and sum of them must be 	 * between 0 and 128 inclusive 	 */
@@ -443,12 +449,16 @@ name|rpu_keeplen
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1161,7 +1171,9 @@ literal|0
 operator|)
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -1341,7 +1353,9 @@ operator|==
 name|ENXIO
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 elseif|else
 if|if
@@ -1364,11 +1378,15 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1482,7 +1500,9 @@ name|len
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 name|rpmlen
@@ -1539,7 +1559,9 @@ name|rpmlen
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1611,7 +1633,9 @@ name|len
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 comment|/* destination check. only for multicast. omit unicast check. */
@@ -1656,7 +1680,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 comment|/* seqnum and segnum check */
@@ -1702,7 +1728,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -1774,7 +1802,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/* update seqnum */
@@ -1817,7 +1847,9 @@ operator|->
 name|rr_seqnum
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2096,7 +2128,9 @@ operator|!
 name|IN6_ARE_ADDR_EQUAL
 argument_list|(
 operator|&
-name|in6a_site_allrouters
+name|sin6_sitelocal_allrouters
+operator|.
+name|sin6_addr
 argument_list|,
 operator|&
 name|pi

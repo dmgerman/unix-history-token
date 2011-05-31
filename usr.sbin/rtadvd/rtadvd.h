@@ -8,43 +8,125 @@ comment|/*	$KAME: rtadvd.h,v 1.26 2003/08/05 12:34:23 itojun Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1998 WIDE Project.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ALLNODES
-value|"ff02::1"
+name|IN6ADDR_LINKLOCAL_ALLNODES_INIT
+define|\
+value|{{{ 0xff, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,	\ 	    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 }}}
 end_define
 
 begin_define
 define|#
 directive|define
-name|ALLROUTERS_LINK
-value|"ff02::2"
+name|IN6ADDR_LINKLOCAL_ALLROUTERS_INIT
+define|\
+value|{{{ 0xff, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,	\ 	    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02 }}}
 end_define
 
 begin_define
 define|#
 directive|define
-name|ALLROUTERS_SITE
-value|"ff05::2"
+name|IN6ADDR_SITELOCAL_ALLROUTERS_INIT
+define|\
+value|{{{ 0xff, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,	\ 	    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02 }}}
 end_define
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|sockaddr_in6
+name|sin6_linklocal_allnodes
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|sockaddr_in6
+name|sin6_linklocal_allrouters
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|sockaddr_in6
+name|sin6_sitelocal_allrouters
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * RFC 3542 API deprecates IPV6_PKTINFO in favor of  * IPV6_RECVPKTINFO  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IPV6_RECVPKTINFO
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPV6_PKTINFO
+end_ifdef
 
 begin_define
 define|#
 directive|define
-name|ANY
-value|"::"
+name|IPV6_RECVPKTINFO
+value|IPV6_PKTINFO
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * RFC 3542 API deprecates IPV6_HOPLIMIT in favor of  * IPV6_RECVHOPLIMIT  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IPV6_RECVHOPLIMIT
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPV6_HOPLIMIT
+end_ifdef
 
 begin_define
 define|#
 directive|define
-name|RTSOLLEN
-value|8
+name|IPV6_RECVHOPLIMIT
+value|IPV6_HOPLIMIT
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* protocol constants and default values */
@@ -307,12 +389,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|RDNSS
-end_ifdef
-
 begin_struct
 struct|struct
 name|rdnss_addr
@@ -433,11 +509,6 @@ block|}
 struct|;
 end_struct
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_struct
 struct|struct
 name|soliciter
@@ -557,9 +628,6 @@ name|int
 name|pfxs
 decl_stmt|;
 comment|/* number of prefixes */
-ifdef|#
-directive|ifdef
-name|RDNSS
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -576,8 +644,6 @@ argument_list|)
 name|dnssl
 expr_stmt|;
 comment|/* search domain list */
-endif|#
-directive|endif
 name|long
 name|clockskew
 decl_stmt|;
