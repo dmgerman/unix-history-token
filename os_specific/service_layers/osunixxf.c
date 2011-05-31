@@ -502,16 +502,23 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsGetLine  *  * PARAMETERS:  fmt                 - Standard printf format  *              args                - Argument list  *  * RETURN:      Actual bytes read  *  * DESCRIPTION: Formatted input with argument list pointer  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsGetLine  *  * PARAMETERS:  Buffer              - Where to return the command line  *              BufferLength        - Maximum length of Buffer  *              BytesRead           - Where the actual byte count is returned  *  * RETURN:      Status and actual bytes read  *  * DESCRIPTION: Formatted input with argument list pointer  *  *****************************************************************************/
 end_comment
 
 begin_function
-name|UINT32
+name|ACPI_STATUS
 name|AcpiOsGetLine
 parameter_list|(
 name|char
 modifier|*
 name|Buffer
+parameter_list|,
+name|UINT32
+name|BufferLength
+parameter_list|,
+name|UINT32
+modifier|*
+name|BytesRead
 parameter_list|)
 block|{
 name|UINT8
@@ -531,6 +538,19 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|i
+operator|>=
+name|BufferLength
+condition|)
+block|{
+return|return
+operator|(
+name|AE_BUFFER_OVERFLOW
+operator|)
+return|;
+block|}
 name|scanf
 argument_list|(
 literal|"%1c"
@@ -568,9 +588,20 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Return the number of bytes in the string */
+if|if
+condition|(
+name|BytesRead
+condition|)
+block|{
+operator|*
+name|BytesRead
+operator|=
+name|i
+expr_stmt|;
+block|}
 return|return
 operator|(
-name|i
+name|AE_OK
 operator|)
 return|;
 block|}

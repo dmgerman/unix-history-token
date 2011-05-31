@@ -1721,6 +1721,8 @@ name|BatchBuffer
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|EX_NO_SINGLE_STEP
 argument_list|)
 expr_stmt|;
