@@ -242,6 +242,10 @@ name|struct
 name|jail
 name|thejail
 decl_stmt|;
+name|struct
+name|in_addr
+name|ia4
+decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -307,7 +311,16 @@ operator|&
 name|sin
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Now re-run in a jail. 	 */
+comment|/* 	 * Now re-run in a jail. 	 * XXX-BZ should switch to jail_set(2). 	 */
+name|ia4
+operator|.
+name|s_addr
+operator|=
+name|htonl
+argument_list|(
+name|INADDR_LOOPBACK
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -323,7 +336,7 @@ name|thejail
 operator|.
 name|version
 operator|=
-literal|0
+name|JAIL_API_VERSION
 expr_stmt|;
 name|thejail
 operator|.
@@ -339,9 +352,22 @@ literal|"jail"
 expr_stmt|;
 name|thejail
 operator|.
-name|ip_number
+name|jailname
 operator|=
-name|INADDR_LOOPBACK
+literal|"udpconnectjail"
+expr_stmt|;
+name|thejail
+operator|.
+name|ip4s
+operator|=
+literal|1
+expr_stmt|;
+name|thejail
+operator|.
+name|ip4
+operator|=
+operator|&
+name|ia4
 expr_stmt|;
 if|if
 condition|(

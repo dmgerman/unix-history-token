@@ -4937,6 +4937,21 @@ name|iv_bmiss
 operator|=
 name|ath_bmiss_vap
 expr_stmt|;
+comment|/* Set default parameters */
+comment|/* 	 * Anything earlier than some AR9300 series MACs don't 	 * support a smaller MPDU density. 	 */
+name|vap
+operator|->
+name|iv_ampdu_density
+operator|=
+name|IEEE80211_HTCAP_MPDUDENSITY_8
+expr_stmt|;
+comment|/* 	 * All NICs can handle the maximum size, however 	 * AR5416 based MACs can only TX aggregates w/ RTS 	 * protection when the total aggregate size is<= 8k. 	 * However, for now that's enforced by the TX path. 	 */
+name|vap
+operator|->
+name|iv_ampdu_rxmax
+operator|=
+name|IEEE80211_HTCAP_MAXRXAMPDU_64K
+expr_stmt|;
 name|avp
 operator|->
 name|av_bslot

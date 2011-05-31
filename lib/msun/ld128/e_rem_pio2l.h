@@ -129,18 +129,10 @@ begin_comment
 comment|/* -0x159c4ec64ddaeb5f78671cbfb2210.0p-327 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INLINE_REM_PIO2L
-end_ifdef
-
 begin_function
 specifier|static
 specifier|inline
 name|__always_inline
-endif|#
-directive|endif
 name|int
 name|__ieee754_rem_pio2l
 parameter_list|(

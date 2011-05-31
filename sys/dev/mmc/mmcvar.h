@@ -89,7 +89,7 @@ argument|media_size
 argument_list|,
 argument|MEDIA_SIZE
 argument_list|,
-argument|off_t
+argument|long
 argument_list|)
 end_macro
 

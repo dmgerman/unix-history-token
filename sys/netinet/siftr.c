@@ -2705,12 +2705,6 @@ operator|&
 name|V_tcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_INFO_RLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dir
@@ -2724,7 +2718,7 @@ name|ipver
 operator|==
 name|INP_IPV4
 condition|?
-name|in_pcblookup_hash
+name|in_pcblookup
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -2741,7 +2735,7 @@ name|ip_dst
 argument_list|,
 name|dport
 argument_list|,
-literal|0
+name|INPLOOKUP_RLOCKPCB
 argument_list|,
 name|m
 operator|->
@@ -2753,7 +2747,7 @@ else|:
 ifdef|#
 directive|ifdef
 name|SIFTR_IPV6
-name|in6_pcblookup_hash
+name|in6_pcblookup
 argument_list|(
 argument|&V_tcbinfo
 argument_list|,
@@ -2765,7 +2759,7 @@ argument|&((struct ip6_hdr *)ip)->ip6_dst
 argument_list|,
 argument|dport
 argument_list|,
-literal|0
+argument|INPLOOKUP_RLOCKPCB
 argument_list|,
 argument|m->m_pkthdr.rcvif
 argument_list|)
@@ -2784,7 +2778,7 @@ name|ipver
 operator|==
 name|INP_IPV4
 condition|?
-name|in_pcblookup_hash
+name|in_pcblookup
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -2801,7 +2795,7 @@ name|ip_src
 argument_list|,
 name|sport
 argument_list|,
-literal|0
+name|INPLOOKUP_RLOCKPCB
 argument_list|,
 name|m
 operator|->
@@ -2813,7 +2807,7 @@ else|:
 ifdef|#
 directive|ifdef
 name|SIFTR_IPV6
-name|in6_pcblookup_hash
+name|in6_pcblookup
 argument_list|(
 argument|&V_tcbinfo
 argument_list|,
@@ -2825,7 +2819,7 @@ argument|&((struct ip6_hdr *)ip)->ip6_src
 argument_list|,
 argument|sport
 argument_list|,
-literal|0
+argument|INPLOOKUP_RLOCKPCB
 argument_list|,
 argument|m->m_pkthdr.rcvif
 argument_list|)
@@ -2862,26 +2856,6 @@ name|nskip_out_inpcb
 operator|++
 expr_stmt|;
 block|}
-else|else
-block|{
-comment|/* Acquire the inpcb lock. */
-name|INP_UNLOCK_ASSERT
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
-name|INP_RLOCK
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
-block|}
-name|INP_INFO_RUNLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|inp

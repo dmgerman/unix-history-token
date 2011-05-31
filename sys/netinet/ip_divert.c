@@ -2732,7 +2732,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|INP_WLOCK
+name|INP_RLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2740,12 +2740,12 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|in_pcbrele
+name|in_pcbrele_rlocked
 argument_list|(
 name|inp
 argument_list|)
 condition|)
-name|INP_WUNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|inp
 argument_list|)
