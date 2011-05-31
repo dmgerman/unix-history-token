@@ -433,12 +433,19 @@ begin_define
 define|#
 directive|define
 name|ACPI_DEBUGGER_MAX_ARGS
-value|8
+value|ACPI_METHOD_NUM_ARGS + 2
 end_define
 
 begin_comment
-comment|/* Must be max method args + 1 */
+comment|/* Max command line arguments */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DB_LINE_BUFFER_SIZE
+value|512
+end_define
 
 begin_define
 define|#

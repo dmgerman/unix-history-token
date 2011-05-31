@@ -15,6 +15,18 @@ directive|define
 name|_SYS_MSGBUF_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
 begin_struct
 struct|struct
 name|msgbuf
@@ -51,6 +63,19 @@ name|u_int
 name|msg_seqmod
 decl_stmt|;
 comment|/* range for sequence numbers */
+name|int
+name|msg_lastpri
+decl_stmt|;
+comment|/* saved priority value */
+name|int
+name|msg_needsnl
+decl_stmt|;
+comment|/* set when newline needed */
+name|struct
+name|mtx
+name|msg_lock
+decl_stmt|;
+comment|/* mutex to protect the buffer */
 block|}
 struct|;
 end_struct
@@ -163,6 +188,28 @@ name|mbp
 parameter_list|,
 name|int
 name|c
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|msgbuf_addstr
+parameter_list|(
+name|struct
+name|msgbuf
+modifier|*
+name|mbp
+parameter_list|,
+name|int
+name|pri
+parameter_list|,
+name|char
+modifier|*
+name|str
+parameter_list|,
+name|int
+name|filter_cr
 parameter_list|)
 function_decl|;
 end_function_decl

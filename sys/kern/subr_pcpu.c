@@ -182,7 +182,7 @@ name|struct
 name|cpuhead
 name|cpuhead
 init|=
-name|SLIST_HEAD_INITIALIZER
+name|STAILQ_HEAD_INITIALIZER
 argument_list|(
 name|cpuhead
 argument_list|)
@@ -256,7 +256,7 @@ index|]
 operator|=
 name|pcpu
 expr_stmt|;
-name|SLIST_INSERT_HEAD
+name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|cpuhead
@@ -988,7 +988,7 @@ modifier|*
 name|pcpu
 parameter_list|)
 block|{
-name|SLIST_REMOVE
+name|STAILQ_REMOVE
 argument_list|(
 operator|&
 name|cpuhead

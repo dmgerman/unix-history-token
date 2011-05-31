@@ -3269,6 +3269,15 @@ value|(sizeof(a) / sizeof(a[0]))
 name|size_t
 name|i
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|feature_present
+argument_list|(
+literal|"inet6"
+argument_list|)
+condition|)
+return|return;
 for|for
 control|(
 name|i

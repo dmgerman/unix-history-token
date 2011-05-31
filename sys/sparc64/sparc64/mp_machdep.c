@@ -1762,7 +1762,7 @@ name|csa_count
 operator|=
 name|mp_ncpus
 expr_stmt|;
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|pc
 argument_list|,

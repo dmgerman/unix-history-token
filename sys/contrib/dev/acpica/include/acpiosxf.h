@@ -807,12 +807,19 @@ comment|/*  * Debug input  */
 end_comment
 
 begin_function_decl
-name|UINT32
+name|ACPI_STATUS
 name|AcpiOsGetLine
 parameter_list|(
 name|char
 modifier|*
 name|Buffer
+parameter_list|,
+name|UINT32
+name|BufferLength
+parameter_list|,
+name|UINT32
+modifier|*
+name|BytesRead
 parameter_list|)
 function_decl|;
 end_function_decl

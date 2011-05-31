@@ -3057,6 +3057,9 @@ decl_stmt|;
 name|int
 name|show_command
 decl_stmt|;
+name|int
+name|show_kidle
+decl_stmt|;
 comment|/* 	 * Save the previous process info. 	 */
 if|if
 condition|(
@@ -3309,6 +3312,12 @@ name|command
 operator|!=
 name|NULL
 expr_stmt|;
+name|show_kidle
+operator|=
+name|sel
+operator|->
+name|kidle
+expr_stmt|;
 comment|/* count up process states and get pointers to interesting procs */
 name|total_procs
 operator|=
@@ -3496,6 +3505,23 @@ name|SIDL
 operator|)
 condition|)
 comment|/* skip idle or non-running processes */
+continue|continue;
+if|if
+condition|(
+name|displaymode
+operator|==
+name|DISP_CPU
+operator|&&
+operator|!
+name|show_kidle
+operator|&&
+name|pp
+operator|->
+name|ki_tdflags
+operator|&
+name|TDF_IDLETD
+condition|)
+comment|/* skip kernel idle process */
 continue|continue;
 if|if
 condition|(

@@ -461,7 +461,7 @@ name|u_int
 name|pc_cpuid
 decl_stmt|;
 comment|/* This cpu number */
-name|SLIST_ENTRY
+name|STAILQ_ENTRY
 argument_list|(
 argument|pcpu
 argument_list|)
@@ -550,7 +550,7 @@ name|_KERNEL
 end_ifdef
 
 begin_expr_stmt
-name|SLIST_HEAD
+name|STAILQ_HEAD
 argument_list|(
 name|cpuhead
 argument_list|,

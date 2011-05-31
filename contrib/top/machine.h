@@ -177,6 +177,10 @@ name|int
 name|jail
 decl_stmt|;
 comment|/* show jail ID */
+name|int
+name|kidle
+decl_stmt|;
+comment|/* show per-CPU idle threads */
 name|char
 modifier|*
 name|command

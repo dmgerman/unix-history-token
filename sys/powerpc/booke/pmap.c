@@ -2260,7 +2260,7 @@ operator|!
 name|smp_started
 condition|)
 return|return;
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|pc
 argument_list|,
@@ -2358,7 +2358,7 @@ operator|!
 name|smp_started
 condition|)
 return|return;
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|pc
 argument_list|,
