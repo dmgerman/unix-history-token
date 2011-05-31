@@ -454,6 +454,18 @@ directive|ifndef
 name|LOCORE
 end_ifndef
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_cpuset.h>
+end_include
+
 begin_struct
 struct|struct
 name|ktr_entry
@@ -494,7 +506,7 @@ end_struct
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|cpuset_t
 name|ktr_cpumask
 decl_stmt|;
 end_decl_stmt
