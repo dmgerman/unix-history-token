@@ -122,7 +122,7 @@ parameter_list|,
 name|l3
 parameter_list|)
 define|\
-value|set	mask, r1 ; \ 	TEST(ktr_mask, r1, r2, r2, l3) ; \ 	lduw	[PCPU(MID)], r1 ; \ 	mov	1, r2 ; \ 	sllx	r2, r1, r1 ; \ #ifdef notyet \ 	TEST(ktr_cpumask, r1, r2, r3, l3) ; \ #endif \ 	ATR(desc, r1, r2, r3, l1, l2)
+value|set	mask, r1 ; \ 	TEST(ktr_mask, r1, r2, r2, l3) ; \ 	lduw	[PCPU(MID)], r1 ; \ 	mov	1, r2 ; \ 	sllx	r2, r1, r1 ; \ 	TEST(ktr_cpumask, r1, r2, r3, l3) ; \ 	ATR(desc, r1, r2, r3, l1, l2)
 end_define
 
 begin_endif
