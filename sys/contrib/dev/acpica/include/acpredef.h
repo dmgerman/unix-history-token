@@ -3006,6 +3006,16 @@ block|}
 block|,
 block|{
 block|{
+literal|"_TDL"
+block|,
+literal|0
+block|,
+name|ACPI_RTYPE_INTEGER
+block|}
+block|}
+block|,
+block|{
+block|{
 literal|"_TIP"
 block|,
 literal|1
