@@ -1380,7 +1380,7 @@ name|ia64_mca_init
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Create sysctl tree for per-CPU information. 	 */
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|pc
 argument_list|,

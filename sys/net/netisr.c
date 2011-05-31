@@ -4893,7 +4893,7 @@ name|pcpu
 modifier|*
 name|pc
 decl_stmt|;
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|pc
 argument_list|,

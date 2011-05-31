@@ -1508,7 +1508,7 @@ name|as_spin
 operator|=
 literal|1
 expr_stmt|;
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|pc
 argument_list|,
@@ -1829,7 +1829,7 @@ name|smp_cpus
 operator|=
 literal|0
 expr_stmt|;
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|pc
 argument_list|,
@@ -1955,7 +1955,7 @@ name|pcpu
 modifier|*
 name|pc
 decl_stmt|;
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|pc
 argument_list|,
@@ -2028,7 +2028,7 @@ name|pcpu
 modifier|*
 name|pc
 decl_stmt|;
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|pc
 argument_list|,
