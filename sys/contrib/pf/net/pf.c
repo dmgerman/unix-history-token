@@ -19926,11 +19926,17 @@ directive|ifdef
 name|__FreeBSD__
 comment|/* XXX MRT not always INET */
 comment|/* stick with table 0 though */
+ifdef|#
+directive|ifdef
+name|INET
 argument|if (af == AF_INET) 		in_rtalloc_ign((struct route *)&ro,
 literal|0
 argument|,
 literal|0
-argument|); 	else 		rtalloc_ign((struct route *)&ro,
+argument|); 	else
+endif|#
+directive|endif
+argument|rtalloc_ign((struct route *)&ro,
 literal|0
 argument|);
 else|#
@@ -20007,11 +20013,17 @@ argument|rtalloc_ign((struct route *)&ro, (RTF_CLONING|RTF_PRCLONING));
 else|#
 directive|else
 comment|/* !RTF_PRCLONING */
+ifdef|#
+directive|ifdef
+name|INET
 argument|if (af == AF_INET) 		in_rtalloc_ign((struct route *)&ro,
 literal|0
 argument|,
 literal|0
-argument|); 	else 		rtalloc_ign((struct route *)&ro,
+argument|); 	else
+endif|#
+directive|endif
+argument|rtalloc_ign((struct route *)&ro,
 literal|0
 argument|);
 endif|#
@@ -20335,7 +20347,13 @@ directive|endif
 comment|/* INET6 */
 argument|default: 			return (
 literal|1
-argument|); 		} 	} 	if (sum) { 		switch (p) { 		case IPPROTO_TCP: 		    { 			KMOD_TCPSTAT_INC(tcps_rcvbadsum); 			break; 		    } 		case IPPROTO_UDP: 		    { 			KMOD_UDPSTAT_INC(udps_badsum); 			break; 		    } 		case IPPROTO_ICMP: 		    { 			KMOD_ICMPSTAT_INC(icps_checksum); 			break; 		    }
+argument|); 		} 	} 	if (sum) { 		switch (p) { 		case IPPROTO_TCP: 		    { 			KMOD_TCPSTAT_INC(tcps_rcvbadsum); 			break; 		    } 		case IPPROTO_UDP: 		    { 			KMOD_UDPSTAT_INC(udps_badsum); 			break; 		    }
+ifdef|#
+directive|ifdef
+name|INET
+argument|case IPPROTO_ICMP: 		    { 			KMOD_ICMPSTAT_INC(icps_checksum); 			break; 		    }
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
@@ -20397,7 +20415,13 @@ directive|endif
 comment|/* INET6 */
 argument|default: 		return (
 literal|1
-argument|); 	} 	if (sum) { 		m->m_pkthdr.csum_flags |= flag_bad; 		switch (p) { 		case IPPROTO_TCP: 			KMOD_TCPSTAT_INC(tcps_rcvbadsum); 			break; 		case IPPROTO_UDP: 			KMOD_UDPSTAT_INC(udps_badsum); 			break; 		case IPPROTO_ICMP: 			KMOD_ICMPSTAT_INC(icps_checksum); 			break;
+argument|); 	} 	if (sum) { 		m->m_pkthdr.csum_flags |= flag_bad; 		switch (p) { 		case IPPROTO_TCP: 			KMOD_TCPSTAT_INC(tcps_rcvbadsum); 			break; 		case IPPROTO_UDP: 			KMOD_UDPSTAT_INC(udps_badsum); 			break;
+ifdef|#
+directive|ifdef
+name|INET
+argument|case IPPROTO_ICMP: 			KMOD_ICMPSTAT_INC(icps_checksum); 			break;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
