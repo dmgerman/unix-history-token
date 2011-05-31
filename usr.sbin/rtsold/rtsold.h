@@ -412,6 +412,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|int
+name|ra_opt_handler
+parameter_list|(
+name|struct
+name|ifinfo
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* if.c */
 end_comment

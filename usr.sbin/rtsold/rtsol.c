@@ -310,18 +310,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|int
-name|ra_opt_handler
-parameter_list|(
-name|struct
-name|ifinfo
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -1181,8 +1169,6 @@ decl_stmt|;
 name|char
 name|nsbuf
 index|[
-literal|11
-operator|+
 name|INET6_ADDRSTRLEN
 operator|+
 literal|1
@@ -1194,20 +1180,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-comment|/* 11 = sizeof("nameserver "), 1+1 = \n\0 termination */
-name|char
-name|slbuf
-index|[
-literal|7
-operator|+
-name|NI_MAXHOST
-operator|+
-literal|1
-operator|+
-literal|1
-index|]
-decl_stmt|;
-comment|/* 7 = sizeof("search "), 1+1 = \n\0 termination */
 name|char
 name|dname
 index|[
@@ -1981,6 +1953,42 @@ operator|*
 operator|)
 name|raoptp
 expr_stmt|;
+comment|/* Optlen sanity check (Section 5.3.1 in RFC 6106) */
+if|if
+condition|(
+name|rdnss
+operator|->
+name|nd_opt_rdnss_len
+operator|<
+literal|3
+condition|)
+block|{
+name|warnmsg
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|__func__
+argument_list|,
+literal|"too short RDNSS option"
+literal|"in RA from %s was ignored."
+argument_list|,
+name|inet_ntop
+argument_list|(
+name|AF_INET6
+argument_list|,
+operator|&
+name|from
+operator|.
+name|sin6_addr
+argument_list|,
+name|ntopbuf
+argument_list|,
+name|INET6_ADDRSTRLEN
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|addr
 operator|=
 operator|(
@@ -2250,6 +2258,42 @@ operator|*
 operator|)
 name|raoptp
 expr_stmt|;
+comment|/* Optlen sanity check (Section 5.3.1 in RFC 6106) */
+if|if
+condition|(
+name|dnssl
+operator|->
+name|nd_opt_dnssl_len
+operator|<
+literal|2
+condition|)
+block|{
+name|warnmsg
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|__func__
+argument_list|,
+literal|"too short DNSSL option"
+literal|"in RA from %s was ignored."
+argument_list|,
+name|inet_ntop
+argument_list|(
+name|AF_INET6
+argument_list|,
+operator|&
+name|from
+operator|.
+name|sin6_addr
+argument_list|,
+name|ntopbuf
+argument_list|,
+name|INET6_ADDRSTRLEN
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|p
 operator|=
 name|raoptp
@@ -2276,24 +2320,15 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|sprintf
-argument_list|(
-name|slbuf
-argument_list|,
-literal|"%s "
-argument_list|,
-name|dname
-argument_list|)
-expr_stmt|;
 name|warnmsg
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
 name|__func__
 argument_list|,
-literal|"slbuf = %s"
+literal|"dname = %s"
 argument_list|,
-name|slbuf
+name|dname
 argument_list|)
 expr_stmt|;
 name|ELM_MALLOC
@@ -2317,7 +2352,7 @@ name|rao_len
 operator|=
 name|strlen
 argument_list|(
-name|nsbuf
+name|dname
 argument_list|)
 expr_stmt|;
 name|rao
@@ -2326,7 +2361,7 @@ name|rao_msg
 operator|=
 name|strdup
 argument_list|(
-name|slbuf
+name|dname
 argument_list|)
 expr_stmt|;
 if|if
@@ -2530,8 +2565,17 @@ literal|"\n"
 decl_stmt|;
 end_decl_stmt
 
-begin_function
+begin_decl_stmt
 specifier|static
+name|char
+name|resstr_sp
+index|[]
+init|=
+literal|" "
+decl_stmt|;
+end_decl_stmt
+
+begin_function
 name|int
 name|ra_opt_handler
 parameter_list|(
@@ -2798,6 +2842,29 @@ operator|=
 name|rao
 operator|->
 name|rao_msg
+expr_stmt|;
+name|TAILQ_INSERT_TAIL
+argument_list|(
+operator|&
+name|sm_dnssl_head
+argument_list|,
+name|smp
+argument_list|,
+name|sm_next
+argument_list|)
+expr_stmt|;
+name|ELM_MALLOC
+argument_list|(
+argument|smp
+argument_list|,
+argument|continue
+argument_list|)
+empty_stmt|;
+name|smp
+operator|->
+name|sm_msg
+operator|=
+name|resstr_sp
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
