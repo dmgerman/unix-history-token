@@ -1573,7 +1573,7 @@ operator|-
 literal|1
 operator|||
 operator|(
-name|size_t
+name|u_long
 operator|)
 name|cpusetsize
 operator|>
