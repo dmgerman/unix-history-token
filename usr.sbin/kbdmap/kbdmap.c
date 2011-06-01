@@ -890,6 +890,11 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 name|fprintf
@@ -899,11 +904,6 @@ argument_list|,
 literal|"Could not open %s for reading\n"
 argument_list|,
 name|sysconfig
-argument_list|)
-expr_stmt|;
-name|fclose
-argument_list|(
-name|fp
 argument_list|)
 expr_stmt|;
 return|return
