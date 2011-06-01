@@ -1516,6 +1516,63 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|IPV6FORWARDING
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GATEWAY6
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|IPV6FORWARDING
+value|1
+end_define
+
+begin_comment
+comment|/* forward IP6 packets not for us */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|IPV6FORWARDING
+value|0
+end_define
+
+begin_comment
+comment|/* don't forward IP6 packets not for us */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GATEWAY6 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !IPV6FORWARDING */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|IPV6_SENDREDIRECTS
 end_ifndef
 
