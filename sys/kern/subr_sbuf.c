@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000 Poul-Henning Kamp and Dag-Erling Coïdan Smørgrav  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2000-2008 Poul-Henning Kamp  * Copyright (c) 2000-2008 Dag-Erling CoÃ¯dan SmÃ¸rgrav  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -647,10 +647,6 @@ argument_list|)
 expr_stmt|;
 name|newbuf
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|SBMALLOC
 argument_list|(
 name|newsize
@@ -793,16 +789,13 @@ condition|)
 block|{
 name|s
 operator|=
-operator|(
-expr|struct
-name|sbuf
-operator|*
-operator|)
 name|SBMALLOC
 argument_list|(
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|s
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -821,8 +814,10 @@ argument_list|(
 name|s
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|s
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|s
@@ -846,8 +841,10 @@ argument_list|(
 name|s
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|s
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|s
@@ -901,10 +898,6 @@ name|s
 operator|->
 name|s_buf
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|SBMALLOC
 argument_list|(
 name|s
@@ -2352,10 +2345,12 @@ name|s
 parameter_list|)
 block|{
 return|return
+operator|(
 name|SBUF_HASOVERFLOWED
 argument_list|(
 name|s
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -2442,9 +2437,11 @@ name|SBUF_FINISHED
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|s
 operator|->
 name|s_buf
+operator|)
 return|;
 block|}
 end_function
@@ -2483,9 +2480,11 @@ literal|1
 operator|)
 return|;
 return|return
+operator|(
 name|s
 operator|->
 name|s_len
+operator|)
 return|;
 block|}
 end_function
@@ -2539,8 +2538,10 @@ argument_list|(
 name|s
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|s
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
