@@ -4439,6 +4439,12 @@ name|halExtChanDfsSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
+name|pCap
+operator|->
+name|halUseCombinedRadarRssi
+operator|=
+name|AH_TRUE
+expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -4511,6 +4517,12 @@ operator|->
 name|halTxStbcSupport
 operator|=
 literal|1
+expr_stmt|;
+name|pCap
+operator|->
+name|halEnhancedDfsSupport
+operator|=
+name|AH_TRUE
 expr_stmt|;
 return|return
 name|AH_TRUE
