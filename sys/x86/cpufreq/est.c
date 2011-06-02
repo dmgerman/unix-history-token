@@ -7867,7 +7867,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-literal|1
+name|strict
 argument_list|)
 expr_stmt|;
 if|if
@@ -7875,8 +7875,6 @@ condition|(
 name|error
 operator|!=
 literal|0
-operator|&&
-name|strict
 condition|)
 block|{
 if|if
@@ -7899,32 +7897,6 @@ name|freq
 argument_list|)
 expr_stmt|;
 continue|continue;
-block|}
-elseif|else
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-operator|&&
-name|bootverbose
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Can't check freq %u, "
-literal|"it may be invalid\n"
-argument_list|,
-name|sets
-index|[
-name|i
-index|]
-operator|.
-name|freq
-argument_list|)
-expr_stmt|;
 block|}
 name|table
 index|[
