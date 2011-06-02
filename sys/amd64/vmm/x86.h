@@ -175,6 +175,9 @@ parameter_list|,
 name|uint32_t
 modifier|*
 name|edx
+parameter_list|,
+name|uint32_t
+name|vcpu_id
 parameter_list|)
 function_decl|;
 end_function_decl

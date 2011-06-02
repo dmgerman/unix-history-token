@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pmap.h>
 end_include
 
@@ -1628,13 +1634,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|unsigned
-name|int
-name|regs
-index|[
-literal|4
-index|]
-decl_stmt|;
 name|uint64_t
 name|fixed0
 decl_stmt|,
@@ -1644,25 +1643,14 @@ name|uint32_t
 name|tmp
 decl_stmt|;
 comment|/* CPUID.1:ECX[bit 5] must be 1 for processor to support VMX */
-name|do_cpuid
-argument_list|(
-literal|1
-argument_list|,
-name|regs
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
+operator|!
 operator|(
-name|regs
-index|[
-literal|2
-index|]
+name|cpu_feature2
 operator|&
-name|CPUID_0000_0001_FEAT0_VMX
+name|CPUID2_VMX
 operator|)
-operator|==
-literal|0
 condition|)
 block|{
 name|printf
@@ -2616,6 +2604,9 @@ specifier|static
 name|int
 name|vmx_handle_cpuid
 parameter_list|(
+name|int
+name|vcpu
+parameter_list|,
 name|struct
 name|vmxctx
 modifier|*
@@ -2680,6 +2671,8 @@ name|vmxctx
 operator|->
 name|guest_rdx
 operator|)
+argument_list|,
+name|vcpu
 argument_list|)
 expr_stmt|;
 if|#
@@ -4468,6 +4461,8 @@ name|handled
 operator|=
 name|vmx_handle_cpuid
 argument_list|(
+name|vcpu
+argument_list|,
 name|vmxctx
 argument_list|)
 expr_stmt|;
