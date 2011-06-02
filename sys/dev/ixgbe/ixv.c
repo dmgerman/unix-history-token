@@ -3296,7 +3296,7 @@ argument_list|(
 name|INET6
 argument_list|)
 name|struct
-name|ifreq
+name|ifaddr
 modifier|*
 name|ifa
 init|=
