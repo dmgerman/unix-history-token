@@ -2031,8 +2031,8 @@ expr_stmt|;
 if|if
 condition|(
 name|lba
-operator|%
-name|alignment
+operator|>
+literal|0
 condition|)
 name|alignment
 operator|=
@@ -2929,8 +2929,8 @@ expr_stmt|;
 if|if
 condition|(
 name|len
-operator|%
-name|alignment
+operator|>
+literal|0
 condition|)
 name|alignment
 operator|=
