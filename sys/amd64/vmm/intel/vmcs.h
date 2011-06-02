@@ -282,6 +282,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VMCS_INITIAL
+value|0xffffffffffffffff
+end_define
+
+begin_define
+define|#
+directive|define
 name|VMCS_IDENT
 parameter_list|(
 name|encoding
