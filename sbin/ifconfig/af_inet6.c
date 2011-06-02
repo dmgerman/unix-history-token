@@ -276,6 +276,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|nd6_status
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -3184,6 +3194,11 @@ operator|.
 name|af_getprefix
 operator|=
 name|in6_getprefix
+block|,
+operator|.
+name|af_other_status
+operator|=
+name|nd6_status
 block|,
 operator|.
 name|af_postproc
