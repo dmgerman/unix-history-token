@@ -1776,7 +1776,7 @@ name|format_locale
 argument_list|(
 name|detail
 operator|->
-name|class
+name|evt_class
 operator|.
 name|members
 operator|.
@@ -1787,11 +1787,11 @@ name|format_class
 argument_list|(
 name|detail
 operator|->
-name|class
+name|evt_class
 operator|.
 name|members
 operator|.
-name|class
+name|evt_class
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2877,7 +2877,7 @@ name|filter
 operator|.
 name|members
 operator|.
-name|class
+name|evt_class
 operator|=
 name|MFI_EVT_CLASS_WARNING
 expr_stmt|;
@@ -2940,7 +2940,7 @@ name|filter
 operator|.
 name|members
 operator|.
-name|class
+name|evt_class
 argument_list|)
 operator|<
 literal|0
