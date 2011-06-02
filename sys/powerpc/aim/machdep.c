@@ -818,7 +818,7 @@ argument|*imisssize; extern void	*dlmisstrap
 argument_list|,
 argument|*dlmisssize; extern void	*dsmisstrap
 argument_list|,
-argument|*dsmisssize;  uintptr_t powerpc_init(vm_offset_t startkernel, vm_offset_t endkernel,     vm_offset_t basekernel, void *mdp) { 	struct		pcpu *pc; 	vm_offset_t	end; 	void		*generictrap; 	size_t		trap_offset; 	void		*kmdp;         char		*env; 	register_t	msr
+argument|*dsmisssize;  uintptr_t powerpc_init(vm_offset_t startkernel, vm_offset_t endkernel,     vm_offset_t basekernel, void *mdp) { 	struct		pcpu *pc; 	void		*generictrap; 	size_t		trap_offset; 	void		*kmdp;         char		*env; 	register_t	msr
 argument_list|,
 argument|scratch; 	uint8_t		*cache_check; 	int		cacheline_warn;
 ifndef|#
@@ -827,9 +827,7 @@ name|__powerpc64__
 argument|int		ppc64;
 endif|#
 directive|endif
-argument|end =
-literal|0
-argument|; 	kmdp = NULL; 	trap_offset =
+argument|kmdp = NULL; 	trap_offset =
 literal|0
 argument|; 	cacheline_warn =
 literal|0
@@ -837,7 +835,7 @@ argument|;
 comment|/* 	 * Parse metadata if present and fetch parameters.  Must be done 	 * before console is inited so cninit gets the right value of 	 * boothowto. 	 */
 argument|if (mdp != NULL) { 		preload_metadata = mdp; 		kmdp = preload_search_by_type(
 literal|"elf kernel"
-argument|); 		if (kmdp != NULL) { 			boothowto = MD_FETCH(kmdp, MODINFOMD_HOWTO, int); 			kern_envp = MD_FETCH(kmdp, MODINFOMD_ENVP, char *); 			end = MD_FETCH(kmdp, MODINFOMD_KERNEND, vm_offset_t);
+argument|); 		if (kmdp != NULL) { 			boothowto = MD_FETCH(kmdp, MODINFOMD_HOWTO, int); 			kern_envp = MD_FETCH(kmdp, MODINFOMD_ENVP, char *); 			endkernel = ulmax(endkernel, MD_FETCH(kmdp, 			    MODINFOMD_KERNEND, vm_offset_t));
 ifdef|#
 directive|ifdef
 name|DDB
