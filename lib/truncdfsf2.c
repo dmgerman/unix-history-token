@@ -169,6 +169,12 @@ directive|include
 file|<stdbool.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"abi.h"
+end_include
+
 begin_typedef
 typedef|typedef
 name|double
@@ -317,7 +323,18 @@ begin_comment
 comment|// End helper routines.  Conversion implementation follows.
 end_comment
 
+begin_expr_stmt
+name|ARM_EABI_FNALIAS
+argument_list|(
+name|d2f
+argument_list|,
+name|truncdfsf2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
+name|COMPILER_RT_ABI
 name|dst_t
 name|__truncdfsf2
 parameter_list|(

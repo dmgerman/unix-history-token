@@ -1937,6 +1937,13 @@ return|;
 block|}
 block|}
 comment|//	printf("No errors found.\n");
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|"skipped\n"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 return|return

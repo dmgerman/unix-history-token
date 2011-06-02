@@ -161,6 +161,11 @@ name|int
 name|main
 parameter_list|()
 block|{
+name|printf
+argument_list|(
+literal|"skipped\n"
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;

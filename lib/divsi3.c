@@ -6,11 +6,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"abi.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"int_lib.h"
 end_include
 
 begin_function_decl
 name|su_int
+name|COMPILER_RT_ABI
 name|__udivsi3
 parameter_list|(
 name|su_int
@@ -26,7 +33,18 @@ begin_comment
 comment|/* Returns: a / b */
 end_comment
 
+begin_expr_stmt
+name|ARM_EABI_FNALIAS
+argument_list|(
+name|idiv
+argument_list|,
+name|divsi3
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
+name|COMPILER_RT_ABI
 name|si_int
 name|__divsi3
 parameter_list|(

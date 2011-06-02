@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"abi.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"int_lib.h"
 end_include
 
@@ -14,6 +20,7 @@ comment|/* Returns:  if (a<  b) returns 0  *           if (a == b) returns 1  * 
 end_comment
 
 begin_function
+name|COMPILER_RT_ABI
 name|si_int
 name|__ucmpdi2
 parameter_list|(

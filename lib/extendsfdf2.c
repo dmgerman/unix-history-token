@@ -167,6 +167,12 @@ directive|include
 file|<limits.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"abi.h"
+end_include
+
 begin_typedef
 typedef|typedef
 name|float
@@ -321,6 +327,16 @@ end_function
 begin_comment
 comment|// End helper routines.  Conversion implementation follows.
 end_comment
+
+begin_expr_stmt
+name|ARM_EABI_FNALIAS
+argument_list|(
+name|f2d
+argument_list|,
+name|extendsfdf2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|dst_t

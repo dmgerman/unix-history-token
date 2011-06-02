@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"abi.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"int_lib.h"
 end_include
 
@@ -14,6 +20,7 @@ comment|/* Returns: 1 if number of bits is odd else returns 0 */
 end_comment
 
 begin_function
+name|COMPILER_RT_ABI
 name|si_int
 name|__paritysi2
 parameter_list|(

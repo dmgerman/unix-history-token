@@ -1171,6 +1171,13 @@ condition|)
 return|return
 literal|1
 return|;
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|"skipped\n"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 return|return

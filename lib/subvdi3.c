@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ===-- subvdi3.c - Implement __subvdi3 -----------------------------------===  *  *      	       The LLVM Compiler Infrastructure  *  * This file is dual licensed under the MIT and the University of Illinois Open  * Source Licenses. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file implements __subvdi3 for the compiler_rt library.  *  * ===----------------------------------------------------------------------===  */
+comment|/* ===-- subvdi3.c - Implement __subvdi3 -----------------------------------===  *  *                The LLVM Compiler Infrastructure  *  * This file is dual licensed under the MIT and the University of Illinois Open  * Source Licenses. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file implements __subvdi3 for the compiler_rt library.  *  * ===----------------------------------------------------------------------===  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"abi.h"
+end_include
 
 begin_include
 include|#
@@ -24,6 +30,7 @@ comment|/* Effects: aborts if a - b overflows */
 end_comment
 
 begin_function
+name|COMPILER_RT_ABI
 name|di_int
 name|__subvdi3
 parameter_list|(

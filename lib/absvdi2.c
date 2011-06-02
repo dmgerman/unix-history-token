@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"abi.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"int_lib.h"
 end_include
 
@@ -24,6 +30,7 @@ comment|/* Effects: aborts if abs(x)< 0 */
 end_comment
 
 begin_function
+name|COMPILER_RT_ABI
 name|di_int
 name|__absvdi2
 parameter_list|(

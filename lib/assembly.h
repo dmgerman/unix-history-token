@@ -58,10 +58,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* We can't use __USER_LABEL_PREFIX__ here, it isn't possible to concatenate the    *values* of two macros. This is quite brittle, though. */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -74,11 +70,18 @@ end_if
 begin_define
 define|#
 directive|define
-name|SYMBOL_NAME
+name|HIDDEN_DIRECTIVE
+value|.private_extern
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCAL_LABEL
 parameter_list|(
 name|name
 parameter_list|)
-value|_##name
+value|L_##name
 end_define
 
 begin_else
@@ -89,17 +92,58 @@ end_else
 begin_define
 define|#
 directive|define
-name|SYMBOL_NAME
+name|HIDDEN_DIRECTIVE
+value|.hidden
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCAL_LABEL
 parameter_list|(
 name|name
 parameter_list|)
-value|name
+value|.L_##name
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|GLUE2
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|a ## b
+end_define
+
+begin_define
+define|#
+directive|define
+name|GLUE
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|GLUE2(a, b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYMBOL_NAME
+parameter_list|(
+name|name
+parameter_list|)
+value|GLUE(__USER_LABEL_PREFIX__, name)
+end_define
 
 begin_ifdef
 ifdef|#
@@ -115,7 +159,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|.globl SYMBOL_NAME(name) SEPARATOR     \   .private_extern SYMBOL_NAME(name) SEPARATOR    \   SYMBOL_NAME(name):
+value|.globl SYMBOL_NAME(name) SEPARATOR                       \   HIDDEN_DIRECTIVE SYMBOL_NAME(name) SEPARATOR             \   SYMBOL_NAME(name):
 end_define
 
 begin_else
@@ -131,7 +175,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|.globl SYMBOL_NAME(name) SEPARATOR     \   SYMBOL_NAME(name):
+value|.globl SYMBOL_NAME(name) SEPARATOR                       \   SYMBOL_NAME(name):
 end_define
 
 begin_endif
@@ -147,7 +191,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|.globl SYMBOL_NAME(name) SEPARATOR             \   .private_extern SYMBOL_NAME(name) SEPARATOR    \   SYMBOL_NAME(name):
+value|.globl SYMBOL_NAME(name) SEPARATOR                       \   HIDDEN_DIRECTIVE SYMBOL_NAME(name) SEPARATOR             \   SYMBOL_NAME(name):
 end_define
 
 begin_define
@@ -158,8 +202,64 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|.globl name SEPARATOR             \   .private_extern name SEPARATOR    \   name:
+value|.globl name SEPARATOR                                    \   HIDDEN_DIRECTIVE name SEPARATOR                          \   name:
 end_define
+
+begin_define
+define|#
+directive|define
+name|DEFINE_COMPILERRT_FUNCTION_ALIAS
+parameter_list|(
+name|name
+parameter_list|,
+name|target
+parameter_list|)
+define|\
+value|.globl SYMBOL_NAME(name) SEPARATOR                       \   .set SYMBOL_NAME(name), SYMBOL_NAME(target) SEPARATOR
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__ARM_EABI__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|DEFINE_AEABI_FUNCTION_ALIAS
+parameter_list|(
+name|aeabi_name
+parameter_list|,
+name|name
+parameter_list|)
+define|\
+value|DEFINE_COMPILERRT_FUNCTION_ALIAS(aeabi_name, name)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DEFINE_AEABI_FUNCTION_ALIAS
+parameter_list|(
+name|aeabi_name
+parameter_list|,
+name|name
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- lib/addsf3.c - Single-precision addition and subtraction --*- C -*-===//
+comment|//===-- lib/addsf3.c - Single-precision addition ------------------*- C -*-===//
 end_comment
 
 begin_comment
@@ -36,11 +36,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file implements single-precision soft-float addition and subtraction
+comment|// This file implements single-precision soft-float addition with the IEEE-754
 end_comment
 
 begin_comment
-comment|// with the IEEE-754 default rounding (to nearest, ties to even).
+comment|// default rounding (to nearest, ties to even).
 end_comment
 
 begin_comment
@@ -50,6 +50,12 @@ end_comment
 begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"abi.h"
+end_include
 
 begin_define
 define|#
@@ -62,6 +68,16 @@ include|#
 directive|include
 file|"fp_lib.h"
 end_include
+
+begin_expr_stmt
+name|ARM_EABI_FNALIAS
+argument_list|(
+name|fadd
+argument_list|,
+name|addsf3
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|fp_t
@@ -649,40 +665,6 @@ return|return
 name|fromRep
 argument_list|(
 name|result
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|// Subtraction; flip the sign bit of b and add.
-end_comment
-
-begin_function
-name|fp_t
-name|__subsf3
-parameter_list|(
-name|fp_t
-name|a
-parameter_list|,
-name|fp_t
-name|b
-parameter_list|)
-block|{
-return|return
-name|__addsf3
-argument_list|(
-name|a
-argument_list|,
-name|fromRep
-argument_list|(
-name|toRep
-argument_list|(
-name|b
-argument_list|)
-operator|^
-name|signBit
-argument_list|)
 argument_list|)
 return|;
 block|}

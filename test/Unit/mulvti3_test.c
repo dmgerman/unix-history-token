@@ -1196,6 +1196,13 @@ comment|//     if (test__mulvti3(2,
 comment|//                       make_ti(0x8000000000000000LL, 0x0000000000000001LL),
 comment|//                       make_ti(0x8000000000000000LL, 0x0000000000000000LL)))  // abort
 comment|//         return 1;
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|"skipped\n"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 return|return

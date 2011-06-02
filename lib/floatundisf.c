@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"int_lib.h"
+file|"abi.h"
 end_include
 
 begin_include
@@ -27,7 +27,24 @@ begin_comment
 comment|/* seee eeee emmm mmmm mmmm mmmm mmmm mmmm */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"int_lib.h"
+end_include
+
+begin_expr_stmt
+name|ARM_EABI_FNALIAS
+argument_list|(
+name|ul2f
+argument_list|,
+name|floatundisf
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
+name|COMPILER_RT_ABI
 name|float
 name|__floatundisf
 parameter_list|(

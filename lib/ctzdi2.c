@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"abi.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"int_lib.h"
 end_include
 
@@ -18,6 +24,7 @@ comment|/* Precondition: a != 0 */
 end_comment
 
 begin_function
+name|COMPILER_RT_ABI
 name|si_int
 name|__ctzdi2
 parameter_list|(

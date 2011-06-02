@@ -55,6 +55,12 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"abi.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -67,7 +73,18 @@ directive|include
 file|"fp_lib.h"
 end_include
 
+begin_expr_stmt
+name|ARM_EABI_FNALIAS
+argument_list|(
+name|f2iz
+argument_list|,
+name|fixsfsi
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
+name|COMPILER_RT_ABI
 name|int
 name|__fixsfsi
 parameter_list|(

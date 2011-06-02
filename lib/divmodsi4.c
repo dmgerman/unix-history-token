@@ -6,11 +6,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"abi.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"int_lib.h"
 end_include
 
 begin_function_decl
 specifier|extern
+name|COMPILER_RT_ABI
 name|si_int
 name|__divsi3
 parameter_list|(
@@ -28,6 +35,7 @@ comment|/* Returns: a / b, *rem = a % b  */
 end_comment
 
 begin_function
+name|COMPILER_RT_ABI
 name|si_int
 name|__divmodsi4
 parameter_list|(

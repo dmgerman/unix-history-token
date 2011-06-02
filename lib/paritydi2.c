@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"abi.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"int_lib.h"
 end_include
 
@@ -15,6 +21,7 @@ end_comment
 
 begin_function_decl
 name|si_int
+name|COMPILER_RT_ABI
 name|__paritysi2
 parameter_list|(
 name|si_int
@@ -24,6 +31,7 @@ function_decl|;
 end_function_decl
 
 begin_function
+name|COMPILER_RT_ABI
 name|si_int
 name|__paritydi2
 parameter_list|(
