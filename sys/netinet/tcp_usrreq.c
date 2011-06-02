@@ -5088,9 +5088,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-name|error
-return|;
+goto|goto
+name|out
+goto|;
 name|oinp
 operator|=
 name|in6_pcblookup_hash_locked
