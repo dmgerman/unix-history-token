@@ -420,7 +420,7 @@ value|1000
 end_define
 
 begin_comment
-comment|/*  * Frequency (MHz) and voltage (mV) settings.  Data from the  * Intel Pentium M Processor Datasheet (Order Number 252612), Table 5.  *  * Dothan processors have multiple VID#s with different settings for  * each VID#.  Since we can't uniquely identify this info  * without undisclosed methods from Intel, we can't support newer  * processors with this table method.  If ACPI Px states are supported,  * we get info from them.  */
+comment|/*  * Frequency (MHz) and voltage (mV) settings.  *  * Dothan processors have multiple VID#s with different settings for  * each VID#.  Since we can't uniquely identify this info  * without undisclosed methods from Intel, we can't support newer  * processors with this table method.  If ACPI Px states are supported,  * we get info from them.  *  * Data from the "Intel Pentium M Processor Datasheet",  * Order Number 252612-003, Table 5.  */
 end_comment
 
 begin_decl_stmt
@@ -1119,7 +1119,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Data from "Intel Pentium M Processor on 90nm Process with  * 2-MB L2 Cache Datasheet", Order Number 302189, Table 5.  */
+comment|/*  * Data from "Intel Pentium M Processor on 90nm Process with  * 2-MB L2 Cache Datasheet", Order Number 302189-008, Table 5.  */
 end_comment
 
 begin_decl_stmt
