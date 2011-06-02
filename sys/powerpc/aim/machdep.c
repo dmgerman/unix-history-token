@@ -427,6 +427,13 @@ name|__powerpc64__
 end_ifdef
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|n_slbs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|cacheline_size
 init|=
@@ -866,13 +873,26 @@ literal|"powerpc_init: no loader metadata.\n"
 argument|); 	}
 comment|/* 	 * Init KDB 	 */
 argument|kdb_init();
-comment|/* 	 * PowerPC 970 CPUs have a misfeature requested by Apple that makes 	 * them pretend they have a 32-byte cacheline. Turn this off 	 * before we measure the cacheline size. 	 */
+comment|/* Various very early CPU fix ups */
 argument|switch (mfpvr()>>
 literal|16
-argument|) { 		case IBM970: 		case IBM970FX: 		case IBM970MP: 		case IBM970GX: 			scratch = mfspr(SPR_HID5); 			scratch&= ~HID5_970_DCBZ_SIZE_HI; 			mtspr(SPR_HID5, scratch); 			break; 	}
+argument|) {
+comment|/* 		 * PowerPC 970 CPUs have a misfeature requested by Apple that 		 * makes them pretend they have a 32-byte cacheline. Turn this 		 * off before we measure the cacheline size. 		 */
+argument|case IBM970: 		case IBM970FX: 		case IBM970MP: 		case IBM970GX: 			scratch = mfspr(SPR_HID5); 			scratch&= ~HID5_970_DCBZ_SIZE_HI; 			mtspr(SPR_HID5, scratch); 			break;
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+argument|case IBMPOWER7:
+comment|/* XXX: get from ibm,slb-size in device tree */
+argument|n_slbs =
+literal|32
+argument|; 			break;
+endif|#
+directive|endif
+argument|}
 comment|/* 	 * Initialize the interrupt tables and figure out our cache line 	 * size and whether or not we need the 64-bit bridge code. 	 */
 comment|/* 	 * Disable translation in case the vector area hasn't been 	 * mapped (G5). Note that no OFW calls can be made until 	 * translation is re-enabled. 	 */
-argument|msr = mfmsr(); 	mtmsr((msr& ~(PSL_IR | PSL_DR)) | PSL_RI); 	isync();
+argument|msr = mfmsr(); 	mtmsr((msr& ~(PSL_IR | PSL_DR)) | PSL_RI);
 comment|/* 	 * Measure the cacheline size using dcbz 	 * 	 * Use EXC_PGM as a playground. We are about to overwrite it 	 * anyway, we know it exists, and we know it is cache-aligned. 	 */
 argument|cache_check = (void *)EXC_PGM;  	for (cacheline_size =
 literal|0
@@ -1615,9 +1635,6 @@ argument_list|(
 name|msr
 argument_list|)
 expr_stmt|;
-name|isync
-argument_list|()
-expr_stmt|;
 comment|/* Warn if cachline size was not determined */
 if|if
 condition|(
@@ -1672,9 +1689,6 @@ operator|&
 operator|~
 name|PSL_EE
 argument_list|)
-expr_stmt|;
-name|isync
-argument_list|()
 expr_stmt|;
 comment|/* 	 * Initialize params/tunables that are derived from memsize 	 */
 name|init_param2
