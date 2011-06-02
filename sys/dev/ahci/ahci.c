@@ -1231,16 +1231,6 @@ literal|0
 block|}
 block|,
 block|{
-literal|0x23238086
-block|,
-literal|0x00
-block|,
-literal|"Intel DH89xxCC"
-block|,
-literal|0
-block|}
-block|,
-block|{
 literal|0x1d028086
 block|,
 literal|0x00
@@ -1266,6 +1256,96 @@ block|,
 literal|0x00
 block|,
 literal|"Intel Patsburg"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x1e028086
+block|,
+literal|0x00
+block|,
+literal|"Intel Panther Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x1e038086
+block|,
+literal|0x00
+block|,
+literal|"Intel Panther Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x1e048086
+block|,
+literal|0x00
+block|,
+literal|"Intel Panther Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x1e058086
+block|,
+literal|0x00
+block|,
+literal|"Intel Panther Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x1e068086
+block|,
+literal|0x00
+block|,
+literal|"Intel Panther Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x1e078086
+block|,
+literal|0x00
+block|,
+literal|"Intel Panther Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x1e0e8086
+block|,
+literal|0x00
+block|,
+literal|"Intel Panther Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x1e0f8086
+block|,
+literal|0x00
+block|,
+literal|"Intel Panther Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x23238086
+block|,
+literal|0x00
+block|,
+literal|"Intel DH89xxCC"
 block|,
 literal|0
 block|}

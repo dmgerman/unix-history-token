@@ -302,6 +302,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_INTEL_PPT1
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x1e20)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_INTEL_82801F
 value|HDA_MODEL_CONSTRUCT(INTEL, 0x2668)
 end_define
@@ -2280,6 +2287,14 @@ block|{
 name|HDA_INTEL_PATSBURG
 block|,
 literal|"Intel Patsburg"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_INTEL_PPT1
+block|,
+literal|"Intel Panther Point"
 block|,
 literal|0
 block|}
