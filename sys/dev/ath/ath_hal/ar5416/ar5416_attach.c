@@ -679,6 +679,19 @@ name|ah_setKeyCacheEntry
 operator|=
 name|ar5416SetKeyCacheEntry
 expr_stmt|;
+comment|/* DFS Functions */
+name|ah
+operator|->
+name|ah_enableDfs
+operator|=
+name|ar5416EnableDfs
+expr_stmt|;
+name|ah
+operator|->
+name|ah_getDfsThresh
+operator|=
+name|ar5416GetDfsThresh
+expr_stmt|;
 comment|/* Power Management Functions */
 name|ah
 operator|->
@@ -4913,6 +4926,12 @@ operator|->
 name|halCSTSupport
 operator|=
 name|AH_TRUE
+expr_stmt|;
+name|pCap
+operator|->
+name|halEnhancedDfsSupport
+operator|=
+name|AH_FALSE
 expr_stmt|;
 if|if
 condition|(

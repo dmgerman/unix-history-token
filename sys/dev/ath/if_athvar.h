@@ -1486,6 +1486,17 @@ name|int
 name|sc_rxchainmask
 decl_stmt|;
 comment|/* currently configured RX chainmask */
+comment|/* DFS related state */
+name|void
+modifier|*
+name|sc_dfs
+decl_stmt|;
+comment|/* Used by an optional DFS module */
+name|struct
+name|task
+name|sc_dfstask
+decl_stmt|;
+comment|/* DFS processing task */
 block|}
 struct|;
 end_struct
@@ -3613,6 +3624,36 @@ name|_dur
 parameter_list|)
 define|\
 value|((*(_ah)->ah_set11nBurstDuration)((_ah), (_ds), (_dur)))
+end_define
+
+begin_comment
+comment|/*  * This is badly-named; you need to set the correct parameters  * to begin to receive useful radar events; and even then  * it doesn't "enable" DFS. See the ath_dfs/null/ module for  * more information.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ath_hal_enabledfs
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_param
+parameter_list|)
+define|\
+value|((*(_ah)->ah_enableDfs)((_ah), (_param)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getdfsthresh
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_param
+parameter_list|)
+define|\
+value|((*(_ah)->ah_getDfsThresh)((_ah), (_param)))
 end_define
 
 begin_define

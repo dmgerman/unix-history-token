@@ -1159,6 +1159,15 @@ operator|(
 literal|1
 operator|)
 return|;
+comment|/* 	 * Allow calls when up_mtx is NULL, before the USB process 	 * structure is initialised. 	 */
+if|if
+condition|(
+name|up
+operator|->
+name|up_mtx
+operator|!=
+name|NULL
+condition|)
 name|mtx_assert
 argument_list|(
 name|up

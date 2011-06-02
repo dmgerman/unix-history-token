@@ -1542,6 +1542,12 @@ name|AH_TRUE
 expr_stmt|;
 name|pCap
 operator|->
+name|halUseCombinedRadarRssi
+operator|=
+name|AH_TRUE
+expr_stmt|;
+name|pCap
+operator|->
 name|halAutoSleepSupport
 operator|=
 name|AH_FALSE
