@@ -279,9 +279,6 @@ argument_list|(
 name|msr
 argument_list|)
 expr_stmt|;
-name|isync
-argument_list|()
-expr_stmt|;
 name|pcpup
 operator|->
 name|pc_curthread
@@ -1515,6 +1512,32 @@ end_break
 begin_default
 default|default:
 end_default
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_if
+if|if
+condition|(
+operator|!
+operator|(
+name|mfmsr
+argument_list|()
+operator|&
+name|PSL_HV
+operator|)
+condition|)
+comment|/* Rely on HV to have set things up */
+break|break;
+end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|printf

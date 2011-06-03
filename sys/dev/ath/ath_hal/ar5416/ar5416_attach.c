@@ -669,6 +669,12 @@ name|ar5416SetCoverageClass
 expr_stmt|;
 name|ah
 operator|->
+name|ah_setQuiet
+operator|=
+name|ar5416SetQuiet
+expr_stmt|;
+name|ah
+operator|->
 name|ah_resetKeyCacheEntry
 operator|=
 name|ar5416ResetKeyCacheEntry

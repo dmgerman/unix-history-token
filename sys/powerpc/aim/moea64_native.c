@@ -372,7 +372,7 @@ name|DISABLE_TRANS
 parameter_list|(
 name|msr
 parameter_list|)
-value|msr = mfmsr(); mtmsr(msr& ~PSL_DR); isync()
+value|msr = mfmsr(); mtmsr(msr& ~PSL_DR)
 end_define
 
 begin_define
@@ -382,7 +382,7 @@ name|ENABLE_TRANS
 parameter_list|(
 name|msr
 parameter_list|)
-value|mtmsr(msr); isync()
+value|mtmsr(msr)
 end_define
 
 begin_comment
@@ -1054,9 +1054,6 @@ operator|&
 operator|~
 name|PSL_IR
 argument_list|)
-expr_stmt|;
-name|isync
-argument_list|()
 expr_stmt|;
 comment|/* 	 * Install kernel SLB entries 	 */
 ifdef|#
