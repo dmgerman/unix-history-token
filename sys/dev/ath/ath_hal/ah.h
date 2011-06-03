@@ -2147,6 +2147,37 @@ comment|/* Enable/Disable if applicable */
 end_comment
 
 begin_comment
+comment|/*  * Flag for setting QUIET period  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_QUIET_DISABLE
+init|=
+literal|0x0
+block|,
+name|HAL_QUIET_ENABLE
+init|=
+literal|0x1
+block|,
+name|HAL_QUIET_ADD_CURRENT_TSF
+init|=
+literal|0x2
+block|,
+comment|/* add current TSF to next_start offset */
+name|HAL_QUIET_ADD_SWBA_RESP_TIME
+init|=
+literal|0x4
+block|,
+comment|/* add beacon response time to next_start offset */
+block|}
+name|HAL_QUIET_FLAG
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Hardware Access Layer (HAL) API.  *  * Clients of the HAL call ath_hal_attach to obtain a reference to an  * ath_hal structure for use with the device.  Hardware-related operations  * that follow must call back into the HAL through interface, supplying  * the reference as the first parameter.  Note that before using the  * reference returned by ath_hal_attach the caller should verify the  * ABI version number.  */
 end_comment
 
@@ -3652,6 +3683,31 @@ parameter_list|,
 name|uint8_t
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+name|HAL_STATUS
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_setQuiet
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|uint32_t
+name|period
+parameter_list|,
+name|uint32_t
+name|duration
+parameter_list|,
+name|uint32_t
+name|nextStart
+parameter_list|,
+name|HAL_QUIET_FLAG
+name|flag
 parameter_list|)
 function_decl|;
 comment|/* DFS functions */

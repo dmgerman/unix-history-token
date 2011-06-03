@@ -524,6 +524,11 @@ name|ah_setCoverageClass
 operator|=
 name|ar5212SetCoverageClass
 block|,
+operator|.
+name|ah_setQuiet
+operator|=
+name|ar5212SetQuiet
+block|,
 comment|/* DFS Functions */
 operator|.
 name|ah_enableDfs
