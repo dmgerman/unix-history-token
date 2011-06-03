@@ -265,6 +265,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IN6ADDR_LINKLOCAL_ALLROUTERS_INIT
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -272,6 +278,11 @@ name|IN6ADDR_LINKLOCAL_ALLROUTERS_INIT
 define|\
 value|{{{ 0xff, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,	\ 	    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02 }}}
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* rtsold.c */
