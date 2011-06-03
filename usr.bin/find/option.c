@@ -1102,7 +1102,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: unknown option"
+literal|"%s: unknown primary or operator"
 argument_list|,
 operator|*
 name|argv
