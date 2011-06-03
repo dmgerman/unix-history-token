@@ -383,7 +383,7 @@ begin_define
 define|#
 directive|define
 name|TRIM_MAX_BLOCKS
-value|4
+value|8
 end_define
 
 begin_define
@@ -397,7 +397,7 @@ begin_define
 define|#
 directive|define
 name|TRIM_MAX_BIOS
-value|(TRIM_MAX_RANGES * 8)
+value|(TRIM_MAX_RANGES * 4)
 end_define
 
 begin_struct
