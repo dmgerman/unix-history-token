@@ -408,7 +408,7 @@ block|{
 comment|/* Put a length field with 63 octet limitation first. */
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|src
 argument_list|,
