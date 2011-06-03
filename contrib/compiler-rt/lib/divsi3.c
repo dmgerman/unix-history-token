@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ===-- divsi3.c - Implement __divsi3 -------------------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is distributed under the University of Illinois Open Source  * License. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file implements __divsi3 for the compiler_rt library.  *  * ===----------------------------------------------------------------------===  */
+comment|/* ===-- divsi3.c - Implement __divsi3 -------------------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is dual licensed under the MIT and the University of Illinois Open  * Source Licenses. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file implements __divsi3 for the compiler_rt library.  *  * ===----------------------------------------------------------------------===  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"abi.h"
+end_include
 
 begin_include
 include|#
@@ -11,6 +17,7 @@ end_include
 
 begin_function_decl
 name|su_int
+name|COMPILER_RT_ABI
 name|__udivsi3
 parameter_list|(
 name|su_int
@@ -26,7 +33,18 @@ begin_comment
 comment|/* Returns: a / b */
 end_comment
 
+begin_expr_stmt
+name|ARM_EABI_FNALIAS
+argument_list|(
+name|idiv
+argument_list|,
+name|divsi3
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
+name|COMPILER_RT_ABI
 name|si_int
 name|__divsi3
 parameter_list|(
