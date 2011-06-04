@@ -4287,15 +4287,15 @@ comment|/* SMPS mode disabled */
 operator||
 name|IEEE80211_HTCAP_SHORTGI20
 comment|/* short GI in 20MHz */
-ifdef|#
-directive|ifdef
-name|notyet
 operator||
 name|IEEE80211_HTCAP_CHWIDTH40
 comment|/* 40MHz channel width*/
 operator||
 name|IEEE80211_HTCAP_SHORTGI40
 comment|/* short GI in 40MHz */
+ifdef|#
+directive|ifdef
+name|notyet
 operator||
 name|IEEE80211_HTCAP_GREENFIELD
 if|#
