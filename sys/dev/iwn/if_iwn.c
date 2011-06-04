@@ -4089,6 +4089,9 @@ operator||
 name|IEEE80211_C_MONITOR
 comment|/* monitor mode supported */
 operator||
+name|IEEE80211_C_BGSCAN
+comment|/* background scanning */
+operator||
 name|IEEE80211_C_TXPMGT
 comment|/* tx power management */
 operator||
@@ -4110,21 +4113,6 @@ operator||
 name|IEEE80211_C_WME
 comment|/* WME */
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|hw_type
-operator|!=
-name|IWN_HW_REV_TYPE_4965
-condition|)
-name|ic
-operator|->
-name|ic_caps
-operator||=
-name|IEEE80211_C_BGSCAN
-expr_stmt|;
-comment|/* background scanning */
 comment|/* Read MAC address, channels, etc from EEPROM. */
 if|if
 condition|(
@@ -29910,7 +29898,7 @@ name|rxchain
 operator||=
 name|IWN_RXCHAIN_FORCE_SEL
 argument_list|(
-name|IWN_ANT_BC
+name|IWN_ANT_B
 argument_list|)
 expr_stmt|;
 block|}
@@ -29986,7 +29974,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|IEEE80211_IS_CHAN_A
+name|IEEE80211_IS_CHAN_5GHZ
 argument_list|(
 name|ic
 operator|->
@@ -30028,6 +30016,39 @@ operator||
 name|IWN_RXON_AUTO
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|hw_type
+operator|==
+name|IWN_HW_REV_TYPE_4965
+operator|&&
+name|sc
+operator|->
+name|rxon
+operator|.
+name|associd
+operator|&&
+name|sc
+operator|->
+name|rxon
+operator|.
+name|chan
+operator|>
+literal|14
+condition|)
+name|tx
+operator|->
+name|rate
+operator|=
+name|htole32
+argument_list|(
+literal|0xd
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 comment|/* Send probe requests at 1Mbps. */
 name|tx
 operator|->
@@ -30040,6 +30061,7 @@ operator||
 name|IWN_RFLAG_CCK
 argument_list|)
 expr_stmt|;
+block|}
 name|rs
 operator|=
 operator|&
