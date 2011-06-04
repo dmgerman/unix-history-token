@@ -1419,6 +1419,9 @@ name|SGE_NCOUNTERS
 index|]
 decl_stmt|;
 name|int
+name|fl_starve_threshold
+decl_stmt|;
+name|int
 name|nrxq
 decl_stmt|;
 comment|/* total rx queues (all ports and the rest) */
