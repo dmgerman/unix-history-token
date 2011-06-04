@@ -6029,6 +6029,16 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* Let DFS at it in case it's a DFS channel */
+name|ath_dfs_radar_enable
+argument_list|(
+name|sc
+argument_list|,
+name|ic
+operator|->
+name|ic_curchan
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -9018,6 +9028,18 @@ name|rfilt
 operator||=
 name|HAL_RX_FILTER_CONTROL
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_dodfs
+condition|)
+block|{
+name|rfilt
+operator||=
+name|HAL_RX_FILTER_PHYRADAR
+expr_stmt|;
+block|}
 comment|/* 	 * Enable RX of compressed BAR frames only when doing 	 * 802.11n. Required for A-MPDU. 	 */
 if|if
 condition|(
@@ -15801,7 +15823,13 @@ name|ath_dfs_process_phy_err
 argument_list|(
 name|sc
 argument_list|,
-name|ds
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+name|char
+operator|*
+argument_list|)
 argument_list|,
 name|tsf
 argument_list|,
