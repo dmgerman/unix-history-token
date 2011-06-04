@@ -137,13 +137,6 @@ directive|include
 file|<powerpc/powermac/powermac_thermal.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|FCU_ZERO_C_TO_K
-value|2732
-end_define
-
 begin_comment
 comment|/* Drivebay sensor: LM75/DS1775. */
 end_comment
@@ -907,7 +900,7 @@ name|target_temp
 operator|=
 literal|500
 operator|+
-name|FCU_ZERO_C_TO_K
+name|ZERO_C_TO_K
 expr_stmt|;
 name|sc
 operator|->
@@ -917,7 +910,7 @@ name|max_temp
 operator|=
 literal|600
 operator|+
-name|FCU_ZERO_C_TO_K
+name|ZERO_C_TO_K
 expr_stmt|;
 block|}
 else|else
@@ -930,7 +923,7 @@ name|target_temp
 operator|=
 literal|300
 operator|+
-name|FCU_ZERO_C_TO_K
+name|ZERO_C_TO_K
 expr_stmt|;
 name|sc
 operator|->
@@ -940,7 +933,7 @@ name|max_temp
 operator|=
 literal|600
 operator|+
-name|FCU_ZERO_C_TO_K
+name|ZERO_C_TO_K
 expr_stmt|;
 block|}
 name|sc
@@ -1108,7 +1101,7 @@ operator|)
 operator|*
 literal|5
 operator|+
-name|FCU_ZERO_C_TO_K
+name|ZERO_C_TO_K
 operator|)
 return|;
 block|}
