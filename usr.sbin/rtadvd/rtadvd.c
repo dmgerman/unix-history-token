@@ -1987,6 +1987,8 @@ name|char
 name|addrbuf
 index|[
 name|INET6_ADDRSTRLEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|int
@@ -3275,7 +3277,7 @@ block|{
 case|case
 name|ND_ROUTER_SOLICIT
 case|:
-comment|/* 		 * Message verification - RFC-2461 6.1.1 		 * XXX: these checks must be done in the kernel as well, 		 *      but we can't completely rely on them. 		 */
+comment|/* 		 * Message verification - RFC 4861 6.1.1 		 * XXX: these checks must be done in the kernel as well, 		 *      but we can't completely rely on them. 		 */
 if|if
 condition|(
 operator|*
@@ -3440,7 +3442,54 @@ break|break;
 case|case
 name|ND_ROUTER_ADVERT
 case|:
-comment|/* 		 * Message verification - RFC-2461 6.1.2 		 * XXX: there's the same dilemma as above... 		 */
+comment|/* 		 * Message verification - RFC 4861 6.1.2 		 * XXX: there's the same dilemma as above... 		 */
+if|if
+condition|(
+operator|!
+name|IN6_IS_ADDR_LINKLOCAL
+argument_list|(
+operator|&
+name|rcvfrom
+operator|.
+name|sin6_addr
+argument_list|)
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"<%s> RA witn non-linklocal source address "
+literal|"received from %s on %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|inet_ntop
+argument_list|(
+name|AF_INET6
+argument_list|,
+operator|&
+name|rcvfrom
+operator|.
+name|sin6_addr
+argument_list|,
+name|ntopbuf
+argument_list|,
+name|INET6_ADDRSTRLEN
+argument_list|)
+argument_list|,
+name|if_indextoname
+argument_list|(
+name|pi
+operator|->
+name|ipi6_ifindex
+argument_list|,
+name|ifnamebuf
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 operator|*
@@ -3825,7 +3874,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * If the IP source address is the unspecified address, there 	 * must be no source link-layer address option in the message. 	 * (RFC-2461 6.1.1) 	 */
+comment|/* 	 * If the IP source address is the unspecified address, there 	 * must be no source link-layer address option in the message. 	 * (RFC 4861 6.1.1) 	 */
 if|if
 condition|(
 name|IN6_IS_ADDR_UNSPECIFIED
@@ -4042,7 +4091,7 @@ decl_stmt|,
 modifier|*
 name|rest
 decl_stmt|;
-comment|/* 	 * Compute a random delay. If the computed value 	 * corresponds to a time later than the time the next 	 * multicast RA is scheduled to be sent, ignore the random 	 * delay and send the advertisement at the 	 * already-scheduled time. RFC-2461 6.2.6 	 */
+comment|/* 	 * Compute a random delay. If the computed value 	 * corresponds to a time later than the time the next 	 * multicast RA is scheduled to be sent, ignore the random 	 * delay and send the advertisement at the 	 * already-scheduled time. RFC 4861 6.2.6 	 */
 ifdef|#
 directive|ifdef
 name|HAVE_ARC4RANDOM
@@ -4381,7 +4430,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * RA consistency check according to RFC-2461 6.2.7 	 */
+comment|/* 	 * RA consistency check according to RFC 4861 6.2.7 	 */
 if|if
 condition|(
 operator|(
@@ -7626,7 +7675,7 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * For the first few advertisements (up to 	 * MAX_INITIAL_RTR_ADVERTISEMENTS), if the randomly chosen interval 	 * is greater than MAX_INITIAL_RTR_ADVERT_INTERVAL, the timer 	 * SHOULD be set to MAX_INITIAL_RTR_ADVERT_INTERVAL instead. 	 * (RFC-2461 6.2.4) 	 */
+comment|/* 	 * For the first few advertisements (up to 	 * MAX_INITIAL_RTR_ADVERTISEMENTS), if the randomly chosen interval 	 * is greater than MAX_INITIAL_RTR_ADVERT_INTERVAL, the timer 	 * SHOULD be set to MAX_INITIAL_RTR_ADVERT_INTERVAL instead. 	 * (RFC 4861 6.2.4) 	 */
 if|if
 condition|(
 name|rai

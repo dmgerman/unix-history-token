@@ -1299,7 +1299,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Basically, hosts MUST NOT send Router Advertisement messages at any 	 * time (RFC 2461, Section 6.2.3). However, it would sometimes be 	 * useful to allow hosts to advertise some parameters such as prefix 	 * information and link MTU. Thus, we allow hosts to invoke rtadvd 	 * only when router lifetime (on every advertising interface) is 	 * explicitly set zero. (see also the above section) 	 */
+comment|/* 	 * Basically, hosts MUST NOT send Router Advertisement messages at any 	 * time (RFC 4861, Section 6.2.3). However, it would sometimes be 	 * useful to allow hosts to advertise some parameters such as prefix 	 * information and link MTU. Thus, we allow hosts to invoke rtadvd 	 * only when router lifetime (on every advertising interface) is 	 * explicitly set zero. (see also the above section) 	 */
 if|if
 condition|(
 name|val
