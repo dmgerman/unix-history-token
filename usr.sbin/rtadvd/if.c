@@ -151,7 +151,8 @@ name|NEXT_SA
 parameter_list|(
 name|ap
 parameter_list|)
-value|(ap) = (struct sockaddr *) \ 	((caddr_t)(ap) + ((ap)->sa_len ? ROUNDUP((ap)->sa_len,\ 						 sizeof(u_long)) :\ 			  			 sizeof(u_long)))
+define|\
+value|(ap) = (struct sockaddr *)((caddr_t)(ap) +			\ 	    ((ap)->sa_len ? ROUNDUP((ap)->sa_len, sizeof(u_long)) :	\ 	    sizeof(u_long)))
 end_define
 
 begin_decl_stmt

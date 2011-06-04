@@ -24,7 +24,8 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|(((a).tv_sec< (b).tv_sec) ||\ 			  (((a).tv_sec == (b).tv_sec)&& \ 			    ((a).tv_usec< (b).tv_usec)))
+define|\
+value|(((a)->tv_sec< (b)->tv_sec) ||		\ 		    (((a)->tv_sec == (b)->tv_sec)&&	\ 		    ((a)->tv_usec< (b)->tv_usec)))
 end_define
 
 begin_comment
@@ -40,53 +41,74 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|(((a).tv_sec< (b).tv_sec) ||\ 			   (((a).tv_sec == (b).tv_sec)&&\  			    ((a).tv_usec<= (b).tv_usec)))
+define|\
+value|(((a)->tv_sec< (b)->tv_sec) ||		\ 		    (((a)->tv_sec == (b)->tv_sec)&&	\ 		    ((a)->tv_usec<= (b)->tv_usec)))
 end_define
+
+begin_define
+define|#
+directive|define
+name|TIMEVAL_EQUAL
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|(((a)->tv_sec == (b)->tv_sec)&&	\ 		    ((a)->tv_usec == (b)->tv_usec))
+end_define
+
+begin_extern
+extern|extern TAILQ_HEAD(rtadvd_timer_head_t
+operator|,
+extern|rtadvd_timer
+end_extern
+
+begin_expr_stmt
+unit|)
+name|ra_timer
+expr_stmt|;
+end_expr_stmt
 
 begin_struct
 struct|struct
 name|rtadvd_timer
 block|{
-name|struct
-name|rtadvd_timer
-modifier|*
-name|next
-decl_stmt|;
-name|struct
-name|rtadvd_timer
-modifier|*
-name|prev
-decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|rtadvd_timer
+argument_list|)
+name|rat_next
+expr_stmt|;
 name|struct
 name|rainfo
 modifier|*
-name|rai
+name|rat_rai
 decl_stmt|;
 name|struct
 name|timeval
-name|tm
+name|rat_tm
 decl_stmt|;
 name|struct
 name|rtadvd_timer
 modifier|*
 function_decl|(
 modifier|*
-name|expire
+name|rat_expire
 function_decl|)
 parameter_list|(
 name|void
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* expiration function */
 name|void
 modifier|*
-name|expire_data
+name|rat_expire_data
 decl_stmt|;
 name|void
 function_decl|(
 modifier|*
-name|update
+name|rat_update
 function_decl|)
 parameter_list|(
 name|void
@@ -97,10 +119,9 @@ name|timeval
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* update function */
 name|void
 modifier|*
-name|update_data
+name|rat_update_data
 decl_stmt|;
 block|}
 struct|;
@@ -175,7 +196,6 @@ name|rtadvd_remove_timer
 parameter_list|(
 name|struct
 name|rtadvd_timer
-modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
