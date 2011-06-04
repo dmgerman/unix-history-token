@@ -3876,7 +3876,7 @@ expr_stmt|;
 comment|/* 		 * Transparently forwarded. Pretend to be the destination. 		 * already got one like this? 		 */
 name|inp
 operator|=
-name|in_pcblookup
+name|in_pcblookup_mbuf
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -3904,6 +3904,8 @@ operator|->
 name|m_pkthdr
 operator|.
 name|rcvif
+argument_list|,
+name|m
 argument_list|)
 expr_stmt|;
 if|if
@@ -3912,7 +3914,7 @@ operator|!
 name|inp
 condition|)
 block|{
-comment|/* 			 * It's new.  Try to find the ambushing socket. 			 */
+comment|/* 			 * It's new.  Try to find the ambushing socket. 			 * Because we've rewritten the destination address, 			 * any hardware-generated hash is ignored. 			 */
 name|inp
 operator|=
 name|in_pcblookup
@@ -3985,7 +3987,7 @@ name|isipv6
 condition|)
 name|inp
 operator|=
-name|in6_pcblookup
+name|in6_pcblookup_mbuf
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4017,6 +4019,8 @@ operator|->
 name|m_pkthdr
 operator|.
 name|rcvif
+argument_list|,
+name|m
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4040,7 +4044,7 @@ directive|ifdef
 name|INET
 name|inp
 operator|=
-name|in_pcblookup
+name|in_pcblookup_mbuf
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4070,6 +4074,8 @@ operator|->
 name|m_pkthdr
 operator|.
 name|rcvif
+argument_list|,
+name|m
 argument_list|)
 expr_stmt|;
 endif|#

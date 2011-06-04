@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ===-- paritydi2.c - Implement __paritydi2 -------------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is distributed under the University of Illinois Open Source  * License. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file implements __paritydi2 for the compiler_rt library.  *  * ===----------------------------------------------------------------------===  */
+comment|/* ===-- paritydi2.c - Implement __paritydi2 -------------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is dual licensed under the MIT and the University of Illinois Open  * Source Licenses. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file implements __paritydi2 for the compiler_rt library.  *  * ===----------------------------------------------------------------------===  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"abi.h"
+end_include
 
 begin_include
 include|#
@@ -15,6 +21,7 @@ end_comment
 
 begin_function_decl
 name|si_int
+name|COMPILER_RT_ABI
 name|__paritysi2
 parameter_list|(
 name|si_int
@@ -24,6 +31,7 @@ function_decl|;
 end_function_decl
 
 begin_function
+name|COMPILER_RT_ABI
 name|si_int
 name|__paritydi2
 parameter_list|(

@@ -1023,7 +1023,7 @@ condition|)
 block|{
 name|warning
 argument_list|(
-literal|"%s not found"
+literal|"%s: not found"
 argument_list|,
 name|n
 argument_list|)

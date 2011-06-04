@@ -2026,6 +2026,12 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+name|INP_HASH_WLOCK
+argument_list|(
+operator|&
+name|V_divcbinfo
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|in_pcbbind
@@ -2037,6 +2043,12 @@ argument_list|,
 name|td
 operator|->
 name|td_ucred
+argument_list|)
+expr_stmt|;
+name|INP_HASH_WUNLOCK
+argument_list|(
+operator|&
+name|V_divcbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WUNLOCK

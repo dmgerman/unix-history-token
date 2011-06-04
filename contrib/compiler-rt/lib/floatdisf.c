@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*===-- floatdisf.c - Implement __floatdisf -------------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is distributed under the University of Illinois Open Source  * License. See LICENSE.TXT for details.  *  *===----------------------------------------------------------------------===  *  * This file implements __floatdisf for the compiler_rt library.  *  *===----------------------------------------------------------------------===  */
+comment|/*===-- floatdisf.c - Implement __floatdisf -------------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is dual licensed under the MIT and the University of Illinois Open  * Source Licenses. See LICENSE.TXT for details.  *  *===----------------------------------------------------------------------===  *  * This file implements __floatdisf for the compiler_rt library.  *  *===----------------------------------------------------------------------===  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"int_lib.h"
+file|"abi.h"
 end_include
 
 begin_include
@@ -27,7 +27,24 @@ begin_comment
 comment|/* seee eeee emmm mmmm mmmm mmmm mmmm mmmm */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"int_lib.h"
+end_include
+
+begin_expr_stmt
+name|ARM_EABI_FNALIAS
+argument_list|(
+name|l2f
+argument_list|,
+name|floatdisf
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
+name|COMPILER_RT_ABI
 name|float
 name|__floatdisf
 parameter_list|(

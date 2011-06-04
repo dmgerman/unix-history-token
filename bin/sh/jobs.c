@@ -4230,7 +4230,7 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"Can't open %s: %s"
+literal|"cannot open %s: %s"
 argument_list|,
 name|_PATH_DEVNULL
 argument_list|,
@@ -4298,7 +4298,7 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"Can't open %s: %s"
+literal|"cannot open %s: %s"
 argument_list|,
 name|_PATH_DEVNULL
 argument_list|,

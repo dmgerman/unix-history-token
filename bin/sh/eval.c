@@ -691,6 +691,9 @@ condition|(
 name|n
 operator|!=
 name|NULL
+operator|&&
+operator|!
+name|nflag
 condition|)
 block|{
 if|if

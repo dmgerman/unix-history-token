@@ -169,7 +169,7 @@ begin_define
 define|#
 directive|define
 name|USB_DEBUG_VAR
-value|umcs7840_debug
+value|umcs_debug
 end_define
 
 begin_include
@@ -193,7 +193,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/serial/umcs7840.h>
+file|<dev/usb/serial/umcs.h>
 end_include
 
 begin_define
@@ -212,7 +212,7 @@ end_ifdef
 begin_decl_stmt
 specifier|static
 name|int
-name|umcs7840_debug
+name|umcs_debug
 init|=
 literal|0
 decl_stmt|;
@@ -225,13 +225,13 @@ name|_hw_usb
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|umcs7840
+name|umcs
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 literal|0
 argument_list|,
-literal|"USB umcs7840 quadport serial adapter"
+literal|"USB umcs quadport serial adapter"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -239,7 +239,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_hw_usb_umcs7840
+name|_hw_usb_umcs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -248,7 +248,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|umcs7840_debug
+name|umcs_debug
 argument_list|,
 literal|0
 argument_list|,

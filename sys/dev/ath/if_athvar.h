@@ -1492,6 +1492,10 @@ modifier|*
 name|sc_dfs
 decl_stmt|;
 comment|/* Used by an optional DFS module */
+name|int
+name|sc_dodfs
+decl_stmt|;
+comment|/* Whether to enable DFS rx filter bits */
 name|struct
 name|task
 name|sc_dfstask

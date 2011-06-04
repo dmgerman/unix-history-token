@@ -269,10 +269,10 @@ name|ath_softc
 modifier|*
 name|sc
 parameter_list|,
-name|struct
-name|ath_desc
+specifier|const
+name|char
 modifier|*
-name|ds
+name|buf
 parameter_list|,
 name|uint64_t
 name|tsf

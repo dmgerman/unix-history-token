@@ -15,6 +15,13 @@ directive|define
 name|_POWERPC_POWERMAC_POWERMAC_THERMAL_H
 end_define
 
+begin_define
+define|#
+directive|define
+name|ZERO_C_TO_K
+value|2732
+end_define
+
 begin_struct
 struct|struct
 name|pmac_fan

@@ -87,6 +87,12 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|nsec_per_tick
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  *  OpenSolaris subsystem initialisation.  */
 end_comment
@@ -149,6 +155,12 @@ name|MUTEX_DEFAULT
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+name|nsec_per_tick
+operator|=
+name|NANOSEC
+operator|/
+name|hz
 expr_stmt|;
 block|}
 end_function
