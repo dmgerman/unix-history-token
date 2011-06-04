@@ -9238,6 +9238,7 @@ argument|case AF_INET:
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
+comment|/* 		 * XXXRW: would be nice if we had an mbuf here so that we 		 * could use in_pcblookup_mbuf(). 		 */
 argument|inp = in_pcblookup(pi, saddr->v4, sport, daddr->v4, 			dport, INPLOOKUP_RLOCKPCB, NULL); 		if (inp == NULL) { 			inp = in_pcblookup(pi, saddr->v4, sport, 			   daddr->v4, dport, INPLOOKUP_WILDCARD | 			   INPLOOKUP_RLOCKPCB, NULL); 			if (inp == NULL) 				return (-
 literal|1
 argument|); 		}
@@ -9261,6 +9262,7 @@ argument|case AF_INET6:
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
+comment|/* 		 * XXXRW: would be nice if we had an mbuf here so that we 		 * could use in6_pcblookup_mbuf(). 		 */
 argument|inp = in6_pcblookup(pi,&saddr->v6, sport,&daddr->v6, dport, INPLOOKUP_RLOCKPCB, NULL); 		if (inp == NULL) { 			inp = in6_pcblookup(pi,&saddr->v6, sport,&daddr->v6, dport, INPLOOKUP_WILDCARD | 			    INPLOOKUP_RLOCKPCB, NULL); 			if (inp == NULL) 				return (-
 literal|1
 argument|); 		}

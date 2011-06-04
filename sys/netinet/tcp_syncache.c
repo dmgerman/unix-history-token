@@ -3339,7 +3339,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|in6_pcbconnect
+name|in6_pcbconnect_mbuf
 argument_list|(
 name|inp
 argument_list|,
@@ -3354,6 +3354,8 @@ argument_list|,
 name|thread0
 operator|.
 name|td_ucred
+argument_list|,
+name|m
 argument_list|)
 operator|)
 operator|!=
@@ -3587,7 +3589,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|in_pcbconnect
+name|in_pcbconnect_mbuf
 argument_list|(
 name|inp
 argument_list|,
@@ -3602,6 +3604,8 @@ argument_list|,
 name|thread0
 operator|.
 name|td_ucred
+argument_list|,
+name|m
 argument_list|)
 operator|)
 operator|!=

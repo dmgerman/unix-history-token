@@ -1334,7 +1334,7 @@ block|}
 comment|/* 	 * Locate pcb for datagram. 	 */
 name|inp
 operator|=
-name|in6_pcblookup
+name|in6_pcblookup_mbuf
 argument_list|(
 operator|&
 name|V_udbinfo
@@ -1366,6 +1366,8 @@ operator|->
 name|m_pkthdr
 operator|.
 name|rcvif
+argument_list|,
+name|m
 argument_list|)
 expr_stmt|;
 if|if
