@@ -16,6 +16,7 @@ specifier|extern
 name|void
 name|rtadvd_dump_file
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)

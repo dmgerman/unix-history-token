@@ -214,6 +214,12 @@ directive|include
 file|"dump.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_decl_stmt
 name|struct
 name|msghdr
@@ -303,21 +309,33 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|dumpfilename
 init|=
-literal|"/var/run/rtadvd.dump"
+name|_PATH_RTADVDDUMP
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|pidfilename
 init|=
-literal|"/var/run/rtadvd.pid"
+name|_PATH_RTADVDPID
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|conffile
+init|=
+name|_PATH_RTADVDCONF
 decl_stmt|;
 end_decl_stmt
 
@@ -370,15 +388,6 @@ decl_stmt|,
 name|sflag
 init|=
 literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_char
-modifier|*
-name|conffile
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -609,7 +618,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 name|struct
 name|sockaddr_in6
 name|sin6_linklocal_allnodes
@@ -637,7 +645,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 name|struct
 name|sockaddr_in6
 name|sin6_linklocal_allrouters
@@ -665,7 +672,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 name|struct
 name|sockaddr_in6
 name|sin6_sitelocal_allrouters
@@ -1739,6 +1745,7 @@ name|rtadvd_set_dump_file
 parameter_list|(
 name|int
 name|sig
+name|__unused
 parameter_list|)
 block|{
 name|do_dump
@@ -1755,6 +1762,7 @@ name|set_die
 parameter_list|(
 name|int
 name|sig
+name|__unused
 parameter_list|)
 block|{
 name|do_die
@@ -2836,7 +2844,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|i
 decl_stmt|;
 name|int
@@ -3149,6 +3157,9 @@ directive|ifdef
 name|OLDRAWSOCKET
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|i
 operator|<
 sizeof|sizeof
@@ -3211,6 +3222,9 @@ else|#
 directive|else
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|i
 operator|<
 sizeof|sizeof
@@ -3356,6 +3370,9 @@ return|return;
 block|}
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|i
 operator|<
 sizeof|sizeof
@@ -3518,6 +3535,9 @@ return|return;
 block|}
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|i
 operator|<
 sizeof|sizeof
@@ -3861,6 +3881,10 @@ name|pi
 operator|->
 name|ipi6_ifindex
 operator|==
+operator|(
+name|unsigned
+name|int
+operator|)
 name|ra
 operator|->
 name|ifindex
@@ -4215,6 +4239,7 @@ name|union
 name|nd_opts
 name|ndopts
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|on_off
@@ -5797,6 +5822,9 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|limit
 operator|<
 sizeof|sizeof
@@ -7345,6 +7373,9 @@ name|i
 operator|<
 literal|0
 operator|||
+operator|(
+name|size_t
+operator|)
 name|i
 operator|!=
 name|rainfo

@@ -37,7 +37,6 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-specifier|const
 name|struct
 name|sockaddr_in6
 name|sin6_linklocal_allnodes
@@ -46,7 +45,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-specifier|const
 name|struct
 name|sockaddr_in6
 name|sin6_linklocal_allrouters
@@ -55,7 +53,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-specifier|const
 name|struct
 name|sockaddr_in6
 name|sin6_sitelocal_allrouters
@@ -571,10 +568,10 @@ decl_stmt|;
 name|char
 name|ifname
 index|[
-literal|16
+name|IFNAMSIZ
 index|]
 decl_stmt|;
-name|int
+name|u_int32_t
 name|phymtu
 decl_stmt|;
 comment|/* mtu of the physical interface */

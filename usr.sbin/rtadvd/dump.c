@@ -200,6 +200,7 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|rtpref_str
@@ -1432,6 +1433,7 @@ begin_function
 name|void
 name|rtadvd_dump_file
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|dumpfile

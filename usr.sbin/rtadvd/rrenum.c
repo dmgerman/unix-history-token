@@ -1476,6 +1476,9 @@ name|cp
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|len
 operator|<
 sizeof|sizeof
@@ -1604,6 +1607,9 @@ comment|/* omit rr minimal length check. hope kernel have done it. */
 comment|/* rr_command length check */
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|len
 operator|<
 operator|(
@@ -2050,6 +2056,9 @@ expr_stmt|;
 comment|/* packet validation based on Section 4.1 of RFC2894 */
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|len
 operator|<
 sizeof|sizeof

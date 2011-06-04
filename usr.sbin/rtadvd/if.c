@@ -1141,7 +1141,9 @@ end_function
 begin_function
 name|int
 name|rtbuf_len
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|size_t
 name|len
@@ -2750,7 +2752,9 @@ end_function
 begin_function
 name|void
 name|init_iflist
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(

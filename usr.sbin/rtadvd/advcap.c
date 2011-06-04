@@ -177,13 +177,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-name|char
-modifier|*
-name|RM
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * termcap - routines for dealing with the terminal capability data base  *  * BUG:		Should use a "last" pointer in tbuf, so that searching  *		for capabilities alphabetically would not be a n**2/2  *		process when large numbers of capabilities are given.  * Note:	If we add a last pointer now we will screw up the  *		tc capability. We really should compile termcap.  *  * Essentially all the work here is scanning and decoding escapes  * in string capabilities.  We don't use stdio because the editor  * doesn't, and because living w/o it is not hard.  */
 end_comment
@@ -209,6 +202,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|remotefile
@@ -217,6 +211,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|conffile
@@ -246,6 +241,7 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -351,20 +347,6 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-name|remotefile
-operator|=
-name|cp
-operator|=
-name|conffile
-condition|?
-name|conffile
-else|:
-name|_PATH_RTADVDCONF
-expr_stmt|;
 return|return
 operator|(
 name|getent
@@ -373,7 +355,7 @@ name|bp
 argument_list|,
 name|name
 argument_list|,
-name|cp
+name|conffile
 argument_list|)
 operator|)
 return|;
@@ -392,9 +374,10 @@ name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|char
 modifier|*
-name|cp
+name|cfile
 parameter_list|)
 block|{
 name|int
@@ -415,6 +398,10 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|;
 name|int
 name|tf
 decl_stmt|;
@@ -429,24 +416,20 @@ expr_stmt|;
 comment|/* 	 * TERMCAP can have one of two things in it. It can be the 	 * name of a file to use instead of /etc/termcap. In this 	 * case it better start with a "/". Or it can be an entry to 	 * use so we don't have to read the file. In this case it 	 * has to already have the newlines crunched out. 	 */
 if|if
 condition|(
-name|cp
+name|cfile
 operator|&&
 operator|*
-name|cp
+name|cfile
 condition|)
-block|{
 name|tf
 operator|=
 name|open
 argument_list|(
-name|RM
-operator|=
-name|cp
+name|cfile
 argument_list|,
 name|O_RDONLY
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|tf
@@ -1529,6 +1512,7 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|dp
