@@ -550,6 +550,10 @@ name|int
 name|rai_advlinkopt
 decl_stmt|;
 comment|/* bool: whether include link-layer addr opt */
+name|int
+name|rai_advonlinkprefix
+decl_stmt|;
+comment|/* bool: gather on-link prefixes? */
 name|struct
 name|sockaddr_dl
 modifier|*
