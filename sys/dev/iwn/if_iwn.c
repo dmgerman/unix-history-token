@@ -19017,6 +19017,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|IEEE80211_QOS_HAS_SEQ
+argument_list|(
+name|wh
+argument_list|)
+operator|&&
 name|IEEE80211_AMPDU_RUNNING
 argument_list|(
 operator|&
