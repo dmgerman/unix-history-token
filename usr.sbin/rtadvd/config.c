@@ -450,7 +450,7 @@ operator|-
 name|src
 argument_list|)
 expr_stmt|;
-comment|/* Copy only 63 octets at most. */
+comment|/* Copy 63 octets at most. */
 name|memcpy
 argument_list|(
 name|dst
@@ -5544,13 +5544,19 @@ operator|++
 expr_stmt|;
 name|len
 operator|+=
-literal|8
-operator|-
 operator|(
 name|len
 operator|%
 literal|8
 operator|)
+condition|?
+literal|8
+operator|-
+name|len
+operator|%
+literal|8
+else|:
+literal|0
 expr_stmt|;
 name|packlen
 operator|+=
@@ -6465,13 +6471,19 @@ name|ndopt_dnssl
 expr_stmt|;
 name|len
 operator|+=
-literal|8
-operator|-
 operator|(
 name|len
 operator|%
 literal|8
 operator|)
+condition|?
+literal|8
+operator|-
+name|len
+operator|%
+literal|8
+else|:
+literal|0
 expr_stmt|;
 comment|/* Length field must be in 8 octets */
 name|ndopt_dnssl

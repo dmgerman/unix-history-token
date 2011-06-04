@@ -1239,7 +1239,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"    % 8u\t"
+literal|"    %8u\t"
 argument_list|,
 name|rdn
 operator|->
@@ -1353,7 +1353,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"    % 8u\t"
+literal|"    %8u\t"
 argument_list|,
 name|dns
 operator|->
