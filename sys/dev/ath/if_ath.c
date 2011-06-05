@@ -15819,6 +15819,40 @@ name|ast_rx_phyerr
 operator|++
 expr_stmt|;
 comment|/* Process DFS radar events */
+if|if
+condition|(
+operator|(
+name|rs
+operator|->
+name|rs_phyerr
+operator|==
+name|HAL_PHYERR_RADAR
+operator|)
+operator|||
+operator|(
+name|rs
+operator|->
+name|rs_phyerr
+operator|==
+name|HAL_PHYERR_FALSE_RADAR_EXT
+operator|)
+condition|)
+block|{
+comment|/* Since we're touching the frame data, sync it */
+name|bus_dmamap_sync
+argument_list|(
+name|sc
+operator|->
+name|sc_dmat
+argument_list|,
+name|bf
+operator|->
+name|bf_dmamap
+argument_list|,
+name|BUS_DMASYNC_POSTREAD
+argument_list|)
+expr_stmt|;
+comment|/* Now pass it to the radar processing code */
 name|ath_dfs_process_phy_err
 argument_list|(
 name|sc
@@ -15836,6 +15870,7 @@ argument_list|,
 name|rs
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Be suitably paranoid about receiving phy errors out of the stats array bounds */
 if|if
 condition|(
