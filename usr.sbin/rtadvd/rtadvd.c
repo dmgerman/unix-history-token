@@ -969,7 +969,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:dDF:fMp:Rs"
+literal|"c:dDfF:M:p:Rs"
 argument_list|)
 operator|)
 operator|!=
@@ -1081,8 +1081,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rtadvd [-dDfMRs] [-c conffile] "
-literal|"[-F dumpfile] [-p pidfile] interfaces...\n"
+literal|"usage: rtadvd [-dDfRs] [-c conffile] "
+literal|"[-F dumpfile] [-M ifname] "
+literal|"[-p pidfile] interfaces...\n"
 argument_list|)
 expr_stmt|;
 name|exit
