@@ -994,15 +994,14 @@ case|case
 literal|'d'
 case|:
 name|dflag
-operator|=
-literal|1
+operator|++
 expr_stmt|;
 break|break;
 case|case
 literal|'D'
 case|:
 name|dflag
-operator|=
+operator|+=
 literal|2
 expr_stmt|;
 break|break;
@@ -1119,24 +1118,7 @@ comment|/* set log level */
 if|if
 condition|(
 name|dflag
-operator|==
-literal|0
-condition|)
-operator|(
-name|void
-operator|)
-name|setlogmask
-argument_list|(
-name|LOG_UPTO
-argument_list|(
-name|LOG_ERR
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dflag
-operator|==
+operator|>
 literal|1
 condition|)
 operator|(
@@ -1146,7 +1128,37 @@ name|setlogmask
 argument_list|(
 name|LOG_UPTO
 argument_list|(
+name|LOG_DEBUG
+argument_list|)
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|dflag
+operator|>
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|setlogmask
+argument_list|(
+name|LOG_UPTO
+argument_list|(
 name|LOG_INFO
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+operator|(
+name|void
+operator|)
+name|setlogmask
+argument_list|(
+name|LOG_UPTO
+argument_list|(
+name|LOG_ERR
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1810,12 +1822,6 @@ name|retrans
 init|=
 name|MAX_FINAL_RTR_ADVERTISEMENTS
 decl_stmt|;
-if|if
-condition|(
-name|dflag
-operator|>
-literal|1
-condition|)
 name|syslog
 argument_list|(
 name|LOG_DEBUG
@@ -2000,12 +2006,6 @@ name|msg
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|dflag
-operator|>
-literal|1
-condition|)
 name|syslog
 argument_list|(
 name|LOG_DEBUG
@@ -2034,12 +2034,6 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * This usually won't happen for messages received on 		 * a routing socket. 		 */
-if|if
-condition|(
-name|dflag
-operator|>
-literal|1
-condition|)
 name|syslog
 argument_list|(
 name|LOG_DEBUG
@@ -2189,12 +2183,6 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/* should not reach here */
-if|if
-condition|(
-name|dflag
-operator|>
-literal|1
-condition|)
 name|syslog
 argument_list|(
 name|LOG_DEBUG
@@ -2231,13 +2219,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|dflag
-operator|>
-literal|1
-condition|)
-block|{
 name|syslog
 argument_list|(
 name|LOG_DEBUG
@@ -2255,7 +2236,6 @@ name|ifname
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 continue|continue;
 block|}
 name|oldifflags
@@ -2376,13 +2356,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|dflag
-operator|>
-literal|1
-condition|)
+else|else
 name|syslog
 argument_list|(
 name|LOG_DEBUG
@@ -2523,18 +2497,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|dflag
-operator|>
-literal|1
-condition|)
 name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"<%s> prefix(%s/%d) was "
-literal|"deleted on %s, "
+literal|"<%s> prefix(%s/%d) was deleted on %s, "
 literal|"but it was not in list"
 argument_list|,
 name|__func__
@@ -2621,13 +2588,6 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/* should not reach here */
-if|if
-condition|(
-name|dflag
-operator|>
-literal|1
-condition|)
-block|{
 name|syslog
 argument_list|(
 name|LOG_DEBUG
@@ -2648,7 +2608,6 @@ name|ifname
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 return|return;
 block|}
 comment|/* check if an interface flag is changed */
