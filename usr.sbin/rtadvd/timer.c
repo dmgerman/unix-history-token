@@ -293,6 +293,13 @@ modifier|*
 name|rat
 parameter_list|)
 block|{
+if|if
+condition|(
+name|rat
+operator|==
+name|NULL
+condition|)
+return|return;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&

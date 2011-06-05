@@ -1365,6 +1365,40 @@ break|break;
 block|}
 if|if
 condition|(
+operator|(
+operator|(
+expr|struct
+name|rt_msghdr
+operator|*
+operator|)
+name|buf
+operator|)
+operator|->
+name|rtm_version
+operator|!=
+name|RTM_VERSION
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"<%s> routing message version mismatch "
+literal|"(buf=%p lim=%p rtm=%p)"
+argument_list|,
+name|__func__
+argument_list|,
+name|buf
+argument_list|,
+name|lim
+argument_list|,
+name|rtm
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
 name|FILTER_MATCH
 argument_list|(
 name|rtm
@@ -1376,9 +1410,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 continue|continue;
-block|}
 switch|switch
 condition|(
 name|rtm
@@ -1655,6 +1687,9 @@ return|;
 comment|/* NOTREACHED */
 case|case
 name|RTM_IFINFO
+case|:
+case|case
+name|RTM_IFANNOUNCE
 case|:
 comment|/* found */
 operator|*
@@ -2757,6 +2792,15 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|syslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"<%s> generate iflist."
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ifblock

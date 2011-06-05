@@ -13,11 +13,20 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|getconfig
 parameter_list|(
-name|char
-modifier|*
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|rmconfig
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
