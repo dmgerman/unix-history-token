@@ -975,7 +975,7 @@ name|m
 parameter_list|,
 name|v
 parameter_list|)
-value|do {					\ 	(m)->m_flags&= ~M_HASHTYPEBITS;				\ 	(m)->m_flags |= ((v)<< M_HASHTYPE_SHIFT);			\ while (0)
+value|do {					\ 	(m)->m_flags&= ~M_HASHTYPEBITS;				\ 	(m)->m_flags |= ((v)<< M_HASHTYPE_SHIFT);			\ } while (0)
 end_define
 
 begin_define
