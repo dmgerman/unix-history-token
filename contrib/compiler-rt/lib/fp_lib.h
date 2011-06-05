@@ -16,11 +16,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file is distributed under the University of Illinois Open Source
+comment|// This file is dual licensed under the MIT and the University of Illinois Open
 end_comment
 
 begin_comment
-comment|// License. See LICENSE.TXT for details.
+comment|// Source Licenses. See LICENSE.TXT for details.
 end_comment
 
 begin_comment

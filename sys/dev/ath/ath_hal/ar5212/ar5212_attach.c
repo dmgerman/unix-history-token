@@ -524,6 +524,22 @@ name|ah_setCoverageClass
 operator|=
 name|ar5212SetCoverageClass
 block|,
+operator|.
+name|ah_setQuiet
+operator|=
+name|ar5212SetQuiet
+block|,
+comment|/* DFS Functions */
+operator|.
+name|ah_enableDfs
+operator|=
+name|ar5212EnableDfs
+block|,
+operator|.
+name|ah_getDfsThresh
+operator|=
+name|ar5212GetDfsThresh
+block|,
 comment|/* Key Cache Functions */
 operator|.
 name|ah_getKeyCacheSize

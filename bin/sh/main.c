@@ -973,7 +973,7 @@ expr_stmt|;
 else|else
 name|error
 argument_list|(
-literal|"Can't open %s: %s"
+literal|"cannot open %s: %s"
 argument_list|,
 name|name
 argument_list|,

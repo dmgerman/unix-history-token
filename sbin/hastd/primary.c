@@ -5627,7 +5627,15 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|ISSYNCREQ
+argument_list|(
+name|hio
+argument_list|)
+condition|)
 block|{
 comment|/* 				 * If READ failed, try to read from remote node. 				 */
 if|if

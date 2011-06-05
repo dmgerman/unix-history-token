@@ -873,7 +873,7 @@ name|char
 name|command_chars
 index|[]
 init|=
-literal|"\f qh?en#sdkriIutHmSCajo"
+literal|"\f qh?en#sdkriIutHmSCajzo"
 decl_stmt|;
 else|#
 directive|else
@@ -882,7 +882,7 @@ name|char
 name|command_chars
 index|[]
 init|=
-literal|"\f qh?en#sdkriIutHmSCaj"
+literal|"\f qh?en#sdkriIutHmSCajz"
 decl_stmt|;
 endif|#
 directive|endif
@@ -981,13 +981,17 @@ define|#
 directive|define
 name|CMD_jidtog
 value|21
+define|#
+directive|define
+name|CMD_kidletog
+value|22
 ifdef|#
 directive|ifdef
 name|ORDER
 define|#
 directive|define
 name|CMD_order
-value|22
+value|23
 endif|#
 directive|endif
 comment|/* set the buffer for stdout */
@@ -1119,6 +1123,12 @@ name|No
 expr_stmt|;
 name|ps
 operator|.
+name|kidle
+operator|=
+name|Yes
+expr_stmt|;
+name|ps
+operator|.
 name|command
 operator|=
 name|NULL
@@ -1199,7 +1209,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"CSIHPabijnquvs:d:U:m:o:t"
+literal|"CSIHPabijnquvzs:d:U:m:o:t"
 argument_list|)
 operator|)
 operator|!=
@@ -1622,13 +1632,26 @@ operator|=
 name|Yes
 expr_stmt|;
 break|break;
+case|case
+literal|'z'
+case|:
+name|ps
+operator|.
+name|kidle
+operator|=
+operator|!
+name|ps
+operator|.
+name|kidle
+expr_stmt|;
+break|break;
 default|default:
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
 literal|"Top version %s\n"
-literal|"Usage: %s [-abCHIijnPqStuv] [-d count] [-m io | cpu] [-o field] [-s time]\n"
+literal|"Usage: %s [-abCHIijnPqStuvz] [-d count] [-m io | cpu] [-o field] [-s time]\n"
 literal|"       [-U username] [number]\n"
 argument_list|,
 name|version_string
@@ -3919,6 +3942,41 @@ argument_list|)
 expr_stmt|;
 name|reset_display
 argument_list|()
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\r'
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CMD_kidletog
+case|:
+name|ps
+operator|.
+name|kidle
+operator|=
+operator|!
+name|ps
+operator|.
+name|kidle
+expr_stmt|;
+name|new_message
+argument_list|(
+name|MT_standout
+operator||
+name|MT_delayed
+argument_list|,
+literal|" %sisplaying system idle process."
+argument_list|,
+name|ps
+operator|.
+name|kidle
+condition|?
+literal|"D"
+else|:
+literal|"Not d"
+argument_list|)
 expr_stmt|;
 name|putchar
 argument_list|(

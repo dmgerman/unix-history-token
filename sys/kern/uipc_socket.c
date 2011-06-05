@@ -8476,6 +8476,18 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
+comment|/* 			 * We could receive some data while was notifying 			 * the protocol. Skip blocking in this case. 			 */
+if|if
+condition|(
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_mb
+operator|==
+name|NULL
+condition|)
+block|{
 name|error
 operator|=
 name|sbwait
@@ -8502,6 +8514,7 @@ expr_stmt|;
 goto|goto
 name|release
 goto|;
+block|}
 block|}
 name|m
 operator|=

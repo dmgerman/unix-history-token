@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*===-- absvdi2.c - Implement __absvdi2 -----------------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is distributed under the University of Illinois Open Source  * License. See LICENSE.TXT for details.  *  *===----------------------------------------------------------------------===  *  * This file implements __absvdi2 for the compiler_rt library.  *  *===----------------------------------------------------------------------===  */
+comment|/*===-- absvdi2.c - Implement __absvdi2 -----------------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is dual licensed under the MIT and the University of Illinois Open  * Source Licenses. See LICENSE.TXT for details.  *  *===----------------------------------------------------------------------===  *  * This file implements __absvdi2 for the compiler_rt library.  *  *===----------------------------------------------------------------------===  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"abi.h"
+end_include
 
 begin_include
 include|#
@@ -24,6 +30,7 @@ comment|/* Effects: aborts if abs(x)< 0 */
 end_comment
 
 begin_function
+name|COMPILER_RT_ABI
 name|di_int
 name|__absvdi2
 parameter_list|(

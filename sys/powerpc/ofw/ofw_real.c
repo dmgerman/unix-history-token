@@ -969,7 +969,7 @@ name|of_bounce_mtx
 argument_list|)
 condition|)
 return|return;
-comment|/* 	 * Allocate a page of contiguous, wired physical memory that can 	 * fit into a 32-bit address space. 	 */
+comment|/* 	 * Allocate a page of contiguous, wired physical memory that can 	 * fit into a 32-bit address space and accessed from real mode. 	 */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -988,7 +988,13 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
+name|ulmin
+argument_list|(
+name|platform_real_maxaddr
+argument_list|()
+argument_list|,
 name|BUS_SPACE_MAXADDR_32BIT
+argument_list|)
 argument_list|,
 name|PAGE_SIZE
 argument_list|,

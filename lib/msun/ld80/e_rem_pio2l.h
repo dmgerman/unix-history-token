@@ -237,18 +237,10 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INLINE_REM_PIO2L
-end_ifdef
-
 begin_function
 specifier|static
 specifier|inline
 name|__always_inline
-endif|#
-directive|endif
 name|int
 name|__ieee754_rem_pio2l
 parameter_list|(

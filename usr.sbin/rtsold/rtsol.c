@@ -1197,8 +1197,6 @@ operator|+
 name|IFNAMSIZ
 operator|+
 literal|1
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|char

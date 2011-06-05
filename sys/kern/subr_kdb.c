@@ -1772,7 +1772,7 @@ name|defined
 argument_list|(
 name|KDB_STOPPEDPCB
 argument_list|)
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|pc
 argument_list|,

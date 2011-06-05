@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ===-- paritysi2.c - Implement __paritysi2 -------------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is distributed under the University of Illinois Open Source  * License. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file implements __paritysi2 for the compiler_rt library.  *  * ===----------------------------------------------------------------------===  */
+comment|/* ===-- paritysi2.c - Implement __paritysi2 -------------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is dual licensed under the MIT and the University of Illinois Open  * Source Licenses. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file implements __paritysi2 for the compiler_rt library.  *  * ===----------------------------------------------------------------------===  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"abi.h"
+end_include
 
 begin_include
 include|#
@@ -14,6 +20,7 @@ comment|/* Returns: 1 if number of bits is odd else returns 0 */
 end_comment
 
 begin_function
+name|COMPILER_RT_ABI
 name|si_int
 name|__paritysi2
 parameter_list|(

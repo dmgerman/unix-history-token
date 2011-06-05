@@ -361,6 +361,21 @@ init|=
 literal|43
 block|,
 comment|/* hardware is capable of 4addr aggregation */
+name|HAL_CAP_DFS_DMN
+init|=
+literal|44
+block|,
+comment|/* current DFS domain */
+name|HAL_CAP_EXT_CHAN_DFS
+init|=
+literal|45
+block|,
+comment|/* DFS support for extension channel */
+name|HAL_CAP_COMBINED_RADAR_RSSI
+init|=
+literal|46
+block|,
+comment|/* Is combined RSSI for radar accurate */
 name|HAL_CAP_AUTO_SLEEP
 init|=
 literal|48
@@ -396,6 +411,11 @@ init|=
 literal|100
 block|,
 comment|/* rx desc tstamp precision (bits) */
+name|HAL_CAP_ENHANCED_DFS_SUPPORT
+init|=
+literal|117
+block|,
+comment|/* hardware supports enhanced DFS */
 comment|/* The following are private to the FreeBSD HAL (224 onward) */
 name|HAL_CAP_INTMIT
 init|=
@@ -2050,6 +2070,113 @@ name|HAL_CAP_INTMIT_CMD
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|int32_t
+name|pe_firpwr
+decl_stmt|;
+comment|/* FIR pwr out threshold */
+name|int32_t
+name|pe_rrssi
+decl_stmt|;
+comment|/* Radar rssi thresh */
+name|int32_t
+name|pe_height
+decl_stmt|;
+comment|/* Pulse height thresh */
+name|int32_t
+name|pe_prssi
+decl_stmt|;
+comment|/* Pulse rssi thresh */
+name|int32_t
+name|pe_inband
+decl_stmt|;
+comment|/* Inband thresh */
+comment|/* The following params are only for AR5413 and later */
+name|u_int32_t
+name|pe_relpwr
+decl_stmt|;
+comment|/* Relative power threshold in 0.5dB steps */
+name|u_int32_t
+name|pe_relstep
+decl_stmt|;
+comment|/* Pulse Relative step threshold in 0.5dB steps */
+name|u_int32_t
+name|pe_maxlen
+decl_stmt|;
+comment|/* Max length of radar sign in 0.8us units */
+name|HAL_BOOL
+name|pe_usefir128
+decl_stmt|;
+comment|/* Use the average in-band power measured over 128 cycles */
+name|HAL_BOOL
+name|pe_blockradar
+decl_stmt|;
+comment|/* 					 * Enable to block radar check if pkt detect is done via OFDM 					 * weak signal detect or pkt is detected immediately after tx 					 * to rx transition 					 */
+name|HAL_BOOL
+name|pe_enmaxrssi
+decl_stmt|;
+comment|/* 					 * Enable to use the max rssi instead of the last rssi during 					 * fine gain changes for radar detection 					 */
+name|HAL_BOOL
+name|pe_extchannel
+decl_stmt|;
+comment|/* Enable DFS on ext channel */
+block|}
+name|HAL_PHYERR_PARAM
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|HAL_PHYERR_PARAM_NOVAL
+value|65535
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_PHYERR_PARAM_ENABLE
+value|0x8000
+end_define
+
+begin_comment
+comment|/* Enable/Disable if applicable */
+end_comment
+
+begin_comment
+comment|/*  * Flag for setting QUIET period  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_QUIET_DISABLE
+init|=
+literal|0x0
+block|,
+name|HAL_QUIET_ENABLE
+init|=
+literal|0x1
+block|,
+name|HAL_QUIET_ADD_CURRENT_TSF
+init|=
+literal|0x2
+block|,
+comment|/* add current TSF to next_start offset */
+name|HAL_QUIET_ADD_SWBA_RESP_TIME
+init|=
+literal|0x4
+block|,
+comment|/* add beacon response time to next_start offset */
+block|}
+name|HAL_QUIET_FLAG
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  * Hardware Access Layer (HAL) API.  *  * Clients of the HAL call ath_hal_attach to obtain a reference to an  * ath_hal structure for use with the device.  Hardware-related operations  * that follow must call back into the HAL through interface, supplying  * the reference as the first parameter.  Note that before using the  * reference returned by ath_hal_attach the caller should verify the  * ABI version number.  */
 end_comment
@@ -3556,6 +3683,66 @@ parameter_list|,
 name|uint8_t
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+name|HAL_STATUS
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_setQuiet
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|uint32_t
+name|period
+parameter_list|,
+name|uint32_t
+name|duration
+parameter_list|,
+name|uint32_t
+name|nextStart
+parameter_list|,
+name|HAL_QUIET_FLAG
+name|flag
+parameter_list|)
+function_decl|;
+comment|/* DFS functions */
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_enableDfs
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|HAL_PHYERR_PARAM
+modifier|*
+name|pe
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_getDfsThresh
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|HAL_PHYERR_PARAM
+modifier|*
+name|pe
 parameter_list|)
 function_decl|;
 comment|/* Key Cache Functions */

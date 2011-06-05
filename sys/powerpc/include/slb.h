@@ -165,7 +165,7 @@ begin_define
 define|#
 directive|define
 name|USER_SLB_SLOT
-value|63
+value|0
 end_define
 
 begin_define

@@ -20033,7 +20033,7 @@ comment|/* 	 * IPv6 does not affected ip_len/ip_off byte order changes. 	 */
 name|int
 name|chk
 decl_stmt|;
-comment|/* We need a proper CSUM befor we start (s. OpenBSD ip_output) */
+comment|/* We need a proper CSUM before we start (s. OpenBSD ip_output) */
 if|if
 condition|(
 operator|(
@@ -20048,12 +20048,18 @@ operator|&
 name|CSUM_DELAY_DATA
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
+comment|/* XXX-BZ copy&paste error from r126261? */
 name|in_delayed_cksum
 argument_list|(
 operator|*
 name|m
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 operator|(
 operator|*
 name|m

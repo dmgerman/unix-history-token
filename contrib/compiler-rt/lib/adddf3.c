@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- lib/adddf3.c - Double-precision addition and subtraction --*- C -*-===//
+comment|//===-- lib/adddf3.c - Double-precision addition ------------------*- C -*-===//
 end_comment
 
 begin_comment
@@ -16,11 +16,31 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file is distributed under the University of Illinois Open Source
+comment|// This file is dual licensed under the MIT and the University of Illinois Open
 end_comment
 
 begin_comment
-comment|// License. See LICENSE.TXT for details.
+comment|// Source Licenses. See LICENSE.TXT for details.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This file implements double-precision soft-float addition with the IEEE-754
+end_comment
+
+begin_comment
+comment|// default rounding (to nearest, ties to even).
 end_comment
 
 begin_comment
@@ -31,25 +51,11 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// This file implements double-precision soft-float addition and subtraction
-end_comment
-
-begin_comment
-comment|// with the IEEE-754 default rounding (to nearest, ties to even).
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//===----------------------------------------------------------------------===//
-end_comment
+begin_include
+include|#
+directive|include
+file|"abi.h"
+end_include
 
 begin_define
 define|#
@@ -63,7 +69,18 @@ directive|include
 file|"fp_lib.h"
 end_include
 
+begin_expr_stmt
+name|ARM_EABI_FNALIAS
+argument_list|(
+name|dadd
+argument_list|,
+name|adddf3
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
+name|COMPILER_RT_ABI
 name|fp_t
 name|__adddf3
 parameter_list|(
@@ -649,40 +666,6 @@ return|return
 name|fromRep
 argument_list|(
 name|result
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|// Subtraction; flip the sign bit of b and add.
-end_comment
-
-begin_function
-name|fp_t
-name|__subdf3
-parameter_list|(
-name|fp_t
-name|a
-parameter_list|,
-name|fp_t
-name|b
-parameter_list|)
-block|{
-return|return
-name|__adddf3
-argument_list|(
-name|a
-argument_list|,
-name|fromRep
-argument_list|(
-name|toRep
-argument_list|(
-name|b
-argument_list|)
-operator|^
-name|signBit
-argument_list|)
 argument_list|)
 return|;
 block|}

@@ -5082,6 +5082,12 @@ operator|.
 name|zbufsize
 argument_list|)
 expr_stmt|;
+name|p
+operator|->
+name|buffer
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 endif|#
 directive|endif

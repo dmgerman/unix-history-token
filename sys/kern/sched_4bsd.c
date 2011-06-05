@@ -3976,7 +3976,7 @@ condition|(
 name|forward_wakeup_use_loop
 condition|)
 block|{
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|pc
 argument_list|,
@@ -4103,7 +4103,7 @@ block|{
 name|forward_wakeups_delivered
 operator|++
 expr_stmt|;
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|pc
 argument_list|,

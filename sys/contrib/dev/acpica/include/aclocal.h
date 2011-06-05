@@ -3580,9 +3580,19 @@ modifier|*
 modifier|*
 name|Args
 decl_stmt|;
+name|ACPI_OBJECT_TYPE
+modifier|*
+name|Types
+decl_stmt|;
 comment|/*      * Arguments to be passed to method for the command      * Threads -      *   the Number of threads, ID of current thread and      *   Index of current thread inside all them created.      */
 name|char
 name|InitArgs
+decl_stmt|;
+name|ACPI_OBJECT_TYPE
+name|ArgTypes
+index|[
+literal|4
+index|]
 decl_stmt|;
 name|char
 modifier|*

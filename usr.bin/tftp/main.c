@@ -895,7 +895,7 @@ literal|"packetdrop"
 block|,
 name|setpacketdrop
 block|,
-literal|"artifical packetloss feature"
+literal|"artificial packetloss feature"
 block|}
 block|,
 block|{
@@ -4987,7 +4987,7 @@ condition|)
 name|printf
 argument_list|(
 literal|"RFC2347 style options are not enabled "
-literal|"(but proceding anyway)\n"
+literal|"(but proceeding anyway)\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5170,7 +5170,7 @@ condition|)
 name|printf
 argument_list|(
 literal|"RFC2347 style or non-RFC defined options are not enabled "
-literal|"(but proceding anyway)\n"
+literal|"(but proceeding anyway)\n"
 argument_list|)
 expr_stmt|;
 if|if

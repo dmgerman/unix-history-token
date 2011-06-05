@@ -643,31 +643,17 @@ break|break;
 case|case
 name|FAE_CLOSE
 case|:
-comment|/* Perform a close() */
-if|if
-condition|(
+comment|/* Perform a close(), do not fail if already closed */
+operator|(
+name|void
+operator|)
 name|_close
 argument_list|(
 name|fae
 operator|->
 name|fae_fildes
 argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|errno
-operator|==
-name|EBADF
-condition|)
-return|return
-operator|(
-name|EBADF
-operator|)
-return|;
-block|}
+expr_stmt|;
 break|break;
 block|}
 return|return

@@ -536,7 +536,7 @@ init|=
 literal|7
 block|,
 comment|/* Transmit override receive */
-comment|/* NB: these are specific to the 5212 */
+comment|/* NB: these are specific to the 5212 and later */
 name|HAL_PHYERR_OFDM_TIMING
 init|=
 literal|17
@@ -570,6 +570,11 @@ comment|/* */
 name|HAL_PHYERR_OFDM_RESTART
 init|=
 literal|23
+block|,
+comment|/* */
+name|HAL_PHYERR_FALSE_RADAR_EXT
+init|=
+literal|24
 block|,
 comment|/* */
 name|HAL_PHYERR_CCK_TIMING
