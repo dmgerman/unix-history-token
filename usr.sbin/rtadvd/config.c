@@ -759,24 +759,24 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* gather on-link prefixes from the kernel or not. */
+comment|/* gather on-link prefixes from the network interfaces. */
 if|if
 condition|(
 name|agetflag
 argument_list|(
-literal|"noonlinkprefix"
+literal|"noifprefix"
 argument_list|)
 condition|)
 name|rai
 operator|->
-name|rai_advonlinkprefix
+name|rai_advifprefix
 operator|=
 literal|0
 expr_stmt|;
 else|else
 name|rai
 operator|->
-name|rai_advonlinkprefix
+name|rai_advifprefix
 operator|=
 literal|1
 expr_stmt|;
@@ -2110,7 +2110,7 @@ if|if
 condition|(
 name|rai
 operator|->
-name|rai_advonlinkprefix
+name|rai_advifprefix
 operator|&&
 name|rai
 operator|->
