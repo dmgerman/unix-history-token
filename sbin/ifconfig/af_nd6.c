@@ -746,6 +746,9 @@ operator|.
 name|flags
 operator|==
 literal|0
+operator|&&
+operator|!
+name|isdefif
 condition|)
 return|return;
 name|printb
