@@ -3583,7 +3583,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"<%s> packet size(%d) is too short"
+literal|"<%s> packet size(%zd) is too short"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3738,7 +3738,7 @@ argument_list|(
 name|LOG_NOTICE
 argument_list|,
 literal|"<%s> RS from %s on %s does not have enough "
-literal|"length (len = %d)"
+literal|"length (len = %zd)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3962,7 +3962,7 @@ argument_list|(
 name|LOG_NOTICE
 argument_list|,
 literal|"<%s> RA from %s on %s does not have enough "
-literal|"length (len = %d)"
+literal|"length (len = %zd)"
 argument_list|,
 name|__func__
 argument_list|,

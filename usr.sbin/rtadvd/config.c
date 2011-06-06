@@ -466,7 +466,7 @@ name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"<%s> labellen = %d"
+literal|"<%s> labellen = %td"
 argument_list|,
 name|__func__
 argument_list|,
