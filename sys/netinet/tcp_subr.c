@@ -1431,6 +1431,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|UMA_ZONE_NOFREE
+argument_list|,
+name|IPI_HASHFIELDS_4TUPLE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * These have to be type stable for the benefit of the timers. 	 */

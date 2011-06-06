@@ -2002,17 +2002,6 @@ name|reclaimed
 operator|=
 literal|1
 expr_stmt|;
-name|softdep_request_cleanup
-argument_list|(
-name|fs
-argument_list|,
-name|vp
-argument_list|,
-name|cred
-argument_list|,
-name|FLUSH_BLOCKS_WAIT
-argument_list|)
-expr_stmt|;
 name|UFS_UNLOCK
 argument_list|(
 name|ump
@@ -2036,6 +2025,17 @@ block|}
 name|UFS_LOCK
 argument_list|(
 name|ump
+argument_list|)
+expr_stmt|;
+name|softdep_request_cleanup
+argument_list|(
+name|fs
+argument_list|,
+name|vp
+argument_list|,
+name|cred
+argument_list|,
+name|FLUSH_BLOCKS_WAIT
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -12782,7 +12782,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function provides the capability for the fsck program to  * update an active filesystem. Fourteen operations are provided:  *  * adjrefcnt(inode, amt) - adjusts the reference count on the  *	specified inode by the specified amount. Under normal  *	operation the count should always go down. Decrementing  *	the count to zero will cause the inode to be freed.  * adjblkcnt(inode, amt) - adjust the number of blocks used to  *	by the specifed amount.  * adjndir, adjbfree, adjifree, adjffree, adjnumclusters(amt) -  *	adjust the superblock summary.  * freedirs(inode, count) - directory inodes [inode..inode + count - 1]  *	are marked as free. Inodes should never have to be marked  *	as in use.  * freefiles(inode, count) - file inodes [inode..inode + count - 1]  *	are marked as free. Inodes should never have to be marked  *	as in use.  * freeblks(blockno, size) - blocks [blockno..blockno + size - 1]  *	are marked as free. Blocks should never have to be marked  *	as in use.  * setflags(flags, set/clear) - the fs_flags field has the specified  *	flags set (second parameter +1) or cleared (second parameter -1).  * setcwd(dirinode) - set the current directory to dirinode in the  *	filesystem associated with the snapshot.  * setdotdot(oldvalue, newvalue) - Verify that the inode number for ".."  *	in the current directory is oldvalue then change it to newvalue.  * unlink(nameptr, oldvalue) - Verify that the inode number associated  *	with nameptr in the current directory is oldvalue then unlink it.  */
+comment|/*  * This function provides the capability for the fsck program to  * update an active filesystem. Fourteen operations are provided:  *  * adjrefcnt(inode, amt) - adjusts the reference count on the  *	specified inode by the specified amount. Under normal  *	operation the count should always go down. Decrementing  *	the count to zero will cause the inode to be freed.  * adjblkcnt(inode, amt) - adjust the number of blocks used by the  *	inode by the specified amount.  * adjndir, adjbfree, adjifree, adjffree, adjnumclusters(amt) -  *	adjust the superblock summary.  * freedirs(inode, count) - directory inodes [inode..inode + count - 1]  *	are marked as free. Inodes should never have to be marked  *	as in use.  * freefiles(inode, count) - file inodes [inode..inode + count - 1]  *	are marked as free. Inodes should never have to be marked  *	as in use.  * freeblks(blockno, size) - blocks [blockno..blockno + size - 1]  *	are marked as free. Blocks should never have to be marked  *	as in use.  * setflags(flags, set/clear) - the fs_flags field has the specified  *	flags set (second parameter +1) or cleared (second parameter -1).  * setcwd(dirinode) - set the current directory to dirinode in the  *	filesystem associated with the snapshot.  * setdotdot(oldvalue, newvalue) - Verify that the inode number for ".."  *	in the current directory is oldvalue then change it to newvalue.  * unlink(nameptr, oldvalue) - Verify that the inode number associated  *	with nameptr in the current directory is oldvalue then unlink it.  */
 end_comment
 
 begin_function_decl

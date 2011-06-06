@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -152,7 +158,7 @@ block|{
 name|struct
 name|ifinfo
 modifier|*
-name|ifinfo
+name|ifi
 decl_stmt|;
 name|struct
 name|timeval
@@ -166,20 +172,14 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|ifinfo
-operator|=
-name|iflist
-init|;
-name|ifinfo
-condition|;
-name|ifinfo
-operator|=
-name|ifinfo
-operator|->
-name|next
-control|)
+name|TAILQ_FOREACH
+argument_list|(
+argument|ifi
+argument_list|,
+argument|&ifinfo_head
+argument_list|,
+argument|ifi_next
+argument_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -187,7 +187,7 @@ name|fp
 argument_list|,
 literal|"Interface %s\n"
 argument_list|,
-name|ifinfo
+name|ifi
 operator|->
 name|ifname
 argument_list|)
@@ -201,7 +201,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ifinfo
+name|ifi
 operator|->
 name|probeinterval
 condition|)
@@ -212,7 +212,7 @@ name|fp
 argument_list|,
 literal|"%d\n"
 argument_list|,
-name|ifinfo
+name|ifi
 operator|->
 name|probeinterval
 argument_list|)
@@ -223,7 +223,7 @@ name|fp
 argument_list|,
 literal|"  probe timer: %d\n"
 argument_list|,
-name|ifinfo
+name|ifi
 operator|->
 name|probetimer
 argument_list|)
@@ -252,7 +252,7 @@ name|fp
 argument_list|,
 literal|"  interface status: %s\n"
 argument_list|,
-name|ifinfo
+name|ifi
 operator|->
 name|active
 operator|>
@@ -269,7 +269,7 @@ name|fp
 argument_list|,
 literal|"  other config: %s\n"
 argument_list|,
-name|ifinfo
+name|ifi
 operator|->
 name|otherconfig
 condition|?
@@ -286,7 +286,7 @@ literal|"  rtsold status: %s\n"
 argument_list|,
 name|ifstatstr
 index|[
-name|ifinfo
+name|ifi
 operator|->
 name|state
 index|]
@@ -298,7 +298,7 @@ name|fp
 argument_list|,
 literal|"  carrier detection: %s\n"
 argument_list|,
-name|ifinfo
+name|ifi
 operator|->
 name|mediareqok
 condition|?
@@ -313,18 +313,18 @@ name|fp
 argument_list|,
 literal|"  probes: %d, dadcount = %d\n"
 argument_list|,
-name|ifinfo
+name|ifi
 operator|->
 name|probes
 argument_list|,
-name|ifinfo
+name|ifi
 operator|->
 name|dadcount
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ifinfo
+name|ifi
 operator|->
 name|timer
 operator|.
@@ -334,7 +334,7 @@ name|tm_max
 operator|.
 name|tv_sec
 operator|&&
-name|ifinfo
+name|ifi
 operator|->
 name|timer
 operator|.
@@ -362,7 +362,7 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|ifinfo
+name|ifi
 operator|->
 name|timer
 operator|.
@@ -371,14 +371,14 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|ifinfo
+name|ifi
 operator|->
 name|timer
 operator|.
 name|tv_usec
 argument_list|,
 operator|(
-name|ifinfo
+name|ifi
 operator|->
 name|expire
 operator|.
@@ -393,7 +393,7 @@ literal|"expired"
 else|:
 name|sec2str
 argument_list|(
-name|ifinfo
+name|ifi
 operator|->
 name|expire
 operator|.
@@ -412,7 +412,7 @@ name|fp
 argument_list|,
 literal|"  number of valid RAs: %d\n"
 argument_list|,
-name|ifinfo
+name|ifi
 operator|->
 name|racnt
 argument_list|)

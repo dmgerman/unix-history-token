@@ -41,8 +41,7 @@ begin_struct
 struct|struct
 name|sockaddr_send
 block|{
-name|unsigned
-name|char
+name|uint8_t
 name|send_len
 decl_stmt|;
 comment|/* total length */

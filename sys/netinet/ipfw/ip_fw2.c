@@ -3024,6 +3024,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 		 * XXXRW: If we had the mbuf here, could use 		 * in_pcblookup_mbuf(). 		 */
 name|pcb
 operator|=
 operator|(

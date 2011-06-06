@@ -8,7 +8,7 @@ comment|/*	$KAME: if.c,v 1.17 2001/01/21 15:27:30 itojun Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -145,7 +151,8 @@ name|NEXT_SA
 parameter_list|(
 name|ap
 parameter_list|)
-value|(ap) = (struct sockaddr *) \ 	((caddr_t)(ap) + ((ap)->sa_len ? ROUNDUP((ap)->sa_len,\ 						 sizeof(u_long)) :\ 			  			 sizeof(u_long)))
+define|\
+value|(ap) = (struct sockaddr *)((caddr_t)(ap) +			\ 	    ((ap)->sa_len ? ROUNDUP((ap)->sa_len, sizeof(u_long)) :	\ 	    sizeof(u_long)))
 end_define
 
 begin_decl_stmt
@@ -1135,7 +1142,9 @@ end_function
 begin_function
 name|int
 name|rtbuf_len
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|size_t
 name|len
@@ -1356,6 +1365,40 @@ break|break;
 block|}
 if|if
 condition|(
+operator|(
+operator|(
+expr|struct
+name|rt_msghdr
+operator|*
+operator|)
+name|buf
+operator|)
+operator|->
+name|rtm_version
+operator|!=
+name|RTM_VERSION
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"<%s> routing message version mismatch "
+literal|"(buf=%p lim=%p rtm=%p)"
+argument_list|,
+name|__func__
+argument_list|,
+name|buf
+argument_list|,
+name|lim
+argument_list|,
+name|rtm
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
 name|FILTER_MATCH
 argument_list|(
 name|rtm
@@ -1367,9 +1410,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 continue|continue;
-block|}
 switch|switch
 condition|(
 name|rtm
@@ -1647,6 +1688,9 @@ comment|/* NOTREACHED */
 case|case
 name|RTM_IFINFO
 case|:
+case|case
+name|RTM_IFANNOUNCE
+case|:
 comment|/* found */
 operator|*
 name|lenp
@@ -1667,10 +1711,12 @@ block|}
 block|}
 return|return
 operator|(
+operator|(
 name|char
 operator|*
 operator|)
 name|rtm
+operator|)
 return|;
 block|}
 end_function
@@ -2742,8 +2788,19 @@ end_function
 begin_function
 name|void
 name|init_iflist
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
+name|syslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"<%s> generate iflist."
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ifblock
