@@ -14,5 +14,19 @@ name|_PATH_RTADVDCONF
 value|"/etc/rtadvd.conf"
 end_define
 
+begin_define
+define|#
+directive|define
+name|_PATH_RTADVDDUMP
+value|"/var/run/rtadvd.dump"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PATH_RTADVDPID
+value|"/var/run/rtadvd.pid"
+end_define
+
 end_unit
 
