@@ -354,6 +354,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|container_of
+parameter_list|(
+name|p
+parameter_list|,
+name|s
+parameter_list|,
+name|f
+parameter_list|)
+value|((s *)(((uint8_t *)(p)) - offsetof(s, f)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|swab16
 parameter_list|(
 name|x

@@ -179,6 +179,58 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SYSCTL_ADD_UQUAD
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_ADD_UQUAD
+value|SYSCTL_ADD_QUAD
+end_define
+
+begin_define
+define|#
+directive|define
+name|sysctl_handle_64
+value|sysctl_handle_quad
+end_define
+
+begin_define
+define|#
+directive|define
+name|CTLTYPE_U64
+value|CTLTYPE_QUAD
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|802507
+end_if
+
+begin_define
+define|#
+directive|define
+name|T4_DEVLOG
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -419,6 +471,15 @@ init|=
 literal|64
 block|,
 comment|/* At least 64 mandated by the firmware spec */
+name|INTR_IQ_QSIZE
+init|=
+literal|64
+block|,
+name|INTR_IQ_ESIZE
+init|=
+literal|64
+block|,
+comment|/* Handles some CPLs too, do not reduce */
 name|CTRL_EQ_QSIZE
 init|=
 literal|128
@@ -532,7 +593,7 @@ operator|<<
 literal|1
 operator|)
 block|,
-name|INTR_FWD
+name|INTR_SHARED
 init|=
 operator|(
 literal|1
@@ -540,6 +601,7 @@ operator|<<
 literal|2
 operator|)
 block|,
+comment|/* one set of intrq's for all ports */
 name|CXGBE_BUSY
 init|=
 operator|(
@@ -1379,19 +1441,11 @@ name|eq
 decl_stmt|;
 comment|/* MUST be first */
 comment|/* stats for common events first */
-name|uint64_t
-name|total_wrs
-decl_stmt|;
-comment|/* # of work requests sent down this queue */
 comment|/* stats for not-that-common events */
 name|uint32_t
 name|no_desc
 decl_stmt|;
 comment|/* out of hardware descriptors */
-name|uint32_t
-name|too_long
-decl_stmt|;
-comment|/* WR longer than hardware max */
 block|}
 name|__aligned
 argument_list|(
@@ -1415,6 +1469,9 @@ name|counter_val
 index|[
 name|SGE_NCOUNTERS
 index|]
+decl_stmt|;
+name|int
+name|fl_starve_threshold
 decl_stmt|;
 name|int
 name|nrxq
@@ -1446,9 +1503,9 @@ comment|/* Control queues */
 name|struct
 name|sge_iq
 modifier|*
-name|fiq
+name|intrq
 decl_stmt|;
-comment|/* Forwarded interrupt queues (INTR_FWD) */
+comment|/* Interrupt queues */
 name|struct
 name|sge_txq
 modifier|*
@@ -1580,6 +1637,12 @@ name|NCHAN
 index|]
 decl_stmt|;
 name|struct
+name|l2t_data
+modifier|*
+name|l2t
+decl_stmt|;
+comment|/* L2 table */
+name|struct
 name|tid_info
 name|tids
 decl_stmt|;
@@ -1614,7 +1677,17 @@ comment|/* from first_port_up to last_port_down */
 name|struct
 name|sysctl_oid
 modifier|*
+name|oid_fwq
+decl_stmt|;
+name|struct
+name|sysctl_oid
+modifier|*
 name|oid_ctrlq
+decl_stmt|;
+name|struct
+name|sysctl_oid
+modifier|*
+name|oid_intrq
 decl_stmt|;
 name|struct
 name|mtx
@@ -1930,14 +2003,25 @@ define|\
 value|rxq =&pi->adapter->sge.rxq[pi->first_rxq]; \ 	for (iter = 0; iter< pi->nrxq; ++iter, ++rxq)
 end_define
 
+begin_comment
+comment|/* One for errors, one for firmware events */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|NFIQ
+name|T4_EXTRA_INTR
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|NINTRQ
 parameter_list|(
 name|sc
 parameter_list|)
-value|((sc)->intr_count> 1 ? (sc)->intr_count - 1 : 1)
+value|((sc)->intr_count> T4_EXTRA_INTR ? \     (sc)->intr_count - T4_EXTRA_INTR : 1)
 end_define
 
 begin_function
@@ -2567,7 +2651,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|t4_intr_fwd
+name|t4_intr
 parameter_list|(
 name|void
 modifier|*
@@ -2588,36 +2672,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|t4_intr_evt
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|t4_intr_data
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|t4_evt_rx
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|t4_eth_rx
 parameter_list|(
 name|void
 modifier|*

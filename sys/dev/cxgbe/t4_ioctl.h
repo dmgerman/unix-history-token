@@ -611,6 +611,12 @@ block|{
 name|uint32_t
 name|idx
 decl_stmt|;
+name|uint16_t
+name|l2tidx
+decl_stmt|;
+name|uint16_t
+name|smtidx
+decl_stmt|;
 name|uint64_t
 name|hits
 decl_stmt|;
