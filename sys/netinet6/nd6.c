@@ -5338,6 +5338,7 @@ name|ia
 argument_list|)
 argument_list|)
 condition|)
+block|{
 name|duplicated_linklocal
 operator|=
 literal|1
@@ -5952,23 +5953,20 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_return
 return|return
 operator|(
 name|error
 operator|)
 return|;
-end_return
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/*  * Create neighbor cache entry and cache link-layer address,  * on reception of inbound ND6 packets.  (RS/RA/NS/redirect)  *  * type - ICMP6 type  * code - type dependent information  *  * XXXXX  *  The caller of this function already acquired the ndp   *  cache table lock because the cache entry is returned.  */
 end_comment
 
 begin_function
-unit|struct
+name|struct
 name|llentry
 modifier|*
 name|nd6_cache_lladdr
