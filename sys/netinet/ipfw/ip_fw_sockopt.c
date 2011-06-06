@@ -1422,17 +1422,19 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* A flush request (arg == 0) on empty ruleset 			 * returns with no error. On the contrary, 			 * if there is no match on a specific request, 			 * we return EINVAL. 			 */
+comment|/* A flush request (arg == 0 or cmd == 1) on empty 			 * ruleset returns with no error. On the contrary, 			 * if there is no match on a specific request, 			 * we return EINVAL. 			 */
+if|if
+condition|(
+name|arg
+operator|!=
+literal|0
+operator|&&
+name|cmd
+operator|!=
+literal|1
+condition|)
 name|error
 operator|=
-operator|(
-name|arg
-operator|==
-literal|0
-operator|)
-condition|?
-literal|0
-else|:
 name|EINVAL
 expr_stmt|;
 break|break;
