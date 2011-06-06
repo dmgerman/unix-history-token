@@ -244,7 +244,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ND6_IFF_DEFROUTE_RTADV
+name|ND6_IFF_NO_RADR
 value|0x40
 end_define
 

@@ -2663,7 +2663,7 @@ literal|"SIOCSIFINFO_FLAGS for -ifdisabled "
 literal|"failed."
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Ignore failure of clearing the flag 				 * intentionally.  The failure means 				 * address duplication wes detected. 				 */
+comment|/* 				 * Ignore failure of clearing the flag 				 * intentionally.  The failure means 				 * address duplication was detected. 				 */
 block|}
 name|EVENTHANDLER_INVOKE
 argument_list|(

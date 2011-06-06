@@ -1026,13 +1026,13 @@ name|VNET_DECLARE
 argument_list|(
 name|int
 argument_list|,
-name|ip6_defroute_rtadv
+name|ip6_no_radr
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Add a route in RA to defroute list.*/
+comment|/* No defroute from RA */
 end_comment
 
 begin_expr_stmt
@@ -1040,13 +1040,13 @@ name|VNET_DECLARE
 argument_list|(
 name|int
 argument_list|,
-name|ip6_disable_isrouter_rtadvif
+name|ip6_norbit_raif
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Disable R-bit in NA on RA 						  * receiving IF. */
+comment|/* Disable R-bit in NA on RA 					 * receiving IF. */
 end_comment
 
 begin_expr_stmt
@@ -1149,15 +1149,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|V_ip6_defroute_rtadv
-value|VNET(ip6_defroute_rtadv)
+name|V_ip6_no_radr
+value|VNET(ip6_no_radr)
 end_define
 
 begin_define
 define|#
 directive|define
-name|V_ip6_disable_isrouter_rtadvif
-value|VNET(ip6_disable_isrouter_rtadvif)
+name|V_ip6_norbit_raif
+value|VNET(ip6_norbit_raif)
 end_define
 
 begin_define

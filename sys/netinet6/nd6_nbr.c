@@ -559,7 +559,7 @@ name|flags
 operator|&
 name|ND6_IFF_ACCEPT_RTADV
 operator|&&
-name|V_ip6_disable_isrouter_rtadvif
+name|V_ip6_norbit_raif
 condition|)
 name|rflag
 operator|=

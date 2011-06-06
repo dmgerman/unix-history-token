@@ -976,7 +976,7 @@ name|ND6_IFF_ACCEPT_RTADV
 expr_stmt|;
 if|if
 condition|(
-name|V_ip6_defroute_rtadv
+name|V_ip6_no_radr
 operator|&&
 operator|!
 operator|(
@@ -991,7 +991,7 @@ name|nd
 operator|->
 name|flags
 operator||=
-name|ND6_IFF_DEFROUTE_RTADV
+name|ND6_IFF_NO_RADR
 expr_stmt|;
 comment|/* XXX: we cannot call nd6_setmtu since ifp is not fully initialized */
 name|nd6_setmtu0
