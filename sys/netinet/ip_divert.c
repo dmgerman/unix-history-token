@@ -441,6 +441,8 @@ argument_list|,
 name|div_inpcb_fini
 argument_list|,
 name|UMA_ZONE_NOFREE
+argument_list|,
+name|IPI_HASHFIELDS_NONE
 argument_list|)
 expr_stmt|;
 block|}

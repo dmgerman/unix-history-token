@@ -813,6 +813,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|UMA_ZONE_NOFREE
+argument_list|,
+name|IPI_HASHFIELDS_2TUPLE
 argument_list|)
 expr_stmt|;
 name|V_udpcb_zone
