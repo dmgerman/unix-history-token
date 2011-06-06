@@ -5237,6 +5237,15 @@ operator|&
 name|ND6_IFF_IFDISABLED
 operator|)
 operator|&&
+operator|!
+operator|(
+name|ND
+operator|.
+name|flags
+operator|&
+name|ND6_IFF_IFDISABLED
+operator|)
+operator|&&
 operator|(
 name|ND
 operator|.
@@ -5518,6 +5527,7 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|ND_IFINFO
 argument_list|(
 name|ifp
@@ -5526,6 +5536,16 @@ operator|->
 name|flags
 operator|&
 name|ND6_IFF_AUTO_LINKLOCAL
+operator|)
+operator|&&
+operator|!
+operator|(
+name|ND
+operator|.
+name|flags
+operator|&
+name|ND6_IFF_IFDISABLED
+operator|)
 condition|)
 block|{
 comment|/* 			 * When the IF already has 			 * ND6_IFF_AUTO_LINKLOCAL and no link-local 			 * address is assigned, try to assign one. 			 */
