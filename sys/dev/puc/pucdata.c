@@ -118,6 +118,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|puc_config_f
+name|puc_config_oxford_pcie
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|puc_config_f
 name|puc_config_quatech
 decl_stmt|;
 end_decl_stmt
@@ -147,13 +154,6 @@ begin_decl_stmt
 specifier|static
 name|puc_config_f
 name|puc_config_titan
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|puc_config_f
-name|puc_config_oxford_pcie
 decl_stmt|;
 end_decl_stmt
 
