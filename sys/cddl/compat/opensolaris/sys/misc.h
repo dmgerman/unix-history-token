@@ -15,11 +15,17 @@ directive|define
 name|_OPENSOLARIS_SYS_MISC_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/limits.h>
+end_include
+
 begin_define
 define|#
 directive|define
 name|MAXUID
-value|2147483647
+value|UID_MAX
 end_define
 
 begin_define
@@ -90,11 +96,25 @@ name|opensolaris_utsname
 block|{
 name|char
 modifier|*
+name|sysname
+decl_stmt|;
+name|char
+modifier|*
 name|nodename
 decl_stmt|;
 name|char
 modifier|*
-name|sysname
+name|release
+decl_stmt|;
+name|char
+name|version
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|char
+modifier|*
+name|machine
 decl_stmt|;
 block|}
 struct|;

@@ -4,7 +4,11 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+end_comment
+
+begin_comment
+comment|/* Portions Copyright 2010 Robert Milkowski */
 end_comment
 
 begin_ifndef
@@ -75,20 +79,81 @@ modifier|*
 name|lwb_zio
 decl_stmt|;
 comment|/* zio for this buffer */
+name|dmu_tx_t
+modifier|*
+name|lwb_tx
+decl_stmt|;
+comment|/* tx for log block allocation */
 name|uint64_t
 name|lwb_max_txg
 decl_stmt|;
 comment|/* highest txg in this lwb */
-name|txg_handle_t
-name|lwb_txgh
-decl_stmt|;
-comment|/* txg handle for txg_exit() */
 name|list_node_t
 name|lwb_node
 decl_stmt|;
 comment|/* zilog->zl_lwb_list linkage */
 block|}
 name|lwb_t
+typedef|;
+comment|/*  * Intent log transaction lists  */
+typedef|typedef
+struct|struct
+name|itxs
+block|{
+name|list_t
+name|i_sync_list
+decl_stmt|;
+comment|/* list of synchronous itxs */
+name|avl_tree_t
+name|i_async_tree
+decl_stmt|;
+comment|/* tree of foids for async itxs */
+block|}
+name|itxs_t
+typedef|;
+typedef|typedef
+struct|struct
+name|itxg
+block|{
+name|kmutex_t
+name|itxg_lock
+decl_stmt|;
+comment|/* lock for this structure */
+name|uint64_t
+name|itxg_txg
+decl_stmt|;
+comment|/* txg for this chain */
+name|uint64_t
+name|itxg_sod
+decl_stmt|;
+comment|/* total size on disk for this txg */
+name|itxs_t
+modifier|*
+name|itxg_itxs
+decl_stmt|;
+comment|/* sync and async itxs */
+block|}
+name|itxg_t
+typedef|;
+comment|/* for async nodes we build up an AVL tree of lists of async itxs per file */
+typedef|typedef
+struct|struct
+name|itx_async_node
+block|{
+name|uint64_t
+name|ia_foid
+decl_stmt|;
+comment|/* file object id */
+name|list_t
+name|ia_list
+decl_stmt|;
+comment|/* list of async itxs for this foid */
+name|avl_node_t
+name|ia_node
+decl_stmt|;
+comment|/* AVL tree linkage */
+block|}
+name|itx_async_node_t
 typedef|;
 comment|/*  * Vdev flushing: during a zil_commit(), we build up an AVL tree of the vdevs  * we've touched so we know which ones need a write cache flush at the end.  */
 typedef|typedef
@@ -106,6 +171,10 @@ comment|/* AVL tree linkage */
 block|}
 name|zil_vdev_node_t
 typedef|;
+define|#
+directive|define
+name|ZIL_PREV_BLKS
+value|16
 comment|/*  * Stable storage intent log management structure.  One per dataset.  */
 struct|struct
 name|zilog
@@ -147,17 +216,13 @@ name|zl_root_zio
 decl_stmt|;
 comment|/* log writer root zio */
 name|uint64_t
-name|zl_itx_seq
-decl_stmt|;
-comment|/* next itx sequence number */
-name|uint64_t
-name|zl_commit_seq
-decl_stmt|;
-comment|/* committed upto this number */
-name|uint64_t
 name|zl_lr_seq
 decl_stmt|;
-comment|/* log record sequence number */
+comment|/* on-disk log record sequence number */
+name|uint64_t
+name|zl_commit_lr_seq
+decl_stmt|;
+comment|/* last committed on-disk lr seq */
 name|uint64_t
 name|zl_destroy_txg
 decl_stmt|;
@@ -206,13 +271,59 @@ name|zl_writer
 decl_stmt|;
 comment|/* boolean: write setup in progress */
 name|uint8_t
-name|zl_log_error
+name|zl_logbias
 decl_stmt|;
-comment|/* boolean: log write error */
+comment|/* latency or throughput */
+name|uint8_t
+name|zl_sync
+decl_stmt|;
+comment|/* synchronous or asynchronous */
+name|int
+name|zl_parse_error
+decl_stmt|;
+comment|/* last zil_parse() error */
+name|uint64_t
+name|zl_parse_blk_seq
+decl_stmt|;
+comment|/* highest blk seq on last parse */
+name|uint64_t
+name|zl_parse_lr_seq
+decl_stmt|;
+comment|/* highest lr seq on last parse */
+name|uint64_t
+name|zl_parse_blk_count
+decl_stmt|;
+comment|/* number of blocks parsed */
+name|uint64_t
+name|zl_parse_lr_count
+decl_stmt|;
+comment|/* number of log records parsed */
+name|uint64_t
+name|zl_next_batch
+decl_stmt|;
+comment|/* next batch number */
+name|uint64_t
+name|zl_com_batch
+decl_stmt|;
+comment|/* committed batch number */
+name|kcondvar_t
+name|zl_cv_batch
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* batch condition variables */
+name|itxg_t
+name|zl_itxg
+index|[
+name|TXG_SIZE
+index|]
+decl_stmt|;
+comment|/* intent log txg chains */
 name|list_t
-name|zl_itx_list
+name|zl_itx_commit_list
 decl_stmt|;
-comment|/* in-memory itx list */
+comment|/* itx list to be committed */
 name|uint64_t
 name|zl_itx_list_sz
 decl_stmt|;
@@ -221,10 +332,6 @@ name|uint64_t
 name|zl_cur_used
 decl_stmt|;
 comment|/* current commit log size used */
-name|uint64_t
-name|zl_prev_used
-decl_stmt|;
-comment|/* previous commit log size used */
 name|list_t
 name|zl_lwb_list
 decl_stmt|;
@@ -243,9 +350,9 @@ name|zl_clean_taskq
 decl_stmt|;
 comment|/* runs lwb and itx clean tasks */
 name|avl_tree_t
-name|zl_dva_tree
+name|zl_bp_tree
 decl_stmt|;
-comment|/* track DVAs during log parse */
+comment|/* track bps during log parse */
 name|clock_t
 name|zl_replay_time
 decl_stmt|;
@@ -254,11 +361,26 @@ name|uint64_t
 name|zl_replay_blks
 decl_stmt|;
 comment|/* number of log blocks replayed */
+name|zil_header_t
+name|zl_old_header
+decl_stmt|;
+comment|/* debugging aid */
+name|uint_t
+name|zl_prev_blks
+index|[
+name|ZIL_PREV_BLKS
+index|]
+decl_stmt|;
+comment|/* size - sector rounded */
+name|uint_t
+name|zl_prev_rotor
+decl_stmt|;
+comment|/* rotor for zl_prev[] */
 block|}
 struct|;
 typedef|typedef
 struct|struct
-name|zil_dva_node
+name|zil_bp_node
 block|{
 name|dva_t
 name|zn_dva
@@ -267,8 +389,12 @@ name|avl_node_t
 name|zn_node
 decl_stmt|;
 block|}
-name|zil_dva_node_t
+name|zil_bp_node_t
 typedef|;
+define|#
+directive|define
+name|ZIL_MAX_LOG_DATA
+value|(SPA_MAXBLOCKSIZE - sizeof (zil_chain_t) - \     sizeof (lr_write_t))
 ifdef|#
 directive|ifdef
 name|__cplusplus

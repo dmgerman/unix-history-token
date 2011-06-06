@@ -64,17 +64,37 @@ directive|endif
 struct|struct
 name|metaslab_class
 block|{
+name|spa_t
+modifier|*
+name|mc_spa
+decl_stmt|;
 name|metaslab_group_t
 modifier|*
 name|mc_rotor
-decl_stmt|;
-name|uint64_t
-name|mc_allocated
 decl_stmt|;
 name|space_map_ops_t
 modifier|*
 name|mc_ops
 decl_stmt|;
+name|uint64_t
+name|mc_aliquot
+decl_stmt|;
+name|uint64_t
+name|mc_alloc
+decl_stmt|;
+comment|/* total allocated space */
+name|uint64_t
+name|mc_deferred
+decl_stmt|;
+comment|/* total deferred frees */
+name|uint64_t
+name|mc_space
+decl_stmt|;
+comment|/* total space (alloc + free) */
+name|uint64_t
+name|mc_dspace
+decl_stmt|;
+comment|/* total deflated space */
 block|}
 struct|;
 struct|struct
@@ -94,6 +114,9 @@ name|mg_bonus_area
 decl_stmt|;
 name|int64_t
 name|mg_bias
+decl_stmt|;
+name|int64_t
+name|mg_activation_count
 decl_stmt|;
 name|metaslab_class_t
 modifier|*
@@ -144,9 +167,20 @@ index|]
 decl_stmt|;
 comment|/* freed this txg	*/
 name|space_map_t
+name|ms_defermap
+index|[
+name|TXG_DEFER_SIZE
+index|]
+decl_stmt|;
+comment|/* deferred frees	*/
+name|space_map_t
 name|ms_map
 decl_stmt|;
 comment|/* in-core free space map	*/
+name|int64_t
+name|ms_deferspace
+decl_stmt|;
+comment|/* sum of ms_defermap[] space	*/
 name|uint64_t
 name|ms_weight
 decl_stmt|;

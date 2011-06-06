@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -66,14 +66,6 @@ parameter_list|)
 value|((zap)->zap_f.zap_block_shift)
 define|#
 directive|define
-name|ZAP_MAXCD
-value|(uint32_t)(-1)
-define|#
-directive|define
-name|ZAP_HASHBITS
-value|28
-define|#
-directive|define
 name|MZAP_ENT_LEN
 value|64
 define|#
@@ -88,6 +80,10 @@ define|#
 directive|define
 name|MZAP_MAX_BLKSZ
 value|(1<< MZAP_MAX_BLKSHIFT)
+define|#
+directive|define
+name|ZAP_NEED_CD
+value|(-1U)
 typedef|typedef
 struct|struct
 name|mzap_ent_phys
@@ -154,12 +150,23 @@ decl_stmt|;
 name|uint64_t
 name|mze_hash
 decl_stmt|;
-name|mzap_ent_phys_t
-name|mze_phys
+name|uint32_t
+name|mze_cd
 decl_stmt|;
+comment|/* copy from mze_phys->mze_cd */
 block|}
 name|mzap_ent_t
 typedef|;
+define|#
+directive|define
+name|MZE_PHYS
+parameter_list|(
+name|zap
+parameter_list|,
+name|mze
+parameter_list|)
+define|\
+value|(&(zap)->zap_m.zap_phys->mz_chunk[(mze)->mze_chunkid])
 comment|/*  * The (fat) zap is stored in one object. It is an array of  * 1<<FZAP_BLOCK_SHIFT byte blocks. The layout looks like one of:  *  * ptrtbl fits in first block:  * 	[zap_phys_t zap_ptrtbl_shift< 6] [zap_leaf_t] ...  *  * ptrtbl too big for first block:  * 	[zap_phys_t zap_ptrtbl_shift>= 6] [zap_leaf_t] [ptrtbl] ...  *  */
 struct_decl|struct
 name|dmu_buf
@@ -258,6 +265,10 @@ name|uint64_t
 name|zap_normflags
 decl_stmt|;
 comment|/* flags for u8_textprep_str() */
+name|uint64_t
+name|zap_flags
+decl_stmt|;
+comment|/* zap_flags_t */
 comment|/* 	 * This structure is followed by padding, and then the embedded 	 * pointer table.  The embedded pointer table takes up second 	 * half of the block.  It is accessed using the 	 * ZAP_EMBEDDED_PTRTBL_ENT() macro. 	 */
 block|}
 name|zap_phys_t
@@ -348,21 +359,30 @@ name|zap_t
 modifier|*
 name|zn_zap
 decl_stmt|;
+name|int
+name|zn_key_intlen
+decl_stmt|;
 specifier|const
-name|char
+name|void
 modifier|*
-name|zn_name_orij
+name|zn_key_orig
+decl_stmt|;
+name|int
+name|zn_key_orig_numints
+decl_stmt|;
+specifier|const
+name|void
+modifier|*
+name|zn_key_norm
+decl_stmt|;
+name|int
+name|zn_key_norm_numints
 decl_stmt|;
 name|uint64_t
 name|zn_hash
 decl_stmt|;
 name|matchtype_t
 name|zn_matchtype
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|zn_name_norm
 decl_stmt|;
 name|char
 name|zn_normbuf
@@ -454,7 +474,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|name
+name|key
 parameter_list|,
 name|matchtype_t
 name|mt
@@ -466,6 +486,30 @@ parameter_list|(
 name|zap_name_t
 modifier|*
 name|zn
+parameter_list|)
+function_decl|;
+name|int
+name|zap_hashbits
+parameter_list|(
+name|zap_t
+modifier|*
+name|zap
+parameter_list|)
+function_decl|;
+name|uint32_t
+name|zap_maxcd
+parameter_list|(
+name|zap_t
+modifier|*
+name|zap
+parameter_list|)
+function_decl|;
+name|uint64_t
+name|zap_getflags
+parameter_list|(
+name|zap_t
+modifier|*
+name|zap
 parameter_list|)
 function_decl|;
 define|#
@@ -527,6 +571,14 @@ parameter_list|,
 name|boolean_t
 modifier|*
 name|normalization_conflictp
+parameter_list|)
+function_decl|;
+name|void
+name|fzap_prefetch
+parameter_list|(
+name|zap_name_t
+modifier|*
+name|zn
 parameter_list|)
 function_decl|;
 name|int
@@ -695,6 +747,21 @@ parameter_list|,
 name|dmu_tx_t
 modifier|*
 name|tx
+parameter_list|,
+name|zap_flags_t
+name|flags
+parameter_list|)
+function_decl|;
+name|int
+name|fzap_cursor_move_to_key
+parameter_list|(
+name|zap_cursor_t
+modifier|*
+name|zc
+parameter_list|,
+name|zap_name_t
+modifier|*
+name|zn
 parameter_list|)
 function_decl|;
 ifdef|#

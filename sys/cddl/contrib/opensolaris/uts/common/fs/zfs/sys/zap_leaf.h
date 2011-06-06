@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -19,12 +19,11 @@ directive|define
 name|_SYS_ZAP_LEAF_H
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
+begin_include
+include|#
+directive|include
+file|<sys/zap.h>
+end_include
 
 begin_ifdef
 ifdef|#
@@ -40,6 +39,12 @@ endif|#
 directive|endif
 struct_decl|struct
 name|zap
+struct_decl|;
+struct_decl|struct
+name|zap_name
+struct_decl|;
+struct_decl|struct
+name|zap_stats
 struct_decl|;
 define|#
 directive|define
@@ -214,9 +219,9 @@ name|le_type
 decl_stmt|;
 comment|/* always ZAP_CHUNK_ENTRY */
 name|uint8_t
-name|le_int_size
+name|le_value_intlen
 decl_stmt|;
-comment|/* size of ints */
+comment|/* size of value's ints */
 name|uint16_t
 name|le_next
 decl_stmt|;
@@ -226,15 +231,15 @@ name|le_name_chunk
 decl_stmt|;
 comment|/* first chunk of the name */
 name|uint16_t
-name|le_name_length
+name|le_name_numints
 decl_stmt|;
-comment|/* bytes in name, incl null */
+comment|/* ints in name (incl null) */
 name|uint16_t
 name|le_value_chunk
 decl_stmt|;
 comment|/* first chunk of the value */
 name|uint16_t
-name|le_value_length
+name|le_value_numints
 decl_stmt|;
 comment|/* value length in ints */
 name|uint32_t
@@ -358,7 +363,8 @@ name|zap_leaf_t
 modifier|*
 name|l
 parameter_list|,
-name|zap_name_t
+name|struct
+name|zap_name
 modifier|*
 name|zn
 parameter_list|,
@@ -412,6 +418,11 @@ specifier|extern
 name|int
 name|zap_entry_read_name
 parameter_list|(
+name|struct
+name|zap
+modifier|*
+name|zap
+parameter_list|,
 specifier|const
 name|zap_entry_handle_t
 modifier|*
@@ -465,13 +476,10 @@ name|zap_leaf_t
 modifier|*
 name|l
 parameter_list|,
-specifier|const
-name|char
+name|struct
+name|zap_name
 modifier|*
-name|name
-parameter_list|,
-name|uint64_t
-name|h
+name|zn
 parameter_list|,
 name|uint32_t
 name|cd
@@ -501,7 +509,8 @@ name|zap_entry_handle_t
 modifier|*
 name|zeh
 parameter_list|,
-name|zap_name_t
+name|struct
+name|zap_name
 modifier|*
 name|zn
 parameter_list|,
@@ -510,7 +519,8 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|zap_t
+name|struct
+name|zap
 modifier|*
 name|zap
 parameter_list|)
@@ -560,7 +570,8 @@ specifier|extern
 name|void
 name|zap_leaf_stats
 parameter_list|(
-name|zap_t
+name|struct
+name|zap
 modifier|*
 name|zap
 parameter_list|,
@@ -568,7 +579,8 @@ name|zap_leaf_t
 modifier|*
 name|l
 parameter_list|,
-name|zap_stats_t
+name|struct
+name|zap_stats
 modifier|*
 name|zs
 parameter_list|)

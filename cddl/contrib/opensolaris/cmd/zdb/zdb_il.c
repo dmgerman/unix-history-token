@@ -81,6 +81,18 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|prefix
+index|[
+literal|4
+index|]
+init|=
+literal|"\t\t\t"
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -106,8 +118,6 @@ decl_stmt|;
 name|sprintf_blkptr
 argument_list|(
 name|blkbuf
-argument_list|,
-name|BP_SPRINTF_LEN
 argument_list|,
 name|bp
 argument_list|)
@@ -161,7 +171,16 @@ decl_stmt|;
 name|char
 modifier|*
 name|name
-init|=
+decl_stmt|,
+modifier|*
+name|link
+decl_stmt|;
+name|lr_attr_t
+modifier|*
+name|lrattr
+decl_stmt|;
+name|name
+operator|=
 operator|(
 name|char
 operator|*
@@ -171,11 +190,57 @@ name|lr
 operator|+
 literal|1
 operator|)
-decl_stmt|;
-name|char
-modifier|*
+expr_stmt|;
+if|if
+condition|(
+name|lr
+operator|->
+name|lr_common
+operator|.
+name|lrc_txtype
+operator|==
+name|TX_CREATE_ATTR
+operator|||
+name|lr
+operator|->
+name|lr_common
+operator|.
+name|lrc_txtype
+operator|==
+name|TX_MKDIR_ATTR
+condition|)
+block|{
+name|lrattr
+operator|=
+operator|(
+name|lr_attr_t
+operator|*
+operator|)
+operator|(
+name|lr
+operator|+
+literal|1
+operator|)
+expr_stmt|;
+name|name
+operator|+=
+name|ZIL_XVAT_SIZE
+argument_list|(
+name|lrattr
+operator|->
+name|lr_attr_masksize
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|txtype
+operator|==
+name|TX_SYMLINK
+condition|)
+block|{
 name|link
-init|=
+operator|=
 name|name
 operator|+
 name|strlen
@@ -184,42 +249,51 @@ name|name
 argument_list|)
 operator|+
 literal|1
-decl_stmt|;
-if|if
-condition|(
-name|txtype
-operator|==
-name|TX_SYMLINK
-condition|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\t\t\t%s -> %s\n"
+literal|"%s%s -> %s\n"
+argument_list|,
+name|prefix
 argument_list|,
 name|name
 argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
-else|else
+block|}
+elseif|else
+if|if
+condition|(
+name|txtype
+operator|!=
+name|TX_MKXATTR
+condition|)
+block|{
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\t\t\t%s\n"
+literal|"%s%s\n"
+argument_list|,
+name|prefix
 argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\t\t\t%s"
+literal|"%s%s"
+argument_list|,
+name|prefix
 argument_list|,
 name|ctime
 argument_list|(
@@ -233,7 +307,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\t\t\tdoid %llu, foid %llu, mode %llo\n"
+literal|"%sdoid %llu, foid %llu, mode %llo\n"
+argument_list|,
+name|prefix
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -262,7 +338,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\t\t\tuid %llu, gid %llu, gen %llu, rdev 0x%llx\n"
+literal|"%suid %llu, gid %llu, gen %llu, rdev 0x%llx\n"
+argument_list|,
+name|prefix
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -322,7 +400,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\t\t\tdoid %llu, name %s\n"
+literal|"%sdoid %llu, name %s\n"
+argument_list|,
+name|prefix
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -371,7 +451,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\t\t\tdoid %llu, link_obj %llu, name %s\n"
+literal|"%sdoid %llu, link_obj %llu, name %s\n"
+argument_list|,
+name|prefix
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -454,7 +536,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\t\t\tsdoid %llu, tdoid %llu\n"
+literal|"%ssdoid %llu, tdoid %llu\n"
+argument_list|,
+name|prefix
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -476,7 +560,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\t\t\tsrc %s tgt %s\n"
+literal|"%ssrc %s tgt %s\n"
+argument_list|,
+name|prefix
 argument_list|,
 name|snm
 argument_list|,
@@ -523,6 +609,9 @@ name|lr
 operator|->
 name|lr_blkptr
 decl_stmt|;
+name|zbookmark_t
+name|zb
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -553,8 +642,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\t\t\tfoid %llu, offset 0x%llx,"
-literal|" length 0x%llx, blkoff 0x%llx\n"
+literal|"%sfoid %llu, offset %llx, length %llx\n"
+argument_list|,
+name|prefix
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -564,7 +654,7 @@ operator|->
 name|lr_foid
 argument_list|,
 operator|(
-name|longlong_t
+name|u_longlong_t
 operator|)
 name|lr
 operator|->
@@ -576,13 +666,6 @@ operator|)
 name|lr
 operator|->
 name|lr_length
-argument_list|,
-operator|(
-name|u_longlong_t
-operator|)
-name|lr
-operator|->
-name|lr_blkoff
 argument_list|)
 expr_stmt|;
 if|if
@@ -615,7 +698,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\t\t\thas blkptr, %s\n"
+literal|"%shas blkptr, %s\n"
+argument_list|,
+name|prefix
 argument_list|,
 name|bp
 operator|->
@@ -637,7 +722,7 @@ name|print_log_bp
 argument_list|(
 name|bp
 argument_list|,
-literal|"\t\t\t"
+name|prefix
 argument_list|)
 expr_stmt|;
 if|if
@@ -684,45 +769,71 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%s<hole>\n"
+argument_list|,
+name|prefix
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
-else|else
+if|if
+condition|(
+name|bp
+operator|->
+name|blk_birth
+operator|<
+name|zilog
+operator|->
+name|zl_header
+operator|->
+name|zh_claim_txg
+condition|)
 block|{
-name|zbookmark_t
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%s<block already committed>\n"
+argument_list|,
+name|prefix
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|SET_BOOKMARK
+argument_list|(
+operator|&
 name|zb
-decl_stmt|;
-name|zb
-operator|.
-name|zb_objset
-operator|=
+argument_list|,
 name|dmu_objset_id
 argument_list|(
 name|zilog
 operator|->
 name|zl_os
 argument_list|)
-expr_stmt|;
-name|zb
-operator|.
-name|zb_object
-operator|=
+argument_list|,
 name|lr
 operator|->
 name|lr_foid
+argument_list|,
+name|ZB_ZIL_LEVEL
+argument_list|,
+name|lr
+operator|->
+name|lr_offset
+operator|/
+name|BP_GET_LSIZE
+argument_list|(
+name|bp
+argument_list|)
+argument_list|)
 expr_stmt|;
-name|zb
-operator|.
-name|zb_level
-operator|=
-literal|0
-expr_stmt|;
-name|zb
-operator|.
-name|zb_blkid
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-comment|/* unknown */
 name|error
 operator|=
 name|zio_wait
@@ -762,14 +873,9 @@ condition|(
 name|error
 condition|)
 return|return;
-block|}
 name|data
 operator|=
 name|buf
-operator|+
-name|lr
-operator|->
-name|lr_blkoff
 expr_stmt|;
 block|}
 else|else
@@ -813,7 +919,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\t\t\t"
+literal|"%s"
+argument_list|,
+name|prefix
 argument_list|)
 expr_stmt|;
 while|while
@@ -895,7 +1003,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\t\t\tfoid %llu, offset 0x%llx, length 0x%llx\n"
+literal|"%sfoid %llu, offset 0x%llx, length 0x%llx\n"
+argument_list|,
+name|prefix
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -974,7 +1084,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\t\t\tfoid %llu, mask 0x%llx\n"
+literal|"%sfoid %llu, mask 0x%llx\n"
+argument_list|,
+name|prefix
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -1005,7 +1117,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\t\t\tAT_MODE  %llo\n"
+literal|"%sAT_MODE  %llo\n"
+argument_list|,
+name|prefix
 argument_list|,
 operator|(
 name|longlong_t
@@ -1030,7 +1144,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\t\t\tAT_UID   %llu\n"
+literal|"%sAT_UID   %llu\n"
+argument_list|,
+name|prefix
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -1055,7 +1171,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\t\t\tAT_GID   %llu\n"
+literal|"%sAT_GID   %llu\n"
+argument_list|,
+name|prefix
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -1080,7 +1198,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\t\t\tAT_SIZE  %llu\n"
+literal|"%sAT_SIZE  %llu\n"
+argument_list|,
+name|prefix
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -1105,7 +1225,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\t\t\tAT_ATIME %llu.%09llu %s"
+literal|"%sAT_ATIME %llu.%09llu %s"
+argument_list|,
+name|prefix
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -1149,7 +1271,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\t\t\tAT_MTIME %llu.%09llu %s"
+literal|"%sAT_MTIME %llu.%09llu %s"
+argument_list|,
+name|prefix
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -1208,7 +1332,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\t\t\tfoid %llu, aclcnt %llu\n"
+literal|"%sfoid %llu, aclcnt %llu\n"
+argument_list|,
+name|prefix
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -1403,7 +1529,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|print_log_record
 parameter_list|(
 name|zilog_t
@@ -1555,6 +1681,11 @@ operator|.
 name|zri_count
 operator|++
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1564,7 +1695,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|print_log_block
 parameter_list|(
 name|zilog_t
@@ -1587,6 +1718,8 @@ name|char
 name|blkbuf
 index|[
 name|BP_SPRINTF_LEN
+operator|+
+literal|10
 index|]
 decl_stmt|;
 name|int
@@ -1615,7 +1748,11 @@ name|verbose
 operator|<=
 literal|3
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|verbose
@@ -1637,13 +1774,6 @@ name|sprintf_blkptr
 argument_list|(
 name|blkbuf
 operator|+
-name|strlen
-argument_list|(
-name|blkbuf
-argument_list|)
-argument_list|,
-name|BP_SPRINTF_LEN
-operator|-
 name|strlen
 argument_list|(
 name|blkbuf
@@ -1720,6 +1850,11 @@ argument_list|,
 name|blkbuf
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1908,7 +2043,7 @@ literal|0
 operator|||
 name|verbose
 operator|<
-literal|2
+literal|1
 condition|)
 return|return;
 operator|(
@@ -1916,7 +2051,8 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\n    ZIL header: claim_txg %llu, claim_seq %llu"
+literal|"\n    ZIL header: claim_txg %llu, "
+literal|"claim_blk_seq %llu, claim_lr_seq %llu"
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -1930,7 +2066,14 @@ name|u_longlong_t
 operator|)
 name|zh
 operator|->
-name|zh_claim_seq
+name|zh_claim_blk_seq
+argument_list|,
+operator|(
+name|u_longlong_t
+operator|)
+name|zh
+operator|->
+name|zh_claim_lr_seq
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1953,22 +2096,6 @@ operator|)
 name|zh
 operator|->
 name|zh_flags
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|verbose
-operator|>=
-literal|4
-condition|)
-name|print_log_bp
-argument_list|(
-operator|&
-name|zh
-operator|->
-name|zh_log
-argument_list|,
-literal|"\n\tfirst block: "
 argument_list|)
 expr_stmt|;
 for|for

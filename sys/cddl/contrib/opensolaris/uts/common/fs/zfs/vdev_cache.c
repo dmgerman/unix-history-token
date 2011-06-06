@@ -660,7 +660,8 @@ name|ve
 operator|->
 name|ve_lastused
 operator|=
-name|LBOLT
+name|ddi_get_lbolt
+argument_list|()
 expr_stmt|;
 name|ve
 operator|->
@@ -755,7 +756,8 @@ name|ve
 operator|->
 name|ve_lastused
 operator|!=
-name|LBOLT
+name|ddi_get_lbolt
+argument_list|()
 condition|)
 block|{
 name|avl_remove
@@ -772,7 +774,8 @@ name|ve
 operator|->
 name|ve_lastused
 operator|=
-name|LBOLT
+name|ddi_get_lbolt
+argument_list|()
 expr_stmt|;
 name|avl_add
 argument_list|(

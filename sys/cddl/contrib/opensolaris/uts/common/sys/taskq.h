@@ -85,6 +85,9 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
+struct_decl|struct
+name|proc
+struct_decl|;
 comment|/*  * Public flags for taskq_create(): bit range 0-15  */
 define|#
 directive|define
@@ -106,6 +109,11 @@ directive|define
 name|TASKQ_THREADS_CPU_PCT
 value|0x0008
 comment|/* number of threads as % of ncpu */
+define|#
+directive|define
+name|TASKQ_DC_BATCH
+value|0x0010
+comment|/* Taskq uses SDC in batch mode */
 comment|/*  * Flags for taskq_dispatch. TQ_SLEEP/TQ_NOSLEEP should be same as  * KM_SLEEP/KM_NOSLEEP.  */
 define|#
 directive|define
@@ -127,6 +135,11 @@ directive|define
 name|TQ_NOALLOC
 value|0x04
 comment|/* cannot allocate memory; may fail */
+define|#
+directive|define
+name|TQ_FRONT
+value|0x08
+comment|/* Put task at the front of the queue */
 ifdef|#
 directive|ifdef
 name|_KERNEL
@@ -187,6 +200,54 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|,
+name|uint_t
+parameter_list|)
+function_decl|;
+specifier|extern
+name|taskq_t
+modifier|*
+name|taskq_create_proc
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|pri_t
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+parameter_list|,
+name|uint_t
+parameter_list|)
+function_decl|;
+specifier|extern
+name|taskq_t
+modifier|*
+name|taskq_create_sysdc
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+parameter_list|,
+name|uint_t
 parameter_list|,
 name|uint_t
 parameter_list|)

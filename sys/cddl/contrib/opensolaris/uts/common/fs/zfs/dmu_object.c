@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_include
@@ -56,14 +56,6 @@ modifier|*
 name|tx
 parameter_list|)
 block|{
-name|objset_impl_t
-modifier|*
-name|osi
-init|=
-name|os
-operator|->
-name|os
-decl_stmt|;
 name|uint64_t
 name|object
 decl_stmt|;
@@ -73,9 +65,10 @@ init|=
 name|DNODES_PER_BLOCK
 operator|<<
 operator|(
-name|osi
-operator|->
-name|os_meta_dnode
+name|DMU_META_DNODE
+argument_list|(
+name|os
+argument_list|)
 operator|->
 name|dn_indblkshift
 operator|-
@@ -96,7 +89,7 @@ decl_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
-name|osi
+name|os
 operator|->
 name|os_obj_lock
 argument_list|)
@@ -109,7 +102,7 @@ control|)
 block|{
 name|object
 operator|=
-name|osi
+name|os
 operator|->
 name|os_obj_next
 expr_stmt|;
@@ -142,9 +135,10 @@ name|error
 init|=
 name|dnode_next_offset
 argument_list|(
-name|osi
-operator|->
-name|os_meta_dnode
+name|DMU_META_DNODE
+argument_list|(
+name|os
+argument_list|)
 argument_list|,
 name|DNODE_FIND_HOLE
 argument_list|,
@@ -177,7 +171,7 @@ operator|>>
 name|DNODE_SHIFT
 expr_stmt|;
 block|}
-name|osi
+name|os
 operator|->
 name|os_obj_next
 operator|=
@@ -190,8 +184,6 @@ name|void
 operator|)
 name|dnode_hold_impl
 argument_list|(
-name|os
-operator|->
 name|os
 argument_list|,
 name|object
@@ -225,7 +217,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|osi
+name|os
 operator|->
 name|os_obj_next
 operator|=
@@ -261,7 +253,7 @@ expr_stmt|;
 name|mutex_exit
 argument_list|(
 operator|&
-name|osi
+name|os
 operator|->
 name|os_obj_lock
 argument_list|)
@@ -339,8 +331,6 @@ name|err
 operator|=
 name|dnode_hold_impl
 argument_list|(
-name|os
-operator|->
 name|os
 argument_list|,
 name|object
@@ -457,8 +447,6 @@ operator|=
 name|dnode_hold_impl
 argument_list|(
 name|os
-operator|->
-name|os
 argument_list|,
 name|object
 argument_list|,
@@ -520,6 +508,20 @@ literal|0
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|bonustype
+operator|==
+name|DMU_OT_SA
+condition|)
+block|{
+name|nblkptr
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
 name|nblkptr
 operator|=
 literal|1
@@ -534,6 +536,7 @@ operator|>>
 name|SPA_BLKPTRSHIFT
 operator|)
 expr_stmt|;
+block|}
 comment|/* 	 * If we are losing blkptrs or changing the block size this must 	 * be a new file instance.   We must clear out the previous file 	 * contents before we can change this type of metadata in the dnode. 	 */
 if|if
 condition|(
@@ -685,8 +688,6 @@ operator|=
 name|dnode_hold_impl
 argument_list|(
 name|os
-operator|->
-name|os
 argument_list|,
 name|object
 argument_list|,
@@ -787,11 +788,10 @@ name|error
 operator|=
 name|dnode_next_offset
 argument_list|(
+name|DMU_META_DNODE
+argument_list|(
 name|os
-operator|->
-name|os
-operator|->
-name|os_meta_dnode
+argument_list|)
 argument_list|,
 operator|(
 name|hole

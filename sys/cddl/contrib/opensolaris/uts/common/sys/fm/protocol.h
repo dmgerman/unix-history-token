@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2004, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -59,7 +59,7 @@ define|#
 directive|define
 name|FM_VERSION
 value|"version"
-comment|/* FM event class values */
+comment|/* FM protocol category 1 class names */
 define|#
 directive|define
 name|FM_EREPORT_CLASS
@@ -70,12 +70,20 @@ name|FM_FAULT_CLASS
 value|"fault"
 define|#
 directive|define
+name|FM_DEFECT_CLASS
+value|"defect"
+define|#
+directive|define
 name|FM_RSRC_CLASS
 value|"resource"
 define|#
 directive|define
 name|FM_LIST_EVENT
 value|"list"
+define|#
+directive|define
+name|FM_IREPORT_CLASS
+value|"ireport"
 comment|/* FM list.* event class values */
 define|#
 directive|define
@@ -129,6 +137,23 @@ define|#
 directive|define
 name|FM_LIST_EVENT_SIZE
 value|"list-sz"
+comment|/* ireport.* event payload member names */
+define|#
+directive|define
+name|FM_IREPORT_DETECTOR
+value|"detector"
+define|#
+directive|define
+name|FM_IREPORT_UUID
+value|"uuid"
+define|#
+directive|define
+name|FM_IREPORT_PRIORITY
+value|"pri"
+define|#
+directive|define
+name|FM_IREPORT_ATTRIBUTES
+value|"attr"
 comment|/*  * list.suspect, isolated, updated, repaired and resolved  * versions/payload member names.  */
 define|#
 directive|define
@@ -160,6 +185,10 @@ name|FM_SUSPECT_FAULT_STATUS
 value|"fault-status"
 define|#
 directive|define
+name|FM_SUSPECT_INJECTED
+value|"__injected"
+define|#
+directive|define
 name|FM_SUSPECT_MESSAGE
 value|"message"
 define|#
@@ -170,6 +199,10 @@ define|#
 directive|define
 name|FM_SUSPECT_RESPONSE
 value|"response"
+define|#
+directive|define
+name|FM_SUSPECT_SEVERITY
+value|"severity"
 define|#
 directive|define
 name|FM_SUSPECT_VERS0
@@ -279,6 +312,10 @@ name|FM_RSRC_ASRU_ACQUITTED
 value|"acquitted"
 define|#
 directive|define
+name|FM_RSRC_ASRU_RESOLVED
+value|"resolved"
+define|#
+directive|define
 name|FM_RSRC_ASRU_UNUSABLE
 value|"unusable"
 define|#
@@ -302,6 +339,14 @@ define|#
 directive|define
 name|FM_RSRC_XPRT_SUBCLASS
 value|"subclass"
+define|#
+directive|define
+name|FM_RSRC_XPRT_FAULT_STATUS
+value|"fault-status"
+define|#
+directive|define
+name|FM_RSRC_XPRT_FAULT_HAS_ASRU
+value|"fault-has-asru"
 comment|/*  * FM ENA Format Macros  */
 define|#
 directive|define
@@ -409,6 +454,10 @@ name|FM_FMRI_AUTH_CHASSIS
 value|"chassis-id"
 define|#
 directive|define
+name|FM_FMRI_AUTH_PRODUCT_SN
+value|"product-sn"
+define|#
+directive|define
 name|FM_FMRI_AUTH_PRODUCT
 value|"product-id"
 define|#
@@ -472,6 +521,10 @@ define|#
 directive|define
 name|FM_FMRI_SCHEME_ZFS
 value|"zfs"
+define|#
+directive|define
+name|FM_FMRI_SCHEME_SW
+value|"sw"
 comment|/* Scheme versions */
 define|#
 directive|define
@@ -543,12 +596,28 @@ name|FM_LEGACY_SCHEME_VERSION
 value|LEGACY_SCHEME_VERSION0
 define|#
 directive|define
+name|SVC_SCHEME_VERSION0
+value|0
+define|#
+directive|define
+name|FM_SVC_SCHEME_VERSION
+value|SVC_SCHEME_VERSION0
+define|#
+directive|define
 name|ZFS_SCHEME_VERSION0
 value|0
 define|#
 directive|define
 name|FM_ZFS_SCHEME_VERSION
 value|ZFS_SCHEME_VERSION0
+define|#
+directive|define
+name|SW_SCHEME_VERSION0
+value|0
+define|#
+directive|define
+name|FM_SW_SCHEME_VERSION
+value|SW_SCHEME_VERSION0
 comment|/* hc scheme member names */
 define|#
 directive|define
@@ -629,6 +698,10 @@ name|FM_FMRI_DEV_ID
 value|"devid"
 define|#
 directive|define
+name|FM_FMRI_DEV_TGTPTLUN0
+value|"target-port-l0id"
+define|#
+directive|define
 name|FM_FMRI_DEV_PATH
 value|"device-path"
 comment|/* pkg scheme member names */
@@ -648,19 +721,15 @@ comment|/* svc scheme member names */
 define|#
 directive|define
 name|FM_FMRI_SVC_NAME
-value|"service-name"
-define|#
-directive|define
-name|FM_FMRI_SVC_VERSION
-value|"service-version"
+value|"svc-name"
 define|#
 directive|define
 name|FM_FMRI_SVC_INSTANCE
-value|"instance"
+value|"svc-instance"
 define|#
 directive|define
 name|FM_FMRI_SVC_CONTRACT_ID
-value|"contract-id"
+value|"svc-contract-id"
 comment|/* svc-authority member names */
 define|#
 directive|define
@@ -669,7 +738,7 @@ value|"scope"
 define|#
 directive|define
 name|FM_FMRI_SVC_AUTH_SYSTEM_FQN
-value|"system-FQN"
+value|"system-fqn"
 comment|/* cpu scheme member names */
 define|#
 directive|define
@@ -771,6 +840,75 @@ define|#
 directive|define
 name|FM_FMRI_ZFS_VDEV
 value|"vdev"
+comment|/* sw scheme member names - extra indentation for members of an nvlist */
+define|#
+directive|define
+name|FM_FMRI_SW_OBJ
+value|"object"
+define|#
+directive|define
+name|FM_FMRI_SW_OBJ_PATH
+value|"path"
+define|#
+directive|define
+name|FM_FMRI_SW_OBJ_ROOT
+value|"root"
+define|#
+directive|define
+name|FM_FMRI_SW_OBJ_PKG
+value|"pkg"
+define|#
+directive|define
+name|FM_FMRI_SW_SITE
+value|"site"
+define|#
+directive|define
+name|FM_FMRI_SW_SITE_TOKEN
+value|"token"
+define|#
+directive|define
+name|FM_FMRI_SW_SITE_MODULE
+value|"module"
+define|#
+directive|define
+name|FM_FMRI_SW_SITE_FILE
+value|"file"
+define|#
+directive|define
+name|FM_FMRI_SW_SITE_LINE
+value|"line"
+define|#
+directive|define
+name|FM_FMRI_SW_SITE_FUNC
+value|"func"
+define|#
+directive|define
+name|FM_FMRI_SW_CTXT
+value|"context"
+define|#
+directive|define
+name|FM_FMRI_SW_CTXT_ORIGIN
+value|"origin"
+define|#
+directive|define
+name|FM_FMRI_SW_CTXT_EXECNAME
+value|"execname"
+define|#
+directive|define
+name|FM_FMRI_SW_CTXT_PID
+value|"pid"
+define|#
+directive|define
+name|FM_FMRI_SW_CTXT_ZONE
+value|"zone"
+define|#
+directive|define
+name|FM_FMRI_SW_CTXT_CTID
+value|"ctid"
+define|#
+directive|define
+name|FM_FMRI_SW_CTXT_STACK
+value|"stack"
 specifier|extern
 name|nv_alloc_t
 modifier|*
@@ -906,6 +1044,10 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -1011,6 +1153,30 @@ parameter_list|,
 name|uint64_t
 parameter_list|,
 name|uint64_t
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|fm_fmri_hc_create
+parameter_list|(
+name|nvlist_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|nvlist_t
+modifier|*
+parameter_list|,
+name|nvlist_t
+modifier|*
+parameter_list|,
+name|nvlist_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+modifier|...
 parameter_list|)
 function_decl|;
 specifier|extern

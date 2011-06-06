@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -167,6 +167,24 @@ name|int
 parameter_list|)
 function_decl|;
 typedef|typedef
+name|void
+name|vdev_hold_func_t
+parameter_list|(
+name|vdev_t
+modifier|*
+name|vd
+parameter_list|)
+function_decl|;
+typedef|typedef
+name|void
+name|vdev_rele_func_t
+parameter_list|(
+name|vdev_t
+modifier|*
+name|vd
+parameter_list|)
+function_decl|;
+typedef|typedef
 struct|struct
 name|vdev_ops
 block|{
@@ -193,6 +211,14 @@ decl_stmt|;
 name|vdev_state_change_func_t
 modifier|*
 name|vdev_op_state_change
+decl_stmt|;
+name|vdev_hold_func_t
+modifier|*
+name|vdev_op_hold
+decl_stmt|;
+name|vdev_rele_func_t
+modifier|*
+name|vdev_op_rele
 decl_stmt|;
 name|char
 name|vdev_op_type
@@ -290,9 +316,17 @@ name|vdev_guid_sum
 decl_stmt|;
 comment|/* self guid + all child guids	*/
 name|uint64_t
+name|vdev_orig_guid
+decl_stmt|;
+comment|/* orig. guid prior to remove	*/
+name|uint64_t
 name|vdev_asize
 decl_stmt|;
 comment|/* allocatable device capacity	*/
+name|uint64_t
+name|vdev_min_asize
+decl_stmt|;
+comment|/* min acceptable asize		*/
 name|uint64_t
 name|vdev_ashift
 decl_stmt|;
@@ -320,6 +354,16 @@ modifier|*
 name|vdev_tsd
 decl_stmt|;
 comment|/* type-specific data		*/
+name|vnode_t
+modifier|*
+name|vdev_name_vp
+decl_stmt|;
+comment|/* vnode for pathname		*/
+name|vnode_t
+modifier|*
+name|vdev_devid_vp
+decl_stmt|;
+comment|/* vnode for devid		*/
 name|vdev_t
 modifier|*
 name|vdev_top
@@ -351,6 +395,27 @@ name|vdev_stat_t
 name|vdev_stat
 decl_stmt|;
 comment|/* virtual device statistics	*/
+name|boolean_t
+name|vdev_expanding
+decl_stmt|;
+comment|/* expand the vdev?		*/
+name|boolean_t
+name|vdev_reopening
+decl_stmt|;
+comment|/* reopen in progress?		*/
+name|int
+name|vdev_open_error
+decl_stmt|;
+comment|/* error on last open		*/
+name|kthread_t
+modifier|*
+name|vdev_open_thread
+decl_stmt|;
+comment|/* thread opening children	*/
+name|uint64_t
+name|vdev_crtxg
+decl_stmt|;
+comment|/* txg when top-level was added */
 comment|/* 	 * Top-level vdev state. 	 */
 name|uint64_t
 name|vdev_ms_array
@@ -395,6 +460,10 @@ name|boolean_t
 name|vdev_probe_wanted
 decl_stmt|;
 comment|/* async probe wanted?	*/
+name|uint64_t
+name|vdev_removing
+decl_stmt|;
+comment|/* device is being removed?	*/
 name|list_node_t
 name|vdev_config_dirty_node
 decl_stmt|;
@@ -411,6 +480,10 @@ name|uint64_t
 name|vdev_islog
 decl_stmt|;
 comment|/* is an intent log device	*/
+name|uint64_t
+name|vdev_ishole
+decl_stmt|;
+comment|/* is a hole in the namespace 	*/
 comment|/* 	 * Leaf vdev state. 	 */
 name|uint64_t
 name|vdev_psize
@@ -444,6 +517,10 @@ name|uint64_t
 name|vdev_removed
 decl_stmt|;
 comment|/* persistent removed state	*/
+name|uint64_t
+name|vdev_resilvering
+decl_stmt|;
+comment|/* persistent resilvering state */
 name|uint64_t
 name|vdev_nparity
 decl_stmt|;
@@ -492,6 +569,14 @@ name|boolean_t
 name|vdev_forcefault
 decl_stmt|;
 comment|/* force online fault		*/
+name|boolean_t
+name|vdev_splitting
+decl_stmt|;
+comment|/* split or repair in progress  */
+name|boolean_t
+name|vdev_delayed_close
+decl_stmt|;
+comment|/* delayed device close?	*/
 name|uint8_t
 name|vdev_tmpoffline
 decl_stmt|;
@@ -534,6 +619,10 @@ modifier|*
 name|vdev_probe_zio
 decl_stmt|;
 comment|/* root of current probe	*/
+name|vdev_aux_t
+name|vdev_label_aux
+decl_stmt|;
+comment|/* on-disk aux state		*/
 comment|/* 	 * For DTrace to work in userland (libzpool) context, these fields must 	 * remain at the end of the structure.  DTrace will use the kernel's 	 * CTF definition for 'struct vdev', and since the size of a kmutex_t is 	 * larger in userland, the offsets for the rest fields would be 	 * incorrect. 	 */
 name|kmutex_t
 name|vdev_dtl_lock
@@ -549,6 +638,10 @@ decl_stmt|;
 comment|/* protects vdev_probe_zio	*/
 block|}
 struct|;
+define|#
+directive|define
+name|VDEV_RAIDZ_MAXPARITY
+value|3
 define|#
 directive|define
 name|VDEV_PAD_SIZE
@@ -610,11 +703,11 @@ name|VDEV_PHYS_SIZE
 operator|-
 sizeof|sizeof
 argument_list|(
-name|zio_block_tail_t
+name|zio_eck_t
 argument_list|)
 index|]
 decl_stmt|;
-name|zio_block_tail_t
+name|zio_eck_t
 name|vp_zbt
 decl_stmt|;
 block|}
@@ -701,7 +794,35 @@ define|#
 directive|define
 name|VDEV_ALLOC_L2CACHE
 value|3
+define|#
+directive|define
+name|VDEV_ALLOC_ROOTPOOL
+value|4
+define|#
+directive|define
+name|VDEV_ALLOC_SPLIT
+value|5
 comment|/*  * Allocate or free a vdev  */
+specifier|extern
+name|vdev_t
+modifier|*
+name|vdev_alloc_common
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
+name|uint_t
+name|id
+parameter_list|,
+name|uint64_t
+name|guid
+parameter_list|,
+name|vdev_ops_t
+modifier|*
+name|ops
+parameter_list|)
+function_decl|;
 specifier|extern
 name|int
 name|vdev_alloc
@@ -805,11 +926,20 @@ name|vdev_load_log_state
 parameter_list|(
 name|vdev_t
 modifier|*
-name|vd
+name|nvd
 parameter_list|,
-name|nvlist_t
+name|vdev_t
 modifier|*
-name|nv
+name|ovd
+parameter_list|)
+function_decl|;
+specifier|extern
+name|boolean_t
+name|vdev_log_state_valid
+parameter_list|(
+name|vdev_t
+modifier|*
+name|vd
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -906,6 +1036,10 @@ name|vdev_missing_ops
 decl_stmt|;
 specifier|extern
 name|vdev_ops_t
+name|vdev_hole_ops
+decl_stmt|;
+specifier|extern
+name|vdev_ops_t
 name|vdev_spare_ops
 decl_stmt|;
 comment|/*  * Common size functions  */
@@ -923,7 +1057,16 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|uint64_t
-name|vdev_get_rsize
+name|vdev_get_min_asize
+parameter_list|(
+name|vdev_t
+modifier|*
+name|vd
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|vdev_set_min_asize
 parameter_list|(
 name|vdev_t
 modifier|*

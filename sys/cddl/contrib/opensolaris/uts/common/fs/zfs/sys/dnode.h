@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -59,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|<sys/dmu_zfetch.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/zrlock.h>
 end_include
 
 begin_ifdef
@@ -131,6 +137,23 @@ directive|define
 name|DN_MAX_OFFSET_SHIFT
 value|64
 comment|/* 2^64 bytes in a dnode */
+comment|/*  * dnode id flags  *  * Note: a file will never ever have its  * ids moved from bonus->spill  * and only in a crypto environment would it be on spill  */
+define|#
+directive|define
+name|DN_ID_CHKED_BONUS
+value|0x1
+define|#
+directive|define
+name|DN_ID_CHKED_SPILL
+value|0x2
+define|#
+directive|define
+name|DN_ID_OLD_EXIST
+value|0x4
+define|#
+directive|define
+name|DN_ID_NEW_EXIST
+value|0x8
 comment|/*  * Derived constants.  */
 define|#
 directive|define
@@ -154,6 +177,10 @@ name|DN_ZERO_BONUSLEN
 value|(DN_MAX_BONUSLEN + 1)
 define|#
 directive|define
+name|DN_KILL_SPILLBLK
+value|(1)
+define|#
+directive|define
 name|DNODES_PER_BLOCK_SHIFT
 value|(DNODE_BLOCK_SHIFT - DNODE_SHIFT)
 define|#
@@ -164,6 +191,10 @@ define|#
 directive|define
 name|DNODES_PER_LEVEL_SHIFT
 value|(DN_MAX_INDBLKSHIFT - SPA_BLKPTRSHIFT)
+define|#
+directive|define
+name|DNODES_PER_LEVEL
+value|(1ULL<< DNODES_PER_LEVEL_SHIFT)
 comment|/* The +2 here is a cheesy way to round up */
 define|#
 directive|define
@@ -196,7 +227,7 @@ struct_decl|struct
 name|dmu_buf_impl
 struct_decl|;
 struct_decl|struct
-name|objset_impl
+name|objset
 struct_decl|;
 struct_decl|struct
 name|zio
@@ -220,6 +251,11 @@ define|#
 directive|define
 name|DNODE_FLAG_USERUSED_ACCOUNTED
 value|(1<<1)
+comment|/* Does dnode have a SA spill blkptr in bonus? */
+define|#
+directive|define
+name|DNODE_FLAG_SPILL_BLKPTR
+value|(1<<2)
 typedef|typedef
 struct|struct
 name|dnode_phys
@@ -295,7 +331,15 @@ name|uint8_t
 name|dn_bonus
 index|[
 name|DN_MAX_BONUSLEN
+operator|-
+sizeof|sizeof
+argument_list|(
+name|blkptr_t
+argument_list|)
 index|]
+decl_stmt|;
+name|blkptr_t
+name|dn_spill
 decl_stmt|;
 block|}
 name|dnode_phys_t
@@ -314,7 +358,7 @@ name|dn_link
 decl_stmt|;
 comment|/* immutable: */
 name|struct
-name|objset_impl
+name|objset
 modifier|*
 name|dn_objset
 decl_stmt|;
@@ -325,6 +369,11 @@ name|struct
 name|dmu_buf_impl
 modifier|*
 name|dn_dbuf
+decl_stmt|;
+name|struct
+name|dnode_handle
+modifier|*
+name|dn_handle
 decl_stmt|;
 name|dnode_phys_t
 modifier|*
@@ -366,6 +415,10 @@ name|uint8_t
 name|dn_datablkshift
 decl_stmt|;
 comment|/* zero if blksz not power of 2! */
+name|uint8_t
+name|dn_moved
+decl_stmt|;
+comment|/* Has this dnode been moved? */
 name|uint16_t
 name|dn_datablkszsec
 decl_stmt|;
@@ -395,6 +448,19 @@ index|[
 name|TXG_SIZE
 index|]
 decl_stmt|;
+name|uint8_t
+name|dn_next_bonustype
+index|[
+name|TXG_SIZE
+index|]
+decl_stmt|;
+name|uint8_t
+name|dn_rm_spillblk
+index|[
+name|TXG_SIZE
+index|]
+decl_stmt|;
+comment|/* for removing spill blk */
 name|uint16_t
 name|dn_next_bonuslen
 index|[
@@ -408,6 +474,11 @@ name|TXG_SIZE
 index|]
 decl_stmt|;
 comment|/* next block size in bytes */
+comment|/* protected by dn_dbufs_mtx; declared here to fill 32-bit hole */
+name|uint32_t
+name|dn_dbufs_count
+decl_stmt|;
+comment|/* count of dn_dbufs */
 comment|/* protected by os_lock: */
 name|list_node_t
 name|dn_dirty_link
@@ -466,22 +537,44 @@ decl_stmt|;
 name|list_t
 name|dn_dbufs
 decl_stmt|;
-comment|/* linked list of descendent dbuf_t's */
+comment|/* descendent dbufs */
+comment|/* protected by dn_struct_rwlock */
 name|struct
 name|dmu_buf_impl
 modifier|*
 name|dn_bonus
 decl_stmt|;
 comment|/* bonus buffer dbuf */
+name|boolean_t
+name|dn_have_spill
+decl_stmt|;
+comment|/* have spill or are spilling */
 comment|/* parent IO for current sync write */
 name|zio_t
 modifier|*
 name|dn_zio
 decl_stmt|;
 comment|/* used in syncing context */
-name|dnode_phys_t
-modifier|*
-name|dn_oldphys
+name|uint64_t
+name|dn_oldused
+decl_stmt|;
+comment|/* old phys used bytes */
+name|uint64_t
+name|dn_oldflags
+decl_stmt|;
+comment|/* old phys dn_flags */
+name|uint64_t
+name|dn_olduid
+decl_stmt|,
+name|dn_oldgid
+decl_stmt|;
+name|uint64_t
+name|dn_newuid
+decl_stmt|,
+name|dn_newgid
+decl_stmt|;
+name|int
+name|dn_id_flags
 decl_stmt|;
 comment|/* holds prefetch structure */
 name|struct
@@ -490,6 +583,40 @@ name|dn_zfetch
 decl_stmt|;
 block|}
 name|dnode_t
+typedef|;
+comment|/*  * Adds a level of indirection between the dbuf and the dnode to avoid  * iterating descendent dbufs in dnode_move(). Handles are not allocated  * individually, but as an array of child dnodes in dnode_hold_impl().  */
+typedef|typedef
+struct|struct
+name|dnode_handle
+block|{
+comment|/* Protects dnh_dnode from modification by dnode_move(). */
+name|zrlock_t
+name|dnh_zrlock
+decl_stmt|;
+name|dnode_t
+modifier|*
+name|dnh_dnode
+decl_stmt|;
+block|}
+name|dnode_handle_t
+typedef|;
+typedef|typedef
+struct|struct
+name|dnode_children
+block|{
+name|size_t
+name|dnc_count
+decl_stmt|;
+comment|/* number of children */
+name|dnode_handle_t
+name|dnc_children
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* sized dynamically */
+block|}
+name|dnode_children_t
 typedef|;
 typedef|typedef
 struct|struct
@@ -512,7 +639,7 @@ modifier|*
 name|dnode_special_open
 parameter_list|(
 name|struct
-name|objset_impl
+name|objset
 modifier|*
 name|dd
 parameter_list|,
@@ -522,14 +649,18 @@ name|dnp
 parameter_list|,
 name|uint64_t
 name|object
+parameter_list|,
+name|dnode_handle_t
+modifier|*
+name|dnh
 parameter_list|)
 function_decl|;
 name|void
 name|dnode_special_close
 parameter_list|(
-name|dnode_t
+name|dnode_handle_t
 modifier|*
-name|dn
+name|dnh
 parameter_list|)
 function_decl|;
 name|void
@@ -547,11 +678,37 @@ modifier|*
 name|tx
 parameter_list|)
 function_decl|;
+name|void
+name|dnode_setbonus_type
+parameter_list|(
+name|dnode_t
+modifier|*
+name|dn
+parameter_list|,
+name|dmu_object_type_t
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
+name|void
+name|dnode_rm_spill
+parameter_list|(
+name|dnode_t
+modifier|*
+name|dn
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
 name|int
 name|dnode_hold
 parameter_list|(
 name|struct
-name|objset_impl
+name|objset
 modifier|*
 name|dd
 parameter_list|,
@@ -572,7 +729,7 @@ name|int
 name|dnode_hold_impl
 parameter_list|(
 name|struct
-name|objset_impl
+name|objset
 modifier|*
 name|dd
 parameter_list|,

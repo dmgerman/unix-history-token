@@ -4,19 +4,13 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2007, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/zfs_context.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sunddi.h>
 end_include
 
 begin_include
@@ -1773,6 +1767,10 @@ condition|(
 name|zfsvfs
 operator|->
 name|z_fuid_obj
+operator|||
+name|zfsvfs
+operator|->
+name|z_fuid_dirty
 condition|)
 name|domain
 operator|=
@@ -1844,9 +1842,7 @@ name|z_zfsvfs
 argument_list|,
 name|zp
 operator|->
-name|z_phys
-operator|->
-name|zp_uid
+name|z_uid
 argument_list|,
 name|cr
 argument_list|,
@@ -1864,9 +1860,7 @@ name|z_zfsvfs
 argument_list|,
 name|zp
 operator|->
-name|z_phys
-operator|->
-name|zp_gid
+name|z_gid
 argument_list|,
 name|cr
 argument_list|,
@@ -2000,14 +1994,14 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-comment|/* sun */
+comment|/* !sun */
 name|id
 operator|=
 name|UID_NOBODY
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* !sun */
 return|return
 operator|(
 name|id
@@ -2021,7 +2015,6 @@ comment|/*  * Add a FUID node to the list of fuid's being created for this  * AC
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|zfs_fuid_node_add
 parameter_list|(
@@ -2293,7 +2286,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create a file system FUID, based on information in the users cred  */
+comment|/*  * Create a file system FUID, based on information in the users cred  *  * If cred contains KSID_OWNER then it should be used to determine  * the uid otherwise cred's uid will be used. By default cred's gid  * is used unless it's an ephemeral ID in which case KSID_GROUP will  * be used if it exists.  */
 end_comment
 
 begin_function
@@ -2350,51 +2343,6 @@ operator|==
 name|ZFS_GROUP
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|type
-operator|==
-name|ZFS_OWNER
-condition|)
-name|id
-operator|=
-name|crgetuid
-argument_list|(
-name|cr
-argument_list|)
-expr_stmt|;
-else|else
-name|id
-operator|=
-name|crgetgid
-argument_list|(
-name|cr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|zfsvfs
-operator|->
-name|z_use_fuids
-operator|||
-operator|!
-name|IS_EPHEMERAL
-argument_list|(
-name|id
-argument_list|)
-condition|)
-return|return
-operator|(
-operator|(
-name|uint64_t
-operator|)
-name|id
-operator|)
-return|;
-ifdef|#
-directive|ifdef
-name|sun
 name|ksid
 operator|=
 name|crgetsid
@@ -2412,11 +2360,113 @@ else|:
 name|KSID_GROUP
 argument_list|)
 expr_stmt|;
-name|VERIFY
+if|if
+condition|(
+operator|!
+name|zfsvfs
+operator|->
+name|z_use_fuids
+operator|||
+operator|(
+name|ksid
+operator|==
+name|NULL
+operator|)
+condition|)
+block|{
+name|id
+operator|=
+operator|(
+name|type
+operator|==
+name|ZFS_OWNER
+operator|)
+condition|?
+name|crgetuid
+argument_list|(
+name|cr
+argument_list|)
+else|:
+name|crgetgid
+argument_list|(
+name|cr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|IS_EPHEMERAL
+argument_list|(
+name|id
+argument_list|)
+condition|)
+return|return
+operator|(
+operator|(
+name|type
+operator|==
+name|ZFS_OWNER
+operator|)
+condition|?
+name|UID_NOBODY
+else|:
+name|GID_NOBODY
+operator|)
+return|;
+return|return
+operator|(
+operator|(
+name|uint64_t
+operator|)
+name|id
+operator|)
+return|;
+block|}
+comment|/* 	 * ksid is present and FUID is supported 	 */
+name|id
+operator|=
+operator|(
+name|type
+operator|==
+name|ZFS_OWNER
+operator|)
+condition|?
+name|ksid_getid
 argument_list|(
 name|ksid
-operator|!=
-name|NULL
+argument_list|)
+else|:
+name|crgetgid
+argument_list|(
+name|cr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|IS_EPHEMERAL
+argument_list|(
+name|id
+argument_list|)
+condition|)
+return|return
+operator|(
+operator|(
+name|uint64_t
+operator|)
+name|id
+operator|)
+return|;
+if|if
+condition|(
+name|type
+operator|==
+name|ZFS_GROUP
+condition|)
+name|id
+operator|=
+name|ksid_getid
+argument_list|(
+name|ksid
 argument_list|)
 expr_stmt|;
 name|rid
@@ -2433,20 +2483,6 @@ argument_list|(
 name|ksid
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* sun */
-name|rid
-operator|=
-name|UID_NOBODY
-expr_stmt|;
-name|domain
-operator|=
-name|nulldomain
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* sun */
 name|idx
 operator|=
 name|zfs_fuid_find_by_domain
@@ -2701,9 +2737,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|sun
 if|if
 condition|(
 name|type
@@ -2758,9 +2791,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-endif|#
-directive|endif
-comment|/* sun */
 comment|/* 			 * When returning nobody we will need to 			 * make a dummy fuid table entry for logging 			 * purposes. 			 */
 name|rid
 operator|=
@@ -2770,13 +2800,7 @@ name|domain
 operator|=
 name|nulldomain
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|sun
 block|}
-endif|#
-directive|endif
-comment|/* sun */
 block|}
 name|idx
 operator|=
@@ -3176,7 +3200,7 @@ argument_list|)
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* !sun */
 name|uid_t
 name|gid
 decl_stmt|;
@@ -3197,15 +3221,6 @@ name|ksid_t
 modifier|*
 name|ksid_groups
 decl_stmt|;
-name|ksidlist_t
-modifier|*
-name|ksidlist
-init|=
-name|crgetsidlist
-argument_list|(
-name|cr
-argument_list|)
-decl_stmt|;
 name|uint32_t
 name|idx
 init|=
@@ -3222,11 +3237,6 @@ argument_list|(
 name|id
 argument_list|)
 decl_stmt|;
-name|ASSERT
-argument_list|(
-name|ksidlist
-argument_list|)
-expr_stmt|;
 name|ksid_groups
 operator|=
 name|ksidlist
@@ -3357,7 +3367,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* !sun */
 comment|/* 	 * Not found in ksidlist, check posix groups 	 */
 name|gid
 operator|=

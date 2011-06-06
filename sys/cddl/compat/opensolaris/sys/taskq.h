@@ -35,9 +35,6 @@ name|void
 modifier|*
 name|ost_arg
 decl_stmt|;
-name|int
-name|ost_magic
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -56,6 +53,9 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|u_int
+name|flags
 parameter_list|,
 name|struct
 name|ostask

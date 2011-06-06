@@ -4,7 +4,11 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+end_comment
+
+begin_comment
+comment|/* Portions Copyright 2010 Robert Milkowski */
 end_comment
 
 begin_ifndef
@@ -77,6 +81,18 @@ directive|define
 name|ZFS_TYPE_DATASET
 define|\
 value|(ZFS_TYPE_FILESYSTEM | ZFS_TYPE_VOLUME | ZFS_TYPE_SNAPSHOT)
+define|#
+directive|define
+name|ZAP_MAXNAMELEN
+value|256
+define|#
+directive|define
+name|ZAP_MAXVALUELEN
+value|(1024 * 8)
+define|#
+directive|define
+name|ZAP_OLDMAXVALUELEN
+value|1024
 comment|/*  * Dataset properties are identified by these constants and must be added to  * the end of this list to ensure that external consumers are not affected  * by the change. If you make any changes to this list, be sure to update  * the property table in usr/src/common/zfs/zfs_prop.c.  */
 typedef|typedef
 enum|enum
@@ -129,8 +145,9 @@ name|ZFS_PROP_ZONED
 block|,
 name|ZFS_PROP_SNAPDIR
 block|,
-name|ZFS_PROP_ACLMODE
+name|ZFS_PROP_PRIVATE
 block|,
+comment|/* not exposed to user, temporary */
 name|ZFS_PROP_ACLINHERIT
 block|,
 name|ZFS_PROP_CREATETXG
@@ -140,8 +157,6 @@ name|ZFS_PROP_NAME
 block|,
 comment|/* not exposed to the user */
 name|ZFS_PROP_CANMOUNT
-block|,
-name|ZFS_PROP_SHAREISCSI
 block|,
 name|ZFS_PROP_ISCSIOPTIONS
 block|,
@@ -188,6 +203,27 @@ block|,
 name|ZFS_PROP_USERACCOUNTING
 block|,
 comment|/* not exposed to the user */
+name|ZFS_PROP_STMF_SHAREINFO
+block|,
+comment|/* not exposed to the user */
+name|ZFS_PROP_DEFER_DESTROY
+block|,
+name|ZFS_PROP_USERREFS
+block|,
+name|ZFS_PROP_LOGBIAS
+block|,
+name|ZFS_PROP_UNIQUE
+block|,
+comment|/* not exposed to the user */
+name|ZFS_PROP_OBJSETID
+block|,
+comment|/* not exposed to the user */
+name|ZFS_PROP_DEDUP
+block|,
+name|ZFS_PROP_MLSLABEL
+block|,
+name|ZFS_PROP_SYNC
+block|,
 name|ZFS_NUM_PROPS
 block|}
 name|zfs_prop_t
@@ -224,10 +260,6 @@ name|ZPOOL_PROP_NAME
 block|,
 name|ZPOOL_PROP_SIZE
 block|,
-name|ZPOOL_PROP_USED
-block|,
-name|ZPOOL_PROP_AVAILABLE
-block|,
 name|ZPOOL_PROP_CAPACITY
 block|,
 name|ZPOOL_PROP_ALTROOT
@@ -249,6 +281,18 @@ block|,
 name|ZPOOL_PROP_FAILUREMODE
 block|,
 name|ZPOOL_PROP_LISTSNAPS
+block|,
+name|ZPOOL_PROP_AUTOEXPAND
+block|,
+name|ZPOOL_PROP_DEDUPDITTO
+block|,
+name|ZPOOL_PROP_DEDUPRATIO
+block|,
+name|ZPOOL_PROP_FREE
+block|,
+name|ZPOOL_PROP_ALLOCATED
+block|,
+name|ZPOOL_PROP_READONLY
 block|,
 name|ZPOOL_NUM_PROPS
 block|}
@@ -292,13 +336,45 @@ block|,
 name|ZPROP_SRC_INHERITED
 init|=
 literal|0x10
+block|,
+name|ZPROP_SRC_RECEIVED
+init|=
+literal|0x20
 block|}
 name|zprop_source_t
 typedef|;
 define|#
 directive|define
 name|ZPROP_SRC_ALL
-value|0x1f
+value|0x3f
+define|#
+directive|define
+name|ZPROP_SOURCE_VAL_RECVD
+value|"$recvd"
+define|#
+directive|define
+name|ZPROP_N_MORE_ERRORS
+value|"N_MORE_ERRORS"
+comment|/*  * Dataset flag implemented as a special entry in the props zap object  * indicating that the dataset has received properties on or after  * SPA_VERSION_RECVD_PROPS. The first such receive blows away local properties  * just as it did in earlier versions, and thereafter, local properties are  * preserved.  */
+define|#
+directive|define
+name|ZPROP_HAS_RECVD
+value|"$hasrecvd"
+typedef|typedef
+enum|enum
+block|{
+name|ZPROP_ERR_NOCLEAR
+init|=
+literal|0x1
+block|,
+comment|/* failure to clear existing props */
+name|ZPROP_ERR_NORESTORE
+init|=
+literal|0x2
+comment|/* failure to restore props on error */
+block|}
+name|zprop_errflags_t
+typedef|;
 typedef|typedef
 name|int
 function_decl|(
@@ -380,7 +456,6 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|name
 parameter_list|)
 function_decl|;
 name|int
@@ -407,6 +482,15 @@ modifier|*
 parameter_list|,
 name|uint64_t
 modifier|*
+parameter_list|)
+function_decl|;
+name|uint64_t
+name|zfs_prop_random_value
+parameter_list|(
+name|zfs_prop_t
+parameter_list|,
+name|uint64_t
+name|seed
 parameter_list|)
 function_decl|;
 name|boolean_t
@@ -478,6 +562,15 @@ modifier|*
 parameter_list|,
 name|uint64_t
 modifier|*
+parameter_list|)
+function_decl|;
+name|uint64_t
+name|zpool_prop_random_value
+parameter_list|(
+name|zpool_prop_t
+parameter_list|,
+name|uint64_t
+name|seed
 parameter_list|)
 function_decl|;
 comment|/*  * Definitions for the Delegation.  */
@@ -569,6 +662,10 @@ name|ZFS_DELEG_PERM_GROUPS
 value|"groups"
 define|#
 directive|define
+name|ZFS_MLSLABEL_DEFAULT
+value|"none"
+define|#
+directive|define
 name|ZFS_SMB_ACL_SRC
 value|"src"
 define|#
@@ -591,6 +688,19 @@ init|=
 literal|2
 block|}
 name|zfs_canmount_type_t
+typedef|;
+typedef|typedef
+enum|enum
+block|{
+name|ZFS_LOGBIAS_LATENCY
+init|=
+literal|0
+block|,
+name|ZFS_LOGBIAS_THROUGHPUT
+init|=
+literal|1
+block|}
+name|zfs_logbias_op_t
 typedef|;
 typedef|typedef
 enum|enum
@@ -645,6 +755,23 @@ init|=
 literal|2
 block|}
 name|zfs_cache_type_t
+typedef|;
+typedef|typedef
+enum|enum
+block|{
+name|ZFS_SYNC_STANDARD
+init|=
+literal|0
+block|,
+name|ZFS_SYNC_ALWAYS
+init|=
+literal|1
+block|,
+name|ZFS_SYNC_DISABLED
+init|=
+literal|2
+block|}
+name|zfs_sync_type_t
 typedef|;
 comment|/*  * On-disk version number.  */
 define|#
@@ -707,15 +834,67 @@ define|#
 directive|define
 name|SPA_VERSION_15
 value|15ULL
-comment|/*  * When bumping up SPA_VERSION, make sure GRUB ZFS understands the on-disk  * format change. Go to usr/src/grub/grub-0.95/stage2/{zfs-include/, fsys_zfs*},  * and do the appropriate changes.  Also bump the version number in  * usr/src/grub/capability.  */
+define|#
+directive|define
+name|SPA_VERSION_16
+value|16ULL
+define|#
+directive|define
+name|SPA_VERSION_17
+value|17ULL
+define|#
+directive|define
+name|SPA_VERSION_18
+value|18ULL
+define|#
+directive|define
+name|SPA_VERSION_19
+value|19ULL
+define|#
+directive|define
+name|SPA_VERSION_20
+value|20ULL
+define|#
+directive|define
+name|SPA_VERSION_21
+value|21ULL
+define|#
+directive|define
+name|SPA_VERSION_22
+value|22ULL
+define|#
+directive|define
+name|SPA_VERSION_23
+value|23ULL
+define|#
+directive|define
+name|SPA_VERSION_24
+value|24ULL
+define|#
+directive|define
+name|SPA_VERSION_25
+value|25ULL
+define|#
+directive|define
+name|SPA_VERSION_26
+value|26ULL
+define|#
+directive|define
+name|SPA_VERSION_27
+value|27ULL
+define|#
+directive|define
+name|SPA_VERSION_28
+value|28ULL
+comment|/*  * When bumping up SPA_VERSION, make sure GRUB ZFS understands the on-disk  * format change. Go to usr/src/grub/grub-0.97/stage2/{zfs-include/, fsys_zfs*},  * and do the appropriate changes.  Also bump the version number in  * usr/src/grub/capability.  */
 define|#
 directive|define
 name|SPA_VERSION
-value|SPA_VERSION_15
+value|SPA_VERSION_28
 define|#
 directive|define
 name|SPA_VERSION_STRING
-value|"15"
+value|"28"
 comment|/*  * Symbolic names for the changes that caused a SPA_VERSION switch.  * Used in the code when checking for presence or absence of a feature.  * Feel free to define multiple symbolic names for each version if there  * were multiple changes to on-disk structures during that version.  *  * NOTE: When checking the current SPA_VERSION in your code, be sure  *       to use spa_version() since it reports the version of the  *       last synced uberblock.  Checking the in-flight version can  *       be dangerous in some cases.  */
 define|#
 directive|define
@@ -731,11 +910,11 @@ name|SPA_VERSION_SPARES
 value|SPA_VERSION_3
 define|#
 directive|define
-name|SPA_VERSION_RAID6
+name|SPA_VERSION_RAIDZ2
 value|SPA_VERSION_3
 define|#
 directive|define
-name|SPA_VERSION_BPLIST_ACCOUNT
+name|SPA_VERSION_BPOBJ_ACCOUNT
 value|SPA_VERSION_3
 define|#
 directive|define
@@ -813,7 +992,63 @@ define|#
 directive|define
 name|SPA_VERSION_USERSPACE
 value|SPA_VERSION_15
-comment|/*  * ZPL version - rev'd whenever an incompatible on-disk format change  * occurs.  This is independent of SPA/DMU/ZAP versioning.  You must  * also update the version_table[] and help message in zfs_prop.c.  *  * When changing, be sure to teach GRUB how to read the new format!  * See usr/src/grub/grub-0.95/stage2/{zfs-include/,fsys_zfs*}  */
+define|#
+directive|define
+name|SPA_VERSION_STMF_PROP
+value|SPA_VERSION_16
+define|#
+directive|define
+name|SPA_VERSION_RAIDZ3
+value|SPA_VERSION_17
+define|#
+directive|define
+name|SPA_VERSION_USERREFS
+value|SPA_VERSION_18
+define|#
+directive|define
+name|SPA_VERSION_HOLES
+value|SPA_VERSION_19
+define|#
+directive|define
+name|SPA_VERSION_ZLE_COMPRESSION
+value|SPA_VERSION_20
+define|#
+directive|define
+name|SPA_VERSION_DEDUP
+value|SPA_VERSION_21
+define|#
+directive|define
+name|SPA_VERSION_RECVD_PROPS
+value|SPA_VERSION_22
+define|#
+directive|define
+name|SPA_VERSION_SLIM_ZIL
+value|SPA_VERSION_23
+define|#
+directive|define
+name|SPA_VERSION_SA
+value|SPA_VERSION_24
+define|#
+directive|define
+name|SPA_VERSION_SCAN
+value|SPA_VERSION_25
+define|#
+directive|define
+name|SPA_VERSION_DIR_CLONES
+value|SPA_VERSION_26
+define|#
+directive|define
+name|SPA_VERSION_DEADLISTS
+value|SPA_VERSION_26
+define|#
+directive|define
+name|SPA_VERSION_FAST_SNAP
+value|SPA_VERSION_27
+define|#
+directive|define
+name|SPA_VERSION_MULTI_REPLACE
+value|SPA_VERSION_28
+comment|/*  * ZPL version - rev'd whenever an incompatible on-disk format change  * occurs.  This is independent of SPA/DMU/ZAP versioning.  You must  * also update the version_table[] and help message in zfs_prop.c.  *  * When changing, be sure to teach GRUB how to read the new format!  * See usr/src/grub/grub-0.97/stage2/{zfs-include/,fsys_zfs*}  */
 define|#
 directive|define
 name|ZPL_VERSION_1
@@ -832,12 +1067,16 @@ name|ZPL_VERSION_4
 value|4ULL
 define|#
 directive|define
+name|ZPL_VERSION_5
+value|5ULL
+define|#
+directive|define
 name|ZPL_VERSION
-value|ZPL_VERSION_4
+value|ZPL_VERSION_5
 define|#
 directive|define
 name|ZPL_VERSION_STRING
-value|"4"
+value|"5"
 define|#
 directive|define
 name|ZPL_VERSION_INITIAL
@@ -862,6 +1101,69 @@ define|#
 directive|define
 name|ZPL_VERSION_USERSPACE
 value|ZPL_VERSION_4
+define|#
+directive|define
+name|ZPL_VERSION_SA
+value|ZPL_VERSION_5
+comment|/* Rewind request information */
+define|#
+directive|define
+name|ZPOOL_NO_REWIND
+value|1
+comment|/* No policy - default behavior */
+define|#
+directive|define
+name|ZPOOL_NEVER_REWIND
+value|2
+comment|/* Do not search for best txg or rewind */
+define|#
+directive|define
+name|ZPOOL_TRY_REWIND
+value|4
+comment|/* Search for best txg, but do not rewind */
+define|#
+directive|define
+name|ZPOOL_DO_REWIND
+value|8
+comment|/* Rewind to best txg w/in deferred frees */
+define|#
+directive|define
+name|ZPOOL_EXTREME_REWIND
+value|16
+comment|/* Allow extreme measures to find best txg */
+define|#
+directive|define
+name|ZPOOL_REWIND_MASK
+value|28
+comment|/* All the possible rewind bits */
+define|#
+directive|define
+name|ZPOOL_REWIND_POLICIES
+value|31
+comment|/* All the possible policy bits */
+typedef|typedef
+struct|struct
+name|zpool_rewind_policy
+block|{
+name|uint32_t
+name|zrp_request
+decl_stmt|;
+comment|/* rewind behavior requested */
+name|uint64_t
+name|zrp_maxmeta
+decl_stmt|;
+comment|/* max acceptable meta-data errors */
+name|uint64_t
+name|zrp_maxdata
+decl_stmt|;
+comment|/* max acceptable data errors */
+name|uint64_t
+name|zrp_txg
+decl_stmt|;
+comment|/* specific txg to load */
+block|}
+name|zpool_rewind_policy_t
+typedef|;
 comment|/*  * The following are configuration names used in the nvlist describing a pool's  * configuration.  */
 define|#
 directive|define
@@ -941,8 +1243,14 @@ name|ZPOOL_CONFIG_DTL
 value|"DTL"
 define|#
 directive|define
-name|ZPOOL_CONFIG_STATS
-value|"stats"
+name|ZPOOL_CONFIG_SCAN_STATS
+value|"scan_stats"
+comment|/* not stored on disk */
+define|#
+directive|define
+name|ZPOOL_CONFIG_VDEV_STATS
+value|"vdev_stats"
+comment|/* not stored on disk */
 define|#
 directive|define
 name|ZPOOL_CONFIG_WHOLE_DISK
@@ -977,6 +1285,10 @@ name|ZPOOL_CONFIG_HOSTNAME
 value|"hostname"
 define|#
 directive|define
+name|ZPOOL_CONFIG_LOADED_TIME
+value|"initial_load_time"
+define|#
+directive|define
 name|ZPOOL_CONFIG_UNSPARE
 value|"unspare"
 define|#
@@ -993,6 +1305,54 @@ name|ZPOOL_CONFIG_L2CACHE
 value|"l2cache"
 define|#
 directive|define
+name|ZPOOL_CONFIG_HOLE_ARRAY
+value|"hole_array"
+define|#
+directive|define
+name|ZPOOL_CONFIG_VDEV_CHILDREN
+value|"vdev_children"
+define|#
+directive|define
+name|ZPOOL_CONFIG_IS_HOLE
+value|"is_hole"
+define|#
+directive|define
+name|ZPOOL_CONFIG_DDT_HISTOGRAM
+value|"ddt_histogram"
+define|#
+directive|define
+name|ZPOOL_CONFIG_DDT_OBJ_STATS
+value|"ddt_object_stats"
+define|#
+directive|define
+name|ZPOOL_CONFIG_DDT_STATS
+value|"ddt_stats"
+define|#
+directive|define
+name|ZPOOL_CONFIG_SPLIT
+value|"splitcfg"
+define|#
+directive|define
+name|ZPOOL_CONFIG_ORIG_GUID
+value|"orig_guid"
+define|#
+directive|define
+name|ZPOOL_CONFIG_SPLIT_GUID
+value|"split_guid"
+define|#
+directive|define
+name|ZPOOL_CONFIG_SPLIT_LIST
+value|"guid_list"
+define|#
+directive|define
+name|ZPOOL_CONFIG_REMOVING
+value|"removing"
+define|#
+directive|define
+name|ZPOOL_CONFIG_RESILVERING
+value|"resilvering"
+define|#
+directive|define
 name|ZPOOL_CONFIG_SUSPENDED
 value|"suspended"
 comment|/* not stored on disk */
@@ -1005,6 +1365,16 @@ define|#
 directive|define
 name|ZPOOL_CONFIG_BOOTFS
 value|"bootfs"
+comment|/* not stored on disk */
+define|#
+directive|define
+name|ZPOOL_CONFIG_MISSING_DEVICES
+value|"missing_vdevs"
+comment|/* not stored on disk */
+define|#
+directive|define
+name|ZPOOL_CONFIG_LOAD_INFO
+value|"load_info"
 comment|/* not stored on disk */
 comment|/*  * The persistent vdev state is stored as separate values rather than a single  * 'vdev_state' entry.  This is because a device can be in multiple states, such  * as offline and degraded.  */
 define|#
@@ -1027,6 +1397,44 @@ define|#
 directive|define
 name|ZPOOL_CONFIG_FRU
 value|"fru"
+define|#
+directive|define
+name|ZPOOL_CONFIG_AUX_STATE
+value|"aux_state"
+comment|/* Rewind policy parameters */
+define|#
+directive|define
+name|ZPOOL_REWIND_POLICY
+value|"rewind-policy"
+define|#
+directive|define
+name|ZPOOL_REWIND_REQUEST
+value|"rewind-request"
+define|#
+directive|define
+name|ZPOOL_REWIND_REQUEST_TXG
+value|"rewind-request-txg"
+define|#
+directive|define
+name|ZPOOL_REWIND_META_THRESH
+value|"rewind-meta-thresh"
+define|#
+directive|define
+name|ZPOOL_REWIND_DATA_THRESH
+value|"rewind-data-thresh"
+comment|/* Rewind data discovered */
+define|#
+directive|define
+name|ZPOOL_CONFIG_LOAD_TIME
+value|"rewind_txg_ts"
+define|#
+directive|define
+name|ZPOOL_CONFIG_LOAD_DATA_ERRORS
+value|"verify_data_errors"
+define|#
+directive|define
+name|ZPOOL_CONFIG_REWIND_TIME
+value|"seconds_of_rewind"
 define|#
 directive|define
 name|VDEV_TYPE_ROOT
@@ -1055,6 +1463,10 @@ define|#
 directive|define
 name|VDEV_TYPE_MISSING
 value|"missing"
+define|#
+directive|define
+name|VDEV_TYPE_HOLE
+value|"hole"
 define|#
 directive|define
 name|VDEV_TYPE_SPARE
@@ -1156,7 +1568,13 @@ name|VDEV_AUX_IO_FAILURE
 block|,
 comment|/* experienced I/O failure		*/
 name|VDEV_AUX_BAD_LOG
+block|,
 comment|/* cannot read log chain(s)		*/
+name|VDEV_AUX_EXTERNAL
+block|,
+comment|/* external diagnosis			*/
+name|VDEV_AUX_SPLIT_POOL
+comment|/* vdev was split off into another pool	*/
 block|}
 name|vdev_aux_t
 typedef|;
@@ -1193,20 +1611,20 @@ comment|/* Internal libzfs state	*/
 block|}
 name|pool_state_t
 typedef|;
-comment|/*  * Scrub types.  */
+comment|/*  * Scan Functions.  */
 typedef|typedef
 enum|enum
-name|pool_scrub_type
+name|pool_scan_func
 block|{
-name|POOL_SCRUB_NONE
+name|POOL_SCAN_NONE
 block|,
-name|POOL_SCRUB_RESILVER
+name|POOL_SCAN_SCRUB
 block|,
-name|POOL_SCRUB_EVERYTHING
+name|POOL_SCAN_RESILVER
 block|,
-name|POOL_SCRUB_TYPES
+name|POOL_SCAN_FUNCS
 block|}
-name|pool_scrub_type_t
+name|pool_scan_func_t
 typedef|;
 comment|/*  * ZIO types.  Needed to interpret vdev statistics below.  */
 typedef|typedef
@@ -1230,6 +1648,76 @@ block|,
 name|ZIO_TYPES
 block|}
 name|zio_type_t
+typedef|;
+comment|/*  * Pool statistics.  Note: all fields should be 64-bit because this  * is passed between kernel and userland as an nvlist uint64 array.  */
+typedef|typedef
+struct|struct
+name|pool_scan_stat
+block|{
+comment|/* values stored on disk */
+name|uint64_t
+name|pss_func
+decl_stmt|;
+comment|/* pool_scan_func_t */
+name|uint64_t
+name|pss_state
+decl_stmt|;
+comment|/* dsl_scan_state_t */
+name|uint64_t
+name|pss_start_time
+decl_stmt|;
+comment|/* scan start time */
+name|uint64_t
+name|pss_end_time
+decl_stmt|;
+comment|/* scan end time */
+name|uint64_t
+name|pss_to_examine
+decl_stmt|;
+comment|/* total bytes to scan */
+name|uint64_t
+name|pss_examined
+decl_stmt|;
+comment|/* total examined bytes	*/
+name|uint64_t
+name|pss_to_process
+decl_stmt|;
+comment|/* total bytes to process */
+name|uint64_t
+name|pss_processed
+decl_stmt|;
+comment|/* total processed bytes */
+name|uint64_t
+name|pss_errors
+decl_stmt|;
+comment|/* scan errors	*/
+comment|/* values not stored on disk */
+name|uint64_t
+name|pss_pass_exam
+decl_stmt|;
+comment|/* examined bytes per scan pass */
+name|uint64_t
+name|pss_pass_start
+decl_stmt|;
+comment|/* start time of a scan pass */
+block|}
+name|pool_scan_stat_t
+typedef|;
+typedef|typedef
+enum|enum
+name|dsl_scan_state
+block|{
+name|DSS_NONE
+block|,
+name|DSS_SCANNING
+block|,
+name|DSS_FINISHED
+block|,
+name|DSS_CANCELED
+block|,
+name|DSS_NUM_STATES
+block|}
+name|dsl_scan_state_t
 typedef|;
 comment|/*  * Vdev statistics.  Note: all fields should be 64-bit because this  * is passed between kernel and userland as an nvlist uint64 array.  */
 typedef|typedef
@@ -1295,35 +1783,88 @@ name|vs_self_healed
 decl_stmt|;
 comment|/* self-healed bytes	*/
 name|uint64_t
-name|vs_scrub_type
+name|vs_scan_removing
 decl_stmt|;
-comment|/* pool_scrub_type_t	*/
+comment|/* removing?	*/
 name|uint64_t
-name|vs_scrub_complete
+name|vs_scan_processed
 decl_stmt|;
-comment|/* completed?		*/
-name|uint64_t
-name|vs_scrub_examined
-decl_stmt|;
-comment|/* bytes examined; top	*/
-name|uint64_t
-name|vs_scrub_repaired
-decl_stmt|;
-comment|/* bytes repaired; leaf	*/
-name|uint64_t
-name|vs_scrub_errors
-decl_stmt|;
-comment|/* errors during scrub	*/
-name|uint64_t
-name|vs_scrub_start
-decl_stmt|;
-comment|/* UTC scrub start time	*/
-name|uint64_t
-name|vs_scrub_end
-decl_stmt|;
-comment|/* UTC scrub end time	*/
+comment|/* scan processed bytes	*/
 block|}
 name|vdev_stat_t
+typedef|;
+comment|/*  * DDT statistics.  Note: all fields should be 64-bit because this  * is passed between kernel and userland as an nvlist uint64 array.  */
+typedef|typedef
+struct|struct
+name|ddt_object
+block|{
+name|uint64_t
+name|ddo_count
+decl_stmt|;
+comment|/* number of elments in ddt 	*/
+name|uint64_t
+name|ddo_dspace
+decl_stmt|;
+comment|/* size of ddt on disk		*/
+name|uint64_t
+name|ddo_mspace
+decl_stmt|;
+comment|/* size of ddt in-core		*/
+block|}
+name|ddt_object_t
+typedef|;
+typedef|typedef
+struct|struct
+name|ddt_stat
+block|{
+name|uint64_t
+name|dds_blocks
+decl_stmt|;
+comment|/* blocks			*/
+name|uint64_t
+name|dds_lsize
+decl_stmt|;
+comment|/* logical size			*/
+name|uint64_t
+name|dds_psize
+decl_stmt|;
+comment|/* physical size		*/
+name|uint64_t
+name|dds_dsize
+decl_stmt|;
+comment|/* deflated allocated size	*/
+name|uint64_t
+name|dds_ref_blocks
+decl_stmt|;
+comment|/* referenced blocks		*/
+name|uint64_t
+name|dds_ref_lsize
+decl_stmt|;
+comment|/* referenced lsize * refcnt	*/
+name|uint64_t
+name|dds_ref_psize
+decl_stmt|;
+comment|/* referenced psize * refcnt	*/
+name|uint64_t
+name|dds_ref_dsize
+decl_stmt|;
+comment|/* referenced dsize * refcnt	*/
+block|}
+name|ddt_stat_t
+typedef|;
+typedef|typedef
+struct|struct
+name|ddt_histogram
+block|{
+name|ddt_stat_t
+name|ddh_stat
+index|[
+literal|64
+index|]
+decl_stmt|;
+comment|/* power-of-two histogram buckets */
+block|}
+name|ddt_histogram_t
 typedef|;
 define|#
 directive|define
@@ -1341,24 +1882,33 @@ define|#
 directive|define
 name|ZFS_DEV
 value|"/dev/" ZFS_DEV_NAME
-comment|/*  * zvol paths.  Irritatingly, the devfsadm interfaces want all these  * paths without the /dev prefix, but for some things, we want the  * /dev prefix.  Below are the names without /dev.  */
+comment|/* general zvol path */
 define|#
 directive|define
-name|ZVOL_DEV_DIR
-value|"zvol"
-comment|/*  * And here are the things we need with /dev, etc. in front of them.  */
+name|ZVOL_DIR
+value|"/dev/zvol"
+comment|/* expansion */
 define|#
 directive|define
 name|ZVOL_PSEUDO_DEV
-value|"/devices/pseudo/zvol@0:"
+value|"/devices/pseudo/zfs@0:"
+comment|/* for dump and swap */
 define|#
 directive|define
 name|ZVOL_FULL_DEV_DIR
-value|"/dev/" ZVOL_DEV_DIR "/"
+value|ZVOL_DIR "/dsk/"
+define|#
+directive|define
+name|ZVOL_FULL_RDEV_DIR
+value|ZVOL_DIR "/rdsk/"
 define|#
 directive|define
 name|ZVOL_PROP_NAME
 value|"name"
+define|#
+directive|define
+name|ZVOL_DEFAULT_BLOCKSIZE
+value|8192
 comment|/*  * /dev/zfs ioctl numbers.  */
 typedef|typedef
 name|unsigned
@@ -1402,7 +1952,7 @@ name|ZFS_IOC_POOL_TRYIMPORT
 value|_IOWR('Z', 6, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_POOL_SCRUB
+name|ZFS_IOC_POOL_SCAN
 value|_IOWR('Z', 7, struct zfs_cmd)
 define|#
 directive|define
@@ -1442,167 +1992,197 @@ name|ZFS_IOC_VDEV_SETPATH
 value|_IOWR('Z', 16, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_OBJSET_STATS
+name|ZFS_IOC_VDEV_SETFRU
 value|_IOWR('Z', 17, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_OBJSET_ZPLPROPS
+name|ZFS_IOC_OBJSET_STATS
 value|_IOWR('Z', 18, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_DATASET_LIST_NEXT
+name|ZFS_IOC_OBJSET_ZPLPROPS
 value|_IOWR('Z', 19, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_SNAPSHOT_LIST_NEXT
+name|ZFS_IOC_DATASET_LIST_NEXT
 value|_IOWR('Z', 20, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_SET_PROP
+name|ZFS_IOC_SNAPSHOT_LIST_NEXT
 value|_IOWR('Z', 21, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_CREATE_MINOR
+name|ZFS_IOC_SET_PROP
 value|_IOWR('Z', 22, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_REMOVE_MINOR
+name|ZFS_IOC_CREATE
 value|_IOWR('Z', 23, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_CREATE
+name|ZFS_IOC_DESTROY
 value|_IOWR('Z', 24, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_DESTROY
+name|ZFS_IOC_ROLLBACK
 value|_IOWR('Z', 25, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_ROLLBACK
+name|ZFS_IOC_RENAME
 value|_IOWR('Z', 26, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_RENAME
+name|ZFS_IOC_RECV
 value|_IOWR('Z', 27, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_RECV
+name|ZFS_IOC_SEND
 value|_IOWR('Z', 28, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_SEND
+name|ZFS_IOC_INJECT_FAULT
 value|_IOWR('Z', 29, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_INJECT_FAULT
+name|ZFS_IOC_CLEAR_FAULT
 value|_IOWR('Z', 30, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_CLEAR_FAULT
+name|ZFS_IOC_INJECT_LIST_NEXT
 value|_IOWR('Z', 31, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_INJECT_LIST_NEXT
+name|ZFS_IOC_ERROR_LOG
 value|_IOWR('Z', 32, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_ERROR_LOG
+name|ZFS_IOC_CLEAR
 value|_IOWR('Z', 33, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_CLEAR
+name|ZFS_IOC_PROMOTE
 value|_IOWR('Z', 34, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_PROMOTE
+name|ZFS_IOC_DESTROY_SNAPS
 value|_IOWR('Z', 35, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_DESTROY_SNAPS
+name|ZFS_IOC_SNAPSHOT
 value|_IOWR('Z', 36, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_SNAPSHOT
+name|ZFS_IOC_DSOBJ_TO_DSNAME
 value|_IOWR('Z', 37, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_DSOBJ_TO_DSNAME
+name|ZFS_IOC_OBJ_TO_PATH
 value|_IOWR('Z', 38, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_OBJ_TO_PATH
+name|ZFS_IOC_POOL_SET_PROPS
 value|_IOWR('Z', 39, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_POOL_SET_PROPS
+name|ZFS_IOC_POOL_GET_PROPS
 value|_IOWR('Z', 40, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_POOL_GET_PROPS
+name|ZFS_IOC_SET_FSACL
 value|_IOWR('Z', 41, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_SET_FSACL
+name|ZFS_IOC_GET_FSACL
 value|_IOWR('Z', 42, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_GET_FSACL
+name|ZFS_IOC_SHARE
 value|_IOWR('Z', 43, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_ISCSI_PERM_CHECK
+name|ZFS_IOC_INHERIT_PROP
 value|_IOWR('Z', 44, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_SHARE
+name|ZFS_IOC_SMB_ACL
 value|_IOWR('Z', 45, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_INHERIT_PROP
+name|ZFS_IOC_USERSPACE_ONE
 value|_IOWR('Z', 46, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_JAIL
+name|ZFS_IOC_USERSPACE_MANY
 value|_IOWR('Z', 47, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_UNJAIL
+name|ZFS_IOC_USERSPACE_UPGRADE
 value|_IOWR('Z', 48, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_SMB_ACL
+name|ZFS_IOC_HOLD
 value|_IOWR('Z', 49, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_USERSPACE_ONE
+name|ZFS_IOC_RELEASE
 value|_IOWR('Z', 50, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_USERSPACE_MANY
+name|ZFS_IOC_GET_HOLDS
 value|_IOWR('Z', 51, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_USERSPACE_UPGRADE
+name|ZFS_IOC_OBJSET_RECVD_PROPS
 value|_IOWR('Z', 52, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_SETFRU
+name|ZFS_IOC_VDEV_SPLIT
 value|_IOWR('Z', 53, struct zfs_cmd)
+define|#
+directive|define
+name|ZFS_IOC_NEXT_OBJ
+value|_IOWR('Z', 54, struct zfs_cmd)
+define|#
+directive|define
+name|ZFS_IOC_DIFF
+value|_IOWR('Z', 55, struct zfs_cmd)
+define|#
+directive|define
+name|ZFS_IOC_TMP_SNAPSHOT
+value|_IOWR('Z', 56, struct zfs_cmd)
+define|#
+directive|define
+name|ZFS_IOC_OBJ_TO_STATS
+value|_IOWR('Z', 57, struct zfs_cmd)
+define|#
+directive|define
+name|ZFS_IOC_JAIL
+value|_IOWR('Z', 58, struct zfs_cmd)
+define|#
+directive|define
+name|ZFS_IOC_UNJAIL
+value|_IOWR('Z', 59, struct zfs_cmd)
 comment|/*  * Internal SPA load state.  Used by FMA diagnosis engine.  */
 typedef|typedef
 enum|enum
 block|{
 name|SPA_LOAD_NONE
 block|,
-comment|/* no load in progress */
+comment|/* no load in progress	*/
 name|SPA_LOAD_OPEN
 block|,
-comment|/* normal open */
+comment|/* normal open		*/
 name|SPA_LOAD_IMPORT
 block|,
-comment|/* import in progress */
+comment|/* import in progress	*/
 name|SPA_LOAD_TRYIMPORT
+block|,
 comment|/* tryimport in progress */
+name|SPA_LOAD_RECOVER
+block|,
+comment|/* recovery requested	*/
+name|SPA_LOAD_ERROR
+comment|/* load failed		*/
 block|}
 name|spa_load_state_t
 typedef|;
@@ -1675,8 +2255,33 @@ name|ZFS_ONLINE_FORCEFAULT
 value|0x4
 define|#
 directive|define
+name|ZFS_ONLINE_EXPAND
+value|0x8
+define|#
+directive|define
 name|ZFS_OFFLINE_TEMPORARY
 value|0x1
+comment|/*  * Flags for ZFS_IOC_POOL_IMPORT  */
+define|#
+directive|define
+name|ZFS_IMPORT_NORMAL
+value|0x0
+define|#
+directive|define
+name|ZFS_IMPORT_VERBATIM
+value|0x1
+define|#
+directive|define
+name|ZFS_IMPORT_ANY_HOST
+value|0x2
+define|#
+directive|define
+name|ZFS_IMPORT_MISSING_LOG
+value|0x4
+define|#
+directive|define
+name|ZFS_IMPORT_ONLY
+value|0x8
 comment|/*  * Sysevent payload members.  ZFS will generate the following sysevents with the  * given payloads:  *  *	ESC_ZFS_RESILVER_START  *	ESC_ZFS_RESILVER_END  *	ESC_ZFS_POOL_DESTROY  *  *		ZFS_EV_POOL_NAME	DATA_TYPE_STRING  *		ZFS_EV_POOL_GUID	DATA_TYPE_UINT64  *  *	ESC_ZFS_VDEV_REMOVE  *	ESC_ZFS_VDEV_CLEAR  *	ESC_ZFS_VDEV_CHECK  *  *		ZFS_EV_POOL_NAME	DATA_TYPE_STRING  *		ZFS_EV_POOL_GUID	DATA_TYPE_UINT64  *		ZFS_EV_VDEV_PATH	DATA_TYPE_STRING	(optional)  *		ZFS_EV_VDEV_GUID	DATA_TYPE_UINT64  */
 define|#
 directive|define
@@ -1694,7 +2299,7 @@ define|#
 directive|define
 name|ZFS_EV_VDEV_GUID
 value|"vdev_guid"
-comment|/*  * Note: This is encoded on-disk, so new events must be added to the  * end, and unused events can not be removed.  Be sure to edit  * zpool_main.c: hist_event_table[].  */
+comment|/*  * Note: This is encoded on-disk, so new events must be added to the  * end, and unused events can not be removed.  Be sure to edit  * libzfs_pool.c: hist_event_table[].  */
 typedef|typedef
 enum|enum
 name|history_internal_events
@@ -1729,7 +2334,7 @@ name|LOG_POOL_UPGRADE
 block|,
 name|LOG_POOL_CLEAR
 block|,
-name|LOG_POOL_SCRUB
+name|LOG_POOL_SCAN
 block|,
 name|LOG_POOL_PROPSET
 block|,
@@ -1775,7 +2380,13 @@ name|LOG_DS_REFQUOTA
 block|,
 name|LOG_DS_REFRESERV
 block|,
-name|LOG_POOL_SCRUB_DONE
+name|LOG_POOL_SCAN_DONE
+block|,
+name|LOG_DS_USER_HOLD
+block|,
+name|LOG_DS_USER_RELEASE
+block|,
+name|LOG_POOL_SPLIT
 block|,
 name|LOG_END
 block|}

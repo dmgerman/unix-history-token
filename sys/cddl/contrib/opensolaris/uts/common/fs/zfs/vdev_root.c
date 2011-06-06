@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_include
@@ -98,9 +98,6 @@ name|ashift
 parameter_list|)
 block|{
 name|int
-name|c
-decl_stmt|;
-name|int
 name|lasterror
 init|=
 literal|0
@@ -133,10 +130,16 @@ name|EINVAL
 operator|)
 return|;
 block|}
+name|vdev_open_children
+argument_list|(
+name|vd
+argument_list|)
+expr_stmt|;
 for|for
 control|(
+name|int
 name|c
-operator|=
+init|=
 literal|0
 init|;
 name|c
@@ -160,21 +163,11 @@ index|[
 name|c
 index|]
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 if|if
 condition|(
-operator|(
-name|error
-operator|=
-name|vdev_open
-argument_list|(
 name|cvd
-argument_list|)
-operator|)
-operator|!=
-literal|0
+operator|->
+name|vdev_open_error
 operator|&&
 operator|!
 name|cvd
@@ -184,12 +177,13 @@ condition|)
 block|{
 name|lasterror
 operator|=
-name|error
+name|cvd
+operator|->
+name|vdev_open_error
 expr_stmt|;
 name|numerrors
 operator|++
 expr_stmt|;
-continue|continue;
 block|}
 block|}
 if|if
@@ -244,13 +238,11 @@ modifier|*
 name|vd
 parameter_list|)
 block|{
-name|int
-name|c
-decl_stmt|;
 for|for
 control|(
+name|int
 name|c
-operator|=
+init|=
 literal|0
 init|;
 name|c
@@ -366,6 +358,10 @@ name|NULL
 block|,
 comment|/* io_done - not applicable to the root */
 name|vdev_root_state_change
+block|,
+name|NULL
+block|,
+name|NULL
 block|,
 name|VDEV_TYPE_ROOT
 block|,

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_ZFS_DEBUG_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_ifdef
 ifdef|#
@@ -149,6 +142,52 @@ comment|/* ZFS_DEBUG */
 specifier|extern
 name|void
 name|zfs_panic_recover
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+typedef|typedef
+struct|struct
+name|zfs_dbgmsg
+block|{
+name|list_node_t
+name|zdm_node
+decl_stmt|;
+name|time_t
+name|zdm_timestamp
+decl_stmt|;
+name|char
+name|zdm_msg
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* variable length allocation */
+block|}
+name|zfs_dbgmsg_t
+typedef|;
+specifier|extern
+name|void
+name|zfs_dbgmsg_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|zfs_dbgmsg_fini
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|zfs_dbgmsg
 parameter_list|(
 specifier|const
 name|char

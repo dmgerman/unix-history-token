@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 1992, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYNCH_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_comment
 comment|/*  * synch.h:  * definitions needed to use the thread synchronization interface  */
@@ -790,34 +783,39 @@ name|_ASM
 ifdef|#
 directive|ifdef
 name|__STDC__
+comment|/*  * The *_held() functions apply equally well to Solaris threads  * and to Posix threads synchronization objects, but the formal  * type declarations are different, so we just declare the argument  * to each *_held() function to be a void *, expecting that they will  * be called with the proper type of argument in each case.  */
 name|int
 name|_sema_held
 parameter_list|(
-name|sema_t
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* sema_t or sem_t */
 name|int
 name|_rw_read_held
 parameter_list|(
-name|rwlock_t
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* rwlock_t or pthread_rwlock_t */
 name|int
 name|_rw_write_held
 parameter_list|(
-name|rwlock_t
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* rwlock_t or pthread_rwlock_t */
 name|int
 name|_mutex_held
 parameter_list|(
-name|mutex_t
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* mutex_t or pthread_mutex_t */
 else|#
 directive|else
 comment|/* __STDC__ */
@@ -835,6 +833,26 @@ parameter_list|()
 function_decl|;
 name|int
 name|_mutex_held
+parameter_list|()
+function_decl|;
+endif|#
+directive|endif
+comment|/* __STDC__ */
+comment|/* Pause API */
+ifdef|#
+directive|ifdef
+name|__STDC__
+name|void
+name|smt_pause
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+else|#
+directive|else
+comment|/* __STDC__ */
+name|void
+name|smt_pause
 parameter_list|()
 function_decl|;
 endif|#

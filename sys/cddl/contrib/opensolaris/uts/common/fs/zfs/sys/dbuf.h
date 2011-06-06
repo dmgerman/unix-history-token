@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_DBUF_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -68,6 +61,12 @@ directive|include
 file|<sys/refcount.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/zrlock.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -80,10 +79,6 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-define|#
-directive|define
-name|DB_BONUS_BLKID
-value|(-1ULL)
 define|#
 directive|define
 name|IN_DMU_SYNC
@@ -113,7 +108,7 @@ define|#
 directive|define
 name|DB_RF_CACHED
 value|(1<< 5)
-comment|/*  * The state transition diagram for dbufs looks like:  *  *		+----> READ ----+  *		|		|  *		|		V  *  (alloc)-->UNCACHED	     CACHED-->EVICTING-->(free)  *		|		^  *		|		|  *		+----> FILL ----+  */
+comment|/*  * The simplified state transition diagram for dbufs looks like:  *  *		+----> READ ----+  *		|		|  *		|		V  *  (alloc)-->UNCACHED	     CACHED-->EVICTING-->(free)  *		|		^	 ^  *		|		|	 |  *		+----> FILL ----+	 |  *		|			 |  *		|			 |  *		+--------> NOFILL -------+  */
 typedef|typedef
 enum|enum
 name|dbuf_states
@@ -121,6 +116,8 @@ block|{
 name|DB_UNCACHED
 block|,
 name|DB_FILL
+block|,
+name|DB_NOFILL
 block|,
 name|DB_READ
 block|,
@@ -131,23 +128,12 @@ block|}
 name|dbuf_states_t
 typedef|;
 struct_decl|struct
-name|objset_impl
-struct_decl|;
-struct_decl|struct
 name|dnode
 struct_decl|;
 struct_decl|struct
 name|dmu_tx
 struct_decl|;
 comment|/*  * level = 0 means the user data  * level = 1 means the single indirect block  * etc.  */
-define|#
-directive|define
-name|LIST_LINK_INACTIVE
-parameter_list|(
-name|link
-parameter_list|)
-define|\
-value|((link)->list_next == NULL&& (link)->list_prev == NULL)
 struct_decl|struct
 name|dmu_buf_impl
 struct_decl|;
@@ -229,6 +215,9 @@ decl_stmt|;
 name|override_states_t
 name|dr_override_state
 decl_stmt|;
+name|uint8_t
+name|dr_copies
+decl_stmt|;
 block|}
 name|dl
 struct|;
@@ -249,17 +238,17 @@ name|db
 decl_stmt|;
 comment|/* the objset we belong to */
 name|struct
-name|objset_impl
+name|objset
 modifier|*
 name|db_objset
 decl_stmt|;
-comment|/* 	 * the dnode we belong to (NULL when evicted) 	 */
+comment|/* 	 * handle to safely access the dnode we belong to (NULL when evicted) 	 */
 name|struct
-name|dnode
+name|dnode_handle
 modifier|*
-name|db_dnode
+name|db_dnode_handle
 decl_stmt|;
-comment|/* 	 * our parent buffer; if the dnode points to us directly, 	 * db_parent == db_dnode->dn_dbuf 	 * only accessed by sync thread ??? 	 * (NULL when evicted) 	 */
+comment|/* 	 * our parent buffer; if the dnode points to us directly, 	 * db_parent == db_dnode_handle->dnh_dnode->dn_dbuf 	 * only accessed by sync thread ??? 	 * (NULL when evicted) 	 * May change from NULL to non-NULL under the protection of db_mtx 	 * (see dbuf_check_blkptr()) 	 */
 name|struct
 name|dmu_buf_impl
 modifier|*
@@ -414,6 +403,52 @@ modifier|*
 name|dn
 parameter_list|)
 function_decl|;
+name|int
+name|dbuf_spill_set_blksz
+parameter_list|(
+name|dmu_buf_t
+modifier|*
+name|db
+parameter_list|,
+name|uint64_t
+name|blksz
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
+name|void
+name|dbuf_spill_hold
+parameter_list|(
+name|struct
+name|dnode
+modifier|*
+name|dn
+parameter_list|,
+name|dmu_buf_impl_t
+modifier|*
+modifier|*
+name|dbp
+parameter_list|,
+name|void
+modifier|*
+name|tag
+parameter_list|)
+function_decl|;
+name|void
+name|dbuf_rm_spill
+parameter_list|(
+name|struct
+name|dnode
+modifier|*
+name|dn
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
 name|dmu_buf_impl_t
 modifier|*
 name|dbuf_hold
@@ -522,6 +557,18 @@ modifier|*
 name|tag
 parameter_list|)
 function_decl|;
+name|void
+name|dbuf_rele_and_unlock
+parameter_list|(
+name|dmu_buf_impl_t
+modifier|*
+name|db
+parameter_list|,
+name|void
+modifier|*
+name|tag
+parameter_list|)
+function_decl|;
 name|dmu_buf_impl_t
 modifier|*
 name|dbuf_find
@@ -566,9 +613,9 @@ name|tx
 parameter_list|)
 function_decl|;
 name|void
-name|dmu_buf_will_fill
+name|dbuf_fill_done
 parameter_list|(
-name|dmu_buf_t
+name|dmu_buf_impl_t
 modifier|*
 name|db
 parameter_list|,
@@ -578,9 +625,9 @@ name|tx
 parameter_list|)
 function_decl|;
 name|void
-name|dbuf_fill_done
+name|dmu_buf_will_not_fill
 parameter_list|(
-name|dmu_buf_impl_t
+name|dmu_buf_t
 modifier|*
 name|db
 parameter_list|,
@@ -642,6 +689,15 @@ modifier|*
 name|tx
 parameter_list|)
 function_decl|;
+name|arc_buf_t
+modifier|*
+name|dbuf_loan_arcbuf
+parameter_list|(
+name|dmu_buf_impl_t
+modifier|*
+name|db
+parameter_list|)
+function_decl|;
 name|void
 name|dbuf_clear
 parameter_list|(
@@ -691,6 +747,14 @@ name|tx
 parameter_list|)
 function_decl|;
 name|void
+name|dbuf_release_bp
+parameter_list|(
+name|dmu_buf_impl_t
+modifier|*
+name|db
+parameter_list|)
+function_decl|;
+name|void
 name|dbuf_free_range
 parameter_list|(
 name|struct
@@ -724,6 +788,59 @@ modifier|*
 name|tx
 parameter_list|)
 function_decl|;
+define|#
+directive|define
+name|DB_DNODE
+parameter_list|(
+name|_db
+parameter_list|)
+value|((_db)->db_dnode_handle->dnh_dnode)
+define|#
+directive|define
+name|DB_DNODE_LOCK
+parameter_list|(
+name|_db
+parameter_list|)
+value|((_db)->db_dnode_handle->dnh_zrlock)
+define|#
+directive|define
+name|DB_DNODE_ENTER
+parameter_list|(
+name|_db
+parameter_list|)
+value|(zrl_add(&DB_DNODE_LOCK(_db)))
+define|#
+directive|define
+name|DB_DNODE_EXIT
+parameter_list|(
+name|_db
+parameter_list|)
+value|(zrl_remove(&DB_DNODE_LOCK(_db)))
+define|#
+directive|define
+name|DB_DNODE_HELD
+parameter_list|(
+name|_db
+parameter_list|)
+value|(!zrl_is_zero(&DB_DNODE_LOCK(_db)))
+define|#
+directive|define
+name|DB_GET_SPA
+parameter_list|(
+name|_spa_p
+parameter_list|,
+name|_db
+parameter_list|)
+value|{		\ 	dnode_t *__dn;				\ 	DB_DNODE_ENTER(_db);			\ 	__dn = DB_DNODE(_db);			\ 	*(_spa_p) = __dn->dn_objset->os_spa;	\ 	DB_DNODE_EXIT(_db);			\ }
+define|#
+directive|define
+name|DB_GET_OBJSET
+parameter_list|(
+name|_os_p
+parameter_list|,
+name|_db
+parameter_list|)
+value|{		\ 	dnode_t *__dn;				\ 	DB_DNODE_ENTER(_db);			\ 	__dn = DB_DNODE(_db);			\ 	*(_os_p) = __dn->dn_objset;		\ 	DB_DNODE_EXIT(_db);			\ }
 name|void
 name|dbuf_init
 parameter_list|(
@@ -736,38 +853,46 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+name|boolean_t
+name|dbuf_is_metadata
+parameter_list|(
+name|dmu_buf_impl_t
+modifier|*
+name|db
+parameter_list|)
+function_decl|;
 define|#
 directive|define
 name|DBUF_IS_METADATA
 parameter_list|(
-name|db
+name|_db
 parameter_list|)
 define|\
-value|((db)->db_level> 0 || dmu_ot[(db)->db_dnode->dn_type].ot_metadata)
+value|(dbuf_is_metadata(_db))
 define|#
 directive|define
 name|DBUF_GET_BUFC_TYPE
 parameter_list|(
-name|db
+name|_db
 parameter_list|)
 define|\
-value|(DBUF_IS_METADATA(db) ? ARC_BUFC_METADATA : ARC_BUFC_DATA)
+value|(DBUF_IS_METADATA(_db) ? ARC_BUFC_METADATA : ARC_BUFC_DATA)
 define|#
 directive|define
 name|DBUF_IS_CACHEABLE
 parameter_list|(
-name|db
+name|_db
 parameter_list|)
 define|\
-value|((db)->db_objset->os_primary_cache == ZFS_CACHE_ALL ||		\ 	(DBUF_IS_METADATA(db)&&					\ 	((db)->db_objset->os_primary_cache == ZFS_CACHE_METADATA)))
+value|((_db)->db_objset->os_primary_cache == ZFS_CACHE_ALL ||		\ 	(DBUF_IS_METADATA(_db)&&					\ 	((_db)->db_objset->os_primary_cache == ZFS_CACHE_METADATA)))
 define|#
 directive|define
 name|DBUF_IS_L2CACHEABLE
 parameter_list|(
-name|db
+name|_db
 parameter_list|)
 define|\
-value|((db)->db_objset->os_secondary_cache == ZFS_CACHE_ALL ||	\ 	(DBUF_IS_METADATA(db)&&					\ 	((db)->db_objset->os_secondary_cache == ZFS_CACHE_METADATA)))
+value|((_db)->db_objset->os_secondary_cache == ZFS_CACHE_ALL ||	\ 	(DBUF_IS_METADATA(_db)&&					\ 	((_db)->db_objset->os_secondary_cache == ZFS_CACHE_METADATA)))
 ifdef|#
 directive|ifdef
 name|ZFS_DEBUG
@@ -795,7 +920,7 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {			\ 	if (zfs_flags& ZFS_DEBUG_DPRINTF) {			\ 	char *__blkbuf = kmem_alloc(BP_SPRINTF_LEN, KM_SLEEP);	\ 	sprintf_blkptr(__blkbuf, BP_SPRINTF_LEN, bp);		\ 	dprintf_dbuf(db, fmt " %s\n", __VA_ARGS__, __blkbuf);	\ 	kmem_free(__blkbuf, BP_SPRINTF_LEN);			\ 	} 							\ _NOTE(CONSTCOND) } while (0)
+value|do {			\ 	if (zfs_flags& ZFS_DEBUG_DPRINTF) {			\ 	char *__blkbuf = kmem_alloc(BP_SPRINTF_LEN, KM_SLEEP);	\ 	sprintf_blkptr(__blkbuf, bp);				\ 	dprintf_dbuf(db, fmt " %s\n", __VA_ARGS__, __blkbuf);	\ 	kmem_free(__blkbuf, BP_SPRINTF_LEN);			\ 	}							\ _NOTE(CONSTCOND) } while (0)
 define|#
 directive|define
 name|DBUF_VERIFY

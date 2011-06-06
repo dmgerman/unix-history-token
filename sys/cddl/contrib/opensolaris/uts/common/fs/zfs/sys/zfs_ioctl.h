@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_ZFS_IOCTL_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -48,6 +41,18 @@ begin_include
 include|#
 directive|include
 file|<sys/dsl_deleg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/spa.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/zfs_stat.h>
 end_include
 
 begin_ifdef
@@ -92,14 +97,81 @@ define|#
 directive|define
 name|ZFS_SNAPDIR_VISIBLE
 value|1
+comment|/*  * Field manipulation macros for the drr_versioninfo field of the  * send stream header.  */
+comment|/*  * Header types for zfs send streams.  */
+typedef|typedef
+enum|enum
+name|drr_headertype
+block|{
+name|DMU_SUBSTREAM
+init|=
+literal|0x1
+block|,
+name|DMU_COMPOUNDSTREAM
+init|=
+literal|0x2
+block|}
+name|drr_headertype_t
+typedef|;
 define|#
 directive|define
-name|DMU_BACKUP_STREAM_VERSION
-value|(1ULL)
+name|DMU_GET_STREAM_HDRTYPE
+parameter_list|(
+name|vi
+parameter_list|)
+value|BF64_GET((vi), 0, 2)
 define|#
 directive|define
-name|DMU_BACKUP_HEADER_VERSION
-value|(2ULL)
+name|DMU_SET_STREAM_HDRTYPE
+parameter_list|(
+name|vi
+parameter_list|,
+name|x
+parameter_list|)
+value|BF64_SET((vi), 0, 2, x)
+define|#
+directive|define
+name|DMU_GET_FEATUREFLAGS
+parameter_list|(
+name|vi
+parameter_list|)
+value|BF64_GET((vi), 2, 30)
+define|#
+directive|define
+name|DMU_SET_FEATUREFLAGS
+parameter_list|(
+name|vi
+parameter_list|,
+name|x
+parameter_list|)
+value|BF64_SET((vi), 2, 30, x)
+comment|/*  * Feature flags for zfs send streams (flags in drr_versioninfo)  */
+define|#
+directive|define
+name|DMU_BACKUP_FEATURE_DEDUP
+value|(0x1)
+define|#
+directive|define
+name|DMU_BACKUP_FEATURE_DEDUPPROPS
+value|(0x2)
+define|#
+directive|define
+name|DMU_BACKUP_FEATURE_SA_SPILL
+value|(0x4)
+comment|/*  * Mask of all supported backup features  */
+define|#
+directive|define
+name|DMU_BACKUP_FEATURE_MASK
+value|(DMU_BACKUP_FEATURE_DEDUP | \ 		DMU_BACKUP_FEATURE_DEDUPPROPS | DMU_BACKUP_FEATURE_SA_SPILL)
+comment|/* Are all features in the given flag word currently supported? */
+define|#
+directive|define
+name|DMU_STREAM_SUPPORTED
+parameter_list|(
+name|x
+parameter_list|)
+value|(!((x)& ~DMU_BACKUP_FEATURE_MASK))
+comment|/*  * The drr_versioninfo field of the dmu_replay_record has the  * following layout:  *  *	64	56	48	40	32	24	16	8	0  *	+-------+-------+-------+-------+-------+-------+-------+-------+  *  	|		reserved	|        feature-flags	    |C|S|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  *  * The low order two bits indicate the header type: SUBSTREAM (0x1)  * or COMPOUNDSTREAM (0x2).  Using two bits for this is historical:  * this field used to be a version number, where the two version types  * were 1 and 2.  Using two bits for this allows earlier versions of  * the code to be able to recognize send streams that don't use any  * of the features indicated by feature flags.  */
 define|#
 directive|define
 name|DMU_BACKUP_MAGIC
@@ -112,6 +184,18 @@ define|#
 directive|define
 name|DRR_FLAG_CI_DATA
 value|(1<<1)
+comment|/*  * flags in the drr_checksumflags field in the DRR_WRITE and  * DRR_WRITE_BYREF blocks  */
+define|#
+directive|define
+name|DRR_CHECKSUM_DEDUP
+value|(1<<0)
+define|#
+directive|define
+name|DRR_IS_DEDUP_CAPABLE
+parameter_list|(
+name|flags
+parameter_list|)
+value|((flags)& DRR_CHECKSUM_DEDUP)
 comment|/*  * zfs ioctl command structure  */
 typedef|typedef
 struct|struct
@@ -130,7 +214,13 @@ block|,
 name|DRR_FREE
 block|,
 name|DRR_END
-block|, 	}
+block|,
+name|DRR_WRITE_BYREF
+block|,
+name|DRR_SPILL
+block|,
+name|DRR_NUMTYPES
+block|}
 name|drr_type
 enum|;
 name|uint32_t
@@ -145,8 +235,9 @@ name|uint64_t
 name|drr_magic
 decl_stmt|;
 name|uint64_t
-name|drr_version
+name|drr_versioninfo
 decl_stmt|;
+comment|/* was drr_version */
 name|uint64_t
 name|drr_creation_time
 decl_stmt|;
@@ -177,6 +268,9 @@ block|{
 name|zio_cksum_t
 name|drr_checksum
 decl_stmt|;
+name|uint64_t
+name|drr_toguid
+decl_stmt|;
 block|}
 name|drr_end
 struct|;
@@ -199,7 +293,7 @@ name|uint32_t
 name|drr_bonuslen
 decl_stmt|;
 name|uint8_t
-name|drr_checksum
+name|drr_checksumtype
 decl_stmt|;
 name|uint8_t
 name|drr_compress
@@ -209,6 +303,9 @@ name|drr_pad
 index|[
 literal|6
 index|]
+decl_stmt|;
+name|uint64_t
+name|drr_toguid
 decl_stmt|;
 comment|/* bonus content follows */
 block|}
@@ -222,6 +319,9 @@ name|drr_firstobj
 decl_stmt|;
 name|uint64_t
 name|drr_numobjs
+decl_stmt|;
+name|uint64_t
+name|drr_toguid
 decl_stmt|;
 block|}
 name|drr_freeobjects
@@ -244,6 +344,25 @@ decl_stmt|;
 name|uint64_t
 name|drr_length
 decl_stmt|;
+name|uint64_t
+name|drr_toguid
+decl_stmt|;
+name|uint8_t
+name|drr_checksumtype
+decl_stmt|;
+name|uint8_t
+name|drr_checksumflags
+decl_stmt|;
+name|uint8_t
+name|drr_pad2
+index|[
+literal|6
+index|]
+decl_stmt|;
+name|ddt_key_t
+name|drr_key
+decl_stmt|;
+comment|/* deduplication key */
 comment|/* content follows */
 block|}
 name|drr_write
@@ -260,14 +379,122 @@ decl_stmt|;
 name|uint64_t
 name|drr_length
 decl_stmt|;
+name|uint64_t
+name|drr_toguid
+decl_stmt|;
 block|}
 name|drr_free
+struct|;
+struct|struct
+name|drr_write_byref
+block|{
+comment|/* where to put the data */
+name|uint64_t
+name|drr_object
+decl_stmt|;
+name|uint64_t
+name|drr_offset
+decl_stmt|;
+name|uint64_t
+name|drr_length
+decl_stmt|;
+name|uint64_t
+name|drr_toguid
+decl_stmt|;
+comment|/* where to find the prior copy of the data */
+name|uint64_t
+name|drr_refguid
+decl_stmt|;
+name|uint64_t
+name|drr_refobject
+decl_stmt|;
+name|uint64_t
+name|drr_refoffset
+decl_stmt|;
+comment|/* properties of the data */
+name|uint8_t
+name|drr_checksumtype
+decl_stmt|;
+name|uint8_t
+name|drr_checksumflags
+decl_stmt|;
+name|uint8_t
+name|drr_pad2
+index|[
+literal|6
+index|]
+decl_stmt|;
+name|ddt_key_t
+name|drr_key
+decl_stmt|;
+comment|/* deduplication key */
+block|}
+name|drr_write_byref
+struct|;
+struct|struct
+name|drr_spill
+block|{
+name|uint64_t
+name|drr_object
+decl_stmt|;
+name|uint64_t
+name|drr_length
+decl_stmt|;
+name|uint64_t
+name|drr_toguid
+decl_stmt|;
+name|uint64_t
+name|drr_pad
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* needed for crypto */
+comment|/* spill data follows */
+block|}
+name|drr_spill
 struct|;
 block|}
 name|drr_u
 union|;
 block|}
 name|dmu_replay_record_t
+typedef|;
+comment|/* diff record range types */
+typedef|typedef
+enum|enum
+name|diff_type
+block|{
+name|DDR_NONE
+init|=
+literal|0x1
+block|,
+name|DDR_INUSE
+init|=
+literal|0x2
+block|,
+name|DDR_FREE
+init|=
+literal|0x4
+block|}
+name|diff_type_t
+typedef|;
+comment|/*  * The diff reports back ranges of free or in-use objects.  */
+typedef|typedef
+struct|struct
+name|dmu_diff_record
+block|{
+name|uint64_t
+name|ddr_type
+decl_stmt|;
+name|uint64_t
+name|ddr_first
+decl_stmt|;
+name|uint64_t
+name|ddr_last
+decl_stmt|;
+block|}
+name|dmu_diff_record_t
 typedef|;
 typedef|typedef
 struct|struct
@@ -302,6 +529,21 @@ name|zi_freq
 decl_stmt|;
 name|uint32_t
 name|zi_failfast
+decl_stmt|;
+name|char
+name|zi_func
+index|[
+name|MAXNAMELEN
+index|]
+decl_stmt|;
+name|uint32_t
+name|zi_iotype
+decl_stmt|;
+name|int32_t
+name|zi_duration
+decl_stmt|;
+name|uint64_t
+name|zi_timer
 decl_stmt|;
 block|}
 name|zinject_record_t
@@ -366,12 +608,20 @@ name|char
 name|zc_value
 index|[
 name|MAXPATHLEN
+operator|*
+literal|2
 index|]
 decl_stmt|;
 name|char
 name|zc_string
 index|[
 name|MAXNAMELEN
+index|]
+decl_stmt|;
+name|char
+name|zc_top_ds
+index|[
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|uint64_t
@@ -420,6 +670,10 @@ decl_stmt|;
 name|uint64_t
 name|zc_obj
 decl_stmt|;
+name|uint64_t
+name|zc_iflags
+decl_stmt|;
+comment|/* internal to zfs(7fs) */
 name|zfs_share_t
 name|zc_share
 decl_stmt|;
@@ -435,6 +689,37 @@ name|zc_begin_record
 decl_stmt|;
 name|zinject_record_t
 name|zc_inject_record
+decl_stmt|;
+name|boolean_t
+name|zc_defer_destroy
+decl_stmt|;
+name|boolean_t
+name|zc_temphold
+decl_stmt|;
+name|uint64_t
+name|zc_action_handle
+decl_stmt|;
+name|int
+name|zc_cleanup_fd
+decl_stmt|;
+name|uint8_t
+name|zc_pad
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* alignment */
+name|uint64_t
+name|zc_sendobj
+decl_stmt|;
+name|uint64_t
+name|zc_fromobj
+decl_stmt|;
+name|uint64_t
+name|zc_createtxg
+decl_stmt|;
+name|zfs_stat_t
+name|zc_stat
 decl_stmt|;
 block|}
 name|zfs_cmd_t
@@ -463,12 +748,16 @@ name|zfs_useracct_t
 typedef|;
 define|#
 directive|define
-name|ZVOL_MAX_MINOR
+name|ZFSDEV_MAX_MINOR
 value|(1<< 16)
 define|#
 directive|define
 name|ZFS_MIN_MINOR
-value|(ZVOL_MAX_MINOR + 1)
+value|(ZFSDEV_MAX_MINOR + 1)
+define|#
+directive|define
+name|ZPOOL_EXPORT_AFTER_SPLIT
+value|0x1
 ifdef|#
 directive|ifdef
 name|_KERNEL
@@ -545,6 +834,7 @@ specifier|extern
 name|int
 name|zfs_unmount_snap
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -552,6 +842,59 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/*  * ZFS minor numbers can refer to either a control device instance or  * a zvol. Depending on the value of zss_type, zss_data points to either  * a zvol_state_t or a zfs_onexit_t.  */
+enum|enum
+name|zfs_soft_state_type
+block|{
+name|ZSST_ZVOL
+block|,
+name|ZSST_CTLDEV
+block|}
+enum|;
+typedef|typedef
+struct|struct
+name|zfs_soft_state
+block|{
+name|enum
+name|zfs_soft_state_type
+name|zss_type
+decl_stmt|;
+name|void
+modifier|*
+name|zss_data
+decl_stmt|;
+block|}
+name|zfs_soft_state_t
+typedef|;
+specifier|extern
+name|void
+modifier|*
+name|zfsdev_get_soft_state
+parameter_list|(
+name|minor_t
+name|minor
+parameter_list|,
+name|enum
+name|zfs_soft_state_type
+name|which
+parameter_list|)
+function_decl|;
+specifier|extern
+name|minor_t
+name|zfsdev_minor_alloc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+modifier|*
+name|zfsdev_state
+decl_stmt|;
+specifier|extern
+name|kmutex_t
+name|zfsdev_state_lock
+decl_stmt|;
 endif|#
 directive|endif
 comment|/* _KERNEL */

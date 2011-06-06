@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_comment
@@ -30,13 +30,6 @@ define|#
 directive|define
 name|_SYS_CRED_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -85,6 +78,9 @@ name|ksidlist
 struct_decl|;
 struct_decl|struct
 name|credklpd
+struct_decl|;
+struct_decl|struct
+name|credgrp
 struct_decl|;
 struct_decl|struct
 name|auditinfo_addr
@@ -207,6 +203,14 @@ name|struct
 name|proc
 modifier|*
 parameter_list|,
+name|cred_t
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|crset_zone_privall
+parameter_list|(
 name|cred_t
 modifier|*
 parameter_list|)
@@ -409,6 +413,18 @@ modifier|*
 parameter_list|)
 function_decl|;
 specifier|extern
+specifier|const
+name|gid_t
+modifier|*
+name|crgetggroups
+parameter_list|(
+specifier|const
+name|struct
+name|credgrp
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
 name|int
 name|crgetngroups
 parameter_list|(
@@ -459,6 +475,7 @@ parameter_list|,
 name|gid_t
 parameter_list|)
 function_decl|;
+comment|/*  * Functions to handle the supplemental group list.  */
 specifier|extern
 name|int
 name|crsetgroups
@@ -469,6 +486,39 @@ parameter_list|,
 name|int
 parameter_list|,
 name|gid_t
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|struct
+name|credgrp
+modifier|*
+name|crgrpcopyin
+parameter_list|(
+name|int
+parameter_list|,
+name|gid_t
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|crgrprele
+parameter_list|(
+name|struct
+name|credgrp
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|crsetcredgrp
+parameter_list|(
+name|cred_t
+modifier|*
+parameter_list|,
+name|struct
+name|credgrp
 modifier|*
 parameter_list|)
 function_decl|;

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sa.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/rrwlock.h>
 end_include
 
@@ -66,6 +72,9 @@ name|struct
 name|zfsvfs
 name|zfsvfs_t
 typedef|;
+struct_decl|struct
+name|znode
+struct_decl|;
 struct|struct
 name|zfsvfs
 block|{
@@ -136,10 +145,6 @@ name|z_log
 decl_stmt|;
 comment|/* intent log pointer */
 name|uint_t
-name|z_acl_mode
-decl_stmt|;
-comment|/* acl chmod/mode behavior */
-name|uint_t
 name|z_acl_inherit
 decl_stmt|;
 comment|/* acl inheritance behavior */
@@ -202,10 +207,10 @@ name|boolean_t
 name|z_replay
 decl_stmt|;
 comment|/* set during ZIL replay */
-name|kmutex_t
-name|z_online_recv_lock
+name|boolean_t
+name|z_use_sa
 decl_stmt|;
-comment|/* held while recv in progress */
+comment|/* version allow system attributes */
 name|uint64_t
 name|z_version
 decl_stmt|;
@@ -223,6 +228,15 @@ decl_stmt|;
 name|uint64_t
 name|z_groupquota_obj
 decl_stmt|;
+name|uint64_t
+name|z_replay_eof
+decl_stmt|;
+comment|/* New end of file - replay only */
+name|sa_attr_type_t
+modifier|*
+name|z_attr_table
+decl_stmt|;
+comment|/* SA attr mapping->id */
 define|#
 directive|define
 name|ZFS_OBJ_MTX_SZ
@@ -309,14 +323,6 @@ parameter_list|(
 name|zfsvfs_t
 modifier|*
 name|zfsvfs
-parameter_list|,
-name|char
-modifier|*
-name|osname
-parameter_list|,
-name|int
-modifier|*
-name|mode
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -331,9 +337,6 @@ specifier|const
 name|char
 modifier|*
 name|osname
-parameter_list|,
-name|int
-name|mode
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -409,7 +412,23 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|boolean_t
-name|zfs_usergroup_overquota
+name|zfs_owner_overquota
+parameter_list|(
+name|zfsvfs_t
+modifier|*
+name|zfsvfs
+parameter_list|,
+name|struct
+name|znode
+modifier|*
+parameter_list|,
+name|boolean_t
+name|isgroup
+parameter_list|)
+function_decl|;
+specifier|extern
+name|boolean_t
+name|zfs_fuid_overquota
 parameter_list|(
 name|zfsvfs_t
 modifier|*
@@ -443,13 +462,10 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|int
-name|mode
-parameter_list|,
 name|zfsvfs_t
 modifier|*
 modifier|*
-name|zvp
+name|zfvp
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -459,6 +475,33 @@ parameter_list|(
 name|zfsvfs_t
 modifier|*
 name|zfsvfs
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|zfs_check_global_label
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|dsname
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|hexsl
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|zfs_vnode_lock
+parameter_list|(
+name|vnode_t
+modifier|*
+name|vp
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 ifdef|#

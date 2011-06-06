@@ -128,6 +128,13 @@ name|p0
 value|proc0
 end_define
 
+begin_define
+define|#
+directive|define
+name|t_tid
+value|td_tid
+end_define
+
 begin_typedef
 typedef|typedef
 name|short

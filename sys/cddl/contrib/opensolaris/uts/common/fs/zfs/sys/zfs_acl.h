@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -52,6 +52,12 @@ begin_include
 include|#
 directive|include
 file|<sys/zfs_fuid.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sa.h>
 end_include
 
 begin_ifdef
@@ -203,6 +209,11 @@ define|#
 directive|define
 name|ZFS_ACE_SPACE
 value|(sizeof (zfs_oldace_t) * ACE_SLOT_CNT)
+comment|/*  * Size of ACL count is always 2 bytes.  * Necessary to for dealing with both V0 ACL and V1 ACL layout  */
+define|#
+directive|define
+name|ZFS_ACL_COUNT_SIZE
+value|(sizeof (uint16_t))
 typedef|typedef
 struct|struct
 name|zfs_acl_phys
@@ -424,7 +435,7 @@ name|size_t
 name|z_size
 decl_stmt|;
 comment|/* length of ACL data */
-name|int
+name|uint64_t
 name|z_ace_count
 decl_stmt|;
 comment|/* number of ACEs in this acl node */
@@ -439,7 +450,7 @@ typedef|typedef
 struct|struct
 name|zfs_acl
 block|{
-name|int
+name|uint64_t
 name|z_acl_count
 decl_stmt|;
 comment|/* Number of ACEs */
@@ -456,7 +467,7 @@ modifier|*
 name|z_next_ace
 decl_stmt|;
 comment|/* pointer to next ACE */
-name|int
+name|uint64_t
 name|z_hints
 decl_stmt|;
 comment|/* ACL hints (ZFS_INHERIT_ACE ...) */
@@ -475,6 +486,21 @@ decl_stmt|;
 comment|/* ACL operations */
 block|}
 name|zfs_acl_t
+typedef|;
+typedef|typedef
+struct|struct
+name|acl_locator_cb
+block|{
+name|zfs_acl_t
+modifier|*
+name|cb_aclp
+decl_stmt|;
+name|zfs_acl_node_t
+modifier|*
+name|cb_acl_node
+decl_stmt|;
+block|}
+name|zfs_acl_locator_cb_t
 typedef|;
 define|#
 directive|define
@@ -740,7 +766,7 @@ name|cred_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|void
 name|zfs_acl_chmod_setattr
 parameter_list|(
 name|struct
@@ -842,6 +868,103 @@ name|dmu_tx_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|uint64_t
+name|zfs_external_acl
+parameter_list|(
+name|struct
+name|znode
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+name|zfs_znode_acl_version
+parameter_list|(
+name|struct
+name|znode
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+name|zfs_acl_size
+parameter_list|(
+name|struct
+name|znode
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+name|zfs_acl_t
+modifier|*
+name|zfs_acl_alloc
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+name|zfs_acl_node_t
+modifier|*
+name|zfs_acl_node_alloc
+parameter_list|(
+name|size_t
+parameter_list|)
+function_decl|;
+name|void
+name|zfs_acl_xform
+parameter_list|(
+name|struct
+name|znode
+modifier|*
+parameter_list|,
+name|zfs_acl_t
+modifier|*
+parameter_list|,
+name|cred_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|zfs_acl_data_locator
+parameter_list|(
+name|void
+modifier|*
+modifier|*
+parameter_list|,
+name|uint32_t
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|boolean_t
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+name|uint64_t
+name|zfs_mode_compute
+parameter_list|(
+name|uint64_t
+parameter_list|,
+name|zfs_acl_t
+modifier|*
+parameter_list|,
+name|uint64_t
+modifier|*
+parameter_list|,
+name|uint64_t
+parameter_list|,
+name|uint64_t
+parameter_list|)
+function_decl|;
+name|int
+name|zfs_acl_chown_setattr
+parameter_list|(
+name|struct
+name|znode
+modifier|*
+parameter_list|)
+function_decl|;
 endif|#
 directive|endif
 ifdef|#
@@ -861,7 +984,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !ZFS_NO_ACL */
+comment|/* _SYS_FS_ZFS_ACL_H */
 end_comment
 
 end_unit

@@ -23,13 +23,6 @@ directive|define
 name|_SYS_PROCESSOR_H
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
-
 begin_include
 include|#
 directive|include
@@ -304,6 +297,18 @@ comment|/*  * Internal interface prototypes  */
 specifier|extern
 name|int
 name|p_online_internal
+parameter_list|(
+name|processorid_t
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|p_online_internal_locked
 parameter_list|(
 name|processorid_t
 parameter_list|,

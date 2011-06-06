@@ -74,6 +74,10 @@ define|#
 directive|define
 name|ZFS_ITER_DEPTH_LIMIT
 value|(1<< 3)
+define|#
+directive|define
+name|ZFS_ITER_RECVD_PROPS
+value|(1<< 4)
 name|int
 name|zfs_for_each
 parameter_list|(

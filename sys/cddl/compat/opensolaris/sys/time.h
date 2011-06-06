@@ -54,13 +54,6 @@ name|hrtime_t
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|LBOLT
-value|((gethrtime() * hz) / NANOSEC)
-end_define
-
 begin_if
 if|#
 directive|if
@@ -113,13 +106,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|lbolt64
-value|(int64_t)(LBOLT)
-end_define
-
 begin_function
 specifier|static
 name|__inline
@@ -136,25 +122,12 @@ decl_stmt|;
 name|hrtime_t
 name|nsec
 decl_stmt|;
-if|#
-directive|if
-literal|1
 name|getnanouptime
 argument_list|(
 operator|&
 name|ts
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|nanouptime
-argument_list|(
-operator|&
-name|ts
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|nsec
 operator|=
 operator|(
@@ -194,6 +167,30 @@ parameter_list|(
 name|ts
 parameter_list|)
 value|getnanotime(ts)
+end_define
+
+begin_define
+define|#
+directive|define
+name|gethrtime_waitfree
+parameter_list|()
+value|gethrtime()
+end_define
+
+begin_define
+define|#
+directive|define
+name|ddi_get_lbolt
+parameter_list|()
+value|((gethrtime() * hz) / NANOSEC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ddi_get_lbolt64
+parameter_list|()
+value|(int64_t)((gethrtime() * hz) / NANOSEC)
 end_define
 
 begin_else

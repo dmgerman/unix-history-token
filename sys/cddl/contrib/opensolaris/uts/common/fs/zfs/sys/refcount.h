@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_REFCOUNT_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -71,18 +64,9 @@ define|#
 directive|define
 name|FTAG
 value|((char *)__func__)
-if|#
-directive|if
-name|defined
-argument_list|(
-name|DEBUG
-argument_list|)
-operator|||
-operator|!
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
+ifdef|#
+directive|ifdef
+name|ZFS_DEBUG
 typedef|typedef
 struct|struct
 name|reference
@@ -225,6 +209,18 @@ name|holder_tag
 parameter_list|)
 function_decl|;
 name|void
+name|refcount_transfer
+parameter_list|(
+name|refcount_t
+modifier|*
+name|dst
+parameter_list|,
+name|refcount_t
+modifier|*
+name|src
+parameter_list|)
+function_decl|;
+name|void
 name|refcount_sysinit
 parameter_list|(
 name|void
@@ -238,7 +234,7 @@ parameter_list|)
 function_decl|;
 else|#
 directive|else
-comment|/* DEBUG */
+comment|/* ZFS_DEBUG */
 typedef|typedef
 struct|struct
 name|refcount
@@ -330,6 +326,15 @@ define|\
 value|atomic_add_64_nv(&(rc)->rc_count, -number)
 define|#
 directive|define
+name|refcount_transfer
+parameter_list|(
+name|dst
+parameter_list|,
+name|src
+parameter_list|)
+value|{ \ 	uint64_t __tmp = (src)->rc_count; \ 	atomic_add_64(&(src)->rc_count, -__tmp); \ 	atomic_add_64(&(dst)->rc_count, __tmp); \ }
+define|#
+directive|define
 name|refcount_sysinit
 parameter_list|()
 define|#
@@ -338,7 +343,7 @@ name|refcount_fini
 parameter_list|()
 endif|#
 directive|endif
-comment|/* DEBUG */
+comment|/* ZFS_DEBUG */
 ifdef|#
 directive|ifdef
 name|__cplusplus

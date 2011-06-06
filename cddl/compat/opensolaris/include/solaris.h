@@ -21,12 +21,33 @@ directive|include
 file|<sys/ccompile.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
 begin_define
 define|#
 directive|define
-name|dirent64
-value|dirent
+name|NOTE
+parameter_list|(
+name|s
+parameter_list|)
 end_define
+
+begin_function_decl
+name|int
+name|mkdirp
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|mode_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

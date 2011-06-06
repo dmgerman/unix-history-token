@@ -1179,7 +1179,8 @@ name|zs
 operator|->
 name|zst_last
 operator|=
-name|LBOLT
+name|ddi_get_lbolt
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -2723,7 +2724,8 @@ if|if
 condition|(
 operator|(
 operator|(
-name|LBOLT
+name|ddi_get_lbolt
+argument_list|()
 operator|-
 name|zs
 operator|->
@@ -3282,7 +3284,8 @@ name|newstream
 operator|->
 name|zst_last
 operator|=
-name|LBOLT
+name|ddi_get_lbolt
+argument_list|()
 expr_stmt|;
 name|mutex_init
 argument_list|(
