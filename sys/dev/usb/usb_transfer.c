@@ -10264,6 +10264,13 @@ argument_list|,
 name|USB_CTRL_XFER_MAX
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Reset clear stall error counter. 	 */
+name|udev
+operator|->
+name|clear_stall_errors
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Try to setup a new USB transfer for the 	 * default control endpoint: 	 */
 name|iface_index
 operator|=
