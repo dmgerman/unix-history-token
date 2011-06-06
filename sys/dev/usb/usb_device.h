@@ -593,6 +593,10 @@ name|devnum
 decl_stmt|;
 endif|#
 directive|endif
+name|uint32_t
+name|clear_stall_errors
+decl_stmt|;
+comment|/* number of clear-stall failures */
 block|}
 struct|;
 end_struct
