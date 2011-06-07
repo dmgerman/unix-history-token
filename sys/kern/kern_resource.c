@@ -601,16 +601,6 @@ argument_list|(
 argument|p
 argument_list|)
 block|{
-comment|/* Do not bother to check PRS_NEW processes */
-if|if
-condition|(
-name|p
-operator|->
-name|p_state
-operator|==
-name|PRS_NEW
-condition|)
-continue|continue;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -618,6 +608,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|p
+operator|->
+name|p_state
+operator|==
+name|PRS_NORMAL
+operator|&&
 name|p_cansee
 argument_list|(
 name|td

@@ -4258,6 +4258,12 @@ continue|continue;
 comment|/* 		 * If this is a system, protected or killed process, skip it. 		 */
 if|if
 condition|(
+name|p
+operator|->
+name|p_state
+operator|!=
+name|PRS_NORMAL
+operator|||
 operator|(
 name|p
 operator|->
@@ -5628,6 +5634,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|p
+operator|->
+name|p_state
+operator|!=
+name|PRS_NORMAL
+operator|||
 name|p
 operator|->
 name|p_flag
