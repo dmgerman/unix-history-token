@@ -27,12 +27,6 @@ directive|include
 file|"ah_devid.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AH_DEBUG
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -42,11 +36,6 @@ end_include
 begin_comment
 comment|/* NB: for HAL_PHYERR* */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
