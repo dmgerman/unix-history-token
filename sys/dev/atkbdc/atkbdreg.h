@@ -70,17 +70,6 @@ begin_comment
 comment|/* don't test keyboard during probe */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|KB_CONF_PROBE_TYPEMATIC
-value|(1<< 4)
-end_define
-
-begin_comment
-comment|/* probe keyboard typematic */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
