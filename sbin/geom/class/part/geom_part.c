@@ -2018,6 +2018,9 @@ argument_list|,
 literal|"Invalid alignment param"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
 name|lba
 operator|=
 name|pp
@@ -2036,12 +2039,7 @@ literal|0
 condition|)
 name|alignment
 operator|=
-name|g_lcm
-argument_list|(
 name|lba
-argument_list|,
-name|alignment
-argument_list|)
 expr_stmt|;
 block|}
 name|error
@@ -2915,7 +2913,6 @@ condition|)
 goto|goto
 name|done
 goto|;
-comment|/* 	 * If stripesize is not zero, then recalculate alignment value. 	 * Use LCM from stripesize and user specified alignment. 	 */
 name|len
 operator|=
 name|pp
@@ -2931,15 +2928,13 @@ condition|(
 name|len
 operator|>
 literal|0
+operator|&&
+operator|!
+name|has_alignment
 condition|)
 name|alignment
 operator|=
-name|g_lcm
-argument_list|(
 name|len
-argument_list|,
-name|alignment
-argument_list|)
 expr_stmt|;
 comment|/* Adjust parameters to stripeoffset */
 name|offset
