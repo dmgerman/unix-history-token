@@ -3373,6 +3373,20 @@ expr_stmt|;
 name|calculate_frequencies
 argument_list|()
 expr_stmt|;
+name|set_cputicker
+argument_list|(
+name|ia64_get_itc
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|itc_freq
+operator|*
+literal|1000000
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Setup the PCPU data for the bootstrap processor. It is needed 	 * by printf(). Also, since printf() has critical sections, we 	 * need to initialize at least pc_curthread. 	 */
 name|pcpup
 operator|=
