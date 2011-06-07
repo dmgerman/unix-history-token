@@ -2177,6 +2177,49 @@ name|HAL_QUIET_FLAG
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|HAL_DFS_EVENT_PRICH
+value|0x0000001
+end_define
+
+begin_struct
+struct|struct
+name|dfs_event
+block|{
+name|uint64_t
+name|re_full_ts
+decl_stmt|;
+comment|/* 64-bit full timestamp from interrupt time */
+name|uint32_t
+name|re_ts
+decl_stmt|;
+comment|/* Original 15 bit recv timestamp */
+name|uint8_t
+name|re_rssi
+decl_stmt|;
+comment|/* rssi of radar event */
+name|uint8_t
+name|re_dur
+decl_stmt|;
+comment|/* duration of radar pulse */
+name|uint32_t
+name|re_flags
+decl_stmt|;
+comment|/* Flags (see above) */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|dfs_event
+name|HAL_DFS_EVENT
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  * Hardware Access Layer (HAL) API.  *  * Clients of the HAL call ath_hal_attach to obtain a reference to an  * ath_hal structure for use with the device.  Hardware-related operations  * that follow must call back into the HAL through interface, supplying  * the reference as the first parameter.  Note that before using the  * reference returned by ath_hal_attach the caller should verify the  * ABI version number.  */
 end_comment
@@ -3743,6 +3786,36 @@ parameter_list|,
 name|HAL_PHYERR_PARAM
 modifier|*
 name|pe
+parameter_list|)
+function_decl|;
+name|HAL_BOOL
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_procRadarEvent
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|struct
+name|ath_rx_status
+modifier|*
+name|rxs
+parameter_list|,
+name|uint64_t
+name|fulltsf
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|HAL_DFS_EVENT
+modifier|*
+name|event
 parameter_list|)
 function_decl|;
 comment|/* Key Cache Functions */

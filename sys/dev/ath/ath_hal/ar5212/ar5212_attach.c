@@ -540,6 +540,11 @@ name|ah_getDfsThresh
 operator|=
 name|ar5212GetDfsThresh
 block|,
+operator|.
+name|ah_procRadarEvent
+operator|=
+name|ar5212ProcessRadarEvent
+block|,
 comment|/* Key Cache Functions */
 operator|.
 name|ah_getKeyCacheSize
