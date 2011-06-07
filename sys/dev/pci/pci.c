@@ -9871,11 +9871,7 @@ name|child
 argument_list|,
 name|actual
 argument_list|,
-name|cfg
-operator|->
-name|msi
-operator|.
-name|msi_msgnum
+name|actual
 argument_list|,
 name|irqs
 argument_list|)
