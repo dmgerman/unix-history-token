@@ -3313,6 +3313,10 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|&&
+name|error
+operator|!=
+name|EWOULDBLOCK
 condition|)
 name|fan
 operator|->
@@ -3505,6 +3509,10 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|&&
+name|error
+operator|!=
+name|EWOULDBLOCK
 condition|)
 name|fan
 operator|->
