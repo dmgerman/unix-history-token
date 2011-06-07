@@ -7854,19 +7854,15 @@ case|case
 name|PMC_FN_DO_SAMPLES
 case|:
 comment|/* 		 * Clear the cpu specific bit in the CPU mask before 		 * do the rest of the processing.  If the NMI handler 		 * gets invoked after the "atomic_clear_int()" call 		 * below but before "pmc_process_samples()" gets 		 * around to processing the interrupt, then we will 		 * come back here at the next hardclock() tick (and 		 * may find nothing to do if "pmc_process_samples()" 		 * had already processed the interrupt).  We don't 		 * lose the interrupt sample. 		 */
-name|atomic_clear_int
+name|CPU_CLR_ATOMIC
 argument_list|(
-operator|&
-name|pmc_cpumask
-argument_list|,
-operator|(
-literal|1
-operator|<<
 name|PCPU_GET
 argument_list|(
 name|cpuid
 argument_list|)
-operator|)
+argument_list|,
+operator|&
+name|pmc_cpumask
 argument_list|)
 expr_stmt|;
 name|pmc_process_samples
@@ -15309,16 +15305,12 @@ expr_stmt|;
 name|done
 label|:
 comment|/* mark CPU as needing processing */
-name|atomic_set_int
+name|CPU_SET_ATOMIC
 argument_list|(
+name|cpu
+argument_list|,
 operator|&
 name|pmc_cpumask
-argument_list|,
-operator|(
-literal|1
-operator|<<
-name|cpu
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -15690,16 +15682,12 @@ name|PMC_SAMPLE_INUSE
 condition|)
 block|{
 comment|/* Need a rescan at a later time. */
-name|atomic_set_int
+name|CPU_SET_ATOMIC
 argument_list|(
+name|cpu
+argument_list|,
 operator|&
 name|pmc_cpumask
-argument_list|,
-operator|(
-literal|1
-operator|<<
-name|cpu
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -18127,9 +18115,11 @@ literal|"cleanup"
 argument_list|)
 expr_stmt|;
 comment|/* switch off sampling */
+name|CPU_ZERO
+argument_list|(
+operator|&
 name|pmc_cpumask
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 name|pmc_intr
 operator|=

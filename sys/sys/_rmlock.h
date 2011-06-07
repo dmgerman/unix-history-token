@@ -48,7 +48,7 @@ name|lock_object
 name|lock_object
 decl_stmt|;
 specifier|volatile
-name|cpumask_t
+name|cpuset_t
 name|rm_writecpus
 decl_stmt|;
 name|LIST_HEAD

@@ -185,14 +185,6 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|int
-name|__cpumask_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
 name|double
 name|__double_t
 typedef|;

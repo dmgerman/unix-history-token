@@ -273,19 +273,37 @@ block|}
 end_function
 
 begin_function
-name|cpumask_t
+name|void
 name|platform_cpu_mask
 parameter_list|(
-name|void
+name|cpuset_t
+modifier|*
+name|mask
 parameter_list|)
 block|{
-return|return
-operator|(
+name|CPU_ZERO
+argument_list|(
+name|mask
+argument_list|)
+expr_stmt|;
+comment|/* 	 * XXX: hack in order to simplify CPU set building, assuming that 	 * core_mask is 32-bits. 	 */
+name|memcpy
+argument_list|(
+name|mask
+argument_list|,
+operator|&
 name|octeon_bootinfo
 operator|->
 name|core_mask
-operator|)
-return|;
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|octeon_bootinfo
+operator|->
+name|core_mask
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

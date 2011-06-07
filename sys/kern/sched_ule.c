@@ -2697,7 +2697,7 @@ parameter_list|,
 name|mask
 parameter_list|)
 define|\
-value|for ((cpu) = 0; (cpu)<= mp_maxid; (cpu)++)		\ 		if ((mask)& 1<< (cpu))
+value|for ((cpu) = 0; (cpu)<= mp_maxid; (cpu)++)		\ 		if (CPU_ISSET(cpu,&mask))
 end_define
 
 begin_function_decl
@@ -11138,6 +11138,12 @@ name|int
 name|indent
 parameter_list|)
 block|{
+name|char
+name|cpusetbuf
+index|[
+name|CPUSETBUFSIZ
+index|]
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -11168,7 +11174,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%*s<cpu count=\"%d\" mask=\"0x%x\">"
+literal|"%*s<cpu count=\"%d\" mask=\"%s\">"
 argument_list|,
 name|indent
 argument_list|,
@@ -11178,9 +11184,15 @@ name|cg
 operator|->
 name|cg_count
 argument_list|,
+name|cpusetobj_strprint
+argument_list|(
+name|cpusetbuf
+argument_list|,
+operator|&
 name|cg
 operator|->
 name|cg_mask
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|first
@@ -11203,19 +11215,15 @@ control|)
 block|{
 if|if
 condition|(
-operator|(
+name|CPU_ISSET
+argument_list|(
+name|i
+argument_list|,
+operator|&
 name|cg
 operator|->
 name|cg_mask
-operator|&
-operator|(
-literal|1
-operator|<<
-name|i
-operator|)
-operator|)
-operator|!=
-literal|0
+argument_list|)
 condition|)
 block|{
 if|if
