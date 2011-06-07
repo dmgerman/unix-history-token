@@ -237,6 +237,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ia64_sync_icache
+parameter_list|(
+name|vm_offset_t
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|ssize_t
 name|ia64_readin
 parameter_list|(

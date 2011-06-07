@@ -971,6 +971,13 @@ name|ph
 operator|->
 name|p_memsz
 expr_stmt|;
+name|ia64_sync_icache
+argument_list|(
+name|ia64_text_start
+argument_list|,
+name|ia64_text_size
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
