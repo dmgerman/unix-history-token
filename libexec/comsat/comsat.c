@@ -931,7 +931,7 @@ name|dsyslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"notify %s on %s\n"
+literal|"notify %s on %s"
 argument_list|,
 name|utp
 operator|->
