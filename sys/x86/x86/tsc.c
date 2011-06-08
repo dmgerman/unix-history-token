@@ -808,16 +808,6 @@ name|tsc_is_invariant
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
-name|smp_tsc
-operator|=
-literal|1
-expr_stmt|;
-comment|/* XXX */
-endif|#
-directive|endif
 return|return
 operator|(
 literal|1
