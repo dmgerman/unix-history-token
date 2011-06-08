@@ -5857,7 +5857,7 @@ name|fs
 operator|.
 name|max_p
 expr_stmt|;
-name|D
+name|ND
 argument_list|(
 literal|"called"
 argument_list|)
@@ -6340,7 +6340,7 @@ name|dn_cfg
 operator|.
 name|red_max_pkt_size
 expr_stmt|;
-name|D
+name|ND
 argument_list|(
 literal|"exit"
 argument_list|)
@@ -11567,11 +11567,9 @@ condition|(
 name|last
 condition|)
 block|{
-name|printf
+name|ND
 argument_list|(
-literal|"%s removing last instance\n"
-argument_list|,
-name|__FUNCTION__
+literal|"removing last instance\n"
 argument_list|)
 expr_stmt|;
 name|ip_dn_ctl_ptr
@@ -11914,7 +11912,7 @@ name|err
 init|=
 name|EINVAL
 decl_stmt|;
-name|D
+name|ND
 argument_list|(
 literal|"called for %s"
 argument_list|,
@@ -11953,7 +11951,7 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
-name|D
+name|ND
 argument_list|(
 literal|"ref_count = %d"
 argument_list|,
