@@ -373,7 +373,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|unsigned
-name|tsc_get_timecount_lowres
+name|tsc_get_timecount_low
 parameter_list|(
 name|struct
 name|timecounter
@@ -2052,7 +2052,7 @@ name|tsc_timecounter
 operator|.
 name|tc_get_timecount
 operator|=
-name|tsc_get_timecount_lowres
+name|tsc_get_timecount_low
 expr_stmt|;
 name|tsc_timecounter
 operator|.
@@ -2066,7 +2066,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"TSC timecounter discards lower %d bit(s).\n"
+literal|"TSC timecounter discards lower %d bit(s)\n"
 argument_list|,
 name|shift
 argument_list|)
@@ -2484,10 +2484,13 @@ argument_list|,
 name|freq
 argument_list|)
 expr_stmt|;
+name|atomic_store_rel_64
+argument_list|(
+operator|&
 name|tsc_timecounter
 operator|.
 name|tc_frequency
-operator|=
+argument_list|,
 name|freq
 operator|>>
 operator|(
@@ -2499,6 +2502,7 @@ operator|)
 name|tsc_timecounter
 operator|.
 name|tc_priv
+argument_list|)
 expr_stmt|;
 block|}
 return|return
@@ -2559,7 +2563,7 @@ end_function
 begin_function
 specifier|static
 name|u_int
-name|tsc_get_timecount_lowres
+name|tsc_get_timecount_low
 parameter_list|(
 name|struct
 name|timecounter
