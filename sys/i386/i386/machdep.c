@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mp_watchdog.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_npx.h"
 end_include
 
@@ -444,6 +450,12 @@ begin_include
 include|#
 directive|include
 file|<machine/metadata.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/mp_watchdog.h>
 end_include
 
 begin_include
@@ -6909,7 +6921,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|SMP
+name|MP_WATCHDOG
 argument_list|)
 operator|&&
 operator|!
@@ -6917,12 +6929,14 @@ name|defined
 argument_list|(
 name|XEN
 argument_list|)
-if|if
-condition|(
-name|mp_grab_cpu_hlt
-argument_list|()
-condition|)
-return|return;
+name|ap_watchdog
+argument_list|(
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 ifndef|#

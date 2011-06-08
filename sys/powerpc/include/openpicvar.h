@@ -119,7 +119,7 @@ parameter_list|,
 name|u_int
 name|irq
 parameter_list|,
-name|cpumask_t
+name|cpuset_t
 name|cpumask
 parameter_list|)
 function_decl|;

@@ -2923,5 +2923,43 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Extract the radar event information from the given phy error.  *  * Returns AH_TRUE if the phy error was actually a phy error,  * AH_FALSE if the phy error wasn't a phy error.  */
+end_comment
+
+begin_function
+name|HAL_BOOL
+name|ar5416ProcessRadarEvent
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|struct
+name|ath_rx_status
+modifier|*
+name|rxs
+parameter_list|,
+name|uint64_t
+name|fulltsf
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|HAL_DFS_EVENT
+modifier|*
+name|event
+parameter_list|)
+block|{
+comment|/* 	 * For now, this isn't implemented. 	 */
+return|return
+name|AH_FALSE
+return|;
+block|}
+end_function
+
 end_unit
 

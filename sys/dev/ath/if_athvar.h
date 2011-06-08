@@ -3663,6 +3663,25 @@ end_define
 begin_define
 define|#
 directive|define
+name|ath_hal_procradarevent
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_rxs
+parameter_list|,
+name|_fulltsf
+parameter_list|,
+name|_buf
+parameter_list|,
+name|_event
+parameter_list|)
+define|\
+value|((*(_ah)->ah_procRadarEvent)((_ah), (_rxs), (_fulltsf), (_buf), (_event)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ath_hal_gpioCfgOutput
 parameter_list|(
 name|_ah

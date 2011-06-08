@@ -3177,14 +3177,12 @@ operator|&
 name|sm_rdnss_head
 argument_list|)
 expr_stmt|;
-else|else
-name|CALL_SCRIPT
-argument_list|(
-name|RESDEL
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|else 		CALL_SCRIPT(RESDEL, NULL);
+endif|#
+directive|endif
 name|ra_opt_handler_freeit
 label|:
 comment|/* Clear script message queue. */

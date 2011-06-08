@@ -15,87 +15,18 @@ directive|define
 name|_SYS_CPUSET_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
+begin_include
+include|#
+directive|include
+file|<sys/_cpuset.h>
+end_include
 
 begin_define
 define|#
 directive|define
-name|CPU_SETSIZE
-value|MAXCPU
+name|CPUSETBUFSIZ
+value|((2 + sizeof(long) * 2) * _NCPUWORDS)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|CPU_MAXSIZE
-value|128
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CPU_SETSIZE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|CPU_SETSIZE
-value|CPU_MAXSIZE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|_NCPUBITS
-value|(sizeof(long) * NBBY)
-end_define
-
-begin_comment
-comment|/* bits per mask */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_NCPUWORDS
-value|howmany(CPU_SETSIZE, _NCPUBITS)
-end_define
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|_cpuset
-block|{
-name|long
-name|__bits
-index|[
-name|howmany
-argument_list|(
-name|CPU_SETSIZE
-argument_list|,
-name|_NCPUBITS
-argument_list|)
-index|]
-decl_stmt|;
-block|}
-name|cpuset_t
-typedef|;
-end_typedef
 
 begin_define
 define|#
@@ -175,6 +106,18 @@ parameter_list|)
 value|do {				\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		(p)->__bits[__i] = -1;			\ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CPU_SETOF
+parameter_list|(
+name|n
+parameter_list|,
+name|p
+parameter_list|)
+value|do {					\ 	CPU_ZERO(p);						\ 	((p)->__bits[(n)/_NCPUBITS] = __cpuset_mask(n));	\ } while (0)
+end_define
+
 begin_comment
 comment|/* Is p empty. */
 end_comment
@@ -187,6 +130,20 @@ parameter_list|(
 name|p
 parameter_list|)
 value|__extension__ ({			\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		if ((p)->__bits[__i])			\ 			break;				\ 	__i == _NCPUWORDS;				\ })
+end_define
+
+begin_comment
+comment|/* Is p full set. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_ISFULLSET
+parameter_list|(
+name|p
+parameter_list|)
+value|__extension__ ({		\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		if ((p)->__bits[__i] != (long)-1)	\ 			break;				\ 	__i == _NCPUWORDS;				\ })
 end_define
 
 begin_comment
@@ -271,6 +228,68 @@ parameter_list|,
 name|s
 parameter_list|)
 value|do {				\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		(d)->__bits[__i]&= ~(s)->__bits[__i];	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_CLR_ATOMIC
+parameter_list|(
+name|n
+parameter_list|,
+name|p
+parameter_list|)
+define|\
+value|atomic_clear_long(&(p)->__bits[(n)/_NCPUBITS], __cpuset_mask(n))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_SET_ATOMIC
+parameter_list|(
+name|n
+parameter_list|,
+name|p
+parameter_list|)
+define|\
+value|atomic_set_long(&(p)->__bits[(n)/_NCPUBITS], __cpuset_mask(n))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_OR_ATOMIC
+parameter_list|(
+name|d
+parameter_list|,
+name|s
+parameter_list|)
+value|do {			\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		atomic_set_long(&(d)->__bits[__i],	\ 		    (s)->__bits[__i]);			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_NAND_ATOMIC
+parameter_list|(
+name|d
+parameter_list|,
+name|s
+parameter_list|)
+value|do {			\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		atomic_clear_long(&(d)->__bits[__i],	\ 		    (s)->__bits[__i]);			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_COPY_STORE_REL
+parameter_list|(
+name|f
+parameter_list|,
+name|t
+parameter_list|)
+value|do {				\ 	__size_t __i;						\ 	for (__i = 0; __i< _NCPUWORDS; __i++)			\ 		atomic_store_rel_long(&(t)->__bits[__i],	\ 		    (f)->__bits[__i]);				\ } while (0)
 end_define
 
 begin_comment
@@ -573,6 +592,46 @@ modifier|*
 parameter_list|,
 name|struct
 name|cpuset
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|cpusetobj_ffs
+parameter_list|(
+specifier|const
+name|cpuset_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|cpusetobj_strprint
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|cpuset_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|cpusetobj_strscan
+parameter_list|(
+name|cpuset_t
+modifier|*
+parameter_list|,
+specifier|const
+name|char
 modifier|*
 parameter_list|)
 function_decl|;

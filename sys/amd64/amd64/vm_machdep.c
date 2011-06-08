@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sf_buf.h>
 end_include
 
@@ -165,6 +171,12 @@ begin_include
 include|#
 directive|include
 file|<machine/pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/smp.h>
 end_include
 
 begin_include
@@ -1859,6 +1871,9 @@ name|void
 name|cpu_reset_proxy
 parameter_list|()
 block|{
+name|cpuset_t
+name|tcrp
+decl_stmt|;
 name|cpu_reset_proxy_active
 operator|=
 literal|1
@@ -1871,13 +1886,17 @@ literal|1
 condition|)
 empty_stmt|;
 comment|/* Wait for other cpu to see that we've started */
+name|CPU_SETOF
+argument_list|(
+name|cpu_reset_proxyid
+argument_list|,
+operator|&
+name|tcrp
+argument_list|)
+expr_stmt|;
 name|stop_cpus
 argument_list|(
-operator|(
-literal|1
-operator|<<
-name|cpu_reset_proxyid
-operator|)
+name|tcrp
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1911,7 +1930,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|SMP
-name|cpumask_t
+name|cpuset_t
 name|map
 decl_stmt|;
 name|u_int
@@ -1922,21 +1941,33 @@ condition|(
 name|smp_active
 condition|)
 block|{
+name|sched_pin
+argument_list|()
+expr_stmt|;
 name|map
 operator|=
 name|PCPU_GET
 argument_list|(
 name|other_cpus
 argument_list|)
+expr_stmt|;
+name|CPU_NAND
+argument_list|(
 operator|&
-operator|~
+name|map
+argument_list|,
+operator|&
 name|stopped_cpus
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|CPU_EMPTY
+argument_list|(
+operator|&
 name|map
-operator|!=
-literal|0
+argument_list|)
 condition|)
 block|{
 name|printf
@@ -1967,6 +1998,9 @@ argument_list|(
 name|cpuid
 argument_list|)
 expr_stmt|;
+name|sched_unpin
+argument_list|()
+expr_stmt|;
 name|cpustop_restartfunc
 operator|=
 name|cpu_reset_proxy
@@ -1981,15 +2015,16 @@ literal|"cpu_reset: Restarting BSP\n"
 argument_list|)
 expr_stmt|;
 comment|/* Restart CPU #0. */
-name|atomic_store_rel_int
+name|CPU_SETOF
 argument_list|(
+literal|0
+argument_list|,
 operator|&
 name|started_cpus
-argument_list|,
-literal|1
-operator|<<
-literal|0
 argument_list|)
+expr_stmt|;
+name|wmb
+argument_list|()
 expr_stmt|;
 name|cnt
 operator|=
@@ -2034,6 +2069,10 @@ condition|)
 empty_stmt|;
 comment|/* NOTREACHED */
 block|}
+else|else
+name|sched_unpin
+argument_list|()
+expr_stmt|;
 name|DELAY
 argument_list|(
 literal|1000000

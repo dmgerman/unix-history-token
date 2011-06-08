@@ -698,6 +698,12 @@ name|ah_getDfsThresh
 operator|=
 name|ar5416GetDfsThresh
 expr_stmt|;
+name|ah
+operator|->
+name|ah_procRadarEvent
+operator|=
+name|ar5416ProcessRadarEvent
+expr_stmt|;
 comment|/* Power Management Functions */
 name|ah
 operator|->

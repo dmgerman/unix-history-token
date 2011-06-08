@@ -224,7 +224,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 specifier|volatile
-name|cpumask_t
+name|cpuset_t
 name|pmc_cpumask
 decl_stmt|;
 end_decl_stmt
@@ -356,7 +356,7 @@ name|PMC_CPU_HAS_SAMPLES
 parameter_list|(
 name|C
 parameter_list|)
-value|(__predict_false(pmc_cpumask& (1<< (C))))
+value|(__predict_false(CPU_ISSET(C,&pmc_cpumask)))
 end_define
 
 begin_comment

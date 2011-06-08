@@ -1239,6 +1239,12 @@ name|do_pipe
 operator|=
 literal|0
 expr_stmt|;
+name|co
+operator|.
+name|use_set
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1881,7 +1887,7 @@ value|32
 name|char
 name|buf
 index|[
-name|BUFSIZ
+literal|4096
 index|]
 decl_stmt|;
 name|char
@@ -2324,7 +2330,10 @@ name|fgets
 argument_list|(
 name|buf
 argument_list|,
-name|BUFSIZ
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 name|f
 argument_list|)

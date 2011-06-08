@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/_cpuset.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_lock.h>
 end_include
 
@@ -109,7 +115,7 @@ decl_stmt|;
 name|vm_object_t
 name|pm_tsb_obj
 decl_stmt|;
-name|cpumask_t
+name|cpuset_t
 name|pm_active
 decl_stmt|;
 name|u_int

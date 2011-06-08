@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_pcbgroup.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -3060,6 +3066,7 @@ name|INET6
 block|}
 endif|#
 directive|endif
+comment|/* 	 * Install in the reservation hash table for now, but don't yet 	 * install a connection group since the full 4-tuple isn't yet 	 * configured. 	 */
 name|inp
 operator|->
 name|inp_lport
@@ -3075,7 +3082,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|in_pcbinshash
+name|in_pcbinshash_nopcbgroup
 argument_list|(
 name|inp
 argument_list|)

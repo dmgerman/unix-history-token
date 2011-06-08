@@ -2687,6 +2687,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|usbd_start_re_enumerate
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+name|udev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|usb_fifo_attach
 parameter_list|(

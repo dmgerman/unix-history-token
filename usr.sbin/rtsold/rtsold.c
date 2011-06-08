@@ -491,6 +491,10 @@ directive|endif
 name|int
 name|rtsock
 decl_stmt|;
+name|char
+modifier|*
+name|argv0
+decl_stmt|;
 ifndef|#
 directive|ifndef
 name|SMALL
@@ -516,6 +520,13 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
+name|argv0
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
 while|while
 condition|(
 operator|(

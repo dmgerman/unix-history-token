@@ -8,11 +8,11 @@ comment|/*	$KAME: if_stf.c,v 1.73 2001/12/03 11:08:30 keiichi Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (C) 2000 WIDE Project.  * Copyright (c) 2010 Hiroki Sato<hrs@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (C) 2000 WIDE Project.  * Copyright (c) 2010-2011 Hiroki Sato<hrs@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  * 6to4 interface, based on RFC3056 + 6rd (RFC5569) support.  *  * 6to4 interface is NOT capable of link-layer (I mean, IPv4) multicasting.  * There is no address mapping defined from IPv6 multicast address to IPv4  * address.  Therefore, we do not have IFF_MULTICAST on the interface.  *  * Due to the lack of address mapping for link-local addresses, we cannot  * throw packets toward link-local addresses (fe80::x).  Also, we cannot throw  * packets to link-local multicast addresses (ff02::x).  *  * Here are interesting symptoms due to the lack of link-local address:  *  * Unicast routing exchange:  * - RIPng: Impossible.  Uses link-local multicast packet toward ff02::9,  *   and link-local addresses as nexthop.  * - OSPFv6: Impossible.  OSPFv6 assumes that there's link-local address  *   assigned to the link, and makes use of them.  Also, HELLO packets use  *   link-local multicast addresses (ff02::5 and ff02::6).  * - BGP4+: Maybe.  You can only use global address as nexthop, and global  *   address as TCP endpoint address.  *  * Multicast routing protocols:  * - PIM: Hello packet cannot be used to discover adjacent PIM routers.  *   Adjacent PIM routers must be configured manually (is it really spec-wise  *   correct thing to do?).  *  * ICMPv6:  * - Redirects cannot be used due to the lack of link-local address.  *  * stf interface does not have, and will not need, a link-local address.  * It seems to have no real benefit and does not help the above symptoms much.  * Even if we assign link-locals to interface, we cannot really  * use link-local unicast/multicast on top of 6to4 cloud (since there's no  * encapsulation defined for link-local address), and the above analysis does  * not change.  RFC3056 does not mandate the assignment of link-local address  * either.  *  * 6to4 interface has security issues.  Refer to  * http://playground.iijlab.net/i-d/draft-itojun-ipv6-transition-abuse-00.txt  * for details.  The code tries to filter out some of malicious packets.  * Note that there is no way to be 100% secure.  *  * 6rd (RFC5569) extension is enabled when an IPv6 GUA other than  * 2002::/16 is assigned.  The stf(4) recognizes a 32-bit just after  * prefixlen as the IPv4 address of the 6rd customer site.  The  * prefixlen must be shorter than 32.  *  */
+comment|/*  * 6to4 interface, based on RFC 3056 + 6rd (RFC 5969) support.  *  * 6to4 interface is NOT capable of link-layer (I mean, IPv4) multicasting.  * There is no address mapping defined from IPv6 multicast address to IPv4  * address.  Therefore, we do not have IFF_MULTICAST on the interface.  *  * Due to the lack of address mapping for link-local addresses, we cannot  * throw packets toward link-local addresses (fe80::x).  Also, we cannot throw  * packets to link-local multicast addresses (ff02::x).  *  * Here are interesting symptoms due to the lack of link-local address:  *  * Unicast routing exchange:  * - RIPng: Impossible.  Uses link-local multicast packet toward ff02::9,  *   and link-local addresses as nexthop.  * - OSPFv6: Impossible.  OSPFv6 assumes that there's link-local address  *   assigned to the link, and makes use of them.  Also, HELLO packets use  *   link-local multicast addresses (ff02::5 and ff02::6).  * - BGP4+: Maybe.  You can only use global address as nexthop, and global  *   address as TCP endpoint address.  *  * Multicast routing protocols:  * - PIM: Hello packet cannot be used to discover adjacent PIM routers.  *   Adjacent PIM routers must be configured manually (is it really spec-wise  *   correct thing to do?).  *  * ICMPv6:  * - Redirects cannot be used due to the lack of link-local address.  *  * stf interface does not have, and will not need, a link-local address.  * It seems to have no real benefit and does not help the above symptoms much.  * Even if we assign link-locals to interface, we cannot really  * use link-local unicast/multicast on top of 6to4 cloud (since there's no  * encapsulation defined for link-local address), and the above analysis does  * not change.  RFC3056 does not mandate the assignment of link-local address  * either.  *  * 6to4 interface has security issues.  Refer to  * http://playground.iijlab.net/i-d/draft-itojun-ipv6-transition-abuse-00.txt  * for details.  The code tries to filter out some of malicious packets.  * Note that there is no way to be 100% secure.  *  * 6rd (RFC 5969) extension is enabled when an IPv6 GUA other than  * 2002::/16 is assigned.  The stf(4) calculates a 6rd delegated  * prefix from a 6rd prefix and an IPv4 address.  *  */
 end_comment
 
 begin_include
@@ -6695,14 +6695,6 @@ condition|(
 name|ifa
 operator|==
 name|NULL
-operator|||
-name|ifa
-operator|->
-name|ifa_addr
-operator|->
-name|sa_family
-operator|!=
-name|AF_INET6
 condition|)
 block|{
 name|error
@@ -6711,6 +6703,33 @@ name|EAFNOSUPPORT
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|ifa
+operator|->
+name|ifa_addr
+operator|->
+name|sa_family
+operator|==
+name|AF_INET6
+operator|&&
+name|ifa
+operator|->
+name|ifa_dstaddr
+operator|->
+name|sa_family
+operator|==
+name|AF_INET
+operator|&&
+name|ifa
+operator|->
+name|ifa_netmask
+operator|->
+name|sa_family
+operator|==
+name|AF_INET6
+condition|)
+block|{
 name|ifa
 operator|->
 name|ifa_rtrequest
@@ -6723,8 +6742,16 @@ name|if_flags
 operator||=
 name|IFF_UP
 expr_stmt|;
+block|}
+else|else
+block|{
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
 break|break;
-comment|/* 	case STFSSRDADDR: 		ifra6 = (struct in6_aliasreq *)data; 		if (ifra6 == NULL || ifra6->ifra_addr->sa_family != AF_INET6) { 			error = EAFNOSUPPORT; 			break; 		} 		sa6 =&ifra6->ifra_addr; 		if (ifra6->ifra_dstaddr->sa_family != AF_INET) { 			error = EAFNOSUPPORT; 			break; 		} 		memcpy(&ifra.ifra_addr, sa6, sizeof(ifra.ifra_addr)); 		error = in6_control(NULL, SIOCAIFADDR_IN6, (caddr_t)&ifra, ifp, curthread); 		if (error) 			return (error); 		 		break; 		 	case STFDSRDADDR: */
+block|}
+break|break;
 case|case
 name|SIOCADDMULTI
 case|:

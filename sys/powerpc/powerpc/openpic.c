@@ -1005,7 +1005,7 @@ parameter_list|,
 name|u_int
 name|irq
 parameter_list|,
-name|cpumask_t
+name|cpuset_t
 name|cpumask
 parameter_list|)
 block|{
@@ -1029,6 +1029,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX: openpic_write() is very special and just needs a 32 bits mask. 	 * For the moment, just play dirty and get the first half word. 	 */
 name|openpic_write
 argument_list|(
 name|sc
@@ -1039,6 +1040,13 @@ name|irq
 argument_list|)
 argument_list|,
 name|cpumask
+operator|.
+name|__bits
+index|[
+literal|0
+index|]
+operator|&
+literal|0xffffffff
 argument_list|)
 expr_stmt|;
 block|}

@@ -201,15 +201,6 @@ comment|/* detect infinite loops in termcap, init 0 */
 end_comment
 
 begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|remotefile
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 specifier|const
 name|char
@@ -782,7 +773,7 @@ name|tcbuf
 argument_list|,
 name|tcname
 argument_list|,
-name|remotefile
+name|conffile
 argument_list|)
 operator|!=
 literal|1
