@@ -380,12 +380,11 @@ name|IFNAMSIZ
 index|]
 decl_stmt|;
 comment|/* if name */
-name|TAILQ_ENTRY
-argument_list|(
-argument|ifc
-argument_list|)
+name|struct
+name|ifc
+modifier|*
 name|ifc_next
-expr_stmt|;
+decl_stmt|;
 name|int
 name|ifc_index
 decl_stmt|;
@@ -441,12 +440,11 @@ modifier|*
 name|ifa_conf
 decl_stmt|;
 comment|/* back pointer */
-name|TAILQ_ENTRY
-argument_list|(
-argument|ifac
-argument_list|)
+name|struct
+name|ifac
+modifier|*
 name|ifa_next
-expr_stmt|;
+decl_stmt|;
 name|struct
 name|in6_addr
 name|ifa_addr
@@ -494,41 +492,21 @@ block|}
 struct|;
 end_struct
 
-begin_macro
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|ifc
-argument_list|)
-end_macro
-
-begin_expr_stmt
+begin_decl_stmt
+name|struct
 name|ifc
-operator|=
-name|TAILQ_HEAD_INITIALIZER
-argument_list|(
+modifier|*
 name|ifc
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
-begin_macro
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|iff
-argument_list|)
-end_macro
-
-begin_expr_stmt
+begin_decl_stmt
+name|struct
+name|iff
+modifier|*
 name|iff_head
-operator|=
-name|TAILQ_HEAD_INITIALIZER
-argument_list|(
-name|iff_head
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -670,12 +648,11 @@ begin_struct
 struct|struct
 name|riprt
 block|{
-name|TAILQ_ENTRY
-argument_list|(
-argument|riprt
-argument_list|)
+name|struct
+name|riprt
+modifier|*
 name|rrt_next
-expr_stmt|;
+decl_stmt|;
 comment|/* next destination */
 name|struct
 name|riprt
