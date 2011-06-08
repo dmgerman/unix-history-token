@@ -2279,6 +2279,30 @@ literal|0x1415
 block|,
 literal|0x9501
 block|,
+literal|0x14db
+block|,
+literal|0x2150
+block|,
+literal|"Kuroutoshikou SERIAL4P-LPPCI2"
+block|,
+name|DEFAULT_RCLK
+operator|*
+literal|10
+block|,
+name|PUC_PORT_4S
+block|,
+literal|0x10
+block|,
+literal|0
+block|,
+literal|8
+block|, 	}
+block|,
+block|{
+literal|0x1415
+block|,
+literal|0x9501
+block|,
 literal|0xffff
 block|,
 literal|0
