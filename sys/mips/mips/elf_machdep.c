@@ -285,7 +285,11 @@ operator|=
 name|SV_ABI_FREEBSD
 operator||
 name|SV_LP64
-block|}
+operator|.
+name|sv_schedtail
+operator|=
+name|NULL
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -557,6 +561,11 @@ operator|.
 name|sv_syscallnames
 operator|=
 name|syscallnames
+block|,
+operator|.
+name|sv_schedtail
+operator|=
+name|NULL
 block|, }
 decl_stmt|;
 end_decl_stmt

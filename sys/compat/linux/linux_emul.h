@@ -242,11 +242,8 @@ begin_function_decl
 name|void
 name|linux_schedtail
 parameter_list|(
-name|void
-modifier|*
-parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|)
 function_decl|;

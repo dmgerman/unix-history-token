@@ -452,6 +452,17 @@ modifier|*
 modifier|*
 name|sv_syscallnames
 decl_stmt|;
+name|void
+function_decl|(
+modifier|*
+name|sv_schedtail
+function_decl|)
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct

@@ -758,6 +758,11 @@ operator|.
 name|sv_syscallnames
 operator|=
 name|freebsd32_syscallnames
+block|,
+operator|.
+name|sv_schedtail
+operator|=
+name|NULL
 block|, }
 decl_stmt|;
 end_decl_stmt

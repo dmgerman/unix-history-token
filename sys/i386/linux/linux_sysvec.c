@@ -502,13 +502,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|eventhandler_tag
-name|linux_schedtail_tag
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|eventhandler_tag
 name|linux_exec_tag
 decl_stmt|;
 end_decl_stmt
@@ -5142,6 +5135,11 @@ operator|.
 name|sv_syscallnames
 operator|=
 name|NULL
+block|,
+operator|.
+name|sv_schedtail
+operator|=
+name|linux_schedtail
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -5313,6 +5311,11 @@ operator|.
 name|sv_syscallnames
 operator|=
 name|NULL
+block|,
+operator|.
+name|sv_schedtail
+operator|=
+name|linux_schedtail
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -5783,19 +5786,6 @@ argument_list|,
 literal|1000
 argument_list|)
 expr_stmt|;
-name|linux_schedtail_tag
-operator|=
-name|EVENTHANDLER_REGISTER
-argument_list|(
-name|schedtail
-argument_list|,
-name|linux_schedtail
-argument_list|,
-name|NULL
-argument_list|,
-literal|1000
-argument_list|)
-expr_stmt|;
 name|linux_exec_tag
 operator|=
 name|EVENTHANDLER_REGISTER
@@ -5990,13 +5980,6 @@ argument_list|(
 name|process_exit
 argument_list|,
 name|linux_exit_tag
-argument_list|)
-expr_stmt|;
-name|EVENTHANDLER_DEREGISTER
-argument_list|(
-name|schedtail
-argument_list|,
-name|linux_schedtail_tag
 argument_list|)
 expr_stmt|;
 name|EVENTHANDLER_DEREGISTER
