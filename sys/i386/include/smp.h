@@ -370,15 +370,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|mp_grab_cpu_hlt
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|smp_cache_flush
 parameter_list|(
