@@ -2995,6 +2995,12 @@ if|if
 condition|(
 name|p
 operator|->
+name|p_state
+operator|==
+name|PRS_NEW
+operator|||
+name|p
+operator|->
 name|p_flag
 operator|&
 operator|(

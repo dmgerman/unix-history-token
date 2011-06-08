@@ -9681,6 +9681,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|p
+operator|->
+name|p_state
+operator|==
+name|PRS_NORMAL
+operator|&&
+operator|(
 name|checkctty
 operator|==
 literal|0
@@ -9690,6 +9697,7 @@ operator|->
 name|p_flag
 operator|&
 name|P_CONTROLT
+operator|)
 condition|)
 name|pksignal
 argument_list|(
@@ -15688,6 +15696,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|p
+operator|->
+name|p_state
+operator|==
+name|PRS_NORMAL
+operator|&&
 name|CANSIGIO
 argument_list|(
 name|sigio
