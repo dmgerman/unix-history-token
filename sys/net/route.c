@@ -1404,11 +1404,6 @@ modifier|*
 name|rnh
 decl_stmt|;
 name|struct
-name|rtentry
-modifier|*
-name|rt
-decl_stmt|;
-name|struct
 name|radix_node
 modifier|*
 name|rn
@@ -1550,8 +1545,6 @@ operator|)
 condition|)
 block|{
 name|newrt
-operator|=
-name|rt
 operator|=
 name|RNTORT
 argument_list|(
