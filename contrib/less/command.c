@@ -2696,6 +2696,10 @@ name|ungot
 operator|=
 name|ug
 expr_stmt|;
+name|unget_end
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
