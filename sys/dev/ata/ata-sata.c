@@ -169,6 +169,14 @@ operator|&
 name|error
 argument_list|)
 expr_stmt|;
+comment|/* Check that SError value is sane. */
+if|if
+condition|(
+name|error
+operator|==
+literal|0xffffffff
+condition|)
+return|return;
 comment|/* Clear set error bits/interrupt. */
 if|if
 condition|(
@@ -812,7 +820,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"hardware reset ...\n"
+literal|"hard reset ...\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -822,7 +830,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"p%d: hardware reset ...\n"
+literal|"p%d: hard reset ...\n"
 argument_list|,
 name|port
 argument_list|)
@@ -870,11 +878,9 @@ argument_list|,
 name|ATA_SC_DET_RESET
 argument_list|)
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 name|ata_udelay
 argument_list|(
 literal|100
@@ -894,11 +900,9 @@ operator|&
 name|val
 argument_list|)
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 if|if
 condition|(
 operator|(
@@ -959,11 +963,9 @@ name|ATA_SC_IPM_DIS_SLUMBER
 operator|)
 argument_list|)
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 name|ata_udelay
 argument_list|(
 literal|100
@@ -983,11 +985,9 @@ operator|&
 name|val
 argument_list|)
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 if|if
 condition|(
 operator|(
@@ -1010,8 +1010,57 @@ argument_list|)
 return|;
 block|}
 block|}
-return|return
+name|fail
+label|:
+comment|/* Clear SATA error register. */
+name|ata_sata_scr_write
+argument_list|(
+name|ch
+argument_list|,
+name|port
+argument_list|,
+name|ATA_SERROR
+argument_list|,
+literal|0xffffffff
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
+if|if
+condition|(
+name|port
+operator|<
 literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"hard reset failed\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"p%d: hard reset failed\n"
+argument_list|,
+name|port
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+return|return
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 end_function
