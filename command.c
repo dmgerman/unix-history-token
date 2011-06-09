@@ -1190,6 +1190,9 @@ name|mca_opt_first_char
 parameter_list|(
 name|c
 parameter_list|)
+name|int
+name|c
+decl_stmt|;
 block|{
 name|int
 name|flag
@@ -2671,6 +2674,10 @@ expr_stmt|;
 name|ungot
 operator|=
 name|ug
+expr_stmt|;
+name|unget_end
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function
