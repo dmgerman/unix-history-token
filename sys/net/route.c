@@ -1470,23 +1470,16 @@ name|newrt
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Look up the address in the table for that Address Family 	 */
 if|if
 condition|(
 name|rnh
 operator|==
 name|NULL
 condition|)
-block|{
-name|V_rtstat
-operator|.
-name|rts_unreach
-operator|++
-expr_stmt|;
 goto|goto
 name|miss
 goto|;
-block|}
+comment|/* 	 * Look up the address in the table for that Address Family 	 */
 name|needlock
 operator|=
 operator|!
@@ -1585,13 +1578,13 @@ name|rnh
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Either we hit the root or couldn't find any match, 	 * Which basically means 	 * "caint get there frm here" 	 */
+name|miss
+label|:
 name|V_rtstat
 operator|.
 name|rts_unreach
 operator|++
 expr_stmt|;
-name|miss
-label|:
 if|if
 condition|(
 name|report
