@@ -1465,16 +1465,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|RT_TRYLOCK
-parameter_list|(
-name|_rt
-parameter_list|)
-value|mtx_trylock(&(_rt)->rt_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
 name|RT_UNLOCK
 parameter_list|(
 name|_rt
@@ -1542,30 +1532,6 @@ parameter_list|(
 name|_rt
 parameter_list|)
 value|do {					\ 	RT_LOCK(_rt);						\ 	RTFREE_LOCKED(_rt);					\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RT_TEMP_UNLOCK
-parameter_list|(
-name|_rt
-parameter_list|)
-value|do {				\ 	RT_ADDREF(_rt);						\ 	RT_UNLOCK(_rt);						\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RT_RELOCK
-parameter_list|(
-name|_rt
-parameter_list|)
-value|do {					\ 	RT_LOCK(_rt);						\ 	if ((_rt)->rt_refcnt<= 1) {				\ 		rtfree(_rt);					\ 		_rt = 0;
-comment|/*  signal that it went away */
-value|\ 	} else {						\ 		RT_REMREF(_rt);					\
-comment|/* note that _rt is still valid */
-value|\ 	}							\ } while (0)
 end_define
 
 begin_function_decl
