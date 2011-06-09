@@ -1153,6 +1153,20 @@ name|AMDID_CMP_CORES
 value|0x000000ff
 end_define
 
+begin_define
+define|#
+directive|define
+name|AMDID_COREID_SIZE
+value|0x0000f000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDID_COREID_SIZE_SHIFT
+value|12
+end_define
+
 begin_comment
 comment|/*  * CPUID manufacturers identifiers  */
 end_comment
