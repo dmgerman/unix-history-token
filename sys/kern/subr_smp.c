@@ -1093,6 +1093,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 name|void
 modifier|*
 name|local_func_arg
@@ -1130,6 +1135,14 @@ function_decl|;
 name|int
 name|generation
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|int
+name|owepreempt
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* Ensure we have up-to-date values. */
 name|atomic_add_acq_int
 argument_list|(
@@ -1175,6 +1188,27 @@ name|generation
 operator|=
 name|smp_rv_generation
 expr_stmt|;
+comment|/* 	 * Use a nested critical section to prevent any preemptions 	 * from occurring during a rendezvous action routine. 	 * Specifically, if a rendezvous handler is invoked via an IPI 	 * and the interrupted thread was in the critical_exit() 	 * function after setting td_critnest to 0 but before 	 * performing a deferred preemption, this routine can be 	 * invoked with td_critnest set to 0 and td_owepreempt true. 	 * In that case, a critical_exit() during the rendezvous 	 * action would trigger a preemption which is not permitted in 	 * a rendezvous action.  To fix this, wrap all of the 	 * rendezvous action handlers in a critical section.  We 	 * cannot use a regular critical section however as having 	 * critical_exit() preempt from this routine would also be 	 * problematic (the preemption must not occur before the IPI 	 * has been acknowleged via an EOI).  Instead, we 	 * intentionally ignore td_owepreempt when leaving the 	 * critical setion.  This should be harmless because we do not 	 * permit rendezvous action routines to schedule threads, and 	 * thus td_owepreempt should never transition from 0 to 1 	 * during this routine. 	 */
+name|td
+operator|=
+name|curthread
+expr_stmt|;
+name|td
+operator|->
+name|td_critnest
+operator|++
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|owepreempt
+operator|=
+name|td
+operator|->
+name|td_owepreempt
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * If requested, run a setup function before the main action 	 * function.  Ensure all CPUs have completed the setup 	 * function before moving on to the action function. 	 */
 if|if
 condition|(
@@ -1251,10 +1285,10 @@ expr_stmt|;
 if|if
 condition|(
 name|local_teardown_func
-operator|==
+operator|!=
 name|smp_no_rendevous_barrier
 condition|)
-return|return;
+block|{
 while|while
 condition|(
 name|smp_rv_waiters
@@ -1280,6 +1314,25 @@ condition|)
 name|local_teardown_func
 argument_list|(
 name|local_func_arg
+argument_list|)
+expr_stmt|;
+block|}
+name|td
+operator|->
+name|td_critnest
+operator|--
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|owepreempt
+operator|==
+name|td
+operator|->
+name|td_owepreempt
+argument_list|,
+operator|(
+literal|"rendezvous action changed td_owepreempt"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
