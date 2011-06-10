@@ -9857,8 +9857,7 @@ parameter_list|)
 block|{
 name|db_printf
 argument_list|(
-literal|"mp %p %s devvp %p fs %p su_wl %d su_wl_in %d su_deps %d "
-literal|"su_req %d\n"
+literal|"mp %p %s devvp %p fs %p su_wl %d su_deps %d su_req %d\n"
 argument_list|,
 name|ump
 operator|->
@@ -9883,10 +9882,6 @@ argument_list|,
 name|ump
 operator|->
 name|softdep_on_worklist
-argument_list|,
-name|ump
-operator|->
-name|softdep_on_worklist_inprogress
 argument_list|,
 name|ump
 operator|->
