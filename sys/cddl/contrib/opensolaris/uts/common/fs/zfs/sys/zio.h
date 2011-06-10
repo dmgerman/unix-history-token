@@ -1146,7 +1146,7 @@ name|done
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|,
 name|enum
 name|zio_flag
@@ -1168,7 +1168,7 @@ name|done
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|,
 name|enum
 name|zio_flag
@@ -1206,7 +1206,7 @@ name|done
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|,
 name|int
 name|priority
@@ -1263,7 +1263,7 @@ name|done
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|,
 name|int
 name|priority
@@ -1311,7 +1311,7 @@ name|done
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|,
 name|int
 name|priority
@@ -1385,7 +1385,7 @@ name|done
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|,
 name|enum
 name|zio_flag
@@ -1418,7 +1418,7 @@ name|done
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|,
 name|int
 name|priority
@@ -1460,7 +1460,7 @@ name|done
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|,
 name|int
 name|priority
@@ -1505,7 +1505,7 @@ name|done
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|,
 name|int
 name|priority
@@ -1783,7 +1783,7 @@ name|done
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -1821,7 +1821,7 @@ name|done
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|)
 function_decl|;
 specifier|extern
