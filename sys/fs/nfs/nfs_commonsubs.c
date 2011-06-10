@@ -9357,7 +9357,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Implement sleep locks for newnfs. The nfslock_usecnt allows for a  * shared lock and the NFSXXX_LOCK flag permits an exclusive lock.  * The first argument is a pointer to an nfsv4lock structure.  * The second argument is 1 iff a blocking lock is wanted.  * If this argument is 0, the call waits until no thread either wants nor  * holds an exclusive lock.  * It returns 1 if the lock was acquired, 0 otherwise.  * If several processes call this function concurrently wanting the exclusive  * lock, one will get the lock and the rest will return without getting the  * lock. (If the caller must have the lock, it simply calls this function in a  *  loop until the function returns 1 to indicate the lock was acquired.)  * Any usecnt must be decremented by calling nfsv4_relref() before  * calling nfsv4_lock(). It was done this way, so nfsv4_lock() could  * be called in a loop.  * The last argument is set to indicate if the call slept, iff not NULL.  */
+comment|/*  * Implement sleep locks for newnfs. The nfslock_usecnt allows for a  * shared lock and the NFSXXX_LOCK flag permits an exclusive lock.  * The first argument is a pointer to an nfsv4lock structure.  * The second argument is 1 iff a blocking lock is wanted.  * If this argument is 0, the call waits until no thread either wants nor  * holds an exclusive lock.  * It returns 1 if the lock was acquired, 0 otherwise.  * If several processes call this function concurrently wanting the exclusive  * lock, one will get the lock and the rest will return without getting the  * lock. (If the caller must have the lock, it simply calls this function in a  *  loop until the function returns 1 to indicate the lock was acquired.)  * Any usecnt must be decremented by calling nfsv4_relref() before  * calling nfsv4_lock(). It was done this way, so nfsv4_lock() could  * be called in a loop.  * The isleptp argument is set to indicate if the call slept, iff not NULL  * and the mp argument indicates to check for a forced dismount, iff not  * NULL.  */
 end_comment
 
 begin_function
@@ -9380,6 +9380,11 @@ parameter_list|,
 name|void
 modifier|*
 name|mutex
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+name|mp
 parameter_list|)
 block|{
 if|if
@@ -9454,6 +9459,36 @@ name|NFSV4LOCK_LOCKWANTED
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|mp
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|mp
+operator|->
+name|mnt_kern_flag
+operator|&
+name|MNTK_UNMOUNTF
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|lp
+operator|->
+name|nfslock_lock
+operator|&=
+operator|~
+name|NFSV4LOCK_LOCKWANTED
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|lp
 operator|->
 name|nfslock_lock
@@ -9630,7 +9665,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get a reference cnt.  * This function will wait for any exclusive lock to be released, but will  * not wait for threads that want the exclusive lock. If priority needs  * to be given to threads that need the exclusive lock, a call to nfsv4_lock()  * with the 2nd argument == 0 should be done before calling nfsv4_getref().  */
+comment|/*  * Get a reference cnt.  * This function will wait for any exclusive lock to be released, but will  * not wait for threads that want the exclusive lock. If priority needs  * to be given to threads that need the exclusive lock, a call to nfsv4_lock()  * with the 2nd argument == 0 should be done before calling nfsv4_getref().  * If the mp argument is not NULL, check for MNTK_UNMOUNTF being set and  * return without getting a refcnt for that case.  */
 end_comment
 
 begin_function
@@ -9650,6 +9685,11 @@ parameter_list|,
 name|void
 modifier|*
 name|mutex
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+name|mp
 parameter_list|)
 block|{
 if|if
@@ -9671,6 +9711,23 @@ operator|&
 name|NFSV4LOCK_LOCK
 condition|)
 block|{
+if|if
+condition|(
+name|mp
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|mp
+operator|->
+name|mnt_kern_flag
+operator|&
+name|MNTK_UNMOUNTF
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return;
 name|lp
 operator|->
 name|nfslock_lock
@@ -9708,6 +9765,23 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|mp
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|mp
+operator|->
+name|mnt_kern_flag
+operator|&
+name|MNTK_UNMOUNTF
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return;
 name|lp
 operator|->
 name|nfslock_usecnt

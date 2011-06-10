@@ -5426,6 +5426,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NFSV4ROOTLOCKMUTEXPTR
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 else|else
@@ -5441,6 +5443,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NFSV4ROOTLOCKMUTEXPTR
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|NFSUNLOCKV4ROOTMUTEX
@@ -5636,6 +5640,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NFSV4ROOTLOCKMUTEXPTR
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|NFSUNLOCKV4ROOTMUTEX
