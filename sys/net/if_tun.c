@@ -576,7 +576,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|tuninit
 parameter_list|(
 name|struct
@@ -2506,7 +2506,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|tuninit
 parameter_list|(
 name|struct
@@ -2534,11 +2534,6 @@ name|ifa
 decl_stmt|;
 endif|#
 directive|endif
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
 name|TUNDEBUG
 argument_list|(
 name|ifp
@@ -2666,11 +2661,6 @@ operator|->
 name|tun_mtx
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
 block|}
 end_function
 
@@ -2789,8 +2779,6 @@ break|break;
 case|case
 name|SIOCSIFADDR
 case|:
-name|error
-operator|=
 name|tuninit
 argument_list|(
 name|ifp
@@ -2800,17 +2788,13 @@ name|TUNDEBUG
 argument_list|(
 name|ifp
 argument_list|,
-literal|"address set, error=%d\n"
-argument_list|,
-name|error
+literal|"address set\n"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|SIOCSIFDSTADDR
 case|:
-name|error
-operator|=
 name|tuninit
 argument_list|(
 name|ifp
@@ -2820,9 +2804,7 @@ name|TUNDEBUG
 argument_list|(
 name|ifp
 argument_list|,
-literal|"destination address set, error=%d\n"
-argument_list|,
-name|error
+literal|"destination address set\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4412,11 +4394,6 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
 name|uint32_t
 name|family
 decl_stmt|;
@@ -4522,7 +4499,7 @@ operator|++
 expr_stmt|;
 return|return
 operator|(
-name|error
+name|ENOBUFS
 operator|)
 return|;
 block|}
