@@ -6131,6 +6131,9 @@ block|{
 case|case
 name|XPT_SCAN_BUS
 case|:
+case|case
+name|XPT_SCAN_TGT
+case|:
 comment|/* Find out the characteristics of the bus */
 name|work_ccb
 operator|=
@@ -8107,6 +8110,9 @@ break|break;
 block|}
 case|case
 name|XPT_SCAN_BUS
+case|:
+case|case
+name|XPT_SCAN_TGT
 case|:
 name|ata_scan_bus
 argument_list|(

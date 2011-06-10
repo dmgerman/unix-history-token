@@ -23309,7 +23309,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* 	 * Allocate a CCB, create a wildcard path for this bus/target and schedule a rescan. 	 */
+comment|/* 	 * Allocate a CCB, create a wildcard path for this target and schedule a rescan. 	 */
 name|ccb
 operator|=
 name|xpt_alloc_ccb_nowait
