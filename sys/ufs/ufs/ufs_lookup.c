@@ -3730,8 +3730,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
+operator|(
+name|void
+operator|)
 name|VOP_FSYNC
 argument_list|(
 name|dvp
