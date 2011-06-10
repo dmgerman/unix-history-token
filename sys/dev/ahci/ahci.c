@@ -1532,6 +1532,16 @@ name|AHCI_Q_NOBSYRES
 block|}
 block|,
 block|{
+literal|0x91721b4b
+block|,
+literal|0x00
+block|,
+literal|"Marvell 88SE9172"
+block|,
+name|AHCI_Q_NOBSYRES
+block|}
+block|,
+block|{
 literal|0x91821b4b
 block|,
 literal|0x00
