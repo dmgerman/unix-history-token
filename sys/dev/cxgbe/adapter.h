@@ -1097,7 +1097,8 @@ name|uint16_t
 name|iqid
 decl_stmt|;
 comment|/* iq that gets egr_update for the eq */
-name|uint32_t
+name|unsigned
+name|int
 name|cntxt_id
 decl_stmt|;
 comment|/* SGE context id for the eq */
