@@ -1065,6 +1065,14 @@ operator|=
 literal|"Montecito"
 expr_stmt|;
 break|break;
+case|case
+literal|0x01
+case|:
+name|model_name
+operator|=
+literal|"Montvale"
+expr_stmt|;
+break|break;
 block|}
 break|break;
 block|}
