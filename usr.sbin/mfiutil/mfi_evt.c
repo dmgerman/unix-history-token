@@ -300,6 +300,11 @@ argument_list|(
 literal|"Failed to get event log info"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2846,6 +2851,11 @@ argument_list|(
 literal|"Failed to get event log info"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2955,6 +2965,11 @@ argument_list|(
 literal|"Error parsing event class"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2989,6 +3004,11 @@ expr_stmt|;
 name|warn
 argument_list|(
 literal|"Error parsing event locale"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -3030,6 +3050,11 @@ argument_list|(
 literal|"Invalid event count"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
@@ -3053,6 +3078,11 @@ case|case
 literal|'?'
 case|:
 default|default:
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
@@ -3102,6 +3132,11 @@ argument_list|(
 literal|"Event count is too high"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
@@ -3119,6 +3154,11 @@ block|{
 name|warnx
 argument_list|(
 literal|"show events: extra arguments"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -3159,6 +3199,11 @@ argument_list|(
 literal|"Error parsing starting sequence number"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -3197,6 +3242,11 @@ argument_list|(
 literal|"Error parsing ending sequence number"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -3220,6 +3270,11 @@ block|{
 name|warnx
 argument_list|(
 literal|"malloc failed"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -3267,6 +3322,16 @@ argument_list|(
 literal|"Failed to fetch events"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|list
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -3308,6 +3373,16 @@ name|mfi_status
 argument_list|(
 name|status
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|list
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return

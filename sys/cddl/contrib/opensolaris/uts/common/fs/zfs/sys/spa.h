@@ -2566,7 +2566,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|class
+name|cls
 parameter_list|,
 name|spa_t
 modifier|*

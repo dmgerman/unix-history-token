@@ -740,6 +740,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ra_output
+parameter_list|(
+name|struct
+name|rainfo
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|prefix_match
 parameter_list|(

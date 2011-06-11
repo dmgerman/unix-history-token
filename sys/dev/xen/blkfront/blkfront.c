@@ -3532,7 +3532,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|blkfront_backend_changed
 parameter_list|(
 name|device_t
@@ -3635,11 +3635,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 

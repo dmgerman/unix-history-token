@@ -821,6 +821,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|STACKSTRNUL
+argument_list|(
+name|expdest
+argument_list|)
+expr_stmt|;
 return|return;
 comment|/* here document expanded */
 block|}

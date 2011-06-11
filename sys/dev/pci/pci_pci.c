@@ -4605,11 +4605,18 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
+name|end_free
+operator|--
+expr_stmt|;
 name|front
 operator|=
 name|end_free
 operator|-
+operator|(
 name|count
+operator|-
+literal|1
+operator|)
 expr_stmt|;
 comment|/* 		 * The resource would now be allocated at (front, 		 * end_free).  Ensure that fits in the (start, end) 		 * bounds.  end_free is checked above.  If 'front' is 		 * ok, ensure it is properly aligned for this window. 		 * Also check for underflow. 		 */
 if|if
@@ -4746,6 +4753,8 @@ operator|=
 name|start_free
 operator|+
 name|count
+operator|-
+literal|1
 expr_stmt|;
 comment|/* 		 * The resource would now be allocated at (start_free, 		 * back).  Ensure that fits in the (start, end) 		 * bounds.  start_free is checked above.  If 'back' is 		 * ok, ensure it is properly aligned for this window. 		 * Also check for overflow. 		 */
 if|if
@@ -4777,6 +4786,8 @@ operator|=
 name|roundup2
 argument_list|(
 name|back
+operator|+
+literal|1
 argument_list|,
 name|w
 operator|->

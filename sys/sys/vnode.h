@@ -1050,6 +1050,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IO_BUFLOCKED
+value|0x2000
+end_define
+
+begin_comment
+comment|/* ffs flag; indir buf is locked */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IO_SEQMAX
 value|0x7F
 end_define

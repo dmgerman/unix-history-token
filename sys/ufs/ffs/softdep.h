@@ -110,12 +110,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UNUSED400
+name|DELAYEDFREE
 value|0x000400
 end_define
 
 begin_comment
-comment|/* currently available. */
+comment|/* allocindirect free delayed. */
 end_comment
 
 begin_define
@@ -551,7 +551,7 @@ name|WK_SBDEP
 parameter_list|(
 name|wk
 parameter_list|)
-value|((struct sbdep *)wk)
+value|((struct sbdep *)(wk))
 end_define
 
 begin_define
@@ -562,6 +562,16 @@ parameter_list|(
 name|wk
 parameter_list|)
 value|((struct jtrunc *)(wk))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WK_JFSYNC
+parameter_list|(
+name|wk
+parameter_list|)
+value|((struct jfsync *)(wk))
 end_define
 
 begin_comment
@@ -691,9 +701,9 @@ end_expr_stmt
 begin_expr_stmt
 name|LIST_HEAD
 argument_list|(
-name|jfreeblkhd
+name|jblkdephd
 argument_list|,
-name|jfreeblk
+name|jblkdep
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -702,6 +712,16 @@ begin_expr_stmt
 name|LIST_HEAD
 argument_list|(
 name|freeworkhd
+argument_list|,
+name|freework
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|freeworklst
 argument_list|,
 name|freework
 argument_list|)
@@ -724,6 +744,16 @@ argument_list|(
 name|inoreflst
 argument_list|,
 name|inoref
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|freeblklst
+argument_list|,
+name|freeblks
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -933,6 +963,11 @@ name|allocdirectlst
 name|id_newextupdt
 decl_stmt|;
 comment|/* extdata updates at ino write */
+name|struct
+name|freeblklst
+name|id_freeblklst
+decl_stmt|;
+comment|/* List of partial truncates. */
 union|union
 block|{
 name|struct
@@ -985,9 +1020,6 @@ define|#
 directive|define
 name|sm_state
 value|sm_list.wk_state
-name|int
-name|sm_cg
-decl_stmt|;
 name|LIST_ENTRY
 argument_list|(
 argument|bmsafemap
@@ -995,6 +1027,16 @@ argument_list|)
 name|sm_hash
 expr_stmt|;
 comment|/* Hash links. */
+name|LIST_ENTRY
+argument_list|(
+argument|bmsafemap
+argument_list|)
+name|sm_next
+expr_stmt|;
+comment|/* Mount list. */
+name|int
+name|sm_cg
+decl_stmt|;
 name|struct
 name|buf
 modifier|*
@@ -1051,6 +1093,16 @@ name|jnewblkhd
 name|sm_jnewblkhd
 decl_stmt|;
 comment|/* Pending block allocations. */
+name|struct
+name|workhead
+name|sm_freehd
+decl_stmt|;
+comment|/* Freedep deps. */
+name|struct
+name|workhead
+name|sm_freewr
+decl_stmt|;
+comment|/* Written freedeps. */
 block|}
 struct|;
 end_struct
@@ -1224,6 +1276,14 @@ argument_list|)
 name|ir_next
 expr_stmt|;
 comment|/* alloc{direct,indir} list */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|freework
+argument_list|)
+name|ir_trunc
+expr_stmt|;
+comment|/* List of truncations. */
 name|caddr_t
 name|ir_saveddata
 decl_stmt|;
@@ -1234,6 +1294,12 @@ modifier|*
 name|ir_savebp
 decl_stmt|;
 comment|/* buffer holding safe copy */
+name|struct
+name|buf
+modifier|*
+name|ir_bp
+decl_stmt|;
+comment|/* buffer holding live copy */
 name|struct
 name|allocindirhd
 name|ir_completehd
@@ -1255,15 +1321,11 @@ name|ir_deplisthd
 decl_stmt|;
 comment|/* allocindir deps for this block */
 name|struct
-name|jnewblkhd
-name|ir_jnewblkhd
+name|freeblks
+modifier|*
+name|ir_freeblks
 decl_stmt|;
-comment|/* Canceled block allocations. */
-name|struct
-name|workhead
-name|ir_jwork
-decl_stmt|;
-comment|/* Journal work pending. */
+comment|/* Freeblks that frees this indir. */
 block|}
 struct|;
 end_struct
@@ -1303,6 +1365,10 @@ name|ufs2_daddr_t
 name|ai_oldblkno
 decl_stmt|;
 comment|/* old value of block pointer */
+name|ufs_lbn_t
+name|ai_lbn
+decl_stmt|;
+comment|/* Logical block number. */
 name|int
 name|ai_offset
 decl_stmt|;
@@ -1418,9 +1484,16 @@ directive|define
 name|fb_state
 value|fb_list.wk_state
 comment|/* inode and dirty block state */
+name|TAILQ_ENTRY
+argument_list|(
+argument|freeblks
+argument_list|)
+name|fb_next
+expr_stmt|;
+comment|/* List of inode truncates. */
 name|struct
-name|jfreeblkhd
-name|fb_jfreeblkhd
+name|jblkdephd
+name|fb_jblkdephd
 decl_stmt|;
 comment|/* Journal entries pending */
 name|struct
@@ -1433,28 +1506,58 @@ name|workhead
 name|fb_jwork
 decl_stmt|;
 comment|/* Journal work pending */
-name|ino_t
-name|fb_previousinum
-decl_stmt|;
-comment|/* inode of previous owner of blocks */
-name|uid_t
-name|fb_uid
-decl_stmt|;
-comment|/* uid of previous owner of blocks */
 name|struct
 name|vnode
 modifier|*
 name|fb_devvp
 decl_stmt|;
 comment|/* filesystem device vnode */
+ifdef|#
+directive|ifdef
+name|QUOTA
+name|struct
+name|dquot
+modifier|*
+name|fb_quota
+index|[
+name|MAXQUOTAS
+index|]
+decl_stmt|;
+comment|/* quotas to be adjusted */
+endif|#
+directive|endif
+name|uint64_t
+name|fb_modrev
+decl_stmt|;
+comment|/* Inode revision at start of trunc. */
+name|off_t
+name|fb_len
+decl_stmt|;
+comment|/* Length we're truncating to. */
 name|ufs2_daddr_t
 name|fb_chkcnt
 decl_stmt|;
-comment|/* used to check cnt of blks released */
+comment|/* Expected blks released. */
+name|ufs2_daddr_t
+name|fb_freecnt
+decl_stmt|;
+comment|/* Actual blocks released. */
+name|ino_t
+name|fb_inum
+decl_stmt|;
+comment|/* inode owner of blocks */
+name|uid_t
+name|fb_uid
+decl_stmt|;
+comment|/* uid of previous owner of blocks */
 name|int
 name|fb_ref
 decl_stmt|;
 comment|/* Children outstanding. */
+name|int
+name|fb_cgwait
+decl_stmt|;
+comment|/* cg writes outstanding. */
 block|}
 struct|;
 end_struct
@@ -1480,9 +1583,16 @@ name|LIST_ENTRY
 argument_list|(
 argument|freework
 argument_list|)
+name|fw_segs
+expr_stmt|;
+comment|/* Seg list. */
+name|TAILQ_ENTRY
+argument_list|(
+argument|freework
+argument_list|)
 name|fw_next
 expr_stmt|;
-comment|/* For seg journal list. */
+comment|/* Hash/Trunc list. */
 name|struct
 name|jnewblk
 modifier|*
@@ -1501,6 +1611,12 @@ modifier|*
 name|fw_parent
 decl_stmt|;
 comment|/* Parent indirect. */
+name|struct
+name|indirdep
+modifier|*
+name|fw_indir
+decl_stmt|;
+comment|/* indirect block. */
 name|ufs2_daddr_t
 name|fw_blkno
 decl_stmt|;
@@ -1509,23 +1625,22 @@ name|ufs_lbn_t
 name|fw_lbn
 decl_stmt|;
 comment|/* Original lbn before free. */
-name|int
+name|uint16_t
 name|fw_frags
 decl_stmt|;
 comment|/* Number of frags. */
-name|int
+name|uint16_t
 name|fw_ref
 decl_stmt|;
 comment|/* Number of children out. */
-name|int
+name|uint16_t
 name|fw_off
 decl_stmt|;
 comment|/* Current working position. */
-name|struct
-name|workhead
-name|fw_jwork
+name|uint16_t
+name|fw_start
 decl_stmt|;
-comment|/* Journal work pending. */
+comment|/* Start of partial truncate. */
 block|}
 struct|;
 end_struct
@@ -1750,6 +1865,10 @@ name|ino_t
 name|dm_oldinum
 decl_stmt|;
 comment|/* inum of the removed dir entry */
+name|doff_t
+name|dm_offset
+decl_stmt|;
+comment|/* offset of removed dir entry in blk */
 union|union
 block|{
 name|struct
@@ -1805,7 +1924,6 @@ define|#
 directive|define
 name|db_state
 value|db_list.wk_state
-comment|/* unused */
 name|struct
 name|pagedep
 modifier|*
@@ -2081,23 +2199,12 @@ argument_list|)
 name|jn_deps
 expr_stmt|;
 comment|/* Jnewblks on sm_jnewblkhd. */
-name|LIST_ENTRY
-argument_list|(
-argument|jnewblk
-argument_list|)
-name|jn_indirdeps
-expr_stmt|;
-comment|/* Jnewblks on ir_jnewblkhd. */
 name|struct
 name|worklist
 modifier|*
 name|jn_dep
 decl_stmt|;
 comment|/* Dependency to ref completed seg. */
-name|ino_t
-name|jn_ino
-decl_stmt|;
-comment|/* Ino to which allocated. */
 name|ufs_lbn_t
 name|jn_lbn
 decl_stmt|;
@@ -2106,6 +2213,10 @@ name|ufs2_daddr_t
 name|jn_blkno
 decl_stmt|;
 comment|/* Blkno allocated */
+name|ino_t
+name|jn_ino
+decl_stmt|;
+comment|/* Ino to which allocated. */
 name|int
 name|jn_oldfrags
 decl_stmt|;
@@ -2119,6 +2230,42 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * A "jblkdep" structure tracks jfreeblk and jtrunc records attached to a  * freeblks structure.  */
+end_comment
+
+begin_struct
+struct|struct
+name|jblkdep
+block|{
+name|struct
+name|worklist
+name|jb_list
+decl_stmt|;
+comment|/* For softdep journal pending. */
+name|struct
+name|jsegdep
+modifier|*
+name|jb_jsegdep
+decl_stmt|;
+comment|/* Reference to the jseg. */
+name|struct
+name|freeblks
+modifier|*
+name|jb_freeblks
+decl_stmt|;
+comment|/* Back pointer to freeblks. */
+name|LIST_ENTRY
+argument_list|(
+argument|jblkdep
+argument_list|)
+name|jb_deps
+expr_stmt|;
+comment|/* Dep list on freeblks. */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * A "jfreeblk" structure tracks the journal write for freeing a block  * or tree of blocks.  The block pointer must not be cleared in the inode  * or indirect prior to the jfreeblk being written to the journal.  */
 end_comment
 
@@ -2127,37 +2274,10 @@ struct|struct
 name|jfreeblk
 block|{
 name|struct
-name|worklist
-name|jf_list
+name|jblkdep
+name|jf_dep
 decl_stmt|;
-comment|/* Linked to softdep_journal_pending. */
-define|#
-directive|define
-name|jf_state
-value|jf_list.wk_state
-name|struct
-name|jsegdep
-modifier|*
-name|jf_jsegdep
-decl_stmt|;
-comment|/* Will track our journal record. */
-name|struct
-name|freeblks
-modifier|*
-name|jf_freeblks
-decl_stmt|;
-comment|/* Back pointer to freeblks. */
-name|LIST_ENTRY
-argument_list|(
-argument|jfreeblk
-argument_list|)
-name|jf_deps
-expr_stmt|;
-comment|/* Jfreeblk on fb_jfreeblkhd. */
-name|ino_t
-name|jf_ino
-decl_stmt|;
-comment|/* Ino from which blocks freed. */
+comment|/* freeblks linkage. */
 name|ufs_lbn_t
 name|jf_lbn
 decl_stmt|;
@@ -2166,6 +2286,10 @@ name|ufs2_daddr_t
 name|jf_blkno
 decl_stmt|;
 comment|/* Blkno being freed. */
+name|ino_t
+name|jf_ino
+decl_stmt|;
+comment|/* Ino from which blocks freed. */
 name|int
 name|jf_frags
 decl_stmt|;
@@ -2203,10 +2327,6 @@ modifier|*
 name|fr_freefrag
 decl_stmt|;
 comment|/* Back pointer to freefrag. */
-name|ino_t
-name|fr_ino
-decl_stmt|;
-comment|/* Ino from which frag freed. */
 name|ufs_lbn_t
 name|fr_lbn
 decl_stmt|;
@@ -2215,6 +2335,10 @@ name|ufs2_daddr_t
 name|fr_blkno
 decl_stmt|;
 comment|/* Blkno being freed. */
+name|ino_t
+name|fr_ino
+decl_stmt|;
+comment|/* Ino from which frag freed. */
 name|int
 name|fr_frags
 decl_stmt|;
@@ -2224,7 +2348,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * A "jtrunc" journals the intent to truncate an inode to a non-zero  * value.  This is done synchronously prior to the synchronous partial  * truncation process.  The jsegdep is not released until the truncation  * is complete and the truncated inode is fsync'd.  */
+comment|/*  * A "jtrunc" journals the intent to truncate an inode's data or extent area.  */
 end_comment
 
 begin_struct
@@ -2232,20 +2356,10 @@ struct|struct
 name|jtrunc
 block|{
 name|struct
-name|worklist
-name|jt_list
+name|jblkdep
+name|jt_dep
 decl_stmt|;
-comment|/* Linked to softdep_journal_pending. */
-name|struct
-name|jsegdep
-modifier|*
-name|jt_jsegdep
-decl_stmt|;
-comment|/* Will track our journal record. */
-name|ino_t
-name|jt_ino
-decl_stmt|;
-comment|/* Ino being truncated. */
+comment|/* freeblks linkage. */
 name|off_t
 name|jt_size
 decl_stmt|;
@@ -2254,6 +2368,39 @@ name|int
 name|jt_extsize
 decl_stmt|;
 comment|/* Final extent size. */
+name|ino_t
+name|jt_ino
+decl_stmt|;
+comment|/* Ino being truncated. */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * A "jfsync" journals the completion of an fsync which invalidates earlier  * jtrunc records in the journal.  */
+end_comment
+
+begin_struct
+struct|struct
+name|jfsync
+block|{
+name|struct
+name|worklist
+name|jfs_list
+decl_stmt|;
+comment|/* For softdep journal pending. */
+name|off_t
+name|jfs_size
+decl_stmt|;
+comment|/* Sync file size. */
+name|int
+name|jfs_extsize
+decl_stmt|;
+comment|/* Sync extent size. */
+name|ino_t
+name|jfs_ino
+decl_stmt|;
+comment|/* ino being synced. */
 block|}
 struct|;
 end_struct

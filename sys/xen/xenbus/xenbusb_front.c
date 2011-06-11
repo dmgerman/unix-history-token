@@ -394,6 +394,15 @@ argument_list|,
 name|M_XENBUS
 argument_list|)
 expr_stmt|;
+name|ivars
+operator|->
+name|xd_otherend_path_len
+operator|=
+name|strlen
+argument_list|(
+name|otherend_path
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|otherend_path

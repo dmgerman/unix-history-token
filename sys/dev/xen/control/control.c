@@ -383,7 +383,6 @@ begin_struct
 struct|struct
 name|xctrl_softc
 block|{
-comment|/** Must be first */
 name|struct
 name|xs_watch
 name|xctrl_watch
@@ -1273,6 +1272,17 @@ operator|.
 name|callback
 operator|=
 name|xctrl_on_watch_event
+expr_stmt|;
+name|xctrl
+operator|->
+name|xctrl_watch
+operator|.
+name|callback_data
+operator|=
+operator|(
+name|uintptr_t
+operator|)
+name|xctrl
 expr_stmt|;
 name|xs_register_watch
 argument_list|(

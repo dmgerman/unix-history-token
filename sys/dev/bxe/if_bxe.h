@@ -970,7 +970,7 @@ value|PAGE_ALIGN(addr)
 end_define
 
 begin_comment
-comment|/* SGE ring related macros */
+comment|/* NUM_RX_SGE_PAGES must be a power of 2. */
 end_comment
 
 begin_define
@@ -983,34 +983,57 @@ end_define
 begin_define
 define|#
 directive|define
-name|RX_SGE_CNT
+name|TOTAL_RX_SGE_PER_PAGE
 value|(BCM_PAGE_SIZE / sizeof(struct eth_rx_sge))
 end_define
 
-begin_define
-define|#
-directive|define
-name|MAX_RX_SGE_CNT
-value|(RX_SGE_CNT - 2)
-end_define
-
 begin_comment
-comment|/* RX_SGE_CNT is required to be a power of 2 */
+comment|/*  512 */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|RX_SGE_MASK
-value|(RX_SGE_CNT - 1)
+name|USABLE_RX_SGE_PER_PAGE
+value|(TOTAL_RX_SGE_PER_PAGE - 2)
 end_define
+
+begin_comment
+comment|/*  510 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RX_SGE_PER_PAGE_MASK
+value|(TOTAL_RX_SGE_PER_PAGE - 1)
+end_define
+
+begin_comment
+comment|/*  511 */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|TOTAL_RX_SGE
-value|(RX_SGE_CNT * NUM_RX_SGE_PAGES)
+value|(TOTAL_RX_SGE_PER_PAGE * NUM_RX_SGE_PAGES)
 end_define
+
+begin_comment
+comment|/* 1024 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USABLE_RX_SGE
+value|(USABLE_RX_SGE_PER_PAGE * NUM_RX_SGE_PAGES)
+end_define
+
+begin_comment
+comment|/* 1020 */
+end_comment
 
 begin_define
 define|#
@@ -1018,6 +1041,10 @@ directive|define
 name|MAX_RX_SGE
 value|(TOTAL_RX_SGE - 1)
 end_define
+
+begin_comment
+comment|/* 1023 */
+end_comment
 
 begin_define
 define|#
@@ -1027,7 +1054,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|((((x)& RX_SGE_MASK) == (MAX_RX_SGE_CNT - 1)) ? (x) + 3 : (x) + 1)
+value|((((x)& RX_SGE_PER_PAGE_MASK) == (USABLE_RX_SGE_PER_PAGE - 1))	\ 	? (x) + 3 : (x) + 1)
 end_define
 
 begin_define
@@ -1047,7 +1074,7 @@ name|RX_SGE_PAGE
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)& ~RX_SGE_MASK)>> 9)
+value|(((x)& ~RX_SGE_PER_PAGE_MASK)>> 9)
 end_define
 
 begin_define
@@ -1057,7 +1084,7 @@ name|RX_SGE_IDX
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& RX_SGE_MASK)
+value|((x)& RX_SGE_PER_PAGE_MASK)
 end_define
 
 begin_comment
@@ -1120,7 +1147,7 @@ define|#
 directive|define
 name|RX_SGE_MASK_LEN
 define|\
-value|((NUM_RX_SGE_PAGES * RX_SGE_CNT) / RX_SGE_MASK_ELEM_SZ)
+value|((NUM_RX_SGE_PAGES * TOTAL_RX_SGE_PER_PAGE) / RX_SGE_MASK_ELEM_SZ)
 end_define
 
 begin_define
@@ -1145,14 +1172,14 @@ comment|/*  * Transmit Buffer Descriptor (tx_bd) definitions*  */
 end_comment
 
 begin_comment
-comment|/* ToDo: Tune this value based on multi-queue/RSS enable/disable. */
+comment|/* NUM_TX_PAGES must be a power of 2. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NUM_TX_PAGES
-value|2
+value|1
 end_define
 
 begin_define
@@ -1162,12 +1189,20 @@ name|TOTAL_TX_BD_PER_PAGE
 value|(BCM_PAGE_SIZE / sizeof(union eth_tx_bd_types))
 end_define
 
+begin_comment
+comment|/*  256 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|USABLE_TX_BD_PER_PAGE
 value|(TOTAL_TX_BD_PER_PAGE - 1)
 end_define
+
+begin_comment
+comment|/*  255 */
+end_comment
 
 begin_define
 define|#
@@ -1176,6 +1211,10 @@ name|TOTAL_TX_BD
 value|(TOTAL_TX_BD_PER_PAGE * NUM_TX_PAGES)
 end_define
 
+begin_comment
+comment|/*  512 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1183,12 +1222,9 @@ name|USABLE_TX_BD
 value|(USABLE_TX_BD_PER_PAGE * NUM_TX_PAGES)
 end_define
 
-begin_define
-define|#
-directive|define
-name|MAX_TX_AVAIL
-value|(USABLE_TX_BD_PER_PAGE * NUM_TX_PAGES - 2)
-end_define
+begin_comment
+comment|/*  510 */
+end_comment
 
 begin_define
 define|#
@@ -1196,6 +1232,10 @@ directive|define
 name|MAX_TX_BD
 value|(TOTAL_TX_BD - 1)
 end_define
+
+begin_comment
+comment|/*  511 */
+end_comment
 
 begin_define
 define|#
@@ -1242,16 +1282,16 @@ begin_comment
 comment|/*  * Receive Buffer Descriptor (rx_bd) definitions*  */
 end_comment
 
+begin_comment
+comment|/* NUM_RX_PAGES must be a power of 2. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NUM_RX_PAGES
-value|2
+value|1
 end_define
-
-begin_comment
-comment|/* 512 (0x200) of 8 byte bds in 4096 byte page. */
-end_comment
 
 begin_define
 define|#
@@ -1261,7 +1301,7 @@ value|(BCM_PAGE_SIZE / sizeof(struct eth_rx_bd))
 end_define
 
 begin_comment
-comment|/* 510 (0x1fe) = 512 - 2 */
+comment|/*  512 */
 end_comment
 
 begin_define
@@ -1272,7 +1312,18 @@ value|(TOTAL_RX_BD_PER_PAGE - 2)
 end_define
 
 begin_comment
-comment|/* 1024 (0x400) */
+comment|/*  510 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RX_BD_PER_PAGE_MASK
+value|(TOTAL_RX_BD_PER_PAGE - 1)
+end_define
+
+begin_comment
+comment|/*  511 */
 end_comment
 
 begin_define
@@ -1283,7 +1334,7 @@ value|(TOTAL_RX_BD_PER_PAGE * NUM_RX_PAGES)
 end_define
 
 begin_comment
-comment|/* 1020 (0x3fc) = 1024 - 4 */
+comment|/* 1024 */
 end_comment
 
 begin_define
@@ -1294,7 +1345,7 @@ value|(USABLE_RX_BD_PER_PAGE * NUM_RX_PAGES)
 end_define
 
 begin_comment
-comment|/* 1023 (0x3ff) = 1024 -1 */
+comment|/* 1020 */
 end_comment
 
 begin_define
@@ -1305,15 +1356,8 @@ value|(TOTAL_RX_BD - 1)
 end_define
 
 begin_comment
-comment|/* 511 (0x1ff) = 512 - 1 */
+comment|/* 1023 */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|RX_DESC_MASK
-value|(TOTAL_RX_BD_PER_PAGE - 1)
-end_define
 
 begin_define
 define|#
@@ -1323,7 +1367,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|((((x)& RX_DESC_MASK) ==					\ 	(USABLE_RX_BD_PER_PAGE - 1)) ? (x) + 3 : (x) + 1)
+value|((((x)& RX_BD_PER_PAGE_MASK) ==				\ 	(USABLE_RX_BD_PER_PAGE - 1)) ? (x) + 3 : (x) + 1)
 end_define
 
 begin_comment
@@ -1347,7 +1391,7 @@ name|RX_PAGE
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)& ~RX_DESC_MASK)>> 9)
+value|(((x)& ~RX_BD_PER_PAGE_MASK)>> 9)
 end_define
 
 begin_define
@@ -1357,15 +1401,11 @@ name|RX_IDX
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& RX_DESC_MASK)
+value|((x)& RX_BD_PER_PAGE_MASK)
 end_define
 
 begin_comment
 comment|/*  * Receive Completion Queue definitions*  */
-end_comment
-
-begin_comment
-comment|/* CQEs (32 bytes) are 4 times larger than rx_bd's (8 bytes). */
 end_comment
 
 begin_define
@@ -1375,10 +1415,6 @@ name|NUM_RCQ_PAGES
 value|(NUM_RX_PAGES * 4)
 end_define
 
-begin_comment
-comment|/* 128 (0x80) */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1387,7 +1423,7 @@ value|(BCM_PAGE_SIZE / sizeof(union eth_rx_cqe))
 end_define
 
 begin_comment
-comment|/* 127 (0x7f)for the next page RCQ bd */
+comment|/*  128 */
 end_comment
 
 begin_define
@@ -1398,7 +1434,7 @@ value|(TOTAL_RCQ_ENTRIES_PER_PAGE - 1)
 end_define
 
 begin_comment
-comment|/* 1024 (0x400) */
+comment|/*  127 */
 end_comment
 
 begin_define
@@ -1409,7 +1445,7 @@ value|(TOTAL_RCQ_ENTRIES_PER_PAGE * NUM_RCQ_PAGES)
 end_define
 
 begin_comment
-comment|/* 1016 (0x3f8) */
+comment|/* 1024 */
 end_comment
 
 begin_define
@@ -1420,7 +1456,7 @@ value|(USABLE_RCQ_ENTRIES_PER_PAGE * NUM_RCQ_PAGES)
 end_define
 
 begin_comment
-comment|/* 1023 (0x3ff) */
+comment|/* 1016 */
 end_comment
 
 begin_define
@@ -1429,6 +1465,10 @@ directive|define
 name|MAX_RCQ_ENTRIES
 value|(TOTAL_RCQ_ENTRIES - 1)
 end_define
+
+begin_comment
+comment|/* 1023 */
+end_comment
 
 begin_define
 define|#
@@ -1549,7 +1589,7 @@ parameter_list|,
 name|idx
 parameter_list|)
 define|\
-value|__SGE_MASK_SET_BIT(fp->sge_mask[(idx)>> RX_SGE_MASK_ELEM_SHIFT], \ 	    ((idx)& RX_SGE_MASK_ELEM_MASK))
+value|__SGE_MASK_SET_BIT(fp->rx_sge_mask[(idx)>> RX_SGE_MASK_ELEM_SHIFT], \ 	    ((idx)& RX_SGE_MASK_ELEM_MASK))
 end_define
 
 begin_define
@@ -1562,7 +1602,7 @@ parameter_list|,
 name|idx
 parameter_list|)
 define|\
-value|__SGE_MASK_CLEAR_BIT(fp->sge_mask[(idx)>> RX_SGE_MASK_ELEM_SHIFT], \ 	    ((idx)& RX_SGE_MASK_ELEM_MASK))
+value|__SGE_MASK_CLEAR_BIT(fp->rx_sge_mask[(idx)>> RX_SGE_MASK_ELEM_SHIFT], \ 	    ((idx)& RX_SGE_MASK_ELEM_MASK))
 end_define
 
 begin_define
@@ -1666,7 +1706,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* TSO was introduced in FreeBSD 7 */
+comment|/* TSO/LRO was introduced in FreeBSD 7 */
 end_comment
 
 begin_define
@@ -1674,7 +1714,7 @@ define|#
 directive|define
 name|BXE_IF_CAPABILITIES
 define|\
-value|(IFCAP_VLAN_MTU | IFCAP_VLAN_HWTAGGING | IFCAP_HWCSUM |		\ 	IFCAP_JUMBO_MTU | IFCAP_TSO4 | IFCAP_VLAN_HWCSUM)
+value|(IFCAP_VLAN_MTU | IFCAP_VLAN_HWTAGGING | IFCAP_HWCSUM |		\ 	IFCAP_JUMBO_MTU | IFCAP_TSO4 | IFCAP_VLAN_HWCSUM | IFCAP_LRO)
 end_define
 
 begin_endif
@@ -1775,6 +1815,27 @@ begin_define
 define|#
 directive|define
 name|RS_PERIODIC_TIMEOUT_USEC
+value|100
+end_define
+
+begin_define
+define|#
+directive|define
+name|BXE_MBUF_ALLOC_RETRY_COUNT
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|BXE_MBUF_MAPPING_RETRY_COUNT
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|BXE_MBUF_RETRY_DELAY
 value|100
 end_define
 
@@ -2010,9 +2071,13 @@ block|}
 enum|;
 end_enum
 
+begin_comment
+comment|/* Statistics for an Ethernet port. */
+end_comment
+
 begin_struct
 struct|struct
-name|bxe_eth_stats
+name|bxe_port_stats
 block|{
 name|uint32_t
 name|total_bytes_received_hi
@@ -2074,6 +2139,19 @@ decl_stmt|;
 name|uint32_t
 name|error_bytes_received_lo
 decl_stmt|;
+name|uint32_t
+name|etherstatsoverrsizepkts_hi
+decl_stmt|;
+name|uint32_t
+name|etherstatsoverrsizepkts_lo
+decl_stmt|;
+name|uint32_t
+name|no_buff_discard_hi
+decl_stmt|;
+name|uint32_t
+name|no_buff_discard_lo
+decl_stmt|;
+comment|/* Layout must match struct mac_stx. */
 name|uint32_t
 name|rx_stat_ifhcinbadoctets_hi
 decl_stmt|;
@@ -2302,18 +2380,7 @@ decl_stmt|;
 name|uint32_t
 name|tx_stat_bmac_ufl_lo
 decl_stmt|;
-name|uint32_t
-name|brb_drop_hi
-decl_stmt|;
-name|uint32_t
-name|brb_drop_lo
-decl_stmt|;
-name|uint32_t
-name|brb_truncate_hi
-decl_stmt|;
-name|uint32_t
-name|brb_truncate_lo
-decl_stmt|;
+comment|/* End of mac_stx. */
 name|uint32_t
 name|pause_frames_received_hi
 decl_stmt|;
@@ -2325,9 +2392,6 @@ name|pause_frames_sent_hi
 decl_stmt|;
 name|uint32_t
 name|pause_frames_sent_lo
-decl_stmt|;
-name|uint32_t
-name|jabber_packets_received
 decl_stmt|;
 name|uint32_t
 name|etherstatspkts1024octetsto1522octets_hi
@@ -2342,10 +2406,16 @@ name|uint32_t
 name|etherstatspktsover1522octets_lo
 decl_stmt|;
 name|uint32_t
-name|no_buff_discard_hi
+name|brb_drop_hi
 decl_stmt|;
 name|uint32_t
-name|no_buff_discard_lo
+name|brb_drop_lo
+decl_stmt|;
+name|uint32_t
+name|brb_truncate_hi
+decl_stmt|;
+name|uint32_t
+name|brb_truncate_lo
 decl_stmt|;
 name|uint32_t
 name|mac_filter_discard
@@ -2386,7 +2456,7 @@ parameter_list|(
 name|stat_name
 parameter_list|)
 define|\
-value|(offsetof(struct bxe_eth_stats, stat_name) / 4)
+value|(offsetof(struct bxe_port_stats, stat_name) / 4)
 end_define
 
 begin_define
@@ -2952,6 +3022,40 @@ value|(BP_PORT(sc) * MAX_DMAE_C_PER_PORT + E1HVN_MAX)
 end_define
 
 begin_comment
+comment|/* Used to manage DMA allocations. */
+end_comment
+
+begin_struct
+struct|struct
+name|bxe_dma
+block|{
+name|bus_addr_t
+name|paddr
+decl_stmt|;
+name|void
+modifier|*
+name|vaddr
+decl_stmt|;
+name|bus_dma_tag_t
+name|tag
+decl_stmt|;
+name|bus_dmamap_t
+name|map
+decl_stmt|;
+name|bus_dma_segment_t
+name|seg
+decl_stmt|;
+name|bus_size_t
+name|size
+decl_stmt|;
+name|int
+name|nseg
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * This is the slowpath data structure.  It is mapped into non-paged memory  * so that the hardware can access it's contents directly and must be page  * aligned.  */
 end_comment
 
@@ -3070,7 +3174,7 @@ parameter_list|,
 name|var
 parameter_list|)
 define|\
-value|(sc->slowpath_paddr + offsetof(struct bxe_slowpath, var))
+value|(sc->slowpath_dma.paddr + offsetof(struct bxe_slowpath, var))
 end_define
 
 begin_union
@@ -3204,60 +3308,47 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-comment|/* Hardware maintained status block. */
-name|bus_dma_tag_t
-name|status_block_tag
-decl_stmt|;
-name|bus_dmamap_t
-name|status_block_map
+comment|/* Status block. */
+name|struct
+name|bxe_dma
+name|sb_dma
 decl_stmt|;
 name|struct
 name|host_status_block
 modifier|*
 name|status_block
 decl_stmt|;
-name|bus_addr_t
-name|status_block_paddr
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
-comment|/* 	 * In this implementation the doorbell data block 	 * (eth_tx_db_data) is mapped into memory immediately 	 * following the status block and is part of the same 	 * memory allocation. 	 */
+comment|/* Transmit chain. */
 name|struct
-name|eth_tx_db_data
-modifier|*
-name|hw_tx_prods
-decl_stmt|;
-name|bus_addr_t
-name|tx_prods_paddr
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* Hardware maintained TX buffer descriptor chains. */
-name|bus_dma_tag_t
-name|tx_bd_chain_tag
-decl_stmt|;
-name|bus_dmamap_t
-name|tx_bd_chain_map
-index|[
-name|NUM_TX_PAGES
-index|]
+name|bxe_dma
+name|tx_dma
 decl_stmt|;
 name|union
 name|eth_tx_bd_types
 modifier|*
-name|tx_bd_chain
-index|[
-name|NUM_TX_PAGES
-index|]
+name|tx_chain
 decl_stmt|;
-name|bus_addr_t
-name|tx_bd_chain_paddr
-index|[
-name|NUM_TX_PAGES
-index|]
+comment|/* Receive chain. */
+name|struct
+name|bxe_dma
+name|rx_dma
 decl_stmt|;
-comment|/* Bus resource tag for TX mbufs. */
+name|struct
+name|eth_rx_bd
+modifier|*
+name|rx_chain
+decl_stmt|;
+comment|/* Receive completion queue chain. */
+name|struct
+name|bxe_dma
+name|rcq_dma
+decl_stmt|;
+name|union
+name|eth_rx_cqe
+modifier|*
+name|rcq_chain
+decl_stmt|;
+comment|/* Bus resource tag, map, and mbufs for TX chain. */
 name|bus_dma_tag_t
 name|tx_mbuf_tag
 decl_stmt|;
@@ -3275,31 +3366,7 @@ index|[
 name|TOTAL_TX_BD
 index|]
 decl_stmt|;
-comment|/* Hardware maintained RX buffer descriptor chains. */
-name|bus_dma_tag_t
-name|rx_bd_chain_tag
-decl_stmt|;
-name|bus_dmamap_t
-name|rx_bd_chain_map
-index|[
-name|NUM_RX_PAGES
-index|]
-decl_stmt|;
-name|struct
-name|eth_rx_bd
-modifier|*
-name|rx_bd_chain
-index|[
-name|NUM_RX_PAGES
-index|]
-decl_stmt|;
-name|bus_addr_t
-name|rx_bd_chain_paddr
-index|[
-name|NUM_RX_PAGES
-index|]
-decl_stmt|;
-comment|/* Bus resource tag for RX mbufs. */
+comment|/* Bus resource tag, map, and mbufs for RX chain. */
 name|bus_dma_tag_t
 name|rx_mbuf_tag
 decl_stmt|;
@@ -3309,36 +3376,15 @@ index|[
 name|TOTAL_RX_BD
 index|]
 decl_stmt|;
+name|bus_dmamap_t
+name|rx_mbuf_spare_map
+decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
 name|rx_mbuf_ptr
 index|[
 name|TOTAL_RX_BD
-index|]
-decl_stmt|;
-comment|/* Hardware maintained Completion Queue (CQ) chains. */
-name|bus_dma_tag_t
-name|rx_cq_chain_tag
-decl_stmt|;
-name|bus_dmamap_t
-name|rx_cq_chain_map
-index|[
-name|NUM_RCQ_PAGES
-index|]
-decl_stmt|;
-name|union
-name|eth_rx_cqe
-modifier|*
-name|rx_cq_chain
-index|[
-name|NUM_RCQ_PAGES
-index|]
-decl_stmt|;
-name|bus_addr_t
-name|rx_cq_chain_paddr
-index|[
-name|NUM_RCQ_PAGES
 index|]
 decl_stmt|;
 comment|/* Ticks until chip reset. */
@@ -3429,7 +3475,6 @@ comment|/* Transmit packet producer index (used in eth_tx_bd). */
 name|uint16_t
 name|tx_pkt_prod
 decl_stmt|;
-comment|/* Transmit packet consumer index. */
 name|uint16_t
 name|tx_pkt_cons
 decl_stmt|;
@@ -3474,36 +3519,21 @@ decl_stmt|;
 comment|/* Pointer to the transmit consumer in the status block. */
 name|uint16_t
 modifier|*
-name|tx_cons_sb
+name|tx_pkt_cons_sb
 decl_stmt|;
-comment|/* Free/used buffer descriptor counters. */
+comment|/* Used TX buffer descriptor counters. */
 name|uint16_t
-name|used_tx_bd
+name|tx_bd_used
 decl_stmt|;
 comment|/* Begin: TPA Related data structure. */
-comment|/* Hardware maintained RX Scatter Gather Entry chains. */
-name|bus_dma_tag_t
-name|rx_sge_chain_tag
-decl_stmt|;
-name|bus_dmamap_t
-name|rx_sge_chain_map
-index|[
-name|NUM_RX_SGE_PAGES
-index|]
+name|struct
+name|bxe_dma
+name|sg_dma
 decl_stmt|;
 name|struct
 name|eth_rx_sge
 modifier|*
-name|rx_sge_chain
-index|[
-name|NUM_RX_SGE_PAGES
-index|]
-decl_stmt|;
-name|bus_addr_t
-name|rx_sge_chain_paddr
-index|[
-name|NUM_RX_SGE_PAGES
-index|]
+name|sg_chain
 decl_stmt|;
 comment|/* Bus tag for RX SGE bufs. */
 name|bus_dma_tag_t
@@ -3515,6 +3545,9 @@ index|[
 name|TOTAL_RX_SGE
 index|]
 decl_stmt|;
+name|bus_dmamap_t
+name|rx_sge_spare_map
+decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -3523,8 +3556,9 @@ index|[
 name|TOTAL_RX_SGE
 index|]
 decl_stmt|;
+comment|/* 	 * Bitmask for each SGE element indicating which 	 * aggregation that element is a part of. 	 */
 name|uint64_t
-name|sge_mask
+name|rx_sge_mask
 index|[
 name|RX_SGE_MASK_LEN
 index|]
@@ -3545,6 +3579,9 @@ name|tpa_mbuf_map
 index|[
 name|ETH_MAX_AGGREGATION_QUEUES_E1H
 index|]
+decl_stmt|;
+name|bus_dmamap_t
+name|tpa_mbuf_spare_map
 decl_stmt|;
 name|struct
 name|mbuf
@@ -3597,9 +3634,6 @@ name|struct
 name|bxe_q_stats
 name|eth_q_stats
 decl_stmt|;
-name|uint16_t
-name|free_rx_bd
-decl_stmt|;
 if|#
 directive|if
 name|__FreeBSD_version
@@ -3612,27 +3646,100 @@ name|br
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* Recieve/transmit packet counters. */
+comment|/* Receive path driver statistics. */
 name|unsigned
 name|long
 name|rx_pkts
 decl_stmt|;
 name|unsigned
 name|long
+name|rx_tpa_pkts
+decl_stmt|;
+name|unsigned
+name|long
+name|rx_null_cqe_flags
+decl_stmt|;
+name|unsigned
+name|long
+name|rx_soft_errors
+decl_stmt|;
+comment|/* Transmit path driver statistics. */
+name|unsigned
+name|long
 name|tx_pkts
 decl_stmt|;
 name|unsigned
 name|long
-name|tpa_pkts
+name|tx_soft_errors
 decl_stmt|;
 name|unsigned
 name|long
-name|rx_calls
+name|tx_offload_frames_csum_ip
 decl_stmt|;
 name|unsigned
 name|long
-name|mbuf_alloc_failed
+name|tx_offload_frames_csum_tcp
 decl_stmt|;
+name|unsigned
+name|long
+name|tx_offload_frames_csum_udp
+decl_stmt|;
+name|unsigned
+name|long
+name|tx_offload_frames_tso
+decl_stmt|;
+name|unsigned
+name|long
+name|tx_header_splits
+decl_stmt|;
+name|unsigned
+name|long
+name|tx_encap_failures
+decl_stmt|;
+name|unsigned
+name|long
+name|tx_hw_queue_full
+decl_stmt|;
+name|unsigned
+name|long
+name|tx_hw_max_queue_depth
+decl_stmt|;
+name|unsigned
+name|long
+name|tx_dma_mapping_failure
+decl_stmt|;
+name|int
+name|tx_max_drbr_queue_depth
+decl_stmt|;
+name|unsigned
+name|long
+name|tx_window_violation_std
+decl_stmt|;
+name|unsigned
+name|long
+name|tx_window_violation_tso
+decl_stmt|;
+name|unsigned
+name|long
+name|tx_unsupported_tso_request_ipv6
+decl_stmt|;
+name|unsigned
+name|long
+name|tx_unsupported_tso_request_not_tcp
+decl_stmt|;
+name|unsigned
+name|long
+name|tx_chain_lost_mbuf
+decl_stmt|;
+name|unsigned
+name|long
+name|tx_frame_deferred
+decl_stmt|;
+name|unsigned
+name|long
+name|tx_queue_xoff
+decl_stmt|;
+comment|/* Memory path driver statistics. */
 name|unsigned
 name|long
 name|mbuf_defrag_attempts
@@ -3643,7 +3750,27 @@ name|mbuf_defrag_failures
 decl_stmt|;
 name|unsigned
 name|long
-name|mbuf_defrag_successes
+name|mbuf_rx_bd_alloc_failed
+decl_stmt|;
+name|unsigned
+name|long
+name|mbuf_rx_bd_mapping_failed
+decl_stmt|;
+name|unsigned
+name|long
+name|mbuf_tpa_alloc_failed
+decl_stmt|;
+name|unsigned
+name|long
+name|mbuf_tpa_mapping_failed
+decl_stmt|;
+name|unsigned
+name|long
+name|mbuf_sge_alloc_failed
+decl_stmt|;
+name|unsigned
+name|long
+name|mbuf_sge_mapping_failed
 decl_stmt|;
 comment|/* Track the number of enqueued mbufs. */
 name|int
@@ -3658,81 +3785,10 @@ decl_stmt|;
 name|int
 name|tpa_mbuf_alloc
 decl_stmt|;
-name|int
-name|max_drbr_queue_depth
-decl_stmt|;
 name|uint64_t
 name|tpa_queue_used
 decl_stmt|;
-name|unsigned
-name|long
-name|null_cqe_flags
-decl_stmt|;
-name|unsigned
-name|long
-name|offload_frames_csum_ip
-decl_stmt|;
-name|unsigned
-name|long
-name|offload_frames_csum_tcp
-decl_stmt|;
-name|unsigned
-name|long
-name|offload_frames_csum_udp
-decl_stmt|;
-name|unsigned
-name|long
-name|offload_frames_tso
-decl_stmt|;
-name|unsigned
-name|long
-name|tx_encap_failures
-decl_stmt|;
-name|unsigned
-name|long
-name|tx_start_called_on_empty_queue
-decl_stmt|;
-name|unsigned
-name|long
-name|tx_queue_too_full
-decl_stmt|;
-name|unsigned
-name|long
-name|tx_dma_mapping_failure
-decl_stmt|;
-name|unsigned
-name|long
-name|window_violation_tso
-decl_stmt|;
-name|unsigned
-name|long
-name|window_violation_std
-decl_stmt|;
-name|unsigned
-name|long
-name|unsupported_tso_request_ipv6
-decl_stmt|;
-name|unsigned
-name|long
-name|unsupported_tso_request_not_tcp
-decl_stmt|;
-name|unsigned
-name|long
-name|tpa_mbuf_alloc_failed
-decl_stmt|;
-name|unsigned
-name|long
-name|tx_chain_lost_mbuf
-decl_stmt|;
 comment|/* FreeBSD interface statistics. */
-name|unsigned
-name|long
-name|soft_rx_errors
-decl_stmt|;
-name|unsigned
-name|long
-name|soft_tx_errors
-decl_stmt|;
 name|unsigned
 name|long
 name|ipackets
@@ -3776,7 +3832,7 @@ begin_define
 define|#
 directive|define
 name|BXE_STATS_BLK_SZ
-value|sizeof(struct bxe_eth_stats)
+value|sizeof(struct bxe_port_stats)
 end_define
 
 begin_define
@@ -3851,7 +3907,6 @@ decl_stmt|;
 name|vm_offset_t
 name|bxe_vhandle
 decl_stmt|;
-comment|/* OS resources for BAR2 memory. */
 comment|/* OS resources for BAR1 doorbell memory. */
 define|#
 directive|define
@@ -3991,9 +4046,6 @@ comment|/* RX Driver parameters*/
 name|uint32_t
 name|rx_csum
 decl_stmt|;
-name|int
-name|rx_buf_size
-decl_stmt|;
 comment|/* ToDo: Replace with OS specific defintions. */
 define|#
 directive|define
@@ -4016,20 +4068,14 @@ define|#
 directive|define
 name|ETH_MAX_JUMBO_PACKET_SIZE
 value|9600
-comment|/* Hardware Maintained Host Default Status Block. */
-name|bus_dma_tag_t
-name|def_status_block_tag
-decl_stmt|;
-name|bus_dmamap_t
-name|def_status_block_map
+name|struct
+name|bxe_dma
+name|def_sb_dma
 decl_stmt|;
 name|struct
 name|host_def_status_block
 modifier|*
-name|def_status_block
-decl_stmt|;
-name|bus_addr_t
-name|def_status_block_paddr
+name|def_sb
 decl_stmt|;
 define|#
 directive|define
@@ -4060,50 +4106,32 @@ index|[
 name|MAX_DYNAMIC_ATTN_GRPS
 index|]
 decl_stmt|;
-comment|/* H/W maintained statistics block. */
-name|bus_dma_tag_t
-name|stats_tag
-decl_stmt|;
-name|bus_dmamap_t
-name|stats_map
+name|struct
+name|bxe_dma
+name|stats_dma
 decl_stmt|;
 name|struct
 name|statistics_block
 modifier|*
-name|stats_block
+name|stats
 decl_stmt|;
-name|bus_addr_t
-name|stats_block_paddr
-decl_stmt|;
-comment|/* H/W maintained slow path. */
-name|bus_dma_tag_t
-name|slowpath_tag
-decl_stmt|;
-name|bus_dmamap_t
-name|slowpath_map
+name|struct
+name|bxe_dma
+name|slowpath_dma
 decl_stmt|;
 name|struct
 name|bxe_slowpath
 modifier|*
 name|slowpath
 decl_stmt|;
-name|bus_addr_t
-name|slowpath_paddr
-decl_stmt|;
-comment|/* Slow path ring. */
-name|bus_dma_tag_t
-name|spq_tag
-decl_stmt|;
-name|bus_dmamap_t
-name|spq_map
+name|struct
+name|bxe_dma
+name|spq_dma
 decl_stmt|;
 name|struct
 name|eth_spe
 modifier|*
 name|spq
-decl_stmt|;
-name|bus_addr_t
-name|spq_paddr
 decl_stmt|;
 name|uint16_t
 name|spq_prod_idx
@@ -4146,42 +4174,23 @@ decl_stmt|;
 define|#
 directive|define
 name|BXE_ONE_PORT_FLAG
-value|0x00000004
+value|0x00000001
 define|#
 directive|define
 name|BXE_NO_WOL_FLAG
-value|0x00000008
+value|0x00000002
 define|#
 directive|define
 name|BXE_USING_DAC_FLAG
-value|0x00000010
-define|#
-directive|define
-name|BXE_USING_MSIX_FLAG
-value|0x00000020
-define|#
-directive|define
-name|BXE_USING_MSI_FLAG
-value|0x00000040
+value|0x00000004
 define|#
 directive|define
 name|BXE_TPA_ENABLE_FLAG
-value|0x00000080
+value|0x00000008
 define|#
 directive|define
 name|BXE_NO_MCP_FLAG
-value|0x00000100
-define|#
-directive|define
-name|BP_NOMCP
-parameter_list|(
-name|sc
-parameter_list|)
-value|(sc->bxe_flags& BXE_NO_MCP_FLAG)
-define|#
-directive|define
-name|BXE_SAFC_TX_FLAG
-value|0x00000200
+value|0x00000010
 define|#
 directive|define
 name|TPA_ENABLED
@@ -4189,6 +4198,13 @@ parameter_list|(
 name|sc
 parameter_list|)
 value|(sc->bxe_flags& BXE_TPA_ENABLE_FLAG)
+define|#
+directive|define
+name|NOMCP
+parameter_list|(
+name|sc
+parameter_list|)
+value|(sc->bxe_flags& BXE_NO_MCP_FLAG)
 comment|/* PCI Express function number for the device. */
 name|int
 name|bxe_func
@@ -4384,14 +4400,6 @@ name|dcc_enable
 decl_stmt|;
 define|#
 directive|define
-name|BXE_NUM_QUEUES
-parameter_list|(
-name|cos
-parameter_list|)
-define|\
-value|((bxe_qs_per_cos& (0xff<< (cos * 8)))>> (cos * 8))
-define|#
-directive|define
 name|BXE_MAX_QUEUES
 parameter_list|(
 name|sc
@@ -4410,34 +4418,6 @@ define|#
 directive|define
 name|BXE_MAX_ENTRIES_PER_PRI
 value|16
-comment|/* Number of queues per class of service. */
-name|uint8_t
-name|qs_per_cos
-index|[
-name|BXE_MAX_COS
-index|]
-decl_stmt|;
-comment|/* Priority to class of service mapping. */
-name|uint8_t
-name|pri_map
-index|[
-name|BXE_MAX_PRIORITY
-index|]
-decl_stmt|;
-comment|/* min rate per cos */
-name|uint16_t
-name|cos_min_rate
-index|[
-name|BXE_MAX_COS
-index|]
-decl_stmt|;
-comment|/* Class of service to queue mapping. */
-name|uint8_t
-name|cos_map
-index|[
-name|BXE_MAX_COS
-index|]
-decl_stmt|;
 comment|/* Used for multiple function devices. */
 name|uint32_t
 name|mf_config
@@ -4538,31 +4518,24 @@ name|uint16_t
 name|stats_counter
 decl_stmt|;
 name|struct
-name|bxe_eth_stats
+name|bxe_port_stats
 name|eth_stats
 decl_stmt|;
+comment|/* Support for DMAE and compressed firmware. */
 name|z_streamp
 name|strm
 decl_stmt|;
-name|bus_dma_tag_t
-name|gunzip_tag
-decl_stmt|;
-name|bus_dmamap_t
-name|gunzip_map
+name|struct
+name|bxe_dma
+name|gz_dma
 decl_stmt|;
 name|void
 modifier|*
-name|gunzip_buf
-decl_stmt|;
-name|bus_addr_t
-name|gunzip_mapping
-decl_stmt|;
-name|int
-name|gunzip_outlen
+name|gz
 decl_stmt|;
 define|#
 directive|define
-name|FW_BUF_SIZE
+name|BXE_FW_BUF_SIZE
 value|0x40000
 name|struct
 name|raw_op
@@ -4726,19 +4699,15 @@ directive|ifdef
 name|BXE_DEBUG
 name|unsigned
 name|long
-name|debug_mbuf_sim_alloc_failed
+name|debug_sim_mbuf_alloc_failed
 decl_stmt|;
 name|unsigned
 name|long
-name|debug_mbuf_sim_map_failed
+name|debug_sim_mbuf_map_failed
 decl_stmt|;
 name|unsigned
 name|long
 name|debug_received_frame_error
-decl_stmt|;
-name|unsigned
-name|long
-name|debug_memory_allocated
 decl_stmt|;
 comment|/* A buffer for hardware/firmware state information (grcdump). */
 name|uint32_t
@@ -5570,7 +5539,7 @@ define|#
 directive|define
 name|BXE_SP_DSB_INDEX
 define|\
-value|&sc->def_status_block->c_def_status_block.index_values[C_DEF_SB_SP_INDEX]
+value|&sc->def_sb->c_def_status_block.index_values[C_DEF_SB_SP_INDEX]
 end_define
 
 begin_define

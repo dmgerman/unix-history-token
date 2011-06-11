@@ -211,6 +211,11 @@ argument_list|(
 literal|"Failed to get controller info"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -728,6 +733,11 @@ argument_list|,
 name|mfi_unit
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -741,6 +751,11 @@ expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get capacity info"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -784,6 +799,11 @@ argument_list|(
 literal|"Failed to get design info"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -823,6 +843,11 @@ expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get status"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -1619,6 +1644,11 @@ argument_list|(
 literal|"Failed to get config"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2127,6 +2157,11 @@ operator|->
 name|spares_size
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|config
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|fd
@@ -2256,6 +2291,11 @@ expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get volume list"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -2455,6 +2495,11 @@ operator|.
 name|v
 operator|.
 name|target_id
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -2691,6 +2736,10 @@ name|error
 operator|)
 return|;
 block|}
+name|list
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|mfi_pd_get_list
@@ -2715,11 +2764,9 @@ argument_list|(
 literal|"Failed to get drive list"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+goto|goto
 name|error
-operator|)
-return|;
+goto|;
 block|}
 comment|/* Walk the list of drives to determine width of state column. */
 name|state_len
@@ -2798,11 +2845,9 @@ operator|.
 name|device_id
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+goto|goto
 name|error
-operator|)
-return|;
+goto|;
 block|}
 name|len
 operator|=
@@ -2909,11 +2954,9 @@ operator|.
 name|device_id
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+goto|goto
 name|error
-operator|)
-return|;
+goto|;
 block|}
 name|print_pd
 argument_list|(
@@ -2931,6 +2974,13 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|error
+label|:
+name|free
+argument_list|(
+name|list
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|fd
@@ -2938,7 +2988,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -3210,6 +3260,11 @@ expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get controller info"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -3552,10 +3607,6 @@ name|error
 operator|)
 return|;
 block|}
-name|busy
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|mfi_ld_get_list
@@ -3578,6 +3629,11 @@ expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get volume list"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -3610,12 +3666,21 @@ argument_list|(
 literal|"Failed to get drive list"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
 block|}
+name|busy
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -3678,6 +3743,16 @@ name|fd
 argument_list|,
 name|target_id
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|plist
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -3916,6 +3991,16 @@ argument_list|,
 name|device_id
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|plist
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -4028,6 +4113,11 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+name|free
+argument_list|(
+name|plist
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|fd

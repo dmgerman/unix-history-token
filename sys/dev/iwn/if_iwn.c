@@ -12428,6 +12428,13 @@ name|int
 name|isnew
 parameter_list|)
 block|{
+define|#
+directive|define
+name|RV
+parameter_list|(
+name|v
+parameter_list|)
+value|((v)& IEEE80211_RATE_VAL)
 name|struct
 name|ieee80211com
 modifier|*
@@ -12537,6 +12544,8 @@ control|)
 block|{
 name|plcp
 operator|=
+name|RV
+argument_list|(
 name|ni
 operator|->
 name|ni_htrates
@@ -12545,6 +12554,7 @@ name|rs_rates
 index|[
 name|i
 index|]
+argument_list|)
 operator||
 name|IWN_RFLAG_MCS
 expr_stmt|;
@@ -12620,6 +12630,8 @@ condition|)
 block|{
 name|rate
 operator|=
+name|RV
+argument_list|(
 name|ni
 operator|->
 name|ni_rates
@@ -12628,10 +12640,7 @@ name|rs_rates
 index|[
 name|ridx
 index|]
-expr_stmt|;
-name|rate
-operator|&=
-name|IEEE80211_RATE_VAL
+argument_list|)
 expr_stmt|;
 name|wn
 operator|->
@@ -12681,6 +12690,8 @@ control|)
 block|{
 name|rate
 operator|=
+name|RV
+argument_list|(
 name|ni
 operator|->
 name|ni_rates
@@ -12689,8 +12700,7 @@ name|rs_rates
 index|[
 name|i
 index|]
-operator|&
-name|IEEE80211_RATE_VAL
+argument_list|)
 expr_stmt|;
 name|plcp
 operator|=
@@ -12748,6 +12758,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+undef|#
+directive|undef
+name|RV
 block|}
 end_function
 
@@ -22850,6 +22863,13 @@ modifier|*
 name|ni
 parameter_list|)
 block|{
+define|#
+directive|define
+name|RV
+parameter_list|(
+name|v
+parameter_list|)
+value|((v)& IEEE80211_RATE_VAL)
 name|struct
 name|iwn_node
 modifier|*
@@ -23009,14 +23029,15 @@ expr_stmt|;
 else|else
 name|rate
 operator|=
+name|RV
+argument_list|(
 name|rs
 operator|->
 name|rs_rates
 index|[
 name|txrate
 index|]
-operator|&
-name|IEEE80211_RATE_VAL
+argument_list|)
 expr_stmt|;
 name|linkq
 operator|.
@@ -23048,7 +23069,8 @@ operator|&
 name|IWN_RFLAG_MCS
 operator|)
 operator|&&
-operator|(
+name|RV
+argument_list|(
 name|le32toh
 argument_list|(
 name|wn
@@ -23058,9 +23080,7 @@ index|[
 name|rate
 index|]
 argument_list|)
-operator|&
-literal|0xff
-operator|)
+argument_list|)
 operator|>
 literal|7
 condition|)
@@ -23099,6 +23119,9 @@ argument_list|,
 literal|1
 argument_list|)
 return|;
+undef|#
+directive|undef
+name|RV
 block|}
 end_function
 

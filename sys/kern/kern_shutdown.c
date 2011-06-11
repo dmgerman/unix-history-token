@@ -2063,8 +2063,6 @@ directive|endif
 name|bootopt
 operator|=
 name|RB_AUTOBOOT
-operator||
-name|RB_DUMP
 expr_stmt|;
 name|newpanic
 operator|=
@@ -2080,6 +2078,10 @@ name|RB_NOSYNC
 expr_stmt|;
 else|else
 block|{
+name|bootopt
+operator||=
+name|RB_DUMP
+expr_stmt|;
 name|panicstr
 operator|=
 name|fmt

@@ -741,6 +741,11 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -769,6 +774,11 @@ expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to fetch volume properties"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -1218,6 +1228,11 @@ argument_list|(
 literal|"cache: read-ahead setting required"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
@@ -1289,6 +1304,11 @@ argument_list|(
 literal|"cache: invalid read-ahead setting"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
@@ -1338,6 +1358,11 @@ block|{
 name|warnx
 argument_list|(
 literal|"cache: bad BBU setting required"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -1390,6 +1415,11 @@ argument_list|(
 literal|"cache: invalid bad BBU setting"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
@@ -1437,6 +1467,11 @@ block|{
 name|warnx
 argument_list|(
 literal|"cache: write-cache setting required"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -1506,6 +1541,11 @@ block|{
 name|warnx
 argument_list|(
 literal|"cache: invalid write-cache setting"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -1596,6 +1636,11 @@ block|{
 name|warnx
 argument_list|(
 literal|"cache: Invalid command"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -1764,6 +1809,11 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1792,6 +1842,11 @@ expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to fetch volume properties"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -1869,6 +1924,11 @@ expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to set volume properties"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -2015,6 +2075,11 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2053,6 +2118,11 @@ name|fd
 argument_list|,
 name|target_id
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
