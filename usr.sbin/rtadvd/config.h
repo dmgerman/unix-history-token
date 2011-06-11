@@ -33,6 +33,21 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|int
+name|loadconfig
+parameter_list|(
+name|char
+modifier|*
+index|[]
+parameter_list|,
+specifier|const
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
 name|delete_prefix
 parameter_list|(
