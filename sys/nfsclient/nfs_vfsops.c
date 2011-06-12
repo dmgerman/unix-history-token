@@ -7798,12 +7798,37 @@ name|td
 operator|=
 name|curthread
 expr_stmt|;
-comment|/* 	 * Force stale buffer cache information to be flushed. 	 */
 name|MNT_ILOCK
 argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If a forced dismount is in progress, return from here so that 	 * the umount(2) syscall doesn't get stuck in VFS_SYNC() before 	 * calling VFS_UNMOUNT(). 	 */
+if|if
+condition|(
+operator|(
+name|mp
+operator|->
+name|mnt_kern_flag
+operator|&
+name|MNTK_UNMOUNTF
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|MNT_IUNLOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EBADF
+operator|)
+return|;
+block|}
+comment|/* 	 * Force stale buffer cache information to be flushed. 	 */
 name|loop
 label|:
 name|MNT_VNODE_FOREACH
