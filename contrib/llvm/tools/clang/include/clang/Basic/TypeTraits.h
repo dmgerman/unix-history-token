@@ -77,7 +77,7 @@ name|UTT_HasTrivialAssign
 block|,
 name|UTT_HasTrivialCopy
 block|,
-name|UTT_HasTrivialConstructor
+name|UTT_HasTrivialDefaultConstructor
 block|,
 name|UTT_HasTrivialDestructor
 block|,
@@ -138,6 +138,8 @@ block|,
 name|UTT_IsStandardLayout
 block|,
 name|UTT_IsTrivial
+block|,
+name|UTT_IsTriviallyCopyable
 block|,
 name|UTT_IsUnion
 block|,

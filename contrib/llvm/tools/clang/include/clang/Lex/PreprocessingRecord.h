@@ -866,6 +866,11 @@ operator|:
 name|public
 name|PPCallbacks
 block|{
+comment|/// \brief Whether we should include nested macro instantiations in
+comment|/// the preprocessing record.
+name|bool
+name|IncludeNestedMacroInstantiations
+block|;
 comment|/// \brief Allocator used to store preprocessing objects.
 name|llvm
 operator|::
@@ -919,8 +924,12 @@ specifier|const
 block|;
 name|public
 operator|:
+comment|/// \brief Construct
+name|explicit
 name|PreprocessingRecord
-argument_list|()
+argument_list|(
+argument|bool IncludeNestedMacroInstantiations
+argument_list|)
 block|;
 comment|/// \brief Allocate memory in the preprocessing record.
 name|void
@@ -951,6 +960,18 @@ argument_list|(
 argument|void *Ptr
 argument_list|)
 block|{ }
+name|size_t
+name|getTotalMemory
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BumpAlloc
+operator|.
+name|getTotalMemory
+argument_list|()
+return|;
+block|}
 comment|// Iteration over the preprocessed entities.
 typedef|typedef
 name|std

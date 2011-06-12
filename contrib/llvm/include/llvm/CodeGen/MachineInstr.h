@@ -776,6 +776,9 @@ block|{
 name|CheckDefs
 block|,
 comment|// Check all operands for equality
+name|CheckKillDead
+block|,
+comment|// Check all operands including kill / dead markers
 name|IgnoreDefs
 block|,
 comment|// Ignore all definitions

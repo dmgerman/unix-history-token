@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"Record.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/ValueTypes.h"
 end_include
 
@@ -78,13 +84,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string>
+file|<cstdlib>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_include
@@ -96,7 +108,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cstdlib>
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -104,7 +116,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Record
+name|CodeGenRegBank
 decl_stmt|;
 comment|/// CodeGenRegister - Represents a register definition.
 struct|struct
@@ -114,6 +126,35 @@ name|Record
 modifier|*
 name|TheDef
 decl_stmt|;
+name|unsigned
+name|EnumValue
+decl_stmt|;
+name|unsigned
+name|CostPerUse
+decl_stmt|;
+comment|// Map SubRegIndex -> Register.
+typedef|typedef
+name|std
+operator|::
+name|map
+operator|<
+name|Record
+operator|*
+operator|,
+name|CodeGenRegister
+operator|*
+operator|,
+name|LessRecord
+operator|>
+name|SubRegMap
+expr_stmt|;
+name|CodeGenRegister
+argument_list|(
+argument|Record *R
+argument_list|,
+argument|unsigned Enum
+argument_list|)
+empty_stmt|;
 specifier|const
 name|std
 operator|::
@@ -123,19 +164,43 @@ name|getName
 argument_list|()
 specifier|const
 expr_stmt|;
-name|unsigned
-name|EnumValue
-decl_stmt|;
-name|unsigned
-name|CostPerUse
-decl_stmt|;
-name|CodeGenRegister
+comment|// Get a map of sub-registers computed lazily.
+comment|// This includes unique entries for all sub-sub-registers.
+specifier|const
+name|SubRegMap
+modifier|&
+name|getSubRegs
+parameter_list|(
+name|CodeGenRegBank
+modifier|&
+parameter_list|)
+function_decl|;
+specifier|const
+name|SubRegMap
+operator|&
+name|getSubRegs
+argument_list|()
+specifier|const
+block|{
+name|assert
 argument_list|(
-name|Record
-operator|*
-name|R
+name|SubRegsComplete
+operator|&&
+literal|"Must precompute sub-registers"
 argument_list|)
-expr_stmt|;
+block|;
+return|return
+name|SubRegs
+return|;
+block|}
+name|private
+label|:
+name|bool
+name|SubRegsComplete
+decl_stmt|;
+name|SubRegMap
+name|SubRegs
+decl_stmt|;
 block|}
 struct|;
 struct|struct
@@ -177,6 +242,9 @@ name|SpillAlignment
 decl_stmt|;
 name|int
 name|CopyCost
+decl_stmt|;
+name|bool
+name|Allocatable
 decl_stmt|;
 comment|// Map SubRegIndex -> RegisterClass
 name|DenseMap
@@ -476,6 +544,180 @@ operator|*
 name|R
 argument_list|)
 struct|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// CodeGenRegBank - Represent a target's registers and the relations between
+end_comment
+
+begin_comment
+comment|// them.
+end_comment
+
+begin_decl_stmt
+name|class
+name|CodeGenRegBank
+block|{
+name|RecordKeeper
+modifier|&
+name|Records
+decl_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|Record
+operator|*
+operator|>
+name|SubRegIndices
+expr_stmt|;
+name|unsigned
+name|NumNamedIndices
+decl_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|CodeGenRegister
+operator|>
+name|Registers
+expr_stmt|;
+name|DenseMap
+operator|<
+name|Record
+operator|*
+operator|,
+name|CodeGenRegister
+operator|*
+operator|>
+name|Def2Reg
+expr_stmt|;
+comment|// Composite SubRegIndex instances.
+comment|// Map (SubRegIndex, SubRegIndex) -> SubRegIndex.
+typedef|typedef
+name|DenseMap
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|Record
+operator|*
+operator|,
+name|Record
+operator|*
+operator|>
+operator|,
+name|Record
+operator|*
+operator|>
+name|CompositeMap
+expr_stmt|;
+name|CompositeMap
+name|Composite
+decl_stmt|;
+comment|// Populate the Composite map from sub-register relationships.
+name|void
+name|computeComposites
+parameter_list|()
+function_decl|;
+name|public
+label|:
+name|CodeGenRegBank
+argument_list|(
+name|RecordKeeper
+operator|&
+argument_list|)
+expr_stmt|;
+comment|// Sub-register indices. The first NumNamedIndices are defined by the user
+comment|// in the .td files. The rest are synthesized such that all sub-registers
+comment|// have a unique name.
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|Record
+operator|*
+operator|>
+operator|&
+name|getSubRegIndices
+argument_list|()
+block|{
+return|return
+name|SubRegIndices
+return|;
+block|}
+name|unsigned
+name|getNumNamedIndices
+parameter_list|()
+block|{
+return|return
+name|NumNamedIndices
+return|;
+block|}
+comment|// Map a SubRegIndex Record to its enum value.
+name|unsigned
+name|getSubRegIndexNo
+parameter_list|(
+name|Record
+modifier|*
+name|idx
+parameter_list|)
+function_decl|;
+comment|// Find or create a sub-register index representing the A+B composition.
+name|Record
+modifier|*
+name|getCompositeSubRegIndex
+parameter_list|(
+name|Record
+modifier|*
+name|A
+parameter_list|,
+name|Record
+modifier|*
+name|B
+parameter_list|,
+name|bool
+name|create
+init|=
+name|false
+parameter_list|)
+function_decl|;
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|CodeGenRegister
+operator|>
+operator|&
+name|getRegisters
+argument_list|()
+block|{
+return|return
+name|Registers
+return|;
+block|}
+comment|// Find a register from its Record def.
+name|CodeGenRegister
+modifier|*
+name|getReg
+parameter_list|(
+name|Record
+modifier|*
+parameter_list|)
+function_decl|;
+comment|// Computed derived records such as missing sub-register indices.
+name|void
+name|computeDerivedInfo
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 

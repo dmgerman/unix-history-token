@@ -597,7 +597,7 @@ name|isUnsigned
 operator|=
 name|T
 operator|->
-name|isUnsignedIntegerType
+name|isUnsignedIntegerOrEnumerationType
 argument_list|()
 operator|||
 name|Loc
@@ -783,7 +783,7 @@ name|isUnsigned
 operator|=
 name|T
 operator|->
-name|isUnsignedIntegerType
+name|isUnsignedIntegerOrEnumerationType
 argument_list|()
 operator|||
 name|Loc
@@ -848,7 +848,7 @@ name|isUnsigned
 operator|=
 name|T
 operator|->
-name|isUnsignedIntegerType
+name|isUnsignedIntegerOrEnumerationType
 argument_list|()
 operator|||
 name|Loc

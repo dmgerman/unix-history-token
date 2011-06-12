@@ -128,6 +128,15 @@ operator|&
 name|T
 argument_list|)
 block|;
+name|explicit
+name|TargetLibraryInfo
+argument_list|(
+specifier|const
+name|TargetLibraryInfo
+operator|&
+name|TLI
+argument_list|)
+block|;
 comment|/// has - This function is used by optimizations that want to match on or form
 comment|/// a given library function.
 name|bool

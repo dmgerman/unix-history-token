@@ -1021,16 +1021,6 @@ name|Preference
 name|SchedulingPref
 expr_stmt|;
 comment|// Scheduling preference.
-name|SmallVector
-operator|<
-name|MachineInstr
-operator|*
-operator|,
-literal|4
-operator|>
-name|DbgInstrList
-expr_stmt|;
-comment|// dbg_values referencing this.
 name|private
 label|:
 name|bool

@@ -210,6 +210,18 @@ name|CXFile
 name|SFile
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Determine whether the given header is guarded against  * multiple inclusions, either with the conventional  * #ifndef/#define/#endif macro guards or with #pragma once.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_isFileMultipleIncludeGuarded
+parameter_list|(
+name|CXTranslationUnit
+name|tu
+parameter_list|,
+name|CXFile
+name|file
+parameter_list|)
+function_decl|;
 comment|/**  * \brief Retrieve a file handle within the given translation unit.  *  * \param tu the translation unit  *  * \param file_name the name of the file.  *  * \returns the file handle for the named file in the translation unit \p tu,  * or a NULL file handle if the file was not a part of this translation unit.  */
 name|CINDEX_LINKAGE
 name|CXFile
@@ -717,6 +729,11 @@ comment|/**    * \brief Enabled chained precompiled preambles in C++.    *    * 
 name|CXTranslationUnit_CXXChainedPCH
 init|=
 literal|0x20
+block|,
+comment|/**    * \brief Used to indicate that the "detailed" preprocessing record,    * if requested, should also contain nested macro instantiations.    *    * Nested macro instantiations (i.e., macro instantiations that occur    * inside another macro instantiation) can, in some code bases, require    * a large amount of storage to due preprocessor metaprogramming. Moreover,    * its fairly rare that this information is useful for libclang clients.    */
+name|CXTranslationUnit_NestedMacroInstantiations
+init|=
+literal|0x40
 block|}
 enum|;
 comment|/**  * \brief Returns the set of flags that is suitable for parsing a translation  * unit that is being edited.  *  * The set of flags returned provide options for \c clang_parseTranslationUnit()  * to indicate that the translation unit is likely to be reparsed many times,  * either explicitly (via \c clang_reparseTranslationUnit()) or implicitly  * (e.g., by code completion (\c clang_codeCompletionAt())). The returned flag  * set contains an unspecified set of optimizations (e.g., the precompiled   * preamble) geared toward improving the performance of these routines. The  * set of optimizations enabled may change from one version to the next.  */
@@ -889,13 +906,21 @@ name|CXTUResourceUsage_ExternalASTSource_Membuffer_MMap
 init|=
 literal|10
 block|,
+name|CXTUResourceUsage_Preprocessor
+init|=
+literal|11
+block|,
+name|CXTUResourceUsage_PreprocessingRecord
+init|=
+literal|12
+block|,
 name|CXTUResourceUsage_MEMORY_IN_BYTES_BEGIN
 init|=
 name|CXTUResourceUsage_AST
 block|,
 name|CXTUResourceUsage_MEMORY_IN_BYTES_END
 init|=
-name|CXTUResourceUsage_ExternalASTSource_Membuffer_MMap
+name|CXTUResourceUsage_PreprocessingRecord
 block|,
 name|CXTUResourceUsage_First
 init|=
@@ -903,7 +928,7 @@ name|CXTUResourceUsage_AST
 block|,
 name|CXTUResourceUsage_Last
 init|=
-name|CXTUResourceUsage_ExternalASTSource_Membuffer_MMap
+name|CXTUResourceUsage_PreprocessingRecord
 block|}
 enum|;
 comment|/**   * \brief Returns the human-readable null-terminated C string that represents   *  the name of the memory category.  This string should never be freed.   */
@@ -1160,13 +1185,23 @@ name|CXCursor_TypeAliasDecl
 init|=
 literal|36
 block|,
+comment|/** \brief An Objective-C @synthesize definition. */
+name|CXCursor_ObjCSynthesizeDecl
+init|=
+literal|37
+block|,
+comment|/** \brief An Objective-C @dynamic definition. */
+name|CXCursor_ObjCDynamicDecl
+init|=
+literal|38
+block|,
 name|CXCursor_FirstDecl
 init|=
 name|CXCursor_UnexposedDecl
 block|,
 name|CXCursor_LastDecl
 init|=
-name|CXCursor_TypeAliasDecl
+name|CXCursor_ObjCDynamicDecl
 block|,
 comment|/* References */
 name|CXCursor_FirstRef
@@ -2316,6 +2351,15 @@ comment|/**  * \brief Determine if a C++ member function or member function temp
 name|CINDEX_LINKAGE
 name|unsigned
 name|clang_CXXMethod_isStatic
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Determine if a C++ member function or member function template is  * explicitly declared 'virtual' or if it overrides a virtual method from  * one of the base classes.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_CXXMethod_isVirtual
 parameter_list|(
 name|CXCursor
 name|C

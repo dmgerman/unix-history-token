@@ -268,6 +268,15 @@ argument_list|)
 block|;
 name|virtual
 name|bool
+name|addPreRegAlloc
+argument_list|(
+argument|PassManagerBase&PM
+argument_list|,
+argument|CodeGenOpt::Level OptLevel
+argument_list|)
+block|;
+name|virtual
+name|bool
 name|addPostRegAlloc
 argument_list|(
 name|PassManagerBase

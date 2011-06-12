@@ -147,6 +147,9 @@ block|,
 name|TST_decltype
 block|,
 comment|// C++0x decltype
+name|TST_underlyingType
+block|,
+comment|// __underlying_type for C++0x
 name|TST_auto
 block|,
 comment|// C++0x auto

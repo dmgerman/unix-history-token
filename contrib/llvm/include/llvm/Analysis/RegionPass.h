@@ -338,7 +338,7 @@ argument_list|(
 argument|unsigned Offset
 argument_list|)
 block|;
-comment|/// @brief Print passes contained by this manager.
+comment|/// @brief Get passes contained by this manager.
 name|Pass
 operator|*
 name|getContainedPass

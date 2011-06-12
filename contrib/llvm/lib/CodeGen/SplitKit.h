@@ -211,9 +211,16 @@ comment|///
 comment|///  1. |   o---x   | Internal to block. Variable is only live in this block.
 comment|///  2. |---x       | Live-in, kill.
 comment|///  3. |       o---| Def, live-out.
-comment|///  4. |---x   o---| Live-in, kill, def, live-out.
+comment|///  4. |---x   o---| Live-in, kill, def, live-out. Counted by NumGapBlocks.
 comment|///  5. |---o---o---| Live-through with uses or defs.
-comment|///  6. |-----------| Live-through without uses. Transparent.
+comment|///  6. |-----------| Live-through without uses. Counted by NumThroughBlocks.
+comment|///
+comment|/// Two BlockInfo entries are created for template 4. One for the live-in
+comment|/// segment, and one for the live-out segment. These entries look as if the
+comment|/// block were split in the middle where the live range isn't live.
+comment|///
+comment|/// Live-through blocks without any uses don't get BlockInfo entries. They
+comment|/// are simply listed in ThroughBlocks instead.
 comment|///
 struct|struct
 name|BlockInfo
@@ -230,18 +237,10 @@ name|SlotIndex
 name|LastUse
 decl_stmt|;
 comment|///< Last instr using current reg.
-name|SlotIndex
-name|Kill
-decl_stmt|;
-comment|///< Interval end point inside block.
-name|SlotIndex
-name|Def
-decl_stmt|;
-comment|///< Interval start point inside block.
 name|bool
 name|LiveThrough
 decl_stmt|;
-comment|///< Live in whole block (Templ 5. or 6. above).
+comment|///< Live in whole block (Templ 5. above).
 name|bool
 name|LiveIn
 decl_stmt|;
@@ -288,6 +287,11 @@ literal|8
 operator|>
 name|UseBlocks
 expr_stmt|;
+comment|/// NumGapBlocks - Number of duplicate entries in UseBlocks for blocks where
+comment|/// the live range has a gap.
+name|unsigned
+name|NumGapBlocks
+decl_stmt|;
 comment|/// ThroughBlocks - Block numbers where CurLI is live through without uses.
 name|BitVector
 name|ThroughBlocks
@@ -295,6 +299,10 @@ decl_stmt|;
 comment|/// NumThroughBlocks - Number of live-through blocks.
 name|unsigned
 name|NumThroughBlocks
+decl_stmt|;
+comment|/// DidRepairRange - analyze was forced to shrinkToUses().
+name|bool
+name|DidRepairRange
 decl_stmt|;
 name|SlotIndex
 name|computeLastSplitPoint
@@ -344,6 +352,18 @@ modifier|*
 name|li
 parameter_list|)
 function_decl|;
+comment|/// didRepairRange() - Returns true if CurLI was invalid and has been repaired
+comment|/// by analyze(). This really shouldn't happen, but sometimes the coalescer
+comment|/// can create live ranges that end in mid-air.
+name|bool
+name|didRepairRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DidRepairRange
+return|;
+block|}
 comment|/// clear - clear all data structures so SplitAnalysis is ready to analyze a
 comment|/// new interval.
 name|void
@@ -432,6 +452,7 @@ name|BlockInfo
 operator|>
 name|getUseBlocks
 argument_list|()
+specifier|const
 block|{
 return|return
 name|UseBlocks
@@ -477,9 +498,28 @@ return|return
 name|ThroughBlocks
 return|;
 block|}
-comment|/// countLiveBlocks - Return the number of blocks where li is live.
-comment|/// This is guaranteed to return the same number as getNumThroughBlocks() +
-comment|/// getUseBlocks().size() after calling analyze(li).
+comment|/// getNumLiveBlocks - Return the number of blocks where CurLI is live.
+name|unsigned
+name|getNumLiveBlocks
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getUseBlocks
+argument_list|()
+operator|.
+name|size
+argument_list|()
+operator|-
+name|NumGapBlocks
+operator|+
+name|getNumThroughBlocks
+argument_list|()
+return|;
+block|}
+comment|/// countLiveBlocks - Return the number of blocks where li is live. This is
+comment|/// guaranteed to return the same number as getNumLiveBlocks() after calling
+comment|/// analyze(li).
 name|unsigned
 name|countLiveBlocks
 argument_list|(

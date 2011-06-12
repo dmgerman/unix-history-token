@@ -1308,6 +1308,12 @@ operator|:
 name|public
 name|Generic_ELF
 block|{
+specifier|const
+name|llvm
+operator|::
+name|Triple
+name|ToolTriple
+block|;
 name|public
 operator|:
 name|NetBSD
@@ -1323,6 +1329,13 @@ operator|::
 name|Triple
 operator|&
 name|Triple
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|ToolTriple
 argument_list|)
 block|;
 name|virtual

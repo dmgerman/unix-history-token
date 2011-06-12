@@ -251,6 +251,15 @@ argument|bool isEH
 argument_list|)
 specifier|const
 block|;
+name|int
+name|getLLVMRegNum
+argument_list|(
+argument|unsigned RegNum
+argument_list|,
+argument|bool isEH
+argument_list|)
+specifier|const
+block|;
 comment|//! Convert D-form load/store to X-form load/store
 comment|/*!       Converts a regiser displacement load/store into a register-indexed       load/store for large stack frames, when the stack frame exceeds the       range of a s10 displacement.      */
 name|int

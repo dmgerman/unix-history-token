@@ -392,6 +392,21 @@ comment|/// address.
 name|MO_ABS_HI
 block|,
 name|MO_ABS_LO
+block|,
+comment|/// MO_TLSGD - Represents the offset into the global offset table at which
+comment|// the module ID and TSL block offset reside during execution (General
+comment|// Dynamic TLS).
+name|MO_TLSGD
+block|,
+comment|/// MO_GOTTPREL - Represents the offset from the thread pointer (Initial
+comment|// Exec TLS).
+name|MO_GOTTPREL
+block|,
+comment|/// MO_TPREL_HI/LO - Represents the hi and low part of the offset from
+comment|// the thread pointer (Local Exec TLS).
+name|MO_TPREL_HI
+block|,
+name|MO_TPREL_LO
 block|}
 enum|;
 block|}

@@ -1421,26 +1421,39 @@ name|other
 argument_list|)
 decl|const
 block|{
-comment|// Non-CVR qualifiers must match exactly.  CVR qualifiers may subset.
 return|return
-operator|(
-operator|(
-name|Mask
-operator|&
-operator|~
-name|CVRMask
-operator|)
+comment|// Address spaces must match exactly.
+name|getAddressSpace
+argument_list|()
 operator|==
-operator|(
 name|other
 operator|.
-name|Mask
-operator|&
-operator|~
-name|CVRMask
-operator|)
+name|getAddressSpace
+argument_list|()
+operator|&&
+comment|// ObjC GC qualifiers can match, be added, or be removed, but can't be
+comment|// changed.
+operator|(
+name|getObjCGCAttr
+argument_list|()
+operator|==
+name|other
+operator|.
+name|getObjCGCAttr
+argument_list|()
+operator|||
+operator|!
+name|hasObjCGCAttr
+argument_list|()
+operator|||
+operator|!
+name|other
+operator|.
+name|hasObjCGCAttr
+argument_list|()
 operator|)
 operator|&&
+comment|// CVR qualifiers may subset.
 operator|(
 operator|(
 operator|(
@@ -2293,6 +2306,33 @@ argument_list|(
 name|Qualifiers
 operator|::
 name|Const
+argument_list|)
+return|;
+block|}
+comment|/// addVolatile - add the specified type qualifier to this QualType.
+name|void
+name|addVolatile
+parameter_list|()
+block|{
+name|addFastQualifiers
+argument_list|(
+name|Qualifiers
+operator|::
+name|Volatile
+argument_list|)
+expr_stmt|;
+block|}
+name|QualType
+name|withVolatile
+argument_list|()
+specifier|const
+block|{
+return|return
+name|withFastQualifiers
+argument_list|(
+name|Qualifiers
+operator|::
+name|Volatile
 argument_list|)
 return|;
 block|}
@@ -4396,6 +4436,13 @@ name|isTrivialType
 argument_list|()
 specifier|const
 block|;
+comment|/// isTriviallyCopyableType - Return true if this is a trivially copyable type
+comment|/// (C++0x [basic.types]p9
+name|bool
+name|isTriviallyCopyableType
+argument_list|()
+specifier|const
+block|;
 comment|/// \brief Test if this type is a standard-layout type.
 comment|/// (C++0x [basic.type]p9)
 name|bool
@@ -5101,19 +5148,31 @@ block|;
 comment|// C99 6.3.1.1p2
 comment|/// isSignedIntegerType - Return true if this is an integer type that is
 comment|/// signed, according to C99 6.2.5p4 [char, signed char, short, int, long..],
-comment|/// an enum decl which has a signed representation, or a vector of signed
-comment|/// integer element type.
+comment|/// or an enum decl which has a signed representation.
 name|bool
 name|isSignedIntegerType
 argument_list|()
 specifier|const
 block|;
 comment|/// isUnsignedIntegerType - Return true if this is an integer type that is
-comment|/// unsigned, according to C99 6.2.5p6 [which returns true for _Bool], an enum
-comment|/// decl which has an unsigned representation, or a vector of unsigned integer
-comment|/// element type.
+comment|/// unsigned, according to C99 6.2.5p6 [which returns true for _Bool],
+comment|/// or an enum decl which has an unsigned representation.
 name|bool
 name|isUnsignedIntegerType
+argument_list|()
+specifier|const
+block|;
+comment|/// Determines whether this is an integer type that is signed or an
+comment|/// enumeration types whose underlying type is a signed integer type.
+name|bool
+name|isSignedIntegerOrEnumerationType
+argument_list|()
+specifier|const
+block|;
+comment|/// Determines whether this is an integer type that is unsigned or an
+comment|/// enumeration types whose underlying type is a unsigned integer type.
+name|bool
+name|isUnsignedIntegerOrEnumerationType
 argument_list|()
 specifier|const
 block|;
@@ -9769,6 +9828,13 @@ operator|=
 name|getExceptionSpecType
 argument_list|()
 block|;
+name|assert
+argument_list|(
+name|EST
+operator|!=
+name|EST_Delayed
+argument_list|)
+block|;
 if|if
 condition|(
 name|EST
@@ -10776,6 +10842,129 @@ operator|*
 name|E
 argument_list|)
 block|; }
+block|;
+comment|/// \brief A unary type transform, which is a type constructed from another
+name|class
+name|UnaryTransformType
+operator|:
+name|public
+name|Type
+block|{
+name|public
+operator|:
+expr|enum
+name|UTTKind
+block|{
+name|EnumUnderlyingType
+block|}
+block|;
+name|private
+operator|:
+comment|/// The untransformed type.
+name|QualType
+name|BaseType
+block|;
+comment|/// The transformed type if not dependent, otherwise the same as BaseType.
+name|QualType
+name|UnderlyingType
+block|;
+name|UTTKind
+name|UKind
+block|;
+name|protected
+operator|:
+name|UnaryTransformType
+argument_list|(
+argument|QualType BaseTy
+argument_list|,
+argument|QualType UnderlyingTy
+argument_list|,
+argument|UTTKind UKind
+argument_list|,
+argument|QualType CanonicalTy
+argument_list|)
+block|;
+name|friend
+name|class
+name|ASTContext
+block|;
+name|public
+operator|:
+name|bool
+name|isSugared
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|isDependentType
+argument_list|()
+return|;
+block|}
+name|QualType
+name|desugar
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UnderlyingType
+return|;
+block|}
+name|QualType
+name|getUnderlyingType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UnderlyingType
+return|;
+block|}
+name|QualType
+name|getBaseType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BaseType
+return|;
+block|}
+name|UTTKind
+name|getUTTKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UKind
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Type *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getTypeClass
+argument_list|()
+operator|==
+name|UnaryTransform
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const UnaryTransformType *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
 block|;
 name|class
 name|TagType
@@ -12303,6 +12492,10 @@ comment|///
 comment|/// Other template specialization types, for which the template name
 comment|/// is dependent, may be canonical types. These types are always
 comment|/// dependent.
+comment|///
+comment|/// An instance of this type is followed by an array of TemplateArgument*s,
+comment|/// then, if the template specialization type is for a type alias template,
+comment|/// a QualType representing the non-canonical aliased type.
 name|class
 name|TemplateSpecializationType
 operator|:
@@ -12332,6 +12525,8 @@ argument_list|,
 argument|unsigned NumArgs
 argument_list|,
 argument|QualType Canon
+argument_list|,
+argument|QualType Aliased
 argument_list|)
 block|;
 name|friend
@@ -12434,6 +12629,42 @@ argument_list|()
 operator|)
 return|;
 block|}
+comment|/// True if this template specialization type is for a type alias
+comment|/// template.
+name|bool
+name|isTypeAlias
+argument_list|()
+specifier|const
+block|;
+comment|/// Get the aliased type, if this is a specialization of a type alias
+comment|/// template.
+name|QualType
+name|getAliasedType
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isTypeAlias
+argument_list|()
+operator|&&
+literal|"not a type alias template specialization"
+argument_list|)
+block|;
+return|return
+operator|*
+name|reinterpret_cast
+operator|<
+specifier|const
+name|QualType
+operator|*
+operator|>
+operator|(
+name|end
+argument_list|()
+operator|)
+return|;
+block|}
 typedef|typedef
 specifier|const
 name|TemplateArgument
@@ -12522,6 +12753,9 @@ argument_list|()
 operator|||
 name|isCurrentInstantiation
 argument_list|()
+operator|||
+name|isTypeAlias
+argument_list|()
 return|;
 block|}
 name|QualType
@@ -12555,7 +12789,21 @@ name|NumArgs
 argument_list|,
 name|Ctx
 argument_list|)
-block|;   }
+block|;
+if|if
+condition|(
+name|isTypeAlias
+argument_list|()
+condition|)
+name|getAliasedType
+argument_list|()
+operator|.
+name|Profile
+argument_list|(
+name|ID
+argument_list|)
+expr_stmt|;
+block|}
 specifier|static
 name|void
 name|Profile

@@ -917,10 +917,24 @@ name|UserDeclaredCopyConstructor
 operator|:
 literal|1
 block|;
+comment|/// UserDeclareMoveConstructor - True when this class has a
+comment|/// user-declared move constructor.
+name|bool
+name|UserDeclaredMoveConstructor
+operator|:
+literal|1
+block|;
 comment|/// UserDeclaredCopyAssignment - True when this class has a
 comment|/// user-declared copy assignment operator.
 name|bool
 name|UserDeclaredCopyAssignment
+operator|:
+literal|1
+block|;
+comment|/// UserDeclareMoveAssignment - True when this class has a
+comment|/// user-declared move assignment.
+name|bool
+name|UserDeclaredMoveAssignment
 operator|:
 literal|1
 block|;
@@ -1012,16 +1026,28 @@ name|HasPublicFields
 operator|:
 literal|1
 block|;
-comment|/// HasTrivialConstructor - True when this class has a trivial constructor.
-comment|///
-comment|/// C++ [class.ctor]p5.  A constructor is trivial if it is an
-comment|/// implicitly-declared default constructor and if:
-comment|/// * its class has no virtual functions and no virtual base classes, and
-comment|/// * all the direct base classes of its class have trivial constructors, and
-comment|/// * for all the nonstatic data members of its class that are of class type
-comment|///   (or array thereof), each such class has a trivial constructor.
+comment|/// \brief True if this class (or any subobject) has mutable fields.
 name|bool
-name|HasTrivialConstructor
+name|HasMutableFields
+operator|:
+literal|1
+block|;
+comment|/// HasTrivialDefaultConstructor - True when, if this class has a default
+comment|/// constructor, this default constructor is trivial.
+comment|///
+comment|/// C++0x [class.ctor]p5
+comment|///    A default constructor is trivial if it is not user-provided and if
+comment|///     -- its class has no virtual functions and no virtual base classes,
+comment|///        and
+comment|///     -- no non-static data member of its class has a
+comment|///        brace-or-equal-initializer, and
+comment|///     -- all the direct base classes of its class have trivial
+comment|///        default constructors, and
+comment|///     -- for all the nonstatic data members of its class that are of class
+comment|///        type (or array thereof), each such class has a trivial
+comment|///        default constructor.
+name|bool
+name|HasTrivialDefaultConstructor
 operator|:
 literal|1
 block|;
@@ -1038,7 +1064,7 @@ comment|/// constructor.
 comment|///
 comment|/// C++0x [class.copy]p13:
 comment|///   A copy/move constructor for class X is trivial if it is neither
-comment|///   user-provided nor deleted and if
+comment|///   user-provided and if
 comment|///    -- class X has no virtual functions and no virtual base classes, and
 comment|///    -- the constructor selected to copy/move each direct base class
 comment|///       subobject is trivial, and
@@ -1056,7 +1082,7 @@ comment|/// constructor.
 comment|///
 comment|/// C++0x [class.copy]p13:
 comment|///   A copy/move constructor for class X is trivial if it is neither
-comment|///   user-provided nor deleted and if
+comment|///   user-provided and if
 comment|///    -- class X has no virtual functions and no virtual base classes, and
 comment|///    -- the constructor selected to copy/move each direct base class
 comment|///       subobject is trivial, and
@@ -1132,8 +1158,14 @@ name|ComputedVisibleConversions
 operator|:
 literal|1
 block|;
-comment|/// \brief Whether we have already declared the default constructor or
-comment|/// do not need to have one declared.
+comment|/// \brief Whether we have a C++0x user-provided default constructor (not
+comment|/// explicitly deleted or defaulted).
+name|bool
+name|UserProvidedDefaultConstructor
+operator|:
+literal|1
+block|;
+comment|/// \brief Whether we have already declared the default constructor.
 name|bool
 name|DeclaredDefaultConstructor
 operator|:
@@ -1145,9 +1177,21 @@ name|DeclaredCopyConstructor
 operator|:
 literal|1
 block|;
+comment|/// \brief Whether we have already declared the move constructor.
+name|bool
+name|DeclaredMoveConstructor
+operator|:
+literal|1
+block|;
 comment|/// \brief Whether we have already declared the copy-assignment operator.
 name|bool
 name|DeclaredCopyAssignment
+operator|:
+literal|1
+block|;
+comment|/// \brief Whether we have already declared the move-assignment operator.
+name|bool
+name|DeclaredMoveAssignment
 operator|:
 literal|1
 block|;
@@ -2107,11 +2151,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Determine whether this class has had its default constructor
+comment|/// \brief Determine if we need to declare a default constructor for
 end_comment
 
 begin_comment
-comment|/// declared implicitly or does not need one declared implicitly.
+comment|/// this class.
 end_comment
 
 begin_comment
@@ -2120,6 +2164,36 @@ end_comment
 
 begin_comment
 comment|/// This value is used for lazy creation of default constructors.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|needsImplicitDefaultConstructor
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|data
+argument_list|()
+operator|.
+name|UserDeclaredConstructor
+operator|&&
+operator|!
+name|data
+argument_list|()
+operator|.
+name|DeclaredDefaultConstructor
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// hasDeclaredDefaultConstructor - Whether this class's default constructor
+end_comment
+
+begin_comment
+comment|/// has been declared (either explicitly or implicitly).
 end_comment
 
 begin_expr_stmt
@@ -2145,18 +2219,13 @@ begin_comment
 comment|/// copy constructor that accepts a const-qualified argument.
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 name|bool
 name|hasConstCopyConstructor
-argument_list|(
+argument_list|()
 specifier|const
-name|ASTContext
-operator|&
-name|Context
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// getCopyConstructor - Returns the copy constructor for this class
@@ -2167,17 +2236,25 @@ name|CXXConstructorDecl
 modifier|*
 name|getCopyConstructor
 argument_list|(
-specifier|const
-name|ASTContext
-operator|&
-name|Context
-argument_list|,
 name|unsigned
 name|TypeQuals
 argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// getMoveConstructor - Returns the move constructor for this class
+end_comment
+
+begin_expr_stmt
+name|CXXConstructorDecl
+operator|*
+name|getMoveConstructor
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Retrieve the copy-assignment operator for this class, if available.
@@ -2232,6 +2309,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// getMoveAssignmentOperator - Returns the move assignment operator for this
+end_comment
+
+begin_comment
+comment|/// class
+end_comment
+
+begin_expr_stmt
+name|CXXMethodDecl
+operator|*
+name|getMoveAssignmentOperator
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// hasUserDeclaredConstructor - Whether this class has any
 end_comment
 
@@ -2254,6 +2348,29 @@ name|data
 argument_list|()
 operator|.
 name|UserDeclaredConstructor
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// hasUserProvidedDefaultconstructor - Whether this class has a
+end_comment
+
+begin_comment
+comment|/// user-provided default constructor per C++0x.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasUserProvidedDefaultConstructor
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|UserProvidedDefaultConstructor
 return|;
 block|}
 end_expr_stmt
@@ -2317,6 +2434,84 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// hasUserDeclaredMoveOperation - Whether this class has a user-
+end_comment
+
+begin_comment
+comment|/// declared move constructor or assignment operator. When false, a
+end_comment
+
+begin_comment
+comment|/// move constructor and assignment operator may be implicitly declared.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasUserDeclaredMoveOperation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|UserDeclaredMoveConstructor
+operator|||
+name|data
+argument_list|()
+operator|.
+name|UserDeclaredMoveAssignment
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine whether this class has had a move constructor
+end_comment
+
+begin_comment
+comment|/// declared by the user.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasUserDeclaredMoveConstructor
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|UserDeclaredMoveConstructor
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine whether this class has had a move constructor
+end_comment
+
+begin_comment
+comment|/// declared.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasDeclaredMoveConstructor
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|DeclaredMoveConstructor
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// hasUserDeclaredCopyAssignment - Whether this class has a
 end_comment
 
@@ -2370,6 +2565,52 @@ name|data
 argument_list|()
 operator|.
 name|DeclaredCopyAssignment
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine whether this class has had a move assignment
+end_comment
+
+begin_comment
+comment|/// declared by the user.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasUserDeclaredMoveAssignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|UserDeclaredMoveAssignment
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// hasDeclaredMoveAssignment - Whether this class has a
+end_comment
+
+begin_comment
+comment|/// declared move assignment operator.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasDeclaredMoveAssignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|DeclaredMoveAssignment
 return|;
 block|}
 end_expr_stmt
@@ -2719,16 +2960,16 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|// hasTrivialConstructor - Whether this class has a trivial constructor
+comment|/// \brief Whether this class, or any of its class subobjects, contains a
 end_comment
 
 begin_comment
-comment|// (C++ [class.ctor]p5)
+comment|/// mutable field.
 end_comment
 
 begin_expr_stmt
 name|bool
-name|hasTrivialConstructor
+name|hasMutableFields
 argument_list|()
 specifier|const
 block|{
@@ -2736,7 +2977,47 @@ return|return
 name|data
 argument_list|()
 operator|.
-name|HasTrivialConstructor
+name|HasMutableFields
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|// hasTrivialDefaultConstructor - Whether this class has a trivial default
+end_comment
+
+begin_comment
+comment|// constructor
+end_comment
+
+begin_comment
+comment|// (C++0x [class.ctor]p5)
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasTrivialDefaultConstructor
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|HasTrivialDefaultConstructor
+operator|&&
+operator|(
+operator|!
+name|data
+argument_list|()
+operator|.
+name|UserDeclaredConstructor
+operator|||
+name|data
+argument_list|()
+operator|.
+name|DeclaredDefaultConstructor
+operator|)
 return|;
 block|}
 end_expr_stmt
@@ -2907,7 +3188,7 @@ comment|// isTriviallyCopyable - Whether this class is considered trivially copy
 end_comment
 
 begin_comment
-comment|// (C++0x [class]p5).
+comment|// (C++0x [class]p6).
 end_comment
 
 begin_expr_stmt
@@ -2916,6 +3197,42 @@ name|isTriviallyCopyable
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// isTrivial - Whether this class is considered trivial
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// C++0x [class]p6
+end_comment
+
+begin_comment
+comment|//    A trivial class is a class that has a trivial default constructor and
+end_comment
+
+begin_comment
+comment|//    is trivially copiable.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isTrivial
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isTriviallyCopyable
+argument_list|()
+operator|&&
+name|hasTrivialDefaultConstructor
+argument_list|()
+return|;
+block|}
 end_expr_stmt
 
 begin_comment
@@ -4477,6 +4794,18 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/// \brief Determine whether this is a move assignment operator.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isMoveAssignmentOperator
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
 begin_expr_stmt
 specifier|const
 name|CXXMethodDecl
@@ -4520,6 +4849,36 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// isUserProvided - True if it is either an implicit constructor or
+end_comment
+
+begin_comment
+comment|/// if it was defaulted or deleted on first declaration.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isUserProvided
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+operator|(
+name|isDeleted
+argument_list|()
+operator|||
+name|getCanonicalDecl
+argument_list|()
+operator|->
+name|isDefaulted
+argument_list|()
+operator|)
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 comment|///
@@ -4908,6 +5267,8 @@ name|MemberOrEllipsisLocation
 decl_stmt|;
 comment|/// \brief The argument used to initialize the base or member, which may
 comment|/// end up constructing an object (when multiple arguments are involved).
+comment|/// If 0, this is a field initializer, and the in-class member initializer
+comment|/// will be used.
 name|Stmt
 modifier|*
 name|Init
@@ -5175,6 +5536,19 @@ operator|*
 operator|>
 operator|(
 operator|)
+return|;
+block|}
+comment|/// isInClassMemberInitializer - Returns true when this initializer is an
+comment|/// implicit ctor initializer generated for a field with an initializer
+comment|/// defined on the member declaration.
+name|bool
+name|isInClassMemberInitializer
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|Init
 return|;
 block|}
 comment|/// isDelegatingInitializer - Returns true when this initializer is creating
@@ -5668,12 +6042,26 @@ operator|=
 name|Index
 expr_stmt|;
 block|}
+comment|/// \brief Get the initializer. This is 0 if this is an in-class initializer
+comment|/// for a non-static data member which has not yet been parsed.
 name|Expr
 operator|*
 name|getInit
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+operator|!
+name|Init
+condition|)
+return|return
+name|getAnyMember
+argument_list|()
+operator|->
+name|getInClassInitializer
+argument_list|()
+return|;
 return|return
 name|static_cast
 operator|<
@@ -5685,14 +6073,10 @@ name|Init
 operator|)
 return|;
 block|}
-block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
+unit|};
 comment|/// CXXConstructorDecl - Represents a C++ constructor within a
 end_comment
 
@@ -6217,11 +6601,14 @@ name|getTargetConstructor
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
+name|assert
+argument_list|(
 name|isDelegatingConstructor
 argument_list|()
-condition|)
+operator|&&
+literal|"A non-delegating constructor has no target"
+argument_list|)
+block|;
 return|return
 name|CtorInitializers
 index|[
@@ -6230,10 +6617,6 @@ index|]
 operator|->
 name|getTargetConstructor
 argument_list|()
-return|;
-else|else
-return|return
-literal|0
 return|;
 block|}
 end_expr_stmt
@@ -6532,6 +6915,50 @@ name|BaseCtor
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+specifier|const
+name|CXXConstructorDecl
+operator|*
+name|getCanonicalDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|CXXConstructorDecl
+operator|>
+operator|(
+name|FunctionDecl
+operator|::
+name|getCanonicalDecl
+argument_list|()
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|CXXConstructorDecl
+modifier|*
+name|getCanonicalDecl
+parameter_list|()
+block|{
+return|return
+name|cast
+operator|<
+name|CXXConstructorDecl
+operator|>
+operator|(
+name|FunctionDecl
+operator|::
+name|getCanonicalDecl
+argument_list|()
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|// Implement isa/cast/dyncast/etc.

@@ -1025,6 +1025,43 @@ literal|4
 operator|>
 name|UnusedFileScopedDecls
 expr_stmt|;
+comment|/// \brief All the delegating constructors seen so far in the file, used for
+comment|/// cycle detection at the end of the TU.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|CXXConstructorDecl
+operator|*
+operator|,
+literal|4
+operator|>
+name|DelegatingCtorDecls
+expr_stmt|;
+comment|/// \brief All the overriding destructors seen during a class definition
+comment|/// (there could be multiple due to nested classes) that had their exception
+comment|/// spec checks delayed, plus the overridden destructor.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|CXXDestructorDecl
+operator|*
+operator|,
+specifier|const
+name|CXXDestructorDecl
+operator|*
+operator|>
+operator|,
+literal|2
+operator|>
+name|DelayedDestructorExceptionSpecChecks
+expr_stmt|;
 comment|/// \brief Callback to the parser to parse templated functions when needed.
 typedef|typedef
 name|void
@@ -2004,11 +2041,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Whether the code handled by Sema should be considered a
+comment|/// SpecialMemberOverloadResult - The overloading result for a special member
 end_comment
 
 begin_comment
-comment|/// complete translation unit or not.
+comment|/// function.
 end_comment
 
 begin_comment
@@ -2016,54 +2053,211 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// When true (which is generally the case), Sema will perform
+comment|/// This is basically a wrapper around PointerIntPair. The lowest bit of the
 end_comment
 
 begin_comment
-comment|/// end-of-translation-unit semantic tasks (such as creating
+comment|/// integer is used to determine whether we have a parameter qualification
 end_comment
 
 begin_comment
-comment|/// initializers for tentative definitions in C) once parsing has
+comment|/// match, the second-lowest is whether we had success in resolving the
 end_comment
 
 begin_comment
-comment|/// completed. This flag will be false when building PCH files,
+comment|/// overload to a unique non-deleted function.
 end_comment
 
 begin_comment
-comment|/// since a PCH file is by definition not a complete translation
+comment|///
 end_comment
 
 begin_comment
-comment|/// unit.
+comment|/// The ConstParamMatch bit represents whether, when looking up a copy
+end_comment
+
+begin_comment
+comment|/// constructor or assignment operator, we found a potential copy
+end_comment
+
+begin_comment
+comment|/// constructor/assignment operator whose first parameter is const-qualified.
+end_comment
+
+begin_comment
+comment|/// This is used for determining parameter types of other objects and is
+end_comment
+
+begin_comment
+comment|/// utterly meaningless on other types of special members.
 end_comment
 
 begin_decl_stmt
+name|class
+name|SpecialMemberOverloadResult
+range|:
+name|public
+name|llvm
+operator|::
+name|FastFoldingSetNode
+block|{
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+name|CXXMethodDecl
+operator|*
+block|,
+literal|2
+operator|>
+name|Pair
+block|;
+name|public
+operator|:
+name|SpecialMemberOverloadResult
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|)
+operator|:
+name|FastFoldingSetNode
+argument_list|(
+argument|ID
+argument_list|)
+block|{}
+name|CXXMethodDecl
+operator|*
+name|getMethod
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Pair
+operator|.
+name|getPointer
+argument_list|()
+return|;
+block|}
+name|void
+name|setMethod
+argument_list|(
+argument|CXXMethodDecl *MD
+argument_list|)
+block|{
+name|Pair
+operator|.
+name|setPointer
+argument_list|(
+name|MD
+argument_list|)
+block|; }
+name|bool
+name|hasSuccess
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Pair
+operator|.
+name|getInt
+argument_list|()
+operator|&
+literal|0x1
+return|;
+block|}
+name|void
+name|setSuccess
+argument_list|(
+argument|bool B
+argument_list|)
+block|{
+name|Pair
+operator|.
+name|setInt
+argument_list|(
+name|unsigned
+argument_list|(
+name|B
+argument_list|)
+operator||
+name|hasConstParamMatch
+argument_list|()
+operator|<<
+literal|1
+argument_list|)
+block|;     }
+name|bool
+name|hasConstParamMatch
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Pair
+operator|.
+name|getInt
+argument_list|()
+operator|&
+literal|0x2
+return|;
+block|}
+name|void
+name|setConstParamMatch
+argument_list|(
+argument|bool B
+argument_list|)
+block|{
+name|Pair
+operator|.
+name|setInt
+argument_list|(
+name|B
+operator|<<
+literal|1
+operator||
+name|unsigned
+argument_list|(
+name|hasSuccess
+argument_list|()
+argument_list|)
+argument_list|)
+block|;     }
+expr|}
+block|;
+comment|/// \brief A cache of special member function overload resolution results
+comment|/// for C++ records.
+name|llvm
+operator|::
+name|FoldingSet
+operator|<
+name|SpecialMemberOverloadResult
+operator|>
+name|SpecialMemberCache
+block|;
+comment|/// \brief Whether the code handled by Sema should be considered a
+comment|/// complete translation unit or not.
+comment|///
+comment|/// When true (which is generally the case), Sema will perform
+comment|/// end-of-translation-unit semantic tasks (such as creating
+comment|/// initializers for tentative definitions in C) once parsing has
+comment|/// completed. This flag will be false when building PCH files,
+comment|/// since a PCH file is by definition not a complete translation
+comment|/// unit.
 name|bool
 name|CompleteTranslationUnit
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
+block|;
 name|llvm
 operator|::
 name|BumpPtrAllocator
 name|BumpAlloc
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+block|;
 comment|/// \brief The number of SFINAE diagnostics that have been trapped.
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|NumSFINAEErrors
-decl_stmt|;
-end_decl_stmt
-
-begin_typedef
+block|;
 typedef|typedef
 name|llvm
 operator|::
@@ -2084,37 +2278,13 @@ operator|>
 expr|>
 name|UnparsedDefaultArgInstantiationsMap
 expr_stmt|;
-end_typedef
-
-begin_comment
 comment|/// \brief A mapping from parameters with unparsed default arguments to the
-end_comment
-
-begin_comment
 comment|/// set of instantiations of each parameter.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This mapping is a temporary data structure used when parsing
-end_comment
-
-begin_comment
 comment|/// nested class templates or nested classes of class templates,
-end_comment
-
-begin_comment
 comment|/// where we might end up instantiating an inner class before the
-end_comment
-
-begin_comment
 comment|/// default arguments of its methods have been parsed.
-end_comment
-
-begin_decl_stmt
 name|UnparsedDefaultArgInstantiationsMap
 name|UnparsedDefaultArgInstantiations
 decl_stmt|;
@@ -2652,6 +2822,13 @@ end_function
 begin_function_decl
 name|void
 name|ActOnEndOfTranslationUnit
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|CheckDelegatingCtorCycles
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -3380,6 +3557,32 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|bool
+name|RequireCompleteExprType
+argument_list|(
+name|Expr
+operator|*
+name|E
+argument_list|,
+specifier|const
+name|PartialDiagnostic
+operator|&
+name|PD
+argument_list|,
+name|std
+operator|::
+name|pair
+operator|<
+name|SourceLocation
+argument_list|,
+name|PartialDiagnostic
+operator|>
+name|Note
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|QualType
 name|getElaboratedType
@@ -3425,6 +3628,24 @@ name|Loc
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|QualType
+name|BuildUnaryTransformType
+argument_list|(
+name|QualType
+name|BaseType
+argument_list|,
+name|UnaryTransformType
+operator|::
+name|UTTKind
+name|UKind
+argument_list|,
+name|SourceLocation
+name|Loc
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|//===--------------------------------------------------------------------===//
@@ -3958,6 +4179,11 @@ parameter_list|,
 name|Declarator
 modifier|&
 name|D
+parameter_list|,
+name|bool
+name|IsFunctionDefintion
+init|=
+name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4077,6 +4303,21 @@ name|T
 parameter_list|,
 name|SourceRange
 name|TRange
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|CheckTypedefForVariablyModifiedType
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|TypedefNameDecl
+modifier|*
+name|D
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4526,6 +4767,20 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|SetDeclDefaulted
+parameter_list|(
+name|Decl
+modifier|*
+name|dcl
+parameter_list|,
+name|SourceLocation
+name|DefaultLoc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|FinalizeDeclaration
 parameter_list|(
 name|Decl
@@ -4813,13 +5068,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/// ParsedFreeStandingDeclSpec - This method is invoked when a declspec with
-end_comment
-
-begin_comment
-comment|/// no declarator (e.g. "struct foo;") is parsed.
-end_comment
+begin_function_decl
+name|Decl
+modifier|*
+name|ParsedFreeStandingDeclSpec
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|AccessSpecifier
+name|AS
+parameter_list|,
+name|DeclSpec
+modifier|&
+name|DS
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|Decl
@@ -4836,6 +5102,9 @@ parameter_list|,
 name|DeclSpec
 modifier|&
 name|DS
+parameter_list|,
+name|MultiTemplateParamsArg
+name|TemplateParams
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4906,6 +5175,9 @@ name|Previous
 parameter_list|,
 name|TagTypeKind
 name|NewTag
+parameter_list|,
+name|bool
+name|isDefinition
 parameter_list|,
 name|SourceLocation
 name|NewTagLoc
@@ -5150,6 +5422,9 @@ name|Expr
 modifier|*
 name|BitfieldWidth
 parameter_list|,
+name|bool
+name|HasInit
+parameter_list|,
 name|AccessSpecifier
 name|AS
 parameter_list|)
@@ -5185,6 +5460,9 @@ name|Expr
 modifier|*
 name|BitfieldWidth
 parameter_list|,
+name|bool
+name|HasInit
+parameter_list|,
 name|SourceLocation
 name|TSSL
 parameter_list|,
@@ -5208,26 +5486,19 @@ begin_enum
 enum|enum
 name|CXXSpecialMember
 block|{
-name|CXXInvalid
-init|=
-operator|-
-literal|1
-block|,
-name|CXXConstructor
-init|=
-literal|0
+name|CXXDefaultConstructor
 block|,
 name|CXXCopyConstructor
-init|=
-literal|1
+block|,
+name|CXXMoveConstructor
 block|,
 name|CXXCopyAssignment
-init|=
-literal|2
+block|,
+name|CXXMoveAssignment
 block|,
 name|CXXDestructor
-init|=
-literal|3
+block|,
+name|CXXInvalid
 block|}
 enum|;
 end_enum
@@ -6348,6 +6619,21 @@ parameter_list|,
 name|Expr
 modifier|*
 name|Value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|CanPerformCopyInitialization
+parameter_list|(
+specifier|const
+name|InitializedEntity
+modifier|&
+name|Entity
+parameter_list|,
+name|ExprResult
+name|Init
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7703,6 +7989,36 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|SpecialMemberOverloadResult
+modifier|*
+name|LookupSpecialMember
+parameter_list|(
+name|CXXRecordDecl
+modifier|*
+name|D
+parameter_list|,
+name|CXXSpecialMember
+name|SM
+parameter_list|,
+name|bool
+name|ConstArg
+parameter_list|,
+name|bool
+name|VolatileArg
+parameter_list|,
+name|bool
+name|RValueThis
+parameter_list|,
+name|bool
+name|ConstThis
+parameter_list|,
+name|bool
+name|VolatileThis
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_label
 name|public
 label|:
@@ -7890,6 +8206,39 @@ parameter_list|(
 name|CXXRecordDecl
 modifier|*
 name|Class
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|CXXConstructorDecl
+modifier|*
+name|LookupDefaultConstructor
+parameter_list|(
+name|CXXRecordDecl
+modifier|*
+name|Class
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|CXXConstructorDecl
+modifier|*
+name|LookupCopyConstructor
+parameter_list|(
+name|CXXRecordDecl
+modifier|*
+name|Class
+parameter_list|,
+name|unsigned
+name|Quals
+parameter_list|,
+name|bool
+modifier|*
+name|ConstParam
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -8095,6 +8444,31 @@ parameter_list|,
 name|AssociatedClassSet
 modifier|&
 name|AssociatedClasses
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|FilterLookupForScope
+parameter_list|(
+name|LookupResult
+modifier|&
+name|R
+parameter_list|,
+name|DeclContext
+modifier|*
+name|Ctx
+parameter_list|,
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|bool
+name|ConsiderLinkage
+parameter_list|,
+name|bool
+name|ExplicitInstantiationOrSpecialization
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -10530,6 +10904,50 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// \brief Figure out if an expression could be turned into a call.
+end_comment
+
+begin_function_decl
+name|bool
+name|isExprCallable
+parameter_list|(
+specifier|const
+name|Expr
+modifier|&
+name|E
+parameter_list|,
+name|QualType
+modifier|&
+name|ZeroArgCallReturnTy
+parameter_list|,
+name|UnresolvedSetImpl
+modifier|&
+name|NonTemplateOverloads
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Give notes for a set of overloads.
+end_comment
+
+begin_function_decl
+name|void
+name|NoteOverloads
+parameter_list|(
+specifier|const
+name|UnresolvedSetImpl
+modifier|&
+name|Overloads
+parameter_list|,
+specifier|const
+name|SourceLocation
+name|FinalNoteLoc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Conditionally issue a diagnostic based on the current
 end_comment
 
@@ -11196,9 +11614,6 @@ name|OpLoc
 parameter_list|,
 name|UnaryExprOrTypeTrait
 name|ExprKind
-parameter_list|,
-name|SourceRange
-name|R
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -11246,12 +11661,20 @@ parameter_list|(
 name|Expr
 modifier|*
 name|E
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|CheckUnaryExprOrTypeTraitOperand
+parameter_list|(
+name|Expr
+modifier|*
+name|E
 parameter_list|,
-name|SourceLocation
-name|OpLoc
-parameter_list|,
-name|SourceRange
-name|R
+name|UnaryExprOrTypeTrait
+name|ExprKind
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -12247,6 +12670,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|bool
+name|CheckMicrosoftIfExistsSymbol
+parameter_list|(
+name|CXXScopeSpec
+modifier|&
+name|SS
+parameter_list|,
+name|UnqualifiedId
+modifier|&
+name|Name
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|//===------------------------- "Block" Extension ------------------------===//
 end_comment
@@ -12345,6 +12783,34 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|//===---------------------------- OpenCL Features -----------------------===//
+end_comment
+
+begin_comment
+comment|/// __builtin_astype(...)
+end_comment
+
+begin_function_decl
+name|ExprResult
+name|ActOnAsTypeExpr
+parameter_list|(
+name|Expr
+modifier|*
+name|expr
+parameter_list|,
+name|ParsedType
+name|DestTy
+parameter_list|,
+name|SourceLocation
+name|BuiltinLoc
+parameter_list|,
+name|SourceLocation
+name|RParenLoc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|//===---------------------------- C++ Features --------------------------===//
 end_comment
 
@@ -12415,14 +12881,13 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
+begin_function
 name|CXXRecordDecl
-operator|*
+modifier|*
 name|getStdBadAlloc
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function|const;
+end_function
 
 begin_function_decl
 name|Decl
@@ -12706,6 +13171,9 @@ parameter_list|,
 name|AccessSpecifier
 name|AS
 parameter_list|,
+name|MultiTemplateParamsArg
+name|TemplateParams
+parameter_list|,
 name|SourceLocation
 name|UsingLoc
 parameter_list|,
@@ -12916,6 +13384,402 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// \brief Helper class that collects exception specifications for
+end_comment
+
+begin_comment
+comment|/// implicitly-declared special member functions.
+end_comment
+
+begin_decl_stmt
+name|class
+name|ImplicitExceptionSpecification
+block|{
+comment|// Pointer to allow copying
+name|ASTContext
+modifier|*
+name|Context
+decl_stmt|;
+comment|// We order exception specifications thus:
+comment|// noexcept is the most restrictive, but is only used in C++0x.
+comment|// throw() comes next.
+comment|// Then a throw(collected exceptions)
+comment|// Finally no specification.
+comment|// throw(...) is used instead if any called function uses it.
+comment|//
+comment|// If this exception specification cannot be known yet (for instance,
+comment|// because this is the exception specification for a defaulted default
+comment|// constructor and we haven't finished parsing the deferred parts of the
+comment|// class yet), the C++0x standard does not specify how to behave. We
+comment|// record this as an 'unknown' exception specification, which overrules
+comment|// any other specification (even 'none', to keep this rule simple).
+name|ExceptionSpecificationType
+name|ComputedEST
+decl_stmt|;
+name|llvm
+operator|::
+name|SmallPtrSet
+operator|<
+name|CanQualType
+operator|,
+literal|4
+operator|>
+name|ExceptionsSeen
+expr_stmt|;
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|QualType
+operator|,
+literal|4
+operator|>
+name|Exceptions
+expr_stmt|;
+name|void
+name|ClearExceptions
+parameter_list|()
+block|{
+name|ExceptionsSeen
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|Exceptions
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+block|}
+name|public
+label|:
+name|explicit
+name|ImplicitExceptionSpecification
+argument_list|(
+name|ASTContext
+operator|&
+name|Context
+argument_list|)
+operator|:
+name|Context
+argument_list|(
+operator|&
+name|Context
+argument_list|)
+operator|,
+name|ComputedEST
+argument_list|(
+argument|EST_BasicNoexcept
+argument_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|Context
+operator|.
+name|getLangOptions
+argument_list|()
+operator|.
+name|CPlusPlus0x
+condition|)
+name|ComputedEST
+operator|=
+name|EST_DynamicNone
+expr_stmt|;
+block|}
+comment|/// \brief Get the computed exception specification type.
+name|ExceptionSpecificationType
+name|getExceptionSpecType
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|ComputedEST
+operator|!=
+name|EST_ComputedNoexcept
+operator|&&
+literal|"noexcept(expr) should not be a possible result"
+argument_list|)
+block|;
+return|return
+name|ComputedEST
+return|;
+block|}
+comment|/// \brief The number of exceptions in the exception specification.
+name|unsigned
+name|size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Exceptions
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+comment|/// \brief The set of exceptions in the exception specification.
+specifier|const
+name|QualType
+operator|*
+name|data
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Exceptions
+operator|.
+name|data
+argument_list|()
+return|;
+block|}
+comment|/// \brief Integrate another called method into the collected data.
+name|void
+name|CalledDecl
+parameter_list|(
+name|CXXMethodDecl
+modifier|*
+name|Method
+parameter_list|)
+function_decl|;
+comment|/// \brief Integrate an invoked expression into the collected data.
+name|void
+name|CalledExpr
+parameter_list|(
+name|Expr
+modifier|*
+name|E
+parameter_list|)
+function_decl|;
+comment|/// \brief Specify that the exception specification can't be detemined yet.
+name|void
+name|SetDelayed
+parameter_list|()
+block|{
+name|ClearExceptions
+argument_list|()
+expr_stmt|;
+name|ComputedEST
+operator|=
+name|EST_Delayed
+expr_stmt|;
+block|}
+name|FunctionProtoType
+operator|::
+name|ExtProtoInfo
+name|getEPI
+argument_list|()
+specifier|const
+block|{
+name|FunctionProtoType
+operator|::
+name|ExtProtoInfo
+name|EPI
+block|;
+name|EPI
+operator|.
+name|ExceptionSpecType
+operator|=
+name|getExceptionSpecType
+argument_list|()
+block|;
+name|EPI
+operator|.
+name|NumExceptions
+operator|=
+name|size
+argument_list|()
+block|;
+name|EPI
+operator|.
+name|Exceptions
+operator|=
+name|data
+argument_list|()
+block|;
+return|return
+name|EPI
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/// \brief Determine what sort of exception specification a defaulted
+end_comment
+
+begin_comment
+comment|/// copy constructor of a class will have.
+end_comment
+
+begin_function_decl
+name|ImplicitExceptionSpecification
+name|ComputeDefaultedDefaultCtorExceptionSpec
+parameter_list|(
+name|CXXRecordDecl
+modifier|*
+name|ClassDecl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Determine what sort of exception specification a defaulted
+end_comment
+
+begin_comment
+comment|/// default constructor of a class will have, and whether the parameter
+end_comment
+
+begin_comment
+comment|/// will be const.
+end_comment
+
+begin_expr_stmt
+name|std
+operator|::
+name|pair
+operator|<
+name|ImplicitExceptionSpecification
+operator|,
+name|bool
+operator|>
+name|ComputeDefaultedCopyCtorExceptionSpecAndConst
+argument_list|(
+name|CXXRecordDecl
+operator|*
+name|ClassDecl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine what sort of exception specification a defautled
+end_comment
+
+begin_comment
+comment|/// copy assignment operator of a class will have, and whether the
+end_comment
+
+begin_comment
+comment|/// parameter will be const.
+end_comment
+
+begin_expr_stmt
+name|std
+operator|::
+name|pair
+operator|<
+name|ImplicitExceptionSpecification
+operator|,
+name|bool
+operator|>
+name|ComputeDefaultedCopyAssignmentExceptionSpecAndConst
+argument_list|(
+name|CXXRecordDecl
+operator|*
+name|ClassDecl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine what sort of exception specification a defaulted
+end_comment
+
+begin_comment
+comment|/// destructor of a class will have.
+end_comment
+
+begin_function_decl
+name|ImplicitExceptionSpecification
+name|ComputeDefaultedDtorExceptionSpec
+parameter_list|(
+name|CXXRecordDecl
+modifier|*
+name|ClassDecl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Determine if a defaulted default constructor ought to be
+end_comment
+
+begin_comment
+comment|/// deleted.
+end_comment
+
+begin_function_decl
+name|bool
+name|ShouldDeleteDefaultConstructor
+parameter_list|(
+name|CXXConstructorDecl
+modifier|*
+name|CD
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Determine if a defaulted copy constructor ought to be
+end_comment
+
+begin_comment
+comment|/// deleted.
+end_comment
+
+begin_function_decl
+name|bool
+name|ShouldDeleteCopyConstructor
+parameter_list|(
+name|CXXConstructorDecl
+modifier|*
+name|CD
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Determine if a defaulted copy assignment operator ought to be
+end_comment
+
+begin_comment
+comment|/// deleted.
+end_comment
+
+begin_function_decl
+name|bool
+name|ShouldDeleteCopyAssignmentOperator
+parameter_list|(
+name|CXXMethodDecl
+modifier|*
+name|MD
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Determine if a defaulted destructor ought to be deleted.
+end_comment
+
+begin_function_decl
+name|bool
+name|ShouldDeleteDestructor
+parameter_list|(
+name|CXXDestructorDecl
+modifier|*
+name|DD
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Declare the implicit default constructor for the given class.
 end_comment
 
@@ -13032,6 +13896,37 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// \brief Build an exception spec for destructors that don't have one.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// C++11 says that user-defined destructors with no exception spec get one
+end_comment
+
+begin_comment
+comment|/// that looks as if the destructor was implicitly declared.
+end_comment
+
+begin_function_decl
+name|void
+name|AdjustDestructorExceptionSpec
+parameter_list|(
+name|CXXRecordDecl
+modifier|*
+name|ClassDecl
+parameter_list|,
+name|CXXDestructorDecl
+modifier|*
+name|Destructor
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Declare all inherited constructors for the given class.
 end_comment
 
@@ -13124,9 +14019,6 @@ parameter_list|,
 name|CXXConstructorDecl
 modifier|*
 name|Constructor
-parameter_list|,
-name|unsigned
-name|TypeQuals
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -13291,6 +14183,29 @@ name|ObjectType
 parameter_list|,
 name|bool
 name|EnteringContext
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// Checks that reinterpret casts don't have undefined behavior.
+end_comment
+
+begin_function_decl
+name|void
+name|CheckCompatibleReinterpretCast
+parameter_list|(
+name|QualType
+name|SrcType
+parameter_list|,
+name|QualType
+name|DestType
+parameter_list|,
+name|bool
+name|IsDereference
+parameter_list|,
+name|SourceRange
+name|Range
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -13511,21 +14426,16 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// tryCaptureCXXThis - Try to capture a 'this' pointer.  Returns a
+comment|/// getAndCaptureCurrentThisType - Try to capture a 'this' pointer.  Returns
 end_comment
 
 begin_comment
-comment|/// pointer to an instance method whose 'this' pointer is
-end_comment
-
-begin_comment
-comment|/// capturable, or null if this is not possible.
+comment|/// the type of the 'this' pointer, or a null type if this is not possible.
 end_comment
 
 begin_function_decl
-name|CXXMethodDecl
-modifier|*
-name|tryCaptureCXXThis
+name|QualType
+name|getAndCaptureCurrentThisType
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -13830,6 +14740,11 @@ name|FunctionDecl
 modifier|*
 modifier|&
 name|Operator
+parameter_list|,
+name|bool
+name|Diagnose
+init|=
+name|true
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -13880,6 +14795,11 @@ name|FunctionDecl
 modifier|*
 modifier|&
 name|Operator
+parameter_list|,
+name|bool
+name|Diagnose
+init|=
+name|true
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -15170,8 +16090,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Expr
-modifier|*
+name|ExprResult
 name|BuildObjCEncodeExpression
 parameter_list|(
 name|SourceLocation
@@ -15423,12 +16342,28 @@ modifier|*
 name|Init
 parameter_list|,
 name|bool
-name|IsDefinition
+name|HasDeferredInit
 parameter_list|,
 name|bool
-name|Deleted
-init|=
-name|false
+name|IsDefinition
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ActOnCXXInClassMemberInitializer
+parameter_list|(
+name|Decl
+modifier|*
+name|VarDecl
+parameter_list|,
+name|SourceLocation
+name|EqualLoc
+parameter_list|,
+name|Expr
+modifier|*
+name|Init
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -15977,6 +16912,21 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ActOnFinishDelayedMemberDeclarations
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|Decl
+modifier|*
+name|Record
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ActOnFinishDelayedCXXMethodDeclaration
 parameter_list|(
 name|Scope
@@ -15992,12 +16942,8 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ActOnFinishDelayedMemberDeclarations
+name|ActOnFinishDelayedMemberInitializers
 parameter_list|(
-name|Scope
-modifier|*
-name|S
-parameter_list|,
 name|Decl
 modifier|*
 name|Record
@@ -16192,6 +17138,61 @@ parameter_list|(
 name|CXXConversionDecl
 modifier|*
 name|Conversion
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|CheckExplicitlyDefaultedMethods
+parameter_list|(
+name|CXXRecordDecl
+modifier|*
+name|Record
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|CheckExplicitlyDefaultedDefaultConstructor
+parameter_list|(
+name|CXXConstructorDecl
+modifier|*
+name|Ctor
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|CheckExplicitlyDefaultedCopyConstructor
+parameter_list|(
+name|CXXConstructorDecl
+modifier|*
+name|Ctor
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|CheckExplicitlyDefaultedCopyAssignment
+parameter_list|(
+name|CXXMethodDecl
+modifier|*
+name|Method
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|CheckExplicitlyDefaultedDestructor
+parameter_list|(
+name|CXXDestructorDecl
+modifier|*
+name|Dtor
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -16642,6 +17643,11 @@ name|NamingClass
 parameter_list|,
 name|DeclAccessPair
 name|FoundDecl
+parameter_list|,
+name|bool
+name|Diagnose
+init|=
+name|true
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -16669,6 +17675,26 @@ name|bool
 name|IsCopyBindingRefToTemp
 init|=
 name|false
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|AccessResult
+name|CheckConstructorAccess
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|CXXConstructorDecl
+modifier|*
+name|D
+parameter_list|,
+name|AccessSpecifier
+name|Access
+parameter_list|,
+name|PartialDiagnostic
+name|PD
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -17324,6 +18350,8 @@ block|,
 name|TPC_FriendFunctionTemplate
 block|,
 name|TPC_FriendFunctionTemplateDefinition
+block|,
+name|TPC_TypeAliasTemplate
 block|}
 enum|;
 end_enum
@@ -17353,6 +18381,9 @@ name|MatchTemplateParametersToScopeSpecifier
 parameter_list|(
 name|SourceLocation
 name|DeclStartLoc
+parameter_list|,
+name|SourceLocation
+name|DeclLoc
 parameter_list|,
 specifier|const
 name|CXXScopeSpec
@@ -21336,7 +22367,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function_decl
-name|bool
+name|void
 name|PerformPendingInstantiations
 parameter_list|(
 name|bool
@@ -22048,7 +23079,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|void
+name|bool
 name|CheckForwardProtocolDeclarationForCircularDependency
 argument_list|(
 name|IdentifierInfo
@@ -22655,6 +23686,9 @@ argument_list|,
 name|ParsedType
 name|ReturnType
 argument_list|,
+name|SourceLocation
+name|SelectorStartLoc
+argument_list|,
 name|Selector
 name|Sel
 argument_list|,
@@ -23026,6 +24060,64 @@ name|RBracLoc
 parameter_list|,
 name|MultiExprArg
 name|Args
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Check whether the given new method is a valid override of the
+end_comment
+
+begin_comment
+comment|/// given overridden method, and set any properties that should be inherited.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns True if an error occurred.
+end_comment
+
+begin_function_decl
+name|bool
+name|CheckObjCMethodOverride
+parameter_list|(
+name|ObjCMethodDecl
+modifier|*
+name|NewMethod
+parameter_list|,
+specifier|const
+name|ObjCMethodDecl
+modifier|*
+name|Overridden
+parameter_list|,
+name|bool
+name|IsImplementation
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Check whether the given method overrides any methods in its class,
+end_comment
+
+begin_comment
+comment|/// calling \c CheckObjCMethodOverride for each overridden method.
+end_comment
+
+begin_function_decl
+name|bool
+name|CheckObjCMethodOverrides
+parameter_list|(
+name|ObjCMethodDecl
+modifier|*
+name|NewMethod
+parameter_list|,
+name|DeclContext
+modifier|*
+name|DC
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -25038,6 +26130,9 @@ begin_function_decl
 name|bool
 name|CheckMessageArgumentTypes
 parameter_list|(
+name|QualType
+name|ReceiverType
+parameter_list|,
 name|Expr
 modifier|*
 modifier|*
@@ -25056,6 +26151,9 @@ parameter_list|,
 name|bool
 name|isClassMessage
 parameter_list|,
+name|bool
+name|isSuperMessage
+parameter_list|,
 name|SourceLocation
 name|lbrac
 parameter_list|,
@@ -25069,6 +26167,58 @@ parameter_list|,
 name|ExprValueKind
 modifier|&
 name|VK
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Determine the result of a message send expression based on
+end_comment
+
+begin_comment
+comment|/// the type of the receiver, the method expected to receive the message,
+end_comment
+
+begin_comment
+comment|/// and the form of the message send.
+end_comment
+
+begin_function_decl
+name|QualType
+name|getMessageSendResultType
+parameter_list|(
+name|QualType
+name|ReceiverType
+parameter_list|,
+name|ObjCMethodDecl
+modifier|*
+name|Method
+parameter_list|,
+name|bool
+name|isClassMessage
+parameter_list|,
+name|bool
+name|isSuperMessage
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief If the given expression involves a message send to a method
+end_comment
+
+begin_comment
+comment|/// with a related result type, emit a note describing what happened.
+end_comment
+
+begin_function_decl
+name|void
+name|EmitRelatedResultTypeNote
+parameter_list|(
+specifier|const
+name|Expr
+modifier|*
+name|E
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -26564,12 +27714,17 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|CheckMemsetArguments
+name|CheckMemsetcpymoveArguments
 parameter_list|(
 specifier|const
 name|CallExpr
 modifier|*
 name|Call
+parameter_list|,
+specifier|const
+name|IdentifierInfo
+modifier|*
+name|FnName
 parameter_list|)
 function_decl|;
 end_function_decl

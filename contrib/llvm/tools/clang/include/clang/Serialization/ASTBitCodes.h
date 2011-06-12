@@ -609,7 +609,12 @@ name|ORIGINAL_FILE_NAME
 init|=
 literal|19
 block|,
-comment|/// Record #20 intentionally left blank.
+comment|/// \brief Record code for the file ID of the original file used to
+comment|/// generate the AST file.
+name|ORIGINAL_FILE_ID
+init|=
+literal|20
+block|,
 comment|/// \brief Record code for the version control branch and revision
 comment|/// information of the compiler used to build this AST file.
 name|VERSION_CONTROL_BRANCH_REVISION
@@ -738,6 +743,17 @@ comment|/// \brief Record code for enabled OpenCL extensions.
 name|OPENCL_EXTENSIONS
 init|=
 literal|43
+block|,
+comment|/// \brief The list of delegating constructor declarations.
+name|DELEGATING_CTORS
+init|=
+literal|44
+block|,
+comment|/// \brief Record code for the table of offsets into the block
+comment|/// of file source-location information.
+name|FILE_SOURCE_LOCATION_OFFSETS
+init|=
+literal|45
 block|}
 enum|;
 comment|/// \brief Record types used within a source manager block.
@@ -1007,6 +1023,13 @@ name|NUM_PREDEF_TYPE_IDS
 init|=
 literal|100
 decl_stmt|;
+comment|/// \brief The number of allowed abbreviations in bits
+specifier|const
+name|unsigned
+name|NUM_ALLOWED_ABBREVS_SIZE
+init|=
+literal|4
+decl_stmt|;
 comment|/// \brief Record codes for each kind of type.
 comment|///
 comment|/// These constants describe the type records that can occur within a
@@ -1200,6 +1223,11 @@ comment|/// \brief A AutoType record.
 name|TYPE_AUTO
 init|=
 literal|38
+block|,
+comment|/// \brief A UnaryTransformType record.
+name|TYPE_UNARY_TRANSFORM
+init|=
+literal|39
 block|}
 enum|;
 comment|/// \brief The type IDs for special types constructed by semantic
@@ -1485,6 +1513,9 @@ name|DECL_NON_TYPE_TEMPLATE_PARM
 block|,
 comment|/// \brief A TemplateTemplateParmDecl record.
 name|DECL_TEMPLATE_TEMPLATE_PARM
+block|,
+comment|/// \brief A TypeAliasTemplateDecl record.
+name|DECL_TYPE_ALIAS_TEMPLATE
 block|,
 comment|/// \brief A StaticAssertDecl record.
 name|DECL_STATIC_ASSERT
@@ -1847,7 +1878,11 @@ block|,
 comment|// SubstNonTypeTemplateParmPackExpr
 comment|// CUDA
 name|EXPR_CUDA_KERNEL_CALL
+block|,
 comment|// CUDAKernelCallExpr
+comment|// OpenCL
+name|EXPR_ASTYPE
+comment|// An AsTypeExpr record.
 block|}
 enum|;
 comment|/// \brief The kinds of designators that can occur in a
@@ -1875,6 +1910,20 @@ comment|/// \brief GNU array range designator.
 name|DESIG_ARRAY_RANGE
 init|=
 literal|3
+block|}
+enum|;
+comment|/// \brief The different kinds of data that can occur in a
+comment|/// CtorInitializer.
+enum|enum
+name|CtorInitializerType
+block|{
+name|CTOR_INITIALIZER_BASE
+block|,
+name|CTOR_INITIALIZER_DELEGATING
+block|,
+name|CTOR_INITIALIZER_MEMBER
+block|,
+name|CTOR_INITIALIZER_INDIRECT_MEMBER
 block|}
 enum|;
 comment|/// @}

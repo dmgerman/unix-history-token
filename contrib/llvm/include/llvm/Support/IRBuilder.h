@@ -300,6 +300,14 @@ name|InsertPt
 operator|=
 name|I
 expr_stmt|;
+name|SetCurrentDebugLocation
+argument_list|(
+name|I
+operator|->
+name|getDebugLoc
+argument_list|()
+argument_list|)
+expr_stmt|;
 block|}
 comment|/// SetInsertPoint - This specifies that created instructions should be
 comment|/// inserted at the specified point.
@@ -381,6 +389,14 @@ name|CurDbgLocation
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// getCurrentFunctionReturnType - Get the return type of the current function
+comment|/// that we're emitting into.
+specifier|const
+name|Type
+modifier|*
+name|getCurrentFunctionReturnType
+parameter_list|()
+function|const;
 comment|/// InsertPoint - A saved insertion point.
 name|class
 name|InsertPoint
@@ -696,6 +712,7 @@ name|C
 argument_list|)
 return|;
 block|}
+comment|/// getInt - Get a constant integer value.
 name|ConstantInt
 modifier|*
 name|getInt
@@ -870,15 +887,9 @@ name|AddrSpace
 argument_list|)
 return|;
 block|}
-comment|/// getCurrentFunctionReturnType - Get the return type of the current function
-comment|/// that we're emitting into.
-specifier|const
-name|Type
-operator|*
-name|getCurrentFunctionReturnType
-argument_list|()
-specifier|const
-expr_stmt|;
+comment|//===--------------------------------------------------------------------===//
+comment|// Intrinsic creation methods
+comment|//===--------------------------------------------------------------------===//
 comment|/// CreateMemSet - Create and insert a memset to the specified pointer and the
 comment|/// specified value.  If the pointer isn't an i8*, it will be converted.  If a
 comment|/// TBAA tag is specified, it will be added to the instruction.
@@ -1131,6 +1142,40 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+comment|/// CreateLifetimeStart - Create a lifetime.start intrinsic.  If the pointer
+comment|/// isn't i8* it will be converted.
+name|CallInst
+modifier|*
+name|CreateLifetimeStart
+parameter_list|(
+name|Value
+modifier|*
+name|Ptr
+parameter_list|,
+name|ConstantInt
+modifier|*
+name|Size
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// CreateLifetimeEnd - Create a lifetime.end intrinsic.  If the pointer isn't
+comment|/// i8* it will be converted.
+name|CallInst
+modifier|*
+name|CreateLifetimeEnd
+parameter_list|(
+name|Value
+modifier|*
+name|Ptr
+parameter_list|,
+name|ConstantInt
+modifier|*
+name|Size
+init|=
+literal|0
+parameter_list|)
+function_decl|;
 name|private
 label|:
 name|Value
@@ -1364,6 +1409,14 @@ block|{
 name|SetInsertPoint
 argument_list|(
 name|IP
+argument_list|)
+block|;
+name|SetCurrentDebugLocation
+argument_list|(
+name|IP
+operator|->
+name|getDebugLoc
+argument_list|()
 argument_list|)
 block|;   }
 name|IRBuilder

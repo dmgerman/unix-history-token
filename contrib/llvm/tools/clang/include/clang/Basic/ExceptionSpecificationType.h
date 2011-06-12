@@ -87,7 +87,10 @@ name|EST_BasicNoexcept
 block|,
 comment|///< noexcept
 name|EST_ComputedNoexcept
+block|,
 comment|///< noexcept(expression)
+name|EST_Delayed
+comment|///< not known yet
 block|}
 enum|;
 specifier|inline

@@ -227,8 +227,8 @@ name|IsDebug
 range|:
 literal|1
 decl_stmt|;
-comment|/// SmallContents - Thisreally should be part of the Contents union, but lives
-comment|/// out here so we can get a better packed struct.
+comment|/// SmallContents - This really should be part of the Contents union, but
+comment|/// lives out here so we can get a better packed struct.
 comment|/// MO_Register: Register number.
 comment|/// OffsetedInfo: Low bits of offset.
 union|union
@@ -1800,7 +1800,7 @@ specifier|static
 name|MachineOperand
 name|CreateFI
 parameter_list|(
-name|unsigned
+name|int
 name|Idx
 parameter_list|)
 block|{

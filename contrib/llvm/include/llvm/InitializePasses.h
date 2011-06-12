@@ -240,6 +240,13 @@ modifier|&
 parameter_list|)
 function_decl|;
 name|void
+name|initializeBranchProbabilityInfoPass
+parameter_list|(
+name|PassRegistry
+modifier|&
+parameter_list|)
+function_decl|;
+name|void
 name|initializeBreakCriticalEdgesPass
 parameter_list|(
 name|PassRegistry

@@ -207,8 +207,9 @@ decl_stmt|;
 comment|/// This function waits for the program to exit. This function will block
 comment|/// the current program until the invoked program exits.
 comment|/// @returns an integer result code indicating the status of the program.
-comment|/// A zero or positive value indicates the result code of the program. A
-comment|/// negative value is the signal number on which it terminated.
+comment|/// A zero or positive value indicates the result code of the program.
+comment|/// -1 indicates failure to execute
+comment|/// -2 indicates a crash during execution or timeout
 comment|/// @see Execute
 comment|/// @brief Waits for the program to exit.
 name|int

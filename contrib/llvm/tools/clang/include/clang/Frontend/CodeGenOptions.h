@@ -378,6 +378,13 @@ operator|::
 name|string
 name|CodeModel
 expr_stmt|;
+comment|/// The filename with path we use for coverage files. The extension will be
+comment|/// replaced.
+name|std
+operator|::
+name|string
+name|CoverageFile
+expr_stmt|;
 comment|/// Enable additional debugging information.
 name|std
 operator|::

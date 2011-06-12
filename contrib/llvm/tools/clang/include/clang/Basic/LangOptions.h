@@ -215,6 +215,13 @@ literal|1
 decl_stmt|;
 comment|// Objective-C auto-synthesized properties.
 name|unsigned
+name|ObjCInferRelatedResultType
+range|:
+literal|1
+decl_stmt|;
+comment|// Infer Objective-C related return
+comment|// types
+name|unsigned
 name|AppleKext
 range|:
 literal|1
@@ -687,6 +694,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|ObjCDefaultSynthProperties
+operator|=
+literal|0
+expr_stmt|;
+name|ObjCInferRelatedResultType
 operator|=
 literal|0
 expr_stmt|;

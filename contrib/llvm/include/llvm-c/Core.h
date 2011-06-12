@@ -742,6 +742,13 @@ comment|/**< Always true (always folded) */
 block|}
 name|LLVMRealPredicate
 typedef|;
+name|void
+name|LLVMInitializeCore
+parameter_list|(
+name|LLVMPassRegistryRef
+name|R
+parameter_list|)
+function_decl|;
 comment|/*===-- Error handling ----------------------------------------------------===*/
 name|void
 name|LLVMDisposeMessage
@@ -5326,6 +5333,11 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
+operator|(
+name|void
+operator|)
+name|Length
+expr_stmt|;
 return|return
 name|reinterpret_cast
 operator|<

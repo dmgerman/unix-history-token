@@ -1042,12 +1042,6 @@ name|SSEDomainShift
 operator|+
 literal|2
 block|,
-name|OpcodeMask
-init|=
-literal|0xFFULL
-operator|<<
-name|OpcodeShift
-block|,
 comment|//===------------------------------------------------------------------===//
 comment|/// VEX - The opcode prefix used by AVX instructions
 name|VEXShift

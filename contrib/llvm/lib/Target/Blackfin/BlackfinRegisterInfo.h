@@ -151,7 +151,6 @@ operator|::
 name|PRegClass
 return|;
 block|}
-comment|// bool hasReservedCallFrame(MachineFunction&MF) const;
 name|bool
 name|requiresRegisterScavenging
 argument_list|(
@@ -206,6 +205,15 @@ specifier|const
 block|;
 name|int
 name|getDwarfRegNum
+argument_list|(
+argument|unsigned RegNum
+argument_list|,
+argument|bool isEH
+argument_list|)
+specifier|const
+block|;
+name|int
+name|getLLVMRegNum
 argument_list|(
 argument|unsigned RegNum
 argument_list|,

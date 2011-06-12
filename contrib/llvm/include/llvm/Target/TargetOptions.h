@@ -229,12 +229,6 @@ specifier|extern
 name|bool
 name|JITEmitDebugInfoToDisk
 decl_stmt|;
-comment|/// UnwindTablesMandatory - This flag indicates that unwind tables should
-comment|/// be emitted for all functions.
-specifier|extern
-name|bool
-name|UnwindTablesMandatory
-decl_stmt|;
 comment|/// GuaranteedTailCallOpt - This flag is enabled when -tailcallopt is
 comment|/// specified on the commandline. When the flag is on, participating targets
 comment|/// will perform tail call optimization on all calls which use the fastcc

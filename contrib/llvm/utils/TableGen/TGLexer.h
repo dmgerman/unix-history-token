@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vector>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -259,6 +265,17 @@ comment|/// by the SourceMgr object.
 name|int
 name|CurBuffer
 decl_stmt|;
+comment|/// Dependencies - This is the list of all included files.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|Dependencies
+expr_stmt|;
 name|public
 label|:
 name|TGLexer
@@ -283,6 +300,24 @@ name|CurCode
 operator|=
 name|LexToken
 argument_list|()
+return|;
+block|}
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|getDependencies
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Dependencies
 return|;
 block|}
 name|tgtok

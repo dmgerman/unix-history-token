@@ -90,6 +90,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineFunctionPass.h"
 end_include
 
@@ -97,6 +103,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|LiveInterval
+decl_stmt|;
 name|class
 name|VirtRegMap
 decl_stmt|;
@@ -137,6 +146,17 @@ argument_list|,
 argument|unsigned NewReg
 argument_list|,
 argument|unsigned SubIdx
+argument_list|)
+block|;
+comment|/// splitRegister - Move any user variables in OldReg to the live ranges in
+comment|/// NewRegs where they are live. Mark the values as unavailable where no new
+comment|/// register is live.
+name|void
+name|splitRegister
+argument_list|(
+argument|unsigned OldReg
+argument_list|,
+argument|ArrayRef<LiveInterval*> NewRegs
 argument_list|)
 block|;
 comment|/// emitDebugValues - Emit new DBG_VALUE instructions reflecting the changes

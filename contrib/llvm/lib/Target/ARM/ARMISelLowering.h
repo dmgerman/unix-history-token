@@ -640,6 +640,18 @@ argument|int64_t Imm
 argument_list|)
 specifier|const
 block|;
+comment|/// isLegalAddImmediate - Return true if the specified immediate is legal
+comment|/// add immediate, that is the target has add instructions which can
+comment|/// add a register and the immediate without having to materialize
+comment|/// the immediate into a register.
+name|virtual
+name|bool
+name|isLegalAddImmediate
+argument_list|(
+argument|int64_t Imm
+argument_list|)
+specifier|const
+block|;
 comment|/// getPreIndexedAddressParts - returns true by value, base pointer and
 comment|/// offset pointer and addressing mode by reference if the node's address
 comment|/// can be legally represented as pre-indexed load / store address.
@@ -766,7 +778,7 @@ name|LowerAsmOperandForConstraint
 argument_list|(
 argument|SDValue Op
 argument_list|,
-argument|char ConstraintLetter
+argument|std::string&Constraint
 argument_list|,
 argument|std::vector<SDValue>&Ops
 argument_list|,
@@ -793,15 +805,6 @@ operator|*
 name|getRegClassFor
 argument_list|(
 argument|EVT VT
-argument_list|)
-specifier|const
-block|;
-comment|/// getFunctionAlignment - Return the Log2 alignment of this function.
-name|virtual
-name|unsigned
-name|getFunctionAlignment
-argument_list|(
-argument|const Function *F
 argument_list|)
 specifier|const
 block|;
