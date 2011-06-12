@@ -552,7 +552,7 @@ literal|0
 condition|)
 name|read_profile
 argument_list|(
-literal|".profile"
+literal|"${HOME-}/.profile"
 argument_list|)
 expr_stmt|;
 else|else
