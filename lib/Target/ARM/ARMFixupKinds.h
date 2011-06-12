@@ -110,7 +110,7 @@ block|,
 comment|// fixup_arm_thumb_br - 12-bit fixup for Thumb B instructions.
 name|fixup_arm_thumb_br
 block|,
-comment|// fixup_arm_thumb_blx - Fixup for Thumb BL instructions.
+comment|// fixup_arm_thumb_bl - Fixup for Thumb BL instructions.
 name|fixup_arm_thumb_bl
 block|,
 comment|// fixup_arm_thumb_blx - Fixup for Thumb BLX instructions.

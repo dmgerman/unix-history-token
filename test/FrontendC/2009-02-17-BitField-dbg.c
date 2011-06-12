@@ -8,7 +8,7 @@ comment|// RUN: %llvmgcc -S -O0 -g %s -o - | \
 end_comment
 
 begin_comment
-comment|// RUN: llc --disable-fp-elim -o 2009-02-17-BitField-dbg.s
+comment|// RUN: llc -disable-cfi --disable-fp-elim -o 2009-02-17-BitField-dbg.s
 end_comment
 
 begin_comment

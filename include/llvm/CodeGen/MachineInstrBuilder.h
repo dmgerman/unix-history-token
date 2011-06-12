@@ -401,7 +401,7 @@ name|MachineInstrBuilder
 modifier|&
 name|addFrameIndex
 argument_list|(
-name|unsigned
+name|int
 name|Idx
 argument_list|)
 decl|const

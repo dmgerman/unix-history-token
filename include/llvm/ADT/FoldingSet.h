@@ -2859,42 +2859,7 @@ specifier|inline
 name|void
 name|Profile
 argument_list|(
-argument|const T *X
-argument_list|,
-argument|FoldingSetNodeID&ID
-argument_list|)
-block|{
-name|ID
-operator|.
-name|AddPointer
-argument_list|(
-name|X
-argument_list|)
-block|;   }
-block|}
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-expr|struct
-name|FoldingSetTrait
-operator|<
-specifier|const
-name|T
-operator|*
-operator|>
-block|{
-specifier|static
-specifier|inline
-name|void
-name|Profile
-argument_list|(
-argument|const T *X
+argument|T *X
 argument_list|,
 argument|FoldingSetNodeID&ID
 argument_list|)

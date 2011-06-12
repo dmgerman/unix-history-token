@@ -327,14 +327,6 @@ argument|EVT VT
 argument_list|)
 specifier|const
 block|;
-name|virtual
-name|unsigned
-name|getFunctionAlignment
-argument_list|(
-argument|const Function *F
-argument_list|)
-specifier|const
-block|;
 name|private
 operator|:
 comment|// Subtarget Info

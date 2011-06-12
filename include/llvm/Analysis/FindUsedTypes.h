@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Pass.h"
+file|"llvm/ADT/SetVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<set>
+file|"llvm/Pass.h"
 end_include
 
 begin_decl_stmt
@@ -87,9 +87,7 @@ range|:
 name|public
 name|ModulePass
 block|{
-name|std
-operator|::
-name|set
+name|SetVector
 operator|<
 specifier|const
 name|Type
@@ -125,9 +123,7 @@ comment|/// getTypes - After the pass has been run, return the set containing al
 comment|/// the types used in the module.
 comment|///
 specifier|const
-name|std
-operator|::
-name|set
+name|SetVector
 operator|<
 specifier|const
 name|Type

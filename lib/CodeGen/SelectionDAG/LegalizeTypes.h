@@ -170,34 +170,6 @@ block|}
 enum|;
 name|private
 label|:
-enum|enum
-name|LegalizeAction
-block|{
-name|Legal
-block|,
-comment|// The target natively supports this type.
-name|PromoteInteger
-block|,
-comment|// Replace this integer type with a larger one.
-name|ExpandInteger
-block|,
-comment|// Split this integer type into two of half the size.
-name|SoftenFloat
-block|,
-comment|// Convert this float type to a same size integer type.
-name|ExpandFloat
-block|,
-comment|// Split this float type into two of half the size.
-name|ScalarizeVector
-block|,
-comment|// Replace this one-element vector with its element type.
-name|SplitVector
-block|,
-comment|// Split this vector type into two of half the size.
-name|WidenVector
-comment|// This vector type should be widened into a larger vector.
-block|}
-enum|;
 comment|/// ValueTypeActions - This is a bitvector that contains two bits for each
 comment|/// simple value type, where the two bits correspond to the LegalizeAction
 comment|/// enum from TargetLowering.  This can be queried with "getTypeAction(VT)".
@@ -207,99 +179,19 @@ name|ValueTypeActionImpl
 name|ValueTypeActions
 expr_stmt|;
 comment|/// getTypeAction - Return how we should legalize values of this type.
-name|LegalizeAction
+name|TargetLowering
+operator|::
+name|LegalizeTypeAction
 name|getTypeAction
 argument_list|(
-name|EVT
-name|VT
+argument|EVT VT
 argument_list|)
-decl|const
+specifier|const
 block|{
-switch|switch
-condition|(
-name|ValueTypeActions
-operator|.
-name|getTypeAction
-argument_list|(
-name|VT
-argument_list|)
-condition|)
-block|{
-default|default:
-name|assert
-argument_list|(
-name|false
-operator|&&
-literal|"Unknown legalize action!"
-argument_list|)
-expr_stmt|;
-case|case
-name|TargetLowering
-operator|::
-name|Legal
-case|:
 return|return
-name|Legal
-return|;
-case|case
-name|TargetLowering
-operator|::
-name|Promote
-case|:
-comment|// Promote can mean
-comment|//   1) For integers, use a larger integer type (e.g. i8 -> i32).
-comment|//   2) For vectors, use a wider vector type (e.g. v3i32 -> v4i32).
-if|if
-condition|(
-operator|!
-name|VT
-operator|.
-name|isVector
-argument_list|()
-condition|)
-return|return
-name|PromoteInteger
-return|;
-return|return
-name|WidenVector
-return|;
-case|case
-name|TargetLowering
-operator|::
-name|Expand
-case|:
-comment|// Expand can mean
-comment|// 1) split scalar in half, 2) convert a float to an integer,
-comment|// 3) scalarize a single-element vector, 4) split a vector in two.
-if|if
-condition|(
-operator|!
-name|VT
-operator|.
-name|isVector
-argument_list|()
-condition|)
-block|{
-if|if
-condition|(
-name|VT
-operator|.
-name|isInteger
-argument_list|()
-condition|)
-return|return
-name|ExpandInteger
-return|;
-if|if
-condition|(
-name|VT
-operator|.
-name|getSizeInBits
-argument_list|()
-operator|==
 name|TLI
 operator|.
-name|getTypeToTransformTo
+name|getTypeAction
 argument_list|(
 operator|*
 name|DAG
@@ -309,33 +201,7 @@ argument_list|()
 argument_list|,
 name|VT
 argument_list|)
-operator|.
-name|getSizeInBits
-argument_list|()
-condition|)
-return|return
-name|SoftenFloat
 return|;
-return|return
-name|ExpandFloat
-return|;
-block|}
-if|if
-condition|(
-name|VT
-operator|.
-name|getVectorNumElements
-argument_list|()
-operator|==
-literal|1
-condition|)
-return|return
-name|ScalarizeVector
-return|;
-return|return
-name|SplitVector
-return|;
-block|}
 block|}
 comment|/// isTypeLegal - Return true if this type is legal on this target.
 name|bool
@@ -347,16 +213,22 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|ValueTypeActions
+name|TLI
 operator|.
 name|getTypeAction
 argument_list|(
+operator|*
+name|DAG
+operator|.
+name|getContext
+argument_list|()
+argument_list|,
 name|VT
 argument_list|)
 operator|==
 name|TargetLowering
 operator|::
-name|Legal
+name|TypeLegal
 return|;
 block|}
 comment|/// IgnoreNodeResults - Pretend all of this node's results are legal.
@@ -1050,6 +922,46 @@ name|N
 parameter_list|)
 function_decl|;
 name|SDValue
+name|PromoteIntRes_EXTRACT_SUBVECTOR
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
+name|PromoteIntRes_VECTOR_SHUFFLE
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
+name|PromoteIntRes_BUILD_VECTOR
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
+name|PromoteIntRes_SCALAR_TO_VECTOR
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
+name|PromoteIntRes_INSERT_VECTOR_ELT
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
 name|PromoteIntRes_BITCAST
 parameter_list|(
 name|SDNode
@@ -1381,6 +1293,30 @@ name|N
 parameter_list|,
 name|unsigned
 name|OpNo
+parameter_list|)
+function_decl|;
+name|SDValue
+name|PromoteIntOp_EXTRACT_ELEMENT
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
+name|PromoteIntOp_EXTRACT_VECTOR_ELT
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
+name|PromoteIntOp_CONCAT_VECTORS
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
 parameter_list|)
 function_decl|;
 name|SDValue

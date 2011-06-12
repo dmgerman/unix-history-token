@@ -543,11 +543,17 @@ name|VK_ARM_GOTTPOFF
 block|,
 name|VK_PPC_TOC
 block|,
-name|VK_PPC_HA16
+name|VK_PPC_DARWIN_HA16
 block|,
 comment|// ha16(symbol)
-name|VK_PPC_LO16
+name|VK_PPC_DARWIN_LO16
+block|,
 comment|// lo16(symbol)
+name|VK_PPC_GAS_HA16
+block|,
+comment|// symbol@ha
+name|VK_PPC_GAS_LO16
+comment|// symbol@l
 block|}
 block|;
 name|private

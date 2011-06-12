@@ -19,8 +19,9 @@ name|y
 parameter_list|)
 block|{
 comment|// CHECK: bar
-comment|// CHECK: movq  %r9, %r10
-comment|// CHECK: movq  %rdi, %r9
+comment|// CHECK-NOT: {{, %r9$}}
+comment|// CHECK: movq  %r9,
+comment|// CHECK: movq  {{.*}}, %r9
 comment|// CHECK: bar
 specifier|register
 name|int

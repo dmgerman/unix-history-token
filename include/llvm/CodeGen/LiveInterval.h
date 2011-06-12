@@ -2028,8 +2028,12 @@ comment|/// Returns true if the live interval is zero length, i.e. no live range
 comment|/// span instructions. It doesn't pay to spill such an interval.
 name|bool
 name|isZeroLength
-argument_list|()
-specifier|const
+argument_list|(
+name|SlotIndexes
+operator|*
+name|Indexes
+argument_list|)
+decl|const
 block|{
 for|for
 control|(
@@ -2053,16 +2057,24 @@ name|i
 control|)
 if|if
 condition|(
+name|Indexes
+operator|->
+name|getNextNonNullIndex
+argument_list|(
+name|i
+operator|->
+name|start
+argument_list|)
+operator|.
+name|getBaseIndex
+argument_list|()
+operator|<
 name|i
 operator|->
 name|end
 operator|.
-name|getPrevIndex
+name|getBaseIndex
 argument_list|()
-operator|>
-name|i
-operator|->
-name|start
 condition|)
 return|return
 name|false
@@ -2229,13 +2241,7 @@ operator|)
 decl_stmt|;
 comment|// DO NOT IMPLEMENT
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
 specifier|inline
 name|raw_ostream
 operator|&
@@ -2263,57 +2269,18 @@ return|return
 name|OS
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// ConnectedVNInfoEqClasses - Helper class that can divide VNInfos in a
-end_comment
-
-begin_comment
 comment|/// LiveInterval into equivalence clases of connected components. A
-end_comment
-
-begin_comment
 comment|/// LiveInterval that has multiple connected components can be broken into
-end_comment
-
-begin_comment
 comment|/// multiple LiveIntervals.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Given a LiveInterval that may have multiple connected components, run:
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|///   unsigned numComps = ConEQ.Classify(LI);
-end_comment
-
-begin_comment
 comment|///   if (numComps> 1) {
-end_comment
-
-begin_comment
 comment|///     // allocate numComps-1 new LiveIntervals into LIS[1..]
-end_comment
-
-begin_comment
 comment|///     ConEQ.Distribute(LIS);
-end_comment
-
-begin_comment
 comment|/// }
-end_comment
-
-begin_decl_stmt
 name|class
 name|ConnectedVNInfoEqClasses
 block|{
@@ -2404,14 +2371,11 @@ name|MRI
 parameter_list|)
 function_decl|;
 block|}
+empty_stmt|;
+block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif

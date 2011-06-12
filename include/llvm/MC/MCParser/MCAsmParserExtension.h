@@ -243,7 +243,7 @@ name|getStreamer
 argument_list|()
 return|;
 block|}
-name|void
+name|bool
 name|Warning
 parameter_list|(
 name|SMLoc

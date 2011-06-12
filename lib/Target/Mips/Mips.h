@@ -112,6 +112,15 @@ modifier|&
 name|TM
 parameter_list|)
 function_decl|;
+name|FunctionPass
+modifier|*
+name|createMipsEmitGPRestorePass
+parameter_list|(
+name|MipsTargetMachine
+modifier|&
+name|TM
+parameter_list|)
+function_decl|;
 specifier|extern
 name|Target
 name|TheMipsTarget

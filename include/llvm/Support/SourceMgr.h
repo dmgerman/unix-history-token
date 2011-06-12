@@ -411,6 +411,7 @@ block|}
 comment|/// AddIncludeFile - Search for a file with the specified name in the current
 comment|/// directory or in one of the IncludeDirs.  If no file is found, this returns
 comment|/// ~0, otherwise it returns the buffer ID of the stacked file.
+comment|/// The full path to the included file can be found in IncludedFile.
 name|unsigned
 name|AddIncludeFile
 argument_list|(
@@ -423,6 +424,12 @@ name|Filename
 argument_list|,
 name|SMLoc
 name|IncludeLoc
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|IncludedFile
 argument_list|)
 decl_stmt|;
 comment|/// FindBufferContainingLoc - Return the ID of the buffer containing the

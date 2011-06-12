@@ -862,9 +862,7 @@ expr|}
 block|;
 comment|/// BackedgeTakenCounts - Cache the backedge-taken count of the loops for
 comment|/// this function as they are computed.
-name|std
-operator|::
-name|map
+name|DenseMap
 operator|<
 specifier|const
 name|Loop
@@ -879,9 +877,7 @@ comment|/// the PHI instructions that we attempt to compute constant evolutions 
 comment|/// This allows us to avoid potentially expensive recomputation of these
 comment|/// properties.  An instruction maps to null if we are unable to compute its
 comment|/// exit value.
-name|std
-operator|::
-name|map
+name|DenseMap
 operator|<
 name|PHINode
 operator|*
@@ -894,9 +890,7 @@ block|;
 comment|/// ValuesAtScopes - This map contains entries for all the expressions
 comment|/// that we attempt to compute getSCEVAtScope information for, which can
 comment|/// be expensive in extreme cases.
-name|std
-operator|::
-name|map
+name|DenseMap
 operator|<
 specifier|const
 name|SCEV
@@ -918,9 +912,7 @@ expr|>
 name|ValuesAtScopes
 block|;
 comment|/// LoopDispositions - Memoized computeLoopDisposition results.
-name|std
-operator|::
-name|map
+name|DenseMap
 operator|<
 specifier|const
 name|SCEV
@@ -955,9 +947,7 @@ name|L
 argument_list|)
 block|;
 comment|/// BlockDispositions - Memoized computeBlockDisposition results.
-name|std
-operator|::
-name|map
+name|DenseMap
 operator|<
 specifier|const
 name|SCEV

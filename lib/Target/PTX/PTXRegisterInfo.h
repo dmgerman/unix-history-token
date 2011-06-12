@@ -216,6 +216,27 @@ literal|0
 argument_list|)
 return|;
 block|}
+name|virtual
+name|int
+name|getLLVMRegNum
+argument_list|(
+argument|unsigned RegNum
+argument_list|,
+argument|bool isEH
+argument_list|)
+specifier|const
+block|{
+return|return
+name|PTXGenRegisterInfo
+operator|::
+name|getLLVMRegNumFull
+argument_list|(
+name|RegNum
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
 expr|}
 block|;
 comment|// struct PTXRegisterInfo

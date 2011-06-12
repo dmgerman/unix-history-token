@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineFunction.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/ValueTypes.h"
 end_include
 
@@ -589,10 +595,13 @@ operator|&
 name|State
 argument_list|)
 typedef|;
+comment|/// ParmContext - This enum tracks whether calling convention lowering is in
+comment|/// the context of prologue or call generation. Not all backends make use of
+comment|/// this information.
 typedef|typedef
 enum|enum
 block|{
-name|Invalid
+name|Unknown
 block|,
 name|Prologue
 block|,
@@ -606,6 +615,8 @@ comment|/// stack slots are used.  It provides accessors to allocate these value
 name|class
 name|CCState
 block|{
+name|private
+label|:
 name|CallingConv
 operator|::
 name|ID
@@ -613,6 +624,10 @@ name|CallingConv
 expr_stmt|;
 name|bool
 name|IsVarArg
+decl_stmt|;
+name|MachineFunction
+modifier|&
+name|MF
 decl_stmt|;
 specifier|const
 name|TargetMachine
@@ -654,6 +669,8 @@ decl_stmt|;
 name|bool
 name|FirstByValRegValid
 decl_stmt|;
+name|protected
+label|:
 name|ParmContext
 name|CallOrPrologue
 decl_stmt|;
@@ -664,6 +681,8 @@ argument_list|(
 argument|CallingConv::ID CC
 argument_list|,
 argument|bool isVarArg
+argument_list|,
+argument|MachineFunction&MF
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|,
@@ -711,6 +730,16 @@ specifier|const
 block|{
 return|return
 name|TM
+return|;
+block|}
+name|MachineFunction
+operator|&
+name|getMachineFunction
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MF
 return|;
 block|}
 name|CallingConv
@@ -1316,18 +1345,6 @@ block|{
 return|return
 name|CallOrPrologue
 return|;
-block|}
-name|void
-name|setCallOrPrologue
-parameter_list|(
-name|ParmContext
-name|pc
-parameter_list|)
-block|{
-name|CallOrPrologue
-operator|=
-name|pc
-expr_stmt|;
 block|}
 name|private
 label|:

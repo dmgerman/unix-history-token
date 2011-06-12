@@ -619,6 +619,13 @@ operator|~
 name|CrashRecoveryContextCleanupRegistrar
 argument_list|()
 block|{
+name|unregister
+argument_list|()
+block|;   }
+name|void
+name|unregister
+argument_list|()
+block|{
 if|if
 condition|(
 name|cleanup
@@ -638,9 +645,13 @@ argument_list|(
 name|cleanup
 argument_list|)
 expr_stmt|;
+name|cleanup
+operator|=
+literal|0
+block|;   }
 block|}
-expr|}
-block|; }
+expr_stmt|;
+block|}
 end_decl_stmt
 
 begin_endif

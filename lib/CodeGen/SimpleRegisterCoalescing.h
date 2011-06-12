@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/BitVector.h"
+file|"RegisterClassInfo.h"
 end_include
 
 begin_decl_stmt
@@ -185,16 +185,9 @@ name|AliasAnalysis
 modifier|*
 name|AA
 decl_stmt|;
-name|DenseMap
-operator|<
-specifier|const
-name|TargetRegisterClass
-operator|*
-operator|,
-name|BitVector
-operator|>
-name|allocatableRCRegs_
-expr_stmt|;
+name|RegisterClassInfo
+name|RegClassInfo
+decl_stmt|;
 comment|/// JoinedCopies - Keep track of copies eliminated due to coalescing.
 comment|///
 name|SmallPtrSet
@@ -361,19 +354,6 @@ modifier|&
 name|CP
 parameter_list|)
 function_decl|;
-comment|/// Return true if the two specified registers belong to different register
-comment|/// classes.  The registers may be either phys or virt regs.
-name|bool
-name|differingRegisterClasses
-argument_list|(
-name|unsigned
-name|RegA
-argument_list|,
-name|unsigned
-name|RegB
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// AdjustCopiesBackFrom - We found a non-trivially-coalescable copy. If
 comment|/// the source value number is defined by a copy from the destination reg
 comment|/// see if we can merge these two destination reg valno# into a single
@@ -428,29 +408,6 @@ parameter_list|,
 name|MachineInstr
 modifier|*
 name|CopyMI
-parameter_list|)
-function_decl|;
-comment|/// TrimLiveIntervalToLastUse - If there is a last use in the same basic
-comment|/// block as the copy instruction, trim the ive interval to the last use
-comment|/// and return true.
-name|bool
-name|TrimLiveIntervalToLastUse
-parameter_list|(
-name|SlotIndex
-name|CopyIdx
-parameter_list|,
-name|MachineBasicBlock
-modifier|*
-name|CopyMBB
-parameter_list|,
-name|LiveInterval
-modifier|&
-name|li
-parameter_list|,
-specifier|const
-name|LiveRange
-modifier|*
-name|LR
 parameter_list|)
 function_decl|;
 comment|/// ReMaterializeTrivialDef - If the source of a copy is defined by a trivial
@@ -527,36 +484,6 @@ modifier|&
 name|CP
 parameter_list|)
 function_decl|;
-comment|/// ShortenDeadCopyLiveRange - Shorten a live range defined by a dead copy.
-comment|/// Return true if live interval is removed.
-name|bool
-name|ShortenDeadCopyLiveRange
-parameter_list|(
-name|LiveInterval
-modifier|&
-name|li
-parameter_list|,
-name|MachineInstr
-modifier|*
-name|CopyMI
-parameter_list|)
-function_decl|;
-comment|/// ShortenDeadCopyLiveRange - Shorten a live range as it's artificially
-comment|/// extended by a dead copy. Mark the last use (if any) of the val# as kill
-comment|/// as ends the live range there. If there isn't another use, then this
-comment|/// live range is dead. Return true if live interval is removed.
-name|bool
-name|ShortenDeadCopySrcLiveRange
-parameter_list|(
-name|LiveInterval
-modifier|&
-name|li
-parameter_list|,
-name|MachineInstr
-modifier|*
-name|CopyMI
-parameter_list|)
-function_decl|;
 comment|/// RemoveDeadDef - If a def of a live interval is now determined dead,
 comment|/// remove the val# it defines. If the live interval becomes empty, remove
 comment|/// it as well.
@@ -586,27 +513,6 @@ modifier|*
 name|CopyMI
 parameter_list|)
 function_decl|;
-comment|/// lastRegisterUse - Returns the last use of the specific register between
-comment|/// cycles Start and End or NULL if there are no uses.
-name|MachineOperand
-modifier|*
-name|lastRegisterUse
-argument_list|(
-name|SlotIndex
-name|Start
-argument_list|,
-name|SlotIndex
-name|End
-argument_list|,
-name|unsigned
-name|Reg
-argument_list|,
-name|SlotIndex
-operator|&
-name|LastUseIdx
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// markAsJoined - Remember that CopyMI has already been joined.
 name|void
 name|markAsJoined

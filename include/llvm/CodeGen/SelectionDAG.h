@@ -1101,13 +1101,8 @@ comment|/// Note that this is an involved process that may invalidate pointers i
 comment|/// the graph.
 name|void
 name|Legalize
-argument_list|(
-name|CodeGenOpt
-operator|::
-name|Level
-name|OptLevel
-argument_list|)
-decl_stmt|;
+parameter_list|()
+function_decl|;
 comment|/// LegalizeVectors - This transforms the SelectionDAG into a SelectionDAG
 comment|/// that only uses vector math operations supported by the target.  This is
 comment|/// necessary as a separate step from Legalize because unrolling a vector
@@ -5483,16 +5478,6 @@ name|A
 argument_list|,
 name|SDValue
 name|B
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// isVerifiedDebugInfoDesc - Returns true if the specified SDValue has
-comment|/// been verified as a debug information descriptor.
-name|bool
-name|isVerifiedDebugInfoDesc
-argument_list|(
-name|SDValue
-name|Op
 argument_list|)
 decl|const
 decl_stmt|;

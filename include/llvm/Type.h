@@ -750,6 +750,13 @@ argument|const Type *Ty
 argument_list|)
 specifier|const
 block|;
+comment|/// isEmptyTy - Return true if this type is empty, that is, it has no
+comment|/// elements or all its elements are empty.
+name|bool
+name|isEmptyTy
+argument_list|()
+specifier|const
+block|;
 comment|/// Here are some useful little methods to query what type derived types are
 comment|/// Note that all other types can just compare to see if this == Type::xxxTy;
 comment|///

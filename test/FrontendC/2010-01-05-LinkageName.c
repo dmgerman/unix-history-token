@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc -O2 -S -g %s -o - | llc -o 2010-01-05-LinkageName.s -O0
+comment|// RUN: %llvmgcc -O2 -S -g %s -o - | llc -disable-cfi -o 2010-01-05-LinkageName.s -O0
 end_comment
 
 begin_comment

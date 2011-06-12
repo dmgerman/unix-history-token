@@ -165,6 +165,10 @@ name|unsigned
 name|CostPerUse
 decl_stmt|;
 comment|// Extra cost of instructions using register.
+name|bool
+name|inAllocatableClass
+decl_stmt|;
+comment|// Register belongs to an allocatable regclass.
 block|}
 struct|;
 name|class
@@ -240,6 +244,10 @@ name|int
 name|CopyCost
 decl_stmt|;
 specifier|const
+name|bool
+name|Allocatable
+decl_stmt|;
+specifier|const
 name|iterator
 name|RegsBegin
 decl_stmt|,
@@ -274,6 +282,8 @@ argument_list|,
 argument|unsigned Al
 argument_list|,
 argument|int CC
+argument_list|,
+argument|bool Allocable
 argument_list|,
 argument|iterator RB
 argument_list|,
@@ -328,6 +338,11 @@ operator|,
 name|CopyCost
 argument_list|(
 name|CC
+argument_list|)
+operator|,
+name|Allocatable
+argument_list|(
+name|Allocable
 argument_list|)
 operator|,
 name|RegsBegin
@@ -771,6 +786,38 @@ end_return
 
 begin_comment
 unit|}
+comment|/// hasSubClassEq - Returns true if RC is a subclass of or equal to this
+end_comment
+
+begin_comment
+comment|/// class.
+end_comment
+
+begin_macro
+unit|bool
+name|hasSubClassEq
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|)
+end_macro
+
+begin_expr_stmt
+specifier|const
+block|{
+return|return
+name|RC
+operator|==
+name|this
+operator|||
+name|hasSubClass
+argument_list|(
+name|RC
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// subclasses_begin / subclasses_end - Loop over all of the classes
 end_comment
 
@@ -778,13 +825,10 @@ begin_comment
 comment|/// that are proper subsets of this register class.
 end_comment
 
-begin_macro
-unit|sc_iterator
+begin_expr_stmt
+name|sc_iterator
 name|subclasses_begin
 argument_list|()
-end_macro
-
-begin_expr_stmt
 specifier|const
 block|{
 return|return
@@ -881,6 +925,38 @@ end_return
 
 begin_comment
 unit|}
+comment|/// hasSuperClassEq - Returns true if RC is a superclass of or equal to this
+end_comment
+
+begin_comment
+comment|/// class.
+end_comment
+
+begin_macro
+unit|bool
+name|hasSuperClassEq
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|)
+end_macro
+
+begin_expr_stmt
+specifier|const
+block|{
+return|return
+name|RC
+operator|==
+name|this
+operator|||
+name|hasSuperClass
+argument_list|(
+name|RC
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// superclasses_begin / superclasses_end - Loop over all of the classes
 end_comment
 
@@ -888,13 +964,10 @@ begin_comment
 comment|/// that are proper supersets of this register class.
 end_comment
 
-begin_macro
-unit|sc_iterator
+begin_expr_stmt
+name|sc_iterator
 name|superclasses_begin
 argument_list|()
-end_macro
-
-begin_expr_stmt
 specifier|const
 block|{
 return|return
@@ -1123,6 +1196,26 @@ specifier|const
 block|{
 return|return
 name|CopyCost
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// isAllocatable - Return true if this register class may be used to create
+end_comment
+
+begin_comment
+comment|/// virtual registers.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isAllocatable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Allocatable
 return|;
 block|}
 end_expr_stmt
@@ -1440,7 +1533,8 @@ argument_list|)
 expr_stmt|;
 return|return
 name|Reg
-operator|-
+operator|&
+operator|~
 operator|(
 literal|1u
 operator|<<
@@ -1460,7 +1554,7 @@ parameter_list|)
 block|{
 return|return
 name|Index
-operator|+
+operator||
 operator|(
 literal|1u
 operator|<<
@@ -2917,6 +3011,20 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+name|virtual
+name|int
+name|getLLVMRegNum
+argument_list|(
+name|unsigned
+name|RegNum
+argument_list|,
+name|bool
+name|isEH
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
 comment|/// getFrameRegister - This method should return the register used as a base
 comment|/// for values allocated in the current stack frame.
 name|virtual
@@ -2942,6 +3050,21 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
+comment|/// getSEHRegNum - Map a target register to an equivalent SEH register
+comment|/// number.  Returns -1 if there is no equivalent value.
+name|virtual
+name|int
+name|getSEHRegNum
+argument_list|(
+name|unsigned
+name|i
+argument_list|)
+decl|const
+block|{
+return|return
+name|i
+return|;
+block|}
 block|}
 end_decl_stmt
 

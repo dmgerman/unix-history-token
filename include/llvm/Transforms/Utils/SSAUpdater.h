@@ -92,6 +92,12 @@ name|class
 name|SSAUpdaterTraits
 expr_stmt|;
 name|class
+name|DbgDeclareInst
+decl_stmt|;
+name|class
+name|DIBuilder
+decl_stmt|;
+name|class
 name|BumpPtrAllocator
 decl_stmt|;
 comment|/// SSAUpdater - This class updates SSA form for a set of values defined in
@@ -312,6 +318,14 @@ name|SSAUpdater
 modifier|&
 name|SSA
 decl_stmt|;
+name|DbgDeclareInst
+modifier|*
+name|DDI
+decl_stmt|;
+name|DIBuilder
+modifier|*
+name|DIB
+decl_stmt|;
 name|public
 label|:
 name|LoadAndStorePromoter
@@ -319,6 +333,10 @@ argument_list|(
 argument|const SmallVectorImpl<Instruction*>&Insts
 argument_list|,
 argument|SSAUpdater&S
+argument_list|,
+argument|DbgDeclareInst *DDI
+argument_list|,
+argument|DIBuilder *DIB
 argument_list|,
 argument|StringRef Name = StringRef()
 argument_list|)

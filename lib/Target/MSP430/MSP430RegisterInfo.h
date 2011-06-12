@@ -145,6 +145,24 @@ literal|0
 argument_list|)
 specifier|const
 block|;
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|getMatchingSuperRegClass
+argument_list|(
+argument|const TargetRegisterClass *A
+argument_list|,
+argument|const TargetRegisterClass *B
+argument_list|,
+argument|unsigned Idx
+argument_list|)
+specifier|const
+block|{
+comment|// No sub-classes makes this really easy.
+return|return
+name|A
+return|;
+block|}
 name|void
 name|eliminateCallFramePseudoInstr
 argument_list|(
@@ -190,6 +208,15 @@ block|;
 comment|//! Get DWARF debugging register number
 name|int
 name|getDwarfRegNum
+argument_list|(
+argument|unsigned RegNum
+argument_list|,
+argument|bool isEH
+argument_list|)
+specifier|const
+block|;
+name|int
+name|getLLVMRegNum
 argument_list|(
 argument|unsigned RegNum
 argument_list|,

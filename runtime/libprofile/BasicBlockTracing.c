@@ -73,7 +73,9 @@ begin_function
 specifier|static
 name|void
 name|BBTraceAtExitHandler
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|WriteAndFlushBBTraceData
 argument_list|()

@@ -284,6 +284,10 @@ name|End
 argument_list|,
 name|unsigned
 name|InsertPosIndex
+argument_list|,
+name|DbgValueVector
+operator|&
+name|DbgValues
 argument_list|)
 decl_stmt|;
 comment|/// Observe - Update liveness information to account for the current

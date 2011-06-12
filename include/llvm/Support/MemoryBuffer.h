@@ -324,7 +324,7 @@ name|true
 argument_list|)
 decl_stmt|;
 comment|/// getMemBuffer - Open the specified memory range as a MemoryBuffer.  Note
-comment|/// that InputData must be null terminated.
+comment|/// that InputData must be null terminated if RequiresNullTerminator is true.
 specifier|static
 name|MemoryBuffer
 modifier|*
