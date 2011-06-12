@@ -99,6 +99,17 @@ begin_comment
 comment|/* do not set variable - just readonly test */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VNOLOCAL
+value|0x100
+end_define
+
+begin_comment
+comment|/* ignore forcelocal */
+end_comment
+
 begin_struct
 struct|struct
 name|var
@@ -173,6 +184,13 @@ name|struct
 name|localvar
 modifier|*
 name|localvars
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|forcelocal
 decl_stmt|;
 end_decl_stmt
 
