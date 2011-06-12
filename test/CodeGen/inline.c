@@ -116,7 +116,7 @@ comment|// RUN: echo "\nC++ tests:"
 end_comment
 
 begin_comment
-comment|// RUN: %clang %s -O1 -emit-llvm -S -o %t -std=c++98
+comment|// RUN: %clang -x c++ %s -O1 -emit-llvm -S -o %t -std=c++98
 end_comment
 
 begin_comment

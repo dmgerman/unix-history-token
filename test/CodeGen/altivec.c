@@ -176,7 +176,7 @@ decl_stmt|;
 name|vi
 operator|++
 expr_stmt|;
-comment|// CHECK: add nsw<4 x i32> {{.*}}<i32 1, i32 1, i32 1, i32 1>
+comment|// CHECK: add<4 x i32> {{.*}}<i32 1, i32 1, i32 1, i32 1>
 name|vector
 name|unsigned
 name|int

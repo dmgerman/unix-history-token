@@ -330,6 +330,11 @@ block|;
 comment|// __has_feature
 name|IdentifierInfo
 operator|*
+name|Ident__has_extension
+block|;
+comment|// __has_extension
+name|IdentifierInfo
+operator|*
 name|Ident__has_builtin
 block|;
 comment|// __has_builtin
@@ -1441,7 +1446,10 @@ comment|/// \brief Create a new preprocessing record, which will keep track of
 comment|/// all macro expansions, macro definitions, etc.
 name|void
 name|createPreprocessingRecord
-parameter_list|()
+parameter_list|(
+name|bool
+name|IncludeNestedMacroInstantiations
+parameter_list|)
 function_decl|;
 comment|/// EnterMainSourceFile - Enter the specified FileID as the main source file,
 comment|/// which implicitly adds the builtin defines etc.

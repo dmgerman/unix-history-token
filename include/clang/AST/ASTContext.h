@@ -1435,6 +1435,57 @@ name|LastFD
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// BitfieldFollowsBitfield - return 'true" if 'FD' is a
+comment|/// bitfield which follows the bitfield 'LastFD'.
+name|bool
+name|BitfieldFollowsBitfield
+argument_list|(
+specifier|const
+name|FieldDecl
+operator|*
+name|FD
+argument_list|,
+specifier|const
+name|FieldDecl
+operator|*
+name|LastFD
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// NoneBitfieldFollowsBitfield - return 'true" if 'FD' is not a
+comment|/// bitfield which follows the bitfield 'LastFD'.
+name|bool
+name|NoneBitfieldFollowsBitfield
+argument_list|(
+specifier|const
+name|FieldDecl
+operator|*
+name|FD
+argument_list|,
+specifier|const
+name|FieldDecl
+operator|*
+name|LastFD
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// BitfieldFollowsNoneBitfield - return 'true" if 'FD' is a
+comment|/// bitfield which follows the none bitfield 'LastFD'.
+name|bool
+name|BitfieldFollowsNoneBitfield
+argument_list|(
+specifier|const
+name|FieldDecl
+operator|*
+name|FD
+argument_list|,
+specifier|const
+name|FieldDecl
+operator|*
+name|LastFD
+argument_list|)
+decl|const
+decl_stmt|;
 comment|// Access to the set of methods overridden by the given C++ method.
 typedef|typedef
 name|CXXMethodVector
@@ -3003,6 +3054,29 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// getUnaryTransformType - unary type transforms
+end_comment
+
+begin_decl_stmt
+name|QualType
+name|getUnaryTransformType
+argument_list|(
+name|QualType
+name|BaseType
+argument_list|,
+name|QualType
+name|UnderlyingType
+argument_list|,
+name|UnaryTransformType
+operator|::
+name|UTTKind
+name|UKind
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getAutoType - C++0x deduced auto type.
 end_comment
 
@@ -3616,11 +3690,23 @@ comment|/// getObjCEncodingForFunctionDecl - Returns the encoded type for this
 end_comment
 
 begin_comment
-comment|//function.  This is in the same format as Objective-C method encodings.
+comment|/// function.  This is in the same format as Objective-C method encodings.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns true if an error occurred (e.g., because one of the parameter
+end_comment
+
+begin_comment
+comment|/// types is incomplete), false otherwise.
 end_comment
 
 begin_decl_stmt
-name|void
+name|bool
 name|getObjCEncodingForFunctionDecl
 argument_list|(
 specifier|const
@@ -3645,8 +3731,20 @@ begin_comment
 comment|/// declaration.
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns true if an error occurred (e.g., because one of the parameter
+end_comment
+
+begin_comment
+comment|/// types is incomplete), false otherwise.
+end_comment
+
 begin_decl_stmt
-name|void
+name|bool
 name|getObjCEncodingForMethodDecl
 argument_list|(
 specifier|const
@@ -6584,7 +6682,7 @@ argument_list|,
 operator|!
 name|Type
 operator|->
-name|isSignedIntegerType
+name|isSignedIntegerOrEnumerationType
 argument_list|()
 argument_list|)
 block|;
@@ -7005,6 +7103,32 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// \brief The number of implicitly-declared move constructors.
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|NumImplicitMoveConstructors
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief The number of implicitly-declared move constructors for
+end_comment
+
+begin_comment
+comment|/// which declarations were built.
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|NumImplicitMoveConstructorsDeclared
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief The number of implicitly-declared copy assignment operators.
 end_comment
 
@@ -7027,6 +7151,32 @@ begin_decl_stmt
 specifier|static
 name|unsigned
 name|NumImplicitCopyAssignmentOperatorsDeclared
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief The number of implicitly-declared move assignment operators.
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|NumImplicitMoveAssignmentOperators
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief The number of implicitly-declared move assignment operators for
+end_comment
+
+begin_comment
+comment|/// which declarations were built.
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|NumImplicitMoveAssignmentOperatorsDeclared
 decl_stmt|;
 end_decl_stmt
 
@@ -7151,6 +7301,43 @@ name|bool
 name|EncodingProperty
 operator|=
 name|false
+argument_list|,
+name|bool
+name|StructField
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// Adds the encoding of the structure's members.
+end_comment
+
+begin_decl_stmt
+name|void
+name|getObjCEncodingForStructureImpl
+argument_list|(
+name|RecordDecl
+operator|*
+name|RD
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|S
+argument_list|,
+specifier|const
+name|FieldDecl
+operator|*
+name|Field
+argument_list|,
+name|bool
+name|includeVBases
+operator|=
+name|true
 argument_list|)
 decl|const
 decl_stmt|;

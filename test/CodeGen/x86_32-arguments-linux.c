@@ -12,7 +12,7 @@ comment|// CHECK: define void @f56(
 end_comment
 
 begin_comment
-comment|// CHECK: i8 signext %a0, %struct.s56_0* byval %a1,
+comment|// CHECK: i8 signext %a0, %struct.s56_0* byval align 4 %a1,
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|// CHECK: call void (i32, ...)* @f56_0(i32 1,
 end_comment
 
 begin_comment
-comment|// CHECK: i32 %{{.*}}, %struct.s56_0* byval %{{[^ ]*}},
+comment|// CHECK: i32 %{{.*}}, %struct.s56_0* byval align 4 %{{[^ ]*}},
 end_comment
 
 begin_comment

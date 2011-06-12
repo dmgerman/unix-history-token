@@ -240,7 +240,8 @@ comment|/// the temporary is being created.
 name|unsigned
 name|Location
 decl_stmt|;
-comment|/// \brief Whether the
+comment|/// \brief Whether the entity being initialized may end up using the
+comment|/// named return value optimization (NRVO).
 name|bool
 name|NRVO
 decl_stmt|;
@@ -1554,9 +1555,6 @@ block|{
 name|public
 label|:
 comment|/// \brief Describes the kind of initialization sequence computed.
-comment|///
-comment|/// FIXME: Much of this information is in the initialization steps... why is
-comment|/// it duplicated here?
 enum|enum
 name|SequenceKind
 block|{
@@ -1568,38 +1566,15 @@ literal|0
 block|,
 comment|/// \brief A dependent initialization, which could not be
 comment|/// type-checked due to the presence of dependent types or
-comment|/// dependently-type expressions.
+comment|/// dependently-typed expressions.
 name|DependentSequence
 block|,
-comment|/// \brief A user-defined conversion sequence.
-name|UserDefinedConversion
-block|,
-comment|/// \brief A constructor call.
-name|ConstructorInitialization
+comment|/// \brief A normal sequence.
+name|NormalSequence
 block|,
 comment|/// \brief A reference binding.
 name|ReferenceBinding
-block|,
-comment|/// \brief List initialization
-name|ListInitialization
-block|,
-comment|/// \brief Zero-initialization.
-name|ZeroInitialization
-block|,
-comment|/// \brief No initialization required.
-name|NoInitialization
-block|,
-comment|/// \brief Standard conversion sequence.
-name|StandardConversion
-block|,
-comment|/// \brief C conversion sequence.
-name|CAssignment
-block|,
-comment|/// \brief String initialization
-name|StringInit
-block|,
-comment|/// \brief Array initialization from another array (GNU C extension).
-name|ArrayInit
+comment|// FIXME: Still looks redundant, but complicated.
 block|}
 enum|;
 comment|/// \brief Describes the kind of a particular step in an initialization
@@ -1984,8 +1959,20 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|!
+name|Failed
+argument_list|()
+return|;
+block|}
+comment|/// \brief Determine whether the initialization sequence is invalid.
+name|bool
+name|Failed
+argument_list|()
+specifier|const
+block|{
+return|return
 name|SequenceKind
-operator|!=
+operator|==
 name|FailedSequence
 return|;
 block|}
@@ -2284,10 +2271,8 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-name|getKind
+name|Failed
 argument_list|()
-operator|==
-name|FailedSequence
 operator|&&
 literal|"Not an initialization failure!"
 argument_list|)

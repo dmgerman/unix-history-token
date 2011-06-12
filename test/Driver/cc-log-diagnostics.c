@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|// RUN: rm -f %t.log
+end_comment
+
+begin_comment
 comment|// RUN: env RC_DEBUG_OPTIONS=1 \
 end_comment
 
 begin_comment
-comment|// RUN:     CC_LOG_DIAGNOSTICS=1 \
+comment|// RUN:     CC_LOG_DIAGNOSTICS=1 CC_LOG_DIAGNOSTICS_FILE=%t.log \
 end_comment
 
 begin_comment
-comment|// RUN:     CC_LOG_DIAGNOSTICS_FILE=%t.log \
-end_comment
-
-begin_comment
-comment|// RUN: %clang -no-canonical-prefixes -ccc-host-triple x86_64-apple-darwin10 -fsyntax-only %s
+comment|// RUN: %clang -Wfoobar -no-canonical-prefixes -ccc-host-triple x86_64-apple-darwin10 -fsyntax-only %s
 end_comment
 
 begin_comment
@@ -52,6 +52,30 @@ end_comment
 
 begin_comment
 comment|// CHECK:<array>
+end_comment
+
+begin_comment
+comment|// CHECK:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK:<key>level</key>
+end_comment
+
+begin_comment
+comment|// CHECK:<string>warning</string>
+end_comment
+
+begin_comment
+comment|// CHECK:<key>message</key>
+end_comment
+
+begin_comment
+comment|// CHECK:<string>unknown warning option '-Wfoobar'</string>
+end_comment
+
+begin_comment
+comment|// CHECK:</dict>
 end_comment
 
 begin_comment

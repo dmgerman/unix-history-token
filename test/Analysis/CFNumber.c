@@ -167,6 +167,13 @@ comment|// expected-warning{{An 8 bit integer is used to initialize a CFNumber o
 block|}
 end_function
 
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(cf_returns_retained)
+argument_list|)
+end_macro
+
 begin_function
 name|CFNumberRef
 name|f2
@@ -188,6 +195,41 @@ name|x
 argument_list|)
 return|;
 comment|// expected-warning{{A 16 bit integer is used to initialize a CFNumber object that represents an 8 bit integer. 8 bits of the input integer will be lost.}}
+block|}
+end_function
+
+begin_comment
+comment|// test that the attribute overrides the naming convention.
+end_comment
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(cf_returns_not_retained)
+argument_list|)
+end_macro
+
+begin_function
+name|CFNumberRef
+name|CreateNum
+parameter_list|(
+name|unsigned
+name|char
+name|x
+parameter_list|)
+block|{
+return|return
+name|CFNumberCreate
+argument_list|(
+literal|0
+argument_list|,
+name|kCFNumberSInt8Type
+argument_list|,
+operator|&
+name|x
+argument_list|)
+return|;
+comment|// expected-warning{{leak}}
 block|}
 end_function
 

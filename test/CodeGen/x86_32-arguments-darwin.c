@@ -232,7 +232,7 @@ comment|// backend in terms of optimization but doesn't change the ABI.
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f9_2(%struct.s9* byval %a0)
+comment|// CHECK: define void @f9_2(%struct.s9* byval align 4 %a0)
 end_comment
 
 begin_struct
@@ -1464,7 +1464,7 @@ comment|// CHECK: define void @f56(
 end_comment
 
 begin_comment
-comment|// CHECK: i8 signext %a0, %struct.s56_0* byval %a1,
+comment|// CHECK: i8 signext %a0, %struct.s56_0* byval align 4 %a1,
 end_comment
 
 begin_comment
@@ -1496,7 +1496,7 @@ comment|// CHECK:   call void (i32, ...)* @f56_0(i32 1,
 end_comment
 
 begin_comment
-comment|// CHECK: i32 %{{[^ ]*}}, %struct.s56_0* byval %{{[^ ]*}},
+comment|// CHECK: i32 %{{[^ ]*}}, %struct.s56_0* byval align 4 %{{[^ ]*}},
 end_comment
 
 begin_comment

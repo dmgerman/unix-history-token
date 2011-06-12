@@ -55,5 +55,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|// va_list on ARM is void*.
+end_comment
+
+begin_function
+name|void
+name|test2
+parameter_list|()
+block|{
+name|__builtin_va_list
+name|ptr
+init|=
+literal|"x"
+decl_stmt|;
+operator|*
+name|ptr
+operator|=
+literal|'0'
+expr_stmt|;
+comment|// expected-error {{incomplete type 'void' is not assignable}}
+block|}
+end_function
+
 end_unit
 

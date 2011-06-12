@@ -67,7 +67,7 @@ operator|<<
 literal|0
 operator|)
 block|,
-name|C99
+name|C89
 init|=
 operator|(
 literal|1
@@ -75,7 +75,7 @@ operator|<<
 literal|1
 operator|)
 block|,
-name|C1X
+name|C99
 init|=
 operator|(
 literal|1
@@ -83,7 +83,7 @@ operator|<<
 literal|2
 operator|)
 block|,
-name|CPlusPlus
+name|C1X
 init|=
 operator|(
 literal|1
@@ -91,7 +91,7 @@ operator|<<
 literal|3
 operator|)
 block|,
-name|CPlusPlus0x
+name|CPlusPlus
 init|=
 operator|(
 literal|1
@@ -99,7 +99,7 @@ operator|<<
 literal|4
 operator|)
 block|,
-name|Digraphs
+name|CPlusPlus0x
 init|=
 operator|(
 literal|1
@@ -107,7 +107,7 @@ operator|<<
 literal|5
 operator|)
 block|,
-name|GNUMode
+name|Digraphs
 init|=
 operator|(
 literal|1
@@ -115,7 +115,7 @@ operator|<<
 literal|6
 operator|)
 block|,
-name|HexFloat
+name|GNUMode
 init|=
 operator|(
 literal|1
@@ -123,12 +123,20 @@ operator|<<
 literal|7
 operator|)
 block|,
-name|ImplicitInt
+name|HexFloat
 init|=
 operator|(
 literal|1
 operator|<<
 literal|8
+operator|)
+block|,
+name|ImplicitInt
+init|=
+operator|(
+literal|1
+operator|<<
+literal|9
 operator|)
 block|}
 enum|;
@@ -212,6 +220,20 @@ operator|&
 name|frontend
 operator|::
 name|BCPLComment
+return|;
+block|}
+comment|/// isC89 - Language is a superset of C89.
+name|bool
+name|isC89
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+operator|&
+name|frontend
+operator|::
+name|C89
 return|;
 block|}
 comment|/// isC99 - Language is a superset of C99.

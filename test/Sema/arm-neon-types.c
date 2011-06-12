@@ -49,10 +49,36 @@ name|vcvt_n_f32_s32
 argument_list|(
 name|x
 argument_list|,
-literal|0
+literal|9
 argument_list|)
 return|;
 comment|// expected-warning {{incompatible vector types}}
+block|}
+end_function
+
+begin_comment
+comment|// Check immediate range for vcvt_n intrinsics is 1 to 32.  Radar 9558930.
+end_comment
+
+begin_function
+name|float32x2_t
+name|test3
+parameter_list|(
+name|uint32x2_t
+name|x
+parameter_list|)
+block|{
+comment|// FIXME: The "incompatible result type" error is due to pr10112 and should be
+comment|// removed when that is fixed.
+return|return
+name|vcvt_n_f32_u32
+argument_list|(
+name|x
+argument_list|,
+literal|0
+argument_list|)
+return|;
+comment|// expected-error {{argument should be a value from 1 to 32}} expected-error {{incompatible result type}}
 block|}
 end_function
 

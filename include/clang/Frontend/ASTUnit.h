@@ -226,6 +226,9 @@ decl_stmt|;
 name|class
 name|TargetInfo
 decl_stmt|;
+name|class
+name|ASTFrontendAction
+decl_stmt|;
 name|using
 name|namespace
 name|idx
@@ -636,6 +639,11 @@ expr_stmt|;
 comment|/// \brief Whether we should be caching code-completion results.
 name|bool
 name|ShouldCacheCodeCompletionResults
+decl_stmt|;
+comment|/// \brief Whether we want to include nested macro instantiations in the
+comment|/// detailed preprocessing record.
+name|bool
+name|NestedMacroInstantiations
 decl_stmt|;
 specifier|static
 name|void
@@ -1733,6 +1741,41 @@ parameter_list|)
 function_decl|;
 name|public
 label|:
+comment|/// \brief Create an ASTUnit from a source file, via a CompilerInvocation
+comment|/// object, by invoking the optionally provided ASTFrontendAction.
+comment|///
+comment|/// \param CI - The compiler invocation to use; it must have exactly one input
+comment|/// source file. The ASTUnit takes ownership of the CompilerInvocation object.
+comment|///
+comment|/// \param Diags - The diagnostics engine to use for reporting errors; its
+comment|/// lifetime is expected to extend past that of the returned ASTUnit.
+comment|///
+comment|/// \param Action - The ASTFrontendAction to invoke. Its ownership is not
+comment|/// transfered.
+specifier|static
+name|ASTUnit
+modifier|*
+name|LoadFromCompilerInvocationAction
+argument_list|(
+name|CompilerInvocation
+operator|*
+name|CI
+argument_list|,
+name|llvm
+operator|::
+name|IntrusiveRefCntPtr
+operator|<
+name|Diagnostic
+operator|>
+name|Diags
+argument_list|,
+name|ASTFrontendAction
+operator|*
+name|Action
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
 comment|/// LoadFromCompilerInvocation - Create an ASTUnit from a source file, via a
 comment|/// CompilerInvocation object.
 comment|///
@@ -1785,6 +1828,11 @@ name|bool
 name|CacheCodeCompletionResults
 operator|=
 name|false
+argument_list|,
+name|bool
+name|NestedMacroInstantiations
+operator|=
+name|true
 argument_list|)
 decl_stmt|;
 comment|/// LoadFromCommandLine - Create an ASTUnit from a vector of command line
@@ -1881,6 +1929,11 @@ name|bool
 name|CXXChainedPCH
 operator|=
 name|false
+argument_list|,
+name|bool
+name|NestedMacroInstantiations
+operator|=
+name|true
 argument_list|)
 decl_stmt|;
 comment|/// \brief Reparse the source files using the same command-line options that

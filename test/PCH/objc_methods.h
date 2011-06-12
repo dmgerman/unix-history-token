@@ -15,9 +15,9 @@ end_expr_stmt
 begin_expr_stmt
 operator|-
 operator|(
-name|void
+name|id
 operator|)
-name|instMethod
+name|init
 expr_stmt|;
 end_expr_stmt
 

@@ -1508,5 +1508,56 @@ comment|// no-warning
 block|}
 end_function
 
+begin_comment
+comment|// FIXME: This is a false positive, but it tests logical operations in switch statements.
+end_comment
+
+begin_function
+name|int
+name|test52
+parameter_list|(
+name|int
+name|a
+parameter_list|,
+name|int
+name|b
+parameter_list|)
+block|{
+name|int
+name|x
+decl_stmt|;
+comment|// expected-note {{variable 'x' is declared here}} expected-note {{add initialization to silence this warning}}
+switch|switch
+condition|(
+name|a
+operator|||
+name|b
+condition|)
+block|{
+comment|// expected-warning {{switch condition has boolean value}}
+case|case
+literal|0
+case|:
+name|x
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|x
+operator|=
+literal|2
+expr_stmt|;
+break|break;
+block|}
+return|return
+name|x
+return|;
+comment|// expected-warning {{variable 'x' may be uninitialized when used here}}
+block|}
+end_function
+
 end_unit
 

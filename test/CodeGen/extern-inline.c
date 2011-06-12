@@ -4,6 +4,10 @@ comment|// RUN: %clang -S -emit-llvm -std=gnu89 -o - %s | FileCheck %s
 end_comment
 
 begin_comment
+comment|// RUN: %clang -S -emit-llvm -fgnu89-inline -o - %s | FileCheck %s
+end_comment
+
+begin_comment
 comment|// PR5253
 end_comment
 

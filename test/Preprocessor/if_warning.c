@@ -91,6 +91,31 @@ directive|endif
 end_endif
 
 begin_comment
+comment|// rdar://9475098
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+else|#
+directive|else
+else|1
+end_else
+
+begin_comment
+comment|// expected-warning {{extra tokens}}
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|// PR6852
 end_comment
 

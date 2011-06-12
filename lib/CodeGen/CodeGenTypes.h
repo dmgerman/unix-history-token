@@ -913,11 +913,11 @@ name|void
 name|GetExpandedTypes
 argument_list|(
 name|QualType
-name|Ty
+name|type
 argument_list|,
-name|std
+name|llvm
 operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
 specifier|const
 name|llvm
@@ -926,10 +926,10 @@ name|Type
 operator|*
 operator|>
 operator|&
-name|ArgTys
+name|expanded
 argument_list|,
 name|bool
-name|IsRecursive
+name|isRecursive
 argument_list|)
 decl_stmt|;
 comment|/// IsZeroInitializable - Return whether a type can be

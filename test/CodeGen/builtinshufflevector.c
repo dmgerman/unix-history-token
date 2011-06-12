@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -emit-llvm< %s | grep 'shufflevector' | count 1
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -emit-llvm -ftrapv< %s | grep 'shufflevector' | count 1
+end_comment
+
 begin_typedef
 typedef|typedef
 name|int
@@ -37,7 +41,13 @@ literal|2
 argument_list|,
 literal|5
 argument_list|,
-literal|7
+operator|(
+literal|2
+operator|*
+literal|3
+operator|)
+operator|+
+literal|1
 argument_list|)
 return|;
 block|}

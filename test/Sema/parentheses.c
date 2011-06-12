@@ -248,6 +248,114 @@ comment|// no warning.
 block|}
 end_function
 
+begin_function_decl
+name|_Bool
+name|someConditionFunc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|conditional_op
+parameter_list|(
+name|int
+name|x
+parameter_list|,
+name|int
+name|y
+parameter_list|,
+name|_Bool
+name|b
+parameter_list|)
+block|{
+call|(
+name|void
+call|)
+argument_list|(
+name|x
+operator|+
+name|someConditionFunc
+argument_list|()
+condition|?
+literal|1
+else|:
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{?: has lower precedence than +}} \
+comment|// expected-note {{place parentheses around the ?: expression to evaluate it first}} \
+comment|// expected-note {{place parentheses around the + expression to silence this warning}}
+call|(
+name|void
+call|)
+argument_list|(
+name|x
+operator|-
+name|b
+condition|?
+literal|1
+else|:
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{?: has lower precedence than -}} \
+comment|// expected-note {{place parentheses around the ?: expression to evaluate it first}} \
+comment|// expected-note {{place parentheses around the - expression to silence this warning}}
+call|(
+name|void
+call|)
+argument_list|(
+name|x
+operator|*
+operator|(
+name|x
+operator|==
+name|y
+operator|)
+condition|?
+literal|1
+else|:
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{?: has lower precedence than *}} \
+comment|// expected-note {{place parentheses around the ?: expression to evaluate it first}} \
+comment|// expected-note {{place parentheses around the * expression to silence this warning}}
+call|(
+name|void
+call|)
+argument_list|(
+name|x
+operator|/
+operator|!
+name|x
+condition|?
+literal|1
+else|:
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{?: has lower precedence than /}} \
+comment|// expected-note {{place parentheses around the ?: expression to evaluate it first}} \
+comment|// expected-note {{place parentheses around the / expression to silence this warning}}
+call|(
+name|void
+call|)
+argument_list|(
+name|x
+operator|%
+literal|2
+condition|?
+literal|1
+else|:
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// no warning
+block|}
+end_function
+
 begin_comment
 comment|// RUN: %clang_cc1 -fsyntax-only -Wparentheses -Werror -fdiagnostics-show-option %s 2>&1 | FileCheck %s
 end_comment

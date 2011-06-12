@@ -2324,13 +2324,6 @@ operator|)
 name|__builtin_ia32_mfence
 argument_list|()
 expr_stmt|;
-name|tmp_V16c
-operator|=
-name|__builtin_ia32_loaddqu
-argument_list|(
-name|tmp_cCp
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)

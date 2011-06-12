@@ -506,7 +506,7 @@ argument_list|(
 name|vsc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: sub nsw<16 x i8> zeroinitializer
+comment|// CHECK: sub<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vmaxsb
 name|vs
 operator|=
@@ -515,7 +515,7 @@ argument_list|(
 name|vs
 argument_list|)
 expr_stmt|;
-comment|// CHECK: sub nsw<8 x i16> zeroinitializer
+comment|// CHECK: sub<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vmaxsh
 name|vi
 operator|=
@@ -524,7 +524,7 @@ argument_list|(
 name|vi
 argument_list|)
 expr_stmt|;
-comment|// CHECK: sub nsw<4 x i32> zeroinitializer
+comment|// CHECK: sub<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vmaxsw
 name|vf
 operator|=
@@ -572,7 +572,7 @@ argument_list|,
 name|vsc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: add nsw<16 x i8>
+comment|// CHECK: add<16 x i8>
 name|res_vsc
 operator|=
 name|vec_add
@@ -582,7 +582,7 @@ argument_list|,
 name|vsc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: add nsw<16 x i8>
+comment|// CHECK: add<16 x i8>
 name|res_vsc
 operator|=
 name|vec_add
@@ -592,7 +592,7 @@ argument_list|,
 name|vbc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: add nsw<16 x i8>
+comment|// CHECK: add<16 x i8>
 name|res_vuc
 operator|=
 name|vec_add
@@ -632,7 +632,7 @@ argument_list|,
 name|vs
 argument_list|)
 expr_stmt|;
-comment|// CHECK: add nsw<8 x i16>
+comment|// CHECK: add<8 x i16>
 name|res_vs
 operator|=
 name|vec_add
@@ -642,7 +642,7 @@ argument_list|,
 name|vs
 argument_list|)
 expr_stmt|;
-comment|// CHECK: add nsw<8 x i16>
+comment|// CHECK: add<8 x i16>
 name|res_vs
 operator|=
 name|vec_add
@@ -652,7 +652,7 @@ argument_list|,
 name|vbs
 argument_list|)
 expr_stmt|;
-comment|// CHECK: add nsw<8 x i16>
+comment|// CHECK: add<8 x i16>
 name|res_vus
 operator|=
 name|vec_add
@@ -692,7 +692,7 @@ argument_list|,
 name|vi
 argument_list|)
 expr_stmt|;
-comment|// CHECK: add nsw<4 x i32>
+comment|// CHECK: add<4 x i32>
 name|res_vi
 operator|=
 name|vec_add
@@ -702,7 +702,7 @@ argument_list|,
 name|vi
 argument_list|)
 expr_stmt|;
-comment|// CHECK: add nsw<4 x i32>
+comment|// CHECK: add<4 x i32>
 name|res_vi
 operator|=
 name|vec_add
@@ -712,7 +712,7 @@ argument_list|,
 name|vbi
 argument_list|)
 expr_stmt|;
-comment|// CHECK: add nsw<4 x i32>
+comment|// CHECK: add<4 x i32>
 name|res_vui
 operator|=
 name|vec_add
@@ -762,7 +762,7 @@ argument_list|,
 name|vsc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: add nsw<16 x i8>
+comment|// CHECK: add<16 x i8>
 name|res_vsc
 operator|=
 name|vec_vaddubm
@@ -772,7 +772,7 @@ argument_list|,
 name|vsc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: add nsw<16 x i8>
+comment|// CHECK: add<16 x i8>
 name|res_vsc
 operator|=
 name|vec_vaddubm
@@ -782,7 +782,7 @@ argument_list|,
 name|vbc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: add nsw<16 x i8>
+comment|// CHECK: add<16 x i8>
 name|res_vuc
 operator|=
 name|vec_vaddubm
@@ -822,7 +822,7 @@ argument_list|,
 name|vs
 argument_list|)
 expr_stmt|;
-comment|// CHECK: add nsw<8 x i16>
+comment|// CHECK: add<8 x i16>
 name|res_vs
 operator|=
 name|vec_vadduhm
@@ -832,7 +832,7 @@ argument_list|,
 name|vs
 argument_list|)
 expr_stmt|;
-comment|// CHECK: add nsw<8 x i16>
+comment|// CHECK: add<8 x i16>
 name|res_vs
 operator|=
 name|vec_vadduhm
@@ -842,7 +842,7 @@ argument_list|,
 name|vbs
 argument_list|)
 expr_stmt|;
-comment|// CHECK: add nsw<8 x i16>
+comment|// CHECK: add<8 x i16>
 name|res_vus
 operator|=
 name|vec_vadduhm
@@ -882,7 +882,7 @@ argument_list|,
 name|vi
 argument_list|)
 expr_stmt|;
-comment|// CHECK: add nsw<4 x i32>
+comment|// CHECK: add<4 x i32>
 name|res_vi
 operator|=
 name|vec_vadduwm
@@ -892,7 +892,7 @@ argument_list|,
 name|vi
 argument_list|)
 expr_stmt|;
-comment|// CHECK: add nsw<4 x i32>
+comment|// CHECK: add<4 x i32>
 name|res_vi
 operator|=
 name|vec_vadduwm
@@ -902,7 +902,7 @@ argument_list|,
 name|vbi
 argument_list|)
 expr_stmt|;
-comment|// CHECK: add nsw<4 x i32>
+comment|// CHECK: add<4 x i32>
 name|res_vui
 operator|=
 name|vec_vadduwm
@@ -5216,8 +5216,8 @@ argument_list|,
 name|vs
 argument_list|)
 expr_stmt|;
-comment|// CHECK: mul nsw<8 x i16>
-comment|// CHECK: add nsw<8 x i16>
+comment|// CHECK: mul<8 x i16>
+comment|// CHECK: add<8 x i16>
 name|res_vs
 operator|=
 name|vec_mladd
@@ -5229,8 +5229,8 @@ argument_list|,
 name|vus
 argument_list|)
 expr_stmt|;
-comment|// CHECK: mul nsw<8 x i16>
-comment|// CHECK: add nsw<8 x i16>
+comment|// CHECK: mul<8 x i16>
+comment|// CHECK: add<8 x i16>
 name|res_vs
 operator|=
 name|vec_mladd
@@ -5242,8 +5242,8 @@ argument_list|,
 name|vs
 argument_list|)
 expr_stmt|;
-comment|// CHECK: mul nsw<8 x i16>
-comment|// CHECK: add nsw<8 x i16>
+comment|// CHECK: mul<8 x i16>
+comment|// CHECK: add<8 x i16>
 comment|/* vec_mradds */
 name|res_vs
 operator|=
@@ -11893,7 +11893,7 @@ argument_list|,
 name|vsc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: sub nsw<16 x i8>
+comment|// CHECK: sub<16 x i8>
 name|res_vsc
 operator|=
 name|vec_sub
@@ -11903,7 +11903,7 @@ argument_list|,
 name|vsc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: sub nsw<16 x i8>
+comment|// CHECK: sub<16 x i8>
 name|res_vsc
 operator|=
 name|vec_sub
@@ -11913,7 +11913,7 @@ argument_list|,
 name|vbc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: sub nsw<16 x i8>
+comment|// CHECK: sub<16 x i8>
 name|res_vuc
 operator|=
 name|vec_sub
@@ -11953,7 +11953,7 @@ argument_list|,
 name|vs
 argument_list|)
 expr_stmt|;
-comment|// CHECK: sub nsw<8 x i16>
+comment|// CHECK: sub<8 x i16>
 name|res_vs
 operator|=
 name|vec_sub
@@ -11963,7 +11963,7 @@ argument_list|,
 name|vs
 argument_list|)
 expr_stmt|;
-comment|// CHECK: sub nsw<8 x i16>
+comment|// CHECK: sub<8 x i16>
 name|res_vs
 operator|=
 name|vec_sub
@@ -11973,7 +11973,7 @@ argument_list|,
 name|vbs
 argument_list|)
 expr_stmt|;
-comment|// CHECK: sub nsw<8 x i16>
+comment|// CHECK: sub<8 x i16>
 name|res_vus
 operator|=
 name|vec_sub
@@ -12013,7 +12013,7 @@ argument_list|,
 name|vi
 argument_list|)
 expr_stmt|;
-comment|// CHECK: sub nsw<4 x i32>
+comment|// CHECK: sub<4 x i32>
 name|res_vi
 operator|=
 name|vec_sub
@@ -12023,7 +12023,7 @@ argument_list|,
 name|vi
 argument_list|)
 expr_stmt|;
-comment|// CHECK: sub nsw<4 x i32>
+comment|// CHECK: sub<4 x i32>
 name|res_vi
 operator|=
 name|vec_sub
@@ -12033,7 +12033,7 @@ argument_list|,
 name|vbi
 argument_list|)
 expr_stmt|;
-comment|// CHECK: sub nsw<4 x i32>
+comment|// CHECK: sub<4 x i32>
 name|res_vui
 operator|=
 name|vec_sub
@@ -12083,7 +12083,7 @@ argument_list|,
 name|vsc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: sub nsw<16 x i8>
+comment|// CHECK: sub<16 x i8>
 name|res_vsc
 operator|=
 name|vec_vsububm
@@ -12093,7 +12093,7 @@ argument_list|,
 name|vsc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: sub nsw<16 x i8>
+comment|// CHECK: sub<16 x i8>
 name|res_vsc
 operator|=
 name|vec_vsububm
@@ -12103,7 +12103,7 @@ argument_list|,
 name|vbc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: sub nsw<16 x i8>
+comment|// CHECK: sub<16 x i8>
 name|res_vuc
 operator|=
 name|vec_vsububm
@@ -12143,7 +12143,7 @@ argument_list|,
 name|vs
 argument_list|)
 expr_stmt|;
-comment|// CHECK: sub nsw<8 x i16>
+comment|// CHECK: sub<8 x i16>
 name|res_vs
 operator|=
 name|vec_vsubuhm
@@ -12203,7 +12203,7 @@ argument_list|,
 name|vi
 argument_list|)
 expr_stmt|;
-comment|// CHECK: sub nsw<4 x i32>
+comment|// CHECK: sub<4 x i32>
 name|res_vi
 operator|=
 name|vec_vsubuwm
@@ -12213,7 +12213,7 @@ argument_list|,
 name|vi
 argument_list|)
 expr_stmt|;
-comment|// CHECK: sub nsw<4 x i32>
+comment|// CHECK: sub<4 x i32>
 name|res_vi
 operator|=
 name|vec_vsubuwm
@@ -12223,7 +12223,7 @@ argument_list|,
 name|vbi
 argument_list|)
 expr_stmt|;
-comment|// CHECK: sub nsw<4 x i32>
+comment|// CHECK: sub<4 x i32>
 name|res_vui
 operator|=
 name|vec_vsubuwm

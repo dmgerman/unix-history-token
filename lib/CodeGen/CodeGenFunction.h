@@ -2770,6 +2770,23 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// The selector slot.  Under the MandatoryCleanup model, all
+end_comment
+
+begin_comment
+comment|/// landing pads write the current selector value into this alloca.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|AllocaInst
+operator|*
+name|EHSelectorSlot
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Emits a landing pad for the current EH stack.
 end_comment
 
@@ -4419,6 +4436,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// DidCallStackSave - Whether llvm.stacksave has been called. Used to avoid
+end_comment
+
+begin_comment
+comment|/// calling llvm.stacksave for multiple VLAs in the same scope.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|DidCallStackSave
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// IndirectBranch - The first time an indirect goto is seen we create a block
 end_comment
 
@@ -4662,20 +4693,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// DidCallStackSave - Whether llvm.stacksave has been called. Used to avoid
-end_comment
-
-begin_comment
-comment|/// calling llvm.stacksave for multiple VLAs in the same scope.
-end_comment
-
-begin_decl_stmt
-name|bool
-name|DidCallStackSave
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// A block containing a single 'unreachable' instruction.  Created
 end_comment
 
@@ -4861,7 +4878,14 @@ operator|&
 name|getContext
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|CGM
+operator|.
+name|getContext
+argument_list|()
+return|;
+block|}
 end_expr_stmt
 
 begin_function
@@ -4938,6 +4962,16 @@ operator|::
 name|Value
 operator|*
 name|getExceptionSlot
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|getEHSelectorSlot
 argument_list|()
 expr_stmt|;
 end_expr_stmt
@@ -5085,6 +5119,9 @@ specifier|const
 name|ObjCContainerDecl
 modifier|*
 name|CD
+parameter_list|,
+name|SourceLocation
+name|StartLoc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5587,6 +5624,32 @@ end_comment
 begin_decl_stmt
 name|void
 name|GenerateThunk
+argument_list|(
+name|llvm
+operator|::
+name|Function
+operator|*
+name|Fn
+argument_list|,
+specifier|const
+name|CGFunctionInfo
+operator|&
+name|FnInfo
+argument_list|,
+name|GlobalDecl
+name|GD
+argument_list|,
+specifier|const
+name|ThunkInfo
+operator|&
+name|Thunk
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|GenerateVarArgsThunk
 argument_list|(
 name|llvm
 operator|::
@@ -8683,6 +8746,16 @@ name|llvm
 operator|::
 name|Constant
 operator|*
+name|getUnwindResumeFn
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Constant
+operator|*
 name|getUnwindResumeOrRethrowFn
 argument_list|()
 expr_stmt|;
@@ -10106,6 +10179,32 @@ name|ReturnValue
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitCXXOperatorMemberCallee
+argument_list|(
+specifier|const
+name|CXXOperatorCallExpr
+operator|*
+name|E
+argument_list|,
+specifier|const
+name|CXXMethodDecl
+operator|*
+name|MD
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|This
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|RValue

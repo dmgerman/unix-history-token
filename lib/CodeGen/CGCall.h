@@ -176,11 +176,16 @@ decl_stmt|;
 name|QualType
 name|Ty
 decl_stmt|;
+name|bool
+name|NeedsCopy
+decl_stmt|;
 name|CallArg
 argument_list|(
 argument|RValue rv
 argument_list|,
 argument|QualType ty
+argument_list|,
+argument|bool needscopy
 argument_list|)
 block|:
 name|RV
@@ -190,7 +195,12 @@ argument_list|)
 operator|,
 name|Ty
 argument_list|(
-argument|ty
+name|ty
+argument_list|)
+operator|,
+name|NeedsCopy
+argument_list|(
+argument|needscopy
 argument_list|)
 block|{ }
 block|}
@@ -218,6 +228,11 @@ name|rvalue
 parameter_list|,
 name|QualType
 name|type
+parameter_list|,
+name|bool
+name|needscopy
+init|=
+name|false
 parameter_list|)
 block|{
 name|push_back
@@ -227,6 +242,8 @@ argument_list|(
 name|rvalue
 argument_list|,
 name|type
+argument_list|,
+name|needscopy
 argument_list|)
 argument_list|)
 expr_stmt|;

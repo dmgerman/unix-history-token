@@ -220,19 +220,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// We are currently incompatible with GCC here.<rdar://problem/9217290>
-end_comment
-
-begin_comment
 comment|//
 end_comment
 
 begin_comment
-comment|// CHECK-XFAIL: @align1_x = global i32 1
-end_comment
-
-begin_comment
-comment|// CHECK: @align1_x = global i32 4
+comment|// CHECK: @align1_x = global i32 1
 end_comment
 
 begin_decl_stmt
@@ -480,11 +472,19 @@ block|}
 end_function
 
 begin_comment
+comment|// Note that we are incompatible with GCC on this example.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// CHECK: define i32 @f1_a
 end_comment
 
 begin_comment
-comment|// CHECK:   load i32* %{{.*}}, align 4
+comment|// CHECK:   load i32* %{{.*}}, align 1
 end_comment
 
 begin_comment
@@ -504,7 +504,7 @@ comment|// CHECK: }
 end_comment
 
 begin_comment
-comment|// Note that we are incompatible with GCC on these two examples.
+comment|// Note that we are incompatible with GCC on this example.
 end_comment
 
 begin_comment
@@ -513,10 +513,6 @@ end_comment
 
 begin_comment
 comment|// CHECK: define i32 @f1_c
-end_comment
-
-begin_comment
-comment|// CHECK-XFAIL:   load i32* %{{.*}}, align 1
 end_comment
 
 begin_comment
@@ -532,11 +528,7 @@ comment|// CHECK: define i32 @f1_d
 end_comment
 
 begin_comment
-comment|// CHECK-XFAIL:   load i32* %{{.*}}, align 1
-end_comment
-
-begin_comment
-comment|// CHECK:   load i32* %{{.*}}, align 4
+comment|// CHECK:   load i32* %{{.*}}, align 1
 end_comment
 
 begin_comment

@@ -562,7 +562,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|false
+name|true
 return|;
 block|}
 comment|/// UseDwarfDebugFlags - Embed the compile options to clang into the Dwarf

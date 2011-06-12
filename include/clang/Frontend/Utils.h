@@ -258,15 +258,6 @@ operator|&
 name|Opts
 argument_list|)
 decl_stmt|;
-comment|/// CheckDiagnostics - Gather the expected diagnostics and check them.
-name|bool
-name|CheckDiagnostics
-parameter_list|(
-name|Preprocessor
-modifier|&
-name|PP
-parameter_list|)
-function_decl|;
 comment|/// AttachDependencyFileGen - Create a dependency file generator, and attach
 comment|/// it to the given preprocessor.  This takes ownership of the output stream.
 name|void

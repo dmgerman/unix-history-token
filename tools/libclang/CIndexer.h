@@ -314,6 +314,14 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
+comment|/// \brief Print libclang's resource usage to standard error.
+name|void
+name|PrintLibclangResourceUsage
+parameter_list|(
+name|CXTranslationUnit
+name|TU
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

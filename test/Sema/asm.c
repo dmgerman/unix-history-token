@@ -316,5 +316,33 @@ comment|// expected-error{{unknown register name 'rr_asm' in asm}}
 block|}
 end_function
 
+begin_comment
+comment|// This is just an assert because of the boolean conversion.
+end_comment
+
+begin_comment
+comment|// Feel free to change the assembly to something sensible if it causes a problem.
+end_comment
+
+begin_comment
+comment|// rdar://problem/9414925
+end_comment
+
+begin_function
+name|void
+name|test11
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|_Bool
+name|b
+decl_stmt|;
+asm|asm
+specifier|volatile
+asm|("movb %%gs:%P2,%b0" : "=q"(b) : "0"(0), "i"(5L));
+block|}
+end_function
+
 end_unit
 

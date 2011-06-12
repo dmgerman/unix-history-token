@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   RUN: %clang_cc1 -E -trigraphs %s | grep bar   RUN: %clang_cc1 -E -trigraphs %s | grep foo   RUN: %clang_cc1 -E -trigraphs %s | not grep abc   RUN: %clang_cc1 -E -trigraphs %s | not grep xyz   RUN: %clang_cc1 -fsyntax-only -trigraphs -verify %s   */
+comment|/*   RUN: %clang_cc1 -E -trigraphs %s | grep bar   RUN: %clang_cc1 -E -trigraphs %s | grep foo   RUN: %clang_cc1 -E -trigraphs %s | not grep qux   RUN: %clang_cc1 -E -trigraphs %s | not grep xyz   RUN: %clang_cc1 -fsyntax-only -trigraphs -verify %s   */
 end_comment
 
 begin_comment
@@ -17,7 +17,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* abc  next comment ends with normal escaped newline: */
+comment|/* qux  next comment ends with normal escaped newline: */
 end_comment
 
 begin_comment

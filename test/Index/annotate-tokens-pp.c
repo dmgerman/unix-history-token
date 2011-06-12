@@ -174,8 +174,20 @@ empty_stmt|;
 block|}
 end_function
 
+begin_include
+include|#
+directive|include
+file|"pragma-once.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"guarded.h"
+end_include
+
 begin_comment
-comment|// RUN: c-index-test -test-annotate-tokens=%s:2:1:26:1 -I%S/Inputs %s | FileCheck %s
+comment|// RUN: c-index-test -test-annotate-tokens=%s:2:1:30:1 -I%S/Inputs %s | FileCheck %s
 end_comment
 
 begin_comment
@@ -808,6 +820,14 @@ end_comment
 
 begin_comment
 comment|// CHECK: Punctuation: "}" [26:1 - 26:2] UnexposedStmt=
+end_comment
+
+begin_comment
+comment|// CHECK: {{28:1.*inclusion directive=pragma-once.h.*multi-include guarded}}
+end_comment
+
+begin_comment
+comment|// CHECK: {{29:1.*inclusion directive=guarded.h.*multi-include guarded}}
 end_comment
 
 end_unit

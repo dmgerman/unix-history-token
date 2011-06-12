@@ -293,9 +293,9 @@ comment|// Diagnostic classification and reporting interfaces.
 comment|//
 comment|/// getDescription - Given a diagnostic ID, return a description of the
 comment|/// issue.
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|getDescription
 argument_list|(
 argument|unsigned DiagID
@@ -362,9 +362,9 @@ comment|/// getWarningOptionForDiag - Return the lowest-level warning option tha
 comment|/// enables the specified diagnostic.  If there is no -Wfoo flag that controls
 comment|/// the diagnostic, this returns null.
 specifier|static
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|getWarningOptionForDiag
 argument_list|(
 argument|unsigned DiagID
@@ -379,12 +379,18 @@ argument_list|(
 argument|unsigned DiagID
 argument_list|)
 block|;
+comment|/// getNumberOfCategories - Return the number of categories
+specifier|static
+name|unsigned
+name|getNumberOfCategories
+argument_list|()
+block|;
 comment|/// getCategoryNameFromID - Given a category ID, return the name of the
 comment|/// category.
 specifier|static
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|getCategoryNameFromID
 argument_list|(
 argument|unsigned CategoryID
@@ -435,9 +441,9 @@ argument_list|)
 block|;
 comment|/// getName - Given a diagnostic ID, return its name
 specifier|static
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|getName
 argument_list|(
 argument|unsigned DiagID
@@ -448,18 +454,15 @@ specifier|static
 name|unsigned
 name|getIdFromName
 argument_list|(
-name|char
-specifier|const
-operator|*
-name|Name
+argument|llvm::StringRef Name
 argument_list|)
 block|;
 comment|/// getBriefExplanation - Given a diagnostic ID, return a brief explanation
 comment|/// of the issue
 specifier|static
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|getBriefExplanation
 argument_list|(
 argument|unsigned DiagID
@@ -468,9 +471,9 @@ block|;
 comment|/// getFullExplanation - Given a diagnostic ID, return a full explanation
 comment|/// of the issue
 specifier|static
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|getFullExplanation
 argument_list|(
 argument|unsigned DiagID
@@ -484,7 +487,7 @@ comment|/// ignores the request if "Group" was unknown, false otherwise.
 name|bool
 name|setDiagnosticGroupMapping
 argument_list|(
-argument|const char *Group
+argument|llvm::StringRef Group
 argument_list|,
 argument|diag::Mapping Map
 argument_list|,

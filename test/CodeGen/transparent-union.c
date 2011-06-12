@@ -50,7 +50,7 @@ comment|// CHECK: define void @f1_0(i32* %a0)
 end_comment
 
 begin_comment
-comment|// CHECK:  call void @f0(%union.transp_t0* byval %{{.*}})
+comment|// CHECK:  call void @f0(%union.transp_t0* byval align 4 %{{.*}})
 end_comment
 
 begin_comment

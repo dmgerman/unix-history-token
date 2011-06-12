@@ -561,9 +561,9 @@ init|=
 operator|*
 name|bp
 decl_stmt|;
-comment|// CHECK: add nsw<4 x i32>
-comment|// CHECK: sub nsw<4 x i32>
-comment|// CHECK: mul nsw<4 x i32>
+comment|// CHECK: add<4 x i32>
+comment|// CHECK: sub<4 x i32>
+comment|// CHECK: mul<4 x i32>
 comment|// CHECK: sdiv<4 x i32>
 comment|// CHECK: srem<4 x i32>
 name|a
@@ -596,9 +596,9 @@ name|a
 operator|%
 name|b
 expr_stmt|;
-comment|// CHECK: add nsw<4 x i32>
-comment|// CHECK: sub nsw<4 x i32>
-comment|// CHECK: mul nsw<4 x i32>
+comment|// CHECK: add<4 x i32>
+comment|// CHECK: sub<4 x i32>
+comment|// CHECK: mul<4 x i32>
 comment|// CHECK: sdiv<4 x i32>
 comment|// CHECK: srem<4 x i32>
 name|a
@@ -631,9 +631,9 @@ name|a
 operator|%
 name|c
 expr_stmt|;
-comment|// CHECK: add nsw<4 x i32>
-comment|// CHECK: sub nsw<4 x i32>
-comment|// CHECK: mul nsw<4 x i32>
+comment|// CHECK: add<4 x i32>
+comment|// CHECK: sub<4 x i32>
+comment|// CHECK: mul<4 x i32>
 comment|// CHECK: sdiv<4 x i32>
 comment|// CHECK: srem<4 x i32>
 name|a
@@ -656,9 +656,9 @@ name|a
 operator|%=
 name|b
 expr_stmt|;
-comment|// CHECK: add nsw<4 x i32>
-comment|// CHECK: sub nsw<4 x i32>
-comment|// CHECK: mul nsw<4 x i32>
+comment|// CHECK: add<4 x i32>
+comment|// CHECK: sub<4 x i32>
+comment|// CHECK: mul<4 x i32>
 comment|// CHECK: sdiv<4 x i32>
 comment|// CHECK: srem<4 x i32>
 name|a
@@ -842,7 +842,7 @@ comment|// CHECK: @test10
 end_comment
 
 begin_comment
-comment|// CHECK: add nsw<4 x i32>
+comment|// CHECK: add<4 x i32>
 end_comment
 
 begin_comment

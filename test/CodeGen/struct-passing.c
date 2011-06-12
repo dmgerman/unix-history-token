@@ -168,11 +168,11 @@ comment|// CHECK: declare void @f3({{.*}} sret)
 end_comment
 
 begin_comment
-comment|// CHECK: declare void @f4({{.*}} byval)
+comment|// CHECK: declare void @f4({{.*}} byval align 4)
 end_comment
 
 begin_comment
-comment|// CHECK: declare void @f5({{.*}} byval)
+comment|// CHECK: declare void @f5({{.*}} byval align 4)
 end_comment
 
 end_unit

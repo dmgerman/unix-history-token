@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -o %t -emit-llvm -g %s
+comment|// RUN: %clang_cc1 -triple x86_64-unk-unk -o %t -emit-llvm -g %s
 end_comment
 
 begin_comment
@@ -183,6 +183,26 @@ name|barfoo
 name|foo
 parameter_list|()
 block|{ }
+end_function
+
+begin_comment
+comment|// CHECK: __uint128_t
+end_comment
+
+begin_function
+name|__uint128_t
+name|foo128
+parameter_list|()
+block|{
+name|__uint128_t
+name|int128
+init|=
+literal|44
+decl_stmt|;
+return|return
+name|int128
+return|;
+block|}
 end_function
 
 end_unit

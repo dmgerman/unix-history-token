@@ -8,7 +8,7 @@ comment|//<rdar://problem/7256886>
 end_comment
 
 begin_comment
-comment|// CHECK: !1 = metadata !{
+comment|// CHECK: !0 = metadata !{
 end_comment
 
 begin_comment

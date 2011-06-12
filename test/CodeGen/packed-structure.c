@@ -40,11 +40,7 @@ comment|// CHECK-GLOBAL: @s0_align_x = global i32 4
 end_comment
 
 begin_comment
-comment|// FIXME: This should be 1 to match gcc. PR7951.
-end_comment
-
-begin_comment
-comment|// CHECK-GLOBAL: @s0_align_y = global i32 4
+comment|// CHECK-GLOBAL: @s0_align_y = global i32 1
 end_comment
 
 begin_comment
@@ -154,7 +150,7 @@ comment|// CHECK-FUNCTIONS: define i32 @s0_load_y
 end_comment
 
 begin_comment
-comment|// CHECK-FUNCTIONS: [[s0_load_y:%.*]] = load i32* {{.*}}, align 4
+comment|// CHECK-FUNCTIONS: [[s0_load_y:%.*]] = load i32* {{.*}}, align 1
 end_comment
 
 begin_comment
@@ -604,7 +600,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|// CHECK-GLOBAL: @s3_1 = global i32 2
+comment|// CHECK-GLOBAL: @s3_1 = global i32 1
 end_comment
 
 begin_decl_stmt
@@ -642,7 +638,7 @@ name|ptr
 parameter_list|)
 block|{
 comment|// CHECK-FUNCTIONS:      [[PTR:%.*]] = getelementptr inbounds {{%.*}}* {{%.*}}, i32 0, i32 1
-comment|// CHECK-FUNCTIONS-NEXT: load i32* [[PTR]], align 2
+comment|// CHECK-FUNCTIONS-NEXT: load i32* [[PTR]], align 1
 return|return
 name|ptr
 operator|->

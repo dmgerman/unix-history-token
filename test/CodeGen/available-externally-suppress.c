@@ -111,7 +111,7 @@ name|x
 parameter_list|)
 block|{
 comment|// CHECK: br i1
-comment|// CHECK-NOT: call
+comment|// CHECK-NOT: call {{.*}} @f1
 comment|// CHECK: ret i32
 return|return
 name|f1
