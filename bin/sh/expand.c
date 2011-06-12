@@ -6693,6 +6693,10 @@ expr_stmt|;
 else|else
 name|wc
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|q
 operator|++
@@ -6985,6 +6989,10 @@ expr_stmt|;
 else|else
 name|chr
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|q
 operator|++
@@ -7059,6 +7067,10 @@ block|}
 else|else
 name|wc
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 expr_stmt|;
 if|if
@@ -7126,6 +7138,10 @@ block|}
 else|else
 name|wc2
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 operator|++
