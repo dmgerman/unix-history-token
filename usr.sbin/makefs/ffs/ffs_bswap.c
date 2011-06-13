@@ -33,6 +33,18 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lockmgr.h>
+end_include
+
 begin_if
 if|#
 directive|if
