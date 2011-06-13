@@ -1259,7 +1259,7 @@ name|bufobj_wwait
 argument_list|(
 name|bo
 argument_list|,
-literal|3
+literal|0
 argument_list|,
 literal|0
 argument_list|)
