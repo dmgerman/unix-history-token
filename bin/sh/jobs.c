@@ -239,6 +239,12 @@ directive|include
 file|"var.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"builtins.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|struct

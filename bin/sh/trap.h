@@ -26,19 +26,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|int
-name|trapcmd
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|clear_traps
 parameter_list|(

@@ -228,6 +228,12 @@ directive|include
 file|"show.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"builtins.h"
+end_include
+
 begin_comment
 comment|/*  * Structure specifying which parts of the string should be searched  * for IFS characters.  */
 end_comment

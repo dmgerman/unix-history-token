@@ -232,6 +232,12 @@ directive|include
 file|"cd.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"builtins.h"
+end_include
+
 begin_decl_stmt
 name|int
 name|rootpid
