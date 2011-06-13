@@ -603,7 +603,7 @@ name|rtp
 operator|.
 name|prio
 operator|=
-name|p4prio_to_rtpprio
+name|p4prio_to_tsprio
 argument_list|(
 name|param
 operator|->
