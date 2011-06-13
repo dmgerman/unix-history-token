@@ -5200,7 +5200,7 @@ comment|/* 	 * Data sent (as far as we can tell). 	 * If this advertises a large
 if|if
 condition|(
 name|recwin
-operator|>
+operator|>=
 literal|0
 operator|&&
 name|SEQ_GT
