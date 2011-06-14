@@ -731,6 +731,17 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * If PKT_ALIAS_SKIP_GLOBAL is set, nat instance is not checked for matching  * states in 'ipfw nat global' rule.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PKT_ALIAS_SKIP_GLOBAL
+value|0x200
+end_define
+
+begin_comment
 comment|/* Function return codes. */
 end_comment
 
