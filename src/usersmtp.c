@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2006, 2008, 2009 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2006, 2008-2010 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: usersmtp.c,v 8.473 2009/06/17 17:26:51 ca Exp $"
+literal|"@(#)$Id: usersmtp.c,v 8.485 2010/07/23 21:09:38 ca Exp $"
 argument_list|)
 end_macro
 
@@ -141,20 +141,6 @@ end_comment
 
 begin_comment
 comment|/* **  USERSMTP -- run SMTP protocol from the user end. ** **	This protocol is described in RFC821. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REPLYCLASS
-parameter_list|(
-name|r
-parameter_list|)
-value|(((r) / 10) % 10)
-end_define
-
-begin_comment
-comment|/* second digit of reply code */
 end_comment
 
 begin_define
@@ -496,7 +482,7 @@ name|esmtp_check
 argument_list|,
 name|NULL
 argument_list|,
-name|XS_DEFAULT
+name|XS_GREET
 argument_list|)
 expr_stmt|;
 if|if
@@ -748,7 +734,7 @@ name|helo_options
 argument_list|,
 name|NULL
 argument_list|,
-name|XS_DEFAULT
+name|XS_EHLO
 argument_list|)
 expr_stmt|;
 if|if
@@ -1323,6 +1309,34 @@ name|l1
 operator|+
 name|l2
 expr_stmt|;
+if|if
+condition|(
+name|rl
+operator|<=
+literal|0
+condition|)
+block|{
+name|sm_syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"str_union: stringlen1=%d, stringlen2=%d, sum=%d, status=overflow"
+argument_list|,
+name|l1
+argument_list|,
+name|l2
+argument_list|,
+name|rl
+argument_list|)
+expr_stmt|;
+name|res
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
 name|res
 operator|=
 operator|(
@@ -1566,18 +1580,11 @@ condition|(
 name|firstline
 condition|)
 block|{
-if|#
-directive|if
-name|SASL
+name|mci_clr_extensions
+argument_list|(
 name|mci
-operator|->
-name|mci_saslcap
-operator|=
-name|NULL
+argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SASL */
 if|#
 directive|if
 name|_FFR_IGNORE_EXT_ON_HELO
@@ -1926,6 +1933,16 @@ operator|*
 name|p
 operator|!=
 literal|'\0'
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|MCIF_AUTH2
+argument_list|,
+name|mci
+operator|->
+name|mci_flags
+argument_list|)
 condition|)
 block|{
 if|if
@@ -1959,7 +1976,7 @@ name|mci
 operator|->
 name|mci_flags
 operator||=
-name|MCIF_AUTH
+name|MCIF_AUTH2
 expr_stmt|;
 block|}
 else|else
@@ -2025,6 +2042,32 @@ expr_stmt|;
 block|}
 block|}
 block|}
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|95
+argument_list|,
+literal|5
+argument_list|)
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"AUTH flags=%lx, mechs=%s"
+argument_list|,
+name|mci
+operator|->
+name|mci_flags
+argument_list|,
+name|mci
+operator|->
+name|mci_saslcap
+argument_list|)
+expr_stmt|;
 block|}
 endif|#
 directive|endif
@@ -6439,7 +6482,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* XXX should these be options settable via .cf ? */
-block|{
 name|ssp
 operator|.
 name|max_ssf
@@ -6459,7 +6501,6 @@ block|ssp.security_flags = SASL_SEC_NOPLAINTEXT;
 endif|#
 directive|endif
 comment|/* 0 */
-block|}
 name|saslresult
 operator|=
 name|sasl_setprop
@@ -9122,7 +9163,7 @@ argument_list|,
 operator|&
 name|enhsc
 argument_list|,
-name|XS_DEFAULT
+name|XS_MAIL
 argument_list|)
 expr_stmt|;
 if|if
@@ -10132,7 +10173,7 @@ argument_list|,
 operator|&
 name|enhsc
 argument_list|,
-name|XS_DEFAULT
+name|XS_RCPT
 argument_list|)
 expr_stmt|;
 name|save_errno
@@ -10758,7 +10799,7 @@ argument_list|,
 operator|&
 name|enhsc
 argument_list|,
-name|XS_DEFAULT
+name|XS_DATA
 argument_list|)
 expr_stmt|;
 if|if
@@ -11363,7 +11404,7 @@ argument_list|,
 operator|&
 name|enhsc
 argument_list|,
-name|XS_DEFAULT
+name|XS_EOM
 argument_list|)
 expr_stmt|;
 if|if
@@ -11742,7 +11783,7 @@ argument_list|,
 operator|&
 name|enhsc
 argument_list|,
-name|XS_DEFAULT
+name|XS_DATA2
 argument_list|)
 expr_stmt|;
 if|if
@@ -12082,7 +12123,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|XS_DEFAULT
+name|XS_QUIT
 argument_list|)
 expr_stmt|;
 name|SuprErrs
@@ -13281,10 +13322,6 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-name|firstline
-operator|=
-name|false
-expr_stmt|;
 comment|/* decode the reply code */
 name|r
 operator|=
@@ -13300,7 +13337,17 @@ name|r
 operator|<
 literal|100
 condition|)
+block|{
+name|firstline
+operator|=
+name|false
+expr_stmt|;
 continue|continue;
+block|}
+name|firstline
+operator|=
+name|false
+expr_stmt|;
 comment|/* if no continuation lines, return this line */
 if|if
 condition|(
