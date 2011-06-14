@@ -2449,8 +2449,26 @@ literal|0xf
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Skip BAR(5) on ICH8M Apples, system locks up on access. */
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|ctlr
+operator|->
+name|chip
+operator|->
+name|chipid
+operator|!=
+name|ATA_I82801HBM_S1
+operator|||
+name|pci_get_subvendor
+argument_list|(
+name|dev
+argument_list|)
+operator|!=
+literal|0x106b
+condition|)
 block|{
 name|ctlr
 operator|->
