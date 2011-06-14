@@ -480,17 +480,12 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|printf
-argument_list|(
-literal|"%s: type %d is not implemented\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|se_value
-operator|->
-name|value_type
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("%s: type %d is not implemented\n", __func__, 		    se_value->value_type);
+endif|#
+directive|endif
 break|break;
 block|}
 if|if
@@ -1298,18 +1293,12 @@ expr_stmt|;
 break|break;
 block|}
 default|default:
-name|printf
-argument_list|(
-literal|"%s: type %d is not implemented\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|nvpair_type
-argument_list|(
-name|elem
-argument_list|)
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("%s: type %d is not implemented\n", __func__, 			    nvpair_type(elem));
+endif|#
+directive|endif
 break|break;
 block|}
 block|}
