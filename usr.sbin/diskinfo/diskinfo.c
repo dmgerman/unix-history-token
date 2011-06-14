@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/time.h>
 end_include
 
@@ -172,6 +178,11 @@ decl_stmt|,
 name|ident
 index|[
 name|DISK_IDENT_SIZE
+index|]
+decl_stmt|,
+name|physpath
+index|[
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|off_t
@@ -762,6 +773,26 @@ argument_list|(
 literal|"\t%-12s\t# Disk ident.\n"
 argument_list|,
 name|ident
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|DIOCGPHYSPATH
+argument_list|,
+name|physpath
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"\t%-12s\t# Physical path\n"
+argument_list|,
+name|physpath
 argument_list|)
 expr_stmt|;
 block|}

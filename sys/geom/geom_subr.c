@@ -1568,6 +1568,14 @@ name|spoiled
 expr_stmt|;
 name|gp
 operator|->
+name|attrchanged
+operator|=
+name|mp
+operator|->
+name|attrchanged
+expr_stmt|;
+name|gp
+operator|->
 name|dumpconf
 operator|=
 name|mp
