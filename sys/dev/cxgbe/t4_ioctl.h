@@ -60,6 +60,9 @@ comment|/* program a filter */
 name|T4_DEL_FILTER
 block|,
 comment|/* delete a filter */
+name|T4_GET_SGE_CONTEXT
+block|,
+comment|/* get SGE context for a queue */
 block|}
 enum|;
 end_enum
@@ -631,6 +634,49 @@ end_struct
 begin_define
 define|#
 directive|define
+name|T4_SGE_CONTEXT_SIZE
+value|24
+end_define
+
+begin_enum
+enum|enum
+block|{
+name|SGE_CONTEXT_EGRESS
+block|,
+name|SGE_CONTEXT_INGRESS
+block|,
+name|SGE_CONTEXT_FLM
+block|,
+name|SGE_CONTEXT_CNM
+block|}
+enum|;
+end_enum
+
+begin_struct
+struct|struct
+name|t4_sge_context
+block|{
+name|uint32_t
+name|mem_id
+decl_stmt|;
+name|uint32_t
+name|cid
+decl_stmt|;
+name|uint32_t
+name|data
+index|[
+name|T4_SGE_CONTEXT_SIZE
+operator|/
+literal|4
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
 name|CHELSIO_T4_GETREG
 value|_IOWR('f', T4_GETREG, struct t4_reg)
 end_define
@@ -682,6 +728,13 @@ define|#
 directive|define
 name|CHELSIO_T4_DEL_FILTER
 value|_IOW('f', T4_DEL_FILTER, struct t4_filter)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_T4_GET_SGE_CONTEXT
+value|_IOWR('f', T4_GET_SGE_CONTEXT, \     struct t4_sge_context)
 end_define
 
 begin_endif
