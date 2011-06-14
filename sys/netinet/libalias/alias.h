@@ -686,28 +686,6 @@ name|PKT_ALIAS_RESET_ON_ADDR_CHANGE
 value|0x20
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_FW_PUNCH
-end_ifndef
-
-begin_comment
-comment|/*  * If PKT_ALIAS_PUNCH_FW is set, active FTP and IRC DCC connections will  * create a 'hole' in the firewall to allow the transfers to work.  The  * ipfw rule number that the hole is created with is controlled by  * PacketAliasSetFWBase().  The hole will be attached to that  * particular alias_link, so when the link goes away the hole is deleted.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PKT_ALIAS_PUNCH_FW
-value|0x100
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * If PKT_ALIAS_PROXY_ONLY is set, then NAT will be disabled and only  * transparent proxying is performed.  */
 end_comment
@@ -729,6 +707,28 @@ directive|define
 name|PKT_ALIAS_REVERSE
 value|0x80
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_FW_PUNCH
+end_ifndef
+
+begin_comment
+comment|/*  * If PKT_ALIAS_PUNCH_FW is set, active FTP and IRC DCC connections will  * create a 'hole' in the firewall to allow the transfers to work.  The  * ipfw rule number that the hole is created with is controlled by  * PacketAliasSetFWBase().  The hole will be attached to that  * particular alias_link, so when the link goes away the hole is deleted.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PKT_ALIAS_PUNCH_FW
+value|0x100
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Function return codes. */
