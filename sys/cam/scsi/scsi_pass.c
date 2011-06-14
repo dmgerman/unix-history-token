@@ -2135,13 +2135,13 @@ name|ccb_h
 operator|.
 name|func_code
 operator|==
-name|XPT_GDEV_ADVINFO
+name|XPT_DEV_ADVINFO
 operator|)
 operator|&&
 operator|(
 name|ccb
 operator|->
-name|cgdai
+name|cdai
 operator|.
 name|bufsiz
 operator|>
