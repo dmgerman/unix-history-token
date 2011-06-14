@@ -4592,13 +4592,6 @@ begin_comment
 comment|/* STARTTLS active */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MCIF_EXTENS
-value|(MCIF_EXPN | MCIF_SIZE | MCIF_8BITMIME | MCIF_DSN | MCIF_8BITOK | MCIF_AUTH | MCIF_ENHSTAT | MCIF_TLS)
-end_define
-
 begin_else
 else|#
 directive|else
@@ -4611,8 +4604,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MCIF_EXTENS
-value|(MCIF_EXPN | MCIF_SIZE | MCIF_8BITMIME | MCIF_DSN | MCIF_8BITOK | MCIF_AUTH | MCIF_ENHSTAT)
+name|MCIF_TLS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MCIF_TLSACT
+value|0
 end_define
 
 begin_endif
@@ -4693,6 +4693,13 @@ end_define
 begin_comment
 comment|/* use only EHLO in smtpinit */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIF_EXTENS
+value|(MCIF_EXPN | MCIF_SIZE | MCIF_8BITMIME | MCIF_DSN | MCIF_8BITOK | MCIF_AUTH | MCIF_ENHSTAT | MCIF_TLS | MCIF_AUTH2)
+end_define
 
 begin_comment
 comment|/* states */
