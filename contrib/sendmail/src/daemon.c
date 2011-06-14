@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2007, 2009 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2007, 2009, 2010 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: daemon.c,v 8.683 2009/12/18 01:12:40 ca Exp $"
+literal|"@(#)$Id: daemon.c,v 8.691 2011/01/25 18:31:30 ca Exp $"
 argument_list|)
 end_macro
 
@@ -5050,7 +5050,11 @@ name|sin6
 operator|.
 name|sin6_addr
 operator|=
+operator|(
 name|LocalDaemon
+operator|&&
+name|V6LoopbackAddrFound
+operator|)
 condition|?
 name|in6addr_loopback
 else|:
@@ -8720,7 +8724,11 @@ name|sin6
 operator|.
 name|sin6_addr
 operator|=
+operator|(
 name|LocalDaemon
+operator|&&
+name|V6LoopbackAddrFound
+operator|)
 condition|?
 name|in6addr_loopback
 else|:
@@ -10523,6 +10531,18 @@ name|sin_addr
 operator|.
 name|s_addr
 expr_stmt|;
+name|addr
+operator|.
+name|sa
+operator|.
+name|sa_family
+operator|=
+name|ConnectOnlyTo
+operator|.
+name|sa
+operator|.
+name|sa_family
+expr_stmt|;
 break|break;
 endif|#
 directive|endif
@@ -11520,6 +11540,14 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
+block|{
+name|SM_FREE_CLR
+argument_list|(
+name|mci
+operator|->
+name|mci_heloname
+argument_list|)
+expr_stmt|;
 name|mci
 operator|->
 name|mci_heloname
@@ -11529,6 +11557,7 @@ argument_list|(
 name|HeloName
 argument_list|)
 expr_stmt|;
+block|}
 name|mci_setstat
 argument_list|(
 name|mci

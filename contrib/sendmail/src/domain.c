@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2004, 2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1986, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2004, 2006, 2010 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1986, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -24,7 +24,7 @@ end_if
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: domain.c,v 8.202 2006/12/19 01:15:07 ca Exp $ (with name server)"
+literal|"@(#)$Id: domain.c,v 8.204 2010/06/29 15:35:33 ca Exp $ (with name server)"
 argument_list|)
 end_macro
 
@@ -40,7 +40,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: domain.c,v 8.202 2006/12/19 01:15:07 ca Exp $ (without name server)"
+literal|"@(#)$Id: domain.c,v 8.204 2010/06/29 15:35:33 ca Exp $ (without name server)"
 argument_list|)
 end_macro
 
@@ -64,55 +64,6 @@ include|#
 directive|include
 file|<arpa/inet.h>
 end_include
-
-begin_comment
-comment|/* **  The standard udp packet size PACKETSZ (512) is not sufficient for some **  nameserver answers containing very many resource records. The resolver **  may switch to tcp and retry if it detects udp packet overflow. **  Also note that the resolver routines res_query and res_search return **  the size of the *un*truncated answer in case the supplied answer buffer **  it not big enough to accommodate the entire answer. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAXPACKET
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MAXPACKET
-value|8192
-end_define
-
-begin_comment
-comment|/* max packet size used internally by BIND */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! MAXPACKET */
-end_comment
-
-begin_typedef
-typedef|typedef
-union|union
-block|{
-name|HEADER
-name|qb1
-decl_stmt|;
-name|unsigned
-name|char
-name|qb2
-index|[
-name|MAXPACKET
-index|]
-decl_stmt|;
-block|}
-name|querybuf
-typedef|;
-end_typedef
 
 begin_ifndef
 ifndef|#
