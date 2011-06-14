@@ -644,7 +644,7 @@ comment|/* gigabits/sec. */
 end_comment
 
 begin_comment
-comment|/*  * Capabilities that interfaces can advertise.  *  * struct ifnet.if_capabilities  *   contains the optional features& capabilities a particular interface  *   supports (not only the driver but also the detected hw revision).  *   Capabilities are defined by IFCAP_* below.  * struct ifnet.if_capenable  *   contains the enabled (either by default or through ifconfig) optional  *   features& capabilities on this interface.  *   Capabilities are defined by IFCAP_* below.  * struct if_data.ifi_hwassist in mbuf CSUM_ flag form, controlled by above  *   contains the enabled optional feature& capabilites that can be used  *   individually per packet and are specified in the mbuf pkthdr.csum_flags  *   field.  IFCAP_* and CSUM_* do not match one to one and CSUM_* may be  *   more detailed or differenciated than IFCAP_*.  *   Hwassist features are defined CSUM_* in sys/mbuf.h  */
+comment|/*  * Capabilities that interfaces can advertise.  *  * struct ifnet.if_capabilities  *   contains the optional features& capabilities a particular interface  *   supports (not only the driver but also the detected hw revision).  *   Capabilities are defined by IFCAP_* below.  * struct ifnet.if_capenable  *   contains the enabled (either by default or through ifconfig) optional  *   features& capabilities on this interface.  *   Capabilities are defined by IFCAP_* below.  * struct if_data.ifi_hwassist in mbuf CSUM_ flag form, controlled by above  *   contains the enabled optional feature& capabilites that can be used  *   individually per packet and are specified in the mbuf pkthdr.csum_flags  *   field.  IFCAP_* and CSUM_* do not match one to one and CSUM_* may be  *   more detailed or differenciated than IFCAP_*.  *   Hwassist features are defined CSUM_* in sys/mbuf.h  *  * Capabilities that cannot be arbitrarily changed with ifconfig/ioctl  * are listed in IFCAP_CANTCHANGE, similar to IFF_CANTCHANGE.  * This is not strictly necessary because the common code never  * changes capabilities, and it is left to the individual driver  * to do the right thing. However, having the filter here  * avoids replication of the same code in all individual drivers.  */
 end_comment
 
 begin_define
@@ -870,6 +870,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IFCAP_NETMAP
+value|0x100000
+end_define
+
+begin_comment
+comment|/* netmap mode supported/enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IFCAP_HWCSUM
 value|(IFCAP_RXCSUM | IFCAP_TXCSUM)
 end_define
@@ -893,6 +904,13 @@ define|#
 directive|define
 name|IFCAP_TOE
 value|(IFCAP_TOE4 | IFCAP_TOE6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFCAP_CANTCHANGE
+value|(IFCAP_NETMAP)
 end_define
 
 begin_define
