@@ -3104,6 +3104,12 @@ operator|&=
 operator|~
 name|RF_ALLOCATED
 expr_stmt|;
+name|r
+operator|->
+name|r_dev
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 literal|0
 return|;
