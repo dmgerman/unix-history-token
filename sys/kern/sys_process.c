@@ -3261,6 +3261,15 @@ name|td
 operator|->
 name|td_proc
 condition|)
+block|{
+comment|/* Remember that a child is being debugged(traced). */
+name|p
+operator|->
+name|p_pptr
+operator|->
+name|p_dbg_child
+operator|++
+expr_stmt|;
 name|proc_reparent
 argument_list|(
 name|p
@@ -3270,6 +3279,7 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
+block|}
 name|data
 operator|=
 name|SIGSTOP
@@ -3588,6 +3598,13 @@ argument_list|,
 name|pp
 argument_list|)
 expr_stmt|;
+name|p
+operator|->
+name|p_pptr
+operator|->
+name|p_dbg_child
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|pp
@@ -3603,6 +3620,12 @@ expr_stmt|;
 block|}
 name|p
 operator|->
+name|p_oppid
+operator|=
+literal|0
+expr_stmt|;
+name|p
+operator|->
 name|p_flag
 operator|&=
 operator|~
@@ -3613,12 +3636,6 @@ name|P_WAITED
 operator||
 name|P_FOLLOWFORK
 operator|)
-expr_stmt|;
-name|p
-operator|->
-name|p_oppid
-operator|=
-literal|0
 expr_stmt|;
 comment|/* should we send SIGCHLD? */
 comment|/* childproc_continued(p); */
