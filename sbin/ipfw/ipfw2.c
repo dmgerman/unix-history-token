@@ -14784,6 +14784,28 @@ argument_list|(
 literal|"missing fib number"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|_substrcmp
+argument_list|(
+operator|*
+name|av
+argument_list|,
+literal|"tablearg"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|action
+operator|->
+name|arg1
+operator|=
+name|IP_FW_TABLEARG
+expr_stmt|;
+block|}
+else|else
+block|{
 name|action
 operator|->
 name|arg1
@@ -14841,6 +14863,7 @@ argument_list|,
 literal|"fib too large.\n"
 argument_list|)
 expr_stmt|;
+block|}
 name|av
 operator|++
 expr_stmt|;
