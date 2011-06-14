@@ -2379,6 +2379,16 @@ name|DA_Q_NO_SYNC_CACHE
 operator|)
 operator|==
 literal|0
+operator|&&
+operator|(
+name|softc
+operator|->
+name|flags
+operator|&
+name|DA_FLAG_PACK_INVALID
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|union
@@ -3406,7 +3416,11 @@ name|periph
 operator|->
 name|path
 argument_list|,
-literal|"lost device\n"
+literal|"lost device - %d outstanding\n"
+argument_list|,
+name|softc
+operator|->
+name|outstanding_cmds
 argument_list|)
 expr_stmt|;
 block|}
@@ -3727,9 +3741,11 @@ name|ccb_state
 operator||=
 name|DA_CCB_RETRY_UA
 expr_stmt|;
-comment|/* FALLTHROUGH*/
+break|break;
 block|}
 default|default:
+break|break;
+block|}
 name|cam_periph_async
 argument_list|(
 name|periph
@@ -3741,8 +3757,6 @@ argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
 block|}
 end_function
 
@@ -6247,11 +6261,29 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|int
+name|queued_error
+decl_stmt|;
+comment|/* 				 * return all queued I/O with EIO, so that 				 * the client can retry these I/Os in the 				 * proper order should it attempt to recover. 				 */
+name|queued_error
+operator|=
+name|EIO
+expr_stmt|;
 if|if
 condition|(
 name|error
 operator|==
 name|ENXIO
+operator|&&
+operator|(
+name|softc
+operator|->
+name|flags
+operator|&
+name|DA_FLAG_PACK_INVALID
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* 					 * Catastrophic error.  Mark our pack as 					 * invalid. 					 */
@@ -6271,8 +6303,11 @@ name|flags
 operator||=
 name|DA_FLAG_PACK_INVALID
 expr_stmt|;
+name|queued_error
+operator|=
+name|ENXIO
+expr_stmt|;
 block|}
-comment|/* 				 * return all queued I/O with EIO, so that 				 * the client can retry these I/Os in the 				 * proper order should it attempt to recover. 				 */
 name|bioq_flush
 argument_list|(
 operator|&
@@ -6282,7 +6317,7 @@ name|bio_queue
 argument_list|,
 name|NULL
 argument_list|,
-name|EIO
+name|queued_error
 argument_list|)
 expr_stmt|;
 name|bp
@@ -6449,6 +6484,33 @@ name|flags
 operator||=
 name|DA_FLAG_WENT_IDLE
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|softc
+operator|->
+name|flags
+operator|&
+name|DA_FLAG_PACK_INVALID
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|xpt_print
+argument_list|(
+name|periph
+operator|->
+name|path
+argument_list|,
+literal|"oustanding %d\n"
+argument_list|,
+name|softc
+operator|->
+name|outstanding_cmds
+argument_list|)
+expr_stmt|;
+block|}
 name|biodone
 argument_list|(
 name|bp
