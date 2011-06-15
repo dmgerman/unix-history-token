@@ -450,6 +450,11 @@ name|TFTP_MAX_BLKSIZE
 index|]
 decl_stmt|;
 block|}
+name|__packed
+name|__aligned
+argument_list|(
+literal|4
+argument_list|)
 name|lastdata
 struct|;
 block|}
@@ -458,6 +463,7 @@ end_struct
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|int
 name|tftperrors
 index|[
@@ -868,6 +874,11 @@ literal|6
 index|]
 decl_stmt|;
 block|}
+name|__packed
+name|__aligned
+argument_list|(
+literal|4
+argument_list|)
 name|wbuf
 struct|;
 name|char
@@ -1334,6 +1345,11 @@ name|tftphdr
 name|t
 decl_stmt|;
 block|}
+name|__packed
+name|__aligned
+argument_list|(
+literal|4
+argument_list|)
 name|wbuf
 struct|;
 name|char
