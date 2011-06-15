@@ -427,6 +427,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ffs_fserr
+parameter_list|(
+name|struct
+name|fs
+modifier|*
+parameter_list|,
+name|ino_t
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ffs_isblock
 parameter_list|(

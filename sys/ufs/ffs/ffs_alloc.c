@@ -395,23 +395,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|ffs_fserr
-parameter_list|(
-name|struct
-name|fs
-modifier|*
-parameter_list|,
-name|ino_t
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|ufs2_daddr_t
 name|ffs_hashalloc
 parameter_list|(
@@ -973,6 +956,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|reclaimed
+operator|>
+literal|0
+operator|&&
 name|ppsratecheck
 argument_list|(
 operator|&
@@ -2074,6 +2061,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|reclaimed
+operator|>
+literal|0
+operator|&&
 name|ppsratecheck
 argument_list|(
 operator|&
@@ -12727,7 +12718,6 @@ comment|/*  * Fserr prints the name of a filesystem with an error diagnostic.  *
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|ffs_fserr
 parameter_list|(
