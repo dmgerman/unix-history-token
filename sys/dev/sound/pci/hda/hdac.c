@@ -21571,15 +21571,13 @@ decl_stmt|;
 name|uint8_t
 name|v
 decl_stmt|;
-name|device_printf
+name|HDA_BOOTVERBOSE
 argument_list|(
-name|dev
-argument_list|,
+argument|device_printf(dev,
 literal|"HDA Driver Revision: %s\n"
-argument_list|,
-name|HDA_DRV_TEST_REV
+argument|, 		    HDA_DRV_TEST_REV);
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|model
 operator|=
 operator|(
