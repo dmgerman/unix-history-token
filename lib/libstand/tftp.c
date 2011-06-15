@@ -2052,6 +2052,8 @@ condition|)
 empty_stmt|;
 continue|continue;
 block|}
+name|recvnext
+label|:
 comment|/* Try to get a packet and process it. */
 name|cc
 operator|=
@@ -2086,6 +2088,22 @@ operator|(
 name|cc
 operator|)
 return|;
+if|if
+condition|(
+operator|(
+name|getsecs
+argument_list|()
+operator|-
+name|t1
+operator|)
+operator|<
+name|tleft
+condition|)
+block|{
+goto|goto
+name|recvnext
+goto|;
+block|}
 comment|/* Timed out or didn't get the packet we're waiting for */
 name|tleft
 operator|+=
