@@ -1462,6 +1462,11 @@ name|ino_t
 name|ff_inum
 decl_stmt|;
 comment|/* owning inode number */
+name|enum
+name|vtype
+name|ff_vtype
+decl_stmt|;
+comment|/* owning inode's file type */
 block|}
 struct|;
 end_struct
@@ -1546,6 +1551,11 @@ name|ino_t
 name|fb_inum
 decl_stmt|;
 comment|/* inode owner of blocks */
+name|enum
+name|vtype
+name|fb_vtype
+decl_stmt|;
+comment|/* inode owner's file type */
 name|uid_t
 name|fb_uid
 decl_stmt|;

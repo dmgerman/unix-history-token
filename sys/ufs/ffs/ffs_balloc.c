@@ -2630,6 +2630,10 @@ name|ip
 operator|->
 name|i_number
 argument_list|,
+name|vp
+operator|->
+name|v_type
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -5888,6 +5892,10 @@ argument_list|,
 name|ip
 operator|->
 name|i_number
+argument_list|,
+name|vp
+operator|->
+name|v_type
 argument_list|,
 name|NULL
 argument_list|)

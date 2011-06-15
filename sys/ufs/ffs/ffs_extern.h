@@ -239,6 +239,9 @@ name|long
 parameter_list|,
 name|ino_t
 parameter_list|,
+name|enum
+name|vtype
+parameter_list|,
 name|struct
 name|workhead
 modifier|*
@@ -628,6 +631,9 @@ parameter_list|,
 name|long
 parameter_list|,
 name|ino_t
+parameter_list|,
+name|enum
+name|vtype
 parameter_list|,
 name|struct
 name|workhead

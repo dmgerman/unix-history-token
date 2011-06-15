@@ -233,6 +233,8 @@ name|size
 parameter_list|,
 name|inum
 parameter_list|,
+name|vtype
+parameter_list|,
 name|wkhd
 parameter_list|)
 name|struct
@@ -253,6 +255,10 @@ name|size
 decl_stmt|;
 name|ino_t
 name|inum
+decl_stmt|;
+name|enum
+name|vtype
+name|vtype
 decl_stmt|;
 name|struct
 name|workhead
@@ -873,7 +879,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * To ensure the consistency of snapshots across crashes, we must  * synchronously write out copied blocks before allowing the  * originals to be modified. Because of the rather severe speed  * penalty that this imposes, the following flag allows this  * crash persistence to be disabled.  */
+comment|/*  * To ensure the consistency of snapshots across crashes, we must  * synchronously write out copied blocks before allowing the  * originals to be modified. Because of the rather severe speed  * penalty that this imposes, the code normally only ensures  * persistence for the filesystem metadata contained within a  * snapshot. Setting the following flag allows this crash  * persistence to be enabled for file contents.  */
 end_comment
 
 begin_decl_stmt
@@ -3272,6 +3278,10 @@ argument_list|,
 name|xp
 operator|->
 name|i_number
+argument_list|,
+name|xvp
+operator|->
+name|v_type
 argument_list|,
 name|NULL
 argument_list|)
@@ -7397,6 +7407,10 @@ name|fs_bsize
 argument_list|,
 name|inum
 argument_list|,
+name|vp
+operator|->
+name|v_type
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -9167,6 +9181,10 @@ name|fs_bsize
 argument_list|,
 name|inum
 argument_list|,
+name|vp
+operator|->
+name|v_type
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -9673,6 +9691,10 @@ name|ip
 operator|->
 name|i_number
 argument_list|,
+name|vp
+operator|->
+name|v_type
+argument_list|,
 name|NULL
 argument_list|)
 operator|)
@@ -9913,6 +9935,10 @@ name|ip
 operator|->
 name|i_number
 argument_list|,
+name|vp
+operator|->
+name|v_type
+argument_list|,
 name|NULL
 argument_list|)
 operator|)
@@ -10032,6 +10058,10 @@ argument_list|,
 name|ip
 operator|->
 name|i_number
+argument_list|,
+name|vp
+operator|->
+name|v_type
 argument_list|,
 name|NULL
 argument_list|)
@@ -10172,6 +10202,8 @@ name|size
 parameter_list|,
 name|inum
 parameter_list|,
+name|vtype
+parameter_list|,
 name|wkhd
 parameter_list|)
 name|struct
@@ -10192,6 +10224,10 @@ name|size
 decl_stmt|;
 name|ino_t
 name|inum
+decl_stmt|;
+name|enum
+name|vtype
+name|vtype
 decl_stmt|;
 name|struct
 name|workhead
@@ -10911,7 +10947,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 		 * If we have already read the old block contents, then 		 * simply copy them to the new block. Note that we need 		 * to synchronously write snapshots that have not been 		 * unlinked, and hence will be visible after a crash, 		 * to ensure their integrity. 		 */
+comment|/* 		 * If we have already read the old block contents, then 		 * simply copy them to the new block. Note that we need 		 * to synchronously write snapshots that have not been 		 * unlinked, and hence will be visible after a crash, 		 * to ensure their integrity. At a minimum we ensure the 		 * integrity of the filesystem metadata, but use the 		 * dopersistence sysctl-setable flag to decide on the 		 * persistence needed for file content data. 		 */
 if|if
 condition|(
 name|savedcbp
@@ -10941,7 +10977,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|vtype
+operator|==
+name|VDIR
+operator|||
 name|dopersistence
+operator|)
 operator|&&
 name|ip
 operator|->
@@ -10998,7 +11040,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|vtype
+operator|==
+name|VDIR
+operator|||
 name|dopersistence
+operator|)
 operator|&&
 name|ip
 operator|->
@@ -11023,7 +11071,7 @@ operator|=
 name|cbp
 expr_stmt|;
 block|}
-comment|/* 	 * Note that we need to synchronously write snapshots that 	 * have not been unlinked, and hence will be visible after 	 * a crash, to ensure their integrity. 	 */
+comment|/* 	 * Note that we need to synchronously write snapshots that 	 * have not been unlinked, and hence will be visible after 	 * a crash, to ensure their integrity. At a minimum we 	 * ensure the integrity of the filesystem metadata, but 	 * use the dopersistence sysctl-setable flag to decide on 	 * the persistence needed for file content data. 	 */
 if|if
 condition|(
 name|savedcbp
@@ -11042,12 +11090,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|vtype
+operator|==
+name|VDIR
+operator|||
 name|dopersistence
+operator|)
 operator|&&
-name|VTOI
-argument_list|(
-name|vp
-argument_list|)
+name|ip
 operator|->
 name|i_effnlink
 operator|>
@@ -13346,7 +13397,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 		 * If we have already read the old block contents, then 		 * simply copy them to the new block. Note that we need 		 * to synchronously write snapshots that have not been 		 * unlinked, and hence will be visible after a crash, 		 * to ensure their integrity. 		 */
+comment|/* 		 * If we have already read the old block contents, then 		 * simply copy them to the new block. Note that we need 		 * to synchronously write snapshots that have not been 		 * unlinked, and hence will be visible after a crash, 		 * to ensure their integrity. At a minimum we ensure the 		 * integrity of the filesystem metadata, but use the 		 * dopersistence sysctl-setable flag to decide on the 		 * persistence needed for file content data. 		 */
 if|if
 condition|(
 name|savedcbp
@@ -13376,7 +13427,23 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|devvp
+operator|==
+name|bp
+operator|->
+name|b_vp
+operator|||
+name|bp
+operator|->
+name|b_vp
+operator|->
+name|v_type
+operator|==
+name|VDIR
+operator|||
 name|dopersistence
+operator|)
 operator|&&
 name|ip
 operator|->
@@ -13438,7 +13505,23 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|devvp
+operator|==
+name|bp
+operator|->
+name|b_vp
+operator|||
+name|bp
+operator|->
+name|b_vp
+operator|->
+name|v_type
+operator|==
+name|VDIR
+operator|||
 name|dopersistence
+operator|)
 operator|&&
 name|ip
 operator|->
@@ -13468,7 +13551,7 @@ operator|=
 name|cbp
 expr_stmt|;
 block|}
-comment|/* 	 * Note that we need to synchronously write snapshots that 	 * have not been unlinked, and hence will be visible after 	 * a crash, to ensure their integrity. 	 */
+comment|/* 	 * Note that we need to synchronously write snapshots that 	 * have not been unlinked, and hence will be visible after 	 * a crash, to ensure their integrity. At a minimum we 	 * ensure the integrity of the filesystem metadata, but 	 * use the dopersistence sysctl-setable flag to decide on 	 * the persistence needed for file content data. 	 */
 if|if
 condition|(
 name|savedcbp
@@ -13487,7 +13570,23 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|devvp
+operator|==
+name|bp
+operator|->
+name|b_vp
+operator|||
+name|bp
+operator|->
+name|b_vp
+operator|->
+name|v_type
+operator|==
+name|VDIR
+operator|||
 name|dopersistence
+operator|)
 operator|&&
 name|VTOI
 argument_list|(
