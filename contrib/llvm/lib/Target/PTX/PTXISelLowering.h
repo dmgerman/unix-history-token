@@ -129,18 +129,6 @@ argument_list|)
 specifier|const
 block|;
 name|virtual
-name|unsigned
-name|getFunctionAlignment
-argument_list|(
-argument|const Function *F
-argument_list|)
-specifier|const
-block|{
-return|return
-literal|2
-return|;
-block|}
-name|virtual
 name|SDValue
 name|LowerOperation
 argument_list|(

@@ -98,8 +98,6 @@ decl_stmt|;
 name|class
 name|MCContext
 decl_stmt|;
-comment|/// MCAsmInfo - This class is intended to be used as a base class for asm
-comment|/// properties and features specific to the target.
 name|namespace
 name|ExceptionHandling
 block|{
@@ -108,16 +106,18 @@ name|ExceptionsType
 block|{
 name|None
 block|,
-name|DwarfTable
-block|,
 name|DwarfCFI
 block|,
 name|SjLj
 block|,
 name|ARM
+block|,
+name|Win64
 block|}
 enum|;
 block|}
+comment|/// MCAsmInfo - This class is intended to be used as a base class for asm
+comment|/// properties and features specific to the target.
 name|class
 name|MCAsmInfo
 block|{
@@ -529,11 +529,6 @@ name|ExceptionsType
 name|ExceptionsType
 expr_stmt|;
 comment|// Defaults to None
-comment|/// RequiresFrameSection - true if the Dwarf2 output needs a frame section
-name|bool
-name|DwarfRequiresFrameSection
-decl_stmt|;
-comment|// Defaults to true.
 comment|/// DwarfUsesInlineInfoSection - True if DwarfDebugInlineSection is used to
 comment|/// encode inline subroutine information.
 name|bool
@@ -547,10 +542,10 @@ modifier|*
 name|DwarfSectionOffsetDirective
 decl_stmt|;
 comment|// Defaults to NULL
-comment|/// DwarfUsesAbsoluteLabelForStmtList - True if DW_AT_stmt_list needs
-comment|/// absolute label instead of offset.
+comment|/// DwarfRequiresRelocationForSectionOffset - True if we need to produce a
+comment|// relocation when we want a section offset in dwarf.
 name|bool
-name|DwarfUsesAbsoluteLabelForStmtList
+name|DwarfRequiresRelocationForSectionOffset
 decl_stmt|;
 comment|// Defaults to true;
 comment|// DwarfUsesLabelOffsetDifference - True if Dwarf2 output can
@@ -1270,12 +1265,6 @@ name|ExceptionsType
 operator|==
 name|ExceptionHandling
 operator|::
-name|DwarfTable
-operator|||
-name|ExceptionsType
-operator|==
-name|ExceptionHandling
-operator|::
 name|DwarfCFI
 operator|||
 name|ExceptionsType
@@ -1283,16 +1272,13 @@ operator|==
 name|ExceptionHandling
 operator|::
 name|ARM
+operator|||
+name|ExceptionsType
+operator|==
+name|ExceptionHandling
+operator|::
+name|Win64
 operator|)
-return|;
-block|}
-name|bool
-name|doesDwarfRequireFrameSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DwarfRequiresFrameSection
 return|;
 block|}
 name|bool
@@ -1316,12 +1302,12 @@ name|DwarfSectionOffsetDirective
 return|;
 block|}
 name|bool
-name|doesDwarfUsesAbsoluteLabelForStmtList
+name|doesDwarfRequireRelocationForSectionOffset
 argument_list|()
 specifier|const
 block|{
 return|return
-name|DwarfUsesAbsoluteLabelForStmtList
+name|DwarfRequiresRelocationForSectionOffset
 return|;
 block|}
 name|bool

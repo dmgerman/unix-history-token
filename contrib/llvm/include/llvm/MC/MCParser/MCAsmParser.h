@@ -264,8 +264,10 @@ literal|0
 function_decl|;
 comment|/// Warning - Emit a warning at the location \arg L, with the message \arg
 comment|/// Msg.
+comment|///
+comment|/// \return The return value is true, if warnings are fatal.
 name|virtual
-name|void
+name|bool
 name|Warning
 parameter_list|(
 name|SMLoc

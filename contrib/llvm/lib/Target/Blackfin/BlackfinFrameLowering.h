@@ -149,6 +149,13 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
+name|bool
+name|hasReservedCallFrame
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
 name|void
 name|processFunctionBeforeCalleeSavedScan
 argument_list|(

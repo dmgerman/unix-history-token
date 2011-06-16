@@ -156,11 +156,15 @@ name|Opcode
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getRegName - Return the assembler register name.
+comment|/// printRegName - Print the assembler register name.
 name|virtual
-name|StringRef
-name|getRegName
+name|void
+name|printRegName
 argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
 name|unsigned
 name|RegNo
 argument_list|)

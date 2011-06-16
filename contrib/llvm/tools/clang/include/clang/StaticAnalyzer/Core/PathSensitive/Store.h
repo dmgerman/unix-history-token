@@ -738,7 +738,7 @@ name|unsigned
 name|Count
 parameter_list|,
 name|InvalidatedSymbols
-modifier|*
+modifier|&
 name|IS
 parameter_list|,
 name|bool

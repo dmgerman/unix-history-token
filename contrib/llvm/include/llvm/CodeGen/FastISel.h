@@ -696,6 +696,39 @@ name|bool
 name|Op1IsKill
 parameter_list|)
 function_decl|;
+comment|/// FastEmitInst_rrr - Emit a MachineInstr with three register operands
+comment|/// and a result register in the given register class.
+comment|///
+name|unsigned
+name|FastEmitInst_rrr
+parameter_list|(
+name|unsigned
+name|MachineInstOpcode
+parameter_list|,
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|RC
+parameter_list|,
+name|unsigned
+name|Op0
+parameter_list|,
+name|bool
+name|Op0IsKill
+parameter_list|,
+name|unsigned
+name|Op1
+parameter_list|,
+name|bool
+name|Op1IsKill
+parameter_list|,
+name|unsigned
+name|Op2
+parameter_list|,
+name|bool
+name|Op2IsKill
+parameter_list|)
+function_decl|;
 comment|/// FastEmitInst_ri - Emit a MachineInstr with a register operand,
 comment|/// an immediate, and a result register in the given register class.
 comment|///
@@ -886,7 +919,7 @@ name|DebugLoc
 name|DL
 parameter_list|)
 function_decl|;
-name|unsigned
+name|void
 name|UpdateValueMap
 parameter_list|(
 specifier|const
@@ -896,6 +929,11 @@ name|I
 parameter_list|,
 name|unsigned
 name|Reg
+parameter_list|,
+name|unsigned
+name|NumRegs
+init|=
+literal|1
 parameter_list|)
 function_decl|;
 name|unsigned
@@ -1013,6 +1051,15 @@ name|I
 parameter_list|,
 name|unsigned
 name|Opcode
+parameter_list|)
+function_decl|;
+name|bool
+name|SelectExtractValue
+parameter_list|(
+specifier|const
+name|User
+modifier|*
+name|I
 parameter_list|)
 function_decl|;
 comment|/// HandlePHINodesInSuccessorBlocks - Handle PHI nodes in successor blocks.

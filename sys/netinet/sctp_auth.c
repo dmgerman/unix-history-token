@@ -8392,11 +8392,13 @@ return|return;
 block|}
 if|if
 condition|(
-name|sctp_is_feature_off
+name|sctp_stcb_is_feature_off
 argument_list|(
 name|stcb
 operator|->
 name|sctp_ep
+argument_list|,
+name|stcb
 argument_list|,
 name|SCTP_PCB_FLAGS_AUTHEVNT
 argument_list|)

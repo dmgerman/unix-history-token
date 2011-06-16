@@ -172,6 +172,12 @@ directive|include
 file|"cd.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"builtins.h"
+end_include
+
 begin_function_decl
 specifier|static
 name|int

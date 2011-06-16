@@ -295,6 +295,14 @@ name|friend
 name|class
 name|SourceManager
 decl_stmt|;
+name|friend
+name|class
+name|ASTWriter
+decl_stmt|;
+name|friend
+name|class
+name|ASTReader
+decl_stmt|;
 specifier|static
 name|FileID
 name|get

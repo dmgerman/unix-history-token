@@ -194,7 +194,7 @@ begin_decl_stmt
 name|int
 name|cflags
 init|=
-literal|0
+name|REG_NOSUB
 decl_stmt|;
 end_decl_stmt
 
@@ -2702,6 +2702,11 @@ name|oflag
 operator|=
 name|true
 expr_stmt|;
+name|cflags
+operator|&=
+operator|~
+name|REG_NOSUB
+expr_stmt|;
 break|break;
 case|case
 literal|'p'
@@ -2801,6 +2806,11 @@ name|wflag
 operator|=
 name|true
 expr_stmt|;
+name|cflags
+operator|&=
+operator|~
+name|REG_NOSUB
+expr_stmt|;
 break|break;
 case|case
 literal|'x'
@@ -2808,6 +2818,11 @@ case|:
 name|xflag
 operator|=
 name|true
+expr_stmt|;
+name|cflags
+operator|&=
+operator|~
+name|REG_NOSUB
 expr_stmt|;
 break|break;
 case|case
@@ -3042,6 +3057,11 @@ argument_list|)
 argument_list|,
 literal|"--color"
 argument_list|)
+expr_stmt|;
+name|cflags
+operator|&=
+operator|~
+name|REG_NOSUB
 expr_stmt|;
 break|break;
 case|case

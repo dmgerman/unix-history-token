@@ -193,6 +193,9 @@ parameter_list|,
 name|AsmPrinter
 modifier|&
 name|AP
+parameter_list|,
+name|bool
+name|isDarwin
 parameter_list|)
 function_decl|;
 specifier|extern

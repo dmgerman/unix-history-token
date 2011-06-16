@@ -384,9 +384,7 @@ operator|>
 name|VReg2Node
 expr_stmt|;
 typedef|typedef
-name|std
-operator|::
-name|map
+name|DenseMap
 operator|<
 name|unsigned
 operator|,

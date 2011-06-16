@@ -877,6 +877,10 @@ name|DW_AT_APPLE_property_attribute
 init|=
 literal|0x3feb
 block|,
+name|DW_AT_APPLE_objc_complete_type
+init|=
+literal|0x3fec
+block|,
 comment|// Attribute form encodings
 name|DW_FORM_addr
 init|=

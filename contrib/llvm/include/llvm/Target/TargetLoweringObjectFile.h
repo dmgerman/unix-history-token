@@ -272,11 +272,6 @@ comment|/// weak_definition of constant 0 for an omitted EH frame.
 name|bool
 name|SupportsWeakOmittedEHFrame
 decl_stmt|;
-comment|/// IsFunctionEHSymbolGlobal - This flag is set to true if the ".eh" symbol
-comment|/// for a function should be marked .globl.
-name|bool
-name|IsFunctionEHSymbolGlobal
-decl_stmt|;
 comment|/// IsFunctionEHFrameSymbolPrivate - This flag is set to true if the
 comment|/// "EH_frame" symbol for EH information should be an assembler temporary (aka
 comment|/// private linkage, aka an L or .L label) or false if it should be a normal
@@ -324,15 +319,6 @@ operator|=
 operator|&
 name|ctx
 expr_stmt|;
-block|}
-name|bool
-name|isFunctionEHSymbolGlobal
-argument_list|()
-specifier|const
-block|{
-return|return
-name|IsFunctionEHSymbolGlobal
-return|;
 block|}
 name|bool
 name|isFunctionEHFrameSymbolPrivate
@@ -600,6 +586,32 @@ return|return
 name|TLSExtraDataSection
 return|;
 block|}
+name|virtual
+specifier|const
+name|MCSection
+modifier|*
+name|getWin64EHFuncTableSection
+argument_list|(
+name|StringRef
+name|suffix
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+name|virtual
+specifier|const
+name|MCSection
+modifier|*
+name|getWin64EHTableSection
+argument_list|(
+name|StringRef
+name|suffix
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
 comment|/// shouldEmitUsedDirectiveFor - This hook allows targets to selectively
 comment|/// decide not to emit the UsedDirective for some symbols in llvm.used.
 comment|/// FIXME: REMOVE this (rdar://7071300)

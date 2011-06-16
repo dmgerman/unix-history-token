@@ -396,6 +396,7 @@ name|RHS
 block|;   }
 name|APValue
 argument_list|(
+specifier|const
 name|Expr
 operator|*
 name|B
@@ -423,6 +424,7 @@ argument_list|)
 block|;   }
 name|APValue
 argument_list|(
+specifier|const
 name|Expr
 operator|*
 name|B
@@ -936,6 +938,7 @@ name|getComplexFloatImag
 argument_list|()
 return|;
 block|}
+specifier|const
 name|Expr
 operator|*
 name|getLValueBase
@@ -1247,6 +1250,7 @@ block|}
 name|void
 name|setLValue
 parameter_list|(
+specifier|const
 name|Expr
 modifier|*
 name|B

@@ -290,6 +290,14 @@ literal|1
 operator|<<
 name|ELF_Other_Shift
 operator|)
+block|,
+name|ELF_Other_ThumbFunc
+init|=
+operator|(
+literal|2
+operator|<<
+name|ELF_Other_Shift
+operator|)
 block|}
 enum|;
 block|}

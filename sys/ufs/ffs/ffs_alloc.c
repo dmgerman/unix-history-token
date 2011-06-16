@@ -395,23 +395,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|ffs_fserr
-parameter_list|(
-name|struct
-name|fs
-modifier|*
-parameter_list|,
-name|ino_t
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|ufs2_daddr_t
 name|ffs_hashalloc
 parameter_list|(
@@ -973,6 +956,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|reclaimed
+operator|>
+literal|0
+operator|&&
 name|ppsratecheck
 argument_list|(
 operator|&
@@ -1847,6 +1834,10 @@ name|ip
 operator|->
 name|i_number
 argument_list|,
+name|vp
+operator|->
+name|v_type
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -2074,6 +2065,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|reclaimed
+operator|>
+literal|0
+operator|&&
 name|ppsratecheck
 argument_list|(
 operator|&
@@ -3368,6 +3363,10 @@ name|ip
 operator|->
 name|i_number
 argument_list|,
+name|vp
+operator|->
+name|v_type
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -4569,6 +4568,10 @@ argument_list|,
 name|ip
 operator|->
 name|i_number
+argument_list|,
+name|vp
+operator|->
+name|v_type
 argument_list|,
 name|NULL
 argument_list|)
@@ -10145,7 +10148,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"ffs_blkfree: bad size"
+literal|"ffs_blkfree_cg: bad size"
 argument_list|)
 expr_stmt|;
 block|}
@@ -10356,7 +10359,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"ffs_blkfree: freeing free block"
+literal|"ffs_blkfree_cg: freeing free block"
 argument_list|)
 expr_stmt|;
 block|}
@@ -10507,7 +10510,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"ffs_blkfree: freeing free frag"
+literal|"ffs_blkfree_cg: freeing free frag"
 argument_list|)
 expr_stmt|;
 block|}
@@ -10938,6 +10941,8 @@ name|size
 parameter_list|,
 name|inum
 parameter_list|,
+name|vtype
+parameter_list|,
 name|dephd
 parameter_list|)
 name|struct
@@ -10963,6 +10968,10 @@ name|size
 decl_stmt|;
 name|ino_t
 name|inum
+decl_stmt|;
+name|enum
+name|vtype
+name|vtype
 decl_stmt|;
 name|struct
 name|workhead
@@ -11013,6 +11022,10 @@ argument_list|,
 name|size
 argument_list|,
 name|inum
+argument_list|,
+name|vtype
+argument_list|,
+name|dephd
 argument_list|)
 condition|)
 block|{
@@ -12725,7 +12738,6 @@ comment|/*  * Fserr prints the name of a filesystem with an error diagnostic.  *
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|ffs_fserr
 parameter_list|(
@@ -13994,6 +14006,8 @@ operator|->
 name|fs_fsize
 argument_list|,
 name|ROOTINO
+argument_list|,
+name|VDIR
 argument_list|,
 name|NULL
 argument_list|)

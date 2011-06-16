@@ -99,6 +99,17 @@ begin_comment
 comment|/* do not set variable - just readonly test */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VNOLOCAL
+value|0x100
+end_define
+
+begin_comment
+comment|/* ignore forcelocal */
+end_comment
+
 begin_struct
 struct|struct
 name|var
@@ -173,6 +184,13 @@ name|struct
 name|localvar
 modifier|*
 name|localvars
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|forcelocal
 decl_stmt|;
 end_decl_stmt
 
@@ -540,32 +558,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|exportcmd
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|localcmd
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|mklocal
 parameter_list|(
@@ -580,32 +572,6 @@ name|void
 name|poplocalvars
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|setvarcmd
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|unsetcmd
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -100,6 +100,16 @@ argument_list|)
 block|;
 name|virtual
 name|void
+name|printRegName
+argument_list|(
+argument|raw_ostream&OS
+argument_list|,
+argument|unsigned RegNo
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
 name|printInst
 argument_list|(
 specifier|const

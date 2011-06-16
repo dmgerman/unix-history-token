@@ -361,6 +361,7 @@ comment|/// @param Ty          Original type.
 comment|/// @param Name        Typedef name.
 comment|/// @param File        File where this type is defined.
 comment|/// @param LineNo      Line number.
+comment|/// @param Context     The surrounding context for the typedef.
 name|DIType
 name|createTypedef
 parameter_list|(
@@ -375,6 +376,9 @@ name|File
 parameter_list|,
 name|unsigned
 name|LineNo
+parameter_list|,
+name|DIDescriptor
+name|Context
 parameter_list|)
 function_decl|;
 comment|/// createFriend - Create debugging information entry for a 'friend'.

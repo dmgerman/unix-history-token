@@ -311,7 +311,7 @@ name|fg
 operator|->
 name|word
 operator|=
-name|wflag
+name|false
 expr_stmt|;
 comment|/* Remove end-of-line character ('$'). */
 if|if

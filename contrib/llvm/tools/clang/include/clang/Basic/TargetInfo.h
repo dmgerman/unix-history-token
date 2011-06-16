@@ -1399,19 +1399,23 @@ argument|unsigned&Index
 argument_list|)
 specifier|const
 block|;
+comment|// Constraint parm will be left pointing at the last character of
+comment|// the constraint.  In practice, it won't be changed unless the
+comment|// constraint is longer than one character.
 name|virtual
 name|std
 operator|::
 name|string
 name|convertConstraint
 argument_list|(
-argument|const char Constraint
+argument|const char *&Constraint
 argument_list|)
 specifier|const
 block|{
 comment|// 'p' defaults to 'r', but can be overridden by targets.
 if|if
 condition|(
+operator|*
 name|Constraint
 operator|==
 literal|'p'
@@ -1431,6 +1435,7 @@ name|string
 argument_list|(
 literal|1
 argument_list|,
+operator|*
 name|Constraint
 argument_list|)
 return|;

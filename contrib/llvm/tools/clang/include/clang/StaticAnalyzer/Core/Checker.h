@@ -290,6 +290,80 @@ argument_list|)
 block|;   }
 block|}
 block|;
+name|class
+name|EndOfTranslationUnit
+block|{
+name|template
+operator|<
+name|typename
+name|CHECKER
+operator|>
+specifier|static
+name|void
+name|_checkEndOfTranslationUnit
+argument_list|(
+argument|void *checker
+argument_list|,
+argument|const TranslationUnitDecl *TU
+argument_list|,
+argument|AnalysisManager& mgr
+argument_list|,
+argument|BugReporter&BR
+argument_list|)
+block|{
+operator|(
+operator|(
+specifier|const
+name|CHECKER
+operator|*
+operator|)
+name|checker
+operator|)
+operator|->
+name|checkEndOfTranslationUnit
+argument_list|(
+name|TU
+argument_list|,
+name|mgr
+argument_list|,
+name|BR
+argument_list|)
+block|;   }
+name|public
+operator|:
+name|template
+operator|<
+name|typename
+name|CHECKER
+operator|>
+specifier|static
+name|void
+name|_register
+argument_list|(
+argument|CHECKER *checker
+argument_list|,
+argument|CheckerManager&mgr
+argument_list|)
+block|{
+name|mgr
+operator|.
+name|_registerForEndOfTranslationUnit
+argument_list|(
+name|CheckerManager
+operator|::
+name|CheckEndOfTranslationUnit
+argument_list|(
+name|checker
+argument_list|,
+name|_checkEndOfTranslationUnit
+operator|<
+name|CHECKER
+operator|>
+argument_list|)
+argument_list|)
+block|;   }
+block|}
+block|;
 name|template
 operator|<
 name|typename
@@ -1162,6 +1236,8 @@ argument|void *checker
 argument_list|,
 argument|const GRState *state
 argument_list|,
+argument|const StoreManager::InvalidatedSymbols *invalidated
+argument_list|,
 argument|const MemRegion * const *Begin
 argument_list|,
 argument|const MemRegion * const *End
@@ -1180,6 +1256,8 @@ operator|->
 name|checkRegionChanges
 argument_list|(
 name|state
+argument_list|,
+name|invalidated
 argument_list|,
 name|Begin
 argument_list|,

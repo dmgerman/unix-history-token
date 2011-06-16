@@ -2787,6 +2787,10 @@ comment|// tMOVr, tMOVgpr2gpr, tMOVgpr2tgpr, tMOVtgpr2gpr: Rd|tRd Rm|tRn
 end_comment
 
 begin_comment
+comment|// tBX: Rm
+end_comment
+
+begin_comment
 comment|// tBX_RET: 0 operand
 end_comment
 
@@ -2852,7 +2856,7 @@ name|Opcode
 operator|==
 name|ARM
 operator|::
-name|tBX_Rm
+name|tBX
 operator|||
 name|Opcode
 operator|==
@@ -2864,10 +2868,10 @@ block|{
 if|if
 condition|(
 name|Opcode
-operator|!=
+operator|==
 name|ARM
 operator|::
-name|tBRIND
+name|tBLXr_r9
 condition|)
 block|{
 comment|// Handling the two predicate operands before the reg operand.
@@ -2923,6 +2927,40 @@ name|NumOpsAdded
 operator|+=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|Opcode
+operator|==
+name|ARM
+operator|::
+name|tBX
+condition|)
+block|{
+comment|// Handling the two predicate operands after the reg operand.
+if|if
+condition|(
+operator|!
+name|B
+operator|->
+name|DoPredicateOperands
+argument_list|(
+name|MI
+argument_list|,
+name|Opcode
+argument_list|,
+name|insn
+argument_list|,
+name|NumOps
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+name|NumOpsAdded
+operator|+=
+literal|2
+expr_stmt|;
+block|}
 return|return
 name|true
 return|;
@@ -5635,8 +5673,6 @@ name|Imm8
 operator|<<
 literal|1
 operator|)
-operator|+
-literal|4
 else|:
 operator|(
 name|int

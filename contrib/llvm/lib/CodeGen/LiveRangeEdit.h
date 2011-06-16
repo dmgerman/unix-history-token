@@ -78,13 +78,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/LiveInterval.h"
+file|"llvm/ADT/ArrayRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallPtrSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/LiveInterval.h"
 end_include
 
 begin_decl_stmt
@@ -467,6 +473,31 @@ name|idx
 operator|+
 name|firstNew_
 index|]
+return|;
+block|}
+name|ArrayRef
+operator|<
+name|LiveInterval
+operator|*
+operator|>
+name|regs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ArrayRef
+operator|<
+name|LiveInterval
+operator|*
+operator|>
+operator|(
+name|newRegs_
+operator|)
+operator|.
+name|slice
+argument_list|(
+name|firstNew_
+argument_list|)
 return|;
 block|}
 comment|/// FIXME: Temporary accessors until we can get rid of

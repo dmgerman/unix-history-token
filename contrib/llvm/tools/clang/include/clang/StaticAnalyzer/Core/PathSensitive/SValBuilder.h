@@ -840,7 +840,7 @@ operator|->
 name|getType
 argument_list|()
 operator|->
-name|isUnsignedIntegerType
+name|isUnsignedIntegerOrEnumerationType
 argument_list|()
 argument_list|)
 argument_list|)

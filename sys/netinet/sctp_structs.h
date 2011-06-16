@@ -1786,6 +1786,12 @@ decl_stmt|;
 name|sctp_assoc_t
 name|sinfo_assoc_id
 decl_stmt|;
+name|uint16_t
+name|sinfo_keynumber
+decl_stmt|;
+name|uint16_t
+name|sinfo_keynumber_valid
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -3347,6 +3353,9 @@ name|sctp_cmt_pf
 decl_stmt|;
 name|uint8_t
 name|use_precise_time
+decl_stmt|;
+name|uint32_t
+name|sctp_features
 decl_stmt|;
 comment|/* 	 * The mapping array is used to track out of order sequences above 	 * last_acked_seq. 0 indicates packet missing 1 indicates packet 	 * rec'd. We slide it up every time we raise last_acked_seq and 0 	 * trailing locactions out.  If I get a TSN above the array 	 * mappingArraySz, I discard the datagram and let retransmit happen. 	 */
 name|uint32_t

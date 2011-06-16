@@ -310,22 +310,10 @@ comment|///
 name|void
 name|addGlobalType
 parameter_list|(
-name|StringRef
-name|Name
-parameter_list|,
-name|DIE
-modifier|*
-name|Die
+name|DIType
+name|Ty
 parameter_list|)
-block|{
-name|GlobalTypes
-index|[
-name|Name
-index|]
-operator|=
-name|Die
-expr_stmt|;
-block|}
+function_decl|;
 comment|/// getDIE - Returns the debug information entry map slot for the
 comment|/// specified debug variable.
 name|DIE
@@ -390,7 +378,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// getDIEEntry - Returns the debug information entry for the speciefied
+comment|/// getDIEEntry - Returns the debug information entry for the specified
 comment|/// debug variable.
 name|DIEEntry
 modifier|*
@@ -748,6 +736,9 @@ specifier|const
 name|MachineOperand
 modifier|&
 name|MO
+parameter_list|,
+name|DIType
+name|Ty
 parameter_list|)
 function_decl|;
 name|bool

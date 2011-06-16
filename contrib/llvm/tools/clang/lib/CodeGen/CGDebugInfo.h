@@ -508,6 +508,18 @@ expr_stmt|;
 name|llvm
 operator|::
 name|DIType
+name|getOrCreateFunctionType
+argument_list|(
+argument|const Decl *D
+argument_list|,
+argument|QualType FnType
+argument_list|,
+argument|llvm::DIFile F
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
 name|getOrCreateVTablePtrType
 argument_list|(
 argument|llvm::DIFile F

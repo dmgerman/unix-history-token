@@ -699,7 +699,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// getOSNumber - Parse the version number from the OS name component of the
+comment|/// getOSVersion - Parse the version number from the OS name component of the
 end_comment
 
 begin_comment

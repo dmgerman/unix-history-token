@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: parseaddr.c,v 8.403 2008/02/08 02:27:35 ca Exp $"
+literal|"@(#)$Id: parseaddr.c,v 8.404 2010/07/27 03:35:42 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1070,7 +1070,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  HASCTRLCHAR -- check for address containing meta-characters ** **  Checks that the address contains no meta-characters, and contains **  no "non-printable" characters unless they are quoted or escaped. **  Quoted or escaped characters are literals. ** **	Parameters: **		addr -- the address to check. **		isrcpt -- true if the address is for a recipient; false **			indicates a from. **		complain -- true if an error should issued if the address **			is invalid and should be "repaired". ** **	Returns: **		true -- if the address has any "wierd" characters or **			non-printable characters or if a quote is unbalanced. **		false -- otherwise. */
+comment|/* **  HASCTRLCHAR -- check for address containing meta-characters ** **  Checks that the address contains no meta-characters, and contains **  no "non-printable" characters unless they are quoted or escaped. **  Quoted or escaped characters are literals. ** **	Parameters: **		addr -- the address to check. **		isrcpt -- true if the address is for a recipient; false **			indicates a from. **		complain -- true if an error should issued if the address **			is invalid and should be "repaired". ** **	Returns: **		true -- if the address has any "weird" characters or **			non-printable characters or if a quote is unbalanced. **		false -- otherwise. */
 end_comment
 
 begin_function

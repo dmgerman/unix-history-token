@@ -187,19 +187,6 @@ argument|unsigned Opcode
 argument_list|)
 specifier|const
 block|;
-comment|/// getFunctionAlignment - Return the Log2 alignment of this function.
-name|virtual
-name|unsigned
-name|getFunctionAlignment
-argument_list|(
-argument|const Function *F
-argument_list|)
-specifier|const
-block|{
-return|return
-literal|1
-return|;
-block|}
 name|std
 operator|::
 name|pair

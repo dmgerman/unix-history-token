@@ -270,6 +270,8 @@ name|kw_readnone
 block|,
 name|kw_readonly
 block|,
+name|kw_uwtable
+block|,
 name|kw_inlinehint
 block|,
 name|kw_noinline

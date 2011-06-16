@@ -279,8 +279,8 @@ operator|=
 name|tmo
 expr_stmt|;
 name|tmo
-operator|<<=
-literal|1
+operator|+=
+name|MINTMO
 expr_stmt|;
 if|if
 condition|(

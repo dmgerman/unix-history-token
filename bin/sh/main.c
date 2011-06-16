@@ -232,6 +232,12 @@ directive|include
 file|"cd.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"builtins.h"
+end_include
+
 begin_decl_stmt
 name|int
 name|rootpid
@@ -552,7 +558,7 @@ literal|0
 condition|)
 name|read_profile
 argument_list|(
-literal|".profile"
+literal|"${HOME-}/.profile"
 argument_list|)
 expr_stmt|;
 else|else

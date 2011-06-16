@@ -1169,6 +1169,57 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_struct
+struct|struct
+name|sockaddr_nd6
+block|{
+name|uint8_t
+name|snd6_len
+decl_stmt|;
+comment|/* total length */
+name|sa_family_t
+name|snd6_family
+decl_stmt|;
+comment|/* address family */
+name|int
+name|snd6_direction
+decl_stmt|;
+name|int
+name|snd6_ifidx
+decl_stmt|;
+name|char
+name|snd6_zero
+index|[
+literal|8
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+specifier|extern
+name|int
+function_decl|(
+modifier|*
+name|nd6_sendso_input_hook
+function_decl|)
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* nd6.c */
 end_comment

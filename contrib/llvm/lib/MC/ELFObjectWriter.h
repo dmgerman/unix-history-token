@@ -681,6 +681,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|virtual
 specifier|const
 name|MCSymbol
 modifier|*
@@ -700,6 +701,14 @@ specifier|const
 name|MCFragment
 operator|&
 name|F
+argument_list|,
+specifier|const
+name|MCFixup
+operator|&
+name|Fixup
+argument_list|,
+name|bool
+name|IsPCRel
 argument_list|)
 decl|const
 decl_stmt|;
@@ -731,8 +740,13 @@ name|MCFragment
 operator|&
 name|F
 argument_list|,
+specifier|const
+name|MCFixup
+operator|&
+name|Fixup
+argument_list|,
 name|bool
-name|IsBSS
+name|IsPCRel
 argument_list|)
 decl|const
 block|{
@@ -2073,7 +2087,9 @@ argument|const MCValue&Target
 argument_list|,
 argument|const MCFragment&F
 argument_list|,
-argument|bool IsBSS
+argument|const MCFixup&Fixup
+argument_list|,
+argument|bool IsPCRel
 argument_list|)
 specifier|const
 block|;
@@ -2091,7 +2107,20 @@ argument|bool IsRelocWithSymbol
 argument_list|,
 argument|int64_t Addend
 argument_list|)
-block|;   }
+block|;
+name|private
+operator|:
+name|unsigned
+name|GetRelocTypeInner
+argument_list|(
+argument|const MCValue&Target
+argument_list|,
+argument|const MCFixup&Fixup
+argument_list|,
+argument|bool IsPCRel
+argument_list|)
+specifier|const
+block|;        }
 decl_stmt|;
 end_decl_stmt
 

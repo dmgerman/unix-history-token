@@ -262,6 +262,15 @@ argument_list|,
 argument|bool isEH
 argument_list|)
 specifier|const
+block|;
+name|int
+name|getLLVMRegNum
+argument_list|(
+argument|unsigned RegNum
+argument_list|,
+argument|bool isEH
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 block|}

@@ -2047,6 +2047,8 @@ block|,
 name|OMF_retain
 block|,
 name|OMF_retainCount
+block|,
+name|OMF_self
 block|}
 enum|;
 end_enum

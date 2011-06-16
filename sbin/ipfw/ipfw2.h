@@ -316,6 +316,8 @@ name|TOK_SAME_PORTS
 block|,
 name|TOK_UNREG_ONLY
 block|,
+name|TOK_SKIP_GLOBAL
+block|,
 name|TOK_RESET_ADDR
 block|,
 name|TOK_ALIAS_REV

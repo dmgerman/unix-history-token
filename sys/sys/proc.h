@@ -2274,6 +2274,10 @@ name|pid_t
 name|p_oppid
 decl_stmt|;
 comment|/* (c + e) Save ppid in ptrace. XXX */
+name|int
+name|p_dbg_child
+decl_stmt|;
+comment|/* (c + e) # of debugged children in 							ptrace. */
 name|struct
 name|vmspace
 modifier|*

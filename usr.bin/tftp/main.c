@@ -4396,12 +4396,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"[*] : RFC2834 options support required.\n"
+literal|"[*] : RFC2347 options support required.\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"[**] : Non-standard RFC2834 option.\n"
+literal|"[**] : Non-standard RFC2347 option.\n"
 argument_list|)
 expr_stmt|;
 return|return;

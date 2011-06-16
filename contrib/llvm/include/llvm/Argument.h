@@ -199,6 +199,12 @@ name|hasByValAttr
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// getParamAlignment - If this is a byval argument, return its alignment.
+name|unsigned
+name|getParamAlignment
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// hasNestAttr - Return true if this argument has the nest attribute on
 comment|/// it in its containing function.
 name|bool

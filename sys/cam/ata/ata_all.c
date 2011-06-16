@@ -1596,6 +1596,16 @@ operator|(
 name|ident_data
 operator|->
 name|config
+operator|==
+name|ATA_PROTO_CFA
+operator|)
+condition|?
+literal|"CFA"
+else|:
+operator|(
+name|ident_data
+operator|->
+name|config
 operator|&
 name|ATA_PROTO_ATAPI
 operator|)

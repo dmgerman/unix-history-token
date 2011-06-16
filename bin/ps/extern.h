@@ -436,6 +436,19 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|egroupname
+parameter_list|(
+name|KINFO
+modifier|*
+parameter_list|,
+name|VARENT
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|rgroupname
 parameter_list|(
 name|KINFO
@@ -516,6 +529,16 @@ end_function_decl
 begin_function_decl
 name|int
 name|s_logname
+parameter_list|(
+name|KINFO
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|s_egroupname
 parameter_list|(
 name|KINFO
 modifier|*

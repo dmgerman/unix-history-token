@@ -245,6 +245,9 @@ name|class
 name|CXXBaseSpecifier
 decl_stmt|;
 name|class
+name|CXXConstructorDecl
+decl_stmt|;
+name|class
 name|CXXCtorInitializer
 decl_stmt|;
 name|class
@@ -758,6 +761,17 @@ specifier|const
 name|uint32_t
 modifier|*
 name|SLocOffsets
+decl_stmt|;
+comment|/// \brief The number of source location file entries in this AST file.
+name|unsigned
+name|LocalNumSLocFileEntries
+decl_stmt|;
+comment|/// \brief Offsets for all of the source location file entries in the
+comment|/// AST file.
+specifier|const
+name|uint32_t
+modifier|*
+name|SLocFileOffsets
 decl_stmt|;
 comment|/// \brief The entire size of this module's source location offset range.
 name|unsigned
@@ -1417,6 +1431,18 @@ literal|16
 operator|>
 name|UnusedFileScopedDecls
 expr_stmt|;
+comment|/// \brief A list of all the delegating constructors we've seen, to diagnose
+comment|/// cycles.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|uint64_t
+operator|,
+literal|4
+operator|>
+name|DelegatingCtorDecls
+expr_stmt|;
 comment|/// \brief A snapshot of Sema's weak undeclared identifier tracking, for
 comment|/// generating warnings.
 name|llvm
@@ -1562,6 +1588,11 @@ operator|::
 name|string
 name|ActualOriginalFileName
 expr_stmt|;
+comment|/// \brief The file ID for the original file that was used to build the
+comment|/// primary AST file.
+name|FileID
+name|OriginalFileID
+decl_stmt|;
 comment|/// \brief The directory that the PCH was originally created in. Used to
 comment|/// allow resolving headers even after headers+PCH was moved to a new path.
 name|std
@@ -1899,6 +1930,19 @@ modifier|&
 name|F
 parameter_list|)
 function_decl|;
+comment|/// \brief Get a FileEntry out of stored-in-PCH filename, making sure we take
+comment|/// into account all the necessary relocations.
+specifier|const
+name|FileEntry
+modifier|*
+name|getFileEntry
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|filename
+argument_list|)
+decl_stmt|;
 name|void
 name|MaybeAddSystemRootToFilename
 argument_list|(
@@ -2247,6 +2291,12 @@ name|ASTFileType
 name|Type
 argument_list|)
 decl_stmt|;
+comment|/// \brief Checks that no file that is stored in PCH is out-of-sync with
+comment|/// the actual file in the file system.
+name|ASTReadResult
+name|validateFileEntries
+parameter_list|()
+function_decl|;
 comment|/// \brief Set the AST callbacks listener.
 name|void
 name|setListener

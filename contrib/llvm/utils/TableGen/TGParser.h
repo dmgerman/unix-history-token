@@ -292,6 +292,27 @@ name|Msg
 argument_list|)
 return|;
 block|}
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|getDependencies
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Lex
+operator|.
+name|getDependencies
+argument_list|()
+return|;
+block|}
 name|private
 label|:
 comment|// Semantic analysis methods.

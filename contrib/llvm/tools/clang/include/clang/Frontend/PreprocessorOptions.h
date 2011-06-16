@@ -159,6 +159,13 @@ decl_stmt|;
 comment|/// Whether we should maintain a detailed
 comment|/// record of all macro definitions and
 comment|/// instantiations.
+comment|/// \brief Whether the detailed preprocessing record includes nested macro
+comment|/// instantiations.
+name|unsigned
+name|DetailedRecordIncludesNestedMacroInstantiations
+range|:
+literal|1
+decl_stmt|;
 comment|/// The implicit PCH included at the start of the translation unit, or empty.
 name|std
 operator|::
@@ -488,6 +495,11 @@ operator|,
 name|DetailedRecord
 argument_list|(
 name|false
+argument_list|)
+operator|,
+name|DetailedRecordIncludesNestedMacroInstantiations
+argument_list|(
+name|true
 argument_list|)
 operator|,
 name|DisablePCHValidation

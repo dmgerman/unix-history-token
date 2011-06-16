@@ -23,7 +23,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: ldap.c,v 1.83 2009/06/19 22:02:26 guenther Exp $"
+literal|"@(#)$Id: ldap.c,v 1.85 2011/04/18 22:20:20 ca Exp $"
 argument_list|)
 end_macro
 
@@ -4005,12 +4005,32 @@ name|save_errno
 operator|=
 name|ETIMEDOUT
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ret
+operator|==
+name|LDAP_RES_SEARCH_RESULT
+condition|)
+block|{
+comment|/* 		**  We may have gotten an LDAP_RES_SEARCH_RESULT response 		**  with an error inside it, so we have to extract that 		**  with ldap_parse_result().  This can happen when talking 		**  to an LDAP proxy whose backend has gone down. 		*/
+if|if
+condition|(
+name|lmap
+operator|->
+name|ldap_res
+operator|==
+name|NULL
+condition|)
+name|save_errno
+operator|=
+name|LDAP_UNAVAILABLE
+expr_stmt|;
 else|else
 block|{
 name|int
 name|rc
 decl_stmt|;
-comment|/* 		**  We may have gotten an LDAP_RES_SEARCH_RESULT response 		**  with an error inside it, so we have to extract that 		**  with ldap_parse_result().  This can happen when talking 		**  to an LDAP proxy whose backend has gone down. 		*/
 name|save_errno
 operator|=
 name|ldap_parse_result
@@ -4048,6 +4068,17 @@ operator|=
 name|rc
 expr_stmt|;
 block|}
+block|}
+else|else
+name|save_errno
+operator|=
+name|sm_ldap_geterrno
+argument_list|(
+name|lmap
+operator|->
+name|ldap_ld
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|save_errno
