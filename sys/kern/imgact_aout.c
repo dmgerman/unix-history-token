@@ -678,7 +678,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|suword
+name|suword32
 argument_list|(
 operator|*
 name|stack_base
