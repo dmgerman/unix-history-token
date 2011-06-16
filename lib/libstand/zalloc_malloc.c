@@ -443,7 +443,7 @@ literal|2
 condition|)
 name|panic
 argument_list|(
-literal|"free: guard2 fail @ %p + %d from %s:%d"
+literal|"free: guard2 fail @ %p + %zu from %s:%d"
 argument_list|,
 name|ptr
 argument_list|,
