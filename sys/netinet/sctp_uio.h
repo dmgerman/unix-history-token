@@ -441,6 +441,23 @@ end_struct
 
 begin_struct
 struct|struct
+name|sctp_default_prinfo
+block|{
+name|uint16_t
+name|pr_policy
+decl_stmt|;
+name|uint32_t
+name|pr_value
+decl_stmt|;
+name|sctp_assoc_t
+name|pr_assoc_id
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|sctp_authinfo
 block|{
 name|uint16_t

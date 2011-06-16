@@ -424,6 +424,13 @@ name|SCTP_DEFAULT_SNDINFO
 value|0x00000021
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_DEFAULT_PRINFO
+value|0x00000022
+end_define
+
 begin_comment
 comment|/*  * read-only options  */
 end_comment
