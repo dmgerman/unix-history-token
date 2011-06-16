@@ -4925,21 +4925,22 @@ name|uint8_t
 modifier|*
 name|p
 decl_stmt|;
+comment|/* 	 * Traditional entry points of int 0x15 and 0x16 are fixed 	 * and later BIOSes follow them.  (U)EFI CSM specification 	 * also mandate these fixed entry points. 	 * 	 * Validate the entry points here before we proceed further. 	 * It's known that some recent laptops does not have the 	 * same entry point and hang on boot if we call it. 	 */
 if|if
 condition|(
 name|x86bios_get_intr
 argument_list|(
 literal|0x15
 argument_list|)
-operator|==
-literal|0
+operator|!=
+literal|0xf000f859
 operator|||
 name|x86bios_get_intr
 argument_list|(
 literal|0x16
 argument_list|)
-operator|==
-literal|0
+operator|!=
+literal|0xf000e82e
 condition|)
 return|return
 operator|(
