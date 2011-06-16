@@ -17073,12 +17073,46 @@ name|error
 decl_stmt|;
 if|if
 condition|(
-name|NFS_ISV34
+name|NFS_ISV4
 argument_list|(
 name|vp
 argument_list|)
+operator|||
+operator|(
+name|NFS_ISV3
+argument_list|(
+name|vp
+argument_list|)
+operator|&&
+operator|(
+name|ap
+operator|->
+name|a_name
+operator|==
+name|_PC_LINK_MAX
+operator|||
+name|ap
+operator|->
+name|a_name
+operator|==
+name|_PC_NAME_MAX
+operator|||
+name|ap
+operator|->
+name|a_name
+operator|==
+name|_PC_CHOWN_RESTRICTED
+operator|||
+name|ap
+operator|->
+name|a_name
+operator|==
+name|_PC_NO_TRUNC
+operator|)
+operator|)
 condition|)
 block|{
+comment|/* 		 * Since only the above 4 a_names are returned by the NFSv3 		 * Pathconf RPC, there is no point in doing it for others. 		 */
 name|error
 operator|=
 name|nfsrpc_pathconf
@@ -17143,7 +17177,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* For NFSv2, just fake them. */
+comment|/* 		 * For NFSv2 (or NFSv3 when not one of the above 4 a_names), 		 * just fake them. 		 */
 name|pc
 operator|.
 name|pc_linkmax
