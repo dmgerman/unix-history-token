@@ -592,8 +592,6 @@ operator|(
 name|p
 operator|,
 name|builtin_flags
-operator|&
-name|EV_TESTED
 operator|)
 expr_stmt|;
 end_expr_stmt
@@ -4380,6 +4378,11 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+name|flags
+operator|&=
+operator|~
+name|EV_BACKCMD
+expr_stmt|;
 block|}
 name|flags
 operator||=
