@@ -431,7 +431,7 @@ begin_define
 define|#
 directive|define
 name|AOUT32_USRSTACK
-value|0xbfc0000
+value|0xbfc00000
 end_define
 
 begin_define
