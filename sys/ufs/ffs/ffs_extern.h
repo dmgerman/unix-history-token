@@ -15,6 +15,12 @@ directive|define
 name|_UFS_FFS_EXTERN_H
 end_define
 
+begin_enum_decl
+enum_decl|enum
+name|vtype
+enum_decl|;
+end_enum_decl
+
 begin_struct_decl
 struct_decl|struct
 name|buf
