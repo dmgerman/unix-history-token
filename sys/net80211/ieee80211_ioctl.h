@@ -1751,7 +1751,7 @@ name|int16_t
 name|i_val
 decl_stmt|;
 comment|/* Index or simple value */
-name|int16_t
+name|uint16_t
 name|i_len
 decl_stmt|;
 comment|/* Index or simple value */

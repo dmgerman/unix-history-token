@@ -701,7 +701,7 @@ name|vap
 operator|->
 name|iv_ic
 decl_stmt|;
-name|int
+name|uint32_t
 name|space
 decl_stmt|;
 name|space
@@ -1170,7 +1170,7 @@ name|IEEE80211_ADDR_LEN
 index|]
 decl_stmt|;
 specifier|const
-name|int
+name|size_t
 name|off
 init|=
 name|__offsetof
@@ -1896,7 +1896,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|size_t
+name|uint32_t
 name|space
 decl_stmt|;
 name|void
@@ -2788,7 +2788,7 @@ name|ieee80211_node
 modifier|*
 name|ni
 parameter_list|,
-name|int
+name|size_t
 name|off
 parameter_list|)
 block|{
@@ -3044,7 +3044,7 @@ name|IEEE80211_ADDR_LEN
 index|]
 decl_stmt|;
 specifier|const
-name|int
+name|size_t
 name|off
 init|=
 name|__offsetof
