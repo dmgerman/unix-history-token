@@ -15,11 +15,22 @@ directive|define
 name|_UFS_FFS_EXTERN_H
 end_define
 
-begin_enum_decl
-enum_decl|enum
-name|vtype
-enum_decl|;
-end_enum_decl
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"No user-serving parts inside"
+end_error
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_struct_decl
 struct_decl|struct
@@ -1526,12 +1537,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_expr_stmt
 name|TAILQ_HEAD
