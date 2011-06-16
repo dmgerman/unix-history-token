@@ -250,6 +250,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|uflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|const
 name|char
 modifier|*
@@ -507,14 +515,14 @@ name|SMALL
 comment|/* rtsold */
 name|opts
 operator|=
-literal|"adDfFm1O:P:R:"
+literal|"adDfFm1O:p:R:u"
 expr_stmt|;
 else|#
 directive|else
 comment|/* rtsol */
 name|opts
 operator|=
-literal|"adDFO:P:R:"
+literal|"adDFO:R:u"
 expr_stmt|;
 name|fflag
 operator|=
@@ -569,7 +577,7 @@ case|case
 literal|'d'
 case|:
 name|dflag
-operator|=
+operator|+=
 literal|1
 expr_stmt|;
 break|break;
@@ -577,7 +585,7 @@ case|case
 literal|'D'
 case|:
 name|dflag
-operator|=
+operator|+=
 literal|2
 expr_stmt|;
 break|break;
@@ -622,7 +630,7 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
-literal|'P'
+literal|'p'
 case|:
 name|pidfilename
 operator|=
@@ -635,6 +643,14 @@ case|:
 name|resolvconf_script
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'u'
+case|:
+name|uflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 default|default:
@@ -689,9 +705,25 @@ comment|/* set log level */
 if|if
 condition|(
 name|dflag
-operator|==
+operator|>
+literal|1
+condition|)
+name|log_upto
+operator|=
+name|LOG_DEBUG
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|dflag
+operator|>
 literal|0
 condition|)
+name|log_upto
+operator|=
+name|LOG_INFO
+expr_stmt|;
+else|else
 name|log_upto
 operator|=
 name|LOG_NOTICE
@@ -710,10 +742,7 @@ name|ident
 operator|=
 name|strrchr
 argument_list|(
-name|argv
-index|[
-literal|0
-index|]
+name|argv0
 argument_list|,
 literal|'/'
 argument_list|)
@@ -725,10 +754,7 @@ name|ident
 condition|)
 name|ident
 operator|=
-name|argv
-index|[
-literal|0
-index|]
+name|argv0
 expr_stmt|;
 else|else
 name|ident
