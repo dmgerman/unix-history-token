@@ -2429,7 +2429,7 @@ name|len
 operator|=
 sizeof|sizeof
 argument_list|(
-name|lvalue
+name|value
 argument_list|)
 expr_stmt|;
 if|if
@@ -2439,7 +2439,7 @@ argument_list|(
 literal|"kern.sched.cpusetsize"
 argument_list|,
 operator|&
-name|lvalue
+name|value
 argument_list|,
 operator|&
 name|len
@@ -2460,7 +2460,10 @@ operator|)
 return|;
 return|return
 operator|(
-name|lvalue
+operator|(
+name|long
+operator|)
+name|value
 operator|)
 return|;
 endif|#
