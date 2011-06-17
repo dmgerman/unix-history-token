@@ -3235,6 +3235,7 @@ case|case
 name|PT_ATTACH
 case|:
 comment|/* security check done above */
+comment|/* 		 * It would be nice if the tracing relationship was separate 		 * from the parent relationship but that would require 		 * another set of links in the proc struct or for "wait" 		 * to scan the entire proc table.  To make life easier, 		 * we just re-parent the process we're trying to trace. 		 * The old parent is remembered so we can put things back 		 * on a "detach". 		 */
 name|p
 operator|->
 name|p_flag
