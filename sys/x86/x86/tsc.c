@@ -2027,7 +2027,7 @@ literal|0
 init|;
 name|shift
 operator|<
-literal|32
+literal|31
 operator|&&
 operator|(
 name|tsc_freq
@@ -2571,11 +2571,18 @@ modifier|*
 name|tc
 parameter_list|)
 block|{
-return|return
+name|uint32_t
+name|rv
+decl_stmt|;
+asm|__asm __volatile("rdtsc; shrd %%cl, %%edx, %0"
+block|:
+literal|"=a"
 operator|(
-name|rdtsc
-argument_list|()
-operator|>>
+name|rv
+operator|)
+operator|:
+literal|"c"
+operator|(
 operator|(
 name|int
 operator|)
@@ -2586,9 +2593,20 @@ name|tc
 operator|->
 name|tc_priv
 operator|)
-return|;
-block|}
+operator|:
+literal|"edx"
+block|)
+function|;
 end_function
 
+begin_return
+return|return
+operator|(
+name|rv
+operator|)
+return|;
+end_return
+
+unit|}
 end_unit
 
