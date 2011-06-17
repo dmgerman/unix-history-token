@@ -5240,7 +5240,7 @@ name|KP_IP6_ADDR
 index|]
 operator|&&
 operator|!
-name|STAILQ_EMPTY
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 name|j
@@ -5264,7 +5264,7 @@ name|KP_IP4_ADDR
 index|]
 operator|&&
 operator|!
-name|STAILQ_EMPTY
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 name|j
@@ -5444,7 +5444,7 @@ name|p
 operator|==
 name|NULL
 operator|||
-name|STAILQ_EMPTY
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 name|p
@@ -5464,7 +5464,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-name|STAILQ_FOREACH_SAFE
+name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|s
 argument_list|,

@@ -261,7 +261,7 @@ index|]
 operator|)
 condition|)
 block|{
-name|STAILQ_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|s
 argument_list|,
@@ -422,7 +422,7 @@ index|]
 operator|)
 condition|)
 block|{
-name|STAILQ_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|s
 argument_list|,

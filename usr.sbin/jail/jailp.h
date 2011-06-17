@@ -524,7 +524,7 @@ struct|;
 end_struct
 
 begin_expr_stmt
-name|STAILQ_HEAD
+name|TAILQ_HEAD
 argument_list|(
 name|cfstrings
 argument_list|,
@@ -537,7 +537,7 @@ begin_struct
 struct|struct
 name|cfstring
 block|{
-name|STAILQ_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|cfstring
 argument_list|)

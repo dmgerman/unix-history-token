@@ -533,7 +533,7 @@ name|j
 operator|->
 name|comstring
 operator|=
-name|STAILQ_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|j
@@ -607,7 +607,7 @@ name|COMSTRING_DUMMY
 condition|?
 name|NULL
 else|:
-name|STAILQ_NEXT
+name|TAILQ_NEXT
 argument_list|(
 name|comstring
 argument_list|,
@@ -1958,7 +1958,7 @@ name|argc
 operator|=
 literal|0
 expr_stmt|;
-name|STAILQ_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|s
 argument_list|,
@@ -1990,7 +1990,7 @@ name|argc
 operator|=
 literal|0
 expr_stmt|;
-name|STAILQ_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|s
 argument_list|,
