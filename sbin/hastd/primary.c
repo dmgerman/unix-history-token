@@ -3259,6 +3259,9 @@ argument_list|(
 name|nvin
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
 comment|/* Setup directions. */
 if|if
 condition|(
@@ -3302,6 +3305,8 @@ argument_list|,
 literal|"Unable to set connection direction"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|pjdlog_info
 argument_list|(
 literal|"Connected to %s."
