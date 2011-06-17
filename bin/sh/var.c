@@ -2708,6 +2708,19 @@ name|i
 operator|++
 control|)
 block|{
+comment|/* 		 * Skip improper variable names so the output remains usable as 		 * shell input. 		 */
+if|if
+condition|(
+operator|!
+name|isassignment
+argument_list|(
+name|vars
+index|[
+name|i
+index|]
+argument_list|)
+condition|)
+continue|continue;
 name|s
 operator|=
 name|strchr
@@ -3082,6 +3095,18 @@ condition|(
 name|values
 condition|)
 block|{
+comment|/* 						 * Skip improper variable names 						 * so the output remains usable 						 * as shell input. 						 */
+if|if
+condition|(
+operator|!
+name|isassignment
+argument_list|(
+name|vp
+operator|->
+name|text
+argument_list|)
+condition|)
+continue|continue;
 name|out1str
 argument_list|(
 name|cmdname
