@@ -261,30 +261,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|JF_IFUP
-value|0x0100
-end_define
-
-begin_comment
-comment|/* IP addresses have been configured */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JF_MOUNTED
-value|0x0200
-end_define
-
-begin_comment
-comment|/* Filesystems have been mounted */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|JF_PERSIST
-value|0x0400
+value|0x0100
 end_define
 
 begin_comment
@@ -295,7 +273,7 @@ begin_define
 define|#
 directive|define
 name|JF_TIMEOUT
-value|0x0800
+value|0x0200
 end_define
 
 begin_comment
@@ -306,7 +284,7 @@ begin_define
 define|#
 directive|define
 name|JF_SLEEPQ
-value|0x2000
+value|0x0400
 end_define
 
 begin_comment
@@ -450,6 +428,9 @@ directive|endif
 name|IP__MOUNT_FROM_FSTAB
 block|,
 comment|/* Line from mount.fstab file */
+name|IP__OP
+block|,
+comment|/* Placeholder for requested operation */
 name|KP_ALLOW_CHFLAGS
 block|,
 name|KP_ALLOW_MOUNT
@@ -672,8 +653,10 @@ name|struct
 name|timespec
 name|timeout
 decl_stmt|;
+specifier|const
 name|enum
 name|intparam
+modifier|*
 name|comparam
 decl_stmt|;
 name|unsigned
@@ -825,16 +808,12 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|run_command
+name|next_command
 parameter_list|(
 name|struct
 name|cfjail
 modifier|*
 name|j
-parameter_list|,
-name|enum
-name|intparam
-name|comparam
 parameter_list|)
 function_decl|;
 end_function_decl

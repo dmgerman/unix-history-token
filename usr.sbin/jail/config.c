@@ -470,6 +470,16 @@ name|PF_CONV
 block|}
 block|,
 index|[
+name|IP__OP
+index|]
+operator|=
+block|{
+name|NULL
+block|,
+name|PF_CONV
+block|}
+block|,
+index|[
 name|KP_ALLOW_CHFLAGS
 index|]
 operator|=
