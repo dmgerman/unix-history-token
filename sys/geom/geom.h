@@ -828,6 +828,38 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* BIO_GETATTR("GEOM::setstate") argument values. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|G_STATE_FAILED
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_STATE_REBUILD
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_STATE_RESYNC
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_STATE_ACTIVE
+value|3
+end_define
+
+begin_comment
 comment|/* geom_dev.c */
 end_comment
 
