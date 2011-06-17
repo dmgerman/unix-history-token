@@ -2373,6 +2373,12 @@ operator|<<
 literal|2
 argument_list|)
 expr_stmt|;
+name|ia64_mf
+argument_list|()
+expr_stmt|;
+name|ia64_srlz_i
+argument_list|()
+expr_stmt|;
 comment|/* PTC.G leave exclusive */
 name|atomic_store_rel_long
 argument_list|(
@@ -2381,6 +2387,9 @@ name|pmap_ptc_g_sem
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|ia64_invala
+argument_list|()
 expr_stmt|;
 name|intr_restore
 argument_list|(

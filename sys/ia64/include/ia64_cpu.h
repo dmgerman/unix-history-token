@@ -1047,7 +1047,7 @@ name|uint64_t
 name|log2size
 parameter_list|)
 block|{
-asm|__asm __volatile("ptc.g %0,%1;; srlz.i;;" :: "r"(va), "r"(log2size));
+asm|__asm __volatile("ptc.g %0,%1;;" :: "r"(va), "r"(log2size));
 block|}
 end_function
 
@@ -1068,7 +1068,7 @@ name|uint64_t
 name|log2size
 parameter_list|)
 block|{
-asm|__asm __volatile("ptc.ga %0,%1;; srlz.i;;" :: "r"(va), "r"(log2size));
+asm|__asm __volatile("ptc.ga %0,%1;;" :: "r"(va), "r"(log2size));
 block|}
 end_function
 
@@ -1090,6 +1090,23 @@ name|log2size
 parameter_list|)
 block|{
 asm|__asm __volatile("ptc.l %0,%1;; srlz.i;;" :: "r"(va), "r"(log2size));
+block|}
+end_function
+
+begin_comment
+comment|/*  * Invalidate the ALAT on the local processor.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ia64_invala
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|__asm __volatile("invala;;");
 block|}
 end_function
 
