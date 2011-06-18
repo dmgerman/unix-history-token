@@ -3121,7 +3121,7 @@ name|sc
 operator|->
 name|powerintr
 expr_stmt|;
-comment|/* 		 * We have a shortish timeout of 500ms here.  Some bridges do 		 * not generate a POWER_CYCLE event for 16-bit cards.  In 		 * those cases, we have to cope the best we can, and having 		 * only a short delay is better than the alternatives. 		 */
+comment|/* 		 * We have a shortish timeout of 500ms here.  Some bridges do 		 * not generate a POWER_CYCLE event for 16-bit cards.  In 		 * those cases, we have to cope the best we can, and having 		 * only a short delay is better than the alternatives.  Others 		 * raise the power cycle a smidge before it is really ready. 		 * We deal with those below. 		 */
 name|sane
 operator|=
 literal|10
@@ -3180,6 +3180,21 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Relax for 10ms.  Some bridges appear to assert this signal 		 * right away, but before the card has stabilized.  Other 		 * cards need need more time to cope up reliabily. 		 * Experiments with troublesome setups show this to be a 		 * "cheap" way to enhance reliabilty.  We need not do this for 		 * "off" since we don't touch the card after we turn it off. 		 */
+name|pause
+argument_list|(
+literal|"cbbPwr"
+argument_list|,
+name|min
+argument_list|(
+name|hz
+operator|/
+literal|100
+argument_list|,
+literal|1
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 		 * The TOPIC95B requires a little bit extra time to get its 		 * act together, so delay for an additional 100ms.  Also as 		 * documented below, it doesn't seem to set the POWER_CYCLE 		 * bit, so don't whine if it never came on. 		 */
 if|if
 condition|(
@@ -3189,7 +3204,6 @@ name|chipset
 operator|==
 name|CB_TOPIC95
 condition|)
-block|{
 name|pause
 argument_list|(
 literal|"cbb95B"
@@ -3199,7 +3213,6 @@ operator|/
 literal|10
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -3207,7 +3220,6 @@ name|sane
 operator|<=
 literal|0
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|sc
@@ -3217,7 +3229,6 @@ argument_list|,
 literal|"power timeout, doom?\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* 	 * After the power is good, we can turn off the power interrupt. 	 * However, the PC Card standard says that we must delay turning the 	 * CD bit back on for a bit to allow for bouncyness on power down 	 * (recall that we don't wait above for a power down, since we don't 	 * get an interrupt for that).  We're called either from the suspend 	 * code in which case we don't want to turn card change on again, or 	 * we're called from the card insertion code, in which case the cbb 	 * thread will turn it on for us before it waits to be woken by a 	 * change event. 	 * 	 * NB: Topic95B doesn't set the power cycle bit.  we assume that 	 * both it and the TOPIC95 behave the same. 	 */
 name|cbb_clrb
