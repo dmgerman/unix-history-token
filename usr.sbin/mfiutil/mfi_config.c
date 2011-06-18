@@ -309,6 +309,9 @@ decl_stmt|;
 name|uint32_t
 name|config_size
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 comment|/* 	 * Keep fetching the config in a loop until we have a large enough 	 * buffer to hold the entire configuration. 	 */
 name|config
 operator|=
@@ -362,12 +365,27 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
+name|free
+argument_list|(
+name|config
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|error
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|config
@@ -666,6 +684,11 @@ literal|"The current mfi(4) driver does not support "
 literal|"configuration changes."
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EOPNOTSUPP
@@ -694,6 +717,11 @@ expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get volume list"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -762,6 +790,11 @@ name|target_id
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EBUSY
@@ -795,6 +828,11 @@ block|{
 name|printf
 argument_list|(
 literal|"\nAborting\n"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -832,6 +870,11 @@ expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to clear configuration"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -1509,11 +1552,20 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|free
+argument_list|(
+name|info
+operator|->
+name|drives
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|mfi_pd_get_info
@@ -1541,6 +1593,13 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|info
+operator|->
+name|drives
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1561,6 +1620,13 @@ argument_list|(
 literal|"Drive %u is not available"
 argument_list|,
 name|device_id
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|info
+operator|->
+name|drives
 argument_list|)
 expr_stmt|;
 return|return
@@ -2580,6 +2646,33 @@ name|EINVAL
 operator|)
 return|;
 block|}
+name|bzero
+argument_list|(
+operator|&
+name|state
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|state
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|config
+operator|=
+name|NULL
+expr_stmt|;
+name|arrays
+operator|=
+name|NULL
+expr_stmt|;
+name|narrays
+operator|=
+literal|0
+expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 name|fd
 operator|=
 name|mfi_open
@@ -2622,11 +2715,13 @@ literal|"The current mfi(4) driver does not support "
 literal|"configuration changes."
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EOPNOTSUPP
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|error
+goto|;
 block|}
 comment|/* Lookup the RAID type first. */
 name|raid_type
@@ -2701,11 +2796,13 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|error
+goto|;
 block|}
 comment|/* Parse any options. */
 name|optind
@@ -2813,11 +2910,13 @@ case|case
 literal|'?'
 case|:
 default|default:
-return|return
-operator|(
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|error
+goto|;
 block|}
 block|}
 name|ac
@@ -2845,11 +2944,13 @@ argument_list|(
 literal|"At least one drive list is required"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|error
+goto|;
 block|}
 switch|switch
 condition|(
@@ -2883,11 +2984,13 @@ argument_list|(
 literal|"Only one drive list can be specified"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|error
+goto|;
 block|}
 break|break;
 case|case
@@ -2912,11 +3015,13 @@ literal|"RAID10, RAID50, and RAID60 require at least "
 literal|"two drive lists"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|error
+goto|;
 block|}
 if|if
 condition|(
@@ -2932,11 +3037,13 @@ argument_list|,
 name|MFI_MAX_SPAN_DEPTH
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|error
+goto|;
 block|}
 break|break;
 block|}
@@ -2965,11 +3072,13 @@ argument_list|(
 literal|"malloc failed"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|ENOMEM
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|error
+goto|;
 block|}
 for|for
 control|(
@@ -3009,11 +3118,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
+goto|goto
 name|error
-operator|)
-return|;
+goto|;
 block|}
 switch|switch
 condition|(
@@ -3066,11 +3173,13 @@ literal|"All arrays must contain the same "
 literal|"number of drives"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|error
+goto|;
 block|}
 block|}
 break|break;
@@ -3098,11 +3207,9 @@ argument_list|(
 literal|"Failed to read configuration"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+goto|goto
 name|error
-operator|)
-return|;
+goto|;
 block|}
 name|p
 operator|=
@@ -3173,11 +3280,13 @@ argument_list|(
 literal|"malloc failed"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|ENOMEM
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|error
+goto|;
 block|}
 for|for
 control|(
@@ -3293,11 +3402,13 @@ argument_list|(
 literal|"malloc failed"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|ENOMEM
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|error
+goto|;
 block|}
 for|for
 control|(
@@ -3471,11 +3582,13 @@ argument_list|(
 literal|"malloc failed"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|ENOMEM
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|error
+goto|;
 block|}
 name|config
 operator|->
@@ -3685,26 +3798,16 @@ argument_list|(
 literal|"Failed to add volume"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+comment|/* FALLTHROUGH */
 block|}
+name|error
+label|:
 comment|/* Clean up. */
 name|free
 argument_list|(
 name|config
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|state
-operator|.
-name|log_drv_count
-operator|>
-literal|0
-condition|)
 name|free
 argument_list|(
 name|state
@@ -3712,14 +3815,6 @@ operator|.
 name|volumes
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|state
-operator|.
-name|array_count
-operator|>
-literal|0
-condition|)
 name|free
 argument_list|(
 name|state
@@ -3762,7 +3857,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -3935,6 +4030,11 @@ literal|"The current mfi(4) driver does not support "
 literal|"configuration changes."
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EOPNOTSUPP
@@ -3973,6 +4073,11 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -4007,6 +4112,11 @@ argument_list|,
 name|target_id
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -4033,6 +4143,11 @@ name|fd
 argument_list|,
 name|target_id
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -4087,6 +4202,11 @@ expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to delete volume"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -4222,6 +4342,14 @@ name|error
 operator|)
 return|;
 block|}
+name|config
+operator|=
+name|NULL
+expr_stmt|;
+name|spare
+operator|=
+name|NULL
+expr_stmt|;
 name|error
 operator|=
 name|mfi_lookup_drive
@@ -4241,11 +4369,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
+goto|goto
 name|error
-operator|)
-return|;
+goto|;
 if|if
 condition|(
 name|mfi_pd_get_info
@@ -4272,11 +4398,9 @@ argument_list|(
 literal|"Failed to fetch drive info"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+goto|goto
 name|error
-operator|)
-return|;
+goto|;
 block|}
 if|if
 condition|(
@@ -4294,11 +4418,13 @@ argument_list|,
 name|device_id
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|error
+goto|;
 block|}
 if|if
 condition|(
@@ -4339,11 +4465,9 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+goto|goto
 name|error
-operator|)
-return|;
+goto|;
 block|}
 block|}
 if|if
@@ -4368,11 +4492,9 @@ argument_list|(
 literal|"Failed to read configuration"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+goto|goto
 name|error
-operator|)
-return|;
+goto|;
 block|}
 name|spare
 operator|=
@@ -4406,11 +4528,13 @@ argument_list|(
 literal|"malloc failed"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|ENOMEM
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|error
+goto|;
 block|}
 name|bzero
 argument_list|(
@@ -4494,11 +4618,13 @@ operator|->
 name|array_ref
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|error
+goto|;
 block|}
 name|p
 operator|+=
@@ -4540,11 +4666,13 @@ argument_list|,
 name|target_id
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|error
+goto|;
 block|}
 name|spare
 operator|->
@@ -4608,11 +4736,13 @@ argument_list|(
 literal|"Missing array; inconsistent config?"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|ENXIO
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|error
+goto|;
 block|}
 if|if
 condition|(
@@ -4634,11 +4764,13 @@ operator|->
 name|array_ref
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|error
+goto|;
 block|}
 name|spare
 operator|->
@@ -4653,11 +4785,6 @@ name|array_ref
 expr_stmt|;
 block|}
 block|}
-name|free
-argument_list|(
-name|config
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|mfi_dcmd_command
@@ -4702,12 +4829,20 @@ argument_list|(
 literal|"Failed to assign spare"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+comment|/* FALLTHROUGH. */
 block|}
+name|error
+label|:
+name|free
+argument_list|(
+name|spare
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|config
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|fd
@@ -4715,7 +4850,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -4831,11 +4966,18 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 comment|/* Get the info for this drive. */
 if|if
 condition|(
@@ -4865,6 +5007,11 @@ argument_list|,
 name|device_id
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -4885,6 +5032,11 @@ argument_list|(
 literal|"Drive %u is not a hot spare"
 argument_list|,
 name|device_id
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -4935,6 +5087,11 @@ expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to delete spare"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -5714,6 +5871,11 @@ argument_list|(
 literal|"Failed to get config"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -5891,6 +6053,11 @@ name|error
 operator|=
 name|EOPNOTSUPP
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -5914,6 +6081,11 @@ block|{
 name|warnx
 argument_list|(
 literal|"malloc failed"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -5948,6 +6120,16 @@ expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to read debug command"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|config
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
