@@ -9907,12 +9907,6 @@ name|IEEE80211_CHAN_A
 operator||
 name|nflags
 expr_stmt|;
-name|sc
-operator|->
-name|sc_flags
-operator||=
-name|IWN_FLAG_HAS_5GHZ
-expr_stmt|;
 block|}
 if|#
 directive|if

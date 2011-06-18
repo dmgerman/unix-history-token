@@ -181,17 +181,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Base Address Register. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWN_PCI_BAR0
-value|PCI_MAPREG_START
-end_define
-
-begin_comment
 comment|/*  * Control and status registers.  */
 end_comment
 

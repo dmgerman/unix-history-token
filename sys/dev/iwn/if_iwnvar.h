@@ -735,10 +735,6 @@ name|sc_flags
 decl_stmt|;
 define|#
 directive|define
-name|IWN_FLAG_HAS_5GHZ
-value|(1<< 0)
-define|#
-directive|define
 name|IWN_FLAG_HAS_OTPROM
 value|(1<< 1)
 define|#
