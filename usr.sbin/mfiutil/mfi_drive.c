@@ -1503,11 +1503,18 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 comment|/* Get the info for this drive. */
 if|if
 condition|(
@@ -1537,6 +1544,11 @@ argument_list|,
 name|device_id
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1558,6 +1570,11 @@ argument_list|(
 literal|"Drive %u is already in the desired state"
 argument_list|,
 name|device_id
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -1634,6 +1651,11 @@ name|mfi_pdstate
 argument_list|(
 name|new_state
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -1965,11 +1987,18 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 comment|/* Get the info for this drive. */
 if|if
 condition|(
@@ -1999,6 +2028,11 @@ argument_list|,
 name|device_id
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2020,6 +2054,11 @@ argument_list|(
 literal|"Drive %d is not in the REBUILD state"
 argument_list|,
 name|device_id
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -2074,6 +2113,11 @@ argument_list|(
 literal|"Failed to start rebuild on drive %u"
 argument_list|,
 name|device_id
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -2213,11 +2257,18 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 comment|/* Get the info for this drive. */
 if|if
 condition|(
@@ -2247,6 +2298,11 @@ argument_list|,
 name|device_id
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2268,6 +2324,11 @@ argument_list|(
 literal|"Drive %d is not in the REBUILD state"
 argument_list|,
 name|device_id
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -2322,6 +2383,11 @@ argument_list|(
 literal|"Failed to abort rebuild on drive %u"
 argument_list|,
 name|device_id
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -2455,11 +2521,18 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 comment|/* Get the info for this drive. */
 if|if
 condition|(
@@ -2487,6 +2560,11 @@ argument_list|(
 literal|"Failed to fetch info for drive %u"
 argument_list|,
 name|device_id
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -2819,11 +2897,18 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 comment|/* Get the info for this drive. */
 if|if
 condition|(
@@ -2851,6 +2936,11 @@ argument_list|(
 literal|"Failed to fetch info for drive %u"
 argument_list|,
 name|device_id
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -2912,6 +3002,11 @@ else|:
 literal|"stop"
 argument_list|,
 name|device_id
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -3129,11 +3224,18 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 name|mbox_store_device_id
 argument_list|(
 operator|&
@@ -3198,6 +3300,11 @@ else|:
 literal|"stop"
 argument_list|,
 name|device_id
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
