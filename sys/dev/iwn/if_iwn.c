@@ -13142,14 +13142,6 @@ operator|->
 name|consecutive
 argument_list|)
 expr_stmt|;
-comment|/* XXX not sure why we're notified w/ zero */
-if|if
-condition|(
-name|misses
-operator|==
-literal|0
-condition|)
-break|break;
 name|DPRINTF
 argument_list|(
 name|sc
@@ -13179,6 +13171,19 @@ name|iv_state
 operator|==
 name|IEEE80211_S_RUN
 operator|&&
+operator|(
+name|ic
+operator|->
+name|ic_flags
+operator|&
+name|IEEE80211_F_SCAN
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|misses
 operator|>
 literal|5
@@ -13215,6 +13220,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 break|break;
 block|}
