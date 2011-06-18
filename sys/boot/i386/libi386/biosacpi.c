@@ -153,7 +153,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%p"
+literal|"%u"
 argument_list|,
 name|VTOP
 argument_list|(

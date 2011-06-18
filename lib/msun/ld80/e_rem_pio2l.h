@@ -327,6 +327,7 @@ name|BIAS
 operator|+
 literal|25
 operator|||
+operator|(
 name|ex
 operator|==
 name|BIAS
@@ -340,6 +341,7 @@ operator|.
 name|manh
 operator|<
 literal|0xc90fdaa2
+operator|)
 condition|)
 block|{
 comment|/* |x| ~< 2^25*(pi/2), medium size */

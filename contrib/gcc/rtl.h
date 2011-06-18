@@ -18,6 +18,35 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__PAST_END
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__PAST_END
+parameter_list|(
+name|array
+parameter_list|,
+name|offset
+parameter_list|)
+value|(((typeof(*(array)) *)(array))[offset])
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
 file|"statistics.h"
 end_include
 
@@ -1763,7 +1792,7 @@ name|N
 parameter_list|,
 name|C
 parameter_list|)
-value|((RTX)->u.fld[N])
+value|__PAST_END((RTX)->u.fld, N)
 end_define
 
 begin_define
@@ -1791,7 +1820,7 @@ name|RTVEC
 parameter_list|,
 name|I
 parameter_list|)
-value|((RTVEC)->elem[I])
+value|__PAST_END((RTVEC)->elem, I)
 end_define
 
 begin_define
@@ -1833,7 +1862,7 @@ name|C
 parameter_list|,
 name|M
 parameter_list|)
-value|((RTX)->u.hwint[N])
+value|__PAST_END((RTX)->u.hwint, N)
 end_define
 
 begin_define

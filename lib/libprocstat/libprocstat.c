@@ -6985,7 +6985,6 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-specifier|static
 name|struct
 name|mount
 name|mnt
@@ -7148,11 +7147,9 @@ argument_list|,
 name|MNAMELEN
 argument_list|)
 expr_stmt|;
-name|mnt
-operator|.
-name|mnt_stat
-operator|.
-name|f_mntonname
+name|mt
+operator|->
+name|mntonname
 index|[
 name|MNAMELEN
 index|]

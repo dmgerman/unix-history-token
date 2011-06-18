@@ -6379,6 +6379,9 @@ name|int
 name|stroff
 decl_stmt|;
 comment|/* Force the section to align to a longword boundary.  Without this,      UnixWare ar crashes.  */
+operator|(
+name|void
+operator|)
 name|bfd_set_section_alignment
 argument_list|(
 name|stdoutput

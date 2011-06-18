@@ -81,6 +81,7 @@ typedef|typedef
 struct|struct
 name|ctf_sect
 block|{
+specifier|const
 name|char
 modifier|*
 name|cts_name

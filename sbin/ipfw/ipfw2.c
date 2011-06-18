@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -17946,12 +17952,14 @@ operator|*
 name|av
 argument_list|)
 expr_stmt|;
+name|__PAST_END
+argument_list|(
 name|c
 operator|->
 name|d
-index|[
+argument_list|,
 literal|1
-index|]
+argument_list|)
 operator|=
 name|j
 expr_stmt|;

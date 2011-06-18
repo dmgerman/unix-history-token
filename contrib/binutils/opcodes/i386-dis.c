@@ -25236,6 +25236,9 @@ condition|(
 literal|1
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|FETCH_DATA
 argument_list|(
 name|the_info
@@ -26817,6 +26820,9 @@ name|priv
 operator|.
 name|orig_sizeflag
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|FETCH_DATA
 argument_list|(
 name|info
@@ -26943,6 +26949,9 @@ name|unsigned
 name|char
 name|threebyte
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|FETCH_DATA
 argument_list|(
 name|info
@@ -27033,6 +27042,9 @@ operator|==
 name|IS_3BYTE_OPCODE
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|FETCH_DATA
 argument_list|(
 name|info
@@ -27420,6 +27432,9 @@ condition|(
 name|need_modrm
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|FETCH_DATA
 argument_list|(
 name|info
@@ -32502,6 +32517,9 @@ name|havesib
 operator|=
 literal|1
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|FETCH_DATA
 argument_list|(
 name|the_info
@@ -33703,6 +33721,9 @@ name|unsigned
 name|int
 name|b
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|FETCH_DATA
 argument_list|(
 name|the_info
@@ -33843,6 +33864,9 @@ name|x
 init|=
 literal|0
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|FETCH_DATA
 argument_list|(
 name|the_info
@@ -33927,6 +33951,9 @@ name|x
 init|=
 literal|0
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|FETCH_DATA
 argument_list|(
 name|the_info
@@ -34035,6 +34062,9 @@ name|x
 init|=
 literal|0
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|FETCH_DATA
 argument_list|(
 name|the_info
@@ -37895,6 +37925,9 @@ name|char
 modifier|*
 name|mnemonic
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|FETCH_DATA
 argument_list|(
 name|the_info
@@ -38010,6 +38043,9 @@ name|unsigned
 name|int
 name|cmp_type
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|FETCH_DATA
 argument_list|(
 name|the_info
