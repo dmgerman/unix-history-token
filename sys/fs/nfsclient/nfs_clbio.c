@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -123,6 +129,12 @@ begin_include
 include|#
 directive|include
 file|<fs/nfsclient/nfsnode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fs/nfsclient/nfs_kdtrace.h>
 end_include
 
 begin_decl_stmt
@@ -1738,6 +1750,11 @@ operator|->
 name|n_attrstamp
 operator|=
 literal|0
+expr_stmt|;
+name|KDTRACE_NFS_ATTRCACHE_FLUSH_DONE
+argument_list|(
+name|vp
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -4521,6 +4538,11 @@ name|n_attrstamp
 operator|=
 literal|0
 expr_stmt|;
+name|KDTRACE_NFS_ATTRCACHE_FLUSH_DONE
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|ncl_vinvalbuf
@@ -4567,6 +4589,11 @@ operator|->
 name|n_attrstamp
 operator|=
 literal|0
+expr_stmt|;
+name|KDTRACE_NFS_ATTRCACHE_FLUSH_DONE
+argument_list|(
+name|vp
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -8066,6 +8093,11 @@ operator|->
 name|n_attrstamp
 operator|=
 literal|0
+expr_stmt|;
+name|KDTRACE_NFS_ATTRCACHE_FLUSH_DONE
+argument_list|(
+name|vp
+argument_list|)
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
