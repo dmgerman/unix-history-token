@@ -1246,7 +1246,11 @@ else|else
 block|{
 name|warnx
 argument_list|(
-literal|"unknown access method"
+literal|"unknown access method: %d"
+argument_list|,
+name|procstat
+operator|->
+name|type
 argument_list|)
 expr_stmt|;
 return|return
@@ -3868,7 +3872,7 @@ else|else
 block|{
 name|warnx
 argument_list|(
-literal|"unknow access method: %d"
+literal|"unknown access method: %d"
 argument_list|,
 name|procstat
 operator|->
@@ -4249,7 +4253,7 @@ else|else
 block|{
 name|warnx
 argument_list|(
-literal|"unknow access method: %d"
+literal|"unknown access method: %d"
 argument_list|,
 name|procstat
 operator|->
@@ -4623,7 +4627,7 @@ else|else
 block|{
 name|warnx
 argument_list|(
-literal|"unknow access method: %d"
+literal|"unknown access method: %d"
 argument_list|,
 name|procstat
 operator|->
@@ -5824,7 +5828,7 @@ else|else
 block|{
 name|warnx
 argument_list|(
-literal|"unknow access method: %d"
+literal|"unknown access method: %d"
 argument_list|,
 name|procstat
 operator|->
