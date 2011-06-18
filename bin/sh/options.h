@@ -171,8 +171,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|hflag
+value|optlist[18].val
+end_define
+
+begin_define
+define|#
+directive|define
 name|NOPTS
-value|18
+value|19
 end_define
 
 begin_struct
@@ -350,6 +357,14 @@ block|{
 literal|"physical"
 block|,
 literal|'P'
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"trackall"
+block|,
+literal|'h'
 block|,
 literal|0
 block|}
