@@ -310,6 +310,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IWN_SHADOW_REG_CTRL
+value|0x0a8
+end_define
+
+begin_define
+define|#
+directive|define
 name|IWN_GIO_CHICKEN
 value|0x100
 end_define
@@ -1166,6 +1173,13 @@ define|#
 directive|define
 name|IWN_GP_DRIVER_CALIB_VER6
 value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_GP_DRIVER_6050_1X2
+value|(1<< 3)
 end_define
 
 begin_comment
@@ -3622,7 +3636,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Structure for command IWN_CMD_SET_SENSITIVITY. */
+comment|/* Structures for command IWN_CMD_SET_SENSITIVITY. */
 end_comment
 
 begin_struct
@@ -3672,6 +3686,88 @@ name|corr_cck_x4
 decl_stmt|;
 name|uint16_t
 name|energy_ofdm_th
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|iwn_enhanced_sensitivity_cmd
+block|{
+name|uint16_t
+name|which
+decl_stmt|;
+name|uint16_t
+name|energy_cck
+decl_stmt|;
+name|uint16_t
+name|energy_ofdm
+decl_stmt|;
+name|uint16_t
+name|corr_ofdm_x1
+decl_stmt|;
+name|uint16_t
+name|corr_ofdm_mrc_x1
+decl_stmt|;
+name|uint16_t
+name|corr_cck_mrc_x4
+decl_stmt|;
+name|uint16_t
+name|corr_ofdm_x4
+decl_stmt|;
+name|uint16_t
+name|corr_ofdm_mrc_x4
+decl_stmt|;
+name|uint16_t
+name|corr_barker
+decl_stmt|;
+name|uint16_t
+name|corr_barker_mrc
+decl_stmt|;
+name|uint16_t
+name|corr_cck_x4
+decl_stmt|;
+name|uint16_t
+name|energy_ofdm_th
+decl_stmt|;
+comment|/* "Enhanced" part. */
+name|uint16_t
+name|ina_det_ofdm
+decl_stmt|;
+name|uint16_t
+name|ina_det_cck
+decl_stmt|;
+name|uint16_t
+name|corr_11_9_en
+decl_stmt|;
+name|uint16_t
+name|ofdm_det_slope_mrc
+decl_stmt|;
+name|uint16_t
+name|ofdm_det_icept_mrc
+decl_stmt|;
+name|uint16_t
+name|ofdm_det_slope
+decl_stmt|;
+name|uint16_t
+name|ofdm_det_icept
+decl_stmt|;
+name|uint16_t
+name|cck_det_slope_mrc
+decl_stmt|;
+name|uint16_t
+name|cck_det_icept_mrc
+decl_stmt|;
+name|uint16_t
+name|cck_det_slope
+decl_stmt|;
+name|uint16_t
+name|cck_det_icept
+decl_stmt|;
+name|uint16_t
+name|reserved
 decl_stmt|;
 block|}
 name|__packed
@@ -5171,6 +5267,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IWN_EEPROM_SKU_CAP
+value|0x045
+end_define
+
+begin_define
+define|#
+directive|define
 name|IWN_EEPROM_RFCFG
 value|0x048
 end_define
@@ -5352,6 +5455,31 @@ define|#
 directive|define
 name|IWN5000_EEPROM_VOLT
 value|0x12b
+end_define
+
+begin_comment
+comment|/* Possible flags for IWN_EEPROM_SKU_CAP. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_EEPROM_SKU_CAP_11N
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_EEPROM_SKU_CAP_AMT
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_EEPROM_SKU_CAP_IPAN
+value|(1<< 8)
 end_define
 
 begin_comment

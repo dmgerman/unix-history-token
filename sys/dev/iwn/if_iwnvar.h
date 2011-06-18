@@ -704,6 +704,14 @@ define|#
 directive|define
 name|IWN_FLAG_INTERNAL_PA
 value|(1<< 4)
+define|#
+directive|define
+name|IWN_FLAG_HAS_11N
+value|(1<< 6)
+define|#
+directive|define
+name|IWN_FLAG_ENH_SENS
+value|(1<< 7)
 name|uint8_t
 name|hw_type
 decl_stmt|;
