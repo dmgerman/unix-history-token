@@ -3850,7 +3850,6 @@ name|la
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* end of FIB loop */
 name|reply
 label|:
 if|if
