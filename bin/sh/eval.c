@@ -4244,12 +4244,6 @@ block|}
 comment|/* Fork off a child process if necessary. */
 if|if
 condition|(
-name|cmd
-operator|->
-name|ncmd
-operator|.
-name|backgnd
-operator|||
 operator|(
 operator|(
 name|cmdentry
@@ -4323,11 +4317,7 @@ argument_list|)
 expr_stmt|;
 name|mode
 operator|=
-name|cmd
-operator|->
-name|ncmd
-operator|.
-name|backgnd
+name|FORK_FG
 expr_stmt|;
 if|if
 condition|(
@@ -5254,11 +5244,6 @@ operator|=
 name|jp
 expr_stmt|;
 block|}
-else|else
-name|exitstatus
-operator|=
-literal|0
-expr_stmt|;
 name|out
 label|:
 if|if
