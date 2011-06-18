@@ -752,6 +752,19 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|int
+name|create_jail
+parameter_list|(
+name|struct
+name|cfjail
+modifier|*
+name|j
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
 name|failed
 parameter_list|(
@@ -1181,6 +1194,13 @@ specifier|const
 name|char
 modifier|*
 name|cfname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|note_remove
 decl_stmt|;
 end_decl_stmt
 
