@@ -5193,6 +5193,14 @@ define|#
 directive|define
 name|IWN_FW_TLV_PBREQ_MAXLEN
 value|6
+define|#
+directive|define
+name|IWN_FW_TLV_ENH_SENS
+value|14
+define|#
+directive|define
+name|IWN_FW_TLV_PHY_CALIB
+value|15
 name|uint16_t
 name|alt
 decl_stmt|;
