@@ -1498,8 +1498,7 @@ name|IWN_FH_TX_STATUS_IDLE
 parameter_list|(
 name|chnl
 parameter_list|)
-define|\
-value|(1<< ((chnl) + 24) | 1<< ((chnl) + 16))
+value|(1<< ((chnl) + 16))
 end_define
 
 begin_comment
