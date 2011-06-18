@@ -3180,7 +3180,7 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Relax for 10ms.  Some bridges appear to assert this signal 		 * right away, but before the card has stabilized.  Other 		 * cards need need more time to cope up reliabily. 		 * Experiments with troublesome setups show this to be a 		 * "cheap" way to enhance reliabilty.  We need not do this for 		 * "off" since we don't touch the card after we turn it off. 		 */
+comment|/* 		 * Relax for 100ms.  Some bridges appear to assert this signal 		 * right away, but before the card has stabilized.  Other 		 * cards need need more time to cope up reliabily. 		 * Experiments with troublesome setups show this to be a 		 * "cheap" way to enhance reliabilty.  We need not do this for 		 * "off" since we don't touch the card after we turn it off. 		 */
 name|pause
 argument_list|(
 literal|"cbbPwr"
@@ -3189,7 +3189,7 @@ name|min
 argument_list|(
 name|hz
 operator|/
-literal|100
+literal|10
 argument_list|,
 literal|1
 argument_list|)
