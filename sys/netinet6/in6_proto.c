@@ -354,6 +354,16 @@ begin_comment
 comment|/*  * TCP/IP protocol family: IP6, ICMP6, UDP, TCP.  */
 end_comment
 
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|inet6
+argument_list|,
+literal|"Internet Protocol version 6"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|extern
 name|struct
