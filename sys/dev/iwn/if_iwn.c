@@ -11019,11 +11019,6 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|ifp
-operator|->
-name|if_ierrors
-operator|++
-expr_stmt|;
 return|return;
 block|}
 name|sc
@@ -11090,11 +11085,6 @@ name|stat
 operator|->
 name|cfg_phy_len
 argument_list|)
-expr_stmt|;
-name|ifp
-operator|->
-name|if_ierrors
-operator|++
 expr_stmt|;
 return|return;
 block|}
@@ -13000,7 +12990,7 @@ if|if
 condition|(
 name|status
 operator|&
-literal|0x80
+name|IWN_TX_FAIL
 condition|)
 block|{
 name|ifp
@@ -13025,6 +13015,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|ifp
+operator|->
+name|if_opackets
+operator|++
+expr_stmt|;
 name|ieee80211_ratectl_tx_complete
 argument_list|(
 name|vap
