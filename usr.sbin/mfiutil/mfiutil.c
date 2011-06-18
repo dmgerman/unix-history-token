@@ -170,6 +170,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"    show logstate             - display event log sequence numbers\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"    show volumes              - list logical volumes\n"
 argument_list|)
 expr_stmt|;
