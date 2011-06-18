@@ -2406,6 +2406,7 @@ argument_list|,
 else|#
 directive|else
 literal|"-"
+argument_list|,
 endif|#
 directive|endif
 operator|(
