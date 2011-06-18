@@ -303,6 +303,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|inet
+argument_list|,
+literal|"Internet Protocol version 4"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|extern
 name|struct
