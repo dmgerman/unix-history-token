@@ -3700,6 +3700,8 @@ operator|->
 name|bio_disk
 operator|->
 name|d_drv1
+operator|==
+name|NULL
 condition|)
 return|return
 name|ENXIO
