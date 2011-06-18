@@ -11098,7 +11098,10 @@ operator|||
 name|dopersistence
 operator|)
 operator|&&
-name|ip
+name|VTOI
+argument_list|(
+name|vp
+argument_list|)
 operator|->
 name|i_effnlink
 operator|>
