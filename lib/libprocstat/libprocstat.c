@@ -1007,7 +1007,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"malloc(%zd)"
+literal|"malloc(%zu)"
 argument_list|,
 name|len
 argument_list|)
@@ -1143,7 +1143,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"malloc(%zd)"
+literal|"malloc(%zu)"
 argument_list|,
 name|len
 argument_list|)
@@ -2350,7 +2350,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"malloc(%zd)"
+literal|"malloc(%zu)"
 argument_list|,
 name|nfiles
 operator|*
