@@ -3942,7 +3942,37 @@ operator|!=
 name|VM_PAGE_BITS_ALL
 condition|)
 block|{
-comment|/* 			 * Explicitly dirty the physical page.  Otherwise, the 			 * caller's changes may go unnoticed because they are 			 * performed through an unmanaged mapping or by a DMA 			 * operation. 			 */
+comment|/* 			 * Explicitly dirty the physical page.  Otherwise, the 			 * caller's changes may go unnoticed because they are 			 * performed through an unmanaged mapping or by a DMA 			 * operation. 			 * 			 * The object lock is not held here.  Therefore, like 			 * a pmap operation, the page queues lock may be 			 * required in order to call vm_page_dirty().  See 			 * vm_page_clear_dirty_mask(). 			 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|__mips__
+argument_list|)
+name|vm_page_dirty
+argument_list|(
+operator|*
+name|mp
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -3955,6 +3985,8 @@ expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 if|if
