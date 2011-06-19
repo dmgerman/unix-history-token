@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: main.c,v 1.94 2005/05/13 05:03:49 lukem Exp $	*/
+comment|/*	$NetBSD: main.c,v 1.17 2009/11/15 10:12:37 lukem Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1996-2004 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Luke Mewburn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the NetBSD  *	Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*	from	NetBSD: main.c,v 1.117 2009/07/13 19:05:41 roy Exp	*/
+end_comment
+
+begin_comment
+comment|/*-  * Copyright (c) 1996-2009 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Luke Mewburn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -13,6 +17,22 @@ end_comment
 
 begin_comment
 comment|/*  * Copyright (C) 1997 and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"tnftp.h"
+end_include
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* tnftp */
 end_comment
 
 begin_include
@@ -27,15 +47,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_expr_stmt
-name|__COPYRIGHT
-argument_list|(
-literal|"@(#) Copyright (c) 1985, 1989, 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_endif
+unit|__COPYRIGHT("@(#) Copyright (c) 1985, 1989, 1993, 1994\  The Regents of the University of California.  All rights reserved.\   Copyright 1996-2008 The NetBSD Foundation, Inc.  All rights reserved");
 endif|#
 directive|endif
 end_endif
@@ -62,15 +75,8 @@ else|#
 directive|else
 end_else
 
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"$NetBSD: main.c,v 1.94 2005/05/13 05:03:49 lukem Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_endif
+unit|__RCSID(" NetBSD: main.c,v 1.117 2009/07/13 19:05:41 roy Exp  ");
 endif|#
 directive|endif
 end_endif
@@ -157,6 +163,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -165,6 +177,15 @@ include|#
 directive|include
 file|<locale.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* tnftp */
+end_comment
 
 begin_define
 define|#
@@ -220,12 +241,15 @@ specifier|static
 name|void
 name|setupoption
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -250,12 +274,14 @@ name|int
 name|main
 parameter_list|(
 name|int
+specifier|volatile
 name|argc
 parameter_list|,
 name|char
 modifier|*
+modifier|*
+specifier|volatile
 name|argv
-index|[]
 parameter_list|)
 block|{
 name|int
@@ -276,33 +302,44 @@ modifier|*
 name|ep
 decl_stmt|,
 modifier|*
-name|anonuser
-decl_stmt|,
-modifier|*
 name|anonpass
 decl_stmt|,
 modifier|*
 name|upload_path
+decl_stmt|,
+modifier|*
+name|src_addr
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|anonuser
 decl_stmt|;
 name|int
 name|dumbterm
 decl_stmt|,
 name|s
 decl_stmt|,
-name|len
-decl_stmt|,
 name|isupload
+decl_stmt|;
+name|size_t
+name|len
 decl_stmt|;
 name|socklen_t
 name|slen
 decl_stmt|;
-name|setlocale
-argument_list|(
-name|LC_ALL
-argument_list|,
-literal|""
-argument_list|)
+name|tzset
+argument_list|()
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* tnftp */
+comment|/* XXX */
+block|setlocale(LC_ALL, "");
+endif|#
+directive|endif
+comment|/* tnftp */
 name|setprogname
 argument_list|(
 name|argv
@@ -446,9 +483,17 @@ name|epsv4
 operator|=
 literal|1
 expr_stmt|;
+name|epsv6
+operator|=
+literal|1
+expr_stmt|;
 else|#
 directive|else
 name|epsv4
+operator|=
+literal|0
+expr_stmt|;
+name|epsv6
 operator|=
 literal|0
 expr_stmt|;
@@ -457,6 +502,14 @@ directive|endif
 name|epsv4bad
 operator|=
 literal|0
+expr_stmt|;
+name|epsv6bad
+operator|=
+literal|0
+expr_stmt|;
+name|src_addr
+operator|=
+name|NULL
 expr_stmt|;
 name|upload_path
 operator|=
@@ -470,10 +523,22 @@ name|reply_callback
 operator|=
 name|NULL
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 name|family
 operator|=
 name|AF_UNSPEC
 expr_stmt|;
+else|#
+directive|else
+name|family
+operator|=
+name|AF_INET
+expr_stmt|;
+comment|/* force AF_INET if no INET6 support */
+endif|#
+directive|endif
 name|netrc
 index|[
 literal|0
@@ -548,7 +613,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"can't create socket"
+literal|"Can't create socket to determine default socket sizes"
 argument_list|)
 expr_stmt|;
 name|slen
@@ -586,7 +651,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"unable to get default rcvbuf size"
+literal|"Unable to get default rcvbuf size"
 argument_list|)
 expr_stmt|;
 name|slen
@@ -624,7 +689,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"unable to get default sndbuf size"
+literal|"Unable to get default sndbuf size"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -698,7 +763,7 @@ literal|1024
 expr_stmt|;
 name|marg_sl
 operator|=
-name|xsl_init
+name|ftp_sl_init
 argument_list|()
 expr_stmt|;
 if|if
@@ -819,7 +884,7 @@ block|}
 else|else
 name|warnx
 argument_list|(
-literal|"unknown $FTPMODE '%s'; using defaults"
+literal|"Unknown $FTPMODE `%s'; using defaults"
 argument_list|,
 name|cp
 argument_list|)
@@ -1019,7 +1084,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"46AadefginN:o:pP:q:r:RtT:u:vV"
+literal|"46AadefginN:o:pP:q:r:Rs:tT:u:vV"
 argument_list|)
 operator|)
 operator|!=
@@ -1087,7 +1152,7 @@ name|options
 operator||=
 name|SO_DEBUG
 expr_stmt|;
-name|debug
+name|ftp_debug
 operator|++
 expr_stmt|;
 break|break;
@@ -1246,7 +1311,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"bad quit value: %s"
+literal|"Bad quit value: %s"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1282,7 +1347,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"bad retry value: %s"
+literal|"Bad retry value: %s"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1294,6 +1359,14 @@ case|:
 name|restartautofetch
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+name|src_addr
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -1321,10 +1394,31 @@ decl_stmt|,
 modifier|*
 name|oac
 decl_stmt|;
+name|char
+name|cmdbuf
+index|[
+name|MAX_C_NAME
+index|]
+decl_stmt|;
 comment|/* look for `dir,max[,incr]' */
 name|targc
 operator|=
 literal|0
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strlcpy
+argument_list|(
+name|cmdbuf
+argument_list|,
+literal|"-T"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cmdbuf
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|targv
 index|[
@@ -1332,11 +1426,11 @@ name|targc
 operator|++
 index|]
 operator|=
-literal|"-T"
+name|cmdbuf
 expr_stmt|;
 name|oac
 operator|=
-name|xstrdup
+name|ftp_strdup
 argument_list|(
 name|optarg
 argument_list|)
@@ -1368,7 +1462,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"bad throttle value: %s"
+literal|"Bad throttle value `%s'"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1432,7 +1526,7 @@ literal|0
 expr_stmt|;
 name|upload_path
 operator|=
-name|xstrdup
+name|ftp_strdup
 argument_list|(
 name|optarg
 argument_list|)
@@ -1506,6 +1600,98 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* not using ports */
+if|if
+condition|(
+name|src_addr
+operator|!=
+name|NULL
+condition|)
+block|{
+name|struct
+name|addrinfo
+name|hints
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|hints
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hints
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|hints
+operator|.
+name|ai_family
+operator|=
+name|family
+expr_stmt|;
+name|hints
+operator|.
+name|ai_socktype
+operator|=
+name|SOCK_STREAM
+expr_stmt|;
+name|hints
+operator|.
+name|ai_flags
+operator|=
+name|AI_PASSIVE
+expr_stmt|;
+name|error
+operator|=
+name|getaddrinfo
+argument_list|(
+name|src_addr
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|hints
+argument_list|,
+operator|&
+name|bindai
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Can't lookup `%s': %s"
+argument_list|,
+name|src_addr
+argument_list|,
+operator|(
+name|error
+operator|==
+name|EAI_SYSTEM
+operator|)
+condition|?
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+else|:
+name|gai_strerror
+argument_list|(
+name|error
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* 	 * Cache the user name and home directory. 	 */
 name|localhome
 operator|=
@@ -1536,7 +1722,7 @@ argument_list|)
 condition|)
 name|localhome
 operator|=
-name|xstrdup
+name|ftp_strdup
 argument_list|(
 name|cp
 argument_list|)
@@ -1600,7 +1786,7 @@ argument_list|)
 condition|)
 name|localhome
 operator|=
-name|xstrdup
+name|ftp_strdup
 argument_list|(
 name|pw
 operator|->
@@ -1609,7 +1795,7 @@ argument_list|)
 expr_stmt|;
 name|localname
 operator|=
-name|xstrdup
+name|ftp_strdup
 argument_list|(
 name|pw
 operator|->
@@ -1701,7 +1887,7 @@ name|NULL
 condition|)
 name|localhome
 operator|=
-name|xstrdup
+name|ftp_strdup
 argument_list|(
 literal|"/"
 argument_list|)
@@ -1718,7 +1904,7 @@ literal|2
 expr_stmt|;
 name|anonpass
 operator|=
-name|xmalloc
+name|ftp_malloc
 argument_list|(
 name|len
 argument_list|)
@@ -1897,24 +2083,6 @@ argument_list|,
 name|setttywidth
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__GNUC__
-comment|/* to shut up gcc warnings */
-operator|(
-name|void
-operator|)
-operator|&
-name|argc
-expr_stmt|;
-operator|(
-name|void
-operator|)
-operator|&
-name|argv
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|argc
@@ -2022,10 +2190,16 @@ literal|4
 index|]
 decl_stmt|,
 modifier|*
-name|user
+name|uuser
 decl_stmt|,
 modifier|*
 name|host
+decl_stmt|;
+name|char
+name|cmdbuf
+index|[
+name|MAXPATHLEN
+index|]
 decl_stmt|;
 if|if
 condition|(
@@ -2063,7 +2237,7 @@ argument_list|,
 name|lostpeer
 argument_list|)
 expr_stmt|;
-name|user
+name|uuser
 operator|=
 name|NULL
 expr_stmt|;
@@ -2093,7 +2267,7 @@ name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
-name|user
+name|uuser
 operator|=
 name|host
 expr_stmt|;
@@ -2104,18 +2278,28 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-comment|/* XXX discards const */
+operator|(
+name|void
+operator|)
+name|strlcpy
+argument_list|(
+name|cmdbuf
+argument_list|,
+name|getprogname
+argument_list|()
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cmdbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|xargv
 index|[
 literal|0
 index|]
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|getprogname
-argument_list|()
+name|cmdbuf
 expr_stmt|;
 name|xargv
 index|[
@@ -2152,7 +2336,7 @@ name|autologin
 expr_stmt|;
 if|if
 condition|(
-name|user
+name|uuser
 operator|!=
 name|NULL
 condition|)
@@ -2185,7 +2369,7 @@ name|connected
 operator|==
 literal|1
 operator|&&
-name|user
+name|uuser
 operator|!=
 name|NULL
 condition|)
@@ -2196,7 +2380,7 @@ name|ftp_login
 argument_list|(
 name|host
 argument_list|,
-name|user
+name|uuser
 argument_list|,
 name|NULL
 argument_list|)
@@ -2319,7 +2503,7 @@ specifier|static
 name|char
 modifier|*
 modifier|*
-name|prompt
+name|promptopt
 decl_stmt|;
 specifier|static
 name|char
@@ -2330,7 +2514,7 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|prompt
+name|promptopt
 operator|==
 name|NULL
 condition|)
@@ -2357,10 +2541,10 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"no such option `prompt'"
+literal|"prompt: no such option `prompt'"
 argument_list|)
 expr_stmt|;
-name|prompt
+name|promptopt
 operator|=
 operator|&
 operator|(
@@ -2380,10 +2564,10 @@ name|buf
 argument_list|)
 argument_list|,
 operator|*
-name|prompt
+name|promptopt
 condition|?
 operator|*
-name|prompt
+name|promptopt
 else|:
 name|DEFAULTPROMPT
 argument_list|)
@@ -2412,7 +2596,7 @@ specifier|static
 name|char
 modifier|*
 modifier|*
-name|rprompt
+name|rpromptopt
 decl_stmt|;
 specifier|static
 name|char
@@ -2423,7 +2607,7 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|rprompt
+name|rpromptopt
 operator|==
 name|NULL
 condition|)
@@ -2450,10 +2634,10 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"no such option `rprompt'"
+literal|"rprompt: no such option `rprompt'"
 argument_list|)
 expr_stmt|;
-name|rprompt
+name|rpromptopt
 operator|=
 operator|&
 operator|(
@@ -2473,10 +2657,10 @@ name|buf
 argument_list|)
 argument_list|,
 operator|*
-name|rprompt
+name|rpromptopt
 condition|?
 operator|*
-name|rprompt
+name|rpromptopt
 else|:
 name|DEFAULTRPROMPT
 argument_list|)
@@ -2509,8 +2693,25 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_EDITCOMPLETE
 name|int
+name|ch
+decl_stmt|;
+name|size_t
 name|num
+decl_stmt|;
+endif|#
+directive|endif
+name|int
+name|len
+decl_stmt|;
+name|char
+name|cmdbuf
+index|[
+name|MAX_C_NAME
+index|]
 decl_stmt|;
 for|for
 control|(
@@ -2562,6 +2763,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -2570,11 +2772,12 @@ argument_list|(
 name|ttyout
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|fgets
+name|len
+operator|=
+name|get_line
 argument_list|(
+name|stdin
+argument_list|,
 name|line
 argument_list|,
 sizeof|sizeof
@@ -2582,12 +2785,24 @@ argument_list|(
 name|line
 argument_list|)
 argument_list|,
-name|stdin
-argument_list|)
-operator|==
 name|NULL
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|len
 condition|)
 block|{
+case|case
+operator|-
+literal|1
+case|:
+comment|/* EOF */
+case|case
+operator|-
+literal|2
+case|:
+comment|/* error */
 if|if
 condition|(
 name|fromatty
@@ -2606,60 +2821,12 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-block|}
-name|num
-operator|=
-name|strlen
-argument_list|(
-name|line
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|num
-operator|==
-literal|0
-condition|)
-break|break;
-if|if
-condition|(
-name|line
-index|[
-operator|--
-name|num
-index|]
-operator|==
-literal|'\n'
-condition|)
-block|{
-if|if
-condition|(
-name|num
-operator|==
-literal|0
-condition|)
-break|break;
-name|line
-index|[
-name|num
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|num
-operator|==
-sizeof|sizeof
-argument_list|(
-name|line
-argument_list|)
+comment|/* NOTREACHED */
+case|case
 operator|-
-literal|2
-condition|)
-block|{
+literal|3
+case|:
+comment|/* too long; try again */
 name|fputs
 argument_list|(
 literal|"Sorry, input line is too long.\n"
@@ -2667,26 +2834,16 @@ argument_list|,
 name|ttyout
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-operator|(
-name|num
-operator|=
-name|getchar
-argument_list|()
-operator|)
-operator|!=
-literal|'\n'
-operator|&&
-name|num
-operator|!=
-name|EOF
-condition|)
-comment|/* void */
-empty_stmt|;
+continue|continue;
+case|case
+literal|0
+case|:
+comment|/* empty; try again */
+continue|continue;
+default|default:
+comment|/* all ok */
 break|break;
 block|}
-comment|/* else it was a line without a newline */
 ifndef|#
 directive|ifndef
 name|NO_EDITCOMPLETE
@@ -2712,8 +2869,12 @@ argument_list|(
 name|el
 argument_list|,
 operator|&
-name|num
+name|ch
 argument_list|)
+expr_stmt|;
+name|num
+operator|=
+name|ch
 expr_stmt|;
 if|if
 condition|(
@@ -2886,6 +3047,9 @@ argument_list|)
 operator|!=
 name|NULL
 operator|||
+operator|!
+name|editing
+operator|||
 name|el_parse
 argument_list|(
 name|el
@@ -2938,14 +3102,29 @@ name|confirmrest
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strlcpy
+argument_list|(
+name|cmdbuf
+argument_list|,
+name|c
+operator|->
+name|c_name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cmdbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|margv
 index|[
 literal|0
 index|]
 operator|=
-name|c
-operator|->
-name|c_name
+name|cmdbuf
 expr_stmt|;
 call|(
 modifier|*
@@ -3244,7 +3423,7 @@ operator|=
 name|slurpstring
 argument_list|()
 expr_stmt|;
-name|xsl_add
+name|ftp_sl_add
 argument_list|(
 name|marg_sl
 argument_list|,
@@ -3365,6 +3544,32 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+specifier|static
+name|char
+name|bangstr
+index|[
+literal|2
+index|]
+init|=
+block|{
+literal|'!'
+block|,
+literal|'\0'
+block|}
+decl_stmt|;
+specifier|static
+name|char
+name|dollarstr
+index|[
+literal|2
+index|]
+init|=
+block|{
+literal|'$'
+block|,
+literal|'\0'
+block|}
+decl_stmt|;
 name|int
 name|got_one
 init|=
@@ -3429,9 +3634,9 @@ operator|==
 literal|'!'
 operator|)
 condition|?
-literal|"!"
+name|bangstr
 else|:
-literal|"$"
+name|dollarstr
 operator|)
 return|;
 comment|/* NOTREACHED */
@@ -3760,10 +3965,12 @@ literal|1
 index|]
 decl_stmt|,
 modifier|*
-name|p
-decl_stmt|,
-modifier|*
 name|cmd
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|p
 decl_stmt|;
 name|int
 name|isusage
@@ -3803,10 +4010,8 @@ literal|1
 operator|)
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s [command [...]]\n"
 argument_list|,
 name|cmd
@@ -3827,7 +4032,7 @@ name|buf
 decl_stmt|;
 name|buf
 operator|=
-name|xsl_init
+name|ftp_sl_init
 argument_list|()
 expr_stmt|;
 name|fprintf
@@ -3871,11 +4076,14 @@ name|c
 operator|->
 name|c_proxy
 condition|)
-name|xsl_add
+name|ftp_sl_add
 argument_list|(
 name|buf
 argument_list|,
+name|ftp_strdup
+argument_list|(
 name|p
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|list_vertical
@@ -3887,7 +4095,7 @@ name|sl_free
 argument_list|(
 name|buf
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3907,6 +4115,12 @@ block|{
 name|char
 modifier|*
 name|arg
+decl_stmt|;
+name|char
+name|cmdbuf
+index|[
+name|MAX_C_NAME
+index|]
 decl_stmt|;
 name|arg
 operator|=
@@ -3969,14 +4183,29 @@ condition|(
 name|isusage
 condition|)
 block|{
+operator|(
+name|void
+operator|)
+name|strlcpy
+argument_list|(
+name|cmdbuf
+argument_list|,
+name|c
+operator|->
+name|c_name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cmdbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|nargv
 index|[
 literal|0
 index|]
 operator|=
-name|c
-operator|->
-name|c_name
+name|cmdbuf
 expr_stmt|;
 call|(
 modifier|*
@@ -4118,7 +4347,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"getoptionvalue() invoked with NULL name"
+literal|"getoptionvalue: invoked with NULL name"
 argument_list|)
 expr_stmt|;
 name|c
@@ -4145,7 +4374,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"getoptionvalue() invoked with unknown option `%s'"
+literal|"getoptionvalue: invoked with unknown option `%s'"
 argument_list|,
 name|name
 argument_list|)
@@ -4159,74 +4388,34 @@ specifier|static
 name|void
 name|setupoption
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|value
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|defaultvalue
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|nargv
-index|[
-literal|3
-index|]
-decl_stmt|;
-name|int
-name|overbose
-decl_stmt|;
-name|nargv
-index|[
-literal|0
-index|]
-operator|=
-literal|"setupoption()"
-expr_stmt|;
-name|nargv
-index|[
-literal|1
-index|]
-operator|=
+name|set_option
+argument_list|(
 name|name
-expr_stmt|;
-name|nargv
-index|[
-literal|2
-index|]
-operator|=
-operator|(
+argument_list|,
 name|value
 condition|?
 name|value
 else|:
 name|defaultvalue
-operator|)
-expr_stmt|;
-name|overbose
-operator|=
-name|verbose
-expr_stmt|;
-name|verbose
-operator|=
-literal|0
-expr_stmt|;
-name|setoption
-argument_list|(
-literal|3
 argument_list|,
-name|nargv
+literal|0
 argument_list|)
-expr_stmt|;
-name|verbose
-operator|=
-name|overbose
 expr_stmt|;
 block|}
 end_function
@@ -4253,9 +4442,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-46AadefginpRtvV] [-N netrc] [-o outfile] [-P port] [-q quittime]\n"
-literal|"           [-r retry] [-T dir,max[,inc][[user@]host [port]]] [host:path[/]]\n"
-literal|"           [file:///file] [ftp://[user[:pass]@]host[:port]/path[/]]\n"
+literal|"usage: %s [-46AadefginpRtVv] [-N netrc] [-o outfile] [-P port] [-q quittime]\n"
+literal|"           [-r retry] [-s srcaddr] [-T dir,max[,inc]]\n"
+literal|"           [[user@]host [port]] [host:path[/]] [file:///file]\n"
+literal|"           [ftp://[user[:pass]@]host[:port]/path[/]]\n"
 literal|"           [http://[user[:pass]@]host[:port]/path] [...]\n"
 literal|"       %s -u URL file [...]\n"
 argument_list|,

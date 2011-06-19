@@ -1,14 +1,34 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: cmdtab.c,v 1.44 2005/04/11 01:49:31 lukem Exp $	*/
+comment|/*	$NetBSD: cmdtab.c,v 1.11 2009/05/20 12:53:47 lukem Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1996-2000 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Luke Mewburn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the NetBSD  *	Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*	from	NetBSD: cmdtab.c,v 1.51 2009/04/12 10:18:52 lukem Exp	*/
+end_comment
+
+begin_comment
+comment|/*-  * Copyright (c) 1996-2009 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Luke Mewburn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 1985, 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"tnftp.h"
+end_include
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* tnftp */
 end_comment
 
 begin_include
@@ -35,15 +55,8 @@ else|#
 directive|else
 end_else
 
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"$NetBSD: cmdtab.c,v 1.44 2005/04/11 01:49:31 lukem Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_endif
+unit|__RCSID(" NetBSD: cmdtab.c,v 1.51 2009/04/12 10:18:52 lukem Exp  ");
 endif|#
 directive|endif
 end_endif
@@ -62,6 +75,15 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* tnftp */
+end_comment
 
 begin_include
 include|#
@@ -232,10 +254,28 @@ end_decl_stmt
 
 begin_decl_stmt
 name|HSTR
+name|epsvhelp
+index|[]
+init|=
+literal|"toggle use of EPSV/EPRT on both IPv4 and IPV6 ftp"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|HSTR
 name|epsv4help
 index|[]
 init|=
 literal|"toggle use of EPSV/EPRT on IPv4 ftp"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|HSTR
+name|epsv6help
+index|[]
+init|=
+literal|"toggle use of EPSV/EPRT on IPv6 ftp"
 decl_stmt|;
 end_decl_stmt
 
@@ -1318,6 +1358,24 @@ name|setedit
 block|}
 block|,
 block|{
+literal|"epsv"
+block|,
+name|H
+argument_list|(
+name|epsvhelp
+argument_list|)
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|CMPL0
+name|setepsv
+block|}
+block|,
+block|{
 literal|"epsv4"
 block|,
 name|H
@@ -1333,6 +1391,24 @@ literal|0
 block|,
 name|CMPL0
 name|setepsv4
+block|}
+block|,
+block|{
+literal|"epsv6"
+block|,
+name|H
+argument_list|(
+name|epsv6help
+argument_list|)
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|CMPL0
+name|setepsv6
 block|}
 block|,
 block|{
@@ -2926,7 +3002,18 @@ name|help
 block|}
 block|,
 block|{
+name|NULL
+block|,
+name|NULL
+block|,
 literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|CMPL0
+name|NULL
 block|}
 block|, }
 decl_stmt|;
@@ -2982,7 +3069,9 @@ name|NULL
 block|}
 block|,
 block|{
-literal|0
+name|NULL
+block|,
+name|NULL
 block|}
 block|, }
 decl_stmt|;
