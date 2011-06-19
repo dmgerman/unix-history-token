@@ -4154,9 +4154,7 @@ operator|)
 return|;
 else|#
 directive|else
-warning|#
-directive|warning
-warning|need td_popc() implementation
+comment|/* This should be a #warning but for now ignore error. Err: "need td_popc() implementation" */
 endif|#
 directive|endif
 block|}
