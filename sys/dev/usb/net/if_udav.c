@@ -1032,6 +1032,17 @@ argument_list|,
 literal|0
 argument_list|)
 block|}
+block|,
+block|{
+name|USB_VPI
+argument_list|(
+argument|USB_VENDOR_KONTRON
+argument_list|,
+argument|USB_PRODUCT_KONTRON_JP1082
+argument_list|,
+literal|0
+argument_list|)
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
