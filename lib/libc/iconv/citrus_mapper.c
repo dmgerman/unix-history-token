@@ -1303,6 +1303,8 @@ goto|goto
 name|quit
 goto|;
 comment|/* open mapper */
+name|UNLOCK
+expr_stmt|;
 name|ret
 operator|=
 name|mapper_open
@@ -1316,6 +1318,8 @@ name|module
 argument_list|,
 name|variable
 argument_list|)
+expr_stmt|;
+name|WLOCK
 expr_stmt|;
 if|if
 condition|(
