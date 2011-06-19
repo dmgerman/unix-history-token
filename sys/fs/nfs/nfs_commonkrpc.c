@@ -1334,16 +1334,11 @@ operator|->
 name|nr_mtx
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KGSSAPI
-name|rpc_gss_secpurge
+name|rpc_gss_secpurge_call
 argument_list|(
 name|client
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|CLNT_CLOSE
 argument_list|(
 name|client
@@ -1400,9 +1395,6 @@ modifier|*
 name|cred
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|KGSSAPI
 name|rpc_gss_service_t
 name|svc
 decl_stmt|;
@@ -1418,16 +1410,11 @@ name|req_options
 decl_stmt|;
 endif|#
 directive|endif
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|secflavour
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|KGSSAPI
 case|case
 name|RPCSEC_GSS_KRB5
 case|:
@@ -1446,7 +1433,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|rpc_gss_mech_to_oid
+name|rpc_gss_mech_to_oid_call
 argument_list|(
 literal|"kerberosv5"
 argument_list|,
@@ -1521,7 +1508,7 @@ name|nfs_keytab_enctype
 expr_stmt|;
 name|auth
 operator|=
-name|rpc_gss_secfind
+name|rpc_gss_secfind_call
 argument_list|(
 name|nrp
 operator|->
@@ -1552,7 +1539,7 @@ name|NULL
 condition|)
 name|auth
 operator|=
-name|rpc_gss_secfind
+name|rpc_gss_secfind_call
 argument_list|(
 name|nrp
 operator|->
@@ -1586,9 +1573,6 @@ name|auth
 operator|)
 return|;
 comment|/* fallthrough */
-endif|#
-directive|endif
-comment|/* KGSSAPI */
 case|case
 name|AUTH_SYS
 case|:
