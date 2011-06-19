@@ -136,6 +136,11 @@ decl_stmt|;
 comment|/* symlink target */
 name|char
 modifier|*
+name|contents
+decl_stmt|;
+comment|/* file to provide contents */
+name|char
+modifier|*
 name|name
 decl_stmt|;
 comment|/* file name */
@@ -157,6 +162,17 @@ end_define
 
 begin_comment
 comment|/* fsnode has a spec entry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FSNODE_F_OPTIONAL
+value|0x02
+end_define
+
+begin_comment
+comment|/* fsnode is optional */
 end_comment
 
 begin_comment
@@ -316,6 +332,21 @@ modifier|*
 name|inode_type
 parameter_list|(
 name|mode_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|fsnode
+modifier|*
+name|read_mtree
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|fsnode
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

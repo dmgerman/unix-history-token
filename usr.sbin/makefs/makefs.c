@@ -24,6 +24,18 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<assert.h>
 end_include
 
@@ -264,6 +276,10 @@ index|[]
 parameter_list|)
 block|{
 name|struct
+name|stat
+name|sb
+decl_stmt|;
+name|struct
 name|timeval
 name|start
 decl_stmt|;
@@ -282,6 +298,10 @@ name|int
 name|ch
 decl_stmt|,
 name|len
+decl_stmt|;
+name|char
+modifier|*
+name|subtree
 decl_stmt|;
 name|char
 modifier|*
@@ -1003,7 +1023,78 @@ argument_list|,
 literal|"-x requires -F mtree-specfile."
 argument_list|)
 expr_stmt|;
+comment|/* Accept '-' as meaning "read from standard input". */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"-"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|sb
+operator|.
+name|st_mode
+operator|=
+name|S_IFREG
+expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
+name|stat
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"Can't stat `%s'"
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+switch|switch
+condition|(
+name|sb
+operator|.
+name|st_mode
+operator|&
+name|S_IFMT
+condition|)
+block|{
+case|case
+name|S_IFDIR
+case|:
 comment|/* walk the tree */
+name|subtree
+operator|=
+name|argv
+index|[
+literal|1
+index|]
+expr_stmt|;
 name|TIMER_START
 argument_list|(
 name|start
@@ -1012,6 +1103,36 @@ expr_stmt|;
 name|root
 operator|=
 name|walk_dir
+argument_list|(
+name|subtree
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|TIMER_RESULTS
+argument_list|(
+name|start
+argument_list|,
+literal|"walk_dir"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|S_IFREG
+case|:
+comment|/* read the manifest file */
+name|subtree
+operator|=
+literal|"."
+expr_stmt|;
+name|TIMER_START
+argument_list|(
+name|start
+argument_list|)
+expr_stmt|;
+name|root
+operator|=
+name|read_mtree
 argument_list|(
 name|argv
 index|[
@@ -1025,9 +1146,25 @@ name|TIMER_RESULTS
 argument_list|(
 name|start
 argument_list|,
-literal|"walk_dir"
+literal|"manifest"
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: not a file or directory"
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
 if|if
 condition|(
 name|specfile
@@ -1043,10 +1180,7 @@ name|apply_specfile
 argument_list|(
 name|specfile
 argument_list|,
-name|argv
-index|[
-literal|1
-index|]
+name|subtree
 argument_list|,
 name|root
 argument_list|,
@@ -1074,10 +1208,7 @@ name|printf
 argument_list|(
 literal|"\nparent: %s\n"
 argument_list|,
-name|argv
-index|[
-literal|1
-index|]
+name|subtree
 argument_list|)
 expr_stmt|;
 name|dump_fsnodes
@@ -1108,10 +1239,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-name|argv
-index|[
-literal|1
-index|]
+name|subtree
 argument_list|,
 name|root
 argument_list|,
@@ -1347,7 +1475,7 @@ argument_list|,
 literal|"usage: %s [-t fs-type] [-o fs-options] [-d debug-mask] [-B endian]\n"
 literal|"\t[-S sector-size] [-M minimum-size] [-m maximum-size] [-s image-size]\n"
 literal|"\t[-b free-blocks] [-f free-files] [-F mtree-specfile] [-x]\n"
-literal|"\t[-N userdb-dir] image-file directory\n"
+literal|"\t[-N userdb-dir] image-file directory | manifest\n"
 argument_list|,
 name|prog
 argument_list|)
