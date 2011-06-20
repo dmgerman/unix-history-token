@@ -1085,8 +1085,11 @@ name|IGB_VFTA_SIZE
 index|]
 decl_stmt|;
 comment|/* Info about the interface */
-name|u8
+name|u16
 name|link_active
+decl_stmt|;
+name|u16
+name|fc
 decl_stmt|;
 name|u16
 name|link_speed
@@ -1098,7 +1101,7 @@ name|u32
 name|smartspeed
 decl_stmt|;
 name|u32
-name|dma_coalesce
+name|dmac
 decl_stmt|;
 comment|/* Interface queues */
 name|struct
