@@ -113,6 +113,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PF_OPT_NUMERIC
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
 name|PF_OPT_MERGE
 value|0x2000
 end_define
@@ -1057,6 +1064,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)

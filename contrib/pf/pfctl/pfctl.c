@@ -1441,7 +1441,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-AdeghmNnOqRrvz] "
+literal|"usage: %s [-AdeghmNnOPqRrvz] "
 argument_list|,
 name|__progname
 argument_list|)
@@ -5019,6 +5019,13 @@ name|PF_OPT_DEBUG
 operator|)
 decl_stmt|;
 name|int
+name|numeric
+init|=
+name|opts
+operator|&
+name|PF_OPT_NUMERIC
+decl_stmt|;
+name|int
 name|len
 init|=
 name|strlen
@@ -5498,6 +5505,8 @@ operator|.
 name|anchor_call
 argument_list|,
 name|rule_numbers
+argument_list|,
+name|numeric
 argument_list|)
 expr_stmt|;
 name|printf
@@ -5951,6 +5960,8 @@ argument_list|,
 name|p
 argument_list|,
 name|rule_numbers
+argument_list|,
+name|numeric
 argument_list|)
 expr_stmt|;
 if|if
@@ -6307,6 +6318,10 @@ argument_list|,
 name|opts
 operator|&
 name|PF_OPT_VERBOSE2
+argument_list|,
+name|opts
+operator|&
+name|PF_OPT_NUMERIC
 argument_list|)
 expr_stmt|;
 name|printf
@@ -8742,6 +8757,12 @@ operator|->
 name|opts
 operator|&
 name|PF_OPT_VERBOSE2
+argument_list|,
+name|pf
+operator|->
+name|opts
+operator|&
+name|PF_OPT_NUMERIC
 argument_list|)
 expr_stmt|;
 block|}
@@ -12536,7 +12557,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:AdD:eqf:F:ghi:k:K:mnNOo::p:rRs:t:T:vx:z"
+literal|"a:AdD:eqf:F:ghi:k:K:mnNOo::Pp:rRs:t:T:vx:z"
 argument_list|)
 operator|)
 operator|!=
@@ -12874,6 +12895,14 @@ case|:
 name|pf_device
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+name|opts
+operator||=
+name|PF_OPT_NUMERIC
 expr_stmt|;
 break|break;
 case|case
