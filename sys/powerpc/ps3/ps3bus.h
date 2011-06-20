@@ -25,7 +25,11 @@ block|,
 name|PS3BUS_IVAR_BUSTYPE
 block|,
 name|PS3BUS_IVAR_DEVTYPE
-block|}
+block|,
+name|PS3BUS_IVAR_BUSIDX
+block|,
+name|PS3BUS_IVAR_DEVIDX
+block|, }
 enum|;
 end_enum
 
@@ -77,14 +81,36 @@ argument|uint64_t
 argument_list|)
 end_macro
 
+begin_macro
+name|PS3BUS_ACCESSOR
+argument_list|(
+argument|devtype
+argument_list|,
+argument|DEVTYPE
+argument_list|,
+argument|uint64_t
+argument_list|)
+end_macro
+
+begin_macro
+name|PS3BUS_ACCESSOR
+argument_list|(
+argument|busidx
+argument_list|,
+argument|BUSIDX
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
 begin_expr_stmt
 name|PS3BUS_ACCESSOR
 argument_list|(
-name|devtype
+name|devidx
 argument_list|,
-name|DEVTYPE
+name|DEVIDX
 argument_list|,
-name|uint64_t
+name|int
 argument_list|)
 comment|/* Bus types */
 expr|enum
