@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|MAX_COLS
-value|512
+value|128
 end_define
 
 begin_comment
