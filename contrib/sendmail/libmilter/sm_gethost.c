@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1999-2001, 2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  *  Copyright (c) 1999-2001, 2004, 2010 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: sm_gethost.c,v 8.27 2004/08/20 21:12:37 ca Exp $"
+literal|"@(#)$Id: sm_gethost.c,v 8.29 2010/07/27 01:09:31 ca Exp $"
 argument_list|)
 end_macro
 
@@ -68,10 +68,11 @@ specifier|static
 name|struct
 name|hostent
 modifier|*
-name|getipnodebyname
+name|sm_getipnodebyname
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -169,7 +170,7 @@ specifier|static
 name|struct
 name|hostent
 modifier|*
-name|getipnodebyname
+name|sm_getipnodebyname
 parameter_list|(
 name|name
 parameter_list|,
@@ -179,6 +180,7 @@ name|flags
 parameter_list|,
 name|err
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
@@ -285,6 +287,22 @@ comment|/* 	**  Stub routine -- if they don't have getipnodeby*(), 	**  they pro
 return|return;
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* NEEDSGETIPNODE&& NETINET6 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sm_getipnodebyname
+value|getipnodebyname
+end_define
 
 begin_endif
 endif|#
@@ -457,7 +475,7 @@ directive|endif
 comment|/* ADDRCONFIG_IS_BROKEN */
 name|h
 operator|=
-name|getipnodebyname
+name|sm_getipnodebyname
 argument_list|(
 name|name
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2006, 2008, 2009 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 2000-2006, 2008, 2009, 2011 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: tls.c,v 8.114 2009/08/10 15:11:09 ca Exp $"
+literal|"@(#)$Id: tls.c,v 8.118 2011/03/07 23:20:47 ca Exp $"
 argument_list|)
 end_macro
 
@@ -4450,6 +4450,7 @@ name|bool
 name|certreq
 decl_stmt|;
 block|{
+specifier|const
 name|SSL_CIPHER
 modifier|*
 name|c
@@ -4767,12 +4768,16 @@ argument_list|)
 expr_stmt|;
 define|#
 directive|define
+name|LL_BADCERT
+value|8
+define|#
+directive|define
 name|CHECK_X509_NAME
 parameter_list|(
 name|which
 parameter_list|)
 define|\
-value|do {	\ 		if (r == -1)	\ 		{		\ 			sm_strlcpy(buf, "BadCertificateUnknown", sizeof(buf)); \ 			if (LogLevel> 7)	\ 				sm_syslog(LOG_INFO, NOQID,	\ 					"STARTTLS=%s, relay=%.100s, field=%s, status=failed to extract CN",	\ 					who,	\ 					host == NULL ? "local" : host,	\ 					which);	\ 		}		\ 		else if ((size_t)r>= sizeof(buf) - 1)	\ 		{		\ 			sm_strlcpy(buf, "BadCertificateTooLong", sizeof(buf)); \ 			if (LogLevel> 7)	\ 				sm_syslog(LOG_INFO, NOQID,	\ 					"STARTTLS=%s, relay=%.100s, field=%s, status=CN too long",	\ 					who,	\ 					host == NULL ? "local" : host,	\ 					which);	\ 		}		\ 		else if ((size_t)r> strlen(buf))	\ 		{		\ 			sm_strlcpy(buf, "BadCertificateContainsNUL",	\ 				sizeof(buf));	\ 			if (LogLevel> 7)	\ 				sm_syslog(LOG_INFO, NOQID,	\ 					"STARTTLS=%s, relay=%.100s, field=%s, status=CN contains NUL",	\ 					who,	\ 					host == NULL ? "local" : host,	\ 					which);	\ 		}		\ 	} while (0)
+value|do {	\ 		if (r == -1)	\ 		{		\ 			sm_strlcpy(buf, "BadCertificateUnknown", sizeof(buf)); \ 			if (LogLevel> LL_BADCERT)	\ 				sm_syslog(LOG_INFO, NOQID,	\ 					"STARTTLS=%s, relay=%.100s, field=%s, status=failed to extract CN",	\ 					who,	\ 					host == NULL ? "local" : host,	\ 					which);	\ 		}		\ 		else if ((size_t)r>= sizeof(buf) - 1)	\ 		{		\ 			sm_strlcpy(buf, "BadCertificateTooLong", sizeof(buf)); \ 			if (LogLevel> 7)	\ 				sm_syslog(LOG_INFO, NOQID,	\ 					"STARTTLS=%s, relay=%.100s, field=%s, status=CN too long",	\ 					who,	\ 					host == NULL ? "local" : host,	\ 					which);	\ 		}		\ 		else if ((size_t)r> strlen(buf))	\ 		{		\ 			sm_strlcpy(buf, "BadCertificateContainsNUL",	\ 				sizeof(buf));	\ 			if (LogLevel> 7)	\ 				sm_syslog(LOG_INFO, NOQID,	\ 					"STARTTLS=%s, relay=%.100s, field=%s, status=CN contains NUL",	\ 					who,	\ 					host == NULL ? "local" : host,	\ 					which);	\ 		}		\ 	} while (0)
 name|r
 operator|=
 name|X509_NAME_get_text_by_NID

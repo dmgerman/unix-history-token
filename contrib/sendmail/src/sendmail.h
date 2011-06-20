@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2009 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 1998-2011 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_comment
@@ -230,7 +230,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#)$Id: sendmail.h,v 8.1068 2009/12/18 17:08:01 ca Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.1089 2011/03/15 23:14:36 ca Exp $"
 expr_stmt|;
 end_expr_stmt
 
@@ -1840,6 +1840,16 @@ parameter_list|(
 name|s
 parameter_list|)
 value|((s)>= QS_DONTSEND)
+end_define
+
+begin_define
+define|#
+directive|define
+name|QS_IS_TEMPFAIL
+parameter_list|(
+name|s
+parameter_list|)
+value|((s) == QS_QUEUEUP || (s) == QS_RETRY)
 end_define
 
 begin_define
@@ -4582,13 +4592,6 @@ begin_comment
 comment|/* STARTTLS active */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MCIF_EXTENS
-value|(MCIF_EXPN | MCIF_SIZE | MCIF_8BITMIME | MCIF_DSN | MCIF_8BITOK | MCIF_AUTH | MCIF_ENHSTAT | MCIF_TLS)
-end_define
-
 begin_else
 else|#
 directive|else
@@ -4601,8 +4604,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MCIF_EXTENS
-value|(MCIF_EXPN | MCIF_SIZE | MCIF_8BITMIME | MCIF_DSN | MCIF_8BITOK | MCIF_AUTH | MCIF_ENHSTAT)
+name|MCIF_TLS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MCIF_TLSACT
+value|0
 end_define
 
 begin_endif
@@ -4665,6 +4675,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MCIF_AUTH2
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* got 2 AUTH lines */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MCIF_ONLY_EHLO
 value|0x10000000
 end_define
@@ -4672,6 +4693,13 @@ end_define
 begin_comment
 comment|/* use only EHLO in smtpinit */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIF_EXTENS
+value|(MCIF_EXPN | MCIF_SIZE | MCIF_8BITMIME | MCIF_DSN | MCIF_8BITOK | MCIF_AUTH | MCIF_ENHSTAT | MCIF_TLS | MCIF_AUTH2)
+end_define
 
 begin_comment
 comment|/* states */
@@ -4856,6 +4884,20 @@ argument_list|(
 operator|(
 name|bool
 operator|,
+name|MCI
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|mci_clr_extensions
+name|__P
+argument_list|(
+operator|(
 name|MCI
 operator|*
 operator|)
@@ -7416,6 +7458,59 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* **  The standard udp packet size PACKETSZ (512) is not sufficient for some **  nameserver answers containing very many resource records. The resolver **  may switch to tcp and retry if it detects udp packet overflow. **  Also note that the resolver routines res_query and res_search return **  the size of the *un*truncated answer in case the supplied answer buffer **  it not big enough to accommodate the entire answer. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXPACKET
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAXPACKET
+value|8192
+end_define
+
+begin_comment
+comment|/* max packet size used internally by BIND */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! MAXPACKET */
+end_comment
+
+begin_comment
+comment|/* **  The resolver functions res_{send,query,querydomain} expect the **  answer buffer to be aligned, but some versions of gcc4 reverse **  25 years of history and no longer align char buffers on the **  stack, resulting in crashes on strict-alignment platforms.  Use **  this union when putting the buffer on the stack to force the **  alignment, then cast to (HEADER *) or (unsigned char *) as needed. */
+end_comment
+
+begin_typedef
+typedef|typedef
+union|union
+block|{
+name|HEADER
+name|qb1
+decl_stmt|;
+name|unsigned
+name|char
+name|qb2
+index|[
+name|MAXPACKET
+index|]
+decl_stmt|;
+block|}
+name|querybuf
+typedef|;
+end_typedef
+
+begin_comment
 comment|/* functions */
 end_comment
 
@@ -7948,7 +8043,8 @@ name|DYNOPENMAP
 parameter_list|(
 name|map
 parameter_list|)
-value|if (!bitset(MF_OPEN, (map)->map_mflags)) \ 	{	\ 		if (!openmap(map))	\ 			return NULL;	\ 	}
+define|\
+value|do		\ 	{		\ 		if (!bitset(MF_OPEN, (map)->map_mflags)) \ 		{	\ 			if (!openmap(map))	\ 				return NULL;	\ 		}	\ 	} while (0)
 end_define
 
 begin_comment
@@ -9936,6 +10032,43 @@ name|LocalDaemon
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|NETINET6
+end_if
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|V6LoopbackAddrFound
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* found an IPv6 loopback address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SETV6LOOPBACKADDRFOUND
+parameter_list|(
+name|sa
+parameter_list|)
+define|\
+value|do	\ 	{	\ 		if (isloopback(sa))	\ 			V6LoopbackAddrFound = true;	\ 	} while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NETINET6 */
+end_comment
+
 begin_else
 else|#
 directive|else
@@ -9950,6 +10083,22 @@ define|#
 directive|define
 name|LocalDaemon
 value|false
+end_define
+
+begin_define
+define|#
+directive|define
+name|V6LoopbackAddrFound
+value|false
+end_define
+
+begin_define
+define|#
+directive|define
+name|SETV6LOOPBACKADDRFOUND
+parameter_list|(
+name|sa
+parameter_list|)
 end_define
 
 begin_endif
@@ -10060,6 +10209,16 @@ end_define
 begin_comment
 comment|/* DeliveryMode (per daemon) option not set */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SM_IS_INTERACTIVE
+parameter_list|(
+name|m
+parameter_list|)
+value|((m) == SM_DELIVER)
+end_define
 
 begin_define
 define|#
@@ -13487,6 +13646,12 @@ begin_comment
 comment|/* macros for debugging flags */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|NOT_SENDMAIL
+end_if
+
 begin_define
 define|#
 directive|define
@@ -13498,6 +13663,28 @@ name|level
 parameter_list|)
 value|(tTdvect[flag]>= (unsigned char)level)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|tTd
+parameter_list|(
+name|flag
+parameter_list|,
+name|level
+parameter_list|)
+value|(tTdvect[flag]>= (unsigned char)level&& !IntSig)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -13565,7 +13752,8 @@ name|setstat
 parameter_list|(
 name|s
 parameter_list|)
-value|{ \ 				if (ExitStat == EX_OK || ExitStat == EX_TEMPFAIL) \ 					ExitStat = s; \ 			}
+define|\
+value|do		\ 	{		\ 		if (ExitStat == EX_OK || ExitStat == EX_TEMPFAIL) \ 			ExitStat = s; \ 	} while (0)
 end_define
 
 begin_define
@@ -13592,7 +13780,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|if ((p) != NULL) \ 			{ \ 				sm_free(p); \ 				(p) = NULL; \ 			} \ 			else
+value|do		\ 	{		\ 		if ((p) != NULL) \ 		{ \ 			sm_free(p); \ 			(p) = NULL; \ 		} \ 	} while (0)
 end_define
 
 begin_comment
@@ -13650,6 +13838,69 @@ define|#
 directive|define
 name|XS_AUTH
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_GREET
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_EHLO
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_MAIL
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_RCPT
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_DATA
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_EOM
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_DATA2
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_RCPT2
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_QUIT
+value|15
 end_define
 
 begin_comment
@@ -15472,6 +15723,14 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
+name|bool
+specifier|volatile
+name|IntSig
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
 name|char
 modifier|*
 name|SmtpGreeting
@@ -15756,6 +16015,30 @@ name|int
 name|ConnectionRateWindowSize
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|STARTTLS
+operator|&&
+name|USE_OPENSSL_ENGINE
+end_if
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|SSLEngineInitialized
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* STARTTLS&& USE_OPENSSL_ENGINE */
+end_comment
 
 begin_comment
 comment|/* **  Declarations of useful functions */
@@ -16541,6 +16824,34 @@ end_define
 
 begin_comment
 comment|/* first digit of reply code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REPLYCLASS
+parameter_list|(
+name|r
+parameter_list|)
+value|(((r) / 10) % 10)
+end_define
+
+begin_comment
+comment|/* second digit of reply code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REPLYMINOR
+parameter_list|(
+name|r
+parameter_list|)
+value|((r) % 10)
+end_define
+
+begin_comment
+comment|/* last digit of reply code */
 end_comment
 
 begin_define

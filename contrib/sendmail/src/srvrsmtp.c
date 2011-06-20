@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2008 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2010 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -39,7 +39,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: srvrsmtp.c,v 8.989 2009/12/18 17:08:01 ca Exp $"
+literal|"@(#)$Id: srvrsmtp.c,v 8.1008 2011/01/12 23:52:59 ca Exp $"
 argument_list|)
 end_macro
 
@@ -3358,7 +3358,6 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX should these be options settable via .cf ? */
 comment|/* ssp.min_ssf = 0; is default due to memset() */
-block|{
 name|ssp
 operator|.
 name|max_ssf
@@ -3371,7 +3370,6 @@ name|maxbufsize
 operator|=
 name|MAXOUTLEN
 expr_stmt|;
-block|}
 name|ssp
 operator|.
 name|security_flags
@@ -3498,44 +3496,6 @@ comment|/* SASL */
 if|#
 directive|if
 name|STARTTLS
-if|#
-directive|if
-name|USE_OPENSSL_ENGINE
-if|if
-condition|(
-name|tls_ok_srv
-operator|&&
-name|bitset
-argument_list|(
-name|SRV_OFFER_TLS
-argument_list|,
-name|features
-argument_list|)
-operator|&&
-operator|!
-name|SSL_set_engine
-argument_list|(
-name|NULL
-argument_list|)
-condition|)
-block|{
-name|sm_syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-name|NOQID
-argument_list|,
-literal|"STARTTLS=server, SSL_set_engine=failed"
-argument_list|)
-expr_stmt|;
-name|tls_ok_srv
-operator|=
-name|false
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* USE_OPENSSL_ENGINE */
 name|set_tls_rd_tmo
 argument_list|(
 name|TimeOuts
@@ -7138,6 +7098,53 @@ name|starttls
 label|:
 if|#
 directive|if
+name|USE_OPENSSL_ENGINE
+if|if
+condition|(
+operator|!
+name|SSLEngineInitialized
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|SSL_set_engine
+argument_list|(
+name|NULL
+argument_list|)
+condition|)
+block|{
+name|sm_syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"STARTTLS=server, SSL_set_engine=failed"
+argument_list|)
+expr_stmt|;
+name|tls_ok_srv
+operator|=
+name|false
+expr_stmt|;
+name|message
+argument_list|(
+literal|"454 4.3.3 TLS not available right now"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+else|else
+name|SSLEngineInitialized
+operator|=
+name|true
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* USE_OPENSSL_ENGINE */
+if|#
+directive|if
 name|TLS_NO_RSA
 comment|/* 			**  XXX do we need a temp key ? 			*/
 else|#
@@ -10112,11 +10119,13 @@ goto|;
 block|}
 if|if
 condition|(
+operator|!
+name|SM_IS_INTERACTIVE
+argument_list|(
 name|e
 operator|->
 name|e_sendmode
-operator|!=
-name|SM_DELIVER
+argument_list|)
 if|#
 directive|if
 name|_FFR_DM_ONE
@@ -18392,11 +18401,16 @@ argument_list|(
 literal|"{auth_authen}"
 argument_list|)
 argument_list|,
+name|xtextify
+argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|auth_identity
+argument_list|,
+literal|"=<>\")"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

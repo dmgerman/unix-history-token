@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: engine.c,v 8.166 2009/11/06 00:57:07 ca Exp $"
+literal|"@(#)$Id: engine.c,v 8.167 2011/03/03 06:09:15 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1669,7 +1669,7 @@ literal|3
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"[%ld] milter_abort\n"
+literal|"[%lu] milter_abort\n"
 argument_list|,
 operator|(
 name|long
@@ -1755,7 +1755,7 @@ literal|5
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"[%ld] mi_engine: mi_rd_cmd error (%x)\n"
+literal|"[%lu] mi_engine: mi_rd_cmd error (%x)\n"
 argument_list|,
 operator|(
 name|long
@@ -1787,7 +1787,7 @@ literal|4
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"[%ld] got cmd '%c' len %d\n"
+literal|"[%lu] got cmd '%c' len %d\n"
 argument_list|,
 operator|(
 name|long
@@ -1849,7 +1849,7 @@ literal|1
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"[%ld] cmd '%c' unknown\n"
+literal|"[%lu] cmd '%c' unknown\n"
 argument_list|,
 operator|(
 name|long
@@ -1894,7 +1894,7 @@ literal|1
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"[%ld] cmd '%c' not impl\n"
+literal|"[%lu] cmd '%c' not impl\n"
 argument_list|,
 operator|(
 name|long
@@ -1932,7 +1932,7 @@ literal|5
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"[%ld] cur %x new %x nextmask %x\n"
+literal|"[%lu] cur %x new %x nextmask %x\n"
 argument_list|,
 operator|(
 name|long
@@ -1976,7 +1976,7 @@ literal|1
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"[%ld] abort: cur %d (%x) new %d (%x) next %x\n"
+literal|"[%lu] abort: cur %d (%x) new %d (%x) next %x\n"
 argument_list|,
 operator|(
 name|long
@@ -2247,7 +2247,7 @@ literal|5
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"[%ld] function returned abort\n"
+literal|"[%lu] function returned abort\n"
 argument_list|,
 operator|(
 name|long
@@ -4707,7 +4707,7 @@ literal|3
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"[%ld] milter_negotiate:"
+literal|"[%lu] milter_negotiate:"
 literal|" mta_actions=0x%lx, mta_flags=0x%lx"
 literal|" actions=0x%lx, flags=0x%lx\n"
 argument_list|,
@@ -4748,7 +4748,7 @@ literal|3
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"[%ld] milter_negotiate:"
+literal|"[%lu] milter_negotiate:"
 literal|" testmode=%d, pflags2mta=%X, internal_pflags=%X\n"
 argument_list|,
 operator|(
