@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: cmds.c,v 1.112 2005/04/11 01:49:31 lukem Exp $	*/
+comment|/*	$NetBSD: cmds.c,v 1.17 2010/01/12 06:55:47 lukem Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1996-2005 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Luke Mewburn.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Jason R. Thorpe of the Numerical Aerospace Simulation Facility,  * NASA Ames Research Center.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the NetBSD  *	Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*	from	NetBSD: cmds.c,v 1.130 2009/07/13 19:05:41 roy Exp	*/
+end_comment
+
+begin_comment
+comment|/*-  * Copyright (c) 1996-2009 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Luke Mewburn.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Jason R. Thorpe of the Numerical Aerospace Simulation Facility,  * NASA Ames Research Center.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -13,6 +17,22 @@ end_comment
 
 begin_comment
 comment|/*  * Copyright (C) 1997 and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"tnftp.h"
+end_include
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* tnftp */
 end_comment
 
 begin_include
@@ -39,15 +59,8 @@ else|#
 directive|else
 end_else
 
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"$NetBSD: cmds.c,v 1.112 2005/04/11 01:49:31 lukem Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_endif
+unit|__RCSID(" NetBSD: cmds.c,v 1.130 2009/07/13 19:05:41 roy Exp  ");
 endif|#
 directive|endif
 end_endif
@@ -134,6 +147,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -161,11 +180,14 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<libutil.h>
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* tnftp */
+end_comment
 
 begin_include
 include|#
@@ -180,13 +202,16 @@ file|"version.h"
 end_include
 
 begin_struct
+specifier|static
 struct|struct
 name|types
 block|{
+specifier|const
 name|char
 modifier|*
 name|t_name
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|t_mode
@@ -194,6 +219,7 @@ decl_stmt|;
 name|int
 name|t_type
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|t_arg
@@ -255,22 +281,21 @@ block|}
 block|,
 block|{
 name|NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|}
 struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|sigjmp_buf
 name|jabort
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|const
-name|char
-modifier|*
-name|mname
 decl_stmt|;
 end_decl_stmt
 
@@ -283,6 +308,40 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|mintr
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|mabort
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|set_type
+parameter_list|(
 specifier|const
 name|char
 modifier|*
@@ -372,6 +431,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Confirm if "cmd" is to be performed upon "file".  * If "file" is NULL, generate a "Continue with" prompt instead.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -388,11 +451,24 @@ modifier|*
 name|file
 parameter_list|)
 block|{
+specifier|const
 name|char
-name|line
+modifier|*
+name|errormsg
+decl_stmt|;
+name|char
+name|cline
 index|[
 name|BUFSIZ
 index|]
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|promptleft
+decl_stmt|,
+modifier|*
+name|promptright
 decl_stmt|;
 if|if
 condition|(
@@ -406,6 +482,33 @@ operator|(
 literal|1
 operator|)
 return|;
+if|if
+condition|(
+name|file
+operator|==
+name|NULL
+condition|)
+block|{
+name|promptleft
+operator|=
+literal|"Continue with"
+expr_stmt|;
+name|promptright
+operator|=
+name|cmd
+expr_stmt|;
+block|}
+else|else
+block|{
+name|promptleft
+operator|=
+name|cmd
+expr_stmt|;
+name|promptright
+operator|=
+name|file
+expr_stmt|;
+block|}
 while|while
 condition|(
 literal|1
@@ -417,9 +520,9 @@ name|ttyout
 argument_list|,
 literal|"%s %s [anpqy?]? "
 argument_list|,
-name|cmd
+name|promptleft
 argument_list|,
-name|file
+name|promptright
 argument_list|)
 expr_stmt|;
 operator|(
@@ -432,19 +535,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fgets
+name|get_line
 argument_list|(
-name|line
+name|stdin
+argument_list|,
+name|cline
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|line
+name|cline
 argument_list|)
 argument_list|,
-name|stdin
+operator|&
+name|errormsg
 argument_list|)
-operator|==
-name|NULL
+operator|<
+literal|0
 condition|)
 block|{
 name|mflag
@@ -455,14 +561,11 @@ name|fprintf
 argument_list|(
 name|ttyout
 argument_list|,
-literal|"\nEOF received; %s aborted\n"
+literal|"%s; %s aborted\n"
 argument_list|,
-name|mname
-argument_list|)
-expr_stmt|;
-name|clearerr
-argument_list|(
-name|stdin
+name|errormsg
+argument_list|,
+name|cmd
 argument_list|)
 expr_stmt|;
 return|return
@@ -480,7 +583,7 @@ name|unsigned
 name|char
 operator|)
 operator|*
-name|line
+name|cline
 argument_list|)
 condition|)
 block|{
@@ -529,7 +632,7 @@ name|ttyout
 argument_list|,
 literal|"%s aborted.\n"
 argument_list|,
-name|mname
+name|cmd
 argument_list|)
 expr_stmt|;
 comment|/* FALLTHROUGH */
@@ -596,9 +699,6 @@ name|types
 modifier|*
 name|p
 decl_stmt|;
-name|int
-name|comret
-decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -610,14 +710,13 @@ operator|>
 literal|2
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|sep
 decl_stmt|;
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s ["
 argument_list|,
 name|argv
@@ -698,6 +797,35 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
+name|set_type
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|set_type
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|ttype
+parameter_list|)
+block|{
+name|struct
+name|types
+modifier|*
+name|p
+decl_stmt|;
+name|int
+name|comret
+decl_stmt|;
 for|for
 control|(
 name|p
@@ -715,10 +843,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|argv
-index|[
-literal|1
-index|]
+name|ttype
 argument_list|,
 name|p
 operator|->
@@ -743,10 +868,7 @@ name|ttyout
 argument_list|,
 literal|"%s: unknown mode.\n"
 argument_list|,
-name|argv
-index|[
-literal|1
-index|]
+name|ttype
 argument_list|)
 expr_stmt|;
 name|code
@@ -886,7 +1008,7 @@ condition|)
 return|return;
 if|if
 condition|(
-name|debug
+name|ftp_debug
 operator|==
 literal|0
 operator|&&
@@ -929,14 +1051,15 @@ operator|==
 literal|0
 condition|)
 block|{
-name|warnx
+name|errx
 argument_list|(
-literal|"internal error: unknown type %d."
+literal|1
+argument_list|,
+literal|"changetype: unknown type %d"
 argument_list|,
 name|newtype
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 if|if
 condition|(
@@ -993,22 +1116,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
-name|char
-modifier|*
-name|stype
-index|[]
-init|=
-block|{
-literal|"type"
-block|,
-literal|""
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Set binary transfer type.  */
 end_comment
@@ -1037,10 +1144,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s\n"
 argument_list|,
 name|argv
@@ -1056,18 +1161,9 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-name|stype
-index|[
-literal|1
-index|]
-operator|=
-literal|"binary"
-expr_stmt|;
-name|settype
+name|set_type
 argument_list|(
-literal|2
-argument_list|,
-name|stype
+literal|"binary"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1101,10 +1197,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s\n"
 argument_list|,
 name|argv
@@ -1120,18 +1214,9 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-name|stype
-index|[
-literal|1
-index|]
-operator|=
-literal|"ascii"
-expr_stmt|;
-name|settype
+name|set_type
 argument_list|(
-literal|2
-argument_list|,
-name|stype
+literal|"ascii"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1165,10 +1250,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s\n"
 argument_list|,
 name|argv
@@ -1184,18 +1267,9 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-name|stype
-index|[
-literal|1
-index|]
-operator|=
-literal|"tenex"
-expr_stmt|;
-name|settype
+name|set_type
 argument_list|(
-literal|2
-argument_list|,
-name|stype
+literal|"tenex"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1229,10 +1303,8 @@ operator|!=
 literal|2
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s mode-name\n"
 argument_list|,
 name|argv
@@ -1293,10 +1365,8 @@ operator|!=
 literal|2
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s format\n"
 argument_list|,
 name|argv
@@ -1357,10 +1427,8 @@ operator|!=
 literal|2
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s struct-mode\n"
 argument_list|,
 name|argv
@@ -1416,6 +1484,7 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|cmd
@@ -1512,10 +1581,8 @@ condition|)
 block|{
 name|usage
 label|:
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s local-file [remote-file]\n"
 argument_list|,
 name|argv
@@ -1788,10 +1855,8 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s local-files\n"
 argument_list|,
 name|argv
@@ -1807,13 +1872,6 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-name|mname
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
 name|mflag
 operator|=
 literal|1
@@ -1837,7 +1895,12 @@ literal|1
 argument_list|)
 condition|)
 name|mabort
-argument_list|()
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1966,9 +2029,12 @@ if|if
 condition|(
 name|confirm
 argument_list|(
-literal|"Continue with"
+name|argv
+index|[
+literal|0
+index|]
 argument_list|,
-literal|"mput"
+name|NULL
 argument_list|)
 condition|)
 block|{
@@ -2115,9 +2181,12 @@ if|if
 condition|(
 name|confirm
 argument_list|(
-literal|"Continue with"
+name|argv
+index|[
+literal|0
+index|]
 argument_list|,
-literal|"mput"
+name|NULL
 argument_list|)
 condition|)
 block|{
@@ -2180,7 +2249,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s: not found"
+literal|"Glob pattern `%s' not found"
 argument_list|,
 name|argv
 index|[
@@ -2309,9 +2378,12 @@ if|if
 condition|(
 name|confirm
 argument_list|(
-literal|"Continue with"
+name|argv
+index|[
+literal|0
+index|]
 argument_list|,
-literal|"mput"
+name|NULL
 argument_list|)
 condition|)
 block|{
@@ -2438,7 +2510,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|mode
+name|gmode
 parameter_list|)
 block|{
 name|int
@@ -2548,10 +2620,8 @@ condition|)
 block|{
 name|usage
 label|:
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s remote-file [local-file]\n"
 argument_list|,
 name|argv
@@ -2692,7 +2762,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"local: %s"
+literal|"Can't stat `%s'"
 argument_list|,
 name|locfile
 argument_list|)
@@ -2770,7 +2840,7 @@ name|locfile
 argument_list|,
 name|remfile
 argument_list|,
-name|mode
+name|gmode
 argument_list|,
 name|remfile
 operator|!=
@@ -2816,6 +2886,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|mintr
 parameter_list|(
@@ -2855,10 +2926,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mabort
 parameter_list|(
-name|void
+specifier|const
+name|char
+modifier|*
+name|cmd
 parameter_list|)
 block|{
 name|int
@@ -2893,9 +2968,9 @@ if|if
 condition|(
 name|confirm
 argument_list|(
-literal|"Continue with"
+name|cmd
 argument_list|,
-name|mname
+name|NULL
 argument_list|)
 condition|)
 block|{
@@ -2958,6 +3033,7 @@ modifier|*
 name|tp
 decl_stmt|;
 name|int
+specifier|volatile
 name|restartit
 decl_stmt|;
 if|if
@@ -2985,10 +3061,8 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s remote-files\n"
 argument_list|,
 name|argv
@@ -3004,13 +3078,6 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-name|mname
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
 name|mflag
 operator|=
 literal|1
@@ -3080,7 +3147,12 @@ literal|1
 argument_list|)
 condition|)
 name|mabort
-argument_list|()
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -3215,7 +3287,7 @@ expr_stmt|;
 else|else
 name|warn
 argument_list|(
-literal|"stat %s"
+literal|"Can't stat `%s'"
 argument_list|,
 name|tp
 argument_list|)
@@ -3269,9 +3341,12 @@ if|if
 condition|(
 name|confirm
 argument_list|(
-literal|"Continue with"
+name|argv
+index|[
+literal|0
+index|]
 argument_list|,
-literal|"mget"
+name|NULL
 argument_list|)
 condition|)
 name|mflag
@@ -3317,16 +3392,25 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
-name|buf
-decl_stmt|,
-modifier|*
-name|mode
+name|gmode
 decl_stmt|;
 name|FILE
 modifier|*
 name|fp
+decl_stmt|;
+name|char
+name|buf
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|,
+name|cmdbuf
+index|[
+name|MAX_C_NAME
+index|]
 decl_stmt|;
 if|if
 condition|(
@@ -3335,10 +3419,8 @@ operator|!=
 literal|2
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s localfile\n"
 argument_list|,
 name|argv
@@ -3377,7 +3459,7 @@ name|fprintf
 argument_list|(
 name|ttyout
 argument_list|,
-literal|"Cannot open source file %s\n"
+literal|"Can't open source file %s\n"
 argument_list|,
 name|argv
 index|[
@@ -3392,14 +3474,29 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
+operator|(
+name|void
+operator|)
+name|strlcpy
+argument_list|(
+name|cmdbuf
+argument_list|,
+literal|"get"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cmdbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|argv
 index|[
 literal|0
 index|]
 operator|=
-literal|"get"
+name|cmdbuf
 expr_stmt|;
-name|mode
+name|gmode
 operator|=
 name|restart_point
 condition|?
@@ -3407,33 +3504,24 @@ literal|"r+"
 else|:
 literal|"w"
 expr_stmt|;
-for|for
-control|(
-init|;
-operator|(
-name|buf
-operator|=
-name|fparseln
+while|while
+condition|(
+name|get_line
 argument_list|(
 name|fp
 argument_list|,
-name|NULL
+name|buf
 argument_list|,
-name|NULL
-argument_list|,
-literal|"\0\0\0"
-argument_list|,
-literal|0
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|;
-name|free
+sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
-control|)
+argument_list|,
+name|NULL
+argument_list|)
+operator|>=
+literal|0
+condition|)
 block|{
 if|if
 condition|(
@@ -3463,7 +3551,7 @@ name|argv
 argument_list|,
 literal|0
 argument_list|,
-name|mode
+name|gmode
 argument_list|)
 expr_stmt|;
 block|}
@@ -3476,17 +3564,18 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|onoff
 parameter_list|(
 name|int
-name|bool
+name|val
 parameter_list|)
 block|{
 return|return
 operator|(
-name|bool
+name|val
 condition|?
 literal|"on"
 else|:
@@ -3524,10 +3613,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s\n"
 argument_list|,
 name|argv
@@ -3894,6 +3981,24 @@ name|fprintf
 argument_list|(
 name|ttyout
 argument_list|,
+literal|"Use of EPSV/EPRT cmds for IPv6: %s%s.\n"
+argument_list|,
+name|onoff
+argument_list|(
+name|epsv6
+argument_list|)
+argument_list|,
+name|epsv6bad
+condition|?
+literal|" (disabled for this connection)"
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|ttyout
+argument_list|,
 literal|"Command line editing: %s.\n"
 argument_list|,
 ifdef|#
@@ -4075,10 +4180,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s [ on | off ]\n"
 argument_list|,
 name|argv
@@ -4191,10 +4294,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s\n"
 argument_list|,
 name|argv
@@ -4325,10 +4426,8 @@ operator|!=
 literal|2
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s [ on | off | bytecount ]\n"
 argument_list|,
 name|argv
@@ -4678,10 +4777,8 @@ operator|>
 literal|3
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s [ on | off | gateserver [port] ]\n"
 argument_list|,
 name|argv
@@ -4768,7 +4865,7 @@ literal|3
 condition|)
 name|gateport
 operator|=
-name|xstrdup
+name|ftp_strdup
 argument_list|(
 name|argv
 index|[
@@ -4971,10 +5068,8 @@ operator|>
 literal|2
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s [ on | off | debuglevel ]\n"
 argument_list|,
 name|argv
@@ -5012,7 +5107,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|debug
+name|ftp_debug
 operator|=
 literal|1
 expr_stmt|;
@@ -5031,7 +5126,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|debug
+name|ftp_debug
 operator|=
 literal|0
 expr_stmt|;
@@ -5076,21 +5171,21 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-name|debug
+name|ftp_debug
 operator|=
 name|val
 expr_stmt|;
 block|}
 block|}
 else|else
-name|debug
+name|ftp_debug
 operator|=
 operator|!
-name|debug
+name|ftp_debug
 expr_stmt|;
 if|if
 condition|(
-name|debug
+name|ftp_debug
 condition|)
 name|options
 operator||=
@@ -5106,19 +5201,19 @@ name|fprintf
 argument_list|(
 name|ttyout
 argument_list|,
-literal|"Debugging %s (debug=%d).\n"
+literal|"Debugging %s (ftp_debug=%d).\n"
 argument_list|,
 name|onoff
 argument_list|(
-name|debug
+name|ftp_debug
 argument_list|)
 argument_list|,
-name|debug
+name|ftp_debug
 argument_list|)
 expr_stmt|;
 name|code
 operator|=
-name|debug
+name|ftp_debug
 operator|>
 literal|0
 expr_stmt|;
@@ -5174,10 +5269,8 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s remote-directory\n"
 argument_list|,
 name|argv
@@ -5309,10 +5402,8 @@ operator|!=
 literal|2
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s [local-directory]\n"
 argument_list|,
 name|argv
@@ -5352,7 +5443,7 @@ literal|1
 condition|)
 name|warn
 argument_list|(
-literal|"lcd %s"
+literal|"Can't chdir `%s'"
 argument_list|,
 name|locdir
 argument_list|)
@@ -5452,10 +5543,8 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s remote-file\n"
 argument_list|,
 name|argv
@@ -5544,10 +5633,8 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s [remote-files]\n"
 argument_list|,
 name|argv
@@ -5563,13 +5650,6 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-name|mname
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
 name|mflag
 operator|=
 literal|1
@@ -5593,7 +5673,12 @@ literal|1
 argument_list|)
 condition|)
 name|mabort
-argument_list|()
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -5677,9 +5762,12 @@ if|if
 condition|(
 name|confirm
 argument_list|(
-literal|"Continue with"
+name|argv
+index|[
+literal|0
+index|]
 argument_list|,
-literal|"mdelete"
+name|NULL
 argument_list|)
 condition|)
 block|{
@@ -5782,10 +5870,8 @@ condition|)
 block|{
 name|usage
 label|:
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s from-name to-name\n"
 argument_list|,
 name|argv
@@ -5835,7 +5921,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get a directory listing of remote files.  * Supports being invoked as:  *	cmd		runs  *	---		----  *	dir, ls		LIST  *	mlsd		MLSD  *	nlist		NLST  *	pdir, pls	LIST |$PAGER  *	mmlsd		MLSD |$PAGER  */
+comment|/*  * Get a directory listing of remote files.  * Supports being invoked as:  *	cmd		runs  *	---		----  *	dir, ls		LIST  *	mlsd		MLSD  *	nlist		NLST  *	pdir, pls	LIST |$PAGER  *	pmlsd		MLSD |$PAGER  */
 end_comment
 
 begin_function
@@ -5861,11 +5947,14 @@ modifier|*
 name|remdir
 decl_stmt|,
 modifier|*
+name|locbuf
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
 name|locfile
 decl_stmt|;
 name|int
-name|freelocfile
-decl_stmt|,
 name|pagecmd
 decl_stmt|,
 name|mlsdcmd
@@ -5874,12 +5963,14 @@ name|remdir
 operator|=
 name|NULL
 expr_stmt|;
+name|locbuf
+operator|=
+name|NULL
+expr_stmt|;
 name|locfile
 operator|=
 literal|"-"
 expr_stmt|;
-name|freelocfile
-operator|=
 name|pagecmd
 operator|=
 name|mlsdcmd
@@ -6039,10 +6130,8 @@ name|pagecmd
 operator|||
 name|mlsdcmd
 condition|)
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s [remote-path]\n"
 argument_list|,
 name|argv
@@ -6052,10 +6141,8 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s [remote-path [local-file]]\n"
 argument_list|,
 name|argv
@@ -6078,11 +6165,12 @@ condition|(
 name|pagecmd
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|p
@@ -6112,14 +6200,14 @@ argument_list|)
 operator|+
 literal|2
 expr_stmt|;
-name|locfile
+name|locbuf
 operator|=
-name|xmalloc
+name|ftp_malloc
 argument_list|(
 name|len
 argument_list|)
 expr_stmt|;
-name|locfile
+name|locbuf
 index|[
 literal|0
 index|]
@@ -6131,7 +6219,7 @@ name|void
 operator|)
 name|strlcpy
 argument_list|(
-name|locfile
+name|locbuf
 operator|+
 literal|1
 argument_list|,
@@ -6142,9 +6230,9 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|freelocfile
+name|locfile
 operator|=
-literal|1
+name|locbuf
 expr_stmt|;
 block|}
 elseif|else
@@ -6167,17 +6255,10 @@ operator|!=
 literal|'|'
 condition|)
 block|{
-name|mname
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
 if|if
 condition|(
 operator|(
-name|locfile
+name|locbuf
 operator|=
 name|globulize
 argument_list|(
@@ -6192,7 +6273,7 @@ name|confirm
 argument_list|(
 literal|"output to local-file:"
 argument_list|,
-name|locfile
+name|locbuf
 argument_list|)
 condition|)
 block|{
@@ -6205,9 +6286,9 @@ goto|goto
 name|freels
 goto|;
 block|}
-name|freelocfile
+name|locfile
 operator|=
-literal|1
+name|locbuf
 expr_stmt|;
 block|}
 name|recvrequest
@@ -6229,16 +6310,14 @@ name|freels
 label|:
 if|if
 condition|(
-name|freelocfile
-operator|&&
-name|locfile
+name|locbuf
 condition|)
 operator|(
 name|void
 operator|)
 name|free
 argument_list|(
-name|locfile
+name|locbuf
 argument_list|)
 expr_stmt|;
 block|}
@@ -6270,17 +6349,21 @@ decl_stmt|,
 name|i
 decl_stmt|;
 name|int
+specifier|volatile
 name|dolist
 decl_stmt|;
 name|char
 modifier|*
-name|mode
-decl_stmt|,
-modifier|*
+specifier|volatile
 name|dest
 decl_stmt|,
 modifier|*
 name|odest
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|lmode
 decl_stmt|;
 if|if
 condition|(
@@ -6333,10 +6416,8 @@ condition|)
 block|{
 name|usage
 label|:
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s remote-files local-file\n"
 argument_list|,
 name|argv
@@ -6371,13 +6452,6 @@ literal|1
 index|]
 operator|=
 name|NULL
-expr_stmt|;
-name|mname
-operator|=
-name|argv
-index|[
-literal|0
-index|]
 expr_stmt|;
 if|if
 condition|(
@@ -6459,7 +6533,12 @@ literal|1
 argument_list|)
 condition|)
 name|mabort
-argument_list|()
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -6481,7 +6560,7 @@ name|i
 operator|++
 control|)
 block|{
-name|mode
+name|lmode
 operator|=
 operator|(
 name|i
@@ -6508,7 +6587,7 @@ index|[
 name|i
 index|]
 argument_list|,
-name|mode
+name|lmode
 argument_list|,
 literal|0
 argument_list|,
@@ -6535,12 +6614,12 @@ if|if
 condition|(
 name|confirm
 argument_list|(
-literal|"Continue with"
-argument_list|,
 name|argv
 index|[
 literal|0
 index|]
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 block|{
@@ -6615,9 +6694,11 @@ name|shellnam
 index|[
 name|MAXPATHLEN
 index|]
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
-name|shell
+name|shellp
 decl_stmt|,
 modifier|*
 name|namep
@@ -6632,10 +6713,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s [command [args]]\n"
 argument_list|,
 name|argv
@@ -6703,7 +6782,7 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-name|shell
+name|shellp
 operator|=
 name|getenv
 argument_list|(
@@ -6712,11 +6791,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|shell
+name|shellp
 operator|==
 name|NULL
 condition|)
-name|shell
+name|shellp
 operator|=
 name|_PATH_BSHELL
 expr_stmt|;
@@ -6724,7 +6803,7 @@ name|namep
 operator|=
 name|strrchr
 argument_list|(
-name|shell
+name|shellp
 argument_list|,
 literal|'/'
 argument_list|)
@@ -6737,7 +6816,7 @@ name|NULL
 condition|)
 name|namep
 operator|=
-name|shell
+name|shellp
 expr_stmt|;
 else|else
 name|namep
@@ -6760,12 +6839,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|debug
+name|ftp_debug
 condition|)
 block|{
 name|fputs
 argument_list|(
-name|shell
+name|shellp
 argument_list|,
 name|ttyout
 argument_list|)
@@ -6787,7 +6866,7 @@ condition|)
 block|{
 name|execl
 argument_list|(
-name|shell
+name|shellp
 argument_list|,
 name|shellnam
 argument_list|,
@@ -6807,7 +6886,7 @@ else|else
 block|{
 name|execl
 argument_list|(
-name|shell
+name|shellp
 argument_list|,
 name|shellnam
 argument_list|,
@@ -6821,9 +6900,9 @@ expr_stmt|;
 block|}
 name|warn
 argument_list|(
-literal|"%s"
+literal|"Can't execute `%s'"
 argument_list|,
-name|shell
+name|shellp
 argument_list|)
 expr_stmt|;
 name|code
@@ -6874,7 +6953,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"Try again later"
+literal|"Can't fork a subshell; try again later"
 argument_list|)
 expr_stmt|;
 name|code
@@ -6909,10 +6988,14 @@ index|[]
 parameter_list|)
 block|{
 name|char
-name|acct
-index|[
-literal|80
-index|]
+modifier|*
+name|password
+decl_stmt|;
+name|char
+name|emptypass
+index|[]
+init|=
+literal|""
 decl_stmt|;
 name|int
 name|n
@@ -6963,10 +7046,8 @@ condition|)
 block|{
 name|usage
 label|:
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s username [password [account]]\n"
 argument_list|,
 name|argv
@@ -7008,18 +7089,32 @@ operator|<
 literal|3
 condition|)
 block|{
-name|argv
-index|[
-literal|2
-index|]
+name|password
 operator|=
 name|getpass
 argument_list|(
 literal|"Password: "
 argument_list|)
 expr_stmt|;
-name|argc
-operator|++
+if|if
+condition|(
+name|password
+operator|==
+name|NULL
+condition|)
+name|password
+operator|=
+name|emptypass
+expr_stmt|;
+block|}
+else|else
+block|{
+name|password
+operator|=
+name|argv
+index|[
+literal|2
+index|]
 expr_stmt|;
 block|}
 name|n
@@ -7028,10 +7123,19 @@ name|command
 argument_list|(
 literal|"PASS %s"
 argument_list|,
-name|argv
-index|[
-literal|2
-index|]
+name|password
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|password
+argument_list|,
+literal|0
+argument_list|,
+name|strlen
+argument_list|(
+name|password
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -7042,6 +7146,9 @@ operator|==
 name|CONTINUE
 condition|)
 block|{
+name|aflag
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|argc
@@ -7049,83 +7156,32 @@ operator|<
 literal|4
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fputs
+name|password
+operator|=
+name|getpass
 argument_list|(
 literal|"Account: "
-argument_list|,
-name|ttyout
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|ttyout
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fgets
-argument_list|(
-name|acct
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|acct
-argument_list|)
-operator|-
-literal|1
-argument_list|,
-name|stdin
-argument_list|)
+name|password
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|ttyout
-argument_list|,
-literal|"\nEOF received; login aborted.\n"
-argument_list|)
-expr_stmt|;
-name|clearerr
-argument_list|(
-name|stdin
-argument_list|)
-expr_stmt|;
-name|code
+name|password
 operator|=
-operator|-
-literal|1
+name|emptypass
 expr_stmt|;
-return|return;
 block|}
-name|acct
-index|[
-name|strlen
-argument_list|(
-name|acct
-argument_list|)
-operator|-
-literal|1
-index|]
+else|else
+block|{
+name|password
 operator|=
-literal|'\0'
-expr_stmt|;
 name|argv
 index|[
 literal|3
 index|]
-operator|=
-name|acct
-expr_stmt|;
-name|argc
-operator|++
 expr_stmt|;
 block|}
 name|n
@@ -7134,14 +7190,20 @@ name|command
 argument_list|(
 literal|"ACCT %s"
 argument_list|,
-name|argv
-index|[
-literal|3
-index|]
+name|password
 argument_list|)
 expr_stmt|;
-name|aflag
-operator|++
+name|memset
+argument_list|(
+name|password
+argument_list|,
+literal|0
+argument_list|,
+name|strlen
+argument_list|(
+name|password
+argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -7170,6 +7232,13 @@ operator|==
 literal|4
 condition|)
 block|{
+name|password
+operator|=
+name|argv
+index|[
+literal|3
+index|]
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -7177,10 +7246,19 @@ name|command
 argument_list|(
 literal|"ACCT %s"
 argument_list|,
-name|argv
-index|[
-literal|3
-index|]
+name|password
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|password
+argument_list|,
+literal|0
+argument_list|,
+name|strlen
+argument_list|(
+name|password
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -7228,10 +7306,8 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s\n"
 argument_list|,
 name|argv
@@ -7316,10 +7392,8 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s\n"
 argument_list|,
 name|argv
@@ -7424,10 +7498,8 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s directory-name\n"
 argument_list|,
 name|argv
@@ -7552,10 +7624,8 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s directory-name\n"
 argument_list|,
 name|argv
@@ -7673,10 +7743,8 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s line-to-send\n"
 argument_list|,
 name|argv
@@ -7746,10 +7814,8 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s line-to-send\n"
 argument_list|,
 name|argv
@@ -7979,10 +8045,8 @@ condition|)
 block|{
 name|usage
 label|:
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s mode remote-file\n"
 argument_list|,
 name|argv
@@ -8059,10 +8123,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s [umask]\n"
 argument_list|,
 name|argv
@@ -8127,10 +8189,8 @@ operator|>
 literal|2
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s [seconds]\n"
 argument_list|,
 name|argv
@@ -8195,10 +8255,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s\n"
 argument_list|,
 name|argv
@@ -8267,10 +8325,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s\n"
 argument_list|,
 name|argv
@@ -8350,10 +8406,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s\n"
 argument_list|,
 name|argv
@@ -8406,6 +8460,12 @@ name|char
 modifier|*
 name|ap
 decl_stmt|;
+name|char
+name|emptypass
+index|[]
+init|=
+literal|""
+decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -8417,10 +8477,8 @@ operator|>
 literal|2
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s [password]\n"
 argument_list|,
 name|argv
@@ -8451,6 +8509,7 @@ literal|1
 index|]
 expr_stmt|;
 else|else
+block|{
 name|ap
 operator|=
 name|getpass
@@ -8458,6 +8517,17 @@ argument_list|(
 literal|"Account:"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ap
+operator|==
+name|NULL
+condition|)
+name|ap
+operator|=
+name|emptypass
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -8466,6 +8536,18 @@ argument_list|(
 literal|"ACCT %s"
 argument_list|,
 name|ap
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|ap
+argument_list|,
+literal|0
+argument_list|,
+name|strlen
+argument_list|(
+name|ap
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -8562,6 +8644,12 @@ decl_stmt|;
 name|sigfunc
 name|oldintr
 decl_stmt|;
+name|char
+name|cmdbuf
+index|[
+name|MAX_C_NAME
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -8587,10 +8675,8 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s command\n"
 argument_list|,
 name|argv
@@ -8792,14 +8878,29 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strlcpy
+argument_list|(
+name|cmdbuf
+argument_list|,
+name|c
+operator|->
+name|c_name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cmdbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|argv
 index|[
 literal|1
 index|]
 operator|=
-name|c
-operator|->
-name|c_name
+name|cmdbuf
 expr_stmt|;
 call|(
 modifier|*
@@ -9086,10 +9187,8 @@ operator|>
 literal|3
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s [inchars [outchars]]\n"
 argument_list|,
 name|argv
@@ -9327,9 +9426,14 @@ name|cp2
 operator|-
 name|dst
 operator|>=
+call|(
+name|ptrdiff_t
+call|)
+argument_list|(
 name|dlen
 operator|-
 literal|1
+argument_list|)
 condition|)
 goto|goto
 name|out
@@ -9436,10 +9540,8 @@ operator|>
 literal|3
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s [mapin mapout]\n"
 argument_list|,
 name|argv
@@ -10403,10 +10505,8 @@ condition|)
 block|{
 name|passiveusage
 label|:
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s [ on | off | auto ]\n"
 argument_list|,
 name|argv
@@ -10565,6 +10665,74 @@ end_function
 
 begin_function
 name|void
+name|setepsv6
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|)
+block|{
+name|code
+operator|=
+name|togglevar
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+operator|&
+name|epsv6
+argument_list|,
+name|verbose
+condition|?
+literal|"EPSV/EPRT on IPv6"
+else|:
+name|NULL
+argument_list|)
+expr_stmt|;
+name|epsv6bad
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|setepsv
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|)
+block|{
+name|setepsv4
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
+name|setepsv6
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
 name|setsunique
 parameter_list|(
 name|int
@@ -10678,10 +10846,8 @@ if|if
 condition|(
 name|cmdlineopt
 condition|)
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s (all|get|put),maximum-bytes[,increment-bytes]]\n"
 argument_list|,
 name|argv
@@ -10691,10 +10857,8 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s (all|get|put) [maximum-bytes [increment-bytes]]\n"
 argument_list|,
 name|argv
@@ -11044,10 +11208,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s\n"
 argument_list|,
 name|argv
@@ -11146,10 +11308,8 @@ operator|>
 literal|2
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s [restart-point]\n"
 argument_list|,
 name|argv
@@ -11301,10 +11461,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s\n"
 argument_list|,
 name|argv
@@ -11417,10 +11575,8 @@ condition|)
 block|{
 name|usage
 label|:
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s macro_name\n"
 argument_list|,
 name|argv
@@ -11734,10 +11890,8 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s remote-file\n"
 argument_list|,
 name|argv
@@ -11851,10 +12005,8 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s remote-file\n"
 argument_list|,
 name|argv
@@ -11900,7 +12052,7 @@ index|[
 literal|1
 index|]
 argument_list|,
-name|asctime
+name|rfc2822time
 argument_list|(
 name|localtime
 argument_list|(
@@ -11945,10 +12097,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s [remote-file]\n"
 argument_list|,
 name|argv
@@ -12044,13 +12194,15 @@ name|argv
 index|[]
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|len
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|pager
 decl_stmt|,
@@ -12086,10 +12238,8 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s local-file\n"
 argument_list|,
 name|argv
@@ -12163,7 +12313,7 @@ literal|2
 expr_stmt|;
 name|pager
 operator|=
-name|xmalloc
+name|ftp_malloc
 argument_list|(
 name|len
 argument_list|)
@@ -12255,13 +12405,16 @@ decl_stmt|,
 name|orestart_point
 decl_stmt|,
 name|overbose
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|len
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|pager
 decl_stmt|;
@@ -12294,10 +12447,8 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s remote-file\n"
 argument_list|,
 name|argv
@@ -12342,7 +12493,7 @@ literal|2
 expr_stmt|;
 name|pager
 operator|=
-name|xmalloc
+name|ftp_malloc
 argument_list|(
 name|len
 argument_list|)
@@ -12462,10 +12613,8 @@ condition|)
 block|{
 name|usage
 label|:
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s size\n"
 argument_list|,
 name|argv
@@ -12666,10 +12815,8 @@ literal|3
 operator|)
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s [option value]\n"
 argument_list|,
 name|argv
@@ -12734,14 +12881,57 @@ block|}
 block|}
 else|else
 block|{
-name|o
-operator|=
-name|getoption
+name|set_option
 argument_list|(
 name|argv
 index|[
 literal|1
 index|]
+argument_list|,
+name|argv
+index|[
+literal|2
+index|]
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|code
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|set_option
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|option
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|value
+parameter_list|,
+name|int
+name|doverbose
+parameter_list|)
+block|{
+name|struct
+name|option
+modifier|*
+name|o
+decl_stmt|;
+name|o
+operator|=
+name|getoption
+argument_list|(
+name|option
 argument_list|)
 expr_stmt|;
 if|if
@@ -12757,10 +12947,7 @@ name|ttyout
 argument_list|,
 literal|"No such option `%s'.\n"
 argument_list|,
-name|argv
-index|[
-literal|1
-index|]
+name|option
 argument_list|)
 expr_stmt|;
 return|return;
@@ -12776,17 +12963,16 @@ name|o
 operator|->
 name|value
 operator|=
-name|xstrdup
+name|ftp_strdup
 argument_list|(
-name|argv
-index|[
-literal|2
-index|]
+name|value
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|verbose
+operator|&&
+name|doverbose
 condition|)
 name|fprintf
 argument_list|(
@@ -12802,11 +12988,6 @@ name|o
 operator|->
 name|value
 argument_list|)
-expr_stmt|;
-block|}
-name|code
-operator|=
-literal|0
 expr_stmt|;
 block|}
 end_function
@@ -12849,10 +13030,8 @@ operator|!=
 literal|2
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s option\n"
 argument_list|,
 name|argv
@@ -12948,10 +13127,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s\n"
 argument_list|,
 name|argv
@@ -13034,10 +13211,8 @@ operator|>
 literal|2
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s [remote-path]\n"
 argument_list|,
 name|argv
@@ -13121,10 +13296,8 @@ operator|>
 literal|3
 condition|)
 block|{
-name|fprintf
+name|UPRINTF
 argument_list|(
-name|ttyout
-argument_list|,
 literal|"usage: %s command [options]\n"
 argument_list|,
 name|argv

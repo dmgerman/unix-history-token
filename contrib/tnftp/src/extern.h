@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: extern.h,v 1.67 2005/05/14 15:26:43 lukem Exp $	*/
+comment|/*	$NetBSD: extern.h,v 1.12 2009/11/15 10:12:37 lukem Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1996-2005 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Luke Mewburn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the NetBSD  *	Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*	from	NetBSD: extern.h,v 1.77 2009/07/13 19:05:41 roy Exp	*/
+end_comment
+
+begin_comment
+comment|/*-  * Copyright (c) 1996-2009 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Luke Mewburn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -237,21 +241,8 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(__format__
-parameter_list|(
-name|__printf__
-parameter_list|,
-function_decl|1
-operator|,
-function_decl|2
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)))
-empty_stmt|;
-end_empty_stmt
 
 begin_ifndef
 ifndef|#
@@ -538,6 +529,26 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|get_line
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|option
 modifier|*
@@ -622,9 +633,11 @@ name|char
 modifier|*
 name|hookup
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -746,15 +759,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mabort
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|macdef
 parameter_list|(
 name|int
@@ -816,15 +820,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mintr
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|mls
 parameter_list|(
 name|int
@@ -876,6 +871,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|onoff
@@ -920,19 +916,6 @@ parameter_list|,
 name|char
 modifier|*
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|parseport
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1128,6 +1111,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -1214,6 +1198,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|rfc2822time
+parameter_list|(
+specifier|const
+name|struct
+name|tm
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|rmthelp
 parameter_list|(
@@ -1257,17 +1255,14 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 modifier|*
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 modifier|*
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 modifier|*
@@ -1390,6 +1385,32 @@ end_function_decl
 begin_function_decl
 name|void
 name|setepsv4
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|setepsv6
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|setepsv
 parameter_list|(
 name|int
 parameter_list|,
@@ -1719,6 +1740,23 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|set_option
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|shell
 parameter_list|(
 name|int
@@ -1878,7 +1916,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|xconnect
+name|ftp_connect
 parameter_list|(
 name|int
 parameter_list|,
@@ -1894,7 +1932,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|xlisten
+name|ftp_listen
 parameter_list|(
 name|int
 parameter_list|,
@@ -1905,7 +1943,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|xpoll
+name|ftp_poll
 parameter_list|(
 name|struct
 name|pollfd
@@ -1921,7 +1959,7 @@ end_function_decl
 begin_function_decl
 name|void
 modifier|*
-name|xmalloc
+name|ftp_malloc
 parameter_list|(
 name|size_t
 parameter_list|)
@@ -1931,7 +1969,7 @@ end_function_decl
 begin_function_decl
 name|StringList
 modifier|*
-name|xsl_init
+name|ftp_sl_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -1940,7 +1978,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|xsl_add
+name|ftp_sl_add
 parameter_list|(
 name|StringList
 modifier|*
@@ -1954,7 +1992,7 @@ end_function_decl
 begin_function_decl
 name|char
 modifier|*
-name|xstrdup
+name|ftp_strdup
 parameter_list|(
 specifier|const
 name|char

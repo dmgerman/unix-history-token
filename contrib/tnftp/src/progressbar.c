@@ -1,10 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: progressbar.c,v 1.7 2005/04/11 01:49:31 lukem Exp $	*/
+comment|/*	$NetBSD: progressbar.c,v 1.14 2009/05/20 12:53:47 lukem Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997-2003 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Luke Mewburn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the NetBSD  *	Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*	from	NetBSD: progressbar.c,v 1.21 2009/04/12 10:18:52 lukem Exp	*/
+end_comment
+
+begin_comment
+comment|/*-  * Copyright (c) 1997-2009 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Luke Mewburn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"tnftp.h"
+end_include
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* tnftp */
 end_comment
 
 begin_include
@@ -19,15 +39,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"$NetBSD: progressbar.c,v 1.7 2005/04/11 01:49:31 lukem Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_endif
+unit|__RCSID(" NetBSD: progressbar.c,v 1.21 2009/04/12 10:18:52 lukem Exp  ");
 endif|#
 directive|endif
 end_endif
@@ -50,12 +63,6 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
 end_include
 
 begin_include
@@ -103,28 +110,29 @@ end_include
 begin_include
 include|#
 directive|include
+file|<tzfile.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* tnftp */
+end_comment
 
 begin_include
 include|#
 directive|include
 file|"progressbar.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|SECSPERHOUR
-value|(60 * 60)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SECSPERDAY
-value|((long)60 * 60 * 24)
-end_define
 
 begin_if
 if|#
@@ -161,11 +169,27 @@ operator|==
 operator|-
 literal|1
 condition|)
+if|#
+directive|if
+name|GETPGRP_VOID
 name|pgrp
 operator|=
 name|getpgrp
 argument_list|()
 expr_stmt|;
+else|#
+directive|else
+comment|/* ! GETPGRP_VOID */
+name|pgrp
+operator|=
+name|getpgrp
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ! GETPGRP_VOID */
 return|return
 operator|(
 name|tcgetpgrp
@@ -232,19 +256,60 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * List of order of magnitude prefixes.  * The last is `P', as 2^64 = 16384 Petabytes  */
+comment|/*  * List of order of magnitude suffixes, per IEC 60027-2.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|prefixes
+modifier|*
+specifier|const
+name|suffixes
 index|[]
 init|=
-literal|" KMGTP"
+block|{
+literal|""
+block|,
+comment|/* 2^0  (byte) */
+literal|"KiB"
+block|,
+comment|/* 2^10 Kibibyte */
+literal|"MiB"
+block|,
+comment|/* 2^20 Mebibyte */
+literal|"GiB"
+block|,
+comment|/* 2^30 Gibibyte */
+literal|"TiB"
+block|,
+comment|/* 2^40 Tebibyte */
+literal|"PiB"
+block|,
+comment|/* 2^50 Pebibyte */
+literal|"EiB"
+block|,
+comment|/* 2^60 Exbibyte */
+if|#
+directive|if
+literal|0
+comment|/* The following are not necessary for signed 64-bit off_t */
+block|"ZiB",
+comment|/* 2^70 Zebibyte */
+block|"YiB",
+comment|/* 2^80 Yobibyte */
+endif|#
+directive|endif
+block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|NSUFFIXES
+value|(int)(sizeof(suffixes) / sizeof(suffixes[0]))
+end_define
 
 begin_comment
 comment|/*  * Display a transfer progress bar if progress is non-zero.  * SIGALRM is hijacked for use by this function.  * - Before the transfer, set filesize to size of file (or -1 if unknown),  *   and call with flag = -1. This starts the once per second timer,  *   and a call to updateprogressmeter() upon SIGALRM.  * - During the transfer, updateprogressmeter will call progressmeter  *   with flag = 0  * - After the transfer, call with flag = 1  */
@@ -312,16 +377,16 @@ decl_stmt|;
 name|int
 name|ratio
 decl_stmt|,
-name|barlength
-decl_stmt|,
 name|i
 decl_stmt|,
 name|remaining
+decl_stmt|,
+name|barlength
 decl_stmt|;
 comment|/* 			 * Work variables for progress bar. 			 * 			 * XXX:	if the format of the progress bar changes 			 *	(especially the number of characters in the 			 *	`static' portion of it), be sure to update 			 *	these appropriately. 			 */
 endif|#
 directive|endif
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|char
@@ -337,7 +402,7 @@ name|NO_PROGRESS
 define|#
 directive|define
 name|BAROVERHEAD
-value|43
+value|45
 comment|/* non `*' portion of progress bar */
 comment|/* 					 * stars should contain at least 					 * sizeof(buf) - BAROVERHEAD entries 					 */
 specifier|static
@@ -490,6 +555,11 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+name|alarmtimer
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -498,11 +568,6 @@ argument_list|(
 name|SIGALRM
 argument_list|,
 name|SIG_DFL
-argument_list|)
-expr_stmt|;
-name|alarmtimer
-argument_list|(
-literal|0
 argument_list|)
 expr_stmt|;
 name|siglongjmp
@@ -575,6 +640,11 @@ operator|==
 literal|1
 condition|)
 block|{
+name|alarmtimer
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -583,11 +653,6 @@ argument_list|(
 name|SIGALRM
 argument_list|,
 name|SIG_DFL
-argument_list|)
-expr_stmt|;
-name|alarmtimer
-argument_list|(
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -709,12 +774,17 @@ name|barlength
 operator|=
 name|MIN
 argument_list|(
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
 operator|-
 literal|1
+argument_list|)
 argument_list|,
 name|ttywidth
 argument_list|)
@@ -727,6 +797,9 @@ name|prefix
 condition|)
 name|barlength
 operator|-=
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|prefix
@@ -763,9 +836,14 @@ name|i
 argument_list|,
 name|stars
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|barlength
 operator|-
 name|i
+argument_list|)
 argument_list|,
 literal|""
 argument_list|)
@@ -788,10 +866,7 @@ literal|100000
 operator|&&
 name|i
 operator|<
-sizeof|sizeof
-argument_list|(
-name|prefixes
-argument_list|)
+name|NSUFFIXES
 condition|;
 name|i
 operator|++
@@ -799,6 +874,15 @@ control|)
 name|abbrevsize
 operator|>>=
 literal|10
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+name|NSUFFIXES
+condition|)
+name|i
+operator|--
 expr_stmt|;
 name|len
 operator|+=
@@ -815,25 +899,17 @@ name|LLFP
 argument_list|(
 literal|"5"
 argument_list|)
-literal|" %c%c "
+literal|" %-3s "
 argument_list|,
 operator|(
 name|LLT
 operator|)
 name|abbrevsize
 argument_list|,
-name|prefixes
+name|suffixes
 index|[
 name|i
 index|]
-argument_list|,
-name|i
-operator|==
-literal|0
-condition|?
-literal|' '
-else|:
-literal|'B'
 argument_list|)
 expr_stmt|;
 name|timersub
@@ -900,10 +976,7 @@ literal|1024000
 operator|&&
 name|i
 operator|<
-sizeof|sizeof
-argument_list|(
-name|prefixes
-argument_list|)
+name|NSUFFIXES
 condition|;
 name|i
 operator|++
@@ -927,7 +1000,7 @@ name|LLFP
 argument_list|(
 literal|"3"
 argument_list|)
-literal|".%02d %cB/s "
+literal|".%02d %.2sB/s "
 argument_list|,
 call|(
 name|LLT
@@ -953,7 +1026,7 @@ operator|/
 literal|1024
 argument_list|)
 argument_list|,
-name|prefixes
+name|suffixes
 index|[
 name|i
 index|]
@@ -1203,7 +1276,8 @@ decl_stmt|,
 name|hh
 decl_stmt|,
 name|i
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|len
 decl_stmt|;
 name|char
@@ -1434,10 +1508,7 @@ literal|1024000
 operator|&&
 name|i
 operator|<
-sizeof|sizeof
-argument_list|(
-name|prefixes
-argument_list|)
+name|NSUFFIXES
 condition|;
 name|i
 operator|++
@@ -1445,6 +1516,15 @@ control|)
 name|bytespersec
 operator|>>=
 literal|10
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+name|NSUFFIXES
+condition|)
+name|i
+operator|--
 expr_stmt|;
 name|len
 operator|+=
@@ -1458,7 +1538,7 @@ name|BUFLEFT
 argument_list|,
 literal|"("
 name|LLF
-literal|".%02d %cB/s)"
+literal|".%02d %.2sB/s)"
 argument_list|,
 call|(
 name|LLT
@@ -1484,7 +1564,7 @@ operator|/
 literal|1024
 argument_list|)
 argument_list|,
-name|prefixes
+name|suffixes
 index|[
 name|i
 index|]
@@ -1775,6 +1855,66 @@ name|int
 name|restartable
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|ultrix
+comment|/* XXX: this is lame - how do we test sigvec vs. sigaction? */
+name|struct
+name|sigvec
+name|vec
+decl_stmt|,
+name|ovec
+decl_stmt|;
+name|vec
+operator|.
+name|sv_handler
+operator|=
+name|func
+expr_stmt|;
+name|sigemptyset
+argument_list|(
+operator|&
+name|vec
+operator|.
+name|sv_mask
+argument_list|)
+expr_stmt|;
+name|vec
+operator|.
+name|sv_flags
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|sigvec
+argument_list|(
+name|sig
+argument_list|,
+operator|&
+name|vec
+argument_list|,
+operator|&
+name|ovec
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|SIG_ERR
+operator|)
+return|;
+return|return
+operator|(
+name|ovec
+operator|.
+name|sv_handler
+operator|)
+return|;
+else|#
+directive|else
+comment|/* ! ultrix */
 name|struct
 name|sigaction
 name|act
@@ -1863,6 +2003,9 @@ operator|.
 name|sa_handler
 operator|)
 return|;
+endif|#
+directive|endif
+comment|/* ! ultrix */
 block|}
 comment|/*  * Install a signal handler with the `restartable' flag set dependent upon  * which signal is being set. (This is a wrapper to xsignal_restart())  */
 name|sigfunc
@@ -1929,7 +2072,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"xsignal_restart called with signal %d"
+literal|"xsignal_restart: called with signal %d"
 argument_list|,
 name|sig
 argument_list|)

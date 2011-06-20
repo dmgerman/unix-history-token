@@ -1,10 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ruserpass.c,v 1.29 2003/08/07 11:13:57 agc Exp $	*/
+comment|/*	$NetBSD: ruserpass.c,v 1.8 2007/08/06 04:33:24 lukem Exp $	*/
+end_comment
+
+begin_comment
+comment|/*	from	NetBSD: ruserpass.c,v 1.33 2007/04/17 05:52:04 lukem Exp	*/
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 1985, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"tnftp.h"
+end_include
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* tnftp */
 end_comment
 
 begin_include
@@ -31,15 +51,8 @@ else|#
 directive|else
 end_else
 
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"$NetBSD: ruserpass.c,v 1.29 2003/08/07 11:13:57 agc Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_endif
+unit|__RCSID(" NetBSD: ruserpass.c,v 1.33 2007/04/17 05:52:04 lukem Exp  ");
 endif|#
 directive|endif
 end_endif
@@ -112,6 +125,15 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* tnftp */
+end_comment
 
 begin_include
 include|#
@@ -201,6 +223,7 @@ specifier|static
 struct|struct
 name|toktab
 block|{
+specifier|const
 name|char
 modifier|*
 name|tokstr
@@ -273,19 +296,16 @@ name|char
 modifier|*
 name|host
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 modifier|*
 name|aname
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 modifier|*
 name|apass
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 modifier|*
@@ -296,6 +316,11 @@ name|char
 modifier|*
 name|tmp
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|mydomain
+decl_stmt|;
 name|char
 name|myname
 index|[
@@ -303,9 +328,6 @@ name|MAXHOSTNAMELEN
 operator|+
 literal|1
 index|]
-decl_stmt|,
-modifier|*
-name|mydomain
 decl_stmt|;
 name|int
 name|t
@@ -360,7 +382,7 @@ name|ENOENT
 condition|)
 name|warn
 argument_list|(
-literal|"%s"
+literal|"Can't read `%s'"
 argument_list|,
 name|netrc
 argument_list|)
@@ -433,6 +455,8 @@ operator|=
 name|token
 argument_list|()
 operator|)
+operator|>
+literal|0
 condition|)
 switch|switch
 condition|(
@@ -458,8 +482,22 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|t
+operator|=
 name|token
 argument_list|()
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+goto|goto
+name|bad
+goto|;
+if|if
+condition|(
+name|t
 operator|!=
 name|ID
 condition|)
@@ -603,6 +641,8 @@ operator|=
 name|token
 argument_list|()
 operator|)
+operator|>
+literal|0
 operator|&&
 name|t
 operator|!=
@@ -622,8 +662,22 @@ name|LOGIN
 case|:
 if|if
 condition|(
+operator|(
+name|t
+operator|=
 name|token
 argument_list|()
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+goto|goto
+name|bad
+goto|;
+if|if
+condition|(
+name|t
 condition|)
 block|{
 if|if
@@ -636,7 +690,7 @@ condition|)
 operator|*
 name|aname
 operator|=
-name|xstrdup
+name|ftp_strdup
 argument_list|(
 name|tokval
 argument_list|)
@@ -705,12 +759,12 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Error: .netrc file is readable by others."
+literal|"Error: .netrc file is readable by others"
 argument_list|)
 expr_stmt|;
 name|warnx
 argument_list|(
-literal|"Remove password or make file unreadable by others."
+literal|"Remove password or make file unreadable by others"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -719,8 +773,22 @@ goto|;
 block|}
 if|if
 condition|(
+operator|(
+name|t
+operator|=
 name|token
 argument_list|()
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+goto|goto
+name|bad
+goto|;
+if|if
+condition|(
+name|t
 operator|&&
 operator|*
 name|apass
@@ -730,7 +798,7 @@ condition|)
 operator|*
 name|apass
 operator|=
-name|xstrdup
+name|ftp_strdup
 argument_list|(
 name|tokval
 argument_list|)
@@ -767,12 +835,12 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Error: .netrc file is readable by others."
+literal|"Error: .netrc file is readable by others"
 argument_list|)
 expr_stmt|;
 name|warnx
 argument_list|(
-literal|"Remove account or make file unreadable by others."
+literal|"Remove account or make file unreadable by others"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -781,8 +849,22 @@ goto|;
 block|}
 if|if
 condition|(
+operator|(
+name|t
+operator|=
 name|token
 argument_list|()
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+goto|goto
+name|bad
+goto|;
+if|if
+condition|(
+name|t
 operator|&&
 operator|*
 name|aacct
@@ -792,7 +874,7 @@ condition|)
 operator|*
 name|aacct
 operator|=
-name|xstrdup
+name|ftp_strdup
 argument_list|(
 name|tokval
 argument_list|)
@@ -1100,6 +1182,31 @@ condition|)
 block|{
 if|if
 condition|(
+name|tmp
+operator|==
+name|macros
+index|[
+name|macnum
+index|]
+operator|.
+name|mac_start
+condition|)
+block|{
+name|macros
+index|[
+name|macnum
+operator|++
+index|]
+operator|.
+name|mac_end
+operator|=
+name|tmp
+expr_stmt|;
+break|break;
+block|}
+elseif|else
+if|if
+condition|(
 operator|*
 operator|(
 name|tmp
@@ -1158,7 +1265,7 @@ break|break;
 default|default:
 name|warnx
 argument_list|(
-literal|"Unknown .netrc keyword %s"
+literal|"Unknown .netrc keyword `%s'"
 argument_list|,
 name|tokval
 argument_list|)
@@ -1171,6 +1278,16 @@ goto|;
 block|}
 name|done
 label|:
+if|if
+condition|(
+name|t
+operator|==
+operator|-
+literal|1
+condition|)
+goto|goto
+name|bad
+goto|;
 operator|(
 name|void
 operator|)
@@ -1318,19 +1435,50 @@ name|c
 operator|==
 literal|'\\'
 condition|)
+if|if
+condition|(
+operator|(
 name|c
 operator|=
 name|getc
 argument_list|(
 name|cfile
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|EOF
+condition|)
+break|break;
 operator|*
 name|cp
 operator|++
 operator|=
 name|c
 expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+name|tokval
+operator|+
+sizeof|sizeof
+argument_list|(
+name|tokval
+argument_list|)
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"Token in .netrc too long"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 block|}
 block|}
 else|else
@@ -1377,19 +1525,50 @@ name|c
 operator|==
 literal|'\\'
 condition|)
+if|if
+condition|(
+operator|(
 name|c
 operator|=
 name|getc
 argument_list|(
 name|cfile
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|EOF
+condition|)
+break|break;
 operator|*
 name|cp
 operator|++
 operator|=
 name|c
 expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+name|tokval
+operator|+
+sizeof|sizeof
+argument_list|(
+name|tokval
+argument_list|)
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"Token in .netrc too long"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 block|}
 block|}
 operator|*

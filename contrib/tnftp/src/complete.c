@@ -1,10 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: complete.c,v 1.38 2000/05/01 10:35:17 lukem Exp $	*/
+comment|/*	$NetBSD: complete.c,v 1.10 2009/05/20 12:53:47 lukem Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997-2000 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Luke Mewburn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the NetBSD  *	Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*	from	NetBSD: complete.c,v 1.46 2009/04/12 10:18:52 lukem Exp	*/
+end_comment
+
+begin_comment
+comment|/*-  * Copyright (c) 1997-2009 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Luke Mewburn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"tnftp.h"
+end_include
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* tnftp */
 end_comment
 
 begin_include
@@ -19,15 +39,8 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"$NetBSD: complete.c,v 1.38 2000/05/01 10:35:17 lukem Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_endif
+unit|__RCSID(" NetBSD: complete.c,v 1.46 2009/04/12 10:18:52 lukem Exp  ");
 endif|#
 directive|endif
 end_endif
@@ -81,6 +94,15 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* tnftp */
+end_comment
 
 begin_include
 include|#
@@ -208,6 +230,7 @@ operator|(
 specifier|const
 name|char
 operator|*
+specifier|const
 operator|*
 operator|)
 name|a
@@ -217,6 +240,7 @@ operator|(
 specifier|const
 name|char
 operator|*
+specifier|const
 operator|*
 operator|)
 name|b
@@ -261,7 +285,7 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|,
 name|j
@@ -584,7 +608,7 @@ name|rv
 decl_stmt|;
 name|words
 operator|=
-name|xsl_init
+name|ftp_sl_init
 argument_list|()
 expr_stmt|;
 name|wordlen
@@ -637,13 +661,16 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|xsl_add
+name|ftp_sl_add
 argument_list|(
 name|words
 argument_list|,
+name|ftp_strdup
+argument_list|(
 name|c
 operator|->
 name|c_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -686,7 +713,7 @@ name|sl_free
 argument_list|(
 name|words
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -898,7 +925,7 @@ operator|)
 return|;
 name|words
 operator|=
-name|xsl_init
+name|ftp_sl_init
 argument_list|()
 expr_stmt|;
 name|len
@@ -1005,14 +1032,14 @@ name|tcp
 decl_stmt|;
 name|tcp
 operator|=
-name|xstrdup
+name|ftp_strdup
 argument_list|(
 name|dp
 operator|->
 name|d_name
 argument_list|)
 expr_stmt|;
-name|xsl_add
+name|ftp_sl_add
 argument_list|(
 name|words
 argument_list|,
@@ -1210,7 +1237,7 @@ name|rv
 decl_stmt|;
 name|words
 operator|=
-name|xsl_init
+name|ftp_sl_init
 argument_list|()
 expr_stmt|;
 name|wordlen
@@ -1263,13 +1290,16 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|xsl_add
+name|ftp_sl_add
 argument_list|(
 name|words
 argument_list|,
+name|ftp_strdup
+argument_list|(
 name|o
 operator|->
 name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1312,7 +1342,7 @@ name|sl_free
 argument_list|(
 name|words
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -1370,7 +1400,7 @@ decl_stmt|,
 modifier|*
 name|cp
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|unsigned
@@ -1378,18 +1408,48 @@ name|char
 name|rv
 decl_stmt|;
 name|char
+name|cmdbuf
+index|[
+name|MAX_C_NAME
+index|]
+decl_stmt|;
+name|char
 modifier|*
 name|dummyargv
-index|[]
+index|[
+literal|3
+index|]
 init|=
 block|{
-literal|"complete"
+name|NULL
 block|,
 name|NULL
 block|,
 name|NULL
 block|}
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|strlcpy
+argument_list|(
+name|cmdbuf
+argument_list|,
+literal|"complete"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cmdbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|dummyargv
+index|[
+literal|0
+index|]
+operator|=
+name|cmdbuf
+expr_stmt|;
 name|dummyargv
 index|[
 literal|1
@@ -1484,6 +1544,7 @@ literal|0
 condition|)
 block|{
 comment|/* dir not cached */
+specifier|const
 name|char
 modifier|*
 name|emesg
@@ -1503,7 +1564,7 @@ argument_list|)
 expr_stmt|;
 name|dirlist
 operator|=
-name|xsl_init
+name|ftp_sl_init
 argument_list|()
 expr_stmt|;
 name|mflag
@@ -1580,12 +1641,12 @@ name|cp
 expr_stmt|;
 name|tcp
 operator|=
-name|xstrdup
+name|ftp_strdup
 argument_list|(
 name|tcp
 argument_list|)
 expr_stmt|;
-name|xsl_add
+name|ftp_sl_add
 argument_list|(
 name|dirlist
 argument_list|,
@@ -1637,7 +1698,7 @@ expr_stmt|;
 block|}
 name|words
 operator|=
-name|xsl_init
+name|ftp_sl_init
 argument_list|()
 expr_stmt|;
 for|for
@@ -1694,7 +1755,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|xsl_add
+name|ftp_sl_add
 argument_list|(
 name|words
 argument_list|,
@@ -1739,7 +1800,7 @@ name|complete
 parameter_list|(
 name|EditLine
 modifier|*
-name|el
+name|cel
 parameter_list|,
 name|int
 name|ch
@@ -1753,7 +1814,7 @@ name|FTPBUFLEN
 index|]
 decl_stmt|;
 specifier|static
-name|int
+name|size_t
 name|lastc_argc
 decl_stmt|,
 name|lastc_argo
@@ -1769,20 +1830,20 @@ modifier|*
 name|lf
 decl_stmt|;
 name|int
-name|celems
-decl_stmt|,
 name|dolist
 decl_stmt|,
 name|cmpltype
 decl_stmt|;
 name|size_t
+name|celems
+decl_stmt|,
 name|len
 decl_stmt|;
 name|lf
 operator|=
 name|el_line
 argument_list|(
-name|el
+name|cel
 argument_list|)
 expr_stmt|;
 name|len
@@ -1911,6 +1972,9 @@ if|if
 condition|(
 name|cursor_argc
 operator|<
+operator|(
+name|size_t
+operator|)
 name|margc
 condition|)
 operator|(
@@ -2162,7 +2226,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"unknown complete type `%c'"
+literal|"complete: unknown complete type `%c'"
 argument_list|,
 name|cmpltype
 argument_list|)
