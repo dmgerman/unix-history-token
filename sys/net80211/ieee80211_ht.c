@@ -1520,6 +1520,24 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|null_addba_response_timeout
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+name|ni
+parameter_list|,
+name|struct
+name|ieee80211_tx_ampdu
+modifier|*
+name|tap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|ieee80211_bar_response
 parameter_list|(
 name|struct
@@ -1645,6 +1663,12 @@ operator|->
 name|ic_addba_response
 operator|=
 name|ieee80211_addba_response
+expr_stmt|;
+name|ic
+operator|->
+name|ic_addba_response_timeout
+operator|=
+name|null_addba_response_timeout
 expr_stmt|;
 name|ic
 operator|->
@@ -8022,6 +8046,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * ADDBA response timeout.  *  * If software aggregation and per-TID queue management was done here,  * that queue would be unpaused after the ADDBA timeout occurs.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -8039,6 +8067,24 @@ name|tap
 init|=
 name|arg
 decl_stmt|;
+name|struct
+name|ieee80211_node
+modifier|*
+name|ni
+init|=
+name|tap
+operator|->
+name|txa_ni
+decl_stmt|;
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+name|ni
+operator|->
+name|ni_ic
+decl_stmt|;
 comment|/* XXX ? */
 name|tap
 operator|->
@@ -8051,6 +8097,15 @@ name|tap
 operator|->
 name|txa_attempts
 operator|++
+expr_stmt|;
+name|ic
+operator|->
+name|ic_addba_response_timeout
+argument_list|(
+name|ni
+argument_list|,
+name|tap
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -8136,6 +8191,24 @@ name|IEEE80211_AGGR_XCHGPEND
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|null_addba_response_timeout
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+name|ni
+parameter_list|,
+name|struct
+name|ieee80211_tx_ampdu
+modifier|*
+name|tap
+parameter_list|)
+block|{ }
 end_function
 
 begin_comment
