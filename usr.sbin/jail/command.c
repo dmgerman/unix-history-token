@@ -388,12 +388,6 @@ modifier|*
 name|j
 parameter_list|)
 block|{
-specifier|const
-name|struct
-name|cfstring
-modifier|*
-name|comstring
-decl_stmt|;
 name|enum
 name|intparam
 name|comparam
@@ -1512,6 +1506,8 @@ expr_stmt|;
 return|return
 literal|1
 return|;
+default|default:
+empty_stmt|;
 block|}
 comment|/* 	 * Collect exec arguments.  Internal commands for network and 	 * mounting build their own argument lists. 	 */
 name|comstring

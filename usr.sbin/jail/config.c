@@ -1723,11 +1723,6 @@ decl_stmt|,
 modifier|*
 name|nv
 decl_stmt|;
-name|struct
-name|ipspec
-modifier|*
-name|ips
-decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -2594,9 +2589,6 @@ name|struct
 name|cfstring
 modifier|*
 name|s
-decl_stmt|,
-modifier|*
-name|ns
 decl_stmt|;
 name|FILE
 modifier|*
