@@ -9866,6 +9866,8 @@ operator|->
 name|fs_ipg
 operator|+
 name|ipref
+argument_list|,
+name|mode
 argument_list|)
 expr_stmt|;
 name|bdwrite
