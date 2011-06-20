@@ -1035,6 +1035,12 @@ name|do_pipe
 operator|=
 literal|0
 expr_stmt|;
+name|co
+operator|.
+name|use_set
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|!
