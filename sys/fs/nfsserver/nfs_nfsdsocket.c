@@ -6576,6 +6576,14 @@ name|NFSV4OP_GETFH
 operator|&&
 name|op
 operator|!=
+name|NFSV4OP_ACCESS
+operator|&&
+name|op
+operator|!=
+name|NFSV4OP_READLINK
+operator|&&
+name|op
+operator|!=
 name|NFSV4OP_SECINFO
 condition|)
 name|nd
