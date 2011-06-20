@@ -24,7 +24,7 @@ end_if
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: udb.c,v 8.164 2006/12/19 19:49:51 ca Exp $ (with USERDB)"
+literal|"@(#)$Id: udb.c,v 8.165 2010/01/10 06:22:00 ca Exp $ (with USERDB)"
 argument_list|)
 end_macro
 
@@ -40,7 +40,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: udb.c,v 8.164 2006/12/19 19:49:51 ca Exp $ (without USERDB)"
+literal|"@(#)$Id: udb.c,v 8.165 2010/01/10 06:22:00 ca Exp $ (without USERDB)"
 argument_list|)
 end_macro
 
@@ -4896,7 +4896,7 @@ literal|28
 argument|,
 literal|1
 argument|)) 			sm_dprintf(
-literal|"_udbx_init: db->close(%s)\n"
+literal|"_udbx_close: db->close(%s)\n"
 argument|, 				up->udb_dbname);
 endif|#
 directive|endif

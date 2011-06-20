@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2009 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2010 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: conf.c,v 8.1153 2009/12/18 17:25:12 ca Exp $"
+literal|"@(#)$Id: conf.c,v 8.1168 2011/01/25 18:31:30 ca Exp $"
 argument_list|)
 end_macro
 
@@ -253,10 +253,11 @@ specifier|static
 name|struct
 name|hostent
 modifier|*
-name|getipnodebyname
+name|sm_getipnodebyname
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -276,14 +277,15 @@ specifier|static
 name|struct
 name|hostent
 modifier|*
-name|getipnodebyaddr
+name|sm_getipnodebyaddr
 name|__P
 argument_list|(
 operator|(
-name|char
+specifier|const
+name|void
 operator|*
 operator|,
-name|int
+name|size_t
 operator|,
 name|int
 operator|,
@@ -293,6 +295,29 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* NETINET6&& NEEDSGETIPNODE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sm_getipnodebyname
+value|getipnodebyname
+end_define
+
+begin_define
+define|#
+directive|define
+name|sm_getipnodebyaddr
+value|getipnodebyaddr
+end_define
 
 begin_endif
 endif|#
@@ -11600,7 +11625,7 @@ comment|/* **  SM_SETPROCTITLE -- set process task and set process title for ps 
 end_comment
 
 begin_comment
-comment|/*VARARGS2*/
+comment|/*VARARGS3*/
 end_comment
 
 begin_function
@@ -16531,7 +16556,7 @@ block|}
 endif|#
 directive|endif
 comment|/* NEEDSTRSTR */
-comment|/* **  SM_GETHOSTBY{NAME,ADDR} -- compatibility routines for gethostbyXXX ** **	Some operating systems have wierd problems with the gethostbyXXX **	routines.  For example, Solaris versions at least through 2.3 **	don't properly deliver a canonical h_name field.  This tries to **	work around these problems. ** **	Support IPv6 as well as IPv4. */
+comment|/* **  SM_GETHOSTBY{NAME,ADDR} -- compatibility routines for gethostbyXXX ** **	Some operating systems have weird problems with the gethostbyXXX **	routines.  For example, Solaris versions at least through 2.3 **	don't properly deliver a canonical h_name field.  This tries to **	work around these problems. ** **	Support IPv6 as well as IPv4. */
 if|#
 directive|if
 name|NETINET6
@@ -16585,7 +16610,7 @@ specifier|static
 name|struct
 name|hostent
 modifier|*
-name|getipnodebyname
+name|sm_getipnodebyname
 parameter_list|(
 name|name
 parameter_list|,
@@ -16595,6 +16620,7 @@ name|flags
 parameter_list|,
 name|err
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
@@ -16683,7 +16709,7 @@ specifier|static
 name|struct
 name|hostent
 modifier|*
-name|getipnodebyaddr
+name|sm_getipnodebyaddr
 parameter_list|(
 name|addr
 parameter_list|,
@@ -16693,11 +16719,12 @@ name|family
 parameter_list|,
 name|err
 parameter_list|)
-name|char
+specifier|const
+name|void
 modifier|*
 name|addr
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|int
@@ -16999,7 +17026,7 @@ directive|endif
 comment|/* ADDRCONFIG_IS_BROKEN */
 name|h
 operator|=
-name|getipnodebyname
+name|sm_getipnodebyname
 argument_list|(
 name|name
 argument_list|,
@@ -17191,7 +17218,7 @@ directive|if
 name|NETINET6
 name|h
 operator|=
-name|getipnodebyname
+name|sm_getipnodebyname
 argument_list|(
 name|hbuf
 argument_list|,
@@ -17628,7 +17655,7 @@ name|err
 decl_stmt|;
 name|hp
 operator|=
-name|getipnodebyaddr
+name|sm_getipnodebyaddr
 argument_list|(
 name|addr
 argument_list|,
@@ -19242,6 +19269,12 @@ block|{
 case|case
 name|AF_INET6
 case|:
+name|SETV6LOOPBACKADDRFOUND
+argument_list|(
+operator|*
+name|sa
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__KAME__
@@ -20241,6 +20274,12 @@ name|NETINET6
 case|case
 name|AF_INET6
 case|:
+name|SETV6LOOPBACKADDRFOUND
+argument_list|(
+operator|*
+name|sa
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__KAME__
@@ -23053,6 +23092,14 @@ directive|endif
 comment|/* HASWAITPID */
 if|#
 directive|if
+name|HAVE_NANOSLEEP
+literal|"HAVE_NANOSLEEP"
+block|,
+endif|#
+directive|endif
+comment|/* HAVE_NANOSLEEP */
+if|#
+directive|if
 name|IDENTPROTO
 literal|"IDENTPROTO"
 block|,
@@ -23296,6 +23343,14 @@ block|,
 endif|#
 directive|endif
 comment|/* USESYSCTL */
+if|#
+directive|if
+name|USE_OPENSSL_ENGINE
+literal|"USE_OPENSSL_ENGINE"
+block|,
+endif|#
+directive|endif
+comment|/* USE_OPENSSL_ENGINE */
 if|#
 directive|if
 name|USING_NETSCAPE_LDAP
@@ -23836,6 +23891,7 @@ directive|if
 name|_FFR_RCPTTHROTDELAY
 comment|/* configurable delay for BadRcptThrottle */
 literal|"_FFR_RCPTTHROTDELAY"
+block|,
 endif|#
 directive|endif
 comment|/* _FFR_RCPTTHROTDELAY */
