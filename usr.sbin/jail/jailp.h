@@ -390,12 +390,25 @@ comment|/* Run non-jailed commands as this user */
 name|IP_EXEC_TIMEOUT
 block|,
 comment|/* Time to wait for a command to complete */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 name|IP_INTERFACE
 block|,
 comment|/* Add IP addresses to this interface */
 name|IP_IP_HOSTNAME
 block|,
 comment|/* Get jail IP address(es) from hostname */
+endif|#
+directive|endif
 name|IP_MOUNT
 block|,
 comment|/* Mount points in fstab(5) form */
@@ -414,9 +427,14 @@ comment|/* Time to wait after sending SIGTERM */
 name|IP_VNET_INTERFACE
 block|,
 comment|/* Assign interface(s) to vnet jail */
+ifdef|#
+directive|ifdef
+name|INET
 name|IP__IP4_IFADDR
 block|,
 comment|/* Copy of ip4.addr with interface/netmask */
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
@@ -447,8 +465,13 @@ name|KP_ENFORCE_STATFS
 block|,
 name|KP_HOST_HOSTNAME
 block|,
+ifdef|#
+directive|ifdef
+name|INET
 name|KP_IP4_ADDR
 block|,
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
