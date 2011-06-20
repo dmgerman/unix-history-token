@@ -1877,7 +1877,11 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"Adding drive %u to array %u\n"
+literal|"Adding drive %s to array %u\n"
+argument_list|,
+name|mfi_drive_name
+argument_list|(
+name|NULL
 argument_list|,
 name|array_info
 operator|->
@@ -1891,6 +1895,11 @@ operator|.
 name|v
 operator|.
 name|device_id
+argument_list|,
+name|MFI_DNAME_DEVICE_ID
+operator||
+name|MFI_DNAME_HONOR_OPTS
+argument_list|)
 argument_list|,
 name|ar
 operator|->

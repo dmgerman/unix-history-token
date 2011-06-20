@@ -250,7 +250,7 @@ decl_stmt|;
 name|char
 name|label
 index|[
-literal|16
+literal|24
 index|]
 decl_stmt|;
 name|time_t
@@ -721,7 +721,11 @@ argument_list|(
 name|label
 argument_list|)
 argument_list|,
-literal|"    Drive %u"
+literal|"    Drive %s"
+argument_list|,
+name|mfi_drive_name
+argument_list|(
+name|NULL
 argument_list|,
 name|list
 operator|->
@@ -731,6 +735,11 @@ name|i
 index|]
 operator|.
 name|device_id
+argument_list|,
+name|MFI_DNAME_DEVICE_ID
+operator||
+name|MFI_DNAME_HONOR_OPTS
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mfi_display_progress
