@@ -1485,7 +1485,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Murphy's law says that it's possible the chip can wedge and  * the 'command in progress' bit may never clear. Hence, we wait  * only a finite amount of time to avoid getting caught in an  * infinite loop. Normally this delay routine would be a macro,  * but it isn't called during normal operation so we can afford  * to make it a function.  */
+comment|/*  * Murphy's law says that it's possible the chip can wedge and  * the 'command in progress' bit may never clear. Hence, we wait  * only a finite amount of time to avoid getting caught in an  * infinite loop. Normally this delay routine would be a macro,  * but it isn't called during normal operation so we can afford  * to make it a function.  Spress warning when card gone.  */
 end_comment
 
 begin_function
@@ -1539,6 +1539,13 @@ condition|(
 name|i
 operator|==
 name|XL_TIMEOUT
+operator|&&
+name|bus_child_present
+argument_list|(
+name|sc
+operator|->
+name|xl_dev
+argument_list|)
 condition|)
 name|device_printf
 argument_list|(
