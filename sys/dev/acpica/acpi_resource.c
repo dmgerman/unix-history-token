@@ -1962,12 +1962,18 @@ argument_list|(
 operator|(
 name|ACPI_DB_RESOURCES
 operator|,
-literal|"%s/Memory 0x%x/%d\n"
+literal|"%s/Memory 0x%jx/%ju\n"
 operator|,
 name|name
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|min
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|length
 operator|)
 argument_list|)
@@ -1995,12 +2001,18 @@ argument_list|(
 operator|(
 name|ACPI_DB_RESOURCES
 operator|,
-literal|"%s/IO 0x%x/%d\n"
+literal|"%s/IO 0x%jx/%ju\n"
 operator|,
 name|name
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|min
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|length
 operator|)
 argument_list|)
@@ -2042,14 +2054,23 @@ argument_list|(
 operator|(
 name|ACPI_DB_RESOURCES
 operator|,
-literal|"%s/Memory 0x%x-0x%x/%d\n"
+literal|"%s/Memory 0x%jx-0x%jx/%ju\n"
 operator|,
 name|name
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|min
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|max
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|length
 operator|)
 argument_list|)
@@ -2081,14 +2102,23 @@ argument_list|(
 operator|(
 name|ACPI_DB_RESOURCES
 operator|,
-literal|"%s/IO 0x%x-0x%x/%d\n"
+literal|"%s/IO 0x%jx-0x%jx/%ju\n"
 operator|,
 name|name
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|min
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|max
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|length
 operator|)
 argument_list|)
