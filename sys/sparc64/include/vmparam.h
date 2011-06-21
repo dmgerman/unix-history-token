@@ -451,7 +451,7 @@ begin_define
 define|#
 directive|define
 name|VM_KMEM_SIZE_SCALE
-value|(3)
+value|(tsb_kernel_ldd_phys == 0 ? 3 : 1)
 end_define
 
 begin_endif
@@ -508,6 +508,13 @@ define|#
 directive|define
 name|UMA_MD_SMALL_ALLOC
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|tsb_kernel_ldd_phys
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
