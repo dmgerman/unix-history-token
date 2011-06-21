@@ -491,11 +491,8 @@ begin_define
 define|#
 directive|define
 name|TLS_MODEL
+value|__attribute__((tls_model("initial-exec")))
 end_define
-
-begin_comment
-comment|/* default */
-end_comment
 
 begin_endif
 endif|#
