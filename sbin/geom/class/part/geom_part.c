@@ -7646,6 +7646,20 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+if|if
+condition|(
+name|partsize
+operator|!=
+name|VTOC_BOOTSIZE
+condition|)
+name|errx
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"invalid bootcode"
+argument_list|)
+expr_stmt|;
 name|gpart_write_partcode_vtoc8
 argument_list|(
 name|gp
@@ -7655,6 +7669,7 @@ argument_list|,
 name|partcode
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
