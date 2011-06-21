@@ -2961,8 +2961,6 @@ expr_stmt|;
 if|if
 condition|(
 name|size
-operator|+
-name|offset
 operator|>
 name|alignment
 condition|)
@@ -2971,8 +2969,6 @@ operator|=
 name|ALIGNDOWN
 argument_list|(
 name|size
-operator|+
-name|offset
 argument_list|,
 name|alignment
 argument_list|)
