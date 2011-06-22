@@ -4091,11 +4091,16 @@ name|cpu_non_c3
 operator|=
 name|i
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__ia64__
 else|else
 name|cpu_can_deep_sleep
 operator|=
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|sbuf_trim
 argument_list|(
