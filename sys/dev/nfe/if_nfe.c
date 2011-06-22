@@ -9797,7 +9797,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|nfe_enable_intr
+name|nfe_disable_intr
 argument_list|(
 name|sc
 argument_list|)
