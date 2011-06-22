@@ -4091,6 +4091,11 @@ name|cpu_non_c3
 operator|=
 name|i
 expr_stmt|;
+else|else
+name|cpu_can_deep_sleep
+operator|=
+literal|1
+expr_stmt|;
 block|}
 name|sbuf_trim
 argument_list|(

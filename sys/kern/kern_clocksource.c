@@ -168,6 +168,18 @@ end_endif
 
 begin_decl_stmt
 name|int
+name|cpu_can_deep_sleep
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* C3 state is available. */
+end_comment
+
+begin_decl_stmt
+name|int
 name|cpu_disable_deep_sleep
 init|=
 literal|0

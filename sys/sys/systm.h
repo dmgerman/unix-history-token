@@ -2017,6 +2017,13 @@ end_function_decl
 begin_decl_stmt
 specifier|extern
 name|int
+name|cpu_can_deep_sleep
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|cpu_disable_deep_sleep
 decl_stmt|;
 end_decl_stmt
