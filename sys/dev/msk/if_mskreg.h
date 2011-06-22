@@ -4591,6 +4591,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|B28_Y2_CPU_WDOG
+value|0x0e48
+end_define
+
+begin_comment
+comment|/* 32 bit Watchdog Register */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|B28_Y2_ASF_IRQ_V_BASE
 value|0x0e60
 end_define
