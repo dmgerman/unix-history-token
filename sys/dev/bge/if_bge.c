@@ -14179,7 +14179,7 @@ operator|->
 name|bge_flags
 operator|&=
 operator|~
-name|BGE_FLAG_JUMBO_FRAME
+name|BGE_FLAG_JUMBO
 expr_stmt|;
 block|}
 break|break;
