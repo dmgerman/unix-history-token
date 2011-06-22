@@ -77,6 +77,12 @@ end_define
 begin_define
 define|#
 directive|define
+name|__HAVE_PIR
+end_define
+
+begin_define
+define|#
+directive|define
 name|__PCI_REROUTE_INTERRUPT
 end_define
 
