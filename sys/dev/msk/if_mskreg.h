@@ -252,6 +252,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|DEVICEID_MRVL_436D
+value|0x436D
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_MRVL_4370
+value|0x4370
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEVICEID_MRVL_4380
 value|0x4380
 end_define
@@ -1743,6 +1757,21 @@ end_define
 
 begin_comment
 comment|/* PCI-X 133MHz Bus */
+end_comment
+
+begin_comment
+comment|/* PCI_OUR_REG_3	32 bit	Our Register 3 (Yukon-ECU only) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_CLK_MACSEC_DIS
+value|BIT_17
+end_define
+
+begin_comment
+comment|/* Disable Clock MACSec. */
 end_comment
 
 begin_comment
@@ -6522,6 +6551,39 @@ end_define
 
 begin_comment
 comment|/* Chip Rev. for Yukon-2 EX B0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIP_REV_YU_SU_A0
+value|0
+end_define
+
+begin_comment
+comment|/* Chip Rev. for Yukon-2 SUPR A0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIP_REV_YU_SU_B0
+value|1
+end_define
+
+begin_comment
+comment|/* Chip Rev. for Yukon-2 SUPR B0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIP_REV_YU_SU_B1
+value|3
+end_define
+
+begin_comment
+comment|/* Chip Rev. for Yukon-2 SUPR B1 */
 end_comment
 
 begin_comment
