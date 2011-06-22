@@ -949,9 +949,12 @@ name|urd
 operator|.
 name|urd_data
 operator|=
+name|libusb20_pass_ptr
+argument_list|(
 name|st
 operator|->
 name|buf
+argument_list|)
 expr_stmt|;
 name|st
 operator|->
@@ -1509,9 +1512,12 @@ name|fs_init
 operator|.
 name|pEndpoints
 operator|=
+name|libusb20_pass_ptr
+argument_list|(
 name|pdev
 operator|->
 name|privBeData
+argument_list|)
 expr_stmt|;
 name|fs_init
 operator|.
@@ -1994,8 +2000,11 @@ name|gen_desc
 operator|.
 name|ugd_data
 operator|=
+name|libusb20_pass_ptr
+argument_list|(
 operator|&
 name|cdesc
+argument_list|)
 expr_stmt|;
 name|gen_desc
 operator|.
@@ -2096,7 +2105,10 @@ name|gen_desc
 operator|.
 name|ugd_data
 operator|=
+name|libusb20_pass_ptr
+argument_list|(
 name|ptr
+argument_list|)
 expr_stmt|;
 name|gen_desc
 operator|.
@@ -2837,7 +2849,10 @@ name|req
 operator|.
 name|ucr_data
 operator|=
+name|libusb20_pass_ptr
+argument_list|(
 name|data
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3308,25 +3323,29 @@ name|temp
 operator|.
 name|max_packet_length
 expr_stmt|;
-comment|/* setup buffer and length lists */
+comment|/* setup buffer and length lists using zero copy */
 name|fsep
 operator|->
 name|ppBuffer
 operator|=
+name|libusb20_pass_ptr
+argument_list|(
 name|xfer
 operator|->
 name|ppBuffer
+argument_list|)
 expr_stmt|;
-comment|/* zero copy */
 name|fsep
 operator|->
 name|pLength
 operator|=
+name|libusb20_pass_ptr
+argument_list|(
 name|xfer
 operator|->
 name|pLength
+argument_list|)
 expr_stmt|;
-comment|/* zero copy */
 return|return
 operator|(
 literal|0
@@ -3853,7 +3872,10 @@ name|ugd
 operator|.
 name|ugd_data
 operator|=
+name|libusb20_pass_ptr
+argument_list|(
 name|buf
+argument_list|)
 expr_stmt|;
 name|ugd
 operator|.
