@@ -10434,6 +10434,14 @@ decl_stmt|;
 name|off_t
 name|amt
 decl_stmt|;
+name|start_ccb
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator|=
+name|CAM_REQ_INVALID
+expr_stmt|;
 name|device
 operator|=
 name|start_ccb
@@ -10469,7 +10477,7 @@ name|flags
 operator|&
 name|CDAI_FLAG_STORE
 condition|)
-break|break;
+return|return;
 name|cdai
 operator|->
 name|provsiz
@@ -10534,7 +10542,7 @@ name|flags
 operator|&
 name|CDAI_FLAG_STORE
 condition|)
-break|break;
+return|return;
 name|cdai
 operator|->
 name|provsiz
@@ -10742,7 +10750,7 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-break|break;
+return|return;
 block|}
 name|start_ccb
 operator|->
