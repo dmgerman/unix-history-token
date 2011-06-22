@@ -17589,6 +17589,9 @@ name|uint16_t
 name|msk_vtag
 decl_stmt|;
 comment|/* VLAN tag id. */
+name|uint32_t
+name|msk_csum
+decl_stmt|;
 block|}
 struct|;
 end_struct
