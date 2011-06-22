@@ -3111,6 +3111,12 @@ operator|->
 name|bustype
 operator|!=
 name|PS3_BUSTYPE_SYSBUS
+operator|&&
+name|dinfo
+operator|->
+name|bustype
+operator|!=
+name|PS3_BUSTYPE_STORAGE
 condition|)
 return|return
 operator|(
@@ -3353,6 +3359,15 @@ operator|->
 name|dma_tag
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Note: storage devices have IOMMU mappings set up by the hypervisor, 	 * but use physical, non-translated addresses. The above IOMMU 	 * initialization is necessary for the hypervisor to be able to set up 	 * the mappings, but actual DMA mappings should not use the IOMMU 	 * routines. 	 */
+if|if
+condition|(
+name|dinfo
+operator|->
+name|bustype
+operator|!=
+name|PS3_BUSTYPE_STORAGE
+condition|)
 name|bus_dma_tag_set_iommu
 argument_list|(
 name|dinfo
