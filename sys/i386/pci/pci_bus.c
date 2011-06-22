@@ -172,7 +172,7 @@ comment|/* read configuration space register */
 end_comment
 
 begin_function
-name|u_int32_t
+name|uint32_t
 name|legacy_pcib_read_config
 parameter_list|(
 name|device_t
@@ -236,7 +236,7 @@ parameter_list|,
 name|u_int
 name|reg
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|data
 parameter_list|,
 name|int
@@ -1177,7 +1177,7 @@ name|slot
 decl_stmt|,
 name|func
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|hdrtype
 decl_stmt|;
 name|int
@@ -1326,10 +1326,10 @@ operator|++
 control|)
 block|{
 comment|/* 			 * Read the IDs and class from the device. 			 */
-name|u_int32_t
+name|uint32_t
 name|id
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|class
 decl_stmt|,
 name|subclass
