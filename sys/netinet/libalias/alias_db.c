@@ -1452,37 +1452,6 @@ specifier|static
 name|struct
 name|alias_link
 modifier|*
-name|AddLink
-parameter_list|(
-name|struct
-name|libalias
-modifier|*
-parameter_list|,
-name|struct
-name|in_addr
-parameter_list|,
-name|struct
-name|in_addr
-parameter_list|,
-name|struct
-name|in_addr
-parameter_list|,
-name|u_short
-parameter_list|,
-name|u_short
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|struct
-name|alias_link
-modifier|*
 name|ReLink
 parameter_list|(
 name|struct
@@ -1591,20 +1560,6 @@ define|#
 directive|define
 name|GET_NEW_PORT_MAX_ATTEMPTS
 value|20
-end_define
-
-begin_define
-define|#
-directive|define
-name|GET_ALIAS_PORT
-value|-1
-end_define
-
-begin_define
-define|#
-directive|define
-name|GET_ALIAS_ID
-value|GET_ALIAS_PORT
 end_define
 
 begin_define
@@ -2943,7 +2898,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|struct
 name|alias_link
 modifier|*
@@ -2975,17 +2929,13 @@ parameter_list|,
 name|int
 name|alias_port_param
 parameter_list|,
-comment|/* if less than zero, alias   */
 name|int
 name|link_type
 parameter_list|)
 block|{
-comment|/* port will be automatically */
-comment|/* chosen. 				 * If greater than    */
 name|u_int
 name|start_point
 decl_stmt|;
-comment|/* zero, equal to alias port  */
 name|struct
 name|alias_link
 modifier|*
