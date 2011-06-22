@@ -3111,12 +3111,6 @@ operator|->
 name|bustype
 operator|!=
 name|PS3_BUSTYPE_SYSBUS
-operator|&&
-name|dinfo
-operator|->
-name|bustype
-operator|!=
-name|PS3_BUSTYPE_STORAGE
 condition|)
 return|return
 operator|(
