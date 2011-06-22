@@ -1417,7 +1417,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|rum_prepare_beacon
 parameter_list|(
 name|struct
@@ -12057,7 +12057,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|rum_prepare_beacon
 parameter_list|(
 name|struct
@@ -12095,6 +12095,17 @@ name|mbuf
 modifier|*
 name|m0
 decl_stmt|;
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_bss
+operator|->
+name|ni_chan
+operator|==
+name|IEEE80211_CHAN_ANYC
+condition|)
+return|return;
 name|m0
 operator|=
 name|ieee80211_beacon_alloc
@@ -12119,9 +12130,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-return|return
-name|ENOBUFS
-return|;
+return|return;
 block|}
 name|tp
 operator|=
@@ -12206,9 +12215,6 @@ argument_list|(
 name|m0
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 end_function
 
