@@ -4873,12 +4873,6 @@ name|bInterfaceNumber
 expr_stmt|;
 name|uaa
 operator|.
-name|use_generic
-operator|=
-literal|0
-expr_stmt|;
-name|uaa
-operator|.
 name|driver_info
 operator|=
 literal|0
@@ -4921,34 +4915,6 @@ operator|.
 name|bIfaceNum
 argument_list|)
 expr_stmt|;
-comment|/* try specific interface drivers first */
-if|if
-condition|(
-name|usb_probe_and_attach_sub
-argument_list|(
-name|udev
-argument_list|,
-operator|&
-name|uaa
-argument_list|)
-condition|)
-block|{
-comment|/* ignore */
-block|}
-comment|/* try generic interface drivers last */
-name|uaa
-operator|.
-name|use_generic
-operator|=
-literal|1
-expr_stmt|;
-name|uaa
-operator|.
-name|driver_info
-operator|=
-literal|0
-expr_stmt|;
-comment|/* reset driver_info */
 if|if
 condition|(
 name|usb_probe_and_attach_sub

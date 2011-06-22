@@ -3492,6 +3492,12 @@ name|ret
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|ret
+operator|.
+name|error
+operator|=
+name|BUS_PROBE_GENERIC
+expr_stmt|;
 comment|/* Search for protocol enforcement */
 if|if
 condition|(
@@ -3931,22 +3937,6 @@ operator|!=
 name|USB_MODE_HOST
 condition|)
 block|{
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
-if|if
-condition|(
-name|uaa
-operator|->
-name|use_generic
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* give other drivers a try first */
 return|return
 operator|(
 name|ENXIO

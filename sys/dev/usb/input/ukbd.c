@@ -3990,7 +3990,7 @@ return|;
 else|else
 return|return
 operator|(
-name|BUS_PROBE_GENERIC
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
@@ -4086,7 +4086,7 @@ expr_stmt|;
 else|else
 name|error
 operator|=
-name|BUS_PROBE_GENERIC
+name|BUS_PROBE_DEFAULT
 expr_stmt|;
 block|}
 else|else

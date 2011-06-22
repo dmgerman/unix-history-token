@@ -1481,22 +1481,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|uaa
-operator|->
-name|use_generic
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* give other drivers a try first */
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 comment|/* Check for a standards compliant device */
 name|id
 operator|=
@@ -1548,7 +1532,7 @@ return|;
 block|}
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_GENERIC
 operator|)
 return|;
 block|}
