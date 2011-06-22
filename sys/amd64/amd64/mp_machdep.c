@@ -967,6 +967,13 @@ literal|1
 condition|)
 return|return;
 comment|/* 	 * Because of uniformity assumption we examine only 	 * those logical processors that belong to the same 	 * package as BSP.  Further, we count number of 	 * logical processors that belong to the same core 	 * as BSP thus deducing number of threads per core. 	 */
+if|if
+condition|(
+name|cpu_high
+operator|>=
+literal|0x4
+condition|)
+block|{
 name|cpuid_count
 argument_list|(
 literal|0x04
@@ -991,6 +998,12 @@ operator|&
 literal|0x3f
 operator|)
 operator|+
+literal|1
+expr_stmt|;
+block|}
+else|else
+name|max_cores
+operator|=
 literal|1
 expr_stmt|;
 name|core_id_bits
