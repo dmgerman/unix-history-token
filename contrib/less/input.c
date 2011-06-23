@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2009  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2011  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -512,6 +512,21 @@ condition|)
 block|{
 do|do
 block|{
+if|if
+condition|(
+name|ABORT_SIGS
+argument_list|()
+condition|)
+block|{
+name|null_line
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|NULL_POSITION
+operator|)
+return|;
+block|}
 name|c
 operator|=
 name|ch_forw_get
