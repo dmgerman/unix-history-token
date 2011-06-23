@@ -2148,6 +2148,30 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* How many packets rxeof tries to clean at a time */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|igb_rx_process_limit
+init|=
+literal|100
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.igb.rx_process_limit"
+argument_list|,
+operator|&
+name|igb_rx_process_limit
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*********************************************************************  *  Device identification routine  *  *  igb_probe determines if the driver should be loaded on  *  adapter based on PCI vendor/device id of the adapter.  *  *  return BUS_PROBE_DEFAULT on success, positive on failure  *********************************************************************/
 end_comment
 
@@ -2625,7 +2649,7 @@ name|adapter
 operator|->
 name|rx_process_limit
 argument_list|,
-literal|100
+name|igb_rx_process_limit
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Validate number of transmit and receive descriptors. It 	 * must not exceed hardware maximum, and must be multiple 	 * of E1000_DBA_ALIGN. 	 */
