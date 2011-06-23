@@ -121,7 +121,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* AcpiExec and AcpiBin configuration */
+comment|/* AcpiExec configuration. Multithreaded with full AML debugger */
 end_comment
 
 begin_ifdef
@@ -159,11 +159,86 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* AcpiNames configuration. Single threaded with debugger output enabled. */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ACPI_BIN_APP
+name|ACPI_NAMES_APP
 end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEBUGGER
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_APPLICATION
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_SINGLE_THREADED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * AcpiBin/AcpiHelp/AcpiSrc configuration. All single threaded, with  * no debug output.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+name|ACPI_BIN_APP
+operator|)
+operator|||
+expr|\
+operator|(
+name|defined
+name|ACPI_SRC_APP
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ACPI_APPLICATION
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_SINGLE_THREADED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_HELP_APP
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEBUG_OUTPUT
+end_define
 
 begin_define
 define|#

@@ -387,9 +387,11 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/*      * 1) We have a return value, but if one wasn't expected, just exit, this is      * not a problem. For example, if the "Implicit Return" feature is      * enabled, methods will always return a value.      *      * 2) If the return value can be of any type, then we cannot perform any      * validation, exit.      */
+comment|/*      * Return value validation and possible repair.      *      * 1) Don't perform return value validation/repair if this feature      * has been disabled via a global option.      *      * 2) We have a return value, but if one wasn't expected, just exit,      * this is not a problem. For example, if the "Implicit Return"      * feature is enabled, methods will always return a value.      *      * 3) If the return value can be of any type, then we cannot perform      * any validation, just exit.      */
 if|if
 condition|(
+name|AcpiGbl_DisableAutoRepair
+operator|||
 operator|(
 operator|!
 name|Predefined
@@ -440,6 +442,12 @@ operator|->
 name|Predefined
 operator|=
 name|Predefined
+expr_stmt|;
+name|Data
+operator|->
+name|Node
+operator|=
+name|Node
 expr_stmt|;
 name|Data
 operator|->

@@ -219,16 +219,6 @@ name|ACPI_FLUSH_CPU_CACHE
 parameter_list|()
 end_define
 
-begin_define
-define|#
-directive|define
-name|ACPI_CAST_PTHREAD_T
-parameter_list|(
-name|pthread
-parameter_list|)
-value|((ACPI_THREAD_ID) (pthread))
-end_define
-
 begin_if
 if|#
 directive|if
@@ -264,6 +254,16 @@ name|COMPILER_DEPENDENT_UINT64
 value|unsigned long
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_CAST_PTHREAD_T
+parameter_list|(
+name|pthread
+parameter_list|)
+value|((ACPI_THREAD_ID) (pthread))
+end_define
+
 begin_else
 else|#
 directive|else
@@ -294,6 +294,16 @@ begin_define
 define|#
 directive|define
 name|ACPI_USE_NATIVE_DIVIDE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_CAST_PTHREAD_T
+parameter_list|(
+name|pthread
+parameter_list|)
+value|((ACPI_THREAD_ID) (UINT32) (void *) (pthread))
 end_define
 
 begin_endif

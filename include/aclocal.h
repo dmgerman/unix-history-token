@@ -1155,6 +1155,10 @@ name|acpi_operand_object
 modifier|*
 name|ParentPackage
 decl_stmt|;
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+decl_stmt|;
 name|UINT32
 name|Flags
 decl_stmt|;

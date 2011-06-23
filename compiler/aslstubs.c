@@ -500,5 +500,47 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* OSL interfaces */
+end_comment
+
+begin_function
+name|ACPI_THREAD_ID
+name|AcpiOsGetThreadId
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0xFFFF
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|ACPI_STATUS
+name|AcpiOsExecute
+parameter_list|(
+name|ACPI_EXECUTE_TYPE
+name|Type
+parameter_list|,
+name|ACPI_OSD_EXEC_CALLBACK
+name|Function
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+block|{
+return|return
+operator|(
+name|AE_SUPPORT
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 

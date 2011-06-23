@@ -691,6 +691,7 @@ begin_function_decl
 name|int
 name|AslCompilererror
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|s

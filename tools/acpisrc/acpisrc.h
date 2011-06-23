@@ -122,14 +122,8 @@ file|<errno.h>
 end_include
 
 begin_comment
-comment|/* Fixups for non-Win32 compilation */
+comment|/* O_BINARY is not always defined */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|WIN32
-end_ifndef
 
 begin_ifndef
 ifndef|#
@@ -148,6 +142,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Fixups for non-Win32 compilation */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WIN32
+end_ifndef
 
 begin_define
 define|#

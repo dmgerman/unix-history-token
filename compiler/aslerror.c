@@ -1422,6 +1422,7 @@ begin_function
 name|int
 name|AslCompilererror
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|CompilerMessage
@@ -1448,7 +1449,12 @@ index|]
 operator|.
 name|Filename
 argument_list|,
+name|ACPI_CAST_PTR
+argument_list|(
+name|char
+argument_list|,
 name|CompilerMessage
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

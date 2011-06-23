@@ -189,6 +189,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"   -dr                 Disable repair of method return values\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"   -dt                 Disable allocation tracking (performance)\n"
 argument_list|)
 expr_stmt|;
@@ -1059,6 +1064,14 @@ case|case
 literal|'o'
 case|:
 name|AcpiGbl_DbOpt_NoRegionSupport
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'r'
+case|:
+name|AcpiGbl_DisableAutoRepair
 operator|=
 name|TRUE
 expr_stmt|;

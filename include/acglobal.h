@@ -196,6 +196,21 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Disable runtime checking and repair of values returned by control methods.  * Use only if the repair is causing a problem on a particular machine.  */
+end_comment
+
+begin_function_decl
+name|UINT8
+name|ACPI_INIT_GLOBAL
+parameter_list|(
+name|AcpiGbl_DisableAutoRepair
+parameter_list|,
+name|FALSE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* AcpiGbl_FADT is a local copy of the FADT, converted to a common format. */
 end_comment
 
