@@ -3959,12 +3959,6 @@ name|defined
 argument_list|(
 name|__ia64__
 argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|__mips__
-argument_list|)
 name|vm_page_dirty
 argument_list|(
 operator|*

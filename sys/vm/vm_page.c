@@ -8436,12 +8436,6 @@ name|defined
 argument_list|(
 name|__ia64__
 argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|__mips__
-argument_list|)
 comment|/* 		 * On the aforementioned architectures, the page queues lock 		 * is not required by the following read-modify-write 		 * operation.  The combination of the object's lock and an 		 * atomic operation suffice.  Moreover, the pmap layer on 		 * these architectures can call vm_page_dirty() without 		 * holding the page queues lock. 		 */
 if|#
 directive|if
