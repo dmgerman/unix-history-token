@@ -938,7 +938,7 @@ block|,
 operator|.
 name|idVendor
 operator|=
-literal|0x0001
+name|USB_TEMPLATE_VENDOR
 block|,
 operator|.
 name|idProduct
