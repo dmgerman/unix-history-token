@@ -279,6 +279,8 @@ argument_list|(
 name|msr
 argument_list|)
 expr_stmt|;
+name|curthread_reg
+operator|=
 name|pcpup
 operator|->
 name|pc_curthread
