@@ -3103,6 +3103,8 @@ decl_stmt|,
 name|err
 decl_stmt|,
 name|flags
+decl_stmt|,
+name|pagesize
 decl_stmt|;
 if|if
 condition|(
@@ -3183,6 +3185,24 @@ operator|=
 literal|2
 expr_stmt|;
 comment|/* 8-bit mode */
+name|pagesize
+operator|=
+literal|24
+expr_stmt|;
+comment|/* log_2(16 MB) */
+if|if
+condition|(
+name|dinfo
+operator|->
+name|bustype
+operator|==
+name|PS3_BUSTYPE_STORAGE
+condition|)
+name|pagesize
+operator|=
+literal|12
+expr_stmt|;
+comment|/* 4 KB */
 for|for
 control|(
 name|i
@@ -3220,8 +3240,7 @@ index|]
 operator|.
 name|mr_size
 argument_list|,
-literal|24
-comment|/* log_2(16 MB) */
+name|pagesize
 argument_list|,
 name|flags
 argument_list|,
