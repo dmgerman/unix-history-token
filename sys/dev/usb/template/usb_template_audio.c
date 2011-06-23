@@ -274,7 +274,7 @@ comment|/* prototypes */
 end_comment
 
 begin_comment
-comment|/* Audio Mixer description structures */
+comment|/*  * Audio Mixer description structures  *  * Some of the audio descriptors were dumped  * from a Creative Labs USB audio device.  */
 end_comment
 
 begin_decl_stmt

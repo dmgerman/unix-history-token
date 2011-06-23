@@ -233,6 +233,10 @@ begin_comment
 comment|/* prototypes */
 end_comment
 
+begin_comment
+comment|/* The following HID descriptor was dumped from a HP mouse. */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|uint8_t

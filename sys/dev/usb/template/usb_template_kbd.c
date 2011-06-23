@@ -306,6 +306,10 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* The following HID descriptor was dumped from a HP keyboard. */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|uint8_t
