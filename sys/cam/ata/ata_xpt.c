@@ -8460,7 +8460,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* FALLTHROUGH */
+name|xpt_action_default
+argument_list|(
+name|start_ccb
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 case|case
 name|XPT_DEV_ADVINFO
