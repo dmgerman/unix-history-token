@@ -1974,54 +1974,6 @@ value|do { OS_REG_WRITE(_a, _r, (OS_REG_READ(_a, _r)&~ (_f)) | (((_v)<< _f##_S)&
 end_define
 
 begin_comment
-comment|/* system-configurable parameters */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ath_hal_dma_beacon_response_time
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* in TU's */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ath_hal_sw_beacon_response_time
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* in TU's */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ath_hal_additional_swba_backoff
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* in TU's */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ath_hal_ar5416_biasadj
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 1 or 0 */
-end_comment
-
-begin_comment
 comment|/* wait for the register contents to have the specified value */
 end_comment
 
@@ -2203,13 +2155,6 @@ directive|include
 file|"ah_debug.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|ath_hal_debug
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -2222,7 +2167,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|do {							\ 		if ((__m) == HAL_DEBUG_UNMASKABLE ||		\ 		    (ath_hal_debug& (__m))) {			\ 			DO_HALDEBUG((_ah), (__m), __VA_ARGS__);	\ 		}						\ 	} while(0);
+value|do {							\ 		if ((__m) == HAL_DEBUG_UNMASKABLE ||		\ 		    ((_ah != AH_NULL)&& (((struct ath_hal*)_ah)->ah_config.ah_debug& (__m)))) {			\ 			DO_HALDEBUG((_ah), (__m), __VA_ARGS__);	\ 		}						\ 	} while(0);
 end_define
 
 begin_function_decl

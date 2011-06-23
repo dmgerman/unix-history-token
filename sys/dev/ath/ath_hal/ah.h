@@ -2220,6 +2220,36 @@ name|HAL_DFS_EVENT
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|int
+name|ah_debug
+decl_stmt|;
+comment|/* only used if AH_DEBUG is defined */
+name|int
+name|ah_ar5416_biasadj
+decl_stmt|;
+comment|/* enable AR2133 radio specific bias fiddling */
+comment|/* NB: these are deprecated; they exist for now for compatibility */
+name|int
+name|ah_dma_beacon_response_time
+decl_stmt|;
+comment|/* in TU's */
+name|int
+name|ah_sw_beacon_response_time
+decl_stmt|;
+comment|/* in TU's */
+name|int
+name|ah_additional_swba_backoff
+decl_stmt|;
+comment|/* in TU's */
+block|}
+name|HAL_OPS_CONFIG
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  * Hardware Access Layer (HAL) API.  *  * Clients of the HAL call ath_hal_attach to obtain a reference to an  * ath_hal structure for use with the device.  Hardware-related operations  * that follow must call back into the HAL through interface, supplying  * the reference as the first parameter.  Note that before using the  * reference returned by ath_hal_attach the caller should verify the  * ABI version number.  */
 end_comment
@@ -2280,6 +2310,9 @@ modifier|*
 name|ah_eepromdata
 decl_stmt|;
 comment|/* eeprom buffer, if needed */
+name|HAL_OPS_CONFIG
+name|ah_config
+decl_stmt|;
 specifier|const
 name|HAL_RATE_TABLE
 modifier|*

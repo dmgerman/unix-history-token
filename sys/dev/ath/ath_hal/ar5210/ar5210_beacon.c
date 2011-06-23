@@ -171,7 +171,11 @@ operator|=
 operator|(
 name|next_beacon
 operator|-
-name|ath_hal_dma_beacon_response_time
+name|ah
+operator|->
+name|ah_config
+operator|.
+name|ah_dma_beacon_response_time
 operator|)
 operator|<<
 literal|3
@@ -184,7 +188,11 @@ operator|=
 operator|(
 name|next_beacon
 operator|-
-name|ath_hal_sw_beacon_response_time
+name|ah
+operator|->
+name|ah_config
+operator|.
+name|ah_sw_beacon_response_time
 operator|)
 operator|<<
 literal|3

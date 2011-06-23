@@ -3909,6 +3909,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|ath_sysctl_hal_attach
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bootverbose
