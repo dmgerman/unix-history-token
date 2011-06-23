@@ -492,7 +492,7 @@ return|return
 name|AH_TRUE
 return|;
 block|}
-name|HALDEBUG
+name|HALDEBUG_G
 argument_list|(
 name|ah
 argument_list|,
@@ -2561,7 +2561,7 @@ literal|3344
 operator|-
 name|freq
 return|;
-name|HALDEBUG
+name|HALDEBUG_G
 argument_list|(
 name|AH_NULL
 argument_list|,
