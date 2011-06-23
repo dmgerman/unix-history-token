@@ -2926,13 +2926,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|priv
-operator|->
-name|autoSrcAddr
-operator|=
-literal|1
-expr_stmt|;
-comment|/* reset auto-src-addr flag */
 name|NG_NODE_REVIVE
 argument_list|(
 name|node
