@@ -1304,7 +1304,7 @@ operator|.
 name|rm_end
 operator|=
 operator|~
-literal|0u
+literal|0ul
 expr_stmt|;
 name|mem_rman
 operator|.

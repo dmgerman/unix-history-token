@@ -438,7 +438,7 @@ operator|.
 name|rm_end
 operator|=
 operator|~
-literal|0u
+literal|0ul
 expr_stmt|;
 name|mem_rman
 operator|.
@@ -468,7 +468,7 @@ argument_list|,
 literal|0
 argument_list|,
 operator|~
-literal|0u
+literal|0
 argument_list|)
 condition|)
 name|panic

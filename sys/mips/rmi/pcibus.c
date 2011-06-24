@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|__FBSDID
 argument_list|(
-literal|"$FreeBSD: src/sys/alpha/pci/pcibus.c,v 1.36 2005/01/05 20:05:52 imp Exp $"
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -854,7 +854,7 @@ operator|.
 name|rm_end
 operator|=
 operator|~
-literal|0u
+literal|0ul
 expr_stmt|;
 name|port_rman
 operator|.
@@ -902,7 +902,7 @@ operator|.
 name|rm_end
 operator|=
 operator|~
-literal|0u
+literal|0ul
 expr_stmt|;
 name|mem_rman
 operator|.
