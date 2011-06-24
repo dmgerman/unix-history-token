@@ -1149,9 +1149,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|struct
-name|usb_device_id
-name|upgt_devs_2
+name|STRUCT_USB_HOST_ID
+name|upgt_devs
 index|[]
 init|=
 block|{
@@ -1497,11 +1496,11 @@ return|return
 operator|(
 name|usbd_lookup_id_by_uaa
 argument_list|(
-name|upgt_devs_2
+name|upgt_devs
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|upgt_devs_2
+name|upgt_devs
 argument_list|)
 argument_list|,
 name|uaa

@@ -837,6 +837,34 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Use these macro when defining USB device ID arrays if you want to  * have your driver module automatically loaded in host, device or  * both modes respectivly:  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STRUCT_USB_HOST_ID
+define|\
+value|struct usb_device_id __section("usb_host_id")
+end_define
+
+begin_define
+define|#
+directive|define
+name|STRUCT_USB_DEVICE_ID
+define|\
+value|struct usb_device_id __section("usb_device_id")
+end_define
+
+begin_define
+define|#
+directive|define
+name|STRUCT_USB_DUAL_ID
+define|\
+value|struct usb_device_id __section("usb_dual_id")
+end_define
+
+begin_comment
 comment|/*  * The following structure is used when looking up an USB driver for  * an USB device. It is inspired by the Linux structure called  * "usb_device_id".  */
 end_comment
 

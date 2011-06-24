@@ -932,8 +932,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|usb_device_id
+name|STRUCT_USB_HOST_ID
 name|uftdi_devs
 index|[]
 init|=

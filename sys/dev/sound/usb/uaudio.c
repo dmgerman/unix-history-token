@@ -2730,6 +2730,44 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|STRUCT_USB_HOST_ID
+name|__used
+name|uaudio_devs
+index|[]
+init|=
+block|{
+comment|/* Generic USB audio class match */
+block|{
+name|USB_IFACE_CLASS
+argument_list|(
+name|UICLASS_AUDIO
+argument_list|)
+block|,
+name|USB_IFACE_SUBCLASS
+argument_list|(
+name|UISUBCLASS_AUDIOCONTROL
+argument_list|)
+block|,}
+block|,
+comment|/* Generic USB MIDI class match */
+block|{
+name|USB_IFACE_CLASS
+argument_list|(
+name|UICLASS_AUDIO
+argument_list|)
+block|,
+name|USB_IFACE_SUBCLASS
+argument_list|(
+name|UISUBCLASS_MIDISTREAM
+argument_list|)
+block|,}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
