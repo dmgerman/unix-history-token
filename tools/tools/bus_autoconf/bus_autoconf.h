@@ -33,6 +33,13 @@ begin_struct
 struct|struct
 name|usb_device_id
 block|{
+comment|/* Internal field */
+name|char
+name|module_name
+index|[
+literal|32
+index|]
+decl_stmt|;
 comment|/* Hook for driver specific information */
 name|unsigned
 name|long
