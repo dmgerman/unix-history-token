@@ -4955,8 +4955,6 @@ operator|.
 name|bIfaceNum
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|usb_probe_and_attach_sub
 argument_list|(
 name|udev
@@ -4964,19 +4962,17 @@ argument_list|,
 operator|&
 name|uaa
 argument_list|)
-condition|)
-block|{
-comment|/* ignore */
-block|}
-block|}
+expr_stmt|;
+comment|/* 		 * Remove the leftover child, if any, to enforce that 		 * a new nomatch devd event is generated for the next 		 * interface if no driver is found: 		 */
 if|if
 condition|(
 name|uaa
 operator|.
 name|temp_dev
+operator|==
+name|NULL
 condition|)
-block|{
-comment|/* remove the last created child; it is unused */
+continue|continue;
 if|if
 condition|(
 name|device_delete_child
@@ -4990,7 +4986,6 @@ operator|.
 name|temp_dev
 argument_list|)
 condition|)
-block|{
 name|DPRINTFN
 argument_list|(
 literal|0
@@ -4998,7 +4993,12 @@ argument_list|,
 literal|"device delete child failed\n"
 argument_list|)
 expr_stmt|;
-block|}
+name|uaa
+operator|.
+name|temp_dev
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 name|done
 label|:
