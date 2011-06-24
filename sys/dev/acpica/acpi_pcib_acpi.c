@@ -465,6 +465,13 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
+name|bus_adjust_resource
+argument_list|,
+name|bus_generic_adjust_resource
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
 name|bus_release_resource
 argument_list|,
 name|bus_generic_release_resource
