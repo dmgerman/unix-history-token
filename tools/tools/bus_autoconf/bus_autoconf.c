@@ -694,33 +694,12 @@ if|if
 condition|(
 name|info
 operator|.
-name|is_iface
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"nomatch 10 {\n"
-literal|"	match \"system\" \"USB\";\n"
-literal|"	match \"subsystem\" \"INTERFACE\";\n"
-literal|"	match \"mode\" \"%s\";\n"
-argument_list|,
-name|mode
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|info
-operator|.
 name|is_any
 condition|)
 block|{
 name|printf
 argument_list|(
 literal|"nomatch 10 {\n"
-literal|"	match \"system\" \"USB\";\n"
-literal|"	match \"subsystem\" \"DEVICE\";\n"
 literal|"	match \"mode\" \"%s\";\n"
 argument_list|,
 name|mode

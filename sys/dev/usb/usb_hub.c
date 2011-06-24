@@ -5124,7 +5124,9 @@ literal|"vendor=0x%04x product=0x%04x "
 literal|"devclass=0x%02x devsubclass=0x%02x "
 literal|"sernum=\"%s\" "
 literal|"release=0x%04x "
-literal|"intclass=0x%02x intsubclass=0x%02x"
+literal|"mode=%s "
+literal|"intclass=0x%02x intsubclass=0x%02x "
+literal|"intprotocol=0x%02x "
 literal|"%s%s"
 argument_list|,
 name|UGETW
@@ -5183,6 +5185,22 @@ operator|.
 name|bcdDevice
 argument_list|)
 argument_list|,
+operator|(
+name|res
+operator|.
+name|udev
+operator|->
+name|flags
+operator|.
+name|usb_mode
+operator|==
+name|USB_MODE_HOST
+operator|)
+condition|?
+literal|"host"
+else|:
+literal|"device"
+argument_list|,
 name|iface
 operator|->
 name|idesc
@@ -5194,6 +5212,12 @@ operator|->
 name|idesc
 operator|->
 name|bInterfaceSubClass
+argument_list|,
+name|iface
+operator|->
+name|idesc
+operator|->
+name|bInterfaceProtocol
 argument_list|,
 name|iface
 operator|->
