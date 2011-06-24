@@ -2250,8 +2250,6 @@ name|_ah
 parameter_list|,
 name|__m
 parameter_list|,
-name|_fmt
-parameter_list|,
 modifier|...
 parameter_list|)
 end_define
@@ -2264,8 +2262,6 @@ parameter_list|(
 name|_ah
 parameter_list|,
 name|__m
-parameter_list|,
-name|_fmt
 parameter_list|,
 modifier|...
 parameter_list|)
