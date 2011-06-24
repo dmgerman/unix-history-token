@@ -6011,7 +6011,7 @@ operator|~
 literal|0UL
 operator|)
 decl_stmt|;
-comment|/*      * First attempt at allocating the resource.  For direct children,      * use resource_list_alloc() to handle reserved resources.  For      * other dveices, pass the request up to our parent.      */
+comment|/*      * First attempt at allocating the resource.  For direct children,      * use resource_list_alloc() to handle reserved resources.  For      * other devices, pass the request up to our parent.      */
 if|if
 condition|(
 name|bus
