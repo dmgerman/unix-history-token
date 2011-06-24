@@ -700,6 +700,7 @@ block|{
 name|printf
 argument_list|(
 literal|"nomatch 10 {\n"
+literal|"	match \"bus\" \"uhub[0-9]+\";\n"
 literal|"	match \"mode\" \"%s\";\n"
 argument_list|,
 name|mode
