@@ -1686,6 +1686,39 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* A match on these entries will load ums */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|STRUCT_USB_HOST_ID
+name|__used
+name|ums_devs
+index|[]
+init|=
+block|{
+block|{
+name|USB_IFACE_CLASS
+argument_list|(
+name|UICLASS_HID
+argument_list|)
+block|,
+name|USB_IFACE_SUBCLASS
+argument_list|(
+name|UISUBCLASS_BOOT
+argument_list|)
+block|,
+name|USB_IFACE_PROTOCOL
+argument_list|(
+name|UIPROTO_MOUSE
+argument_list|)
+block|,}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
