@@ -125,16 +125,21 @@ expr_stmt|;
 if|if
 condition|(
 name|off
-operator|<=
+operator|<
 literal|0
 condition|)
+block|{
 name|err
 argument_list|(
 name|EX_NOINPUT
 argument_list|,
-literal|"Cannot seek to end of file"
+literal|"Cannot seek to "
+literal|"end of file '%s'"
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|lseek
@@ -148,13 +153,18 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
 name|err
 argument_list|(
 name|EX_NOINPUT
 argument_list|,
-literal|"Cannot seek to beginning of file"
+literal|"Cannot seek to "
+literal|"beginning of file '%s'"
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
+block|}
 name|len
 operator|=
 name|off
