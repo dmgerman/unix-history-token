@@ -761,10 +761,8 @@ name|et_max_period
 operator|.
 name|sec
 operator|=
-operator|~
-literal|0ul
+literal|0xffffffff
 expr_stmt|;
-comment|/* XXX unless itc_freq>= (1<<32) */
 name|et
 operator|->
 name|et_max_period
