@@ -1702,13 +1702,6 @@ name|ZYD_ZD1211B_DEV
 argument_list|(
 name|ACCTON
 argument_list|,
-name|SMCWUSBG_NF
-argument_list|)
-block|,
-name|ZYD_ZD1211B_DEV
-argument_list|(
-name|ACCTON
-argument_list|,
 name|SMCWUSBG
 argument_list|)
 block|,
