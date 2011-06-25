@@ -10,14 +10,59 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_BUS_AUTOCONF_H_
+name|_BUS_SECTIONS_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_BUS_AUTOCONF_H_
+name|_BUS_SECTIONS_H_
 end_define
+
+begin_function_decl
+name|uint16_t
+name|format_get_section_size
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint8_t
+name|format_get_field
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|uint8_t
+modifier|*
+parameter_list|,
+name|uint16_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|format_parse_entries
+parameter_list|(
+specifier|const
+name|uint8_t
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -25,7 +70,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _BUS_AUTOCONF_H_ */
+comment|/* _BUS_SECTIONS_H_ */
 end_comment
 
 end_unit

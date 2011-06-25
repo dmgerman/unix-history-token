@@ -10,14 +10,32 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_BUS_AUTOCONF_H_
+name|_BUS_LOAD_FILE_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_BUS_AUTOCONF_H_
+name|_BUS_LOAD_FILE_H_
 end_define
+
+begin_function_decl
+name|void
+name|load_file
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|uint8_t
+modifier|*
+modifier|*
+parameter_list|,
+name|uint32_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -25,7 +43,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _BUS_AUTOCONF_H_ */
+comment|/* _BUS_LOAD_FILE_H_ */
 end_comment
 
 end_unit
