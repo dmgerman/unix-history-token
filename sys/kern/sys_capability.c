@@ -134,28 +134,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * We don't currently have any MIB entries for sysctls, but we do expose  * security.capabilities so that it's easy to tell if options CAPABILITIES is  * compiled into the kernel.  */
-end_comment
-
-begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(
-name|_security
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|capabilities
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-literal|0
-argument_list|,
-literal|"Capsicum"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/*  * System call to enter capability mode for the process.  */
 end_comment
 
