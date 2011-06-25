@@ -44,6 +44,10 @@ name|pcs_nextints
 decl_stmt|;
 comment|/* ExtINT counter. */
 name|u_long
+name|pcs_nhardclocks
+decl_stmt|;
+comment|/* IPI_HARDCLOCK counter. */
+name|u_long
 name|pcs_nhighfps
 decl_stmt|;
 comment|/* IPI_HIGH_FP counter. */
@@ -99,9 +103,13 @@ name|clock
 decl_stmt|;
 comment|/* Clock counter. */
 name|uint64_t
-name|clockadj
+name|clock_load
 decl_stmt|;
-comment|/* Clock adjust. */
+comment|/* Clock reload value. */
+name|uint32_t
+name|clock_mode
+decl_stmt|;
+comment|/* Clock ET mode */
 name|uint32_t
 name|awake
 range|:

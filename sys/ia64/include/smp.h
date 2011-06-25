@@ -31,6 +31,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IPI_HARDCLOCK
+value|ia64_ipi_hardclock
+end_define
+
+begin_define
+define|#
+directive|define
 name|IPI_PREEMPT
 value|ia64_ipi_preempt
 end_define
@@ -138,6 +145,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|ia64_ipi_ast
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ia64_ipi_hardclock
 decl_stmt|;
 end_decl_stmt
 
