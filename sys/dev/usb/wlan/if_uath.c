@@ -594,13 +594,6 @@ name|UATH_DEV
 argument_list|(
 name|ACCTON
 argument_list|,
-name|SMCWUSBG
-argument_list|)
-block|,
-name|UATH_DEV
-argument_list|(
-name|ACCTON
-argument_list|,
 name|SMCWUSBTG2
 argument_list|)
 block|,
