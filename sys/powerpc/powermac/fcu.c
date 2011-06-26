@@ -2784,7 +2784,7 @@ name|fan
 operator|.
 name|min_rpm
 operator|=
-literal|40
+literal|30
 expr_stmt|;
 comment|/* Percent */
 name|sc
