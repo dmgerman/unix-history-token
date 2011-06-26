@@ -3077,6 +3077,14 @@ comment|/* capable of bg scanning */
 operator||
 name|IEEE80211_C_TXFRAG
 comment|/* handle tx frags */
+ifdef|#
+directive|ifdef
+name|ATH_ENABLE_DFS
+operator||
+name|IEEE80211_C_DFS
+comment|/* Enable DFS radar detection */
+endif|#
+directive|endif
 expr_stmt|;
 comment|/* 	 * Query the hal to figure out h/w crypto support. 	 */
 if|if
