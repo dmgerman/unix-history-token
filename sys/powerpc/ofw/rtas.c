@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -75,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/pcb.h>
 end_include
 
 begin_include
@@ -193,6 +205,19 @@ name|register_t
 name|rtasmsr
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|int
+name|setfault
+parameter_list|(
+name|faultbuf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* defined in locore.S */
+end_comment
 
 begin_comment
 comment|/*  * After the VM is up, allocate RTAS memory and instantiate it  */
@@ -687,6 +712,9 @@ block|{
 name|vm_offset_t
 name|argsptr
 decl_stmt|;
+name|faultbuf
+name|env
+decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;
@@ -808,6 +836,18 @@ name|args
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Get rid of any stale machine checks that have been waiting.  */
+asm|__asm __volatile ("sync; isync");
+if|if
+condition|(
+operator|!
+name|setfault
+argument_list|(
+name|env
+argument_list|)
+condition|)
+block|{
+asm|__asm __volatile ("sync");
 name|result
 operator|=
 name|rtascall
@@ -817,6 +857,24 @@ argument_list|,
 name|rtas_private_data
 argument_list|)
 expr_stmt|;
+asm|__asm __volatile ("sync; isync");
+block|}
+else|else
+block|{
+name|result
+operator|=
+name|RTAS_HW_ERROR
+expr_stmt|;
+block|}
+name|curthread
+operator|->
+name|td_pcb
+operator|->
+name|pcb_onfault
+operator|=
+literal|0
+expr_stmt|;
+asm|__asm __volatile ("sync");
 name|rtas_real_unmap
 argument_list|(
 name|argsptr
