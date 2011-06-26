@@ -6128,6 +6128,7 @@ name|sc_ledon
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* XXX beacons ? */
 block|}
 end_function
 
@@ -7416,6 +7417,13 @@ operator|->
 name|sc_doresetcal
 operator|=
 name|AH_FALSE
+expr_stmt|;
+comment|/* 	 * Beacon timers were cleared here; give ath_newstate() 	 * a hint that the beacon timers should be poked when 	 * things transition to the RUN state. 	 */
+name|sc
+operator|->
+name|sc_beacons
+operator|=
+literal|0
 expr_stmt|;
 comment|/* 	 * Setup the hardware after reset: the key cache 	 * is filled as needed and the receive engine is 	 * set going.  Frame transmit is handled entirely 	 * in the frame output path; there's nothing to do 	 * here except setup the interrupt mask. 	 */
 if|if
@@ -20424,6 +20432,42 @@ argument_list|,
 name|chan
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Reset clears the beacon timers; reset them 		 * here if needed. 		 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_beacons
+condition|)
+block|{
+comment|/* restart beacons */
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_TDMA
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_tdma
+condition|)
+name|ath_tdma_config
+argument_list|(
+name|sc
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
+name|ath_beacon_config
+argument_list|(
+name|sc
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 		 * Re-enable interrupts. 		 */
 name|ath_hal_intrset
 argument_list|(
