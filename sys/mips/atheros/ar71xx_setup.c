@@ -20,24 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cpuregs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<mips/sentry5/s5reg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ddb.h"
 end_include
 
@@ -122,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpuregs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/hwfunc.h>
 end_include
 
@@ -177,6 +165,12 @@ begin_include
 include|#
 directive|include
 file|<mips/atheros/ar91xx_chip.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<mips/sentry5/s5reg.h>
 end_include
 
 begin_define

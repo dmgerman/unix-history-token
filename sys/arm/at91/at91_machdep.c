@@ -275,12 +275,6 @@ directive|include
 file|<arm/at91/at91sam9g20reg.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<arm/at91/at91board.h>
-end_include
-
 begin_define
 define|#
 directive|define
