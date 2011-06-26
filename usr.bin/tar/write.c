@@ -3583,6 +3583,16 @@ name|lst
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|bsdtar
+operator|->
+name|option_no_subdirs
+condition|)
+name|descend
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 		 * Are we about to cross to a new filesystem? 		 */
 if|if
 condition|(
@@ -3632,7 +3642,6 @@ operator|->
 name|option_dont_traverse_mounts
 condition|)
 block|{
-comment|/* User has asked us not to cross mount points. */
 name|descend
 operator|=
 literal|0
@@ -3656,7 +3665,35 @@ argument_list|,
 name|st
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|descend
+condition|)
 continue|continue;
+if|if
+condition|(
+name|bsdtar
+operator|->
+name|option_interactive
+operator|&&
+operator|!
+name|yes
+argument_list|(
+literal|"add '%s'"
+argument_list|,
+name|name
+argument_list|)
+condition|)
+continue|continue;
+name|tree_descend
+argument_list|(
+name|tree
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|archive_entry_free
 argument_list|(
 name|entry
@@ -3879,15 +3916,9 @@ name|name
 argument_list|)
 condition|)
 continue|continue;
-comment|/* Note: if user vetoes, we won't descend. */
 if|if
 condition|(
 name|descend
-operator|&&
-operator|!
-name|bsdtar
-operator|->
-name|option_no_subdirs
 condition|)
 name|tree_descend
 argument_list|(
