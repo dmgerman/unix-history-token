@@ -2968,6 +2968,7 @@ name|minimum_command_size
 operator|=
 literal|6
 expr_stmt|;
+comment|/* 	 * Refcount and block open attempts until we are setup 	 * Can't block 	 */
 operator|(
 name|void
 operator|)
@@ -3346,11 +3347,6 @@ name|DISK_VERSION
 argument_list|)
 expr_stmt|;
 name|cam_periph_lock
-argument_list|(
-name|periph
-argument_list|)
-expr_stmt|;
-name|cam_periph_unhold
 argument_list|(
 name|periph
 argument_list|)
@@ -4176,17 +4172,6 @@ block|}
 block|}
 name|cdregisterexit
 label|:
-comment|/* 	 * Refcount and block open attempts until we are setup 	 * Can't block 	 */
-operator|(
-name|void
-operator|)
-name|cam_periph_hold
-argument_list|(
-name|periph
-argument_list|,
-name|PRIBIO
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
