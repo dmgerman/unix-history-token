@@ -35,6 +35,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DOSDSNOFF
+value|440
+end_define
+
+begin_comment
+comment|/* WinNT/2K/XP Drive Serial Number offset */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DOSPARTOFF
 value|446
 end_define
