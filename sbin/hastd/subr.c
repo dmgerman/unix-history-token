@@ -999,6 +999,7 @@ name|res
 operator|==
 name|NULL
 condition|)
+block|{
 name|capsicum
 operator|=
 operator|(
@@ -1008,6 +1009,25 @@ operator|==
 literal|0
 operator|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|capsicum
+condition|)
+block|{
+name|pjdlog_common
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"Unable to sandbox using capsicum"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 else|else
 name|capsicum
 operator|=
