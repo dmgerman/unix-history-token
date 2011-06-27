@@ -62,6 +62,50 @@ name|USB_GENERIC_NAME
 value|"ugen"
 end_define
 
+begin_define
+define|#
+directive|define
+name|USB_TEMPLATE_SYSCTL
+value|"hw.usb.template"
+end_define
+
+begin_comment
+comment|/* integer type */
+end_comment
+
+begin_comment
+comment|/* Definition of valid template sysctl values */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|USB_TEMP_MSC
+block|,
+comment|/* USB Mass Storage */
+name|USB_TEMP_CDCE
+block|,
+comment|/* USB CDC Ethernet */
+name|USB_TEMP_MTP
+block|,
+comment|/* Message Transfer Protocol */
+name|USB_TEMP_MODEM
+block|,
+comment|/* USB CDC Modem */
+name|USB_TEMP_AUDIO
+block|,
+comment|/* USB Audio */
+name|USB_TEMP_KBD
+block|,
+comment|/* USB Keyboard */
+name|USB_TEMP_MOUSE
+block|,
+comment|/* USB Mouse */
+name|USB_TEMP_MAX
+block|, }
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|usb_read_dir
