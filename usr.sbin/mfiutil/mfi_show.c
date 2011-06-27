@@ -1350,9 +1350,6 @@ name|info
 parameter_list|,
 name|int
 name|state_len
-parameter_list|,
-name|int
-name|location
 parameter_list|)
 block|{
 specifier|const
@@ -1450,67 +1447,6 @@ argument_list|(
 literal|" %s"
 argument_list|,
 name|s
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|location
-condition|)
-return|return;
-if|if
-condition|(
-name|info
-operator|->
-name|encl_device_id
-operator|==
-literal|0xffff
-condition|)
-name|printf
-argument_list|(
-literal|" slot %d"
-argument_list|,
-name|info
-operator|->
-name|slot_number
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|info
-operator|->
-name|encl_device_id
-operator|==
-name|info
-operator|->
-name|ref
-operator|.
-name|v
-operator|.
-name|device_id
-condition|)
-name|printf
-argument_list|(
-literal|" enclosure %d"
-argument_list|,
-name|info
-operator|->
-name|encl_index
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|" enclosure %d, slot %d"
-argument_list|,
-name|info
-operator|->
-name|encl_index
-argument_list|,
-name|info
-operator|->
-name|slot_number
 argument_list|)
 expr_stmt|;
 block|}
@@ -1754,26 +1690,29 @@ name|v
 operator|.
 name|device_id
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"        drive %s "
+argument_list|,
+name|mfi_drive_name
+argument_list|(
+name|NULL
+argument_list|,
+name|device_id
+argument_list|,
+name|MFI_DNAME_DEVICE_ID
+operator||
+name|MFI_DNAME_HONOR_OPTS
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|device_id
-operator|==
+operator|!=
 literal|0xffff
 condition|)
-name|printf
-argument_list|(
-literal|"        drive MISSING\n"
-argument_list|)
-expr_stmt|;
-else|else
 block|{
-name|printf
-argument_list|(
-literal|"        drive %u "
-argument_list|,
-name|device_id
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|mfi_pd_get_info
@@ -1814,8 +1753,6 @@ operator|&
 name|pinfo
 argument_list|,
 operator|-
-literal|1
-argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
@@ -2037,7 +1974,7 @@ name|p
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    %s spare %u "
+literal|"    %s spare %s "
 argument_list|,
 name|sp
 operator|->
@@ -2049,6 +1986,10 @@ literal|"dedicated"
 else|:
 literal|"global"
 argument_list|,
+name|mfi_drive_name
+argument_list|(
+name|NULL
+argument_list|,
 name|sp
 operator|->
 name|ref
@@ -2056,6 +1997,11 @@ operator|.
 name|v
 operator|.
 name|device_id
+argument_list|,
+name|MFI_DNAME_DEVICE_ID
+operator||
+name|MFI_DNAME_HONOR_OPTS
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2097,8 +2043,6 @@ operator|&
 name|pinfo
 argument_list|,
 operator|-
-literal|1
-argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
@@ -2958,14 +2902,56 @@ goto|goto
 name|error
 goto|;
 block|}
+name|printf
+argument_list|(
+literal|"%s "
+argument_list|,
+name|mfi_drive_name
+argument_list|(
+operator|&
+name|info
+argument_list|,
+name|list
+operator|->
+name|addr
+index|[
+name|i
+index|]
+operator|.
+name|device_id
+argument_list|,
+name|MFI_DNAME_DEVICE_ID
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|print_pd
 argument_list|(
 operator|&
 name|info
 argument_list|,
 name|state_len
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" %s"
 argument_list|,
-literal|1
+name|mfi_drive_name
+argument_list|(
+operator|&
+name|info
+argument_list|,
+name|list
+operator|->
+name|addr
+index|[
+name|i
+index|]
+operator|.
+name|device_id
+argument_list|,
+name|MFI_DNAME_ES
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -4020,9 +4006,18 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"drive %u "
+literal|"drive %s "
+argument_list|,
+name|mfi_drive_name
+argument_list|(
+name|NULL
 argument_list|,
 name|device_id
+argument_list|,
+name|MFI_DNAME_DEVICE_ID
+operator||
+name|MFI_DNAME_HONOR_OPTS
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mfi_display_progress
@@ -4055,9 +4050,18 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"drive %u "
+literal|"drive %s "
+argument_list|,
+name|mfi_drive_name
+argument_list|(
+name|NULL
 argument_list|,
 name|device_id
+argument_list|,
+name|MFI_DNAME_DEVICE_ID
+operator||
+name|MFI_DNAME_HONOR_OPTS
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mfi_display_progress
@@ -4090,9 +4094,18 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"drive %u "
+literal|"drive %s "
+argument_list|,
+name|mfi_drive_name
+argument_list|(
+name|NULL
 argument_list|,
 name|device_id
+argument_list|,
+name|MFI_DNAME_DEVICE_ID
+operator||
+name|MFI_DNAME_HONOR_OPTS
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mfi_display_progress
