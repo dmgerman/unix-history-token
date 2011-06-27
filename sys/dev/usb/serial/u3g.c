@@ -5033,24 +5033,19 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Ejecting 0x%04x:0x%04x using method %ld\n"
+literal|"Ejecting %s %s using method %ld\n"
 argument_list|,
-name|uaa
-operator|->
-name|info
-operator|.
-name|idVendor
-argument_list|,
-name|uaa
-operator|->
-name|info
-operator|.
-name|idProduct
-argument_list|,
-name|USB_GET_DRIVER_INFO
+name|usb_get_manufacturer
 argument_list|(
-name|uaa
+name|udev
 argument_list|)
+argument_list|,
+name|usb_get_product
+argument_list|(
+name|udev
+argument_list|)
+argument_list|,
+name|method
 argument_list|)
 expr_stmt|;
 block|}
