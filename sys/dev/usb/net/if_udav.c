@@ -967,8 +967,7 @@ end_define
 begin_decl_stmt
 specifier|static
 specifier|const
-name|struct
-name|usb_device_id
+name|STRUCT_USB_HOST_ID
 name|udav_devs
 index|[]
 init|=

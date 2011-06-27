@@ -837,6 +837,34 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Use these macro when defining USB device ID arrays if you want to  * have your driver module automatically loaded in host, device or  * both modes respectivly:  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STRUCT_USB_HOST_ID
+define|\
+value|struct usb_device_id __section("usb_host_id")
+end_define
+
+begin_define
+define|#
+directive|define
+name|STRUCT_USB_DEVICE_ID
+define|\
+value|struct usb_device_id __section("usb_device_id")
+end_define
+
+begin_define
+define|#
+directive|define
+name|STRUCT_USB_DUAL_ID
+define|\
+value|struct usb_device_id __section("usb_dual_id")
+end_define
+
+begin_comment
 comment|/*  * The following structure is used when looking up an USB driver for  * an USB device. It is inspired by the Linux structure called  * "usb_device_id".  */
 end_comment
 
@@ -933,6 +961,11 @@ name|match_flag_int_protocol
 range|:
 literal|1
 decl_stmt|;
+name|uint8_t
+name|match_flag_unused
+range|:
+literal|6
+decl_stmt|;
 if|#
 directive|if
 name|USB_HAVE_COMPAT_LINUX
@@ -983,8 +1016,39 @@ value|0x0200
 endif|#
 directive|endif
 block|}
+name|__aligned
+argument_list|(
+literal|32
+argument_list|)
 struct|;
 end_struct
+
+begin_comment
+comment|/* check that the size of the structure above is correct */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|usb_device_id_assert
+index|[
+operator|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|usb_device_id
+argument_list|)
+operator|==
+literal|32
+operator|)
+condition|?
+literal|1
+else|:
+operator|-
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
