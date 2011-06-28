@@ -2283,6 +2283,11 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* record data transfer */
+name|m_addr_changed
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEV_ENC

@@ -1205,6 +1205,11 @@ block|ifp->if_mtu = sc->gif_ro.ro_rt->rt_ifp->if_mtu 			- sizeof(struct ip);
 endif|#
 directive|endif
 block|}
+name|m_addr_changed
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|ip_output

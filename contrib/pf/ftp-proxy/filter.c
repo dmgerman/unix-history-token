@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: filter.c,v 1.5 2006/12/01 07:31:21 camield Exp $ */
+comment|/*	$OpenBSD: filter.c,v 1.8 2008/06/13 07:25:26 claudio Exp $ */
 end_comment
 
 begin_comment
@@ -242,9 +242,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|qname
+decl_stmt|,
+modifier|*
+name|tagname
 decl_stmt|;
 end_decl_stmt
 
@@ -992,9 +996,15 @@ begin_function
 name|void
 name|init_filter
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|opt_qname
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|opt_tagname
 parameter_list|,
 name|int
 name|opt_verbose
@@ -1007,6 +1017,10 @@ decl_stmt|;
 name|qname
 operator|=
 name|opt_qname
+expr_stmt|;
+name|tagname
+operator|=
+name|opt_tagname
 expr_stmt|;
 if|if
 condition|(
@@ -1049,7 +1063,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"/dev/pf"
+literal|"open /dev/pf"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1821,7 +1835,7 @@ block|{
 case|case
 name|PF_RULESET_FILTER
 case|:
-comment|/* 		 * pass quick [log] inet[6] proto tcp \ 		 *     from $src to $dst port = $d_port flags S/SA keep state 		 *     (max 1) [queue qname] 		 */
+comment|/* 		 * pass [quick] [log] inet[6] proto tcp \ 		 *     from $src to $dst port = $d_port flags S/SA keep state 		 *     (max 1) [queue qname] [tag tagname] 		 */
 name|pfr
 operator|.
 name|rule
@@ -1906,6 +1920,40 @@ operator|.
 name|qname
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tagname
+operator|!=
+name|NULL
+condition|)
+block|{
+name|pfr
+operator|.
+name|rule
+operator|.
+name|quick
+operator|=
+literal|0
+expr_stmt|;
+name|strlcpy
+argument_list|(
+name|pfr
+operator|.
+name|rule
+operator|.
+name|tagname
+argument_list|,
+name|tagname
+argument_list|,
+sizeof|sizeof
+name|pfr
+operator|.
+name|rule
+operator|.
+name|tagname
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|PF_RULESET_NAT

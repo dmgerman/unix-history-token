@@ -3035,8 +3035,47 @@ operator|)
 return|;
 end_return
 
+begin_function_decl
+unit|}  extern
+name|void
+function_decl|(
+modifier|*
+name|m_addr_chg_pf_p
+function_decl|)
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|m_addr_changed
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|)
+block|{
+if|if
+condition|(
+name|m_addr_chg_pf_p
+condition|)
+name|m_addr_chg_pf_p
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
-unit|}
 comment|/*  * mbuf, cluster, and external object allocation macros (for compatibility  * purposes).  */
 end_comment
 
@@ -3305,7 +3344,7 @@ value|m_copym((m), (o), (l), M_DONTWAIT)
 end_define
 
 begin_decl_stmt
-unit|extern
+specifier|extern
 name|int
 name|max_datalen
 decl_stmt|;

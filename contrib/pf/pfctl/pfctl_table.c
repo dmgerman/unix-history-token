@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pfctl_table.c,v 1.66 2007/03/01 17:20:54 deraadt Exp $ */
+comment|/*	$OpenBSD: pfctl_table.c,v 1.67 2008/06/10 20:55:02 mcbride Exp $ */
 end_comment
 
 begin_comment
@@ -1647,6 +1647,22 @@ argument|p
 argument_list|,
 argument|&b
 argument_list|)
+block|{
+operator|(
+operator|(
+expr|struct
+name|pfr_astats
+operator|*
+operator|)
+name|p
+operator|)
+operator|->
+name|pfras_a
+operator|.
+name|pfra_fback
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|time
@@ -1694,6 +1710,7 @@ argument_list|,
 literal|"duplicate buffer"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|opts
@@ -2267,7 +2284,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%c%c%c%c%c%c\t%s"
+literal|"%c%c%c%c%c%c%c\t%s"
 argument_list|,
 operator|(
 name|ta
@@ -2338,6 +2355,18 @@ name|PFR_TFLAG_REFDANCHOR
 operator|)
 condition|?
 literal|'h'
+else|:
+literal|'-'
+argument_list|,
+operator|(
+name|ta
+operator|->
+name|pfrt_flags
+operator|&
+name|PFR_TFLAG_COUNTERS
+operator|)
+condition|?
+literal|'C'
 else|:
 literal|'-'
 argument_list|,
@@ -2719,6 +2748,8 @@ block|,
 literal|' '
 block|,
 literal|'Y'
+block|,
+literal|' '
 block|}
 decl_stmt|;
 name|unsigned
@@ -3152,6 +3183,17 @@ name|time
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|as
+operator|->
+name|pfras_a
+operator|.
+name|pfra_fback
+operator|==
+name|PFR_FB_NOCOUNT
+condition|)
+return|return;
 for|for
 control|(
 name|dir

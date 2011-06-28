@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pfctl_optimize.c,v 1.13 2006/10/31 14:17:45 mcbride Exp $ */
+comment|/*	$OpenBSD: pfctl_optimize.c,v 1.17 2008/05/06 03:45:21 mpf Exp $ */
 end_comment
 
 begin_comment
@@ -729,7 +729,14 @@ argument_list|)
 block|,
 name|PF_RULE_FIELD
 argument_list|(
-name|states
+name|states_cur
+argument_list|,
+name|DC
+argument_list|)
+block|,
+name|PF_RULE_FIELD
+argument_list|(
+name|states_tot
 argument_list|,
 name|DC
 argument_list|)
@@ -822,6 +829,13 @@ block|,
 name|PF_RULE_FIELD
 argument_list|(
 name|min_ttl
+argument_list|,
+name|NEVER
+argument_list|)
+block|,
+name|PF_RULE_FIELD
+argument_list|(
+name|set_tos
 argument_list|,
 name|NEVER
 argument_list|)
@@ -2021,7 +2035,7 @@ endif|#
 directive|endif
 comment|/* OPT_DEBUG */
 comment|/* We have a few optimization passes: 	 *   1) remove duplicate rules or rules that are a subset of other 	 *      rules 	 *   2) combine otherwise identical rules with different IP addresses 	 *      into a single rule and put the addresses in a table. 	 *   3) re-order the rules to improve kernel skip steps 	 *   4) re-order the 'quick' rules based on feedback from the 	 *      active ruleset statistics 	 * 	 * XXX combine_rules() doesn't combine v4 and v6 rules.  would just 	 *     have to keep af in the table container, make af 'COMBINE' and 	 *     twiddle the af on the merged rule 	 * XXX maybe add a weighting to the metric on skipsteps when doing 	 *     reordering.  sometimes two sequential tables will be better 	 *     that four consecutive interfaces. 	 * XXX need to adjust the skipstep count of everything after PROTO, 	 *     since they aren't actually checked on a proto mismatch in 	 *     pf_test_{tcp, udp, icmp}() 	 * XXX should i treat proto=0, af=0 or dir=0 special in skepstep 	 *     calculation since they are a DC? 	 * XXX keep last skiplist of last superblock to influence this 	 *     superblock.  '5 inet6 log' should make '3 inet6' come before '4 	 *     inet' in the next superblock. 	 * XXX would be useful to add tables for ports 	 * XXX we can also re-order some mutually exclusive superblocks to 	 *     try merging superblocks before any of these optimization passes. 	 *     for instance a single 'log in' rule in the middle of non-logging 	 *     out rules. 	 */
-comment|/* shortcut.  there will be alot of 1-rule superblocks */
+comment|/* shortcut.  there will be a lot of 1-rule superblocks */
 if|if
 condition|(
 operator|!
@@ -7495,7 +7509,10 @@ literal|1
 argument_list|,
 name|pf
 operator|->
-name|anchor
+name|astack
+index|[
+literal|0
+index|]
 operator|->
 name|name
 argument_list|,
@@ -7505,7 +7522,10 @@ name|pt_buf
 argument_list|,
 name|pf
 operator|->
-name|anchor
+name|astack
+index|[
+literal|0
+index|]
 operator|->
 name|ruleset
 operator|.
@@ -7515,11 +7535,20 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"failed to create table %s"
+literal|"failed to create table %s in %s"
 argument_list|,
 name|tbl
 operator|->
 name|pt_name
+argument_list|,
+name|pf
+operator|->
+name|astack
+index|[
+literal|0
+index|]
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 return|return
@@ -8071,7 +8100,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * Have to handle interface groups seperately.  Consider the following 	 * rules: 	 *	block on EXTIFS to any port 22 	 *	pass  on em0 to any port 22 	 * (where EXTIFS is an arbitrary interface group) 	 * The optimizer may decide to re-order the pass rule in front of the 	 * block rule.  But what if EXTIFS includes em0???  Such a reordering 	 * would change the meaning of the ruleset. 	 * We can't just lookup the EXTIFS group and check if em0 is a member 	 * because the user is allowed to add interfaces to a group during 	 * runtime. 	 * Ergo interface groups become a defacto superblock break :-( 	 */
+comment|/* 	 * Have to handle interface groups separately.  Consider the following 	 * rules: 	 *	block on EXTIFS to any port 22 	 *	pass  on em0 to any port 22 	 * (where EXTIFS is an arbitrary interface group) 	 * The optimizer may decide to re-order the pass rule in front of the 	 * block rule.  But what if EXTIFS includes em0???  Such a reordering 	 * would change the meaning of the ruleset. 	 * We can't just lookup the EXTIFS group and check if em0 is a member 	 * because the user is allowed to add interfaces to a group during 	 * runtime. 	 * Ergo interface groups become a defacto superblock break :-( 	 */
 if|if
 condition|(
 name|interface_group

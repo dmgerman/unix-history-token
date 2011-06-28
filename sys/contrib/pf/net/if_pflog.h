@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
-comment|/* $OpenBSD: if_pflog.h,v 1.14 2006/10/25 11:27:01 henning Exp $ */
+comment|/* $OpenBSD: if_pflog.h,v 1.13 2006/10/23 12:46:09 henning Exp $ */
 end_comment
 
 begin_comment
@@ -29,12 +25,6 @@ directive|define
 name|PFLOGIFS_MAX
 value|16
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_struct
 struct|struct
@@ -70,15 +60,6 @@ expr_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
 
 begin_define
 define|#
@@ -240,51 +221,17 @@ name|pf_pdesc
 struct_decl|;
 end_struct_decl
 
-begin_typedef
-typedef|typedef
-name|int
-name|pflog_packet_t
-parameter_list|(
-name|struct
-name|pfi_kif
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|sa_family_t
-parameter_list|,
-name|u_int8_t
-parameter_list|,
-name|u_int8_t
-parameter_list|,
-name|struct
-name|pf_rule
-modifier|*
-parameter_list|,
-name|struct
-name|pf_rule
-modifier|*
-parameter_list|,
-name|struct
-name|pf_ruleset
-modifier|*
-parameter_list|,
-name|struct
-name|pf_pdesc
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
-begin_decl_stmt
-specifier|extern
-name|pflog_packet_t
-modifier|*
-name|pflog_packet_ptr
-decl_stmt|;
-end_decl_stmt
+begin_endif
+unit|typedef int pflog_packet_t(struct pfi_kif *, struct mbuf *, sa_family_t,     u_int8_t, u_int8_t, struct pf_rule *, struct pf_rule *,     struct pf_ruleset *, struct pf_pdesc *); extern pflog_packet_t *pflog_packet_ptr;
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -311,7 +258,7 @@ name|g
 parameter_list|,
 name|h
 parameter_list|)
-value|do {	\ 	if (pflog_packet_ptr != NULL)		\ 	pflog_packet_ptr(i,a,b,c,d,e,f,g,h);	\ } while (0)
+value|do {		\ 	if (pflog_packet_ptr != NULL)			\ 		pflog_packet_ptr(i,a,b,c,d,e,f,g,h);    \ } while (0)
 end_define
 
 begin_else
@@ -405,10 +352,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* __FreeBSD__ */
-end_comment
 
 begin_endif
 endif|#

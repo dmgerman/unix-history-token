@@ -46,6 +46,20 @@ name|PF_TAG_TRANSLATE_LOCALHOST
 value|0x04
 end_define
 
+begin_define
+define|#
+directive|define
+name|PF_PACKET_LOOPED
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_FASTFWD_OURS_PRESENT
+value|0x10
+end_define
+
 begin_struct
 struct|struct
 name|pf_mtag
@@ -55,14 +69,19 @@ modifier|*
 name|hdr
 decl_stmt|;
 comment|/* saved hdr pos in mbuf, for ECN */
-name|u_int
-name|rtableid
+name|void
+modifier|*
+name|statekey
 decl_stmt|;
-comment|/* alternate routing table id */
+comment|/* pf stackside statekey */
 name|u_int32_t
 name|qid
 decl_stmt|;
 comment|/* queue id */
+name|u_int
+name|rtableid
+decl_stmt|;
+comment|/* alternate routing table id */
 name|u_int16_t
 name|tag
 decl_stmt|;
@@ -73,10 +92,6 @@ decl_stmt|;
 name|u_int8_t
 name|routed
 decl_stmt|;
-name|sa_family_t
-name|af
-decl_stmt|;
-comment|/* for ECN */
 block|}
 struct|;
 end_struct

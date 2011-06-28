@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pfctl.h,v 1.40 2007/02/09 11:25:27 henning Exp $ */
+comment|/*	$OpenBSD: pfctl.h,v 1.42 2007/12/05 12:01:47 chl Exp $ */
 end_comment
 
 begin_comment
@@ -91,15 +91,6 @@ parameter_list|)
 define|\
 value|for ((var) = pfr_buf_next((buf), NULL);		\ 	    (var) != NULL;				\ 	    (var) = pfr_buf_next((buf), (var)))
 end_define
-
-begin_function_decl
-name|void
-name|pfr_set_fd
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|int
@@ -353,28 +344,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pfr_clr_astats
-parameter_list|(
-name|struct
-name|pfr_table
-modifier|*
-parameter_list|,
-name|struct
-name|pfr_addr
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|pfr_tst_addrs
 parameter_list|(
 name|struct
@@ -386,31 +355,6 @@ name|pfr_addr
 modifier|*
 parameter_list|,
 name|int
-parameter_list|,
-name|int
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|pfr_set_tflags
-parameter_list|(
-name|struct
-name|pfr_table
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-modifier|*
 parameter_list|,
 name|int
 modifier|*
@@ -712,6 +656,23 @@ name|altqsupport
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|dummynetsupport
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|HTONL
+parameter_list|(
+name|x
+parameter_list|)
+value|(x) = htonl((__uint32_t)(x))
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -852,8 +813,11 @@ name|void
 name|print_host
 parameter_list|(
 name|struct
-name|pf_state_host
+name|pf_addr
 modifier|*
+parameter_list|,
+name|u_int16_t
+name|p
 parameter_list|,
 name|sa_family_t
 parameter_list|,
@@ -867,7 +831,7 @@ name|void
 name|print_seq
 parameter_list|(
 name|struct
-name|pf_state_peer
+name|pfsync_state_peer
 modifier|*
 parameter_list|)
 function_decl|;
@@ -878,7 +842,7 @@ name|void
 name|print_state
 parameter_list|(
 name|struct
-name|pf_state
+name|pfsync_state
 modifier|*
 parameter_list|,
 name|int
