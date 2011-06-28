@@ -10904,6 +10904,7 @@ name|sc
 operator|->
 name|sc_mac_rxcfg
 operator|&
+operator|~
 name|GEM_MAC_RX_HASH_FILTER
 expr_stmt|;
 name|GEM_BANK1_WRITE_4
