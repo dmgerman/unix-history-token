@@ -81,6 +81,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR9287_RDEXT_DEFAULT
+value|0x1F
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR9287_EEP_START_LOC
 value|128
 end_define
