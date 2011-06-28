@@ -177,12 +177,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_busdma.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb/usb_device.h>
 end_include
 
