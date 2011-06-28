@@ -4890,7 +4890,7 @@ name|rt0
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* XXX 		 * "flow-table" only support IPv4 at the moment. 		 */
+comment|/* XXX 		 * "flow-table" only support IPv4 at the moment. 		 * XXX-BZ as of r205066 it would support IPv6. 		 */
 ifdef|#
 directive|ifdef
 name|INET

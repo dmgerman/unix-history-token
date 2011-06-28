@@ -414,7 +414,14 @@ name|AR_EEP_PWR_TABLE_OFFSET
 block|,
 comment|/* int8_t* */
 name|AR_EEP_PWDCLKIND
+block|,
 comment|/* uint8_t* */
+name|AR_EEP_TEMPSENSE_SLOPE
+block|,
+comment|/* int8_t* */
+name|AR_EEP_TEMPSENSE_SLOPE_PAL_ON
+block|,
+comment|/* int8_t* */
 block|}
 enum|;
 end_enum

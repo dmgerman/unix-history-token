@@ -524,6 +524,27 @@ name|ah_setCoverageClass
 operator|=
 name|ar5212SetCoverageClass
 block|,
+operator|.
+name|ah_setQuiet
+operator|=
+name|ar5212SetQuiet
+block|,
+comment|/* DFS Functions */
+operator|.
+name|ah_enableDfs
+operator|=
+name|ar5212EnableDfs
+block|,
+operator|.
+name|ah_getDfsThresh
+operator|=
+name|ar5212GetDfsThresh
+block|,
+operator|.
+name|ah_procRadarEvent
+operator|=
+name|ar5212ProcessRadarEvent
+block|,
 comment|/* Key Cache Functions */
 operator|.
 name|ah_getKeyCacheSize
@@ -991,6 +1012,16 @@ name|aniparams
 argument_list|,
 name|AH_TRUE
 argument_list|)
+expr_stmt|;
+comment|/* Set overridable ANI methods */
+name|AH5212
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_aniControl
+operator|=
+name|ar5212AniControl
 expr_stmt|;
 block|}
 end_function

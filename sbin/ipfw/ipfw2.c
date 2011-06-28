@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -5453,6 +5459,14 @@ break|break;
 case|case
 name|O_NAT
 case|:
+if|if
+condition|(
+name|cmd
+operator|->
+name|arg1
+operator|!=
+literal|0
+condition|)
 name|PRINT_UINT_ARG
 argument_list|(
 literal|"nat "
@@ -5460,6 +5474,12 @@ argument_list|,
 name|cmd
 operator|->
 name|arg1
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"nat global"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -14329,6 +14349,31 @@ argument_list|(
 name|ipfw_insn_nat
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|_substrcmp
+argument_list|(
+operator|*
+name|av
+argument_list|,
+literal|"global"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|action
+operator|->
+name|arg1
+operator|=
+literal|0
+expr_stmt|;
+name|av
+operator|++
+expr_stmt|;
+break|break;
+block|}
+else|else
 goto|goto
 name|chkarg
 goto|;
@@ -14829,6 +14874,28 @@ argument_list|(
 literal|"missing fib number"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|_substrcmp
+argument_list|(
+operator|*
+name|av
+argument_list|,
+literal|"tablearg"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|action
+operator|->
+name|arg1
+operator|=
+name|IP_FW_TABLEARG
+expr_stmt|;
+block|}
+else|else
+block|{
 name|action
 operator|->
 name|arg1
@@ -14886,6 +14953,7 @@ argument_list|,
 literal|"fib too large.\n"
 argument_list|)
 expr_stmt|;
+block|}
 name|av
 operator|++
 expr_stmt|;
@@ -17884,12 +17952,14 @@ operator|*
 name|av
 argument_list|)
 expr_stmt|;
+name|__PAST_END
+argument_list|(
 name|c
 operator|->
 name|d
-index|[
+argument_list|,
 literal|1
-index|]
+argument_list|)
 operator|=
 name|j
 expr_stmt|;

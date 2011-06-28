@@ -304,6 +304,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|IN_TRUNCATED
+value|0x0800
+end_define
+
+begin_comment
+comment|/* Journaled truncation pending. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|i_devvp
 value|i_ump->um_devvp
 end_define

@@ -1978,6 +1978,52 @@ name|void
 name|ExitScope
 parameter_list|()
 function_decl|;
+comment|/// \brief RAII object used to modify the scope flags for the current scope.
+name|class
+name|ParseScopeFlags
+block|{
+name|Scope
+modifier|*
+name|CurScope
+decl_stmt|;
+name|unsigned
+name|OldFlags
+decl_stmt|;
+name|ParseScopeFlags
+argument_list|(
+specifier|const
+name|ParseScopeFlags
+operator|&
+argument_list|)
+expr_stmt|;
+comment|// do not implement
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|ParseScopeFlags
+operator|&
+operator|)
+decl_stmt|;
+comment|// do not implement
+name|public
+label|:
+name|ParseScopeFlags
+argument_list|(
+argument|Parser *Self
+argument_list|,
+argument|unsigned ScopeFlags
+argument_list|,
+argument|bool ManageFlags = true
+argument_list|)
+empty_stmt|;
+operator|~
+name|ParseScopeFlags
+argument_list|()
+expr_stmt|;
+block|}
+empty_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Diagnostic Emission and Error recovery.
 name|public
@@ -2161,8 +2207,8 @@ comment|/// [class.mem]p1: "... the class is regarded as complete within
 comment|/// - function bodies
 comment|/// - default arguments
 comment|/// - exception-specifications (TODO: C++0x)
-comment|/// - and brace-or-equal-initializers (TODO: C++0x)
-comment|/// for non-static data members (including such things in nested classes)."
+comment|/// - and brace-or-equal-initializers for non-static data members
+comment|/// (including such things in nested classes)."
 comment|/// LateParsedDeclarations build the tree of those elements so they can
 comment|/// be parsed after parsing the top-level class.
 name|class
@@ -2178,6 +2224,11 @@ expr_stmt|;
 name|virtual
 name|void
 name|ParseLexedMethodDeclarations
+parameter_list|()
+function_decl|;
+name|virtual
+name|void
+name|ParseLexedMemberInitializers
 parameter_list|()
 function_decl|;
 name|virtual
@@ -2216,6 +2267,11 @@ block|;
 name|virtual
 name|void
 name|ParseLexedMethodDeclarations
+argument_list|()
+block|;
+name|virtual
+name|void
+name|ParseLexedMemberInitializers
 argument_list|()
 block|;
 name|virtual
@@ -2410,6 +2466,56 @@ block|,
 literal|8
 operator|>
 name|DefaultArgs
+block|;   }
+decl_stmt|;
+comment|/// LateParsedMemberInitializer - An initializer for a non-static class data
+comment|/// member whose parsing must to be delayed until the class is completely
+comment|/// defined (C++11 [class.mem]p2).
+name|struct
+name|LateParsedMemberInitializer
+range|:
+name|public
+name|LateParsedDeclaration
+block|{
+name|LateParsedMemberInitializer
+argument_list|(
+name|Parser
+operator|*
+name|P
+argument_list|,
+name|Decl
+operator|*
+name|FD
+argument_list|)
+operator|:
+name|Self
+argument_list|(
+name|P
+argument_list|)
+block|,
+name|Field
+argument_list|(
+argument|FD
+argument_list|)
+block|{ }
+name|virtual
+name|void
+name|ParseLexedMemberInitializers
+argument_list|()
+block|;
+name|Parser
+operator|*
+name|Self
+block|;
+comment|/// Field - The field declaration.
+name|Decl
+operator|*
+name|Field
+block|;
+comment|/// CachedTokens - The sequence of tokens that comprises the initializer,
+comment|/// including any leading '='.
+name|CachedTokens
+name|Toks
 block|;   }
 decl_stmt|;
 comment|/// LateParsedDeclarationsContainer - During parsing of a top (non-nested)
@@ -3244,6 +3350,16 @@ argument_list|,
 argument|const ParsedTemplateInfo&TemplateInfo
 argument_list|,
 argument|const VirtSpecifiers& VS
+argument_list|,
+argument|ExprResult& Init
+argument_list|)
+block|;
+name|void
+name|ParseCXXNonStaticMemberInitializer
+argument_list|(
+name|Decl
+operator|*
+name|VarD
 argument_list|)
 block|;
 name|void
@@ -3276,6 +3392,22 @@ argument_list|(
 name|LexedMethod
 operator|&
 name|LM
+argument_list|)
+block|;
+name|void
+name|ParseLexedMemberInitializers
+argument_list|(
+name|ParsingClass
+operator|&
+name|Class
+argument_list|)
+block|;
+name|void
+name|ParseLexedMemberInitializer
+argument_list|(
+name|LateParsedMemberInitializer
+operator|&
+name|MI
 argument_list|)
 block|;
 name|bool
@@ -3359,7 +3491,6 @@ block|;
 name|bool
 name|isDeclarationAfterDeclarator
 argument_list|()
-specifier|const
 block|;
 name|bool
 name|isStartOfFunctionDefinition
@@ -4563,6 +4694,39 @@ name|SourceLocation
 name|AsmLoc
 parameter_list|)
 function_decl|;
+name|bool
+name|ParseMicrosoftIfExistsCondition
+parameter_list|(
+name|bool
+modifier|&
+name|Result
+parameter_list|)
+function_decl|;
+name|void
+name|ParseMicrosoftIfExistsStatement
+parameter_list|(
+name|StmtVector
+modifier|&
+name|Stmts
+parameter_list|)
+function_decl|;
+name|void
+name|ParseMicrosoftIfExistsExternalDeclaration
+parameter_list|()
+function_decl|;
+name|void
+name|ParseMicrosoftIfExistsClassDeclaration
+argument_list|(
+name|DeclSpec
+operator|::
+name|TST
+name|TagType
+argument_list|,
+name|AccessSpecifier
+operator|&
+name|CurAS
+argument_list|)
+decl_stmt|;
 name|bool
 name|ParseAsmOperandsOpt
 argument_list|(
@@ -5908,6 +6072,14 @@ modifier|&
 name|DS
 parameter_list|)
 function_decl|;
+name|void
+name|ParseUnderlyingTypeSpecifier
+parameter_list|(
+name|DeclSpec
+modifier|&
+name|DS
+parameter_list|)
+function_decl|;
 name|ExprResult
 name|ParseCXX0XAlignArgument
 parameter_list|(
@@ -6240,6 +6412,58 @@ name|SourceLocation
 argument_list|()
 parameter_list|)
 function_decl|;
+name|void
+name|ParseInnerNamespace
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|SourceLocation
+operator|>
+operator|&
+name|IdentLoc
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|IdentifierInfo
+operator|*
+operator|>
+operator|&
+name|Ident
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|SourceLocation
+operator|>
+operator|&
+name|NamespaceLoc
+argument_list|,
+name|unsigned
+name|int
+name|index
+argument_list|,
+name|SourceLocation
+operator|&
+name|InlineLoc
+argument_list|,
+name|SourceLocation
+operator|&
+name|LBrace
+argument_list|,
+name|ParsedAttributes
+operator|&
+name|attrs
+argument_list|,
+name|SourceLocation
+operator|&
+name|RBraceLoc
+argument_list|)
+decl_stmt|;
 name|Decl
 modifier|*
 name|ParseLinkage
@@ -6405,6 +6629,17 @@ parameter_list|,
 name|Decl
 modifier|*
 name|TagDecl
+parameter_list|)
+function_decl|;
+name|ExprResult
+name|ParseCXXMemberInitializer
+parameter_list|(
+name|bool
+name|IsFunction
+parameter_list|,
+name|SourceLocation
+modifier|&
+name|EqualLoc
 parameter_list|)
 function_decl|;
 name|void

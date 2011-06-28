@@ -3110,25 +3110,12 @@ name|NULL
 condition|)
 block|{
 comment|/* should never occur */
-if|if
-condition|(
-name|last_log
-operator|!=
-name|time_uptime
-condition|)
-block|{
-name|last_log
-operator|=
-name|time_uptime
-expr_stmt|;
-name|printf
+name|DEB
 argument_list|(
+argument|if (last_log != time_uptime) { 			last_log = time_uptime; 			printf(
 literal|"ipfw: %s: entry already present, done\n"
-argument_list|,
-name|__func__
+argument|, 			    __func__); 		}
 argument_list|)
-expr_stmt|;
-block|}
 name|IPFW_DYN_UNLOCK
 argument_list|()
 expr_stmt|;

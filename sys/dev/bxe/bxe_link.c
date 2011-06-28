@@ -5545,9 +5545,12 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-literal|1
+name|BXE_VERBOSE_PHY
 argument_list|,
-literal|"params->speed_cap_mask = 0x%x, control2 = 0x%x\n"
+literal|"%s(): params->speed_cap_mask = 0x%x, "
+literal|"control2 = 0x%x\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|,
 name|params
 operator|->
@@ -5596,9 +5599,11 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BXE_INFO
+name|BXE_VERBOSE_PHY
 argument_list|,
-literal|"XGXS\n"
+literal|"%s(): XGXS\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|)
 expr_stmt|;
 name|CL45_WR_OVER_CL22
@@ -7824,9 +7829,11 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BXE_INFO
+name|BXE_VERBOSE_PHY
 argument_list|,
-literal|"flow_ctrl 0x%x\n"
+literal|"%s(): flow_ctrl 0x%x\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|,
 name|vars
 operator|->
@@ -7869,9 +7876,11 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BXE_INFO
+name|BXE_VERBOSE_PHY
 argument_list|,
-literal|"bxe_check_fallback_to_cl37\n"
+literal|"%s(): IEEE 802.3 Clause 37 Fallback\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|)
 expr_stmt|;
 name|CL45_RD_OVER_CL22
@@ -7913,7 +7922,7 @@ name|sc
 argument_list|,
 name|BXE_VERBOSE_PHY
 argument_list|,
-literal|"Signal is not detected. Restoring CL73."
+literal|"No signal detected. Restoring CL73."
 literal|"rx_status(0x80b0) = 0x%x\n"
 argument_list|,
 name|rx_status
@@ -8078,7 +8087,10 @@ name|sc
 argument_list|,
 name|BXE_INFO
 argument_list|,
-literal|"Disabling CL73, and restarting CL37 autoneg\n"
+literal|"%s(): Disabling CL73 and restarting CL37 "
+literal|"autoneg\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|)
 expr_stmt|;
 block|}
@@ -15492,9 +15504,11 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BXE_INFO
+name|BXE_VERBOSE_PHY
 argument_list|,
-literal|"not SGMII, no AN\n"
+literal|"%s(): Not SGMII, no AN\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|)
 expr_stmt|;
 comment|/* Disable autoneg. */
@@ -23974,32 +23988,6 @@ operator|->
 name|ext_phy_config
 argument_list|)
 expr_stmt|;
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BXE_INFO
-argument_list|,
-literal|"bxe_set_led: port %x, mode %d\n"
-argument_list|,
-name|port
-argument_list|,
-name|mode
-argument_list|)
-expr_stmt|;
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BXE_VERBOSE_PHY
-argument_list|,
-literal|"speed 0x%x, hw_led_mode 0x%x\n"
-argument_list|,
-name|speed
-argument_list|,
-name|hw_led_mode
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|mode
@@ -24261,7 +24249,9 @@ name|sc
 argument_list|,
 name|BXE_VERBOSE_PHY
 argument_list|,
-literal|"bxe_set_led: Invalid led mode %d\n"
+literal|"%s(): Invalid led mode (%d)!\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|,
 name|mode
 argument_list|)
@@ -25493,7 +25483,9 @@ name|sc
 argument_list|,
 name|BXE_INFO
 argument_list|,
-literal|"Resetting the link of port %d\n"
+literal|"%s(): Resetting port %d link.\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|,
 name|port
 argument_list|)

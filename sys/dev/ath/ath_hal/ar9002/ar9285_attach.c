@@ -495,7 +495,11 @@ operator|->
 name|ah_ani_function
 operator|&=
 operator|~
+operator|(
+literal|1
+operator|<<
 name|HAL_ANI_NOISE_IMMUNITY_LEVEL
+operator|)
 expr_stmt|;
 name|ar5416AniAttach
 argument_list|(
@@ -2015,6 +2019,12 @@ comment|/* 802.11n max */
 name|pCap
 operator|->
 name|halExtChanDfsSupport
+operator|=
+name|AH_TRUE
+expr_stmt|;
+name|pCap
+operator|->
+name|halUseCombinedRadarRssi
 operator|=
 name|AH_TRUE
 expr_stmt|;

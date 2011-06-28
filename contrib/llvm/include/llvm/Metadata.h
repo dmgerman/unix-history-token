@@ -129,7 +129,7 @@ expr_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// MDString - a single uniqued string.
 comment|/// These are used to efficiently contain a byte sequence for metadata.
-comment|/// MDString is always unnamd.
+comment|/// MDString is always unnamed.
 name|class
 name|MDString
 range|:

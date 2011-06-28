@@ -319,8 +319,8 @@ index|[
 name|VM_MAX_NAMELEN
 index|]
 decl_stmt|;
-comment|/* 	 * Mask of active vcpus. 	 * An active vcpu is one that has been started implicitly (BSP) or 	 * explicitly (AP) by sending it a startup ipi. 	 */
-name|cpumask_t
+comment|/* 	 * Set of active vcpus. 	 * An active vcpu is one that has been started implicitly (BSP) or 	 * explicitly (AP) by sending it a startup ipi. 	 */
+name|cpuset_t
 name|active_cpus
 decl_stmt|;
 block|}
@@ -3250,20 +3250,21 @@ name|vcpuid
 operator|<
 name|VM_MAXCPU
 condition|)
+name|CPU_SET
+argument_list|(
+name|vcpuid
+argument_list|,
+operator|&
 name|vm
 operator|->
 name|active_cpus
-operator||=
-name|vcpu_mask
-argument_list|(
-name|vcpuid
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_function
-name|cpumask_t
+name|cpuset_t
 name|vm_active_cpus
 parameter_list|(
 name|struct

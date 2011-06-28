@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/smp.h>
 end_include
 
@@ -230,18 +236,6 @@ include|#
 directive|include
 file|"mmu_if.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|DEBUG
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|DEBUG
-end_undef
 
 begin_ifdef
 ifdef|#
@@ -2266,7 +2260,7 @@ operator|!
 name|smp_started
 condition|)
 return|return;
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|pc
 argument_list|,
@@ -2364,7 +2358,7 @@ operator|!
 name|smp_started
 condition|)
 return|return;
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|pc
 argument_list|,
@@ -4573,7 +4567,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * This is called during e500_init, before the system is really initialized.  */
+comment|/*  * This is called during booke_init, before the system is really initialized.  */
 end_comment
 
 begin_function
@@ -5940,12 +5934,13 @@ name|PTE_VALID
 expr_stmt|;
 block|}
 comment|/* Mark kernel_pmap active on all CPUs */
+name|CPU_FILL
+argument_list|(
+operator|&
 name|kernel_pmap
 operator|->
 name|pm_active
-operator|=
-operator|~
-literal|0
+argument_list|)
 expr_stmt|;
 comment|/*******************************************************/
 comment|/* Final setup */
@@ -6861,11 +6856,13 @@ index|]
 operator|=
 name|TID_NONE
 expr_stmt|;
-name|pmap
+name|CPU_ZERO
+argument_list|(
+operator|&
+name|kernel_pmap
 operator|->
 name|pm_active
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -8204,14 +8201,14 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-name|atomic_set_int
+name|CPU_OR_ATOMIC
 argument_list|(
 operator|&
 name|pmap
 operator|->
 name|pm_active
 argument_list|,
-name|PCPU_GET
+name|PCPU_PTR
 argument_list|(
 name|cpumask
 argument_list|)
@@ -8351,18 +8348,24 @@ argument_list|,
 name|pmap
 argument_list|)
 expr_stmt|;
-name|atomic_clear_int
+name|sched_pin
+argument_list|()
+expr_stmt|;
+name|CPU_NAND_ATOMIC
 argument_list|(
 operator|&
 name|pmap
 operator|->
 name|pm_active
 argument_list|,
-name|PCPU_GET
+name|PCPU_PTR
 argument_list|(
 name|cpumask
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|sched_unpin
+argument_list|()
 expr_stmt|;
 name|PCPU_SET
 argument_list|(
@@ -13028,7 +13031,7 @@ block|{
 name|uint32_t
 name|mas0
 decl_stmt|;
-comment|/* TLB1[1] is used to map the kernel. Save that entry. */
+comment|/* TLB1[0] is used to map the kernel. Save that entry. */
 name|mas0
 operator|=
 name|MAS0_TLBSEL
@@ -13038,7 +13041,7 @@ argument_list|)
 operator||
 name|MAS0_ESEL
 argument_list|(
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 name|mtspr
@@ -13051,7 +13054,7 @@ expr_stmt|;
 asm|__asm __volatile("isync; tlbre");
 name|tlb1
 index|[
-literal|1
+literal|0
 index|]
 operator|.
 name|mas1
@@ -13063,7 +13066,7 @@ argument_list|)
 expr_stmt|;
 name|tlb1
 index|[
-literal|1
+literal|0
 index|]
 operator|.
 name|mas2
@@ -13075,7 +13078,7 @@ argument_list|)
 expr_stmt|;
 name|tlb1
 index|[
-literal|1
+literal|0
 index|]
 operator|.
 name|mas3
@@ -13085,10 +13088,10 @@ argument_list|(
 name|SPR_MAS3
 argument_list|)
 expr_stmt|;
-comment|/* Map in CCSRBAR in TLB1[0] */
+comment|/* Map in CCSRBAR in TLB1[1] */
 name|tlb1_idx
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 name|tlb1_set_entry
 argument_list|(
@@ -13100,11 +13103,6 @@ name|CCSRBAR_SIZE
 argument_list|,
 name|_TLB_ENTRY_IO
 argument_list|)
-expr_stmt|;
-comment|/* 	 * Set the next available TLB1 entry index. Note TLB[1] is reserved 	 * for initial mapping of kernel text+data, which was set early in 	 * locore, we need to skip this [busy] entry. 	 */
-name|tlb1_idx
-operator|=
-literal|2
 expr_stmt|;
 comment|/* Setup TLB miss defaults */
 name|set_mas4_defaults

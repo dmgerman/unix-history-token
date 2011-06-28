@@ -513,7 +513,7 @@ name|open
 argument_list|(
 name|_devname
 argument_list|,
-name|O_RDWR
+name|O_RDONLY
 argument_list|)
 operator|)
 operator|==

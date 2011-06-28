@@ -177,21 +177,54 @@ parameter_list|()
 value|gethrtime()
 end_define
 
-begin_define
-define|#
-directive|define
-name|ddi_get_lbolt
-parameter_list|()
-value|((gethrtime() * hz) / NANOSEC)
-end_define
+begin_decl_stmt
+specifier|extern
+name|int
+name|nsec_per_tick
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/* nanoseconds per clock tick */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|int64_t
 name|ddi_get_lbolt64
-parameter_list|()
-value|(int64_t)((gethrtime() * hz) / NANOSEC)
-end_define
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|gethrtime
+argument_list|()
+operator|/
+name|nsec_per_tick
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|clock_t
+name|ddi_get_lbolt
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ddi_get_lbolt64
+argument_list|()
+operator|)
+return|;
+block|}
+end_function
 
 begin_else
 else|#

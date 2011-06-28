@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: makemap.c,v 8.179 2008/04/14 02:06:16 ca Exp $"
+literal|"@(#)$Id: makemap.c,v 8.180 2010/11/23 02:35:08 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -946,7 +946,7 @@ name|smioerr
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
-literal|"makemap: %s: %s"
+literal|"makemap: %s: %s\n"
 argument_list|,
 name|cfile
 argument_list|,

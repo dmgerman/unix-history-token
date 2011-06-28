@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2009  Internet Systems Consortium,
 end_comment
 
 begin_comment
-comment|/* $Id: lwdclient.h,v 1.18.332.2 2009/01/18 23:47:34 tbox Exp $ */
+comment|/* $Id: lwdclient.h,v 1.18.332.2 2009-01-18 23:47:34 tbox Exp $ */
 end_comment
 
 begin_ifndef

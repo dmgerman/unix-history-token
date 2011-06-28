@@ -316,7 +316,6 @@ name|ee
 operator|!=
 literal|0
 condition|)
-block|{
 name|mtmsr
 argument_list|(
 name|mfmsr
@@ -325,10 +324,6 @@ operator||
 name|ee
 argument_list|)
 expr_stmt|;
-name|isync
-argument_list|()
-expr_stmt|;
-block|}
 name|trap
 argument_list|(
 name|framep

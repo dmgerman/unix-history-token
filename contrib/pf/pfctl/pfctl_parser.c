@@ -207,6 +207,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -256,6 +258,8 @@ parameter_list|,
 name|u_int8_t
 parameter_list|,
 name|u_int8_t
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -1954,6 +1958,9 @@ specifier|const
 name|char
 modifier|*
 name|proto
+parameter_list|,
+name|int
+name|numeric
 parameter_list|)
 block|{
 name|char
@@ -1972,6 +1979,11 @@ name|servent
 modifier|*
 name|s
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|numeric
+condition|)
 name|s
 operator|=
 name|getservbyport
@@ -1980,6 +1992,11 @@ name|p1
 argument_list|,
 name|proto
 argument_list|)
+expr_stmt|;
+else|else
+name|s
+operator|=
+name|NULL
 expr_stmt|;
 name|p1
 operator|=
@@ -2247,6 +2264,9 @@ name|proto
 parameter_list|,
 name|int
 name|verbose
+parameter_list|,
+name|int
+name|numeric
 parameter_list|)
 block|{
 name|char
@@ -2431,6 +2451,8 @@ condition|?
 literal|"tcp"
 else|:
 literal|"udp"
+argument_list|,
+name|numeric
 argument_list|)
 expr_stmt|;
 if|if
@@ -2517,6 +2539,8 @@ condition|?
 literal|"tcp"
 else|:
 literal|"udp"
+argument_list|,
+name|numeric
 argument_list|)
 expr_stmt|;
 block|}
@@ -4415,6 +4439,8 @@ argument_list|,
 argument|const char *anchor_call
 argument_list|,
 argument|int verbose
+argument_list|,
+argument|int numeric
 argument_list|)
 end_macro
 
@@ -5222,6 +5248,8 @@ operator|->
 name|proto
 argument_list|,
 name|verbose
+argument_list|,
+name|numeric
 argument_list|)
 expr_stmt|;
 if|if

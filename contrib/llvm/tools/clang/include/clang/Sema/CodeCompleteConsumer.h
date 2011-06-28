@@ -236,6 +236,11 @@ comment|/// like the
 name|CCD_ProbablyNotObjCCollection
 init|=
 literal|15
+block|,
+comment|/// \brief An Objective-C method being used as a property.
+name|CCD_MethodAsProperty
+init|=
+literal|2
 block|}
 enum|;
 comment|/// \brief Priority value factors by which we will divide or multiply the

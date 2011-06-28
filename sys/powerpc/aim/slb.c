@@ -142,14 +142,24 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|uma_zone_t
 name|slbt_zone
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|uma_zone_t
 name|slb_cache_zone
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|n_slbs
+init|=
+literal|64
 decl_stmt|;
 end_decl_stmt
 
@@ -1782,12 +1792,19 @@ literal|0
 init|;
 name|i
 operator|<
-name|USER_SLB_SLOT
+name|n_slbs
 condition|;
 name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|i
+operator|==
+name|USER_SLB_SLOT
+condition|)
+continue|continue;
 if|if
 condition|(
 operator|!
@@ -1810,7 +1827,7 @@ if|if
 condition|(
 name|i
 operator|==
-name|USER_SLB_SLOT
+name|n_slbs
 condition|)
 name|slbcache
 index|[
@@ -1829,7 +1846,7 @@ operator|=
 name|mftb
 argument_list|()
 operator|%
-literal|64
+name|n_slbs
 operator|,
 name|j
 operator|=
@@ -1837,7 +1854,7 @@ literal|0
 init|;
 name|j
 operator|<
-literal|64
+name|n_slbs
 condition|;
 name|j
 operator|++
@@ -1850,7 +1867,7 @@ operator|+
 literal|1
 operator|)
 operator|%
-literal|64
+name|n_slbs
 control|)
 block|{
 if|if
@@ -1878,7 +1895,7 @@ name|KASSERT
 argument_list|(
 name|j
 operator|<
-literal|64
+name|n_slbs
 argument_list|,
 operator|(
 literal|"All kernel SLB slots locked!"
@@ -1887,6 +1904,17 @@ argument_list|)
 expr_stmt|;
 name|fillkernslb
 label|:
+name|KASSERT
+argument_list|(
+name|i
+operator|!=
+name|USER_SLB_SLOT
+argument_list|,
+operator|(
+literal|"Filling user SLB slot with a kernel mapping"
+operator|)
+argument_list|)
+expr_stmt|;
 name|slbcache
 index|[
 name|i
@@ -1976,7 +2004,7 @@ name|pm
 operator|->
 name|pm_slb_len
 operator|<
-literal|64
+name|n_slbs
 condition|)
 block|{
 name|i
@@ -1998,7 +2026,7 @@ operator|=
 name|mftb
 argument_list|()
 operator|%
-literal|64
+name|n_slbs
 expr_stmt|;
 block|}
 comment|/* Note that this replacement is atomic with respect to trap_subr */
@@ -2228,7 +2256,11 @@ name|uma_zcreate
 argument_list|(
 literal|"SLB cache"
 argument_list|,
-literal|64
+operator|(
+name|n_slbs
+operator|+
+literal|1
+operator|)
 operator|*
 sizeof|sizeof
 argument_list|(

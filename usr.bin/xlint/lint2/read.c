@@ -3393,12 +3393,6 @@ case|case
 name|NOTSPEC
 case|:
 break|break;
-case|case
-name|NTSPEC
-case|:
-name|abort
-argument_list|()
-expr_stmt|;
 block|}
 operator|*
 name|epp
@@ -4258,12 +4252,6 @@ case|case
 name|LONG
 case|:
 break|break;
-case|case
-name|NTSPEC
-case|:
-name|abort
-argument_list|()
-expr_stmt|;
 block|}
 operator|*
 name|epp

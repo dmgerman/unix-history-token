@@ -1117,11 +1117,7 @@ name|_KERNEL
 comment|/* FreeBSD only. */
 name|struct
 name|ostask
-name|io_task_issue
-decl_stmt|;
-name|struct
-name|ostask
-name|io_task_interrupt
+name|io_task
 decl_stmt|;
 endif|#
 directive|endif
@@ -1150,7 +1146,7 @@ name|done
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|,
 name|enum
 name|zio_flag
@@ -1172,7 +1168,7 @@ name|done
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|,
 name|enum
 name|zio_flag
@@ -1210,7 +1206,7 @@ name|done
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|,
 name|int
 name|priority
@@ -1267,7 +1263,7 @@ name|done
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|,
 name|int
 name|priority
@@ -1315,7 +1311,7 @@ name|done
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|,
 name|int
 name|priority
@@ -1389,7 +1385,7 @@ name|done
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|,
 name|enum
 name|zio_flag
@@ -1422,7 +1418,7 @@ name|done
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|,
 name|int
 name|priority
@@ -1464,7 +1460,7 @@ name|done
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|,
 name|int
 name|priority
@@ -1509,7 +1505,7 @@ name|done
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|,
 name|int
 name|priority
@@ -1787,7 +1783,7 @@ name|done
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -1825,7 +1821,7 @@ name|done
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|)
 function_decl|;
 specifier|extern

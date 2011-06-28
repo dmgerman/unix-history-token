@@ -233,6 +233,18 @@ directive|include
 file|"mystring.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"var.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"builtins.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -4077,6 +4089,10 @@ argument_list|()
 expr_stmt|;
 name|INTON
 expr_stmt|;
+name|forcelocal
+operator|=
+literal|0
+expr_stmt|;
 name|clear_traps
 argument_list|()
 expr_stmt|;
@@ -4230,7 +4246,7 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"Can't open %s: %s"
+literal|"cannot open %s: %s"
 argument_list|,
 name|_PATH_DEVNULL
 argument_list|,
@@ -4298,7 +4314,7 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"Can't open %s: %s"
+literal|"cannot open %s: %s"
 argument_list|,
 name|_PATH_DEVNULL
 argument_list|,
@@ -5661,6 +5677,9 @@ condition|(
 name|bgjob
 operator|!=
 name|NULL
+operator|&&
+operator|!
+name|forcelocal
 condition|)
 name|bgjob
 operator|->

@@ -1021,6 +1021,12 @@ begin_comment
 comment|/*  * The lower numbers -> 21 are used by NFSv2 and v3. These define higher  * numbers used by NFSv4.  * NFS_V3NPROCS is one greater than the last V3 op and NFS_NPROCS is  * one greater than the last number.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NFS_V3NPROCS
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1171,6 +1177,15 @@ directive|define
 name|NFSV4_NPROCS
 value|41
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NFS_V3NPROCS */
+end_comment
 
 begin_comment
 comment|/*  * Stats structure  */
@@ -1363,12 +1378,23 @@ begin_comment
 comment|/*  * Define NFS_NPROCS as NFSV4_NPROCS for the experimental kernel code.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NFS_NPROCS
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|NFS_NPROCS
 value|NFSV4_NPROCS
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

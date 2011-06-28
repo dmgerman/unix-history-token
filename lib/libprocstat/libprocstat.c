@@ -1007,7 +1007,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"malloc(%zd)"
+literal|"malloc(%zu)"
 argument_list|,
 name|len
 argument_list|)
@@ -1143,7 +1143,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"malloc(%zd)"
+literal|"malloc(%zu)"
 argument_list|,
 name|len
 argument_list|)
@@ -1246,7 +1246,11 @@ else|else
 block|{
 name|warnx
 argument_list|(
-literal|"unknown access method"
+literal|"unknown access method: %d"
+argument_list|,
+name|procstat
+operator|->
+name|type
 argument_list|)
 expr_stmt|;
 return|return
@@ -2350,7 +2354,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"malloc(%zd)"
+literal|"malloc(%zu)"
 argument_list|,
 name|nfiles
 operator|*
@@ -2845,6 +2849,16 @@ name|PS_FST_FFLAG_READ
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|vmentry
+operator|.
+name|eflags
+operator|&
+name|MAP_ENTRY_COW
+operator|)
+operator|==
+literal|0
+operator|&&
 name|prot
 operator|&
 name|VM_PROT_WRITE
@@ -3692,6 +3706,16 @@ name|PS_FST_FFLAG_READ
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|kve
+operator|->
+name|kve_flags
+operator|&
+name|KVME_FLAG_COW
+operator|)
+operator|==
+literal|0
+operator|&&
 name|kve
 operator|->
 name|kve_protection
@@ -3868,7 +3892,7 @@ else|else
 block|{
 name|warnx
 argument_list|(
-literal|"unknow access method: %d"
+literal|"unknown access method: %d"
 argument_list|,
 name|procstat
 operator|->
@@ -4249,7 +4273,7 @@ else|else
 block|{
 name|warnx
 argument_list|(
-literal|"unknow access method: %d"
+literal|"unknown access method: %d"
 argument_list|,
 name|procstat
 operator|->
@@ -4623,7 +4647,7 @@ else|else
 block|{
 name|warnx
 argument_list|(
-literal|"unknow access method: %d"
+literal|"unknown access method: %d"
 argument_list|,
 name|procstat
 operator|->
@@ -5824,7 +5848,7 @@ else|else
 block|{
 name|warnx
 argument_list|(
-literal|"unknow access method: %d"
+literal|"unknown access method: %d"
 argument_list|,
 name|procstat
 operator|->
@@ -6985,7 +7009,6 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-specifier|static
 name|struct
 name|mount
 name|mnt
@@ -7148,11 +7171,9 @@ argument_list|,
 name|MNAMELEN
 argument_list|)
 expr_stmt|;
-name|mnt
-operator|.
-name|mnt_stat
-operator|.
-name|f_mntonname
+name|mt
+operator|->
+name|mntonname
 index|[
 name|MNAMELEN
 index|]

@@ -132,6 +132,9 @@ decl_stmt|;
 name|class
 name|DiagnosticErrorTrap
 decl_stmt|;
+name|class
+name|StoredDiagnostic
+decl_stmt|;
 comment|/// \brief Annotates a diagnostic with some code that should be
 comment|/// inserted, removed, or replaced to fix the problem.
 comment|///
@@ -1747,6 +1750,18 @@ expr_stmt|;
 block|}
 end_function
 
+begin_expr_stmt
+name|ExtensionHandling
+name|getExtensionHandlingBehavior
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ExtBehavior
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
 comment|/// AllExtensionsSilenced - This is a counter bumped when an __extension__
 end_comment
@@ -1866,9 +1881,9 @@ begin_decl_stmt
 name|bool
 name|setDiagnosticGroupMapping
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|Group
 argument_list|,
 name|diag
@@ -2232,6 +2247,18 @@ name|Report
 parameter_list|(
 name|unsigned
 name|DiagID
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|Report
+parameter_list|(
+specifier|const
+name|StoredDiagnostic
+modifier|&
+name|storedDiag
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3840,6 +3867,11 @@ name|Diagnostic
 modifier|*
 name|DiagObj
 decl_stmt|;
+name|llvm
+operator|::
+name|StringRef
+name|StoredDiagMessage
+expr_stmt|;
 name|public
 label|:
 name|explicit
@@ -3854,6 +3886,23 @@ operator|:
 name|DiagObj
 argument_list|(
 argument|DO
+argument_list|)
+block|{}
+name|DiagnosticInfo
+argument_list|(
+argument|const Diagnostic *DO
+argument_list|,
+argument|llvm::StringRef storedDiagMessage
+argument_list|)
+operator|:
+name|DiagObj
+argument_list|(
+name|DO
+argument_list|)
+operator|,
+name|StoredDiagMessage
+argument_list|(
+argument|storedDiagMessage
 argument_list|)
 block|{}
 specifier|const

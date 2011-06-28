@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/*  * $Id: assertions.h,v 1.26 2008/10/15 23:47:31 tbox Exp $  */
+comment|/*  * $Id: assertions.h,v 1.26 2008-10-15 23:47:31 tbox Exp $  */
 end_comment
 
 begin_comment

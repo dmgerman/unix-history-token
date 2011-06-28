@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2008-2010  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: dnssec-dsfromkey.c,v 1.2.14.6 2010/01/11 23:47:22 tbox Exp $ */
+comment|/* $Id: dnssec-dsfromkey.c,v 1.2.14.6 2010-01-11 23:47:22 tbox Exp $ */
 end_comment
 
 begin_comment

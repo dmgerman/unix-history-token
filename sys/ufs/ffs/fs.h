@@ -2139,6 +2139,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|JOP_SYNC
+value|7
+end_define
+
+begin_comment
+comment|/* fsync() complete record. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|JREC_SIZE
 value|32
 end_define
@@ -2313,7 +2324,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Truncation record.  Records a partial truncation so that it may be  * completed later.  */
+comment|/*  * Truncation record.  Records a partial truncation so that it may be  * completed at check time.  Also used for sync records.  */
 end_comment
 
 begin_struct

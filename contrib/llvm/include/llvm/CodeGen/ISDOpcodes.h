@@ -182,11 +182,11 @@ comment|// It takes an input chain and a pointer to the jump buffer as inputs
 comment|// and returns an outchain.
 name|EH_SJLJ_LONGJMP
 block|,
-comment|// OUTCHAIN = EH_SJLJ_DISPATCHSETUP(INCHAIN, context)
+comment|// OUTCHAIN = EH_SJLJ_DISPATCHSETUP(INCHAIN, setjmpval)
 comment|// This corresponds to the eh.sjlj.dispatchsetup intrinsic. It takes an
-comment|// input chain and a pointer to the sjlj function context as inputs and
-comment|// returns an outchain. By default, this does nothing. Targets can lower
-comment|// this to unwind setup code if needed.
+comment|// input chain and the value returning from setjmp as inputs and returns an
+comment|// outchain. By default, this does nothing. Targets can lower this to unwind
+comment|// setup code if needed.
 name|EH_SJLJ_DISPATCHSETUP
 block|,
 comment|// TargetConstant* - Like Constant*, but the DAG does not do any folding,

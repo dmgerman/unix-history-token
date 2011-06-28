@@ -156,6 +156,12 @@ directive|include
 file|"memalloc.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"builtins.h"
+end_include
+
 begin_define
 define|#
 directive|define

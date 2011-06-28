@@ -293,7 +293,11 @@ operator|->
 name|ah_ani_function
 operator|&=
 operator|~
+operator|(
+literal|1
+operator|<<
 name|HAL_ANI_NOISE_IMMUNITY_LEVEL
+operator|)
 expr_stmt|;
 name|ar5416AniAttach
 argument_list|(
@@ -665,6 +669,12 @@ name|ar5416SetCoverageClass
 expr_stmt|;
 name|ah
 operator|->
+name|ah_setQuiet
+operator|=
+name|ar5416SetQuiet
+expr_stmt|;
+name|ah
+operator|->
 name|ah_resetKeyCacheEntry
 operator|=
 name|ar5416ResetKeyCacheEntry
@@ -674,6 +684,25 @@ operator|->
 name|ah_setKeyCacheEntry
 operator|=
 name|ar5416SetKeyCacheEntry
+expr_stmt|;
+comment|/* DFS Functions */
+name|ah
+operator|->
+name|ah_enableDfs
+operator|=
+name|ar5416EnableDfs
+expr_stmt|;
+name|ah
+operator|->
+name|ah_getDfsThresh
+operator|=
+name|ar5416GetDfsThresh
+expr_stmt|;
+name|ah
+operator|->
+name|ah_procRadarEvent
+operator|=
+name|ar5416ProcessRadarEvent
 expr_stmt|;
 comment|/* Power Management Functions */
 name|ah
@@ -924,7 +953,17 @@ argument_list|)
 operator|->
 name|ah_ani_function
 operator|=
-name|HAL_ANI_ALL
+literal|0xffffffff
+expr_stmt|;
+comment|/* Set overridable ANI methods */
+name|AH5212
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_aniControl
+operator|=
+name|ar5416AniControl
 expr_stmt|;
 block|}
 end_function
@@ -4899,6 +4938,12 @@ operator|->
 name|halCSTSupport
 operator|=
 name|AH_TRUE
+expr_stmt|;
+name|pCap
+operator|->
+name|halEnhancedDfsSupport
+operator|=
+name|AH_FALSE
 expr_stmt|;
 if|if
 condition|(

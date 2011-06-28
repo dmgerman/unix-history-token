@@ -4683,6 +4683,8 @@ name|ef
 operator|->
 name|strbase
 expr_stmt|;
+name|nosyms
+label|:
 name|error
 operator|=
 name|link_elf_link_common_finish
@@ -4699,8 +4701,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-name|nosyms
-label|:
 operator|*
 name|result
 operator|=

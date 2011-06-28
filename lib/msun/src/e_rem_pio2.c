@@ -912,13 +912,6 @@ argument_list|,
 name|x
 argument_list|)
 expr_stmt|;
-name|SET_LOW_WORD
-argument_list|(
-name|z
-argument_list|,
-name|low
-argument_list|)
-expr_stmt|;
 name|e0
 operator|=
 operator|(
@@ -930,7 +923,7 @@ operator|-
 literal|1046
 expr_stmt|;
 comment|/* e0 = ilogb(z)-23; */
-name|SET_HIGH_WORD
+name|INSERT_WORDS
 argument_list|(
 name|z
 argument_list|,
@@ -946,6 +939,8 @@ operator|<<
 literal|20
 argument_list|)
 operator|)
+argument_list|,
+name|low
 argument_list|)
 expr_stmt|;
 for|for

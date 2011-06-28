@@ -17,7 +17,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: nsec3_50.h,v 1.4 2008/09/25 04:02:39 tbox Exp $ */
+comment|/* $Id: nsec3_50.h,v 1.4 2008-09-25 04:02:39 tbox Exp $ */
 end_comment
 
 begin_comment

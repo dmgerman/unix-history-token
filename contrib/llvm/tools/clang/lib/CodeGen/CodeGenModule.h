@@ -374,6 +374,14 @@ empty_stmt|;
 struct|struct
 name|CodeGenTypeCache
 block|{
+comment|/// void
+specifier|const
+name|llvm
+operator|::
+name|Type
+operator|*
+name|VoidTy
+expr_stmt|;
 comment|/// i8, i32, and i64
 specifier|const
 name|llvm
@@ -396,7 +404,7 @@ name|IntegerType
 operator|*
 name|IntTy
 expr_stmt|;
-comment|/// intptr_t and size_t, which we assume are the same
+comment|/// intptr_t, size_t, and ptrdiff_t, which we assume are the same size.
 union|union
 block|{
 specifier|const
@@ -412,6 +420,13 @@ operator|::
 name|IntegerType
 operator|*
 name|SizeTy
+expr_stmt|;
+specifier|const
+name|llvm
+operator|::
+name|IntegerType
+operator|*
+name|PtrDiffTy
 expr_stmt|;
 block|}
 union|;
@@ -2733,6 +2748,12 @@ parameter_list|)
 function_decl|;
 name|void
 name|EmitDeclMetadata
+parameter_list|()
+function_decl|;
+comment|/// EmitCoverageFile - Emit the llvm.gcov metadata used to tell LLVM where
+comment|/// to emit the .gcno and .gcda files in a way that persists in .bc files.
+name|void
+name|EmitCoverageFile
 parameter_list|()
 function_decl|;
 comment|/// MayDeferGeneration - Determine if the given decl can be emitted

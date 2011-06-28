@@ -233,23 +233,6 @@ name|MCJITCtor
 operator|=
 name|createJIT
 block|;   }
-comment|// FIXME: This routine is scheduled for termination. Do not use it.
-specifier|static
-name|TargetMachine
-operator|*
-name|selectTarget
-argument_list|(
-argument|Module *M
-argument_list|,
-argument|StringRef MArch
-argument_list|,
-argument|StringRef MCPU
-argument_list|,
-argument|const SmallVectorImpl<std::string>& MAttrs
-argument_list|,
-argument|std::string *Err
-argument_list|)
-block|;
 specifier|static
 name|ExecutionEngine
 operator|*
@@ -265,13 +248,7 @@ argument|CodeGenOpt::Level OptLevel
 argument_list|,
 argument|bool GVsWithCode
 argument_list|,
-argument|CodeModel::Model CMM
-argument_list|,
-argument|StringRef MArch
-argument_list|,
-argument|StringRef MCPU
-argument_list|,
-argument|const SmallVectorImpl<std::string>& MAttrs
+argument|TargetMachine *TM
 argument_list|)
 block|;
 comment|// @}

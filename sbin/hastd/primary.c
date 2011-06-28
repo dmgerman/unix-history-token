@@ -3259,6 +3259,9 @@ argument_list|(
 name|nvin
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
 comment|/* Setup directions. */
 if|if
 condition|(
@@ -3302,6 +3305,8 @@ argument_list|,
 literal|"Unable to set connection direction"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|pjdlog_info
 argument_list|(
 literal|"Connected to %s."
@@ -5627,7 +5632,15 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|ISSYNCREQ
+argument_list|(
+name|hio
+argument_list|)
+condition|)
 block|{
 comment|/* 				 * If READ failed, try to read from remote node. 				 */
 if|if

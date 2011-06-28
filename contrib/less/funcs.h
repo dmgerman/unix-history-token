@@ -1594,14 +1594,6 @@ end_function_decl
 begin_function_decl
 name|public
 name|void
-name|opt_l
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|public
-name|void
 name|opt_j
 parameter_list|()
 function_decl|;

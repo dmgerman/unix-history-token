@@ -229,13 +229,6 @@ argument|unsigned Opcode
 argument_list|)
 specifier|const
 block|;
-name|unsigned
-name|getFunctionAlignment
-argument_list|(
-argument|const Function *F
-argument_list|)
-specifier|const
-block|;
 name|private
 operator|:
 name|SDValue

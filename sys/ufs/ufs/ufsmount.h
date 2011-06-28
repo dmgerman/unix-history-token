@@ -142,6 +142,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|bmsafemaphd
+argument_list|,
+name|bmsafemap
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* This structure describes the UFS specific mount structure data. */
 end_comment
@@ -248,6 +258,11 @@ name|inodedeplst
 name|softdep_unlinked
 decl_stmt|;
 comment|/* Unlinked inodes */
+name|struct
+name|bmsafemaphd
+name|softdep_dirtycg
+decl_stmt|;
+comment|/* Dirty CGs */
 name|int
 name|softdep_on_journal
 decl_stmt|;
@@ -256,10 +271,6 @@ name|int
 name|softdep_on_worklist
 decl_stmt|;
 comment|/* Items on the worklist */
-name|int
-name|softdep_on_worklist_inprogress
-decl_stmt|;
-comment|/* Busy items on worklist */
 name|int
 name|softdep_deps
 decl_stmt|;

@@ -350,12 +350,6 @@ name|RACCT_CPU
 block|}
 block|,
 block|{
-literal|"fsize"
-block|,
-name|RACCT_FSIZE
-block|}
-block|,
-block|{
 literal|"data"
 block|,
 name|RACCT_DATA
@@ -395,12 +389,6 @@ block|{
 literal|"nofile"
 block|,
 name|RACCT_NOFILE
-block|}
-block|,
-block|{
-literal|"sbsize"
-block|,
-name|RACCT_SBSIZE
 block|}
 block|,
 block|{

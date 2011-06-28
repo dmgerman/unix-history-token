@@ -2520,6 +2520,9 @@ operator||
 name|extra_flags
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|bfd_set_section_alignment
 argument_list|(
 name|vars

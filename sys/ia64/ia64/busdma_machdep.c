@@ -662,7 +662,6 @@ name|highaddr
 operator|)
 operator|||
 operator|(
-operator|(
 name|paddr
 operator|&
 operator|(
@@ -675,9 +674,7 @@ operator|)
 operator|)
 operator|!=
 literal|0
-operator|)
 operator|||
-operator|(
 operator|(
 name|paddr
 operator|&
@@ -692,7 +689,6 @@ name|len
 operator|)
 operator|&
 name|bndy
-operator|)
 operator|)
 operator|)
 operator|&&
@@ -1893,7 +1889,7 @@ name|mflags
 operator||=
 name|M_ZERO
 expr_stmt|;
-comment|/*  	 * XXX: 	 * (dmat->alignment< dmat->maxsize) is just a quick hack; the exact 	 * alignment guarantees of malloc need to be nailed down, and the 	 * code below should be rewritten to take that into account. 	 * 	 * In the meantime, we'll warn the user if malloc gets it wrong. 	 */
+comment|/* 	 * XXX: 	 * (dmat->alignment< dmat->maxsize) is just a quick hack; the exact 	 * alignment guarantees of malloc need to be nailed down, and the 	 * code below should be rewritten to take that into account. 	 * 	 * In the meantime, we'll warn the user if malloc gets it wrong. 	 */
 if|if
 condition|(
 operator|(

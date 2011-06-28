@@ -150,6 +150,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|uint16_t
+name|pil_stray_count
+index|[
+name|PIL_MAX
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|intr_vector
 name|intr_vectors
@@ -170,7 +180,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|uint16_t
 name|intr_stray_count
 index|[
 name|IV_MAX
@@ -803,15 +813,58 @@ modifier|*
 name|tf
 parameter_list|)
 block|{
+name|uint64_t
+name|level
+decl_stmt|;
+name|level
+operator|=
+name|tf
+operator|->
+name|tf_level
+expr_stmt|;
+if|if
+condition|(
+name|pil_stray_count
+index|[
+name|level
+index|]
+operator|<
+name|MAX_STRAY_LOG
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"stray level interrupt %ld\n"
 argument_list|,
-name|tf
-operator|->
-name|tf_level
+name|level
 argument_list|)
 expr_stmt|;
+name|pil_stray_count
+index|[
+name|level
+index|]
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|pil_stray_count
+index|[
+name|level
+index|]
+operator|>=
+name|MAX_STRAY_LOG
+condition|)
+name|printf
+argument_list|(
+literal|"got %d stray level interrupt %ld's: not "
+literal|"logging anymore\n"
+argument_list|,
+name|MAX_STRAY_LOG
+argument_list|,
+name|level
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -830,17 +883,24 @@ name|intr_vector
 modifier|*
 name|iv
 decl_stmt|;
+name|u_int
+name|vec
+decl_stmt|;
 name|iv
 operator|=
 name|cookie
+expr_stmt|;
+name|vec
+operator|=
+name|iv
+operator|->
+name|iv_vec
 expr_stmt|;
 if|if
 condition|(
 name|intr_stray_count
 index|[
-name|iv
-operator|->
-name|iv_vec
+name|vec
 index|]
 operator|<
 name|MAX_STRAY_LOG
@@ -850,16 +910,12 @@ name|printf
 argument_list|(
 literal|"stray vector interrupt %d\n"
 argument_list|,
-name|iv
-operator|->
-name|iv_vec
+name|vec
 argument_list|)
 expr_stmt|;
 name|intr_stray_count
 index|[
-name|iv
-operator|->
-name|iv_vec
+name|vec
 index|]
 operator|++
 expr_stmt|;
@@ -867,23 +923,19 @@ if|if
 condition|(
 name|intr_stray_count
 index|[
-name|iv
-operator|->
-name|iv_vec
+name|vec
 index|]
 operator|>=
 name|MAX_STRAY_LOG
 condition|)
 name|printf
 argument_list|(
-literal|"got %d stray interrupt %d's: not logging "
-literal|"anymore\n"
+literal|"got %d stray vector interrupt %d's: not "
+literal|"logging anymore\n"
 argument_list|,
 name|MAX_STRAY_LOG
 argument_list|,
-name|iv
-operator|->
-name|iv_vec
+name|vec
 argument_list|)
 expr_stmt|;
 block|}
@@ -1987,20 +2039,10 @@ begin_comment
 comment|/*  * Support for balancing interrupt sources across CPUs.  For now we just  * allocate CPUs round-robin.  */
 end_comment
 
-begin_comment
-comment|/* The BSP is always a valid target. */
-end_comment
-
 begin_decl_stmt
 specifier|static
-name|cpumask_t
+name|cpuset_t
 name|intr_cpus
-init|=
-operator|(
-literal|1
-operator|<<
-literal|0
-operator|)
 decl_stmt|;
 end_decl_stmt
 
@@ -2086,15 +2128,13 @@ block|}
 do|while
 condition|(
 operator|!
-operator|(
-name|intr_cpus
-operator|&
-operator|(
-literal|1
-operator|<<
+name|CPU_ISSET
+argument_list|(
 name|current_cpu
-operator|)
-operator|)
+argument_list|,
+operator|&
+name|intr_cpus
+argument_list|)
 condition|)
 do|;
 block|}
@@ -2232,13 +2272,13 @@ argument_list|,
 name|cpu
 argument_list|)
 expr_stmt|;
-name|intr_cpus
-operator||=
-operator|(
-literal|1
-operator|<<
+name|CPU_SET
+argument_list|(
 name|cpu
-operator|)
+argument_list|,
+operator|&
+name|intr_cpus
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -2271,6 +2311,15 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* The BSP is always a valid target. */
+name|CPU_SETOF
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|intr_cpus
+argument_list|)
+expr_stmt|;
 comment|/* Don't bother on UP. */
 if|if
 condition|(

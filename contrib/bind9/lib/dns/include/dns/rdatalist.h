@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: rdatalist.h,v 1.22 2008/04/03 06:09:05 tbox Exp $ */
+comment|/* $Id: rdatalist.h,v 1.22 2008-04-03 06:09:05 tbox Exp $ */
 end_comment
 
 begin_ifndef

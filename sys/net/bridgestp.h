@@ -1292,6 +1292,11 @@ decl_stmt|;
 name|bstp_rtage_cb_t
 name|bs_rtage_cb
 decl_stmt|;
+name|struct
+name|vnet
+modifier|*
+name|bs_vnet
+decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -620,6 +620,7 @@ block|}
 comment|/* 	 * If we'll need to use it or we're updating it, 	 * then create the base home directory if necessary 	 */
 if|if
 condition|(
+operator|(
 name|arg
 operator|!=
 name|NULL
@@ -632,6 +633,18 @@ literal|'m'
 argument_list|)
 operator|!=
 name|NULL
+operator|)
+operator|&&
+operator|(
+name|getarg
+argument_list|(
+name|args
+argument_list|,
+literal|'d'
+argument_list|)
+operator|==
+name|NULL
+operator|)
 condition|)
 block|{
 name|int

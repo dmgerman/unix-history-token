@@ -538,8 +538,6 @@ operator|&
 name|sizes
 argument_list|)
 decl|const
-init|=
-literal|0
 decl_stmt|;
 name|protected
 label|:

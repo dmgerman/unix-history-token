@@ -98,6 +98,11 @@ name|bool
 name|EmitData
 init|=
 name|true
+parameter_list|,
+name|bool
+name|Use402Format
+init|=
+name|false
 parameter_list|)
 function_decl|;
 block|}

@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|//  This file defines the StmtVisitor interface.
+comment|//  This file defines the StmtVisitor and ConstStmtVisitor interfaces.
 end_comment
 
 begin_comment
@@ -87,20 +87,49 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-define|#
-directive|define
-name|DISPATCH
-parameter_list|(
-name|NAME
-parameter_list|,
-name|CLASS
-parameter_list|)
-define|\
-value|return static_cast<ImplClass*>(this)->Visit ## NAME(static_cast<CLASS*>(S))
-comment|/// StmtVisitor - This class implements a simple visitor for Stmt subclasses.
-comment|/// Since Expr derives from Stmt, this also includes support for visiting Exprs.
 name|template
 operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|make_ptr
+block|{
+typedef|typedef
+name|T
+modifier|*
+name|type
+typedef|;
+block|}
+empty_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|make_const_ptr
+block|{
+typedef|typedef
+specifier|const
+name|T
+modifier|*
+name|type
+typedef|;
+block|}
+empty_stmt|;
+comment|/// StmtVisitorBase - This class implements a simple visitor for Stmt
+comment|/// subclasses. Since Expr derives from Stmt, this also includes support for
+comment|/// visiting Exprs.
+name|template
+operator|<
+name|template
+operator|<
+name|typename
+operator|>
+name|class
+name|Ptr
+operator|,
 name|typename
 name|ImplClass
 operator|,
@@ -110,14 +139,31 @@ operator|=
 name|void
 operator|>
 name|class
-name|StmtVisitor
+name|StmtVisitorBase
 block|{
 name|public
 operator|:
+define|#
+directive|define
+name|PTR
+parameter_list|(
+name|CLASS
+parameter_list|)
+value|typename Ptr<CLASS>::type
+define|#
+directive|define
+name|DISPATCH
+parameter_list|(
+name|NAME
+parameter_list|,
+name|CLASS
+parameter_list|)
+define|\
+value|return static_cast<ImplClass*>(this)->Visit ## NAME(static_cast<PTR(CLASS)>(S))
 name|RetTy
 name|Visit
 argument_list|(
-argument|Stmt *S
+argument|PTR(Stmt) S
 argument_list|)
 block|{
 comment|// If we have a binary expr, dispatch to the subcode of the binop.  A smart
@@ -125,10 +171,12 @@ comment|// optimizer (e.g. LLVM) will fold this comparison into the switch stmt
 comment|// below.
 if|if
 condition|(
-name|BinaryOperator
-modifier|*
+name|PTR
+argument_list|(
+argument|BinaryOperator
+argument_list|)
 name|BinOp
-init|=
+operator|=
 name|dyn_cast
 operator|<
 name|BinaryOperator
@@ -479,10 +527,12 @@ block|}
 elseif|else
 if|if
 condition|(
-name|UnaryOperator
-modifier|*
+name|PTR
+argument_list|(
+argument|UnaryOperator
+argument_list|)
 name|UnOp
-init|=
+operator|=
 name|dyn_cast
 operator|<
 name|UnaryOperator
@@ -689,7 +739,7 @@ parameter_list|,
 name|PARENT
 parameter_list|)
 define|\
-value|RetTy Visit ## CLASS(CLASS *S) { DISPATCH(PARENT, PARENT); }
+value|RetTy Visit ## CLASS(PTR(CLASS) S) { DISPATCH(PARENT, PARENT); }
 include|#
 directive|include
 file|"clang/AST/StmtNodes.inc"
@@ -702,7 +752,7 @@ parameter_list|(
 name|NAME
 parameter_list|)
 define|\
-value|RetTy VisitBin ## NAME(BinaryOperator *S) { \     DISPATCH(BinaryOperator, BinaryOperator); \   }
+value|RetTy VisitBin ## NAME(PTR(BinaryOperator) S) { \     DISPATCH(BinaryOperator, BinaryOperator); \   }
 name|BINOP_FALLBACK
 argument_list|(
 argument|PtrMemD
@@ -803,7 +853,7 @@ parameter_list|(
 name|NAME
 parameter_list|)
 define|\
-value|RetTy VisitBin ## NAME(CompoundAssignOperator *S) { \     DISPATCH(CompoundAssignOperator, CompoundAssignOperator); \   }
+value|RetTy VisitBin ## NAME(PTR(CompoundAssignOperator) S) { \     DISPATCH(CompoundAssignOperator, CompoundAssignOperator); \   }
 name|CAO_FALLBACK
 argument_list|(
 argument|MulAssign
@@ -856,7 +906,7 @@ parameter_list|(
 name|NAME
 parameter_list|)
 define|\
-value|RetTy VisitUnary ## NAME(UnaryOperator *S) { \     DISPATCH(UnaryOperator, UnaryOperator);    \   }
+value|RetTy VisitUnary ## NAME(PTR(UnaryOperator) S) { \     DISPATCH(UnaryOperator, UnaryOperator);    \   }
 name|UNARYOP_FALLBACK
 argument_list|(
 argument|PostInc
@@ -916,7 +966,7 @@ comment|// Base case, ignore it. :)
 name|RetTy
 name|VisitStmt
 argument_list|(
-argument|Stmt *Node
+argument|PTR(Stmt) Node
 argument_list|)
 block|{
 return|return
@@ -924,12 +974,72 @@ name|RetTy
 argument_list|()
 return|;
 block|}
-expr|}
-block|;
+undef|#
+directive|undef
+name|PTR
 undef|#
 directive|undef
 name|DISPATCH
-block|}
+expr|}
+block|;
+comment|/// StmtVisitor - This class implements a simple visitor for Stmt subclasses.
+comment|/// Since Expr derives from Stmt, this also includes support for visiting Exprs.
+comment|///
+comment|/// This class does not preserve constness of Stmt pointers (see also
+comment|/// ConstStmtVisitor).
+name|template
+operator|<
+name|typename
+name|ImplClass
+block|,
+name|typename
+name|RetTy
+operator|=
+name|void
+operator|>
+name|class
+name|StmtVisitor
+operator|:
+name|public
+name|StmtVisitorBase
+operator|<
+name|make_ptr
+block|,
+name|ImplClass
+block|,
+name|RetTy
+operator|>
+block|{}
+block|;
+comment|/// ConstStmtVisitor - This class implements a simple visitor for Stmt
+comment|/// subclasses. Since Expr derives from Stmt, this also includes support for
+comment|/// visiting Exprs.
+comment|///
+comment|/// This class preserves constness of Stmt pointers (see also StmtVisitor).
+name|template
+operator|<
+name|typename
+name|ImplClass
+block|,
+name|typename
+name|RetTy
+operator|=
+name|void
+operator|>
+name|class
+name|ConstStmtVisitor
+operator|:
+name|public
+name|StmtVisitorBase
+operator|<
+name|make_const_ptr
+block|,
+name|ImplClass
+block|,
+name|RetTy
+operator|>
+block|{}
+block|;  }
 end_decl_stmt
 
 begin_comment

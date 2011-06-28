@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mp_watchdog.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_perfmon.h"
 end_include
 
@@ -432,6 +438,12 @@ begin_include
 include|#
 directive|include
 file|<machine/metadata.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/mp_watchdog.h>
 end_include
 
 begin_include
@@ -3273,13 +3285,15 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|SMP
-if|if
-condition|(
-name|mp_grab_cpu_hlt
-argument_list|()
-condition|)
-return|return;
+name|MP_WATCHDOG
+name|ap_watchdog
+argument_list|(
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* If we are busy - try to use fast methods. */

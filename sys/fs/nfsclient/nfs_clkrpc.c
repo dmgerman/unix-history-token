@@ -732,9 +732,6 @@ modifier|*
 name|args
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|KGSSAPI
 name|char
 name|principal
 index|[
@@ -744,11 +741,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|KGSSAPI
 if|if
 condition|(
 name|args
@@ -794,8 +786,6 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* 	 * Only the first nfsd actually does any work. The RPC code 	 * adds threads to it as needed. Any extra processes offered 	 * by nfsd just exit. If nfsd is new enough, it will call us 	 * once with a structure that specifies how many threads to 	 * use. 	 */
 name|NFSD_LOCK
 argument_list|()
@@ -813,9 +803,6 @@ expr_stmt|;
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KGSSAPI
 if|if
 condition|(
 name|principal
@@ -825,7 +812,7 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
-name|rpc_gss_set_svc_name
+name|rpc_gss_set_svc_name_call
 argument_list|(
 name|principal
 argument_list|,
@@ -838,8 +825,6 @@ argument_list|,
 name|NFSV4_CBVERS
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|nfscbd_pool
 operator|->
 name|sp_minthreads
@@ -857,18 +842,13 @@ argument_list|(
 name|nfscbd_pool
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KGSSAPI
-name|rpc_gss_clear_svc_name
+name|rpc_gss_clear_svc_name_call
 argument_list|(
 name|NFS_CALLBCKPROG
 argument_list|,
 name|NFSV4_CBVERS
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;

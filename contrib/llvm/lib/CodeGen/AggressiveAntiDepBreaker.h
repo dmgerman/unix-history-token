@@ -445,6 +445,8 @@ argument_list|,
 argument|MachineBasicBlock::iterator End
 argument_list|,
 argument|unsigned InsertPosIndex
+argument_list|,
+argument|DbgValueVector&DbgValues
 argument_list|)
 block|;
 comment|/// Observe - Update liveness information to account for the current

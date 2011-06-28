@@ -288,6 +288,12 @@ decl_stmt|;
 name|bool
 name|Merged
 decl_stmt|;
+name|bool
+name|Constant
+decl_stmt|;
+name|int64_t
+name|iConstant
+decl_stmt|;
 name|DotDebugLocEntry
 argument_list|()
 operator|:
@@ -308,7 +314,17 @@ argument_list|)
 operator|,
 name|Merged
 argument_list|(
-argument|false
+name|false
+argument_list|)
+operator|,
+name|Constant
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|iConstant
+argument_list|(
+literal|0
 argument_list|)
 block|{}
 name|DotDebugLocEntry
@@ -355,7 +371,56 @@ argument_list|)
 operator|,
 name|Merged
 argument_list|(
-argument|false
+name|false
+argument_list|)
+operator|,
+name|Constant
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|iConstant
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|DotDebugLocEntry
+argument_list|(
+argument|const MCSymbol *B
+argument_list|,
+argument|const MCSymbol *E
+argument_list|,
+argument|int64_t i
+argument_list|)
+operator|:
+name|Begin
+argument_list|(
+name|B
+argument_list|)
+operator|,
+name|End
+argument_list|(
+name|E
+argument_list|)
+operator|,
+name|Variable
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Merged
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|Constant
+argument_list|(
+name|true
+argument_list|)
+operator|,
+name|iConstant
+argument_list|(
+argument|i
 argument_list|)
 block|{}
 comment|/// Empty entries are also used as a trigger to emit temp label. Such
@@ -420,6 +485,22 @@ name|Merged
 operator|=
 name|true
 expr_stmt|;
+block|}
+name|bool
+name|isConstant
+parameter_list|()
+block|{
+return|return
+name|Constant
+return|;
+block|}
+name|int64_t
+name|getConstant
+parameter_list|()
+block|{
+return|return
+name|iConstant
+return|;
 block|}
 block|}
 name|DotDebugLocEntry
@@ -1042,6 +1123,11 @@ name|MCSymbol
 modifier|*
 name|PrevLabel
 decl_stmt|;
+comment|/// PrologEndLoc - This location indicates end of function prologue and
+comment|/// beginning of function body.
+name|DebugLoc
+name|PrologEndLoc
+decl_stmt|;
 struct|struct
 name|FunctionDebugFrameInfo
 block|{
@@ -1091,9 +1177,6 @@ comment|// Section Symbols: these are assembler temporary labels that are emitte
 comment|// the beginning of each supported dwarf section.  These are used to form
 comment|// section offsets and are created by EmitSectionLabels.
 name|MCSymbol
-modifier|*
-name|DwarfFrameSectionSym
-decl_stmt|,
 modifier|*
 name|DwarfInfoSectionSym
 decl_stmt|,
@@ -1294,23 +1377,6 @@ name|unsigned
 name|SectionEnd
 parameter_list|)
 function_decl|;
-comment|/// emitCommonDebugFrame - Emit common frame info into a debug frame section.
-comment|///
-name|void
-name|emitCommonDebugFrame
-parameter_list|()
-function_decl|;
-comment|/// emitFunctionDebugFrame - Emit per function frame info into a debug frame
-comment|/// section.
-name|void
-name|emitFunctionDebugFrame
-parameter_list|(
-specifier|const
-name|FunctionDebugFrameInfo
-modifier|&
-name|DebugFrameInfo
-parameter_list|)
-function_decl|;
 comment|/// emitDebugPubNames - Emit visible names into a debug pubnames section.
 comment|///
 name|void
@@ -1434,6 +1500,9 @@ specifier|const
 name|MDNode
 modifier|*
 name|Scope
+parameter_list|,
+name|unsigned
+name|Flags
 parameter_list|)
 function_decl|;
 comment|/// recordVariableFrameIndex - Record a variable's index.

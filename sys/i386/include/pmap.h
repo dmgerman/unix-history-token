@@ -570,6 +570,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/_cpuset.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_lock.h>
 end_include
 
@@ -1743,7 +1749,7 @@ argument_list|)
 name|pm_pvchunk
 expr_stmt|;
 comment|/* list of mappings in pmap */
-name|cpumask_t
+name|cpuset_t
 name|pm_active
 decl_stmt|;
 comment|/* active on cpus */

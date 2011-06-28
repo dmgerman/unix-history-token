@@ -211,6 +211,11 @@ argument_list|(
 literal|"Failed to get controller info"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -728,6 +733,11 @@ argument_list|,
 name|mfi_unit
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -741,6 +751,11 @@ expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get capacity info"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -784,6 +799,11 @@ argument_list|(
 literal|"Failed to get design info"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -823,6 +843,11 @@ expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get status"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -1325,9 +1350,6 @@ name|info
 parameter_list|,
 name|int
 name|state_len
-parameter_list|,
-name|int
-name|location
 parameter_list|)
 block|{
 specifier|const
@@ -1425,67 +1447,6 @@ argument_list|(
 literal|" %s"
 argument_list|,
 name|s
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|location
-condition|)
-return|return;
-if|if
-condition|(
-name|info
-operator|->
-name|encl_device_id
-operator|==
-literal|0xffff
-condition|)
-name|printf
-argument_list|(
-literal|" slot %d"
-argument_list|,
-name|info
-operator|->
-name|slot_number
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|info
-operator|->
-name|encl_device_id
-operator|==
-name|info
-operator|->
-name|ref
-operator|.
-name|v
-operator|.
-name|device_id
-condition|)
-name|printf
-argument_list|(
-literal|" enclosure %d"
-argument_list|,
-name|info
-operator|->
-name|encl_index
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|" enclosure %d, slot %d"
-argument_list|,
-name|info
-operator|->
-name|encl_index
-argument_list|,
-name|info
-operator|->
-name|slot_number
 argument_list|)
 expr_stmt|;
 block|}
@@ -1619,6 +1580,11 @@ argument_list|(
 literal|"Failed to get config"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1724,26 +1690,29 @@ name|v
 operator|.
 name|device_id
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"        drive %s "
+argument_list|,
+name|mfi_drive_name
+argument_list|(
+name|NULL
+argument_list|,
+name|device_id
+argument_list|,
+name|MFI_DNAME_DEVICE_ID
+operator||
+name|MFI_DNAME_HONOR_OPTS
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|device_id
-operator|==
+operator|!=
 literal|0xffff
 condition|)
-name|printf
-argument_list|(
-literal|"        drive MISSING\n"
-argument_list|)
-expr_stmt|;
-else|else
 block|{
-name|printf
-argument_list|(
-literal|"        drive %u "
-argument_list|,
-name|device_id
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|mfi_pd_get_info
@@ -1784,8 +1753,6 @@ operator|&
 name|pinfo
 argument_list|,
 operator|-
-literal|1
-argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
@@ -2007,7 +1974,7 @@ name|p
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    %s spare %u "
+literal|"    %s spare %s "
 argument_list|,
 name|sp
 operator|->
@@ -2019,6 +1986,10 @@ literal|"dedicated"
 else|:
 literal|"global"
 argument_list|,
+name|mfi_drive_name
+argument_list|(
+name|NULL
+argument_list|,
 name|sp
 operator|->
 name|ref
@@ -2026,6 +1997,11 @@ operator|.
 name|v
 operator|.
 name|device_id
+argument_list|,
+name|MFI_DNAME_DEVICE_ID
+operator||
+name|MFI_DNAME_HONOR_OPTS
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2067,8 +2043,6 @@ operator|&
 name|pinfo
 argument_list|,
 operator|-
-literal|1
-argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
@@ -2127,6 +2101,11 @@ operator|->
 name|spares_size
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|config
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|fd
@@ -2256,6 +2235,11 @@ expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get volume list"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -2455,6 +2439,11 @@ operator|.
 name|v
 operator|.
 name|target_id
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -2691,6 +2680,10 @@ name|error
 operator|)
 return|;
 block|}
+name|list
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|mfi_pd_get_list
@@ -2715,11 +2708,9 @@ argument_list|(
 literal|"Failed to get drive list"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+goto|goto
 name|error
-operator|)
-return|;
+goto|;
 block|}
 comment|/* Walk the list of drives to determine width of state column. */
 name|state_len
@@ -2798,11 +2789,9 @@ operator|.
 name|device_id
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+goto|goto
 name|error
-operator|)
-return|;
+goto|;
 block|}
 name|len
 operator|=
@@ -2909,20 +2898,60 @@ operator|.
 name|device_id
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+goto|goto
 name|error
-operator|)
-return|;
+goto|;
 block|}
+name|printf
+argument_list|(
+literal|"%s "
+argument_list|,
+name|mfi_drive_name
+argument_list|(
+operator|&
+name|info
+argument_list|,
+name|list
+operator|->
+name|addr
+index|[
+name|i
+index|]
+operator|.
+name|device_id
+argument_list|,
+name|MFI_DNAME_DEVICE_ID
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|print_pd
 argument_list|(
 operator|&
 name|info
 argument_list|,
 name|state_len
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" %s"
 argument_list|,
-literal|1
+name|mfi_drive_name
+argument_list|(
+operator|&
+name|info
+argument_list|,
+name|list
+operator|->
+name|addr
+index|[
+name|i
+index|]
+operator|.
+name|device_id
+argument_list|,
+name|MFI_DNAME_ES
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2931,6 +2960,13 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|error
+label|:
+name|free
+argument_list|(
+name|list
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|fd
@@ -2938,7 +2974,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -3210,6 +3246,11 @@ expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get controller info"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -3552,10 +3593,6 @@ name|error
 operator|)
 return|;
 block|}
-name|busy
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|mfi_ld_get_list
@@ -3578,6 +3615,11 @@ expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get volume list"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -3610,12 +3652,21 @@ argument_list|(
 literal|"Failed to get drive list"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
 block|}
+name|busy
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -3678,6 +3729,16 @@ name|fd
 argument_list|,
 name|target_id
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|plist
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -3916,6 +3977,16 @@ argument_list|,
 name|device_id
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|plist
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -3935,9 +4006,18 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"drive %u "
+literal|"drive %s "
+argument_list|,
+name|mfi_drive_name
+argument_list|(
+name|NULL
 argument_list|,
 name|device_id
+argument_list|,
+name|MFI_DNAME_DEVICE_ID
+operator||
+name|MFI_DNAME_HONOR_OPTS
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mfi_display_progress
@@ -3970,9 +4050,18 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"drive %u "
+literal|"drive %s "
+argument_list|,
+name|mfi_drive_name
+argument_list|(
+name|NULL
 argument_list|,
 name|device_id
+argument_list|,
+name|MFI_DNAME_DEVICE_ID
+operator||
+name|MFI_DNAME_HONOR_OPTS
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mfi_display_progress
@@ -4005,9 +4094,18 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"drive %u "
+literal|"drive %s "
+argument_list|,
+name|mfi_drive_name
+argument_list|(
+name|NULL
 argument_list|,
 name|device_id
+argument_list|,
+name|MFI_DNAME_DEVICE_ID
+operator||
+name|MFI_DNAME_HONOR_OPTS
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mfi_display_progress
@@ -4028,6 +4126,11 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+name|free
+argument_list|(
+name|plist
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|fd

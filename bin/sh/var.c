@@ -170,6 +170,12 @@ directive|include
 file|"parser.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"builtins.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -319,6 +325,12 @@ specifier|static
 name|struct
 name|var
 name|voptind
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|forcelocal
 decl_stmt|;
 end_decl_stmt
 
@@ -1424,6 +1436,26 @@ condition|)
 name|flags
 operator||=
 name|VEXPORT
+expr_stmt|;
+if|if
+condition|(
+name|forcelocal
+operator|&&
+operator|!
+operator|(
+name|flags
+operator|&
+operator|(
+name|VNOSET
+operator||
+name|VNOLOCAL
+operator|)
+operator|)
+condition|)
+name|mklocal
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 name|vp
 operator|=
@@ -2676,6 +2708,19 @@ name|i
 operator|++
 control|)
 block|{
+comment|/* 		 * Skip improper variable names so the output remains usable as 		 * shell input. 		 */
+if|if
+condition|(
+operator|!
+name|isassignment
+argument_list|(
+name|vars
+index|[
+name|i
+index|]
+argument_list|)
+condition|)
+continue|continue;
 name|s
 operator|=
 name|strchr
@@ -3050,6 +3095,18 @@ condition|(
 name|values
 condition|)
 block|{
+comment|/* 						 * Skip improper variable names 						 * so the output remains usable 						 * as shell input. 						 */
+if|if
+condition|(
+operator|!
+name|isassignment
+argument_list|(
+name|vp
+operator|->
+name|text
+argument_list|)
+condition|)
+continue|continue;
 name|out1str
 argument_list|(
 name|cmdname
@@ -3316,6 +3373,8 @@ name|name
 argument_list|)
 argument_list|,
 name|VSTRFIXED
+operator||
+name|VNOLOCAL
 argument_list|)
 expr_stmt|;
 else|else
@@ -3326,6 +3385,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|VSTRFIXED
+operator||
+name|VNOLOCAL
 argument_list|)
 expr_stmt|;
 name|vp
@@ -3391,7 +3452,7 @@ argument_list|(
 name|name
 argument_list|)
 argument_list|,
-literal|0
+name|VNOLOCAL
 argument_list|)
 expr_stmt|;
 block|}

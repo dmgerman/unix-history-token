@@ -9238,13 +9238,10 @@ argument|case AF_INET:
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|INP_INFO_RLOCK(pi);
-comment|/* XXX LOR */
-argument|inp = in_pcblookup_hash(pi, saddr->v4, sport, daddr->v4, 			dport,
-literal|0
-argument|, NULL); 		if (inp == NULL) { 			inp = in_pcblookup_hash(pi, saddr->v4, sport, 			   daddr->v4, dport, INPLOOKUP_WILDCARD, NULL); 			if(inp == NULL) { 				INP_INFO_RUNLOCK(pi); 				return (-
+comment|/* 		 * XXXRW: would be nice if we had an mbuf here so that we 		 * could use in_pcblookup_mbuf(). 		 */
+argument|inp = in_pcblookup(pi, saddr->v4, sport, daddr->v4, 			dport, INPLOOKUP_RLOCKPCB, NULL); 		if (inp == NULL) { 			inp = in_pcblookup(pi, saddr->v4, sport, 			   daddr->v4, dport, INPLOOKUP_WILDCARD | 			   INPLOOKUP_RLOCKPCB, NULL); 			if (inp == NULL) 				return (-
 literal|1
-argument|); 			} 		}
+argument|); 		}
 else|#
 directive|else
 argument|inp = in_pcbhashlookup(tb, saddr->v4, sport, daddr->v4, dport); 		if (inp == NULL) { 			inp = in_pcblookup_listen(tb, daddr->v4, dport,
@@ -9265,11 +9262,10 @@ argument|case AF_INET6:
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|INP_INFO_RLOCK(pi); 		inp = in6_pcblookup_hash(pi,&saddr->v6, sport,&daddr->v6, dport,
-literal|0
-argument|, NULL); 		if (inp == NULL) { 			inp = in6_pcblookup_hash(pi,&saddr->v6, sport,&daddr->v6, dport, INPLOOKUP_WILDCARD, NULL); 			if (inp == NULL) { 				INP_INFO_RUNLOCK(pi); 				return (-
+comment|/* 		 * XXXRW: would be nice if we had an mbuf here so that we 		 * could use in6_pcblookup_mbuf(). 		 */
+argument|inp = in6_pcblookup(pi,&saddr->v6, sport,&daddr->v6, dport, INPLOOKUP_RLOCKPCB, NULL); 		if (inp == NULL) { 			inp = in6_pcblookup(pi,&saddr->v6, sport,&daddr->v6, dport, INPLOOKUP_WILDCARD | 			    INPLOOKUP_RLOCKPCB, NULL); 			if (inp == NULL) 				return (-
 literal|1
-argument|); 			} 		}
+argument|); 		}
 else|#
 directive|else
 argument|inp = in6_pcbhashlookup(tb,&saddr->v6, sport,&daddr->v6, 		    dport); 		if (inp == NULL) { 			inp = in6_pcblookup_listen(tb,&daddr->v6, dport,
@@ -9289,9 +9285,9 @@ argument|); 	}
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|pd->lookup.uid = inp->inp_cred->cr_uid; 	pd->lookup.gid = inp->inp_cred->cr_groups[
+argument|INP_RLOCK_ASSERT(inp); 	pd->lookup.uid = inp->inp_cred->cr_uid; 	pd->lookup.gid = inp->inp_cred->cr_groups[
 literal|0
-argument|]; 	INP_INFO_RUNLOCK(pi);
+argument|]; 	INP_RUNLOCK(inp);
 else|#
 directive|else
 argument|pd->lookup.uid = inp->inp_socket->so_euid; 	pd->lookup.gid = inp->inp_socket->so_egid; 	pd->lookup.pid = inp->inp_socket->so_cpid;
@@ -19932,11 +19928,17 @@ directive|ifdef
 name|__FreeBSD__
 comment|/* XXX MRT not always INET */
 comment|/* stick with table 0 though */
+ifdef|#
+directive|ifdef
+name|INET
 argument|if (af == AF_INET) 		in_rtalloc_ign((struct route *)&ro,
 literal|0
 argument|,
 literal|0
-argument|); 	else 		rtalloc_ign((struct route *)&ro,
+argument|); 	else
+endif|#
+directive|endif
+argument|rtalloc_ign((struct route *)&ro,
 literal|0
 argument|);
 else|#
@@ -20013,11 +20015,17 @@ argument|rtalloc_ign((struct route *)&ro, (RTF_CLONING|RTF_PRCLONING));
 else|#
 directive|else
 comment|/* !RTF_PRCLONING */
+ifdef|#
+directive|ifdef
+name|INET
 argument|if (af == AF_INET) 		in_rtalloc_ign((struct route *)&ro,
 literal|0
 argument|,
 literal|0
-argument|); 	else 		rtalloc_ign((struct route *)&ro,
+argument|); 	else
+endif|#
+directive|endif
+argument|rtalloc_ign((struct route *)&ro,
 literal|0
 argument|);
 endif|#
@@ -20341,7 +20349,13 @@ directive|endif
 comment|/* INET6 */
 argument|default: 			return (
 literal|1
-argument|); 		} 	} 	if (sum) { 		switch (p) { 		case IPPROTO_TCP: 		    { 			KMOD_TCPSTAT_INC(tcps_rcvbadsum); 			break; 		    } 		case IPPROTO_UDP: 		    { 			KMOD_UDPSTAT_INC(udps_badsum); 			break; 		    } 		case IPPROTO_ICMP: 		    { 			KMOD_ICMPSTAT_INC(icps_checksum); 			break; 		    }
+argument|); 		} 	} 	if (sum) { 		switch (p) { 		case IPPROTO_TCP: 		    { 			KMOD_TCPSTAT_INC(tcps_rcvbadsum); 			break; 		    } 		case IPPROTO_UDP: 		    { 			KMOD_UDPSTAT_INC(udps_badsum); 			break; 		    }
+ifdef|#
+directive|ifdef
+name|INET
+argument|case IPPROTO_ICMP: 		    { 			KMOD_ICMPSTAT_INC(icps_checksum); 			break; 		    }
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
@@ -20403,7 +20417,13 @@ directive|endif
 comment|/* INET6 */
 argument|default: 		return (
 literal|1
-argument|); 	} 	if (sum) { 		m->m_pkthdr.csum_flags |= flag_bad; 		switch (p) { 		case IPPROTO_TCP: 			KMOD_TCPSTAT_INC(tcps_rcvbadsum); 			break; 		case IPPROTO_UDP: 			KMOD_UDPSTAT_INC(udps_badsum); 			break; 		case IPPROTO_ICMP: 			KMOD_ICMPSTAT_INC(icps_checksum); 			break;
+argument|); 	} 	if (sum) { 		m->m_pkthdr.csum_flags |= flag_bad; 		switch (p) { 		case IPPROTO_TCP: 			KMOD_TCPSTAT_INC(tcps_rcvbadsum); 			break; 		case IPPROTO_UDP: 			KMOD_UDPSTAT_INC(udps_badsum); 			break;
+ifdef|#
+directive|ifdef
+name|INET
+argument|case IPPROTO_ICMP: 			KMOD_ICMPSTAT_INC(icps_checksum); 			break;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6

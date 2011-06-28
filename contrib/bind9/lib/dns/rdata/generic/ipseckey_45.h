@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2005, 2007  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: ipseckey_45.h,v 1.4 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: ipseckey_45.h,v 1.4 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_ifndef

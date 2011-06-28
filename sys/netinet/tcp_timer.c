@@ -2158,7 +2158,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|in_pcbrele
+name|in_pcbrele_wlocked
 argument_list|(
 name|inp
 argument_list|)

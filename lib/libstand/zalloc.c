@@ -321,7 +321,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"zfree(%p,%d): wild pointer"
+literal|"zfree(%p,%ju): wild pointer"
 argument_list|,
 name|ptr
 argument_list|,
@@ -406,7 +406,7 @@ name|mn
 condition|)
 name|panic
 argument_list|(
-literal|"zfree(%p,%d): corrupt memlist1"
+literal|"zfree(%p,%ju): corrupt memlist1"
 argument_list|,
 name|ptr
 argument_list|,
@@ -597,7 +597,7 @@ name|mr_Bytes
 condition|)
 name|panic
 argument_list|(
-literal|"zfree(%p,%d): corrupt memlist2"
+literal|"zfree(%p,%ju): corrupt memlist2"
 argument_list|,
 name|ptr
 argument_list|,

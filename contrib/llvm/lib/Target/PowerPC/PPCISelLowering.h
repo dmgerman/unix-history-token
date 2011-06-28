@@ -704,7 +704,7 @@ name|LowerAsmOperandForConstraint
 argument_list|(
 argument|SDValue Op
 argument_list|,
-argument|char ConstraintLetter
+argument|std::string&Constraint
 argument_list|,
 argument|std::vector<SDValue>&Ops
 argument_list|,
@@ -782,15 +782,6 @@ argument_list|,
 argument|bool MemcpyStrSrc
 argument_list|,
 argument|MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-comment|/// getFunctionAlignment - Return the Log2 alignment of this function.
-name|virtual
-name|unsigned
-name|getFunctionAlignment
-argument_list|(
-argument|const Function *F
 argument_list|)
 specifier|const
 block|;

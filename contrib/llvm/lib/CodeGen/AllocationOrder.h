@@ -76,7 +76,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|BitVector
+name|RegisterClassInfo
 decl_stmt|;
 name|class
 name|VirtRegMap
@@ -100,12 +100,15 @@ modifier|*
 name|Pos
 decl_stmt|;
 specifier|const
-name|BitVector
+name|RegisterClassInfo
 modifier|&
-name|Reserved
+name|RCI
 decl_stmt|;
 name|unsigned
 name|Hint
+decl_stmt|;
+name|bool
+name|OwnedBegin
 decl_stmt|;
 name|public
 label|:
@@ -120,16 +123,68 @@ argument|unsigned VirtReg
 argument_list|,
 argument|const VirtRegMap&VRM
 argument_list|,
-argument|const BitVector&ReservedRegs
+argument|const RegisterClassInfo&RegClassInfo
 argument_list|)
 empty_stmt|;
+operator|~
+name|AllocationOrder
+argument_list|()
+expr_stmt|;
 comment|/// next - Return the next physical register in the allocation order, or 0.
 comment|/// It is safe to call next again after it returned 0.
 comment|/// It will keep returning 0 until rewind() is called.
 name|unsigned
 name|next
 parameter_list|()
-function_decl|;
+block|{
+comment|// First take the hint.
+if|if
+condition|(
+operator|!
+name|Pos
+condition|)
+block|{
+name|Pos
+operator|=
+name|Begin
+expr_stmt|;
+if|if
+condition|(
+name|Hint
+condition|)
+return|return
+name|Hint
+return|;
+block|}
+comment|// Then look at the order from TRI.
+while|while
+condition|(
+name|Pos
+operator|!=
+name|End
+condition|)
+block|{
+name|unsigned
+name|Reg
+init|=
+operator|*
+name|Pos
+operator|++
+decl_stmt|;
+if|if
+condition|(
+name|Reg
+operator|!=
+name|Hint
+condition|)
+return|return
+name|Reg
+return|;
+block|}
+return|return
+literal|0
+return|;
+block|}
 comment|/// rewind - Start over from the beginning.
 name|void
 name|rewind

@@ -1097,6 +1097,15 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|feature_present
+argument_list|(
+literal|"inet"
+argument_list|)
+condition|)
+return|return;
 name|af_register
 argument_list|(
 operator|&

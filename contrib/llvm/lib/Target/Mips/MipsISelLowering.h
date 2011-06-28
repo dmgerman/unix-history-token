@@ -118,6 +118,17 @@ block|,
 comment|// Handle gp_rel (small data/bss sections) relocation.
 name|GPRel
 block|,
+comment|// General Dynamic TLS
+name|TlsGd
+block|,
+comment|// Local Exec TLS
+name|TprelHi
+block|,
+name|TprelLo
+block|,
+comment|// Thread Pointer
+name|ThreadPointer
+block|,
 comment|// Floating Point Branch Conditional
 name|FPBrcond
 block|,
@@ -152,6 +163,8 @@ block|,
 name|BuildPairF64
 block|,
 name|ExtractElementF64
+block|,
+name|WrapperPIC
 block|}
 enum|;
 block|}
@@ -204,15 +217,6 @@ name|SimpleValueType
 name|getSetCCResultType
 argument_list|(
 argument|EVT VT
-argument_list|)
-specifier|const
-block|;
-comment|/// getFunctionAlignment - Return the Log2 alignment of this function.
-name|virtual
-name|unsigned
-name|getFunctionAlignment
-argument_list|(
-argument|const Function *F
 argument_list|)
 specifier|const
 block|;
@@ -285,15 +289,6 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerFP_TO_SINT
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
 name|LowerGlobalAddress
 argument_list|(
 argument|SDValue Op
@@ -340,6 +335,24 @@ specifier|const
 block|;
 name|SDValue
 name|LowerVASTART
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerFCOPYSIGN
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerFRAMEADDR
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -495,6 +508,62 @@ argument_list|(
 argument|const APFloat&Imm
 argument_list|,
 argument|EVT VT
+argument_list|)
+specifier|const
+block|;
+name|MachineBasicBlock
+operator|*
+name|EmitAtomicBinary
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|,
+argument|unsigned Size
+argument_list|,
+argument|unsigned BinOpcode
+argument_list|,
+argument|bool Nand = false
+argument_list|)
+specifier|const
+block|;
+name|MachineBasicBlock
+operator|*
+name|EmitAtomicBinaryPartword
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|,
+argument|unsigned Size
+argument_list|,
+argument|unsigned BinOpcode
+argument_list|,
+argument|bool Nand = false
+argument_list|)
+specifier|const
+block|;
+name|MachineBasicBlock
+operator|*
+name|EmitAtomicCmpSwap
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|,
+argument|unsigned Size
+argument_list|)
+specifier|const
+block|;
+name|MachineBasicBlock
+operator|*
+name|EmitAtomicCmpSwapPartword
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|,
+argument|unsigned Size
 argument_list|)
 specifier|const
 block|;   }

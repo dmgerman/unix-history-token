@@ -751,6 +751,13 @@ name|mnt_flag
 operator||=
 name|MNT_RDONLY
 expr_stmt|;
+comment|/* 	 * We don't want snapshots to allow access to vulnerable setuid 	 * programs, so we turn off setuid when mounting snapshots. 	 */
+name|mp
+operator|->
+name|mnt_flag
+operator||=
+name|MNT_NOSUID
+expr_stmt|;
 comment|/* 	 * We don't want snapshots to be visible in regular 	 * mount(8) and df(1) output. 	 */
 name|mp
 operator|->

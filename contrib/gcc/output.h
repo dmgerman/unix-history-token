@@ -341,6 +341,12 @@ directive|if
 name|GCC_VERSION
 operator|>=
 literal|3004
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
 end_if
 
 begin_define
@@ -370,6 +376,10 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* FIXME(benl): what about %wd? */
+end_comment
 
 begin_define
 define|#

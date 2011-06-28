@@ -2343,7 +2343,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|IPSEC
-comment|/* 	 * Bypass packet filtering for packets from a tunnel (gif). 	 */
+comment|/* 	 * Bypass packet filtering for packets previously handled by IPsec. 	 */
 if|if
 condition|(
 name|ip_ipsec_filtertunnel

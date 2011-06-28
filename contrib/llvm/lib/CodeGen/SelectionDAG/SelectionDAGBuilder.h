@@ -1368,6 +1368,16 @@ name|void
 name|clear
 parameter_list|()
 function_decl|;
+comment|/// clearDanglingDebugInfo - Clear the dangling debug information
+comment|/// map. This function is seperated from the clear so that debug
+comment|/// information that is dangling in a basic block can be properly
+comment|/// resolved in a different basic block. This allows the
+comment|/// SelectionDAG to resolve dangling debug information attached
+comment|/// to PHI nodes.
+name|void
+name|clearDanglingDebugInfo
+parameter_list|()
+function_decl|;
 comment|/// getRoot - Return the current virtual root of the Selection DAG,
 comment|/// flushing any PendingLoad items. This must be done before emitting
 comment|/// a store or any other node that may need to be ordered after any

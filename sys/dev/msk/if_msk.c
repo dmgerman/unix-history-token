@@ -2754,9 +2754,13 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+name|gmac
+operator|&
+operator|(
 name|GM_GPCR_RX_ENA
 operator||
 name|GM_GPCR_TX_ENA
+operator|)
 operator|)
 operator|!=
 literal|0

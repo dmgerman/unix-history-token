@@ -2466,7 +2466,7 @@ name|uint8_t
 name|reserved
 decl_stmt|;
 name|int8_t
-name|class
+name|evt_class
 decl_stmt|;
 block|}
 name|members
@@ -2577,7 +2577,7 @@ name|code
 decl_stmt|;
 name|union
 name|mfi_evt
-name|class
+name|evt_class
 decl_stmt|;
 name|uint8_t
 name|arg_type

@@ -159,6 +159,22 @@ decl_stmt|;
 comment|/// Show categories: 0 -> none, 1 -> Number,
 comment|/// 2 -> Full Name.
 name|unsigned
+name|Format
+range|:
+literal|2
+decl_stmt|;
+comment|/// Format for diagnostics:
+enum|enum
+name|TextDiagnosticFormat
+block|{
+name|Clang
+block|,
+name|Msvc
+block|,
+name|Vi
+block|}
+enum|;
+name|unsigned
 name|ShowColors
 range|:
 literal|1
@@ -310,6 +326,10 @@ expr_stmt|;
 name|ShowCategories
 operator|=
 literal|0
+expr_stmt|;
+name|Format
+operator|=
+name|Clang
 expr_stmt|;
 name|ShowSourceRanges
 operator|=

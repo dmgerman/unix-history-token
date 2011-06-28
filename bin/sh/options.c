@@ -150,6 +150,12 @@ directive|include
 file|"mystring.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"builtins.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -315,6 +321,10 @@ parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|;
+name|char
+modifier|*
+name|scriptname
 decl_stmt|;
 name|argptr
 operator|=
@@ -484,9 +494,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|commandname
-operator|=
-name|arg0
+name|scriptname
 operator|=
 operator|*
 name|argptr
@@ -494,10 +502,16 @@ operator|++
 expr_stmt|;
 name|setinputfile
 argument_list|(
-name|commandname
+name|scriptname
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|commandname
+operator|=
+name|arg0
+operator|=
+name|scriptname
 expr_stmt|;
 block|}
 comment|/* POSIX 1003.2: first arg after -c cmd is $0, remainder $1... */

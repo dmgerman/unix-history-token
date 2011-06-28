@@ -102,7 +102,10 @@ name|PTX_VERSION_2_1
 block|,
 comment|/*< PTX Version 2.1 */
 name|PTX_VERSION_2_2
+block|,
 comment|/*< PTX Version 2.2 */
+name|PTX_VERSION_2_3
+comment|/*< PTX Version 2.3 */
 block|}
 block|;
 comment|/// Shader Model supported on the target GPU.
@@ -116,6 +119,10 @@ block|;
 comment|// The native .f64 type is supported on the hardware.
 name|bool
 name|SupportsDouble
+block|;
+comment|// Support the fused-multiply add (FMA) and multiply-add (MAD) instructions
+name|bool
+name|SupportsFMA
 block|;
 comment|// Use .u64 instead of .u32 for addresses.
 name|bool
@@ -165,6 +172,15 @@ name|Is64Bit
 return|;
 block|}
 name|bool
+name|supportsFMA
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SupportsFMA
+return|;
+block|}
+name|bool
 name|supportsSM13
 argument_list|()
 specifier|const
@@ -206,6 +222,17 @@ return|return
 name|PTXVersion
 operator|>=
 name|PTX_VERSION_2_2
+return|;
+block|}
+name|bool
+name|supportsPTX23
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PTXVersion
+operator|>=
+name|PTX_VERSION_2_3
 return|;
 block|}
 name|std

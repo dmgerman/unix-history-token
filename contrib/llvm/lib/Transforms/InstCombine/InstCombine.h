@@ -1524,6 +1524,41 @@ return|return
 name|New
 return|;
 block|}
+comment|// InsertNewInstWith - same as InsertNewInstBefore, but also sets the
+comment|// debug loc.
+comment|//
+name|Instruction
+modifier|*
+name|InsertNewInstWith
+parameter_list|(
+name|Instruction
+modifier|*
+name|New
+parameter_list|,
+name|Instruction
+modifier|&
+name|Old
+parameter_list|)
+block|{
+name|New
+operator|->
+name|setDebugLoc
+argument_list|(
+name|Old
+operator|.
+name|getDebugLoc
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+name|InsertNewInstBefore
+argument_list|(
+name|New
+argument_list|,
+name|Old
+argument_list|)
+return|;
+block|}
 comment|// ReplaceInstUsesWith - This method is to be used when an instruction is
 comment|// found to be dead, replacable with another preexisting expression.  Here
 comment|// we add all uses of I to the worklist, replace all uses of I with the new

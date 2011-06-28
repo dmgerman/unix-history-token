@@ -8064,6 +8064,15 @@ name|CRYPTO_SHA1_HMAC
 condition|)
 block|{
 comment|/* 				 * SHA-1 ICV's are byte-swapped; fix 'em up 				 * before copy them to their destination. 				 */
+name|re
+operator|->
+name|re_sastate
+operator|.
+name|sa_saved_indigest
+index|[
+literal|0
+index|]
+operator|=
 name|bswap32
 argument_list|(
 name|re
@@ -8076,6 +8085,15 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+name|re
+operator|->
+name|re_sastate
+operator|.
+name|sa_saved_indigest
+index|[
+literal|1
+index|]
+operator|=
 name|bswap32
 argument_list|(
 name|re
@@ -8088,6 +8106,15 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+name|re
+operator|->
+name|re_sastate
+operator|.
+name|sa_saved_indigest
+index|[
+literal|2
+index|]
+operator|=
 name|bswap32
 argument_list|(
 name|re

@@ -2523,7 +2523,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_dirty:  *  *	make page all dirty  */
+comment|/*  *	vm_page_dirty:  *  *	Set all bits in the page's dirty field.  *  *	The object containing the specified page must be locked if the call is  *	made from the machine-independent layer.  If, however, the call is  *	made from the pmap layer, then the page queues lock may be required.  *	See vm_page_clear_dirty_mask().  */
 end_comment
 
 begin_function
@@ -8379,7 +8379,7 @@ name|int
 name|pagebits
 parameter_list|)
 block|{
-comment|/* 	 * If the object is locked and the page is neither VPO_BUSY nor 	 * PG_WRITEABLE, then the page's dirty field cannot possibly be 	 * modified by a concurrent pmap operation.  	 */
+comment|/* 	 * If the object is locked and the page is neither VPO_BUSY nor 	 * PG_WRITEABLE, then the page's dirty field cannot possibly be 	 * set by a concurrent pmap operation.  	 */
 name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|m
@@ -8420,6 +8420,84 @@ name|pagebits
 expr_stmt|;
 else|else
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|__mips__
+argument_list|)
+comment|/* 		 * On the aforementioned architectures, the page queues lock 		 * is not required by the following read-modify-write 		 * operation.  The combination of the object's lock and an 		 * atomic operation suffice.  Moreover, the pmap layer on 		 * these architectures can call vm_page_dirty() without 		 * holding the page queues lock. 		 */
+if|#
+directive|if
+name|PAGE_SIZE
+operator|==
+literal|4096
+name|atomic_clear_char
+argument_list|(
+operator|&
+name|m
+operator|->
+name|dirty
+argument_list|,
+name|pagebits
+argument_list|)
+expr_stmt|;
+elif|#
+directive|elif
+name|PAGE_SIZE
+operator|==
+literal|8192
+name|atomic_clear_short
+argument_list|(
+operator|&
+name|m
+operator|->
+name|dirty
+argument_list|,
+name|pagebits
+argument_list|)
+expr_stmt|;
+elif|#
+directive|elif
+name|PAGE_SIZE
+operator|==
+literal|16384
+name|atomic_clear_int
+argument_list|(
+operator|&
+name|m
+operator|->
+name|dirty
+argument_list|,
+name|pagebits
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+error|#
+directive|error
+literal|"PAGE_SIZE is not supported."
+endif|#
+directive|endif
+else|#
+directive|else
+comment|/* 		 * Otherwise, the page queues lock is required to ensure that 		 * a concurrent pmap operation does not set the page's dirty 		 * field during the following read-modify-write operation. 		 */
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -8433,6 +8511,8 @@ expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 comment|/*  *	vm_page_set_validclean:  *  *	Sets portions of a page valid and clean.  The arguments are expected  *	to be DEV_BSIZE aligned but if they aren't the bitmap is inclusive  *	of any partial chunks touched by the range.  The invalid portion of  *	such chunks will be zero'd.  *  *	This routine may not block.  *  *	(base + size) must be less then or equal to PAGE_SIZE.  */
@@ -9362,6 +9442,47 @@ literal|0
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|void
+name|vm_page_object_lock_assert
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+block|{
+comment|/* 	 * Certain of the page's fields may only be modified by the 	 * holder of the containing object's lock or the setter of the 	 * page's VPO_BUSY flag.  Unfortunately, the setter of the 	 * VPO_BUSY flag is not recorded, and thus cannot be checked 	 * here. 	 */
+if|if
+condition|(
+name|m
+operator|->
+name|object
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|m
+operator|->
+name|oflags
+operator|&
+name|VPO_BUSY
+operator|)
+operator|==
+literal|0
+condition|)
+name|VM_OBJECT_LOCK_ASSERT
+argument_list|(
+name|m
+operator|->
+name|object
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 include|#
 directive|include
 file|"opt_ddb.h"

@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -214,7 +220,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Check validity of a Prefix Control Operation(PCO).  * Return 0 on success, 1 on failure.  */
+comment|/*  * Check validity of a Prefix Control Operation(PCO).  * return 0 on success, 1 on failure.  */
 end_comment
 
 begin_function
@@ -282,7 +288,9 @@ name|rpm_len
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 comment|/* rpm->rpm_code must be valid value */
@@ -318,7 +326,9 @@ name|rpm_code
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 comment|/* rpm->rpm_matchlen must be 0 to 128 inclusive */
@@ -345,7 +355,9 @@ name|rpm_matchlen
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 comment|/* 	 * rpu->rpu_uselen, rpu->rpu_keeplen, and sum of them must be 	 * between 0 and 128 inclusive 	 */
@@ -437,12 +449,16 @@ name|rpu_keeplen
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -485,7 +501,7 @@ decl_stmt|;
 name|struct
 name|prefix
 modifier|*
-name|pp
+name|pfx
 decl_stmt|;
 name|rpu
 operator|=
@@ -957,29 +973,14 @@ name|NULL
 condition|)
 continue|continue;
 comment|/* non-advertising IF */
-for|for
-control|(
-name|pp
-operator|=
-name|rai
-operator|->
-name|prefix
-operator|.
-name|next
-init|;
-name|pp
-operator|!=
-operator|&
-name|rai
-operator|->
-name|prefix
-condition|;
-name|pp
-operator|=
-name|pp
-operator|->
-name|next
-control|)
+name|TAILQ_FOREACH
+argument_list|(
+argument|pfx
+argument_list|,
+argument|&rai->rai_prefix
+argument_list|,
+argument|pfx_next
+argument_list|)
 block|{
 name|struct
 name|timeval
@@ -990,13 +991,13 @@ condition|(
 name|prefix_match
 argument_list|(
 operator|&
-name|pp
+name|pfx
 operator|->
-name|prefix
+name|pfx_prefix
 argument_list|,
-name|pp
+name|pfx
 operator|->
-name|prefixlen
+name|pfx_prefixlen
 argument_list|,
 operator|&
 name|rpm
@@ -1010,9 +1011,9 @@ argument_list|)
 condition|)
 block|{
 comment|/* change parameters */
-name|pp
+name|pfx
 operator|->
-name|validlifetime
+name|pfx_validlifetime
 operator|=
 name|ntohl
 argument_list|(
@@ -1021,9 +1022,9 @@ operator|->
 name|rpu_vltime
 argument_list|)
 expr_stmt|;
-name|pp
+name|pfx
 operator|->
-name|preflifetime
+name|pfx_preflifetime
 operator|=
 name|ntohl
 argument_list|(
@@ -1047,23 +1048,23 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|pp
+name|pfx
 operator|->
-name|vltimeexpire
+name|pfx_vltimeexpire
 operator|=
 name|now
 operator|.
 name|tv_sec
 operator|+
-name|pp
+name|pfx
 operator|->
-name|validlifetime
+name|pfx_validlifetime
 expr_stmt|;
 block|}
 else|else
-name|pp
+name|pfx
 operator|->
-name|vltimeexpire
+name|pfx_vltimeexpire
 operator|=
 literal|0
 expr_stmt|;
@@ -1082,23 +1083,23 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|pp
+name|pfx
 operator|->
-name|pltimeexpire
+name|pfx_pltimeexpire
 operator|=
 name|now
 operator|.
 name|tv_sec
 operator|+
-name|pp
+name|pfx
 operator|->
-name|preflifetime
+name|pfx_preflifetime
 expr_stmt|;
 block|}
 else|else
-name|pp
+name|pfx
 operator|->
-name|pltimeexpire
+name|pfx_pltimeexpire
 operator|=
 literal|0
 expr_stmt|;
@@ -1155,7 +1156,9 @@ literal|0
 operator|)
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -1287,7 +1290,7 @@ name|irr_name
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * if ICMP6_RR_FLAGS_FORCEAPPLY(A flag) is 0 and IFF_UP is off, 		 * the interface is not applied 		 */
+comment|/* 		 * if ICMP6_RR_FLAGS_FORCEAPPLY(A flag) is 0 and 		 * IFF_UP is off, the interface is not applied 		 */
 if|if
 condition|(
 operator|(
@@ -1335,7 +1338,9 @@ operator|==
 name|ENXIO
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 elseif|else
 if|if
@@ -1358,11 +1363,15 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1452,6 +1461,9 @@ name|cp
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|len
 operator|<
 sizeof|sizeof
@@ -1476,7 +1488,9 @@ name|len
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 name|rpmlen
@@ -1533,7 +1547,9 @@ name|rpmlen
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1576,6 +1592,9 @@ comment|/* omit rr minimal length check. hope kernel have done it. */
 comment|/* rr_command length check */
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|len
 operator|<
 operator|(
@@ -1605,7 +1624,9 @@ name|len
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 comment|/* destination check. only for multicast. omit unicast check. */
@@ -1645,12 +1666,17 @@ name|dst
 argument_list|,
 name|ntopbuf
 argument_list|,
-name|INET6_ADDRSTRLEN
+sizeof|sizeof
+argument_list|(
+name|ntopbuf
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 comment|/* seqnum and segnum check */
@@ -1691,12 +1717,17 @@ name|from
 argument_list|,
 name|ntopbuf
 argument_list|,
-name|INET6_ADDRSTRLEN
+sizeof|sizeof
+argument_list|(
+name|ntopbuf
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -1763,12 +1794,17 @@ name|from
 argument_list|,
 name|ntopbuf
 argument_list|,
-name|INET6_ADDRSTRLEN
+sizeof|sizeof
+argument_list|(
+name|ntopbuf
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/* update seqnum */
@@ -1811,7 +1847,9 @@ operator|->
 name|rr_seqnum
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1884,11 +1922,9 @@ argument_list|,
 name|rr
 argument_list|)
 condition|)
-block|{
 goto|goto
 name|failed
 goto|;
-block|}
 comment|/* update segnum */
 name|RR_SET_SEGNUM
 argument_list|(
@@ -1981,7 +2017,13 @@ index|[
 literal|0
 index|]
 argument_list|,
-name|INET6_ADDRSTRLEN
+sizeof|sizeof
+argument_list|(
+name|ntopbuf
+index|[
+literal|0
+index|]
+argument_list|)
 argument_list|)
 argument_list|,
 name|inet_ntop
@@ -1996,7 +2038,13 @@ index|[
 literal|1
 index|]
 argument_list|,
-name|INET6_ADDRSTRLEN
+sizeof|sizeof
+argument_list|(
+name|ntopbuf
+index|[
+literal|1
+index|]
+argument_list|)
 argument_list|)
 argument_list|,
 name|if_indextoname
@@ -2012,6 +2060,9 @@ expr_stmt|;
 comment|/* packet validation based on Section 4.1 of RFC2894 */
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|len
 operator|<
 sizeof|sizeof
@@ -2045,7 +2096,13 @@ index|[
 literal|0
 index|]
 argument_list|,
-name|INET6_ADDRSTRLEN
+sizeof|sizeof
+argument_list|(
+name|ntopbuf
+index|[
+literal|0
+index|]
+argument_list|)
 argument_list|)
 argument_list|,
 name|inet_ntop
@@ -2060,7 +2117,13 @@ index|[
 literal|1
 index|]
 argument_list|,
-name|INET6_ADDRSTRLEN
+sizeof|sizeof
+argument_list|(
+name|ntopbuf
+index|[
+literal|1
+index|]
+argument_list|)
 argument_list|)
 argument_list|,
 name|if_indextoname
@@ -2090,7 +2153,9 @@ operator|!
 name|IN6_ARE_ADDR_EQUAL
 argument_list|(
 operator|&
-name|in6a_site_allrouters
+name|sin6_sitelocal_allrouters
+operator|.
+name|sin6_addr
 argument_list|,
 operator|&
 name|pi
@@ -2120,7 +2185,13 @@ index|[
 literal|0
 index|]
 argument_list|,
-name|INET6_ADDRSTRLEN
+sizeof|sizeof
+argument_list|(
+name|ntopbuf
+index|[
+literal|0
+index|]
+argument_list|)
 argument_list|)
 argument_list|,
 name|inet_ntop
@@ -2137,7 +2208,13 @@ index|[
 literal|1
 index|]
 argument_list|,
-name|INET6_ADDRSTRLEN
+sizeof|sizeof
+argument_list|(
+name|ntopbuf
+index|[
+literal|1
+index|]
+argument_list|)
 argument_list|)
 argument_list|,
 name|if_indextoname

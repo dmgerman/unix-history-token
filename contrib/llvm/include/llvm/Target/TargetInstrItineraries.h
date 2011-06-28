@@ -333,7 +333,12 @@ argument_list|)
 operator|,
 name|Itineraries
 argument_list|(
-argument|I
+name|I
+argument_list|)
+operator|,
+name|IssueWidth
+argument_list|(
+literal|0
 argument_list|)
 block|{}
 comment|/// isEmpty - Returns true if there are no itineraries.

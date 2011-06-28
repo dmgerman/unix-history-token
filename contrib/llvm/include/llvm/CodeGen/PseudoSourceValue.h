@@ -76,7 +76,7 @@ name|class
 name|raw_ostream
 decl_stmt|;
 comment|/// PseudoSourceValue - Special value supplied for machine level alias
-comment|/// analysis. It indicates that the a memory access references the functions
+comment|/// analysis. It indicates that a memory access references the functions
 comment|/// stack frame (e.g., a spill slot), below the stack frame (e.g., argument
 comment|/// space), or constant pool.
 name|class

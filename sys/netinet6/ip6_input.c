@@ -1952,6 +1952,23 @@ comment|/* 	 * Reject packets with IPv4 compatible addresses (auto tunnel). 	 * 
 block|if (IN6_IS_ADDR_V4COMPAT(&ip6->ip6_src) || 	    IN6_IS_ADDR_V4COMPAT(&ip6->ip6_dst)) { 		V_ip6stat.ip6s_badscope++; 		in6_ifstat_inc(m->m_pkthdr.rcvif, ifs6_in_addrerr); 		goto bad; 	}
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|IPSEC
+comment|/* 	 * Bypass packet filtering for packets previously handled by IPsec. 	 */
+if|if
+condition|(
+name|ip6_ipsec_filtertunnel
+argument_list|(
+name|m
+argument_list|)
+condition|)
+goto|goto
+name|passin
+goto|;
+endif|#
+directive|endif
+comment|/* IPSEC */
 comment|/* 	 * Run through list of hooks for input packets. 	 * 	 * NB: Beware of the destination address changing 	 *     (e.g. by NAT rewriting).  When this happens, 	 *     tell ip6_forward to do the right thing. 	 */
 name|odst
 operator|=

@@ -377,6 +377,16 @@ begin_comment
 comment|/*  * TCP/IP protocol family: IP6, ICMP6, UDP, TCP.  */
 end_comment
 
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|inet6
+argument_list|,
+literal|"Internet Protocol version 6"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -1647,6 +1657,30 @@ name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
+name|ip6_no_radr
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|ip6_norbit_raif
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
 name|ip6_maxfragpackets
 argument_list|)
 expr_stmt|;
@@ -2549,6 +2583,57 @@ literal|0
 argument_list|,
 literal|"Default value of per-interface flag for accepting ICMPv6 Router"
 literal|"Advertisement messages"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_VNET_INT
+argument_list|(
+name|_net_inet6_ip6
+argument_list|,
+name|IPV6CTL_NO_RADR
+argument_list|,
+name|no_radr
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
+name|ip6_no_radr
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|"Default value of per-interface flag to control whether routers "
+literal|"sending ICMPv6 RA messages on that interface are added into the "
+literal|"default router list."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_VNET_INT
+argument_list|(
+name|_net_inet6_ip6
+argument_list|,
+name|IPV6CTL_NORBIT_RAIF
+argument_list|,
+name|norbit_raif
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
+name|ip6_norbit_raif
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|"Always set 0 to R flag in ICMPv6 NA messages when accepting RA"
+literal|" on the interface."
 argument_list|)
 expr_stmt|;
 end_expr_stmt

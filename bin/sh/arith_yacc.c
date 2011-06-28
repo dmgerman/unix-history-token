@@ -1578,7 +1578,7 @@ end_comment
 
 begin_function
 name|int
-name|expcmd
+name|letcmd
 parameter_list|(
 name|int
 name|argc

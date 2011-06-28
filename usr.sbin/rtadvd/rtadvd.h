@@ -8,43 +8,122 @@ comment|/*	$KAME: rtadvd.h,v 1.26 2003/08/05 12:34:23 itojun Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1998 WIDE Project.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ALLNODES
-value|"ff02::1"
+name|IN6ADDR_LINKLOCAL_ALLNODES_INIT
+define|\
+value|{{{ 0xff, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,	\ 	    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 }}}
 end_define
 
 begin_define
 define|#
 directive|define
-name|ALLROUTERS_LINK
-value|"ff02::2"
+name|IN6ADDR_LINKLOCAL_ALLROUTERS_INIT
+define|\
+value|{{{ 0xff, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,	\ 	    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02 }}}
 end_define
 
 begin_define
 define|#
 directive|define
-name|ALLROUTERS_SITE
-value|"ff05::2"
+name|IN6ADDR_SITELOCAL_ALLROUTERS_INIT
+define|\
+value|{{{ 0xff, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,	\ 	    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02 }}}
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|sockaddr_in6
+name|sin6_linklocal_allnodes
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|sockaddr_in6
+name|sin6_linklocal_allrouters
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|sockaddr_in6
+name|sin6_sitelocal_allrouters
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * RFC 3542 API deprecates IPV6_PKTINFO in favor of  * IPV6_RECVPKTINFO  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IPV6_RECVPKTINFO
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPV6_PKTINFO
+end_ifdef
 
 begin_define
 define|#
 directive|define
-name|ANY
-value|"::"
+name|IPV6_RECVPKTINFO
+value|IPV6_PKTINFO
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * RFC 3542 API deprecates IPV6_HOPLIMIT in favor of  * IPV6_RECVHOPLIMIT  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IPV6_RECVHOPLIMIT
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPV6_HOPLIMIT
+end_ifdef
 
 begin_define
 define|#
 directive|define
-name|RTSOLLEN
-value|8
+name|IPV6_RECVHOPLIMIT
+value|IPV6_HOPLIMIT
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* protocol constants and default values */
@@ -198,64 +277,58 @@ begin_struct
 struct|struct
 name|prefix
 block|{
-name|struct
-name|prefix
-modifier|*
-name|next
-decl_stmt|;
-comment|/* forward link */
-name|struct
-name|prefix
-modifier|*
-name|prev
-decl_stmt|;
-comment|/* previous link */
+name|TAILQ_ENTRY
+argument_list|(
+argument|prefix
+argument_list|)
+name|pfx_next
+expr_stmt|;
 name|struct
 name|rainfo
 modifier|*
-name|rainfo
+name|pfx_rainfo
 decl_stmt|;
 comment|/* back pointer to the interface */
+comment|/* 	 * Expiration timer.  This is used when a prefix derived from 	 * the kernel is deleted. 	 */
 name|struct
 name|rtadvd_timer
 modifier|*
-name|timer
+name|pfx_timer
 decl_stmt|;
-comment|/* expiration timer.  used when a prefix 				     * derived from the kernel is deleted. 				     */
 name|u_int32_t
-name|validlifetime
+name|pfx_validlifetime
 decl_stmt|;
 comment|/* AdvValidLifetime */
 name|long
-name|vltimeexpire
+name|pfx_vltimeexpire
 decl_stmt|;
-comment|/* expiration of vltime; decrement case only */
+comment|/* Expiration of vltime */
 name|u_int32_t
-name|preflifetime
+name|pfx_preflifetime
 decl_stmt|;
 comment|/* AdvPreferredLifetime */
 name|long
-name|pltimeexpire
+name|pfx_pltimeexpire
 decl_stmt|;
-comment|/* expiration of pltime; decrement case only */
+comment|/* Expiration of pltime */
 name|u_int
-name|onlinkflg
+name|pfx_onlinkflg
 decl_stmt|;
 comment|/* bool: AdvOnLinkFlag */
 name|u_int
-name|autoconfflg
+name|pfx_autoconfflg
 decl_stmt|;
 comment|/* bool: AdvAutonomousFlag */
 name|int
-name|prefixlen
+name|pfx_prefixlen
 decl_stmt|;
 name|int
-name|origin
+name|pfx_origin
 decl_stmt|;
-comment|/* from kernel or config */
+comment|/* From kernel or config */
 name|struct
 name|in6_addr
-name|prefix
+name|pfx_prefix
 decl_stmt|;
 block|}
 struct|;
@@ -271,32 +344,26 @@ begin_struct
 struct|struct
 name|rtinfo
 block|{
-name|struct
-name|rtinfo
-modifier|*
-name|prev
-decl_stmt|;
-comment|/* previous link */
-name|struct
-name|rtinfo
-modifier|*
-name|next
-decl_stmt|;
-comment|/* forward link */
+name|TAILQ_ENTRY
+argument_list|(
+argument|rtinfo
+argument_list|)
+name|rti_next
+expr_stmt|;
 name|u_int32_t
-name|ltime
+name|rti_ltime
 decl_stmt|;
 comment|/* route lifetime */
 name|u_int
-name|rtpref
+name|rti_rtpref
 decl_stmt|;
 comment|/* route preference */
 name|int
-name|prefixlen
+name|rti_prefixlen
 decl_stmt|;
 name|struct
 name|in6_addr
-name|prefix
+name|rti_prefix
 decl_stmt|;
 block|}
 struct|;
@@ -309,16 +376,137 @@ end_endif
 
 begin_struct
 struct|struct
+name|rdnss_addr
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|rdnss_addr
+argument_list|)
+name|ra_next
+expr_stmt|;
+name|struct
+name|in6_addr
+name|ra_dns
+decl_stmt|;
+comment|/* DNS server entry */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|rdnss
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|rdnss
+argument_list|)
+name|rd_next
+expr_stmt|;
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|rdnss_addr
+argument_list|)
+name|rd_list
+expr_stmt|;
+comment|/* list of DNS servers */
+name|int
+name|rd_cnt
+decl_stmt|;
+comment|/* number of DNS servers */
+name|u_int32_t
+name|rd_ltime
+decl_stmt|;
+comment|/* number of seconds valid */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The maximum length of a domain name in a DNS search list is calculated  * by a domain name + length fields per 63 octets + a zero octet at  * the tail and adding 8 octet boundary padding.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_DNAME_LABELENC_MAXLEN
+define|\
+value|(NI_MAXHOST + (NI_MAXHOST / 64 + 1) + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNAME_LABELENC_MAXLEN
+define|\
+value|(_DNAME_LABELENC_MAXLEN + 8 - _DNAME_LABELENC_MAXLEN % 8)
+end_define
+
+begin_struct
+struct|struct
+name|dnssl_addr
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|dnssl_addr
+argument_list|)
+name|da_next
+expr_stmt|;
+name|int
+name|da_len
+decl_stmt|;
+comment|/* length of entry */
+name|char
+name|da_dom
+index|[
+name|DNAME_LABELENC_MAXLEN
+index|]
+decl_stmt|;
+comment|/* search domain name entry */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|dnssl
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|dnssl
+argument_list|)
+name|dn_next
+expr_stmt|;
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|dnssl_addr
+argument_list|)
+name|dn_list
+expr_stmt|;
+comment|/* list of search domains */
+name|u_int32_t
+name|dn_ltime
+decl_stmt|;
+comment|/* number of seconds valid */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|soliciter
 block|{
-name|struct
-name|soliciter
-modifier|*
-name|next
-decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|soliciter
+argument_list|)
+name|sol_next
+expr_stmt|;
 name|struct
 name|sockaddr_in6
-name|addr
+name|sol_addr
 decl_stmt|;
 block|}
 struct|;
@@ -329,156 +517,201 @@ struct|struct
 name|rainfo
 block|{
 comment|/* pointer for list */
-name|struct
-name|rainfo
-modifier|*
-name|next
-decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|rainfo
+argument_list|)
+name|rai_next
+expr_stmt|;
 comment|/* timer related parameters */
 name|struct
 name|rtadvd_timer
 modifier|*
-name|timer
-decl_stmt|;
-name|int
-name|initcounter
+name|rai_timer
 decl_stmt|;
 comment|/* counter for the first few advertisements */
-name|struct
-name|timeval
-name|lastsent
+name|int
+name|rai_initcounter
 decl_stmt|;
 comment|/* timestamp when the latest RA was sent */
-name|int
-name|waiting
+name|struct
+name|timeval
+name|rai_lastsent
 decl_stmt|;
 comment|/* number of RS waiting for RA */
+name|int
+name|rai_waiting
+decl_stmt|;
 comment|/* interface information */
 name|int
-name|ifindex
+name|rai_ifindex
 decl_stmt|;
 name|int
-name|advlinkopt
+name|rai_advlinkopt
 decl_stmt|;
 comment|/* bool: whether include link-layer addr opt */
+name|int
+name|rai_advifprefix
+decl_stmt|;
+comment|/* bool: gather IF prefixes? */
 name|struct
 name|sockaddr_dl
 modifier|*
-name|sdl
+name|rai_sdl
 decl_stmt|;
 name|char
-name|ifname
+name|rai_ifname
 index|[
-literal|16
+name|IFNAMSIZ
 index|]
 decl_stmt|;
-name|int
-name|phymtu
+name|u_int32_t
+name|rai_phymtu
 decl_stmt|;
 comment|/* mtu of the physical interface */
 comment|/* Router configuration variables */
 name|u_short
-name|lifetime
+name|rai_lifetime
 decl_stmt|;
 comment|/* AdvDefaultLifetime */
 name|u_int
-name|maxinterval
+name|rai_maxinterval
 decl_stmt|;
 comment|/* MaxRtrAdvInterval */
 name|u_int
-name|mininterval
+name|rai_mininterval
 decl_stmt|;
 comment|/* MinRtrAdvInterval */
 name|int
-name|managedflg
+name|rai_managedflg
 decl_stmt|;
 comment|/* AdvManagedFlag */
 name|int
-name|otherflg
+name|rai_otherflg
 decl_stmt|;
 comment|/* AdvOtherConfigFlag */
 name|int
-name|rtpref
+name|rai_rtpref
 decl_stmt|;
 comment|/* router preference */
 name|u_int32_t
-name|linkmtu
+name|rai_linkmtu
 decl_stmt|;
 comment|/* AdvLinkMTU */
 name|u_int32_t
-name|reachabletime
+name|rai_reachabletime
 decl_stmt|;
 comment|/* AdvReachableTime */
 name|u_int32_t
-name|retranstimer
+name|rai_retranstimer
 decl_stmt|;
 comment|/* AdvRetransTimer */
 name|u_int
-name|hoplimit
+name|rai_hoplimit
 decl_stmt|;
 comment|/* AdvCurHopLimit */
-name|struct
-name|prefix
-name|prefix
-decl_stmt|;
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|prefix
+argument_list|)
+name|rai_prefix
+expr_stmt|;
 comment|/* AdvPrefixList(link head) */
 name|int
-name|pfxs
+name|rai_pfxs
 decl_stmt|;
 comment|/* number of prefixes */
 name|long
-name|clockskew
+name|rai_clockskew
 decl_stmt|;
 comment|/* used for consisitency check of lifetimes */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|rdnss
+argument_list|)
+name|rai_rdnss
+expr_stmt|;
+comment|/* DNS server list */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|dnssl
+argument_list|)
+name|rai_dnssl
+expr_stmt|;
+comment|/* search domain list */
 ifdef|#
 directive|ifdef
 name|ROUTEINFO
-name|struct
-name|rtinfo
-name|route
-decl_stmt|;
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|rtinfo
+argument_list|)
+name|rai_route
+expr_stmt|;
 comment|/* route information option (link head) */
 name|int
-name|routes
+name|rai_routes
 decl_stmt|;
 comment|/* number of route information options */
 endif|#
 directive|endif
 comment|/* actual RA packet data and its length */
 name|size_t
-name|ra_datalen
+name|rai_ra_datalen
 decl_stmt|;
 name|u_char
 modifier|*
-name|ra_data
+name|rai_ra_data
 decl_stmt|;
 comment|/* statistics */
 name|u_quad_t
-name|raoutput
+name|rai_raoutput
 decl_stmt|;
-comment|/* number of RAs sent */
+comment|/* # of RAs sent */
 name|u_quad_t
-name|rainput
+name|rai_rainput
 decl_stmt|;
-comment|/* number of RAs received */
+comment|/* # of RAs received */
 name|u_quad_t
-name|rainconsistent
+name|rai_rainconsistent
 decl_stmt|;
-comment|/* number of RAs inconsistent with ours */
+comment|/* # of RAs inconsistent with ours */
 name|u_quad_t
-name|rsinput
+name|rai_rsinput
 decl_stmt|;
-comment|/* number of RSs received */
+comment|/* # of RSs received */
 comment|/* info about soliciter */
-name|struct
-name|soliciter
-modifier|*
-name|soliciter
-decl_stmt|;
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|soliciter
+argument_list|)
+name|rai_soliciter
+expr_stmt|;
 comment|/* recent solication source */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Interface list including RA information */
+end_comment
+
+begin_extern
+extern|extern TAILQ_HEAD(railist_head_t
+operator|,
+extern|rainfo
+end_extern
+
+begin_expr_stmt
+unit|)
+name|railist
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|struct
@@ -501,6 +734,17 @@ modifier|*
 parameter_list|,
 name|struct
 name|timeval
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ra_output
+parameter_list|(
+name|struct
+name|rainfo
 modifier|*
 parameter_list|)
 function_decl|;
@@ -554,14 +798,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|in6_addr
-name|in6a_site_allrouters
-decl_stmt|;
-end_decl_stmt
 
 end_unit
 

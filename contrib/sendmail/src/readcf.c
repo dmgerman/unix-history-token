@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2006, 2008, 2009 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2006, 2008-2010 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: readcf.c,v 8.674 2009/10/26 17:47:00 ca Exp $"
+literal|"@(#)$Id: readcf.c,v 8.684 2011/03/15 17:29:29 guenther Exp $"
 argument_list|)
 end_macro
 
@@ -332,9 +332,25 @@ directive|if
 name|STARTTLS
 name|Srv_SSL_Options
 operator|=
+name|SSL_OP_ALL
+expr_stmt|;
 name|Clt_SSL_Options
 operator|=
 name|SSL_OP_ALL
+ifdef|#
+directive|ifdef
+name|SSL_OP_NO_SSLv2
+operator||
+name|SSL_OP_NO_SSLv2
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SSL_OP_NO_TICKET
+operator||
+name|SSL_OP_NO_TICKET
+endif|#
+directive|endif
 expr_stmt|;
 endif|#
 directive|endif
@@ -9658,6 +9674,29 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_RCPTTHROTDELAY */
+if|#
+directive|if
+literal|0
+operator|&&
+name|_FFR_QOS
+operator|&&
+name|defined
+argument_list|(
+name|SOL_IP
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|IP_TOS
+argument_list|)
+define|#
+directive|define
+name|O_INETQOS
+value|0xe7
+comment|/* reserved for FFR_QOS */
+block|{ "InetQoS",			O_INETQOS,	OI_NONE },
+endif|#
+directive|endif
 block|{
 name|NULL
 block|,
@@ -9709,7 +9748,6 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* SSL_OP_MICROSOFT_SESS_ID_BUG */
 ifdef|#
 directive|ifdef
 name|SSL_OP_NETSCAPE_CHALLENGE_BUG
@@ -9721,7 +9759,6 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* SSL_OP_NETSCAPE_CHALLENGE_BUG */
 ifdef|#
 directive|ifdef
 name|SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG
@@ -9733,7 +9770,6 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG */
 ifdef|#
 directive|ifdef
 name|SSL_OP_SSLREF2_REUSE_CERT_TYPE_BUG
@@ -9745,7 +9781,6 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* SSL_OP_SSLREF2_REUSE_CERT_TYPE_BUG */
 ifdef|#
 directive|ifdef
 name|SSL_OP_MICROSOFT_BIG_SSLV3_BUFFER
@@ -9757,7 +9792,6 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* SSL_OP_MICROSOFT_BIG_SSLV3_BUFFER */
 ifdef|#
 directive|ifdef
 name|SSL_OP_MSIE_SSLV2_RSA_PADDING
@@ -9769,7 +9803,6 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* SSL_OP_MSIE_SSLV2_RSA_PADDING */
 ifdef|#
 directive|ifdef
 name|SSL_OP_SSLEAY_080_CLIENT_DH_BUG
@@ -9781,7 +9814,6 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* SSL_OP_SSLEAY_080_CLIENT_DH_BUG */
 ifdef|#
 directive|ifdef
 name|SSL_OP_TLS_D5_BUG
@@ -9793,7 +9825,6 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* SSL_OP_TLS_D5_BUG */
 ifdef|#
 directive|ifdef
 name|SSL_OP_TLS_BLOCK_PADDING_BUG
@@ -9805,7 +9836,6 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* SSL_OP_TLS_BLOCK_PADDING_BUG */
 ifdef|#
 directive|ifdef
 name|SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS
@@ -9817,13 +9847,50 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS */
+ifdef|#
+directive|ifdef
+name|SSL_OP_ALL
 block|{
 literal|"SSL_OP_ALL"
 block|,
 name|SSL_OP_ALL
 block|}
 block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SSL_OP_NO_QUERY_MTU
+block|{
+literal|"SSL_OP_NO_QUERY_MTU"
+block|,
+name|SSL_OP_NO_QUERY_MTU
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SSL_OP_COOKIE_EXCHANGE
+block|{
+literal|"SSL_OP_COOKIE_EXCHANGE"
+block|,
+name|SSL_OP_COOKIE_EXCHANGE
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SSL_OP_NO_TICKET
+block|{
+literal|"SSL_OP_NO_TICKET"
+block|,
+name|SSL_OP_NO_TICKET
+block|}
+block|,
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION
@@ -9835,7 +9902,28 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION */
+ifdef|#
+directive|ifdef
+name|SSL_OP_SINGLE_ECDH_USE
+block|{
+literal|"SSL_OP_SINGLE_ECDH_USE"
+block|,
+name|SSL_OP_SINGLE_ECDH_USE
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SSL_OP_SINGLE_DH_USE
+block|{
+literal|"SSL_OP_SINGLE_DH_USE"
+block|,
+name|SSL_OP_SINGLE_DH_USE
+block|}
+block|,
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|SSL_OP_EPHEMERAL_RSA
@@ -9847,7 +9935,6 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* SSL_OP_EPHEMERAL_RSA */
 ifdef|#
 directive|ifdef
 name|SSL_OP_CIPHER_SERVER_PREFERENCE
@@ -9859,7 +9946,6 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* SSL_OP_CIPHER_SERVER_PREFERENCE */
 ifdef|#
 directive|ifdef
 name|SSL_OP_TLS_ROLLBACK_BUG
@@ -9871,7 +9957,6 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* SSL_OP_TLS_ROLLBACK_BUG */
 ifdef|#
 directive|ifdef
 name|SSL_OP_NO_SSLv2
@@ -9883,7 +9968,6 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* SSL_OP_NO_SSLv2 */
 ifdef|#
 directive|ifdef
 name|SSL_OP_NO_SSLv3
@@ -9895,7 +9979,6 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* SSL_OP_NO_SSLv3 */
 ifdef|#
 directive|ifdef
 name|SSL_OP_NO_TLSv1
@@ -9907,7 +9990,6 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* SSL_OP_NO_TLSv1 */
 ifdef|#
 directive|ifdef
 name|SSL_OP_PKCS1_CHECK_1
@@ -9919,7 +10001,6 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* SSL_OP_PKCS1_CHECK_1 */
 ifdef|#
 directive|ifdef
 name|SSL_OP_PKCS1_CHECK_2
@@ -9931,7 +10012,6 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* SSL_OP_PKCS1_CHECK_2 */
 ifdef|#
 directive|ifdef
 name|SSL_OP_NETSCAPE_CA_DN_BUG
@@ -9943,7 +10023,6 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* SSL_OP_NETSCAPE_CA_DN_BUG */
 ifdef|#
 directive|ifdef
 name|SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG
@@ -9955,7 +10034,6 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG */
 block|{
 name|NULL
 block|,
@@ -14193,7 +14271,7 @@ name|sin6
 operator|.
 name|sin6_addr
 argument_list|)
-operator|!=
+operator|==
 literal|1
 condition|)
 name|ConnectOnlyTo

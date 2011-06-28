@@ -631,6 +631,9 @@ decl_stmt|;
 name|size_t
 name|mapsize
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
 comment|/* Setup direction. */
 if|if
 condition|(
@@ -655,6 +658,8 @@ argument_list|,
 literal|"Unable to set connection direction"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|map
 operator|=
 name|NULL
@@ -1353,6 +1358,9 @@ argument_list|(
 name|nvout
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
 comment|/* Setup direction. */
 if|if
 condition|(
@@ -1377,6 +1385,8 @@ argument_list|,
 literal|"Unable to set connection direction"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|res

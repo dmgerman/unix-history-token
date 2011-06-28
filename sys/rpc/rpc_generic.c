@@ -132,6 +132,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<rpc/rpcsec_gss.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpc/rpc_com.h>
 end_include
 
@@ -165,6 +171,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Provide an entry point hook for the rpcsec_gss module. */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|rpc_gss_entries
+name|rpc_gss_entries
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 struct|struct

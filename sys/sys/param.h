@@ -1254,6 +1254,22 @@ define|\
 value|((struct s *)(void *)((char *)(x) - offsetof(struct s, m)))
 end_define
 
+begin_comment
+comment|/*  * Access a variable length array that has been declared as a fixed  * length array.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__PAST_END
+parameter_list|(
+name|array
+parameter_list|,
+name|offset
+parameter_list|)
+value|(((typeof(*(array)) *)(array))[offset])
+end_define
+
 begin_endif
 endif|#
 directive|endif

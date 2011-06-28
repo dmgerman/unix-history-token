@@ -2979,6 +2979,44 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Returns true if the given MacroID location points at the first
+end_comment
+
+begin_comment
+comment|/// token of the macro instantiation.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isAtStartOfMacroInstantiation
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Returns true if the given MacroID location points at the last
+end_comment
+
+begin_comment
+comment|/// token of the macro instantiation.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isAtEndOfMacroInstantiation
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
 end_comment
 

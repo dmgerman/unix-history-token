@@ -100,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/StaticAnalyzer/Core/PathSensitive/ObjCMessage.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/StaticAnalyzer/Core/BugReporter/BugReporter.h"
 end_include
 
@@ -627,6 +633,13 @@ specifier|const
 name|GRState
 operator|*
 name|state
+argument_list|,
+specifier|const
+name|StoreManager
+operator|::
+name|InvalidatedSymbols
+operator|*
+name|invalidated
 argument_list|,
 specifier|const
 name|MemRegion
@@ -1904,7 +1917,18 @@ name|ExplodedNode
 operator|*
 name|Pred
 argument_list|)
-block|; }
+block|;
+name|public
+operator|:
+comment|/// Returns true if calling the specific function or method would possibly
+comment|/// cause global variables to be invalidated.
+name|bool
+name|doesInvalidateGlobals
+argument_list|(
+argument|const CallOrObjCMessage&callOrMessage
+argument_list|)
+specifier|const
+block|;    }
 decl_stmt|;
 block|}
 comment|// end ento namespace

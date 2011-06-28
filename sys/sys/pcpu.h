@@ -35,6 +35,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/_cpuset.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
 end_include
 
@@ -455,15 +461,7 @@ name|u_int
 name|pc_cpuid
 decl_stmt|;
 comment|/* This cpu number */
-name|cpumask_t
-name|pc_cpumask
-decl_stmt|;
-comment|/* This cpu mask */
-name|cpumask_t
-name|pc_other_cpus
-decl_stmt|;
-comment|/* Mask of all other cpus */
-name|SLIST_ENTRY
+name|STAILQ_ENTRY
 argument_list|(
 argument|pcpu
 argument_list|)
@@ -528,6 +526,15 @@ comment|/* Dynamic per-cpu data area */
 comment|/* 	 * Keep MD fields last, so that CPU-specific variations on a 	 * single architecture don't result in offset variations of 	 * the machine-independent fields of the pcpu.  Even though 	 * the pcpu structure is private to the kernel, some ports 	 * (e.g., lsof, part of gtop) define _KERNEL and include this 	 * header.  While strictly speaking this is wrong, there's no 	 * reason not to keep the offsets of the MI fields constant 	 * if only to make kernel debugging easier. 	 */
 name|PCPU_MD_FIELDS
 expr_stmt|;
+comment|/* 	 * XXX 	 * For the time being, keep the cpuset_t objects as the very last 	 * members of the structure. 	 * They are actually tagged to be removed soon, but as long as this 	 * does not happen, it is necessary to find a way to implement 	 * easilly interfaces to userland and leaving them last makes that 	 * possible. 	 */
+name|cpuset_t
+name|pc_cpumask
+decl_stmt|;
+comment|/* This cpu mask */
+name|cpuset_t
+name|pc_other_cpus
+decl_stmt|;
+comment|/* Mask of all other cpus */
 block|}
 name|__aligned
 argument_list|(
@@ -543,7 +550,7 @@ name|_KERNEL
 end_ifdef
 
 begin_expr_stmt
-name|SLIST_HEAD
+name|STAILQ_HEAD
 argument_list|(
 name|cpuhead
 argument_list|,

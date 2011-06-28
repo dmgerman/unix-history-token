@@ -250,7 +250,7 @@ decl_stmt|;
 name|char
 name|label
 index|[
-literal|16
+literal|24
 index|]
 decl_stmt|;
 name|time_t
@@ -324,11 +324,18 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 name|printf
 argument_list|(
 literal|"Operation Mode: "
@@ -482,6 +489,11 @@ argument_list|(
 literal|"Failed to get patrol read properties"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -590,6 +602,11 @@ argument_list|(
 literal|"Failed to get drive list"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -668,6 +685,16 @@ operator|.
 name|device_id
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|list
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -694,7 +721,11 @@ argument_list|(
 name|label
 argument_list|)
 argument_list|,
-literal|"    Drive %u"
+literal|"    Drive %s"
+argument_list|,
+name|mfi_drive_name
+argument_list|(
+name|NULL
 argument_list|,
 name|list
 operator|->
@@ -704,6 +735,11 @@ name|i
 index|]
 operator|.
 name|device_id
+argument_list|,
+name|MFI_DNAME_DEVICE_ID
+operator||
+name|MFI_DNAME_HONOR_OPTS
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mfi_display_progress
@@ -720,6 +756,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|free
+argument_list|(
+name|list
+argument_list|)
+expr_stmt|;
 block|}
 name|close
 argument_list|(
@@ -823,6 +864,11 @@ expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to start patrol read"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -933,6 +979,11 @@ expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to stop patrol read"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -1282,11 +1333,18 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 name|prop
 operator|.
 name|op_mode
@@ -1339,11 +1397,18 @@ name|at
 operator|==
 literal|0
 condition|)
+block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
+block|}
 name|prop
 operator|.
 name|next_exec
@@ -1403,6 +1468,11 @@ expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to set patrol read properties"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return

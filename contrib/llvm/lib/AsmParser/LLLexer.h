@@ -345,6 +345,18 @@ function_decl|;
 name|lltok
 operator|::
 name|Kind
+name|ReadString
+argument_list|(
+argument|lltok::Kind kind
+argument_list|)
+expr_stmt|;
+name|bool
+name|ReadVarName
+parameter_list|()
+function_decl|;
+name|lltok
+operator|::
+name|Kind
 name|LexIdentifier
 argument_list|()
 expr_stmt|;

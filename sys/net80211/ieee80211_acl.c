@@ -170,7 +170,7 @@ decl_stmt|;
 name|int
 name|as_policy
 decl_stmt|;
-name|int
+name|uint32_t
 name|as_nacls
 decl_stmt|;
 name|TAILQ_HEAD
@@ -1162,10 +1162,11 @@ name|ap
 decl_stmt|;
 name|int
 name|error
+decl_stmt|;
+name|uint32_t
+name|i
 decl_stmt|,
 name|space
-decl_stmt|,
-name|i
 decl_stmt|;
 switch|switch
 condition|(

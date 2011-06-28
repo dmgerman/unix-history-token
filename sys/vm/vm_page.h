@@ -26,7 +26,7 @@ file|<vm/pmap.h>
 end_include
 
 begin_comment
-comment|/*  *	Management of resident (logical) pages.  *  *	A small structure is kept for each resident  *	page, indexed by page number.  Each structure  *	is an element of several lists:  *  *		A hash table bucket used to quickly  *		perform object/offset lookups  *  *		A list of all pages for a given object,  *		so they can be quickly deactivated at  *		time of deallocation.  *  *		An ordered list of pages due for pageout.  *  *	In addition, the structure contains the object  *	and offset to which this page belongs (for pageout),  *	and sundry status bits.  *  *	Fields in this structure are locked either by the lock on the  *	object that the page belongs to (O), its corresponding page lock (P),  *	or by the lock on the page queues (Q).  *	  */
+comment|/*  *	Management of resident (logical) pages.  *  *	A small structure is kept for each resident  *	page, indexed by page number.  Each structure  *	is an element of several lists:  *  *		A hash table bucket used to quickly  *		perform object/offset lookups  *  *		A list of all pages for a given object,  *		so they can be quickly deactivated at  *		time of deallocation.  *  *		An ordered list of pages due for pageout.  *  *	In addition, the structure contains the object  *	and offset to which this page belongs (for pageout),  *	and sundry status bits.  *  *	In general, operations on this structure's mutable fields are  *	synchronized using either one of or a combination of the lock on the  *	object that the page belongs to (O), the pool lock for the page (P),  *	or the lock for either the free or paging queues (Q).  If a field is  *	annotated below with two of these locks, then holding either lock is  *	sufficient for read access, but both locks are required for write   *	access.  *  *	In contrast, the synchronization of accesses to the page's dirty field  *	is machine dependent (M).  In the machine-independent layer, the lock  *	on the object that the page belongs to must be held in order to  *	operate on the field.  However, the pmap layer is permitted to set  *	all bits within the field without holding that lock.  Therefore, if  *	the underlying architecture does not support atomic read-modify-write  *	operations on the field's type, then the machine-independent layer  *	must also hold the page queues lock when performing read-modify-write  *	operations and the pmap layer must hold the page queues lock when  *	setting the field.  In the machine-independent layer, the  *	implementation of read-modify-write operations on the field is  *	encapsulated in vm_page_clear_dirty_mask().  */
 end_comment
 
 begin_expr_stmt
@@ -130,6 +130,7 @@ decl_stmt|;
 comment|/* page busy count (O) */
 comment|/* NOTE that these must support one bit per DEV_BSIZE in a page!!! */
 comment|/* so, on normal X86 kernels, they must be at least 8 bits wide */
+comment|/* In reality, support for 32KB pages is not fully implemented. */
 if|#
 directive|if
 name|PAGE_SIZE
@@ -142,7 +143,7 @@ comment|/* map of valid DEV_BSIZE chunks (O) */
 name|u_char
 name|dirty
 decl_stmt|;
-comment|/* map of dirty DEV_BSIZE chunks (O) */
+comment|/* map of dirty DEV_BSIZE chunks (M) */
 elif|#
 directive|elif
 name|PAGE_SIZE
@@ -155,7 +156,7 @@ comment|/* map of valid DEV_BSIZE chunks (O) */
 name|u_short
 name|dirty
 decl_stmt|;
-comment|/* map of dirty DEV_BSIZE chunks (O) */
+comment|/* map of dirty DEV_BSIZE chunks (M) */
 elif|#
 directive|elif
 name|PAGE_SIZE
@@ -168,7 +169,7 @@ comment|/* map of valid DEV_BSIZE chunks (O) */
 name|u_int
 name|dirty
 decl_stmt|;
-comment|/* map of dirty DEV_BSIZE chunks (O) */
+comment|/* map of dirty DEV_BSIZE chunks (M) */
 elif|#
 directive|elif
 name|PAGE_SIZE
@@ -181,7 +182,7 @@ comment|/* map of valid DEV_BSIZE chunks (O) */
 name|u_long
 name|dirty
 decl_stmt|;
-comment|/* map of dirty DEV_BSIZE chunks (O) */
+comment|/* map of dirty DEV_BSIZE chunks (M) */
 endif|#
 directive|endif
 block|}
@@ -1693,6 +1694,52 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+end_ifdef
+
+begin_function_decl
+name|void
+name|vm_page_object_lock_assert
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|VM_PAGE_OBJECT_LOCK_ASSERT
+parameter_list|(
+name|m
+parameter_list|)
+value|vm_page_object_lock_assert(m)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|VM_PAGE_OBJECT_LOCK_ASSERT
+parameter_list|(
+name|m
+parameter_list|)
+value|(void)0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  *	vm_page_sleep_if_busy:  *  *	Sleep and release the page queues lock if VPO_BUSY is set or,  *	if also_m_busy is TRUE, busy is non-zero.  Returns TRUE if the  *	thread slept and the page queues lock was released.  *	Otherwise, retains the page queues lock and returns FALSE.  *  *	The object containing the given page must be locked.  */
 end_comment
@@ -1769,6 +1816,11 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
+name|VM_PAGE_OBJECT_LOCK_ASSERT
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|m
 operator|->
 name|dirty

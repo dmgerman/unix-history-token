@@ -1429,6 +1429,34 @@ operator|*
 name|IgnoreParenImpCasts
 argument_list|()
 block|;
+comment|/// IgnoreConversionOperator - Ignore conversion operator. If this Expr is a
+comment|/// call to a conversion operator, return the argument.
+name|Expr
+operator|*
+name|IgnoreConversionOperator
+argument_list|()
+block|;
+specifier|const
+name|Expr
+operator|*
+name|IgnoreConversionOperator
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|IgnoreConversionOperator
+argument_list|()
+return|;
+block|}
 specifier|const
 name|Expr
 operator|*
@@ -3423,6 +3451,23 @@ operator|&&
 literal|"Illegal type in IntegerLiteral"
 argument_list|)
 block|;
+name|assert
+argument_list|(
+name|V
+operator|.
+name|getBitWidth
+argument_list|()
+operator|==
+name|C
+operator|.
+name|getIntWidth
+argument_list|(
+name|type
+argument_list|)
+operator|&&
+literal|"Integer type is not the correct size for constant."
+argument_list|)
+block|;
 name|setValue
 argument_list|(
 name|C
@@ -3430,8 +3475,10 @@ argument_list|,
 name|V
 argument_list|)
 block|;   }
-comment|// type should be IntTy, LongTy, LongLongTy, UnsignedIntTy, UnsignedLongTy,
-comment|// or UnsignedLongLongTy
+comment|/// \brief Returns a new integer literal with value 'V' and type 'type'.
+comment|/// \param type - either IntTy, LongTy, LongLongTy, UnsignedIntTy,
+comment|/// UnsignedLongTy, or UnsignedLongLongTy which should match the size of V
+comment|/// \param V - the value that the returned integer literal contains.
 specifier|static
 name|IntegerLiteral
 operator|*
@@ -3446,6 +3493,7 @@ argument_list|,
 argument|SourceLocation l
 argument_list|)
 block|;
+comment|/// \brief Returns a new empty integer literal.
 specifier|static
 name|IntegerLiteral
 operator|*
@@ -5720,6 +5768,7 @@ name|getComponent
 argument_list|(
 argument|unsigned Idx
 argument_list|)
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -5733,6 +5782,7 @@ block|;
 return|return
 name|reinterpret_cast
 operator|<
+specifier|const
 name|OffsetOfNode
 operator|*
 operator|>
@@ -5828,6 +5878,31 @@ operator|)
 index|[
 name|Idx
 index|]
+return|;
+block|}
+specifier|const
+name|Expr
+operator|*
+name|getIndexExpr
+argument_list|(
+argument|unsigned Idx
+argument_list|)
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|OffsetOfExpr
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getIndexExpr
+argument_list|(
+name|Idx
+argument_list|)
 return|;
 block|}
 name|void
@@ -13722,6 +13797,27 @@ operator|(
 operator|)
 return|;
 block|}
+specifier|const
+name|Expr
+operator|*
+name|getArrayFiller
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|InitListExpr
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getArrayFiller
+argument_list|()
+return|;
+block|}
 name|void
 name|setArrayFiller
 argument_list|(
@@ -13751,6 +13847,27 @@ operator|*
 operator|>
 operator|(
 operator|)
+return|;
+block|}
+specifier|const
+name|FieldDecl
+operator|*
+name|getInitializedFieldInUnion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|InitListExpr
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getInitializedFieldInUnion
+argument_list|()
 return|;
 block|}
 name|void
@@ -16620,7 +16737,171 @@ argument_list|()
 return|;
 block|}
 expr|}
-block|;  }
+block|;
+comment|/// AsTypeExpr - Clang builtin function __builtin_astype [OpenCL 6.2.4.2]
+comment|/// This AST node provides support for reinterpreting a type to another
+comment|/// type of the same size.
+name|class
+name|AsTypeExpr
+operator|:
+name|public
+name|Expr
+block|{
+name|private
+operator|:
+name|Expr
+operator|*
+name|SrcExpr
+block|;
+name|QualType
+name|DstType
+block|;
+name|SourceLocation
+name|BuiltinLoc
+block|,
+name|RParenLoc
+block|;
+name|public
+operator|:
+name|AsTypeExpr
+argument_list|(
+argument|Expr* SrcExpr
+argument_list|,
+argument|QualType DstType
+argument_list|,
+argument|ExprValueKind VK
+argument_list|,
+argument|ExprObjectKind OK
+argument_list|,
+argument|SourceLocation BuiltinLoc
+argument_list|,
+argument|SourceLocation RParenLoc
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+name|AsTypeExprClass
+argument_list|,
+name|DstType
+argument_list|,
+name|VK
+argument_list|,
+name|OK
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|)
+block|,
+name|SrcExpr
+argument_list|(
+name|SrcExpr
+argument_list|)
+block|,
+name|DstType
+argument_list|(
+name|DstType
+argument_list|)
+block|,
+name|BuiltinLoc
+argument_list|(
+name|BuiltinLoc
+argument_list|)
+block|,
+name|RParenLoc
+argument_list|(
+argument|RParenLoc
+argument_list|)
+block|{}
+comment|/// \brief Build an empty __builtin_astype
+name|explicit
+name|AsTypeExpr
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+argument|AsTypeExprClass
+argument_list|,
+argument|Empty
+argument_list|)
+block|{}
+comment|/// getSrcExpr - Return the Expr to be converted.
+name|Expr
+operator|*
+name|getSrcExpr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SrcExpr
+return|;
+block|}
+name|QualType
+name|getDstType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DstType
+return|;
+block|}
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|BuiltinLoc
+argument_list|,
+name|RParenLoc
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|AsTypeExprClass
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const AsTypeExpr *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|// Iterators
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|()
+return|;
+block|}
+expr|}
+block|; }
 end_decl_stmt
 
 begin_comment

@@ -1040,15 +1040,6 @@ operator|->
 name|sectorsize
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pp
-operator|->
-name|stripesize
-operator|>
-literal|0
-condition|)
-block|{
 name|sbuf_printf
 argument_list|(
 name|sb
@@ -1071,7 +1062,6 @@ operator|->
 name|stripeoffset
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|pp

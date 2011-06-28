@@ -1340,10 +1340,20 @@ end_decl_stmt
 
 begin_decl_stmt
 name|ACPI_EXTERN
+name|ACPI_OBJECT_TYPE
+name|AcpiGbl_DbArgTypes
+index|[
+name|ACPI_DEBUGGER_MAX_ARGS
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
 name|char
 name|AcpiGbl_DbLineBuf
 index|[
-literal|80
+name|ACPI_DB_LINE_BUFFER_SIZE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1353,7 +1363,7 @@ name|ACPI_EXTERN
 name|char
 name|AcpiGbl_DbParsedBuf
 index|[
-literal|80
+name|ACPI_DB_LINE_BUFFER_SIZE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1363,7 +1373,7 @@ name|ACPI_EXTERN
 name|char
 name|AcpiGbl_DbScopeBuf
 index|[
-literal|40
+literal|80
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1373,7 +1383,7 @@ name|ACPI_EXTERN
 name|char
 name|AcpiGbl_DbDebugFilename
 index|[
-literal|40
+literal|80
 index|]
 decl_stmt|;
 end_decl_stmt

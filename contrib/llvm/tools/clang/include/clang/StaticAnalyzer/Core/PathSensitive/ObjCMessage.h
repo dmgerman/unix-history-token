@@ -1032,6 +1032,11 @@ operator|)
 return|;
 block|}
 name|SVal
+name|getFunctionCallee
+argument_list|()
+specifier|const
+expr_stmt|;
+name|SVal
 name|getCXXCallee
 argument_list|()
 specifier|const

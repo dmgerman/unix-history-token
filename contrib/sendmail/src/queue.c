@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2009 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2009, 2011 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: queue.c,v 8.987 2009/12/18 17:08:01 ca Exp $"
+literal|"@(#)$Id: queue.c,v 8.991 2011/03/15 23:14:36 ca Exp $"
 argument_list|)
 end_macro
 
@@ -888,7 +888,7 @@ name|SM_CONF_SHM
 end_if
 
 begin_comment
-comment|/* **  Shared memory data ** **  Current layout: **	size -- size of shared memory segment **	pid -- pid of owner, should be a unique id to avoid misinterpretations **		by other processes. **	tag -- should be a unique id to avoid misinterpretations by others. **		idea: hash over configuration data that will be stored here. **	NumFileSys -- number of file systems. **	FileSys -- (arrary of) structure for used file systems. **	RSATmpCnt -- counter for number of uses of ephemeral RSA key. **	QShm -- (array of) structure for information about queue directories. */
+comment|/* **  Shared memory data ** **  Current layout: **	size -- size of shared memory segment **	pid -- pid of owner, should be a unique id to avoid misinterpretations **		by other processes. **	tag -- should be a unique id to avoid misinterpretations by others. **		idea: hash over configuration data that will be stored here. **	NumFileSys -- number of file systems. **	FileSys -- (array of) structure for used file systems. **	RSATmpCnt -- counter for number of uses of ephemeral RSA key. **	QShm -- (array of) structure for information about queue directories. */
 end_comment
 
 begin_comment
@@ -2626,7 +2626,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* output inode number of data file */
-comment|/* XXX should probably include device major/minor too */
 if|if
 condition|(
 name|e
@@ -19594,11 +19593,20 @@ name|e_id
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|IntSig
+condition|)
+return|return
+name|NULL
+return|;
 name|assign_queueid
 argument_list|(
 name|e
 argument_list|)
 expr_stmt|;
+block|}
 name|type
 operator|=
 name|queue_letter
@@ -19766,6 +19774,14 @@ name|e_qdir
 operator|==
 name|NOQDIR
 condition|)
+block|{
+if|if
+condition|(
+name|IntSig
+condition|)
+return|return
+name|NULL
+return|;
 operator|(
 name|void
 operator|)
@@ -19774,6 +19790,7 @@ argument_list|(
 name|e
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|type
@@ -19949,6 +19966,13 @@ literal|"/xf/"
 expr_stmt|;
 break|break;
 default|default:
+if|if
+condition|(
+name|IntSig
+condition|)
+return|return
+name|NULL
+return|;
 name|sm_abort
 argument_list|(
 literal|"queuename: bad queue file type %d"

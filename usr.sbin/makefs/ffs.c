@@ -4120,6 +4120,15 @@ name|FI_WRITTEN
 expr_stmt|;
 if|if
 condition|(
+name|cur
+operator|->
+name|contents
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
 name|snprintf
 argument_list|(
 name|path
@@ -4150,6 +4159,7 @@ argument_list|,
 literal|"Pathname too long."
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|cur
@@ -4306,6 +4316,16 @@ name|inode
 operator|->
 name|ino
 argument_list|,
+operator|(
+name|cur
+operator|->
+name|contents
+operator|)
+condition|?
+name|cur
+operator|->
+name|contents
+else|:
 name|path
 argument_list|,
 name|fsopts

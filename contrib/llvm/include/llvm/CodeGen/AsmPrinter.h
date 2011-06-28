@@ -446,9 +446,22 @@ name|MachineInstr
 operator|&
 name|MI
 argument_list|)
+block|;      enum
+name|CFIMoveType
+block|{
+name|CFI_M_None
+block|,
+name|CFI_M_EH
+block|,
+name|CFI_M_Debug
+block|}
+block|;
+name|CFIMoveType
+name|needsCFIMoves
+argument_list|()
 block|;
 name|bool
-name|needsCFIMoves
+name|needsSEHMoves
 argument_list|()
 block|;
 comment|/// EmitConstantPool - Print to the current output stream assembly
@@ -896,16 +909,6 @@ argument|const MachineInstr *MI
 argument_list|)
 specifier|const
 block|;
-comment|/// getDwarfRegOpSize - get size required to emit given machine location
-comment|/// using dwarf encoding.
-name|virtual
-name|unsigned
-name|getDwarfRegOpSize
-argument_list|(
-argument|const MachineLocation&MLoc
-argument_list|)
-specifier|const
-block|;
 comment|/// getISAEncoding - Get the value for DW_AT_APPLE_isa. Zero if no isa
 comment|/// encoding specified.
 name|virtual
@@ -929,30 +932,12 @@ block|;
 comment|//===------------------------------------------------------------------===//
 comment|// Dwarf Lowering Routines
 comment|//===------------------------------------------------------------------===//
-comment|/// EmitFrameMoves - Emit frame instructions to describe the layout of the
+comment|/// EmitCFIFrameMove - Emit frame instruction to describe the layout of the
 comment|/// frame.
-name|void
-name|EmitFrameMoves
-argument_list|(
-argument|const std::vector<MachineMove>&Moves
-argument_list|,
-argument|MCSymbol *BaseLabel
-argument_list|,
-argument|bool isEH
-argument_list|)
-specifier|const
-block|;
 name|void
 name|EmitCFIFrameMove
 argument_list|(
 argument|const MachineMove&Move
-argument_list|)
-specifier|const
-block|;
-name|void
-name|EmitCFIFrameMoves
-argument_list|(
-argument|const std::vector<MachineMove>&Moves
 argument_list|)
 specifier|const
 block|;

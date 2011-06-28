@@ -824,7 +824,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ypserv [-h] [-d] [-n] [-p path] [-P port]\n"
+literal|"usage: ypserv [-h addr] [-d] [-n] [-p path] [-P port]\n"
 argument_list|)
 expr_stmt|;
 name|exit

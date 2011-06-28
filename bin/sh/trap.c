@@ -147,6 +147,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"builtins.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"myhistedit.h"
 end_include
 

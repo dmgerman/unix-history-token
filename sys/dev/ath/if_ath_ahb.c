@@ -441,7 +441,7 @@ if|if
 condition|(
 name|psc
 operator|->
-name|sc_sr
+name|sc_eeprom
 operator|==
 name|NULL
 condition|)
@@ -514,6 +514,26 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_eepromdata
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"cannot allocate memory for eeprom data\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bad1
+goto|;
+block|}
 name|device_printf
 argument_list|(
 name|sc

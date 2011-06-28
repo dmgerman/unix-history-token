@@ -231,6 +231,10 @@ value|0x0000000c
 end_define
 
 begin_comment
+comment|/* deprecated */
+end_comment
+
+begin_comment
 comment|/* Without this applied we will give V4 and V6 addresses on a V6 socket */
 end_comment
 
@@ -390,6 +394,41 @@ define|#
 directive|define
 name|SCTP_AUTH_DEACTIVATE_KEY
 value|0x0000001d
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_EVENT
+value|0x0000001e
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_RECVRCVINFO
+value|0x0000001f
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_RECVNXTINFO
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_DEFAULT_SNDINFO
+value|0x00000021
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_DEFAULT_PRINFO
+value|0x00000022
 end_define
 
 begin_comment
@@ -1879,6 +1918,10 @@ name|SCTP_PCB_FLAGS_EXT_RCVINFO
 value|0x00000002
 end_define
 
+begin_comment
+comment|/* deprecated */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1945,6 +1988,10 @@ directive|define
 name|SCTP_PCB_FLAGS_RECVDATAIOEVNT
 value|0x00000400
 end_define
+
+begin_comment
+comment|/* deprecated */
+end_comment
 
 begin_define
 define|#
@@ -2049,6 +2096,20 @@ define|#
 directive|define
 name|SCTP_PCB_FLAGS_DRYEVNT
 value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_PCB_FLAGS_RECVRCVINFO
+value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_PCB_FLAGS_RECVNXTINFO
+value|0x10000000
 end_define
 
 begin_comment

@@ -221,6 +221,9 @@ name|class
 name|MDNode
 decl_stmt|;
 name|class
+name|MMIAddrLabelMap
+decl_stmt|;
+name|class
 name|MachineBasicBlock
 decl_stmt|;
 name|class
@@ -235,68 +238,6 @@ decl_stmt|;
 name|class
 name|StructType
 decl_stmt|;
-comment|/// MachineModuleInfoImpl - This class can be derived from and used by targets
-comment|/// to hold private target-specific information for each Module.  Objects of
-comment|/// type are accessed/created with MMI::getInfo and destroyed when the
-comment|/// MachineModuleInfo is destroyed.
-name|class
-name|MachineModuleInfoImpl
-block|{
-name|public
-label|:
-typedef|typedef
-name|PointerIntPair
-operator|<
-name|MCSymbol
-operator|*
-operator|,
-literal|1
-operator|,
-name|bool
-operator|>
-name|StubValueTy
-expr_stmt|;
-name|virtual
-operator|~
-name|MachineModuleInfoImpl
-argument_list|()
-expr_stmt|;
-typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|MCSymbol
-operator|*
-operator|,
-name|StubValueTy
-operator|>
-expr|>
-name|SymbolListTy
-expr_stmt|;
-name|protected
-label|:
-specifier|static
-name|SymbolListTy
-name|GetSortedStubs
-argument_list|(
-specifier|const
-name|DenseMap
-operator|<
-name|MCSymbol
-operator|*
-argument_list|,
-name|StubValueTy
-operator|>
-operator|&
-argument_list|)
-decl_stmt|;
-block|}
-empty_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// LandingPadInfo - This structure is used to retain landing pad info for
 comment|/// the current function.
@@ -374,9 +315,70 @@ argument_list|)
 block|{}
 block|}
 struct|;
+comment|//===----------------------------------------------------------------------===//
+comment|/// MachineModuleInfoImpl - This class can be derived from and used by targets
+comment|/// to hold private target-specific information for each Module.  Objects of
+comment|/// type are accessed/created with MMI::getInfo and destroyed when the
+comment|/// MachineModuleInfo is destroyed.
+comment|///
 name|class
-name|MMIAddrLabelMap
+name|MachineModuleInfoImpl
+block|{
+name|public
+label|:
+typedef|typedef
+name|PointerIntPair
+operator|<
+name|MCSymbol
+operator|*
+operator|,
+literal|1
+operator|,
+name|bool
+operator|>
+name|StubValueTy
+expr_stmt|;
+name|virtual
+operator|~
+name|MachineModuleInfoImpl
+argument_list|()
+expr_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|MCSymbol
+operator|*
+operator|,
+name|StubValueTy
+operator|>
+expr|>
+name|SymbolListTy
+expr_stmt|;
+name|protected
+label|:
+specifier|static
+name|SymbolListTy
+name|GetSortedStubs
+argument_list|(
+specifier|const
+name|DenseMap
+operator|<
+name|MCSymbol
+operator|*
+argument_list|,
+name|StubValueTy
+operator|>
+operator|&
+argument_list|)
 decl_stmt|;
+block|}
+empty_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// MachineModuleInfo - This class contains meta information specific to a
 comment|/// module.  Queries can be made by different debugging and exception handling

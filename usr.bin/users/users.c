@@ -120,9 +120,16 @@ typedef|typedef
 name|char
 name|namebuf
 index|[
-name|MAXLOGNAME
-index|]
-typedef|;
+sizeof|sizeof
+argument_list|(
+operator|(
+operator|(
+expr|struct
+name|utmpx
+operator|*
+typedef|)0)->
+name|ut_user
+typedef|) + 1];
 end_typedef
 
 begin_function_decl

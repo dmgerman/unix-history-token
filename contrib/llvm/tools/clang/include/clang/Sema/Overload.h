@@ -555,10 +555,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|First
-operator|==
-name|ICK_Identity
-operator|&&
 name|Second
 operator|==
 name|ICK_Identity

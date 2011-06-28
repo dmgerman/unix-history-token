@@ -24278,7 +24278,7 @@ name|ccb_h
 operator|.
 name|func_code
 operator|=
-name|XPT_GDEV_ADVINFO
+name|XPT_DEV_ADVINFO
 expr_stmt|;
 name|ccb
 operator|->
@@ -24290,23 +24290,23 @@ name|CAM_DIR_IN
 expr_stmt|;
 name|ccb
 operator|->
-name|cgdai
+name|cdai
 operator|.
 name|flags
 operator|=
-name|CGDAI_FLAG_PROTO
+literal|0
 expr_stmt|;
 name|ccb
 operator|->
-name|cgdai
+name|cdai
 operator|.
 name|buftype
 operator|=
-name|CGDAI_TYPE_SCSI_DEVID
+name|CDAI_TYPE_SCSI_DEVID
 expr_stmt|;
 name|ccb
 operator|->
-name|cgdai
+name|cdai
 operator|.
 name|bufsiz
 operator|=
@@ -24324,7 +24324,7 @@ literal|0
 condition|)
 name|ccb
 operator|->
-name|cgdai
+name|cdai
 operator|.
 name|buf
 operator|=
@@ -24409,7 +24409,7 @@ if|if
 condition|(
 name|ccb
 operator|->
-name|cgdai
+name|cdai
 operator|.
 name|provsiz
 operator|==
@@ -24438,7 +24438,7 @@ name|device_id_len
 operator|=
 name|ccb
 operator|->
-name|cgdai
+name|cdai
 operator|.
 name|provsiz
 expr_stmt|;
@@ -25459,7 +25459,7 @@ decl_stmt|;
 comment|/* 		 * XXX KDM look for LUN IDs as well? 		 */
 name|item_addr
 operator|=
-name|scsi_get_sas_addr
+name|scsi_get_devid
 argument_list|(
 name|item
 operator|->
@@ -25468,6 +25468,8 @@ argument_list|,
 name|item
 operator|->
 name|device_id_len
+argument_list|,
+name|scsi_devid_is_sas_target
 argument_list|)
 expr_stmt|;
 if|if

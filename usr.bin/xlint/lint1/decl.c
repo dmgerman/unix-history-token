@@ -1749,11 +1749,6 @@ case|case
 name|INT
 case|:
 break|break;
-case|case
-name|NTSPEC
-case|:
-comment|/* this value unused */
-break|break;
 block|}
 comment|/* Anything other is not accepted. */
 name|dcs

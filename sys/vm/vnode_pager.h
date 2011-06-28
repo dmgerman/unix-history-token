@@ -74,6 +74,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|vnode_pager_undirty_pages
+parameter_list|(
+name|vm_page_t
+modifier|*
+name|ma
+parameter_list|,
+name|int
+modifier|*
+name|rtvals
+parameter_list|,
+name|int
+name|written
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

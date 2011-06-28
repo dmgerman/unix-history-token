@@ -343,16 +343,6 @@ argument|const MachineInstr *MI
 argument_list|)
 specifier|const
 block|;
-comment|/// getDwarfRegOpSize - get size required to emit given machine location
-comment|/// using dwarf encoding.
-name|virtual
-name|unsigned
-name|getDwarfRegOpSize
-argument_list|(
-argument|const MachineLocation&MLoc
-argument_list|)
-specifier|const
-block|;
 comment|/// EmitDwarfRegOp - Emit dwarf register operation.
 name|virtual
 name|void

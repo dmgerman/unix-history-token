@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -111,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|<fs/nfsclient/nfs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fs/nfsclient/nfs_kdtrace.h>
 end_include
 
 begin_include
@@ -1201,11 +1213,21 @@ name|stamp
 operator|=
 literal|0
 expr_stmt|;
+name|KDTRACE_NFS_ACCESSCACHE_FLUSH_DONE
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|np
 operator|->
 name|n_attrstamp
 operator|=
 literal|0
+expr_stmt|;
+name|KDTRACE_NFS_ATTRCACHE_FLUSH_DONE
+argument_list|(
+name|vp
+argument_list|)
 expr_stmt|;
 name|mtx_unlock
 argument_list|(

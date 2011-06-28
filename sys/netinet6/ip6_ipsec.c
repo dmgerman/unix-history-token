@@ -378,7 +378,7 @@ comment|/* INET6 */
 end_comment
 
 begin_comment
-comment|/*  * Check if we have to jump over firewall processing for this packet.  * Called from ip_input().  * 1 = jump over firewall, 0 = packet goes through firewall.  */
+comment|/*  * Check if we have to jump over firewall processing for this packet.  * Called from ip6_input().  * 1 = jump over firewall, 0 = packet goes through firewall.  */
 end_comment
 
 begin_function
@@ -397,7 +397,7 @@ name|defined
 argument_list|(
 name|IPSEC
 argument_list|)
-comment|/* 	 * Bypass packet filtering for packets from a tunnel. 	 */
+comment|/* 	 * Bypass packet filtering for packets previously handled by IPsec. 	 */
 if|if
 condition|(
 operator|!
@@ -426,7 +426,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check if this packet has an active SA and needs to be dropped instead  * of forwarded.  * Called from ip_input().  * 1 = drop packet, 0 = forward packet.  */
+comment|/*  * Check if this packet has an active SA and needs to be dropped instead  * of forwarded.  * Called from ip6_input().  * 1 = drop packet, 0 = forward packet.  */
 end_comment
 
 begin_function
@@ -542,7 +542,9 @@ comment|/*XXX error stat???*/
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ip_input: no SP for forwarding\n"
+literal|"%s: no SP for forwarding\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -596,7 +598,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check if protocol type doesn't have a further header and do IPSEC  * decryption or reject right now.  Protocols with further headers get  * their IPSEC treatment within the protocol specific processing.  * Called from ip_input().  * 1 = drop packet, 0 = continue processing packet.  */
+comment|/*  * Check if protocol type doesn't have a further header and do IPSEC  * decryption or reject right now.  Protocols with further headers get  * their IPSEC treatment within the protocol specific processing.  * Called from ip6_input().  * 1 = drop packet, 0 = continue processing packet.  */
 end_comment
 
 begin_function
@@ -760,7 +762,9 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ip_input: no SP, packet discarded\n"
+literal|"%s: no SP, packet discarded\n"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;

@@ -96,11 +96,20 @@ argument_list|(
 name|JITMemoryManager
 operator|*
 name|jmm
+argument_list|,
+name|Module
+operator|*
+name|m
 argument_list|)
 operator|:
 name|JMM
 argument_list|(
-argument|jmm
+name|jmm
+argument_list|)
+block|,
+name|M
+argument_list|(
+argument|m
 argument_list|)
 block|{}
 comment|// Allocate ActualSize bytes, or more, for the named function. Return
@@ -140,13 +149,47 @@ argument_list|(
 name|Name
 argument_list|)
 block|;
+comment|// Some ObjC names have a prefixed \01 in the IR. If we failed to find
+comment|// the symbol and it's of the ObjC conventions (starts with "-"), try
+comment|// prepending a \01 and see if we can find it that way.
+if|if
+condition|(
+operator|!
+name|F
+operator|&&
+name|Name
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+condition|)
+name|F
+operator|=
+name|M
+operator|->
+name|getFunction
+argument_list|(
+operator|(
+name|Twine
+argument_list|(
+literal|"\1"
+argument_list|)
+operator|+
+name|Name
+operator|)
+operator|.
+name|str
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|assert
 argument_list|(
 name|F
 operator|&&
 literal|"No matching function in JIT IR Module!"
 argument_list|)
-block|;
+decl_stmt|;
 return|return
 name|JMM
 operator|->
@@ -158,8 +201,17 @@ name|Size
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|// Mark the end of the function, including how much of the allocated
+end_comment
+
+begin_comment
 comment|// memory was actually used.
+end_comment
+
+begin_function
 name|void
 name|endFunctionBody
 parameter_list|(
@@ -202,6 +254,40 @@ argument_list|(
 name|Name
 argument_list|)
 decl_stmt|;
+comment|// Some ObjC names have a prefixed \01 in the IR. If we failed to find
+comment|// the symbol and it's of the ObjC conventions (starts with "-"), try
+comment|// prepending a \01 and see if we can find it that way.
+if|if
+condition|(
+operator|!
+name|F
+operator|&&
+name|Name
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+condition|)
+name|F
+operator|=
+name|M
+operator|->
+name|getFunction
+argument_list|(
+operator|(
+name|Twine
+argument_list|(
+literal|"\1"
+argument_list|)
+operator|+
+name|Name
+operator|)
+operator|.
+name|str
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|assert
 argument_list|(
 name|F
@@ -221,15 +307,10 @@ name|FunctionEnd
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function
 
 begin_comment
-unit|}
+unit|};  }
 comment|// End llvm namespace
 end_comment
 

@@ -431,7 +431,7 @@ begin_define
 define|#
 directive|define
 name|AOUT32_USRSTACK
-value|0xbfc0000
+value|0xbfc00000
 end_define
 
 begin_define
@@ -678,7 +678,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|suword
+name|suword32
 argument_list|(
 operator|*
 name|stack_base

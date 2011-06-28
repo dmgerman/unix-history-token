@@ -999,6 +999,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|fflush
+argument_list|(
+name|newfd
+argument_list|)
+expr_stmt|;
 comment|/* 			 * Send SIGHUP to mountd, but unlock exports file later. 			 */
 name|restart_mountd
 argument_list|()

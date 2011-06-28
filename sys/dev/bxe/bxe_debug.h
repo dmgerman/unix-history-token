@@ -124,6 +124,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BXE_CP_TPA
+value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
 name|BXE_CP_ALL
 value|0x00FFFFFF
 end_define
@@ -637,6 +644,41 @@ define|#
 directive|define
 name|BXE_INSANE_REGS
 value|(BXE_CP_REGS | BXE_LEVEL_INSANE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BXE_WARN_TPA
+value|(BXE_CP_TPA | BXE_LEVEL_WARN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BXE_INFO_TPA
+value|(BXE_CP_TPA | BXE_LEVEL_INFO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BXE_VERBOSE_TPA
+value|(BXE_CP_TPA | BXE_LEVEL_VERBOSE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BXE_EXTREME_TPA
+value|(BXE_CP_TPA | BXE_LEVEL_EXTREME)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BXE_INSANE_TPA
+value|(BXE_CP_TPA | BXE_LEVEL_INSANE)
 end_define
 
 begin_define

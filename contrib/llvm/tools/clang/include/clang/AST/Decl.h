@@ -5997,6 +5997,18 @@ literal|1
 decl_stmt|;
 comment|// sunk from CXXMethodDecl
 name|bool
+name|IsDefaulted
+range|:
+literal|1
+decl_stmt|;
+comment|// sunk from CXXMethoDecl
+name|bool
+name|IsExplicitlyDefaulted
+range|:
+literal|1
+decl_stmt|;
+comment|//sunk from CXXMethodDecl
+name|bool
 name|HasImplicitReturnZero
 range|:
 literal|1
@@ -6242,6 +6254,16 @@ name|false
 argument_list|)
 operator|,
 name|IsTrivial
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsDefaulted
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsExplicitlyDefaulted
 argument_list|(
 name|false
 argument_list|)
@@ -6548,6 +6570,45 @@ name|Definition
 argument_list|)
 return|;
 block|}
+comment|/// hasTrivialBody - Returns whether the function has a trivial body that does
+comment|/// not require any specific codegen.
+name|bool
+name|hasTrivialBody
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// isDefined - Returns true if the function is defined at all, including
+comment|/// a deleted definition. Except for the behavior when the function is
+comment|/// deleted, behaves like hasBody.
+name|bool
+name|isDefined
+argument_list|(
+specifier|const
+name|FunctionDecl
+operator|*
+operator|&
+name|Definition
+argument_list|)
+decl|const
+decl_stmt|;
+name|virtual
+name|bool
+name|isDefined
+argument_list|()
+specifier|const
+block|{
+specifier|const
+name|FunctionDecl
+operator|*
+name|Definition
+block|;
+return|return
+name|isDefined
+argument_list|(
+name|Definition
+argument_list|)
+return|;
+block|}
 comment|/// getBody - Retrieve the body (definition) of the function. The
 comment|/// function body might be in any of the (re-)declarations of this
 comment|/// function. The variant that accepts a FunctionDecl pointer will
@@ -6589,11 +6650,27 @@ block|}
 comment|/// isThisDeclarationADefinition - Returns whether this specific
 comment|/// declaration of the function is also a definition. This does not
 comment|/// determine whether the function has been defined (e.g., in a
-comment|/// previous definition); for that information, use getBody.
-comment|/// FIXME: Should return true if function is deleted or defaulted. However,
-comment|/// CodeGenModule.cpp uses it, and I don't know if this would break it.
+comment|/// previous definition); for that information, use isDefined. Note
+comment|/// that this returns false for a defaulted function unless that function
+comment|/// has been implicitly defined (possibly as deleted).
 name|bool
 name|isThisDeclarationADefinition
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsDeleted
+operator|||
+name|Body
+operator|||
+name|IsLateTemplateParsed
+return|;
+block|}
+comment|/// doesThisDeclarationHaveABody - Returns whether this specific
+comment|/// declaration of the function has a body - that is, if it is a non-
+comment|/// deleted definition.
+name|bool
+name|doesThisDeclarationHaveABody
 argument_list|()
 specifier|const
 block|{
@@ -6731,6 +6808,56 @@ operator|=
 name|IT
 expr_stmt|;
 block|}
+comment|/// Whether this function is defaulted per C++0x. Only valid for
+comment|/// special member functions.
+name|bool
+name|isDefaulted
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsDefaulted
+return|;
+block|}
+name|void
+name|setDefaulted
+parameter_list|(
+name|bool
+name|D
+init|=
+name|true
+parameter_list|)
+block|{
+name|IsDefaulted
+operator|=
+name|D
+expr_stmt|;
+block|}
+comment|/// Whether this function is explicitly defaulted per C++0x. Only valid
+comment|/// for special member functions.
+name|bool
+name|isExplicitlyDefaulted
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsExplicitlyDefaulted
+return|;
+block|}
+name|void
+name|setExplicitlyDefaulted
+parameter_list|(
+name|bool
+name|ED
+init|=
+name|true
+parameter_list|)
+block|{
+name|IsExplicitlyDefaulted
+operator|=
+name|ED
+expr_stmt|;
+block|}
 comment|/// Whether falling off this function implicitly returns null/zero.
 comment|/// If a more specific implicit return value is required, front-ends
 comment|/// should synthesize the appropriate return statements.
@@ -6822,17 +6949,33 @@ comment|///   Integer(double) = delete; // no construction from float or double
 comment|///   Integer(long double) = delete; // no construction from long double
 comment|/// };
 comment|/// @endcode
+comment|// If a function is deleted, its first declaration must be.
 name|bool
 name|isDeleted
 argument_list|()
 specifier|const
 block|{
 return|return
+name|getCanonicalDecl
+argument_list|()
+operator|->
 name|IsDeleted
 return|;
 block|}
+name|bool
+name|isDeletedAsWritten
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsDeleted
+operator|&&
+operator|!
+name|IsDefaulted
+return|;
+block|}
 name|void
-name|setDeleted
+name|setDeletedAsWritten
 parameter_list|(
 name|bool
 name|D
@@ -6845,10 +6988,28 @@ operator|=
 name|D
 expr_stmt|;
 block|}
-comment|/// \brief Determines whether this is a function "main", which is
-comment|/// the entry point into an executable program.
+comment|/// \brief Determines whether this function is "main", which is the
+comment|/// entry point into an executable program.
 name|bool
 name|isMain
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Determines whether this operator new or delete is one
+comment|/// of the reserved global placement operators:
+comment|///    void *operator new(size_t, void *);
+comment|///    void *operator new[](size_t, void *);
+comment|///    void operator delete(void *, void *);
+comment|///    void operator delete[](void *, void *);
+comment|/// These functions have special behavior under [new.delete.placement]:
+comment|///    These functions are reserved, a C++ program may not define
+comment|///    functions that displace the versions in the Standard C++ library.
+comment|///    The provisions of [basic.stc.dynamic] do not apply to these
+comment|///    reserved placement forms of operator new and operator delete.
+comment|///
+comment|/// This function must be an allocation or deallocation function.
+name|bool
+name|isReservedGlobalPlacementOperator
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -7703,9 +7864,27 @@ name|CachedFieldIndex
 operator|:
 literal|31
 block|;
+comment|/// \brief A pointer to either the in-class initializer for this field (if
+comment|/// the boolean value is false), or the bit width expression for this bit
+comment|/// field (if the boolean value is true).
+comment|///
+comment|/// We can safely combine these two because in-class initializers are not
+comment|/// permitted for bit-fields.
+comment|///
+comment|/// If the boolean is false and the initializer is null, then this field has
+comment|/// an in-class initializer which has not yet been parsed and attached.
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
 name|Expr
 operator|*
-name|BitWidth
+block|,
+literal|1
+block|,
+name|bool
+operator|>
+name|InitializerOrBitWidth
 block|;
 name|protected
 operator|:
@@ -7728,6 +7907,8 @@ argument_list|,
 argument|Expr *BW
 argument_list|,
 argument|bool Mutable
+argument_list|,
+argument|bool HasInit
 argument_list|)
 operator|:
 name|DeclaratorDecl
@@ -7757,11 +7938,25 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
-name|BitWidth
+name|InitializerOrBitWidth
 argument_list|(
 argument|BW
+argument_list|,
+argument|!HasInit
 argument_list|)
-block|{   }
+block|{
+name|assert
+argument_list|(
+operator|!
+operator|(
+name|BW
+operator|&&
+name|HasInit
+operator|)
+operator|&&
+literal|"got initializer for bitfield"
+argument_list|)
+block|;   }
 name|public
 operator|:
 specifier|static
@@ -7786,6 +7981,8 @@ argument_list|,
 argument|Expr *BW
 argument_list|,
 argument|bool Mutable
+argument_list|,
+argument|bool HasInit
 argument_list|)
 block|;
 comment|/// getFieldIndex - Returns the index of this field within its record,
@@ -7823,9 +8020,15 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|BitWidth
-operator|!=
-name|NULL
+name|InitializerOrBitWidth
+operator|.
+name|getInt
+argument_list|()
+operator|&&
+name|InitializerOrBitWidth
+operator|.
+name|getPointer
+argument_list|()
 return|;
 block|}
 comment|/// @brief Determines whether this is an unnamed bitfield.
@@ -7835,9 +8038,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|BitWidth
-operator|!=
-name|NULL
+name|isBitField
+argument_list|()
 operator|&&
 operator|!
 name|getDeclName
@@ -7860,7 +8062,15 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|BitWidth
+name|isBitField
+argument_list|()
+operator|?
+name|InitializerOrBitWidth
+operator|.
+name|getPointer
+argument_list|()
+operator|:
+literal|0
 return|;
 block|}
 name|void
@@ -7869,10 +8079,108 @@ argument_list|(
 argument|Expr *BW
 argument_list|)
 block|{
-name|BitWidth
-operator|=
+name|assert
+argument_list|(
+operator|!
+name|InitializerOrBitWidth
+operator|.
+name|getPointer
+argument_list|()
+operator|&&
+literal|"bit width or initializer already set"
+argument_list|)
+block|;
+name|InitializerOrBitWidth
+operator|.
+name|setPointer
+argument_list|(
 name|BW
-block|; }
+argument_list|)
+block|;
+name|InitializerOrBitWidth
+operator|.
+name|setInt
+argument_list|(
+literal|1
+argument_list|)
+block|;   }
+comment|/// hasInClassInitializer - Determine whether this member has a C++0x in-class
+comment|/// initializer.
+name|bool
+name|hasInClassInitializer
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|InitializerOrBitWidth
+operator|.
+name|getInt
+argument_list|()
+return|;
+block|}
+comment|/// getInClassInitializer - Get the C++0x in-class initializer for this
+comment|/// member, or null if one has not been set. If a valid declaration has an
+comment|/// in-class initializer, but this returns null, then we have not parsed and
+comment|/// attached it yet.
+name|Expr
+operator|*
+name|getInClassInitializer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasInClassInitializer
+argument_list|()
+condition|?
+name|InitializerOrBitWidth
+operator|.
+name|getPointer
+argument_list|()
+else|:
+literal|0
+return|;
+block|}
+comment|/// setInClassInitializer - Set the C++0x in-class initializer for this member.
+name|void
+name|setInClassInitializer
+argument_list|(
+name|Expr
+operator|*
+name|Init
+argument_list|)
+block|;
+comment|/// removeInClassInitializer - Remove the C++0x in-class initializer from this
+comment|/// member.
+name|void
+name|removeInClassInitializer
+argument_list|()
+block|{
+name|assert
+argument_list|(
+operator|!
+name|InitializerOrBitWidth
+operator|.
+name|getInt
+argument_list|()
+operator|&&
+literal|"no initializer to remove"
+argument_list|)
+block|;
+name|InitializerOrBitWidth
+operator|.
+name|setPointer
+argument_list|(
+literal|0
+argument_list|)
+block|;
+name|InitializerOrBitWidth
+operator|.
+name|setInt
+argument_list|(
+literal|1
+argument_list|)
+block|;   }
 comment|/// getParent - Returns the parent of this field declaration, which
 comment|/// is the struct in which this method is defined.
 specifier|const

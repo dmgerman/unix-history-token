@@ -395,23 +395,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|ffs_fserr
-parameter_list|(
-name|struct
-name|fs
-modifier|*
-parameter_list|,
-name|ino_t
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|ufs2_daddr_t
 name|ffs_hashalloc
 parameter_list|(
@@ -934,6 +917,14 @@ condition|(
 name|reclaimed
 operator|==
 literal|0
+operator|&&
+operator|(
+name|flags
+operator|&
+name|IO_BUFLOCKED
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|reclaimed
@@ -965,6 +956,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|reclaimed
+operator|>
+literal|0
+operator|&&
 name|ppsratecheck
 argument_list|(
 operator|&
@@ -1839,6 +1834,10 @@ name|ip
 operator|->
 name|i_number
 argument_list|,
+name|vp
+operator|->
+name|v_type
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1996,22 +1995,19 @@ condition|(
 name|reclaimed
 operator|==
 literal|0
+operator|&&
+operator|(
+name|flags
+operator|&
+name|IO_BUFLOCKED
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|reclaimed
 operator|=
 literal|1
-expr_stmt|;
-name|softdep_request_cleanup
-argument_list|(
-name|fs
-argument_list|,
-name|vp
-argument_list|,
-name|cred
-argument_list|,
-name|FLUSH_BLOCKS_WAIT
-argument_list|)
 expr_stmt|;
 name|UFS_UNLOCK
 argument_list|(
@@ -2038,6 +2034,17 @@ argument_list|(
 name|ump
 argument_list|)
 expr_stmt|;
+name|softdep_request_cleanup
+argument_list|(
+name|fs
+argument_list|,
+name|vp
+argument_list|,
+name|cred
+argument_list|,
+name|FLUSH_BLOCKS_WAIT
+argument_list|)
+expr_stmt|;
 goto|goto
 name|retry
 goto|;
@@ -2058,6 +2065,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|reclaimed
+operator|>
+literal|0
+operator|&&
 name|ppsratecheck
 argument_list|(
 operator|&
@@ -3352,6 +3363,10 @@ name|ip
 operator|->
 name|i_number
 argument_list|,
+name|vp
+operator|->
+name|v_type
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -4554,6 +4569,10 @@ name|ip
 operator|->
 name|i_number
 argument_list|,
+name|vp
+operator|->
+name|v_type
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -5305,12 +5324,6 @@ name|noinodes
 label|:
 if|if
 condition|(
-name|fs
-operator|->
-name|fs_pendinginodes
-operator|>
-literal|0
-operator|&&
 name|reclaimed
 operator|==
 literal|0
@@ -9853,6 +9866,8 @@ operator|->
 name|fs_ipg
 operator|+
 name|ipref
+argument_list|,
+name|mode
 argument_list|)
 expr_stmt|;
 name|bdwrite
@@ -10059,33 +10074,9 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|devvp
 argument_list|,
-literal|"ffs_blkfree"
+literal|"ffs_blkfree_cg"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|devvp
-operator|->
-name|v_vflag
-operator|&
-name|VV_COPYONWRITE
-operator|)
-operator|&&
-name|ffs_snapblkfree
-argument_list|(
-name|fs
-argument_list|,
-name|devvp
-argument_list|,
-name|bno
-argument_list|,
-name|size
-argument_list|,
-name|inum
-argument_list|)
-condition|)
-return|return;
 block|}
 ifdef|#
 directive|ifdef
@@ -10159,7 +10150,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"ffs_blkfree: bad size"
+literal|"ffs_blkfree_cg: bad size"
 argument_list|)
 expr_stmt|;
 block|}
@@ -10370,7 +10361,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"ffs_blkfree: freeing free block"
+literal|"ffs_blkfree_cg: freeing free block"
 argument_list|)
 expr_stmt|;
 block|}
@@ -10521,7 +10512,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"ffs_blkfree: freeing free frag"
+literal|"ffs_blkfree_cg: freeing free frag"
 argument_list|)
 expr_stmt|;
 block|}
@@ -10952,6 +10943,8 @@ name|size
 parameter_list|,
 name|inum
 parameter_list|,
+name|vtype
+parameter_list|,
 name|dephd
 parameter_list|)
 name|struct
@@ -10978,6 +10971,10 @@ decl_stmt|;
 name|ino_t
 name|inum
 decl_stmt|;
+name|enum
+name|vtype
+name|vtype
+decl_stmt|;
 name|struct
 name|workhead
 modifier|*
@@ -10999,6 +10996,43 @@ name|ffs_blkfree_trim_params
 modifier|*
 name|tp
 decl_stmt|;
+comment|/* 	 * Check to see if a snapshot wants to claim the block. 	 * Check that devvp is a normal disk device, not a snapshot, 	 * it has a snapshot(s) associated with it, and one of the 	 * snapshots wants to claim the block. 	 */
+if|if
+condition|(
+name|devvp
+operator|->
+name|v_type
+operator|!=
+name|VREG
+operator|&&
+operator|(
+name|devvp
+operator|->
+name|v_vflag
+operator|&
+name|VV_COPYONWRITE
+operator|)
+operator|&&
+name|ffs_snapblkfree
+argument_list|(
+name|fs
+argument_list|,
+name|devvp
+argument_list|,
+name|bno
+argument_list|,
+name|size
+argument_list|,
+name|inum
+argument_list|,
+name|vtype
+argument_list|,
+name|dephd
+argument_list|)
+condition|)
+block|{
+return|return;
+block|}
 if|if
 condition|(
 operator|!
@@ -12706,7 +12740,6 @@ comment|/*  * Fserr prints the name of a filesystem with an error diagnostic.  *
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|ffs_fserr
 parameter_list|(
@@ -12779,7 +12812,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function provides the capability for the fsck program to  * update an active filesystem. Fourteen operations are provided:  *  * adjrefcnt(inode, amt) - adjusts the reference count on the  *	specified inode by the specified amount. Under normal  *	operation the count should always go down. Decrementing  *	the count to zero will cause the inode to be freed.  * adjblkcnt(inode, amt) - adjust the number of blocks used to  *	by the specifed amount.  * adjndir, adjbfree, adjifree, adjffree, adjnumclusters(amt) -  *	adjust the superblock summary.  * freedirs(inode, count) - directory inodes [inode..inode + count - 1]  *	are marked as free. Inodes should never have to be marked  *	as in use.  * freefiles(inode, count) - file inodes [inode..inode + count - 1]  *	are marked as free. Inodes should never have to be marked  *	as in use.  * freeblks(blockno, size) - blocks [blockno..blockno + size - 1]  *	are marked as free. Blocks should never have to be marked  *	as in use.  * setflags(flags, set/clear) - the fs_flags field has the specified  *	flags set (second parameter +1) or cleared (second parameter -1).  * setcwd(dirinode) - set the current directory to dirinode in the  *	filesystem associated with the snapshot.  * setdotdot(oldvalue, newvalue) - Verify that the inode number for ".."  *	in the current directory is oldvalue then change it to newvalue.  * unlink(nameptr, oldvalue) - Verify that the inode number associated  *	with nameptr in the current directory is oldvalue then unlink it.  */
+comment|/*  * This function provides the capability for the fsck program to  * update an active filesystem. Fourteen operations are provided:  *  * adjrefcnt(inode, amt) - adjusts the reference count on the  *	specified inode by the specified amount. Under normal  *	operation the count should always go down. Decrementing  *	the count to zero will cause the inode to be freed.  * adjblkcnt(inode, amt) - adjust the number of blocks used by the  *	inode by the specified amount.  * adjndir, adjbfree, adjifree, adjffree, adjnumclusters(amt) -  *	adjust the superblock summary.  * freedirs(inode, count) - directory inodes [inode..inode + count - 1]  *	are marked as free. Inodes should never have to be marked  *	as in use.  * freefiles(inode, count) - file inodes [inode..inode + count - 1]  *	are marked as free. Inodes should never have to be marked  *	as in use.  * freeblks(blockno, size) - blocks [blockno..blockno + size - 1]  *	are marked as free. Blocks should never have to be marked  *	as in use.  * setflags(flags, set/clear) - the fs_flags field has the specified  *	flags set (second parameter +1) or cleared (second parameter -1).  * setcwd(dirinode) - set the current directory to dirinode in the  *	filesystem associated with the snapshot.  * setdotdot(oldvalue, newvalue) - Verify that the inode number for ".."  *	in the current directory is oldvalue then change it to newvalue.  * unlink(nameptr, oldvalue) - Verify that the inode number associated  *	with nameptr in the current directory is oldvalue then unlink it.  */
 end_comment
 
 begin_function_decl
@@ -13975,6 +14008,8 @@ operator|->
 name|fs_fsize
 argument_list|,
 name|ROOTINO
+argument_list|,
+name|VDIR
 argument_list|,
 name|NULL
 argument_list|)

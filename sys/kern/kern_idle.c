@@ -167,7 +167,7 @@ comment|/* start with no idle process */
 ifdef|#
 directive|ifdef
 name|SMP
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|pc
 argument_list|,

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/*  * $Id: gssapi_link.c,v 1.12 2008/11/11 03:55:01 marka Exp $  */
+comment|/*  * $Id: gssapi_link.c,v 1.12 2008-11-11 03:55:01 marka Exp $  */
 end_comment
 
 begin_include

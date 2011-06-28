@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ===-- umodsi3.c - Implement __umodsi3 -----------------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is distributed under the University of Illinois Open Source  * License. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file implements __umodsi3 for the compiler_rt library.  *  * ===----------------------------------------------------------------------===  */
+comment|/* ===-- umodsi3.c - Implement __umodsi3 -----------------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is dual licensed under the MIT and the University of Illinois Open  * Source Licenses. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file implements __umodsi3 for the compiler_rt library.  *  * ===----------------------------------------------------------------------===  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"abi.h"
+end_include
 
 begin_include
 include|#
@@ -15,6 +21,7 @@ end_comment
 
 begin_function_decl
 name|su_int
+name|COMPILER_RT_ABI
 name|__udivsi3
 parameter_list|(
 name|su_int
@@ -27,6 +34,7 @@ function_decl|;
 end_function_decl
 
 begin_function
+name|COMPILER_RT_ABI
 name|su_int
 name|__umodsi3
 parameter_list|(

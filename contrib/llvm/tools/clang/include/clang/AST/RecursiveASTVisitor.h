@@ -2248,6 +2248,12 @@ argument|{     TRY_TO(TraverseStmt(T->getUnderlyingExpr()));   }
 argument_list|)
 name|DEF_TRAVERSE_TYPE
 argument_list|(
+argument|UnaryTransformType
+argument_list|,
+argument|{     TRY_TO(TraverseType(T->getBaseType()));     TRY_TO(TraverseType(T->getUnderlyingType()));     }
+argument_list|)
+name|DEF_TRAVERSE_TYPE
+argument_list|(
 argument|AutoType
 argument_list|,
 argument|{     TRY_TO(TraverseType(T->getDeducedType()));   }
@@ -2682,6 +2688,15 @@ argument_list|(
 argument|DecltypeType
 argument_list|,
 argument|{     TRY_TO(TraverseStmt(TL.getTypePtr()->getUnderlyingExpr()));   }
+argument_list|)
+end_macro
+
+begin_macro
+name|DEF_TRAVERSE_TYPELOC
+argument_list|(
+argument|UnaryTransformType
+argument_list|,
+argument|{     TRY_TO(TraverseTypeLoc(TL.getUnderlyingTInfo()->getTypeLoc()));   }
 argument_list|)
 end_macro
 
@@ -3795,6 +3810,15 @@ comment|// We shouldn't traverse D->getTypeForDecl(); it's a result of
 comment|// declaring the type alias, not something that was written in the
 comment|// source.
 argument|}
+argument_list|)
+end_macro
+
+begin_macro
+name|DEF_TRAVERSE_DECL
+argument_list|(
+argument|TypeAliasTemplateDecl
+argument_list|,
+argument|{     TRY_TO(TraverseDecl(D->getTemplatedDecl()));     TRY_TO(TraverseTemplateParameterListHelper(D->getTemplateParameters()));   }
 argument_list|)
 end_macro
 
@@ -5821,6 +5845,13 @@ argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|ObjCStringLiteral
+argument_list|,
+argument|{ }
+argument_list|)
+comment|// Traverse OpenCL: AsType, Convert.
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|AsTypeExpr
 argument_list|,
 argument|{ }
 argument_list|)

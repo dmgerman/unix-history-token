@@ -48,6 +48,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/rwlock.h>
 end_include
 
@@ -324,7 +330,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*-  * struct inpcb captures the network layer state for TCP, UDP, and raw IPv4  * and IPv6 sockets.  In the case of TCP, further per-connection state is  * hung off of inp_ppcb most of the time.  Almost all fields of struct inpcb  * are static after creation or protected by a per-inpcb rwlock, inp_lock.  A  * few fields also require the global pcbinfo lock for the inpcb to be held,  * when modified, such as the global connection lists and hashes, as well as  * binding information (which affects which hash a connection is on).  This  * model means that connections can be looked up without holding the  * per-connection lock, which is important for performance when attempting to  * find the connection for a packet given its IP and port tuple.  Writing to  * these fields that write locks be held on both the inpcb and global locks.  *  * Key:  * (c) - Constant after initialization  * (i) - Protected by the inpcb lock  * (p) - Protected by the pcbinfo lock for the inpcb  * (s) - Protected by another subsystem's locks  * (x) - Undefined locking  *  * A few other notes:  *  * When a read lock is held, stability of the field is guaranteed; to write  * to a field, a write lock must generally be held.  *  * netinet/netinet6-layer code should not assume that the inp_socket pointer  * is safe to dereference without inp_lock being held, even for protocols  * other than TCP (where the inpcb persists during TIMEWAIT even after the  * socket has been freed), or there may be close(2)-related races.  *  * The inp_vflag field is overloaded, and would otherwise ideally be (c).  */
+comment|/*-  * struct inpcb captures the network layer state for TCP, UDP, and raw IPv4  * and IPv6 sockets.  In the case of TCP, further per-connection state is  * hung off of inp_ppcb most of the time.  Almost all fields of struct inpcb  * are static after creation or protected by a per-inpcb rwlock, inp_lock.  A  * few fields also require the global pcbinfo lock for the inpcb to be held,  * when modified, such as the global connection lists and hashes, as well as  * binding information (which affects which hash a connection is on).  This  * model means that connections can be looked up without holding the  * per-connection lock, which is important for performance when attempting to  * find the connection for a packet given its IP and port tuple.  Writing to  * these fields that write locks be held on both the inpcb and global locks.  *  * Key:  * (c) - Constant after initialization  * (g) - Protected by the pcbgroup lock  * (i) - Protected by the inpcb lock  * (p) - Protected by the pcbinfo lock for the inpcb  * (s) - Protected by another subsystem's locks  * (x) - Undefined locking  *  * A few other notes:  *  * When a read lock is held, stability of the field is guaranteed; to write  * to a field, a write lock must generally be held.  *  * netinet/netinet6-layer code should not assume that the inp_socket pointer  * is safe to dereference without inp_lock being held, even for protocols  * other than TCP (where the inpcb persists during TIMEWAIT even after the  * socket has been freed), or there may be close(2)-related races.  *  * The inp_vflag field is overloaded, and would otherwise ideally be (c).  */
 end_comment
 
 begin_struct
@@ -338,6 +344,13 @@ argument_list|)
 name|inp_hash
 expr_stmt|;
 comment|/* (i/p) hash list */
+name|LIST_ENTRY
+argument_list|(
+argument|inpcb
+argument_list|)
+name|inp_pcbgrouphash
+expr_stmt|;
+comment|/* (g/i) hash list */
 name|LIST_ENTRY
 argument_list|(
 argument|inpcb
@@ -356,6 +369,19 @@ modifier|*
 name|inp_pcbinfo
 decl_stmt|;
 comment|/* (c) PCB list info */
+name|struct
+name|inpcbgroup
+modifier|*
+name|inp_pcbgroup
+decl_stmt|;
+comment|/* (g/i) PCB group list */
+name|LIST_ENTRY
+argument_list|(
+argument|inpcb
+argument_list|)
+name|inp_pcbgroup_wild
+expr_stmt|;
+comment|/* (g/i/p) group wildcard entry */
 name|struct
 name|socket
 modifier|*
@@ -752,14 +778,14 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*-  * Global data structure for each high-level protocol (UDP, TCP, ...) in both  * IPv4 and IPv6.  Holds inpcb lists and information for managing them.  *  * Each pcbinfo is protected by ipi_lock, covering mutable global fields (such  * as the global pcb list) and hashed lookup tables.  The lock order is:  *  *    ipi_lock (before) inpcb locks  *  * Locking key:  *  * (c) Constant or nearly constant after initialisation  * (g) Locked by ipi_lock  * (h) Read using either ipi_lock or inpcb lock; write requires both.  * (x) Synchronisation properties poorly defined  */
+comment|/*-  * Global data structure for each high-level protocol (UDP, TCP, ...) in both  * IPv4 and IPv6.  Holds inpcb lists and information for managing them.  *  * Each pcbinfo is protected by two locks: ipi_lock and ipi_hash_lock,  * the former covering mutable global fields (such as the global pcb list),  * and the latter covering the hashed lookup tables.  The lock order is:  *  *    ipi_lock (before) inpcb locks (before) {ipi_hash_lock, pcbgroup locks}  *  * Locking key:  *  * (c) Constant or nearly constant after initialisation  * (g) Locked by ipi_lock  * (h) Read using either ipi_hash_lock or inpcb lock; write requires both  * (p) Protected by one or more pcbgroup locks  * (x) Synchronisation properties poorly defined  */
 end_comment
 
 begin_struct
 struct|struct
 name|inpcbinfo
 block|{
-comment|/* 	 * Global lock protecting global inpcb list, inpcb count, hash tables, 	 * etc. 	 */
+comment|/* 	 * Global lock protecting global inpcb list, inpcb count, etc. 	 */
 name|struct
 name|rwlock
 name|ipi_lock
@@ -800,28 +826,59 @@ modifier|*
 name|ipi_zone
 decl_stmt|;
 comment|/* (c) */
+comment|/* 	 * Connection groups associated with this protocol.  These fields are 	 * constant, but pcbgroup structures themselves are protected by 	 * per-pcbgroup locks. 	 */
+name|struct
+name|inpcbgroup
+modifier|*
+name|ipi_pcbgroups
+decl_stmt|;
+comment|/* (c) */
+name|u_int
+name|ipi_npcbgroups
+decl_stmt|;
+comment|/* (c) */
+name|u_int
+name|ipi_hashfields
+decl_stmt|;
+comment|/* (c) */
+comment|/* 	 * Global lock protecting non-pcbgroup hash lookup tables. 	 */
+name|struct
+name|rwlock
+name|ipi_hash_lock
+decl_stmt|;
 comment|/* 	 * Global hash of inpcbs, hashed by local and foreign addresses and 	 * port numbers. 	 */
 name|struct
 name|inpcbhead
 modifier|*
 name|ipi_hashbase
 decl_stmt|;
-comment|/* (g) */
+comment|/* (h) */
 name|u_long
 name|ipi_hashmask
 decl_stmt|;
-comment|/* (g) */
+comment|/* (h) */
 comment|/* 	 * Global hash of inpcbs, hashed by only local port number. 	 */
 name|struct
 name|inpcbporthead
 modifier|*
 name|ipi_porthashbase
 decl_stmt|;
-comment|/* (g) */
+comment|/* (h) */
 name|u_long
 name|ipi_porthashmask
 decl_stmt|;
-comment|/* (g) */
+comment|/* (h) */
+comment|/* 	 * List of wildcard inpcbs for use with pcbgroups.  In the past, was 	 * per-pcbgroup but is now global.  All pcbgroup locks must be held 	 * to modify the list, so any is sufficient to read it. 	 */
+name|struct
+name|inpcbhead
+modifier|*
+name|ipi_wildbase
+decl_stmt|;
+comment|/* (p) */
+name|u_long
+name|ipi_wildmask
+decl_stmt|;
+comment|/* (p) */
 comment|/* 	 * Pointer to network stack instance 	 */
 name|struct
 name|vnet
@@ -838,6 +895,43 @@ literal|2
 index|]
 decl_stmt|;
 block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Connection groups hold sets of connections that have similar CPU/thread  * affinity.  Each connection belongs to exactly one connection group.  */
+end_comment
+
+begin_struct
+struct|struct
+name|inpcbgroup
+block|{
+comment|/* 	 * Per-connection group hash of inpcbs, hashed by local and foreign 	 * addresses and port numbers. 	 */
+name|struct
+name|inpcbhead
+modifier|*
+name|ipg_hashbase
+decl_stmt|;
+comment|/* (c) */
+name|u_long
+name|ipg_hashmask
+decl_stmt|;
+comment|/* (c) */
+comment|/* 	 * Notional affinity of this pcbgroup. 	 */
+name|u_int
+name|ipg_cpu
+decl_stmt|;
+comment|/* (p) */
+comment|/* 	 * Per-connection group lock, not to be confused with ipi_lock. 	 * Protects the hash table hung off the group, but also the global 	 * wildcard list in inpcbinfo. 	 */
+name|struct
+name|mtx
+name|ipg_lock
+decl_stmt|;
+block|}
+name|__aligned
+argument_list|(
+name|CACHE_LINE_SIZE
+argument_list|)
 struct|;
 end_struct
 
@@ -1372,6 +1466,141 @@ end_define
 begin_define
 define|#
 directive|define
+name|INP_HASH_LOCK_INIT
+parameter_list|(
+name|ipi
+parameter_list|,
+name|d
+parameter_list|)
+define|\
+value|rw_init_flags(&(ipi)->ipi_hash_lock, (d), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_HASH_LOCK_DESTROY
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_destroy(&(ipi)->ipi_hash_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_HASH_RLOCK
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_rlock(&(ipi)->ipi_hash_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_HASH_WLOCK
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_wlock(&(ipi)->ipi_hash_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_HASH_RUNLOCK
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_runlock(&(ipi)->ipi_hash_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_HASH_WUNLOCK
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_wunlock(&(ipi)->ipi_hash_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_HASH_LOCK_ASSERT
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_assert(&(ipi)->ipi_hash_lock, \ 					    RA_LOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_HASH_WLOCK_ASSERT
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_assert(&(ipi)->ipi_hash_lock, \ 					    RA_WLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_GROUP_LOCK_INIT
+parameter_list|(
+name|ipg
+parameter_list|,
+name|d
+parameter_list|)
+value|mtx_init(&(ipg)->ipg_lock, (d), NULL, \ 					    MTX_DEF | MTX_DUPOK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_GROUP_LOCK_DESTROY
+parameter_list|(
+name|ipg
+parameter_list|)
+value|mtx_destroy(&(ipg)->ipg_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_GROUP_LOCK
+parameter_list|(
+name|ipg
+parameter_list|)
+value|mtx_lock(&(ipg)->ipg_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_GROUP_LOCK_ASSERT
+parameter_list|(
+name|ipg
+parameter_list|)
+value|mtx_assert(&(ipg)->ipg_lock, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_GROUP_UNLOCK
+parameter_list|(
+name|ipg
+parameter_list|)
+value|mtx_unlock(&(ipg)->ipg_lock)
+end_define
+
+begin_define
+define|#
+directive|define
 name|INP_PCBHASH
 parameter_list|(
 name|faddr
@@ -1809,8 +2038,56 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INP_PCBGROUPWILD
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* in pcbgroup wildcard list */
+end_comment
+
+begin_comment
+comment|/*  * Flags passed to in_pcblookup*() functions.  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|INPLOOKUP_WILDCARD
-value|1
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Allow wildcard sockets. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INPLOOKUP_RLOCKPCB
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Return inpcb read-locked. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INPLOOKUP_WLOCKPCB
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* Return inpcb write-locked. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INPLOOKUP_MASK
+value|(INPLOOKUP_WILDCARD | INPLOOKUP_RLOCKPCB | \ 			    INPLOOKUP_WLOCKPCB)
 end_define
 
 begin_define
@@ -1857,6 +2134,31 @@ parameter_list|,
 name|af
 parameter_list|)
 value|(INP_SOCKAF(so) == af)
+end_define
+
+begin_comment
+comment|/*  * Constants for pcbinfo.ipi_hashfields.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPI_HASHFIELDS_NONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_HASHFIELDS_2TUPLE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_HASHFIELDS_4TUPLE
+value|2
 end_define
 
 begin_ifdef
@@ -2125,6 +2427,135 @@ parameter_list|,
 name|uma_fini
 parameter_list|,
 name|uint32_t
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|inpcbgroup
+modifier|*
+name|in_pcbgroup_byhash
+parameter_list|(
+name|struct
+name|inpcbinfo
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|uint32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|inpcbgroup
+modifier|*
+name|in_pcbgroup_byinpcb
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|inpcbgroup
+modifier|*
+name|in_pcbgroup_bytuple
+parameter_list|(
+name|struct
+name|inpcbinfo
+modifier|*
+parameter_list|,
+name|struct
+name|in_addr
+parameter_list|,
+name|u_short
+parameter_list|,
+name|struct
+name|in_addr
+parameter_list|,
+name|u_short
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|in_pcbgroup_destroy
+parameter_list|(
+name|struct
+name|inpcbinfo
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|in_pcbgroup_enabled
+parameter_list|(
+name|struct
+name|inpcbinfo
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|in_pcbgroup_init
+parameter_list|(
+name|struct
+name|inpcbinfo
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|in_pcbgroup_remove
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|in_pcbgroup_update
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|in_pcbgroup_update_mbuf
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2248,6 +2679,29 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|in_pcbconnect_mbuf
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|in_pcbconnect_setup
 parameter_list|(
 name|struct
@@ -2338,6 +2792,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|in_pcbinshash_nopcbgroup
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|inpcb
 modifier|*
@@ -2365,7 +2830,7 @@ begin_function_decl
 name|struct
 name|inpcb
 modifier|*
-name|in_pcblookup_hash
+name|in_pcblookup
 parameter_list|(
 name|struct
 name|inpcbinfo
@@ -2385,6 +2850,39 @@ name|int
 parameter_list|,
 name|struct
 name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|inpcb
+modifier|*
+name|in_pcblookup_mbuf
+parameter_list|(
+name|struct
+name|inpcbinfo
+modifier|*
+parameter_list|,
+name|struct
+name|in_addr
+parameter_list|,
+name|u_int
+parameter_list|,
+name|struct
+name|in_addr
+parameter_list|,
+name|u_int
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2438,6 +2936,21 @@ name|in_pcbrehash
 parameter_list|(
 name|struct
 name|inpcb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|in_pcbrehash_mbuf
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
 modifier|*
 parameter_list|)
 function_decl|;

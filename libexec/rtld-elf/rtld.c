@@ -5213,17 +5213,7 @@ name|bind_now
 operator|=
 name|true
 expr_stmt|;
-if|if
-condition|(
-name|dynp
-operator|->
-name|d_un
-operator|.
-name|d_val
-operator|&
-name|DF_STATIC_TLS
-condition|)
-empty_stmt|;
+comment|/*if (dynp->d_un.d_val& DF_STATIC_TLS) 		    ;*/
 break|break;
 ifdef|#
 directive|ifdef
@@ -5348,18 +5338,7 @@ name|z_origin
 operator|=
 name|true
 expr_stmt|;
-if|if
-condition|(
-name|dynp
-operator|->
-name|d_un
-operator|.
-name|d_val
-operator|&
-name|DF_1_GLOBAL
-condition|)
-comment|/* XXX */
-empty_stmt|;
+comment|/*if (dynp->d_un.d_val& DF_1_GLOBAL) 		    XXX ;*/
 if|if
 condition|(
 name|dynp

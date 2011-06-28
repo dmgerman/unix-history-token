@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ===-- ffsdi2.c - Implement __ffsdi2 -------------------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is distributed under the University of Illinois Open Source  * License. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file implements __ffsdi2 for the compiler_rt library.  *  * ===----------------------------------------------------------------------===  */
+comment|/* ===-- ffsdi2.c - Implement __ffsdi2 -------------------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is dual licensed under the MIT and the University of Illinois Open  * Source Licenses. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file implements __ffsdi2 for the compiler_rt library.  *  * ===----------------------------------------------------------------------===  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"abi.h"
+end_include
 
 begin_include
 include|#
@@ -14,6 +20,7 @@ comment|/* Returns: the index of the least significant 1-bit in a, or  * the val
 end_comment
 
 begin_function
+name|COMPILER_RT_ABI
 name|si_int
 name|__ffsdi2
 parameter_list|(

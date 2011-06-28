@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: listenlist.c,v 1.14 2007/06/19 23:46:59 tbox Exp $ */
+comment|/* $Id: listenlist.c,v 1.14 2007-06-19 23:46:59 tbox Exp $ */
 end_comment
 
 begin_comment

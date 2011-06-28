@@ -116,6 +116,9 @@ block|,
 name|Slash
 block|,
 comment|// '/'
+name|BackSlash
+block|,
+comment|// '\'
 name|LParen
 block|,
 name|RParen

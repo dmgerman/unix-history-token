@@ -952,6 +952,15 @@ decl_stmt|;
 specifier|static
 specifier|const
 name|TST
+name|TST_underlyingType
+init|=
+name|clang
+operator|::
+name|TST_underlyingType
+decl_stmt|;
+specifier|static
+specifier|const
+name|TST
 name|TST_auto
 init|=
 name|clang
@@ -1249,6 +1258,10 @@ operator|||
 name|T
 operator|==
 name|TST_typeofType
+operator|||
+name|T
+operator|==
+name|TST_underlyingType
 operator|)
 return|;
 block|}
@@ -1927,6 +1940,31 @@ block|{
 return|return
 name|TQ_volatileLoc
 return|;
+block|}
+comment|/// \brief Clear out all of the type qualifiers.
+name|void
+name|ClearTypeQualifiers
+parameter_list|()
+block|{
+name|TypeQualifiers
+operator|=
+literal|0
+expr_stmt|;
+name|TQ_constLoc
+operator|=
+name|SourceLocation
+argument_list|()
+expr_stmt|;
+name|TQ_restrictLoc
+operator|=
+name|SourceLocation
+argument_list|()
+expr_stmt|;
+name|TQ_volatileLoc
+operator|=
+name|SourceLocation
+argument_list|()
+expr_stmt|;
 block|}
 comment|// function-specifier
 name|bool
@@ -3901,8 +3939,8 @@ comment|/// If this is an invalid location, there is no ref-qualifier.
 name|unsigned
 name|RefQualifierLoc
 block|;
-comment|/// \brief When ExceptionSpecType isn't EST_None, the location of the
-comment|/// keyword introducing the spec.
+comment|/// \brief When ExceptionSpecType isn't EST_None or EST_Delayed, the
+comment|/// location of the keyword introducing the spec.
 name|unsigned
 name|ExceptionSpecLoc
 block|;
@@ -4803,7 +4841,10 @@ name|TemplateTypeArgContext
 block|,
 comment|// Template type argument.
 name|AliasDeclContext
+block|,
 comment|// C++0x alias-declaration.
+name|AliasTemplateContext
+comment|// C++0x alias-declaration template.
 block|}
 block|;
 name|private
@@ -5313,6 +5354,9 @@ case|case
 name|AliasDeclContext
 case|:
 case|case
+name|AliasTemplateContext
+case|:
+case|case
 name|PrototypeContext
 case|:
 case|case
@@ -5388,6 +5432,9 @@ name|TypeNameContext
 case|:
 case|case
 name|AliasDeclContext
+case|:
+case|case
+name|AliasTemplateContext
 case|:
 case|case
 name|ObjCPrototypeContext
@@ -5466,6 +5513,9 @@ name|TypeNameContext
 case|:
 case|case
 name|AliasDeclContext
+case|:
+case|case
+name|AliasTemplateContext
 case|:
 case|case
 name|BlockLiteralContext
@@ -5851,6 +5901,127 @@ block|}
 end_function
 
 begin_comment
+comment|/// isArrayOfUnknownBound - This method returns true if the declarator
+end_comment
+
+begin_comment
+comment|/// is a declarator for an array of unknown bound (looking through
+end_comment
+
+begin_comment
+comment|/// parentheses).
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isArrayOfUnknownBound
+argument_list|()
+specifier|const
+block|{
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|,
+name|i_end
+init|=
+name|DeclTypeInfo
+operator|.
+name|size
+argument_list|()
+init|;
+name|i
+operator|<
+name|i_end
+condition|;
+operator|++
+name|i
+control|)
+block|{
+switch|switch
+condition|(
+name|DeclTypeInfo
+index|[
+name|i
+index|]
+operator|.
+name|Kind
+condition|)
+block|{
+case|case
+name|DeclaratorChunk
+operator|::
+name|Paren
+case|:
+continue|continue;
+case|case
+name|DeclaratorChunk
+operator|::
+name|Function
+case|:
+case|case
+name|DeclaratorChunk
+operator|::
+name|Pointer
+case|:
+case|case
+name|DeclaratorChunk
+operator|::
+name|Reference
+case|:
+case|case
+name|DeclaratorChunk
+operator|::
+name|BlockPointer
+case|:
+case|case
+name|DeclaratorChunk
+operator|::
+name|MemberPointer
+case|:
+return|return
+name|false
+return|;
+case|case
+name|DeclaratorChunk
+operator|::
+name|Array
+case|:
+return|return
+operator|!
+name|DeclTypeInfo
+index|[
+name|i
+index|]
+operator|.
+name|Arr
+operator|.
+name|NumElts
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"Invalid type chunk"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|false
+return|;
+end_return
+
+begin_expr_stmt
+unit|}     return
+name|false
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+unit|}
 comment|/// isFunctionDeclarator - This method returns true if the declarator
 end_comment
 
@@ -5866,15 +6037,16 @@ begin_comment
 comment|/// assigned with the index of the declaration chunk.
 end_comment
 
-begin_decl_stmt
-name|bool
+begin_macro
+unit|bool
 name|isFunctionDeclarator
 argument_list|(
-name|unsigned
-operator|&
-name|idx
+argument|unsigned& idx
 argument_list|)
-decl|const
+end_macro
+
+begin_expr_stmt
+specifier|const
 block|{
 for|for
 control|(
@@ -5960,17 +6132,22 @@ argument_list|(
 literal|"Invalid type chunk"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|false
 return|;
-block|}
-return|return
+end_return
+
+begin_expr_stmt
+unit|}     return
 name|false
-return|;
-block|}
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
+unit|}
 comment|/// isFunctionDeclarator - Once this declarator is fully parsed and formed,
 end_comment
 
@@ -5982,10 +6159,13 @@ begin_comment
 comment|/// (looking through parentheses).
 end_comment
 
-begin_expr_stmt
-name|bool
+begin_macro
+unit|bool
 name|isFunctionDeclarator
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 name|unsigned

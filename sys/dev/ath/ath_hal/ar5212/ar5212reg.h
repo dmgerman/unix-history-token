@@ -2767,6 +2767,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR_QUIET1_QUIET_ACK_CTS_ENABLE_S
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR_QUIET2
 value|0x8100
 end_define

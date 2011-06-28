@@ -51,24 +51,6 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|char
-modifier|*
-name|AcpiDbGetNextToken
-parameter_list|(
-name|char
-modifier|*
-name|String
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|Next
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|UINT32
 name|AcpiDbGetLine
 parameter_list|(
@@ -898,6 +880,26 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
+literal|"     Hex Integer                      Integer method argument\n"
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"     \"Ascii String\"                   String method argument\n"
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"     (Byte List)                      Buffer method argument\n"
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"     [Package Element List]           Package method argument\n"
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
 literal|"  Go                                  Allow method to run to completion\n"
 argument_list|)
 expr_stmt|;
@@ -984,7 +986,6 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-specifier|static
 name|char
 modifier|*
 name|AcpiDbGetNextToken
@@ -997,11 +998,23 @@ name|char
 modifier|*
 modifier|*
 name|Next
+parameter_list|,
+name|ACPI_OBJECT_TYPE
+modifier|*
+name|ReturnType
 parameter_list|)
 block|{
 name|char
 modifier|*
 name|Start
+decl_stmt|;
+name|UINT32
+name|Depth
+decl_stmt|;
+name|ACPI_OBJECT_TYPE
+name|Type
+init|=
+name|ACPI_TYPE_INTEGER
 decl_stmt|;
 comment|/* At end of buffer? */
 if|if
@@ -1022,7 +1035,7 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/* Get rid of any spaces at the beginning */
+comment|/* Remove any spaces at the beginning */
 if|if
 condition|(
 operator|*
@@ -1064,14 +1077,15 @@ operator|)
 return|;
 block|}
 block|}
-if|if
+switch|switch
 condition|(
 operator|*
 name|String
-operator|==
-literal|'"'
 condition|)
 block|{
+case|case
+literal|'"'
+case|:
 comment|/* This is a quoted string, scan until closing quote */
 name|String
 operator|++
@@ -1080,7 +1094,11 @@ name|Start
 operator|=
 name|String
 expr_stmt|;
-comment|/* Find end of token */
+name|Type
+operator|=
+name|ACPI_TYPE_STRING
+expr_stmt|;
+comment|/* Find end of string */
 while|while
 condition|(
 operator|*
@@ -1098,9 +1116,152 @@ name|String
 operator|++
 expr_stmt|;
 block|}
-block|}
-else|else
+break|break;
+case|case
+literal|'('
+case|:
+comment|/* This is the start of a buffer, scan until closing paren */
+name|String
+operator|++
+expr_stmt|;
+name|Start
+operator|=
+name|String
+expr_stmt|;
+name|Type
+operator|=
+name|ACPI_TYPE_BUFFER
+expr_stmt|;
+comment|/* Find end of buffer */
+while|while
+condition|(
+operator|*
+name|String
+operator|&&
+operator|(
+operator|*
+name|String
+operator|!=
+literal|')'
+operator|)
+condition|)
 block|{
+name|String
+operator|++
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|'['
+case|:
+comment|/* This is the start of a package, scan until closing bracket */
+name|String
+operator|++
+expr_stmt|;
+name|Depth
+operator|=
+literal|1
+expr_stmt|;
+name|Start
+operator|=
+name|String
+expr_stmt|;
+name|Type
+operator|=
+name|ACPI_TYPE_PACKAGE
+expr_stmt|;
+comment|/* Find end of package (closing bracket) */
+while|while
+condition|(
+operator|*
+name|String
+condition|)
+block|{
+comment|/* Handle String package elements */
+if|if
+condition|(
+operator|*
+name|String
+operator|==
+literal|'"'
+condition|)
+block|{
+comment|/* Find end of string */
+name|String
+operator|++
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|String
+operator|&&
+operator|(
+operator|*
+name|String
+operator|!=
+literal|'"'
+operator|)
+condition|)
+block|{
+name|String
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+operator|(
+operator|*
+name|String
+operator|)
+condition|)
+block|{
+break|break;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+operator|*
+name|String
+operator|==
+literal|'['
+condition|)
+block|{
+name|Depth
+operator|++
+expr_stmt|;
+comment|/* A nested package declaration */
+block|}
+elseif|else
+if|if
+condition|(
+operator|*
+name|String
+operator|==
+literal|']'
+condition|)
+block|{
+name|Depth
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|Depth
+operator|==
+literal|0
+condition|)
+comment|/* Found final package closing bracket */
+block|{
+break|break;
+block|}
+block|}
+name|String
+operator|++
+expr_stmt|;
+block|}
+break|break;
+default|default:
 name|Start
 operator|=
 name|String
@@ -1123,6 +1284,7 @@ name|String
 operator|++
 expr_stmt|;
 block|}
+break|break;
 block|}
 if|if
 condition|(
@@ -1154,6 +1316,11 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
+operator|*
+name|ReturnType
+operator|=
+name|Type
+expr_stmt|;
 return|return
 operator|(
 name|Start
@@ -1226,6 +1393,12 @@ name|This
 argument_list|,
 operator|&
 name|Next
+argument_list|,
+operator|&
+name|AcpiGbl_DbArgTypes
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -1609,6 +1782,12 @@ index|[
 literal|2
 index|]
 argument_list|,
+operator|&
+name|AcpiGbl_DbArgTypes
+index|[
+literal|2
+index|]
+argument_list|,
 name|EX_SINGLE_STEP
 argument_list|)
 expr_stmt|;
@@ -1696,6 +1875,12 @@ index|]
 argument_list|,
 operator|&
 name|AcpiGbl_DbArgs
+index|[
+literal|2
+index|]
+argument_list|,
+operator|&
+name|AcpiGbl_DbArgTypes
 index|[
 literal|2
 index|]
@@ -2643,14 +2828,42 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Get the user input line */
-operator|(
-name|void
-operator|)
+name|Status
+operator|=
 name|AcpiOsGetLine
 argument_list|(
 name|AcpiGbl_DbLineBuf
+argument_list|,
+name|ACPI_DB_LINE_BUFFER_SIZE
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_EXCEPTION
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+name|Status
+operator|,
+literal|"While parsing command line"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
 comment|/* Check for single or multithreaded debug */
 if|if
 condition|(

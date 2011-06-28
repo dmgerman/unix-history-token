@@ -544,6 +544,12 @@ name|objcDeclQualifier
 range|:
 literal|6
 decl_stmt|;
+comment|/// \brief Indicates whether this method has a related result type.
+name|unsigned
+name|RelatedResultType
+range|:
+literal|1
+decl_stmt|;
 comment|// Number of args separated by ':' in a method declaration.
 name|unsigned
 name|NumSelectorArgs
@@ -612,6 +618,8 @@ argument|bool isDefined = false
 argument_list|,
 argument|ImplementationControl impControl = None
 argument_list|,
+argument|bool HasRelatedResultType = false
+argument_list|,
 argument|unsigned numSelectorArgs =
 literal|0
 argument_list|)
@@ -665,6 +673,11 @@ operator|,
 name|objcDeclQualifier
 argument_list|(
 name|OBJC_TQ_None
+argument_list|)
+operator|,
+name|RelatedResultType
+argument_list|(
+name|HasRelatedResultType
 argument_list|)
 operator|,
 name|NumSelectorArgs
@@ -767,6 +780,11 @@ name|impControl
 init|=
 name|None
 parameter_list|,
+name|bool
+name|HasRelatedResultType
+init|=
+name|false
+parameter_list|,
 name|unsigned
 name|numSelectorArgs
 init|=
@@ -822,6 +840,32 @@ block|{
 name|objcDeclQualifier
 operator|=
 name|QV
+expr_stmt|;
+block|}
+comment|/// \brief Determine whether this method has a result type that is related
+comment|/// to the message receiver's type.
+name|bool
+name|hasRelatedResultType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RelatedResultType
+return|;
+block|}
+comment|/// \brief Note whether this method has a related result type.
+name|void
+name|SetRelatedResultType
+parameter_list|(
+name|bool
+name|RRT
+init|=
+name|true
+parameter_list|)
+block|{
+name|RelatedResultType
+operator|=
+name|RRT
 expr_stmt|;
 block|}
 name|unsigned
@@ -3378,6 +3422,9 @@ name|BW
 argument_list|,
 comment|/*Mutable=*/
 name|false
+argument_list|,
+comment|/*HasInit=*/
+name|false
 argument_list|)
 block|,
 name|NextIvar
@@ -3629,6 +3676,9 @@ comment|// FIXME: Do ObjCAtDefs have declarators ?
 argument|BW
 argument_list|,
 comment|/*Mutable=*/
+argument|false
+argument_list|,
+comment|/*HasInit=*/
 argument|false
 argument_list|)
 block|{}

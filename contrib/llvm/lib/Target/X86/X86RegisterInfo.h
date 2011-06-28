@@ -238,6 +238,23 @@ argument|bool isEH
 argument_list|)
 specifier|const
 block|;
+name|int
+name|getLLVMRegNum
+argument_list|(
+argument|unsigned RegNum
+argument_list|,
+argument|bool isEH
+argument_list|)
+specifier|const
+block|;
+comment|// FIXME: This should be tablegen'd like getDwarfRegNum is
+name|int
+name|getSEHRegNum
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|;
 comment|/// Code Generation virtual methods...
 comment|///
 comment|/// getMatchingSuperRegClass - Return a subclass of the specified register

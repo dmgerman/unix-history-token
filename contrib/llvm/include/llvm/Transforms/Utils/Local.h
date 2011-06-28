@@ -127,13 +127,20 @@ comment|/// ConstantFoldTerminator - If a terminator instruction is predicated o
 comment|/// constant value, convert it into an unconditional branch to the constant
 comment|/// destination.  This is a nontrivial operation because the successors of this
 comment|/// basic block must have their PHI nodes updated.
-comment|///
+comment|/// Also calls RecursivelyDeleteTriviallyDeadInstructions() on any branch/switch
+comment|/// conditions and indirectbr addresses this might make dead if
+comment|/// DeleteDeadConditions is true.
 name|bool
 name|ConstantFoldTerminator
 parameter_list|(
 name|BasicBlock
 modifier|*
 name|BB
+parameter_list|,
+name|bool
+name|DeleteDeadConditions
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
@@ -447,6 +454,17 @@ parameter_list|(
 name|Function
 modifier|&
 name|F
+parameter_list|)
+function_decl|;
+comment|/// FindAllocaDbgDeclare - Finds the llvm.dbg.declare intrinsic corresponding to
+comment|/// an alloca, if any.
+name|DbgDeclareInst
+modifier|*
+name|FindAllocaDbgDeclare
+parameter_list|(
+name|Value
+modifier|*
+name|V
 parameter_list|)
 function_decl|;
 block|}

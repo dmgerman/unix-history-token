@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: dialog.h,v 1.223 2011/03/02 10:04:09 tom Exp $  *  *  dialog.h -- common declarations for all dialog modules  *  *  Copyright 2000-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors  *	Savio Lam (lam836@cs.cuhk.hk)  */
+comment|/*  *  $Id: dialog.h,v 1.224 2011/06/13 14:29:42 tom Exp $  *  *  dialog.h -- common declarations for all dialog modules  *  *  Copyright 2000-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors  *	Savio Lam (lam836@cs.cuhk.hk)  */
 end_comment
 
 begin_ifndef
@@ -109,15 +109,35 @@ begin_comment
 comment|/* sqrt() */
 end_comment
 
+begin_comment
+comment|/* header conflict with Solaris xpg4 versus<sys/regset.h> */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ERR
+argument_list|)
+operator|&&
+operator|(
+name|ERR
+operator|==
+literal|13
+operator|)
+end_if
+
 begin_undef
 undef|#
 directive|undef
 name|ERR
 end_undef
 
-begin_comment
-comment|/* header conflict with Solaris xpg4 */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

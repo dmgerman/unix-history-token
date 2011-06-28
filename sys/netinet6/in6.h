@@ -2650,8 +2650,30 @@ end_define
 begin_define
 define|#
 directive|define
-name|IPV6CTL_MAXID
+name|IPV6CTL_NO_RADR
 value|48
+end_define
+
+begin_comment
+comment|/* No defroute from RA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6CTL_NORBIT_RAIF
+value|49
+end_define
+
+begin_comment
+comment|/* Disable R-bit in NA on RA 					 * receiving IF. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6CTL_MAXID
+value|50
 end_define
 
 begin_endif

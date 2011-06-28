@@ -9778,6 +9778,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|bfd_set_section_vma
 argument_list|(
 name|abfd

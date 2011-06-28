@@ -673,14 +673,11 @@ end_function_decl
 
 begin_function_decl
 name|u_int
-name|e500_init
+name|booke_init
 parameter_list|(
-name|u_int32_t
+name|uint32_t
 parameter_list|,
-name|u_int32_t
-parameter_list|,
-name|void
-modifier|*
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1060,17 +1057,13 @@ end_function
 
 begin_function
 name|u_int
-name|e500_init
+name|booke_init
 parameter_list|(
-name|u_int32_t
-name|startkernel
+name|uint32_t
+name|arg1
 parameter_list|,
-name|u_int32_t
-name|endkernel
-parameter_list|,
-name|void
-modifier|*
-name|mdp
+name|uint32_t
+name|arg2
 parameter_list|)
 block|{
 name|struct
@@ -1081,6 +1074,9 @@ decl_stmt|;
 name|void
 modifier|*
 name|kmdp
+decl_stmt|,
+modifier|*
+name|mdp
 decl_stmt|;
 name|vm_offset_t
 name|dtbp
@@ -1096,13 +1092,57 @@ name|NULL
 expr_stmt|;
 name|end
 operator|=
-name|endkernel
+operator|(
+name|uintptr_t
+operator|)
+name|_end
 expr_stmt|;
 name|dtbp
 operator|=
 operator|(
 name|vm_offset_t
 operator|)
+name|NULL
+expr_stmt|;
+comment|/* 	 * Handle the various ways we can get loaded and started: 	 *  -	FreeBSD's loader passes the pointer to the metadata 	 *	in arg1, with arg2 undefined. arg1 has a value that's 	 *	relative to the kernel's link address (i.e. larger 	 *	than 0xc0000000). 	 *  -	Juniper's loader passes the metadata pointer in arg2 	 *	and sets arg1 to zero. This is to signal that the 	 *	loader maps the kernel and starts it at its link 	 *	address (unlike the FreeBSD loader). 	 *  -	U-Boot passes the standard argc and argv parameters 	 *	in arg1 and arg2 (resp). arg1 is between 1 and some 	 *	relatively small number, such as 64K. arg2 is the 	 *	physical address of the argv vector. 	 */
+if|if
+condition|(
+name|arg1
+operator|>
+operator|(
+name|uintptr_t
+operator|)
+name|kernel_text
+condition|)
+comment|/* FreeBSD loader */
+name|mdp
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|arg1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|arg1
+operator|==
+literal|0
+condition|)
+comment|/* Juniper loader */
+name|mdp
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|arg2
+expr_stmt|;
+else|else
+comment|/* U-Boot */
+name|mdp
+operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	 * Parse metadata and fetch parameters. 	 */
@@ -1222,13 +1262,24 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * We should scream but how? Cannot even output anything... 		 */
-comment|/* 		  * FIXME add return value and handle in the locore so we can 		  * return to the loader maybe? (this seems not very easy to 		  * restore everything as the TLB have all been reprogrammed 		  * in the locore etc...) 		  */
-while|while
-condition|(
-literal|1
-condition|)
-empty_stmt|;
+name|bzero
+argument_list|(
+name|__sbss_start
+argument_list|,
+name|__sbss_end
+operator|-
+name|__sbss_start
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|__bss_start
+argument_list|,
+name|_end
+operator|-
+name|__bss_start
+argument_list|)
+expr_stmt|;
 block|}
 if|#
 directive|if
@@ -1385,21 +1436,9 @@ expr_stmt|;
 comment|/* Print out some debug info... */
 name|debugf
 argument_list|(
-literal|"e500_init: console initialized\n"
-argument_list|)
-expr_stmt|;
-name|debugf
-argument_list|(
-literal|" arg1 startkernel = 0x%08x\n"
+literal|"%s: console initialized\n"
 argument_list|,
-name|startkernel
-argument_list|)
-expr_stmt|;
-name|debugf
-argument_list|(
-literal|" arg2 endkernel = 0x%08x\n"
-argument_list|,
-name|endkernel
+name|__func__
 argument_list|)
 expr_stmt|;
 name|debugf
@@ -1542,7 +1581,10 @@ argument_list|)
 expr_stmt|;
 name|pmap_bootstrap
 argument_list|(
-name|startkernel
+operator|(
+name|uintptr_t
+operator|)
+name|kernel_text
 argument_list|,
 name|end
 argument_list|)
@@ -1775,7 +1817,9 @@ argument_list|)
 expr_stmt|;
 name|debugf
 argument_list|(
-literal|"e500_init: SP = 0x%08x\n"
+literal|"%s: SP = 0x%08x\n"
+argument_list|,
+name|__func__
 argument_list|,
 operator|(
 operator|(
@@ -1790,11 +1834,6 @@ operator|)
 operator|&
 operator|~
 literal|15
-argument_list|)
-expr_stmt|;
-name|debugf
-argument_list|(
-literal|"e500_init: e\n"
 argument_list|)
 expr_stmt|;
 return|return

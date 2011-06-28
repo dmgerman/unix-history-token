@@ -19,6 +19,12 @@ directive|include
 file|"opt_inet.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_inet6.h"
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -51,7 +57,7 @@ name|char
 name|ixgbe_driver_version
 index|[]
 init|=
-literal|"2.3.10"
+literal|"2.3.11"
 decl_stmt|;
 end_decl_stmt
 
@@ -1806,7 +1812,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*********************************************************************  *  Device identification routine  *  *  ixgbe_probe determines if the driver should be loaded on  *  adapter based on PCI vendor/device id of the adapter.  *  *  return 0 on success, positive on failure  *********************************************************************/
+comment|/*********************************************************************  *  Device identification routine  *  *  ixgbe_probe determines if the driver should be loaded on  *  adapter based on PCI vendor/device id of the adapter.  *  *  return BUS_PROBE_DEFAULT on success, positive on failure  *********************************************************************/
 end_comment
 
 begin_function
@@ -1988,7 +1994,7 @@ name|ixgbe_total_ports
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
@@ -2043,6 +2049,32 @@ argument_list|(
 literal|"ixgbe_attach: begin"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|resource_disabled
+argument_list|(
+literal|"ixgbe"
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Disabled by device hint\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 comment|/* Allocate, clear, and link in our adapter structure */
 name|adapter
 operator|=
@@ -4180,9 +4212,17 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 name|struct
 name|ifaddr
 modifier|*
@@ -4194,6 +4234,11 @@ name|ifaddr
 operator|*
 operator|)
 name|data
+decl_stmt|;
+name|bool
+name|avoid_reset
+init|=
+name|FALSE
 decl_stmt|;
 endif|#
 directive|endif
@@ -4223,8 +4268,48 @@ name|sa_family
 operator|==
 name|AF_INET
 condition|)
+name|avoid_reset
+operator|=
+name|TRUE
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET6
+if|if
+condition|(
+name|ifa
+operator|->
+name|ifa_addr
+operator|->
+name|sa_family
+operator|==
+name|AF_INET6
+condition|)
+name|avoid_reset
+operator|=
+name|TRUE
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+comment|/* 		** Calling init results in link renegotiation, 		** so we avoid doing it when possible. 		*/
+if|if
+condition|(
+name|avoid_reset
+condition|)
 block|{
-comment|/* 			 * Since resetting hardware takes a very long time 			 * and results in link renegotiation we only 			 * initialize the hardware only when it is absolutely 			 * required. 			 */
 name|ifp
 operator|->
 name|if_flags
@@ -4242,23 +4327,11 @@ operator|&
 name|IFF_DRV_RUNNING
 operator|)
 condition|)
-block|{
-name|IXGBE_CORE_LOCK
+name|ixgbe_init
 argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-name|ixgbe_init_locked
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
-name|IXGBE_CORE_UNLOCK
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -4279,8 +4352,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
 name|error
 operator|=
 name|ether_ioctl
@@ -4293,6 +4364,8 @@ name|data
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|SIOCSIFMTU
 case|:
@@ -4604,6 +4677,18 @@ operator|->
 name|if_capenable
 operator|^=
 name|IFCAP_VLAN_HWFILTER
+expr_stmt|;
+if|if
+condition|(
+name|mask
+operator|&
+name|IFCAP_VLAN_HWTSO
+condition|)
+name|ifp
+operator|->
+name|if_capenable
+operator|^=
+name|IFCAP_VLAN_HWTSO
 expr_stmt|;
 if|if
 condition|(
@@ -6333,7 +6418,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  *  MSI Queue Interrupt Service routine  *  **********************************************************************/
+comment|/*********************************************************************  *  *  MSIX Queue Interrupt Service routine  *  **********************************************************************/
 end_comment
 
 begin_function
@@ -6416,6 +6501,47 @@ name|ixgbe_txeof
 argument_list|(
 name|txr
 argument_list|)
+expr_stmt|;
+comment|/* 	** Make certain that if the stack  	** has anything queued the task gets 	** scheduled to handle it. 	*/
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|800000
+if|if
+condition|(
+operator|!
+name|IFQ_DRV_IS_EMPTY
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|ifp
+operator|->
+name|if_snd
+argument_list|)
+condition|)
+else|#
+directive|else
+if|if
+condition|(
+operator|!
+name|drbr_empty
+argument_list|(
+name|adapter
+operator|->
+name|ifp
+argument_list|,
+name|txr
+operator|->
+name|br
+argument_list|)
+condition|)
+endif|#
+directive|endif
+name|more_tx
+operator|=
+literal|1
 expr_stmt|;
 name|IXGBE_TX_UNLOCK
 argument_list|(
@@ -7275,9 +7401,6 @@ name|struct
 name|ixgbe_tx_buf
 modifier|*
 name|txbuf
-decl_stmt|,
-modifier|*
-name|txbuf_mapped
 decl_stmt|;
 name|union
 name|ixgbe_adv_tx_desc
@@ -7330,10 +7453,6 @@ name|tx_buffers
 index|[
 name|first
 index|]
-expr_stmt|;
-name|txbuf_mapped
-operator|=
-name|txbuf
 expr_stmt|;
 name|map
 operator|=
@@ -7899,6 +8018,20 @@ operator|->
 name|m_head
 operator|=
 name|m_head
+expr_stmt|;
+comment|/* Swap the dma map between the first and last descriptor */
+name|txr
+operator|->
+name|tx_buffers
+index|[
+name|first
+index|]
+operator|.
+name|map
+operator|=
+name|txbuf
+operator|->
+name|map
 expr_stmt|;
 name|txbuf
 operator|->
@@ -10441,7 +10574,17 @@ name|adapter
 operator|->
 name|dev
 argument_list|,
-literal|"Using MSI interrupt\n"
+literal|"Using an MSI interrupt\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|device_printf
+argument_list|(
+name|adapter
+operator|->
+name|dev
+argument_list|,
+literal|"Using a Legacy interrupt\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -11112,15 +11255,17 @@ name|ifp
 operator|->
 name|if_capabilities
 operator||=
-name|IFCAP_VLAN_HWTAGGING
-operator||
-name|IFCAP_VLAN_MTU
+name|IFCAP_JUMBO_MTU
 expr_stmt|;
 name|ifp
 operator|->
 name|if_capabilities
 operator||=
-name|IFCAP_JUMBO_MTU
+name|IFCAP_VLAN_HWTAGGING
+operator||
+name|IFCAP_VLAN_HWTSO
+operator||
+name|IFCAP_VLAN_MTU
 expr_stmt|;
 name|ifp
 operator|->
@@ -11137,7 +11282,7 @@ name|if_capabilities
 operator||=
 name|IFCAP_LRO
 expr_stmt|;
-comment|/* 	** Dont turn this on by default, if vlans are 	** created on another pseudo device (eg. lagg) 	** then vlan events are not passed thru, breaking 	** operation, but with HW FILTER off it works. If 	** using vlans directly on the em driver you can 	** enable this and get full hardware tag filtering. 	*/
+comment|/* 	** Don't turn this on by default, if vlans are 	** created on another pseudo device (eg. lagg) 	** then vlan events are not passed thru, breaking 	** operation, but with HW FILTER off it works. If 	** using vlans directly on the ixgbe driver you can 	** enable this and get full hardware tag filtering. 	*/
 name|ifp
 operator|->
 name|if_capabilities
@@ -25561,6 +25706,8 @@ parameter_list|)
 block|{
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|adapter

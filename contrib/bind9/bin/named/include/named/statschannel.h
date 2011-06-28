@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2008  Internet Systems Consortium, Inc. ("ISC")  *  
 end_comment
 
 begin_comment
-comment|/* $Id: statschannel.h,v 1.3 2008/04/03 05:55:51 marka Exp $ */
+comment|/* $Id: statschannel.h,v 1.3 2008-04-03 05:55:51 marka Exp $ */
 end_comment
 
 begin_ifndef
