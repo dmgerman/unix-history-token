@@ -631,6 +631,9 @@ decl_stmt|;
 name|size_t
 name|mapsize
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
 comment|/* Setup direction. */
 if|if
 condition|(
@@ -655,6 +658,8 @@ argument_list|,
 literal|"Unable to set connection direction"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|map
 operator|=
 name|NULL
@@ -1353,6 +1358,9 @@ argument_list|(
 name|nvout
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
 comment|/* Setup direction. */
 if|if
 condition|(
@@ -1377,6 +1385,8 @@ argument_list|,
 literal|"Unable to set connection direction"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|res
@@ -2244,6 +2254,9 @@ name|hio_cmd
 condition|)
 block|{
 case|case
+name|HIO_FLUSH
+case|:
+case|case
 name|HIO_KEEPALIVE
 case|:
 break|break;
@@ -2735,6 +2748,50 @@ name|hio
 argument_list|)
 expr_stmt|;
 continue|continue;
+block|}
+switch|switch
+condition|(
+name|hio
+operator|->
+name|hio_cmd
+condition|)
+block|{
+case|case
+name|HIO_READ
+case|:
+name|res
+operator|->
+name|hr_stat_read
+operator|++
+expr_stmt|;
+break|break;
+case|case
+name|HIO_WRITE
+case|:
+name|res
+operator|->
+name|hr_stat_write
+operator|++
+expr_stmt|;
+break|break;
+case|case
+name|HIO_DELETE
+case|:
+name|res
+operator|->
+name|hr_stat_delete
+operator|++
+expr_stmt|;
+break|break;
+case|case
+name|HIO_FLUSH
+case|:
+name|res
+operator|->
+name|hr_stat_flush
+operator|++
+expr_stmt|;
+break|break;
 block|}
 name|reqlog
 argument_list|(

@@ -649,6 +649,26 @@ comment|/* Locked used to synchronize access to hr_amp. */
 name|pthread_mutex_t
 name|hr_amp_lock
 decl_stmt|;
+comment|/* Number of BIO_READ requests. */
+name|uint64_t
+name|hr_stat_read
+decl_stmt|;
+comment|/* Number of BIO_WRITE requests. */
+name|uint64_t
+name|hr_stat_write
+decl_stmt|;
+comment|/* Number of BIO_DELETE requests. */
+name|uint64_t
+name|hr_stat_delete
+decl_stmt|;
+comment|/* Number of BIO_FLUSH requests. */
+name|uint64_t
+name|hr_stat_flush
+decl_stmt|;
+comment|/* Number of activemap updates. */
+name|uint64_t
+name|hr_stat_activemap_update
+decl_stmt|;
 comment|/* Next resource. */
 name|TAILQ_ENTRY
 argument_list|(

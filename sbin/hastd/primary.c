@@ -3259,6 +3259,9 @@ argument_list|(
 name|nvin
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
 comment|/* Setup directions. */
 if|if
 condition|(
@@ -3302,6 +3305,8 @@ argument_list|,
 literal|"Unable to set connection direction"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|pjdlog_info
 argument_list|(
 literal|"Connected to %s."
@@ -5094,6 +5099,11 @@ block|{
 case|case
 name|BIO_READ
 case|:
+name|res
+operator|->
+name|hr_stat_read
+operator|++
+expr_stmt|;
 name|pjdlog_debug
 argument_list|(
 literal|2
@@ -5179,6 +5189,11 @@ break|break;
 case|case
 name|BIO_WRITE
 case|:
+name|res
+operator|->
+name|hr_stat_write
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|res
@@ -5364,6 +5379,11 @@ name|gctl_length
 argument_list|)
 condition|)
 block|{
+name|res
+operator|->
+name|hr_stat_activemap_update
+operator|++
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -5388,6 +5408,32 @@ case|:
 case|case
 name|BIO_FLUSH
 case|:
+switch|switch
+condition|(
+name|ggio
+operator|->
+name|gctl_cmd
+condition|)
+block|{
+case|case
+name|BIO_DELETE
+case|:
+name|res
+operator|->
+name|hr_stat_delete
+operator|++
+expr_stmt|;
+break|break;
+case|case
+name|BIO_FLUSH
+case|:
+name|res
+operator|->
+name|hr_stat_flush
+operator|++
+expr_stmt|;
+break|break;
+block|}
 name|pjdlog_debug
 argument_list|(
 literal|2
@@ -5584,7 +5630,15 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|ISSYNCREQ
+argument_list|(
+name|hio
+argument_list|)
+condition|)
 block|{
 comment|/* 				 * If READ failed, try to read from remote node. 				 */
 if|if
