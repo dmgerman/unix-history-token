@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -1405,6 +1405,23 @@ argument_list|,
 literal|"<1.00x or higher if compressed>"
 argument_list|,
 literal|"RATIO"
+argument_list|)
+expr_stmt|;
+name|zprop_register_number
+argument_list|(
+name|ZFS_PROP_REFRATIO
+argument_list|,
+literal|"refcompressratio"
+argument_list|,
+literal|0
+argument_list|,
+name|PROP_READONLY
+argument_list|,
+name|ZFS_TYPE_DATASET
+argument_list|,
+literal|"<1.00x or higher if compressed>"
+argument_list|,
+literal|"REFRATIO"
 argument_list|)
 expr_stmt|;
 name|zprop_register_number
