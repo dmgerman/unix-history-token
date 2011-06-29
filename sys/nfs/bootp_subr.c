@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_nfs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -8460,6 +8466,18 @@ index|]
 operator|=
 literal|"nfs:"
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NFSCLIENT
+name|rootdevnames
+index|[
+literal|1
+index|]
+operator|=
+literal|"oldnfs:"
+expr_stmt|;
+endif|#
+directive|endif
 name|mountopts
 argument_list|(
 operator|&
