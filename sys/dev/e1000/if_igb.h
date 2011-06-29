@@ -822,6 +822,10 @@ directive|endif
 name|bus_dma_tag_t
 name|txtag
 decl_stmt|;
+name|struct
+name|task
+name|txq_task
+decl_stmt|;
 name|u32
 name|bytes
 decl_stmt|;
