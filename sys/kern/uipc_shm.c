@@ -1141,7 +1141,7 @@ name|object
 operator|->
 name|size
 argument_list|,
-name|FALSE
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Toss pages from swap. */

@@ -7120,13 +7120,17 @@ name|m
 operator|->
 name|flags
 operator|&
+operator|(
 name|PG_FICTITIOUS
+operator||
+name|PG_UNMANAGED
+operator|)
 operator|)
 operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"pmap_remove_all: page %p is fictitious"
+literal|"pmap_remove_all: page %p is not managed"
 operator|,
 name|m
 operator|)

@@ -5319,9 +5319,9 @@ operator|&
 name|V_SAVE
 operator|)
 condition|?
-name|TRUE
+name|OBJPR_CLEANONLY
 else|:
-name|FALSE
+literal|0
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_UNLOCK

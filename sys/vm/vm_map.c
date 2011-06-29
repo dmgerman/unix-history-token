@@ -11047,6 +11047,7 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
+comment|/* 			 * The option OBJPR_NOTMAPPED can be passed here 			 * because vm_map_delete() already performed 			 * pmap_remove() on the only mapping to this range 			 * of pages.  			 */
 name|vm_object_page_remove
 argument_list|(
 name|object
@@ -11055,7 +11056,7 @@ name|offidxstart
 argument_list|,
 name|offidxend
 argument_list|,
-name|FALSE
+name|OBJPR_NOTMAPPED
 argument_list|)
 expr_stmt|;
 if|if
