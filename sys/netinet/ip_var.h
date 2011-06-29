@@ -1423,6 +1423,17 @@ begin_comment
 comment|/* rule reference */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MTAG_IPFW_CALL
+value|1308397630
+end_define
+
+begin_comment
+comment|/* call stack */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|ip_fw_args
