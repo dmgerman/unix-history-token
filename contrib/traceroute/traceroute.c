@@ -7567,8 +7567,8 @@ name|strlen
 argument_list|(
 name|hostname
 argument_list|)
-operator|>
-literal|64
+operator|>=
+name|MAXHOSTNAMELEN
 condition|)
 block|{
 name|Fprintf
