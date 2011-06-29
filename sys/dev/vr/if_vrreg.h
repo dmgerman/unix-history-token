@@ -3812,10 +3812,6 @@ name|int
 name|vr_if_flags
 decl_stmt|;
 name|struct
-name|task
-name|vr_link_task
-decl_stmt|;
-name|struct
 name|vr_chain_data
 name|vr_cdata
 decl_stmt|;
