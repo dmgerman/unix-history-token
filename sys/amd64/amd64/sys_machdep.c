@@ -20,7 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_capabilities.h"
+file|"opt_capsicum.h"
 end_include
 
 begin_include
@@ -765,7 +765,7 @@ name|iargs
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|CAPABILITIES
+name|CAPABILITY_MODE
 comment|/* 	 * Whitelist of operations which are safe enough for capability mode. 	 */
 if|if
 condition|(

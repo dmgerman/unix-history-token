@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_capabilities.h"
+file|"opt_capsicum.h"
 end_include
 
 begin_include
@@ -120,7 +120,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CAPABILITIES
+name|CAPABILITY_MODE
 end_ifdef
 
 begin_expr_stmt
@@ -298,7 +298,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !CAPABILITIES */
+comment|/* !CAPABILITY_MODE */
 end_comment
 
 begin_function
@@ -353,7 +353,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CAPABILITIES */
+comment|/* CAPABILITY_MODE */
 end_comment
 
 end_unit
