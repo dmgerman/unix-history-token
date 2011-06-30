@@ -407,6 +407,13 @@ name|MII_PHY_DESC
 argument_list|(
 name|xxMARVELL
 argument_list|,
+name|E1149R
+argument_list|)
+block|,
+name|MII_PHY_DESC
+argument_list|(
+name|xxMARVELL
+argument_list|,
 name|E3016
 argument_list|)
 block|,
@@ -571,6 +578,9 @@ expr_stmt|;
 break|break;
 case|case
 name|MII_MODEL_xxMARVELL_E1149
+case|:
+case|case
+name|MII_MODEL_xxMARVELL_E1149R
 case|:
 comment|/* 		 * Some 88E1149 PHY's page select is initialized to 		 * point to other bank instead of copper/fiber bank 		 * which in turn resulted in wrong registers were 		 * accessed during PHY operation. It is believed that 		 * page 0 should be used for copper PHY so reinitialize 		 * E1000_EADR to select default copper PHY. If parent 		 * device know the type of PHY(either copper or fiber), 		 * that information should be used to select default 		 * type of PHY. 		 */
 name|PHY_WRITE
@@ -844,6 +854,9 @@ case|case
 name|MII_MODEL_xxMARVELL_E1149
 case|:
 case|case
+name|MII_MODEL_xxMARVELL_E1149R
+case|:
+case|case
 name|MII_MODEL_xxMARVELL_PHYG65G
 case|:
 comment|/* Disable energy detect mode. */
@@ -978,6 +991,12 @@ operator|->
 name|mii_mpd_model
 operator|==
 name|MII_MODEL_xxMARVELL_E1149
+operator|||
+name|sc
+operator|->
+name|mii_mpd_model
+operator|==
+name|MII_MODEL_xxMARVELL_E1149R
 condition|)
 block|{
 name|PHY_WRITE
