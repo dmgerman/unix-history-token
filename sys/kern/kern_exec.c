@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_capsicum.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_hwpmc_hooks.h"
 end_include
 
@@ -45,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/capability.h>
 end_include
 
 begin_include
@@ -1907,6 +1919,28 @@ operator|!=
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|CAPABILITY_MODE
+comment|/* 		 * While capability mode can't reach this point via direct 		 * path arguments to execve(), we also don't allow 		 * interpreters to be used in capability mode (for now). 		 * Catch indirect lookups and return a permissions error. 		 */
+if|if
+condition|(
+name|IN_CAPABILITY_MODE
+argument_list|(
+name|td
+argument_list|)
+condition|)
+block|{
+name|error
+operator|=
+name|ECAPMODE
+expr_stmt|;
+goto|goto
+name|exec_fail
+goto|;
+block|}
+endif|#
+directive|endif
 name|error
 operator|=
 name|namei
@@ -2801,7 +2835,7 @@ name|p_pwait
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Implement image setuid/setgid. 	 * 	 * Don't honor setuid/setgid if the filesystem prohibits it or if 	 * the process is being traced. 	 * 	 * XXXMAC: For the time being, use NOSUID to also prohibit 	 * transitions on the file system. 	 */
+comment|/* 	 * Implement image setuid/setgid. 	 * 	 * Don't honor setuid/setgid if the filesystem prohibits it or if 	 * the process is being traced. 	 * 	 * We disable setuid/setgid/etc in compatibility mode on the basis 	 * that most setugid applications are not written with that 	 * environment in mind, and will therefore almost certainly operate 	 * incorrectly. In principle there's no reason that setugid 	 * applications might not be useful in capability mode, so we may want 	 * to reconsider this conservative design choice in the future. 	 * 	 * XXXMAC: For the time being, use NOSUID to also prohibit 	 * transitions on the file system. 	 */
 name|credential_changing
 operator|=
 literal|0
@@ -2870,6 +2904,23 @@ if|if
 condition|(
 name|credential_changing
 operator|&&
+ifdef|#
+directive|ifdef
+name|CAPABILITY_MODE
+operator|(
+operator|(
+name|oldcred
+operator|->
+name|cr_flags
+operator|&
+name|CRED_FLAG_CAPMODE
+operator|)
+operator|==
+literal|0
+operator|)
+operator|&&
+endif|#
+directive|endif
 operator|(
 name|imgp
 operator|->

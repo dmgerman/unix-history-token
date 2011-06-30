@@ -420,7 +420,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CAPABILITY_MODE
-comment|/* 	 * Whitelist of operations which are safe enough for capability mode. 	 */
+comment|/* 	 * When adding new operations, add a new case statement here to 	 * explicitly indicate whether or not the operation is safe to 	 * perform in capability mode. 	 */
 if|if
 condition|(
 name|IN_CAPABILITY_MODE
