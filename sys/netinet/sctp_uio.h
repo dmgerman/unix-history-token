@@ -2065,6 +2065,9 @@ decl_stmt|;
 name|uint16_t
 name|sca_keynumber
 decl_stmt|;
+name|uint16_t
+name|sca_keylength
+decl_stmt|;
 name|uint8_t
 name|sca_key
 index|[]
