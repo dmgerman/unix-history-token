@@ -10948,6 +10948,9 @@ break|break;
 case|case
 name|JOP_TRUNC
 case|:
+case|case
+name|JOP_SYNC
+case|:
 name|ino_build_trunc
 argument_list|(
 operator|(
