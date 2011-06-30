@@ -3101,6 +3101,9 @@ case|:
 case|case
 name|O_REASS
 case|:
+case|case
+name|O_CALLRETURN
+case|:
 name|check_size
 label|:
 if|if

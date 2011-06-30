@@ -1482,7 +1482,7 @@ name|object
 operator|->
 name|size
 argument_list|,
-name|FALSE
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 		 * this gets rid of garbage at the end of a page that is now 		 * only partially backed by the vnode. 		 * 		 * XXX for some reason (I don't know yet), if we take a 		 * completely invalid page and mark it partially valid 		 * it can screw up NFS reads, so we don't allow the case. 		 */

@@ -6821,6 +6821,13 @@ condition|(
 name|i
 operator|==
 name|DC_TIMEOUT
+operator|&&
+name|bus_child_present
+argument_list|(
+name|sc
+operator|->
+name|dc_dev
+argument_list|)
 condition|)
 block|{
 if|if

@@ -857,7 +857,7 @@ argument|proc_linkup0(&proc0,&thread0); 	thread0.td_frame =&frame0;
 comment|/* 	 * Set up per-cpu data. 	 */
 argument|pc = __pcpu; 	pcpu_init(pc,
 literal|0
-argument|, sizeof(struct pcpu)); 	pc->pc_curthread =&thread0; 	pc->pc_cpuid =
+argument|, sizeof(struct pcpu)); 	curthread_reg = pc->pc_curthread =&thread0; 	pc->pc_cpuid =
 literal|0
 argument|;
 asm|__asm __volatile("mtsprg 0, %0" :: "r"(pc));
@@ -2440,10 +2440,7 @@ name|rv
 decl_stmt|;
 name|td
 operator|=
-name|PCPU_GET
-argument_list|(
 name|curthread
-argument_list|)
 expr_stmt|;
 name|oldfault
 operator|=

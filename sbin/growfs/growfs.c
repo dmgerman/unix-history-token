@@ -9863,8 +9863,8 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"active snapshot found in file system\n"
-literal|"	please remove all snapshots before "
+literal|"active snapshot found in file system; "
+literal|"please remove all snapshots before "
 literal|"using growfs"
 argument_list|)
 expr_stmt|;
@@ -9901,8 +9901,8 @@ block|{
 name|printf
 argument_list|(
 literal|"We strongly recommend you to make a backup "
-literal|"before growing the Filesystem\n\n"
-literal|" Did you backup your data (Yes/No) ? "
+literal|"before growing the file system.\n"
+literal|"Did you backup your data (Yes/No)? "
 argument_list|)
 expr_stmt|;
 name|fgets
@@ -9932,7 +9932,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\n Nothing done \n"
+literal|"\nNothing done\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -9944,7 +9944,7 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"new file systemsize is: %jd frags\n"
+literal|"New file system size is %jd frags\n"
 argument_list|,
 operator|(
 name|intmax_t

@@ -563,7 +563,7 @@ decl_stmt|;
 name|int8_t
 name|pwr_table_offset
 decl_stmt|;
-name|HALDEBUG
+name|HALDEBUG_G
 argument_list|(
 name|AH_NULL
 argument_list|,
@@ -607,7 +607,7 @@ operator|==
 name|AH_NULL
 condition|)
 block|{
-name|HALDEBUG
+name|HALDEBUG_G
 argument_list|(
 name|AH_NULL
 argument_list|,
@@ -1477,6 +1477,15 @@ name|AR_EEP_REGDMN_0
 argument_list|,
 name|AH_NULL
 argument_list|)
+expr_stmt|;
+name|AH_PRIVATE
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_currentRDext
+operator|=
+name|AR9287_RDEXT_DEFAULT
 expr_stmt|;
 comment|/* 	 * ah_miscMode is populated by ar5416FillCapabilityInfo() 	 * starting from griffin. Set here to make sure that 	 * AR_MISC_MODE_MIC_NEW_LOC_ENABLE is set before a GTK is 	 * placed into hardware. 	 */
 if|if

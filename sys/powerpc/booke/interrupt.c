@@ -468,10 +468,7 @@ name|oldframe
 decl_stmt|;
 name|td
 operator|=
-name|PCPU_GET
-argument_list|(
 name|curthread
-argument_list|)
 expr_stmt|;
 name|critical_enter
 argument_list|()

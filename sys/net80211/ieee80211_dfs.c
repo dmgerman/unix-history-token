@@ -1333,6 +1333,18 @@ else|else
 block|{
 comment|/* 			 * Spec says to stop all transmissions and 			 * wait on the current channel for an entry 			 * on the NOL to expire. 			 */
 comment|/*XXX*/
+name|if_printf
+argument_list|(
+name|ic
+operator|->
+name|ic_ifp
+argument_list|,
+literal|"%s: No free channels; waiting for entry "
+literal|"on NOL to expire\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 else|else

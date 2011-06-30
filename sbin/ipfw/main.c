@@ -973,7 +973,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"abcdefhinNqs:STtv"
+literal|"abcdefhinNp:qs:STtv"
 argument_list|)
 operator|)
 operator|!=
@@ -1093,6 +1093,17 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'p'
+case|:
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"An absolute pathname must be used "
+literal|"with -p option."
+argument_list|)
+expr_stmt|;
 case|case
 literal|'q'
 case|:
@@ -2580,7 +2591,10 @@ literal|0
 index|]
 operator|==
 literal|'/'
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|access
 argument_list|(
 name|av
@@ -2602,6 +2616,22 @@ argument_list|,
 name|av
 argument_list|)
 expr_stmt|;
+else|else
+name|err
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"pathname: %s"
+argument_list|,
+name|av
+index|[
+name|ac
+operator|-
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 if|if

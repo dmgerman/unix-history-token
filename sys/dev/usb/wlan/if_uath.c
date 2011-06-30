@@ -576,8 +576,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 specifier|const
-name|struct
-name|usb_device_id
+name|STRUCT_USB_HOST_ID
 name|uath_devs
 index|[]
 init|=
@@ -591,13 +590,6 @@ parameter_list|,
 name|p
 parameter_list|)
 value|{ USB_VP(USB_VENDOR_##v, USB_PRODUCT_##v##_##p) }
-name|UATH_DEV
-argument_list|(
-name|ACCTON
-argument_list|,
-name|SMCWUSBG
-argument_list|)
-block|,
 name|UATH_DEV
 argument_list|(
 name|ACCTON

@@ -404,6 +404,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Hook for telling pf that the destination address changed */
+end_comment
+
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|m_addr_chg_pf_p
+function_decl|)
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef

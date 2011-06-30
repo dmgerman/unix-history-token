@@ -938,7 +938,11 @@ condition|)
 block|{
 name|nextStart_us
 operator|+=
-name|ath_hal_sw_beacon_response_time
+name|ah
+operator|->
+name|ah_config
+operator|.
+name|ah_sw_beacon_response_time
 expr_stmt|;
 block|}
 name|OS_REG_RMW_FIELD

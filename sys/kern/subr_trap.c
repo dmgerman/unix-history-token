@@ -20,7 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_capabilities.h"
+file|"opt_capsicum.h"
 end_include
 
 begin_include
@@ -1279,7 +1279,7 @@ goto|;
 block|}
 ifdef|#
 directive|ifdef
-name|CAPABILITIES
+name|CAPABILITY_MODE
 comment|/* 		 * In capability mode, we only allow access to system calls 		 * flagged with SYF_CAPENABLED. 		 */
 if|if
 condition|(

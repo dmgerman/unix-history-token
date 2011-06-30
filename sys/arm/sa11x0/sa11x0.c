@@ -64,12 +64,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/interrupt.h>
 end_include
 
@@ -143,12 +137,6 @@ begin_include
 include|#
 directive|include
 file|<arm/sa11x0/sa11x0_gpioreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/bus.h>
 end_include
 
 begin_function_decl

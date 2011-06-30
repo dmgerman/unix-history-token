@@ -17,11 +17,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CAPSICUM
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/capability.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -993,12 +1004,16 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Until capsicum doesn't allow ioctl(2) we cannot use it to sandbox 	 * primary and secondary worker processes, as primary uses GGATE 	 * ioctls and secondary uses ioctls to handle BIO_DELETE and BIO_FLUSH. 	 * For now capsicum is only used to sandbox hastctl. 	 */
+ifdef|#
+directive|ifdef
+name|HAVE_CAPSICUM
 if|if
 condition|(
 name|res
 operator|==
 name|NULL
 condition|)
+block|{
 name|capsicum
 operator|=
 operator|(
@@ -1008,7 +1023,28 @@ operator|==
 literal|0
 operator|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|capsicum
+condition|)
+block|{
+name|pjdlog_common
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"Unable to sandbox using capsicum"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 else|else
+endif|#
+directive|endif
 name|capsicum
 operator|=
 name|false

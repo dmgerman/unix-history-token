@@ -2026,6 +2026,10 @@ begin_comment
 comment|/*  * Functions to read the a tuple from the card  */
 end_comment
 
+begin_comment
+comment|/*  * Read CIS bytes out of the config space.  We have to read it 4 bytes at a  * time and do the usual mask and shift to return the bytes.  The standard  * defines the byte order to be little endian.  pci_read_config converts it to  * host byte order.  This is why we have no endian conversion functions: the  * shifts wind up being endian neutral.  This is also why we avoid the obvious  * memcpy optimization.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -2082,32 +2086,22 @@ argument_list|(
 name|child
 argument_list|,
 name|loc
-operator|-
-name|loc
-operator|%
-literal|4
+operator|&
+operator|~
+literal|0x3
 argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|j
-operator|=
-name|loc
-operator|%
-literal|4
-init|;
-name|j
-operator|>
-literal|0
-condition|;
-name|j
-operator|--
-control|)
 name|e
 operator|>>=
 literal|8
+operator|*
+operator|(
+name|loc
+operator|&
+literal|0x3
+operator|)
 expr_stmt|;
 operator|*
 name|len
@@ -2139,9 +2133,11 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|i
-operator|%
-literal|4
+operator|&
+literal|0x3
+operator|)
 operator|==
 literal|0
 condition|)
@@ -2215,6 +2211,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Read the CIS data out of memroy.  We indirect through the bus space  * routines to ensure proper byte ordering conversions when necessary.  */
+end_comment
 
 begin_function
 specifier|static
@@ -3133,7 +3133,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ENXIO
+literal|0
 operator|)
 return|;
 block|}

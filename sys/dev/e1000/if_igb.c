@@ -1983,6 +1983,24 @@ begin_comment
 comment|/*********************************************************************  *  Tunable default values.  *********************************************************************/
 end_comment
 
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|igb
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"IGB driver parameters"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Descriptor defaults */
 end_comment
@@ -2027,6 +2045,48 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_igb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|rxd
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|igb_rxd
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of receive descriptors per queue"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_igb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|txd
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|igb_txd
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of transmit descriptors per queue"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* ** AIM: Adaptive Interrupt Moderation ** which means that the interrupt rate ** is varied over time based on the ** traffic for that interrupt vector */
 end_comment
@@ -2047,6 +2107,27 @@ literal|"hw.igb.enable_aim"
 argument_list|,
 operator|&
 name|igb_enable_aim
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_igb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|enable_aim
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|igb_enable_aim
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable adaptive interrupt moderation"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2075,6 +2156,27 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_igb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|enable_msix
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|igb_enable_msix
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable MSI-X interrupts"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* ** Tuneable Interrupt rate */
 end_comment
@@ -2095,6 +2197,27 @@ literal|"hw.igb.max_interrupt_rate"
 argument_list|,
 operator|&
 name|igb_max_interrupt_rate
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_igb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|max_interrupt_rate
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|igb_max_interrupt_rate
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum interrupts per second"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2123,6 +2246,27 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_igb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|header_split
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|igb_header_split
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable receive mbuf header split"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* ** This will autoconfigure based on ** the number of CPUs if left at 0. */
 end_comment
@@ -2143,6 +2287,72 @@ literal|"hw.igb.num_queues"
 argument_list|,
 operator|&
 name|igb_num_queues
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_igb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|num_queues
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|igb_num_queues
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of queues to configure, 0 indicates autoconfigure"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* How many packets rxeof tries to clean at a time */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|igb_rx_process_limit
+init|=
+literal|100
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.igb.rx_process_limit"
+argument_list|,
+operator|&
+name|igb_rx_process_limit
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_igb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|rx_process_limit
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|igb_rx_process_limit
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum number of received packets to process at a time, -1 means unlimited"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2464,35 +2674,20 @@ argument_list|,
 literal|"NVM Information"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|igb_set_sysctl_value
 argument_list|(
-name|device_get_sysctl_ctx
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|SYSCTL_CHILDREN
-argument_list|(
-name|device_get_sysctl_tree
-argument_list|(
-name|dev
-argument_list|)
-argument_list|)
-argument_list|,
-name|OID_AUTO
+name|adapter
 argument_list|,
 literal|"enable_aim"
 argument_list|,
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
+literal|"Interrupt Moderation"
 argument_list|,
 operator|&
+name|adapter
+operator|->
+name|enable_aim
+argument_list|,
 name|igb_enable_aim
-argument_list|,
-literal|1
-argument_list|,
-literal|"Interrupt Moderation"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_PROC
@@ -2625,7 +2820,7 @@ name|adapter
 operator|->
 name|rx_process_limit
 argument_list|,
-literal|100
+name|igb_rx_process_limit
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Validate number of transmit and receive descriptors. It 	 * must not exceed hardware maximum, and must be multiple 	 * of E1000_DBA_ALIGN. 	 */
@@ -6951,7 +7146,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|igb_enable_aim
+name|adapter
+operator|->
+name|enable_aim
 operator|==
 name|FALSE
 condition|)

@@ -1424,6 +1424,11 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
+name|m_addr_changed
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|netisr_queue

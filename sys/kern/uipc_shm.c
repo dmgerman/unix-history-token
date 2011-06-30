@@ -24,7 +24,19 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_capsicum.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/capability.h>
 end_include
 
 begin_include
@@ -1141,7 +1153,7 @@ name|object
 operator|->
 name|size
 argument_list|,
-name|FALSE
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Toss pages from swap. */
@@ -2159,6 +2171,32 @@ name|fd
 decl_stmt|,
 name|error
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CAPABILITY_MODE
+comment|/* 	 * shm_open(2) is only allowed for anonymous objects. 	 */
+if|if
+condition|(
+name|IN_CAPABILITY_MODE
+argument_list|(
+name|td
+argument_list|)
+operator|&&
+operator|(
+name|uap
+operator|->
+name|path
+operator|!=
+name|SHM_ANON
+operator|)
+condition|)
+return|return
+operator|(
+name|ECAPMODE
+operator|)
+return|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(

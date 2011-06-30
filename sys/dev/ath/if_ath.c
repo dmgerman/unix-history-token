@@ -3077,6 +3077,14 @@ comment|/* capable of bg scanning */
 operator||
 name|IEEE80211_C_TXFRAG
 comment|/* handle tx frags */
+ifdef|#
+directive|ifdef
+name|ATH_ENABLE_DFS
+operator||
+name|IEEE80211_C_DFS
+comment|/* Enable DFS radar detection */
+endif|#
+directive|endif
 expr_stmt|;
 comment|/* 	 * Query the hal to figure out h/w crypto support. 	 */
 if|if
@@ -3905,6 +3913,11 @@ name|sc
 argument_list|)
 expr_stmt|;
 name|ath_sysctl_stats_attach
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ath_sysctl_hal_attach
 argument_list|(
 name|sc
 argument_list|)
@@ -6115,6 +6128,7 @@ name|sc_ledon
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* XXX beacons ? */
 block|}
 end_function
 
@@ -7403,6 +7417,13 @@ operator|->
 name|sc_doresetcal
 operator|=
 name|AH_FALSE
+expr_stmt|;
+comment|/* 	 * Beacon timers were cleared here; give ath_newstate() 	 * a hint that the beacon timers should be poked when 	 * things transition to the RUN state. 	 */
+name|sc
+operator|->
+name|sc_beacons
+operator|=
+literal|0
 expr_stmt|;
 comment|/* 	 * Setup the hardware after reset: the key cache 	 * is filled as needed and the receive engine is 	 * set going.  Frame transmit is handled entirely 	 * in the frame output path; there's nothing to do 	 * here except setup the interrupt mask. 	 */
 if|if
@@ -20411,6 +20432,42 @@ argument_list|,
 name|chan
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Reset clears the beacon timers; reset them 		 * here if needed. 		 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_beacons
+condition|)
+block|{
+comment|/* restart beacons */
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_TDMA
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_tdma
+condition|)
+name|ath_tdma_config
+argument_list|(
+name|sc
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
+name|ath_beacon_config
+argument_list|(
+name|sc
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 		 * Re-enable interrupts. 		 */
 name|ath_hal_intrset
 argument_list|(
@@ -21361,6 +21418,11 @@ decl_stmt|;
 name|u_int32_t
 name|rfilt
 decl_stmt|;
+name|int
+name|csa_run_transition
+init|=
+literal|0
+decl_stmt|;
 specifier|static
 specifier|const
 name|HAL_LED_STATE
@@ -21416,6 +21478,22 @@ index|[
 name|nstate
 index|]
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_state
+operator|==
+name|IEEE80211_S_CSA
+operator|&&
+name|nstate
+operator|==
+name|IEEE80211_S_RUN
+condition|)
+name|csa_run_transition
+operator|=
+literal|1
 expr_stmt|;
 name|callout_drain
 argument_list|(
@@ -21861,12 +21939,23 @@ break|break;
 case|case
 name|IEEE80211_M_STA
 case|:
-comment|/* 			 * Defer beacon timer configuration to the next 			 * beacon frame so we have a current TSF to use 			 * (any TSF collected when scanning is likely old). 			 */
+comment|/* 			 * Defer beacon timer configuration to the next 			 * beacon frame so we have a current TSF to use 			 * (any TSF collected when scanning is likely old). 			 * However if it's due to a CSA -> RUN transition, 			 * force a beacon update so we pick up a lack of 			 * beacons from an AP in CAC and thus force a 			 * scan. 			 */
 name|sc
 operator|->
 name|sc_syncbeacon
 operator|=
 literal|1
+expr_stmt|;
+if|if
+condition|(
+name|csa_run_transition
+condition|)
+name|ath_beacon_config
+argument_list|(
+name|sc
+argument_list|,
+name|vap
+argument_list|)
 expr_stmt|;
 break|break;
 case|case

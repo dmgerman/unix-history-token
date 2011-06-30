@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: privsep_fdpass.c,v 1.2 2004/08/13 02:51:48 djm Exp $	*/
+comment|/*	$OpenBSD: privsep_fdpass.c,v 1.5 2008/03/24 16:11:08 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -106,8 +106,14 @@ name|struct
 name|msghdr
 name|msg
 decl_stmt|;
+union|union
+block|{
+name|struct
+name|cmsghdr
+name|hdr
+decl_stmt|;
 name|char
-name|tmp
+name|buf
 index|[
 name|CMSG_SPACE
 argument_list|(
@@ -118,6 +124,9 @@ argument_list|)
 argument_list|)
 index|]
 decl_stmt|;
+block|}
+name|cmsgbuf
+union|;
 name|struct
 name|cmsghdr
 modifier|*
@@ -162,18 +171,20 @@ operator|=
 operator|(
 name|caddr_t
 operator|)
-name|tmp
+operator|&
+name|cmsgbuf
+operator|.
+name|buf
 expr_stmt|;
 name|msg
 operator|.
 name|msg_controllen
 operator|=
-name|CMSG_LEN
-argument_list|(
 sizeof|sizeof
 argument_list|(
-name|int
-argument_list|)
+name|cmsgbuf
+operator|.
+name|buf
 argument_list|)
 expr_stmt|;
 name|cmsg
@@ -321,8 +332,14 @@ name|struct
 name|msghdr
 name|msg
 decl_stmt|;
+union|union
+block|{
+name|struct
+name|cmsghdr
+name|hdr
+decl_stmt|;
 name|char
-name|tmp
+name|buf
 index|[
 name|CMSG_SPACE
 argument_list|(
@@ -333,6 +350,9 @@ argument_list|)
 argument_list|)
 index|]
 decl_stmt|;
+block|}
+name|cmsgbuf
+union|;
 name|struct
 name|cmsghdr
 modifier|*
@@ -397,7 +417,10 @@ name|msg
 operator|.
 name|msg_control
 operator|=
-name|tmp
+operator|&
+name|cmsgbuf
+operator|.
+name|buf
 expr_stmt|;
 name|msg
 operator|.
@@ -405,7 +428,9 @@ name|msg_controllen
 operator|=
 sizeof|sizeof
 argument_list|(
-name|tmp
+name|cmsgbuf
+operator|.
+name|buf
 argument_list|)
 expr_stmt|;
 if|if

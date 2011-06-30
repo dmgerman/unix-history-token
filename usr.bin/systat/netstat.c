@@ -189,12 +189,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/tcp_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/tcp_debug.h>
 end_include
 

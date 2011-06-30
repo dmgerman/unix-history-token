@@ -758,7 +758,11 @@ argument_list|(
 name|ah
 argument_list|)
 operator|&&
-name|ath_hal_ar5416_biasadj
+name|ah
+operator|->
+name|ah_config
+operator|.
+name|ah_ar5416_biasadj
 condition|)
 name|ar2133ForceBias
 argument_list|(

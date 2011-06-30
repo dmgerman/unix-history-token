@@ -2126,6 +2126,7 @@ goto|;
 block|}
 name|offset
 operator|=
+operator|(
 name|pp
 operator|->
 name|lg_stripeoffset
@@ -2133,6 +2134,9 @@ operator|/
 name|pp
 operator|->
 name|lg_sectorsize
+operator|)
+operator|%
+name|alignment
 expr_stmt|;
 name|last
 operator|=
@@ -2939,6 +2943,7 @@ expr_stmt|;
 comment|/* Adjust parameters to stripeoffset */
 name|offset
 operator|=
+operator|(
 name|pp
 operator|->
 name|lg_stripeoffset
@@ -2946,6 +2951,9 @@ operator|/
 name|pp
 operator|->
 name|lg_sectorsize
+operator|)
+operator|%
+name|alignment
 expr_stmt|;
 name|start
 operator|=
@@ -2961,8 +2969,6 @@ expr_stmt|;
 if|if
 condition|(
 name|size
-operator|+
-name|offset
 operator|>
 name|alignment
 condition|)
@@ -2971,8 +2977,6 @@ operator|=
 name|ALIGNDOWN
 argument_list|(
 name|size
-operator|+
-name|offset
 argument_list|,
 name|alignment
 argument_list|)
@@ -7642,6 +7646,20 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+if|if
+condition|(
+name|partsize
+operator|!=
+name|VTOC_BOOTSIZE
+condition|)
+name|errx
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"invalid bootcode"
+argument_list|)
+expr_stmt|;
 name|gpart_write_partcode_vtoc8
 argument_list|(
 name|gp
@@ -7651,6 +7669,7 @@ argument_list|,
 name|partcode
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if

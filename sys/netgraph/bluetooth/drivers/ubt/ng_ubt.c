@@ -1155,8 +1155,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 specifier|const
-name|struct
-name|usb_device_id
+name|STRUCT_USB_HOST_ID
 name|ubt_ignore_devs
 index|[]
 init|=
@@ -1183,8 +1182,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 specifier|const
-name|struct
-name|usb_device_id
+name|STRUCT_USB_HOST_ID
 name|ubt_devs
 index|[]
 init|=

@@ -543,7 +543,7 @@ name|start
 argument_list|,
 name|end
 argument_list|,
-name|FALSE
+literal|0
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_UNLOCK

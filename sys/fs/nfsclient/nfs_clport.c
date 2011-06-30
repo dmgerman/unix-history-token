@@ -1782,6 +1782,16 @@ name|nap
 operator|->
 name|na_fsid
 expr_stmt|;
+name|np
+operator|->
+name|n_vattr
+operator|.
+name|na_mode
+operator|=
+name|nap
+operator|->
+name|na_mode
+expr_stmt|;
 block|}
 else|else
 block|{

@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_capabilities.h"
+file|"opt_capsicum.h"
 end_include
 
 begin_include
@@ -120,7 +120,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CAPABILITIES
+name|CAPABILITY_MODE
 end_ifdef
 
 begin_expr_stmt
@@ -129,28 +129,6 @@ argument_list|(
 name|security_capabilities
 argument_list|,
 literal|"Capsicum Capability Mode"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/*  * We don't currently have any MIB entries for sysctls, but we do expose  * security.capabilities so that it's easy to tell if options CAPABILITIES is  * compiled into the kernel.  */
-end_comment
-
-begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(
-name|_security
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|capabilities
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-literal|0
-argument_list|,
-literal|"Capsicum"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -320,7 +298,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !CAPABILITIES */
+comment|/* !CAPABILITY_MODE */
 end_comment
 
 begin_function
@@ -375,7 +353,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CAPABILITIES */
+comment|/* CAPABILITY_MODE */
 end_comment
 
 end_unit

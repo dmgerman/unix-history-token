@@ -2844,6 +2844,13 @@ argument_list|(
 name|brdev
 argument_list|)
 decl_stmt|;
+comment|/* 	 * We're about to pull the rug out from the card, so mark it as 	 * gone to prevent harm.          */
+name|sc
+operator|->
+name|cardok
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Place the cards in reset, turn off the interrupts and power 	 * down the socket. 	 */
 name|PCI_MASK_CONFIG
 argument_list|(

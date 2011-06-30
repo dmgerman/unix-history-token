@@ -764,6 +764,11 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* record data transfer */
+name|m_addr_changed
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 comment|/* 	 * We're done with IPsec processing, transmit the packet using the 	 * appropriate network protocol (IP or IPv6). SPD lookup will be 	 * performed again there. 	 */
 switch|switch
 condition|(

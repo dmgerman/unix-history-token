@@ -1070,7 +1070,7 @@ directive|ifdef
 name|__powerpc64__
 name|db_printf
 argument_list|(
-literal|"0x%16lx: "
+literal|"0x%016lx: "
 argument_list|,
 name|stackframe
 argument_list|)

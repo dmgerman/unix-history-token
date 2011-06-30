@@ -5148,6 +5148,11 @@ name|ip6c_nxt
 operator|=
 name|nxt
 expr_stmt|;
+name|m_addr_changed
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|icmp6type
@@ -10003,6 +10008,11 @@ name|M_BCAST
 operator||
 name|M_MCAST
 operator|)
+expr_stmt|;
+name|m_addr_changed
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 name|ip6_output
 argument_list|(

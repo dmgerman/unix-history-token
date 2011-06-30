@@ -23,6 +23,24 @@ directive|define
 name|_USB_TEMPLATE_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_TEMPLATE_VENDOR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USB_TEMPLATE_VENDOR
+value|0x0001
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 specifier|const
@@ -268,7 +286,43 @@ specifier|extern
 specifier|const
 name|struct
 name|usb_temp_device_desc
+name|usb_template_audio
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|usb_temp_device_desc
 name|usb_template_cdce
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|usb_temp_device_desc
+name|usb_template_kbd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|usb_temp_device_desc
+name|usb_template_modem
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|usb_temp_device_desc
+name|usb_template_mouse
 decl_stmt|;
 end_decl_stmt
 
@@ -281,10 +335,6 @@ name|usb_template_msc
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Mass Storage Class */
-end_comment
-
 begin_decl_stmt
 specifier|extern
 specifier|const
@@ -293,10 +343,6 @@ name|usb_temp_device_desc
 name|usb_template_mtp
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Message Transfer 								 * Protocol */
-end_comment
 
 begin_function_decl
 name|usb_error_t

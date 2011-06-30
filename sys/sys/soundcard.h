@@ -1065,20 +1065,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SNDCTL_SEQ_HALT
+name|SNDCTL_SEQ_RESET
 value|_IO  ('Q', 0)
 end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCTL_SEQ_RESET
-value|SNDCTL_SEQ_HALT
-end_define
-
-begin_comment
-comment|/* Historic interface */
-end_comment
 
 begin_define
 define|#
@@ -2676,8 +2665,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SNDCTL_DSP_RESET
+name|SNDCTL_DSP_HALT
 value|_IO  ('P', 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_RESET
+value|SNDCTL_DSP_HALT
 end_define
 
 begin_define

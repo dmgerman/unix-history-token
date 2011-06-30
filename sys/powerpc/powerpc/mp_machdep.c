@@ -328,26 +328,6 @@ operator|&
 name|ap_boot_mtx
 argument_list|)
 expr_stmt|;
-comment|/* Initialize curthread */
-name|PCPU_SET
-argument_list|(
-name|curthread
-argument_list|,
-name|PCPU_GET
-argument_list|(
-name|idlethread
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|PCPU_SET
-argument_list|(
-name|curpcb
-argument_list|,
-name|curthread
-operator|->
-name|td_pcb
-argument_list|)
-expr_stmt|;
 comment|/* Start per-CPU event timers. */
 name|cpu_initclocks_ap
 argument_list|()

@@ -901,8 +901,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|struct
-name|usb_device_id
+name|STRUCT_USB_HOST_ID
 name|u3g_devs
 index|[]
 init|=

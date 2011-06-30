@@ -4091,6 +4091,11 @@ name|cpu_non_c3
 operator|=
 name|i
 expr_stmt|;
+else|else
+name|cpu_can_deep_sleep
+operator|=
+literal|1
+expr_stmt|;
 block|}
 name|sbuf_trim
 argument_list|(
@@ -4345,9 +4350,6 @@ name|cx_next_idx
 operator|=
 literal|0
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|__ia64__
 if|if
 condition|(
 name|cpu_disable_deep_sleep
@@ -4366,8 +4368,6 @@ name|cpu_non_c3
 argument_list|)
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|i
 operator|=
 name|sc

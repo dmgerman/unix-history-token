@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_capsicum.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_compat.h"
 end_include
 
@@ -33,6 +39,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/capability.h>
 end_include
 
 begin_include
@@ -2868,6 +2880,24 @@ name|i
 decl_stmt|,
 name|numsegs
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CAPABILITY_MODE
+comment|/* 	 * XXXJA: This check can go away once we are sufficiently confident 	 * that the checks in namei() are correct. 	 */
+if|if
+condition|(
+name|IN_CAPABILITY_MODE
+argument_list|(
+name|curthread
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ECAPMODE
+operator|)
+return|;
+endif|#
+directive|endif
 name|tempdata
 operator|=
 name|malloc

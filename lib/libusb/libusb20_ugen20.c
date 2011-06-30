@@ -808,6 +808,23 @@ name|LIBUSB20_SPEED_UNKNOWN
 expr_stmt|;
 break|break;
 block|}
+comment|/* get parent HUB index and port */
+name|pdev
+operator|->
+name|parent_address
+operator|=
+name|devinfo
+operator|.
+name|udi_hubindex
+expr_stmt|;
+name|pdev
+operator|->
+name|parent_port
+operator|=
+name|devinfo
+operator|.
+name|udi_hubport
+expr_stmt|;
 comment|/* generate a nice description for printout */
 name|snprintf
 argument_list|(

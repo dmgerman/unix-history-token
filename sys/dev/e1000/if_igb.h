@@ -1103,6 +1103,9 @@ decl_stmt|;
 name|u32
 name|dmac
 decl_stmt|;
+name|int
+name|enable_aim
+decl_stmt|;
 comment|/* Interface queues */
 name|struct
 name|igb_queue

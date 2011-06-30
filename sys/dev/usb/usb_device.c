@@ -4726,6 +4726,46 @@ operator|&
 name|uaa
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If the whole USB device is targeted, invoke the USB event 	 * handler(s): 	 */
+if|if
+condition|(
+name|iface_index
+operator|==
+name|USB_IFACE_INDEX_ANY
+condition|)
+block|{
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|usb_dev_configured
+argument_list|,
+name|udev
+argument_list|,
+operator|&
+name|uaa
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|uaa
+operator|.
+name|dev_state
+operator|!=
+name|UAA_DEV_READY
+condition|)
+block|{
+comment|/* leave device unconfigured */
+name|usb_unconfigure
+argument_list|(
+name|udev
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
+block|}
 comment|/* Check if only one interface should be probed: */
 if|if
 condition|(
@@ -4915,8 +4955,6 @@ operator|.
 name|bIfaceNum
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|usb_probe_and_attach_sub
 argument_list|(
 name|udev
@@ -4924,19 +4962,17 @@ argument_list|,
 operator|&
 name|uaa
 argument_list|)
-condition|)
-block|{
-comment|/* ignore */
-block|}
-block|}
+expr_stmt|;
+comment|/* 		 * Remove the leftover child, if any, to enforce that 		 * a new nomatch devd event is generated for the next 		 * interface if no driver is found: 		 */
 if|if
 condition|(
 name|uaa
 operator|.
 name|temp_dev
+operator|==
+name|NULL
 condition|)
-block|{
-comment|/* remove the last created child; it is unused */
+continue|continue;
 if|if
 condition|(
 name|device_delete_child
@@ -4950,7 +4986,6 @@ operator|.
 name|temp_dev
 argument_list|)
 condition|)
-block|{
 name|DPRINTFN
 argument_list|(
 literal|0
@@ -4958,7 +4993,12 @@ argument_list|,
 literal|"device delete child failed\n"
 argument_list|)
 expr_stmt|;
-block|}
+name|uaa
+operator|.
+name|temp_dev
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 name|done
 label|:
@@ -5557,7 +5597,7 @@ name|sr_sx
 argument_list|,
 literal|"USB suspend and resume SX lock"
 argument_list|,
-name|SX_DUPOK
+name|SX_NOWITNESS
 argument_list|)
 expr_stmt|;
 name|cv_init
@@ -6831,34 +6871,6 @@ name|repeat_set_config
 goto|;
 block|}
 block|}
-block|}
-name|EVENTHANDLER_INVOKE
-argument_list|(
-name|usb_dev_configured
-argument_list|,
-name|udev
-argument_list|,
-operator|&
-name|uaa
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|uaa
-operator|.
-name|dev_state
-operator|!=
-name|UAA_DEV_READY
-condition|)
-block|{
-comment|/* leave device unconfigured */
-name|usb_unconfigure
-argument_list|(
-name|udev
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 block|}
 name|config_done
 label|:

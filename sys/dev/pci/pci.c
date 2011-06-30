@@ -1717,9 +1717,7 @@ name|OID_AUTO
 argument_list|,
 name|usb_early_takeover
 argument_list|,
-name|CTLFLAG_RD
-operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|pci_usb_takeover
@@ -13584,7 +13582,7 @@ comment|/* Let the parent decide. */
 name|end
 operator|=
 operator|~
-literal|0ULL
+literal|0ul
 expr_stmt|;
 block|}
 else|else

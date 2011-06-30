@@ -56551,6 +56551,9 @@ continue|continue;
 case|case
 name|D_FREEWORK
 case|:
+case|case
+name|D_FREEDEP
+case|:
 continue|continue;
 default|default:
 name|panic

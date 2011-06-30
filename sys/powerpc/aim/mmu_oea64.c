@@ -7824,7 +7824,7 @@ name|pte_lo
 operator|&
 name|LPTE_RPGN
 operator|)
-operator|+
+operator||
 operator|(
 name|va
 operator|-

@@ -619,7 +619,7 @@ name|decode_win_idma_dump
 block|}
 block|,
 block|{
-literal|"mvrl,pcie"
+literal|"mrvl,pcie"
 block|,
 operator|&
 name|decode_win_pcie_setup

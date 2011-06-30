@@ -368,6 +368,32 @@ begin_comment
 comment|/* skip if PG_NOSYNC */
 end_comment
 
+begin_comment
+comment|/*  * The following options are supported by vm_object_page_remove().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OBJPR_CLEANONLY
+value|0x1
+end_define
+
+begin_comment
+comment|/* Don't remove dirty pages. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OBJPR_NOTMAPPED
+value|0x2
+end_define
+
+begin_comment
+comment|/* Don't unmap pages. */
+end_comment
+
 begin_expr_stmt
 name|TAILQ_HEAD
 argument_list|(
@@ -729,12 +755,16 @@ name|void
 name|vm_object_page_remove
 parameter_list|(
 name|vm_object_t
+name|object
 parameter_list|,
 name|vm_pindex_t
+name|start
 parameter_list|,
 name|vm_pindex_t
+name|end
 parameter_list|,
-name|boolean_t
+name|int
+name|options
 parameter_list|)
 function_decl|;
 end_function_decl

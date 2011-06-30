@@ -5319,9 +5319,9 @@ operator|&
 name|V_SAVE
 operator|)
 condition|?
-name|TRUE
+name|OBJPR_CLEANONLY
 else|:
-name|FALSE
+literal|0
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_UNLOCK
@@ -16447,7 +16447,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Common filesystem object access control check routine.  Accepts a  * vnode's type, "mode", uid and gid, requested access mode, credentials,  * and optional call-by-reference privused argument allowing vaccess()  * to indicate to the caller whether privilege was used to satisfy the  * request (obsoleted).  Returns 0 on success, or an errno on failure.  *  * The ifdef'd CAPABILITIES version is here for reference, but is not  * actually used.  */
+comment|/*  * Common filesystem object access control check routine.  Accepts a  * vnode's type, "mode", uid and gid, requested access mode, credentials,  * and optional call-by-reference privused argument allowing vaccess()  * to indicate to the caller whether privilege was used to satisfy the  * request (obsoleted).  Returns 0 on success, or an errno on failure.  */
 end_comment
 
 begin_function

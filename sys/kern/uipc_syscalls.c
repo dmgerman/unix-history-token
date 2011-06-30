@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_capsicum.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_inet.h"
 end_include
 
@@ -57,6 +63,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/capability.h>
 end_include
 
 begin_include
@@ -3340,6 +3352,31 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CAPABILITY_MODE
+if|if
+condition|(
+name|IN_CAPABILITY_MODE
+argument_list|(
+name|td
+argument_list|)
+operator|&&
+operator|(
+name|mp
+operator|->
+name|msg_name
+operator|!=
+name|NULL
+operator|)
+condition|)
+return|return
+operator|(
+name|ECAPMODE
+operator|)
+return|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|mp

@@ -22268,8 +22268,9 @@ name|dev
 argument_list|)
 condition|)
 block|{
-name|runq
-operator|=
+operator|(
+name|void
+operator|)
 name|xpt_schedule_dev_sendq
 argument_list|(
 name|ccb_h
