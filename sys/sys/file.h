@@ -238,6 +238,17 @@ begin_comment
 comment|/* Device specific fd type */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DTYPE_CAPABILITY
+value|12
+end_define
+
+begin_comment
+comment|/* capability */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
