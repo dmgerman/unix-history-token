@@ -2112,11 +2112,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|m_free
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|t
