@@ -255,6 +255,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LOADER_GPT_SUPPORT
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|LOADER_MBR_SUPPORT
+argument_list|)
+end_if
+
 begin_comment
 comment|/* Given a size in 512 byte sectors, convert it to a human-readable number. */
 end_comment
@@ -358,6 +372,17 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOADER_MBR_SUPPORT
+end_ifdef
 
 begin_function
 specifier|static
@@ -1918,6 +1943,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|disk_printmbr
 parameter_list|(
@@ -2032,6 +2058,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -2885,6 +2916,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|disk_opengpt
 parameter_list|(
@@ -3593,6 +3625,10 @@ block|{
 name|int
 name|rc
 decl_stmt|;
+name|rc
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * While we are reading disk metadata, make sure we do it relative 	 * to the start of the disk 	 */
 name|dev
 operator|->
@@ -3616,6 +3652,9 @@ name|rc
 condition|)
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|LOADER_MBR_SUPPORT
 name|rc
 operator|=
 name|disk_openmbr
@@ -3623,6 +3662,8 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|rc
@@ -3648,14 +3689,11 @@ name|int
 name|verbose
 parameter_list|)
 block|{
-name|int
-name|rc
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|LOADER_GPT_SUPPORT
-name|rc
-operator|=
+if|if
+condition|(
 name|disk_printgpt
 argument_list|(
 name|dev
@@ -3664,16 +3702,15 @@ name|prefix
 argument_list|,
 name|verbose
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rc
 operator|==
 literal|0
 condition|)
 return|return;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|LOADER_MBR_SUPPORT
 name|disk_printmbr
 argument_list|(
 name|dev
@@ -3683,6 +3720,8 @@ argument_list|,
 name|verbose
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
