@@ -3004,10 +3004,8 @@ argument_list|(
 name|arg
 argument_list|)
 argument_list|,
-literal|0
-argument_list|)
-operator|,
 name|orig_fndecl
+argument_list|)
 condition|)
 return|return
 name|true
@@ -7114,6 +7112,19 @@ name|decl
 argument_list|)
 condition|)
 break|break;
+if|if
+condition|(
+name|warn_trampolines
+condition|)
+block|{
+name|warning
+argument_list|(
+literal|0
+argument_list|,
+literal|"local function address taken needing trampoline generation"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Lookup the immediate parent of the callee, as that's where 	 we need to insert the trampoline.  */
 for|for
 control|(
