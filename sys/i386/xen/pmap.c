@@ -8496,6 +8496,16 @@ argument_list|)
 block|{
 if|if
 condition|(
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_MARKER
+operator|)
+operator|!=
+literal|0
+operator|||
 name|m
 operator|->
 name|hold_count
