@@ -4562,6 +4562,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|nfscl_freelockowner
+parameter_list|(
+name|struct
+name|nfscllockowner
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|nfscl_getbytelock
 parameter_list|(
