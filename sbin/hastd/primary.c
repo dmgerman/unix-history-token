@@ -4104,7 +4104,9 @@ expr_stmt|;
 if|if
 condition|(
 name|drop_privs
-argument_list|()
+argument_list|(
+name|res
+argument_list|)
 operator|!=
 literal|0
 condition|)

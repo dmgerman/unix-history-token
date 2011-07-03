@@ -117,7 +117,10 @@ begin_function_decl
 name|int
 name|drop_privs
 parameter_list|(
-name|void
+name|struct
+name|hast_resource
+modifier|*
+name|res
 parameter_list|)
 function_decl|;
 end_function_decl
