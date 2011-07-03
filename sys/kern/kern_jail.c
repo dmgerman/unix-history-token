@@ -18092,6 +18092,9 @@ case|:
 case|case
 name|PRIV_NET_SETIFVNET
 case|:
+case|case
+name|PRIV_NET_SETIFFIB
+case|:
 comment|/* 		 * 802.11-related privileges. 		 */
 case|case
 name|PRIV_NET80211_GETKEY

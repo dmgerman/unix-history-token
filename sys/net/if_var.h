@@ -677,6 +677,10 @@ name|u_char
 name|if_alloctype
 decl_stmt|;
 comment|/* if_type at time of allocation */
+name|u_int
+name|if_fib
+decl_stmt|;
+comment|/* interface FIB */
 comment|/* 	 * Spare fields are added so that we can modify sensitive data 	 * structures without changing the kernel binary interface, and must 	 * be used with care where binary compatibility is required. 	 */
 name|char
 name|if_cspare
