@@ -598,7 +598,7 @@ block|,
 block|{
 name|USB_VPI
 argument_list|(
-literal|0x1b75
+argument|USB_VENDOR_OVISLINK
 argument_list|,
 literal|0x8187
 argument_list|,
