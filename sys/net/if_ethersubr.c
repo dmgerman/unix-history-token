@@ -3393,6 +3393,15 @@ name|ETHER_VLAN_ENCAP_LEN
 argument_list|)
 expr_stmt|;
 block|}
+name|M_SETFIB
+argument_list|(
+name|m
+argument_list|,
+name|ifp
+operator|->
+name|if_fib
+argument_list|)
+expr_stmt|;
 comment|/* Allow ng_ether(4) to claim this frame. */
 if|if
 condition|(
