@@ -1542,11 +1542,7 @@ comment|/* Length we're truncating to. */
 name|ufs2_daddr_t
 name|fb_chkcnt
 decl_stmt|;
-comment|/* Expected blks released. */
-name|ufs2_daddr_t
-name|fb_freecnt
-decl_stmt|;
-comment|/* Actual blocks released. */
+comment|/* Blocks released. */
 name|ino_t
 name|fb_inum
 decl_stmt|;
