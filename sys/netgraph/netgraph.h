@@ -3019,7 +3019,7 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|int
+name|void
 name|_ng_node_unref
 parameter_list|(
 name|node_p
@@ -3042,14 +3042,11 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
 name|_NG_NODE_UNREF
 argument_list|(
 name|node
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
