@@ -56554,6 +56554,9 @@ case|:
 case|case
 name|D_FREEDEP
 case|:
+case|case
+name|D_JSEGDEP
+case|:
 continue|continue;
 default|default:
 name|panic
