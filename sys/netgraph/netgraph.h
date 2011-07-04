@@ -66,6 +66,12 @@ directive|include
 file|<sys/mutex.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/refcount.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -538,7 +544,7 @@ name|_NG_HOOK_REF
 parameter_list|(
 name|hook
 parameter_list|)
-value|atomic_add_int(&(hook)->hk_refs, 1)
+value|refcount_acquire(&(hook)->hk_refs)
 end_define
 
 begin_define
@@ -2302,7 +2308,7 @@ comment|/*  * Public methods for nodes.  * If you can't do it with these you pro
 end_comment
 
 begin_function_decl
-name|int
+name|void
 name|ng_unref_node
 parameter_list|(
 name|node_p
@@ -2352,7 +2358,7 @@ name|_NG_NODE_REF
 parameter_list|(
 name|node
 parameter_list|)
-value|atomic_add_int(&(node)->nd_refs, 1)
+value|refcount_acquire(&(node)->nd_refs)
 end_define
 
 begin_define
