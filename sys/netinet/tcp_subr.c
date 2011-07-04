@@ -2544,6 +2544,11 @@ name|caddr_t
 operator|)
 name|ipgen
 expr_stmt|;
+name|m_addr_changed
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 comment|/* m_len is set later */
 name|tlen
 operator|=
