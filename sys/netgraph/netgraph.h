@@ -2633,7 +2633,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|__inline
-name|int
+name|void
 name|_ng_node_unref
 parameter_list|(
 name|node_p
