@@ -4402,6 +4402,14 @@ name|m
 operator|->
 name|m_len
 expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|=
+name|NULL
+expr_stmt|;
 name|sa
 operator|.
 name|sa_family
