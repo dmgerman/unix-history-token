@@ -464,14 +464,14 @@ name|void
 modifier|*
 name|addr
 parameter_list|,
-name|int
+name|u_long
 name|extensions
 parameter_list|,
-name|int
+name|u_int
 name|hints
 parameter_list|)
 block|{
-asm|__asm __volatile("monitor;"
+asm|__asm __volatile("monitor"
 block|: :
 literal|"a"
 operator|(
@@ -497,14 +497,14 @@ name|__inline
 name|void
 name|cpu_mwait
 parameter_list|(
-name|int
+name|u_long
 name|extensions
 parameter_list|,
-name|int
+name|u_int
 name|hints
 parameter_list|)
 block|{
-asm|__asm __volatile("mwait;" : :"a" (hints), "c" (extensions));
+asm|__asm __volatile("mwait" : : "a" (hints), "c" (extensions));
 block|}
 end_function
 
