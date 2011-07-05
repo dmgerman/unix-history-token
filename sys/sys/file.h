@@ -863,6 +863,27 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|fgetcap
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|fd
+parameter_list|,
+name|struct
+name|file
+modifier|*
+modifier|*
+name|fpp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|_fdrop
 parameter_list|(
 name|struct
