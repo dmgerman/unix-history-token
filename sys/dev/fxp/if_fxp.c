@@ -14521,6 +14521,12 @@ name|D101S_RCVBUNDLE_UCODE
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|uint32_t
@@ -14540,6 +14546,11 @@ init|=
 name|D102_C_RCVBUNDLE_UCODE
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -14641,6 +14652,9 @@ block|,
 name|D101S_CPUSAVER_BUNDLE_MAX_DWORD
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|notyet
 block|{
 name|FXP_REV_82550
 block|,
@@ -14667,6 +14681,8 @@ block|,
 name|D102_C_CPUSAVER_BUNDLE_MAX_DWORD
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 name|FXP_REV_82551_F
 block|,
