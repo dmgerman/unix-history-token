@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: resolver.c,v 1.384.14.30 2011-01-27 23:45:47 tbox Exp $ */
+comment|/* $Id: resolver.c,v 1.384.14.30.4.1 2011-06-21 20:13:23 each Exp $ */
 end_comment
 
 begin_comment
@@ -1446,6 +1446,16 @@ parameter_list|(
 name|r
 parameter_list|)
 value|(((r)->attributes& DNS_RDATASETATTR_NXDOMAIN) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEGATIVE
+parameter_list|(
+name|r
+parameter_list|)
+value|(((r)->attributes& DNS_RDATASETATTR_NEGATIVE) != 0)
 end_define
 
 begin_function_decl
@@ -4302,13 +4312,12 @@ operator|->
 name|rdataset
 argument_list|)
 operator|&&
+name|NEGATIVE
+argument_list|(
 name|event
 operator|->
 name|rdataset
-operator|->
-name|type
-operator|==
-name|dns_rdatatype_none
+argument_list|)
 condition|)
 block|{
 name|INSIST
@@ -18419,11 +18428,10 @@ name|ardataset
 operator|!=
 name|NULL
 operator|&&
+name|NEGATIVE
+argument_list|(
 name|ardataset
-operator|->
-name|type
-operator|==
-literal|0
+argument_list|)
 condition|)
 block|{
 if|if
@@ -19827,11 +19835,10 @@ name|ardataset
 operator|!=
 name|NULL
 operator|&&
+name|NEGATIVE
+argument_list|(
 name|ardataset
-operator|->
-name|type
-operator|==
-literal|0
+argument_list|)
 condition|)
 block|{
 comment|/* 						 * The answer in the cache is 						 * better than the answer we 						 * found, and is a negative 						 * cache entry, so we must set 						 * eresult appropriately. 						 */
@@ -20205,11 +20212,10 @@ name|ardataset
 operator|!=
 name|NULL
 operator|&&
+name|NEGATIVE
+argument_list|(
 name|ardataset
-operator|->
-name|type
-operator|==
-literal|0
+argument_list|)
 condition|)
 block|{
 comment|/* 					 * The answer in the cache is better 					 * than the answer we found, and is 					 * a negative cache entry, so we 					 * must set eresult appropriately. 					 */
@@ -20306,13 +20312,12 @@ operator|->
 name|rdataset
 argument_list|)
 operator|&&
+name|NEGATIVE
+argument_list|(
 name|event
 operator|->
 name|rdataset
-operator|->
-name|type
-operator|==
-name|dns_rdatatype_none
+argument_list|)
 condition|)
 block|{
 name|INSIST
@@ -20681,11 +20686,10 @@ block|{
 comment|/* 		 * If the cache now contains a negative entry and we 		 * care about whether it is DNS_R_NCACHENXDOMAIN or 		 * DNS_R_NCACHENXRRSET then extract it. 		 */
 if|if
 condition|(
+name|NEGATIVE
+argument_list|(
 name|ardataset
-operator|->
-name|type
-operator|==
-literal|0
+argument_list|)
 condition|)
 block|{
 comment|/* 			 * The cache data is a negative cache entry. 			 */
