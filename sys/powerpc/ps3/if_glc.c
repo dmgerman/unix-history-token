@@ -921,7 +921,7 @@ name|sc
 operator|->
 name|sc_irq
 argument_list|,
-name|INTR_TYPE_MISC
+name|INTR_TYPE_NET
 operator||
 name|INTR_MPSAFE
 operator||
@@ -4257,14 +4257,7 @@ name|m
 operator|->
 name|m_len
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_rx_vlan
-operator|>=
-literal|0
-condition|)
+comment|/* 		 * Remove VLAN tag. Even on early firmwares that do not allow 		 * multiple VLANs, the VLAN tag is still in place here. 		 */
 name|m_adj
 argument_list|(
 name|m
