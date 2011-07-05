@@ -641,13 +641,7 @@ name|error
 decl_stmt|;
 name|cnvin
 operator|=
-name|cnvout
-operator|=
 name|NULL
-expr_stmt|;
-name|error
-operator|=
-literal|0
 expr_stmt|;
 comment|/* 	 * Prepare and send command to worker process. 	 */
 name|cnvout
