@@ -515,16 +515,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|CTASSERT
-argument_list|(
-name|MAXCPU
-operator|<=
-name|IDR_CHEETAH_MAX_BN_PAIRS
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
 name|void
 name|mp_init
@@ -3152,6 +3142,13 @@ expr_stmt|;
 name|bnp
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|bnp
+operator|==
+name|IDR_CHEETAH_MAX_BN_PAIRS
+condition|)
+break|break;
 block|}
 block|}
 while|while
