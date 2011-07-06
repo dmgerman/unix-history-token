@@ -870,6 +870,9 @@ operator|)
 return|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -906,6 +909,8 @@ operator|(
 name|EPROCLIM
 operator|)
 return|;
+endif|#
+directive|endif
 comment|/* Initialize our td */
 name|newtd
 operator|=
@@ -1310,6 +1315,9 @@ operator|)
 return|;
 name|fail
 label|:
+ifdef|#
+directive|ifdef
+name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -1329,6 +1337,8 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|error

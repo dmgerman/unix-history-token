@@ -5925,11 +5925,16 @@ name|tryagain
 decl_stmt|,
 name|attempts
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|RACCT
 name|uint64_t
 name|rsize
 decl_stmt|,
 name|ravailable
 decl_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 name|TRUE
@@ -6231,6 +6236,9 @@ name|limit
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|RACCT
 name|rsize
 operator|=
 name|IDX_TO_OFF
@@ -6362,6 +6370,8 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|vmspace_free
 argument_list|(
 name|vm

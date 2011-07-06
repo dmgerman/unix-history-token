@@ -3031,6 +3031,9 @@ argument_list|)
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|p1
@@ -3063,6 +3066,8 @@ operator|(
 name|EAGAIN
 operator|)
 return|;
+endif|#
+directive|endif
 name|mem_charged
 operator|=
 literal|0
@@ -3368,6 +3373,9 @@ goto|goto
 name|fail
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|RACCT
 comment|/* 	 * After fork, there is exactly one thread running. 	 */
 name|PROC_LOCK
 argument_list|(
@@ -3405,6 +3413,8 @@ goto|goto
 name|fail
 goto|;
 block|}
+endif|#
+directive|endif
 comment|/* 	 * Increment the count of procs running with this uid. Don't allow 	 * a nonprivileged user to exceed their current limit. 	 * 	 * XXXRW: Can we avoid privilege here if it's not needed? 	 */
 name|error
 operator|=
@@ -3589,6 +3599,9 @@ operator|/
 literal|2
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|p1
@@ -3608,6 +3621,8 @@ argument_list|(
 name|p1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|error

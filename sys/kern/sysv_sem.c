@@ -5229,6 +5229,9 @@ goto|goto
 name|done2
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -5271,6 +5274,8 @@ goto|goto
 name|done2
 goto|;
 block|}
+endif|#
+directive|endif
 name|DPRINTF
 argument_list|(
 operator|(
@@ -5861,6 +5866,9 @@ return|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -5902,6 +5910,8 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|sops
 operator|=
 name|malloc

@@ -786,6 +786,9 @@ operator||
 name|VM_MAP_WIRE_NOHOLES
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RACCT
 if|if
 condition|(
 name|error
@@ -827,6 +830,8 @@ name|curproc
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* 	 * Return EFAULT on error to match copy{in,out}() behaviour 	 * rather than returning ENOMEM like mlock() would. 	 */
 return|return
 operator|(
@@ -890,6 +895,9 @@ operator||
 name|VM_MAP_WIRE_NOHOLES
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|curproc
@@ -923,6 +931,8 @@ argument_list|(
 name|curproc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

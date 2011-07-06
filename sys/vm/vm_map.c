@@ -1177,6 +1177,9 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -1232,6 +1235,8 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -13462,9 +13467,14 @@ name|limit
 decl_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|RACCT
 name|int
 name|error
 decl_stmt|;
+endif|#
+directive|endif
 name|Retry
 label|:
 name|PROC_LOCK
@@ -13878,6 +13888,9 @@ name|KERN_NO_SPACE
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -13925,6 +13938,8 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Round up the grow amount modulo SGROWSIZ */
 name|grow_amount
 operator|=
@@ -14062,6 +14077,9 @@ goto|goto
 name|out
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -14106,6 +14124,8 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|vm_map_lock_upgrade
@@ -14588,6 +14608,9 @@ expr_stmt|;
 block|}
 name|out
 label|:
+ifdef|#
+directive|ifdef
+name|RACCT
 if|if
 condition|(
 name|rv
@@ -14657,6 +14680,8 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|rv

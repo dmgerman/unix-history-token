@@ -4061,6 +4061,9 @@ name|fd_nfiles
 condition|)
 block|{
 comment|/* 			 * The resource limits are here instead of e.g. fdalloc(), 			 * because the file descriptor table may be shared between 			 * processes, so we can't really use racct_add()/racct_sub(). 			 * Instead of counting the number of actually allocated 			 * descriptors, just put the limit on the size of the file 			 * descriptor table. 			 */
+ifdef|#
+directive|ifdef
+name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -4109,6 +4112,8 @@ name|EMFILE
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 name|fdgrowtable
 argument_list|(
 name|fdp
@@ -6880,9 +6885,15 @@ operator|-
 literal|1
 decl_stmt|,
 name|maxfd
-decl_stmt|,
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|RACCT
+name|int
 name|error
 decl_stmt|;
+endif|#
+directive|endif
 name|FILEDESC_XLOCK_ASSERT
 argument_list|(
 name|fdp
@@ -6969,6 +6980,9 @@ operator|->
 name|fd_nfiles
 condition|)
 break|break;
+ifdef|#
+directive|ifdef
+name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -7010,6 +7024,8 @@ operator|(
 name|EMFILE
 operator|)
 return|;
+endif|#
+directive|endif
 name|fdgrowtable
 argument_list|(
 name|fdp
@@ -8605,6 +8621,9 @@ operator|==
 name|NULL
 condition|)
 return|return;
+ifdef|#
+directive|ifdef
+name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -8630,6 +8649,8 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Check for special need to clear POSIX style locks */
 name|fdtol
 operator|=

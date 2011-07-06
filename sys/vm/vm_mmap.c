@@ -4080,6 +4080,9 @@ operator|(
 name|EAGAIN
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|proc
@@ -4112,6 +4115,8 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+endif|#
+directive|endif
 name|error
 operator|=
 name|vm_map_wire
@@ -4132,6 +4137,9 @@ operator||
 name|VM_MAP_WIRE_NOHOLES
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RACCT
 if|if
 condition|(
 name|error
@@ -4173,6 +4181,8 @@ name|proc
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|error
@@ -4312,6 +4322,9 @@ operator|)
 return|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -4352,6 +4365,8 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|uap
@@ -4429,6 +4444,9 @@ name|EAGAIN
 operator|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|RACCT
 if|if
 condition|(
 name|error
@@ -4478,6 +4496,8 @@ name|td_proc
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|error
@@ -4608,6 +4628,9 @@ operator||
 name|VM_MAP_WIRE_HOLESOK
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RACCT
 if|if
 condition|(
 name|error
@@ -4641,6 +4664,8 @@ name|td_proc
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|error
@@ -4804,6 +4829,9 @@ operator||
 name|VM_MAP_WIRE_NOHOLES
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RACCT
 if|if
 condition|(
 name|error
@@ -4842,6 +4870,8 @@ name|td_proc
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|error

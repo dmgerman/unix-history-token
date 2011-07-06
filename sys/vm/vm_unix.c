@@ -360,6 +360,9 @@ goto|goto
 name|done
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -469,6 +472,8 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|rv
 operator|=
 name|vm_map_insert
@@ -500,6 +505,9 @@ operator|!=
 name|KERN_SUCCESS
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -542,6 +550,8 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|error
 operator|=
 name|ENOMEM
@@ -640,6 +650,9 @@ operator|-
 name|new
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -682,6 +695,8 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|done
 label|:
