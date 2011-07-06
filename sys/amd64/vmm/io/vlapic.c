@@ -1550,12 +1550,6 @@ name|vec
 decl_stmt|,
 name|mode
 decl_stmt|;
-name|CPU_ZERO
-argument_list|(
-operator|&
-name|dmask
-argument_list|)
-expr_stmt|;
 name|dest
 operator|=
 name|icrval
