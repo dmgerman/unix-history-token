@@ -171,23 +171,16 @@ name|CISCO_SH_VERB_FLOW6
 value|"%-14s %-30s %-14s %-30s %2u %3x %4x %6lu\n" \ 	"%4.4x /%-2u %-5u                 %4.4x /%-2u %-5u %-30s %9u %8u\n\n"
 end_define
 
-begin_function_decl
-specifier|static
-name|void
-name|flow_cache_print
-parameter_list|(
-name|struct
-name|ngnf_show_header
-modifier|*
-name|resp
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_function_decl
 specifier|static
 name|void
-name|flow_cache_print6
+name|flow_cache_print
 parameter_list|(
 name|struct
 name|ngnf_show_header
@@ -210,6 +203,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
+begin_function_decl
+specifier|static
+name|void
+name|flow_cache_print6
+parameter_list|(
+name|struct
+name|ngnf_show_header
+modifier|*
+name|resp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 specifier|static
 name|void
@@ -222,6 +239,11 @@ name|resp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -236,6 +258,20 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+end_if
 
 begin_function_decl
 specifier|static
@@ -257,6 +293,11 @@ parameter_list|)
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -698,17 +739,27 @@ parameter_list|)
 block|{
 name|int
 name|ipv4
-init|=
-literal|1
 decl_stmt|,
 name|ipv6
-init|=
-literal|1
 decl_stmt|,
 name|verbose
 init|=
 literal|0
 decl_stmt|;
+name|ipv4
+operator|=
+name|feature_present
+argument_list|(
+literal|"inet"
+argument_list|)
+expr_stmt|;
+name|ipv6
+operator|=
+name|feature_present
+argument_list|(
+literal|"inet6"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|argc
@@ -800,6 +851,9 @@ name|verbose
 operator|=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 name|ipv4
@@ -827,6 +881,11 @@ name|flow_cache_print
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET6
 if|if
 condition|(
 name|ipv6
@@ -854,8 +913,24 @@ name|flow_cache_print6
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+end_if
 
 begin_function
 specifier|static
@@ -1110,6 +1185,17 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -1305,6 +1391,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -1516,6 +1607,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_function
 specifier|static
@@ -1773,6 +1870,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
