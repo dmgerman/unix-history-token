@@ -670,6 +670,20 @@ block|,
 block|{
 literal|0x9710
 block|,
+literal|0x9900
+block|,
+literal|0xa000
+block|,
+literal|0x1000
+block|,
+literal|"MosChip MCS9900 PCIe to Peripheral Controller"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x9710
+block|,
 literal|0x9901
 block|,
 literal|0xa000
