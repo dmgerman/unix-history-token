@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: rbtdb.c,v 1.270.12.26 2010-12-02 05:09:58 marka Exp $ */
+comment|/* $Id: rbtdb.c,v 1.270.12.26.4.1 2011-06-21 20:13:23 each Exp $ */
 end_comment
 
 begin_comment
@@ -1066,6 +1066,13 @@ name|RDATASET_ATTR_OPTOUT
 value|0x0080
 end_define
 
+begin_define
+define|#
+directive|define
+name|RDATASET_ATTR_NEGATIVE
+value|0x0100
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1200,6 +1207,17 @@ name|header
 parameter_list|)
 define|\
 value|(((header)->attributes& RDATASET_ATTR_OPTOUT) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEGATIVE
+parameter_list|(
+name|header
+parameter_list|)
+define|\
+value|(((header)->attributes& RDATASET_ATTR_NEGATIVE) != 0)
 end_define
 
 begin_define
@@ -1423,6 +1441,7 @@ comment|/* Unlocked. */
 name|dns_db_t
 name|common
 decl_stmt|;
+comment|/* Locks the data in this struct */
 if|#
 directive|if
 name|DNS_RBTDB_USERWLOCK
@@ -1436,9 +1455,11 @@ name|lock
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* Locks the tree structure (prevents nodes appearing/disappearing) */
 name|isc_rwlock_t
 name|tree_lock
 decl_stmt|;
+comment|/* Locks for individual tree nodes */
 name|unsigned
 name|int
 name|node_lock_count
@@ -2591,6 +2612,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|NEGATIVE
+argument_list|(
+name|header
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
 name|NXDOMAIN
 argument_list|(
 name|header
@@ -2600,18 +2629,7 @@ name|statattributes
 operator|=
 name|DNS_RDATASTATSTYPE_ATTR_NXDOMAIN
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|RBTDB_RDATATYPE_BASE
-argument_list|(
-name|header
-operator|->
-name|type
-argument_list|)
-operator|==
-literal|0
-condition|)
+else|else
 block|{
 name|statattributes
 operator|=
@@ -2626,6 +2644,7 @@ operator|->
 name|type
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 name|base
@@ -11830,6 +11849,19 @@ name|trust
 expr_stmt|;
 if|if
 condition|(
+name|NEGATIVE
+argument_list|(
+name|header
+argument_list|)
+condition|)
+name|rdataset
+operator|->
+name|attributes
+operator||=
+name|DNS_RDATASETATTR_NEGATIVE
+expr_stmt|;
+if|if
+condition|(
 name|NXDOMAIN
 argument_list|(
 name|header
@@ -19475,14 +19507,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|RBTDB_RDATATYPE_BASE
+name|NEGATIVE
 argument_list|(
 name|found
-operator|->
-name|type
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 comment|/* 		 * We found a negative cache entry. 		 */
@@ -22730,14 +22758,10 @@ operator|)
 return|;
 if|if
 condition|(
-name|RBTDB_RDATATYPE_BASE
+name|NEGATIVE
 argument_list|(
 name|found
-operator|->
-name|type
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 comment|/* 		 * We found a negative cache entry. 		 */
@@ -23611,9 +23635,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|rdtype
-operator|==
-literal|0
+name|NEGATIVE
+argument_list|(
+name|newheader
+argument_list|)
 condition|)
 block|{
 comment|/* 			 * We're adding a negative cache entry. 			 */
@@ -26162,6 +26187,24 @@ operator|->
 name|resign
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|rdataset
+operator|->
+name|attributes
+operator|&
+name|DNS_RDATASETATTR_NEGATIVE
+operator|)
+operator|!=
+literal|0
+condition|)
+name|newheader
+operator|->
+name|attributes
+operator||=
+name|RDATASET_ATTR_NEGATIVE
 expr_stmt|;
 if|if
 condition|(
@@ -29927,12 +29970,12 @@ name|rbtdb
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|RBTDB_LOCK
+name|RWLOCK
 argument_list|(
 operator|&
 name|rbtdb
 operator|->
-name|lock
+name|tree_lock
 argument_list|,
 name|isc_rwlocktype_read
 argument_list|)
@@ -30140,12 +30183,12 @@ name|ISC_R_SUCCESS
 expr_stmt|;
 name|unlock
 label|:
-name|RBTDB_UNLOCK
+name|RWUNLOCK
 argument_list|(
 operator|&
 name|rbtdb
 operator|->
-name|lock
+name|tree_lock
 argument_list|,
 name|isc_rwlocktype_read
 argument_list|)
@@ -30250,12 +30293,12 @@ expr_stmt|;
 name|header
 operator|--
 expr_stmt|;
-name|RBTDB_LOCK
+name|RWLOCK
 argument_list|(
 operator|&
 name|rbtdb
 operator|->
-name|lock
+name|tree_lock
 argument_list|,
 name|isc_rwlocktype_write
 argument_list|)
@@ -30335,12 +30378,12 @@ argument_list|,
 name|isc_rwlocktype_write
 argument_list|)
 expr_stmt|;
-name|RBTDB_UNLOCK
+name|RWUNLOCK
 argument_list|(
 operator|&
 name|rbtdb
 operator|->
-name|lock
+name|tree_lock
 argument_list|,
 name|isc_rwlocktype_write
 argument_list|)
@@ -34075,9 +34118,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|rdtype
-operator|==
-literal|0
+name|NEGATIVE
+argument_list|(
+name|header
+argument_list|)
 condition|)
 block|{
 name|covers
