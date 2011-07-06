@@ -8521,8 +8521,15 @@ comment|/* not valid on layer2 pkts */
 break|break;
 if|if
 condition|(
-operator|!
 name|q
+operator|==
+name|NULL
+operator|||
+name|q
+operator|->
+name|rule
+operator|!=
+name|f
 operator|||
 name|dyn_dir
 operator|==
