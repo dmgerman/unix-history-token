@@ -1596,7 +1596,7 @@ name|fprintf
 argument_list|(
 name|fstab
 argument_list|,
-literal|"%s\t%s\t%s\t%s\t%d\t%d\n"
+literal|"%s\t%s\t\t%s\t%s\t%d\t%d\n"
 argument_list|,
 name|md
 operator|->
