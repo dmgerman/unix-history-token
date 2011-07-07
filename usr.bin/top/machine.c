@@ -3477,6 +3477,19 @@ comment|/* skip zombies */
 continue|continue;
 if|if
 condition|(
+operator|!
+name|show_kidle
+operator|&&
+name|pp
+operator|->
+name|ki_tdflags
+operator|&
+name|TDF_IDLETD
+condition|)
+comment|/* skip kernel idle process */
+continue|continue;
+if|if
+condition|(
 name|displaymode
 operator|==
 name|DISP_CPU
@@ -3505,23 +3518,6 @@ name|SIDL
 operator|)
 condition|)
 comment|/* skip idle or non-running processes */
-continue|continue;
-if|if
-condition|(
-name|displaymode
-operator|==
-name|DISP_CPU
-operator|&&
-operator|!
-name|show_kidle
-operator|&&
-name|pp
-operator|->
-name|ki_tdflags
-operator|&
-name|TDF_IDLETD
-condition|)
-comment|/* skip kernel idle process */
 continue|continue;
 if|if
 condition|(
