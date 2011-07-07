@@ -4098,7 +4098,7 @@ name|out
 goto|;
 if|if
 condition|(
-name|racct_is_in_thousands
+name|RACCT_IS_IN_THOUSANDS
 argument_list|(
 name|rule
 operator|->
@@ -4248,7 +4248,7 @@ literal|"rule not fully specified"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Some rules just don't make sense.  Note that the one below 	 * cannot be rewritten using racct_is_deniable(); the RACCT_PCTCPU, 	 * for example, is not deniable in the racct sense, but the 	 * limit is enforced in a different way, so "deny" rules for %CPU 	 * do make sense. 	 */
+comment|/* 	 * Some rules just don't make sense.  Note that the one below 	 * cannot be rewritten using RACCT_IS_DENIABLE(); the RACCT_PCTCPU, 	 * for example, is not deniable in the racct sense, but the 	 * limit is enforced in a different way, so "deny" rules for %CPU 	 * do make sense. 	 */
 if|if
 condition|(
 name|rule
@@ -4284,7 +4284,7 @@ name|rr_per
 operator|==
 name|RCTL_SUBJECT_TYPE_PROCESS
 operator|&&
-name|racct_is_sloppy
+name|RACCT_IS_SLOPPY
 argument_list|(
 name|rule
 operator|->
@@ -5134,7 +5134,7 @@ name|amount
 operator|!=
 name|RCTL_AMOUNT_UNDEFINED
 operator|&&
-name|racct_is_in_thousands
+name|RACCT_IS_IN_THOUSANDS
 argument_list|(
 name|rule
 operator|->
@@ -5443,7 +5443,7 @@ name|sloppy
 operator|==
 literal|0
 operator|&&
-name|racct_is_sloppy
+name|RACCT_IS_SLOPPY
 argument_list|(
 name|i
 argument_list|)
@@ -5460,7 +5460,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|racct_is_in_thousands
+name|RACCT_IS_IN_THOUSANDS
 argument_list|(
 name|i
 argument_list|)

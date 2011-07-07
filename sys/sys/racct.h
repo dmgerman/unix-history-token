@@ -267,7 +267,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|racct_is_in_thousands
+name|RACCT_IS_IN_THOUSANDS
 parameter_list|(
 name|X
 parameter_list|)
@@ -281,7 +281,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|racct_is_reclaimable
+name|RACCT_IS_RECLAIMABLE
 parameter_list|(
 name|X
 parameter_list|)
@@ -295,7 +295,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|racct_is_inheritable
+name|RACCT_IS_INHERITABLE
 parameter_list|(
 name|X
 parameter_list|)
@@ -309,7 +309,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|racct_is_deniable
+name|RACCT_IS_DENIABLE
 parameter_list|(
 name|X
 parameter_list|)
@@ -323,7 +323,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|racct_is_sloppy
+name|RACCT_IS_SLOPPY
 parameter_list|(
 name|X
 parameter_list|)
