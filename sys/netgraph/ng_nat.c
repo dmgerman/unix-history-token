@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/libalias/alias_local.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netgraph/ng_message.h>
 end_include
 
@@ -2962,6 +2968,7 @@ literal|"ng_nat: ip_len != m_pkthdr.len"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We drop packet when: 	 * 1. libalias returns PKT_ALIAS_ERROR; 	 * 2. For incoming packets: 	 *	a) for unresolved fragments; 	 *	b) libalias returns PKT_ALIAS_IGNORED and 	 *		PKT_ALIAS_DENY_INCOMING flag is set. 	 */
 if|if
 condition|(
 name|hook
@@ -2994,12 +3001,30 @@ expr_stmt|;
 if|if
 condition|(
 name|rval
-operator|!=
-name|PKT_ALIAS_OK
-operator|&&
+operator|==
+name|PKT_ALIAS_ERROR
+operator|||
 name|rval
+operator|==
+name|PKT_ALIAS_UNRESOLVED_FRAGMENT
+operator|||
+operator|(
+name|rval
+operator|==
+name|PKT_ALIAS_IGNORED
+operator|&&
+operator|(
+name|priv
+operator|->
+name|lib
+operator|->
+name|packetAliasMode
+operator|&
+name|PKT_ALIAS_DENY_INCOMING
+operator|)
 operator|!=
-name|PKT_ALIAS_FOUND_HEADER_FRAGMENT
+literal|0
+operator|)
 condition|)
 block|{
 name|NG_FREE_ITEM
@@ -3047,8 +3072,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rval
-operator|!=
-name|PKT_ALIAS_OK
+operator|==
+name|PKT_ALIAS_ERROR
 condition|)
 block|{
 name|NG_FREE_ITEM
