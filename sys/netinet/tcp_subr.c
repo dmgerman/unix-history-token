@@ -964,12 +964,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TCP_SORECEIVE_STREAM
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -999,11 +993,6 @@ literal|"Using soreceive_stream for TCP sockets"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -1574,9 +1563,6 @@ name|tcp_tcbhashsize
 operator|=
 name|hashsize
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TCP_SORECEIVE_STREAM
 name|TUNABLE_INT_FETCH
 argument_list|(
 literal|"net.inet.tcp.soreceive_stream"
@@ -1596,15 +1582,19 @@ name|pru_soreceive
 operator|=
 name|soreceive_stream
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 name|tcp6_usrreqs
 operator|.
 name|pru_soreceive
 operator|=
 name|soreceive_stream
 expr_stmt|;
-block|}
 endif|#
 directive|endif
+comment|/* INET6 */
+block|}
 ifdef|#
 directive|ifdef
 name|INET6
