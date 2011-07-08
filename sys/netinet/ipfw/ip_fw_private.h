@@ -838,6 +838,10 @@ name|uint32_t
 name|id
 decl_stmt|;
 comment|/* ruleset id */
+name|uint32_t
+name|gencnt
+decl_stmt|;
+comment|/* generation count */
 block|}
 struct|;
 end_struct
