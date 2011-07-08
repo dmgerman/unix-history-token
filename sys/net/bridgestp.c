@@ -8782,6 +8782,13 @@ operator|==
 literal|0
 condition|)
 return|return;
+name|CURVNET_SET
+argument_list|(
+name|bs
+operator|->
+name|bs_vnet
+argument_list|)
+expr_stmt|;
 comment|/* slow timer to catch missed link events */
 if|if
 condition|(
@@ -8952,6 +8959,9 @@ name|bp_txcount
 operator|--
 expr_stmt|;
 block|}
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
@@ -10144,6 +10154,12 @@ operator|=
 name|cb
 operator|->
 name|bcb_rtage
+expr_stmt|;
+name|bs
+operator|->
+name|bs_vnet
+operator|=
+name|curvnet
 expr_stmt|;
 name|getmicrotime
 argument_list|(
