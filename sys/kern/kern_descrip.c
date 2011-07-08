@@ -8347,7 +8347,7 @@ name|fdp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* copy everything except kqueue descriptors */
+comment|/* copy all passable descriptors (i.e. not kqueue) */
 name|newfdp
 operator|->
 name|fd_freefile
@@ -8380,6 +8380,7 @@ argument_list|,
 name|i
 argument_list|)
 operator|&&
+operator|(
 name|fdp
 operator|->
 name|fd_ofiles
@@ -8387,9 +8388,12 @@ index|[
 name|i
 index|]
 operator|->
-name|f_type
-operator|!=
-name|DTYPE_KQUEUE
+name|f_ops
+operator|->
+name|fo_flags
+operator|&
+name|DFLAG_PASSABLE
+operator|)
 operator|&&
 name|fdp
 operator|->
