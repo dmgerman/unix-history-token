@@ -92,7 +92,6 @@ name|s
 decl_stmt|;
 if|if
 condition|(
-operator|(
 name|fstat
 argument_list|(
 name|kqfd
@@ -103,25 +102,18 @@ argument_list|)
 operator|!=
 operator|-
 literal|1
-operator|)
-operator|||
-operator|(
-name|errno
-operator|!=
-name|EBADF
-operator|)
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s:%d - %s: fstat(kqfd) in child did not return EBADF"
+literal|"kqueue inherited across fork! (%s() at %s:%d)"
+argument_list|,
+name|__func__
 argument_list|,
 name|__FILE__
 argument_list|,
 name|__LINE__
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 name|pause
