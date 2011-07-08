@@ -216,7 +216,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   * Search for interface with name "ifn", and fill n accordingly:  *  * n->ip        ip address of interface "ifn"  * n->if_name   copy of interface name "ifn"  */
+comment|/*  * Search for interface with name "ifn", and fill n accordingly:  *  * n->ip	ip address of interface "ifn"  * n->if_name   copy of interface name "ifn"  */
 end_comment
 
 begin_function
@@ -729,11 +729,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * XXX - The following functions, macros and definitions come from natd.c:  * it would be better to move them outside natd.c, in a file   * (redirect_support.[ch]?) shared by ipfw and natd, but for now i can live   * with it.  */
+comment|/*  * XXX - The following functions, macros and definitions come from natd.c:  * it would be better to move them outside natd.c, in a file  * (redirect_support.[ch]?) shared by ipfw and natd, but for now i can live  * with it.  */
 end_comment
 
 begin_comment
-comment|/*  * Definition of a port range, and macros to deal with values.  * FORMAT:  HI 16-bits == first port in range, 0 == all ports.  *          LO 16-bits == number of ports in range  * NOTES:   - Port values are not stored in network byte order.  */
+comment|/*  * Definition of a port range, and macros to deal with values.  * FORMAT:  HI 16-bits == first port in range, 0 == all ports.  *	  LO 16-bits == number of ports in range  * NOTES:   - Port values are not stored in network byte order.  */
 end_comment
 
 begin_define
@@ -1244,11 +1244,11 @@ define|#
 directive|define
 name|INC_ARGCV
 parameter_list|()
-value|do {        \ 	(*_av)++;               \ 	(*_ac)--;               \ 	av = *_av;              \ 	ac = *_ac;              \ } while(0)
+value|do {	\ 	(*_av)++;		\ 	(*_ac)--;		\ 	av = *_av;		\ 	ac = *_ac;		\ } while(0)
 end_define
 
 begin_comment
-comment|/*   * The next 3 functions add support for the addr, port and proto redirect and   * their logic is loosely based on SetupAddressRedirect(), SetupPortRedirect()   * and SetupProtoRedirect() from natd.c.  *  * Every setup_* function fills at least one redirect entry   * (struct cfg_redir) and zero or more server pool entry (struct cfg_spool)   * in buf.  *   * The format of data in buf is:  *   *  *     cfg_nat    cfg_redir    cfg_spool    ......  cfg_spool   *  *    -------------------------------------        ------------  *   |          | .....X ... |          |         |           |  .....  *    ------------------------------------- ...... ------------  *                     ^            *                spool_cnt       n=0       ......   n=(X-1)  *  * len points to the amount of available space in buf  * space counts the memory consumed by every function  *  * XXX - Every function get all the argv params so it   * has to check, in optional parameters, that the next  * args is a valid option for the redir entry and not   * another token. Only redir_port and redir_proto are   * affected by this.  */
+comment|/*  * The next 3 functions add support for the addr, port and proto redirect and  * their logic is loosely based on SetupAddressRedirect(), SetupPortRedirect()  * and SetupProtoRedirect() from natd.c.  *  * Every setup_* function fills at least one redirect entry  * (struct cfg_redir) and zero or more server pool entry (struct cfg_spool)  * in buf.  *  * The format of data in buf is:  *  *     cfg_nat    cfg_redir    cfg_spool    ......  cfg_spool  *  *    -------------------------------------        ------------  *   |          | .....X ... |          |         |           |  .....  *    ------------------------------------- ...... ------------  *                     ^  *                spool_cnt       n=0       ......   n=(X-1)  *  * len points to the amount of available space in buf  * space counts the memory consumed by every function  *  * XXX - Every function get all the argv params so it  * has to check, in optional parameters, that the next  * args is a valid option for the redir entry and not  * another token. Only redir_port and redir_proto are  * affected by this.  */
 end_comment
 
 begin_function
@@ -1815,7 +1815,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * The sctp nat does not allow the port numbers to be mapped to  		 * new port numbers. Therefore, no ports are to be specified  		 * in the target port field. 		 */
+comment|/* 		 * The sctp nat does not allow the port numbers to be mapped to 		 * new port numbers. Therefore, no ports are to be specified 		 * in the target port field. 		 */
 if|if
 condition|(
 name|r
@@ -2048,7 +2048,7 @@ name|INC_ARGCV
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Extract remote address and optionally port. 	 */
-comment|/*  	 * NB: isalpha(**av) => we've to check that next parameter is really an 	 * option for this redirect entry, else stop here processing arg[cv]. 	 */
+comment|/* 	 * NB: isalpha(**av) => we've to check that next parameter is really an 	 * option for this redirect entry, else stop here processing arg[cv]. 	 */
 if|if
 condition|(
 name|ac
@@ -2183,7 +2183,7 @@ argument_list|(
 name|portRange
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Make sure port ranges match up, then add the redirect ports. 	 */
+comment|/* 	 * Make sure port ranges match up, then add the redirect ports. 	 */
 if|if
 condition|(
 name|numLocalPorts
@@ -3812,7 +3812,7 @@ operator||=
 name|PKT_ALIAS_PROXY_ONLY
 expr_stmt|;
 break|break;
-comment|/*  			 * All the setup_redir_* functions work directly in the final  			 * buffer, see above for details. 			 */
+comment|/* 			 * All the setup_redir_* functions work directly in 			 * the final buffer, see above for details. 			 */
 case|case
 name|TOK_REDIR_ADDR
 case|:
