@@ -325,6 +325,9 @@ literal|"zfree(%p,%ju): wild pointer"
 argument_list|,
 name|ptr
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|bytes
 argument_list|)
 expr_stmt|;
@@ -404,15 +407,20 @@ operator|*
 operator|)
 name|mn
 condition|)
+block|{
 name|panic
 argument_list|(
 literal|"zfree(%p,%ju): corrupt memlist1"
 argument_list|,
 name|ptr
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|bytes
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 		 * merge against next area or create independant area 		 */
 if|if
 condition|(
@@ -595,15 +603,20 @@ name|mn
 operator|->
 name|mr_Bytes
 condition|)
+block|{
 name|panic
 argument_list|(
 literal|"zfree(%p,%ju): corrupt memlist2"
 argument_list|,
 name|ptr
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|bytes
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * We are beyond the last MemNode, append new MemNode.  Merge against 	 * previous area if possible. 	 */
 if|if
