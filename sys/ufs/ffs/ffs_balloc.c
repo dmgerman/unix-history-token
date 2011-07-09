@@ -1089,7 +1089,7 @@ endif|#
 directive|endif
 name|saved_inbdflush
 operator|=
-name|thread_pflags_set
+name|curthread_pflags_set
 argument_list|(
 name|TDP_INBDFLUSH
 argument_list|)
@@ -1185,7 +1185,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|thread_pflags_restore
+name|curthread_pflags_restore
 argument_list|(
 name|saved_inbdflush
 argument_list|)
@@ -1797,7 +1797,7 @@ operator|&
 name|BA_METAONLY
 condition|)
 block|{
-name|thread_pflags_restore
+name|curthread_pflags_restore
 argument_list|(
 name|saved_inbdflush
 argument_list|)
@@ -2094,7 +2094,7 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
-name|thread_pflags_restore
+name|curthread_pflags_restore
 argument_list|(
 name|saved_inbdflush
 argument_list|)
@@ -2252,7 +2252,7 @@ name|nb
 argument_list|)
 expr_stmt|;
 block|}
-name|thread_pflags_restore
+name|curthread_pflags_restore
 argument_list|(
 name|saved_inbdflush
 argument_list|)
@@ -2269,7 +2269,7 @@ operator|)
 return|;
 name|fail
 label|:
-name|thread_pflags_restore
+name|curthread_pflags_restore
 argument_list|(
 name|saved_inbdflush
 argument_list|)
@@ -4334,7 +4334,7 @@ endif|#
 directive|endif
 name|saved_inbdflush
 operator|=
-name|thread_pflags_set
+name|curthread_pflags_set
 argument_list|(
 name|TDP_INBDFLUSH
 argument_list|)
@@ -4430,7 +4430,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|thread_pflags_restore
+name|curthread_pflags_restore
 argument_list|(
 name|saved_inbdflush
 argument_list|)
@@ -5042,7 +5042,7 @@ operator|&
 name|BA_METAONLY
 condition|)
 block|{
-name|thread_pflags_restore
+name|curthread_pflags_restore
 argument_list|(
 name|saved_inbdflush
 argument_list|)
@@ -5339,7 +5339,7 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
-name|thread_pflags_restore
+name|curthread_pflags_restore
 argument_list|(
 name|saved_inbdflush
 argument_list|)
@@ -5498,7 +5498,7 @@ name|nb
 argument_list|)
 expr_stmt|;
 block|}
-name|thread_pflags_restore
+name|curthread_pflags_restore
 argument_list|(
 name|saved_inbdflush
 argument_list|)
@@ -5515,7 +5515,7 @@ operator|)
 return|;
 name|fail
 label|:
-name|thread_pflags_restore
+name|curthread_pflags_restore
 argument_list|(
 name|saved_inbdflush
 argument_list|)

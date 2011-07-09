@@ -5332,7 +5332,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|thread_pflags_set
+name|curthread_pflags_set
 parameter_list|(
 name|int
 name|flags
@@ -5381,7 +5381,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|thread_pflags_restore
+name|curthread_pflags_restore
 parameter_list|(
 name|int
 name|save
