@@ -239,6 +239,9 @@ operator|<
 operator|(
 name|u_int
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|xdrs
 operator|->
 name|x_base
@@ -316,6 +319,9 @@ name|x_base
 operator|=
 operator|(
 name|caddr_t
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|len
 expr_stmt|;

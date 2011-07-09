@@ -1508,6 +1508,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|unsigned
+name|long
+name|xdr_sizeof
+parameter_list|(
+name|xdrproc_t
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_macro
 name|__END_DECLS
 end_macro
