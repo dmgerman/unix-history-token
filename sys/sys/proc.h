@@ -1580,12 +1580,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDP_UNUSED80
+name|TDP_NOFAULTING
 value|0x00000080
 end_define
 
 begin_comment
-comment|/* available. */
+comment|/* Do not handle page faults. */
 end_comment
 
 begin_define
