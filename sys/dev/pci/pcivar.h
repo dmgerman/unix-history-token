@@ -1860,6 +1860,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|device_t
+name|pci_find_class
+parameter_list|(
+name|uint8_t
+name|class
+parameter_list|,
+name|uint8_t
+name|subclass
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Can be used by drivers to manage the MSI-X table. */
 end_comment
