@@ -3742,6 +3742,21 @@ literal|0xffff
 argument_list|,
 name|UQ_AU_VENDOR_CLASS
 argument_list|)
+block|,
+name|USB_QUIRK
+argument_list|(
+name|MEDELI
+argument_list|,
+name|DD305
+argument_list|,
+literal|0x0000
+argument_list|,
+literal|0xffff
+argument_list|,
+name|UQ_SINGLE_CMD_MIDI
+argument_list|,
+name|UQ_MATCH_VENDOR_ONLY
+argument_list|)
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -4134,6 +4149,12 @@ name|UQ_AU_VENDOR_CLASS
 index|]
 operator|=
 literal|"UQ_AU_VENDOR_CLASS"
+block|,
+index|[
+name|UQ_SINGLE_CMD_MIDI
+index|]
+operator|=
+literal|"UQ_SINGLE_CMD_MIDI"
 block|, }
 decl_stmt|;
 end_decl_stmt

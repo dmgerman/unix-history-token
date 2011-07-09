@@ -209,6 +209,9 @@ comment|/* device claims MIDI class, but isn't */
 name|UQ_AU_VENDOR_CLASS
 block|,
 comment|/* audio device uses vendor and not audio class */
+name|UQ_SINGLE_CMD_MIDI
+block|,
+comment|/* at most one command per USB packet */
 name|USB_QUIRK_MAX
 block|}
 enum|;
