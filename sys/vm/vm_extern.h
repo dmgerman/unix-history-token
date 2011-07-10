@@ -462,6 +462,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|vm_mmap_to_errno
+parameter_list|(
+name|int
+name|rv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|vm_set_page_size
 parameter_list|(
