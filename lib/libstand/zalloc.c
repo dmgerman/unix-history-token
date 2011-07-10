@@ -40,7 +40,7 @@ name|MemPool
 modifier|*
 name|mp
 parameter_list|,
-name|iaddr_t
+name|uintptr_t
 name|bytes
 parameter_list|)
 block|{
@@ -252,7 +252,7 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|iaddr_t
+name|uintptr_t
 name|bytes
 parameter_list|)
 block|{
@@ -310,7 +310,7 @@ name|mp_End
 operator|||
 operator|(
 operator|(
-name|iaddr_t
+name|uintptr_t
 operator|)
 name|ptr
 operator|&
@@ -736,7 +736,7 @@ name|void
 modifier|*
 name|base
 parameter_list|,
-name|iaddr_t
+name|uintptr_t
 name|bytes
 parameter_list|)
 block|{

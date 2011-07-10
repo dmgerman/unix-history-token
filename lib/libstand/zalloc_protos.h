@@ -14,7 +14,7 @@ name|MemPool
 modifier|*
 name|mpool
 parameter_list|,
-name|iaddr_t
+name|uintptr_t
 name|bytes
 parameter_list|)
 function_decl|;
@@ -34,7 +34,7 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|iaddr_t
+name|uintptr_t
 name|bytes
 parameter_list|)
 function_decl|;
@@ -53,7 +53,7 @@ name|void
 modifier|*
 name|base
 parameter_list|,
-name|iaddr_t
+name|uintptr_t
 name|bytes
 parameter_list|)
 function_decl|;
