@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -882,6 +888,22 @@ literal|127
 argument_list|)
 expr_stmt|;
 default|default:
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|_waitpid
+argument_list|(
+name|p
+argument_list|,
+name|NULL
+argument_list|,
+name|WNOHANG
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|pid
