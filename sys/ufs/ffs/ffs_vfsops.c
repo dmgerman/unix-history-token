@@ -1265,6 +1265,7 @@ expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
+comment|/* 			 * Drop our write and exclusive access. 			 */
 name|g_access
 argument_list|(
 name|ump
@@ -1276,7 +1277,8 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
-literal|0
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
@@ -1534,17 +1536,7 @@ expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
-comment|/* 			 * If we're the root device, we may not have an E count 			 * yet, get it now. 			 */
-if|if
-condition|(
-name|ump
-operator|->
-name|um_cp
-operator|->
-name|ace
-operator|==
-literal|0
-condition|)
+comment|/* 			 * Request exclusive write access. 			 */
 name|error
 operator|=
 name|g_access
@@ -1558,22 +1550,6 @@ argument_list|,
 literal|1
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-else|else
-name|error
-operator|=
-name|g_access
-argument_list|(
-name|ump
-operator|->
-name|um_cp
-argument_list|,
-literal|0
-argument_list|,
-literal|1
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
@@ -3142,37 +3118,6 @@ name|ronly
 condition|?
 literal|0
 else|:
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* 	 * If we are a root mount, drop the E flag so fsck can do its magic. 	 * We will pick it up again when we remount R/W. 	 */
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-operator|&&
-name|ronly
-operator|&&
-operator|(
-name|mp
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_ROOTFS
-operator|)
-condition|)
-name|error
-operator|=
-name|g_access
-argument_list|(
-name|cp
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-operator|-
 literal|1
 argument_list|)
 expr_stmt|;
