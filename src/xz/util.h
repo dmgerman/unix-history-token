@@ -92,7 +92,7 @@ name|size
 parameter_list|)
 function_decl|lzma_attribute
 parameter_list|(
-function_decl|(malloc
+function_decl|(__malloc__
 end_function_decl
 
 begin_expr_stmt
@@ -121,7 +121,7 @@ name|src
 parameter_list|)
 function_decl|lzma_attribute
 parameter_list|(
-function_decl|(malloc
+function_decl|(__malloc__
 end_function_decl
 
 begin_empty_stmt
@@ -447,9 +447,9 @@ modifier|...
 parameter_list|)
 function_decl|lzma_attribute
 parameter_list|(
-function_decl|(format
+function_decl|(__format__
 parameter_list|(
-name|printf
+name|__printf__
 parameter_list|,
 function_decl|3
 operator|,

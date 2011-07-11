@@ -210,6 +210,17 @@ condition|)
 return|return
 name|LZMA_PROG_ERROR
 return|;
+if|if
+condition|(
+operator|!
+name|lzma_check_is_supported
+argument_list|(
+name|check
+argument_list|)
+condition|)
+return|return
+name|LZMA_UNSUPPORTED_CHECK
+return|;
 comment|// Note for the paranoids: Index encoder prevents the Stream from
 comment|// getting too big and still being accepted with LZMA_OK, and Block
 comment|// encoder catches if the input is too big. So we don't need to
@@ -280,7 +291,7 @@ name|out_pos
 operator|+=
 name|LZMA_STREAM_HEADER_SIZE
 expr_stmt|;
-comment|// Block
+comment|// Encode a Block but only if there is at least one byte of input.
 name|lzma_block
 name|block
 init|=
@@ -301,6 +312,12 @@ operator|=
 name|filters
 block|, 	}
 decl_stmt|;
+if|if
+condition|(
+name|in_size
+operator|>
+literal|0
+condition|)
 name|return_if_error
 argument_list|(
 name|lzma_block_buffer_encode
@@ -325,7 +342,9 @@ argument_list|)
 expr_stmt|;
 comment|// Index
 block|{
-comment|// Create an Index with one Record.
+comment|// Create an Index. It will have one Record if there was
+comment|// at least one byte of input to encode. Otherwise the
+comment|// Index will be empty.
 name|lzma_index
 modifier|*
 name|i
@@ -347,6 +366,16 @@ return|;
 name|lzma_ret
 name|ret
 init|=
+name|LZMA_OK
+decl_stmt|;
+if|if
+condition|(
+name|in_size
+operator|>
+literal|0
+condition|)
+name|ret
+operator|=
 name|lzma_index_append
 argument_list|(
 name|i
@@ -363,7 +392,7 @@ name|block
 operator|.
 name|uncompressed_size
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|// If adding the Record was successful, encode the Index
 comment|// and get its size which will be stored into Stream Footer.
 if|if

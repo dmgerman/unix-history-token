@@ -66,7 +66,7 @@ value|(UINT32_C(1)<< 31)
 end_define
 
 begin_comment
-comment|/**  * \brief       Calculate approximate memory usage of easy encoder  *  * This function is a wrapper for lzma_raw_encoder_memusage().  *  * \param       preset  Compression preset (level and possible flags)  */
+comment|/**  * \brief       Calculate approximate memory usage of easy encoder  *  * This function is a wrapper for lzma_raw_encoder_memusage().  *  * \param       preset  Compression preset (level and possible flags)  *  * \return      Number of bytes of memory required for the given  *              preset when encoding. If an error occurs, for example  *              due to unsupported preset, UINT64_MAX is returned.  */
 end_comment
 
 begin_extern
@@ -88,7 +88,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/**  * \brief       Calculate approximate decoder memory usage of a preset  *  * This function is a wrapper for lzma_raw_decoder_memusage().  *  * \param       preset  Compression preset (level and possible flags)  */
+comment|/**  * \brief       Calculate approximate decoder memory usage of a preset  *  * This function is a wrapper for lzma_raw_decoder_memusage().  *  * \param       preset  Compression preset (level and possible flags)  *  * \return      Number of bytes of memory required to decompress a file  *              that was compressed using the given preset. If an error  *              occurs, for example due to unsupported preset, UINT64_MAX  *              is returned.  */
 end_comment
 
 begin_extern
@@ -136,7 +136,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/**  * \brief       Single-call .xz Stream encoding using a preset number  *  * The maximum required output buffer size can be calculated with  * lzma_stream_buffer_bound().  *  * \param       preset      Compression preset to use. See the description  *                          in lzma_easy_encoder().  * \param       check       Type of the integrity check to calculate from  *                          uncompressed data.  * \param       allocator   lzma_allocator for custom allocator functions.  *                          Set to NULL to use malloc() and free().  * \param       in          Beginning of the input buffer  * \param       in_size     Size of the input buffer  * \param       out         Beginning of the output buffer  * \param       out_pos     The next byte will be written to out[*out_pos].  *                          *out_pos is updated only if encoding succeeds.  * \param       out_size    Size of the out buffer; the first byte into  *                          which no data is written to is out[out_size].  *  * \return      - LZMA_OK: Encoding was successful.  *              - LZMA_BUF_ERROR: Not enough output buffer space.  *              - LZMA_OPTIONS_ERROR  *              - LZMA_MEM_ERROR  *              - LZMA_DATA_ERROR  *              - LZMA_PROG_ERROR  */
+comment|/**  * \brief       Single-call .xz Stream encoding using a preset number  *  * The maximum required output buffer size can be calculated with  * lzma_stream_buffer_bound().  *  * \param       preset      Compression preset to use. See the description  *                          in lzma_easy_encoder().  * \param       check       Type of the integrity check to calculate from  *                          uncompressed data.  * \param       allocator   lzma_allocator for custom allocator functions.  *                          Set to NULL to use malloc() and free().  * \param       in          Beginning of the input buffer  * \param       in_size     Size of the input buffer  * \param       out         Beginning of the output buffer  * \param       out_pos     The next byte will be written to out[*out_pos].  *                          *out_pos is updated only if encoding succeeds.  * \param       out_size    Size of the out buffer; the first byte into  *                          which no data is written to is out[out_size].  *  * \return      - LZMA_OK: Encoding was successful.  *              - LZMA_BUF_ERROR: Not enough output buffer space.  *              - LZMA_UNSUPPORTED_CHECK  *              - LZMA_OPTIONS_ERROR  *              - LZMA_MEM_ERROR  *              - LZMA_DATA_ERROR  *              - LZMA_PROG_ERROR  */
 end_comment
 
 begin_extern
@@ -171,7 +171,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/**  * \brief       Initialize .xz Stream encoder using a custom filter chain  *  * \param       strm    Pointer to properly prepared lzma_stream  * \param       filters Array of filters. This must be terminated with  *                      filters[n].id = LZMA_VLI_UNKNOWN. See filter.h for  *                      more information.  * \param       check   Type of the integrity check to calculate from  *                      uncompressed data.  *  * \return      - LZMA_OK: Initialization was successful.  *              - LZMA_MEM_ERROR  *              - LZMA_OPTIONS_ERROR  *              - LZMA_PROG_ERROR  */
+comment|/**  * \brief       Initialize .xz Stream encoder using a custom filter chain  *  * \param       strm    Pointer to properly prepared lzma_stream  * \param       filters Array of filters. This must be terminated with  *                      filters[n].id = LZMA_VLI_UNKNOWN. See filter.h for  *                      more information.  * \param       check   Type of the integrity check to calculate from  *                      uncompressed data.  *  * \return      - LZMA_OK: Initialization was successful.  *              - LZMA_MEM_ERROR  *              - LZMA_UNSUPPORTED_CHECK  *              - LZMA_OPTIONS_ERROR  *              - LZMA_PROG_ERROR  */
 end_comment
 
 begin_extern
@@ -242,7 +242,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/**  * \brief       Single-call .xz Stream encoder  *  * \param       filters     Array of filters. This must be terminated with  *                          filters[n].id = LZMA_VLI_UNKNOWN. See filter.h  *                          for more information.  * \param       check       Type of the integrity check to calculate from  *                          uncompressed data.  * \param       allocator   lzma_allocator for custom allocator functions.  *                          Set to NULL to use malloc() and free().  * \param       in          Beginning of the input buffer  * \param       in_size     Size of the input buffer  * \param       out         Beginning of the output buffer  * \param       out_pos     The next byte will be written to out[*out_pos].  *                          *out_pos is updated only if encoding succeeds.  * \param       out_size    Size of the out buffer; the first byte into  *                          which no data is written to is out[out_size].  *  * \return      - LZMA_OK: Encoding was successful.  *              - LZMA_BUF_ERROR: Not enough output buffer space.  *              - LZMA_OPTIONS_ERROR  *              - LZMA_MEM_ERROR  *              - LZMA_DATA_ERROR  *              - LZMA_PROG_ERROR  */
+comment|/**  * \brief       Single-call .xz Stream encoder  *  * \param       filters     Array of filters. This must be terminated with  *                          filters[n].id = LZMA_VLI_UNKNOWN. See filter.h  *                          for more information.  * \param       check       Type of the integrity check to calculate from  *                          uncompressed data.  * \param       allocator   lzma_allocator for custom allocator functions.  *                          Set to NULL to use malloc() and free().  * \param       in          Beginning of the input buffer  * \param       in_size     Size of the input buffer  * \param       out         Beginning of the output buffer  * \param       out_pos     The next byte will be written to out[*out_pos].  *                          *out_pos is updated only if encoding succeeds.  * \param       out_size    Size of the out buffer; the first byte into  *                          which no data is written to is out[out_size].  *  * \return      - LZMA_OK: Encoding was successful.  *              - LZMA_BUF_ERROR: Not enough output buffer space.  *              - LZMA_UNSUPPORTED_CHECK  *              - LZMA_OPTIONS_ERROR  *              - LZMA_MEM_ERROR  *              - LZMA_DATA_ERROR  *              - LZMA_PROG_ERROR  */
 end_comment
 
 begin_extern

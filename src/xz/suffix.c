@@ -89,24 +89,6 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|suffix_pair
-block|{
-specifier|const
-name|char
-modifier|*
-name|compressed
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|uncompressed
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_comment
 comment|/// \brief      Test if the char is a directory separator
 end_comment
@@ -341,8 +323,19 @@ parameter_list|)
 block|{
 specifier|static
 specifier|const
-name|struct
-name|suffix_pair
+struct|struct
+block|{
+specifier|const
+name|char
+modifier|*
+name|compressed
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|uncompressed
+decl_stmt|;
+block|}
 name|suffixes
 index|[]
 init|=
@@ -375,7 +368,7 @@ block|,
 comment|// { ".gz",    "" },
 comment|// { ".tgz",   ".tar" },
 block|}
-decl_stmt|;
+struct|;
 specifier|const
 name|char
 modifier|*
@@ -611,8 +604,9 @@ block|{
 comment|// The order of these must match the order in args.h.
 specifier|static
 specifier|const
-name|struct
-name|suffix_pair
+name|char
+modifier|*
+specifier|const
 name|all_suffixes
 index|[]
 index|[
@@ -621,54 +615,26 @@ index|]
 init|=
 block|{
 block|{
-block|{
 literal|".xz"
 block|,
-literal|""
-block|}
-block|,
-block|{
 literal|".txz"
 block|,
-literal|".tar"
-block|}
-block|,
-block|{
-name|NULL
-block|,
 name|NULL
 block|}
-block|}
 block|,
-block|{
 block|{
 literal|".lzma"
 block|,
-literal|""
-block|}
-block|,
-block|{
 literal|".tlz"
 block|,
-literal|".tar"
-block|}
-block|,
-block|{
 name|NULL
-block|,
-name|NULL
-block|}
-comment|/* 		}, { 			{ ".gz",    "" }, 			{ ".tgz",   ".tar" }, 			{ NULL,     NULL } */
+comment|/* 		}, { 			".gz", 			".tgz", 			NULL */
 block|}
 block|,
 block|{
 comment|// --format=raw requires specifying the suffix
 comment|// manually or using stdout.
-block|{
 name|NULL
-block|,
-name|NULL
-block|}
 block|}
 block|}
 decl_stmt|;
@@ -689,10 +655,10 @@ operator|-
 literal|1
 decl_stmt|;
 specifier|const
-name|struct
-name|suffix_pair
+name|char
 modifier|*
 specifier|const
+modifier|*
 name|suffixes
 init|=
 name|all_suffixes
@@ -711,8 +677,6 @@ name|suffixes
 index|[
 name|i
 index|]
-operator|.
-name|compressed
 operator|!=
 name|NULL
 condition|;
@@ -728,8 +692,6 @@ name|suffixes
 index|[
 name|i
 index|]
-operator|.
-name|compressed
 argument_list|,
 name|src_name
 argument_list|,
@@ -753,8 +715,45 @@ name|suffixes
 index|[
 name|i
 index|]
-operator|.
-name|compressed
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+block|}
+if|if
+condition|(
+name|custom_suffix
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|test_suffix
+argument_list|(
+name|custom_suffix
+argument_list|,
+name|src_name
+argument_list|,
+name|src_len
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|message_warning
+argument_list|(
+name|_
+argument_list|(
+literal|"%s: File already has `%s' "
+literal|"suffix, skipping"
+argument_list|)
+argument_list|,
+name|src_name
+argument_list|,
+name|custom_suffix
 argument_list|)
 expr_stmt|;
 return|return
@@ -806,8 +805,6 @@ name|suffixes
 index|[
 literal|0
 index|]
-operator|.
-name|compressed
 decl_stmt|;
 specifier|const
 name|size_t

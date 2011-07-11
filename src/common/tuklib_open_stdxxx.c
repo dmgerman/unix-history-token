@@ -169,11 +169,13 @@ operator|!=
 name|i
 condition|)
 block|{
-comment|// Something went wrong. Exit with the
-comment|// exit status we were given. Don't try
-comment|// to print an error message, since stderr
-comment|// may very well be non-existent. This
-comment|// error should be extremely rare.
+if|if
+condition|(
+name|fd
+operator|!=
+operator|-
+literal|1
+condition|)
 operator|(
 name|void
 operator|)
@@ -182,6 +184,11 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+comment|// Something went wrong. Exit with the
+comment|// exit status we were given. Don't try
+comment|// to print an error message, since stderr
+comment|// may very well be non-existent. This
+comment|// error should be extremely rare.
 name|exit
 argument_list|(
 name|err_status

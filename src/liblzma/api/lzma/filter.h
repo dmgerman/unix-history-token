@@ -127,7 +127,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/**  * \brief       Calculate approximate memory requirements for raw encoder  *  * This function can be used to calculate the memory requirements for  * Block and Stream encoders too because Block and Stream encoders don't  * need significantly more memory than raw encoder.  *  * \param       filters     Array of filters terminated with  *                          .id == LZMA_VLI_UNKNOWN.  *  * \return      Number of bytes of memory required for the given  *              filter chain when encoding.  */
+comment|/**  * \brief       Calculate approximate memory requirements for raw encoder  *  * This function can be used to calculate the memory requirements for  * Block and Stream encoders too because Block and Stream encoders don't  * need significantly more memory than raw encoder.  *  * \param       filters     Array of filters terminated with  *                          .id == LZMA_VLI_UNKNOWN.  *  * \return      Number of bytes of memory required for the given  *              filter chain when encoding. If an error occurs,  *              for example due to unsupported filter chain,  *              UINT64_MAX is returned.  */
 end_comment
 
 begin_extern
@@ -149,7 +149,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/**  * \brief       Calculate approximate memory requirements for raw decoder  *  * This function can be used to calculate the memory requirements for  * Block and Stream decoders too because Block and Stream decoders don't  * need significantly more memory than raw decoder.  *  * \param       filters     Array of filters terminated with  *                          .id == LZMA_VLI_UNKNOWN.  *  * \return      Number of bytes of memory required for the given  *              filter chain when decoding.  */
+comment|/**  * \brief       Calculate approximate memory requirements for raw decoder  *  * This function can be used to calculate the memory requirements for  * Block and Stream decoders too because Block and Stream decoders don't  * need significantly more memory than raw decoder.  *  * \param       filters     Array of filters terminated with  *                          .id == LZMA_VLI_UNKNOWN.  *  * \return      Number of bytes of memory required for the given  *              filter chain when decoding. If an error occurs,  *              for example due to unsupported filter chain,  *              UINT64_MAX is returned.  */
 end_comment
 
 begin_extern
