@@ -163,7 +163,7 @@ name|void
 parameter_list|)
 function_decl|lzma_attribute
 parameter_list|(
-function_decl|(noreturn
+function_decl|(__noreturn__
 end_function_decl
 
 begin_empty_stmt

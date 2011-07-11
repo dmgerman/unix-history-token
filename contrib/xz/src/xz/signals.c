@@ -643,7 +643,7 @@ name|type
 name|lzma_attribute
 argument_list|(
 operator|(
-name|unused
+name|__unused__
 operator|)
 argument_list|)
 argument_list|)

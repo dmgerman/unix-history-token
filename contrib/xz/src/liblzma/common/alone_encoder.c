@@ -105,7 +105,7 @@ name|allocator
 name|lzma_attribute
 argument_list|(
 operator|(
-name|unused
+name|__unused__
 operator|)
 argument_list|)
 argument_list|,
@@ -416,7 +416,7 @@ condition|)
 return|return
 name|LZMA_OPTIONS_ERROR
 return|;
-comment|// Round up to to the next 2^n or 2^n + 2^(n - 1) depending on which
+comment|// Round up to the next 2^n or 2^n + 2^(n - 1) depending on which
 comment|// one is the next unless it is UINT32_MAX. While the header would
 comment|// allow any 32-bit integer, we do this to keep the decoder of liblzma
 comment|// accepting the resulting files.

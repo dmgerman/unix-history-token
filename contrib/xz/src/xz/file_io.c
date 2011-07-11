@@ -240,7 +240,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// Make sure that stdin, stdout, and and stderr are connected to
+comment|// Make sure that stdin, stdout, and stderr are connected to
 comment|// a valid file descriptor. Exit immediately with exit code ERROR
 comment|// if we cannot make the file descriptors valid. Maybe we should
 comment|// print an error message, but our stderr could be screwed anyway.

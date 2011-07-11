@@ -202,7 +202,7 @@ directive|define
 name|hash_2_calc
 parameter_list|()
 define|\
-value|const uint32_t hash_value = *(const uint16_t *)(cur);
+value|const uint32_t hash_value = *(const uint16_t *)(cur)
 end_define
 
 begin_else

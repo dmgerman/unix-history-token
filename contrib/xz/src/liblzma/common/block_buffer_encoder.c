@@ -884,16 +884,10 @@ end_macro
 
 begin_block
 block|{
-comment|// Sanity checks
+comment|// Validate the arguments.
 if|if
 condition|(
 name|block
-operator|==
-name|NULL
-operator|||
-name|block
-operator|->
-name|filters
 operator|==
 name|NULL
 operator|||
@@ -923,7 +917,8 @@ condition|)
 return|return
 name|LZMA_PROG_ERROR
 return|;
-comment|// Check the version field.
+comment|// The contents of the structure may depend on the version so
+comment|// check the version before validating the contents of *block.
 if|if
 condition|(
 name|block
@@ -934,6 +929,42 @@ literal|0
 condition|)
 return|return
 name|LZMA_OPTIONS_ERROR
+return|;
+if|if
+condition|(
+call|(
+name|unsigned
+name|int
+call|)
+argument_list|(
+name|block
+operator|->
+name|check
+argument_list|)
+operator|>
+name|LZMA_CHECK_ID_MAX
+operator|||
+name|block
+operator|->
+name|filters
+operator|==
+name|NULL
+condition|)
+return|return
+name|LZMA_PROG_ERROR
+return|;
+if|if
+condition|(
+operator|!
+name|lzma_check_is_supported
+argument_list|(
+name|block
+operator|->
+name|check
+argument_list|)
+condition|)
+return|return
+name|LZMA_UNSUPPORTED_CHECK
 return|;
 comment|// Size of a Block has to be a multiple of four, so limit the size
 comment|// here already. This way we don't need to check it again when adding
@@ -961,15 +992,13 @@ operator|->
 name|check
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
+name|assert
+argument_list|(
 name|check_size
-operator|==
+operator|!=
 name|UINT32_MAX
-condition|)
-return|return
-name|LZMA_PROG_ERROR
-return|;
+argument_list|)
+expr_stmt|;
 comment|// Reserve space for the Check field.
 if|if
 condition|(

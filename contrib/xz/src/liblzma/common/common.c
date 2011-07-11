@@ -120,8 +120,12 @@ modifier|*
 name|lzma_attribute
 argument_list|(
 operator|(
-name|malloc
+name|__malloc__
 operator|)
+argument_list|)
+name|lzma_attr_alloc_size
+argument_list|(
+literal|1
 argument_list|)
 name|lzma_alloc
 argument_list|(
