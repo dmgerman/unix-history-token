@@ -11262,6 +11262,8 @@ index|]
 operator|.
 name|data_queued
 argument_list|,
+literal|0
+argument_list|,
 literal|"Tx AC3 data queued"
 argument_list|)
 expr_stmt|;
