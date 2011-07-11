@@ -839,7 +839,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"short read wanted %d, got %d"
+literal|"short read wanted %zu, got %zd"
 argument_list|,
 name|nwant
 argument_list|,
