@@ -11006,12 +11006,19 @@ condition|)
 block|{
 return|return;
 block|}
+comment|/* 	 * Nothing to delay if TRIM is disabled, or the operation is 	 * performed on the snapshot. 	 */
 if|if
 condition|(
 operator|!
 name|ump
 operator|->
 name|um_candelete
+operator|||
+name|devvp
+operator|->
+name|v_type
+operator|==
+name|VREG
 condition|)
 block|{
 name|ffs_blkfree_cg
