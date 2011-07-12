@@ -3573,6 +3573,14 @@ name|pp
 operator|->
 name|ki_pctcpu
 expr_stmt|;
+name|prev_pp
+operator|->
+name|ki_runtime
+operator|+=
+name|pp
+operator|->
+name|ki_runtime
+expr_stmt|;
 block|}
 block|}
 comment|/* if requested, sort the "interesting" processes */
