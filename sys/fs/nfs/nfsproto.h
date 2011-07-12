@@ -3677,7 +3677,7 @@ define|#
 directive|define
 name|NFSATTRBIT_WRITEGETATTR0
 define|\
-value|(NFSATTRBM_CHANGE |						\  	NFSATTRBM_SIZE |						\  	NFSATTRBM_FSID)
+value|(NFSATTRBM_SUPPORTEDATTRS |					\  	NFSATTRBM_TYPE |						\  	NFSATTRBM_CHANGE |						\  	NFSATTRBM_SIZE |						\  	NFSATTRBM_FSID |						\  	NFSATTRBM_FILEID |						\  	NFSATTRBM_MAXREAD)
 end_define
 
 begin_comment
@@ -3689,7 +3689,7 @@ define|#
 directive|define
 name|NFSATTRBIT_WRITEGETATTR1
 define|\
-value|(NFSATTRBM_TIMEMETADATA |					\  	NFSATTRBM_TIMEMODIFY)
+value|(NFSATTRBM_MODE |						\  	NFSATTRBM_NUMLINKS |						\  	NFSATTRBM_RAWDEV |						\  	NFSATTRBM_SPACEUSED |						\  	NFSATTRBM_TIMEACCESS |						\  	NFSATTRBM_TIMEMETADATA |					\  	NFSATTRBM_TIMEMODIFY)
 end_define
 
 begin_comment
