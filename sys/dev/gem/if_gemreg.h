@@ -20,7 +20,7 @@ comment|/* register definitions for Apple GMAC, Sun ERI and Sun GEM */
 end_comment
 
 begin_comment
-comment|/*  * First bank: this registers live at the start of the PCI  * mapping, and at the start of the second bank of the SBus  * version.  */
+comment|/*  * First bank: these registers live at the start of the PCI  * mapping, and at the start of the second bank of the SBus  * version.  */
 end_comment
 
 begin_define
@@ -352,7 +352,7 @@ value|"\177\020"					\ 			"b\0INTME\0b\1TXEMPTY\0b\2TXDONE\0"		\ 			"b\4RXDONE\0
 end_define
 
 begin_comment
-comment|/*  * Second bank: this registers live at offset 0x1000 of the PCI  * mapping, and at the start of the first bank of the SBus  * version.  */
+comment|/*  * Second bank: these registers live at offset 0x1000 of the PCI  * mapping, and at the start of the first bank of the SBus  * version.  */
 end_comment
 
 begin_define
@@ -732,6 +732,24 @@ end_define
 begin_comment
 comment|/* Force PCI RSTOUT#. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_RESET_CLSZ_MASK
+value|0x00ff0000
+end_define
+
+begin_comment
+comment|/* ERI cache line size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_RESET_CLSZ_SHFT
+value|16
+end_define
 
 begin_comment
 comment|/* The rest of the registers live in the first bank again. */
@@ -3664,6 +3682,24 @@ value|0
 end_define
 
 begin_comment
+comment|/* Miscellaneous */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_ERI_CACHE_LINE_SIZE
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEM_ERI_LATENCY_TIMER
+value|64
+end_define
+
+begin_comment
 comment|/*  * descriptor table structures  */
 end_comment
 
@@ -3682,7 +3718,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Transmit flags */
+comment|/*  * Transmit flags  * GEM_TD_CXSUM_ENABLE, GEM_TD_CXSUM_START, GEM_TD_CXSUM_STUFF and  * GEM_TD_INTERRUPT_ME only need to be set in the first descriptor of a group.  */
 end_comment
 
 begin_define
@@ -3773,10 +3809,6 @@ end_define
 
 begin_comment
 comment|/* do not insert crc */
-end_comment
-
-begin_comment
-comment|/*  * Only need to set GEM_TD_CXSUM_ENABLE, GEM_TD_CXSUM_STUFF,  * GEM_TD_CXSUM_START, and GEM_TD_INTERRUPT_ME in 1st descriptor of a group.  */
 end_comment
 
 begin_comment
