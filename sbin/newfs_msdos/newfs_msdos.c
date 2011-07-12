@@ -4326,7 +4326,7 @@ argument_list|,
 operator|&
 name|si_sa
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 operator|==
 operator|-
