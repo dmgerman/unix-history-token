@@ -424,10 +424,6 @@ name|struct
 name|addrinfo
 name|hints
 decl_stmt|;
-comment|/* Start disks transferring immediately. */
-name|sync
-argument_list|()
-expr_stmt|;
 name|all
 operator|=
 name|errs
@@ -548,6 +544,20 @@ expr_stmt|;
 name|argv
 operator|+=
 name|optind
+expr_stmt|;
+comment|/* Start disks transferring immediately. */
+if|if
+condition|(
+operator|(
+name|fflag
+operator|&
+name|MNT_FORCE
+operator|)
+operator|==
+literal|0
+condition|)
+name|sync
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
