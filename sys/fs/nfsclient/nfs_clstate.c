@@ -3818,6 +3818,16 @@ literal|0
 operator|&&
 operator|!
 name|igotlock
+operator|&&
+operator|(
+name|mp
+operator|->
+name|mnt_kern_flag
+operator|&
+name|MNTK_UNMOUNTF
+operator|)
+operator|==
+literal|0
 condition|)
 name|igotlock
 operator|=
