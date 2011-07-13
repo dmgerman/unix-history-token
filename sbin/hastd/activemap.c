@@ -955,7 +955,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|bool
 name|keepdirty_add
 parameter_list|(
 name|struct
@@ -1013,7 +1013,11 @@ argument_list|,
 name|kd_next
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|false
+operator|)
+return|;
 block|}
 comment|/* 	 * Add new element, but first remove the most unused one if 	 * we have too many. 	 */
 if|if
@@ -1122,6 +1126,11 @@ name|kd_next
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|true
+operator|)
+return|;
 block|}
 end_function
 
@@ -1418,17 +1427,19 @@ operator|->
 name|am_ndirty
 operator|++
 expr_stmt|;
-name|modified
-operator|=
-name|true
-expr_stmt|;
 block|}
+if|if
+condition|(
 name|keepdirty_add
 argument_list|(
 name|amp
 argument_list|,
 name|ext
 argument_list|)
+condition|)
+name|modified
+operator|=
+name|true
 expr_stmt|;
 block|}
 return|return
@@ -1572,6 +1583,17 @@ operator|->
 name|am_ndirty
 operator|--
 expr_stmt|;
+if|if
+condition|(
+name|keepdirty_find
+argument_list|(
+name|amp
+argument_list|,
+name|ext
+argument_list|)
+operator|==
+name|NULL
+condition|)
 name|modified
 operator|=
 name|true
