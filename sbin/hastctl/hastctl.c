@@ -1980,9 +1980,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|,
 literal|"Invalid extentsize"
 argument_list|)
@@ -2003,9 +2003,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|,
 literal|"Invalid keepdirty"
 argument_list|)
@@ -2026,9 +2026,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|,
 literal|"Invalid mediasize"
 argument_list|)
