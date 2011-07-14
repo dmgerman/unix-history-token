@@ -2335,15 +2335,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tsemmap: %12d\t(# of entries in semaphore map)\n"
-argument_list|,
-name|seminfo
-operator|.
-name|semmap
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"\tsemmni: %12d\t(# of semaphore identifiers)\n"
 argument_list|,
 name|seminfo

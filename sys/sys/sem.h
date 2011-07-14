@@ -478,9 +478,6 @@ struct|struct
 name|seminfo
 block|{
 name|int
-name|semmap
-decl_stmt|,
-comment|/* # of entries in semaphore map */
 name|semmni
 decl_stmt|,
 comment|/* # of semaphore identifiers */

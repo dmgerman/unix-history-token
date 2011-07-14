@@ -220,7 +220,7 @@ begin_define
 define|#
 directive|define
 name|SEMINFO_XVEC
-value|X(semmap, sizeof(int))				\ 			X(semmni, sizeof(int))				\ 			X(semmns, sizeof(int))				\ 			X(semmnu, sizeof(int))				\ 			X(semmsl, sizeof(int))				\ 			X(semopm, sizeof(int))				\ 			X(semume, sizeof(int))				\ 			X(semusz, sizeof(int))				\ 			X(semvmx, sizeof(int))				\ 			X(semaem, sizeof(int))
+value|X(semmni, sizeof(int))				\ 			X(semmns, sizeof(int))				\ 			X(semmnu, sizeof(int))				\ 			X(semmsl, sizeof(int))				\ 			X(semopm, sizeof(int))				\ 			X(semume, sizeof(int))				\ 			X(semusz, sizeof(int))				\ 			X(semvmx, sizeof(int))				\ 			X(semaem, sizeof(int))
 end_define
 
 begin_define

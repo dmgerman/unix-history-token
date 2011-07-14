@@ -2778,12 +2778,30 @@ name|seminfo
 argument_list|,
 operator|&
 name|linux_seminfo
+operator|.
+name|semmni
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|linux_seminfo
 argument_list|)
+operator|-
+sizeof|sizeof
+argument_list|(
+name|linux_seminfo
+operator|.
+name|semmap
 argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Linux does not use the semmap field either but populates it 		 * with the defined value from SEMMAP, which really is redefined 		 * to SEMMNS, which they define as SEMMNI * SEMMSL. 		 * Try to simulate this returning our dynamic semmns value. 		 */
+name|linux_seminfo
+operator|.
+name|semmap
+operator|=
+name|linux_seminfo
+operator|.
+name|semmns
 expr_stmt|;
 comment|/* XXX BSD equivalent? #define used_semids 10 #define used_sems 10 		linux_seminfo.semusz = used_semids; 		linux_seminfo.semaem = used_sems; */
 name|error
