@@ -898,6 +898,11 @@ directive|define
 name|CpuPadLock
 value|0x10000
 comment|/* VIA PadLock required */
+define|#
+directive|define
+name|CpuSSSE3
+value|0x80000
+comment|/* Supplemental Streaming SIMD extensions 3 required */
 comment|/* These flags are set by gas depending on the flag_code.  */
 define|#
 directive|define
@@ -913,7 +918,7 @@ comment|/* The default value for unknown CPUs - enable all features to avoid pro
 define|#
 directive|define
 name|CpuUnknownFlags
-value|(Cpu086|Cpu186|Cpu286|Cpu386|Cpu486|Cpu586|Cpu686|CpuP4|CpuSledgehammer|CpuMMX|CpuSSE|CpuSSE2|CpuPNI|Cpu3dnow|CpuK6|CpuAthlon|CpuPadLock)
+value|(Cpu086|Cpu186|Cpu286|Cpu386|Cpu486|Cpu586|Cpu686|CpuP4|CpuSledgehammer|CpuMMX|CpuSSE|CpuSSE2|CpuPNI|Cpu3dnow|CpuK6|CpuAthlon|CpuPadLock|CpuSSSE3)
 comment|/* the bits in opcode_modifier are used to generate the final opcode from      the base_opcode.  These bits also are used to detect alternate forms of      the same instruction */
 name|unsigned
 name|int
