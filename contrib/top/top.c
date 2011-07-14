@@ -3692,7 +3692,7 @@ name|MT_standout
 operator||
 name|MT_delayed
 argument_list|,
-literal|"Displaying threads %s"
+literal|" Displaying threads %s"
 argument_list|,
 name|ps
 operator|.
@@ -3737,7 +3737,7 @@ name|MT_standout
 operator||
 name|MT_delayed
 argument_list|,
-literal|"Displaying %sCPU"
+literal|" Displaying %sCPU"
 argument_list|,
 name|ps
 operator|.
