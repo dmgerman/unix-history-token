@@ -745,6 +745,16 @@ index|[
 name|BPF_MEMWORDS
 index|]
 decl_stmt|;
+name|bzero
+argument_list|(
+name|mem
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|mem
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pc
