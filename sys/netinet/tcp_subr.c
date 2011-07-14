@@ -1576,12 +1576,17 @@ condition|(
 name|tcp_soreceive_stream
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 name|tcp_usrreqs
 operator|.
 name|pru_soreceive
 operator|=
 name|soreceive_stream
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
