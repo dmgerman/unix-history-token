@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: formbox.c,v 1.71 2010/02/24 10:45:57 Samuel.Martin.Moro Exp $  *  *  formbox.c -- implements the form (i.e, some pairs label/editbox)  *  *  Copyright 2003-2009,2010	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  This is adapted from source contributed by  *	Valery Reznic (valery_reznic@users.sourceforge.net)  */
+comment|/*  *  $Id: formbox.c,v 1.73 2011/06/29 09:48:08 tom Exp $  *  *  formbox.c -- implements the form (i.e, some pairs label/editbox)  *  *  Copyright 2003-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  This is adapted from source contributed by  *	Valery Reznic (valery_reznic@users.sourceforge.net)  */
 end_comment
 
 begin_include
@@ -2070,6 +2070,8 @@ name|binding
 index|[]
 init|=
 block|{
+name|HELPKEY_BINDINGS
+block|,
 name|ENTERKEY_BINDINGS
 block|,
 name|NAVIGATE_BINDINGS
@@ -2084,6 +2086,8 @@ index|[]
 init|=
 block|{
 name|INPUTSTR_BINDINGS
+block|,
+name|HELPKEY_BINDINGS
 block|,
 name|ENTERKEY_BINDINGS
 block|,
@@ -3052,7 +3056,7 @@ operator|>=
 literal|0
 operator|)
 condition|?
-name|dlg_ok_buttoncode
+name|dlg_enter_buttoncode
 argument_list|(
 name|state
 argument_list|)

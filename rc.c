@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: rc.c,v 1.45 2010/01/18 10:28:16 tom Exp $  *  *  rc.c -- routines for processing the configuration file  *  *  Copyright 2000-2008,2010	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors  *	Savio Lam (lam836@cs.cuhk.hk)  */
+comment|/*  *  $Id: rc.c,v 1.47 2011/06/20 22:30:04 tom Exp $  *  *  rc.c -- routines for processing the configuration file  *  *  Copyright 2000-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors  *	Savio Lam (lam836@cs.cuhk.hk)  */
 end_comment
 
 begin_include
@@ -1810,16 +1810,11 @@ block|}
 endif|#
 directive|endif
 comment|/* HAVE_COLOR */
-if|#
-directive|if
-literal|1
 name|dlg_dump_keys
 argument_list|(
 name|rc_file
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 operator|(
 name|void
 operator|)
@@ -1884,15 +1879,10 @@ name|rc_file
 init|=
 literal|0
 decl_stmt|;
-if|#
-directive|if
-literal|1
 name|char
 modifier|*
 name|params
 decl_stmt|;
-endif|#
-directive|endif
 comment|/*      *  At startup, dialog determines the settings to use as follows:      *      *  a) if the environment variable $DIALOGRC is set, its value determines      *     the name of the configuration file.      *      *  b) if the file in (a) can't be found, use the file $HOME/.dialogrc      *     as the configuration file.      *      *  c) if the file in (b) can't be found, try using the GLOBALRC file.      *     Usually this will be /etc/dialogrc.      *      *  d) if the file in (c) cannot be found, use the compiled-in defaults.      */
 comment|/* try step (a) */
 if|if
@@ -1999,6 +1989,8 @@ name|rc_file
 operator|=
 name|fopen
 argument_list|(
+name|tempptr
+operator|=
 name|str
 argument_list|,
 literal|"rt"
@@ -2029,6 +2021,8 @@ name|rc_file
 operator|=
 name|fopen
 argument_list|(
+name|tempptr
+operator|=
 name|str
 argument_list|,
 literal|"rt"
@@ -2042,6 +2036,15 @@ literal|0
 return|;
 comment|/* step (c) failed, use default values */
 block|}
+name|DLG_TRACE
+argument_list|(
+operator|(
+literal|"opened rc file \"%s\"\n"
+operator|,
+name|tempptr
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Scan each line and set variables */
 while|while
 condition|(
@@ -2065,11 +2068,13 @@ name|NULL
 operator|)
 condition|)
 block|{
-name|dlg_trace_msg
+name|DLG_TRACE
 argument_list|(
-literal|"rc:%s\n"
-argument_list|,
+operator|(
+literal|"rc:%s"
+operator|,
 name|str
+operator|)
 argument_list|)
 expr_stmt|;
 if|if

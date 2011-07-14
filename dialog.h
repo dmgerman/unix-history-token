@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: dialog.h,v 1.223 2011/03/02 10:04:09 tom Exp $  *  *  dialog.h -- common declarations for all dialog modules  *  *  Copyright 2000-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors  *	Savio Lam (lam836@cs.cuhk.hk)  */
+comment|/*  *  $Id: dialog.h,v 1.231 2011/06/29 09:51:00 tom Exp $  *  *  dialog.h -- common declarations for all dialog modules  *  *  Copyright 2000-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors  *	Savio Lam (lam836@cs.cuhk.hk)  */
 end_comment
 
 begin_ifndef
@@ -109,15 +109,35 @@ begin_comment
 comment|/* sqrt() */
 end_comment
 
+begin_comment
+comment|/* header conflict with Solaris xpg4 versus<sys/regset.h> */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ERR
+argument_list|)
+operator|&&
+operator|(
+name|ERR
+operator|==
+literal|13
+operator|)
+end_if
+
 begin_undef
 undef|#
 directive|undef
 name|ERR
 end_undef
 
-begin_comment
-comment|/* header conflict with Solaris xpg4 */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -608,6 +628,13 @@ end_define
 begin_comment
 comment|/* CTRL is preferred, but conflicts */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CHR_HELP
+value|DLG_CTRL('E')
+end_define
 
 begin_define
 define|#
@@ -2287,6 +2314,25 @@ modifier|*
 name|time_format
 decl_stmt|;
 comment|/* option "--time-format" */
+comment|/* 1.1-20110629 */
+name|char
+modifier|*
+name|help_line
+decl_stmt|;
+comment|/* option "--hline" */
+name|char
+modifier|*
+name|help_file
+decl_stmt|;
+comment|/* option "--hfile" */
+name|bool
+name|in_helpfile
+decl_stmt|;
+comment|/* flag to prevent recursion in --hfile */
+name|bool
+name|no_nl_expand
+decl_stmt|;
+comment|/* option "--no-nl-expand" */
 block|}
 name|DIALOG_VARS
 typedef|;
@@ -2612,6 +2658,27 @@ comment|/*width*/
 parameter_list|,
 name|int
 comment|/*percent*/
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|dialog_helpfile
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+comment|/*title*/
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/*file*/
+parameter_list|,
+name|int
+comment|/*height*/
+parameter_list|,
+name|int
+comment|/*width*/
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -3287,6 +3354,18 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
+name|dlg_draw_helpline
+parameter_list|(
+name|WINDOW
+modifier|*
+comment|/*dialog*/
+parameter_list|,
+name|bool
+comment|/*decorations*/
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
 name|dlg_draw_scrollbar
 parameter_list|(
 name|WINDOW
@@ -3667,6 +3746,53 @@ parameter_list|(
 name|DIALOG_FORMITEM
 modifier|*
 comment|/*items*/
+parameter_list|)
+function_decl|;
+comment|/* guage.c */
+specifier|extern
+name|void
+modifier|*
+name|dlg_allocate_gauge
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+comment|/* title */
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/* cprompt */
+parameter_list|,
+name|int
+comment|/* height */
+parameter_list|,
+name|int
+comment|/* width */
+parameter_list|,
+name|int
+comment|/* percent */
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|dlg_free_gauge
+parameter_list|(
+name|void
+modifier|*
+comment|/* objptr */
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|dlg_update_gauge
+parameter_list|(
+name|void
+modifier|*
+comment|/* objptr */
+parameter_list|,
+name|int
+comment|/* percent */
 parameter_list|)
 function_decl|;
 comment|/* inputstr.c */
@@ -4884,6 +5010,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Normally "enter" means "ok".  Use this macro to handle the explicit  * check for DLGK_ENTER:  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|dlg_enter_buttoncode
+parameter_list|(
+name|code
+parameter_list|)
+value|(dialog_vars.nook ? DLG_EXIT_OK : dlg_ok_buttoncode(code))
+end_define
 
 begin_comment
 comment|/*  * The following stuff is needed for mouse support  */

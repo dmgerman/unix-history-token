@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: textbox.c,v 1.99 2011/01/16 22:20:34 tom Exp $  *  *  textbox.c -- implements the text box  *  *  Copyright 2000-2010,2011	Thomas E.  Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors:  *	Savio Lam (lam836@cs.cuhk.hk)  */
+comment|/*  *  $Id: textbox.c,v 1.101 2011/06/29 09:53:03 tom Exp $  *  *  textbox.c -- implements the text box  *  *  Copyright 2000-2010,2011	Thomas E.  Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors:  *	Savio Lam (lam836@cs.cuhk.hk)  */
 end_comment
 
 begin_include
@@ -2071,6 +2071,8 @@ init|=
 block|{
 name|INPUTSTR_BINDINGS
 block|,
+name|HELPKEY_BINDINGS
+block|,
 name|ENTERKEY_BINDINGS
 block|,
 name|END_KEYS_BINDING
@@ -2969,6 +2971,8 @@ name|binding
 index|[]
 init|=
 block|{
+name|HELPKEY_BINDINGS
+block|,
 name|ENTERKEY_BINDINGS
 block|,
 name|DLG_KEYS_DATA
@@ -4042,6 +4046,17 @@ break|break;
 case|case
 name|DLGK_ENTER
 case|:
+if|if
+condition|(
+name|dialog_vars
+operator|.
+name|nook
+condition|)
+name|result
+operator|=
+name|DLG_EXIT_OK
+expr_stmt|;
+else|else
 name|result
 operator|=
 name|dlg_exit_buttoncode
