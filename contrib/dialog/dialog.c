@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: dialog.c,v 1.186 2011/03/02 09:58:29 tom Exp $  *  *  cdialog - Display simple dialog boxes from shell scripts  *  *  Copyright 2000-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors  *	Savio Lam (lam836@cs.cuhk.hk)  */
+comment|/*  * $Id: dialog.c,v 1.193 2011/06/29 09:10:56 tom Exp $  *  *  cdialog - Display simple dialog boxes from shell scripts  *  *  Copyright 2000-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors  *	Savio Lam (lam836@cs.cuhk.hk)  */
 end_comment
 
 begin_include
@@ -142,7 +142,11 @@ name|o_help
 block|,
 name|o_help_button
 block|,
+name|o_help_file
+block|,
 name|o_help_label
+block|,
+name|o_help_line
 block|,
 name|o_help_status
 block|,
@@ -191,6 +195,8 @@ block|,
 name|o_no_lines
 block|,
 name|o_no_mouse
+block|,
+name|o_no_nl_expand
 block|,
 name|o_no_shadow
 block|,
@@ -273,6 +279,8 @@ block|,
 name|o_trim
 block|,
 name|o_under_mouse
+block|,
+name|o_version
 block|,
 name|o_visit_items
 block|,
@@ -759,6 +767,26 @@ literal|""
 block|}
 block|,
 block|{
+literal|"hfile"
+block|,
+name|o_help_file
+block|,
+literal|1
+block|,
+literal|"<str>"
+block|}
+block|,
+block|{
+literal|"hline"
+block|,
+name|o_help_line
+block|,
+literal|1
+block|,
+literal|"<str>"
+block|}
+block|,
+block|{
 literal|"icon"
 block|,
 name|o_icon
@@ -992,6 +1020,16 @@ block|{
 literal|"no-mouse"
 block|,
 name|o_no_mouse
+block|,
+literal|1
+block|,
+literal|""
+block|}
+block|,
+block|{
+literal|"no-nl-expand"
+block|,
+name|o_no_nl_expand
 block|,
 literal|1
 block|,
@@ -1423,7 +1461,7 @@ block|,
 block|{
 literal|"version"
 block|,
-name|o_print_version
+name|o_version
 block|,
 literal|5
 block|,
@@ -4404,6 +4442,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_DLG_GAUGE
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -4492,6 +4536,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -5534,6 +5583,33 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Print program's version.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|PrintVersion
+parameter_list|(
+name|FILE
+modifier|*
+name|fp
+parameter_list|)
+block|{
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"Version: %s\n"
+argument_list|,
+name|dialog_version
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Print program help-message  */
 end_comment
 
@@ -5628,6 +5704,15 @@ modifier|*
 modifier|*
 name|opts
 decl_stmt|;
+name|end_dialog
+argument_list|()
+expr_stmt|;
+name|dialog_state
+operator|.
+name|output
+operator|=
+name|stdout
+expr_stmt|;
 name|opts
 operator|=
 name|dlg_calloc
@@ -6070,6 +6155,16 @@ name|TRUE
 expr_stmt|;
 break|break;
 case|case
+name|o_no_nl_expand
+case|:
+name|dialog_vars
+operator|.
+name|no_nl_expand
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
 name|o_no_collapse
 case|:
 name|dialog_vars
@@ -6226,6 +6321,38 @@ name|TRUE
 expr_stmt|;
 break|break;
 case|case
+name|o_help_line
+case|:
+name|dialog_vars
+operator|.
+name|help_line
+operator|=
+name|optionString
+argument_list|(
+name|argv
+argument_list|,
+operator|&
+name|offset
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|o_help_file
+case|:
+name|dialog_vars
+operator|.
+name|help_file
+operator|=
+name|optionString
+argument_list|(
+name|argv
+argument_list|,
+operator|&
+name|offset
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|o_help_button
 case|:
 name|dialog_vars
@@ -6352,14 +6479,11 @@ condition|(
 name|output
 condition|)
 block|{
-name|fprintf
+name|PrintVersion
 argument_list|(
-name|stdout
-argument_list|,
-literal|"Version: %s\n"
-argument_list|,
-name|dialog_version
-argument_list|()
+name|dialog_state
+operator|.
+name|output
 argument_list|)
 expr_stmt|;
 block|}
@@ -6747,6 +6871,9 @@ operator|.
 name|no_mouse
 operator|=
 name|TRUE
+expr_stmt|;
+name|mouse_close
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
@@ -7205,7 +7332,7 @@ name|input
 operator|=
 name|stdin
 expr_stmt|;
-comment|/*      * Look for the last --stdout, --stderr or --output-fd option, and use      * that.  We can only write to one of them.  If --stdout is used, that      * can interfere with initializing the curses library, so we want to      * know explicitly if it is used.      */
+comment|/*      * Look for the last --stdout, --stderr or --output-fd option, and use      * that.  We can only write to one of them.  If --stdout is used, that      * can interfere with initializing the curses library, so we want to      * know explicitly if it is used.      *      * Also, look for any --version or --help message, processing those      * immediately.      */
 while|while
 condition|(
 name|offset
@@ -7339,6 +7466,35 @@ operator|=
 name|TRUE
 expr_stmt|;
 break|break;
+case|case
+name|o_version
+case|:
+name|dialog_state
+operator|.
+name|output
+operator|=
+name|stdout
+expr_stmt|;
+name|PrintVersion
+argument_list|(
+name|dialog_state
+operator|.
+name|output
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|DLG_EXIT_OK
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|o_help
+case|:
+name|Help
+argument_list|()
+expr_stmt|;
+break|break;
 default|default:
 operator|++
 name|offset
@@ -7426,6 +7582,7 @@ argument_list|(
 name|my_buffer
 argument_list|)
 expr_stmt|;
+comment|/*      * Dialog's output may be redirected (see above).  Handle the special      * case of options that only report information without interaction.      */
 if|if
 condition|(
 name|argc
@@ -7433,7 +7590,6 @@ operator|==
 literal|2
 condition|)
 block|{
-comment|/* if we don't want clear screen */
 switch|switch
 condition|(
 name|lookupOption
@@ -7483,14 +7639,11 @@ break|break;
 case|case
 name|o_print_version
 case|:
-name|fprintf
+name|PrintVersion
 argument_list|(
-name|stdout
-argument_list|,
-literal|"Version: %s\n"
-argument_list|,
-name|dialog_version
-argument_list|()
+name|dialog_state
+operator|.
+name|output
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7512,15 +7665,6 @@ name|o_ignore
 case|:
 break|break;
 default|default:
-case|case
-name|o_help
-case|:
-name|dialog_state
-operator|.
-name|output
-operator|=
-name|stdout
-expr_stmt|;
 name|Help
 argument_list|()
 expr_stmt|;
@@ -7935,6 +8079,12 @@ name|o_title
 case|:
 case|case
 name|o_backtitle
+case|:
+case|case
+name|o_help_line
+case|:
+case|case
+name|o_help_file
 case|:
 break|break;
 default|default:

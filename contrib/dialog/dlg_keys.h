@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: dlg_keys.h,v 1.24 2010/01/19 00:57:36 tom Exp $  *  * dlg_keys.h -- runtime binding support for dialog  *  * Copyright 2005-2007,2010 Thomas E.  Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
+comment|/*  *  $Id: dlg_keys.h,v 1.26 2011/06/21 22:09:22 tom Exp $  *  *  dlg_keys.h -- runtime binding support for dialog  *  *  Copyright 2005-2010,2011 Thomas E.  Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
 end_comment
 
 begin_ifndef
@@ -197,6 +197,8 @@ name|DLGK_FINAL
 block|,
 name|DLGK_SELECT
 block|,
+name|DLGK_HELPFILE
+block|,
 name|DLGK_TRACE
 block|}
 name|DLG_KEYS_ENUM
@@ -215,6 +217,11 @@ parameter_list|(
 name|code
 parameter_list|)
 value|((code) + M_EVENT)
+define|#
+directive|define
+name|HELPKEY_BINDINGS
+define|\
+value|DLG_KEYS_DATA( DLGK_HELPFILE,	   CHR_HELP ), \ 	DLG_KEYS_DATA( DLGK_HELPFILE,	   KEY_F(1) ), \ 	DLG_KEYS_DATA( DLGK_HELPFILE,	   KEY_HELP )
 define|#
 directive|define
 name|ENTERKEY_BINDINGS
