@@ -347,6 +347,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MFI_FWSTATE_BOOT_MESSAGE_PENDING
+value|0x90000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|MFI_FWSTATE_FLUSH_CACHE
 value|0xa0000000
 end_define
@@ -433,6 +440,13 @@ end_define
 begin_comment
 comment|/* Respond to WAIT_HANDSHAKE */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MFI_FWINIT_HOTPLUG
+value|0x00000010
+end_define
 
 begin_comment
 comment|/* MFI Commands */
