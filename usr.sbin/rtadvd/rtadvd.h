@@ -8,8 +8,21 @@ comment|/*	$KAME: rtadvd.h,v 1.26 2003/08/05 12:34:23 itojun Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 1998 WIDE Project.  * Copyright (C) 2011 Hiroki Sato<hrs@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ELM_MALLOC
+parameter_list|(
+name|p
+parameter_list|,
+name|error_action
+parameter_list|)
+define|\
+value|do {								\ 		p = malloc(sizeof(*p));					\ 		if (p == NULL) {					\ 			syslog(LOG_ERR, "<%s> malloc failed: %s",	\ 			    __func__, strerror(errno));			\ 			error_action;					\ 		}							\ 		memset(p, 0, sizeof(*p));				\ 	} while(0)
+end_define
 
 begin_define
 define|#
@@ -543,8 +556,10 @@ name|int
 name|rai_waiting
 decl_stmt|;
 comment|/* interface information */
-name|int
-name|rai_ifindex
+name|struct
+name|ifinfo
+modifier|*
+name|rai_ifinfo
 decl_stmt|;
 name|int
 name|rai_advlinkopt
@@ -554,21 +569,6 @@ name|int
 name|rai_advifprefix
 decl_stmt|;
 comment|/* bool: gather IF prefixes? */
-name|struct
-name|sockaddr_dl
-modifier|*
-name|rai_sdl
-decl_stmt|;
-name|char
-name|rai_ifname
-index|[
-name|IFNAMSIZ
-index|]
-decl_stmt|;
-name|u_int32_t
-name|rai_phymtu
-decl_stmt|;
-comment|/* mtu of the physical interface */
 comment|/* Router configuration variables */
 name|u_short
 name|rai_lifetime
@@ -667,23 +667,6 @@ name|u_char
 modifier|*
 name|rai_ra_data
 decl_stmt|;
-comment|/* statistics */
-name|u_quad_t
-name|rai_raoutput
-decl_stmt|;
-comment|/* # of RAs sent */
-name|u_quad_t
-name|rai_rainput
-decl_stmt|;
-comment|/* # of RAs received */
-name|u_quad_t
-name|rai_rainconsistent
-decl_stmt|;
-comment|/* # of RAs inconsistent with ours */
-name|u_quad_t
-name|rai_rsinput
-decl_stmt|;
-comment|/* # of RSs received */
 comment|/* info about soliciter */
 name|TAILQ_HEAD
 argument_list|(
@@ -698,7 +681,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Interface list including RA information */
+comment|/* RA information list */
 end_comment
 
 begin_extern
@@ -712,6 +695,111 @@ unit|)
 name|railist
 expr_stmt|;
 end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|IFI_STATE_UNCONFIGURED
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFI_STATE_CONFIGURED
+value|1
+end_define
+
+begin_struct
+struct|struct
+name|ifinfo
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|ifinfo
+argument_list|)
+name|ifi_next
+expr_stmt|;
+name|u_int16_t
+name|ifi_state
+decl_stmt|;
+name|u_int16_t
+name|ifi_persist
+decl_stmt|;
+name|u_int16_t
+name|ifi_ifindex
+decl_stmt|;
+name|char
+name|ifi_ifname
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+name|u_int8_t
+name|ifi_type
+decl_stmt|;
+name|u_int16_t
+name|ifi_flags
+decl_stmt|;
+name|u_int32_t
+name|ifi_nd_flags
+decl_stmt|;
+name|u_int32_t
+name|ifi_phymtu
+decl_stmt|;
+name|struct
+name|sockaddr_dl
+name|ifi_sdl
+decl_stmt|;
+name|struct
+name|rainfo
+modifier|*
+name|ifi_rainfo
+decl_stmt|;
+comment|/* statistics */
+name|u_int64_t
+name|ifi_raoutput
+decl_stmt|;
+comment|/* # of RAs sent */
+name|u_int64_t
+name|ifi_rainput
+decl_stmt|;
+comment|/* # of RAs received */
+name|u_int64_t
+name|ifi_rainconsistent
+decl_stmt|;
+comment|/* # of inconsistent recv'd RAs  */
+name|u_int64_t
+name|ifi_rsinput
+decl_stmt|;
+comment|/* # of RSs received */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Interface list */
+end_comment
+
+begin_extern
+extern|extern TAILQ_HEAD(ifilist_head_t
+operator|,
+extern|ifinfo
+end_extern
+
+begin_expr_stmt
+unit|)
+name|ifilist
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|mcastif
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|struct
@@ -771,9 +859,9 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|rainfo
+name|ifinfo
 modifier|*
-name|if_indextorainfo
+name|if_indextoifinfo
 parameter_list|(
 name|int
 parameter_list|)
@@ -794,6 +882,24 @@ name|struct
 name|in6_addr
 modifier|*
 parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|rtadvd_set_reload
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|rtadvd_set_die
+parameter_list|(
 name|int
 parameter_list|)
 function_decl|;

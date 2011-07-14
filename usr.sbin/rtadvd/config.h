@@ -13,7 +13,9 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|int
+name|struct
+name|ifinfo
+modifier|*
 name|getconfig
 parameter_list|(
 name|int
@@ -34,13 +36,19 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|loadconfig
+name|loadconfig_ifname
 parameter_list|(
 name|char
 modifier|*
-index|[]
-parameter_list|,
-specifier|const
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|loadconfig_index
+parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
