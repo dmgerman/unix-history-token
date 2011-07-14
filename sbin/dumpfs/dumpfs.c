@@ -130,6 +130,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdint.h>
 end_include
 
@@ -518,7 +524,9 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"/dev/ufsid/%x%x\n"
+literal|"%sufsid/%08x%08x\n"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|afs
 operator|.
