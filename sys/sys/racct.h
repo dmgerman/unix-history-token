@@ -220,7 +220,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RACCT_IN_THOUSANDS
+name|RACCT_IN_MILLIONS
 value|0x01
 end_define
 
@@ -261,17 +261,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Amount stored in c_resources[] is thousand times bigger than what's  * visible to the userland.  It gets fixed up when retrieving resource  * usage or adding rules.  */
+comment|/*  * Amount stored in c_resources[] is 10**6 times bigger than what's  * visible to the userland.  It gets fixed up when retrieving resource  * usage or adding rules.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|RACCT_IS_IN_THOUSANDS
+name|RACCT_IS_IN_MILLIONS
 parameter_list|(
 name|X
 parameter_list|)
-value|(racct_types[X]& RACCT_IN_THOUSANDS)
+value|(racct_types[X]& RACCT_IN_MILLIONS)
 end_define
 
 begin_comment

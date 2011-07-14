@@ -571,7 +571,7 @@ index|[
 name|RACCT_CPU
 index|]
 operator|=
-name|RACCT_IN_THOUSANDS
+name|RACCT_IN_MILLIONS
 block|,
 index|[
 name|RACCT_DATA
@@ -743,7 +743,7 @@ index|[
 name|RACCT_WALLCLOCK
 index|]
 operator|=
-name|RACCT_IN_THOUSANDS
+name|RACCT_IN_MILLIONS
 block|}
 decl_stmt|;
 end_decl_stmt
