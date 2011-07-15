@@ -243,6 +243,41 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * cap_new(): Create a new capability derived from an existing file  * descriptor with the specified rights.  If the existing file descriptor is  * a capability, then the new rights must be a subset of the existing rights.  */
+end_comment
+
+begin_function_decl
+name|int
+name|cap_new
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+name|cap_rights_t
+name|rights
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * cap_getrights(): Query the rights on a capability.  */
+end_comment
+
+begin_function_decl
+name|int
+name|cap_getrights
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+name|cap_rights_t
+modifier|*
+name|rightsp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_macro
 name|__END_DECLS
 end_macro
