@@ -221,6 +221,10 @@ name|mtx
 name|um_lock
 decl_stmt|;
 comment|/* Protects ufsmount& fs */
+name|pid_t
+name|um_fsckpid
+decl_stmt|;
+comment|/* PID permitted fsck sysctls */
 name|long
 name|um_numindirdeps
 decl_stmt|;
