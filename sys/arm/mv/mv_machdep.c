@@ -1562,6 +1562,12 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+name|preload_addr_relocate
+operator|=
+name|KERNVIRTADDR
+operator|-
+name|KERNPHYSADDR
+expr_stmt|;
 block|}
 else|else
 block|{
