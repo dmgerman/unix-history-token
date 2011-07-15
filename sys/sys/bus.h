@@ -583,6 +583,17 @@ begin_comment
 comment|/* Reserved resource is allocated. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RLE_PREFETCH
+value|0x0004
+end_define
+
+begin_comment
+comment|/* Resource is a prefetch range. */
+end_comment
+
 begin_function_decl
 name|void
 name|resource_list_init
