@@ -109,6 +109,40 @@ value|(td->td_ucred->cr_flags& CRED_FLAG_CAPMODE)
 end_define
 
 begin_comment
+comment|/*  * Create a capability to wrap a file object.  */
+end_comment
+
+begin_function_decl
+name|int
+name|kern_capwrap
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|file
+modifier|*
+name|fp
+parameter_list|,
+name|cap_rights_t
+name|rights
+parameter_list|,
+name|struct
+name|file
+modifier|*
+modifier|*
+name|cap
+parameter_list|,
+name|int
+modifier|*
+name|capfd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Unwrap a capability if its rights mask is a superset of 'rights'.  *  * Unwrapping a non-capability is effectively a no-op; the value of fp_cap  * is simply copied into fpp.  */
 end_comment
 

@@ -5379,6 +5379,9 @@ name|struct
 name|file
 modifier|*
 name|fp
+decl_stmt|,
+modifier|*
+name|fp_object
 decl_stmt|;
 name|int
 name|error
@@ -5505,9 +5508,23 @@ argument_list|,
 name|fd
 argument_list|)
 expr_stmt|;
+comment|/* 	 * When we're closing an fd with a capability, we need to notify 	 * mqueue if the underlying object is of type mqueue. 	 */
+operator|(
+name|void
+operator|)
+name|cap_funwrap
+argument_list|(
+name|fp
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|fp_object
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|fp
+name|fp_object
 operator|->
 name|f_type
 operator|==
@@ -5519,7 +5536,7 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
-name|fp
+name|fp_object
 argument_list|)
 expr_stmt|;
 name|FILEDESC_XUNLOCK
@@ -10050,18 +10067,40 @@ name|filedesc
 modifier|*
 name|fdp
 decl_stmt|;
-comment|/* 	 * POSIX record locking dictates that any close releases ALL 	 * locks owned by this process.  This is handled by setting 	 * a flag in the unlock to free ONLY locks obeying POSIX 	 * semantics, and not to free BSD-style file locks. 	 * If the descriptor was in a message, POSIX-style locks 	 * aren't passed with the descriptor, and the thread pointer 	 * will be NULL.  Callers should be careful only to pass a 	 * NULL thread pointer when there really is no owning 	 * context that might have locks, or the locks will be 	 * leaked. 	 */
+name|struct
+name|file
+modifier|*
+name|fp_object
+decl_stmt|;
+comment|/* 	 * POSIX record locking dictates that any close releases ALL 	 * locks owned by this process.  This is handled by setting 	 * a flag in the unlock to free ONLY locks obeying POSIX 	 * semantics, and not to free BSD-style file locks. 	 * If the descriptor was in a message, POSIX-style locks 	 * aren't passed with the descriptor, and the thread pointer 	 * will be NULL.  Callers should be careful only to pass a 	 * NULL thread pointer when there really is no owning 	 * context that might have locks, or the locks will be 	 * leaked. 	 * 	 * If this is a capability, we do lock processing under the underlying 	 * node, not the capability itself. 	 */
+operator|(
+name|void
+operator|)
+name|cap_funwrap
+argument_list|(
+name|fp
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|fp_object
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|fp
+operator|(
+name|fp_object
 operator|->
 name|f_type
 operator|==
 name|DTYPE_VNODE
+operator|)
 operator|&&
+operator|(
 name|td
 operator|!=
 name|NULL
+operator|)
 condition|)
 block|{
 name|int
@@ -10069,7 +10108,7 @@ name|vfslocked
 decl_stmt|;
 name|vp
 operator|=
-name|fp
+name|fp_object
 operator|->
 name|f_vnode
 expr_stmt|;
@@ -10251,7 +10290,7 @@ name|F_UNLCK
 expr_stmt|;
 name|vp
 operator|=
-name|fp
+name|fp_object
 operator|->
 name|f_vnode
 expr_stmt|;
@@ -11493,7 +11532,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle the last reference to a file being closed.  */
+comment|/*  * Handle the last reference to a file being closed.  *  * No special capability handling here, as the capability's fo_close will run  * instead of the object here, and perform any necessary drop on the object.  */
 end_comment
 
 begin_function
