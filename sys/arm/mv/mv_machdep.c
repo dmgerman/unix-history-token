@@ -2256,19 +2256,6 @@ condition|(
 literal|1
 condition|)
 empty_stmt|;
-comment|/* 	 * Initialize GPIO as early as possible. 	 */
-if|if
-condition|(
-name|platform_gpio_init
-argument_list|()
-operator|!=
-literal|0
-condition|)
-while|while
-condition|(
-literal|1
-condition|)
-empty_stmt|;
 name|cninit
 argument_list|()
 expr_stmt|;
