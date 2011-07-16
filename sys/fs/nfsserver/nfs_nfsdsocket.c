@@ -6240,7 +6240,7 @@ name|mnt_stat
 operator|.
 name|f_fsid
 expr_stmt|;
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -6320,7 +6320,7 @@ name|mnt_stat
 operator|.
 name|f_fsid
 expr_stmt|;
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -6394,7 +6394,7 @@ name|mnt_stat
 operator|.
 name|f_fsid
 expr_stmt|;
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -6884,7 +6884,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Lookup ops return a locked vnode */
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|nvp
 argument_list|,

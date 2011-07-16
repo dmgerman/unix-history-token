@@ -1471,7 +1471,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|nvp
 argument_list|,

@@ -7761,7 +7761,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		 * Lose the lock but keep the ref. 		 */
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 operator|*
 name|vpp
@@ -8431,7 +8431,7 @@ name|allerror
 operator|=
 name|error
 expr_stmt|;
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|vp
 argument_list|,
