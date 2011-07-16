@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: check-tool.c,v 1.35.36.5 2010-09-07 23:46:05 tbox Exp $ */
+comment|/* $Id: check-tool.c,v 1.41 2010-09-07 23:46:59 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -2984,7 +2984,7 @@ name|buffer
 argument_list|,
 name|dns_rootname
 argument_list|,
-name|ISC_FALSE
+literal|0
 argument_list|,
 name|NULL
 argument_list|)

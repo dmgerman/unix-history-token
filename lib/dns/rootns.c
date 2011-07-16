@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2008, 2010  Internet Systems Conso
 end_comment
 
 begin_comment
-comment|/* $Id: rootns.c,v 1.36.50.4 2010-06-18 05:37:50 marka Exp $ */
+comment|/* $Id: rootns.c,v 1.40 2010-06-18 05:36:24 marka Exp $ */
 end_comment
 
 begin_comment

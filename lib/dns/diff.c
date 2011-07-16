@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007-2009  Internet Systems Consortium, 
 end_comment
 
 begin_comment
-comment|/* $Id: diff.c,v 1.18.50.2 2009-01-05 23:47:22 tbox Exp $ */
+comment|/* $Id: diff.c,v 1.23 2009-12-01 00:47:09 each Exp $ */
 end_comment
 
 begin_comment
@@ -1685,15 +1685,64 @@ if|if
 condition|(
 name|warn
 condition|)
+block|{
+name|char
+name|classbuf
+index|[
+name|DNS_RDATATYPE_FORMATSIZE
+index|]
+decl_stmt|;
+name|char
+name|namebuf
+index|[
+name|DNS_NAME_FORMATSIZE
+index|]
+decl_stmt|;
+name|dns_name_format
+argument_list|(
+name|dns_db_origin
+argument_list|(
+name|db
+argument_list|)
+argument_list|,
+name|namebuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|namebuf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|dns_rdataclass_format
+argument_list|(
+name|dns_db_class
+argument_list|(
+name|db
+argument_list|)
+argument_list|,
+name|classbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|classbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|isc_log_write
 argument_list|(
 name|DIFF_COMMON_LOGARGS
 argument_list|,
 name|ISC_LOG_WARNING
 argument_list|,
+literal|"%s/%s: dns_diff_apply: "
 literal|"update with no effect"
+argument_list|,
+name|namebuf
+argument_list|,
+name|classbuf
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -2139,6 +2188,7 @@ name|DIFF_COMMON_LOGARGS
 argument_list|,
 name|ISC_LOG_WARNING
 argument_list|,
+literal|"dns_diff_load: "
 literal|"update with no effect"
 argument_list|)
 expr_stmt|;

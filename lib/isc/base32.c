@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2008, 2009  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: base32.c,v 1.3.116.3 2009-10-21 01:22:47 each Exp $ */
+comment|/* $Id: base32.c,v 1.6 2009-10-21 01:22:29 each Exp $ */
 end_comment
 
 begin_comment

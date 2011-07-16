@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Portions Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Portions Copyright (C) 1995-2000 by Network Associates, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Portions Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Portions Copyright (C) 1995-2000 by Network Associates, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/*  * Principal Author: Brian Wellington  * $Id: hmac_link.c,v 1.11 2008-04-01 23:47:10 tbox Exp $  */
+comment|/*  * Principal Author: Brian Wellington  * $Id: hmac_link.c,v 1.19 2011-01-11 23:47:13 tbox Exp $  */
 end_comment
 
 begin_include
@@ -79,27 +79,6 @@ directive|include
 file|"dst_parse.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|HMAC_LEN
-value|64
-end_define
-
-begin_define
-define|#
-directive|define
-name|HMAC_IPAD
-value|0x36
-end_define
-
-begin_define
-define|#
-directive|define
-name|HMAC_OPAD
-value|0x5c
-end_define
-
 begin_function_decl
 specifier|static
 name|isc_result_t
@@ -124,7 +103,7 @@ name|unsigned
 name|char
 name|key
 index|[
-name|HMAC_LEN
+name|ISC_MD5_BLOCK_LENGTH
 index|]
 decl_stmt|;
 block|}
@@ -250,7 +229,7 @@ name|hkey
 operator|->
 name|key
 argument_list|,
-name|HMAC_LEN
+name|ISC_SHA1_BLOCK_LENGTH
 argument_list|)
 expr_stmt|;
 name|dctx
@@ -594,7 +573,7 @@ name|hkey2
 operator|->
 name|key
 argument_list|,
-name|HMAC_LEN
+name|ISC_SHA1_BLOCK_LENGTH
 argument_list|)
 operator|==
 literal|0
@@ -624,6 +603,15 @@ name|key
 parameter_list|,
 name|int
 name|pseudorandom_ok
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|callback
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
 parameter_list|)
 block|{
 name|isc_buffer_t
@@ -632,6 +620,7 @@ decl_stmt|;
 name|isc_result_t
 name|ret
 decl_stmt|;
+name|unsigned
 name|int
 name|bytes
 decl_stmt|;
@@ -639,9 +628,14 @@ name|unsigned
 name|char
 name|data
 index|[
-name|HMAC_LEN
+name|ISC_SHA1_BLOCK_LENGTH
 index|]
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|callback
+argument_list|)
+expr_stmt|;
 name|bytes
 operator|=
 operator|(
@@ -658,18 +652,18 @@ if|if
 condition|(
 name|bytes
 operator|>
-name|HMAC_LEN
+name|ISC_SHA1_BLOCK_LENGTH
 condition|)
 block|{
 name|bytes
 operator|=
-name|HMAC_LEN
+name|ISC_SHA1_BLOCK_LENGTH
 expr_stmt|;
 name|key
 operator|->
 name|key_size
 operator|=
-name|HMAC_LEN
+name|ISC_SHA1_BLOCK_LENGTH
 operator|*
 literal|8
 expr_stmt|;
@@ -680,7 +674,7 @@ name|data
 argument_list|,
 literal|0
 argument_list|,
-name|HMAC_LEN
+name|ISC_SHA1_BLOCK_LENGTH
 argument_list|)
 expr_stmt|;
 name|ret
@@ -744,7 +738,7 @@ name|data
 argument_list|,
 literal|0
 argument_list|,
-name|HMAC_LEN
+name|ISC_SHA1_BLOCK_LENGTH
 argument_list|)
 expr_stmt|;
 return|return
@@ -1018,7 +1012,7 @@ name|r
 operator|.
 name|length
 operator|>
-name|HMAC_LEN
+name|ISC_SHA1_BLOCK_LENGTH
 condition|)
 block|{
 name|isc_md5_init
@@ -1305,6 +1299,10 @@ parameter_list|,
 name|isc_lex_t
 modifier|*
 name|lexer
+parameter_list|,
+name|dst_key_t
+modifier|*
+name|pub
 parameter_list|)
 block|{
 name|dst_private_t
@@ -1330,6 +1328,11 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|pub
+argument_list|)
+expr_stmt|;
 comment|/* read private key file */
 name|result
 operator|=
@@ -1569,6 +1572,12 @@ comment|/*%< cleanup */
 name|NULL
 block|,
 comment|/*%< fromlabel */
+name|NULL
+block|,
+comment|/*%< dump */
+name|NULL
+block|,
+comment|/*%< restore */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1635,7 +1644,7 @@ name|unsigned
 name|char
 name|key
 index|[
-name|ISC_SHA1_DIGESTLENGTH
+name|ISC_SHA1_BLOCK_LENGTH
 index|]
 decl_stmt|;
 block|}
@@ -1703,7 +1712,7 @@ name|hkey
 operator|->
 name|key
 argument_list|,
-name|ISC_SHA1_DIGESTLENGTH
+name|ISC_SHA1_BLOCK_LENGTH
 argument_list|)
 expr_stmt|;
 name|dctx
@@ -2055,7 +2064,7 @@ name|hkey2
 operator|->
 name|key
 argument_list|,
-name|ISC_SHA1_DIGESTLENGTH
+name|ISC_SHA1_BLOCK_LENGTH
 argument_list|)
 operator|==
 literal|0
@@ -2085,6 +2094,15 @@ name|key
 parameter_list|,
 name|int
 name|pseudorandom_ok
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|callback
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
 parameter_list|)
 block|{
 name|isc_buffer_t
@@ -2093,6 +2111,7 @@ decl_stmt|;
 name|isc_result_t
 name|ret
 decl_stmt|;
+name|unsigned
 name|int
 name|bytes
 decl_stmt|;
@@ -2100,9 +2119,14 @@ name|unsigned
 name|char
 name|data
 index|[
-name|HMAC_LEN
+name|ISC_SHA1_BLOCK_LENGTH
 index|]
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|callback
+argument_list|)
+expr_stmt|;
 name|bytes
 operator|=
 operator|(
@@ -2119,18 +2143,18 @@ if|if
 condition|(
 name|bytes
 operator|>
-name|HMAC_LEN
+name|ISC_SHA1_BLOCK_LENGTH
 condition|)
 block|{
 name|bytes
 operator|=
-name|HMAC_LEN
+name|ISC_SHA1_BLOCK_LENGTH
 expr_stmt|;
 name|key
 operator|->
 name|key_size
 operator|=
-name|HMAC_LEN
+name|ISC_SHA1_BLOCK_LENGTH
 operator|*
 literal|8
 expr_stmt|;
@@ -2141,7 +2165,7 @@ name|data
 argument_list|,
 literal|0
 argument_list|,
-name|HMAC_LEN
+name|ISC_SHA1_BLOCK_LENGTH
 argument_list|)
 expr_stmt|;
 name|ret
@@ -2205,7 +2229,7 @@ name|data
 argument_list|,
 literal|0
 argument_list|,
-name|ISC_SHA1_DIGESTLENGTH
+name|ISC_SHA1_BLOCK_LENGTH
 argument_list|)
 expr_stmt|;
 return|return
@@ -2479,7 +2503,7 @@ name|r
 operator|.
 name|length
 operator|>
-name|ISC_SHA1_DIGESTLENGTH
+name|ISC_SHA1_BLOCK_LENGTH
 condition|)
 block|{
 name|isc_sha1_init
@@ -2766,6 +2790,10 @@ parameter_list|,
 name|isc_lex_t
 modifier|*
 name|lexer
+parameter_list|,
+name|dst_key_t
+modifier|*
+name|pub
 parameter_list|)
 block|{
 name|dst_private_t
@@ -2791,6 +2819,11 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|pub
+argument_list|)
+expr_stmt|;
 comment|/* read private key file */
 name|result
 operator|=
@@ -3026,6 +3059,12 @@ comment|/* cleanup */
 name|NULL
 block|,
 comment|/* fromlabel */
+name|NULL
+block|,
+comment|/* dump */
+name|NULL
+block|,
+comment|/* restore */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3092,7 +3131,7 @@ name|unsigned
 name|char
 name|key
 index|[
-name|ISC_SHA224_DIGESTLENGTH
+name|ISC_SHA224_BLOCK_LENGTH
 index|]
 decl_stmt|;
 block|}
@@ -3160,7 +3199,7 @@ name|hkey
 operator|->
 name|key
 argument_list|,
-name|ISC_SHA224_DIGESTLENGTH
+name|ISC_SHA224_BLOCK_LENGTH
 argument_list|)
 expr_stmt|;
 name|dctx
@@ -3512,7 +3551,7 @@ name|hkey2
 operator|->
 name|key
 argument_list|,
-name|ISC_SHA224_DIGESTLENGTH
+name|ISC_SHA224_BLOCK_LENGTH
 argument_list|)
 operator|==
 literal|0
@@ -3542,6 +3581,15 @@ name|key
 parameter_list|,
 name|int
 name|pseudorandom_ok
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|callback
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
 parameter_list|)
 block|{
 name|isc_buffer_t
@@ -3550,6 +3598,7 @@ decl_stmt|;
 name|isc_result_t
 name|ret
 decl_stmt|;
+name|unsigned
 name|int
 name|bytes
 decl_stmt|;
@@ -3557,9 +3606,14 @@ name|unsigned
 name|char
 name|data
 index|[
-name|HMAC_LEN
+name|ISC_SHA224_BLOCK_LENGTH
 index|]
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|callback
+argument_list|)
+expr_stmt|;
 name|bytes
 operator|=
 operator|(
@@ -3576,18 +3630,18 @@ if|if
 condition|(
 name|bytes
 operator|>
-name|HMAC_LEN
+name|ISC_SHA224_BLOCK_LENGTH
 condition|)
 block|{
 name|bytes
 operator|=
-name|HMAC_LEN
+name|ISC_SHA224_BLOCK_LENGTH
 expr_stmt|;
 name|key
 operator|->
 name|key_size
 operator|=
-name|HMAC_LEN
+name|ISC_SHA224_BLOCK_LENGTH
 operator|*
 literal|8
 expr_stmt|;
@@ -3598,7 +3652,7 @@ name|data
 argument_list|,
 literal|0
 argument_list|,
-name|HMAC_LEN
+name|ISC_SHA224_BLOCK_LENGTH
 argument_list|)
 expr_stmt|;
 name|ret
@@ -3662,7 +3716,7 @@ name|data
 argument_list|,
 literal|0
 argument_list|,
-name|ISC_SHA224_DIGESTLENGTH
+name|ISC_SHA224_BLOCK_LENGTH
 argument_list|)
 expr_stmt|;
 return|return
@@ -3936,7 +3990,7 @@ name|r
 operator|.
 name|length
 operator|>
-name|ISC_SHA224_DIGESTLENGTH
+name|ISC_SHA224_BLOCK_LENGTH
 condition|)
 block|{
 name|isc_sha224_init
@@ -4223,6 +4277,10 @@ parameter_list|,
 name|isc_lex_t
 modifier|*
 name|lexer
+parameter_list|,
+name|dst_key_t
+modifier|*
+name|pub
 parameter_list|)
 block|{
 name|dst_private_t
@@ -4248,6 +4306,11 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|pub
+argument_list|)
+expr_stmt|;
 comment|/* read private key file */
 name|result
 operator|=
@@ -4483,6 +4546,12 @@ comment|/* cleanup */
 name|NULL
 block|,
 comment|/* fromlabel */
+name|NULL
+block|,
+comment|/* dump */
+name|NULL
+block|,
+comment|/* restore */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4549,7 +4618,7 @@ name|unsigned
 name|char
 name|key
 index|[
-name|ISC_SHA256_DIGESTLENGTH
+name|ISC_SHA256_BLOCK_LENGTH
 index|]
 decl_stmt|;
 block|}
@@ -4617,7 +4686,7 @@ name|hkey
 operator|->
 name|key
 argument_list|,
-name|ISC_SHA256_DIGESTLENGTH
+name|ISC_SHA256_BLOCK_LENGTH
 argument_list|)
 expr_stmt|;
 name|dctx
@@ -4969,7 +5038,7 @@ name|hkey2
 operator|->
 name|key
 argument_list|,
-name|ISC_SHA256_DIGESTLENGTH
+name|ISC_SHA256_BLOCK_LENGTH
 argument_list|)
 operator|==
 literal|0
@@ -4999,6 +5068,15 @@ name|key
 parameter_list|,
 name|int
 name|pseudorandom_ok
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|callback
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
 parameter_list|)
 block|{
 name|isc_buffer_t
@@ -5007,6 +5085,7 @@ decl_stmt|;
 name|isc_result_t
 name|ret
 decl_stmt|;
+name|unsigned
 name|int
 name|bytes
 decl_stmt|;
@@ -5014,9 +5093,14 @@ name|unsigned
 name|char
 name|data
 index|[
-name|HMAC_LEN
+name|ISC_SHA256_BLOCK_LENGTH
 index|]
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|callback
+argument_list|)
+expr_stmt|;
 name|bytes
 operator|=
 operator|(
@@ -5033,18 +5117,18 @@ if|if
 condition|(
 name|bytes
 operator|>
-name|HMAC_LEN
+name|ISC_SHA256_BLOCK_LENGTH
 condition|)
 block|{
 name|bytes
 operator|=
-name|HMAC_LEN
+name|ISC_SHA256_BLOCK_LENGTH
 expr_stmt|;
 name|key
 operator|->
 name|key_size
 operator|=
-name|HMAC_LEN
+name|ISC_SHA256_BLOCK_LENGTH
 operator|*
 literal|8
 expr_stmt|;
@@ -5055,7 +5139,7 @@ name|data
 argument_list|,
 literal|0
 argument_list|,
-name|HMAC_LEN
+name|ISC_SHA256_BLOCK_LENGTH
 argument_list|)
 expr_stmt|;
 name|ret
@@ -5119,7 +5203,7 @@ name|data
 argument_list|,
 literal|0
 argument_list|,
-name|ISC_SHA256_DIGESTLENGTH
+name|ISC_SHA256_BLOCK_LENGTH
 argument_list|)
 expr_stmt|;
 return|return
@@ -5393,7 +5477,7 @@ name|r
 operator|.
 name|length
 operator|>
-name|ISC_SHA256_DIGESTLENGTH
+name|ISC_SHA256_BLOCK_LENGTH
 condition|)
 block|{
 name|isc_sha256_init
@@ -5680,6 +5764,10 @@ parameter_list|,
 name|isc_lex_t
 modifier|*
 name|lexer
+parameter_list|,
+name|dst_key_t
+modifier|*
+name|pub
 parameter_list|)
 block|{
 name|dst_private_t
@@ -5705,6 +5793,11 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|pub
+argument_list|)
+expr_stmt|;
 comment|/* read private key file */
 name|result
 operator|=
@@ -5940,6 +6033,12 @@ comment|/* cleanup */
 name|NULL
 block|,
 comment|/* fromlabel */
+name|NULL
+block|,
+comment|/* dump */
+name|NULL
+block|,
+comment|/* restore */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -6006,7 +6105,7 @@ name|unsigned
 name|char
 name|key
 index|[
-name|ISC_SHA384_DIGESTLENGTH
+name|ISC_SHA384_BLOCK_LENGTH
 index|]
 decl_stmt|;
 block|}
@@ -6074,7 +6173,7 @@ name|hkey
 operator|->
 name|key
 argument_list|,
-name|ISC_SHA384_DIGESTLENGTH
+name|ISC_SHA384_BLOCK_LENGTH
 argument_list|)
 expr_stmt|;
 name|dctx
@@ -6426,7 +6525,7 @@ name|hkey2
 operator|->
 name|key
 argument_list|,
-name|ISC_SHA384_DIGESTLENGTH
+name|ISC_SHA384_BLOCK_LENGTH
 argument_list|)
 operator|==
 literal|0
@@ -6456,6 +6555,15 @@ name|key
 parameter_list|,
 name|int
 name|pseudorandom_ok
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|callback
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
 parameter_list|)
 block|{
 name|isc_buffer_t
@@ -6464,6 +6572,7 @@ decl_stmt|;
 name|isc_result_t
 name|ret
 decl_stmt|;
+name|unsigned
 name|int
 name|bytes
 decl_stmt|;
@@ -6471,9 +6580,14 @@ name|unsigned
 name|char
 name|data
 index|[
-name|HMAC_LEN
+name|ISC_SHA384_BLOCK_LENGTH
 index|]
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|callback
+argument_list|)
+expr_stmt|;
 name|bytes
 operator|=
 operator|(
@@ -6490,18 +6604,18 @@ if|if
 condition|(
 name|bytes
 operator|>
-name|HMAC_LEN
+name|ISC_SHA384_BLOCK_LENGTH
 condition|)
 block|{
 name|bytes
 operator|=
-name|HMAC_LEN
+name|ISC_SHA384_BLOCK_LENGTH
 expr_stmt|;
 name|key
 operator|->
 name|key_size
 operator|=
-name|HMAC_LEN
+name|ISC_SHA384_BLOCK_LENGTH
 operator|*
 literal|8
 expr_stmt|;
@@ -6512,7 +6626,7 @@ name|data
 argument_list|,
 literal|0
 argument_list|,
-name|HMAC_LEN
+name|ISC_SHA384_BLOCK_LENGTH
 argument_list|)
 expr_stmt|;
 name|ret
@@ -6576,7 +6690,7 @@ name|data
 argument_list|,
 literal|0
 argument_list|,
-name|ISC_SHA384_DIGESTLENGTH
+name|ISC_SHA384_BLOCK_LENGTH
 argument_list|)
 expr_stmt|;
 return|return
@@ -6850,7 +6964,7 @@ name|r
 operator|.
 name|length
 operator|>
-name|ISC_SHA384_DIGESTLENGTH
+name|ISC_SHA384_BLOCK_LENGTH
 condition|)
 block|{
 name|isc_sha384_init
@@ -7137,6 +7251,10 @@ parameter_list|,
 name|isc_lex_t
 modifier|*
 name|lexer
+parameter_list|,
+name|dst_key_t
+modifier|*
+name|pub
 parameter_list|)
 block|{
 name|dst_private_t
@@ -7162,6 +7280,11 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|pub
+argument_list|)
+expr_stmt|;
 comment|/* read private key file */
 name|result
 operator|=
@@ -7397,6 +7520,12 @@ comment|/* cleanup */
 name|NULL
 block|,
 comment|/* fromlabel */
+name|NULL
+block|,
+comment|/* dump */
+name|NULL
+block|,
+comment|/* restore */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -7463,7 +7592,7 @@ name|unsigned
 name|char
 name|key
 index|[
-name|ISC_SHA512_DIGESTLENGTH
+name|ISC_SHA512_BLOCK_LENGTH
 index|]
 decl_stmt|;
 block|}
@@ -7531,7 +7660,7 @@ name|hkey
 operator|->
 name|key
 argument_list|,
-name|ISC_SHA512_DIGESTLENGTH
+name|ISC_SHA512_BLOCK_LENGTH
 argument_list|)
 expr_stmt|;
 name|dctx
@@ -7883,7 +8012,7 @@ name|hkey2
 operator|->
 name|key
 argument_list|,
-name|ISC_SHA512_DIGESTLENGTH
+name|ISC_SHA512_BLOCK_LENGTH
 argument_list|)
 operator|==
 literal|0
@@ -7913,6 +8042,15 @@ name|key
 parameter_list|,
 name|int
 name|pseudorandom_ok
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|callback
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
 parameter_list|)
 block|{
 name|isc_buffer_t
@@ -7921,6 +8059,7 @@ decl_stmt|;
 name|isc_result_t
 name|ret
 decl_stmt|;
+name|unsigned
 name|int
 name|bytes
 decl_stmt|;
@@ -7928,9 +8067,14 @@ name|unsigned
 name|char
 name|data
 index|[
-name|HMAC_LEN
+name|ISC_SHA512_BLOCK_LENGTH
 index|]
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|callback
+argument_list|)
+expr_stmt|;
 name|bytes
 operator|=
 operator|(
@@ -7947,18 +8091,18 @@ if|if
 condition|(
 name|bytes
 operator|>
-name|HMAC_LEN
+name|ISC_SHA512_BLOCK_LENGTH
 condition|)
 block|{
 name|bytes
 operator|=
-name|HMAC_LEN
+name|ISC_SHA512_BLOCK_LENGTH
 expr_stmt|;
 name|key
 operator|->
 name|key_size
 operator|=
-name|HMAC_LEN
+name|ISC_SHA512_BLOCK_LENGTH
 operator|*
 literal|8
 expr_stmt|;
@@ -7969,7 +8113,7 @@ name|data
 argument_list|,
 literal|0
 argument_list|,
-name|HMAC_LEN
+name|ISC_SHA512_BLOCK_LENGTH
 argument_list|)
 expr_stmt|;
 name|ret
@@ -8033,7 +8177,7 @@ name|data
 argument_list|,
 literal|0
 argument_list|,
-name|ISC_SHA512_DIGESTLENGTH
+name|ISC_SHA512_BLOCK_LENGTH
 argument_list|)
 expr_stmt|;
 return|return
@@ -8307,7 +8451,7 @@ name|r
 operator|.
 name|length
 operator|>
-name|ISC_SHA512_DIGESTLENGTH
+name|ISC_SHA512_BLOCK_LENGTH
 condition|)
 block|{
 name|isc_sha512_init
@@ -8594,6 +8738,10 @@ parameter_list|,
 name|isc_lex_t
 modifier|*
 name|lexer
+parameter_list|,
+name|dst_key_t
+modifier|*
+name|pub
 parameter_list|)
 block|{
 name|dst_private_t
@@ -8619,6 +8767,11 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|pub
+argument_list|)
+expr_stmt|;
 comment|/* read private key file */
 name|result
 operator|=
@@ -8854,6 +9007,12 @@ comment|/* cleanup */
 name|NULL
 block|,
 comment|/* fromlabel */
+name|NULL
+block|,
+comment|/* dump */
+name|NULL
+block|,
+comment|/* restore */
 block|}
 decl_stmt|;
 end_decl_stmt

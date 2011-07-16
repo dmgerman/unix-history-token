@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2008, 2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/*  * $Id: tkey.c,v 1.90.118.4 2010-12-09 01:12:55 marka Exp $  */
+comment|/*  * $Id: tkey.c,v 1.100 2011-01-08 23:47:01 tbox Exp $  */
 end_comment
 
 begin_comment
@@ -435,6 +435,12 @@ name|gsscred
 operator|=
 name|NULL
 expr_stmt|;
+name|tctx
+operator|->
+name|gssapi_keytab
+operator|=
+name|NULL
+expr_stmt|;
 operator|*
 name|tctxp
 operator|=
@@ -544,6 +550,25 @@ sizeof|sizeof
 argument_list|(
 name|dns_name_t
 argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|tctx
+operator|->
+name|gssapi_keytab
+operator|!=
+name|NULL
+condition|)
+block|{
+name|isc_mem_free
+argument_list|(
+name|mctx
+argument_list|,
+name|tctx
+operator|->
+name|gssapi_keytab
 argument_list|)
 expr_stmt|;
 block|}
@@ -2316,6 +2341,7 @@ name|gss_ctx
 init|=
 name|NULL
 decl_stmt|;
+comment|/* 	 * You have to define either a gss credential (principal) to 	 * accept with tkey-gssapi-credential, or you have to 	 * configure a specific keytab (with tkey-gssapi-keytab) in 	 * order to use gsstkey 	 */
 if|if
 condition|(
 name|tctx
@@ -2323,12 +2349,26 @@ operator|->
 name|gsscred
 operator|==
 name|NULL
+operator|&&
+name|tctx
+operator|->
+name|gssapi_keytab
+operator|==
+name|NULL
 condition|)
+block|{
+name|tkey_log
+argument_list|(
+literal|"process_gsstkey(): no tkey-gssapi-credential "
+literal|"or tkey-gssapi-keytab configured"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ISC_R_NOPERM
 operator|)
 return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -2427,6 +2467,7 @@ operator|&
 name|principal
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Note that tctx->gsscred may be NULL if tctx->gssapi_keytab is set 	 */
 name|result
 operator|=
 name|dst_gssapi_acceptctx
@@ -2434,6 +2475,10 @@ argument_list|(
 name|tctx
 operator|->
 name|gsscred
+argument_list|,
+name|tctx
+operator|->
+name|gssapi_keytab
 argument_list|,
 operator|&
 name|intoken
@@ -2556,6 +2601,9 @@ name|mctx
 argument_list|,
 operator|&
 name|dstkey
+argument_list|,
+operator|&
+name|intoken
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3759,7 +3807,7 @@ name|b
 argument_list|,
 name|NULL
 argument_list|,
-name|ISC_FALSE
+literal|0
 argument_list|,
 name|NULL
 argument_list|)
@@ -5128,6 +5176,15 @@ name|context
 parameter_list|,
 name|isc_boolean_t
 name|win2k
+parameter_list|,
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|err_message
 parameter_list|)
 block|{
 name|dns_rdata_tkey_t
@@ -5182,6 +5239,13 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+name|REQUIRE
+argument_list|(
+name|mctx
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|isc_buffer_init
 argument_list|(
 operator|&
@@ -5207,6 +5271,10 @@ operator|&
 name|token
 argument_list|,
 name|context
+argument_list|,
+name|mctx
+argument_list|,
+name|err_message
 argument_list|)
 expr_stmt|;
 if|if
@@ -6468,6 +6536,11 @@ parameter_list|,
 name|dns_tsig_keyring_t
 modifier|*
 name|ring
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|err_message
 parameter_list|)
 block|{
 name|dns_rdata_t
@@ -6531,6 +6604,13 @@ expr_stmt|;
 name|REQUIRE
 argument_list|(
 name|gname
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|REQUIRE
+argument_list|(
+name|ring
 operator|!=
 name|NULL
 argument_list|)
@@ -6751,6 +6831,12 @@ argument_list|,
 name|outtoken
 argument_list|,
 name|context
+argument_list|,
+name|ring
+operator|->
+name|mctx
+argument_list|,
+name|err_message
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6769,6 +6855,8 @@ name|mctx
 argument_list|,
 operator|&
 name|dstkey
+argument_list|,
+name|NULL
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7135,6 +7223,11 @@ name|ring
 parameter_list|,
 name|isc_boolean_t
 name|win2k
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|err_message
 parameter_list|)
 block|{
 name|dns_rdata_t
@@ -7394,6 +7487,12 @@ operator|&
 name|outtoken
 argument_list|,
 name|context
+argument_list|,
+name|ring
+operator|->
+name|mctx
+argument_list|,
+name|err_message
 argument_list|)
 expr_stmt|;
 if|if
@@ -7426,6 +7525,8 @@ name|mctx
 argument_list|,
 operator|&
 name|dstkey
+argument_list|,
+name|NULL
 argument_list|)
 argument_list|)
 expr_stmt|;

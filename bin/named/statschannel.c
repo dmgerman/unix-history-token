@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2008-2010  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: statschannel.c,v 1.14.64.11 2010-02-04 23:47:46 tbox Exp $ */
+comment|/* $Id: statschannel.c,v 1.26 2010-02-04 23:49:13 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -63,6 +63,12 @@ begin_include
 include|#
 directive|include
 file|<isc/task.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dns/cache.h>
 end_include
 
 begin_include
@@ -4143,7 +4149,7 @@ argument_list|,
 argument|ISC_XMLCHAR
 literal|"name"
 argument_list|,
-argument|ISC_XMLCHAR 							 view->name
+argument|ISC_XMLCHAR 					 dns_cache_getname(view->cache)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7065,13 +7071,31 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"[View: %s]\n"
+literal|"[View: %s (Cache: %s)]\n"
 argument_list|,
 name|view
 operator|->
 name|name
+argument_list|,
+name|dns_cache_getname
+argument_list|(
+name|view
+operator|->
+name|cache
+argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dns_view_iscacheshared
+argument_list|(
+name|view
+argument_list|)
+condition|)
+block|{
+comment|/* 			 * Avoid dumping redundant statistics when the cache is 			 * shared. 			 */
+continue|continue;
+block|}
 name|dns_rdatasetstats_dump
 argument_list|(
 name|cachestats

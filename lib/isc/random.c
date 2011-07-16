@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2009  Internet Systems Consortium,
 end_comment
 
 begin_comment
-comment|/* $Id: random.c,v 1.25.332.2 2009-07-16 23:47:17 tbox Exp $ */
+comment|/* $Id: random.c,v 1.28 2009-07-16 05:52:46 marka Exp $ */
 end_comment
 
 begin_comment
@@ -362,6 +362,16 @@ argument_list|(
 name|jitter
 operator|<
 name|max
+operator|||
+operator|(
+name|jitter
+operator|==
+literal|0
+operator|&&
+name|max
+operator|==
+literal|0
+operator|)
 argument_list|)
 expr_stmt|;
 if|if

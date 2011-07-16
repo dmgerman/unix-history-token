@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: types.h,v 1.46.84.2 2009-01-29 23:47:44 tbox Exp $ */
+comment|/* $Id: types.h,v 1.52 2009-12-05 23:31:41 each Exp $ */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,18 @@ directive|define
 name|ISC_TYPES_H
 value|1
 end_define
+
+begin_include
+include|#
+directive|include
+file|<isc/bind9.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/namespace.h>
+end_include
 
 begin_comment
 comment|/*! \file isc/types.h  * \brief  * OS-specific types, from the OS-specific include directories.  */
@@ -58,6 +70,30 @@ end_include
 
 begin_comment
 comment|/* Core Types.  Alphabetized by defined type. */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|isc_appctx
+name|isc_appctx_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*%< Application context */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|isc_backtrace_symmap
+name|isc_backtrace_symmap_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*%< Symbol Table Entry */
 end_comment
 
 begin_typedef
@@ -733,6 +769,8 @@ modifier|*
 parameter_list|,
 name|void
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_typedef

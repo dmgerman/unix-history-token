@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007, 2009, 2010  Internet Systems Consortium, 
 end_comment
 
 begin_comment
-comment|/* $Id: host.c,v 1.116.216.5 2010-10-19 23:45:58 tbox Exp $ */
+comment|/* $Id: host.c,v 1.124 2010-11-16 05:38:30 marka Exp $ */
 end_comment
 
 begin_comment
@@ -547,6 +547,18 @@ name|deconsttext
 return|;
 block|}
 end_function
+
+begin_decl_stmt
+name|ISC_PLATFORM_NORETURN_PRE
+specifier|static
+name|void
+name|show_usage
+argument_list|(
+name|void
+argument_list|)
+name|ISC_PLATFORM_NORETURN_POST
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static

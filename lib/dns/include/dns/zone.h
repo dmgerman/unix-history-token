@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: zone.h,v 1.160.50.8 2010-12-14 23:46:09 tbox Exp $ */
+comment|/* $Id: zone.h,v 1.182 2010-12-18 01:56:22 each Exp $ */
 end_comment
 
 begin_ifndef
@@ -81,6 +81,12 @@ block|,
 name|dns_zone_slave
 block|,
 name|dns_zone_stub
+block|,
+name|dns_zone_staticstub
+block|,
+name|dns_zone_key
+block|,
+name|dns_zone_dlz
 block|}
 name|dns_zonetype_t
 typedef|;
@@ -383,6 +389,50 @@ begin_comment
 comment|/*%< nsec3-test-zone */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DNS_ZONEOPT_SECURETOINSECURE
+value|0x08000000U
+end_define
+
+begin_comment
+comment|/*%< dnssec-secure-to-insecure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_ZONEOPT_DNSKEYKSKONLY
+value|0x10000000U
+end_define
+
+begin_comment
+comment|/*%< dnssec-dnskey-kskonly */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_ZONEOPT_CHECKDUPRR
+value|0x20000000U
+end_define
+
+begin_comment
+comment|/*%< check-dup-records */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_ZONEOPT_CHECKDUPRRFAIL
+value|0x40000000U
+end_define
+
+begin_comment
+comment|/*%< fatal check-dup-records failures */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -411,6 +461,54 @@ end_endif
 
 begin_comment
 comment|/* NOMINUM_PUBLIC */
+end_comment
+
+begin_comment
+comment|/*  * Zone key maintenance options  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_ZONEKEY_ALLOW
+value|0x00000001U
+end_define
+
+begin_comment
+comment|/*%< fetch keys on command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_ZONEKEY_MAINTAIN
+value|0x00000002U
+end_define
+
+begin_comment
+comment|/*%< publish/sign on schedule */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_ZONEKEY_CREATE
+value|0x00000004U
+end_define
+
+begin_comment
+comment|/*%< make keys when needed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_ZONEKEY_FULLSIGN
+value|0x00000008U
+end_define
+
+begin_comment
+comment|/*%< roll to new keys immediately */
 end_comment
 
 begin_ifndef
@@ -955,6 +1053,25 @@ comment|/*%<  * 	Attach '*dbp' to the database to if it exists otherwise  *	retu
 end_comment
 
 begin_function_decl
+name|void
+name|dns_zone_setdb
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  *	Sets the zone database to 'db'.  *  *	This function is expected to be used to configure a zone with a  *	database which is not loaded from a file or zone transfer.  *	It can be used for a general purpose zone, but right now its use  *	is limited to static-stub zones to avoid possible undiscovered  *	problems in the general cases.  *  * Require:  *\li	'zone' to be a valid zone of static-stub.  *\li	zone doesn't have a database.  */
+end_comment
+
+begin_function_decl
 name|isc_result_t
 name|dns_zone_setdbtype
 parameter_list|(
@@ -1277,6 +1394,44 @@ end_function_decl
 
 begin_comment
 comment|/*%<  *	Returns the current zone options.  *  * Require:  *\li	'zone' to be a valid zone.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_zone_setkeyopt
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|unsigned
+name|int
+name|option
+parameter_list|,
+name|isc_boolean_t
+name|value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  *	Set key options on ('value' == ISC_TRUE) or off ('value' ==  *	#ISC_FALSE).  *  * Require:  *\li	'zone' to be a valid zone.  */
+end_comment
+
+begin_function_decl
+name|unsigned
+name|int
+name|dns_zone_getkeyopts
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  *	Returns the current zone key options.  *  * Require:  *\li	'zone' to be a valid zone.  */
 end_comment
 
 begin_function_decl
@@ -3356,6 +3511,104 @@ end_function_decl
 
 begin_comment
 comment|/*  * Get/Set the private record type.  It is expected that these interfaces  * will not be permanent.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_zone_rekey
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|isc_boolean_t
+name|fullsign
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Update the zone's DNSKEY set from the key repository.  *  * If 'fullsign' is true, trigger an immediate full signing of  * the zone with the new key.  Otherwise, if there are no keys or  * if the new keys are for algorithms that have already signed the  * zone, then the zone can be re-signed incrementally.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_zone_nscheck
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|,
+name|dns_dbversion_t
+modifier|*
+name|version
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|errors
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Check if the name servers for the zone are sane (have address, don't  * refer to CNAMEs/DNAMEs.  The number of constiancy errors detected in  * returned in '*errors'  *  * Requires:  * \li	'zone' to be valid.  * \li	'db' to be valid.  * \li	'version' to be valid or NULL.  * \li	'errors' to be non NULL.  *  * Returns:  * 	ISC_R_SUCCESS if there were no errors examining the zone contents.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_zone_setadded
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|isc_boolean_t
+name|added
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Sets the value of zone->added, which should be ISC_TRUE for  * zones that were originally added by "rndc addzone".  *  * Requires:  * \li	'zone' to be valid.  */
+end_comment
+
+begin_function_decl
+name|isc_boolean_t
+name|dns_zone_getadded
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Returns ISC_TRUE if the zone was originally added at runtime  * using "rndc addzone".  *  * Requires:  * \li	'zone' to be valid.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_zone_dlzpostload
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Load the origin names for a writeable DLZ database.  */
 end_comment
 
 begin_macro

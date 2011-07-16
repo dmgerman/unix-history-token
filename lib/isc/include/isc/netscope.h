@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007, 2009  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: netscope.h,v 1.11.332.2 2009-06-25 23:47:24 tbox Exp $ */
+comment|/* $Id: netscope.h,v 1.13 2009-06-25 23:48:02 tbox Exp $ */
 end_comment
 
 begin_ifndef
