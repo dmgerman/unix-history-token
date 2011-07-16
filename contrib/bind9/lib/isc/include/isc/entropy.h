@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007, 2009  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: entropy.h,v 1.32.332.3 2009-10-19 02:46:07 marka Exp $ */
+comment|/* $Id: entropy.h,v 1.35 2009-10-19 02:37:08 marka Exp $ */
 end_comment
 
 begin_ifndef

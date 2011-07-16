@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007-2010  Internet Systems Consortium, 
 end_comment
 
 begin_comment
-comment|/* $Id: journal.c,v 1.103.48.8 2010-11-17 23:45:45 tbox Exp $ */
+comment|/* $Id: journal.c,v 1.112 2010-11-17 23:47:08 tbox Exp $ */
 end_comment
 
 begin_include
@@ -2358,7 +2358,10 @@ name|isc_log_write
 argument_list|(
 name|JOURNAL_COMMON_LOGARGS
 argument_list|,
-name|ISC_LOG_INFO
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|1
+argument_list|)
 argument_list|,
 literal|"journal file %s does not exist, "
 literal|"creating it"

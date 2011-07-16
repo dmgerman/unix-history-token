@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2007, 2009  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: wks_11.c,v 1.54.332.2 2009-02-16 23:47:15 tbox Exp $ */
+comment|/* $Id: wks_11.c,v 1.57 2009-12-04 21:09:34 marka Exp $ */
 end_comment
 
 begin_comment
@@ -1816,6 +1816,28 @@ expr_stmt|;
 return|return
 operator|(
 name|ISC_TRUE
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|casecompare_in_wks
+parameter_list|(
+name|ARGS_COMPARE
+parameter_list|)
+block|{
+return|return
+operator|(
+name|compare_in_wks
+argument_list|(
+name|rdata1
+argument_list|,
+name|rdata2
+argument_list|)
 operator|)
 return|;
 block|}

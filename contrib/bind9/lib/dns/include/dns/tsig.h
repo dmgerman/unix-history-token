@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007, 2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2009-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: tsig.h,v 1.51.332.4 2010-12-09 01:12:55 marka Exp $ */
+comment|/* $Id: tsig.h,v 1.59 2011-01-11 23:47:13 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -40,6 +40,12 @@ begin_include
 include|#
 directive|include
 file|<isc/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/stdio.h>
 end_include
 
 begin_include
@@ -243,6 +249,10 @@ argument|dns_tsigkey_t
 argument_list|)
 name|lru
 expr_stmt|;
+name|unsigned
+name|int
+name|references
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -563,8 +573,47 @@ comment|/*%<  *	Create an empty TSIG key ring.  *  *	Requires:  *\li		'mctx' is 
 end_comment
 
 begin_function_decl
+name|isc_result_t
+name|dns_tsigkeyring_add
+parameter_list|(
+name|dns_tsig_keyring_t
+modifier|*
+name|ring
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|,
+name|dns_tsigkey_t
+modifier|*
+name|tkey
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  *      Place a TSIG key onto a key ring.  *  *	Requires:  *\li		'ring', 'name' and 'tkey' are not NULL  *  *	Returns:  *\li		#ISC_R_SUCCESS  *\li		Any other value indicates failure.  */
+end_comment
+
+begin_function_decl
 name|void
-name|dns_tsigkeyring_destroy
+name|dns_tsigkeyring_attach
+parameter_list|(
+name|dns_tsig_keyring_t
+modifier|*
+name|source
+parameter_list|,
+name|dns_tsig_keyring_t
+modifier|*
+modifier|*
+name|target
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dns_tsigkeyring_detach
 parameter_list|(
 name|dns_tsig_keyring_t
 modifier|*
@@ -574,9 +623,40 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|isc_result_t
+name|dns_tsigkeyring_dumpanddetach
+parameter_list|(
+name|dns_tsig_keyring_t
+modifier|*
+modifier|*
+name|ringp
+parameter_list|,
+name|FILE
+modifier|*
+name|fp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*%<  *	Destroy a TSIG key ring.  *  *	Requires:  *\li		'ringp' is not NULL  */
 end_comment
+
+begin_function_decl
+name|void
+name|dns_keyring_restore
+parameter_list|(
+name|dns_tsig_keyring_t
+modifier|*
+name|ring
+parameter_list|,
+name|FILE
+modifier|*
+name|fp
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_macro
 name|ISC_LANG_ENDDECLS
