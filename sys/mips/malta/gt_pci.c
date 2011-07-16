@@ -1449,7 +1449,7 @@ name|sc
 operator|->
 name|sc_ioh_icu1
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|sc
 operator|->
@@ -1469,7 +1469,7 @@ name|sc
 operator|->
 name|sc_ioh_icu1
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 name|OCW3_SEL
 operator||
@@ -1489,7 +1489,7 @@ name|sc
 operator|->
 name|sc_ioh_icu1
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 name|OCW3_SEL
 operator||
@@ -1573,7 +1573,7 @@ name|sc
 operator|->
 name|sc_ioh_icu2
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|sc
 operator|->
@@ -1593,7 +1593,7 @@ name|sc
 operator|->
 name|sc_ioh_icu2
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 name|OCW3_SEL
 operator||
@@ -1613,7 +1613,7 @@ name|sc
 operator|->
 name|sc_ioh_icu2
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 name|OCW3_SEL
 operator||
