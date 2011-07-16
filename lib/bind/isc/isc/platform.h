@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: platform.h.in,v 1.48.84.4 2010-06-03 23:47:49 tbox Exp $ */
+comment|/* $Id: platform.h.in,v 1.56 2010-12-18 01:56:23 each Exp $ */
 end_comment
 
 begin_ifndef
@@ -254,6 +254,17 @@ name|ISC_PLATFORM_HAVEDEVPOLL
 end_undef
 
 begin_comment
+comment|/*! \brief  * Define if we want to log backtrace  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISC_PLATFORM_USEBACKTRACE
+value|1
+end_define
+
+begin_comment
 comment|/*  *** Printing.  ***/
 end_comment
 
@@ -372,6 +383,10 @@ comment|/*  * Defined to<gssapi.h> or<gssapi/gssapi.h> for how to include  * the
 end_comment
 
 begin_comment
+comment|/*  * Defined to<gssapi_krb5.h> or<gssapi/gssapi_krb5.h> for how to  * include the GSSAPI KRB5 header.  */
+end_comment
+
+begin_comment
 comment|/*  * Defined to<krb5.h> or<krb5/krb5.h> for how to include  * the KRB5 header.  */
 end_comment
 
@@ -432,12 +447,51 @@ begin_comment
 comment|/*  * If the "xadd" operation is available on this architecture,  * ISC_PLATFORM_HAVEXADD will be defined.  */
 end_comment
 
+begin_comment
+comment|/*  * FreeBSD local modification, preserve this over upgrades  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|ISC_PLATFORM_HAVEXADD
 value|1
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_undef
+undef|#
+directive|undef
+name|ISC_PLATFORM_HAVEXADD
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * If the "xaddq" operation (64bit xadd) is available on this architecture,  * ISC_PLATFORM_HAVEXADDQ will be defined.  */
@@ -480,6 +534,29 @@ begin_comment
 comment|/*  * If the "atomic swap" operation is available on this architecture,  * ISC_PLATFORM_HAVEATOMICSTORE" will be defined.  */
 end_comment
 
+begin_comment
+comment|/*  * FreeBSD local modification, preserve this over upgrades  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -487,9 +564,48 @@ name|ISC_PLATFORM_HAVEATOMICSTORE
 value|1
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_undef
+undef|#
+directive|undef
+name|ISC_PLATFORM_HAVEATOMICSTORE
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * If the "compare-and-exchange" operation is available on this architecture,  * ISC_PLATFORM_HAVECMPXCHG will be defined.  */
 end_comment
+
+begin_comment
+comment|/*  * FreeBSD local modification, preserve this over upgrades  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -498,9 +614,48 @@ name|ISC_PLATFORM_HAVECMPXCHG
 value|1
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_undef
+undef|#
+directive|undef
+name|ISC_PLATFORM_HAVECMPXCHG
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Define if gcc ASM extension is available  */
 end_comment
+
+begin_comment
+comment|/*  * FreeBSD local modification, preserve this over upgrades  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -508,6 +663,22 @@ directive|define
 name|ISC_PLATFORM_USEGCCASM
 value|1
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_undef
+undef|#
+directive|undef
+name|ISC_PLATFORM_USEGCCASM
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Define if Tru64 style ASM syntax must be used.  */
@@ -532,6 +703,33 @@ define|#
 directive|define
 name|ISC_PLATFORM_HAVESTRINGSH
 value|1
+end_define
+
+begin_comment
+comment|/*  * Define if the hash functions must be provided by OpenSSL.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ISC_PLATFORM_OPENSSLHASH
+end_undef
+
+begin_comment
+comment|/*  * Defines for the noreturn attribute.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISC_PLATFORM_NORETURN_PRE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISC_PLATFORM_NORETURN_POST
+value|__attribute__((noreturn))
 end_define
 
 begin_comment
