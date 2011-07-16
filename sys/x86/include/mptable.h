@@ -655,16 +655,13 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NEW_PCIB
-end_ifdef
-
 begin_struct
 struct|struct
 name|mptable_hostb_softc
 block|{
+ifdef|#
+directive|ifdef
+name|NEW_PCIB
 name|struct
 name|pcib_host_resources
 name|sc_host_res
@@ -675,9 +672,17 @@ decl_stmt|;
 name|int
 name|sc_decodes_isa_io
 decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEW_PCIB
+end_ifdef
 
 begin_function_decl
 name|void

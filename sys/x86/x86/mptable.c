@@ -1075,6 +1075,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEW_PCIB
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -1090,6 +1096,11 @@ name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -2213,6 +2224,12 @@ block|}
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEW_PCIB
+end_ifdef
+
 begin_comment
 comment|/*  * Call the handler routine for each entry in the MP config extended  * table.  */
 end_comment
@@ -2298,6 +2315,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
