@@ -1148,36 +1148,9 @@ condition|(
 name|he
 operator|->
 name|action
-operator|==
+operator|!=
 name|NULL
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"[%s]: No Handler for message from stn_id=%d,"
-literal|" vc=%d, size=%d, msg0=%jx, dropping message\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|srcid
-argument_list|,
-name|vc
-argument_list|,
-name|size
-argument_list|,
-operator|(
-name|uintmax_t
-operator|)
-name|msg
-operator|.
-name|msg
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
 call|(
 name|he
 operator|->
@@ -1200,6 +1173,13 @@ operator|->
 name|arg
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* debug */
+block|else 			printf("[%s]: No Handler for message from stn_id=%d," 			    " vc=%d, size=%d, msg0=%jx, dropping message\n", 			    __func__, srcid, vc, size, (uintmax_t)msg.msg[0]);
+endif|#
+directive|endif
 block|}
 return|return
 operator|(

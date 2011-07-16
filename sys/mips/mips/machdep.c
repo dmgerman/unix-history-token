@@ -1280,6 +1280,11 @@ name|defined
 argument_list|(
 name|CPU_RMI
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_NLM
+argument_list|)
 comment|/* Fake, but sufficient, for the 32-bit with 64-bit hardware addresses  */
 name|bcopy
 argument_list|(

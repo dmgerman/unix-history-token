@@ -835,8 +835,7 @@ label|:
 name|printf
 argument_list|(
 literal|"ERROR : Unsupported CPU mask [use 1,2 or 4 threads per core].\n"
-literal|"\tcore0 thread mask [%lx], boot cpu mask [%lx]\n"
-literal|"\tUsing default, 16 TLB entries per CPU, split mode\n"
+literal|"\tcore0 thread mask [%lx], boot cpu mask [%lx].\n"
 argument_list|,
 operator|(
 name|u_long
@@ -2061,11 +2060,6 @@ argument_list|(
 name|xlp_cpu_frequency
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Platform specific startup now completes\n"
 argument_list|)
 expr_stmt|;
 block|}

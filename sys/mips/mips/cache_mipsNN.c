@@ -103,17 +103,78 @@ parameter_list|)
 value|((x)& ~31)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_NLM
+argument_list|)
+end_if
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|xlp_sync
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|__asm __volatile (
+literal|".set push              \n"
+literal|".set noreorder         \n"
+literal|".set mips64            \n"
+literal|"dla    $8, 1f          \n"
+literal|"/* jr.hb $8 */         \n"
+literal|".word 0x1000408        \n"
+literal|"nop                    \n"
+literal|"1: nop                    \n"
+literal|".set pop               \n"
+operator|:
+operator|:
+operator|:
+literal|"$8"
+block|)
+function|;
+end_function
+
+begin_endif
+unit|}
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|SB1250_PASS1
-end_ifdef
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
 name|SYNC
 value|__asm volatile("sync; sync")
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|CPU_NLM
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|SYNC
+value|xlp_sync()
 end_define
 
 begin_else
@@ -133,17 +194,36 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CPU_CNMIPS
-end_ifdef
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
 name|SYNCI
 value|mips_sync_icache();
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|CPU_NLM
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|SYNCI
+value|xlp_sync()
 end_define
 
 begin_else
@@ -166,11 +246,11 @@ begin_comment
 comment|/*  * Exported variables for consumers like bus_dma code  */
 end_comment
 
-begin_decl_stmt
-name|int
+begin_expr_stmt
+unit|int
 name|mips_picache_linesize
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|int
