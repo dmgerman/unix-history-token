@@ -8350,7 +8350,7 @@ expr_stmt|;
 comment|/* XXX Racy bv_cnt check. */
 if|if
 condition|(
-name|VOP_ISLOCKED
+name|NFSVOPISLOCKED
 argument_list|(
 name|vp
 argument_list|)

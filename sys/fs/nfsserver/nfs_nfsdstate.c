@@ -20129,7 +20129,7 @@ argument_list|()
 expr_stmt|;
 name|lktype
 operator|=
-name|VOP_ISLOCKED
+name|NFSVOPISLOCKED
 argument_list|(
 name|vp
 argument_list|)
@@ -20651,7 +20651,7 @@ argument_list|()
 expr_stmt|;
 name|lktype
 operator|=
-name|VOP_ISLOCKED
+name|NFSVOPISLOCKED
 argument_list|(
 name|vp
 argument_list|)
@@ -21279,7 +21279,7 @@ return|return;
 name|KASSERT
 argument_list|(
 operator|(
-name|VOP_ISLOCKED
+name|NFSVOPISLOCKED
 argument_list|(
 name|vp
 argument_list|)

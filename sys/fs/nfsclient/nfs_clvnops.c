@@ -5917,7 +5917,7 @@ condition|)
 block|{
 name|ltype
 operator|=
-name|VOP_ISLOCKED
+name|NFSVOPISLOCKED
 argument_list|(
 name|dvp
 argument_list|)

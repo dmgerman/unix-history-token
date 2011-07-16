@@ -422,7 +422,7 @@ argument_list|)
 expr_stmt|;
 name|old_lock
 operator|=
-name|VOP_ISLOCKED
+name|NFSVOPISLOCKED
 argument_list|(
 name|vp
 argument_list|)
