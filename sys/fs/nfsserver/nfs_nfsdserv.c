@@ -1239,7 +1239,7 @@ name|nd
 operator|->
 name|nd_repstat
 operator|=
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|tvp
 argument_list|,
@@ -17020,7 +17020,7 @@ name|vp
 operator|=
 name|dp
 expr_stmt|;
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|vp
 argument_list|,

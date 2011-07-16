@@ -448,7 +448,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Upgrade to exclusive lock, this might block */
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -500,7 +500,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Downgrade from exclusive lock. */
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|vp
 argument_list|,

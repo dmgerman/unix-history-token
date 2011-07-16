@@ -7025,7 +7025,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|savevp
 argument_list|,
@@ -7153,7 +7153,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|vp
 argument_list|,
