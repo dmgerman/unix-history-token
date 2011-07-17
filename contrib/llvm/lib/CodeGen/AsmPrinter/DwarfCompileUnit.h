@@ -748,6 +748,7 @@ name|DIE
 modifier|*
 name|Die
 parameter_list|,
+specifier|const
 name|ConstantInt
 modifier|*
 name|CI

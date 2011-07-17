@@ -72,31 +72,10 @@ block|{
 name|class
 name|raw_ostream
 decl_stmt|;
-name|class
-name|BranchProbabilityInfo
-decl_stmt|;
-name|class
-name|MachineBranchProbabilityInfo
-decl_stmt|;
-name|class
-name|MachineBasicBlock
-decl_stmt|;
 comment|// This class represents Branch Probability as a non-negative fraction.
 name|class
 name|BranchProbability
 block|{
-name|friend
-name|class
-name|BranchProbabilityInfo
-decl_stmt|;
-name|friend
-name|class
-name|MachineBranchProbabilityInfo
-decl_stmt|;
-name|friend
-name|class
-name|MachineBasicBlock
-decl_stmt|;
 comment|// Numerator
 name|uint32_t
 name|N
@@ -105,6 +84,8 @@ comment|// Denominator
 name|uint32_t
 name|D
 decl_stmt|;
+name|public
+label|:
 name|BranchProbability
 argument_list|(
 argument|uint32_t n
@@ -112,8 +93,40 @@ argument_list|,
 argument|uint32_t d
 argument_list|)
 empty_stmt|;
-name|public
-label|:
+name|uint32_t
+name|getNumerator
+argument_list|()
+specifier|const
+block|{
+return|return
+name|N
+return|;
+block|}
+name|uint32_t
+name|getDenominator
+argument_list|()
+specifier|const
+block|{
+return|return
+name|D
+return|;
+block|}
+comment|// Return (1 - Probability).
+name|BranchProbability
+name|getCompl
+parameter_list|()
+block|{
+return|return
+name|BranchProbability
+argument_list|(
+name|D
+operator|-
+name|N
+argument_list|,
+name|D
+argument_list|)
+return|;
+block|}
 name|raw_ostream
 modifier|&
 name|print

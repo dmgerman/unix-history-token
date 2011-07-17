@@ -146,7 +146,8 @@ name|TheKind
 decl_stmt|;
 name|llvm
 operator|::
-name|PATypeHolder
+name|Type
+operator|*
 name|TypeData
 expr_stmt|;
 name|unsigned
@@ -162,7 +163,7 @@ name|ABIArgInfo
 argument_list|(
 argument|Kind K
 argument_list|,
-argument|const llvm::Type *TD=
+argument|llvm::Type *TD=
 literal|0
 argument_list|,
 argument|unsigned UI=
@@ -222,7 +223,7 @@ specifier|static
 name|ABIArgInfo
 name|getDirect
 argument_list|(
-argument|const llvm::Type *T =
+argument|llvm::Type *T =
 literal|0
 argument_list|,
 argument|unsigned Offset =
@@ -244,7 +245,6 @@ specifier|static
 name|ABIArgInfo
 name|getExtend
 argument_list|(
-specifier|const
 name|llvm
 operator|::
 name|Type
@@ -424,7 +424,6 @@ return|return
 name|UIntData
 return|;
 block|}
-specifier|const
 name|llvm
 operator|::
 name|Type
@@ -448,7 +447,6 @@ block|}
 name|void
 name|setCoerceToType
 argument_list|(
-specifier|const
 name|llvm
 operator|::
 name|Type

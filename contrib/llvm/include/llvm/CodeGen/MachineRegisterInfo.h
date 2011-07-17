@@ -115,18 +115,6 @@ name|VirtReg2IndexFunctor
 operator|>
 name|VRegInfo
 expr_stmt|;
-comment|/// RegClassVRegMap - This vector acts as a map from TargetRegisterClass to
-comment|/// virtual registers. For each target register class, it keeps a list of
-comment|/// virtual registers belonging to the class.
-name|std
-operator|::
-name|vector
-operator|<
-name|unsigned
-operator|>
-operator|*
-name|RegClass2VRegMap
-expr_stmt|;
 comment|/// RegAllocHints - This vector records register allocation hints for virtual
 comment|/// registers. For each virtual register, it keeps a register and hint type
 comment|/// pair making up the allocation hint. Hint type is target specific except
@@ -779,32 +767,6 @@ name|size
 argument_list|()
 return|;
 block|}
-comment|/// getRegClassVirtRegs - Return the list of virtual registers of the given
-comment|/// target register class.
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|unsigned
-operator|>
-operator|&
-name|getRegClassVirtRegs
-argument_list|(
-argument|const TargetRegisterClass *RC
-argument_list|)
-specifier|const
-block|{
-return|return
-name|RegClass2VRegMap
-index|[
-name|RC
-operator|->
-name|getID
-argument_list|()
-index|]
-return|;
-block|}
 comment|/// setRegAllocationHint - Specify a register allocation hint for the
 comment|/// specified virtual register.
 name|void
@@ -860,6 +822,43 @@ name|RegAllocHints
 index|[
 name|Reg
 index|]
+return|;
+block|}
+comment|/// getSimpleHint - Return the preferred register allocation hint, or 0 if a
+comment|/// standard simple hint (Type == 0) is not set.
+name|unsigned
+name|getSimpleHint
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|)
+decl|const
+block|{
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|unsigned
+operator|>
+name|Hint
+operator|=
+name|getRegAllocationHint
+argument_list|(
+name|Reg
+argument_list|)
+expr_stmt|;
+return|return
+name|Hint
+operator|.
+name|first
+condition|?
+literal|0
+else|:
+name|Hint
+operator|.
+name|second
 return|;
 block|}
 comment|//===--------------------------------------------------------------------===//

@@ -241,6 +241,13 @@ argument_list|(
 argument|Instruction *Inst
 argument_list|)
 block|{
+name|assert
+argument_list|(
+name|Inst
+operator|&&
+literal|"Def requires inst"
+argument_list|)
+block|;
 return|return
 name|MemDepResult
 argument_list|(
@@ -262,6 +269,13 @@ modifier|*
 name|Inst
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|Inst
+operator|&&
+literal|"Clobber requires inst"
+argument_list|)
+expr_stmt|;
 return|return
 name|MemDepResult
 argument_list|(
@@ -291,6 +305,23 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+specifier|static
+name|MemDepResult
+name|getUnknown
+parameter_list|()
+block|{
+return|return
+name|MemDepResult
+argument_list|(
+name|PairTy
+argument_list|(
+literal|0
+argument_list|,
+name|Clobber
+argument_list|)
+argument_list|)
+return|;
+block|}
 comment|/// isClobber - Return true if this MemDepResult represents a query that is
 comment|/// a instruction clobber dependency.
 name|bool
@@ -305,6 +336,29 @@ name|getInt
 argument_list|()
 operator|==
 name|Clobber
+operator|&&
+name|getInst
+argument_list|()
+return|;
+block|}
+comment|/// isUnknown - Return true if this MemDepResult represents a query which
+comment|/// cannot and/or will not be computed.
+name|bool
+name|isUnknown
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Value
+operator|.
+name|getInt
+argument_list|()
+operator|==
+name|Clobber
+operator|&&
+operator|!
+name|getInst
+argument_list|()
 return|;
 block|}
 comment|/// isDef - Return true if this MemDepResult represents a query that is

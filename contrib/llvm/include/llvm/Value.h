@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/AbstractTypeUser.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Use.h"
 end_include
 
@@ -123,9 +117,6 @@ decl_stmt|;
 name|class
 name|ValueSymbolTable
 decl_stmt|;
-name|class
-name|TypeSymbolTable
-decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -169,6 +160,9 @@ name|Twine
 decl_stmt|;
 name|class
 name|MDNode
+decl_stmt|;
+name|class
+name|Type
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//                                 Value Class
@@ -223,7 +217,8 @@ name|unsigned
 name|short
 name|SubclassData
 decl_stmt|;
-name|PATypeHolder
+name|Type
+modifier|*
 name|VTy
 decl_stmt|;
 name|Use
@@ -238,10 +233,6 @@ comment|// Allow ValueSymbolTable to directly mod Name.
 name|friend
 name|class
 name|ValueHandleBase
-decl_stmt|;
-name|friend
-name|class
-name|AbstractTypeUser
 decl_stmt|;
 name|ValueName
 modifier|*
@@ -318,8 +309,6 @@ decl|const
 decl_stmt|;
 comment|/// All values are typed, get the type of this value.
 comment|///
-specifier|inline
-specifier|const
 name|Type
 operator|*
 name|getType
@@ -338,7 +327,6 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|// All values can potentially be named...
-specifier|inline
 name|bool
 name|hasName
 argument_list|()
@@ -413,16 +401,6 @@ comment|/// use list is guaranteed to be empty.
 comment|///
 name|void
 name|replaceAllUsesWith
-parameter_list|(
-name|Value
-modifier|*
-name|V
-parameter_list|)
-function_decl|;
-comment|// uncheckedReplaceAllUsesWith - Just like replaceAllUsesWith but dangerous.
-comment|// Only use when in type resolution situations!
-name|void
-name|uncheckedReplaceAllUsesWith
 parameter_list|(
 name|Value
 modifier|*
@@ -811,22 +789,6 @@ name|true
 return|;
 comment|// Values are always values.
 block|}
-comment|/// getRawType - This should only be used to implement the vmcore library.
-comment|///
-specifier|const
-name|Type
-operator|*
-name|getRawType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|VTy
-operator|.
-name|getRawType
-argument_list|()
-return|;
-block|}
 comment|/// stripPointerCasts - This method strips off any unneeded pointer
 comment|/// casts from the specified value, returning the original uncasted value.
 comment|/// Note that the returned value has pointer type if the specified value does.
@@ -928,6 +890,24 @@ literal|1u
 operator|<<
 literal|29
 decl_stmt|;
+comment|/// mutateType - Mutate the type of this Value to be of the specified type.
+comment|/// Note that this is an extremely dangerous operation which can create
+comment|/// completely invalid IR very easily.  It is strongly recommended that you
+comment|/// recreate IR objects with the right types instead of mutating them in
+comment|/// place.
+name|void
+name|mutateType
+parameter_list|(
+name|Type
+modifier|*
+name|Ty
+parameter_list|)
+block|{
+name|VTy
+operator|=
+name|Ty
+expr_stmt|;
+block|}
 name|protected
 label|:
 name|unsigned

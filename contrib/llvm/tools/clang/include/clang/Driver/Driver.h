@@ -997,6 +997,16 @@ name|ArchName
 argument_list|)
 decl|const
 decl_stmt|;
+name|bool
+name|IsUsingLTO
+argument_list|(
+specifier|const
+name|ArgList
+operator|&
+name|Args
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// @}
 comment|/// GetReleaseVersion - Parse (([0-9]+)(.([0-9]+)(.([0-9]+)?))?)? and
 comment|/// return the grouped values as integers. Numbers which are not

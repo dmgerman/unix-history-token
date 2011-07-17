@@ -152,6 +152,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
@@ -415,7 +421,7 @@ name|Identifiers
 block|;
 comment|/// Selectors - This table contains all the selectors in the program. Unlike
 comment|/// IdentifierTable above, this table *isn't* populated by the preprocessor.
-comment|/// It is declared/instantiated here because it's role/lifetime is
+comment|/// It is declared/expanded here because it's role/lifetime is
 comment|/// conceptually similar the IdentifierTable. In addition, the current control
 comment|/// flow (in clang::ParseAST()), make it convenient to put here.
 comment|/// FIXME: Make sure the lifetime of Identifiers/Selectors *isn't* tied to
@@ -675,10 +681,10 @@ operator|>
 expr|>
 name|PragmaPushMacroInfo
 expr_stmt|;
-comment|/// \brief Instantiation source location for the last macro that expanded
+comment|/// \brief Expansion source location for the last macro that expanded
 comment|/// to no tokens.
 name|SourceLocation
-name|LastEmptyMacroInstantiationLoc
+name|LastEmptyMacroExpansionLoc
 decl_stmt|;
 comment|// Various statistics we track for performance analysis.
 name|unsigned
@@ -746,7 +752,38 @@ index|[
 name|TokenLexerCacheSize
 index|]
 decl_stmt|;
-comment|/// \brief A record of the macro definitions and instantiations that
+comment|/// \brief Keeps macro expanded tokens for TokenLexers.
+comment|//
+comment|/// Works like a stack; a TokenLexer adds the macro expanded tokens that is
+comment|/// going to lex in the cache and when it finishes the tokens are removed
+comment|/// from the end of the cache.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|Token
+operator|,
+literal|16
+operator|>
+name|MacroExpandedTokens
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|TokenLexer
+operator|*
+operator|,
+name|size_t
+operator|>
+expr|>
+name|MacroExpandingLexersStack
+expr_stmt|;
+comment|/// \brief A record of the macro definitions and expansions that
 comment|/// occurred during preprocessing.
 comment|///
 comment|/// This is an optional side structure that can be enabled with
@@ -1215,15 +1252,15 @@ name|true
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \brief Instantiation source location for the last macro that expanded
+comment|/// \brief Expansion source location for the last macro that expanded
 comment|/// to no tokens.
 name|SourceLocation
-name|getLastEmptyMacroInstantiationLoc
+name|getLastEmptyMacroExpansionLoc
 argument_list|()
 specifier|const
 block|{
 return|return
-name|LastEmptyMacroInstantiationLoc
+name|LastEmptyMacroExpansionLoc
 return|;
 block|}
 specifier|const
@@ -1448,7 +1485,7 @@ name|void
 name|createPreprocessingRecord
 parameter_list|(
 name|bool
-name|IncludeNestedMacroInstantiations
+name|IncludeNestedMacroExpansions
 parameter_list|)
 function_decl|;
 comment|/// EnterMainSourceFile - Enter the specified FileID as the main source file,
@@ -2054,7 +2091,7 @@ return|;
 block|}
 comment|/// getSpelling() - Return the 'spelling' of the token at the given
 comment|/// location; does not go up to the spelling location or down to the
-comment|/// instantiation location.
+comment|/// expansion location.
 comment|///
 comment|/// \param buffer A buffer which will be used only if the token requires
 comment|///   "cleaning", e.g. if it contains trigraphs or escaped newlines
@@ -2276,7 +2313,7 @@ return|;
 block|}
 comment|/// CreateString - Plop the specified string into a scratch buffer and set the
 comment|/// specified token's location and length to it.  If specified, the source
-comment|/// location provides a location of the instantiation point of the token.
+comment|/// location provides a location of the expansion point of the token.
 name|void
 name|CreateString
 parameter_list|(
@@ -2334,6 +2371,52 @@ argument_list|(
 name|Loc
 argument_list|,
 name|Offset
+argument_list|,
+name|SourceMgr
+argument_list|,
+name|Features
+argument_list|)
+return|;
+block|}
+comment|/// \brief Returns true if the given MacroID location points at the first
+comment|/// token of the macro expansion.
+name|bool
+name|isAtStartOfMacroExpansion
+argument_list|(
+name|SourceLocation
+name|loc
+argument_list|)
+decl|const
+block|{
+return|return
+name|Lexer
+operator|::
+name|isAtStartOfMacroExpansion
+argument_list|(
+name|loc
+argument_list|,
+name|SourceMgr
+argument_list|,
+name|Features
+argument_list|)
+return|;
+block|}
+comment|/// \brief Returns true if the given MacroID location points at the last
+comment|/// token of the macro expansion.
+name|bool
+name|isAtEndOfMacroExpansion
+argument_list|(
+name|SourceLocation
+name|loc
+argument_list|)
+decl|const
+block|{
+return|return
+name|Lexer
+operator|::
+name|isAtEndOfMacroExpansion
+argument_list|(
+name|loc
 argument_list|,
 name|SourceMgr
 argument_list|,
@@ -2431,6 +2514,11 @@ name|void
 name|PrintStats
 parameter_list|()
 function_decl|;
+name|size_t
+name|getTotalMemory
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// HandleMicrosoftCommentPaste - When the macro expander pastes together a
 comment|/// comment (/##/) in microsoft mode, this method handles updating the current
 comment|/// state, returning the token on the next source line.
@@ -3054,6 +3142,39 @@ modifier|*
 name|MI
 parameter_list|)
 function_decl|;
+comment|/// \brief Cache macro expanded tokens for TokenLexers.
+comment|//
+comment|/// Works like a stack; a TokenLexer adds the macro expanded tokens that is
+comment|/// going to lex in the cache and when it finishes the tokens are removed
+comment|/// from the end of the cache.
+name|Token
+modifier|*
+name|cacheMacroExpandedTokens
+argument_list|(
+name|TokenLexer
+operator|*
+name|tokLexer
+argument_list|,
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|Token
+operator|>
+name|tokens
+argument_list|)
+decl_stmt|;
+name|void
+name|removeCachedMacroExpandedTokensOfLastLexer
+parameter_list|()
+function_decl|;
+name|friend
+name|void
+name|TokenLexer
+operator|::
+name|ExpandFunctionArguments
+argument_list|()
+expr_stmt|;
 comment|/// isNextPPTokenLParen - Determine whether the next preprocessor token to be
 comment|/// lexed is a '('.  If so, consume the token and return true, if not, this
 comment|/// method should have no observable side-effect on the lexed tokens.
@@ -3078,7 +3199,7 @@ name|MI
 parameter_list|,
 name|SourceLocation
 modifier|&
-name|InstantiationEnd
+name|ExpansionEnd
 parameter_list|)
 function_decl|;
 comment|/// ExpandBuiltinMacro - If an identifier token is read that is to be expanded

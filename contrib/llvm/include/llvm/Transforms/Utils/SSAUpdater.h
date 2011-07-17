@@ -318,14 +318,6 @@ name|SSAUpdater
 modifier|&
 name|SSA
 decl_stmt|;
-name|DbgDeclareInst
-modifier|*
-name|DDI
-decl_stmt|;
-name|DIBuilder
-modifier|*
-name|DIB
-decl_stmt|;
 name|public
 label|:
 name|LoadAndStorePromoter
@@ -333,10 +325,6 @@ argument_list|(
 argument|const SmallVectorImpl<Instruction*>&Insts
 argument_list|,
 argument|SSAUpdater&S
-argument_list|,
-argument|DbgDeclareInst *DDI
-argument_list|,
-argument|DIBuilder *DIB
 argument_list|,
 argument|StringRef Name = StringRef()
 argument_list|)
@@ -439,6 +427,16 @@ comment|/// This is called before each instruction is deleted.
 name|virtual
 name|void
 name|instructionDeleted
+argument_list|(
+argument|Instruction *I
+argument_list|)
+specifier|const
+block|{   }
+comment|/// updateDebugInfo - This is called to update debug info associated with the
+comment|/// instruction.
+name|virtual
+name|void
+name|updateDebugInfo
 argument_list|(
 argument|Instruction *I
 argument_list|)

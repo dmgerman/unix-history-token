@@ -414,12 +414,28 @@ comment|/// is expected.
 name|CCC_ObjCMessageReceiver
 block|,
 comment|/// \brief Code completion occurred on the right-hand side of a member
-comment|/// access expression.
+comment|/// access expression using the dot operator.
 comment|///
 comment|/// The results of this completion are the members of the type being
 comment|/// accessed. The type itself is available via
 comment|/// \c CodeCompletionContext::getType().
-name|CCC_MemberAccess
+name|CCC_DotMemberAccess
+block|,
+comment|/// \brief Code completion occurred on the right-hand side of a member
+comment|/// access expression using the arrow operator.
+comment|///
+comment|/// The results of this completion are the members of the type being
+comment|/// accessed. The type itself is available via
+comment|/// \c CodeCompletionContext::getType().
+name|CCC_ArrowMemberAccess
+block|,
+comment|/// \brief Code completion occurred on the right-hand side of an Objective-C
+comment|/// property access expression.
+comment|///
+comment|/// The results of this completion are the members of the type being
+comment|/// accessed. The type itself is available via
+comment|/// \c CodeCompletionContext::getType().
+name|CCC_ObjCPropertyAccess
 block|,
 comment|/// \brief Code completion occurred after the "enum" keyword, to indicate
 comment|/// an enumeration name.
@@ -481,6 +497,19 @@ comment|/// \brief Code completion in a parenthesized expression, which means th
 comment|/// we may also have types here in C and Objective-C (as well as in C++).
 name|CCC_ParenthesizedExpression
 block|,
+comment|/// \brief Code completion where an Objective-C instance message is expcted.
+name|CCC_ObjCInstanceMessage
+block|,
+comment|/// \brief Code completion where an Objective-C class message is expected.
+name|CCC_ObjCClassMessage
+block|,
+comment|/// \brief Code completion where a superclass of an Objective-C class is
+comment|/// expected.
+name|CCC_ObjCSuperclass
+block|,
+comment|/// \brief Code completion where an Objective-C category name is expected.
+name|CCC_ObjCCategoryName
+block|,
 comment|/// \brief An unknown context, in which we are recovering from a parsing
 comment|/// error and don't know which completions we should give.
 name|CCC_Recovery
@@ -531,7 +560,15 @@ if|if
 condition|(
 name|Kind
 operator|==
-name|CCC_MemberAccess
+name|CCC_DotMemberAccess
+operator|||
+name|Kind
+operator|==
+name|CCC_ArrowMemberAccess
+operator|||
+name|Kind
+operator|==
+name|CCC_ObjCPropertyAccess
 condition|)
 name|BaseType
 operator|=

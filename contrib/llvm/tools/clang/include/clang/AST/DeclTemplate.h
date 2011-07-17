@@ -1164,6 +1164,18 @@ literal|1
 argument_list|)
 return|;
 block|}
+name|bool
+name|isExplicitSpecialization
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTemplateSpecializationKind
+argument_list|()
+operator|==
+name|TSK_ExplicitSpecialization
+return|;
+block|}
 comment|/// \brief Set the template specialization kind.
 name|void
 name|setTemplateSpecializationKind
@@ -4665,6 +4677,18 @@ operator|>
 operator|(
 name|SpecializationKind
 operator|)
+return|;
+block|}
+name|bool
+name|isExplicitSpecialization
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getSpecializationKind
+argument_list|()
+operator|==
+name|TSK_ExplicitSpecialization
 return|;
 block|}
 name|void

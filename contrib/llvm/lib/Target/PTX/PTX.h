@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"MCTargetDesc/PTXMCTargetDesc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
@@ -149,40 +155,12 @@ name|Level
 name|OptLevel
 argument_list|)
 decl_stmt|;
-specifier|extern
-name|Target
-name|ThePTX32Target
-decl_stmt|;
-specifier|extern
-name|Target
-name|ThePTX64Target
-decl_stmt|;
 block|}
 end_decl_stmt
 
 begin_comment
 comment|// namespace llvm;
 end_comment
-
-begin_comment
-comment|// Defines symbolic names for PTX registers.
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"PTXGenRegisterNames.inc"
-end_include
-
-begin_comment
-comment|// Defines symbolic names for the PTX instructions.
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"PTXGenInstrNames.inc"
-end_include
 
 begin_endif
 endif|#

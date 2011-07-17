@@ -78,7 +78,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"llvm/Config/config.h"
+file|"llvm/Config/llvm-config.h"
 end_include
 
 begin_include
@@ -2373,7 +2373,7 @@ comment|/// Get the error_category used for errno values from POSIX functions. T
 end_comment
 
 begin_comment
-comment|/// the same as the system_category on POISIX systems, but is the same as the
+comment|/// the same as the system_category on POSIX systems, but is the same as the
 end_comment
 
 begin_comment

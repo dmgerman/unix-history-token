@@ -2240,10 +2240,36 @@ name|end
 argument_list|()
 argument_list|)
 expr_stmt|;
+comment|// If we just moved the element we're inserting, be sure to update
+comment|// the reference.
+specifier|const
+name|T
+modifier|*
+name|EltPtr
+init|=
+operator|&
+name|Elt
+decl_stmt|;
+if|if
+condition|(
+name|I
+operator|<=
+name|EltPtr
+operator|&&
+name|EltPtr
+operator|<
+name|this
+operator|->
+name|EndX
+condition|)
+operator|++
+name|EltPtr
+expr_stmt|;
 operator|*
 name|I
 operator|=
-name|Elt
+operator|*
+name|EltPtr
 expr_stmt|;
 return|return
 name|I

@@ -69,6 +69,9 @@ decl_stmt|;
 name|class
 name|TargetOptions
 decl_stmt|;
+name|class
+name|LangOptions
+decl_stmt|;
 enum|enum
 name|BackendAction
 block|{
@@ -107,6 +110,11 @@ specifier|const
 name|TargetOptions
 operator|&
 name|TOpts
+argument_list|,
+specifier|const
+name|LangOptions
+operator|&
+name|LOpts
 argument_list|,
 name|llvm
 operator|::

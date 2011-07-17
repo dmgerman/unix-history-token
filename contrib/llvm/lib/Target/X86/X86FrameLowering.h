@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCDwarf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetFrameLowering.h"
 end_include
 
@@ -237,6 +243,17 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|,
 argument|int FI
+argument_list|)
+specifier|const
+block|;
+name|uint32_t
+name|getCompactUnwindEncoding
+argument_list|(
+argument|ArrayRef<MCCFIInstruction> Instrs
+argument_list|,
+argument|int DataAlignmentFactor
+argument_list|,
+argument|bool IsEH
 argument_list|)
 specifier|const
 block|; }

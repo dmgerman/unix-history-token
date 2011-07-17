@@ -343,6 +343,17 @@ literal|30
 decl_stmt|;
 comment|///< Function must be in a unwind
 comment|///table
+specifier|const
+name|Attributes
+name|NonLazyBind
+init|=
+literal|1U
+operator|<<
+literal|31
+decl_stmt|;
+comment|///< Function is called early and/or
+comment|///  often, so lazy binding isn't
+comment|///  worthwhile.
 comment|/// Note that uwtable is about the ABI or the user mandating an entry in the
 comment|/// unwind table. The nounwind attribute is about an exception passing by the
 comment|/// function.
@@ -404,6 +415,8 @@ operator||
 name|Hotpatch
 operator||
 name|UWTable
+operator||
+name|NonLazyBind
 decl_stmt|;
 comment|/// @brief Parameter attributes that do not apply to vararg call arguments.
 specifier|const

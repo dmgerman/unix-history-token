@@ -218,6 +218,20 @@ modifier|&
 name|RHS
 parameter_list|)
 function_decl|;
+comment|// A type for the word following an array of hung-off Uses in memory, which is
+comment|// a pointer back to their User with the bottom bit set.
+typedef|typedef
+name|PointerIntPair
+operator|<
+name|User
+operator|*
+operator|,
+literal|1
+operator|,
+name|unsigned
+operator|>
+name|UserRef
+expr_stmt|;
 name|private
 label|:
 comment|/// Copy ctor - do not implement
@@ -399,6 +413,31 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// initTags - initialize the waymarking tags on an array of Uses, so that
+end_comment
+
+begin_comment
+comment|/// getUser() can find the User from any of those Uses.
+end_comment
+
+begin_function_decl
+specifier|static
+name|Use
+modifier|*
+name|initTags
+parameter_list|(
+name|Use
+modifier|*
+name|Start
+parameter_list|,
+name|Use
+modifier|*
+name|Stop
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// zap - This is used to destroy Use operands when the number of operands of
 end_comment
 
@@ -442,23 +481,6 @@ argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt
-
-begin_function_decl
-specifier|static
-name|Use
-modifier|*
-name|initTags
-parameter_list|(
-name|Use
-modifier|*
-name|Start
-parameter_list|,
-name|Use
-modifier|*
-name|Stop
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 name|Value
@@ -587,13 +609,6 @@ begin_decl_stmt
 name|friend
 name|class
 name|Value
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|friend
-name|class
-name|User
 decl_stmt|;
 end_decl_stmt
 
@@ -1022,46 +1037,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-unit|};
-comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
-comment|//                         AugmentedUse layout struct
-end_comment
-
-begin_comment
-comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_decl_stmt
-name|struct
-name|AugmentedUse
-range|:
-name|public
-name|Use
-block|{
-name|PointerIntPair
-operator|<
-name|User
-operator|*
-block|,
-literal|1
-block|,
-name|unsigned
-operator|>
-name|ref
-block|;
-name|AugmentedUse
-argument_list|()
-block|;
-comment|// not implemented
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-unit|}
+unit|};  }
 comment|// End llvm namespace
 end_comment
 

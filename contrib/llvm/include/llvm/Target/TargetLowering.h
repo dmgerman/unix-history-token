@@ -5222,24 +5222,6 @@ name|Constraint
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getRegClassForInlineAsmConstraint - Given a constraint letter (e.g. "r"),
-comment|/// return a list of registers that can be used to satisfy the constraint.
-comment|/// This should only be used for C_RegisterClass constraints.
-name|virtual
-name|std
-operator|::
-name|vector
-operator|<
-name|unsigned
-operator|>
-name|getRegClassForInlineAsmConstraint
-argument_list|(
-argument|const std::string&Constraint
-argument_list|,
-argument|EVT VT
-argument_list|)
-specifier|const
-expr_stmt|;
 comment|/// getRegForInlineAsmConstraint - Given a physical register constraint (e.g.
 comment|/// {edx}), return the register number and the register class for the
 comment|/// register.
@@ -5550,6 +5532,24 @@ block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Div utility functions
 comment|//
+name|SDValue
+name|BuildExactSDIV
+argument_list|(
+name|SDValue
+name|Op1
+argument_list|,
+name|SDValue
+name|Op2
+argument_list|,
+name|DebugLoc
+name|dl
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
 name|SDValue
 name|BuildSDIV
 argument_list|(
@@ -6437,6 +6437,11 @@ decl_stmt|;
 comment|// Found a legal promoted vector type.
 if|if
 condition|(
+name|NVT
+operator|!=
+name|MVT
+argument_list|()
+operator|&&
 name|ValueTypeActions
 operator|.
 name|getTypeAction
@@ -6486,6 +6491,15 @@ expr_stmt|;
 comment|// If there is no simple vector type with this many elements then there
 comment|// cannot be a larger legal vector type.  Note that this assumes that
 comment|// there are no skipped intermediate vector types in the simple types.
+if|if
+condition|(
+operator|!
+name|EltVT
+operator|.
+name|isSimple
+argument_list|()
+condition|)
+break|break;
 name|MVT
 name|LargerVector
 init|=

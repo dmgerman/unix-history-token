@@ -915,11 +915,6 @@ name|unsigned
 name|MaxInterferingRegs
 init|=
 name|UINT_MAX
-parameter_list|,
-name|float
-name|MaxWeight
-init|=
-name|HUGE_VALF
 parameter_list|)
 function_decl|;
 comment|// Was this virtual register visited during collectInterferingVRegs?

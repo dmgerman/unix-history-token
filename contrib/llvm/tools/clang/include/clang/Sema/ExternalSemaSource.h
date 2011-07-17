@@ -146,6 +146,23 @@ argument_list|(
 argument|Selector Sel
 argument_list|)
 block|;
+comment|/// \brief Load the set of namespaces that are known to the external source,
+comment|/// which will be used during typo correction.
+name|virtual
+name|void
+name|ReadKnownNamespaces
+argument_list|(
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|NamespaceDecl
+operator|*
+operator|>
+operator|&
+name|Namespaces
+argument_list|)
+block|;
 comment|/// \brief Do last resort, unqualified lookup on a LookupResult that
 comment|/// Sema cannot find.
 comment|///

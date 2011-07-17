@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"MCTargetDesc/PPCMCTargetDesc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -114,6 +120,12 @@ name|class
 name|MCContext
 decl_stmt|;
 name|class
+name|MCInstrInfo
+decl_stmt|;
+name|class
+name|MCSubtargetInfo
+decl_stmt|;
+name|class
 name|TargetMachine
 decl_stmt|;
 name|class
@@ -151,12 +163,14 @@ modifier|*
 name|createPPCMCCodeEmitter
 parameter_list|(
 specifier|const
-name|Target
+name|MCInstrInfo
 modifier|&
+name|MCII
 parameter_list|,
-name|TargetMachine
+specifier|const
+name|MCSubtargetInfo
 modifier|&
-name|TM
+name|STI
 parameter_list|,
 name|MCContext
 modifier|&
@@ -198,14 +212,6 @@ name|bool
 name|isDarwin
 parameter_list|)
 function_decl|;
-specifier|extern
-name|Target
-name|ThePPC32Target
-decl_stmt|;
-specifier|extern
-name|Target
-name|ThePPC64Target
-decl_stmt|;
 name|namespace
 name|PPCII
 block|{
@@ -261,38 +267,6 @@ end_decl_stmt
 begin_comment
 comment|// end namespace llvm;
 end_comment
-
-begin_comment
-comment|// Defines symbolic names for PowerPC registers.  This defines a mapping from
-end_comment
-
-begin_comment
-comment|// register name to register number.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"PPCGenRegisterNames.inc"
-end_include
-
-begin_comment
-comment|// Defines symbolic names for the PowerPC instructions.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"PPCGenInstrNames.inc"
-end_include
 
 begin_endif
 endif|#

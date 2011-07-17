@@ -81,6 +81,12 @@ directive|include
 file|<limits.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -114,7 +120,7 @@ comment|///
 comment|///   namespace llvm {
 comment|///   template<bool xcompile> class TypeBuilder<MyType, xcompile> {
 comment|///   public:
-comment|///     static const StructType *get(LLVMContext&Context) {
+comment|///     static StructType *get(LLVMContext&Context) {
 comment|///       // If you cache this result, be sure to cache it separately
 comment|///       // for each LLVMContext.
 comment|///       return StructType::get(
@@ -294,7 +300,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|const
 name|PointerType
 operator|*
 name|get
@@ -368,7 +373,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|const
 name|ArrayType
 operator|*
 name|get
@@ -420,7 +424,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|const
 name|ArrayType
 operator|*
 name|get
@@ -480,7 +483,7 @@ parameter_list|(
 name|T
 parameter_list|)
 define|\
-value|template<> class TypeBuilder<T, false> { \ public: \   static const IntegerType *get(LLVMContext&Context) { \     return IntegerType::get(Context, sizeof(T) * CHAR_BIT); \   } \ }; \ template<> class TypeBuilder<T, true> { \
+value|template<> class TypeBuilder<T, false> { \ public: \   static IntegerType *get(LLVMContext&Context) { \     return IntegerType::get(Context, sizeof(T) * CHAR_BIT); \   } \ }; \ template<> class TypeBuilder<T, true> { \
 comment|/* We provide a definition here so users don't accidentally */
 value|\
 comment|/* define these types to work. */
@@ -586,7 +589,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|const
 name|IntegerType
 operator|*
 name|get
@@ -621,7 +623,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|const
 name|Type
 operator|*
 name|get
@@ -666,7 +667,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|const
 name|Type
 operator|*
 name|get
@@ -715,7 +715,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|const
 name|Type
 operator|*
 name|get
@@ -752,7 +751,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|const
 name|Type
 operator|*
 name|get
@@ -789,7 +787,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|const
 name|Type
 operator|*
 name|get
@@ -826,7 +823,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|const
 name|Type
 operator|*
 name|get
@@ -863,7 +859,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|const
 name|Type
 operator|*
 name|get
@@ -900,7 +895,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|const
 name|Type
 operator|*
 name|get
@@ -935,7 +929,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|const
 name|Type
 operator|*
 name|get
@@ -1088,7 +1081,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|const
 name|FunctionType
 operator|*
 name|get
@@ -1144,7 +1136,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|const
 name|FunctionType
 operator|*
 name|get
@@ -1156,7 +1147,6 @@ name|std
 operator|::
 name|vector
 operator|<
-specifier|const
 name|Type
 operator|*
 operator|>
@@ -1241,7 +1231,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|const
 name|FunctionType
 operator|*
 name|get
@@ -1253,7 +1242,6 @@ name|std
 operator|::
 name|vector
 operator|<
-specifier|const
 name|Type
 operator|*
 operator|>
@@ -1360,7 +1348,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|const
 name|FunctionType
 operator|*
 name|get
@@ -1372,7 +1359,6 @@ name|std
 operator|::
 name|vector
 operator|<
-specifier|const
 name|Type
 operator|*
 operator|>
@@ -1501,7 +1487,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|const
 name|FunctionType
 operator|*
 name|get
@@ -1513,7 +1498,6 @@ name|std
 operator|::
 name|vector
 operator|<
-specifier|const
 name|Type
 operator|*
 operator|>
@@ -1664,7 +1648,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|const
 name|FunctionType
 operator|*
 name|get
@@ -1676,7 +1659,6 @@ name|std
 operator|::
 name|vector
 operator|<
-specifier|const
 name|Type
 operator|*
 operator|>
@@ -1821,7 +1803,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|const
 name|FunctionType
 operator|*
 name|get
@@ -1879,7 +1860,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|const
 name|FunctionType
 operator|*
 name|get
@@ -1891,7 +1871,6 @@ name|std
 operator|::
 name|vector
 operator|<
-specifier|const
 name|Type
 operator|*
 operator|>
@@ -1978,7 +1957,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|const
 name|FunctionType
 operator|*
 name|get
@@ -1990,7 +1968,6 @@ name|std
 operator|::
 name|vector
 operator|<
-specifier|const
 name|Type
 operator|*
 operator|>
@@ -2099,7 +2076,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|const
 name|FunctionType
 operator|*
 name|get
@@ -2111,7 +2087,6 @@ name|std
 operator|::
 name|vector
 operator|<
-specifier|const
 name|Type
 operator|*
 operator|>
@@ -2242,7 +2217,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|const
 name|FunctionType
 operator|*
 name|get
@@ -2254,7 +2228,6 @@ name|std
 operator|::
 name|vector
 operator|<
-specifier|const
 name|Type
 operator|*
 operator|>
@@ -2407,7 +2380,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|const
 name|FunctionType
 operator|*
 name|get
@@ -2419,7 +2391,6 @@ name|std
 operator|::
 name|vector
 operator|<
-specifier|const
 name|Type
 operator|*
 operator|>

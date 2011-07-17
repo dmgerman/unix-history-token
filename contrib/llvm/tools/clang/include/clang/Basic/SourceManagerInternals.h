@@ -334,9 +334,7 @@ block|{}
 name|unsigned
 name|getLineTableFilenameID
 argument_list|(
-argument|const char *Ptr
-argument_list|,
-argument|unsigned Len
+argument|llvm::StringRef Str
 argument_list|)
 expr_stmt|;
 specifier|const

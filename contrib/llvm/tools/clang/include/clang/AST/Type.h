@@ -537,6 +537,30 @@ name|Strong
 block|}
 enum|;
 enum|enum
+name|ObjCLifetime
+block|{
+comment|/// There is no lifetime qualification on this type.
+name|OCL_None
+block|,
+comment|/// This object can be modified without requiring retains or
+comment|/// releases.
+name|OCL_ExplicitNone
+block|,
+comment|/// Assigning into this object requires the old value to be
+comment|/// released and the new value to be retained.  The timing of the
+comment|/// release of the old value is inexact: it may be moved to
+comment|/// immediately after the last known point where the value is
+comment|/// live.
+name|OCL_Strong
+block|,
+comment|/// Reading or writing from this object requires a barrier call.
+name|OCL_Weak
+block|,
+comment|/// Assigning into this object requires a lifetime extension.
+name|OCL_Autoreleasing
+block|}
+enum|;
+enum|enum
 block|{
 comment|/// The maximum supported address space number.
 comment|/// 24 bits should be enough for anyone.
@@ -1023,6 +1047,150 @@ return|return
 name|qs
 return|;
 block|}
+name|Qualifiers
+name|withoutObjCGLifetime
+argument_list|()
+specifier|const
+block|{
+name|Qualifiers
+name|qs
+operator|=
+operator|*
+name|this
+block|;
+name|qs
+operator|.
+name|removeObjCLifetime
+argument_list|()
+block|;
+return|return
+name|qs
+return|;
+block|}
+name|bool
+name|hasObjCLifetime
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Mask
+operator|&
+name|LifetimeMask
+return|;
+block|}
+name|ObjCLifetime
+name|getObjCLifetime
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ObjCLifetime
+argument_list|(
+operator|(
+name|Mask
+operator|&
+name|LifetimeMask
+operator|)
+operator|>>
+name|LifetimeShift
+argument_list|)
+return|;
+block|}
+name|void
+name|setObjCLifetime
+parameter_list|(
+name|ObjCLifetime
+name|type
+parameter_list|)
+block|{
+name|Mask
+operator|=
+operator|(
+name|Mask
+operator|&
+operator|~
+name|LifetimeMask
+operator|)
+operator||
+operator|(
+name|type
+operator|<<
+name|LifetimeShift
+operator|)
+expr_stmt|;
+block|}
+name|void
+name|removeObjCLifetime
+parameter_list|()
+block|{
+name|setObjCLifetime
+argument_list|(
+name|OCL_None
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|addObjCLifetime
+parameter_list|(
+name|ObjCLifetime
+name|type
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|type
+argument_list|)
+expr_stmt|;
+name|setObjCLifetime
+argument_list|(
+name|type
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// True if the lifetime is neither None or ExplicitNone.
+name|bool
+name|hasNonTrivialObjCLifetime
+argument_list|()
+specifier|const
+block|{
+name|ObjCLifetime
+name|lifetime
+operator|=
+name|getObjCLifetime
+argument_list|()
+block|;
+return|return
+operator|(
+name|lifetime
+operator|>
+name|OCL_ExplicitNone
+operator|)
+return|;
+block|}
+comment|/// True if the lifetime is either strong or weak.
+name|bool
+name|hasStrongOrWeakObjCLifetime
+argument_list|()
+specifier|const
+block|{
+name|ObjCLifetime
+name|lifetime
+operator|=
+name|getObjCLifetime
+argument_list|()
+block|;
+return|return
+operator|(
+name|lifetime
+operator|==
+name|OCL_Strong
+operator|||
+name|lifetime
+operator|==
+name|OCL_Weak
+operator|)
+return|;
+block|}
 name|bool
 name|hasAddressSpace
 argument_list|()
@@ -1350,6 +1518,21 @@ name|getObjCGCAttr
 argument_list|()
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Q
+operator|.
+name|hasObjCLifetime
+argument_list|()
+condition|)
+name|addObjCLifetime
+argument_list|(
+name|Q
+operator|.
+name|getObjCLifetime
+argument_list|()
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 comment|/// \brief Add the qualifiers from the given set to this set, given that
@@ -1403,6 +1586,27 @@ name|hasObjCGCAttr
 argument_list|()
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+name|getObjCLifetime
+argument_list|()
+operator|==
+name|qs
+operator|.
+name|getObjCLifetime
+argument_list|()
+operator|||
+operator|!
+name|hasObjCLifetime
+argument_list|()
+operator|||
+operator|!
+name|qs
+operator|.
+name|hasObjCLifetime
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|Mask
 operator||=
 name|qs
@@ -1453,6 +1657,15 @@ name|hasObjCGCAttr
 argument_list|()
 operator|)
 operator|&&
+comment|// ObjC lifetime qualifiers must match exactly.
+name|getObjCLifetime
+argument_list|()
+operator|==
+name|other
+operator|.
+name|getObjCLifetime
+argument_list|()
+operator|&&
 comment|// CVR qualifiers may subset.
 operator|(
 operator|(
@@ -1479,6 +1692,63 @@ operator|)
 operator|)
 return|;
 block|}
+comment|/// \brief Determines if these qualifiers compatibly include another set of
+comment|/// qualifiers from the narrow perspective of Objective-C ARC lifetime.
+comment|///
+comment|/// One set of Objective-C lifetime qualifiers compatibly includes the other
+comment|/// if the lifetime qualifiers match, or if both are non-__weak and the
+comment|/// including set also contains the 'const' qualifier.
+name|bool
+name|compatiblyIncludesObjCLifetime
+argument_list|(
+name|Qualifiers
+name|other
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|getObjCLifetime
+argument_list|()
+operator|==
+name|other
+operator|.
+name|getObjCLifetime
+argument_list|()
+condition|)
+return|return
+name|true
+return|;
+if|if
+condition|(
+name|getObjCLifetime
+argument_list|()
+operator|==
+name|OCL_Weak
+operator|||
+name|other
+operator|.
+name|getObjCLifetime
+argument_list|()
+operator|==
+name|OCL_Weak
+condition|)
+return|return
+name|false
+return|;
+return|return
+name|hasConst
+argument_list|()
+return|;
+block|}
+name|bool
+name|isSupersetOf
+argument_list|(
+name|Qualifiers
+name|Other
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Determine whether this set of qualifiers is a strict superset of
 comment|/// another set of qualifiers, not considering qualifier compatibility.
 name|bool
@@ -1689,8 +1959,8 @@ expr_stmt|;
 block|}
 name|private
 label|:
-comment|// bits:     |0 1 2|3 .. 4|5  ..  31|
-comment|//           |C R V|GCAttr|AddrSpace|
+comment|// bits:     |0 1 2|3 .. 4|5  ..  7|8   ...   31|
+comment|//           |C R V|GCAttr|Lifetime|AddressSpace|
 name|uint32_t
 name|Mask
 decl_stmt|;
@@ -1711,6 +1981,20 @@ decl_stmt|;
 specifier|static
 specifier|const
 name|uint32_t
+name|LifetimeMask
+init|=
+literal|0xE0
+decl_stmt|;
+specifier|static
+specifier|const
+name|uint32_t
+name|LifetimeShift
+init|=
+literal|5
+decl_stmt|;
+specifier|static
+specifier|const
+name|uint32_t
 name|AddressSpaceMask
 init|=
 operator|~
@@ -1718,6 +2002,8 @@ operator|(
 name|CVRMask
 operator||
 name|GCAttrMask
+operator||
+name|LifetimeMask
 operator|)
 decl_stmt|;
 specifier|static
@@ -1725,7 +2011,7 @@ specifier|const
 name|uint32_t
 name|AddressSpaceShift
 init|=
-literal|5
+literal|8
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -2280,6 +2566,51 @@ name|Ctx
 argument_list|)
 return|;
 block|}
+comment|/// \brief Determine whether this is a Plain Old Data (POD) type (C++ 3.9p10).
+name|bool
+name|isPODType
+argument_list|(
+name|ASTContext
+operator|&
+name|Context
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// isCXX11PODType() - Return true if this is a POD type according to the
+comment|/// more relaxed rules of the C++11 standard, regardless of the current
+comment|/// compilation's language.
+comment|/// (C++0x [basic.types]p9)
+name|bool
+name|isCXX11PODType
+argument_list|(
+name|ASTContext
+operator|&
+name|Context
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// isTrivialType - Return true if this is a trivial type
+comment|/// (C++0x [basic.types]p9)
+name|bool
+name|isTrivialType
+argument_list|(
+name|ASTContext
+operator|&
+name|Context
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// isTriviallyCopyableType - Return true if this is a trivially
+comment|/// copyable type (C++0x [basic.types]p9)
+name|bool
+name|isTriviallyCopyableType
+argument_list|(
+name|ASTContext
+operator|&
+name|Context
+argument_list|)
+decl|const
+decl_stmt|;
 comment|// Don't promise in the API that anything besides 'const' can be
 comment|// easily added.
 comment|/// addConst - add the specified type qualifier to this QualType.
@@ -2333,6 +2664,21 @@ argument_list|(
 name|Qualifiers
 operator|::
 name|Volatile
+argument_list|)
+return|;
+block|}
+name|QualType
+name|withCVRQualifiers
+argument_list|(
+name|unsigned
+name|CVR
+argument_list|)
+decl|const
+block|{
+return|return
+name|withFastQualifiers
+argument_list|(
+name|CVR
 argument_list|)
 return|;
 block|}
@@ -2651,6 +2997,21 @@ name|this
 argument_list|)
 return|;
 block|}
+comment|/// \brief Return the specified type with one level of "sugar" removed from
+comment|/// the type.
+comment|///
+comment|/// This routine takes off the first typedef, typeof, etc. If the outer level
+comment|/// of the type is already concrete, it returns it unmodified.
+name|QualType
+name|getSingleStepDesugaredType
+argument_list|(
+specifier|const
+name|ASTContext
+operator|&
+name|Context
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// IgnoreParens - Returns the specified type after dropping any
 comment|/// outer-level parentheses.
 name|QualType
@@ -2991,7 +3352,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// GCAttrTypesAttr - Returns gc attribute of this type.
+comment|/// getObjCGCAttr - Returns gc attribute of this type.
 end_comment
 
 begin_expr_stmt
@@ -3047,6 +3408,60 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// getObjCLifetime - Returns lifetime attribute of this type.
+end_comment
+
+begin_expr_stmt
+name|Qualifiers
+operator|::
+name|ObjCLifetime
+name|getObjCLifetime
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getQualifiers
+argument_list|()
+operator|.
+name|getObjCLifetime
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
+name|hasNonTrivialObjCLifetime
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getQualifiers
+argument_list|()
+operator|.
+name|hasNonTrivialObjCLifetime
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
+name|hasStrongOrWeakObjCLifetime
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getQualifiers
+argument_list|()
+operator|.
+name|hasStrongOrWeakObjCLifetime
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
 begin_enum
 enum|enum
 name|DestructionKind
@@ -3054,6 +3469,10 @@ block|{
 name|DK_none
 block|,
 name|DK_cxx_destructor
+block|,
+name|DK_objc_strong_lifetime
+block|,
+name|DK_objc_weak_lifetime
 block|}
 enum|;
 end_enum
@@ -3089,6 +3508,70 @@ argument_list|)
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine whether expressions of the given type are forbidden
+end_comment
+
+begin_comment
+comment|/// from being lvalues in C.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The expression types that are forbidden to be lvalues are:
+end_comment
+
+begin_comment
+comment|///   - 'void', but not qualified void
+end_comment
+
+begin_comment
+comment|///   - function types
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The exact rule here is C99 6.3.2.1:
+end_comment
+
+begin_comment
+comment|///   An lvalue is an expression with an object type or an incomplete
+end_comment
+
+begin_comment
+comment|///   type other than void.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isCForbiddenLValueType
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine whether this type has trivial copy-assignment semantics.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|hasTrivialCopyAssignment
+argument_list|(
+name|ASTContext
+operator|&
+name|Context
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_label
 name|private
@@ -3528,6 +4011,32 @@ argument_list|()
 return|;
 block|}
 name|bool
+name|hasObjCLifetime
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Quals
+operator|.
+name|hasObjCLifetime
+argument_list|()
+return|;
+block|}
+name|Qualifiers
+operator|::
+name|ObjCLifetime
+name|getObjCLifetime
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Quals
+operator|.
+name|getObjCLifetime
+argument_list|()
+return|;
+block|}
+name|bool
 name|hasAddressSpace
 argument_list|()
 specifier|const
@@ -3774,6 +4283,13 @@ name|Dependent
 operator|:
 literal|1
 block|;
+comment|/// \brief Whether this type somehow involves a template parameter, even
+comment|/// if the resolution of the type does not depend on a template parameter.
+name|unsigned
+name|InstantiationDependent
+operator|:
+literal|1
+block|;
 comment|/// \brief Whether this type is a variably-modified type (C99 6.7.5).
 name|unsigned
 name|VariablyModified
@@ -3900,7 +4416,7 @@ block|;   enum
 block|{
 name|NumTypeBits
 operator|=
-literal|17
+literal|18
 block|}
 block|;
 name|protected
@@ -4192,6 +4708,8 @@ argument|QualType canon
 argument_list|,
 argument|bool Dependent
 argument_list|,
+argument|bool InstantiationDependent
+argument_list|,
 argument|bool VariablyModified
 argument_list|,
 argument|bool ContainsUnexpandedParameterPack
@@ -4217,6 +4735,14 @@ operator|.
 name|Dependent
 operator|=
 name|Dependent
+block|;
+name|TypeBits
+operator|.
+name|InstantiationDependent
+operator|=
+name|Dependent
+operator|||
+name|InstantiationDependent
 block|;
 name|TypeBits
 operator|.
@@ -4269,6 +4795,29 @@ operator|.
 name|Dependent
 operator|=
 name|D
+block|;
+if|if
+condition|(
+name|D
+condition|)
+name|TypeBits
+operator|.
+name|InstantiationDependent
+operator|=
+name|true
+expr_stmt|;
+block|}
+name|void
+name|setInstantiationDependent
+argument_list|(
+argument|bool D = true
+argument_list|)
+block|{
+name|TypeBits
+operator|.
+name|InstantiationDependent
+operator|=
+name|D
 block|; }
 name|void
 name|setVariablyModified
@@ -4281,7 +4830,7 @@ operator|.
 name|VariablyModified
 operator|=
 name|VM
-block|; }
+block|;    }
 name|void
 name|setContainsUnexpandedParameterPack
 argument_list|(
@@ -4416,12 +4965,6 @@ name|isVoidType
 argument_list|()
 return|;
 block|}
-comment|/// isPODType - Return true if this is a plain-old-data type (C++ 3.9p10).
-name|bool
-name|isPODType
-argument_list|()
-specifier|const
-block|;
 comment|/// isLiteralType - Return true if this is a literal type
 comment|/// (C++0x [basic.types]p10)
 name|bool
@@ -4429,33 +4972,10 @@ name|isLiteralType
 argument_list|()
 specifier|const
 block|;
-comment|/// isTrivialType - Return true if this is a trivial type
-comment|/// (C++0x [basic.types]p9)
-name|bool
-name|isTrivialType
-argument_list|()
-specifier|const
-block|;
-comment|/// isTriviallyCopyableType - Return true if this is a trivially copyable type
-comment|/// (C++0x [basic.types]p9
-name|bool
-name|isTriviallyCopyableType
-argument_list|()
-specifier|const
-block|;
 comment|/// \brief Test if this type is a standard-layout type.
 comment|/// (C++0x [basic.type]p9)
 name|bool
 name|isStandardLayoutType
-argument_list|()
-specifier|const
-block|;
-comment|/// isCXX11PODType() - Return true if this is a POD type according to the
-comment|/// more relaxed rules of the C++11 standard, regardless of the current
-comment|/// compilation's language.
-comment|/// (C++0x [basic.types]p9)
-name|bool
-name|isCXX11PODType
 argument_list|()
 specifier|const
 block|;
@@ -4781,7 +5301,31 @@ name|isObjCObjectPointerType
 argument_list|()
 specifier|const
 block|;
-comment|// Pointer to *any* ObjC object.
+comment|// pointer to ObjC object
+name|bool
+name|isObjCRetainableType
+argument_list|()
+specifier|const
+block|;
+comment|// ObjC object or block pointer
+name|bool
+name|isObjCLifetimeType
+argument_list|()
+specifier|const
+block|;
+comment|// (array of)* retainable type
+name|bool
+name|isObjCIndirectLifetimeType
+argument_list|()
+specifier|const
+block|;
+comment|// (pointer to)* lifetime type
+name|bool
+name|isObjCNSObjectType
+argument_list|()
+specifier|const
+block|;
+comment|// __attribute__((NSObject))
 comment|// FIXME: change this to 'raw' interface type, so we can used 'interface' type
 comment|// for the common case.
 name|bool
@@ -4838,6 +5382,16 @@ specifier|const
 block|;
 comment|// 'id' or 'Class'
 name|bool
+name|isObjCARCBridgableType
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|isCARCBridgableType
+argument_list|()
+specifier|const
+block|;
+name|bool
 name|isTemplateTypeParmType
 argument_list|()
 specifier|const
@@ -4849,7 +5403,22 @@ argument_list|()
 specifier|const
 block|;
 comment|// C++0x nullptr_t
-block|enum
+comment|/// Determines if this type, which must satisfy
+comment|/// isObjCLifetimeType(), is implicitly __unsafe_unretained rather
+comment|/// than implicitly __strong.
+name|bool
+name|isObjCARCImplicitlyUnretainedType
+argument_list|()
+specifier|const
+block|;
+comment|/// Return the implicit lifetime for this type, which must not be dependent.
+name|Qualifiers
+operator|::
+name|ObjCLifetime
+name|getObjCARCImplicitLifetime
+argument_list|()
+specifier|const
+block|;    enum
 name|ScalarTypeKind
 block|{
 name|STK_Pointer
@@ -4887,6 +5456,21 @@ operator|.
 name|Dependent
 return|;
 block|}
+comment|/// \brief Determine whether this type is an instantiation-dependent type,
+comment|/// meaning that the type involves a template parameter (even if the
+comment|/// definition does not actually depend on the type substituted for that
+comment|/// template parameter).
+name|bool
+name|isInstantiationDependentType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TypeBits
+operator|.
+name|InstantiationDependent
+return|;
+block|}
 comment|/// \brief Whether this type is a variably-modified type (C99 6.7.5).
 name|bool
 name|isVariablyModifiedType
@@ -4920,6 +5504,11 @@ block|;
 comment|/// \brief Determine wither this type is a C++ elaborated-type-specifier.
 name|bool
 name|isElaboratedTypeSpecifier
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|canDecayToPointerType
 argument_list|()
 specifier|const
 block|;
@@ -5449,6 +6038,9 @@ argument_list|,
 comment|/*Dependent=*/
 argument|(K == Dependent)
 argument_list|,
+comment|/*InstantiationDependent=*/
+argument|(K == Dependent)
+argument_list|,
 comment|/*VariablyModified=*/
 argument|false
 argument_list|,
@@ -5660,6 +6252,11 @@ argument_list|()
 argument_list|,
 name|Element
 operator|->
+name|isInstantiationDependentType
+argument_list|()
+argument_list|,
+name|Element
+operator|->
 name|isVariablyModifiedType
 argument_list|()
 argument_list|,
@@ -5811,6 +6408,11 @@ argument_list|()
 argument_list|,
 name|InnerType
 operator|->
+name|isInstantiationDependentType
+argument_list|()
+argument_list|,
+name|InnerType
+operator|->
 name|isVariablyModifiedType
 argument_list|()
 argument_list|,
@@ -5951,6 +6553,11 @@ argument_list|,
 name|Pointee
 operator|->
 name|isDependentType
+argument_list|()
+argument_list|,
+name|Pointee
+operator|->
+name|isInstantiationDependentType
 argument_list|()
 argument_list|,
 name|Pointee
@@ -6109,6 +6716,11 @@ argument_list|()
 argument_list|,
 name|Pointee
 operator|->
+name|isInstantiationDependentType
+argument_list|()
+argument_list|,
+name|Pointee
+operator|->
 name|isVariablyModifiedType
 argument_list|()
 argument_list|,
@@ -6263,6 +6875,11 @@ argument_list|,
 name|Referencee
 operator|->
 name|isDependentType
+argument_list|()
+argument_list|,
+name|Referencee
+operator|->
+name|isInstantiationDependentType
 argument_list|()
 argument_list|,
 name|Referencee
@@ -6668,6 +7285,18 @@ operator|->
 name|isDependentType
 argument_list|()
 argument_list|,
+operator|(
+name|Cls
+operator|->
+name|isInstantiationDependentType
+argument_list|()
+operator|||
+name|Pointee
+operator|->
+name|isInstantiationDependentType
+argument_list|()
+operator|)
+argument_list|,
 name|Pointee
 operator|->
 name|isVariablyModifiedType
@@ -6915,6 +7544,15 @@ argument_list|,
 name|et
 operator|->
 name|isDependentType
+argument_list|()
+operator|||
+name|tc
+operator|==
+name|DependentSizedArray
+argument_list|,
+name|et
+operator|->
+name|isInstantiationDependentType
 argument_list|()
 operator|||
 name|tc
@@ -8661,8 +9299,10 @@ block|{
 comment|// Feel free to rearrange or add bits, but if you go over 8,
 comment|// you'll need to adjust both the Bits field below and
 comment|// Type::FunctionTypeBitfields.
-comment|//   |  CC  |noreturn|hasregparm|regparm
-comment|//   |0 .. 2|   3    |    4     |5 ..  7
+comment|//   |  CC  |noreturn|produces|regparm|
+comment|//   |0 .. 2|   3    |    4   | 5 .. 7|
+comment|//
+comment|// regparm is either 0 (no regparm attribute) or the regparm value+1.
 block|enum
 block|{
 name|CallConvMask
@@ -8677,7 +9317,7 @@ literal|0x8
 block|}
 block|;     enum
 block|{
-name|HasRegParmMask
+name|ProducesResultMask
 operator|=
 literal|0x10
 block|}
@@ -8690,6 +9330,8 @@ operator|(
 name|CallConvMask
 operator||
 name|NoReturnMask
+operator||
+name|ProducesResultMask
 operator|)
 block|,
 name|RegParmOffset
@@ -8697,8 +9339,8 @@ operator|=
 literal|5
 block|}
 block|;
-name|unsigned
-name|char
+comment|// Assumed to be the last field
+name|uint16_t
 name|Bits
 block|;
 name|ExtInfo
@@ -8708,7 +9350,7 @@ argument_list|)
 operator|:
 name|Bits
 argument_list|(
-argument|static_cast<unsigned char>(Bits)
+argument|static_cast<uint16_t>(Bits)
 argument_list|)
 block|{}
 name|friend
@@ -8728,8 +9370,24 @@ argument_list|,
 argument|unsigned regParm
 argument_list|,
 argument|CallingConv cc
+argument_list|,
+argument|bool producesResult
 argument_list|)
 block|{
+name|assert
+argument_list|(
+operator|(
+operator|!
+name|hasRegParm
+operator|||
+name|regParm
+operator|<
+literal|7
+operator|)
+operator|&&
+literal|"Invalid regparm value"
+argument_list|)
+block|;
 name|Bits
 operator|=
 operator|(
@@ -8741,24 +9399,34 @@ operator|)
 operator||
 operator|(
 name|noReturn
-operator|?
+condition|?
 name|NoReturnMask
-operator|:
+else|:
+literal|0
+operator|)
+operator||
+operator|(
+name|producesResult
+condition|?
+name|ProducesResultMask
+else|:
 literal|0
 operator|)
 operator||
 operator|(
 name|hasRegParm
-operator|?
-name|HasRegParmMask
-operator|:
-literal|0
-operator|)
-operator||
+condition|?
+operator|(
 operator|(
 name|regParm
+operator|+
+literal|1
+operator|)
 operator|<<
 name|RegParmOffset
+operator|)
+else|:
+literal|0
 operator|)
 block|;     }
 comment|// Constructor with all defaults. Use when for example creating a
@@ -8783,14 +9451,29 @@ name|NoReturnMask
 return|;
 block|}
 name|bool
-name|getHasRegParm
+name|getProducesResult
 argument_list|()
 specifier|const
 block|{
 return|return
 name|Bits
 operator|&
-name|HasRegParmMask
+name|ProducesResultMask
+return|;
+block|}
+name|bool
+name|getHasRegParm
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|Bits
+operator|>>
+name|RegParmOffset
+operator|)
+operator|!=
+literal|0
 return|;
 block|}
 name|unsigned
@@ -8798,10 +9481,24 @@ name|getRegParm
 argument_list|()
 specifier|const
 block|{
-return|return
+name|unsigned
+name|RegParm
+operator|=
 name|Bits
 operator|>>
 name|RegParmOffset
+block|;
+if|if
+condition|(
+name|RegParm
+operator|>
+literal|0
+condition|)
+operator|--
+name|RegParm
+expr_stmt|;
+return|return
+name|RegParm
 return|;
 block|}
 name|CallingConv
@@ -8885,17 +9582,54 @@ argument_list|)
 return|;
 block|}
 name|ExtInfo
+name|withProducesResult
+argument_list|(
+argument|bool producesResult
+argument_list|)
+specifier|const
+block|{
+if|if
+condition|(
+name|producesResult
+condition|)
+return|return
+name|ExtInfo
+argument_list|(
+name|Bits
+operator||
+name|ProducesResultMask
+argument_list|)
+return|;
+else|else
+return|return
+name|ExtInfo
+argument_list|(
+name|Bits
+operator|&
+operator|~
+name|ProducesResultMask
+argument_list|)
+return|;
+block|}
+name|ExtInfo
 name|withRegParm
 argument_list|(
 argument|unsigned RegParm
 argument_list|)
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|RegParm
+operator|<
+literal|7
+operator|&&
+literal|"Invalid regparm value"
+argument_list|)
+block|;
 return|return
 name|ExtInfo
 argument_list|(
-name|HasRegParmMask
-operator||
 operator|(
 name|Bits
 operator|&
@@ -8904,7 +9638,11 @@ name|RegParmMask
 operator|)
 operator||
 operator|(
+operator|(
 name|RegParm
+operator|+
+literal|1
+operator|)
 operator|<<
 name|RegParmOffset
 operator|)
@@ -8969,6 +9707,8 @@ argument|QualType Canonical
 argument_list|,
 argument|bool Dependent
 argument_list|,
+argument|bool InstantiationDependent
+argument_list|,
 argument|bool VariablyModified
 argument_list|,
 argument|bool ContainsUnexpandedParameterPack
@@ -8983,6 +9723,8 @@ argument_list|,
 name|Canonical
 argument_list|,
 name|Dependent
+argument_list|,
+name|InstantiationDependent
 argument_list|,
 name|VariablyModified
 argument_list|,
@@ -9245,6 +9987,9 @@ argument_list|,
 comment|/*Dependent=*/
 argument|false
 argument_list|,
+comment|/*InstantiationDependent=*/
+argument|false
+argument_list|,
 argument|Result->isVariablyModifiedType()
 argument_list|,
 comment|/*ContainsUnexpandedParameterPack=*/
@@ -9417,6 +10162,11 @@ name|NoexceptExpr
 argument_list|(
 literal|0
 argument_list|)
+block|,
+name|ConsumedArguments
+argument_list|(
+literal|0
+argument_list|)
 block|{}
 name|FunctionType
 operator|::
@@ -9447,6 +10197,11 @@ block|;
 name|Expr
 operator|*
 name|NoexceptExpr
+block|;
+specifier|const
+name|bool
+operator|*
+name|ConsumedArguments
 block|;   }
 block|;
 name|private
@@ -9510,7 +10265,7 @@ comment|/// NumArgs - The number of arguments this function has, not counting '.
 name|unsigned
 name|NumArgs
 operator|:
-literal|20
+literal|19
 block|;
 comment|/// NumExceptions - The number of types in the exception spec, if any.
 name|unsigned
@@ -9524,17 +10279,87 @@ name|ExceptionSpecType
 operator|:
 literal|3
 block|;
+comment|/// HasAnyConsumedArgs - Whether this function has any consumed arguments.
+name|unsigned
+name|HasAnyConsumedArgs
+operator|:
+literal|1
+block|;
 comment|/// ArgInfo - There is an variable size array after the class in memory that
 comment|/// holds the argument types.
 comment|/// Exceptions - There is another variable size array after ArgInfo that
 comment|/// holds the exception types.
 comment|/// NoexceptExpr - Instead of Exceptions, there may be a single Expr* pointing
 comment|/// to the expression in the noexcept() specifier.
+comment|/// ConsumedArgs - A variable size array, following Exceptions
+comment|/// and of length NumArgs, holding flags indicating which arguments
+comment|/// are consumed.  This only appears if HasAnyConsumedArgs is true.
 name|friend
 name|class
 name|ASTContext
 block|;
 comment|// ASTContext creates these.
+specifier|const
+name|bool
+operator|*
+name|getConsumedArgsBuffer
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|hasAnyConsumedArgs
+argument_list|()
+argument_list|)
+block|;
+comment|// Find the end of the exceptions.
+name|Expr
+operator|*
+specifier|const
+operator|*
+name|eh_end
+operator|=
+name|reinterpret_cast
+operator|<
+name|Expr
+operator|*
+specifier|const
+operator|*
+operator|>
+operator|(
+name|arg_type_end
+argument_list|()
+operator|)
+block|;
+if|if
+condition|(
+name|getExceptionSpecType
+argument_list|()
+operator|!=
+name|EST_ComputedNoexcept
+condition|)
+name|eh_end
+operator|+=
+name|NumExceptions
+expr_stmt|;
+else|else
+name|eh_end
+operator|+=
+literal|1
+expr_stmt|;
+comment|// NoexceptExpr
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|bool
+operator|*
+operator|>
+operator|(
+name|eh_end
+operator|)
+return|;
+block|}
 name|public
 operator|:
 name|unsigned
@@ -9661,6 +10486,18 @@ name|getNoexceptExpr
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|hasAnyConsumedArgs
+argument_list|()
+condition|)
+name|EPI
+operator|.
+name|ConsumedArguments
+operator|=
+name|getConsumedArgsBuffer
+argument_list|()
+expr_stmt|;
 return|return
 name|EPI
 return|;
@@ -9985,6 +10822,48 @@ name|NumExceptions
 return|;
 block|}
 name|bool
+name|hasAnyConsumedArgs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasAnyConsumedArgs
+return|;
+block|}
+name|bool
+name|isArgConsumed
+argument_list|(
+argument|unsigned I
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|I
+operator|<
+name|getNumArgs
+argument_list|()
+operator|&&
+literal|"argument index out of range!"
+argument_list|)
+block|;
+if|if
+condition|(
+name|hasAnyConsumedArgs
+argument_list|()
+condition|)
+return|return
+name|getConsumedArgsBuffer
+argument_list|()
+index|[
+name|I
+index|]
+return|;
+return|return
+name|false
+return|;
+block|}
+name|bool
 name|isSugared
 argument_list|()
 specifier|const
@@ -10095,6 +10974,8 @@ name|UnresolvedUsing
 argument_list|,
 name|QualType
 argument_list|()
+argument_list|,
+name|true
 argument_list|,
 name|true
 argument_list|,
@@ -10243,6 +11124,11 @@ argument_list|()
 argument_list|,
 name|can
 operator|->
+name|isInstantiationDependentType
+argument_list|()
+argument_list|,
+name|can
+operator|->
 name|isVariablyModifiedType
 argument_list|()
 argument_list|,
@@ -10377,11 +11263,7 @@ name|bool
 name|isSugared
 argument_list|()
 specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
+block|;
 specifier|static
 name|bool
 name|classof
@@ -10457,29 +11339,6 @@ argument_list|(
 argument|Context
 argument_list|)
 block|{ }
-name|bool
-name|isSugared
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|QualType
-name|desugar
-argument_list|()
-specifier|const
-block|{
-return|return
-name|QualType
-argument_list|(
-name|this
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
 name|void
 name|Profile
 argument_list|(
@@ -10543,6 +11402,11 @@ argument_list|,
 name|T
 operator|->
 name|isDependentType
+argument_list|()
+argument_list|,
+name|T
+operator|->
+name|isInstantiationDependentType
 argument_list|()
 argument_list|,
 name|T
@@ -10700,24 +11564,13 @@ name|QualType
 name|desugar
 argument_list|()
 specifier|const
-block|{
-return|return
-name|getUnderlyingType
-argument_list|()
-return|;
-block|}
+block|;
 comment|/// \brief Returns whether this type directly provides sugar.
 name|bool
 name|isSugared
 argument_list|()
 specifier|const
-block|{
-return|return
-operator|!
-name|isDependentType
-argument_list|()
-return|;
-block|}
+block|;
 specifier|static
 name|bool
 name|classof
@@ -10783,29 +11636,6 @@ operator|*
 name|E
 argument_list|)
 block|;
-name|bool
-name|isSugared
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|QualType
-name|desugar
-argument_list|()
-specifier|const
-block|{
-return|return
-name|QualType
-argument_list|(
-name|this
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
 name|void
 name|Profile
 argument_list|(
@@ -11399,6 +12229,8 @@ block|,
 comment|// Enumerated operand (string or keyword).
 name|attr_objc_gc
 block|,
+name|attr_objc_ownership
+block|,
 name|attr_pcs
 block|,
 name|FirstEnumOperandKind
@@ -11456,6 +12288,11 @@ argument_list|,
 name|canon
 operator|->
 name|isDependentType
+argument_list|()
+argument_list|,
+name|canon
+operator|->
+name|isInstantiationDependentType
 argument_list|()
 argument_list|,
 name|canon
@@ -11688,6 +12525,9 @@ argument_list|,
 comment|/*Dependent=*/
 name|true
 argument_list|,
+comment|/*InstantiationDependent=*/
+name|true
+argument_list|,
 comment|/*VariablyModified=*/
 name|false
 argument_list|,
@@ -11721,6 +12561,9 @@ literal|0
 argument|)
 argument_list|,
 comment|/*Dependent=*/
+argument|true
+argument_list|,
+comment|/*InstantiationDependent=*/
 argument|true
 argument_list|,
 comment|/*VariablyModified=*/
@@ -11995,6 +12838,11 @@ argument_list|,
 name|Canon
 operator|->
 name|isDependentType
+argument_list|()
+argument_list|,
+name|Canon
+operator|->
+name|isInstantiationDependentType
 argument_list|()
 argument_list|,
 name|Canon
@@ -12336,6 +13184,9 @@ argument_list|,
 comment|/*Dependent=*/
 argument|DeducedType.isNull()
 argument_list|,
+comment|/*InstantiationDependent=*/
+argument|DeducedType.isNull()
+argument_list|,
 comment|/*VariablyModified=*/
 argument|false
 argument_list|,
@@ -12477,25 +13328,26 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief Represents the type of a template specialization as written
-comment|/// in the source code.
+comment|/// \brief Represents a type template specialization; the template
+comment|/// must be a class template, a type alias template, or a template
+comment|/// template parameter.  A template which cannot be resolved to one of
+comment|/// these, e.g. because it is written with a dependent scope
+comment|/// specifier, is instead represented as a
+comment|/// @c DependentTemplateSpecializationType.
 comment|///
-comment|/// Template specialization types represent the syntactic form of a
-comment|/// template-id that refers to a type, e.g., @c vector<int>. Some
-comment|/// template specialization types are syntactic sugar, whose canonical
-comment|/// type will point to some other type node that represents the
-comment|/// instantiation or class template specialization. For example, a
-comment|/// class template specialization type of @c vector<int> will refer to
-comment|/// a tag type for the instantiation
-comment|/// @c std::vector<int, std::allocator<int>>.
+comment|/// A non-dependent template specialization type is always "sugar",
+comment|/// typically for a @c RecordType.  For example, a class template
+comment|/// specialization type of @c vector<int> will refer to a tag type for
+comment|/// the instantiation @c std::vector<int, std::allocator<int>>
 comment|///
-comment|/// Other template specialization types, for which the template name
-comment|/// is dependent, may be canonical types. These types are always
-comment|/// dependent.
+comment|/// Template specializations are dependent if either the template or
+comment|/// any of the template arguments are dependent, in which case the
+comment|/// type may also be canonical.
 comment|///
-comment|/// An instance of this type is followed by an array of TemplateArgument*s,
-comment|/// then, if the template specialization type is for a type alias template,
-comment|/// a QualType representing the non-canonical aliased type.
+comment|/// Instances of this type are allocated with a trailing array of
+comment|/// TemplateArguments, followed by a QualType representing the
+comment|/// non-canonical aliased type when the template is a type alias
+comment|/// template.
 name|class
 name|TemplateSpecializationType
 operator|:
@@ -12507,7 +13359,13 @@ name|llvm
 operator|::
 name|FoldingSetNode
 block|{
-comment|/// \brief The name of the template being specialized.
+comment|/// \brief The name of the template being specialized.  This is
+comment|/// either a TemplateName::Template (in which case it is a
+comment|/// ClassTemplateDecl*, a TemplateTemplateParmDecl*, or a
+comment|/// TypeAliasTemplateDecl*), a
+comment|/// TemplateName::SubstTemplateTemplateParmPack, or a
+comment|/// TemplateName::SubstTemplateTemplateParm (in which case the
+comment|/// replacement must, recursively, be one of these).
 name|TemplateName
 name|Template
 block|;
@@ -12545,6 +13403,8 @@ argument_list|(
 argument|const TemplateArgument *Args
 argument_list|,
 argument|unsigned NumArgs
+argument_list|,
+argument|bool&InstantiationDependent
 argument_list|)
 block|;
 specifier|static
@@ -12554,6 +13414,8 @@ argument_list|(
 argument|const TemplateArgumentLoc *Args
 argument_list|,
 argument|unsigned NumArgs
+argument_list|,
+argument|bool&InstantiationDependent
 argument_list|)
 block|;
 specifier|static
@@ -12563,6 +13425,10 @@ argument_list|(
 specifier|const
 name|TemplateArgumentListInfo
 operator|&
+argument_list|,
+name|bool
+operator|&
+name|InstantiationDependent
 argument_list|)
 block|;
 comment|/// \brief Print a template argument list, including the '<' and '>'
@@ -12916,6 +13782,9 @@ argument_list|,
 comment|/*Dependent=*/
 name|true
 argument_list|,
+comment|/*InstantiationDependent=*/
+name|true
+argument_list|,
 comment|/*VariablyModified=*/
 name|false
 argument_list|,
@@ -13114,6 +13983,8 @@ argument|QualType Canonical
 argument_list|,
 argument|bool Dependent
 argument_list|,
+argument|bool InstantiationDependent
+argument_list|,
 argument|bool VariablyModified
 argument_list|,
 argument|bool ContainsUnexpandedParameterPack
@@ -13126,6 +13997,8 @@ argument_list|,
 argument|Canonical
 argument_list|,
 argument|Dependent
+argument_list|,
+argument|InstantiationDependent
 argument_list|,
 argument|VariablyModified
 argument_list|,
@@ -13294,6 +14167,11 @@ argument_list|,
 name|NamedType
 operator|->
 name|isDependentType
+argument_list|()
+argument_list|,
+name|NamedType
+operator|->
+name|isInstantiationDependentType
 argument_list|()
 argument_list|,
 name|NamedType
@@ -13519,6 +14397,9 @@ argument_list|,
 name|CanonType
 argument_list|,
 comment|/*Dependent=*/
+name|true
+argument_list|,
+comment|/*InstantiationDependent=*/
 name|true
 argument_list|,
 comment|/*VariablyModified=*/
@@ -14018,6 +14899,9 @@ argument_list|,
 comment|/*Dependent=*/
 name|true
 argument_list|,
+comment|/*InstantiationDependent=*/
+name|true
+argument_list|,
 comment|/*VariableModified=*/
 name|Pattern
 operator|->
@@ -14299,6 +15183,8 @@ name|ObjCInterface
 argument_list|,
 name|QualType
 argument_list|()
+argument_list|,
+name|false
 argument_list|,
 name|false
 argument_list|,
@@ -14925,6 +15811,8 @@ argument_list|(
 name|ObjCObjectPointer
 argument_list|,
 name|Canonical
+argument_list|,
+name|false
 argument_list|,
 name|false
 argument_list|,
@@ -16182,6 +17070,36 @@ operator|*
 name|this
 return|;
 block|}
+specifier|inline
+name|bool
+name|QualType
+operator|::
+name|isCForbiddenLValueType
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+operator|(
+name|getTypePtr
+argument_list|()
+operator|->
+name|isVoidType
+argument_list|()
+operator|&&
+operator|!
+name|hasQualifiers
+argument_list|()
+operator|)
+operator|||
+name|getTypePtr
+argument_list|()
+operator|->
+name|isFunctionType
+argument_list|()
+operator|)
+return|;
+block|}
 comment|/// \brief Tests whether the type is categorized as a fundamental type.
 comment|///
 comment|/// \returns True for types specified in C++0x [basic.fundamental].
@@ -17106,6 +18024,23 @@ name|isEnumeralType
 argument_list|()
 return|;
 block|}
+comment|/// \brief Determines whether this type can decay to a pointer type.
+specifier|inline
+name|bool
+name|Type
+operator|::
+name|canDecayToPointerType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isFunctionType
+argument_list|()
+operator|||
+name|isArrayType
+argument_list|()
+return|;
+block|}
 specifier|inline
 name|bool
 name|Type
@@ -17189,8 +18124,17 @@ return|return
 name|type
 return|;
 block|}
+end_block
+
+begin_comment
 comment|/// Insertion operator for diagnostics.  This allows sending QualType's into a
+end_comment
+
+begin_comment
 comment|/// diagnostic with<<.
+end_comment
+
+begin_expr_stmt
 specifier|inline
 specifier|const
 name|DiagnosticBuilder
@@ -17202,7 +18146,7 @@ specifier|const
 name|DiagnosticBuilder
 operator|&
 name|DB
-expr|,
+operator|,
 name|QualType
 name|T
 operator|)
@@ -17231,8 +18175,17 @@ return|return
 name|DB
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Insertion operator for partial diagnostics.  This allows sending QualType's
+end_comment
+
+begin_comment
 comment|/// into a diagnostic with<<.
+end_comment
+
+begin_expr_stmt
 specifier|inline
 specifier|const
 name|PartialDiagnostic
@@ -17244,7 +18197,7 @@ specifier|const
 name|PartialDiagnostic
 operator|&
 name|PD
-expr|,
+operator|,
 name|QualType
 name|T
 operator|)
@@ -17273,13 +18226,22 @@ return|return
 name|PD
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// Helper class template that is used by Type::getAs to ensure that one does
+end_comment
+
+begin_comment
 comment|// not try to look through a qualified type to get to an array type.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
 name|T
-block|,
+operator|,
 name|bool
 name|isArrayType
 operator|=
@@ -17289,7 +18251,7 @@ operator|::
 name|is_same
 operator|<
 name|T
-expr|,
+operator|,
 name|ArrayType
 operator|>
 operator|::
@@ -17300,7 +18262,7 @@ operator|::
 name|is_base_of
 operator|<
 name|ArrayType
-expr|,
+operator|,
 name|T
 operator|>
 operator|::
@@ -17310,7 +18272,10 @@ operator|>
 expr|struct
 name|ArrayType_cannot_be_used_with_getAs
 block|{ }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -17320,11 +18285,17 @@ expr|struct
 name|ArrayType_cannot_be_used_with_getAs
 operator|<
 name|T
-block|,
+operator|,
 name|true
 operator|>
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Member-template getAs<specific type>'.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -17369,7 +18340,13 @@ condition|)
 return|return
 name|Ty
 return|;
+end_expr_stmt
+
+begin_comment
 comment|// If the canonical form of this type isn't the right kind, reject it.
+end_comment
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -17384,8 +18361,17 @@ condition|)
 return|return
 literal|0
 return|;
+end_if
+
+begin_comment
 comment|// If this is a typedef for the type, strip the typedef off without
+end_comment
+
+begin_comment
 comment|// losing all typedef information.
+end_comment
+
+begin_return
 return|return
 name|cast
 operator|<
@@ -17396,8 +18382,10 @@ name|getUnqualifiedDesugaredType
 argument_list|()
 operator|)
 return|;
-block|}
-specifier|inline
+end_return
+
+begin_expr_stmt
+unit|}  inline
 specifier|const
 name|ArrayType
 operator|*
@@ -17426,7 +18414,13 @@ condition|)
 return|return
 name|arr
 return|;
+end_expr_stmt
+
+begin_comment
 comment|// If the canonical form of this type isn't the right kind, reject it.
+end_comment
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -17441,8 +18435,17 @@ condition|)
 return|return
 literal|0
 return|;
+end_if
+
+begin_comment
 comment|// If this is a typedef for the type, strip the typedef off without
+end_comment
+
+begin_comment
 comment|// losing all typedef information.
+end_comment
+
+begin_return
 return|return
 name|cast
 operator|<
@@ -17453,11 +18456,10 @@ name|getUnqualifiedDesugaredType
 argument_list|()
 operator|)
 return|;
-block|}
-end_block
+end_return
 
 begin_expr_stmt
-name|template
+unit|}  template
 operator|<
 name|typename
 name|T

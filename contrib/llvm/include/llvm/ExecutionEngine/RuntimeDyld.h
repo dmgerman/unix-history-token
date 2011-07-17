@@ -189,6 +189,10 @@ name|RuntimeDyldImpl
 modifier|*
 name|Dyld
 decl_stmt|;
+name|RTDyldMemoryManager
+modifier|*
+name|MM
+decl_stmt|;
 name|public
 label|:
 name|RuntimeDyld

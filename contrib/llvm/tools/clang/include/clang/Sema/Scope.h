@@ -180,6 +180,11 @@ comment|/// usable.
 name|ThisScope
 init|=
 literal|0x1000
+block|,
+comment|/// TryScope - This is the scope of a C++ try statement.
+name|TryScope
+init|=
+literal|0x2000
 block|}
 enum|;
 name|private
@@ -945,6 +950,21 @@ return|;
 block|}
 return|return
 name|false
+return|;
+block|}
+comment|/// \brief Determine whether this scope is a C++ 'try' block.
+name|bool
+name|isTryScope
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFlags
+argument_list|()
+operator|&
+name|Scope
+operator|::
+name|TryScope
 return|;
 block|}
 typedef|typedef

@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -324,7 +330,6 @@ block|}
 comment|/// getAllocatedType - Return the type that is being allocated by the
 comment|/// instruction.
 comment|///
-specifier|const
 name|Type
 operator|*
 name|getAllocatedType
@@ -1223,7 +1228,7 @@ argument_list|)
 comment|//===----------------------------------------------------------------------===//
 comment|//                             GetElementPtrInst Class
 comment|//===----------------------------------------------------------------------===//
-comment|// checkType - Simple wrapper function to give a better assertion failure
+comment|// checkGEPType - Simple wrapper function to give a better assertion failure
 comment|// message on bad indexes for a gep instruction.
 comment|//
 specifier|static
@@ -1231,7 +1236,7 @@ specifier|inline
 specifier|const
 name|Type
 operator|*
-name|checkType
+name|checkGEPType
 argument_list|(
 argument|const Type *Ty
 argument_list|)
@@ -1383,7 +1388,6 @@ name|typename
 name|RandomAccessIterator
 operator|>
 specifier|static
-specifier|const
 name|Type
 operator|*
 name|getIndexedType
@@ -1979,7 +1983,6 @@ name|typename
 name|RandomAccessIterator
 operator|>
 specifier|static
-specifier|const
 name|Type
 operator|*
 name|getIndexedType
@@ -2004,8 +2007,8 @@ argument|typename std::iterator_traits<RandomAccessIterator>::                  
 argument_list|)
 return|;
 block|}
+comment|// FIXME: Use ArrayRef
 specifier|static
-specifier|const
 name|Type
 operator|*
 name|getIndexedType
@@ -2018,7 +2021,6 @@ argument|unsigned NumIdx
 argument_list|)
 block|;
 specifier|static
-specifier|const
 name|Type
 operator|*
 name|getIndexedType
@@ -2031,7 +2033,6 @@ argument|unsigned NumIdx
 argument_list|)
 block|;
 specifier|static
-specifier|const
 name|Type
 operator|*
 name|getIndexedType
@@ -2044,7 +2045,6 @@ argument|unsigned NumIdx
 argument_list|)
 block|;
 specifier|static
-specifier|const
 name|Type
 operator|*
 name|getIndexedType
@@ -2347,7 +2347,7 @@ argument_list|)
 operator|:
 name|Instruction
 argument_list|(
-argument|PointerType::get(checkType(                                    getIndexedType(Ptr->getType(),                                                   IdxBegin, IdxEnd)),                                  cast<PointerType>(Ptr->getType())                                    ->getAddressSpace())
+argument|PointerType::get(checkGEPType(                                    getIndexedType(Ptr->getType(),                                                   IdxBegin, IdxEnd)),                                  cast<PointerType>(Ptr->getType())                                    ->getAddressSpace())
 argument_list|,
 argument|GetElementPtr
 argument_list|,
@@ -2395,7 +2395,7 @@ argument_list|)
 operator|:
 name|Instruction
 argument_list|(
-argument|PointerType::get(checkType(                                    getIndexedType(Ptr->getType(),                                                   IdxBegin, IdxEnd)),                                  cast<PointerType>(Ptr->getType())                                    ->getAddressSpace())
+argument|PointerType::get(checkGEPType(                                    getIndexedType(Ptr->getType(),                                                   IdxBegin, IdxEnd)),                                  cast<PointerType>(Ptr->getType())                                    ->getAddressSpace())
 argument_list|,
 argument|GetElementPtr
 argument_list|,
@@ -3468,153 +3468,86 @@ block|;
 name|void
 name|init
 argument_list|(
-argument|Value *Func
-argument_list|,
-argument|Value* const *Params
-argument_list|,
-argument|unsigned NumParams
-argument_list|)
-block|;
-name|void
-name|init
-argument_list|(
 name|Value
 operator|*
 name|Func
 argument_list|,
-name|Value
-operator|*
-name|Actual1
-argument_list|,
-name|Value
-operator|*
-name|Actual2
-argument_list|)
-block|;
-name|void
-name|init
-argument_list|(
-name|Value
-operator|*
-name|Func
-argument_list|,
-name|Value
-operator|*
-name|Actual
-argument_list|)
-block|;
-name|void
-name|init
-argument_list|(
-name|Value
-operator|*
-name|Func
-argument_list|)
-block|;
-name|template
+name|ArrayRef
 operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
-name|void
-name|init
-argument_list|(
-argument|Value *Func
-argument_list|,
-argument|RandomAccessIterator ArgBegin
-argument_list|,
-argument|RandomAccessIterator ArgEnd
-argument_list|,
-argument|const Twine&NameStr
-argument_list|,
-comment|// This argument ensures that we have an iterator we can
-comment|// do arithmetic on in constant time
-argument|std::random_access_iterator_tag
-argument_list|)
-block|{
-name|unsigned
-name|NumArgs
-operator|=
-operator|(
-name|unsigned
-operator|)
-name|std
-operator|::
-name|distance
-argument_list|(
-name|ArgBegin
-argument_list|,
-name|ArgEnd
-argument_list|)
-block|;
-comment|// This requires that the iterator points to contiguous memory.
-name|init
-argument_list|(
-name|Func
-argument_list|,
-name|NumArgs
-condition|?
-operator|&
+name|Value
 operator|*
-name|ArgBegin
-else|:
-literal|0
+operator|>
+name|Args
 argument_list|,
-name|NumArgs
-argument_list|)
-block|;
-name|setName
-argument_list|(
+specifier|const
+name|Twine
+operator|&
 name|NameStr
 argument_list|)
-block|;   }
-comment|/// Construct a CallInst given a range of arguments. RandomAccessIterator
-comment|/// must be a random-access iterator pointing to contiguous storage
-comment|/// (e.g. a std::vector<>::iterator). Checks are made for
-comment|/// random-accessness but not for contiguous storage as that would
-comment|/// incur runtime overhead.
-comment|/// @brief Construct a CallInst from a range of arguments
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
-name|CallInst
+block|;
+name|void
+name|init
 argument_list|(
-argument|Value *Func
+name|Value
+operator|*
+name|Func
 argument_list|,
-argument|RandomAccessIterator ArgBegin
-argument_list|,
-argument|RandomAccessIterator ArgEnd
-argument_list|,
-argument|const Twine&NameStr
-argument_list|,
-argument|Instruction *InsertBefore
+specifier|const
+name|Twine
+operator|&
+name|NameStr
 argument_list|)
 block|;
-comment|/// Construct a CallInst given a range of arguments.  RandomAccessIterator
-comment|/// must be a random-access iterator pointing to contiguous storage
-comment|/// (e.g. a std::vector<>::iterator).  Checks are made for
-comment|/// random-accessness but not for contiguous storage as that would
-comment|/// incur runtime overhead.
+comment|/// Construct a CallInst given a range of arguments.
 comment|/// @brief Construct a CallInst from a range of arguments
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
 specifier|inline
 name|CallInst
 argument_list|(
-argument|Value *Func
+name|Value
+operator|*
+name|Func
 argument_list|,
-argument|RandomAccessIterator ArgBegin
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|Args
 argument_list|,
-argument|RandomAccessIterator ArgEnd
+specifier|const
+name|Twine
+operator|&
+name|NameStr
 argument_list|,
-argument|const Twine&NameStr
+name|Instruction
+operator|*
+name|InsertBefore
+argument_list|)
+block|;
+comment|/// Construct a CallInst given a range of arguments.
+comment|/// @brief Construct a CallInst from a range of arguments
+specifier|inline
+name|CallInst
+argument_list|(
+name|Value
+operator|*
+name|Func
 argument_list|,
-argument|BasicBlock *InsertAtEnd
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|Args
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|NameStr
+argument_list|,
+name|BasicBlock
+operator|*
+name|InsertAtEnd
 argument_list|)
 block|;
 name|CallInst
@@ -3701,11 +3634,6 @@ specifier|const
 block|;
 name|public
 operator|:
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
 specifier|static
 name|CallInst
 operator|*
@@ -3713,9 +3641,7 @@ name|Create
 argument_list|(
 argument|Value *Func
 argument_list|,
-argument|RandomAccessIterator ArgBegin
-argument_list|,
-argument|RandomAccessIterator ArgEnd
+argument|ArrayRef<Value *> Args
 argument_list|,
 argument|const Twine&NameStr =
 literal|""
@@ -3727,7 +3653,7 @@ block|{
 return|return
 name|new
 argument_list|(
-argument|unsigned(ArgEnd - ArgBegin +
+argument|unsigned(Args.size() +
 literal|1
 argument|)
 argument_list|)
@@ -3735,84 +3661,7 @@ name|CallInst
 argument_list|(
 name|Func
 argument_list|,
-name|ArgBegin
-argument_list|,
-name|ArgEnd
-argument_list|,
-name|NameStr
-argument_list|,
-name|InsertBefore
-argument_list|)
-return|;
-block|}
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
-specifier|static
-name|CallInst
-operator|*
-name|Create
-argument_list|(
-argument|Value *Func
-argument_list|,
-argument|RandomAccessIterator ArgBegin
-argument_list|,
-argument|RandomAccessIterator ArgEnd
-argument_list|,
-argument|const Twine&NameStr
-argument_list|,
-argument|BasicBlock *InsertAtEnd
-argument_list|)
-block|{
-return|return
-name|new
-argument_list|(
-argument|unsigned(ArgEnd - ArgBegin +
-literal|1
-argument|)
-argument_list|)
-name|CallInst
-argument_list|(
-name|Func
-argument_list|,
-name|ArgBegin
-argument_list|,
-name|ArgEnd
-argument_list|,
-name|NameStr
-argument_list|,
-name|InsertAtEnd
-argument_list|)
-return|;
-block|}
-specifier|static
-name|CallInst
-operator|*
-name|Create
-argument_list|(
-argument|Value *F
-argument_list|,
-argument|Value *Actual
-argument_list|,
-argument|const Twine&NameStr =
-literal|""
-argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
-argument_list|)
-block|{
-return|return
-name|new
-argument_list|(
-literal|2
-argument_list|)
-name|CallInst
-argument_list|(
-name|F
-argument_list|,
-name|Actual
+name|Args
 argument_list|,
 name|NameStr
 argument_list|,
@@ -3825,9 +3674,9 @@ name|CallInst
 operator|*
 name|Create
 argument_list|(
-argument|Value *F
+argument|Value *Func
 argument_list|,
-argument|Value *Actual
+argument|ArrayRef<Value *> Args
 argument_list|,
 argument|const Twine&NameStr
 argument_list|,
@@ -3837,13 +3686,15 @@ block|{
 return|return
 name|new
 argument_list|(
-literal|2
+argument|unsigned(Args.size() +
+literal|1
+argument|)
 argument_list|)
 name|CallInst
 argument_list|(
-name|F
+name|Func
 argument_list|,
-name|Actual
+name|Args
 argument_list|,
 name|NameStr
 argument_list|,
@@ -4729,24 +4580,29 @@ literal|1
 operator|>
 block|{ }
 block|;
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
 name|CallInst
 operator|::
 name|CallInst
 argument_list|(
-argument|Value *Func
+name|Value
+operator|*
+name|Func
 argument_list|,
-argument|RandomAccessIterator ArgBegin
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|Args
 argument_list|,
-argument|RandomAccessIterator ArgEnd
+specifier|const
+name|Twine
+operator|&
+name|NameStr
 argument_list|,
-argument|const Twine&NameStr
-argument_list|,
-argument|BasicBlock *InsertAtEnd
+name|BasicBlock
+operator|*
+name|InsertAtEnd
 argument_list|)
 operator|:
 name|Instruction
@@ -4755,11 +4611,11 @@ argument|cast<FunctionType>(cast<PointerType>(Func->getType())                  
 argument_list|,
 argument|Instruction::Call
 argument_list|,
-argument|OperandTraits<CallInst>::op_end(this) - (ArgEnd - ArgBegin +
+argument|OperandTraits<CallInst>::op_end(this) - (Args.size() +
 literal|1
 argument|)
 argument_list|,
-argument|unsigned(ArgEnd - ArgBegin +
+argument|unsigned(Args.size() +
 literal|1
 argument|)
 argument_list|,
@@ -4768,35 +4624,36 @@ argument_list|)
 block|{
 name|init
 argument_list|(
-argument|Func
+name|Func
 argument_list|,
-argument|ArgBegin
+name|Args
 argument_list|,
-argument|ArgEnd
-argument_list|,
-argument|NameStr
-argument_list|,
-argument|typename std::iterator_traits<RandomAccessIterator>        ::iterator_category()
+name|NameStr
 argument_list|)
 block|; }
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
 name|CallInst
 operator|::
 name|CallInst
 argument_list|(
-argument|Value *Func
+name|Value
+operator|*
+name|Func
 argument_list|,
-argument|RandomAccessIterator ArgBegin
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|Args
 argument_list|,
-argument|RandomAccessIterator ArgEnd
+specifier|const
+name|Twine
+operator|&
+name|NameStr
 argument_list|,
-argument|const Twine&NameStr
-argument_list|,
-argument|Instruction *InsertBefore
+name|Instruction
+operator|*
+name|InsertBefore
 argument_list|)
 operator|:
 name|Instruction
@@ -4805,11 +4662,11 @@ argument|cast<FunctionType>(cast<PointerType>(Func->getType())                  
 argument_list|,
 argument|Instruction::Call
 argument_list|,
-argument|OperandTraits<CallInst>::op_end(this) - (ArgEnd - ArgBegin +
+argument|OperandTraits<CallInst>::op_end(this) - (Args.size() +
 literal|1
 argument|)
 argument_list|,
-argument|unsigned(ArgEnd - ArgBegin +
+argument|unsigned(Args.size() +
 literal|1
 argument|)
 argument_list|,
@@ -4818,15 +4675,11 @@ argument_list|)
 block|{
 name|init
 argument_list|(
-argument|Func
+name|Func
 argument_list|,
-argument|ArgBegin
+name|Args
 argument_list|,
-argument|ArgEnd
-argument_list|,
-argument|NameStr
-argument_list|,
-argument|typename std::iterator_traits<RandomAccessIterator>        ::iterator_category()
+name|NameStr
 argument_list|)
 block|; }
 comment|// Note: if you get compile errors about private methods then
@@ -6395,221 +6248,66 @@ block|;
 name|void
 name|init
 argument_list|(
-argument|const unsigned *Idx
-argument_list|,
-argument|unsigned NumIdx
-argument_list|,
-argument|const Twine&NameStr
-argument_list|)
-block|;
-name|void
-name|init
-argument_list|(
-argument|unsigned Idx
-argument_list|,
-argument|const Twine&NameStr
-argument_list|)
-block|;
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
-name|void
-name|init
-argument_list|(
-argument|RandomAccessIterator IdxBegin
-argument_list|,
-argument|RandomAccessIterator IdxEnd
-argument_list|,
-argument|const Twine&NameStr
-argument_list|,
-comment|// This argument ensures that we have an iterator we can
-comment|// do arithmetic on in constant time
-argument|std::random_access_iterator_tag
-argument_list|)
-block|{
-name|unsigned
-name|NumIdx
-operator|=
-name|static_cast
+name|ArrayRef
 operator|<
 name|unsigned
 operator|>
-operator|(
-name|std
-operator|::
-name|distance
-argument_list|(
-name|IdxBegin
+name|Idxs
 argument_list|,
-name|IdxEnd
-argument_list|)
-operator|)
-block|;
-comment|// There's no fundamental reason why we require at least one index
-comment|// (other than weirdness with&*IdxBegin being invalid; see
-comment|// getelementptr's init routine for example). But there's no
-comment|// present need to support it.
-name|assert
-argument_list|(
-name|NumIdx
-operator|>
-literal|0
-operator|&&
-literal|"ExtractValueInst must have at least one index"
-argument_list|)
-block|;
-comment|// This requires that the iterator points to contiguous memory.
-name|init
-argument_list|(
+specifier|const
+name|Twine
 operator|&
-operator|*
-name|IdxBegin
-argument_list|,
-name|NumIdx
-argument_list|,
 name|NameStr
 argument_list|)
 block|;
-comment|// FIXME: for the general case
-comment|// we have to build an array here
-block|}
-comment|/// getIndexedType - Returns the type of the element that would be extracted
-comment|/// with an extractvalue instruction with the specified parameters.
-comment|///
-comment|/// Null is returned if the indices are invalid for the specified type.
-comment|///
-specifier|static
-specifier|const
-name|Type
-operator|*
-name|getIndexedType
-argument_list|(
-argument|const Type *Agg
-argument_list|,
-argument|const unsigned *Idx
-argument_list|,
-argument|unsigned NumIdx
-argument_list|)
-block|;
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
-specifier|static
-specifier|const
-name|Type
-operator|*
-name|getIndexedType
-argument_list|(
-argument|const Type *Ptr
-argument_list|,
-argument|RandomAccessIterator IdxBegin
-argument_list|,
-argument|RandomAccessIterator IdxEnd
-argument_list|,
-comment|// This argument ensures that we
-comment|// have an iterator we can do
-comment|// arithmetic on in constant time
-argument|std::random_access_iterator_tag
-argument_list|)
-block|{
-name|unsigned
-name|NumIdx
-operator|=
-name|static_cast
-operator|<
-name|unsigned
-operator|>
-operator|(
-name|std
-operator|::
-name|distance
-argument_list|(
-name|IdxBegin
-argument_list|,
-name|IdxEnd
-argument_list|)
-operator|)
-block|;
-if|if
-condition|(
-name|NumIdx
-operator|>
-literal|0
-condition|)
-comment|// This requires that the iterator points to contiguous memory.
-return|return
-name|getIndexedType
-argument_list|(
-name|Ptr
-argument_list|,
-operator|&
-operator|*
-name|IdxBegin
-argument_list|,
-name|NumIdx
-argument_list|)
-return|;
-else|else
-return|return
-name|getIndexedType
-argument_list|(
-name|Ptr
-argument_list|,
-operator|(
-specifier|const
-name|unsigned
-operator|*
-operator|)
-literal|0
-argument_list|,
-name|NumIdx
-argument_list|)
-return|;
-block|}
 comment|/// Constructors - Create a extractvalue instruction with a base aggregate
 comment|/// value and a list of indices.  The first ctor can optionally insert before
 comment|/// an existing instruction, the second appends the new instruction to the
 comment|/// specified BasicBlock.
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
 specifier|inline
 name|ExtractValueInst
 argument_list|(
-argument|Value *Agg
+name|Value
+operator|*
+name|Agg
 argument_list|,
-argument|RandomAccessIterator IdxBegin
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Idxs
 argument_list|,
-argument|RandomAccessIterator IdxEnd
+specifier|const
+name|Twine
+operator|&
+name|NameStr
 argument_list|,
-argument|const Twine&NameStr
-argument_list|,
-argument|Instruction *InsertBefore
+name|Instruction
+operator|*
+name|InsertBefore
 argument_list|)
 block|;
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
 specifier|inline
 name|ExtractValueInst
 argument_list|(
-argument|Value *Agg
+name|Value
+operator|*
+name|Agg
 argument_list|,
-argument|RandomAccessIterator IdxBegin
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Idxs
 argument_list|,
-argument|RandomAccessIterator IdxEnd
+specifier|const
+name|Twine
+operator|&
+name|NameStr
 argument_list|,
-argument|const Twine&NameStr
-argument_list|,
-argument|BasicBlock *InsertAtEnd
+name|BasicBlock
+operator|*
+name|InsertAtEnd
 argument_list|)
 block|;
 comment|// allocate space for exactly one operand
@@ -6644,11 +6342,6 @@ specifier|const
 block|;
 name|public
 operator|:
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
 specifier|static
 name|ExtractValueInst
 operator|*
@@ -6656,9 +6349,7 @@ name|Create
 argument_list|(
 argument|Value *Agg
 argument_list|,
-argument|RandomAccessIterator IdxBegin
-argument_list|,
-argument|RandomAccessIterator IdxEnd
+argument|ArrayRef<unsigned> Idxs
 argument_list|,
 argument|const Twine&NameStr =
 literal|""
@@ -6673,93 +6364,7 @@ name|ExtractValueInst
 argument_list|(
 name|Agg
 argument_list|,
-name|IdxBegin
-argument_list|,
-name|IdxEnd
-argument_list|,
-name|NameStr
-argument_list|,
-name|InsertBefore
-argument_list|)
-return|;
-block|}
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
-specifier|static
-name|ExtractValueInst
-operator|*
-name|Create
-argument_list|(
-argument|Value *Agg
-argument_list|,
-argument|RandomAccessIterator IdxBegin
-argument_list|,
-argument|RandomAccessIterator IdxEnd
-argument_list|,
-argument|const Twine&NameStr
-argument_list|,
-argument|BasicBlock *InsertAtEnd
-argument_list|)
-block|{
-return|return
-name|new
-name|ExtractValueInst
-argument_list|(
-name|Agg
-argument_list|,
-name|IdxBegin
-argument_list|,
-name|IdxEnd
-argument_list|,
-name|NameStr
-argument_list|,
-name|InsertAtEnd
-argument_list|)
-return|;
-block|}
-comment|/// Constructors - These two creators are convenience methods because one
-comment|/// index extractvalue instructions are much more common than those with
-comment|/// more than one.
-specifier|static
-name|ExtractValueInst
-operator|*
-name|Create
-argument_list|(
-argument|Value *Agg
-argument_list|,
-argument|unsigned Idx
-argument_list|,
-argument|const Twine&NameStr =
-literal|""
-argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
-argument_list|)
-block|{
-name|unsigned
 name|Idxs
-index|[
-literal|1
-index|]
-operator|=
-block|{
-name|Idx
-block|}
-block|;
-return|return
-name|new
-name|ExtractValueInst
-argument_list|(
-name|Agg
-argument_list|,
-name|Idxs
-argument_list|,
-name|Idxs
-operator|+
-literal|1
 argument_list|,
 name|NameStr
 argument_list|,
@@ -6774,23 +6379,13 @@ name|Create
 argument_list|(
 argument|Value *Agg
 argument_list|,
-argument|unsigned Idx
+argument|ArrayRef<unsigned> Idxs
 argument_list|,
 argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
 block|{
-name|unsigned
-name|Idxs
-index|[
-literal|1
-index|]
-operator|=
-block|{
-name|Idx
-block|}
-block|;
 return|return
 name|new
 name|ExtractValueInst
@@ -6798,10 +6393,6 @@ argument_list|(
 name|Agg
 argument_list|,
 name|Idxs
-argument_list|,
-name|Idxs
-operator|+
-literal|1
 argument_list|,
 name|NameStr
 argument_list|,
@@ -6813,47 +6404,21 @@ comment|/// getIndexedType - Returns the type of the element that would be extra
 comment|/// with an extractvalue instruction with the specified parameters.
 comment|///
 comment|/// Null is returned if the indices are invalid for the specified type.
-comment|///
-name|template
+specifier|static
+name|Type
+operator|*
+name|getIndexedType
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|Agg
+argument_list|,
+name|ArrayRef
 operator|<
-name|typename
-name|RandomAccessIterator
+name|unsigned
 operator|>
-specifier|static
-specifier|const
-name|Type
-operator|*
-name|getIndexedType
-argument_list|(
-argument|const Type *Ptr
-argument_list|,
-argument|RandomAccessIterator IdxBegin
-argument_list|,
-argument|RandomAccessIterator IdxEnd
-argument_list|)
-block|{
-return|return
-name|getIndexedType
-argument_list|(
-argument|Ptr
-argument_list|,
-argument|IdxBegin
-argument_list|,
-argument|IdxEnd
-argument_list|,
-argument|typename std::iterator_traits<RandomAccessIterator>::                           iterator_category()
-argument_list|)
-return|;
-block|}
-specifier|static
-specifier|const
-name|Type
-operator|*
-name|getIndexedType
-argument_list|(
-argument|const Type *Ptr
-argument_list|,
-argument|unsigned Idx
+name|Idxs
 argument_list|)
 block|;
 typedef|typedef
@@ -6924,12 +6489,23 @@ literal|0U
 return|;
 comment|// get index for modifying correct operand
 block|}
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|getIndices
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Indices
+return|;
+block|}
 name|unsigned
 name|getNumIndices
 argument_list|()
 specifier|const
 block|{
-comment|// Note: always non-negative
 return|return
 operator|(
 name|unsigned
@@ -7012,29 +6588,33 @@ return|;
 block|}
 expr|}
 block|;
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
 name|ExtractValueInst
 operator|::
 name|ExtractValueInst
 argument_list|(
-argument|Value *Agg
+name|Value
+operator|*
+name|Agg
 argument_list|,
-argument|RandomAccessIterator IdxBegin
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Idxs
 argument_list|,
-argument|RandomAccessIterator IdxEnd
+specifier|const
+name|Twine
+operator|&
+name|NameStr
 argument_list|,
-argument|const Twine&NameStr
-argument_list|,
-argument|Instruction *InsertBefore
+name|Instruction
+operator|*
+name|InsertBefore
 argument_list|)
 operator|:
 name|UnaryInstruction
 argument_list|(
-argument|checkType(getIndexedType(Agg->getType(),                                               IdxBegin, IdxEnd))
+argument|checkGEPType(getIndexedType(Agg->getType(), Idxs))
 argument_list|,
 argument|ExtractValue
 argument_list|,
@@ -7045,38 +6625,38 @@ argument_list|)
 block|{
 name|init
 argument_list|(
-argument|IdxBegin
+name|Idxs
 argument_list|,
-argument|IdxEnd
-argument_list|,
-argument|NameStr
-argument_list|,
-argument|typename std::iterator_traits<RandomAccessIterator>        ::iterator_category()
+name|NameStr
 argument_list|)
 block|; }
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
 name|ExtractValueInst
 operator|::
 name|ExtractValueInst
 argument_list|(
-argument|Value *Agg
+name|Value
+operator|*
+name|Agg
 argument_list|,
-argument|RandomAccessIterator IdxBegin
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Idxs
 argument_list|,
-argument|RandomAccessIterator IdxEnd
+specifier|const
+name|Twine
+operator|&
+name|NameStr
 argument_list|,
-argument|const Twine&NameStr
-argument_list|,
-argument|BasicBlock *InsertAtEnd
+name|BasicBlock
+operator|*
+name|InsertAtEnd
 argument_list|)
 operator|:
 name|UnaryInstruction
 argument_list|(
-argument|checkType(getIndexedType(Agg->getType(),                                               IdxBegin, IdxEnd))
+argument|checkGEPType(getIndexedType(Agg->getType(), Idxs))
 argument_list|,
 argument|ExtractValue
 argument_list|,
@@ -7087,13 +6667,9 @@ argument_list|)
 block|{
 name|init
 argument_list|(
-argument|IdxBegin
+name|Idxs
 argument_list|,
-argument|IdxEnd
-argument_list|,
-argument|NameStr
-argument_list|,
-argument|typename std::iterator_traits<RandomAccessIterator>        ::iterator_category()
+name|NameStr
 argument_list|)
 block|; }
 comment|//===----------------------------------------------------------------------===//
@@ -7138,146 +6714,82 @@ block|;
 name|void
 name|init
 argument_list|(
-argument|Value *Agg
-argument_list|,
-argument|Value *Val
-argument_list|,
-argument|const unsigned *Idx
-argument_list|,
-argument|unsigned NumIdx
-argument_list|,
-argument|const Twine&NameStr
-argument_list|)
-block|;
-name|void
-name|init
-argument_list|(
-argument|Value *Agg
-argument_list|,
-argument|Value *Val
-argument_list|,
-argument|unsigned Idx
-argument_list|,
-argument|const Twine&NameStr
-argument_list|)
-block|;
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
-name|void
-name|init
-argument_list|(
-argument|Value *Agg
-argument_list|,
-argument|Value *Val
-argument_list|,
-argument|RandomAccessIterator IdxBegin
-argument_list|,
-argument|RandomAccessIterator IdxEnd
-argument_list|,
-argument|const Twine&NameStr
-argument_list|,
-comment|// This argument ensures that we have an iterator we can
-comment|// do arithmetic on in constant time
-argument|std::random_access_iterator_tag
-argument_list|)
-block|{
-name|unsigned
-name|NumIdx
-operator|=
-name|static_cast
-operator|<
-name|unsigned
-operator|>
-operator|(
-name|std
-operator|::
-name|distance
-argument_list|(
-name|IdxBegin
-argument_list|,
-name|IdxEnd
-argument_list|)
-operator|)
-block|;
-comment|// There's no fundamental reason why we require at least one index
-comment|// (other than weirdness with&*IdxBegin being invalid; see
-comment|// getelementptr's init routine for example). But there's no
-comment|// present need to support it.
-name|assert
-argument_list|(
-name|NumIdx
-operator|>
-literal|0
-operator|&&
-literal|"InsertValueInst must have at least one index"
-argument_list|)
-block|;
-comment|// This requires that the iterator points to contiguous memory.
-name|init
-argument_list|(
+name|Value
+operator|*
 name|Agg
 argument_list|,
+name|Value
+operator|*
 name|Val
 argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Idxs
+argument_list|,
+specifier|const
+name|Twine
 operator|&
-operator|*
-name|IdxBegin
-argument_list|,
-name|NumIdx
-argument_list|,
 name|NameStr
 argument_list|)
 block|;
-comment|// FIXME: for the general case
-comment|// we have to build an array here
-block|}
 comment|/// Constructors - Create a insertvalue instruction with a base aggregate
 comment|/// value, a value to insert, and a list of indices.  The first ctor can
 comment|/// optionally insert before an existing instruction, the second appends
 comment|/// the new instruction to the specified BasicBlock.
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
 specifier|inline
 name|InsertValueInst
 argument_list|(
-argument|Value *Agg
+name|Value
+operator|*
+name|Agg
 argument_list|,
-argument|Value *Val
+name|Value
+operator|*
+name|Val
 argument_list|,
-argument|RandomAccessIterator IdxBegin
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Idxs
 argument_list|,
-argument|RandomAccessIterator IdxEnd
+specifier|const
+name|Twine
+operator|&
+name|NameStr
 argument_list|,
-argument|const Twine&NameStr
-argument_list|,
-argument|Instruction *InsertBefore
+name|Instruction
+operator|*
+name|InsertBefore
 argument_list|)
 block|;
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
 specifier|inline
 name|InsertValueInst
 argument_list|(
-argument|Value *Agg
+name|Value
+operator|*
+name|Agg
 argument_list|,
-argument|Value *Val
+name|Value
+operator|*
+name|Val
 argument_list|,
-argument|RandomAccessIterator IdxBegin
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Idxs
 argument_list|,
-argument|RandomAccessIterator IdxEnd
+specifier|const
+name|Twine
+operator|&
+name|NameStr
 argument_list|,
-argument|const Twine&NameStr
-argument_list|,
-argument|BasicBlock *InsertAtEnd
+name|BasicBlock
+operator|*
+name|InsertAtEnd
 argument_list|)
 block|;
 comment|/// Constructors - These two constructors are convenience methods because one
@@ -7342,11 +6854,6 @@ literal|2
 argument_list|)
 return|;
 block|}
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
 specifier|static
 name|InsertValueInst
 operator|*
@@ -7356,9 +6863,7 @@ argument|Value *Agg
 argument_list|,
 argument|Value *Val
 argument_list|,
-argument|RandomAccessIterator IdxBegin
-argument_list|,
-argument|RandomAccessIterator IdxEnd
+argument|ArrayRef<unsigned> Idxs
 argument_list|,
 argument|const Twine&NameStr =
 literal|""
@@ -7375,87 +6880,7 @@ name|Agg
 argument_list|,
 name|Val
 argument_list|,
-name|IdxBegin
-argument_list|,
-name|IdxEnd
-argument_list|,
-name|NameStr
-argument_list|,
-name|InsertBefore
-argument_list|)
-return|;
-block|}
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
-specifier|static
-name|InsertValueInst
-operator|*
-name|Create
-argument_list|(
-argument|Value *Agg
-argument_list|,
-argument|Value *Val
-argument_list|,
-argument|RandomAccessIterator IdxBegin
-argument_list|,
-argument|RandomAccessIterator IdxEnd
-argument_list|,
-argument|const Twine&NameStr
-argument_list|,
-argument|BasicBlock *InsertAtEnd
-argument_list|)
-block|{
-return|return
-name|new
-name|InsertValueInst
-argument_list|(
-name|Agg
-argument_list|,
-name|Val
-argument_list|,
-name|IdxBegin
-argument_list|,
-name|IdxEnd
-argument_list|,
-name|NameStr
-argument_list|,
-name|InsertAtEnd
-argument_list|)
-return|;
-block|}
-comment|/// Constructors - These two creators are convenience methods because one
-comment|/// index insertvalue instructions are much more common than those with
-comment|/// more than one.
-specifier|static
-name|InsertValueInst
-operator|*
-name|Create
-argument_list|(
-argument|Value *Agg
-argument_list|,
-argument|Value *Val
-argument_list|,
-argument|unsigned Idx
-argument_list|,
-argument|const Twine&NameStr =
-literal|""
-argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
-argument_list|)
-block|{
-return|return
-name|new
-name|InsertValueInst
-argument_list|(
-name|Agg
-argument_list|,
-name|Val
-argument_list|,
-name|Idx
+name|Idxs
 argument_list|,
 name|NameStr
 argument_list|,
@@ -7472,7 +6897,7 @@ argument|Value *Agg
 argument_list|,
 argument|Value *Val
 argument_list|,
-argument|unsigned Idx
+argument|ArrayRef<unsigned> Idxs
 argument_list|,
 argument|const Twine&NameStr
 argument_list|,
@@ -7487,7 +6912,7 @@ name|Agg
 argument_list|,
 name|Val
 argument_list|,
-name|Idx
+name|Idxs
 argument_list|,
 name|NameStr
 argument_list|,
@@ -7605,12 +7030,23 @@ literal|1U
 return|;
 comment|// get index for modifying correct operand
 block|}
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|getIndices
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Indices
+return|;
+block|}
 name|unsigned
 name|getNumIndices
 argument_list|()
 specifier|const
 block|{
-comment|// Note: always non-negative
 return|return
 operator|(
 name|unsigned
@@ -7711,26 +7147,32 @@ literal|2
 operator|>
 block|{ }
 block|;
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
 name|InsertValueInst
 operator|::
 name|InsertValueInst
 argument_list|(
-argument|Value *Agg
+name|Value
+operator|*
+name|Agg
 argument_list|,
-argument|Value *Val
+name|Value
+operator|*
+name|Val
 argument_list|,
-argument|RandomAccessIterator IdxBegin
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Idxs
 argument_list|,
-argument|RandomAccessIterator IdxEnd
+specifier|const
+name|Twine
+operator|&
+name|NameStr
 argument_list|,
-argument|const Twine&NameStr
-argument_list|,
-argument|Instruction *InsertBefore
+name|Instruction
+operator|*
+name|InsertBefore
 argument_list|)
 operator|:
 name|Instruction
@@ -7748,39 +7190,41 @@ argument_list|)
 block|{
 name|init
 argument_list|(
-argument|Agg
+name|Agg
 argument_list|,
-argument|Val
+name|Val
 argument_list|,
-argument|IdxBegin
+name|Idxs
 argument_list|,
-argument|IdxEnd
-argument_list|,
-argument|NameStr
-argument_list|,
-argument|typename std::iterator_traits<RandomAccessIterator>        ::iterator_category()
+name|NameStr
 argument_list|)
 block|; }
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
 name|InsertValueInst
 operator|::
 name|InsertValueInst
 argument_list|(
-argument|Value *Agg
+name|Value
+operator|*
+name|Agg
 argument_list|,
-argument|Value *Val
+name|Value
+operator|*
+name|Val
 argument_list|,
-argument|RandomAccessIterator IdxBegin
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Idxs
 argument_list|,
-argument|RandomAccessIterator IdxEnd
+specifier|const
+name|Twine
+operator|&
+name|NameStr
 argument_list|,
-argument|const Twine&NameStr
-argument_list|,
-argument|BasicBlock *InsertAtEnd
+name|BasicBlock
+operator|*
+name|InsertAtEnd
 argument_list|)
 operator|:
 name|Instruction
@@ -7798,17 +7242,13 @@ argument_list|)
 block|{
 name|init
 argument_list|(
-argument|Agg
+name|Agg
 argument_list|,
-argument|Val
+name|Val
 argument_list|,
-argument|IdxBegin
+name|Idxs
 argument_list|,
-argument|IdxEnd
-argument_list|,
-argument|NameStr
-argument_list|,
-argument|typename std::iterator_traits<RandomAccessIterator>        ::iterator_category()
+name|NameStr
 argument_list|)
 block|; }
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
@@ -7906,8 +7346,7 @@ argument_list|)
 block|,
 name|ReservedSpace
 argument_list|(
-argument|NumReservedValues *
-literal|2
+argument|NumReservedValues
 argument_list|)
 block|{
 name|setName
@@ -7950,8 +7389,7 @@ argument_list|)
 block|,
 name|ReservedSpace
 argument_list|(
-argument|NumReservedValues *
-literal|2
+argument|NumReservedValues
 argument_list|)
 block|{
 name|setName
@@ -7968,6 +7406,17 @@ argument_list|)
 block|;   }
 name|protected
 operator|:
+comment|// allocHungoffUses - this is more complicated than the generic
+comment|// User::allocHungoffUses, because we have to allocate Uses for the incoming
+comment|// values and pointers to the incoming blocks, all in one allocation.
+name|Use
+operator|*
+name|allocHungoffUses
+argument_list|(
+argument|unsigned
+argument_list|)
+specifier|const
+block|;
 name|virtual
 name|PHINode
 operator|*
@@ -8047,6 +7496,121 @@ argument_list|(
 name|Value
 argument_list|)
 block|;
+comment|// Block iterator interface. This provides access to the list of incoming
+comment|// basic blocks, which parallels the list of incoming values.
+typedef|typedef
+name|BasicBlock
+modifier|*
+modifier|*
+name|block_iterator
+typedef|;
+typedef|typedef
+name|BasicBlock
+modifier|*
+specifier|const
+modifier|*
+name|const_block_iterator
+typedef|;
+name|block_iterator
+name|block_begin
+argument_list|()
+block|{
+name|Use
+operator|::
+name|UserRef
+operator|*
+name|ref
+operator|=
+name|reinterpret_cast
+operator|<
+name|Use
+operator|::
+name|UserRef
+operator|*
+operator|>
+operator|(
+name|op_begin
+argument_list|()
+operator|+
+name|ReservedSpace
+operator|)
+block|;
+return|return
+name|reinterpret_cast
+operator|<
+name|block_iterator
+operator|>
+operator|(
+name|ref
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+name|const_block_iterator
+name|block_begin
+argument_list|()
+specifier|const
+block|{
+specifier|const
+name|Use
+operator|::
+name|UserRef
+operator|*
+name|ref
+operator|=
+name|reinterpret_cast
+operator|<
+specifier|const
+name|Use
+operator|::
+name|UserRef
+operator|*
+operator|>
+operator|(
+name|op_begin
+argument_list|()
+operator|+
+name|ReservedSpace
+operator|)
+block|;
+return|return
+name|reinterpret_cast
+operator|<
+name|const_block_iterator
+operator|>
+operator|(
+name|ref
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+name|block_iterator
+name|block_end
+argument_list|()
+block|{
+return|return
+name|block_begin
+argument_list|()
+operator|+
+name|getNumOperands
+argument_list|()
+return|;
+block|}
+name|const_block_iterator
+name|block_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|block_begin
+argument_list|()
+operator|+
+name|getNumOperands
+argument_list|()
+return|;
+block|}
 comment|/// getNumIncomingValues - Return the number of incoming edges
 comment|///
 name|unsigned
@@ -8057,8 +7621,6 @@ block|{
 return|return
 name|getNumOperands
 argument_list|()
-operator|/
-literal|2
 return|;
 block|}
 comment|/// getIncomingValue - Return incoming value number x
@@ -8071,24 +7633,10 @@ argument|unsigned i
 argument_list|)
 specifier|const
 block|{
-name|assert
-argument_list|(
-name|i
-operator|*
-literal|2
-operator|<
-name|getNumOperands
-argument_list|()
-operator|&&
-literal|"Invalid value number!"
-argument_list|)
-block|;
 return|return
 name|getOperand
 argument_list|(
 name|i
-operator|*
-literal|2
 argument_list|)
 return|;
 block|}
@@ -8100,23 +7648,9 @@ argument_list|,
 argument|Value *V
 argument_list|)
 block|{
-name|assert
-argument_list|(
-name|i
-operator|*
-literal|2
-operator|<
-name|getNumOperands
-argument_list|()
-operator|&&
-literal|"Invalid value number!"
-argument_list|)
-block|;
 name|setOperand
 argument_list|(
 name|i
-operator|*
-literal|2
 argument_list|,
 name|V
 argument_list|)
@@ -8130,8 +7664,6 @@ argument_list|)
 block|{
 return|return
 name|i
-operator|*
-literal|2
 return|;
 block|}
 specifier|static
@@ -8141,21 +7673,8 @@ argument_list|(
 argument|unsigned i
 argument_list|)
 block|{
-name|assert
-argument_list|(
-name|i
-operator|%
-literal|2
-operator|==
-literal|0
-operator|&&
-literal|"Invalid incoming-value operand index!"
-argument_list|)
-block|;
 return|return
 name|i
-operator|/
-literal|2
 return|;
 block|}
 comment|/// getIncomingBlock - Return incoming basic block number @p i.
@@ -8169,20 +7688,11 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|cast
-operator|<
-name|BasicBlock
-operator|>
-operator|(
-name|getOperand
-argument_list|(
+name|block_begin
+argument_list|()
+index|[
 name|i
-operator|*
-literal|2
-operator|+
-literal|1
-argument_list|)
-operator|)
+index|]
 return|;
 block|}
 comment|/// getIncomingBlock - Return incoming basic block corresponding
@@ -8209,21 +7719,17 @@ literal|"Iterator doesn't point to PHI's Uses?"
 argument_list|)
 block|;
 return|return
-name|cast
-operator|<
-name|BasicBlock
-operator|>
-operator|(
-operator|(
+name|getIncomingBlock
+argument_list|(
+name|unsigned
+argument_list|(
 operator|&
 name|U
-operator|+
-literal|1
-operator|)
-operator|->
-name|get
+operator|-
+name|op_begin
 argument_list|()
-operator|)
+argument_list|)
+argument_list|)
 return|;
 block|}
 comment|/// getIncomingBlock - Return incoming basic block corresponding
@@ -8260,60 +7766,14 @@ argument_list|,
 argument|BasicBlock *BB
 argument_list|)
 block|{
-name|setOperand
-argument_list|(
+name|block_begin
+argument_list|()
+index|[
 name|i
-operator|*
-literal|2
-operator|+
-literal|1
-argument_list|,
-operator|(
-name|Value
-operator|*
-operator|)
+index|]
+operator|=
 name|BB
-argument_list|)
 block|;   }
-specifier|static
-name|unsigned
-name|getOperandNumForIncomingBlock
-argument_list|(
-argument|unsigned i
-argument_list|)
-block|{
-return|return
-name|i
-operator|*
-literal|2
-operator|+
-literal|1
-return|;
-block|}
-specifier|static
-name|unsigned
-name|getIncomingBlockNumForOperand
-argument_list|(
-argument|unsigned i
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|i
-operator|%
-literal|2
-operator|==
-literal|1
-operator|&&
-literal|"Invalid incoming-block operand index!"
-argument_list|)
-block|;
-return|return
-name|i
-operator|/
-literal|2
-return|;
-block|}
 comment|/// addIncoming - Add an incoming value to the end of the PHI list
 comment|///
 name|void
@@ -8351,17 +7811,10 @@ operator|&&
 literal|"All operands to PHI node must be the same type as the PHI node!"
 argument_list|)
 block|;
-name|unsigned
-name|OpNo
-operator|=
-name|NumOperands
-block|;
 if|if
 condition|(
-name|OpNo
-operator|+
-literal|2
-operator|>
+name|NumOperands
+operator|==
 name|ReservedSpace
 condition|)
 name|growOperands
@@ -8369,31 +7822,26 @@ argument_list|()
 expr_stmt|;
 comment|// Get more space!
 comment|// Initialize some new operands.
+operator|++
 name|NumOperands
-operator|=
-name|OpNo
-operator|+
-literal|2
 block|;
-name|OperandList
-index|[
-name|OpNo
-index|]
-operator|=
-name|V
-block|;
-name|OperandList
-index|[
-name|OpNo
-operator|+
+name|setIncomingValue
+argument_list|(
+name|NumOperands
+operator|-
 literal|1
-index|]
-operator|=
-operator|(
-name|Value
-operator|*
-operator|)
+argument_list|,
+name|V
+argument_list|)
+block|;
+name|setIncomingBlock
+argument_list|(
+name|NumOperands
+operator|-
+literal|1
+argument_list|,
 name|BB
+argument_list|)
 block|;   }
 comment|/// removeIncomingValue - Remove an incoming value.  This is useful if a
 comment|/// predecessor basic block is deleted.  The value removed is returned.
@@ -8457,12 +7905,6 @@ argument|const BasicBlock *BB
 argument_list|)
 specifier|const
 block|{
-name|Use
-operator|*
-name|OL
-operator|=
-name|OperandList
-block|;
 for|for
 control|(
 name|unsigned
@@ -8479,33 +7921,21 @@ name|i
 operator|!=
 name|e
 condition|;
+operator|++
 name|i
-operator|+=
-literal|2
 control|)
 if|if
 condition|(
-name|OL
+name|block_begin
+argument_list|()
 index|[
 name|i
-operator|+
-literal|1
 index|]
-operator|.
-name|get
-argument_list|()
 operator|==
-operator|(
-specifier|const
-name|Value
-operator|*
-operator|)
 name|BB
 condition|)
 return|return
 name|i
-operator|/
-literal|2
 return|;
 return|return
 operator|-
@@ -8520,13 +7950,27 @@ argument|const BasicBlock *BB
 argument_list|)
 specifier|const
 block|{
-return|return
-name|getIncomingValue
-argument_list|(
+name|int
+name|Idx
+operator|=
 name|getBasicBlockIndex
 argument_list|(
 name|BB
 argument_list|)
+block|;
+name|assert
+argument_list|(
+name|Idx
+operator|>=
+literal|0
+operator|&&
+literal|"Invalid basic block argument!"
+argument_list|)
+block|;
+return|return
+name|getIncomingValue
+argument_list|(
+name|Idx
 argument_list|)
 return|;
 block|}
@@ -10591,94 +10035,34 @@ block|;
 name|void
 name|init
 argument_list|(
-argument|Value *Fn
-argument_list|,
-argument|BasicBlock *IfNormal
-argument_list|,
-argument|BasicBlock *IfException
-argument_list|,
-argument|Value* const *Args
-argument_list|,
-argument|unsigned NumArgs
-argument_list|)
-block|;
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
-name|void
-name|init
-argument_list|(
-argument|Value *Func
-argument_list|,
-argument|BasicBlock *IfNormal
-argument_list|,
-argument|BasicBlock *IfException
-argument_list|,
-argument|RandomAccessIterator ArgBegin
-argument_list|,
-argument|RandomAccessIterator ArgEnd
-argument_list|,
-argument|const Twine&NameStr
-argument_list|,
-comment|// This argument ensures that we have an iterator we can
-comment|// do arithmetic on in constant time
-argument|std::random_access_iterator_tag
-argument_list|)
-block|{
-name|unsigned
-name|NumArgs
-operator|=
-operator|(
-name|unsigned
-operator|)
-name|std
-operator|::
-name|distance
-argument_list|(
-name|ArgBegin
-argument_list|,
-name|ArgEnd
-argument_list|)
-block|;
-comment|// This requires that the iterator points to contiguous memory.
-name|init
-argument_list|(
+name|Value
+operator|*
 name|Func
 argument_list|,
+name|BasicBlock
+operator|*
 name|IfNormal
 argument_list|,
+name|BasicBlock
+operator|*
 name|IfException
 argument_list|,
-name|NumArgs
-condition|?
-operator|&
+name|ArrayRef
+operator|<
+name|Value
 operator|*
-name|ArgBegin
-else|:
-literal|0
+operator|>
+name|Args
 argument_list|,
-name|NumArgs
-argument_list|)
-block|;
-name|setName
-argument_list|(
+specifier|const
+name|Twine
+operator|&
 name|NameStr
 argument_list|)
-block|;   }
+block|;
 comment|/// Construct an InvokeInst given a range of arguments.
-comment|/// RandomAccessIterator must be a random-access iterator pointing to
-comment|/// contiguous storage (e.g. a std::vector<>::iterator).  Checks are
-comment|/// made for random-accessness but not for contiguous storage as
-comment|/// that would incur runtime overhead.
 comment|///
 comment|/// @brief Construct an InvokeInst from a range of arguments
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
 specifier|inline
 name|InvokeInst
 argument_list|(
@@ -10688,9 +10072,7 @@ argument|BasicBlock *IfNormal
 argument_list|,
 argument|BasicBlock *IfException
 argument_list|,
-argument|RandomAccessIterator ArgBegin
-argument_list|,
-argument|RandomAccessIterator ArgEnd
+argument|ArrayRef<Value *> Args
 argument_list|,
 argument|unsigned Values
 argument_list|,
@@ -10700,17 +10082,8 @@ argument|Instruction *InsertBefore
 argument_list|)
 block|;
 comment|/// Construct an InvokeInst given a range of arguments.
-comment|/// RandomAccessIterator must be a random-access iterator pointing to
-comment|/// contiguous storage (e.g. a std::vector<>::iterator).  Checks are
-comment|/// made for random-accessness but not for contiguous storage as
-comment|/// that would incur runtime overhead.
 comment|///
 comment|/// @brief Construct an InvokeInst from a range of arguments
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
 specifier|inline
 name|InvokeInst
 argument_list|(
@@ -10720,9 +10093,7 @@ argument|BasicBlock *IfNormal
 argument_list|,
 argument|BasicBlock *IfException
 argument_list|,
-argument|RandomAccessIterator ArgBegin
-argument_list|,
-argument|RandomAccessIterator ArgEnd
+argument|ArrayRef<Value *> Args
 argument_list|,
 argument|unsigned Values
 argument_list|,
@@ -10742,11 +10113,6 @@ specifier|const
 block|;
 name|public
 operator|:
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
 specifier|static
 name|InvokeInst
 operator|*
@@ -10758,9 +10124,7 @@ argument|BasicBlock *IfNormal
 argument_list|,
 argument|BasicBlock *IfException
 argument_list|,
-argument|RandomAccessIterator ArgBegin
-argument_list|,
-argument|RandomAccessIterator ArgEnd
+argument|ArrayRef<Value *> Args
 argument_list|,
 argument|const Twine&NameStr =
 literal|""
@@ -10771,13 +10135,16 @@ argument_list|)
 block|{
 name|unsigned
 name|Values
+operator|=
+name|unsigned
 argument_list|(
-name|ArgEnd
-operator|-
-name|ArgBegin
+name|Args
+operator|.
+name|size
+argument_list|()
+argument_list|)
 operator|+
 literal|3
-argument_list|)
 block|;
 return|return
 name|new
@@ -10792,9 +10159,7 @@ name|IfNormal
 argument_list|,
 name|IfException
 argument_list|,
-name|ArgBegin
-argument_list|,
-name|ArgEnd
+name|Args
 argument_list|,
 name|Values
 argument_list|,
@@ -10804,11 +10169,6 @@ name|InsertBefore
 argument_list|)
 return|;
 block|}
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
 specifier|static
 name|InvokeInst
 operator|*
@@ -10820,9 +10180,7 @@ argument|BasicBlock *IfNormal
 argument_list|,
 argument|BasicBlock *IfException
 argument_list|,
-argument|RandomAccessIterator ArgBegin
-argument_list|,
-argument|RandomAccessIterator ArgEnd
+argument|ArrayRef<Value *> Args
 argument_list|,
 argument|const Twine&NameStr
 argument_list|,
@@ -10831,13 +10189,16 @@ argument_list|)
 block|{
 name|unsigned
 name|Values
+operator|=
+name|unsigned
 argument_list|(
-name|ArgEnd
-operator|-
-name|ArgBegin
+name|Args
+operator|.
+name|size
+argument_list|()
+argument_list|)
 operator|+
 literal|3
-argument_list|)
 block|;
 return|return
 name|new
@@ -10852,9 +10213,7 @@ name|IfNormal
 argument_list|,
 name|IfException
 argument_list|,
-name|ArgBegin
-argument_list|,
-name|ArgEnd
+name|Args
 argument_list|,
 name|Values
 argument_list|,
@@ -11687,11 +11046,6 @@ literal|3
 operator|>
 block|{ }
 block|;
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
 name|InvokeInst
 operator|::
 name|InvokeInst
@@ -11702,9 +11056,7 @@ argument|BasicBlock *IfNormal
 argument_list|,
 argument|BasicBlock *IfException
 argument_list|,
-argument|RandomAccessIterator ArgBegin
-argument_list|,
-argument|RandomAccessIterator ArgEnd
+argument|ArrayRef<Value *> Args
 argument_list|,
 argument|unsigned Values
 argument_list|,
@@ -11728,26 +11080,17 @@ argument_list|)
 block|{
 name|init
 argument_list|(
-argument|Func
+name|Func
 argument_list|,
-argument|IfNormal
+name|IfNormal
 argument_list|,
-argument|IfException
+name|IfException
 argument_list|,
-argument|ArgBegin
+name|Args
 argument_list|,
-argument|ArgEnd
-argument_list|,
-argument|NameStr
-argument_list|,
-argument|typename std::iterator_traits<RandomAccessIterator>        ::iterator_category()
+name|NameStr
 argument_list|)
 block|; }
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
 name|InvokeInst
 operator|::
 name|InvokeInst
@@ -11758,9 +11101,7 @@ argument|BasicBlock *IfNormal
 argument_list|,
 argument|BasicBlock *IfException
 argument_list|,
-argument|RandomAccessIterator ArgBegin
-argument_list|,
-argument|RandomAccessIterator ArgEnd
+argument|ArrayRef<Value *> Args
 argument_list|,
 argument|unsigned Values
 argument_list|,
@@ -11784,19 +11125,15 @@ argument_list|)
 block|{
 name|init
 argument_list|(
-argument|Func
+name|Func
 argument_list|,
-argument|IfNormal
+name|IfNormal
 argument_list|,
-argument|IfException
+name|IfException
 argument_list|,
-argument|ArgBegin
+name|Args
 argument_list|,
-argument|ArgEnd
-argument_list|,
-argument|NameStr
-argument_list|,
-argument|typename std::iterator_traits<RandomAccessIterator>        ::iterator_category()
+name|NameStr
 argument_list|)
 block|; }
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS

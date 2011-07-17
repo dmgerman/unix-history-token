@@ -73,9 +73,6 @@ name|class
 name|MCOperand
 decl_stmt|;
 name|class
-name|TargetMachine
-decl_stmt|;
-name|class
 name|MBlazeInstPrinter
 range|:
 name|public
@@ -85,10 +82,6 @@ name|public
 operator|:
 name|MBlazeInstPrinter
 argument_list|(
-name|TargetMachine
-operator|&
-name|TM
-argument_list|,
 specifier|const
 name|MCAsmInfo
 operator|&

@@ -115,9 +115,6 @@ name|class
 name|AttrListPtr
 decl_stmt|;
 name|class
-name|TypeSymbolTable
-decl_stmt|;
-name|class
 name|ValueSymbolTable
 decl_stmt|;
 name|class
@@ -593,10 +590,6 @@ name|CstEnd
 parameter_list|)
 function_decl|;
 name|void
-name|OptimizeTypes
-parameter_list|()
-function_decl|;
-name|void
 name|EnumerateMDNodeOperands
 parameter_list|(
 specifier|const
@@ -666,15 +659,6 @@ specifier|const
 name|AttrListPtr
 modifier|&
 name|PAL
-parameter_list|)
-function_decl|;
-name|void
-name|EnumerateTypeSymbolTable
-parameter_list|(
-specifier|const
-name|TypeSymbolTable
-modifier|&
-name|ST
 parameter_list|)
 function_decl|;
 name|void

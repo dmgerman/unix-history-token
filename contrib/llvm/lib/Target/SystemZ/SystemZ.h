@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"MCTargetDesc/SystemZMCTargetDesc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
@@ -167,40 +173,12 @@ name|Level
 name|OptLevel
 argument_list|)
 decl_stmt|;
-specifier|extern
-name|Target
-name|TheSystemZTarget
-decl_stmt|;
 block|}
 end_decl_stmt
 
 begin_comment
 comment|// end namespace llvm;
 end_comment
-
-begin_comment
-comment|// Defines symbolic names for SystemZ registers.
-end_comment
-
-begin_comment
-comment|// This defines a mapping from register name to register number.
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"SystemZGenRegisterNames.inc"
-end_include
-
-begin_comment
-comment|// Defines symbolic names for the SystemZ instructions.
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"SystemZGenInstrNames.inc"
-end_include
 
 begin_endif
 endif|#

@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"MCTargetDesc/MSP430MCTargetDesc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
@@ -146,40 +152,12 @@ modifier|*
 name|createMSP430BranchSelectionPass
 parameter_list|()
 function_decl|;
-specifier|extern
-name|Target
-name|TheMSP430Target
-decl_stmt|;
 block|}
 end_decl_stmt
 
 begin_comment
 comment|// end namespace llvm;
 end_comment
-
-begin_comment
-comment|// Defines symbolic names for MSP430 registers.
-end_comment
-
-begin_comment
-comment|// This defines a mapping from register name to register number.
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"MSP430GenRegisterNames.inc"
-end_include
-
-begin_comment
-comment|// Defines symbolic names for the MSP430 instructions.
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"MSP430GenInstrNames.inc"
-end_include
 
 begin_endif
 endif|#

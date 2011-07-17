@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"MCTargetDesc/BlackfinMCTargetDesc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
@@ -93,40 +99,12 @@ name|Level
 name|OptLevel
 argument_list|)
 decl_stmt|;
-specifier|extern
-name|Target
-name|TheBlackfinTarget
-decl_stmt|;
 block|}
 end_decl_stmt
 
 begin_comment
 comment|// end namespace llvm
 end_comment
-
-begin_comment
-comment|// Defines symbolic names for Blackfin registers.  This defines a mapping from
-end_comment
-
-begin_comment
-comment|// register name to register number.
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"BlackfinGenRegisterNames.inc"
-end_include
-
-begin_comment
-comment|// Defines symbolic names for the Blackfin instructions.
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"BlackfinGenInstrNames.inc"
-end_include
 
 begin_endif
 endif|#

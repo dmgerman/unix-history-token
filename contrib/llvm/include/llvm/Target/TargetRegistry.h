@@ -129,7 +129,16 @@ name|class
 name|MCInstPrinter
 decl_stmt|;
 name|class
+name|MCInstrInfo
+decl_stmt|;
+name|class
+name|MCRegisterInfo
+decl_stmt|;
+name|class
 name|MCStreamer
+decl_stmt|;
+name|class
+name|MCSubtargetInfo
 decl_stmt|;
 name|class
 name|TargetAsmBackend
@@ -223,7 +232,7 @@ name|MCAsmInfo
 modifier|*
 function_decl|(
 modifier|*
-name|AsmInfoCtorFnTy
+name|MCAsmInfoCtorFnTy
 function_decl|)
 parameter_list|(
 specifier|const
@@ -233,6 +242,46 @@ name|T
 parameter_list|,
 name|StringRef
 name|TT
+parameter_list|)
+function_decl|;
+typedef|typedef
+name|MCInstrInfo
+modifier|*
+function_decl|(
+modifier|*
+name|MCInstrInfoCtorFnTy
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+typedef|typedef
+name|MCRegisterInfo
+modifier|*
+function_decl|(
+modifier|*
+name|MCRegInfoCtorFnTy
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+typedef|typedef
+name|MCSubtargetInfo
+modifier|*
+function_decl|(
+modifier|*
+name|MCSubtargetInfoCtorFnTy
+function_decl|)
+parameter_list|(
+name|StringRef
+name|TT
+parameter_list|,
+name|StringRef
+name|CPU
+parameter_list|,
+name|StringRef
+name|Features
 parameter_list|)
 function_decl|;
 typedef|typedef
@@ -254,6 +303,13 @@ operator|::
 name|string
 operator|&
 name|TT
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|CPU
 argument_list|,
 specifier|const
 name|std
@@ -324,18 +380,13 @@ modifier|*
 name|AsmParserCtorTy
 call|)
 argument_list|(
-specifier|const
-name|Target
+name|MCSubtargetInfo
 operator|&
-name|T
+name|STI
 argument_list|,
 name|MCAsmParser
 operator|&
 name|P
-argument_list|,
-name|TargetMachine
-operator|&
-name|TM
 argument_list|)
 argument_list|;     typedef
 name|MCDisassembler
@@ -363,10 +414,6 @@ name|Target
 operator|&
 name|T
 operator|,
-name|TargetMachine
-operator|&
-name|TM
-operator|,
 name|unsigned
 name|SyntaxVariant
 operator|,
@@ -384,13 +431,14 @@ name|CodeEmitterCtorTy
 call|)
 argument_list|(
 specifier|const
-name|Target
+name|MCInstrInfo
 operator|&
-name|T
+name|II
 argument_list|,
-name|TargetMachine
+specifier|const
+name|MCSubtargetInfo
 operator|&
-name|TM
+name|STI
 argument_list|,
 name|MCContext
 operator|&
@@ -508,8 +556,25 @@ comment|/// HasJIT - Whether this target supports the JIT.
 name|bool
 name|HasJIT
 argument_list|;
-name|AsmInfoCtorFnTy
-name|AsmInfoCtorFn
+comment|/// MCAsmInfoCtorFn - Constructor function for this target's MCAsmInfo, if
+comment|/// registered.
+name|MCAsmInfoCtorFnTy
+name|MCAsmInfoCtorFn
+argument_list|;
+comment|/// MCInstrInfoCtorFn - Constructor function for this target's MCInstrInfo,
+comment|/// if registered.
+name|MCInstrInfoCtorFnTy
+name|MCInstrInfoCtorFn
+argument_list|;
+comment|/// MCRegInfoCtorFn - Constructor function for this target's MCRegisterInfo,
+comment|/// if registered.
+name|MCRegInfoCtorFnTy
+name|MCRegInfoCtorFn
+argument_list|;
+comment|/// MCSubtargetInfoCtorFn - Constructor function for this target's
+comment|/// MCSubtargetInfo, if registered.
+name|MCSubtargetInfoCtorFnTy
+name|MCSubtargetInfoCtorFn
 argument_list|;
 comment|/// TargetMachineCtorFn - Construction function for this target's
 comment|/// TargetMachine, if registered.
@@ -745,7 +810,7 @@ block|}
 comment|/// @}
 comment|/// @name Feature Constructors
 comment|/// @{
-comment|/// createAsmInfo - Create a MCAsmInfo implementation for the specified
+comment|/// createMCAsmInfo - Create a MCAsmInfo implementation for the specified
 comment|/// target triple.
 comment|///
 comment|/// \arg Triple - This argument is used to determine the target machine
@@ -754,7 +819,7 @@ comment|/// either the target triple from the module, or the target triple of th
 comment|/// host if that does not exist.
 name|MCAsmInfo
 modifier|*
-name|createAsmInfo
+name|createMCAsmInfo
 argument_list|(
 name|StringRef
 name|Triple
@@ -764,13 +829,13 @@ block|{
 if|if
 condition|(
 operator|!
-name|AsmInfoCtorFn
+name|MCAsmInfoCtorFn
 condition|)
 return|return
 literal|0
 return|;
 return|return
-name|AsmInfoCtorFn
+name|MCAsmInfoCtorFn
 argument_list|(
 operator|*
 name|this
@@ -779,13 +844,152 @@ name|Triple
 argument_list|)
 return|;
 block|}
-comment|/// createTargetMachine - Create a target specific machine implementation
-comment|/// for the specified \arg Triple.
+comment|/// createMCInstrInfo - Create a MCInstrInfo implementation.
 comment|///
+name|MCInstrInfo
+operator|*
+name|createMCInstrInfo
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|MCInstrInfoCtorFn
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|MCInstrInfoCtorFn
+argument_list|()
+return|;
+block|}
+comment|/// createMCRegInfo - Create a MCRegisterInfo implementation.
+comment|///
+name|MCRegisterInfo
+operator|*
+name|createMCRegInfo
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|MCRegInfoCtorFn
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|MCRegInfoCtorFn
+argument_list|()
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// createMCSubtargetInfo - Create a MCSubtargetInfo implementation.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// \arg Triple - This argument is used to determine the target machine
+end_comment
+
+begin_comment
 comment|/// feature set; it should always be provided. Generally this should be
+end_comment
+
+begin_comment
 comment|/// either the target triple from the module, or the target triple of the
+end_comment
+
+begin_comment
 comment|/// host if that does not exist.
+end_comment
+
+begin_comment
+comment|/// \arg CPU - This specifies the name of the target CPU.
+end_comment
+
+begin_comment
+comment|/// \arg Features - This specifies the string representation of the
+end_comment
+
+begin_comment
+comment|/// additional target features.
+end_comment
+
+begin_decl_stmt
+name|MCSubtargetInfo
+modifier|*
+name|createMCSubtargetInfo
+argument_list|(
+name|StringRef
+name|Triple
+argument_list|,
+name|StringRef
+name|CPU
+argument_list|,
+name|StringRef
+name|Features
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+operator|!
+name|MCSubtargetInfoCtorFn
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|MCSubtargetInfoCtorFn
+argument_list|(
+name|Triple
+argument_list|,
+name|CPU
+argument_list|,
+name|Features
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// createTargetMachine - Create a target specific machine implementation
+end_comment
+
+begin_comment
+comment|/// for the specified \arg Triple.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \arg Triple - This argument is used to determine the target machine
+end_comment
+
+begin_comment
+comment|/// feature set; it should always be provided. Generally this should be
+end_comment
+
+begin_comment
+comment|/// either the target triple from the module, or the target triple of the
+end_comment
+
+begin_comment
+comment|/// host if that does not exist.
+end_comment
+
+begin_decl_stmt
 name|TargetMachine
 modifier|*
 name|createTargetMachine
@@ -802,6 +1006,13 @@ name|std
 operator|::
 name|string
 operator|&
+name|CPU
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
 name|Features
 argument_list|)
 decl|const
@@ -822,14 +1033,31 @@ name|this
 argument_list|,
 name|Triple
 argument_list|,
+name|CPU
+argument_list|,
 name|Features
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// createAsmBackend - Create a target specific assembly parser.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \arg Triple - The target triple string.
+end_comment
+
+begin_comment
 comment|/// \arg Backend - The target independent assembler object.
+end_comment
+
+begin_decl_stmt
 name|TargetAsmBackend
 modifier|*
 name|createAsmBackend
@@ -861,8 +1089,17 @@ name|Triple
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// createAsmLexer - Create a target specific assembly lexer.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|TargetAsmLexer
 modifier|*
 name|createAsmLexer
@@ -892,21 +1129,36 @@ name|MAI
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// createAsmParser - Create a target specific assembly parser.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \arg Parser - The target independent parser implementation to use for
+end_comment
+
+begin_comment
 comment|/// parsing and lexing.
+end_comment
+
+begin_decl_stmt
 name|TargetAsmParser
 modifier|*
 name|createAsmParser
 argument_list|(
+name|MCSubtargetInfo
+operator|&
+name|STI
+argument_list|,
 name|MCAsmParser
 operator|&
 name|Parser
-argument_list|,
-name|TargetMachine
-operator|&
-name|TM
 argument_list|)
 decl|const
 block|{
@@ -921,17 +1173,23 @@ return|;
 return|return
 name|AsmParserCtorFn
 argument_list|(
-operator|*
-name|this
+name|STI
 argument_list|,
 name|Parser
-argument_list|,
-name|TM
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// createAsmPrinter - Create a target specific assembly printer pass.  This
+end_comment
+
+begin_comment
 comment|/// takes ownership of the MCStreamer object.
+end_comment
+
+begin_decl_stmt
 name|AsmPrinter
 modifier|*
 name|createAsmPrinter
@@ -963,6 +1221,9 @@ name|Streamer
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|MCDisassembler
 operator|*
 name|createMCDisassembler
@@ -977,6 +1238,9 @@ condition|)
 return|return
 literal|0
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|MCDisassemblerCtorFn
 argument_list|(
@@ -984,24 +1248,18 @@ operator|*
 name|this
 argument_list|)
 return|;
-block|}
-name|MCInstPrinter
-modifier|*
+end_return
+
+begin_expr_stmt
+unit|}      MCInstPrinter
+operator|*
 name|createMCInstPrinter
 argument_list|(
-name|TargetMachine
-operator|&
-name|TM
+argument|unsigned SyntaxVariant
 argument_list|,
-name|unsigned
-name|SyntaxVariant
-argument_list|,
-specifier|const
-name|MCAsmInfo
-operator|&
-name|MAI
+argument|const MCAsmInfo&MAI
 argument_list|)
-decl|const
+specifier|const
 block|{
 if|if
 condition|(
@@ -1011,34 +1269,39 @@ condition|)
 return|return
 literal|0
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|MCInstPrinterCtorFn
 argument_list|(
 operator|*
 name|this
 argument_list|,
-name|TM
-argument_list|,
 name|SyntaxVariant
 argument_list|,
 name|MAI
 argument_list|)
 return|;
-block|}
+end_return
+
+begin_comment
+unit|}
 comment|/// createCodeEmitter - Create a target specific code emitter.
-name|MCCodeEmitter
-modifier|*
+end_comment
+
+begin_expr_stmt
+unit|MCCodeEmitter
+operator|*
 name|createCodeEmitter
 argument_list|(
-name|TargetMachine
-operator|&
-name|TM
+argument|const MCInstrInfo&II
 argument_list|,
-name|MCContext
-operator|&
-name|Ctx
+argument|const MCSubtargetInfo&STI
+argument_list|,
+argument|MCContext&Ctx
 argument_list|)
-decl|const
+specifier|const
 block|{
 if|if
 condition|(
@@ -1048,61 +1311,78 @@ condition|)
 return|return
 literal|0
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|CodeEmitterCtorFn
 argument_list|(
-operator|*
-name|this
+name|II
 argument_list|,
-name|TM
+name|STI
 argument_list|,
 name|Ctx
 argument_list|)
 return|;
-block|}
+end_return
+
+begin_comment
+unit|}
 comment|/// createObjectStreamer - Create a target specific MCStreamer.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \arg TT - The target triple.
+end_comment
+
+begin_comment
 comment|/// \arg Ctx - The target context.
+end_comment
+
+begin_comment
 comment|/// \arg TAB - The target assembler backend object. Takes ownership.
+end_comment
+
+begin_comment
 comment|/// \arg _OS - The stream object.
+end_comment
+
+begin_comment
 comment|/// \arg _Emitter - The target independent assembler object.Takes ownership.
+end_comment
+
+begin_comment
 comment|/// \arg RelaxAll - Relax all fixups?
+end_comment
+
+begin_comment
 comment|/// \arg NoExecStack - Mark file as not needing a executable stack.
-name|MCStreamer
-modifier|*
+end_comment
+
+begin_expr_stmt
+unit|MCStreamer
+operator|*
 name|createObjectStreamer
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|TT
+argument|const std::string&TT
 argument_list|,
-name|MCContext
-operator|&
-name|Ctx
+argument|MCContext&Ctx
 argument_list|,
-name|TargetAsmBackend
-operator|&
-name|TAB
+argument|TargetAsmBackend&TAB
 argument_list|,
-name|raw_ostream
-operator|&
-name|_OS
+argument|raw_ostream&_OS
 argument_list|,
-name|MCCodeEmitter
-operator|*
-name|_Emitter
+argument|MCCodeEmitter *_Emitter
 argument_list|,
-name|bool
-name|RelaxAll
+argument|bool RelaxAll
 argument_list|,
-name|bool
-name|NoExecStack
+argument|bool NoExecStack
 argument_list|)
-decl|const
+specifier|const
 block|{
 if|if
 condition|(
@@ -1112,6 +1392,9 @@ condition|)
 return|return
 literal|0
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|ObjectStreamerCtorFn
 argument_list|(
@@ -1133,45 +1416,37 @@ argument_list|,
 name|NoExecStack
 argument_list|)
 return|;
-block|}
+end_return
+
+begin_comment
+unit|}
 comment|/// createAsmStreamer - Create a target specific MCStreamer.
-name|MCStreamer
-modifier|*
+end_comment
+
+begin_expr_stmt
+unit|MCStreamer
+operator|*
 name|createAsmStreamer
 argument_list|(
-name|MCContext
-operator|&
-name|Ctx
+argument|MCContext&Ctx
 argument_list|,
-name|formatted_raw_ostream
-operator|&
-name|OS
+argument|formatted_raw_ostream&OS
 argument_list|,
-name|bool
-name|isVerboseAsm
+argument|bool isVerboseAsm
 argument_list|,
-name|bool
-name|useLoc
+argument|bool useLoc
 argument_list|,
-name|bool
-name|useCFI
+argument|bool useCFI
 argument_list|,
-name|MCInstPrinter
-operator|*
-name|InstPrint
+argument|MCInstPrinter *InstPrint
 argument_list|,
-name|MCCodeEmitter
-operator|*
-name|CE
+argument|MCCodeEmitter *CE
 argument_list|,
-name|TargetAsmBackend
-operator|*
-name|TAB
+argument|TargetAsmBackend *TAB
 argument_list|,
-name|bool
-name|ShowInst
+argument|bool ShowInst
 argument_list|)
-decl|const
+specifier|const
 block|{
 comment|// AsmStreamerCtorFn is default to llvm::createAsmStreamer
 return|return
@@ -1197,15 +1472,14 @@ name|ShowInst
 argument_list|)
 return|;
 block|}
-comment|/// @}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_expr_stmt
 
 begin_comment
+comment|/// @}
+end_comment
+
+begin_comment
+unit|};
 comment|/// TargetRegistry - Generic interface to target specific features.
 end_comment
 
@@ -1605,7 +1879,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// RegisterAsmInfo - Register a MCAsmInfo implementation for the
+comment|/// RegisterMCAsmInfo - Register a MCAsmInfo implementation for the
 end_comment
 
 begin_comment
@@ -1643,7 +1917,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|void
-name|RegisterAsmInfo
+name|RegisterMCAsmInfo
 argument_list|(
 name|Target
 operator|&
@@ -1651,7 +1925,7 @@ name|T
 argument_list|,
 name|Target
 operator|::
-name|AsmInfoCtorFnTy
+name|MCAsmInfoCtorFnTy
 name|Fn
 argument_list|)
 block|{
@@ -1661,11 +1935,215 @@ condition|(
 operator|!
 name|T
 operator|.
-name|AsmInfoCtorFn
+name|MCAsmInfoCtorFn
 condition|)
 name|T
 operator|.
-name|AsmInfoCtorFn
+name|MCAsmInfoCtorFn
+operator|=
+name|Fn
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// RegisterMCInstrInfo - Register a MCInstrInfo implementation for the
+end_comment
+
+begin_comment
+comment|/// given target.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Clients are responsible for ensuring that registration doesn't occur
+end_comment
+
+begin_comment
+comment|/// while another thread is attempting to access the registry. Typically
+end_comment
+
+begin_comment
+comment|/// this is done by initializing all targets at program startup.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @param T - The target being registered.
+end_comment
+
+begin_comment
+comment|/// @param Fn - A function to construct a MCInstrInfo for the target.
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|RegisterMCInstrInfo
+argument_list|(
+name|Target
+operator|&
+name|T
+argument_list|,
+name|Target
+operator|::
+name|MCInstrInfoCtorFnTy
+name|Fn
+argument_list|)
+block|{
+comment|// Ignore duplicate registration.
+if|if
+condition|(
+operator|!
+name|T
+operator|.
+name|MCInstrInfoCtorFn
+condition|)
+name|T
+operator|.
+name|MCInstrInfoCtorFn
+operator|=
+name|Fn
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// RegisterMCRegInfo - Register a MCRegisterInfo implementation for the
+end_comment
+
+begin_comment
+comment|/// given target.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Clients are responsible for ensuring that registration doesn't occur
+end_comment
+
+begin_comment
+comment|/// while another thread is attempting to access the registry. Typically
+end_comment
+
+begin_comment
+comment|/// this is done by initializing all targets at program startup.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @param T - The target being registered.
+end_comment
+
+begin_comment
+comment|/// @param Fn - A function to construct a MCRegisterInfo for the target.
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|RegisterMCRegInfo
+argument_list|(
+name|Target
+operator|&
+name|T
+argument_list|,
+name|Target
+operator|::
+name|MCRegInfoCtorFnTy
+name|Fn
+argument_list|)
+block|{
+comment|// Ignore duplicate registration.
+if|if
+condition|(
+operator|!
+name|T
+operator|.
+name|MCRegInfoCtorFn
+condition|)
+name|T
+operator|.
+name|MCRegInfoCtorFn
+operator|=
+name|Fn
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// RegisterMCSubtargetInfo - Register a MCSubtargetInfo implementation for
+end_comment
+
+begin_comment
+comment|/// the given target.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Clients are responsible for ensuring that registration doesn't occur
+end_comment
+
+begin_comment
+comment|/// while another thread is attempting to access the registry. Typically
+end_comment
+
+begin_comment
+comment|/// this is done by initializing all targets at program startup.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @param T - The target being registered.
+end_comment
+
+begin_comment
+comment|/// @param Fn - A function to construct a MCSubtargetInfo for the target.
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|RegisterMCSubtargetInfo
+argument_list|(
+name|Target
+operator|&
+name|T
+argument_list|,
+name|Target
+operator|::
+name|MCSubtargetInfoCtorFnTy
+name|Fn
+argument_list|)
+block|{
+comment|// Ignore duplicate registration.
+if|if
+condition|(
+operator|!
+name|T
+operator|.
+name|MCSubtargetInfoCtorFn
+condition|)
+name|T
+operator|.
+name|MCSubtargetInfoCtorFn
 operator|=
 name|Fn
 expr_stmt|;
@@ -2465,7 +2943,7 @@ end_expr_stmt
 
 begin_comment
 unit|};
-comment|/// RegisterAsmInfo - Helper template for registering a target assembly info
+comment|/// RegisterMCAsmInfo - Helper template for registering a target assembly info
 end_comment
 
 begin_comment
@@ -2489,7 +2967,7 @@ comment|///   extern Target TheFooTarget;
 end_comment
 
 begin_comment
-comment|///   RegisterAsmInfo<FooMCAsmInfo> X(TheFooTarget);
+comment|///   RegisterMCAsmInfo<FooMCAsmInfo> X(TheFooTarget);
 end_comment
 
 begin_comment
@@ -2503,16 +2981,16 @@ name|class
 name|MCAsmInfoImpl
 operator|>
 expr|struct
-name|RegisterAsmInfo
+name|RegisterMCAsmInfo
 block|{
-name|RegisterAsmInfo
+name|RegisterMCAsmInfo
 argument_list|(
 argument|Target&T
 argument_list|)
 block|{
 name|TargetRegistry
 operator|::
-name|RegisterAsmInfo
+name|RegisterMCAsmInfo
 argument_list|(
 name|T
 argument_list|,
@@ -2546,7 +3024,7 @@ end_expr_stmt
 
 begin_comment
 unit|};
-comment|/// RegisterAsmInfoFn - Helper template for registering a target assembly info
+comment|/// RegisterMCAsmInfoFn - Helper template for registering a target assembly info
 end_comment
 
 begin_comment
@@ -2570,7 +3048,7 @@ comment|///   extern Target TheFooTarget;
 end_comment
 
 begin_comment
-comment|///   RegisterAsmInfoFn X(TheFooTarget, TheFunction);
+comment|///   RegisterMCAsmInfoFn X(TheFooTarget, TheFunction);
 end_comment
 
 begin_comment
@@ -2579,18 +3057,414 @@ end_comment
 
 begin_struct
 struct|struct
-name|RegisterAsmInfoFn
+name|RegisterMCAsmInfoFn
 block|{
-name|RegisterAsmInfoFn
+name|RegisterMCAsmInfoFn
 argument_list|(
 argument|Target&T
 argument_list|,
-argument|Target::AsmInfoCtorFnTy Fn
+argument|Target::MCAsmInfoCtorFnTy Fn
 argument_list|)
 block|{
 name|TargetRegistry
 operator|::
-name|RegisterAsmInfo
+name|RegisterMCAsmInfo
+argument_list|(
+name|T
+argument_list|,
+name|Fn
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/// RegisterMCInstrInfo - Helper template for registering a target instruction
+end_comment
+
+begin_comment
+comment|/// info implementation.  This invokes the static "Create" method on the class
+end_comment
+
+begin_comment
+comment|/// to actually do the construction.  Usage:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// extern "C" void LLVMInitializeFooTarget() {
+end_comment
+
+begin_comment
+comment|///   extern Target TheFooTarget;
+end_comment
+
+begin_comment
+comment|///   RegisterMCInstrInfo<FooMCInstrInfo> X(TheFooTarget);
+end_comment
+
+begin_comment
+comment|/// }
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|MCInstrInfoImpl
+operator|>
+expr|struct
+name|RegisterMCInstrInfo
+block|{
+name|RegisterMCInstrInfo
+argument_list|(
+argument|Target&T
+argument_list|)
+block|{
+name|TargetRegistry
+operator|::
+name|RegisterMCInstrInfo
+argument_list|(
+name|T
+argument_list|,
+operator|&
+name|Allocator
+argument_list|)
+block|;     }
+name|private
+operator|:
+specifier|static
+name|MCInstrInfo
+operator|*
+name|Allocator
+argument_list|()
+block|{
+return|return
+name|new
+name|MCInstrInfoImpl
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+unit|};
+comment|/// RegisterMCInstrInfoFn - Helper template for registering a target
+end_comment
+
+begin_comment
+comment|/// instruction info implementation.  This invokes the specified function to
+end_comment
+
+begin_comment
+comment|/// do the construction.  Usage:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// extern "C" void LLVMInitializeFooTarget() {
+end_comment
+
+begin_comment
+comment|///   extern Target TheFooTarget;
+end_comment
+
+begin_comment
+comment|///   RegisterMCInstrInfoFn X(TheFooTarget, TheFunction);
+end_comment
+
+begin_comment
+comment|/// }
+end_comment
+
+begin_struct
+struct|struct
+name|RegisterMCInstrInfoFn
+block|{
+name|RegisterMCInstrInfoFn
+argument_list|(
+argument|Target&T
+argument_list|,
+argument|Target::MCInstrInfoCtorFnTy Fn
+argument_list|)
+block|{
+name|TargetRegistry
+operator|::
+name|RegisterMCInstrInfo
+argument_list|(
+name|T
+argument_list|,
+name|Fn
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/// RegisterMCRegInfo - Helper template for registering a target register info
+end_comment
+
+begin_comment
+comment|/// implementation.  This invokes the static "Create" method on the class to
+end_comment
+
+begin_comment
+comment|/// actually do the construction.  Usage:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// extern "C" void LLVMInitializeFooTarget() {
+end_comment
+
+begin_comment
+comment|///   extern Target TheFooTarget;
+end_comment
+
+begin_comment
+comment|///   RegisterMCRegInfo<FooMCRegInfo> X(TheFooTarget);
+end_comment
+
+begin_comment
+comment|/// }
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|MCRegisterInfoImpl
+operator|>
+expr|struct
+name|RegisterMCRegInfo
+block|{
+name|RegisterMCRegInfo
+argument_list|(
+argument|Target&T
+argument_list|)
+block|{
+name|TargetRegistry
+operator|::
+name|RegisterMCRegInfo
+argument_list|(
+name|T
+argument_list|,
+operator|&
+name|Allocator
+argument_list|)
+block|;     }
+name|private
+operator|:
+specifier|static
+name|MCRegisterInfo
+operator|*
+name|Allocator
+argument_list|()
+block|{
+return|return
+name|new
+name|MCRegisterInfoImpl
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+unit|};
+comment|/// RegisterMCRegInfoFn - Helper template for registering a target register
+end_comment
+
+begin_comment
+comment|/// info implementation.  This invokes the specified function to do the
+end_comment
+
+begin_comment
+comment|/// construction.  Usage:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// extern "C" void LLVMInitializeFooTarget() {
+end_comment
+
+begin_comment
+comment|///   extern Target TheFooTarget;
+end_comment
+
+begin_comment
+comment|///   RegisterMCRegInfoFn X(TheFooTarget, TheFunction);
+end_comment
+
+begin_comment
+comment|/// }
+end_comment
+
+begin_struct
+struct|struct
+name|RegisterMCRegInfoFn
+block|{
+name|RegisterMCRegInfoFn
+argument_list|(
+argument|Target&T
+argument_list|,
+argument|Target::MCRegInfoCtorFnTy Fn
+argument_list|)
+block|{
+name|TargetRegistry
+operator|::
+name|RegisterMCRegInfo
+argument_list|(
+name|T
+argument_list|,
+name|Fn
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/// RegisterMCSubtargetInfo - Helper template for registering a target
+end_comment
+
+begin_comment
+comment|/// subtarget info implementation.  This invokes the static "Create" method
+end_comment
+
+begin_comment
+comment|/// on the class to actually do the construction.  Usage:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// extern "C" void LLVMInitializeFooTarget() {
+end_comment
+
+begin_comment
+comment|///   extern Target TheFooTarget;
+end_comment
+
+begin_comment
+comment|///   RegisterMCSubtargetInfo<FooMCSubtargetInfo> X(TheFooTarget);
+end_comment
+
+begin_comment
+comment|/// }
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|MCSubtargetInfoImpl
+operator|>
+expr|struct
+name|RegisterMCSubtargetInfo
+block|{
+name|RegisterMCSubtargetInfo
+argument_list|(
+argument|Target&T
+argument_list|)
+block|{
+name|TargetRegistry
+operator|::
+name|RegisterMCSubtargetInfo
+argument_list|(
+name|T
+argument_list|,
+operator|&
+name|Allocator
+argument_list|)
+block|;     }
+name|private
+operator|:
+specifier|static
+name|MCSubtargetInfo
+operator|*
+name|Allocator
+argument_list|(
+argument|StringRef TT
+argument_list|,
+argument|StringRef CPU
+argument_list|,
+argument|StringRef FS
+argument_list|)
+block|{
+return|return
+name|new
+name|MCSubtargetInfoImpl
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+unit|};
+comment|/// RegisterMCSubtargetInfoFn - Helper template for registering a target
+end_comment
+
+begin_comment
+comment|/// subtarget info implementation.  This invokes the specified function to
+end_comment
+
+begin_comment
+comment|/// do the construction.  Usage:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// extern "C" void LLVMInitializeFooTarget() {
+end_comment
+
+begin_comment
+comment|///   extern Target TheFooTarget;
+end_comment
+
+begin_comment
+comment|///   RegisterMCSubtargetInfoFn X(TheFooTarget, TheFunction);
+end_comment
+
+begin_comment
+comment|/// }
+end_comment
+
+begin_struct
+struct|struct
+name|RegisterMCSubtargetInfoFn
+block|{
+name|RegisterMCSubtargetInfoFn
+argument_list|(
+argument|Target&T
+argument_list|,
+argument|Target::MCSubtargetInfoCtorFnTy Fn
+argument_list|)
+block|{
+name|TargetRegistry
+operator|::
+name|RegisterMCSubtargetInfo
 argument_list|(
 name|T
 argument_list|,
@@ -2669,6 +3543,8 @@ argument|const Target&T
 argument_list|,
 argument|const std::string&TT
 argument_list|,
+argument|const std::string&CPU
+argument_list|,
 argument|const std::string&FS
 argument_list|)
 block|{
@@ -2679,6 +3555,8 @@ argument_list|(
 name|T
 argument_list|,
 name|TT
+argument_list|,
+name|CPU
 argument_list|,
 name|FS
 argument_list|)
@@ -2908,22 +3786,18 @@ name|TargetAsmParser
 operator|*
 name|Allocator
 argument_list|(
-argument|const Target&T
+argument|MCSubtargetInfo&STI
 argument_list|,
 argument|MCAsmParser&P
-argument_list|,
-argument|TargetMachine&TM
 argument_list|)
 block|{
 return|return
 name|new
 name|AsmParserImpl
 argument_list|(
-name|T
+name|STI
 argument_list|,
 name|P
-argument_list|,
-name|TM
 argument_list|)
 return|;
 block|}
@@ -3074,9 +3948,9 @@ name|MCCodeEmitter
 operator|*
 name|Allocator
 argument_list|(
-argument|const Target&T
+argument|const MCInstrInfo&II
 argument_list|,
-argument|TargetMachine&TM
+argument|const MCSubtargetInfo&STI
 argument_list|,
 argument|MCContext&Ctx
 argument_list|)
@@ -3084,13 +3958,7 @@ block|{
 return|return
 name|new
 name|CodeEmitterImpl
-argument_list|(
-name|T
-argument_list|,
-name|TM
-argument_list|,
-name|Ctx
-argument_list|)
+argument_list|()
 return|;
 block|}
 end_expr_stmt

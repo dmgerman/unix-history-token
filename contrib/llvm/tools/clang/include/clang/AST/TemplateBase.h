@@ -860,9 +860,17 @@ name|Null
 return|;
 block|}
 comment|/// \brief Whether this template argument is dependent on a template
-comment|/// parameter.
+comment|/// parameter such that its result can change from one instantiation to
+comment|/// another.
 name|bool
 name|isDependent
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Whether this template argument is dependent on a template
+comment|/// parameter.
+name|bool
+name|isInstantiationDependent
 argument_list|()
 specifier|const
 expr_stmt|;

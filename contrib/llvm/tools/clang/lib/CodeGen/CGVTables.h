@@ -86,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"GlobalDecl.h"
+file|"clang/AST/GlobalDecl.h"
 end_include
 
 begin_decl_stmt

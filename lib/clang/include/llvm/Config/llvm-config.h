@@ -179,6 +179,17 @@ value|LLVMInitializeX86TargetInfo
 end_define
 
 begin_comment
+comment|/* LLVM name for the native MCAsmInfo init function, if available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_NATIVE_MCASMINFO
+value|LLVMInitializeX86MCAsmInfo
+end_define
+
+begin_comment
 comment|/* LLVM name for the native AsmPrinter init function, if available */
 end_comment
 
@@ -187,6 +198,17 @@ define|#
 directive|define
 name|LLVM_NATIVE_ASMPRINTER
 value|LLVMInitializeX86AsmPrinter
+end_define
+
+begin_comment
+comment|/* LLVM name for the native AsmPrinter init function, if available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_NATIVE_ASMPARSER
+value|LLVMInitializeX86AsmParser
 end_define
 
 begin_comment

@@ -144,10 +144,6 @@ argument_list|,
 name|Value
 operator|*
 name|O
-argument_list|,
-name|Value
-operator|*
-name|PN
 argument_list|)
 operator|:
 name|CallbackVH
@@ -162,12 +158,7 @@ argument_list|)
 operator|,
 name|OperandValToReplace
 argument_list|(
-name|O
-argument_list|)
-operator|,
-name|Phi
-argument_list|(
-argument|PN
+argument|O
 argument_list|)
 block|{   }
 comment|/// getUser - Return the user instruction for this use.
@@ -202,23 +193,6 @@ argument_list|(
 name|NewUser
 argument_list|)
 expr_stmt|;
-block|}
-comment|/// getPhi - Return the phi node that represents this IV.
-name|PHINode
-operator|*
-name|getPhi
-argument_list|()
-specifier|const
-block|{
-return|return
-name|cast
-operator|<
-name|PHINode
-operator|>
-operator|(
-name|Phi
-operator|)
-return|;
 block|}
 comment|/// getOperandValToReplace - Return the Value of the operand in the user
 comment|/// instruction that this IVStrideUse is representing.
@@ -282,10 +256,6 @@ comment|/// OperandValToReplace - The Value of the operand in the user instructi
 comment|/// that this IVStrideUse is representing.
 name|WeakVH
 name|OperandValToReplace
-decl_stmt|;
-comment|/// Phi - The loop header phi that represents this IV.
-name|WeakVH
-name|Phi
 decl_stmt|;
 comment|/// PostIncLoops - The set of loops for which Expr has been adjusted to
 comment|/// use post-inc mode. This corresponds with SCEVExpander's post-inc concept.
@@ -488,10 +458,6 @@ argument_list|(
 name|Instruction
 operator|*
 name|I
-argument_list|,
-name|PHINode
-operator|*
-name|Phi
 argument_list|)
 block|;
 name|IVStrideUse
@@ -505,10 +471,6 @@ argument_list|,
 name|Value
 operator|*
 name|Operand
-argument_list|,
-name|PHINode
-operator|*
-name|Phi
 argument_list|)
 block|;
 comment|/// getReplacementExpr - Return a SCEV expression which computes the

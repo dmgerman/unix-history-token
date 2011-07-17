@@ -390,12 +390,10 @@ block|{
 return|return
 name|TRI
 operator|->
-name|get
+name|isInAllocatableClass
 argument_list|(
 name|PhysReg
 argument_list|)
-operator|.
-name|inAllocatableClass
 operator|&&
 operator|!
 name|isReserved

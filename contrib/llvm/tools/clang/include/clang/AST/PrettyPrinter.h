@@ -178,7 +178,12 @@ argument_list|)
 operator|,
 name|AnonymousTagLocations
 argument_list|(
-argument|true
+name|true
+argument_list|)
+operator|,
+name|SuppressStrongLifetime
+argument_list|(
+argument|false
 argument_list|)
 block|{ }
 comment|/// \brief The number of spaces to use to indent each line.
@@ -294,6 +299,13 @@ comment|/// that entity (e.g., "enum<anonymous at t.h:10:5>"). Otherwise, just
 comment|/// prints "<anonymous>" for the name.
 name|bool
 name|AnonymousTagLocations
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief When true, suppress printing of the __strong lifetime qualifier in
+comment|/// ARC.
+name|unsigned
+name|SuppressStrongLifetime
 range|:
 literal|1
 decl_stmt|;

@@ -974,6 +974,36 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Indicates that an unrecoverable error has occurred.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|UnrecoverableErrorOccurred
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Toggles for DiagnosticErrorTrap to check whether an error occurred
+end_comment
+
+begin_comment
+comment|/// during a parsing section, e.g. during parsing a function.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|TrapErrorOccurred
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|TrapUnrecoverableErrorOccurred
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// LastDiagLevel - This is the level of the last diagnostic emitted.  This is
 end_comment
 
@@ -1108,6 +1138,15 @@ operator|,
 name|void
 operator|*
 name|Cookie
+operator|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|intptr_t
+operator|>
+operator|&
+name|QualTypeVals
 operator|)
 expr_stmt|;
 end_typedef
@@ -1940,6 +1979,24 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// \brief Determine whether any kind of unrecoverable error has occurred.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasUnrecoverableErrorOccurred
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FatalErrorOccurred
+operator|||
+name|UnrecoverableErrorOccurred
+return|;
+block|}
+end_expr_stmt
+
 begin_expr_stmt
 name|unsigned
 name|getNumWarnings
@@ -2062,6 +2119,15 @@ name|char
 operator|>
 operator|&
 name|Output
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|intptr_t
+operator|>
+operator|&
+name|QualTypeVals
 argument_list|)
 decl|const
 block|{
@@ -2086,6 +2152,8 @@ argument_list|,
 name|Output
 argument_list|,
 name|ArgToStringCookie
+argument_list|,
+name|QualTypeVals
 argument_list|)
 expr_stmt|;
 block|}
@@ -2838,9 +2906,6 @@ name|Diagnostic
 modifier|&
 name|Diag
 decl_stmt|;
-name|unsigned
-name|PrevErrors
-decl_stmt|;
 name|public
 label|:
 name|explicit
@@ -2853,14 +2918,12 @@ argument_list|)
 operator|:
 name|Diag
 argument_list|(
-name|Diag
+argument|Diag
 argument_list|)
-operator|,
-name|PrevErrors
-argument_list|(
-argument|Diag.NumErrors
-argument_list|)
-block|{}
+block|{
+name|reset
+argument_list|()
+block|; }
 comment|/// \brief Determine whether any errors have occurred since this
 comment|/// object instance was created.
 name|bool
@@ -2871,9 +2934,20 @@ block|{
 return|return
 name|Diag
 operator|.
-name|NumErrors
-operator|>
-name|PrevErrors
+name|TrapErrorOccurred
+return|;
+block|}
+comment|/// \brief Determine whether any unrecoverable errors have occurred since this
+comment|/// object instance was created.
+name|bool
+name|hasUnrecoverableErrorOccurred
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Diag
+operator|.
+name|TrapUnrecoverableErrorOccurred
 return|;
 block|}
 comment|// Set to initial state of "no errors occurred".
@@ -2881,11 +2955,17 @@ name|void
 name|reset
 parameter_list|()
 block|{
-name|PrevErrors
-operator|=
 name|Diag
 operator|.
-name|NumErrors
+name|TrapErrorOccurred
+operator|=
+name|false
+expr_stmt|;
+name|Diag
+operator|.
+name|TrapUnrecoverableErrorOccurred
+operator|=
+name|false
 expr_stmt|;
 block|}
 block|}

@@ -149,6 +149,10 @@ block|,
 comment|/// REG_SEQUENCE - This variadic instruction is used to form a register that
 comment|/// represent a consecutive sequence of sub-registers. It's used as register
 comment|/// coalescing / allocation aid and must be eliminated before code emission.
+comment|// In SDNode form, the first operand encodes the register class created by
+comment|// the REG_SEQUENCE, while each subsequent pair names a vreg + subreg index
+comment|// pair.  Once it has been lowered to a MachineInstr, the regclass operand
+comment|// is no longer present.
 comment|/// e.g. v1027 = REG_SEQUENCE v1024, 3, v1025, 4, v1026, 5
 comment|/// After register coalescing references of v1024 should be replace with
 comment|/// v1027:3, v1025 with v1027:4, etc.

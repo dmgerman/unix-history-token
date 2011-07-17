@@ -83,6 +83,18 @@ directive|include
 file|"llvm/Target/TargetInstrInfo.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|GET_INSTRINFO_HEADER
+end_define
+
+begin_include
+include|#
+directive|include
+file|"SystemZGenInstrInfo.inc"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -126,7 +138,7 @@ name|class
 name|SystemZInstrInfo
 range|:
 name|public
-name|TargetInstrInfoImpl
+name|SystemZGenInstrInfo
 block|{
 specifier|const
 name|SystemZRegisterInfo
@@ -310,7 +322,7 @@ argument_list|)
 specifier|const
 block|;
 specifier|const
-name|TargetInstrDesc
+name|MCInstrDesc
 operator|&
 name|getBrCond
 argument_list|(
@@ -319,7 +331,7 @@ argument_list|)
 specifier|const
 block|;
 specifier|const
-name|TargetInstrDesc
+name|MCInstrDesc
 operator|&
 name|getLongDispOpc
 argument_list|(
@@ -328,7 +340,7 @@ argument_list|)
 specifier|const
 block|;
 specifier|const
-name|TargetInstrDesc
+name|MCInstrDesc
 operator|&
 name|getMemoryInstr
 argument_list|(

@@ -1269,6 +1269,96 @@ operator|<
 name|typename
 name|T
 operator|>
+name|void
+name|dropAttr
+argument_list|()
+block|{
+if|if
+condition|(
+operator|!
+name|HasAttrs
+condition|)
+return|return;
+name|AttrVec
+operator|&
+name|Attrs
+operator|=
+name|getAttrs
+argument_list|()
+expr_stmt|;
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|,
+name|e
+init|=
+name|Attrs
+operator|.
+name|size
+argument_list|()
+init|;
+name|i
+operator|!=
+name|e
+condition|;
+comment|/* in loop */
+control|)
+block|{
+if|if
+condition|(
+name|isa
+operator|<
+name|T
+operator|>
+operator|(
+name|Attrs
+index|[
+name|i
+index|]
+operator|)
+condition|)
+block|{
+name|Attrs
+operator|.
+name|erase
+argument_list|(
+name|Attrs
+operator|.
+name|begin
+argument_list|()
+operator|+
+name|i
+argument_list|)
+expr_stmt|;
+operator|--
+name|e
+expr_stmt|;
+block|}
+else|else
+operator|++
+name|i
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|Attrs
+operator|.
+name|empty
+argument_list|()
+condition|)
+name|HasAttrs
+operator|=
+name|false
+expr_stmt|;
+block|}
+name|template
+operator|<
+name|typename
+name|T
+operator|>
 name|specific_attr_iterator
 operator|<
 name|T
@@ -2095,9 +2185,21 @@ name|Current
 return|;
 block|}
 block|}
+end_block
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief Returns iterator for all the redeclarations of the same decl.
+end_comment
+
+begin_comment
 comment|/// It will iterate at least once (when this decl is the only one).
+end_comment
+
+begin_expr_stmt
 name|redecl_iterator
 name|redecls_begin
 argument_list|()
@@ -2117,6 +2219,9 @@ operator|)
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|redecl_iterator
 name|redecls_end
 argument_list|()
@@ -2127,9 +2232,21 @@ name|redecl_iterator
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// getBody - If this Decl represents a declaration for a body of code,
+end_comment
+
+begin_comment
 comment|///  such as a function or method definition, this method returns the
+end_comment
+
+begin_comment
 comment|///  top-level Stmt* of that body.  Otherwise this method returns null.
+end_comment
+
+begin_expr_stmt
 name|virtual
 name|Stmt
 operator|*
@@ -2141,8 +2258,17 @@ return|return
 literal|0
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Returns true if this Decl represents a declaration for a body of
+end_comment
+
+begin_comment
 comment|/// code, such as a function or method definition.
+end_comment
+
+begin_expr_stmt
 name|virtual
 name|bool
 name|hasBody
@@ -2156,14 +2282,29 @@ operator|!=
 literal|0
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// getBodyRBrace - Gets the right brace of the body, if a body exists.
+end_comment
+
+begin_comment
 comment|/// This works whether the body is a CompoundStmt or a CXXTryStmt.
+end_comment
+
+begin_expr_stmt
 name|SourceLocation
 name|getBodyRBrace
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// global temp stats (until we have a per-module visitor)
+end_comment
+
+begin_function_decl
 specifier|static
 name|void
 name|add
@@ -2172,6 +2313,9 @@ name|Kind
 name|k
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|bool
 name|CollectingStats
@@ -2182,44 +2326,101 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|void
 name|PrintStats
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// isTemplateParameter - Determines whether this declaration is a
+end_comment
+
+begin_comment
 comment|/// template parameter.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isTemplateParameter
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// isTemplateParameter - Determines whether this declaration is a
+end_comment
+
+begin_comment
 comment|/// template parameter pack.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isTemplateParameterPack
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Whether this declaration is a parameter pack.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isParameterPack
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Whether this declaration is a function or function template.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isFunctionOrFunctionTemplate
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Changes the namespace of this declaration to reflect that it's
+end_comment
+
+begin_comment
 comment|/// the object of a friend declaration.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// These declarations appear in the lexical context of the friending
+end_comment
+
+begin_comment
 comment|/// class, but in the semantic context of the actual entity.  This property
+end_comment
+
+begin_comment
 comment|/// applies only to a specific decl object;  other redeclarations of the
+end_comment
+
+begin_comment
 comment|/// same entity may not (and probably don't) share this property.
+end_comment
+
+begin_function
 name|void
 name|setObjectOfFriendDecl
 parameter_list|(
@@ -2329,6 +2530,9 @@ name|IDNS_Ordinary
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_enum
 enum|enum
 name|FriendObjectKind
 block|{
@@ -2342,10 +2546,25 @@ name|FOK_Undeclared
 comment|// a friend of a previously-undeclared entity
 block|}
 enum|;
+end_enum
+
+begin_comment
 comment|/// \brief Determines whether this declaration is the object of a
+end_comment
+
+begin_comment
 comment|/// friend declaration and, if so, what kind.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// There is currently no direct way to find the associated FriendDecl.
+end_comment
+
+begin_expr_stmt
 name|FriendObjectKind
 name|getFriendObjectKind
 argument_list|()
@@ -2372,6 +2591,9 @@ condition|)
 return|return
 name|FOK_None
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 name|IdentifierNamespace
@@ -2387,17 +2609,20 @@ else|:
 name|FOK_Undeclared
 operator|)
 return|;
-block|}
-end_block
+end_return
 
 begin_comment
+unit|}
 comment|/// Specifies that this declaration is a C++ overloaded non-member.
 end_comment
 
-begin_function
-name|void
+begin_macro
+unit|void
 name|setNonMemberOperator
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|assert
 argument_list|(
@@ -2428,7 +2653,7 @@ operator||=
 name|IDNS_NonMemberOperator
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|// Implement isa/cast/dyncast/etc.

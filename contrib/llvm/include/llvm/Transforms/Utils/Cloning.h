@@ -287,33 +287,6 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// CloneLoop - Clone Loop. Clone dominator info for loop insiders. Populate
-comment|/// VMap using old blocks to new blocks mapping.
-name|Loop
-modifier|*
-name|CloneLoop
-parameter_list|(
-name|Loop
-modifier|*
-name|L
-parameter_list|,
-name|LPPassManager
-modifier|*
-name|LPM
-parameter_list|,
-name|LoopInfo
-modifier|*
-name|LI
-parameter_list|,
-name|ValueToValueMapTy
-modifier|&
-name|VMap
-parameter_list|,
-name|Pass
-modifier|*
-name|P
-parameter_list|)
-function_decl|;
 comment|/// CloneFunction - Return a copy of the specified function, but without
 comment|/// embedding the function into another module.  Also, any references specified
 comment|/// in the VMap are changed to refer to their mapped value instead of the

@@ -71,10 +71,16 @@ directive|include
 file|"llvm/ADT/BitVector.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|GET_REGINFO_HEADER
+end_define
+
 begin_include
 include|#
 directive|include
-file|"PTXGenRegisterInfo.h.inc"
+file|"PTXGenRegisterInfo.inc"
 end_include
 
 begin_decl_stmt
@@ -95,11 +101,16 @@ name|PTXGenRegisterInfo
 block|{
 name|PTXRegisterInfo
 argument_list|(
-argument|PTXTargetMachine&TM
+name|PTXTargetMachine
+operator|&
+name|TM
 argument_list|,
-argument|const TargetInstrInfo&TII
+specifier|const
+name|TargetInstrInfo
+operator|&
+name|TII
 argument_list|)
-block|{}
+block|;
 name|virtual
 specifier|const
 name|unsigned
@@ -150,19 +161,14 @@ name|virtual
 name|void
 name|eliminateFrameIndex
 argument_list|(
-argument|MachineBasicBlock::iterator MI
+argument|MachineBasicBlock::iterator II
 argument_list|,
 argument|int SPAdj
 argument_list|,
 argument|RegScavenger *RS = NULL
 argument_list|)
 specifier|const
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"PTX does not support general function call"
-argument_list|)
-block|;   }
+block|;
 name|virtual
 name|unsigned
 name|getFrameRegister

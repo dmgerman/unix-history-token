@@ -71,6 +71,18 @@ directive|include
 file|"AlphaRegisterInfo.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|GET_INSTRINFO_HEADER
+end_define
+
+begin_include
+include|#
+directive|include
+file|"AlphaGenInstrInfo.inc"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -79,7 +91,7 @@ name|class
 name|AlphaInstrInfo
 range|:
 name|public
-name|TargetInstrInfoImpl
+name|AlphaGenInstrInfo
 block|{
 specifier|const
 name|AlphaRegisterInfo

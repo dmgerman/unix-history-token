@@ -1329,9 +1329,9 @@ modifier|*
 name|CreateMachineInstr
 parameter_list|(
 specifier|const
-name|TargetInstrDesc
+name|MCInstrDesc
 modifier|&
-name|TID
+name|MCID
 parameter_list|,
 name|DebugLoc
 name|DL

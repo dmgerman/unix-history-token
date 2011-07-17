@@ -114,11 +114,6 @@ decl_stmt|;
 specifier|extern
 name|unsigned
 name|char
-name|DeadTypeEliminationID
-decl_stmt|;
-specifier|extern
-name|unsigned
-name|char
 name|EarlyCSEID
 decl_stmt|;
 specifier|extern

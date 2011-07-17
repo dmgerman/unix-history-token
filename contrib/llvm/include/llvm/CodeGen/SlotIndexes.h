@@ -591,6 +591,17 @@ name|getPointer
 argument_list|()
 return|;
 block|}
+comment|/// Return true for a valid index.
+name|operator
+name|bool
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isValid
+argument_list|()
+return|;
+block|}
 comment|/// Print this index to the given raw_ostream.
 name|void
 name|print

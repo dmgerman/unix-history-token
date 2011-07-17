@@ -119,6 +119,22 @@ decl_stmt|;
 name|class
 name|TagDecl
 decl_stmt|;
+comment|/// \brief Enumeration describing the result of loading information from
+comment|/// an external source.
+enum|enum
+name|ExternalLoadResult
+block|{
+comment|/// \brief Loading the external information has succeeded.
+name|ELR_Success
+block|,
+comment|/// \brief Loading the external information has failed.
+name|ELR_Failure
+block|,
+comment|/// \brief The external information has already been loaded, and therefore
+comment|/// no additional processing is required.
+name|ELR_AlreadyLoaded
+block|}
+enum|;
 comment|/// \brief Abstract interface for external sources of AST nodes.
 comment|///
 comment|/// External AST sources provide AST nodes constructed from some
@@ -313,11 +329,11 @@ comment|/// \param isKindWeWant a predicate function that returns true if the pa
 comment|/// declaration kind is one we are looking for. If NULL, all declarations
 comment|/// are returned.
 comment|///
-comment|/// \return true if an error occurred
+comment|/// \return an indication of whether the load succeeded or failed.
 comment|///
 comment|/// The default implementation of this method is a no-op.
 name|virtual
-name|bool
+name|ExternalLoadResult
 name|FindExternalLexicalDecls
 argument_list|(
 specifier|const
@@ -351,7 +367,7 @@ comment|/// \brief Finds all declarations lexically contained within the given
 comment|/// DeclContext.
 comment|///
 comment|/// \return true if an error occurred
-name|bool
+name|ExternalLoadResult
 name|FindExternalLexicalDecls
 argument_list|(
 specifier|const
@@ -386,7 +402,7 @@ operator|<
 name|typename
 name|DeclTy
 operator|>
-name|bool
+name|ExternalLoadResult
 name|FindExternalLexicalDeclsBy
 argument_list|(
 argument|const DeclContext *DC

@@ -103,6 +103,10 @@ name|MachineFunctionInfo
 block|{
 name|private
 operator|:
+name|MachineFunction
+operator|&
+name|MF
+block|;
 comment|/// SRetReturnReg - Some subtargets require that sret lowering includes
 comment|/// returning the value of the returned struct in a register. This field
 comment|/// holds the virtual register into which the sret argument is passed.
@@ -140,6 +144,11 @@ name|int
 name|GPFI
 block|;
 comment|// Index of the frame object for restoring $gp
+name|mutable
+name|int
+name|DynAllocFI
+block|;
+comment|// Frame index of dynamically allocated stack area.
 name|unsigned
 name|MaxCallFrameSize
 block|;
@@ -158,6 +167,11 @@ operator|&
 name|MF
 argument_list|)
 operator|:
+name|MF
+argument_list|(
+name|MF
+argument_list|)
+block|,
 name|SRetReturnReg
 argument_list|(
 literal|0
@@ -200,6 +214,11 @@ argument_list|)
 argument_list|)
 block|,
 name|GPFI
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|DynAllocFI
 argument_list|(
 literal|0
 argument_list|)
@@ -344,6 +363,60 @@ operator|==
 name|FI
 return|;
 block|}
+comment|// The first call to this function creates a frame object for dynamically
+comment|// allocated stack area.
+name|int
+name|getDynAllocFI
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|DynAllocFI
+condition|)
+name|DynAllocFI
+operator|=
+name|MF
+operator|.
+name|getFrameInfo
+argument_list|()
+operator|->
+name|CreateFixedObject
+argument_list|(
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+name|true
+argument_list|)
+expr_stmt|;
+return|return
+name|DynAllocFI
+return|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|isDynAllocFI
+argument_list|(
+name|int
+name|FI
+argument_list|)
+decl|const
+block|{
+return|return
+name|DynAllocFI
+operator|&&
+name|DynAllocFI
+operator|==
+name|FI
+return|;
+block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|unsigned
 name|getSRetReturnReg
 argument_list|()
@@ -353,6 +426,9 @@ return|return
 name|SRetReturnReg
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setSRetReturnReg
 parameter_list|(
@@ -365,6 +441,9 @@ operator|=
 name|Reg
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
 name|unsigned
 name|getGlobalBaseReg
 argument_list|()
@@ -374,6 +453,9 @@ return|return
 name|GlobalBaseReg
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setGlobalBaseReg
 parameter_list|(
@@ -386,6 +468,9 @@ operator|=
 name|Reg
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
 name|int
 name|getVarArgsFrameIndex
 argument_list|()
@@ -395,6 +480,9 @@ return|return
 name|VarArgsFrameIndex
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setVarArgsFrameIndex
 parameter_list|(
@@ -407,6 +495,9 @@ operator|=
 name|Index
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
 name|unsigned
 name|getMaxCallFrameSize
 argument_list|()
@@ -416,6 +507,9 @@ return|return
 name|MaxCallFrameSize
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setMaxCallFrameSize
 parameter_list|(
@@ -428,6 +522,9 @@ operator|=
 name|S
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
 name|int
 name|getAtomicFrameIndex
 argument_list|()
@@ -437,6 +534,9 @@ return|return
 name|AtomicFrameIndex
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setAtomicFrameIndex
 parameter_list|(
@@ -449,15 +549,10 @@ operator|=
 name|Index
 expr_stmt|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function
 
 begin_comment
-unit|}
+unit|};  }
 comment|// end of namespace llvm
 end_comment
 

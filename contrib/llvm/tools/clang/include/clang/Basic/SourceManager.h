@@ -148,6 +148,9 @@ decl_stmt|;
 name|class
 name|LineTableInfo
 decl_stmt|;
+name|class
+name|LangOptions
+decl_stmt|;
 comment|/// SrcMgr - Public enums and private classes that are part of the
 comment|/// SourceManager implementation.
 comment|///
@@ -240,7 +243,7 @@ name|NumLines
 decl_stmt|;
 comment|/// getBuffer - Returns the memory buffer for the associated content.
 comment|///
-comment|/// \param Diag Object through which diagnostics will be emitted it the
+comment|/// \param Diag Object through which diagnostics will be emitted if the
 comment|/// buffer cannot be retrieved.
 comment|///
 comment|/// \param Loc If specified, is the location that invalid file diagnostics
@@ -759,7 +762,9 @@ decl_stmt|;
 comment|/// InstantiationLocStart/InstantiationLocEnd - In a macro expansion, these
 comment|/// indicate the start and end of the instantiation.  In object-like macros,
 comment|/// these will be the same.  In a function-like macro instantiation, the
-comment|/// start will be the identifier and the end will be the ')'.
+comment|/// start will be the identifier and the end will be the ')'.  Finally, in
+comment|/// macro-argument instantitions, the end will be 'SourceLocation()', an
+comment|/// invalid location.
 name|unsigned
 name|InstantiationLocStart
 decl_stmt|,
@@ -800,13 +805,26 @@ name|getInstantiationLocEnd
 argument_list|()
 specifier|const
 block|{
-return|return
+name|SourceLocation
+name|EndLoc
+operator|=
 name|SourceLocation
 operator|::
 name|getFromRawEncoding
 argument_list|(
 name|InstantiationLocEnd
 argument_list|)
+block|;
+return|return
+name|EndLoc
+operator|.
+name|isInvalid
+argument_list|()
+condition|?
+name|getInstantiationLocStart
+argument_list|()
+else|:
+name|EndLoc
 return|;
 block|}
 name|std
@@ -834,23 +852,47 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// get - Return a InstantiationInfo for an expansion.  IL specifies
-comment|/// the instantiation location (where the macro is expanded), and SL
-comment|/// specifies the spelling location (where the characters from the token
-comment|/// come from).  IL and PL can both refer to normal File SLocs or
+name|bool
+name|isMacroArgInstantiation
+argument_list|()
+specifier|const
+block|{
+comment|// Note that this needs to return false for default constructed objects.
+return|return
+name|getInstantiationLocStart
+argument_list|()
+operator|.
+name|isValid
+argument_list|()
+operator|&&
+name|SourceLocation
+operator|::
+name|getFromRawEncoding
+argument_list|(
+name|InstantiationLocEnd
+argument_list|)
+operator|.
+name|isInvalid
+argument_list|()
+return|;
+block|}
+comment|/// create - Return a InstantiationInfo for an expansion. ILStart and
+comment|/// ILEnd specify the instantiation range (where the macro is expanded),
+comment|/// and SL specifies the spelling location (where the characters from the
+comment|/// token come from). All three can refer to normal File SLocs or
 comment|/// instantiation locations.
 specifier|static
 name|InstantiationInfo
-name|get
+name|create
 parameter_list|(
+name|SourceLocation
+name|SL
+parameter_list|,
 name|SourceLocation
 name|ILStart
 parameter_list|,
 name|SourceLocation
 name|ILEnd
-parameter_list|,
-name|SourceLocation
-name|SL
 parameter_list|)
 block|{
 name|InstantiationInfo
@@ -885,6 +927,50 @@ argument_list|()
 expr_stmt|;
 return|return
 name|X
+return|;
+block|}
+comment|/// createForMacroArg - Return a special InstantiationInfo for the
+comment|/// expansion of a macro argument into a function-like macro's body. IL
+comment|/// specifies the instantiation location (where the macro is expanded).
+comment|/// This doesn't need to be a range because a macro is always instantiated
+comment|/// at a macro parameter reference, and macro parameters are always exactly
+comment|/// one token. SL specifies the spelling location (where the characters
+comment|/// from the token come from). IL and SL can both refer to normal File
+comment|/// SLocs or instantiation locations.
+comment|///
+comment|/// Given the code:
+comment|/// \code
+comment|///   #define F(x) f(x)
+comment|///   F(42);
+comment|/// \endcode
+comment|///
+comment|/// When expanding '\c F(42)', the '\c x' would call this with an SL
+comment|/// pointing at '\c 42' anad an IL pointing at its location in the
+comment|/// definition of '\c F'.
+specifier|static
+name|InstantiationInfo
+name|createForMacroArg
+parameter_list|(
+name|SourceLocation
+name|SL
+parameter_list|,
+name|SourceLocation
+name|IL
+parameter_list|)
+block|{
+comment|// We store an intentionally invalid source location for the end of the
+comment|// instantiation range to mark that this is a macro argument instantation
+comment|// rather than a normal one.
+return|return
+name|create
+argument_list|(
+name|SL
+argument_list|,
+name|IL
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|)
 return|;
 block|}
 block|}
@@ -1552,8 +1638,8 @@ comment|//===-------------------------------------------------------------------
 comment|// Methods to create new FileID's and instantiations.
 comment|//===--------------------------------------------------------------------===//
 comment|/// createFileID - Create a new FileID that represents the specified file
-comment|/// being #included from the specified IncludePosition.  This returns 0 on
-comment|/// error and translates NULL into standard input.
+comment|/// being #included from the specified IncludePosition.  This translates NULL
+comment|/// into standard input.
 comment|/// PreallocateID should be non-zero to specify which pre-allocated,
 comment|/// lazily computed source location is being filled in by this operation.
 name|FileID
@@ -1672,9 +1758,23 @@ return|return
 name|MainFileID
 return|;
 block|}
+comment|/// createMacroArgInstantiationLoc - Return a new SourceLocation that encodes
+comment|/// the fact that a token from SpellingLoc should actually be referenced from
+comment|/// InstantiationLoc, and that it represents the instantiation of a macro
+comment|/// argument into the function-like macro body.
+name|SourceLocation
+name|createMacroArgInstantiationLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|SourceLocation InstantiationLoc
+argument_list|,
+argument|unsigned TokLength
+argument_list|)
+block|;
 comment|/// createInstantiationLoc - Return a new SourceLocation that encodes the fact
-comment|/// that a token at Loc should actually be referenced from InstantiationLoc.
-comment|/// TokLength is the length of the token being instantiated.
+comment|/// that a token from SpellingLoc should actually be referenced from
+comment|/// InstantiationLoc.
 name|SourceLocation
 name|createInstantiationLoc
 argument_list|(
@@ -2367,8 +2467,6 @@ return|return
 name|getDecomposedInstantiationLocSlowCase
 argument_list|(
 name|E
-argument_list|,
-name|Offset
 argument_list|)
 return|;
 block|}
@@ -2499,6 +2597,37 @@ name|second
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// isMacroArgInstantiation - This method tests whether the given source
+end_comment
+
+begin_comment
+comment|/// location represents a macro argument's instantiation into the
+end_comment
+
+begin_comment
+comment|/// function-like macro definition. Such source locations only appear inside
+end_comment
+
+begin_comment
+comment|/// of the instantiation locations representing where a particular
+end_comment
+
+begin_comment
+comment|/// function-like macro was expanded.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isMacroArgInstantiation
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|//===--------------------------------------------------------------------===//
@@ -2979,41 +3108,175 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Returns true if the given MacroID location points at the first
+comment|/// \brief Given a specific chunk of a FileID (FileID with offset+length),
 end_comment
 
 begin_comment
-comment|/// token of the macro instantiation.
+comment|/// returns true if \arg Loc is inside that chunk and sets relative offset
+end_comment
+
+begin_comment
+comment|/// (offset of \arg Loc from beginning of chunk) to \arg relativeOffset.
 end_comment
 
 begin_decl_stmt
 name|bool
-name|isAtStartOfMacroInstantiation
+name|isInFileID
 argument_list|(
 name|SourceLocation
 name|Loc
+argument_list|,
+name|FileID
+name|FID
+argument_list|,
+name|unsigned
+name|offset
+argument_list|,
+name|unsigned
+name|length
+argument_list|,
+name|unsigned
+operator|*
+name|relativeOffset
+operator|=
+literal|0
 argument_list|)
 decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// \brief Returns true if the given MacroID location points at the last
-end_comment
-
-begin_comment
-comment|/// token of the macro instantiation.
-end_comment
-
-begin_decl_stmt
-name|bool
-name|isAtEndOfMacroInstantiation
+block|{
+name|assert
 argument_list|(
-name|SourceLocation
-name|Loc
+operator|!
+name|FID
+operator|.
+name|isInvalid
+argument_list|()
 argument_list|)
-decl|const
+expr_stmt|;
+if|if
+condition|(
+name|Loc
+operator|.
+name|isInvalid
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+name|unsigned
+name|start
+init|=
+name|getSLocEntry
+argument_list|(
+name|FID
+argument_list|)
+operator|.
+name|getOffset
+argument_list|()
+operator|+
+name|offset
 decl_stmt|;
+name|unsigned
+name|end
+init|=
+name|start
+operator|+
+name|length
+decl_stmt|;
+ifndef|#
+directive|ifndef
+name|NDEBUG
+comment|// Make sure offset/length describe a chunk inside the given FileID.
+name|unsigned
+name|NextOffset
+decl_stmt|;
+if|if
+condition|(
+name|FID
+operator|.
+name|ID
+operator|+
+literal|1
+operator|==
+name|SLocEntryTable
+operator|.
+name|size
+argument_list|()
+condition|)
+name|NextOffset
+operator|=
+name|getNextOffset
+argument_list|()
+expr_stmt|;
+else|else
+name|NextOffset
+operator|=
+name|getSLocEntry
+argument_list|(
+name|FID
+operator|.
+name|ID
+operator|+
+literal|1
+argument_list|)
+operator|.
+name|getOffset
+argument_list|()
+expr_stmt|;
+name|assert
+argument_list|(
+name|start
+operator|<
+name|NextOffset
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|end
+operator|<
+name|NextOffset
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|Loc
+operator|.
+name|getOffset
+argument_list|()
+operator|>=
+name|start
+operator|&&
+name|Loc
+operator|.
+name|getOffset
+argument_list|()
+operator|<
+name|end
+condition|)
+block|{
+if|if
+condition|(
+name|relativeOffset
+condition|)
+operator|*
+name|relativeOffset
+operator|=
+name|Loc
+operator|.
+name|getOffset
+argument_list|()
+operator|-
+name|start
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+return|return
+name|false
+return|;
+block|}
 end_decl_stmt
 
 begin_comment
@@ -3036,20 +3299,17 @@ begin_comment
 comment|///
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|unsigned
 name|getLineTableFilenameID
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|Ptr
-parameter_list|,
-name|unsigned
-name|Len
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|Str
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// AddLineNote - Add a line note to the line table for the FileID and offset
@@ -3292,6 +3552,71 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// \brief Determines the order of 2 source locations in the "source location
+end_comment
+
+begin_comment
+comment|/// address space".
+end_comment
+
+begin_function
+specifier|static
+name|bool
+name|isBeforeInSourceLocationOffset
+parameter_list|(
+name|SourceLocation
+name|LHS
+parameter_list|,
+name|SourceLocation
+name|RHS
+parameter_list|)
+block|{
+return|return
+name|isBeforeInSourceLocationOffset
+argument_list|(
+name|LHS
+argument_list|,
+name|RHS
+operator|.
+name|getOffset
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Determines the order of a source location and a source location
+end_comment
+
+begin_comment
+comment|/// offset in the "source location address space".
+end_comment
+
+begin_function
+specifier|static
+name|bool
+name|isBeforeInSourceLocationOffset
+parameter_list|(
+name|SourceLocation
+name|LHS
+parameter_list|,
+name|unsigned
+name|RHS
+parameter_list|)
+block|{
+return|return
+name|LHS
+operator|.
+name|getOffset
+argument_list|()
+operator|<
+name|RHS
+return|;
+block|}
+end_function
 
 begin_comment
 comment|// Iterators over FileInfos.
@@ -3602,6 +3927,45 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// createInstantiationLoc - Implements the common elements of storing an
+end_comment
+
+begin_comment
+comment|/// instantiation info struct into the SLocEntry table and producing a source
+end_comment
+
+begin_comment
+comment|/// location that refers to it.
+end_comment
+
+begin_decl_stmt
+name|SourceLocation
+name|createInstantiationLocImpl
+argument_list|(
+specifier|const
+name|SrcMgr
+operator|::
+name|InstantiationInfo
+operator|&
+name|II
+argument_list|,
+name|unsigned
+name|TokLength
+argument_list|,
+name|unsigned
+name|PreallocatedID
+operator|=
+literal|0
+argument_list|,
+name|unsigned
+name|Offset
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// isOffsetInFileID - Return true if the specified FileID contains the
 end_comment
 
@@ -3819,8 +4183,6 @@ operator|>
 name|getDecomposedInstantiationLocSlowCase
 argument_list|(
 argument|const SrcMgr::SLocEntry *E
-argument_list|,
-argument|unsigned Offset
 argument_list|)
 specifier|const
 expr_stmt|;

@@ -91,7 +91,9 @@ name|ISD
 operator|::
 name|BUILTIN_OP_END
 block|,
-name|READ_PARAM
+name|LOAD_PARAM
+block|,
+name|STORE_PARAM
 block|,
 name|EXIT
 block|,

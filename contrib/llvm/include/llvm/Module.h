@@ -118,6 +118,34 @@ decl_stmt|;
 name|class
 name|LLVMContext
 decl_stmt|;
+name|class
+name|StructType
+decl_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|DenseMapInfo
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|KeyT
+operator|,
+name|typename
+name|ValueT
+operator|,
+name|typename
+name|KeyInfoT
+operator|,
+name|typename
+name|ValueInfoT
+operator|>
+name|class
+name|DenseMap
+expr_stmt|;
 name|template
 operator|<
 operator|>
@@ -563,11 +591,6 @@ modifier|*
 name|ValSymTab
 decl_stmt|;
 comment|///< Symbol table for values
-name|TypeSymbolTable
-modifier|*
-name|TypeSymTab
-decl_stmt|;
-comment|///< Symbol table for types
 name|OwningPtr
 operator|<
 name|GVMaterializer
@@ -835,7 +858,7 @@ block|}
 comment|/// @}
 comment|/// @name Generic Value Accessors
 comment|/// @{
-comment|/// getNamedValue - Return the first global value in the module with
+comment|/// getNamedValue - Return the global value in the module with
 comment|/// the specified name, of arbitrary type.  This method returns null
 comment|/// if a global with the specified name is not found.
 name|GlobalValue
@@ -868,6 +891,55 @@ name|StringRef
 operator|>
 operator|&
 name|Result
+argument_list|)
+decl|const
+decl_stmt|;
+typedef|typedef
+name|DenseMap
+operator|<
+name|StructType
+operator|*
+operator|,
+name|unsigned
+operator|,
+name|DenseMapInfo
+operator|<
+name|StructType
+operator|*
+operator|>
+operator|,
+name|DenseMapInfo
+operator|<
+name|unsigned
+operator|>
+expr|>
+name|NumeredTypesMapTy
+expr_stmt|;
+comment|/// findUsedStructTypes - Walk the entire module and find all of the
+comment|/// struct types that are in use, returning them in a vector.
+name|void
+name|findUsedStructTypes
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|StructType
+operator|*
+operator|>
+operator|&
+name|StructTypes
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// getTypeByName - Return the type with the specified name, or null if there
+comment|/// is none by that name.
+name|StructType
+modifier|*
+name|getTypeByName
+argument_list|(
+name|StringRef
+name|Name
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1003,7 +1075,7 @@ name|false
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getNamedGlobal - Return the first global variable in the module with the
+comment|/// getNamedGlobal - Return the global variable in the module with the
 comment|/// specified name, of arbitrary type.  This method returns null if a global
 comment|/// with the specified name is not found.
 name|GlobalVariable
@@ -1047,7 +1119,7 @@ function_decl|;
 comment|/// @}
 comment|/// @name Global Alias Accessors
 comment|/// @{
-comment|/// getNamedAlias - Return the first global alias in the module with the
+comment|/// getNamedAlias - Return the global alias in the module with the
 comment|/// specified name, of arbitrary type.  This method returns null if a global
 comment|/// with the specified name is not found.
 name|GlobalAlias
@@ -1062,7 +1134,7 @@ decl_stmt|;
 comment|/// @}
 comment|/// @name Named Metadata Accessors
 comment|/// @{
-comment|/// getNamedMetadata - Return the first NamedMDNode in the module with the
+comment|/// getNamedMetadata - Return the NamedMDNode in the module with the
 comment|/// specified name. This method returns null if a NamedMDNode with the
 comment|/// specified name is not found.
 name|NamedMDNode
@@ -1076,7 +1148,7 @@ name|Name
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getOrInsertNamedMetadata - Return the first named MDNode in the module
+comment|/// getOrInsertNamedMetadata - Return the named MDNode in the module
 comment|/// with the specified name. This method returns a new NamedMDNode if a
 comment|/// NamedMDNode with the specified name is not found.
 name|NamedMDNode
@@ -1097,47 +1169,6 @@ modifier|*
 name|NMD
 parameter_list|)
 function_decl|;
-comment|/// @}
-comment|/// @name Type Accessors
-comment|/// @{
-comment|/// addTypeName - Insert an entry in the symbol table mapping Str to Type.  If
-comment|/// there is already an entry for this name, true is returned and the symbol
-comment|/// table is not modified.
-name|bool
-name|addTypeName
-parameter_list|(
-name|StringRef
-name|Name
-parameter_list|,
-specifier|const
-name|Type
-modifier|*
-name|Ty
-parameter_list|)
-function_decl|;
-comment|/// getTypeName - If there is at least one entry in the symbol table for the
-comment|/// specified type, return it.
-name|std
-operator|::
-name|string
-name|getTypeName
-argument_list|(
-argument|const Type *Ty
-argument_list|)
-specifier|const
-expr_stmt|;
-comment|/// getTypeByName - Return the type with the specified name in this module, or
-comment|/// null if there is none by that name.
-specifier|const
-name|Type
-modifier|*
-name|getTypeByName
-argument_list|(
-name|StringRef
-name|Name
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// @}
 comment|/// @name Materialization
 comment|/// @{
@@ -1410,34 +1441,9 @@ operator|*
 name|ValSymTab
 return|;
 block|}
-comment|/// Get the symbol table of types
-specifier|const
-name|TypeSymbolTable
-operator|&
-name|getTypeSymbolTable
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|*
-name|TypeSymTab
-return|;
-block|}
-comment|/// Get the Module's symbol table of types
-name|TypeSymbolTable
-modifier|&
-name|getTypeSymbolTable
-parameter_list|()
-block|{
-return|return
-operator|*
-name|TypeSymTab
-return|;
-block|}
 comment|/// @}
 comment|/// @name Global Variable Iteration
 comment|/// @{
-comment|/// Get an iterator to the first global variable
 name|global_iterator
 name|global_begin
 parameter_list|()
@@ -1449,7 +1455,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-comment|/// Get a constant iterator to the first global variable
 name|const_global_iterator
 name|global_begin
 argument_list|()
@@ -1462,7 +1467,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-comment|/// Get an iterator to the last global variable
 name|global_iterator
 name|global_end
 parameter_list|()
@@ -1474,7 +1478,6 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/// Get a constant iterator to the last global variable
 name|const_global_iterator
 name|global_end
 argument_list|()
@@ -1487,7 +1490,6 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/// Determine if the list of globals is empty.
 name|bool
 name|global_empty
 argument_list|()
@@ -1503,7 +1505,6 @@ block|}
 comment|/// @}
 comment|/// @name Function Iteration
 comment|/// @{
-comment|/// Get an iterator to the first function.
 name|iterator
 name|begin
 parameter_list|()
@@ -1515,7 +1516,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-comment|/// Get a constant iterator to the first function.
 name|const_iterator
 name|begin
 argument_list|()
@@ -1528,7 +1528,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-comment|/// Get an iterator to the last function.
 name|iterator
 name|end
 parameter_list|()
@@ -1540,7 +1539,6 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/// Get a constant iterator to the last function.
 name|const_iterator
 name|end
 argument_list|()
@@ -1553,7 +1551,6 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/// Determine how many functions are in the Module's list of functions.
 name|size_t
 name|size
 argument_list|()
@@ -1566,7 +1563,6 @@ name|size
 argument_list|()
 return|;
 block|}
-comment|/// Determine if the list of functions is empty.
 name|bool
 name|empty
 argument_list|()
@@ -1656,7 +1652,6 @@ block|}
 comment|/// @}
 comment|/// @name Alias Iteration
 comment|/// @{
-comment|/// Get an iterator to the first alias.
 name|alias_iterator
 name|alias_begin
 parameter_list|()
@@ -1668,7 +1663,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-comment|/// Get a constant iterator to the first alias.
 name|const_alias_iterator
 name|alias_begin
 argument_list|()
@@ -1681,7 +1675,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-comment|/// Get an iterator to the last alias.
 name|alias_iterator
 name|alias_end
 parameter_list|()
@@ -1693,7 +1686,6 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/// Get a constant iterator to the last alias.
 name|const_alias_iterator
 name|alias_end
 argument_list|()
@@ -1706,7 +1698,6 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/// Determine how many aliases are in the Module's list of aliases.
 name|size_t
 name|alias_size
 argument_list|()
@@ -1719,7 +1710,6 @@ name|size
 argument_list|()
 return|;
 block|}
-comment|/// Determine if the list of aliases is empty.
 name|bool
 name|alias_empty
 argument_list|()
@@ -1735,7 +1725,6 @@ block|}
 comment|/// @}
 comment|/// @name Named Metadata Iteration
 comment|/// @{
-comment|/// Get an iterator to the first named metadata.
 name|named_metadata_iterator
 name|named_metadata_begin
 parameter_list|()
@@ -1747,7 +1736,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-comment|/// Get a constant iterator to the first named metadata.
 name|const_named_metadata_iterator
 name|named_metadata_begin
 argument_list|()
@@ -1760,7 +1748,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-comment|/// Get an iterator to the last named metadata.
 name|named_metadata_iterator
 name|named_metadata_end
 parameter_list|()
@@ -1772,7 +1759,6 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/// Get a constant iterator to the last named metadata.
 name|const_named_metadata_iterator
 name|named_metadata_end
 argument_list|()
@@ -1785,8 +1771,6 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/// Determine how many NamedMDNodes are in the Module's list of named
-comment|/// metadata.
 name|size_t
 name|named_metadata_size
 argument_list|()
@@ -1799,7 +1783,6 @@ name|size
 argument_list|()
 return|;
 block|}
-comment|/// Determine if the list of named metadata is empty.
 name|bool
 name|named_metadata_empty
 argument_list|()
@@ -1815,7 +1798,8 @@ block|}
 comment|/// @}
 comment|/// @name Utility functions for printing and dumping Module objects
 comment|/// @{
-comment|/// Print the module to an output stream with AssemblyAnnotationWriter.
+comment|/// Print the module to an output stream with an optional
+comment|/// AssemblyAnnotationWriter.
 name|void
 name|print
 argument_list|(

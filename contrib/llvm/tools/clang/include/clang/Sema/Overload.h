@@ -237,6 +237,9 @@ comment|///< Block Pointer conversions
 name|ICK_TransparentUnionConversion
 block|,
 comment|/// Transparent Union Conversions
+name|ICK_Writeback_Conversion
+block|,
+comment|///< Objective-C ARC writeback conversion
 name|ICK_Num_Conversion_Kinds
 comment|///< The number of conversion kinds
 block|}
@@ -292,7 +295,10 @@ name|ICR_Conversion
 block|,
 comment|///< Conversion
 name|ICR_Complex_Real_Conversion
+block|,
 comment|///< Complex<-> Real conversion
+name|ICR_Writeback_Conversion
+comment|///< ObjC ARC writeback conversion
 block|}
 enum|;
 name|ImplicitConversionRank
@@ -346,6 +352,13 @@ name|DeprecatedStringLiteralToCharPtr
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief Whether the qualification conversion involves a change in the
+comment|/// Objective-C lifetime (for automatic reference counting).
+name|unsigned
+name|QualificationIncludesObjCLifetime
+range|:
+literal|1
+decl_stmt|;
 comment|/// IncompatibleObjC - Whether this is an Objective-C conversion
 comment|/// that we should warn about (if we actually use it).
 name|unsigned
@@ -390,6 +403,13 @@ comment|/// \brief Whether this binds an implicit object argument to a
 comment|/// non-static member function without a ref-qualifier.
 name|unsigned
 name|BindsImplicitObjectArgumentWithoutRefQualifier
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether this binds a reference to an object with a different
+comment|/// Objective-C lifetime qualifier.
+name|unsigned
+name|ObjCLifetimeConversionBinding
 range|:
 literal|1
 decl_stmt|;

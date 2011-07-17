@@ -283,7 +283,6 @@ block|}
 comment|/// Find the LLVM type used to represent the given member pointer
 comment|/// type.
 name|virtual
-specifier|const
 name|llvm
 operator|::
 name|Type

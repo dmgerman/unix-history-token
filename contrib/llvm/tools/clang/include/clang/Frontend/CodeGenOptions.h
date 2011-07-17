@@ -118,6 +118,12 @@ literal|1
 decl_stmt|;
 comment|/// -dA, -fverbose-asm.
 name|unsigned
+name|ObjCAutoRefCountExceptions
+range|:
+literal|1
+decl_stmt|;
+comment|/// Whether ARC should be EH-safe.
+name|unsigned
 name|CXAAtExit
 range|:
 literal|1
@@ -256,6 +262,12 @@ literal|1
 decl_stmt|;
 comment|/// Set when -fno-dwarf2-cfi-asm is enabled.
 name|unsigned
+name|NoExecStack
+range|:
+literal|1
+decl_stmt|;
+comment|/// Set when -Wa,--noexecstack is enabled.
+name|unsigned
 name|NoImplicitFloat
 range|:
 literal|1
@@ -285,6 +297,18 @@ range|:
 literal|2
 decl_stmt|;
 comment|/// Method of Objective-C dispatch to use.
+name|unsigned
+name|ObjCRuntimeHasARC
+range|:
+literal|1
+decl_stmt|;
+comment|/// The target runtime supports ARC natively
+name|unsigned
+name|ObjCRuntimeHasTerminate
+range|:
+literal|1
+decl_stmt|;
+comment|/// The ObjC runtime has objc_terminate
 name|unsigned
 name|OmitLeafFramePointer
 range|:
@@ -365,6 +389,13 @@ range|:
 literal|1
 decl_stmt|;
 comment|/// Emit unwind tables.
+comment|/// Attempt to use register sized accesses to bit-fields in structures, when
+comment|/// possible.
+name|unsigned
+name|UseRegisterSizedBitfieldAccess
+range|:
+literal|1
+decl_stmt|;
 name|unsigned
 name|VerifyModule
 range|:
@@ -557,9 +588,21 @@ name|NumRegisterParameters
 operator|=
 literal|0
 expr_stmt|;
+name|ObjCAutoRefCountExceptions
+operator|=
+literal|0
+expr_stmt|;
 name|ObjCDispatchMethod
 operator|=
 name|Legacy
+expr_stmt|;
+name|ObjCRuntimeHasARC
+operator|=
+literal|0
+expr_stmt|;
+name|ObjCRuntimeHasTerminate
+operator|=
+literal|0
 expr_stmt|;
 name|OmitLeafFramePointer
 operator|=
@@ -610,6 +653,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|UnwindTables
+operator|=
+literal|0
+expr_stmt|;
+name|UseRegisterSizedBitfieldAccess
 operator|=
 literal|0
 expr_stmt|;

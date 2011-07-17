@@ -211,7 +211,7 @@ comment|/// currently following the C++0x scheme.
 enum|enum
 name|ExprValueKind
 block|{
-comment|/// An r-value expression (a gr-value in the C++0x taxonomy)
+comment|/// An r-value expression (a pr-value in the C++0x taxonomy)
 comment|/// produces a temporary value.
 name|VK_RValue
 block|,

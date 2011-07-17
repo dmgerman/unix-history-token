@@ -606,6 +606,12 @@ operator|<
 name|PBQPBuilder
 operator|>
 name|builder
+argument_list|,
+name|char
+operator|*
+name|customPassID
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 block|}

@@ -204,6 +204,23 @@ name|mutable
 name|bool
 name|TargetInitialized
 block|;
+comment|// FIXME: Remove this once there is a proper way to detect an ARC runtime
+comment|// for the simulator.
+name|public
+operator|:
+name|mutable
+expr|enum
+block|{
+name|ARCSimulator_None
+block|,
+name|ARCSimulator_HasARCRuntime
+block|,
+name|ARCSimulator_NoARCRuntime
+block|}
+name|ARCRuntimeForSimulator
+block|;
+name|private
+operator|:
 comment|/// Whether we are targeting iPhoneOS target.
 name|mutable
 name|bool
@@ -228,6 +245,11 @@ name|std
 operator|::
 name|string
 name|MacosxVersionMin
+block|;
+name|bool
+name|hasARCRuntime
+argument_list|()
+specifier|const
 block|;
 name|private
 operator|:
@@ -675,6 +697,24 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+comment|/// AddLinkARCArgs - Add the linker arguments to link the ARC runtime library.
+name|virtual
+name|void
+name|AddLinkARCArgs
+argument_list|(
+specifier|const
+name|ArgList
+operator|&
+name|Args
+argument_list|,
+name|ArgStringList
+operator|&
+name|CmdArgs
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
 comment|/// AddLinkRuntimeLibArgs - Add the linker arguments to link the compiler
 comment|/// runtime library.
 name|virtual
@@ -713,6 +753,16 @@ name|HasNativeLLVMSupport
 argument_list|()
 specifier|const
 expr_stmt|;
+name|virtual
+name|void
+name|configureObjCRuntime
+argument_list|(
+name|ObjCRuntime
+operator|&
+name|runtime
+argument_list|)
+decl|const
+decl_stmt|;
 name|virtual
 name|DerivedArgList
 modifier|*
@@ -1035,6 +1085,17 @@ argument|ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 block|;
+name|void
+name|AddLinkRuntimeLib
+argument_list|(
+argument|const ArgList&Args
+argument_list|,
+argument|ArgStringList&CmdArgs
+argument_list|,
+argument|const char *DarwinStaticLib
+argument_list|)
+specifier|const
+block|;
 name|virtual
 name|void
 name|AddCXXStdlibLibArgs
@@ -1048,6 +1109,16 @@ block|;
 name|virtual
 name|void
 name|AddCCKextLibArgs
+argument_list|(
+argument|const ArgList&Args
+argument_list|,
+argument|ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|AddLinkARCArgs
 argument_list|(
 argument|const ArgList&Args
 argument_list|,
