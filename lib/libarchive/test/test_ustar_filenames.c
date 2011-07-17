@@ -165,7 +165,6 @@ expr_stmt|;
 name|filename
 index|[
 name|i
-operator|++
 index|]
 operator|=
 literal|'\0'

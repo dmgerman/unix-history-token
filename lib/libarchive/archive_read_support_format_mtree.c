@@ -1938,6 +1938,10 @@ expr_stmt|;
 if|if
 condition|(
 name|eq
+operator|==
+name|NULL
+operator|||
+name|eq
 operator|>
 name|next
 condition|)

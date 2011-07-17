@@ -129,7 +129,15 @@ end_include
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
 name|HAVE_BZLIB_H
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|BZ_CONFIG_ERROR
+argument_list|)
 end_if
 
 begin_struct
@@ -315,7 +323,15 @@ name|bzip2_reader_free
 expr_stmt|;
 if|#
 directive|if
+name|defined
+argument_list|(
 name|HAVE_BZLIB_H
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|BZ_CONFIG_ERROR
+argument_list|)
 return|return
 operator|(
 name|ARCHIVE_OK
@@ -546,11 +562,21 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|HAVE_BZLIB_H
-end_ifndef
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|BZ_CONFIG_ERROR
+argument_list|)
+end_if
 
 begin_comment
 comment|/*  * If we don't have the library on this system, we can't actually do the  * decompression.  We can, however, still detect compressed archives  * and emit a useful message.  */

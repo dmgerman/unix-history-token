@@ -109,11 +109,21 @@ directive|include
 file|"archive_write_private.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|HAVE_BZLIB_H
-end_ifndef
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|BZ_CONFIG_ERROR
+argument_list|)
+end_if
 
 begin_function
 name|int
@@ -1735,7 +1745,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_BZLIB_H */
+comment|/* HAVE_BZLIB_H&& BZ_CONFIG_ERROR */
 end_comment
 
 end_unit

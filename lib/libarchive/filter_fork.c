@@ -55,6 +55,18 @@ name|defined
 argument_list|(
 name|HAVE_POLL
 argument_list|)
+operator|&&
+operator|(
+name|defined
+argument_list|(
+name|HAVE_POLL_H
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_SYS_POLL_H
+argument_list|)
+operator|)
 end_if
 
 begin_if
@@ -600,6 +612,18 @@ name|defined
 argument_list|(
 name|HAVE_POLL
 argument_list|)
+operator|&&
+operator|(
+name|defined
+argument_list|(
+name|HAVE_POLL_H
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_SYS_POLL_H
+argument_list|)
+operator|)
 name|struct
 name|pollfd
 name|fds
