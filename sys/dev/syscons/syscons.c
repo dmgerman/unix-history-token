@@ -8446,6 +8446,14 @@ name|PIO_KEYMAP
 case|:
 comment|/* set keyboard translation table */
 case|case
+name|OGIO_KEYMAP
+case|:
+comment|/* get keyboard translation table (compat) */
+case|case
+name|OPIO_KEYMAP
+case|:
+comment|/* set keyboard translation table (compat) */
+case|case
 name|GIO_DEADKEYMAP
 case|:
 comment|/* get accent key translation table */

@@ -3638,7 +3638,7 @@ name|uap
 operator|->
 name|cmd
 operator|=
-name|GIO_KEYMAP
+name|OGIO_KEYMAP
 expr_stmt|;
 name|error
 operator|=
@@ -3663,7 +3663,7 @@ name|uap
 operator|->
 name|cmd
 operator|=
-name|PIO_KEYMAP
+name|OPIO_KEYMAP
 expr_stmt|;
 name|error
 operator|=

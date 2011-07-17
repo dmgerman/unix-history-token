@@ -3783,6 +3783,9 @@ case|case
 name|PIO_KEYMAP
 case|:
 case|case
+name|OPIO_KEYMAP
+case|:
+case|case
 name|PIO_KEYMAPENT
 case|:
 case|case
