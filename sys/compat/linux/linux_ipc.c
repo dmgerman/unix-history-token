@@ -2794,7 +2794,7 @@ name|semmap
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Linux does not use the semmap field either but populates it 		 * with the defined value from SEMMAP, which really is redefined 		 * to SEMMNS, which they define as SEMMNI * SEMMSL. 		 * Try to simulate this returning our dynamic semmns value. 		 */
+comment|/* 		 * Linux does not use the semmap field but populates it with 		 * the defined value from SEMMAP, which really is redefined to 		 * SEMMNS, which they define as SEMMNI * SEMMSL.  Try to 		 * simulate this returning our dynamic semmns value. 		 */
 name|linux_seminfo
 operator|.
 name|semmap
