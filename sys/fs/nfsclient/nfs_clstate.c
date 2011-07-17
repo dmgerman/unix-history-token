@@ -363,20 +363,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|nfscl_freelockowner
-parameter_list|(
-name|struct
-name|nfscllockowner
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|nfscl_freealllocks
 parameter_list|(
 name|struct
@@ -7039,7 +7025,7 @@ comment|/*  * Free up a byte range lock owner structure.  */
 end_comment
 
 begin_function
-specifier|static
+name|APPLESTATIC
 name|void
 name|nfscl_freelockowner
 parameter_list|(
