@@ -68,13 +68,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/BranchProbability.h"
+file|"llvm/Pass.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/LoopInfo.h"
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/BranchProbability.h"
 end_include
 
 begin_decl_stmt
@@ -91,6 +97,11 @@ name|public
 name|FunctionPass
 block|{
 comment|// Default weight value. Used when we don't have information about the edge.
+comment|// TODO: DEFAULT_WEIGHT makes sense during static predication, when none of
+comment|// the successors have a weight yet. But it doesn't make sense when providing
+comment|// weight to an edge that may have siblings with non-zero weights. This can
+comment|// be handled various ways, but it's probably fine for an edge with unknown
+comment|// weight to just "inherit" the non-zero weight of an adjacent successor.
 specifier|static
 specifier|const
 name|uint32_t
@@ -158,29 +169,15 @@ argument_list|(
 argument|AnalysisUsage&AU
 argument_list|)
 specifier|const
-block|{
-name|AU
-operator|.
-name|addRequired
-operator|<
-name|LoopInfo
-operator|>
-operator|(
-operator|)
-block|;
-name|AU
-operator|.
-name|setPreservesAll
-argument_list|()
-block|;   }
+expr_stmt|;
 name|bool
 name|runOnFunction
-argument_list|(
+parameter_list|(
 name|Function
-operator|&
+modifier|&
 name|F
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|// Returned value is between 1 and UINT32_MAX. Look at
 comment|// BranchProbabilityInfo.cpp for details.
 name|uint32_t

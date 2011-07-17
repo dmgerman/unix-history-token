@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"MCTargetDesc/AlphaMCTargetDesc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
@@ -154,48 +160,12 @@ modifier|*
 name|createAlphaBranchSelectionPass
 parameter_list|()
 function_decl|;
-specifier|extern
-name|Target
-name|TheAlphaTarget
-decl_stmt|;
 block|}
 end_decl_stmt
 
 begin_comment
 comment|// end namespace llvm;
 end_comment
-
-begin_comment
-comment|// Defines symbolic names for Alpha registers.  This defines a mapping from
-end_comment
-
-begin_comment
-comment|// register name to register number.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"AlphaGenRegisterNames.inc"
-end_include
-
-begin_comment
-comment|// Defines symbolic names for the Alpha instructions.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"AlphaGenInstrNames.inc"
-end_include
 
 begin_endif
 endif|#

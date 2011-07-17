@@ -263,11 +263,15 @@ specifier|const
 block|;
 name|std
 operator|::
-name|vector
+name|pair
 operator|<
 name|unsigned
+block|,
+specifier|const
+name|TargetRegisterClass
+operator|*
 operator|>
-name|getRegClassForInlineAsmConstraint
+name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,

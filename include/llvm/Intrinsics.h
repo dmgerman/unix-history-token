@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -133,11 +139,7 @@ name|getName
 argument_list|(
 argument|ID id
 argument_list|,
-argument|const Type **Tys =
-literal|0
-argument_list|,
-argument|unsigned numTys =
-literal|0
+argument|ArrayRef<Type*> Tys = ArrayRef<Type*>()
 argument_list|)
 expr_stmt|;
 comment|/// Intrinsic::getType(ID) - Return the function type for an intrinsic.
@@ -146,28 +148,30 @@ specifier|const
 name|FunctionType
 modifier|*
 name|getType
-parameter_list|(
+argument_list|(
 name|LLVMContext
-modifier|&
+operator|&
 name|Context
-parameter_list|,
+argument_list|,
 name|ID
 name|id
-parameter_list|,
-specifier|const
+argument_list|,
+name|ArrayRef
+operator|<
 name|Type
-modifier|*
-modifier|*
+operator|*
+operator|>
 name|Tys
-init|=
-literal|0
-parameter_list|,
-name|unsigned
-name|numTys
-init|=
-literal|0
-parameter_list|)
-function_decl|;
+operator|=
+name|ArrayRef
+operator|<
+name|Type
+operator|*
+operator|>
+operator|(
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/// Intrinsic::isOverloaded(ID) - Returns true if the intrinsic can be
 comment|/// overloaded.
 name|bool
@@ -197,28 +201,30 @@ comment|/// intrinsic.
 name|Function
 modifier|*
 name|getDeclaration
-parameter_list|(
+argument_list|(
 name|Module
-modifier|*
+operator|*
 name|M
-parameter_list|,
+argument_list|,
 name|ID
 name|id
-parameter_list|,
-specifier|const
+argument_list|,
+name|ArrayRef
+operator|<
 name|Type
-modifier|*
-modifier|*
+operator|*
+operator|>
 name|Tys
-init|=
-literal|0
-parameter_list|,
-name|unsigned
-name|numTys
-init|=
-literal|0
-parameter_list|)
-function_decl|;
+operator|=
+name|ArrayRef
+operator|<
+name|Type
+operator|*
+operator|>
+operator|(
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/// Map a GCC builtin name to an intrinsic ID.
 name|ID
 name|getIntrinsicForGCCBuiltin

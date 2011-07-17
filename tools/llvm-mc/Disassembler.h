@@ -80,9 +80,6 @@ name|class
 name|Target
 decl_stmt|;
 name|class
-name|TargetMachine
-decl_stmt|;
-name|class
 name|raw_ostream
 decl_stmt|;
 name|class
@@ -98,10 +95,6 @@ specifier|const
 name|Target
 operator|&
 name|target
-argument_list|,
-name|TargetMachine
-operator|&
-name|TM
 argument_list|,
 specifier|const
 name|std

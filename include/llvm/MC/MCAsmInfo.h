@@ -126,6 +126,21 @@ label|:
 comment|//===------------------------------------------------------------------===//
 comment|// Properties to be set by the target writer, used to configure asm printer.
 comment|//
+comment|/// PointerSize - Pointer size in bytes.
+comment|///               Default is 4.
+name|unsigned
+name|PointerSize
+decl_stmt|;
+comment|/// IsLittleEndian - True if target is little endian.
+comment|///                  Default is true.
+name|bool
+name|IsLittleEndian
+decl_stmt|;
+comment|/// StackGrowsUp - True if target stack grow up.
+comment|///                Default is false.
+name|bool
+name|StackGrowsUp
+decl_stmt|;
 comment|/// HasSubsectionsViaSymbols - True if this target has the MachO
 comment|/// .subsections_via_symbols directive.
 name|bool
@@ -553,6 +568,12 @@ comment|// use EmitLabelOffsetDifference.
 name|bool
 name|DwarfUsesLabelOffsetForRanges
 decl_stmt|;
+comment|/// DwarfRegNumForCFI - True if dwarf register numbers are printed
+comment|/// instead of symbolic register names in .cfi_* directives.
+name|bool
+name|DwarfRegNumForCFI
+decl_stmt|;
+comment|// Defaults to false;
 comment|//===--- CBE Asm Translation Table -----------------------------------===//
 specifier|const
 name|char
@@ -590,6 +611,36 @@ name|unsigned
 name|Value
 parameter_list|)
 function_decl|;
+comment|/// getPointerSize - Get the pointer size in bytes.
+name|unsigned
+name|getPointerSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PointerSize
+return|;
+block|}
+comment|/// islittleendian - True if the target is little endian.
+name|bool
+name|isLittleEndian
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsLittleEndian
+return|;
+block|}
+comment|/// isStackGrowthDirectionUp - True if target stack grow up.
+name|bool
+name|isStackGrowthDirectionUp
+argument_list|()
+specifier|const
+block|{
+return|return
+name|StackGrowsUp
+return|;
+block|}
 name|bool
 name|hasSubsectionsViaSymbols
 argument_list|()
@@ -1317,6 +1368,15 @@ specifier|const
 block|{
 return|return
 name|DwarfUsesLabelOffsetForRanges
+return|;
+block|}
+name|bool
+name|useDwarfRegNumForCFI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DwarfRegNumForCFI
 return|;
 block|}
 specifier|const

@@ -76,7 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetInstrDesc.h"
+file|"llvm/MC/MCInstrDesc.h"
 end_include
 
 begin_include
@@ -101,6 +101,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -135,9 +141,6 @@ name|SmallVectorImpl
 expr_stmt|;
 name|class
 name|AliasAnalysis
-decl_stmt|;
-name|class
-name|TargetInstrDesc
 decl_stmt|;
 name|class
 name|TargetInstrInfo
@@ -202,9 +205,9 @@ enum|;
 name|private
 label|:
 specifier|const
-name|TargetInstrDesc
+name|MCInstrDesc
 modifier|*
-name|TID
+name|MCID
 decl_stmt|;
 comment|// Instruction descriptor.
 name|uint16_t
@@ -316,7 +319,7 @@ operator|&
 argument_list|)
 expr_stmt|;
 comment|/// MachineInstr ctor - This constructor creates a dummy MachineInstr with
-comment|/// TID NULL and no operands.
+comment|/// MCID NULL and no operands.
 name|MachineInstr
 argument_list|()
 expr_stmt|;
@@ -325,14 +328,14 @@ comment|// over time, the non-DebugLoc versions should be phased out and eventua
 comment|// removed.
 comment|/// MachineInstr ctor - This constructor creates a MachineInstr and adds the
 comment|/// implicit operands.  It reserves space for the number of operands specified
-comment|/// by the TargetInstrDesc.  The version with a DebugLoc should be preferred.
+comment|/// by the MCInstrDesc.  The version with a DebugLoc should be preferred.
 name|explicit
 name|MachineInstr
 parameter_list|(
 specifier|const
-name|TargetInstrDesc
+name|MCInstrDesc
 modifier|&
-name|TID
+name|MCID
 parameter_list|,
 name|bool
 name|NoImp
@@ -350,21 +353,21 @@ operator|*
 name|MBB
 argument_list|,
 specifier|const
-name|TargetInstrDesc
+name|MCInstrDesc
 operator|&
-name|TID
+name|MCID
 argument_list|)
 expr_stmt|;
 comment|/// MachineInstr ctor - This constructor create a MachineInstr and add the
 comment|/// implicit operands.  It reserves space for number of operands specified by
-comment|/// TargetInstrDesc.  An explicit DebugLoc is supplied.
+comment|/// MCInstrDesc.  An explicit DebugLoc is supplied.
 name|explicit
 name|MachineInstr
 parameter_list|(
 specifier|const
-name|TargetInstrDesc
+name|MCInstrDesc
 modifier|&
-name|TID
+name|MCID
 parameter_list|,
 specifier|const
 name|DebugLoc
@@ -385,7 +388,7 @@ argument|MachineBasicBlock *MBB
 argument_list|,
 argument|const DebugLoc dl
 argument_list|,
-argument|const TargetInstrDesc&TID
+argument|const MCInstrDesc&MCID
 argument_list|)
 empty_stmt|;
 operator|~
@@ -553,10 +556,25 @@ return|return
 name|debugLoc
 return|;
 block|}
+comment|/// emitError - Emit an error referring to the source location of this
+comment|/// instruction. This should only be used for inline assembly that is somehow
+comment|/// impossible to compile. Other errors should have been handled much
+comment|/// earlier.
+comment|///
+comment|/// If this method returns, the caller should try to recover from the error.
+comment|///
+name|void
+name|emitError
+argument_list|(
+name|StringRef
+name|Msg
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// getDesc - Returns the target instruction descriptor of this
 comment|/// MachineInstr.
 specifier|const
-name|TargetInstrDesc
+name|MCInstrDesc
 operator|&
 name|getDesc
 argument_list|()
@@ -564,7 +582,7 @@ specifier|const
 block|{
 return|return
 operator|*
-name|TID
+name|MCID
 return|;
 block|}
 comment|/// getOpcode - Returns the opcode of this MachineInstr.
@@ -575,7 +593,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|TID
+name|MCID
 operator|->
 name|Opcode
 return|;
@@ -1017,6 +1035,34 @@ operator|==
 name|TargetOpcode
 operator|::
 name|COPY
+return|;
+block|}
+name|bool
+name|isFullCopy
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isCopy
+argument_list|()
+operator|&&
+operator|!
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+operator|.
+name|getSubReg
+argument_list|()
+operator|&&
+operator|!
+name|getOperand
+argument_list|(
+literal|1
+argument_list|)
+operator|.
+name|getSubReg
+argument_list|()
 return|;
 block|}
 comment|/// isCopyLike - Return true if the instruction behaves like a copy.
@@ -1682,8 +1728,8 @@ specifier|const
 expr_stmt|;
 comment|/// hasUnmodeledSideEffects - Return true if this instruction has side
 comment|/// effects that are not modeled by mayLoad / mayStore, etc.
-comment|/// For all instructions, the property is encoded in TargetInstrDesc::Flags
-comment|/// (see TargetInstrDesc::hasUnmodeledSideEffects(). The only exception is
+comment|/// For all instructions, the property is encoded in MCInstrDesc::Flags
+comment|/// (see MCInstrDesc::hasUnmodeledSideEffects(). The only exception is
 comment|/// INLINEASM instruction, in which case the side effect property is encoded
 comment|/// in one of its operands (see InlineAsm::Extra_HasSideEffect).
 comment|///
@@ -1756,12 +1802,12 @@ name|void
 name|setDesc
 parameter_list|(
 specifier|const
-name|TargetInstrDesc
+name|MCInstrDesc
 modifier|&
 name|tid
 parameter_list|)
 block|{
-name|TID
+name|MCID
 operator|=
 operator|&
 name|tid

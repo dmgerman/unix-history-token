@@ -90,7 +90,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|TargetInstrDesc
+name|MCInstrDesc
 decl_stmt|;
 name|class
 name|SDDbgValue
@@ -192,7 +192,7 @@ operator|*
 name|MI
 argument_list|,
 specifier|const
-name|TargetInstrDesc
+name|MCInstrDesc
 operator|&
 name|II
 argument_list|,
@@ -247,7 +247,7 @@ name|unsigned
 name|IIOpNum
 argument_list|,
 specifier|const
-name|TargetInstrDesc
+name|MCInstrDesc
 operator|*
 name|II
 argument_list|,
@@ -288,7 +288,7 @@ name|unsigned
 name|IIOpNum
 argument_list|,
 specifier|const
-name|TargetInstrDesc
+name|MCInstrDesc
 operator|*
 name|II
 argument_list|,

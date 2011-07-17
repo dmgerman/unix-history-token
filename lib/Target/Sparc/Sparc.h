@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"MCTargetDesc/SparcMCTargetDesc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ErrorHandling.h"
 end_include
 
@@ -121,52 +127,12 @@ modifier|&
 name|TM
 parameter_list|)
 function_decl|;
-specifier|extern
-name|Target
-name|TheSparcTarget
-decl_stmt|;
-specifier|extern
-name|Target
-name|TheSparcV9Target
-decl_stmt|;
 block|}
 end_decl_stmt
 
 begin_comment
 comment|// end namespace llvm;
 end_comment
-
-begin_comment
-comment|// Defines symbolic names for Sparc registers.  This defines a mapping from
-end_comment
-
-begin_comment
-comment|// register name to register number.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"SparcGenRegisterNames.inc"
-end_include
-
-begin_comment
-comment|// Defines symbolic names for the Sparc instructions.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"SparcGenInstrNames.inc"
-end_include
 
 begin_decl_stmt
 name|namespace

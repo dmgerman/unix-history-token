@@ -118,9 +118,9 @@ block|{
 name|class
 name|Record
 decl_stmt|;
-struct_decl|struct
+name|class
 name|Init
-struct_decl|;
+decl_stmt|;
 name|class
 name|ListInit
 decl_stmt|;

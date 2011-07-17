@@ -629,6 +629,7 @@ block|}
 name|operator
 name|T
 argument_list|()
+specifier|const
 block|{
 return|return
 name|Vec

@@ -77,6 +77,18 @@ directive|include
 file|"PPCRegisterInfo.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|GET_INSTRINFO_HEADER
+end_define
+
+begin_include
+include|#
+directive|include
+file|"PPCGenInstrInfo.inc"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -191,7 +203,7 @@ name|class
 name|PPCInstrInfo
 range|:
 name|public
-name|TargetInstrInfoImpl
+name|PPCGenInstrInfo
 block|{
 name|PPCTargetMachine
 operator|&

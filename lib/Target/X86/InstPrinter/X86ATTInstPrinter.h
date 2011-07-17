@@ -73,12 +73,6 @@ name|class
 name|MCOperand
 decl_stmt|;
 name|class
-name|X86Subtarget
-decl_stmt|;
-name|class
-name|TargetMachine
-decl_stmt|;
-name|class
 name|X86ATTInstPrinter
 range|:
 name|public
@@ -88,10 +82,6 @@ name|public
 operator|:
 name|X86ATTInstPrinter
 argument_list|(
-name|TargetMachine
-operator|&
-name|TM
-argument_list|,
 specifier|const
 name|MCAsmInfo
 operator|&
@@ -127,14 +117,6 @@ name|StringRef
 name|getOpcodeName
 argument_list|(
 argument|unsigned Opcode
-argument_list|)
-specifier|const
-block|;
-comment|// Methods used to print the alias of an instruction.
-name|unsigned
-name|ComputeAvailableFeatures
-argument_list|(
-argument|const X86Subtarget *Subtarget
 argument_list|)
 specifier|const
 block|;

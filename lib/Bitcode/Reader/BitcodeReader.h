@@ -622,7 +622,8 @@ name|std
 operator|::
 name|vector
 operator|<
-name|PATypeHolder
+name|Type
+operator|*
 operator|>
 name|TypeList
 block|;
@@ -783,13 +784,6 @@ operator|>
 expr|>
 name|BlockAddrFwdRefs
 expr_stmt|;
-comment|/// LLVM2_7MetadataDetected - True if metadata produced by LLVM 2.7 or
-comment|/// earlier was detected, in which case we behave slightly differently,
-comment|/// for compatibility.
-comment|/// FIXME: Remove in LLVM 3.0.
-name|bool
-name|LLVM2_7MetadataDetected
-decl_stmt|;
 name|public
 label|:
 name|explicit
@@ -836,12 +830,7 @@ argument_list|)
 operator|,
 name|MDValueList
 argument_list|(
-name|C
-argument_list|)
-operator|,
-name|LLVM2_7MetadataDetected
-argument_list|(
-argument|false
+argument|C
 argument_list|)
 block|{
 name|HasReversedFunctionsWithBodies
@@ -990,18 +979,20 @@ argument_list|)
 decl_stmt|;
 name|private
 label|:
-specifier|const
 name|Type
 modifier|*
 name|getTypeByID
 parameter_list|(
 name|unsigned
 name|ID
-parameter_list|,
-name|bool
-name|isTypeTable
-init|=
-name|false
+parameter_list|)
+function_decl|;
+name|Type
+modifier|*
+name|getTypeByIDOrNull
+parameter_list|(
+name|unsigned
+name|ID
 parameter_list|)
 function_decl|;
 name|Value
@@ -1020,13 +1011,11 @@ block|{
 if|if
 condition|(
 name|Ty
-operator|==
-name|Type
-operator|::
-name|getMetadataTy
-argument_list|(
-name|Context
-argument_list|)
+operator|&&
+name|Ty
+operator|->
+name|isMetadataTy
+argument_list|()
 condition|)
 return|return
 name|MDValueList
@@ -1036,7 +1025,6 @@ argument_list|(
 name|ID
 argument_list|)
 return|;
-else|else
 return|return
 name|ValueList
 operator|.
@@ -1309,9 +1297,19 @@ name|ParseTypeTable
 parameter_list|()
 function_decl|;
 name|bool
-name|ParseTypeSymbolTable
+name|ParseOldTypeTable
 parameter_list|()
 function_decl|;
+comment|// FIXME: Remove in LLVM 3.1
+name|bool
+name|ParseTypeTableBody
+parameter_list|()
+function_decl|;
+name|bool
+name|ParseOldTypeSymbolTable
+parameter_list|()
+function_decl|;
+comment|// FIXME: Remove in LLVM 3.1
 name|bool
 name|ParseValueSymbolTable
 parameter_list|()

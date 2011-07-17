@@ -183,6 +183,16 @@ parameter_list|()
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|//
+comment|// createObjCARCAliasAnalysisPass - This pass implements ObjC-ARC-based
+comment|// alias analysis.
+comment|//
+name|ImmutablePass
+modifier|*
+name|createObjCARCAliasAnalysisPass
+parameter_list|()
+function_decl|;
+comment|//===--------------------------------------------------------------------===//
+comment|//
 comment|// createProfileLoaderPass - This pass loads information from a profile dump
 comment|// file.
 comment|//

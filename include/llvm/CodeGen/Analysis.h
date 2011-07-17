@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -139,6 +145,46 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+specifier|inline
+name|unsigned
+name|ComputeLinearIndex
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|Ty
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Indices
+argument_list|,
+name|unsigned
+name|CurIndex
+operator|=
+literal|0
+argument_list|)
+block|{
+return|return
+name|ComputeLinearIndex
+argument_list|(
+name|Ty
+argument_list|,
+name|Indices
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|Indices
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|CurIndex
+argument_list|)
+return|;
+block|}
 comment|/// ComputeValueVTs - Given an LLVM IR type, compute a sequence of
 comment|/// EVTs that represent all the individual underlying
 comment|/// non-aggregate types that comprise it.

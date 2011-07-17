@@ -148,7 +148,6 @@ expr_stmt|;
 name|unsigned
 name|UIntVal
 decl_stmt|;
-specifier|const
 name|Type
 modifier|*
 name|TyVal
@@ -244,7 +243,6 @@ return|return
 name|StrVal
 return|;
 block|}
-specifier|const
 name|Type
 operator|*
 name|getTyVal

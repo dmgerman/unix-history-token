@@ -60,9 +60,6 @@ name|class
 name|StringRef
 decl_stmt|;
 name|class
-name|Target
-decl_stmt|;
-name|class
 name|SMLoc
 decl_stmt|;
 name|class
@@ -108,19 +105,9 @@ name|protected
 operator|:
 comment|// Can only create subclasses.
 name|TargetAsmParser
-argument_list|(
-specifier|const
-name|Target
-operator|&
-argument_list|)
+argument_list|()
 block|;
-comment|/// The Target that this machine was created for.
-specifier|const
-name|Target
-operator|&
-name|TheTarget
-block|;
-comment|/// The current set of available features.
+comment|/// AvailableFeatures - The current set of available features.
 name|unsigned
 name|AvailableFeatures
 block|;
@@ -131,17 +118,6 @@ operator|~
 name|TargetAsmParser
 argument_list|()
 block|;
-specifier|const
-name|Target
-operator|&
-name|getTarget
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TheTarget
-return|;
-block|}
 name|unsigned
 name|getAvailableFeatures
 argument_list|()

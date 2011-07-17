@@ -5608,6 +5608,11 @@ name|Radix
 argument_list|,
 name|bool
 name|Signed
+argument_list|,
+name|bool
+name|formatAsCLiteral
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -5644,6 +5649,8 @@ argument_list|(
 name|Str
 argument_list|,
 name|Radix
+argument_list|,
+name|false
 argument_list|,
 name|false
 argument_list|)
@@ -5684,6 +5691,8 @@ argument_list|,
 name|Radix
 argument_list|,
 name|true
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 block|}

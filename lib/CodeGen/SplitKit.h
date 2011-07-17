@@ -249,6 +249,24 @@ name|bool
 name|LiveOut
 decl_stmt|;
 comment|///< Current reg is live out.
+comment|/// isOneInstr - Returns true when this BlockInfo describes a single
+comment|/// instruction.
+name|bool
+name|isOneInstr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SlotIndex
+operator|::
+name|isSameInstr
+argument_list|(
+name|FirstUse
+argument_list|,
+name|LastUse
+argument_list|)
+return|;
+block|}
 block|}
 struct|;
 name|private
@@ -946,6 +964,15 @@ name|SlotIndex
 name|Idx
 parameter_list|)
 function_decl|;
+comment|/// enterIntvAfter - Enter the open interval after the instruction at Idx.
+comment|/// Return the beginning of the new live range.
+name|SlotIndex
+name|enterIntvAfter
+parameter_list|(
+name|SlotIndex
+name|Idx
+parameter_list|)
+function_decl|;
 comment|/// enterIntvAtEnd - Enter the open interval at the end of MBB.
 comment|/// Use the open interval from he inserted copy to the MBB end.
 comment|/// Return the beginning of the new live range.
@@ -1077,6 +1104,85 @@ operator|::
 name|BlockPtrSet
 operator|&
 name|Blocks
+argument_list|)
+decl_stmt|;
+comment|/// splitLiveThroughBlock - Split CurLI in the given block such that it
+comment|/// enters the block in IntvIn and leaves it in IntvOut. There may be uses in
+comment|/// the block, but they will be ignored when placing split points.
+comment|///
+comment|/// @param MBBNum      Block number.
+comment|/// @param IntvIn      Interval index entering the block.
+comment|/// @param LeaveBefore When set, leave IntvIn before this point.
+comment|/// @param IntvOut     Interval index leaving the block.
+comment|/// @param EnterAfter  When set, enter IntvOut after this point.
+name|void
+name|splitLiveThroughBlock
+parameter_list|(
+name|unsigned
+name|MBBNum
+parameter_list|,
+name|unsigned
+name|IntvIn
+parameter_list|,
+name|SlotIndex
+name|LeaveBefore
+parameter_list|,
+name|unsigned
+name|IntvOut
+parameter_list|,
+name|SlotIndex
+name|EnterAfter
+parameter_list|)
+function_decl|;
+comment|/// splitRegInBlock - Split CurLI in the given block such that it enters the
+comment|/// block in IntvIn and leaves it on the stack (or not at all). Split points
+comment|/// are placed in a way that avoids putting uses in the stack interval. This
+comment|/// may require creating a local interval when there is interference.
+comment|///
+comment|/// @param BI          Block descriptor.
+comment|/// @param IntvIn      Interval index entering the block. Not 0.
+comment|/// @param LeaveBefore When set, leave IntvIn before this point.
+name|void
+name|splitRegInBlock
+argument_list|(
+specifier|const
+name|SplitAnalysis
+operator|::
+name|BlockInfo
+operator|&
+name|BI
+argument_list|,
+name|unsigned
+name|IntvIn
+argument_list|,
+name|SlotIndex
+name|LeaveBefore
+argument_list|)
+decl_stmt|;
+comment|/// splitRegOutBlock - Split CurLI in the given block such that it enters the
+comment|/// block on the stack (or isn't live-in at all) and leaves it in IntvOut.
+comment|/// Split points are placed to avoid interference and such that the uses are
+comment|/// not in the stack interval. This may require creating a local interval
+comment|/// when there is interference.
+comment|///
+comment|/// @param BI          Block descriptor.
+comment|/// @param IntvOut     Interval index leaving the block.
+comment|/// @param EnterAfter  When set, enter IntvOut after this point.
+name|void
+name|splitRegOutBlock
+argument_list|(
+specifier|const
+name|SplitAnalysis
+operator|::
+name|BlockInfo
+operator|&
+name|BI
+argument_list|,
+name|unsigned
+name|IntvOut
+argument_list|,
+name|SlotIndex
+name|EnterAfter
 argument_list|)
 decl_stmt|;
 block|}

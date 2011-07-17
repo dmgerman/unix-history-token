@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Analysis/ConstantFolding.h"
 end_include
 
@@ -1565,13 +1571,11 @@ name|Constant
 operator|*
 name|Agg
 argument_list|,
-specifier|const
+name|ArrayRef
+operator|<
 name|unsigned
-operator|*
+operator|>
 name|IdxList
-argument_list|,
-name|unsigned
-name|NumIdx
 argument_list|)
 decl|const
 block|{
@@ -1585,8 +1589,6 @@ argument_list|(
 name|Agg
 argument_list|,
 name|IdxList
-argument_list|,
-name|NumIdx
 argument_list|)
 argument_list|)
 return|;
@@ -1603,13 +1605,11 @@ name|Constant
 operator|*
 name|Val
 argument_list|,
-specifier|const
+name|ArrayRef
+operator|<
 name|unsigned
-operator|*
+operator|>
 name|IdxList
-argument_list|,
-name|unsigned
-name|NumIdx
 argument_list|)
 decl|const
 block|{
@@ -1625,8 +1625,6 @@ argument_list|,
 name|Val
 argument_list|,
 name|IdxList
-argument_list|,
-name|NumIdx
 argument_list|)
 argument_list|)
 return|;

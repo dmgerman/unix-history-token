@@ -159,6 +159,8 @@ argument|const Target&T
 argument_list|,
 argument|const std::string&TT
 argument_list|,
+argument|const std::string&CPU
+argument_list|,
 argument|const std::string&FS
 argument_list|,
 argument|bool is64Bit
@@ -348,6 +350,13 @@ name|std
 operator|::
 name|string
 operator|&
+name|CPU
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
 name|FS
 argument_list|)
 block|; }
@@ -375,6 +384,13 @@ operator|::
 name|string
 operator|&
 name|TT
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|CPU
 argument_list|,
 specifier|const
 name|std

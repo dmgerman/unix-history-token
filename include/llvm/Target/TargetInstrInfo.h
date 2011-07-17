@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetInstrDesc.h"
+file|"llvm/MC/MCInstrInfo.h"
 end_include
 
 begin_include
@@ -114,6 +114,9 @@ decl_stmt|;
 name|class
 name|TargetRegisterInfo
 decl_stmt|;
+name|class
+name|BranchProbability
+decl_stmt|;
 name|template
 operator|<
 name|class
@@ -128,105 +131,81 @@ comment|/// TargetInstrInfo - Interface to description of machine instruction se
 comment|///
 name|class
 name|TargetInstrInfo
+range|:
+name|public
+name|MCInstrInfo
 block|{
-specifier|const
-name|TargetInstrDesc
-modifier|*
-name|Descriptors
-decl_stmt|;
-comment|// Raw array to allow static init'n
-name|unsigned
-name|NumOpcodes
-decl_stmt|;
-comment|// Number of entries in the desc array
 name|TargetInstrInfo
 argument_list|(
 specifier|const
 name|TargetInstrInfo
 operator|&
 argument_list|)
-expr_stmt|;
+block|;
 comment|// DO NOT IMPLEMENT
 name|void
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|TargetInstrInfo
 operator|&
 operator|)
-decl_stmt|;
+block|;
 comment|// DO NOT IMPLEMENT
 name|public
-label|:
+operator|:
 name|TargetInstrInfo
 argument_list|(
-argument|const TargetInstrDesc *desc
+argument|int CFSetupOpcode = -
+literal|1
 argument_list|,
-argument|unsigned NumOpcodes
+argument|int CFDestroyOpcode = -
+literal|1
 argument_list|)
-empty_stmt|;
+operator|:
+name|CallFrameSetupOpcode
+argument_list|(
+name|CFSetupOpcode
+argument_list|)
+block|,
+name|CallFrameDestroyOpcode
+argument_list|(
+argument|CFDestroyOpcode
+argument_list|)
+block|{   }
 name|virtual
 operator|~
 name|TargetInstrInfo
 argument_list|()
-expr_stmt|;
-name|unsigned
-name|getNumOpcodes
-argument_list|()
+block|;
+comment|/// getRegClass - Givem a machine instruction descriptor, returns the register
+comment|/// class constraint for OpNum, or NULL.
 specifier|const
-block|{
-return|return
-name|NumOpcodes
-return|;
-block|}
-comment|/// get - Return the machine instruction descriptor that corresponds to the
-comment|/// specified instruction opcode.
-comment|///
+name|TargetRegisterClass
+operator|*
+name|getRegClass
+argument_list|(
+argument|const MCInstrDesc&TID
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|)
 specifier|const
-name|TargetInstrDesc
-modifier|&
-name|get
-argument_list|(
-name|unsigned
-name|Opcode
-argument_list|)
-decl|const
-block|{
-name|assert
-argument_list|(
-name|Opcode
-operator|<
-name|NumOpcodes
-operator|&&
-literal|"Invalid opcode!"
-argument_list|)
-expr_stmt|;
-return|return
-name|Descriptors
-index|[
-name|Opcode
-index|]
-return|;
-block|}
+block|;
 comment|/// isTriviallyReMaterializable - Return true if the instruction is trivially
 comment|/// rematerializable, meaning it has no side effects and requires no operands
 comment|/// that aren't always available.
 name|bool
 name|isTriviallyReMaterializable
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
+argument|const MachineInstr *MI
 argument_list|,
-name|AliasAnalysis
-operator|*
-name|AA
-operator|=
+argument|AliasAnalysis *AA =
 literal|0
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|MI
@@ -266,7 +245,7 @@ operator|)
 return|;
 block|}
 name|protected
-label|:
+operator|:
 comment|/// isReallyTriviallyReMaterializable - For instructions with opcodes for
 comment|/// which the M_REMATERIALIZABLE flag is set, this hook lets the target
 comment|/// specify whether the instruction is actually trivially rematerializable,
@@ -277,23 +256,18 @@ name|virtual
 name|bool
 name|isReallyTriviallyReMaterializable
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
+argument|const MachineInstr *MI
 argument_list|,
-name|AliasAnalysis
-operator|*
-name|AA
+argument|AliasAnalysis *AA
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|false
 return|;
 block|}
 name|private
-label|:
+operator|:
 comment|/// isReallyTriviallyReMaterializableGeneric - For instructions with opcodes
 comment|/// for which the M_REMATERIALIZABLE flag is set and the target hook
 comment|/// isReallyTriviallyReMaterializable returns false, this function does
@@ -302,19 +276,38 @@ comment|/// trivially rematerializable.
 name|bool
 name|isReallyTriviallyReMaterializableGeneric
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
+argument|const MachineInstr *MI
 argument_list|,
-name|AliasAnalysis
-operator|*
-name|AA
+argument|AliasAnalysis *AA
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|public
-label|:
+operator|:
+comment|/// getCallFrameSetup/DestroyOpcode - These methods return the opcode of the
+comment|/// frame setup/destroy instructions if they exist (-1 otherwise).  Some
+comment|/// targets use pseudo instructions in order to abstract away the difference
+comment|/// between operating with a frame pointer and operating without, through the
+comment|/// use of these two instructions.
+comment|///
+name|int
+name|getCallFrameSetupOpcode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CallFrameSetupOpcode
+return|;
+block|}
+name|int
+name|getCallFrameDestroyOpcode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CallFrameDestroyOpcode
+return|;
+block|}
 comment|/// isCoalescableExtInstr - Return true if the instruction is a "coalescable"
 comment|/// extension instruction. That is, it's like a copy where it's legal for the
 comment|/// source to overlap the destination. e.g. X86::MOVSX64rr32. If this returns
@@ -325,24 +318,15 @@ name|virtual
 name|bool
 name|isCoalescableExtInstr
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|&
-name|MI
+argument|const MachineInstr&MI
 argument_list|,
-name|unsigned
-operator|&
-name|SrcReg
+argument|unsigned&SrcReg
 argument_list|,
-name|unsigned
-operator|&
-name|DstReg
+argument|unsigned&DstReg
 argument_list|,
-name|unsigned
-operator|&
-name|SubIdx
+argument|unsigned&SubIdx
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|false
@@ -357,16 +341,11 @@ name|virtual
 name|unsigned
 name|isLoadFromStackSlot
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
+argument|const MachineInstr *MI
 argument_list|,
-name|int
-operator|&
-name|FrameIndex
+argument|int&FrameIndex
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 literal|0
@@ -379,16 +358,11 @@ name|virtual
 name|unsigned
 name|isLoadFromStackSlotPostFE
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
+argument|const MachineInstr *MI
 argument_list|,
-name|int
-operator|&
-name|FrameIndex
+argument|int&FrameIndex
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 literal|0
@@ -405,22 +379,13 @@ name|virtual
 name|bool
 name|hasLoadFromStackSlot
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
+argument|const MachineInstr *MI
 argument_list|,
-specifier|const
-name|MachineMemOperand
-operator|*
-operator|&
-name|MMO
+argument|const MachineMemOperand *&MMO
 argument_list|,
-name|int
-operator|&
-name|FrameIndex
+argument|int&FrameIndex
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 literal|0
@@ -435,16 +400,11 @@ name|virtual
 name|unsigned
 name|isStoreToStackSlot
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
+argument|const MachineInstr *MI
 argument_list|,
-name|int
-operator|&
-name|FrameIndex
+argument|int&FrameIndex
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 literal|0
@@ -457,16 +417,11 @@ name|virtual
 name|unsigned
 name|isStoreToStackSlotPostFE
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
+argument|const MachineInstr *MI
 argument_list|,
-name|int
-operator|&
-name|FrameIndex
+argument|int&FrameIndex
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 literal|0
@@ -482,22 +437,13 @@ name|virtual
 name|bool
 name|hasStoreToStackSlot
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
+argument|const MachineInstr *MI
 argument_list|,
-specifier|const
-name|MachineMemOperand
-operator|*
-operator|&
-name|MMO
+argument|const MachineMemOperand *&MMO
 argument_list|,
-name|int
-operator|&
-name|FrameIndex
+argument|int&FrameIndex
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 literal|0
@@ -512,55 +458,35 @@ name|virtual
 name|void
 name|reMaterialize
 argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
+argument|MachineBasicBlock&MBB
 argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|MI
+argument|MachineBasicBlock::iterator MI
 argument_list|,
-name|unsigned
-name|DestReg
+argument|unsigned DestReg
 argument_list|,
-name|unsigned
-name|SubIdx
+argument|unsigned SubIdx
 argument_list|,
-specifier|const
-name|MachineInstr
-operator|*
-name|Orig
+argument|const MachineInstr *Orig
 argument_list|,
-specifier|const
-name|TargetRegisterInfo
-operator|&
-name|TRI
+argument|const TargetRegisterInfo&TRI
 argument_list|)
-decl|const
-init|=
+specifier|const
+operator|=
 literal|0
-decl_stmt|;
+block|;
 comment|/// scheduleTwoAddrSource - Schedule the copy / re-mat of the source of the
 comment|/// two-addrss instruction inserted by two-address pass.
 name|virtual
 name|void
 name|scheduleTwoAddrSource
 argument_list|(
-name|MachineInstr
-operator|*
-name|SrcMI
+argument|MachineInstr *SrcMI
 argument_list|,
-name|MachineInstr
-operator|*
-name|UseMI
+argument|MachineInstr *UseMI
 argument_list|,
-specifier|const
-name|TargetRegisterInfo
-operator|&
-name|TRI
+argument|const TargetRegisterInfo&TRI
 argument_list|)
-decl|const
+specifier|const
 block|{
 comment|// Do nothing.
 block|}
@@ -571,21 +497,17 @@ comment|///
 comment|/// The instruction must be duplicable as indicated by isNotDuplicable().
 name|virtual
 name|MachineInstr
-modifier|*
+operator|*
 name|duplicate
 argument_list|(
-name|MachineInstr
-operator|*
-name|Orig
+argument|MachineInstr *Orig
 argument_list|,
-name|MachineFunction
-operator|&
-name|MF
+argument|MachineFunction&MF
 argument_list|)
-decl|const
-init|=
+specifier|const
+operator|=
 literal|0
-decl_stmt|;
+block|;
 comment|/// convertToThreeAddress - This method must be implemented by targets that
 comment|/// set the M_CONVERTIBLE_TO_3_ADDR flag.  When this flag is set, the target
 comment|/// may be able to convert a two-address instruction into one or more true
@@ -598,26 +520,16 @@ comment|/// performed, otherwise it returns the last new instruction.
 comment|///
 name|virtual
 name|MachineInstr
-modifier|*
+operator|*
 name|convertToThreeAddress
 argument_list|(
-name|MachineFunction
-operator|::
-name|iterator
-operator|&
-name|MFI
+argument|MachineFunction::iterator&MFI
 argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-operator|&
-name|MBBI
+argument|MachineBasicBlock::iterator&MBBI
 argument_list|,
-name|LiveVariables
-operator|*
-name|LV
+argument|LiveVariables *LV
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 literal|0
@@ -633,22 +545,17 @@ comment|/// method for a non-commutable instruction, but there may be some cases
 comment|/// where this method fails and returns null.
 name|virtual
 name|MachineInstr
-modifier|*
+operator|*
 name|commuteInstruction
 argument_list|(
-name|MachineInstr
-operator|*
-name|MI
+argument|MachineInstr *MI
 argument_list|,
-name|bool
-name|NewMI
-operator|=
-name|false
+argument|bool NewMI = false
 argument_list|)
-decl|const
-init|=
+specifier|const
+operator|=
 literal|0
-decl_stmt|;
+block|;
 comment|/// findCommutedOpIndices - If specified MI is commutable, return the two
 comment|/// operand indices that would swap value. Return false if the instruction
 comment|/// is not in a form which this routine understands.
@@ -656,22 +563,16 @@ name|virtual
 name|bool
 name|findCommutedOpIndices
 argument_list|(
-name|MachineInstr
-operator|*
-name|MI
+argument|MachineInstr *MI
 argument_list|,
-name|unsigned
-operator|&
-name|SrcOpIdx1
+argument|unsigned&SrcOpIdx1
 argument_list|,
-name|unsigned
-operator|&
-name|SrcOpIdx2
+argument|unsigned&SrcOpIdx2
 argument_list|)
-decl|const
-init|=
+specifier|const
+operator|=
 literal|0
-decl_stmt|;
+block|;
 comment|/// produceSameValue - Return true if two machine instructions would produce
 comment|/// identical values. By default, this is only true when the two instructions
 comment|/// are deemed identical except for defs. If this function is called when the
@@ -681,27 +582,17 @@ name|virtual
 name|bool
 name|produceSameValue
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI0
+argument|const MachineInstr *MI0
 argument_list|,
-specifier|const
-name|MachineInstr
-operator|*
-name|MI1
+argument|const MachineInstr *MI1
 argument_list|,
-specifier|const
-name|MachineRegisterInfo
-operator|*
-name|MRI
-operator|=
+argument|const MachineRegisterInfo *MRI =
 literal|0
 argument_list|)
-decl|const
-init|=
+specifier|const
+operator|=
 literal|0
-decl_stmt|;
+block|;
 comment|/// AnalyzeBranch - Analyze the branching code at the end of MBB, returning
 comment|/// true if it cannot be understood (e.g. it's a switch dispatch or isn't
 comment|/// implemented for a target).  Upon success, this returns false and returns
@@ -731,33 +622,17 @@ name|virtual
 name|bool
 name|AnalyzeBranch
 argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
+argument|MachineBasicBlock&MBB
 argument_list|,
-name|MachineBasicBlock
-operator|*
-operator|&
-name|TBB
+argument|MachineBasicBlock *&TBB
 argument_list|,
-name|MachineBasicBlock
-operator|*
-operator|&
-name|FBB
+argument|MachineBasicBlock *&FBB
 argument_list|,
-name|SmallVectorImpl
-operator|<
-name|MachineOperand
-operator|>
-operator|&
-name|Cond
+argument|SmallVectorImpl<MachineOperand>&Cond
 argument_list|,
-name|bool
-name|AllowModify
-operator|=
-name|false
+argument|bool AllowModify = false
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|true
@@ -770,11 +645,9 @@ name|virtual
 name|unsigned
 name|RemoveBranch
 argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
+argument|MachineBasicBlock&MBB
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -782,7 +655,7 @@ literal|0
 operator|&&
 literal|"Target didn't implement TargetInstrInfo::RemoveBranch!"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 literal|0
 return|;
@@ -801,30 +674,17 @@ name|virtual
 name|unsigned
 name|InsertBranch
 argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
+argument|MachineBasicBlock&MBB
 argument_list|,
-name|MachineBasicBlock
-operator|*
-name|TBB
+argument|MachineBasicBlock *TBB
 argument_list|,
-name|MachineBasicBlock
-operator|*
-name|FBB
+argument|MachineBasicBlock *FBB
 argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|MachineOperand
-operator|>
-operator|&
-name|Cond
+argument|const SmallVectorImpl<MachineOperand>&Cond
 argument_list|,
-name|DebugLoc
-name|DL
+argument|DebugLoc DL
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -832,7 +692,7 @@ literal|0
 operator|&&
 literal|"Target didn't implement TargetInstrInfo::InsertBranch!"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 literal|0
 return|;
@@ -844,19 +704,14 @@ name|virtual
 name|void
 name|ReplaceTailWithBranchTo
 argument_list|(
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|Tail
+argument|MachineBasicBlock::iterator Tail
 argument_list|,
-name|MachineBasicBlock
-operator|*
-name|NewDest
+argument|MachineBasicBlock *NewDest
 argument_list|)
-decl|const
-init|=
+specifier|const
+operator|=
 literal|0
-decl_stmt|;
+block|;
 comment|/// isLegalToSplitMBBAt - Return true if it's legal to split the given basic
 comment|/// block at the specified instruction (i.e. instruction would be the start
 comment|/// of a new basic block).
@@ -864,16 +719,11 @@ name|virtual
 name|bool
 name|isLegalToSplitMBBAt
 argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
+argument|MachineBasicBlock&MBB
 argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|MBBI
+argument|MachineBasicBlock::iterator MBBI
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|true
@@ -888,23 +738,15 @@ name|virtual
 name|bool
 name|isProfitableToIfCvt
 argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
+argument|MachineBasicBlock&MBB
 argument_list|,
-name|unsigned
-name|NumCyles
+argument|unsigned NumCyles
 argument_list|,
-name|unsigned
-name|ExtraPredCycles
+argument|unsigned ExtraPredCycles
 argument_list|,
-name|float
-name|Probability
-argument_list|,
-name|float
-name|Confidence
+argument|const BranchProbability&Probability
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|false
@@ -920,33 +762,21 @@ name|virtual
 name|bool
 name|isProfitableToIfCvt
 argument_list|(
-name|MachineBasicBlock
-operator|&
-name|TMBB
+argument|MachineBasicBlock&TMBB
 argument_list|,
-name|unsigned
-name|NumTCycles
+argument|unsigned NumTCycles
 argument_list|,
-name|unsigned
-name|ExtraTCycles
+argument|unsigned ExtraTCycles
 argument_list|,
-name|MachineBasicBlock
-operator|&
-name|FMBB
+argument|MachineBasicBlock&FMBB
 argument_list|,
-name|unsigned
-name|NumFCycles
+argument|unsigned NumFCycles
 argument_list|,
-name|unsigned
-name|ExtraFCycles
+argument|unsigned ExtraFCycles
 argument_list|,
-name|float
-name|Probability
-argument_list|,
-name|float
-name|Confidence
+argument|const BranchProbability&Probability
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|false
@@ -962,20 +792,13 @@ name|virtual
 name|bool
 name|isProfitableToDupForIfCvt
 argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
+argument|MachineBasicBlock&MBB
 argument_list|,
-name|unsigned
-name|NumCyles
+argument|unsigned NumCyles
 argument_list|,
-name|float
-name|Probability
-argument_list|,
-name|float
-name|Confidence
+argument|const BranchProbability&Probability
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|false
@@ -986,28 +809,19 @@ name|virtual
 name|void
 name|copyPhysReg
 argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
+argument|MachineBasicBlock&MBB
 argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|MI
+argument|MachineBasicBlock::iterator MI
 argument_list|,
-name|DebugLoc
-name|DL
+argument|DebugLoc DL
 argument_list|,
-name|unsigned
-name|DestReg
+argument|unsigned DestReg
 argument_list|,
-name|unsigned
-name|SrcReg
+argument|unsigned SrcReg
 argument_list|,
-name|bool
-name|KillSrc
+argument|bool KillSrc
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -1015,8 +829,7 @@ literal|0
 operator|&&
 literal|"Target didn't implement TargetInstrInfo::copyPhysReg!"
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// storeRegToStackSlot - Store the specified register of the given register
 comment|/// class to the specified stack frame index. The store instruction is to be
 comment|/// added to the given machine basic block before the specified machine
@@ -1026,35 +839,21 @@ name|virtual
 name|void
 name|storeRegToStackSlot
 argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
+argument|MachineBasicBlock&MBB
 argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|MI
+argument|MachineBasicBlock::iterator MI
 argument_list|,
-name|unsigned
-name|SrcReg
+argument|unsigned SrcReg
 argument_list|,
-name|bool
-name|isKill
+argument|bool isKill
 argument_list|,
-name|int
-name|FrameIndex
+argument|int FrameIndex
 argument_list|,
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|RC
+argument|const TargetRegisterClass *RC
 argument_list|,
-specifier|const
-name|TargetRegisterInfo
-operator|*
-name|TRI
+argument|const TargetRegisterInfo *TRI
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -1062,8 +861,7 @@ literal|0
 operator|&&
 literal|"Target didn't implement TargetInstrInfo::storeRegToStackSlot!"
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// loadRegFromStackSlot - Load the specified register of the given register
 comment|/// class from the specified stack frame index. The load instruction is to be
 comment|/// added to the given machine basic block before the specified machine
@@ -1072,32 +870,19 @@ name|virtual
 name|void
 name|loadRegFromStackSlot
 argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
+argument|MachineBasicBlock&MBB
 argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|MI
+argument|MachineBasicBlock::iterator MI
 argument_list|,
-name|unsigned
-name|DestReg
+argument|unsigned DestReg
 argument_list|,
-name|int
-name|FrameIndex
+argument|int FrameIndex
 argument_list|,
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|RC
+argument|const TargetRegisterClass *RC
 argument_list|,
-specifier|const
-name|TargetRegisterInfo
-operator|*
-name|TRI
+argument|const TargetRegisterInfo *TRI
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -1105,8 +890,7 @@ literal|0
 operator|&&
 literal|"Target didn't implement TargetInstrInfo::loadRegFromStackSlot!"
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// emitFrameIndexDebugValue - Emit a target-dependent form of
 comment|/// DBG_VALUE encoding the address of a frame index.  Addresses would
 comment|/// normally be lowered the same way as other addresses on the target,
@@ -1117,28 +901,20 @@ comment|/// target-specific AsmPrinter code as well; you will probably get inval
 comment|/// assembly output if you don't.
 name|virtual
 name|MachineInstr
-modifier|*
+operator|*
 name|emitFrameIndexDebugValue
 argument_list|(
-name|MachineFunction
-operator|&
-name|MF
+argument|MachineFunction&MF
 argument_list|,
-name|int
-name|FrameIx
+argument|int FrameIx
 argument_list|,
-name|uint64_t
-name|Offset
+argument|uint64_t Offset
 argument_list|,
-specifier|const
-name|MDNode
-operator|*
-name|MDPtr
+argument|const MDNode *MDPtr
 argument_list|,
-name|DebugLoc
-name|dl
+argument|DebugLoc dl
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 literal|0
@@ -1151,83 +927,51 @@ comment|/// operand folded, otherwise NULL is returned.
 comment|/// The new instruction is inserted before MI, and the client is responsible
 comment|/// for removing the old instruction.
 name|MachineInstr
-modifier|*
+operator|*
 name|foldMemoryOperand
 argument_list|(
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|MI
+argument|MachineBasicBlock::iterator MI
 argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|unsigned
-operator|>
-operator|&
-name|Ops
+argument|const SmallVectorImpl<unsigned>&Ops
 argument_list|,
-name|int
-name|FrameIndex
+argument|int FrameIndex
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// foldMemoryOperand - Same as the previous version except it allows folding
 comment|/// of any load and store from / to any address, not just from a specific
 comment|/// stack slot.
 name|MachineInstr
-modifier|*
+operator|*
 name|foldMemoryOperand
 argument_list|(
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|MI
+argument|MachineBasicBlock::iterator MI
 argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|unsigned
-operator|>
-operator|&
-name|Ops
+argument|const SmallVectorImpl<unsigned>&Ops
 argument_list|,
-name|MachineInstr
-operator|*
-name|LoadMI
+argument|MachineInstr* LoadMI
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|protected
-label|:
+operator|:
 comment|/// foldMemoryOperandImpl - Target-dependent implementation for
 comment|/// foldMemoryOperand. Target-independent code in foldMemoryOperand will
 comment|/// take care of adding a MachineMemOperand to the newly created instruction.
 name|virtual
 name|MachineInstr
-modifier|*
+operator|*
 name|foldMemoryOperandImpl
 argument_list|(
-name|MachineFunction
-operator|&
-name|MF
+argument|MachineFunction&MF
 argument_list|,
-name|MachineInstr
-operator|*
-name|MI
+argument|MachineInstr* MI
 argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|unsigned
-operator|>
-operator|&
-name|Ops
+argument|const SmallVectorImpl<unsigned>&Ops
 argument_list|,
-name|int
-name|FrameIndex
+argument|int FrameIndex
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 literal|0
@@ -1238,60 +982,39 @@ comment|/// foldMemoryOperand. Target-independent code in foldMemoryOperand will
 comment|/// take care of adding a MachineMemOperand to the newly created instruction.
 name|virtual
 name|MachineInstr
-modifier|*
+operator|*
 name|foldMemoryOperandImpl
 argument_list|(
-name|MachineFunction
-operator|&
-name|MF
+argument|MachineFunction&MF
 argument_list|,
-name|MachineInstr
-operator|*
-name|MI
+argument|MachineInstr* MI
 argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|unsigned
-operator|>
-operator|&
-name|Ops
+argument|const SmallVectorImpl<unsigned>&Ops
 argument_list|,
-name|MachineInstr
-operator|*
-name|LoadMI
+argument|MachineInstr* LoadMI
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 literal|0
 return|;
 block|}
 name|public
-label|:
+operator|:
 comment|/// canFoldMemoryOperand - Returns true for the specified load / store if
 comment|/// folding is possible.
 name|virtual
 name|bool
 name|canFoldMemoryOperand
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
+argument|const MachineInstr *MI
 argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|unsigned
-operator|>
-operator|&
-name|Ops
+argument|const SmallVectorImpl<unsigned>&Ops
 argument_list|)
-decl|const
-init|=
+specifier|const
+operator|=
 literal|0
-decl_stmt|;
+block|;
 comment|/// unfoldMemoryOperand - Separate a single instruction which folded a load or
 comment|/// a store or a load and a store into two or more instruction. If this is
 comment|/// possible, returns true as well as the new instructions by reference.
@@ -1299,32 +1022,19 @@ name|virtual
 name|bool
 name|unfoldMemoryOperand
 argument_list|(
-name|MachineFunction
-operator|&
-name|MF
+argument|MachineFunction&MF
 argument_list|,
-name|MachineInstr
-operator|*
-name|MI
+argument|MachineInstr *MI
 argument_list|,
-name|unsigned
-name|Reg
+argument|unsigned Reg
 argument_list|,
-name|bool
-name|UnfoldLoad
+argument|bool UnfoldLoad
 argument_list|,
-name|bool
-name|UnfoldStore
+argument|bool UnfoldStore
 argument_list|,
-name|SmallVectorImpl
-operator|<
-name|MachineInstr
-operator|*
-operator|>
-operator|&
-name|NewMIs
+argument|SmallVectorImpl<MachineInstr*>&NewMIs
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|false
@@ -1334,23 +1044,13 @@ name|virtual
 name|bool
 name|unfoldMemoryOperand
 argument_list|(
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|,
-name|SDNode
-operator|*
-name|N
+argument|SDNode *N
 argument_list|,
-name|SmallVectorImpl
-operator|<
-name|SDNode
-operator|*
-operator|>
-operator|&
-name|NewNodes
+argument|SmallVectorImpl<SDNode*>&NewNodes
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|false
@@ -1366,22 +1066,16 @@ name|virtual
 name|unsigned
 name|getOpcodeAfterMemoryUnfold
 argument_list|(
-name|unsigned
-name|Opc
+argument|unsigned Opc
 argument_list|,
-name|bool
-name|UnfoldLoad
+argument|bool UnfoldLoad
 argument_list|,
-name|bool
-name|UnfoldStore
+argument|bool UnfoldStore
 argument_list|,
-name|unsigned
-operator|*
-name|LoadRegIndex
-operator|=
+argument|unsigned *LoadRegIndex =
 literal|0
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 literal|0
@@ -1396,23 +1090,15 @@ name|virtual
 name|bool
 name|areLoadsFromSameBasePtr
 argument_list|(
-name|SDNode
-operator|*
-name|Load1
+argument|SDNode *Load1
 argument_list|,
-name|SDNode
-operator|*
-name|Load2
+argument|SDNode *Load2
 argument_list|,
-name|int64_t
-operator|&
-name|Offset1
+argument|int64_t&Offset1
 argument_list|,
-name|int64_t
-operator|&
-name|Offset2
+argument|int64_t&Offset2
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|false
@@ -1430,24 +1116,17 @@ name|virtual
 name|bool
 name|shouldScheduleLoadsNear
 argument_list|(
-name|SDNode
-operator|*
-name|Load1
+argument|SDNode *Load1
 argument_list|,
-name|SDNode
-operator|*
-name|Load2
+argument|SDNode *Load2
 argument_list|,
-name|int64_t
-name|Offset1
+argument|int64_t Offset1
 argument_list|,
-name|int64_t
-name|Offset2
+argument|int64_t Offset2
 argument_list|,
-name|unsigned
-name|NumLoads
+argument|unsigned NumLoads
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|false
@@ -1460,14 +1139,9 @@ name|virtual
 name|bool
 name|ReverseBranchCondition
 argument_list|(
-name|SmallVectorImpl
-operator|<
-name|MachineOperand
-operator|>
-operator|&
-name|Cond
+argument|SmallVectorImpl<MachineOperand>&Cond
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|true
@@ -1479,27 +1153,20 @@ name|virtual
 name|void
 name|insertNoop
 argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
+argument|MachineBasicBlock&MBB
 argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|MI
+argument|MachineBasicBlock::iterator MI
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// getNoopForMachoTarget - Return the noop instruction to use for a noop.
 name|virtual
 name|void
 name|getNoopForMachoTarget
 argument_list|(
-name|MCInst
-operator|&
-name|NopInst
+argument|MCInst&NopInst
 argument_list|)
-decl|const
+specifier|const
 block|{
 comment|// Default to just using 'nop' string.
 block|}
@@ -1509,12 +1176,9 @@ name|virtual
 name|bool
 name|isPredicated
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
+argument|const MachineInstr *MI
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|false
@@ -1526,58 +1190,35 @@ name|virtual
 name|bool
 name|isUnpredicatedTerminator
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
+argument|const MachineInstr *MI
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// PredicateInstruction - Convert the instruction into a predicated
 comment|/// instruction. It returns true if the operation was successful.
 name|virtual
 name|bool
 name|PredicateInstruction
 argument_list|(
-name|MachineInstr
-operator|*
-name|MI
+argument|MachineInstr *MI
 argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|MachineOperand
-operator|>
-operator|&
-name|Pred
+argument|const SmallVectorImpl<MachineOperand>&Pred
 argument_list|)
-decl|const
-init|=
+specifier|const
+operator|=
 literal|0
-decl_stmt|;
+block|;
 comment|/// SubsumesPredicate - Returns true if the first specified predicate
 comment|/// subsumes the second, e.g. GE subsumes GT.
 name|virtual
 name|bool
 name|SubsumesPredicate
 argument_list|(
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|MachineOperand
-operator|>
-operator|&
-name|Pred1
+argument|const SmallVectorImpl<MachineOperand>&Pred1
 argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|MachineOperand
-operator|>
-operator|&
-name|Pred2
+argument|const SmallVectorImpl<MachineOperand>&Pred2
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|false
@@ -1590,20 +1231,11 @@ name|virtual
 name|bool
 name|DefinesPredicate
 argument_list|(
-name|MachineInstr
-operator|*
-name|MI
+argument|MachineInstr *MI
 argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|MachineOperand
-operator|>
-operator|&
-name|Pred
+argument|std::vector<MachineOperand>&Pred
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|false
@@ -1616,11 +1248,9 @@ name|virtual
 name|bool
 name|isPredicable
 argument_list|(
-name|MachineInstr
-operator|*
-name|MI
+argument|MachineInstr *MI
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|MI
@@ -1638,12 +1268,9 @@ name|virtual
 name|bool
 name|isSafeToMoveRegClassDefs
 argument_list|(
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|RC
+argument|const TargetRegisterClass *RC
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|true
@@ -1656,86 +1283,60 @@ name|virtual
 name|bool
 name|isSchedulingBoundary
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
+argument|const MachineInstr *MI
 argument_list|,
-specifier|const
-name|MachineBasicBlock
-operator|*
-name|MBB
+argument|const MachineBasicBlock *MBB
 argument_list|,
-specifier|const
-name|MachineFunction
-operator|&
-name|MF
+argument|const MachineFunction&MF
 argument_list|)
-decl|const
-init|=
+specifier|const
+operator|=
 literal|0
-decl_stmt|;
+block|;
 comment|/// Measure the specified inline asm to determine an approximation of its
 comment|/// length.
 name|virtual
 name|unsigned
 name|getInlineAsmLength
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|Str
+argument|const char *Str
 argument_list|,
-specifier|const
-name|MCAsmInfo
-operator|&
-name|MAI
+argument|const MCAsmInfo&MAI
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// CreateTargetHazardRecognizer - Allocate and return a hazard recognizer to
 comment|/// use for this target when scheduling the machine instructions before
 comment|/// register allocation.
 name|virtual
 name|ScheduleHazardRecognizer
-modifier|*
+operator|*
 name|CreateTargetHazardRecognizer
 argument_list|(
-specifier|const
-name|TargetMachine
-operator|*
-name|TM
+argument|const TargetMachine *TM
 argument_list|,
-specifier|const
-name|ScheduleDAG
-operator|*
-name|DAG
+argument|const ScheduleDAG *DAG
 argument_list|)
-decl|const
-init|=
+specifier|const
+operator|=
 literal|0
-decl_stmt|;
+block|;
 comment|/// CreateTargetPostRAHazardRecognizer - Allocate and return a hazard
 comment|/// recognizer to use for this target when scheduling the machine instructions
 comment|/// after register allocation.
 name|virtual
 name|ScheduleHazardRecognizer
-modifier|*
+operator|*
 name|CreateTargetPostRAHazardRecognizer
 argument_list|(
-specifier|const
-name|InstrItineraryData
-operator|*
+argument|const InstrItineraryData*
 argument_list|,
-specifier|const
-name|ScheduleDAG
-operator|*
-name|DAG
+argument|const ScheduleDAG *DAG
 argument_list|)
-decl|const
-init|=
+specifier|const
+operator|=
 literal|0
-decl_stmt|;
+block|;
 comment|/// AnalyzeCompare - For a comparison instruction, return the source register
 comment|/// in SrcReg and the value it compares against in CmpValue. Return true if
 comment|/// the comparison instruction can be analyzed.
@@ -1743,24 +1344,15 @@ name|virtual
 name|bool
 name|AnalyzeCompare
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
+argument|const MachineInstr *MI
 argument_list|,
-name|unsigned
-operator|&
-name|SrcReg
+argument|unsigned&SrcReg
 argument_list|,
-name|int
-operator|&
-name|Mask
+argument|int&Mask
 argument_list|,
-name|int
-operator|&
-name|Value
+argument|int&Value
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|false
@@ -1773,25 +1365,17 @@ name|virtual
 name|bool
 name|OptimizeCompareInstr
 argument_list|(
-name|MachineInstr
-operator|*
-name|CmpInstr
+argument|MachineInstr *CmpInstr
 argument_list|,
-name|unsigned
-name|SrcReg
+argument|unsigned SrcReg
 argument_list|,
-name|int
-name|Mask
+argument|int Mask
 argument_list|,
-name|int
-name|Value
+argument|int Value
 argument_list|,
-specifier|const
-name|MachineRegisterInfo
-operator|*
-name|MRI
+argument|const MachineRegisterInfo *MRI
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|false
@@ -1803,22 +1387,15 @@ name|virtual
 name|bool
 name|FoldImmediate
 argument_list|(
-name|MachineInstr
-operator|*
-name|UseMI
+argument|MachineInstr *UseMI
 argument_list|,
-name|MachineInstr
-operator|*
-name|DefMI
+argument|MachineInstr *DefMI
 argument_list|,
-name|unsigned
-name|Reg
+argument|unsigned Reg
 argument_list|,
-name|MachineRegisterInfo
-operator|*
-name|MRI
+argument|MachineRegisterInfo *MRI
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|false
@@ -1830,18 +1407,12 @@ name|virtual
 name|unsigned
 name|getNumMicroOps
 argument_list|(
-specifier|const
-name|InstrItineraryData
-operator|*
-name|ItinData
+argument|const InstrItineraryData *ItinData
 argument_list|,
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
+argument|const MachineInstr *MI
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// isZeroCost - Return true for pseudo instructions that don't consume any
 comment|/// machine resources in their current form. These are common cases that the
 comment|/// scheduler should consider free, rather than conservatively handling them
@@ -1849,10 +1420,9 @@ comment|/// as instructions with no itinerary.
 name|bool
 name|isZeroCost
 argument_list|(
-name|unsigned
-name|Opcode
+argument|unsigned Opcode
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|Opcode
@@ -1871,54 +1441,34 @@ name|virtual
 name|int
 name|getOperandLatency
 argument_list|(
-specifier|const
-name|InstrItineraryData
-operator|*
-name|ItinData
+argument|const InstrItineraryData *ItinData
 argument_list|,
-specifier|const
-name|MachineInstr
-operator|*
-name|DefMI
+argument|const MachineInstr *DefMI
 argument_list|,
-name|unsigned
-name|DefIdx
+argument|unsigned DefIdx
 argument_list|,
-specifier|const
-name|MachineInstr
-operator|*
-name|UseMI
+argument|const MachineInstr *UseMI
 argument_list|,
-name|unsigned
-name|UseIdx
+argument|unsigned UseIdx
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|virtual
 name|int
 name|getOperandLatency
 argument_list|(
-specifier|const
-name|InstrItineraryData
-operator|*
-name|ItinData
+argument|const InstrItineraryData *ItinData
 argument_list|,
-name|SDNode
-operator|*
-name|DefNode
+argument|SDNode *DefNode
 argument_list|,
-name|unsigned
-name|DefIdx
+argument|unsigned DefIdx
 argument_list|,
-name|SDNode
-operator|*
-name|UseNode
+argument|SDNode *UseNode
 argument_list|,
-name|unsigned
-name|UseIdx
+argument|unsigned UseIdx
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// getInstrLatency - Compute the instruction latency of a given instruction.
 comment|/// If the instruction has higher cost when predicated, it's returned via
 comment|/// PredCost.
@@ -1926,49 +1476,34 @@ name|virtual
 name|int
 name|getInstrLatency
 argument_list|(
-specifier|const
-name|InstrItineraryData
-operator|*
-name|ItinData
+argument|const InstrItineraryData *ItinData
 argument_list|,
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
+argument|const MachineInstr *MI
 argument_list|,
-name|unsigned
-operator|*
-name|PredCost
-operator|=
+argument|unsigned *PredCost =
 literal|0
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|virtual
 name|int
 name|getInstrLatency
 argument_list|(
-specifier|const
-name|InstrItineraryData
-operator|*
-name|ItinData
+argument|const InstrItineraryData *ItinData
 argument_list|,
-name|SDNode
-operator|*
-name|Node
+argument|SDNode *Node
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// isHighLatencyDef - Return true if this opcode has high latency to its
 comment|/// result.
 name|virtual
 name|bool
 name|isHighLatencyDef
 argument_list|(
-name|int
-name|opc
+argument|int opc
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|false
@@ -1983,33 +1518,19 @@ name|virtual
 name|bool
 name|hasHighOperandLatency
 argument_list|(
-specifier|const
-name|InstrItineraryData
-operator|*
-name|ItinData
+argument|const InstrItineraryData *ItinData
 argument_list|,
-specifier|const
-name|MachineRegisterInfo
-operator|*
-name|MRI
+argument|const MachineRegisterInfo *MRI
 argument_list|,
-specifier|const
-name|MachineInstr
-operator|*
-name|DefMI
+argument|const MachineInstr *DefMI
 argument_list|,
-name|unsigned
-name|DefIdx
+argument|unsigned DefIdx
 argument_list|,
-specifier|const
-name|MachineInstr
-operator|*
-name|UseMI
+argument|const MachineInstr *UseMI
 argument_list|,
-name|unsigned
-name|UseIdx
+argument|unsigned UseIdx
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|false
@@ -2021,23 +1542,22 @@ name|virtual
 name|bool
 name|hasLowDefLatency
 argument_list|(
-specifier|const
-name|InstrItineraryData
-operator|*
-name|ItinData
+argument|const InstrItineraryData *ItinData
 argument_list|,
-specifier|const
-name|MachineInstr
-operator|*
-name|DefMI
+argument|const MachineInstr *DefMI
 argument_list|,
-name|unsigned
-name|DefIdx
+argument|unsigned DefIdx
 argument_list|)
-decl|const
+specifier|const
+block|;
+name|private
+operator|:
+name|int
+name|CallFrameSetupOpcode
+block|,
+name|CallFrameDestroyOpcode
+block|; }
 decl_stmt|;
-block|}
-empty_stmt|;
 comment|/// TargetInstrInfoImpl - This is the default implementation of
 comment|/// TargetInstrInfo, which just provides a couple of default implementations
 comment|/// for various methods.  This separated out because it is implemented in
@@ -2052,16 +1572,18 @@ name|protected
 operator|:
 name|TargetInstrInfoImpl
 argument_list|(
-argument|const TargetInstrDesc *desc
+argument|int CallFrameSetupOpcode = -
+literal|1
 argument_list|,
-argument|unsigned NumOpcodes
+argument|int CallFrameDestroyOpcode = -
+literal|1
 argument_list|)
 operator|:
 name|TargetInstrInfo
 argument_list|(
-argument|desc
+argument|CallFrameSetupOpcode
 argument_list|,
-argument|NumOpcodes
+argument|CallFrameDestroyOpcode
 argument_list|)
 block|{}
 name|public

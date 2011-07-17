@@ -88,10 +88,10 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
-comment|/// dump - Print a debug representation of the operand to the given stream.
+comment|/// print - Print a debug representation of the operand to the given stream.
 name|virtual
 name|void
-name|dump
+name|print
 argument_list|(
 name|raw_ostream
 operator|&
@@ -101,8 +101,44 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+comment|/// dump - Print to the debug stream.
+name|virtual
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
 block|}
 empty_stmt|;
+comment|//===----------------------------------------------------------------------===//
+comment|// Debugging Support
+specifier|inline
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|raw_ostream
+operator|&
+name|OS
+operator|,
+specifier|const
+name|MCParsedAsmOperand
+operator|&
+name|MO
+operator|)
+block|{
+name|MO
+operator|.
+name|print
+argument_list|(
+name|OS
+argument_list|)
+block|;
+return|return
+name|OS
+return|;
+block|}
 block|}
 end_decl_stmt
 

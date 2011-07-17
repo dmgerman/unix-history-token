@@ -313,9 +313,16 @@ init|=
 literal|35
 block|,
 comment|// This has no value
-name|LAST_VALUETYPE
+name|untyped
 init|=
 literal|36
+block|,
+comment|// This value takes a register, but has
+comment|// unspecified type.  The register class
+comment|// will be determined by the opcode.
+name|LAST_VALUETYPE
+init|=
+literal|37
 block|,
 comment|// This always remains at the end of the list.
 comment|// This is the current maximum for LAST_VALUETYPE.

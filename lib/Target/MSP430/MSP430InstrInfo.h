@@ -71,6 +71,18 @@ directive|include
 file|"MSP430RegisterInfo.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|GET_INSTRINFO_HEADER
+end_define
+
+begin_include
+include|#
+directive|include
+file|"MSP430GenInstrInfo.inc"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -132,7 +144,7 @@ name|class
 name|MSP430InstrInfo
 range|:
 name|public
-name|TargetInstrInfoImpl
+name|MSP430GenInstrInfo
 block|{
 specifier|const
 name|MSP430RegisterInfo

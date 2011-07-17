@@ -71,6 +71,18 @@ directive|include
 file|"SparcRegisterInfo.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|GET_INSTRINFO_HEADER
+end_define
+
+begin_include
+include|#
+directive|include
+file|"SparcGenInstrInfo.inc"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -121,7 +133,7 @@ name|class
 name|SparcInstrInfo
 range|:
 name|public
-name|TargetInstrInfoImpl
+name|SparcGenInstrInfo
 block|{
 specifier|const
 name|SparcRegisterInfo

@@ -161,15 +161,6 @@ name|createGlobalOptimizerPass
 parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
-comment|/// createDeadTypeEliminationPass - Return a new pass that eliminates symbol
-comment|/// table entries for types that are never used.
-comment|///
-name|ModulePass
-modifier|*
-name|createDeadTypeEliminationPass
-parameter_list|()
-function_decl|;
-comment|//===----------------------------------------------------------------------===//
 comment|/// createGlobalDCEPass - This transform is designed to eliminate unreachable
 comment|/// internal globals (functions or global variables)
 comment|///

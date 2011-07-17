@@ -158,6 +158,9 @@ decl_stmt|;
 name|class
 name|MCStreamer
 decl_stmt|;
+name|class
+name|MCSubtargetInfo
+decl_stmt|;
 name|template
 operator|<
 name|typename

@@ -484,16 +484,20 @@ literal|1
 operator|)
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|first
 argument_list|()
 specifier|const
 block|{
 return|return
+name|StringRef
+argument_list|(
 name|getKeyData
 argument_list|()
+argument_list|,
+name|getKeyLength
+argument_list|()
+argument_list|)
 return|;
 block|}
 comment|/// Create - Create a StringMapEntry for the specified key and default
@@ -1498,10 +1502,7 @@ operator|<
 name|typename
 name|InitTy
 operator|>
-name|StringMapEntry
-operator|<
-name|ValueTy
-operator|>
+name|MapEntryTy
 operator|&
 name|GetOrCreateValue
 argument_list|(
@@ -1618,16 +1619,14 @@ return|;
 block|}
 end_decl_stmt
 
-begin_expr_stmt
-name|StringMapEntry
-operator|<
-name|ValueTy
-operator|>
-operator|&
+begin_function
+name|MapEntryTy
+modifier|&
 name|GetOrCreateValue
-argument_list|(
-argument|StringRef Key
-argument_list|)
+parameter_list|(
+name|StringRef
+name|Key
+parameter_list|)
 block|{
 return|return
 name|GetOrCreateValue
@@ -1639,74 +1638,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|InitTy
-operator|>
-name|StringMapEntry
-operator|<
-name|ValueTy
-operator|>
-operator|&
-name|GetOrCreateValue
-argument_list|(
-argument|const char *KeyStart
-argument_list|,
-argument|const char *KeyEnd
-argument_list|,
-argument|InitTy Val
-argument_list|)
-block|{
-return|return
-name|GetOrCreateValue
-argument_list|(
-name|StringRef
-argument_list|(
-name|KeyStart
-argument_list|,
-name|KeyEnd
-operator|-
-name|KeyStart
-argument_list|)
-argument_list|,
-name|Val
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|StringMapEntry
-operator|<
-name|ValueTy
-operator|>
-operator|&
-name|GetOrCreateValue
-argument_list|(
-argument|const char *KeyStart
-argument_list|,
-argument|const char *KeyEnd
-argument_list|)
-block|{
-return|return
-name|GetOrCreateValue
-argument_list|(
-name|StringRef
-argument_list|(
-name|KeyStart
-argument_list|,
-name|KeyEnd
-operator|-
-name|KeyStart
-argument_list|)
-argument_list|)
-return|;
-block|}
-end_expr_stmt
+end_function
 
 begin_comment
 comment|/// remove - Remove the specified key/value pair from the map, but do not

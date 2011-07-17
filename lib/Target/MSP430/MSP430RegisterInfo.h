@@ -65,10 +65,16 @@ directive|include
 file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|GET_REGINFO_HEADER
+end_define
+
 begin_include
 include|#
 directive|include
-file|"MSP430GenRegisterInfo.h.inc"
+file|"MSP430GenRegisterInfo.inc"
 end_include
 
 begin_decl_stmt

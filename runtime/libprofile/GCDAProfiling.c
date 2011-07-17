@@ -390,7 +390,7 @@ literal|'\0'
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|_MSC_VER
+name|_WIN32
 name|_mkdir
 argument_list|(
 name|pathname

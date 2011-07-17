@@ -106,6 +106,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallPtrSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -2029,11 +2035,45 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// isPredecessorOf - Return true if this node is a predecessor of N. This
+comment|/// isPredecessorOf - Return true if this node is a predecessor of N.
 end_comment
 
 begin_comment
-comment|/// node is either an operand of N or it can be reached by recursively
+comment|/// NOTE: Implemented on top of hasPredecessor and every bit as
+end_comment
+
+begin_comment
+comment|/// expensive. Use carefully.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isPredecessorOf
+argument_list|(
+specifier|const
+name|SDNode
+operator|*
+name|N
+argument_list|)
+decl|const
+block|{
+return|return
+name|N
+operator|->
+name|hasPredecessor
+argument_list|(
+name|this
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// hasPredecessor - Return true if N is a predecessor of this node.
+end_comment
+
+begin_comment
+comment|/// N is either an operand of this node, or can be reached by recursively
 end_comment
 
 begin_comment
@@ -2041,16 +2081,88 @@ comment|/// traversing up the operands.
 end_comment
 
 begin_comment
-comment|/// NOTE: this is an expensive method. Use it carefully.
+comment|/// NOTE: This is an expensive method. Use it carefully.
 end_comment
 
 begin_decl_stmt
 name|bool
-name|isPredecessorOf
+name|hasPredecessor
 argument_list|(
+specifier|const
 name|SDNode
 operator|*
 name|N
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// hasPredecesorHelper - Return true if N is a predecessor of this node.
+end_comment
+
+begin_comment
+comment|/// N is either an operand of this node, or can be reached by recursively
+end_comment
+
+begin_comment
+comment|/// traversing up the operands.
+end_comment
+
+begin_comment
+comment|/// In this helper the Visited and worklist sets are held externally to
+end_comment
+
+begin_comment
+comment|/// cache predecessors over multiple invocations. If you want to test for
+end_comment
+
+begin_comment
+comment|/// multiple predecessors this method is preferable to multiple calls to
+end_comment
+
+begin_comment
+comment|/// hasPredecessor. Be sure to clear Visited and Worklist if the DAG
+end_comment
+
+begin_comment
+comment|/// changes.
+end_comment
+
+begin_comment
+comment|/// NOTE: This is still very expensive. Use carefully.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|hasPredecessorHelper
+argument_list|(
+specifier|const
+name|SDNode
+operator|*
+name|N
+argument_list|,
+name|SmallPtrSet
+operator|<
+specifier|const
+name|SDNode
+operator|*
+argument_list|,
+literal|32
+operator|>
+operator|&
+name|Visited
+argument_list|,
+name|SmallVector
+operator|<
+specifier|const
+name|SDNode
+operator|*
+argument_list|,
+literal|16
+operator|>
+operator|&
+name|Worklist
 argument_list|)
 decl|const
 decl_stmt|;

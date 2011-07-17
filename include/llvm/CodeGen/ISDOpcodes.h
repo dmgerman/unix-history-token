@@ -346,6 +346,8 @@ name|FSUB
 block|,
 name|FMUL
 block|,
+name|FMA
+block|,
 name|FDIV
 block|,
 name|FREM
@@ -759,7 +761,8 @@ name|TRAP
 block|,
 comment|// PREFETCH - This corresponds to a prefetch intrinsic. It takes chains are
 comment|// their first operand. The other operands are the address to prefetch,
-comment|// read / write specifier, and locality specifier.
+comment|// read / write specifier, locality specifier and instruction / data cache
+comment|// specifier.
 name|PREFETCH
 block|,
 comment|// OUTCHAIN = MEMBARRIER(INCHAIN, load-load, load-store, store-load,

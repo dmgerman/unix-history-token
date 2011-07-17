@@ -179,7 +179,7 @@ name|public
 operator|:
 name|TargetLoweringObjectFileELF
 argument_list|()
-block|{}
+block|;
 operator|~
 name|TargetLoweringObjectFileELF
 argument_list|()
@@ -445,7 +445,7 @@ name|public
 operator|:
 name|TargetLoweringObjectFileMachO
 argument_list|()
-block|{}
+block|;
 operator|~
 name|TargetLoweringObjectFileMachO
 argument_list|()
@@ -693,7 +693,7 @@ name|public
 operator|:
 name|TargetLoweringObjectFileCOFF
 argument_list|()
-block|{}
+block|;
 operator|~
 name|TargetLoweringObjectFileCOFF
 argument_list|()

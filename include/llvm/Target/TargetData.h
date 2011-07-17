@@ -826,7 +826,6 @@ decl_stmt|;
 comment|/// getIntPtrType - Return an unsigned integer type that is the same size or
 comment|/// greater to the host pointer size.
 comment|///
-specifier|const
 name|IntegerType
 modifier|*
 name|getIntPtrType
@@ -866,20 +865,6 @@ specifier|const
 name|StructLayout
 modifier|*
 name|getStructLayout
-argument_list|(
-specifier|const
-name|StructType
-operator|*
-name|Ty
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// InvalidateStructLayoutInfo - TargetData speculatively caches StructLayout
-comment|/// objects.  If a TargetData object is alive when types are being refined and
-comment|/// removed, this method must be called whenever a StructType is removed to
-comment|/// avoid a dangling pointer in this cache.
-name|void
-name|InvalidateStructLayoutInfo
 argument_list|(
 specifier|const
 name|StructType

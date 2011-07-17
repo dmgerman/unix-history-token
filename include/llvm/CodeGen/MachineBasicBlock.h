@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<functional>
 end_include
 
@@ -101,6 +107,9 @@ name|StringRef
 decl_stmt|;
 name|class
 name|raw_ostream
+decl_stmt|;
+name|class
+name|MachineBranchProbabilityInfo
 decl_stmt|;
 name|template
 operator|<
@@ -300,6 +309,28 @@ name|MachineBasicBlock
 operator|*
 operator|>
 name|Successors
+expr_stmt|;
+comment|/// Weights - Keep track of the weights to the successors. This vector
+comment|/// has the same order as Successors, or it is empty if we don't use it
+comment|/// (disable optimization).
+name|std
+operator|::
+name|vector
+operator|<
+name|uint32_t
+operator|>
+name|Weights
+expr_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|uint32_t
+operator|>
+operator|::
+name|iterator
+name|weight_iterator
 expr_stmt|;
 comment|/// LiveIns - Keep track of the physical registers that are livein of
 comment|/// the basicblock.
@@ -1128,7 +1159,9 @@ parameter_list|()
 function_decl|;
 comment|// Machine-CFG mutators
 comment|/// addSuccessor - Add succ as a successor of this MachineBasicBlock.
-comment|/// The Predecessors list of succ is automatically updated.
+comment|/// The Predecessors list of succ is automatically updated. WEIGHT
+comment|/// parameter is stored in Weights list and it may be used by
+comment|/// MachineBranchProbabilityInfo analysis to calculate branch probability.
 comment|///
 name|void
 name|addSuccessor
@@ -1136,6 +1169,11 @@ parameter_list|(
 name|MachineBasicBlock
 modifier|*
 name|succ
+parameter_list|,
+name|uint32_t
+name|weight
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// removeSuccessor - Remove successor from the successors list of this
@@ -1158,6 +1196,20 @@ name|removeSuccessor
 parameter_list|(
 name|succ_iterator
 name|I
+parameter_list|)
+function_decl|;
+comment|/// replaceSuccessor - Replace successor OLD with NEW and update weight info.
+comment|///
+name|void
+name|replaceSuccessor
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|Old
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|New
 parameter_list|)
 function_decl|;
 comment|/// transferSuccessors - Transfers all the successors from MBB to this
@@ -1657,6 +1709,30 @@ specifier|const
 expr_stmt|;
 name|private
 label|:
+comment|/// getWeightIterator - Return weight iterator corresponding to the I
+comment|/// successor iterator.
+name|weight_iterator
+name|getWeightIterator
+parameter_list|(
+name|succ_iterator
+name|I
+parameter_list|)
+function_decl|;
+name|friend
+name|class
+name|MachineBranchProbabilityInfo
+decl_stmt|;
+comment|/// getSuccWeight - Return weight of the edge from this block to MBB. This
+comment|/// method should NOT be called directly, but by using getEdgeWeight method
+comment|/// from MachineBranchProbabilityInfo class.
+name|uint32_t
+name|getSuccWeight
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|succ
+parameter_list|)
+function_decl|;
 comment|// Methods used to maintain doubly linked list of blocks...
 name|friend
 block|struct

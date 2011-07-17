@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Twine.h"
 end_include
 
@@ -99,9 +105,9 @@ decl_stmt|;
 struct_decl|struct
 name|RecTy
 struct_decl|;
-struct_decl|struct
+name|class
 name|Init
-struct_decl|;
+decl_stmt|;
 struct_decl|struct
 name|MultiClass
 struct_decl|;
@@ -257,8 +263,6 @@ name|Msg
 argument_list|)
 decl|const
 block|{
-name|Lex
-operator|.
 name|PrintError
 argument_list|(
 name|L

@@ -409,7 +409,7 @@ name|Parent
 return|;
 block|}
 comment|/// use_back - Specialize the methods defined in Value, as we know that an
-comment|/// BasicBlock can only be used by Users (specifically PHI nodes, terminators,
+comment|/// BasicBlock can only be used by Users (specifically terminators
 comment|/// and BlockAddress's).
 name|User
 modifier|*
@@ -518,6 +518,33 @@ name|this
 operator|)
 operator|->
 name|getFirstNonPHIOrDbg
+argument_list|()
+return|;
+block|}
+comment|// Same as above, but also skip lifetime intrinsics.
+name|Instruction
+modifier|*
+name|getFirstNonPHIOrDbgOrLifetime
+parameter_list|()
+function_decl|;
+specifier|const
+name|Instruction
+operator|*
+name|getFirstNonPHIOrDbgOrLifetime
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getFirstNonPHIOrDbgOrLifetime
 argument_list|()
 return|;
 block|}
@@ -911,6 +938,16 @@ operator|!=
 literal|0
 return|;
 block|}
+comment|/// replaceSuccessorsPhiUsesWith - Update all phi nodes in all our successors
+comment|/// to refer to basic block New instead of to us.
+name|void
+name|replaceSuccessorsPhiUsesWith
+parameter_list|(
+name|BasicBlock
+modifier|*
+name|New
+parameter_list|)
+function_decl|;
 name|private
 label|:
 comment|/// AdjustBlockAddressRefCount - BasicBlock stores the number of BlockAddress

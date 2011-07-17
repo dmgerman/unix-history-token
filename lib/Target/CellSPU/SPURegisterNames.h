@@ -55,10 +55,16 @@ begin_comment
 comment|//
 end_comment
 
+begin_define
+define|#
+directive|define
+name|GET_REGINFO_ENUM
+end_define
+
 begin_include
 include|#
 directive|include
-file|"SPUGenRegisterNames.inc"
+file|"SPUGenRegisterInfo.inc"
 end_include
 
 begin_endif

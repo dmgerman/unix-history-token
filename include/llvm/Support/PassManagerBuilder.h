@@ -180,6 +180,11 @@ block|,
 comment|/// EP_LoopOptimizerEnd - This extension point allows adding loop passes to
 comment|/// the end of the loop optimizer.
 name|EP_LoopOptimizerEnd
+block|,
+comment|/// EP_ScalarOptimizerLate - This extension point allows adding optimization
+comment|/// passes after most of the main optimizations, but before the last
+comment|/// cleanup-ish optimizations.
+name|EP_ScalarOptimizerLate
 block|}
 enum|;
 comment|/// The Optimization Level - Specify the basic optimization level.
@@ -449,6 +454,14 @@ operator|.
 name|add
 argument_list|(
 name|createEarlyCSEPass
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|FPM
+operator|.
+name|add
+argument_list|(
+name|createLowerExpectIntrinsicPass
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -877,6 +890,13 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 comment|// Delete dead stores
+name|addExtensionsToPM
+argument_list|(
+name|EP_ScalarOptimizerLate
+argument_list|,
+name|MPM
+argument_list|)
+expr_stmt|;
 name|MPM
 operator|.
 name|add
@@ -910,6 +930,7 @@ operator|!
 name|DisableUnitAtATime
 condition|)
 block|{
+comment|// FIXME: We shouldn't bother with this anymore.
 name|MPM
 operator|.
 name|add
@@ -919,15 +940,6 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 comment|// Get rid of dead prototypes
-name|MPM
-operator|.
-name|add
-argument_list|(
-name|createDeadTypeEliminationPass
-argument_list|()
-argument_list|)
-expr_stmt|;
-comment|// Eliminate dead types
 comment|// GlobalOpt already deletes dead functions and globals, at -O3 try a
 comment|// late pass of GlobalDCE.  It is capable of deleting dead cycles.
 if|if

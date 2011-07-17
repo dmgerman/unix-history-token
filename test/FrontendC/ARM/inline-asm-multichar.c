@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc -S -march=armv7a %s
+comment|// RUN: %llvmgcc -S -march=armv7a %s | FileCheck %s
 end_comment
 
 begin_comment
@@ -22,15 +22,7 @@ name|k
 init|=
 literal|1.0f
 decl_stmt|;
-name|CHECK
-label|:
-name|call
-name|void
-name|asm
-name|sideeffect
-literal|"flds s15, $0 \0A"
-operator|,
-literal|"*^Uv,~{s15}"
+comment|// CHECK: "flds s15, $0 \0A", "*^Uv,~{s15}"
 asm|__asm__
 specifier|volatile
 asm|("flds s15, %[k] \n" :: [k] "Uv,m" (k) : "s15");
