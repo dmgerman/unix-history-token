@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lafe_platform.h"
+file|"bsdtar_platform.h"
 end_include
 
 begin_expr_stmt
