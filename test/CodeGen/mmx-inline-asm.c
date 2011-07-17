@@ -14,7 +14,7 @@ file|<mmintrin.h>
 end_include
 
 begin_comment
-comment|// CHECK: type { x86_mmx, x86_mmx, x86_mmx, x86_mmx, x86_mmx, x86_mmx, x86_mmx }
+comment|// CHECK: { x86_mmx, x86_mmx, x86_mmx, x86_mmx, x86_mmx, x86_mmx, x86_mmx }
 end_comment
 
 begin_function

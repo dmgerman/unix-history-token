@@ -49,7 +49,7 @@ comment|// CHECK: private unnamed_addr global
 end_comment
 
 begin_comment
-comment|// CHECK: @llvm.global.annotations = appending global [2 x %0]
+comment|// CHECK: @llvm.global.annotations = appending global [2 x { i8*, i8*, i8*, i32 }]
 end_comment
 
 end_unit

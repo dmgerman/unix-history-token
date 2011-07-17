@@ -39,8 +39,8 @@ asm|asm ("nop" : : : "0", "%0", "#0");
 asm|asm ("nop" : : : "foo");
 comment|// expected-error {{unknown register name 'foo' in asm}}
 asm|asm ("nop" : : : "52");
-asm|asm ("nop" : : : "53");
-comment|// expected-error {{unknown register name '53' in asm}}
+asm|asm ("nop" : : : "54");
+comment|// expected-error {{unknown register name '54' in asm}}
 asm|asm ("nop" : : : "-1");
 comment|// expected-error {{unknown register name '-1' in asm}}
 asm|asm ("nop" : : : "+1");
@@ -341,6 +341,43 @@ decl_stmt|;
 asm|asm
 specifier|volatile
 asm|("movb %%gs:%P2,%b0" : "=q"(b) : "0"(0), "i"(5L));
+block|}
+end_function
+
+begin_function
+name|void
+name|test12
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+specifier|register
+name|int
+name|cc
+asm|__asm ("cc");
+comment|// expected-error{{unknown register name 'cc' in asm}}
+block|}
+end_function
+
+begin_comment
+comment|// PR10223
+end_comment
+
+begin_function
+name|void
+name|test13
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|void
+modifier|*
+name|esp
+decl_stmt|;
+asm|__asm__
+specifier|volatile
+asm|("mov %%esp, %o" : "=r"(esp) : : );
+comment|// expected-error {{invalid % escape in inline assembly string}}
 block|}
 end_function
 

@@ -51,7 +51,7 @@ name|P
 operator|-
 literal|4
 return|;
-comment|/* expected-error{{subtraction of pointer 'struct incomplete *' requires pointee to be a complete object type}} */
+comment|/* expected-error{{arithmetic on a pointer to an incomplete type 'struct incomplete'}} */
 block|}
 end_function
 
@@ -70,7 +70,7 @@ name|P
 operator|-
 literal|4
 return|;
-comment|/* expected-warning{{GNU void* extension}} */
+comment|/* expected-warning{{arithmetic on a pointer to void is a GNU extension}} */
 block|}
 end_function
 
@@ -92,7 +92,7 @@ name|P
 operator|-
 name|Q
 return|;
-comment|/* expected-warning{{GNU void* extension}} */
+comment|/* expected-warning{{arithmetic on pointers to void is a GNU extension}} */
 block|}
 end_function
 

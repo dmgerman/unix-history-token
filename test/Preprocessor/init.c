@@ -68,7 +68,7 @@ comment|// CXX0X:#define __GXX_WEAK__ 1
 end_comment
 
 begin_comment
-comment|// CXX0X:#define __cplusplus 199711L
+comment|// CXX0X:#define __cplusplus 201103L
 end_comment
 
 begin_comment

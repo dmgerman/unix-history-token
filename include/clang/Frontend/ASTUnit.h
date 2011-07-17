@@ -640,10 +640,10 @@ comment|/// \brief Whether we should be caching code-completion results.
 name|bool
 name|ShouldCacheCodeCompletionResults
 decl_stmt|;
-comment|/// \brief Whether we want to include nested macro instantiations in the
+comment|/// \brief Whether we want to include nested macro expansions in the
 comment|/// detailed preprocessing record.
 name|bool
-name|NestedMacroInstantiations
+name|NestedMacroExpansions
 decl_stmt|;
 specifier|static
 name|void
@@ -902,7 +902,7 @@ name|MemoryBuffer
 operator|*
 name|getMainBufferWithPrecompiledPreamble
 argument_list|(
-argument|CompilerInvocation PreambleInvocation
+argument|const CompilerInvocation&PreambleInvocationIn
 argument_list|,
 argument|bool AllowRebuild = true
 argument_list|,
@@ -1830,7 +1830,7 @@ operator|=
 name|false
 argument_list|,
 name|bool
-name|NestedMacroInstantiations
+name|NestedMacroExpansions
 operator|=
 name|true
 argument_list|)
@@ -1931,7 +1931,7 @@ operator|=
 name|false
 argument_list|,
 name|bool
-name|NestedMacroInstantiations
+name|NestedMacroExpansions
 operator|=
 name|true
 argument_list|)
@@ -2045,8 +2045,8 @@ argument_list|)
 decl_stmt|;
 comment|/// \brief Save this translation unit to a file with the given name.
 comment|///
-comment|/// \returns True if an error occurred, false otherwise.
-name|bool
+comment|/// \returns An indication of whether the save was successful or not.
+name|CXSaveError
 name|Save
 argument_list|(
 name|llvm

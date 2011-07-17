@@ -169,6 +169,9 @@ name|class
 name|NestedNameSpecifierLoc
 decl_stmt|;
 name|class
+name|ObjCDeclSpec
+decl_stmt|;
+name|class
 name|Preprocessor
 decl_stmt|;
 name|class
@@ -465,6 +468,15 @@ name|Context
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Retrieve the location of the name in the last qualifier
+comment|/// in this nested name specifier.  For example:
+comment|///   ::foo::bar<0>::
+comment|///          ^~~
+name|SourceLocation
+name|getLastQualifierNameLoc
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// No scope specifier.
 name|bool
 name|isEmpty
@@ -1241,6 +1253,10 @@ name|void
 name|SaveStorageSpecifierAsWritten
 parameter_list|()
 function_decl|;
+name|ObjCDeclSpec
+modifier|*
+name|ObjCQualifiers
+decl_stmt|;
 specifier|static
 name|bool
 name|isTypeRep
@@ -1452,6 +1468,11 @@ argument_list|)
 operator|,
 name|writtenBS
 argument_list|()
+operator|,
+name|ObjCQualifiers
+argument_list|(
+literal|0
+argument_list|)
 block|{   }
 operator|~
 name|DeclSpec
@@ -2885,6 +2906,29 @@ return|return
 name|writtenBS
 return|;
 block|}
+name|ObjCDeclSpec
+operator|*
+name|getObjCQualifiers
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ObjCQualifiers
+return|;
+block|}
+name|void
+name|setObjCQualifiers
+parameter_list|(
+name|ObjCDeclSpec
+modifier|*
+name|quals
+parameter_list|)
+block|{
+name|ObjCQualifiers
+operator|=
+name|quals
+expr_stmt|;
+block|}
 comment|/// isMissingDeclaratorOk - This checks if this DeclSpec can stand alone,
 comment|/// without a Declarator. Only tag declspecs can stand alone.
 name|bool
@@ -2981,6 +3025,18 @@ block|,
 name|DQ_PR_atomic
 init|=
 literal|0x100
+block|,
+name|DQ_PR_weak
+init|=
+literal|0x200
+block|,
+name|DQ_PR_strong
+init|=
+literal|0x400
+block|,
+name|DQ_PR_unsafe_unretained
+init|=
+literal|0x800
 block|}
 enum|;
 name|ObjCDeclSpec
@@ -3145,7 +3201,7 @@ comment|// NOTE: VC++ treats enums as signed, avoid using ObjCPropertyAttributeK
 name|unsigned
 name|PropertyAttributes
 range|:
-literal|9
+literal|12
 decl_stmt|;
 name|IdentifierInfo
 modifier|*
@@ -3206,6 +3262,9 @@ name|IK_DestructorName
 block|,
 comment|/// \brief A template-id, e.g., f<int>.
 name|IK_TemplateId
+block|,
+comment|/// \brief An implicit 'self' parameter
+name|IK_ImplicitSelfParam
 block|}
 name|Kind
 enum|;
@@ -3386,6 +3445,18 @@ block|{
 return|return
 name|Kind
 return|;
+block|}
+name|void
+name|setKind
+parameter_list|(
+name|IdKind
+name|kind
+parameter_list|)
+block|{
+name|Kind
+operator|=
+name|kind
+expr_stmt|;
 block|}
 comment|/// \brief Specify that this unqualified-id was parsed as an identifier.
 comment|///
@@ -3939,6 +4010,11 @@ comment|/// If this is an invalid location, there is no ref-qualifier.
 name|unsigned
 name|RefQualifierLoc
 block|;
+comment|/// \brief The location of the 'mutable' qualifer in a lambda-declarator, if
+comment|/// any.
+name|unsigned
+name|MutableLoc
+block|;
 comment|/// \brief When ExceptionSpecType isn't EST_None or EST_Delayed, the
 comment|/// location of the keyword introducing the spec.
 name|unsigned
@@ -4083,6 +4159,21 @@ name|RefQualifierLoc
 argument_list|)
 return|;
 block|}
+comment|/// \brief Retrieve the location of the 'mutable' qualifier, if any.
+name|SourceLocation
+name|getMutableLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceLocation
+operator|::
+name|getFromRawEncoding
+argument_list|(
+name|MutableLoc
+argument_list|)
+return|;
+block|}
 comment|/// \brief Determine whether this function declaration contains a
 comment|/// ref-qualifier.
 name|bool
@@ -4092,6 +4183,21 @@ specifier|const
 block|{
 return|return
 name|getRefQualifierLoc
+argument_list|()
+operator|.
+name|isValid
+argument_list|()
+return|;
+block|}
+comment|/// \brief Determine whether this lambda-declarator contains a 'mutable'
+comment|/// qualifier.
+name|bool
+name|hasMutableQualifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getMutableLoc
 argument_list|()
 operator|.
 name|isValid
@@ -4615,6 +4721,8 @@ argument|bool RefQualifierIsLvalueRef
 argument_list|,
 argument|SourceLocation RefQualifierLoc
 argument_list|,
+argument|SourceLocation MutableLoc
+argument_list|,
 argument|ExceptionSpecificationType ESpecType
 argument_list|,
 argument|SourceLocation ESpecLoc
@@ -4831,9 +4939,15 @@ comment|// Condition declaration in a C++ if/switch/while/for.
 name|TemplateParamContext
 block|,
 comment|// Within a template parameter list.
+name|CXXNewContext
+block|,
+comment|// C++ new-expression.
 name|CXXCatchContext
 block|,
 comment|// C++ catch exception-declaration
+name|ObjCCatchContext
+block|,
+comment|// Objective-C catch exception-declaration
 name|BlockLiteralContext
 block|,
 comment|// Block literal declarator.
@@ -5366,7 +5480,13 @@ case|case
 name|TemplateParamContext
 case|:
 case|case
+name|CXXNewContext
+case|:
+case|case
 name|CXXCatchContext
+case|:
+case|case
+name|ObjCCatchContext
 case|:
 case|case
 name|BlockLiteralContext
@@ -5424,11 +5544,17 @@ case|:
 case|case
 name|CXXCatchContext
 case|:
+case|case
+name|ObjCCatchContext
+case|:
 return|return
 name|true
 return|;
 case|case
 name|TypeNameContext
+case|:
+case|case
+name|CXXNewContext
 case|:
 case|case
 name|AliasDeclContext
@@ -5509,7 +5635,13 @@ case|case
 name|CXXCatchContext
 case|:
 case|case
+name|ObjCCatchContext
+case|:
+case|case
 name|TypeNameContext
+case|:
+case|case
+name|CXXNewContext
 case|:
 case|case
 name|AliasDeclContext
@@ -6257,6 +6389,38 @@ name|getFunctionTypeInfo
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine whether the declaration that will be produced from
+end_comment
+
+begin_comment
+comment|/// this declaration will be a function.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// A declaration can declare a function even if the declarator itself
+end_comment
+
+begin_comment
+comment|/// isn't a function declarator, if the type specifier refers to a function
+end_comment
+
+begin_comment
+comment|/// type. This routine checks for both cases.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isDeclarationOfFunction
+argument_list|()
+specifier|const
+expr_stmt|;
 end_expr_stmt
 
 begin_comment

@@ -205,5 +205,37 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: uint64x2_t
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|long
+name|uint64_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|uint64_t
+name|uint64x2_t
+name|__attribute__
+typedef|((
+name|ext_vector_type
+typedef|(2)));
+end_typedef
+
+begin_decl_stmt
+name|uint64x2_t
+name|extvectbar
+index|[
+literal|4
+index|]
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

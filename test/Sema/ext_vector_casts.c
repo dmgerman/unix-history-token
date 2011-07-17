@@ -203,7 +203,7 @@ name|ivec4
 operator|+=
 name|vec4
 expr_stmt|;
-comment|// expected-error {{can't convert between vector values of different size ('float4' and 'int4')}}
+comment|// expected-error {{can't convert between vector values of different size ('int4' and 'float4')}}
 name|ivec4
 operator|+=
 operator|(

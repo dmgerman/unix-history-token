@@ -39,7 +39,7 @@ union|;
 end_union
 
 begin_comment
-comment|// CHECK: @u2 = global %1 { i32 0, [4 x i8] undef }
+comment|// CHECK: @u2 = global { i32, [4 x i8] } { i32 0, [4 x i8] undef }
 end_comment
 
 begin_union
@@ -59,7 +59,7 @@ union|;
 end_union
 
 begin_comment
-comment|// CHECK: @u3 = global %2 zeroinitializer
+comment|// CHECK: @u3 = global  %union.anon.1 zeroinitializer
 end_comment
 
 begin_union
@@ -205,7 +205,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @ds4 = global %3 { %4 { %struct.anon zeroinitializer, i16 0, %struct.anon { i16 1 } } }
+comment|// CHECK: @ds4 = global %struct.ds { %struct.anon.3 { %struct.anon zeroinitializer, i16 0, %struct.anon.2 { i16 1 } } }
 end_comment
 
 begin_decl_stmt
@@ -267,7 +267,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @ds7 = global %3 { %4 { %struct.anon { i16 2 }, i16 3, %struct.anon zeroinitializer } }
+comment|// CHECK: @ds7 = global %struct.ds { %struct.anon.3 { %struct.anon { i16 2 }, i16 3, %struct.anon.2 zeroinitializer } }
 end_comment
 
 begin_decl_stmt
@@ -324,7 +324,7 @@ operator|=
 literal|1024
 block|,   }
 decl_stmt|;
-comment|// CHECK: bitcast %union.anon* %u2
+comment|// CHECK: bitcast %union.anon.4* %u2
 comment|// CHECK: call void @llvm.memset
 union|union
 block|{

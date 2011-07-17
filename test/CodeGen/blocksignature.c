@@ -12,7 +12,7 @@ comment|// X64: @.str = private unnamed_addr constant [6 x i8] c"v8@?0\00"
 end_comment
 
 begin_comment
-comment|// X64: @__block_literal_global = internal constant %1 { i8** @_NSConcreteGlobalBlock, i32 1342177280,
+comment|// X64: @__block_literal_global = internal constant {{.*}} { i8** @_NSConcreteGlobalBlock, i32 1342177280,
 end_comment
 
 begin_comment
@@ -28,11 +28,11 @@ comment|// X32: [[STR1:@.*]] = private unnamed_addr constant [6 x i8] c"v4@?0\00
 end_comment
 
 begin_comment
-comment|// X32: @__block_descriptor_tmp = internal constant [[FULL_DESCRIPTOR_T:%.*]] { i32 0, i32 20, i8* getelementptr inbounds ([6 x i8]* [[STR1]], i32 0, i32 0), i8* null }
+comment|// X32: @__block_descriptor_tmp = internal constant [[FULL_DESCRIPTOR_T:.*]] { i32 0, i32 20, i8* getelementptr inbounds ([6 x i8]* [[STR1]], i32 0, i32 0), i8* null }
 end_comment
 
 begin_comment
-comment|// X32: @__block_literal_global = internal constant [[GLOBAL_LITERAL_T:%.*]] { i8** @_NSConcreteGlobalBlock, i32 1342177280, i32 0, i8* bitcast (void (i8*)* @__block_global_{{.*}} to i8*), [[DESCRIPTOR_T:%.*]]* bitcast ([[FULL_DESCRIPTOR_T]]* @__block_descriptor_tmp to {{%.*}}*) }
+comment|// X32: @__block_literal_global = internal constant [[GLOBAL_LITERAL_T:.*]] { i8** @_NSConcreteGlobalBlock, i32 1342177280, i32 0, i8* bitcast (void (i8*)* @__block_global_{{.*}} to i8*), [[DESCRIPTOR_T:%.*]]* bitcast ([[FULL_DESCRIPTOR_T]]* @__block_descriptor_tmp to {{%.*}}*) }
 end_comment
 
 begin_comment

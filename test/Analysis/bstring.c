@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,cplusplus.experimental.CString -analyzer-store=region -Wno-null-dereference -verify %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,unix.experimental.CString -analyzer-store=region -Wno-null-dereference -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -DUSE_BUILTINS -analyzer-checker=core,cplusplus.experimental.CString -analyzer-store=region -Wno-null-dereference -verify %s
+comment|// RUN: %clang_cc1 -analyze -DUSE_BUILTINS -analyzer-checker=core,unix.experimental.CString -analyzer-store=region -Wno-null-dereference -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -DVARIANT -analyzer-checker=core,cplusplus.experimental.CString -analyzer-store=region -Wno-null-dereference -verify %s
+comment|// RUN: %clang_cc1 -analyze -DVARIANT -analyzer-checker=core,unix.experimental.CString -analyzer-store=region -Wno-null-dereference -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -DUSE_BUILTINS -DVARIANT -analyzer-checker=core,cplusplus.experimental.CString -analyzer-store=region -Wno-null-dereference -verify %s
+comment|// RUN: %clang_cc1 -analyze -DUSE_BUILTINS -DVARIANT -analyzer-checker=core,unix.experimental.CString -analyzer-store=region -Wno-null-dereference -verify %s
 end_comment
 
 begin_comment
@@ -346,7 +346,7 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{Byte string function accesses out-of-bound array element}}
+comment|// expected-warning{{Memory copy function accesses out-of-bound array element}}
 block|}
 end_function
 
@@ -384,7 +384,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{Byte string function overflows destination buffer}}
+comment|// expected-warning{{Memory copy function overflows destination buffer}}
 block|}
 end_function
 
@@ -468,7 +468,7 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{Byte string function accesses out-of-bound array element}}
+comment|// expected-warning{{Memory copy function accesses out-of-bound array element}}
 block|}
 end_function
 
@@ -510,7 +510,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{Byte string function overflows destination buffer}}
+comment|// expected-warning{{Memory copy function overflows destination buffer}}
 block|}
 end_function
 
@@ -676,7 +676,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{Null pointer argument in call to byte string function}}
+comment|// expected-warning{{Null pointer argument in call to memory copy function}}
 block|}
 end_function
 
@@ -704,7 +704,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{Null pointer argument in call to byte string function}}
+comment|// expected-warning{{Null pointer argument in call to memory copy function}}
 block|}
 end_function
 
@@ -841,7 +841,7 @@ argument_list|)
 operator|!=
 name|a
 condition|)
-comment|// expected-warning{{Null pointer argument in call to byte string function}}
+comment|// expected-warning{{Null pointer argument in call to memory copy function}}
 operator|(
 name|void
 operator|)
@@ -1093,7 +1093,7 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{Byte string function accesses out-of-bound array element}}
+comment|// expected-warning{{Memory copy function accesses out-of-bound array element}}
 block|}
 end_function
 
@@ -1131,7 +1131,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{Byte string function overflows destination buffer}}
+comment|// expected-warning{{Memory copy function overflows destination buffer}}
 block|}
 end_function
 
@@ -1215,7 +1215,7 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{Byte string function accesses out-of-bound array element}}
+comment|// expected-warning{{Memory copy function accesses out-of-bound array element}}
 block|}
 end_function
 
@@ -1257,7 +1257,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{Byte string function overflows destination buffer}}
+comment|// expected-warning{{Memory copy function overflows destination buffer}}
 block|}
 end_function
 
@@ -1423,7 +1423,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{Null pointer argument in call to byte string function}}
+comment|// expected-warning{{Null pointer argument in call to memory copy function}}
 block|}
 end_function
 
@@ -1451,7 +1451,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{Null pointer argument in call to byte string function}}
+comment|// expected-warning{{Null pointer argument in call to memory copy function}}
 block|}
 end_function
 
@@ -1538,7 +1538,7 @@ argument_list|)
 operator|!=
 name|a
 condition|)
-comment|// expected-warning{{Null pointer argument in call to byte string function}}
+comment|// expected-warning{{Null pointer argument in call to memory copy function}}
 operator|(
 name|void
 operator|)

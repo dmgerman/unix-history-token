@@ -19,6 +19,26 @@ begin_comment
 comment|// expected-warning {{'naked' attribute only applies to functions}}
 end_comment
 
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(naked)
+argument_list|)
+end_macro
+
+begin_function
+name|int
+name|t0
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|__asm__
+specifier|volatile
+asm|("mov r0, #0");
+block|}
+end_function
+
 begin_function_decl
 name|void
 name|t1

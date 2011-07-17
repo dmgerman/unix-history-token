@@ -160,7 +160,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// expected-error {{arithmetic on pointer to incomplete type 'int (*)[]'}}
+comment|// expected-error {{arithmetic on a pointer to an incomplete type 'int []'}}
 end_comment
 
 begin_decl_stmt

@@ -275,9 +275,9 @@ name|Create_PragmaLexer
 argument_list|(
 argument|SourceLocation SpellingLoc
 argument_list|,
-argument|SourceLocation InstantiationLocStart
+argument|SourceLocation ExpansionLocStart
 argument_list|,
-argument|SourceLocation InstantiationLocEnd
+argument|SourceLocation ExpansionLocEnd
 argument_list|,
 argument|unsigned TokLen
 argument_list|,
@@ -666,8 +666,8 @@ comment|/// token at the given source location.  If, as is usually true, it
 comment|/// is not necessary to copy any data, then the returned string may
 comment|/// not point into the provided buffer.
 comment|///
-comment|/// This method lexes at the instantiation depth of the given
-comment|/// location and does not jump to the instantiation or spelling
+comment|/// This method lexes at the expansion depth of the given
+comment|/// location and does not jump to the expansion or spelling
 comment|/// location.
 specifier|static
 name|llvm
@@ -760,6 +760,32 @@ argument_list|,
 argument|const SourceManager&SM
 argument_list|,
 argument|const LangOptions&Features
+argument_list|)
+block|;
+comment|/// \brief Returns true if the given MacroID location points at the first
+comment|/// token of the macro expansion.
+specifier|static
+name|bool
+name|isAtStartOfMacroExpansion
+argument_list|(
+argument|SourceLocation loc
+argument_list|,
+argument|const SourceManager&SM
+argument_list|,
+argument|const LangOptions&LangOpts
+argument_list|)
+block|;
+comment|/// \brief Returns true if the given MacroID location points at the last
+comment|/// token of the macro expansion.
+specifier|static
+name|bool
+name|isAtEndOfMacroExpansion
+argument_list|(
+argument|SourceLocation loc
+argument_list|,
+argument|const SourceManager&SM
+argument_list|,
+argument|const LangOptions&LangOpts
 argument_list|)
 block|;
 comment|/// \brief Compute the preamble of the given file.

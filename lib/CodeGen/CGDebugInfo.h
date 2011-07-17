@@ -136,6 +136,9 @@ decl_stmt|;
 name|class
 name|ClassTemplateSpecializationDecl
 decl_stmt|;
+name|class
+name|GlobalDecl
+decl_stmt|;
 name|namespace
 name|CodeGen
 block|{
@@ -144,9 +147,6 @@ name|CodeGenModule
 decl_stmt|;
 name|class
 name|CodeGenFunction
-decl_stmt|;
-name|class
-name|GlobalDecl
 decl_stmt|;
 name|class
 name|CGBlockInfo
@@ -715,6 +715,8 @@ argument_list|,
 argument|uint64_t offsetInBits
 argument_list|,
 argument|llvm::DIFile tunit
+argument_list|,
+argument|llvm::DIDescriptor scope
 argument_list|)
 expr_stmt|;
 name|void
@@ -741,6 +743,11 @@ operator|*
 operator|>
 operator|&
 name|E
+argument_list|,
+name|llvm
+operator|::
+name|DIType
+name|RecordTy
 argument_list|)
 decl_stmt|;
 name|void

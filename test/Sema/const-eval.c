@@ -327,7 +327,7 @@ operator|-
 literal|1.0f
 index|]
 decl_stmt|;
-comment|// expected-error {{array size is negative}}
+comment|// expected-error {{'a' declared as an array with a negative size}}
 block|}
 struct|;
 end_struct

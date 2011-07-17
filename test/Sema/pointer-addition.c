@@ -42,30 +42,30 @@ function_decl|;
 name|b
 operator|++
 expr_stmt|;
-comment|// expected-error {{arithmetic on pointer to incomplete type}}
+comment|// expected-error {{arithmetic on a pointer to an incomplete type}}
 name|b
 operator|+=
 literal|1
 expr_stmt|;
-comment|// expected-error {{arithmetic on pointer to incomplete type}}
+comment|// expected-error {{arithmetic on a pointer to an incomplete type}}
 name|c
 operator|++
 expr_stmt|;
-comment|// expected-warning {{use of GNU void* extension}}
+comment|// expected-warning {{arithmetic on a pointer to void is a GNU extension}}
 name|c
 operator|+=
 literal|1
 expr_stmt|;
-comment|// expected-warning {{use of GNU void* extension}}
+comment|// expected-warning {{arithmetic on a pointer to void is a GNU extension}}
 name|c
 operator|--
 expr_stmt|;
-comment|// expected-warning {{use of GNU void* extension}}
+comment|// expected-warning {{arithmetic on a pointer to void is a GNU extension}}
 name|c
 operator|-=
 literal|1
 expr_stmt|;
-comment|// expected-warning {{use of GNU void* extension}}
+comment|// expected-warning {{arithmetic on a pointer to void is a GNU extension}}
 operator|(
 name|void
 operator|)
@@ -74,14 +74,14 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-comment|// expected-warning {{use of GNU void* extension}}
+comment|// expected-warning {{subscript of a pointer to void is a GNU extension}}
 name|b
 operator|=
 literal|1
 operator|+
 name|b
 expr_stmt|;
-comment|// expected-error {{arithmetic on pointer to incomplete type}}
+comment|// expected-error {{arithmetic on a pointer to an incomplete type}}
 comment|/* The next couple tests are only pedantic warnings in gcc */
 name|void
 function_decl|(
@@ -102,20 +102,30 @@ name|d
 operator|+=
 literal|1
 expr_stmt|;
-comment|// expected-warning {{arithmetic on pointer to function type 'void (*)(S *, void *)' is a GNU extension}}
+comment|// expected-warning {{arithmetic on a pointer to the function type 'void (S *, void *)' is a GNU extension}}
 name|d
 operator|++
 expr_stmt|;
-comment|// expected-warning {{arithmetic on pointer to function type 'void (*)(S *, void *)' is a GNU extension}}}
+comment|// expected-warning {{arithmetic on a pointer to the function type 'void (S *, void *)' is a GNU extension}}
 name|d
 operator|--
 expr_stmt|;
-comment|// expected-warning {{arithmetic on pointer to function type 'void (*)(S *, void *)' is a GNU extension}}
+comment|// expected-warning {{arithmetic on a pointer to the function type 'void (S *, void *)' is a GNU extension}}
 name|d
 operator|-=
 literal|1
 expr_stmt|;
-comment|// expected-warning {{arithmetic on pointer to function type 'void (*)(S *, void *)' is a GNU extension}}
+comment|// expected-warning {{arithmetic on a pointer to the function type 'void (S *, void *)' is a GNU extension}}
+call|(
+name|void
+call|)
+argument_list|(
+literal|1
+operator|+
+name|d
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{arithmetic on a pointer to the function type 'void (S *, void *)' is a GNU extension}}
 block|}
 end_function
 

@@ -409,14 +409,18 @@ literal|5
 index|]
 argument_list|)
 block|{
-comment|// CHECK: store [[vla_type:.*]] %p,
-comment|// CHECK: load i32*
-comment|// CHECK-NEXT: mul i32 40
-comment|// CHECK-NEXT: [[byte_idx:%.*]] = mul i32 1
-comment|// CHECK-NEXT: [[tmp_1:%.*]] = load [[vla_type]]*
-comment|// CHECK-NEXT: [[tmp_2:%.*]] = bitcast [[vla_type]] [[tmp_1]] to i8*
-comment|// CHECK-NEXT: [[idx:%.*]] = getelementptr inbounds i8* [[tmp_2]], i32 [[byte_idx]]
-comment|// CHECK-NEXT: bitcast i8* [[idx]] to [[vla_type]]
+comment|// CHECK:      [[NV:%.*]] = alloca i32, align 4
+comment|// CHECK-NEXT: [[PV:%.*]] = alloca [5 x double]*, align 4
+comment|// CHECK-NEXT: store
+comment|// CHECK-NEXT: store
+comment|// CHECK-NEXT: [[N:%.*]] = load i32* [[NV]], align 4
+comment|// CHECK-NEXT: [[P:%.*]] = load [5 x double]** [[PV]], align 4
+comment|// CHECK-NEXT: [[T0:%.*]] = mul nsw i32 1, [[N]]
+comment|// CHECK-NEXT: [[T1:%.*]] = getelementptr inbounds [5 x double]* [[P]], i32 [[T0]]
+comment|// CHECK-NEXT: [[T2:%.*]] = getelementptr inbounds [5 x double]* [[T1]], i32 2
+comment|// CHECK-NEXT: [[T3:%.*]] = getelementptr inbounds [5 x double]* [[T2]], i32 0, i32 3
+comment|// CHECK-NEXT: [[T4:%.*]] = load double* [[T3]]
+comment|// CHECK-NEXT: ret double [[T4]]
 return|return
 name|p
 index|[
@@ -428,6 +432,91 @@ index|]
 index|[
 literal|3
 index|]
+return|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|test4
+argument_list|(
+name|unsigned
+name|n
+argument_list|,
+name|char
+argument_list|(
+operator|*
+name|p
+argument_list|)
+index|[
+name|n
+index|]
+index|[
+name|n
+operator|+
+literal|1
+index|]
+index|[
+literal|6
+index|]
+argument_list|)
+block|{
+comment|// CHECK:    define i32 @test4(
+comment|// CHECK:      [[N:%.*]] = alloca i32, align 4
+comment|// CHECK-NEXT: [[P:%.*]] = alloca [6 x i8]*, align 4
+comment|// CHECK-NEXT: [[P2:%.*]] = alloca [6 x i8]*, align 4
+comment|// CHECK-NEXT: store i32
+comment|// CHECK-NEXT: store [6 x i8]*
+comment|// VLA captures.
+comment|// CHECK-NEXT: [[DIM0:%.*]] = load i32* [[N]], align 4
+comment|// CHECK-NEXT: [[T0:%.*]] = load i32* [[N]], align 4
+comment|// CHECK-NEXT: [[DIM1:%.*]] = add i32 [[T0]], 1
+comment|// __typeof.  FIXME: does this really need to be loaded?
+comment|// CHECK-NEXT: load [6 x i8]** [[P]]
+comment|// CHECK-NEXT: [[T0:%.*]] = load [6 x i8]** [[P]], align 4
+comment|// CHECK-NEXT: [[T1:%.*]] = load i32* [[N]], align 4
+comment|// CHECK-NEXT: [[T2:%.*]] = udiv i32 [[T1]], 2
+comment|// CHECK-NEXT: [[T3:%.*]] = mul nuw i32 [[DIM0]], [[DIM1]]
+comment|// CHECK-NEXT: [[T4:%.*]] = mul nsw i32 [[T2]], [[T3]]
+comment|// CHECK-NEXT: [[T5:%.*]] = getelementptr inbounds [6 x i8]* [[T0]], i32 [[T4]]
+comment|// CHECK-NEXT: [[T6:%.*]] = load i32* [[N]], align 4
+comment|// CHECK-NEXT: [[T7:%.*]] = udiv i32 [[T6]], 4
+comment|// CHECK-NEXT: [[T8:%.*]] = sub i32 0, [[T7]]
+comment|// CHECK-NEXT: [[T9:%.*]] = mul nuw i32 [[DIM0]], [[DIM1]]
+comment|// CHECK-NEXT: [[T10:%.*]] = mul nsw i32 [[T8]], [[T9]]
+comment|// CHECK-NEXT: [[T11:%.*]] = getelementptr inbounds [6 x i8]* [[T5]], i32 [[T10]]
+comment|// CHECK-NEXT: store [6 x i8]* [[T11]], [6 x i8]** [[P2]], align 4
+name|__typeof
+argument_list|(
+argument|p
+argument_list|)
+name|p2
+operator|=
+operator|(
+name|p
+operator|+
+name|n
+operator|/
+literal|2
+operator|)
+operator|-
+name|n
+operator|/
+literal|4
+expr_stmt|;
+comment|// CHECK-NEXT: [[T0:%.*]] = load [6 x i8]** [[P2]], align 4
+comment|// CHECK-NEXT: [[T1:%.*]] = load [6 x i8]** [[P]], align 4
+comment|// CHECK-NEXT: [[T2:%.*]] = ptrtoint [6 x i8]* [[T0]] to i32
+comment|// CHECK-NEXT: [[T3:%.*]] = ptrtoint [6 x i8]* [[T1]] to i32
+comment|// CHECK-NEXT: [[T4:%.*]] = sub i32 [[T2]], [[T3]]
+comment|// CHECK-NEXT: [[T5:%.*]] = mul nuw i32 [[DIM0]], [[DIM1]]
+comment|// CHECK-NEXT: [[T6:%.*]] = mul nuw i32 6, [[T5]]
+comment|// CHECK-NEXT: [[T7:%.*]] = sdiv exact i32 [[T4]], [[T6]]
+comment|// CHECK-NEXT: ret i32 [[T7]]
+return|return
+name|p2
+operator|-
+name|p
 return|;
 block|}
 end_decl_stmt

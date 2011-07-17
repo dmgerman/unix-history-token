@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Basic/TargetInfo.h"
 end_include
 
@@ -401,6 +395,11 @@ init|=
 literal|0x10
 block|,
 comment|/* declared __weak, only used in byref copy                                     helpers */
+name|BLOCK_FIELD_IS_ARC
+init|=
+literal|0x40
+block|,
+comment|/* field has ARC-specific semantics */
 name|BLOCK_BYREF_CALLER
 init|=
 literal|128

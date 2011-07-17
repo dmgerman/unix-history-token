@@ -190,6 +190,27 @@ operator|->
 name|x
 expr_stmt|;
 comment|// expected-warning {{'x' is deprecated}}
+name|struct
+name|foo
+name|f1
+init|=
+block|{
+operator|.
+name|x
+operator|=
+literal|17
+block|}
+decl_stmt|;
+comment|// expected-warning {{'x' is deprecated}}
+name|struct
+name|foo
+name|f2
+init|=
+block|{
+literal|17
+block|}
+decl_stmt|;
+comment|// expected-warning {{'x' is deprecated}}
 block|}
 end_function
 

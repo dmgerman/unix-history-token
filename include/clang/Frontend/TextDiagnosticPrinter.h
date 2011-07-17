@@ -205,11 +205,20 @@ argument_list|,
 argument|const std::string&SourceLine
 argument_list|)
 block|;
+name|virtual
 name|void
-name|EmitCaretDiagnostic
+name|HandleDiagnostic
 argument_list|(
 argument|Diagnostic::Level Level
 argument_list|,
+argument|const DiagnosticInfo&Info
+argument_list|)
+block|;
+name|private
+operator|:
+name|void
+name|EmitCaretDiagnostic
+argument_list|(
 argument|SourceLocation Loc
 argument_list|,
 argument|CharSourceRange *Ranges
@@ -230,16 +239,7 @@ argument|unsigned MacroSkipStart
 argument_list|,
 argument|unsigned MacroSkipEnd
 argument_list|)
-block|;
-name|virtual
-name|void
-name|HandleDiagnostic
-argument_list|(
-argument|Diagnostic::Level Level
-argument_list|,
-argument|const DiagnosticInfo&Info
-argument_list|)
-block|; }
+block|;    }
 decl_stmt|;
 block|}
 end_decl_stmt

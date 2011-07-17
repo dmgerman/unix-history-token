@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file defines
+comment|// This file implements cocoa naming convention analysis.
 end_comment
 
 begin_comment
@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Type.h"
 end_include
 
@@ -69,6 +75,9 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|ObjCMethodDecl
+decl_stmt|;
 name|namespace
 name|ento
 block|{
@@ -90,6 +99,11 @@ name|deriveNamingConvention
 parameter_list|(
 name|Selector
 name|S
+parameter_list|,
+specifier|const
+name|ObjCMethodDecl
+modifier|*
+name|MD
 parameter_list|)
 function_decl|;
 specifier|static
@@ -99,12 +113,19 @@ name|followsFundamentalRule
 parameter_list|(
 name|Selector
 name|S
+parameter_list|,
+specifier|const
+name|ObjCMethodDecl
+modifier|*
+name|MD
 parameter_list|)
 block|{
 return|return
 name|deriveNamingConvention
 argument_list|(
 name|S
+argument_list|,
+name|MD
 argument_list|)
 operator|==
 name|CreateRule
@@ -133,13 +154,6 @@ argument_list|()
 argument_list|)
 decl_stmt|;
 name|bool
-name|isCFObjectRef
-parameter_list|(
-name|QualType
-name|T
-parameter_list|)
-function_decl|;
-name|bool
 name|isCocoaObjectRef
 parameter_list|(
 name|QualType
@@ -147,9 +161,33 @@ name|T
 parameter_list|)
 function_decl|;
 block|}
+name|namespace
+name|coreFoundation
+block|{
+name|bool
+name|isCFObjectRef
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
+name|bool
+name|followsCreateRule
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|functionName
+argument_list|)
+decl_stmt|;
+block|}
 block|}
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end: "clang:ento"
+end_comment
 
 begin_endif
 endif|#

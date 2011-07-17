@@ -61,12 +61,6 @@ directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm

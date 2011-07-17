@@ -4,6 +4,14 @@ comment|// RUN: %clang_cc1 -fms-extensions -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_comment
+comment|// CHECK: %struct.test = type { i32, %struct.nested2, i32 }
+end_comment
+
+begin_comment
+comment|// CHECK: %struct.nested2 = type { i32, %struct.nested1, i32 }
+end_comment
+
+begin_comment
 comment|// CHECK: %struct.nested1 = type { i32, i32 }
 end_comment
 
@@ -23,10 +31,6 @@ name|NESTED1
 typedef|;
 end_typedef
 
-begin_comment
-comment|// CHECK: %struct.nested2 = type { i32, %struct.nested1, i32 }
-end_comment
-
 begin_struct
 struct|struct
 name|nested2
@@ -42,10 +46,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|// CHECK: %struct.test = type { i32, %struct.nested2, i32 }
-end_comment
 
 begin_struct
 struct|struct

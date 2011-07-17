@@ -178,5 +178,98 @@ begin_comment
 comment|// CHECK-NO: declare x86_fp80 @llvm.pow.f80(x86_fp80, x86_fp80) nounwind readonly
 end_comment
 
+begin_comment
+comment|// CHECK-YES: define void @test_fma
+end_comment
+
+begin_comment
+comment|// CHECK-NO: define void @test_fma
+end_comment
+
+begin_function
+name|void
+name|test_fma
+parameter_list|(
+name|float
+name|a0
+parameter_list|,
+name|double
+name|a1
+parameter_list|,
+name|long
+name|double
+name|a2
+parameter_list|)
+block|{
+comment|// CHECK-YES: call float @llvm.fma.f32
+comment|// CHECK-NO: call float @llvm.fma.f32
+name|float
+name|l0
+init|=
+name|fmaf
+argument_list|(
+name|a0
+argument_list|,
+name|a0
+argument_list|,
+name|a0
+argument_list|)
+decl_stmt|;
+comment|// CHECK-YES: call double @llvm.fma.f64
+comment|// CHECK-NO: call double @llvm.fma.f64
+name|double
+name|l1
+init|=
+name|fma
+argument_list|(
+name|a1
+argument_list|,
+name|a1
+argument_list|,
+name|a1
+argument_list|)
+decl_stmt|;
+comment|// CHECK-YES: call x86_fp80 @llvm.fma.f80
+comment|// CHECK-NO: call x86_fp80 @llvm.fma.f80
+name|long
+name|double
+name|l2
+init|=
+name|fmal
+argument_list|(
+name|a2
+argument_list|,
+name|a2
+argument_list|,
+name|a2
+argument_list|)
+decl_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-YES: declare float @llvm.fma.f32(float, float, float) nounwind readnone
+end_comment
+
+begin_comment
+comment|// CHECK-YES: declare double @llvm.fma.f64(double, double, double) nounwind readnone
+end_comment
+
+begin_comment
+comment|// CHECK-YES: declare x86_fp80 @llvm.fma.f80(x86_fp80, x86_fp80, x86_fp80) nounwind readnone
+end_comment
+
+begin_comment
+comment|// CHECK-NO: declare float @llvm.fma.f32(float, float, float) nounwind readnone
+end_comment
+
+begin_comment
+comment|// CHECK-NO: declare double @llvm.fma.f64(double, double, double) nounwind readnone
+end_comment
+
+begin_comment
+comment|// CHECK-NO: declare x86_fp80 @llvm.fma.f80(x86_fp80, x86_fp80, x86_fp80) nounwind readnone
+end_comment
+
 end_unit
 

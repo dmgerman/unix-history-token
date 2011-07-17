@@ -139,6 +139,20 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|ONE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TWO
+value|2
+end_define
+
 begin_function
 name|int
 name|test_cond
@@ -161,6 +175,14 @@ literal|4
 operator|+
 name|foobar
 decl_stmt|;
+comment|// CHECK: x = y ? ONE : TWO;
+name|x
+operator|=
+name|y
+condition|?
+name|ONE
+name|TWO
+expr_stmt|;
 return|return
 name|x
 return|;

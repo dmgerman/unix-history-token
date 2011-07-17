@@ -166,16 +166,16 @@ parameter_list|)
 block|{
 comment|// CHECK: macro-backtrace-limit.c:31:7: warning: comparison of distinct pointer types ('int *' and 'float *')
 comment|// CHECK: if (M12(ip, fp)) { }
-comment|// CHECK: macro-backtrace-limit.c:15:19: note: instantiated from:
+comment|// CHECK: macro-backtrace-limit.c:15:19: note: expanded from:
 comment|// CHECK: #define M12(A, B) M11(A, B)
-comment|// CHECK: macro-backtrace-limit.c:14:19: note: instantiated from:
+comment|// CHECK: macro-backtrace-limit.c:14:19: note: expanded from:
 comment|// CHECK: #define M11(A, B) M10(A, B)
-comment|// CHECK: note: (skipping 7 contexts in backtrace; use -fmacro-backtrace-limit=0 to see all)
-comment|// CHECK: macro-backtrace-limit.c:6:18: note: instantiated from:
+comment|// CHECK: note: (skipping 7 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+comment|// CHECK: macro-backtrace-limit.c:6:18: note: expanded from:
 comment|// CHECK: #define M3(A, B) M2(A, B)
-comment|// CHECK: macro-backtrace-limit.c:5:18: note: instantiated from:
+comment|// CHECK: macro-backtrace-limit.c:5:18: note: expanded from:
 comment|// CHECK: #define M2(A, B) M1(A, B)
-comment|// CHECK: macro-backtrace-limit.c:4:23: note: instantiated from:
+comment|// CHECK: macro-backtrace-limit.c:4:23: note: expanded from:
 comment|// CHECK: #define M1(A, B) ((A)< (B))
 if|if
 condition|(

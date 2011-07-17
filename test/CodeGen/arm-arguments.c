@@ -375,7 +375,7 @@ comment|// APCS-GNU: define void @f11(
 end_comment
 
 begin_comment
-comment|// APCS-GNU: struct.s10* sret
+comment|// APCS-GNU: struct.s11* sret
 end_comment
 
 begin_comment
@@ -484,7 +484,7 @@ comment|// APCS-GNU: define void @f14(
 end_comment
 
 begin_comment
-comment|// APCS-GNU: struct.s13* sret
+comment|// APCS-GNU: union.u14* sret
 end_comment
 
 begin_comment

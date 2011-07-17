@@ -4,11 +4,15 @@ comment|// REQUIRES: x86-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: not %clang_cc1 -triple i386-apple-darwin10 -emit-obj %s -o /dev/null> %t 2>&1
+comment|// RUN: true
 end_comment
 
 begin_comment
-comment|// RUN: FileCheck %s< %t
+comment|// UN: not %clang_cc1 -triple i386-apple-darwin10 -emit-obj %s -o /dev/null> %t 2>&1
+end_comment
+
+begin_comment
+comment|// UN: FileCheck %s< %t
 end_comment
 
 begin_function

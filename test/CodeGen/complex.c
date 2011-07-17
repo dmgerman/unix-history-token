@@ -396,5 +396,27 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|t8
+parameter_list|()
+block|{
+name|__complex__
+name|int
+modifier|*
+name|x
+init|=
+operator|&
+operator|(
+name|__complex__
+name|int
+operator|)
+block|{
+literal|1
+block|}
+decl_stmt|;
+block|}
+end_function
+
 end_unit
 

@@ -101,7 +101,7 @@ comment|// RUN: c-index-test -cursor-at=%s:5:7 -I%S/Inputs %s | FileCheck -check
 end_comment
 
 begin_comment
-comment|// CHECK-3: macro instantiation=OBSCURE:1:9
+comment|// CHECK-3: macro expansion=OBSCURE:1:9
 end_comment
 
 begin_comment
@@ -109,7 +109,7 @@ comment|// RUN: c-index-test -cursor-at=%s:6:6 -I%S/Inputs %s | FileCheck -check
 end_comment
 
 begin_comment
-comment|// CHECK-4: macro instantiation=OBSCURE:1:9
+comment|// CHECK-4: macro expansion=OBSCURE:1:9
 end_comment
 
 begin_comment
@@ -117,7 +117,7 @@ comment|// RUN: c-index-test -cursor-at=%s:6:19 -I%S/Inputs %s | FileCheck -chec
 end_comment
 
 begin_comment
-comment|// CHECK-5: macro instantiation=DECORATION:2:9
+comment|// CHECK-5: macro expansion=DECORATION:2:9
 end_comment
 
 begin_comment
@@ -133,7 +133,7 @@ comment|// RUN: c-index-test -cursor-at=%s:14:1 -I%S/Inputs %s | FileCheck -chec
 end_comment
 
 begin_comment
-comment|// CHECK-7: macro instantiation=B:12:9
+comment|// CHECK-7: macro expansion=B:12:9
 end_comment
 
 begin_comment

@@ -8,7 +8,7 @@ comment|// Make sure we generate something sane instead of a ptrtoint
 end_comment
 
 begin_comment
-comment|// CHECK: bitcast (%0* @r to %union.x*), [4 x i8] undef
+comment|// CHECK: bitcast ({ %union.x*, [4 x i8] }* @r to %union.x*), [4 x i8] undef
 end_comment
 
 begin_union
@@ -38,7 +38,7 @@ union|;
 end_union
 
 begin_comment
-comment|// CHECK: global %1 { [3 x i8] zeroinitializer, [5 x i8] undef }
+comment|// CHECK: global { [3 x i8], [5 x i8] } { [3 x i8] zeroinitializer, [5 x i8] undef }
 end_comment
 
 begin_union

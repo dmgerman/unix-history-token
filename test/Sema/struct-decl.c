@@ -83,7 +83,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|//expected-error{{array size is negative}}
+comment|//expected-error{{'name2' declared as an array with a negative size}}
 end_comment
 
 begin_comment

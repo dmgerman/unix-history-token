@@ -1562,6 +1562,17 @@ literal|1
 operator|>
 name|OpenCLExtensions
 expr_stmt|;
+comment|/// \brief A list of the namespaces we've seen.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|uint64_t
+operator|,
+literal|4
+operator|>
+name|KnownNamespaces
+expr_stmt|;
 comment|//@}
 comment|/// \brief Diagnostic IDs and their mappings that the user changed.
 name|llvm
@@ -2817,7 +2828,7 @@ comment|///
 comment|/// \returns true if there was an error while reading the
 comment|/// declarations for this declaration context.
 name|virtual
-name|bool
+name|ExternalLoadResult
 name|FindExternalLexicalDecls
 argument_list|(
 specifier|const
@@ -2996,6 +3007,23 @@ argument_list|(
 argument|Selector Sel
 argument_list|)
 expr_stmt|;
+comment|/// \brief Load the set of namespaces that are known to the external source,
+comment|/// which will be used during typo correction.
+name|virtual
+name|void
+name|ReadKnownNamespaces
+argument_list|(
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|NamespaceDecl
+operator|*
+operator|>
+operator|&
+name|Namespaces
+argument_list|)
+decl_stmt|;
 comment|/// \brief Load a selector from disk, registering its ID if it exists.
 name|void
 name|LoadSelector

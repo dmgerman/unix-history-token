@@ -177,11 +177,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f8_1(%struct.s19* sret %agg.result)
+comment|// CHECK: define void @f8_1(%union.u8* sret %agg.result)
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f8_2(%struct.s19* byval align 16 %a0)
+comment|// CHECK: define void @f8_2(%union.u8* byval align 16 %a0)
 end_comment
 
 begin_union
@@ -284,7 +284,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f11(%struct.s19* sret %agg.result)
+comment|// CHECK: define void @f11(%union.anon* sret %agg.result)
 end_comment
 
 begin_union
@@ -856,7 +856,7 @@ return|return
 operator|*
 name|X
 return|;
-comment|// CHECK: define %struct.f24s @f24(%struct.f23S* %X, %struct.f24s* %P2)
+comment|// CHECK: define { i64, i32 } @f24(%struct.f23S* %X, %struct.f24s* %P2)
 block|}
 end_function
 
@@ -924,7 +924,7 @@ modifier|*
 name|P
 parameter_list|)
 block|{
-comment|// CHECK: define %struct.foo26 @f26(%struct.foo26* %P)
+comment|// CHECK: define { i32*, float* } @f26(%struct.foo26* %P)
 return|return
 operator|*
 name|P
@@ -1293,6 +1293,239 @@ block|{
 name|func
 argument_list|(
 name|ss
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: define double @f36(double %arg.coerce)
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|v2i32
+name|__attribute
+typedef|((
+name|__vector_size__
+typedef|(8)));
+end_typedef
+
+begin_function
+name|v2i32
+name|f36
+parameter_list|(
+name|v2i32
+name|arg
+parameter_list|)
+block|{
+return|return
+name|arg
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: declare void @f38(<8 x float>)
+end_comment
+
+begin_comment
+comment|// CHECK: declare void @f37(<8 x float>)
+end_comment
+
+begin_typedef
+typedef|typedef
+name|float
+name|__m256
+name|__attribute__
+typedef|((
+name|__vector_size__
+typedef|(32)));
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|__m256
+name|m
+decl_stmt|;
+block|}
+name|s256
+typedef|;
+end_typedef
+
+begin_decl_stmt
+name|s256
+name|x38
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|__m256
+name|x37
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|void
+name|f38
+parameter_list|(
+name|s256
+name|x
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|f37
+parameter_list|(
+name|__m256
+name|x
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|f39
+parameter_list|()
+block|{
+name|f38
+argument_list|(
+name|x38
+argument_list|)
+expr_stmt|;
+name|f37
+argument_list|(
+name|x37
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// The two next tests make sure that the struct below is passed
+end_comment
+
+begin_comment
+comment|// in the same way regardless of avx being used
+end_comment
+
+begin_comment
+comment|// CHECK: declare void @func40(%struct.t128* byval align 16)
+end_comment
+
+begin_typedef
+typedef|typedef
+name|float
+name|__m128
+name|__attribute__
+typedef|((
+name|__vector_size__
+typedef|(16)));
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|t128
+block|{
+name|__m128
+name|m
+decl_stmt|;
+name|__m128
+name|n
+decl_stmt|;
+block|}
+name|two128
+typedef|;
+end_typedef
+
+begin_function_decl
+specifier|extern
+name|void
+name|func40
+parameter_list|(
+name|two128
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|func41
+parameter_list|(
+name|two128
+name|s
+parameter_list|)
+block|{
+name|func40
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: declare void @func42(%struct.t128_2* byval align 16)
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|xxx
+block|{
+name|__m128
+name|array
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+name|Atwo128
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|t128_2
+block|{
+name|Atwo128
+name|x
+decl_stmt|;
+block|}
+name|SA
+typedef|;
+end_typedef
+
+begin_function_decl
+specifier|extern
+name|void
+name|func42
+parameter_list|(
+name|SA
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|func43
+parameter_list|(
+name|SA
+name|s
+parameter_list|)
+block|{
+name|func42
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 block|}

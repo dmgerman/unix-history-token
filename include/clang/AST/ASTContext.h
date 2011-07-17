@@ -637,7 +637,19 @@ name|llvm
 operator|::
 name|FoldingSet
 operator|<
+name|SubstTemplateTemplateParmStorage
+operator|>
+name|SubstTemplateTemplateParms
+block|;
+name|mutable
+name|llvm
+operator|::
+name|ContextualFoldingSet
+operator|<
 name|SubstTemplateTemplateParmPackStorage
+block|,
+name|ASTContext
+operator|&
 operator|>
 name|SubstTemplateTemplateParmPacks
 block|;
@@ -4163,6 +4175,69 @@ return|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|/// getLifetimeQualifiedType - Returns a type with the given
+end_comment
+
+begin_comment
+comment|/// lifetime qualifier.
+end_comment
+
+begin_decl_stmt
+name|QualType
+name|getLifetimeQualifiedType
+argument_list|(
+name|QualType
+name|type
+argument_list|,
+name|Qualifiers
+operator|::
+name|ObjCLifetime
+name|lifetime
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|type
+operator|.
+name|getObjCLifetime
+argument_list|()
+operator|==
+name|Qualifiers
+operator|::
+name|OCL_None
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|lifetime
+operator|!=
+name|Qualifiers
+operator|::
+name|OCL_None
+argument_list|)
+expr_stmt|;
+name|Qualifiers
+name|qs
+decl_stmt|;
+name|qs
+operator|.
+name|addObjCLifetime
+argument_list|(
+name|lifetime
+argument_list|)
+expr_stmt|;
+return|return
+name|getQualifiedType
+argument_list|(
+name|type
+argument_list|,
+name|qs
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
 begin_decl_stmt
 name|DeclarationNameInfo
 name|getNameForTemplate
@@ -4237,6 +4312,21 @@ name|NNS
 argument_list|,
 name|OverloadedOperatorKind
 name|Operator
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|TemplateName
+name|getSubstTemplateTemplateParm
+argument_list|(
+name|TemplateTemplateParmDecl
+operator|*
+name|param
+argument_list|,
+name|TemplateName
+name|replacement
 argument_list|)
 decl|const
 decl_stmt|;
@@ -4406,16 +4496,23 @@ begin_comment
 comment|/// its NSObject attribute set.
 end_comment
 
-begin_decl_stmt
+begin_function
+specifier|static
 name|bool
 name|isObjCNSObjectType
-argument_list|(
+parameter_list|(
 name|QualType
 name|Ty
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+block|{
+return|return
+name|Ty
+operator|->
+name|isObjCNSObjectType
+argument_list|()
+return|;
+block|}
+end_function
 
 begin_comment
 comment|//===--------------------------------------------------------------------===//
@@ -5829,6 +5926,58 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Perform adjustment on the parameter type of a function.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This routine adjusts the given parameter type @p T to the actual
+end_comment
+
+begin_comment
+comment|/// parameter type used by semantic analysis (C99 6.7.5.3p[7,8],
+end_comment
+
+begin_comment
+comment|/// C++ [dcl.fct]p3). The adjusted parameter type is returned.
+end_comment
+
+begin_function_decl
+name|QualType
+name|getAdjustedParameterType
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Retrieve the parameter type as adjusted for use in the signature
+end_comment
+
+begin_comment
+comment|/// of a function, decaying array and function types and removing top-level
+end_comment
+
+begin_comment
+comment|/// cv-qualifiers.
+end_comment
+
+begin_function_decl
+name|QualType
+name|getSignatureParameterType
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// getArrayDecayedType - Return the properly qualified result of decaying the
 end_comment
 
@@ -5885,6 +6034,26 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// \brief Recurses in pointer/array types until it finds an objc retainable
+end_comment
+
+begin_comment
+comment|/// type and returns its ownership.
+end_comment
+
+begin_expr_stmt
+name|Qualifiers
+operator|::
+name|ObjCLifetime
+name|getInnerObjCOwnership
+argument_list|(
+argument|QualType T
+argument_list|)
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Whether this is a promotable bitfield reference according
@@ -6154,6 +6323,17 @@ end_function_decl
 begin_comment
 comment|// C99 6.2.7p1
 end_comment
+
+begin_function_decl
+name|bool
+name|propertyTypesAreCompatible
+parameter_list|(
+name|QualType
+parameter_list|,
+name|QualType
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|bool

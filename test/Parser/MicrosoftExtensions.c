@@ -392,6 +392,9 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
+name|__debugbreak
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -emit-llvm-only
+comment|// RUN: %clang_cc1 %s -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_typedef
@@ -163,6 +163,40 @@ block|}
 decl_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// CHECK: %struct.fp_struct_foo = type { void (i32)* }
+end_comment
+
+begin_struct
+struct|struct
+name|fp_struct_bar
+block|{
+name|int
+name|a
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|fp_struct_foo
+block|{
+name|void
+function_decl|(
+modifier|*
+name|FP
+function_decl|)
+parameter_list|(
+name|struct
+name|fp_struct_bar
+parameter_list|)
+function_decl|;
+block|}
+name|G
+struct|;
+end_struct
 
 end_unit
 

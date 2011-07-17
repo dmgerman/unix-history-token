@@ -1990,6 +1990,12 @@ name|getRawEncoding
 argument_list|()
 expr_stmt|;
 block|}
+comment|/// \brief Determine whether this name involves a template parameter.
+name|bool
+name|isInstantiationDependent
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Determine whether this name contains an unexpanded
 comment|/// parameter pack.
 name|bool

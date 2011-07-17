@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -179,6 +173,49 @@ name|VisitFlag
 operator|>
 name|VisitedFD
 expr_stmt|;
+comment|/// \name Statistics
+comment|/// @{
+comment|/// \brief Number of function CFGs built and analyzed.
+name|unsigned
+name|NumFunctionsAnalyzed
+decl_stmt|;
+comment|/// \brief Number of functions for which the CFG could not be successfully
+comment|/// built.
+name|unsigned
+name|NumFunctionsWithBadCFGs
+decl_stmt|;
+comment|/// \brief Total number of blocks across all CFGs.
+name|unsigned
+name|NumCFGBlocks
+decl_stmt|;
+comment|/// \brief Largest number of CFG blocks for a single function analyzed.
+name|unsigned
+name|MaxCFGBlocksPerFunction
+decl_stmt|;
+comment|/// \brief Total number of CFGs with variables analyzed for uninitialized
+comment|/// uses.
+name|unsigned
+name|NumUninitAnalysisFunctions
+decl_stmt|;
+comment|/// \brief Total number of variables analyzed for uninitialized uses.
+name|unsigned
+name|NumUninitAnalysisVariables
+decl_stmt|;
+comment|/// \brief Max number of variables analyzed for uninitialized uses in a single
+comment|/// function.
+name|unsigned
+name|MaxUninitAnalysisVariablesPerFunction
+decl_stmt|;
+comment|/// \brief Total number of block visits during uninitialized use analysis.
+name|unsigned
+name|NumUninitAnalysisBlockVisits
+decl_stmt|;
+comment|/// \brief Max number of block visits during uninitialized use analysis of
+comment|/// a single function.
+name|unsigned
+name|MaxUninitAnalysisBlockVisitsPerFunction
+decl_stmt|;
+comment|/// @}
 name|public
 label|:
 name|AnalysisBasedWarnings
@@ -217,6 +254,11 @@ return|return
 name|DefaultPolicy
 return|;
 block|}
+name|void
+name|PrintStats
+argument_list|()
+specifier|const
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

@@ -26,7 +26,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @t13 = global %0 zeroinitializer, section "SECT"
+comment|// CHECK: @t13 = global %struct.s0 zeroinitializer, section "SECT"
 end_comment
 
 begin_struct

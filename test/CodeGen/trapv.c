@@ -3,10 +3,6 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin10 -ftrapv %s -emit-llvm -o - | FileCheck %s
 end_comment
 
-begin_comment
-comment|// CHECK: [[I32O:%.*]] = type { i32, i1 }
-end_comment
-
 begin_decl_stmt
 name|unsigned
 name|int
@@ -50,9 +46,9 @@ name|uk
 expr_stmt|;
 comment|// CHECK:      [[T1:%.*]] = load i32* @j
 comment|// CHECK-NEXT: [[T2:%.*]] = load i32* @k
-comment|// CHECK-NEXT: [[T3:%.*]] = call [[I32O]] @llvm.sadd.with.overflow.i32(i32 [[T1]], i32 [[T2]])
-comment|// CHECK-NEXT: [[T4:%.*]] = extractvalue [[I32O]] [[T3]], 0
-comment|// CHECK-NEXT: [[T5:%.*]] = extractvalue [[I32O]] [[T3]], 1
+comment|// CHECK-NEXT: [[T3:%.*]] = call { i32, i1 } @llvm.sadd.with.overflow.i32(i32 [[T1]], i32 [[T2]])
+comment|// CHECK-NEXT: [[T4:%.*]] = extractvalue { i32, i1 } [[T3]], 0
+comment|// CHECK-NEXT: [[T5:%.*]] = extractvalue { i32, i1 } [[T3]], 1
 comment|// CHECK-NEXT: br i1 [[T5]]
 comment|// CHECK:      call void @llvm.trap()
 name|i
@@ -87,9 +83,9 @@ operator|++
 argument_list|)
 expr_stmt|;
 comment|// CHECK:      [[T1:%.*]] = load i32* @i
-comment|// CHECK-NEXT: [[T2:%.*]] = call [[I32O]] @llvm.sadd.with.overflow.i32(i32 [[T1]], i32 1)
-comment|// CHECK-NEXT: [[T3:%.*]] = extractvalue [[I32O]] [[T2]], 0
-comment|// CHECK-NEXT: [[T4:%.*]] = extractvalue [[I32O]] [[T2]], 1
+comment|// CHECK-NEXT: [[T2:%.*]] = call { i32, i1 } @llvm.sadd.with.overflow.i32(i32 [[T1]], i32 1)
+comment|// CHECK-NEXT: [[T3:%.*]] = extractvalue { i32, i1 } [[T2]], 0
+comment|// CHECK-NEXT: [[T4:%.*]] = extractvalue { i32, i1 } [[T2]], 1
 comment|// CHECK-NEXT: br i1 [[T4]]
 comment|// CHECK:      call void @llvm.trap()
 block|}
@@ -118,9 +114,9 @@ name|i
 argument_list|)
 expr_stmt|;
 comment|// CHECK:      [[T1:%.*]] = load i32* @i
-comment|// CHECK-NEXT: [[T2:%.*]] = call [[I32O]] @llvm.sadd.with.overflow.i32(i32 [[T1]], i32 1)
-comment|// CHECK-NEXT: [[T3:%.*]] = extractvalue [[I32O]] [[T2]], 0
-comment|// CHECK-NEXT: [[T4:%.*]] = extractvalue [[I32O]] [[T2]], 1
+comment|// CHECK-NEXT: [[T2:%.*]] = call { i32, i1 } @llvm.sadd.with.overflow.i32(i32 [[T1]], i32 1)
+comment|// CHECK-NEXT: [[T3:%.*]] = extractvalue { i32, i1 } [[T2]], 0
+comment|// CHECK-NEXT: [[T4:%.*]] = extractvalue { i32, i1 } [[T2]], 1
 comment|// CHECK-NEXT: br i1 [[T4]]
 comment|// CHECK:      call void @llvm.trap()
 block|}

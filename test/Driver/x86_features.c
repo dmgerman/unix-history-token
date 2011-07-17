@@ -4,7 +4,11 @@ comment|// RUN: %clang -ccc-host-triple i386-unknown-unknown -### -S %s -msse -m
 end_comment
 
 begin_comment
-comment|// RUN: grep '"-target-feature" "+sse" "-target-feature" "+sse4" "-target-feature" "-sse" "-target-feature" "-mmx" "-target-feature" "+sse"' %t
+comment|// RUN: grep '"pentium4" "-target-feature" "+sse4" "-target-feature" "-mmx" "-target-feature" "+sse"' %t
+end_comment
+
+begin_comment
+comment|// Note that we filter out all but the last -m(no)sse.
 end_comment
 
 end_unit

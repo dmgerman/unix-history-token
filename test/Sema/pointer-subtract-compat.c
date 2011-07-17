@@ -57,7 +57,7 @@ name|fp
 operator|-
 name|fp
 decl_stmt|;
-comment|// expected-warning{{arithmetic on pointer to function type 'void (*)(void)' is a GNU extension}}
+comment|// expected-warning{{arithmetic on pointers to the function type 'void (void)' is a GNU extension}}
 block|}
 end_function
 

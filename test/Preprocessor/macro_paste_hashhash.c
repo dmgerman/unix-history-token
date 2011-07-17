@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -E %s | grep '^"x ## y";$'
+comment|// RUN: %clang_cc1 -E %s | FileCheck %s
 end_comment
 
 begin_define
@@ -42,12 +42,39 @@ parameter_list|)
 value|in_between(c hash_hash d)
 end_define
 
+begin_comment
+comment|// CHECK: "x ## y";
+end_comment
+
 begin_expr_stmt
 name|join
 argument_list|(
 name|x
 argument_list|,
 name|y
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|FOO
+parameter_list|(
+name|x
+parameter_list|)
+value|A x B
+end_define
+
+begin_comment
+comment|// CHECK: A ## B;
+end_comment
+
+begin_expr_stmt
+name|FOO
+argument_list|(
+operator|#
+operator|#
 argument_list|)
 expr_stmt|;
 end_expr_stmt

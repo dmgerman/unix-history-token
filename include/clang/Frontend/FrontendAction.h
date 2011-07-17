@@ -154,6 +154,10 @@ name|friend
 name|class
 name|ASTMergeAction
 decl_stmt|;
+name|friend
+name|class
+name|WrapperFrontendAction
+decl_stmt|;
 name|private
 label|:
 name|ASTConsumer
@@ -205,6 +209,25 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
+comment|/// \brief Callback before starting processing a single input, giving the
+comment|/// opportunity to modify the CompilerInvocation or do some other action
+comment|/// before BeginSourceFileAction is called.
+comment|///
+comment|/// \return True on success; on failure \see BeginSourceFileAction() and
+comment|/// ExecutionAction() and EndSourceFileAction() will not be called.
+name|virtual
+name|bool
+name|BeginInvocation
+parameter_list|(
+name|CompilerInstance
+modifier|&
+name|CI
+parameter_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// BeginSourceFileAction - Callback at the start of processing a single
 comment|/// input.
 comment|///
@@ -659,6 +682,112 @@ name|true
 return|;
 block|}
 expr|}
+block|;
+comment|/// WrapperFrontendAction - A frontend action which simply wraps some other
+comment|/// runtime specified frontend action. Deriving from this class allows an
+comment|/// action to inject custom logic around some existing action's behavior. It
+comment|/// implements every virtual method in the FrontendAction interface by
+comment|/// forwarding to the wrapped action.
+name|class
+name|WrapperFrontendAction
+operator|:
+name|public
+name|FrontendAction
+block|{
+name|llvm
+operator|::
+name|OwningPtr
+operator|<
+name|FrontendAction
+operator|>
+name|WrappedAction
+block|;
+name|protected
+operator|:
+name|virtual
+name|ASTConsumer
+operator|*
+name|CreateASTConsumer
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|,
+argument|llvm::StringRef InFile
+argument_list|)
+block|;
+name|virtual
+name|bool
+name|BeginInvocation
+argument_list|(
+name|CompilerInstance
+operator|&
+name|CI
+argument_list|)
+block|;
+name|virtual
+name|bool
+name|BeginSourceFileAction
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|,
+argument|llvm::StringRef Filename
+argument_list|)
+block|;
+name|virtual
+name|void
+name|ExecuteAction
+argument_list|()
+block|;
+name|virtual
+name|void
+name|EndSourceFileAction
+argument_list|()
+block|;
+name|public
+operator|:
+comment|/// Construct a WrapperFrontendAction from an existing action, taking
+comment|/// ownership of it.
+name|WrapperFrontendAction
+argument_list|(
+name|FrontendAction
+operator|*
+name|WrappedAction
+argument_list|)
+block|;
+name|virtual
+name|bool
+name|usesPreprocessorOnly
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|bool
+name|usesCompleteTranslationUnit
+argument_list|()
+block|;
+name|virtual
+name|bool
+name|hasPCHSupport
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|bool
+name|hasASTFileSupport
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|bool
+name|hasIRSupport
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|bool
+name|hasCodeCompletionSupport
+argument_list|()
+specifier|const
+block|; }
 block|;  }
 end_decl_stmt
 

@@ -754,6 +754,12 @@ comment|/// of file source-location information.
 name|FILE_SOURCE_LOCATION_OFFSETS
 init|=
 literal|45
+block|,
+comment|/// \brief Record code for the set of known namespaces, which are used
+comment|/// for typo correction.
+name|KNOWN_NAMESPACES
+init|=
+literal|46
 block|}
 enum|;
 comment|/// \brief Record types used within a source manager block.
@@ -780,8 +786,8 @@ init|=
 literal|3
 block|,
 comment|/// \brief Describes a source location entry (SLocEntry) for a
-comment|/// macro instantiation.
-name|SM_SLOC_INSTANTIATION_ENTRY
+comment|/// macro expansion.
+name|SM_SLOC_EXPANSION_ENTRY
 init|=
 literal|4
 block|,
@@ -822,9 +828,8 @@ comment|/// \brief Record types used within a preprocessor detail block.
 enum|enum
 name|PreprocessorDetailRecordTypes
 block|{
-comment|/// \brief Describes a macro instantiation within the preprocessing
-comment|/// record.
-name|PPD_MACRO_INSTANTIATION
+comment|/// \brief Describes a macro expansion within the preprocessing record.
+name|PPD_MACRO_EXPANSION
 init|=
 literal|0
 block|,
@@ -1731,6 +1736,9 @@ block|,
 comment|/// \brief An ObjCIsa Expr record.
 name|EXPR_OBJC_ISA
 block|,
+comment|/// \breif An ObjCIndirectCopyRestoreExpr record.
+name|EXPR_OBJC_INDIRECT_COPY_RESTORE
+block|,
 comment|/// \brief An ObjCForCollectionStmt record.
 name|STMT_OBJC_FOR_COLLECTION
 block|,
@@ -1748,6 +1756,9 @@ name|STMT_OBJC_AT_SYNCHRONIZED
 block|,
 comment|/// \brief An ObjCAtThrowStmt record.
 name|STMT_OBJC_AT_THROW
+block|,
+comment|/// \brief An ObjCAutoreleasePoolStmt record.
+name|STMT_OBJC_AUTORELEASE_POOL
 block|,
 comment|// C++
 comment|/// \brief A CXXCatchStmt record.
@@ -1798,12 +1809,6 @@ comment|// CXXTypeidExpr (of expr).
 name|EXPR_CXX_TYPEID_TYPE
 block|,
 comment|// CXXTypeidExpr (of type).
-name|EXPR_CXX_UUIDOF_EXPR
-block|,
-comment|// CXXUuidofExpr (of expr).
-name|EXPR_CXX_UUIDOF_TYPE
-block|,
-comment|// CXXUuidofExpr (of type).
 name|EXPR_CXX_THIS
 block|,
 comment|// CXXThisExpr
@@ -1873,16 +1878,42 @@ comment|// PackExpansionExpr
 name|EXPR_SIZEOF_PACK
 block|,
 comment|// SizeOfPackExpr
+name|EXPR_SUBST_NON_TYPE_TEMPLATE_PARM
+block|,
+comment|// SubstNonTypeTemplateParmExpr
 name|EXPR_SUBST_NON_TYPE_TEMPLATE_PARM_PACK
 block|,
 comment|// SubstNonTypeTemplateParmPackExpr
+name|EXPR_MATERIALIZE_TEMPORARY
+block|,
+comment|// MaterializeTemporaryExpr
 comment|// CUDA
 name|EXPR_CUDA_KERNEL_CALL
 block|,
 comment|// CUDAKernelCallExpr
 comment|// OpenCL
 name|EXPR_ASTYPE
-comment|// An AsTypeExpr record.
+block|,
+comment|// AsTypeExpr
+comment|// Microsoft
+name|EXPR_CXX_UUIDOF_EXPR
+block|,
+comment|// CXXUuidofExpr (of expr).
+name|EXPR_CXX_UUIDOF_TYPE
+block|,
+comment|// CXXUuidofExpr (of type).
+name|STMT_SEH_EXCEPT
+block|,
+comment|// SEHExceptStmt
+name|STMT_SEH_FINALLY
+block|,
+comment|// SEHFinallyStmt
+name|STMT_SEH_TRY
+block|,
+comment|// SEHTryStmt
+comment|// ARC
+name|EXPR_OBJC_BRIDGED_CAST
+comment|// ObjCBridgedCastExpr
 block|}
 enum|;
 comment|/// \brief The kinds of designators that can occur in a

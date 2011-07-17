@@ -27,7 +27,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|// CHECK: @a = global %0 { i32 1, [2 x i32] [i32 7, i32 11] }
+comment|// CHECK: @a = global { i32, [2 x i32] } { i32 1, [2 x i32] [i32 7, i32 11] }
 end_comment
 
 begin_struct
@@ -56,7 +56,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|// CHECK: @b = global %0 { i32 1, [2 x i32] [i32 13, i32 15] }
+comment|// CHECK: @b = global { i32, [2 x i32] } { i32 1, [2 x i32] [i32 13, i32 15] }
 end_comment
 
 end_unit

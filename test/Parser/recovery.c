@@ -318,6 +318,29 @@ block|}
 end_function
 
 begin_comment
+comment|// rdar://9045701
+end_comment
+
+begin_function
+name|void
+name|test9045701
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+define|#
+directive|define
+name|VALUE
+value|0
+name|x
+operator|=
+name|VALUE
+comment|// expected-error{{expected ';' after expression}}
+block|}
+end_function
+
+begin_comment
 comment|// rdar://7980651
 end_comment
 
@@ -369,6 +392,47 @@ name|z
 init|=
 name|y
 decl_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test2
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+define|#
+directive|define
+name|VALUE2
+value|VALUE+VALUE
+define|#
+directive|define
+name|VALUE3
+value|VALUE+0
+define|#
+directive|define
+name|VALUE4
+parameter_list|(
+name|x
+parameter_list|)
+value|x+0
+name|x
+operator|=
+name|VALUE2
+comment|// expected-error{{expected ';' after expression}}
+name|x
+operator|=
+name|VALUE3
+comment|// expected-error{{expected ';' after expression}}
+name|x
+operator|=
+name|VALUE4
+argument_list|(
+literal|0
+argument_list|)
+comment|// expected-error{{expected ';' after expression}}
 block|}
 end_function
 

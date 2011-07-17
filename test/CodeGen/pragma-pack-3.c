@@ -4,19 +4,11 @@ comment|// RUN: %clang_cc1 -triple i386-apple-darwin9 %s -emit-llvm -o - | FileC
 end_comment
 
 begin_comment
-comment|// CHECK-X32: %struct.menu = type<{ i8*, i8, i8 }>
-end_comment
-
-begin_comment
 comment|// CHECK-X32: %union.command = type<{ i8*, [2 x i8] }>
 end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin9 %s -emit-llvm -o - | FileCheck -check-prefix X64 %s
-end_comment
-
-begin_comment
-comment|// CHECK-X64: %struct.menu = type<{ i8*, i8, i8 }>
 end_comment
 
 begin_comment

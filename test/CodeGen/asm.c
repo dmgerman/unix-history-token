@@ -554,5 +554,22 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// PR10299 - fpsr, fpcr
+end_comment
+
+begin_function
+name|void
+name|test
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|__asm__
+specifier|__volatile__
+asm|(					   \ 		       "finit"				   \ 		       :				   \ 		       :				   \ 		       :"st","st(1)","st(2)","st(3)",	   \ 			"st(4)","st(5)","st(6)","st(7)",   \ 			"fpsr","fpcr"			   \ 							   );
+block|}
+end_function
+
 end_unit
 

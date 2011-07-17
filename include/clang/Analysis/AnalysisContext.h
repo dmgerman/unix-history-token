@@ -423,6 +423,18 @@ name|void
 name|dumpCFG
 parameter_list|()
 function_decl|;
+comment|/// \brief Returns true if we have built a CFG for this analysis context.
+comment|/// Note that this doesn't correspond to whether or not a valid CFG exists, it
+comment|/// corresponds to whether we *attempted* to build one.
+name|bool
+name|isCFGBuilt
+argument_list|()
+specifier|const
+block|{
+return|return
+name|builtCFG
+return|;
+block|}
 name|ParentMap
 modifier|&
 name|getParentMap

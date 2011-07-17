@@ -272,7 +272,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{size of static array must be an integer constant expression}}
+comment|// expected-warning {{variable length array folded to constant array as an extension}}
 end_comment
 
 begin_decl_stmt
@@ -396,7 +396,7 @@ block|}
 end_function
 
 begin_comment
-comment|// expected-error {{variable-sized object may not be initialized}}
+comment|// expected-warning {{variable length array folded to constant array as an extension}}
 end_comment
 
 begin_comment

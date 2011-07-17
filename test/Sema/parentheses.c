@@ -159,6 +159,32 @@ name|void
 call|)
 argument_list|(
 name|i
+operator|&
+name|i
+operator||
+name|i
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{'&' within '|'}} \
+comment|// expected-note {{place parentheses around the '&' expression to silence this warning}}
+call|(
+name|void
+call|)
+argument_list|(
+name|i
+operator||
+name|i
+operator|&
+name|i
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{'&' within '|'}} \
+comment|// expected-note {{place parentheses around the '&' expression to silence this warning}}
+call|(
+name|void
+call|)
+argument_list|(
+name|i
 operator|||
 name|i
 operator|&&
@@ -283,9 +309,9 @@ else|:
 literal|2
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{?: has lower precedence than +}} \
-comment|// expected-note {{place parentheses around the ?: expression to evaluate it first}} \
-comment|// expected-note {{place parentheses around the + expression to silence this warning}}
+comment|// expected-warning {{operator '?:' has lower precedence than '+'}} \
+comment|// expected-note {{place parentheses around the '?:' expression to evaluate it first}} \
+comment|// expected-note {{place parentheses around the '+' expression to silence this warning}}
 call|(
 name|void
 call|)
@@ -299,9 +325,9 @@ else|:
 literal|2
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{?: has lower precedence than -}} \
-comment|// expected-note {{place parentheses around the ?: expression to evaluate it first}} \
-comment|// expected-note {{place parentheses around the - expression to silence this warning}}
+comment|// expected-warning {{operator '?:' has lower precedence than '-'}} \
+comment|// expected-note {{place parentheses around the '?:' expression to evaluate it first}} \
+comment|// expected-note {{place parentheses around the '-' expression to silence this warning}}
 call|(
 name|void
 call|)
@@ -319,9 +345,9 @@ else|:
 literal|2
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{?: has lower precedence than *}} \
-comment|// expected-note {{place parentheses around the ?: expression to evaluate it first}} \
-comment|// expected-note {{place parentheses around the * expression to silence this warning}}
+comment|// expected-warning {{operator '?:' has lower precedence than '*'}} \
+comment|// expected-note {{place parentheses around the '?:' expression to evaluate it first}} \
+comment|// expected-note {{place parentheses around the '*' expression to silence this warning}}
 call|(
 name|void
 call|)
@@ -336,9 +362,9 @@ else|:
 literal|2
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{?: has lower precedence than /}} \
-comment|// expected-note {{place parentheses around the ?: expression to evaluate it first}} \
-comment|// expected-note {{place parentheses around the / expression to silence this warning}}
+comment|// expected-warning {{operator '?:' has lower precedence than '/'}} \
+comment|// expected-note {{place parentheses around the '?:' expression to evaluate it first}} \
+comment|// expected-note {{place parentheses around the '/' expression to silence this warning}}
 call|(
 name|void
 call|)

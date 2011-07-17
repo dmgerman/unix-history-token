@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -w -fblocks -triple i386-apple-darwin9 -emit-llvm -o %t %s
-end_comment
-
-begin_comment
-comment|// RUN: FileCheck< %t %s
+comment|// RUN: %clang_cc1 -w -fblocks -triple i386-apple-darwin9 -target-cpu yonah -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_comment
@@ -1476,7 +1472,7 @@ comment|// CHECK: i64 %a4.coerce, %struct.s56_2* byval align 4,
 end_comment
 
 begin_comment
-comment|// CHECK:<4 x i32> %a6, %struct.s39* byval align 16 %a7,
+comment|// CHECK:<4 x i32> %a6, %struct.s56_3* byval align 16 %a7,
 end_comment
 
 begin_comment
@@ -1508,7 +1504,7 @@ comment|// CHECK: i64 %{{[^ ]*}}, %struct.s56_2* byval align 4 %{{[^ ]*}},
 end_comment
 
 begin_comment
-comment|// CHECK:<4 x i32> %{{[^ ]*}}, %struct.s39* byval align 16 %{{[^ ]*}},
+comment|// CHECK:<4 x i32> %{{[^ ]*}}, %struct.s56_3* byval align 16 %{{[^ ]*}},
 end_comment
 
 begin_comment

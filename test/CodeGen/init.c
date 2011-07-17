@@ -700,5 +700,32 @@ comment|// CHECK: ret void
 block|}
 end_function
 
+begin_comment
+comment|// Verify that we can convert a recursive struct with a memory that returns
+end_comment
+
+begin_comment
+comment|// an instance of the struct we're converting.
+end_comment
+
+begin_struct
+struct|struct
+name|test12
+block|{
+name|struct
+name|test12
+function_decl|(
+modifier|*
+name|p
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+block|}
+name|test12g
+struct|;
+end_struct
+
 end_unit
 

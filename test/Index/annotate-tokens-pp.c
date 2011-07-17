@@ -287,7 +287,7 @@ comment|// CHECK: Identifier: "Y" [4:25 - 4:26] macro definition=WIBBLE
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "NOTHING" [5:1 - 5:8] macro instantiation=NOTHING:1:9
+comment|// CHECK: Identifier: "NOTHING" [5:1 - 5:8] macro expansion=NOTHING:1:9
 end_comment
 
 begin_comment
@@ -315,7 +315,7 @@ comment|// CHECK: Keyword: "float" [5:20 - 5:25]
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "WIBBLE" [5:26 - 5:32] macro instantiation=WIBBLE:4:9
+comment|// CHECK: Identifier: "WIBBLE" [5:26 - 5:32] macro expansion=WIBBLE:4:9
 end_comment
 
 begin_comment
@@ -347,11 +347,11 @@ comment|// CHECK: Keyword: "int" [6:1 - 6:4]
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "BAR" [6:5 - 6:8] macro instantiation=BAR:3:9
+comment|// CHECK: Identifier: "BAR" [6:5 - 6:8] macro expansion=BAR:3:9
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "STILL_NOTHING" [6:9 - 6:22] macro instantiation=STILL_NOTHING:2:9
+comment|// CHECK: Identifier: "STILL_NOTHING" [6:9 - 6:22] macro expansion=STILL_NOTHING:2:9
 end_comment
 
 begin_comment
@@ -535,7 +535,7 @@ comment|// CHECK: Punctuation: "=" [16:9 - 16:10] VarDecl=k:16:7 (Definition)
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "REVERSE_MACRO" [16:11 - 16:24] macro instantiation=REVERSE_MACRO:10:9
+comment|// CHECK: Identifier: "REVERSE_MACRO" [16:11 - 16:24] macro expansion=REVERSE_MACRO:10:9
 end_comment
 
 begin_comment
@@ -575,7 +575,7 @@ comment|// CHECK: Punctuation: "=" [17:9 - 17:10] VarDecl=j:17:7 (Definition)
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "TWICE_MACRO" [17:11 - 17:22] macro instantiation=TWICE_MACRO:11:9
+comment|// CHECK: Identifier: "TWICE_MACRO" [17:11 - 17:22] macro expansion=TWICE_MACRO:11:9
 end_comment
 
 begin_comment
@@ -755,7 +755,7 @@ comment|// CHECK: Punctuation: ";" [24:13 - 24:14] UnexposedStmt=
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "fun_with_macro_bodies" [25:3 - 25:24] macro instantiation=fun_with_macro_bodies:21:9
+comment|// CHECK: Identifier: "fun_with_macro_bodies" [25:3 - 25:24] macro expansion=fun_with_macro_bodies:21:9
 end_comment
 
 begin_comment

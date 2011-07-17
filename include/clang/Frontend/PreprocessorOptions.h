@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- PreprocessorOptionms.h ---------------------------------*- C++ -*-===//
+comment|//===--- PreprocessorOptions.h ----------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -99,6 +99,19 @@ decl_stmt|;
 name|class
 name|LangOptions
 decl_stmt|;
+comment|/// \brief Enumerate the kinds of standard library that
+enum|enum
+name|ObjCXXARCStandardLibraryKind
+block|{
+name|ARCXX_nolib
+block|,
+comment|/// \brief libc++
+name|ARCXX_libcxx
+block|,
+comment|/// \brief libstdc++
+name|ARCXX_libstdcxx
+block|}
+enum|;
 comment|/// PreprocessorOptions - This class is used for passing the various options
 comment|/// used in preprocessor initialization to InitializePreprocessor().
 name|class
@@ -158,11 +171,11 @@ literal|1
 decl_stmt|;
 comment|/// Whether we should maintain a detailed
 comment|/// record of all macro definitions and
-comment|/// instantiations.
+comment|/// expansions.
 comment|/// \brief Whether the detailed preprocessing record includes nested macro
-comment|/// instantiations.
+comment|/// expansions.
 name|unsigned
-name|DetailedRecordIncludesNestedMacroInstantiations
+name|DetailedRecordIncludesNestedMacroExpansions
 range|:
 literal|1
 decl_stmt|;
@@ -297,6 +310,12 @@ comment|/// manipulation of the compiler invocation object, in cases where the
 comment|/// compiler invocation and its buffers will be reused.
 name|bool
 name|RetainRemappedFileBuffers
+decl_stmt|;
+comment|/// \brief The Objective-C++ ARC standard library that we should support,
+comment|/// by providing appropriate definitions to retrofit the standard library
+comment|/// with support for lifetime-qualified pointers.
+name|ObjCXXARCStandardLibraryKind
+name|ObjCXXARCStandardLibrary
 decl_stmt|;
 typedef|typedef
 name|std
@@ -497,7 +516,7 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|DetailedRecordIncludesNestedMacroInstantiations
+name|DetailedRecordIncludesNestedMacroExpansions
 argument_list|(
 name|true
 argument_list|)
@@ -531,7 +550,12 @@ argument_list|)
 operator|,
 name|RetainRemappedFileBuffers
 argument_list|(
-argument|false
+name|false
+argument_list|)
+operator|,
+name|ObjCXXARCStandardLibrary
+argument_list|(
+argument|ARCXX_nolib
 argument_list|)
 block|{ }
 name|void

@@ -210,7 +210,7 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-comment|// expected-warning {{overrides the sign bit of the shift expression}}
+comment|// expected-warning {{sets the sign bit of the shift expression}}
 name|i
 operator|=
 operator|-

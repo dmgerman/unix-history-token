@@ -3,10 +3,6 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin10 -emit-llvm %s -o %t
 end_comment
 
-begin_comment
-comment|// RUN: grep "struct._attrs = type<{ i32, i8 }>" %t
-end_comment
-
 begin_typedef
 typedef|typedef
 struct|struct

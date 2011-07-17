@@ -1555,7 +1555,7 @@ argument_list|)
 operator|:
 name|Tool
 argument_list|(
-literal|"netbsd::Ling"
+literal|"netbsd::Link"
 argument_list|,
 literal|"linker"
 argument_list|,

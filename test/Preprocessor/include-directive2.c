@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|HEADER
-value|<float.h>
+value|<stdarg.h>
 end_define
 
 begin_include

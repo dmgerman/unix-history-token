@@ -134,5 +134,36 @@ begin_comment
 comment|// expected-error {{weak declaration cannot have internal linkage}}
 end_comment
 
+begin_comment
+comment|// rdar://9538608
+end_comment
+
+begin_decl_stmt
+name|int
+name|C
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-note {{previous definition is here}}
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|C
+name|__attribute__
+argument_list|(
+operator|(
+name|weak_import
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning {{an already-declared variable is made a weak_import declaration}}
+end_comment
+
 end_unit
 

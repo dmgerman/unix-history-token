@@ -267,5 +267,32 @@ comment|// CHECK: declare void @f8_callback()
 block|}
 end_function
 
+begin_comment
+comment|// PR10204: don't crash
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|test9_helper
+parameter_list|(
+name|void
+parameter_list|)
+block|{}
+end_function
+
+begin_function
+name|void
+name|test9
+parameter_list|()
+block|{
+operator|(
+name|void
+operator|)
+name|test9_helper
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

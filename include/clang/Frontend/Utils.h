@@ -89,6 +89,12 @@ directive|include
 file|"llvm/Support/raw_ostream.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"clang/Basic/Diagnostic.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm

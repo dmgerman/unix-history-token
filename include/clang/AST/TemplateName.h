@@ -119,6 +119,9 @@ name|class
 name|NamedDecl
 decl_stmt|;
 name|class
+name|SubstTemplateTemplateParmStorage
+decl_stmt|;
+name|class
 name|SubstTemplateTemplateParmPackStorage
 decl_stmt|;
 name|class
@@ -137,23 +140,32 @@ name|UncommonTemplateNameStorage
 block|{
 name|protected
 label|:
+enum|enum
+name|Kind
+block|{
+name|Overloaded
+block|,
+name|SubstTemplateTemplateParm
+block|,
+name|SubstTemplateTemplateParmPack
+block|}
+enum|;
 union|union
 block|{
 struct|struct
 block|{
-comment|/// \brief If true, this is an OverloadedTemplateStorage instance;
-comment|/// otherwise, it's a SubstTemplateTemplateParmPackStorage instance.
+comment|/// \brief A Kind.
 name|unsigned
-name|IsOverloadedStorage
+name|Kind
 range|:
-literal|1
+literal|2
 decl_stmt|;
 comment|/// \brief The number of stored templates or template arguments,
 comment|/// depending on which subclass we have.
 name|unsigned
 name|Size
 range|:
-literal|31
+literal|30
 decl_stmt|;
 block|}
 name|Bits
@@ -166,22 +178,22 @@ block|}
 union|;
 name|UncommonTemplateNameStorage
 argument_list|(
-argument|unsigned Size
+argument|Kind kind
 argument_list|,
-argument|bool OverloadedStorage
+argument|unsigned size
 argument_list|)
 block|{
 name|Bits
 operator|.
-name|IsOverloadedStorage
+name|Kind
 operator|=
-name|OverloadedStorage
+name|kind
 expr_stmt|;
 name|Bits
 operator|.
 name|Size
 operator|=
-name|Size
+name|size
 expr_stmt|;
 block|}
 name|public
@@ -205,11 +217,37 @@ block|{
 return|return
 name|Bits
 operator|.
-name|IsOverloadedStorage
+name|Kind
+operator|==
+name|Overloaded
 condition|?
 name|reinterpret_cast
 operator|<
 name|OverloadedTemplateStorage
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+else|:
+literal|0
+return|;
+block|}
+name|SubstTemplateTemplateParmStorage
+modifier|*
+name|getAsSubstTemplateTemplateParm
+parameter_list|()
+block|{
+return|return
+name|Bits
+operator|.
+name|Kind
+operator|==
+name|SubstTemplateTemplateParm
+condition|?
+name|reinterpret_cast
+operator|<
+name|SubstTemplateTemplateParmStorage
 operator|*
 operator|>
 operator|(
@@ -227,10 +265,10 @@ block|{
 return|return
 name|Bits
 operator|.
-name|IsOverloadedStorage
+name|Kind
+operator|==
+name|SubstTemplateTemplateParmPack
 condition|?
-literal|0
-else|:
 name|reinterpret_cast
 operator|<
 name|SubstTemplateTemplateParmPackStorage
@@ -239,6 +277,8 @@ operator|>
 operator|(
 name|this
 operator|)
+else|:
+literal|0
 return|;
 block|}
 block|}
@@ -257,14 +297,14 @@ name|ASTContext
 block|;
 name|OverloadedTemplateStorage
 argument_list|(
-argument|unsigned Size
+argument|unsigned size
 argument_list|)
 operator|:
 name|UncommonTemplateNameStorage
 argument_list|(
-argument|Size
+argument|Overloaded
 argument_list|,
-argument|true
+argument|size
 argument_list|)
 block|{ }
 name|NamedDecl
@@ -361,10 +401,6 @@ name|llvm
 decl|::
 name|FoldingSetNode
 block|{
-name|ASTContext
-modifier|&
-name|Context
-decl_stmt|;
 name|TemplateTemplateParmDecl
 modifier|*
 name|Parameter
@@ -378,8 +414,6 @@ name|public
 label|:
 name|SubstTemplateTemplateParmPackStorage
 argument_list|(
-argument|ASTContext&Context
-argument_list|,
 argument|TemplateTemplateParmDecl *Parameter
 argument_list|,
 argument|unsigned Size
@@ -389,14 +423,9 @@ argument_list|)
 block|:
 name|UncommonTemplateNameStorage
 argument_list|(
-name|Size
+name|SubstTemplateTemplateParmPack
 argument_list|,
-name|false
-argument_list|)
-operator|,
-name|Context
-argument_list|(
-name|Context
+name|Size
 argument_list|)
 operator|,
 name|Parameter
@@ -435,6 +464,10 @@ operator|::
 name|FoldingSetNodeID
 operator|&
 name|ID
+argument_list|,
+name|ASTContext
+operator|&
+name|Context
 argument_list|)
 decl_stmt|;
 specifier|static
@@ -553,6 +586,10 @@ comment|/// \brief A dependent template name that has not been resolved to a
 comment|/// template (or set of templates).
 name|DependentTemplate
 block|,
+comment|/// \brief A template template parameter that has been substituted
+comment|/// for some other template name.
+name|SubstTemplateTemplateParm
+block|,
 comment|/// \brief A template template parameter pack that has been substituted for
 comment|/// a template template argument pack, but has not yet been expanded into
 comment|/// individual arguments.
@@ -591,6 +628,14 @@ argument_list|(
 argument|Storage
 argument_list|)
 block|{ }
+name|explicit
+name|TemplateName
+argument_list|(
+name|SubstTemplateTemplateParmStorage
+operator|*
+name|Storage
+argument_list|)
+expr_stmt|;
 name|explicit
 name|TemplateName
 argument_list|(
@@ -701,11 +746,66 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// \brief Retrieve the substituted template template parameter pack, if
+comment|/// \brief Retrieve the substituted template template parameter, if
 comment|/// known.
 comment|///
-comment|/// \returns The storage for the substituted template template parameter pack,
+comment|/// \returns The storage for the substituted template template parameter,
 comment|/// if known. Otherwise, returns NULL.
+name|SubstTemplateTemplateParmStorage
+operator|*
+name|getAsSubstTemplateTemplateParm
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|UncommonTemplateNameStorage
+modifier|*
+name|uncommon
+init|=
+name|Storage
+operator|.
+name|dyn_cast
+operator|<
+name|UncommonTemplateNameStorage
+operator|*
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|uncommon
+operator|->
+name|getAsSubstTemplateTemplateParm
+argument_list|()
+return|;
+return|return
+literal|0
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Retrieve the substituted template template parameter pack, if
+end_comment
+
+begin_comment
+comment|/// known.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns The storage for the substituted template template parameter pack,
+end_comment
+
+begin_comment
+comment|/// if known. Otherwise, returns NULL.
+end_comment
+
+begin_expr_stmt
 name|SubstTemplateTemplateParmPackStorage
 operator|*
 name|getAsSubstTemplateTemplateParmPack
@@ -734,13 +834,16 @@ operator|->
 name|getAsSubstTemplateTemplateParmPack
 argument_list|()
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 literal|0
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/// \brief Retrieve the underlying qualified template name
 end_comment
 
@@ -749,7 +852,7 @@ comment|/// structure, if any.
 end_comment
 
 begin_expr_stmt
-name|QualifiedTemplateName
+unit|QualifiedTemplateName
 operator|*
 name|getAsQualifiedTemplateName
 argument_list|()
@@ -798,6 +901,14 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+name|TemplateName
+name|getUnderlying
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/// \brief Determines whether this is a dependent template name.
 end_comment
@@ -805,6 +916,22 @@ end_comment
 begin_expr_stmt
 name|bool
 name|isDependent
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determines whether this is a template name that somehow
+end_comment
+
+begin_comment
+comment|/// depends on a template parameter.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isInstantiationDependent
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -993,6 +1120,169 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// \brief A structure for storing the information associated with a
+end_comment
+
+begin_comment
+comment|/// substituted template template parameter.
+end_comment
+
+begin_decl_stmt
+name|class
+name|SubstTemplateTemplateParmStorage
+range|:
+name|public
+name|UncommonTemplateNameStorage
+decl_stmt|,
+name|public
+name|llvm
+decl|::
+name|FoldingSetNode
+block|{
+name|friend
+name|class
+name|ASTContext
+decl_stmt|;
+name|TemplateTemplateParmDecl
+modifier|*
+name|Parameter
+decl_stmt|;
+name|TemplateName
+name|Replacement
+decl_stmt|;
+name|SubstTemplateTemplateParmStorage
+argument_list|(
+argument|TemplateTemplateParmDecl *parameter
+argument_list|,
+argument|TemplateName replacement
+argument_list|)
+block|:
+name|UncommonTemplateNameStorage
+argument_list|(
+name|SubstTemplateTemplateParm
+argument_list|,
+literal|0
+argument_list|)
+operator|,
+name|Parameter
+argument_list|(
+name|parameter
+argument_list|)
+operator|,
+name|Replacement
+argument_list|(
+argument|replacement
+argument_list|)
+block|{}
+name|public
+operator|:
+name|TemplateTemplateParmDecl
+operator|*
+name|getParameter
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Parameter
+return|;
+block|}
+name|TemplateName
+name|getReplacement
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Replacement
+return|;
+block|}
+name|void
+name|Profile
+argument_list|(
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|)
+decl_stmt|;
+specifier|static
+name|void
+name|Profile
+argument_list|(
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|,
+name|TemplateTemplateParmDecl
+operator|*
+name|parameter
+argument_list|,
+name|TemplateName
+name|replacement
+argument_list|)
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
+specifier|inline
+name|TemplateName
+operator|::
+name|TemplateName
+argument_list|(
+name|SubstTemplateTemplateParmStorage
+operator|*
+name|Storage
+argument_list|)
+operator|:
+name|Storage
+argument_list|(
+argument|Storage
+argument_list|)
+block|{ }
+specifier|inline
+name|TemplateName
+name|TemplateName
+operator|::
+name|getUnderlying
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|SubstTemplateTemplateParmStorage
+modifier|*
+name|subst
+init|=
+name|getAsSubstTemplateTemplateParm
+argument_list|()
+condition|)
+return|return
+name|subst
+operator|->
+name|getReplacement
+argument_list|()
+operator|.
+name|getUnderlying
+argument_list|()
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+operator|*
+name|this
+return|;
+end_return
+
+begin_comment
+unit|}
 comment|/// \brief Represents a template name that was expressed as a
 end_comment
 
@@ -1036,10 +1326,13 @@ begin_comment
 comment|/// providing extra syntactic sugar for downstream clients.
 end_comment
 
-begin_decl_stmt
-name|class
+begin_label
+unit|class
 name|QualifiedTemplateName
-range|:
+label|:
+end_label
+
+begin_expr_stmt
 name|public
 name|llvm
 operator|::
@@ -1128,8 +1421,17 @@ name|getInt
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief The template declaration that this qualified name refers
+end_comment
+
+begin_comment
 comment|/// to.
+end_comment
+
+begin_expr_stmt
 name|TemplateDecl
 operator|*
 name|getDecl
@@ -1140,8 +1442,17 @@ return|return
 name|Template
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief The template declaration to which this qualified name
+end_comment
+
+begin_comment
 comment|/// refers.
+end_comment
+
+begin_expr_stmt
 name|TemplateDecl
 operator|*
 name|getTemplateDecl
@@ -1152,10 +1463,17 @@ return|return
 name|Template
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|void
 name|Profile
 argument_list|(
-argument|llvm::FoldingSetNodeID&ID
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|ID
 argument_list|)
 block|{
 name|Profile
@@ -1171,18 +1489,31 @@ argument_list|,
 name|getTemplateDecl
 argument_list|()
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|Profile
 argument_list|(
-argument|llvm::FoldingSetNodeID&ID
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|ID
 argument_list|,
-argument|NestedNameSpecifier *NNS
+name|NestedNameSpecifier
+operator|*
+name|NNS
 argument_list|,
-argument|bool TemplateKeyword
+name|bool
+name|TemplateKeyword
 argument_list|,
-argument|TemplateDecl *Template
+name|TemplateDecl
+operator|*
+name|Template
 argument_list|)
 block|{
 name|ID
@@ -1191,34 +1522,61 @@ name|AddPointer
 argument_list|(
 name|NNS
 argument_list|)
-block|;
+expr_stmt|;
 name|ID
 operator|.
 name|AddBoolean
 argument_list|(
 name|TemplateKeyword
 argument_list|)
-block|;
+expr_stmt|;
 name|ID
 operator|.
 name|AddPointer
 argument_list|(
 name|Template
 argument_list|)
-block|;   }
-expr|}
-block|;
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+unit|};
 comment|/// \brief Represents a dependent template name that cannot be
+end_comment
+
+begin_comment
 comment|/// resolved prior to template instantiation.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This kind of template name refers to a dependent template name,
+end_comment
+
+begin_comment
 comment|/// including its nested name specifier (if any). For example,
+end_comment
+
+begin_comment
 comment|/// DependentTemplateName can refer to "MetaFun::template apply",
+end_comment
+
+begin_comment
 comment|/// where "MetaFun::" is the nested name specifier and "apply" is the
+end_comment
+
+begin_comment
 comment|/// template name referenced. The "template" keyword is implied.
+end_comment
+
+begin_decl_stmt
 name|class
 name|DependentTemplateName
-operator|:
+range|:
 name|public
 name|llvm
 operator|::

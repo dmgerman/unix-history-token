@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/DiagnosticIDs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -301,6 +307,61 @@ name|PragmaMessage
 argument_list|(
 name|SourceLocation
 name|Loc
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|Str
+argument_list|)
+block|{   }
+comment|/// PragmaDiagnosticPush - This callback is invoked when a
+comment|/// #pragma gcc dianostic push directive is read.
+name|virtual
+name|void
+name|PragmaDiagnosticPush
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|Namespace
+argument_list|)
+block|{   }
+comment|/// PragmaDiagnosticPop - This callback is invoked when a
+comment|/// #pragma gcc dianostic pop directive is read.
+name|virtual
+name|void
+name|PragmaDiagnosticPop
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|Namespace
+argument_list|)
+block|{   }
+comment|/// PragmaDiagnostic - This callback is invoked when a
+comment|/// #pragma gcc dianostic directive is read.
+name|virtual
+name|void
+name|PragmaDiagnostic
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|Namespace
+argument_list|,
+name|diag
+operator|::
+name|Mapping
+name|mapping
 argument_list|,
 name|llvm
 operator|::
@@ -695,6 +756,99 @@ operator|->
 name|PragmaMessage
 argument_list|(
 name|Loc
+argument_list|,
+name|Str
+argument_list|)
+block|;   }
+name|virtual
+name|void
+name|PragmaDiagnosticPush
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|llvm::StringRef Namespace
+argument_list|)
+block|{
+name|First
+operator|->
+name|PragmaDiagnosticPush
+argument_list|(
+name|Loc
+argument_list|,
+name|Namespace
+argument_list|)
+block|;
+name|Second
+operator|->
+name|PragmaDiagnosticPush
+argument_list|(
+name|Loc
+argument_list|,
+name|Namespace
+argument_list|)
+block|;   }
+name|virtual
+name|void
+name|PragmaDiagnosticPop
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|llvm::StringRef Namespace
+argument_list|)
+block|{
+name|First
+operator|->
+name|PragmaDiagnosticPop
+argument_list|(
+name|Loc
+argument_list|,
+name|Namespace
+argument_list|)
+block|;
+name|Second
+operator|->
+name|PragmaDiagnosticPop
+argument_list|(
+name|Loc
+argument_list|,
+name|Namespace
+argument_list|)
+block|;   }
+name|virtual
+name|void
+name|PragmaDiagnostic
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|llvm::StringRef Namespace
+argument_list|,
+argument|diag::Mapping mapping
+argument_list|,
+argument|llvm::StringRef Str
+argument_list|)
+block|{
+name|First
+operator|->
+name|PragmaDiagnostic
+argument_list|(
+name|Loc
+argument_list|,
+name|Namespace
+argument_list|,
+name|mapping
+argument_list|,
+name|Str
+argument_list|)
+block|;
+name|Second
+operator|->
+name|PragmaDiagnostic
+argument_list|(
+name|Loc
+argument_list|,
+name|Namespace
+argument_list|,
+name|mapping
 argument_list|,
 name|Str
 argument_list|)

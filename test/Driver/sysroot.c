@@ -12,7 +12,7 @@ comment|// RUN: FileCheck --check-prefix=CHECK-SYSROOTEQ< %t1 %s
 end_comment
 
 begin_comment
-comment|// CHECK-SYSROOTEQ: "-cc1"{{.*}} "-isysroot" "/FOO"
+comment|// CHECK-SYSROOTEQ: "-cc1"{{.*}} "-isysroot" "{{[^"]*}}/FOO"
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ comment|// RUN: FileCheck --check-prefix=CHECK-APPLE-ISYSROOT< %t2 %s
 end_comment
 
 begin_comment
-comment|// CHECK-APPLE-ISYSROOT: "-arch" "i386"{{.*}} "-syslibroot" "/FOO"
+comment|// CHECK-APPLE-ISYSROOT: "-arch" "i386"{{.*}} "-syslibroot" "{{[^"]*}}/FOO"
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// RUN: FileCheck --check-prefix=CHECK-APPLE-SYSROOT< %t3 %s
 end_comment
 
 begin_comment
-comment|// CHECK-APPLE-SYSROOT: "-arch" "i386"{{.*}} "-syslibroot" "/BAR"
+comment|// CHECK-APPLE-SYSROOT: "-arch" "i386"{{.*}} "-syslibroot" "{{[^"]*}}/BAR"
 end_comment
 
 end_unit

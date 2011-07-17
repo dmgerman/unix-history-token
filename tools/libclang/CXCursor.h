@@ -118,7 +118,7 @@ name|class
 name|MacroDefinition
 decl_stmt|;
 name|class
-name|MacroInstantiation
+name|MacroExpansion
 decl_stmt|;
 name|class
 name|NamedDecl
@@ -493,22 +493,22 @@ name|CXCursor
 name|C
 parameter_list|)
 function_decl|;
-comment|/// \brief Create a macro instantiation cursor.
+comment|/// \brief Create a macro expansion cursor.
 name|CXCursor
-name|MakeMacroInstantiationCursor
+name|MakeMacroExpansionCursor
 parameter_list|(
-name|MacroInstantiation
+name|MacroExpansion
 modifier|*
 parameter_list|,
 name|CXTranslationUnit
 name|TU
 parameter_list|)
 function_decl|;
-comment|/// \brief Unpack a given macro instantiation cursor to retrieve its
+comment|/// \brief Unpack a given macro expansion cursor to retrieve its
 comment|/// source range.
-name|MacroInstantiation
+name|MacroExpansion
 modifier|*
-name|getCursorMacroInstantiation
+name|getCursorMacroExpansion
 parameter_list|(
 name|CXCursor
 name|C
@@ -666,6 +666,14 @@ function_decl|;
 name|Attr
 modifier|*
 name|getCursorAttr
+parameter_list|(
+name|CXCursor
+name|Cursor
+parameter_list|)
+function_decl|;
+name|Decl
+modifier|*
+name|getCursorParentDecl
 parameter_list|(
 name|CXCursor
 name|Cursor

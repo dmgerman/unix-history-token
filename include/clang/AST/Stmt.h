@@ -870,6 +870,11 @@ range|:
 literal|1
 decl_stmt|;
 name|unsigned
+name|InstantiationDependent
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
 name|ContainsUnexpandedParameterPack
 range|:
 literal|1
@@ -880,7 +885,7 @@ enum|enum
 block|{
 name|NumExprBits
 init|=
-literal|15
+literal|16
 block|}
 enum|;
 name|class
@@ -961,6 +966,24 @@ literal|1
 decl_stmt|;
 block|}
 empty_stmt|;
+name|class
+name|ObjCIndirectCopyRestoreExprBitfields
+block|{
+name|friend
+name|class
+name|ObjCIndirectCopyRestoreExpr
+decl_stmt|;
+name|unsigned
+label|:
+name|NumExprBits
+expr_stmt|;
+name|unsigned
+name|ShouldCopy
+range|:
+literal|1
+decl_stmt|;
+block|}
+empty_stmt|;
 union|union
 block|{
 comment|// FIXME: this is wasteful on 64-bit platforms.
@@ -985,6 +1008,9 @@ name|CastExprBits
 decl_stmt|;
 name|CallExprBitfields
 name|CallExprBits
+decl_stmt|;
+name|ObjCIndirectCopyRestoreExprBitfields
+name|ObjCIndirectCopyRestoreExprBits
 decl_stmt|;
 block|}
 union|;
@@ -1430,6 +1456,13 @@ name|viewAST
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Skip past any implicit AST nodes which might surround this
+comment|/// statement, such as ExprWithCleanups or ImplicitCastExpr nodes.
+name|Stmt
+modifier|*
+name|IgnoreImplicit
+parameter_list|()
+function_decl|;
 comment|// Implement isa<T> support.
 specifier|static
 name|bool
@@ -1571,6 +1604,7 @@ argument_list|,
 name|bool
 name|Canonical
 argument_list|)
+decl|const
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -7406,6 +7440,27 @@ argument_list|,
 argument|Stmt *Block
 argument_list|)
 block|;
+name|friend
+name|class
+name|ASTReader
+block|;
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+name|explicit
+name|SEHExceptStmt
+argument_list|(
+argument|EmptyShell E
+argument_list|)
+operator|:
+name|Stmt
+argument_list|(
+argument|SEHExceptStmtClass
+argument_list|,
+argument|E
+argument_list|)
+block|{ }
 name|public
 operator|:
 specifier|static
@@ -7565,6 +7620,27 @@ argument_list|,
 argument|Stmt *Block
 argument_list|)
 block|;
+name|friend
+name|class
+name|ASTReader
+block|;
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+name|explicit
+name|SEHFinallyStmt
+argument_list|(
+argument|EmptyShell E
+argument_list|)
+operator|:
+name|Stmt
+argument_list|(
+argument|SEHFinallyStmtClass
+argument_list|,
+argument|E
+argument_list|)
+block|{ }
 name|public
 operator|:
 specifier|static
@@ -7721,6 +7797,27 @@ argument_list|,
 argument|Stmt *Handler
 argument_list|)
 block|;
+name|friend
+name|class
+name|ASTReader
+block|;
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+name|explicit
+name|SEHTryStmt
+argument_list|(
+argument|EmptyShell E
+argument_list|)
+operator|:
+name|Stmt
+argument_list|(
+argument|SEHTryStmtClass
+argument_list|,
+argument|E
+argument_list|)
+block|{ }
 name|public
 operator|:
 specifier|static

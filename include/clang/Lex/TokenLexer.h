@@ -110,13 +110,19 @@ decl_stmt|;
 comment|/// Tokens - This is the pointer to an array of tokens that the macro is
 comment|/// defined to, with arguments expanded for function-like macros.  If this is
 comment|/// a token stream, these are the tokens we are returning.  This points into
-comment|/// the macro definition we are lexing from, a scratch buffer allocated from
-comment|/// the preprocessor's bump pointer allocator, or some other buffer that we
-comment|/// may or may not own (depending on OwnsTokens).
+comment|/// the macro definition we are lexing from, a cache buffer that is owned by
+comment|/// the preprocessor, or some other buffer that we may or may not own
+comment|/// (depending on OwnsTokens).
+comment|/// Note that if it points into Preprocessor's cache buffer, the Preprocessor
+comment|/// may update the pointer as needed.
 specifier|const
 name|Token
 modifier|*
 name|Tokens
+decl_stmt|;
+name|friend
+name|class
+name|Preprocessor
 decl_stmt|;
 comment|/// NumTokens - This is the length of the Tokens array.
 comment|///
@@ -128,13 +134,34 @@ comment|///
 name|unsigned
 name|CurToken
 decl_stmt|;
-comment|/// InstantiateLocStart/End - The source location range where this macro was
-comment|/// instantiated.
+comment|/// ExpandLocStart/End - The source location range where this macro was
+comment|/// expanded.
 name|SourceLocation
-name|InstantiateLocStart
+name|ExpandLocStart
 decl_stmt|,
-name|InstantiateLocEnd
+name|ExpandLocEnd
 decl_stmt|;
+comment|/// \brief Source location pointing at the source location entry chunk that
+comment|/// was reserved for the current macro expansion.
+name|SourceLocation
+name|MacroExpansionStart
+decl_stmt|;
+comment|/// \brief The offset of the macro expansion in the
+comment|/// "source location address space".
+name|unsigned
+name|MacroStartSLocOffset
+decl_stmt|;
+comment|/// \brief FileID/offset of the start of the macro definition.
+name|std
+operator|::
+name|pair
+operator|<
+name|FileID
+operator|,
+name|unsigned
+operator|>
+name|MacroDefStartInfo
+expr_stmt|;
 comment|/// Lexical information about the expansion point of the macro: the identifier
 comment|/// that the macro expanded from had these properties.
 name|bool
@@ -377,7 +404,7 @@ function_decl|;
 comment|/// HandleMicrosoftCommentPaste - In microsoft compatibility mode, /##/ pastes
 comment|/// together to form a comment that comments out everything in the current
 comment|/// macro, other active macros, and anything left on the current physical
-comment|/// source line of the instantiated buffer.  Handle this by returning the
+comment|/// source line of the expanded buffer.  Handle this by returning the
 comment|/// first token on the next line.
 name|void
 name|HandleMicrosoftCommentPaste
@@ -387,6 +414,17 @@ modifier|&
 name|Tok
 parameter_list|)
 function_decl|;
+comment|/// \brief If \arg loc is a FileID and points inside the current macro
+comment|/// definition, returns the appropriate source location pointing at the
+comment|/// macro expansion source location entry.
+name|SourceLocation
+name|getMacroExpansionLocation
+argument_list|(
+name|SourceLocation
+name|loc
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

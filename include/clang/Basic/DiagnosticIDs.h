@@ -551,6 +551,15 @@ argument|Diagnostic&Diag
 argument_list|)
 specifier|const
 block|;
+comment|/// \brief Whether the diagnostic may leave the AST in a state where some
+comment|/// invariants can break.
+name|bool
+name|isUnrecoverable
+argument_list|(
+argument|unsigned DiagID
+argument_list|)
+specifier|const
+block|;
 name|friend
 name|class
 name|Diagnostic

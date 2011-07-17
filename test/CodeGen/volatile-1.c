@@ -36,7 +36,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @ci = common global [[CINT:%.*]] zeroinitializer
+comment|// CHECK: @ci = common global [[CINT:.*]] zeroinitializer
 end_comment
 
 begin_decl_stmt

@@ -172,7 +172,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @g1x = global {{%.}} { double 1.000000e+00{{[0]*}}, double 0.000000e+00{{[0]*}} }
+comment|// CHECK: @g1x = global { double, double } { double 1.000000e+00{{[0]*}}, double 0.000000e+00{{[0]*}} }
 end_comment
 
 begin_decl_stmt
@@ -185,7 +185,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @g1y = global {{%.}} { double 0.000000e+00{{[0]*}}, double 1.000000e+00{{[0]*}} }
+comment|// CHECK: @g1y = global { double, double } { double 0.000000e+00{{[0]*}}, double 1.000000e+00{{[0]*}} }
 end_comment
 
 begin_decl_stmt
@@ -198,7 +198,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @g1 = global {{%.}} { i8 1, i8 10 }
+comment|// CHECK: @g1 = global { i8, i8 } { i8 1, i8 10 }
 end_comment
 
 begin_decl_stmt
@@ -221,7 +221,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @g2 = global %2 { i32 1, i32 10 }
+comment|// CHECK: @g2 = global { i32, i32 } { i32 1, i32 10 }
 end_comment
 
 begin_decl_stmt
@@ -234,7 +234,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @g3 = global {{%.}} { float 1.000000e+00{{[0]*}}, float 1.000000e+0{{[0]*}}1 }
+comment|// CHECK: @g3 = global { float, float } { float 1.000000e+00{{[0]*}}, float 1.000000e+0{{[0]*}}1 }
 end_comment
 
 begin_decl_stmt
@@ -247,7 +247,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @g4 = global {{%.}} { double 1.000000e+00{{[0]*}}, double 1.000000e+0{{[0]*}}1 }
+comment|// CHECK: @g4 = global { double, double } { double 1.000000e+00{{[0]*}}, double 1.000000e+0{{[0]*}}1 }
 end_comment
 
 begin_decl_stmt
@@ -260,7 +260,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @g5 = global %2 zeroinitializer
+comment|// CHECK: @g5 = global { i32, i32 } zeroinitializer
 end_comment
 
 begin_decl_stmt
@@ -279,7 +279,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @g6 = global {{%.}} { double -1.100000e+0{{[0]*}}1, double 2.900000e+0{{[0]*}}1 }
+comment|// CHECK: @g6 = global { double, double } { double -1.100000e+0{{[0]*}}1, double 2.900000e+0{{[0]*}}1 }
 end_comment
 
 begin_decl_stmt
@@ -394,7 +394,7 @@ comment|// PR5108
 end_comment
 
 begin_comment
-comment|// CHECK: @gv1 = global %4<{ i32 0, i8 7 }>, align 1
+comment|// CHECK: @gv1 = global %struct.anon<{ i32 0, i8 7 }>, align 1
 end_comment
 
 begin_struct
@@ -438,7 +438,7 @@ comment|// PR5118
 end_comment
 
 begin_comment
-comment|// CHECK: @gv2 = global %5<{ i8 1, i8* null }>, align 1
+comment|// CHECK: @gv2 = global %struct.anon.0<{ i8 1, i8* null }>, align 1
 end_comment
 
 begin_struct

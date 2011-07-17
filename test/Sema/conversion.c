@@ -1840,5 +1840,51 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|test26
+parameter_list|(
+name|int
+name|si
+parameter_list|,
+name|long
+name|sl
+parameter_list|)
+block|{
+name|si
+operator|=
+name|sl
+operator|%
+name|sl
+expr_stmt|;
+comment|// expected-warning {{implicit conversion loses integer precision: 'long' to 'int'}}
+name|si
+operator|=
+name|sl
+operator|%
+name|si
+expr_stmt|;
+name|si
+operator|=
+name|si
+operator|%
+name|sl
+expr_stmt|;
+name|si
+operator|=
+name|si
+operator|/
+name|sl
+expr_stmt|;
+name|si
+operator|=
+name|sl
+operator|/
+name|si
+expr_stmt|;
+comment|// expected-warning {{implicit conversion loses integer precision: 'long' to 'int'}}
+block|}
+end_function
+
 end_unit
 

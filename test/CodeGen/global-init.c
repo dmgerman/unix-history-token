@@ -109,7 +109,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|// CHECK: global %0 { i32 1, i32 2, i32 0, i8 0, i32 0, i32 0 }
+comment|// CHECK: global %struct.ManyFields { i32 1, i32 2, i32 0, i8 0, i32 0, i32 0 }
 end_comment
 
 begin_decl_stmt
@@ -130,7 +130,7 @@ comment|// PR6766
 end_comment
 
 begin_comment
-comment|// CHECK: @l = global %1 { [24 x i8] c"f\00\00\00o\00\00\00o\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00", i32 1 }
+comment|// CHECK: @l = global { [24 x i8], i32 } { [24 x i8] c"f\00\00\00o\00\00\00o\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00", i32 1 }
 end_comment
 
 begin_typedef
