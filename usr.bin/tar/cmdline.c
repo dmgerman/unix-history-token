@@ -881,7 +881,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -1139,7 +1139,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -1355,7 +1355,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -1379,7 +1379,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -1440,7 +1440,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -1483,7 +1483,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,

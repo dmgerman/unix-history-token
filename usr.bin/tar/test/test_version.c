@@ -121,6 +121,9 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|assertEqualMem
 argument_list|(
 name|q
@@ -129,7 +132,8 @@ literal|"bsdtar "
 argument_list|,
 literal|7
 argument_list|)
-expr_stmt|;
+condition|)
+return|return;
 name|q
 operator|+=
 literal|7
