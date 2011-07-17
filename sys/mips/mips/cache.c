@@ -62,6 +62,25 @@ name|mips_cache_ops
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MIPS_DISABLE_L1_CACHE
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_RMI
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_NLM
+argument_list|)
+end_if
+
 begin_function
 specifier|static
 name|void
@@ -75,6 +94,11 @@ name|size
 parameter_list|)
 block|{ }
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
