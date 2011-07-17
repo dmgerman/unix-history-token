@@ -2372,7 +2372,7 @@ operator|)
 return|;
 name|error
 operator|=
-name|nfsvno_pathconf
+name|VOP_PATHCONF
 argument_list|(
 name|vp
 argument_list|,
@@ -2380,10 +2380,6 @@ name|_PC_ACL_NFS4
 argument_list|,
 operator|&
 name|retval
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if
