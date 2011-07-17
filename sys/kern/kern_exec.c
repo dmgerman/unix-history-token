@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/eventhandler.h>
 end_include
 
@@ -575,6 +581,8 @@ argument_list|,
 name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_CAPRD
 argument_list|,
 name|NULL
 argument_list|,

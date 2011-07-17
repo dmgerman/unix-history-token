@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_capsicum.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_compat.h"
 end_include
 
@@ -45,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/capability.h>
 end_include
 
 begin_include
@@ -2896,6 +2908,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * XXXRW/JA: Shouldn't return name data for nodes that we don't permit in  * capability mode.  */
+end_comment
+
 begin_expr_stmt
 specifier|static
 name|SYSCTL_NODE
@@ -2907,6 +2923,8 @@ argument_list|,
 name|name
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_CAPRD
 argument_list|,
 name|sysctl_sysctl_name
 argument_list|,
@@ -3351,6 +3369,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * XXXRW/JA: Shouldn't return next data for nodes that we don't permit in  * capability mode.  */
+end_comment
+
 begin_expr_stmt
 specifier|static
 name|SYSCTL_NODE
@@ -3362,6 +3384,8 @@ argument_list|,
 name|next
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_CAPRD
 argument_list|,
 name|sysctl_sysctl_next
 argument_list|,
@@ -3820,6 +3844,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * XXXRW/JA: Shouldn't return name2oid data for nodes that we don't permit in  * capability mode.  */
+end_comment
+
 begin_expr_stmt
 name|SYSCTL_PROC
 argument_list|(
@@ -3836,6 +3864,8 @@ operator||
 name|CTLFLAG_ANYBODY
 operator||
 name|CTLFLAG_MPSAFE
+operator||
+name|CTLFLAG_CAPRW
 argument_list|,
 literal|0
 argument_list|,
@@ -3981,6 +4011,8 @@ argument_list|,
 name|CTLFLAG_RD
 operator||
 name|CTLFLAG_MPSAFE
+operator||
+name|CTLFLAG_CAPRD
 argument_list|,
 name|sysctl_sysctl_oidfmt
 argument_list|,
@@ -4092,6 +4124,8 @@ argument_list|,
 name|oiddescr
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_CAPRD
 argument_list|,
 name|sysctl_sysctl_oiddescr
 argument_list|,
@@ -6212,6 +6246,63 @@ literal|"sysctl_root(): req->td == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CAPABILITY_MODE
+comment|/* 	 * If the process is in capability mode, then don't permit reading or 	 * writing unless specifically granted for the node. 	 */
+if|if
+condition|(
+name|IN_CAPABILITY_MODE
+argument_list|(
+name|req
+operator|->
+name|td
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|req
+operator|->
+name|oldptr
+operator|&&
+operator|!
+operator|(
+name|oid
+operator|->
+name|oid_kind
+operator|&
+name|CTLFLAG_CAPRD
+operator|)
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
+if|if
+condition|(
+name|req
+operator|->
+name|newptr
+operator|&&
+operator|!
+operator|(
+name|oid
+operator|->
+name|oid_kind
+operator|&
+name|CTLFLAG_CAPWR
+operator|)
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
 comment|/* Is this sysctl sensitive to securelevels? */
 if|if
 condition|(

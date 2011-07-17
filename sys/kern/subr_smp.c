@@ -205,6 +205,8 @@ argument_list|,
 name|smp
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_CAPRD
 argument_list|,
 name|NULL
 argument_list|,
@@ -214,7 +216,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_kern_smp
 argument_list|,
@@ -223,6 +225,8 @@ argument_list|,
 name|maxid
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_CAPRD
 argument_list|,
 operator|&
 name|mp_maxid
@@ -244,6 +248,8 @@ argument_list|,
 name|maxcpus
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_CAPRD
 argument_list|,
 operator|&
 name|mp_maxcpus
@@ -310,6 +316,8 @@ argument_list|,
 name|disabled
 argument_list|,
 name|CTLFLAG_RDTUN
+operator||
+name|CTLFLAG_CAPRD
 argument_list|,
 operator|&
 name|smp_disabled
@@ -354,6 +362,8 @@ argument_list|,
 name|cpus
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_CAPRD
 argument_list|,
 operator|&
 name|smp_cpus
