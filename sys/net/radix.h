@@ -562,6 +562,10 @@ name|int
 name|rnh_multipath
 decl_stmt|;
 comment|/* multipath capable ? */
+name|u_int
+name|rnh_spare
+decl_stmt|;
+comment|/* route caching */
 ifdef|#
 directive|ifdef
 name|_KERNEL

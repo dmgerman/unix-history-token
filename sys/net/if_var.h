@@ -673,31 +673,24 @@ modifier|*
 name|if_lagg
 decl_stmt|;
 comment|/* lagg glue */
-name|u_char
-name|if_alloctype
-decl_stmt|;
-comment|/* if_type at time of allocation */
-name|u_int
-name|if_fib
-decl_stmt|;
-comment|/* interface FIB */
-comment|/* 	 * Spare fields are added so that we can modify sensitive data 	 * structures without changing the kernel binary interface, and must 	 * be used with care where binary compatibility is required. 	 */
-name|char
-name|if_cspare
-index|[
-literal|3
-index|]
-decl_stmt|;
 name|char
 modifier|*
 name|if_description
 decl_stmt|;
 comment|/* interface description */
-name|void
-modifier|*
-name|if_pspare
+name|u_int
+name|if_fib
+decl_stmt|;
+comment|/* interface FIB */
+name|u_char
+name|if_alloctype
+decl_stmt|;
+comment|/* if_type at time of allocation */
+comment|/* 	 * Spare fields are added so that we can modify sensitive data 	 * structures without changing the kernel binary interface, and must 	 * be used with care where binary compatibility is required. 	 */
+name|char
+name|if_cspare
 index|[
-literal|7
+literal|3
 index|]
 decl_stmt|;
 name|int
@@ -706,6 +699,14 @@ index|[
 literal|4
 index|]
 decl_stmt|;
+name|void
+modifier|*
+name|if_pspare
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* 1 netmap, 7 TDB */
 block|}
 struct|;
 end_struct
