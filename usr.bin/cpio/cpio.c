@@ -724,7 +724,7 @@ argument_list|(
 name|buff
 argument_list|)
 expr_stmt|;
-comment|/* Need progname before calling warnc. */
+comment|/* Need lafe_progname before calling lafe_warnc. */
 if|if
 condition|(
 operator|*
@@ -732,7 +732,7 @@ name|argv
 operator|==
 name|NULL
 condition|)
-name|progname
+name|lafe_progname
 operator|=
 literal|"bsdcpio"
 expr_stmt|;
@@ -750,7 +750,7 @@ name|defined
 argument_list|(
 name|__CYGWIN__
 argument_list|)
-name|progname
+name|lafe_progname
 operator|=
 name|strrchr
 argument_list|(
@@ -762,7 +762,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|progname
+name|lafe_progname
 operator|=
 name|strrchr
 argument_list|(
@@ -776,15 +776,15 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|progname
+name|lafe_progname
 operator|!=
 name|NULL
 condition|)
-name|progname
+name|lafe_progname
 operator|++
 expr_stmt|;
 else|else
-name|progname
+name|lafe_progname
 operator|=
 operator|*
 name|argv
@@ -1003,7 +1003,7 @@ name|bytes_per_block
 operator|<=
 literal|0
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1044,7 +1044,7 @@ case|case
 literal|'E'
 case|:
 comment|/* NetBSD/OpenBSD */
-name|include_from_file
+name|lafe_include_from_file
 argument_list|(
 operator|&
 name|cpio
@@ -1078,7 +1078,7 @@ case|case
 literal|'f'
 case|:
 comment|/* POSIX 1997 */
-name|exclude
+name|lafe_exclude
 argument_list|(
 operator|&
 name|cpio
@@ -1136,7 +1136,7 @@ name|mode
 operator|!=
 literal|'\0'
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1288,7 +1288,7 @@ name|mode
 operator|!=
 literal|'\0'
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1320,7 +1320,7 @@ name|mode
 operator|!=
 literal|'\0'
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1393,7 +1393,7 @@ condition|(
 name|errmsg
 condition|)
 block|{
-name|warnc
+name|lafe_warnc
 argument_list|(
 operator|-
 literal|1
@@ -1583,7 +1583,7 @@ name|mode
 operator|!=
 literal|'i'
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1604,7 +1604,7 @@ name|cpio
 operator|->
 name|option_list
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1628,7 +1628,7 @@ name|mode
 operator|!=
 literal|'o'
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1650,7 +1650,7 @@ name|mode
 operator|!=
 literal|'p'
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1705,7 +1705,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|include
+name|lafe_include
 argument_list|(
 operator|&
 name|cpio
@@ -1767,7 +1767,7 @@ name|argv
 operator|==
 literal|'\0'
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1788,7 +1788,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1837,7 +1837,7 @@ name|p
 decl_stmt|;
 name|p
 operator|=
-name|progname
+name|lafe_progname
 expr_stmt|;
 name|fprintf
 argument_list|(
@@ -1933,7 +1933,7 @@ name|p
 decl_stmt|;
 name|prog
 operator|=
-name|progname
+name|lafe_progname
 expr_stmt|;
 name|fflush
 argument_list|(
@@ -2079,7 +2079,7 @@ modifier|*
 name|spare
 decl_stmt|;
 name|struct
-name|line_reader
+name|lafe_line_reader
 modifier|*
 name|lr
 decl_stmt|;
@@ -2097,7 +2097,7 @@ name|cpio
 operator|->
 name|option_append
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -2121,7 +2121,7 @@ name|archive_read_disk
 operator|==
 name|NULL
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -2173,7 +2173,7 @@ name|archive
 operator|==
 name|NULL
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -2275,7 +2275,7 @@ name|r
 operator|<
 name|ARCHIVE_WARN
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -2303,7 +2303,7 @@ name|r
 operator|!=
 name|ARCHIVE_OK
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -2371,7 +2371,7 @@ name|r
 operator|!=
 name|ARCHIVE_OK
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -2389,7 +2389,7 @@ argument_list|)
 expr_stmt|;
 name|lr
 operator|=
-name|line_reader
+name|lafe_line_reader
 argument_list|(
 literal|"-"
 argument_list|,
@@ -2403,7 +2403,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|line_reader_next
+name|lafe_line_reader_next
 argument_list|(
 name|lr
 argument_list|)
@@ -2418,7 +2418,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|line_reader_free
+name|lafe_line_reader_free
 argument_list|(
 name|lr
 argument_list|)
@@ -2493,7 +2493,7 @@ name|r
 operator|!=
 name|ARCHIVE_OK
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -2621,7 +2621,7 @@ name|entry
 operator|==
 name|NULL
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -2659,7 +2659,7 @@ name|r
 operator|<
 name|ARCHIVE_FAILED
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -2681,7 +2681,7 @@ name|r
 operator|<
 name|ARCHIVE_OK
 condition|)
-name|warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -2855,7 +2855,7 @@ name|pass_destpath
 operator|==
 name|NULL
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -3130,7 +3130,7 @@ name|t
 operator|==
 name|NULL
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -3177,7 +3177,7 @@ name|r
 operator|!=
 name|ARCHIVE_OK
 condition|)
-name|warnc
+name|lafe_warnc
 argument_list|(
 name|archive_errno
 argument_list|(
@@ -3227,7 +3227,7 @@ name|EXDEV
 condition|)
 block|{
 comment|/* Cross-device link:  Just fall through and use 			 * the original entry to copy the file over. */
-name|warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -3283,7 +3283,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warnc
+name|lafe_warnc
 argument_list|(
 name|errno
 argument_list|,
@@ -3325,7 +3325,7 @@ name|r
 operator|!=
 name|ARCHIVE_OK
 condition|)
-name|warnc
+name|lafe_warnc
 argument_list|(
 name|archive_errno
 argument_list|(
@@ -3411,7 +3411,7 @@ name|r
 operator|<
 literal|0
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -3439,7 +3439,7 @@ operator|<
 name|bytes_read
 condition|)
 block|{
-name|warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -3567,7 +3567,7 @@ condition|(
 operator|!
 name|warned
 condition|)
-name|warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -3770,7 +3770,7 @@ literal|0
 condition|)
 endif|#
 directive|endif
-name|warnc
+name|lafe_warnc
 argument_list|(
 name|errno
 argument_list|,
@@ -3834,7 +3834,7 @@ name|ext
 operator|==
 name|NULL
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -3860,7 +3860,7 @@ name|r
 operator|!=
 name|ARCHIVE_OK
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -3885,7 +3885,7 @@ name|a
 operator|==
 name|NULL
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -3919,7 +3919,7 @@ operator|->
 name|bytes_per_block
 argument_list|)
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -3966,7 +3966,7 @@ operator|!=
 name|ARCHIVE_OK
 condition|)
 block|{
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -3986,7 +3986,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|excluded
+name|lafe_excluded
 argument_list|(
 name|cpio
 operator|->
@@ -4169,7 +4169,7 @@ name|r
 operator|!=
 name|ARCHIVE_OK
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -4196,7 +4196,7 @@ name|r
 operator|!=
 name|ARCHIVE_OK
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -4348,7 +4348,7 @@ operator|!=
 name|ARCHIVE_OK
 condition|)
 block|{
-name|warnc
+name|lafe_warnc
 argument_list|(
 name|archive_errno
 argument_list|(
@@ -4389,7 +4389,7 @@ operator|!=
 name|ARCHIVE_OK
 condition|)
 block|{
-name|warnc
+name|lafe_warnc
 argument_list|(
 name|archive_errno
 argument_list|(
@@ -4449,7 +4449,7 @@ name|a
 operator|==
 name|NULL
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -4483,7 +4483,7 @@ operator|->
 name|bytes_per_block
 argument_list|)
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -4530,7 +4530,7 @@ operator|!=
 name|ARCHIVE_OK
 condition|)
 block|{
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -4550,7 +4550,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|excluded
+name|lafe_excluded
 argument_list|(
 name|cpio
 operator|->
@@ -4603,7 +4603,7 @@ name|r
 operator|!=
 name|ARCHIVE_OK
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -5141,7 +5141,7 @@ name|destdir
 parameter_list|)
 block|{
 name|struct
-name|line_reader
+name|lafe_line_reader
 modifier|*
 name|lr
 decl_stmt|;
@@ -5215,7 +5215,7 @@ name|archive
 operator|==
 name|NULL
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -5243,7 +5243,7 @@ name|r
 operator|!=
 name|ARCHIVE_OK
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -5288,7 +5288,7 @@ name|archive_read_disk
 operator|==
 name|NULL
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -5327,7 +5327,7 @@ argument_list|)
 expr_stmt|;
 name|lr
 operator|=
-name|line_reader
+name|lafe_line_reader
 argument_list|(
 literal|"-"
 argument_list|,
@@ -5341,7 +5341,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|line_reader_next
+name|lafe_line_reader_next
 argument_list|(
 name|lr
 argument_list|)
@@ -5356,7 +5356,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|line_reader_free
+name|lafe_line_reader_free
 argument_list|(
 name|lr
 argument_list|)
@@ -5383,7 +5383,7 @@ name|r
 operator|!=
 name|ARCHIVE_OK
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -5789,7 +5789,7 @@ name|name_cache_variable
 operator|==
 name|NULL
 condition|)
-name|errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -6131,7 +6131,7 @@ name|errno
 operator|!=
 name|ENOENT
 condition|)
-name|warnc
+name|lafe_warnc
 argument_list|(
 name|errno
 argument_list|,
@@ -6264,7 +6264,7 @@ name|errno
 operator|!=
 literal|0
 condition|)
-name|warnc
+name|lafe_warnc
 argument_list|(
 name|errno
 argument_list|,

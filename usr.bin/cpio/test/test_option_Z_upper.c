@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003-2007 Tim Kientzle  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2003-2009 Tim Kientzle  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -20,7 +20,7 @@ end_expr_stmt
 begin_macro
 name|DEFINE_TEST
 argument_list|(
-argument|test_option_y
+argument|test_option_Z_upper
 argument_list|)
 end_macro
 
@@ -46,12 +46,12 @@ argument_list|,
 literal|"a"
 argument_list|)
 expr_stmt|;
-comment|/* Archive it with bzip2 compression. */
+comment|/* Archive it with compress compression. */
 name|r
 operator|=
 name|systemf
 argument_list|(
-literal|"echo f | %s -oy>archive.out 2>archive.err"
+literal|"echo f | %s -oZ>archive.out 2>archive.err"
 argument_list|,
 name|testprog
 argument_list|)
@@ -95,14 +95,14 @@ block|{
 name|skipping
 argument_list|(
 literal|"This version of bsdcpio was compiled "
-literal|"without bzip2 support"
+literal|"without compress support"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
 name|failure
 argument_list|(
-literal|"-y option is broken"
+literal|"-Z option is broken"
 argument_list|)
 expr_stmt|;
 name|assertEqualInt
@@ -114,14 +114,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|assertTextFileContents
-argument_list|(
-literal|"1 block\n"
-argument_list|,
-literal|"archive.err"
-argument_list|)
-expr_stmt|;
-comment|/* Check that the archive file has a bzip2 signature. */
+comment|/* Check that the archive file has a compress signature. */
 name|p
 operator|=
 name|slurpfile
@@ -143,9 +136,9 @@ name|assertEqualMem
 argument_list|(
 name|p
 argument_list|,
-literal|"BZh9"
+literal|"\x1f\x9d"
 argument_list|,
-literal|4
+literal|2
 argument_list|)
 expr_stmt|;
 block|}

@@ -131,13 +131,18 @@ end_macro
 
 begin_block
 block|{
-name|int
-name|fd
-decl_stmt|,
+name|FILE
+modifier|*
 name|filelist
 decl_stmt|;
 name|int
 name|r
+decl_stmt|;
+name|int
+name|uid
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|int
 name|dev
@@ -161,122 +166,80 @@ decl_stmt|;
 name|size_t
 name|s
 decl_stmt|;
-name|mode_t
-name|oldmask
-decl_stmt|;
-name|oldmask
-operator|=
-name|umask
+name|assertUmask
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+name|uid
+operator|=
+name|getuid
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Create an assortment of files. 	 * TODO: Extend this to cover more filetypes. 	 */
 name|filelist
 operator|=
-name|open
+name|fopen
 argument_list|(
 literal|"filelist"
 argument_list|,
-name|O_CREAT
-operator||
-name|O_WRONLY
-argument_list|,
-literal|0644
+literal|"w"
 argument_list|)
 expr_stmt|;
 comment|/* "file" */
-name|fd
-operator|=
-name|open
+name|assertMakeFile
 argument_list|(
 literal|"file"
 argument_list|,
-name|O_CREAT
-operator||
-name|O_WRONLY
-argument_list|,
 literal|0644
+argument_list|,
+literal|"1234567890"
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
-name|fd
-operator|>=
-literal|0
-argument_list|)
-expr_stmt|;
-name|assertEqualInt
-argument_list|(
-literal|10
-argument_list|,
-name|write
-argument_list|(
-name|fd
-argument_list|,
-literal|"123456789"
-argument_list|,
-literal|10
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-name|assertEqualInt
-argument_list|(
-literal|5
-argument_list|,
-name|write
+name|fprintf
 argument_list|(
 name|filelist
 argument_list|,
 literal|"file\n"
-argument_list|,
-literal|5
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* "symlink" */
-name|assertEqualInt
+if|if
+condition|(
+name|canSymlink
+argument_list|()
+condition|)
+block|{
+name|assertMakeSymlink
 argument_list|(
-literal|0
-argument_list|,
-name|symlink
-argument_list|(
-literal|"file"
-argument_list|,
 literal|"symlink"
-argument_list|)
+argument_list|,
+literal|"file"
 argument_list|)
 expr_stmt|;
-name|assertEqualInt
-argument_list|(
-literal|8
-argument_list|,
-name|write
+name|fprintf
 argument_list|(
 name|filelist
 argument_list|,
 literal|"symlink\n"
-argument_list|,
-literal|8
-argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* "dir" */
-name|assertEqualInt
-argument_list|(
-literal|0
-argument_list|,
-name|mkdir
+name|assertMakeDir
 argument_list|(
 literal|"dir"
 argument_list|,
 literal|0775
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Record some facts about what we just created: */
@@ -288,22 +251,15 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* They were all created w/in last two seconds. */
-name|assertEqualInt
-argument_list|(
-literal|4
-argument_list|,
-name|write
+name|fprintf
 argument_list|(
 name|filelist
 argument_list|,
 literal|"dir\n"
-argument_list|,
-literal|4
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Use the cpio program to create an archive. */
-name|close
+name|fclose
 argument_list|(
 name|filelist
 argument_list|)
@@ -480,6 +436,23 @@ expr_stmt|;
 comment|/* Mode */
 endif|#
 directive|endif
+if|if
+condition|(
+name|uid
+operator|<
+literal|0
+condition|)
+name|uid
+operator|=
+name|from_octal
+argument_list|(
+name|e
+operator|+
+literal|24
+argument_list|,
+literal|6
+argument_list|)
+expr_stmt|;
 name|assertEqualInt
 argument_list|(
 name|from_octal
@@ -491,8 +464,7 @@ argument_list|,
 literal|6
 argument_list|)
 argument_list|,
-name|getuid
-argument_list|()
+name|uid
 argument_list|)
 expr_stmt|;
 comment|/* uid */
@@ -623,7 +595,7 @@ name|e
 operator|+
 literal|81
 argument_list|,
-literal|"123456789\0"
+literal|"1234567890"
 argument_list|,
 literal|10
 argument_list|)
@@ -633,7 +605,13 @@ name|e
 operator|+=
 literal|91
 expr_stmt|;
-comment|/* Second entry is "symlink" pointing to "file" */
+comment|/* "symlink" pointing to "file" */
+if|if
+condition|(
+name|canSymlink
+argument_list|()
+condition|)
+block|{
 name|assert
 argument_list|(
 name|is_octal
@@ -674,7 +652,7 @@ expr_stmt|;
 comment|/* dev */
 name|assert
 argument_list|(
-name|dev
+name|ino
 operator|!=
 name|from_octal
 argument_list|(
@@ -699,7 +677,7 @@ name|defined
 argument_list|(
 name|__CYGWIN__
 argument_list|)
-comment|/* On Windows, symbolic link and group members bits and  	 * others bits do not work. */
+comment|/* On Windows, symbolic link and group members bits and 		 * others bits do not work. */
 name|assertEqualMem
 argument_list|(
 name|e
@@ -725,8 +703,7 @@ argument_list|,
 literal|6
 argument_list|)
 argument_list|,
-name|getuid
-argument_list|()
+name|uid
 argument_list|)
 expr_stmt|;
 comment|/* uid */
@@ -825,33 +802,6 @@ literal|6
 argument_list|)
 expr_stmt|;
 comment|/* Name size */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_WIN32
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__CYGWIN__
-argument_list|)
-comment|/* On Windows, symbolic link does not work. */
-name|assertEqualMem
-argument_list|(
-name|e
-operator|+
-literal|65
-argument_list|,
-literal|"00000000012"
-argument_list|,
-literal|11
-argument_list|)
-expr_stmt|;
-comment|/* File size */
-else|#
-directive|else
 name|assertEqualMem
 argument_list|(
 name|e
@@ -864,8 +814,6 @@ literal|11
 argument_list|)
 expr_stmt|;
 comment|/* File size */
-endif|#
-directive|endif
 name|assertEqualMem
 argument_list|(
 name|e
@@ -878,37 +826,6 @@ literal|8
 argument_list|)
 expr_stmt|;
 comment|/* Name contents */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_WIN32
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__CYGWIN__
-argument_list|)
-comment|/* On Windows, symbolic link does not work. */
-name|assertEqualMem
-argument_list|(
-name|e
-operator|+
-literal|84
-argument_list|,
-literal|"123456789\0"
-argument_list|,
-literal|10
-argument_list|)
-expr_stmt|;
-comment|/* File contents. */
-name|e
-operator|+=
-literal|94
-expr_stmt|;
-else|#
-directive|else
 name|assertEqualMem
 argument_list|(
 name|e
@@ -925,9 +842,8 @@ name|e
 operator|+=
 literal|88
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* Second entry is "dir" */
+block|}
+comment|/* "dir" */
 name|assert
 argument_list|(
 name|is_octal
@@ -1033,6 +949,22 @@ expr_stmt|;
 comment|/* Mode */
 else|#
 directive|else
+comment|/* Accept 042775 to accomodate systems where sgid bit propagates. */
+if|if
+condition|(
+name|memcmp
+argument_list|(
+name|e
+operator|+
+literal|18
+argument_list|,
+literal|"042775"
+argument_list|,
+literal|6
+argument_list|)
+operator|!=
+literal|0
+condition|)
 name|assertEqualMem
 argument_list|(
 name|e
@@ -1058,8 +990,7 @@ argument_list|,
 literal|6
 argument_list|)
 argument_list|,
-name|getuid
-argument_list|()
+name|uid
 argument_list|)
 expr_stmt|;
 comment|/* uid */
@@ -1337,11 +1268,6 @@ comment|/* Name */
 name|free
 argument_list|(
 name|p
-argument_list|)
-expr_stmt|;
-name|umask
-argument_list|(
-name|oldmask
 argument_list|)
 expr_stmt|;
 block|}

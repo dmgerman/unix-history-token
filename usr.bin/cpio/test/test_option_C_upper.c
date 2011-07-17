@@ -9,41 +9,6 @@ directive|include
 file|"test.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_UTIME_H
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<utime.h>
-end_include
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|HAVE_SYS_UTIME_H
-argument_list|)
-end_elif
-
-begin_include
-include|#
-directive|include
-file|<sys/utime.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_expr_stmt
 name|__FBSDID
 argument_list|(
@@ -55,42 +20,31 @@ end_expr_stmt
 begin_macro
 name|DEFINE_TEST
 argument_list|(
-argument|test_option_u
+argument|test_option_C_upper
 argument_list|)
 end_macro
 
 begin_block
 block|{
-name|struct
-name|utimbuf
-name|times
-decl_stmt|;
-name|char
-modifier|*
-name|p
-decl_stmt|;
-name|size_t
-name|s
-decl_stmt|;
 name|int
 name|r
 decl_stmt|;
-comment|/* Create a file. */
+comment|/* 	 * Create a file on disk. 	 */
 name|assertMakeFile
 argument_list|(
-literal|"f"
+literal|"file"
 argument_list|,
 literal|0644
 argument_list|,
-literal|"a"
+name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* Copy the file to the "copy" dir. */
+comment|/* Create an archive without -C; this should be 512 bytes. */
 name|r
 operator|=
 name|systemf
 argument_list|(
-literal|"echo f | %s -pd copy>copy.out 2>copy.err"
+literal|"echo file | %s -o> small.cpio 2>small.err"
 argument_list|,
 name|testprog
 argument_list|)
@@ -102,88 +56,26 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Check that the file contains only a single "a" */
-name|p
-operator|=
-name|slurpfile
+name|assertTextFileContents
 argument_list|(
-operator|&
-name|s
+literal|"1 block\n"
 argument_list|,
-literal|"copy/f"
+literal|"small.err"
 argument_list|)
 expr_stmt|;
-name|assertEqualInt
+name|assertFileSize
 argument_list|(
-name|s
+literal|"small.cpio"
 argument_list|,
-literal|1
+literal|512
 argument_list|)
 expr_stmt|;
-name|assertEqualMem
-argument_list|(
-name|p
-argument_list|,
-literal|"a"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* Recreate the file with a single "b" */
-name|assertMakeFile
-argument_list|(
-literal|"f"
-argument_list|,
-literal|0644
-argument_list|,
-literal|"b"
-argument_list|)
-expr_stmt|;
-comment|/* Set the mtime to the distant past. */
-name|memset
-argument_list|(
-operator|&
-name|times
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|times
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|times
-operator|.
-name|actime
-operator|=
-literal|1
-expr_stmt|;
-name|times
-operator|.
-name|modtime
-operator|=
-literal|3
-expr_stmt|;
-name|assertEqualInt
-argument_list|(
-literal|0
-argument_list|,
-name|utime
-argument_list|(
-literal|"f"
-argument_list|,
-operator|&
-name|times
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* Copy the file to the "copy" dir. */
+comment|/* Create an archive with -C 513; this should be 513 bytes. */
 name|r
 operator|=
 name|systemf
 argument_list|(
-literal|"echo f | %s -pd copy>copy.out 2>copy.err"
+literal|"echo file | %s -o -C 513> 513.cpio 2>513.err"
 argument_list|,
 name|testprog
 argument_list|)
@@ -195,39 +87,26 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Verify that the file hasn't changed (it wasn't overwritten) */
-name|p
-operator|=
-name|slurpfile
+name|assertTextFileContents
 argument_list|(
-operator|&
-name|s
+literal|"1 block\n"
 argument_list|,
-literal|"copy/f"
+literal|"513.err"
 argument_list|)
 expr_stmt|;
-name|assertEqualInt
+name|assertFileSize
 argument_list|(
-name|s
+literal|"513.cpio"
 argument_list|,
-literal|1
+literal|513
 argument_list|)
 expr_stmt|;
-name|assertEqualMem
-argument_list|(
-name|p
-argument_list|,
-literal|"a"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* Copy the file to the "copy" dir with -u (force) */
+comment|/* Create an archive with -C 12345; this should be 12345 bytes. */
 name|r
 operator|=
 name|systemf
 argument_list|(
-literal|"echo f | %s -pud copy>copy.out 2>copy.err"
+literal|"echo file | %s -o -C12345> 12345.cpio 2>12345.err"
 argument_list|,
 name|testprog
 argument_list|)
@@ -239,31 +118,36 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Verify that the file has changed (it was overwritten) */
-name|p
-operator|=
-name|slurpfile
+name|assertTextFileContents
 argument_list|(
-operator|&
-name|s
+literal|"1 block\n"
 argument_list|,
-literal|"copy/f"
+literal|"12345.err"
 argument_list|)
 expr_stmt|;
-name|assertEqualInt
+name|assertFileSize
 argument_list|(
-name|s
+literal|"12345.cpio"
 argument_list|,
-literal|1
+literal|12345
 argument_list|)
 expr_stmt|;
-name|assertEqualMem
+comment|/* Create an archive with invalid -C request */
+name|assert
 argument_list|(
-name|p
+literal|0
+operator|!=
+name|systemf
+argument_list|(
+literal|"echo file | %s -o -C> bad.cpio 2>bad.err"
 argument_list|,
-literal|"b"
-argument_list|,
-literal|1
+name|testprog
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|assertEmptyFile
+argument_list|(
+literal|"bad.cpio"
 argument_list|)
 expr_stmt|;
 block|}
