@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -286,6 +286,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|zfs_mg_alloc_failures
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * An allocating zio is one that either currently has the DVA allocate  * stage set or will have it later in its lifetime.  */
@@ -699,6 +706,39 @@ name|c
 index|]
 expr_stmt|;
 block|}
+comment|/* 	 * The zio write taskqs have 1 thread per cpu, allow 1/2 of the taskqs 	 * to fail 3 times per txg or 8 failures, whichever is greater. 	 */
+if|if
+condition|(
+name|zfs_mg_alloc_failures
+operator|==
+literal|0
+condition|)
+name|zfs_mg_alloc_failures
+operator|=
+name|MAX
+argument_list|(
+operator|(
+literal|3
+operator|*
+name|max_ncpus
+operator|/
+literal|2
+operator|)
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|zfs_mg_alloc_failures
+operator|<
+literal|8
+condition|)
+name|zfs_mg_alloc_failures
+operator|=
+literal|8
+expr_stmt|;
 name|zio_inject_init
 argument_list|()
 expr_stmt|;
@@ -10579,6 +10619,11 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|int
+name|flags
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|zio
@@ -10667,6 +10712,35 @@ name|bp
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * The dump device does not support gang blocks so allocation on 	 * behalf of the dump device (i.e. ZIO_FLAG_NODATA) must avoid 	 * the "fast" gang feature. 	 */
+name|flags
+operator||=
+operator|(
+name|zio
+operator|->
+name|io_flags
+operator|&
+name|ZIO_FLAG_NODATA
+operator|)
+condition|?
+name|METASLAB_GANG_AVOID
+else|:
+literal|0
+expr_stmt|;
+name|flags
+operator||=
+operator|(
+name|zio
+operator|->
+name|io_flags
+operator|&
+name|ZIO_FLAG_GANG_CHILD
+operator|)
+condition|?
+name|METASLAB_GANG_CHILD
+else|:
+literal|0
+expr_stmt|;
 name|error
 operator|=
 name|metaslab_alloc
@@ -10693,7 +10767,7 @@ name|io_txg
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -10701,6 +10775,27 @@ condition|(
 name|error
 condition|)
 block|{
+name|spa_dbgmsg
+argument_list|(
+name|spa
+argument_list|,
+literal|"%s: metaslab allocation failure: zio %p, "
+literal|"size %llu, error %d"
+argument_list|,
+name|spa_name
+argument_list|(
+name|spa
+argument_list|)
+argument_list|,
+name|zio
+argument_list|,
+name|zio
+operator|->
+name|io_size
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error

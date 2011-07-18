@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -6238,6 +6238,25 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|boolean_t
+name|spa_debug_enabled
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+block|{
+return|return
+operator|(
+name|spa
+operator|->
+name|spa_debug
 operator|)
 return|;
 block|}
