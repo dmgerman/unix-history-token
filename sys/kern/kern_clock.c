@@ -3314,9 +3314,7 @@ literal|0
 expr_stmt|;
 name|nintr
 operator|=
-name|eintrcnt
-operator|-
-name|intrcnt
+name|sintrcnt
 expr_stmt|;
 name|printf
 argument_list|(

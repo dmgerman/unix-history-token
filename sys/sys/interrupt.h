@@ -429,30 +429,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|u_long
-name|eintrcnt
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* end of intrcnt[] */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|eintrnames
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* end of intrnames[] */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|u_long
 name|intrcnt
 index|[]
 decl_stmt|;
@@ -472,6 +448,28 @@ end_decl_stmt
 
 begin_comment
 comment|/* string table containing device names */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|size_t
+name|sintrcnt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* size of intrcnt table */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|size_t
+name|sintrnames
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* size of intrnames table */
 end_comment
 
 begin_ifdef

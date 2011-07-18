@@ -1506,16 +1506,6 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
-name|MAXCPU
-argument_list|,
-name|MAXCPU
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|ASSYM
-argument_list|(
 name|MAXCOMLEN
 argument_list|,
 name|MAXCOMLEN

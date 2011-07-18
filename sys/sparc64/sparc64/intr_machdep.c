@@ -628,8 +628,6 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|intrnames
-operator|+
 operator|(
 name|MAXCOMLEN
 operator|+
@@ -638,7 +636,7 @@ operator|)
 operator|*
 name|index
 operator|>=
-name|eintrnames
+name|sintrnames
 condition|)
 return|return
 operator|(
