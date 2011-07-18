@@ -3742,15 +3742,15 @@ name|MT_standout
 operator||
 name|MT_delayed
 argument_list|,
-literal|" Displaying %sCPU"
+literal|" Displaying %s CPU"
 argument_list|,
 name|ps
 operator|.
 name|wcpu
 condition|?
-literal|"W"
+literal|"weighted"
 else|:
-literal|""
+literal|"raw"
 argument_list|)
 expr_stmt|;
 name|header_text
