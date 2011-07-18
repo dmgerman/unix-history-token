@@ -662,6 +662,9 @@ name|struct
 name|sockaddr_storage
 name|ar_arg_sockaddr
 decl_stmt|;
+name|cap_rights_t
+name|ar_arg_rights
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1032,6 +1035,13 @@ define|#
 directive|define
 name|ARG_ATFD2
 value|0x0008000000000000ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARG_RIGHTS
+value|0x0010000000000000ULL
 end_define
 
 begin_define
