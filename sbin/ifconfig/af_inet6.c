@@ -3303,6 +3303,9 @@ value|(sizeof(a) / sizeof(a[0]))
 name|size_t
 name|i
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|RESCUE
 if|if
 condition|(
 operator|!
@@ -3312,6 +3315,8 @@ literal|"inet6"
 argument_list|)
 condition|)
 return|return;
+endif|#
+directive|endif
 for|for
 control|(
 name|i
