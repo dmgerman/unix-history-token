@@ -476,7 +476,7 @@ name|s_comm
 block|,
 name|COMMLEN
 operator|+
-name|OCOMMLEN
+name|TDNAMLEN
 operator|+
 literal|1
 block|,
@@ -2548,7 +2548,7 @@ name|s_comm
 block|,
 name|COMMLEN
 operator|+
-name|OCOMMLEN
+name|TDNAMLEN
 operator|+
 literal|1
 block|,

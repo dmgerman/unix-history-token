@@ -908,7 +908,7 @@ name|strlen
 argument_list|(
 name|kipp
 operator|->
-name|ki_ocomm
+name|ki_tdname
 argument_list|)
 operator|&&
 operator|(
@@ -920,7 +920,7 @@ name|ki_comm
 argument_list|,
 name|kipp
 operator|->
-name|ki_ocomm
+name|ki_tdname
 argument_list|)
 operator|!=
 literal|0
@@ -929,7 +929,7 @@ operator|)
 condition|?
 name|kipp
 operator|->
-name|ki_ocomm
+name|ki_tdname
 else|:
 literal|"-"
 argument_list|)

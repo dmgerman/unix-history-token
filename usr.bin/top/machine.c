@@ -4131,7 +4131,7 @@ name|P_HADTHREADS
 operator|&&
 name|pp
 operator|->
-name|ki_ocomm
+name|ki_tdname
 index|[
 literal|0
 index|]
@@ -4147,7 +4147,7 @@ literal|"{%s}"
 argument_list|,
 name|pp
 operator|->
-name|ki_ocomm
+name|ki_tdname
 argument_list|)
 expr_stmt|;
 block|}
@@ -4220,7 +4220,7 @@ name|P_HADTHREADS
 operator|&&
 name|pp
 operator|->
-name|ki_ocomm
+name|ki_tdname
 index|[
 literal|0
 index|]
@@ -4236,7 +4236,7 @@ literal|"{%s}"
 argument_list|,
 name|pp
 operator|->
-name|ki_ocomm
+name|ki_tdname
 argument_list|)
 expr_stmt|;
 block|}

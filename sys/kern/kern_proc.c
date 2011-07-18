@@ -4664,7 +4664,7 @@ name|strlcpy
 argument_list|(
 name|kp
 operator|->
-name|ki_ocomm
+name|ki_tdname
 argument_list|,
 name|td
 operator|->
@@ -4674,7 +4674,7 @@ sizeof|sizeof
 argument_list|(
 name|kp
 operator|->
-name|ki_ocomm
+name|ki_tdname
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6010,13 +6010,13 @@ name|bcopy
 argument_list|(
 name|ki
 operator|->
-name|ki_ocomm
+name|ki_tdname
 argument_list|,
 name|ki32
 operator|->
-name|ki_ocomm
+name|ki_tdname
 argument_list|,
-name|OCOMMLEN
+name|TDNAMLEN
 operator|+
 literal|1
 argument_list|)

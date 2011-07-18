@@ -982,9 +982,9 @@ name|u_char
 name|ki_lastcpu
 decl_stmt|;
 name|char
-name|ki_ocomm
+name|ki_tdname
 index|[
-name|OCOMMLEN
+name|TDNAMLEN
 operator|+
 literal|1
 index|]

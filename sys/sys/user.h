@@ -267,7 +267,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OCOMMLEN
+name|TDNAMLEN
 value|16
 end_define
 
@@ -329,6 +329,31 @@ end_define
 begin_comment
 comment|/* size of returned ki_loginclass */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|OCOMMLEN
+value|TDNAMLEN
+end_define
+
+begin_define
+define|#
+directive|define
+name|ki_ocomm
+value|ki_tdname
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Flags for the process credential. */
@@ -602,9 +627,9 @@ name|ki_lastcpu
 decl_stmt|;
 comment|/* Last cpu we were on */
 name|char
-name|ki_ocomm
+name|ki_tdname
 index|[
-name|OCOMMLEN
+name|TDNAMLEN
 operator|+
 literal|1
 index|]

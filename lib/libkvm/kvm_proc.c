@@ -2188,7 +2188,7 @@ name|strlcpy
 argument_list|(
 name|kp
 operator|->
-name|ki_ocomm
+name|ki_tdname
 argument_list|,
 name|mtd
 operator|.
@@ -2220,7 +2220,7 @@ name|strlcpy
 argument_list|(
 name|kp
 operator|->
-name|ki_ocomm
+name|ki_tdname
 argument_list|,
 name|mtd
 operator|.
@@ -2230,7 +2230,7 @@ sizeof|sizeof
 argument_list|(
 name|kp
 operator|->
-name|ki_ocomm
+name|ki_tdname
 argument_list|)
 argument_list|)
 expr_stmt|;
