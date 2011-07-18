@@ -13731,6 +13731,10 @@ operator|~
 name|S_IFMT
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|err
+operator|=
 name|zfs_acl_chmod_setattr
 argument_list|(
 name|zp
@@ -13740,7 +13744,10 @@ name|aclp
 argument_list|,
 name|new_mode
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|out
+goto|;
 name|mutex_enter
 argument_list|(
 operator|&
