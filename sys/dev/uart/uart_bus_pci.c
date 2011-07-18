@@ -338,6 +338,20 @@ literal|0x10
 block|}
 block|,
 block|{
+literal|0x1282
+block|,
+literal|0x6585
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Davicom 56PDV PCI Modem"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
 literal|0x12b9
 block|,
 literal|0x1008
