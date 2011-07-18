@@ -1092,10 +1092,7 @@ begin_function
 name|void
 name|toggle_pcpustats
 parameter_list|(
-name|struct
-name|statics
-modifier|*
-name|statics
+name|void
 parameter_list|)
 block|{
 if|if
@@ -1160,12 +1157,6 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* 7 */
-name|statics
-operator|->
-name|ncpus
-operator|=
-name|ncpus
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -1196,12 +1187,6 @@ expr_stmt|;
 name|Header_lines
 operator|=
 literal|7
-expr_stmt|;
-name|statics
-operator|->
-name|ncpus
-operator|=
-literal|1
 expr_stmt|;
 block|}
 block|}
@@ -1695,16 +1680,14 @@ name|statics
 operator|->
 name|ncpus
 operator|=
-literal|1
+name|ncpus
 expr_stmt|;
 if|if
 condition|(
 name|pcpu_stats
 condition|)
 name|toggle_pcpustats
-argument_list|(
-name|statics
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* all done! */
 return|return

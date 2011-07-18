@@ -4013,10 +4013,7 @@ literal|"global "
 argument_list|)
 expr_stmt|;
 name|toggle_pcpustats
-argument_list|(
-operator|&
-name|statics
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|max_topn
 operator|=
