@@ -889,15 +889,6 @@ name|LLVM_CLANG_CANPROXY_SIMPLE_ACCESSOR
 argument_list|(
 argument|bool
 argument_list|,
-argument|isPODType
-argument_list|)
-end_macro
-
-begin_macro
-name|LLVM_CLANG_CANPROXY_SIMPLE_ACCESSOR
-argument_list|(
-argument|bool
-argument_list|,
 argument|isVariablyModifiedType
 argument_list|)
 end_macro
@@ -1286,6 +1277,15 @@ argument_list|(
 argument|bool
 argument_list|,
 argument|isSpecifierType
+argument_list|)
+end_macro
+
+begin_macro
+name|LLVM_CLANG_CANPROXY_SIMPLE_ACCESSOR
+argument_list|(
+argument|CXXRecordDecl*
+argument_list|,
+argument|getAsCXXRecordDecl
 argument_list|)
 end_macro
 

@@ -192,6 +192,14 @@ name|MCSection
 modifier|*
 name|LSDASection
 decl_stmt|;
+comment|/// CompactUnwindSection - If exception handling is supported by the target
+comment|/// and the target can support a compact representation of the CIE and FDE,
+comment|/// this is the section to emit them into.
+specifier|const
+name|MCSection
+modifier|*
+name|CompactUnwindSection
+decl_stmt|;
 comment|// Dwarf sections for debug info.  If a target supports debug info, these must
 comment|// be set.
 specifier|const
@@ -411,6 +419,17 @@ specifier|const
 block|{
 return|return
 name|LSDASection
+return|;
+block|}
+specifier|const
+name|MCSection
+operator|*
+name|getCompactUnwindSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CompactUnwindSection
 return|;
 block|}
 name|virtual

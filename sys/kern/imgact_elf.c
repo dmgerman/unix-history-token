@@ -5707,6 +5707,9 @@ operator|.
 name|count
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -5753,6 +5756,8 @@ goto|goto
 name|done
 goto|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|hdrsize

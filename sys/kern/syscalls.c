@@ -1553,10 +1553,10 @@ comment|/* 512 = shmctl */
 literal|"lpathconf"
 block|,
 comment|/* 513 = lpathconf */
-literal|"#514"
+literal|"cap_new"
 block|,
 comment|/* 514 = cap_new */
-literal|"#515"
+literal|"cap_getrights"
 block|,
 comment|/* 515 = cap_getrights */
 literal|"cap_enter"

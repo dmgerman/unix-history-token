@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -49,6 +49,21 @@ directive|include
 file|<sys/zio.h>
 end_include
 
+begin_comment
+comment|/*  * Allow allocations to switch to gang blocks quickly. We do this to  * avoid having to load lots of space_maps in a given txg. There are,  * however, some cases where we want to avoid "fast" ganging and instead  * we want to do an exhaustive search of all metaslabs on this device.  * Currently we don't allow any gang or dump device related allocations  * to "fast" gang.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAN_FASTGANG
+parameter_list|(
+name|flags
+parameter_list|)
+define|\
+value|(!((flags)& (METASLAB_GANG_CHILD | METASLAB_GANG_HEADER | \ 	METASLAB_GANG_AVOID)))
+end_define
+
 begin_decl_stmt
 name|uint64_t
 name|metaslab_aliquot
@@ -72,6 +87,58 @@ end_decl_stmt
 begin_comment
 comment|/* force gang blocks */
 end_comment
+
+begin_comment
+comment|/*  * This value defines the number of allowed allocation failures per vdev.  * If a device reaches this threshold in a given txg then we consider skipping  * allocations on that device.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|zfs_mg_alloc_failures
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_vfs_zfs
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_zfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|mg_alloc_failures
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|zfs_mg_alloc_failures
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of allowed allocation failures per vdev"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.mg_alloc_failures"
+argument_list|,
+operator|&
+name|zfs_mg_alloc_failures
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Metaslab debugging: when set, keeps all space maps in core to verify frees.  */
@@ -2952,7 +3019,7 @@ modifier|*
 name|zfs_metaslab_ops
 init|=
 operator|&
-name|metaslab_ndf_ops
+name|metaslab_df_ops
 decl_stmt|;
 end_decl_stmt
 
@@ -3722,9 +3789,6 @@ name|msp
 parameter_list|,
 name|uint64_t
 name|activation_weight
-parameter_list|,
-name|uint64_t
-name|size
 parameter_list|)
 block|{
 name|metaslab_group_t
@@ -3910,20 +3974,6 @@ name|mg_lock
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * If we were able to load the map then make sure 		 * that this map is still able to satisfy our request. 		 */
-if|if
-condition|(
-name|msp
-operator|->
-name|ms_weight
-operator|<
-name|size
-condition|)
-return|return
-operator|(
-name|ENOSPC
-operator|)
-return|;
 name|metaslab_group_sort
 argument_list|(
 name|msp
@@ -5082,6 +5132,13 @@ name|mg
 operator|->
 name|mg_vd
 decl_stmt|;
+name|int64_t
+name|failures
+init|=
+name|mg
+operator|->
+name|mg_alloc_failures
+decl_stmt|;
 comment|/* 	 * Re-evaluate all metaslabs which have lower offsets than the 	 * bonus area. 	 */
 for|for
 control|(
@@ -5153,6 +5210,17 @@ name|ms_lock
 argument_list|)
 expr_stmt|;
 block|}
+name|atomic_add_64
+argument_list|(
+operator|&
+name|mg
+operator|->
+name|mg_alloc_failures
+argument_list|,
+operator|-
+name|failures
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Prefetch the next potential metaslabs 	 */
 name|metaslab_prefetch
 argument_list|(
@@ -5282,7 +5350,10 @@ modifier|*
 name|mg
 parameter_list|,
 name|uint64_t
-name|size
+name|psize
+parameter_list|,
+name|uint64_t
+name|asize
 parameter_list|,
 name|uint64_t
 name|txg
@@ -5296,8 +5367,21 @@ name|dva
 parameter_list|,
 name|int
 name|d
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
+name|spa_t
+modifier|*
+name|spa
+init|=
+name|mg
+operator|->
+name|mg_vd
+operator|->
+name|vdev_spa
+decl_stmt|;
 name|metaslab_t
 modifier|*
 name|msp
@@ -5415,9 +5499,48 @@ name|msp
 operator|->
 name|ms_weight
 operator|<
-name|size
+name|asize
 condition|)
 block|{
+name|spa_dbgmsg
+argument_list|(
+name|spa
+argument_list|,
+literal|"%s: failed to meet weight "
+literal|"requirement: vdev %llu, txg %llu, mg %p, "
+literal|"msp %p, psize %llu, asize %llu, "
+literal|"failures %llu, weight %llu"
+argument_list|,
+name|spa_name
+argument_list|(
+name|spa
+argument_list|)
+argument_list|,
+name|mg
+operator|->
+name|mg_vd
+operator|->
+name|vdev_id
+argument_list|,
+name|txg
+argument_list|,
+name|mg
+argument_list|,
+name|msp
+argument_list|,
+name|psize
+argument_list|,
+name|asize
+argument_list|,
+name|mg
+operator|->
+name|mg_alloc_failures
+argument_list|,
+name|msp
+operator|->
+name|ms_weight
+argument_list|)
+expr_stmt|;
 name|mutex_exit
 argument_list|(
 operator|&
@@ -5523,6 +5646,68 @@ operator|-
 literal|1ULL
 operator|)
 return|;
+comment|/* 		 * If we've already reached the allowable number of failed 		 * allocation attempts on this metaslab group then we 		 * consider skipping it. We skip it only if we're allowed 		 * to "fast" gang, the physical size is larger than 		 * a gang block, and we're attempting to allocate from 		 * the primary metaslab. 		 */
+if|if
+condition|(
+name|mg
+operator|->
+name|mg_alloc_failures
+operator|>
+name|zfs_mg_alloc_failures
+operator|&&
+name|CAN_FASTGANG
+argument_list|(
+name|flags
+argument_list|)
+operator|&&
+name|psize
+operator|>
+name|SPA_GANGBLOCKSIZE
+operator|&&
+name|activation_weight
+operator|==
+name|METASLAB_WEIGHT_PRIMARY
+condition|)
+block|{
+name|spa_dbgmsg
+argument_list|(
+name|spa
+argument_list|,
+literal|"%s: skipping metaslab group: "
+literal|"vdev %llu, txg %llu, mg %p, psize %llu, "
+literal|"asize %llu, failures %llu"
+argument_list|,
+name|spa_name
+argument_list|(
+name|spa
+argument_list|)
+argument_list|,
+name|mg
+operator|->
+name|mg_vd
+operator|->
+name|vdev_id
+argument_list|,
+name|txg
+argument_list|,
+name|mg
+argument_list|,
+name|psize
+argument_list|,
+name|asize
+argument_list|,
+name|mg
+operator|->
+name|mg_alloc_failures
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1ULL
+operator|)
+return|;
+block|}
 name|mutex_enter
 argument_list|(
 operator|&
@@ -5538,7 +5723,7 @@ name|msp
 operator|->
 name|ms_weight
 operator|<
-name|size
+name|asize
 operator|||
 operator|(
 name|was_active
@@ -5612,8 +5797,6 @@ argument_list|(
 name|msp
 argument_list|,
 name|activation_weight
-argument_list|,
-name|size
 argument_list|)
 operator|!=
 literal|0
@@ -5641,7 +5824,7 @@ name|msp
 operator|->
 name|ms_map
 argument_list|,
-name|size
+name|asize
 argument_list|)
 operator|)
 operator|!=
@@ -5649,6 +5832,14 @@ operator|-
 literal|1ULL
 condition|)
 break|break;
+name|atomic_inc_64
+argument_list|(
+operator|&
+name|mg
+operator|->
+name|mg_alloc_failures
+argument_list|)
+expr_stmt|;
 name|metaslab_passivate
 argument_list|(
 name|msp
@@ -5713,7 +5904,7 @@ index|]
 argument_list|,
 name|offset
 argument_list|,
-name|size
+name|asize
 argument_list|)
 expr_stmt|;
 name|mutex_exit
@@ -6157,6 +6348,8 @@ name|metaslab_group_alloc
 argument_list|(
 name|mg
 argument_list|,
+name|psize
+argument_list|,
 name|asize
 argument_list|,
 name|txg
@@ -6166,6 +6359,8 @@ argument_list|,
 name|dva
 argument_list|,
 name|d
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -6200,15 +6395,14 @@ name|vu
 decl_stmt|,
 name|cu
 decl_stmt|;
-comment|/* 				 * Determine percent used in units of 0..1024. 				 * (This is just to avoid floating point.) 				 */
 name|vu
 operator|=
 operator|(
 name|vs
 operator|->
 name|vs_alloc
-operator|<<
-literal|10
+operator|*
+literal|100
 operator|)
 operator|/
 operator|(
@@ -6225,8 +6419,8 @@ operator|(
 name|mc
 operator|->
 name|mc_alloc
-operator|<<
-literal|10
+operator|*
+literal|100
 operator|)
 operator|/
 operator|(
@@ -6237,7 +6431,7 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-comment|/* 				 * Bias by at most +/- 25% of the aliquot. 				 */
+comment|/* 				 * Calculate how much more or less we should 				 * try to allocate from this device during 				 * this iteration around the rotor. 				 * For example, if a device is 80% full 				 * and the pool is 20% full then we should 				 * reduce allocations by 60% on this device. 				 * 				 * mg_bias = (20 - 80) * 512K / 100 = -307K 				 * 				 * This reduces allocations by 307K for this 				 * iteration. 				 */
 name|mg
 operator|->
 name|mg_bias
@@ -6257,11 +6451,7 @@ operator|->
 name|mg_aliquot
 operator|)
 operator|/
-operator|(
-literal|1024
-operator|*
-literal|4
-operator|)
+literal|100
 expr_stmt|;
 block|}
 if|if
@@ -6870,8 +7060,6 @@ argument_list|(
 name|msp
 argument_list|,
 name|METASLAB_WEIGHT_SECONDARY
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if

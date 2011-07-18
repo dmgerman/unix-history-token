@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: dig.h,v 1.107.120.2 2009-01-06 23:47:26 tbox Exp $ */
+comment|/* $Id: dig.h,v 1.111 2009-09-29 15:06:06 fdupont Exp $ */
 end_comment
 
 begin_ifndef
@@ -1158,28 +1158,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
+name|ISC_PLATFORM_NORETURN_PRE
 name|void
 name|fatal
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
+operator|*
 name|format
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|ISC_FORMAT_PRINTF
-parameter_list|(
-function_decl|1
-operator|,
-function_decl|2
-end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+argument_list|,
+operator|...
+argument_list|)
+name|ISC_FORMAT_PRINTF
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
+name|ISC_PLATFORM_NORETURN_POST
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void
@@ -1305,6 +1304,42 @@ name|void
 name|setup_system
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|isc_result_t
+name|parse_uint
+parameter_list|(
+name|isc_uint32_t
+modifier|*
+name|uip
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|value
+parameter_list|,
+name|isc_uint32_t
+name|max
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|desc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|parse_hmac
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|hmacstr
 parameter_list|)
 function_decl|;
 end_function_decl

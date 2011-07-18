@@ -155,6 +155,15 @@ argument_list|,
 name|void
 operator|*
 name|Cookie
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|intptr_t
+operator|>
+operator|&
+name|QualTypeVals
 argument_list|)
 decl_stmt|;
 block|}

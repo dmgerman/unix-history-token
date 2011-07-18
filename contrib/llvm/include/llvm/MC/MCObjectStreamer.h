@@ -309,6 +309,8 @@ argument_list|,
 argument|const MCSymbol *LastLabel
 argument_list|,
 argument|const MCSymbol *Label
+argument_list|,
+argument|unsigned PointerSize
 argument_list|)
 block|;
 name|virtual

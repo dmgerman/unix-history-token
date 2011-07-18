@@ -416,6 +416,7 @@ name|Flags
 parameter_list|)
 function_decl|;
 comment|/// createMemberType - Create debugging information entry for a member.
+comment|/// @param Scope        Member scope.
 comment|/// @param Name         Member name.
 comment|/// @param File         File where this member is defined.
 comment|/// @param LineNo       Line number.
@@ -427,6 +428,9 @@ comment|/// @param Ty           Parent type.
 name|DIType
 name|createMemberType
 parameter_list|(
+name|DIDescriptor
+name|Scope
+parameter_list|,
 name|StringRef
 name|Name
 parameter_list|,

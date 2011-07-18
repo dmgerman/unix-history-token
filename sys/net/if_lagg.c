@@ -6334,6 +6334,11 @@ name|sc
 operator|->
 name|sc_ifp
 decl_stmt|;
+name|LAGG_RLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -6361,6 +6366,11 @@ operator|==
 name|LAGG_PROTO_NONE
 condition|)
 block|{
+name|LAGG_RUNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -6372,11 +6382,6 @@ name|NULL
 operator|)
 return|;
 block|}
-name|LAGG_RLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ETHER_BPF_MTAP
 argument_list|(
 name|scifp

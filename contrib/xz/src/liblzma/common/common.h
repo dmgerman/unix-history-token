@@ -670,7 +670,7 @@ name|allocator
 parameter_list|)
 function_decl|lzma_attribute
 parameter_list|(
-function_decl|(malloc
+function_decl|(__malloc__
 end_function_decl
 
 begin_expr_stmt

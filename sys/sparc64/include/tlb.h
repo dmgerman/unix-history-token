@@ -83,12 +83,110 @@ end_define
 begin_define
 define|#
 directive|define
+name|TLB_DAR_TLB_SHIFT
+value|(16)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TLB_DAR_SLOT
 parameter_list|(
+name|tlb
+parameter_list|,
 name|slot
 parameter_list|)
-value|((slot)<< TLB_DAR_SLOT_SHIFT)
+define|\
+value|((tlb)<< TLB_DAR_TLB_SHIFT | (slot)<< TLB_DAR_SLOT_SHIFT)
 end_define
+
+begin_define
+define|#
+directive|define
+name|TLB_DAR_T16
+value|(0)
+end_define
+
+begin_comment
+comment|/* US-III{,i,+}, IV{,+} */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLB_DAR_T32
+value|(0)
+end_define
+
+begin_comment
+comment|/* US-I, II{,e,i} */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLB_DAR_DT512_0
+value|(2)
+end_define
+
+begin_comment
+comment|/* US-III{,i,+}, IV{,+} */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLB_DAR_DT512_1
+value|(3)
+end_define
+
+begin_comment
+comment|/* US-III{,i,+}, IV{,+} */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLB_DAR_IT128
+value|(2)
+end_define
+
+begin_comment
+comment|/* US-III{,i,+}, IV */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLB_DAR_IT512
+value|(2)
+end_define
+
+begin_comment
+comment|/* US-IV+ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLB_DAR_FTLB
+value|(0)
+end_define
+
+begin_comment
+comment|/* SPARC64 V, VI, VII, VIIIfx */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLB_DAR_STLB
+value|(2)
+end_define
+
+begin_comment
+comment|/* SPARC64 V, VI, VII, VIIIfx */
+end_comment
 
 begin_define
 define|#
@@ -735,6 +833,18 @@ end_decl_stmt
 begin_decl_stmt
 name|tlb_flush_user_t
 name|spitfire_tlb_flush_user
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|tlb_flush_nonlocked_t
+name|zeus_tlb_flush_nonlocked
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|tlb_flush_user_t
+name|zeus_tlb_flush_user
 decl_stmt|;
 end_decl_stmt
 

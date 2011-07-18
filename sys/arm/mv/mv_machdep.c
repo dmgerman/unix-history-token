@@ -1562,6 +1562,12 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+name|preload_addr_relocate
+operator|=
+name|KERNVIRTADDR
+operator|-
+name|KERNPHYSADDR
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -2241,19 +2247,6 @@ comment|/* 	 * Re-initialise MPP. It is important to call this prior to using 	 
 if|if
 condition|(
 name|platform_mpp_init
-argument_list|()
-operator|!=
-literal|0
-condition|)
-while|while
-condition|(
-literal|1
-condition|)
-empty_stmt|;
-comment|/* 	 * Initialize GPIO as early as possible. 	 */
-if|if
-condition|(
-name|platform_gpio_init
 argument_list|()
 operator|!=
 literal|0

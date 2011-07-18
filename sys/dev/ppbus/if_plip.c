@@ -2569,6 +2569,17 @@ argument_list|,
 name|top
 argument_list|)
 expr_stmt|;
+name|M_SETFIB
+argument_list|(
+name|top
+argument_list|,
+name|sc
+operator|->
+name|sc_ifp
+operator|->
+name|if_fib
+argument_list|)
+expr_stmt|;
 comment|/* mbuf is free'd on failure. */
 name|netisr_queue
 argument_list|(
@@ -2842,6 +2853,17 @@ operator|->
 name|sc_ifp
 argument_list|,
 name|top
+argument_list|)
+expr_stmt|;
+name|M_SETFIB
+argument_list|(
+name|top
+argument_list|,
+name|sc
+operator|->
+name|sc_ifp
+operator|->
+name|if_fib
 argument_list|)
 expr_stmt|;
 comment|/* mbuf is free'd on failure. */

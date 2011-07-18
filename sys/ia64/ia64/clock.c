@@ -329,6 +329,11 @@ operator||
 name|xiv
 argument_list|)
 expr_stmt|;
+name|ia64_set_eoi
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|ia64_srlz_d
 argument_list|()
 expr_stmt|;
@@ -356,7 +361,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}

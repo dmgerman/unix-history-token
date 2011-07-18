@@ -165,6 +165,8 @@ block|,
 name|ExtractElementF64
 block|,
 name|WrapperPIC
+block|,
+name|DynAlloc
 block|}
 enum|;
 block|}
@@ -469,20 +471,6 @@ name|TargetRegisterClass
 operator|*
 operator|>
 name|getRegForInlineAsmConstraint
-argument_list|(
-argument|const std::string&Constraint
-argument_list|,
-argument|EVT VT
-argument_list|)
-specifier|const
-block|;
-name|std
-operator|::
-name|vector
-operator|<
-name|unsigned
-operator|>
-name|getRegClassForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,

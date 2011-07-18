@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: cfg.h,v 1.44 2007-10-12 04:17:18 each Exp $ */
+comment|/* $Id: cfg.h,v 1.46 2010-08-13 23:47:04 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -42,6 +42,12 @@ begin_include
 include|#
 directive|include
 file|<isc/lang.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/refcount.h>
 end_include
 
 begin_include
@@ -109,7 +115,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*%  * A callback function to be called when parsing an option   * that needs to be interpreted at parsing time, like  * "directory".  */
+comment|/*%  * A callback function to be called when parsing an option  * that needs to be interpreted at parsing time, like  * "directory".  */
 end_comment
 
 begin_typedef
@@ -143,6 +149,26 @@ end_comment
 
 begin_function_decl
 name|ISC_LANG_BEGINDECLS
+name|void
+name|cfg_parser_attach
+parameter_list|(
+name|cfg_parser_t
+modifier|*
+name|src
+parameter_list|,
+name|cfg_parser_t
+modifier|*
+modifier|*
+name|dest
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Reference a parser object.  */
+end_comment
+
+begin_function_decl
 name|isc_result_t
 name|cfg_parser_create
 parameter_list|(
@@ -240,7 +266,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Read a configuration containing data of type 'type'  * and make '*ret' point to its parse tree.  *  * The configuration is read from the file 'filename'  * (isc_parse_file()) or the buffer 'buffer'  * (isc_parse_buffer()).  *  * Returns an error if the file does not parse correctly.  *   * Requires:  *\li 	"filename" is valid.  *\li 	"mem" is valid.  *\li	"type" is valid.  *\li 	"cfg" is non-NULL and "*cfg" is NULL.  *  * Returns:  *     \li #ISC_R_SUCCESS                 - success  *\li      #ISC_R_NOMEMORY                - no memory available  *\li      #ISC_R_INVALIDFILE             - file doesn't exist or is unreadable  *\li      others	                      - file contains errors  */
+comment|/*%<  * Read a configuration containing data of type 'type'  * and make '*ret' point to its parse tree.  *  * The configuration is read from the file 'filename'  * (isc_parse_file()) or the buffer 'buffer'  * (isc_parse_buffer()).  *  * Returns an error if the file does not parse correctly.  *  * Requires:  *\li 	"filename" is valid.  *\li 	"mem" is valid.  *\li	"type" is valid.  *\li 	"cfg" is non-NULL and "*cfg" is NULL.  *  * Returns:  *     \li #ISC_R_SUCCESS                 - success  *\li      #ISC_R_NOMEMORY                - no memory available  *\li      #ISC_R_INVALIDFILE             - file doesn't exist or is unreadable  *\li      others	                      - file contains errors  */
 end_comment
 
 begin_function_decl
@@ -256,7 +282,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Destroy a configuration parser.  */
+comment|/*%<  * Remove a reference to a configuration parser; destroy it if there are no  * more references.  */
 end_comment
 
 begin_function_decl
@@ -272,7 +298,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Return true iff 'obj' is of void type (e.g., an optional   * value not specified).  */
+comment|/*%<  * Return true iff 'obj' is of void type (e.g., an optional  * value not specified).  */
 end_comment
 
 begin_function_decl
@@ -653,7 +679,6 @@ comment|/*%<  * Returns the length of a list of configure objects.  If obj is  *
 end_comment
 
 begin_function_decl
-specifier|const
 name|cfg_obj_t
 modifier|*
 name|cfg_listelt_value
@@ -766,7 +791,27 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Return true iff 'obj' is of type 'type'.   */
+comment|/*%<  * Return true iff 'obj' is of type 'type'.  */
+end_comment
+
+begin_function_decl
+name|void
+name|cfg_obj_attach
+parameter_list|(
+name|cfg_obj_t
+modifier|*
+name|src
+parameter_list|,
+name|cfg_obj_t
+modifier|*
+modifier|*
+name|dest
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Reference a configuration object.  */
 end_comment
 
 begin_function_decl
@@ -786,7 +831,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Destroy a configuration object.  */
+comment|/*%<  * Delete a reference to a configuration object; destroy the object if  * there are no more references.  */
 end_comment
 
 begin_function_decl

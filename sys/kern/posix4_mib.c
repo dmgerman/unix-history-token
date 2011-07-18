@@ -127,7 +127,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|SYSCTL_INT(_p1003_1b, num, name, CTLFLAG_RD, facility + num - 1, 0, "");
+value|SYSCTL_INT(_p1003_1b, num, name, CTLFLAG_RD | CTLFLAG_CAPRD, \ 	facility + num - 1, 0, "");
 end_define
 
 begin_define
@@ -166,7 +166,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|SYSCTL_INT(_kern_p1003_1b, OID_AUTO, name, CTLFLAG_RD, \ 	    facility + num - 1, 0, "");
+value|SYSCTL_INT(_kern_p1003_1b, OID_AUTO, name, CTLFLAG_RD | CTLFLAG_CAPRD, \ 	    facility + num - 1, 0, "");
 end_define
 
 begin_define

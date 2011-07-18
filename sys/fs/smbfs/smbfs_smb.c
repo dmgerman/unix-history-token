@@ -3006,7 +3006,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set DOS file attributes.  * Looks like this call can be used only if CAP_NT_SMBS bit is on.  */
+comment|/*  * Set DOS file attributes.  * Looks like this call can be used only if SMB_CAP_NT_SMBS bit is on.  */
 end_comment
 
 begin_function

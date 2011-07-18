@@ -3127,6 +3127,15 @@ argument_list|,
 name|RANDOM_NET
 argument_list|)
 expr_stmt|;
+name|M_SETFIB
+argument_list|(
+name|m
+argument_list|,
+name|ifp
+operator|->
+name|if_fib
+argument_list|)
+expr_stmt|;
 name|netisr_dispatch
 argument_list|(
 name|isr

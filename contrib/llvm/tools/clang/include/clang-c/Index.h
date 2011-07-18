@@ -730,10 +730,15 @@ name|CXTranslationUnit_CXXChainedPCH
 init|=
 literal|0x20
 block|,
-comment|/**    * \brief Used to indicate that the "detailed" preprocessing record,    * if requested, should also contain nested macro instantiations.    *    * Nested macro instantiations (i.e., macro instantiations that occur    * inside another macro instantiation) can, in some code bases, require    * a large amount of storage to due preprocessor metaprogramming. Moreover,    * its fairly rare that this information is useful for libclang clients.    */
-name|CXTranslationUnit_NestedMacroInstantiations
+comment|/**    * \brief Used to indicate that the "detailed" preprocessing record,    * if requested, should also contain nested macro expansions.    *    * Nested macro expansions (i.e., macro expansions that occur    * inside another macro expansion) can, in some code bases, require    * a large amount of storage to due preprocessor metaprogramming. Moreover,    * its fairly rare that this information is useful for libclang clients.    */
+name|CXTranslationUnit_NestedMacroExpansions
 init|=
 literal|0x40
+block|,
+comment|/**    * \brief Legacy name to indicate that the "detailed" preprocessing record,    * if requested, should contain nested macro expansions.    *    * \see CXTranslationUnit_NestedMacroExpansions for the current name for this    * value, and its semantics. This is just an alias.    */
+name|CXTranslationUnit_NestedMacroInstantiations
+init|=
+name|CXTranslationUnit_NestedMacroExpansions
 block|}
 enum|;
 comment|/**  * \brief Returns the set of flags that is suitable for parsing a translation  * unit that is being edited.  *  * The set of flags returned provide options for \c clang_parseTranslationUnit()  * to indicate that the translation unit is likely to be reparsed many times,  * either explicitly (via \c clang_reparseTranslationUnit()) or implicitly  * (e.g., by code completion (\c clang_codeCompletionAt())). The returned flag  * set contains an unspecified set of optimizations (e.g., the precompiled   * preamble) geared toward improving the performance of these routines. The  * set of optimizations enabled may change from one version to the next.  */
@@ -798,7 +803,32 @@ name|CXTranslationUnit
 name|TU
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Saves a translation unit into a serialized representation of  * that translation unit on disk.  *  * Any translation unit that was parsed without error can be saved  * into a file. The translation unit can then be deserialized into a  * new \c CXTranslationUnit with \c clang_createTranslationUnit() or,  * if it is an incomplete translation unit that corresponds to a  * header, used as a precompiled header when parsing other translation  * units.  *  * \param TU The translation unit to save.  *  * \param FileName The file to which the translation unit will be saved.  *  * \param options A bitmask of options that affects how the translation unit  * is saved. This should be a bitwise OR of the  * CXSaveTranslationUnit_XXX flags.  *  * \returns Zero if the translation unit was saved successfully, a  * non-zero value otherwise.  */
+comment|/**  * \brief Describes the kind of error that occurred (if any) in a call to  * \c clang_saveTranslationUnit().  */
+enum|enum
+name|CXSaveError
+block|{
+comment|/**    * \brief Indicates that no error occurred while saving a translation unit.    */
+name|CXSaveError_None
+init|=
+literal|0
+block|,
+comment|/**    * \brief Indicates that an unknown error occurred while attempting to save    * the file.    *    * This error typically indicates that file I/O failed when attempting to     * write the file.    */
+name|CXSaveError_Unknown
+init|=
+literal|1
+block|,
+comment|/**    * \brief Indicates that errors during translation prevented this attempt    * to save the translation unit.    *     * Errors that prevent the translation unit from being saved can be    * extracted using \c clang_getNumDiagnostics() and \c clang_getDiagnostic().    */
+name|CXSaveError_TranslationErrors
+init|=
+literal|2
+block|,
+comment|/**    * \brief Indicates that the translation unit to be saved was somehow    * invalid (e.g., NULL).    */
+name|CXSaveError_InvalidTU
+init|=
+literal|3
+block|}
+enum|;
+comment|/**  * \brief Saves a translation unit into a serialized representation of  * that translation unit on disk.  *  * Any translation unit that was parsed without error can be saved  * into a file. The translation unit can then be deserialized into a  * new \c CXTranslationUnit with \c clang_createTranslationUnit() or,  * if it is an incomplete translation unit that corresponds to a  * header, used as a precompiled header when parsing other translation  * units.  *  * \param TU The translation unit to save.  *  * \param FileName The file to which the translation unit will be saved.  *  * \param options A bitmask of options that affects how the translation unit  * is saved. This should be a bitwise OR of the  * CXSaveTranslationUnit_XXX flags.  *  * \returns A value that will match one of the enumerators of the CXSaveError  * enumeration. Zero (CXSaveError_None) indicates that the translation unit was   * saved successfully, while a non-zero value indicates that a problem occurred.  */
 name|CINDEX_LINKAGE
 name|int
 name|clang_saveTranslationUnit
@@ -1382,9 +1412,13 @@ name|CXCursor_MacroDefinition
 init|=
 literal|501
 block|,
-name|CXCursor_MacroInstantiation
+name|CXCursor_MacroExpansion
 init|=
 literal|502
+block|,
+name|CXCursor_MacroInstantiation
+init|=
+name|CXCursor_MacroExpansion
 block|,
 name|CXCursor_InclusionDirective
 init|=
@@ -1492,6 +1526,15 @@ comment|/**  * \brief Determine whether the given cursor kind represents a state
 name|CINDEX_LINKAGE
 name|unsigned
 name|clang_isStatement
+parameter_list|(
+name|enum
+name|CXCursorKind
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Determine whether the given cursor kind represents an attribute.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_isAttribute
 parameter_list|(
 name|enum
 name|CXCursorKind
@@ -2784,6 +2827,183 @@ init|=
 literal|0x02
 block|}
 enum|;
+comment|/**  * \brief Bits that represent the context under which completion is occurring.  *  * The enumerators in this enumeration may be bitwise-OR'd together if multiple  * contexts are occurring simultaneously.  */
+enum|enum
+name|CXCompletionContext
+block|{
+comment|/**    * \brief The context for completions is unexposed, as only Clang results    * should be included. (This is equivalent to having no context bits set.)    */
+name|CXCompletionContext_Unexposed
+init|=
+literal|0
+block|,
+comment|/**    * \brief Completions for any possible type should be included in the results.    */
+name|CXCompletionContext_AnyType
+init|=
+literal|1
+operator|<<
+literal|0
+block|,
+comment|/**    * \brief Completions for any possible value (variables, function calls, etc.)    * should be included in the results.    */
+name|CXCompletionContext_AnyValue
+init|=
+literal|1
+operator|<<
+literal|1
+block|,
+comment|/**    * \brief Completions for values that resolve to an Objective-C object should    * be included in the results.    */
+name|CXCompletionContext_ObjCObjectValue
+init|=
+literal|1
+operator|<<
+literal|2
+block|,
+comment|/**    * \brief Completions for values that resolve to an Objective-C selector    * should be included in the results.    */
+name|CXCompletionContext_ObjCSelectorValue
+init|=
+literal|1
+operator|<<
+literal|3
+block|,
+comment|/**    * \brief Completions for values that resolve to a C++ class type should be    * included in the results.    */
+name|CXCompletionContext_CXXClassTypeValue
+init|=
+literal|1
+operator|<<
+literal|4
+block|,
+comment|/**    * \brief Completions for fields of the member being accessed using the dot    * operator should be included in the results.    */
+name|CXCompletionContext_DotMemberAccess
+init|=
+literal|1
+operator|<<
+literal|5
+block|,
+comment|/**    * \brief Completions for fields of the member being accessed using the arrow    * operator should be included in the results.    */
+name|CXCompletionContext_ArrowMemberAccess
+init|=
+literal|1
+operator|<<
+literal|6
+block|,
+comment|/**    * \brief Completions for properties of the Objective-C object being accessed    * using the dot operator should be included in the results.    */
+name|CXCompletionContext_ObjCPropertyAccess
+init|=
+literal|1
+operator|<<
+literal|7
+block|,
+comment|/**    * \brief Completions for enum tags should be included in the results.    */
+name|CXCompletionContext_EnumTag
+init|=
+literal|1
+operator|<<
+literal|8
+block|,
+comment|/**    * \brief Completions for union tags should be included in the results.    */
+name|CXCompletionContext_UnionTag
+init|=
+literal|1
+operator|<<
+literal|9
+block|,
+comment|/**    * \brief Completions for struct tags should be included in the results.    */
+name|CXCompletionContext_StructTag
+init|=
+literal|1
+operator|<<
+literal|10
+block|,
+comment|/**    * \brief Completions for C++ class names should be included in the results.    */
+name|CXCompletionContext_ClassTag
+init|=
+literal|1
+operator|<<
+literal|11
+block|,
+comment|/**    * \brief Completions for C++ namespaces and namespace aliases should be    * included in the results.    */
+name|CXCompletionContext_Namespace
+init|=
+literal|1
+operator|<<
+literal|12
+block|,
+comment|/**    * \brief Completions for C++ nested name specifiers should be included in    * the results.    */
+name|CXCompletionContext_NestedNameSpecifier
+init|=
+literal|1
+operator|<<
+literal|13
+block|,
+comment|/**    * \brief Completions for Objective-C interfaces (classes) should be included    * in the results.    */
+name|CXCompletionContext_ObjCInterface
+init|=
+literal|1
+operator|<<
+literal|14
+block|,
+comment|/**    * \brief Completions for Objective-C protocols should be included in    * the results.    */
+name|CXCompletionContext_ObjCProtocol
+init|=
+literal|1
+operator|<<
+literal|15
+block|,
+comment|/**    * \brief Completions for Objective-C categories should be included in    * the results.    */
+name|CXCompletionContext_ObjCCategory
+init|=
+literal|1
+operator|<<
+literal|16
+block|,
+comment|/**    * \brief Completions for Objective-C instance messages should be included    * in the results.    */
+name|CXCompletionContext_ObjCInstanceMessage
+init|=
+literal|1
+operator|<<
+literal|17
+block|,
+comment|/**    * \brief Completions for Objective-C class messages should be included in    * the results.    */
+name|CXCompletionContext_ObjCClassMessage
+init|=
+literal|1
+operator|<<
+literal|18
+block|,
+comment|/**    * \brief Completions for Objective-C selector names should be included in    * the results.    */
+name|CXCompletionContext_ObjCSelectorName
+init|=
+literal|1
+operator|<<
+literal|19
+block|,
+comment|/**    * \brief Completions for preprocessor macro names should be included in    * the results.    */
+name|CXCompletionContext_MacroName
+init|=
+literal|1
+operator|<<
+literal|20
+block|,
+comment|/**    * \brief Natural language completions should be included in the results.    */
+name|CXCompletionContext_NaturalLanguage
+init|=
+literal|1
+operator|<<
+literal|21
+block|,
+comment|/**    * \brief The current context is unknown, so set all contexts.    */
+name|CXCompletionContext_Unknown
+init|=
+operator|(
+operator|(
+literal|1
+operator|<<
+literal|22
+operator|)
+operator|-
+literal|1
+operator|)
+block|}
+enum|;
 comment|/**  * \brief Returns a default set of code-completion options that can be  * passed to\c clang_codeCompleteAt().   */
 name|CINDEX_LINKAGE
 name|unsigned
@@ -2870,6 +3090,18 @@ name|unsigned
 name|Index
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Determines what compeltions are appropriate for the context  * the given code completion.  *   * \param Results the code completion results to query  *  * \returns the kinds of completions that are appropriate for use  * along with the given code completion results.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|long
+name|long
+name|clang_codeCompleteGetContexts
+parameter_list|(
+name|CXCodeCompleteResults
+modifier|*
+name|Results
+parameter_list|)
+function_decl|;
 comment|/**  * @}  */
 comment|/**  * \defgroup CINDEX_MISC Miscellaneous utility functions  *  * @{  */
 comment|/**  * \brief Return a version string, suitable for showing to a user, but not  *        intended to be parsed (the format is not guaranteed to be stable).  */
@@ -2922,6 +3154,60 @@ name|visitor
 parameter_list|,
 name|CXClientData
 name|client_data
+parameter_list|)
+function_decl|;
+comment|/**  * @}  */
+comment|/** \defgroup CINDEX_REMAPPING Remapping functions  *  * @{  */
+comment|/**  * \brief A remapping of original source files and their translated files.  */
+typedef|typedef
+name|void
+modifier|*
+name|CXRemapping
+typedef|;
+comment|/**  * \brief Retrieve a remapping.  *  * \param path the path that contains metadata about remappings.  *  * \returns the requested remapping. This remapping must be freed  * via a call to \c clang_remap_dispose(). Can return NULL if an error occurred.  */
+name|CINDEX_LINKAGE
+name|CXRemapping
+name|clang_getRemappings
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Determine the number of remappings.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_remap_getNumFiles
+parameter_list|(
+name|CXRemapping
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Get the original and the associated filename from the remapping.  *   * \param original If non-NULL, will be set to the original filename.  *  * \param transformed If non-NULL, will be set to the filename that the original  * is associated with.  */
+name|CINDEX_LINKAGE
+name|void
+name|clang_remap_getFilenames
+parameter_list|(
+name|CXRemapping
+parameter_list|,
+name|unsigned
+name|index
+parameter_list|,
+name|CXString
+modifier|*
+name|original
+parameter_list|,
+name|CXString
+modifier|*
+name|transformed
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Dispose the remapping.  */
+name|CINDEX_LINKAGE
+name|void
+name|clang_remap_dispose
+parameter_list|(
+name|CXRemapping
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */

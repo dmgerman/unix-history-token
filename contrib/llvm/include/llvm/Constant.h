@@ -153,27 +153,18 @@ name|public
 operator|:
 comment|/// isNullValue - Return true if this is the value that would be returned by
 comment|/// getNullValue.
-name|virtual
 name|bool
 name|isNullValue
 argument_list|()
 specifier|const
-operator|=
-literal|0
 block|;
 comment|/// isNegativeZeroValue - Return true if the value is what would be returned
 comment|/// by getZeroValueForNegation.
-name|virtual
 name|bool
 name|isNegativeZeroValue
 argument_list|()
 specifier|const
-block|{
-return|return
-name|isNullValue
-argument_list|()
-return|;
-block|}
+block|;
 comment|/// canTrap - Return true if evaluation of this constant could trap.  This is
 comment|/// true for things like constant expressions that could divide by zero.
 name|bool

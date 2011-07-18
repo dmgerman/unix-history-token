@@ -278,8 +278,8 @@ block|,
 comment|/// PSHUFB - Shuffle 16 8-bit values within a vector.
 name|PSHUFB
 block|,
-comment|/// PANDN - and with not'd value.
-name|PANDN
+comment|/// ANDNP - Bitwise Logical AND NOT of Packed FP values.
+name|ANDNP
 block|,
 comment|/// PSIGNB/W/D - Copy integer sign.
 name|PSIGNB
@@ -852,6 +852,26 @@ operator|=
 name|true
 argument_list|)
 decl_stmt|;
+comment|/// isCalleePop - Determines whether the callee is required to pop its
+comment|/// own arguments. Callee pop is necessary to support tail calls.
+name|bool
+name|isCalleePop
+argument_list|(
+name|CallingConv
+operator|::
+name|ID
+name|CallingConv
+argument_list|,
+name|bool
+name|is64Bit
+argument_list|,
+name|bool
+name|IsVarArg
+argument_list|,
+name|bool
+name|TailCallOpt
+argument_list|)
+decl_stmt|;
 block|}
 comment|//===--------------------------------------------------------------------===//
 comment|//  X86TargetLowering - X86 Implementation of the TargetLowering interface
@@ -1176,20 +1196,6 @@ argument_list|(
 argument|AsmOperandInfo&info
 argument_list|,
 argument|const char *constraint
-argument_list|)
-specifier|const
-block|;
-name|std
-operator|::
-name|vector
-operator|<
-name|unsigned
-operator|>
-name|getRegClassForInlineAsmConstraint
-argument_list|(
-argument|const std::string&Constraint
-argument_list|,
-argument|EVT VT
 argument_list|)
 specifier|const
 block|;
@@ -2196,6 +2202,15 @@ specifier|const
 block|;
 name|SDValue
 name|LowerMEMBARRIER
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerSIGN_EXTEND_INREG
 argument_list|(
 argument|SDValue Op
 argument_list|,

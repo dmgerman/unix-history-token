@@ -460,7 +460,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * I believe there is a slight chance that vgonel() could 		 * get called on this vnode between when vn_lock() drops 		 * the VI_LOCK() and vget() acquires it again, so that it 		 * hasn't yet had v_usecount incremented. If this were to 		 * happen, the VI_DOOMED flag would be set, so check for 		 * that here. Since we now have the v_usecount incremented, 		 * we should be ok until we vrele() it, if the VI_DOOMED 		 * flag isn't set now. 		 */
+comment|/* 		 * I believe there is a slight chance that vgonel() could 		 * get called on this vnode between when NFSVOPLOCK() drops 		 * the VI_LOCK() and vget() acquires it again, so that it 		 * hasn't yet had v_usecount incremented. If this were to 		 * happen, the VI_DOOMED flag would be set, so check for 		 * that here. Since we now have the v_usecount incremented, 		 * we should be ok until we vrele() it, if the VI_DOOMED 		 * flag isn't set now. 		 */
 name|VI_LOCK
 argument_list|(
 name|nvp
@@ -1471,7 +1471,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|nvp
 argument_list|,

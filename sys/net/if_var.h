@@ -673,6 +673,15 @@ modifier|*
 name|if_lagg
 decl_stmt|;
 comment|/* lagg glue */
+name|char
+modifier|*
+name|if_description
+decl_stmt|;
+comment|/* interface description */
+name|u_int
+name|if_fib
+decl_stmt|;
+comment|/* interface FIB */
 name|u_char
 name|if_alloctype
 decl_stmt|;
@@ -684,24 +693,20 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-name|char
-modifier|*
-name|if_description
-decl_stmt|;
-comment|/* interface description */
-name|void
-modifier|*
-name|if_pspare
-index|[
-literal|7
-index|]
-decl_stmt|;
 name|int
 name|if_ispare
 index|[
 literal|4
 index|]
 decl_stmt|;
+name|void
+modifier|*
+name|if_pspare
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* 1 netmap, 7 TDB */
 block|}
 struct|;
 end_struct

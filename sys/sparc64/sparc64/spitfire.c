@@ -583,7 +583,7 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|/*  * Flush all non-locked mappings from the TLB.  */
+comment|/*  * Flush all non-locked mappings from the TLBs.  */
 end_comment
 
 begin_macro
@@ -596,8 +596,11 @@ end_macro
 
 begin_block
 block|{
-name|int
+name|u_int
 name|i
+decl_stmt|;
+name|u_int
+name|slot
 decl_stmt|;
 for|for
 control|(
@@ -613,15 +616,21 @@ name|i
 operator|++
 control|)
 block|{
+name|slot
+operator|=
+name|TLB_DAR_SLOT
+argument_list|(
+name|TLB_DAR_T32
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
 name|ldxa
 argument_list|(
-name|TLB_DAR_SLOT
-argument_list|(
-name|i
-argument_list|)
+name|slot
 argument_list|,
 name|ASI_DTLB_DATA_ACCESS_REG
 argument_list|)
@@ -633,10 +642,7 @@ literal|0
 condition|)
 name|stxa_sync
 argument_list|(
-name|TLB_DAR_SLOT
-argument_list|(
-name|i
-argument_list|)
+name|slot
 argument_list|,
 name|ASI_DTLB_DATA_ACCESS_REG
 argument_list|,
@@ -648,10 +654,7 @@ condition|(
 operator|(
 name|ldxa
 argument_list|(
-name|TLB_DAR_SLOT
-argument_list|(
-name|i
-argument_list|)
+name|slot
 argument_list|,
 name|ASI_ITLB_DATA_ACCESS_REG
 argument_list|)
@@ -663,10 +666,7 @@ literal|0
 condition|)
 name|stxa_sync
 argument_list|(
-name|TLB_DAR_SLOT
-argument_list|(
-name|i
-argument_list|)
+name|slot
 argument_list|,
 name|ASI_ITLB_DATA_ACCESS_REG
 argument_list|,
@@ -678,7 +678,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Flush all user mappings from the TLB.  */
+comment|/*  * Flush all user mappings from the TLBs.  */
 end_comment
 
 begin_function
@@ -694,8 +694,11 @@ decl_stmt|;
 name|u_long
 name|tag
 decl_stmt|;
-name|int
+name|u_int
 name|i
+decl_stmt|;
+name|u_int
+name|slot
 decl_stmt|;
 for|for
 control|(
@@ -711,14 +714,20 @@ name|i
 operator|++
 control|)
 block|{
+name|slot
+operator|=
+name|TLB_DAR_SLOT
+argument_list|(
+name|TLB_DAR_T32
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 name|data
 operator|=
 name|ldxa
 argument_list|(
-name|TLB_DAR_SLOT
-argument_list|(
-name|i
-argument_list|)
+name|slot
 argument_list|,
 name|ASI_DTLB_DATA_ACCESS_REG
 argument_list|)
@@ -727,10 +736,7 @@ name|tag
 operator|=
 name|ldxa
 argument_list|(
-name|TLB_DAR_SLOT
-argument_list|(
-name|i
-argument_list|)
+name|slot
 argument_list|,
 name|ASI_DTLB_TAG_READ_REG
 argument_list|)
@@ -762,10 +768,7 @@ name|TLB_CTX_KERNEL
 condition|)
 name|stxa_sync
 argument_list|(
-name|TLB_DAR_SLOT
-argument_list|(
-name|i
-argument_list|)
+name|slot
 argument_list|,
 name|ASI_DTLB_DATA_ACCESS_REG
 argument_list|,
@@ -776,10 +779,7 @@ name|data
 operator|=
 name|ldxa
 argument_list|(
-name|TLB_DAR_SLOT
-argument_list|(
-name|i
-argument_list|)
+name|slot
 argument_list|,
 name|ASI_ITLB_DATA_ACCESS_REG
 argument_list|)
@@ -788,10 +788,7 @@ name|tag
 operator|=
 name|ldxa
 argument_list|(
-name|TLB_DAR_SLOT
-argument_list|(
-name|i
-argument_list|)
+name|slot
 argument_list|,
 name|ASI_ITLB_TAG_READ_REG
 argument_list|)
@@ -823,10 +820,7 @@ name|TLB_CTX_KERNEL
 condition|)
 name|stxa_sync
 argument_list|(
-name|TLB_DAR_SLOT
-argument_list|(
-name|i
-argument_list|)
+name|slot
 argument_list|,
 name|ASI_ITLB_DATA_ACCESS_REG
 argument_list|,

@@ -13129,15 +13129,18 @@ block|}
 block|,
 comment|/* 513 = lpathconf */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|cap_new_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nosys
+name|cap_new
 block|,
-name|AUE_NULL
+name|AUE_CAP_NEW
 block|,
 name|NULL
 block|,
@@ -13145,22 +13148,25 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0
+name|SYF_CAPENABLED
 block|,
-name|SY_THR_ABSENT
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 514 = cap_new */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|cap_getrights_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nosys
+name|cap_getrights
 block|,
-name|AUE_NULL
+name|AUE_CAP_GETRIGHTS
 block|,
 name|NULL
 block|,
@@ -13168,9 +13174,9 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0
+name|SYF_CAPENABLED
 block|,
-name|SY_THR_ABSENT
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 515 = cap_getrights */

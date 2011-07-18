@@ -708,7 +708,7 @@ operator|->
 name|option_options
 argument_list|)
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -745,7 +745,7 @@ else|:
 name|DEFAULT_BYTES_PER_BLOCK
 argument_list|)
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -818,7 +818,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -829,7 +829,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -893,7 +893,7 @@ name|r
 operator|<
 name|ARCHIVE_OK
 condition|)
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -925,7 +925,7 @@ name|ARCHIVE_RETRY
 condition|)
 block|{
 comment|/* Retryable error: try again */
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -1149,7 +1149,7 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -1176,7 +1176,7 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -1203,7 +1203,7 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -1413,7 +1413,7 @@ name|r
 operator|!=
 name|ARCHIVE_OK
 condition|)
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,

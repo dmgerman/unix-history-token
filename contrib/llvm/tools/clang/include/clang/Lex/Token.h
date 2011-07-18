@@ -141,12 +141,9 @@ decl_stmt|;
 comment|/// Kind - The actual flavor of token this is.
 comment|///
 name|unsigned
-name|char
+name|short
 name|Kind
 decl_stmt|;
-comment|// DON'T make Kind a 'tok::TokenKind';
-comment|// MSVC will treat it as a signed char and
-comment|// TokenKinds> 127 won't be handled correctly.
 comment|/// Flags - Bits we track about this token, members of the TokenFlags enum.
 name|unsigned
 name|char

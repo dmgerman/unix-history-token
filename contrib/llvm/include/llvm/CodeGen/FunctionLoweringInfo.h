@@ -119,6 +119,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/BranchProbabilityInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/ValueTypes.h"
 end_include
 
@@ -221,6 +227,10 @@ decl_stmt|;
 name|MachineRegisterInfo
 modifier|*
 name|RegInfo
+decl_stmt|;
+name|BranchProbabilityInfo
+modifier|*
+name|BPI
 decl_stmt|;
 comment|/// CanLowerReturn - true iff the function's return value can be lowered to
 comment|/// registers.

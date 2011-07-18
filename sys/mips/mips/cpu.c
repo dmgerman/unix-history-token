@@ -309,6 +309,9 @@ operator|=
 name|mips_rd_config1
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|CPU_NLM
 name|cpuinfo
 operator|->
 name|tlb_nentries
@@ -325,6 +328,32 @@ operator|)
 operator|+
 literal|1
 expr_stmt|;
+else|#
+directive|else
+comment|/* Account for Extended TLB entries in XLP */
+name|tmp
+operator|=
+name|mips_rd_config6
+argument_list|()
+expr_stmt|;
+name|cpuinfo
+operator|->
+name|tlb_nentries
+operator|=
+operator|(
+operator|(
+name|tmp
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xffff
+operator|)
+operator|+
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Add extended TLB size information from config4.  */
 if|#
 directive|if

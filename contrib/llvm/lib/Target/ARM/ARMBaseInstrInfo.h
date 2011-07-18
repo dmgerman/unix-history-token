@@ -89,6 +89,18 @@ directive|include
 file|"llvm/ADT/SmallSet.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|GET_INSTRINFO_HEADER
+end_define
+
+begin_include
+include|#
+directive|include
+file|"ARMGenInstrInfo.inc"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -116,40 +128,12 @@ init|=
 literal|0x1f
 block|,
 comment|// The AddrMode enums are declared in ARMBaseInfo.h
-comment|// Size* - Flags to keep track of the size of an instruction.
-name|SizeShift
-init|=
-literal|5
-block|,
-name|SizeMask
-init|=
-literal|7
-operator|<<
-name|SizeShift
-block|,
-name|SizeSpecial
-init|=
-literal|1
-block|,
-comment|// 0 byte pseudo or special case.
-name|Size8Bytes
-init|=
-literal|2
-block|,
-name|Size4Bytes
-init|=
-literal|3
-block|,
-name|Size2Bytes
-init|=
-literal|4
-block|,
 comment|// IndexMode - Unindex, pre-indexed, or post-indexed are valid for load
 comment|// and store ops only.  Generic "updating" flag is used for ld/st multiple.
 comment|// The index mode enums are declared in ARMBaseInfo.h
 name|IndexModeShift
 init|=
-literal|8
+literal|5
 block|,
 name|IndexModeMask
 init|=
@@ -162,7 +146,7 @@ comment|// Instruction encoding formats.
 comment|//
 name|FormShift
 init|=
-literal|10
+literal|7
 block|,
 name|FormMask
 init|=
@@ -441,7 +425,7 @@ name|UnaryDP
 init|=
 literal|1
 operator|<<
-literal|16
+literal|13
 block|,
 comment|// Xform16Bit - Indicates this Thumb2 instruction may be transformed into
 comment|// a 16-bit Thumb instruction if certain conditions are met.
@@ -449,13 +433,13 @@ name|Xform16Bit
 init|=
 literal|1
 operator|<<
-literal|17
+literal|14
 block|,
 comment|//===------------------------------------------------------------------===//
 comment|// Code domain.
 name|DomainShift
 init|=
-literal|18
+literal|15
 block|,
 name|DomainMask
 init|=
@@ -583,7 +567,7 @@ name|class
 name|ARMBaseInstrInfo
 range|:
 name|public
-name|TargetInstrInfoImpl
+name|ARMGenInstrInfo
 block|{
 specifier|const
 name|ARMSubtarget
@@ -1000,8 +984,8 @@ argument_list|)
 specifier|const
 block|;
 comment|/// shouldScheduleLoadsNear - This is a used by the pre-regalloc scheduler to
-comment|/// determine (in conjunction with areLoadsFromSameBasePtr) if two loads should
-comment|/// be scheduled togther. On some targets if two loads are loading from
+comment|/// determine (in conjunction with areLoadsFromSameBasePtr) if two loads
+comment|/// should be scheduled togther. On some targets if two loads are loading from
 comment|/// addresses in the same cache line, it's better if they are scheduled
 comment|/// together. This function takes two integers that represent the load offsets
 comment|/// from the common base address. It returns true if it decides it's desirable
@@ -1045,9 +1029,7 @@ argument|unsigned NumCycles
 argument_list|,
 argument|unsigned ExtraPredCycles
 argument_list|,
-argument|float Prob
-argument_list|,
-argument|float Confidence
+argument|const BranchProbability&Probability
 argument_list|)
 specifier|const
 block|;
@@ -1067,9 +1049,7 @@ argument|unsigned NumF
 argument_list|,
 argument|unsigned ExtraF
 argument_list|,
-argument|float Probability
-argument_list|,
-argument|float Confidence
+argument|const BranchProbability&Probability
 argument_list|)
 specifier|const
 block|;
@@ -1081,9 +1061,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|unsigned NumCycles
 argument_list|,
-argument|float Probability
-argument_list|,
-argument|float Confidence
+argument|const BranchProbability&Probability
 argument_list|)
 specifier|const
 block|{
@@ -1193,7 +1171,7 @@ name|getVLDMDefCycle
 argument_list|(
 argument|const InstrItineraryData *ItinData
 argument_list|,
-argument|const TargetInstrDesc&DefTID
+argument|const MCInstrDesc&DefMCID
 argument_list|,
 argument|unsigned DefClass
 argument_list|,
@@ -1208,7 +1186,7 @@ name|getLDMDefCycle
 argument_list|(
 argument|const InstrItineraryData *ItinData
 argument_list|,
-argument|const TargetInstrDesc&DefTID
+argument|const MCInstrDesc&DefMCID
 argument_list|,
 argument|unsigned DefClass
 argument_list|,
@@ -1223,7 +1201,7 @@ name|getVSTMUseCycle
 argument_list|(
 argument|const InstrItineraryData *ItinData
 argument_list|,
-argument|const TargetInstrDesc&UseTID
+argument|const MCInstrDesc&UseMCID
 argument_list|,
 argument|unsigned UseClass
 argument_list|,
@@ -1238,7 +1216,7 @@ name|getSTMUseCycle
 argument_list|(
 argument|const InstrItineraryData *ItinData
 argument_list|,
-argument|const TargetInstrDesc&UseTID
+argument|const MCInstrDesc&UseMCID
 argument_list|,
 argument|unsigned UseClass
 argument_list|,
@@ -1253,13 +1231,13 @@ name|getOperandLatency
 argument_list|(
 argument|const InstrItineraryData *ItinData
 argument_list|,
-argument|const TargetInstrDesc&DefTID
+argument|const MCInstrDesc&DefMCID
 argument_list|,
 argument|unsigned DefIdx
 argument_list|,
 argument|unsigned DefAlign
 argument_list|,
-argument|const TargetInstrDesc&UseTID
+argument|const MCInstrDesc&UseMCID
 argument_list|,
 argument|unsigned UseIdx
 argument_list|,

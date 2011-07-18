@@ -937,6 +937,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Initialize a dummy page for marking the caller's place in the specified  * paging queue.  In principle, this function only needs to set the flag  * PG_MARKER.  Nonetheless, it sets the flag VPO_BUSY and initializes the hold  * count to one as safety precautions.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -964,8 +968,6 @@ name|marker
 operator|->
 name|flags
 operator|=
-name|PG_FICTITIOUS
-operator||
 name|PG_MARKER
 expr_stmt|;
 name|marker
@@ -982,7 +984,7 @@ name|queue
 expr_stmt|;
 name|marker
 operator|->
-name|wire_count
+name|hold_count
 operator|=
 literal|1
 expr_stmt|;
@@ -5923,11 +5925,16 @@ name|tryagain
 decl_stmt|,
 name|attempts
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|RACCT
 name|uint64_t
 name|rsize
 decl_stmt|,
 name|ravailable
 decl_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 name|TRUE
@@ -6229,6 +6236,9 @@ name|limit
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|RACCT
 name|rsize
 operator|=
 name|IDX_TO_OFF
@@ -6360,6 +6370,8 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|vmspace_free
 argument_list|(
 name|vm

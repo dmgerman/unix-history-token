@@ -2006,6 +2006,12 @@ operator|=
 operator|-
 literal|1000
 expr_stmt|;
+name|tsc_timecounter
+operator|.
+name|tc_flags
+operator||=
+name|TC_FLAGS_C3STOP
+expr_stmt|;
 if|if
 condition|(
 name|bootverbose

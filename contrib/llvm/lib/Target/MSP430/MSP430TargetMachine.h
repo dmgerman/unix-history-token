@@ -166,6 +166,13 @@ name|std
 operator|::
 name|string
 operator|&
+name|CPU
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
 name|FS
 argument_list|)
 block|;

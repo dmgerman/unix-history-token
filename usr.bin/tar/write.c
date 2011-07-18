@@ -874,7 +874,7 @@ name|names_from_file
 operator|==
 name|NULL
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1086,7 +1086,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1107,7 +1107,7 @@ operator|!=
 name|ARCHIVE_OK
 condition|)
 block|{
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1135,7 +1135,7 @@ operator|->
 name|option_options
 argument_list|)
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1162,7 +1162,7 @@ operator|->
 name|filename
 argument_list|)
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1283,7 +1283,7 @@ name|fd
 operator|<
 literal|0
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1335,7 +1335,7 @@ name|r
 operator|!=
 name|ARCHIVE_OK
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1391,7 +1391,7 @@ operator|->
 name|fd
 argument_list|)
 expr_stmt|;
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1479,7 +1479,7 @@ operator|!=
 name|ARCHIVE_FORMAT_EMPTY
 condition|)
 block|{
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1545,7 +1545,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1567,7 +1567,7 @@ operator|->
 name|option_options
 argument_list|)
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1594,7 +1594,7 @@ operator|->
 name|fd
 argument_list|)
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1721,7 +1721,7 @@ name|fd
 operator|<
 literal|0
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1780,7 +1780,7 @@ operator|!=
 name|ARCHIVE_OK
 condition|)
 block|{
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1835,7 +1835,7 @@ operator|->
 name|fd
 argument_list|)
 expr_stmt|;
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1967,7 +1967,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1989,7 +1989,7 @@ operator|->
 name|option_options
 argument_list|)
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -2016,7 +2016,7 @@ operator|->
 name|fd
 argument_list|)
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -2161,7 +2161,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -2183,7 +2183,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -2217,7 +2217,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -2311,7 +2311,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -2476,7 +2476,7 @@ name|a
 argument_list|)
 condition|)
 block|{
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -2706,7 +2706,7 @@ name|bsdtar
 operator|->
 name|next_line_is_dir
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -2795,7 +2795,7 @@ literal|10240
 argument_list|)
 condition|)
 block|{
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -2837,7 +2837,7 @@ operator|!=
 name|ARCHIVE_OK
 condition|)
 block|{
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -3022,7 +3022,7 @@ name|bsdtar
 operator|->
 name|verbose
 condition|)
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -3225,7 +3225,7 @@ operator|<
 name|bytes_read
 condition|)
 block|{
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -3345,7 +3345,7 @@ operator|!
 name|tree
 condition|)
 block|{
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 name|errno
 argument_list|,
@@ -3416,7 +3416,7 @@ name|tree_ret
 operator|==
 name|TREE_ERROR_FATAL
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -3437,7 +3437,7 @@ operator|==
 name|TREE_ERROR_DIR
 condition|)
 block|{
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 name|errno
 argument_list|,
@@ -3489,7 +3489,7 @@ name|NULL
 condition|)
 block|{
 comment|/* Couldn't lstat(); must not exist. */
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 name|errno
 argument_list|,
@@ -3764,7 +3764,7 @@ name|r
 operator|!=
 name|ARCHIVE_OK
 condition|)
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 name|archive_errno
 argument_list|(
@@ -4128,7 +4128,7 @@ name|bsdtar
 operator|->
 name|verbose
 condition|)
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 name|errno
 argument_list|,
@@ -4176,7 +4176,7 @@ name|bsdtar
 operator|->
 name|verbose
 condition|)
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -4521,7 +4521,7 @@ literal|0
 condition|)
 block|{
 comment|/* Write failed; this is bad */
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -4548,7 +4548,7 @@ name|bytes_read
 condition|)
 block|{
 comment|/* Write was truncated; warn but continue. */
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -4591,7 +4591,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 name|errno
 argument_list|,
@@ -4942,7 +4942,7 @@ name|p
 operator|==
 name|NULL
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -4968,7 +4968,7 @@ name|name
 operator|==
 name|NULL
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -5075,7 +5075,7 @@ name|names_from_file
 operator|==
 name|NULL
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -5092,7 +5092,7 @@ name|filename
 operator|==
 name|NULL
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -5109,7 +5109,7 @@ name|create_compression
 operator|!=
 literal|0
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -5155,7 +5155,7 @@ operator|.
 name|st_mode
 argument_list|)
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -5169,7 +5169,7 @@ name|filename
 argument_list|)
 expr_stmt|;
 comment|/* Is this an appropriate check here on Windows? */
-comment|/* 	if (GetFileType(handle) != FILE_TYPE_DISK) 		bsdtar_errc(1, 0, "Cannot append"); */
+comment|/* 	if (GetFileType(handle) != FILE_TYPE_DISK) 		lafe_errc(1, 0, "Cannot append"); */
 block|}
 end_function
 

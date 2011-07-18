@@ -757,28 +757,6 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SEMMAP
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|SEMMAP
-value|30
-end_define
-
-begin_comment
-comment|/* # of entries in semaphore map */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|SEMMSL
 end_ifndef
 
@@ -892,9 +870,6 @@ name|seminfo
 name|seminfo
 init|=
 block|{
-name|SEMMAP
-block|,
-comment|/* # of entries in semaphore map */
 name|SEMMNI
 block|,
 comment|/* # of semaphore identifiers */
@@ -924,29 +899,6 @@ comment|/* adjust on exit max value */
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_kern_ipc
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|semmap
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|seminfo
-operator|.
-name|semmap
-argument_list|,
-literal|0
-argument_list|,
-literal|"Number of entries in the semaphore map"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -1365,16 +1317,6 @@ name|i
 decl_stmt|,
 name|error
 decl_stmt|;
-name|TUNABLE_INT_FETCH
-argument_list|(
-literal|"kern.ipc.semmap"
-argument_list|,
-operator|&
-name|seminfo
-operator|.
-name|semmap
-argument_list|)
-expr_stmt|;
 name|TUNABLE_INT_FETCH
 argument_list|(
 literal|"kern.ipc.semmni"
@@ -5229,6 +5171,9 @@ goto|goto
 name|done2
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -5271,6 +5216,8 @@ goto|goto
 name|done2
 goto|;
 block|}
+endif|#
+directive|endif
 name|DPRINTF
 argument_list|(
 operator|(
@@ -5861,6 +5808,9 @@ return|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -5902,6 +5852,8 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|sops
 operator|=
 name|malloc

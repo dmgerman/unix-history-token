@@ -577,6 +577,15 @@ argument|MachineBasicBlock *MBB
 argument_list|)
 specifier|const
 block|;
+name|SDValue
+name|PerformCMOVCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
 name|virtual
 name|SDValue
 name|PerformDAGCombine
@@ -747,20 +756,6 @@ name|TargetRegisterClass
 operator|*
 operator|>
 name|getRegForInlineAsmConstraint
-argument_list|(
-argument|const std::string&Constraint
-argument_list|,
-argument|EVT VT
-argument_list|)
-specifier|const
-block|;
-name|std
-operator|::
-name|vector
-operator|<
-name|unsigned
-operator|>
-name|getRegClassForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,

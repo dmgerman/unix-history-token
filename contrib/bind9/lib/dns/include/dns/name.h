@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007, 2009, 2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2009-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: name.h,v 1.126.332.5 2010-07-09 23:45:55 tbox Exp $ */
+comment|/* $Id: name.h,v 1.137 2011-01-13 04:59:26 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -153,35 +153,35 @@ begin_define
 define|#
 directive|define
 name|DNS_NAMEATTR_ABSOLUTE
-value|0x0001
+value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
 name|DNS_NAMEATTR_READONLY
-value|0x0002
+value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
 name|DNS_NAMEATTR_DYNAMIC
-value|0x0004
+value|0x00000004
 end_define
 
 begin_define
 define|#
 directive|define
 name|DNS_NAMEATTR_DYNOFFSETS
-value|0x0008
+value|0x00000008
 end_define
 
 begin_define
 define|#
 directive|define
 name|DNS_NAMEATTR_NOCOMPRESS
-value|0x0010
+value|0x00000010
 end_define
 
 begin_comment
@@ -192,7 +192,7 @@ begin_define
 define|#
 directive|define
 name|DNS_NAMEATTR_CACHE
-value|0x0100
+value|0x00000100
 end_define
 
 begin_comment
@@ -203,7 +203,7 @@ begin_define
 define|#
 directive|define
 name|DNS_NAMEATTR_ANSWER
-value|0x0200
+value|0x00000200
 end_define
 
 begin_comment
@@ -214,7 +214,7 @@ begin_define
 define|#
 directive|define
 name|DNS_NAMEATTR_NCACHE
-value|0x0400
+value|0x00000400
 end_define
 
 begin_comment
@@ -225,7 +225,7 @@ begin_define
 define|#
 directive|define
 name|DNS_NAMEATTR_CHAINING
-value|0x0800
+value|0x00000800
 end_define
 
 begin_comment
@@ -236,7 +236,7 @@ begin_define
 define|#
 directive|define
 name|DNS_NAMEATTR_CHASE
-value|0x1000
+value|0x00001000
 end_define
 
 begin_comment
@@ -247,11 +247,48 @@ begin_define
 define|#
 directive|define
 name|DNS_NAMEATTR_WILDCARD
-value|0x2000
+value|0x00002000
 end_define
 
 begin_comment
 comment|/*%< Used by server. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_NAMEATTR_PREREQUISITE
+value|0x00004000
+end_define
+
+begin_comment
+comment|/*%< Used by client. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_NAMEATTR_UPDATE
+value|0x00008000
+end_define
+
+begin_comment
+comment|/*%< Used by client. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_NAMEATTR_HASUPDATEREC
+value|0x00010000
+end_define
+
+begin_comment
+comment|/*%< Used by client. */
+end_comment
+
+begin_comment
+comment|/*  * Various flags.  */
 end_comment
 
 begin_define
@@ -920,6 +957,7 @@ name|isc_buffer_t
 modifier|*
 name|source
 parameter_list|,
+specifier|const
 name|dns_name_t
 modifier|*
 name|origin
@@ -1266,6 +1304,87 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Format 'name' as text appropriate for use in log messages.  *  * Store the formatted name at 'cp', writing no more than  * 'size' bytes.  The resulting string is guaranteed to be  * null terminated.  *  * The formatted name will have a terminating dot only if it is  * the root.  *  * This function cannot fail, instead any errors are indicated  * in the returned text.  *  * Requires:  *  *\li	'name' is a valid name.  *  *\li	'cp' points a valid character array of size 'size'.  *  *\li	'size'> 0.  *  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_name_tostring
+parameter_list|(
+name|dns_name_t
+modifier|*
+name|source
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|target
+parameter_list|,
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Convert 'name' to string format, allocating sufficient memory to  * hold it (free with isc_mem_free()).  *  * Differs from dns_name_format in that it allocates its own memory.  *  * Requires:  *  *\li	'name' is a valid name.  *\li	'target' is not NULL.  *\li	'*target' is NULL.  *  * Returns:  *  *\li	ISC_R_SUCCESS  *  *\li	Any error that dns_name_totext() can return.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_name_fromstring
+parameter_list|(
+name|dns_name_t
+modifier|*
+name|target
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|src
+parameter_list|,
+name|unsigned
+name|int
+name|options
+parameter_list|,
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|isc_result_t
+name|dns_name_fromstring2
+parameter_list|(
+name|dns_name_t
+modifier|*
+name|target
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|src
+parameter_list|,
+specifier|const
+name|dns_name_t
+modifier|*
+name|origin
+parameter_list|,
+name|unsigned
+name|int
+name|options
+parameter_list|,
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Convert a string to a name and place it in target, allocating memory  * as necessary.  'options' has the same semantics as that of  * dns_name_fromtext().  *  * If 'target' has a buffer then the name will be copied into it rather than  * memory being allocated.  *  * Requires:  *  * \li	'target' is a valid name that is not read-only.  * \li	'src' is not NULL.  *  * Returns:  *  *\li	#ISC_R_SUCCESS  *  *\li	Any error that dns_name_fromtext() can return.  *  *\li	Any error that dns_name_dup() can return.  */
 end_comment
 
 begin_function_decl

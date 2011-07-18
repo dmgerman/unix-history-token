@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2009  Internet Systems Consortium,
 end_comment
 
 begin_comment
-comment|/* $Id: loc_29.c,v 1.45.332.4 2009-02-17 05:54:12 marka Exp $ */
+comment|/* $Id: loc_29.c,v 1.50 2009-12-04 21:09:33 marka Exp $ */
 end_comment
 
 begin_comment
@@ -4661,6 +4661,28 @@ expr_stmt|;
 return|return
 operator|(
 name|ISC_TRUE
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|casecompare_loc
+parameter_list|(
+name|ARGS_COMPARE
+parameter_list|)
+block|{
+return|return
+operator|(
+name|compare_loc
+argument_list|(
+name|rdata1
+argument_list|,
+name|rdata2
+argument_list|)
 operator|)
 return|;
 block|}

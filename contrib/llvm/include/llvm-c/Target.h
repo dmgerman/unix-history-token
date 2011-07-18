@@ -153,6 +153,21 @@ undef|#
 directive|undef
 name|LLVM_TARGET
 comment|/* Explicit undef to make SWIG happier */
+define|#
+directive|define
+name|LLVM_TARGET
+parameter_list|(
+name|TargetName
+parameter_list|)
+define|\
+value|void LLVMInitialize##TargetName##MCAsmInfo(void);
+include|#
+directive|include
+file|"llvm/Config/Targets.def"
+undef|#
+directive|undef
+name|LLVM_TARGET
+comment|/* Explicit undef to make SWIG happier */
 comment|/** LLVMInitializeAllTargetInfos - The main program should call this function if     it wants access to all available targets that LLVM is configured to     support. */
 specifier|static
 specifier|inline
@@ -218,6 +233,9 @@ name|LLVM_NATIVE_TARGETINFO
 argument_list|()
 expr_stmt|;
 name|LLVM_NATIVE_TARGET
+argument_list|()
+expr_stmt|;
+name|LLVM_NATIVE_MCASMINFO
 argument_list|()
 expr_stmt|;
 return|return
@@ -379,16 +397,6 @@ name|StructTy
 parameter_list|,
 name|unsigned
 name|Element
-parameter_list|)
-function_decl|;
-comment|/** Struct layouts are speculatively cached. If a TargetDataRef is alive when     types are being refined and removed, this method must be called whenever a     struct type is removed to avoid a dangling pointer in this cache.     See the method llvm::TargetData::InvalidateStructLayoutInfo. */
-name|void
-name|LLVMInvalidateStructLayout
-parameter_list|(
-name|LLVMTargetDataRef
-parameter_list|,
-name|LLVMTypeRef
-name|StructTy
 parameter_list|)
 function_decl|;
 comment|/** Deallocates a TargetData.     See the destructor llvm::TargetData::~TargetData. */

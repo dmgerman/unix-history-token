@@ -219,11 +219,16 @@ name|Type
 decl_stmt|;
 union|union
 block|{
-comment|/// \brief When Kind == EK_Variable, EK_Parameter, or EK_Member,
-comment|/// the VarDecl, ParmVarDecl, or FieldDecl, respectively.
+comment|/// \brief When Kind == EK_Variable or EK_Member, the VarDecl or
+comment|/// FieldDecl, respectively.
 name|DeclaratorDecl
 modifier|*
 name|VariableOrMember
+decl_stmt|;
+comment|/// \brief When Kind == EK_Parameter, the ParmVarDecl, with the
+comment|/// low bit indicating whether the parameter is "consumed".
+name|uintptr_t
+name|Parameter
 decl_stmt|;
 comment|/// \brief When Kind == EK_Temporary, the type source information for
 comment|/// the temporary.
@@ -293,40 +298,6 @@ operator|,
 name|VariableOrMember
 argument_list|(
 argument|Var
-argument_list|)
-block|{ }
-comment|/// \brief Create the initialization entity for a parameter.
-name|InitializedEntity
-argument_list|(
-name|ParmVarDecl
-operator|*
-name|Parm
-argument_list|)
-operator|:
-name|Kind
-argument_list|(
-name|EK_Parameter
-argument_list|)
-operator|,
-name|Parent
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Type
-argument_list|(
-name|Parm
-operator|->
-name|getType
-argument_list|()
-operator|.
-name|getUnqualifiedType
-argument_list|()
-argument_list|)
-operator|,
-name|VariableOrMember
-argument_list|(
-argument|Parm
 argument_list|)
 block|{ }
 comment|/// \brief Create the initialization entity for the result of a
@@ -452,13 +423,37 @@ modifier|*
 name|Parm
 parameter_list|)
 block|{
-name|InitializedEntity
-name|Res
-argument_list|(
+name|bool
+name|Consumed
+init|=
+operator|(
+name|Context
+operator|.
+name|getLangOptions
+argument_list|()
+operator|.
+name|ObjCAutoRefCount
+operator|&&
 name|Parm
-argument_list|)
+operator|->
+name|hasAttr
+operator|<
+name|NSConsumedAttr
+operator|>
+operator|(
+operator|)
+operator|)
 decl_stmt|;
-name|Res
+name|InitializedEntity
+name|Entity
+decl_stmt|;
+name|Entity
+operator|.
+name|Kind
+operator|=
+name|EK_Parameter
+expr_stmt|;
+name|Entity
 operator|.
 name|Type
 operator|=
@@ -466,13 +461,45 @@ name|Context
 operator|.
 name|getVariableArrayDecayedType
 argument_list|(
-name|Res
+name|Parm
+operator|->
+name|getType
+argument_list|()
 operator|.
-name|Type
+name|getUnqualifiedType
+argument_list|()
 argument_list|)
 expr_stmt|;
+name|Entity
+operator|.
+name|Parent
+operator|=
+literal|0
+expr_stmt|;
+name|Entity
+operator|.
+name|Parameter
+operator|=
+operator|(
+name|static_cast
+operator|<
+name|uintptr_t
+operator|>
+operator|(
+name|Consumed
+operator|)
+operator||
+name|reinterpret_cast
+operator|<
+name|uintptr_t
+operator|>
+operator|(
+name|Parm
+operator|)
+operator|)
+expr_stmt|;
 return|return
-name|Res
+name|Entity
 return|;
 block|}
 comment|/// \brief Create the initialization entity for a parameter that is
@@ -487,6 +514,9 @@ name|Context
 parameter_list|,
 name|QualType
 name|Type
+parameter_list|,
+name|bool
+name|Consumed
 parameter_list|)
 block|{
 name|InitializedEntity
@@ -517,9 +547,11 @@ literal|0
 expr_stmt|;
 name|Entity
 operator|.
-name|VariableOrMember
+name|Parameter
 operator|=
-literal|0
+operator|(
+name|Consumed
+operator|)
 expr_stmt|;
 return|return
 name|Entity
@@ -884,6 +916,31 @@ name|allowsNRVO
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Determine whether this initialization consumes the
+comment|/// parameter.
+name|bool
+name|isParameterConsumed
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|getKind
+argument_list|()
+operator|==
+name|EK_Parameter
+operator|&&
+literal|"Not a parameter"
+argument_list|)
+block|;
+return|return
+operator|(
+name|Parameter
+operator|&
+literal|1
+operator|)
+return|;
+block|}
 comment|/// \brief Retrieve the base specifier.
 name|CXXBaseSpecifier
 operator|*
@@ -1096,8 +1153,11 @@ comment|///< Implicit value initialization
 name|SIK_DirectCast
 block|,
 comment|///< Direct initialization due to a cast
-comment|/// \brief Direct initialization due to a C-style or functional cast.
-name|SIK_DirectCStyleOrFunctionalCast
+comment|/// \brief Direct initialization due to a C-style cast.
+name|SIK_DirectCStyleCast
+block|,
+comment|/// \brief Direct initialization due to a functional-style cast.
+name|SIK_DirectFunctionalCast
 block|}
 enum|;
 comment|/// \brief The kind of initialization being performed.
@@ -1179,26 +1239,82 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
-comment|/// \brief Create a direct initialization due to a cast.
+comment|/// \brief Create a direct initialization due to a cast that isn't a C-style
+comment|/// or functional cast.
 specifier|static
 name|InitializationKind
 name|CreateCast
 parameter_list|(
 name|SourceRange
 name|TypeRange
-parameter_list|,
-name|bool
-name|IsCStyleCast
 parameter_list|)
 block|{
 return|return
 name|InitializationKind
 argument_list|(
-name|IsCStyleCast
-condition|?
-name|SIK_DirectCStyleOrFunctionalCast
-else|:
 name|SIK_DirectCast
+argument_list|,
+name|TypeRange
+operator|.
+name|getBegin
+argument_list|()
+argument_list|,
+name|TypeRange
+operator|.
+name|getBegin
+argument_list|()
+argument_list|,
+name|TypeRange
+operator|.
+name|getEnd
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \brief Create a direct initialization for a C-style cast.
+specifier|static
+name|InitializationKind
+name|CreateCStyleCast
+parameter_list|(
+name|SourceLocation
+name|StartLoc
+parameter_list|,
+name|SourceRange
+name|TypeRange
+parameter_list|)
+block|{
+return|return
+name|InitializationKind
+argument_list|(
+name|SIK_DirectCStyleCast
+argument_list|,
+name|StartLoc
+argument_list|,
+name|TypeRange
+operator|.
+name|getBegin
+argument_list|()
+argument_list|,
+name|TypeRange
+operator|.
+name|getEnd
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \brief Create a direct initialization for a functional cast.
+specifier|static
+name|InitializationKind
+name|CreateFunctionalCast
+parameter_list|(
+name|SourceRange
+name|TypeRange
+parameter_list|)
+block|{
+return|return
+name|InitializationKind
+argument_list|(
+name|SIK_DirectFunctionalCast
 argument_list|,
 name|TypeRange
 operator|.
@@ -1351,7 +1467,11 @@ name|SIK_DirectCast
 operator|||
 name|Kind
 operator|==
-name|SIK_DirectCStyleOrFunctionalCast
+name|SIK_DirectCStyleCast
+operator|||
+name|Kind
+operator|==
+name|SIK_DirectFunctionalCast
 return|;
 block|}
 end_expr_stmt
@@ -1369,7 +1489,47 @@ block|{
 return|return
 name|Kind
 operator|==
-name|SIK_DirectCStyleOrFunctionalCast
+name|SIK_DirectCStyleCast
+operator|||
+name|Kind
+operator|==
+name|SIK_DirectFunctionalCast
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// brief Determine whether this is a C-style cast.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isCStyleCast
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|SIK_DirectCStyleCast
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// brief Determine whether this is a functional-style cast.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isFunctionalCast
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|SIK_DirectFunctionalCast
 return|;
 block|}
 end_expr_stmt
@@ -1571,10 +1731,6 @@ name|DependentSequence
 block|,
 comment|/// \brief A normal sequence.
 name|NormalSequence
-block|,
-comment|/// \brief A reference binding.
-name|ReferenceBinding
-comment|// FIXME: Still looks redundant, but complicated.
 block|}
 enum|;
 comment|/// \brief Describes the kind of a particular step in an initialization
@@ -1644,6 +1800,15 @@ block|,
 comment|/// \brief Array initialization (from an array rvalue).
 comment|/// This is a GNU C extension.
 name|SK_ArrayInit
+block|,
+comment|/// \brief Pass an object by indirect copy-and-restore.
+name|SK_PassByIndirectCopyRestore
+block|,
+comment|/// \brief Pass an object by indirect restore.
+name|SK_PassByIndirectRestore
+block|,
+comment|/// \brief Produce an Objective-C object pointer.
+name|SK_ProduceObjCObject
 block|}
 enum|;
 comment|/// \brief A single step in the initialization sequence.
@@ -2205,6 +2370,26 @@ function_decl|;
 comment|/// \brief Add an array initialization step.
 name|void
 name|AddArrayInitStep
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
+comment|/// \brief Add a step to pass an object by indirect copy-restore.
+name|void
+name|AddPassByIndirectCopyRestoreStep
+parameter_list|(
+name|QualType
+name|T
+parameter_list|,
+name|bool
+name|shouldCopy
+parameter_list|)
+function_decl|;
+comment|/// \brief Add a step to "produce" an Objective-C object (by
+comment|/// retaining it).
+name|void
+name|AddProduceObjCObjectStep
 parameter_list|(
 name|QualType
 name|T

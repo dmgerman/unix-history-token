@@ -1310,6 +1310,8 @@ argument_list|,
 name|false
 argument_list|,
 name|false
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|Value
@@ -1452,6 +1454,8 @@ argument_list|,
 name|VK_RValue
 argument_list|,
 name|OK_Ordinary
+argument_list|,
+name|false
 argument_list|,
 name|false
 argument_list|,
@@ -1613,6 +1617,14 @@ operator|->
 name|getType
 argument_list|()
 operator|->
+name|isInstantiationDependentType
+argument_list|()
+argument_list|,
+name|Operand
+operator|->
+name|getType
+argument_list|()
+operator|->
 name|containsUnexpandedParameterPack
 argument_list|()
 argument_list|)
@@ -1658,6 +1670,11 @@ operator|||
 name|Operand
 operator|->
 name|isValueDependent
+argument_list|()
+argument_list|,
+name|Operand
+operator|->
+name|isInstantiationDependent
 argument_list|()
 argument_list|,
 name|Operand
@@ -1986,6 +2003,14 @@ operator|->
 name|getType
 argument_list|()
 operator|->
+name|isInstantiationDependentType
+argument_list|()
+argument_list|,
+name|Operand
+operator|->
+name|getType
+argument_list|()
+operator|->
 name|containsUnexpandedParameterPack
 argument_list|()
 argument_list|)
@@ -2024,6 +2049,11 @@ argument_list|,
 name|Operand
 operator|->
 name|isTypeDependent
+argument_list|()
+argument_list|,
+name|Operand
+operator|->
+name|isInstantiationDependent
 argument_list|()
 argument_list|,
 name|Operand
@@ -2347,6 +2377,11 @@ operator|->
 name|isDependentType
 argument_list|()
 argument_list|,
+name|Type
+operator|->
+name|isInstantiationDependentType
+argument_list|()
+argument_list|,
 comment|/*ContainsUnexpandedParameterPack=*/
 name|false
 argument_list|)
@@ -2479,6 +2514,16 @@ block|;
 name|SourceLocation
 name|ThrowLoc
 block|;
+comment|/// \brief Whether the thrown variable (if any) is in scope.
+name|unsigned
+name|IsThrownVariableInScope
+operator|:
+literal|1
+block|;
+name|friend
+name|class
+name|ASTStmtReader
+block|;
 name|public
 operator|:
 comment|// Ty is the void type which is used as the result type of the
@@ -2491,6 +2536,8 @@ argument_list|,
 argument|QualType Ty
 argument_list|,
 argument|SourceLocation l
+argument_list|,
+argument|bool IsThrownVariableInScope
 argument_list|)
 operator|:
 name|Expr
@@ -2511,6 +2558,13 @@ name|expr
 operator|&&
 name|expr
 operator|->
+name|isInstantiationDependent
+argument_list|()
+argument_list|,
+name|expr
+operator|&&
+name|expr
+operator|->
 name|containsUnexpandedParameterPack
 argument_list|()
 argument_list|)
@@ -2522,7 +2576,12 @@ argument_list|)
 block|,
 name|ThrowLoc
 argument_list|(
-argument|l
+name|l
+argument_list|)
+block|,
+name|IsThrownVariableInScope
+argument_list|(
+argument|IsThrownVariableInScope
 argument_list|)
 block|{}
 name|CXXThrowExpr
@@ -2569,16 +2628,6 @@ name|Op
 operator|)
 return|;
 block|}
-name|void
-name|setSubExpr
-argument_list|(
-argument|Expr *E
-argument_list|)
-block|{
-name|Op
-operator|=
-name|E
-block|; }
 name|SourceLocation
 name|getThrowLoc
 argument_list|()
@@ -2588,16 +2637,20 @@ return|return
 name|ThrowLoc
 return|;
 block|}
-name|void
-name|setThrowLoc
-argument_list|(
-argument|SourceLocation L
-argument_list|)
+comment|/// \brief Determines whether the variable thrown by this expression (if any!)
+comment|/// is within the innermost try block.
+comment|///
+comment|/// This information is required to determine whether the NRVO can apply to
+comment|/// this variable.
+name|bool
+name|isThrownVariableInScope
+argument_list|()
+specifier|const
 block|{
-name|ThrowLoc
-operator|=
-name|L
-block|; }
+return|return
+name|IsThrownVariableInScope
+return|;
+block|}
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -2773,6 +2826,8 @@ argument_list|,
 name|false
 argument_list|,
 name|false
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|Param
@@ -2816,6 +2871,8 @@ name|SubExpr
 operator|->
 name|getObjectKind
 argument_list|()
+argument_list|,
+name|false
 argument_list|,
 name|false
 argument_list|,
@@ -3192,6 +3249,11 @@ argument_list|,
 name|SubExpr
 operator|->
 name|isValueDependent
+argument_list|()
+argument_list|,
+name|SubExpr
+operator|->
+name|isInstantiationDependent
 argument_list|()
 argument_list|,
 name|SubExpr
@@ -4277,6 +4339,11 @@ name|false
 argument_list|,
 name|false
 argument_list|,
+name|Type
+operator|->
+name|isInstantiationDependentType
+argument_list|()
+argument_list|,
 name|false
 argument_list|)
 block|,
@@ -5310,6 +5377,11 @@ name|false
 argument_list|,
 name|arg
 operator|->
+name|isInstantiationDependent
+argument_list|()
+argument_list|,
+name|arg
+operator|->
 name|containsUnexpandedParameterPack
 argument_list|()
 argument_list|)
@@ -6090,6 +6162,14 @@ operator|->
 name|getType
 argument_list|()
 operator|->
+name|isInstantiationDependentType
+argument_list|()
+argument_list|,
+name|queried
+operator|->
+name|getType
+argument_list|()
+operator|->
 name|containsUnexpandedParameterPack
 argument_list|()
 argument_list|)
@@ -6333,6 +6413,24 @@ argument_list|()
 operator|->
 name|isDependentType
 argument_list|()
+argument_list|,
+operator|(
+name|lhsType
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|isInstantiationDependentType
+argument_list|()
+operator|||
+name|rhsType
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|isInstantiationDependentType
+argument_list|()
+operator|)
 argument_list|,
 operator|(
 name|lhsType
@@ -6621,6 +6719,25 @@ operator|->
 name|isDependentType
 argument_list|()
 argument_list|,
+operator|(
+name|queried
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|isInstantiationDependentType
+argument_list|()
+operator|||
+operator|(
+name|dimension
+operator|&&
+name|dimension
+operator|->
+name|isInstantiationDependent
+argument_list|()
+operator|)
+operator|)
+argument_list|,
 name|queried
 operator|->
 name|getType
@@ -6883,6 +7000,11 @@ argument_list|()
 argument_list|,
 name|queried
 operator|->
+name|isInstantiationDependent
+argument_list|()
+argument_list|,
+name|queried
+operator|->
 name|containsUnexpandedParameterPack
 argument_list|()
 argument_list|)
@@ -7077,9 +7199,11 @@ argument|UnresolvedSetIterator Begin
 argument_list|,
 argument|UnresolvedSetIterator End
 argument_list|,
-argument|bool KnownDependent = false
+argument|bool KnownDependent
 argument_list|,
-argument|bool KnownContainsUnexpandedParameterPack = false
+argument|bool KnownInstantiationDependent
+argument_list|,
+argument|bool KnownContainsUnexpandedParameterPack
 argument_list|)
 block|;
 name|OverloadExpr
@@ -7587,6 +7711,12 @@ argument_list|,
 name|Begin
 argument_list|,
 name|End
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|RequiresADL
@@ -10354,6 +10484,15 @@ name|Val
 operator|==
 name|CT_Dependent
 argument_list|,
+name|Val
+operator|==
+name|CT_Dependent
+operator|||
+name|Operand
+operator|->
+name|isInstantiationDependent
+argument_list|()
+argument_list|,
 name|Operand
 operator|->
 name|containsUnexpandedParameterPack
@@ -10552,6 +10691,9 @@ comment|/*TypeDependent=*/
 name|true
 argument_list|,
 comment|/*ValueDependent=*/
+name|true
+argument_list|,
+comment|/*InstantiationDependent=*/
 name|true
 argument_list|,
 comment|/*ContainsUnexpandedParameterPack=*/
@@ -10860,6 +11002,9 @@ argument_list|,
 comment|/*ValueDependent=*/
 name|true
 argument_list|,
+comment|/*InstantiationDependent=*/
+name|true
+argument_list|,
 comment|/*ContainsUnexpandedParameterPack=*/
 name|false
 argument_list|)
@@ -10920,6 +11065,9 @@ comment|/*TypeDependent=*/
 name|false
 argument_list|,
 comment|/*ValueDependent=*/
+name|false
+argument_list|,
+comment|/*InstantiationDependent=*/
 name|false
 argument_list|,
 comment|/*ContainsUnexpandedParameterPack=*/
@@ -11080,6 +11228,201 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// \brief Represents a reference to a non-type template parameter
+comment|/// that has been substituted with a template argument.
+name|class
+name|SubstNonTypeTemplateParmExpr
+operator|:
+name|public
+name|Expr
+block|{
+comment|/// \brief The replaced parameter.
+name|NonTypeTemplateParmDecl
+operator|*
+name|Param
+block|;
+comment|/// \brief The replacement expression.
+name|Stmt
+operator|*
+name|Replacement
+block|;
+comment|/// \brief The location of the non-type template parameter reference.
+name|SourceLocation
+name|NameLoc
+block|;
+name|friend
+name|class
+name|ASTReader
+block|;
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+name|explicit
+name|SubstNonTypeTemplateParmExpr
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+argument|SubstNonTypeTemplateParmExprClass
+argument_list|,
+argument|Empty
+argument_list|)
+block|{ }
+name|public
+operator|:
+name|SubstNonTypeTemplateParmExpr
+argument_list|(
+argument|QualType type
+argument_list|,
+argument|ExprValueKind valueKind
+argument_list|,
+argument|SourceLocation loc
+argument_list|,
+argument|NonTypeTemplateParmDecl *param
+argument_list|,
+argument|Expr *replacement
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+name|SubstNonTypeTemplateParmExprClass
+argument_list|,
+name|type
+argument_list|,
+name|valueKind
+argument_list|,
+name|OK_Ordinary
+argument_list|,
+name|replacement
+operator|->
+name|isTypeDependent
+argument_list|()
+argument_list|,
+name|replacement
+operator|->
+name|isValueDependent
+argument_list|()
+argument_list|,
+name|replacement
+operator|->
+name|isInstantiationDependent
+argument_list|()
+argument_list|,
+name|replacement
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+argument_list|)
+block|,
+name|Param
+argument_list|(
+name|param
+argument_list|)
+block|,
+name|Replacement
+argument_list|(
+name|replacement
+argument_list|)
+block|,
+name|NameLoc
+argument_list|(
+argument|loc
+argument_list|)
+block|{}
+name|SourceLocation
+name|getNameLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NameLoc
+return|;
+block|}
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NameLoc
+return|;
+block|}
+name|Expr
+operator|*
+name|getReplacement
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|Replacement
+operator|)
+return|;
+block|}
+name|NonTypeTemplateParmDecl
+operator|*
+name|getParameter
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Param
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *s
+argument_list|)
+block|{
+return|return
+name|s
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|SubstNonTypeTemplateParmExprClass
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const SubstNonTypeTemplateParmExpr *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|// Iterators
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|Replacement
+argument_list|,
+operator|&
+name|Replacement
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
 comment|/// \brief Represents a reference to a non-type template parameter pack that
 comment|/// has been substituted with a non-template argument pack.
 comment|///
@@ -11120,12 +11463,25 @@ name|NameLoc
 block|;
 name|friend
 name|class
-name|ASTStmtReader
+name|ASTReader
 block|;
 name|friend
 name|class
-name|ASTStmtWriter
+name|ASTStmtReader
 block|;
+name|explicit
+name|SubstNonTypeTemplateParmPackExpr
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+argument|SubstNonTypeTemplateParmPackExprClass
+argument_list|,
+argument|Empty
+argument_list|)
+block|{ }
 name|public
 operator|:
 name|SubstNonTypeTemplateParmPackExpr
@@ -11139,18 +11495,6 @@ argument_list|,
 argument|const TemplateArgument&ArgPack
 argument_list|)
 block|;
-name|SubstNonTypeTemplateParmPackExpr
-argument_list|(
-argument|EmptyShell Empty
-argument_list|)
-operator|:
-name|Expr
-argument_list|(
-argument|SubstNonTypeTemplateParmPackExprClass
-argument_list|,
-argument|Empty
-argument_list|)
-block|{ }
 comment|/// \brief Retrieve the non-type template parameter pack being substituted.
 name|NonTypeTemplateParmDecl
 operator|*
@@ -11223,6 +11567,197 @@ block|{
 return|return
 name|child_range
 argument_list|()
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief Represents a prvalue temporary that written into memory so that
+comment|/// a reference can bind to it.
+comment|///
+comment|/// Prvalue expressions are materialized when they need to have an address
+comment|/// in memory for a reference to bind to. This happens when binding a
+comment|/// reference to the result of a conversion, e.g.,
+comment|///
+comment|/// \code
+comment|/// const int&r = 1.0;
+comment|/// \endcode
+comment|///
+comment|/// Here, 1.0 is implicitly converted to an \c int. That resulting \c int is
+comment|/// then materialized via a \c MaterializeTemporaryExpr, and the reference
+comment|/// binds to the temporary. \c MaterializeTemporaryExprs are always glvalues
+comment|/// (either an lvalue or an xvalue, depending on the kind of reference binding
+comment|/// to it), maintaining the invariant that references always bind to glvalues.
+name|class
+name|MaterializeTemporaryExpr
+operator|:
+name|public
+name|Expr
+block|{
+comment|/// \brief The temporary-generating expression whose value will be
+comment|/// materialized.
+name|Stmt
+operator|*
+name|Temporary
+block|;
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+name|friend
+name|class
+name|ASTStmtWriter
+block|;
+name|public
+operator|:
+name|MaterializeTemporaryExpr
+argument_list|(
+argument|QualType T
+argument_list|,
+argument|Expr *Temporary
+argument_list|,
+argument|bool BoundToLvalueReference
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+name|MaterializeTemporaryExprClass
+argument_list|,
+name|T
+argument_list|,
+name|BoundToLvalueReference
+condition|?
+name|VK_LValue
+else|:
+name|VK_XValue
+argument_list|,
+name|OK_Ordinary
+argument_list|,
+name|Temporary
+operator|->
+name|isTypeDependent
+argument_list|()
+argument_list|,
+name|Temporary
+operator|->
+name|isValueDependent
+argument_list|()
+argument_list|,
+name|Temporary
+operator|->
+name|isInstantiationDependent
+argument_list|()
+argument_list|,
+name|Temporary
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+argument_list|)
+block|,
+name|Temporary
+argument_list|(
+argument|Temporary
+argument_list|)
+block|{ }
+name|MaterializeTemporaryExpr
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+argument|MaterializeTemporaryExprClass
+argument_list|,
+argument|Empty
+argument_list|)
+block|{ }
+comment|/// \brief Retrieve the temporary-generating subexpression whose value will
+comment|/// be materialized into a glvalue.
+name|Expr
+operator|*
+name|GetTemporaryExpr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|Temporary
+operator|)
+return|;
+block|}
+comment|/// \brief Determine whether this materialized temporary is bound to an
+comment|/// lvalue reference; otherwise, it's bound to an rvalue reference.
+name|bool
+name|isBoundToLvalueReference
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getValueKind
+argument_list|()
+operator|==
+name|VK_LValue
+return|;
+block|}
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Temporary
+operator|->
+name|getSourceRange
+argument_list|()
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|MaterializeTemporaryExprClass
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const MaterializeTemporaryExpr *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|// Iterators
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|Temporary
+argument_list|,
+operator|&
+name|Temporary
+operator|+
+literal|1
+argument_list|)
 return|;
 block|}
 expr|}

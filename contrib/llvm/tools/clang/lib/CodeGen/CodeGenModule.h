@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/GlobalDecl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Mangle.h"
 end_include
 
@@ -105,12 +111,6 @@ begin_include
 include|#
 directive|include
 file|"CodeGenTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"GlobalDecl.h"
 end_include
 
 begin_include
@@ -158,6 +158,9 @@ name|Module
 decl_stmt|;
 name|class
 name|Constant
+decl_stmt|;
+name|class
+name|ConstantInt
 decl_stmt|;
 name|class
 name|Function
@@ -375,7 +378,6 @@ struct|struct
 name|CodeGenTypeCache
 block|{
 comment|/// void
-specifier|const
 name|llvm
 operator|::
 name|Type
@@ -383,7 +385,6 @@ operator|*
 name|VoidTy
 expr_stmt|;
 comment|/// i8, i32, and i64
-specifier|const
 name|llvm
 operator|::
 name|IntegerType
@@ -397,7 +398,6 @@ operator|*
 name|Int64Ty
 expr_stmt|;
 comment|/// int
-specifier|const
 name|llvm
 operator|::
 name|IntegerType
@@ -407,21 +407,18 @@ expr_stmt|;
 comment|/// intptr_t, size_t, and ptrdiff_t, which we assume are the same size.
 union|union
 block|{
-specifier|const
 name|llvm
 operator|::
 name|IntegerType
 operator|*
 name|IntPtrTy
 expr_stmt|;
-specifier|const
 name|llvm
 operator|::
 name|IntegerType
 operator|*
 name|SizeTy
 expr_stmt|;
-specifier|const
 name|llvm
 operator|::
 name|IntegerType
@@ -433,14 +430,12 @@ union|;
 comment|/// void* in address space 0
 union|union
 block|{
-specifier|const
 name|llvm
 operator|::
 name|PointerType
 operator|*
 name|VoidPtrTy
 expr_stmt|;
-specifier|const
 name|llvm
 operator|::
 name|PointerType
@@ -452,14 +447,12 @@ union|;
 comment|/// void** in address space 0
 union|union
 block|{
-specifier|const
 name|llvm
 operator|::
 name|PointerType
 operator|*
 name|VoidPtrPtrTy
 expr_stmt|;
-specifier|const
 name|llvm
 operator|::
 name|PointerType
@@ -478,6 +471,184 @@ name|unsigned
 name|char
 name|PointerAlignInBytes
 decl_stmt|;
+block|}
+struct|;
+struct|struct
+name|RREntrypoints
+block|{
+name|RREntrypoints
+argument_list|()
+block|{
+name|memset
+argument_list|(
+name|this
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|this
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// void objc_autoreleasePoolPop(void*);
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|objc_autoreleasePoolPop
+expr_stmt|;
+comment|/// void *objc_autoreleasePoolPush(void);
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|objc_autoreleasePoolPush
+expr_stmt|;
+block|}
+struct|;
+struct|struct
+name|ARCEntrypoints
+block|{
+name|ARCEntrypoints
+argument_list|()
+block|{
+name|memset
+argument_list|(
+name|this
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|this
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// id objc_autorelease(id);
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|objc_autorelease
+expr_stmt|;
+comment|/// id objc_autoreleaseReturnValue(id);
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|objc_autoreleaseReturnValue
+expr_stmt|;
+comment|/// void objc_copyWeak(id *dest, id *src);
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|objc_copyWeak
+expr_stmt|;
+comment|/// void objc_destroyWeak(id*);
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|objc_destroyWeak
+expr_stmt|;
+comment|/// id objc_initWeak(id*, id);
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|objc_initWeak
+expr_stmt|;
+comment|/// id objc_loadWeak(id*);
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|objc_loadWeak
+expr_stmt|;
+comment|/// id objc_loadWeakRetained(id*);
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|objc_loadWeakRetained
+expr_stmt|;
+comment|/// void objc_moveWeak(id *dest, id *src);
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|objc_moveWeak
+expr_stmt|;
+comment|/// id objc_retain(id);
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|objc_retain
+expr_stmt|;
+comment|/// id objc_retainAutorelease(id);
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|objc_retainAutorelease
+expr_stmt|;
+comment|/// id objc_retainAutoreleaseReturnValue(id);
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|objc_retainAutoreleaseReturnValue
+expr_stmt|;
+comment|/// id objc_retainAutoreleasedReturnValue(id);
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|objc_retainAutoreleasedReturnValue
+expr_stmt|;
+comment|/// id objc_retainBlock(id);
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|objc_retainBlock
+expr_stmt|;
+comment|/// void objc_release(id);
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|objc_release
+expr_stmt|;
+comment|/// id objc_storeStrong(id*, id);
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|objc_storeStrong
+expr_stmt|;
+comment|/// id objc_storeWeak(id*, id);
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|objc_storeWeak
+expr_stmt|;
+comment|/// A void(void) inline asm to use to mark that the return value of
+comment|/// a call will be immediately retain.
+name|llvm
+operator|::
+name|InlineAsm
+operator|*
+name|retainAutoreleasedReturnValueMarker
+expr_stmt|;
 block|}
 struct|;
 comment|/// CodeGenModule - This class organizes the cross-function state that is used
@@ -588,6 +759,14 @@ decl_stmt|;
 name|CGDebugInfo
 modifier|*
 name|DebugInfo
+decl_stmt|;
+name|ARCEntrypoints
+modifier|*
+name|ARCData
+decl_stmt|;
+name|RREntrypoints
+modifier|*
+name|RRData
 decl_stmt|;
 comment|// WeakRefReferences - A set of references that have only been seen via
 comment|// a weakref so far. This is used to remove the weak of the reference if we ever
@@ -864,14 +1043,12 @@ name|Constant
 operator|*
 name|BlockObjectDispose
 expr_stmt|;
-specifier|const
 name|llvm
 operator|::
 name|Type
 operator|*
 name|BlockDescriptorType
 expr_stmt|;
-specifier|const
 name|llvm
 operator|::
 name|Type
@@ -967,6 +1144,47 @@ parameter_list|()
 block|{
 return|return
 name|ABI
+return|;
+block|}
+name|ARCEntrypoints
+operator|&
+name|getARCEntrypoints
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|getLangOptions
+argument_list|()
+operator|.
+name|ObjCAutoRefCount
+operator|&&
+name|ARCData
+operator|!=
+literal|0
+argument_list|)
+block|;
+return|return
+operator|*
+name|ARCData
+return|;
+block|}
+name|RREntrypoints
+operator|&
+name|getRREntrypoints
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|RRData
+operator|!=
+literal|0
+argument_list|)
+block|;
+return|return
+operator|*
+name|RRData
 return|;
 block|}
 name|llvm
@@ -1174,6 +1392,16 @@ operator|*
 name|TBAAInfo
 argument_list|)
 decl_stmt|;
+comment|/// getSize - Emit the given number of characters as a value of type size_t.
+name|llvm
+operator|::
+name|ConstantInt
+operator|*
+name|getSize
+argument_list|(
+argument|CharUnits numChars
+argument_list|)
+expr_stmt|;
 comment|/// setGlobalVisibility - Set the visibility for the given LLVM
 comment|/// GlobalValue.
 name|void
@@ -1673,7 +1901,6 @@ return|;
 block|}
 comment|/// getBlockDescriptorType - Fetches the type of a generic block
 comment|/// descriptor.
-specifier|const
 name|llvm
 operator|::
 name|Type
@@ -1682,7 +1909,6 @@ name|getBlockDescriptorType
 argument_list|()
 expr_stmt|;
 comment|/// getGenericBlockLiteralType - The type of a generic block literal.
-specifier|const
 name|llvm
 operator|::
 name|Type
@@ -1880,11 +2106,7 @@ name|getIntrinsic
 argument_list|(
 argument|unsigned IID
 argument_list|,
-argument|const llvm::Type **Tys =
-literal|0
-argument_list|,
-argument|unsigned NumTys =
-literal|0
+argument|llvm::ArrayRef<llvm::Type*> Tys =                                                  llvm::ArrayRef<llvm::Type*>()
 argument_list|)
 expr_stmt|;
 comment|/// EmitTopLevelDecl - Emit code for a single top level declaration.
@@ -1971,6 +2193,8 @@ argument_list|(
 argument|const llvm::FunctionType *Ty
 argument_list|,
 argument|llvm::StringRef Name
+argument_list|,
+argument|llvm::Attributes ExtraAttrs =                                           llvm::Attribute::None
 argument_list|)
 expr_stmt|;
 comment|/// CreateRuntimeVariable - Create a new runtime global variable with the
@@ -2421,6 +2645,8 @@ argument_list|,
 argument|GlobalDecl D
 argument_list|,
 argument|bool ForVTable
+argument_list|,
+argument|llvm::Attributes ExtraAttrs =                                             llvm::Attribute::None
 argument_list|)
 expr_stmt|;
 name|llvm

@@ -571,7 +571,7 @@ index|[
 name|RACCT_CPU
 index|]
 operator|=
-name|RACCT_IN_THOUSANDS
+name|RACCT_IN_MILLIONS
 block|,
 index|[
 name|RACCT_DATA
@@ -743,7 +743,7 @@ index|[
 name|RACCT_WALLCLOCK
 index|]
 operator|=
-name|RACCT_IN_THOUSANDS
+name|RACCT_IN_MILLIONS
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -887,7 +887,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|racct_is_sloppy
+name|RACCT_IS_SLOPPY
 argument_list|(
 name|i
 argument_list|)
@@ -949,7 +949,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|racct_is_reclaimable
+name|RACCT_IS_RECLAIMABLE
 argument_list|(
 name|i
 argument_list|)
@@ -983,7 +983,7 @@ condition|)
 block|{
 name|KASSERT
 argument_list|(
-name|racct_is_sloppy
+name|RACCT_IS_SLOPPY
 argument_list|(
 name|i
 argument_list|)
@@ -1160,7 +1160,7 @@ control|)
 block|{
 if|if
 condition|(
-name|racct_is_sloppy
+name|RACCT_IS_SLOPPY
 argument_list|(
 name|i
 argument_list|)
@@ -1169,7 +1169,7 @@ continue|continue;
 if|if
 condition|(
 operator|!
-name|racct_is_reclaimable
+name|RACCT_IS_RECLAIMABLE
 argument_list|(
 name|i
 argument_list|)
@@ -1311,7 +1311,7 @@ condition|)
 block|{
 name|KASSERT
 argument_list|(
-name|racct_is_sloppy
+name|RACCT_IS_SLOPPY
 argument_list|(
 name|resource
 argument_list|)
@@ -1428,7 +1428,7 @@ if|if
 condition|(
 name|error
 operator|&&
-name|racct_is_deniable
+name|RACCT_IS_DENIABLE
 argument_list|(
 name|resource
 argument_list|)
@@ -1839,7 +1839,7 @@ name|diff
 operator|>=
 literal|0
 operator|||
-name|racct_is_reclaimable
+name|RACCT_IS_RECLAIMABLE
 argument_list|(
 name|resource
 argument_list|)
@@ -1878,7 +1878,7 @@ if|if
 condition|(
 name|error
 operator|&&
-name|racct_is_deniable
+name|RACCT_IS_DENIABLE
 argument_list|(
 name|resource
 argument_list|)
@@ -2299,7 +2299,7 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|racct_is_reclaimable
+name|RACCT_IS_RECLAIMABLE
 argument_list|(
 name|resource
 argument_list|)
@@ -2440,7 +2440,7 @@ directive|ifdef
 name|notyet
 name|KASSERT
 argument_list|(
-name|racct_is_reclaimable
+name|RACCT_IS_RECLAIMABLE
 argument_list|(
 name|resource
 argument_list|)
@@ -2655,7 +2655,7 @@ operator|==
 literal|0
 operator|||
 operator|!
-name|racct_is_inheritable
+name|RACCT_IS_INHERITABLE
 argument_list|(
 name|i
 argument_list|)

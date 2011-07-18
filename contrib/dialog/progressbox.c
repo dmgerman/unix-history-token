@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: progressbox.c,v 1.11 2011/03/02 01:10:08 tom Exp $  *  *  progressbox.c -- implements the progress box  *  *  Copyright 2005	Valery Reznic  *  Copyright 2006-2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License as  *  published by the Free Software Foundation; either version 2.1 of the  *  License, or (at your option) any later version.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
+comment|/*  *  $Id: progressbox.c,v 1.13 2011/06/27 08:18:20 tom Exp $  *  *  progressbox.c -- implements the progress box  *  *  Copyright 2005	Valery Reznic  *  Copyright 2006-2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License as  *  published by the Free Software Foundation; either version 2.1 of the  *  License, or (at your option) any later version.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
 end_comment
 
 begin_include
@@ -434,6 +434,8 @@ name|binding
 index|[]
 init|=
 block|{
+name|HELPKEY_BINDINGS
+block|,
 name|ENTERKEY_BINDINGS
 block|,
 name|DLG_KEYS_DATA
@@ -819,6 +821,13 @@ argument_list|(
 name|dialog
 argument_list|,
 name|title
+argument_list|)
+expr_stmt|;
+name|dlg_draw_helpline
+argument_list|(
+name|dialog
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if

@@ -101,16 +101,6 @@ directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/Config/config.h"
-end_include
-
-begin_comment
-comment|// for mode_t
-end_comment
-
 begin_comment
 comment|// FIXME: Enhance libsystem to support inode and other fields in stat.
 end_comment
@@ -120,6 +110,25 @@ include|#
 directive|include
 file|<sys/types.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|short
+name|mode_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct_decl
 struct_decl|struct

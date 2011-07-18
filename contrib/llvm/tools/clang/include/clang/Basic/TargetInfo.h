@@ -952,6 +952,19 @@ name|IntMaxType
 argument_list|)
 return|;
 block|}
+comment|/// getRegisterWidth - Return the "preferred" register width on this target.
+name|uint64_t
+name|getRegisterWidth
+argument_list|()
+specifier|const
+block|{
+comment|// Currently we assume the register width on the target matches the pointer
+comment|// width, we can introduce a new variable for this if/when some target wants
+comment|// it.
+return|return
+name|LongWidth
+return|;
+block|}
 comment|/// getUserLabelPrefix - This returns the default value of the
 comment|/// __USER_LABEL_PREFIX__ macro, which is the prefix given to user symbols by
 comment|/// default.  On most platforms this is "_", but it is "" on some, and "." on
@@ -1081,6 +1094,16 @@ argument_list|()
 specifier|const
 operator|=
 literal|0
+block|;
+comment|/// isValidClobber - Returns whether the passed in string is
+comment|/// a valid clobber in an inline asm statement. This is used by
+comment|/// Sema.
+name|bool
+name|isValidClobber
+argument_list|(
+argument|llvm::StringRef Name
+argument_list|)
+specifier|const
 block|;
 comment|/// isValidGCCRegisterName - Returns whether the passed in string
 comment|/// is a valid register name according to GCC. This is used by Sema for
@@ -1494,6 +1517,22 @@ operator|*
 specifier|const
 name|Register
 block|;   }
+block|;    struct
+name|AddlRegName
+block|{
+specifier|const
+name|char
+operator|*
+specifier|const
+name|Names
+index|[
+literal|5
+index|]
+block|;
+specifier|const
+name|unsigned
+name|RegNum
+block|;   }
 block|;
 name|virtual
 name|bool
@@ -1808,6 +1847,15 @@ name|getRegParmMax
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|RegParmMax
+operator|<
+literal|7
+operator|&&
+literal|"RegParmMax value is larger than AST can handle"
+argument_list|)
+block|;
 return|return
 name|RegParmMax
 return|;
@@ -1984,6 +2032,31 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+name|virtual
+name|void
+name|getGCCAddlRegNames
+argument_list|(
+specifier|const
+name|AddlRegName
+operator|*
+operator|&
+name|Addl
+argument_list|,
+name|unsigned
+operator|&
+name|NumAddl
+argument_list|)
+decl|const
+block|{
+name|Addl
+operator|=
+literal|0
+expr_stmt|;
+name|NumAddl
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|virtual
 name|bool
 name|validateAsmConstraint

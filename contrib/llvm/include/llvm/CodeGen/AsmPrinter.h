@@ -1085,6 +1085,7 @@ block|;
 name|void
 name|EmitLLVMUsedList
 argument_list|(
+specifier|const
 name|Constant
 operator|*
 name|List
@@ -1093,6 +1094,7 @@ block|;
 name|void
 name|EmitXXStructorList
 argument_list|(
+specifier|const
 name|Constant
 operator|*
 name|List

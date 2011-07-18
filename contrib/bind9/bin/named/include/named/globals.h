@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2008, 2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: globals.h,v 1.80.12.3 2010-09-15 12:16:50 marka Exp $ */
+comment|/* $Id: globals.h,v 1.89 2010-09-15 12:07:55 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -52,6 +52,12 @@ begin_include
 include|#
 directive|include
 file|<dns/zone.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dst/dst.h>
 end_include
 
 begin_include
@@ -428,6 +434,18 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|EXTERN
+name|cfg_obj_t
+modifier|*
+name|ns_g_bindkeys
+name|INIT
+parameter_list|(
+name|NULL
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|EXTERN
 specifier|const
@@ -439,6 +457,25 @@ argument_list|(
 name|NS_SYSCONFDIR
 literal|"/rndc.key"
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|EXTERN
+name|dns_tsigkey_t
+modifier|*
+name|ns_g_sessionkey
+name|INIT
+parameter_list|(
+name|NULL
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|EXTERN
+name|dns_name_t
+name|ns_g_sessionkeyname
 decl_stmt|;
 end_decl_stmt
 
@@ -601,6 +638,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|EXTERN
+specifier|const
+name|char
+modifier|*
+name|ns_g_defaultsessionkeyfile
+name|INIT
+argument_list|(
+name|NS_LOCALSTATEDIR
+literal|"/run/named/"
+literal|"session.key"
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
@@ -687,6 +739,48 @@ name|NULL
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_PKCS11
+end_ifdef
+
+begin_decl_stmt
+name|EXTERN
+specifier|const
+name|char
+modifier|*
+name|ns_g_engine
+name|INIT
+argument_list|(
+literal|"pkcs11"
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+name|EXTERN
+specifier|const
+name|char
+modifier|*
+name|ns_g_engine
+name|INIT
+parameter_list|(
+name|NULL
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|EXTERN

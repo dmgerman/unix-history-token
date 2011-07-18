@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: trace.c,v 1.12 2011/01/13 01:36:34 tom Exp $  *  *  trace.c -- implements screen-dump and keystroke-logging  *  *  Copyright 2007-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
+comment|/*  *  $Id: trace.c,v 1.14 2011/06/21 21:12:56 tom Exp $  *  *  trace.c -- implements screen-dump and keystroke-logging  *  *  Copyright 2007-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
 end_comment
 
 begin_include
@@ -554,6 +554,11 @@ argument_list|)
 expr_stmt|;
 name|CASE
 argument_list|(
+name|DLGK_HELPFILE
+argument_list|)
+expr_stmt|;
+name|CASE
+argument_list|(
 name|DLGK_TRACE
 argument_list|)
 expr_stmt|;
@@ -661,6 +666,14 @@ block|{
 name|dlg_trace_time
 argument_list|(
 literal|"** opened at"
+argument_list|)
+expr_stmt|;
+name|dlg_trace_msg
+argument_list|(
+literal|"** dialog %s\n"
+argument_list|,
+name|dialog_version
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}

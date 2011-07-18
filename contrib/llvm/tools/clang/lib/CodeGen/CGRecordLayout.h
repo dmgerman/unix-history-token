@@ -508,14 +508,16 @@ comment|/// The LLVM type corresponding to this record layout; used when
 comment|/// laying it out as a complete object.
 name|llvm
 operator|::
-name|PATypeHolder
+name|StructType
+operator|*
 name|CompleteObjectType
 expr_stmt|;
 comment|/// The LLVM type for the non-virtual part of this record layout;
 comment|/// used when laying it out as a base subobject.
 name|llvm
 operator|::
-name|PATypeHolder
+name|StructType
+operator|*
 name|BaseSubobjectType
 expr_stmt|;
 comment|/// Map from (non-bit-field) struct field to the corresponding llvm struct
@@ -593,9 +595,9 @@ name|public
 label|:
 name|CGRecordLayout
 argument_list|(
-argument|const llvm::StructType *CompleteObjectType
+argument|llvm::StructType *CompleteObjectType
 argument_list|,
-argument|const llvm::StructType *BaseSubobjectType
+argument|llvm::StructType *BaseSubobjectType
 argument_list|,
 argument|bool IsZeroInitializable
 argument_list|,
@@ -624,7 +626,6 @@ argument_list|)
 block|{}
 comment|/// \brief Return the "complete object" LLVM type associated with
 comment|/// this record.
-specifier|const
 name|llvm
 operator|::
 name|StructType
@@ -634,23 +635,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|cast
-operator|<
-name|llvm
-operator|::
-name|StructType
-operator|>
-operator|(
 name|CompleteObjectType
-operator|.
-name|get
-argument_list|()
-operator|)
 return|;
 block|}
 comment|/// \brief Return the "base subobject" LLVM type associated with
 comment|/// this record.
-specifier|const
 name|llvm
 operator|::
 name|StructType
@@ -660,18 +649,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|cast
-operator|<
-name|llvm
-operator|::
-name|StructType
-operator|>
-operator|(
 name|BaseSubobjectType
-operator|.
-name|get
-argument_list|()
-operator|)
 return|;
 block|}
 comment|/// \brief Check whether this struct can be C++ zero-initialized

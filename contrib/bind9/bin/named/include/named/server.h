@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: server.h,v 1.93.120.3 2009-07-11 04:23:53 marka Exp $ */
+comment|/* $Id: server.h,v 1.110 2010-08-16 23:46:52 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -145,6 +145,16 @@ decl_stmt|;
 comment|/*%< Dump file name */
 name|char
 modifier|*
+name|secrootsfile
+decl_stmt|;
+comment|/*%< Secroots file name */
+name|char
+modifier|*
+name|bindkeysfile
+decl_stmt|;
+comment|/*%< bind.keys file name */
+name|char
+modifier|*
 name|recfile
 decl_stmt|;
 comment|/*%< Recursive file name */
@@ -235,36 +245,40 @@ name|isc_boolean_t
 name|log_queries
 decl_stmt|;
 comment|/*%< For BIND 8 compatibility */
+name|ns_cachelist_t
+name|cachelist
+decl_stmt|;
+comment|/*%< Possibly shared caches */
 name|isc_stats_t
 modifier|*
 name|nsstats
 decl_stmt|;
-comment|/*%< Server statistics */
+comment|/*%< Server stats */
 name|dns_stats_t
 modifier|*
 name|rcvquerystats
 decl_stmt|;
-comment|/*% Incoming query statistics */
+comment|/*% Incoming query stats */
 name|dns_stats_t
 modifier|*
 name|opcodestats
 decl_stmt|;
-comment|/*%< Incoming message statistics */
+comment|/*%< Incoming message stats */
 name|isc_stats_t
 modifier|*
 name|zonestats
 decl_stmt|;
-comment|/*% Zone management statistics */
+comment|/*% Zone management stats */
 name|isc_stats_t
 modifier|*
 name|resolverstats
 decl_stmt|;
-comment|/*% Resolver statistics */
+comment|/*% Resolver stats */
 name|isc_stats_t
 modifier|*
 name|sockstats
 decl_stmt|;
-comment|/*%< Socket statistics */
+comment|/*%< Socket stats */
 name|ns_controls_t
 modifier|*
 name|controls
@@ -283,6 +297,25 @@ name|acache
 decl_stmt|;
 name|ns_statschannellist_t
 name|statschannels
+decl_stmt|;
+name|dns_tsigkey_t
+modifier|*
+name|sessionkey
+decl_stmt|;
+name|char
+modifier|*
+name|session_keyfile
+decl_stmt|;
+name|dns_name_t
+modifier|*
+name|session_keyname
+decl_stmt|;
+name|unsigned
+name|int
+name|session_keyalg
+decl_stmt|;
+name|isc_uint16_t
+name|session_keybits
 decl_stmt|;
 block|}
 struct|;
@@ -689,6 +722,25 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*%  * Dump the current security roots to the secroots file.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|ns_server_dumpsecroots
+parameter_list|(
+name|ns_server_t
+modifier|*
+name|server
+parameter_list|,
+name|char
+modifier|*
+name|args
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*%  * Change or increment the server debug level.  */
 end_comment
 
@@ -833,6 +885,25 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*%  * Update a zone's DNSKEY set from the key repository.  If  * the command that triggered the call to this function was "sign",  * then force a full signing of the zone.  If it was "loadkeys",  * then don't sign the zone; any needed changes to signatures can  * take place incrementally.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|ns_server_rekey
+parameter_list|(
+name|ns_server_t
+modifier|*
+name|server
+parameter_list|,
+name|char
+modifier|*
+name|args
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*%  * Dump the current recursive queries.  */
 end_comment
 
@@ -874,6 +945,44 @@ end_comment
 begin_function_decl
 name|isc_result_t
 name|ns_server_validation
+parameter_list|(
+name|ns_server_t
+modifier|*
+name|server
+parameter_list|,
+name|char
+modifier|*
+name|args
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Add a zone to a running process  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|ns_server_add_zone
+parameter_list|(
+name|ns_server_t
+modifier|*
+name|server
+parameter_list|,
+name|char
+modifier|*
+name|args
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Deletes a zone from a running process  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|ns_server_del_zone
 parameter_list|(
 name|ns_server_t
 modifier|*

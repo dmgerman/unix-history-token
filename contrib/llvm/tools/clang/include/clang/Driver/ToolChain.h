@@ -108,6 +108,9 @@ name|class
 name|JobAction
 decl_stmt|;
 name|class
+name|ObjCRuntime
+decl_stmt|;
+name|class
 name|Tool
 decl_stmt|;
 comment|/// ToolChain - Access to tools for a single platform.
@@ -615,6 +618,20 @@ argument|const ArgList&Args
 argument_list|)
 specifier|const
 expr_stmt|;
+comment|/// configureObjCRuntime - Configure the known properties of the
+comment|/// Objective-C runtime for this platform.
+comment|///
+comment|/// FIXME: this doesn't really belong here.
+name|virtual
+name|void
+name|configureObjCRuntime
+argument_list|(
+name|ObjCRuntime
+operator|&
+name|runtime
+argument_list|)
+decl|const
+decl_stmt|;
 comment|// GetCXXStdlibType - Determine the C++ standard library type to use with the
 comment|// given compilation arguments.
 name|virtual
@@ -642,6 +659,9 @@ argument_list|,
 name|ArgStringList
 operator|&
 name|CmdArgs
+argument_list|,
+name|bool
+name|ObjCXXAutoRefCount
 argument_list|)
 decl|const
 decl_stmt|;

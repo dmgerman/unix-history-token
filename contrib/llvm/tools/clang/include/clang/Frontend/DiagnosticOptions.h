@@ -202,8 +202,7 @@ comment|/// Limit # errors emitted.
 name|unsigned
 name|MacroBacktraceLimit
 decl_stmt|;
-comment|/// Limit depth of macro instantiation
-comment|/// backtrace.
+comment|/// Limit depth of macro expansion backtrace.
 name|unsigned
 name|TemplateBacktraceLimit
 decl_stmt|;

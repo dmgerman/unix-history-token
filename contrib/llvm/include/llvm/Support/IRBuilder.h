@@ -333,6 +333,87 @@ operator|=
 name|IP
 expr_stmt|;
 block|}
+comment|/// SetInsertPoint(Use) - Find the nearest point that dominates this use, and
+comment|/// specify that created instructions should be inserted at this point.
+name|void
+name|SetInsertPoint
+parameter_list|(
+name|Use
+modifier|&
+name|U
+parameter_list|)
+block|{
+name|Instruction
+modifier|*
+name|UseInst
+init|=
+name|cast
+operator|<
+name|Instruction
+operator|>
+operator|(
+name|U
+operator|.
+name|getUser
+argument_list|()
+operator|)
+decl_stmt|;
+if|if
+condition|(
+name|PHINode
+modifier|*
+name|Phi
+init|=
+name|dyn_cast
+operator|<
+name|PHINode
+operator|>
+operator|(
+name|UseInst
+operator|)
+condition|)
+block|{
+name|BasicBlock
+modifier|*
+name|PredBB
+init|=
+name|Phi
+operator|->
+name|getIncomingBlock
+argument_list|(
+name|U
+argument_list|)
+decl_stmt|;
+name|assert
+argument_list|(
+name|U
+operator|!=
+name|PredBB
+operator|->
+name|getTerminator
+argument_list|()
+operator|&&
+literal|"critical edge not split"
+argument_list|)
+expr_stmt|;
+name|SetInsertPoint
+argument_list|(
+name|PredBB
+argument_list|,
+name|PredBB
+operator|->
+name|getTerminator
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|SetInsertPoint
+argument_list|(
+name|UseInst
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// SetCurrentDebugLocation - Set location information used by debugging
 comment|/// information.
 name|void
@@ -351,9 +432,7 @@ expr_stmt|;
 block|}
 comment|/// getCurrentDebugLocation - Get location information used by debugging
 comment|/// information.
-specifier|const
 name|DebugLoc
-operator|&
 name|getCurrentDebugLocation
 argument_list|()
 specifier|const
@@ -391,7 +470,6 @@ expr_stmt|;
 block|}
 comment|/// getCurrentFunctionReturnType - Get the return type of the current function
 comment|/// that we're emitting into.
-specifier|const
 name|Type
 modifier|*
 name|getCurrentFunctionReturnType
@@ -738,7 +816,6 @@ comment|//===-------------------------------------------------------------------
 comment|// Type creation methods
 comment|//===--------------------------------------------------------------------===//
 comment|/// getInt1Ty - Fetch the type representing a single bit
-specifier|const
 name|IntegerType
 modifier|*
 name|getInt1Ty
@@ -754,7 +831,6 @@ argument_list|)
 return|;
 block|}
 comment|/// getInt8Ty - Fetch the type representing an 8-bit integer.
-specifier|const
 name|IntegerType
 modifier|*
 name|getInt8Ty
@@ -770,7 +846,6 @@ argument_list|)
 return|;
 block|}
 comment|/// getInt16Ty - Fetch the type representing a 16-bit integer.
-specifier|const
 name|IntegerType
 modifier|*
 name|getInt16Ty
@@ -786,7 +861,6 @@ argument_list|)
 return|;
 block|}
 comment|/// getInt32Ty - Fetch the type resepresenting a 32-bit integer.
-specifier|const
 name|IntegerType
 modifier|*
 name|getInt32Ty
@@ -802,7 +876,6 @@ argument_list|)
 return|;
 block|}
 comment|/// getInt64Ty - Fetch the type representing a 64-bit integer.
-specifier|const
 name|IntegerType
 modifier|*
 name|getInt64Ty
@@ -818,7 +891,6 @@ argument_list|)
 return|;
 block|}
 comment|/// getFloatTy - Fetch the type representing a 32-bit floating point value.
-specifier|const
 name|Type
 modifier|*
 name|getFloatTy
@@ -834,7 +906,6 @@ argument_list|)
 return|;
 block|}
 comment|/// getDoubleTy - Fetch the type representing a 64-bit floating point value.
-specifier|const
 name|Type
 modifier|*
 name|getDoubleTy
@@ -850,7 +921,6 @@ argument_list|)
 return|;
 block|}
 comment|/// getVoidTy - Fetch the type representing void.
-specifier|const
 name|Type
 modifier|*
 name|getVoidTy
@@ -865,7 +935,6 @@ name|Context
 argument_list|)
 return|;
 block|}
-specifier|const
 name|PointerType
 modifier|*
 name|getInt8PtrTy
@@ -1419,6 +1488,47 @@ name|getDebugLoc
 argument_list|()
 argument_list|)
 block|;   }
+name|explicit
+name|IRBuilder
+argument_list|(
+name|Use
+operator|&
+name|U
+argument_list|)
+operator|:
+name|IRBuilderBase
+argument_list|(
+name|U
+operator|->
+name|getContext
+argument_list|()
+argument_list|)
+block|,
+name|Folder
+argument_list|()
+block|{
+name|SetInsertPoint
+argument_list|(
+name|U
+argument_list|)
+block|;
+name|SetCurrentDebugLocation
+argument_list|(
+name|cast
+operator|<
+name|Instruction
+operator|>
+operator|(
+name|U
+operator|.
+name|getUser
+argument_list|()
+operator|)
+operator|->
+name|getDebugLoc
+argument_list|()
+argument_list|)
+block|;   }
 name|IRBuilder
 argument_list|(
 argument|BasicBlock *TheBB
@@ -1942,15 +2052,6 @@ init|=
 literal|""
 parameter_list|)
 block|{
-name|Value
-modifier|*
-name|Args
-index|[]
-init|=
-block|{
-literal|0
-block|}
-decl_stmt|;
 return|return
 name|Insert
 argument_list|(
@@ -1964,9 +2065,13 @@ name|NormalDest
 argument_list|,
 name|UnwindDest
 argument_list|,
-name|Args
-argument_list|,
-name|Args
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+operator|)
 argument_list|)
 argument_list|,
 name|Name
@@ -2004,15 +2109,6 @@ init|=
 literal|""
 parameter_list|)
 block|{
-name|Value
-modifier|*
-name|Args
-index|[]
-init|=
-block|{
-name|Arg1
-block|}
-decl_stmt|;
 return|return
 name|Insert
 argument_list|(
@@ -2026,11 +2122,7 @@ name|NormalDest
 argument_list|,
 name|UnwindDest
 argument_list|,
-name|Args
-argument_list|,
-name|Args
-operator|+
-literal|1
+name|Arg1
 argument_list|)
 argument_list|,
 name|Name
@@ -2103,10 +2195,6 @@ argument_list|,
 name|UnwindDest
 argument_list|,
 name|Args
-argument_list|,
-name|Args
-operator|+
-literal|3
 argument_list|)
 argument_list|,
 name|Name
@@ -2119,27 +2207,35 @@ begin_comment
 comment|/// CreateInvoke - Create an invoke instruction.
 end_comment
 
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
+begin_decl_stmt
 name|InvokeInst
-operator|*
+modifier|*
 name|CreateInvoke
 argument_list|(
-argument|Value *Callee
+name|Value
+operator|*
+name|Callee
 argument_list|,
-argument|BasicBlock *NormalDest
+name|BasicBlock
+operator|*
+name|NormalDest
 argument_list|,
-argument|BasicBlock *UnwindDest
+name|BasicBlock
+operator|*
+name|UnwindDest
 argument_list|,
-argument|RandomAccessIterator ArgBegin
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|Args
 argument_list|,
-argument|RandomAccessIterator ArgEnd
-argument_list|,
-argument|const Twine&Name =
+specifier|const
+name|Twine
+operator|&
+name|Name
+operator|=
 literal|""
 argument_list|)
 block|{
@@ -2156,16 +2252,14 @@ name|NormalDest
 argument_list|,
 name|UnwindDest
 argument_list|,
-name|ArgBegin
-argument_list|,
-name|ArgEnd
+name|Args
 argument_list|)
 argument_list|,
 name|Name
 argument_list|)
 return|;
 block|}
-end_expr_stmt
+end_decl_stmt
 
 begin_function
 name|UnwindInst
@@ -9022,10 +9116,6 @@ argument_list|(
 name|Callee
 argument_list|,
 name|Args
-argument_list|,
-name|Args
-operator|+
-literal|2
 argument_list|)
 argument_list|,
 name|Name
@@ -9086,10 +9176,6 @@ argument_list|(
 name|Callee
 argument_list|,
 name|Args
-argument_list|,
-name|Args
-operator|+
-literal|3
 argument_list|)
 argument_list|,
 name|Name
@@ -9156,10 +9242,6 @@ argument_list|(
 name|Callee
 argument_list|,
 name|Args
-argument_list|,
-name|Args
-operator|+
-literal|4
 argument_list|)
 argument_list|,
 name|Name
@@ -9232,10 +9314,6 @@ argument_list|(
 name|Callee
 argument_list|,
 name|Args
-argument_list|,
-name|Args
-operator|+
-literal|5
 argument_list|)
 argument_list|,
 name|Name
@@ -9258,7 +9336,7 @@ operator|<
 name|Value
 operator|*
 operator|>
-name|Arg
+name|Args
 argument_list|,
 specifier|const
 name|Twine
@@ -9277,15 +9355,7 @@ name|Create
 argument_list|(
 name|Callee
 argument_list|,
-name|Arg
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|Arg
-operator|.
-name|end
-argument_list|()
+name|Args
 argument_list|,
 name|Name
 argument_list|)
@@ -9293,46 +9363,6 @@ argument_list|)
 return|;
 block|}
 end_decl_stmt
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
-name|CallInst
-operator|*
-name|CreateCall
-argument_list|(
-argument|Value *Callee
-argument_list|,
-argument|RandomAccessIterator ArgBegin
-argument_list|,
-argument|RandomAccessIterator ArgEnd
-argument_list|,
-argument|const Twine&Name =
-literal|""
-argument_list|)
-block|{
-return|return
-name|Insert
-argument_list|(
-name|CallInst
-operator|::
-name|Create
-argument_list|(
-name|Callee
-argument_list|,
-name|ArgBegin
-argument_list|,
-name|ArgEnd
-argument_list|)
-argument_list|,
-name|Name
-argument_list|)
-return|;
-block|}
-end_expr_stmt
 
 begin_function
 name|Value
@@ -9752,25 +9782,28 @@ return|;
 block|}
 end_function
 
-begin_function
+begin_decl_stmt
 name|Value
 modifier|*
 name|CreateExtractValue
-parameter_list|(
+argument_list|(
 name|Value
-modifier|*
+operator|*
 name|Agg
-parameter_list|,
+argument_list|,
+name|ArrayRef
+operator|<
 name|unsigned
-name|Idx
-parameter_list|,
+operator|>
+name|Idxs
+argument_list|,
 specifier|const
 name|Twine
-modifier|&
+operator|&
 name|Name
-init|=
+operator|=
 literal|""
-parameter_list|)
+argument_list|)
 block|{
 if|if
 condition|(
@@ -9795,10 +9828,7 @@ name|CreateExtractValue
 argument_list|(
 name|AggC
 argument_list|,
-operator|&
-name|Idx
-argument_list|,
-literal|1
+name|Idxs
 argument_list|)
 argument_list|,
 name|Name
@@ -9813,194 +9843,39 @@ name|Create
 argument_list|(
 name|Agg
 argument_list|,
-name|Idx
+name|Idxs
 argument_list|)
 argument_list|,
 name|Name
 argument_list|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
+begin_decl_stmt
+name|Value
+modifier|*
+name|CreateInsertValue
+argument_list|(
 name|Value
 operator|*
-name|CreateExtractValue
-argument_list|(
-argument|Value *Agg
-argument_list|,
-argument|RandomAccessIterator IdxBegin
-argument_list|,
-argument|RandomAccessIterator IdxEnd
-argument_list|,
-argument|const Twine&Name =
-literal|""
-argument_list|)
-block|{
-if|if
-condition|(
-name|Constant
-modifier|*
-name|AggC
-init|=
-name|dyn_cast
-operator|<
-name|Constant
-operator|>
-operator|(
-name|Agg
-operator|)
-condition|)
-return|return
-name|Insert
-argument_list|(
-name|Folder
-operator|.
-name|CreateExtractValue
-argument_list|(
-name|AggC
-argument_list|,
-name|IdxBegin
-argument_list|,
-name|IdxEnd
-operator|-
-name|IdxBegin
-argument_list|)
-argument_list|,
-name|Name
-argument_list|)
-return|;
-end_expr_stmt
-
-begin_return
-return|return
-name|Insert
-argument_list|(
-name|ExtractValueInst
-operator|::
-name|Create
-argument_list|(
 name|Agg
 argument_list|,
-name|IdxBegin
-argument_list|,
-name|IdxEnd
-argument_list|)
-argument_list|,
-name|Name
-argument_list|)
-return|;
-end_return
-
-begin_expr_stmt
-unit|}    Value
+name|Value
 operator|*
-name|CreateInsertValue
-argument_list|(
-argument|Value *Agg
-argument_list|,
-argument|Value *Val
-argument_list|,
-argument|unsigned Idx
-argument_list|,
-argument|const Twine&Name =
-literal|""
-argument_list|)
-block|{
-if|if
-condition|(
-name|Constant
-modifier|*
-name|AggC
-init|=
-name|dyn_cast
-operator|<
-name|Constant
-operator|>
-operator|(
-name|Agg
-operator|)
-condition|)
-if|if
-condition|(
-name|Constant
-modifier|*
-name|ValC
-init|=
-name|dyn_cast
-operator|<
-name|Constant
-operator|>
-operator|(
 name|Val
-operator|)
-condition|)
-return|return
-name|Insert
-argument_list|(
-name|Folder
-operator|.
-name|CreateInsertValue
-argument_list|(
-name|AggC
 argument_list|,
-name|ValC
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Idxs
 argument_list|,
+specifier|const
+name|Twine
 operator|&
-name|Idx
-argument_list|,
-literal|1
-argument_list|)
-argument_list|,
 name|Name
-argument_list|)
-return|;
-end_expr_stmt
-
-begin_return
-return|return
-name|Insert
-argument_list|(
-name|InsertValueInst
-operator|::
-name|Create
-argument_list|(
-name|Agg
-argument_list|,
-name|Val
-argument_list|,
-name|Idx
-argument_list|)
-argument_list|,
-name|Name
-argument_list|)
-return|;
-end_return
-
-begin_expr_stmt
-unit|}    template
-operator|<
-name|typename
-name|RandomAccessIterator
-operator|>
-name|Value
-operator|*
-name|CreateInsertValue
-argument_list|(
-argument|Value *Agg
-argument_list|,
-argument|Value *Val
-argument_list|,
-argument|RandomAccessIterator IdxBegin
-argument_list|,
-argument|RandomAccessIterator IdxEnd
-argument_list|,
-argument|const Twine&Name =
+operator|=
 literal|""
 argument_list|)
 block|{
@@ -10043,19 +9918,12 @@ name|AggC
 argument_list|,
 name|ValC
 argument_list|,
-name|IdxBegin
-argument_list|,
-name|IdxEnd
-operator|-
-name|IdxBegin
+name|Idxs
 argument_list|)
 argument_list|,
 name|Name
 argument_list|)
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|Insert
 argument_list|(
@@ -10067,18 +9935,16 @@ name|Agg
 argument_list|,
 name|Val
 argument_list|,
-name|IdxBegin
-argument_list|,
-name|IdxEnd
+name|Idxs
 argument_list|)
 argument_list|,
 name|Name
 argument_list|)
 return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|//===--------------------------------------------------------------------===//
 end_comment
 
@@ -10094,16 +9960,22 @@ begin_comment
 comment|/// CreateIsNull - Return an i1 value testing if \arg Arg is null.
 end_comment
 
-begin_expr_stmt
-unit|Value
-operator|*
+begin_function
+name|Value
+modifier|*
 name|CreateIsNull
-argument_list|(
-argument|Value *Arg
-argument_list|,
-argument|const Twine&Name =
+parameter_list|(
+name|Value
+modifier|*
+name|Arg
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Name
+init|=
 literal|""
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|CreateICmpEQ
@@ -10124,7 +9996,7 @@ name|Name
 argument_list|)
 return|;
 block|}
-end_expr_stmt
+end_function
 
 begin_comment
 comment|/// CreateIsNotNull - Return an i1 value testing if \arg Arg is not null.
@@ -10224,7 +10096,6 @@ operator|&&
 literal|"Pointer subtraction operand types must match!"
 argument_list|)
 expr_stmt|;
-specifier|const
 name|PointerType
 modifier|*
 name|ArgType

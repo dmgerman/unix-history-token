@@ -2781,6 +2781,13 @@ name|sb
 argument_list|)
 operator|==
 literal|0
+operator|&&
+name|S_ISCHR
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
 condition|)
 block|{
 return|return

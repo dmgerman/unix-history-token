@@ -86,6 +86,12 @@ decl_stmt|;
 comment|///< Include phony targets for each
 comment|/// dependency, which can avoid some 'make'
 comment|/// problems.
+name|unsigned
+name|AddMissingHeaderDeps
+range|:
+literal|1
+decl_stmt|;
+comment|///< Add missing headers to dependency list
 comment|/// The file to write dependency output to.
 name|std
 operator|::
@@ -127,6 +133,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|UsePhonyTargets
+operator|=
+literal|0
+expr_stmt|;
+name|AddMissingHeaderDeps
 operator|=
 literal|0
 expr_stmt|;

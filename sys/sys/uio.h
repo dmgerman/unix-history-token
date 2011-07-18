@@ -411,6 +411,25 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|uiomove_nofault
+parameter_list|(
+name|void
+modifier|*
+name|cp
+parameter_list|,
+name|int
+name|n
+parameter_list|,
+name|struct
+name|uio
+modifier|*
+name|uio
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|uiomoveco
 parameter_list|(
 name|void

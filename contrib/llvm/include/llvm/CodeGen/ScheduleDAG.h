@@ -140,7 +140,7 @@ name|class
 name|TargetInstrInfo
 decl_stmt|;
 name|class
-name|TargetInstrDesc
+name|MCInstrDesc
 decl_stmt|;
 name|class
 name|TargetMachine
@@ -2382,6 +2382,23 @@ name|SUnit
 name|ExitSU
 decl_stmt|;
 comment|// Special node for the region exit.
+ifdef|#
+directive|ifdef
+name|NDEBUG
+specifier|static
+specifier|const
+name|bool
+name|StressSched
+init|=
+name|false
+decl_stmt|;
+else|#
+directive|else
+name|bool
+name|StressSched
+decl_stmt|;
+endif|#
+directive|endif
 name|explicit
 name|ScheduleDAG
 parameter_list|(
@@ -2395,10 +2412,10 @@ operator|~
 name|ScheduleDAG
 argument_list|()
 expr_stmt|;
-comment|/// getInstrDesc - Return the TargetInstrDesc of this SUnit.
+comment|/// getInstrDesc - Return the MCInstrDesc of this SUnit.
 comment|/// Return NULL for SDNodes without a machine opcode.
 specifier|const
-name|TargetInstrDesc
+name|MCInstrDesc
 modifier|*
 name|getInstrDesc
 argument_list|(
@@ -2626,9 +2643,9 @@ argument_list|)
 decl_stmt|;
 name|private
 label|:
-comment|// Return the TargetInstrDesc of this SDNode or NULL.
+comment|// Return the MCInstrDesc of this SDNode or NULL.
 specifier|const
-name|TargetInstrDesc
+name|MCInstrDesc
 modifier|*
 name|getNodeDesc
 argument_list|(

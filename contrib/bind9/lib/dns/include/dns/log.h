@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007, 2009  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: log.h,v 1.42.332.2 2009-01-18 23:47:41 tbox Exp $ */
+comment|/* $Id: log.h,v 1.45 2009-12-18 22:16:49 each Exp $ */
 end_comment
 
 begin_comment
@@ -342,6 +342,13 @@ define|#
 directive|define
 name|DNS_LOGMODULE_DLZ
 value|(&dns_modules[26])
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_LOGMODULE_DNSSEC
+value|(&dns_modules[27])
 end_define
 
 begin_function_decl

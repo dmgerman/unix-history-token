@@ -197,7 +197,7 @@ name|gname_cache
 decl_stmt|;
 comment|/* Work data. */
 name|struct
-name|matching
+name|lafe_matching
 modifier|*
 name|matching
 decl_stmt|;

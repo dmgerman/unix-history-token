@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetInstrItineraries.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -82,16 +82,37 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Target
+name|InstrItineraryData
+decl_stmt|;
+name|class
+name|JITCodeEmitter
 decl_stmt|;
 name|class
 name|MCAsmInfo
 decl_stmt|;
 name|class
+name|MCContext
+decl_stmt|;
+name|class
+name|Pass
+decl_stmt|;
+name|class
+name|PassManager
+decl_stmt|;
+name|class
+name|PassManagerBase
+decl_stmt|;
+name|class
+name|Target
+decl_stmt|;
+name|class
 name|TargetData
 decl_stmt|;
 name|class
-name|TargetSubtarget
+name|TargetELFWriterInfo
+decl_stmt|;
+name|class
+name|TargetFrameLowering
 decl_stmt|;
 name|class
 name|TargetInstrInfo
@@ -106,31 +127,13 @@ name|class
 name|TargetLowering
 decl_stmt|;
 name|class
-name|TargetSelectionDAGInfo
-decl_stmt|;
-name|class
-name|TargetFrameLowering
-decl_stmt|;
-name|class
-name|JITCodeEmitter
-decl_stmt|;
-name|class
-name|MCContext
-decl_stmt|;
-name|class
 name|TargetRegisterInfo
 decl_stmt|;
 name|class
-name|PassManagerBase
+name|TargetSelectionDAGInfo
 decl_stmt|;
 name|class
-name|PassManager
-decl_stmt|;
-name|class
-name|Pass
-decl_stmt|;
-name|class
-name|TargetELFWriterInfo
+name|TargetSubtargetInfo
 decl_stmt|;
 name|class
 name|formatted_raw_ostream
@@ -251,16 +254,20 @@ label|:
 comment|// Can only create subclasses.
 name|TargetMachine
 argument_list|(
-specifier|const
-name|Target
-operator|&
+argument|const Target&T
+argument_list|,
+argument|StringRef TargetTriple
+argument_list|,
+argument|StringRef CPU
+argument_list|,
+argument|StringRef FS
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 comment|/// getSubtargetImpl - virtual method implemented by subclasses that returns
-comment|/// a reference to that target's TargetSubtarget-derived member variable.
+comment|/// a reference to that target's TargetSubtargetInfo-derived member variable.
 name|virtual
 specifier|const
-name|TargetSubtarget
+name|TargetSubtargetInfo
 operator|*
 name|getSubtargetImpl
 argument_list|()
@@ -276,6 +283,23 @@ name|Target
 modifier|&
 name|TheTarget
 decl_stmt|;
+comment|/// TargetTriple, TargetCPU, TargetFS - Triple string, CPU name, and target
+comment|/// feature strings the TargetMachine instance is created with.
+name|std
+operator|::
+name|string
+name|TargetTriple
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|TargetCPU
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|TargetFS
+expr_stmt|;
 comment|/// AsmInfo - Contains target specific asm information.
 comment|///
 specifier|const
@@ -324,6 +348,36 @@ specifier|const
 block|{
 return|return
 name|TheTarget
+return|;
+block|}
+specifier|const
+name|StringRef
+name|getTargetTriple
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+return|;
+block|}
+specifier|const
+name|StringRef
+name|getTargetCPU
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetCPU
+return|;
+block|}
+specifier|const
+name|StringRef
+name|getTargetFeatureString
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetFS
 return|;
 block|}
 comment|// Interfaces to the major aspects of target machine information:
@@ -406,7 +460,7 @@ name|AsmInfo
 return|;
 block|}
 comment|/// getSubtarget - This method returns a pointer to the specified type of
-comment|/// TargetSubtarget.  In debug builds, it verifies that the object being
+comment|/// TargetSubtargetInfo.  In debug builds, it verifies that the object being
 comment|/// returned is of the correct type.
 name|template
 operator|<
@@ -843,27 +897,18 @@ range|:
 name|public
 name|TargetMachine
 block|{
-name|std
-operator|::
-name|string
-name|TargetTriple
-block|;
 name|protected
 operator|:
 comment|// Can only create subclasses.
 name|LLVMTargetMachine
 argument_list|(
-specifier|const
-name|Target
-operator|&
-name|T
+argument|const Target&T
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|TargetTriple
+argument|StringRef TargetTriple
+argument_list|,
+argument|StringRef CPU
+argument_list|,
+argument|StringRef FS
 argument_list|)
 block|;
 name|private
@@ -895,19 +940,6 @@ argument_list|()
 block|;
 name|public
 operator|:
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|getTargetTriple
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TargetTriple
-return|;
-block|}
 comment|/// addPassesToEmitFile - Add passes to the specified pass manager to get the
 comment|/// specified file emitted.  Typically this will involve several steps of code
 comment|/// generation.  If OptLevel is None, the code generator should emit code as

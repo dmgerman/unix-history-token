@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Config/config.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Host.h"
 end_include
 

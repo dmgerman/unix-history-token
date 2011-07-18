@@ -296,6 +296,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_typedef
+typedef|typedef
+name|__cap_rights_t
+name|cap_rights_t
+typedef|;
+end_typedef
+
 begin_ifndef
 ifndef|#
 directive|ifndef

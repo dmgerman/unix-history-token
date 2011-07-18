@@ -8822,12 +8822,6 @@ begin_comment
 comment|/*  * Optimized version of soreceive() for stream (TCP) sockets.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TCP_SORECEIVE_STREAM
-end_ifdef
-
 begin_function
 name|int
 name|soreceive_stream
@@ -9033,7 +9027,7 @@ name|uio
 operator|->
 name|uio_resid
 expr_stmt|;
-comment|/* We will never ever get anything unless we are connected. */
+comment|/* We will never ever get anything unless we are or were connected. */
 if|if
 condition|(
 operator|!
@@ -9050,70 +9044,9 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* When disconnecting there may be still some data left. */
-if|if
-condition|(
-name|sb
-operator|->
-name|sb_cc
-operator|>
-literal|0
-condition|)
-goto|goto
-name|deliver
-goto|;
-if|if
-condition|(
-operator|!
-operator|(
-name|so
-operator|->
-name|so_state
-operator|&
-name|SS_ISDISCONNECTED
-operator|)
-condition|)
 name|error
 operator|=
 name|ENOTCONN
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-comment|/* Socket buffer is empty and we shall not block. */
-if|if
-condition|(
-name|sb
-operator|->
-name|sb_cc
-operator|==
-literal|0
-operator|&&
-operator|(
-operator|(
-name|sb
-operator|->
-name|sb_flags
-operator|&
-name|SS_NBIO
-operator|)
-operator|||
-operator|(
-name|flags
-operator|&
-operator|(
-name|MSG_DONTWAIT
-operator||
-name|MSG_NBIO
-operator|)
-operator|)
-operator|)
-condition|)
-block|{
-name|error
-operator|=
-name|EAGAIN
 expr_stmt|;
 goto|goto
 name|out
@@ -9206,6 +9139,44 @@ goto|goto
 name|deliver
 goto|;
 else|else
+goto|goto
+name|out
+goto|;
+block|}
+comment|/* Socket buffer is empty and we shall not block. */
+if|if
+condition|(
+name|sb
+operator|->
+name|sb_cc
+operator|==
+literal|0
+operator|&&
+operator|(
+operator|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SS_NBIO
+operator|)
+operator|||
+operator|(
+name|flags
+operator|&
+operator|(
+name|MSG_DONTWAIT
+operator||
+name|MSG_NBIO
+operator|)
+operator|)
+operator|)
+condition|)
+block|{
+name|error
+operator|=
+name|EAGAIN
+expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -9784,15 +9755,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TCP_SORECEIVE_STREAM */
-end_comment
 
 begin_comment
 comment|/*  * Optimized version of soreceive() for simple datagram cases from userspace.  * Unlike in the stream case, we're able to drop a datagram if copyout()  * fails, and because we handle datagrams atomically, we don't need to use a  * sleep lock to prevent I/O interlacing.  */

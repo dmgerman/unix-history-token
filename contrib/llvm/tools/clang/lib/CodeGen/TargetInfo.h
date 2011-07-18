@@ -301,7 +301,6 @@ name|Address
 return|;
 block|}
 name|virtual
-specifier|const
 name|llvm
 operator|::
 name|Type
@@ -312,12 +311,34 @@ argument|CodeGen::CodeGenFunction&CGF
 argument_list|,
 argument|llvm::StringRef Constraint
 argument_list|,
-argument|const llvm::Type* Ty
+argument|llvm::Type* Ty
 argument_list|)
 specifier|const
 block|{
 return|return
 name|Ty
+return|;
+block|}
+comment|/// Retrieve the address of a function to call immediately before
+comment|/// calling objc_retainAutoreleasedReturnValue.  The
+comment|/// implementation of objc_autoreleaseReturnValue sniffs the
+comment|/// instruction stream following its return address to decide
+comment|/// whether it's a call to objc_retainAutoreleasedReturnValue.
+comment|/// This can be prohibitively expensive, depending on the
+comment|/// relocation model, and so on some targets it instead sniffs for
+comment|/// a particular instruction sequence.  This functions returns
+comment|/// that instruction sequence in inline assembly, which will be
+comment|/// empty if none is required.
+name|virtual
+name|llvm
+operator|::
+name|StringRef
+name|getARCRetainAutoreleasedReturnValueMarker
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|""
 return|;
 block|}
 block|}

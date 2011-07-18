@@ -127,6 +127,10 @@ comment|/// change.
 name|unsigned
 name|Tag
 decl_stmt|;
+comment|/// RefCount - The total number of Cursor instances referring to this Entry.
+name|unsigned
+name|RefCount
+decl_stmt|;
 comment|/// MF - The current function.
 name|MachineFunction
 modifier|*
@@ -206,6 +210,11 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
+name|RefCount
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|Indexes
 argument_list|(
 literal|0
@@ -219,6 +228,15 @@ argument_list|,
 argument|SlotIndexes *indexes
 argument_list|)
 block|{
+name|assert
+argument_list|(
+operator|!
+name|hasRefs
+argument_list|()
+operator|&&
+literal|"Cannot clear cache entry with references"
+argument_list|)
+block|;
 name|PhysReg
 operator|=
 literal|0
@@ -238,6 +256,29 @@ specifier|const
 block|{
 return|return
 name|PhysReg
+return|;
+block|}
+name|void
+name|addRef
+parameter_list|(
+name|int
+name|Delta
+parameter_list|)
+block|{
+name|RefCount
+operator|+=
+name|Delta
+expr_stmt|;
+block|}
+name|bool
+name|hasRefs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RefCount
+operator|>
+literal|0
 return|;
 block|}
 name|void
@@ -404,6 +445,17 @@ name|TargetRegisterInfo
 operator|*
 argument_list|)
 expr_stmt|;
+comment|/// getMaxCursors - Return the maximum number of concurrent cursors that can
+comment|/// be supported.
+name|unsigned
+name|getMaxCursors
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CacheEntries
+return|;
+block|}
 comment|/// Cursor - The primary query interface for the block interference cache.
 name|class
 name|Cursor
@@ -416,18 +468,146 @@ name|BlockInterference
 modifier|*
 name|Current
 decl_stmt|;
+name|void
+name|setEntry
+parameter_list|(
+name|Entry
+modifier|*
+name|E
+parameter_list|)
+block|{
+name|Current
+operator|=
+literal|0
+expr_stmt|;
+comment|// Update reference counts. Nothing happens when RefCount reaches 0, so
+comment|// we don't have to check for E == CacheEntry etc.
+if|if
+condition|(
+name|CacheEntry
+condition|)
+name|CacheEntry
+operator|->
+name|addRef
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|CacheEntry
+operator|=
+name|E
+expr_stmt|;
+if|if
+condition|(
+name|CacheEntry
+condition|)
+name|CacheEntry
+operator|->
+name|addRef
+argument_list|(
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|public
 label|:
-comment|/// Cursor - Create a cursor for the interference allocated to PhysReg and
-comment|/// all its aliases.
+comment|/// Cursor - Create a dangling cursor.
+name|Cursor
+argument_list|()
+operator|:
+name|CacheEntry
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Current
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+operator|~
+name|Cursor
+argument_list|()
+block|{
+name|setEntry
+argument_list|(
+literal|0
+argument_list|)
+block|; }
 name|Cursor
 argument_list|(
-argument|InterferenceCache&Cache
-argument_list|,
-argument|unsigned PhysReg
+specifier|const
+name|Cursor
+operator|&
+name|O
 argument_list|)
-block|:
+operator|:
 name|CacheEntry
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Current
+argument_list|(
+literal|0
+argument_list|)
+block|{
+name|setEntry
+argument_list|(
+name|O
+operator|.
+name|CacheEntry
+argument_list|)
+block|;     }
+name|Cursor
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|Cursor
+operator|&
+name|O
+operator|)
+block|{
+name|setEntry
+argument_list|(
+name|O
+operator|.
+name|CacheEntry
+argument_list|)
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+comment|/// setPhysReg - Point this cursor to PhysReg's interference.
+name|void
+name|setPhysReg
+parameter_list|(
+name|InterferenceCache
+modifier|&
+name|Cache
+parameter_list|,
+name|unsigned
+name|PhysReg
+parameter_list|)
+block|{
+comment|// Release reference before getting a new one. That guarantees we can
+comment|// actually have CacheEntries live cursors.
+name|setEntry
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|PhysReg
+condition|)
+name|setEntry
 argument_list|(
 name|Cache
 operator|.
@@ -436,18 +616,15 @@ argument_list|(
 name|PhysReg
 argument_list|)
 argument_list|)
-operator|,
-name|Current
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+expr_stmt|;
+block|}
 comment|/// moveTo - Move cursor to basic block MBBNum.
 name|void
 name|moveToBlock
-argument_list|(
-argument|unsigned MBBNum
-argument_list|)
+parameter_list|(
+name|unsigned
+name|MBBNum
+parameter_list|)
 block|{
 name|Current
 operator|=
@@ -457,11 +634,12 @@ name|get
 argument_list|(
 name|MBBNum
 argument_list|)
-block|;     }
+expr_stmt|;
+block|}
 comment|/// hasInterference - Return true if the current block has any interference.
 name|bool
 name|hasInterference
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|Current

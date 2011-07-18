@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007-2009  Internet Systems Consortium, 
 end_comment
 
 begin_comment
-comment|/* $Id: rbt.c,v 1.142.50.3 2009-10-20 05:06:04 marka Exp $ */
+comment|/* $Id: rbt.c,v 1.146 2009-10-27 04:46:58 marka Exp $ */
 end_comment
 
 begin_comment
@@ -2106,13 +2106,28 @@ name|current
 operator|->
 name|is_root
 expr_stmt|;
+if|if
+condition|(
+name|current
+operator|->
+name|nsec
+operator|==
+name|DNS_RBT_NSEC_HAS_NSEC
+condition|)
 name|new_current
 operator|->
-name|nsec3
+name|nsec
+operator|=
+name|DNS_RBT_NSEC_NORMAL
+expr_stmt|;
+else|else
+name|new_current
+operator|->
+name|nsec
 operator|=
 name|current
 operator|->
-name|nsec3
+name|nsec
 expr_stmt|;
 name|PARENT
 argument_list|(
@@ -4784,9 +4799,9 @@ literal|0
 expr_stmt|;
 name|node
 operator|->
-name|nsec3
+name|nsec
 operator|=
-literal|0
+name|DNS_RBT_NSEC_NORMAL
 expr_stmt|;
 name|MAKE_BLACK
 argument_list|(

@@ -1071,6 +1071,125 @@ function_decl|;
 end_function_decl
 
 begin_function
+name|void
+name|toggle_pcpustats
+parameter_list|(
+name|struct
+name|statics
+modifier|*
+name|statics
+parameter_list|)
+block|{
+if|if
+condition|(
+name|ncpus
+operator|==
+literal|1
+condition|)
+return|return;
+comment|/* Adjust display based on ncpus */
+if|if
+condition|(
+name|pcpu_stats
+condition|)
+block|{
+name|y_mem
+operator|+=
+name|ncpus
+operator|-
+literal|1
+expr_stmt|;
+comment|/* 3 */
+name|y_swap
+operator|+=
+name|ncpus
+operator|-
+literal|1
+expr_stmt|;
+comment|/* 4 */
+name|y_idlecursor
+operator|+=
+name|ncpus
+operator|-
+literal|1
+expr_stmt|;
+comment|/* 5 */
+name|y_message
+operator|+=
+name|ncpus
+operator|-
+literal|1
+expr_stmt|;
+comment|/* 5 */
+name|y_header
+operator|+=
+name|ncpus
+operator|-
+literal|1
+expr_stmt|;
+comment|/* 6 */
+name|y_procs
+operator|+=
+name|ncpus
+operator|-
+literal|1
+expr_stmt|;
+comment|/* 7 */
+name|Header_lines
+operator|+=
+name|ncpus
+operator|-
+literal|1
+expr_stmt|;
+comment|/* 7 */
+name|statics
+operator|->
+name|ncpus
+operator|=
+name|ncpus
+expr_stmt|;
+block|}
+else|else
+block|{
+name|y_mem
+operator|=
+literal|3
+expr_stmt|;
+name|y_swap
+operator|=
+literal|4
+expr_stmt|;
+name|y_idlecursor
+operator|=
+literal|5
+expr_stmt|;
+name|y_message
+operator|=
+literal|5
+expr_stmt|;
+name|y_header
+operator|=
+literal|6
+expr_stmt|;
+name|y_procs
+operator|=
+literal|7
+expr_stmt|;
+name|Header_lines
+operator|=
+literal|7
+expr_stmt|;
+name|statics
+operator|->
+name|ncpus
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
 name|int
 name|machine_init
 parameter_list|(
@@ -1084,17 +1203,23 @@ name|do_unames
 parameter_list|)
 block|{
 name|int
+name|i
+decl_stmt|,
+name|j
+decl_stmt|,
+name|empty
+decl_stmt|,
 name|pagesize
 decl_stmt|;
 name|size_t
-name|modelen
+name|size
 decl_stmt|;
 name|struct
 name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-name|modelen
+name|size
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -1112,7 +1237,7 @@ operator|&
 name|smpmode
 argument_list|,
 operator|&
-name|modelen
+name|size
 argument_list|,
 name|NULL
 argument_list|,
@@ -1129,7 +1254,7 @@ operator|&
 name|smpmode
 argument_list|,
 operator|&
-name|modelen
+name|size
 argument_list|,
 name|NULL
 argument_list|,
@@ -1139,7 +1264,7 @@ operator|!=
 literal|0
 operator|)
 operator|||
-name|modelen
+name|size
 operator|!=
 sizeof|sizeof
 argument_list|(
@@ -1340,22 +1465,7 @@ name|ordernames
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Adjust display based on ncpus */
-if|if
-condition|(
-name|pcpu_stats
-condition|)
-block|{
-name|int
-name|i
-decl_stmt|,
-name|j
-decl_stmt|,
-name|empty
-decl_stmt|;
-name|size_t
-name|size
-decl_stmt|;
+comment|/* Allocate state for per-CPU stats. */
 name|cpumask
 operator|=
 literal|0
@@ -1525,63 +1635,6 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|ncpus
-operator|>
-literal|1
-condition|)
-block|{
-name|y_mem
-operator|+=
-name|ncpus
-operator|-
-literal|1
-expr_stmt|;
-comment|/* 3 */
-name|y_swap
-operator|+=
-name|ncpus
-operator|-
-literal|1
-expr_stmt|;
-comment|/* 4 */
-name|y_idlecursor
-operator|+=
-name|ncpus
-operator|-
-literal|1
-expr_stmt|;
-comment|/* 5 */
-name|y_message
-operator|+=
-name|ncpus
-operator|-
-literal|1
-expr_stmt|;
-comment|/* 5 */
-name|y_header
-operator|+=
-name|ncpus
-operator|-
-literal|1
-expr_stmt|;
-comment|/* 6 */
-name|y_procs
-operator|+=
-name|ncpus
-operator|-
-literal|1
-expr_stmt|;
-comment|/* 7 */
-name|Header_lines
-operator|+=
-name|ncpus
-operator|-
-literal|1
-expr_stmt|;
-comment|/* 7 */
-block|}
 name|size
 operator|=
 sizeof|sizeof
@@ -1624,18 +1677,17 @@ name|statics
 operator|->
 name|ncpus
 operator|=
-name|ncpus
-expr_stmt|;
-block|}
-else|else
-block|{
-name|statics
-operator|->
-name|ncpus
-operator|=
 literal|1
 expr_stmt|;
-block|}
+if|if
+condition|(
+name|pcpu_stats
+condition|)
+name|toggle_pcpustats
+argument_list|(
+name|statics
+argument_list|)
+expr_stmt|;
 comment|/* all done! */
 return|return
 operator|(
@@ -1853,12 +1905,7 @@ decl_stmt|;
 name|size_t
 name|size
 decl_stmt|;
-comment|/* get the cp_time array */
-if|if
-condition|(
-name|pcpu_stats
-condition|)
-block|{
+comment|/* get the CPU stats */
 name|size
 operator|=
 operator|(
@@ -1900,9 +1947,6 @@ argument_list|,
 literal|"sysctlbyname kern.cp_times"
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
 name|GETSYSCTL
 argument_list|(
 literal|"kern.cp_time"
@@ -1910,7 +1954,6 @@ argument_list|,
 name|cp_time
 argument_list|)
 expr_stmt|;
-block|}
 name|GETSYSCTL
 argument_list|(
 literal|"vm.loadavg"
@@ -1960,11 +2003,7 @@ name|sysload
 operator|.
 name|fscale
 expr_stmt|;
-if|if
-condition|(
-name|pcpu_stats
-condition|)
-block|{
+comment|/* convert cp_time counts to percentages */
 for|for
 control|(
 name|i
@@ -1996,7 +2035,6 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-comment|/* convert cp_time counts to percentages */
 name|percentages
 argument_list|(
 name|CPUSTATES
@@ -2038,10 +2076,6 @@ name|j
 operator|++
 expr_stmt|;
 block|}
-block|}
-else|else
-block|{
-comment|/* convert cp_time counts to percentages */
 name|percentages
 argument_list|(
 name|CPUSTATES
@@ -2055,7 +2089,6 @@ argument_list|,
 name|cp_diff
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* sum memory& swap statistics */
 block|{
 specifier|static
@@ -3034,13 +3067,6 @@ name|kinfo_proc
 modifier|*
 name|pp
 decl_stmt|;
-name|struct
-name|kinfo_proc
-modifier|*
-name|prev_pp
-init|=
-name|NULL
-decl_stmt|;
 comment|/* these are copied out of sel for speed */
 name|int
 name|show_idle
@@ -3206,7 +3232,13 @@ name|kvm_getprocs
 argument_list|(
 name|kd
 argument_list|,
+name|sel
+operator|->
+name|thread
+condition|?
 name|KERN_PROC_ALL
+else|:
+name|KERN_PROC_PROC
 argument_list|,
 literal|0
 argument_list|,
@@ -3477,6 +3509,19 @@ comment|/* skip zombies */
 continue|continue;
 if|if
 condition|(
+operator|!
+name|show_kidle
+operator|&&
+name|pp
+operator|->
+name|ki_tdflags
+operator|&
+name|TDF_IDLETD
+condition|)
+comment|/* skip kernel idle process */
+continue|continue;
+if|if
+condition|(
 name|displaymode
 operator|==
 name|DISP_CPU
@@ -3510,23 +3555,6 @@ if|if
 condition|(
 name|displaymode
 operator|==
-name|DISP_CPU
-operator|&&
-operator|!
-name|show_kidle
-operator|&&
-name|pp
-operator|->
-name|ki_tdflags
-operator|&
-name|TDF_IDLETD
-condition|)
-comment|/* skip kernel idle process */
-continue|continue;
-if|if
-condition|(
-name|displaymode
-operator|==
 name|DISP_IO
 operator|&&
 operator|!
@@ -3555,26 +3583,6 @@ name|uid
 condition|)
 comment|/* skip proc. that don't belong to the selected UID */
 continue|continue;
-comment|/* 		 * When not showing threads, take the first thread 		 * for output and add the fields that we can from 		 * the rest of the process's threads rather than 		 * using the system's mostly-broken KERN_PROC_PROC. 		 */
-if|if
-condition|(
-name|sel
-operator|->
-name|thread
-operator|||
-name|prev_pp
-operator|==
-name|NULL
-operator|||
-name|prev_pp
-operator|->
-name|ki_pid
-operator|!=
-name|pp
-operator|->
-name|ki_pid
-condition|)
-block|{
 operator|*
 name|prefp
 operator|++
@@ -3584,30 +3592,6 @@ expr_stmt|;
 name|active_procs
 operator|++
 expr_stmt|;
-name|prev_pp
-operator|=
-name|pp
-expr_stmt|;
-block|}
-else|else
-block|{
-name|prev_pp
-operator|->
-name|ki_pctcpu
-operator|+=
-name|pp
-operator|->
-name|ki_pctcpu
-expr_stmt|;
-name|prev_pp
-operator|->
-name|ki_runtime
-operator|+=
-name|pp
-operator|->
-name|ki_runtime
-expr_stmt|;
-block|}
 block|}
 comment|/* if requested, sort the "interesting" processes */
 if|if

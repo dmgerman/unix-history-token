@@ -15,11 +15,19 @@ directive|define
 name|_MACHINE_INTR_MACHDEP_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CPU_RMI
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_NLM
+argument_list|)
+end_if
 
 begin_define
 define|#

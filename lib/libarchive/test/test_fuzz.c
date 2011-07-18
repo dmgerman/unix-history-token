@@ -123,6 +123,13 @@ block|,
 block|{
 literal|0
 block|,
+literal|"test_read_format_cpio_svr4_gzip_rpm.rpm"
+block|}
+block|,
+comment|/* Test RPM unwrapper */
+block|{
+literal|0
+block|,
 literal|"test_read_format_gtar_sparse_1_17_posix10_modified.tar"
 block|}
 block|,
@@ -406,7 +413,14 @@ operator|<
 name|buffsize
 argument_list|)
 condition|)
+block|{
+name|free
+argument_list|(
+name|rawimage
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 block|}
 else|else
 block|{
@@ -651,12 +665,12 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
+block|}
 name|archive_read_finish
 argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|free
 argument_list|(

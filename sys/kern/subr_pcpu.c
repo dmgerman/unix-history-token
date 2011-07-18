@@ -239,16 +239,6 @@ name|pc_cpuid
 operator|=
 name|cpuid
 expr_stmt|;
-name|CPU_SETOF
-argument_list|(
-name|cpuid
-argument_list|,
-operator|&
-name|pcpu
-operator|->
-name|pc_cpumask
-argument_list|)
-expr_stmt|;
 name|cpuid_to_pcpu
 index|[
 name|cpuid

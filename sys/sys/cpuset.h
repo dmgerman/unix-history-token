@@ -256,6 +256,10 @@ define|\
 value|atomic_set_long(&(p)->__bits[(n)/_NCPUBITS], __cpuset_mask(n))
 end_define
 
+begin_comment
+comment|/* Convenience functions catering special cases. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -266,18 +270,6 @@ parameter_list|,
 name|s
 parameter_list|)
 value|do {			\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		atomic_set_long(&(d)->__bits[__i],	\ 		    (s)->__bits[__i]);			\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPU_NAND_ATOMIC
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|do {			\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		atomic_clear_long(&(d)->__bits[__i],	\ 		    (s)->__bits[__i]);			\ } while (0)
 end_define
 
 begin_define

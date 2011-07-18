@@ -5917,7 +5917,7 @@ condition|)
 block|{
 name|ltype
 operator|=
-name|VOP_ISLOCKED
+name|NFSVOPISLOCKED
 argument_list|(
 name|dvp
 argument_list|)
@@ -5943,7 +5943,7 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|dvp
 argument_list|,
@@ -5959,7 +5959,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|dvp
 argument_list|,
@@ -6010,7 +6010,7 @@ name|error
 operator|)
 return|;
 block|}
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|dvp
 argument_list|,
@@ -6065,7 +6065,7 @@ name|newvp
 operator|!=
 name|dvp
 condition|)
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|dvp
 argument_list|,
@@ -9192,7 +9192,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|fvp
 argument_list|,
@@ -9219,7 +9219,7 @@ operator|->
 name|cn_thread
 argument_list|)
 expr_stmt|;
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|fvp
 argument_list|,
@@ -15483,7 +15483,7 @@ name|td
 operator|->
 name|td_ucred
 expr_stmt|;
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -15501,7 +15501,7 @@ operator|&
 name|VI_DOOMED
 condition|)
 block|{
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -15619,7 +15619,7 @@ operator|==
 name|F_SETLK
 condition|)
 block|{
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -15648,7 +15648,7 @@ operator|(
 name|EINTR
 operator|)
 return|;
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -15666,7 +15666,7 @@ operator|&
 name|VI_DOOMED
 condition|)
 block|{
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -15709,7 +15709,7 @@ operator|==
 name|NFSERR_DENIED
 condition|)
 block|{
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -15738,7 +15738,7 @@ operator|==
 name|EINTR
 condition|)
 block|{
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -15759,7 +15759,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -15902,7 +15902,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -15927,7 +15927,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -15970,7 +15970,7 @@ argument_list|)
 operator|->
 name|n_size
 expr_stmt|;
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -16011,7 +16011,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -16077,7 +16077,7 @@ operator|)
 return|;
 name|error
 operator|=
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -16120,7 +16120,7 @@ argument_list|)
 operator|->
 name|n_size
 expr_stmt|;
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -16146,7 +16146,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|vp
 argument_list|,

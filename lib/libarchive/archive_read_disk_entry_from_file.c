@@ -944,6 +944,32 @@ argument_list|,
 name|ACL_TYPE_ACCESS
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+elseif|else
+if|if
+condition|(
+operator|(
+operator|!
+name|a
+operator|->
+name|follow_symlinks
+operator|)
+operator|&&
+operator|(
+name|archive_entry_filetype
+argument_list|(
+name|entry
+argument_list|)
+operator|==
+name|AE_IFLNK
+operator|)
+condition|)
+comment|/* We can't get the ACL of a symlink, so we assume it can't 		   have one. */
+name|acl
+operator|=
+name|NULL
+expr_stmt|;
 endif|#
 directive|endif
 else|else
@@ -1958,6 +1984,9 @@ directive|elif
 name|HAVE_EXTATTR_GET_FILE
 operator|&&
 name|HAVE_EXTATTR_LIST_FILE
+operator|&&
+expr|\
+name|HAVE_DECL_EXTATTR_NAMESPACE_USER
 end_elif
 
 begin_comment
@@ -1969,6 +1998,7 @@ comment|/* TODO: Implement this.  Follow the Linux model above, but  * with Free
 end_comment
 
 begin_function_decl
+specifier|static
 name|int
 name|setup_xattr
 parameter_list|(
@@ -2002,6 +2032,7 @@ function_decl|;
 end_function_decl
 
 begin_function
+specifier|static
 name|int
 name|setup_xattr
 parameter_list|(

@@ -78,6 +78,9 @@ decl_stmt|;
 name|class
 name|Token
 decl_stmt|;
+name|class
+name|SourceLocation
+decl_stmt|;
 comment|/// MacroArgs - An instance of this class captures information about
 comment|/// the formal arguments specified to a function-like macro invocation.
 name|class
@@ -260,6 +263,9 @@ parameter_list|,
 name|Preprocessor
 modifier|&
 name|PP
+parameter_list|,
+name|SourceLocation
+name|hashInstLoc
 parameter_list|)
 function_decl|;
 comment|/// getNumArguments - Return the number of arguments passed into this macro
@@ -307,8 +313,9 @@ name|PP
 parameter_list|,
 name|bool
 name|Charify
-init|=
-name|false
+parameter_list|,
+name|SourceLocation
+name|hashInstLoc
 parameter_list|)
 function_decl|;
 comment|/// deallocate - This should only be called by the Preprocessor when managing

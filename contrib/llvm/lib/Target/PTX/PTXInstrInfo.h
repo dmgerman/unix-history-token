@@ -71,6 +71,18 @@ directive|include
 file|"llvm/Target/TargetInstrInfo.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|GET_INSTRINFO_HEADER
+end_define
+
+begin_include
+include|#
+directive|include
+file|"PTXGenInstrInfo.inc"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -91,7 +103,7 @@ name|class
 name|PTXInstrInfo
 range|:
 name|public
-name|TargetInstrInfoImpl
+name|PTXGenInstrInfo
 block|{
 name|private
 operator|:
@@ -277,6 +289,55 @@ argument_list|,
 argument|const SmallVectorImpl<MachineOperand>&Cond
 argument_list|,
 argument|DebugLoc DL
+argument_list|)
+specifier|const
+block|;
+comment|// Memory operand folding for spills
+comment|// TODO: Implement this eventually and get rid of storeRegToStackSlot and
+comment|//       loadRegFromStackSlot.  Doing so will get rid of the "stack" registers
+comment|//       we currently use to spill, though I doubt the overall effect on ptxas
+comment|//       output will be large.  I have yet to see a case where ptxas is unable
+comment|//       to see through the "stack" register usage and hence generates
+comment|//       efficient code anyway.
+comment|// virtual MachineInstr* foldMemoryOperandImpl(MachineFunction&MF,
+comment|//                                             MachineInstr* MI,
+comment|//                                       const SmallVectorImpl<unsigned>&Ops,
+comment|//                                             int FrameIndex) const;
+name|virtual
+name|void
+name|storeRegToStackSlot
+argument_list|(
+argument|MachineBasicBlock& MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MII
+argument_list|,
+argument|unsigned SrcReg
+argument_list|,
+argument|bool isKill
+argument_list|,
+argument|int FrameIndex
+argument_list|,
+argument|const TargetRegisterClass* RC
+argument_list|,
+argument|const TargetRegisterInfo* TRI
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|loadRegFromStackSlot
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MII
+argument_list|,
+argument|unsigned DestReg
+argument_list|,
+argument|int FrameIdx
+argument_list|,
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
 block|;

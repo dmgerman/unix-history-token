@@ -2752,6 +2752,9 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -2777,6 +2780,8 @@ operator|->
 name|p_pptr
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Free credentials, arguments, and sigacts. 	 */
 name|crfree
 argument_list|(
@@ -3493,9 +3498,14 @@ modifier|*
 name|parent
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|RACCT
 name|int
 name|locked
 decl_stmt|;
+endif|#
+directive|endif
 name|sx_assert
 argument_list|(
 operator|&
@@ -3520,6 +3530,9 @@ operator|==
 name|parent
 condition|)
 return|return;
+ifdef|#
+directive|ifdef
+name|RACCT
 name|locked
 operator|=
 name|PROC_LOCKED
@@ -3556,6 +3569,8 @@ argument_list|(
 name|parent
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|PROC_LOCK
 argument_list|(
 name|child

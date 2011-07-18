@@ -9602,6 +9602,26 @@ name|LOGIN_SETPRIORITY
 expr_stmt|;
 ifdef|#
 directive|ifdef
+name|LOGIN_SETCPUMASK
+name|sucflags
+operator||=
+name|LOGIN_SETCPUMASK
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* LOGIN_SETCPUMASK */
+ifdef|#
+directive|ifdef
+name|LOGIN_SETLOGINCLASS
+name|sucflags
+operator||=
+name|LOGIN_SETLOGINCLASS
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* LOGIN_SETLOGINCLASS */
+ifdef|#
+directive|ifdef
 name|LOGIN_SETMAC
 name|sucflags
 operator||=

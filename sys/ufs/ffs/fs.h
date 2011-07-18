@@ -366,8 +366,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FFS_MAXID
+name|FFS_SET_INODE
 value|15
+end_define
+
+begin_comment
+comment|/* update an on-disk inode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_SET_BUFOUTPUT
+value|16
+end_define
+
+begin_comment
+comment|/* set buffered writing on descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_MAXID
+value|16
 end_define
 
 begin_comment

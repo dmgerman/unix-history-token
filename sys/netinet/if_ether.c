@@ -3502,12 +3502,16 @@ argument_list|(
 name|la
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|log_arp_permanent_modify
+condition|)
 name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"arp: %*D attempts to modify permanent "
-literal|"entry for %s on %s\n"
+literal|"arp: %*D attempts to modify "
+literal|"permanent entry for %s on %s\n"
 argument_list|,
 name|ifp
 operator|->
@@ -4401,6 +4405,14 @@ operator|=
 name|m
 operator|->
 name|m_len
+expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|=
+name|NULL
 expr_stmt|;
 name|sa
 operator|.

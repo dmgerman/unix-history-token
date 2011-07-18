@@ -3416,6 +3416,9 @@ index|[
 name|segnum
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -3495,6 +3498,8 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * In case we sleep in malloc(), mark the segment present but deleted 	 * so that noone else tries to create the same key. 	 */
 name|shmseg
 operator|->
@@ -3584,6 +3589,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -3620,6 +3628,8 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|ENOMEM

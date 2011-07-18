@@ -117,6 +117,13 @@ argument_list|,
 name|testprog
 argument_list|)
 expr_stmt|;
+name|assertEqualInt
+argument_list|(
+name|r
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|failure
 argument_list|(
 literal|"--help should generate nothing to stderr."
@@ -183,6 +190,13 @@ argument_list|,
 name|testprog
 argument_list|)
 expr_stmt|;
+name|assertEqualInt
+argument_list|(
+name|r
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|failure
 argument_list|(
 literal|"-h should generate nothing to stderr."
@@ -213,6 +227,13 @@ argument_list|(
 literal|"%s -W help>Whelp.stdout 2>Whelp.stderr"
 argument_list|,
 name|testprog
+argument_list|)
+expr_stmt|;
+name|assertEqualInt
+argument_list|(
+name|r
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|failure

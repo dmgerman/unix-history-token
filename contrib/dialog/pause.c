@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: pause.c,v 1.26 2011/01/18 10:16:33 tom Exp $  *  *  pause.c -- implements the pause dialog  *  *  Copyright 2004-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  This is adapted from source contributed by  *	Yura Kalinichenko  */
+comment|/*  *  $Id: pause.c,v 1.29 2011/06/29 09:48:53 tom Exp $  *  *  pause.c -- implements the pause dialog  *  *  Copyright 2004-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  This is adapted from source contributed by  *	Yura Kalinichenko  */
 end_comment
 
 begin_include
@@ -78,6 +78,8 @@ name|binding
 index|[]
 init|=
 block|{
+name|HELPKEY_BINDINGS
+block|,
 name|ENTERKEY_BINDINGS
 block|,
 name|DLG_KEYS_DATA
@@ -437,6 +439,13 @@ argument_list|(
 name|dialog
 argument_list|,
 name|title
+argument_list|)
+expr_stmt|;
+name|dlg_draw_helpline
+argument_list|(
+name|dialog
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|wattrset
@@ -921,7 +930,7 @@ name|DLGK_ENTER
 case|:
 name|result
 operator|=
-name|dlg_ok_buttoncode
+name|dlg_enter_buttoncode
 argument_list|(
 name|button
 argument_list|)

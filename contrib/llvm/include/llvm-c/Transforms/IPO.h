@@ -57,14 +57,6 @@ name|LLVMPassManagerRef
 name|PM
 parameter_list|)
 function_decl|;
-comment|/** See llvm::createDeadTypeEliminationPass function. */
-name|void
-name|LLVMAddDeadTypeEliminationPass
-parameter_list|(
-name|LLVMPassManagerRef
-name|PM
-parameter_list|)
-function_decl|;
 comment|/** See llvm::createFunctionAttrsPass function. */
 name|void
 name|LLVMAddFunctionAttrsPass

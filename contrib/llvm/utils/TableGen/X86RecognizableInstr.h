@@ -176,6 +176,10 @@ comment|/// The isCodeGenOnly filed from the record
 name|bool
 name|IsCodeGenOnly
 decl_stmt|;
+comment|// Whether the instruction has the predicate "Mode64Bit"
+name|bool
+name|Is64Bit
+decl_stmt|;
 comment|/// The instruction name as listed in the tables
 name|std
 operator|::

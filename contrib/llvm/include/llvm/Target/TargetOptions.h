@@ -239,10 +239,10 @@ specifier|extern
 name|bool
 name|GuaranteedTailCallOpt
 decl_stmt|;
-comment|/// StackAlignment - Override default stack alignment for target.
+comment|/// StackAlignmentOverride - Override default stack alignment for target.
 specifier|extern
 name|unsigned
-name|StackAlignment
+name|StackAlignmentOverride
 decl_stmt|;
 comment|/// RealignStack - This flag indicates whether the stack should be
 comment|/// automatically realigned, if needed.

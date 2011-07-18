@@ -275,6 +275,14 @@ condition|(
 name|fs
 operator|->
 name|fs_ronly
+operator|&&
+name|ip
+operator|->
+name|i_ump
+operator|->
+name|um_fsckpid
+operator|==
+literal|0
 condition|)
 return|return
 operator|(

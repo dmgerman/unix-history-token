@@ -2361,6 +2361,9 @@ operator|=
 name|uafp
 expr_stmt|;
 comment|/* 	 * This is the historical "accident" allowing users to configure IPv4 	 * addresses without the "inet" keyword which while a nice feature has 	 * proven to complicate other things.  We cannot remove this but only 	 * make sure we will never have a similar implicit default for IPv6 or 	 * any other address familiy.  We need a fallback though for 	 * ifconfig IF up/down etc. to work without INET support as people 	 * never used ifconfig IF link up/down, etc. either. 	 */
+ifndef|#
+directive|ifndef
+name|RESCUE
 ifdef|#
 directive|ifdef
 name|INET
@@ -2382,6 +2385,8 @@ argument_list|(
 literal|"inet"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 if|if

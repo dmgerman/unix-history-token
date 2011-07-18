@@ -2960,6 +2960,9 @@ goto|goto
 name|done2
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -3002,6 +3005,8 @@ goto|goto
 name|done2
 goto|;
 block|}
+endif|#
+directive|endif
 name|DPRINTF
 argument_list|(
 operator|(
@@ -3361,9 +3366,14 @@ decl_stmt|;
 name|short
 name|next
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|RACCT
 name|size_t
 name|saved_msgsz
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -3550,6 +3560,9 @@ name|done2
 goto|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -3637,6 +3650,8 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|segs_needed
 operator|=
 operator|(
@@ -4681,6 +4696,9 @@ literal|0
 expr_stmt|;
 name|done3
 label|:
+ifdef|#
+directive|ifdef
+name|RACCT
 if|if
 condition|(
 name|error
@@ -4725,6 +4743,8 @@ name|td_proc
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|done2
 label|:
 name|mtx_unlock

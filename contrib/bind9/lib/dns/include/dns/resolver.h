@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: resolver.h,v 1.60.56.5 2010-02-25 10:56:41 tbox Exp $ */
+comment|/* $Id: resolver.h,v 1.67.86.1.2.1 2011-06-02 23:47:36 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -106,6 +106,9 @@ name|client
 decl_stmt|;
 name|dns_messageid_t
 name|id
+decl_stmt|;
+name|isc_result_t
+name|vresult
 decl_stmt|;
 block|}
 name|dns_fetchevent_t
@@ -381,7 +384,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Freeze resolver.  *  * Notes:  *  *\li	Certain configuration changes cannot be made after the resolver  *	is frozen.  Fetches cannot be created until the resolver is frozen.  *  * Requires:  *  *\li	'res' is a valid, unfrozen resolver.  *  * Ensures:  *  *\li	'res' is frozen.  */
+comment|/*%<  * Freeze resolver.  *  * Notes:  *  *\li	Certain configuration changes cannot be made after the resolver  *	is frozen.  Fetches cannot be created until the resolver is frozen.  *  * Requires:  *  *\li	'res' is a valid resolver.  *  * Ensures:  *  *\li	'res' is frozen.  */
 end_comment
 
 begin_function_decl
@@ -948,6 +951,41 @@ name|name
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|dns_resolver_settimeout
+parameter_list|(
+name|dns_resolver_t
+modifier|*
+name|resolver
+parameter_list|,
+name|unsigned
+name|int
+name|seconds
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Set the length of time the resolver will work on a query, in seconds.  *  * If timeout is 0, the default timeout will be applied.  *  * Requires:  * \li  resolver to be valid.  */
+end_comment
+
+begin_function_decl
+name|unsigned
+name|int
+name|dns_resolver_gettimeout
+parameter_list|(
+name|dns_resolver_t
+modifier|*
+name|resolver
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Get the current length of time the resolver will work on a query, in seconds.  *  * Requires:  * \li  resolver to be valid.  */
+end_comment
 
 begin_function_decl
 name|void

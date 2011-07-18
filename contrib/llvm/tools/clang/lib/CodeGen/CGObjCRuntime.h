@@ -661,6 +661,27 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
+name|virtual
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitNSAutoreleasePoolClassRef
+argument_list|(
+argument|CGBuilderTy&Builder
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|false
+operator|&&
+literal|"autoreleasepool unsupported in this ABI"
+argument_list|)
+block|;
+return|return
+literal|0
+return|;
+block|}
 comment|/// EnumerationMutationFunction - Return the function that's called by the
 comment|/// compiler when a mutation is detected during foreach iteration.
 name|virtual

@@ -364,6 +364,13 @@ modifier|*
 name|sc_cred
 decl_stmt|;
 comment|/* cred cache for jail checks */
+name|u_int32_t
+name|sc_spare
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* UTO */
 block|}
 struct|;
 end_struct

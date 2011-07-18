@@ -578,6 +578,12 @@ name|ah_debug
 operator|&
 name|mask
 operator|)
+operator|||
+operator|(
+name|ath_hal_debug
+operator|&
+name|mask
+operator|)
 condition|)
 block|{
 name|__va_list

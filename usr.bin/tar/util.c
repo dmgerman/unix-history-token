@@ -1214,7 +1214,7 @@ name|pending_chdir
 operator|==
 name|NULL
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1257,7 +1257,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1477,7 +1477,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -1567,7 +1567,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -1634,7 +1634,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -2080,7 +2080,7 @@ if|if
 condition|(
 name|slashonly
 condition|)
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -2093,7 +2093,7 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,

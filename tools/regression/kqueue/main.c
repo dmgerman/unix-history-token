@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"common.h"
 end_include
 
@@ -982,9 +988,8 @@ block|{
 name|int
 name|test_proc
 init|=
-literal|0
+literal|1
 decl_stmt|;
-comment|/* XXX-FIXME */
 name|int
 name|test_socket
 init|=

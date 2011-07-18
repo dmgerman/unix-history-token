@@ -174,9 +174,9 @@ name|void
 name|lzma_attribute
 argument_list|(
 operator|(
-name|format
+name|__format__
 argument_list|(
-name|printf
+name|__printf__
 argument_list|,
 literal|1
 argument_list|,
@@ -250,7 +250,7 @@ name|void
 name|lzma_attribute
 argument_list|(
 operator|(
-name|noreturn
+name|__noreturn__
 operator|)
 argument_list|)
 name|help
@@ -304,7 +304,7 @@ name|void
 name|lzma_attribute
 argument_list|(
 operator|(
-name|noreturn
+name|__noreturn__
 operator|)
 argument_list|)
 name|version

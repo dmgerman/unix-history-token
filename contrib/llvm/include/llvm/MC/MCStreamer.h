@@ -2071,6 +2071,9 @@ specifier|const
 name|MCSymbol
 modifier|*
 name|Label
+parameter_list|,
+name|unsigned
+name|PointerSize
 parameter_list|)
 init|=
 literal|0
@@ -2689,6 +2692,18 @@ end_comment
 
 begin_comment
 comment|/// the assembly.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param DecodeLSDA - If true, emit comments that translates the LSDA into a
+end_comment
+
+begin_comment
+comment|/// human readable format. Only usable with CFI.
 end_comment
 
 begin_function_decl

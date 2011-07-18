@@ -68,6 +68,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCDwarf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<utility>
 end_include
 
@@ -542,6 +554,30 @@ name|MF
 argument_list|)
 decl|const
 block|{   }
+comment|/// getCompactUnwindEncoding - Get the compact unwind encoding for the
+comment|/// function. Return 0 if the compact unwind isn't available.
+name|virtual
+name|uint32_t
+name|getCompactUnwindEncoding
+argument_list|(
+name|ArrayRef
+operator|<
+name|MCCFIInstruction
+operator|>
+name|Instrs
+argument_list|,
+name|int
+name|DataAlignmentFactor
+argument_list|,
+name|bool
+name|IsEH
+argument_list|)
+decl|const
+block|{
+return|return
+literal|0
+return|;
+block|}
 block|}
 empty_stmt|;
 block|}

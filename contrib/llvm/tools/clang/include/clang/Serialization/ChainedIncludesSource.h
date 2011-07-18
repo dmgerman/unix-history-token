@@ -196,7 +196,7 @@ name|DC
 argument_list|)
 block|;
 name|virtual
-name|bool
+name|ExternalLoadResult
 name|FindExternalLexicalDecls
 argument_list|(
 specifier|const

@@ -1097,6 +1097,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|RESCUE
 if|if
 condition|(
 operator|!
@@ -1106,6 +1109,8 @@ literal|"inet"
 argument_list|)
 condition|)
 return|return;
+endif|#
+directive|endif
 name|af_register
 argument_list|(
 operator|&

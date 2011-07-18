@@ -185,6 +185,16 @@ modifier|*
 name|N
 parameter_list|)
 function_decl|;
+comment|/// getFromDILexicalBlock - Translate the DILexicalBlock into a DebugLoc.
+specifier|static
+name|DebugLoc
+name|getFromDILexicalBlock
+parameter_list|(
+name|MDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
 comment|/// isUnknown - Return true if this is an unknown location.
 name|bool
 name|isUnknown
@@ -330,6 +340,16 @@ name|DL
 operator|)
 return|;
 block|}
+name|void
+name|dump
+argument_list|(
+specifier|const
+name|LLVMContext
+operator|&
+name|Ctx
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 empty_stmt|;
 name|template

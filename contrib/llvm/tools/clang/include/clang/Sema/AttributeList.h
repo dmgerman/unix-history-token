@@ -208,6 +208,11 @@ name|IsAvailability
 range|:
 literal|1
 decl_stmt|;
+name|unsigned
+name|AttrKind
+range|:
+literal|8
+decl_stmt|;
 comment|/// \brief The location of the 'unavailable' keyword in an
 comment|/// availability attribute.
 name|SourceLocation
@@ -472,6 +477,14 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|AttrKind
+operator|=
+name|getKind
+argument_list|(
+name|getName
+argument_list|()
+argument_list|)
+expr_stmt|;
 block|}
 name|AttributeList
 argument_list|(
@@ -596,6 +609,14 @@ name|AvailabilityChange
 argument_list|(
 name|obsoleted
 argument_list|)
+block|;
+name|AttrKind
+operator|=
+name|getKind
+argument_list|(
+name|getName
+argument_list|()
+argument_list|)
 block|;   }
 name|friend
 name|class
@@ -611,15 +632,6 @@ enum|enum
 name|Kind
 block|{
 comment|// Please keep this list alphabetized.
-name|AT_IBAction
-block|,
-comment|// Clang-specific.
-name|AT_IBOutlet
-block|,
-comment|// Clang-specific.
-name|AT_IBOutletCollection
-block|,
-comment|// Clang-specific.
 name|AT_address_space
 block|,
 name|AT_alias
@@ -632,6 +644,8 @@ name|AT_analyzer_noreturn
 block|,
 name|AT_annotate
 block|,
+name|AT_arc_weakref_unavailable
+block|,
 name|AT_availability
 block|,
 comment|// Clang-specific
@@ -643,6 +657,18 @@ name|AT_carries_dependency
 block|,
 name|AT_cdecl
 block|,
+name|AT_cf_consumed
+block|,
+comment|// Clang-specific.
+name|AT_cf_returns_autoreleased
+block|,
+comment|// Clang-specific.
+name|AT_cf_returns_not_retained
+block|,
+comment|// Clang-specific.
+name|AT_cf_returns_retained
+block|,
+comment|// Clang-specific.
 name|AT_cleanup
 block|,
 name|AT_common
@@ -677,6 +703,17 @@ name|AT_gnu_inline
 block|,
 name|AT_host
 block|,
+name|AT_IBAction
+block|,
+comment|// Clang-specific.
+name|AT_IBOutlet
+block|,
+comment|// Clang-specific.
+name|AT_IBOutletCollection
+block|,
+comment|// Clang-specific.
+name|AT_init_priority
+block|,
 name|AT_launch_bounds
 block|,
 name|AT_malloc
@@ -685,21 +722,23 @@ name|AT_may_alias
 block|,
 name|AT_mode
 block|,
+name|AT_MsStruct
+block|,
+name|AT_naked
+block|,
 name|AT_neon_polyvector_type
 block|,
 comment|// Clang-specific.
 name|AT_neon_vector_type
 block|,
 comment|// Clang-specific.
-name|AT_naked
+name|AT_no_instrument_function
+block|,
+name|AT_nocommon
 block|,
 name|AT_nodebug
 block|,
 name|AT_noinline
-block|,
-name|AT_no_instrument_function
-block|,
-name|AT_nocommon
 block|,
 name|AT_nonnull
 block|,
@@ -707,16 +746,13 @@ name|AT_noreturn
 block|,
 name|AT_nothrow
 block|,
-name|AT_nsobject
-block|,
-name|AT_objc_exception
-block|,
-name|AT_objc_method_family
-block|,
-name|AT_cf_returns_not_retained
+name|AT_ns_consumed
 block|,
 comment|// Clang-specific.
-name|AT_cf_returns_retained
+name|AT_ns_consumes_self
+block|,
+comment|// Clang-specific.
+name|AT_ns_returns_autoreleased
 block|,
 comment|// Clang-specific.
 name|AT_ns_returns_not_retained
@@ -725,20 +761,20 @@ comment|// Clang-specific.
 name|AT_ns_returns_retained
 block|,
 comment|// Clang-specific.
-name|AT_ns_returns_autoreleased
+name|AT_nsobject
 block|,
-comment|// Clang-specific.
-name|AT_cf_consumed
+name|AT_objc_exception
 block|,
-comment|// Clang-specific.
-name|AT_ns_consumed
-block|,
-comment|// Clang-specific.
-name|AT_ns_consumes_self
-block|,
-comment|// Clang-specific.
 name|AT_objc_gc
 block|,
+name|AT_objc_method_family
+block|,
+name|AT_objc_ownership
+block|,
+comment|// Clang-specific.
+name|AT_objc_precise_lifetime
+block|,
+comment|// Clang-specific.
 name|AT_opencl_image_access
 block|,
 comment|// OpenCL-specific.
@@ -767,6 +803,8 @@ comment|// ARM specific
 name|AT_pure
 block|,
 name|AT_regparm
+block|,
+name|AT_reqd_wg_size
 block|,
 name|AT_section
 block|,
@@ -799,15 +837,9 @@ name|AT_warn_unused_result
 block|,
 name|AT_weak
 block|,
-name|AT_weakref
-block|,
 name|AT_weak_import
 block|,
-name|AT_reqd_wg_size
-block|,
-name|AT_init_priority
-block|,
-name|AT_MsStruct
+name|AT_weakref
 block|,
 name|IgnoredAttribute
 block|,
@@ -928,10 +960,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getKind
+name|Kind
 argument_list|(
-name|getName
-argument_list|()
+name|AttrKind
 argument_list|)
 return|;
 block|}
@@ -1264,12 +1295,33 @@ name|UnavailableLoc
 return|;
 block|}
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// A factory, from which one makes pools, from which one creates
+end_comment
+
+begin_comment
 comment|/// individual attributes which are deallocated with the pool.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Note that it's tolerably cheap to create and destroy one of
+end_comment
+
+begin_comment
 comment|/// these as long as you don't actually allocate anything in it.
+end_comment
+
+begin_decl_stmt
 name|class
 name|AttributeFactory
 block|{
@@ -1402,7 +1454,13 @@ name|AttributeFactory
 argument_list|()
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
 name|class
 name|AttributePool
 block|{
@@ -1805,11 +1863,29 @@ name|Arg
 parameter_list|)
 function_decl|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// addAttributeLists - Add two AttributeLists together
+end_comment
+
+begin_comment
 comment|/// The right-hand list is appended to the left-hand list, if any
+end_comment
+
+begin_comment
 comment|/// A pointer to the joined list is returned.
+end_comment
+
+begin_comment
 comment|/// Note: the lists are not left unmodified.
+end_comment
+
+begin_function
 specifier|inline
 name|AttributeList
 modifier|*
@@ -1871,10 +1947,25 @@ return|return
 name|Left
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// CXX0XAttributeList - A wrapper around a C++0x attribute list.
+end_comment
+
+begin_comment
 comment|/// Stores, in addition to the list proper, whether or not an actual list was
+end_comment
+
+begin_comment
 comment|/// (as opposed to an empty list, which may be ill-formed in some places) and
+end_comment
+
+begin_comment
 comment|/// the source range of the list.
+end_comment
+
+begin_struct
 struct|struct
 name|CXX0XAttributeList
 block|{
@@ -1930,12 +2021,33 @@ argument_list|)
 block|{   }
 block|}
 struct|;
+end_struct
+
+begin_comment
 comment|/// ParsedAttributes - A collection of parsed attributes.  Currently
+end_comment
+
+begin_comment
 comment|/// we don't differentiate between the various attribute syntaxes,
+end_comment
+
+begin_comment
 comment|/// which is basically silly.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Right now this is a very lightweight container, but the expectation
+end_comment
+
+begin_comment
 comment|/// is that this will become significantly more serious.
+end_comment
+
+begin_decl_stmt
 name|class
 name|ParsedAttributes
 block|{
@@ -2400,11 +2512,14 @@ modifier|*
 name|list
 decl_stmt|;
 block|}
-empty_stmt|;
-block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// end namespace clang
 end_comment
 

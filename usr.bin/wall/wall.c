@@ -1113,6 +1113,10 @@ name|egid
 argument_list|)
 expr_stmt|;
 block|}
+name|cnt
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 name|fgets
@@ -1130,10 +1134,6 @@ condition|)
 block|{
 for|for
 control|(
-name|cnt
-operator|=
-literal|0
-operator|,
 name|p
 operator|=
 name|lbuf

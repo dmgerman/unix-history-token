@@ -1367,6 +1367,23 @@ operator|=
 literal|20
 expr_stmt|;
 break|break;
+case|case
+name|MFI_FWSTATE_BOOT_MESSAGE_PENDING
+case|:
+name|MFI_WRITE4
+argument_list|(
+name|sc
+argument_list|,
+name|MFI_IDB
+argument_list|,
+name|MFI_FWINIT_HOTPLUG
+argument_list|)
+expr_stmt|;
+name|max_wait
+operator|=
+literal|10
+expr_stmt|;
+break|break;
 default|default:
 name|device_printf
 argument_list|(
@@ -1374,7 +1391,7 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"Unknown firmware state %d\n"
+literal|"Unknown firmware state %#x\n"
 argument_list|,
 name|fw_state
 argument_list|)
@@ -1441,7 +1458,7 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"firmware stuck in state "
+literal|"Firmware stuck in state "
 literal|"%#x\n"
 argument_list|,
 name|fw_state
@@ -6009,7 +6026,7 @@ name|hdr
 operator|->
 name|cmd_status
 operator|==
-literal|0xff
+name|MFI_STAT_INVALID_STATUS
 condition|)
 block|{
 name|sc
@@ -7367,7 +7384,7 @@ name|hdr
 operator|->
 name|cmd_status
 operator|!=
-literal|0
+name|MFI_STAT_OK
 operator|)
 operator|||
 operator|(
@@ -8089,7 +8106,7 @@ name|hdr
 operator|->
 name|cmd_status
 operator|=
-literal|0xff
+name|MFI_STAT_INVALID_STATUS
 expr_stmt|;
 name|hdr
 operator|->
@@ -8152,7 +8169,7 @@ name|hdr
 operator|->
 name|cmd_status
 operator|==
-literal|0xff
+name|MFI_STAT_INVALID_STATUS
 condition|)
 block|{
 name|DELAY
@@ -8178,7 +8195,7 @@ name|hdr
 operator|->
 name|cmd_status
 operator|==
-literal|0xff
+name|MFI_STAT_INVALID_STATUS
 condition|)
 block|{
 name|device_printf

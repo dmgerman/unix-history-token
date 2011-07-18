@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Casting.h"
 end_include
 
@@ -175,11 +181,11 @@ name|OptSpecifier
 name|ID
 decl_stmt|;
 comment|/// The option name.
-specifier|const
-name|char
-modifier|*
+name|llvm
+operator|::
+name|StringRef
 name|Name
-decl_stmt|;
+expr_stmt|;
 comment|/// Group this option is a member of, if any.
 specifier|const
 name|OptionGroup
@@ -278,9 +284,9 @@ return|return
 name|Kind
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|getName
 argument_list|()
 specifier|const
@@ -502,9 +508,9 @@ return|;
 block|}
 comment|/// getRenderName - Return the name to use when rendering this
 comment|/// option.
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|getRenderName
 argument_list|()
 specifier|const

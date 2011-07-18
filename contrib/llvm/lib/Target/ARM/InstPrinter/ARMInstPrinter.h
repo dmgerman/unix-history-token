@@ -73,9 +73,6 @@ name|class
 name|MCOperand
 decl_stmt|;
 name|class
-name|TargetMachine
-decl_stmt|;
-name|class
 name|ARMInstPrinter
 range|:
 name|public
@@ -85,10 +82,6 @@ name|public
 operator|:
 name|ARMInstPrinter
 argument_list|(
-name|TargetMachine
-operator|&
-name|TM
-argument_list|,
 specifier|const
 name|MCAsmInfo
 operator|&
@@ -170,16 +163,6 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
-argument_list|,
-argument|raw_ostream&O
-argument_list|)
-block|;
-name|void
-name|printSOImmOperand
-argument_list|(
-argument|const MCInst *MI
-argument_list|,
-argument|unsigned OpNum
 argument_list|,
 argument|raw_ostream&O
 argument_list|)

@@ -655,6 +655,9 @@ expr_stmt|;
 comment|/// InsertText - Insert the specified string at the specified location in the
 comment|/// original buffer.  This method returns true (and does nothing) if the input
 comment|/// location was not rewritable, false otherwise.
+comment|///
+comment|/// \param indentNewLines if true new lines in the string are indented
+comment|/// using the indentation of the source line in position \arg Loc.
 name|bool
 name|InsertText
 argument_list|(
@@ -670,6 +673,11 @@ name|bool
 name|InsertAfter
 operator|=
 name|true
+argument_list|,
+name|bool
+name|indentNewLines
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 comment|/// InsertTextAfter - Insert the specified string at the specified location in

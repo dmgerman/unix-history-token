@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007-2009  Internet Systems Consortium, 
 end_comment
 
 begin_comment
-comment|/* $Id: ifiter_getifaddrs.c,v 1.11.120.2 2009-09-24 23:47:34 tbox Exp $ */
+comment|/* $Id: ifiter_getifaddrs.c,v 1.13 2009-09-24 23:48:13 tbox Exp $ */
 end_comment
 
 begin_comment

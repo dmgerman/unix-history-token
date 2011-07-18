@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -353,82 +359,24 @@ comment|/// insertvalues when a part of a nested struct is extracted.
 name|Value
 modifier|*
 name|FindInsertedValue
-parameter_list|(
-name|Value
-modifier|*
-name|V
-parameter_list|,
-specifier|const
-name|unsigned
-modifier|*
-name|idx_begin
-parameter_list|,
-specifier|const
-name|unsigned
-modifier|*
-name|idx_end
-parameter_list|,
-name|Instruction
-modifier|*
-name|InsertBefore
-init|=
-literal|0
-parameter_list|)
-function_decl|;
-comment|/// This is a convenience wrapper for finding values indexed by a single index
-comment|/// only.
-specifier|inline
-name|Value
-modifier|*
-name|FindInsertedValue
-parameter_list|(
-name|Value
-modifier|*
-name|V
-parameter_list|,
-specifier|const
-name|unsigned
-name|Idx
-parameter_list|,
-name|Instruction
-modifier|*
-name|InsertBefore
-init|=
-literal|0
-parameter_list|)
-block|{
-specifier|const
-name|unsigned
-name|Idxs
-index|[
-literal|1
-index|]
-init|=
-block|{
-name|Idx
-block|}
-decl_stmt|;
-return|return
-name|FindInsertedValue
 argument_list|(
+name|Value
+operator|*
 name|V
 argument_list|,
-operator|&
-name|Idxs
-index|[
-literal|0
-index|]
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|idx_range
 argument_list|,
-operator|&
-name|Idxs
-index|[
-literal|1
-index|]
-argument_list|,
+name|Instruction
+operator|*
 name|InsertBefore
+operator|=
+literal|0
 argument_list|)
-return|;
-block|}
+decl_stmt|;
 comment|/// GetPointerBaseWithConstantOffset - Analyze the specified pointer to see if
 comment|/// it can be expressed as a base pointer plus a constant offset.  Return the
 comment|/// base and offset to the caller.
@@ -600,6 +548,17 @@ name|MaxLookup
 argument_list|)
 return|;
 block|}
+comment|/// onlyUsedByLifetimeMarkers - Return true if the only users of this pointer
+comment|/// are lifetime markers.
+name|bool
+name|onlyUsedByLifetimeMarkers
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

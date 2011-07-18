@@ -238,6 +238,17 @@ begin_comment
 comment|/* Device specific fd type */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DTYPE_CAPABILITY
+value|12
+end_define
+
+begin_comment
+comment|/* capability */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -832,6 +843,27 @@ end_function_decl
 begin_function_decl
 name|int
 name|fget_write
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|fd
+parameter_list|,
+name|struct
+name|file
+modifier|*
+modifier|*
+name|fpp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|fgetcap
 parameter_list|(
 name|struct
 name|thread

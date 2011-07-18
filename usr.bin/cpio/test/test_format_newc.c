@@ -17,6 +17,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* Number of bytes needed to pad 'n' to multiple of 'block', assuming  * that 'block' is a power of two. This trick can be more easily  * remembered as -n& (block - 1), but many compilers quite reasonably  * warn about "-n" when n is an unsigned value.  (~(n) + 1) is the  * same thing, but written in a way that won't offend anyone. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PAD
+parameter_list|(
+name|n
+parameter_list|,
+name|block
+parameter_list|)
+value|((~(n) + 1)& ((block) - 1))
+end_define
+
 begin_function
 specifier|static
 name|int
@@ -204,9 +220,8 @@ end_macro
 
 begin_block
 block|{
-name|int
-name|fd
-decl_stmt|,
+name|FILE
+modifier|*
 name|list
 decl_stmt|;
 name|int
@@ -220,6 +235,12 @@ decl_stmt|,
 name|ino
 decl_stmt|,
 name|gid
+decl_stmt|;
+name|int
+name|uid
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|time_t
 name|t
@@ -242,176 +263,110 @@ name|fs
 decl_stmt|,
 name|ns
 decl_stmt|;
-name|mode_t
-name|oldmask
-decl_stmt|;
-name|oldmask
-operator|=
-name|umask
+name|assertUmask
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+name|uid
+operator|=
+name|getuid
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Create an assortment of files. 	 * TODO: Extend this to cover more filetypes. 	 */
 name|list
 operator|=
-name|open
+name|fopen
 argument_list|(
 literal|"list"
 argument_list|,
-name|O_CREAT
-operator||
-name|O_WRONLY
-argument_list|,
-literal|0644
+literal|"w"
 argument_list|)
 expr_stmt|;
 comment|/* "file1" */
-name|fd
-operator|=
-name|open
+name|assertMakeFile
 argument_list|(
 literal|"file1"
 argument_list|,
-name|O_CREAT
-operator||
-name|O_WRONLY
-argument_list|,
 literal|0644
+argument_list|,
+literal|"1234567890"
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
-name|fd
-operator|>=
-literal|0
-argument_list|)
-expr_stmt|;
-name|assertEqualInt
-argument_list|(
-literal|10
-argument_list|,
-name|write
-argument_list|(
-name|fd
-argument_list|,
-literal|"123456789"
-argument_list|,
-literal|10
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-name|assertEqualInt
-argument_list|(
-literal|6
-argument_list|,
-name|write
+name|fprintf
 argument_list|(
 name|list
 argument_list|,
 literal|"file1\n"
-argument_list|,
-literal|6
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* "hardlink" */
-name|assertEqualInt
+name|assertMakeHardlink
 argument_list|(
-literal|0
-argument_list|,
-name|link
-argument_list|(
-literal|"file1"
-argument_list|,
 literal|"hardlink"
-argument_list|)
+argument_list|,
+literal|"file1"
 argument_list|)
 expr_stmt|;
-name|assertEqualInt
-argument_list|(
-literal|9
-argument_list|,
-name|write
+name|fprintf
 argument_list|(
 name|list
 argument_list|,
 literal|"hardlink\n"
-argument_list|,
-literal|9
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Another hardlink, but this one won't be archived. */
-name|assertEqualInt
+name|assertMakeHardlink
 argument_list|(
-literal|0
-argument_list|,
-name|link
-argument_list|(
-literal|"file1"
-argument_list|,
 literal|"hardlink2"
-argument_list|)
+argument_list|,
+literal|"file1"
 argument_list|)
 expr_stmt|;
 comment|/* "symlink" */
-name|assertEqualInt
+if|if
+condition|(
+name|canSymlink
+argument_list|()
+condition|)
+block|{
+name|assertMakeSymlink
 argument_list|(
-literal|0
-argument_list|,
-name|symlink
-argument_list|(
-literal|"file1"
-argument_list|,
 literal|"symlink"
-argument_list|)
+argument_list|,
+literal|"file1"
 argument_list|)
 expr_stmt|;
-name|assertEqualInt
-argument_list|(
-literal|8
-argument_list|,
-name|write
+name|fprintf
 argument_list|(
 name|list
 argument_list|,
 literal|"symlink\n"
-argument_list|,
-literal|8
-argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* "dir" */
-name|assertEqualInt
-argument_list|(
-literal|0
-argument_list|,
-name|mkdir
+name|assertMakeDir
 argument_list|(
 literal|"dir"
 argument_list|,
 literal|0775
 argument_list|)
-argument_list|)
 expr_stmt|;
-name|assertEqualInt
-argument_list|(
-literal|4
-argument_list|,
-name|write
+name|fprintf
 argument_list|(
 name|list
 argument_list|,
 literal|"dir\n"
-argument_list|,
-literal|4
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Record some facts about what we just created: */
@@ -424,7 +379,7 @@ argument_list|)
 expr_stmt|;
 comment|/* They were all created w/in last two seconds. */
 comment|/* Use the cpio program to create an archive. */
-name|close
+name|fclose
 argument_list|(
 name|list
 argument_list|)
@@ -450,6 +405,12 @@ argument_list|)
 condition|)
 return|return;
 comment|/* Verify that nothing went to stderr. */
+if|if
+condition|(
+name|canSymlink
+argument_list|()
+condition|)
+block|{
 name|assertTextFileContents
 argument_list|(
 literal|"2 blocks\n"
@@ -457,6 +418,17 @@ argument_list|,
 literal|"newc.err"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|assertTextFileContents
+argument_list|(
+literal|"1 block\n"
+argument_list|,
+literal|"newc.err"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Verify that stdout is a well-formed cpio file in "newc" format. */
 name|p
 operator|=
@@ -472,7 +444,12 @@ name|assertEqualInt
 argument_list|(
 name|s
 argument_list|,
+name|canSymlink
+argument_list|()
+condition|?
 literal|1024
+else|:
+literal|512
 argument_list|)
 expr_stmt|;
 name|e
@@ -565,6 +542,23 @@ expr_stmt|;
 comment|/* Mode */
 endif|#
 directive|endif
+if|if
+condition|(
+name|uid
+operator|<
+literal|0
+condition|)
+name|uid
+operator|=
+name|from_hex
+argument_list|(
+name|e
+operator|+
+literal|22
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
 name|assertEqualInt
 argument_list|(
 name|from_hex
@@ -576,8 +570,7 @@ argument_list|,
 literal|8
 argument_list|)
 argument_list|,
-name|getuid
-argument_list|()
+name|uid
 argument_list|)
 expr_stmt|;
 comment|/* uid */
@@ -696,10 +689,12 @@ argument_list|)
 expr_stmt|;
 name|fs
 operator|+=
-literal|3
-operator|&
-operator|-
+name|PAD
+argument_list|(
 name|fs
+argument_list|,
+literal|4
+argument_list|)
 expr_stmt|;
 name|devmajor
 operator|=
@@ -776,14 +771,14 @@ argument_list|)
 expr_stmt|;
 name|ns
 operator|+=
-literal|3
-operator|&
-operator|(
-operator|-
+name|PAD
+argument_list|(
 name|ns
-operator|-
+operator|+
 literal|2
-operator|)
+argument_list|,
+literal|4
+argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
@@ -822,6 +817,12 @@ name|fs
 operator|+
 name|ns
 expr_stmt|;
+if|if
+condition|(
+name|canSymlink
+argument_list|()
+condition|)
+block|{
 comment|/* "symlink" pointing to "file1" */
 name|assert
 argument_list|(
@@ -858,19 +859,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* ino */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_WIN32
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__CYGWIN__
-argument_list|)
-comment|/* On Windows, symbolic link and group members bits and  	 * others bits do not work. */
 name|assertEqualInt
 argument_list|(
 literal|0xa1ff
@@ -886,8 +874,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Mode */
-endif|#
-directive|endif
 name|assertEqualInt
 argument_list|(
 name|from_hex
@@ -899,8 +885,7 @@ argument_list|,
 literal|8
 argument_list|)
 argument_list|,
-name|getuid
-argument_list|()
+name|uid
 argument_list|)
 expr_stmt|;
 comment|/* uid */
@@ -966,33 +951,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Almost same as first entry. */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_WIN32
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__CYGWIN__
-argument_list|)
-comment|/* Symbolic link does not work. */
-name|assertEqualMem
-argument_list|(
-name|e
-operator|+
-literal|54
-argument_list|,
-literal|"0000000a"
-argument_list|,
-literal|8
-argument_list|)
-expr_stmt|;
-comment|/* File size */
-else|#
-directive|else
 name|assertEqualMem
 argument_list|(
 name|e
@@ -1005,8 +963,6 @@ literal|8
 argument_list|)
 expr_stmt|;
 comment|/* File size */
-endif|#
-directive|endif
 name|fs
 operator|=
 name|from_hex
@@ -1020,10 +976,12 @@ argument_list|)
 expr_stmt|;
 name|fs
 operator|+=
-literal|3
-operator|&
-operator|-
+name|PAD
+argument_list|(
 name|fs
+argument_list|,
+literal|4
+argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
@@ -1106,14 +1064,14 @@ argument_list|)
 expr_stmt|;
 name|ns
 operator|+=
-literal|3
-operator|&
-operator|(
-operator|-
+name|PAD
+argument_list|(
 name|ns
-operator|-
+operator|+
 literal|2
-operator|)
+argument_list|,
+literal|4
+argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
@@ -1142,18 +1100,6 @@ literal|10
 argument_list|)
 expr_stmt|;
 comment|/* Name contents */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_WIN32
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__CYGWIN__
-argument_list|)
 name|assertEqualMem
 argument_list|(
 name|e
@@ -1168,8 +1114,6 @@ literal|8
 argument_list|)
 expr_stmt|;
 comment|/* symlink target */
-endif|#
-directive|endif
 name|e
 operator|+=
 literal|110
@@ -1178,6 +1122,7 @@ name|fs
 operator|+
 name|ns
 expr_stmt|;
+block|}
 comment|/* "dir" */
 name|assert
 argument_list|(
@@ -1246,9 +1191,10 @@ expr_stmt|;
 comment|/* Mode */
 else|#
 directive|else
+comment|/* Mode: sgid bit sometimes propagates from parent dirs, ignore it. */
 name|assertEqualInt
 argument_list|(
-literal|0x41fd
+literal|040775
 argument_list|,
 name|from_hex
 argument_list|(
@@ -1258,9 +1204,11 @@ literal|14
 argument_list|,
 literal|8
 argument_list|)
+operator|&
+operator|~
+literal|02000
 argument_list|)
 expr_stmt|;
-comment|/* Mode */
 endif|#
 directive|endif
 name|assertEqualInt
@@ -1274,8 +1222,7 @@ argument_list|,
 literal|8
 argument_list|)
 argument_list|,
-name|getuid
-argument_list|()
+name|uid
 argument_list|)
 expr_stmt|;
 comment|/* uid */
@@ -1371,10 +1318,12 @@ argument_list|)
 expr_stmt|;
 name|fs
 operator|+=
-literal|3
-operator|&
-operator|-
+name|PAD
+argument_list|(
 name|fs
+argument_list|,
+literal|4
+argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
@@ -1457,14 +1406,14 @@ argument_list|)
 expr_stmt|;
 name|ns
 operator|+=
-literal|3
-operator|&
-operator|(
-operator|-
+name|PAD
+argument_list|(
 name|ns
-operator|-
+operator|+
 literal|2
-operator|)
+argument_list|,
+literal|4
+argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
@@ -1605,8 +1554,7 @@ argument_list|,
 literal|8
 argument_list|)
 argument_list|,
-name|getuid
-argument_list|()
+name|uid
 argument_list|)
 expr_stmt|;
 comment|/* uid */
@@ -1700,10 +1648,12 @@ argument_list|)
 expr_stmt|;
 name|fs
 operator|+=
-literal|3
-operator|&
-operator|-
+name|PAD
+argument_list|(
 name|fs
+argument_list|,
+literal|4
+argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
@@ -1786,14 +1736,14 @@ argument_list|)
 expr_stmt|;
 name|ns
 operator|+=
-literal|3
-operator|&
-operator|(
-operator|-
+name|PAD
+argument_list|(
 name|ns
-operator|-
+operator|+
 literal|2
-operator|)
+argument_list|,
+literal|4
+argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
@@ -1830,7 +1780,7 @@ literal|110
 operator|+
 name|ns
 argument_list|,
-literal|"123456789\0\0\0"
+literal|"1234567890\0\0"
 argument_list|,
 literal|12
 argument_list|)
@@ -2041,11 +1991,6 @@ comment|/* Name */
 name|free
 argument_list|(
 name|p
-argument_list|)
-expr_stmt|;
-name|umask
-argument_list|(
-name|oldmask
 argument_list|)
 expr_stmt|;
 block|}

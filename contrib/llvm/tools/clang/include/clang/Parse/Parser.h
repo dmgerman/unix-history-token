@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/DelayedCleanupPool.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Lex/Preprocessor.h"
 end_include
 
@@ -533,6 +539,11 @@ block|;
 comment|/// Factory object for creating AttributeList objects.
 name|AttributeFactory
 name|AttrFactory
+block|;
+comment|/// \brief Gathers and cleans up objects when parsing of a top-level
+comment|/// declaration is finished.
+name|DelayedCleanupPool
+name|TopLevelDeclCleanupPool
 block|;
 name|public
 operator|:
@@ -1513,20 +1524,6 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// TryAnnotateTypeOrScopeToken - If the current token position is on a
-comment|/// typename (possibly qualified in C++) or a C++ scope specifier not followed
-comment|/// by a typename, TryAnnotateTypeOrScopeToken will replace one or more tokens
-comment|/// with a single annotation token representing the typename or C++ scope
-comment|/// respectively.
-comment|/// This simplifies handling of C++ scope specifiers and allows efficient
-comment|/// backtracking without the need to re-parse and resolve nested-names and
-comment|/// typenames.
-comment|/// It will mainly be called when we expect to treat identifiers as typenames
-comment|/// (if they are typenames). For example, in C we do not expect identifiers
-comment|/// inside expressions to be treated as typenames so it will not be called
-comment|/// for expressions in C.
-comment|///
-comment|/// This returns true if the token was annotated.
 name|bool
 name|TryAnnotateTypeOrScopeToken
 parameter_list|(
@@ -1536,9 +1533,6 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// TryAnnotateCXXScopeToken - Like TryAnnotateTypeOrScopeToken but
-comment|/// only annotates C++ scope specifiers.  This returns true if there
-comment|/// was an unrecoverable error.
 name|bool
 name|TryAnnotateCXXScopeToken
 parameter_list|(
@@ -1677,6 +1671,19 @@ modifier|&
 name|isInvalid
 parameter_list|)
 function_decl|;
+comment|/// \brief Get the TemplateIdAnnotation from the token and put it in the
+comment|/// cleanup pool so that it gets destroyed when parsing the current top level
+comment|/// declaration is finished.
+name|TemplateIdAnnotation
+modifier|*
+name|takeTemplateIdAnnotation
+parameter_list|(
+specifier|const
+name|Token
+modifier|&
+name|tok
+parameter_list|)
+function_decl|;
 comment|/// TentativeParsingAction - An object that is used as a kind of "tentative
 comment|/// parsing transaction". It gets instantiated to mark the token position and
 comment|/// after the token consumption is done, Commit() or Revert() is called to
@@ -1797,12 +1804,6 @@ argument_list|)
 block|;     }
 block|}
 empty_stmt|;
-comment|/// MatchRHSPunctuation - For punctuation with a LHS and RHS (e.g. '['/']'),
-comment|/// this helper function matches and consumes the specified RHS token if
-comment|/// present.  If not present, it emits the specified diagnostic indicating
-comment|/// that the parser failed to match the RHS of the token at LHSLoc.  LHSName
-comment|/// should be the name of the unmatched LHS token.  This returns the location
-comment|/// of the consumed token.
 name|SourceLocation
 name|MatchRHSPunctuation
 argument_list|(
@@ -3829,7 +3830,7 @@ argument|bool isAddressOfOperand
 argument_list|,
 argument|bool&NotCastExpr
 argument_list|,
-argument|ParsedType TypeOfCast
+argument|bool isTypeCast
 argument_list|)
 block|;
 name|ExprResult
@@ -3839,7 +3840,7 @@ argument|bool isUnaryExpression
 argument_list|,
 argument|bool isAddressOfOperand = false
 argument_list|,
-argument|ParsedType TypeOfCast = ParsedType()
+argument|bool isTypeCast = false
 argument_list|)
 block|;
 comment|/// Returns true if the next token would start a postfix-expression
@@ -4037,8 +4038,8 @@ parameter_list|,
 name|bool
 name|stopIfCastExpr
 parameter_list|,
-name|ParsedType
-name|TypeOfCast
+name|bool
+name|isTypeCast
 parameter_list|,
 name|ParsedType
 modifier|&
@@ -4580,6 +4581,20 @@ name|false
 parameter_list|)
 function_decl|;
 name|StmtResult
+name|ParseCompoundStatement
+parameter_list|(
+name|ParsedAttributes
+modifier|&
+name|Attr
+parameter_list|,
+name|bool
+name|isStmtExpr
+parameter_list|,
+name|unsigned
+name|ScopeFlags
+parameter_list|)
+function_decl|;
+name|StmtResult
 name|ParseCompoundStatementBody
 parameter_list|(
 name|bool
@@ -4838,6 +4853,13 @@ parameter_list|)
 function_decl|;
 name|StmtResult
 name|ParseObjCSynchronizedStmt
+parameter_list|(
+name|SourceLocation
+name|atLoc
+parameter_list|)
+function_decl|;
+name|StmtResult
+name|ParseObjCAutoreleasePoolStmt
 parameter_list|(
 name|SourceLocation
 name|atLoc
@@ -5129,6 +5151,11 @@ parameter_list|(
 name|DeclSpec
 modifier|&
 name|DS
+parameter_list|,
+name|AccessSpecifier
+name|AS
+init|=
+name|AS_none
 parameter_list|)
 function_decl|;
 name|void
@@ -5663,6 +5690,24 @@ operator|=
 name|Declarator
 operator|::
 name|TypeNameContext
+argument_list|,
+name|ObjCDeclSpec
+operator|*
+name|objcQuals
+operator|=
+literal|0
+argument_list|,
+name|AccessSpecifier
+name|AS
+operator|=
+name|AS_none
+argument_list|,
+name|Decl
+operator|*
+operator|*
+name|OwnedType
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 name|void
@@ -6349,24 +6394,60 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+name|bool
+name|isFunctionDeclaratorIdentifierList
+parameter_list|()
+function_decl|;
 name|void
 name|ParseFunctionDeclaratorIdentifierList
-parameter_list|(
-name|SourceLocation
-name|LParenLoc
-parameter_list|,
-name|IdentifierInfo
-modifier|*
-name|FirstIdent
-parameter_list|,
-name|SourceLocation
-name|FirstIdentLoc
-parameter_list|,
+argument_list|(
 name|Declarator
-modifier|&
+operator|&
 name|D
-parameter_list|)
-function_decl|;
+argument_list|,
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|DeclaratorChunk
+operator|::
+name|ParamInfo
+argument_list|,
+literal|16
+operator|>
+operator|&
+name|ParamInfo
+argument_list|)
+decl_stmt|;
+name|void
+name|ParseParameterDeclarationClause
+argument_list|(
+name|Declarator
+operator|&
+name|D
+argument_list|,
+name|ParsedAttributes
+operator|&
+name|attrs
+argument_list|,
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|DeclaratorChunk
+operator|::
+name|ParamInfo
+argument_list|,
+literal|16
+operator|>
+operator|&
+name|ParamInfo
+argument_list|,
+name|SourceLocation
+operator|&
+name|EllipsisLoc
+argument_list|)
+decl_stmt|;
 name|void
 name|ParseBracketDeclarator
 parameter_list|(
@@ -6495,6 +6576,13 @@ parameter_list|,
 name|ParsedAttributesWithRange
 modifier|&
 name|attrs
+parameter_list|,
+name|Decl
+modifier|*
+modifier|*
+name|OwnedType
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 name|Decl
@@ -6539,6 +6627,13 @@ name|AccessSpecifier
 name|AS
 init|=
 name|AS_none
+parameter_list|,
+name|Decl
+modifier|*
+modifier|*
+name|OwnedType
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 name|Decl

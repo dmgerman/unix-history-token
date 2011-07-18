@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"RegisterClassInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineBasicBlock.h"
 end_include
 
@@ -126,6 +132,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|RegisterClassInfo
+decl_stmt|;
+name|class
 name|TargetInstrInfo
 decl_stmt|;
 name|class
@@ -154,6 +163,11 @@ specifier|const
 name|TargetRegisterInfo
 operator|*
 name|TRI
+block|;
+specifier|const
+name|RegisterClassInfo
+operator|&
+name|RegClassInfo
 block|;
 comment|/// AllocatableSet - The set of allocatable registers.
 comment|/// We'll be ignoring anti-dependencies on non-allocatable registers,
@@ -240,6 +254,10 @@ argument_list|(
 name|MachineFunction
 operator|&
 name|MFi
+argument_list|,
+specifier|const
+name|RegisterClassInfo
+operator|&
 argument_list|)
 expr_stmt|;
 operator|~

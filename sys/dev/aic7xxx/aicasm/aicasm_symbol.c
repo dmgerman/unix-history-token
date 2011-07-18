@@ -9,16 +9,22 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__linux__
+name|BSD
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|"aicdb.h"
+file|<db.h>
 end_include
 
 begin_else
@@ -29,7 +35,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|<db.h>
+file|<db_185.h>
 end_include
 
 begin_endif

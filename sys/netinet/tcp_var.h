@@ -599,10 +599,13 @@ modifier|*
 name|osd
 decl_stmt|;
 comment|/* storage for Khelp module data */
-name|int
+name|uint32_t
 name|t_ispare
+index|[
+literal|12
+index|]
 decl_stmt|;
-comment|/* explicit pad for 64bit alignment */
+comment|/* 4 keep timers, 5 UTO, 3 TBD */
 name|void
 modifier|*
 name|t_pspare2
@@ -614,10 +617,10 @@ comment|/* 4 TBD */
 name|uint64_t
 name|_pad
 index|[
-literal|12
+literal|6
 index|]
 decl_stmt|;
-comment|/* 7 UTO, 5 TBD (1-2 CC/RTT?) */
+comment|/* 6 TBD (1-2 CC/RTT?) */
 block|}
 struct|;
 end_struct
@@ -1204,6 +1207,10 @@ name|u_int8_t
 name|to_nsacks
 decl_stmt|;
 comment|/* number of SACK blocks */
+name|u_int32_t
+name|to_spare
+decl_stmt|;
+comment|/* UTO */
 block|}
 struct|;
 end_struct

@@ -530,6 +530,22 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Whether this nested name specifier involves a template
+end_comment
+
+begin_comment
+comment|/// parameter.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isInstantiationDependent
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Whether this nested-name-specifier contains an unexpanded
 end_comment
 
@@ -1225,6 +1241,24 @@ name|Context
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Retrieve a nested-name-specifier with location
+comment|/// information based on the information in this builder.  This loc
+comment|/// will contain references to the builder's internal data and may
+comment|/// be invalidated by any change to the builder.
+name|NestedNameSpecifierLoc
+name|getTemporary
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NestedNameSpecifierLoc
+argument_list|(
+name|Representation
+argument_list|,
+name|Buffer
+argument_list|)
+return|;
+block|}
 comment|/// \brief Clear out this builder, and prepare it to build another
 comment|/// nested-name-specifier with source-location information.
 name|void

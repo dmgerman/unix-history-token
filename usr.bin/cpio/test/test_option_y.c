@@ -31,52 +31,19 @@ modifier|*
 name|p
 decl_stmt|;
 name|int
-name|fd
-decl_stmt|;
-name|int
 name|r
 decl_stmt|;
 name|size_t
 name|s
 decl_stmt|;
 comment|/* Create a file. */
-name|fd
-operator|=
-name|open
+name|assertMakeFile
 argument_list|(
 literal|"f"
 argument_list|,
-name|O_CREAT
-operator||
-name|O_WRONLY
-argument_list|,
 literal|0644
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|fd
-operator|>=
-literal|0
-argument_list|)
-expr_stmt|;
-name|assertEqualInt
-argument_list|(
-literal|1
-argument_list|,
-name|write
-argument_list|(
-name|fd
 argument_list|,
 literal|"a"
-argument_list|,
-literal|1
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-name|fd
 argument_list|)
 expr_stmt|;
 comment|/* Archive it with bzip2 compression. */
@@ -89,21 +56,6 @@ argument_list|,
 name|testprog
 argument_list|)
 expr_stmt|;
-name|failure
-argument_list|(
-literal|"-y (bzip) option seems to be broken"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|assertEqualInt
-argument_list|(
-name|r
-argument_list|,
-literal|0
-argument_list|)
-condition|)
-block|{
 name|p
 operator|=
 name|slurpfile
@@ -123,11 +75,18 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
+name|r
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|strstr
 argument_list|(
 name|p
 argument_list|,
-literal|"bzip2 compression not supported"
+literal|"compression not available"
 argument_list|)
 operator|!=
 name|NULL
@@ -139,9 +98,22 @@ literal|"This version of bsdcpio was compiled "
 literal|"without bzip2 support"
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
-else|else
-block|{
+name|failure
+argument_list|(
+literal|"-y option is broken"
+argument_list|)
+expr_stmt|;
+name|assertEqualInt
+argument_list|(
+name|r
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|assertTextFileContents
 argument_list|(
 literal|"1 block\n"
@@ -176,8 +148,6 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 block|}
 end_block
 

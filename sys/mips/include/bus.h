@@ -3352,11 +3352,19 @@ begin_comment
 comment|/* Special bus space for RMI processors */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CPU_RMI
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_NLM
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|extern

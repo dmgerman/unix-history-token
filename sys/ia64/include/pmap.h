@@ -107,6 +107,9 @@ argument|pv_entry
 argument_list|)
 name|pv_list
 expr_stmt|;
+name|vm_memattr_t
+name|memattr
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -345,7 +348,7 @@ name|pmap_page_get_memattr
 parameter_list|(
 name|m
 parameter_list|)
-value|VM_MEMATTR_DEFAULT
+value|((m)->md.memattr)
 end_define
 
 begin_define
@@ -356,18 +359,6 @@ parameter_list|(
 name|m
 parameter_list|)
 value|(!TAILQ_EMPTY(&(m)->md.pv_list))
-end_define
-
-begin_define
-define|#
-directive|define
-name|pmap_page_set_memattr
-parameter_list|(
-name|m
-parameter_list|,
-name|ma
-parameter_list|)
-value|(void)0
 end_define
 
 begin_define
@@ -393,15 +384,6 @@ name|sz
 parameter_list|)
 value|pmap_unmapdev(va, sz)
 end_define
-
-begin_function_decl
-name|vm_offset_t
-name|pmap_steal_memory
-parameter_list|(
-name|vm_size_t
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|vm_offset_t
@@ -467,10 +449,28 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|pmap_unmapdev
+name|pmap_page_set_memattr
 parameter_list|(
-name|vm_offset_t
+name|vm_page_t
 parameter_list|,
+name|vm_memattr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|vm_offset_t
+name|pmap_page_to_va
+parameter_list|(
+name|vm_page_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|vm_offset_t
+name|pmap_steal_memory
+parameter_list|(
 name|vm_size_t
 parameter_list|)
 function_decl|;
@@ -486,6 +486,17 @@ name|struct
 name|pmap
 modifier|*
 name|pmap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pmap_unmapdev
+parameter_list|(
+name|vm_offset_t
+parameter_list|,
+name|vm_size_t
 parameter_list|)
 function_decl|;
 end_function_decl

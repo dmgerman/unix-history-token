@@ -33,27 +33,22 @@ modifier|*
 name|contents
 parameter_list|)
 block|{
-name|int
-name|fd
+name|FILE
+modifier|*
+name|f
 init|=
-name|open
+name|fopen
 argument_list|(
 name|fn
 argument_list|,
-name|O_RDWR
-operator||
-name|O_CREAT
-argument_list|,
-literal|0644
+literal|"w"
 argument_list|)
 decl_stmt|;
 name|failure
 argument_list|(
-literal|"Couldn't create file '%s', fd=%d, errno=%d (%s)\n"
+literal|"Couldn't create file '%s', errno=%d (%s)\n"
 argument_list|,
 name|fn
-argument_list|,
-name|fd
 argument_list|,
 name|errno
 argument_list|,
@@ -68,9 +63,9 @@ condition|(
 operator|!
 name|assert
 argument_list|(
-name|fd
-operator|>
-literal|0
+name|f
+operator|!=
+name|NULL
 argument_list|)
 condition|)
 return|return
@@ -92,16 +87,18 @@ argument_list|(
 name|contents
 argument_list|)
 argument_list|,
-name|write
+name|fwrite
 argument_list|(
-name|fd
-argument_list|,
 name|contents
+argument_list|,
+literal|1
 argument_list|,
 name|strlen
 argument_list|(
 name|contents
 argument_list|)
+argument_list|,
+name|f
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -109,9 +106,9 @@ name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|close
+name|fclose
 argument_list|(
-name|fd
+name|f
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -137,29 +134,19 @@ name|struct
 name|stat
 name|st
 decl_stmt|;
-comment|/* Create a sample file hierarchy. */
-name|assertEqualInt
-argument_list|(
-literal|0
-argument_list|,
-name|mkdir
+comment|/* Create a sample file heirarchy. */
+name|assertMakeDir
 argument_list|(
 literal|"in"
 argument_list|,
 literal|0755
 argument_list|)
-argument_list|)
 expr_stmt|;
-name|assertEqualInt
-argument_list|(
-literal|0
-argument_list|,
-name|mkdir
+name|assertMakeDir
 argument_list|(
 literal|"in/d1"
 argument_list|,
 literal|0755
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|assertEqualInt
@@ -218,22 +205,19 @@ condition|)
 block|{
 name|skipping
 argument_list|(
-literal|"bsdtar does not support -s option on this platform"
+literal|"%s does not support -s option on this platform"
+argument_list|,
+name|testprog
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Test 1: Filename substitution when creating archives. 	 */
-name|assertEqualInt
-argument_list|(
-literal|0
-argument_list|,
-name|mkdir
+name|assertMakeDir
 argument_list|(
 literal|"test1"
 argument_list|,
 literal|0755
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|systemf
@@ -273,16 +257,11 @@ literal|"test1/in/d2/foo"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Test 2: Basic substitution when extracting archive. 	 */
-name|assertEqualInt
-argument_list|(
-literal|0
-argument_list|,
-name|mkdir
+name|assertMakeDir
 argument_list|(
 literal|"test2"
 argument_list|,
 literal|0755
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|systemf
@@ -319,16 +298,11 @@ literal|"in.lst"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Test 4: Multiple substitutions when extracting archive. 	 */
-name|assertEqualInt
-argument_list|(
-literal|0
-argument_list|,
-name|mkdir
+name|assertMakeDir
 argument_list|(
 literal|"test4"
 argument_list|,
 literal|0755
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|systemf
@@ -359,16 +333,11 @@ literal|"test4/in/d1/baz"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Test 5: Name-switching substitutions when extracting archive. 	 */
-name|assertEqualInt
-argument_list|(
-literal|0
-argument_list|,
-name|mkdir
+name|assertMakeDir
 argument_list|(
 literal|"test5"
 argument_list|,
 literal|0755
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|systemf

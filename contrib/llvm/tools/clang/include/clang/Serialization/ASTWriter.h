@@ -1282,7 +1282,7 @@ comment|/// \param isysroot if non-NULL, write a relocatable PCH file whose head
 comment|/// are relative to the given system root.
 comment|///
 comment|/// \param PPRec Record of the preprocessing actions that occurred while
-comment|/// preprocessing this file, e.g., macro instantiations
+comment|/// preprocessing this file, e.g., macro expansions
 name|void
 name|WriteAST
 argument_list|(

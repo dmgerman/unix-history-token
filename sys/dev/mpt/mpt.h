@@ -2722,10 +2722,6 @@ modifier|*
 name|pci_reg
 decl_stmt|;
 comment|/* Register map for chip */
-name|int
-name|pci_mem_rid
-decl_stmt|;
-comment|/* Resource ID */
 name|bus_space_tag_t
 name|pci_st
 decl_stmt|;
@@ -2735,9 +2731,6 @@ name|pci_sh
 decl_stmt|;
 comment|/* Bus handle for registers */
 comment|/* PIO versions of above. */
-name|int
-name|pci_pio_rid
-decl_stmt|;
 name|struct
 name|resource
 modifier|*

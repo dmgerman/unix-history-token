@@ -223,6 +223,10 @@ name|dns_rdatatype_nsec3param
 init|=
 literal|51
 block|,
+name|dns_rdatatype_hip
+init|=
+literal|55
+block|,
 name|dns_rdatatype_spf
 init|=
 literal|99
@@ -242,6 +246,10 @@ block|,
 name|dns_rdatatype_dlv
 init|=
 literal|32769
+block|,
+name|dns_rdatatype_keydata
+init|=
+literal|65533
 block|,
 name|dns_rdatatype_ixfr
 init|=
@@ -605,6 +613,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|dns_rdatatype_hip
+value|((dns_rdatatype_t)dns_rdatatype_hip)
+end_define
+
+begin_define
+define|#
+directive|define
 name|dns_rdatatype_spf
 value|((dns_rdatatype_t)dns_rdatatype_spf)
 end_define
@@ -635,6 +650,13 @@ define|#
 directive|define
 name|dns_rdatatype_dlv
 value|((dns_rdatatype_t)dns_rdatatype_dlv)
+end_define
+
+begin_define
+define|#
+directive|define
+name|dns_rdatatype_keydata
+value|((dns_rdatatype_t)dns_rdatatype_keydata)
 end_define
 
 begin_define

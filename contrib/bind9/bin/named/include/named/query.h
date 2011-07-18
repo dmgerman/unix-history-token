@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007, 2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007, 2010, 2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: query.h,v 1.40.332.2 2010-09-24 08:30:28 tbox Exp $ */
+comment|/* $Id: query.h,v 1.45 2011-01-13 04:59:24 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -45,6 +45,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dns/rdataset.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dns/rpz.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dns/types.h>
 end_include
 
@@ -70,6 +82,9 @@ decl_stmt|;
 name|dns_dbversion_t
 modifier|*
 name|version
+decl_stmt|;
+name|isc_boolean_t
+name|acl_checked
 decl_stmt|;
 name|isc_boolean_t
 name|queryok
@@ -145,6 +160,10 @@ name|dns_fetch_t
 modifier|*
 name|fetch
 decl_stmt|;
+name|dns_rpz_st_t
+modifier|*
+name|rpz_st
+decl_stmt|;
 name|isc_bufferlist_t
 name|namebufs
 decl_stmt|;
@@ -160,6 +179,30 @@ argument|ns_dbversion_t
 argument_list|)
 name|freeversions
 expr_stmt|;
+name|dns_rdataset_t
+modifier|*
+name|dns64_aaaa
+decl_stmt|;
+name|dns_rdataset_t
+modifier|*
+name|dns64_sigaaaa
+decl_stmt|;
+name|isc_boolean_t
+modifier|*
+name|dns64_aaaaok
+decl_stmt|;
+name|unsigned
+name|int
+name|dns64_aaaaoklen
+decl_stmt|;
+name|unsigned
+name|int
+name|dns64_options
+decl_stmt|;
+name|unsigned
+name|int
+name|dns64_ttl
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -260,6 +303,20 @@ define|#
 directive|define
 name|NS_QUERYATTR_CACHEACLOK
 value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NS_QUERYATTR_DNS64
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NS_QUERYATTR_DNS64EXCLUDE
+value|0x8000
 end_define
 
 begin_function_decl

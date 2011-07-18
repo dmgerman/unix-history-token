@@ -506,6 +506,13 @@ literal|1
 decl_stmt|;
 comment|/// Let the user write __unknown_anytype.
 name|unsigned
+name|DebuggerSupport
+range|:
+literal|1
+decl_stmt|;
+comment|/// Do things that only make sense when
+comment|/// supporting a debugger
+name|unsigned
 name|SpellChecking
 range|:
 literal|1
@@ -539,6 +546,25 @@ name|NoBitFieldTypeAlign
 range|:
 literal|1
 decl_stmt|;
+name|unsigned
+name|ObjCAutoRefCount
+range|:
+literal|1
+decl_stmt|;
+comment|// Objective C automated reference counting
+name|unsigned
+name|ObjCRuntimeHasWeak
+range|:
+literal|1
+decl_stmt|;
+comment|// The ARC runtime supports __weak
+name|unsigned
+name|ObjCInferRelatedReturnType
+range|:
+literal|1
+decl_stmt|;
+comment|// Infer Objective-C related return
+comment|// types
 name|unsigned
 name|FakeAddressSpaceMap
 range|:
@@ -677,6 +703,18 @@ name|HexFloats
 operator|=
 literal|0
 expr_stmt|;
+name|ObjCAutoRefCount
+operator|=
+literal|0
+expr_stmt|;
+name|ObjCRuntimeHasWeak
+operator|=
+literal|0
+expr_stmt|;
+name|ObjCInferRelatedReturnType
+operator|=
+literal|0
+expr_stmt|;
 name|GC
 operator|=
 name|ObjC1
@@ -699,7 +737,7 @@ literal|0
 expr_stmt|;
 name|ObjCInferRelatedResultType
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 name|NoConstantCFStrings
 operator|=
@@ -929,6 +967,8 @@ operator|=
 literal|0
 expr_stmt|;
 name|ParseUnknownAnytype
+operator|=
+name|DebuggerSupport
 operator|=
 literal|0
 expr_stmt|;

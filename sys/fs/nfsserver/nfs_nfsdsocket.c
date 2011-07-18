@@ -4711,7 +4711,9 @@ name|nd_repstat
 operator|=
 name|NFSERR_GARBAGE
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 if|if
 condition|(
@@ -4827,7 +4829,9 @@ name|nd_repstat
 operator|==
 name|NFSERR_PROGNOTV4
 condition|)
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 block|}
 comment|/* 	 * For V2 and 3, set the ND_SAVEREPLY flag for the recent request 	 * cache, as required. 	 * For V4, nfsrvd_compound() does this. 	 */
@@ -4921,7 +4925,9 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 comment|/* 	 * Now the procedure can be performed. For V4, nfsrvd_compound() 	 * works through the sub-rpcs, otherwise just call the procedure. 	 * The procedures are in three groups with different arguments. 	 * The group is indicated by the value in nfs_retfh[]. 	 */
 if|if
@@ -4966,8 +4972,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|p
 argument_list|)
 expr_stmt|;
 name|error
@@ -5252,6 +5256,15 @@ name|nd_flag
 operator|&=
 operator|~
 name|ND_SAVEREPLY
+expr_stmt|;
+name|out
+label|:
+name|NFSEXITCODE2
+argument_list|(
+literal|0
+argument_list|,
+name|nd
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -6242,7 +6255,7 @@ name|mnt_stat
 operator|.
 name|f_fsid
 expr_stmt|;
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -6322,7 +6335,7 @@ name|mnt_stat
 operator|.
 name|f_fsid
 expr_stmt|;
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -6396,7 +6409,7 @@ name|mnt_stat
 operator|.
 name|f_fsid
 expr_stmt|;
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -6886,7 +6899,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Lookup ops return a locked vnode */
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|nvp
 argument_list|,
@@ -7027,7 +7040,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|savevp
 argument_list|,
@@ -7155,7 +7168,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -7471,6 +7484,13 @@ argument_list|)
 expr_stmt|;
 name|NFSUNLOCKV4ROOTMUTEX
 argument_list|()
+expr_stmt|;
+name|NFSEXITCODE2
+argument_list|(
+literal|0
+argument_list|,
+name|nd
+argument_list|)
 expr_stmt|;
 block|}
 end_function

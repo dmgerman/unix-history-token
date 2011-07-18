@@ -1194,6 +1194,9 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|u_int
+name|ifru_fib
+decl_stmt|;
 block|}
 name|ifr_ifru
 union|;
@@ -1272,6 +1275,11 @@ directive|define
 name|ifr_index
 value|ifr_ifru.ifru_index
 comment|/* interface index */
+define|#
+directive|define
+name|ifr_fib
+value|ifr_ifru.ifru_fib
+comment|/* interface fib */
 block|}
 struct|;
 end_struct

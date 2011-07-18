@@ -3534,6 +3534,10 @@ name|PIO_KEYMAP
 case|:
 comment|/* set keyboard translation table */
 case|case
+name|OPIO_KEYMAP
+case|:
+comment|/* set keyboard translation table (compat) */
+case|case
 name|PIO_KEYMAPENT
 case|:
 comment|/* set keyboard translation table entry */

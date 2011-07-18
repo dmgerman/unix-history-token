@@ -99,9 +99,6 @@ name|class
 name|InstrItineraryData
 decl_stmt|;
 name|class
-name|TargetInstrDesc
-decl_stmt|;
-name|class
 name|ScheduleDAG
 decl_stmt|;
 name|class

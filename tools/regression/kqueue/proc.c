@@ -6,6 +6,24 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"common.h"
 end_include
 
@@ -68,6 +86,36 @@ operator|==
 literal|0
 condition|)
 block|{
+name|struct
+name|stat
+name|s
+decl_stmt|;
+if|if
+condition|(
+name|fstat
+argument_list|(
+name|kqfd
+argument_list|,
+operator|&
+name|s
+argument_list|)
+operator|!=
+operator|-
+literal|1
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"kqueue inherited across fork! (%s() at %s:%d)"
+argument_list|,
+name|__func__
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|)
+expr_stmt|;
 name|pause
 argument_list|()
 expr_stmt|;
@@ -126,6 +174,11 @@ argument_list|(
 literal|"kevent(EVFILT_PROC, EV_DELETE)"
 argument_list|)
 expr_stmt|;
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|test_no_kevents
 argument_list|()
 expr_stmt|;
@@ -180,6 +233,12 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TODO
+end_ifdef
 
 begin_function
 specifier|static
@@ -309,12 +368,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TODO
-end_ifdef
 
 begin_function
 name|void
@@ -1012,9 +1065,14 @@ expr_stmt|;
 name|add_and_delete
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+name|TODO
 name|event_trigger
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|signal
 argument_list|(
 name|SIGUSR1

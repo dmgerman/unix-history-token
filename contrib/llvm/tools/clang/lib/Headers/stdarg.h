@@ -96,6 +96,10 @@ name|__STDC_VERSION__
 operator|>=
 literal|199900L
 operator|||
+name|__cplusplus
+operator|>=
+literal|201103L
+operator|||
 operator|!
 name|defined
 argument_list|(

@@ -5029,6 +5029,15 @@ end_macro
 begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
+argument|ObjCAutoreleasePoolStmt
+argument_list|,
+argument|{ }
+argument_list|)
+end_macro
+
+begin_macro
+name|DEF_TRAVERSE_STMT
+argument_list|(
 argument|CXXForRangeStmt
 argument_list|,
 argument|{ }
@@ -5679,6 +5688,18 @@ argument|{ }
 argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(
+argument|ObjCIndirectCopyRestoreExpr
+argument_list|,
+argument|{ }
+argument_list|)
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|ObjCBridgedCastExpr
+argument_list|,
+argument|{   TRY_TO(TraverseTypeLoc(S->getTypeInfoAsWritten()->getTypeLoc())); }
+argument_list|)
+name|DEF_TRAVERSE_STMT
+argument_list|(
 argument|ParenExpr
 argument_list|,
 argument|{ }
@@ -5808,6 +5829,18 @@ argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|SubstNonTypeTemplateParmPackExpr
+argument_list|,
+argument|{ }
+argument_list|)
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|SubstNonTypeTemplateParmExpr
+argument_list|,
+argument|{ }
+argument_list|)
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|MaterializeTemporaryExpr
 argument_list|,
 argument|{ }
 argument_list|)

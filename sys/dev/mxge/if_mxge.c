@@ -13827,6 +13827,15 @@ operator|*
 name|ptr
 operator|==
 literal|'C'
+operator|||
+operator|*
+operator|(
+name|ptr
+operator|+
+literal|1
+operator|)
+operator|==
+literal|'C'
 condition|)
 block|{
 comment|/* -C is CX4 */

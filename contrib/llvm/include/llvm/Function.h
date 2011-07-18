@@ -528,7 +528,6 @@ operator|~
 name|Function
 argument_list|()
 expr_stmt|;
-specifier|const
 name|Type
 operator|*
 name|getReturnType
@@ -536,7 +535,6 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|// Return the type of the ret val
-specifier|const
 name|FunctionType
 operator|*
 name|getFunctionType
@@ -559,23 +557,6 @@ name|isVarArg
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// isDeclaration - Is the body of this function unknown? (The basic block
-comment|/// list is empty if so.) This is true for function declarations, but not
-comment|/// true for function definitions.
-comment|///
-name|virtual
-name|bool
-name|isDeclaration
-argument_list|()
-specifier|const
-block|{
-return|return
-name|BasicBlocks
-operator|.
-name|empty
-argument_list|()
-return|;
-block|}
 comment|/// getIntrinsicID - This method returns the ID number of the specified
 comment|/// function, or Intrinsic::not_intrinsic if the function is not an
 comment|/// instrinsic, or if the pointer is null.  This value is always defined to be

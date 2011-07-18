@@ -203,15 +203,6 @@ argument_list|(
 name|Value
 argument_list|)
 expr_stmt|;
-comment|/// isDeclaration - Is this global variable lacking an initializer?  If so,
-comment|/// the global variable is defined in some other translation unit, and is thus
-comment|/// only a declaration here.
-name|virtual
-name|bool
-name|isDeclaration
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|/// removeFromParent - This method unlinks 'this' from the containing module,
 comment|/// but does not delete it.
 comment|///

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: named-checkzone.c,v 1.51.34.6 2010-09-07 23:46:06 tbox Exp $ */
+comment|/* $Id: named-checkzone.c,v 1.61 2010-09-07 23:46:59 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -271,6 +271,18 @@ define|\
 value|do { \ 		if (result != ISC_R_SUCCESS) { \ 			if (!quiet) \ 				fprintf(stderr, "%s() returned %s\n", \ 					function, dns_result_totext(result)); \ 			return (result); \ 		} \ 	} while (0)
 end_define
 
+begin_decl_stmt
+name|ISC_PLATFORM_NORETURN_PRE
+specifier|static
+name|void
+name|usage
+argument_list|(
+name|void
+argument_list|)
+name|ISC_PLATFORM_NORETURN_POST
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -287,6 +299,7 @@ literal|"usage: %s [-djqvD] [-c class] "
 literal|"[-f inputformat] [-F outputformat] "
 literal|"[-t directory] [-w directory] [-k (ignore|warn|fail)] "
 literal|"[-n (ignore|warn|fail)] [-m (ignore|warn|fail)] "
+literal|"[-r (ignore|warn|fail)] "
 literal|"[-i (full|full-sibling|local|local-sibling|none)] "
 literal|"[-M (ignore|warn|fail)] [-S (ignore|warn|fail)] "
 literal|"[-W (ignore|warn)] "
@@ -300,7 +313,7 @@ name|progmode_check
 condition|?
 literal|"[-o filename]"
 else|:
-literal|"{-o filename}"
+literal|"-o filename"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -549,6 +562,8 @@ name|DNS_ZONEOPT_CHECKNS
 operator||
 name|DNS_ZONEOPT_FATALNS
 operator||
+name|DNS_ZONEOPT_CHECKDUPRR
+operator||
 name|DNS_ZONEOPT_CHECKNAMES
 operator||
 name|DNS_ZONEOPT_CHECKNAMESFAIL
@@ -557,6 +572,11 @@ name|DNS_ZONEOPT_CHECKWILDCARD
 operator|)
 expr_stmt|;
 block|}
+else|else
+name|zone_options
+operator||=
+name|DNS_ZONEOPT_CHECKDUPRR
+expr_stmt|;
 define|#
 directive|define
 name|ARGCMP
@@ -579,7 +599,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:df:hi:jk:m:n:qs:t:o:vw:DF:M:S:W:"
+literal|"c:df:hi:jk:m:n:qr:s:t:o:vw:DF:M:S:W:"
 argument_list|)
 operator|)
 operator|!=
@@ -1025,6 +1045,14 @@ expr_stmt|;
 block|}
 break|break;
 case|case
+literal|'o'
+case|:
+name|output_filename
+operator|=
+name|isc_commandline_argument
+expr_stmt|;
+break|break;
+case|case
 literal|'q'
 case|:
 name|quiet
@@ -1032,34 +1060,70 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
-literal|'t'
+literal|'r'
 case|:
-name|result
-operator|=
-name|isc_dir_chroot
-argument_list|(
-name|isc_commandline_argument
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|result
-operator|!=
-name|ISC_R_SUCCESS
+name|ARGCMP
+argument_list|(
+literal|"warn"
+argument_list|)
 condition|)
+block|{
+name|zone_options
+operator||=
+name|DNS_ZONEOPT_CHECKDUPRR
+expr_stmt|;
+name|zone_options
+operator|&=
+operator|~
+name|DNS_ZONEOPT_CHECKDUPRRFAIL
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ARGCMP
+argument_list|(
+literal|"fail"
+argument_list|)
+condition|)
+block|{
+name|zone_options
+operator||=
+name|DNS_ZONEOPT_CHECKDUPRR
+operator||
+name|DNS_ZONEOPT_CHECKDUPRRFAIL
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ARGCMP
+argument_list|(
+literal|"ignore"
+argument_list|)
+condition|)
+block|{
+name|zone_options
+operator|&=
+operator|~
+operator|(
+name|DNS_ZONEOPT_CHECKDUPRR
+operator||
+name|DNS_ZONEOPT_CHECKDUPRRFAIL
+operator|)
+expr_stmt|;
+block|}
+else|else
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"isc_dir_chroot: %s: %s\n"
+literal|"invalid argument to -r: %s\n"
 argument_list|,
 name|isc_commandline_argument
-argument_list|,
-name|isc_result_totext
-argument_list|(
-name|result
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1118,12 +1182,42 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-literal|'o'
+literal|'t'
 case|:
-name|output_filename
+name|result
 operator|=
+name|isc_dir_chroot
+argument_list|(
 name|isc_commandline_argument
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"isc_dir_chroot: %s: %s\n"
+argument_list|,
+name|isc_commandline_argument
+argument_list|,
+name|isc_result_totext
+argument_list|(
+name|result
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'v'

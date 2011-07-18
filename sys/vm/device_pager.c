@@ -858,11 +858,18 @@ name|csw
 operator|==
 name|NULL
 condition|)
-name|panic
+block|{
+name|VM_OBJECT_LOCK
 argument_list|(
-literal|"dev_pager_getpage: no cdevsw"
+name|object
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|VM_PAGER_FAIL
+operator|)
+return|;
+block|}
 name|td
 operator|=
 name|curthread

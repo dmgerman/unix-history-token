@@ -855,6 +855,7 @@ function_decl|;
 name|void
 name|EmitXXStructorList
 parameter_list|(
+specifier|const
 name|Constant
 modifier|*
 name|List

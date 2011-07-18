@@ -54,12 +54,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
 end_include
 
@@ -440,6 +434,9 @@ decl_stmt|;
 name|u_int
 name|version
 decl_stmt|;
+name|u_int
+name|spare0
+decl_stmt|;
 name|g_taste_t
 modifier|*
 name|taste
@@ -492,6 +489,14 @@ decl_stmt|;
 name|g_ioctl_t
 modifier|*
 name|ioctl
+decl_stmt|;
+name|void
+modifier|*
+name|spare1
+decl_stmt|;
+name|void
+modifier|*
+name|spare2
 decl_stmt|;
 comment|/* 	 * The remaining elements are private 	 */
 name|LIST_ENTRY
@@ -610,6 +615,14 @@ decl_stmt|;
 name|g_ioctl_t
 modifier|*
 name|ioctl
+decl_stmt|;
+name|void
+modifier|*
+name|spare0
+decl_stmt|;
+name|void
+modifier|*
+name|spare1
 decl_stmt|;
 name|void
 modifier|*

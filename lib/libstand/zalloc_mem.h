@@ -17,7 +17,7 @@ name|MemNode
 modifier|*
 name|mr_Next
 decl_stmt|;
-name|iaddr_t
+name|uintptr_t
 name|mr_Bytes
 decl_stmt|;
 block|}
@@ -42,10 +42,10 @@ name|MemNode
 modifier|*
 name|mp_First
 decl_stmt|;
-name|iaddr_t
+name|uintptr_t
 name|mp_Size
 decl_stmt|;
-name|iaddr_t
+name|uintptr_t
 name|mp_Used
 decl_stmt|;
 block|}

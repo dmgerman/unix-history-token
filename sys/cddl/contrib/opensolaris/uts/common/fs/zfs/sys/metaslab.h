@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -143,6 +143,14 @@ define|#
 directive|define
 name|METASLAB_GANG_HEADER
 value|0x2
+define|#
+directive|define
+name|METASLAB_GANG_CHILD
+value|0x4
+define|#
+directive|define
+name|METASLAB_GANG_AVOID
+value|0x8
 specifier|extern
 name|int
 name|metaslab_alloc

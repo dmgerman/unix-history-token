@@ -114,10 +114,6 @@ block|,
 comment|// !
 name|kw_x
 block|,
-name|kw_begin
-block|,
-name|kw_end
-block|,
 name|kw_true
 block|,
 name|kw_false
@@ -292,6 +288,8 @@ name|kw_naked
 block|,
 name|kw_hotpatch
 block|,
+name|kw_nonlazybind
+block|,
 name|kw_type
 block|,
 name|kw_opaque
@@ -423,11 +421,7 @@ name|kw_unwind
 block|,
 name|kw_unreachable
 block|,
-name|kw_malloc
-block|,
 name|kw_alloca
-block|,
-name|kw_free
 block|,
 name|kw_load
 block|,
@@ -440,8 +434,6 @@ block|,
 name|kw_insertelement
 block|,
 name|kw_shufflevector
-block|,
-name|kw_getresult
 block|,
 name|kw_extractvalue
 block|,

@@ -873,7 +873,7 @@ name|char
 name|command_chars
 index|[]
 init|=
-literal|"\f qh?en#sdkriIutHmSCajzo"
+literal|"\f qh?en#sdkriIutHmSCajzPo"
 decl_stmt|;
 else|#
 directive|else
@@ -882,7 +882,7 @@ name|char
 name|command_chars
 index|[]
 init|=
-literal|"\f qh?en#sdkriIutHmSCajz"
+literal|"\f qh?en#sdkriIutHmSCajzP"
 decl_stmt|;
 endif|#
 directive|endif
@@ -985,13 +985,17 @@ define|#
 directive|define
 name|CMD_kidletog
 value|22
+define|#
+directive|define
+name|CMD_pcputog
+value|23
 ifdef|#
 directive|ifdef
 name|ORDER
 define|#
 directive|define
 name|CMD_order
-value|23
+value|24
 endif|#
 directive|endif
 comment|/* set the buffer for stdout */
@@ -1629,7 +1633,8 @@ literal|'P'
 case|:
 name|pcpu_stats
 operator|=
-name|Yes
+operator|!
+name|pcpu_stats
 expr_stmt|;
 break|break;
 case|case
@@ -3692,7 +3697,7 @@ name|MT_standout
 operator||
 name|MT_delayed
 argument_list|,
-literal|"Displaying threads %s"
+literal|" Displaying threads %s"
 argument_list|,
 name|ps
 operator|.
@@ -3737,7 +3742,7 @@ name|MT_standout
 operator||
 name|MT_delayed
 argument_list|,
-literal|"Displaying %sCPU"
+literal|" Displaying %sCPU"
 argument_list|,
 name|ps
 operator|.
@@ -3977,6 +3982,52 @@ literal|"D"
 else|:
 literal|"Not d"
 argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\r'
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CMD_pcputog
+case|:
+name|pcpu_stats
+operator|=
+operator|!
+name|pcpu_stats
+expr_stmt|;
+name|new_message
+argument_list|(
+name|MT_standout
+operator||
+name|MT_delayed
+argument_list|,
+literal|" Displaying %sCPU statistics."
+argument_list|,
+name|pcpu_stats
+condition|?
+literal|"per-"
+else|:
+literal|"global "
+argument_list|)
+expr_stmt|;
+name|toggle_pcpustats
+argument_list|(
+operator|&
+name|statics
+argument_list|)
+expr_stmt|;
+name|max_topn
+operator|=
+name|display_updatecpus
+argument_list|(
+operator|&
+name|statics
+argument_list|)
+expr_stmt|;
+name|reset_display
+argument_list|()
 expr_stmt|;
 name|putchar
 argument_list|(

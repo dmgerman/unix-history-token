@@ -620,6 +620,9 @@ argument_list|(
 literal|"swap_reserve:& PAGE_MASK"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|curproc
@@ -652,6 +655,8 @@ operator|(
 literal|0
 operator|)
 return|;
+endif|#
+directive|endif
 name|res
 operator|=
 literal|0
@@ -869,6 +874,9 @@ name|incr
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|RACCT
 if|if
 condition|(
 operator|!
@@ -895,6 +903,8 @@ name|curproc
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|res
@@ -932,6 +942,9 @@ operator|&
 name|sw_dev_mtx
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|curproc
@@ -951,6 +964,8 @@ argument_list|(
 name|curproc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|uip
 operator|=
 name|curthread

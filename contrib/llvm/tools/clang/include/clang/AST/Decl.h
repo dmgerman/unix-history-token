@@ -2760,6 +2760,13 @@ name|CXXForRangeDecl
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief Whether this variable is an ARC pseudo-__strong
+comment|/// variable;  see isARCPseudoStrong() for details.
+name|unsigned
+name|ARCPseudoStrong
+range|:
+literal|1
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -2778,7 +2785,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|// two reserved bits for now
+comment|// one reserved bit
 end_comment
 
 begin_decl_stmt
@@ -4110,6 +4117,62 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/// \brief Determine whether this variable is a reference that
+end_comment
+
+begin_comment
+comment|/// extends the lifetime of its temporary initializer.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// A reference extends the lifetime of its temporary initializer if
+end_comment
+
+begin_comment
+comment|/// it's initializer is an rvalue that would normally go out of scope
+end_comment
+
+begin_comment
+comment|/// at the end of the initializer (a full expression). In such cases,
+end_comment
+
+begin_comment
+comment|/// the reference itself takes ownership of the temporary, which will
+end_comment
+
+begin_comment
+comment|/// be destroyed when the reference goes out of scope. For example:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// const int&r = 1.0; // creates a temporary of type 'int'
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_expr_stmt
+name|bool
+name|extendsLifetimeOfTemporary
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
 begin_expr_stmt
 name|EvaluatedStmt
 operator|*
@@ -4716,6 +4779,53 @@ operator|.
 name|CXXForRangeDecl
 operator|=
 name|FRD
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Determine whether this variable is an ARC pseudo-__strong
+end_comment
+
+begin_comment
+comment|/// variable.  A pseudo-__strong variable has a __strong-qualified
+end_comment
+
+begin_comment
+comment|/// type but does not actually retain the object written into it.
+end_comment
+
+begin_comment
+comment|/// Generally such variables are also 'const' for safety.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isARCPseudoStrong
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VarDeclBits
+operator|.
+name|ARCPseudoStrong
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setARCPseudoStrong
+parameter_list|(
+name|bool
+name|ps
+parameter_list|)
+block|{
+name|VarDeclBits
+operator|.
+name|ARCPseudoStrong
+operator|=
+name|ps
 expr_stmt|;
 block|}
 end_function
@@ -8102,6 +8212,26 @@ operator|.
 name|setInt
 argument_list|(
 literal|1
+argument_list|)
+block|;   }
+comment|/// removeBitWidth - Remove the bitfield width from this member.
+name|void
+name|removeBitWidth
+argument_list|()
+block|{
+name|assert
+argument_list|(
+name|isBitField
+argument_list|()
+operator|&&
+literal|"no bit width to remove"
+argument_list|)
+block|;
+name|InitializerOrBitWidth
+operator|.
+name|setPointer
+argument_list|(
+literal|0
 argument_list|)
 block|;   }
 comment|/// hasInClassInitializer - Determine whether this member has a C++0x in-class
@@ -12451,6 +12581,19 @@ name|CapturesCXXThis
 return|;
 block|}
 end_expr_stmt
+
+begin_decl_stmt
+name|bool
+name|capturesVariable
+argument_list|(
+specifier|const
+name|VarDecl
+operator|*
+name|var
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void

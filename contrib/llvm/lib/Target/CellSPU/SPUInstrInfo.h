@@ -77,6 +77,18 @@ directive|include
 file|"SPURegisterInfo.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|GET_INSTRINFO_HEADER
+end_define
+
+begin_include
+include|#
+directive|include
+file|"SPUGenInstrInfo.inc"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -86,7 +98,7 @@ name|class
 name|SPUInstrInfo
 range|:
 name|public
-name|TargetInstrInfoImpl
+name|SPUGenInstrInfo
 block|{
 name|SPUTargetMachine
 operator|&

@@ -120,7 +120,7 @@ name|void
 name|lzma_attribute
 argument_list|(
 operator|(
-name|noreturn
+name|__noreturn__
 operator|)
 argument_list|)
 name|help
@@ -192,7 +192,7 @@ name|void
 name|lzma_attribute
 argument_list|(
 operator|(
-name|noreturn
+name|__noreturn__
 operator|)
 argument_list|)
 name|version

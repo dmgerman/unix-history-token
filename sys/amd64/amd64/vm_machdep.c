@@ -110,12 +110,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sched.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sf_buf.h>
 end_include
 
@@ -1946,14 +1940,19 @@ condition|(
 name|smp_active
 condition|)
 block|{
-name|sched_pin
-argument_list|()
-expr_stmt|;
 name|map
 operator|=
+name|all_cpus
+expr_stmt|;
+name|CPU_CLR
+argument_list|(
 name|PCPU_GET
 argument_list|(
-name|other_cpus
+name|cpuid
+argument_list|)
+argument_list|,
+operator|&
+name|map
 argument_list|)
 expr_stmt|;
 name|CPU_NAND
@@ -2002,9 +2001,6 @@ name|PCPU_GET
 argument_list|(
 name|cpuid
 argument_list|)
-expr_stmt|;
-name|sched_unpin
-argument_list|()
 expr_stmt|;
 name|cpustop_restartfunc
 operator|=
@@ -2081,10 +2077,6 @@ argument_list|()
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
-else|else
-name|sched_unpin
-argument_list|()
-expr_stmt|;
 name|DELAY
 argument_list|(
 literal|1000000

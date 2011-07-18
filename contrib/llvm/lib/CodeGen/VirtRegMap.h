@@ -768,6 +768,26 @@ name|unsigned
 name|virtReg
 parameter_list|)
 function_decl|;
+comment|/// @brief returns true if VirtReg is assigned to its preferred physreg.
+name|bool
+name|hasPreferredPhys
+parameter_list|(
+name|unsigned
+name|VirtReg
+parameter_list|)
+block|{
+return|return
+name|getPhys
+argument_list|(
+name|VirtReg
+argument_list|)
+operator|==
+name|getRegAllocPref
+argument_list|(
+name|VirtReg
+argument_list|)
+return|;
+block|}
 comment|/// @brief records virtReg is a split live interval from SReg.
 name|void
 name|setIsSplitFromReg

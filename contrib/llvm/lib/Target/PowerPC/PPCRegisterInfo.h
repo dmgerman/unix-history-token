@@ -72,13 +72,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"PPCGenRegisterInfo.h.inc"
+file|<map>
 end_include
+
+begin_define
+define|#
+directive|define
+name|GET_REGINFO_HEADER
+end_define
 
 begin_include
 include|#
 directive|include
-file|<map>
+file|"PPCGenRegisterInfo.inc"
 end_include
 
 begin_decl_stmt

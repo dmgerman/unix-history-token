@@ -869,9 +869,9 @@ name|getFrameInfo
 argument_list|()
 decl_stmt|;
 specifier|const
-name|TargetInstrDesc
+name|MCInstrDesc
 modifier|&
-name|TID
+name|MCID
 init|=
 name|MI
 operator|->
@@ -885,7 +885,7 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-name|TID
+name|MCID
 operator|.
 name|mayLoad
 argument_list|()
@@ -898,7 +898,7 @@ name|MOLoad
 expr_stmt|;
 if|if
 condition|(
-name|TID
+name|MCID
 operator|.
 name|mayStore
 argument_list|()

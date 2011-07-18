@@ -1196,7 +1196,7 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
-comment|/* Unloading of the kgssapi module isn't supported. */
+comment|/* 		 * Unloading of the kgssapi module is not currently supported. 		 * If somebody wants this, we would need to keep track of 		 * currently executing threads and make sure the count is 0. 		 */
 comment|/* FALLTHROUGH */
 default|default:
 name|error

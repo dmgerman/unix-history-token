@@ -131,6 +131,8 @@ argument_list|,
 name|kern
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_CAPRD
 argument_list|,
 literal|0
 argument_list|,
@@ -378,6 +380,8 @@ argument_list|,
 name|CTLFLAG_RD
 operator||
 name|CTLFLAG_MPSAFE
+operator||
+name|CTLFLAG_CAPRD
 argument_list|,
 name|osrelease
 argument_list|,
@@ -398,6 +402,8 @@ argument_list|,
 name|osrevision
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_CAPRD
 argument_list|,
 literal|0
 argument_list|,
@@ -442,6 +448,8 @@ argument_list|,
 name|CTLFLAG_RD
 operator||
 name|CTLFLAG_MPSAFE
+operator||
+name|CTLFLAG_CAPRD
 argument_list|,
 name|ostype
 argument_list|,
@@ -466,6 +474,8 @@ argument_list|,
 name|osreldate
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_CAPRD
 argument_list|,
 operator|&
 name|osreldate
@@ -550,6 +560,8 @@ argument_list|,
 name|argmax
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_CAPRD
 argument_list|,
 literal|0
 argument_list|,
@@ -570,6 +582,8 @@ argument_list|,
 name|posix1version
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_CAPRD
 argument_list|,
 literal|0
 argument_list|,
@@ -590,6 +604,8 @@ argument_list|,
 name|ngroups
 argument_list|,
 name|CTLFLAG_RDTUN
+operator||
+name|CTLFLAG_CAPRD
 argument_list|,
 operator|&
 name|ngroups_max
@@ -611,6 +627,8 @@ argument_list|,
 name|job_control
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_CAPRD
 argument_list|,
 literal|0
 argument_list|,
@@ -637,6 +655,8 @@ argument_list|,
 name|saved_ids
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_CAPRD
 argument_list|,
 literal|0
 argument_list|,
@@ -662,6 +682,8 @@ argument_list|,
 name|saved_ids
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_CAPRD
 argument_list|,
 literal|0
 argument_list|,
@@ -723,6 +745,8 @@ argument_list|,
 name|ncpu
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_CAPRD
 argument_list|,
 operator|&
 name|mp_ncpus
@@ -744,6 +768,8 @@ argument_list|,
 name|byteorder
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_CAPRD
 argument_list|,
 literal|0
 argument_list|,
@@ -764,6 +790,8 @@ argument_list|,
 name|pagesize
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_CAPRD
 argument_list|,
 literal|0
 argument_list|,
@@ -851,6 +879,8 @@ operator||
 name|CTLFLAG_RD
 operator||
 name|CTLFLAG_MPSAFE
+operator||
+name|CTLFLAG_CAPRD
 argument_list|,
 name|NULL
 argument_list|,
@@ -2367,7 +2397,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * This is really cheating.  These actually live in the libc, something  * which I'm not quite sure is a good idea anyway, but in order for  * getnext and friends to actually work, we define dummies here.  */
+comment|/*  * This is really cheating.  These actually live in the libc, something  * which I'm not quite sure is a good idea anyway, but in order for  * getnext and friends to actually work, we define dummies here.  *  * XXXRW: These probably should be CTLFLAG_CAPRD.  */
 end_comment
 
 begin_expr_stmt

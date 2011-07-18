@@ -124,7 +124,12 @@ comment|// "dbg"
 name|MD_tbaa
 init|=
 literal|1
+block|,
 comment|// "tbaa"
+name|MD_prof
+init|=
+literal|2
+comment|// "prof"
 block|}
 enum|;
 comment|/// getMDKindID - Return a unique non-zero ID for the specified metadata kind.

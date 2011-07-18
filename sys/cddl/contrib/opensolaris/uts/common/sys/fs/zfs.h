@@ -145,9 +145,8 @@ name|ZFS_PROP_ZONED
 block|,
 name|ZFS_PROP_SNAPDIR
 block|,
-name|ZFS_PROP_PRIVATE
+name|ZFS_PROP_ACLMODE
 block|,
-comment|/* not exposed to user, temporary */
 name|ZFS_PROP_ACLINHERIT
 block|,
 name|ZFS_PROP_CREATETXG

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008, 2010, 2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: ssu.h,v 1.24 2008-01-18 23:46:58 tbox Exp $ */
+comment|/* $Id: ssu.h,v 1.28 2011-01-06 23:47:00 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -34,6 +34,12 @@ begin_include
 include|#
 directive|include
 file|<dns/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dst/dst.h>
 end_include
 
 begin_function_decl
@@ -88,8 +94,16 @@ name|DNS_SSUMATCHTYPE_6TO4SELF
 value|11
 define|#
 directive|define
+name|DNS_SSUMATCHTYPE_EXTERNAL
+value|12
+define|#
+directive|define
+name|DNS_SSUMATCHTYPE_DLZ
+value|13
+define|#
+directive|define
 name|DNS_SSUMATCHTYPE_MAX
-value|11
+value|12
 comment|/* max value */
 name|isc_result_t
 name|dns_ssutable_create
@@ -108,6 +122,30 @@ end_function_decl
 
 begin_comment
 comment|/*%<  *	Creates a table that will be used to store simple-secure-update rules.  *	Note: all locking must be provided by the client.  *  *	Requires:  *\li		'mctx' is a valid memory context  *\li		'table' is not NULL, and '*table' is NULL  *  *	Returns:  *\li		ISC_R_SUCCESS  *\li		ISC_R_NOMEMORY  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_ssutable_createdlz
+parameter_list|(
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|dns_ssutable_t
+modifier|*
+modifier|*
+name|tablep
+parameter_list|,
+name|dns_dlzdb_t
+modifier|*
+name|dlzdatabase
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Create an SSU table that contains a dlzdatabase pointer, and a  * single rule with matchtype DNS_SSUMATCHTYPE_DLZ. This type of SSU  * table is used by writeable DLZ drivers to offload authorization for  * updates to the driver.  */
 end_comment
 
 begin_function_decl
@@ -206,6 +244,11 @@ name|tcpaddr
 parameter_list|,
 name|dns_rdatatype_t
 name|type
+parameter_list|,
+specifier|const
+name|dst_key_t
+modifier|*
+name|key
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -343,6 +386,45 @@ end_function_decl
 begin_comment
 comment|/*%<  * Returns the next rule in the table.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMORE  */
 end_comment
+
+begin_comment
+comment|/*%<  * Check a policy rule via an external application  */
+end_comment
+
+begin_function_decl
+name|isc_boolean_t
+name|dns_ssu_external_match
+parameter_list|(
+name|dns_name_t
+modifier|*
+name|identity
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|signer
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|,
+name|isc_netaddr_t
+modifier|*
+name|tcpaddr
+parameter_list|,
+name|dns_rdatatype_t
+name|type
+parameter_list|,
+specifier|const
+name|dst_key_t
+modifier|*
+name|key
+parameter_list|,
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_macro
 name|ISC_LANG_ENDDECLS

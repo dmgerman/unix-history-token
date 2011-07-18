@@ -122,6 +122,12 @@ name|MUL_I64
 block|,
 name|MUL_I128
 block|,
+name|MULO_I32
+block|,
+name|MULO_I64
+block|,
+name|MULO_I128
+block|,
 name|SDIV_I8
 block|,
 name|SDIV_I16
@@ -226,6 +232,14 @@ block|,
 name|REM_F80
 block|,
 name|REM_PPCF128
+block|,
+name|FMA_F32
+block|,
+name|FMA_F64
+block|,
+name|FMA_F80
+block|,
+name|FMA_PPCF128
 block|,
 name|POWI_F32
 block|,

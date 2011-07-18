@@ -652,9 +652,6 @@ name|struct
 name|gem_softc
 modifier|*
 name|sc
-parameter_list|,
-name|u_int
-name|enable
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3333,6 +3330,20 @@ argument_list|,
 name|GEM_RESET_RX
 operator||
 name|GEM_RESET_TX
+operator||
+operator|(
+name|sc
+operator|->
+name|sc_variant
+operator|==
+name|GEM_SUN_ERI
+condition|?
+name|GEM_ERI_CACHE_LINE_SIZE
+operator|<<
+name|GEM_RESET_CLSZ_SHFT
+else|:
+literal|0
+operator|)
 argument_list|)
 expr_stmt|;
 name|GEM_BANK2_BARRIER
@@ -3764,6 +3775,20 @@ argument_list|,
 name|GEM_RESET
 argument_list|,
 name|GEM_RESET_RX
+operator||
+operator|(
+name|sc
+operator|->
+name|sc_variant
+operator|==
+name|GEM_SUN_ERI
+condition|?
+name|GEM_ERI_CACHE_LINE_SIZE
+operator|<<
+name|GEM_RESET_CLSZ_SHFT
+else|:
+literal|0
+operator|)
 argument_list|)
 expr_stmt|;
 name|GEM_BANK2_BARRIER
@@ -3789,8 +3814,6 @@ argument_list|,
 name|GEM_RESET
 argument_list|,
 name|GEM_RESET_RX
-operator||
-name|GEM_RESET_TX
 argument_list|,
 literal|0
 argument_list|)
@@ -4040,7 +4063,7 @@ name|GEM_RX_CONFIG_FBOFF_SHFT
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Adjust for the SBus clock probably isn't worth the fuzz. */
+comment|/* Adjusting for the SBus clock probably isn't worth the fuzz. */
 name|GEM_BANK1_WRITE_4
 argument_list|(
 name|sc
@@ -4101,14 +4124,6 @@ literal|12
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Clear the RX filter and reprogram it.  This will also set the 	 * current RX MAC configuration. 	 */
-name|gem_setladrf
-argument_list|(
-name|sc
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|GEM_BANK1_WRITE_4
 argument_list|(
 name|sc
@@ -4136,17 +4151,10 @@ operator||
 name|GEM_MAC_RX_FRAME_CNT
 argument_list|)
 expr_stmt|;
-name|GEM_BANK1_WRITE_4
+comment|/* 	 * Clear the RX filter and reprogram it.  This will also set the 	 * current RX MAC configuration and enable it. 	 */
+name|gem_setladrf
 argument_list|(
 name|sc
-argument_list|,
-name|GEM_MAC_RX_CONFIG
-argument_list|,
-name|sc
-operator|->
-name|sc_mac_rxcfg
-operator||
-name|GEM_MAC_RX_ENABLE
 argument_list|)
 expr_stmt|;
 block|}
@@ -4231,6 +4239,20 @@ argument_list|,
 name|GEM_RESET
 argument_list|,
 name|GEM_RESET_TX
+operator||
+operator|(
+name|sc
+operator|->
+name|sc_variant
+operator|==
+name|GEM_SUN_ERI
+condition|?
+name|GEM_ERI_CACHE_LINE_SIZE
+operator|<<
+name|GEM_RESET_CLSZ_SHFT
+else|:
+literal|0
+operator|)
 argument_list|)
 expr_stmt|;
 name|GEM_BANK2_BARRIER
@@ -4255,8 +4277,6 @@ name|sc
 argument_list|,
 name|GEM_RESET
 argument_list|,
-name|GEM_RESET_RX
-operator||
 name|GEM_RESET_TX
 argument_list|,
 literal|0
@@ -4805,6 +4825,9 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
 if|if
 condition|(
 operator|(
@@ -4818,6 +4841,8 @@ operator|!=
 literal|0
 condition|)
 return|return;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|GEM_DEBUG
@@ -4910,13 +4935,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* step 5.  RX MAC registers& counters */
-name|gem_setladrf
-argument_list|(
-name|sc
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* step 6& 7.  Program Descriptor Ring Base Addresses. */
 comment|/* NOTE: we use only 32-bit DMA addresses here. */
 name|GEM_BANK1_WRITE_4
@@ -5222,7 +5240,7 @@ operator||
 name|GEM_RX_CONFIG_RXDMA_EN
 argument_list|)
 expr_stmt|;
-comment|/* Adjust for the SBus clock probably isn't worth the fuzz. */
+comment|/* Adjusting for the SBus clock probably isn't worth the fuzz. */
 name|GEM_BANK1_WRITE_4
 argument_list|(
 name|sc
@@ -5296,35 +5314,24 @@ name|GEM_MAC_RX_CONFIG
 argument_list|)
 expr_stmt|;
 name|v
-operator||=
+operator|&=
+operator|~
 name|GEM_MAC_RX_ENABLE
-operator||
-name|GEM_MAC_RX_STRIP_CRC
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|gem_disable_rx
-argument_list|(
-name|sc
-argument_list|)
+name|v
+operator||=
+name|GEM_MAC_RX_STRIP_CRC
 expr_stmt|;
 name|sc
 operator|->
 name|sc_mac_rxcfg
 operator|=
 name|v
-operator|&
-operator|~
-name|GEM_MAC_RX_ENABLE
 expr_stmt|;
-name|GEM_BANK1_WRITE_4
+comment|/* 	 * Clear the RX filter and reprogram it.  This will also set the 	 * current RX MAC configuration and enable it. 	 */
+name|gem_setladrf
 argument_list|(
 name|sc
-argument_list|,
-name|GEM_MAC_RX_CONFIG
-argument_list|,
-name|v
 argument_list|)
 expr_stmt|;
 comment|/* step 13.  TX_MAC Configuration Register */
@@ -10625,8 +10632,6 @@ condition|)
 name|gem_setladrf
 argument_list|(
 name|sc
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 else|else
@@ -10742,8 +10747,6 @@ condition|)
 name|gem_setladrf
 argument_list|(
 name|sc
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|GEM_UNLOCK
@@ -10857,9 +10860,6 @@ name|struct
 name|gem_softc
 modifier|*
 name|sc
-parameter_list|,
-name|u_int
-name|enable
 parameter_list|)
 block|{
 name|struct
@@ -11140,14 +11140,6 @@ name|sc_mac_rxcfg
 operator|=
 name|v
 expr_stmt|;
-if|if
-condition|(
-name|enable
-condition|)
-name|v
-operator||=
-name|GEM_MAC_RX_ENABLE
-expr_stmt|;
 name|GEM_BANK1_WRITE_4
 argument_list|(
 name|sc
@@ -11155,6 +11147,8 @@ argument_list|,
 name|GEM_MAC_RX_CONFIG
 argument_list|,
 name|v
+operator||
+name|GEM_MAC_RX_ENABLE
 argument_list|)
 expr_stmt|;
 block|}

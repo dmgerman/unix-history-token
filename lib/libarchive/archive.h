@@ -161,9 +161,25 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|_WIN64
+name|_SSIZE_T_DEFINED
 argument_list|)
 end_if
+
+begin_define
+define|#
+directive|define
+name|__LA_SSIZE_T
+value|ssize_t
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_WIN64
+argument_list|)
+end_elif
 
 begin_define
 define|#
@@ -428,7 +444,7 @@ comment|/*  * The version number is expressed as a single integer that makes it 
 define|#
 directive|define
 name|ARCHIVE_VERSION_NUMBER
-value|2007901
+value|2008004
 name|__LA_DECL
 name|int
 name|archive_version_number
@@ -440,7 +456,7 @@ comment|/*  * Textual name/version of the library, useful for version displays. 
 define|#
 directive|define
 name|ARCHIVE_VERSION_STRING
-value|"libarchive 2.7.901a"
+value|"libarchive 2.8.4"
 name|__LA_DECL
 specifier|const
 name|char
@@ -950,6 +966,15 @@ parameter_list|)
 function_decl|;
 name|__LA_DECL
 name|int
+name|archive_read_support_compression_rpm
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
 name|archive_read_support_compression_uu
 parameter_list|(
 name|struct
@@ -1041,6 +1066,15 @@ function_decl|;
 name|__LA_DECL
 name|int
 name|archive_read_support_format_tar
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
+name|archive_read_support_format_xar
 parameter_list|(
 name|struct
 name|archive

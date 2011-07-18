@@ -8,8 +8,21 @@ comment|/*	$KAME: rtadvd.h,v 1.26 2003/08/05 12:34:23 itojun Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 1998 WIDE Project.  * Copyright (C) 2011 Hiroki Sato<hrs@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ELM_MALLOC
+parameter_list|(
+name|p
+parameter_list|,
+name|error_action
+parameter_list|)
+define|\
+value|do {								\ 		p = malloc(sizeof(*p));					\ 		if (p == NULL) {					\ 			syslog(LOG_ERR, "<%s> malloc failed: %s",	\ 			    __func__, strerror(errno));			\ 			error_action;					\ 		}							\ 		memset(p, 0, sizeof(*p));				\ 	} while(0)
+end_define
 
 begin_define
 define|#
@@ -295,27 +308,27 @@ name|rtadvd_timer
 modifier|*
 name|pfx_timer
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|pfx_validlifetime
 decl_stmt|;
 comment|/* AdvValidLifetime */
-name|long
+name|uint32_t
 name|pfx_vltimeexpire
 decl_stmt|;
 comment|/* Expiration of vltime */
-name|u_int32_t
+name|uint32_t
 name|pfx_preflifetime
 decl_stmt|;
 comment|/* AdvPreferredLifetime */
-name|long
+name|uint32_t
 name|pfx_pltimeexpire
 decl_stmt|;
 comment|/* Expiration of pltime */
-name|u_int
+name|int
 name|pfx_onlinkflg
 decl_stmt|;
 comment|/* bool: AdvOnLinkFlag */
-name|u_int
+name|int
 name|pfx_autoconfflg
 decl_stmt|;
 comment|/* bool: AdvAutonomousFlag */
@@ -334,12 +347,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ROUTEINFO
-end_ifdef
-
 begin_struct
 struct|struct
 name|rtinfo
@@ -350,11 +357,11 @@ argument|rtinfo
 argument_list|)
 name|rti_next
 expr_stmt|;
-name|u_int32_t
+name|uint32_t
 name|rti_ltime
 decl_stmt|;
 comment|/* route lifetime */
-name|u_int
+name|int
 name|rti_rtpref
 decl_stmt|;
 comment|/* route preference */
@@ -368,11 +375,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -411,11 +413,7 @@ argument_list|)
 name|rd_list
 expr_stmt|;
 comment|/* list of DNS servers */
-name|int
-name|rd_cnt
-decl_stmt|;
-comment|/* number of DNS servers */
-name|u_int32_t
+name|uint32_t
 name|rd_ltime
 decl_stmt|;
 comment|/* number of seconds valid */
@@ -486,7 +484,7 @@ argument_list|)
 name|dn_list
 expr_stmt|;
 comment|/* list of search domains */
-name|u_int32_t
+name|uint32_t
 name|dn_ltime
 decl_stmt|;
 comment|/* number of seconds valid */
@@ -523,28 +521,11 @@ argument|rainfo
 argument_list|)
 name|rai_next
 expr_stmt|;
-comment|/* timer related parameters */
-name|struct
-name|rtadvd_timer
-modifier|*
-name|rai_timer
-decl_stmt|;
-comment|/* counter for the first few advertisements */
-name|int
-name|rai_initcounter
-decl_stmt|;
-comment|/* timestamp when the latest RA was sent */
-name|struct
-name|timeval
-name|rai_lastsent
-decl_stmt|;
-comment|/* number of RS waiting for RA */
-name|int
-name|rai_waiting
-decl_stmt|;
 comment|/* interface information */
-name|int
-name|rai_ifindex
+name|struct
+name|ifinfo
+modifier|*
+name|rai_ifinfo
 decl_stmt|;
 name|int
 name|rai_advlinkopt
@@ -554,31 +535,16 @@ name|int
 name|rai_advifprefix
 decl_stmt|;
 comment|/* bool: gather IF prefixes? */
-name|struct
-name|sockaddr_dl
-modifier|*
-name|rai_sdl
-decl_stmt|;
-name|char
-name|rai_ifname
-index|[
-name|IFNAMSIZ
-index|]
-decl_stmt|;
-name|u_int32_t
-name|rai_phymtu
-decl_stmt|;
-comment|/* mtu of the physical interface */
 comment|/* Router configuration variables */
-name|u_short
+name|uint16_t
 name|rai_lifetime
 decl_stmt|;
 comment|/* AdvDefaultLifetime */
-name|u_int
+name|uint16_t
 name|rai_maxinterval
 decl_stmt|;
 comment|/* MaxRtrAdvInterval */
-name|u_int
+name|uint16_t
 name|rai_mininterval
 decl_stmt|;
 comment|/* MinRtrAdvInterval */
@@ -594,19 +560,19 @@ name|int
 name|rai_rtpref
 decl_stmt|;
 comment|/* router preference */
-name|u_int32_t
+name|uint32_t
 name|rai_linkmtu
 decl_stmt|;
 comment|/* AdvLinkMTU */
-name|u_int32_t
+name|uint32_t
 name|rai_reachabletime
 decl_stmt|;
 comment|/* AdvReachableTime */
-name|u_int32_t
+name|uint32_t
 name|rai_retranstimer
 decl_stmt|;
 comment|/* AdvRetransTimer */
-name|u_int
+name|uint8_t
 name|rai_hoplimit
 decl_stmt|;
 comment|/* AdvCurHopLimit */
@@ -622,7 +588,7 @@ name|int
 name|rai_pfxs
 decl_stmt|;
 comment|/* number of prefixes */
-name|long
+name|uint16_t
 name|rai_clockskew
 decl_stmt|;
 comment|/* used for consisitency check of lifetimes */
@@ -642,9 +608,6 @@ argument_list|)
 name|rai_dnssl
 expr_stmt|;
 comment|/* search domain list */
-ifdef|#
-directive|ifdef
-name|ROUTEINFO
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -657,33 +620,14 @@ name|int
 name|rai_routes
 decl_stmt|;
 comment|/* number of route information options */
-endif|#
-directive|endif
 comment|/* actual RA packet data and its length */
 name|size_t
 name|rai_ra_datalen
 decl_stmt|;
-name|u_char
+name|char
 modifier|*
 name|rai_ra_data
 decl_stmt|;
-comment|/* statistics */
-name|u_quad_t
-name|rai_raoutput
-decl_stmt|;
-comment|/* # of RAs sent */
-name|u_quad_t
-name|rai_rainput
-decl_stmt|;
-comment|/* # of RAs received */
-name|u_quad_t
-name|rai_rainconsistent
-decl_stmt|;
-comment|/* # of RAs inconsistent with ours */
-name|u_quad_t
-name|rai_rsinput
-decl_stmt|;
-comment|/* # of RSs received */
 comment|/* info about soliciter */
 name|TAILQ_HEAD
 argument_list|(
@@ -698,7 +642,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Interface list including RA information */
+comment|/* RA information list */
 end_comment
 
 begin_extern
@@ -712,6 +656,146 @@ unit|)
 name|railist
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * ifi_state:  *  *           (INIT)  *              |  *              | update_ifinfo()  *              | update_persist_ifinfo()  *              v  *         UNCONFIGURED  *               |  ^  *   loadconfig()|  |rm_ifinfo(), ra_output()  *      (MC join)|  |(MC leave)  *               |  |  *               |  |  *               v  |  *         TRANSITIVE  *               |  ^  *    ra_output()|  |getconfig()  *               |  |  *               |  |  *               |  |  *               v  |  *         CONFIGURED  *  *  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFI_STATE_UNCONFIGURED
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFI_STATE_CONFIGURED
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFI_STATE_TRANSITIVE
+value|2
+end_define
+
+begin_struct
+struct|struct
+name|ifinfo
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|ifinfo
+argument_list|)
+name|ifi_next
+expr_stmt|;
+name|uint16_t
+name|ifi_state
+decl_stmt|;
+name|uint16_t
+name|ifi_persist
+decl_stmt|;
+name|uint16_t
+name|ifi_ifindex
+decl_stmt|;
+name|char
+name|ifi_ifname
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+name|uint8_t
+name|ifi_type
+decl_stmt|;
+name|uint16_t
+name|ifi_flags
+decl_stmt|;
+name|uint32_t
+name|ifi_nd_flags
+decl_stmt|;
+name|uint32_t
+name|ifi_phymtu
+decl_stmt|;
+name|struct
+name|sockaddr_dl
+name|ifi_sdl
+decl_stmt|;
+name|struct
+name|rainfo
+modifier|*
+name|ifi_rainfo
+decl_stmt|;
+name|struct
+name|rainfo
+modifier|*
+name|ifi_rainfo_trans
+decl_stmt|;
+name|uint16_t
+name|ifi_burstcount
+decl_stmt|;
+name|uint32_t
+name|ifi_burstinterval
+decl_stmt|;
+name|struct
+name|rtadvd_timer
+modifier|*
+name|ifi_ra_timer
+decl_stmt|;
+comment|/* timestamp when the latest RA was sent */
+name|struct
+name|timeval
+name|ifi_ra_lastsent
+decl_stmt|;
+name|uint16_t
+name|ifi_rs_waitcount
+decl_stmt|;
+comment|/* statistics */
+name|uint64_t
+name|ifi_raoutput
+decl_stmt|;
+comment|/* # of RAs sent */
+name|uint64_t
+name|ifi_rainput
+decl_stmt|;
+comment|/* # of RAs received */
+name|uint64_t
+name|ifi_rainconsistent
+decl_stmt|;
+comment|/* # of inconsistent recv'd RAs  */
+name|uint64_t
+name|ifi_rsinput
+decl_stmt|;
+comment|/* # of RSs received */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Interface list */
+end_comment
+
+begin_extern
+extern|extern TAILQ_HEAD(ifilist_head_t
+operator|,
+extern|ifinfo
+end_extern
+
+begin_expr_stmt
+unit|)
+name|ifilist
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|mcastif
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|struct
@@ -744,7 +828,7 @@ name|void
 name|ra_output
 parameter_list|(
 name|struct
-name|rainfo
+name|ifinfo
 modifier|*
 parameter_list|)
 function_decl|;
@@ -771,9 +855,9 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|rainfo
+name|ifinfo
 modifier|*
-name|if_indextorainfo
+name|if_indextoifinfo
 parameter_list|(
 name|int
 parameter_list|)
@@ -794,6 +878,24 @@ name|struct
 name|in6_addr
 modifier|*
 parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|rtadvd_set_reload
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|rtadvd_set_shutdown
+parameter_list|(
 name|int
 parameter_list|)
 function_decl|;

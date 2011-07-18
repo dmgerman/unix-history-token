@@ -479,6 +479,31 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
+comment|/* Used to distinguish between normal, callout, lock and init devices. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TTYUNIT_INIT
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TTYUNIT_LOCK
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|TTYUNIT_CALLOUT
+value|0x4
+end_define
+
+begin_comment
 comment|/* Allocation and deallocation. */
 end_comment
 

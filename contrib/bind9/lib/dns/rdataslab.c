@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rdataslab.c,v 1.48.50.4 2010-02-25 10:56:41 tbox Exp $ */
+comment|/* $Id: rdataslab.c,v 1.52.148.1.2.1 2011-06-02 23:47:35 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -418,6 +418,12 @@ condition|(
 name|nitems
 operator|==
 literal|0
+operator|&&
+name|rdataset
+operator|->
+name|type
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -435,6 +441,13 @@ operator|(
 name|ISC_R_NOSPACE
 operator|)
 return|;
+if|if
+condition|(
+name|nalloc
+operator|!=
+literal|0
+condition|)
+block|{
 name|x
 operator|=
 name|isc_mem_get
@@ -461,6 +474,12 @@ operator|(
 name|ISC_R_NOMEMORY
 operator|)
 return|;
+block|}
+else|else
+name|x
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* 	 * Save all of the rdata members into an array. 	 */
 name|result
 operator|=
@@ -474,6 +493,10 @@ condition|(
 name|result
 operator|!=
 name|ISC_R_SUCCESS
+operator|&&
+name|result
+operator|!=
+name|ISC_R_NOMORE
 condition|)
 goto|goto
 name|free_rdatas
@@ -759,6 +782,13 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 	 * Don't forget the last item! 	 */
+if|if
+condition|(
+name|nalloc
+operator|!=
+literal|0
+condition|)
+block|{
 if|#
 directive|if
 name|DNS_RDATASET_FIXED
@@ -800,6 +830,7 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 comment|/* 	 * Provide space to store the per RR meta data. 	 */
 if|if
 condition|(
@@ -1183,6 +1214,12 @@ name|ISC_R_SUCCESS
 expr_stmt|;
 name|free_rdatas
 label|:
+if|if
+condition|(
+name|x
+operator|!=
+name|NULL
+condition|)
 name|isc_mem_put
 argument_list|(
 name|mctx

@@ -4265,6 +4265,11 @@ name|highlightdate
 operator|&&
 operator|!
 name|flag_nohighlight
+operator|&&
+name|isatty
+argument_list|(
+name|STDOUT_FILENO
+argument_list|)
 condition|)
 name|highlight
 argument_list|(

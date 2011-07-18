@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: inputbox.c,v 1.64 2010/01/19 01:03:39 tom Exp $  *  * inputbox.c -- implements the input box  *  * Copyright 2000-2009,2010 Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors:  *	Savio Lam (lam836@cs.cuhk.hk)  */
+comment|/*  *  $Id: inputbox.c,v 1.67 2011/06/29 09:48:34 tom Exp $  *  *  inputbox.c -- implements the input box  *  *  Copyright 2000-2010,2011 Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors:  *	Savio Lam (lam836@cs.cuhk.hk)  */
 end_comment
 
 begin_include
@@ -71,6 +71,8 @@ name|binding
 index|[]
 init|=
 block|{
+name|HELPKEY_BINDINGS
+block|,
 name|ENTERKEY_BINDINGS
 block|,
 name|NAVIGATE_BINDINGS
@@ -85,6 +87,8 @@ index|[]
 init|=
 block|{
 name|INPUTSTR_BINDINGS
+block|,
+name|HELPKEY_BINDINGS
 block|,
 name|ENTERKEY_BINDINGS
 block|,
@@ -428,6 +432,13 @@ argument_list|(
 name|dialog
 argument_list|,
 name|dialog_attr
+argument_list|)
+expr_stmt|;
+name|dlg_draw_helpline
+argument_list|(
+name|dialog
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|dlg_print_autowrap
@@ -859,7 +870,7 @@ operator|>=
 literal|0
 operator|)
 condition|?
-name|dlg_ok_buttoncode
+name|dlg_enter_buttoncode
 argument_list|(
 name|state
 argument_list|)

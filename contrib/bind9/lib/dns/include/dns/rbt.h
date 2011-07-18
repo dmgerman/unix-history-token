@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: rbt.h,v 1.71.48.3 2009-10-20 05:06:04 marka Exp $ */
+comment|/* $Id: rbt.h,v 1.77 2009-11-04 01:18:19 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -201,6 +201,32 @@ name|dns_rbtnode_t
 typedef|;
 end_typedef
 
+begin_enum
+enum|enum
+block|{
+name|DNS_RBT_NSEC_NORMAL
+init|=
+literal|0
+block|,
+comment|/* in main tree */
+name|DNS_RBT_NSEC_HAS_NSEC
+init|=
+literal|1
+block|,
+comment|/* also has node in nsec tree */
+name|DNS_RBT_NSEC_NSEC
+init|=
+literal|2
+block|,
+comment|/* in nsec tree */
+name|DNS_RBT_NSEC_NSEC3
+init|=
+literal|3
+comment|/* in nsec3 tree */
+block|}
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|dns_rbtnode
@@ -247,7 +273,7 @@ argument_list|)
 name|deadlink
 expr_stmt|;
 comment|/*@{*/
-comment|/*! 	 * The following bitfields add up to a total bitwidth of 32. 	 * The range of values necessary for each item is indicated, 	 * but in the case of "attributes" the field is wider to accommodate 	 * possible future expansion.  "offsetlen" could be one bit 	 * narrower by always adjusting its value by 1 to find the real 	 * offsetlen, but doing so does not gain anything (except perhaps 	 * another bit for "attributes", which doesn't yet need any more). 	 * 	 * In each case below the "range" indicated is what's _necessary_ for 	 * the bitfield to hold, not what it actually _can_ hold. 	 */
+comment|/*! 	 * The following bitfields add up to a total bitwidth of 32. 	 * The range of values necessary for each item is indicated, 	 * but in the case of "attributes" the field is wider to accommodate 	 * possible future expansion. 	 * 	 * In each case below the "range" indicated is what's _necessary_ for 	 * the bitfield to hold, not what it actually _can_ hold. 	 */
 name|unsigned
 name|int
 name|is_root
@@ -273,16 +299,16 @@ name|unsigned
 name|int
 name|attributes
 range|:
-literal|4
+literal|3
 decl_stmt|;
 comment|/*%< range is 0..2 */
 name|unsigned
 name|int
-name|nsec3
+name|nsec
 range|:
-literal|1
+literal|2
 decl_stmt|;
-comment|/*%< range is 0..1 */
+comment|/*%< range is 0..3 */
 name|unsigned
 name|int
 name|namelen
@@ -1110,7 +1136,7 @@ name|dns_rbtnode_refdestroy
 parameter_list|(
 name|node
 parameter_list|)
-value|(REQUIRE((node)->references == 0))
+value|REQUIRE((node)->references == 0)
 end_define
 
 begin_define

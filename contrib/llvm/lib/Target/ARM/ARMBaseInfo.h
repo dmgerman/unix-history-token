@@ -74,6 +74,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"MCTargetDesc/ARMMCTargetDesc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ErrorHandling.h"
 end_include
 
@@ -84,38 +90,6 @@ end_comment
 begin_comment
 comment|// so are safe to include here.
 end_comment
-
-begin_comment
-comment|// Defines symbolic names for ARM registers.  This defines a mapping from
-end_comment
-
-begin_comment
-comment|// register name to register number.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"ARMGenRegisterNames.inc"
-end_include
-
-begin_comment
-comment|// Defines symbolic names for the ARM instructions.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"ARMGenInstrNames.inc"
-end_include
 
 begin_decl_stmt
 name|namespace
