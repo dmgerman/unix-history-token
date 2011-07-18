@@ -4712,6 +4712,7 @@ decl_stmt|;
 name|spare_cbdata_t
 name|cb
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|state
