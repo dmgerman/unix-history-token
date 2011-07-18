@@ -1022,13 +1022,6 @@ argument_list|,
 name|bus_generic_print_child
 argument_list|)
 block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_driver_added
-argument_list|,
-name|bus_generic_driver_added
-argument_list|)
-block|,
 comment|/* MII interface */
 name|DEVMETHOD
 argument_list|(
