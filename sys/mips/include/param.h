@@ -246,12 +246,23 @@ name|MAXSMPCPU
 value|32
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXCPU
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|MAXCPU
 value|MAXSMPCPU
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
