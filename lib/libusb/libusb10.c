@@ -3128,6 +3128,16 @@ operator|(
 name|LIBUSB_ERROR_INVALID_PARAM
 operator|)
 return|;
+if|if
+condition|(
+name|namelen
+operator|>
+literal|255
+condition|)
+name|namelen
+operator|=
+literal|255
+expr_stmt|;
 name|err
 operator|=
 name|libusb20_dev_get_iface_desc

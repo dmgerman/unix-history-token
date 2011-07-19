@@ -4291,6 +4291,14 @@ operator|(
 name|LIBUSB20_ERROR_INVALID_PARAM
 operator|)
 return|;
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* set default string value */
 return|return
 operator|(
 name|pdev
