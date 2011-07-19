@@ -404,13 +404,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|PCPU_NAME_LEN
-value|(sizeof("CPU ") + sizeof(__XSTRING(MAXCPU)) - 1)
-end_define
-
 begin_comment
 comment|/*  * This structure maps out the global data that needs to be kept on a  * per-cpu basis.  The members are accessed via the PCPU_GET/SET/PTR  * macros defined in<machine/pcpu.h>.  Machine dependent fields are  * defined in the PCPU_MD_FIELDS macro defined in<machine/pcpu.h>.  */
 end_comment
@@ -552,9 +545,7 @@ name|struct
 name|pcpu
 modifier|*
 name|cpuid_to_pcpu
-index|[
-name|MAXCPU
-index|]
+index|[]
 decl_stmt|;
 end_decl_stmt
 
