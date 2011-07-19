@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -1216,6 +1222,16 @@ argument_list|(
 name|node
 argument_list|)
 decl_stmt|;
+name|taskqueue_drain
+argument_list|(
+name|taskqueue_swi
+argument_list|,
+operator|&
+name|ifp
+operator|->
+name|if_linktask
+argument_list|)
+expr_stmt|;
 name|NG_NODE_REALLY_DIE
 argument_list|(
 name|node
