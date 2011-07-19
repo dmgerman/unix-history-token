@@ -472,18 +472,6 @@ name|lock_list_entry
 modifier|*
 name|pc_spinlocks
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|KTR
-name|char
-name|pc_name
-index|[
-name|PCPU_NAME_LEN
-index|]
-decl_stmt|;
-comment|/* String name for KTR */
-endif|#
-directive|endif
 name|struct
 name|vmmeter
 name|pc_cnt
