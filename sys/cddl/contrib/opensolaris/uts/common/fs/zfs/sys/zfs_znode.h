@@ -633,6 +633,9 @@ name|struct
 name|task
 name|z_task
 decl_stmt|;
+name|dev_t
+name|z_rdev
+decl_stmt|;
 block|}
 name|znode_t
 typedef|;

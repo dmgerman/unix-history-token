@@ -11292,7 +11292,14 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-comment|//	vap->va_rdev = zfs_cmpldev(pzp->zp_rdev);
+name|vap
+operator|->
+name|va_rdev
+operator|=
+name|zp
+operator|->
+name|z_rdev
+expr_stmt|;
 name|vap
 operator|->
 name|va_seq
