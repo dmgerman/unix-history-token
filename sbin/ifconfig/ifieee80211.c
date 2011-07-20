@@ -9920,36 +9920,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 				 * DFS and HT40 don't mix.  This should be 				 * expressed in the regdomain database but 				 * just in case enforce it here. 				 */
-if|if
-condition|(
-operator|(
-name|chanFlags
-operator|&
-name|IEEE80211_CHAN_HT40
-operator|)
-operator|&&
-operator|(
-name|flags
-operator|&
-name|IEEE80211_CHAN_DFS
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-name|verbose
-condition|)
-name|printf
-argument_list|(
-literal|"%u: skip, HT40+DFS "
-literal|"not permitted\n"
-argument_list|,
-name|freq
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
 comment|/* NB: HT attribute comes from caller */
 name|flags
 operator|&=
