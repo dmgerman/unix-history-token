@@ -981,6 +981,10 @@ name|KF_TYPE_PTS
 value|10
 end_define
 
+begin_comment
+comment|/* no KF_TYPE_CAPABILITY (11), since capabilities wrap other file objects */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1227,6 +1231,13 @@ define|#
 directive|define
 name|KF_FLAG_EXEC
 value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
+name|KF_FLAG_CAPABILITY
+value|0x00008000
 end_define
 
 begin_comment
@@ -1536,9 +1547,17 @@ name|kf_pad1
 decl_stmt|;
 comment|/* Round to 32 bit alignment. */
 name|int
+name|_kf_ispare0
+decl_stmt|;
+comment|/* Space for more stuff. */
+name|cap_rights_t
+name|kf_cap_rights
+decl_stmt|;
+comment|/* Capability rights. */
+name|int
 name|_kf_ispare
 index|[
-literal|7
+literal|4
 index|]
 decl_stmt|;
 comment|/* Space for more stuff. */
