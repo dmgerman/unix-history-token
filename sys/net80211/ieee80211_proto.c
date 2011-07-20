@@ -7877,6 +7877,11 @@ modifier|*
 name|ic
 parameter_list|)
 block|{
+name|struct
+name|ieee80211vap
+modifier|*
+name|vap
+decl_stmt|;
 name|IEEE80211_LOCK_ASSERT
 argument_list|(
 name|ic
