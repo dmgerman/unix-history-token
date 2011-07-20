@@ -150,6 +150,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kdb.h>
 end_include
 
@@ -2165,6 +2177,78 @@ end_function
 begin_function
 specifier|static
 name|void
+name|ukbd_yield
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|struct
+name|thread
+modifier|*
+name|td
+init|=
+name|curthread
+decl_stmt|;
+name|uint32_t
+name|old_prio
+decl_stmt|;
+name|DROP_GIANT
+argument_list|()
+expr_stmt|;
+name|thread_lock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+comment|/* get current priority */
+name|old_prio
+operator|=
+name|td
+operator|->
+name|td_base_pri
+expr_stmt|;
+comment|/* set new priority */
+name|sched_prio
+argument_list|(
+name|td
+argument_list|,
+name|td
+operator|->
+name|td_user_pri
+argument_list|)
+expr_stmt|;
+comment|/* cause a task switch */
+name|mi_switch
+argument_list|(
+name|SW_INVOL
+operator||
+name|SWT_RELINQUISH
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* restore priority */
+name|sched_prio
+argument_list|(
+name|td
+argument_list|,
+name|old_prio
+argument_list|)
+expr_stmt|;
+name|thread_unlock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+name|PICKUP_GIANT
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|ukbd_do_poll
 parameter_list|(
 name|struct
@@ -2212,13 +2296,9 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* make sure the USB code gets a chance to run */
-name|pause
-argument_list|(
-literal|"UKBD"
-argument_list|,
-literal|1
-argument_list|)
+comment|/* give USB threads a chance to run */
+name|ukbd_yield
+argument_list|()
 expr_stmt|;
 comment|/* check if we should wait */
 if|if
