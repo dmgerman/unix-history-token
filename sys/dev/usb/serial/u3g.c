@@ -1900,6 +1900,15 @@ argument_list|)
 block|,
 name|U3G_DEV
 argument_list|(
+name|LONGCHEER
+argument_list|,
+name|XSSTICK
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
 name|MERLIN
 argument_list|,
 name|V620
