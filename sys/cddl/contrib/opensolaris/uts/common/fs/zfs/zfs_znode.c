@@ -3224,6 +3224,9 @@ name|B_TRUE
 expr_stmt|;
 comment|/* z_prefetch default is enabled */
 break|break;
+ifdef|#
+directive|ifdef
+name|sun
 case|case
 name|VBLK
 case|:
@@ -3259,9 +3262,9 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|zp
+name|vp
 operator|->
-name|z_rdev
+name|v_rdev
 operator|=
 name|zfs_cmpldev
 argument_list|(
@@ -3270,6 +3273,9 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+endif|#
+directive|endif
+comment|/* sun */
 case|case
 name|VFIFO
 case|:
