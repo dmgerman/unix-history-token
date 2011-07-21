@@ -763,7 +763,7 @@ begin_define
 define|#
 directive|define
 name|UMIDI_TX_FRAMES
-value|128
+value|256
 end_define
 
 begin_comment
