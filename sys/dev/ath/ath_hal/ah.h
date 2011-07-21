@@ -2107,22 +2107,26 @@ name|u_int32_t
 name|pe_maxlen
 decl_stmt|;
 comment|/* Max length of radar sign in 0.8us units */
-name|HAL_BOOL
+name|int32_t
 name|pe_usefir128
 decl_stmt|;
 comment|/* Use the average in-band power measured over 128 cycles */
-name|HAL_BOOL
+name|int32_t
 name|pe_blockradar
 decl_stmt|;
 comment|/* 					 * Enable to block radar check if pkt detect is done via OFDM 					 * weak signal detect or pkt is detected immediately after tx 					 * to rx transition 					 */
-name|HAL_BOOL
+name|int32_t
 name|pe_enmaxrssi
 decl_stmt|;
 comment|/* 					 * Enable to use the max rssi instead of the last rssi during 					 * fine gain changes for radar detection 					 */
-name|HAL_BOOL
+name|int32_t
 name|pe_extchannel
 decl_stmt|;
 comment|/* Enable DFS on ext channel */
+name|int32_t
+name|pe_enabled
+decl_stmt|;
+comment|/* Whether radar detection is enabled */
 block|}
 name|HAL_PHYERR_PARAM
 typedef|;
