@@ -2190,37 +2190,14 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-if|if
-condition|(
-operator|(
-name|fband
-operator|->
-name|useDfs
-operator|&
-name|dfsMask
-operator|)
-operator|&&
-operator|(
-name|cm
-operator|->
-name|flags
-operator|&
-name|IEEE80211_CHAN_HT40
-operator|)
-condition|)
-block|{
+if|#
+directive|if
+literal|0
+block|if ((fband->useDfs& dfsMask)&&  				    (cm->flags& IEEE80211_CHAN_HT40)) {
 comment|/* NB: DFS and HT40 don't mix */
-name|HALDEBUG
-argument_list|(
-name|ah
-argument_list|,
-name|HAL_DEBUG_REGDOMAIN
-argument_list|,
-literal|"skip HT40 chan, DFS required\n"
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
+block|HALDEBUG(ah, HAL_DEBUG_REGDOMAIN, 					    "skip HT40 chan, DFS required\n"); 					continue; 				}
+endif|#
+directive|endif
 comment|/* 				 * Make sure that channel separation 				 * meets the requirement. 				 */
 if|if
 condition|(
