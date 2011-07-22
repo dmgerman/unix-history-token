@@ -777,17 +777,11 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
-comment|/* capability auditing will follow in a few commits */
 name|AUDIT_ARG_RIGHTS
 argument_list|(
 name|rights
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|fget
