@@ -13161,7 +13161,7 @@ specifier|static
 name|int
 name|fsckcmds
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -13312,12 +13312,6 @@ modifier|*
 name|origops
 decl_stmt|,
 name|bufferedops
-decl_stmt|;
-specifier|static
-name|int
-name|outcnt
-init|=
-literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -14860,11 +14854,6 @@ name|DEBUG
 if|if
 condition|(
 name|fsckcmds
-operator|&&
-name|outcnt
-operator|++
-operator|<
-literal|100
 condition|)
 block|{
 name|printf
@@ -15385,12 +15374,6 @@ decl_stmt|;
 name|daddr_t
 name|lbn
 decl_stmt|;
-specifier|static
-name|int
-name|outcnt
-init|=
-literal|0
-decl_stmt|;
 comment|/* 	 * The devvp is associated with the /dev filesystem. To discover 	 * the filesystem with which the device is associated, we depend 	 * on the application setting the current directory to a location 	 * within the filesystem being written. Yes, this is an ugly hack. 	 */
 name|devvp
 operator|=
@@ -15474,11 +15457,6 @@ name|DEBUG
 if|if
 condition|(
 name|fsckcmds
-operator|&&
-name|outcnt
-operator|++
-operator|<
-literal|100
 condition|)
 block|{
 name|printf
