@@ -1874,11 +1874,25 @@ expr_stmt|;
 comment|/* We only sync the cache if the drive is capable of it. */
 if|if
 condition|(
+operator|(
 name|softc
 operator|->
 name|flags
 operator|&
 name|ADA_FLAG_CAN_FLUSHCACHE
+operator|)
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|softc
+operator|->
+name|flags
+operator|&
+name|ADA_FLAG_PACK_INVALID
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|ccb
@@ -6691,6 +6705,16 @@ condition|(
 name|error
 operator|==
 name|ENXIO
+operator|&&
+operator|(
+name|softc
+operator|->
+name|flags
+operator|&
+name|ADA_FLAG_PACK_INVALID
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* 					 * Catastrophic error.  Mark our pack as 					 * invalid. 					 */
