@@ -2873,6 +2873,19 @@ name|pr_recovery_delay
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* clear any leftover port reset changes first */
+name|usbd_req_clear_port_feature
+argument_list|(
+name|udev
+argument_list|,
+name|mtx
+argument_list|,
+name|port
+argument_list|,
+name|UHF_C_PORT_RESET
+argument_list|)
+expr_stmt|;
+comment|/* assert port reset on the given port */
 name|err
 operator|=
 name|usbd_req_set_port_feature
@@ -2886,15 +2899,14 @@ argument_list|,
 name|UHF_PORT_RESET
 argument_list|)
 expr_stmt|;
+comment|/* check for errors */
 if|if
 condition|(
 name|err
 condition|)
-block|{
 goto|goto
 name|done
 goto|;
-block|}
 ifdef|#
 directive|ifdef
 name|USB_DEBUG
@@ -2955,6 +2967,12 @@ condition|(
 literal|1
 condition|)
 block|{
+name|uint16_t
+name|status
+decl_stmt|;
+name|uint16_t
+name|change
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|USB_DEBUG
@@ -3015,41 +3033,56 @@ goto|goto
 name|done
 goto|;
 block|}
-comment|/* if the device disappeared, just give up */
-if|if
-condition|(
-operator|!
-operator|(
+name|status
+operator|=
 name|UGETW
 argument_list|(
 name|ps
 operator|.
 name|wPortStatus
 argument_list|)
-operator|&
-name|UPS_CURRENT_CONNECT_STATUS
-operator|)
-condition|)
-block|{
-goto|goto
-name|done
-goto|;
-block|}
-comment|/* check if reset is complete */
-if|if
-condition|(
+expr_stmt|;
+name|change
+operator|=
 name|UGETW
 argument_list|(
 name|ps
 operator|.
 name|wPortChange
 argument_list|)
+expr_stmt|;
+comment|/* if the device disappeared, just give up */
+if|if
+condition|(
+operator|!
+operator|(
+name|status
+operator|&
+name|UPS_CURRENT_CONNECT_STATUS
+operator|)
+condition|)
+goto|goto
+name|done
+goto|;
+comment|/* check if reset is complete */
+if|if
+condition|(
+name|change
 operator|&
 name|UPS_C_PORT_RESET
 condition|)
-block|{
 break|break;
-block|}
+comment|/* 		 * Some Virtual Machines like VirtualBox 4.x fail to 		 * generate a port reset change event. Check if reset 		 * is no longer asserted. 		 */
+if|if
+condition|(
+operator|!
+operator|(
+name|status
+operator|&
+name|UPS_RESET
+operator|)
+condition|)
+break|break;
 comment|/* check for timeout */
 if|if
 condition|(
