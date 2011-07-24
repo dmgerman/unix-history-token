@@ -2815,8 +2815,8 @@ name|hdr_list
 modifier|*
 name|hl
 decl_stmt|;
-name|int
-name|i
+name|size_t
+name|len
 decl_stmt|;
 name|remember
 argument_list|(
@@ -2880,22 +2880,29 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|i
+name|len
 operator|=
+name|strlen
+argument_list|(
 name|dp
 operator|->
-name|d_namlen
-operator|-
-literal|2
+name|d_name
+argument_list|)
 expr_stmt|;
 comment|/* Skip non-headers */
 if|if
 condition|(
+name|len
+operator|<
+literal|2
+operator|||
 name|dp
 operator|->
 name|d_name
 index|[
-name|i
+name|len
+operator|-
+literal|2
 index|]
 operator|!=
 literal|'.'
@@ -2904,8 +2911,8 @@ name|dp
 operator|->
 name|d_name
 index|[
-name|i
-operator|+
+name|len
+operator|-
 literal|1
 index|]
 operator|!=
@@ -2915,7 +2922,7 @@ continue|continue;
 comment|/* Skip special stuff, eg: bus_if.h, but check opt_*.h */
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|dp
 operator|->
