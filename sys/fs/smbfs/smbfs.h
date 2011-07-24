@@ -236,7 +236,7 @@ name|ucred
 modifier|*
 name|sm_owner
 decl_stmt|;
-name|u_int
+name|uint64_t
 name|sm_flags
 decl_stmt|;
 name|long

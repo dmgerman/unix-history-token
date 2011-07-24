@@ -7558,11 +7558,11 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|u_int
+name|uint64_t
 modifier|*
 name|w
 parameter_list|,
-name|u_int
+name|uint64_t
 name|val
 parameter_list|)
 block|{
