@@ -983,6 +983,17 @@ begin_comment
 comment|/* disable cluster write */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MNT_SUJ
+value|0x0000000100000000ULL
+end_define
+
+begin_comment
+comment|/* using journaled soft updates */
+end_comment
+
 begin_comment
 comment|/*  * NFS export related mount flags.  */
 end_comment
@@ -1120,7 +1131,7 @@ begin_define
 define|#
 directive|define
 name|MNT_VISFLAGMASK
-value|(MNT_RDONLY	| MNT_SYNCHRONOUS | MNT_NOEXEC	| \ 			MNT_NOSUID	| MNT_UNION	| \ 			MNT_ASYNC	| MNT_EXRDONLY	| MNT_EXPORTED	| \ 			MNT_DEFEXPORTED	| MNT_EXPORTANON| MNT_EXKERB	| \ 			MNT_LOCAL	| MNT_USER	| MNT_QUOTA	| \ 			MNT_ROOTFS	| MNT_NOATIME	| MNT_NOCLUSTERR| \ 			MNT_NOCLUSTERW	| MNT_SUIDDIR	| MNT_SOFTDEP	| \ 			MNT_IGNORE	| MNT_EXPUBLIC	| MNT_NOSYMFOLLOW | \ 			MNT_GJOURNAL	| MNT_MULTILABEL | MNT_ACLS	| \ 			MNT_NFS4ACLS)
+value|(MNT_RDONLY	| MNT_SYNCHRONOUS | MNT_NOEXEC	| \ 			MNT_NOSUID	| MNT_UNION	| MNT_SUJ	| \ 			MNT_ASYNC	| MNT_EXRDONLY	| MNT_EXPORTED	| \ 			MNT_DEFEXPORTED	| MNT_EXPORTANON| MNT_EXKERB	| \ 			MNT_LOCAL	| MNT_USER	| MNT_QUOTA	| \ 			MNT_ROOTFS	| MNT_NOATIME	| MNT_NOCLUSTERR| \ 			MNT_NOCLUSTERW	| MNT_SUIDDIR	| MNT_SOFTDEP	| \ 			MNT_IGNORE	| MNT_EXPUBLIC	| MNT_NOSYMFOLLOW | \ 			MNT_GJOURNAL	| MNT_MULTILABEL | MNT_ACLS	| \ 			MNT_NFS4ACLS)
 end_define
 
 begin_comment
@@ -1301,17 +1312,6 @@ end_define
 
 begin_comment
 comment|/* Allow shared locking for writes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MNTK_SUJ
-value|0x00000100
-end_define
-
-begin_comment
-comment|/* Softdep journaling enabled */
 end_comment
 
 begin_define

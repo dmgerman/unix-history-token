@@ -520,6 +520,12 @@ literal|"soft-updates"
 block|}
 block|,
 block|{
+name|MNT_SUJ
+block|,
+literal|"journaled soft-updates"
+block|}
+block|,
+block|{
 name|MNT_MULTILABEL
 block|,
 literal|"multilabel"
@@ -1427,7 +1433,7 @@ argument_list|(
 operator|&
 name|mntbuf
 argument_list|,
-name|MNT_NOWAIT
+name|MNT_WAIT
 argument_list|)
 operator|)
 operator|==
@@ -3455,7 +3461,7 @@ argument_list|(
 operator|&
 name|mntbuf
 argument_list|,
-name|MNT_NOWAIT
+name|MNT_WAIT
 argument_list|)
 expr_stmt|;
 for|for

@@ -492,7 +492,7 @@ name|DOINGSUJ
 parameter_list|(
 name|vp
 parameter_list|)
-value|((vp)->v_mount->mnt_kern_flag& MNTK_SUJ)
+value|((vp)->v_mount->mnt_flag& MNT_SUJ)
 end_define
 
 begin_comment

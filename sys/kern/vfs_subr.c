@@ -12823,6 +12823,11 @@ argument_list|)
 expr_stmt|;
 name|MNT_FLAG
 argument_list|(
+name|MNT_SUJ
+argument_list|)
+expr_stmt|;
+name|MNT_FLAG
+argument_list|(
 name|MNT_NOSYMFOLLOW
 argument_list|)
 expr_stmt|;
@@ -12946,11 +12951,6 @@ argument_list|(
 name|MNT_BYFSID
 argument_list|)
 expr_stmt|;
-name|MNT_FLAG
-argument_list|(
-name|MNT_SOFTDEP
-argument_list|)
-expr_stmt|;
 undef|#
 directive|undef
 name|MNT_FLAG
@@ -13072,11 +13072,6 @@ expr_stmt|;
 name|MNT_KERN_FLAG
 argument_list|(
 name|MNTK_SHARED_WRITES
-argument_list|)
-expr_stmt|;
-name|MNT_KERN_FLAG
-argument_list|(
-name|MNTK_SUJ
 argument_list|)
 expr_stmt|;
 name|MNT_KERN_FLAG
