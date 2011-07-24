@@ -125,6 +125,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -354,6 +360,10 @@ name|sectimeout
 operator|=
 name|TIMEOUT
 expr_stmt|;
+name|pw
+operator|=
+name|NULL
+expr_stmt|;
 name|mypw
 operator|=
 name|NULL
@@ -542,6 +552,29 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"not a terminal?"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|ttynam
+argument_list|,
+name|_PATH_DEV
+argument_list|,
+name|strlen
+argument_list|(
+name|_PATH_DEV
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|ttynam
+operator|+=
+name|strlen
+argument_list|(
+name|_PATH_DEV
 argument_list|)
 expr_stmt|;
 if|if
@@ -894,6 +927,29 @@ literal|0x2
 expr_stmt|;
 block|}
 comment|/* header info */
+if|if
+condition|(
+name|pw
+operator|!=
+name|NULL
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"lock: %s using %s on %s."
+argument_list|,
+name|pw
+operator|->
+name|pw_name
+argument_list|,
+name|ttynam
+argument_list|,
+name|hostname
+argument_list|)
+expr_stmt|;
+else|else
 operator|(
 name|void
 operator|)
