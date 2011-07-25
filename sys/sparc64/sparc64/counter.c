@@ -266,6 +266,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|sc
@@ -308,12 +310,6 @@ operator|->
 name|tc_get_timecount
 operator|=
 name|counter_get_timecount
-expr_stmt|;
-name|tc
-operator|->
-name|tc_poll_pps
-operator|=
-name|NULL
 expr_stmt|;
 name|tc
 operator|->
@@ -397,8 +393,6 @@ name|sc
 operator|->
 name|sc_offset
 argument_list|)
-operator|&
-name|COUNTER_MASK
 operator|)
 return|;
 block|}
