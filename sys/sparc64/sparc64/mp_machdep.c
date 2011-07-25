@@ -2037,12 +2037,6 @@ comment|/* 	 * Flush all non-locked TLB entries possibly left over by the 	 * fi
 name|tlb_flush_nonlocked
 argument_list|()
 expr_stmt|;
-comment|/* Initialize global registers. */
-name|cpu_setregs
-argument_list|(
-name|pc
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Enable interrupts. 	 * Note that the PIL we be lowered indirectly via sched_throw(NULL) 	 * when fake spinlock held by the idle thread eventually is released. 	 */
 name|wrpr
 argument_list|(
