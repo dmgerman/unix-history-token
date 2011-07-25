@@ -663,7 +663,7 @@ name|valuestr
 name|lzma_attribute
 argument_list|(
 operator|(
-name|unused
+name|__unused__
 operator|)
 argument_list|)
 argument_list|)
@@ -824,7 +824,7 @@ name|valuestr
 name|lzma_attribute
 argument_list|(
 operator|(
-name|unused
+name|__unused__
 operator|)
 argument_list|)
 argument_list|)
@@ -979,7 +979,7 @@ name|void
 name|lzma_attribute
 argument_list|(
 operator|(
-name|noreturn
+name|__noreturn__
 operator|)
 argument_list|)
 name|error_lzma_preset

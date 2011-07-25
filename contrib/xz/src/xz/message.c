@@ -364,7 +364,7 @@ name|sig
 name|lzma_attribute
 argument_list|(
 operator|(
-name|unused
+name|__unused__
 operator|)
 argument_list|)
 argument_list|)
@@ -2644,11 +2644,18 @@ argument_list|(
 name|false
 argument_list|)
 expr_stmt|;
+comment|// TRANSLATORS: This is the program name in the beginning
+comment|// of the line in messages. Usually it becomes "xz: ".
+comment|// This is a translatable string because French needs
+comment|// a space before a colon.
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: "
+argument_list|)
 argument_list|,
 name|progname
 argument_list|)

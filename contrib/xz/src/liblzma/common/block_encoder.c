@@ -562,7 +562,7 @@ name|filters
 name|lzma_attribute
 argument_list|(
 operator|(
-name|unused
+name|__unused__
 operator|)
 argument_list|)
 argument_list|,
@@ -627,6 +627,17 @@ argument_list|,
 name|allocator
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|block
+operator|==
+name|NULL
+condition|)
+return|return
+name|LZMA_PROG_ERROR
+return|;
+comment|// The contents of the structure may depend on the version so
+comment|// check the version first.
 if|if
 condition|(
 name|block

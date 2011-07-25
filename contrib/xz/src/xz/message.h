@@ -182,9 +182,9 @@ modifier|...
 parameter_list|)
 function_decl|lzma_attribute
 parameter_list|(
-function_decl|(format
+function_decl|(__format__
 parameter_list|(
-name|printf
+name|__printf__
 parameter_list|,
 function_decl|2
 operator|,
@@ -226,9 +226,9 @@ modifier|...
 parameter_list|)
 function_decl|lzma_attribute
 parameter_list|(
-function_decl|(format
+function_decl|(__format__
 parameter_list|(
-name|printf
+name|__printf__
 parameter_list|,
 function_decl|1
 operator|,
@@ -270,9 +270,9 @@ modifier|...
 parameter_list|)
 function_decl|lzma_attribute
 parameter_list|(
-function_decl|(format
+function_decl|(__format__
 parameter_list|(
-name|printf
+name|__printf__
 parameter_list|,
 function_decl|1
 operator|,
@@ -310,9 +310,9 @@ modifier|...
 parameter_list|)
 function_decl|lzma_attribute
 parameter_list|(
-function_decl|(format
+function_decl|(__format__
 parameter_list|(
-name|printf
+name|__printf__
 parameter_list|,
 function_decl|1
 operator|,
@@ -324,7 +324,7 @@ unit|)))
 name|lzma_attribute
 argument_list|(
 operator|(
-name|noreturn
+name|__noreturn__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -347,7 +347,7 @@ name|void
 parameter_list|)
 function_decl|lzma_attribute
 parameter_list|(
-function_decl|(noreturn
+function_decl|(__noreturn__
 end_function_decl
 
 begin_empty_stmt
@@ -372,7 +372,7 @@ name|void
 parameter_list|)
 function_decl|lzma_attribute
 parameter_list|(
-function_decl|(noreturn
+function_decl|(__noreturn__
 end_function_decl
 
 begin_empty_stmt
@@ -529,7 +529,7 @@ name|void
 parameter_list|)
 function_decl|lzma_attribute
 parameter_list|(
-function_decl|(noreturn
+function_decl|(__noreturn__
 end_function_decl
 
 begin_empty_stmt
@@ -551,7 +551,7 @@ name|long_help
 parameter_list|)
 function_decl|lzma_attribute
 parameter_list|(
-function_decl|(noreturn
+function_decl|(__noreturn__
 end_function_decl
 
 begin_empty_stmt

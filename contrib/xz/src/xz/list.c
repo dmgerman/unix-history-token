@@ -1398,9 +1398,7 @@ condition|)
 goto|goto
 name|data_error
 goto|;
-name|lzma_block
-name|block
-decl_stmt|;
+comment|// Initialize the block structure and decode Block Header Size.
 name|lzma_filter
 name|filters
 index|[
@@ -1409,34 +1407,9 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-comment|// Initialize the pointers so that they can be passed to free().
-for|for
-control|(
-name|size_t
-name|i
-init|=
-literal|0
-init|;
-name|i
-operator|<
-name|ARRAY_SIZE
-argument_list|(
-name|filters
-argument_list|)
-condition|;
-operator|++
-name|i
-control|)
-name|filters
-index|[
-name|i
-index|]
-operator|.
-name|options
-operator|=
-name|NULL
-expr_stmt|;
-comment|// Initialize the block structure and decode Block Header Size.
+name|lzma_block
+name|block
+decl_stmt|;
 name|block
 operator|.
 name|version
@@ -1625,6 +1598,36 @@ break|break;
 case|case
 name|LZMA_DATA_ERROR
 case|:
+comment|// Free the memory allocated by lzma_block_header_decode().
+for|for
+control|(
+name|size_t
+name|i
+init|=
+literal|0
+init|;
+name|filters
+index|[
+name|i
+index|]
+operator|.
+name|id
+operator|!=
+name|LZMA_VLI_UNKNOWN
+condition|;
+operator|++
+name|i
+control|)
+name|free
+argument_list|(
+name|filters
+index|[
+name|i
+index|]
+operator|.
+name|options
+argument_list|)
+expr_stmt|;
 goto|goto
 name|data_error
 goto|;
@@ -1739,39 +1742,6 @@ name|message_strm
 argument_list|(
 name|LZMA_DATA_ERROR
 argument_list|)
-argument_list|)
-expr_stmt|;
-comment|// Free the memory allocated by lzma_block_header_decode().
-comment|// This is truly needed only if we get here after a succcessful
-comment|// call to lzma_block_header_decode() but it doesn't hurt to
-comment|// always do it.
-for|for
-control|(
-name|size_t
-name|i
-init|=
-literal|0
-init|;
-name|filters
-index|[
-name|i
-index|]
-operator|.
-name|id
-operator|!=
-name|LZMA_VLI_UNKNOWN
-condition|;
-operator|++
-name|i
-control|)
-name|free
-argument_list|(
-name|filters
-index|[
-name|i
-index|]
-operator|.
-name|options
 argument_list|)
 expr_stmt|;
 return|return

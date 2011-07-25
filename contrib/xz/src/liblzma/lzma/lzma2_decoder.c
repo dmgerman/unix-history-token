@@ -196,6 +196,16 @@ operator|++
 operator|*
 name|in_pos
 expr_stmt|;
+comment|// End marker
+if|if
+condition|(
+name|control
+operator|==
+literal|0x00
+condition|)
+return|return
+name|LZMA_STREAM_END
+return|;
 if|if
 condition|(
 name|control
@@ -336,16 +346,6 @@ block|}
 block|}
 else|else
 block|{
-comment|// End marker
-if|if
-condition|(
-name|control
-operator|==
-literal|0x00
-condition|)
-return|return
-name|LZMA_STREAM_END
-return|;
 comment|// Invalid control values
 if|if
 condition|(
