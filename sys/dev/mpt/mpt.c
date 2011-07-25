@@ -1051,7 +1051,7 @@ modifier|*
 name|pers
 parameter_list|)
 block|{
-comment|/* Load is always successfull. */
+comment|/* Load is always successful. */
 return|return
 operator|(
 literal|0
@@ -1070,7 +1070,7 @@ modifier|*
 name|mpt
 parameter_list|)
 block|{
-comment|/* Probe is always successfull. */
+comment|/* Probe is always successful. */
 return|return
 operator|(
 literal|0
@@ -1089,7 +1089,7 @@ modifier|*
 name|mpt
 parameter_list|)
 block|{
-comment|/* Attach is always successfull. */
+comment|/* Attach is always successful. */
 return|return
 operator|(
 literal|0
@@ -1108,7 +1108,7 @@ modifier|*
 name|mpt
 parameter_list|)
 block|{
-comment|/* Enable is always successfull. */
+comment|/* Enable is always successful. */
 return|return
 operator|(
 literal|0
@@ -1220,7 +1220,7 @@ modifier|*
 name|pers
 parameter_list|)
 block|{
-comment|/* Unload is always successfull. */
+comment|/* Unload is always successful. */
 return|return
 operator|(
 literal|0
@@ -2319,7 +2319,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|/* Some error occured that LSI wants logged */
+comment|/* Some error occurred that LSI wants logged */
 name|mpt_prt
 argument_list|(
 name|mpt
@@ -10059,7 +10059,7 @@ modifier|*
 name|pers
 parameter_list|)
 block|{
-comment|/* Unload is always successfull. */
+comment|/* Unload is always successful. */
 return|return
 operator|(
 literal|0
@@ -10926,7 +10926,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* Allocate some DMA accessable memory for requests */
+comment|/* Allocate some DMA accessible memory for requests */
 if|if
 condition|(
 name|bus_dmamem_alloc
@@ -11840,7 +11840,7 @@ name|struct
 name|mpt_map_info
 name|mi
 decl_stmt|;
-comment|/* 		 * In some configurations, the IOC's firmware is 		 * stored in a shared piece of system NVRAM that 		 * is only accessable via the BIOS.  In this 		 * case, the firmware keeps a copy of firmware in 		 * RAM until the OS driver retrieves it.  Once 		 * retrieved, we are responsible for re-downloading 		 * the firmware after any hard-reset. 		 */
+comment|/* 		 * In some configurations, the IOC's firmware is 		 * stored in a shared piece of system NVRAM that 		 * is only accessible via the BIOS.  In this 		 * case, the firmware keeps a copy of firmware in 		 * RAM until the OS driver retrieves it.  Once 		 * retrieved, we are responsible for re-downloading 		 * the firmware after any hard-reset. 		 */
 name|mpt
 operator|->
 name|fw_image_size
