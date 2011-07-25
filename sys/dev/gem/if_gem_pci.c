@@ -770,6 +770,26 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* Set the PCI latency timer for Sun ERIs. */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_variant
+operator|==
+name|GEM_SUN_ERI
+condition|)
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+name|PCIR_LATTIMER
+argument_list|,
+name|GEM_ERI_LATENCY_TIMER
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_dev
