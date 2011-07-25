@@ -2197,7 +2197,9 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"uma_small_alloc: free page still has mappings!"
+literal|"uma_small_alloc: free page %p still has mappings!"
+operator|,
+name|m
 operator|)
 argument_list|)
 expr_stmt|;
