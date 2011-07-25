@@ -636,7 +636,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|uint32_t
+name|uint16_t
 name|opts
 decl_stmt|;
 end_decl_stmt
@@ -1181,7 +1181,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|uint8_t
 name|autoboot
 decl_stmt|;
 name|ino_t
@@ -1616,11 +1616,12 @@ decl_stmt|,
 name|x
 decl_stmt|;
 name|int
-name|fmt
-decl_stmt|,
 name|i
 decl_stmt|,
 name|j
+decl_stmt|;
+name|uint8_t
+name|fmt
 decl_stmt|;
 if|if
 condition|(
