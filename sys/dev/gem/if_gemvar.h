@@ -474,6 +474,10 @@ name|u_int
 name|sc_rxfifosize
 decl_stmt|;
 comment|/* RX FIFO size (bytes) */
+name|uint32_t
+name|sc_mac_rxcfg
+decl_stmt|;
+comment|/* RX MAC conf. % GEM_MAC_RX_ENABLE */
 name|int
 name|sc_ifflags
 decl_stmt|;
