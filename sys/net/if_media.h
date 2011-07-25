@@ -1773,7 +1773,9 @@ begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_ETHERNET_ALIASES
-value|{					\ 	{ IFM_10_T,	"UTP" },					\ 	{ IFM_10_T,	"10UTP" },					\ 	{ IFM_10_2,	"BNC" },					\ 	{ IFM_10_2,	"10BNC" },					\ 	{ IFM_10_5,	"AUI" },					\ 	{ IFM_10_5,	"10AUI" },					\ 	{ IFM_100_TX,	"100TX" },					\ 	{ IFM_100_T4,	"100T4" },					\ 	{ IFM_100_VG,	"100VG" },					\ 	{ IFM_100_T2,	"100T2" },					\ 	{ IFM_10_STP,	"10STP" },					\ 	{ IFM_10_FL,	"10FL" },					\ 	{ IFM_1000_SX,	"1000SX" },					\ 	{ IFM_1000_LX,	"1000LX" },					\ 	{ IFM_1000_CX,	"1000CX" },					\ 	{ IFM_1000_T,	"1000baseTX" },					\ 	{ IFM_1000_T,	"1000TX" },					\ 	{ IFM_1000_T,	"1000T" },					\ 	{ IFM_2500_SX,	"2500SX" },					\ 	{ 0, NULL },							\ }
+value|{					\ 	{ IFM_10_T,	"10baseT" },					\ 	{ IFM_10_T,	"UTP" },					\ 	{ IFM_10_T,	"10UTP" },					\ 	{ IFM_10_2,	"BNC" },					\ 	{ IFM_10_2,	"10BNC" },					\ 	{ IFM_10_5,	"AUI" },					\ 	{ IFM_10_5,	"10AUI" },					\ 	{ IFM_100_TX,	"100TX" },					\ 	{ IFM_100_T4,	"100T4" },					\ 	{ IFM_100_VG,	"100VG" },					\ 	{ IFM_100_T2,	"100T2" },					\ 	{ IFM_10_STP,	"10STP" },					\ 	{ IFM_10_FL,	"10FL" },					\ 	{ IFM_1000_SX,	"1000SX" },					\ 	{ IFM_1000_LX,	"1000LX" },					\ 	{ IFM_1000_CX,	"1000CX" },					\ 	{ IFM_1000_T,	"1000baseTX" },					\ 	{ IFM_1000_T,	"1000TX" },					\ 	{ IFM_1000_T,	"1000T" },					\ 	{ IFM_2500_SX,	"2500SX" },					\ 									\
+comment|/*								\ 	 * Shorthands for common media+option combinations as announced	\ 	 * by miibus(4)							\ 	 */
+value|\ 	{ IFM_10_T | IFM_FDX,			"10baseT-FDX" },	\ 	{ IFM_10_T | IFM_FDX | IFM_FLOW,	"10baseT-FDX-flow" },	\ 	{ IFM_100_TX | IFM_FDX,			"100baseTX-FDX" },	\ 	{ IFM_100_TX | IFM_FDX | IFM_FLOW,	"100baseTX-FDX-flow" },	\ 	{ IFM_1000_T | IFM_FDX,			"1000baseT-FDX" },	\ 	{ IFM_1000_T | IFM_FDX | IFM_FLOW,	"1000baseT-FDX-flow" },	\ 	{ IFM_1000_T | IFM_FDX | IFM_FLOW | IFM_ETH_MASTER,		\ 	    "1000baseT-FDX-flow-master" },				\ 	{ IFM_1000_T | IFM_FDX | IFM_ETH_MASTER,			\ 	    "1000baseT-FDX-master" },					\ 	{ IFM_1000_T | IFM_ETH_MASTER,		"1000baseT-master" },	\ 									\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
@@ -1892,7 +1894,9 @@ begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_SHARED_ALIASES
-value|{					\ 	{ IFM_AUTO,	"auto" },					\ 	{ 0, NULL },							\ }
+value|{					\ 	{ IFM_AUTO,	"auto" },					\ 									\
+comment|/*								\ 	 * Shorthands for common media+option combinations as announced	\ 	 * by miibus(4)							\ 	 */
+value|\ 	{ IFM_AUTO | IFM_FLOW,	"auto-flow" },				\ 									\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
