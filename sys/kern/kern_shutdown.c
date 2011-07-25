@@ -2195,34 +2195,6 @@ argument_list|,
 literal|"panic"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|RESTARTABLE_PANICS
-comment|/* See if the user aborted the panic, in which case we continue. */
-if|if
-condition|(
-name|panicstr
-operator|==
-name|NULL
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|SMP
-name|atomic_store_rel_int
-argument_list|(
-operator|&
-name|panic_cpu
-argument_list|,
-name|NOCPU
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-return|return;
-block|}
-endif|#
-directive|endif
 endif|#
 directive|endif
 comment|/*thread_lock(td); */
