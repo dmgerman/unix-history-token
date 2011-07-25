@@ -1653,7 +1653,7 @@ comment|/* Completion status */
 name|uint16_t
 name|ResponseCode
 decl_stmt|;
-comment|/* TMF Reponse Code */
+comment|/* TMF Response Code */
 name|uint16_t
 name|serno
 decl_stmt|;
@@ -2709,7 +2709,7 @@ name|void
 modifier|*
 name|ih
 decl_stmt|;
-comment|/* Interupt handle */
+comment|/* Interrupt handle */
 name|struct
 name|mpt_pci_cfg
 name|pci_cfg
@@ -4276,7 +4276,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/************************** Scatter Gather Managment **************************/
+comment|/************************** Scatter Gather Management **************************/
 end_comment
 
 begin_comment
