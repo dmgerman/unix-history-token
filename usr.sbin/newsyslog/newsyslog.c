@@ -383,6 +383,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CE_PID2CMD
+value|0x0400
+end_define
+
+begin_comment
+comment|/* Replace PID file with a shell command.*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MIN_PID
 value|5
 end_define
@@ -543,9 +554,9 @@ decl_stmt|;
 comment|/* Name of the log */
 name|char
 modifier|*
-name|pid_file
+name|pid_cmd_file
 decl_stmt|;
-comment|/* PID file */
+comment|/* PID or command file */
 name|char
 modifier|*
 name|r_reason
@@ -642,13 +653,17 @@ modifier|*
 name|sw_pidtype
 decl_stmt|;
 comment|/* "daemon" or "process group" */
+name|int
+name|run_cmd
+decl_stmt|;
+comment|/* run command or send PID to signal */
 name|char
 name|sw_fname
 index|[
 literal|1
 index|]
 decl_stmt|;
-comment|/* file the PID was read from */
+comment|/* file the PID was read from or shell cmd */
 block|}
 struct|;
 end_struct
@@ -2007,7 +2022,7 @@ condition|)
 block|{
 name|tempwork
 operator|->
-name|pid_file
+name|pid_cmd_file
 operator|=
 name|NULL
 expr_stmt|;
@@ -2015,17 +2030,17 @@ if|if
 condition|(
 name|src_entry
 operator|->
-name|pid_file
+name|pid_cmd_file
 condition|)
 name|tempwork
 operator|->
-name|pid_file
+name|pid_cmd_file
 operator|=
 name|strdup
 argument_list|(
 name|src_entry
 operator|->
-name|pid_file
+name|pid_cmd_file
 argument_list|)
 expr_stmt|;
 name|tempwork
@@ -2164,7 +2179,7 @@ block|{
 comment|/* Initialize as a "do-nothing" entry */
 name|tempwork
 operator|->
-name|pid_file
+name|pid_cmd_file
 operator|=
 name|NULL
 expr_stmt|;
@@ -2338,7 +2353,7 @@ if|if
 condition|(
 name|ent
 operator|->
-name|pid_file
+name|pid_cmd_file
 operator|!=
 name|NULL
 condition|)
@@ -2347,12 +2362,12 @@ name|free
 argument_list|(
 name|ent
 operator|->
-name|pid_file
+name|pid_cmd_file
 argument_list|)
 expr_stmt|;
 name|ent
 operator|->
-name|pid_file
+name|pid_cmd_file
 operator|=
 name|NULL
 expr_stmt|;
@@ -6158,6 +6173,16 @@ name|CE_NOSIGNAL
 expr_stmt|;
 break|break;
 case|case
+literal|'r'
+case|:
+name|working
+operator|->
+name|flags
+operator||=
+name|CE_PID2CMD
+expr_stmt|;
+break|break;
+case|case
 literal|'u'
 case|:
 name|working
@@ -6267,7 +6292,7 @@ expr_stmt|;
 block|}
 name|working
 operator|->
-name|pid_file
+name|pid_cmd_file
 operator|=
 name|NULL
 expr_stmt|;
@@ -6288,7 +6313,7 @@ literal|'/'
 condition|)
 name|working
 operator|->
-name|pid_file
+name|pid_cmd_file
 operator|=
 name|strdup
 argument_list|(
@@ -6433,12 +6458,12 @@ operator|==
 name|CE_NOSIGNAL
 condition|)
 block|{
-comment|/* 			 * This config-entry specified 'n' for nosignal, 			 * see if it also specified an explicit pid_file. 			 * This would be a pretty pointless combination. 			 */
+comment|/* 			 * This config-entry specified 'n' for nosignal, 			 * see if it also specified an explicit pid_cmd_file. 			 * This would be a pretty pointless combination. 			 */
 if|if
 condition|(
 name|working
 operator|->
-name|pid_file
+name|pid_cmd_file
 operator|!=
 name|NULL
 condition|)
@@ -6449,7 +6474,7 @@ literal|"Ignoring '%s' because flag 'n' was specified in line:\n%s"
 argument_list|,
 name|working
 operator|->
-name|pid_file
+name|pid_cmd_file
 argument_list|,
 name|errline
 argument_list|)
@@ -6458,12 +6483,12 @@ name|free
 argument_list|(
 name|working
 operator|->
-name|pid_file
+name|pid_cmd_file
 argument_list|)
 expr_stmt|;
 name|working
 operator|->
-name|pid_file
+name|pid_cmd_file
 operator|=
 name|NULL
 expr_stmt|;
@@ -6474,7 +6499,7 @@ if|if
 condition|(
 name|working
 operator|->
-name|pid_file
+name|pid_cmd_file
 operator|==
 name|NULL
 condition|)
@@ -6510,7 +6535,7 @@ name|needroot
 condition|)
 name|working
 operator|->
-name|pid_file
+name|pid_cmd_file
 operator|=
 name|strdup
 argument_list|(
@@ -8481,7 +8506,7 @@ if|if
 condition|(
 name|ent
 operator|->
-name|pid_file
+name|pid_cmd_file
 operator|!=
 name|NULL
 condition|)
@@ -8554,6 +8579,10 @@ name|int
 name|kres
 decl_stmt|,
 name|secs
+decl_stmt|;
+name|char
+modifier|*
+name|tmp
 decl_stmt|;
 if|if
 condition|(
@@ -8669,6 +8698,87 @@ argument_list|(
 literal|"\tsleep %d\n"
 argument_list|,
 name|secs
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|swork
+operator|->
+name|run_cmd
+condition|)
+block|{
+name|asprintf
+argument_list|(
+operator|&
+name|tmp
+argument_list|,
+literal|"%s %d"
+argument_list|,
+name|swork
+operator|->
+name|sw_fname
+argument_list|,
+name|swork
+operator|->
+name|sw_signum
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tmp
+operator|==
+name|NULL
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"can't allocate memory to run %s"
+argument_list|,
+name|swork
+operator|->
+name|sw_fname
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|verbose
+condition|)
+name|printf
+argument_list|(
+literal|"Run command: %s\n"
+argument_list|,
+name|tmp
+argument_list|)
+expr_stmt|;
+name|kres
+operator|=
+name|system
+argument_list|(
+name|tmp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|kres
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"%s: returned non-zero exit code: %d"
+argument_list|,
+name|tmp
+argument_list|,
+name|kres
+argument_list|)
+expr_stmt|;
+block|}
+name|free
+argument_list|(
+name|tmp
 argument_list|)
 expr_stmt|;
 return|return;
@@ -9270,7 +9380,7 @@ name|strcmp
 argument_list|(
 name|ent
 operator|->
-name|pid_file
+name|pid_cmd_file
 argument_list|,
 name|stmp
 operator|->
@@ -9352,7 +9462,7 @@ name|strlen
 argument_list|(
 name|ent
 operator|->
-name|pid_file
+name|pid_cmd_file
 argument_list|)
 operator|+
 literal|1
@@ -9364,6 +9474,31 @@ argument_list|(
 name|tmpsiz
 argument_list|)
 expr_stmt|;
+name|stmp
+operator|->
+name|run_cmd
+operator|=
+literal|0
+expr_stmt|;
+comment|/* If this is a command to run we just set the flag and run command */
+if|if
+condition|(
+name|ent
+operator|->
+name|flags
+operator|&
+name|CE_PID2CMD
+condition|)
+block|{
+name|stmp
+operator|->
+name|run_cmd
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
 name|set_swpid
 argument_list|(
 name|stmp
@@ -9371,6 +9506,7 @@ argument_list|,
 name|ent
 argument_list|)
 expr_stmt|;
+block|}
 name|stmp
 operator|->
 name|sw_signum
@@ -9387,7 +9523,7 @@ name|sw_fname
 argument_list|,
 name|ent
 operator|->
-name|pid_file
+name|pid_cmd_file
 argument_list|)
 expr_stmt|;
 if|if
@@ -9733,7 +9869,7 @@ name|fopen
 argument_list|(
 name|ent
 operator|->
-name|pid_file
+name|pid_cmd_file
 argument_list|,
 literal|"r"
 argument_list|)
@@ -9769,7 +9905,7 @@ literal|"pid file doesn't exist: %s"
 argument_list|,
 name|ent
 operator|->
-name|pid_file
+name|pid_cmd_file
 argument_list|)
 expr_stmt|;
 block|}
@@ -9780,7 +9916,7 @@ literal|"can't open pid file: %s"
 argument_list|,
 name|ent
 operator|->
-name|pid_file
+name|pid_cmd_file
 argument_list|)
 expr_stmt|;
 return|return;
@@ -9820,11 +9956,11 @@ literal|1
 expr_stmt|;
 name|warnx
 argument_list|(
-literal|"pid file is empty: %s"
+literal|"pid/cmd file is empty: %s"
 argument_list|,
 name|ent
 operator|->
-name|pid_file
+name|pid_cmd_file
 argument_list|)
 expr_stmt|;
 block|}
@@ -9835,7 +9971,7 @@ literal|"can't read from pid file: %s"
 argument_list|,
 name|ent
 operator|->
-name|pid_file
+name|pid_cmd_file
 argument_list|)
 expr_stmt|;
 operator|(
@@ -9907,7 +10043,7 @@ literal|"pid file does not start with a valid number: %s"
 argument_list|,
 name|ent
 operator|->
-name|pid_file
+name|pid_cmd_file
 argument_list|)
 expr_stmt|;
 block|}
@@ -9931,7 +10067,7 @@ name|rval
 argument_list|,
 name|ent
 operator|->
-name|pid_file
+name|pid_cmd_file
 argument_list|)
 expr_stmt|;
 if|if
