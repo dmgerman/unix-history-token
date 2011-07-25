@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ufs/ufs/dir.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ufs/ffs/fs.h>
 end_include
 
@@ -288,7 +294,7 @@ name|DEV_BSIZE
 index|]
 decl_stmt|;
 name|struct
-name|dirent
+name|direct
 modifier|*
 name|d
 decl_stmt|;
@@ -375,7 +381,7 @@ name|ino
 operator|=
 name|d
 operator|->
-name|d_fileno
+name|d_ino
 expr_stmt|;
 return|return
 name|d
