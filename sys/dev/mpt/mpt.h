@@ -2795,6 +2795,10 @@ name|uint32_t
 name|max_seg_cnt
 decl_stmt|;
 comment|/* calculated after IOC facts */
+name|uint32_t
+name|max_cam_seg_cnt
+decl_stmt|;
+comment|/* calculated from MAXPHYS*/
 comment|/* 	 * Hardware management 	 */
 name|u_int
 name|reset_cnt
