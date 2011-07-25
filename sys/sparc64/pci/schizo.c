@@ -2359,12 +2359,6 @@ name|schizo_get_timecount
 expr_stmt|;
 name|tc
 operator|->
-name|tc_poll_pps
-operator|=
-name|NULL
-expr_stmt|;
-name|tc
-operator|->
 name|tc_counter_mask
 operator|=
 name|STX_CTRL_PERF_CNT_MASK
@@ -7997,6 +7991,7 @@ name|tc_priv
 expr_stmt|;
 return|return
 operator|(
+operator|(
 name|SCHIZO_CTRL_READ_8
 argument_list|(
 name|sc
@@ -8009,6 +8004,9 @@ name|STX_CTRL_PERF_CNT_MASK
 operator|<<
 name|STX_CTRL_PERF_CNT_CNT0_SHIFT
 operator|)
+operator|)
+operator|>>
+name|STX_CTRL_PERF_CNT_CNT0_SHIFT
 operator|)
 return|;
 block|}
