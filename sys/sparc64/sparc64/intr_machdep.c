@@ -150,6 +150,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|uint16_t
+name|pil_stray_count
+index|[
+name|PIL_MAX
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|intr_vector
 name|intr_vectors
@@ -170,7 +180,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|uint16_t
 name|intr_stray_count
 index|[
 name|IV_MAX
@@ -802,15 +812,58 @@ modifier|*
 name|tf
 parameter_list|)
 block|{
+name|uint64_t
+name|level
+decl_stmt|;
+name|level
+operator|=
+name|tf
+operator|->
+name|tf_level
+expr_stmt|;
+if|if
+condition|(
+name|pil_stray_count
+index|[
+name|level
+index|]
+operator|<
+name|MAX_STRAY_LOG
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"stray level interrupt %ld\n"
 argument_list|,
-name|tf
-operator|->
-name|tf_level
+name|level
 argument_list|)
 expr_stmt|;
+name|pil_stray_count
+index|[
+name|level
+index|]
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|pil_stray_count
+index|[
+name|level
+index|]
+operator|>=
+name|MAX_STRAY_LOG
+condition|)
+name|printf
+argument_list|(
+literal|"got %d stray level interrupt %ld's: not "
+literal|"logging anymore\n"
+argument_list|,
+name|MAX_STRAY_LOG
+argument_list|,
+name|level
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -829,17 +882,24 @@ name|intr_vector
 modifier|*
 name|iv
 decl_stmt|;
+name|u_int
+name|vec
+decl_stmt|;
 name|iv
 operator|=
 name|cookie
+expr_stmt|;
+name|vec
+operator|=
+name|iv
+operator|->
+name|iv_vec
 expr_stmt|;
 if|if
 condition|(
 name|intr_stray_count
 index|[
-name|iv
-operator|->
-name|iv_vec
+name|vec
 index|]
 operator|<
 name|MAX_STRAY_LOG
@@ -849,16 +909,12 @@ name|printf
 argument_list|(
 literal|"stray vector interrupt %d\n"
 argument_list|,
-name|iv
-operator|->
-name|iv_vec
+name|vec
 argument_list|)
 expr_stmt|;
 name|intr_stray_count
 index|[
-name|iv
-operator|->
-name|iv_vec
+name|vec
 index|]
 operator|++
 expr_stmt|;
@@ -866,23 +922,19 @@ if|if
 condition|(
 name|intr_stray_count
 index|[
-name|iv
-operator|->
-name|iv_vec
+name|vec
 index|]
 operator|>=
 name|MAX_STRAY_LOG
 condition|)
 name|printf
 argument_list|(
-literal|"got %d stray interrupt %d's: not logging "
-literal|"anymore\n"
+literal|"got %d stray vector interrupt %d's: not "
+literal|"logging anymore\n"
 argument_list|,
 name|MAX_STRAY_LOG
 argument_list|,
-name|iv
-operator|->
-name|iv_vec
+name|vec
 argument_list|)
 expr_stmt|;
 block|}
