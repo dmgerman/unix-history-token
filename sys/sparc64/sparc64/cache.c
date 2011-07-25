@@ -614,7 +614,7 @@ condition|)
 block|{
 name|cache_enable
 operator|=
-name|cheetah_cache_enable
+name|zeus_cache_enable
 expr_stmt|;
 name|cache_flush
 operator|=
@@ -630,11 +630,11 @@ name|zeus_icache_page_inval
 expr_stmt|;
 name|tlb_flush_nonlocked
 operator|=
-name|cheetah_tlb_flush_nonlocked
+name|zeus_tlb_flush_nonlocked
 expr_stmt|;
 name|tlb_flush_user
 operator|=
-name|cheetah_tlb_flush_user
+name|zeus_tlb_flush_user
 expr_stmt|;
 block|}
 elseif|else
