@@ -10015,7 +10015,7 @@ name|ccb_h
 operator|.
 name|target_lun
 operator|>=
-literal|256
+name|MPT_MAX_LUNS
 condition|)
 block|{
 name|mpt_req
@@ -18977,7 +18977,7 @@ if|if
 condition|(
 name|lun
 operator|>
-literal|256
+name|MPT_MAX_LUNS
 condition|)
 block|{
 name|tmf_req
@@ -21170,7 +21170,7 @@ name|ccb_h
 operator|.
 name|target_lun
 operator|>
-literal|256
+name|MPT_MAX_LUNS
 condition|)
 block|{
 name|ta
@@ -21991,7 +21991,7 @@ if|if
 condition|(
 name|lun
 operator|>
-literal|256
+name|MPT_MAX_LUNS
 condition|)
 block|{
 name|ta
