@@ -470,20 +470,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|MPT_IO_BAR
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|MPT_MEM_BAR
-value|1
-end_define
-
 begin_function_decl
 specifier|static
 name|int
@@ -1609,6 +1595,11 @@ name|data
 decl_stmt|,
 name|cmd
 decl_stmt|;
+name|int
+name|mpt_io_bar
+decl_stmt|,
+name|mpt_mem_bar
+decl_stmt|;
 comment|/* Allocate the softc structure */
 name|mpt
 operator|=
@@ -1990,6 +1981,51 @@ name|mpt
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Figure out which are the I/O and MEM Bars 	 */
+name|data
+operator|=
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|PCIR_BAR
+argument_list|(
+literal|0
+argument_list|)
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|PCI_BAR_IO
+argument_list|(
+name|data
+argument_list|)
+condition|)
+block|{
+comment|/* BAR0 is IO, BAR1 is memory */
+name|mpt_io_bar
+operator|=
+literal|0
+expr_stmt|;
+name|mpt_mem_bar
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* BAR0 is memory, BAR1 is IO */
+name|mpt_mem_bar
+operator|=
+literal|0
+expr_stmt|;
+name|mpt_io_bar
+operator|=
+literal|1
+expr_stmt|;
+block|}
 comment|/* 	 * Set up register access.  PIO mode is required for 	 * certain reset operations (but must be disabled for 	 * some cards otherwise). 	 */
 name|mpt
 operator|->
@@ -1997,7 +2033,7 @@ name|pci_pio_rid
 operator|=
 name|PCIR_BAR
 argument_list|(
-name|MPT_IO_BAR
+name|mpt_io_bar
 argument_list|)
 expr_stmt|;
 name|mpt
@@ -2067,7 +2103,7 @@ name|pci_mem_rid
 operator|=
 name|PCIR_BAR
 argument_list|(
-name|MPT_MEM_BAR
+name|mpt_mem_bar
 argument_list|)
 expr_stmt|;
 name|mpt
