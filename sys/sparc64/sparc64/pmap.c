@@ -438,6 +438,46 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|pmap_cache_remove
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|,
+name|vm_offset_t
+name|va
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|pmap_protect_tte
+parameter_list|(
+name|struct
+name|pmap
+modifier|*
+name|pm1
+parameter_list|,
+name|struct
+name|pmap
+modifier|*
+name|pm2
+parameter_list|,
+name|struct
+name|tte
+modifier|*
+name|tp
+parameter_list|,
+name|vm_offset_t
+name|va
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Map the given physical page at the specified virtual address in the  * target pmap with the protection requested.  If specified the page  * will be wired down.  *  * The page queues and pmap must be locked.  */
 end_comment
@@ -3658,6 +3698,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pmap_cache_remove
 parameter_list|(
@@ -5825,6 +5866,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|pmap_protect_tte
 parameter_list|(
@@ -8711,7 +8753,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove all pages from specified address space, this aids process exit  * speeds.  This is much faster than pmap_remove n the case of running down  * an entire address space.  Only works for the current pmap.  */
+comment|/*  * Remove all pages from specified address space, this aids process exit  * speeds.  This is much faster than pmap_remove in the case of running down  * an entire address space.  Only works for the current pmap.  */
 end_comment
 
 begin_function
