@@ -4825,6 +4825,9 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
 if|if
 condition|(
 operator|(
@@ -4838,6 +4841,8 @@ operator|!=
 literal|0
 condition|)
 return|return;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|GEM_DEBUG
