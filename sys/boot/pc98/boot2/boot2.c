@@ -1864,7 +1864,7 @@ name|i
 decl_stmt|;
 endif|#
 directive|endif
-name|int
+name|uint8_t
 name|autoboot
 decl_stmt|;
 name|ino_t
@@ -2349,11 +2349,12 @@ decl_stmt|,
 name|x
 decl_stmt|;
 name|int
-name|fmt
-decl_stmt|,
 name|i
 decl_stmt|,
 name|j
+decl_stmt|;
+name|uint8_t
+name|fmt
 decl_stmt|;
 if|if
 condition|(
