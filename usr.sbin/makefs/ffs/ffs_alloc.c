@@ -210,6 +210,7 @@ name|ip
 parameter_list|,
 name|daddr_t
 name|lbn
+name|__unused
 parameter_list|,
 name|daddr_t
 name|bpref
@@ -244,9 +245,6 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|u_int
-operator|)
 name|size
 operator|>
 name|fs
@@ -703,29 +701,21 @@ begin_function
 name|daddr_t
 name|ffs_blkpref_ufs2
 parameter_list|(
-name|ip
-parameter_list|,
-name|lbn
-parameter_list|,
-name|indx
-parameter_list|,
-name|bap
-parameter_list|)
 name|struct
 name|inode
 modifier|*
 name|ip
-decl_stmt|;
+parameter_list|,
 name|daddr_t
 name|lbn
-decl_stmt|;
+parameter_list|,
 name|int
 name|indx
-decl_stmt|;
+parameter_list|,
 name|int64_t
 modifier|*
 name|bap
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|fs
@@ -1836,7 +1826,7 @@ argument_list|)
 decl_stmt|;
 name|u_int8_t
 modifier|*
-name|blksfree
+name|blksfree_swap
 decl_stmt|;
 name|cgp
 operator|=
@@ -1849,7 +1839,7 @@ name|bp
 operator|->
 name|b_data
 expr_stmt|;
-name|blksfree
+name|blksfree_swap
 operator|=
 name|cg_blksfree_swap
 argument_list|(
@@ -1864,6 +1854,9 @@ name|bpref
 operator|==
 literal|0
 operator|||
+operator|(
+name|uint32_t
+operator|)
 name|dtog
 argument_list|(
 name|fs
@@ -1920,7 +1913,7 @@ name|ffs_isblock
 argument_list|(
 name|fs
 argument_list|,
-name|blksfree
+name|blksfree_swap
 argument_list|,
 name|fragstoblks
 argument_list|(
@@ -1990,7 +1983,7 @@ name|ffs_clrblock
 argument_list|(
 name|fs
 argument_list|,
-name|blksfree
+name|blksfree_swap
 argument_list|,
 operator|(
 name|long
@@ -2149,9 +2142,6 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-operator|(
-name|u_int
-operator|)
 name|size
 operator|>
 name|fs
@@ -2226,7 +2216,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"bad block %lld, ino %d"
+literal|"bad block %lld, ino %llu"
 argument_list|,
 operator|(
 name|long
@@ -2234,6 +2224,11 @@ name|long
 operator|)
 name|bno
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -3371,6 +3366,9 @@ name|fs_contigsumsize
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|unsigned
+operator|)
 name|end
 operator|>=
 name|ufs_rw32
