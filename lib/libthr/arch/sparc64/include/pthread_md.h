@@ -74,31 +74,24 @@ block|}
 struct|;
 end_struct
 
-begin_expr_stmt
-specifier|register
-expr|struct
-name|tcb
-operator|*
-name|_tp
-asm|__asm("%g7");
-define|#
-directive|define
-name|_tcb
-value|(_tp)
+begin_comment
 comment|/*  * The tcb constructors.  */
-expr|struct
+end_comment
+
+begin_function_decl
+name|struct
 name|tcb
-operator|*
+modifier|*
 name|_tcb_ctor
-argument_list|(
-expr|struct
+parameter_list|(
+name|struct
 name|pthread
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|int
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -127,16 +120,9 @@ modifier|*
 name|tcb
 parameter_list|)
 block|{
-name|_tp
-operator|=
-name|tcb
-expr_stmt|;
+asm|__asm __volatile("mov %0, %%g7" : : "r" (tcb));
 block|}
 end_function
-
-begin_comment
-comment|/*  * Get the current tcb.  */
-end_comment
 
 begin_expr_stmt
 specifier|static
@@ -149,22 +135,19 @@ argument_list|(
 argument|void
 argument_list|)
 block|{
+specifier|register
+expr|struct
+name|tcb
+operator|*
+name|tp
+asm|__asm("%g7");
 return|return
 operator|(
-name|_tcb
+name|tp
 operator|)
 return|;
 block|}
 end_expr_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pthread
-modifier|*
-name|_thr_initial
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 specifier|static
@@ -177,29 +160,25 @@ argument_list|(
 argument|void
 argument_list|)
 block|{
-if|if
-condition|(
-name|_thr_initial
-condition|)
 return|return
 operator|(
-name|_tcb
+name|_tcb_get
+argument_list|()
 operator|->
 name|tcb_thread
 operator|)
 return|;
+block|}
 end_expr_stmt
 
-begin_return
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-end_return
+begin_define
+define|#
+directive|define
+name|HAS__UMTX_OP_ERR
+value|1
+end_define
 
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif
