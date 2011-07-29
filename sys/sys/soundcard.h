@@ -2511,8 +2511,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SNDCTL_DSP_RESET
+name|SNDCTL_DSP_HALT
 value|_IO  ('P', 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_RESET
+value|SNDCTL_DSP_HALT
 end_define
 
 begin_define
