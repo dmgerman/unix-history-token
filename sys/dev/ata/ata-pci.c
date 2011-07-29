@@ -143,12 +143,7 @@ directive|include
 file|<ata_if.h>
 end_include
 
-begin_comment
-comment|/* local vars */
-end_comment
-
 begin_expr_stmt
-specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_ATAPCI
@@ -693,6 +688,21 @@ name|dev
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ctlr
+operator|->
+name|chipdeinit
+operator|!=
+name|NULL
+condition|)
+name|ctlr
+operator|->
+name|chipdeinit
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ctlr
