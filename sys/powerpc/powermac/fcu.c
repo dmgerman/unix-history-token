@@ -1284,8 +1284,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|ENXIO
 operator|)
 return|;
 block|}
@@ -1334,8 +1333,7 @@ literal|0
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+name|EIO
 operator|)
 return|;
 return|return
@@ -1869,8 +1867,7 @@ literal|0
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+name|EIO
 operator|)
 return|;
 return|return
@@ -2954,8 +2951,7 @@ literal|0
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+name|EIO
 operator|)
 return|;
 name|error
@@ -2998,8 +2994,7 @@ literal|0
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+name|EIO
 operator|)
 return|;
 switch|switch
@@ -3047,11 +3042,11 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/* This should never happen */
-name|error
-operator|=
-operator|-
-literal|1
-expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 block|}
 empty_stmt|;
 block|}
