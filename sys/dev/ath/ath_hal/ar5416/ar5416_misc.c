@@ -2822,9 +2822,9 @@ name|pe
 operator|->
 name|pe_usefir128
 operator|==
-literal|0
+literal|1
 condition|)
-name|OS_REG_SET_BIT
+name|OS_REG_CLR_BIT
 argument_list|(
 name|ah
 argument_list|,
@@ -2840,9 +2840,9 @@ name|pe
 operator|->
 name|pe_usefir128
 operator|==
-literal|1
+literal|0
 condition|)
-name|OS_REG_CLR_BIT
+name|OS_REG_SET_BIT
 argument_list|(
 name|ah
 argument_list|,
@@ -2857,7 +2857,7 @@ name|pe
 operator|->
 name|pe_enmaxrssi
 operator|==
-literal|0
+literal|1
 condition|)
 name|OS_REG_SET_BIT
 argument_list|(
@@ -2875,7 +2875,7 @@ name|pe
 operator|->
 name|pe_enmaxrssi
 operator|==
-literal|1
+literal|0
 condition|)
 name|OS_REG_CLR_BIT
 argument_list|(
@@ -2892,7 +2892,7 @@ name|pe
 operator|->
 name|pe_blockradar
 operator|==
-literal|0
+literal|1
 condition|)
 name|OS_REG_SET_BIT
 argument_list|(
@@ -2910,7 +2910,7 @@ name|pe
 operator|->
 name|pe_blockradar
 operator|==
-literal|1
+literal|0
 condition|)
 name|OS_REG_CLR_BIT
 argument_list|(
@@ -2931,6 +2931,15 @@ name|HAL_PHYERR_PARAM_NOVAL
 condition|)
 block|{
 name|val
+operator|=
+name|OS_REG_READ
+argument_list|(
+name|ah
+argument_list|,
+name|AR_PHY_RADAR_1
+argument_list|)
+expr_stmt|;
+name|val
 operator|&=
 operator|~
 name|AR_PHY_RADAR_1_MAXLEN
@@ -2946,7 +2955,6 @@ argument_list|,
 name|AR_PHY_RADAR_1_MAXLEN
 argument_list|)
 expr_stmt|;
-block|}
 name|OS_REG_WRITE
 argument_list|(
 name|ah
@@ -2956,6 +2964,7 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Enable HT/40 if the upper layer asks; 	 * it should check the channel is HT/40 and HAL_CAP_EXT_CHAN_DFS 	 * is available. 	 */
 if|if
 condition|(
