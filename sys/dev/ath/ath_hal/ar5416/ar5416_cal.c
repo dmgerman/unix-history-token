@@ -530,6 +530,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * AGC calibration for the AR5416, AR9130, AR9160, AR9280.  */
+end_comment
+
 begin_function
 name|HAL_BOOL
 name|ar5416InitCalHardware
@@ -554,7 +558,7 @@ name|ah
 argument_list|)
 condition|)
 block|{
-comment|/* Enable Rx Filter Cal */
+comment|/* Disable ADC */
 name|OS_REG_CLR_BIT
 argument_list|(
 name|ah
@@ -564,78 +568,7 @@ argument_list|,
 name|AR_PHY_ADC_CTL_OFF_PWDADC
 argument_list|)
 expr_stmt|;
-name|OS_REG_SET_BIT
-argument_list|(
-name|ah
-argument_list|,
-name|AR_PHY_AGC_CONTROL
-argument_list|,
-name|AR_PHY_AGC_CONTROL_FLTR_CAL
-argument_list|)
-expr_stmt|;
-comment|/* Clear the carrier leak cal bit */
-name|OS_REG_CLR_BIT
-argument_list|(
-name|ah
-argument_list|,
-name|AR_PHY_CL_CAL_CTL
-argument_list|,
-name|AR_PHY_CL_CAL_ENABLE
-argument_list|)
-expr_stmt|;
-comment|/* kick off the cal */
-name|OS_REG_SET_BIT
-argument_list|(
-name|ah
-argument_list|,
-name|AR_PHY_AGC_CONTROL
-argument_list|,
-name|AR_PHY_AGC_CONTROL_CAL
-argument_list|)
-expr_stmt|;
-comment|/* Poll for offset calibration complete */
-if|if
-condition|(
-operator|!
-name|ath_hal_wait
-argument_list|(
-name|ah
-argument_list|,
-name|AR_PHY_AGC_CONTROL
-argument_list|,
-name|AR_PHY_AGC_CONTROL_CAL
-argument_list|,
-literal|0
-argument_list|)
-condition|)
-block|{
-name|HALDEBUG
-argument_list|(
-name|ah
-argument_list|,
-name|HAL_DEBUG_ANY
-argument_list|,
-literal|"%s: offset calibration failed to complete in 1ms; "
-literal|"noisy environment?\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-return|return
-name|AH_FALSE
-return|;
-block|}
-comment|/* Set the cl cal bit and rerun the cal a 2nd time */
 comment|/* Enable Rx Filter Cal */
-name|OS_REG_CLR_BIT
-argument_list|(
-name|ah
-argument_list|,
-name|AR_PHY_ADC_CTL
-argument_list|,
-name|AR_PHY_ADC_CTL_OFF_PWDADC
-argument_list|)
-expr_stmt|;
 name|OS_REG_SET_BIT
 argument_list|(
 name|ah
@@ -643,15 +576,6 @@ argument_list|,
 name|AR_PHY_AGC_CONTROL
 argument_list|,
 name|AR_PHY_AGC_CONTROL_FLTR_CAL
-argument_list|)
-expr_stmt|;
-name|OS_REG_SET_BIT
-argument_list|(
-name|ah
-argument_list|,
-name|AR_PHY_CL_CAL_CTL
-argument_list|,
-name|AR_PHY_CL_CAL_ENABLE
 argument_list|)
 expr_stmt|;
 block|}
@@ -696,6 +620,35 @@ expr_stmt|;
 return|return
 name|AH_FALSE
 return|;
+block|}
+if|if
+condition|(
+name|AR_SREV_MERLIN_10_OR_LATER
+argument_list|(
+name|ah
+argument_list|)
+condition|)
+block|{
+comment|/* Enable ADC */
+name|OS_REG_SET_BIT
+argument_list|(
+name|ah
+argument_list|,
+name|AR_PHY_ADC_CTL
+argument_list|,
+name|AR_PHY_ADC_CTL_OFF_PWDADC
+argument_list|)
+expr_stmt|;
+comment|/* Disable Rx Filter Cal */
+name|OS_REG_CLR_BIT
+argument_list|(
+name|ah
+argument_list|,
+name|AR_PHY_AGC_CONTROL
+argument_list|,
+name|AR_PHY_AGC_CONTROL_FLTR_CAL
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 name|AH_TRUE
