@@ -1433,7 +1433,7 @@ argument_list|(
 operator|&
 name|mntbuf
 argument_list|,
-name|MNT_WAIT
+name|MNT_NOWAIT
 argument_list|)
 operator|)
 operator|==
@@ -3461,7 +3461,7 @@ argument_list|(
 operator|&
 name|mntbuf
 argument_list|,
-name|MNT_WAIT
+name|MNT_NOWAIT
 argument_list|)
 expr_stmt|;
 for|for
