@@ -548,6 +548,18 @@ expr_stmt|;
 comment|/* Receive Functions */
 name|ah
 operator|->
+name|ah_getRxFilter
+operator|=
+name|ar5416GetRxFilter
+expr_stmt|;
+name|ah
+operator|->
+name|ah_setRxFilter
+operator|=
+name|ar5416SetRxFilter
+expr_stmt|;
+name|ah
+operator|->
 name|ah_startPcuReceive
 operator|=
 name|ar5416StartPcuReceive
