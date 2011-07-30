@@ -865,6 +865,7 @@ decl_stmt|;
 name|uint8_t
 name|frac_n_5g
 decl_stmt|;
+comment|/* 					 * bit 0: indicates that fracN synth 					 * mode applies to all 5G channels 					 */
 name|uint8_t
 name|futureBase
 index|[
