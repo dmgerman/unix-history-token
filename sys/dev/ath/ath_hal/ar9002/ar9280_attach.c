@@ -140,7 +140,7 @@ block|,
 operator|.
 name|calCountMax
 operator|=
-name|PER_MIN_LOG_COUNT
+name|PER_MAX_LOG_COUNT
 block|,
 operator|.
 name|calCollect
@@ -181,7 +181,7 @@ block|,
 operator|.
 name|calCountMax
 operator|=
-name|PER_MIN_LOG_COUNT
+name|PER_MAX_LOG_COUNT
 block|,
 operator|.
 name|calCollect
