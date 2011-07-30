@@ -890,6 +890,11 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 name|fprintf
