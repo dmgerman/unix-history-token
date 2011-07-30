@@ -2190,6 +2190,17 @@ name|periph
 operator|->
 name|softc
 decl_stmt|;
+name|uint32_t
+name|prio
+decl_stmt|;
+comment|/* Check if cam_periph_getccb() was called. */
+name|prio
+operator|=
+name|periph
+operator|->
+name|immediate_priority
+expr_stmt|;
+comment|/* Check if we have more work to do. */
 if|if
 condition|(
 name|bioq_first
@@ -2216,15 +2227,25 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* Have more work to do, so ensure we stay scheduled */
+name|prio
+operator|=
+name|CAM_PRIORITY_NORMAL
+expr_stmt|;
+block|}
+comment|/* Schedule CCB if any of above is true. */
+if|if
+condition|(
+name|prio
+operator|!=
+name|CAM_PRIORITY_NONE
+condition|)
 name|xpt_schedule
 argument_list|(
 name|periph
 argument_list|,
-name|CAM_PRIORITY_NORMAL
+name|prio
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
