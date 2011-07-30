@@ -516,7 +516,6 @@ condition|)
 block|{
 name|error
 operator|=
-operator|-
 name|EINVAL
 expr_stmt|;
 break|break;
@@ -598,7 +597,6 @@ break|break;
 default|default:
 name|error
 operator|=
-operator|-
 name|EINVAL
 expr_stmt|;
 block|}
@@ -635,7 +633,6 @@ argument_list|)
 condition|)
 name|error
 operator|=
-operator|-
 name|EFAULT
 expr_stmt|;
 name|bad
