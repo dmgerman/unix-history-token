@@ -228,6 +228,15 @@ case|case
 name|ADC_DC_CAL
 case|:
 comment|/* Run ADC Gain Cal for either 5ghz any or 2ghz HT40 */
+comment|/* 		 * Merlin (AR9280) doesn't ever complete ADC calibrations 		 * in 5ghz non-HT40 mode (ie, HT20, 11a). For now, disable 		 * it for Merlin only until further information is 		 * available. 		 */
+if|if
+condition|(
+operator|!
+name|AR_SREV_MERLIN
+argument_list|(
+name|ah
+argument_list|)
+condition|)
 if|if
 condition|(
 name|IEEE80211_IS_CHAN_5GHZ
