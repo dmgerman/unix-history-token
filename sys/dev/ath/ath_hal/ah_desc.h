@@ -602,6 +602,32 @@ init|=
 literal|31
 block|,
 comment|/* */
+name|HAL_PHYERR_CCK_LENGTH_ILLEGAL
+init|=
+literal|32
+block|,
+comment|/* */
+name|HAL_PHYERR_CCK_POWER_DROP
+init|=
+literal|33
+block|,
+comment|/* */
+comment|/* AR5416 and later */
+name|HAL_PHYERR_HT_CRC_ERROR
+init|=
+literal|34
+block|,
+comment|/* */
+name|HAL_PHYERR_HT_LENGTH_ILLEGAL
+init|=
+literal|35
+block|,
+comment|/* */
+name|HAL_PHYERR_HT_RATE_ILLEGAL
+init|=
+literal|36
+block|,
+comment|/* */
 block|}
 enum|;
 end_enum
