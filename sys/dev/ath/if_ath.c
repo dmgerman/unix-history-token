@@ -6499,6 +6499,27 @@ operator|.
 name|ast_rxeol
 operator|++
 expr_stmt|;
+comment|/* 			 * Disable RXEOL/RXORN - prevent an interrupt 			 * storm until the PCU logic can be reset. 			 */
+name|sc
+operator|->
+name|sc_imask
+operator|&=
+operator|~
+operator|(
+name|HAL_INT_RXEOL
+operator||
+name|HAL_INT_RXORN
+operator|)
+expr_stmt|;
+name|ath_hal_intrset
+argument_list|(
+name|ah
+argument_list|,
+name|sc
+operator|->
+name|sc_imask
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_rxlink
