@@ -13148,25 +13148,6 @@ name|nbuf
 operator|*
 name|ndesc
 expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"desc_len: %d, nbuf=%d, ndesc=%d; dd_desc_len=%d\n"
-argument_list|,
-name|desc_len
-argument_list|,
-name|nbuf
-argument_list|,
-name|ndesc
-argument_list|,
-name|dd
-operator|->
-name|dd_desc_len
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Merlin work-around: 	 * Descriptors that cross the 4KB boundary can't be used. 	 * Assume one skipped descriptor per 4KB page. 	 */
 if|if
 condition|(
@@ -13203,21 +13184,6 @@ literal|1
 operator|)
 operator|*
 literal|4096
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"numdescpage: %d, new dd_desc_len=%d\n"
-argument_list|,
-name|numdescpage
-argument_list|,
-name|dd
-operator|->
-name|dd_desc_len
-argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Setup DMA descriptor area. 	 */
