@@ -2188,6 +2188,27 @@ name|HAL_DFS_EVENT_PRICH
 value|0x0000001
 end_define
 
+begin_define
+define|#
+directive|define
+name|HAL_DFS_EVENT_EXTCH
+value|0x0000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_DFS_EVENT_EXTEARLY
+value|0x0000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_DFS_EVENT_ISDC
+value|0x0000008
+end_define
+
 begin_struct
 struct|struct
 name|dfs_event
