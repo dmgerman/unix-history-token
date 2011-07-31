@@ -132,7 +132,7 @@ name|dst
 parameter_list|,
 name|fld
 parameter_list|)
-value|do {			\ 	CP((src).fld,(dst).fld,tv_sec);		\ 	CP((src).fld,(dst).fld,tv_nsec);	\ } while (0);
+value|do {			\ 	CP((src).fld,(dst).fld,tv_sec);		\ 	CP((src).fld,(dst).fld,tv_nsec);	\ } while (0)
 end_define
 
 begin_struct
