@@ -32,6 +32,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/cpuset.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -44,19 +56,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/rman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/bus.h>
 end_include
 
 begin_include
