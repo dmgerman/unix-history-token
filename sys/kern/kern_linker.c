@@ -4794,6 +4794,9 @@ argument_list|()
 expr_stmt|;
 block|}
 else|else
+name|KLD_UNLOCK
+argument_list|()
+expr_stmt|;
 else|#
 directive|else
 name|KLD_UNLOCK
