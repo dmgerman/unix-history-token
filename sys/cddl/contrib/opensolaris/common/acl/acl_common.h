@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -49,13 +49,37 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-specifier|extern
-name|ace_t
+typedef|typedef
+struct|struct
 name|trivial_acl
-index|[
-literal|6
-index|]
+block|{
+name|uint32_t
+name|allow0
 decl_stmt|;
+comment|/* allow mask for bits only in owner */
+name|uint32_t
+name|deny1
+decl_stmt|;
+comment|/* deny mask for bits not in owner */
+name|uint32_t
+name|deny2
+decl_stmt|;
+comment|/* deny mask for bits not in group */
+name|uint32_t
+name|owner
+decl_stmt|;
+comment|/* allow mask matching mode */
+name|uint32_t
+name|group
+decl_stmt|;
+comment|/* allow mask matching mode */
+name|uint32_t
+name|everyone
+decl_stmt|;
+comment|/* allow mask matching mode */
+block|}
+name|trivial_acl_t
+typedef|;
 specifier|extern
 name|int
 name|acltrivial
@@ -173,7 +197,7 @@ parameter_list|,
 name|int
 name|target_flavor
 parameter_list|,
-name|int
+name|boolean_t
 name|isdir
 parameter_list|,
 name|uid_t
@@ -224,6 +248,9 @@ parameter_list|(
 name|mode_t
 name|mode
 parameter_list|,
+name|boolean_t
+name|isdir
+parameter_list|,
 name|ace_t
 modifier|*
 modifier|*
@@ -240,29 +267,12 @@ parameter_list|(
 name|mode_t
 name|mode
 parameter_list|,
-name|uint32_t
-modifier|*
-name|allow0
+name|boolean_t
+name|isdir
 parameter_list|,
-name|uint32_t
+name|trivial_acl_t
 modifier|*
-name|deny1
-parameter_list|,
-name|uint32_t
-modifier|*
-name|deny2
-parameter_list|,
-name|uint32_t
-modifier|*
-name|owner
-parameter_list|,
-name|uint32_t
-modifier|*
-name|group
-parameter_list|,
-name|uint32_t
-modifier|*
-name|everyone
+name|masks
 parameter_list|)
 function_decl|;
 ifdef|#

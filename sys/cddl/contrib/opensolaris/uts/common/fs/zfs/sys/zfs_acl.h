@@ -766,7 +766,7 @@ name|cred_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|void
+name|int
 name|zfs_acl_chmod_setattr
 parameter_list|(
 name|struct
