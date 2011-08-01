@@ -1553,6 +1553,7 @@ operator|->
 name|ip6_plen
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 endif|#
 directive|endif
