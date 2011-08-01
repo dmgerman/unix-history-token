@@ -429,9 +429,15 @@ name|defined
 argument_list|(
 name|__CYGWIN__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__HAIKU__
+argument_list|)
+comment|/* Some platforms don't have predictable names for 		 * uid=0, so we skip this part of the test. */
 name|skipping
 argument_list|(
-literal|"standard uname/gname lookup; typically no user with uid=0 on cygwin platform"
+literal|"standard uname/gname lookup"
 argument_list|)
 expr_stmt|;
 name|i

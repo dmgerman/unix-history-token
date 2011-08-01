@@ -1747,6 +1747,9 @@ name|len
 operator|=
 literal|1
 operator|+
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|key
@@ -1754,6 +1757,9 @@ argument_list|)
 operator|+
 literal|1
 operator|+
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|value
@@ -1980,7 +1986,7 @@ name|NULL
 condition|)
 block|{
 comment|/* Convert narrow-character to wide-character. */
-name|int
+name|size_t
 name|wcs_length
 init|=
 name|strlen
@@ -2547,7 +2553,7 @@ name|a
 operator|->
 name|archive
 argument_list|,
-name|EILSEQ
+name|ARCHIVE_ERRNO_FILE_FORMAT
 argument_list|,
 literal|"Can't translate pathname '%s' to UTF-8"
 argument_list|,
@@ -2595,7 +2601,7 @@ name|a
 operator|->
 name|archive
 argument_list|,
-name|EILSEQ
+name|ARCHIVE_ERRNO_FILE_FORMAT
 argument_list|,
 literal|"Can't translate uname '%s' to UTF-8"
 argument_list|,
@@ -2643,7 +2649,7 @@ name|a
 operator|->
 name|archive
 argument_list|,
-name|EILSEQ
+name|ARCHIVE_ERRNO_FILE_FORMAT
 argument_list|,
 literal|"Can't translate gname '%s' to UTF-8"
 argument_list|,
@@ -2719,7 +2725,7 @@ name|a
 operator|->
 name|archive
 argument_list|,
-name|EILSEQ
+name|ARCHIVE_ERRNO_FILE_FORMAT
 argument_list|,
 literal|"Can't translate linkpath '%s' to UTF-8"
 argument_list|,
@@ -3175,6 +3181,10 @@ block|}
 comment|/* If numeric GID is too large, add 'gid' to pax extended attrs. */
 if|if
 condition|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|archive_entry_gid
 argument_list|(
 name|entry_main
@@ -3288,6 +3298,10 @@ block|}
 comment|/* If numeric UID is too large, add 'uid' to pax extended attrs. */
 if|if
 condition|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|archive_entry_uid
 argument_list|(
 name|entry_main
@@ -3926,7 +3940,7 @@ operator|)
 argument_list|,
 literal|"SCHILY.ino"
 argument_list|,
-name|archive_entry_ino
+name|archive_entry_ino64
 argument_list|(
 name|entry_main
 argument_list|)
@@ -4059,9 +4073,6 @@ decl_stmt|;
 name|mode_t
 name|mode
 decl_stmt|;
-name|long
-name|ns
-decl_stmt|;
 name|pax_attr_entry
 operator|=
 name|archive_entry_new
@@ -4111,6 +4122,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|uid
 operator|>=
 literal|1
@@ -4119,11 +4134,14 @@ literal|18
 condition|)
 name|uid
 operator|=
-operator|(
+call|(
+name|uid_t
+call|)
+argument_list|(
 literal|1
 operator|<<
 literal|18
-operator|)
+argument_list|)
 operator|-
 literal|1
 expr_stmt|;
@@ -4143,6 +4161,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|gid
 operator|>=
 literal|1
@@ -4151,11 +4173,14 @@ literal|18
 condition|)
 name|gid
 operator|=
-operator|(
+call|(
+name|gid_t
+call|)
+argument_list|(
 literal|1
 operator|<<
 literal|18
-operator|)
+argument_list|)
 operator|-
 literal|1
 expr_stmt|;
@@ -4240,13 +4265,6 @@ argument_list|(
 name|entry_main
 argument_list|)
 expr_stmt|;
-name|ns
-operator|=
-name|archive_entry_mtime_nsec
-argument_list|(
-name|entry_main
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|s
@@ -4258,25 +4276,17 @@ name|s
 operator|=
 literal|0
 expr_stmt|;
-name|ns
-operator|=
-literal|0
-expr_stmt|;
 block|}
 if|if
 condition|(
 name|s
-operator|>
+operator|>=
 literal|0x7fffffff
 condition|)
 block|{
 name|s
 operator|=
 literal|0x7fffffff
-expr_stmt|;
-name|ns
-operator|=
-literal|0
 expr_stmt|;
 block|}
 name|archive_entry_set_mtime
@@ -4285,63 +4295,17 @@ name|pax_attr_entry
 argument_list|,
 name|s
 argument_list|,
-name|ns
+literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Ditto for atime. */
-name|s
-operator|=
-name|archive_entry_atime
-argument_list|(
-name|entry_main
-argument_list|)
-expr_stmt|;
-name|ns
-operator|=
-name|archive_entry_atime_nsec
-argument_list|(
-name|entry_main
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|s
-operator|<
-literal|0
-condition|)
-block|{
-name|s
-operator|=
-literal|0
-expr_stmt|;
-name|ns
-operator|=
-literal|0
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|s
-operator|>
-literal|0x7fffffff
-condition|)
-block|{
-name|s
-operator|=
-literal|0x7fffffff
-expr_stmt|;
-name|ns
-operator|=
-literal|0
-expr_stmt|;
-block|}
+comment|/* Standard ustar doesn't support atime. */
 name|archive_entry_set_atime
 argument_list|(
 name|pax_attr_entry
 argument_list|,
-name|s
+literal|0
 argument_list|,
-name|ns
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Standard ustar doesn't support ctime. */
@@ -4390,6 +4354,9 @@ init|=
 literal|"archive_write_pax_header: "
 literal|"'x' header failed?!  This can't happen.\n"
 decl_stmt|;
+name|size_t
+name|u
+init|=
 name|write
 argument_list|(
 literal|2
@@ -4401,7 +4368,13 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|)
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|u
 expr_stmt|;
+comment|/* UNUSED */
 name|exit
 argument_list|(
 literal|1
@@ -4705,7 +4678,7 @@ name|suffix_length
 init|=
 literal|99
 decl_stmt|;
-name|int
+name|size_t
 name|insert_length
 decl_stmt|;
 comment|/* Length of additional dir element to be added. */
@@ -5151,7 +5124,6 @@ literal|'/'
 expr_stmt|;
 operator|*
 name|p
-operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -5405,11 +5377,6 @@ modifier|*
 name|a
 parameter_list|)
 block|{
-name|struct
-name|pax
-modifier|*
-name|pax
-decl_stmt|;
 name|int
 name|r
 decl_stmt|;
@@ -5428,17 +5395,6 @@ operator|(
 name|ARCHIVE_OK
 operator|)
 return|;
-name|pax
-operator|=
-operator|(
-expr|struct
-name|pax
-operator|*
-operator|)
-name|a
-operator|->
-name|format_data
-expr_stmt|;
 name|r
 operator|=
 name|write_nulls
@@ -5602,7 +5558,8 @@ parameter_list|)
 block|{
 name|int
 name|ret
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|to_write
 decl_stmt|;
 while|while
@@ -6497,7 +6454,6 @@ block|}
 comment|/* Add trailing NUL character so output is a valid C string. */
 operator|*
 name|d
-operator|++
 operator|=
 literal|'\0'
 expr_stmt|;

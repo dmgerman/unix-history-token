@@ -1504,9 +1504,6 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|;
-name|int
-name|err
-decl_stmt|;
 name|ws
 operator|=
 operator|(
@@ -1541,10 +1538,6 @@ literal|1
 argument_list|,
 literal|"Out of memory"
 argument_list|)
-expr_stmt|;
-name|err
-operator|=
-literal|0
 expr_stmt|;
 name|dest
 operator|=
@@ -1766,7 +1759,6 @@ expr_stmt|;
 block|}
 operator|*
 name|dest
-operator|++
 operator|=
 literal|L'
 expr|\0'

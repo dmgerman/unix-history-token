@@ -19,25 +19,29 @@ begin_comment
 comment|/*  * Note: archive.h is for use outside of libarchive; the configuration  * headers (config.h, archive_platform.h, etc.) are purely internal.  * Do NOT use HAVE_XXX configuration macros to control the behavior of  * this header!  If you must conditionalize, use predefined compiler and/or  * platform macros.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_comment
-comment|/* Linux requires this for off_t */
-end_comment
-
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__BORLANDC__
+argument_list|)
+operator|&&
+name|__BORLANDC__
+operator|>=
+literal|0x560
+end_if
+
+begin_define
+define|#
+directive|define
+name|__LA_STDINT_H
+value|<stdint.h>
+end_define
+
+begin_elif
+elif|#
+directive|elif
 operator|!
 name|defined
 argument_list|(
@@ -55,16 +59,52 @@ name|defined
 argument_list|(
 name|__INTERIX
 argument_list|)
-end_if
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__BORLANDC__
+argument_list|)
+end_elif
 
-begin_comment
-comment|/* Header unavailable on Watcom C or MS Visual C++ or SFU. */
-end_comment
+begin_define
+define|#
+directive|define
+name|__LA_STDINT_H
+value|<inttypes.h>
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
 directive|include
-file|<inttypes.h>
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_comment
+comment|/* Linux requires this for off_t */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LA_STDINT_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+include|__LA_STDINT_H
 end_include
 
 begin_comment
@@ -121,9 +161,25 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|_WIN64
+name|_SSIZE_T_DEFINED
 argument_list|)
 end_if
+
+begin_define
+define|#
+directive|define
+name|__LA_SSIZE_T
+value|ssize_t
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_WIN64
+argument_list|)
+end_elif
 
 begin_define
 define|#
@@ -149,19 +205,52 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BORLANDC__
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|__LA_UID_T
-value|unsigned int
+value|uid_t
 end_define
 
 begin_define
 define|#
 directive|define
 name|__LA_GID_T
-value|unsigned int
+value|gid_t
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__LA_UID_T
+value|short
+end_define
+
+begin_define
+define|#
+directive|define
+name|__LA_GID_T
+value|short
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -355,7 +444,7 @@ comment|/*  * The version number is expressed as a single integer that makes it 
 define|#
 directive|define
 name|ARCHIVE_VERSION_NUMBER
-value|2007000
+value|2008004
 name|__LA_DECL
 name|int
 name|archive_version_number
@@ -367,7 +456,7 @@ comment|/*  * Textual name/version of the library, useful for version displays. 
 define|#
 directive|define
 name|ARCHIVE_VERSION_STRING
-value|"libarchive 2.7.0"
+value|"libarchive 2.8.4"
 name|__LA_DECL
 specifier|const
 name|char
@@ -667,6 +756,14 @@ define|#
 directive|define
 name|ARCHIVE_COMPRESSION_XZ
 value|6
+define|#
+directive|define
+name|ARCHIVE_COMPRESSION_UU
+value|7
+define|#
+directive|define
+name|ARCHIVE_COMPRESSION_RPM
+value|8
 comment|/*  * Codes returned by archive_format.  *  * Top 16 bits identifies the format family (e.g., "tar"); lower  * 16 bits indicate the variant.  This is updated by read_next_header.  * Note that the lower 16 bits will often vary from entry to entry.  * In some cases, this variation occurs as libarchive learns more about  * the archive (for example, later entries might utilize extensions that  * weren't necessary earlier in the archive; in this case, libarchive  * will change the format code to indicate the extended format that  * was used).  In other cases, it's because different tools have  * modified the archive and so different parts of the archive  * actually have slightly different formts.  (Both tar and cpio store  * format codes in each entry, so it is quite possible for each  * entry to be in a different format.)  */
 define|#
 directive|define
@@ -764,6 +861,10 @@ define|#
 directive|define
 name|ARCHIVE_FORMAT_RAW
 value|0x90000
+define|#
+directive|define
+name|ARCHIVE_FORMAT_XAR
+value|0xA0000
 comment|/*-  * Basic outline for reading an archive:  *   1) Ask archive_read_new for an archive reader object.  *   2) Update any global properties as appropriate.  *      In particular, you'll certainly want to call appropriate  *      archive_read_support_XXX functions.  *   3) Call archive_read_open_XXX to open the archive  *   4) Repeatedly call archive_read_next_header to get information about  *      successive archive entries.  Call archive_read_data to extract  *      data for entries of interest.  *   5) Call archive_read_finish to end processing.  */
 name|__LA_DECL
 name|struct
@@ -865,6 +966,24 @@ parameter_list|)
 function_decl|;
 name|__LA_DECL
 name|int
+name|archive_read_support_compression_rpm
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
+name|archive_read_support_compression_uu
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
 name|archive_read_support_compression_xz
 parameter_list|(
 name|struct
@@ -947,6 +1066,15 @@ function_decl|;
 name|__LA_DECL
 name|int
 name|archive_read_support_format_tar
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
+name|archive_read_support_format_xar
 parameter_list|(
 name|struct
 name|archive
@@ -1465,24 +1593,22 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/* Release all resources and destroy the object. */
-comment|/* Note that archive_read_finish will call archive_read_close for you. */
-if|#
-directive|if
-name|ARCHIVE_VERSION_NUMBER
-operator|<
-literal|2000000
-comment|/* Erroneously declared to return void in libarchive 1.x */
+comment|/* Note that archive_read_free will call archive_read_close for you. */
 name|__LA_DECL
-name|void
-name|archive_read_finish
+name|int
+name|archive_read_free
 parameter_list|(
 name|struct
 name|archive
 modifier|*
 parameter_list|)
 function_decl|;
-else|#
-directive|else
+if|#
+directive|if
+name|ARCHIVE_VERSION_NUMBER
+operator|<
+literal|4000000
+comment|/* Synonym for archive_read_free() for backwards compatibility. */
 name|__LA_DECL
 name|int
 name|archive_read_finish
@@ -1494,7 +1620,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|/*-  * To create an archive:  *   1) Ask archive_write_new for a archive writer object.  *   2) Set any global properties.  In particular, you should set  *      the compression and format to use.  *   3) Call archive_write_open to open the file (most people  *       will use archive_write_open_file or archive_write_open_fd,  *       which provide convenient canned I/O callbacks for you).  *   4) For each entry:  *      - construct an appropriate struct archive_entry structure  *      - archive_write_header to write the header  *      - archive_write_data to write the entry data  *   5) archive_write_close to close the output  *   6) archive_write_finish to cleanup the writer and release resources  */
+comment|/*-  * To create an archive:  *   1) Ask archive_write_new for a archive writer object.  *   2) Set any global properties.  In particular, you should set  *      the compression and format to use.  *   3) Call archive_write_open to open the file (most people  *       will use archive_write_open_file or archive_write_open_fd,  *       which provide convenient canned I/O callbacks for you).  *   4) For each entry:  *      - construct an appropriate struct archive_entry structure  *      - archive_write_header to write the header  *      - archive_write_data to write the entry data  *   5) archive_write_close to close the output  *   6) archive_write_free to cleanup the writer and release resources  */
 name|__LA_DECL
 name|struct
 name|archive
@@ -1750,6 +1876,15 @@ parameter_list|)
 function_decl|;
 name|__LA_DECL
 name|int
+name|archive_write_set_format_zip
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
 name|archive_write_open
 parameter_list|(
 name|struct
@@ -1961,25 +2096,22 @@ name|archive
 modifier|*
 parameter_list|)
 function_decl|;
-if|#
-directive|if
-name|ARCHIVE_VERSION_NUMBER
-operator|<
-literal|2000000
-comment|/* Return value was incorrect in libarchive 1.x. */
+comment|/* This can fail if the archive wasn't already closed, in which case  * archive_write_free() will implicitly call archive_write_close(). */
 name|__LA_DECL
-name|void
-name|archive_write_finish
+name|int
+name|archive_write_free
 parameter_list|(
 name|struct
 name|archive
 modifier|*
 parameter_list|)
 function_decl|;
-else|#
-directive|else
-comment|/* Libarchive 2.x and later returns an error if this fails. */
-comment|/* It can fail if the archive wasn't already closed, in which case  * archive_write_finish() will implicitly call archive_write_close(). */
+if|#
+directive|if
+name|ARCHIVE_VERSION_NUMBER
+operator|<
+literal|4000000
+comment|/* Synonym for archive_write_free() for backwards compatibility. */
 name|__LA_DECL
 name|int
 name|archive_write_finish
@@ -2040,7 +2172,7 @@ modifier|*
 name|s
 parameter_list|)
 function_decl|;
-comment|/*-  * ARCHIVE_WRITE_DISK API  *  * To create objects on disk:  *   1) Ask archive_write_disk_new for a new archive_write_disk object.  *   2) Set any global properties.  In particular, you probably  *      want to set the options.  *   3) For each entry:  *      - construct an appropriate struct archive_entry structure  *      - archive_write_header to create the file/dir/etc on disk  *      - archive_write_data to write the entry data  *   4) archive_write_finish to cleanup the writer and release resources  *  * In particular, you can use this in conjunction with archive_read()  * to pull entries out of an archive and create them on disk.  */
+comment|/*-  * ARCHIVE_WRITE_DISK API  *  * To create objects on disk:  *   1) Ask archive_write_disk_new for a new archive_write_disk object.  *   2) Set any global properties.  In particular, you probably  *      want to set the options.  *   3) For each entry:  *      - construct an appropriate struct archive_entry structure  *      - archive_write_header to create the file/dir/etc on disk  *      - archive_write_data to write the entry data  *   4) archive_write_free to cleanup the writer and release resources  *  * In particular, you can use this in conjunction with archive_read()  * to pull entries out of an archive and create them on disk.  */
 name|__LA_DECL
 name|struct
 name|archive

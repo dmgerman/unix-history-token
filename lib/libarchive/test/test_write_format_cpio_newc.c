@@ -122,6 +122,9 @@ name|buff
 decl_stmt|,
 modifier|*
 name|e
+decl_stmt|,
+modifier|*
+name|file
 decl_stmt|;
 name|size_t
 name|buffsize
@@ -430,9 +433,14 @@ name|archive_entry_set_mode
 argument_list|(
 name|entry
 argument_list|,
-name|S_IFLNK
-operator||
 literal|0664
+argument_list|)
+expr_stmt|;
+name|archive_entry_set_filetype
+argument_list|(
+name|entry
+argument_list|,
+name|AE_IFLNK
 argument_list|)
 expr_stmt|;
 name|archive_entry_set_size
@@ -533,6 +541,10 @@ operator|=
 name|buff
 expr_stmt|;
 comment|/* First entry is "file" */
+name|file
+operator|=
+name|e
+expr_stmt|;
 name|assert
 argument_list|(
 name|is_hex
@@ -556,18 +568,23 @@ literal|6
 argument_list|)
 expr_stmt|;
 comment|/* Magic */
-name|assertEqualMem
+name|assert
+argument_list|(
+name|memcmp
 argument_list|(
 name|e
 operator|+
 literal|6
 argument_list|,
-literal|"00000059"
+literal|"00000000"
 argument_list|,
 literal|8
 argument_list|)
+operator|!=
+literal|0
+argument_list|)
 expr_stmt|;
-comment|/* ino */
+comment|/* ino != 0 */
 name|assertEqualMem
 argument_list|(
 name|e
@@ -985,18 +1002,42 @@ literal|6
 argument_list|)
 expr_stmt|;
 comment|/* Magic */
-name|assertEqualMem
+name|assert
+argument_list|(
+name|memcmp
 argument_list|(
 name|e
 operator|+
 literal|6
 argument_list|,
-literal|"00000058"
+name|file
+operator|+
+literal|6
 argument_list|,
 literal|8
 argument_list|)
+operator|!=
+literal|0
+argument_list|)
 expr_stmt|;
-comment|/* ino */
+comment|/* ino != file ino */
+name|assert
+argument_list|(
+name|memcmp
+argument_list|(
+name|e
+operator|+
+literal|6
+argument_list|,
+literal|"00000000"
+argument_list|,
+literal|8
+argument_list|)
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* ino != 0 */
 name|assertEqualMem
 argument_list|(
 name|e

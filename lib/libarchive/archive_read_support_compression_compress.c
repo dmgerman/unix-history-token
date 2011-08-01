@@ -658,8 +658,9 @@ operator|=
 name|compress_filter_close
 expr_stmt|;
 comment|/* XXX MOVE THE FOLLOWING OUT OF INIT() XXX */
-name|code
-operator|=
+operator|(
+name|void
+operator|)
 name|getbits
 argument_list|(
 name|self
@@ -668,8 +669,9 @@ literal|8
 argument_list|)
 expr_stmt|;
 comment|/* Skip first signature byte. */
-name|code
-operator|=
+operator|(
+name|void
+operator|)
 name|getbits
 argument_list|(
 name|self

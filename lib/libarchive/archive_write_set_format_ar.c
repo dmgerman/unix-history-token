@@ -671,10 +671,6 @@ decl_stmt|;
 name|int64_t
 name|size
 decl_stmt|;
-name|ret
-operator|=
-literal|0
-expr_stmt|;
 name|append_fn
 operator|=
 literal|0

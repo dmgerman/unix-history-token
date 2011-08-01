@@ -169,7 +169,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|_archive_write_finish
+name|_archive_write_free
 parameter_list|(
 name|struct
 name|archive
@@ -259,9 +259,9 @@ name|_archive_write_close
 expr_stmt|;
 name|av
 operator|.
-name|archive_finish
+name|archive_free
 operator|=
-name|_archive_write_finish
+name|_archive_write_free
 expr_stmt|;
 name|av
 operator|.
@@ -1400,10 +1400,6 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|ret
-operator|=
-name|ARCHIVE_OK
-expr_stmt|;
 name|__archive_check_magic
 argument_list|(
 operator|&
@@ -1736,7 +1732,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|_archive_write_finish
+name|_archive_write_free
 parameter_list|(
 name|struct
 name|archive
@@ -1772,7 +1768,7 @@ name|ARCHIVE_WRITE_MAGIC
 argument_list|,
 name|ARCHIVE_STATE_ANY
 argument_list|,
-literal|"archive_write_finish"
+literal|"archive_write_free"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1956,7 +1952,7 @@ name|skip_file_ino
 operator|!=
 literal|0
 operator|&&
-name|archive_entry_ino
+name|archive_entry_ino64
 argument_list|(
 name|entry
 argument_list|)

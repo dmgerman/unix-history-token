@@ -480,6 +480,9 @@ expr_stmt|;
 if|#
 directive|if
 name|HAVE_GRP_H
+if|#
+directive|if
+name|HAVE_GETGRNAM_R
 block|{
 name|char
 name|_buffer
@@ -514,6 +517,12 @@ init|;
 condition|;
 control|)
 block|{
+name|result
+operator|=
+operator|&
+name|grent
+expr_stmt|;
+comment|/* Old getgrnam_r ignores last arg. */
 name|r
 operator|=
 name|getgrnam_r
@@ -599,6 +608,38 @@ name|buffer
 argument_list|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+comment|/* HAVE_GETGRNAM_R */
+block|{
+name|struct
+name|group
+modifier|*
+name|result
+decl_stmt|;
+name|result
+operator|=
+name|getgrnam
+argument_list|(
+name|gname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|NULL
+condition|)
+name|gid
+operator|=
+name|result
+operator|->
+name|gr_gid
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* HAVE_GETGRNAM_R */
 elif|#
 directive|elif
 name|defined
@@ -776,6 +817,9 @@ expr_stmt|;
 if|#
 directive|if
 name|HAVE_PWD_H
+if|#
+directive|if
+name|HAVE_GETPWNAM_R
 block|{
 name|char
 name|_buffer
@@ -810,6 +854,12 @@ init|;
 condition|;
 control|)
 block|{
+name|result
+operator|=
+operator|&
+name|pwent
+expr_stmt|;
+comment|/* Old getpwnam_r ignores last arg. */
 name|r
 operator|=
 name|getpwnam_r
@@ -895,6 +945,38 @@ name|buffer
 argument_list|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+comment|/* HAVE_GETPWNAM_R */
+block|{
+name|struct
+name|passwd
+modifier|*
+name|result
+decl_stmt|;
+name|result
+operator|=
+name|getpwnam
+argument_list|(
+name|uname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|NULL
+condition|)
+name|uid
+operator|=
+name|result
+operator|->
+name|pw_uid
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* HAVE_GETPWNAM_R */
 elif|#
 directive|elif
 name|defined
@@ -1034,6 +1116,8 @@ name|h
 operator|&
 literal|0xF0000000
 operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|h

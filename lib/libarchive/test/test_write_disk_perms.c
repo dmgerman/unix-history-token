@@ -133,6 +133,8 @@ argument_list|(
 literal|"test_gid"
 argument_list|,
 name|O_CREAT
+operator||
+name|O_BINARY
 argument_list|,
 literal|0664
 argument_list|)
@@ -407,6 +409,11 @@ name|struct
 name|stat
 name|st
 decl_stmt|;
+name|assertUmask
+argument_list|(
+name|UMASK
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Set ownership of the current directory to the group of this 	 * process.  Otherwise, the SGID tests below fail if the 	 * /tmp directory is owned by a group to which we don't belong 	 * and we're on a system where group ownership is inherited. 	 * (Because we're not allowed to SGID files with defaultgid().) 	 */
 name|assertEqualInt
 argument_list|(
@@ -700,16 +707,11 @@ argument_list|)
 expr_stmt|;
 comment|/* Overwrite an existing dir. */
 comment|/* For dir, the first perms should get left. */
-name|assert
-argument_list|(
-name|mkdir
+name|assertMakeDir
 argument_list|(
 literal|"dir_overwrite_0744"
 argument_list|,
 literal|0744
-argument_list|)
-operator|==
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Check original perms. */

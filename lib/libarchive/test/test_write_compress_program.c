@@ -77,39 +77,16 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|compprog
-decl_stmt|,
-modifier|*
-name|decompprog
-decl_stmt|;
-name|decompprog
-operator|=
-name|external_gzip_program
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-operator|(
-name|compprog
-operator|=
-name|external_gzip_program
-argument_list|(
-literal|0
-argument_list|)
-operator|)
-operator|==
-name|NULL
+operator|!
+name|canGzip
+argument_list|()
 condition|)
 block|{
 name|skipping
 argument_list|(
-literal|"There is no gzip compression "
-literal|"program in this platform"
+literal|"Cannot run 'gzip'"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -144,7 +121,7 @@ name|archive_write_set_compression_program
 argument_list|(
 name|a
 argument_list|,
-name|compprog
+literal|"gzip"
 argument_list|)
 expr_stmt|;
 if|if
@@ -379,14 +356,14 @@ name|r
 operator|!=
 name|ARCHIVE_OK
 operator|&&
-name|decompprog
-operator|==
-name|NULL
+operator|!
+name|canGunzip
+argument_list|()
 condition|)
 block|{
 name|skipping
 argument_list|(
-literal|"No gzip decompression is available; "
+literal|"No libz and no gunzip program, "
 literal|"unable to verify gzip compression"
 argument_list|)
 expr_stmt|;

@@ -899,9 +899,6 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|int
-name|ret2
-decl_stmt|;
 name|struct
 name|archive_none
 modifier|*
@@ -921,8 +918,6 @@ operator|.
 name|data
 expr_stmt|;
 name|ret
-operator|=
-name|ret2
 operator|=
 name|ARCHIVE_OK
 expr_stmt|;
@@ -977,10 +972,6 @@ operator|->
 name|avail
 expr_stmt|;
 comment|/* Tricky calculation to determine size of last block */
-name|target_block_length
-operator|=
-name|block_length
-expr_stmt|;
 if|if
 condition|(
 name|a

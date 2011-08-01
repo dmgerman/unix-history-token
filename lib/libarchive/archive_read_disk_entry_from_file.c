@@ -426,6 +426,8 @@ argument_list|,
 name|O_RDONLY
 operator||
 name|O_NONBLOCK
+operator||
+name|O_BINARY
 argument_list|)
 expr_stmt|;
 if|if
@@ -482,6 +484,7 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* TODO: On Windows, use GetFileInfoByHandle() here. 		 * Using Windows stat() call is badly broken, but 		 * even the stat() wrapper has problems because 		 * 'struct stat' is broken on Windows. 		 */
 if|#
 directive|if
 name|HAVE_FSTAT
@@ -504,11 +507,25 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+name|errno
+argument_list|,
+literal|"Can't fstat"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_FATAL
+name|ARCHIVE_FAILED
 operator|)
 return|;
+block|}
 block|}
 elseif|else
 endif|#
@@ -536,11 +553,27 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+name|errno
+argument_list|,
+literal|"Can't lstat %s"
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_FATAL
+name|ARCHIVE_FAILED
 operator|)
 return|;
+block|}
 block|}
 elseif|else
 endif|#
@@ -557,11 +590,27 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+name|errno
+argument_list|,
+literal|"Can't stat %s"
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_FATAL
+name|ARCHIVE_FAILED
 operator|)
 return|;
+block|}
 name|st
 operator|=
 operator|&
@@ -706,7 +755,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 operator|)
 return|;
 block|}
@@ -894,6 +943,32 @@ name|accpath
 argument_list|,
 name|ACL_TYPE_ACCESS
 argument_list|)
+expr_stmt|;
+else|#
+directive|else
+elseif|else
+if|if
+condition|(
+operator|(
+operator|!
+name|a
+operator|->
+name|follow_symlinks
+operator|)
+operator|&&
+operator|(
+name|archive_entry_filetype
+argument_list|(
+name|entry
+argument_list|)
+operator|==
+name|AE_IFLNK
+operator|)
+condition|)
+comment|/* We can't get the ACL of a symlink, so we assume it can't 		   have one. */
+name|acl
+operator|=
+name|NULL
 expr_stmt|;
 endif|#
 directive|endif
@@ -1909,6 +1984,9 @@ directive|elif
 name|HAVE_EXTATTR_GET_FILE
 operator|&&
 name|HAVE_EXTATTR_LIST_FILE
+operator|&&
+expr|\
+name|HAVE_DECL_EXTATTR_NAMESPACE_USER
 end_elif
 
 begin_comment
@@ -1920,6 +1998,7 @@ comment|/* TODO: Implement this.  Follow the Linux model above, but  * with Free
 end_comment
 
 begin_function_decl
+specifier|static
 name|int
 name|setup_xattr
 parameter_list|(
@@ -1953,6 +2032,7 @@ function_decl|;
 end_function_decl
 
 begin_function
+specifier|static
 name|int
 name|setup_xattr
 parameter_list|(

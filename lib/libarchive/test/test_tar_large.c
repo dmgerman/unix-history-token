@@ -782,6 +782,9 @@ name|skip
 condition|)
 name|skip
 operator|=
+operator|(
+name|off_t
+operator|)
 name|private
 operator|->
 name|filebytes

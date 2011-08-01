@@ -129,6 +129,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"archive_endian.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"archive_private.h"
 end_include
 
@@ -788,6 +794,12 @@ decl_stmt|;
 name|ssize_t
 name|avail
 decl_stmt|;
+name|uint32_t
+name|dicsize
+decl_stmt|;
+name|uint64_t
+name|uncompressed_size
+decl_stmt|;
 name|int
 name|bits_checked
 decl_stmt|;
@@ -803,7 +815,7 @@ name|__archive_read_filter_ahead
 argument_list|(
 name|filter
 argument_list|,
-literal|6
+literal|14
 argument_list|,
 operator|&
 name|avail
@@ -820,7 +832,8 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* First byte of raw LZMA stream is always 0x5d. */
+comment|/* First byte of raw LZMA stream is commonly 0x5d. 	 * The first byte is a special number, which consists of 	 * three parameters of LZMA compression, a number of literal 	 * context bits(which is from 0 to 8, default is 3), a number 	 * of literal pos bits(which is from 0 to 4, default is 0), 	 * a number of pos bits(which is from 0 to 4, default is 2). 	 * The first byte is made by 	 * (pos bits * 5 + literal pos bit) * 9 + * literal contest bit, 	 * and so the default value in this field is 	 * (2 * 5 + 0) * 9 + 3 = 0x5d. 	 * lzma of LZMA SDK has options to change those parameters. 	 * It means a range of this field is from 0 to 224. And lzma of 	 * XZ Utils with option -e records 0x5e in this field. */
+comment|/* NOTE: If this checking of the first byte increases false 	 * recognition, we should allow only 0x5d and 0x5e for the first 	 * byte of LZMA stream. */
 name|bits_checked
 operator|=
 literal|0
@@ -831,52 +844,204 @@ name|buffer
 index|[
 literal|0
 index|]
-operator|!=
-literal|0x5d
+operator|>
+operator|(
+literal|4
+operator|*
+literal|5
+operator|+
+literal|4
+operator|)
+operator|*
+literal|9
+operator|+
+literal|8
 condition|)
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-name|bits_checked
-operator|+=
-literal|8
-expr_stmt|;
-comment|/* Second through fifth bytes are dictionary code, stored in 	 * little-endian order.  The two least-significant bytes are 	 * always zero. */
+comment|/* Most likely value in the first byte of LZMA stream. */
 if|if
 condition|(
 name|buffer
 index|[
-literal|1
-index|]
-operator|!=
 literal|0
+index|]
+operator|==
+literal|0x5d
 operator|||
 name|buffer
 index|[
-literal|2
-index|]
-operator|!=
 literal|0
+index|]
+operator|==
+literal|0x5e
 condition|)
+name|bits_checked
+operator|+=
+literal|8
+expr_stmt|;
+comment|/* Sixth through fourteenth bytes are uncompressed size, 	 * stored in little-endian order. `-1' means uncompressed 	 * size is unknown and lzma of XZ Utils always records `-1' 	 * in this field. */
+name|uncompressed_size
+operator|=
+name|archive_le64dec
+argument_list|(
+name|buffer
+operator|+
+literal|5
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|uncompressed_size
+operator|==
+operator|(
+name|uint64_t
+operator|)
+name|ARCHIVE_LITERAL_LL
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+condition|)
+name|bits_checked
+operator|+=
+literal|64
+expr_stmt|;
+comment|/* Second through fifth bytes are dictionary size, stored in 	 * little-endian order. The minimum dictionary size is 	 * 1<< 12(4KiB) which the lzma of LZMA SDK uses with option 	 * -d12 and the maxinam dictionary size is 1<< 27(128MiB) 	 * which the one uses with option -d27. 	 * NOTE: A comment of LZMA SDK source code says this dictionary 	 * range is from 1<< 12 to 1<< 30. */
+name|dicsize
+operator|=
+name|archive_le32dec
+argument_list|(
+name|buffer
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|dicsize
+condition|)
+block|{
+case|case
+literal|0x00001000
+case|:
+comment|/* lzma of LZMA SDK option -d12. */
+case|case
+literal|0x00002000
+case|:
+comment|/* lzma of LZMA SDK option -d13. */
+case|case
+literal|0x00004000
+case|:
+comment|/* lzma of LZMA SDK option -d14. */
+case|case
+literal|0x00008000
+case|:
+comment|/* lzma of LZMA SDK option -d15. */
+case|case
+literal|0x00010000
+case|:
+comment|/* lzma of XZ Utils option -0 and -1. 			 * lzma of LZMA SDK option -d16. */
+case|case
+literal|0x00020000
+case|:
+comment|/* lzma of LZMA SDK option -d17. */
+case|case
+literal|0x00040000
+case|:
+comment|/* lzma of LZMA SDK option -d18. */
+case|case
+literal|0x00080000
+case|:
+comment|/* lzma of XZ Utils option -2. 			 * lzma of LZMA SDK option -d19. */
+case|case
+literal|0x00100000
+case|:
+comment|/* lzma of XZ Utils option -3. 			 * lzma of LZMA SDK option -d20. */
+case|case
+literal|0x00200000
+case|:
+comment|/* lzma of XZ Utils option -4. 			 * lzma of LZMA SDK option -d21. */
+case|case
+literal|0x00400000
+case|:
+comment|/* lzma of XZ Utils option -5. 			 * lzma of LZMA SDK option -d22. */
+case|case
+literal|0x00800000
+case|:
+comment|/* lzma of XZ Utils option -6. 			 * lzma of LZMA SDK option -d23. */
+case|case
+literal|0x01000000
+case|:
+comment|/* lzma of XZ Utils option -7. 			 * lzma of LZMA SDK option -d24. */
+case|case
+literal|0x02000000
+case|:
+comment|/* lzma of XZ Utils option -8. 			 * lzma of LZMA SDK option -d25. */
+case|case
+literal|0x04000000
+case|:
+comment|/* lzma of XZ Utils option -9. 			 * lzma of LZMA SDK option -d26. */
+case|case
+literal|0x08000000
+case|:
+comment|/* lzma of LZMA SDK option -d27. */
+name|bits_checked
+operator|+=
+literal|32
+expr_stmt|;
+break|break;
+default|default:
+comment|/* If a memory usage for encoding was not enough on 		 * the platform where LZMA stream was made, lzma of 		 * XZ Utils automatically decreased the dictionary 		 * size to enough memory for encoding by 1Mi bytes 		 * (1<< 20).*/
+if|if
+condition|(
+name|dicsize
+operator|<=
+literal|0x03F00000
+operator|&&
+name|dicsize
+operator|>=
+literal|0x00300000
+operator|&&
+operator|(
+name|dicsize
+operator|&
+operator|(
+operator|(
+literal|1
+operator|<<
+literal|20
+operator|)
+operator|-
+literal|1
+operator|)
+operator|)
+operator|==
+literal|0
+operator|&&
+name|bits_checked
+operator|==
+literal|8
+operator|+
+literal|64
+condition|)
+block|{
+name|bits_checked
+operator|+=
+literal|32
+expr_stmt|;
+break|break;
+block|}
+comment|/* Otherwise dictionary size is unlikely. But it is 		 * possible that someone makes lzma stream with 		 * liblzma/LZMA SDK in one's dictionary size. */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-name|bits_checked
-operator|+=
-literal|16
-expr_stmt|;
-comment|/* ??? TODO:  Fix this. ??? */
-comment|/* NSIS format check uses this, but I've seen tar.lzma 	 * archives where this byte is 0xff, not 0.  Can it 	 * ever be anything other than 0 or 0xff? 	 */
-if|#
-directive|if
-literal|0
-block|if (buffer[5] != 0) 		return (0); 	bits_checked += 8;
-endif|#
-directive|endif
+block|}
 comment|/* TODO: The above test is still very weak.  It would be 	 * good to do better. */
 return|return
 operator|(
@@ -1161,13 +1326,7 @@ argument_list|,
 operator|(
 literal|1U
 operator|<<
-literal|23
-operator|)
-operator|+
-operator|(
-literal|1U
-operator|<<
-literal|21
+literal|30
 operator|)
 argument_list|,
 comment|/* memlimit */
@@ -1189,13 +1348,7 @@ argument_list|,
 operator|(
 literal|1U
 operator|<<
-literal|23
-operator|)
-operator|+
-operator|(
-literal|1U
-operator|<<
-literal|21
+literal|30
 operator|)
 argument_list|)
 expr_stmt|;

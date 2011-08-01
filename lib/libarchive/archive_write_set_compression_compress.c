@@ -894,12 +894,6 @@ name|ocode
 operator|==
 name|CLEAR
 expr_stmt|;
-name|bits
-operator|=
-name|state
-operator|->
-name|code_len
-expr_stmt|;
 comment|/* 	 * Since ocode is always>= 8 bits, only need to mask the first 	 * hunk on the left. 	 */
 name|bit_offset
 operator|=
@@ -1769,7 +1763,7 @@ name|private_data
 modifier|*
 name|state
 decl_stmt|;
-name|unsigned
+name|size_t
 name|tocopy
 decl_stmt|;
 name|state
@@ -1784,10 +1778,6 @@ operator|->
 name|compressor
 operator|.
 name|data
-expr_stmt|;
-name|ret
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(

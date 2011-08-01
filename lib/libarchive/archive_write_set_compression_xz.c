@@ -1486,10 +1486,6 @@ operator|->
 name|compressed
 expr_stmt|;
 comment|/* Tricky calculation to determine size of last block. */
-name|target_block_length
-operator|=
-name|block_length
-expr_stmt|;
 if|if
 condition|(
 name|a

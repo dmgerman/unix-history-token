@@ -157,6 +157,12 @@ name|archive_write_set_format_ustar
 block|}
 block|,
 block|{
+name|ARCHIVE_FORMAT_ZIP
+block|,
+name|archive_write_set_format_zip
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL

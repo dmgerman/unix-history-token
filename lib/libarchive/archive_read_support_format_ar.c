@@ -85,6 +85,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LIMITS_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -603,11 +620,6 @@ modifier|*
 name|a
 parameter_list|)
 block|{
-name|struct
-name|ar
-modifier|*
-name|ar
-decl_stmt|;
 specifier|const
 name|void
 modifier|*
@@ -640,21 +652,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|ar
-operator|=
-operator|(
-expr|struct
-name|ar
-operator|*
-operator|)
-operator|(
-name|a
-operator|->
-name|format
-operator|->
-name|data
-operator|)
-expr_stmt|;
 comment|/* 	 * Verify the 8-byte file signature. 	 * TODO: Do we need to check more than this? 	 */
 if|if
 condition|(
