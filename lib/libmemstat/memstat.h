@@ -16,17 +16,6 @@ name|_MEMSTAT_H_
 end_define
 
 begin_comment
-comment|/*  * Number of CPU slots in library-internal data structures.  This should be  * at least the value of MAXCPU from param.h.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MEMSTAT_MAXCPU
-value|32
-end_define
-
-begin_comment
 comment|/*  * Amount of caller data to maintain for each caller data slot.  Applications  * must not request more than this number of caller save data, or risk  * corrupting internal libmemstat(3) data structures.  A compile time check  * in the application is probably appropriate.  */
 end_comment
 
@@ -126,17 +115,6 @@ end_define
 
 begin_comment
 comment|/* Permission denied. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MEMSTAT_ERROR_TOOMANYCPUS
-value|4
-end_define
-
-begin_comment
-comment|/* Too many CPUs. */
 end_comment
 
 begin_define
