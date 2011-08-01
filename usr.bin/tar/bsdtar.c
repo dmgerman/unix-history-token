@@ -323,6 +323,38 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__MINGW32__
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|_CRT_glob
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Disable broken CRT globbing. */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|bsdtar
+modifier|*
+name|_bsdtar
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
@@ -550,6 +582,8 @@ name|time_t
 name|now
 decl_stmt|;
 comment|/* 	 * Use a pointer for consistency, but stack-allocated storage 	 * for ease of cleanup. 	 */
+name|_bsdtar
+operator|=
 name|bsdtar
 operator|=
 operator|&
@@ -639,7 +673,7 @@ argument_list|,
 name|NULL
 argument_list|)
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -666,7 +700,7 @@ argument_list|,
 name|NULL
 argument_list|)
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -680,7 +714,7 @@ directive|endif
 block|}
 endif|#
 directive|endif
-comment|/* Need bsdtar_progname before calling bsdtar_warnc. */
+comment|/* Need lafe_progname before calling lafe_warnc. */
 if|if
 condition|(
 operator|*
@@ -688,7 +722,7 @@ name|argv
 operator|==
 name|NULL
 condition|)
-name|bsdtar_progname
+name|lafe_progname
 operator|=
 literal|"bsdtar"
 expr_stmt|;
@@ -706,7 +740,7 @@ name|defined
 argument_list|(
 name|__CYGWIN__
 argument_list|)
-name|bsdtar_progname
+name|lafe_progname
 operator|=
 name|strrchr
 argument_list|(
@@ -718,7 +752,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|bsdtar_progname
+name|lafe_progname
 operator|=
 name|strrchr
 argument_list|(
@@ -732,15 +766,15 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|bsdtar_progname
+name|lafe_progname
 operator|!=
 name|NULL
 condition|)
-name|bsdtar_progname
+name|lafe_progname
 operator|++
 expr_stmt|;
 else|else
-name|bsdtar_progname
+name|lafe_progname
 operator|=
 operator|*
 name|argv
@@ -752,6 +786,9 @@ operator|&
 name|now
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|HAVE_SETLOCALE
 if|if
 condition|(
 name|setlocale
@@ -763,13 +800,15 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
 literal|"Failed to set default locale"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined
@@ -957,7 +996,7 @@ name|t
 operator|>
 literal|8192
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1029,16 +1068,19 @@ case|:
 comment|/* GNU tar */
 if|if
 condition|(
-name|exclude
+name|lafe_exclude
 argument_list|(
+operator|&
 name|bsdtar
+operator|->
+name|matching
 argument_list|,
 name|bsdtar
 operator|->
 name|optarg
 argument_list|)
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1169,16 +1211,19 @@ case|:
 comment|/* 			 * Noone else has the @archive extension, so 			 * noone else needs this to filter entries 			 * when transforming archives. 			 */
 if|if
 condition|(
-name|include
+name|lafe_include
 argument_list|(
+operator|&
 name|bsdtar
+operator|->
+name|matching
 argument_list|,
 name|bsdtar
 operator|->
 name|optarg
 argument_list|)
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1196,9 +1241,6 @@ case|case
 literal|'j'
 case|:
 comment|/* GNU tar */
-if|#
-directive|if
-name|HAVE_LIBBZ2
 if|if
 condition|(
 name|bsdtar
@@ -1207,7 +1249,7 @@ name|create_compression
 operator|!=
 literal|'\0'
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1228,28 +1270,11 @@ name|create_compression
 operator|=
 name|opt
 expr_stmt|;
-else|#
-directive|else
-name|bsdtar_warnc
-argument_list|(
-literal|0
-argument_list|,
-literal|"bzip2 compression not supported by this version of bsdtar"
-argument_list|)
-expr_stmt|;
-name|usage
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 literal|'J'
 case|:
 comment|/* GNU tar 1.21 and later */
-if|#
-directive|if
-name|HAVE_LIBLZMA
 if|if
 condition|(
 name|bsdtar
@@ -1258,7 +1283,7 @@ name|create_compression
 operator|!=
 literal|'\0'
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1279,20 +1304,6 @@ name|create_compression
 operator|=
 name|opt
 expr_stmt|;
-else|#
-directive|else
-name|bsdtar_warnc
-argument_list|(
-literal|0
-argument_list|,
-literal|"xz compression not supported by this version of bsdtar"
-argument_list|)
-expr_stmt|;
-name|usage
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 literal|'k'
@@ -1342,9 +1353,6 @@ break|break;
 case|case
 name|OPTION_LZMA
 case|:
-if|#
-directive|if
-name|HAVE_LIBLZMA
 if|if
 condition|(
 name|bsdtar
@@ -1353,7 +1361,7 @@ name|create_compression
 operator|!=
 literal|'\0'
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1374,20 +1382,6 @@ name|create_compression
 operator|=
 name|opt
 expr_stmt|;
-else|#
-directive|else
-name|bsdtar_warnc
-argument_list|(
-literal|0
-argument_list|,
-literal|"lzma compression not supported by this version of bsdtar"
-argument_list|)
-expr_stmt|;
-name|usage
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 literal|'m'
@@ -1453,7 +1447,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1526,7 +1520,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1787,7 +1781,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -1940,16 +1934,19 @@ case|:
 comment|/* GNU tar */
 if|if
 condition|(
-name|exclude_from_file
+name|lafe_exclude_from_file
 argument_list|(
+operator|&
 name|bsdtar
+operator|->
+name|matching
 argument_list|,
 name|bsdtar
 operator|->
 name|optarg
 argument_list|)
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1979,9 +1976,6 @@ case|case
 literal|'y'
 case|:
 comment|/* FreeBSD version of GNU tar */
-if|#
-directive|if
-name|HAVE_LIBBZ2
 if|if
 condition|(
 name|bsdtar
@@ -1990,7 +1984,7 @@ name|create_compression
 operator|!=
 literal|'\0'
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -2011,20 +2005,6 @@ name|create_compression
 operator|=
 name|opt
 expr_stmt|;
-else|#
-directive|else
-name|bsdtar_warnc
-argument_list|(
-literal|0
-argument_list|,
-literal|"bzip2 compression not supported by this version of bsdtar"
-argument_list|)
-expr_stmt|;
-name|usage
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 literal|'Z'
@@ -2038,7 +2018,7 @@ name|create_compression
 operator|!=
 literal|'\0'
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -2064,9 +2044,6 @@ case|case
 literal|'z'
 case|:
 comment|/* GNU tar, star, many others */
-if|#
-directive|if
-name|HAVE_LIBZ
 if|if
 condition|(
 name|bsdtar
@@ -2075,7 +2052,7 @@ name|create_compression
 operator|!=
 literal|'\0'
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -2096,20 +2073,6 @@ name|create_compression
 operator|=
 name|opt
 expr_stmt|;
-else|#
-directive|else
-name|bsdtar_warnc
-argument_list|(
-literal|0
-argument_list|,
-literal|"gzip compression not supported by this version of bsdtar"
-argument_list|)
-expr_stmt|;
-name|usage
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 name|OPTION_USE_COMPRESS_PROGRAM
@@ -2162,7 +2125,7 @@ name|mode
 operator|==
 literal|'\0'
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -2492,9 +2455,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|cleanup_exclusions
+name|lafe_cleanup_exclusions
 argument_list|(
+operator|&
 name|bsdtar
+operator|->
+name|matching
 argument_list|)
 expr_stmt|;
 if|#
@@ -2515,7 +2481,7 @@ name|return_value
 operator|!=
 literal|0
 condition|)
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -2560,7 +2526,7 @@ name|mode
 operator|!=
 name|opt
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -2622,7 +2588,7 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -2654,7 +2620,7 @@ name|p
 decl_stmt|;
 name|p
 operator|=
-name|bsdtar_progname
+name|lafe_progname
 expr_stmt|;
 name|fprintf
 argument_list|(
@@ -2791,7 +2757,7 @@ name|p
 decl_stmt|;
 name|prog
 operator|=
-name|bsdtar_progname
+name|lafe_progname
 expr_stmt|;
 name|fflush
 argument_list|(

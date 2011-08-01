@@ -37,38 +37,6 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|MAJOR_IN_MKDEV
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/mkdev.h>
-end_include
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|MAJOR_IN_SYSMACROS
-argument_list|)
-end_elif
-
-begin_include
-include|#
-directive|include
-file|<sys/sysmacros.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|HAVE_SYS_PARAM_H
 end_ifdef
 
@@ -161,6 +129,23 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDINT_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
 end_include
 
 begin_endif
@@ -329,12 +314,24 @@ argument_list|,
 literal|'t'
 argument_list|)
 expr_stmt|;
-name|unmatched_inclusions_warn
+if|if
+condition|(
+name|lafe_unmatched_inclusions_warn
 argument_list|(
 name|bsdtar
+operator|->
+name|matching
 argument_list|,
 literal|"Not found in archive"
 argument_list|)
+operator|!=
+literal|0
+condition|)
+name|bsdtar
+operator|->
+name|return_value
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_function
@@ -356,12 +353,24 @@ argument_list|,
 literal|'x'
 argument_list|)
 expr_stmt|;
-name|unmatched_inclusions_warn
+if|if
+condition|(
+name|lafe_unmatched_inclusions_warn
 argument_list|(
 name|bsdtar
+operator|->
+name|matching
 argument_list|,
 literal|"Not found in archive"
 argument_list|)
+operator|!=
+literal|0
+condition|)
+name|bsdtar
+operator|->
+name|return_value
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_function
@@ -415,6 +424,9 @@ name|comp
 decl_stmt|,
 name|uncomp
 decl_stmt|;
+name|int
+name|compression
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -456,17 +468,19 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"In: %s bytes, compression %d%%;"
-argument_list|,
-name|tar_i64toa
-argument_list|(
+if|if
+condition|(
 name|comp
-argument_list|)
-argument_list|,
+operator|>
+name|uncomp
+condition|)
+name|compression
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|compression
+operator|=
 call|(
 name|int
 call|)
@@ -481,6 +495,19 @@ literal|100
 operator|/
 name|uncomp
 argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"In: %s bytes, compression %d%%;"
+argument_list|,
+name|tar_i64toa
+argument_list|(
+name|comp
+argument_list|)
+argument_list|,
+name|compression
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -592,9 +619,12 @@ operator|->
 name|argv
 condition|)
 block|{
-name|include
+name|lafe_include
 argument_list|(
+operator|&
 name|bsdtar
+operator|->
+name|matching
 argument_list|,
 operator|*
 name|bsdtar
@@ -616,13 +646,20 @@ name|names_from_file
 operator|!=
 name|NULL
 condition|)
-name|include_from_file
+name|lafe_include_from_file
 argument_list|(
+operator|&
 name|bsdtar
+operator|->
+name|matching
 argument_list|,
 name|bsdtar
 operator|->
 name|names_from_file
+argument_list|,
+name|bsdtar
+operator|->
+name|option_null
 argument_list|)
 expr_stmt|;
 name|a
@@ -671,11 +708,13 @@ operator|->
 name|option_options
 argument_list|)
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
 literal|0
+argument_list|,
+literal|"%s"
 argument_list|,
 name|archive_error_string
 argument_list|(
@@ -706,7 +745,7 @@ else|:
 name|DEFAULT_BYTES_PER_BLOCK
 argument_list|)
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -779,7 +818,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -790,7 +829,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -815,9 +854,11 @@ name|bsdtar
 operator|->
 name|option_fast_read
 operator|&&
-name|unmatched_inclusions
+name|lafe_unmatched_inclusions
 argument_list|(
 name|bsdtar
+operator|->
+name|matching
 argument_list|)
 operator|==
 literal|0
@@ -852,7 +893,7 @@ name|r
 operator|<
 name|ARCHIVE_OK
 condition|)
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -884,7 +925,7 @@ name|ARCHIVE_RETRY
 condition|)
 block|{
 comment|/* Retryable error: try again */
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -1019,9 +1060,11 @@ block|}
 comment|/* 		 * Note that pattern exclusions are checked before 		 * pathname rewrites are handled.  This gives more 		 * control over exclusions, since rewrites always lose 		 * information.  (For example, consider a rewrite 		 * s/foo[0-9]/foo/.  If we check exclusions after the 		 * rewrite, there would be no way to exclude foo1/bar 		 * while allowing foo2/bar.) 		 */
 if|if
 condition|(
-name|excluded
+name|lafe_excluded
 argument_list|(
 name|bsdtar
+operator|->
+name|matching
 argument_list|,
 name|archive_entry_pathname
 argument_list|(
@@ -1106,7 +1149,7 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -1133,7 +1176,7 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -1160,7 +1203,7 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -1370,7 +1413,7 @@ name|r
 operator|!=
 name|ARCHIVE_OK
 condition|)
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -1451,12 +1494,6 @@ modifier|*
 name|entry
 parameter_list|)
 block|{
-specifier|const
-name|struct
-name|stat
-modifier|*
-name|st
-decl_stmt|;
 name|char
 name|tmp
 index|[
@@ -1483,13 +1520,6 @@ specifier|static
 name|time_t
 name|now
 decl_stmt|;
-name|st
-operator|=
-name|archive_entry_stat
-argument_list|(
-name|entry
-argument_list|)
-expr_stmt|;
 comment|/* 	 * We avoid collecting the entire list in memory at once by 	 * listing things as we see them.  However, that also means we can't 	 * just pre-compute the field widths.  Instead, we start with guesses 	 * and just widen them as necessary.  These numbers are completely 	 * arbitrary. 	 */
 if|if
 condition|(
@@ -1534,13 +1564,9 @@ argument_list|(
 name|entry
 argument_list|)
 argument_list|,
-call|(
-name|int
-call|)
+name|archive_entry_nlink
 argument_list|(
-name|st
-operator|->
-name|st_nlink
+name|entry
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1578,9 +1604,10 @@ operator|(
 name|unsigned
 name|long
 operator|)
-name|st
-operator|->
-name|st_uid
+name|archive_entry_uid
+argument_list|(
+name|entry
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|p
@@ -1676,9 +1703,10 @@ operator|(
 name|unsigned
 name|long
 operator|)
-name|st
-operator|->
-name|st_gid
+name|archive_entry_gid
+argument_list|(
+name|entry
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|w
@@ -1701,19 +1729,19 @@ block|}
 comment|/* 	 * Print device number or file size, right-aligned so as to make 	 * total width of group and devnum/filesize fields be gs_width. 	 * If gs_width is too small, grow it. 	 */
 if|if
 condition|(
-name|S_ISCHR
+name|archive_entry_filetype
 argument_list|(
-name|st
-operator|->
-name|st_mode
+name|entry
 argument_list|)
+operator|==
+name|AE_IFCHR
 operator|||
-name|S_ISBLK
+name|archive_entry_filetype
 argument_list|(
-name|st
-operator|->
-name|st_mode
+name|entry
 argument_list|)
+operator|==
+name|AE_IFBLK
 condition|)
 block|{
 name|sprintf
@@ -1726,42 +1754,35 @@ operator|(
 name|unsigned
 name|long
 operator|)
-name|major
+name|archive_entry_rdevmajor
 argument_list|(
-name|st
-operator|->
-name|st_rdev
+name|entry
 argument_list|)
 argument_list|,
 operator|(
 name|unsigned
 name|long
 operator|)
-name|minor
+name|archive_entry_rdevminor
 argument_list|(
-name|st
-operator|->
-name|st_rdev
+name|entry
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* ls(1) also casts here. */
 block|}
 else|else
 block|{
-comment|/* 		 * Note the use of platform-dependent macros to format 		 * the filesize here.  We need the format string and the 		 * corresponding type for the cast. 		 */
-name|sprintf
+name|strcpy
 argument_list|(
 name|tmp
 argument_list|,
-name|BSDTAR_FILESIZE_PRINTF
-argument_list|,
-operator|(
-name|BSDTAR_FILESIZE_TYPE
-operator|)
-name|st
-operator|->
-name|st_size
+name|tar_i64toa
+argument_list|(
+name|archive_entry_size
+argument_list|(
+name|entry
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1814,13 +1835,15 @@ expr_stmt|;
 comment|/* Format the time using 'ls -l' conventions. */
 name|tim
 operator|=
-operator|(
-name|time_t
-operator|)
-name|st
-operator|->
-name|st_mtime
+name|archive_entry_mtime
+argument_list|(
+name|entry
+argument_list|)
 expr_stmt|;
+define|#
+directive|define
+name|HALF_YEAR
+value|(time_t)365 * 86400 / 2
 if|#
 directive|if
 name|defined
@@ -1833,63 +1856,33 @@ name|defined
 argument_list|(
 name|__CYGWIN__
 argument_list|)
+define|#
+directive|define
+name|DAY_FMT
+value|"%d"
 comment|/* Windows' strftime function does not support %e format. */
-if|if
-condition|(
-name|abs
-argument_list|(
-name|tim
-operator|-
-name|now
-argument_list|)
-operator|>
-operator|(
-literal|365
-operator|/
-literal|2
-operator|)
-operator|*
-literal|86400
-condition|)
-name|fmt
-operator|=
-name|bsdtar
-operator|->
-name|day_first
-condition|?
-literal|"%d %b  %Y"
-else|:
-literal|"%b %d  %Y"
-expr_stmt|;
-else|else
-name|fmt
-operator|=
-name|bsdtar
-operator|->
-name|day_first
-condition|?
-literal|"%d %b %H:%M"
-else|:
-literal|"%b %d %H:%M"
-expr_stmt|;
 else|#
 directive|else
+define|#
+directive|define
+name|DAY_FMT
+value|"%e"
+comment|/* Day number without leading zeros */
+endif|#
+directive|endif
 if|if
 condition|(
-name|abs
-argument_list|(
 name|tim
-operator|-
+operator|<
 name|now
-argument_list|)
+operator|-
+name|HALF_YEAR
+operator|||
+name|tim
 operator|>
-operator|(
-literal|365
-operator|/
-literal|2
-operator|)
-operator|*
-literal|86400
+name|now
+operator|+
+name|HALF_YEAR
 condition|)
 name|fmt
 operator|=
@@ -1897,9 +1890,12 @@ name|bsdtar
 operator|->
 name|day_first
 condition|?
-literal|"%e %b  %Y"
+name|DAY_FMT
+literal|" %b  %Y"
 else|:
-literal|"%b %e  %Y"
+literal|"%b "
+name|DAY_FMT
+literal|"  %Y"
 expr_stmt|;
 else|else
 name|fmt
@@ -1908,12 +1904,13 @@ name|bsdtar
 operator|->
 name|day_first
 condition|?
-literal|"%e %b %H:%M"
+name|DAY_FMT
+literal|" %b %H:%M"
 else|:
-literal|"%b %e %H:%M"
+literal|"%b "
+name|DAY_FMT
+literal|" %H:%M"
 expr_stmt|;
-endif|#
-directive|endif
 name|strftime
 argument_list|(
 name|tmp
@@ -1977,11 +1974,9 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|S_ISLNK
+name|archive_entry_symlink
 argument_list|(
-name|st
-operator|->
-name|st_mode
+name|entry
 argument_list|)
 condition|)
 comment|/* Symbolic link */

@@ -89,7 +89,7 @@ literal|0
 argument_list|,
 name|stat
 argument_list|(
-name|testprog
+name|testprogfile
 argument_list|,
 operator|&
 name|st
