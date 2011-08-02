@@ -452,6 +452,14 @@ comment|/* #undef NEED_PTHREAD_SCOPE_SYSTEM */
 end_comment
 
 begin_comment
+comment|/* define if ATF unit tests are to be built. */
+end_comment
+
+begin_comment
+comment|/* #undef ATF_TEST */
+end_comment
+
+begin_comment
 comment|/* Define if recvmsg() does not meet all of the BSD socket API specifications.    */
 end_comment
 
@@ -557,6 +565,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_FCNTL_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `getenv' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETENV
 value|1
 end_define
 
@@ -1017,6 +1036,17 @@ define|#
 directive|define
 name|PORT_NONBLOCK
 value|O_NONBLOCK
+end_define
+
+begin_comment
+comment|/* The size of `void *', as computed by sizeof. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIZEOF_VOID_P
+value|8
 end_define
 
 begin_comment
