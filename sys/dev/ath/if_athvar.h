@@ -1056,8 +1056,13 @@ comment|/* reset cal state next trip */
 name|sc_rxslink
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* do self-linked final descriptor */
+name|sc_kickpcu
+range|:
+literal|1
+decl_stmt|;
+comment|/* kick PCU RX on next RX proc */
 name|uint32_t
 name|sc_eerd
 decl_stmt|;
