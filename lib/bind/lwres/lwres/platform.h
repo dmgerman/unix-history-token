@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: platform.h.in,v 1.14.18.5 2005/06/08 02:07:59 marka Exp $ */
+comment|/* $Id: platform.h.in,v 1.14.18.5 2005-06-08 02:07:59 marka Exp $ */
 end_comment
 
 begin_comment

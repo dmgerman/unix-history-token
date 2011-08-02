@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2004-2010 Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003 Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2011 Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003 Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: rdatastructpre.h,v 1.14 2004/03/05 05:10:04 marka Exp $ */
+comment|/* $Id: rdatastructpre.h,v 1.14 2004-03-05 05:10:04 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -123,7 +123,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: a_1.h,v 1.24.18.2 2005/04/29 00:16:41 marka Exp $ */
+comment|/* $Id: a_1.h,v 1.24.18.2 2005-04-29 00:16:41 marka Exp $ */
 end_comment
 
 begin_typedef
@@ -157,7 +157,7 @@ comment|/*  * Copyright (C) 2005  Internet Systems Consortium, Inc. ("ISC")  *  
 end_comment
 
 begin_comment
-comment|/* $Id: a_1.h,v 1.2.2.2 2005/06/05 00:02:22 marka Exp $ */
+comment|/* $Id: a_1.h,v 1.2.2.2 2005-06-05 00:02:22 marka Exp $ */
 end_comment
 
 begin_comment
@@ -244,7 +244,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: a_1.h,v 1.8.18.2 2005/04/29 00:16:41 marka Exp $ */
+comment|/* $Id: a_1.h,v 1.8.18.2 2005-04-29 00:16:41 marka Exp $ */
 end_comment
 
 begin_typedef
@@ -295,7 +295,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: ns_2.h,v 1.23.18.2 2005/04/29 00:16:37 marka Exp $ */
+comment|/* $Id: ns_2.h,v 1.23.18.2 2005-04-29 00:16:37 marka Exp $ */
 end_comment
 
 begin_typedef
@@ -349,7 +349,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: md_3.h,v 1.24.18.2 2005/04/29 00:16:35 marka Exp $ */
+comment|/* $Id: md_3.h,v 1.24.18.2 2005-04-29 00:16:35 marka Exp $ */
 end_comment
 
 begin_typedef
@@ -403,7 +403,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: mf_4.h,v 1.22.18.2 2005/04/29 00:16:35 marka Exp $ */
+comment|/* $Id: mf_4.h,v 1.22.18.2 2005-04-29 00:16:35 marka Exp $ */
 end_comment
 
 begin_typedef
@@ -440,7 +440,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: cname_5.h,v 1.24 2004/03/05 05:10:10 marka Exp $ */
+comment|/* $Id: cname_5.h,v 1.24 2004-03-05 05:10:10 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -507,7 +507,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: soa_6.h,v 1.28.18.2 2005/04/29 00:16:40 marka Exp $ */
+comment|/* $Id: soa_6.h,v 1.28.18.2 2005-04-29 00:16:40 marka Exp $ */
 end_comment
 
 begin_typedef
@@ -584,7 +584,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: mb_7.h,v 1.23.18.2 2005/04/29 00:16:34 marka Exp $ */
+comment|/* $Id: mb_7.h,v 1.23.18.2 2005-04-29 00:16:34 marka Exp $ */
 end_comment
 
 begin_typedef
@@ -638,7 +638,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: mg_8.h,v 1.22.18.2 2005/04/29 00:16:35 marka Exp $ */
+comment|/* $Id: mg_8.h,v 1.22.18.2 2005-04-29 00:16:35 marka Exp $ */
 end_comment
 
 begin_typedef
@@ -692,7 +692,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: mr_9.h,v 1.22.18.2 2005/04/29 00:16:36 marka Exp $ */
+comment|/* $Id: mr_9.h,v 1.22.18.2 2005-04-29 00:16:36 marka Exp $ */
 end_comment
 
 begin_typedef
@@ -746,7 +746,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: null_10.h,v 1.21.18.2 2005/04/29 00:16:37 marka Exp $ */
+comment|/* $Id: null_10.h,v 1.21.18.2 2005-04-29 00:16:37 marka Exp $ */
 end_comment
 
 begin_typedef
@@ -801,7 +801,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: wks_11.h,v 1.20 2004/03/05 05:10:25 marka Exp $ */
+comment|/* $Id: wks_11.h,v 1.20 2004-03-05 05:10:25 marka Exp $ */
 end_comment
 
 begin_typedef
@@ -867,7 +867,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: ptr_12.h,v 1.23.18.2 2005/04/29 00:16:39 marka Exp $ */
+comment|/* $Id: ptr_12.h,v 1.23.18.2 2005-04-29 00:16:39 marka Exp $ */
 end_comment
 
 begin_typedef
@@ -917,7 +917,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: hinfo_13.h,v 1.23 2004/03/05 05:10:12 marka Exp $ */
+comment|/* $Id: hinfo_13.h,v 1.23 2004-03-05 05:10:12 marka Exp $ */
 end_comment
 
 begin_typedef
@@ -982,7 +982,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: minfo_14.h,v 1.23.18.2 2005/04/29 00:16:35 marka Exp $ */
+comment|/* $Id: minfo_14.h,v 1.23.18.2 2005-04-29 00:16:35 marka Exp $ */
 end_comment
 
 begin_typedef
@@ -1039,7 +1039,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: mx_15.h,v 1.25.18.2 2005/04/29 00:16:36 marka Exp $ */
+comment|/* $Id: mx_15.h,v 1.25.18.2 2005-04-29 00:16:36 marka Exp $ */
 end_comment
 
 begin_typedef
@@ -1096,7 +1096,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: txt_16.h,v 1.24.18.2 2005/04/29 00:16:40 marka Exp $ */
+comment|/* $Id: txt_16.h,v 1.24.18.2 2005-04-29 00:16:40 marka Exp $ */
 end_comment
 
 begin_typedef
@@ -1210,7 +1210,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: rp_17.h,v 1.17.18.2 2005/04/29 00:16:39 marka Exp $ */
+comment|/* $Id: rp_17.h,v 1.17.18.2 2005-04-29 00:16:39 marka Exp $ */
 end_comment
 
 begin_comment
@@ -1267,7 +1267,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: afsdb_18.h,v 1.16.18.2 2005/04/29 00:16:30 marka Exp $ */
+comment|/* $Id: afsdb_18.h,v 1.16.18.2 2005-04-29 00:16:30 marka Exp $ */
 end_comment
 
 begin_comment
@@ -1324,7 +1324,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: x25_19.h,v 1.14.18.2 2005/04/29 00:16:40 marka Exp $ */
+comment|/* $Id: x25_19.h,v 1.14.18.2 2005-04-29 00:16:40 marka Exp $ */
 end_comment
 
 begin_comment
@@ -1383,7 +1383,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: isdn_20.h,v 1.14.18.2 2005/04/29 00:16:33 marka Exp $ */
+comment|/* $Id: isdn_20.h,v 1.14.18.2 2005-04-29 00:16:33 marka Exp $ */
 end_comment
 
 begin_comment
@@ -1448,7 +1448,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: rt_21.h,v 1.17.18.2 2005/04/29 00:16:40 marka Exp $ */
+comment|/* $Id: rt_21.h,v 1.17.18.2 2005-04-29 00:16:40 marka Exp $ */
 end_comment
 
 begin_comment
@@ -1505,7 +1505,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: nsap_22.h,v 1.14.18.2 2005/04/29 00:16:43 marka Exp $ */
+comment|/* $Id: nsap_22.h,v 1.14.18.2 2005-04-29 00:16:43 marka Exp $ */
 end_comment
 
 begin_comment
@@ -1564,7 +1564,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: nsap-ptr_23.h,v 1.15.18.2 2005/04/29 00:16:43 marka Exp $ */
+comment|/* $Id: nsap-ptr_23.h,v 1.15.18.2 2005-04-29 00:16:43 marka Exp $ */
 end_comment
 
 begin_comment
@@ -1618,7 +1618,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: sig_24.h,v 1.22.18.2 2005/04/29 00:16:40 marka Exp $ */
+comment|/* $Id: sig_24.h,v 1.22.18.2 2005-04-29 00:16:40 marka Exp $ */
 end_comment
 
 begin_comment
@@ -1701,7 +1701,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: key_25.h,v 1.15.18.2 2005/04/29 00:16:33 marka Exp $ */
+comment|/* $Id: key_25.h,v 1.15.18.2 2005-04-29 00:16:33 marka Exp $ */
 end_comment
 
 begin_comment
@@ -1769,7 +1769,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: px_26.h,v 1.15.18.2 2005/04/29 00:16:43 marka Exp $ */
+comment|/* $Id: px_26.h,v 1.15.18.2 2005-04-29 00:16:43 marka Exp $ */
 end_comment
 
 begin_comment
@@ -1829,7 +1829,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: gpos_27.h,v 1.13.18.2 2005/04/29 00:16:32 marka Exp $ */
+comment|/* $Id: gpos_27.h,v 1.13.18.2 2005-04-29 00:16:32 marka Exp $ */
 end_comment
 
 begin_comment
@@ -1901,7 +1901,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: aaaa_28.h,v 1.17.18.2 2005/04/29 00:16:42 marka Exp $ */
+comment|/* $Id: aaaa_28.h,v 1.17.18.2 2005-04-29 00:16:42 marka Exp $ */
 end_comment
 
 begin_comment
@@ -1952,7 +1952,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: loc_29.h,v 1.15.18.2 2005/04/29 00:16:34 marka Exp $ */
+comment|/* $Id: loc_29.h,v 1.15.18.2 2005-04-29 00:16:34 marka Exp $ */
 end_comment
 
 begin_comment
@@ -2039,7 +2039,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: nxt_30.h,v 1.21.18.2 2005/04/29 00:16:38 marka Exp $ */
+comment|/* $Id: nxt_30.h,v 1.21.18.2 2005-04-29 00:16:38 marka Exp $ */
 end_comment
 
 begin_comment
@@ -2101,7 +2101,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: srv_33.h,v 1.15.18.2 2005/04/29 00:16:43 marka Exp $ */
+comment|/* $Id: srv_33.h,v 1.15.18.2 2005-04-29 00:16:43 marka Exp $ */
 end_comment
 
 begin_comment
@@ -2168,7 +2168,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: naptr_35.h,v 1.19.18.2 2005/04/29 00:16:42 marka Exp $ */
+comment|/* $Id: naptr_35.h,v 1.19.18.2 2005-04-29 00:16:42 marka Exp $ */
 end_comment
 
 begin_comment
@@ -2249,7 +2249,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: kx_36.h,v 1.16.18.2 2005/04/29 00:16:42 marka Exp $ */
+comment|/* $Id: kx_36.h,v 1.16.18.2 2005-04-29 00:16:42 marka Exp $ */
 end_comment
 
 begin_comment
@@ -2293,7 +2293,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: cert_37.h,v 1.16.18.2 2005/04/29 00:16:31 marka Exp $ */
+comment|/* $Id: cert_37.h,v 1.16.18.2 2005-04-29 00:16:31 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -2374,7 +2374,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: a6_38.h,v 1.20.18.2 2005/04/29 00:16:41 marka Exp $ */
+comment|/* $Id: a6_38.h,v 1.20.18.2 2005-04-29 00:16:41 marka Exp $ */
 end_comment
 
 begin_comment
@@ -2435,7 +2435,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: dname_39.h,v 1.17.18.2 2005/04/29 00:16:31 marka Exp $ */
+comment|/* $Id: dname_39.h,v 1.17.18.2 2005-04-29 00:16:31 marka Exp $ */
 end_comment
 
 begin_comment
@@ -2489,7 +2489,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: opt_41.h,v 1.14.18.2 2005/04/29 00:16:38 marka Exp $ */
+comment|/* $Id: opt_41.h,v 1.14.18.2 2005-04-29 00:16:38 marka Exp $ */
 end_comment
 
 begin_comment
@@ -2614,7 +2614,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: apl_42.h,v 1.2.18.2 2005/04/29 00:16:42 marka Exp $ */
+comment|/* $Id: apl_42.h,v 1.2.18.2 2005-04-29 00:16:42 marka Exp $ */
 end_comment
 
 begin_typedef
@@ -2725,7 +2725,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: ds_43.h,v 1.3.20.2 2005/04/29 00:16:32 marka Exp $ */
+comment|/* $Id: ds_43.h,v 1.3.20.2 2005-04-29 00:16:32 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -2793,7 +2793,7 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: sshfp_44.h,v 1.2.18.3 2006/03/10 04:04:32 marka Exp $ */
+comment|/* $Id: sshfp_44.h,v 1.2.18.3 2006-03-10 04:04:32 marka Exp $ */
 end_comment
 
 begin_comment
@@ -2858,7 +2858,7 @@ comment|/*  * Copyright (C) 2005  Internet Systems Consortium, Inc. ("ISC")  *  
 end_comment
 
 begin_comment
-comment|/* $Id: ipseckey_45.h,v 1.2.2.1 2005/07/07 03:17:36 marka Exp $ */
+comment|/* $Id: ipseckey_45.h,v 1.2.2.1 2005-07-07 03:17:36 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -2949,7 +2949,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: rrsig_46.h,v 1.3.20.2 2005/04/29 00:16:39 marka Exp $ */
+comment|/* $Id: rrsig_46.h,v 1.3.20.2 2005-04-29 00:16:39 marka Exp $ */
 end_comment
 
 begin_comment
@@ -3032,7 +3032,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: nsec_47.h,v 1.4.20.4 2008/07/15 23:46:14 tbox Exp $ */
+comment|/* $Id: nsec_47.h,v 1.4.20.4 2008-07-15 23:46:14 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -3094,7 +3094,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: dnskey_48.h,v 1.3.20.2 2005/04/29 00:16:32 marka Exp $ */
+comment|/* $Id: dnskey_48.h,v 1.3.20.2 2005-04-29 00:16:32 marka Exp $ */
 end_comment
 
 begin_comment
@@ -3162,7 +3162,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: spf_99.h,v 1.1.2.2 2005/07/16 00:40:54 marka Exp $ */
+comment|/* $Id: spf_99.h,v 1.1.2.2 2005-07-16 00:40:54 marka Exp $ */
 end_comment
 
 begin_typedef
@@ -3280,7 +3280,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: unspec_103.h,v 1.13.18.2 2005/04/29 00:16:40 marka Exp $ */
+comment|/* $Id: unspec_103.h,v 1.13.18.2 2005-04-29 00:16:40 marka Exp $ */
 end_comment
 
 begin_typedef
@@ -3335,7 +3335,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: tkey_249.h,v 1.20.18.2 2005/04/29 00:16:40 marka Exp $ */
+comment|/* $Id: tkey_249.h,v 1.20.18.2 2005-04-29 00:16:40 marka Exp $ */
 end_comment
 
 begin_comment
@@ -3404,7 +3404,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: tsig_250.h,v 1.21.18.2 2005/04/29 00:16:29 marka Exp $ */
+comment|/* $Id: tsig_250.h,v 1.21.18.2 2005-04-29 00:16:29 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -3486,7 +3486,7 @@ comment|/*  * Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: dlv_32769.h,v 1.2.2.2 2006/02/19 06:50:47 marka Exp $ */
+comment|/* $Id: dlv_32769.h,v 1.2.2.2 2006-02-19 06:50:47 marka Exp $ */
 end_comment
 
 begin_comment
@@ -3554,7 +3554,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: rdatastructsuf.h,v 1.8 2004/03/05 05:10:04 marka Exp $ */
+comment|/* $Id: rdatastructsuf.h,v 1.8 2004-03-05 05:10:04 marka Exp $ */
 end_comment
 
 begin_macro

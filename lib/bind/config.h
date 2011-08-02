@@ -16,7 +16,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2008  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: acconfig.h,v 1.44.18.7 2008/12/01 23:45:56 tbox Exp $ */
+comment|/* $Id: acconfig.h,v 1.44.18.7 2008-12-01 23:45:56 tbox Exp $ */
 end_comment
 
 begin_comment
