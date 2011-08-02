@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2009  Internet Systems Consortium,
 end_comment
 
 begin_comment
-comment|/* $Id: netdb.h.in,v 1.39.332.2 2009/01/18 23:47:41 tbox Exp $ */
+comment|/* $Id: netdb.h.in,v 1.39.332.2 2009-01-18 23:47:41 tbox Exp $ */
 end_comment
 
 begin_comment
