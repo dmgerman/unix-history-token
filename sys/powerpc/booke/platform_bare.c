@@ -774,6 +774,7 @@ name|bootinfo
 operator|!=
 name|NULL
 condition|)
+block|{
 if|if
 condition|(
 name|bootinfo
@@ -797,7 +798,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Compatbility with Juniper's loader. */
+comment|/* Compatibility with Juniper's loader. */
 name|ticks
 operator|=
 name|bootinfo
@@ -807,6 +808,7 @@ index|]
 operator|>>
 literal|3
 expr_stmt|;
+block|}
 block|}
 else|else
 name|ticks
