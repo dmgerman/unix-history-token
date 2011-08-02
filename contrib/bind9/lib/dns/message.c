@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: message.c,v 1.245.50.7.6.3 2011-06-21 20:13:22 each Exp $ */
+comment|/* $Id: message.c,v 1.245.50.10 2011-06-09 00:16:34 each Exp $ */
 end_comment
 
 begin_comment
@@ -5223,10 +5223,6 @@ operator|=
 name|ISC_FALSE
 expr_stmt|;
 name|skip_type_search
-operator|=
-name|ISC_FALSE
-expr_stmt|;
-name|free_name
 operator|=
 name|ISC_FALSE
 expr_stmt|;
@@ -12600,6 +12596,13 @@ operator|&
 name|tsig
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|INSIST
+argument_list|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
 argument_list|)
 expr_stmt|;
 if|if

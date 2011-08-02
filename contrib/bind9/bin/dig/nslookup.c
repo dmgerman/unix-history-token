@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2009, 2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: nslookup.c,v 1.117.334.5 2009-10-20 01:11:22 marka Exp $ */
+comment|/* $Id: nslookup.c,v 1.117.334.7 2011-02-21 23:45:48 tbox Exp $ */
 end_comment
 
 begin_include
@@ -2511,44 +2511,6 @@ end_function
 
 begin_function
 specifier|static
-name|void
-name|safecpy
-parameter_list|(
-name|char
-modifier|*
-name|dest
-parameter_list|,
-name|char
-modifier|*
-name|src
-parameter_list|,
-name|int
-name|size
-parameter_list|)
-block|{
-name|strncpy
-argument_list|(
-name|dest
-argument_list|,
-name|src
-argument_list|,
-name|size
-argument_list|)
-expr_stmt|;
-name|dest
-index|[
-name|size
-operator|-
-literal|1
-index|]
-operator|=
-literal|0
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
 name|isc_result_t
 name|parse_uint
 parameter_list|(
@@ -2825,7 +2787,7 @@ literal|6
 index|]
 argument_list|)
 condition|)
-name|safecpy
+name|strlcpy
 argument_list|(
 name|defclass
 argument_list|,
@@ -2868,7 +2830,7 @@ literal|3
 index|]
 argument_list|)
 condition|)
-name|safecpy
+name|strlcpy
 argument_list|(
 name|defclass
 argument_list|,
@@ -2911,7 +2873,7 @@ literal|5
 index|]
 argument_list|)
 condition|)
-name|safecpy
+name|strlcpy
 argument_list|(
 name|deftype
 argument_list|,
@@ -2954,7 +2916,7 @@ literal|3
 index|]
 argument_list|)
 condition|)
-name|safecpy
+name|strlcpy
 argument_list|(
 name|deftype
 argument_list|,
@@ -2997,7 +2959,7 @@ literal|10
 index|]
 argument_list|)
 condition|)
-name|safecpy
+name|strlcpy
 argument_list|(
 name|deftype
 argument_list|,
@@ -3040,7 +3002,7 @@ literal|6
 index|]
 argument_list|)
 condition|)
-name|safecpy
+name|strlcpy
 argument_list|(
 name|deftype
 argument_list|,
@@ -3083,7 +3045,7 @@ literal|3
 index|]
 argument_list|)
 condition|)
-name|safecpy
+name|strlcpy
 argument_list|(
 name|deftype
 argument_list|,
@@ -3126,7 +3088,7 @@ literal|2
 index|]
 argument_list|)
 condition|)
-name|safecpy
+name|strlcpy
 argument_list|(
 name|deftype
 argument_list|,
@@ -3158,7 +3120,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|safecpy
+name|strlcpy
 argument_list|(
 name|domainopt
 argument_list|,
@@ -3199,7 +3161,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|safecpy
+name|strlcpy
 argument_list|(
 name|domainopt
 argument_list|,
@@ -3848,7 +3810,7 @@ operator|==
 name|ISC_R_SUCCESS
 condition|)
 block|{
-name|safecpy
+name|strlcpy
 argument_list|(
 name|lookup
 operator|->
@@ -3879,7 +3841,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|safecpy
+name|strlcpy
 argument_list|(
 name|lookup
 operator|->

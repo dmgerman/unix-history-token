@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009, 2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: master.c,v 1.171.120.2 2009-01-18 23:47:40 tbox Exp $ */
+comment|/* $Id: master.c,v 1.171.120.4 2011-03-12 04:57:26 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -5424,6 +5424,15 @@ name|lctx
 operator|->
 name|inc
 expr_stmt|;
+name|source
+operator|=
+name|isc_lex_getsourcename
+argument_list|(
+name|lctx
+operator|->
+name|lex
+argument_list|)
+expr_stmt|;
 name|line
 operator|=
 name|isc_lex_getsourceline
@@ -5433,13 +5442,9 @@ operator|->
 name|lex
 argument_list|)
 expr_stmt|;
-name|source
-operator|=
-name|isc_lex_getsourcename
+name|POST
 argument_list|(
-name|lctx
-operator|->
-name|lex
+name|line
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -6527,6 +6532,15 @@ name|lctx
 operator|->
 name|inc
 expr_stmt|;
+name|source
+operator|=
+name|isc_lex_getsourcename
+argument_list|(
+name|lctx
+operator|->
+name|lex
+argument_list|)
+expr_stmt|;
 name|line
 operator|=
 name|isc_lex_getsourceline
@@ -6536,13 +6550,9 @@ operator|->
 name|lex
 argument_list|)
 expr_stmt|;
-name|source
-operator|=
-name|isc_lex_getsourcename
+name|POST
 argument_list|(
-name|lctx
-operator|->
-name|lex
+name|line
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -10054,6 +10064,11 @@ operator|&
 name|target
 argument_list|)
 expr_stmt|;
+name|POST
+argument_list|(
+name|dumptime
+argument_list|)
+expr_stmt|;
 name|lctx
 operator|->
 name|first
@@ -10809,10 +10824,6 @@ expr_stmt|;
 name|rdcount
 operator|-=
 name|i
-expr_stmt|;
-name|i
-operator|=
-literal|0
 expr_stmt|;
 goto|goto
 name|continue_read
@@ -12830,14 +12841,6 @@ argument_list|(
 name|save
 argument_list|)
 expr_stmt|;
-name|this
-operator|=
-name|ISC_LIST_HEAD
-argument_list|(
-operator|*
-name|current
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -12925,14 +12928,6 @@ block|}
 name|ISC_LIST_INIT
 argument_list|(
 name|save
-argument_list|)
-expr_stmt|;
-name|this
-operator|=
-name|ISC_LIST_HEAD
-argument_list|(
-operator|*
-name|glue
 argument_list|)
 expr_stmt|;
 while|while

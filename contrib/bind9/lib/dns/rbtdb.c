@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rbtdb.c,v 1.270.12.26.4.1 2011-06-21 20:13:23 each Exp $ */
+comment|/* $Id: rbtdb.c,v 1.270.12.32 2011-06-09 00:16:35 each Exp $ */
 end_comment
 
 begin_comment
@@ -1531,7 +1531,11 @@ name|rbtnodelist_t
 modifier|*
 name|deadnodes
 decl_stmt|;
-comment|/* 	 * Heaps.  Each of these is used for TTL based expiry. 	 */
+comment|/* 	 * Heaps.  These are used for TTL based expiry in a cache, 	 * or for zone resigning in a zone DB.  hmctx is the memory 	 * context to use for the heap (which differs from the main 	 * database memory context in the case of a cache). 	 */
+name|isc_mem_t
+modifier|*
+name|hmctx
+decl_stmt|;
 name|isc_heap_t
 modifier|*
 modifier|*
@@ -3964,9 +3968,7 @@ name|isc_mem_put
 argument_list|(
 name|rbtdb
 operator|->
-name|common
-operator|.
-name|mctx
+name|hmctx
 argument_list|,
 name|rbtdb
 operator|->
@@ -4085,6 +4087,14 @@ operator|->
 name|common
 operator|.
 name|ondest
+expr_stmt|;
+name|isc_mem_detach
+argument_list|(
+operator|&
+name|rbtdb
+operator|->
+name|hmctx
+argument_list|)
 expr_stmt|;
 name|isc_mem_putanddetach
 argument_list|(
@@ -11542,12 +11552,47 @@ block|}
 comment|/* 	 * Did we find anything? 	 */
 if|if
 condition|(
+operator|!
+name|IS_CACHE
+argument_list|(
+name|search
+operator|->
+name|rbtdb
+argument_list|)
+operator|&&
+operator|!
+name|IS_STUB
+argument_list|(
+name|search
+operator|->
+name|rbtdb
+argument_list|)
+operator|&&
+name|ns_header
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 		 * Note that NS has precedence over DNAME if both exist 		 * in a zone.  Otherwise DNAME take precedence over NS. 		 */
+name|found
+operator|=
+name|ns_header
+expr_stmt|;
+name|search
+operator|->
+name|zonecut_sigrdataset
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|dname_header
 operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Note that DNAME has precedence over NS if both exist. 		 */
 name|found
 operator|=
 name|dname_header
@@ -16552,6 +16597,13 @@ name|search
 operator|.
 name|zonecut
 expr_stmt|;
+name|INSIST
+argument_list|(
+name|node
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|lock
 operator|=
 operator|&
@@ -17749,6 +17801,11 @@ expr_stmt|;
 name|locktype
 operator|=
 name|isc_rwlocktype_write
+expr_stmt|;
+name|POST
+argument_list|(
+name|locktype
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -19136,22 +19193,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 					 * If we've already got the CNAME RRSIG, 					 * use it, otherwise change sigtype 					 * so that we find it. 					 */
-if|if
-condition|(
-name|cnamesig
-operator|!=
-name|NULL
-condition|)
-name|foundsig
-operator|=
-name|cnamesig
-expr_stmt|;
-else|else
-name|sigtype
-operator|=
-name|RBTDB_RDATATYPE_SIGCNAME
-expr_stmt|;
+comment|/* 					 * If we've already got the 					 * CNAME RRSIG, use it. 					 */
 name|foundsig
 operator|=
 name|cnamesig
@@ -19690,6 +19732,11 @@ name|locktype
 operator|=
 name|isc_rwlocktype_write
 expr_stmt|;
+name|POST
+argument_list|(
+name|locktype
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -19781,6 +19828,13 @@ operator|=
 name|search
 operator|.
 name|zonecut
+expr_stmt|;
+name|INSIST
+argument_list|(
+name|node
+operator|!=
+name|NULL
+argument_list|)
 expr_stmt|;
 name|lock
 operator|=
@@ -20527,6 +20581,11 @@ expr_stmt|;
 name|locktype
 operator|=
 name|isc_rwlocktype_write
+expr_stmt|;
+name|POST
+argument_list|(
+name|locktype
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -30672,17 +30731,13 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
+name|isc_mem_t
+modifier|*
+name|hmctx
+init|=
+name|mctx
+decl_stmt|;
 comment|/* Keep the compiler happy. */
-name|UNUSED
-argument_list|(
-name|argc
-argument_list|)
-expr_stmt|;
-name|UNUSED
-argument_list|(
-name|argv
-argument_list|)
-expr_stmt|;
 name|UNUSED
 argument_list|(
 name|driverarg
@@ -30712,6 +30767,24 @@ operator|(
 name|ISC_R_NOMEMORY
 operator|)
 return|;
+comment|/* 	 * If argv[0] exists, it points to a memory context to use for heap 	 */
+if|if
+condition|(
+name|argc
+operator|!=
+literal|0
+condition|)
+name|hmctx
+operator|=
+operator|(
+name|isc_mem_t
+operator|*
+operator|)
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
 name|memset
 argument_list|(
 name|rbtdb
@@ -31079,7 +31152,7 @@ name|heaps
 operator|=
 name|isc_mem_get
 argument_list|(
-name|mctx
+name|hmctx
 argument_list|,
 name|rbtdb
 operator|->
@@ -31170,7 +31243,7 @@ name|result
 operator|=
 name|isc_heap_create
 argument_list|(
-name|mctx
+name|hmctx
 argument_list|,
 name|sooner
 argument_list|,
@@ -31433,6 +31506,16 @@ operator|->
 name|common
 operator|.
 name|mctx
+argument_list|)
+expr_stmt|;
+name|isc_mem_attach
+argument_list|(
+name|hmctx
+argument_list|,
+operator|&
+name|rbtdb
+operator|->
+name|hmctx
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Must be initialized before free_rbtdb() is called. 	 */

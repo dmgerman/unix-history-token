@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: rdataset.c,v 1.82.50.4.6.3 2011-06-21 20:13:23 each Exp $ */
+comment|/* $Id: rdataset.c,v 1.82.50.8 2011-06-09 00:16:36 each Exp $ */
 end_comment
 
 begin_comment
@@ -1195,6 +1195,8 @@ name|int
 name|i
 decl_stmt|,
 name|count
+init|=
+literal|0
 decl_stmt|,
 name|added
 decl_stmt|,
@@ -1292,10 +1294,6 @@ name|mctx
 operator|!=
 name|NULL
 argument_list|)
-expr_stmt|;
-name|count
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(

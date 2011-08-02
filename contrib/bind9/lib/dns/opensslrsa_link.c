@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/*  * Principal Author: Brian Wellington  * $Id: opensslrsa_link.c,v 1.20.50.8 2010-01-22 02:36:49 marka Exp $  */
+comment|/*  * Principal Author: Brian Wellington  * $Id: opensslrsa_link.c,v 1.20.50.11 2011-03-12 04:57:27 tbox Exp $  */
 end_comment
 
 begin_ifdef
@@ -173,11 +173,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_ENGINE
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<openssl/engine.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * We don't use configure for windows so enforce the OpenSSL version  * here.  Unlike with configure we don't support overriding this test.  */
@@ -5252,12 +5263,17 @@ name|rsa
 init|=
 name|NULL
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_ENGINE
 name|ENGINE
 modifier|*
 name|e
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 name|isc_mem_t
 modifier|*
 name|mctx
@@ -5278,12 +5294,22 @@ name|label
 init|=
 name|NULL
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_ENGINE
+argument_list|)
+operator|||
+name|USE_EVP
 name|EVP_PKEY
 modifier|*
 name|pkey
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* read private key file */
 name|ret
 operator|=
@@ -5394,6 +5420,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|USE_ENGINE
 name|INSIST
 argument_list|(
 name|name
@@ -5572,6 +5601,15 @@ operator|(
 name|ISC_R_SUCCESS
 operator|)
 return|;
+else|#
+directive|else
+name|DST_RET
+argument_list|(
+name|DST_R_NOENGINE
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|rsa
 operator|=
@@ -5948,6 +5986,9 @@ modifier|*
 name|pin
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|USE_ENGINE
 name|ENGINE
 modifier|*
 name|e
@@ -6143,6 +6184,35 @@ operator|(
 name|ret
 operator|)
 return|;
+else|#
+directive|else
+name|UNUSED
+argument_list|(
+name|key
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|engine
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|label
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|pin
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|DST_R_NOENGINE
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: server.c,v 1.520.12.21 2011-01-14 23:45:49 tbox Exp $ */
+comment|/* $Id: server.c,v 1.520.12.23 2011-03-11 10:49:51 marka Exp $ */
 end_comment
 
 begin_comment
@@ -2489,6 +2489,8 @@ parameter_list|)
 block|{
 name|isc_result_t
 name|result
+init|=
+name|ISC_R_FAILURE
 decl_stmt|;
 name|dns_dispatch_t
 modifier|*
@@ -2514,11 +2516,6 @@ name|unsigned
 name|int
 name|maxdispatchbuffers
 decl_stmt|;
-comment|/* 	 * Make compiler happy. 	 */
-name|result
-operator|=
-name|ISC_R_FAILURE
-expr_stmt|;
 switch|switch
 condition|(
 name|af
@@ -4934,6 +4931,13 @@ comment|/* Production view */
 name|isc_mem_t
 modifier|*
 name|cmctx
+init|=
+name|NULL
+decl_stmt|,
+modifier|*
+name|hmctx
+init|=
+name|NULL
 decl_stmt|;
 name|dns_dispatch_t
 modifier|*
@@ -5042,10 +5046,6 @@ argument_list|(
 name|view
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|cmctx
-operator|=
-name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -5185,6 +5185,11 @@ expr_stmt|;
 name|forview
 operator|=
 literal|""
+expr_stmt|;
+name|POST
+argument_list|(
+name|forview
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Set the view's port number for outgoing queries. 	 */
@@ -6234,6 +6239,7 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* 		 * Create a cache. 		 * 		 * We use two separate memory contexts for the 		 * cache, for the main cache memory and the heap 		 * memory. 		 */
 name|CHECK
 argument_list|(
 name|isc_mem_create
@@ -6247,11 +6253,44 @@ name|cmctx
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|CHECK
-argument_list|(
-name|dns_cache_create
+name|isc_mem_setname
 argument_list|(
 name|cmctx
+argument_list|,
+literal|"cache"
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|CHECK
+argument_list|(
+name|isc_mem_create
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|hmctx
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|isc_mem_setname
+argument_list|(
+name|hmctx
+argument_list|,
+literal|"cache_heap"
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|CHECK
+argument_list|(
+name|dns_cache_create3
+argument_list|(
+name|cmctx
+argument_list|,
+name|hmctx
 argument_list|,
 name|ns_g_taskmgr
 argument_list|,
@@ -6260,6 +6299,8 @@ argument_list|,
 name|view
 operator|->
 name|rdclass
+argument_list|,
+name|NULL
 argument_list|,
 literal|"rbt"
 argument_list|,
@@ -6272,13 +6313,16 @@ name|cache
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|isc_mem_setname
+name|isc_mem_detach
 argument_list|(
+operator|&
 name|cmctx
-argument_list|,
-literal|"cache"
-argument_list|,
-name|NULL
+argument_list|)
+expr_stmt|;
+name|isc_mem_detach
+argument_list|(
+operator|&
+name|hmctx
 argument_list|)
 expr_stmt|;
 block|}
@@ -10003,6 +10047,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|hmctx
+operator|!=
+name|NULL
+condition|)
+name|isc_mem_detach
+argument_list|(
+operator|&
+name|hmctx
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|cache
 operator|!=
 name|NULL
@@ -11088,6 +11144,13 @@ name|dns_rdataclass_in
 argument_list|,
 operator|&
 name|viewclass
+argument_list|)
+expr_stmt|;
+name|INSIST
+argument_list|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
 argument_list|)
 expr_stmt|;
 block|}
@@ -14321,7 +14384,6 @@ expr_stmt|;
 name|maps
 index|[
 name|i
-operator|++
 index|]
 operator|=
 name|NULL
@@ -15234,8 +15296,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|result
-operator|=
+comment|/* check return code? */
+operator|(
+name|void
+operator|)
 name|ns_listenlist_fromconfig
 argument_list|(
 name|clistenon
@@ -15341,8 +15405,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|result
-operator|=
+comment|/* check return code? */
+operator|(
+name|void
+operator|)
 name|ns_listenlist_fromconfig
 argument_list|(
 name|clistenon
@@ -21621,11 +21687,6 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-name|CHECK
-argument_list|(
-name|result
-argument_list|)
-expr_stmt|;
 name|cleanup
 label|:
 if|if
@@ -22767,6 +22828,11 @@ expr_stmt|;
 name|result
 operator|=
 name|ISC_R_SUCCESS
+expr_stmt|;
+name|POST
+argument_list|(
+name|result
+argument_list|)
 expr_stmt|;
 goto|goto
 name|nextzone

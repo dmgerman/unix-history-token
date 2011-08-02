@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009, 2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dispatch.c,v 1.155.12.11 2009-12-02 23:26:28 marka Exp $ */
+comment|/* $Id: dispatch.c,v 1.155.12.14 2011-04-06 10:34:27 marka Exp $ */
 end_comment
 
 begin_comment
@@ -3942,6 +3942,50 @@ elseif|else
 if|if
 condition|(
 name|result
+operator|==
+name|ISC_R_NOPERM
+condition|)
+block|{
+name|char
+name|buf
+index|[
+name|ISC_SOCKADDR_FORMATSIZE
+index|]
+decl_stmt|;
+name|isc_sockaddr_format
+argument_list|(
+operator|&
+name|localaddr
+argument_list|,
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|dispatch_log
+argument_list|(
+name|disp
+argument_list|,
+name|ISC_LOG_WARNING
+argument_list|,
+literal|"open_socket(%s) -> %s: continuing"
+argument_list|,
+name|buf
+argument_list|,
+name|isc_result_totext
+argument_list|(
+name|result
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|result
 operator|!=
 name|ISC_R_ADDRINUSE
 condition|)
@@ -5602,10 +5646,6 @@ name|id
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Look at flags.  If query, drop it. If response, 	 * look to see where it goes. 	 */
-name|queue_response
-operator|=
-name|ISC_FALSE
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -6711,10 +6751,6 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * Allocate an event to send to the query or response client, and 	 * allocate a new buffer for our use. 	 */
 comment|/* 	 * Look at flags.  If query, drop it. If response, 	 * look to see where it goes. 	 */
-name|queue_response
-operator|=
-name|ISC_FALSE
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -10591,11 +10627,14 @@ operator|->
 name|mctx
 argument_list|,
 name|qid
+operator|->
+name|qid_table
 argument_list|,
+name|buckets
+operator|*
 sizeof|sizeof
 argument_list|(
-operator|*
-name|qid
+name|dns_displist_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -10606,14 +10645,11 @@ operator|->
 name|mctx
 argument_list|,
 name|qid
-operator|->
-name|qid_table
 argument_list|,
-name|buckets
-operator|*
 sizeof|sizeof
 argument_list|(
-name|dns_displist_t
+operator|*
+name|qid
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -13581,10 +13617,6 @@ operator|->
 name|refcount
 operator|--
 expr_stmt|;
-name|killit
-operator|=
-name|ISC_FALSE
-expr_stmt|;
 if|if
 condition|(
 name|disp
@@ -15038,10 +15070,6 @@ name|disp
 operator|->
 name|refcount
 operator|--
-expr_stmt|;
-name|killit
-operator|=
-name|ISC_FALSE
 expr_stmt|;
 if|if
 condition|(

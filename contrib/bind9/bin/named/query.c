@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: query.c,v 1.313.20.24 2010-09-24 08:09:07 marka Exp $ */
+comment|/* $Id: query.c,v 1.313.20.27 2011-03-19 09:47:54 marka Exp $ */
 end_comment
 
 begin_comment
@@ -6230,6 +6230,11 @@ expr_stmt|;
 name|needadditionalcache
 operator|=
 name|ISC_FALSE
+expr_stmt|;
+name|POST
+argument_list|(
+name|needadditionalcache
+argument_list|)
 expr_stmt|;
 name|additionaltype
 operator|=
@@ -19776,6 +19781,21 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* 		 * RFC2672, section 4.1, subsection 3c says 		 * we should return YXDOMAIN if the constructed 		 * name would be too long. 		 */
+if|if
+condition|(
+name|result
+operator|==
+name|DNS_R_NAMETOOLONG
+condition|)
+name|client
+operator|->
+name|message
+operator|->
+name|rcode
+operator|=
+name|dns_rcode_yxdomain
+expr_stmt|;
 if|if
 condition|(
 name|result
@@ -19793,23 +19813,6 @@ operator|&
 name|tname
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|result
-operator|==
-name|ISC_R_NOSPACE
-condition|)
-block|{
-comment|/* 				 * RFC2672, section 4.1, subsection 3c says 				 * we should return YXDOMAIN if the constructed 				 * name would be too long. 				 */
-name|client
-operator|->
-name|message
-operator|->
-name|rcode
-operator|=
-name|dns_rcode_yxdomain
-expr_stmt|;
-block|}
 goto|goto
 name|cleanup
 goto|;

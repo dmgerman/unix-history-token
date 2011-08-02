@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: zone.c,v 1.483.36.23 2010-12-14 00:48:22 marka Exp $ */
+comment|/* $Id: zone.c,v 1.483.36.33 2011-07-21 06:23:20 marka Exp $ */
 end_comment
 
 begin_comment
@@ -21,6 +21,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -6794,6 +6800,9 @@ name|db
 init|=
 name|NULL
 decl_stmt|;
+name|isc_boolean_t
+name|rbt
+decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|DNS_ZONE_VALID
@@ -6857,6 +6866,45 @@ goto|goto
 name|cleanup
 goto|;
 block|}
+name|INSIST
+argument_list|(
+name|zone
+operator|->
+name|db_argc
+operator|>=
+literal|1
+argument_list|)
+expr_stmt|;
+name|rbt
+operator|=
+name|strcmp
+argument_list|(
+name|zone
+operator|->
+name|db_argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"rbt"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|zone
+operator|->
+name|db_argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"rbt64"
+argument_list|)
+operator|==
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|zone
@@ -6870,9 +6918,11 @@ operator|->
 name|masterfile
 operator|==
 name|NULL
+operator|&&
+name|rbt
 condition|)
 block|{
-comment|/* 		 * The zone has no master file configured, but it already 		 * has a database.  It could be the built-in 		 * version.bind. CH zone, a zone with a persistent 		 * database being reloaded, or maybe a zone that 		 * used to have a master file but whose configuration 		 * was changed so that it no longer has one.  Do nothing. 		 */
+comment|/* 		 * The zone has no master file configured. 		 */
 name|result
 operator|=
 name|ISC_R_SUCCESS
@@ -7040,16 +7090,7 @@ name|filetime
 expr_stmt|;
 block|}
 block|}
-name|INSIST
-argument_list|(
-name|zone
-operator|->
-name|db_argc
-operator|>=
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Built in zones don't need to be reloaded. 	 */
+comment|/* 	 * Built in zones (with the exception of empty zones) don't need 	 * to be reloaded. 	 */
 if|if
 condition|(
 name|zone
@@ -7071,6 +7112,28 @@ literal|"_builtin"
 argument_list|)
 operator|==
 literal|0
+operator|&&
+operator|(
+name|zone
+operator|->
+name|db_argc
+operator|<
+literal|2
+operator|||
+name|strcmp
+argument_list|(
+name|zone
+operator|->
+name|db_argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"empty"
+argument_list|)
+operator|!=
+literal|0
+operator|)
 operator|&&
 name|DNS_ZONE_FLAG
 argument_list|(
@@ -7104,35 +7167,7 @@ operator|==
 name|dns_zone_stub
 operator|)
 operator|&&
-operator|(
-name|strcmp
-argument_list|(
-name|zone
-operator|->
-name|db_argv
-index|[
-literal|0
-index|]
-argument_list|,
-literal|"rbt"
-argument_list|)
-operator|==
-literal|0
-operator|||
-name|strcmp
-argument_list|(
-name|zone
-operator|->
-name|db_argv
-index|[
-literal|0
-index|]
-argument_list|,
-literal|"rbt64"
-argument_list|)
-operator|==
-literal|0
-operator|)
+name|rbt
 condition|)
 block|{
 if|if
@@ -7693,11 +7728,21 @@ operator|==
 name|dns_zone_master
 operator|&&
 operator|(
+operator|(
 name|zone
 operator|->
 name|update_acl
 operator|!=
 name|NULL
+operator|&&
+operator|!
+name|dns_acl_isnone
+argument_list|(
+name|zone
+operator|->
+name|update_acl
+argument_list|)
+operator|)
 operator|||
 name|zone
 operator|->
@@ -9798,11 +9843,6 @@ operator|)
 return|;
 block|}
 block|}
-else|else
-name|tresult
-operator|=
-name|result
-expr_stmt|;
 name|dns_name_format
 argument_list|(
 name|owner
@@ -26898,6 +26938,13 @@ argument_list|,
 name|DNS_DUMP_DELAY
 argument_list|)
 expr_stmt|;
+name|DNS_ZONE_SETFLAG
+argument_list|(
+name|zone
+argument_list|,
+name|DNS_ZONEFLG_NEEDNOTIFY
+argument_list|)
+expr_stmt|;
 name|UNLOCK_ZONE
 argument_list|(
 name|zone
@@ -27951,8 +27998,6 @@ decl_stmt|,
 name|soaexpire
 decl_stmt|,
 name|expire
-decl_stmt|,
-name|stop
 decl_stmt|;
 name|isc_uint32_t
 name|jitter
@@ -28191,12 +28236,6 @@ operator|-
 name|jitter
 operator|%
 literal|3600
-expr_stmt|;
-name|stop
-operator|=
-name|now
-operator|+
-literal|5
 expr_stmt|;
 name|check_ksk
 operator|=
@@ -30441,6 +30480,14 @@ argument_list|(
 name|zone
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|zone
+operator|->
+name|type
+operator|==
+name|dns_zone_master
+condition|)
 name|set_resigntime
 argument_list|(
 name|zone
@@ -30726,7 +30773,7 @@ expr_stmt|;
 if|if
 condition|(
 name|result
-operator||=
+operator|!=
 name|ISC_R_SUCCESS
 condition|)
 name|dns_zone_log
@@ -37329,7 +37376,7 @@ argument_list|(
 literal|1
 argument_list|)
 argument_list|,
-literal|"refresh: skipped tcp fallback"
+literal|"refresh: skipped tcp fallback "
 literal|"as master %s (source %s) is "
 literal|"unreachable (cached)"
 argument_list|,
@@ -40990,6 +41037,13 @@ argument_list|)
 expr_stmt|;
 name|INSIST
 argument_list|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
+argument_list|)
+expr_stmt|;
+name|INSIST
+argument_list|(
 name|zone
 operator|->
 name|masterscnt
@@ -41427,6 +41481,11 @@ default|default:
 name|result
 operator|=
 name|ISC_R_NOTIMPLEMENTED
+expr_stmt|;
+name|POST
+argument_list|(
+name|result
+argument_list|)
 expr_stmt|;
 goto|goto
 name|cleanup
@@ -51719,6 +51778,75 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Size of the zone task table.  For best results, this should be a  * prime number, approximately 1% of the maximum number of authoritative  * zones expected to be served by this server.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_ZONE_TASKS
+value|101
+end_define
+
+begin_function
+specifier|static
+name|int
+name|calculate_zone_tasks
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|ntasks
+init|=
+name|DEFAULT_ZONE_TASKS
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_GETENV
+name|char
+modifier|*
+name|env
+init|=
+name|getenv
+argument_list|(
+literal|"BIND9_ZONE_TASKS_HINT"
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|env
+operator|!=
+name|NULL
+condition|)
+name|ntasks
+operator|=
+name|atoi
+argument_list|(
+name|env
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ntasks
+operator|<
+name|DEFAULT_ZONE_TASKS
+condition|)
+name|ntasks
+operator|=
+name|DEFAULT_ZONE_TASKS
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+operator|(
+name|ntasks
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/***  ***	Zone manager.  ***/
 end_comment
 
@@ -51757,6 +51885,12 @@ name|result
 decl_stmt|;
 name|isc_interval_t
 name|interval
+decl_stmt|;
+name|int
+name|zone_tasks
+init|=
+name|calculate_zone_tasks
+argument_list|()
 decl_stmt|;
 name|zmgr
 operator|=
@@ -51921,8 +52055,7 @@ name|taskmgr
 argument_list|,
 name|mctx
 argument_list|,
-literal|8
-comment|/* XXX */
+name|zone_tasks
 argument_list|,
 literal|2
 argument_list|,
@@ -51941,6 +52074,21 @@ condition|)
 goto|goto
 name|free_rwlock
 goto|;
+name|isc_log_write
+argument_list|(
+name|dns_lctx
+argument_list|,
+name|DNS_LOGCATEGORY_GENERAL
+argument_list|,
+name|DNS_LOGMODULE_ZONE
+argument_list|,
+name|ISC_LOG_NOTICE
+argument_list|,
+literal|"Using %d tasks for zone loading"
+argument_list|,
+name|zone_tasks
+argument_list|)
+expr_stmt|;
 comment|/* Create a single task for queueing of SOA queries. */
 name|result
 operator|=

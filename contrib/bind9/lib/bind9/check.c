@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2001-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2001-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: check.c,v 1.95.12.6 2010-03-04 23:47:53 tbox Exp $ */
+comment|/* $Id: check.c,v 1.95.12.8 2011-03-12 04:57:26 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -9159,7 +9159,7 @@ modifier|*
 name|keyname
 decl_stmt|;
 name|isc_buffer_t
-name|keydatabuf
+name|b
 decl_stmt|;
 name|isc_region_t
 name|r
@@ -9222,6 +9222,12 @@ literal|"algorithm"
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|dns_fixedname_init
+argument_list|(
+operator|&
+name|fkeyname
+argument_list|)
+expr_stmt|;
 name|keyname
 operator|=
 name|dns_fixedname_name
@@ -9242,6 +9248,74 @@ literal|"name"
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|isc_buffer_init
+argument_list|(
+operator|&
+name|b
+argument_list|,
+name|keynamestr
+argument_list|,
+name|strlen
+argument_list|(
+name|keynamestr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|isc_buffer_add
+argument_list|(
+operator|&
+name|b
+argument_list|,
+name|strlen
+argument_list|(
+name|keynamestr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|result
+operator|=
+name|dns_name_fromtext
+argument_list|(
+name|keyname
+argument_list|,
+operator|&
+name|b
+argument_list|,
+name|dns_rootname
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+block|{
+name|cfg_obj_log
+argument_list|(
+name|key
+argument_list|,
+name|logctx
+argument_list|,
+name|ISC_LOG_WARNING
+argument_list|,
+literal|"bad key name: %s\n"
+argument_list|,
+name|isc_result_totext
+argument_list|(
+name|result
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|result
+operator|=
+name|ISC_R_FAILURE
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|flags
@@ -9320,7 +9394,7 @@ block|}
 name|isc_buffer_init
 argument_list|(
 operator|&
-name|keydatabuf
+name|b
 argument_list|,
 name|keydata
 argument_list|,
@@ -9349,7 +9423,7 @@ argument_list|(
 name|keystr
 argument_list|,
 operator|&
-name|keydatabuf
+name|b
 argument_list|)
 expr_stmt|;
 if|if
@@ -9385,7 +9459,7 @@ block|{
 name|isc_buffer_usedregion
 argument_list|(
 operator|&
-name|keydatabuf
+name|b
 argument_list|,
 operator|&
 name|r

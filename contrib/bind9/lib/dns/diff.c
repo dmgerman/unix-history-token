@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007-2009, 2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: diff.c,v 1.18.50.2 2009-01-05 23:47:22 tbox Exp $ */
+comment|/* $Id: diff.c,v 1.18.50.5 2011-03-26 00:47:02 each Exp $ */
 end_comment
 
 begin_comment
@@ -1216,9 +1216,6 @@ name|modified
 init|=
 name|NULL
 decl_stmt|;
-name|isc_boolean_t
-name|offline
-decl_stmt|;
 name|op
 operator|=
 name|t
@@ -1333,10 +1330,6 @@ operator|&
 name|node
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|offline
-operator|=
-name|ISC_FALSE
 expr_stmt|;
 while|while
 condition|(
@@ -1467,20 +1460,6 @@ name|rdl
 operator|.
 name|ttl
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|t
-operator|->
-name|rdata
-operator|.
-name|flags
-operator|&
-name|DNS_RDATA_OFFLINE
-condition|)
-name|offline
-operator|=
-name|ISC_TRUE
 expr_stmt|;
 name|ISC_LIST_APPEND
 argument_list|(
@@ -1668,6 +1647,35 @@ argument_list|,
 name|modified
 argument_list|,
 name|resign
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|diff
+operator|->
+name|resign
+operator|==
+literal|0
+operator|&&
+operator|(
+name|op
+operator|==
+name|DNS_DIFFOP_ADDRESIGN
+operator|||
+name|op
+operator|==
+name|DNS_DIFFOP_DELRESIGN
+operator|)
+condition|)
+name|isc_log_write
+argument_list|(
+name|DIFF_COMMON_LOGARGS
+argument_list|,
+name|ISC_LOG_WARNING
+argument_list|,
+literal|"resign requested "
+literal|"with 0 resign "
+literal|"interval"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2291,10 +2299,6 @@ operator|(
 name|ISC_R_NOMEMORY
 operator|)
 return|;
-name|i
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|i

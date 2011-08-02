@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: resolver.c,v 1.384.14.30.4.1 2011-06-21 20:13:23 each Exp $ */
+comment|/* $Id: resolver.c,v 1.384.14.32 2011-06-09 00:16:36 each Exp $ */
 end_comment
 
 begin_comment
@@ -11068,6 +11068,8 @@ decl_stmt|;
 name|unsigned
 name|int
 name|stdoptions
+init|=
+literal|0
 decl_stmt|;
 name|isc_sockaddr_t
 modifier|*
@@ -11125,11 +11127,6 @@ name|fctx
 operator|->
 name|res
 expr_stmt|;
-name|stdoptions
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Keep compiler happy. */
 comment|/* 	 * Forwarders. 	 */
 name|INSIST
 argument_list|(
@@ -18851,6 +18848,13 @@ operator|&
 name|nsnode
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+continue|continue;
 block|}
 name|result
 operator|=
@@ -19120,6 +19124,11 @@ expr_stmt|;
 name|need_validation
 operator|=
 name|ISC_FALSE
+expr_stmt|;
+name|POST
+argument_list|(
+name|need_validation
+argument_list|)
 expr_stmt|;
 name|secure_domain
 operator|=
@@ -20845,6 +20854,11 @@ expr_stmt|;
 name|need_validation
 operator|=
 name|ISC_FALSE
+expr_stmt|;
+name|POST
+argument_list|(
+name|need_validation
+argument_list|)
 expr_stmt|;
 name|secure_domain
 operator|=
@@ -23469,6 +23483,11 @@ name|want_chaining
 operator|=
 name|ISC_FALSE
 expr_stmt|;
+name|POST
+argument_list|(
+name|want_chaining
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -24017,6 +24036,11 @@ name|want_chaining
 operator|=
 name|ISC_TRUE
 expr_stmt|;
+name|POST
+argument_list|(
+name|want_chaining
+argument_list|)
+expr_stmt|;
 name|aflag
 operator|=
 name|DNS_RDATASETATTR_ANSWER
@@ -24046,6 +24070,11 @@ comment|/* 						 * We can't construct the 						 * DNAME target.  Do not 						
 name|want_chaining
 operator|=
 name|ISC_FALSE
+expr_stmt|;
+name|POST
+argument_list|(
+name|want_chaining
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -27127,6 +27156,13 @@ decl_stmt|;
 name|resend
 operator|=
 name|ISC_TRUE
+expr_stmt|;
+name|INSIST
+argument_list|(
+name|opt
+operator|!=
+name|NULL
+argument_list|)
 expr_stmt|;
 name|version
 operator|=
@@ -34479,15 +34515,9 @@ name|badcache
 operator|==
 name|NULL
 condition|)
-block|{
-name|result
-operator|=
-name|ISC_R_NOMEMORY
-expr_stmt|;
 goto|goto
 name|cleanup
 goto|;
-block|}
 name|resolver
 operator|->
 name|badhash
@@ -34712,15 +34742,9 @@ name|bad
 operator|==
 name|NULL
 condition|)
-block|{
-name|result
-operator|=
-name|ISC_R_NOMEMORY
-expr_stmt|;
 goto|goto
 name|cleanup
 goto|;
-block|}
 name|bad
 operator|->
 name|type

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: adb.c,v 1.243.42.6 2010-08-11 23:45:49 tbox Exp $ */
+comment|/* $Id: adb.c,v 1.243.42.10 2011-03-13 03:42:09 marka Exp $ */
 end_comment
 
 begin_comment
@@ -2795,6 +2795,21 @@ operator|->
 name|ttl
 operator|=
 name|ADB_CACHE_MINIMUM
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|rdataset
+operator|->
+name|trust
+operator|==
+name|dns_trust_ultimate
+condition|)
+name|rdataset
+operator|->
+name|ttl
+operator|=
+literal|0
 expr_stmt|;
 else|else
 name|rdataset
@@ -8766,9 +8781,6 @@ name|victims
 decl_stmt|,
 name|max_victims
 decl_stmt|;
-name|isc_boolean_t
-name|result
-decl_stmt|;
 name|dns_adbname_t
 modifier|*
 name|victim
@@ -8863,8 +8875,9 @@ argument_list|,
 name|plink
 argument_list|)
 expr_stmt|;
-name|result
-operator|=
+operator|(
+name|void
+operator|)
 name|check_expire_name
 argument_list|(
 operator|&
@@ -10959,6 +10972,11 @@ name|result
 operator|=
 name|ISC_R_UNEXPECTED
 expr_stmt|;
+name|POST
+argument_list|(
+name|result
+argument_list|)
+expr_stmt|;
 name|wanted_addresses
 operator|=
 operator|(
@@ -11072,6 +11090,13 @@ name|options
 argument_list|,
 operator|&
 name|bucket
+argument_list|)
+expr_stmt|;
+name|INSIST
+argument_list|(
+name|bucket
+operator|!=
+name|DNS_ADB_INVALIDBUCKET
 argument_list|)
 expr_stmt|;
 if|if
@@ -12433,6 +12458,11 @@ expr_stmt|;
 name|bucket
 operator|=
 name|DNS_ADB_INVALIDBUCKET
+expr_stmt|;
+name|POST
+argument_list|(
+name|bucket
+argument_list|)
 expr_stmt|;
 name|cleanup
 label|:
@@ -16255,6 +16285,13 @@ operator|&
 name|bucket
 argument_list|,
 name|now
+argument_list|)
+expr_stmt|;
+name|INSIST
+argument_list|(
+name|bucket
+operator|!=
+name|DNS_ADB_INVALIDBUCKET
 argument_list|)
 expr_stmt|;
 if|if

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009, 2011  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: masterdump.c,v 1.94.50.3.18.3 2011-06-21 20:13:22 each Exp $ */
+comment|/* $Id: masterdump.c,v 1.94.50.10 2011-06-09 00:16:34 each Exp $ */
 end_comment
 
 begin_comment
@@ -3267,7 +3267,6 @@ name|flags
 operator|&
 name|DNS_STYLEFLAG_TRUST
 condition|)
-block|{
 name|fprintf
 argument_list|(
 name|f
@@ -3282,7 +3281,6 @@ name|trust
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -4119,6 +4117,17 @@ operator|&
 name|rdataset
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+return|return
+operator|(
+name|result
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -5672,22 +5681,22 @@ argument_list|,
 name|DNS_RAWFORMAT_VERSION
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-sizeof|sizeof
+if|#
+directive|if
+operator|!
+name|defined
 argument_list|(
-name|now32
+name|STDTIME_ON_32BITS
 argument_list|)
+operator|||
+operator|(
+name|STDTIME_ON_32BITS
+operator|+
+literal|0
+operator|)
 operator|!=
-sizeof|sizeof
-argument_list|(
-name|dctx
-operator|->
-name|now
-argument_list|)
-condition|)
-block|{
-comment|/* 				 * We assume isc_stdtime_t is a 32-bit integer, 				 * which should be the case on most cases. 				 * If it turns out to be uncommon, we'll need 				 * to bump the version number and revise the 				 * header format. 				 */
+literal|1
+comment|/* 			 * We assume isc_stdtime_t is a 32-bit integer, 			 * which should be the case on most cases. 			 * If it turns out to be uncommon, we'll need 			 * to bump the version number and revise the 			 * header format. 			 */
 name|isc_log_write
 argument_list|(
 name|dns_lctx
@@ -5706,14 +5715,16 @@ name|now32
 operator|=
 literal|0
 expr_stmt|;
-block|}
-else|else
+else|#
+directive|else
 name|now32
 operator|=
 name|dctx
 operator|->
 name|now
 expr_stmt|;
+endif|#
+directive|endif
 name|isc_buffer_putuint32
 argument_list|(
 operator|&
@@ -7670,6 +7681,47 @@ argument_list|,
 name|f
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+block|{
+name|isc_log_write
+argument_list|(
+name|dns_lctx
+argument_list|,
+name|ISC_LOGCATEGORY_GENERAL
+argument_list|,
+name|DNS_LOGMODULE_MASTERDUMP
+argument_list|,
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"dumping master file: %s: dump: %s"
+argument_list|,
+name|filename
+argument_list|,
+name|isc_result_totext
+argument_list|(
+name|result
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|isc_stdio_close
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ISC_R_UNEXPECTED
+operator|)
+return|;
+block|}
 name|result
 operator|=
 name|isc_stdio_close

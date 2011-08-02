@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: cache.h,v 1.26 2007-06-19 23:47:16 tbox Exp $ */
+comment|/* $Id: cache.h,v 1.26.332.2 2011-03-03 23:46:01 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -58,7 +58,7 @@ name|dns_cache_create
 parameter_list|(
 name|isc_mem_t
 modifier|*
-name|mctx
+name|cmctx
 parameter_list|,
 name|isc_taskmgr_t
 modifier|*
@@ -93,8 +93,104 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|isc_result_t
+name|dns_cache_create2
+parameter_list|(
+name|isc_mem_t
+modifier|*
+name|cmctx
+parameter_list|,
+name|isc_taskmgr_t
+modifier|*
+name|taskmgr
+parameter_list|,
+name|isc_timermgr_t
+modifier|*
+name|timermgr
+parameter_list|,
+name|dns_rdataclass_t
+name|rdclass
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|cachename
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|db_type
+parameter_list|,
+name|unsigned
+name|int
+name|db_argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|db_argv
+parameter_list|,
+name|dns_cache_t
+modifier|*
+modifier|*
+name|cachep
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|isc_result_t
+name|dns_cache_create3
+parameter_list|(
+name|isc_mem_t
+modifier|*
+name|cmctx
+parameter_list|,
+name|isc_mem_t
+modifier|*
+name|hmctx
+parameter_list|,
+name|isc_taskmgr_t
+modifier|*
+name|taskmgr
+parameter_list|,
+name|isc_timermgr_t
+modifier|*
+name|timermgr
+parameter_list|,
+name|dns_rdataclass_t
+name|rdclass
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|cachename
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|db_type
+parameter_list|,
+name|unsigned
+name|int
+name|db_argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|db_argv
+parameter_list|,
+name|dns_cache_t
+modifier|*
+modifier|*
+name|cachep
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*%<  * Create a new DNS cache.  *  * Requires:  *  *\li	'mctx' is a valid memory context  *  *\li	'taskmgr' is a valid task manager and 'timermgr' is a valid timer  * 	manager, or both are NULL.  If NULL, no periodic cleaning of the  * 	cache will take place.  *  *\li	'cachep' is a valid pointer, and *cachep == NULL  *  * Ensures:  *  *\li	'*cachep' is attached to the newly created cache  *  * Returns:  *  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  */
+comment|/*%<  * Create a new DNS cache.  *  * dns_cache_create2() is used in BIND 9.7 and up but is not implemented  * here.  *  * dns_cache_create3() will create a cache using two separate memory  * contexts, one for cache data which can be cleaned and a separate one for  * memory allocated for the heap (which can grow without an upper limit and  * has no mechanism for shrinking).  *  * dns_cache_create() is a backward compatible version that internally  * specifies an empty cache name and a single memory context.  *  * Requires:  *  *\li	'cmctx' (and 'hmctx' if applicable) is a valid memory context.  *  *\li	'taskmgr' is a valid task manager and 'timermgr' is a valid timer  * 	manager, or both are NULL.  If NULL, no periodic cleaning of the  * 	cache will take place.  *  *\li	'cachep' is a valid pointer, and *cachep == NULL  *  * Ensures:  *  *\li	'*cachep' is attached to the newly created cache  *  * Returns:  *  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  */
 end_comment
 
 begin_function_decl
