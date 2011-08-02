@@ -18446,6 +18446,14 @@ operator|->
 name|pr_allow
 operator|&
 name|PR_ALLOW_MOUNT
+operator|&&
+name|cred
+operator|->
+name|cr_prison
+operator|->
+name|pr_enforce_statfs
+operator|<
+literal|2
 condition|)
 return|return
 operator|(
