@@ -19809,9 +19809,11 @@ index|[
 literal|1024
 index|]
 decl_stmt|;
-name|int
+name|unsigned
+name|long
 name|cmd
-decl_stmt|,
+decl_stmt|;
+name|int
 name|ret
 decl_stmt|;
 if|if
