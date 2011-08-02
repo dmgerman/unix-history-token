@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2009, 2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Portions Copyright (c) 1987, 1993  *      The Regents of the Unive
 end_comment
 
 begin_comment
-comment|/* $Id: file.c,v 1.47.18.4 2009-02-16 23:46:03 tbox Exp $ */
+comment|/* $Id: file.c,v 1.47.18.6 2011-03-05 23:47:52 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -1352,6 +1352,81 @@ argument_list|)
 operator|==
 name|ISC_R_SUCCESS
 argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|isc_result_t
+name|isc_file_isplainfile
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|filename
+parameter_list|)
+block|{
+comment|/* 	 * This function returns success if filename is a plain file. 	 */
+name|struct
+name|stat
+name|filestat
+decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|filestat
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|stat
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|stat
+argument_list|(
+name|filename
+argument_list|,
+operator|&
+name|filestat
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|(
+name|isc__errno2result
+argument_list|(
+name|errno
+argument_list|)
+operator|)
+return|;
+if|if
+condition|(
+operator|!
+name|S_ISREG
+argument_list|(
+name|filestat
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ISC_R_INVALIDFILE
+operator|)
+return|;
+return|return
+operator|(
+name|ISC_R_SUCCESS
 operator|)
 return|;
 block|}

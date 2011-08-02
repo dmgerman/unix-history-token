@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rbtdb.c,v 1.196.18.64 2010-11-17 10:21:01 marka Exp $ */
+comment|/* $Id: rbtdb.c,v 1.196.18.67 2011-06-09 00:42:47 each Exp $ */
 end_comment
 
 begin_comment
@@ -938,6 +938,13 @@ name|RDATASET_ATTR_NXDOMAIN
 value|0x0010
 end_define
 
+begin_define
+define|#
+directive|define
+name|RDATASET_ATTR_NEGATIVE
+value|0x0100
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1050,6 +1057,17 @@ name|header
 parameter_list|)
 define|\
 value|(((header)->attributes& RDATASET_ATTR_NXDOMAIN) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEGATIVE
+parameter_list|(
+name|header
+parameter_list|)
+define|\
+value|(((header)->attributes& RDATASET_ATTR_NEGATIVE) != 0)
 end_define
 
 begin_define
@@ -7563,12 +7581,47 @@ block|}
 comment|/* 	 * Did we find anything? 	 */
 if|if
 condition|(
+operator|!
+name|IS_CACHE
+argument_list|(
+name|search
+operator|->
+name|rbtdb
+argument_list|)
+operator|&&
+operator|!
+name|IS_STUB
+argument_list|(
+name|search
+operator|->
+name|rbtdb
+argument_list|)
+operator|&&
+name|ns_header
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 		 * Note that NS has precedence over DNAME if both exist 		 * in a zone.  Otherwise DNAME take precedence over NS. 		 */
+name|found
+operator|=
+name|ns_header
+expr_stmt|;
+name|search
+operator|->
+name|zonecut_sigrdataset
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|dname_header
 operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Note that DNAME has precedence over NS if both exist. 		 */
 name|found
 operator|=
 name|dname_header
@@ -7867,6 +7920,19 @@ operator|=
 name|header
 operator|->
 name|trust
+expr_stmt|;
+if|if
+condition|(
+name|NEGATIVE
+argument_list|(
+name|header
+argument_list|)
+condition|)
+name|rdataset
+operator|->
+name|attributes
+operator||=
+name|DNS_RDATASETATTR_NEGATIVE
 expr_stmt|;
 if|if
 condition|(
@@ -14756,14 +14822,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|RBTDB_RDATATYPE_BASE
+name|NEGATIVE
 argument_list|(
 name|found
-operator|->
-name|type
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 comment|/* 		 * We found a negative cache entry. 		 */
@@ -17674,14 +17736,10 @@ operator|)
 return|;
 if|if
 condition|(
-name|RBTDB_RDATATYPE_BASE
+name|NEGATIVE
 argument_list|(
 name|found
-operator|->
-name|type
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 comment|/* 		 * We found a negative cache entry. 		 */
@@ -18479,9 +18537,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|rdtype
-operator|==
-literal|0
+name|NEGATIVE
+argument_list|(
+name|newheader
+argument_list|)
 condition|)
 block|{
 comment|/* 			 * We're adding a negative cache entry. 			 */
@@ -20338,6 +20397,24 @@ operator|->
 name|serial
 operator|=
 literal|1
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|rdataset
+operator|->
+name|attributes
+operator|&
+name|DNS_RDATASETATTR_NEGATIVE
+operator|)
+operator|!=
+literal|0
+condition|)
+name|newheader
+operator|->
+name|attributes
+operator||=
+name|RDATASET_ATTR_NEGATIVE
 expr_stmt|;
 if|if
 condition|(
@@ -25534,9 +25611,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|rdtype
-operator|==
-literal|0
+name|NEGATIVE
+argument_list|(
+name|header
+argument_list|)
 condition|)
 block|{
 name|covers

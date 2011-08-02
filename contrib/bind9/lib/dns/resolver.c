@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: resolver.c,v 1.284.18.103 2010-06-23 23:45:21 tbox Exp $ */
+comment|/* $Id: resolver.c,v 1.284.18.106 2011-06-09 00:42:48 each Exp $ */
 end_comment
 
 begin_comment
@@ -1381,6 +1381,16 @@ parameter_list|(
 name|r
 parameter_list|)
 value|(((r)->attributes& DNS_RDATASETATTR_NXDOMAIN) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEGATIVE
+parameter_list|(
+name|r
+parameter_list|)
+value|(((r)->attributes& DNS_RDATASETATTR_NEGATIVE) != 0)
 end_define
 
 begin_define
@@ -4057,13 +4067,12 @@ operator|->
 name|rdataset
 argument_list|)
 operator|&&
+name|NEGATIVE
+argument_list|(
 name|event
 operator|->
 name|rdataset
-operator|->
-name|type
-operator|==
-name|dns_rdatatype_none
+argument_list|)
 condition|)
 block|{
 name|INSIST
@@ -17370,11 +17379,10 @@ name|ardataset
 operator|!=
 name|NULL
 operator|&&
+name|NEGATIVE
+argument_list|(
 name|ardataset
-operator|->
-name|type
-operator|==
-literal|0
+argument_list|)
 condition|)
 block|{
 if|if
@@ -18778,11 +18786,10 @@ name|ardataset
 operator|!=
 name|NULL
 operator|&&
+name|NEGATIVE
+argument_list|(
 name|ardataset
-operator|->
-name|type
-operator|==
-literal|0
+argument_list|)
 condition|)
 block|{
 comment|/* 						 * The answer in the cache is 						 * better than the answer we 						 * found, and is a negative 						 * cache entry, so we must set 						 * eresult appropriately. 						 */
@@ -19156,11 +19163,10 @@ name|ardataset
 operator|!=
 name|NULL
 operator|&&
+name|NEGATIVE
+argument_list|(
 name|ardataset
-operator|->
-name|type
-operator|==
-literal|0
+argument_list|)
 condition|)
 block|{
 comment|/* 					 * The answer in the cache is better 					 * than the answer we found, and is 					 * a negative cache entry, so we 					 * must set eresult appropriately. 					 */
@@ -19257,13 +19263,12 @@ operator|->
 name|rdataset
 argument_list|)
 operator|&&
+name|NEGATIVE
+argument_list|(
 name|event
 operator|->
 name|rdataset
-operator|->
-name|type
-operator|==
-name|dns_rdatatype_none
+argument_list|)
 condition|)
 block|{
 name|INSIST
@@ -19627,11 +19632,10 @@ block|{
 comment|/* 		 * If the cache now contains a negative entry and we 		 * care about whether it is DNS_R_NCACHENXDOMAIN or 		 * DNS_R_NCACHENXRRSET then extract it. 		 */
 if|if
 condition|(
+name|NEGATIVE
+argument_list|(
 name|ardataset
-operator|->
-name|type
-operator|==
-literal|0
+argument_list|)
 condition|)
 block|{
 comment|/* 			 * The cache data is a negative cache entry. 			 */
@@ -30048,6 +30052,31 @@ name|int
 name|options
 parameter_list|)
 block|{
+comment|/* 	 * Don't match fetch contexts that are shutting down. 	 */
+if|if
+condition|(
+name|fctx
+operator|->
+name|cloned
+operator|||
+name|fctx
+operator|->
+name|state
+operator|==
+name|fetchstate_done
+operator|||
+name|ISC_LIST_EMPTY
+argument_list|(
+name|fctx
+operator|->
+name|events
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ISC_FALSE
+operator|)
+return|;
 if|if
 condition|(
 name|fctx
@@ -30756,35 +30785,13 @@ name|unlock
 goto|;
 block|}
 block|}
-comment|/* 	 * If we didn't have a fetch, would attach to a done fetch, this 	 * fetch has already cloned its results, or if the fetch has gone 	 * "idle" (no one was interested in it), we need to start a new 	 * fetch instead of joining with the existing one. 	 */
 if|if
 condition|(
 name|fctx
 operator|==
 name|NULL
-operator|||
-name|fctx
-operator|->
-name|state
-operator|==
-name|fetchstate_done
-operator|||
-name|fctx
-operator|->
-name|cloned
-operator|||
-name|ISC_LIST_EMPTY
-argument_list|(
-name|fctx
-operator|->
-name|events
-argument_list|)
 condition|)
 block|{
-name|fctx
-operator|=
-name|NULL
-expr_stmt|;
 name|result
 operator|=
 name|fctx_create

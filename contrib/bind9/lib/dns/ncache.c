@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2010, 2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: ncache.c,v 1.36.18.8.10.1 2011-05-26 23:56:27 each Exp $ */
+comment|/* $Id: ncache.c,v 1.36.18.12 2011-06-09 00:42:47 each Exp $ */
 end_comment
 
 begin_comment
@@ -665,6 +665,10 @@ argument_list|(
 operator|&
 name|buffer
 argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|)
 name|rdataset
 operator|->
 name|trust
@@ -939,6 +943,10 @@ argument_list|(
 operator|&
 name|buffer
 argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|)
 name|trust
 argument_list|)
 expr_stmt|;
@@ -1088,6 +1096,12 @@ name|trust
 operator|=
 name|trust
 expr_stmt|;
+name|ncrdataset
+operator|.
+name|attributes
+operator||=
+name|DNS_RDATASETATTR_NEGATIVE
+expr_stmt|;
 if|if
 condition|(
 name|message
@@ -1200,6 +1214,19 @@ name|rdataset
 operator|->
 name|type
 operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+name|REQUIRE
+argument_list|(
+operator|(
+name|rdataset
+operator|->
+name|attributes
+operator|&
+name|DNS_RDATASETATTR_NEGATIVE
+operator|)
+operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
@@ -2097,6 +2124,10 @@ operator|-
 literal|1
 index|]
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 name|trust
 expr_stmt|;
 block|}
@@ -2198,6 +2229,19 @@ name|ncacherdataset
 operator|->
 name|type
 operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+name|REQUIRE
+argument_list|(
+operator|(
+name|ncacherdataset
+operator|->
+name|attributes
+operator|&
+name|DNS_RDATASETATTR_NEGATIVE
+operator|)
+operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
@@ -2614,6 +2658,19 @@ name|ncacherdataset
 operator|->
 name|type
 operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+name|REQUIRE
+argument_list|(
+operator|(
+name|ncacherdataset
+operator|->
+name|attributes
+operator|&
+name|DNS_RDATASETATTR_NEGATIVE
+operator|)
+operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
@@ -3171,6 +3228,19 @@ name|ncacherdataset
 operator|->
 name|type
 operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+name|REQUIRE
+argument_list|(
+operator|(
+name|ncacherdataset
+operator|->
+name|attributes
+operator|&
+name|DNS_RDATASETATTR_NEGATIVE
+operator|)
+operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
