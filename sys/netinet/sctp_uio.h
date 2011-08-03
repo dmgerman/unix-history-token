@@ -1168,7 +1168,7 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/* SCTP_ADDR_NOT_REACHABLE */
+comment|/* neither SCTP_ADDR_REACHABLE nor 					 * SCTP_ADDR_UNCONFIRMED */
 end_comment
 
 begin_define
@@ -1838,6 +1838,27 @@ directive|define
 name|SPP_IPV4_TOS
 value|0x00000200
 end_define
+
+begin_struct
+struct|struct
+name|sctp_paddrthlds
+block|{
+name|sctp_assoc_t
+name|spt_assoc_id
+decl_stmt|;
+name|struct
+name|sockaddr_storage
+name|spt_address
+decl_stmt|;
+name|uint16_t
+name|spt_pathmaxrxt
+decl_stmt|;
+name|uint16_t
+name|spt_pathpfthld
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -3282,39 +3303,12 @@ name|uint32_t
 name|sctps_timoinpkill
 decl_stmt|;
 comment|/* Number of inp free timers expired */
-comment|/* Early fast retransmission counters */
+comment|/* former early FR counters */
 name|uint32_t
-name|sctps_earlyfrstart
-decl_stmt|;
-name|uint32_t
-name|sctps_earlyfrstop
-decl_stmt|;
-name|uint32_t
-name|sctps_earlyfrmrkretrans
-decl_stmt|;
-name|uint32_t
-name|sctps_earlyfrstpout
-decl_stmt|;
-name|uint32_t
-name|sctps_earlyfrstpidsck1
-decl_stmt|;
-name|uint32_t
-name|sctps_earlyfrstpidsck2
-decl_stmt|;
-name|uint32_t
-name|sctps_earlyfrstpidsck3
-decl_stmt|;
-name|uint32_t
-name|sctps_earlyfrstpidsck4
-decl_stmt|;
-name|uint32_t
-name|sctps_earlyfrstrid
-decl_stmt|;
-name|uint32_t
-name|sctps_earlyfrstrout
-decl_stmt|;
-name|uint32_t
-name|sctps_earlyfrstrtmr
+name|sctps_spare
+index|[
+literal|11
+index|]
 decl_stmt|;
 comment|/* others */
 name|uint32_t
@@ -3997,6 +3991,9 @@ name|uint8_t
 name|heartbeat_enabled
 decl_stmt|;
 comment|/* sctpAssocLocalRemEntry 4   */
+name|uint8_t
+name|potentially_failed
+decl_stmt|;
 name|struct
 name|sctp_timeval
 name|start_time
@@ -4006,9 +4003,12 @@ name|uint32_t
 name|rtt
 decl_stmt|;
 name|uint32_t
+name|heartbeat_interval
+decl_stmt|;
+name|uint32_t
 name|extra_padding
 index|[
-literal|32
+literal|31
 index|]
 decl_stmt|;
 comment|/* future */

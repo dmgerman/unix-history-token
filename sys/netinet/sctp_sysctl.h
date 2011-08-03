@@ -151,6 +151,9 @@ name|uint32_t
 name|sctp_path_rtx_max_default
 decl_stmt|;
 name|uint32_t
+name|sctp_path_pf_threshold
+decl_stmt|;
+name|uint32_t
 name|sctp_add_more_threshold
 decl_stmt|;
 name|uint32_t
@@ -167,16 +170,7 @@ name|uint32_t
 name|sctp_nr_sack_on_off
 decl_stmt|;
 name|uint32_t
-name|sctp_cmt_pf
-decl_stmt|;
-name|uint32_t
 name|sctp_use_cwnd_based_maxburst
-decl_stmt|;
-name|uint32_t
-name|sctp_early_fr
-decl_stmt|;
-name|uint32_t
-name|sctp_early_fr_msec
 decl_stmt|;
 name|uint32_t
 name|sctp_asconf_auth_nochk
@@ -1347,6 +1341,38 @@ value|SCTP_DEF_MAX_PATH_RTX
 end_define
 
 begin_comment
+comment|/* path_pf_threshold: threshold for considering the path potentially failed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_PATH_PF_THRESHOLD_DESC
+value|"Default potentially failed threshold"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_PATH_PF_THRESHOLD_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_PATH_PF_THRESHOLD_MAX
+value|0xFFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_PATH_PF_THRESHOLD_DEFAULT
+value|SCTPCTL_PATH_PF_THRESHOLD_MAX
+end_define
+
+begin_comment
 comment|/* add_more_on_output: When space-wise is it worthwhile to try to add more to a socket send buffer */
 end_comment
 
@@ -1507,38 +1533,6 @@ value|0
 end_define
 
 begin_comment
-comment|/* JRS 5/2107 - CMT PF type flag */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_CMT_PF_DESC
-value|"CMT PF type flag"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_CMT_PF_MIN
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_CMT_PF_MAX
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_CMT_PF_DEFAULT
-value|0
-end_define
-
-begin_comment
 comment|/* cwnd_maxburst: Use a CWND adjusting maxburst */
 end_comment
 
@@ -1568,70 +1562,6 @@ define|#
 directive|define
 name|SCTPCTL_CWND_MAXBURST_DEFAULT
 value|1
-end_define
-
-begin_comment
-comment|/* early_fast_retran: Early Fast Retransmit with timer */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_EARLY_FAST_RETRAN_DESC
-value|"Early Fast Retransmit with timer"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_EARLY_FAST_RETRAN_MIN
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_EARLY_FAST_RETRAN_MAX
-value|0xFFFFFFFF
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_EARLY_FAST_RETRAN_DEFAULT
-value|0
-end_define
-
-begin_comment
-comment|/* early_fast_retran_msec: Early Fast Retransmit minimum timer value */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_EARLY_FAST_RETRAN_MSEC_DESC
-value|"Early Fast Retransmit minimum timer value"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_EARLY_FAST_RETRAN_MSEC_MIN
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_EARLY_FAST_RETRAN_MSEC_MAX
-value|0xFFFFFFFF
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_EARLY_FAST_RETRAN_MSEC_DEFAULT
-value|SCTP_MINFR_MSEC_TIMER
 end_define
 
 begin_comment

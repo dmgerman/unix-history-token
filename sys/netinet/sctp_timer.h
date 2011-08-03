@@ -62,28 +62,6 @@ value|2
 end_define
 
 begin_function_decl
-name|void
-name|sctp_early_fr_timer
-parameter_list|(
-name|struct
-name|sctp_inpcb
-modifier|*
-name|inp
-parameter_list|,
-name|struct
-name|sctp_tcb
-modifier|*
-name|stcb
-parameter_list|,
-name|struct
-name|sctp_nets
-modifier|*
-name|net
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|sctp_nets
 modifier|*
@@ -196,8 +174,6 @@ parameter_list|,
 name|struct
 name|sctp_nets
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
