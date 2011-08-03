@@ -2211,7 +2211,7 @@ end_define
 
 begin_struct
 struct|struct
-name|dfs_event
+name|hal_dfs_event
 block|{
 name|uint64_t
 name|re_full_ts
@@ -2240,7 +2240,7 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|dfs_event
+name|hal_dfs_event
 name|HAL_DFS_EVENT
 typedef|;
 end_typedef
