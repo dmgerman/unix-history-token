@@ -259,6 +259,8 @@ name|status
 operator|=
 name|PS_STOP
 expr_stmt|;
+name|out
+label|:
 if|if
 condition|(
 name|error
@@ -273,13 +275,6 @@ operator|*
 name|pphdl
 operator|=
 name|phdl
-expr_stmt|;
-name|out
-label|:
-name|proc_free
-argument_list|(
-name|phdl
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
