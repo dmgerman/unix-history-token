@@ -1914,7 +1914,7 @@ argument_list|,
 sizeof|sizeof
 name|cmd
 argument_list|,
-literal|"%scat %s | tbl | nroff -T%s -man | col | %s> %s.tmp"
+literal|"%scat %s | tbl | nroff -T%s -man | %s> %s.tmp"
 argument_list|,
 name|zipped
 operator|==
