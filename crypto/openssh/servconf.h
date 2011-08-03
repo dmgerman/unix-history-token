@@ -4,7 +4,7 @@ comment|/* $OpenBSD: servconf.h,v 1.95 2010/11/13 23:27:50 djm Exp $ */
 end_comment
 
 begin_comment
-comment|/* $OpenBSD$ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

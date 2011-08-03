@@ -4,7 +4,7 @@ comment|/* $OpenBSD: compat.h,v 1.42 2008/09/11 14:22:37 markus Exp $ */
 end_comment
 
 begin_comment
-comment|/* $FReeBSD$ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
