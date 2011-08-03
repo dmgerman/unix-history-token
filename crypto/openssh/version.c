@@ -64,9 +64,7 @@ name|version
 operator|=
 name|xstrdup
 argument_list|(
-name|SSH_VERSION_BASE
-literal|" "
-name|SSH_VERSION_ADDENDUM
+name|SSH_VERSION
 argument_list|)
 expr_stmt|;
 return|return
@@ -108,6 +106,11 @@ argument_list|(
 name|SSH_VERSION_BASE
 argument_list|)
 operator|+
+name|strlen
+argument_list|(
+name|SSH_VERSION_HPN
+argument_list|)
+operator|+
 literal|1
 operator|+
 name|strlen
@@ -134,6 +137,8 @@ literal|"%s %s"
 argument_list|,
 name|SSH_VERSION_BASE
 argument_list|,
+name|SSH_VERSION_HPN
+argument_list|,
 name|add
 argument_list|)
 expr_stmt|;
@@ -144,7 +149,7 @@ name|newvers
 operator|=
 name|xstrdup
 argument_list|(
-name|SSH_VERSION_BASE
+argument|SSH_VERSION_BASE SSH_VERSION_HPN
 argument_list|)
 expr_stmt|;
 block|}

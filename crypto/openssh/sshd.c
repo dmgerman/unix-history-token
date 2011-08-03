@@ -4,6 +4,10 @@ comment|/* $OpenBSD: sshd.c,v 1.381 2011/01/11 06:13:10 djm Exp $ */
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * This program is the ssh daemon.  It listens for connections from clients,  * and performs authentication, executes use commands or shell, and forwards  * information to/from the application to the user client over an encrypted  * connection.  This can also handle forwarding of X11, TCP/IP, and  * authentication agent connections.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  *  * SSH2 implementation:  * Privilege Separation:  *  * Copyright (c) 2000, 2001, 2002 Markus Friedl.  All rights reserved.  * Copyright (c) 2002 Niels Provos.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
@@ -1662,7 +1666,7 @@ name|major
 argument_list|,
 name|minor
 argument_list|,
-name|SSH_VERSION
+name|SSH_RELEASE
 argument_list|,
 name|newline
 argument_list|)
@@ -4217,6 +4221,12 @@ index|[
 name|NI_MAXSERV
 index|]
 decl_stmt|;
+name|int
+name|socksize
+decl_stmt|;
+name|socklen_t
+name|len
+decl_stmt|;
 for|for
 control|(
 name|ai
@@ -4421,6 +4431,44 @@ argument_list|,
 name|strport
 argument_list|,
 name|ntop
+argument_list|)
+expr_stmt|;
+name|len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|socksize
+argument_list|)
+expr_stmt|;
+name|getsockopt
+argument_list|(
+name|listen_sock
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_RCVBUF
+argument_list|,
+operator|&
+name|socksize
+argument_list|,
+operator|&
+name|len
+argument_list|)
+expr_stmt|;
+name|debug
+argument_list|(
+literal|"Server TCP RWIN socket size: %d"
+argument_list|,
+name|socksize
+argument_list|)
+expr_stmt|;
+name|debug
+argument_list|(
+literal|"HPN Buffer Size: %d"
+argument_list|,
+name|options
+operator|.
+name|hpn_buffer_size
 argument_list|)
 expr_stmt|;
 comment|/* Bind the socket to the desired port. */
@@ -8522,6 +8570,18 @@ argument_list|,
 name|remote_port
 argument_list|)
 expr_stmt|;
+comment|/* Set HPN options for the child. */
+name|channel_set_hpn
+argument_list|(
+name|options
+operator|.
+name|hpn_disabled
+argument_list|,
+name|options
+operator|.
+name|hpn_buffer_size
+argument_list|)
+expr_stmt|;
 comment|/* 	 * We don't want to listen forever unless the other side 	 * successfully authenticates itself.  So we set up an alarm which is 	 * cleared after successful authentication.  A limit of zero 	 * indicates no limit. Note that we don't set the alarm in debugging 	 * mode; it is just annoying to have the server exit just when you 	 * are about to discover the bug. 	 */
 name|signal
 argument_list|(
@@ -9940,6 +10000,39 @@ name|options
 operator|.
 name|ciphers
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NONE_CIPHER_ENABLED
+block|}
+elseif|else
+if|if
+condition|(
+name|options
+operator|.
+name|none_enabled
+operator|==
+literal|1
+condition|)
+block|{
+name|debug
+argument_list|(
+literal|"WARNING: None cipher enabled"
+argument_list|)
+expr_stmt|;
+name|myproposal
+index|[
+name|PROPOSAL_ENC_ALGS_CTOS
+index|]
+operator|=
+name|myproposal
+index|[
+name|PROPOSAL_ENC_ALGS_STOC
+index|]
+operator|=
+name|KEX_ENCRYPT_INCLUDE_NONE
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|myproposal
 index|[

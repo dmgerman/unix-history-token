@@ -4,6 +4,10 @@ comment|/* $OpenBSD: misc.h,v 1.47 2010/11/21 01:01:13 djm Exp $ */
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
 end_comment
 
@@ -246,6 +250,18 @@ begin_function_decl
 name|void
 name|sock_set_v6only
 parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sock_get_rcvbuf
+parameter_list|(
+name|int
+modifier|*
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;

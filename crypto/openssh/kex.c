@@ -4,6 +4,10 @@ comment|/* $OpenBSD: kex.c,v 1.86 2010/09/22 05:01:29 djm Exp $ */
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 2000, 2001 Markus Friedl.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
@@ -402,12 +406,24 @@ block|}
 end_function
 
 begin_comment
-comment|/* put algorithm proposal into buffer */
+comment|/* Put algorithm proposal into buffer. */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NONE_CIPHER_ENABLED
+end_ifndef
 
 begin_function
 specifier|static
 name|void
+else|#
+directive|else
+comment|/* Also used in sshconnect2.c. */
+name|void
+endif|#
+directive|endif
 name|kex_prop2buf
 parameter_list|(
 name|Buffer
@@ -2172,6 +2188,14 @@ name|first_kex_follows
 decl_stmt|,
 name|type
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NONE_CIPHER_ENABLED
+name|int
+name|auth_flag
+decl_stmt|;
+endif|#
+directive|endif
 name|my
 operator|=
 name|kex_buf2prop
@@ -2270,6 +2294,23 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Algorithm Negotiation */
+ifdef|#
+directive|ifdef
+name|NONE_CIPHER_ENABLED
+name|auth_flag
+operator|=
+name|packet_get_authentication_state
+argument_list|()
+expr_stmt|;
+name|debug
+argument_list|(
+literal|"AUTH STATE is %d"
+argument_list|,
+name|auth_flag
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|mode
@@ -2407,6 +2448,64 @@ name|ncomp
 index|]
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NONE_CIPHER_ENABLED
+name|debug
+argument_list|(
+literal|"REQUESTED ENC.NAME is '%s'"
+argument_list|,
+name|newkeys
+operator|->
+name|enc
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|newkeys
+operator|->
+name|enc
+operator|.
+name|name
+argument_list|,
+literal|"none"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|debug
+argument_list|(
+literal|"Requesting NONE. Authflag is %d"
+argument_list|,
+name|auth_flag
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|auth_flag
+operator|==
+literal|1
+condition|)
+name|debug
+argument_list|(
+literal|"None requested post authentication."
+argument_list|)
+expr_stmt|;
+else|else
+name|fatal
+argument_list|(
+literal|"Pre-authentication none cipher requests "
+literal|"are not allowed."
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|debug
 argument_list|(
 literal|"kex: %s %s %s %s"

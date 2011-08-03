@@ -4,6 +4,10 @@ comment|/* $OpenBSD: sshconnect2.c,v 1.186 2010/11/29 23:45:51 djm Exp $ */
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 2000 Markus Friedl.  All rights reserved.  * Copyright (c) 2008 Damien Miller.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
@@ -321,6 +325,36 @@ name|Options
 name|options
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NONE_CIPHER_ENABLED
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|Kex
+modifier|*
+name|xxx_kex
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * tty_flag is set in ssh.c so we can use it here.  If set then prevent  * the switch to the null cipher.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tty_flag
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * SSH2 key exchange  */
@@ -2144,6 +2178,92 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NONE_CIPHER_ENABLED
+comment|/* 	 * If the user explicitly requests to use the none cipher enable it 	 * post authentication and only if the right conditions are met: both 	 * of the NONE switches must be true and there must be no tty allocated. 	 */
+if|if
+condition|(
+name|options
+operator|.
+name|none_switch
+operator|==
+literal|1
+operator|&&
+name|options
+operator|.
+name|none_enabled
+operator|==
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|tty_flag
+condition|)
+block|{
+name|debug
+argument_list|(
+literal|"Requesting none cipher re-keying..."
+argument_list|)
+expr_stmt|;
+name|myproposal
+index|[
+name|PROPOSAL_ENC_ALGS_STOC
+index|]
+operator|=
+literal|"none"
+expr_stmt|;
+name|myproposal
+index|[
+name|PROPOSAL_ENC_ALGS_CTOS
+index|]
+operator|=
+literal|"none"
+expr_stmt|;
+name|kex_prop2buf
+argument_list|(
+operator|&
+name|xxx_kex
+operator|->
+name|my
+argument_list|,
+name|myproposal
+argument_list|)
+expr_stmt|;
+name|packet_request_rekeying
+argument_list|()
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"WARNING: enabled NONE cipher\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Requested NONE cipher on an interactive session. */
+name|debug
+argument_list|(
+literal|"Cannot switch to NONE cipher with tty "
+literal|"allocated"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"NONE cipher switch disabled given "
+literal|"a TTY is allocated\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
 name|debug
 argument_list|(
 literal|"Authentication succeeded (%s)."
