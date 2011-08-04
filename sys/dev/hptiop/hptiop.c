@@ -6768,6 +6768,12 @@ name|id
 condition|)
 block|{
 case|case
+literal|0x4322
+case|:
+case|case
+literal|0x4321
+case|:
+case|case
 literal|0x4320
 case|:
 name|sas
