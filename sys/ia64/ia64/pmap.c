@@ -5173,6 +5173,9 @@ name|uint64_t
 modifier|*
 name|pbvm_pgtbl
 decl_stmt|;
+name|vm_paddr_t
+name|pa
+decl_stmt|;
 name|u_int
 name|idx
 decl_stmt|;
@@ -5197,26 +5200,28 @@ argument_list|(
 literal|6
 argument_list|)
 condition|)
-return|return
-operator|(
+block|{
+name|pa
+operator|=
 name|IA64_RR_MASK
 argument_list|(
 name|va
 argument_list|)
-operator|)
-return|;
-comment|/* Bail out if the virtual address is beyond our limits. */
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+comment|/* Region 5 is our KVA. Bail out if the VA is beyond our limits. */
 if|if
 condition|(
 name|va
 operator|>=
 name|kernel_vm_end
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+goto|goto
+name|err_out
+goto|;
 if|if
 condition|(
 name|va
@@ -5231,8 +5236,8 @@ argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|pa
+operator|=
 name|pmap_present
 argument_list|(
 name|pte
@@ -5250,10 +5255,12 @@ name|PAGE_MASK
 operator|)
 else|:
 literal|0
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
-comment|/* PBVM page table. */
+comment|/* The PBVM page table. */
 if|if
 condition|(
 name|va
@@ -5264,18 +5271,18 @@ name|bootinfo
 operator|->
 name|bi_pbvm_pgtblsz
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+goto|goto
+name|err_out
+goto|;
 if|if
 condition|(
 name|va
 operator|>=
 name|IA64_PBVM_PGTBL
 condition|)
-return|return
+block|{
+name|pa
+operator|=
 operator|(
 name|va
 operator|-
@@ -5285,8 +5292,12 @@ operator|+
 name|bootinfo
 operator|->
 name|bi_pbvm_pgtbl
-return|;
-comment|/* PBVM. */
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+comment|/* The PBVM itself. */
 if|if
 condition|(
 name|va
@@ -5324,11 +5335,9 @@ operator|>>
 literal|3
 operator|)
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+goto|goto
+name|err_out
+goto|;
 if|if
 condition|(
 operator|(
@@ -5342,13 +5351,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-return|return
-operator|(
+goto|goto
+name|err_out
+goto|;
+name|pa
+operator|=
 operator|(
 name|pbvm_pgtbl
 index|[
@@ -5363,21 +5370,32 @@ name|va
 operator|&
 name|IA64_PBVM_PAGE_MASK
 operator|)
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
+name|err_out
+label|:
 name|printf
 argument_list|(
-literal|"XXX: %s: va=%#lx\n"
+literal|"XXX: %s: va=%#lx is invalid\n"
 argument_list|,
 name|__func__
 argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
+name|pa
+operator|=
+literal|0
+expr_stmt|;
+comment|/* FALLTHROUGH */
+name|out
+label|:
 return|return
 operator|(
-literal|0
+name|pa
 operator|)
 return|;
 block|}
