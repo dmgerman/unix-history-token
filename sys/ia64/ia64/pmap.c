@@ -5264,7 +5264,6 @@ name|bootinfo
 operator|->
 name|bi_pbvm_pgtblsz
 condition|)
-empty_stmt|;
 return|return
 operator|(
 literal|0
