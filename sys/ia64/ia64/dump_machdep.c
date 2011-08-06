@@ -91,6 +91,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/bootinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/efi.h>
 end_include
 
@@ -862,6 +868,12 @@ operator|->
 name|md_type
 operator|==
 name|EFI_MD_TYPE_FREE
+operator|||
+name|mdp
+operator|->
+name|md_type
+operator|==
+name|EFI_MD_TYPE_DATA
 condition|)
 block|{
 name|error
@@ -1044,6 +1056,18 @@ operator|.
 name|e_machine
 operator|=
 name|EM_IA_64
+expr_stmt|;
+name|ehdr
+operator|.
+name|e_entry
+operator|=
+name|ia64_tpa
+argument_list|(
+operator|(
+name|uintptr_t
+operator|)
+name|bootinfo
+argument_list|)
 expr_stmt|;
 name|ehdr
 operator|.
