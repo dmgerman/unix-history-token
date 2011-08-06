@@ -18721,6 +18721,12 @@ name|DECL_EXTERNAL
 argument_list|(
 name|decl
 argument_list|)
+operator|||
+operator|!
+name|TREE_PUBLIC
+argument_list|(
+name|decl
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
