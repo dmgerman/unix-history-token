@@ -777,7 +777,7 @@ block|{
 name|psaddr_t
 name|pt
 decl_stmt|;
-name|int32_t
+name|long
 name|lwp
 decl_stmt|;
 name|int
@@ -832,7 +832,7 @@ condition|)
 block|{
 name|ret
 operator|=
-name|thr_pread_int
+name|thr_pread_long
 argument_list|(
 name|ta
 argument_list|,
@@ -1006,7 +1006,7 @@ decl_stmt|;
 name|psaddr_t
 name|pt
 decl_stmt|;
-name|int32_t
+name|long
 name|lwp
 decl_stmt|;
 name|int
@@ -1049,7 +1049,7 @@ condition|)
 block|{
 name|ret
 operator|=
-name|thr_pread_int
+name|thr_pread_long
 argument_list|(
 name|ta
 argument_list|,
@@ -1696,7 +1696,7 @@ decl_stmt|;
 name|td_thr_events_e
 name|tmp
 decl_stmt|;
-name|int32_t
+name|long
 name|lwp
 decl_stmt|;
 name|int
@@ -1839,7 +1839,7 @@ name|th_p
 expr_stmt|;
 name|ret
 operator|=
-name|thr_pread_int
+name|thr_pread_long
 argument_list|(
 name|ta
 argument_list|,
@@ -3271,7 +3271,7 @@ name|pt
 decl_stmt|,
 name|pt_temp
 decl_stmt|;
-name|int32_t
+name|long
 name|lwp
 decl_stmt|;
 name|int
@@ -3418,7 +3418,7 @@ name|th_p
 expr_stmt|;
 name|ret
 operator|=
-name|thr_pread_int
+name|thr_pread_long
 argument_list|(
 name|ta
 argument_list|,
