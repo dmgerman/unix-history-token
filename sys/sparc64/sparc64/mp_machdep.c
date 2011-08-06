@@ -3176,21 +3176,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|ids
-operator|&
-operator|(
-name|IDR_CHEETAH_ALL_BUSY
-operator||
-name|IDR_CHEETAH_ALL_NACK
-operator|)
-operator|)
-operator|==
-literal|0
-condition|)
-return|return;
 name|bnp
 operator|=
 literal|0
@@ -3251,7 +3236,6 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * On at least Fire V880 we may receive IDR_NACKs for 		 * CPUs we actually haven't tried to send an IPI to, 		 * but which apparently can be safely ignored. 		 */
 if|if
 condition|(
 name|CPU_EMPTY
