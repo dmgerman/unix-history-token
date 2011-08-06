@@ -450,6 +450,7 @@ name|r
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|r
 argument_list|)
 argument_list|)
@@ -485,6 +486,7 @@ name|mc_fpstate
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|r
 argument_list|)
 argument_list|)
