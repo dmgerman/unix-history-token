@@ -2337,6 +2337,10 @@ name|int
 name|listening
 decl_stmt|;
 comment|/* SUD bit is cleared. */
+name|int
+name|wrongccs
+decl_stmt|;
+comment|/* CCS field in CMD was wrong */
 name|union
 name|ccb
 modifier|*

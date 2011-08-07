@@ -12724,7 +12724,7 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"is %08x cs %08x ss %08x "
-literal|"rs %08x tfd %02x serr %08x\n"
+literal|"rs %08x tfd %02x serr %08x cmd %08x\n"
 argument_list|,
 name|ATA_INL
 argument_list|(
@@ -12773,6 +12773,15 @@ operator|->
 name|r_mem
 argument_list|,
 name|AHCI_P_SERR
+argument_list|)
+argument_list|,
+name|ATA_INL
+argument_list|(
+name|ch
+operator|->
+name|r_mem
+argument_list|,
+name|AHCI_P_CMD
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -13170,6 +13179,10 @@ operator|||
 name|ch
 operator|->
 name|fbs_enabled
+operator|||
+name|ch
+operator|->
+name|wrongccs
 condition|)
 name|slot
 operator|->
@@ -13177,6 +13190,37 @@ name|state
 operator|=
 name|AHCI_SLOT_EXECUTING
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|ch
+operator|->
+name|rslots
+operator|&
+operator|(
+literal|1
+operator|<<
+name|ccs
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|ch
+operator|->
+name|wrongccs
+operator|=
+literal|1
+expr_stmt|;
+name|slot
+operator|->
+name|state
+operator|=
+name|AHCI_SLOT_EXECUTING
+expr_stmt|;
+block|}
 name|callout_reset
 argument_list|(
 operator|&
@@ -13235,7 +13279,8 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"is %08x cs %08x ss %08x rs %08x tfd %02x serr %08x\n"
+literal|"is %08x cs %08x ss %08x rs %08x tfd %02x "
+literal|"serr %08x cmd %08x\n"
 argument_list|,
 name|ATA_INL
 argument_list|(
@@ -13284,6 +13329,15 @@ operator|->
 name|r_mem
 argument_list|,
 name|AHCI_P_SERR
+argument_list|)
+argument_list|,
+name|ATA_INL
+argument_list|(
+name|ch
+operator|->
+name|r_mem
+argument_list|,
+name|AHCI_P_CMD
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -13366,6 +13420,11 @@ operator|!
 name|ch
 operator|->
 name|fbs_enabled
+operator|&&
+operator|!
+name|ch
+operator|->
+name|wrongccs
 condition|)
 block|{
 comment|/* Without FBS we know real timeout source. */
@@ -17102,6 +17161,12 @@ expr_stmt|;
 name|ch
 operator|->
 name|toslots
+operator|=
+literal|0
+expr_stmt|;
+name|ch
+operator|->
+name|wrongccs
 operator|=
 literal|0
 expr_stmt|;
