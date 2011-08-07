@@ -777,7 +777,7 @@ block|{
 name|psaddr_t
 name|pt
 decl_stmt|;
-name|long
+name|int64_t
 name|lwp
 decl_stmt|;
 name|int
@@ -1006,7 +1006,7 @@ decl_stmt|;
 name|psaddr_t
 name|pt
 decl_stmt|;
-name|long
+name|int64_t
 name|lwp
 decl_stmt|;
 name|int
@@ -1696,7 +1696,7 @@ decl_stmt|;
 name|td_thr_events_e
 name|tmp
 decl_stmt|;
-name|long
+name|int64_t
 name|lwp
 decl_stmt|;
 name|int
@@ -3271,7 +3271,7 @@ name|pt
 decl_stmt|,
 name|pt_temp
 decl_stmt|;
-name|long
+name|int64_t
 name|lwp
 decl_stmt|;
 name|int
