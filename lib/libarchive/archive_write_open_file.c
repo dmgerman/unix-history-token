@@ -341,6 +341,12 @@ name|mine
 operator|=
 name|client_data
 expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 name|bytesWritten
 operator|=
 name|fwrite
@@ -359,10 +365,17 @@ expr_stmt|;
 if|if
 condition|(
 name|bytesWritten
-operator|<
-name|length
+operator|<=
+literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EINTR
+condition|)
+continue|continue;
 name|archive_set_error
 argument_list|(
 name|a
@@ -384,6 +397,7 @@ operator|(
 name|bytesWritten
 operator|)
 return|;
+block|}
 block|}
 end_function
 
