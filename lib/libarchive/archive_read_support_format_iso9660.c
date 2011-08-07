@@ -3450,7 +3450,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Location of Occurrence of Type L Path Table must be 	 * available location, 	 *> SYSTEM_AREA_BLOCK(16) + 2 and< Volume Space Size. */
+comment|/* Location of Occurrence of Type L Path Table must be 	 * available location, 	 *>= SYSTEM_AREA_BLOCK(16) + 2 and< Volume Space Size. */
 name|location
 operator|=
 name|archive_le32dec
@@ -3463,7 +3463,7 @@ expr_stmt|;
 if|if
 condition|(
 name|location
-operator|<=
+operator|<
 name|SYSTEM_AREA_BLOCK
 operator|+
 literal|2
@@ -3477,7 +3477,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Location of Occurrence of Type M Path Table must be 	 * available location, 	 *> SYSTEM_AREA_BLOCK(16) + 2 and< Volume Space Size. */
+comment|/* The Type M Path Table must be at a valid location (WinISO 	 * and probably other programs omit this, so we allow zero) 	 * 	 *>= SYSTEM_AREA_BLOCK(16) + 2 and< Volume Space Size. */
 name|location
 operator|=
 name|archive_be32dec
@@ -3489,11 +3489,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|location
-operator|<=
+operator|>
+literal|0
+operator|&&
+name|location
+operator|<
 name|SYSTEM_AREA_BLOCK
 operator|+
 literal|2
+operator|)
 operator|||
 name|location
 operator|>=
@@ -3738,7 +3744,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Location of Occurrence of Type L Path Table must be 	 * available location, 	 *> SYSTEM_AREA_BLOCK(16) + 2 and< Volume Space Size. */
+comment|/* Location of Occurrence of Type L Path Table must be 	 * available location, 	 *>= SYSTEM_AREA_BLOCK(16) + 2 and< Volume Space Size. */
 name|location
 operator|=
 name|archive_le32dec
@@ -3751,7 +3757,7 @@ expr_stmt|;
 if|if
 condition|(
 name|location
-operator|<=
+operator|<
 name|SYSTEM_AREA_BLOCK
 operator|+
 literal|2
@@ -3765,7 +3771,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Location of Occurrence of Type M Path Table must be 	 * available location, 	 *> SYSTEM_AREA_BLOCK(16) + 2 and< Volume Space Size. */
+comment|/* Location of Occurrence of Type M Path Table must be 	 * available location, 	 *>= SYSTEM_AREA_BLOCK(16) + 2 and< Volume Space Size. */
 name|location
 operator|=
 name|archive_be32dec
@@ -3777,11 +3783,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|location
-operator|<=
+operator|>
+literal|0
+operator|&&
+name|location
+operator|<
 name|SYSTEM_AREA_BLOCK
 operator|+
 literal|2
+operator|)
 operator|||
 name|location
 operator|>=
@@ -4093,7 +4105,7 @@ expr_stmt|;
 if|if
 condition|(
 name|location
-operator|<=
+operator|<
 name|SYSTEM_AREA_BLOCK
 operator|+
 literal|2
@@ -4107,7 +4119,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Location of Occurrence of Type M Path Table must be 	 * available location, 	 *> SYSTEM_AREA_BLOCK(16) + 2 and< Volume Space Size. */
+comment|/* The Type M Path Table must also be at a valid location 	 * (although ECMA 119 requires a Type M Path Table, WinISO and 	 * probably other programs omit it, so we permit a zero here) 	 * 	 *>= SYSTEM_AREA_BLOCK(16) + 2 and< Volume Space Size. */
 name|location
 operator|=
 name|archive_be32dec
@@ -4119,11 +4131,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|location
-operator|<=
+operator|>
+literal|0
+operator|&&
+name|location
+operator|<
 name|SYSTEM_AREA_BLOCK
 operator|+
 literal|2
+operator|)
 operator|||
 name|location
 operator|>=
@@ -4135,6 +4153,7 @@ literal|0
 operator|)
 return|;
 comment|/* Reserved field must be 0. */
+comment|/* FreeBSD: makefs erroneously created images with 0x20 */
 for|for
 control|(
 name|i
@@ -4158,6 +4177,15 @@ name|i
 index|]
 operator|!=
 literal|0
+operator|&&
+name|h
+index|[
+name|PVD_reserved4_offset
+operator|+
+name|i
+index|]
+operator|!=
+literal|32
 condition|)
 return|return
 operator|(
@@ -8297,6 +8325,9 @@ decl_stmt|;
 name|size_t
 name|dr_len
 decl_stmt|;
+name|uint64_t
+name|fsize
+decl_stmt|;
 name|int32_t
 name|location
 decl_stmt|;
@@ -8345,6 +8376,17 @@ argument_list|(
 name|isodirrec
 operator|+
 name|DR_extent_offset
+argument_list|)
+expr_stmt|;
+name|fsize
+operator|=
+name|toi
+argument_list|(
+name|isodirrec
+operator|+
+name|DR_size_offset
+argument_list|,
+name|DR_size_size
 argument_list|)
 expr_stmt|;
 comment|/* Sanity check that dr_len needs at least 34. */
@@ -8409,7 +8451,33 @@ comment|/* Sanity check that location doesn't exceed volume block. 	 * Don't che
 if|if
 condition|(
 name|location
-operator|>=
+operator|>
+literal|0
+operator|&&
+operator|(
+name|location
+operator|+
+operator|(
+operator|(
+name|fsize
+operator|+
+name|iso9660
+operator|->
+name|logical_block_size
+operator|-
+literal|1
+operator|)
+operator|/
+name|iso9660
+operator|->
+name|logical_block_size
+operator|)
+operator|)
+operator|>
+operator|(
+name|unsigned
+name|int
+operator|)
 name|iso9660
 operator|->
 name|volume_block
@@ -8511,14 +8579,7 @@ name|file
 operator|->
 name|size
 operator|=
-name|toi
-argument_list|(
-name|isodirrec
-operator|+
-name|DR_size_offset
-argument_list|,
-name|DR_size_size
-argument_list|)
+name|fsize
 expr_stmt|;
 name|file
 operator|->

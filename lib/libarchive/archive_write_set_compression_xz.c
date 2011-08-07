@@ -1929,6 +1929,10 @@ argument_list|,
 literal|"lzma compression error: "
 literal|"%ju MiB would have been needed"
 argument_list|,
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 operator|(
 name|lzma_memusage
 argument_list|(
@@ -1952,6 +1956,7 @@ literal|1024
 operator|*
 literal|1024
 operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
