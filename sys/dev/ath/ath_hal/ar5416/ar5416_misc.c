@@ -3130,5 +3130,42 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Return whether fast-clock is currently enabled for this  * channel.  */
+end_comment
+
+begin_function
+name|HAL_BOOL
+name|ar5416IsFastClockEnabled
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+block|{
+name|struct
+name|ath_hal_private
+modifier|*
+name|ahp
+init|=
+name|AH_PRIVATE
+argument_list|(
+name|ah
+argument_list|)
+decl_stmt|;
+return|return
+name|IS_5GHZ_FAST_CLOCK_EN
+argument_list|(
+name|ah
+argument_list|,
+name|ahp
+operator|->
+name|ah_curchan
+argument_list|)
+return|;
+block|}
+end_function
+
 end_unit
 

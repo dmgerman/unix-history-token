@@ -3876,6 +3876,19 @@ modifier|*
 name|event
 parameter_list|)
 function_decl|;
+name|HAL_BOOL
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_isFastClockEnabled
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+function_decl|;
 comment|/* Key Cache Functions */
 name|uint32_t
 name|__ahdecl

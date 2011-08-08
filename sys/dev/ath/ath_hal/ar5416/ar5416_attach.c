@@ -716,6 +716,12 @@ name|ah_procRadarEvent
 operator|=
 name|ar5416ProcessRadarEvent
 expr_stmt|;
+name|ah
+operator|->
+name|ah_isFastClockEnabled
+operator|=
+name|ar5416IsFastClockEnabled
+expr_stmt|;
 comment|/* Power Management Functions */
 name|ah
 operator|->
