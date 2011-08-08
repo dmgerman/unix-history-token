@@ -1116,6 +1116,10 @@ name|HAL_REG_DOMAIN
 name|ah_currentRDext
 decl_stmt|;
 comment|/* EEPROM extended regdomain flags */
+name|HAL_DFS_DOMAIN
+name|ah_dfsDomain
+decl_stmt|;
+comment|/* current DFS domain */
 name|HAL_CHANNEL_INTERNAL
 name|ah_channels
 index|[

@@ -2357,6 +2357,23 @@ return|return
 name|HAL_OK
 return|;
 case|case
+name|HAL_CAP_DFS_DMN
+case|:
+comment|/* DFS Domain */
+operator|*
+name|result
+operator|=
+name|AH_PRIVATE
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_dfsDomain
+expr_stmt|;
+return|return
+name|HAL_OK
+return|;
+case|case
 name|HAL_CAP_CIPHER
 case|:
 comment|/* cipher handled in hardware */

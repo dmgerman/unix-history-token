@@ -2151,6 +2151,39 @@ comment|/* Enable/Disable if applicable */
 end_comment
 
 begin_comment
+comment|/*  * DFS operating mode flags.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_DFS_UNINIT_DOMAIN
+init|=
+literal|0
+block|,
+comment|/* Uninitialized dfs domain */
+name|HAL_DFS_FCC_DOMAIN
+init|=
+literal|1
+block|,
+comment|/* FCC3 dfs domain */
+name|HAL_DFS_ETSI_DOMAIN
+init|=
+literal|2
+block|,
+comment|/* ETSI dfs domain */
+name|HAL_DFS_MKK4_DOMAIN
+init|=
+literal|3
+block|,
+comment|/* Japan dfs domain */
+block|}
+name|HAL_DFS_DOMAIN
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Flag for setting QUIET period  */
 end_comment
 
