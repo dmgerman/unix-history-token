@@ -20969,6 +20969,12 @@ name|st_wcp
 argument_list|)
 expr_stmt|;
 block|}
+name|strg1
+operator|->
+name|st_len
+operator|=
+name|len
+expr_stmt|;
 name|free
 argument_list|(
 name|strg2
