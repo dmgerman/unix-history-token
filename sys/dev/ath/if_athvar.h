@@ -3687,7 +3687,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ath_hal_isfastclockenabled
+name|ath_hal_is_fast_clock_enabled
 parameter_list|(
 name|_ah
 parameter_list|)
