@@ -3692,7 +3692,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|((*(_ah)->ah_isFastClockEnabled((_ah))
+value|((*(_ah)->ah_isFastClockEnabled)((_ah))
 end_define
 
 begin_define
