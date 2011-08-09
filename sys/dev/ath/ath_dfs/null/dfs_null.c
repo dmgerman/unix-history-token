@@ -718,25 +718,5 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Update the current radar patterns based on the  * current operating mode/regulatory domain.  */
-end_comment
-
-begin_function
-name|int
-name|ath_dfs_init_radar_filters
-parameter_list|(
-name|struct
-name|ath_softc
-modifier|*
-name|sc
-parameter_list|)
-block|{
-return|return
-literal|1
-return|;
-block|}
-end_function
-
 end_unit
 
