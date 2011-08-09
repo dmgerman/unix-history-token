@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -7019,7 +7025,7 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-comment|/* 	 * V2 can only handle 32 bit filesizes.  A 4GB-1 limit may be too 	 * high, depending on whether we end up with negative offsets in 	 * the client or server somewhere.  2GB-1 may be safer. 	 * 	 * For V3, nfs_fsinfo will adjust this as necessary.  Assume maximum 	 * that we can handle until we find out otherwise. 	 * XXX Our "safe" limit on the client is what we can store in our 	 * buffer cache using signed(!) block numbers. 	 */
+comment|/* 	 * V2 can only handle 32 bit filesizes.  A 4GB-1 limit may be too 	 * high, depending on whether we end up with negative offsets in 	 * the client or server somewhere.  2GB-1 may be safer. 	 * 	 * For V3, nfs_fsinfo will adjust this as necessary.  Assume maximum 	 * that we can handle until we find out otherwise. 	 */
 if|if
 condition|(
 operator|(
@@ -7043,14 +7049,7 @@ name|nmp
 operator|->
 name|nm_maxfilesize
 operator|=
-operator|(
-name|u_int64_t
-operator|)
-literal|0x80000000
-operator|*
-name|DEV_BSIZE
-operator|-
-literal|1
+name|OFF_MAX
 expr_stmt|;
 name|nmp
 operator|->
