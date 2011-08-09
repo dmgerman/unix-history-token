@@ -3260,6 +3260,9 @@ modifier|*
 name|dm
 parameter_list|)
 block|{
+name|unsigned
+name|gen
+decl_stmt|;
 name|sx_assert
 argument_list|(
 operator|&
@@ -3270,13 +3273,17 @@ argument_list|,
 name|SX_XLOCKED
 argument_list|)
 expr_stmt|;
+name|gen
+operator|=
+name|devfs_generation
+expr_stmt|;
 if|if
 condition|(
 name|dm
 operator|->
 name|dm_generation
 operator|==
-name|devfs_generation
+name|gen
 condition|)
 return|return;
 while|while
@@ -3293,7 +3300,7 @@ name|dm
 operator|->
 name|dm_generation
 operator|=
-name|devfs_generation
+name|gen
 expr_stmt|;
 block|}
 end_function
