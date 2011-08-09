@@ -190,7 +190,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Page flags stored in oflags:  *  * Access to these page flags is synchronized by the lock on the object  * containing the page (O).  */
+comment|/*  * Page flags stored in oflags:  *  * Access to these page flags is synchronized by the lock on the object  * containing the page (O).  *  * Note: VPO_UNMANAGED (used by OBJT_DEVICE, OBJT_PHYS and OBJT_SG)  * 	 indicates that the page is not under PV management but  * 	 otherwise should be treated as a normal page.  Pages not  * 	 under PV management cannot be paged out via the  * 	 object/vm_page_t because there is no knowledge of their pte  * 	 mappings, and such pages are also not on any PQ queue.  *  */
 end_comment
 
 begin_define
@@ -213,6 +213,17 @@ end_define
 
 begin_comment
 comment|/* someone is waiting for page */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VPO_UNMANAGED
+value|0x0004
+end_define
+
+begin_comment
+comment|/* No PV management for page */
 end_comment
 
 begin_define
@@ -525,7 +536,7 @@ value|vm_page_queue_free_lock.data
 end_define
 
 begin_comment
-comment|/*  * These are the flags defined for vm_page.  *  * Note: PG_UNMANAGED (used by OBJT_PHYS) indicates that the page is  * 	 not under PV management but otherwise should be treated as a  *	 normal page.  Pages not under PV management cannot be paged out  *	 via the object/vm_page_t because there is no knowledge of their  *	 pte mappings, nor can they be removed from their objects via   *	 the object, and such pages are also not on any PQ queue.  *  * PG_REFERENCED may be cleared only if the object containing the page is  * locked.  *  * PG_WRITEABLE is set exclusively on managed pages by pmap_enter().  When it  * does so, the page must be VPO_BUSY.  */
+comment|/*  * These are the flags defined for vm_page.  *  * PG_REFERENCED may be cleared only if the object containing the page is  * locked.  *  * PG_WRITEABLE is set exclusively on managed pages by pmap_enter().  When it  * does so, the page must be VPO_BUSY.  */
 end_comment
 
 begin_define
@@ -603,17 +614,6 @@ end_define
 
 begin_comment
 comment|/* page has been referenced */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PG_UNMANAGED
-value|0x0800
-end_define
-
-begin_comment
-comment|/* No PV management for page */
 end_comment
 
 begin_define

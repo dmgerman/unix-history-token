@@ -529,9 +529,9 @@ argument_list|(
 operator|(
 name|mem
 operator|->
-name|flags
+name|oflags
 operator|&
-name|PG_UNMANAGED
+name|VPO_UNMANAGED
 operator|)
 operator|!=
 literal|0
@@ -1390,9 +1390,9 @@ argument_list|(
 operator|(
 name|m
 operator|->
-name|flags
+name|oflags
 operator|&
-name|PG_UNMANAGED
+name|VPO_UNMANAGED
 operator|)
 operator|!=
 literal|0
