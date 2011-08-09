@@ -2228,6 +2228,8 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP89"
 block|,
+name|AHCI_Q_NOFORCE
+operator||
 name|AHCI_Q_NOAA
 block|}
 block|,
