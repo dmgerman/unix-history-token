@@ -130,6 +130,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ID_PCH_DH89XXCC
+value|0x23308086
+end_define
+
+begin_define
+define|#
+directive|define
 name|ID_82801AA
 value|0x24138086
 end_define
@@ -613,6 +620,9 @@ literal|"Intel 82801JI (ICH10) SMBus controller"
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|ID_PCH_DH89XXCC
+case|:
 case|case
 name|ID_PCH
 case|:
