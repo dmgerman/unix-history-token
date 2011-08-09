@@ -22750,12 +22750,6 @@ name|EINVAL
 return|;
 comment|/* XXX */
 block|}
-comment|/* 	 * Setting country code might change the DFS domain 	 * so initialize the DFS Radar filters 	 */
-name|ath_dfs_init_radar_filters
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
