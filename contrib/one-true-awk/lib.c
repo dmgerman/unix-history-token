@@ -715,13 +715,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|file
+operator|==
+name|NULL
+operator|||
 operator|*
 name|file
 operator|==
 literal|'\0'
 condition|)
 block|{
-comment|/* it's been zapped */
+comment|/* deleted or zapped */
 name|argno
 operator|++
 expr_stmt|;
@@ -1101,6 +1105,7 @@ operator|*
 name|FS
 argument_list|)
 expr_stmt|;
+comment|/*fflush(stdout); avoids some buffering problem but makes it 25% slower*/
 name|strcpy
 argument_list|(
 name|inputFS
@@ -1436,6 +1441,20 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lookup
+argument_list|(
+name|temp
+argument_list|,
+name|ARGVtab
+argument_list|)
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
 name|x
 operator|=
 name|setsymtab
@@ -3084,6 +3103,10 @@ literal|"in recbld inputFS=%s, fldtab[0]=%p\n"
 operator|,
 name|inputFS
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|fldtab
 index|[
 literal|0
@@ -3140,6 +3163,10 @@ literal|"in recbld inputFS=%s, fldtab[0]=%p\n"
 operator|,
 name|inputFS
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|fldtab
 index|[
 literal|0
