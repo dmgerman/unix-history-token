@@ -454,7 +454,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s size mismatch (expected %d, got %d)"
+literal|"%s size mismatch (expected %zu, got %zu)"
 argument_list|,
 name|xp
 operator|->
@@ -886,7 +886,7 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"%s size mismatch "
-literal|"(expected %d, got %d)"
+literal|"(expected %zu, got %zu)"
 argument_list|,
 name|sym2sysctl
 index|[
