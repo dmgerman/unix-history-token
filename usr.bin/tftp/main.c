@@ -232,13 +232,13 @@ begin_comment
 comment|/* secs between rexmt's */
 end_comment
 
-begin_decl_stmt
-specifier|static
+begin_typedef
+typedef|typedef
 name|struct
 name|sockaddr_storage
 name|peeraddr
-decl_stmt|;
-end_decl_stmt
+typedef|;
+end_typedef
 
 begin_decl_stmt
 specifier|static
