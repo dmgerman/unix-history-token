@@ -146,9 +146,6 @@ begin_struct
 struct|struct
 name|write_fd_data
 block|{
-name|off_t
-name|offset
-decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
@@ -509,6 +506,12 @@ operator|*
 operator|)
 name|client_data
 expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 name|bytesWritten
 operator|=
 name|write
@@ -529,6 +532,13 @@ operator|<=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EINTR
+condition|)
+continue|continue;
 name|archive_set_error
 argument_list|(
 name|a
@@ -550,6 +560,7 @@ operator|(
 name|bytesWritten
 operator|)
 return|;
+block|}
 block|}
 end_function
 
