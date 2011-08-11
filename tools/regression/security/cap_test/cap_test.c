@@ -114,7 +114,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|size_t
+name|int
 name|test_count
 init|=
 sizeof|sizeof
@@ -153,17 +153,14 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"1..%ju\n"
+literal|"1..%d\n"
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
 name|test_count
 argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|size_t
+name|int
 name|i
 init|=
 literal|0
@@ -224,7 +221,7 @@ literal|0
 decl_stmt|;
 for|for
 control|(
-name|size_t
+name|int
 name|j
 init|=
 literal|0
