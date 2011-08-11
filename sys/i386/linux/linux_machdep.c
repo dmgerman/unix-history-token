@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/file.h>
 end_include
 
@@ -2167,7 +2173,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* 		 * Linux follows Solaris mmap(2) description: 		 * The file descriptor fildes is opened with 		 * read permission, regardless of the 		 * protection options specified. 		 */
+comment|/* 		 * Linux follows Solaris mmap(2) description: 		 * The file descriptor fildes is opened with 		 * read permission, regardless of the 		 * protection options specified. 		 * 		 * Checking just CAP_MMAP is fine here, since the real work 		 * is done in the FreeBSD mmap(). 		 */
 if|if
 condition|(
 operator|(
@@ -2180,6 +2186,8 @@ argument_list|,
 name|bsd_args
 operator|.
 name|fd
+argument_list|,
+name|CAP_MMAP
 argument_list|,
 operator|&
 name|fp

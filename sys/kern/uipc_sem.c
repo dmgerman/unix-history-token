@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/condvar.h>
 end_include
 
@@ -512,6 +518,9 @@ name|td
 parameter_list|,
 name|semid_t
 name|id
+parameter_list|,
+name|cap_rights_t
+name|rights
 parameter_list|,
 name|struct
 name|file
@@ -2512,6 +2521,9 @@ parameter_list|,
 name|semid_t
 name|id
 parameter_list|,
+name|cap_rights_t
+name|rights
+parameter_list|,
 name|struct
 name|file
 modifier|*
@@ -2539,6 +2551,8 @@ argument_list|(
 name|td
 argument_list|,
 name|id
+argument_list|,
+name|rights
 argument_list|,
 operator|&
 name|fp
@@ -3005,6 +3019,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* No capability rights required to close a semaphore. */
 name|error
 operator|=
 name|ksem_get
@@ -3014,6 +3029,8 @@ argument_list|,
 name|uap
 operator|->
 name|id
+argument_list|,
+literal|0
 argument_list|,
 operator|&
 name|fp
@@ -3141,6 +3158,8 @@ argument_list|,
 name|uap
 operator|->
 name|id
+argument_list|,
+name|CAP_SEM_POST
 argument_list|,
 operator|&
 name|fp
@@ -3590,6 +3609,8 @@ name|td
 argument_list|,
 name|id
 argument_list|,
+name|CAP_SEM_WAIT
+argument_list|,
 operator|&
 name|fp
 argument_list|)
@@ -3952,6 +3973,8 @@ name|uap
 operator|->
 name|id
 argument_list|,
+name|CAP_SEM_GETVALUE
+argument_list|,
 operator|&
 name|fp
 argument_list|)
@@ -4123,6 +4146,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* No capability rights required to close a semaphore. */
 name|error
 operator|=
 name|ksem_get
@@ -4132,6 +4156,8 @@ argument_list|,
 name|uap
 operator|->
 name|id
+argument_list|,
+literal|0
 argument_list|,
 operator|&
 name|fp

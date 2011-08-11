@@ -388,20 +388,20 @@ value|0x0000020000000000ULL
 end_define
 
 begin_comment
-comment|/* Events - maybe we need a post/get distinction? */
+comment|/* kqueue events. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CAP_EVENT
+name|CAP_POLL_KEVENT
 value|0x0000040000000000ULL
 end_define
 
 begin_define
 define|#
 directive|define
-name|CAP_KEVENT
+name|CAP_POST_KEVENT
 value|0x0000080000000000ULL
 end_define
 

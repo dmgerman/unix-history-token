@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_capsicum.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_quota.h"
 end_include
 
@@ -27,6 +33,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/capability.h>
 end_include
 
 begin_include
@@ -13379,6 +13391,8 @@ name|cmd
 operator|.
 name|handle
 argument_list|,
+name|CAP_FSCK
+argument_list|,
 operator|&
 name|fp
 argument_list|)
@@ -15125,6 +15139,8 @@ argument_list|,
 name|cmd
 operator|.
 name|value
+argument_list|,
+name|CAP_FSCK
 argument_list|,
 operator|&
 name|vfp

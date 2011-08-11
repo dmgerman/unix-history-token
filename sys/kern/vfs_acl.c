@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/fcntl.h>
 end_include
 
@@ -1830,6 +1836,8 @@ name|uap
 operator|->
 name|filedes
 argument_list|,
+name|CAP_ACL_GET
+argument_list|,
 operator|&
 name|fp
 argument_list|)
@@ -1934,6 +1942,8 @@ argument_list|,
 name|uap
 operator|->
 name|filedes
+argument_list|,
+name|CAP_ACL_SET
 argument_list|,
 operator|&
 name|fp
@@ -2255,6 +2265,8 @@ argument_list|,
 name|uap
 operator|->
 name|filedes
+argument_list|,
+name|CAP_ACL_DELETE
 argument_list|,
 operator|&
 name|fp
@@ -2580,6 +2592,8 @@ argument_list|,
 name|uap
 operator|->
 name|filedes
+argument_list|,
+name|CAP_ACL_CHECK
 argument_list|,
 operator|&
 name|fp

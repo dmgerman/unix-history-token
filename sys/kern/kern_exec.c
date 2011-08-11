@@ -1994,15 +1994,18 @@ operator|->
 name|fd
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Some might argue that CAP_READ and/or CAP_MMAP should also 		 * be required here; such arguments will be entertained. 		 */
 name|error
 operator|=
-name|fgetvp
+name|fgetvp_read
 argument_list|(
 name|td
 argument_list|,
 name|args
 operator|->
 name|fd
+argument_list|,
+name|CAP_FEXECVE
 argument_list|,
 operator|&
 name|binvp

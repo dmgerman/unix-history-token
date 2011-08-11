@@ -44,6 +44,12 @@ name|file_t
 typedef|;
 end_typedef
 
+begin_include
+include|#
+directive|include
+file|<sys/capability.h>
+end_include
+
 begin_function
 specifier|static
 name|__inline
@@ -60,6 +66,7 @@ name|file
 modifier|*
 name|fp
 decl_stmt|;
+comment|/* 	 * We wouldn't need all of these rights on every invocation 	 * if we had more information about intent. 	 */
 if|if
 condition|(
 name|fget
@@ -67,6 +74,12 @@ argument_list|(
 name|curthread
 argument_list|,
 name|fd
+argument_list|,
+name|CAP_READ
+operator||
+name|CAP_WRITE
+operator||
+name|CAP_SEEK
 argument_list|,
 operator|&
 name|fp
@@ -102,6 +115,7 @@ name|file
 modifier|*
 name|fp
 decl_stmt|;
+comment|/* No CAP_ rights required, as we're only releasing. */
 if|if
 condition|(
 name|fget
@@ -109,6 +123,8 @@ argument_list|(
 name|curthread
 argument_list|,
 name|fd
+argument_list|,
+literal|0
 argument_list|,
 operator|&
 name|fp

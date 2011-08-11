@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -147,8 +153,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"1..%ld\n"
+literal|"1..%ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|test_count
 argument_list|)
 expr_stmt|;

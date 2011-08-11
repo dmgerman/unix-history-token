@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/conf.h>
 end_include
 
@@ -555,6 +561,8 @@ argument_list|(
 name|td
 argument_list|,
 name|fd
+argument_list|,
+name|CAP_IOCTL
 argument_list|,
 operator|&
 name|fp
@@ -1538,6 +1546,8 @@ argument_list|,
 name|args
 operator|->
 name|fd
+argument_list|,
+name|CAP_READ
 argument_list|,
 operator|&
 name|fp
@@ -5238,6 +5248,8 @@ name|uap
 operator|->
 name|fd
 argument_list|,
+name|CAP_READ
+argument_list|,
 operator|&
 name|vp
 argument_list|)
@@ -7045,6 +7057,8 @@ argument_list|,
 name|args
 operator|->
 name|fd
+argument_list|,
+name|CAP_FCNTL
 argument_list|,
 operator|&
 name|fp

@@ -790,6 +790,8 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
+name|rights
+argument_list|,
 operator|&
 name|fp
 argument_list|)

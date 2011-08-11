@@ -17,6 +17,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_include
+include|#
+directive|include
+file|<sys/capability.h>
+end_include
+
 begin_comment
 comment|/*  * Functions that perform the vfs operations required by the routines in  * nfsd_serv.c. It is hoped that this change will make the server more  * portable.  */
 end_comment
@@ -14968,6 +14974,7 @@ condition|)
 goto|goto
 name|out
 goto|;
+comment|/* 		 * Since we don't know what rights might be required, 		 * pretend that we need them all. It is better to be too 		 * careful than too reckless. 		 */
 if|if
 condition|(
 operator|(
@@ -14981,6 +14988,8 @@ name|sockarg
 operator|.
 name|sock
 argument_list|,
+name|CAP_SOCK_ALL
+argument_list|,
 operator|&
 name|fp
 argument_list|)
@@ -14991,6 +15000,11 @@ condition|)
 goto|goto
 name|out
 goto|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 if|if
 condition|(
 name|fp

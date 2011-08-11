@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_capsicum.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_kdtrace.h"
 end_include
 
@@ -45,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/capability.h>
 end_include
 
 begin_include
@@ -882,6 +894,30 @@ operator|->
 name|ni_dirfd
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CAPABILITY_MODE
+name|KASSERT
+argument_list|(
+operator|!
+name|IN_CAPABILITY_MODE
+argument_list|(
+name|td
+argument_list|)
+argument_list|,
+operator|(
+literal|"%s: reached %s:%d in capability mode"
+operator|,
+name|__func__
+operator|,
+name|__FILE__
+operator|,
+name|__LINE__
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|error
 operator|=
 name|fgetvp
@@ -891,6 +927,8 @@ argument_list|,
 name|ndp
 operator|->
 name|ni_dirfd
+argument_list|,
+literal|0
 argument_list|,
 operator|&
 name|dp

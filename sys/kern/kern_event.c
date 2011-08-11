@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -3870,6 +3876,8 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
+name|CAP_POST_KEVENT
+argument_list|,
 operator|&
 name|fp
 argument_list|)
@@ -4640,6 +4648,8 @@ argument_list|,
 name|kev
 operator|->
 name|ident
+argument_list|,
+name|CAP_POLL_KEVENT
 argument_list|,
 operator|&
 name|fp
@@ -10471,6 +10481,8 @@ argument_list|(
 name|td
 argument_list|,
 name|fd
+argument_list|,
+name|CAP_POST_KEVENT
 argument_list|,
 operator|&
 name|fp

@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -644,6 +650,8 @@ argument_list|,
 name|addsockarg
 operator|.
 name|sock
+argument_list|,
+name|CAP_SOCK_ALL
 argument_list|,
 operator|&
 name|fp

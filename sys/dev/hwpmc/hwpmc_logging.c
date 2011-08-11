@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/file.h>
 end_include
 
@@ -2577,6 +2583,8 @@ argument_list|(
 name|curthread
 argument_list|,
 name|logfd
+argument_list|,
+name|CAP_WRITE
 argument_list|,
 operator|&
 name|po

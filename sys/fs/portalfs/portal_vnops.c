@@ -10,7 +10,19 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_capsicum.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/capability.h>
 end_include
 
 begin_include
@@ -888,6 +900,24 @@ name|struct
 name|portal_cred
 name|pcred
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CAPABILITY_MODE
+comment|/* 	 * This may require access to a global namespace (e.g. an IP address); 	 * disallow it entirely, as we do open(2). 	 */
+if|if
+condition|(
+name|IN_CAPABILITY_MODE
+argument_list|(
+name|td
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ECAPMODE
+operator|)
+return|;
+endif|#
+directive|endif
 comment|/* 	 * Nothing to do when opening the root node. 	 */
 if|if
 condition|(
@@ -1682,6 +1712,8 @@ argument_list|(
 name|td
 argument_list|,
 name|fd
+argument_list|,
+literal|0
 argument_list|,
 operator|&
 name|fp
