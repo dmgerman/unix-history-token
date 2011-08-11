@@ -5415,6 +5415,13 @@ name|success
 goto|;
 block|}
 comment|/* 		 * Clean up the descriptor, but only if another thread hadn't 		 * replaced or closed it. 		 */
+if|if
+condition|(
+name|indx
+operator|!=
+operator|-
+literal|1
+condition|)
 name|fdclose
 argument_list|(
 name|fdp
@@ -5752,6 +5759,13 @@ argument_list|)
 expr_stmt|;
 name|bad_unlocked
 label|:
+if|if
+condition|(
+name|indx
+operator|!=
+operator|-
+literal|1
+condition|)
 name|fdclose
 argument_list|(
 name|fdp
