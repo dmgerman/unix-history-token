@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -659,6 +665,14 @@ name|callout
 name|gdt
 decl_stmt|;
 comment|/* gone device timer */
+name|struct
+name|task
+name|ltask
+decl_stmt|;
+name|struct
+name|task
+name|gtask
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|ISP_TARGET_MODE
