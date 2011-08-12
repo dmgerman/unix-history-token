@@ -198,6 +198,52 @@ name|CAP_FUTIMES
 value|0x0000000000040000ULL
 end_define
 
+begin_define
+define|#
+directive|define
+name|CAP_CREATE
+value|0x0000000000080000ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_DELETE
+value|0x0000000000100000ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_MKDIR
+value|0x0000000000200000ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_RMDIR
+value|0x0000000000400000ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_MKFIFO
+value|0x0000000000800000ULL
+end_define
+
+begin_comment
+comment|/* Lookups - used to constrain *at() calls. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAP_LOOKUP
+value|0x0000000001000000ULL
+end_define
+
 begin_comment
 comment|/* Extended attributes. */
 end_comment
@@ -206,28 +252,28 @@ begin_define
 define|#
 directive|define
 name|CAP_EXTATTR_DELETE
-value|0x0000000000080000ULL
+value|0x0000000002000000ULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_EXTATTR_GET
-value|0x0000000000100000ULL
+value|0x0000000004000000ULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_EXTATTR_LIST
-value|0x0000000000200000ULL
+value|0x0000000008000000ULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_EXTATTR_SET
-value|0x0000000000400000ULL
+value|0x0000000010000000ULL
 end_define
 
 begin_comment
@@ -238,28 +284,28 @@ begin_define
 define|#
 directive|define
 name|CAP_ACL_CHECK
-value|0x0000000000800000ULL
+value|0x0000000020000000ULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_ACL_DELETE
-value|0x0000000001000000ULL
+value|0x0000000040000000ULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_ACL_GET
-value|0x0000000002000000ULL
+value|0x0000000080000000ULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_ACL_SET
-value|0x0000000004000000ULL
+value|0x0000000100000000ULL
 end_define
 
 begin_comment
@@ -270,70 +316,70 @@ begin_define
 define|#
 directive|define
 name|CAP_ACCEPT
-value|0x0000000008000000ULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_BIND
-value|0x0000000010000000ULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_CONNECT
-value|0x0000000020000000ULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_GETPEERNAME
-value|0x0000000040000000ULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_GETSOCKNAME
-value|0x0000000080000000ULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_GETSOCKOPT
-value|0x0000000100000000ULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_LISTEN
 value|0x0000000200000000ULL
 end_define
 
 begin_define
 define|#
 directive|define
-name|CAP_PEELOFF
+name|CAP_BIND
 value|0x0000000400000000ULL
 end_define
 
 begin_define
 define|#
 directive|define
-name|CAP_SETSOCKOPT
+name|CAP_CONNECT
 value|0x0000000800000000ULL
 end_define
 
 begin_define
 define|#
 directive|define
-name|CAP_SHUTDOWN
+name|CAP_GETPEERNAME
 value|0x0000001000000000ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_GETSOCKNAME
+value|0x0000002000000000ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_GETSOCKOPT
+value|0x0000004000000000ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_LISTEN
+value|0x0000008000000000ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_PEELOFF
+value|0x0000010000000000ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_SETSOCKOPT
+value|0x0000020000000000ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_SHUTDOWN
+value|0x0000040000000000ULL
 end_define
 
 begin_define
@@ -352,14 +398,14 @@ begin_define
 define|#
 directive|define
 name|CAP_MAC_GET
-value|0x0000002000000000ULL
+value|0x0000080000000000ULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_MAC_SET
-value|0x0000004000000000ULL
+value|0x0000100000000000ULL
 end_define
 
 begin_comment
@@ -370,21 +416,21 @@ begin_define
 define|#
 directive|define
 name|CAP_SEM_GETVALUE
-value|0x0000008000000000ULL
+value|0x0000200000000000ULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_SEM_POST
-value|0x0000010000000000ULL
+value|0x0000400000000000ULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_SEM_WAIT
-value|0x0000020000000000ULL
+value|0x0000800000000000ULL
 end_define
 
 begin_comment
@@ -395,14 +441,14 @@ begin_define
 define|#
 directive|define
 name|CAP_POLL_KEVENT
-value|0x0000040000000000ULL
+value|0x0001000000000000ULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_POST_KEVENT
-value|0x0000080000000000ULL
+value|0x0002000000000000ULL
 end_define
 
 begin_comment
@@ -413,14 +459,14 @@ begin_define
 define|#
 directive|define
 name|CAP_IOCTL
-value|0x0000100000000000ULL
+value|0x0004000000000000ULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_TTYHOOK
-value|0x0000200000000000ULL
+value|0x0008000000000000ULL
 end_define
 
 begin_comment
@@ -431,7 +477,7 @@ begin_define
 define|#
 directive|define
 name|CAP_MASK_VALID
-value|0x00003fffffffffffULL
+value|0x000fffffffffffffULL
 end_define
 
 begin_ifdef
