@@ -915,10 +915,6 @@ name|void
 modifier|*
 name|zfsdev_state
 decl_stmt|;
-specifier|extern
-name|kmutex_t
-name|zfsdev_state_lock
-decl_stmt|;
 endif|#
 directive|endif
 comment|/* _KERNEL */
