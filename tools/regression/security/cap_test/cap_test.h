@@ -303,7 +303,16 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|test_syscalls
+name|test_fcntl
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|test_relative
 parameter_list|(
 name|void
 parameter_list|)
@@ -313,15 +322,6 @@ end_function_decl
 begin_function_decl
 name|int
 name|test_sysctl
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|test_fcntl
 parameter_list|(
 name|void
 parameter_list|)
