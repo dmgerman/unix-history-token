@@ -10323,7 +10323,7 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
-name|CAP_POLL_KEVENT
+name|CAP_POLL_EVENT
 argument_list|,
 name|fget
 argument_list|,
@@ -11328,7 +11328,7 @@ name|cap_funwrap
 argument_list|(
 name|fp2
 argument_list|,
-name|CAP_POLL_KEVENT
+name|CAP_POLL_EVENT
 argument_list|,
 operator|&
 name|fp2

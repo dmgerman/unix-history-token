@@ -440,14 +440,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CAP_POLL_KEVENT
+name|CAP_POLL_EVENT
 value|0x0001000000000000ULL
 end_define
 
 begin_define
 define|#
 directive|define
-name|CAP_POST_KEVENT
+name|CAP_POST_EVENT
 value|0x0002000000000000ULL
 end_define
 

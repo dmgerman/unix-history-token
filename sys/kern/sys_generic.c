@@ -5181,7 +5181,7 @@ name|cap_funwrap
 argument_list|(
 name|fp
 argument_list|,
-name|CAP_POLL_KEVENT
+name|CAP_POLL_EVENT
 argument_list|,
 operator|&
 name|fp_fromcap

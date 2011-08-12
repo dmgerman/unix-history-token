@@ -1071,14 +1071,14 @@ name|TRY
 argument_list|(
 name|fd
 argument_list|,
-name|CAP_POST_KEVENT
+name|CAP_POST_EVENT
 argument_list|)
 expr_stmt|;
 name|TRY
 argument_list|(
 name|fd
 argument_list|,
-name|CAP_POLL_KEVENT
+name|CAP_POLL_EVENT
 argument_list|)
 expr_stmt|;
 name|TRY
