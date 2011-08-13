@@ -8542,6 +8542,17 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+if|if
+condition|(
+name|dataset_name_hidden
+argument_list|(
+name|zc
+operator|->
+name|zc_name
+argument_list|)
+operator|==
+name|B_FALSE
+condition|)
 operator|(
 name|void
 operator|)
