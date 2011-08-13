@@ -806,7 +806,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|SW_WATCHDOG
-name|wdog_kern_path
+name|wdog_kern_pat
 argument_list|(
 name|WD_LASTVAL
 argument_list|)
