@@ -10757,19 +10757,7 @@ operator|-
 name|osname
 operator|)
 expr_stmt|;
-if|if
-condition|(
-name|strchr
-argument_list|(
-name|name
-argument_list|,
-literal|'/'
-argument_list|)
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* Prefetch only for pool name. */
+comment|/* Prefetch the datasets. */
 name|cookie
 operator|=
 literal|0
@@ -10792,12 +10780,21 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|dataset_name_hidden
+argument_list|(
+name|osname
+argument_list|)
+condition|)
 operator|(
 name|void
 operator|)
 name|dmu_objset_prefetch
 argument_list|(
-name|p
+name|osname
 argument_list|,
 name|NULL
 argument_list|)
