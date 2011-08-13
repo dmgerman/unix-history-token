@@ -5378,7 +5378,9 @@ end_function_decl
 begin_function
 name|void
 name|my_svc_run
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|size_t
 name|nfds

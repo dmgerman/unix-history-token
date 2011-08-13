@@ -838,6 +838,7 @@ name|nc_flag
 operator|&
 name|NC_VISIBLE
 condition|)
+block|{
 if|if
 condition|(
 name|ipv6_only
@@ -864,6 +865,7 @@ argument_list|(
 name|nconf
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|endnetconfig
 argument_list|(
@@ -3733,7 +3735,9 @@ end_function
 begin_function
 name|void
 name|rpcbind_abort
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef

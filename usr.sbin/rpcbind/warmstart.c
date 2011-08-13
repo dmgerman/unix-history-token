@@ -533,7 +533,9 @@ end_function
 begin_function
 name|void
 name|write_warmstart
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -578,7 +580,9 @@ end_function
 begin_function
 name|void
 name|read_warmstart
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|rpcblist_ptr
 name|tmp_rpcbl

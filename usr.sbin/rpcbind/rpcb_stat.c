@@ -90,7 +90,9 @@ end_decl_stmt
 begin_function
 name|void
 name|rpcbs_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{  }
 end_function
 
