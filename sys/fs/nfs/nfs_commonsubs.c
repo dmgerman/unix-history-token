@@ -5545,6 +5545,10 @@ if|if
 condition|(
 name|aceerr
 operator|||
+name|aclp
+operator|==
+name|NULL
+operator|||
 name|nfsrv_compareacl
 argument_list|(
 name|aclp
