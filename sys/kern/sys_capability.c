@@ -761,9 +761,6 @@ name|struct
 name|file
 modifier|*
 name|fp
-decl_stmt|,
-modifier|*
-name|fcapp
 decl_stmt|;
 name|cap_rights_t
 name|rights
@@ -823,9 +820,6 @@ argument_list|,
 name|fp
 argument_list|,
 name|rights
-argument_list|,
-operator|&
-name|fcapp
 argument_list|,
 operator|&
 name|capfd
@@ -991,12 +985,6 @@ parameter_list|,
 name|cap_rights_t
 name|rights
 parameter_list|,
-name|struct
-name|file
-modifier|*
-modifier|*
-name|fcappp
-parameter_list|,
 name|int
 modifier|*
 name|capfdp
@@ -1014,6 +1002,9 @@ name|struct
 name|file
 modifier|*
 name|fp_object
+decl_stmt|,
+modifier|*
+name|fcapp
 decl_stmt|;
 name|int
 name|error
@@ -1076,7 +1067,8 @@ name|falloc
 argument_list|(
 name|td
 argument_list|,
-name|fcappp
+operator|&
+name|fcapp
 argument_list|,
 name|capfdp
 argument_list|,
@@ -1155,8 +1147,7 @@ name|cp
 operator|->
 name|cap_file
 operator|=
-operator|*
-name|fcappp
+name|fcapp
 expr_stmt|;
 if|if
 condition|(
@@ -1168,8 +1159,7 @@ name|DFLAG_PASSABLE
 condition|)
 name|finit
 argument_list|(
-operator|*
-name|fcappp
+name|fcapp
 argument_list|,
 name|fp
 operator|->
@@ -1186,8 +1176,7 @@ expr_stmt|;
 else|else
 name|finit
 argument_list|(
-operator|*
-name|fcappp
+name|fcapp
 argument_list|,
 name|fp
 operator|->
@@ -1204,8 +1193,7 @@ expr_stmt|;
 comment|/* 	 * Release our private reference (the proc filedesc still has one). 	 */
 name|fdrop
 argument_list|(
-operator|*
-name|fcappp
+name|fcapp
 argument_list|,
 name|td
 argument_list|)

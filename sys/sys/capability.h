@@ -517,12 +517,6 @@ parameter_list|,
 name|cap_rights_t
 name|rights
 parameter_list|,
-name|struct
-name|file
-modifier|*
-modifier|*
-name|cap
-parameter_list|,
 name|int
 modifier|*
 name|capfd

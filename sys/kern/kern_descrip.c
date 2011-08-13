@@ -10831,6 +10831,37 @@ block|}
 ifdef|#
 directive|ifdef
 name|CAPABILITIES
+comment|/* 	 * If this is a capability, what rights does it have? 	 */
+if|if
+condition|(
+name|haverightsp
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|fp
+operator|->
+name|f_type
+operator|==
+name|DTYPE_CAPABILITY
+condition|)
+operator|*
+name|haverightsp
+operator|=
+name|cap_rights
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+else|else
+operator|*
+name|haverightsp
+operator|=
+name|CAP_MASK_VALID
+expr_stmt|;
+block|}
 comment|/* 	 * If a capability has been requested, return the capability directly. 	 * Otherwise, check capability rights, extract the underlying object, 	 * and check its access flags. 	 */
 if|if
 condition|(
