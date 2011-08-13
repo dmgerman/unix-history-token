@@ -11744,7 +11744,7 @@ name|nd
 operator|->
 name|nd_repstat
 operator|=
-name|NFSERR_ATTRNOTSUPP
+name|aceerr
 expr_stmt|;
 name|attrsum
 operator|+=

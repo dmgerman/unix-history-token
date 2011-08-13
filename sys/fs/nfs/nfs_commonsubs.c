@@ -3533,7 +3533,7 @@ name|ACL_MAX_ENTRIES
 condition|)
 name|aceerr
 operator|=
-literal|1
+name|NFSERR_ATTRNOTSUPP
 expr_stmt|;
 if|if
 condition|(
@@ -3543,7 +3543,7 @@ literal|0
 condition|)
 name|aceerr
 operator|=
-literal|1
+name|NFSERR_ATTRNOTSUPP
 expr_stmt|;
 for|for
 control|(
