@@ -503,7 +503,7 @@ name|lockedit
 operator|=
 literal|1
 expr_stmt|;
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -684,7 +684,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -5441,7 +5441,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|fvp
 argument_list|,
@@ -5722,7 +5722,7 @@ operator|!
 name|error
 condition|)
 block|{
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -9961,7 +9961,7 @@ name|ISDOTDOT
 expr_stmt|;
 if|if
 condition|(
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -13125,7 +13125,7 @@ operator|==
 name|LK_SHARED
 condition|)
 comment|/* 		 * It would be much better to pass lktype to VFS_FHTOVP(), 		 * but this will have to do until VFS_FHTOVP() has a lock 		 * type argument like VFS_VGET(). 		 */
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 operator|*
 name|vpp

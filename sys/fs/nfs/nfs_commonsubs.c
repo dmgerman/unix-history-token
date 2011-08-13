@@ -10511,7 +10511,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|vp
 argument_list|,

@@ -19420,7 +19420,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -20063,7 +20063,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Test for and try to clear out a conflicting client. This is called by  * nfsrv_lockctrl() and nfsrv_openctrl() when conflicts with other clients  * a found.  * The trick here is that it can't revoke a conflicting client with an  * expired lease unless it holds the v4root lock, so...  * If no v4root lock, get the lock and return 1 to indicate "try again".  * Return 0 to indicate the conflict can't be revoked and 1 to indicate  * the revocation worked and the conflicting client is "bye, bye", so it  * can be tried again.  * Return 2 to indicate that the vnode is VI_DOOMED after vn_lock().  * Unlocks State before a non-zero value is returned.  */
+comment|/*  * Test for and try to clear out a conflicting client. This is called by  * nfsrv_lockctrl() and nfsrv_openctrl() when conflicts with other clients  * a found.  * The trick here is that it can't revoke a conflicting client with an  * expired lease unless it holds the v4root lock, so...  * If no v4root lock, get the lock and return 1 to indicate "try again".  * Return 0 to indicate the conflict can't be revoked and 1 to indicate  * the revocation worked and the conflicting client is "bye, bye", so it  * can be tried again.  * Return 2 to indicate that the vnode is VI_DOOMED after NFSVOPLOCK().  * Unlocks State before a non-zero value is returned.  */
 end_comment
 
 begin_function
@@ -20183,7 +20183,7 @@ name|haslockp
 operator|=
 literal|1
 expr_stmt|;
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -20705,7 +20705,7 @@ name|haslockp
 operator|=
 literal|1
 expr_stmt|;
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -21333,7 +21333,7 @@ do|do
 block|{
 if|if
 condition|(
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|vp
 argument_list|,

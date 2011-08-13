@@ -5791,7 +5791,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|dvp
 argument_list|,
@@ -5897,7 +5897,7 @@ name|newvp
 operator|!=
 name|dvp
 condition|)
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|dvp
 argument_list|,
@@ -8967,7 +8967,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|fvp
 argument_list|,
@@ -15223,7 +15223,7 @@ name|td
 operator|->
 name|td_ucred
 expr_stmt|;
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -15388,7 +15388,7 @@ operator|(
 name|EINTR
 operator|)
 return|;
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -15657,7 +15657,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -15807,7 +15807,7 @@ operator|)
 return|;
 name|error
 operator|=
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|vp
 argument_list|,
