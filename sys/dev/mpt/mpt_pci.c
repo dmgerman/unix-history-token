@@ -1367,6 +1367,18 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|mpt
+operator|->
+name|is_sas
+condition|)
+name|mpt
+operator|->
+name|msi_enable
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
 name|resource_int_value
 argument_list|(
 name|device_get_name
@@ -1390,17 +1402,13 @@ name|tval
 argument_list|)
 operator|==
 literal|0
-operator|&&
-name|tval
-operator|==
-literal|1
 condition|)
 block|{
 name|mpt
 operator|->
 name|msi_enable
 operator|=
-literal|1
+name|tval
 expr_stmt|;
 block|}
 block|}
@@ -2027,9 +2035,7 @@ literal|1
 expr_stmt|;
 block|}
 comment|/* 	 * Set up register access.  PIO mode is required for 	 * certain reset operations (but must be disabled for 	 * some cards otherwise). 	 */
-name|mpt
-operator|->
-name|pci_pio_rid
+name|mpt_io_bar
 operator|=
 name|PCIR_BAR
 argument_list|(
@@ -2047,9 +2053,7 @@ argument_list|,
 name|SYS_RES_IOPORT
 argument_list|,
 operator|&
-name|mpt
-operator|->
-name|pci_pio_rid
+name|mpt_io_bar
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
@@ -2097,9 +2101,7 @@ name|pci_pio_reg
 argument_list|)
 expr_stmt|;
 comment|/* Allocate kernel virtual memory for the 9x9's Mem0 region */
-name|mpt
-operator|->
-name|pci_mem_rid
+name|mpt_mem_bar
 operator|=
 name|PCIR_BAR
 argument_list|(
@@ -2117,9 +2119,7 @@ argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
 operator|&
-name|mpt
-operator|->
-name|pci_mem_rid
+name|mpt_mem_bar
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
@@ -2332,7 +2332,15 @@ name|iqd
 argument_list|,
 name|RF_ACTIVE
 operator||
+operator|(
+name|mpt
+operator|->
+name|pci_msi_count
+condition|?
+literal|0
+else|:
 name|RF_SHAREABLE
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2404,7 +2412,6 @@ name|bad
 goto|;
 block|}
 comment|/* Allocate dma memory */
-comment|/* XXX JGibbs -Should really be done based on IOCFacts. */
 if|if
 condition|(
 name|mpt_dma_mem_alloc
@@ -2604,7 +2611,7 @@ name|mpt
 operator|->
 name|ih
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -2622,13 +2629,12 @@ name|dev
 argument_list|,
 name|SYS_RES_IRQ
 argument_list|,
+name|rman_get_rid
+argument_list|(
 name|mpt
 operator|->
-name|pci_msi_count
-condition|?
-literal|1
-else|:
-literal|0
+name|pci_irq
+argument_list|)
 argument_list|,
 name|mpt
 operator|->
@@ -2639,7 +2645,7 @@ name|mpt
 operator|->
 name|pci_irq
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -2678,9 +2684,12 @@ name|dev
 argument_list|,
 name|SYS_RES_IOPORT
 argument_list|,
+name|rman_get_rid
+argument_list|(
 name|mpt
 operator|->
-name|pci_pio_rid
+name|pci_pio_reg
+argument_list|)
 argument_list|,
 name|mpt
 operator|->
@@ -2691,7 +2700,7 @@ name|mpt
 operator|->
 name|pci_pio_reg
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -2709,9 +2718,12 @@ name|dev
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
+name|rman_get_rid
+argument_list|(
 name|mpt
 operator|->
-name|pci_mem_rid
+name|pci_reg
+argument_list|)
 argument_list|,
 name|mpt
 operator|->
@@ -2722,7 +2734,7 @@ name|mpt
 operator|->
 name|pci_reg
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 name|MPT_LOCK_DESTROY
@@ -3363,7 +3375,7 @@ name|mpt
 operator|->
 name|reply_dmat
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|free
 argument_list|(
@@ -3378,7 +3390,7 @@ name|mpt
 operator|->
 name|request_pool
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 end_function
