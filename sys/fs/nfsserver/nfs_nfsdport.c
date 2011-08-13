@@ -534,7 +534,7 @@ name|lockedit
 operator|!=
 literal|0
 condition|)
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -785,7 +785,7 @@ name|vpislocked
 operator|==
 literal|0
 condition|)
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -987,7 +987,7 @@ name|vpislocked
 operator|==
 literal|0
 condition|)
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -5462,7 +5462,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|fvp
 argument_list|,
@@ -5787,7 +5787,7 @@ operator|->
 name|ni_dvp
 argument_list|)
 expr_stmt|;
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -9479,7 +9479,7 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -10037,7 +10037,7 @@ name|vp
 operator|!=
 name|nvp
 condition|)
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -10456,7 +10456,7 @@ argument_list|(
 name|nvp
 argument_list|)
 expr_stmt|;
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|nvp
 argument_list|,

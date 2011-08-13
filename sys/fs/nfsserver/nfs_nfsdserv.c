@@ -1218,7 +1218,7 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -7892,7 +7892,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -10967,7 +10967,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|VOP_UNLOCK
+name|NFSVOPUNLOCK
 argument_list|(
 name|ndp
 operator|->
