@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: cd9660.h,v 1.15 2010/10/27 18:51:34 christos Exp $	*/
+comment|/*	$NetBSD: cd9660.h,v 1.17 2011/06/23 02:35:56 enami Exp $	*/
 end_comment
 
 begin_comment
@@ -95,6 +95,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/endian.h>
 end_include
 
 begin_include
