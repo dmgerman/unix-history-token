@@ -3390,6 +3390,23 @@ value|2
 end_define
 
 begin_comment
+comment|/*  * Platform Independent Error Prinout  */
+end_comment
+
+begin_function_decl
+name|void
+name|isp_prt_endcmd
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|XS_T
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Platform Dependent Error and Debug Printout  *  * Two required functions for each platform must be provided:  *  *    void isp_prt(ispsoftc_t *, int level, const char *, ...)  *    void isp_xs_prt(ispsoftc_t *, XS_T *, int level, const char *, ...)  *  * but due to compiler differences on different platforms this won't be  * formally defined here. Instead, they go in each platform definition file.  */
 end_comment
 

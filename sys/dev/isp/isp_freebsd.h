@@ -2417,7 +2417,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|isp_detach
 parameter_list|(
 name|ispsoftc_t
@@ -2514,8 +2514,52 @@ end_define
 begin_define
 define|#
 directive|define
+name|ISP_SPRIV_TACTIVE
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISP_SPRIV_DONE
 value|0x8
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_SPRIV_WPEND
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_S_TACTIVE
+parameter_list|(
+name|sccb
+parameter_list|)
+value|(sccb)->ccb_h.spriv_field0 |= ISP_SPRIV_TACTIVE
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_C_TACTIVE
+parameter_list|(
+name|sccb
+parameter_list|)
+value|(sccb)->ccb_h.spriv_field0&= ~ISP_SPRIV_TACTIVE
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_TACTIVE_P
+parameter_list|(
+name|sccb
+parameter_list|)
+value|((sccb)->ccb_h.spriv_field0& ISP_SPRIV_TACTIVE)
 end_define
 
 begin_define
@@ -2546,6 +2590,36 @@ parameter_list|(
 name|sccb
 parameter_list|)
 value|((sccb)->ccb_h.spriv_field0& ISP_SPRIV_DONE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_CMD_S_WPEND
+parameter_list|(
+name|sccb
+parameter_list|)
+value|(sccb)->ccb_h.spriv_field0 |= ISP_SPRIV_WPEND
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_CMD_C_WPEND
+parameter_list|(
+name|sccb
+parameter_list|)
+value|(sccb)->ccb_h.spriv_field0&= ~ISP_SPRIV_WPEND
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_CMD_WPEND_P
+parameter_list|(
+name|sccb
+parameter_list|)
+value|((sccb)->ccb_h.spriv_field0& ISP_SPRIV_WPEND)
 end_define
 
 begin_define
