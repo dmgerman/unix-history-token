@@ -5236,6 +5236,8 @@ operator|-
 literal|1
 decl_stmt|,
 name|error
+decl_stmt|,
+name|error_open
 decl_stmt|;
 name|struct
 name|flock
@@ -5467,6 +5469,10 @@ operator|)
 condition|)
 block|{
 comment|/* XXX from fdopen */
+name|error_open
+operator|=
+name|error
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5509,7 +5515,7 @@ name|td_dupfd
 argument_list|,
 name|flags
 argument_list|,
-name|error
+name|error_open
 argument_list|)
 operator|)
 operator|==
