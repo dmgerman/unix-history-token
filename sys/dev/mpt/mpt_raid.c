@@ -459,6 +459,172 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|mpt_vol_type
+parameter_list|(
+name|struct
+name|mpt_raid_volume
+modifier|*
+name|vol
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|mpt_vol_state
+parameter_list|(
+name|struct
+name|mpt_raid_volume
+modifier|*
+name|vol
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|mpt_disk_state
+parameter_list|(
+name|struct
+name|mpt_raid_disk
+modifier|*
+name|disk
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|mpt_vol_prt
+parameter_list|(
+name|struct
+name|mpt_softc
+modifier|*
+name|mpt
+parameter_list|,
+name|struct
+name|mpt_raid_volume
+modifier|*
+name|vol
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|mpt_disk_prt
+parameter_list|(
+name|struct
+name|mpt_softc
+modifier|*
+name|mpt
+parameter_list|,
+name|struct
+name|mpt_raid_disk
+modifier|*
+name|disk
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|mpt_issue_raid_req
+parameter_list|(
+name|struct
+name|mpt_softc
+modifier|*
+name|mpt
+parameter_list|,
+name|struct
+name|mpt_raid_volume
+modifier|*
+name|vol
+parameter_list|,
+name|struct
+name|mpt_raid_disk
+modifier|*
+name|disk
+parameter_list|,
+name|request_t
+modifier|*
+name|req
+parameter_list|,
+name|u_int
+name|Action
+parameter_list|,
+name|uint32_t
+name|ActionDataWord
+parameter_list|,
+name|bus_addr_t
+name|addr
+parameter_list|,
+name|bus_size_t
+name|len
+parameter_list|,
+name|int
+name|write
+parameter_list|,
+name|int
+name|wait
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|mpt_refresh_raid_data
+parameter_list|(
+name|struct
+name|mpt_softc
+modifier|*
+name|mpt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|mpt_schedule_raid_refresh
+parameter_list|(
+name|struct
+name|mpt_softc
+modifier|*
+name|mpt
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|uint32_t
@@ -469,6 +635,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -524,6 +691,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -581,6 +749,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -678,6 +847,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mpt_vol_prt
 parameter_list|(
@@ -767,6 +937,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mpt_disk_prt
 parameter_list|(
@@ -1017,6 +1188,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mpt_raid_probe
 parameter_list|(
@@ -1058,6 +1230,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mpt_raid_attach
 parameter_list|(
@@ -1262,6 +1435,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mpt_raid_enable
 parameter_list|(
@@ -1280,6 +1454,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mpt_raid_detach
 parameter_list|(
@@ -2357,6 +2532,7 @@ comment|/*  * Utiltity routine to perform a RAID action command;  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|mpt_issue_raid_req
 parameter_list|(
@@ -3095,7 +3271,7 @@ name|ccb
 modifier|*
 name|ccb
 parameter_list|,
-name|u_int
+name|target_id_t
 modifier|*
 name|tgt
 parameter_list|)
@@ -3192,7 +3368,7 @@ name|mpt_softc
 modifier|*
 name|mpt
 parameter_list|,
-name|int
+name|target_id_t
 name|tgt
 parameter_list|)
 block|{
@@ -5464,6 +5640,7 @@ comment|/*  * Update in-core information about RAID support.  We update any entr
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|mpt_refresh_raid_data
 parameter_list|(
@@ -6709,6 +6886,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mpt_schedule_raid_refresh
 parameter_list|(
@@ -7363,6 +7541,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*

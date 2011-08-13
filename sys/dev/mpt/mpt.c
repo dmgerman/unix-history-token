@@ -1042,6 +1042,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mpt_stdload
 parameter_list|(
@@ -1061,6 +1062,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mpt_stdprobe
 parameter_list|(
@@ -1080,6 +1082,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mpt_stdattach
 parameter_list|(
@@ -1099,6 +1102,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mpt_stdenable
 parameter_list|(
@@ -1118,6 +1122,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mpt_stdready
 parameter_list|(
@@ -1126,10 +1131,11 @@ name|mpt_softc
 modifier|*
 name|mpt
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mpt_stdevent
 parameter_list|(
@@ -1172,6 +1178,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mpt_stdreset
 parameter_list|(
@@ -1183,10 +1190,11 @@ parameter_list|,
 name|int
 name|type
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mpt_stdshutdown
 parameter_list|(
@@ -1195,10 +1203,11 @@ name|mpt_softc
 modifier|*
 name|mpt
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mpt_stddetach
 parameter_list|(
@@ -1207,10 +1216,11 @@ name|mpt_softc
 modifier|*
 name|mpt
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mpt_stdunload
 parameter_list|(
@@ -9620,6 +9630,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mpt_core_load
 parameter_list|(
@@ -9698,6 +9709,7 @@ comment|/*  * Initialize per-instance driver data and perform  * initial control
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|mpt_core_attach
 parameter_list|(
@@ -9878,6 +9890,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mpt_core_enable
 parameter_list|(
@@ -9964,6 +9977,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mpt_core_shutdown
 parameter_list|(
@@ -9982,6 +9996,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mpt_core_detach
 parameter_list|(
@@ -10050,6 +10065,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mpt_core_unload
 parameter_list|(

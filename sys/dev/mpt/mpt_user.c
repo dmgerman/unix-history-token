@@ -294,6 +294,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|int
 name|mpt_user_probe
 parameter_list|(
@@ -313,6 +314,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mpt_user_attach
 parameter_list|(
@@ -464,6 +466,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mpt_user_enable
 parameter_list|(
@@ -482,6 +485,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mpt_user_ready
 parameter_list|(
@@ -490,10 +494,11 @@ name|mpt_softc
 modifier|*
 name|mpt
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mpt_user_event
 parameter_list|(
@@ -521,6 +526,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mpt_user_reset
 parameter_list|(
@@ -532,10 +538,11 @@ parameter_list|,
 name|int
 name|type
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mpt_user_detach
 parameter_list|(

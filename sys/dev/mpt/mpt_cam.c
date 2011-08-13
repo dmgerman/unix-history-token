@@ -815,6 +815,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
+specifier|static
 name|int
 name|mpt_cam_probe
 parameter_list|(
@@ -897,6 +898,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mpt_cam_attach
 parameter_list|(
@@ -5393,6 +5395,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mpt_cam_enable
 parameter_list|(
@@ -5532,6 +5535,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mpt_cam_ready
 parameter_list|(
@@ -5597,6 +5601,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mpt_cam_detach
 parameter_list|(
