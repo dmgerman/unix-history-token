@@ -126,7 +126,7 @@ end_ifdef
 begin_expr_stmt
 name|FEATURE
 argument_list|(
-name|security_capabilities
+name|security_capability_mode
 argument_list|,
 literal|"Capsicum Capability Mode"
 argument_list|)
@@ -361,6 +361,16 @@ ifdef|#
 directive|ifdef
 name|CAPABILITIES
 end_ifdef
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|security_capabilities
+argument_list|,
+literal|"Capsicum Capabilities"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * struct capability describes a capability, and is hung off of its struct  * file f_data field.  cap_file and cap_rightss are static once hooked up, as  * neither the object it references nor the rights it encapsulates are  * permitted to change.  */
