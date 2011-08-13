@@ -1209,8 +1209,6 @@ argument_list|(
 name|dp
 argument_list|,
 literal|0
-argument_list|,
-name|p
 argument_list|)
 expr_stmt|;
 name|VREF
@@ -1479,8 +1477,6 @@ operator|->
 name|ni_vp
 argument_list|,
 literal|0
-argument_list|,
-name|p
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1509,8 +1505,6 @@ operator|->
 name|ni_dvp
 argument_list|,
 literal|0
-argument_list|,
-name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -14372,8 +14366,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -14440,8 +14432,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return

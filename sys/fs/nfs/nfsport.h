@@ -3542,7 +3542,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Define these for vnode lock/unlock ops.  */
+comment|/*  * Define these for vnode lock/unlock ops.  *  * These are good abstractions to macro out, so that they can be added to  * later, for debugging or stats, etc.  */
 end_comment
 
 begin_define
@@ -3553,8 +3553,6 @@ parameter_list|(
 name|v
 parameter_list|,
 name|f
-parameter_list|,
-name|p
 parameter_list|)
 value|vn_lock((v), (f))
 end_define
@@ -3567,8 +3565,6 @@ parameter_list|(
 name|v
 parameter_list|,
 name|f
-parameter_list|,
-name|p
 parameter_list|)
 value|VOP_UNLOCK((v), (f))
 end_define
@@ -3579,8 +3575,6 @@ directive|define
 name|NFSVOPISLOCKED
 parameter_list|(
 name|v
-parameter_list|,
-name|p
 parameter_list|)
 value|VOP_ISLOCKED((v))
 end_define

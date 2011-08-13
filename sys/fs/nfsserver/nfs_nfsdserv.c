@@ -9037,8 +9037,6 @@ argument_list|(
 name|tdp
 argument_list|,
 literal|0
-argument_list|,
-name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -9728,8 +9726,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -9902,8 +9898,6 @@ argument_list|(
 name|dp
 argument_list|,
 literal|0
-argument_list|,
-name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -11882,8 +11876,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|p
 argument_list|)
 expr_stmt|;
 operator|*
@@ -17436,8 +17428,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|p
 argument_list|)
 expr_stmt|;
 if|if
