@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2008-2011 Robert N. M. Watson  * Copyright (c) 2010
 end_comment
 
 begin_comment
-comment|/*  * FreeBSD kernel capability facility.  *  * Currently, this file implements only capability mode; capabilities  * (rights-refined file descriptors) will follow.  *  */
+comment|/*  * FreeBSD kernel capability facility.  *  * Two kernel features are implemented here: capability mode, a sandboxed mode  * of execution for processes, and capabilities, a refinement on file  * descriptors that allows fine-grained control over operations on the file  * descriptor.  Collectively, these allow processes to run in the style of a  * historic "capability system" in which they can use only resources  * explicitly delegated to them.  This model is enforced by restricting access  * to global namespaces in capability mode.  *  * Capabilities wrap other file descriptor types, binding them to a constant  * rights mask set when the capability is created.  New capabilities may be  * derived from existing capabilities, but only if they have the same or a  * strict subset of the rights on the original capability.  *  * System calls permitted in capability mode are defined in capabilities.conf;  * calls must be carefully audited for safety to ensure that they don't allow  * escape from a sandbox.  Some calls permit only a subset of operations in  * capability mode -- for example, shm_open(2) is limited to creating  * anonymous, rather than named, POSIX shared memory objects.  */
 end_comment
 
 begin_include
