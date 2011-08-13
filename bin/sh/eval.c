@@ -912,6 +912,10 @@ break|break;
 case|case
 name|NREDIR
 case|:
+name|oexitstatus
+operator|=
+name|exitstatus
+expr_stmt|;
 name|expredir
 argument_list|(
 name|n
@@ -1773,6 +1777,10 @@ operator|==
 name|NBACKGND
 operator|)
 decl_stmt|;
+name|oexitstatus
+operator|=
+name|exitstatus
+expr_stmt|;
 name|expredir
 argument_list|(
 name|n
@@ -1928,10 +1936,6 @@ operator|&
 name|fn
 operator|.
 name|list
-expr_stmt|;
-name|oexitstatus
-operator|=
-name|exitstatus
 expr_stmt|;
 switch|switch
 condition|(
