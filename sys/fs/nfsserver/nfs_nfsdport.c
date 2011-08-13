@@ -491,7 +491,7 @@ block|{
 comment|/* 		 * When vpislocked == 0, the vnode is either exclusively 		 * locked by this thread or not locked by this thread. 		 * As such, shared lock it, if not exclusively locked. 		 */
 if|if
 condition|(
-name|VOP_ISLOCKED
+name|NFSVOPISLOCKED
 argument_list|(
 name|vp
 argument_list|)
