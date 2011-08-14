@@ -5178,7 +5178,7 @@ directive|ifdef
 name|INET
 name|asoc
 operator|->
-name|default_tos
+name|default_dscp
 operator|=
 name|m
 operator|->
@@ -5192,7 +5192,7 @@ else|#
 directive|else
 name|asoc
 operator|->
-name|default_tos
+name|default_dscp
 operator|=
 literal|0
 expr_stmt|;

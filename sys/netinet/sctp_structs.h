@@ -880,7 +880,10 @@ name|uint32_t
 name|heartbeat_random2
 decl_stmt|;
 name|uint32_t
-name|tos_flowlabel
+name|flowlabel
+decl_stmt|;
+name|uint8_t
+name|dscp
 decl_stmt|;
 name|struct
 name|timeval
@@ -3218,7 +3221,7 @@ name|uint8_t
 name|hb_random_idx
 decl_stmt|;
 name|uint8_t
-name|default_tos
+name|default_dscp
 decl_stmt|;
 name|uint8_t
 name|asconf_del_pending
