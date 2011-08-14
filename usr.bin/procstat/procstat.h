@@ -21,6 +21,8 @@ name|int
 name|hflag
 decl_stmt|,
 name|nflag
+decl_stmt|,
+name|Cflag
 decl_stmt|;
 end_decl_stmt
 

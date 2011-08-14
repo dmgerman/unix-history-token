@@ -1523,6 +1523,9 @@ parameter_list|,
 name|char
 modifier|*
 name|path
+parameter_list|,
+name|cap_rights_t
+name|cap_rights
 parameter_list|)
 block|{
 name|struct
@@ -1608,6 +1611,12 @@ operator|->
 name|fs_path
 operator|=
 name|path
+expr_stmt|;
+name|entry
+operator|->
+name|fs_cap_rights
+operator|=
+name|cap_rights
 expr_stmt|;
 return|return
 operator|(
@@ -2054,6 +2063,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2102,6 +2113,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2150,6 +2163,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2200,6 +2215,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2248,6 +2265,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2305,6 +2324,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2576,6 +2597,7 @@ directive|endif
 default|default:
 continue|continue;
 block|}
+comment|/* XXXRW: No capability rights support for kvm yet. */
 name|entry
 operator|=
 name|filestat_new_entry
@@ -2600,6 +2622,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2890,6 +2914,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3113,6 +3139,12 @@ block|{
 name|KF_FLAG_ASYNC
 block|,
 name|PS_FST_FFLAG_ASYNC
+block|}
+block|,
+block|{
+name|KF_FLAG_CAPABILITY
+block|,
+name|PS_FST_FFLAG_CAPABILITY
 block|}
 block|,
 block|{
@@ -3396,6 +3428,9 @@ decl_stmt|;
 name|int
 name|refcount
 decl_stmt|;
+name|cap_rights_t
+name|cap_rights
+decl_stmt|;
 name|assert
 argument_list|(
 name|kp
@@ -3581,6 +3616,12 @@ name|path
 operator|=
 name|NULL
 expr_stmt|;
+name|cap_rights
+operator|=
+name|kif
+operator|->
+name|kf_cap_rights
+expr_stmt|;
 comment|/* 		 * Create filestat entry. 		 */
 name|entry
 operator|=
@@ -3601,6 +3642,8 @@ argument_list|,
 name|offset
 argument_list|,
 name|path
+argument_list|,
+name|cap_rights
 argument_list|)
 expr_stmt|;
 if|if
@@ -3781,6 +3824,8 @@ argument_list|,
 name|offset
 argument_list|,
 name|path
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
