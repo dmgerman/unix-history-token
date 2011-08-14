@@ -428,6 +428,20 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|char
+name|dma_buf
+index|[
+literal|2048
+index|]
+name|__aligned
+argument_list|(
+literal|2048
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|ps3stor_read_sectors
@@ -466,7 +480,7 @@ value|((a)<= (b) ? (a) : (b))
 define|#
 directive|define
 name|BOUNCE_SECTORS
-value|4
+value|(sizeof(dma_buf) / sd->sd_blksize)
 define|#
 directive|define
 name|ASYNC_STATUS_POLL_PERIOD
@@ -483,16 +497,6 @@ operator|->
 name|sd_regs
 index|[
 name|regidx
-index|]
-decl_stmt|;
-name|char
-name|dma_buf
-index|[
-name|sd
-operator|->
-name|sd_blksize
-operator|*
-name|BOUNCE_SECTORS
 index|]
 decl_stmt|;
 name|uint64_t
@@ -513,6 +517,8 @@ name|timeout
 decl_stmt|;
 name|int
 name|err
+init|=
+literal|0
 decl_stmt|;
 name|nleft
 operator|=
@@ -624,6 +630,15 @@ operator|-=
 name|ASYNC_STATUS_POLL_PERIOD
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|status
+operator|!=
+literal|0
+condition|)
+return|return
+name|EIO
+return|;
 name|memcpy
 argument_list|(
 name|buf
@@ -657,7 +672,7 @@ name|nsectors
 expr_stmt|;
 block|}
 return|return
-literal|0
+name|err
 return|;
 undef|#
 directive|undef
