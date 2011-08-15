@@ -394,6 +394,16 @@ literal|"D-Link DGE-528(T) Gigabit Ethernet Adapter"
 block|}
 block|,
 block|{
+name|DLINK_VENDORID
+block|,
+name|DLINK_DEVICEID_530T_REVC
+block|,
+literal|0
+block|,
+literal|"D-Link DGE-530(T) Gigabit Ethernet Adapter"
+block|}
+block|,
+block|{
 name|RT_VENDORID
 block|,
 name|RT_DEVICEID_8139

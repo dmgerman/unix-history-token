@@ -5261,6 +5261,13 @@ name|DLINK_DEVICEID_528T
 value|0x4300
 end_define
 
+begin_define
+define|#
+directive|define
+name|DLINK_DEVICEID_530T_REVC
+value|0x4302
+end_define
+
 begin_comment
 comment|/*  * D-Link DFE-690TXD device ID  */
 end_comment
