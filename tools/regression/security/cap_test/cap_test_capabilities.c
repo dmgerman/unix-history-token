@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<poll.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -127,7 +133,7 @@ name|rights_needed
 parameter_list|,
 name|succeeded
 parameter_list|)
-value|do {		\ 	if ((rights& (rights_needed)) == (rights_needed)) {		\ 		if (!(succeeded))					\ 			SYSCALL_FAIL(syscall, "failed");		\ 	} else {							\ 		if (succeeded)						\ 			FAILX("%s:\tsucceeded when it shouldn't have"	\ 			    " (rights 0x%jx)", #syscall, rights);	\ 		else if (errno != ENOTCAPABLE)				\ 			SYSCALL_FAIL(syscall, "errno != ENOTCAPABLE");	\ 	}								\ } while (0)
+value|do {		\ 	if ((rights& (rights_needed)) == (rights_needed)) {		\ 		if (!(succeeded))					\ 			SYSCALL_FAIL(syscall, "failed");		\ 	} else {							\ 		if (succeeded)						\ 			FAILX("%s:\tsucceeded when it shouldn't have"	\ 			    " (rights 0x%jx)", #syscall, rights);	\ 		else if (errno != ENOTCAPABLE)				\ 			SYSCALL_FAIL(syscall, "errno != ENOTCAPABLE");	\ 	}								\ 	errno = 0;							\ } while (0)
 end_define
 
 begin_comment
@@ -141,7 +147,7 @@ name|CHECK_MMAP_RESULT
 parameter_list|(
 name|rights_needed
 parameter_list|)
-value|do {			\ 	if ((rights& (rights_needed)) == (rights_needed)) {		\ 		if (p == MAP_FAILED)					\ 			SYSCALL_FAIL(mmap, "failed");			\ 		else							\ 			(void)munmap(p, getpagesize());			\ 	} else {							\ 		if (p != MAP_FAILED) {					\ 			FAILX("%s:\tsucceeded when it shouldn't have"	\ 			    " (rights 0x%jx)", "mmap", rights);		\ 			(void)munmap(p, getpagesize());			\ 		} else if (errno != ENOTCAPABLE)			\ 			SYSCALL_FAIL(syscall, "errno != ENOTCAPABLE");	\ 	}								\ } while (0)
+value|do {			\ 	if ((rights& (rights_needed)) == (rights_needed)) {		\ 		if (p == MAP_FAILED)					\ 			SYSCALL_FAIL(mmap, "failed");			\ 		else							\ 			(void)munmap(p, getpagesize());			\ 	} else {							\ 		if (p != MAP_FAILED) {					\ 			FAILX("%s:\tsucceeded when it shouldn't have"	\ 			    " (rights 0x%jx)", "mmap", rights);		\ 			(void)munmap(p, getpagesize());			\ 		} else if (errno != ENOTCAPABLE)			\ 			SYSCALL_FAIL(syscall, "errno != ENOTCAPABLE");	\ 	}								\ 	errno = 0;							\ } while (0)
 end_define
 
 begin_comment
@@ -192,6 +198,10 @@ name|int
 name|ret
 decl_stmt|,
 name|is_nfs
+decl_stmt|;
+name|struct
+name|pollfd
+name|pollfd
 decl_stmt|;
 name|int
 name|success
@@ -261,6 +271,28 @@ name|fd_capcap
 operator|!=
 name|fd_cap
 argument_list|)
+expr_stmt|;
+name|pollfd
+operator|.
+name|fd
+operator|=
+name|fd_cap
+expr_stmt|;
+name|pollfd
+operator|.
+name|events
+operator|=
+name|POLLIN
+operator||
+name|POLLERR
+operator||
+name|POLLHUP
+expr_stmt|;
+name|pollfd
+operator|.
+name|revents
+operator|=
+literal|0
 expr_stmt|;
 name|ssize
 operator|=
@@ -813,7 +845,52 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* XXX select / poll / kqueue */
+name|ret
+operator|=
+name|poll
+argument_list|(
+operator|&
+name|pollfd
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rights
+operator|&
+name|CAP_POLL_EVENT
+condition|)
+name|CHECK
+argument_list|(
+operator|(
+name|pollfd
+operator|.
+name|revents
+operator|&
+name|POLLNVAL
+operator|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
+name|CHECK
+argument_list|(
+operator|(
+name|pollfd
+operator|.
+name|revents
+operator|&
+name|POLLNVAL
+operator|)
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* XXX: select, kqueue */
 name|close
 argument_list|(
 name|fd_cap
@@ -861,7 +938,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-literal|"/tmp/cap_test"
+literal|"/tmp/cap_test_capabilities"
 argument_list|,
 name|O_RDWR
 operator||
