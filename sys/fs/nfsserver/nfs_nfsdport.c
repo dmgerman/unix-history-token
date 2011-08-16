@@ -15000,11 +15000,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
 if|if
 condition|(
 name|fp
