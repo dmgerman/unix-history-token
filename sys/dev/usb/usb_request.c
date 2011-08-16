@@ -6778,12 +6778,6 @@ name|idesc
 operator|==
 name|NULL
 operator|)
-operator|||
-operator|(
-name|id
-operator|==
-literal|0
-operator|)
 condition|)
 block|{
 return|return
