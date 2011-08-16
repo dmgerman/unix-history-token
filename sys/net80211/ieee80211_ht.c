@@ -10349,6 +10349,8 @@ decl_stmt|;
 if|if
 condition|(
 name|status
+operator|==
+literal|0
 condition|)
 comment|/* ACK'd */
 name|bar_stop_timer
@@ -10394,7 +10396,7 @@ block|{
 if|if
 condition|(
 name|status
-operator|!=
+operator|==
 literal|0
 condition|)
 block|{
