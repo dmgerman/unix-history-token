@@ -2824,7 +2824,17 @@ operator|.
 name|fo_ioctl
 operator|=
 name|linux_file_ioctl
-block|}
+block|,
+operator|.
+name|fo_chmod
+operator|=
+name|invfo_chmod
+block|,
+operator|.
+name|fo_chown
+operator|=
+name|invfo_chown
+block|, }
 decl_stmt|;
 end_decl_stmt
 
