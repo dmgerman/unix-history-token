@@ -10281,7 +10281,7 @@ if|if
 condition|(
 name|optval
 operator|<
-literal|1
+literal|0
 operator|||
 name|optval
 operator|>
@@ -10298,6 +10298,13 @@ goto|;
 block|}
 if|if
 condition|(
+name|so
+operator|->
+name|so_proto
+operator|!=
+name|NULL
+operator|&&
+operator|(
 operator|(
 name|so
 operator|->
@@ -10321,6 +10328,7 @@ name|dom_family
 operator|==
 name|PF_ROUTE
 operator|)
+operator|)
 condition|)
 block|{
 name|so
@@ -10332,10 +10340,6 @@ expr_stmt|;
 comment|/* Note: ignore error */
 if|if
 condition|(
-name|so
-operator|->
-name|so_proto
-operator|&&
 name|so
 operator|->
 name|so_proto
