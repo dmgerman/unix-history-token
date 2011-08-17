@@ -3215,6 +3215,10 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 name|shmfd
 operator|=
 name|fp
