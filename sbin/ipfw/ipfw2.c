@@ -6243,6 +6243,16 @@ expr_stmt|;
 case|case
 name|O_IP_SRCPORT
 case|:
+if|if
+condition|(
+name|flags
+operator|&
+name|HAVE_DSTIP
+condition|)
+name|flags
+operator||=
+name|HAVE_IP
+expr_stmt|;
 name|show_prerequisites
 argument_list|(
 operator|&
