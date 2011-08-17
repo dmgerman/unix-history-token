@@ -575,6 +575,9 @@ modifier|*
 name|ep
 decl_stmt|;
 name|int
+name|c
+decl_stmt|;
+name|int
 name|multisep
 init|=
 operator|(
@@ -605,6 +608,8 @@ name|skip
 operator|--
 condition|)
 block|{
+name|c
+operator|=
 name|getline
 argument_list|()
 expr_stmt|;
@@ -619,6 +624,13 @@ argument_list|(
 name|curline
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|c
+operator|==
+name|EOF
+condition|)
+return|return;
 block|}
 name|getline
 argument_list|()
