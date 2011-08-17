@@ -390,9 +390,377 @@ literal|10
 block|}
 block|,
 block|{
+name|DEVICEID_PCH
+block|,
+literal|"Intel PCH watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PCHM
+block|,
+literal|"Intel PCH watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_P55
+block|,
+literal|"Intel P55 watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PM55
+block|,
+literal|"Intel PM55 watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
 name|DEVICEID_H55
 block|,
 literal|"Intel H55 watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_QM57
+block|,
+literal|"Intel QM57 watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_H57
+block|,
+literal|"Intel H57 watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_HM55
+block|,
+literal|"Intel HM55 watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_Q57
+block|,
+literal|"Intel Q57 watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_HM57
+block|,
+literal|"Intel HM57 watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_PCHMSFF
+block|,
+literal|"Intel PCHMSFF watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_QS57
+block|,
+literal|"Intel QS57 watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_3400
+block|,
+literal|"Intel 3400 watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_3420
+block|,
+literal|"Intel 3420 watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_3450
+block|,
+literal|"Intel 3450 watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT0
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT1
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT2
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT3
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT4
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT5
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT6
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT7
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT8
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT9
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT10
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT11
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT12
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT13
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT14
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT15
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT16
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT17
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT18
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT19
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT20
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT21
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT22
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT23
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT23
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT25
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT26
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT27
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT28
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT29
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT30
+block|,
+literal|"Intel Cougar Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_CPT31
+block|,
+literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
 block|}
