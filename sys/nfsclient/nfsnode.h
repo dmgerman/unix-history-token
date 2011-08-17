@@ -15,6 +15,12 @@ directive|define
 name|_NFSCLIENT_NFSNODE_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/_task.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -50,6 +56,10 @@ begin_struct
 struct|struct
 name|sillyrename
 block|{
+name|struct
+name|task
+name|s_task
+decl_stmt|;
 name|struct
 name|ucred
 modifier|*
