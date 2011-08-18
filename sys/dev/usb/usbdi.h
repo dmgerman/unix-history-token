@@ -83,6 +83,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|usb_fs_privdata
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|mbuf
 struct_decl|;
 end_struct_decl
@@ -1603,7 +1609,7 @@ literal|2
 index|]
 decl_stmt|;
 name|struct
-name|cdev
+name|usb_fs_privdata
 modifier|*
 name|dev
 decl_stmt|;
