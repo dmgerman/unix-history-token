@@ -7603,12 +7603,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|req
-operator|->
-name|oldptr
-operator|!=
-name|NULL
-operator|&&
 name|pa
 operator|!=
 name|NULL
