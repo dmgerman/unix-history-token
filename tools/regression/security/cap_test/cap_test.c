@@ -107,6 +107,16 @@ argument_list|)
 block|,
 name|TEST_INIT
 argument_list|(
+name|pdfork
+argument_list|)
+block|,
+name|TEST_INIT
+argument_list|(
+name|pdkill
+argument_list|)
+block|,
+name|TEST_INIT
+argument_list|(
 name|relative
 argument_list|)
 block|,
