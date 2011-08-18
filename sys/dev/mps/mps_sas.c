@@ -4390,7 +4390,7 @@ name|cpi
 operator|->
 name|max_lun
 operator|=
-literal|0
+literal|8
 expr_stmt|;
 name|cpi
 operator|->
