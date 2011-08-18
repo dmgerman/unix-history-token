@@ -249,6 +249,17 @@ begin_comment
 comment|/* capability */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DTYPE_PROCDESC
+value|13
+end_define
+
+begin_comment
+comment|/* process descriptor */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef

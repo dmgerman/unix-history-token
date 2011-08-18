@@ -895,6 +895,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|RFPROCDESC
+value|(1<<28)
+end_define
+
+begin_comment
+comment|/* return a process descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RFPPWAIT
 value|(1<<31)
 end_define
@@ -906,15 +917,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RFKERNELONLY
-value|(RFSTOPPED | RFHIGHPID | RFPPWAIT)
+name|RFFLAGS
+value|(RFFDG | RFPROC | RFMEM | RFNOWAIT | RFCFDG | \     RFTHREAD | RFSIGSHARE | RFLINUXTHPN | RFSTOPPED | RFHIGHPID | RFTSIGZMB | \     RFPROCDESC | RFPPWAIT)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RFFLAGS
-value|(RFFDG | RFPROC | RFMEM | RFNOWAIT | RFCFDG | \     RFTHREAD | RFSIGSHARE | RFLINUXTHPN | RFSTOPPED | RFHIGHPID | RFTSIGZMB | \     RFPPWAIT)
+name|RFKERNELONLY
+value|(RFSTOPPED | RFHIGHPID | RFPPWAIT | RFPROCDESC)
 end_define
 
 begin_endif

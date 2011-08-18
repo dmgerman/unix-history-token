@@ -470,6 +470,31 @@ value|0x0008000000000000ULL
 end_define
 
 begin_comment
+comment|/* Process management via process descriptors. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAP_PDGETPID
+value|0x0010000000000000ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_PDWAIT
+value|0x0020000000000000ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_PDKILL
+value|0x0040000000000000ULL
+end_define
+
+begin_comment
 comment|/* The mask of all valid method rights. */
 end_comment
 
@@ -477,7 +502,7 @@ begin_define
 define|#
 directive|define
 name|CAP_MASK_VALID
-value|0x000fffffffffffffULL
+value|0x007fffffffffffffULL
 end_define
 
 begin_ifdef

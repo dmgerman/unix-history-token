@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_procdesc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -51,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sysproto.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/capability.h>
 end_include
 
 begin_include
@@ -87,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/procdesc.h>
 end_include
 
 begin_include
@@ -1520,7 +1538,27 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Notify parent that we're gone.  If parent has the PS_NOCLDWAIT 	 * flag set, or if the handler is set to SIG_IGN, notify process 	 * 1 instead (and hope it will handle this situation). 	 */
+comment|/* 	 * If this is a process with a descriptor, we may not need to deliver 	 * a signal to the parent.  proctree_lock is held over 	 * procdesc_exit() to serialize concurrent calls to close() and 	 * exit(). 	 */
+ifdef|#
+directive|ifdef
+name|PROCDESC
+if|if
+condition|(
+name|p
+operator|->
+name|p_procdesc
+operator|==
+name|NULL
+operator|||
+name|procdesc_exit
+argument_list|(
+name|p
+argument_list|)
+condition|)
+block|{
+endif|#
+directive|endif
+comment|/* 		 * Notify parent that we're gone.  If parent has the 		 * PS_NOCLDWAIT flag set, or if the handler is set to SIG_IGN, 		 * notify process 1 instead (and hope it will handle this 		 * situation). 		 */
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -1605,7 +1643,7 @@ operator|->
 name|p_pptr
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Notify parent, so in case he was wait(2)ing or 		 * executing waitpid(2) with our pid, he will 		 * continue. 		 */
+comment|/* 			 * Notify parent, so in case he was wait(2)ing or 			 * executing waitpid(2) with our pid, he will 			 * continue. 			 */
 name|wakeup
 argument_list|(
 name|pp
@@ -1679,6 +1717,20 @@ name|p_sigparent
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|PROCDESC
+block|}
+else|else
+name|PROC_LOCK
+argument_list|(
+name|p
+operator|->
+name|p_pptr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|sx_xunlock
 argument_list|(
 operator|&
@@ -2373,7 +2425,6 @@ comment|/*  * Reap the remains of a zombie process and optionally return status 
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|proc_reap
 parameter_list|(
@@ -2669,6 +2720,24 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PROCDESC
+if|if
+condition|(
+name|p
+operator|->
+name|p_procdesc
+operator|!=
+name|NULL
+condition|)
+name|procdesc_reap
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|sx_xunlock
 argument_list|(
 operator|&
