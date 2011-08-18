@@ -2341,6 +2341,11 @@ block|}
 comment|/* 	 * If we're in FRSYNC mode, sync out this znode before reading it. 	 */
 if|if
 condition|(
+name|zfsvfs
+operator|->
+name|z_log
+operator|&&
+operator|(
 name|ioflag
 operator|&
 name|FRSYNC
@@ -2352,6 +2357,7 @@ operator|->
 name|os_sync
 operator|==
 name|ZFS_SYNC_ALWAYS
+operator|)
 condition|)
 name|zil_commit
 argument_list|(
@@ -27790,8 +27796,6 @@ operator|->
 name|a_uio
 argument_list|,
 name|IO_UNIT
-operator||
-name|IO_SYNC
 argument_list|,
 name|ap
 operator|->
