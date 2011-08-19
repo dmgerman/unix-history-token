@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ***************************************************************************************** **        O.S   : FreeBSD **   FILE NAME  : arcmsr.c **        BY    : Erich Chen, Ching Huang **   Description: SCSI RAID Device Driver for  **                ARECA (ARC11XX/ARC12XX/ARC13XX/ARC16XX/ARC188x) SATA/SAS RAID HOST Adapter **                ARCMSR RAID Host adapter **                [RAID controller:INTEL 331(PCI-X) 341(PCI-EXPRESS) chip set] ****************************************************************************************** ************************************************************************ ** ** Copyright (c) 2004-2010 ARECA Co. Ltd. **        Erich Chen, Taipei Taiwan All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES(INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION)HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT **(INCLUDING NEGLIGENCE OR OTHERWISE)ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ************************************************************************** ** History ** **        REV#         DATE	            NAME	         DESCRIPTION **     1.00.00.00	03/31/2004		Erich Chen			 First release **     1.20.00.02	11/29/2004		Erich Chen			 bug fix with arcmsr_bus_reset when PHY error **     1.20.00.03	04/19/2005		Erich Chen			 add SATA 24 Ports adapter type support **                                                       clean unused function **     1.20.00.12	09/12/2005		Erich Chen        	 bug fix with abort command handling,  **                                                       firmware version check  **                                                       and firmware update notify for hardware bug fix **                                                       handling if none zero high part physical address  **                                                       of srb resource  **     1.20.00.13	08/18/2006		Erich Chen			 remove pending srb and report busy **                                                       add iop message xfer  **                                                       with scsi pass-through command **                                                       add new device id of sas raid adapters  **                                                       code fit for SPARC64& PPC  **     1.20.00.14	02/05/2007		Erich Chen			 bug fix for incorrect ccb_h.status report **                                                       and cause g_vfs_done() read write error **     1.20.00.15	10/10/2007		Erich Chen			 support new RAID adapter type ARC120x **     1.20.00.16	10/10/2009		Erich Chen			 Bug fix for RAID adapter type ARC120x **                                                       bus_dmamem_alloc() with BUS_DMA_ZERO **     1.20.00.17	07/15/2010		Ching Huang			 Added support ARC1880 **														 report CAM_DEV_NOT_THERE instead of CAM_SEL_TIMEOUT when device failed, **														 prevent cam_periph_error removing all LUN devices of one Target id **														 for any one LUN device failed **     1.20.00.18	10/14/2010		Ching Huang			 Fixed "inquiry data fails comparion at DV1 step" **               	10/25/2010		Ching Huang			 Fixed bad range input in bus_alloc_resource for ADAPTER_TYPE_B **     1.20.00.19	11/11/2010		Ching Huang			 Fixed arcmsr driver prevent arcsas support for Areca SAS HBA ARC13x0 **     1.20.00.20	12/08/2010		Ching Huang			 Avoid calling atomic_set_int function **     1.20.00.21	02/08/2011		Ching Huang			 Implement I/O request timeout **               	02/14/2011		Ching Huang			 Modified pktRequestCount **     1.20.00.21	03/03/2011		Ching Huang			 if a command timeout, then wait its ccb back before free it ****************************************************************************************** * $FreeBSD$ */
+comment|/* ***************************************************************************************** **        O.S   : FreeBSD **   FILE NAME  : arcmsr.c **        BY    : Erich Chen, Ching Huang **   Description: SCSI RAID Device Driver for  **                ARECA (ARC11XX/ARC12XX/ARC13XX/ARC16XX/ARC188x) SATA/SAS RAID HOST Adapter **                ARCMSR RAID Host adapter **                [RAID controller:INTEL 331(PCI-X) 341(PCI-EXPRESS) chip set] ****************************************************************************************** ************************************************************************ ** ** Copyright (c) 2004-2010 ARECA Co. Ltd. **        Erich Chen, Taipei Taiwan All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES(INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION)HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT **(INCLUDING NEGLIGENCE OR OTHERWISE)ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ************************************************************************** ** History ** **        REV#         DATE	            NAME	         DESCRIPTION **     1.00.00.00	03/31/2004		Erich Chen			 First release **     1.20.00.02	11/29/2004		Erich Chen			 bug fix with arcmsr_bus_reset when PHY error **     1.20.00.03	04/19/2005		Erich Chen			 add SATA 24 Ports adapter type support **                                                       clean unused function **     1.20.00.12	09/12/2005		Erich Chen        	 bug fix with abort command handling,  **                                                       firmware version check  **                                                       and firmware update notify for hardware bug fix **                                                       handling if none zero high part physical address  **                                                       of srb resource  **     1.20.00.13	08/18/2006		Erich Chen			 remove pending srb and report busy **                                                       add iop message xfer  **                                                       with scsi pass-through command **                                                       add new device id of sas raid adapters  **                                                       code fit for SPARC64& PPC  **     1.20.00.14	02/05/2007		Erich Chen			 bug fix for incorrect ccb_h.status report **                                                       and cause g_vfs_done() read write error **     1.20.00.15	10/10/2007		Erich Chen			 support new RAID adapter type ARC120x **     1.20.00.16	10/10/2009		Erich Chen			 Bug fix for RAID adapter type ARC120x **                                                       bus_dmamem_alloc() with BUS_DMA_ZERO **     1.20.00.17	07/15/2010		Ching Huang			 Added support ARC1880 **														 report CAM_DEV_NOT_THERE instead of CAM_SEL_TIMEOUT when device failed, **														 prevent cam_periph_error removing all LUN devices of one Target id **														 for any one LUN device failed **     1.20.00.18	10/14/2010		Ching Huang			 Fixed "inquiry data fails comparion at DV1 step" **               	10/25/2010		Ching Huang			 Fixed bad range input in bus_alloc_resource for ADAPTER_TYPE_B **     1.20.00.19	11/11/2010		Ching Huang			 Fixed arcmsr driver prevent arcsas support for Areca SAS HBA ARC13x0 **     1.20.00.20	12/08/2010		Ching Huang			 Avoid calling atomic_set_int function **     1.20.00.21	02/08/2011		Ching Huang			 Implement I/O request timeout **               	02/14/2011		Ching Huang			 Modified pktRequestCount **     1.20.00.21	03/03/2011		Ching Huang			 if a command timeout, then wait its ccb back before free it **     1.20.00.22	07/04/2011		Ching Huang			 Fixed multiple MTX panic ****************************************************************************************** * $FreeBSD$ */
 end_comment
 
 begin_if
@@ -498,7 +498,7 @@ begin_define
 define|#
 directive|define
 name|ARCMSR_DRIVER_VERSION
-value|"Driver Version 1.20.00.21 2010-03-03"
+value|"Driver Version 1.20.00.22 2011-07-04"
 end_define
 
 begin_include
@@ -6253,6 +6253,9 @@ name|AdapterControlBlock
 modifier|*
 name|acb
 decl_stmt|;
+name|int
+name|mutex
+decl_stmt|;
 name|acb
 operator|=
 operator|(
@@ -6265,6 +6268,22 @@ argument_list|(
 name|psim
 argument_list|)
 expr_stmt|;
+name|mutex
+operator|=
+name|mtx_owned
+argument_list|(
+operator|&
+name|acb
+operator|->
+name|qbuffer_lock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mutex
+operator|==
+literal|0
+condition|)
 name|ARCMSR_LOCK_ACQUIRE
 argument_list|(
 operator|&
@@ -6278,6 +6297,12 @@ argument_list|(
 name|acb
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mutex
+operator|==
+literal|0
+condition|)
 name|ARCMSR_LOCK_RELEASE
 argument_list|(
 operator|&
@@ -9682,6 +9707,25 @@ name|workingsrb_startindex
 decl_stmt|,
 name|workingsrb_doneindex
 decl_stmt|;
+name|int
+name|mutex
+decl_stmt|;
+name|mutex
+operator|=
+name|mtx_owned
+argument_list|(
+operator|&
+name|acb
+operator|->
+name|qbuffer_lock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mutex
+operator|==
+literal|0
+condition|)
 name|ARCMSR_LOCK_ACQUIRE
 argument_list|(
 operator|&
@@ -9739,6 +9783,12 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|mutex
+operator|==
+literal|0
+condition|)
 name|ARCMSR_LOCK_RELEASE
 argument_list|(
 operator|&
