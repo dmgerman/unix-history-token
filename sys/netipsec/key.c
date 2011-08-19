@@ -13688,7 +13688,9 @@ name|state
 operator|=
 name|SADB_SASTATE_LARVAL
 expr_stmt|;
-comment|/* XXX locking??? */
+name|SAHTREE_LOCK
+argument_list|()
+expr_stmt|;
 name|LIST_INSERT_TAIL
 argument_list|(
 operator|&
@@ -13705,6 +13707,9 @@ name|secasvar
 argument_list|,
 name|chain
 argument_list|)
+expr_stmt|;
+name|SAHTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 name|done
 label|:
@@ -26828,14 +26833,14 @@ argument_list|,
 name|SADB_SASTATE_DEAD
 argument_list|)
 expr_stmt|;
-name|SAHTREE_UNLOCK
-argument_list|()
-expr_stmt|;
 name|KEY_FREESAV
 argument_list|(
 operator|&
 name|sav
 argument_list|)
+expr_stmt|;
+name|SAHTREE_UNLOCK
+argument_list|()
 expr_stmt|;
 block|{
 name|struct
