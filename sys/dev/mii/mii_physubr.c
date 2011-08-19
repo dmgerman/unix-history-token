@@ -1118,11 +1118,15 @@ literal|1000
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* NB: a PHY may default to isolation. */
+comment|/* NB: a PHY may default to being powered down and/or isolated. */
 name|reg
 operator|&=
 operator|~
+operator|(
+name|BMCR_PDOWN
+operator||
 name|BMCR_ISO
+operator|)
 expr_stmt|;
 if|if
 condition|(
