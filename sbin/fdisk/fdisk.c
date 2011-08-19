@@ -5032,13 +5032,13 @@ condition|)
 block|{
 if|if
 condition|(
-name|maxval
-operator|>
-literal|0
-operator|&&
 name|acc
 operator|<=
 name|maxval
+operator|||
+name|maxval
+operator|==
+literal|0
 condition|)
 name|acc
 operator|=
