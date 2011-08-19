@@ -5813,7 +5813,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"WWN                   %02x%02x%02x%02x\n"
+literal|"WWN                   %04x%04x%04x%04x\n"
 argument_list|,
 name|parm
 operator|->
