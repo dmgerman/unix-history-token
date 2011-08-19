@@ -659,7 +659,7 @@ operator|)
 operator|&
 literal|0xff
 expr_stmt|;
-comment|/* 			 * On earlier generation of processors, the value 			 * obtained from IA32_TEMPERATURE_TARGET register is 			 * an offset that needs to be summed with a model 			 * specific base.  It is however not clear what 			 * these numbers are, with the publicly available 			 * documents from Intel. 			 * 			 * For now, we consider [70, 100]C range, as 			 * described in #322683, as "reasonable" and accept 			 * these values whenever the MSR is available for 			 * read, regardless the CPU model. 			 */
+comment|/* 			 * On earlier generation of processors, the value 			 * obtained from IA32_TEMPERATURE_TARGET register is 			 * an offset that needs to be summed with a model 			 * specific base.  It is however not clear what 			 * these numbers are, with the publicly available 			 * documents from Intel. 			 * 			 * For now, we consider [70, 110]C range, as 			 * described in #322683, as "reasonable" and accept 			 * these values whenever the MSR is available for 			 * read, regardless the CPU model. 			 */
 if|if
 condition|(
 name|tjtarget
@@ -668,7 +668,7 @@ literal|70
 operator|&&
 name|tjtarget
 operator|<=
-literal|100
+literal|110
 condition|)
 name|sc
 operator|->
