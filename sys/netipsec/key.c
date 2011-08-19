@@ -11115,6 +11115,12 @@ operator|->
 name|sadb_msg_pid
 argument_list|)
 expr_stmt|;
+name|KEY_FREESP
+argument_list|(
+operator|&
+name|sp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|n
