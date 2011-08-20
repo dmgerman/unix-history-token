@@ -433,6 +433,26 @@ name|V_fw_deny_unknown_exthdrs
 value|VNET(fw_deny_unknown_exthdrs)
 end_define
 
+begin_expr_stmt
+specifier|static
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|fw_permit_single_frag6
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_fw_permit_single_frag6
+value|VNET(fw_permit_single_frag6)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -913,6 +933,32 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Deny packets with unknown IPv6 Extension Headers"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_VNET_INT
+argument_list|(
+name|_net_inet6_ip6_fw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|permit_single_frag6
+argument_list|,
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_SECURE
+argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
+name|fw_permit_single_frag6
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|"Permit single packet IPv6 fragments"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3592,7 +3638,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* hlen>0 means we have an IP pkt */
-comment|/* 	 * offset	The offset of a fragment. offset != 0 means that 	 *	we have a fragment at this offset of an IPv4 packet. 	 *	offset == 0 means that (if this is an IPv4 packet) 	 *	this is the first or only fragment. 	 *	For IPv6 offset == 0 means there is no Fragment Header.  	 *	If offset != 0 for IPv6 always use correct mask to 	 *	get the correct offset because we add IP6F_MORE_FRAG 	 *	to be able to dectect the first fragment which would 	 *	otherwise have offset = 0. 	 */
+comment|/* 	 * offset	The offset of a fragment. offset != 0 means that 	 *	we have a fragment at this offset of an IPv4 packet. 	 *	offset == 0 means that (if this is an IPv4 packet) 	 *	this is the first or only fragment. 	 *	For IPv6 offset == 0 means there is no Fragment Header or there 	 *	is a single packet fragement (fragement header added without 	 *	needed).  We will treat a single packet fragment as if there 	 *	was no fragment header (or log/block depending on the 	 *	V_fw_permit_single_frag6 sysctl setting). 	 *	If offset != 0 for IPv6 always use correct mask to 	 *	get the correct offset because we add IP6F_MORE_FRAG to be able 	 *	to dectect the first of multiple fragments which would 	 *	otherwise have offset = 0. 	 */
 name|u_short
 name|offset
 init|=
@@ -4234,7 +4280,7 @@ name|ip6f_offlg
 operator|&
 name|IP6F_OFF_MASK
 expr_stmt|;
-comment|/* Add IP6F_MORE_FRAG for offset of first 				 * fragment to be != 0. */
+comment|/* Add IP6F_MORE_FRAG for offset of first 				 * fragment to be != 0 if there shall be more. */
 name|offset
 operator||=
 operator|(
@@ -4252,6 +4298,10 @@ name|IP6F_MORE_FRAG
 expr_stmt|;
 if|if
 condition|(
+name|V_fw_permit_single_frag6
+operator|==
+literal|0
+operator|&&
 name|offset
 operator|==
 literal|0
