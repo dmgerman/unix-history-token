@@ -8542,6 +8542,17 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|dataset_name_hidden
+argument_list|(
+name|zc
+operator|->
+name|zc_name
+argument_list|)
+condition|)
 operator|(
 name|void
 operator|)
@@ -8554,6 +8565,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 do|do
 block|{
