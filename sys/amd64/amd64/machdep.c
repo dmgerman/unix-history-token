@@ -6094,8 +6094,6 @@ name|u_long
 name|physmem_tunable
 decl_stmt|,
 name|memtest
-decl_stmt|,
-name|tmpul
 decl_stmt|;
 name|pt_entry_t
 modifier|*
@@ -6344,19 +6342,13 @@ name|memtest
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
 name|TUNABLE_ULONG_FETCH
 argument_list|(
 literal|"hw.memtest.tests"
 argument_list|,
 operator|&
-name|tmpul
-argument_list|)
-condition|)
 name|memtest
-operator|=
-name|tmpul
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Don't allow MAXMEM or hw.physmem to extend the amount of memory 	 * in the system. 	 */
 if|if
