@@ -3549,7 +3549,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The main check routine for the firewall.  *  * All arguments are in args so we can modify them and return them  * back to the caller.  *  * Parameters:  *  *	args->m	(in/out) The packet; we set to NULL when/if we nuke it.  *		Starts with the IP header.  *	args->eh (in)	Mac header if present, NULL for layer3 packet.  *	args->L3offset	Number of bytes bypassed if we came from L2.  *			e.g. often sizeof(eh)  ** NOTYET **  *	args->oif	Outgoing interface, NULL if packet is incoming.  *		The incoming interface is in the mbuf. (in)  *	args->divert_rule (in/out)  *		Skip up to the first rule past this rule number;  *		upon return, non-zero port number for divert or tee.  *  *	args->rule	Pointer to the last matching rule (in/out)  *	args->next_hop	Socket we are forwarding to (out).  *	args->f_id	Addresses grabbed from the packet (out)  * 	args->rule.info	a cookie depending on rule action  *  * Return value:  *  *	IP_FW_PASS	the packet must be accepted  *	IP_FW_DENY	the packet must be dropped  *	IP_FW_DIVERT	divert packet, port in m_tag  *	IP_FW_TEE	tee packet, port in m_tag  *	IP_FW_DUMMYNET	to dummynet, pipe in args->cookie  *	IP_FW_NETGRAPH	into netgraph, cookie args->cookie  *		args->rule contains the matching rule,  *		args->rule.info has additional information.  *  */
+comment|/*  * The main check routine for the firewall.  *  * All arguments are in args so we can modify them and return them  * back to the caller.  *  * Parameters:  *  *	args->m	(in/out) The packet; we set to NULL when/if we nuke it.  *		Starts with the IP header.  *	args->eh (in)	Mac header if present, NULL for layer3 packet.  *	args->L3offset	Number of bytes bypassed if we came from L2.  *			e.g. often sizeof(eh)  ** NOTYET **  *	args->oif	Outgoing interface, NULL if packet is incoming.  *		The incoming interface is in the mbuf. (in)  *	args->divert_rule (in/out)  *		Skip up to the first rule past this rule number;  *		upon return, non-zero port number for divert or tee.  *  *	args->rule	Pointer to the last matching rule (in/out)  *	args->next_hop	Socket we are forwarding to (out).  *	args->next_hop6	IPv6 next hop we are forwarding to (out).  *	args->f_id	Addresses grabbed from the packet (out)  * 	args->rule.info	a cookie depending on rule action  *  * Return value:  *  *	IP_FW_PASS	the packet must be accepted  *	IP_FW_DENY	the packet must be dropped  *	IP_FW_DIVERT	divert packet, port in m_tag  *	IP_FW_TEE	tee packet, port in m_tag  *	IP_FW_DUMMYNET	to dummynet, pipe in args->cookie  *	IP_FW_NETGRAPH	into netgraph, cookie args->cookie  *		args->rule contains the matching rule,  *		args->rule.info has additional information.  *  */
 end_comment
 
 begin_function
@@ -9423,6 +9423,81 @@ literal|1
 expr_stmt|;
 comment|/* exit outer loop */
 break|break;
+ifdef|#
+directive|ifdef
+name|INET6
+case|case
+name|O_FORWARD_IP6
+case|:
+if|if
+condition|(
+name|args
+operator|->
+name|eh
+condition|)
+comment|/* not valid on layer2 pkts */
+break|break;
+if|if
+condition|(
+name|q
+operator|==
+name|NULL
+operator|||
+name|q
+operator|->
+name|rule
+operator|!=
+name|f
+operator|||
+name|dyn_dir
+operator|==
+name|MATCH_FORWARD
+condition|)
+block|{
+name|struct
+name|sockaddr_in6
+modifier|*
+name|sin6
+decl_stmt|;
+name|sin6
+operator|=
+operator|&
+operator|(
+operator|(
+operator|(
+name|ipfw_insn_sa6
+operator|*
+operator|)
+name|cmd
+operator|)
+operator|->
+name|sa
+operator|)
+expr_stmt|;
+name|args
+operator|->
+name|next_hop6
+operator|=
+name|sin6
+expr_stmt|;
+block|}
+name|retval
+operator|=
+name|IP_FW_PASS
+expr_stmt|;
+name|l
+operator|=
+literal|0
+expr_stmt|;
+comment|/* exit inner loop */
+name|done
+operator|=
+literal|1
+expr_stmt|;
+comment|/* exit outer loop */
+break|break;
+endif|#
+directive|endif
 case|case
 name|O_NETGRAPH
 case|:
