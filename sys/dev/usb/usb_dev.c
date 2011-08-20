@@ -4009,22 +4009,53 @@ argument_list|,
 operator|&
 name|refs
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|err
 condition|)
+goto|goto
+name|done
+goto|;
+comment|/* 	 * If this function is not called directly from the root HUB 	 * thread, there is usually a need to lock the enumeration 	 * lock. Check this. 	 */
+if|if
+condition|(
+operator|!
+name|usbd_enum_is_locked
+argument_list|(
+name|cpd
+operator|->
+name|udev
+argument_list|)
+condition|)
 block|{
-name|free
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+literal|"Locking enumeration\n"
+argument_list|)
+expr_stmt|;
+comment|/* reference device */
+name|err
+operator|=
+name|usb_usb_ref_device
 argument_list|(
 name|cpd
 argument_list|,
-name|M_USBDEV
+operator|&
+name|refs
 argument_list|)
 expr_stmt|;
-return|return;
+if|if
+condition|(
+name|err
+condition|)
+goto|goto
+name|done
+goto|;
 block|}
 if|if
 condition|(
@@ -4076,6 +4107,8 @@ operator|&
 name|refs
 argument_list|)
 expr_stmt|;
+name|done
+label|:
 name|free
 argument_list|(
 name|cpd
@@ -4083,7 +4116,6 @@ argument_list|,
 name|M_USBDEV
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
