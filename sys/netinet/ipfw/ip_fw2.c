@@ -4166,10 +4166,14 @@ name|EXT_RTHDR2
 expr_stmt|;
 break|break;
 default|default:
+if|if
+condition|(
+name|V_fw_verbose
+condition|)
 name|printf
 argument_list|(
-literal|"IPFW2: IPV6 - Unknown Routing "
-literal|"Header type(%d)\n"
+literal|"IPFW2: IPV6 - Unknown "
+literal|"Routing Header type(%d)\n"
 argument_list|,
 operator|(
 operator|(
@@ -4319,10 +4323,14 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|V_fw_verbose
+condition|)
 name|printf
 argument_list|(
-literal|"IPFW2: IPV6 - Invalid Fragment "
-literal|"Header\n"
+literal|"IPFW2: IPV6 - Invalid "
+literal|"Fragment Header\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4617,10 +4625,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+if|if
+condition|(
+name|V_fw_verbose
+condition|)
 name|printf
 argument_list|(
-literal|"IPFW2: IPV6 - Unknown Extension "
-literal|"Header(%d), ext_hd=%x\n"
+literal|"IPFW2: IPV6 - Unknown "
+literal|"Extension Header(%d), ext_hd=%x\n"
 argument_list|,
 name|proto
 argument_list|,
