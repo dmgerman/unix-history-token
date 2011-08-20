@@ -1162,7 +1162,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-literal|0
+name|LIBUSB_SPEED_UNKNOWN
 operator|)
 return|;
 comment|/* should not happen */
