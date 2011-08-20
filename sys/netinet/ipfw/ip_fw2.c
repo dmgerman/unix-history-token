@@ -3922,6 +3922,10 @@ condition|(
 name|ulp
 operator|==
 name|NULL
+operator|&&
+name|offset
+operator|==
+literal|0
 condition|)
 block|{
 switch|switch
