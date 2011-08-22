@@ -2961,6 +2961,10 @@ argument_list|)
 expr_stmt|;
 block|}
 name|error
+operator|=
+literal|0
+expr_stmt|;
+name|error
 label|:
 name|free
 argument_list|(
