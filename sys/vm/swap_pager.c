@@ -7211,32 +7211,6 @@ decl_stmt|;
 name|u_long
 name|mblocks
 decl_stmt|;
-comment|/* 	 * If we go beyond this, we get overflows in the radix 	 * tree bitmap code. 	 */
-name|mblocks
-operator|=
-literal|0x40000000
-operator|/
-name|BLIST_META_RADIX
-expr_stmt|;
-if|if
-condition|(
-name|nblks
-operator|>
-name|mblocks
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"WARNING: reducing size to maximum of %lu blocks per swap unit\n"
-argument_list|,
-name|mblocks
-argument_list|)
-expr_stmt|;
-name|nblks
-operator|=
-name|mblocks
-expr_stmt|;
-block|}
 comment|/* 	 * nblks is in DEV_BSIZE'd chunks, convert to PAGE_SIZE'd chunks. 	 * First chop nblks off to page-align it, then convert. 	 *  	 * sw->sw_nblks is in page-sized chunks now too. 	 */
 name|nblks
 operator|&=
@@ -7257,6 +7231,38 @@ argument_list|(
 name|nblks
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If we go beyond this, we get overflows in the radix 	 * tree bitmap code. 	 */
+name|mblocks
+operator|=
+literal|0x40000000
+operator|/
+name|BLIST_META_RADIX
+expr_stmt|;
+if|if
+condition|(
+name|nblks
+operator|>
+name|mblocks
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"WARNING: reducing swap size to maximum of %luMB per unit\n"
+argument_list|,
+name|mblocks
+operator|/
+literal|1024
+operator|/
+literal|1024
+operator|*
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+name|nblks
+operator|=
+name|mblocks
+expr_stmt|;
+block|}
 name|sp
 operator|=
 name|malloc
