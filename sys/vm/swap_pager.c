@@ -252,7 +252,7 @@ file|<geom/geom.h>
 end_include
 
 begin_comment
-comment|/*  * SWB_NPAGES must be a power of 2.  It may be set to 1, 2, 4, 8, or 16  * pages per allocation.  We recommend you stick with the default of 8.  * The 16-page limit is due to the radix code (kern/subr_blist.c).  */
+comment|/*  * SWB_NPAGES must be a power of 2.  It may be set to 1, 2, 4, 8, 16  * or 32 pages per allocation.  * The 32-page limit is due to the radix code (kern/subr_blist.c).  */
 end_comment
 
 begin_ifndef
@@ -296,7 +296,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Piecemeal swap metadata structure.  Swap is stored in a radix tree.  *  * If SWB_NPAGES is 8 and sizeof(char *) == sizeof(daddr_t), our radix  * is basically 8.  Assuming PAGE_SIZE == 4096, one tree level represents  * 32K worth of data, two levels represent 256K, three levels represent  * 2 MBytes.   This is acceptable.  *  * Overall memory utilization is about the same as the old swap structure.  */
+comment|/*  * The swblock structure maps an object and a small, fixed-size range  * of page indices to disk addresses within a swap area.  * The collection of these mappings is implemented as a hash table.  * Unused disk addresses within a swap area are allocated and managed  * using a blist.  */
 end_comment
 
 begin_define
@@ -2620,7 +2620,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWAP_PAGER_DEALLOC() -	remove swap metadata from object  *  *	The swap backing for the object is destroyed.  The code is   *	designed such that we can reinstantiate it later, but this  *	routine is typically called only when the entire object is  *	about to be destroyed.  *  *	This routine may block, but no longer does.   *  *	The object must be locked or unreferenceable.  */
+comment|/*  * SWAP_PAGER_DEALLOC() -	remove swap metadata from object  *  *	The swap backing for the object is destroyed.  The code is   *	designed such that we can reinstantiate it later, but this  *	routine is typically called only when the entire object is  *	about to be destroyed.  *  *	The object must be locked.  */
 end_comment
 
 begin_function
@@ -2697,7 +2697,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * SWP_PAGER_GETSWAPSPACE() -	allocate raw swap space  *  *	Allocate swap for the requested number of pages.  The starting  *	swap block number (a page index) is returned or SWAPBLK_NONE  *	if the allocation failed.  *  *	Also has the side effect of advising that somebody made a mistake  *	when they configured swap and didn't configure enough.  *  *	This routine may not block  *  *	We allocate in round-robin fashion from the configured devices.  */
+comment|/*  * SWP_PAGER_GETSWAPSPACE() -	allocate raw swap space  *  *	Allocate swap for the requested number of pages.  The starting  *	swap block number (a page index) is returned or SWAPBLK_NONE  *	if the allocation failed.  *  *	Also has the side effect of advising that somebody made a mistake  *	when they configured swap and didn't configure enough.  *  *	This routine may not sleep.  *  *	We allocate in round-robin fashion from the configured devices.  */
 end_comment
 
 begin_function
@@ -2987,7 +2987,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWP_PAGER_FREESWAPSPACE() -	free raw swap space   *  *	This routine returns the specified swap blocks back to the bitmap.  *  *	Note:  This routine may not block (it could in the old swap code),  *	and through the use of the new blist routines it does not block.  *  *	This routine may not block  */
+comment|/*  * SWP_PAGER_FREESWAPSPACE() -	free raw swap space   *  *	This routine returns the specified swap blocks back to the bitmap.  *  *	This routine may not sleep.  */
 end_comment
 
 begin_function
@@ -3284,7 +3284,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWAP_PAGER_COPY() -  copy blocks from source pager to destination pager  *			and destroy the source.  *  *	Copy any valid swapblks from the source to the destination.  In  *	cases where both the source and destination have a valid swapblk,  *	we keep the destination's.  *  *	This routine is allowed to block.  It may block allocating metadata  *	indirectly through swp_pager_meta_build() or if paging is still in  *	progress on the source.   *  *	XXX vm_page_collapse() kinda expects us not to block because we   *	supposedly do not need to allocate memory, but for the moment we  *	*may* have to get a little memory from the zone allocator, but  *	it is taken from the interrupt memory.  We should be ok.   *  *	The source object contains no vm_page_t's (which is just as well)  *  *	The source object is of type OBJT_SWAP.  *  *	The source and destination objects must be locked or   *	inaccessible (XXX are they ?)  */
+comment|/*  * SWAP_PAGER_COPY() -  copy blocks from source pager to destination pager  *			and destroy the source.  *  *	Copy any valid swapblks from the source to the destination.  In  *	cases where both the source and destination have a valid swapblk,  *	we keep the destination's.  *  *	This routine is allowed to sleep.  It may sleep allocating metadata  *	indirectly through swp_pager_meta_build() or if paging is still in  *	progress on the source.   *  *	The source object contains no vm_page_t's (which is just as well)  *  *	The source object is of type OBJT_SWAP.  *  *	The source and destination objects must be locked.  *	Both object locks may temporarily be released.  */
 end_comment
 
 begin_function
@@ -3734,7 +3734,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWAP_PAGER_PAGE_UNSWAPPED() - remove swap backing store related to page  *  *	This removes any associated swap backing store, whether valid or  *	not, from the page.    *  *	This routine is typically called when a page is made dirty, at  *	which point any associated swap can be freed.  MADV_FREE also  *	calls us in a special-case situation  *  *	NOTE!!!  If the page is clean and the swap was valid, the caller  *	should make the page dirty before calling this routine.  This routine  *	does NOT change the m->dirty status of the page.  Also: MADV_FREE  *	depends on it.  *  *	This routine may not block  */
+comment|/*  * SWAP_PAGER_PAGE_UNSWAPPED() - remove swap backing store related to page  *  *	This removes any associated swap backing store, whether valid or  *	not, from the page.    *  *	This routine is typically called when a page is made dirty, at  *	which point any associated swap can be freed.  MADV_FREE also  *	calls us in a special-case situation  *  *	NOTE!!!  If the page is clean and the swap was valid, the caller  *	should make the page dirty before calling this routine.  This routine  *	does NOT change the m->dirty status of the page.  Also: MADV_FREE  *	depends on it.  *  *	This routine may not sleep.  */
 end_comment
 
 begin_function
@@ -4977,7 +4977,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	swp_pager_async_iodone:  *  *	Completion routine for asynchronous reads and writes from/to swap.  *	Also called manually by synchronous code to finish up a bp.  *  *	For READ operations, the pages are VPO_BUSY'd.  For WRITE operations,   *	the pages are vm_page_t->busy'd.  For READ operations, we VPO_BUSY   *	unbusy all pages except the 'main' request page.  For WRITE   *	operations, we vm_page_t->busy'd unbusy all pages ( we can do this   *	because we marked them all VM_PAGER_PEND on return from putpages ).  *  *	This routine may not block.  */
+comment|/*  *	swp_pager_async_iodone:  *  *	Completion routine for asynchronous reads and writes from/to swap.  *	Also called manually by synchronous code to finish up a bp.  *  *	For READ operations, the pages are VPO_BUSY'd.  For WRITE operations,   *	the pages are vm_page_t->busy'd.  For READ operations, we VPO_BUSY   *	unbusy all pages except the 'main' request page.  For WRITE   *	operations, we vm_page_t->busy'd unbusy all pages ( we can do this   *	because we marked them all VM_PAGER_PEND on return from putpages ).  *  *	This routine may not sleep.  */
 end_comment
 
 begin_function
@@ -5427,7 +5427,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	swap_pager_isswapped:  *  *	Return 1 if at least one page in the given object is paged  *	out to the given swap device.  *  *	This routine may not block.  */
+comment|/*  *	swap_pager_isswapped:  *  *	Return 1 if at least one page in the given object is paged  *	out to the given swap device.  *  *	This routine may not sleep.  */
 end_comment
 
 begin_function
