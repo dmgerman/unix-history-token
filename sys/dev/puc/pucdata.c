@@ -1840,6 +1840,30 @@ block|,
 block|{
 literal|0x1393
 block|,
+literal|0x1120
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Moxa Technologies, CP-112UL"
+block|,
+name|DEFAULT_RCLK
+operator|*
+literal|8
+block|,
+name|PUC_PORT_2S
+block|,
+literal|0x18
+block|,
+literal|0
+block|,
+literal|8
+block|, 	}
+block|,
+block|{
+literal|0x1393
+block|,
 literal|0x1141
 block|,
 literal|0xffff
