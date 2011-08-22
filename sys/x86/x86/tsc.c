@@ -2028,13 +2028,30 @@ block|}
 ifdef|#
 directive|ifdef
 name|SMP
-comment|/* 	 * We can not use the TSC in SMP mode unless the TSCs on all CPUs are 	 * synchronized.  If the user is sure that the system has synchronized 	 * TSCs, set kern.timecounter.smp_tsc tunable to a non-zero value. 	 * We also limit the frequency even lower to avoid "temporal anomalies" 	 * as much as possible. 	 */
+comment|/* 	 * We can not use the TSC in SMP mode unless the TSCs on all CPUs are 	 * synchronized.  If the user is sure that the system has synchronized 	 * TSCs, set kern.timecounter.smp_tsc tunable to a non-zero value. 	 * We also limit the frequency even lower to avoid "temporal anomalies" 	 * as much as possible.  The TSC seems unreliable in virtualized SMP 	 * environments, so it is set to a negative quality in those cases. 	 */
 if|if
 condition|(
 name|smp_cpus
 operator|>
 literal|1
 condition|)
+block|{
+if|if
+condition|(
+name|vm_guest
+operator|!=
+literal|0
+condition|)
+block|{
+name|tsc_timecounter
+operator|.
+name|tc_quality
+operator|=
+operator|-
+literal|100
+expr_stmt|;
+block|}
+else|else
 block|{
 name|tsc_timecounter
 operator|.
@@ -2047,6 +2064,7 @@ name|max_freq
 operator|>>=
 literal|8
 expr_stmt|;
+block|}
 block|}
 elseif|else
 endif|#
