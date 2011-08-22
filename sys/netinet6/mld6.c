@@ -2494,11 +2494,6 @@ expr_stmt|;
 name|MLD_LOCK
 argument_list|()
 expr_stmt|;
-name|IF_ADDR_LOCK
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Switch to MLDv1 host compatibility mode. 	 */
 name|mli
 operator|=
@@ -2553,6 +2548,11 @@ condition|)
 name|timer
 operator|=
 literal|1
+expr_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3279,11 +3279,6 @@ expr_stmt|;
 name|MLD_LOCK
 argument_list|()
 expr_stmt|;
-name|IF_ADDR_LOCK
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|mli
 operator|=
 name|MLD_IFINFO
@@ -3410,6 +3405,11 @@ block|}
 else|else
 block|{
 comment|/* 		 * MLDv2 Group-specific or Group-and-source-specific Query. 		 * 		 * Group-source-specific queries are throttled on 		 * a per-group basis to defeat denial-of-service attempts. 		 * Queries for groups we are not a member of on this 		 * link are simply ignored. 		 */
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|inm
 operator|=
 name|in6m_lookup_locked
@@ -3428,9 +3428,16 @@ name|inm
 operator|==
 name|NULL
 condition|)
+block|{
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out_locked
 goto|;
+block|}
 if|if
 condition|(
 name|nsrc
@@ -3460,6 +3467,11 @@ argument_list|,
 literal|"%s: GS query throttled."
 argument_list|,
 name|__func__
+argument_list|)
+expr_stmt|;
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3517,14 +3529,14 @@ operator|->
 name|mld_addr
 argument_list|)
 expr_stmt|;
-block|}
-name|out_locked
-label|:
 name|IF_ADDR_UNLOCK
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+block|}
+name|out_locked
+label|:
 name|MLD_UNLOCK
 argument_list|()
 expr_stmt|;
