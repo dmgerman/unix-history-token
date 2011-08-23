@@ -425,6 +425,30 @@ literal|99
 block|, }
 enum|;
 enum|enum
+name|libusb_speed
+block|{
+name|LIBUSB_SPEED_UNKNOWN
+init|=
+literal|0
+block|,
+name|LIBUSB_SPEED_LOW
+init|=
+literal|1
+block|,
+name|LIBUSB_SPEED_FULL
+init|=
+literal|2
+block|,
+name|LIBUSB_SPEED_HIGH
+init|=
+literal|3
+block|,
+name|LIBUSB_SPEED_SUPER
+init|=
+literal|4
+block|, }
+enum|;
+enum|enum
 name|libusb_transfer_status
 block|{
 name|LIBUSB_TRANSFER_COMPLETED
@@ -963,6 +987,15 @@ parameter_list|)
 function_decl|;
 name|uint8_t
 name|libusb_get_device_address
+parameter_list|(
+name|libusb_device
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+name|enum
+name|libusb_speed
+name|libusb_get_device_speed
 parameter_list|(
 name|libusb_device
 modifier|*
