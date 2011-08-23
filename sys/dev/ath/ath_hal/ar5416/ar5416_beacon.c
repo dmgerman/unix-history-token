@@ -49,6 +49,16 @@ parameter_list|)
 value|((_tu)<< 10)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ONE_EIGHTH_TU_TO_USEC
+parameter_list|(
+name|_tu8
+parameter_list|)
+value|((_tu8)<< 7)
+end_define
+
 begin_comment
 comment|/*  * Initialize all of the hardware registers used to  * send beacons.  Note that for station operation the  * driver calls ar5416SetStaBeaconTimers instead.  */
 end_comment
@@ -91,14 +101,12 @@ name|ah
 argument_list|,
 name|AR_NEXT_DBA
 argument_list|,
-name|TU_TO_USEC
+name|ONE_EIGHTH_TU_TO_USEC
 argument_list|(
 name|bt
 operator|->
 name|bt_nextdba
 argument_list|)
-operator|>>
-literal|3
 argument_list|)
 expr_stmt|;
 name|OS_REG_WRITE
@@ -107,14 +115,12 @@ name|ah
 argument_list|,
 name|AR_NEXT_SWBA
 argument_list|,
-name|TU_TO_USEC
+name|ONE_EIGHTH_TU_TO_USEC
 argument_list|(
 name|bt
 operator|->
 name|bt_nextswba
 argument_list|)
-operator|>>
-literal|3
 argument_list|)
 expr_stmt|;
 name|OS_REG_WRITE
@@ -519,9 +525,12 @@ name|ah
 argument_list|,
 name|AR_NEXT_TBTT
 argument_list|,
+name|TU_TO_USEC
+argument_list|(
 name|bs
 operator|->
 name|bs_nexttbtt
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Start the beacon timers by setting the BEACON register 	 * to the beacon interval; no need to write tim offset since 	 * h/w parses IEs. 	 */
