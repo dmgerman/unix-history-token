@@ -273,14 +273,8 @@ value|"dumpsize"
 end_define
 
 begin_comment
-comment|/*  * This lock protects the zfsdev_state structure from being modified  * while it's being used, e.g. an open that comes in before a create  * finishes.  It also protects temporary opens of the dataset so that,  * e.g., an open doesn't get a spurious EBUSY.  */
+comment|/*  * The spa_namespace_lock protects the zfsdev_state structure from being  * modified while it's being used, e.g. an open that comes in before a  * create finishes.  It also protects temporary opens of the dataset so that,  * e.g., an open doesn't get a spurious EBUSY.  */
 end_comment
-
-begin_decl_stmt
-name|kmutex_t
-name|zfsdev_state_lock
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -975,7 +969,7 @@ argument_list|(
 name|MUTEX_HELD
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2009,7 +2003,7 @@ decl_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 name|zv
@@ -2035,7 +2029,7 @@ expr_stmt|;
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -2104,7 +2098,7 @@ expr_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -2120,7 +2114,7 @@ block|{
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -2154,7 +2148,7 @@ block|{
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -2188,7 +2182,7 @@ expr_stmt|;
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -2219,7 +2213,7 @@ expr_stmt|;
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -2300,7 +2294,7 @@ expr_stmt|;
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -2370,7 +2364,7 @@ expr_stmt|;
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -2620,7 +2614,7 @@ expr_stmt|;
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 name|zvol_geom_run
@@ -2682,7 +2676,7 @@ argument_list|(
 name|MUTEX_HELD
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2796,7 +2790,7 @@ decl_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -2816,7 +2810,7 @@ block|{
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -2841,7 +2835,7 @@ expr_stmt|;
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -3361,7 +3355,7 @@ argument_list|(
 name|MUTEX_HELD
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3503,7 +3497,7 @@ expr_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 name|g_topology_lock
@@ -3604,7 +3598,7 @@ expr_stmt|;
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 name|PICKUP_GIANT
@@ -3656,7 +3650,7 @@ decl_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 name|zv
@@ -3688,7 +3682,7 @@ block|{
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -4004,7 +3998,7 @@ expr_stmt|;
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -4048,7 +4042,7 @@ decl_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 name|zv
@@ -4067,7 +4061,7 @@ block|{
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -4099,7 +4093,7 @@ block|{
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -4195,7 +4189,7 @@ expr_stmt|;
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -4221,7 +4215,7 @@ expr_stmt|;
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -4265,7 +4259,7 @@ decl_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 name|zv
@@ -4284,7 +4278,7 @@ block|{
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -4352,7 +4346,7 @@ expr_stmt|;
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -7508,7 +7502,7 @@ decl_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 name|zv
@@ -7533,7 +7527,7 @@ block|{
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -7626,7 +7620,7 @@ expr_stmt|;
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -7704,7 +7698,7 @@ expr_stmt|;
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -7758,7 +7752,7 @@ decl_stmt|;
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 name|error
@@ -7799,7 +7793,7 @@ expr_stmt|;
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 name|zil_commit
@@ -7947,7 +7941,7 @@ expr_stmt|;
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -7963,7 +7957,7 @@ expr_stmt|;
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 name|zil_commit
@@ -8084,7 +8078,7 @@ block|}
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -8146,18 +8140,6 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|mutex_init
-argument_list|(
-operator|&
-name|zfsdev_state_lock
-argument_list|,
-name|NULL
-argument_list|,
-name|MUTEX_DEFAULT
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 name|ZFS_LOG
 argument_list|(
 literal|1
@@ -8175,12 +8157,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|mutex_destroy
-argument_list|(
-operator|&
-name|zfsdev_state_lock
-argument_list|)
-expr_stmt|;
 name|ddi_soft_state_fini
 argument_list|(
 operator|&
@@ -8257,7 +8233,7 @@ argument_list|(
 name|MUTEX_HELD
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -10955,7 +10931,7 @@ argument_list|(
 name|MUTEX_HELD
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -11134,7 +11110,7 @@ expr_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 name|g_topology_lock
@@ -11282,7 +11258,7 @@ expr_stmt|;
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 name|PICKUP_GIANT

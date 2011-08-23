@@ -21050,7 +21050,7 @@ argument_list|(
 name|MUTEX_HELD
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -21134,7 +21134,7 @@ argument_list|(
 name|MUTEX_HELD
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -21238,7 +21238,7 @@ argument_list|(
 name|MUTEX_HELD
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -21377,7 +21377,7 @@ block|{
 name|mutex_enter
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 name|error
@@ -21390,7 +21390,7 @@ expr_stmt|;
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -21437,7 +21437,7 @@ return|return;
 name|mutex_enter
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 name|zo
@@ -21459,7 +21459,7 @@ block|{
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 return|return;
@@ -21474,7 +21474,7 @@ expr_stmt|;
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 block|}
