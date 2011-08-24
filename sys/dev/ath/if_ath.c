@@ -25279,6 +25279,13 @@ name|nexttbtt
 operator|+
 literal|1
 expr_stmt|;
+comment|/* Enables TBTT, DBA, SWBA timers by default */
+name|bt
+operator|.
+name|bt_flags
+operator|=
+literal|0
+expr_stmt|;
 name|ath_hal_beaconsettimers
 argument_list|(
 name|ah
