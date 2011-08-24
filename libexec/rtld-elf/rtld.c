@@ -150,6 +150,12 @@ directive|include
 file|"rtld_tls.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"rtld_printf.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -3641,7 +3647,7 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-name|vsnprintf
+name|rtld_vsnprintf
 argument_list|(
 name|buf
 argument_list|,
@@ -4269,13 +4275,16 @@ name|msg
 operator|=
 literal|"Fatal error"
 expr_stmt|;
-name|errx
+name|rtld_fdputstr
 argument_list|(
-literal|1
-argument_list|,
-literal|"%s"
+name|STDERR_FILENO
 argument_list|,
 name|msg
+argument_list|)
+expr_stmt|;
+name|_exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -15850,7 +15859,7 @@ name|needed
 operator|!=
 name|NULL
 condition|)
-name|printf
+name|rtld_printf
 argument_list|(
 literal|"%s:\n"
 argument_list|,
@@ -15974,7 +15983,7 @@ name|c
 condition|)
 block|{
 default|default:
-name|putchar
+name|rtld_putchar
 argument_list|(
 name|c
 argument_list|)
@@ -15998,7 +16007,7 @@ continue|continue;
 case|case
 literal|'n'
 case|:
-name|putchar
+name|rtld_putchar
 argument_list|(
 literal|'\n'
 argument_list|)
@@ -16007,7 +16016,7 @@ break|break;
 case|case
 literal|'t'
 case|:
-name|putchar
+name|rtld_putchar
 argument_list|(
 literal|'\t'
 argument_list|)
@@ -16034,7 +16043,7 @@ case|case
 literal|'%'
 case|:
 default|default:
-name|putchar
+name|rtld_putchar
 argument_list|(
 name|c
 argument_list|)
@@ -16043,10 +16052,8 @@ break|break;
 case|case
 literal|'A'
 case|:
-name|printf
+name|rtld_putstr
 argument_list|(
-literal|"%s"
-argument_list|,
 name|main_local
 argument_list|)
 expr_stmt|;
@@ -16054,10 +16061,8 @@ break|break;
 case|case
 literal|'a'
 case|:
-name|printf
+name|rtld_putstr
 argument_list|(
-literal|"%s"
-argument_list|,
 name|obj_main
 operator|->
 name|path
@@ -16067,10 +16072,8 @@ break|break;
 case|case
 literal|'o'
 case|:
-name|printf
+name|rtld_putstr
 argument_list|(
-literal|"%s"
-argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
@@ -16078,16 +16081,14 @@ break|break;
 if|#
 directive|if
 literal|0
-block|case 'm': 			printf("%d", sodp->sod_major); 			break; 		    case 'n': 			printf("%d", sodp->sod_minor); 			break;
+block|case 'm': 			rtld_printf("%d", sodp->sod_major); 			break; 		    case 'n': 			rtld_printf("%d", sodp->sod_minor); 			break;
 endif|#
 directive|endif
 case|case
 literal|'p'
 case|:
-name|printf
+name|rtld_putstr
 argument_list|(
-literal|"%s"
-argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
@@ -16095,7 +16096,7 @@ break|break;
 case|case
 literal|'x'
 case|:
-name|printf
+name|rtld_printf
 argument_list|(
 literal|"%p"
 argument_list|,

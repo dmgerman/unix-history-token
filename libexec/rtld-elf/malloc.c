@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<paths.h>
 end_include
 
@@ -115,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mman.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"rtld_printf.h"
 end_include
 
 begin_ifndef
@@ -492,26 +492,12 @@ begin_comment
 comment|/* Debugging stuff */
 end_comment
 
-begin_function_decl
-specifier|static
-name|void
-name|xprintf
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
 name|TRACE
 parameter_list|()
-value|xprintf("TRACE %s:%d\n", __FILE__, __LINE__)
+value|rtld_printf("TRACE %s:%d\n", __FILE__, __LINE__)
 end_define
 
 begin_decl_stmt
@@ -2152,8 +2138,10 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|warn
+name|rtld_fdprintf
 argument_list|(
+name|STDERR_FILENO
+argument_list|,
 literal|"morepages: munmap %p"
 argument_list|,
 name|addr
@@ -2215,9 +2203,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|xprintf
+name|rtld_printf
 argument_list|(
-literal|"Cannot map anonymous memory"
+literal|"Cannot map anonymous memory\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2249,71 +2237,6 @@ directive|endif
 return|return
 name|n
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Non-mallocing printf, for use by malloc itself.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|xprintf
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-block|{
-name|char
-name|buf
-index|[
-literal|256
-index|]
-decl_stmt|;
-name|va_list
-name|ap
-decl_stmt|;
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
-name|vsprintf
-argument_list|(
-name|buf
-argument_list|,
-name|fmt
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|write
-argument_list|(
-name|STDOUT_FILENO
-argument_list|,
-name|buf
-argument_list|,
-name|strlen
-argument_list|(
-name|buf
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

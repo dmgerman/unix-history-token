@@ -617,16 +617,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|print_ebp
-parameter_list|(
-name|str
-parameter_list|)
-value|do {register long ebp asm("ebp"); printf("%s 0x%0lx\n", str, ebp);} while (0)
-end_define
-
 begin_function
 name|void
 name|rlock_acquire
