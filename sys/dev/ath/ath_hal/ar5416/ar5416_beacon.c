@@ -767,7 +767,7 @@ name|OS_REG_WRITE
 argument_list|(
 name|ah
 argument_list|,
-name|AR_SLEEP1
+name|AR5416_SLEEP1
 argument_list|,
 name|SM
 argument_list|(
@@ -780,15 +780,16 @@ argument_list|,
 name|AR5416_SLEEP1_CAB_TIMEOUT
 argument_list|)
 operator||
-name|AR_SLEEP1_ASSUME_DTIM
+name|AR5416_SLEEP1_ASSUME_DTIM
 argument_list|)
 expr_stmt|;
+comment|/* XXX autosleep? Use min beacon timeout; check ath9k -adrian */
 comment|/* beacon timeout is now in 1/8 TU */
 name|OS_REG_WRITE
 argument_list|(
 name|ah
 argument_list|,
-name|AR_SLEEP2
+name|AR5416_SLEEP2
 argument_list|,
 name|SM
 argument_list|(
@@ -802,13 +803,17 @@ name|AR5416_SLEEP2_BEACON_TIMEOUT
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* TIM_PERIOD and DTIM_PERIOD are now in uS. */
 name|OS_REG_WRITE
 argument_list|(
 name|ah
 argument_list|,
 name|AR_TIM_PERIOD
 argument_list|,
+name|TU_TO_USEC
+argument_list|(
 name|beaconintval
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|OS_REG_WRITE
@@ -817,7 +822,10 @@ name|ah
 argument_list|,
 name|AR_DTIM_PERIOD
 argument_list|,
+name|TU_TO_USEC
+argument_list|(
 name|dtimperiod
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|OS_REG_SET_BIT
