@@ -31664,7 +31664,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|ffs_pages_remove
+name|vn_pages_remove
 argument_list|(
 name|vp
 argument_list|,
@@ -31760,7 +31760,7 @@ name|end
 operator|=
 name|extend
 expr_stmt|;
-name|ffs_pages_remove
+name|vn_pages_remove
 argument_list|(
 name|vp
 argument_list|,
