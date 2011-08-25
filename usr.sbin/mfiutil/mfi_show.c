@@ -1756,12 +1756,12 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|p
 operator|+=
