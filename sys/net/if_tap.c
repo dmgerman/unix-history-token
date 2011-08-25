@@ -1091,6 +1091,14 @@ name|if_xname
 operator|)
 argument_list|)
 expr_stmt|;
+name|seldrain
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|tap_rsel
+argument_list|)
+expr_stmt|;
 name|knlist_destroy
 argument_list|(
 operator|&

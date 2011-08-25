@@ -1349,6 +1349,14 @@ argument_list|,
 name|entries
 argument_list|)
 expr_stmt|;
+name|seldrain
+argument_list|(
+operator|&
+name|clone
+operator|->
+name|sel_read
+argument_list|)
+expr_stmt|;
 name|knlist_destroy
 argument_list|(
 operator|&

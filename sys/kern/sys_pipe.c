@@ -6570,6 +6570,14 @@ name|pipe_present
 operator|=
 name|PIPE_FINALIZED
 expr_stmt|;
+name|seldrain
+argument_list|(
+operator|&
+name|cpipe
+operator|->
+name|pipe_sel
+argument_list|)
+expr_stmt|;
 name|knlist_destroy
 argument_list|(
 operator|&

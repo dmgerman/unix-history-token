@@ -7302,6 +7302,28 @@ name|sfp
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Drain the waiters tied to all the selfd belonging the specified selinfo. */
+name|void
+name|seldrain
+parameter_list|(
+name|sip
+parameter_list|)
+name|struct
+name|selinfo
+modifier|*
+name|sip
+decl_stmt|;
+block|{
+comment|/* 	 * This feature is already provided by doselwakeup(), thus it is 	 * enough to go for it. 	 * Eventually, the context, should take care to avoid races 	 * between thread calling select()/poll() and file descriptor 	 * detaching, but, again, the races are just the same as 	 * selwakeup(). 	 */
+name|doselwakeup
+argument_list|(
+name|sip
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*  * Record a select request.  */
 name|void
 name|selrecord
