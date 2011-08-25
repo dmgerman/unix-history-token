@@ -952,7 +952,9 @@ argument_list|,
 name|tcp_autorcvbuf_max
 argument_list|)
 operator|=
-literal|256
+literal|2
+operator|*
+literal|1024
 operator|*
 literal|1024
 expr_stmt|;
