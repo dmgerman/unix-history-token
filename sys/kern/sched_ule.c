@@ -8685,7 +8685,7 @@ argument_list|)
 argument_list|,
 literal|"proc exit"
 argument_list|,
-literal|"prio:td"
+literal|"prio:%d"
 argument_list|,
 name|child
 operator|->
@@ -8748,7 +8748,7 @@ argument_list|)
 argument_list|,
 literal|"thread exit"
 argument_list|,
-literal|"prio:td"
+literal|"prio:%d"
 argument_list|,
 name|child
 operator|->
