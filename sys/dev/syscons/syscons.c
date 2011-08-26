@@ -18957,12 +18957,8 @@ if|if
 condition|(
 name|enable_kdbkey
 condition|)
-name|kdb_enter
-argument_list|(
-name|KDB_WHY_BREAK
-argument_list|,
-literal|"manual escape to debugger"
-argument_list|)
+name|kdb_break
+argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
