@@ -2634,6 +2634,13 @@ expr_stmt|;
 comment|/* we do not support forward yet	*/
 name|args
 operator|.
+name|next_hop6
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* we do not support forward yet	*/
+name|args
+operator|.
 name|eh
 operator|=
 operator|&

@@ -13593,6 +13593,12 @@ name|NULL
 expr_stmt|;
 name|args
 operator|.
+name|next_hop6
+operator|=
+name|NULL
+expr_stmt|;
+name|args
+operator|.
 name|eh
 operator|=
 operator|&
