@@ -17,23 +17,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|KLD_MODULE
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|"opt_comconsole.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
