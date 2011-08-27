@@ -907,6 +907,16 @@ parameter_list|,
 name|i
 parameter_list|)
 value|{ USB_VPI(USB_VENDOR_##v, USB_PRODUCT_##v##_##p, i) }
+comment|/* Option GlobeTrotter MAX 7.2 with upgraded firmware */
+name|UHSO_DEV
+argument_list|(
+name|OPTION
+argument_list|,
+name|GTMAX72
+argument_list|,
+name|UHSO_STATIC_IFACE
+argument_list|)
+block|,
 comment|/* Option GlobeSurfer iCON 7.2 */
 name|UHSO_DEV
 argument_list|(
