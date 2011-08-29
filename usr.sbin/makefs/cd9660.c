@@ -6581,6 +6581,10 @@ operator|*
 name|oldname
 operator|!=
 literal|'\0'
+operator|&&
+name|extlen
+operator|<
+literal|3
 condition|)
 block|{
 comment|/* Handle period first, as it is special */
@@ -6646,28 +6650,14 @@ break|break;
 comment|/* Enforce 12.3 / 8 */
 if|if
 condition|(
-operator|(
-operator|(
 name|namelen
 operator|==
 literal|8
-operator|)
 operator|&&
 operator|!
 name|found_ext
-operator|)
-operator|||
-operator|(
-name|found_ext
-operator|&&
-name|extlen
-operator|==
-literal|3
-operator|)
 condition|)
-block|{
 break|break;
-block|}
 if|if
 condition|(
 name|islower
@@ -6833,6 +6823,12 @@ operator|*
 name|oldname
 operator|!=
 literal|'\0'
+operator|&&
+name|namelen
+operator|+
+name|extlen
+operator|<
+literal|30
 condition|)
 block|{
 comment|/* Handle period first, as it is special */
@@ -6910,17 +6906,6 @@ name|oldname
 argument_list|)
 operator|==
 literal|4
-condition|)
-break|break;
-if|if
-condition|(
-operator|(
-name|namelen
-operator|+
-name|extlen
-operator|)
-operator|==
-literal|30
 condition|)
 break|break;
 if|if
