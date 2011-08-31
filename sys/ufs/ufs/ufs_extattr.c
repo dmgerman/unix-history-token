@@ -4222,15 +4222,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|ufs_extattr_uepm_lock
-argument_list|(
-name|ump
-argument_list|,
-name|ap
-operator|->
-name|a_td
-argument_list|)
-expr_stmt|;
 comment|/* 	 * XXX: No longer a supported way to delete extended attributes. 	 */
 if|if
 condition|(
@@ -4245,6 +4236,15 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|ufs_extattr_uepm_lock
+argument_list|(
+name|ump
+argument_list|,
+name|ap
+operator|->
+name|a_td
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|ufs_extattr_set
