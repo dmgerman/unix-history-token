@@ -980,11 +980,15 @@ argument_list|(
 name|cc
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Avoid interrupts and preemption firing after the callout cpu 	 * is blocked in order to avoid deadlocks as the new thread 	 * may be willing to acquire the callout cpu lock. 	 */
 name|c
 operator|->
 name|c_cpu
 operator|=
 name|CPUBLOCK
+expr_stmt|;
+name|spinlock_enter
+argument_list|()
 expr_stmt|;
 name|CC_UNLOCK
 argument_list|(
@@ -1002,6 +1006,9 @@ name|CC_LOCK
 argument_list|(
 name|new_cc
 argument_list|)
+expr_stmt|;
+name|spinlock_exit
+argument_list|()
 expr_stmt|;
 name|c
 operator|->
