@@ -866,6 +866,16 @@ literal|0
 block|}
 block|,
 block|{
+literal|0x06121b21
+block|,
+literal|0x00
+block|,
+literal|"ASMedia ASM1061"
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|0x26528086
 block|,
 literal|0x00
