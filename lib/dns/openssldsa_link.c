@@ -4,7 +4,7 @@ comment|/*  * Portions Copyright (C) 2004-2009, 2011  Internet Systems Consortiu
 end_comment
 
 begin_comment
-comment|/* $Id: openssldsa_link.c,v 1.20 2011-01-11 23:47:13 tbox Exp $ */
+comment|/* $Id: openssldsa_link.c,v 1.20.10.1 2011-03-11 06:47:04 marka Exp $ */
 end_comment
 
 begin_ifdef
@@ -1145,10 +1145,6 @@ name|ISC_SHA1_DIGESTLENGTH
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-name|cp
-operator|+=
-name|ISC_SHA1_DIGESTLENGTH
 expr_stmt|;
 if|#
 directive|if

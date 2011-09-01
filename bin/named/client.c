@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: client.c,v 1.271 2011-01-11 23:47:12 tbox Exp $ */
+comment|/* $Id: client.c,v 1.271.10.2 2011-07-28 04:30:54 marka Exp $ */
 end_comment
 
 begin_include
@@ -2515,6 +2515,12 @@ name|opt
 argument_list|)
 expr_stmt|;
 block|}
+name|client
+operator|->
+name|signer
+operator|=
+name|NULL
+expr_stmt|;
 name|client
 operator|->
 name|udpsize
@@ -5436,6 +5442,20 @@ argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
+comment|/* 	 * ns_g_server->interfacemgr is task exclusive locked. 	 */
+if|if
+condition|(
+name|ns_g_server
+operator|->
+name|interfacemgr
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ISC_TRUE
+operator|)
+return|;
 if|if
 condition|(
 operator|!
@@ -8922,6 +8942,12 @@ expr_stmt|;
 name|client
 operator|->
 name|shutdown_arg
+operator|=
+name|NULL
+expr_stmt|;
+name|client
+operator|->
+name|signer
 operator|=
 name|NULL
 expr_stmt|;

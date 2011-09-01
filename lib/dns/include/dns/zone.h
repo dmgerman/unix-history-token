@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: zone.h,v 1.182 2010-12-18 01:56:22 each Exp $ */
+comment|/* $Id: zone.h,v 1.182.16.2 2011-07-08 23:47:16 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -2707,7 +2707,25 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Create a zone manager.  *  * Requires:  *\li	'mctx' to be a valid memory context.  *\li	'taskmgr' to be a valid task manager.  *\li	'timermgr' to be a valid timer manager.  *\li	'zmgrp'	to point to a NULL pointer.  */
+comment|/*%<  * Create a zone manager.  Note: the zone manager will not be able to  * manage any zones until dns_zonemgr_setsize() has been run.  *  * Requires:  *\li	'mctx' to be a valid memory context.  *\li	'taskmgr' to be a valid task manager.  *\li	'timermgr' to be a valid timer manager.  *\li	'zmgrp'	to point to a NULL pointer.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_zonemgr_setsize
+parameter_list|(
+name|dns_zonemgr_t
+modifier|*
+name|zmgr
+parameter_list|,
+name|int
+name|num_zones
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  *	Set the size of the zone manager task pool.  This must be run  *	before zmgr can be used for managing zones.  Currently, it can only  *	be run once; the task pool cannot be resized.  *  * Requires:  *\li	zmgr is a valid zone manager.  *\li	zmgr->zonetasks has been initialized.  */
 end_comment
 
 begin_function_decl

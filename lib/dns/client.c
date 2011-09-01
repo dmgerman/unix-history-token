@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2009, 2010  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2009-2011  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: client.c,v 1.12 2010-12-03 12:03:22 marka Exp $ */
+comment|/* $Id: client.c,v 1.12.24.2 2011-03-12 04:59:16 tbox Exp $ */
 end_comment
 
 begin_include
@@ -3137,9 +3137,11 @@ modifier|*
 name|mctx
 decl_stmt|;
 name|isc_result_t
-name|result
-decl_stmt|,
 name|tresult
+decl_stmt|,
+name|result
+init|=
+name|ISC_R_SUCCESS
 decl_stmt|;
 name|isc_result_t
 name|vresult
@@ -3214,10 +3216,6 @@ operator|->
 name|view
 operator|->
 name|mctx
-expr_stmt|;
-name|result
-operator|=
-name|ISC_R_SUCCESS
 expr_stmt|;
 name|name
 operator|=
@@ -3430,6 +3428,13 @@ block|}
 block|}
 else|else
 block|{
+name|INSIST
+argument_list|(
+name|event
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|event
@@ -4285,6 +4290,11 @@ name|result
 operator|=
 name|tresult
 expr_stmt|;
+name|POST
+argument_list|(
+name|result
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 block|}
@@ -4302,6 +4312,11 @@ operator|=
 name|DNS_R_SERVFAIL
 expr_stmt|;
 comment|/* better code? */
+name|POST
+argument_list|(
+name|result
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -10101,6 +10116,11 @@ name|reqev
 operator|->
 name|result
 expr_stmt|;
+name|POST
+argument_list|(
+name|result
+argument_list|)
+expr_stmt|;
 name|uctx
 operator|=
 name|reqev
@@ -10310,6 +10330,11 @@ block|}
 name|section
 operator|=
 name|DNS_SECTION_ANSWER
+expr_stmt|;
+name|POST
+argument_list|(
+name|section
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

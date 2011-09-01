@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007-2009, 2011  Internet Systems Consor
 end_comment
 
 begin_comment
-comment|/* $Id: timer.c,v 1.95.302.1.2.1 2011-06-02 23:47:36 tbox Exp $ */
+comment|/* $Id: timer.c,v 1.95.302.3 2011-03-11 06:47:08 marka Exp $ */
 end_comment
 
 begin_comment
@@ -1340,11 +1340,16 @@ modifier|*
 name|timer
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|USE_TIMER_THREAD
 name|isc_boolean_t
 name|need_wakeup
 init|=
 name|ISC_FALSE
 decl_stmt|;
+endif|#
+directive|endif
 name|isc__timermgr_t
 modifier|*
 name|manager
@@ -1365,6 +1370,9 @@ operator|>
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|USE_TIMER_THREAD
 if|if
 condition|(
 name|timer
@@ -1377,6 +1385,8 @@ name|need_wakeup
 operator|=
 name|ISC_TRUE
 expr_stmt|;
+endif|#
+directive|endif
 name|isc_heap_delete
 argument_list|(
 name|manager
@@ -2273,12 +2283,6 @@ name|now
 argument_list|)
 expr_stmt|;
 block|}
-name|manager
-operator|=
-name|timer
-operator|->
-name|manager
-expr_stmt|;
 name|LOCK
 argument_list|(
 operator|&

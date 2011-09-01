@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: update.c,v 1.186.16.1.2.1 2011-06-02 23:47:28 tbox Exp $ */
+comment|/* $Id: update.c,v 1.186.16.5 2011-03-25 23:53:52 each Exp $ */
 end_comment
 
 begin_include
@@ -6501,6 +6501,8 @@ name|NULL
 decl_stmt|;
 name|isc_boolean_t
 name|has_nsec
+init|=
+name|ISC_FALSE
 decl_stmt|;
 name|unsigned
 name|int
@@ -9863,7 +9865,8 @@ name|name
 argument_list|,
 name|cut
 argument_list|,
-name|diff
+operator|&
+name|sig_diff
 argument_list|,
 name|zone_keys
 argument_list|,
@@ -10641,7 +10644,8 @@ name|name
 argument_list|,
 name|cut
 argument_list|,
-name|diff
+operator|&
+name|sig_diff
 argument_list|,
 name|zone_keys
 argument_list|,
@@ -16430,10 +16434,6 @@ literal|"prerequisites are OK"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check Requestor's Permissions.  It seems a bit silly to do this 	 * only after prerequisite testing, but that is what RFC2136 says. 	 */
-name|result
-operator|=
-name|ISC_R_SUCCESS
-expr_stmt|;
 if|if
 condition|(
 name|ssutable

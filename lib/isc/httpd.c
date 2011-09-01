@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2006-2008, 2010  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2006-2008, 2010, 2011  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: httpd.c,v 1.20 2010-11-16 05:38:31 marka Exp $ */
+comment|/* $Id: httpd.c,v 1.20.40.3 2011-03-11 06:47:07 marka Exp $ */
 end_comment
 
 begin_comment
@@ -1210,6 +1210,9 @@ operator|->
 name|mctx
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|isc_mutex_destroy
 argument_list|(
 operator|&
@@ -1418,6 +1421,9 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|isc_mutex_destroy
 argument_list|(
 operator|&
@@ -2491,6 +2497,12 @@ argument_list|,
 name|httpd
 argument_list|)
 expr_stmt|;
+comment|/* FIXME!!! */
+name|POST
+argument_list|(
+name|result
+argument_list|)
+expr_stmt|;
 name|NOTICE
 argument_list|(
 literal|"accept queued recv on socket"
@@ -2969,8 +2981,10 @@ name|recvlen
 operator|-
 literal|1
 expr_stmt|;
-name|result
-operator|=
+comment|/* check return code? */
+operator|(
+name|void
+operator|)
 name|isc_socket_recv
 argument_list|(
 name|httpd
@@ -3249,6 +3263,13 @@ operator|->
 name|freecb_arg
 argument_list|)
 expr_stmt|;
+name|RUNTIME_CHECK
+argument_list|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
+argument_list|)
+expr_stmt|;
 block|}
 name|isc_httpd_response
 argument_list|(
@@ -3382,8 +3403,10 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
-name|result
-operator|=
+comment|/* check return code? */
+operator|(
+name|void
+operator|)
 name|isc_socket_sendv
 argument_list|(
 name|httpd
@@ -3691,7 +3714,7 @@ operator|+
 literal|2
 expr_stmt|;
 comment|/* return msg + CRLF */
-if|if
+while|while
 condition|(
 name|isc_buffer_availablelength
 argument_list|(
@@ -3821,7 +3844,7 @@ operator|+=
 literal|2
 expr_stmt|;
 comment|/* CRLF */
-if|if
+while|while
 condition|(
 name|isc_buffer_availablelength
 argument_list|(
@@ -3922,7 +3945,7 @@ block|{
 name|isc_result_t
 name|result
 decl_stmt|;
-if|if
+while|while
 condition|(
 name|isc_buffer_availablelength
 argument_list|(
@@ -4047,7 +4070,7 @@ operator|+=
 literal|2
 expr_stmt|;
 comment|/* CRLF */
-if|if
+while|while
 condition|(
 name|isc_buffer_availablelength
 argument_list|(
@@ -4138,9 +4161,6 @@ name|ev_arg
 decl_stmt|;
 name|isc_region_t
 name|r
-decl_stmt|;
-name|isc_result_t
-name|result
 decl_stmt|;
 name|isc_socketevent_t
 modifier|*
@@ -4348,8 +4368,10 @@ name|HTTP_RECVLEN
 operator|-
 literal|1
 expr_stmt|;
-name|result
-operator|=
+comment|/* check return code? */
+operator|(
+name|void
+operator|)
 name|isc_socket_recv
 argument_list|(
 name|httpd

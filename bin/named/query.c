@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: query.c,v 1.353.8.2.2.5 2011-06-09 03:17:10 marka Exp $ */
+comment|/* $Id: query.c,v 1.353.8.11 2011-06-09 03:14:03 marka Exp $ */
 end_comment
 
 begin_comment
@@ -65,22 +65,11 @@ directive|include
 file|<dns/db.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DLZ
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<dns/dlz.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -4601,9 +4590,6 @@ block|{
 name|isc_result_t
 name|result
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DLZ
 name|isc_result_t
 name|tresult
 decl_stmt|;
@@ -4792,29 +4778,6 @@ name|tresult
 expr_stmt|;
 block|}
 block|}
-else|#
-directive|else
-name|result
-operator|=
-name|query_getzonedb
-argument_list|(
-name|client
-argument_list|,
-name|name
-argument_list|,
-name|qtype
-argument_list|,
-name|options
-argument_list|,
-name|zonep
-argument_list|,
-name|dbp
-argument_list|,
-name|versionp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* If successful, Transfer ownership of zone. */
 if|if
 condition|(
@@ -4823,16 +4786,11 @@ operator|==
 name|ISC_R_SUCCESS
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DLZ
 operator|*
 name|zonep
 operator|=
 name|zone
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 		 * If neither attempt above succeeded, return the cache instead 		 */
 operator|*
 name|is_zonep
@@ -6965,6 +6923,11 @@ expr_stmt|;
 name|needadditionalcache
 operator|=
 name|ISC_FALSE
+expr_stmt|;
+name|POST
+argument_list|(
+name|needadditionalcache
+argument_list|)
 expr_stmt|;
 name|additionaltype
 operator|=
@@ -19586,10 +19549,6 @@ operator|=
 name|DNS_RPZ_POLICY_MISS
 expr_stmt|;
 comment|/* 		 * Check rules for the name if this it the first time, 		 * i.e. we've not been recursing. 		 */
-name|result
-operator|=
-name|DNS_R_SERVFAIL
-expr_stmt|;
 name|st
 operator|->
 name|state
@@ -19625,6 +19584,15 @@ operator|&
 name|rdataset
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+goto|goto
+name|cleanup
+goto|;
 if|if
 condition|(
 name|st
@@ -23118,6 +23086,10 @@ condition|(
 name|i
 operator|==
 name|count
+operator|&&
+name|aaaaok
+operator|!=
+name|NULL
 condition|)
 name|isc_mem_put
 argument_list|(
@@ -23141,6 +23113,12 @@ name|ISC_TRUE
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|aaaaok
+operator|!=
+name|NULL
+condition|)
 name|isc_mem_put
 argument_list|(
 name|client
@@ -24371,10 +24349,6 @@ expr_stmt|;
 if|if
 condition|(
 name|is_zone
-operator|&&
-name|zone
-operator|!=
-name|NULL
 condition|)
 block|{
 name|authoritative
@@ -24383,6 +24357,10 @@ name|ISC_TRUE
 expr_stmt|;
 if|if
 condition|(
+name|zone
+operator|!=
+name|NULL
+operator|&&
 name|dns_zone_gettype
 argument_list|(
 name|zone
@@ -24415,9 +24393,6 @@ condition|(
 name|is_zone
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DLZ
 if|if
 condition|(
 name|zone
@@ -24426,8 +24401,6 @@ name|NULL
 condition|)
 block|{
 comment|/* 				 * if is_zone = true, zone = NULL then this is 				 * a DLZ zone.  Don't attempt to attach zone. 				 */
-endif|#
-directive|endif
 name|dns_zone_attach
 argument_list|(
 name|zone
@@ -24440,12 +24413,7 @@ operator|.
 name|authzone
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DLZ
 block|}
-endif|#
-directive|endif
 name|dns_db_attach
 argument_list|(
 name|db
@@ -24837,10 +24805,6 @@ operator|.
 name|attributes
 operator||=
 name|NS_QUERYATTR_RECURSING
-expr_stmt|;
-name|result
-operator|=
-name|ISC_R_SUCCESS
 expr_stmt|;
 goto|goto
 name|cleanup
@@ -26581,10 +26545,6 @@ goto|goto
 name|db_find
 goto|;
 block|}
-name|result
-operator|=
-name|DNS_R_NXRRSET
-expr_stmt|;
 comment|/* 		 * Look for a NSEC3 record if we don't have a NSEC record. 		 */
 if|if
 condition|(
@@ -27016,15 +26976,10 @@ name|qtype
 operator|==
 name|dns_rdatatype_soa
 operator|&&
-ifdef|#
-directive|ifdef
-name|DLZ
 name|zone
 operator|!=
 name|NULL
 operator|&&
-endif|#
-directive|endif
 name|dns_zone_getzeronosoattl
 argument_list|(
 name|zone
@@ -28258,21 +28213,13 @@ operator|&
 name|tname
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|result
-operator|!=
-name|ISC_R_SUCCESS
-condition|)
-block|{
+comment|/* 		 * RFC2672, section 4.1, subsection 3c says 		 * we should return YXDOMAIN if the constructed 		 * name would be too long. 		 */
 if|if
 condition|(
 name|result
 operator|==
-name|ISC_R_NOSPACE
+name|DNS_R_NAMETOOLONG
 condition|)
-block|{
-comment|/* 				 * RFC2672, section 4.1, subsection 3c says 				 * we should return YXDOMAIN if the constructed 				 * name would be too long. 				 */
 name|client
 operator|->
 name|message
@@ -28281,11 +28228,15 @@ name|rcode
 operator|=
 name|dns_rcode_yxdomain
 expr_stmt|;
-block|}
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
 goto|goto
 name|cleanup
 goto|;
-block|}
 name|query_keepname
 argument_list|(
 name|client
@@ -29885,8 +29836,9 @@ goto|goto
 name|cleanup
 goto|;
 comment|/* 					 * Add a fake SOA record. 					 */
-name|result
-operator|=
+operator|(
+name|void
+operator|)
 name|query_addsoa
 argument_list|(
 name|client

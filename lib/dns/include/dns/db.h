@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009, 2011  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: db.h,v 1.104 2011-01-13 04:59:25 tbox Exp $ */
+comment|/* $Id: db.h,v 1.104.8.1 2011-05-19 04:42:51 each Exp $ */
 end_comment
 
 begin_ifndef
@@ -2335,7 +2335,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Sets the re-signing time associated with 'rdataset' to 'resign'.  *  * Requires:  * \li	'db' is a valid zone database.  * \li	'rdataset' to be associated with 'db'.  *  * Returns:  * \li	#ISC_R_SUCCESS  * \li	#ISC_R_NOMEMORY  * \li	#ISC_R_NOTIMPLEMENTED - Not supported by this DB implementation.  */
+comment|/*%<  * Sets the re-signing time associated with 'rdataset' to 'resign'.  *  * Requires:  * \li	'db' is a valid zone database.  * \li	'rdataset' is or is to be associated with 'db'.  * \li  'rdataset' is not pending removed from the heap via an  *       uncommitted call to dns_db_resigned().  *  * Returns:  * \li	#ISC_R_SUCCESS  * \li	#ISC_R_NOMEMORY  * \li	#ISC_R_NOTIMPLEMENTED - Not supported by this DB implementation.  */
 end_comment
 
 begin_function_decl
@@ -2381,7 +2381,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Mark 'rdataset' as not being available to be returned by  * dns_db_getsigningtime().  If the changes associated with 'version'  * are committed this will be permanent.  If the version is not committed  * this change will be rolled back when the version is closed.  *  * Requires:  * \li	'db' is a valid zone database.  * \li	'rdataset' to be associated with 'db'.  * \li	'version' to be open for writing.  */
+comment|/*%<  * Mark 'rdataset' as not being available to be returned by  * dns_db_getsigningtime().  If the changes associated with 'version'  * are committed this will be permanent.  If the version is not committed  * this change will be rolled back when the version is closed.  Until  * 'version' is either committed or rolled back, 'rdataset' can no longer  * be acted upon by dns_db_setsigningtime().  *  * Requires:  * \li	'db' is a valid zone database.  * \li	'rdataset' to be associated with 'db'.  * \li	'version' to be open for writing.  */
 end_comment
 
 begin_function_decl

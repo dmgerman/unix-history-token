@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/*  * $Id: tkey.c,v 1.100 2011-01-08 23:47:01 tbox Exp $  */
+comment|/*  * $Id: tkey.c,v 1.100.12.1 2011-03-11 06:47:05 marka Exp $  */
 end_comment
 
 begin_comment
@@ -284,7 +284,24 @@ operator|&
 name|outbuf
 argument_list|)
 expr_stmt|;
-comment|/* XXXMLG ignore result */
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Warning: dns_message_totext returned: %s\n"
+argument_list|,
+name|dns_result_totext
+argument_list|(
+name|result
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -934,6 +951,14 @@ argument_list|,
 name|link
 argument_list|)
 condition|)
+block|{
+name|INSIST
+argument_list|(
+name|newlist
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|ISC_LIST_UNLINK
 argument_list|(
 name|newlist
@@ -945,6 +970,7 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
+block|}
 name|dns_message_puttemprdata
 argument_list|(
 name|msg
@@ -2718,7 +2744,7 @@ name|tkeyout
 operator|->
 name|expire
 operator|=
-name|tkeyout
+name|tsigkey
 operator|->
 name|expire
 expr_stmt|;

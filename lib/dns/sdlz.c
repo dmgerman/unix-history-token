@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 2002 Stichting NLnet, Netherlands, stichting@nlnet.n
 end_comment
 
 begin_comment
-comment|/* $Id: sdlz.c,v 1.31 2011-01-13 06:29:16 marka Exp $ */
+comment|/* $Id: sdlz.c,v 1.31.8.2 2011-03-21 19:53:34 each Exp $ */
 end_comment
 
 begin_comment
@@ -1246,6 +1246,9 @@ name|impmagic
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|isc_mutex_destroy
 argument_list|(
 operator|&
@@ -7822,6 +7825,8 @@ decl_stmt|;
 name|isc_buffer_t
 modifier|*
 name|tkey_token
+init|=
+name|NULL
 decl_stmt|;
 name|isc_region_t
 name|token_region
@@ -7868,6 +7873,8 @@ comment|/* 	 * Format the request elements. sdlz operates on strings, not 	 * st
 if|if
 condition|(
 name|signer
+operator|!=
+name|NULL
 condition|)
 name|dns_name_format
 argument_list|(
@@ -7904,6 +7911,8 @@ expr_stmt|;
 if|if
 condition|(
 name|tcpaddr
+operator|!=
+name|NULL
 condition|)
 name|isc_netaddr_format
 argument_list|(
@@ -7940,7 +7949,10 @@ expr_stmt|;
 if|if
 condition|(
 name|key
+operator|!=
+name|NULL
 condition|)
+block|{
 name|dst_key_format
 argument_list|(
 name|key
@@ -7953,6 +7965,14 @@ name|b_key
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|tkey_token
+operator|=
+name|dst_key_tkeytoken
+argument_list|(
+name|key
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 name|b_key
 index|[
@@ -7961,16 +7981,11 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|tkey_token
-operator|=
-name|dst_key_tkeytoken
-argument_list|(
-name|key
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|tkey_token
+operator|!=
+name|NULL
 condition|)
 block|{
 name|isc_buffer_region
@@ -8014,6 +8029,8 @@ argument_list|,
 name|token_len
 argument_list|,
 name|token_len
+operator|!=
+literal|0
 condition|?
 name|token_region
 operator|.
