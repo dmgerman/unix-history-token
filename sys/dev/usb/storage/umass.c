@@ -4589,14 +4589,6 @@ name|opcode
 operator|=
 name|TEST_UNIT_READY
 expr_stmt|;
-comment|/* 	 * some devices need a delay after that the configuration value is 	 * set to function properly: 	 */
-name|usb_pause_mtx
-argument_list|(
-name|NULL
-argument_list|,
-name|hz
-argument_list|)
-expr_stmt|;
 comment|/* register the SIM */
 name|err
 operator|=
