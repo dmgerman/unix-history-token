@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2006 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2006, 2011 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  * Support for shared swap-backed anonymous memory objects via  * shm_open(2) and shm_unlink(2).  While most of the implementation is  * here, vm_mmap.c contains mapping logic changes.  *  * TODO:  *  * (2) Need to export data to a userland tool via a sysctl.  Should ipcs(1)  *     and ipcrm(1) be expanded or should new tools to manage both POSIX  *     kernel semaphores and POSIX shared memory be written?  *  * (3) Add support for this file type to fstat(1).  *  * (4) Resource limits?  Does this need its own resource limits or are the  *     existing limits in mmap(2) sufficient?  *  * (5) Partial page truncation.  vnode_pager_setsize() will zero any parts  *     of a partially mapped page as a result of ftruncate(2)/truncate(2).  *     We can do the same (with the same pmap evil), but do we need to  *     worry about the bits on disk if the page is swapped out or will the  *     swapper zero the parts of a page that are invalid if the page is  *     swapped back in for us?  *  * (6) Add MAC support in mac_biba(4) and mac_mls(4).  *  * (7) Add a MAC check_create() hook for creating new named objects.  */
+comment|/*  * Support for shared swap-backed anonymous memory objects via  * shm_open(2) and shm_unlink(2).  While most of the implementation is  * here, vm_mmap.c contains mapping logic changes.  *  * TODO:  *  * (1) Need to export data to a userland tool via a sysctl.  Should ipcs(1)  *     and ipcrm(1) be expanded or should new tools to manage both POSIX  *     kernel semaphores and POSIX shared memory be written?  *  * (2) Add support for this file type to fstat(1).  *  * (3) Resource limits?  Does this need its own resource limits or are the  *     existing limits in mmap(2) sufficient?  *  * (4) Partial page truncation.  vnode_pager_setsize() will zero any parts  *     of a partially mapped page as a result of ftruncate(2)/truncate(2).  *     We can do the same (with the same pmap evil), but do we need to  *     worry about the bits on disk if the page is swapped out or will the  *     swapper zero the parts of a page that are invalid if the page is  *     swapped back in for us?  */
 end_comment
 
 begin_include
@@ -2541,6 +2541,29 @@ operator|&
 name|O_CREAT
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|MAC
+name|error
+operator|=
+name|mac_posixshm_check_create
+argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
+endif|#
+directive|endif
 name|shmfd
 operator|=
 name|shm_alloc
@@ -2561,6 +2584,12 @@ argument_list|,
 name|shmfd
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+block|}
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -2625,6 +2654,15 @@ operator|->
 name|td_ucred
 argument_list|,
 name|shmfd
+argument_list|,
+name|FFLAGS
+argument_list|(
+name|uap
+operator|->
+name|flags
+operator|&
+name|O_ACCMODE
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
