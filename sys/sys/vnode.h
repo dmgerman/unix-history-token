@@ -3316,6 +3316,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|vn_pages_remove
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|vm_pindex_t
+name|start
+parameter_list|,
+name|vm_pindex_t
+name|end
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|vn_pollrecord
 parameter_list|(
