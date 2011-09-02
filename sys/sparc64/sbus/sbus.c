@@ -1294,11 +1294,6 @@ name|sc
 operator|->
 name|sc_rd
 operator|=
-operator|(
-expr|struct
-name|sbus_rd
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -1316,6 +1311,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
