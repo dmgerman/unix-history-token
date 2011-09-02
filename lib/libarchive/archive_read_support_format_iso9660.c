@@ -8894,7 +8894,7 @@ operator|->
 name|subdirs
 operator|++
 expr_stmt|;
-comment|/* To be appeared before other dirs. */
+comment|/* Overwrite an offset and a number of this "CL" entry 			 * to appear before other dirs. "+1" to those is to 			 * make sure to appear after "RE" entry which this 			 * "CL" entry should be connected with. */
 name|file
 operator|->
 name|offset
@@ -8906,6 +8906,8 @@ operator|=
 name|file
 operator|->
 name|cl_offset
+operator|+
+literal|1
 expr_stmt|;
 block|}
 block|}
@@ -12337,20 +12339,18 @@ operator|->
 name|re_descendant
 condition|)
 block|{
-comment|/* 				 * Do not expose this at this time 				 * because we have not gotten its full-path 				 * name yet. 				 */
+comment|/* 				 * If the top level "RE" entry of this entry 				 * is not exposed, we, accordingly, should not 				 * expose this entry at this time because 				 * we cannot make its proper full-path name. 				 */
 if|if
 condition|(
 name|rede_add_entry
 argument_list|(
 name|file
 argument_list|)
-operator|<
+operator|==
 literal|0
 condition|)
-goto|goto
-name|fatal_rr
-goto|;
 continue|continue;
+comment|/* Otherwise we can expose this entry because 				 * it seems its top level "RE" has already been 				 * exposed. */
 block|}
 block|}
 break|break;
