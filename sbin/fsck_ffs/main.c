@@ -2901,7 +2901,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-BEFprfny] [-b block] [-c level] [-m mode] "
+literal|"usage: %s [-BEFfnpry] [-b block] [-c level] [-m mode] "
 literal|"filesystem ...\n"
 argument_list|,
 name|getprogname
