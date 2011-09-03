@@ -364,6 +364,11 @@ name|errmsg
 operator|=
 literal|"line too long"
 expr_stmt|;
+name|free
+argument_list|(
+name|lp
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
@@ -412,6 +417,11 @@ expr_stmt|;
 name|errmsg
 operator|=
 literal|"cannot seek temp file"
+expr_stmt|;
+name|free
+argument_list|(
+name|lp
+argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -477,6 +487,11 @@ expr_stmt|;
 name|errmsg
 operator|=
 literal|"cannot write temp file"
+expr_stmt|;
+name|free
+argument_list|(
+name|lp
+argument_list|)
 expr_stmt|;
 return|return
 name|NULL
