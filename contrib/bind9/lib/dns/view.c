@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: view.c,v 1.178 2011-01-13 09:53:04 marka Exp $ */
+comment|/* $Id: view.c,v 1.178.8.1 2011-03-11 06:47:06 marka Exp $ */
 end_comment
 
 begin_comment
@@ -6135,8 +6135,6 @@ decl_stmt|,
 name|use_zone
 decl_stmt|,
 name|try_hints
-decl_stmt|,
-name|is_staticstub_zone
 decl_stmt|;
 name|dns_zone_t
 modifier|*
@@ -6178,10 +6176,6 @@ operator|=
 name|NULL
 expr_stmt|;
 name|use_zone
-operator|=
-name|ISC_FALSE
-expr_stmt|;
-name|is_staticstub_zone
 operator|=
 name|ISC_FALSE
 expr_stmt|;
@@ -6244,7 +6238,6 @@ name|result
 operator|==
 name|DNS_R_PARTIALMATCH
 condition|)
-block|{
 name|result
 operator|=
 name|dns_zone_getdb
@@ -6255,20 +6248,6 @@ operator|&
 name|db
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|dns_zone_gettype
-argument_list|(
-name|zone
-argument_list|)
-operator|==
-name|dns_zone_staticstub
-condition|)
-name|is_staticstub_zone
-operator|=
-name|ISC_TRUE
-expr_stmt|;
-block|}
 else|#
 directive|else
 name|result
@@ -7097,6 +7076,11 @@ expr_stmt|;
 name|result
 operator|=
 name|ISC_R_NOTFOUND
+expr_stmt|;
+name|POST
+argument_list|(
+name|result
+argument_list|)
 expr_stmt|;
 block|}
 if|if

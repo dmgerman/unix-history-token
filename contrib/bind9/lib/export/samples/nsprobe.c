@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2009, 2010  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2009-2011  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: nsprobe.c,v 1.7 2010-01-07 23:48:54 tbox Exp $ */
+comment|/* $Id: nsprobe.c,v 1.7.180.3 2011-04-05 06:35:00 marka Exp $ */
 end_comment
 
 begin_include
@@ -3775,6 +3775,11 @@ name|result
 operator|=
 name|ISC_R_NOMEMORY
 expr_stmt|;
+name|POST
+argument_list|(
+name|result
+argument_list|)
+expr_stmt|;
 goto|goto
 name|cleanup
 goto|;
@@ -4497,6 +4502,11 @@ expr_stmt|;
 name|result
 operator|=
 name|ISC_R_NOMEMORY
+expr_stmt|;
+name|POST
+argument_list|(
+name|result
+argument_list|)
 expr_stmt|;
 comment|/* 					 * XXX: should we continue with the 					 * available servers anyway? 					 */
 goto|goto
@@ -5306,8 +5316,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"assumption failure: addrlen is too long: %d\n"
+literal|"assumption failure: addrlen is too long: %ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|res
 operator|->
 name|ai_addrlen

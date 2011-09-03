@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009, 2011  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/*  * $Id: gssapi_link.c,v 1.16 2011-01-11 23:47:13 tbox Exp $  */
+comment|/*  * $Id: gssapi_link.c,v 1.16.10.1 2011-03-28 05:36:05 marka Exp $  */
 end_comment
 
 begin_include
@@ -656,7 +656,7 @@ name|gsig
 operator|.
 name|length
 operator|!=
-literal|0
+literal|0U
 condition|)
 name|gss_release_buffer
 argument_list|(
@@ -1142,7 +1142,7 @@ operator|%
 literal|4
 operator|)
 operator|!=
-literal|0
+literal|0U
 condition|)
 return|return
 operator|(
@@ -1373,7 +1373,7 @@ name|gssbuffer
 operator|.
 name|length
 operator|==
-literal|0
+literal|0U
 condition|)
 return|return
 operator|(
