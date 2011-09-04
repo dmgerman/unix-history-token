@@ -4109,7 +4109,7 @@ name|rule
 operator|->
 name|rr_amount
 operator|*=
-literal|1000
+literal|1000000
 expr_stmt|;
 block|}
 if|if
@@ -5467,7 +5467,7 @@ argument_list|)
 condition|)
 name|amount
 operator|/=
-literal|1000
+literal|1000000
 expr_stmt|;
 name|sbuf_printf
 argument_list|(
