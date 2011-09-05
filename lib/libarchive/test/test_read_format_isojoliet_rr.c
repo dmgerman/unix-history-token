@@ -338,7 +338,7 @@ argument_list|)
 expr_stmt|;
 name|assertEqualString
 argument_list|(
-literal|"long-joliet-file-name.textfile"
+literal|"hardlink"
 argument_list|,
 name|archive_entry_pathname
 argument_list|(
@@ -485,7 +485,7 @@ argument_list|)
 expr_stmt|;
 name|assertEqualString
 argument_list|(
-literal|"hardlink"
+literal|"long-joliet-file-name.textfile"
 argument_list|,
 name|archive_entry_pathname
 argument_list|(
@@ -505,7 +505,7 @@ argument_list|)
 expr_stmt|;
 name|assertEqualString
 argument_list|(
-literal|"long-joliet-file-name.textfile"
+literal|"hardlink"
 argument_list|,
 name|archive_entry_hardlink
 argument_list|(

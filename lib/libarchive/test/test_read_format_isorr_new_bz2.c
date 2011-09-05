@@ -357,7 +357,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-literal|"hardlink"
+literal|"file"
 argument_list|,
 name|archive_entry_pathname
 argument_list|(
@@ -371,7 +371,7 @@ block|{
 comment|/* A regular file. */
 name|assertEqualString
 argument_list|(
-literal|"hardlink"
+literal|"file"
 argument_list|,
 name|archive_entry_pathname
 argument_list|(
@@ -492,7 +492,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-literal|"file"
+literal|"hardlink"
 argument_list|,
 name|archive_entry_pathname
 argument_list|(
@@ -507,7 +507,7 @@ comment|/* A hardlink to the regular file. */
 comment|/* Note: If "hardlink" gets returned before "file", 			 * then "hardlink" will get returned as a regular file 			 * and "file" will get returned as the hardlink. 			 * This test should tolerate that, since it's a 			 * perfectly permissible thing for libarchive to do. */
 name|assertEqualString
 argument_list|(
-literal|"file"
+literal|"hardlink"
 argument_list|,
 name|archive_entry_pathname
 argument_list|(
@@ -527,7 +527,7 @@ argument_list|)
 expr_stmt|;
 name|assertEqualString
 argument_list|(
-literal|"hardlink"
+literal|"file"
 argument_list|,
 name|archive_entry_hardlink
 argument_list|(
