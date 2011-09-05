@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 2003-2011 Netlogic Microsystems (Netlogic). All rights  * reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * THIS SOFTWARE IS PROVIDED BY Netlogic Microsystems ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL NETLOGIC OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  * NETLOGIC_BSD */
+comment|/*-  * Copyright 2003-2011 Netlogic Microsystems (Netlogic). All rights  * reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * THIS SOFTWARE IS PROVIDED BY Netlogic Microsystems ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL NETLOGIC OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  * NETLOGIC_BSD  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__XLP_UART_H__
+name|__XLP_HAL_UART_H__
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__XLP_UART_H__
+name|__XLP_HAL_UART_H__
 end_define
 
 begin_comment
@@ -22,95 +22,95 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XLP_UART_RX_DATA_REG
-value|0x40
+name|UART_RX_DATA
+value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_UART_TX_DATA_REG
-value|0x40
+name|UART_TX_DATA
+value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_UART_INT_EN_REG
-value|0x41
+name|UART_INT_EN
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_UART_INT_ID_REG
-value|0x42
+name|UART_INT_ID
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_UART_FIFO_CTL_REG
-value|0x42
+name|UART_FIFO_CTL
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_UART_LINE_CTL_REG
-value|0x43
+name|UART_LINE_CTL
+value|0x03
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_UART_MODEM_CTL_REG
-value|0x44
+name|UART_MODEM_CTL
+value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_UART_LINE_STS_REG
-value|0x45
+name|UART_LINE_STS
+value|0x05
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_UART_MODEM_STS_REG
-value|0x46
+name|UART_MODEM_STS
+value|0x06
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_UART_DIVISOR0_REG
-value|0x40
+name|UART_DIVISOR0
+value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_UART_DIVISOR1_REG
-value|0x41
+name|UART_DIVISOR1
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_UART_BASE_BAUD
-value|(133000000/16)
+name|BASE_BAUD
+value|(XLP_IO_CLK/16)
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_UART_BAUD_DIVISOR
+name|BAUD_DIVISOR
 parameter_list|(
 name|baud
 parameter_list|)
-value|(XLP_UART_BASE_BAUD / baud)
+value|(BASE_BAUD / baud)
 end_define
 
 begin_comment
@@ -325,66 +325,6 @@ name|IER_EMSC
 value|0x8
 end_define
 
-begin_comment
-comment|/* uart IRQ info */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|XLP_NODE0_UART0_IRQ
-value|17
-end_define
-
-begin_define
-define|#
-directive|define
-name|XLP_NODE1_UART0_IRQ
-value|18
-end_define
-
-begin_define
-define|#
-directive|define
-name|XLP_NODE2_UART0_IRQ
-value|19
-end_define
-
-begin_define
-define|#
-directive|define
-name|XLP_NODE3_UART0_IRQ
-value|20
-end_define
-
-begin_define
-define|#
-directive|define
-name|XLP_NODE0_UART1_IRQ
-value|21
-end_define
-
-begin_define
-define|#
-directive|define
-name|XLP_NODE1_UART1_IRQ
-value|22
-end_define
-
-begin_define
-define|#
-directive|define
-name|XLP_NODE2_UART1_IRQ
-value|23
-end_define
-
-begin_define
-define|#
-directive|define
-name|XLP_NODE3_UART1_IRQ
-value|24
-end_define
-
 begin_if
 if|#
 directive|if
@@ -404,19 +344,19 @@ end_if
 begin_define
 define|#
 directive|define
-name|nlm_rdreg_uart
+name|nlm_read_uart_reg
 parameter_list|(
 name|b
 parameter_list|,
 name|r
 parameter_list|)
-value|nlm_read_reg_kseg(b,r)
+value|nlm_read_reg(b, r)
 end_define
 
 begin_define
 define|#
 directive|define
-name|nlm_wreg_uart
+name|nlm_write_uart_reg
 parameter_list|(
 name|b
 parameter_list|,
@@ -424,36 +364,38 @@ name|r
 parameter_list|,
 name|v
 parameter_list|)
-value|nlm_write_reg_kseg(b,r,v)
+value|nlm_write_reg(b, r, v)
 end_define
 
 begin_define
 define|#
 directive|define
-name|nlm_pcibase_uart
+name|nlm_get_uart_pcibase
 parameter_list|(
 name|node
 parameter_list|,
 name|inst
 parameter_list|)
+define|\
 value|nlm_pcicfg_base(XLP_IO_UART_OFFSET(node, inst))
 end_define
 
 begin_define
 define|#
 directive|define
-name|nlm_regbase_uart
+name|nlm_get_uart_regbase
 parameter_list|(
 name|node
 parameter_list|,
 name|inst
 parameter_list|)
-value|nlm_pcibase_uart(node, inst)
+define|\
+value|(nlm_get_uart_pcibase(node, inst) + XLP_IO_PCI_HDRSZ)
 end_define
 
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
 name|void
 name|nlm_uart_set_baudrate
 parameter_list|(
@@ -469,19 +411,19 @@ name|lcr
 decl_stmt|;
 name|lcr
 operator|=
-name|nlm_rdreg_uart
+name|nlm_read_uart_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_UART_LINE_CTL_REG
+name|UART_LINE_CTL
 argument_list|)
 expr_stmt|;
 comment|/* enable divisor register, and write baud values */
-name|nlm_wreg_uart
+name|nlm_write_uart_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_UART_LINE_CTL_REG
+name|UART_LINE_CTL
 argument_list|,
 name|lcr
 operator||
@@ -492,14 +434,14 @@ literal|7
 operator|)
 argument_list|)
 expr_stmt|;
-name|nlm_wreg_uart
+name|nlm_write_uart_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_UART_DIVISOR0_REG
+name|UART_DIVISOR0
 argument_list|,
 operator|(
-name|XLP_UART_BAUD_DIVISOR
+name|BAUD_DIVISOR
 argument_list|(
 name|baud
 argument_list|)
@@ -508,15 +450,15 @@ literal|0xff
 operator|)
 argument_list|)
 expr_stmt|;
-name|nlm_wreg_uart
+name|nlm_write_uart_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_UART_DIVISOR1_REG
+name|UART_DIVISOR1
 argument_list|,
 operator|(
 operator|(
-name|XLP_UART_BAUD_DIVISOR
+name|BAUD_DIVISOR
 argument_list|(
 name|baud
 argument_list|)
@@ -529,11 +471,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* restore default lcr */
-name|nlm_wreg_uart
+name|nlm_write_uart_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_UART_LINE_CTL_REG
+name|UART_LINE_CTL
 argument_list|,
 name|lcr
 argument_list|)
@@ -543,9 +485,9 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
 name|void
-name|nlm_outbyte
+name|nlm_uart_outbyte
 parameter_list|(
 name|uint64_t
 name|base
@@ -565,11 +507,11 @@ control|)
 block|{
 name|lsr
 operator|=
-name|nlm_rdreg_uart
+name|nlm_read_uart_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_UART_LINE_STS_REG
+name|UART_LINE_STS
 argument_list|)
 expr_stmt|;
 if|if
@@ -580,11 +522,11 @@ literal|0x20
 condition|)
 break|break;
 block|}
-name|nlm_wreg_uart
+name|nlm_write_uart_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_UART_TX_DATA_REG
+name|UART_TX_DATA
 argument_list|,
 operator|(
 name|int
@@ -597,9 +539,9 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
 name|char
-name|nlm_inbyte
+name|nlm_uart_inbyte
 parameter_list|(
 name|uint64_t
 name|base
@@ -618,11 +560,11 @@ control|)
 block|{
 name|lsr
 operator|=
-name|nlm_rdreg_uart
+name|nlm_read_uart_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_UART_LINE_STS_REG
+name|UART_LINE_STS
 argument_list|)
 expr_stmt|;
 if|if
@@ -649,11 +591,11 @@ block|{
 comment|/* Rx data */
 name|data
 operator|=
-name|nlm_rdreg_uart
+name|nlm_read_uart_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_UART_RX_DATA_REG
+name|UART_RX_DATA
 argument_list|)
 expr_stmt|;
 break|break;
@@ -670,7 +612,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
 name|int
 name|nlm_uart_init
 parameter_list|(
@@ -757,21 +699,21 @@ operator|<<
 literal|3
 expr_stmt|;
 comment|/* setup default lcr */
-name|nlm_wreg_uart
+name|nlm_write_uart_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_UART_LINE_CTL_REG
+name|UART_LINE_CTL
 argument_list|,
 name|lcr
 argument_list|)
 expr_stmt|;
 comment|/* Reset the FIFOs */
-name|nlm_wreg_uart
+name|nlm_write_uart_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_UART_LINE_CTL_REG
+name|UART_LINE_CTL
 argument_list|,
 name|FCR_RCV_RST
 operator||
@@ -789,11 +731,11 @@ if|if
 condition|(
 name|loopback
 condition|)
-name|nlm_wreg_uart
+name|nlm_write_uart_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_UART_MODEM_CTL_REG
+name|UART_MODEM_CTL
 argument_list|,
 literal|0x1f
 argument_list|)
@@ -802,11 +744,11 @@ if|if
 condition|(
 name|int_en
 condition|)
-name|nlm_wreg_uart
+name|nlm_write_uart_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_UART_INT_EN_REG
+name|UART_INT_EN
 argument_list|,
 name|IER_ERXRDY
 operator||
@@ -834,7 +776,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __XLP_UART_H__ */
+comment|/* __XLP_HAL_UART_H__ */
 end_comment
 
 end_unit
