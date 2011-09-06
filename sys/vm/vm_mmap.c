@@ -3683,15 +3683,15 @@ name|mincoreinfo
 operator||=
 name|MINCORE_MODIFIED_OTHER
 expr_stmt|;
-comment|/* 				 * The first test for PG_REFERENCED is an 				 * optimization.  The second test is 				 * required because a concurrent pmap 				 * operation could clear the last reference 				 * and set PG_REFERENCED before the call to 				 * pmap_is_referenced().  				 */
+comment|/* 				 * The first test for PGA_REFERENCED is an 				 * optimization.  The second test is 				 * required because a concurrent pmap 				 * operation could clear the last reference 				 * and set PGA_REFERENCED before the call to 				 * pmap_is_referenced().  				 */
 if|if
 condition|(
 operator|(
 name|m
 operator|->
-name|flags
+name|aflags
 operator|&
-name|PG_REFERENCED
+name|PGA_REFERENCED
 operator|)
 operator|!=
 literal|0
@@ -3704,9 +3704,9 @@ operator|||
 operator|(
 name|m
 operator|->
-name|flags
+name|aflags
 operator|&
-name|PG_REFERENCED
+name|PGA_REFERENCED
 operator|)
 operator|!=
 literal|0

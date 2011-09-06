@@ -9615,11 +9615,11 @@ name|tpte
 operator|&
 name|PG_A
 condition|)
-name|vm_page_flag_set
+name|vm_page_aflag_set
 argument_list|(
 name|m
 argument_list|,
-name|PG_REFERENCED
+name|PGA_REFERENCED
 argument_list|)
 expr_stmt|;
 if|if
@@ -9733,11 +9733,11 @@ operator|->
 name|pv_list
 argument_list|)
 condition|)
-name|vm_page_flag_clear
+name|vm_page_aflag_clear
 argument_list|(
 name|m
 argument_list|,
-name|PG_WRITEABLE
+name|PGA_WRITEABLE
 argument_list|)
 expr_stmt|;
 block|}
@@ -11001,11 +11001,11 @@ operator|->
 name|pv_list
 argument_list|)
 condition|)
-name|vm_page_flag_clear
+name|vm_page_aflag_clear
 argument_list|(
 name|m
 argument_list|,
-name|PG_WRITEABLE
+name|PGA_WRITEABLE
 argument_list|)
 expr_stmt|;
 block|}
@@ -11991,11 +11991,11 @@ name|oldpde
 operator|&
 name|PG_A
 condition|)
-name|vm_page_flag_set
+name|vm_page_aflag_set
 argument_list|(
 name|m
 argument_list|,
-name|PG_REFERENCED
+name|PGA_REFERENCED
 argument_list|)
 expr_stmt|;
 if|if
@@ -12018,11 +12018,11 @@ operator|->
 name|pv_list
 argument_list|)
 condition|)
-name|vm_page_flag_clear
+name|vm_page_aflag_clear
 argument_list|(
 name|m
 argument_list|,
-name|PG_WRITEABLE
+name|PGA_WRITEABLE
 argument_list|)
 expr_stmt|;
 block|}
@@ -12260,11 +12260,11 @@ name|oldpte
 operator|&
 name|PG_A
 condition|)
-name|vm_page_flag_set
+name|vm_page_aflag_set
 argument_list|(
 name|m
 argument_list|,
-name|PG_REFERENCED
+name|PGA_REFERENCED
 argument_list|)
 expr_stmt|;
 name|pmap_remove_entry
@@ -13147,11 +13147,11 @@ name|tpte
 operator|&
 name|PG_A
 condition|)
-name|vm_page_flag_set
+name|vm_page_aflag_set
 argument_list|(
 name|m
 argument_list|,
-name|PG_REFERENCED
+name|PGA_REFERENCED
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Update the vm_page_t clean and reference bits. 		 */
@@ -13229,11 +13229,11 @@ name|pmap
 argument_list|)
 expr_stmt|;
 block|}
-name|vm_page_flag_clear
+name|vm_page_aflag_clear
 argument_list|(
 name|m
 argument_list|,
-name|PG_WRITEABLE
+name|PGA_WRITEABLE
 argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
@@ -14995,11 +14995,11 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|vm_page_flag_set
+name|vm_page_aflag_set
 argument_list|(
 name|m
 argument_list|,
-name|PG_WRITEABLE
+name|PGA_WRITEABLE
 argument_list|)
 expr_stmt|;
 block|}
@@ -15113,11 +15113,11 @@ name|origpte
 operator|&
 name|PG_MANAGED
 condition|)
-name|vm_page_flag_set
+name|vm_page_aflag_set
 argument_list|(
 name|om
 argument_list|,
-name|PG_REFERENCED
+name|PGA_REFERENCED
 argument_list|)
 expr_stmt|;
 if|if
@@ -15230,11 +15230,11 @@ operator|->
 name|pv_list
 argument_list|)
 condition|)
-name|vm_page_flag_clear
+name|vm_page_aflag_clear
 argument_list|(
 name|om
 argument_list|,
-name|PG_WRITEABLE
+name|PGA_WRITEABLE
 argument_list|)
 expr_stmt|;
 if|if
@@ -18761,11 +18761,11 @@ operator|.
 name|pv_list
 argument_list|)
 condition|)
-name|vm_page_flag_clear
+name|vm_page_aflag_clear
 argument_list|(
 name|mt
 argument_list|,
-name|PG_WRITEABLE
+name|PGA_WRITEABLE
 argument_list|)
 expr_stmt|;
 block|}
@@ -18898,11 +18898,11 @@ operator|->
 name|pv_list
 argument_list|)
 condition|)
-name|vm_page_flag_clear
+name|vm_page_aflag_clear
 argument_list|(
 name|m
 argument_list|,
-name|PG_WRITEABLE
+name|PGA_WRITEABLE
 argument_list|)
 expr_stmt|;
 block|}
@@ -19048,7 +19048,7 @@ name|m
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the page is not VPO_BUSY, then PG_WRITEABLE cannot be 	 * concurrently set while the object is locked.  Thus, if PG_WRITEABLE 	 * is clear, no PTEs can have PG_M set. 	 */
+comment|/* 	 * If the page is not VPO_BUSY, then PGA_WRITEABLE cannot be 	 * concurrently set while the object is locked.  Thus, if PGA_WRITEABLE 	 * is clear, no PTEs can have PG_M set. 	 */
 name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|m
@@ -19073,9 +19073,9 @@ operator|&&
 operator|(
 name|m
 operator|->
-name|flags
+name|aflags
 operator|&
-name|PG_WRITEABLE
+name|PGA_WRITEABLE
 operator|)
 operator|==
 literal|0
@@ -19564,7 +19564,7 @@ name|m
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the page is not VPO_BUSY, then PG_WRITEABLE cannot be set by 	 * another thread while the object is locked.  Thus, if PG_WRITEABLE 	 * is clear, no page table entries need updating. 	 */
+comment|/* 	 * If the page is not VPO_BUSY, then PGA_WRITEABLE cannot be set by 	 * another thread while the object is locked.  Thus, if PGA_WRITEABLE 	 * is clear, no page table entries need updating. 	 */
 name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|m
@@ -19589,9 +19589,9 @@ operator|&&
 operator|(
 name|m
 operator|->
-name|flags
+name|aflags
 operator|&
-name|PG_WRITEABLE
+name|PGA_WRITEABLE
 operator|)
 operator|==
 literal|0
@@ -19806,11 +19806,11 @@ name|pmap
 argument_list|)
 expr_stmt|;
 block|}
-name|vm_page_flag_clear
+name|vm_page_aflag_clear
 argument_list|(
 name|m
 argument_list|,
-name|PG_WRITEABLE
+name|PGA_WRITEABLE
 argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
@@ -20305,15 +20305,15 @@ name|m
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the page is not PG_WRITEABLE, then no PTEs can have PG_M set. 	 * If the object containing the page is locked and the page is not 	 * VPO_BUSY, then PG_WRITEABLE cannot be concurrently set. 	 */
+comment|/* 	 * If the page is not PGA_WRITEABLE, then no PTEs can have PG_M set. 	 * If the object containing the page is locked and the page is not 	 * VPO_BUSY, then PGA_WRITEABLE cannot be concurrently set. 	 */
 if|if
 condition|(
 operator|(
 name|m
 operator|->
-name|flags
+name|aflags
 operator|&
-name|PG_WRITEABLE
+name|PGA_WRITEABLE
 operator|)
 operator|==
 literal|0

@@ -4019,18 +4019,12 @@ name|MADV_WILLNEED
 condition|)
 block|{
 comment|/* 				 * Reference the page before unlocking and 				 * sleeping so that the page daemon is less 				 * likely to reclaim it.  				 */
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
-name|vm_page_flag_set
+name|vm_page_aflag_set
 argument_list|(
 name|m
 argument_list|,
-name|PG_REFERENCED
+name|PGA_REFERENCED
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 block|}
 name|vm_page_unlock
