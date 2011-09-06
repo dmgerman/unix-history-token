@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: dst.h,v 1.31 2011-01-11 23:47:14 tbox Exp $ */
+comment|/* $Id: dst.h,v 1.31.10.1 2011-03-21 19:53:35 each Exp $ */
 end_comment
 
 begin_ifndef
@@ -1678,7 +1678,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Return the token from the TKEY request, if any.  If this key was  * not negotiated via TKEY, return NULL.  */
+comment|/*%<  * Return the token from the TKEY request, if any.  If this key was  * not negotiated via TKEY, return NULL.  *  * Requires:  *	"key" is a valid key.  */
 end_comment
 
 begin_function_decl

@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/nlm/hal/mmio.h>
+file|<mips/nlm/hal/haldefs.h>
 end_include
 
 begin_include
@@ -271,14 +271,12 @@ name|bas
 operator|.
 name|bsh
 operator|=
-name|nlm_regbase_uart
+name|nlm_get_uart_regbase
 argument_list|(
 literal|0
 argument_list|,
 literal|0
 argument_list|)
-operator|+
-name|XLP_IO_PCI_HDRSZ
 expr_stmt|;
 name|sc
 operator|->
@@ -294,14 +292,12 @@ name|sc_bas
 operator|.
 name|bsh
 operator|=
-name|nlm_regbase_uart
+name|nlm_get_uart_regbase
 argument_list|(
 literal|0
 argument_list|,
 literal|0
 argument_list|)
-operator|+
-name|XLP_IO_PCI_HDRSZ
 expr_stmt|;
 comment|/* regshft = 2, rclk = 66000000, rid = 0, chan = 0 */
 return|return

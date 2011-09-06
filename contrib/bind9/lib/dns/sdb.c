@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: sdb.c,v 1.76 2011-01-13 04:59:25 tbox Exp $ */
+comment|/* $Id: sdb.c,v 1.76.8.1 2011-03-14 13:40:14 fdupont Exp $ */
 end_comment
 
 begin_comment
@@ -6605,6 +6605,9 @@ argument_list|)
 expr_stmt|;
 name|cleanup_lock
 label|:
+operator|(
+name|void
+operator|)
 name|isc_mutex_destroy
 argument_list|(
 operator|&

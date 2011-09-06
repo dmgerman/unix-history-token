@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: rndc.c,v 1.131.20.1.2.1 2011-06-02 23:47:28 tbox Exp $ */
+comment|/* $Id: rndc.c,v 1.131.20.2 2011-02-28 01:19:59 tbox Exp $ */
 end_comment
 
 begin_comment

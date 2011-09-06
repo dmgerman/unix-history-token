@@ -1,66 +1,66 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 2003-2011 Netlogic Microsystems (Netlogic). All rights  * reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * THIS SOFTWARE IS PROVIDED BY Netlogic Microsystems ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL NETLOGIC OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  * NETLOGIC_BSD */
+comment|/*-  * Copyright 2003-2011 Netlogic Microsystems (Netlogic). All rights  * reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * THIS SOFTWARE IS PROVIDED BY Netlogic Microsystems ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL NETLOGIC OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  * NETLOGIC_BSD  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__NLM_COP2_H__
+name|__NLM_HAL_COP2_H__
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__NLM_COP2_H__
+name|__NLM_HAL_COP2_H__
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_COP2_TX_BUF_REG
+name|COP2_TX_BUF
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_COP2_RX_BUF_REG
+name|COP2_RX_BUF
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_COP2_TXMSGSTATUS_REG
+name|COP2_TXMSGSTATUS
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_COP2_RXMSGSTATUS_REG
+name|COP2_RXMSGSTATUS
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_COP2_MSGSTATUS1_REG
+name|COP2_MSGSTATUS1
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_COP2_MSGCONFIG_REG
+name|COP2_MSGCONFIG
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_COP2_MSGCONFIG1_REG
+name|COP2_MSGCONFIG1
 value|6
 end_define
 
@@ -139,7 +139,7 @@ parameter_list|,
 name|sel
 parameter_list|)
 define|\
-value|static inline uint32_t nlm_read_c2_##name(void)			\ {								\ 	uint32_t __rv;						\ 	__asm__ __volatile__ (					\ 	".set	push\n"						\ 	".set	noreorder\n"					\ 	".set	mips64\n"					\ 	"mfc2	%0, $%1, %2\n"					\ 	".set	pop\n"						\ 	: "=r" (__rv)						\ 	: "i" (reg), "i" (sel)					\ 	);							\ 	return __rv;						\ }								\ 								\ static inline void nlm_write_c2_##name(uint32_t val)		\ {								\ 	__asm__ __volatile__(					\ 	".set	push\n"						\ 	".set	noreorder\n"					\ 	".set	mips64\n"					\ 	"mtc2	%0, $%1, %2\n"					\ 	".set	pop\n"						\ 	:: "r" (val), "i" (reg), "i" (sel)			\ 	);							\ } struct __hack
+value|static inline uint32_t nlm_read_c2_##name(void)			\ {								\ 	uint32_t __rv;						\ 	__asm__ __volatile__ (					\ 	".set	push\n"						\ 	".set	noreorder\n"					\ 	".set	mips64\n"					\ 	"mfc2	%0, $%1, %2\n"					\ 	".set	pop\n"						\ 	: "=r" (__rv)						\ 	: "i" (reg), "i" (sel));				\ 	return __rv;						\ }								\ 								\ static inline void nlm_write_c2_##name(uint32_t val)		\ {								\ 	__asm__ __volatile__(					\ 	".set	push\n"						\ 	".set	noreorder\n"					\ 	".set	mips64\n"					\ 	"mtc2	%0, $%1, %2\n"					\ 	".set	pop\n"						\ 	: : "r" (val), "i" (reg), "i" (sel));			\ } struct __hack
 end_define
 
 begin_if
@@ -164,7 +164,7 @@ parameter_list|,
 name|sel
 parameter_list|)
 define|\
-value|static inline uint64_t nlm_read_c2_##name(void)			\ {								\ 	uint64_t __rv;						\ 	__asm__ __volatile__ (					\ 	".set	push\n"						\ 	".set	noreorder\n"					\ 	".set	mips64\n"					\ 	"dmfc2	%0, $%1, %2\n"					\ 	".set	pop\n"						\ 	: "=r" (__rv)						\ 	: "i" (reg), "i" (sel) );				\ 	return __rv;						\ }								\ 								\ static inline void nlm_write_c2_##name(uint64_t val)		\ {								\ 	__asm__ __volatile__ (					\ 	".set	push\n"						\ 	".set	noreorder\n"					\ 	".set	mips64\n"					\ 	"dmtc2	%0, $%1, %2\n"					\ 	".set	pop\n"						\ 	:: "r" (val), "i" (reg), "i" (sel) );			\ } struct __hack
+value|static inline uint64_t nlm_read_c2_##name(void)			\ {								\ 	uint64_t __rv;						\ 	__asm__ __volatile__ (					\ 	".set	push\n"						\ 	".set	noreorder\n"					\ 	".set	mips64\n"					\ 	"dmfc2	%0, $%1, %2\n"					\ 	".set	pop\n"						\ 	: "=r" (__rv)						\ 	: "i" (reg), "i" (sel));				\ 	return __rv;						\ }								\ 								\ static inline void nlm_write_c2_##name(uint64_t val)		\ {								\ 	__asm__ __volatile__ (					\ 	".set	push\n"						\ 	".set	noreorder\n"					\ 	".set	mips64\n"					\ 	"dmtc2	%0, $%1, %2\n"					\ 	".set	pop\n"						\ 	: : "r" (val), "i" (reg), "i" (sel));			\ } struct __hack
 end_define
 
 begin_else
@@ -184,7 +184,7 @@ parameter_list|,
 name|sel
 parameter_list|)
 define|\
-value|static inline uint64_t nlm_read_c2_##name(void)			\ {								\ 	uint32_t __high, __low;					\ 	__asm__ __volatile__ (					\ 	".set	push\n"						\ 	".set	noreorder\n"					\ 	".set	mips64\n"					\ 	"dmfc2	$8, $%2, %3\n"					\ 	"dsra32	%0, $8, 0\n"					\ 	"sll	%1, $8, 0\n"					\ 	".set	pop\n"						\ 	: "=r"(__high), "=r"(__low)				\ 	: "i"(reg), "i"(sel)					\ 	: "$8" );						\ 								\ 	return (((uint64_t)__high<< 32) | __low);		\ }								\ 								\ static inline void nlm_write_c2_##name(uint64_t val)		\ {								\        uint32_t __high = val>> 32;				\        uint32_t __low = val& 0xffffffff;			\ 	__asm__ __volatile__ (					\ 	".set	push\n"						\ 	".set	noreorder\n"					\ 	".set	mips64\n"					\ 	"dsll32	$8, %1, 0\n"					\ 	"dsll32	$9, %0, 0\n"					\ 	"dsrl32	$8, $8, 0\n"					\ 	"or	$8, $8, $9\n"					\ 	"dmtc2	$8, $%2, %3\n"					\ 	".set	pop\n"						\ 	:: "r"(__high), "r"(__low),  "i"(reg), "i"(sel)		\ 	:"$8", "$9");						\ } struct __hack
+value|static inline uint64_t nlm_read_c2_##name(void)			\ {								\ 	uint32_t __high, __low;					\ 	__asm__ __volatile__ (					\ 	".set	push\n"						\ 	".set	noreorder\n"					\ 	".set	mips64\n"					\ 	"dmfc2	$8, $%2, %3\n"					\ 	"dsra32	%0, $8, 0\n"					\ 	"sll	%1, $8, 0\n"					\ 	".set	pop\n"						\ 	: "=r"(__high), "=r"(__low)				\ 	: "i"(reg), "i"(sel)					\ 	: "$8");						\ 								\ 	return ((uint64_t)__high<< 32) | __low;		\ }								\ 								\ static inline void nlm_write_c2_##name(uint64_t val)		\ {								\ 	uint32_t __high = val>> 32;				\ 	uint32_t __low = val& 0xffffffff;			\ 	__asm__ __volatile__ (					\ 	".set	push\n"						\ 	".set	noreorder\n"					\ 	".set	mips64\n"					\ 	"dsll32	$8, %1, 0\n"					\ 	"dsll32	$9, %0, 0\n"					\ 	"dsrl32	$8, $8, 0\n"					\ 	"or	$8, $8, $9\n"					\ 	"dmtc2	$8, $%2, %3\n"					\ 	".set	pop\n"						\ 	: : "r"(__high), "r"(__low),  "i"(reg), "i"(sel)	\ 	: "$8", "$9");						\ } struct __hack
 end_define
 
 begin_endif
@@ -197,7 +197,7 @@ name|NLM_DEFINE_COP2_ACCESSORS64
 argument_list|(
 name|txbuf0
 argument_list|,
-name|XLP_COP2_TX_BUF_REG
+name|COP2_TX_BUF
 argument_list|,
 literal|0
 argument_list|)
@@ -209,7 +209,7 @@ name|NLM_DEFINE_COP2_ACCESSORS64
 argument_list|(
 name|txbuf1
 argument_list|,
-name|XLP_COP2_TX_BUF_REG
+name|COP2_TX_BUF
 argument_list|,
 literal|1
 argument_list|)
@@ -221,7 +221,7 @@ name|NLM_DEFINE_COP2_ACCESSORS64
 argument_list|(
 name|txbuf2
 argument_list|,
-name|XLP_COP2_TX_BUF_REG
+name|COP2_TX_BUF
 argument_list|,
 literal|2
 argument_list|)
@@ -233,7 +233,7 @@ name|NLM_DEFINE_COP2_ACCESSORS64
 argument_list|(
 name|txbuf3
 argument_list|,
-name|XLP_COP2_TX_BUF_REG
+name|COP2_TX_BUF
 argument_list|,
 literal|3
 argument_list|)
@@ -245,7 +245,7 @@ name|NLM_DEFINE_COP2_ACCESSORS64
 argument_list|(
 name|rxbuf0
 argument_list|,
-name|XLP_COP2_RX_BUF_REG
+name|COP2_RX_BUF
 argument_list|,
 literal|0
 argument_list|)
@@ -257,7 +257,7 @@ name|NLM_DEFINE_COP2_ACCESSORS64
 argument_list|(
 name|rxbuf1
 argument_list|,
-name|XLP_COP2_RX_BUF_REG
+name|COP2_RX_BUF
 argument_list|,
 literal|1
 argument_list|)
@@ -269,7 +269,7 @@ name|NLM_DEFINE_COP2_ACCESSORS64
 argument_list|(
 name|rxbuf2
 argument_list|,
-name|XLP_COP2_RX_BUF_REG
+name|COP2_RX_BUF
 argument_list|,
 literal|2
 argument_list|)
@@ -281,7 +281,7 @@ name|NLM_DEFINE_COP2_ACCESSORS64
 argument_list|(
 name|rxbuf3
 argument_list|,
-name|XLP_COP2_RX_BUF_REG
+name|COP2_RX_BUF
 argument_list|,
 literal|3
 argument_list|)
@@ -293,7 +293,7 @@ name|NLM_DEFINE_COP2_ACCESSORS32
 argument_list|(
 name|txmsgstatus
 argument_list|,
-name|XLP_COP2_TXMSGSTATUS_REG
+name|COP2_TXMSGSTATUS
 argument_list|,
 literal|0
 argument_list|)
@@ -305,7 +305,7 @@ name|NLM_DEFINE_COP2_ACCESSORS32
 argument_list|(
 name|rxmsgstatus
 argument_list|,
-name|XLP_COP2_RXMSGSTATUS_REG
+name|COP2_RXMSGSTATUS
 argument_list|,
 literal|0
 argument_list|)
@@ -317,7 +317,7 @@ name|NLM_DEFINE_COP2_ACCESSORS32
 argument_list|(
 name|msgstatus1
 argument_list|,
-name|XLP_COP2_MSGSTATUS1_REG
+name|COP2_MSGSTATUS1
 argument_list|,
 literal|0
 argument_list|)
@@ -329,7 +329,7 @@ name|NLM_DEFINE_COP2_ACCESSORS32
 argument_list|(
 name|msgconfig
 argument_list|,
-name|XLP_COP2_MSGCONFIG_REG
+name|COP2_MSGCONFIG
 argument_list|,
 literal|0
 argument_list|)
@@ -341,7 +341,7 @@ name|NLM_DEFINE_COP2_ACCESSORS32
 argument_list|(
 name|msgconfig1
 argument_list|,
-name|XLP_COP2_MSGCONFIG1_REG
+name|COP2_MSGCONFIG1
 argument_list|,
 literal|0
 argument_list|)
@@ -354,7 +354,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
 name|int
 name|nlm_msgsend
 parameter_list|(
@@ -367,7 +367,7 @@ name|result
 decl_stmt|;
 asm|__asm__
 specifier|volatile
-asm|( 		".set push			\n" 		".set noreorder			\n" 		".set mips64			\n" 		"move	$8, %1			\n" 		"sync				\n" 		"/* msgsnds	$9, $8 */	\n" 		".word	0x4a084801		\n" 		"move	%0, $9			\n" 		".set pop			\n" 		: "=r" (result) 		: "r" (val) 		: "$8", "$9" 	);
+asm|( 		".set push\n" 		".set noreorder\n" 		".set mips64\n" 		"move	$8, %1\n" 		"sync\n" 		"/* msgsnds	$9, $8 */\n" 		".word	0x4a084801\n" 		"move	%0, $9\n" 		".set pop\n" 		: "=r" (result) 		: "r" (val) 		: "$8", "$9");
 return|return
 name|result
 return|;
@@ -376,7 +376,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
 name|int
 name|nlm_msgld
 parameter_list|(
@@ -389,7 +389,7 @@ name|val
 decl_stmt|;
 asm|__asm__
 specifier|volatile
-asm|( 		".set push			\n" 		".set noreorder			\n" 		".set mips64			\n" 		"move	$8, %1			\n" 		"/* msgld	$9, $8 */	\n" 		".word 0x4a084802		\n" 		"move	%0, $9			\n" 		".set pop			\n" 		: "=r" (val) 		: "r" (vc) 		: "$8", "$9" 	);
+asm|( 		".set push\n" 		".set noreorder\n" 		".set mips64\n" 		"move	$8, %1\n" 		"/* msgld	$9, $8 */\n" 		".word 0x4a084802\n" 		"move	%0, $9\n" 		".set pop\n" 		: "=r" (val) 		: "r" (vc) 		: "$8", "$9");
 return|return
 name|val
 return|;
@@ -398,7 +398,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
 name|void
 name|nlm_msgwait
 parameter_list|(
@@ -408,70 +408,13 @@ parameter_list|)
 block|{
 asm|__asm__
 specifier|volatile
-asm|( 		".set push			\n" 		".set noreorder			\n" 		".set mips64			\n" 		"move	$8, %0			\n" 		"/* msgwait	$8 */		\n" 		".word 0x4a080003		\n" 		".set pop			\n" 		:: "r" (vc) 		: "$8" 	);
-block|}
-end_function
-
-begin_comment
-comment|/* TODO this is not needed in n32 and n64 */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|uint32_t
-name|nlm_fmn_saveflags
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|uint32_t
-name|sr
-init|=
-name|mips_rd_status
-argument_list|()
-decl_stmt|;
-name|mips_wr_status
-argument_list|(
-operator|(
-name|sr
-operator|&
-operator|~
-name|MIPS_SR_INT_IE
-operator|)
-operator||
-name|MIPS_SR_COP_2_BIT
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|sr
-operator|)
-return|;
+asm|( 		".set push\n" 		".set noreorder\n" 		".set mips64\n" 		"move	$8, %0\n" 		"/* msgwait	$8 */\n" 		".word 0x4a080003\n" 		".set pop\n" 		: : "r" (vc) 		: "$8");
 block|}
 end_function
 
 begin_function
 specifier|static
-name|__inline
-name|void
-name|nlm_fmn_restoreflags
-parameter_list|(
-name|uint32_t
-name|sr
-parameter_list|)
-block|{
-name|mips_wr_status
-argument_list|(
-name|sr
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline__
+specifier|inline
 name|int
 name|nlm_fmn_msgsend
 parameter_list|(
@@ -504,7 +447,7 @@ literal|1
 expr_stmt|;
 name|flags
 operator|=
-name|nlm_fmn_saveflags
+name|nlm_save_flags_cop2
 argument_list|()
 expr_stmt|;
 switch|switch
@@ -604,22 +547,20 @@ operator|=
 name|nlm_read_c2_txmsgstatus
 argument_list|()
 expr_stmt|;
-name|nlm_fmn_restoreflags
+name|nlm_restore_flags
 argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|rv
-operator|)
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
 name|int
 name|nlm_fmn_msgrcv
 parameter_list|(
@@ -659,7 +600,7 @@ name|rv
 decl_stmt|;
 name|flags
 operator|=
-name|nlm_fmn_saveflags
+name|nlm_save_flags_cop2
 argument_list|()
 expr_stmt|;
 name|status
@@ -790,7 +731,7 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-name|nlm_fmn_restoreflags
+name|nlm_restore_flags
 argument_list|(
 name|flags
 argument_list|)
@@ -801,13 +742,9 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/**  * nlm_fmn_cpu_init() initializes the per-h/w thread cop2 w.r.t the following  * configuration parameters. It needs to be individually setup on each  * hardware thread.  *  * int_vec - interrupt vector getting placed into msgconfig reg  * ctpe - cross thread message pop enable. When set to 1, the thread (h/w cpu)  *        associated where this cop2 register is setup, can pop messages  *        intended for any other thread in the same core.  * v0pe - VC0 pop message request mode enable. When set to 1, the thread  * 	  can send pop requests to vc0.  * v1pe - VC1 pop message request mode enable. When set to 1, the thread  * 	  can send pop requests to vc1.  * v2pe - VC2 pop message request mode enable. When set to 1, the thread  * 	  can send pop requests to vc2.  * v3pe - VC3 pop message request mode enable. When set to 1, the thread  * 	  can send pop requests to vc3.  */
-end_comment
-
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
 name|void
 name|nlm_fmn_cpu_init
 parameter_list|(

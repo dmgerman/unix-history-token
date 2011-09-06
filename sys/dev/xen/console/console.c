@@ -443,6 +443,24 @@ begin_comment
 comment|/* write_cons, write_prod */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KDB
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|xc_altbrk
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -1222,6 +1240,23 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
+ifdef|#
+directive|ifdef
+name|KDB
+name|kdb_alt_break
+argument_list|(
+name|buf
+index|[
+name|i
+index|]
+argument_list|,
+operator|&
+name|xc_altbrk
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ttydisc_rint
 argument_list|(
 name|tp
@@ -1234,6 +1269,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 name|ttydisc_rint_done
 argument_list|(
 name|tp

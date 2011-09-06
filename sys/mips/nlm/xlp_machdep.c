@@ -240,19 +240,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/nlm/hal/mmio.h>
+file|<mips/nlm/hal/haldefs.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<mips/nlm/hal/iomap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<mips/nlm/hal/cop0.h>
 end_include
 
 begin_include
@@ -354,7 +348,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|uint64_t
-name|nlm_pcicfg_baseaddr
+name|xlp_io_base
 init|=
 name|MIPS_PHYS_TO_KSEG1
 argument_list|(
@@ -445,7 +439,7 @@ name|reg
 operator|=
 name|nlm_mfcr
 argument_list|(
-name|XLP_LSU_DEFEATURE
+name|LSU_DEFEATURE
 argument_list|)
 expr_stmt|;
 comment|/* Enable Unaligned and L2HPE */
@@ -480,7 +474,7 @@ literal|0xeull
 expr_stmt|;
 name|nlm_mtcr
 argument_list|(
-name|XLP_LSU_DEFEATURE
+name|LSU_DEFEATURE
 argument_list|,
 name|reg
 argument_list|)
@@ -489,7 +483,7 @@ name|reg
 operator|=
 name|nlm_mfcr
 argument_list|(
-name|XLP_SCHED_DEFEATURE
+name|SCHED_DEFEATURE
 argument_list|)
 expr_stmt|;
 comment|/* Experimental: Disable BRU accepting ALU ops - A0 errata */
@@ -503,7 +497,7 @@ operator|)
 expr_stmt|;
 name|nlm_mtcr
 argument_list|(
-name|XLP_SCHED_DEFEATURE
+name|SCHED_DEFEATURE
 argument_list|,
 name|reg
 argument_list|)
@@ -1041,20 +1035,23 @@ name|tc
 name|__unused
 parameter_list|)
 block|{
+name|uint64_t
+name|count
+init|=
+name|nlm_pic_read_timer
+argument_list|(
+name|xlp_pic_base
+argument_list|,
+name|PIC_CLOCK_TIMER
+argument_list|)
+decl_stmt|;
 return|return
-operator|(
 operator|(
 name|unsigned
 name|int
 operator|)
 operator|~
-name|nlm_pic_read_systimer
-argument_list|(
-name|xlp_pic_base
-argument_list|,
-literal|7
-argument_list|)
-operator|)
+name|count
 return|;
 block|}
 end_function
@@ -1082,7 +1079,7 @@ operator|~
 literal|0U
 block|,
 comment|/* counter_mask */
-name|XLP_PIC_TIMER_FREQ
+name|XLP_IO_CLK
 block|,
 comment|/* frequency */
 literal|"XLRPIC"
@@ -1098,7 +1095,7 @@ name|i
 decl_stmt|;
 name|xlp_pic_base
 operator|=
-name|nlm_regbase_pic
+name|nlm_get_pic_regbase
 argument_list|(
 literal|0
 argument_list|)
@@ -1123,13 +1120,13 @@ literal|0
 init|;
 name|i
 operator|<
-name|XLP_PIC_MAX_IRT
+name|PIC_NUM_IRTS
 condition|;
 name|i
 operator|++
 control|)
 block|{
-name|nlm_pic_write_irt_raw
+name|nlm_pic_write_irt
 argument_list|(
 name|xlp_pic_base
 argument_list|,
@@ -1151,18 +1148,14 @@ literal|0x1
 argument_list|)
 expr_stmt|;
 block|}
-name|nlm_pic_set_systimer
+name|nlm_pic_set_timer
 argument_list|(
 name|xlp_pic_base
 argument_list|,
-literal|7
+name|PIC_CLOCK_TIMER
 argument_list|,
 operator|~
 literal|0ULL
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -1253,7 +1246,7 @@ block|{
 name|uint64_t
 name|bridgebase
 init|=
-name|nlm_regbase_bridge
+name|nlm_get_bridge_regbase
 argument_list|(
 literal|0
 argument_list|)
@@ -1296,11 +1289,11 @@ control|)
 block|{
 name|val
 operator|=
-name|nlm_rdreg_bridge
+name|nlm_read_bridge_reg
 argument_list|(
 name|bridgebase
 argument_list|,
-name|XLP_BRIDGE_DRAM_BAR_REG
+name|BRIDGE_DRAM_BAR
 argument_list|(
 name|i
 argument_list|)
@@ -1322,11 +1315,11 @@ literal|20
 expr_stmt|;
 name|val
 operator|=
-name|nlm_rdreg_bridge
+name|nlm_read_bridge_reg
 argument_list|(
 name|bridgebase
 argument_list|,
-name|XLP_BRIDGE_DRAM_LIMIT_REG
+name|BRIDGE_DRAM_LIMIT
 argument_list|(
 name|i
 argument_list|)
@@ -1674,6 +1667,32 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+comment|/* copy phys_avail to dump_avail */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<=
+name|j
+operator|+
+literal|1
+condition|;
+name|i
+operator|++
+control|)
+name|dump_avail
+index|[
+name|i
+index|]
+operator|=
+name|phys_avail
+index|[
+name|i
+index|]
+expr_stmt|;
 name|realmem
 operator|=
 name|physmem
@@ -1697,7 +1716,7 @@ block|{
 name|uint64_t
 name|sysbase
 init|=
-name|nlm_regbase_sys
+name|nlm_get_sys_regbase
 argument_list|(
 literal|0
 argument_list|)
@@ -1719,11 +1738,11 @@ name|val
 decl_stmt|;
 name|val
 operator|=
-name|nlm_rdreg_sys
+name|nlm_read_sys_reg
 argument_list|(
 name|sysbase
 argument_list|,
-name|XLP_SYS_POWER_ON_RESET_REG
+name|SYS_POWER_ON_RESET_CFG
 argument_list|)
 expr_stmt|;
 name|pll_divf
@@ -2110,16 +2129,16 @@ block|{
 name|uint64_t
 name|sysbase
 init|=
-name|nlm_regbase_sys
+name|nlm_get_sys_regbase
 argument_list|(
 literal|0
 argument_list|)
 decl_stmt|;
-name|nlm_wreg_sys
+name|nlm_write_sys_reg
 argument_list|(
 name|sysbase
 argument_list|,
-name|XLP_SYS_CHIP_RESET_REG
+name|SYS_CHIP_RESET
 argument_list|,
 literal|1
 argument_list|)
@@ -2179,7 +2198,7 @@ decl_stmt|;
 name|uint64_t
 name|sysbase
 init|=
-name|nlm_regbase_sys
+name|nlm_get_sys_regbase
 argument_list|(
 literal|0
 argument_list|)
@@ -2226,11 +2245,11 @@ expr_stmt|;
 comment|/* Enable core clock */
 name|val
 operator|=
-name|nlm_rdreg_sys
+name|nlm_read_sys_reg
 argument_list|(
 name|sysbase
 argument_list|,
-name|XLP_SYS_CORE_DFS_DIS_CTRL_REG
+name|SYS_CORE_DFS_DIS_CTRL
 argument_list|)
 expr_stmt|;
 name|val
@@ -2238,11 +2257,11 @@ operator|&=
 operator|~
 name|coremask
 expr_stmt|;
-name|nlm_wreg_sys
+name|nlm_write_sys_reg
 argument_list|(
 name|sysbase
 argument_list|,
-name|XLP_SYS_CORE_DFS_DIS_CTRL_REG
+name|SYS_CORE_DFS_DIS_CTRL
 argument_list|,
 name|val
 argument_list|)
@@ -2250,11 +2269,11 @@ expr_stmt|;
 comment|/* Remove CPU Reset */
 name|val
 operator|=
-name|nlm_rdreg_sys
+name|nlm_read_sys_reg
 argument_list|(
 name|sysbase
 argument_list|,
-name|XLP_SYS_CPU_RESET_REG
+name|SYS_CPU_RESET
 argument_list|)
 expr_stmt|;
 name|val
@@ -2264,11 +2283,11 @@ name|coremask
 operator|&
 literal|0xff
 expr_stmt|;
-name|nlm_wreg_sys
+name|nlm_write_sys_reg
 argument_list|(
 name|sysbase
 argument_list|,
-name|XLP_SYS_CPU_RESET_REG
+name|SYS_CPU_RESET
 argument_list|,
 name|val
 argument_list|)
@@ -2289,11 +2308,11 @@ do|do
 block|{
 name|val
 operator|=
-name|nlm_rdreg_sys
+name|nlm_read_sys_reg
 argument_list|(
 name|sysbase
 argument_list|,
-name|XLP_SYS_CPU_NONCOHERENT_MODE_REG
+name|SYS_CPU_NONCOHERENT_MODE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2482,8 +2501,6 @@ block|{
 name|nlm_pic_send_ipi
 argument_list|(
 name|xlp_pic_base
-argument_list|,
-literal|0
 argument_list|,
 name|xlp_cpuid_to_hwtid
 index|[

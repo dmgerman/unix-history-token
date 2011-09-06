@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2008, 2011  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: xfrin.c,v 1.166.522.2.2.1 2011-06-02 23:47:35 tbox Exp $ */
+comment|/* $Id: xfrin.c,v 1.166.522.4 2011-03-11 06:47:06 marka Exp $ */
 end_comment
 
 begin_comment
@@ -6095,11 +6095,9 @@ name|reqtype
 operator|==
 name|dns_rdatatype_soa
 condition|)
-name|FAIL
-argument_list|(
-name|result
-argument_list|)
-expr_stmt|;
+goto|goto
+name|failure
+goto|;
 name|xfrin_log
 argument_list|(
 name|xfr
@@ -6256,11 +6254,9 @@ name|result
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|FAIL
-argument_list|(
-name|result
-argument_list|)
-expr_stmt|;
+goto|goto
+name|failure
+goto|;
 block|}
 for|for
 control|(

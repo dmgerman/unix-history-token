@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: parser.c,v 1.139 2011-01-04 23:47:14 tbox Exp $ */
+comment|/* $Id: parser.c,v 1.139.14.2 2011-03-11 06:47:09 marka Exp $ */
 end_comment
 
 begin_comment
@@ -10010,6 +10010,11 @@ expr_stmt|;
 name|n
 operator|++
 expr_stmt|;
+name|POST
+argument_list|(
+name|n
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -10183,6 +10188,8 @@ decl_stmt|;
 name|unsigned
 name|int
 name|addrlen
+init|=
+literal|0
 decl_stmt|,
 name|prefixlen
 decl_stmt|;
@@ -10232,10 +10239,6 @@ literal|128
 expr_stmt|;
 break|break;
 default|default:
-name|addrlen
-operator|=
-literal|0
-expr_stmt|;
 name|INSIST
 argument_list|(
 literal|0
@@ -10550,6 +10553,20 @@ name|rep
 operator|==
 operator|&
 name|cfg_rep_netprefix
+argument_list|)
+expr_stmt|;
+name|REQUIRE
+argument_list|(
+name|netaddr
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|REQUIRE
+argument_list|(
+name|prefixlen
+operator|!=
+name|NULL
 argument_list|)
 expr_stmt|;
 operator|*
@@ -11067,6 +11084,11 @@ argument_list|)
 expr_stmt|;
 name|n
 operator|++
+expr_stmt|;
+name|POST
+argument_list|(
+name|n
+argument_list|)
 expr_stmt|;
 block|}
 name|cfg_print_chars

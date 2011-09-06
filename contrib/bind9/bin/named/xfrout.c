@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: xfrout.c,v 1.139 2010-12-18 01:56:19 each Exp $ */
+comment|/* $Id: xfrout.c,v 1.139.16.3 2011-07-28 04:30:54 marka Exp $ */
 end_comment
 
 begin_include
@@ -61,22 +61,11 @@ directive|include
 file|<dns/dbiterator.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DLZ
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<dns/dlz.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -3338,16 +3327,11 @@ name|is_poll
 init|=
 name|ISC_FALSE
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DLZ
 name|isc_boolean_t
 name|is_dlz
 init|=
 name|ISC_FALSE
 decl_stmt|;
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|reqtype
@@ -3558,9 +3542,6 @@ name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
-ifdef|#
-directive|ifdef
-name|DLZ
 block|{
 comment|/* 		 * Normal zone table does not have a match. 		 * Try the DLZ database 		 */
 if|if
@@ -3667,8 +3648,6 @@ name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
-endif|#
-directive|endif
 name|FAILQ
 argument_list|(
 name|DNS_R_NOTAUTH
@@ -3680,9 +3659,6 @@ argument_list|,
 name|question_class
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DLZ
 name|is_dlz
 operator|=
 name|ISC_TRUE
@@ -3724,8 +3700,6 @@ block|}
 else|else
 block|{
 comment|/* zone table has a match */
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|dns_zone_gettype
@@ -3777,12 +3751,7 @@ operator|&
 name|ver
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DLZ
 block|}
-endif|#
-directive|endif
 name|xfrout_log1
 argument_list|(
 name|client
@@ -3974,19 +3943,13 @@ argument_list|,
 name|mnemonic
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Decide whether to allow this transfer. 	 */
-ifdef|#
-directive|ifdef
-name|DLZ
-comment|/* 	 * if not a DLZ zone decide whether to allow this transfer. 	 */
+comment|/* 	 * If not a DLZ zone, decide whether to allow this transfer. 	 */
 if|if
 condition|(
 operator|!
 name|is_dlz
 condition|)
 block|{
-endif|#
-directive|endif
 name|ns_client_aclmsg
 argument_list|(
 literal|"zone transfer"
@@ -4030,12 +3993,7 @@ name|ISC_LOG_ERROR
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DLZ
 block|}
-endif|#
-directive|endif
 comment|/* 	 * AXFR over UDP is not possible. 	 */
 if|if
 condition|(
@@ -4109,9 +4067,6 @@ name|format
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Get a dynamically allocated copy of the current SOA. 	 */
-ifdef|#
-directive|ifdef
-name|DLZ
 if|if
 condition|(
 name|is_dlz
@@ -4124,8 +4079,6 @@ operator|&
 name|ver
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|CHECK
 argument_list|(
 name|dns_db_createsoatuple
@@ -4420,9 +4373,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Create the xfrout context object.  This transfers the ownership 	 * of "stream", "db", "ver", and "quota" to the xfrout context object. 	 */
-ifdef|#
-directive|ifdef
-name|DLZ
 if|if
 condition|(
 name|is_dlz
@@ -4482,8 +4432,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|CHECK
 argument_list|(
 name|xfrout_ctx_create
@@ -4582,7 +4530,6 @@ name|tsigkey
 operator|!=
 name|NULL
 condition|)
-block|{
 name|dns_name_format
 argument_list|(
 operator|&
@@ -4600,7 +4547,6 @@ name|keyname
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 name|keyname
 index|[
@@ -4994,7 +4940,17 @@ name|xfr
 operator|->
 name|mctx
 operator|=
+name|NULL
+expr_stmt|;
+name|isc_mem_attach
+argument_list|(
 name|mctx
+argument_list|,
+operator|&
+name|xfr
+operator|->
+name|mctx
+argument_list|)
 expr_stmt|;
 name|xfr
 operator|->
@@ -6766,6 +6722,12 @@ init|=
 operator|*
 name|xfrp
 decl_stmt|;
+name|ns_client_t
+modifier|*
+name|client
+init|=
+name|NULL
+decl_stmt|;
 name|INSIST
 argument_list|(
 name|xfr
@@ -6951,6 +6913,17 @@ operator|->
 name|db
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We want to detch the client after we have released the memory 	 * context as ns_client_detach checks the memory reference count. 	 */
+name|ns_client_attach
+argument_list|(
+name|xfr
+operator|->
+name|client
+argument_list|,
+operator|&
+name|client
+argument_list|)
+expr_stmt|;
 name|ns_client_detach
 argument_list|(
 operator|&
@@ -6959,8 +6932,9 @@ operator|->
 name|client
 argument_list|)
 expr_stmt|;
-name|isc_mem_put
+name|isc_mem_putanddetach
 argument_list|(
+operator|&
 name|xfr
 operator|->
 name|mctx
@@ -6972,6 +6946,12 @@ argument_list|(
 operator|*
 name|xfr
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|ns_client_detach
+argument_list|(
+operator|&
+name|client
 argument_list|)
 expr_stmt|;
 operator|*

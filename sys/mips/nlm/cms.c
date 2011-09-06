@@ -164,19 +164,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/nlm/hal/mmio.h>
+file|<mips/nlm/hal/haldefs.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<mips/nlm/hal/iomap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<mips/nlm/hal/cop0.h>
 end_include
 
 begin_include
@@ -385,7 +379,7 @@ decl_stmt|;
 comment|/* TODO: Add other nodes */
 name|xlp_cms_base
 operator|=
-name|nlm_regbase_cms
+name|nlm_get_cms_regbase
 argument_list|(
 literal|0
 argument_list|)
@@ -545,7 +539,7 @@ if|#
 directive|if
 literal|0
 comment|/* there are a total of 18 src stations on XLP. */
-block|printf("Setting up CMS credits!\n");         for(src=0; src<18; src++) {                 for(qid=0; qid<1024; qid++) {                         nlm_cms_setup_credits(xlp_cms_base, qid, src, credit);                 }         }
+block|printf("Setting up CMS credits!\n"); 	for (src=0; src<18; src++) { 		for(qid=0; qid<1024; qid++) { 			nlm_cms_setup_credits(xlp_cms_base, qid, src, credit); 		} 	}
 endif|#
 directive|endif
 name|printf
@@ -589,7 +583,6 @@ condition|;
 name|qid
 operator|++
 control|)
-block|{
 name|nlm_cms_setup_credits
 argument_list|(
 name|xlp_cms_base
@@ -601,7 +594,6 @@ argument_list|,
 name|credit
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* PCIE Credits */
 for|for
@@ -643,7 +635,6 @@ condition|;
 name|qid
 operator|++
 control|)
-block|{
 name|nlm_cms_setup_credits
 argument_list|(
 name|xlp_cms_base
@@ -655,7 +646,6 @@ argument_list|,
 name|credit
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* DTE Credits */
 name|src
@@ -675,7 +665,6 @@ condition|;
 name|qid
 operator|++
 control|)
-block|{
 name|nlm_cms_setup_credits
 argument_list|(
 name|xlp_cms_base
@@ -687,7 +676,6 @@ argument_list|,
 name|credit
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* RSA Credits */
 name|src
 operator|=
@@ -706,7 +694,6 @@ condition|;
 name|qid
 operator|++
 control|)
-block|{
 name|nlm_cms_setup_credits
 argument_list|(
 name|xlp_cms_base
@@ -718,7 +705,6 @@ argument_list|,
 name|credit
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Crypto Credits */
 name|src
 operator|=
@@ -737,7 +723,6 @@ condition|;
 name|qid
 operator|++
 control|)
-block|{
 name|nlm_cms_setup_credits
 argument_list|(
 name|xlp_cms_base
@@ -749,7 +734,6 @@ argument_list|,
 name|credit
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* CMP Credits */
 name|src
 operator|=
@@ -768,7 +752,6 @@ condition|;
 name|qid
 operator|++
 control|)
-block|{
 name|nlm_cms_setup_credits
 argument_list|(
 name|xlp_cms_base
@@ -780,7 +763,6 @@ argument_list|,
 name|credit
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* POE Credits */
 name|src
 operator|=
@@ -799,7 +781,6 @@ condition|;
 name|qid
 operator|++
 control|)
-block|{
 name|nlm_cms_setup_credits
 argument_list|(
 name|xlp_cms_base
@@ -811,7 +792,6 @@ argument_list|,
 name|credit
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* NAE Credits */
 name|src
 operator|=
@@ -830,7 +810,6 @@ condition|;
 name|qid
 operator|++
 control|)
-block|{
 name|nlm_cms_setup_credits
 argument_list|(
 name|xlp_cms_base
@@ -842,7 +821,6 @@ argument_list|,
 name|credit
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -861,7 +839,7 @@ name|i
 decl_stmt|;
 name|queue
 operator|=
-name|XLP_CMS_CPU_PUSHQ
+name|CMS_CPU_PUSHQ
 argument_list|(
 literal|0
 argument_list|,
@@ -1078,7 +1056,7 @@ control|)
 block|{
 name|mflags
 operator|=
-name|nlm_fmn_saveflags
+name|nlm_save_flags_cop2
 argument_list|()
 expr_stmt|;
 name|status
@@ -1100,7 +1078,7 @@ operator|&
 name|msg
 argument_list|)
 expr_stmt|;
-name|nlm_fmn_restoreflags
+name|nlm_restore_flags
 argument_list|(
 name|mflags
 argument_list|)
@@ -1413,7 +1391,7 @@ argument_list|)
 expr_stmt|;
 name|mflags
 operator|=
-name|nlm_fmn_saveflags
+name|nlm_save_flags_cop2
 argument_list|()
 expr_stmt|;
 name|nlm_fmn_cpu_init
@@ -1431,7 +1409,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|nlm_fmn_restoreflags
+name|nlm_restore_flags
 argument_list|(
 name|mflags
 argument_list|)
@@ -1499,7 +1477,7 @@ comment|/* sleep */
 if|#
 directive|if
 literal|0
-block|thread_lock(td);                 if (mthd->needed) {                         thread_unlock(td);                         continue;                 }                 sched_class(td, PRI_ITHD);                 TD_SET_IWAIT(td);                 mi_switch(SW_VOL, NULL);                 thread_unlock(td);
+block|thread_lock(td); 		if (mthd->needed) { 			thread_unlock(td); 			continue; 		} 		sched_class(td, PRI_ITHD); 		TD_SET_IWAIT(td); 		mi_switch(SW_VOL, NULL); 		thread_unlock(td);
 else|#
 directive|else
 name|pause

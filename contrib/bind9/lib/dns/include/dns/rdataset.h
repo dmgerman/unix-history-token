@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: rdataset.h,v 1.69.270.3 2011-06-21 20:15:54 each Exp $ */
+comment|/* $Id: rdataset.h,v 1.69.148.3 2011-06-08 23:02:43 each Exp $ */
 end_comment
 
 begin_ifndef
@@ -1302,7 +1302,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Display trust in textual form.  */
+comment|/*  * Display trust in textual form.  */
 end_comment
 
 begin_macro

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2009, 2010  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2009-2011  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dnssec-settime.c,v 1.28 2010-12-19 07:29:36 each Exp $ */
+comment|/* $Id: dnssec-settime.c,v 1.28.16.3 2011-06-02 20:24:11 each Exp $ */
 end_comment
 
 begin_comment
@@ -313,8 +313,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"    -p C/P/A/R/I/D/all: print a particular time "
-literal|"value or values "
-literal|"[default: all]\n"
+literal|"value or values\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2252,6 +2251,38 @@ argument_list|,
 name|DST_TIME_DELETE
 argument_list|)
 expr_stmt|;
+comment|/* 	 * No metadata changes were made but we're forcing an upgrade 	 * to the new format anyway: use "-P now -A now" as the default 	 */
+if|if
+condition|(
+name|force
+operator|&&
+operator|!
+name|changed
+condition|)
+block|{
+name|dst_key_settime
+argument_list|(
+name|key
+argument_list|,
+name|DST_TIME_PUBLISH
+argument_list|,
+name|now
+argument_list|)
+expr_stmt|;
+name|dst_key_settime
+argument_list|(
+name|key
+argument_list|,
+name|DST_TIME_ACTIVATE
+argument_list|,
+name|now
+argument_list|)
+expr_stmt|;
+name|changed
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+block|}
 comment|/* 	 * Print out time values, if -p was used. 	 */
 if|if
 condition|(

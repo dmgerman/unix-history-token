@@ -549,6 +549,17 @@ comment|/* #undef HAVE_DEVPOLL_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `dlclose' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DLCLOSE
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<dlfcn.h> header file. */
 end_comment
 
@@ -556,6 +567,28 @@ begin_define
 define|#
 directive|define
 name|HAVE_DLFCN_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `dlopen' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DLOPEN
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `dlsym' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DLSYM
 value|1
 end_define
 
@@ -1076,6 +1109,17 @@ define|#
 directive|define
 name|IRS_GETNAMEINFO_FLAGS_T
 value|int
+end_define
+
+begin_comment
+comment|/* Define to allow building of objects for dlopen(). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISC_DLZ_DLOPEN
+value|1
 end_define
 
 begin_comment

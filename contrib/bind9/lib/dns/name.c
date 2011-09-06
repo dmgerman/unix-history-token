@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: name.c,v 1.174 2011-01-13 04:59:25 tbox Exp $ */
+comment|/* $Id: name.c,v 1.174.8.1 2011-03-11 06:47:04 marka Exp $ */
 end_comment
 
 begin_comment
@@ -5280,6 +5280,8 @@ name|ndata
 decl_stmt|,
 modifier|*
 name|label
+init|=
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
@@ -5294,15 +5296,25 @@ decl_stmt|;
 name|unsigned
 name|int
 name|value
+init|=
+literal|0
 decl_stmt|,
 name|count
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|int
 name|n1
+init|=
+literal|0
 decl_stmt|,
 name|n2
-decl_stmt|,
+init|=
+literal|0
+decl_stmt|;
+name|unsigned
+name|int
 name|tlen
 decl_stmt|,
 name|nrem
@@ -5310,6 +5322,8 @@ decl_stmt|,
 name|nused
 decl_stmt|,
 name|digits
+init|=
+literal|0
 decl_stmt|,
 name|labels
 decl_stmt|,
@@ -5432,31 +5446,6 @@ name|offsets
 index|[
 literal|0
 index|]
-operator|=
-literal|0
-expr_stmt|;
-comment|/* 	 * Initialize things to make the compiler happy; they're not required. 	 */
-name|n1
-operator|=
-literal|0
-expr_stmt|;
-name|n2
-operator|=
-literal|0
-expr_stmt|;
-name|label
-operator|=
-name|NULL
-expr_stmt|;
-name|digits
-operator|=
-literal|0
-expr_stmt|;
-name|value
-operator|=
-literal|0
-expr_stmt|;
-name|count
 operator|=
 literal|0
 expr_stmt|;
@@ -5831,6 +5820,11 @@ name|state
 operator|=
 name|ft_escape
 expr_stmt|;
+name|POST
+argument_list|(
+name|state
+argument_list|)
+expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
 name|ft_escape
@@ -6132,6 +6126,11 @@ expr_stmt|;
 name|nrem
 operator|-=
 name|n1
+expr_stmt|;
+name|POST
+argument_list|(
+name|nrem
+argument_list|)
 expr_stmt|;
 while|while
 condition|(

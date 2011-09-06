@@ -1259,7 +1259,7 @@ argument_list|(
 operator|*
 operator|(
 specifier|volatile
-name|u_int32_t
+name|u_int8_t
 operator|*
 operator|)
 operator|(
@@ -1296,7 +1296,7 @@ argument_list|(
 operator|*
 operator|(
 specifier|volatile
-name|u_int32_t
+name|u_int16_t
 operator|*
 operator|)
 operator|(
@@ -1460,7 +1460,7 @@ block|{
 operator|*
 operator|(
 specifier|volatile
-name|u_int32_t
+name|u_int8_t
 operator|*
 operator|)
 operator|(
@@ -1469,9 +1469,6 @@ operator|+
 name|offset
 operator|)
 operator|=
-operator|(
-name|u_int32_t
-operator|)
 name|value
 expr_stmt|;
 block|}
@@ -1499,7 +1496,7 @@ block|{
 operator|*
 operator|(
 specifier|volatile
-name|u_int32_t
+name|u_int16_t
 operator|*
 operator|)
 operator|(
@@ -1508,9 +1505,6 @@ operator|+
 name|offset
 operator|)
 operator|=
-operator|(
-name|u_int32_t
-operator|)
 name|value
 expr_stmt|;
 block|}

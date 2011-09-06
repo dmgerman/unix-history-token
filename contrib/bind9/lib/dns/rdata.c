@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: rdata.c,v 1.209 2011-01-13 04:59:25 tbox Exp $ */
+comment|/* $Id: rdata.c,v 1.209.8.2 2011-03-11 06:47:05 marka Exp $ */
 end_comment
 
 begin_comment
@@ -3238,6 +3238,13 @@ argument_list|,
 name|target
 argument_list|)
 expr_stmt|;
+name|INSIST
+argument_list|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
+argument_list|)
+expr_stmt|;
 name|dns_rdata_toregion
 argument_list|(
 name|rdata
@@ -4361,6 +4368,13 @@ decl_stmt|;
 name|isc_buffer_t
 name|buf
 decl_stmt|;
+if|if
+condition|(
+name|size
+operator|==
+literal|0U
+condition|)
+return|return;
 name|isc_buffer_init
 argument_list|(
 operator|&
@@ -4419,26 +4433,15 @@ name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
-block|{
-name|snprintf
+name|strlcpy
 argument_list|(
 name|array
 argument_list|,
-name|size
-argument_list|,
 literal|"<unknown>"
+argument_list|,
+name|size
 argument_list|)
 expr_stmt|;
-name|array
-index|[
-name|size
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-block|}
 block|}
 end_function
 

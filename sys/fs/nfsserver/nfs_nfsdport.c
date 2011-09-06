@@ -1214,6 +1214,12 @@ name|cnp
 operator|->
 name|cn_pnbuf
 expr_stmt|;
+name|ndp
+operator|->
+name|ni_strictrelative
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Extract and set starting directory. 	 */
 if|if
 condition|(

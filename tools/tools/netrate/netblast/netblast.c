@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -298,7 +304,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * We maintain and, if there's room, send a counter.  Note 		 * that even if the error is purely local, we still increment 		 * the counter, so missing sequence numbers on the receive 		 * side should not be assumed to be packets lost in transit. 		 * For example, if the UDP socket gets back an ICMP from a 		 * previous send, the error will turn up the current send 		 * operation, causing the current sequence number also to be 		 * skipped. 		 * 		 * XXXRW: Note alignment assumption. 		 */
+comment|/* 		 * We maintain and, if there's room, send a counter.  Note 		 * that even if the error is purely local, we still increment 		 * the counter, so missing sequence numbers on the receive 		 * side should not be assumed to be packets lost in transit. 		 * For example, if the UDP socket gets back an ICMP from a 		 * previous send, the error will turn up the current send 		 * operation, causing the current sequence number also to be 		 * skipped. 		 */
 if|if
 condition|(
 name|packet_len
@@ -306,17 +312,10 @@ operator|>=
 literal|4
 condition|)
 block|{
-operator|*
-operator|(
-operator|(
-name|u_int32_t
-operator|*
-operator|)
-name|packet
-operator|)
-operator|=
-name|htonl
+name|be32enc
 argument_list|(
+name|packet
+argument_list|,
 name|counter
 argument_list|)
 expr_stmt|;

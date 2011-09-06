@@ -1196,20 +1196,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|r_debug_state
-parameter_list|(
-name|struct
+argument_list|(
+expr|struct
 name|r_debug
-modifier|*
-parameter_list|,
-name|struct
+operator|*
+argument_list|,
+expr|struct
 name|link_map
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+argument_list|)
+name|__noinline
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Data declarations.  */
@@ -13824,7 +13825,10 @@ name|link_map
 modifier|*
 name|m
 parameter_list|)
-block|{ }
+block|{
+comment|/*      * The following is a hack to force the compiler to emit calls to      * this function, even when optimizing.  If the function is empty,      * the compiler is not obliged to emit any code for calls to it,      * even when marked __noinline.  However, gdb depends on those      * calls being made.      */
+asm|__asm __volatile("" : : : "memory");
+block|}
 end_function
 
 begin_comment

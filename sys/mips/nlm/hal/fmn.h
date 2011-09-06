@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 2003-2011 Netlogic Microsystems (Netlogic). All rights  * reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * THIS SOFTWARE IS PROVIDED BY Netlogic Microsystems ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL NETLOGIC OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  * NETLOGIC_BSD */
+comment|/*-  * Copyright 2003-2011 Netlogic Microsystems (Netlogic). All rights  * reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * THIS SOFTWARE IS PROVIDED BY Netlogic Microsystems ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL NETLOGIC OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  * NETLOGIC_BSD  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -26,7 +26,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XLP_CMS_OUTPUTQ_CONFIG_REG
+name|CMS_OUTPUTQ_CONFIG
 parameter_list|(
 name|i
 parameter_list|)
@@ -36,70 +36,70 @@ end_define
 begin_define
 define|#
 directive|define
-name|XLP_CMS_MAX_OUTPUTQ
+name|CMS_MAX_OUTPUTQ
 value|1024
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_OUTPUTQ_CREDIT_CFG_REG
+name|CMS_OUTPUTQ_CREDIT_CFG
 value|(0x2000/4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_MSG_CONFIG_REG
+name|CMS_MSG_CONFIG
 value|(0x2008/4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_MSG_ERR_REG
+name|CMS_MSG_ERR
 value|(0x2010/4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_TRACE_CONFIG_REG
+name|CMS_TRACE_CONFIG
 value|(0x2018/4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_TRACE_BASE_ADDR_REG
+name|CMS_TRACE_BASE_ADDR
 value|(0x2020/4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_TRACE_LIMIT_ADDR_REG
+name|CMS_TRACE_LIMIT_ADDR
 value|(0x2028/4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_TRACE_CURRENT_ADDR_REG
+name|CMS_TRACE_CURRENT_ADDR
 value|(0x2030/4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_MSG_ENDIAN_SWAP_REG
+name|CMS_MSG_ENDIAN_SWAP
 value|(0x2038/4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_CPU_PUSHQ
+name|CMS_CPU_PUSHQ
 parameter_list|(
 name|node
 parameter_list|,
@@ -116,7 +116,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|XLP_CMS_POPQ
+name|CMS_POPQ
 parameter_list|(
 name|node
 parameter_list|,
@@ -128,7 +128,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 parameter_list|(
 name|node
 parameter_list|,
@@ -140,7 +140,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|XLP_CMS_POPQ_QID
+name|CMS_POPQ_QID
 parameter_list|(
 name|i
 parameter_list|)
@@ -150,14 +150,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|XLP_CMS_POPQ_MAXQID
+name|CMS_POPQ_MAXQID
 value|255
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_PCIE0_QID
+name|CMS_PCIE0_QID
 parameter_list|(
 name|i
 parameter_list|)
@@ -167,14 +167,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|XLP_CMS_PCIE0_MAXQID
+name|CMS_PCIE0_MAXQID
 value|257
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_PCIE1_QID
+name|CMS_PCIE1_QID
 parameter_list|(
 name|i
 parameter_list|)
@@ -184,14 +184,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|XLP_CMS_PCIE1_MAXQID
+name|CMS_PCIE1_MAXQID
 value|259
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_PCIE2_QID
+name|CMS_PCIE2_QID
 parameter_list|(
 name|i
 parameter_list|)
@@ -201,14 +201,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|XLP_CMS_PCIE2_MAXQID
+name|CMS_PCIE2_MAXQID
 value|261
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_PCIE3_QID
+name|CMS_PCIE3_QID
 parameter_list|(
 name|i
 parameter_list|)
@@ -218,14 +218,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|XLP_CMS_PCIE3_MAXQID
+name|CMS_PCIE3_MAXQID
 value|263
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_DTE_QID
+name|CMS_DTE_QID
 parameter_list|(
 name|i
 parameter_list|)
@@ -235,14 +235,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|XLP_CMS_DTE_MAXQID
+name|CMS_DTE_MAXQID
 value|267
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_RSA_ECC_QID
+name|CMS_RSA_ECC_QID
 parameter_list|(
 name|i
 parameter_list|)
@@ -252,14 +252,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|XLP_CMS_RSA_ECC_MAXQID
+name|CMS_RSA_ECC_MAXQID
 value|280
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_CRYPTO_QID
+name|CMS_CRYPTO_QID
 parameter_list|(
 name|i
 parameter_list|)
@@ -269,7 +269,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|XLP_CMS_CRYPTO_MAXQID
+name|CMS_CRYPTO_MAXQID
 value|296
 end_define
 
@@ -280,7 +280,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XLP_CMS_CMP_QID
+name|CMS_CMP_QID
 parameter_list|(
 name|i
 parameter_list|)
@@ -290,14 +290,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|XLP_CMS_CMP_MAXQID
+name|CMS_CMP_MAXQID
 value|305
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_POE_QID
+name|CMS_POE_QID
 parameter_list|(
 name|i
 parameter_list|)
@@ -307,14 +307,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|XLP_CMS_POE_MAXQID
+name|CMS_POE_MAXQID
 value|391
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_NAE_QID
+name|CMS_NAE_QID
 parameter_list|(
 name|i
 parameter_list|)
@@ -324,42 +324,42 @@ end_define
 begin_define
 define|#
 directive|define
-name|XLP_CMS_NAE_MAXQID
+name|CMS_NAE_MAXQID
 value|1023
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_NAE_TX_VC_BASE
+name|CMS_NAE_TX_VC_BASE
 value|476
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_NAE_TX_VC_LIMIT
+name|CMS_NAE_TX_VC_LIMIT
 value|999
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_NAE_RX_VC_BASE
+name|CMS_NAE_RX_VC_BASE
 value|1000
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_NAE_RX_VC_LIMIT
+name|CMS_NAE_RX_VC_LIMIT
 value|1019
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_MAX_CMS_QUEUES
+name|MAX_CMS_QUEUES
 value|1024
 end_define
 
@@ -370,21 +370,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XLP_CMS_LVL_INTR_DISABLE
+name|CMS_LVL_INTR_DISABLE
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_LVL_LOW_WATERMARK
+name|CMS_LVL_LOW_WATERMARK
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_LVL_HI_WATERMARK
+name|CMS_LVL_HI_WATERMARK
 value|2
 end_define
 
@@ -395,35 +395,35 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XLP_CMS_QUEUE_NON_EMPTY
+name|CMS_QUEUE_NON_EMPTY
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_QUEUE_QUARTER_FULL
+name|CMS_QUEUE_QUARTER_FULL
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_QUEUE_HALF_FULL
+name|CMS_QUEUE_HALF_FULL
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_QUEUE_THREE_QUARTER_FULL
+name|CMS_QUEUE_THREE_QUARTER_FULL
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_QUEUE_FULL
+name|CMS_QUEUE_FULL
 value|4
 end_define
 
@@ -434,21 +434,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XLP_CMS_TIMER_INTR_DISABLE
+name|CMS_TIMER_INTR_DISABLE
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_TIMER_CONSUMER
+name|CMS_TIMER_CONSUMER
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_TIMER_PRODUCER
+name|CMS_TIMER_PRODUCER
 value|1
 end_define
 
@@ -459,91 +459,91 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XLP_CMS_TWO_POW_EIGHT_CYCLES
+name|CMS_TWO_POW_EIGHT_CYCLES
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_TWO_POW_TEN_CYCLES
+name|CMS_TWO_POW_TEN_CYCLES
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_TWO_POW_TWELVE_CYCLES
+name|CMS_TWO_POW_TWELVE_CYCLES
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_TWO_POW_FOURTEEN_CYCLES
+name|CMS_TWO_POW_FOURTEEN_CYCLES
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_TWO_POW_SIXTEEN_CYCLES
+name|CMS_TWO_POW_SIXTEEN_CYCLES
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_TWO_POW_EIGHTTEEN_CYCLES
+name|CMS_TWO_POW_EIGHTTEEN_CYCLES
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_TWO_POW_TWENTY_CYCLES
+name|CMS_TWO_POW_TWENTY_CYCLES
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_TWO_POW_TWENTYTWO_CYCLES
+name|CMS_TWO_POW_TWENTYTWO_CYCLES
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_QUEUE_ENA
+name|CMS_QUEUE_ENA
 value|1ULL
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_QUEUE_DIS
+name|CMS_QUEUE_DIS
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_SPILL_ENA
+name|CMS_SPILL_ENA
 value|1ULL
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_SPILL_DIS
+name|CMS_SPILL_DIS
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_MAX_VCPU_VC
+name|CMS_MAX_VCPU_VC
 value|4
 end_define
 
@@ -554,29 +554,29 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XLP_CMS_ON_CHIP_MESG_SPACE
+name|CMS_ON_CHIP_MESG_SPACE
 value|(32*1024)
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_ON_CHIP_PER_QUEUE_SPACE
+name|CMS_ON_CHIP_PER_QUEUE_SPACE
 define|\
-value|((XLP_CMS_ON_CHIP_MESG_SPACE)/(XLP_MAX_CMS_QUEUES))
+value|((CMS_ON_CHIP_MESG_SPACE)/(MAX_CMS_QUEUES))
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_MAX_ONCHIP_SEGMENTS
+name|CMS_MAX_ONCHIP_SEGMENTS
 value|1024
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_MAX_SPILL_SEGMENTS_PER_QUEUE
+name|CMS_MAX_SPILL_SEGMENTS_PER_QUEUE
 value|64
 end_define
 
@@ -587,63 +587,63 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XLP_CMS_ILLEGAL_DST_ERROR
+name|CMS_ILLEGAL_DST_ERROR
 value|0x100
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_BIU_TIMEOUT_ERROR
+name|CMS_BIU_TIMEOUT_ERROR
 value|0x080
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_BIU_ERROR
+name|CMS_BIU_ERROR
 value|0x040
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_SPILL_FILL_UNCORRECT_ECC_ERROR
+name|CMS_SPILL_FILL_UNCORRECT_ECC_ERROR
 value|0x020
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_SPILL_FILL_CORRECT_ECC_ERROR
+name|CMS_SPILL_FILL_CORRECT_ECC_ERROR
 value|0x010
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_SPILL_UNCORRECT_ECC_ERROR
+name|CMS_SPILL_UNCORRECT_ECC_ERROR
 value|0x008
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_SPILL_CORRECT_ECC_ERROR
+name|CMS_SPILL_CORRECT_ECC_ERROR
 value|0x004
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_OUTPUTQ_UNCORRECT_ECC_ERROR
+name|CMS_OUTPUTQ_UNCORRECT_ECC_ERROR
 value|0x002
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_OUTPUTQ_CORRECT_ECC_ERROR
+name|CMS_OUTPUTQ_CORRECT_ECC_ERROR
 value|0x001
 end_define
 
@@ -654,7 +654,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XLP_CMS_SINGLE_ENTRY_MSG_SIZE
+name|CMS_SINGLE_ENTRY_MSG_SIZE
 value|12
 end_define
 
@@ -665,12 +665,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XLP_CMS_PER_QUEUE_SPILL_MEM
+name|CMS_PER_QUEUE_SPILL_MEM
 parameter_list|(
 name|spilltotmsgs
 parameter_list|)
 define|\
-value|((spilltotmsgs) * (XLP_CMS_SINGLE_ENTRY_MSG_SIZE))
+value|((spilltotmsgs) * (CMS_SINGLE_ENTRY_MSG_SIZE))
 end_define
 
 begin_comment
@@ -680,12 +680,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XLP_CMS_TOTAL_SPILL_MEM
+name|CMS_TOTAL_SPILL_MEM
 parameter_list|(
 name|spilltotmsgs
 parameter_list|)
 define|\
-value|((XLP_CMS_PER_QUEUE_SPILL_MEM(spilltotmsgs)) *	\ 		(XLP_MAX_CMS_QUEUES))
+value|((CMS_PER_QUEUE_SPILL_MEM(spilltotmsgs)) *	\ 		(MAX_CMS_QUEUES))
 end_define
 
 begin_comment
@@ -695,12 +695,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XLP_CMS_TOTAL_QUEUE_SIZE
+name|CMS_TOTAL_QUEUE_SIZE
 parameter_list|(
 name|spilltotmsgs
 parameter_list|)
 define|\
-value|((spilltotmsgs) + (XLP_CMS_ON_CHIP_PER_QUEUE_SPACE))
+value|((spilltotmsgs) + (CMS_ON_CHIP_PER_QUEUE_SPACE))
 end_define
 
 begin_comment
@@ -710,126 +710,126 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XLP_CMS_CPU0_SRC_STID
+name|CMS_CPU0_SRC_STID
 value|(0<< 4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_CPU1_SRC_STID
+name|CMS_CPU1_SRC_STID
 value|(1<< 4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_CPU2_SRC_STID
+name|CMS_CPU2_SRC_STID
 value|(2<< 4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_CPU3_SRC_STID
+name|CMS_CPU3_SRC_STID
 value|(3<< 4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_CPU4_SRC_STID
+name|CMS_CPU4_SRC_STID
 value|(4<< 4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_CPU5_SRC_STID
+name|CMS_CPU5_SRC_STID
 value|(5<< 4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_CPU6_SRC_STID
+name|CMS_CPU6_SRC_STID
 value|(6<< 4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_CPU7_SRC_STID
+name|CMS_CPU7_SRC_STID
 value|(7<< 4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_PCIE0_SRC_STID
+name|CMS_PCIE0_SRC_STID
 value|256
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_PCIE1_SRC_STID
+name|CMS_PCIE1_SRC_STID
 value|258
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_PCIE2_SRC_STID
+name|CMS_PCIE2_SRC_STID
 value|260
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_PCIE3_SRC_STID
+name|CMS_PCIE3_SRC_STID
 value|262
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_DTE_SRC_STID
+name|CMS_DTE_SRC_STID
 value|264
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_RSA_ECC_SRC_STID
+name|CMS_RSA_ECC_SRC_STID
 value|272
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_CRYPTO_SRC_STID
+name|CMS_CRYPTO_SRC_STID
 value|281
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_CMP_SRC_STID
+name|CMS_CMP_SRC_STID
 value|298
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_POE_SRC_STID
+name|CMS_POE_SRC_STID
 value|384
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_NAE_SRC_STID
+name|CMS_NAE_SRC_STID
 value|476
 end_define
 
@@ -842,14 +842,14 @@ end_if
 begin_define
 define|#
 directive|define
-name|XLP_CMS_DEFAULT_CREDIT
+name|CMS_DEFAULT_CREDIT
 parameter_list|(
 name|cmstotstns
 parameter_list|,
 name|spilltotmsgs
 parameter_list|)
 define|\
-value|((XLP_CMS_TOTAL_QUEUE_SIZE(spilltotmsgs)) /	\ 		(cmstotstns))
+value|((CMS_TOTAL_QUEUE_SIZE(spilltotmsgs)) /	\ 		(cmstotstns))
 end_define
 
 begin_endif
@@ -860,7 +860,7 @@ end_endif
 begin_define
 define|#
 directive|define
-name|XLP_CMS_DEFAULT_CREDIT
+name|CMS_DEFAULT_CREDIT
 parameter_list|(
 name|cmstotstns
 parameter_list|,
@@ -876,40 +876,40 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XLP_CMS_POPQID_START
+name|CMS_POPQID_START
 value|128
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_POPQID_END
+name|CMS_POPQID_END
 value|255
 end_define
 
 begin_define
 define|#
 directive|define
-name|XLP_CMS_INT_RCVD
+name|CMS_INT_RCVD
 value|0x800000000000000ULL
 end_define
 
 begin_define
 define|#
 directive|define
-name|nlm_rdreg_cms
+name|nlm_read_cms_reg
 parameter_list|(
 name|b
 parameter_list|,
 name|r
 parameter_list|)
-value|nlm_read_reg64_xkseg(b,r)
+value|nlm_read_reg64_xkphys(b,r)
 end_define
 
 begin_define
 define|#
 directive|define
-name|nlm_wreg_cms
+name|nlm_write_cms_reg
 parameter_list|(
 name|b
 parameter_list|,
@@ -917,13 +917,13 @@ name|r
 parameter_list|,
 name|v
 parameter_list|)
-value|nlm_write_reg64_xkseg(b,r,v)
+value|nlm_write_reg64_xkphys(b,r,v)
 end_define
 
 begin_define
 define|#
 directive|define
-name|nlm_pcibase_cms
+name|nlm_get_cms_pcibase
 parameter_list|(
 name|node
 parameter_list|)
@@ -933,11 +933,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|nlm_regbase_cms
+name|nlm_get_cms_regbase
 parameter_list|(
 name|node
 parameter_list|)
-value|nlm_pcibar0_base_xkphys(nlm_pcibase_cms(node))
+value|nlm_xkphys_map_pcibar0(nlm_get_cms_pcibase(node))
 end_define
 
 begin_enum
@@ -1054,7 +1054,7 @@ specifier|extern
 name|uint32_t
 name|cms_onchip_seg_availability
 index|[
-name|XLP_CMS_ON_CHIP_PER_QUEUE_SPACE
+name|CMS_ON_CHIP_PER_QUEUE_SPACE
 index|]
 decl_stmt|;
 end_decl_stmt

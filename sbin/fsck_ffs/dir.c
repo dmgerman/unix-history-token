@@ -1199,7 +1199,7 @@ decl_stmt|;
 name|u_char
 name|type
 decl_stmt|;
-name|u_int
+name|u_int8_t
 name|namlen
 decl_stmt|;
 name|int
@@ -1293,8 +1293,8 @@ operator|<
 name|size
 operator|||
 name|namlen
-operator|>
-name|MAXNAMLEN
+operator|==
+literal|0
 operator|||
 name|type
 operator|>

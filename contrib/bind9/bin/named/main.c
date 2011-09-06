@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.180 2010-12-22 03:59:02 marka Exp $ */
+comment|/* $Id: main.c,v 1.180.14.3 2011-03-11 06:47:00 marka Exp $ */
 end_comment
 
 begin_comment
@@ -167,6 +167,12 @@ directive|include
 file|<dst/result.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dlz/dlz_dlopen_driver.h>
+end_include
+
 begin_comment
 comment|/*  * Defining NS_MAIN provides storage declarations (rather than extern)  * for variables in named/globals.h.  */
 end_comment
@@ -295,15 +301,15 @@ begin_comment
 comment|/* #include "xxdb.h" */
 end_comment
 
-begin_comment
-comment|/*  * Include DLZ drivers if appropriate.  */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DLZ
+name|CONTRIB_DLZ
 end_ifdef
+
+begin_comment
+comment|/*  * Include contributed DLZ drivers if appropriate.  */
+end_comment
 
 begin_include
 include|#
@@ -2325,6 +2331,11 @@ name|argv
 operator|+=
 name|isc_commandline_index
 expr_stmt|;
+name|POST
+argument_list|(
+name|argv
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|argc
@@ -3310,8 +3321,37 @@ comment|/* 	 * Add calls to register sdb drivers here. 	 */
 comment|/* xxdb_init(); */
 ifdef|#
 directive|ifdef
-name|DLZ
-comment|/* 	 * Register any DLZ drivers. 	 */
+name|ISC_DLZ_DLOPEN
+comment|/* 	 * Register the DLZ "dlopen" driver. 	 */
+name|result
+operator|=
+name|dlz_dlopen_init
+argument_list|(
+name|ns_g_mctx
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+name|ns_main_earlyfatal
+argument_list|(
+literal|"dlz_dlopen_init() failed: %s"
+argument_list|,
+name|isc_result_totext
+argument_list|(
+name|result
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|CONTRIB_DLZ
+comment|/* 	 * Register any other contributed DLZ drivers. 	 */
 name|result
 operator|=
 name|dlz_drivers_init
@@ -3370,9 +3410,18 @@ comment|/* 	 * Add calls to unregister sdb drivers here. 	 */
 comment|/* xxdb_clear(); */
 ifdef|#
 directive|ifdef
-name|DLZ
-comment|/* 	 * Unregister any DLZ drivers. 	 */
+name|CONTRIB_DLZ
+comment|/* 	 * Unregister contributed DLZ drivers. 	 */
 name|dlz_drivers_clear
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ISC_DLZ_DLOPEN
+comment|/* 	 * Unregister "dlopen" DLZ driver. 	 */
+name|dlz_dlopen_clear
 argument_list|()
 expr_stmt|;
 endif|#

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2006-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: spnego.c,v 1.16 2011-01-11 23:47:13 tbox Exp $ */
+comment|/* $Id: spnego.c,v 1.16.10.2 2011-04-04 11:10:57 marka Exp $ */
 end_comment
 
 begin_comment
@@ -1199,7 +1199,7 @@ name|token
 operator|->
 name|length
 operator|==
-literal|0
+literal|0U
 condition|)
 return|return
 operator|(
@@ -1246,7 +1246,7 @@ operator|&
 literal|0x7f
 operator|)
 operator|>
-literal|4
+literal|4U
 condition|)
 return|return
 operator|(
@@ -1910,7 +1910,7 @@ name|mech_token
 operator|->
 name|length
 operator|!=
-literal|0
+literal|0U
 condition|)
 block|{
 name|resp
@@ -2569,7 +2569,7 @@ name|ot
 operator|->
 name|length
 operator|!=
-literal|0
+literal|0U
 condition|)
 name|gss_release_buffer
 argument_list|(
@@ -2632,7 +2632,7 @@ if|if
 condition|(
 name|total_len
 operator|<
-literal|1
+literal|1U
 condition|)
 return|return
 operator|(
@@ -3066,7 +3066,7 @@ if|if
 condition|(
 name|len
 operator|>
-literal|0
+literal|0U
 condition|)
 block|{
 name|val
@@ -3147,7 +3147,7 @@ if|if
 condition|(
 name|len
 operator|<=
-literal|0
+literal|0U
 condition|)
 return|return
 operator|(
@@ -3167,7 +3167,7 @@ if|if
 condition|(
 name|v
 operator|<
-literal|128
+literal|128U
 condition|)
 block|{
 operator|*
@@ -3200,7 +3200,7 @@ if|if
 condition|(
 name|v
 operator|==
-literal|0x80
+literal|0x80U
 condition|)
 block|{
 operator|*
@@ -3337,7 +3337,7 @@ name|data
 operator|->
 name|length
 operator|!=
-literal|0
+literal|0U
 condition|)
 return|return
 operator|(
@@ -3407,7 +3407,7 @@ if|if
 condition|(
 name|len
 operator|<
-literal|1
+literal|1U
 condition|)
 return|return
 operator|(
@@ -3441,7 +3441,7 @@ name|NULL
 operator|&&
 name|len
 operator|!=
-literal|0
+literal|0U
 condition|)
 return|return
 operator|(
@@ -3490,7 +3490,7 @@ literal|2
 init|;
 name|len
 operator|>
-literal|0
+literal|0U
 condition|;
 operator|++
 name|n
@@ -3525,7 +3525,7 @@ do|while
 condition|(
 name|len
 operator|>
-literal|0
+literal|0U
 operator|&&
 name|p
 index|[
@@ -3626,7 +3626,7 @@ if|if
 condition|(
 name|len
 operator|<
-literal|1
+literal|1U
 condition|)
 return|return
 operator|(
@@ -4575,7 +4575,7 @@ if|if
 condition|(
 name|len
 operator|<
-literal|128
+literal|128U
 condition|)
 return|return
 operator|(
@@ -4641,7 +4641,7 @@ while|while
 condition|(
 name|len
 operator|>
-literal|0
+literal|0U
 operator|&&
 name|val
 condition|)
@@ -4694,7 +4694,7 @@ if|if
 condition|(
 name|len
 operator|<
-literal|1
+literal|1U
 condition|)
 return|return
 operator|(
@@ -4763,7 +4763,7 @@ if|if
 condition|(
 name|len
 operator|<
-literal|1
+literal|1U
 condition|)
 return|return
 operator|(
@@ -4805,7 +4805,7 @@ if|if
 condition|(
 name|len
 operator|<
-literal|1
+literal|1U
 condition|)
 return|return
 operator|(
@@ -4836,7 +4836,7 @@ if|if
 condition|(
 name|len
 operator|<
-literal|1
+literal|1U
 condition|)
 return|return
 operator|(
@@ -4881,7 +4881,7 @@ if|if
 condition|(
 name|len
 operator|<
-literal|1
+literal|1U
 condition|)
 return|return
 operator|(
@@ -4939,7 +4939,7 @@ if|if
 condition|(
 name|len
 operator|<
-literal|1
+literal|1U
 condition|)
 return|return
 operator|(
@@ -4950,7 +4950,7 @@ if|if
 condition|(
 name|val
 operator|<
-literal|128
+literal|128U
 condition|)
 block|{
 operator|*
@@ -5172,7 +5172,7 @@ if|if
 condition|(
 name|len
 operator|<
-literal|1
+literal|1U
 condition|)
 return|return
 operator|(
@@ -5205,7 +5205,7 @@ if|if
 condition|(
 name|len
 operator|<
-literal|1
+literal|1U
 condition|)
 return|return
 operator|(
@@ -5235,7 +5235,7 @@ if|if
 condition|(
 name|len
 operator|<
-literal|1
+literal|1U
 condition|)
 return|return
 operator|(
@@ -5308,7 +5308,7 @@ if|if
 condition|(
 name|len
 operator|<
-literal|1
+literal|1U
 condition|)
 return|return
 operator|(
@@ -6143,7 +6143,7 @@ name|output_token
 operator|->
 name|length
 operator|!=
-literal|0
+literal|0U
 condition|)
 name|gss_release_buffer
 argument_list|(
@@ -6337,7 +6337,7 @@ if|if
 condition|(
 name|total_len
 operator|<
-literal|1
+literal|1U
 condition|)
 return|return
 operator|(
@@ -6646,7 +6646,7 @@ name|krb5_output_token
 operator|.
 name|length
 operator|>
-literal|0
+literal|0U
 condition|)
 block|{
 name|token_init
@@ -6933,7 +6933,7 @@ name|krb5_output_token
 operator|.
 name|length
 operator|!=
-literal|0
+literal|0U
 condition|)
 name|gss_release_buffer
 argument_list|(
@@ -7578,7 +7578,7 @@ name|input_token
 operator|->
 name|length
 operator|==
-literal|0
+literal|0U
 condition|)
 return|return
 operator|(

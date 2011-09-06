@@ -4737,9 +4737,9 @@ argument_list|(
 operator|(
 name|m
 operator|->
-name|flags
+name|aflags
 operator|&
-name|PG_WRITEABLE
+name|PGA_WRITEABLE
 operator|)
 operator|==
 literal|0

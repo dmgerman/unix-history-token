@@ -510,6 +510,12 @@ name|ni_startdir
 operator|=
 name|NULL
 expr_stmt|;
+name|nd
+operator|->
+name|ni_strictrelative
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 

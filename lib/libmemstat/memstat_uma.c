@@ -21,16 +21,6 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|LIBMEMSTAT
-end_define
-
-begin_comment
-comment|/* Cause vm_page.h not to include opt_vmpage.h */
-end_comment
-
 begin_include
 include|#
 directive|include

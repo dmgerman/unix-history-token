@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 2003-2011 Netlogic Microsystems (Netlogic). All rights  * reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * THIS SOFTWARE IS PROVIDED BY Netlogic Microsystems ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL NETLOGIC OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  * NETLOGIC_BSD */
+comment|/*-  * Copyright 2003-2011 Netlogic Microsystems (Netlogic). All rights  * reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * THIS SOFTWARE IS PROVIDED BY Netlogic Microsystems ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL NETLOGIC OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  * NETLOGIC_BSD */
 end_comment
 
 begin_include
@@ -26,13 +26,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/cpufunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<mips/nlm/hal/mips-extns.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/nlm/hal/mmio.h>
+file|<mips/nlm/hal/haldefs.h>
 end_include
 
 begin_include
@@ -46,20 +58,6 @@ include|#
 directive|include
 file|<mips/nlm/hal/fmn.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
-end_include
-
-begin_decl_stmt
-name|uint32_t
-name|bad_xlp_num_nodes
-init|=
-literal|4
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* XLP can take upto 16K of FMN messages per hardware queue, as spill. * But, configuring all 16K causes the total spill memory to required * to blow upto 192MB for single chip configuration, and 768MB in four * chip configuration. Hence for now, we will setup the per queue spill * as 1K FMN messages. With this, the total spill memory needed for 1024 * hardware queues (with 12bytes per single entry FMN message) becomes * (1*1024)*12*1024queues = 12MB. For the four chip config, the memory * needed = 12 * 4 = 48MB. */
@@ -94,49 +92,10 @@ begin_decl_stmt
 name|uint32_t
 name|cms_onchip_seg_availability
 index|[
-name|XLP_CMS_ON_CHIP_PER_QUEUE_SPACE
+name|CMS_ON_CHIP_PER_QUEUE_SPACE
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_function
-name|int
-name|nlm_cms_verify_credit_config
-parameter_list|(
-name|int
-name|spill_en
-parameter_list|,
-name|int
-name|tot_credit
-parameter_list|)
-block|{
-comment|/* Note: In XLP there seem to be no mechanism to read back 	 * the credit count that has been programmed into a sid / did pair; 	 * since we have only one register 0x2000 to read. 	 * Hence it looks like all credit mgmt/verification needs to 	 * be done by software. Software could keep track of total credits 	 * getting programmed and verify it from this function. 	 */
-if|if
-condition|(
-name|spill_en
-condition|)
-block|{
-comment|/* TODO */
-block|}
-if|if
-condition|(
-name|tot_credit
-operator|>
-operator|(
-name|XLP_CMS_ON_CHIP_MESG_SPACE
-operator|*
-name|bad_xlp_num_nodes
-operator|)
-condition|)
-return|return
-literal|1
-return|;
-comment|/* credits overflowed - should not happen */
-return|return
-literal|0
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/**  * Takes inputs as node, queue_size and maximum number of queues.  * Calculates the base, start& end and returns the same for a  * defined qid.  *  * The output queues are maintained in the internal output buffer  * which is a on-chip SRAM structure. For the actial hardware  * internal implementation, It is a structure which consists  * of eight banks of 4096-entry x message-width SRAMs. The SRAM  * implementation is designed to run at 1GHz with a 1-cycle read/write  * access. A read/write transaction can be initiated for each bank  * every cycle for a total of eight accesses per cycle. Successive  * entries of the same output queue are placed in successive banks.  * This is done to spread different read& write accesses to same/different  * output queue over as many different banks as possible so that they  * can be scheduled concurrently. Spreading the accesses to as many banks  * as possible to maximize the concurrency internally is important for  * achieving the desired peak throughput. This is done by h/w implementation  * itself.  *  * Output queues are allocated from this internal output buffer by  * software. The total capacity of the output buffer is 32K-entry.  * Each output queue can be sized from 32-entry to 1024-entry in  * increments of 32-entry. This is done by specifying a Start& a  * End pointer: pointers to the first& last 32-entry chunks allocated  * to the output queue.  *  * To optimize the storage required for 1024 OQ pointers, the upper 5-bits  * are shared by the Start& the End pointer. The side-effect of this  * optimization is that an OQ can't cross a 1024-entry boundary. Also, the  * lower 5-bits don't need to be specified in the Start& the End pointer  * as the allocation is in increments of 32-entries.  *  * Queue occupancy is tracked by a Head& a Tail pointer. Tail pointer  * indicates the location to which next entry will be written& Head  * pointer indicates the location from which next entry will be read. When  * these pointers reach the top of the allocated space (indicated by the  * End pointer), they are reset to the bottom of the allocated space  * (indicated by the Start pointer).  *  * Output queue pointer information:  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  *  *   14               10 9              5 4                 0  *   ------------------  *   | base ptr       |  *   ------------------  *                       ----------------  *                       | start ptr    |  *                       ----------------  *                       ----------------  *                       | end   ptr    |  *                       ----------------  *                       ------------------------------------  *                       |           head ptr               |  *                       ------------------------------------  *                       ------------------------------------  *                       |           tail ptr               |  *                       ------------------------------------  * Note:  * A total of 1024 segments can sit on one software-visible "bank"  * of internal SRAM. Each segment contains 32 entries. Also note  * that sw-visible "banks" are not the same as the actual internal  * 8-bank implementation of hardware. It is an optimization of  * internal access.  *  */
@@ -184,11 +143,11 @@ literal|0
 operator|)
 operator|)
 expr_stmt|;
-name|nlm_wreg_cms
+name|nlm_write_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_OUTPUTQ_CREDIT_CFG_REG
+name|CMS_OUTPUTQ_CREDIT_CFG
 argument_list|,
 name|val
 argument_list|)
@@ -246,41 +205,41 @@ if|#
 directive|if
 literal|0
 comment|/* configure credits for src cpu0, on this queue */
-block|nlm_cms_setup_credits(base, qid, XLP_CMS_CPU0_SRC_STID, 		XLP_CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
+block|nlm_cms_setup_credits(base, qid, CMS_CPU0_SRC_STID, 		CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
 comment|/* configure credits for src cpu1, on this queue */
-block|nlm_cms_setup_credits(base, qid, XLP_CMS_CPU1_SRC_STID, 		XLP_CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
+block|nlm_cms_setup_credits(base, qid, CMS_CPU1_SRC_STID, 		CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
 comment|/* configure credits for src cpu2, on this queue */
-block|nlm_cms_setup_credits(base, qid, XLP_CMS_CPU2_SRC_STID, 		XLP_CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
+block|nlm_cms_setup_credits(base, qid, CMS_CPU2_SRC_STID, 		CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
 comment|/* configure credits for src cpu3, on this queue */
-block|nlm_cms_setup_credits(base, qid, XLP_CMS_CPU3_SRC_STID, 		XLP_CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
+block|nlm_cms_setup_credits(base, qid, CMS_CPU3_SRC_STID, 		CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
 comment|/* configure credits for src cpu4, on this queue */
-block|nlm_cms_setup_credits(base, qid, XLP_CMS_CPU4_SRC_STID, 		XLP_CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
+block|nlm_cms_setup_credits(base, qid, CMS_CPU4_SRC_STID, 		CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
 comment|/* configure credits for src cpu5, on this queue */
-block|nlm_cms_setup_credits(base, qid, XLP_CMS_CPU5_SRC_STID, 		XLP_CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
+block|nlm_cms_setup_credits(base, qid, CMS_CPU5_SRC_STID, 		CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
 comment|/* configure credits for src cpu6, on this queue */
-block|nlm_cms_setup_credits(base, qid, XLP_CMS_CPU6_SRC_STID, 		XLP_CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
+block|nlm_cms_setup_credits(base, qid, CMS_CPU6_SRC_STID, 		CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
 comment|/* configure credits for src cpu7, on this queue */
-block|nlm_cms_setup_credits(base, qid, XLP_CMS_CPU7_SRC_STID, 		XLP_CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
+block|nlm_cms_setup_credits(base, qid, CMS_CPU7_SRC_STID, 		CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
 comment|/* configure credits for src pcie0, on this queue */
-block|nlm_cms_setup_credits(base, qid, XLP_CMS_PCIE0_SRC_STID, 		XLP_CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
+block|nlm_cms_setup_credits(base, qid, CMS_PCIE0_SRC_STID, 		CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
 comment|/* configure credits for src pcie1, on this queue */
-block|nlm_cms_setup_credits(base, qid, XLP_CMS_PCIE1_SRC_STID, 		XLP_CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
+block|nlm_cms_setup_credits(base, qid, CMS_PCIE1_SRC_STID, 		CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
 comment|/* configure credits for src pcie2, on this queue */
-block|nlm_cms_setup_credits(base, qid, XLP_CMS_PCIE2_SRC_STID, 		XLP_CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
+block|nlm_cms_setup_credits(base, qid, CMS_PCIE2_SRC_STID, 		CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
 comment|/* configure credits for src pcie3, on this queue */
-block|nlm_cms_setup_credits(base, qid, XLP_CMS_PCIE3_SRC_STID, 		XLP_CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
+block|nlm_cms_setup_credits(base, qid, CMS_PCIE3_SRC_STID, 		CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
 comment|/* configure credits for src dte, on this queue */
-block|nlm_cms_setup_credits(base, qid, XLP_CMS_DTE_SRC_STID, 		XLP_CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
+block|nlm_cms_setup_credits(base, qid, CMS_DTE_SRC_STID, 		CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
 comment|/* configure credits for src rsa_ecc, on this queue */
-block|nlm_cms_setup_credits(base, qid, XLP_CMS_RSA_ECC_SRC_STID, 		XLP_CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
+block|nlm_cms_setup_credits(base, qid, CMS_RSA_ECC_SRC_STID, 		CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
 comment|/* configure credits for src crypto, on this queue */
-block|nlm_cms_setup_credits(base, qid, XLP_CMS_CRYPTO_SRC_STID, 		XLP_CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
+block|nlm_cms_setup_credits(base, qid, CMS_CRYPTO_SRC_STID, 		CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
 comment|/* configure credits for src cmp, on this queue */
-block|nlm_cms_setup_credits(base, qid, XLP_CMS_CMP_SRC_STID, 		XLP_CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
+block|nlm_cms_setup_credits(base, qid, CMS_CMP_SRC_STID, 		CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
 comment|/* configure credits for src poe, on this queue */
-block|nlm_cms_setup_credits(base, qid, XLP_CMS_POE_SRC_STID, 		XLP_CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
+block|nlm_cms_setup_credits(base, qid, CMS_POE_SRC_STID, 		CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
 comment|/* configure credits for src nae, on this queue */
-block|nlm_cms_setup_credits(base, qid, XLP_CMS_NAE_SRC_STID, 		XLP_CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
+block|nlm_cms_setup_credits(base, qid, CMS_NAE_SRC_STID, 		CMS_DEFAULT_CREDIT(nlm_cms_total_stations, 			nlm_cms_spill_total_messages));
 endif|#
 directive|endif
 return|return
@@ -320,7 +279,7 @@ if|if
 condition|(
 name|nsegs
 operator|>
-name|XLP_CMS_MAX_SPILL_SEGMENTS_PER_QUEUE
+name|CMS_MAX_SPILL_SEGMENTS_PER_QUEUE
 condition|)
 block|{
 return|return
@@ -329,12 +288,12 @@ return|;
 block|}
 name|queue_config
 operator|=
-name|nlm_rdreg_cms
+name|nlm_read_cms_reg
 argument_list|(
 name|base
 argument_list|,
 operator|(
-name|XLP_CMS_OUTPUTQ_CONFIG_REG
+name|CMS_OUTPUTQ_CONFIG
 argument_list|(
 name|qid
 argument_list|)
@@ -361,7 +320,7 @@ operator|(
 operator|(
 name|uint64_t
 operator|)
-name|XLP_CMS_SPILL_ENA
+name|CMS_SPILL_ENA
 operator|<<
 literal|62
 operator|)
@@ -397,12 +356,12 @@ literal|15
 operator|)
 operator|)
 expr_stmt|;
-name|nlm_wreg_cms
+name|nlm_write_cms_reg
 argument_list|(
 name|base
 argument_list|,
 operator|(
-name|XLP_CMS_OUTPUTQ_CONFIG_REG
+name|CMS_OUTPUTQ_CONFIG
 argument_list|(
 name|qid
 argument_list|)
@@ -463,13 +422,13 @@ operator|+
 name|nsegs
 operator|)
 operator|>
-name|XLP_CMS_MAX_ONCHIP_SEGMENTS
+name|CMS_MAX_ONCHIP_SEGMENTS
 operator|)
 operator|||
 operator|(
 name|nsegs
 operator|>
-name|XLP_CMS_ON_CHIP_PER_QUEUE_SPACE
+name|CMS_ON_CHIP_PER_QUEUE_SPACE
 operator|)
 condition|)
 block|{
@@ -616,12 +575,12 @@ expr_stmt|;
 block|}
 name|queue_config
 operator|=
-name|nlm_rdreg_cms
+name|nlm_read_cms_reg
 argument_list|(
 name|base
 argument_list|,
 operator|(
-name|XLP_CMS_OUTPUTQ_CONFIG_REG
+name|CMS_OUTPUTQ_CONFIG
 argument_list|(
 name|qid
 argument_list|)
@@ -636,7 +595,7 @@ operator|(
 operator|(
 name|uint64_t
 operator|)
-name|XLP_CMS_QUEUE_ENA
+name|CMS_QUEUE_ENA
 operator|<<
 literal|63
 operator|)
@@ -668,12 +627,12 @@ literal|0x1f
 operator|)
 operator|)
 expr_stmt|;
-name|nlm_wreg_cms
+name|nlm_write_cms_reg
 argument_list|(
 name|base
 argument_list|,
 operator|(
-name|XLP_CMS_OUTPUTQ_CONFIG_REG
+name|CMS_OUTPUTQ_CONFIG
 argument_list|(
 name|qid
 argument_list|)
@@ -720,7 +679,7 @@ name|base
 decl_stmt|;
 name|base
 operator|=
-name|nlm_regbase_cms
+name|nlm_get_cms_regbase
 argument_list|(
 name|node
 argument_list|)
@@ -792,7 +751,7 @@ literal|0
 init|;
 name|vc
 operator|<
-name|XLP_CMS_MAX_VCPU_VC
+name|CMS_MAX_VCPU_VC
 condition|;
 name|vc
 operator|++
@@ -816,7 +775,7 @@ condition|)
 continue|continue;
 name|queue
 operator|=
-name|XLP_CMS_CPU_PUSHQ
+name|CMS_CPU_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -844,14 +803,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_PCIE0_QID
+name|CMS_PCIE0_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_PCIE0_MAXQID
+name|CMS_PCIE0_MAXQID
 condition|;
 name|j
 operator|++
@@ -859,7 +818,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -883,14 +842,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_PCIE1_QID
+name|CMS_PCIE1_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_PCIE1_MAXQID
+name|CMS_PCIE1_MAXQID
 condition|;
 name|j
 operator|++
@@ -898,7 +857,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -922,14 +881,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_PCIE2_QID
+name|CMS_PCIE2_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_PCIE2_MAXQID
+name|CMS_PCIE2_MAXQID
 condition|;
 name|j
 operator|++
@@ -937,7 +896,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -961,14 +920,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_PCIE3_QID
+name|CMS_PCIE3_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_PCIE3_MAXQID
+name|CMS_PCIE3_MAXQID
 condition|;
 name|j
 operator|++
@@ -976,7 +935,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -1000,14 +959,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_DTE_QID
+name|CMS_DTE_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_DTE_MAXQID
+name|CMS_DTE_MAXQID
 condition|;
 name|j
 operator|++
@@ -1015,7 +974,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -1039,14 +998,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_RSA_ECC_QID
+name|CMS_RSA_ECC_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_RSA_ECC_MAXQID
+name|CMS_RSA_ECC_MAXQID
 condition|;
 name|j
 operator|++
@@ -1054,7 +1013,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -1078,14 +1037,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_CRYPTO_QID
+name|CMS_CRYPTO_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_CRYPTO_MAXQID
+name|CMS_CRYPTO_MAXQID
 condition|;
 name|j
 operator|++
@@ -1093,7 +1052,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -1117,14 +1076,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_CMP_QID
+name|CMS_CMP_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_CMP_MAXQID
+name|CMS_CMP_MAXQID
 condition|;
 name|j
 operator|++
@@ -1132,7 +1091,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -1156,14 +1115,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_POE_QID
+name|CMS_POE_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_POE_MAXQID
+name|CMS_POE_MAXQID
 condition|;
 name|j
 operator|++
@@ -1171,7 +1130,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -1195,14 +1154,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_NAE_QID
+name|CMS_NAE_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_NAE_MAXQID
+name|CMS_NAE_MAXQID
 condition|;
 name|j
 operator|++
@@ -1210,7 +1169,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -1239,14 +1198,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_POPQ_QID
+name|CMS_POPQ_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_POPQ_MAXQID
+name|CMS_POPQ_MAXQID
 condition|;
 name|j
 operator|++
@@ -1254,7 +1213,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_POPQ
+name|CMS_POPQ
 argument_list|(
 name|node
 argument_list|,
@@ -1289,11 +1248,11 @@ name|qid
 parameter_list|)
 block|{
 return|return
-name|nlm_rdreg_cms
+name|nlm_read_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_OUTPUTQ_CONFIG_REG
+name|CMS_OUTPUTQ_CONFIG
 argument_list|(
 name|qid
 argument_list|)
@@ -1321,11 +1280,11 @@ name|rdval
 decl_stmt|;
 name|rdval
 operator|=
-name|nlm_rdreg_cms
+name|nlm_read_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_OUTPUTQ_CONFIG_REG
+name|CMS_OUTPUTQ_CONFIG
 argument_list|(
 name|qid
 argument_list|)
@@ -1335,11 +1294,11 @@ name|rdval
 operator||=
 name|val
 expr_stmt|;
-name|nlm_wreg_cms
+name|nlm_write_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_OUTPUTQ_CONFIG_REG
+name|CMS_OUTPUTQ_CONFIG
 argument_list|(
 name|qid
 argument_list|)
@@ -1372,11 +1331,11 @@ name|val
 decl_stmt|;
 name|val
 operator|=
-name|nlm_rdreg_cms
+name|nlm_read_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_OUTPUTQ_CONFIG_REG
+name|CMS_OUTPUTQ_CONFIG
 argument_list|(
 name|qid
 argument_list|)
@@ -1404,11 +1363,11 @@ literal|56
 operator|)
 operator|)
 expr_stmt|;
-name|nlm_wreg_cms
+name|nlm_write_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_OUTPUTQ_CONFIG_REG
+name|CMS_OUTPUTQ_CONFIG
 argument_list|(
 name|qid
 argument_list|)
@@ -1448,7 +1407,7 @@ name|base
 decl_stmt|;
 name|base
 operator|=
-name|nlm_regbase_cms
+name|nlm_get_cms_regbase
 argument_list|(
 name|node
 argument_list|)
@@ -1488,7 +1447,7 @@ literal|0
 init|;
 name|vc
 operator|<
-name|XLP_CMS_MAX_VCPU_VC
+name|CMS_MAX_VCPU_VC
 condition|;
 name|vc
 operator|++
@@ -1496,7 +1455,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_CPU_PUSHQ
+name|CMS_CPU_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -1524,14 +1483,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_PCIE0_QID
+name|CMS_PCIE0_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_PCIE0_MAXQID
+name|CMS_PCIE0_MAXQID
 condition|;
 name|j
 operator|++
@@ -1539,7 +1498,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -1563,14 +1522,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_PCIE1_QID
+name|CMS_PCIE1_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_PCIE1_MAXQID
+name|CMS_PCIE1_MAXQID
 condition|;
 name|j
 operator|++
@@ -1578,7 +1537,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -1602,14 +1561,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_PCIE2_QID
+name|CMS_PCIE2_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_PCIE2_MAXQID
+name|CMS_PCIE2_MAXQID
 condition|;
 name|j
 operator|++
@@ -1617,7 +1576,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -1641,14 +1600,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_PCIE3_QID
+name|CMS_PCIE3_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_PCIE3_MAXQID
+name|CMS_PCIE3_MAXQID
 condition|;
 name|j
 operator|++
@@ -1656,7 +1615,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -1680,14 +1639,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_DTE_QID
+name|CMS_DTE_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_DTE_MAXQID
+name|CMS_DTE_MAXQID
 condition|;
 name|j
 operator|++
@@ -1695,7 +1654,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -1719,14 +1678,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_RSA_ECC_QID
+name|CMS_RSA_ECC_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_RSA_ECC_MAXQID
+name|CMS_RSA_ECC_MAXQID
 condition|;
 name|j
 operator|++
@@ -1734,7 +1693,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -1758,14 +1717,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_CRYPTO_QID
+name|CMS_CRYPTO_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_CRYPTO_MAXQID
+name|CMS_CRYPTO_MAXQID
 condition|;
 name|j
 operator|++
@@ -1773,7 +1732,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -1797,14 +1756,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_CMP_QID
+name|CMS_CMP_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_CMP_MAXQID
+name|CMS_CMP_MAXQID
 condition|;
 name|j
 operator|++
@@ -1812,7 +1771,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -1836,14 +1795,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_POE_QID
+name|CMS_POE_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_POE_MAXQID
+name|CMS_POE_MAXQID
 condition|;
 name|j
 operator|++
@@ -1851,7 +1810,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -1875,14 +1834,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_NAE_QID
+name|CMS_NAE_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_NAE_MAXQID
+name|CMS_NAE_MAXQID
 condition|;
 name|j
 operator|++
@@ -1890,7 +1849,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -1914,14 +1873,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_POPQ_QID
+name|CMS_POPQ_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_POPQ_MAXQID
+name|CMS_POPQ_MAXQID
 condition|;
 name|j
 operator|++
@@ -1929,7 +1888,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_POPQ
+name|CMS_POPQ
 argument_list|(
 name|node
 argument_list|,
@@ -1973,11 +1932,11 @@ name|val
 decl_stmt|;
 name|val
 operator|=
-name|nlm_rdreg_cms
+name|nlm_read_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_OUTPUTQ_CONFIG_REG
+name|CMS_OUTPUTQ_CONFIG
 argument_list|(
 name|qid
 argument_list|)
@@ -2005,11 +1964,11 @@ literal|51
 operator|)
 operator|)
 expr_stmt|;
-name|nlm_wreg_cms
+name|nlm_write_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_OUTPUTQ_CONFIG_REG
+name|CMS_OUTPUTQ_CONFIG
 argument_list|(
 name|qid
 argument_list|)
@@ -2052,7 +2011,7 @@ name|base
 decl_stmt|;
 name|base
 operator|=
-name|nlm_regbase_cms
+name|nlm_get_cms_regbase
 argument_list|(
 name|node
 argument_list|)
@@ -2092,7 +2051,7 @@ literal|0
 init|;
 name|vc
 operator|<
-name|XLP_CMS_MAX_VCPU_VC
+name|CMS_MAX_VCPU_VC
 condition|;
 name|vc
 operator|++
@@ -2100,7 +2059,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_CPU_PUSHQ
+name|CMS_CPU_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -2128,14 +2087,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_PCIE0_QID
+name|CMS_PCIE0_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_PCIE0_MAXQID
+name|CMS_PCIE0_MAXQID
 condition|;
 name|j
 operator|++
@@ -2143,7 +2102,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -2167,14 +2126,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_PCIE1_QID
+name|CMS_PCIE1_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_PCIE1_MAXQID
+name|CMS_PCIE1_MAXQID
 condition|;
 name|j
 operator|++
@@ -2182,7 +2141,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -2206,14 +2165,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_PCIE2_QID
+name|CMS_PCIE2_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_PCIE2_MAXQID
+name|CMS_PCIE2_MAXQID
 condition|;
 name|j
 operator|++
@@ -2221,7 +2180,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -2245,14 +2204,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_PCIE3_QID
+name|CMS_PCIE3_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_PCIE3_MAXQID
+name|CMS_PCIE3_MAXQID
 condition|;
 name|j
 operator|++
@@ -2260,7 +2219,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -2284,14 +2243,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_DTE_QID
+name|CMS_DTE_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_DTE_MAXQID
+name|CMS_DTE_MAXQID
 condition|;
 name|j
 operator|++
@@ -2299,7 +2258,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -2323,14 +2282,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_RSA_ECC_QID
+name|CMS_RSA_ECC_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_RSA_ECC_MAXQID
+name|CMS_RSA_ECC_MAXQID
 condition|;
 name|j
 operator|++
@@ -2338,7 +2297,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -2362,14 +2321,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_CRYPTO_QID
+name|CMS_CRYPTO_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_CRYPTO_MAXQID
+name|CMS_CRYPTO_MAXQID
 condition|;
 name|j
 operator|++
@@ -2377,7 +2336,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -2401,14 +2360,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_CMP_QID
+name|CMS_CMP_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_CMP_MAXQID
+name|CMS_CMP_MAXQID
 condition|;
 name|j
 operator|++
@@ -2416,7 +2375,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -2440,14 +2399,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_POE_QID
+name|CMS_POE_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_POE_MAXQID
+name|CMS_POE_MAXQID
 condition|;
 name|j
 operator|++
@@ -2455,7 +2414,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -2479,14 +2438,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_NAE_QID
+name|CMS_NAE_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_NAE_MAXQID
+name|CMS_NAE_MAXQID
 condition|;
 name|j
 operator|++
@@ -2494,7 +2453,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_IO_PUSHQ
+name|CMS_IO_PUSHQ
 argument_list|(
 name|node
 argument_list|,
@@ -2518,14 +2477,14 @@ for|for
 control|(
 name|j
 operator|=
-name|XLP_CMS_POPQ_QID
+name|CMS_POPQ_QID
 argument_list|(
 literal|0
 argument_list|)
 init|;
 name|j
 operator|<
-name|XLP_CMS_POPQ_MAXQID
+name|CMS_POPQ_MAXQID
 condition|;
 name|j
 operator|++
@@ -2533,7 +2492,7 @@ control|)
 block|{
 name|queue
 operator|=
-name|XLP_CMS_POPQ
+name|CMS_POPQ
 argument_list|(
 name|node
 argument_list|,
@@ -2575,11 +2534,11 @@ name|val
 decl_stmt|;
 name|val
 operator|=
-name|nlm_rdreg_cms
+name|nlm_read_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_OUTPUTQ_CONFIG_REG
+name|CMS_OUTPUTQ_CONFIG
 argument_list|(
 name|qid
 argument_list|)
@@ -2615,11 +2574,11 @@ name|val
 decl_stmt|;
 name|val
 operator|=
-name|nlm_rdreg_cms
+name|nlm_read_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_OUTPUTQ_CONFIG_REG
+name|CMS_OUTPUTQ_CONFIG
 argument_list|(
 name|qid
 argument_list|)
@@ -2633,11 +2592,11 @@ operator|<<
 literal|59
 operator|)
 expr_stmt|;
-name|nlm_wreg_cms
+name|nlm_write_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_OUTPUTQ_CONFIG_REG
+name|CMS_OUTPUTQ_CONFIG
 argument_list|(
 name|qid
 argument_list|)
@@ -2664,11 +2623,11 @@ name|val
 decl_stmt|;
 name|val
 operator|=
-name|nlm_rdreg_cms
+name|nlm_read_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_MSG_CONFIG_REG
+name|CMS_MSG_CONFIG
 argument_list|)
 expr_stmt|;
 name|val
@@ -2679,11 +2638,11 @@ operator|<<
 literal|8
 operator|)
 expr_stmt|;
-name|nlm_wreg_cms
+name|nlm_write_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_MSG_CONFIG_REG
+name|CMS_MSG_CONFIG
 argument_list|,
 name|val
 argument_list|)
@@ -2707,11 +2666,11 @@ name|val
 decl_stmt|;
 name|val
 operator|=
-name|nlm_rdreg_cms
+name|nlm_read_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_MSG_CONFIG_REG
+name|CMS_MSG_CONFIG
 argument_list|)
 expr_stmt|;
 name|val
@@ -2722,11 +2681,11 @@ operator|<<
 literal|7
 operator|)
 expr_stmt|;
-name|nlm_wreg_cms
+name|nlm_write_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_MSG_CONFIG_REG
+name|CMS_MSG_CONFIG
 argument_list|,
 name|val
 argument_list|)
@@ -2750,11 +2709,11 @@ name|val
 decl_stmt|;
 name|val
 operator|=
-name|nlm_rdreg_cms
+name|nlm_read_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_MSG_CONFIG_REG
+name|CMS_MSG_CONFIG
 argument_list|)
 expr_stmt|;
 name|val
@@ -2765,11 +2724,11 @@ operator|<<
 literal|6
 operator|)
 expr_stmt|;
-name|nlm_wreg_cms
+name|nlm_write_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_MSG_CONFIG_REG
+name|CMS_MSG_CONFIG
 argument_list|,
 name|val
 argument_list|)
@@ -2793,11 +2752,11 @@ name|val
 decl_stmt|;
 name|val
 operator|=
-name|nlm_rdreg_cms
+name|nlm_read_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_MSG_CONFIG_REG
+name|CMS_MSG_CONFIG
 argument_list|)
 expr_stmt|;
 name|val
@@ -2814,11 +2773,11 @@ operator|<<
 literal|3
 operator|)
 expr_stmt|;
-name|nlm_wreg_cms
+name|nlm_write_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_MSG_CONFIG_REG
+name|CMS_MSG_CONFIG
 argument_list|,
 name|val
 argument_list|)
@@ -2842,11 +2801,11 @@ name|val
 decl_stmt|;
 name|val
 operator|=
-name|nlm_rdreg_cms
+name|nlm_read_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_MSG_CONFIG_REG
+name|CMS_MSG_CONFIG
 argument_list|)
 expr_stmt|;
 name|val
@@ -2863,11 +2822,11 @@ operator|<<
 literal|2
 operator|)
 expr_stmt|;
-name|nlm_wreg_cms
+name|nlm_write_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_MSG_CONFIG_REG
+name|CMS_MSG_CONFIG
 argument_list|,
 name|val
 argument_list|)
@@ -2891,11 +2850,11 @@ name|val
 decl_stmt|;
 name|val
 operator|=
-name|nlm_rdreg_cms
+name|nlm_read_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_MSG_CONFIG_REG
+name|CMS_MSG_CONFIG
 argument_list|)
 expr_stmt|;
 name|val
@@ -2906,11 +2865,11 @@ operator|<<
 literal|1
 operator|)
 expr_stmt|;
-name|nlm_wreg_cms
+name|nlm_write_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_MSG_CONFIG_REG
+name|CMS_MSG_CONFIG
 argument_list|,
 name|val
 argument_list|)
@@ -2934,11 +2893,11 @@ name|val
 decl_stmt|;
 name|val
 operator|=
-name|nlm_rdreg_cms
+name|nlm_read_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_MSG_CONFIG_REG
+name|CMS_MSG_CONFIG
 argument_list|)
 expr_stmt|;
 name|val
@@ -2949,11 +2908,11 @@ operator|<<
 literal|0
 operator|)
 expr_stmt|;
-name|nlm_wreg_cms
+name|nlm_write_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_MSG_CONFIG_REG
+name|CMS_MSG_CONFIG
 argument_list|,
 name|val
 argument_list|)
@@ -2970,11 +2929,11 @@ name|base
 parameter_list|)
 block|{
 return|return
-name|nlm_rdreg_cms
+name|nlm_read_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_MSG_ERR_REG
+name|CMS_MSG_ERR
 argument_list|)
 return|;
 block|}
@@ -3107,31 +3066,31 @@ block|{
 name|uint64_t
 name|val
 decl_stmt|;
-name|nlm_wreg_cms
+name|nlm_write_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_TRACE_BASE_ADDR_REG
+name|CMS_TRACE_BASE_ADDR
 argument_list|,
 name|trace_base
 argument_list|)
 expr_stmt|;
-name|nlm_wreg_cms
+name|nlm_write_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_TRACE_LIMIT_ADDR_REG
+name|CMS_TRACE_LIMIT_ADDR
 argument_list|,
 name|trace_limit
 argument_list|)
 expr_stmt|;
 name|val
 operator|=
-name|nlm_rdreg_cms
+name|nlm_read_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_TRACE_CONFIG_REG
+name|CMS_TRACE_CONFIG
 argument_list|)
 expr_stmt|;
 name|val
@@ -3185,11 +3144,11 @@ literal|0
 operator|)
 operator|)
 expr_stmt|;
-name|nlm_wreg_cms
+name|nlm_write_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_MSG_CONFIG_REG
+name|CMS_MSG_CONFIG
 argument_list|,
 name|val
 argument_list|)
@@ -3208,11 +3167,11 @@ name|int
 name|en
 parameter_list|)
 block|{
-name|nlm_wreg_cms
+name|nlm_write_cms_reg
 argument_list|(
 name|base
 argument_list|,
-name|XLP_CMS_MSG_ENDIAN_SWAP_REG
+name|CMS_MSG_ENDIAN_SWAP
 argument_list|,
 name|en
 argument_list|)
