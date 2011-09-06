@@ -4436,6 +4436,7 @@ name|asf1d
 argument_list|)
 operator|+
 operator|(
+operator|(
 name|asf1d
 operator|->
 name|bSamFreqType
@@ -4451,6 +4452,7 @@ operator|->
 name|bSamFreqType
 operator|*
 literal|3
+operator|)
 operator|)
 operator|)
 condition|)
