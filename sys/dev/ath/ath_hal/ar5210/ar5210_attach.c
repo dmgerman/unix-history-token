@@ -617,6 +617,11 @@ name|ah_resetStationBeaconTimers
 operator|=
 name|ar5210ResetStaBeaconTimers
 block|,
+operator|.
+name|ah_getNextTBTT
+operator|=
+name|ar5210GetNextTBTT
+block|,
 comment|/* Interrupt Functions */
 operator|.
 name|ah_isInterruptPending

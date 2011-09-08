@@ -669,7 +669,7 @@ operator|)
 condition|)
 name|tsf
 operator|=
-name|ar5212GetTsf64
+name|ar5416GetTsf64
 argument_list|(
 name|ah
 argument_list|)
@@ -713,7 +713,7 @@ if|if
 condition|(
 name|tsf
 condition|)
-name|ar5212SetTsf64
+name|ar5416SetTsf64
 argument_list|(
 name|ah
 argument_list|,
@@ -837,7 +837,7 @@ name|ah
 argument_list|)
 operator|&&
 operator|(
-name|ar5212GetTsf64
+name|ar5416GetTsf64
 argument_list|(
 name|ah
 argument_list|)
@@ -850,7 +850,7 @@ name|tsf
 operator|+=
 literal|1500
 expr_stmt|;
-name|ar5212SetTsf64
+name|ar5416SetTsf64
 argument_list|(
 name|ah
 argument_list|,
@@ -1871,7 +1871,7 @@ comment|/* XXX spur mitigation for Melin */
 end_comment
 
 begin_endif
-unit|if (!IEEE80211_IS_CHAN_DFS(chan))  		chan->ic_state&= ~IEEE80211_CHANSTATE_CWINT;  	ichan->channel_time = 0; 	ichan->tsf_last = ar5212GetTsf64(ah); 	ar5212TxEnable(ah, AH_TRUE); 	return AH_TRUE; }
+unit|if (!IEEE80211_IS_CHAN_DFS(chan))  		chan->ic_state&= ~IEEE80211_CHANSTATE_CWINT;  	ichan->channel_time = 0; 	ichan->tsf_last = ar5416GetTsf64(ah); 	ar5212TxEnable(ah, AH_TRUE); 	return AH_TRUE; }
 endif|#
 directive|endif
 end_endif

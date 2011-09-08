@@ -753,8 +753,12 @@ decl_stmt|,
 name|halSupportsFastClock5GHz
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* Hardware supports 5ghz fast clock; check eeprom/channel before using */
+name|halHasLongRxDescTsf
+range|:
+literal|1
+decl_stmt|;
 name|uint32_t
 name|halWirelessModes
 decl_stmt|;

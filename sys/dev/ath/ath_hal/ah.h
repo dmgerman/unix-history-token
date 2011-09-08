@@ -457,6 +457,11 @@ init|=
 literal|242
 block|,
 comment|/* support a self-linked tail RX descriptor */
+name|HAL_CAP_LONG_RXDESC_TSF
+init|=
+literal|243
+block|,
+comment|/* hardware supports 32bit TSF in RX descriptor */
 block|}
 name|HAL_CAPABILITY_TYPE
 typedef|;
@@ -4117,6 +4122,18 @@ name|ath_hal
 modifier|*
 parameter_list|)
 function_decl|;
+name|uint64_t
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_getNextTBTT
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* 802.11n Functions */
 name|HAL_BOOL
 name|__ahdecl
@@ -4756,6 +4773,64 @@ name|rateix
 parameter_list|,
 name|HAL_BOOL
 name|shortPreamble
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Adjust the TSF.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|__ahdecl
+name|ath_hal_adjusttsf
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|int32_t
+name|tsfdelta
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Enable or disable CCA.  */
+end_comment
+
+begin_function_decl
+name|void
+name|__ahdecl
+name|ath_hal_setcca
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|int
+name|ena
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Get CCA setting.  */
+end_comment
+
+begin_function_decl
+name|int
+name|__ahdecl
+name|ath_hal_getcca
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
 parameter_list|)
 function_decl|;
 end_function_decl
