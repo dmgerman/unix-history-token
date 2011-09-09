@@ -651,6 +651,12 @@ name|ar5416GpioSetIntr
 expr_stmt|;
 name|ah
 operator|->
+name|ah_getTsf64
+operator|=
+name|ar5416GetTsf64
+expr_stmt|;
+name|ah
+operator|->
 name|ah_resetTsf
 operator|=
 name|ar5416ResetTsf
@@ -753,6 +759,12 @@ operator|->
 name|ah_resetStationBeaconTimers
 operator|=
 name|ar5416ResetStaBeaconTimers
+expr_stmt|;
+name|ah
+operator|->
+name|ah_getNextTBTT
+operator|=
+name|ar5416GetNextTBTT
 expr_stmt|;
 comment|/* 802.11n Functions */
 name|ah
@@ -4962,6 +4974,13 @@ operator|->
 name|halEnhancedDfsSupport
 operator|=
 name|AH_FALSE
+expr_stmt|;
+comment|/* Hardware supports 32 bit TSF values in the RX descriptor */
+name|pCap
+operator|->
+name|halHasLongRxDescTsf
+operator|=
+name|AH_TRUE
 expr_stmt|;
 if|if
 condition|(

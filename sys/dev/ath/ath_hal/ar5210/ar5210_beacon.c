@@ -46,6 +46,44 @@ file|"ar5210/ar5210desc.h"
 end_include
 
 begin_comment
+comment|/*  * Return the hardware NextTBTT in TSF  */
+end_comment
+
+begin_function
+name|uint64_t
+name|ar5210GetNextTBTT
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+block|{
+define|#
+directive|define
+name|TU_TO_TSF
+parameter_list|(
+name|_tu
+parameter_list|)
+value|(((uint64_t)(_tu))<< 10)
+return|return
+name|TU_TO_TSF
+argument_list|(
+name|OS_REG_READ
+argument_list|(
+name|ah
+argument_list|,
+name|AR_TIMER0
+argument_list|)
+argument_list|)
+return|;
+undef|#
+directive|undef
+name|TU_TO_TSF
+block|}
+end_function
+
+begin_comment
 comment|/*  * Initialize all of the hardware registers used to send beacons.  */
 end_comment
 

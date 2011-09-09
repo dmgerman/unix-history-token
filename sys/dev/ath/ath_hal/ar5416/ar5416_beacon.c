@@ -60,6 +60,31 @@ value|((_tu8)<< 7)
 end_define
 
 begin_comment
+comment|/*  * Return the hardware NextTBTT in TSF  */
+end_comment
+
+begin_function
+name|uint64_t
+name|ar5416GetNextTBTT
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+block|{
+return|return
+name|OS_REG_READ
+argument_list|(
+name|ah
+argument_list|,
+name|AR_NEXT_TBTT
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Initialize all of the hardware registers used to  * send beacons.  Note that for station operation the  * driver calls ar5416SetStaBeaconTimers instead.  */
 end_comment
 

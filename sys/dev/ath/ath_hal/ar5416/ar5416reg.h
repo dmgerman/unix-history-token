@@ -200,6 +200,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR_INTR_ASYNC_CAUSE_CLR
+value|0x4038
+end_define
+
+begin_comment
+comment|/* clear pending interrupts */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AR_INTR_ASYNC_ENABLE
 value|0x403c
 end_define

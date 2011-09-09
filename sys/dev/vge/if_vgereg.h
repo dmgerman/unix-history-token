@@ -2261,6 +2261,13 @@ name|VGE_INTRS
 value|(VGE_ISR_TXOK0|VGE_ISR_RXOK|VGE_ISR_STOPPED|	\ 			 VGE_ISR_RXOFLOW|VGE_ISR_PHYINT|		\ 			 VGE_ISR_LINKSTS|VGE_ISR_RXNODESC|		\ 			 VGE_ISR_RXDMA_STALL|VGE_ISR_TXDMA_STALL)
 end_define
 
+begin_define
+define|#
+directive|define
+name|VGE_INTRS_POLLING
+value|(VGE_ISR_PHYINT|VGE_ISR_LINKSTS)
+end_define
+
 begin_comment
 comment|/* Interrupt mask register */
 end_comment
