@@ -151,12 +151,6 @@ directive|include
 file|<dev/usb/usb_dynamic.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/usb/quirk/usb_quirk.h>
-end_include
-
 begin_comment
 comment|/* function prototypes */
 end_comment
@@ -179,6 +173,13 @@ begin_decl_stmt
 specifier|static
 name|usb_temp_unsetup_t
 name|usb_temp_unsetup_w
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|usb_test_quirk_t
+name|usb_test_quirk_w
 decl_stmt|;
 end_decl_stmt
 
@@ -274,6 +275,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|uint8_t
 name|usb_test_quirk_w
 parameter_list|(
@@ -287,53 +289,6 @@ name|uint16_t
 name|quirk
 parameter_list|)
 block|{
-name|uint8_t
-name|x
-decl_stmt|;
-if|if
-condition|(
-name|quirk
-operator|==
-name|UQ_NONE
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* no match */
-for|for
-control|(
-name|x
-operator|=
-literal|0
-init|;
-name|x
-operator|!=
-name|USB_MAX_AUTO_QUIRK
-condition|;
-name|x
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|info
-operator|->
-name|autoQuirk
-index|[
-name|x
-index|]
-operator|==
-name|quirk
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-comment|/* match */
-block|}
 return|return
 operator|(
 literal|0
