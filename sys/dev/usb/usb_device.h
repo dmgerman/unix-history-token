@@ -467,13 +467,6 @@ name|uint16_t
 name|langid
 decl_stmt|;
 comment|/* language for strings */
-name|uint16_t
-name|autoQuirk
-index|[
-name|USB_MAX_AUTO_QUIRK
-index|]
-decl_stmt|;
-comment|/* dynamic quirks */
 name|uint8_t
 name|address
 decl_stmt|;
@@ -610,6 +603,13 @@ name|uint32_t
 name|clear_stall_errors
 decl_stmt|;
 comment|/* number of clear-stall failures */
+name|uint16_t
+name|autoQuirk
+index|[
+name|USB_MAX_AUTO_QUIRK
+index|]
+decl_stmt|;
+comment|/* dynamic quirks */
 block|}
 struct|;
 end_struct
