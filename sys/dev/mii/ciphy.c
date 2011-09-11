@@ -469,6 +469,8 @@ operator|->
 name|mii_flags
 operator||=
 name|MIIF_NOISOLATE
+operator||
+name|MIIF_NOMANPAUSE
 expr_stmt|;
 name|ciphy_reset
 argument_list|(

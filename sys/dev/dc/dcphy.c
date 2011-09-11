@@ -524,6 +524,8 @@ operator||=
 name|MIIF_NOISOLATE
 operator||
 name|MIIF_NOLOOP
+operator||
+name|MIIF_NOMANPAUSE
 expr_stmt|;
 comment|/*dcphy_reset(sc);*/
 name|dc_sc

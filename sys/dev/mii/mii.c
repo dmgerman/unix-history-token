@@ -1686,7 +1686,7 @@ name|M_TEMP
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Check to see if there is a PHY at this address.  Note, 		 * many braindead PHYs report 0/0 in their ID registers, 		 * so we test for media in the BMSR. 	 	 */
+comment|/* 		 * Check to see if there is a PHY at this address.  Note, 		 * many braindead PHYs report 0/0 in their ID registers, 		 * so we test for media in the BMSR. 		 */
 name|bmsr
 operator|=
 name|MIIBUS_READREG
@@ -1740,7 +1740,7 @@ condition|)
 goto|goto
 name|skip
 goto|;
-comment|/* 		 * Extract the IDs. Braindead PHYs will be handled by 		 * the `ukphy' driver, as we have no ID information to 		 * match on. 	 	 */
+comment|/* 		 * Extract the IDs. Braindead PHYs will be handled by 		 * the `ukphy' driver, as we have no ID information to 		 * match on. 		 */
 name|ma
 operator|.
 name|mii_id1

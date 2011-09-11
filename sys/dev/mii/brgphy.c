@@ -1069,13 +1069,6 @@ name|mii_oui
 condition|)
 block|{
 case|case
-name|MII_OUI_BROADCOM
-case|:
-case|case
-name|MII_OUI_BROADCOM2
-case|:
-break|break;
-case|case
 name|MII_OUI_xxBROADCOM
 case|:
 switch|switch
@@ -1173,19 +1166,6 @@ expr_stmt|;
 break|break;
 block|}
 break|break;
-case|case
-name|MII_OUI_xxBROADCOM_ALT2
-case|:
-comment|/* No special handling yet. */
-break|break;
-default|default:
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Unrecognized OUI for PHY!\n"
-argument_list|)
-expr_stmt|;
 block|}
 name|ifp
 operator|=
@@ -1761,10 +1741,6 @@ name|mii_oui
 condition|)
 block|{
 case|case
-name|MII_OUI_BROADCOM
-case|:
-break|break;
-case|case
 name|MII_OUI_xxBROADCOM
 case|:
 switch|switch
@@ -1825,10 +1801,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-break|break;
-case|case
-name|MII_OUI_xxBROADCOM_ALT1
-case|:
 break|break;
 block|}
 block|}
@@ -4317,10 +4289,6 @@ name|mii_oui
 condition|)
 block|{
 case|case
-name|MII_OUI_BROADCOM
-case|:
-break|break;
-case|case
 name|MII_OUI_xxBROADCOM
 case|:
 switch|switch
@@ -4381,13 +4349,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-break|break;
-case|case
-name|MII_OUI_xxBROADCOM_ALT1
-case|:
-case|case
-name|MII_OUI_xxBROADCOM_ALT2
-case|:
 break|break;
 block|}
 name|ifp

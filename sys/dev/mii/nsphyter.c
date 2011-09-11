@@ -263,7 +263,7 @@ specifier|static
 specifier|const
 name|struct
 name|mii_phydesc
-name|nsphys
+name|nsphyters
 index|[]
 init|=
 block|{
@@ -308,7 +308,7 @@ name|mii_phy_dev_probe
 argument_list|(
 name|dev
 argument_list|,
-name|nsphys
+name|nsphyters
 argument_list|,
 name|BUS_PROBE_DEFAULT
 argument_list|)

@@ -1124,11 +1124,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|struct
-name|jmphy_softc
-modifier|*
-name|jsc
-decl_stmt|;
 name|uint16_t
 name|t2cr
 decl_stmt|,
@@ -1137,15 +1132,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|jsc
-operator|=
-operator|(
-expr|struct
-name|jmphy_softc
-operator|*
-operator|)
-name|sc
-expr_stmt|;
 comment|/* Disable sleep mode. */
 name|PHY_WRITE
 argument_list|(

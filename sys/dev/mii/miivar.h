@@ -26,7 +26,7 @@ file|<sys/queue.h>
 end_include
 
 begin_comment
-comment|/*  * Media Independent Interface configuration defintions.  */
+comment|/*  * Media Independent Interface data structure defintions  */
 end_comment
 
 begin_struct_decl
@@ -122,14 +122,14 @@ argument|mii_softc
 argument_list|)
 name|mii_phys
 expr_stmt|;
-name|int
+name|u_int
 name|mii_instance
 decl_stmt|;
 comment|/* 	 * PHY driver fills this in with active media status. 	 */
-name|int
+name|u_int
 name|mii_media_status
 decl_stmt|;
-name|int
+name|u_int
 name|mii_media_active
 decl_stmt|;
 comment|/* 	 * Calls from MII layer into network interface driver. 	 */
@@ -235,11 +235,11 @@ argument_list|)
 name|mii_list
 expr_stmt|;
 comment|/* entry on parent's PHY list */
-name|int
+name|u_int
 name|mii_phy
 decl_stmt|;
 comment|/* our MII address */
-name|int
+name|u_int
 name|mii_inst
 decl_stmt|;
 comment|/* instance for ifmedia */
@@ -253,31 +253,31 @@ modifier|*
 name|mii_pdata
 decl_stmt|;
 comment|/* pointer to parent's mii_data */
-name|int
+name|u_int
 name|mii_flags
 decl_stmt|;
 comment|/* misc. flags; see below */
-name|int
+name|u_int
 name|mii_capabilities
 decl_stmt|;
 comment|/* capabilities from BMSR */
-name|int
+name|u_int
 name|mii_extcapabilities
 decl_stmt|;
 comment|/* extended capabilities */
-name|int
+name|u_int
 name|mii_ticks
 decl_stmt|;
 comment|/* MII_TICK counter */
-name|int
+name|u_int
 name|mii_anegticks
 decl_stmt|;
 comment|/* ticks before retrying aneg */
-name|int
+name|u_int
 name|mii_media_active
 decl_stmt|;
 comment|/* last active media */
-name|int
+name|u_int
 name|mii_media_status
 decl_stmt|;
 comment|/* last active status */
@@ -563,22 +563,26 @@ modifier|*
 name|mii_data
 decl_stmt|;
 comment|/* pointer to parent data */
-name|int
+name|u_int
 name|mii_phyno
 decl_stmt|;
 comment|/* MII address */
-name|int
+name|u_int
+name|mii_offset
+decl_stmt|;
+comment|/* first PHY, second PHY, etc. */
+name|uint32_t
 name|mii_id1
 decl_stmt|;
 comment|/* PHY ID register 1 */
-name|int
+name|uint32_t
 name|mii_id2
 decl_stmt|;
 comment|/* PHY ID register 2 */
-name|int
+name|u_int
 name|mii_capmask
 decl_stmt|;
-comment|/* capability mask from BMSR */
+comment|/* capability mask for BMSR */
 block|}
 struct|;
 end_struct
@@ -599,11 +603,11 @@ begin_struct
 struct|struct
 name|mii_phydesc
 block|{
-name|u_int32_t
+name|uint32_t
 name|mpd_oui
 decl_stmt|;
 comment|/* the PHY's OUI */
-name|u_int32_t
+name|uint32_t
 name|mpd_model
 decl_stmt|;
 comment|/* the PHY's model */
@@ -644,15 +648,15 @@ begin_struct
 struct|struct
 name|mii_media
 block|{
-name|int
+name|u_int
 name|mm_bmcr
 decl_stmt|;
 comment|/* BMCR settings for this media */
-name|int
+name|u_int
 name|mm_anar
 decl_stmt|;
 comment|/* ANAR settings for this media */
-name|int
+name|u_int
 name|mm_gtcr
 decl_stmt|;
 comment|/* 100base-T2 or 1000base-T CR */
@@ -806,7 +810,7 @@ argument|flags
 argument_list|,
 argument|FLAGS
 argument_list|,
-argument|int
+argument|u_int
 argument_list|)
 end_macro
 

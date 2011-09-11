@@ -1791,6 +1791,7 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 name|ADD
 argument_list|(
 name|IFM_MAKEWORD
@@ -1809,6 +1810,12 @@ argument_list|,
 name|MII_MEDIA_NONE
 argument_list|)
 expr_stmt|;
+name|PRINT
+argument_list|(
+literal|"none"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * There are different interpretations for the bits in 	 * HomePNA PHYs.  And there is really only one media type 	 * that is supported. 	 */
 if|if
 condition|(

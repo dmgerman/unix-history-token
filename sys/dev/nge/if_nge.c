@@ -10937,13 +10937,6 @@ operator|->
 name|nge_miibus
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mii
-operator|->
-name|mii_instance
-condition|)
-block|{
 name|LIST_FOREACH
 argument_list|(
 argument|miisc
@@ -10957,7 +10950,6 @@ argument_list|(
 name|miisc
 argument_list|)
 expr_stmt|;
-block|}
 name|error
 operator|=
 name|mii_mediachg

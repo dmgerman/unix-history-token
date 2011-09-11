@@ -433,6 +433,8 @@ operator|->
 name|mii_flags
 operator||=
 name|MIIF_NOMANPAUSE
+operator||
+name|MIIF_NOMANPAUSE
 expr_stmt|;
 name|ifmedia_add
 argument_list|(

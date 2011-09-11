@@ -625,6 +625,8 @@ operator||=
 name|MIIF_NOISOLATE
 operator||
 name|MIIF_NOLOOP
+operator||
+name|MIIF_NOMANPAUSE
 expr_stmt|;
 if|if
 condition|(
@@ -1409,6 +1411,11 @@ operator|->
 name|mii_media_active
 operator||=
 name|IFM_FDX
+operator||
+name|mii_phy_flowstatus
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 else|else
 name|mii
