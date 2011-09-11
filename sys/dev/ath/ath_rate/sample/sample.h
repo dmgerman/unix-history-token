@@ -696,7 +696,6 @@ operator|.
 name|spAckDuration
 expr_stmt|;
 comment|/* XXX assumes short preamble */
-comment|/* XXX assumes HT/20; the node info isn't yet available here */
 name|ctsduration
 operator|+=
 name|ath_hal_pkt_txtime
@@ -711,9 +710,9 @@ name|length
 argument_list|,
 name|rix
 argument_list|,
-literal|0
-argument_list|,
 name|is_ht40
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -748,7 +747,6 @@ operator|+=
 name|t_difs
 expr_stmt|;
 comment|/* XXX assumes short preamble */
-comment|/* XXX assumes HT/20; the node info isn't yet available here */
 name|tt
 operator|+=
 operator|(
@@ -769,9 +767,9 @@ name|length
 argument_list|,
 name|rix
 argument_list|,
-literal|0
-argument_list|,
 name|is_ht40
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|tt
