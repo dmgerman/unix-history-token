@@ -454,6 +454,8 @@ operator|->
 name|mii_flags
 operator||=
 name|MIIF_NOISOLATE
+operator||
+name|MIIF_NOMANPAUSE
 expr_stmt|;
 define|#
 directive|define
@@ -1863,6 +1865,11 @@ operator||=
 name|IFM_100_TX
 operator||
 name|IFM_FDX
+operator||
+name|mii_phy_flowstatus
+argument_list|(
+name|phy
+argument_list|)
 expr_stmt|;
 block|}
 end_function

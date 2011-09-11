@@ -383,6 +383,8 @@ operator||
 name|MIIF_NOLOOP
 operator||
 name|MIIF_IS_HPNA
+operator||
+name|MIIF_NOMANPAUSE
 expr_stmt|;
 name|mii_phy_reset
 argument_list|(

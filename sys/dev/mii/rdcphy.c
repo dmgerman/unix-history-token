@@ -410,6 +410,12 @@ name|mii_pdata
 operator|=
 name|mii
 expr_stmt|;
+name|sc
+operator|->
+name|mii_flags
+operator||=
+name|MIIF_NOMANPAUSE
+expr_stmt|;
 name|rsc
 operator|->
 name|mii_model

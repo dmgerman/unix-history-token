@@ -555,6 +555,8 @@ operator|->
 name|mii_flags
 operator||=
 name|MIIF_NOISOLATE
+operator||
+name|MIIF_NOMANPAUSE
 expr_stmt|;
 define|#
 directive|define
@@ -1001,10 +1003,31 @@ name|mii_media_active
 operator||=
 name|IFM_NONE
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|mii
+operator|->
+name|mii_media_active
+operator|&
+name|IFM_FDX
+operator|)
+operator|!=
+literal|0
+condition|)
+name|mii
+operator|->
+name|mii_media_active
+operator||=
+name|mii_phy_flowstatus
+argument_list|(
+name|phy
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 comment|/* 		 * If the other side doesn't support NWAY, then the 		 * best we can do is determine if we have a 10Mbps or 		 * 100Mbps link. There's no way to know if the link 		 * is full or half duplex, so we default to half duplex 		 * and hope that the user is clever enough to manually 		 * change the media settings if we're wrong. 		 */
-comment|/* 		 * The RealTek PHY supports non-NWAY link speed 		 * detection, however it does not report the link 		 * detection results via the ANLPAR or BMSR registers. 		 * (What? RealTek doesn't do things the way everyone 		 * else does? I'm just shocked, shocked I tell you.) 		 * To determine the link speed, we have to do one 		 * of two things: 		 * 		 * - If this is a standalone RealTek RTL8201(L) PHY, 		 *   we can determine the link speed by testing bit 0 		 *   in the magic, vendor-specific register at offset 		 *   0x19. 		 * 		 * - If this is a RealTek MAC with integrated PHY, we 		 *   can test the 'SPEED10' bit of the MAC's media status 		 *   register. 		 */
+comment|/* 		 * The RealTek PHY supports non-NWAY link speed 		 * detection, however it does not report the link 		 * detection results via the ANLPAR or BMSR registers. 		 * (What? RealTek doesn't do things the way everyone 		 * else does? I'm just shocked, shocked I tell you.) 		 * To determine the link speed, we have to do one 		 * of two things: 		 * 		 * - If this is a standalone RealTek RTL8201(L) or 		 *   workalike PHY, we can determine the link speed by 		 *   testing bit 0 in the magic, vendor-specific register 		 *   at offset 0x19. 		 * 		 * - If this is a RealTek MAC with integrated PHY, we 		 *   can test the 'SPEED10' bit of the MAC's media status 		 *   register. 		 */
 if|if
 condition|(
 name|rsc

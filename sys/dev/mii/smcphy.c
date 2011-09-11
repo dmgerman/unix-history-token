@@ -151,7 +151,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|smcphy_reset
 parameter_list|(
 name|struct
@@ -419,25 +419,14 @@ operator||=
 name|MIIF_NOISOLATE
 operator||
 name|MIIF_NOLOOP
+operator||
+name|MIIF_NOMANPAUSE
 expr_stmt|;
-if|if
-condition|(
 name|smcphy_reset
 argument_list|(
 name|sc
 argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"reset failed\n"
-argument_list|)
 expr_stmt|;
-block|}
 comment|/* Mask interrupts, we poll instead. */
 name|PHY_WRITE
 argument_list|(
@@ -712,26 +701,11 @@ name|mii_ticks
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
 name|smcphy_reset
 argument_list|(
 name|sc
 argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mii_dev
-argument_list|,
-literal|"reset failed\n"
-argument_list|)
 expr_stmt|;
-block|}
 name|smcphy_auto
 argument_list|(
 name|sc
@@ -767,7 +741,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|smcphy_reset
 parameter_list|(
 name|struct
@@ -837,13 +811,15 @@ name|bmcr
 operator|&
 name|BMCR_RESET
 condition|)
-block|{
-return|return
-operator|(
-name|EIO
-operator|)
-return|;
-block|}
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|mii_dev
+argument_list|,
+literal|"reset failed\n"
+argument_list|)
+expr_stmt|;
 name|PHY_WRITE
 argument_list|(
 name|sc
@@ -853,11 +829,16 @@ argument_list|,
 literal|0x3000
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+comment|/* Mask interrupts, we poll instead. */
+name|PHY_WRITE
+argument_list|(
+name|sc
+argument_list|,
+literal|0x1e
+argument_list|,
+literal|0xffc0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

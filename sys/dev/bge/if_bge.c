@@ -23855,12 +23855,6 @@ operator|->
 name|bge_miibus
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mii
-operator|->
-name|mii_instance
-condition|)
 name|LIST_FOREACH
 argument_list|(
 argument|miisc

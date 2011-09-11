@@ -454,6 +454,8 @@ operator||=
 name|MIIF_NOISOLATE
 operator||
 name|MIIF_NOLOOP
+operator||
+name|MIIF_NOMANPAUSE
 expr_stmt|;
 name|ruephy_reset
 argument_list|(
@@ -911,6 +913,11 @@ operator|->
 name|mii_media_active
 operator||=
 name|IFM_FDX
+operator||
+name|mii_phy_flowstatus
+argument_list|(
+name|phy
+argument_list|)
 expr_stmt|;
 else|else
 name|mii

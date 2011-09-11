@@ -2179,7 +2179,6 @@ name|mii_data
 modifier|*
 name|mii
 decl_stmt|;
-comment|/* 	 * Many of the PHYs that wind up on PC Cards are weird in 	 * this way.  Generally, we don't need to worry so much about 	 * the Isolation protocol since there's only one PHY in 	 * these designs, so this workaround is reasonable. 	 */
 name|mii
 operator|=
 name|device_get_softc
@@ -2197,19 +2196,11 @@ argument|&mii->mii_phys
 argument_list|,
 argument|mii_list
 argument_list|)
-block|{
-name|miisc
-operator|->
-name|mii_flags
-operator||=
-name|MIIF_FORCEANEG
-expr_stmt|;
 name|mii_phy_reset
 argument_list|(
 name|miisc
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|mii_mediachg
@@ -3143,7 +3134,7 @@ name|MII_PHY_ANY
 argument_list|,
 name|MII_OFFSET_ANY
 argument_list|,
-literal|0
+name|MIIF_FORCEANEG
 argument_list|)
 expr_stmt|;
 block|}
@@ -3194,7 +3185,7 @@ name|MII_PHY_ANY
 argument_list|,
 name|MII_OFFSET_ANY
 argument_list|,
-literal|0
+name|MIIF_FORCEANEG
 argument_list|)
 expr_stmt|;
 if|if

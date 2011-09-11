@@ -447,6 +447,8 @@ operator||=
 name|MIIF_NOISOLATE
 operator||
 name|MIIF_NOLOOP
+operator||
+name|MIIF_NOMANPAUSE
 expr_stmt|;
 name|sc
 operator|->

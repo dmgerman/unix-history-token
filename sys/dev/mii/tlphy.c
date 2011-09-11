@@ -519,6 +519,14 @@ name|mii_pdata
 operator|=
 name|mii
 expr_stmt|;
+name|sc
+operator|->
+name|sc_mii
+operator|.
+name|mii_flags
+operator||=
+name|MIIF_NOMANPAUSE
+expr_stmt|;
 comment|/* 	 * Note that if we're on a device that also supports 100baseTX, 	 * we are not going to want to use the built-in 10baseT port, 	 * since there will be another PHY on the MII wired up to the 	 * UTP connector. 	 */
 name|capmask
 operator|=
@@ -1351,6 +1359,14 @@ operator|->
 name|mii_media_active
 operator||=
 name|IFM_FDX
+operator||
+name|mii_phy_flowstatus
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_mii
+argument_list|)
 expr_stmt|;
 else|else
 name|mii

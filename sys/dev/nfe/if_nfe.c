@@ -17809,17 +17809,6 @@ default|default:
 break|break;
 block|}
 block|}
-name|phyno
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|mii
-operator|->
-name|mii_instance
-condition|)
-block|{
 name|miisc
 operator|=
 name|LIST_FIRST
@@ -17849,9 +17838,6 @@ argument_list|(
 name|miisc
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-return|return;
 name|nfe_miibus_writereg
 argument_list|(
 name|sc
