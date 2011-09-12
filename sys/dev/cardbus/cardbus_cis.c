@@ -2440,6 +2440,15 @@ argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
+name|bus_delete_resource
+argument_list|(
+name|child
+argument_list|,
+name|SYS_RES_MEMORY
+argument_list|,
+name|rid
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
