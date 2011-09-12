@@ -6450,6 +6450,13 @@ decl_stmt|;
 name|vm_page_t
 name|m
 decl_stmt|;
+name|PMAP_LOCK_ASSERT
+argument_list|(
+name|pm
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|data
 operator|=
 name|atomic_clear_long
@@ -6585,9 +6592,6 @@ operator|&
 name|VM_PROT_WRITE
 condition|)
 return|return;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
 name|pm
@@ -6679,9 +6683,6 @@ name|PMAP_UNLOCK
 argument_list|(
 name|pm
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 block|}
 end_function
