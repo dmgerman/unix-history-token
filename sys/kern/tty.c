@@ -3349,8 +3349,6 @@ name|si_drv1
 decl_stmt|;
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
 name|tty_lock
 argument_list|(
@@ -3400,6 +3398,10 @@ condition|)
 goto|goto
 name|done
 goto|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|cmd
