@@ -1250,12 +1250,6 @@ decl_stmt|;
 name|uint16_t
 name|bcdDevice
 decl_stmt|;
-name|uint16_t
-name|autoQuirk
-index|[
-name|USB_MAX_AUTO_QUIRK
-index|]
-decl_stmt|;
 name|uint8_t
 name|bDeviceClass
 decl_stmt|;

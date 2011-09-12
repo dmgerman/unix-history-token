@@ -4224,14 +4224,10 @@ name|done
 label|:
 return|return
 operator|(
-name|usb_test_quirk_w
-argument_list|(
-name|info
-argument_list|,
-name|quirk
-argument_list|)
+literal|0
 operator|)
 return|;
+comment|/* no quirk match */
 block|}
 end_function
 
