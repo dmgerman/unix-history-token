@@ -5,7 +5,7 @@ end_comment
 
 begin_function_decl
 name|int
-name|cmsg_getprop
+name|cm_getprop
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -16,7 +16,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cmsg_setprop
+name|cm_setprop
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -27,7 +27,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cmsg_handler_server
+name|cm_handler_server
 parameter_list|(
 name|int
 parameter_list|)

@@ -203,7 +203,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cmsg_send
+name|cm_send
 parameter_list|(
 name|int
 parameter_list|,
@@ -215,7 +215,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cmsg_recv
+name|cm_recv
 parameter_list|(
 name|int
 parameter_list|,
@@ -227,7 +227,7 @@ end_function_decl
 
 begin_function_decl
 name|size_t
-name|cmsg_pl2bin
+name|cm_pl2bin
 parameter_list|(
 name|char
 modifier|*
@@ -243,7 +243,7 @@ begin_function_decl
 name|struct
 name|ctrl_msg_pl
 modifier|*
-name|cmsg_bin2pl
+name|cm_bin2pl
 parameter_list|(
 name|char
 modifier|*
@@ -257,7 +257,7 @@ end_function_decl
 
 begin_function_decl
 name|size_t
-name|cmsg_str2bin
+name|cm_str2bin
 parameter_list|(
 name|char
 modifier|*
@@ -273,7 +273,7 @@ end_function_decl
 begin_function_decl
 name|void
 modifier|*
-name|cmsg_bin2str
+name|cm_bin2str
 parameter_list|(
 name|char
 modifier|*
