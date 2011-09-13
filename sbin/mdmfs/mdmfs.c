@@ -626,7 +626,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:b:Cc:Dd:E:e:F:f:hi:LlMm:NnO:o:Pp:Ss:t:Uv:w:X"
+literal|"a:b:Cc:Dd:E:e:F:f:hi:LlMm:NnO:o:Pp:Ss:tUv:w:X"
 argument_list|)
 operator|)
 operator|!=
@@ -967,6 +967,18 @@ argument_list|,
 literal|"-s %s"
 argument_list|,
 name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'t'
+case|:
+name|argappend
+argument_list|(
+operator|&
+name|newfs_arg
+argument_list|,
+literal|"-t"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3003,7 +3015,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-DLlMNnPSUX] [-a maxcontig] [-b block-size]\n"
+literal|"usage: %s [-DLlMNnPStUX] [-a maxcontig] [-b block-size]\n"
 literal|"\t[-c blocks-per-cylinder-group][-d max-extent-size] [-E path-mdconfig]\n"
 literal|"\t[-e maxbpg] [-F file] [-f frag-size] [-i bytes] [-m percent-free]\n"
 literal|"\t[-O optimization] [-o mount-options]\n"
