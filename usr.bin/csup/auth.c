@@ -1051,7 +1051,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"%s:%d Missng client name\n"
+literal|"%s:%d Missing client name\n"
 argument_list|,
 name|authfile
 argument_list|,
@@ -1108,7 +1108,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"%s:%d Missng password\n"
+literal|"%s:%d Missing password\n"
 argument_list|,
 name|authfile
 argument_list|,
@@ -1150,7 +1150,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"%s:%d Missng comment\n"
+literal|"%s:%d Missing comment\n"
 argument_list|,
 name|authfile
 argument_list|,
