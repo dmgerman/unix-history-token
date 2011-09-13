@@ -29960,7 +29960,7 @@ name|s_lo
 parameter_list|,
 name|a_lo
 parameter_list|)
-value|do {			\ 	s_lo += a_lo;						\ 	s_hi += a_hi + (s_lo< a_lo) ? 1 : 0;			\ } while (0)
+value|do {			\ 	s_lo += a_lo;						\ 	s_hi += a_hi + ((s_lo< a_lo) ? 1 : 0);			\ } while (0)
 end_define
 
 begin_comment
