@@ -1065,7 +1065,7 @@ block|}
 comment|/* Skip the rest of this line, it isn't what we are looking for. */
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|auth
 operator|->
