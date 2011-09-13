@@ -1632,6 +1632,18 @@ name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
+name|ip6_rfc6204w3
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
 name|ip6_maxfragpackets
 argument_list|)
 expr_stmt|;
@@ -2585,6 +2597,31 @@ literal|0
 argument_list|,
 literal|"Always set 0 to R flag in ICMPv6 NA messages when accepting RA"
 literal|" on the interface."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_VNET_INT
+argument_list|(
+name|_net_inet6_ip6
+argument_list|,
+name|IPV6CTL_RFC6204W3
+argument_list|,
+name|rfc6204w3
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
+name|ip6_rfc6204w3
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|"Accept the default router list from ICMPv6 RA messages even "
+literal|"when packet forwarding enabled."
 argument_list|)
 expr_stmt|;
 end_expr_stmt

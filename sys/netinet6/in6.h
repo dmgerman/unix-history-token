@@ -2672,8 +2672,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IPV6CTL_MAXID
+name|IPV6CTL_RFC6204W3
 value|50
+end_define
+
+begin_comment
+comment|/* Accept defroute even when forwarding 					   enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6CTL_MAXID
+value|51
 end_define
 
 begin_endif
