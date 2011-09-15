@@ -16573,6 +16573,8 @@ operator|&
 name|lockstate
 argument_list|)
 expr_stmt|;
+name|dtv
+operator|=
 operator|*
 name|dtvp
 operator|=
