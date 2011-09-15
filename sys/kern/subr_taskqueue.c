@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -742,6 +748,14 @@ operator|->
 name|ta_pending
 condition|)
 block|{
+if|if
+condition|(
+name|task
+operator|->
+name|ta_pending
+operator|<
+name|USHRT_MAX
+condition|)
 name|task
 operator|->
 name|ta_pending
