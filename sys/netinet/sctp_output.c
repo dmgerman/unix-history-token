@@ -16737,7 +16737,6 @@ name|EINVAL
 expr_stmt|;
 return|return
 operator|(
-operator|-
 literal|1
 operator|)
 return|;
@@ -16916,7 +16915,6 @@ name|EINVAL
 expr_stmt|;
 return|return
 operator|(
-operator|-
 literal|1
 operator|)
 return|;
@@ -16986,7 +16984,6 @@ name|EINVAL
 expr_stmt|;
 return|return
 operator|(
-operator|-
 literal|1
 operator|)
 return|;
