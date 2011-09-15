@@ -909,14 +909,11 @@ expr_stmt|;
 name|i
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
 if|if
 condition|(
 name|i
 operator|==
-literal|100000
+literal|100000000
 condition|)
 block|{
 name|printf
@@ -926,8 +923,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-endif|#
-directive|endif
 block|}
 name|stopping_cpu
 operator|=
