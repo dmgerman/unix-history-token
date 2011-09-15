@@ -2256,6 +2256,7 @@ goto|;
 block|}
 name|offset
 operator|=
+operator|(
 name|pp
 operator|->
 name|lg_stripeoffset
@@ -2263,6 +2264,9 @@ operator|/
 name|pp
 operator|->
 name|lg_sectorsize
+operator|)
+operator|%
+name|alignment
 expr_stmt|;
 name|last
 operator|=
@@ -3187,6 +3191,7 @@ expr_stmt|;
 comment|/* Adjust parameters to stripeoffset */
 name|offset
 operator|=
+operator|(
 name|pp
 operator|->
 name|lg_stripeoffset
@@ -3194,6 +3199,9 @@ operator|/
 name|pp
 operator|->
 name|lg_sectorsize
+operator|)
+operator|%
+name|alignment
 expr_stmt|;
 name|start
 operator|=
