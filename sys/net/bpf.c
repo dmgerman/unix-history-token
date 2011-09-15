@@ -2524,16 +2524,6 @@ operator|&
 name|bpf_mtx
 argument_list|)
 expr_stmt|;
-name|selwakeuppri
-argument_list|(
-operator|&
-name|d
-operator|->
-name|bd_sel
-argument_list|,
-name|PRINET
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
@@ -2545,6 +2535,14 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* MAC */
+name|seldrain
+argument_list|(
+operator|&
+name|d
+operator|->
+name|bd_sel
+argument_list|)
+expr_stmt|;
 name|knlist_destroy
 argument_list|(
 operator|&

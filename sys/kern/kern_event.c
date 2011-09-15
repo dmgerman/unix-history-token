@@ -8055,6 +8055,14 @@ argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
+name|seldrain
+argument_list|(
+operator|&
+name|kq
+operator|->
+name|kq_sel
+argument_list|)
+expr_stmt|;
 name|knlist_destroy
 argument_list|(
 operator|&

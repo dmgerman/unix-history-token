@@ -15257,6 +15257,14 @@ modifier|*
 name|vi
 parameter_list|)
 block|{
+name|seldrain
+argument_list|(
+operator|&
+name|vi
+operator|->
+name|vpi_selinfo
+argument_list|)
+expr_stmt|;
 name|knlist_destroy
 argument_list|(
 operator|&
