@@ -2292,6 +2292,14 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+name|seldrain
+argument_list|(
+operator|&
+name|ap
+operator|->
+name|ap_selinfo
+argument_list|)
+expr_stmt|;
 name|knlist_destroy
 argument_list|(
 operator|&

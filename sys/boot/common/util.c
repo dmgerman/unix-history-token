@@ -531,7 +531,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-literal|10
+literal|32
 index|]
 decl_stmt|,
 modifier|*

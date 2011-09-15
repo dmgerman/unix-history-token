@@ -62,7 +62,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/nlm/hal/mmio.h>
+file|<mips/nlm/hal/haldefs.h>
 end_include
 
 begin_include

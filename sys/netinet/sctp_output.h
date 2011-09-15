@@ -698,14 +698,12 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|sctp_send_hb
 parameter_list|(
 name|struct
 name|sctp_tcb
 modifier|*
-parameter_list|,
-name|int
 parameter_list|,
 name|struct
 name|sctp_nets

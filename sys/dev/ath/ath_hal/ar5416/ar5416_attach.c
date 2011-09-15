@@ -548,6 +548,18 @@ expr_stmt|;
 comment|/* Receive Functions */
 name|ah
 operator|->
+name|ah_getRxFilter
+operator|=
+name|ar5416GetRxFilter
+expr_stmt|;
+name|ah
+operator|->
+name|ah_setRxFilter
+operator|=
+name|ar5416SetRxFilter
+expr_stmt|;
+name|ah
+operator|->
 name|ah_startPcuReceive
 operator|=
 name|ar5416StartPcuReceive
@@ -639,6 +651,12 @@ name|ar5416GpioSetIntr
 expr_stmt|;
 name|ah
 operator|->
+name|ah_getTsf64
+operator|=
+name|ar5416GetTsf64
+expr_stmt|;
+name|ah
+operator|->
 name|ah_resetTsf
 operator|=
 name|ar5416ResetTsf
@@ -704,6 +722,12 @@ name|ah_procRadarEvent
 operator|=
 name|ar5416ProcessRadarEvent
 expr_stmt|;
+name|ah
+operator|->
+name|ah_isFastClockEnabled
+operator|=
+name|ar5416IsFastClockEnabled
+expr_stmt|;
 comment|/* Power Management Functions */
 name|ah
 operator|->
@@ -735,6 +759,12 @@ operator|->
 name|ah_resetStationBeaconTimers
 operator|=
 name|ar5416ResetStaBeaconTimers
+expr_stmt|;
+name|ah
+operator|->
+name|ah_getNextTBTT
+operator|=
+name|ar5416GetNextTBTT
 expr_stmt|;
 comment|/* 802.11n Functions */
 name|ah
@@ -4944,6 +4974,13 @@ operator|->
 name|halEnhancedDfsSupport
 operator|=
 name|AH_FALSE
+expr_stmt|;
+comment|/* Hardware supports 32 bit TSF values in the RX descriptor */
+name|pCap
+operator|->
+name|halHasLongRxDescTsf
+operator|=
+name|AH_TRUE
 expr_stmt|;
 if|if
 condition|(

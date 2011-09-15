@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: cd9660_write.c,v 1.13 2010/10/22 00:49:15 christos Exp $	*/
+comment|/*	$NetBSD: cd9660_write.c,v 1.14 2011/01/04 09:48:21 wiz Exp $	*/
 end_comment
 
 begin_comment
@@ -1795,6 +1795,14 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|rf
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1828,6 +1836,14 @@ expr_stmt|;
 name|free
 argument_list|(
 name|buf
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|rf
 argument_list|)
 expr_stmt|;
 return|return

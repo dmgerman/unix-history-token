@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stddef.h>
 end_include
 
@@ -25,6 +19,24 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"rtld.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"rtld_printf.h"
 end_include
 
 begin_function_decl
@@ -108,13 +120,20 @@ name|p
 operator|==
 name|NULL
 condition|)
-name|err
+block|{
+name|rtld_fdputstr
 argument_list|(
-literal|1
+name|STDERR_FILENO
 argument_list|,
-literal|"Out of memory"
+literal|"Out of memory\n"
 argument_list|)
 expr_stmt|;
+name|_exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|p
 return|;
@@ -147,13 +166,20 @@ name|p
 operator|==
 name|NULL
 condition|)
-name|err
+block|{
+name|rtld_fdputstr
 argument_list|(
-literal|1
+name|STDERR_FILENO
 argument_list|,
-literal|"Out of memory"
+literal|"Out of memory\n"
 argument_list|)
 expr_stmt|;
+name|_exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|p
 return|;

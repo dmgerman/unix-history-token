@@ -172,7 +172,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|uint32_t
-name|kernload
+name|kernload_ap
 decl_stmt|;
 end_decl_stmt
 
@@ -775,6 +775,16 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|bootinfo
+index|[
+literal|0
+index|]
+operator|==
+literal|1
+condition|)
+block|{
 comment|/* Backward compatibility. See 8-STABLE. */
 name|ticks
 operator|=
@@ -785,6 +795,20 @@ index|]
 operator|>>
 literal|3
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Compatibility with Juniper's loader. */
+name|ticks
+operator|=
+name|bootinfo
+index|[
+literal|5
+index|]
+operator|>>
+literal|3
+expr_stmt|;
+block|}
 block|}
 else|else
 name|ticks
@@ -1130,7 +1154,7 @@ operator|-
 name|KERNBASE
 operator|)
 operator|+
-name|kernload
+name|kernload_ap
 expr_stmt|;
 name|ccsr_write4
 argument_list|(

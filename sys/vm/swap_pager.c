@@ -252,7 +252,7 @@ file|<geom/geom.h>
 end_include
 
 begin_comment
-comment|/*  * SWB_NPAGES must be a power of 2.  It may be set to 1, 2, 4, 8, or 16  * pages per allocation.  We recommend you stick with the default of 8.  * The 16-page limit is due to the radix code (kern/subr_blist.c).  */
+comment|/*  * SWB_NPAGES must be a power of 2.  It may be set to 1, 2, 4, 8, 16  * or 32 pages per allocation.  * The 32-page limit is due to the radix code (kern/subr_blist.c).  */
 end_comment
 
 begin_ifndef
@@ -296,7 +296,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Piecemeal swap metadata structure.  Swap is stored in a radix tree.  *  * If SWB_NPAGES is 8 and sizeof(char *) == sizeof(daddr_t), our radix  * is basically 8.  Assuming PAGE_SIZE == 4096, one tree level represents  * 32K worth of data, two levels represent 256K, three levels represent  * 2 MBytes.   This is acceptable.  *  * Overall memory utilization is about the same as the old swap structure.  */
+comment|/*  * The swblock structure maps an object and a small, fixed-size range  * of page indices to disk addresses within a swap area.  * The collection of these mappings is implemented as a hash table.  * Unused disk addresses within a swap area are allocated and managed  * using a blist.  */
 end_comment
 
 begin_define
@@ -2620,7 +2620,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWAP_PAGER_DEALLOC() -	remove swap metadata from object  *  *	The swap backing for the object is destroyed.  The code is   *	designed such that we can reinstantiate it later, but this  *	routine is typically called only when the entire object is  *	about to be destroyed.  *  *	This routine may block, but no longer does.   *  *	The object must be locked or unreferenceable.  */
+comment|/*  * SWAP_PAGER_DEALLOC() -	remove swap metadata from object  *  *	The swap backing for the object is destroyed.  The code is   *	designed such that we can reinstantiate it later, but this  *	routine is typically called only when the entire object is  *	about to be destroyed.  *  *	The object must be locked.  */
 end_comment
 
 begin_function
@@ -2697,7 +2697,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * SWP_PAGER_GETSWAPSPACE() -	allocate raw swap space  *  *	Allocate swap for the requested number of pages.  The starting  *	swap block number (a page index) is returned or SWAPBLK_NONE  *	if the allocation failed.  *  *	Also has the side effect of advising that somebody made a mistake  *	when they configured swap and didn't configure enough.  *  *	This routine may not block  *  *	We allocate in round-robin fashion from the configured devices.  */
+comment|/*  * SWP_PAGER_GETSWAPSPACE() -	allocate raw swap space  *  *	Allocate swap for the requested number of pages.  The starting  *	swap block number (a page index) is returned or SWAPBLK_NONE  *	if the allocation failed.  *  *	Also has the side effect of advising that somebody made a mistake  *	when they configured swap and didn't configure enough.  *  *	This routine may not sleep.  *  *	We allocate in round-robin fashion from the configured devices.  */
 end_comment
 
 begin_function
@@ -2987,7 +2987,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWP_PAGER_FREESWAPSPACE() -	free raw swap space   *  *	This routine returns the specified swap blocks back to the bitmap.  *  *	Note:  This routine may not block (it could in the old swap code),  *	and through the use of the new blist routines it does not block.  *  *	This routine may not block  */
+comment|/*  * SWP_PAGER_FREESWAPSPACE() -	free raw swap space   *  *	This routine returns the specified swap blocks back to the bitmap.  *  *	This routine may not sleep.  */
 end_comment
 
 begin_function
@@ -3284,7 +3284,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWAP_PAGER_COPY() -  copy blocks from source pager to destination pager  *			and destroy the source.  *  *	Copy any valid swapblks from the source to the destination.  In  *	cases where both the source and destination have a valid swapblk,  *	we keep the destination's.  *  *	This routine is allowed to block.  It may block allocating metadata  *	indirectly through swp_pager_meta_build() or if paging is still in  *	progress on the source.   *  *	XXX vm_page_collapse() kinda expects us not to block because we   *	supposedly do not need to allocate memory, but for the moment we  *	*may* have to get a little memory from the zone allocator, but  *	it is taken from the interrupt memory.  We should be ok.   *  *	The source object contains no vm_page_t's (which is just as well)  *  *	The source object is of type OBJT_SWAP.  *  *	The source and destination objects must be locked or   *	inaccessible (XXX are they ?)  */
+comment|/*  * SWAP_PAGER_COPY() -  copy blocks from source pager to destination pager  *			and destroy the source.  *  *	Copy any valid swapblks from the source to the destination.  In  *	cases where both the source and destination have a valid swapblk,  *	we keep the destination's.  *  *	This routine is allowed to sleep.  It may sleep allocating metadata  *	indirectly through swp_pager_meta_build() or if paging is still in  *	progress on the source.   *  *	The source object contains no vm_page_t's (which is just as well)  *  *	The source object is of type OBJT_SWAP.  *  *	The source and destination objects must be locked.  *	Both object locks may temporarily be released.  */
 end_comment
 
 begin_function
@@ -3734,7 +3734,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWAP_PAGER_PAGE_UNSWAPPED() - remove swap backing store related to page  *  *	This removes any associated swap backing store, whether valid or  *	not, from the page.    *  *	This routine is typically called when a page is made dirty, at  *	which point any associated swap can be freed.  MADV_FREE also  *	calls us in a special-case situation  *  *	NOTE!!!  If the page is clean and the swap was valid, the caller  *	should make the page dirty before calling this routine.  This routine  *	does NOT change the m->dirty status of the page.  Also: MADV_FREE  *	depends on it.  *  *	This routine may not block  */
+comment|/*  * SWAP_PAGER_PAGE_UNSWAPPED() - remove swap backing store related to page  *  *	This removes any associated swap backing store, whether valid or  *	not, from the page.    *  *	This routine is typically called when a page is made dirty, at  *	which point any associated swap can be freed.  MADV_FREE also  *	calls us in a special-case situation  *  *	NOTE!!!  If the page is clean and the swap was valid, the caller  *	should make the page dirty before calling this routine.  This routine  *	does NOT change the m->dirty status of the page.  Also: MADV_FREE  *	depends on it.  *  *	This routine may not sleep.  */
 end_comment
 
 begin_function
@@ -4977,7 +4977,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	swp_pager_async_iodone:  *  *	Completion routine for asynchronous reads and writes from/to swap.  *	Also called manually by synchronous code to finish up a bp.  *  *	For READ operations, the pages are VPO_BUSY'd.  For WRITE operations,   *	the pages are vm_page_t->busy'd.  For READ operations, we VPO_BUSY   *	unbusy all pages except the 'main' request page.  For WRITE   *	operations, we vm_page_t->busy'd unbusy all pages ( we can do this   *	because we marked them all VM_PAGER_PEND on return from putpages ).  *  *	This routine may not block.  */
+comment|/*  *	swp_pager_async_iodone:  *  *	Completion routine for asynchronous reads and writes from/to swap.  *	Also called manually by synchronous code to finish up a bp.  *  *	For READ operations, the pages are VPO_BUSY'd.  For WRITE operations,   *	the pages are vm_page_t->busy'd.  For READ operations, we VPO_BUSY   *	unbusy all pages except the 'main' request page.  For WRITE   *	operations, we vm_page_t->busy'd unbusy all pages ( we can do this   *	because we marked them all VM_PAGER_PEND on return from putpages ).  *  *	This routine may not sleep.  */
 end_comment
 
 begin_function
@@ -5295,9 +5295,9 @@ argument_list|(
 operator|(
 name|m
 operator|->
-name|flags
+name|aflags
 operator|&
-name|PG_WRITEABLE
+name|PGA_WRITEABLE
 operator|)
 operator|==
 literal|0
@@ -5427,7 +5427,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	swap_pager_isswapped:  *  *	Return 1 if at least one page in the given object is paged  *	out to the given swap device.  *  *	This routine may not block.  */
+comment|/*  *	swap_pager_isswapped:  *  *	Return 1 if at least one page in the given object is paged  *	out to the given swap device.  *  *	This routine may not sleep.  */
 end_comment
 
 begin_function
@@ -7211,32 +7211,6 @@ decl_stmt|;
 name|u_long
 name|mblocks
 decl_stmt|;
-comment|/* 	 * If we go beyond this, we get overflows in the radix 	 * tree bitmap code. 	 */
-name|mblocks
-operator|=
-literal|0x40000000
-operator|/
-name|BLIST_META_RADIX
-expr_stmt|;
-if|if
-condition|(
-name|nblks
-operator|>
-name|mblocks
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"WARNING: reducing size to maximum of %lu blocks per swap unit\n"
-argument_list|,
-name|mblocks
-argument_list|)
-expr_stmt|;
-name|nblks
-operator|=
-name|mblocks
-expr_stmt|;
-block|}
 comment|/* 	 * nblks is in DEV_BSIZE'd chunks, convert to PAGE_SIZE'd chunks. 	 * First chop nblks off to page-align it, then convert. 	 *  	 * sw->sw_nblks is in page-sized chunks now too. 	 */
 name|nblks
 operator|&=
@@ -7257,6 +7231,38 @@ argument_list|(
 name|nblks
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If we go beyond this, we get overflows in the radix 	 * tree bitmap code. 	 */
+name|mblocks
+operator|=
+literal|0x40000000
+operator|/
+name|BLIST_META_RADIX
+expr_stmt|;
+if|if
+condition|(
+name|nblks
+operator|>
+name|mblocks
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"WARNING: reducing swap size to maximum of %luMB per unit\n"
+argument_list|,
+name|mblocks
+operator|/
+literal|1024
+operator|/
+literal|1024
+operator|*
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+name|nblks
+operator|=
+name|mblocks
+expr_stmt|;
+block|}
 name|sp
 operator|=
 name|malloc
@@ -8197,52 +8203,46 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
-name|sysctl_vm_swap_info
+name|swap_dev_info
 parameter_list|(
-name|SYSCTL_HANDLER_ARGS
+name|int
+name|name
+parameter_list|,
+name|struct
+name|xswdev
+modifier|*
+name|xs
+parameter_list|,
+name|char
+modifier|*
+name|devname
+parameter_list|,
+name|size_t
+name|len
 parameter_list|)
 block|{
-name|int
+name|struct
+name|swdevt
 modifier|*
-name|name
-init|=
-operator|(
-name|int
-operator|*
-operator|)
-name|arg1
+name|sp
+decl_stmt|;
+name|char
+modifier|*
+name|tmp_devname
 decl_stmt|;
 name|int
 name|error
 decl_stmt|,
 name|n
 decl_stmt|;
-name|struct
-name|xswdev
-name|xs
-decl_stmt|;
-name|struct
-name|swdevt
-modifier|*
-name|sp
-decl_stmt|;
-if|if
-condition|(
-name|arg2
-operator|!=
-literal|1
-condition|)
-comment|/* name length */
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 name|n
 operator|=
 literal|0
+expr_stmt|;
+name|error
+operator|=
+name|ENOENT
 expr_stmt|;
 name|mtx_lock
 argument_list|(
@@ -8262,25 +8262,23 @@ block|{
 if|if
 condition|(
 name|n
-operator|==
-operator|*
+operator|!=
 name|name
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sw_dev_mtx
-argument_list|)
+name|n
+operator|++
 expr_stmt|;
+continue|continue;
+block|}
 name|xs
-operator|.
+operator|->
 name|xsw_version
 operator|=
 name|XSWDEV_VERSION
 expr_stmt|;
 name|xs
-operator|.
+operator|->
 name|xsw_dev
 operator|=
 name|sp
@@ -8288,7 +8286,7 @@ operator|->
 name|sw_dev
 expr_stmt|;
 name|xs
-operator|.
+operator|->
 name|xsw_flags
 operator|=
 name|sp
@@ -8296,7 +8294,7 @@ operator|->
 name|sw_flags
 expr_stmt|;
 name|xs
-operator|.
+operator|->
 name|xsw_nblks
 operator|=
 name|sp
@@ -8304,13 +8302,133 @@ operator|->
 name|sw_nblks
 expr_stmt|;
 name|xs
-operator|.
+operator|->
 name|xsw_used
 operator|=
 name|sp
 operator|->
 name|sw_used
 expr_stmt|;
+if|if
+condition|(
+name|devname
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|vn_isdisk
+argument_list|(
+name|sp
+operator|->
+name|sw_vp
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+name|tmp_devname
+operator|=
+name|sp
+operator|->
+name|sw_vp
+operator|->
+name|v_rdev
+operator|->
+name|si_name
+expr_stmt|;
+else|else
+name|tmp_devname
+operator|=
+literal|"[file]"
+expr_stmt|;
+name|strncpy
+argument_list|(
+name|devname
+argument_list|,
+name|tmp_devname
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+block|}
+name|error
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sw_dev_mtx
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|sysctl_vm_swap_info
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+name|struct
+name|xswdev
+name|xs
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+if|if
+condition|(
+name|arg2
+operator|!=
+literal|1
+condition|)
+comment|/* name length */
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+name|error
+operator|=
+name|swap_dev_info
+argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|arg1
+argument_list|,
+operator|&
+name|xs
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|error
 operator|=
 name|SYSCTL_OUT
@@ -8329,22 +8447,6 @@ expr_stmt|;
 return|return
 operator|(
 name|error
-operator|)
-return|;
-block|}
-name|n
-operator|++
-expr_stmt|;
-block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sw_dev_mtx
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENOENT
 operator|)
 return|;
 block|}

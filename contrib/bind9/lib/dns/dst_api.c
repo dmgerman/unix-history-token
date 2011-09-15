@@ -4,7 +4,7 @@ comment|/*  * Portions Copyright (C) 2004-2011  Internet Systems Consortium, Inc
 end_comment
 
 begin_comment
-comment|/*  * Principal Author: Brian Wellington  * $Id: dst_api.c,v 1.57 2011-01-11 23:47:13 tbox Exp $  */
+comment|/*  * Principal Author: Brian Wellington  * $Id: dst_api.c,v 1.57.10.1 2011-03-21 19:53:34 each Exp $  */
 end_comment
 
 begin_comment
@@ -9388,6 +9388,14 @@ modifier|*
 name|key
 parameter_list|)
 block|{
+name|REQUIRE
+argument_list|(
+name|VALID_KEY
+argument_list|(
+name|key
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|key

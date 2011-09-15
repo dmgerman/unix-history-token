@@ -267,7 +267,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OCOMMLEN
+name|TDNAMLEN
 value|16
 end_define
 
@@ -329,6 +329,31 @@ end_define
 begin_comment
 comment|/* size of returned ki_loginclass */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|OCOMMLEN
+value|TDNAMLEN
+end_define
+
+begin_define
+define|#
+directive|define
+name|ki_ocomm
+value|ki_tdname
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Flags for the process credential. */
@@ -602,9 +627,9 @@ name|ki_lastcpu
 decl_stmt|;
 comment|/* Last cpu we were on */
 name|char
-name|ki_ocomm
+name|ki_tdname
 index|[
-name|OCOMMLEN
+name|TDNAMLEN
 operator|+
 literal|1
 index|]
@@ -956,6 +981,17 @@ name|KF_TYPE_PTS
 value|10
 end_define
 
+begin_comment
+comment|/* no KF_TYPE_CAPABILITY (11), since capabilities wrap other file objects */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KF_TYPE_PROCDESC
+value|12
+end_define
+
 begin_define
 define|#
 directive|define
@@ -1202,6 +1238,13 @@ define|#
 directive|define
 name|KF_FLAG_EXEC
 value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
+name|KF_FLAG_CAPABILITY
+value|0x00008000
 end_define
 
 begin_comment
@@ -1499,6 +1542,14 @@ decl_stmt|;
 block|}
 name|kf_pts
 struct|;
+struct|struct
+block|{
+name|pid_t
+name|kf_pid
+decl_stmt|;
+block|}
+name|kf_proc
+struct|;
 block|}
 name|kf_un
 union|;
@@ -1511,9 +1562,17 @@ name|kf_pad1
 decl_stmt|;
 comment|/* Round to 32 bit alignment. */
 name|int
+name|_kf_ispare0
+decl_stmt|;
+comment|/* Space for more stuff. */
+name|cap_rights_t
+name|kf_cap_rights
+decl_stmt|;
+comment|/* Capability rights. */
+name|int
 name|_kf_ispare
 index|[
-literal|7
+literal|4
 index|]
 decl_stmt|;
 comment|/* Space for more stuff. */

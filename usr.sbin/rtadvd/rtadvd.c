@@ -954,7 +954,7 @@ literal|'D'
 case|:
 name|dflag
 operator|+=
-literal|2
+literal|3
 expr_stmt|;
 break|break;
 case|case
@@ -1063,7 +1063,7 @@ if|if
 condition|(
 name|dflag
 operator|>
-literal|1
+literal|2
 condition|)
 operator|(
 name|void
@@ -1081,7 +1081,7 @@ if|if
 condition|(
 name|dflag
 operator|>
-literal|0
+literal|1
 condition|)
 operator|(
 name|void
@@ -1091,6 +1091,24 @@ argument_list|(
 name|LOG_UPTO
 argument_list|(
 name|LOG_INFO
+argument_list|)
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|dflag
+operator|>
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|setlogmask
+argument_list|(
+name|LOG_UPTO
+argument_list|(
+name|LOG_NOTICE
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1179,9 +1197,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"<%s> failed to open the pid log file, run anyway."
+literal|"failed to open the pid file %s, run anyway."
 argument_list|,
-name|__func__
+name|pidfilename
 argument_list|)
 expr_stmt|;
 block|}
@@ -1263,9 +1281,12 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"<%s> cannot open control socket"
+literal|"cannot open control socket: %s"
 argument_list|,
-name|__func__
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1408,9 +1429,12 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"<%s> listen failed"
+literal|"cannot listen control socket: %s"
 argument_list|,
-name|__func__
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1580,7 +1604,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* EINTR would occur upon SIGUSR1 for status dump */
+comment|/* EINTR would occur if a signal was delivered */
 if|if
 condition|(
 name|errno
@@ -1591,9 +1615,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"<%s> select: %s"
-argument_list|,
-name|__func__
+literal|"poll() failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1686,14 +1708,17 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"<%s> accept"
+literal|"cannot accept() control socket: %s"
 argument_list|,
-name|__func__
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|cmsg_handler_server
+name|cm_handler_server
 argument_list|(
 name|fd
 argument_list|)
@@ -1752,7 +1777,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"waiting expiration of the all RA timers\n"
+literal|"waiting expiration of the all RA timers."
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -1783,9 +1808,9 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_NOTICE
 argument_list|,
-literal|"gracefully terminated.\n"
+literal|"gracefully terminated."
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1805,7 +1830,7 @@ name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"<%s> cease to be an advertising router\n"
+literal|"<%s> cease to be an advertising router"
 argument_list|,
 name|__func__
 argument_list|)
@@ -1893,6 +1918,53 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
+if|if
+condition|(
+name|ifi
+operator|->
+name|ifi_ra_lastsent
+operator|.
+name|tv_sec
+operator|==
+literal|0
+operator|&&
+name|ifi
+operator|->
+name|ifi_ra_lastsent
+operator|.
+name|tv_usec
+operator|==
+literal|0
+operator|&&
+name|ifi
+operator|->
+name|ifi_ra_timer
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 			 * When RA configured but never sent, 			 * ignore the IF immediately. 			 */
+name|rtadvd_remove_timer
+argument_list|(
+name|ifi
+operator|->
+name|ifi_ra_timer
+argument_list|)
+expr_stmt|;
+name|ifi
+operator|->
+name|ifi_ra_timer
+operator|=
+name|NULL
+expr_stmt|;
+name|ifi
+operator|->
+name|ifi_state
+operator|=
+name|IFI_STATE_UNCONFIGURED
+expr_stmt|;
+continue|continue;
+block|}
 name|ifi
 operator|->
 name|ifi_state
@@ -1955,11 +2027,9 @@ expr_stmt|;
 block|}
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_NOTICE
 argument_list|,
-literal|"<%s> final RA transmission started.\n"
-argument_list|,
-name|__func__
+literal|"final RA transmission started."
 argument_list|)
 expr_stmt|;
 name|pidfile_remove
@@ -2354,7 +2424,7 @@ continue|continue;
 block|}
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_DEBUG
 argument_list|,
 literal|"<%s>: if_announcemsg (idx=%d:%d)"
 argument_list|,
@@ -2381,11 +2451,9 @@ name|IFAN_ARRIVAL
 case|:
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_NOTICE
 argument_list|,
-literal|"<%s>: interface added (idx=%d)"
-argument_list|,
-name|__func__
+literal|"interface added (idx=%d)"
 argument_list|,
 name|ifan
 operator|->
@@ -2415,11 +2483,9 @@ name|IFAN_DEPARTURE
 case|:
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_NOTICE
 argument_list|,
-literal|"<%s>: interface removed (idx=%d)"
-argument_list|,
-name|__func__
+literal|"interface removed (idx=%d)"
 argument_list|,
 name|ifan
 operator|->
@@ -2883,11 +2949,9 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_NOTICE
 argument_list|,
-literal|"<%s> interface %s becomes down. stop timer."
-argument_list|,
-name|__func__
+literal|"<interface %s becomes down. stop timer."
 argument_list|,
 name|ifi
 operator|->
@@ -2930,11 +2994,9 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_NOTICE
 argument_list|,
-literal|"<%s> interface %s becomes up. restart timer."
-argument_list|,
-name|__func__
+literal|"interface %s becomes up. restart timer."
 argument_list|,
 name|ifi
 operator|->
@@ -3297,9 +3359,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"<%s> failed to get receiving interface"
-argument_list|,
-name|__func__
+literal|"failed to get receiving interface"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3315,9 +3375,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"<%s> failed to get receiving hop limit"
-argument_list|,
-name|__func__
+literal|"failed to get receiving hop limit"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3398,9 +3456,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"<%s> packet size(%d) is too short"
-argument_list|,
-name|__func__
+literal|"packet size(%d) is too short"
 argument_list|,
 name|i
 argument_list|)
@@ -3457,9 +3513,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"<%s> packet size(%zd) is too short"
-argument_list|,
-name|__func__
+literal|"packet size(%zd) is too short"
 argument_list|,
 name|i
 argument_list|)
@@ -3507,10 +3561,8 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"<%s> RS with invalid hop limit(%d) "
+literal|"RS with invalid hop limit(%d) "
 literal|"received from %s on %s"
-argument_list|,
-name|__func__
 argument_list|,
 operator|*
 name|hlimp
@@ -3555,10 +3607,8 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"<%s> RS with invalid ICMP6 code(%d) "
+literal|"RS with invalid ICMP6 code(%d) "
 literal|"received from %s on %s"
-argument_list|,
-name|__func__
 argument_list|,
 name|icp
 operator|->
@@ -3611,10 +3661,8 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"<%s> RS from %s on %s does not have enough "
+literal|"RS from %s on %s does not have enough "
 literal|"length (len = %zd)"
-argument_list|,
-name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -3685,10 +3733,8 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"<%s> RA witn non-linklocal source address "
+literal|"RA witn non-linklocal source address "
 literal|"received from %s on %s"
-argument_list|,
-name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -3731,10 +3777,8 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"<%s> RA with invalid hop limit(%d) "
+literal|"RA with invalid hop limit(%d) "
 literal|"received from %s on %s"
-argument_list|,
-name|__func__
 argument_list|,
 operator|*
 name|hlimp
@@ -3779,10 +3823,8 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"<%s> RA with invalid ICMP6 code(%d) "
+literal|"RA with invalid ICMP6 code(%d) "
 literal|"received from %s on %s"
-argument_list|,
-name|__func__
 argument_list|,
 name|icp
 operator|->
@@ -3835,10 +3877,8 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"<%s> RA from %s on %s does not have enough "
+literal|"RA from %s on %s does not have enough "
 literal|"length (len = %zd)"
-argument_list|,
-name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -3903,10 +3943,8 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"<%s> received a router renumbering "
+literal|"received a router renumbering "
 literal|"message, but not allowed to be accepted"
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3938,9 +3976,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"<%s> invalid icmp type(%d)"
-argument_list|,
-name|__func__
+literal|"invalid icmp type(%d)"
 argument_list|,
 name|icp
 operator|->
@@ -4055,6 +4091,14 @@ sizeof|sizeof
 argument_list|(
 name|ndopts
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|ndopts
+operator|.
+name|opt_list
 argument_list|)
 expr_stmt|;
 if|if
@@ -4543,7 +4587,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_DEBUG
 argument_list|,
 literal|"<%s> if (idx=%d) not found.  Why?"
 argument_list|,
@@ -4604,9 +4648,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"<%s> nd6 flags failed (idx=%d)"
-argument_list|,
-name|__func__
+literal|"cannot get nd6 flags (idx=%d)"
 argument_list|,
 name|idx
 argument_list|)
@@ -4755,6 +4797,14 @@ sizeof|sizeof
 argument_list|(
 name|ndopts
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|ndopts
+operator|.
+name|opt_list
 argument_list|)
 expr_stmt|;
 name|error
@@ -4912,7 +4962,6 @@ name|LOG_DEBUG
 argument_list|,
 literal|"<%s> ifi->ifi_rainput = %"
 name|PRIu64
-literal|"\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4943,12 +4992,10 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_NOTICE
 argument_list|,
-literal|"<%s> CurHopLimit inconsistent on %s:"
+literal|"CurHopLimit inconsistent on %s:"
 literal|" %d from %s, %d from us"
-argument_list|,
-name|__func__
 argument_list|,
 name|ifi
 operator|->
@@ -5002,12 +5049,10 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_NOTICE
 argument_list|,
-literal|"<%s> M flag inconsistent on %s:"
+literal|"M flag inconsistent on %s:"
 literal|" %s from %s, %s from us"
-argument_list|,
-name|__func__
 argument_list|,
 name|ifi
 operator|->
@@ -5068,12 +5113,10 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_NOTICE
 argument_list|,
-literal|"<%s> O flag inconsistent on %s:"
+literal|"O flag inconsistent on %s:"
 literal|" %s from %s, %s from us"
-argument_list|,
-name|__func__
 argument_list|,
 name|ifi
 operator|->
@@ -5143,12 +5186,10 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_NOTICE
 argument_list|,
-literal|"<%s> ReachableTime inconsistent on %s:"
+literal|"ReachableTime inconsistent on %s:"
 literal|" %d from %s, %d from us"
-argument_list|,
-name|__func__
 argument_list|,
 name|ifi
 operator|->
@@ -5209,12 +5250,10 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_NOTICE
 argument_list|,
-literal|"<%s> RetranceTimer inconsistent on %s:"
+literal|"RetranceTimer inconsistent on %s:"
 literal|" %d from %s, %d from us"
-argument_list|,
-name|__func__
 argument_list|,
 name|ifi
 operator|->
@@ -5284,12 +5323,10 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_NOTICE
 argument_list|,
-literal|"<%s> MTU option value inconsistent on %s:"
+literal|"MTU option value inconsistent on %s:"
 literal|" %d from %s, %d from us"
-argument_list|,
-name|__func__
 argument_list|,
 name|ifi
 operator|->
@@ -7666,33 +7703,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|check_accept_rtadv
-argument_list|(
-name|ifi
-operator|->
-name|ifi_ifindex
-argument_list|)
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_INFO
-argument_list|,
-literal|"<%s> non-zero lifetime RA "
-literal|"on RA receiving interface %s."
-literal|"  Ignored."
-argument_list|,
-name|__func__
-argument_list|,
-name|ifi
-operator|->
-name|ifi_ifname
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
 name|getinet6sysctl
 argument_list|(
 name|IPV6CTL_FORWARDING
@@ -7703,13 +7713,36 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_ERR
 argument_list|,
-literal|"<%s> non-zero lifetime RA "
+literal|"non-zero lifetime RA "
 literal|"but net.inet6.ip6.forwarding=0.  "
 literal|"Ignored."
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|check_accept_rtadv
+argument_list|(
+name|ifi
+operator|->
+name|ifi_ifindex
+argument_list|)
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
 argument_list|,
-name|__func__
+literal|"non-zero lifetime RA "
+literal|"on RA receiving interface %s."
+literal|"  Ignored."
+argument_list|,
+name|ifi
+operator|->
+name|ifi_ifname
 argument_list|)
 expr_stmt|;
 return|return;

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009, 2011  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/*  * Principal Author: Brian Wellington  * $Id: opensslrsa_link.c,v 1.39 2011-01-11 23:47:13 tbox Exp $  */
+comment|/*  * Principal Author: Brian Wellington  * $Id: opensslrsa_link.c,v 1.39.10.2 2011-03-11 02:57:35 marka Exp $  */
 end_comment
 
 begin_ifdef
@@ -173,11 +173,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_ENGINE
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<openssl/engine.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * We don't use configure for windows so enforce the OpenSSL version  * here.  Unlike with configure we don't support overriding this test.  */
@@ -5555,12 +5566,17 @@ name|pubrsa
 init|=
 name|NULL
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_ENGINE
 name|ENGINE
 modifier|*
 name|e
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 name|isc_mem_t
 modifier|*
 name|mctx
@@ -5581,12 +5597,22 @@ name|label
 init|=
 name|NULL
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_ENGINE
+argument_list|)
+operator|||
+name|USE_EVP
 name|EVP_PKEY
 modifier|*
 name|pkey
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|USE_EVP
@@ -5757,6 +5783,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|USE_ENGINE
 if|if
 condition|(
 name|engine
@@ -5981,6 +6010,15 @@ operator|(
 name|ISC_R_SUCCESS
 operator|)
 return|;
+else|#
+directive|else
+name|DST_RET
+argument_list|(
+name|DST_R_NOENGINE
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|rsa
 operator|=
@@ -6406,6 +6444,9 @@ modifier|*
 name|pin
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|USE_ENGINE
 name|ENGINE
 modifier|*
 name|e
@@ -6787,6 +6828,35 @@ operator|(
 name|ret
 operator|)
 return|;
+else|#
+directive|else
+name|UNUSED
+argument_list|(
+name|key
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|engine
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|label
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|pin
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|DST_R_NOENGINE
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 

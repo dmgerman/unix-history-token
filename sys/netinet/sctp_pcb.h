@@ -821,6 +821,9 @@ decl_stmt|;
 name|uint16_t
 name|def_net_failure
 decl_stmt|;
+name|uint16_t
+name|def_net_pf_threshold
+decl_stmt|;
 comment|/* number of streams to pre-open on a association */
 name|uint16_t
 name|pre_open_stream_count
@@ -880,6 +883,17 @@ name|max_burst
 decl_stmt|;
 name|uint32_t
 name|fr_max_burst
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
+name|uint32_t
+name|default_flowlabel
+decl_stmt|;
+endif|#
+directive|endif
+name|uint8_t
+name|default_dscp
 decl_stmt|;
 name|char
 name|current_secret_number
@@ -2008,6 +2022,11 @@ modifier|*
 parameter_list|,
 name|struct
 name|sockaddr
+modifier|*
+parameter_list|,
+name|struct
+name|sctp_nets
+modifier|*
 modifier|*
 parameter_list|,
 name|int

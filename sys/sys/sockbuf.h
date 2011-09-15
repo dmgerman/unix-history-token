@@ -47,7 +47,7 @@ begin_define
 define|#
 directive|define
 name|SB_MAX
-value|(256*1024)
+value|(2*1024*1024)
 end_define
 
 begin_comment

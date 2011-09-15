@@ -322,17 +322,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PVO_FAKE
-value|0x100UL
-end_define
-
-begin_comment
-comment|/* fictitious phys page */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PVO_LARGE
 value|0x200UL
 end_define
@@ -349,16 +338,6 @@ parameter_list|(
 name|pvo
 parameter_list|)
 value|((pvo)->pvo_vaddr& ~ADDR_POFF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PVO_ISFAKE
-parameter_list|(
-name|pvo
-parameter_list|)
-value|((pvo)->pvo_vaddr& PVO_FAKE)
 end_define
 
 begin_define

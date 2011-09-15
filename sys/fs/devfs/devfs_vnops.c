@@ -8731,6 +8731,16 @@ operator|=
 name|devfs_close_f
 block|,
 operator|.
+name|fo_chmod
+operator|=
+name|vn_chmod
+block|,
+operator|.
+name|fo_chown
+operator|=
+name|vn_chown
+block|,
+operator|.
 name|fo_flags
 operator|=
 name|DFLAG_PASSABLE

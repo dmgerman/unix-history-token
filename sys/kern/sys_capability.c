@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2008-2011 Robert N. M. Watson  * Copyright (c) 2010
 end_comment
 
 begin_comment
-comment|/*  * FreeBSD kernel capability facility.  *  * Currently, this file implements only capability mode; capabilities  * (rights-refined file descriptors) will follow.  *  */
+comment|/*  * FreeBSD kernel capability facility.  *  * Two kernel features are implemented here: capability mode, a sandboxed mode  * of execution for processes, and capabilities, a refinement on file  * descriptors that allows fine-grained control over operations on the file  * descriptor.  Collectively, these allow processes to run in the style of a  * historic "capability system" in which they can use only resources  * explicitly delegated to them.  This model is enforced by restricting access  * to global namespaces in capability mode.  *  * Capabilities wrap other file descriptor types, binding them to a constant  * rights mask set when the capability is created.  New capabilities may be  * derived from existing capabilities, but only if they have the same or a  * strict subset of the rights on the original capability.  *  * System calls permitted in capability mode are defined in capabilities.conf;  * calls must be carefully audited for safety to ensure that they don't allow  * escape from a sandbox.  Some calls permit only a subset of operations in  * capability mode -- for example, shm_open(2) is limited to creating  * anonymous, rather than named, POSIX shared memory objects.  */
 end_comment
 
 begin_include
@@ -126,7 +126,7 @@ end_ifdef
 begin_expr_stmt
 name|FEATURE
 argument_list|(
-name|security_capabilities
+name|security_capability_mode
 argument_list|,
 literal|"Capsicum Capability Mode"
 argument_list|)
@@ -362,6 +362,16 @@ directive|ifdef
 name|CAPABILITIES
 end_ifdef
 
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|security_capabilities
+argument_list|,
+literal|"Capsicum Capabilities"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * struct capability describes a capability, and is hung off of its struct  * file f_data field.  cap_file and cap_rightss are static once hooked up, as  * neither the object it references nor the rights it encapsulates are  * permitted to change.  */
 end_comment
@@ -452,6 +462,20 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|fo_chmod_t
+name|capability_chmod
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|fo_chown_t
+name|capability_chown
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|fileops
 name|capability_ops
@@ -496,6 +520,16 @@ operator|.
 name|fo_close
 operator|=
 name|capability_close
+block|,
+operator|.
+name|fo_chmod
+operator|=
+name|capability_chmod
+block|,
+operator|.
+name|fo_chown
+operator|=
+name|capability_chown
 block|,
 operator|.
 name|fo_flags
@@ -551,6 +585,16 @@ operator|.
 name|fo_close
 operator|=
 name|capability_close
+block|,
+operator|.
+name|fo_chmod
+operator|=
+name|capability_chmod
+block|,
+operator|.
+name|fo_chown
+operator|=
+name|capability_chown
 block|,
 operator|.
 name|fo_flags
@@ -761,9 +805,6 @@ name|struct
 name|file
 modifier|*
 name|fp
-decl_stmt|,
-modifier|*
-name|fcapp
 decl_stmt|;
 name|cap_rights_t
 name|rights
@@ -777,17 +818,11 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
-comment|/* capability auditing will follow in a few commits */
 name|AUDIT_ARG_RIGHTS
 argument_list|(
 name|rights
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|fget
@@ -795,6 +830,8 @@ argument_list|(
 name|td
 argument_list|,
 name|fd
+argument_list|,
+name|rights
 argument_list|,
 operator|&
 name|fp
@@ -827,9 +864,6 @@ argument_list|,
 name|fp
 argument_list|,
 name|rights
-argument_list|,
-operator|&
-name|fcapp
 argument_list|,
 operator|&
 name|capfd
@@ -995,12 +1029,6 @@ parameter_list|,
 name|cap_rights_t
 name|rights
 parameter_list|,
-name|struct
-name|file
-modifier|*
-modifier|*
-name|fcappp
-parameter_list|,
 name|int
 modifier|*
 name|capfdp
@@ -1018,6 +1046,9 @@ name|struct
 name|file
 modifier|*
 name|fp_object
+decl_stmt|,
+modifier|*
+name|fcapp
 decl_stmt|;
 name|int
 name|error
@@ -1080,7 +1111,8 @@ name|falloc
 argument_list|(
 name|td
 argument_list|,
-name|fcappp
+operator|&
+name|fcapp
 argument_list|,
 name|capfdp
 argument_list|,
@@ -1159,8 +1191,7 @@ name|cp
 operator|->
 name|cap_file
 operator|=
-operator|*
-name|fcappp
+name|fcapp
 expr_stmt|;
 if|if
 condition|(
@@ -1172,8 +1203,7 @@ name|DFLAG_PASSABLE
 condition|)
 name|finit
 argument_list|(
-operator|*
-name|fcappp
+name|fcapp
 argument_list|,
 name|fp
 operator|->
@@ -1190,8 +1220,7 @@ expr_stmt|;
 else|else
 name|finit
 argument_list|(
-operator|*
-name|fcappp
+name|fcapp
 argument_list|,
 name|fp
 operator|->
@@ -1208,8 +1237,7 @@ expr_stmt|;
 comment|/* 	 * Release our private reference (the proc filedesc still has one). 	 */
 name|fdrop
 argument_list|(
-operator|*
-name|fcappp
+name|fcapp
 argument_list|,
 name|td
 argument_list|)
@@ -1780,6 +1808,71 @@ block|{
 name|panic
 argument_list|(
 literal|"capability_stat"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|capability_chmod
+parameter_list|(
+name|struct
+name|file
+modifier|*
+name|fp
+parameter_list|,
+name|mode_t
+name|mode
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|active_cred
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+block|{
+name|panic
+argument_list|(
+literal|"capability_chmod"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|capability_chown
+parameter_list|(
+name|struct
+name|file
+modifier|*
+name|fp
+parameter_list|,
+name|uid_t
+name|uid
+parameter_list|,
+name|gid_t
+name|gid
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|active_cred
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+block|{
+name|panic
+argument_list|(
+literal|"capability_chown"
 argument_list|)
 expr_stmt|;
 block|}

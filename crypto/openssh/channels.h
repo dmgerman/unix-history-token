@@ -4,6 +4,10 @@ comment|/* $OpenBSD: channels.h,v 1.104 2010/05/14 23:29:23 djm Exp $ */
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
 end_comment
 
@@ -524,6 +528,12 @@ decl_stmt|;
 name|u_int
 name|local_maxpacket
 decl_stmt|;
+name|u_int
+name|tcpwinsz
+decl_stmt|;
+name|int
+name|dynamic_window
+decl_stmt|;
 name|int
 name|extended_usage
 decl_stmt|;
@@ -662,6 +672,13 @@ define|#
 directive|define
 name|CHAN_X11_WINDOW_DEFAULT
 value|(4*CHAN_X11_PACKET_DEFAULT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHAN_HPN_MIN_WINDOW_DEFAULT
+value|(2*1024*1024)
 end_define
 
 begin_comment
@@ -1693,6 +1710,21 @@ name|chan_obuf_empty
 parameter_list|(
 name|Channel
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* hpn handler */
+end_comment
+
+begin_function_decl
+name|void
+name|channel_set_hpn
+parameter_list|(
+name|int
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -341,6 +341,9 @@ comment|/* socket argument */
 name|O_CALLRETURN
 block|,
 comment|/* arg1=called rule number */
+name|O_FORWARD_IP6
+block|,
+comment|/* fwd sockaddr_in6             */
 name|O_LAST_OPCODE
 comment|/* not an opcode!		*/
 block|}
@@ -556,6 +559,27 @@ name|sa
 decl_stmt|;
 block|}
 name|ipfw_insn_sa
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * This is used to forward to a given address (ipv6).  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ipfw_insn_sa6
+block|{
+name|ipfw_insn
+name|o
+decl_stmt|;
+name|struct
+name|sockaddr_in6
+name|sa
+decl_stmt|;
+block|}
+name|ipfw_insn_sa6
 typedef|;
 end_typedef
 

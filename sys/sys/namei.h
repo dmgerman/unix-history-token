@@ -99,6 +99,10 @@ name|uio_seg
 name|ni_segflg
 decl_stmt|;
 comment|/* location of pathname */
+name|cap_rights_t
+name|ni_rightsneeded
+decl_stmt|;
+comment|/* rights required to look up vnode */
 comment|/* 	 * Arguments to lookup. 	 */
 name|struct
 name|vnode
@@ -122,6 +126,15 @@ name|int
 name|ni_dirfd
 decl_stmt|;
 comment|/* starting directory for *at functions */
+name|int
+name|ni_strictrelative
+decl_stmt|;
+comment|/* relative lookup only; no '..' */
+comment|/* 	 * Results: returned from namei 	 */
+name|cap_rights_t
+name|ni_baserights
+decl_stmt|;
+comment|/* rights the *at base has (or -1) */
 comment|/* 	 * Results: returned from/manipulated by lookup 	 */
 name|struct
 name|vnode
@@ -582,7 +595,7 @@ parameter_list|,
 name|td
 parameter_list|)
 define|\
-value|NDINIT_ALL(ndp, op, flags, segflg, namep, AT_FDCWD, NULL, td)
+value|NDINIT_ALL(ndp, op, flags, segflg, namep, AT_FDCWD, NULL, 0, td)
 end_define
 
 begin_define
@@ -605,7 +618,32 @@ parameter_list|,
 name|td
 parameter_list|)
 define|\
-value|NDINIT_ALL(ndp, op, flags, segflg, namep, dirfd, NULL, td)
+value|NDINIT_ALL(ndp, op, flags, segflg, namep, dirfd, NULL, 0, td)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDINIT_ATRIGHTS
+parameter_list|(
+name|ndp
+parameter_list|,
+name|op
+parameter_list|,
+name|flags
+parameter_list|,
+name|segflg
+parameter_list|,
+name|namep
+parameter_list|,
+name|dirfd
+parameter_list|,
+name|rights
+parameter_list|,
+name|td
+parameter_list|)
+define|\
+value|NDINIT_ALL(ndp, op, flags, segflg, namep, dirfd, NULL, rights, td)
 end_define
 
 begin_define
@@ -628,7 +666,7 @@ parameter_list|,
 name|td
 parameter_list|)
 define|\
-value|NDINIT_ALL(ndp, op, flags, segflg, namep, AT_FDCWD, vp, td)
+value|NDINIT_ALL(ndp, op, flags, segflg, namep, AT_FDCWD, vp, 0, td)
 end_define
 
 begin_function
@@ -664,6 +702,9 @@ name|struct
 name|vnode
 modifier|*
 name|startdir
+parameter_list|,
+name|cap_rights_t
+name|rights
 parameter_list|,
 name|struct
 name|thread
@@ -710,6 +751,24 @@ operator|->
 name|ni_startdir
 operator|=
 name|startdir
+expr_stmt|;
+name|ndp
+operator|->
+name|ni_strictrelative
+operator|=
+literal|0
+expr_stmt|;
+name|ndp
+operator|->
+name|ni_rightsneeded
+operator|=
+name|rights
+expr_stmt|;
+name|ndp
+operator|->
+name|ni_baserights
+operator|=
+literal|0
 expr_stmt|;
 name|ndp
 operator|->

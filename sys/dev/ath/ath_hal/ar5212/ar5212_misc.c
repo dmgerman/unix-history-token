@@ -5523,5 +5523,25 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Return whether 5GHz fast-clock (44MHz) is enabled.  * It's always disabled for AR5212 series NICs.  */
+end_comment
+
+begin_function
+name|HAL_BOOL
+name|ar5212IsFastClockEnabled
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+block|{
+return|return
+name|AH_FALSE
+return|;
+block|}
+end_function
+
 end_unit
 

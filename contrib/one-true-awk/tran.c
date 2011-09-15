@@ -1519,6 +1519,10 @@ argument_list|(
 operator|(
 literal|"setsymtab found %p: n=%s s=\"%s\" f=%g t=%o\n"
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|p
 operator|,
 name|NN
@@ -1685,6 +1689,10 @@ argument_list|(
 operator|(
 literal|"setsymtab set %p: n=%s s=\"%s\" f=%g t=%o\n"
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|p
 operator|,
 name|p
@@ -2139,6 +2147,10 @@ argument_list|(
 operator|(
 literal|"setfval %p: %s = %g, t=%o\n"
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|vp
 operator|,
 name|NN
@@ -2271,6 +2283,10 @@ argument_list|(
 operator|(
 literal|"starting setsval %p: %s = \"%s\", t=%o, r,f=%d,%d\n"
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|vp
 operator|,
 name|NN
@@ -2429,6 +2445,10 @@ argument_list|(
 operator|(
 literal|"setsval %p: %s = \"%s (%p) \", t=%o r,f=%d,%d\n"
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|vp
 operator|,
 name|NN
@@ -2579,6 +2599,10 @@ argument_list|(
 operator|(
 literal|"getfval %p: %s = %g, t=%o\n"
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|vp
 operator|,
 name|NN
@@ -2778,6 +2802,10 @@ argument_list|(
 operator|(
 literal|"getsval %p: %s = \"%s (%p)\", t=%o\n"
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|vp
 operator|,
 name|NN

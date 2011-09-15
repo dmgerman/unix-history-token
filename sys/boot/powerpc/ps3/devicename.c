@@ -618,6 +618,9 @@ break|break;
 case|case
 name|DEVT_NET
 case|:
+case|case
+name|DEVT_CD
+case|:
 comment|/* 		 * PS3 only has one network interface (well, two, but 		 * netbooting over wireless is not something I'm going 		 * to worry about. 		 */
 name|idev
 operator|->
@@ -852,6 +855,9 @@ expr_stmt|;
 break|break;
 case|case
 name|DEVT_NET
+case|:
+case|case
+name|DEVT_CD
 case|:
 name|sprintf
 argument_list|(

@@ -1647,6 +1647,22 @@ name|rr_action
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 			 * We're supposed to send a signal, but the process 			 * is not fully initialized yet, probably because we 			 * got called from fork1().  For now just deny the 			 * allocation instead. 			 */
+if|if
+condition|(
+name|p
+operator|->
+name|p_state
+operator|!=
+name|PRS_NORMAL
+condition|)
+block|{
+name|should_deny
+operator|=
+literal|1
+expr_stmt|;
+continue|continue;
+block|}
 comment|/* 			 * We're using the fact that RCTL_ACTION_SIG* values 			 * are equal to their counterparts from sys/signal.h. 			 */
 name|psignal
 argument_list|(
@@ -4109,7 +4125,7 @@ name|rule
 operator|->
 name|rr_amount
 operator|*=
-literal|1000
+literal|1000000
 expr_stmt|;
 block|}
 if|if
@@ -5467,7 +5483,7 @@ argument_list|)
 condition|)
 name|amount
 operator|/=
-literal|1000
+literal|1000000
 expr_stmt|;
 name|sbuf_printf
 argument_list|(

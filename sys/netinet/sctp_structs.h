@@ -749,6 +749,10 @@ name|struct
 name|sctp_timer
 name|pmtu_timer
 decl_stmt|;
+name|struct
+name|sctp_timer
+name|hb_timer
+decl_stmt|;
 comment|/* 	 * The following two in combination equate to a route entry for v6 	 * or v4. 	 */
 name|struct
 name|sctp_net_route
@@ -794,11 +798,6 @@ name|struct
 name|sctp_timer
 name|rxt_timer
 decl_stmt|;
-name|struct
-name|sctp_timer
-name|fr_timer
-decl_stmt|;
-comment|/* for early fr */
 comment|/* last time in seconds I sent to it */
 name|struct
 name|timeval
@@ -880,8 +879,16 @@ decl_stmt|;
 name|uint32_t
 name|heartbeat_random2
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 name|uint32_t
-name|tos_flowlabel
+name|flowlabel
+decl_stmt|;
+endif|#
+directive|endif
+name|uint8_t
+name|dscp
 decl_stmt|;
 name|struct
 name|timeval
@@ -895,15 +902,23 @@ comment|/* number or DATA chunks marked for timer 				 * based retransmissions *
 name|uint32_t
 name|marked_fastretrans
 decl_stmt|;
+name|uint32_t
+name|heart_beat_delay
+decl_stmt|;
+comment|/* Heart Beat delay in ms */
 comment|/* if this guy is ok or not ... status */
 name|uint16_t
 name|dest_state
 decl_stmt|;
-comment|/* number of transmit failures to down this guy */
+comment|/* number of timeouts to consider the destination unreachable */
 name|uint16_t
 name|failure_threshold
 decl_stmt|;
-comment|/* error stats on destination */
+comment|/* number of timeouts to consider the destination potentially failed */
+name|uint16_t
+name|pf_threshold
+decl_stmt|;
+comment|/* error stats on the destination */
 name|uint16_t
 name|error_count
 decl_stmt|;
@@ -1850,6 +1865,23 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
+name|sctp_cwnd_update_exit_pf
+function_decl|)
+parameter_list|(
+name|struct
+name|sctp_tcb
+modifier|*
+name|stcb
+parameter_list|,
+name|struct
+name|sctp_nets
+modifier|*
+name|net
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
 name|sctp_cwnd_update_after_fr
 function_decl|)
 parameter_list|(
@@ -1952,28 +1984,6 @@ name|net
 parameter_list|,
 name|int
 name|burst_limit
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|sctp_cwnd_update_after_fr_timer
-function_decl|)
-parameter_list|(
-name|struct
-name|sctp_inpcb
-modifier|*
-name|inp
-parameter_list|,
-name|struct
-name|sctp_tcb
-modifier|*
-name|stcb
-parameter_list|,
-name|struct
-name|sctp_nets
-modifier|*
-name|net
 parameter_list|)
 function_decl|;
 name|void
@@ -2488,11 +2498,6 @@ decl_stmt|;
 comment|/* timers and such */
 name|struct
 name|sctp_timer
-name|hb_timer
-decl_stmt|;
-comment|/* hb timer */
-name|struct
-name|sctp_timer
 name|dack_timer
 decl_stmt|;
 comment|/* Delayed ack timer */
@@ -2632,6 +2637,12 @@ name|sctp_nets
 modifier|*
 name|primary_destination
 decl_stmt|;
+name|struct
+name|sctp_nets
+modifier|*
+name|alternate
+decl_stmt|;
+comment|/* If primary is down or PF */
 comment|/* For CMT */
 name|struct
 name|sctp_nets
@@ -2908,9 +2919,14 @@ name|uint32_t
 name|my_rwnd_control_len
 decl_stmt|;
 comment|/* shadow of sb_mbcnt used for rwnd 					 * control */
+ifdef|#
+directive|ifdef
+name|INET6
 name|uint32_t
 name|default_flowlabel
 decl_stmt|;
+endif|#
+directive|endif
 name|uint32_t
 name|pr_sctp_cnt
 decl_stmt|;
@@ -2986,9 +3002,8 @@ name|unsigned
 name|int
 name|cnt_on_all_streams
 decl_stmt|;
-comment|/* Heart Beat delay in ticks */
-name|unsigned
-name|int
+comment|/* Heart Beat delay in ms */
+name|uint32_t
 name|heart_beat_delay
 decl_stmt|;
 comment|/* autoclose */
@@ -3134,6 +3149,9 @@ decl_stmt|;
 name|uint16_t
 name|def_net_failure
 decl_stmt|;
+name|uint16_t
+name|def_net_pf_threshold
+decl_stmt|;
 comment|/* 	 * lock flag: 0 is ok to send, 1+ (duals as a retran count) is 	 * awaiting ACK 	 */
 name|uint16_t
 name|mapping_array_size
@@ -3213,11 +3231,7 @@ name|uint8_t
 name|hb_random_idx
 decl_stmt|;
 name|uint8_t
-name|hb_is_disabled
-decl_stmt|;
-comment|/* is the hb disabled? */
-name|uint8_t
-name|default_tos
+name|default_dscp
 decl_stmt|;
 name|uint8_t
 name|asconf_del_pending

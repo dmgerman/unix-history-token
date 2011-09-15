@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: nsupdate.c,v 1.193 2011-01-10 05:32:03 marka Exp $ */
+comment|/* $Id: nsupdate.c,v 1.193.12.3 2011-05-23 22:12:14 each Exp $ */
 end_comment
 
 begin_comment
@@ -793,6 +793,8 @@ specifier|static
 name|dst_key_t
 modifier|*
 name|sig0key
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -11764,6 +11766,11 @@ name|section
 operator|=
 name|DNS_SECTION_ANSWER
 expr_stmt|;
+name|POST
+argument_list|(
+name|section
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|debugging
@@ -14721,6 +14728,18 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|sig0key
+operator|!=
+name|NULL
+condition|)
+name|dst_key_free
+argument_list|(
+operator|&
+name|sig0key
+argument_list|)
+expr_stmt|;
 name|ddebug
 argument_list|(
 literal|"Shutting down task manager"

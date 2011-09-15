@@ -1039,6 +1039,21 @@ value|lockdestroy(&(bp)->b_lock)
 end_define
 
 begin_comment
+comment|/*  * Print informations on a buffer lock.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUF_LOCKPRINTINFO
+parameter_list|(
+name|bp
+parameter_list|)
+define|\
+value|lockmgr_printinfo(&(bp)->b_lock)
+end_define
+
+begin_comment
 comment|/*  * Buffer lock assertions.  */
 end_comment
 

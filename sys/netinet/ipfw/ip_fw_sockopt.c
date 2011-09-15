@@ -21,6 +21,12 @@ begin_comment
 comment|/*  * Sockopt support for ipfw. The routines here implement  * the upper half of the ipfw code.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"opt_ipfw.h"
+end_include
+
 begin_if
 if|#
 directive|if
@@ -30,12 +36,6 @@ argument_list|(
 name|KLD_MODULE
 argument_list|)
 end_if
-
-begin_include
-include|#
-directive|include
-file|"opt_ipfw.h"
-end_include
 
 begin_include
 include|#
@@ -3004,6 +3004,42 @@ name|EINVAL
 return|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|INET6
+case|case
+name|O_FORWARD_IP6
+case|:
+ifdef|#
+directive|ifdef
+name|IPFIREWALL_FORWARD
+if|if
+condition|(
+name|cmdlen
+operator|!=
+name|F_INSN_SIZE
+argument_list|(
+name|ipfw_insn_sa6
+argument_list|)
+condition|)
+goto|goto
+name|bad_size
+goto|;
+goto|goto
+name|check_action
+goto|;
+else|#
+directive|else
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+endif|#
+directive|endif
+endif|#
+directive|endif
+comment|/* INET6 */
 case|case
 name|O_DIVERT
 case|:

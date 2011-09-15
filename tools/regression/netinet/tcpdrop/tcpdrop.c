@@ -1033,6 +1033,13 @@ argument_list|(
 name|sin
 argument_list|)
 expr_stmt|;
+name|len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|sin
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|getsockname

@@ -39,6 +39,12 @@ begin_comment
 comment|/* linux compat */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|usb_fs_privdata
+struct_decl|;
+end_struct_decl
+
 begin_define
 define|#
 directive|define
@@ -413,7 +419,7 @@ name|ugen_symlink
 decl_stmt|;
 comment|/* our generic symlink */
 name|struct
-name|cdev
+name|usb_fs_privdata
 modifier|*
 name|ctrl_dev
 decl_stmt|;
@@ -461,6 +467,13 @@ name|uint16_t
 name|langid
 decl_stmt|;
 comment|/* language for strings */
+name|uint16_t
+name|autoQuirk
+index|[
+name|USB_MAX_AUTO_QUIRK
+index|]
+decl_stmt|;
+comment|/* dynamic quirks */
 name|uint8_t
 name|address
 decl_stmt|;
@@ -667,6 +680,57 @@ name|mode
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_if
+if|#
+directive|if
+name|USB_HAVE_UGEN
+end_if
+
+begin_function_decl
+name|struct
+name|usb_fs_privdata
+modifier|*
+name|usb_make_dev
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|uid_t
+parameter_list|,
+name|gid_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|usb_destroy_dev
+parameter_list|(
+name|struct
+name|usb_fs_privdata
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|usb_error_t

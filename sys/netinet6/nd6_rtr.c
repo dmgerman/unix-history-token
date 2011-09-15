@@ -1290,7 +1290,7 @@ name|nd_ra
 operator|->
 name|nd_ra_flags_reserved
 expr_stmt|;
-comment|/* 	 * Effectively-disable the route in the RA packet 	 * when ND6_IFF_NO_RADR on the receiving interface or 	 * ip6.forwarding=1. 	 */
+comment|/* 	 * Effectively-disable routes from RA messages when 	 * ND6_IFF_NO_RADR enabled on the receiving interface or 	 * (ip6.forwarding == 1&& ip6.rfc6204w3 != 1). 	 */
 if|if
 condition|(
 name|ndi
@@ -1298,8 +1298,20 @@ operator|->
 name|flags
 operator|&
 name|ND6_IFF_NO_RADR
-operator|||
+condition|)
+name|dr0
+operator|.
+name|rtlifetime
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|V_ip6_forwarding
+operator|&&
+operator|!
+name|V_ip6_rfc6204w3
 condition|)
 name|dr0
 operator|.

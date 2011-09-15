@@ -292,6 +292,21 @@ end_struct_decl
 
 begin_function_decl
 name|void
+name|amd64_syscall
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|traced
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|busdma_swi
 parameter_list|(
 name|void

@@ -23,6 +23,12 @@ directive|include
 file|"opt_kdtrace.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/capability.h>
+end_include
+
 begin_comment
 comment|/*  * generally, I don't like #includes inside .h files, but it seems to  * be the easiest way to handle the port.  */
 end_comment
@@ -6368,6 +6374,7 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* 		 * Since we don't know what rights might be required, 		 * pretend that we need them all. It is better to be too 		 * careful than too reckless. 		 */
 if|if
 condition|(
 operator|(
@@ -6380,6 +6387,8 @@ argument_list|,
 name|nfscbdarg
 operator|.
 name|sock
+argument_list|,
+name|CAP_SOCK_ALL
 argument_list|,
 operator|&
 name|fp

@@ -104,7 +104,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/nlm/hal/mmio.h>
+file|<mips/nlm/hal/haldefs.h>
 end_include
 
 begin_include
@@ -116,7 +116,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/nlm/hal/cop0.h>
+file|<mips/nlm/hal/mips-extns.h>
 end_include
 
 begin_include

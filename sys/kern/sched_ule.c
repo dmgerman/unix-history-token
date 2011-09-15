@@ -262,7 +262,7 @@ begin_define
 define|#
 directive|define
 name|TDQ_LOADNAME_LEN
-value|(PCPU_NAME_LEN + sizeof(" load"))
+value|(sizeof("CPU ") + sizeof(__XSTRING(MAXCPU)) - 1 + sizeof(" load"))
 end_define
 
 begin_comment
@@ -8685,7 +8685,7 @@ argument_list|)
 argument_list|,
 literal|"proc exit"
 argument_list|,
-literal|"prio:td"
+literal|"prio:%d"
 argument_list|,
 name|child
 operator|->
@@ -8748,7 +8748,7 @@ argument_list|)
 argument_list|,
 literal|"thread exit"
 argument_list|,
-literal|"prio:td"
+literal|"prio:%d"
 argument_list|,
 name|child
 operator|->

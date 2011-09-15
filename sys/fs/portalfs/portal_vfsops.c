@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/domain.h>
 end_include
 
@@ -395,6 +401,7 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* 	 * Capsicum is not incompatible with portalfs, but we don't really 	 * know what rights are required. In the spirit of "better safe than 	 * sorry", pretend that all rights are required for now. 	 */
 if|if
 condition|(
 operator|(
@@ -405,6 +412,8 @@ argument_list|(
 name|td
 argument_list|,
 name|v
+argument_list|,
+name|CAP_MASK_VALID
 argument_list|,
 operator|&
 name|fp

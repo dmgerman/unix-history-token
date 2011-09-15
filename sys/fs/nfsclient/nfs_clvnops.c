@@ -8292,6 +8292,17 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|vput
+argument_list|(
+name|newvp
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 if|if

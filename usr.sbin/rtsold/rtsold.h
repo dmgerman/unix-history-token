@@ -25,6 +25,16 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|script_msg_head_t
+argument_list|,
+name|script_msg
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|ra_opt
@@ -113,7 +123,7 @@ comment|/* link-layer address */
 name|char
 name|ifname
 index|[
-name|IF_NAMESIZE
+name|IFNAMSIZ
 index|]
 decl_stmt|;
 comment|/* interface name */
@@ -255,6 +265,13 @@ name|ifinfo_head
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|DNSINFO_ORIGIN_LABEL
+value|"slaac"
+end_define
+
 begin_comment
 comment|/*  * RFC 3542 API deprecates IPV6_PKTINFO in favor of  * IPV6_RECVPKTINFO  */
 end_comment
@@ -370,6 +387,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|Fflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|uflag
 decl_stmt|;
 end_decl_stmt
 

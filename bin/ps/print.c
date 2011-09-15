@@ -658,7 +658,7 @@ name|k
 operator|->
 name|ki_p
 operator|->
-name|ki_ocomm
+name|ki_tdname
 argument_list|)
 expr_stmt|;
 block|}
@@ -1042,7 +1042,7 @@ name|tmpbuff
 index|[
 name|COMMLEN
 operator|+
-name|OCOMMLEN
+name|TDNAMLEN
 operator|+
 literal|2
 index|]
@@ -1126,7 +1126,7 @@ name|k
 operator|->
 name|ki_p
 operator|->
-name|ki_ocomm
+name|ki_tdname
 argument_list|)
 expr_stmt|;
 block|}
@@ -1170,7 +1170,7 @@ name|k
 operator|->
 name|ki_p
 operator|->
-name|ki_ocomm
+name|ki_tdname
 argument_list|)
 expr_stmt|;
 else|else
@@ -1255,7 +1255,7 @@ name|k
 operator|->
 name|ki_p
 operator|->
-name|ki_ocomm
+name|ki_tdname
 argument_list|)
 expr_stmt|;
 else|else
@@ -5359,7 +5359,7 @@ name|tmpbuff
 index|[
 name|COMMLEN
 operator|+
-name|OCOMMLEN
+name|TDNAMLEN
 operator|+
 literal|2
 index|]
@@ -5402,7 +5402,7 @@ name|k
 operator|->
 name|ki_p
 operator|->
-name|ki_ocomm
+name|ki_tdname
 argument_list|)
 expr_stmt|;
 else|else

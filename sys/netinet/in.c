@@ -5016,7 +5016,7 @@ name|p
 operator|=
 name|ia
 operator|->
-name|ia_addr
+name|ia_dstaddr
 operator|.
 name|sin_addr
 expr_stmt|;
@@ -5620,6 +5620,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|prefix
 operator|.
 name|s_addr
@@ -5627,6 +5628,18 @@ operator|!=
 name|p
 operator|.
 name|s_addr
+operator|)
+operator|||
+operator|!
+operator|(
+name|ia
+operator|->
+name|ia_ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_UP
+operator|)
 condition|)
 continue|continue;
 comment|/* 		 * If we got a matching prefix address, move IFA_ROUTE and 		 * the route itself to it.  Make sure that routing daemons 		 * get a heads-up. 		 * 		 * XXX: a special case for carp(4) interface - this should 		 *      be more generally specified as an interface that 		 *      doesn't support such action. 		 */

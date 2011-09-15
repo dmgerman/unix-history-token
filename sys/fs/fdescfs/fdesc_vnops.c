@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/conf.h>
 end_include
 
@@ -1232,6 +1238,7 @@ operator|=
 name|fd1
 expr_stmt|;
 block|}
+comment|/* 	 * No rights to check since 'fp' isn't actually used. 	 */
 if|if
 condition|(
 operator|(
@@ -1242,6 +1249,8 @@ argument_list|(
 name|td
 argument_list|,
 name|fd
+argument_list|,
+literal|0
 argument_list|,
 operator|&
 name|fp
@@ -1785,6 +1794,8 @@ operator|->
 name|p_fd
 argument_list|,
 name|fd
+argument_list|,
+name|CAP_EXTATTR_SET
 argument_list|,
 operator|&
 name|fp

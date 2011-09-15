@@ -673,6 +673,15 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX override with 9285 specific state */
 comment|/* override 5416 methods for our needs */
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_initPLL
+operator|=
+name|ar9280InitPLL
+expr_stmt|;
 name|ah
 operator|->
 name|ah_setAntennaSwitch

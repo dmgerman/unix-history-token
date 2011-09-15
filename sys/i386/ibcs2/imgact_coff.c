@@ -332,13 +332,16 @@ block|}
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s(%d):  vm_mmap(&vmspace->vm_map,&0x%08lx, 0x%x, 0x%x, "
+literal|"%s(%d):  vm_mmap(&vmspace->vm_map,&0x%08jx, 0x%x, 0x%x, "
 literal|"VM_PROT_ALL, MAP_PRIVATE | MAP_FIXED, OBJT_VNODE, vp, 0x%x)\n"
 operator|,
 name|__FILE__
 operator|,
 name|__LINE__
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|map_addr
 operator|,
 name|map_len
@@ -444,12 +447,15 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s(%d): vm_map_find(&vmspace->vm_map, NULL, 0,&0x%08lx,0x%x, FALSE, VM_PROT_ALL, VM_PROT_ALL, 0)\n"
+literal|"%s(%d): vm_map_find(&vmspace->vm_map, NULL, 0,&0x%08jx,0x%x, VMFS_NO_SPACE, VM_PROT_ALL, VM_PROT_ALL, 0)\n"
 operator|,
 name|__FILE__
 operator|,
 name|__LINE__
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|map_addr
 operator|,
 name|map_len
@@ -481,7 +487,7 @@ name|map_addr
 argument_list|,
 name|map_len
 argument_list|,
-name|FALSE
+name|VMFS_NO_SPACE
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,
@@ -495,7 +501,12 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
+name|vm_mmap_to_errno
+argument_list|(
 name|error
+argument_list|)
+operator|)
 return|;
 block|}
 if|if
@@ -505,7 +516,7 @@ name|error
 operator|=
 name|vm_mmap
 argument_list|(
-name|kernel_map
+name|exec_map
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -558,7 +569,7 @@ if|if
 condition|(
 name|vm_map_remove
 argument_list|(
-name|kernel_map
+name|exec_map
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -901,7 +912,7 @@ name|error
 operator|=
 name|vm_mmap
 argument_list|(
-name|kernel_map
+name|exec_map
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -1253,7 +1264,7 @@ if|if
 condition|(
 name|vm_map_remove
 argument_list|(
-name|kernel_map
+name|exec_map
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -1396,7 +1407,7 @@ name|bss_size
 init|=
 literal|0
 decl_stmt|;
-name|caddr_t
+name|vm_offset_t
 name|hole
 decl_stmt|;
 if|if
@@ -1590,8 +1601,8 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"i = %d, scns[i].s_name = %s, scns[i].s_vaddr = %08lx, "
-literal|"scns[i].s_scnptr = %d\n"
+literal|"i = %d, s_name = %s, s_vaddr = %08lx, "
+literal|"s_scnptr = %ld s_size = %lx\n"
 operator|,
 name|i
 operator|,
@@ -1615,6 +1626,13 @@ name|i
 index|]
 operator|.
 name|s_scnptr
+operator|,
+name|scns
+index|[
+name|i
+index|]
+operator|.
+name|s_size
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1809,7 +1827,7 @@ name|error
 operator|=
 name|vm_mmap
 argument_list|(
-name|kernel_map
+name|exec_map
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -1824,7 +1842,7 @@ name|VM_PROT_READ
 argument_list|,
 name|VM_PROT_READ
 argument_list|,
-literal|0
+name|MAP_SHARED
 argument_list|,
 name|OBJT_VNODE
 argument_list|,
@@ -2026,7 +2044,18 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"error %d loading coff shared library %s\n"
+argument_list|,
+name|error
+argument_list|,
+name|libname
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 block|}
 name|free
 argument_list|(
@@ -2040,7 +2069,7 @@ if|if
 condition|(
 name|vm_map_remove
 argument_list|(
-name|kernel_map
+name|exec_map
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -2074,7 +2103,7 @@ name|DPRINTF
 argument_list|(
 operator|(
 literal|"%s(%d):  load_coff_section(vmspace, "
-literal|"imgp->vp, %08lx, %08lx, 0x%x, 0x%x, 0x%x)\n"
+literal|"imgp->vp, %08lx, %08lx, 0x%lx, 0x%lx, 0x%x)\n"
 operator|,
 name|__FILE__
 operator|,
@@ -2156,7 +2185,7 @@ name|DPRINTF
 argument_list|(
 operator|(
 literal|"%s(%d): load_coff_section(vmspace, "
-literal|"imgp->vp, 0x%08lx, 0x%08lx, 0x%x, 0x%x, 0x%x)\n"
+literal|"imgp->vp, 0x%08lx, 0x%08lx, 0x%lx, 0x%lx, 0x%x)\n"
 operator|,
 name|__FILE__
 operator|,
@@ -2306,9 +2335,6 @@ name|data_address
 expr_stmt|;
 name|hole
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|trunc_page
 argument_list|(
 operator|(
@@ -2317,7 +2343,6 @@ operator|)
 name|vmspace
 operator|->
 name|vm_daddr
-argument_list|)
 operator|+
 name|ctob
 argument_list|(
@@ -2325,16 +2350,20 @@ name|vmspace
 operator|->
 name|vm_dsize
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s(%d): vm_map_find(&vmspace->vm_map, NULL, 0,&0x%08lx, PAGE_SIZE, FALSE, VM_PROT_ALL, VM_PROT_ALL, 0)\n"
+literal|"%s(%d): vm_map_find(&vmspace->vm_map, NULL, 0,&0x%jx, PAGE_SIZE, FALSE, VM_PROT_ALL, VM_PROT_ALL, 0)\n"
 operator|,
 name|__FILE__
 operator|,
 name|__LINE__
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|hole
 operator|)
 argument_list|)
@@ -2348,8 +2377,6 @@ name|error
 operator|)
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
 name|vm_map_find
 argument_list|(
 operator|&
@@ -2370,7 +2397,7 @@ name|hole
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
-name|FALSE
+name|VMFS_NO_SPACE
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,
@@ -2382,7 +2409,7 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"IBCS2: start vm_dsize = 0x%x, vm_daddr = 0x%x end = 0x%x\n"
+literal|"IBCS2: start vm_dsize = 0x%x, vm_daddr = 0x%p end = 0x%p\n"
 operator|,
 name|ctob
 argument_list|(
@@ -2411,11 +2438,13 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s(%d):  returning successfully!\n"
+literal|"%s(%d):  returning %d!\n"
 operator|,
 name|__FILE__
 operator|,
 name|__LINE__
+operator|,
+name|error
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2433,7 +2462,9 @@ name|LK_RETRY
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function

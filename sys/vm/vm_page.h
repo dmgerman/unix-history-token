@@ -93,10 +93,10 @@ comment|/* page queue index (P,Q) */
 name|int8_t
 name|segind
 decl_stmt|;
-name|u_short
-name|flags
+name|short
+name|hold_count
 decl_stmt|;
-comment|/* see below */
+comment|/* page hold count (P) */
 name|uint8_t
 name|order
 decl_stmt|;
@@ -112,10 +112,14 @@ name|u_int
 name|wire_count
 decl_stmt|;
 comment|/* wired down maps refs (P) */
-name|short
-name|hold_count
+name|uint8_t
+name|aflags
 decl_stmt|;
-comment|/* page hold count (P) */
+comment|/* access is atomic */
+name|uint8_t
+name|flags
+decl_stmt|;
+comment|/* see below, often immutable after alloc */
 name|u_short
 name|oflags
 decl_stmt|;
@@ -190,7 +194,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Page flags stored in oflags:  *  * Access to these page flags is synchronized by the lock on the object  * containing the page (O).  */
+comment|/*  * Page flags stored in oflags:  *  * Access to these page flags is synchronized by the lock on the object  * containing the page (O).  *  * Note: VPO_UNMANAGED (used by OBJT_DEVICE, OBJT_PHYS and OBJT_SG)  * 	 indicates that the page is not under PV management but  * 	 otherwise should be treated as a normal page.  Pages not  * 	 under PV management cannot be paged out via the  * 	 object/vm_page_t because there is no knowledge of their pte  * 	 mappings, and such pages are also not on any PQ queue.  *  */
 end_comment
 
 begin_define
@@ -213,6 +217,17 @@ end_define
 
 begin_comment
 comment|/* someone is waiting for page */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VPO_UNMANAGED
+value|0x0004
+end_define
+
+begin_comment
+comment|/* No PV management for page */
 end_comment
 
 begin_define
@@ -525,14 +540,40 @@ value|vm_page_queue_free_lock.data
 end_define
 
 begin_comment
-comment|/*  * These are the flags defined for vm_page.  *  * Note: PG_UNMANAGED (used by OBJT_PHYS) indicates that the page is  * 	 not under PV management but otherwise should be treated as a  *	 normal page.  Pages not under PV management cannot be paged out  *	 via the object/vm_page_t because there is no knowledge of their  *	 pte mappings, nor can they be removed from their objects via   *	 the object, and such pages are also not on any PQ queue.  *  * PG_REFERENCED may be cleared only if the object containing the page is  * locked.  *  * PG_WRITEABLE is set exclusively on managed pages by pmap_enter().  When it  * does so, the page must be VPO_BUSY.  */
+comment|/*  * These are the flags defined for vm_page.  *  * aflags are updated by atomic accesses. Use the vm_page_aflag_set()  * and vm_page_aflag_clear() functions to set and clear the flags.  *  * PGA_REFERENCED may be cleared only if the object containing the page is  * locked.  *  * PGA_WRITEABLE is set exclusively on managed pages by pmap_enter().  When it  * does so, the page must be VPO_BUSY.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PGA_WRITEABLE
+value|0x01
+end_define
+
+begin_comment
+comment|/* page may be mapped writeable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PGA_REFERENCED
+value|0x02
+end_define
+
+begin_comment
+comment|/* page has been referenced */
+end_comment
+
+begin_comment
+comment|/*  * Page flags.  If changed at any other time than page allocation or  * freeing, the modification must be protected by the vm_page lock.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PG_CACHED
-value|0x0001
+value|0x01
 end_define
 
 begin_comment
@@ -543,7 +584,7 @@ begin_define
 define|#
 directive|define
 name|PG_FREE
-value|0x0002
+value|0x02
 end_define
 
 begin_comment
@@ -553,19 +594,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PG_WINATCFLS
-value|0x0004
-end_define
-
-begin_comment
-comment|/* flush dirty page on inactive q */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PG_FICTITIOUS
-value|0x0008
+value|0x04
 end_define
 
 begin_comment
@@ -575,19 +605,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PG_WRITEABLE
-value|0x0010
-end_define
-
-begin_comment
-comment|/* page is mapped writeable */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PG_ZERO
-value|0x0040
+value|0x08
 end_define
 
 begin_comment
@@ -597,30 +616,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PG_REFERENCED
-value|0x0080
-end_define
-
-begin_comment
-comment|/* page has been referenced */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PG_UNMANAGED
-value|0x0800
-end_define
-
-begin_comment
-comment|/* No PV management for page */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PG_MARKER
-value|0x1000
+value|0x10
 end_define
 
 begin_comment
@@ -631,11 +628,22 @@ begin_define
 define|#
 directive|define
 name|PG_SLAB
-value|0x2000
+value|0x20
 end_define
 
 begin_comment
 comment|/* object pointer is actually a slab */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_WINATCFLS
+value|0x40
+end_define
+
+begin_comment
+comment|/* flush dirty page on inactive q */
 end_comment
 
 begin_comment
@@ -1064,13 +1072,12 @@ end_define
 
 begin_function_decl
 name|void
-name|vm_page_flag_set
+name|vm_page_aflag_set
 parameter_list|(
 name|vm_page_t
 name|m
 parameter_list|,
-name|unsigned
-name|short
+name|uint8_t
 name|bits
 parameter_list|)
 function_decl|;
@@ -1078,13 +1085,12 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vm_page_flag_clear
+name|vm_page_aflag_clear
 parameter_list|(
 name|vm_page_t
 name|m
 parameter_list|,
-name|unsigned
-name|short
+name|uint8_t
 name|bits
 parameter_list|)
 function_decl|;
@@ -1422,6 +1428,16 @@ end_function_decl
 begin_function_decl
 name|void
 name|vm_page_putfake
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vm_page_reference
 parameter_list|(
 name|vm_page_t
 name|m

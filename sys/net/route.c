@@ -6097,9 +6097,14 @@ name|rti_flags
 operator|=
 name|flags
 operator||
+operator|(
 name|ifa
 operator|->
 name|ifa_flags
+operator|&
+operator|~
+name|IFA_RTSELF
+operator|)
 expr_stmt|;
 name|info
 operator|.

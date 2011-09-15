@@ -1392,7 +1392,7 @@ name|cm
 operator|->
 name|cm_len
 operator|+=
-name|cmsg_pl2bin
+name|cm_pl2bin
 argument_list|(
 name|msg
 argument_list|,
@@ -1424,7 +1424,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|cmsg_handler_client
+name|cm_handler_client
 argument_list|(
 name|s
 operator|->
@@ -1538,7 +1538,7 @@ operator|(
 literal|1
 operator|)
 return|;
-name|cmsg_bin2pl
+name|cm_bin2pl
 argument_list|(
 name|msg
 argument_list|,
@@ -2989,7 +2989,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tMinAdvInterval/MaxAdvInterval: %s/%s\n"
+literal|"\tMinAdvInterval/MaxAdvInterval: "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s/"
 argument_list|,
 name|sec2str
 argument_list|(
@@ -2999,6 +3004,11 @@ name|rai_mininterval
 argument_list|,
 name|ssbuf
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s\n"
 argument_list|,
 name|sec2str
 argument_list|(
@@ -3110,10 +3120,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t"
-literal|"ReachableTime: %s, "
-literal|"RetransTimer: %s, "
-literal|"CurHopLimit: %d\n"
+literal|"\tReachableTime: %s, "
 argument_list|,
 name|sec2str
 argument_list|(
@@ -3123,6 +3130,12 @@ name|rai_reachabletime
 argument_list|,
 name|ssbuf
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"RetransTimer: %s, "
+literal|"CurHopLimit: %d\n"
 argument_list|,
 name|sec2str
 argument_list|(

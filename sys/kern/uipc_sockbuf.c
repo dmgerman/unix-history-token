@@ -149,6 +149,9 @@ begin_decl_stmt
 name|u_long
 name|sb_max_adj
 init|=
+operator|(
+name|quad_t
+operator|)
 name|SB_MAX
 operator|*
 name|MCLBYTES

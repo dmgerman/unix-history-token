@@ -1056,8 +1056,18 @@ comment|/* reset cal state next trip */
 name|sc_rxslink
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* do self-linked final descriptor */
+name|sc_kickpcu
+range|:
+literal|1
+decl_stmt|,
+comment|/* kick PCU RX on next RX proc */
+name|sc_rxtsf32
+range|:
+literal|1
+decl_stmt|;
+comment|/* RX dec TSF is 32 bits */
 name|uint32_t
 name|sc_eerd
 decl_stmt|;
@@ -2254,6 +2264,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|ath_hal_getnexttbtt
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((*(_ah)->ah_getNextTBTT)((_ah)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ath_hal_setassocid
 parameter_list|(
 name|_ah
@@ -3315,7 +3336,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(ath_hal_getcapability(_ah, HAP_CAP_SPLIT_4KB_TRANS, 0, NULL) == HAL_OK)
+value|(ath_hal_getcapability(_ah, HAL_CAP_SPLIT_4KB_TRANS, 0, NULL) == HAL_OK)
 end_define
 
 begin_define
@@ -3338,6 +3359,17 @@ name|_ah
 parameter_list|)
 define|\
 value|(ath_hal_getcapability(_ah, HAL_CAP_GTXTO, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_has_long_rxdesc_tsf
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_LONG_RXDESC_TSF, 0, NULL) == HAL_OK)
 end_define
 
 begin_define
@@ -3677,6 +3709,17 @@ name|_event
 parameter_list|)
 define|\
 value|((*(_ah)->ah_procRadarEvent)((_ah), (_rxs), (_fulltsf), (_buf), (_event)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_is_fast_clock_enabled
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((*(_ah)->ah_isFastClockEnabled)((_ah)))
 end_define
 
 begin_define

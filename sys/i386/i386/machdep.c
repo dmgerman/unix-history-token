@@ -10529,6 +10529,8 @@ name|da_indx
 decl_stmt|;
 name|u_long
 name|physmem_tunable
+decl_stmt|,
+name|memtest
 decl_stmt|;
 name|vm_paddr_t
 name|physmap
@@ -11316,6 +11318,19 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* 	 * By default keep the memtest enabled.  Use a general name so that 	 * one could eventually do more with the code than just disable it. 	 */
+name|memtest
+operator|=
+literal|1
+expr_stmt|;
+name|TUNABLE_ULONG_FETCH
+argument_list|(
+literal|"hw.memtest.tests"
+argument_list|,
+operator|&
+name|memtest
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|atop
@@ -11598,6 +11613,15 @@ name|page_bad
 operator|=
 name|FALSE
 expr_stmt|;
+if|if
+condition|(
+name|memtest
+operator|==
+literal|0
+condition|)
+goto|goto
+name|skip_memtest
+goto|;
 comment|/* 			 * map page into kernel: valid, read/write,non-cacheable 			 */
 operator|*
 name|pte
@@ -11740,6 +11764,8 @@ name|ptr
 operator|=
 name|tmp
 expr_stmt|;
+name|skip_memtest
+label|:
 comment|/* 			 * Adjust array of valid/good pages. 			 */
 if|if
 condition|(

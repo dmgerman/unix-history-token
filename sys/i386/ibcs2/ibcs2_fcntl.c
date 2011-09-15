@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/fcntl.h>
 end_include
 
@@ -1069,6 +1075,8 @@ name|td_retval
 index|[
 literal|0
 index|]
+argument_list|,
+name|CAP_IOCTL
 argument_list|,
 operator|&
 name|fp

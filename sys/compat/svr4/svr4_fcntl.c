@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -1212,6 +1218,7 @@ name|td
 operator|->
 name|td_retval
 expr_stmt|;
+comment|/* 	 * If we ever want to support Capsicum on SVR4 processes (unlikely) 	 * or FreeBSD grows a native frevoke() (more likely), we will need a 	 * CAP_REVOKE here. 	 * 	 * In the meantime, use CAP_MASK_VALID: if a SVR4 process wants to 	 * do an frevoke(), it needs to do it on either a regular file 	 * descriptor or a fully-privileged capability (which is effectively 	 * the same as a non-capability-restricted file descriptor). 	 */
 if|if
 condition|(
 operator|(
@@ -1222,6 +1229,8 @@ argument_list|(
 name|td
 argument_list|,
 name|fd
+argument_list|,
+name|CAP_MASK_VALID
 argument_list|,
 operator|&
 name|vp
@@ -1476,6 +1485,8 @@ argument_list|(
 name|td
 argument_list|,
 name|fd
+argument_list|,
+name|CAP_FTRUNCATE
 argument_list|,
 operator|&
 name|fp
@@ -1824,6 +1835,8 @@ argument_list|(
 name|td
 argument_list|,
 name|retval
+argument_list|,
+name|CAP_IOCTL
 argument_list|,
 operator|&
 name|fp

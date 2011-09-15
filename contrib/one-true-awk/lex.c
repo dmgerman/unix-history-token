@@ -2430,6 +2430,11 @@ name|xbuf
 argument_list|,
 literal|"%x"
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
 operator|&
 name|n
 argument_list|)

@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 2002 Stichting NLnet, Netherlands, stichting@nlnet.n
 end_comment
 
 begin_comment
-comment|/* $Id: sdlz.h,v 1.14 2011-01-13 08:50:29 tbox Exp $ */
+comment|/* $Id: sdlz.h,v 1.14.8.2 2011-03-17 23:47:06 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -650,9 +650,10 @@ begin_comment
 comment|/*%<  * Removes the sdlz driver from the list of registered sdlz drivers.  * There must be no active sdlz drivers of this type when this  * function is called.  */
 end_comment
 
-begin_function_decl
+begin_typedef
+typedef|typedef
 name|isc_result_t
-name|dns_sdlz_putnamedrr
+name|dns_sdlz_putnamedrr_t
 parameter_list|(
 name|dns_sdlzallnodes_t
 modifier|*
@@ -677,15 +678,22 @@ modifier|*
 name|data
 parameter_list|)
 function_decl|;
-end_function_decl
+end_typedef
+
+begin_decl_stmt
+name|dns_sdlz_putnamedrr_t
+name|dns_sdlz_putnamedrr
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*%<  * Add a single resource record to the allnodes structure to be later  * parsed into a zone transfer response.  */
 end_comment
 
-begin_function_decl
+begin_typedef
+typedef|typedef
 name|isc_result_t
-name|dns_sdlz_putrr
+name|dns_sdlz_putrr_t
 parameter_list|(
 name|dns_sdlzlookup_t
 modifier|*
@@ -705,15 +713,22 @@ modifier|*
 name|data
 parameter_list|)
 function_decl|;
-end_function_decl
+end_typedef
+
+begin_decl_stmt
+name|dns_sdlz_putrr_t
+name|dns_sdlz_putrr
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*%<  * Add a single resource record to the lookup structure to be later  * parsed into a query response.  */
 end_comment
 
-begin_function_decl
+begin_typedef
+typedef|typedef
 name|isc_result_t
-name|dns_sdlz_putsoa
+name|dns_sdlz_putsoa_t
 parameter_list|(
 name|dns_sdlzlookup_t
 modifier|*
@@ -733,15 +748,22 @@ name|isc_uint32_t
 name|serial
 parameter_list|)
 function_decl|;
-end_function_decl
+end_typedef
+
+begin_decl_stmt
+name|dns_sdlz_putsoa_t
+name|dns_sdlz_putsoa
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*%<  * This function may optionally be called from the 'authority'  * callback to simplify construction of the SOA record for 'zone'.  It  * will provide a SOA listing 'mname' as as the master server and  * 'rname' as the responsible person mailbox.  It is the  * responsibility of the driver to increment the serial number between  * responses if necessary.  All other SOA fields will have reasonable  * default values.  */
 end_comment
 
-begin_function_decl
+begin_typedef
+typedef|typedef
 name|isc_result_t
-name|dns_sdlz_setdb
+name|dns_sdlz_setdb_t
 parameter_list|(
 name|dns_dlzdb_t
 modifier|*
@@ -760,7 +782,13 @@ modifier|*
 name|dbp
 parameter_list|)
 function_decl|;
-end_function_decl
+end_typedef
+
+begin_decl_stmt
+name|dns_sdlz_setdb_t
+name|dns_sdlz_setdb
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*%<  * Create the database pointers for a writeable SDLZ zone  */

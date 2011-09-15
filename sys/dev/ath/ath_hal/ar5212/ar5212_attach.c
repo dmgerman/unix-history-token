@@ -545,6 +545,11 @@ name|ah_procRadarEvent
 operator|=
 name|ar5212ProcessRadarEvent
 block|,
+operator|.
+name|ah_isFastClockEnabled
+operator|=
+name|ar5212IsFastClockEnabled
+block|,
 comment|/* Key Cache Functions */
 operator|.
 name|ah_getKeyCacheSize
@@ -602,6 +607,11 @@ operator|.
 name|ah_resetStationBeaconTimers
 operator|=
 name|ar5212ResetStaBeaconTimers
+block|,
+operator|.
+name|ah_getNextTBTT
+operator|=
+name|ar5212GetNextTBTT
 block|,
 comment|/* Interrupt Functions */
 operator|.

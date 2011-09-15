@@ -9920,36 +9920,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 				 * DFS and HT40 don't mix.  This should be 				 * expressed in the regdomain database but 				 * just in case enforce it here. 				 */
-if|if
-condition|(
-operator|(
-name|chanFlags
-operator|&
-name|IEEE80211_CHAN_HT40
-operator|)
-operator|&&
-operator|(
-name|flags
-operator|&
-name|IEEE80211_CHAN_DFS
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-name|verbose
-condition|)
-name|printf
-argument_list|(
-literal|"%u: skip, HT40+DFS "
-literal|"not permitted\n"
-argument_list|,
-name|freq
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
 comment|/* NB: HT attribute comes from caller */
 name|flags
 operator|&=
@@ -17529,6 +17499,90 @@ index|[
 literal|14
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|verb
+condition|)
+name|printf
+argument_list|(
+literal|"Channel %3u : %u%c%c%c%c%c MHz%-14.14s"
+argument_list|,
+name|ieee80211_mhz2ieee
+argument_list|(
+name|c
+operator|->
+name|ic_freq
+argument_list|,
+name|c
+operator|->
+name|ic_flags
+argument_list|)
+argument_list|,
+name|c
+operator|->
+name|ic_freq
+argument_list|,
+name|IEEE80211_IS_CHAN_PASSIVE
+argument_list|(
+name|c
+argument_list|)
+condition|?
+literal|'*'
+else|:
+literal|' '
+argument_list|,
+name|IEEE80211_IS_CHAN_DFS
+argument_list|(
+name|c
+argument_list|)
+condition|?
+literal|'D'
+else|:
+literal|' '
+argument_list|,
+name|IEEE80211_IS_CHAN_RADAR
+argument_list|(
+name|c
+argument_list|)
+condition|?
+literal|'R'
+else|:
+literal|' '
+argument_list|,
+name|IEEE80211_IS_CHAN_CWINT
+argument_list|(
+name|c
+argument_list|)
+condition|?
+literal|'I'
+else|:
+literal|' '
+argument_list|,
+name|IEEE80211_IS_CHAN_CACDONE
+argument_list|(
+name|c
+argument_list|)
+condition|?
+literal|'C'
+else|:
+literal|' '
+argument_list|,
+name|get_chaninfo
+argument_list|(
+name|c
+argument_list|,
+name|verb
+argument_list|,
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"Channel %3u : %u%c MHz%-14.14s"

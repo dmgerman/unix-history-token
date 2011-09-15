@@ -2512,6 +2512,9 @@ name|packet
 decl_stmt|,
 name|len
 decl_stmt|;
+name|int
+name|last_len
+decl_stmt|;
 name|uint8_t
 modifier|*
 name|data
@@ -2690,6 +2693,10 @@ name|data
 operator|=
 name|NULL
 expr_stmt|;
+name|last_len
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -2733,6 +2740,12 @@ operator|/
 literal|2
 argument_list|)
 expr_stmt|;
+name|last_len
+operator|=
+name|m
+operator|->
+name|m_len
+expr_stmt|;
 block|}
 comment|/* 	 * Push out the control byte and and the odd byte if needed. 	 */
 if|if
@@ -2763,9 +2776,7 @@ operator|)
 operator||
 name|data
 index|[
-name|m
-operator|->
-name|m_len
+name|last_len
 operator|-
 literal|1
 index|]

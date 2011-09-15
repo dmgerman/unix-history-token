@@ -116,6 +116,7 @@ decl_stmt|;
 comment|/* Free items in keg. */
 comment|/* 	 * Per-CPU measurements fall into two categories: per-CPU allocation, 	 * and per-CPU cache state. 	 */
 struct|struct
+name|mt_percpu_alloc_s
 block|{
 name|uint64_t
 name|mtp_memalloced
@@ -151,22 +152,19 @@ name|MEMSTAT_MAXCALLER
 index|]
 decl_stmt|;
 block|}
+modifier|*
 name|mt_percpu_alloc
-index|[
-name|MEMSTAT_MAXCPU
-index|]
 struct|;
 struct|struct
+name|mt_percpu_cache_s
 block|{
 name|uint64_t
 name|mtp_free
 decl_stmt|;
 comment|/* Per-CPU cache free items. */
 block|}
+modifier|*
 name|mt_percpu_cache
-index|[
-name|MEMSTAT_MAXCPU
-index|]
 struct|;
 name|LIST_ENTRY
 argument_list|(
@@ -231,6 +229,9 @@ specifier|const
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|int
+name|maxcpus
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -243,6 +244,9 @@ name|struct
 name|memory_type
 modifier|*
 name|mtp
+parameter_list|,
+name|int
+name|maxcpus
 parameter_list|)
 function_decl|;
 end_function_decl

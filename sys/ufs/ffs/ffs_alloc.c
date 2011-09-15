@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -10703,11 +10709,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|MOUNTEDSOFTDEP
+argument_list|(
 name|mp
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_SOFTDEP
+argument_list|)
 operator|&&
 name|devvp
 operator|->
@@ -12090,14 +12095,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|MOUNTEDSOFTDEP
+argument_list|(
 name|UFSTOVFS
 argument_list|(
 name|ump
 argument_list|)
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_SOFTDEP
+argument_list|)
 operator|&&
 name|devvp
 operator|->
@@ -13161,7 +13165,7 @@ specifier|static
 name|int
 name|fsckcmds
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -13313,12 +13317,6 @@ name|origops
 decl_stmt|,
 name|bufferedops
 decl_stmt|;
-specifier|static
-name|int
-name|outcnt
-init|=
-literal|0
-decl_stmt|;
 if|if
 condition|(
 name|req
@@ -13386,6 +13384,8 @@ argument_list|,
 name|cmd
 operator|.
 name|handle
+argument_list|,
+name|CAP_FSCK
 argument_list|,
 operator|&
 name|fp
@@ -14860,11 +14860,6 @@ name|DEBUG
 if|if
 condition|(
 name|fsckcmds
-operator|&&
-name|outcnt
-operator|++
-operator|<
-literal|100
 condition|)
 block|{
 name|printf
@@ -15139,6 +15134,8 @@ name|cmd
 operator|.
 name|value
 argument_list|,
+name|CAP_FSCK
+argument_list|,
 operator|&
 name|vfp
 argument_list|)
@@ -15385,12 +15382,6 @@ decl_stmt|;
 name|daddr_t
 name|lbn
 decl_stmt|;
-specifier|static
-name|int
-name|outcnt
-init|=
-literal|0
-decl_stmt|;
 comment|/* 	 * The devvp is associated with the /dev filesystem. To discover 	 * the filesystem with which the device is associated, we depend 	 * on the application setting the current directory to a location 	 * within the filesystem being written. Yes, this is an ugly hack. 	 */
 name|devvp
 operator|=
@@ -15474,11 +15465,6 @@ name|DEBUG
 if|if
 condition|(
 name|fsckcmds
-operator|&&
-name|outcnt
-operator|++
-operator|<
-literal|100
 condition|)
 block|{
 name|printf

@@ -224,6 +224,34 @@ directive|include
 file|<sys/ctype.h>
 end_include
 
+begin_decl_stmt
+specifier|static
+name|int
+name|usb_no_cs_fail
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_usb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|no_cs_fail
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|usb_no_cs_fail
+argument_list|,
+literal|0
+argument_list|,
+literal|"USB clear stall failures are ignored, if set"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1019,6 +1047,8 @@ block|{
 case|case
 name|USB_ST_TRANSFERRED
 case|:
+name|tr_transferred
+label|:
 comment|/* reset error counter */
 name|udev
 operator|->
@@ -1262,6 +1292,14 @@ argument_list|(
 literal|"Clear stall failed.\n"
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Some VMs like VirtualBox always return failure on 		 * clear-stall which we sometimes should just ignore. 		 */
+if|if
+condition|(
+name|usb_no_cs_fail
+condition|)
+goto|goto
+name|tr_transferred
+goto|;
 if|if
 condition|(
 name|udev
@@ -6777,12 +6815,6 @@ operator|->
 name|idesc
 operator|==
 name|NULL
-operator|)
-operator|||
-operator|(
-name|id
-operator|==
-literal|0
 operator|)
 condition|)
 block|{

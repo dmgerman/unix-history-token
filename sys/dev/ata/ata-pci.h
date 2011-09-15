@@ -112,6 +112,15 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
+name|chipdeinit
+function_decl|)
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
 name|suspend
 function_decl|)
 parameter_list|(
@@ -3794,6 +3803,14 @@ name|devclass_t
 name|ata_pci_devclass
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_ATAPCI
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* macro for easy definition of all driver module stuff */

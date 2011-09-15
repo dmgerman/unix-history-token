@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: cd9660_eltorito.c,v 1.14 2010/10/27 18:51:35 christos Exp $	*/
+comment|/*	$NetBSD: cd9660_eltorito.c,v 1.17 2011/06/23 02:35:56 enami Exp $	*/
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 2005 Daniel Watt, Walter Deignan, Ryan Gabrys, Alan  * Perez-Rathke and Ram Vedam.  All rights reserved.  *  * This code was written by Daniel Watt, Walter Deignan, Ryan Gabrys,  * Alan Perez-Rathke and Ram Vedam.  *  * Redistribution and use in source and binary forms, with or  * without modification, are permitted provided that the following  * conditions are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above  *    copyright notice, this list of conditions and the following  *    disclaimer in the documentation and/or other materials provided  *    with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY DANIEL WATT, WALTER DEIGNAN, RYAN  * GABRYS, ALAN PEREZ-RATHKE AND RAM VEDAM ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL DANIEL WATT, WALTER DEIGNAN, RYAN  * GABRYS, ALAN PEREZ-RATHKE AND RAM VEDAM BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE,DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY  * OF SUCH DAMAGE.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/endian.h>
-end_include
 
 begin_include
 include|#
@@ -2176,7 +2170,7 @@ modifier|*
 name|fd
 parameter_list|,
 name|int
-name|index
+name|idx
 parameter_list|,
 name|off_t
 name|sector_start
@@ -2194,6 +2188,8 @@ decl_stmt|;
 name|uint32_t
 name|lba
 decl_stmt|;
+if|if
+condition|(
 name|fseeko
 argument_list|(
 name|fd
@@ -2202,7 +2198,7 @@ call|(
 name|off_t
 call|)
 argument_list|(
-name|index
+name|idx
 argument_list|)
 operator|*
 literal|16
@@ -2210,6 +2206,16 @@ operator|+
 literal|0x1be
 argument_list|,
 name|SEEK_SET
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"fseeko"
 argument_list|)
 expr_stmt|;
 name|val
@@ -2398,9 +2404,7 @@ name|fd
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -2415,7 +2419,7 @@ modifier|*
 name|fd
 parameter_list|,
 name|int
-name|index
+name|idx
 parameter_list|,
 name|int
 name|total_partitions
@@ -2446,6 +2450,8 @@ decl_stmt|;
 name|uint16_t
 name|apm16
 decl_stmt|;
+if|if
+condition|(
 name|fseeko
 argument_list|(
 name|fd
@@ -2454,7 +2460,7 @@ call|(
 name|off_t
 call|)
 argument_list|(
-name|index
+name|idx
 operator|+
 literal|1
 argument_list|)
@@ -2462,6 +2468,16 @@ operator|*
 name|sector_size
 argument_list|,
 name|SEEK_SET
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"fseeko"
 argument_list|)
 expr_stmt|;
 comment|/* Signature */

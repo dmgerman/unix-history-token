@@ -2149,7 +2149,7 @@ index|]
 operator|.
 name|jp_name
 argument_list|,
-literal|"ip.addr"
+literal|"ip4.addr"
 argument_list|)
 condition|)
 block|{

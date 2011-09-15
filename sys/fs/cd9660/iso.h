@@ -1770,7 +1770,7 @@ begin_struct
 struct|struct
 name|iso_mnt
 block|{
-name|int
+name|uint64_t
 name|im_flags
 decl_stmt|;
 name|struct

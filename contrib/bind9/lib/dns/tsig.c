@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/*  * $Id: tsig.c,v 1.147 2011-01-11 23:47:13 tbox Exp $  */
+comment|/*  * $Id: tsig.c,v 1.147.10.1 2011-03-21 19:53:34 each Exp $  */
 end_comment
 
 begin_comment
@@ -3369,10 +3369,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|result
-operator|!=
-name|ISC_R_SUCCESS
-operator|&&
 name|dstkey
 operator|!=
 name|NULL

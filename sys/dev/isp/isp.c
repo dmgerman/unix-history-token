@@ -508,20 +508,6 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|void
-name|isp_prt_endcmd
-parameter_list|(
-name|ispsoftc_t
-modifier|*
-parameter_list|,
-name|XS_T
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|isp_parse_async
 parameter_list|(
@@ -28758,7 +28744,6 @@ comment|/*  * Support routines.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|isp_prt_endcmd
 parameter_list|(

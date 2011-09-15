@@ -144,6 +144,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"control.h"
 end_include
 
@@ -314,13 +320,13 @@ name|DEF_PL_HANDLER
 parameter_list|(
 name|key
 parameter_list|)
-value|{ #key, cmsg_getprop_##key }
+value|{ #key, cm_getprop_##key }
 end_define
 
 begin_function_decl
 specifier|static
 name|int
-name|cmsg_getprop_echo
+name|cm_getprop_echo
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -332,7 +338,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|cmsg_getprop_version
+name|cm_getprop_version
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -344,7 +350,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|cmsg_getprop_ifilist
+name|cm_getprop_ifilist
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -356,7 +362,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|cmsg_getprop_ifi
+name|cm_getprop_ifi
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -368,7 +374,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|cmsg_getprop_ifi_ra_timer
+name|cm_getprop_ifi_ra_timer
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -380,7 +386,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|cmsg_getprop_rai
+name|cm_getprop_rai
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -392,7 +398,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|cmsg_getprop_pfx
+name|cm_getprop_pfx
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -404,7 +410,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|cmsg_getprop_rdnss
+name|cm_getprop_rdnss
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -416,7 +422,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|cmsg_getprop_dnssl
+name|cm_getprop_dnssl
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -428,7 +434,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|cmsg_getprop_rti
+name|cm_getprop_rti
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -440,7 +446,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|cmsg_setprop_reload
+name|cm_setprop_reload
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -452,7 +458,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|cmsg_setprop_enable
+name|cm_setprop_enable
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -464,7 +470,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|cmsg_setprop_disable
+name|cm_setprop_disable
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -503,7 +509,7 @@ block|{
 block|{
 literal|""
 block|,
-name|cmsg_getprop_echo
+name|cm_getprop_echo
 block|}
 block|,
 name|DEF_PL_HANDLER
@@ -562,7 +568,7 @@ end_struct
 begin_function
 specifier|static
 name|int
-name|cmsg_getprop_echo
+name|cm_getprop_echo
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -612,7 +618,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|cmsg_getprop_version
+name|cm_getprop_version
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -662,7 +668,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|cmsg_getprop_ifilist
+name|cm_getprop_ifilist
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -834,7 +840,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|cmsg_getprop_ifi
+name|cm_getprop_ifi
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -939,7 +945,7 @@ argument_list|)
 expr_stmt|;
 name|len
 operator|=
-name|cmsg_str2bin
+name|cm_str2bin
 argument_list|(
 name|p
 argument_list|,
@@ -997,7 +1003,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|cmsg_getprop_rai
+name|cm_getprop_rai
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -1139,7 +1145,7 @@ argument_list|)
 expr_stmt|;
 name|len
 operator|=
-name|cmsg_str2bin
+name|cm_str2bin
 argument_list|(
 name|p
 argument_list|,
@@ -1197,7 +1203,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|cmsg_getprop_ifi_ra_timer
+name|cm_getprop_ifi_ra_timer
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -1376,7 +1382,7 @@ argument_list|)
 expr_stmt|;
 name|len
 operator|=
-name|cmsg_str2bin
+name|cm_str2bin
 argument_list|(
 name|p
 argument_list|,
@@ -1434,7 +1440,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|cmsg_getprop_rti
+name|cm_getprop_rti
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -1683,7 +1689,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|cmsg_getprop_pfx
+name|cm_getprop_pfx
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -1932,7 +1938,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|cmsg_getprop_rdnss
+name|cm_getprop_rdnss
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -2307,7 +2313,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|cmsg_getprop_dnssl
+name|cm_getprop_dnssl
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -2673,7 +2679,7 @@ end_function
 
 begin_function
 name|int
-name|cmsg_getprop
+name|cm_getprop
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -2771,7 +2777,7 @@ end_function
 
 begin_function
 name|int
-name|cmsg_setprop
+name|cm_setprop
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -2823,7 +2829,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|cmsg_setprop_reload
+name|cm_setprop_reload
 argument_list|(
 name|cp
 argument_list|)
@@ -2871,7 +2877,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|cmsg_setprop_enable
+name|cm_setprop_enable
 argument_list|(
 name|cp
 argument_list|)
@@ -2895,7 +2901,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|cmsg_setprop_disable
+name|cm_setprop_disable
 argument_list|(
 name|cp
 argument_list|)
@@ -2935,7 +2941,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|cmsg_setprop_reload
+name|cm_setprop_reload
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -2975,7 +2981,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|cmsg_setprop_enable
+name|cm_setprop_enable
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -3078,7 +3084,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|cmsg_setprop_disable
+name|cm_setprop_disable
 parameter_list|(
 name|struct
 name|ctrl_msg_pl
@@ -3152,12 +3158,50 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|ifi
+operator|->
+name|ifi_persist
+operator|==
+literal|1
+condition|)
+block|{
 name|ifi
 operator|->
 name|ifi_persist
 operator|=
 literal|0
 expr_stmt|;
+name|rm_ifinfo
+argument_list|(
+name|ifi
+argument_list|)
+expr_stmt|;
+comment|/* MC leaving needed here */
+name|sock_mc_leave
+argument_list|(
+operator|&
+name|sock
+argument_list|,
+name|ifi
+operator|->
+name|ifi_ifindex
+argument_list|)
+expr_stmt|;
+name|set_do_reload_ifname
+argument_list|(
+name|ifi
+operator|->
+name|ifi_ifname
+argument_list|)
+expr_stmt|;
+name|set_do_reload
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -3168,7 +3212,7 @@ end_function
 
 begin_function
 name|int
-name|cmsg_handler_server
+name|cm_handler_server
 parameter_list|(
 name|int
 name|fd
@@ -3307,7 +3351,7 @@ name|CM_VERSION
 expr_stmt|;
 name|error
 operator|=
-name|cmsg_send
+name|cm_send
 argument_list|(
 name|fd
 argument_list|,
@@ -3322,7 +3366,7 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"<%s> cmsg_send()"
+literal|"<%s> cm_send()"
 argument_list|,
 name|__func__
 argument_list|)
@@ -3337,7 +3381,7 @@ name|CM_STATE_ACK_WAIT
 case|:
 name|error
 operator|=
-name|cmsg_recv
+name|cm_recv
 argument_list|(
 name|fd
 argument_list|,
@@ -3353,7 +3397,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"<%s> cmsg_recv()"
+literal|"<%s> cm_recv()"
 argument_list|,
 name|__func__
 argument_list|)
@@ -3436,7 +3480,7 @@ name|CM_STATE_MSG_RECV
 case|:
 name|error
 operator|=
-name|cmsg_recv
+name|cm_recv
 argument_list|(
 name|fd
 argument_list|,
@@ -3452,7 +3496,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"<%s> cmsg_recv()"
+literal|"<%s> cm_recv()"
 argument_list|,
 name|__func__
 argument_list|)
@@ -3545,7 +3589,7 @@ break|break;
 case|case
 name|CM_TYPE_REQ_GET_PROP
 case|:
-name|cmsg_bin2pl
+name|cm_bin2pl
 argument_list|(
 name|msg
 argument_list|,
@@ -3555,7 +3599,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|cmsg_getprop
+name|cm_getprop
 argument_list|(
 operator|&
 name|cp
@@ -3605,7 +3649,7 @@ name|cm
 operator|->
 name|cm_len
 operator|+=
-name|cmsg_pl2bin
+name|cm_pl2bin
 argument_list|(
 name|msg
 argument_list|,
@@ -3633,7 +3677,7 @@ break|break;
 case|case
 name|CM_TYPE_REQ_SET_PROP
 case|:
-name|cmsg_bin2pl
+name|cm_bin2pl
 argument_list|(
 name|msg
 argument_list|,
@@ -3643,7 +3687,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|cmsg_setprop
+name|cm_setprop
 argument_list|(
 operator|&
 name|cp

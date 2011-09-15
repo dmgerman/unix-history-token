@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: gssapictx.c,v 1.26 2011-01-10 03:49:49 marka Exp $ */
+comment|/* $Id: gssapictx.c,v 1.26.12.2 2011-04-07 23:05:01 marka Exp $ */
 end_comment
 
 begin_include
@@ -726,7 +726,7 @@ name|gbuffer
 operator|.
 name|length
 operator|!=
-literal|0
+literal|0U
 condition|)
 block|{
 name|gret
@@ -2418,7 +2418,7 @@ name|gouttoken
 operator|.
 name|length
 operator|!=
-literal|0
+literal|0U
 condition|)
 block|{
 name|GBUFFER_TO_REGION
@@ -2618,11 +2618,6 @@ operator|==
 name|NULL
 argument_list|)
 expr_stmt|;
-name|log_cred
-argument_list|(
-name|cred
-argument_list|)
-expr_stmt|;
 name|REGION_TO_GBUFFER
 argument_list|(
 operator|*
@@ -2783,6 +2778,11 @@ block|}
 endif|#
 directive|endif
 block|}
+name|log_cred
+argument_list|(
+name|cred
+argument_list|)
+expr_stmt|;
 name|gret
 operator|=
 name|gss_accept_sec_context
@@ -2912,7 +2912,7 @@ name|gouttoken
 operator|.
 name|length
 operator|>
-literal|0
+literal|0U
 condition|)
 block|{
 name|RETERR
@@ -3024,7 +3024,7 @@ name|gnamebuf
 operator|.
 name|length
 operator|>
-literal|0
+literal|0U
 operator|&&
 operator|(
 operator|(
@@ -3126,7 +3126,7 @@ name|gnamebuf
 operator|.
 name|length
 operator|!=
-literal|0
+literal|0U
 condition|)
 block|{
 name|gret
@@ -3507,7 +3507,7 @@ name|msg_major
 operator|.
 name|length
 operator|!=
-literal|0
+literal|0U
 condition|)
 operator|(
 name|void
@@ -3527,7 +3527,7 @@ name|msg_minor
 operator|.
 name|length
 operator|!=
-literal|0
+literal|0U
 condition|)
 operator|(
 name|void

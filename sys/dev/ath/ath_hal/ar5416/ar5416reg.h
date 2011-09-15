@@ -200,6 +200,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR_INTR_ASYNC_CAUSE_CLR
+value|0x4038
+end_define
+
+begin_comment
+comment|/* clear pending interrupts */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AR_INTR_ASYNC_ENABLE
 value|0x403c
 end_define
@@ -485,6 +496,24 @@ define|#
 directive|define
 name|AR_RESET_TSF
 value|0x8020
+end_define
+
+begin_comment
+comment|/*  * AR_SLEEP1 / AR_SLEEP2 are in the same place as in  * AR5212, however the fields have changed.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR5416_SLEEP1
+value|0x80d4
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR5416_SLEEP2
+value|0x80d8
 end_define
 
 begin_define
@@ -2712,6 +2741,13 @@ end_define
 begin_comment
 comment|/* Sleep control */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|AR5416_SLEEP1_ASSUME_DTIM
+value|0x00080000
+end_define
 
 begin_define
 define|#

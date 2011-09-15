@@ -2506,8 +2506,6 @@ name|gpart_partition
 argument_list|(
 name|pp
 operator|->
-name|lg_geom
-operator|->
 name|lg_name
 argument_list|,
 name|NULL
@@ -4641,8 +4639,6 @@ name|gpart_partition
 argument_list|(
 name|pp
 operator|->
-name|lg_geom
-operator|->
 name|lg_name
 argument_list|,
 name|NULL
@@ -4757,6 +4753,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|items
 index|[
 literal|0
@@ -4766,6 +4763,16 @@ name|text
 operator|=
 literal|"freebsd"
 expr_stmt|;
+name|items
+index|[
+literal|0
+index|]
+operator|.
+name|help
+operator|=
+literal|"Filesystem type (e.g. freebsd, fat32)"
+expr_stmt|;
+block|}
 name|nitems
 operator|=
 name|scheme_supports_labels

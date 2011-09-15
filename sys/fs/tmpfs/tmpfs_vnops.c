@@ -2385,14 +2385,9 @@ literal|0
 condition|)
 block|{
 comment|/* 			 * Reference the page before unlocking and sleeping so 			 * that the page daemon is less likely to reclaim it.   			 */
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
-name|vm_page_flag_set
+name|vm_page_reference
 argument_list|(
 name|m
-argument_list|,
-name|PG_REFERENCED
 argument_list|)
 expr_stmt|;
 name|vm_page_sleep
@@ -2490,14 +2485,9 @@ literal|0
 condition|)
 block|{
 comment|/* 			 * Reference the page before unlocking and sleeping so 			 * that the page daemon is less likely to reclaim it.   			 */
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
-name|vm_page_flag_set
+name|vm_page_reference
 argument_list|(
 name|m
-argument_list|,
-name|PG_REFERENCED
 argument_list|)
 expr_stmt|;
 name|vm_page_sleep
@@ -3018,14 +3008,9 @@ literal|0
 condition|)
 block|{
 comment|/* 			 * Reference the page before unlocking and sleeping so 			 * that the page daemon is less likely to reclaim it.   			 */
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
-name|vm_page_flag_set
+name|vm_page_reference
 argument_list|(
 name|vpg
-argument_list|,
-name|PG_REFERENCED
 argument_list|)
 expr_stmt|;
 name|vm_page_sleep

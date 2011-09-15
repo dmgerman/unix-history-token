@@ -472,7 +472,17 @@ name|DOINGSOFTDEP
 parameter_list|(
 name|vp
 parameter_list|)
-value|((vp)->v_mount->mnt_flag& MNT_SOFTDEP)
+value|((vp)->v_mount->mnt_flag& (MNT_SOFTDEP | MNT_SUJ))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUNTEDSOFTDEP
+parameter_list|(
+name|mp
+parameter_list|)
+value|((mp)->mnt_flag& (MNT_SOFTDEP | MNT_SUJ))
 end_define
 
 begin_define
@@ -492,7 +502,17 @@ name|DOINGSUJ
 parameter_list|(
 name|vp
 parameter_list|)
-value|((vp)->v_mount->mnt_kern_flag& MNTK_SUJ)
+value|((vp)->v_mount->mnt_flag& MNT_SUJ)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUNTEDSUJ
+parameter_list|(
+name|mp
+parameter_list|)
+value|((mp)->mnt_flag& MNT_SUJ)
 end_define
 
 begin_comment

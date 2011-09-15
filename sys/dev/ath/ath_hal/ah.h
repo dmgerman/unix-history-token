@@ -457,6 +457,11 @@ init|=
 literal|242
 block|,
 comment|/* support a self-linked tail RX descriptor */
+name|HAL_CAP_LONG_RXDESC_TSF
+init|=
+literal|243
+block|,
+comment|/* hardware supports 32bit TSF in RX descriptor */
 block|}
 name|HAL_CAPABILITY_TYPE
 typedef|;
@@ -2107,22 +2112,26 @@ name|u_int32_t
 name|pe_maxlen
 decl_stmt|;
 comment|/* Max length of radar sign in 0.8us units */
-name|HAL_BOOL
+name|int32_t
 name|pe_usefir128
 decl_stmt|;
 comment|/* Use the average in-band power measured over 128 cycles */
-name|HAL_BOOL
+name|int32_t
 name|pe_blockradar
 decl_stmt|;
 comment|/* 					 * Enable to block radar check if pkt detect is done via OFDM 					 * weak signal detect or pkt is detected immediately after tx 					 * to rx transition 					 */
-name|HAL_BOOL
+name|int32_t
 name|pe_enmaxrssi
 decl_stmt|;
 comment|/* 					 * Enable to use the max rssi instead of the last rssi during 					 * fine gain changes for radar detection 					 */
-name|HAL_BOOL
+name|int32_t
 name|pe_extchannel
 decl_stmt|;
 comment|/* Enable DFS on ext channel */
+name|int32_t
+name|pe_enabled
+decl_stmt|;
+comment|/* Whether radar detection is enabled */
 block|}
 name|HAL_PHYERR_PARAM
 typedef|;
@@ -2145,6 +2154,39 @@ end_define
 begin_comment
 comment|/* Enable/Disable if applicable */
 end_comment
+
+begin_comment
+comment|/*  * DFS operating mode flags.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_DFS_UNINIT_DOMAIN
+init|=
+literal|0
+block|,
+comment|/* Uninitialized dfs domain */
+name|HAL_DFS_FCC_DOMAIN
+init|=
+literal|1
+block|,
+comment|/* FCC3 dfs domain */
+name|HAL_DFS_ETSI_DOMAIN
+init|=
+literal|2
+block|,
+comment|/* ETSI dfs domain */
+name|HAL_DFS_MKK4_DOMAIN
+init|=
+literal|3
+block|,
+comment|/* Japan dfs domain */
+block|}
+name|HAL_DFS_DOMAIN
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * Flag for setting QUIET period  */
@@ -2184,9 +2226,30 @@ name|HAL_DFS_EVENT_PRICH
 value|0x0000001
 end_define
 
+begin_define
+define|#
+directive|define
+name|HAL_DFS_EVENT_EXTCH
+value|0x0000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_DFS_EVENT_EXTEARLY
+value|0x0000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_DFS_EVENT_ISDC
+value|0x0000008
+end_define
+
 begin_struct
 struct|struct
-name|dfs_event
+name|hal_dfs_event
 block|{
 name|uint64_t
 name|re_full_ts
@@ -2215,7 +2278,7 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|dfs_event
+name|hal_dfs_event
 name|HAL_DFS_EVENT
 typedef|;
 end_typedef
@@ -3851,6 +3914,19 @@ modifier|*
 name|event
 parameter_list|)
 function_decl|;
+name|HAL_BOOL
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_isFastClockEnabled
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+function_decl|;
 comment|/* Key Cache Functions */
 name|uint32_t
 name|__ahdecl
@@ -4039,6 +4115,18 @@ name|__ahdecl
 function_decl|(
 modifier|*
 name|ah_resetStationBeaconTimers
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|)
+function_decl|;
+name|uint64_t
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_getNextTBTT
 function_decl|)
 parameter_list|(
 name|struct
@@ -4685,6 +4773,64 @@ name|rateix
 parameter_list|,
 name|HAL_BOOL
 name|shortPreamble
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Adjust the TSF.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|__ahdecl
+name|ath_hal_adjusttsf
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|int32_t
+name|tsfdelta
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Enable or disable CCA.  */
+end_comment
+
+begin_function_decl
+name|void
+name|__ahdecl
+name|ath_hal_setcca
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|int
+name|ena
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Get CCA setting.  */
+end_comment
+
+begin_function_decl
+name|int
+name|__ahdecl
+name|ath_hal_getcca
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
 parameter_list|)
 function_decl|;
 end_function_decl

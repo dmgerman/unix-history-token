@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/fcntl.h>
 end_include
 
@@ -2952,6 +2958,8 @@ argument_list|,
 name|args
 operator|->
 name|s
+argument_list|,
+name|CAP_CONNECT
 argument_list|,
 operator|&
 name|so

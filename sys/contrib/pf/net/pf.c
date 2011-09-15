@@ -14730,7 +14730,7 @@ argument|if (action == PF_PASS&& r->divert.port&& 	    ip_divert_ptr != NULL&& !
 literal|0
 argument|, 				sizeof(struct ipfw_rule_ref), M_NOWAIT | M_ZERO); 		if (ipfwtag != NULL) { 			((struct ipfw_rule_ref *)(ipfwtag+
 literal|1
-argument|))->info = r->divert.port; 			((struct ipfw_rule_ref *)(ipfwtag+
+argument|))->info = 			    ntohs(r->divert.port); 			((struct ipfw_rule_ref *)(ipfwtag+
 literal|1
 argument|))->rulenum = dir;  			m_tag_prepend(m, ipfwtag);  			PF_UNLOCK();  			if (m->m_flags& M_FASTFWD_OURS) { 				pd.pf_mtag->flags |= PF_FASTFWD_OURS_PRESENT; 				m->m_flags&= ~M_FASTFWD_OURS; 			}  			ip_divert_ptr(*m0, 				dir ==  PF_IN ? DIR_IN : DIR_OUT); 			*m0 = NULL; 			return (action); 		} else {
 comment|/* XXX: ipfw has the same behaviour! */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002-2009 Sam Leffler, Errno Consulting  * Copyright (c) 2005-2006 Atheros Communications, Inc.  * All rights reserved.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2002-2009 Sam Leffler, Errno Consulting  * Copyright (c) 2005-2011 Atheros Communications, Inc.  * All rights reserved.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -61,6 +61,11 @@ init|=
 literal|0x13
 block|,
 comment|/* USA w/ 1/2 and 1/4 width channels */
+name|FCC6_FCCA
+init|=
+literal|0x14
+block|,
+comment|/* Canada for AP only */
 name|FCC2_FCCA
 init|=
 literal|0x20
@@ -126,6 +131,16 @@ init|=
 literal|0x34
 block|,
 comment|/* Bulgaria */
+name|ETSI8_WORLD
+init|=
+literal|0x3D
+block|,
+comment|/* Russia */
+name|ETSI9_WORLD
+init|=
+literal|0x3E
+block|,
+comment|/* Ukraine */
 name|ETSI_RESERVED
 init|=
 literal|0x33
@@ -194,6 +209,11 @@ init|=
 literal|0x4C
 block|,
 comment|/* Japan (MKK1_MKKA,except Ch14) */
+name|APL2_FCCA
+init|=
+literal|0x4D
+block|,
+comment|/* Mobile customer */
 name|APL3_FCCA
 init|=
 literal|0x50
@@ -244,7 +264,12 @@ name|APL9_WORLD
 init|=
 literal|0x5E
 block|,
-comment|/* Korea 5GHz */
+comment|/* Korea 5GHz; before 11/2007; now APs only */
+name|APL10_WORLD
+init|=
+literal|0x5F
+block|,
+comment|/* Korea 5GHz; After 11/2007; STAs only */
 comment|/* 	 * World mode SKUs 	 */
 name|WOR0_WORLD
 init|=
@@ -306,6 +331,11 @@ init|=
 literal|0x6B
 block|,
 comment|/* WorldB (WOB SKU) */
+name|WORC_WORLD
+init|=
+literal|0x6C
+block|,
+comment|/* WorldC (WOC SKU) */
 name|MKK3_MKKB
 init|=
 literal|0x80
@@ -396,7 +426,92 @@ init|=
 literal|0x91
 block|,
 comment|/* Japan UNI-1 even + UNI-1 odd + UNI-2 + mid-band + MKKC */
-comment|/* Following definitions are used only by s/w to map old  	 * Japan SKUs. 	 */
+name|MKK14_MKKA1
+init|=
+literal|0x92
+block|,
+comment|/* Japan UNI-1 even + UNI-1 odd + 4.9GHz + MKKA1 */
+name|MKK15_MKKA1
+init|=
+literal|0x93
+block|,
+comment|/* Japan UNI-1 even + UNI-1 odd + UNI-2 + 4.9GHz + MKKA1 */
+name|MKK10_FCCA
+init|=
+literal|0xD0
+block|,
+comment|/* Japan UNI-1 even + UNI-2 + 4.9GHz + FCCA */
+name|MKK10_MKKA1
+init|=
+literal|0xD1
+block|,
+comment|/* Japan UNI-1 even + UNI-2 + 4.9GHz + MKKA1 */
+name|MKK10_MKKC
+init|=
+literal|0xD2
+block|,
+comment|/* Japan UNI-1 even + UNI-2 + 4.9GHz + MKKC */
+name|MKK10_MKKA2
+init|=
+literal|0xD3
+block|,
+comment|/* Japan UNI-1 even + UNI-2 + 4.9GHz + MKKA2 */
+name|MKK11_MKKA
+init|=
+literal|0xD4
+block|,
+comment|/* Japan UNI-1 even + UNI-2 + mid-band + 4.9GHz + MKKA */
+name|MKK11_FCCA
+init|=
+literal|0xD5
+block|,
+comment|/* Japan UNI-1 even + UNI-2 + mid-band + 4.9GHz + FCCA */
+name|MKK11_MKKA1
+init|=
+literal|0xD6
+block|,
+comment|/* Japan UNI-1 even + UNI-2 + mid-band + 4.9GHz + MKKA1 */
+name|MKK11_MKKC
+init|=
+literal|0xD7
+block|,
+comment|/* Japan UNI-1 even + UNI-2 + mid-band + 4.9GHz + MKKC */
+name|MKK11_MKKA2
+init|=
+literal|0xD8
+block|,
+comment|/* Japan UNI-1 even + UNI-2 + mid-band + 4.9GHz + MKKA2 */
+name|MKK12_MKKA
+init|=
+literal|0xD9
+block|,
+comment|/* Japan UNI-1 even + UNI-1 odd + UNI-2 + mid-band + 4.9GHz + MKKA */
+name|MKK12_FCCA
+init|=
+literal|0xDA
+block|,
+comment|/* Japan UNI-1 even + UNI-1 odd + UNI-2 + mid-band + 4.9GHz + FCCA */
+name|MKK12_MKKA1
+init|=
+literal|0xDB
+block|,
+comment|/* Japan UNI-1 even + UNI-1 odd + UNI-2 + mid-band + 4.9GHz + MKKA1 */
+name|MKK12_MKKC
+init|=
+literal|0xDC
+block|,
+comment|/* Japan UNI-1 even + UNI-1 odd + UNI-2 + mid-band + 4.9GHz + MKKC */
+name|MKK12_MKKA2
+init|=
+literal|0xDD
+block|,
+comment|/* Japan UNI-1 even + UNI-1 odd + UNI-2 + mid-band + 4.9GHz + MKKA2 */
+name|MKK13_MKKB
+init|=
+literal|0xDE
+block|,
+comment|/* Japan UNI-1 even + UNI-1 odd + UNI-2 + mid-band + MKKB + All passive + no adhoc */
+comment|/* 	 * Following definitions are used only by s/w to map old 	 * Japan SKUs. 	 */
 name|MKK3_MKKA
 init|=
 literal|0xF0
@@ -437,6 +552,46 @@ init|=
 literal|0xF7
 block|,
 comment|/* Japan UNI-1 even + UNI-2 + 4.9GHz */
+name|MKK6_MKKA1
+init|=
+literal|0xF8
+block|,
+comment|/* Japan UNI-1 even + UNI-1 odd + UNI-2 + MKKA1 */
+name|MKK6_FCCA
+init|=
+literal|0xF9
+block|,
+comment|/* Japan UNI-1 even + UNI-1 odd + UNI-2 + FCCA */
+name|MKK7_MKKA1
+init|=
+literal|0xFA
+block|,
+comment|/* Japan UNI-1 even + UNI-1 odd + UNI-2 + MKKA1 */
+name|MKK7_FCCA
+init|=
+literal|0xFB
+block|,
+comment|/* Japan UNI-1 even + UNI-1 odd + UNI-2 + FCCA */
+name|MKK9_FCCA
+init|=
+literal|0xFC
+block|,
+comment|/* Japan UNI-1 even + 4.9GHz + FCCA */
+name|MKK9_MKKA1
+init|=
+literal|0xFD
+block|,
+comment|/* Japan UNI-1 even + 4.9GHz + MKKA1 */
+name|MKK9_MKKC
+init|=
+literal|0xFE
+block|,
+comment|/* Japan UNI-1 even + 4.9GHz + MKKC */
+name|MKK9_MKKA2
+init|=
+literal|0xFF
+block|,
+comment|/* Japan UNI-1 even + 4.9GHz + MKKA2 */
 comment|/* 	 * Regulator domains ending in a number (e.g. APL1, 	 * MK1, ETSI4, etc) apply to 5GHz channel and power 	 * information.  Regulator domains ending in a letter 	 * (e.g. APLA, FCCA, etc) apply to 2.4GHz channel and 	 * power information. 	 */
 name|APL1
 init|=
@@ -468,6 +623,11 @@ init|=
 literal|0x0650
 block|,
 comment|/* Singapore */
+name|APL7
+init|=
+literal|0x0750
+block|,
+comment|/* Taiwan, disable ch52 */
 name|APL8
 init|=
 literal|0x0850
@@ -477,7 +637,12 @@ name|APL9
 init|=
 literal|0x0950
 block|,
-comment|/* Korea (South) ROC 3 */
+comment|/* Korea. Before 11/2007. Now used only by APs */
+name|APL10
+init|=
+literal|0x1050
+block|,
+comment|/* Korea. After 11/2007. For STAs only */
 name|ETSI1
 init|=
 literal|0x0130
@@ -508,6 +673,16 @@ init|=
 literal|0x0630
 block|,
 comment|/* Europe& others */
+name|ETSI8
+init|=
+literal|0x0830
+block|,
+comment|/* Russia */
+name|ETSI9
+init|=
+literal|0x0930
+block|,
+comment|/* Ukraine */
 name|ETSIA
 init|=
 literal|0x0A30
@@ -548,6 +723,11 @@ init|=
 literal|0x0166
 block|,
 comment|/* US w/ 1/2 and 1/4 width channels */
+name|FCC6
+init|=
+literal|0x0610
+block|,
+comment|/* Canada and Australia */
 name|FCCA
 init|=
 literal|0x0A10
@@ -612,6 +792,31 @@ init|=
 literal|0x0B40
 block|,
 comment|/* Japan (UNI-1 even + UNI-2 + 4.9 GHZ) */
+name|MKK11
+init|=
+literal|0x1140
+block|,
+comment|/* Japan (UNI-1 even + UNI-2 + 4.9 GHZ) */
+name|MKK12
+init|=
+literal|0x1240
+block|,
+comment|/* Japan (UNI-1 even + UNI-2 + 4.9 GHZ) */
+name|MKK13
+init|=
+literal|0x0C40
+block|,
+comment|/* Same as MKK8 but all passive and no adhoc 11a */
+name|MKK14
+init|=
+literal|0x1440
+block|,
+comment|/* Japan UNI-1 even + UNI-1 odd + 4.9GHz */
+name|MKK15
+init|=
+literal|0x1540
+block|,
+comment|/* Japan UNI-1 even + UNI-1 odd + UNI-2 + 4.9GHz */
 name|MKKA
 init|=
 literal|0x0A40

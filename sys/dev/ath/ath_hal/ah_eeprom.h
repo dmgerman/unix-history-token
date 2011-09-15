@@ -422,6 +422,9 @@ comment|/* int8_t* */
 name|AR_EEP_TEMPSENSE_SLOPE_PAL_ON
 block|,
 comment|/* int8_t* */
+name|AR_EEP_FRAC_N_5G
+block|,
+comment|/* uint8_t* */
 block|}
 enum|;
 end_enum

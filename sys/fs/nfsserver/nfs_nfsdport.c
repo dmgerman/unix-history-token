@@ -17,6 +17,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_include
+include|#
+directive|include
+file|<sys/capability.h>
+end_include
+
 begin_comment
 comment|/*  * Functions that perform the vfs operations required by the routines in  * nfsd_serv.c. It is hoped that this change will make the server more  * portable.  */
 end_comment
@@ -1207,6 +1213,12 @@ operator|=
 name|cnp
 operator|->
 name|cn_pnbuf
+expr_stmt|;
+name|ndp
+operator|->
+name|ni_strictrelative
+operator|=
+literal|0
 expr_stmt|;
 comment|/* 	 * Extract and set starting directory. 	 */
 if|if
@@ -14968,6 +14980,7 @@ condition|)
 goto|goto
 name|out
 goto|;
+comment|/* 		 * Since we don't know what rights might be required, 		 * pretend that we need them all. It is better to be too 		 * careful than too reckless. 		 */
 if|if
 condition|(
 operator|(
@@ -14980,6 +14993,8 @@ argument_list|,
 name|sockarg
 operator|.
 name|sock
+argument_list|,
+name|CAP_SOCK_ALL
 argument_list|,
 operator|&
 name|fp

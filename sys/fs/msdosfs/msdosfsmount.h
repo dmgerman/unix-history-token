@@ -232,7 +232,7 @@ modifier|*
 name|pm_inusemap
 decl_stmt|;
 comment|/* ptr to bitmap of in-use clusters */
-name|u_int
+name|uint64_t
 name|pm_flags
 decl_stmt|;
 comment|/* see below */

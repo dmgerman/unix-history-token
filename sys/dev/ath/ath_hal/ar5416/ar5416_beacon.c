@@ -49,6 +49,41 @@ parameter_list|)
 value|((_tu)<< 10)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ONE_EIGHTH_TU_TO_USEC
+parameter_list|(
+name|_tu8
+parameter_list|)
+value|((_tu8)<< 7)
+end_define
+
+begin_comment
+comment|/*  * Return the hardware NextTBTT in TSF  */
+end_comment
+
+begin_function
+name|uint64_t
+name|ar5416GetNextTBTT
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+block|{
+return|return
+name|OS_REG_READ
+argument_list|(
+name|ah
+argument_list|,
+name|AR_NEXT_TBTT
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Initialize all of the hardware registers used to  * send beacons.  Note that for station operation the  * driver calls ar5416SetStaBeaconTimers instead.  */
 end_comment
@@ -91,14 +126,12 @@ name|ah
 argument_list|,
 name|AR_NEXT_DBA
 argument_list|,
-name|TU_TO_USEC
+name|ONE_EIGHTH_TU_TO_USEC
 argument_list|(
 name|bt
 operator|->
 name|bt_nextdba
 argument_list|)
-operator|>>
-literal|3
 argument_list|)
 expr_stmt|;
 name|OS_REG_WRITE
@@ -107,14 +140,12 @@ name|ah
 argument_list|,
 name|AR_NEXT_SWBA
 argument_list|,
-name|TU_TO_USEC
+name|ONE_EIGHTH_TU_TO_USEC
 argument_list|(
 name|bt
 operator|->
 name|bt_nextswba
 argument_list|)
-operator|>>
-literal|3
 argument_list|)
 expr_stmt|;
 name|OS_REG_WRITE
@@ -519,9 +550,12 @@ name|ah
 argument_list|,
 name|AR_NEXT_TBTT
 argument_list|,
+name|TU_TO_USEC
+argument_list|(
 name|bs
 operator|->
 name|bs_nexttbtt
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Start the beacon timers by setting the BEACON register 	 * to the beacon interval; no need to write tim offset since 	 * h/w parses IEs. 	 */
@@ -758,7 +792,7 @@ name|OS_REG_WRITE
 argument_list|(
 name|ah
 argument_list|,
-name|AR_SLEEP1
+name|AR5416_SLEEP1
 argument_list|,
 name|SM
 argument_list|(
@@ -771,15 +805,16 @@ argument_list|,
 name|AR5416_SLEEP1_CAB_TIMEOUT
 argument_list|)
 operator||
-name|AR_SLEEP1_ASSUME_DTIM
+name|AR5416_SLEEP1_ASSUME_DTIM
 argument_list|)
 expr_stmt|;
+comment|/* XXX autosleep? Use min beacon timeout; check ath9k -adrian */
 comment|/* beacon timeout is now in 1/8 TU */
 name|OS_REG_WRITE
 argument_list|(
 name|ah
 argument_list|,
-name|AR_SLEEP2
+name|AR5416_SLEEP2
 argument_list|,
 name|SM
 argument_list|(
@@ -793,13 +828,17 @@ name|AR5416_SLEEP2_BEACON_TIMEOUT
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* TIM_PERIOD and DTIM_PERIOD are now in uS. */
 name|OS_REG_WRITE
 argument_list|(
 name|ah
 argument_list|,
 name|AR_TIM_PERIOD
 argument_list|,
+name|TU_TO_USEC
+argument_list|(
 name|beaconintval
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|OS_REG_WRITE
@@ -808,7 +847,10 @@ name|ah
 argument_list|,
 name|AR_DTIM_PERIOD
 argument_list|,
+name|TU_TO_USEC
+argument_list|(
 name|dtimperiod
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|OS_REG_SET_BIT

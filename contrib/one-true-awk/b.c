@@ -1374,7 +1374,7 @@ begin_function
 name|int
 name|hexstr
 parameter_list|(
-name|char
+name|uschar
 modifier|*
 modifier|*
 name|pp
@@ -1502,7 +1502,7 @@ operator|*
 name|pp
 operator|=
 operator|(
-name|char
+name|uschar
 operator|*
 operator|)
 name|p
@@ -1531,7 +1531,7 @@ begin_function
 name|int
 name|quoted
 parameter_list|(
-name|char
+name|uschar
 modifier|*
 modifier|*
 name|pp
@@ -1539,7 +1539,7 @@ parameter_list|)
 comment|/* pick up next thing after a \\ */
 comment|/* and increment *pp */
 block|{
-name|char
+name|uschar
 modifier|*
 name|p
 init|=
@@ -1909,11 +1909,6 @@ name|c
 operator|=
 name|quoted
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 operator|&
 name|p
 argument_list|)
@@ -1971,11 +1966,6 @@ name|c2
 operator|=
 name|quoted
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 operator|&
 name|p
 argument_list|)
@@ -4916,11 +4906,6 @@ name|rlxval
 operator|=
 name|quoted
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 operator|&
 name|prestr
 argument_list|)

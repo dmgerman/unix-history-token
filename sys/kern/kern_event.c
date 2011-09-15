@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -608,6 +614,16 @@ operator|.
 name|fo_close
 operator|=
 name|kqueue_close
+block|,
+operator|.
+name|fo_chmod
+operator|=
+name|invfo_chmod
+block|,
+operator|.
+name|fo_chown
+operator|=
+name|invfo_chown
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -3870,6 +3886,8 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
+name|CAP_POST_EVENT
+argument_list|,
 operator|&
 name|fp
 argument_list|)
@@ -4640,6 +4658,8 @@ argument_list|,
 name|kev
 operator|->
 name|ident
+argument_list|,
+name|CAP_POLL_EVENT
 argument_list|,
 operator|&
 name|fp
@@ -8104,6 +8124,14 @@ argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
+name|seldrain
+argument_list|(
+operator|&
+name|kq
+operator|->
+name|kq_sel
+argument_list|)
+expr_stmt|;
 name|knlist_destroy
 argument_list|(
 operator|&
@@ -10471,6 +10499,8 @@ argument_list|(
 name|td
 argument_list|,
 name|fd
+argument_list|,
+name|CAP_POST_EVENT
 argument_list|,
 operator|&
 name|fp

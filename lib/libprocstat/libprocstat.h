@@ -339,6 +339,13 @@ name|PS_FST_FFLAG_HASLOCK
 value|0x4000
 end_define
 
+begin_define
+define|#
+directive|define
+name|PS_FST_FFLAG_CAPABILITY
+value|0x8000
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|procstat
@@ -392,6 +399,10 @@ argument|filestat
 argument_list|)
 name|next
 expr_stmt|;
+name|cap_rights_t
+name|fs_cap_rights
+decl_stmt|;
+comment|/* Capability rights, if flag set. */
 block|}
 struct|;
 end_struct

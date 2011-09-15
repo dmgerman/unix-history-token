@@ -87,6 +87,18 @@ end_ifdef
 
 begin_function_decl
 name|void
+name|seldrain
+parameter_list|(
+name|struct
+name|selinfo
+modifier|*
+name|sip
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|selrecord
 parameter_list|(
 name|struct

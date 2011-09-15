@@ -57,6 +57,14 @@ name|ps3disk
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|devsw
+name|ps3cdrom
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * We could use linker sets for some or all of these, but  * then we would have to control what ended up linked into  * the bootstrap.  So it's easier to conditionalise things  * here.  *  * XXX rename these arrays to be consistent and less namespace-hostile  */
 end_comment
@@ -77,12 +85,18 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|LOADER_DISK_SUPPORT
+name|LOADER_CD9660_SUPPORT
 argument_list|)
-operator|||
+operator|&
+name|ps3cdrom
+block|,
+endif|#
+directive|endif
+if|#
+directive|if
 name|defined
 argument_list|(
-name|LOADER_CD9660_SUPPORT
+name|LOADER_DISK_SUPPORT
 argument_list|)
 operator|&
 name|ps3disk

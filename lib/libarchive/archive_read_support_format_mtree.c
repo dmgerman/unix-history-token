@@ -2762,6 +2762,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|archive_string_empty
+argument_list|(
+operator|&
+name|mtree
+operator|->
+name|contents_name
+argument_list|)
+expr_stmt|;
 comment|/* Parse options from this line. */
 name|parsed_kws
 operator|=
@@ -3150,7 +3158,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 	 * If there is a contents file on disk, use that size; 	 * otherwise leave it as-is (it might have been set from 	 * the mtree size= keyword). 	 */
+comment|/* 	 * Check for a mismatch between the type in the specification and 	 * the type of the contents object on disk. 	 */
 if|if
 condition|(
 name|st
@@ -3401,6 +3409,7 @@ name|r
 return|;
 block|}
 block|}
+comment|/* 	 * If there is a contents file on disk, pick some of the metadata 	 * from that file.  For most of these, we only set it from the contents 	 * if it wasn't already parsed from the specification. 	 */
 if|if
 condition|(
 name|st

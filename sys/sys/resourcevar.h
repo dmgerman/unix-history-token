@@ -605,6 +605,23 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|rufetchtd
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|rusage
+modifier|*
+name|ru
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ruxagg
 parameter_list|(
 name|struct

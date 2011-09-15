@@ -21,6 +21,12 @@ begin_comment
 comment|/*  * The FreeBSD IP packet firewall, main file  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"opt_ipfw.h"
+end_include
+
 begin_if
 if|#
 directive|if
@@ -30,12 +36,6 @@ argument_list|(
 name|KLD_MODULE
 argument_list|)
 end_if
-
-begin_include
-include|#
-directive|include
-file|"opt_ipfw.h"
-end_include
 
 begin_include
 include|#
@@ -431,6 +431,26 @@ define|#
 directive|define
 name|V_fw_deny_unknown_exthdrs
 value|VNET(fw_deny_unknown_exthdrs)
+end_define
+
+begin_expr_stmt
+specifier|static
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|fw_permit_single_frag6
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_fw_permit_single_frag6
+value|VNET(fw_permit_single_frag6)
 end_define
 
 begin_ifdef
@@ -913,6 +933,32 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Deny packets with unknown IPv6 Extension Headers"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_VNET_INT
+argument_list|(
+name|_net_inet6_ip6_fw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|permit_single_frag6
+argument_list|,
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_SECURE
+argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
+name|fw_permit_single_frag6
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|"Permit single packet IPv6 fragments"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3503,7 +3549,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The main check routine for the firewall.  *  * All arguments are in args so we can modify them and return them  * back to the caller.  *  * Parameters:  *  *	args->m	(in/out) The packet; we set to NULL when/if we nuke it.  *		Starts with the IP header.  *	args->eh (in)	Mac header if present, NULL for layer3 packet.  *	args->L3offset	Number of bytes bypassed if we came from L2.  *			e.g. often sizeof(eh)  ** NOTYET **  *	args->oif	Outgoing interface, NULL if packet is incoming.  *		The incoming interface is in the mbuf. (in)  *	args->divert_rule (in/out)  *		Skip up to the first rule past this rule number;  *		upon return, non-zero port number for divert or tee.  *  *	args->rule	Pointer to the last matching rule (in/out)  *	args->next_hop	Socket we are forwarding to (out).  *	args->f_id	Addresses grabbed from the packet (out)  * 	args->rule.info	a cookie depending on rule action  *  * Return value:  *  *	IP_FW_PASS	the packet must be accepted  *	IP_FW_DENY	the packet must be dropped  *	IP_FW_DIVERT	divert packet, port in m_tag  *	IP_FW_TEE	tee packet, port in m_tag  *	IP_FW_DUMMYNET	to dummynet, pipe in args->cookie  *	IP_FW_NETGRAPH	into netgraph, cookie args->cookie  *		args->rule contains the matching rule,  *		args->rule.info has additional information.  *  */
+comment|/*  * The main check routine for the firewall.  *  * All arguments are in args so we can modify them and return them  * back to the caller.  *  * Parameters:  *  *	args->m	(in/out) The packet; we set to NULL when/if we nuke it.  *		Starts with the IP header.  *	args->eh (in)	Mac header if present, NULL for layer3 packet.  *	args->L3offset	Number of bytes bypassed if we came from L2.  *			e.g. often sizeof(eh)  ** NOTYET **  *	args->oif	Outgoing interface, NULL if packet is incoming.  *		The incoming interface is in the mbuf. (in)  *	args->divert_rule (in/out)  *		Skip up to the first rule past this rule number;  *		upon return, non-zero port number for divert or tee.  *  *	args->rule	Pointer to the last matching rule (in/out)  *	args->next_hop	Socket we are forwarding to (out).  *	args->next_hop6	IPv6 next hop we are forwarding to (out).  *	args->f_id	Addresses grabbed from the packet (out)  * 	args->rule.info	a cookie depending on rule action  *  * Return value:  *  *	IP_FW_PASS	the packet must be accepted  *	IP_FW_DENY	the packet must be dropped  *	IP_FW_DIVERT	divert packet, port in m_tag  *	IP_FW_TEE	tee packet, port in m_tag  *	IP_FW_DUMMYNET	to dummynet, pipe in args->cookie  *	IP_FW_NETGRAPH	into netgraph, cookie args->cookie  *		args->rule contains the matching rule,  *		args->rule.info has additional information.  *  */
 end_comment
 
 begin_function
@@ -3592,9 +3638,14 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* hlen>0 means we have an IP pkt */
-comment|/* 	 * offset	The offset of a fragment. offset != 0 means that 	 *	we have a fragment at this offset of an IPv4 packet. 	 *	offset == 0 means that (if this is an IPv4 packet) 	 *	this is the first or only fragment. 	 *	For IPv6 offset == 0 means there is no Fragment Header.  	 *	If offset != 0 for IPv6 always use correct mask to 	 *	get the correct offset because we add IP6F_MORE_FRAG 	 *	to be able to dectect the first fragment which would 	 *	otherwise have offset = 0. 	 */
+comment|/* 	 * offset	The offset of a fragment. offset != 0 means that 	 *	we have a fragment at this offset of an IPv4 packet. 	 *	offset == 0 means that (if this is an IPv4 packet) 	 *	this is the first or only fragment. 	 *	For IPv6 offset|ip6f_mf == 0 means there is no Fragment Header 	 *	or there is a single packet fragement (fragement header added 	 *	without needed).  We will treat a single packet fragment as if 	 *	there was no fragment header (or log/block depending on the 	 *	V_fw_permit_single_frag6 sysctl setting). 	 */
 name|u_short
 name|offset
+init|=
+literal|0
+decl_stmt|;
+name|u_short
+name|ip6f_mf
 init|=
 literal|0
 decl_stmt|;
@@ -3871,6 +3922,10 @@ condition|(
 name|ulp
 operator|==
 name|NULL
+operator|&&
+name|offset
+operator|==
+literal|0
 condition|)
 block|{
 switch|switch
@@ -4111,10 +4166,14 @@ name|EXT_RTHDR2
 expr_stmt|;
 break|break;
 default|default:
+if|if
+condition|(
+name|V_fw_verbose
+condition|)
 name|printf
 argument_list|(
-literal|"IPFW2: IPV6 - Unknown Routing "
-literal|"Header type(%d)\n"
+literal|"IPFW2: IPV6 - Unknown "
+literal|"Routing Header type(%d)\n"
 argument_list|,
 operator|(
 operator|(
@@ -4234,9 +4293,8 @@ name|ip6f_offlg
 operator|&
 name|IP6F_OFF_MASK
 expr_stmt|;
-comment|/* Add IP6F_MORE_FRAG for offset of first 				 * fragment to be != 0. */
-name|offset
-operator||=
+name|ip6f_mf
+operator|=
 operator|(
 operator|(
 expr|struct
@@ -4252,15 +4310,27 @@ name|IP6F_MORE_FRAG
 expr_stmt|;
 if|if
 condition|(
+name|V_fw_permit_single_frag6
+operator|==
+literal|0
+operator|&&
 name|offset
+operator|==
+literal|0
+operator|&&
+name|ip6f_mf
 operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|V_fw_verbose
+condition|)
 name|printf
 argument_list|(
-literal|"IPFW2: IPV6 - Invalid Fragment "
-literal|"Header\n"
+literal|"IPFW2: IPV6 - Invalid "
+literal|"Fragment Header\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4555,10 +4625,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+if|if
+condition|(
+name|V_fw_verbose
+condition|)
 name|printf
 argument_list|(
-literal|"IPFW2: IPV6 - Unknown Extension "
-literal|"Header(%d), ext_hd=%x\n"
+literal|"IPFW2: IPV6 - Unknown "
+literal|"Extension Header(%d), ext_hd=%x\n"
 argument_list|,
 name|proto
 argument_list|,
@@ -7111,6 +7185,8 @@ argument_list|,
 name|oif
 argument_list|,
 name|offset
+operator||
+name|ip6f_mf
 argument_list|,
 name|tablearg
 argument_list|,
@@ -9347,6 +9423,81 @@ literal|1
 expr_stmt|;
 comment|/* exit outer loop */
 break|break;
+ifdef|#
+directive|ifdef
+name|INET6
+case|case
+name|O_FORWARD_IP6
+case|:
+if|if
+condition|(
+name|args
+operator|->
+name|eh
+condition|)
+comment|/* not valid on layer2 pkts */
+break|break;
+if|if
+condition|(
+name|q
+operator|==
+name|NULL
+operator|||
+name|q
+operator|->
+name|rule
+operator|!=
+name|f
+operator|||
+name|dyn_dir
+operator|==
+name|MATCH_FORWARD
+condition|)
+block|{
+name|struct
+name|sockaddr_in6
+modifier|*
+name|sin6
+decl_stmt|;
+name|sin6
+operator|=
+operator|&
+operator|(
+operator|(
+operator|(
+name|ipfw_insn_sa6
+operator|*
+operator|)
+name|cmd
+operator|)
+operator|->
+name|sa
+operator|)
+expr_stmt|;
+name|args
+operator|->
+name|next_hop6
+operator|=
+name|sin6
+expr_stmt|;
+block|}
+name|retval
+operator|=
+name|IP_FW_PASS
+expr_stmt|;
+name|l
+operator|=
+literal|0
+expr_stmt|;
+comment|/* exit inner loop */
+name|done
+operator|=
+literal|1
+expr_stmt|;
+comment|/* exit outer loop */
+break|break;
+endif|#
+directive|endif
 case|case
 name|O_NETGRAPH
 case|:

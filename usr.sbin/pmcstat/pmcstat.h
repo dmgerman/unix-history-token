@@ -15,6 +15,12 @@ directive|define
 name|_PMCSTAT_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/_cpuset.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -638,7 +644,7 @@ name|double
 name|pa_interval
 decl_stmt|;
 comment|/* printing interval in seconds */
-name|uint32_t
+name|cpuset_t
 name|pa_cpumask
 decl_stmt|;
 comment|/* filter for CPUs analysed */
@@ -740,21 +746,6 @@ name|void
 name|pmcstat_cleanup
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pmcstat_clone_event_descriptor
-parameter_list|(
-name|struct
-name|pmcstat_ev
-modifier|*
-name|_ev
-parameter_list|,
-name|uint32_t
-name|_cpumask
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -919,18 +910,6 @@ parameter_list|(
 name|char
 modifier|*
 name|_opt
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|uint32_t
-name|pmcstat_get_cpumask
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|_a
 parameter_list|)
 function_decl|;
 end_function_decl

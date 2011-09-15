@@ -753,8 +753,12 @@ decl_stmt|,
 name|halSupportsFastClock5GHz
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* Hardware supports 5ghz fast clock; check eeprom/channel before using */
+name|halHasLongRxDescTsf
+range|:
+literal|1
+decl_stmt|;
 name|uint32_t
 name|halWirelessModes
 decl_stmt|;
@@ -1116,6 +1120,10 @@ name|HAL_REG_DOMAIN
 name|ah_currentRDext
 decl_stmt|;
 comment|/* EEPROM extended regdomain flags */
+name|HAL_DFS_DOMAIN
+name|ah_dfsDomain
+decl_stmt|;
+comment|/* current DFS domain */
 name|HAL_CHANNEL_INTERNAL
 name|ah_channels
 index|[

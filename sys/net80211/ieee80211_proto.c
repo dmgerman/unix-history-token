@@ -7802,6 +7802,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Complete the channel switch by transitioning all CSA VAPs to RUN.  * This is called by both the completion and cancellation functions  * so each VAP is placed back in the RUN state and can thus transmit.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -7860,7 +7864,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Complete an 802.11h channel switch started by ieee80211_csa_startswitch.  * We clear state and move all vap's in CSA state to RUN state  * so they can again transmit.  */
+comment|/*  * Complete an 802.11h channel switch started by ieee80211_csa_startswitch.  * We clear state and move all vap's in CSA state to RUN state  * so they can again transmit.  *  * Although this may not be completely correct, update the BSS channel  * for each VAP to the newly configured channel. The setcurchan sets  * the current operating channel for the interface (so the radio does  * switch over) but the VAP BSS isn't updated, leading to incorrectly  * reported information via ioctl.  */
 end_comment
 
 begin_function
@@ -7873,6 +7877,11 @@ modifier|*
 name|ic
 parameter_list|)
 block|{
+name|struct
+name|ieee80211vap
+modifier|*
+name|vap
+decl_stmt|;
 name|IEEE80211_LOCK_ASSERT
 argument_list|(
 name|ic
@@ -7899,6 +7908,32 @@ name|ic
 operator|->
 name|ic_csa_newchan
 argument_list|)
+expr_stmt|;
+name|TAILQ_FOREACH
+argument_list|(
+argument|vap
+argument_list|,
+argument|&ic->ic_vaps
+argument_list|,
+argument|iv_next
+argument_list|)
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_state
+operator|==
+name|IEEE80211_S_CSA
+condition|)
+name|vap
+operator|->
+name|iv_bss
+operator|->
+name|ni_chan
+operator|=
+name|ic
+operator|->
+name|ic_curchan
 expr_stmt|;
 name|csa_completeswitch
 argument_list|(

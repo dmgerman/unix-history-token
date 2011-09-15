@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/fcntl.h>
 end_include
 
@@ -1108,6 +1114,8 @@ argument_list|,
 name|uap
 operator|->
 name|fd
+argument_list|,
+name|CAP_MAC_GET
 argument_list|,
 operator|&
 name|fp
@@ -2187,6 +2195,8 @@ argument_list|,
 name|uap
 operator|->
 name|fd
+argument_list|,
+name|CAP_MAC_SET
 argument_list|,
 operator|&
 name|fp

@@ -10349,6 +10349,8 @@ decl_stmt|;
 if|if
 condition|(
 name|status
+operator|==
+literal|0
 condition|)
 comment|/* ACK'd */
 name|bar_stop_timer
@@ -10394,7 +10396,7 @@ block|{
 if|if
 condition|(
 name|status
-operator|!=
+operator|==
 literal|0
 condition|)
 block|{
@@ -10833,6 +10835,7 @@ operator|->
 name|txa_attempts
 argument_list|)
 expr_stmt|;
+comment|/* 	 * ic_raw_xmit will free the node reference 	 * regardless of queue/TX success or failure. 	 */
 name|ret
 operator|=
 name|ic
@@ -10861,9 +10864,9 @@ operator|&=
 operator|~
 name|IEEE80211_AGGR_BARPEND
 expr_stmt|;
-goto|goto
-name|bad
-goto|;
+return|return
+name|ret
+return|;
 block|}
 comment|/* XXX hack against tx complete happening before timer is started */
 if|if

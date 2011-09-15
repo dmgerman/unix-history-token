@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/conf.h>
 end_include
 
@@ -1428,6 +1434,8 @@ operator|->
 name|td_proc
 operator|->
 name|p_fd
+argument_list|,
+name|CAP_WRITE
 argument_list|,
 name|tmp
 operator|->

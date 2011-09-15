@@ -2238,7 +2238,7 @@ name|dp
 operator|->
 name|dp_tx
 decl_stmt|;
-name|int
+name|clock_t
 name|timeout
 init|=
 name|ddi_get_lbolt

@@ -878,8 +878,8 @@ argument_list|(
 name|s
 operator|->
 name|s_size
-operator|>
-literal|1
+operator|>=
+literal|0
 argument_list|,
 operator|(
 literal|"attempt to create a too small sbuf"

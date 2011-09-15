@@ -11232,13 +11232,13 @@ name|sc_if
 decl_stmt|;
 endif|#
 directive|endif
+endif|#
+directive|endif
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|ip
 modifier|*

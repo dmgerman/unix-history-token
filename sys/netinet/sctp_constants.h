@@ -2250,13 +2250,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_ADDR_NOT_REACHABLE
-value|0x002
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTP_ADDR_NOHB
 value|0x004
 end_define
@@ -2278,29 +2271,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_ADDR_WAS_PRIMARY
-value|0x020
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_ADDR_SWITCH_PRIMARY
-value|0x040
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTP_ADDR_OUT_OF_SCOPE
 value|0x080
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_ADDR_DOUBLE_SWITCH
-value|0x100
 end_define
 
 begin_define
@@ -2595,43 +2567,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_TIMER_TYPE_EARLYFR
-value|17
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTP_TIMER_TYPE_ASOCKILL
-value|18
+value|16
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_TIMER_TYPE_ADDR_WQ
-value|19
+value|17
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_TIMER_TYPE_ZERO_COPY
-value|20
+value|18
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_TIMER_TYPE_ZCOPY_SENDQ
-value|21
+value|19
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_TIMER_TYPE_PRIM_DELETED
-value|22
+value|20
 end_define
 
 begin_comment
@@ -2642,7 +2607,7 @@ begin_define
 define|#
 directive|define
 name|SCTP_TIMER_TYPE_LAST
-value|23
+value|21
 end_define
 
 begin_define
@@ -2839,11 +2804,11 @@ begin_define
 define|#
 directive|define
 name|SCTP_RTO_LOWER_BOUND
-value|(300)
+value|(1000)
 end_define
 
 begin_comment
-comment|/* 0.3 sec is ms */
+comment|/* 1 sec is ms */
 end_comment
 
 begin_define
@@ -2903,6 +2868,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCTP_DEF_PATH_PF_THRESHOLD
+value|SCTP_DEF_MAX_PATH_RTX
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCTP_DEF_PMTU_RAISE_SEC
 value|600
 end_define
@@ -2945,7 +2917,7 @@ begin_define
 define|#
 directive|define
 name|SCTP_ADDRMAX
-value|24
+value|16
 end_define
 
 begin_comment

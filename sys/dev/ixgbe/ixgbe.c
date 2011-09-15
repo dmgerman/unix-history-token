@@ -17785,6 +17785,13 @@ name|IXGBE_SRRCTL_BSIZEHDRSIZE_SHIFT
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|BSIZEPKT_ROUNDUP
+value|((1<<IXGBE_SRRCTL_BSIZEPKT_SHIFT)-1)
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -17941,9 +17948,13 @@ argument_list|)
 expr_stmt|;
 name|bufsz
 operator|=
+operator|(
 name|adapter
 operator|->
 name|rx_mbuf_sz
+operator|+
+name|BSIZEPKT_ROUNDUP
+operator|)
 operator|>>
 name|IXGBE_SRRCTL_BSIZEPKT_SHIFT
 expr_stmt|;
@@ -19740,7 +19751,15 @@ name|sendmp
 operator|!=
 name|NULL
 condition|)
+block|{
 comment|/* secondary frag */
+name|mp
+operator|->
+name|m_flags
+operator|&=
+operator|~
+name|M_PKTHDR
+expr_stmt|;
 name|sendmp
 operator|->
 name|m_pkthdr
@@ -19751,6 +19770,7 @@ name|mp
 operator|->
 name|m_len
 expr_stmt|;
+block|}
 else|else
 block|{
 comment|/* first desc of a non-ps chain */

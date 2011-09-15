@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cpuset.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/gmon.h>
 end_include
 
@@ -5634,19 +5640,18 @@ expr_stmt|;
 comment|/* Filter on the CPU id. */
 if|if
 condition|(
+operator|!
+name|CPU_ISSET
+argument_list|(
+name|cpu
+argument_list|,
+operator|&
 operator|(
 name|args
 operator|.
 name|pa_cpumask
-operator|&
-operator|(
-literal|1
-operator|<<
-name|cpu
 operator|)
-operator|)
-operator|==
-literal|0
+argument_list|)
 condition|)
 block|{
 name|pmcstat_stats

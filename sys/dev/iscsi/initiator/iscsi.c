@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -1982,6 +1988,8 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
+name|CAP_SOCK_ALL
+argument_list|,
 operator|&
 name|sp
 operator|->
@@ -2005,6 +2013,8 @@ argument_list|(
 name|td
 argument_list|,
 name|fd
+argument_list|,
+name|CAP_SOCK_ALL
 argument_list|,
 operator|&
 name|sp

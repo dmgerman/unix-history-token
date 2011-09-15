@@ -3809,6 +3809,10 @@ name|dev
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|dev_unlock
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|res
