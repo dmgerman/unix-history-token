@@ -6009,7 +6009,7 @@ name|hdr
 operator|->
 name|cmd_status
 operator|==
-literal|0xff
+name|MFI_STAT_INVALID_STATUS
 condition|)
 block|{
 name|sc
@@ -7367,7 +7367,7 @@ name|hdr
 operator|->
 name|cmd_status
 operator|!=
-literal|0
+name|MFI_STAT_OK
 operator|)
 operator|||
 operator|(
@@ -8089,7 +8089,7 @@ name|hdr
 operator|->
 name|cmd_status
 operator|=
-literal|0xff
+name|MFI_STAT_INVALID_STATUS
 expr_stmt|;
 name|hdr
 operator|->
@@ -8152,7 +8152,7 @@ name|hdr
 operator|->
 name|cmd_status
 operator|==
-literal|0xff
+name|MFI_STAT_INVALID_STATUS
 condition|)
 block|{
 name|DELAY
@@ -8178,7 +8178,7 @@ name|hdr
 operator|->
 name|cmd_status
 operator|==
-literal|0xff
+name|MFI_STAT_INVALID_STATUS
 condition|)
 block|{
 name|device_printf
