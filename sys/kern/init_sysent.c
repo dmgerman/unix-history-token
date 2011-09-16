@@ -201,7 +201,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sys_exit
+name|sys_sys_exit
 block|,
 name|AUE_EXIT
 block|,
@@ -224,7 +224,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|fork
+name|sys_fork
 block|,
 name|AUE_FORK
 block|,
@@ -250,7 +250,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|read
+name|sys_read
 block|,
 name|AUE_NULL
 block|,
@@ -276,7 +276,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|write
+name|sys_write
 block|,
 name|AUE_NULL
 block|,
@@ -302,7 +302,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|open
+name|sys_open
 block|,
 name|AUE_OPEN_RWTC
 block|,
@@ -328,7 +328,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|close
+name|sys_close
 block|,
 name|AUE_CLOSE
 block|,
@@ -354,7 +354,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|wait4
+name|sys_wait4
 block|,
 name|AUE_WAIT4
 block|,
@@ -405,7 +405,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|link
+name|sys_link
 block|,
 name|AUE_LINK
 block|,
@@ -431,7 +431,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|unlink
+name|sys_unlink
 block|,
 name|AUE_UNLINK
 block|,
@@ -480,7 +480,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|chdir
+name|sys_chdir
 block|,
 name|AUE_CHDIR
 block|,
@@ -506,7 +506,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|fchdir
+name|sys_fchdir
 block|,
 name|AUE_FCHDIR
 block|,
@@ -532,7 +532,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|mknod
+name|sys_mknod
 block|,
 name|AUE_MKNOD
 block|,
@@ -558,7 +558,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|chmod
+name|sys_chmod
 block|,
 name|AUE_CHMOD
 block|,
@@ -584,7 +584,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|chown
+name|sys_chown
 block|,
 name|AUE_CHOWN
 block|,
@@ -610,7 +610,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|obreak
+name|sys_obreak
 block|,
 name|AUE_NULL
 block|,
@@ -683,7 +683,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getpid
+name|sys_getpid
 block|,
 name|AUE_GETPID
 block|,
@@ -709,7 +709,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|mount
+name|sys_mount
 block|,
 name|AUE_MOUNT
 block|,
@@ -735,7 +735,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|unmount
+name|sys_unmount
 block|,
 name|AUE_UMOUNT
 block|,
@@ -761,7 +761,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|setuid
+name|sys_setuid
 block|,
 name|AUE_SETUID
 block|,
@@ -784,7 +784,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getuid
+name|sys_getuid
 block|,
 name|AUE_GETUID
 block|,
@@ -807,7 +807,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|geteuid
+name|sys_geteuid
 block|,
 name|AUE_GETEUID
 block|,
@@ -833,7 +833,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|ptrace
+name|sys_ptrace
 block|,
 name|AUE_PTRACE
 block|,
@@ -859,7 +859,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|recvmsg
+name|sys_recvmsg
 block|,
 name|AUE_RECVMSG
 block|,
@@ -885,7 +885,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sendmsg
+name|sys_sendmsg
 block|,
 name|AUE_SENDMSG
 block|,
@@ -911,7 +911,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|recvfrom
+name|sys_recvfrom
 block|,
 name|AUE_RECVFROM
 block|,
@@ -937,7 +937,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|accept
+name|sys_accept
 block|,
 name|AUE_ACCEPT
 block|,
@@ -963,7 +963,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getpeername
+name|sys_getpeername
 block|,
 name|AUE_GETPEERNAME
 block|,
@@ -989,7 +989,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getsockname
+name|sys_getsockname
 block|,
 name|AUE_GETSOCKNAME
 block|,
@@ -1015,7 +1015,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|access
+name|sys_access
 block|,
 name|AUE_ACCESS
 block|,
@@ -1041,7 +1041,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|chflags
+name|sys_chflags
 block|,
 name|AUE_CHFLAGS
 block|,
@@ -1067,7 +1067,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|fchflags
+name|sys_fchflags
 block|,
 name|AUE_FCHFLAGS
 block|,
@@ -1090,7 +1090,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sync
+name|sys_sync
 block|,
 name|AUE_SYNC
 block|,
@@ -1116,7 +1116,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|kill
+name|sys_kill
 block|,
 name|AUE_KILL
 block|,
@@ -1164,7 +1164,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getppid
+name|sys_getppid
 block|,
 name|AUE_GETPPID
 block|,
@@ -1215,7 +1215,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|dup
+name|sys_dup
 block|,
 name|AUE_DUP
 block|,
@@ -1238,7 +1238,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|pipe
+name|sys_pipe
 block|,
 name|AUE_PIPE
 block|,
@@ -1261,7 +1261,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getegid
+name|sys_getegid
 block|,
 name|AUE_GETEGID
 block|,
@@ -1287,7 +1287,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|profil
+name|sys_profil
 block|,
 name|AUE_PROFILE
 block|,
@@ -1313,7 +1313,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|ktrace
+name|sys_ktrace
 block|,
 name|AUE_KTRACE
 block|,
@@ -1361,7 +1361,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getgid
+name|sys_getgid
 block|,
 name|AUE_GETGID
 block|,
@@ -1412,7 +1412,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getlogin
+name|sys_getlogin
 block|,
 name|AUE_GETLOGIN
 block|,
@@ -1438,7 +1438,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|setlogin
+name|sys_setlogin
 block|,
 name|AUE_SETLOGIN
 block|,
@@ -1464,7 +1464,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|acct
+name|sys_acct
 block|,
 name|AUE_ACCT
 block|,
@@ -1512,7 +1512,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sigaltstack
+name|sys_sigaltstack
 block|,
 name|AUE_SIGALTSTACK
 block|,
@@ -1538,7 +1538,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|ioctl
+name|sys_ioctl
 block|,
 name|AUE_IOCTL
 block|,
@@ -1564,7 +1564,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|reboot
+name|sys_reboot
 block|,
 name|AUE_REBOOT
 block|,
@@ -1590,7 +1590,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|revoke
+name|sys_revoke
 block|,
 name|AUE_REVOKE
 block|,
@@ -1616,7 +1616,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|symlink
+name|sys_symlink
 block|,
 name|AUE_SYMLINK
 block|,
@@ -1642,7 +1642,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|readlink
+name|sys_readlink
 block|,
 name|AUE_READLINK
 block|,
@@ -1668,7 +1668,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|execve
+name|sys_execve
 block|,
 name|AUE_EXECVE
 block|,
@@ -1694,7 +1694,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|umask
+name|sys_umask
 block|,
 name|AUE_UMASK
 block|,
@@ -1720,7 +1720,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|chroot
+name|sys_chroot
 block|,
 name|AUE_CHROOT
 block|,
@@ -1818,7 +1818,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|msync
+name|sys_msync
 block|,
 name|AUE_MSYNC
 block|,
@@ -1841,7 +1841,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|vfork
+name|sys_vfork
 block|,
 name|AUE_VFORK
 block|,
@@ -1913,7 +1913,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sbrk
+name|sys_sbrk
 block|,
 name|AUE_SBRK
 block|,
@@ -1939,7 +1939,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sstk
+name|sys_sstk
 block|,
 name|AUE_SSTK
 block|,
@@ -1990,7 +1990,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|ovadvise
+name|sys_ovadvise
 block|,
 name|AUE_O_VADVISE
 block|,
@@ -2016,7 +2016,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|munmap
+name|sys_munmap
 block|,
 name|AUE_MUNMAP
 block|,
@@ -2042,7 +2042,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|mprotect
+name|sys_mprotect
 block|,
 name|AUE_MPROTECT
 block|,
@@ -2068,7 +2068,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|madvise
+name|sys_madvise
 block|,
 name|AUE_MADVISE
 block|,
@@ -2140,7 +2140,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|mincore
+name|sys_mincore
 block|,
 name|AUE_MINCORE
 block|,
@@ -2166,7 +2166,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getgroups
+name|sys_getgroups
 block|,
 name|AUE_GETGROUPS
 block|,
@@ -2192,7 +2192,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|setgroups
+name|sys_setgroups
 block|,
 name|AUE_SETGROUPS
 block|,
@@ -2215,7 +2215,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getpgrp
+name|sys_getpgrp
 block|,
 name|AUE_GETPGRP
 block|,
@@ -2241,7 +2241,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|setpgid
+name|sys_setpgid
 block|,
 name|AUE_SETPGRP
 block|,
@@ -2267,7 +2267,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|setitimer
+name|sys_setitimer
 block|,
 name|AUE_SETITIMER
 block|,
@@ -2315,7 +2315,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|swapon
+name|sys_swapon
 block|,
 name|AUE_SWAPON
 block|,
@@ -2341,7 +2341,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getitimer
+name|sys_getitimer
 block|,
 name|AUE_GETITIMER
 block|,
@@ -2414,7 +2414,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getdtablesize
+name|sys_getdtablesize
 block|,
 name|AUE_GETDTABLESIZE
 block|,
@@ -2440,7 +2440,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|dup2
+name|sys_dup2
 block|,
 name|AUE_DUP2
 block|,
@@ -2489,7 +2489,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|fcntl
+name|sys_fcntl
 block|,
 name|AUE_FCNTL
 block|,
@@ -2515,7 +2515,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|select
+name|sys_select
 block|,
 name|AUE_SELECT
 block|,
@@ -2564,7 +2564,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|fsync
+name|sys_fsync
 block|,
 name|AUE_FSYNC
 block|,
@@ -2590,7 +2590,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|setpriority
+name|sys_setpriority
 block|,
 name|AUE_SETPRIORITY
 block|,
@@ -2616,7 +2616,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|socket
+name|sys_socket
 block|,
 name|AUE_SOCKET
 block|,
@@ -2642,7 +2642,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|connect
+name|sys_connect
 block|,
 name|AUE_CONNECT
 block|,
@@ -2693,7 +2693,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getpriority
+name|sys_getpriority
 block|,
 name|AUE_GETPRIORITY
 block|,
@@ -2794,7 +2794,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|bind
+name|sys_bind
 block|,
 name|AUE_BIND
 block|,
@@ -2820,7 +2820,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|setsockopt
+name|sys_setsockopt
 block|,
 name|AUE_SETSOCKOPT
 block|,
@@ -2846,7 +2846,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|listen
+name|sys_listen
 block|,
 name|AUE_LISTEN
 block|,
@@ -3093,7 +3093,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|gettimeofday
+name|sys_gettimeofday
 block|,
 name|AUE_GETTIMEOFDAY
 block|,
@@ -3119,7 +3119,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getrusage
+name|sys_getrusage
 block|,
 name|AUE_GETRUSAGE
 block|,
@@ -3145,7 +3145,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getsockopt
+name|sys_getsockopt
 block|,
 name|AUE_GETSOCKOPT
 block|,
@@ -3194,7 +3194,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|readv
+name|sys_readv
 block|,
 name|AUE_READV
 block|,
@@ -3220,7 +3220,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|writev
+name|sys_writev
 block|,
 name|AUE_WRITEV
 block|,
@@ -3246,7 +3246,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|settimeofday
+name|sys_settimeofday
 block|,
 name|AUE_SETTIMEOFDAY
 block|,
@@ -3272,7 +3272,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|fchown
+name|sys_fchown
 block|,
 name|AUE_FCHOWN
 block|,
@@ -3298,7 +3298,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|fchmod
+name|sys_fchmod
 block|,
 name|AUE_FCHMOD
 block|,
@@ -3349,7 +3349,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|setreuid
+name|sys_setreuid
 block|,
 name|AUE_SETREUID
 block|,
@@ -3375,7 +3375,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|setregid
+name|sys_setregid
 block|,
 name|AUE_SETREGID
 block|,
@@ -3401,7 +3401,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|rename
+name|sys_rename
 block|,
 name|AUE_RENAME
 block|,
@@ -3477,7 +3477,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|flock
+name|sys_flock
 block|,
 name|AUE_FLOCK
 block|,
@@ -3503,7 +3503,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|mkfifo
+name|sys_mkfifo
 block|,
 name|AUE_MKFIFO
 block|,
@@ -3529,7 +3529,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sendto
+name|sys_sendto
 block|,
 name|AUE_SENDTO
 block|,
@@ -3555,7 +3555,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|shutdown
+name|sys_shutdown
 block|,
 name|AUE_SHUTDOWN
 block|,
@@ -3581,7 +3581,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|socketpair
+name|sys_socketpair
 block|,
 name|AUE_SOCKETPAIR
 block|,
@@ -3607,7 +3607,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|mkdir
+name|sys_mkdir
 block|,
 name|AUE_MKDIR
 block|,
@@ -3633,7 +3633,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|rmdir
+name|sys_rmdir
 block|,
 name|AUE_RMDIR
 block|,
@@ -3659,7 +3659,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|utimes
+name|sys_utimes
 block|,
 name|AUE_UTIMES
 block|,
@@ -3708,7 +3708,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|adjtime
+name|sys_adjtime
 block|,
 name|AUE_ADJTIME
 block|,
@@ -3878,7 +3878,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|setsid
+name|sys_setsid
 block|,
 name|AUE_SETSID
 block|,
@@ -3904,7 +3904,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|quotactl
+name|sys_quotactl
 block|,
 name|AUE_QUOTACTL
 block|,
@@ -4196,7 +4196,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|lgetfh
+name|sys_lgetfh
 block|,
 name|AUE_LGETFH
 block|,
@@ -4222,7 +4222,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getfh
+name|sys_getfh
 block|,
 name|AUE_NFS_GETFH
 block|,
@@ -4349,7 +4349,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|rtprio
+name|sys_rtprio
 block|,
 name|AUE_RTPRIO
 block|,
@@ -4574,7 +4574,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|setfib
+name|sys_setfib
 block|,
 name|AUE_NULL
 block|,
@@ -4600,7 +4600,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|ntp_adjtime
+name|sys_ntp_adjtime
 block|,
 name|AUE_NTP_ADJTIME
 block|,
@@ -4718,7 +4718,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|setgid
+name|sys_setgid
 block|,
 name|AUE_SETGID
 block|,
@@ -4744,7 +4744,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|setegid
+name|sys_setegid
 block|,
 name|AUE_SETEGID
 block|,
@@ -4770,7 +4770,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|seteuid
+name|sys_seteuid
 block|,
 name|AUE_SETEUID
 block|,
@@ -4888,7 +4888,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|stat
+name|sys_stat
 block|,
 name|AUE_STAT
 block|,
@@ -4914,7 +4914,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|fstat
+name|sys_fstat
 block|,
 name|AUE_FSTAT
 block|,
@@ -4940,7 +4940,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|lstat
+name|sys_lstat
 block|,
 name|AUE_LSTAT
 block|,
@@ -4966,7 +4966,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|pathconf
+name|sys_pathconf
 block|,
 name|AUE_PATHCONF
 block|,
@@ -4992,7 +4992,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|fpathconf
+name|sys_fpathconf
 block|,
 name|AUE_FPATHCONF
 block|,
@@ -5041,7 +5041,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getrlimit
+name|sys_getrlimit
 block|,
 name|AUE_GETRLIMIT
 block|,
@@ -5067,7 +5067,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|setrlimit
+name|sys_setrlimit
 block|,
 name|AUE_SETRLIMIT
 block|,
@@ -5093,7 +5093,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getdirentries
+name|sys_getdirentries
 block|,
 name|AUE_GETDIRENTRIES
 block|,
@@ -5246,7 +5246,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|__sysctl
+name|sys___sysctl
 block|,
 name|AUE_SYSCTL
 block|,
@@ -5272,7 +5272,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|mlock
+name|sys_mlock
 block|,
 name|AUE_MLOCK
 block|,
@@ -5298,7 +5298,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|munlock
+name|sys_munlock
 block|,
 name|AUE_MUNLOCK
 block|,
@@ -5324,7 +5324,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|undelete
+name|sys_undelete
 block|,
 name|AUE_UNDELETE
 block|,
@@ -5350,7 +5350,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|futimes
+name|sys_futimes
 block|,
 name|AUE_FUTIMES
 block|,
@@ -5376,7 +5376,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getpgid
+name|sys_getpgid
 block|,
 name|AUE_GETPGID
 block|,
@@ -5425,7 +5425,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|poll
+name|sys_poll
 block|,
 name|AUE_POLL
 block|,
@@ -6011,7 +6011,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|clock_gettime
+name|sys_clock_gettime
 block|,
 name|AUE_NULL
 block|,
@@ -6037,7 +6037,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|clock_settime
+name|sys_clock_settime
 block|,
 name|AUE_CLOCK_SETTIME
 block|,
@@ -6063,7 +6063,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|clock_getres
+name|sys_clock_getres
 block|,
 name|AUE_NULL
 block|,
@@ -6089,7 +6089,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|ktimer_create
+name|sys_ktimer_create
 block|,
 name|AUE_NULL
 block|,
@@ -6115,7 +6115,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|ktimer_delete
+name|sys_ktimer_delete
 block|,
 name|AUE_NULL
 block|,
@@ -6141,7 +6141,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|ktimer_settime
+name|sys_ktimer_settime
 block|,
 name|AUE_NULL
 block|,
@@ -6167,7 +6167,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|ktimer_gettime
+name|sys_ktimer_gettime
 block|,
 name|AUE_NULL
 block|,
@@ -6193,7 +6193,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|ktimer_getoverrun
+name|sys_ktimer_getoverrun
 block|,
 name|AUE_NULL
 block|,
@@ -6219,7 +6219,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nanosleep
+name|sys_nanosleep
 block|,
 name|AUE_NULL
 block|,
@@ -6406,7 +6406,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|ntp_gettime
+name|sys_ntp_gettime
 block|,
 name|AUE_NULL
 block|,
@@ -6455,7 +6455,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|minherit
+name|sys_minherit
 block|,
 name|AUE_MINHERIT
 block|,
@@ -6481,7 +6481,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|rfork
+name|sys_rfork
 block|,
 name|AUE_RFORK
 block|,
@@ -6507,7 +6507,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|openbsd_poll
+name|sys_openbsd_poll
 block|,
 name|AUE_POLL
 block|,
@@ -6530,7 +6530,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|issetugid
+name|sys_issetugid
 block|,
 name|AUE_ISSETUGID
 block|,
@@ -6556,7 +6556,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|lchown
+name|sys_lchown
 block|,
 name|AUE_LCHOWN
 block|,
@@ -6982,7 +6982,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getdents
+name|sys_getdents
 block|,
 name|AUE_O_GETDENTS
 block|,
@@ -7031,7 +7031,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|lchmod
+name|sys_lchmod
 block|,
 name|AUE_LCHMOD
 block|,
@@ -7057,7 +7057,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|lchown
+name|sys_lchown
 block|,
 name|AUE_LCHOWN
 block|,
@@ -7083,7 +7083,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|lutimes
+name|sys_lutimes
 block|,
 name|AUE_LUTIMES
 block|,
@@ -7109,7 +7109,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|msync
+name|sys_msync
 block|,
 name|AUE_MSYNC
 block|,
@@ -7135,7 +7135,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nstat
+name|sys_nstat
 block|,
 name|AUE_STAT
 block|,
@@ -7161,7 +7161,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nfstat
+name|sys_nfstat
 block|,
 name|AUE_FSTAT
 block|,
@@ -7187,7 +7187,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nlstat
+name|sys_nlstat
 block|,
 name|AUE_LSTAT
 block|,
@@ -7397,7 +7397,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|preadv
+name|sys_preadv
 block|,
 name|AUE_PREADV
 block|,
@@ -7423,7 +7423,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|pwritev
+name|sys_pwritev
 block|,
 name|AUE_PWRITEV
 block|,
@@ -7612,7 +7612,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|fhopen
+name|sys_fhopen
 block|,
 name|AUE_FHOPEN
 block|,
@@ -7638,7 +7638,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|fhstat
+name|sys_fhstat
 block|,
 name|AUE_FHSTAT
 block|,
@@ -7664,7 +7664,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|modnext
+name|sys_modnext
 block|,
 name|AUE_NULL
 block|,
@@ -7690,7 +7690,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|modstat
+name|sys_modstat
 block|,
 name|AUE_NULL
 block|,
@@ -7716,7 +7716,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|modfnext
+name|sys_modfnext
 block|,
 name|AUE_NULL
 block|,
@@ -7742,7 +7742,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|modfind
+name|sys_modfind
 block|,
 name|AUE_NULL
 block|,
@@ -7768,7 +7768,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|kldload
+name|sys_kldload
 block|,
 name|AUE_MODLOAD
 block|,
@@ -7794,7 +7794,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|kldunload
+name|sys_kldunload
 block|,
 name|AUE_MODUNLOAD
 block|,
@@ -7820,7 +7820,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|kldfind
+name|sys_kldfind
 block|,
 name|AUE_NULL
 block|,
@@ -7846,7 +7846,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|kldnext
+name|sys_kldnext
 block|,
 name|AUE_NULL
 block|,
@@ -7872,7 +7872,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|kldstat
+name|sys_kldstat
 block|,
 name|AUE_NULL
 block|,
@@ -7898,7 +7898,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|kldfirstmod
+name|sys_kldfirstmod
 block|,
 name|AUE_NULL
 block|,
@@ -7924,7 +7924,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getsid
+name|sys_getsid
 block|,
 name|AUE_GETSID
 block|,
@@ -7950,7 +7950,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|setresuid
+name|sys_setresuid
 block|,
 name|AUE_SETRESUID
 block|,
@@ -7976,7 +7976,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|setresgid
+name|sys_setresgid
 block|,
 name|AUE_SETRESGID
 block|,
@@ -8204,7 +8204,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|yield
+name|sys_yield
 block|,
 name|AUE_NULL
 block|,
@@ -8276,7 +8276,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|mlockall
+name|sys_mlockall
 block|,
 name|AUE_MLOCKALL
 block|,
@@ -8299,7 +8299,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|munlockall
+name|sys_munlockall
 block|,
 name|AUE_MUNLOCKALL
 block|,
@@ -8325,7 +8325,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|__getcwd
+name|sys___getcwd
 block|,
 name|AUE_GETCWD
 block|,
@@ -8351,7 +8351,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sched_setparam
+name|sys_sched_setparam
 block|,
 name|AUE_NULL
 block|,
@@ -8377,7 +8377,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sched_getparam
+name|sys_sched_getparam
 block|,
 name|AUE_NULL
 block|,
@@ -8403,7 +8403,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sched_setscheduler
+name|sys_sched_setscheduler
 block|,
 name|AUE_NULL
 block|,
@@ -8429,7 +8429,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sched_getscheduler
+name|sys_sched_getscheduler
 block|,
 name|AUE_NULL
 block|,
@@ -8452,7 +8452,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sched_yield
+name|sys_sched_yield
 block|,
 name|AUE_NULL
 block|,
@@ -8478,7 +8478,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sched_get_priority_max
+name|sys_sched_get_priority_max
 block|,
 name|AUE_NULL
 block|,
@@ -8504,7 +8504,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sched_get_priority_min
+name|sys_sched_get_priority_min
 block|,
 name|AUE_NULL
 block|,
@@ -8530,7 +8530,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sched_rr_get_interval
+name|sys_sched_rr_get_interval
 block|,
 name|AUE_NULL
 block|,
@@ -8556,7 +8556,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|utrace
+name|sys_utrace
 block|,
 name|AUE_NULL
 block|,
@@ -8607,7 +8607,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|kldsym
+name|sys_kldsym
 block|,
 name|AUE_NULL
 block|,
@@ -8633,7 +8633,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|jail
+name|sys_jail
 block|,
 name|AUE_JAIL
 block|,
@@ -8685,7 +8685,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sigprocmask
+name|sys_sigprocmask
 block|,
 name|AUE_SIGPROCMASK
 block|,
@@ -8711,7 +8711,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sigsuspend
+name|sys_sigsuspend
 block|,
 name|AUE_SIGSUSPEND
 block|,
@@ -8762,7 +8762,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sigpending
+name|sys_sigpending
 block|,
 name|AUE_SIGPENDING
 block|,
@@ -8813,7 +8813,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sigtimedwait
+name|sys_sigtimedwait
 block|,
 name|AUE_SIGWAIT
 block|,
@@ -8839,7 +8839,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sigwaitinfo
+name|sys_sigwaitinfo
 block|,
 name|AUE_NULL
 block|,
@@ -8865,7 +8865,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|__acl_get_file
+name|sys___acl_get_file
 block|,
 name|AUE_NULL
 block|,
@@ -8891,7 +8891,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|__acl_set_file
+name|sys___acl_set_file
 block|,
 name|AUE_NULL
 block|,
@@ -8917,7 +8917,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|__acl_get_fd
+name|sys___acl_get_fd
 block|,
 name|AUE_NULL
 block|,
@@ -8943,7 +8943,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|__acl_set_fd
+name|sys___acl_set_fd
 block|,
 name|AUE_NULL
 block|,
@@ -8969,7 +8969,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|__acl_delete_file
+name|sys___acl_delete_file
 block|,
 name|AUE_NULL
 block|,
@@ -8995,7 +8995,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|__acl_delete_fd
+name|sys___acl_delete_fd
 block|,
 name|AUE_NULL
 block|,
@@ -9021,7 +9021,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|__acl_aclcheck_file
+name|sys___acl_aclcheck_file
 block|,
 name|AUE_NULL
 block|,
@@ -9047,7 +9047,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|__acl_aclcheck_fd
+name|sys___acl_aclcheck_fd
 block|,
 name|AUE_NULL
 block|,
@@ -9073,7 +9073,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|extattrctl
+name|sys_extattrctl
 block|,
 name|AUE_EXTATTRCTL
 block|,
@@ -9099,7 +9099,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|extattr_set_file
+name|sys_extattr_set_file
 block|,
 name|AUE_EXTATTR_SET_FILE
 block|,
@@ -9125,7 +9125,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|extattr_get_file
+name|sys_extattr_get_file
 block|,
 name|AUE_EXTATTR_GET_FILE
 block|,
@@ -9151,7 +9151,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|extattr_delete_file
+name|sys_extattr_delete_file
 block|,
 name|AUE_EXTATTR_DELETE_FILE
 block|,
@@ -9203,7 +9203,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getresuid
+name|sys_getresuid
 block|,
 name|AUE_GETRESUID
 block|,
@@ -9229,7 +9229,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getresgid
+name|sys_getresgid
 block|,
 name|AUE_GETRESGID
 block|,
@@ -9252,7 +9252,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|kqueue
+name|sys_kqueue
 block|,
 name|AUE_KQUEUE
 block|,
@@ -9278,7 +9278,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|kevent
+name|sys_kevent
 block|,
 name|AUE_NULL
 block|,
@@ -9465,7 +9465,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|extattr_set_fd
+name|sys_extattr_set_fd
 block|,
 name|AUE_EXTATTR_SET_FD
 block|,
@@ -9491,7 +9491,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|extattr_get_fd
+name|sys_extattr_get_fd
 block|,
 name|AUE_EXTATTR_GET_FD
 block|,
@@ -9517,7 +9517,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|extattr_delete_fd
+name|sys_extattr_delete_fd
 block|,
 name|AUE_EXTATTR_DELETE_FD
 block|,
@@ -9543,7 +9543,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|__setugid
+name|sys___setugid
 block|,
 name|AUE_NULL
 block|,
@@ -9592,7 +9592,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|eaccess
+name|sys_eaccess
 block|,
 name|AUE_EACCESS
 block|,
@@ -9644,7 +9644,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nmount
+name|sys_nmount
 block|,
 name|AUE_NMOUNT
 block|,
@@ -9785,7 +9785,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|__mac_get_proc
+name|sys___mac_get_proc
 block|,
 name|AUE_NULL
 block|,
@@ -9811,7 +9811,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|__mac_set_proc
+name|sys___mac_set_proc
 block|,
 name|AUE_NULL
 block|,
@@ -9837,7 +9837,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|__mac_get_fd
+name|sys___mac_get_fd
 block|,
 name|AUE_NULL
 block|,
@@ -9863,7 +9863,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|__mac_get_file
+name|sys___mac_get_file
 block|,
 name|AUE_NULL
 block|,
@@ -9889,7 +9889,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|__mac_set_fd
+name|sys___mac_set_fd
 block|,
 name|AUE_NULL
 block|,
@@ -9915,7 +9915,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|__mac_set_file
+name|sys___mac_set_file
 block|,
 name|AUE_NULL
 block|,
@@ -9941,7 +9941,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|kenv
+name|sys_kenv
 block|,
 name|AUE_NULL
 block|,
@@ -9967,7 +9967,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|lchflags
+name|sys_lchflags
 block|,
 name|AUE_LCHFLAGS
 block|,
@@ -9993,7 +9993,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|uuidgen
+name|sys_uuidgen
 block|,
 name|AUE_NULL
 block|,
@@ -10019,7 +10019,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sendfile
+name|sys_sendfile
 block|,
 name|AUE_SENDFILE
 block|,
@@ -10045,7 +10045,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|mac_syscall
+name|sys_mac_syscall
 block|,
 name|AUE_NULL
 block|,
@@ -10071,7 +10071,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getfsstat
+name|sys_getfsstat
 block|,
 name|AUE_GETFSSTAT
 block|,
@@ -10097,7 +10097,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|statfs
+name|sys_statfs
 block|,
 name|AUE_STATFS
 block|,
@@ -10123,7 +10123,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|fstatfs
+name|sys_fstatfs
 block|,
 name|AUE_FSTATFS
 block|,
@@ -10149,7 +10149,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|fhstatfs
+name|sys_fhstatfs
 block|,
 name|AUE_FHSTATFS
 block|,
@@ -10432,7 +10432,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|__mac_get_pid
+name|sys___mac_get_pid
 block|,
 name|AUE_NULL
 block|,
@@ -10458,7 +10458,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|__mac_get_link
+name|sys___mac_get_link
 block|,
 name|AUE_NULL
 block|,
@@ -10484,7 +10484,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|__mac_set_link
+name|sys___mac_set_link
 block|,
 name|AUE_NULL
 block|,
@@ -10510,7 +10510,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|extattr_set_link
+name|sys_extattr_set_link
 block|,
 name|AUE_EXTATTR_SET_LINK
 block|,
@@ -10536,7 +10536,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|extattr_get_link
+name|sys_extattr_get_link
 block|,
 name|AUE_EXTATTR_GET_LINK
 block|,
@@ -10562,7 +10562,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|extattr_delete_link
+name|sys_extattr_delete_link
 block|,
 name|AUE_EXTATTR_DELETE_LINK
 block|,
@@ -10588,7 +10588,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|__mac_execve
+name|sys___mac_execve
 block|,
 name|AUE_NULL
 block|,
@@ -10614,7 +10614,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sigaction
+name|sys_sigaction
 block|,
 name|AUE_SIGACTION
 block|,
@@ -10640,7 +10640,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sigreturn
+name|sys_sigreturn
 block|,
 name|AUE_SIGRETURN
 block|,
@@ -10735,7 +10735,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getcontext
+name|sys_getcontext
 block|,
 name|AUE_NULL
 block|,
@@ -10761,7 +10761,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|setcontext
+name|sys_setcontext
 block|,
 name|AUE_NULL
 block|,
@@ -10787,7 +10787,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|swapcontext
+name|sys_swapcontext
 block|,
 name|AUE_NULL
 block|,
@@ -10813,7 +10813,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|swapoff
+name|sys_swapoff
 block|,
 name|AUE_SWAPOFF
 block|,
@@ -10839,7 +10839,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|__acl_get_link
+name|sys___acl_get_link
 block|,
 name|AUE_NULL
 block|,
@@ -10865,7 +10865,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|__acl_set_link
+name|sys___acl_set_link
 block|,
 name|AUE_NULL
 block|,
@@ -10891,7 +10891,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|__acl_delete_link
+name|sys___acl_delete_link
 block|,
 name|AUE_NULL
 block|,
@@ -10917,7 +10917,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|__acl_aclcheck_link
+name|sys___acl_aclcheck_link
 block|,
 name|AUE_NULL
 block|,
@@ -10943,7 +10943,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sigwait
+name|sys_sigwait
 block|,
 name|AUE_SIGWAIT
 block|,
@@ -10969,7 +10969,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|thr_create
+name|sys_thr_create
 block|,
 name|AUE_NULL
 block|,
@@ -10995,7 +10995,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|thr_exit
+name|sys_thr_exit
 block|,
 name|AUE_NULL
 block|,
@@ -11021,7 +11021,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|thr_self
+name|sys_thr_self
 block|,
 name|AUE_NULL
 block|,
@@ -11047,7 +11047,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|thr_kill
+name|sys_thr_kill
 block|,
 name|AUE_NULL
 block|,
@@ -11073,7 +11073,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|_umtx_lock
+name|sys__umtx_lock
 block|,
 name|AUE_NULL
 block|,
@@ -11099,7 +11099,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|_umtx_unlock
+name|sys__umtx_unlock
 block|,
 name|AUE_NULL
 block|,
@@ -11125,7 +11125,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|jail_attach
+name|sys_jail_attach
 block|,
 name|AUE_NULL
 block|,
@@ -11151,7 +11151,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|extattr_list_fd
+name|sys_extattr_list_fd
 block|,
 name|AUE_EXTATTR_LIST_FD
 block|,
@@ -11177,7 +11177,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|extattr_list_file
+name|sys_extattr_list_file
 block|,
 name|AUE_EXTATTR_LIST_FILE
 block|,
@@ -11203,7 +11203,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|extattr_list_link
+name|sys_extattr_list_link
 block|,
 name|AUE_EXTATTR_LIST_LINK
 block|,
@@ -11278,7 +11278,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|thr_suspend
+name|sys_thr_suspend
 block|,
 name|AUE_NULL
 block|,
@@ -11304,7 +11304,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|thr_wake
+name|sys_thr_wake
 block|,
 name|AUE_NULL
 block|,
@@ -11330,7 +11330,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|kldunloadf
+name|sys_kldunloadf
 block|,
 name|AUE_MODUNLOAD
 block|,
@@ -11356,7 +11356,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|audit
+name|sys_audit
 block|,
 name|AUE_AUDIT
 block|,
@@ -11382,7 +11382,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|auditon
+name|sys_auditon
 block|,
 name|AUE_AUDITON
 block|,
@@ -11408,7 +11408,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getauid
+name|sys_getauid
 block|,
 name|AUE_GETAUID
 block|,
@@ -11434,7 +11434,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|setauid
+name|sys_setauid
 block|,
 name|AUE_SETAUID
 block|,
@@ -11460,7 +11460,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getaudit
+name|sys_getaudit
 block|,
 name|AUE_GETAUDIT
 block|,
@@ -11486,7 +11486,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|setaudit
+name|sys_setaudit
 block|,
 name|AUE_SETAUDIT
 block|,
@@ -11512,7 +11512,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getaudit_addr
+name|sys_getaudit_addr
 block|,
 name|AUE_GETAUDIT_ADDR
 block|,
@@ -11538,7 +11538,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|setaudit_addr
+name|sys_setaudit_addr
 block|,
 name|AUE_SETAUDIT_ADDR
 block|,
@@ -11564,7 +11564,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|auditctl
+name|sys_auditctl
 block|,
 name|AUE_AUDITCTL
 block|,
@@ -11590,7 +11590,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|_umtx_op
+name|sys__umtx_op
 block|,
 name|AUE_NULL
 block|,
@@ -11616,7 +11616,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|thr_new
+name|sys_thr_new
 block|,
 name|AUE_NULL
 block|,
@@ -11642,7 +11642,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sigqueue
+name|sys_sigqueue
 block|,
 name|AUE_NULL
 block|,
@@ -11824,7 +11824,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|abort2
+name|sys_abort2
 block|,
 name|AUE_NULL
 block|,
@@ -11850,7 +11850,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|thr_set_name
+name|sys_thr_set_name
 block|,
 name|AUE_NULL
 block|,
@@ -11902,7 +11902,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|rtprio_thread
+name|sys_rtprio_thread
 block|,
 name|AUE_RTPRIO
 block|,
@@ -12020,7 +12020,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sctp_peeloff
+name|sys_sctp_peeloff
 block|,
 name|AUE_NULL
 block|,
@@ -12046,7 +12046,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sctp_generic_sendmsg
+name|sys_sctp_generic_sendmsg
 block|,
 name|AUE_NULL
 block|,
@@ -12072,7 +12072,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sctp_generic_sendmsg_iov
+name|sys_sctp_generic_sendmsg_iov
 block|,
 name|AUE_NULL
 block|,
@@ -12098,7 +12098,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sctp_generic_recvmsg
+name|sys_sctp_generic_recvmsg
 block|,
 name|AUE_NULL
 block|,
@@ -12124,7 +12124,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|pread
+name|sys_pread
 block|,
 name|AUE_PREAD
 block|,
@@ -12150,7 +12150,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|pwrite
+name|sys_pwrite
 block|,
 name|AUE_PWRITE
 block|,
@@ -12176,7 +12176,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|mmap
+name|sys_mmap
 block|,
 name|AUE_MMAP
 block|,
@@ -12202,7 +12202,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|lseek
+name|sys_lseek
 block|,
 name|AUE_LSEEK
 block|,
@@ -12228,7 +12228,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|truncate
+name|sys_truncate
 block|,
 name|AUE_TRUNCATE
 block|,
@@ -12254,7 +12254,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|ftruncate
+name|sys_ftruncate
 block|,
 name|AUE_FTRUNCATE
 block|,
@@ -12280,7 +12280,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|thr_kill2
+name|sys_thr_kill2
 block|,
 name|AUE_KILL
 block|,
@@ -12306,7 +12306,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|shm_open
+name|sys_shm_open
 block|,
 name|AUE_SHMOPEN
 block|,
@@ -12332,7 +12332,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|shm_unlink
+name|sys_shm_unlink
 block|,
 name|AUE_SHMUNLINK
 block|,
@@ -12358,7 +12358,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|cpuset
+name|sys_cpuset
 block|,
 name|AUE_NULL
 block|,
@@ -12384,7 +12384,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|cpuset_setid
+name|sys_cpuset_setid
 block|,
 name|AUE_NULL
 block|,
@@ -12410,7 +12410,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|cpuset_getid
+name|sys_cpuset_getid
 block|,
 name|AUE_NULL
 block|,
@@ -12436,7 +12436,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|cpuset_getaffinity
+name|sys_cpuset_getaffinity
 block|,
 name|AUE_NULL
 block|,
@@ -12462,7 +12462,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|cpuset_setaffinity
+name|sys_cpuset_setaffinity
 block|,
 name|AUE_NULL
 block|,
@@ -12488,7 +12488,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|faccessat
+name|sys_faccessat
 block|,
 name|AUE_FACCESSAT
 block|,
@@ -12514,7 +12514,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|fchmodat
+name|sys_fchmodat
 block|,
 name|AUE_FCHMODAT
 block|,
@@ -12540,7 +12540,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|fchownat
+name|sys_fchownat
 block|,
 name|AUE_FCHOWNAT
 block|,
@@ -12566,7 +12566,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|fexecve
+name|sys_fexecve
 block|,
 name|AUE_FEXECVE
 block|,
@@ -12592,7 +12592,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|fstatat
+name|sys_fstatat
 block|,
 name|AUE_FSTATAT
 block|,
@@ -12618,7 +12618,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|futimesat
+name|sys_futimesat
 block|,
 name|AUE_FUTIMESAT
 block|,
@@ -12644,7 +12644,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|linkat
+name|sys_linkat
 block|,
 name|AUE_LINKAT
 block|,
@@ -12670,7 +12670,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|mkdirat
+name|sys_mkdirat
 block|,
 name|AUE_MKDIRAT
 block|,
@@ -12696,7 +12696,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|mkfifoat
+name|sys_mkfifoat
 block|,
 name|AUE_MKFIFOAT
 block|,
@@ -12722,7 +12722,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|mknodat
+name|sys_mknodat
 block|,
 name|AUE_MKNODAT
 block|,
@@ -12748,7 +12748,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|openat
+name|sys_openat
 block|,
 name|AUE_OPENAT_RWTC
 block|,
@@ -12774,7 +12774,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|readlinkat
+name|sys_readlinkat
 block|,
 name|AUE_READLINKAT
 block|,
@@ -12800,7 +12800,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|renameat
+name|sys_renameat
 block|,
 name|AUE_RENAMEAT
 block|,
@@ -12826,7 +12826,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|symlinkat
+name|sys_symlinkat
 block|,
 name|AUE_SYMLINKAT
 block|,
@@ -12852,7 +12852,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|unlinkat
+name|sys_unlinkat
 block|,
 name|AUE_UNLINKAT
 block|,
@@ -12878,7 +12878,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|posix_openpt
+name|sys_posix_openpt
 block|,
 name|AUE_POSIX_OPENPT
 block|,
@@ -12930,7 +12930,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|jail_get
+name|sys_jail_get
 block|,
 name|AUE_NULL
 block|,
@@ -12956,7 +12956,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|jail_set
+name|sys_jail_set
 block|,
 name|AUE_NULL
 block|,
@@ -12982,7 +12982,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|jail_remove
+name|sys_jail_remove
 block|,
 name|AUE_NULL
 block|,
@@ -13008,7 +13008,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|closefrom
+name|sys_closefrom
 block|,
 name|AUE_CLOSEFROM
 block|,
@@ -13112,7 +13112,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|lpathconf
+name|sys_lpathconf
 block|,
 name|AUE_LPATHCONF
 block|,
@@ -13138,7 +13138,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|cap_new
+name|sys_cap_new
 block|,
 name|AUE_CAP_NEW
 block|,
@@ -13164,7 +13164,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|cap_getrights
+name|sys_cap_getrights
 block|,
 name|AUE_CAP_GETRIGHTS
 block|,
@@ -13187,7 +13187,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|cap_enter
+name|sys_cap_enter
 block|,
 name|AUE_CAP_ENTER
 block|,
@@ -13213,7 +13213,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|cap_getmode
+name|sys_cap_getmode
 block|,
 name|AUE_CAP_GETMODE
 block|,
@@ -13239,7 +13239,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|pdfork
+name|sys_pdfork
 block|,
 name|AUE_PDFORK
 block|,
@@ -13265,7 +13265,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|pdkill
+name|sys_pdkill
 block|,
 name|AUE_PDKILL
 block|,
@@ -13291,7 +13291,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|pdgetpid
+name|sys_pdgetpid
 block|,
 name|AUE_PDGETPID
 block|,
@@ -13340,7 +13340,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|pselect
+name|sys_pselect
 block|,
 name|AUE_SELECT
 block|,
@@ -13366,7 +13366,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getloginclass
+name|sys_getloginclass
 block|,
 name|AUE_NULL
 block|,
@@ -13392,7 +13392,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|setloginclass
+name|sys_setloginclass
 block|,
 name|AUE_NULL
 block|,
@@ -13418,7 +13418,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|rctl_get_racct
+name|sys_rctl_get_racct
 block|,
 name|AUE_NULL
 block|,
@@ -13444,7 +13444,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|rctl_get_rules
+name|sys_rctl_get_rules
 block|,
 name|AUE_NULL
 block|,
@@ -13470,7 +13470,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|rctl_get_limits
+name|sys_rctl_get_limits
 block|,
 name|AUE_NULL
 block|,
@@ -13496,7 +13496,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|rctl_add_rule
+name|sys_rctl_add_rule
 block|,
 name|AUE_NULL
 block|,
@@ -13522,7 +13522,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|rctl_remove_rule
+name|sys_rctl_remove_rule
 block|,
 name|AUE_NULL
 block|,
@@ -13548,7 +13548,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|posix_fallocate
+name|sys_posix_fallocate
 block|,
 name|AUE_NULL
 block|,
