@@ -3050,13 +3050,6 @@ name|kinfo_proc
 modifier|*
 name|pp
 decl_stmt|;
-name|struct
-name|kinfo_proc
-modifier|*
-name|prev_pp
-init|=
-name|NULL
-decl_stmt|;
 comment|/* these are copied out of sel for speed */
 name|int
 name|show_idle
@@ -3222,7 +3215,13 @@ name|kvm_getprocs
 argument_list|(
 name|kd
 argument_list|,
+name|sel
+operator|->
+name|thread
+condition|?
 name|KERN_PROC_ALL
+else|:
+name|KERN_PROC_PROC
 argument_list|,
 literal|0
 argument_list|,
@@ -3567,26 +3566,6 @@ name|uid
 condition|)
 comment|/* skip proc. that don't belong to the selected UID */
 continue|continue;
-comment|/* 		 * When not showing threads, take the first thread 		 * for output and add the fields that we can from 		 * the rest of the process's threads rather than 		 * using the system's mostly-broken KERN_PROC_PROC. 		 */
-if|if
-condition|(
-name|sel
-operator|->
-name|thread
-operator|||
-name|prev_pp
-operator|==
-name|NULL
-operator|||
-name|prev_pp
-operator|->
-name|ki_pid
-operator|!=
-name|pp
-operator|->
-name|ki_pid
-condition|)
-block|{
 operator|*
 name|prefp
 operator|++
@@ -3596,30 +3575,6 @@ expr_stmt|;
 name|active_procs
 operator|++
 expr_stmt|;
-name|prev_pp
-operator|=
-name|pp
-expr_stmt|;
-block|}
-else|else
-block|{
-name|prev_pp
-operator|->
-name|ki_pctcpu
-operator|+=
-name|pp
-operator|->
-name|ki_pctcpu
-expr_stmt|;
-name|prev_pp
-operator|->
-name|ki_runtime
-operator|+=
-name|pp
-operator|->
-name|ki_runtime
-expr_stmt|;
-block|}
 block|}
 comment|/* if requested, sort the "interesting" processes */
 if|if
