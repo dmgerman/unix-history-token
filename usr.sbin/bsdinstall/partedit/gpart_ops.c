@@ -4965,7 +4965,7 @@ index|[
 literal|0
 index|]
 operator|.
-name|name
+name|text
 argument_list|)
 operator|!=
 literal|0
