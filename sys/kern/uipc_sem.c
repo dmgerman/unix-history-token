@@ -3018,7 +3018,7 @@ end_endif
 
 begin_function
 name|int
-name|ksem_init
+name|sys_ksem_init
 parameter_list|(
 name|struct
 name|thread
@@ -3099,7 +3099,7 @@ end_endif
 
 begin_function
 name|int
-name|ksem_open
+name|sys_ksem_open
 parameter_list|(
 name|struct
 name|thread
@@ -3208,7 +3208,7 @@ end_endif
 
 begin_function
 name|int
-name|ksem_unlink
+name|sys_ksem_unlink
 parameter_list|(
 name|struct
 name|thread
@@ -3348,7 +3348,7 @@ end_endif
 
 begin_function
 name|int
-name|ksem_close
+name|sys_ksem_close
 parameter_list|(
 name|struct
 name|thread
@@ -3478,7 +3478,7 @@ end_endif
 
 begin_function
 name|int
-name|ksem_post
+name|sys_ksem_post
 parameter_list|(
 name|struct
 name|thread
@@ -3665,7 +3665,7 @@ end_endif
 
 begin_function
 name|int
-name|ksem_wait
+name|sys_ksem_wait
 parameter_list|(
 name|struct
 name|thread
@@ -3727,7 +3727,7 @@ end_endif
 
 begin_function
 name|int
-name|ksem_timedwait
+name|sys_ksem_timedwait
 parameter_list|(
 name|struct
 name|thread
@@ -3863,7 +3863,7 @@ end_endif
 
 begin_function
 name|int
-name|ksem_trywait
+name|sys_ksem_trywait
 parameter_list|(
 name|struct
 name|thread
@@ -4290,7 +4290,7 @@ end_endif
 
 begin_function
 name|int
-name|ksem_getvalue
+name|sys_ksem_getvalue
 parameter_list|(
 name|struct
 name|thread
@@ -4475,7 +4475,7 @@ end_endif
 
 begin_function
 name|int
-name|ksem_destroy
+name|sys_ksem_destroy
 parameter_list|(
 name|struct
 name|thread
@@ -4992,22 +4992,22 @@ argument_list|(
 name|freebsd32_ksem_open
 argument_list|)
 block|,
-name|SYSCALL32_INIT_HELPER
+name|SYSCALL32_INIT_HELPER_COMPAT
 argument_list|(
 name|ksem_unlink
 argument_list|)
 block|,
-name|SYSCALL32_INIT_HELPER
+name|SYSCALL32_INIT_HELPER_COMPAT
 argument_list|(
 name|ksem_close
 argument_list|)
 block|,
-name|SYSCALL32_INIT_HELPER
+name|SYSCALL32_INIT_HELPER_COMPAT
 argument_list|(
 name|ksem_post
 argument_list|)
 block|,
-name|SYSCALL32_INIT_HELPER
+name|SYSCALL32_INIT_HELPER_COMPAT
 argument_list|(
 name|ksem_wait
 argument_list|)
@@ -5017,17 +5017,17 @@ argument_list|(
 name|freebsd32_ksem_timedwait
 argument_list|)
 block|,
-name|SYSCALL32_INIT_HELPER
+name|SYSCALL32_INIT_HELPER_COMPAT
 argument_list|(
 name|ksem_trywait
 argument_list|)
 block|,
-name|SYSCALL32_INIT_HELPER
+name|SYSCALL32_INIT_HELPER_COMPAT
 argument_list|(
 name|ksem_getvalue
 argument_list|)
 block|,
-name|SYSCALL32_INIT_HELPER
+name|SYSCALL32_INIT_HELPER_COMPAT
 argument_list|(
 name|ksem_destroy
 argument_list|)

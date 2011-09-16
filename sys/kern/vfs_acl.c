@@ -1351,7 +1351,7 @@ end_comment
 
 begin_function
 name|int
-name|__acl_get_file
+name|sys___acl_get_file
 parameter_list|(
 name|struct
 name|thread
@@ -1463,7 +1463,7 @@ end_comment
 
 begin_function
 name|int
-name|__acl_get_link
+name|sys___acl_get_link
 parameter_list|(
 name|struct
 name|thread
@@ -1575,7 +1575,7 @@ end_comment
 
 begin_function
 name|int
-name|__acl_set_file
+name|sys___acl_set_file
 parameter_list|(
 name|struct
 name|thread
@@ -1687,7 +1687,7 @@ end_comment
 
 begin_function
 name|int
-name|__acl_set_link
+name|sys___acl_set_link
 parameter_list|(
 name|struct
 name|thread
@@ -1799,7 +1799,7 @@ end_comment
 
 begin_function
 name|int
-name|__acl_get_fd
+name|sys___acl_get_fd
 parameter_list|(
 name|struct
 name|thread
@@ -1906,7 +1906,7 @@ end_comment
 
 begin_function
 name|int
-name|__acl_set_fd
+name|sys___acl_set_fd
 parameter_list|(
 name|struct
 name|thread
@@ -2013,7 +2013,7 @@ end_comment
 
 begin_function
 name|int
-name|__acl_delete_file
+name|sys___acl_delete_file
 parameter_list|(
 name|struct
 name|thread
@@ -2121,7 +2121,7 @@ end_comment
 
 begin_function
 name|int
-name|__acl_delete_link
+name|sys___acl_delete_link
 parameter_list|(
 name|struct
 name|thread
@@ -2229,7 +2229,7 @@ end_comment
 
 begin_function
 name|int
-name|__acl_delete_fd
+name|sys___acl_delete_fd
 parameter_list|(
 name|struct
 name|thread
@@ -2332,7 +2332,7 @@ end_comment
 
 begin_function
 name|int
-name|__acl_aclcheck_file
+name|sys___acl_aclcheck_file
 parameter_list|(
 name|struct
 name|thread
@@ -2444,7 +2444,7 @@ end_comment
 
 begin_function
 name|int
-name|__acl_aclcheck_link
+name|sys___acl_aclcheck_link
 parameter_list|(
 name|struct
 name|thread
@@ -2556,7 +2556,7 @@ end_comment
 
 begin_function
 name|int
-name|__acl_aclcheck_fd
+name|sys___acl_aclcheck_fd
 parameter_list|(
 name|struct
 name|thread

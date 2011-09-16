@@ -822,7 +822,7 @@ end_comment
 
 begin_function
 name|int
-name|clock_gettime
+name|sys_clock_gettime
 parameter_list|(
 name|struct
 name|thread
@@ -1204,7 +1204,7 @@ end_comment
 
 begin_function
 name|int
-name|clock_settime
+name|sys_clock_settime
 parameter_list|(
 name|struct
 name|thread
@@ -1401,7 +1401,7 @@ end_endif
 
 begin_function
 name|int
-name|clock_getres
+name|sys_clock_getres
 parameter_list|(
 name|struct
 name|thread
@@ -1909,7 +1909,7 @@ end_comment
 
 begin_function
 name|int
-name|nanosleep
+name|sys_nanosleep
 parameter_list|(
 name|struct
 name|thread
@@ -2080,7 +2080,7 @@ end_comment
 
 begin_function
 name|int
-name|gettimeofday
+name|sys_gettimeofday
 parameter_list|(
 name|struct
 name|thread
@@ -2223,7 +2223,7 @@ end_comment
 
 begin_function
 name|int
-name|settimeofday
+name|sys_settimeofday
 parameter_list|(
 name|struct
 name|thread
@@ -2495,7 +2495,7 @@ end_endif
 
 begin_function
 name|int
-name|getitimer
+name|sys_getitimer
 parameter_list|(
 name|struct
 name|thread
@@ -2748,7 +2748,7 @@ end_endif
 
 begin_function
 name|int
-name|setitimer
+name|sys_setitimer
 parameter_list|(
 name|struct
 name|thread
@@ -2789,7 +2789,7 @@ name|oitv
 expr_stmt|;
 return|return
 operator|(
-name|getitimer
+name|sys_getitimer
 argument_list|(
 name|td
 argument_list|,
@@ -3232,7 +3232,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|psignal
+name|kern_psignal
 argument_list|(
 name|p
 argument_list|,
@@ -4356,7 +4356,7 @@ end_endif
 
 begin_function
 name|int
-name|ktimer_create
+name|sys_ktimer_create
 parameter_list|(
 name|struct
 name|thread
@@ -5109,7 +5109,7 @@ end_endif
 
 begin_function
 name|int
-name|ktimer_delete
+name|sys_ktimer_delete
 parameter_list|(
 name|struct
 name|thread
@@ -5465,7 +5465,7 @@ end_endif
 
 begin_function
 name|int
-name|ktimer_settime
+name|sys_ktimer_settime
 parameter_list|(
 name|struct
 name|thread
@@ -5702,7 +5702,7 @@ end_endif
 
 begin_function
 name|int
-name|ktimer_gettime
+name|sys_ktimer_gettime
 parameter_list|(
 name|struct
 name|thread
@@ -5871,7 +5871,7 @@ end_endif
 
 begin_function
 name|int
-name|ktimer_getoverrun
+name|sys_ktimer_getoverrun
 parameter_list|(
 name|struct
 name|thread

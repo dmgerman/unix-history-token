@@ -3144,7 +3144,7 @@ literal|0
 return|;
 default|default:
 return|return
-name|fpathconf
+name|sys_fpathconf
 argument_list|(
 name|td
 argument_list|,

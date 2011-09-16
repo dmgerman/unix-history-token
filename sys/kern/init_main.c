@@ -3372,7 +3372,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|execve
+name|sys_execve
 argument_list|(
 name|td
 argument_list|,

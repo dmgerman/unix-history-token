@@ -390,7 +390,7 @@ end_comment
 
 begin_function
 name|int
-name|fork
+name|sys_fork
 parameter_list|(
 name|struct
 name|thread
@@ -473,7 +473,7 @@ end_comment
 
 begin_function
 name|int
-name|pdfork
+name|sys_pdfork
 parameter_list|(
 name|td
 parameter_list|,
@@ -597,7 +597,7 @@ end_comment
 
 begin_function
 name|int
-name|vfork
+name|sys_vfork
 parameter_list|(
 name|struct
 name|thread
@@ -700,7 +700,7 @@ end_function
 
 begin_function
 name|int
-name|rfork
+name|sys_rfork
 parameter_list|(
 name|struct
 name|thread
@@ -2382,7 +2382,7 @@ argument_list|(
 name|p2
 argument_list|)
 expr_stmt|;
-name|psignal
+name|kern_psignal
 argument_list|(
 name|p2
 argument_list|,

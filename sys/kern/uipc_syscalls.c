@@ -787,7 +787,7 @@ end_endif
 
 begin_function
 name|int
-name|socket
+name|sys_socket
 parameter_list|(
 name|td
 parameter_list|,
@@ -1000,7 +1000,7 @@ end_comment
 
 begin_function
 name|int
-name|bind
+name|sys_bind
 parameter_list|(
 name|td
 parameter_list|,
@@ -1233,7 +1233,7 @@ end_comment
 
 begin_function
 name|int
-name|listen
+name|sys_listen
 parameter_list|(
 name|td
 parameter_list|,
@@ -2380,7 +2380,7 @@ end_function
 
 begin_function
 name|int
-name|accept
+name|sys_accept
 parameter_list|(
 name|td
 parameter_list|,
@@ -2467,7 +2467,7 @@ end_comment
 
 begin_function
 name|int
-name|connect
+name|sys_connect
 parameter_list|(
 name|td
 parameter_list|,
@@ -3274,7 +3274,7 @@ end_function
 
 begin_function
 name|int
-name|socketpair
+name|sys_socketpair
 parameter_list|(
 name|struct
 name|thread
@@ -4201,7 +4201,7 @@ end_function
 
 begin_function
 name|int
-name|sendto
+name|sys_sendto
 parameter_list|(
 name|td
 parameter_list|,
@@ -4572,7 +4572,7 @@ end_endif
 
 begin_function
 name|int
-name|sendmsg
+name|sys_sendmsg
 parameter_list|(
 name|td
 parameter_list|,
@@ -5664,7 +5664,7 @@ end_function
 
 begin_function
 name|int
-name|recvfrom
+name|sys_recvfrom
 parameter_list|(
 name|td
 parameter_list|,
@@ -5850,7 +5850,7 @@ name|MSG_COMPAT
 expr_stmt|;
 return|return
 operator|(
-name|recvfrom
+name|sys_recvfrom
 argument_list|(
 name|td
 argument_list|,
@@ -6163,7 +6163,7 @@ end_endif
 
 begin_function
 name|int
-name|recvmsg
+name|sys_recvmsg
 parameter_list|(
 name|td
 parameter_list|,
@@ -6349,7 +6349,7 @@ end_comment
 
 begin_function
 name|int
-name|shutdown
+name|sys_shutdown
 parameter_list|(
 name|td
 parameter_list|,
@@ -6455,7 +6455,7 @@ end_comment
 
 begin_function
 name|int
-name|setsockopt
+name|sys_setsockopt
 parameter_list|(
 name|td
 parameter_list|,
@@ -6728,7 +6728,7 @@ end_comment
 
 begin_function
 name|int
-name|getsockopt
+name|sys_getsockopt
 parameter_list|(
 name|td
 parameter_list|,
@@ -7482,7 +7482,7 @@ end_function
 
 begin_function
 name|int
-name|getsockname
+name|sys_getsockname
 parameter_list|(
 name|td
 parameter_list|,
@@ -7997,7 +7997,7 @@ end_function
 
 begin_function
 name|int
-name|getpeername
+name|sys_getpeername
 parameter_list|(
 name|td
 parameter_list|,
@@ -8628,7 +8628,7 @@ end_comment
 
 begin_function
 name|int
-name|sendfile
+name|sys_sendfile
 parameter_list|(
 name|struct
 name|thread
@@ -10818,7 +10818,7 @@ end_comment
 
 begin_function
 name|int
-name|sctp_peeloff
+name|sys_sctp_peeloff
 parameter_list|(
 name|td
 parameter_list|,
@@ -11200,7 +11200,7 @@ end_function
 
 begin_function
 name|int
-name|sctp_generic_sendmsg
+name|sys_sctp_generic_sendmsg
 parameter_list|(
 name|td
 parameter_list|,
@@ -11778,7 +11778,7 @@ end_function
 
 begin_function
 name|int
-name|sctp_generic_sendmsg_iov
+name|sys_sctp_generic_sendmsg_iov
 parameter_list|(
 name|td
 parameter_list|,
@@ -12452,7 +12452,7 @@ end_function
 
 begin_function
 name|int
-name|sctp_generic_recvmsg
+name|sys_sctp_generic_recvmsg
 parameter_list|(
 name|td
 parameter_list|,

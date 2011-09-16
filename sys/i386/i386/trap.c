@@ -2055,7 +2055,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|PROC_LOCK(p); 				psignal(p, SIGBUS); 				PROC_UNLOCK(p);
+block|PROC_LOCK(p); 				kern_psignal(p, SIGBUS); 				PROC_UNLOCK(p);
 endif|#
 directive|endif
 goto|goto

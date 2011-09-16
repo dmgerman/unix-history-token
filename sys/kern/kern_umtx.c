@@ -13843,7 +13843,7 @@ end_function
 
 begin_function
 name|int
-name|_umtx_lock
+name|sys__umtx_lock
 parameter_list|(
 name|struct
 name|thread
@@ -13878,7 +13878,7 @@ end_function
 
 begin_function
 name|int
-name|_umtx_unlock
+name|sys__umtx_unlock
 parameter_list|(
 name|struct
 name|thread
@@ -15693,7 +15693,7 @@ end_decl_stmt
 
 begin_function
 name|int
-name|_umtx_op
+name|sys__umtx_op
 parameter_list|(
 name|struct
 name|thread

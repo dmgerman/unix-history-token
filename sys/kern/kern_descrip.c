@@ -1429,7 +1429,7 @@ end_comment
 
 begin_function
 name|int
-name|getdtablesize
+name|sys_getdtablesize
 parameter_list|(
 name|struct
 name|thread
@@ -1560,7 +1560,7 @@ end_comment
 
 begin_function
 name|int
-name|dup2
+name|sys_dup2
 parameter_list|(
 name|struct
 name|thread
@@ -1636,7 +1636,7 @@ end_comment
 
 begin_function
 name|int
-name|dup
+name|sys_dup
 parameter_list|(
 name|struct
 name|thread
@@ -1713,7 +1713,7 @@ end_comment
 
 begin_function
 name|int
-name|fcntl
+name|sys_fcntl
 parameter_list|(
 name|struct
 name|thread
@@ -5461,7 +5461,7 @@ end_comment
 
 begin_function
 name|int
-name|close
+name|sys_close
 parameter_list|(
 name|td
 parameter_list|,
@@ -5784,7 +5784,7 @@ end_comment
 
 begin_function
 name|int
-name|closefrom
+name|sys_closefrom
 parameter_list|(
 name|struct
 name|thread
@@ -6077,7 +6077,7 @@ end_comment
 
 begin_function
 name|int
-name|fstat
+name|sys_fstat
 parameter_list|(
 name|struct
 name|thread
@@ -6297,7 +6297,7 @@ end_comment
 
 begin_function
 name|int
-name|nfstat
+name|sys_nfstat
 parameter_list|(
 name|struct
 name|thread
@@ -6412,7 +6412,7 @@ end_comment
 
 begin_function
 name|int
-name|fpathconf
+name|sys_fpathconf
 parameter_list|(
 name|struct
 name|thread
@@ -11984,7 +11984,7 @@ end_comment
 
 begin_function
 name|int
-name|flock
+name|sys_flock
 parameter_list|(
 name|struct
 name|thread

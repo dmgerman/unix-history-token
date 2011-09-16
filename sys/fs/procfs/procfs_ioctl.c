@@ -821,14 +821,14 @@ block|}
 if|#
 directive|if
 literal|0
-block|p->p_step = 0; 		if (P_SHOULDSTOP(p)) { 			p->p_xstat = sig; 			p->p_flag&= ~(P_STOPPED_TRACE|P_STOPPED_SIG); 			PROC_SLOCK(p); 			thread_unsuspend(p); 			PROC_SUNLOCK(p); 		} else if (sig) 			psignal(p, sig);
+block|p->p_step = 0; 		if (P_SHOULDSTOP(p)) { 			p->p_xstat = sig; 			p->p_flag&= ~(P_STOPPED_TRACE|P_STOPPED_SIG); 			PROC_SLOCK(p); 			thread_unsuspend(p); 			PROC_SUNLOCK(p); 		} else if (sig) 			kern_psignal(p, sig);
 else|#
 directive|else
 if|if
 condition|(
 name|sig
 condition|)
-name|psignal
+name|kern_psignal
 argument_list|(
 name|p
 argument_list|,

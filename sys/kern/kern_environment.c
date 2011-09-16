@@ -212,7 +212,7 @@ end_define
 
 begin_function
 name|int
-name|kenv
+name|sys_kenv
 parameter_list|(
 name|td
 parameter_list|,

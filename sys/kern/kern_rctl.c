@@ -1664,7 +1664,7 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* 			 * We're using the fact that RCTL_ACTION_SIG* values 			 * are equal to their counterparts from sys/signal.h. 			 */
-name|psignal
+name|kern_psignal
 argument_list|(
 name|p
 argument_list|,
@@ -5522,7 +5522,7 @@ end_function
 
 begin_function
 name|int
-name|rctl_get_racct
+name|sys_rctl_get_racct
 parameter_list|(
 name|struct
 name|thread
@@ -5996,7 +5996,7 @@ end_function
 
 begin_function
 name|int
-name|rctl_get_rules
+name|sys_rctl_get_rules
 parameter_list|(
 name|struct
 name|thread
@@ -6369,7 +6369,7 @@ end_function
 
 begin_function
 name|int
-name|rctl_get_limits
+name|sys_rctl_get_limits
 parameter_list|(
 name|struct
 name|thread
@@ -6751,7 +6751,7 @@ end_function
 
 begin_function
 name|int
-name|rctl_add_rule
+name|sys_rctl_add_rule
 parameter_list|(
 name|struct
 name|thread
@@ -6935,7 +6935,7 @@ end_function
 
 begin_function
 name|int
-name|rctl_remove_rule
+name|sys_rctl_remove_rule
 parameter_list|(
 name|struct
 name|thread
@@ -8084,7 +8084,7 @@ end_comment
 
 begin_function
 name|int
-name|rctl_get_racct
+name|sys_rctl_get_racct
 parameter_list|(
 name|struct
 name|thread
@@ -8107,7 +8107,7 @@ end_function
 
 begin_function
 name|int
-name|rctl_get_rules
+name|sys_rctl_get_rules
 parameter_list|(
 name|struct
 name|thread
@@ -8130,7 +8130,7 @@ end_function
 
 begin_function
 name|int
-name|rctl_get_limits
+name|sys_rctl_get_limits
 parameter_list|(
 name|struct
 name|thread
@@ -8153,7 +8153,7 @@ end_function
 
 begin_function
 name|int
-name|rctl_add_rule
+name|sys_rctl_add_rule
 parameter_list|(
 name|struct
 name|thread
@@ -8176,7 +8176,7 @@ end_function
 
 begin_function
 name|int
-name|rctl_remove_rule
+name|sys_rctl_remove_rule
 parameter_list|(
 name|struct
 name|thread

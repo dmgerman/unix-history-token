@@ -1369,7 +1369,7 @@ end_comment
 
 begin_function
 name|int
-name|jail
+name|sys_jail
 parameter_list|(
 name|struct
 name|thread
@@ -2642,7 +2642,7 @@ end_comment
 
 begin_function
 name|int
-name|jail_set
+name|sys_jail_set
 parameter_list|(
 name|struct
 name|thread
@@ -9266,7 +9266,7 @@ end_comment
 
 begin_function
 name|int
-name|jail_get
+name|sys_jail_get
 parameter_list|(
 name|struct
 name|thread
@@ -11267,7 +11267,7 @@ end_comment
 
 begin_function
 name|int
-name|jail_remove
+name|sys_jail_remove
 parameter_list|(
 name|struct
 name|thread
@@ -11679,7 +11679,7 @@ name|cr_prison
 operator|==
 name|pr
 condition|)
-name|psignal
+name|kern_psignal
 argument_list|(
 name|p
 argument_list|,
@@ -11717,7 +11717,7 @@ end_comment
 
 begin_function
 name|int
-name|jail_attach
+name|sys_jail_attach
 parameter_list|(
 name|struct
 name|thread

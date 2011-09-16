@@ -4239,7 +4239,7 @@ end_endif
 
 begin_function
 name|int
-name|sigaction
+name|sys_sigaction
 parameter_list|(
 name|td
 parameter_list|,
@@ -5513,7 +5513,7 @@ end_endif
 
 begin_function
 name|int
-name|sigprocmask
+name|sys_sigprocmask
 parameter_list|(
 name|td
 parameter_list|,
@@ -5779,7 +5779,7 @@ end_comment
 
 begin_function
 name|int
-name|sigwait
+name|sys_sigwait
 parameter_list|(
 name|struct
 name|thread
@@ -5923,7 +5923,7 @@ end_function
 
 begin_function
 name|int
-name|sigtimedwait
+name|sys_sigtimedwait
 parameter_list|(
 name|struct
 name|thread
@@ -6099,7 +6099,7 @@ end_function
 
 begin_function
 name|int
-name|sigwaitinfo
+name|sys_sigwaitinfo
 parameter_list|(
 name|struct
 name|thread
@@ -6812,7 +6812,7 @@ end_endif
 
 begin_function
 name|int
-name|sigpending
+name|sys_sigpending
 parameter_list|(
 name|td
 parameter_list|,
@@ -7533,7 +7533,7 @@ end_comment
 
 begin_function
 name|int
-name|sigsuspend
+name|sys_sigsuspend
 parameter_list|(
 name|td
 parameter_list|,
@@ -8109,7 +8109,7 @@ end_comment
 
 begin_function
 name|int
-name|sigaltstack
+name|sys_sigaltstack
 parameter_list|(
 name|td
 parameter_list|,
@@ -8757,7 +8757,7 @@ end_comment
 
 begin_function
 name|int
-name|kill
+name|sys_kill
 parameter_list|(
 name|struct
 name|thread
@@ -9034,7 +9034,7 @@ end_function
 
 begin_function
 name|int
-name|pdkill
+name|sys_pdkill
 parameter_list|(
 name|td
 parameter_list|,
@@ -9145,7 +9145,7 @@ name|uap
 operator|->
 name|signum
 condition|)
-name|psignal
+name|kern_psignal
 argument_list|(
 name|p
 argument_list|,
@@ -9367,7 +9367,7 @@ end_endif
 
 begin_function
 name|int
-name|sigqueue
+name|sys_sigqueue
 parameter_list|(
 name|struct
 name|thread
@@ -10268,7 +10268,7 @@ end_comment
 
 begin_function
 name|void
-name|psignal
+name|kern_psignal
 parameter_list|(
 name|struct
 name|proc
@@ -13914,7 +13914,7 @@ name|p_flag
 operator||=
 name|P_WKILLED
 expr_stmt|;
-name|psignal
+name|kern_psignal
 argument_list|(
 name|p
 argument_list|,
@@ -16188,7 +16188,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|psignal
+name|kern_psignal
 argument_list|(
 name|p
 argument_list|,
@@ -16311,7 +16311,7 @@ operator|->
 name|p_ucred
 argument_list|)
 condition|)
-name|psignal
+name|kern_psignal
 argument_list|(
 name|sigio
 operator|->
@@ -16397,7 +16397,7 @@ name|P_CONTROLT
 operator|)
 operator|)
 condition|)
-name|psignal
+name|kern_psignal
 argument_list|(
 name|p
 argument_list|,

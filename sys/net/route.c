@@ -1036,7 +1036,7 @@ end_endif
 
 begin_function
 name|int
-name|setfib
+name|sys_setfib
 parameter_list|(
 name|struct
 name|thread

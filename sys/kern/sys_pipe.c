@@ -1627,7 +1627,7 @@ end_comment
 
 begin_function
 name|int
-name|pipe
+name|sys_pipe
 parameter_list|(
 name|struct
 name|thread

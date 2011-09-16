@@ -4947,7 +4947,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|write
+name|sys_write
 argument_list|(
 name|td
 argument_list|,
@@ -4987,7 +4987,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -5093,7 +5093,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -5119,7 +5119,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -5145,7 +5145,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -5171,7 +5171,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -5197,7 +5197,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -5225,7 +5225,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -5251,7 +5251,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -5277,7 +5277,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -5303,7 +5303,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -5329,7 +5329,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -5355,7 +5355,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -5384,7 +5384,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -5411,7 +5411,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -5527,7 +5527,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -5553,7 +5553,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -5579,7 +5579,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -5794,7 +5794,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -5820,7 +5820,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -5846,7 +5846,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -5877,7 +5877,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -5903,7 +5903,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -7828,7 +7828,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -7854,7 +7854,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -7880,7 +7880,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -7906,7 +7906,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -8153,7 +8153,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -8179,7 +8179,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -8205,7 +8205,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -8465,7 +8465,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9019,7 +9019,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9046,7 +9046,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9073,7 +9073,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9100,7 +9100,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9127,7 +9127,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9154,7 +9154,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9181,7 +9181,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9208,7 +9208,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9235,7 +9235,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9262,7 +9262,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9289,7 +9289,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9316,7 +9316,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9343,7 +9343,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9370,7 +9370,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9397,7 +9397,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9424,7 +9424,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9451,7 +9451,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9699,7 +9699,7 @@ name|SOUND_MIXER_READ_STEREODEVS
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9723,7 +9723,7 @@ name|SOUND_MIXER_READ_CAPS
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9747,7 +9747,7 @@ name|SOUND_MIXER_READ_RECMASK
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9771,7 +9771,7 @@ name|SOUND_MIXER_READ_DEVMASK
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9798,7 +9798,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9822,7 +9822,7 @@ name|SNDCTL_DSP_RESET
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9846,7 +9846,7 @@ name|SNDCTL_DSP_SYNC
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9870,7 +9870,7 @@ name|SNDCTL_DSP_SPEED
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9894,7 +9894,7 @@ name|SNDCTL_DSP_STEREO
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9919,7 +9919,7 @@ name|SNDCTL_DSP_GETBLKSIZE
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9943,7 +9943,7 @@ name|SNDCTL_DSP_SETFMT
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9967,7 +9967,7 @@ name|SOUND_PCM_WRITE_CHANNELS
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -9991,7 +9991,7 @@ name|SOUND_PCM_WRITE_FILTER
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10015,7 +10015,7 @@ name|SNDCTL_DSP_POST
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10039,7 +10039,7 @@ name|SNDCTL_DSP_SUBDIVIDE
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10063,7 +10063,7 @@ name|SNDCTL_DSP_SETFRAGMENT
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10087,7 +10087,7 @@ name|SNDCTL_DSP_GETFMTS
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10111,7 +10111,7 @@ name|SNDCTL_DSP_GETOSPACE
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10135,7 +10135,7 @@ name|SNDCTL_DSP_GETISPACE
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10159,7 +10159,7 @@ name|SNDCTL_DSP_NONBLOCK
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10183,7 +10183,7 @@ name|SNDCTL_DSP_GETCAPS
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10208,7 +10208,7 @@ name|SNDCTL_DSP_SETTRIGGER
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10232,7 +10232,7 @@ name|SNDCTL_DSP_GETIPTR
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10256,7 +10256,7 @@ name|SNDCTL_DSP_GETOPTR
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10280,7 +10280,7 @@ name|SNDCTL_DSP_SETDUPLEX
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10304,7 +10304,7 @@ name|SNDCTL_DSP_GETODELAY
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10328,7 +10328,7 @@ name|SNDCTL_SEQ_RESET
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10352,7 +10352,7 @@ name|SNDCTL_SEQ_SYNC
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10376,7 +10376,7 @@ name|SNDCTL_SYNTH_INFO
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10400,7 +10400,7 @@ name|SNDCTL_SEQ_CTRLRATE
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10424,7 +10424,7 @@ name|SNDCTL_SEQ_GETOUTCOUNT
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10448,7 +10448,7 @@ name|SNDCTL_SEQ_GETINCOUNT
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10472,7 +10472,7 @@ name|SNDCTL_SEQ_PERCMODE
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10496,7 +10496,7 @@ name|SNDCTL_FM_LOAD_INSTR
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10520,7 +10520,7 @@ name|SNDCTL_SEQ_TESTMIDI
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10544,7 +10544,7 @@ name|SNDCTL_SEQ_RESETSAMPLES
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10568,7 +10568,7 @@ name|SNDCTL_SEQ_NRSYNTHS
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10592,7 +10592,7 @@ name|SNDCTL_SEQ_NRMIDIS
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10616,7 +10616,7 @@ name|SNDCTL_MIDI_INFO
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10640,7 +10640,7 @@ name|SNDCTL_SEQ_TRESHOLD
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10664,7 +10664,7 @@ name|SNDCTL_SYNTH_MEMAVL
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10772,7 +10772,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10798,7 +10798,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10824,7 +10824,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10850,7 +10850,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10876,7 +10876,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10902,7 +10902,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -10928,7 +10928,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -11031,7 +11031,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -11057,7 +11057,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -11165,7 +11165,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -11192,7 +11192,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -11218,7 +11218,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -11244,7 +11244,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -11270,7 +11270,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -13017,7 +13017,7 @@ name|FIOSETOWN
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -13041,7 +13041,7 @@ name|SIOCSPGRP
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -13065,7 +13065,7 @@ name|FIOGETOWN
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -13089,7 +13089,7 @@ name|SIOCGPGRP
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -13113,7 +13113,7 @@ name|SIOCATMARK
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -13186,7 +13186,7 @@ name|SIOCGIFADDR
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -13223,7 +13223,7 @@ name|SIOCSIFADDR
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -13247,7 +13247,7 @@ name|SIOCGIFDSTADDR
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -13283,7 +13283,7 @@ name|SIOCGIFBRDADDR
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -13319,7 +13319,7 @@ name|SIOCGIFNETMASK
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -13363,7 +13363,7 @@ name|SIOCGIFMTU
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -13387,7 +13387,7 @@ name|SIOCSIFMTU
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -13447,7 +13447,7 @@ name|SIOCADDMULTI
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -13471,7 +13471,7 @@ name|SIOCDELMULTI
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -13495,7 +13495,7 @@ name|SIOCGIFINDEX
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -13528,7 +13528,7 @@ name|SIOCGPRIVATE_0
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -13554,7 +13554,7 @@ name|SIOCGPRIVATE_1
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -13738,7 +13738,7 @@ name|cmd
 argument_list|)
 expr_stmt|;
 return|return
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -16004,7 +16004,7 @@ return|;
 block|}
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -16065,7 +16065,7 @@ name|SIOCGIFADDR
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -16089,7 +16089,7 @@ name|SIOCSIFADDR
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -16113,7 +16113,7 @@ name|SIOCGIFFLAGS
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -17826,7 +17826,7 @@ return|;
 block|}
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -18214,7 +18214,7 @@ name|ENOIOCTL
 condition|)
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,

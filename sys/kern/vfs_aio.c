@@ -4702,7 +4702,7 @@ operator|->
 name|userproc
 argument_list|)
 expr_stmt|;
-name|psignal
+name|kern_psignal
 argument_list|(
 name|aiocbe
 operator|->
@@ -5272,7 +5272,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* The daemon resides in its own pgrp. */
-name|setsid
+name|sys_setsid
 argument_list|(
 name|td
 argument_list|,
@@ -8900,7 +8900,7 @@ end_function
 
 begin_function
 name|int
-name|aio_return
+name|sys_aio_return
 parameter_list|(
 name|struct
 name|thread
@@ -9227,7 +9227,7 @@ end_function
 
 begin_function
 name|int
-name|aio_suspend
+name|sys_aio_suspend
 parameter_list|(
 name|struct
 name|thread
@@ -9396,7 +9396,7 @@ end_comment
 
 begin_function
 name|int
-name|aio_cancel
+name|sys_aio_cancel
 parameter_list|(
 name|struct
 name|thread
@@ -10086,7 +10086,7 @@ end_function
 
 begin_function
 name|int
-name|aio_error
+name|sys_aio_error
 parameter_list|(
 name|struct
 name|thread
@@ -10123,7 +10123,7 @@ end_comment
 
 begin_function
 name|int
-name|oaio_read
+name|sys_oaio_read
 parameter_list|(
 name|struct
 name|thread
@@ -10165,7 +10165,7 @@ end_function
 
 begin_function
 name|int
-name|aio_read
+name|sys_aio_read
 parameter_list|(
 name|struct
 name|thread
@@ -10206,7 +10206,7 @@ end_comment
 
 begin_function
 name|int
-name|oaio_write
+name|sys_oaio_write
 parameter_list|(
 name|struct
 name|thread
@@ -10248,7 +10248,7 @@ end_function
 
 begin_function
 name|int
-name|aio_write
+name|sys_aio_write
 parameter_list|(
 name|struct
 name|thread
@@ -11029,7 +11029,7 @@ end_comment
 
 begin_function
 name|int
-name|olio_listio
+name|sys_olio_listio
 parameter_list|(
 name|struct
 name|thread
@@ -11277,7 +11277,7 @@ end_comment
 
 begin_function
 name|int
-name|lio_listio
+name|sys_lio_listio
 parameter_list|(
 name|struct
 name|thread
@@ -12131,7 +12131,7 @@ end_function
 
 begin_function
 name|int
-name|aio_waitcomplete
+name|sys_aio_waitcomplete
 parameter_list|(
 name|struct
 name|thread
@@ -12307,7 +12307,7 @@ end_function
 
 begin_function
 name|int
-name|aio_fsync
+name|sys_aio_fsync
 parameter_list|(
 name|struct
 name|thread
@@ -14017,7 +14017,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|aio_cancel
+name|sys_aio_cancel
 argument_list|(
 name|td
 argument_list|,

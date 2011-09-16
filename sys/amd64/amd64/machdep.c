@@ -2027,7 +2027,7 @@ end_comment
 
 begin_function
 name|int
-name|sigreturn
+name|sys_sigreturn
 parameter_list|(
 name|td
 parameter_list|,
@@ -2487,7 +2487,7 @@ name|uap
 parameter_list|)
 block|{
 return|return
-name|sigreturn
+name|sys_sigreturn
 argument_list|(
 name|td
 argument_list|,

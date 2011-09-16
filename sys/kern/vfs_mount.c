@@ -1742,7 +1742,7 @@ end_comment
 
 begin_function
 name|int
-name|nmount
+name|sys_nmount
 parameter_list|(
 name|td
 parameter_list|,
@@ -3528,7 +3528,7 @@ end_comment
 
 begin_function
 name|int
-name|mount
+name|sys_mount
 parameter_list|(
 name|td
 parameter_list|,
@@ -5549,7 +5549,7 @@ end_comment
 
 begin_function
 name|int
-name|unmount
+name|sys_unmount
 parameter_list|(
 name|td
 parameter_list|,

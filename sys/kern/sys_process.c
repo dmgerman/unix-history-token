@@ -1929,7 +1929,7 @@ end_endif
 
 begin_function
 name|int
-name|ptrace
+name|sys_ptrace
 parameter_list|(
 name|struct
 name|thread
@@ -3767,7 +3767,7 @@ if|if
 condition|(
 name|data
 condition|)
-name|psignal
+name|kern_psignal
 argument_list|(
 name|p
 argument_list|,

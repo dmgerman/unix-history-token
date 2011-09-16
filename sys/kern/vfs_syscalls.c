@@ -567,7 +567,7 @@ end_comment
 
 begin_function
 name|int
-name|sync
+name|sys_sync
 parameter_list|(
 name|td
 parameter_list|,
@@ -834,7 +834,7 @@ end_endif
 
 begin_function
 name|int
-name|quotactl
+name|sys_quotactl
 parameter_list|(
 name|td
 parameter_list|,
@@ -1219,7 +1219,7 @@ end_endif
 
 begin_function
 name|int
-name|statfs
+name|sys_statfs
 parameter_list|(
 name|td
 parameter_list|,
@@ -1633,7 +1633,7 @@ end_endif
 
 begin_function
 name|int
-name|fstatfs
+name|sys_fstatfs
 parameter_list|(
 name|td
 parameter_list|,
@@ -2086,7 +2086,7 @@ end_endif
 
 begin_function
 name|int
-name|getfsstat
+name|sys_getfsstat
 parameter_list|(
 name|td
 parameter_list|,
@@ -3583,7 +3583,7 @@ end_endif
 
 begin_function
 name|int
-name|fchdir
+name|sys_fchdir
 parameter_list|(
 name|td
 parameter_list|,
@@ -3919,7 +3919,7 @@ end_endif
 
 begin_function
 name|int
-name|chdir
+name|sys_chdir
 parameter_list|(
 name|td
 parameter_list|,
@@ -4335,7 +4335,7 @@ end_endif
 
 begin_function
 name|int
-name|chroot
+name|sys_chroot
 parameter_list|(
 name|td
 parameter_list|,
@@ -4959,7 +4959,7 @@ end_endif
 
 begin_function
 name|int
-name|open
+name|sys_open
 parameter_list|(
 name|td
 parameter_list|,
@@ -5037,7 +5037,7 @@ end_endif
 
 begin_function
 name|int
-name|openat
+name|sys_openat
 parameter_list|(
 name|struct
 name|thread
@@ -6045,7 +6045,7 @@ end_endif
 
 begin_function
 name|int
-name|mknod
+name|sys_mknod
 parameter_list|(
 name|td
 parameter_list|,
@@ -6123,7 +6123,7 @@ end_endif
 
 begin_function
 name|int
-name|mknodat
+name|sys_mknodat
 parameter_list|(
 name|struct
 name|thread
@@ -6807,7 +6807,7 @@ end_endif
 
 begin_function
 name|int
-name|mkfifo
+name|sys_mkfifo
 parameter_list|(
 name|td
 parameter_list|,
@@ -6878,7 +6878,7 @@ end_endif
 
 begin_function
 name|int
-name|mkfifoat
+name|sys_mkfifoat
 parameter_list|(
 name|struct
 name|thread
@@ -7358,7 +7358,7 @@ end_endif
 
 begin_function
 name|int
-name|link
+name|sys_link
 parameter_list|(
 name|td
 parameter_list|,
@@ -7436,7 +7436,7 @@ end_endif
 
 begin_function
 name|int
-name|linkat
+name|sys_linkat
 parameter_list|(
 name|struct
 name|thread
@@ -8196,7 +8196,7 @@ end_endif
 
 begin_function
 name|int
-name|symlink
+name|sys_symlink
 parameter_list|(
 name|td
 parameter_list|,
@@ -8268,7 +8268,7 @@ end_endif
 
 begin_function
 name|int
-name|symlinkat
+name|sys_symlinkat
 parameter_list|(
 name|struct
 name|thread
@@ -8782,7 +8782,7 @@ end_comment
 
 begin_function
 name|int
-name|undelete
+name|sys_undelete
 parameter_list|(
 name|td
 parameter_list|,
@@ -9091,7 +9091,7 @@ end_endif
 
 begin_function
 name|int
-name|unlink
+name|sys_unlink
 parameter_list|(
 name|td
 parameter_list|,
@@ -9157,7 +9157,7 @@ end_endif
 
 begin_function
 name|int
-name|unlinkat
+name|sys_unlinkat
 parameter_list|(
 name|struct
 name|thread
@@ -9713,7 +9713,7 @@ end_endif
 
 begin_function
 name|int
-name|lseek
+name|sys_lseek
 parameter_list|(
 name|td
 parameter_list|,
@@ -10234,7 +10234,7 @@ name|whence
 expr_stmt|;
 return|return
 operator|(
-name|lseek
+name|sys_lseek
 argument_list|(
 name|td
 argument_list|,
@@ -10309,7 +10309,7 @@ name|whence
 expr_stmt|;
 return|return
 operator|(
-name|lseek
+name|sys_lseek
 argument_list|(
 name|td
 argument_list|,
@@ -10507,7 +10507,7 @@ end_endif
 
 begin_function
 name|int
-name|access
+name|sys_access
 parameter_list|(
 name|td
 parameter_list|,
@@ -10574,7 +10574,7 @@ block|}
 endif|#
 directive|endif
 name|int
-name|faccessat
+name|sys_faccessat
 argument_list|(
 expr|struct
 name|thread
@@ -10925,7 +10925,7 @@ end_endif
 
 begin_function
 name|int
-name|eaccess
+name|sys_eaccess
 parameter_list|(
 name|td
 parameter_list|,
@@ -11472,7 +11472,7 @@ end_endif
 
 begin_function
 name|int
-name|stat
+name|sys_stat
 parameter_list|(
 name|td
 parameter_list|,
@@ -11574,7 +11574,7 @@ block|}
 endif|#
 directive|endif
 name|int
-name|fstatat
+name|sys_fstatat
 argument_list|(
 expr|struct
 name|thread
@@ -12054,7 +12054,7 @@ end_endif
 
 begin_function
 name|int
-name|lstat
+name|sys_lstat
 parameter_list|(
 name|td
 parameter_list|,
@@ -12364,7 +12364,7 @@ end_endif
 
 begin_function
 name|int
-name|nstat
+name|sys_nstat
 parameter_list|(
 name|td
 parameter_list|,
@@ -12487,7 +12487,7 @@ end_endif
 
 begin_function
 name|int
-name|nlstat
+name|sys_nlstat
 parameter_list|(
 name|td
 parameter_list|,
@@ -12608,7 +12608,7 @@ end_endif
 
 begin_function
 name|int
-name|pathconf
+name|sys_pathconf
 parameter_list|(
 name|td
 parameter_list|,
@@ -12678,7 +12678,7 @@ end_endif
 
 begin_function
 name|int
-name|lpathconf
+name|sys_lpathconf
 parameter_list|(
 name|td
 parameter_list|,
@@ -12900,7 +12900,7 @@ end_endif
 
 begin_function
 name|int
-name|readlink
+name|sys_readlink
 parameter_list|(
 name|td
 parameter_list|,
@@ -12981,7 +12981,7 @@ end_endif
 
 begin_function
 name|int
-name|readlinkat
+name|sys_readlinkat
 parameter_list|(
 name|struct
 name|thread
@@ -13576,7 +13576,7 @@ end_endif
 
 begin_function
 name|int
-name|chflags
+name|sys_chflags
 parameter_list|(
 name|td
 parameter_list|,
@@ -13710,7 +13710,7 @@ end_comment
 
 begin_function
 name|int
-name|lchflags
+name|sys_lchflags
 parameter_list|(
 name|td
 parameter_list|,
@@ -13869,7 +13869,7 @@ end_endif
 
 begin_function
 name|int
-name|fchflags
+name|sys_fchflags
 parameter_list|(
 name|td
 parameter_list|,
@@ -14205,7 +14205,7 @@ end_endif
 
 begin_function
 name|int
-name|chmod
+name|sys_chmod
 parameter_list|(
 name|td
 parameter_list|,
@@ -14272,7 +14272,7 @@ block|}
 endif|#
 directive|endif
 name|int
-name|fchmodat
+name|sys_fchmodat
 argument_list|(
 expr|struct
 name|thread
@@ -14409,7 +14409,7 @@ end_endif
 
 begin_function
 name|int
-name|lchmod
+name|sys_lchmod
 parameter_list|(
 name|td
 parameter_list|,
@@ -14637,7 +14637,7 @@ end_endif
 
 begin_function
 name|int
-name|fchmod
+name|sys_fchmod
 parameter_list|(
 name|struct
 name|thread
@@ -14930,7 +14930,7 @@ end_endif
 
 begin_function
 name|int
-name|chown
+name|sys_chown
 parameter_list|(
 name|td
 parameter_list|,
@@ -15012,7 +15012,7 @@ end_endif
 
 begin_function
 name|int
-name|fchownat
+name|sys_fchownat
 parameter_list|(
 name|struct
 name|thread
@@ -15319,7 +15319,7 @@ end_endif
 
 begin_function
 name|int
-name|lchown
+name|sys_lchown
 parameter_list|(
 name|td
 parameter_list|,
@@ -15444,7 +15444,7 @@ end_endif
 
 begin_function
 name|int
-name|fchown
+name|sys_fchown
 parameter_list|(
 name|td
 parameter_list|,
@@ -16047,7 +16047,7 @@ end_endif
 
 begin_function
 name|int
-name|utimes
+name|sys_utimes
 parameter_list|(
 name|td
 parameter_list|,
@@ -16124,7 +16124,7 @@ end_endif
 
 begin_function
 name|int
-name|futimesat
+name|sys_futimesat
 parameter_list|(
 name|struct
 name|thread
@@ -16412,7 +16412,7 @@ end_endif
 
 begin_function
 name|int
-name|lutimes
+name|sys_lutimes
 parameter_list|(
 name|td
 parameter_list|,
@@ -16647,7 +16647,7 @@ end_endif
 
 begin_function
 name|int
-name|futimes
+name|sys_futimes
 parameter_list|(
 name|td
 parameter_list|,
@@ -16900,7 +16900,7 @@ end_endif
 
 begin_function
 name|int
-name|truncate
+name|sys_truncate
 parameter_list|(
 name|td
 parameter_list|,
@@ -17306,7 +17306,7 @@ name|length
 expr_stmt|;
 return|return
 operator|(
-name|truncate
+name|sys_truncate
 argument_list|(
 name|td
 argument_list|,
@@ -17368,7 +17368,7 @@ name|length
 expr_stmt|;
 return|return
 operator|(
-name|truncate
+name|sys_truncate
 argument_list|(
 name|td
 argument_list|,
@@ -17417,7 +17417,7 @@ name|length
 expr_stmt|;
 return|return
 operator|(
-name|ftruncate
+name|sys_ftruncate
 argument_list|(
 name|td
 argument_list|,
@@ -17457,7 +17457,7 @@ end_endif
 
 begin_function
 name|int
-name|fsync
+name|sys_fsync
 parameter_list|(
 name|td
 parameter_list|,
@@ -17738,7 +17738,7 @@ end_endif
 
 begin_function
 name|int
-name|rename
+name|sys_rename
 parameter_list|(
 name|td
 parameter_list|,
@@ -17813,7 +17813,7 @@ end_endif
 
 begin_function
 name|int
-name|renameat
+name|sys_renameat
 parameter_list|(
 name|struct
 name|thread
@@ -18611,7 +18611,7 @@ end_endif
 
 begin_function
 name|int
-name|mkdir
+name|sys_mkdir
 parameter_list|(
 name|td
 parameter_list|,
@@ -18682,7 +18682,7 @@ end_endif
 
 begin_function
 name|int
-name|mkdirat
+name|sys_mkdirat
 parameter_list|(
 name|struct
 name|thread
@@ -19173,7 +19173,7 @@ end_endif
 
 begin_function
 name|int
-name|rmdir
+name|sys_rmdir
 parameter_list|(
 name|td
 parameter_list|,
@@ -20484,7 +20484,7 @@ end_endif
 
 begin_function
 name|int
-name|getdirentries
+name|sys_getdirentries
 parameter_list|(
 name|td
 parameter_list|,
@@ -21040,7 +21040,7 @@ end_endif
 
 begin_function
 name|int
-name|getdents
+name|sys_getdents
 parameter_list|(
 name|td
 parameter_list|,
@@ -21095,7 +21095,7 @@ name|NULL
 expr_stmt|;
 return|return
 operator|(
-name|getdirentries
+name|sys_getdirentries
 argument_list|(
 name|td
 argument_list|,
@@ -21135,7 +21135,7 @@ end_endif
 
 begin_function
 name|int
-name|umask
+name|sys_umask
 parameter_list|(
 name|td
 parameter_list|,
@@ -21243,7 +21243,7 @@ end_endif
 
 begin_function
 name|int
-name|revoke
+name|sys_revoke
 parameter_list|(
 name|td
 parameter_list|,
@@ -21686,7 +21686,7 @@ end_endif
 
 begin_function
 name|int
-name|lgetfh
+name|sys_lgetfh
 parameter_list|(
 name|td
 parameter_list|,
@@ -21912,7 +21912,7 @@ end_endif
 
 begin_function
 name|int
-name|getfh
+name|sys_getfh
 parameter_list|(
 name|td
 parameter_list|,
@@ -22143,7 +22143,7 @@ end_endif
 
 begin_function
 name|int
-name|fhopen
+name|sys_fhopen
 parameter_list|(
 name|td
 parameter_list|,
@@ -23039,7 +23039,7 @@ end_endif
 
 begin_function
 name|int
-name|fhstat
+name|sys_fhstat
 parameter_list|(
 name|td
 parameter_list|,
@@ -23288,7 +23288,7 @@ end_endif
 
 begin_function
 name|int
-name|fhstatfs
+name|sys_fhstatfs
 parameter_list|(
 name|td
 parameter_list|,
@@ -24033,7 +24033,7 @@ end_function
 
 begin_function
 name|int
-name|posix_fallocate
+name|sys_posix_fallocate
 parameter_list|(
 name|struct
 name|thread

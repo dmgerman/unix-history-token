@@ -379,7 +379,7 @@ operator|->
 name|size
 expr_stmt|;
 return|return
-name|ftruncate
+name|sys_ftruncate
 argument_list|(
 name|td
 argument_list|,

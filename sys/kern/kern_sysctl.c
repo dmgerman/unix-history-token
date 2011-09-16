@@ -6682,7 +6682,7 @@ end_endif
 
 begin_function
 name|int
-name|__sysctl
+name|sys___sysctl
 parameter_list|(
 name|struct
 name|thread

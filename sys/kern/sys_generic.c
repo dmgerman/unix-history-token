@@ -651,7 +651,7 @@ end_endif
 
 begin_function
 name|int
-name|read
+name|sys_read
 parameter_list|(
 name|td
 parameter_list|,
@@ -798,7 +798,7 @@ end_endif
 
 begin_function
 name|int
-name|pread
+name|sys_pread
 parameter_list|(
 name|td
 parameter_list|,
@@ -965,7 +965,7 @@ name|offset
 expr_stmt|;
 return|return
 operator|(
-name|pread
+name|sys_pread
 argument_list|(
 name|td
 argument_list|,
@@ -1013,7 +1013,7 @@ end_endif
 
 begin_function
 name|int
-name|readv
+name|sys_readv
 parameter_list|(
 name|struct
 name|thread
@@ -1213,7 +1213,7 @@ end_endif
 
 begin_function
 name|int
-name|preadv
+name|sys_preadv
 parameter_list|(
 name|struct
 name|thread
@@ -1688,7 +1688,7 @@ end_endif
 
 begin_function
 name|int
-name|write
+name|sys_write
 parameter_list|(
 name|td
 parameter_list|,
@@ -1843,7 +1843,7 @@ end_endif
 
 begin_function
 name|int
-name|pwrite
+name|sys_pwrite
 parameter_list|(
 name|td
 parameter_list|,
@@ -2017,7 +2017,7 @@ name|offset
 expr_stmt|;
 return|return
 operator|(
-name|pwrite
+name|sys_pwrite
 argument_list|(
 name|td
 argument_list|,
@@ -2065,7 +2065,7 @@ end_endif
 
 begin_function
 name|int
-name|writev
+name|sys_writev
 parameter_list|(
 name|struct
 name|thread
@@ -2265,7 +2265,7 @@ end_endif
 
 begin_function
 name|int
-name|pwritev
+name|sys_pwritev
 parameter_list|(
 name|struct
 name|thread
@@ -2897,7 +2897,7 @@ end_endif
 
 begin_function
 name|int
-name|ftruncate
+name|sys_ftruncate
 parameter_list|(
 name|td
 parameter_list|,
@@ -3048,7 +3048,7 @@ end_comment
 
 begin_function
 name|int
-name|ioctl
+name|sys_ioctl
 parameter_list|(
 name|struct
 name|thread
@@ -3749,7 +3749,7 @@ end_function
 
 begin_function
 name|int
-name|pselect
+name|sys_pselect
 parameter_list|(
 name|struct
 name|thread
@@ -4086,7 +4086,7 @@ end_endif
 
 begin_function
 name|int
-name|select
+name|sys_select
 parameter_list|(
 name|struct
 name|thread
@@ -5769,7 +5769,7 @@ end_endif
 
 begin_function
 name|int
-name|poll
+name|sys_poll
 parameter_list|(
 name|td
 parameter_list|,
@@ -6838,7 +6838,7 @@ struct|;
 endif|#
 directive|endif
 name|int
-name|openbsd_poll
+name|sys_openbsd_poll
 parameter_list|(
 name|td
 parameter_list|,
@@ -6859,7 +6859,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|poll
+name|sys_poll
 argument_list|(
 name|td
 argument_list|,

@@ -2325,7 +2325,7 @@ name|data
 argument_list|)
 expr_stmt|;
 return|return
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,

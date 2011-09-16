@@ -504,7 +504,7 @@ end_comment
 
 begin_function
 name|int
-name|getloginclass
+name|sys_getloginclass
 parameter_list|(
 name|struct
 name|thread
@@ -655,7 +655,7 @@ end_comment
 
 begin_function
 name|int
-name|setloginclass
+name|sys_setloginclass
 parameter_list|(
 name|struct
 name|thread
