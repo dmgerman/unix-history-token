@@ -7107,7 +7107,7 @@ end_function
 
 begin_function
 name|int
-name|nlm_syscall
+name|sys_nlm_syscall
 parameter_list|(
 name|struct
 name|thread

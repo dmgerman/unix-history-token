@@ -2521,7 +2521,7 @@ operator|)
 return|;
 name|retval_socket
 operator|=
-name|socket
+name|sys_socket
 argument_list|(
 name|td
 argument_list|,
@@ -3088,7 +3088,7 @@ name|backlog
 expr_stmt|;
 return|return
 operator|(
-name|listen
+name|sys_listen
 argument_list|(
 name|td
 argument_list|,
@@ -3181,7 +3181,7 @@ expr_stmt|;
 comment|/* XXX */
 name|error
 operator|=
-name|accept
+name|sys_accept
 argument_list|(
 name|td
 argument_list|,
@@ -3536,7 +3536,7 @@ expr_stmt|;
 comment|/* XXX */
 name|error
 operator|=
-name|getsockname
+name|sys_getsockname
 argument_list|(
 name|td
 argument_list|,
@@ -3676,7 +3676,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|getpeername
+name|sys_getpeername
 argument_list|(
 name|td
 argument_list|,
@@ -4130,7 +4130,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-name|sendto
+name|sys_sendto
 argument_list|(
 name|td
 argument_list|,
@@ -4237,7 +4237,7 @@ literal|0
 expr_stmt|;
 return|return
 operator|(
-name|recvfrom
+name|sys_recvfrom
 argument_list|(
 name|td
 argument_list|,
@@ -4559,7 +4559,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|recvfrom
+name|sys_recvfrom
 argument_list|(
 name|td
 argument_list|,
@@ -6147,7 +6147,7 @@ name|how
 expr_stmt|;
 return|return
 operator|(
-name|shutdown
+name|sys_shutdown
 argument_list|(
 name|td
 argument_list|,
@@ -6438,7 +6438,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|setsockopt
+name|sys_setsockopt
 argument_list|(
 name|td
 argument_list|,
@@ -6462,7 +6462,7 @@ block|}
 else|else
 name|error
 operator|=
-name|setsockopt
+name|sys_setsockopt
 argument_list|(
 name|td
 argument_list|,
@@ -6868,7 +6868,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|getsockopt
+name|sys_getsockopt
 argument_list|(
 name|td
 argument_list|,
@@ -6892,7 +6892,7 @@ block|}
 else|else
 name|error
 operator|=
-name|getsockopt
+name|sys_getsockopt
 argument_list|(
 name|td
 argument_list|,

@@ -163,6 +163,16 @@ parameter_list|)
 value|{			\     .new_sysent = {						\ 	.sy_narg = (sizeof(struct syscallname ## _args )	\ 	    / sizeof(register_t)),				\ 	.sy_call = (sy_call_t *)& syscallname,			\     },								\     .syscall_no = FREEBSD32_SYS_##syscallname			\ }
 end_define
 
+begin_define
+define|#
+directive|define
+name|SYSCALL32_INIT_HELPER_COMPAT
+parameter_list|(
+name|syscallname
+parameter_list|)
+value|{		\     .new_sysent = {						\ 	.sy_narg = (sizeof(struct syscallname ## _args )	\ 	    / sizeof(register_t)),				\ 	.sy_call = (sy_call_t *)& sys_ ## syscallname,		\     },								\     .syscall_no = FREEBSD32_SYS_##syscallname			\ }
+end_define
+
 begin_function_decl
 name|int
 name|syscall32_register

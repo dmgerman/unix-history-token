@@ -1183,7 +1183,7 @@ argument_list|(
 name|semsys
 argument_list|)
 block|,
-name|SYSCALL_INIT_HELPER
+name|SYSCALL_INIT_HELPER_COMPAT
 argument_list|(
 name|freebsd7___semctl
 argument_list|)
@@ -1250,12 +1250,12 @@ argument_list|(
 name|freebsd32_semctl
 argument_list|)
 block|,
-name|SYSCALL32_INIT_HELPER
+name|SYSCALL32_INIT_HELPER_COMPAT
 argument_list|(
 name|semget
 argument_list|)
 block|,
-name|SYSCALL32_INIT_HELPER
+name|SYSCALL32_INIT_HELPER_COMPAT
 argument_list|(
 name|semop
 argument_list|)
@@ -2742,7 +2742,7 @@ end_endif
 
 begin_function
 name|int
-name|__semctl
+name|sys___semctl
 parameter_list|(
 name|struct
 name|thread
@@ -4740,7 +4740,7 @@ end_endif
 
 begin_function
 name|int
-name|semget
+name|sys_semget
 parameter_list|(
 name|struct
 name|thread
@@ -5611,7 +5611,7 @@ end_endif
 
 begin_function
 name|int
-name|semop
+name|sys_semop
 parameter_list|(
 name|struct
 name|thread
@@ -7489,13 +7489,13 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|semget
+name|sys_semget
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|semop
+name|sys_semop
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -7506,7 +7506,7 @@ end_comment
 
 begin_function
 name|int
-name|semsys
+name|sys_semsys
 parameter_list|(
 name|td
 parameter_list|,
@@ -8118,7 +8118,7 @@ return|;
 default|default:
 return|return
 operator|(
-name|semsys
+name|sys_semsys
 argument_list|(
 name|td
 argument_list|,

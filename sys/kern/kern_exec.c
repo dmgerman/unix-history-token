@@ -981,7 +981,7 @@ end_endif
 
 begin_function
 name|int
-name|execve
+name|sys_execve
 parameter_list|(
 name|td
 parameter_list|,
@@ -1081,7 +1081,7 @@ block|}
 endif|#
 directive|endif
 name|int
-name|fexecve
+name|sys_fexecve
 argument_list|(
 expr|struct
 name|thread
@@ -1191,7 +1191,7 @@ end_endif
 
 begin_function
 name|int
-name|__mac_execve
+name|sys___mac_execve
 parameter_list|(
 name|td
 parameter_list|,

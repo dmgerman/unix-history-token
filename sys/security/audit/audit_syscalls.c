@@ -117,7 +117,7 @@ end_comment
 
 begin_function
 name|int
-name|audit
+name|sys_audit
 parameter_list|(
 name|struct
 name|thread
@@ -409,7 +409,7 @@ end_comment
 
 begin_function
 name|int
-name|auditon
+name|sys_auditon
 parameter_list|(
 name|struct
 name|thread
@@ -2561,7 +2561,7 @@ end_comment
 
 begin_function
 name|int
-name|getauid
+name|sys_getauid
 parameter_list|(
 name|struct
 name|thread
@@ -2648,7 +2648,7 @@ end_comment
 
 begin_function
 name|int
-name|setauid
+name|sys_setauid
 parameter_list|(
 name|struct
 name|thread
@@ -2851,7 +2851,7 @@ end_comment
 
 begin_function
 name|int
-name|getaudit
+name|sys_getaudit
 parameter_list|(
 name|struct
 name|thread
@@ -3028,7 +3028,7 @@ end_comment
 
 begin_function
 name|int
-name|setaudit
+name|sys_setaudit
 parameter_list|(
 name|struct
 name|thread
@@ -3308,7 +3308,7 @@ end_comment
 
 begin_function
 name|int
-name|getaudit_addr
+name|sys_getaudit_addr
 parameter_list|(
 name|struct
 name|thread
@@ -3409,7 +3409,7 @@ end_comment
 
 begin_function
 name|int
-name|setaudit_addr
+name|sys_setaudit_addr
 parameter_list|(
 name|struct
 name|thread
@@ -3636,7 +3636,7 @@ end_comment
 
 begin_function
 name|int
-name|auditctl
+name|sys_auditctl
 parameter_list|(
 name|struct
 name|thread
@@ -3942,7 +3942,7 @@ end_comment
 
 begin_function
 name|int
-name|audit
+name|sys_audit
 parameter_list|(
 name|struct
 name|thread
@@ -3965,7 +3965,7 @@ end_function
 
 begin_function
 name|int
-name|auditon
+name|sys_auditon
 parameter_list|(
 name|struct
 name|thread
@@ -3988,7 +3988,7 @@ end_function
 
 begin_function
 name|int
-name|getauid
+name|sys_getauid
 parameter_list|(
 name|struct
 name|thread
@@ -4011,7 +4011,7 @@ end_function
 
 begin_function
 name|int
-name|setauid
+name|sys_setauid
 parameter_list|(
 name|struct
 name|thread
@@ -4034,7 +4034,7 @@ end_function
 
 begin_function
 name|int
-name|getaudit
+name|sys_getaudit
 parameter_list|(
 name|struct
 name|thread
@@ -4057,7 +4057,7 @@ end_function
 
 begin_function
 name|int
-name|setaudit
+name|sys_setaudit
 parameter_list|(
 name|struct
 name|thread
@@ -4080,7 +4080,7 @@ end_function
 
 begin_function
 name|int
-name|getaudit_addr
+name|sys_getaudit_addr
 parameter_list|(
 name|struct
 name|thread
@@ -4103,7 +4103,7 @@ end_function
 
 begin_function
 name|int
-name|setaudit_addr
+name|sys_setaudit_addr
 parameter_list|(
 name|struct
 name|thread
@@ -4126,7 +4126,7 @@ end_function
 
 begin_function
 name|int
-name|auditctl
+name|sys_auditctl
 parameter_list|(
 name|struct
 name|thread

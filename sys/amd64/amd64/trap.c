@@ -3340,21 +3340,6 @@ directive|include
 file|"../../kern/subr_syscall.c"
 end_include
 
-begin_function_decl
-name|void
-name|amd64_syscall
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|int
-name|traced
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  *	syscall -	system call request C handler  *  *	A system call is essentially treated as a trap.  */
 end_comment

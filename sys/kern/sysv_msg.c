@@ -609,7 +609,7 @@ argument_list|(
 name|msgsys
 argument_list|)
 block|,
-name|SYSCALL_INIT_HELPER
+name|SYSCALL_INIT_HELPER_COMPAT
 argument_list|(
 name|freebsd7_msgctl
 argument_list|)
@@ -686,7 +686,7 @@ argument_list|(
 name|freebsd32_msgrcv
 argument_list|)
 block|,
-name|SYSCALL32_INIT_HELPER
+name|SYSCALL32_INIT_HELPER_COMPAT
 argument_list|(
 name|msgget
 argument_list|)
@@ -1707,7 +1707,7 @@ end_endif
 
 begin_function
 name|int
-name|msgctl
+name|sys_msgctl
 parameter_list|(
 name|td
 parameter_list|,
@@ -2610,7 +2610,7 @@ end_endif
 
 begin_function
 name|int
-name|msgget
+name|sys_msgget
 parameter_list|(
 name|td
 parameter_list|,
@@ -4763,7 +4763,7 @@ end_function
 
 begin_function
 name|int
-name|msgsnd
+name|sys_msgsnd
 parameter_list|(
 name|td
 parameter_list|,
@@ -6006,7 +6006,7 @@ end_function
 
 begin_function
 name|int
-name|msgrcv
+name|sys_msgrcv
 parameter_list|(
 name|td
 parameter_list|,
@@ -6458,7 +6458,7 @@ return|;
 default|default:
 return|return
 operator|(
-name|msgsys
+name|sys_msgsys
 argument_list|(
 name|td
 argument_list|,
@@ -7460,19 +7460,19 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|msgget
+name|sys_msgget
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|msgsnd
+name|sys_msgsnd
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|msgrcv
+name|sys_msgrcv
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -7483,7 +7483,7 @@ end_comment
 
 begin_function
 name|int
-name|msgsys
+name|sys_msgsys
 parameter_list|(
 name|td
 parameter_list|,

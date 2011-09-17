@@ -179,7 +179,7 @@ end_expr_stmt
 
 begin_function
 name|int
-name|__mac_get_pid
+name|sys___mac_get_pid
 parameter_list|(
 name|struct
 name|thread
@@ -460,7 +460,7 @@ end_function
 
 begin_function
 name|int
-name|__mac_get_proc
+name|sys___mac_get_proc
 parameter_list|(
 name|struct
 name|thread
@@ -660,7 +660,7 @@ end_function
 
 begin_function
 name|int
-name|__mac_set_proc
+name|sys___mac_set_proc
 parameter_list|(
 name|struct
 name|thread
@@ -942,7 +942,7 @@ end_function
 
 begin_function
 name|int
-name|__mac_get_fd
+name|sys___mac_get_fd
 parameter_list|(
 name|struct
 name|thread
@@ -1435,7 +1435,7 @@ end_function
 
 begin_function
 name|int
-name|__mac_get_file
+name|sys___mac_get_file
 parameter_list|(
 name|struct
 name|thread
@@ -1737,7 +1737,7 @@ end_function
 
 begin_function
 name|int
-name|__mac_get_link
+name|sys___mac_get_link
 parameter_list|(
 name|struct
 name|thread
@@ -2039,7 +2039,7 @@ end_function
 
 begin_function
 name|int
-name|__mac_set_fd
+name|sys___mac_set_fd
 parameter_list|(
 name|struct
 name|thread
@@ -2529,7 +2529,7 @@ end_function
 
 begin_function
 name|int
-name|__mac_set_file
+name|sys___mac_set_file
 parameter_list|(
 name|struct
 name|thread
@@ -2822,7 +2822,7 @@ end_function
 
 begin_function
 name|int
-name|__mac_set_link
+name|sys___mac_set_link
 parameter_list|(
 name|struct
 name|thread
@@ -3115,7 +3115,7 @@ end_function
 
 begin_function
 name|int
-name|mac_syscall
+name|sys_mac_syscall
 parameter_list|(
 name|struct
 name|thread
@@ -3319,7 +3319,7 @@ end_comment
 
 begin_function
 name|int
-name|__mac_get_pid
+name|sys___mac_get_pid
 parameter_list|(
 name|struct
 name|thread
@@ -3342,7 +3342,7 @@ end_function
 
 begin_function
 name|int
-name|__mac_get_proc
+name|sys___mac_get_proc
 parameter_list|(
 name|struct
 name|thread
@@ -3365,7 +3365,7 @@ end_function
 
 begin_function
 name|int
-name|__mac_set_proc
+name|sys___mac_set_proc
 parameter_list|(
 name|struct
 name|thread
@@ -3388,7 +3388,7 @@ end_function
 
 begin_function
 name|int
-name|__mac_get_fd
+name|sys___mac_get_fd
 parameter_list|(
 name|struct
 name|thread
@@ -3411,7 +3411,7 @@ end_function
 
 begin_function
 name|int
-name|__mac_get_file
+name|sys___mac_get_file
 parameter_list|(
 name|struct
 name|thread
@@ -3434,7 +3434,7 @@ end_function
 
 begin_function
 name|int
-name|__mac_get_link
+name|sys___mac_get_link
 parameter_list|(
 name|struct
 name|thread
@@ -3457,7 +3457,7 @@ end_function
 
 begin_function
 name|int
-name|__mac_set_fd
+name|sys___mac_set_fd
 parameter_list|(
 name|struct
 name|thread
@@ -3480,7 +3480,7 @@ end_function
 
 begin_function
 name|int
-name|__mac_set_file
+name|sys___mac_set_file
 parameter_list|(
 name|struct
 name|thread
@@ -3503,7 +3503,7 @@ end_function
 
 begin_function
 name|int
-name|__mac_set_link
+name|sys___mac_set_link
 parameter_list|(
 name|struct
 name|thread
@@ -3526,7 +3526,7 @@ end_function
 
 begin_function
 name|int
-name|mac_syscall
+name|sys_mac_syscall
 parameter_list|(
 name|struct
 name|thread

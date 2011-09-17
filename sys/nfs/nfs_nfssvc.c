@@ -228,7 +228,7 @@ end_comment
 
 begin_function
 name|int
-name|nfssvc
+name|sys_nfssvc
 parameter_list|(
 name|struct
 name|thread

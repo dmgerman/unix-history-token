@@ -4441,7 +4441,7 @@ end_function
 
 begin_function
 name|int
-name|kldload
+name|sys_kldload
 parameter_list|(
 name|struct
 name|thread
@@ -4817,7 +4817,7 @@ end_function
 
 begin_function
 name|int
-name|kldunload
+name|sys_kldunload
 parameter_list|(
 name|struct
 name|thread
@@ -4849,7 +4849,7 @@ end_function
 
 begin_function
 name|int
-name|kldunloadf
+name|sys_kldunloadf
 parameter_list|(
 name|struct
 name|thread
@@ -4902,7 +4902,7 @@ end_function
 
 begin_function
 name|int
-name|kldfind
+name|sys_kldfind
 parameter_list|(
 name|struct
 name|thread
@@ -5057,7 +5057,7 @@ end_function
 
 begin_function
 name|int
-name|kldnext
+name|sys_kldnext
 parameter_list|(
 name|struct
 name|thread
@@ -5221,7 +5221,7 @@ end_function
 
 begin_function
 name|int
-name|kldstat
+name|sys_kldstat
 parameter_list|(
 name|struct
 name|thread
@@ -5549,7 +5549,7 @@ end_function
 
 begin_function
 name|int
-name|kldfirstmod
+name|sys_kldfirstmod
 parameter_list|(
 name|struct
 name|thread
@@ -5674,7 +5674,7 @@ end_function
 
 begin_function
 name|int
-name|kldsym
+name|sys_kldsym
 parameter_list|(
 name|struct
 name|thread

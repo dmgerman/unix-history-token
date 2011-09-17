@@ -5,7 +5,7 @@ end_comment
 
 begin_function_decl
 name|int
-name|cmsg_handler_client
+name|cm_handler_client
 parameter_list|(
 name|int
 parameter_list|,

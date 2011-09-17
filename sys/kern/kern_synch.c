@@ -2305,7 +2305,7 @@ end_comment
 
 begin_function
 name|int
-name|yield
+name|sys_yield
 parameter_list|(
 name|struct
 name|thread

@@ -16123,7 +16123,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|psignal
+name|kern_psignal
 argument_list|(
 name|procp
 argument_list|,

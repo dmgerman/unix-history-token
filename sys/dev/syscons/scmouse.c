@@ -4405,7 +4405,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|psignal
+name|kern_psignal
 argument_list|(
 name|cur_scp
 operator|->
@@ -4694,7 +4694,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|psignal
+name|kern_psignal
 argument_list|(
 name|cur_scp
 operator|->

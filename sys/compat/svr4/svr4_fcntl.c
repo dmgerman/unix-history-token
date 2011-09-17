@@ -1662,7 +1662,7 @@ name|start
 expr_stmt|;
 name|error
 operator|=
-name|ftruncate
+name|sys_ftruncate
 argument_list|(
 name|td
 argument_list|,
@@ -2169,7 +2169,7 @@ operator|->
 name|whence
 expr_stmt|;
 return|return
-name|lseek
+name|sys_lseek
 argument_list|(
 name|td
 argument_list|,

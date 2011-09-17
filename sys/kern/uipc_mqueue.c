@@ -9853,7 +9853,7 @@ end_comment
 
 begin_function
 name|int
-name|kmq_open
+name|sys_kmq_open
 parameter_list|(
 name|struct
 name|thread
@@ -9983,7 +9983,7 @@ end_comment
 
 begin_function
 name|int
-name|kmq_unlink
+name|sys_kmq_unlink
 parameter_list|(
 name|struct
 name|thread
@@ -10661,7 +10661,7 @@ end_function
 
 begin_function
 name|int
-name|kmq_setattr
+name|sys_kmq_setattr
 parameter_list|(
 name|struct
 name|thread
@@ -10792,7 +10792,7 @@ end_function
 
 begin_function
 name|int
-name|kmq_timedreceive
+name|sys_kmq_timedreceive
 parameter_list|(
 name|struct
 name|thread
@@ -10955,7 +10955,7 @@ end_function
 
 begin_function
 name|int
-name|kmq_timedsend
+name|sys_kmq_timedsend
 parameter_list|(
 name|struct
 name|thread
@@ -11117,7 +11117,7 @@ end_function
 
 begin_function
 name|int
-name|kmq_notify
+name|sys_kmq_notify
 parameter_list|(
 name|struct
 name|thread
@@ -14095,12 +14095,12 @@ argument_list|(
 name|freebsd32_kmq_timedreceive
 argument_list|)
 block|,
-name|SYSCALL32_INIT_HELPER
+name|SYSCALL32_INIT_HELPER_COMPAT
 argument_list|(
 name|kmq_notify
 argument_list|)
 block|,
-name|SYSCALL32_INIT_HELPER
+name|SYSCALL32_INIT_HELPER_COMPAT
 argument_list|(
 name|kmq_unlink
 argument_list|)

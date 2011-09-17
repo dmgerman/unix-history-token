@@ -2467,7 +2467,7 @@ name|pos
 expr_stmt|;
 return|return
 operator|(
-name|pread
+name|sys_pread
 argument_list|(
 name|td
 argument_list|,
@@ -2860,7 +2860,7 @@ name|pos
 expr_stmt|;
 name|error
 operator|=
-name|pread
+name|sys_pread
 argument_list|(
 name|td
 argument_list|,
@@ -2970,7 +2970,7 @@ name|pos
 expr_stmt|;
 return|return
 operator|(
-name|mmap
+name|sys_mmap
 argument_list|(
 name|td
 argument_list|,
@@ -8127,7 +8127,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|pread
+name|sys_pread
 argument_list|(
 name|td
 argument_list|,
@@ -8197,7 +8197,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|pwrite
+name|sys_pwrite
 argument_list|(
 name|td
 argument_list|,
@@ -8260,7 +8260,7 @@ name|whence
 expr_stmt|;
 return|return
 operator|(
-name|lseek
+name|sys_lseek
 argument_list|(
 name|td
 argument_list|,
@@ -8333,7 +8333,7 @@ name|whence
 expr_stmt|;
 name|error
 operator|=
-name|lseek
+name|sys_lseek
 argument_list|(
 name|td
 argument_list|,
@@ -8427,7 +8427,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|truncate
+name|sys_truncate
 argument_list|(
 name|td
 argument_list|,
@@ -8481,7 +8481,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ftruncate
+name|sys_ftruncate
 argument_list|(
 name|td
 argument_list|,
@@ -8774,7 +8774,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|pread
+name|sys_pread
 argument_list|(
 name|td
 argument_list|,
@@ -8844,7 +8844,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|pwrite
+name|sys_pwrite
 argument_list|(
 name|td
 argument_list|,
@@ -8912,7 +8912,7 @@ name|whence
 expr_stmt|;
 name|error
 operator|=
-name|lseek
+name|sys_lseek
 argument_list|(
 name|td
 argument_list|,
@@ -9006,7 +9006,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|truncate
+name|sys_truncate
 argument_list|(
 name|td
 argument_list|,
@@ -9060,7 +9060,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ftruncate
+name|sys_ftruncate
 argument_list|(
 name|td
 argument_list|,
@@ -14030,7 +14030,7 @@ name|setid
 expr_stmt|;
 return|return
 operator|(
-name|cpuset_setid
+name|sys_cpuset_setid
 argument_list|(
 name|td
 argument_list|,
@@ -14100,7 +14100,7 @@ name|setid
 expr_stmt|;
 return|return
 operator|(
-name|cpuset_getid
+name|sys_cpuset_getid
 argument_list|(
 name|td
 argument_list|,
@@ -14178,7 +14178,7 @@ name|mask
 expr_stmt|;
 return|return
 operator|(
-name|cpuset_getaffinity
+name|sys_cpuset_getaffinity
 argument_list|(
 name|td
 argument_list|,
@@ -14256,7 +14256,7 @@ name|mask
 expr_stmt|;
 return|return
 operator|(
-name|cpuset_setaffinity
+name|sys_cpuset_setaffinity
 argument_list|(
 name|td
 argument_list|,
@@ -15975,7 +15975,7 @@ operator|)
 expr_stmt|;
 return|return
 operator|(
-name|posix_fallocate
+name|sys_posix_fallocate
 argument_list|(
 name|td
 argument_list|,

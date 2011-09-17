@@ -346,7 +346,7 @@ end_endif
 
 begin_function
 name|int
-name|getpriority
+name|sys_getpriority
 parameter_list|(
 name|td
 parameter_list|,
@@ -744,7 +744,7 @@ end_endif
 
 begin_function
 name|int
-name|setpriority
+name|sys_setpriority
 parameter_list|(
 name|td
 parameter_list|,
@@ -1280,7 +1280,7 @@ end_endif
 
 begin_function
 name|int
-name|rtprio_thread
+name|sys_rtprio_thread
 parameter_list|(
 name|struct
 name|thread
@@ -1591,7 +1591,7 @@ end_endif
 
 begin_function
 name|int
-name|rtprio
+name|sys_rtprio
 parameter_list|(
 name|td
 parameter_list|,
@@ -2609,7 +2609,7 @@ end_endif
 
 begin_function
 name|int
-name|setrlimit
+name|sys_setrlimit
 parameter_list|(
 name|td
 parameter_list|,
@@ -2821,7 +2821,7 @@ name|p_cpulimit
 operator|+=
 literal|5
 expr_stmt|;
-name|psignal
+name|kern_psignal
 argument_list|(
 name|p
 argument_list|,
@@ -3521,7 +3521,7 @@ end_comment
 
 begin_function
 name|int
-name|getrlimit
+name|sys_getrlimit
 parameter_list|(
 name|td
 parameter_list|,
@@ -4302,7 +4302,7 @@ end_endif
 
 begin_function
 name|int
-name|getrusage
+name|sys_getrusage
 parameter_list|(
 name|td
 parameter_list|,

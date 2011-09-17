@@ -1631,7 +1631,7 @@ parameter_list|,
 name|mask
 parameter_list|)
 define|\
-value|{ \ 	(mask) = (x)& 0x8080808080808080ULL; \ 	(mask) = ((mask)<< 1) - ((mask)>> 7); \ 	(x) = (((x)<< 1)& 0xfefefefefefefefeULL) ^ \ 	    ((mask)& 0x1d1d1d1d1d1d1d1d); \ }
+value|{ \ 	(mask) = (x)& 0x8080808080808080ULL; \ 	(mask) = ((mask)<< 1) - ((mask)>> 7); \ 	(x) = (((x)<< 1)& 0xfefefefefefefefeULL) ^ \ 	    ((mask)& 0x1d1d1d1d1d1d1d1dULL); \ }
 end_define
 
 begin_define

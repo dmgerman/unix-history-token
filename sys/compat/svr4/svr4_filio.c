@@ -255,7 +255,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|poll
+name|sys_poll
 argument_list|(
 name|td
 argument_list|,

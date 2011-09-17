@@ -155,7 +155,7 @@ end_include
 
 begin_function
 name|int
-name|cmsg_handler_client
+name|cm_handler_client
 parameter_list|(
 name|int
 name|fd
@@ -381,7 +381,7 @@ name|CM_VERSION
 expr_stmt|;
 name|error
 operator|=
-name|cmsg_send
+name|cm_send
 argument_list|(
 name|fd
 argument_list|,
@@ -396,7 +396,7 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"<%s> cmsg_send()"
+literal|"<%s> cm_send()"
 argument_list|,
 name|__func__
 argument_list|)
@@ -411,7 +411,7 @@ name|CM_STATE_ACK_WAIT
 case|:
 name|error
 operator|=
-name|cmsg_recv
+name|cm_recv
 argument_list|(
 name|fd
 argument_list|,
@@ -427,7 +427,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"<%s> cmsg_recv()"
+literal|"<%s> cm_recv()"
 argument_list|,
 name|__func__
 argument_list|)

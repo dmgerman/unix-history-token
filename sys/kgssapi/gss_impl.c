@@ -287,7 +287,7 @@ end_expr_stmt
 
 begin_function
 name|int
-name|gssd_syscall
+name|sys_gssd_syscall
 parameter_list|(
 name|struct
 name|thread

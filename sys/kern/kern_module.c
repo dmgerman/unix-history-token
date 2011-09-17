@@ -1200,7 +1200,7 @@ end_comment
 
 begin_function
 name|int
-name|modnext
+name|sys_modnext
 parameter_list|(
 name|struct
 name|thread
@@ -1347,7 +1347,7 @@ end_function
 
 begin_function
 name|int
-name|modfnext
+name|sys_modfnext
 parameter_list|(
 name|struct
 name|thread
@@ -1477,7 +1477,7 @@ end_struct
 
 begin_function
 name|int
-name|modstat
+name|sys_modstat
 parameter_list|(
 name|struct
 name|thread
@@ -1796,7 +1796,7 @@ end_function
 
 begin_function
 name|int
-name|modfind
+name|sys_modfind
 parameter_list|(
 name|struct
 name|thread

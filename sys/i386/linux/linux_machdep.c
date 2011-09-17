@@ -2455,7 +2455,7 @@ endif|#
 directive|endif
 name|error
 operator|=
-name|mmap
+name|sys_mmap
 argument_list|(
 name|td
 argument_list|,
@@ -2569,7 +2569,7 @@ name|PROT_EXEC
 expr_stmt|;
 return|return
 operator|(
-name|mprotect
+name|sys_mprotect
 argument_list|(
 name|td
 argument_list|,
@@ -4102,7 +4102,7 @@ operator|->
 name|length
 expr_stmt|;
 return|return
-name|ftruncate
+name|sys_ftruncate
 argument_list|(
 name|td
 argument_list|,
@@ -4753,7 +4753,7 @@ name|args
 parameter_list|)
 block|{
 return|return
-name|ktimer_create
+name|sys_ktimer_create
 argument_list|(
 name|td
 argument_list|,
@@ -4784,7 +4784,7 @@ name|args
 parameter_list|)
 block|{
 return|return
-name|ktimer_settime
+name|sys_ktimer_settime
 argument_list|(
 name|td
 argument_list|,
@@ -4815,7 +4815,7 @@ name|args
 parameter_list|)
 block|{
 return|return
-name|ktimer_gettime
+name|sys_ktimer_gettime
 argument_list|(
 name|td
 argument_list|,
@@ -4846,7 +4846,7 @@ name|args
 parameter_list|)
 block|{
 return|return
-name|ktimer_getoverrun
+name|sys_ktimer_getoverrun
 argument_list|(
 name|td
 argument_list|,
@@ -4877,7 +4877,7 @@ name|args
 parameter_list|)
 block|{
 return|return
-name|ktimer_delete
+name|sys_ktimer_delete
 argument_list|(
 name|td
 argument_list|,
@@ -4915,7 +4915,7 @@ ifdef|#
 directive|ifdef
 name|P1003_1B_MQUEUE
 return|return
-name|kmq_open
+name|sys_kmq_open
 argument_list|(
 name|td
 argument_list|,
@@ -4958,7 +4958,7 @@ ifdef|#
 directive|ifdef
 name|P1003_1B_MQUEUE
 return|return
-name|kmq_unlink
+name|sys_kmq_unlink
 argument_list|(
 name|td
 argument_list|,
@@ -5001,7 +5001,7 @@ ifdef|#
 directive|ifdef
 name|P1003_1B_MQUEUE
 return|return
-name|kmq_timedsend
+name|sys_kmq_timedsend
 argument_list|(
 name|td
 argument_list|,
@@ -5044,7 +5044,7 @@ ifdef|#
 directive|ifdef
 name|P1003_1B_MQUEUE
 return|return
-name|kmq_timedreceive
+name|sys_kmq_timedreceive
 argument_list|(
 name|td
 argument_list|,
@@ -5087,7 +5087,7 @@ ifdef|#
 directive|ifdef
 name|P1003_1B_MQUEUE
 return|return
-name|kmq_notify
+name|sys_kmq_notify
 argument_list|(
 name|td
 argument_list|,
@@ -5130,7 +5130,7 @@ ifdef|#
 directive|ifdef
 name|P1003_1B_MQUEUE
 return|return
-name|kmq_setattr
+name|sys_kmq_setattr
 argument_list|(
 name|td
 argument_list|,

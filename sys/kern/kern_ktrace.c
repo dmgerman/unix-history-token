@@ -3680,7 +3680,7 @@ end_comment
 
 begin_function
 name|int
-name|ktrace
+name|sys_ktrace
 parameter_list|(
 name|td
 parameter_list|,
@@ -4414,7 +4414,7 @@ end_comment
 
 begin_function
 name|int
-name|utrace
+name|sys_utrace
 parameter_list|(
 name|td
 parameter_list|,

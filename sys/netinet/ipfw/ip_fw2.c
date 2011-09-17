@@ -21,6 +21,12 @@ begin_comment
 comment|/*  * The FreeBSD IP packet firewall, main file  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"opt_ipfw.h"
+end_include
+
 begin_if
 if|#
 directive|if
@@ -30,12 +36,6 @@ argument_list|(
 name|KLD_MODULE
 argument_list|)
 end_if
-
-begin_include
-include|#
-directive|include
-file|"opt_ipfw.h"
-end_include
 
 begin_include
 include|#

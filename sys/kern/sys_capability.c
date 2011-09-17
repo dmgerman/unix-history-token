@@ -139,7 +139,7 @@ end_comment
 
 begin_function
 name|int
-name|cap_enter
+name|sys_cap_enter
 parameter_list|(
 name|struct
 name|thread
@@ -242,7 +242,7 @@ end_comment
 
 begin_function
 name|int
-name|cap_getmode
+name|sys_cap_getmode
 parameter_list|(
 name|struct
 name|thread
@@ -303,7 +303,7 @@ end_comment
 
 begin_function
 name|int
-name|cap_enter
+name|sys_cap_enter
 parameter_list|(
 name|struct
 name|thread
@@ -326,7 +326,7 @@ end_function
 
 begin_function
 name|int
-name|cap_getmode
+name|sys_cap_getmode
 parameter_list|(
 name|struct
 name|thread
@@ -776,7 +776,7 @@ end_comment
 
 begin_function
 name|int
-name|cap_new
+name|sys_cap_new
 parameter_list|(
 name|struct
 name|thread
@@ -909,7 +909,7 @@ end_comment
 
 begin_function
 name|int
-name|cap_getrights
+name|sys_cap_getrights
 parameter_list|(
 name|struct
 name|thread
@@ -1893,7 +1893,7 @@ end_comment
 
 begin_function
 name|int
-name|cap_new
+name|sys_cap_new
 parameter_list|(
 name|struct
 name|thread
@@ -1916,7 +1916,7 @@ end_function
 
 begin_function
 name|int
-name|cap_getrights
+name|sys_cap_getrights
 parameter_list|(
 name|struct
 name|thread

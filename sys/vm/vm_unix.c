@@ -126,7 +126,7 @@ end_comment
 
 begin_function
 name|int
-name|obreak
+name|sys_obreak
 parameter_list|(
 name|td
 parameter_list|,
@@ -771,7 +771,7 @@ end_comment
 
 begin_function
 name|int
-name|ovadvise
+name|sys_ovadvise
 parameter_list|(
 name|td
 parameter_list|,

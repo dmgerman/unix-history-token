@@ -754,6 +754,17 @@ parameter_list|(
 name|syscallname
 parameter_list|)
 define|\
+value|static struct sysent syscallname##_sysent = {			\ 	(sizeof(struct syscallname ## _args )			\ 	    / sizeof(register_t)),				\ 	(sy_call_t *)& sys_##syscallname,	       		\ 	SYS_AUE_##syscallname					\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAKE_SYSENT_COMPAT
+parameter_list|(
+name|syscallname
+parameter_list|)
+define|\
 value|static struct sysent syscallname##_sysent = {			\ 	(sizeof(struct syscallname ## _args )			\ 	    / sizeof(register_t)),				\ 	(sy_call_t *)& syscallname,				\ 	SYS_AUE_##syscallname					\ }
 end_define
 
@@ -831,7 +842,17 @@ name|SYSCALL_INIT_HELPER
 parameter_list|(
 name|syscallname
 parameter_list|)
-value|{			\     .new_sysent = {						\ 	.sy_narg = (sizeof(struct syscallname ## _args )	\ 	    / sizeof(register_t)),				\ 	.sy_call = (sy_call_t *)& syscallname,			\ 	.sy_auevent = SYS_AUE_##syscallname			\     },								\     .syscall_no = SYS_##syscallname				\ }
+value|{			\     .new_sysent = {						\ 	.sy_narg = (sizeof(struct syscallname ## _args )	\ 	    / sizeof(register_t)),				\ 	.sy_call = (sy_call_t *)& sys_ ## syscallname,		\ 	.sy_auevent = SYS_AUE_##syscallname			\     },								\     .syscall_no = SYS_##syscallname				\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCALL_INIT_HELPER_COMPAT
+parameter_list|(
+name|syscallname
+parameter_list|)
+value|{		\     .new_sysent = {						\ 	.sy_narg = (sizeof(struct syscallname ## _args )	\ 	    / sizeof(register_t)),				\ 	.sy_call = (sy_call_t *)& syscallname,			\ 	.sy_auevent = SYS_AUE_##syscallname			\     },								\     .syscall_no = SYS_##syscallname				\ }
 end_define
 
 begin_define

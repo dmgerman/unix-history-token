@@ -6124,7 +6124,7 @@ operator|->
 name|p
 argument_list|)
 expr_stmt|;
-name|psignal
+name|kern_psignal
 argument_list|(
 name|mfi_aen_entry
 operator|->

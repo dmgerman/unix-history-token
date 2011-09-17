@@ -2744,7 +2744,7 @@ name|pid
 expr_stmt|;
 return|return
 operator|(
-name|kill
+name|sys_kill
 argument_list|(
 name|td
 argument_list|,

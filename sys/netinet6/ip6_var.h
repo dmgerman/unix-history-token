@@ -1054,6 +1054,20 @@ name|VNET_DECLARE
 argument_list|(
 name|int
 argument_list|,
+name|ip6_rfc6204w3
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Accept defroute from RA even when 					   forwarding enabled */
+end_comment
+
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+name|int
+argument_list|,
 name|ip6_keepfaith
 argument_list|)
 expr_stmt|;
@@ -1158,6 +1172,13 @@ define|#
 directive|define
 name|V_ip6_norbit_raif
 value|VNET(ip6_norbit_raif)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_rfc6204w3
+value|VNET(ip6_rfc6204w3)
 end_define
 
 begin_define

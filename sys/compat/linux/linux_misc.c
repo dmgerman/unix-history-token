@@ -1011,7 +1011,7 @@ name|vm_daddr
 operator|)
 operator|&&
 operator|!
-name|obreak
+name|sys_obreak
 argument_list|(
 name|td
 argument_list|,
@@ -2796,7 +2796,7 @@ name|new_len
 expr_stmt|;
 name|error
 operator|=
-name|munmap
+name|sys_munmap
 argument_list|(
 name|td
 argument_list|,
@@ -2909,7 +2909,7 @@ name|LINUX_MS_SYNC
 expr_stmt|;
 return|return
 operator|(
-name|msync
+name|sys_msync
 argument_list|(
 name|td
 argument_list|,
@@ -5380,7 +5380,7 @@ name|inc
 expr_stmt|;
 return|return
 operator|(
-name|setpriority
+name|sys_setpriority
 argument_list|(
 name|td
 argument_list|,
@@ -6550,7 +6550,7 @@ name|param
 expr_stmt|;
 return|return
 operator|(
-name|sched_setscheduler
+name|sys_sched_setscheduler
 argument_list|(
 name|td
 argument_list|,
@@ -6620,7 +6620,7 @@ name|pid
 expr_stmt|;
 name|error
 operator|=
-name|sched_getscheduler
+name|sys_sched_getscheduler
 argument_list|(
 name|td
 argument_list|,
@@ -6777,7 +6777,7 @@ return|;
 block|}
 return|return
 operator|(
-name|sched_get_priority_max
+name|sys_sched_get_priority_max
 argument_list|(
 name|td
 argument_list|,
@@ -6880,7 +6880,7 @@ return|;
 block|}
 return|return
 operator|(
-name|sched_get_priority_min
+name|sys_sched_get_priority_min
 argument_list|(
 name|td
 argument_list|,
@@ -7109,7 +7109,7 @@ return|;
 block|}
 return|return
 operator|(
-name|reboot
+name|sys_reboot
 argument_list|(
 name|td
 argument_list|,
@@ -7705,7 +7705,7 @@ name|pid
 expr_stmt|;
 return|return
 operator|(
-name|getsid
+name|sys_getsid
 argument_list|(
 name|td
 argument_list|,
@@ -7810,7 +7810,7 @@ name|who
 expr_stmt|;
 name|error
 operator|=
-name|getpriority
+name|sys_getpriority
 argument_list|(
 name|td
 argument_list|,
@@ -9129,7 +9129,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|cpuset_getaffinity
+name|sys_cpuset_getaffinity
 argument_list|(
 name|td
 argument_list|,
@@ -9272,7 +9272,7 @@ name|user_mask_ptr
 expr_stmt|;
 return|return
 operator|(
-name|cpuset_setaffinity
+name|sys_cpuset_setaffinity
 argument_list|(
 name|td
 argument_list|,

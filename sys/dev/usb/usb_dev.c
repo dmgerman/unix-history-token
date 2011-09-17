@@ -3309,7 +3309,7 @@ operator|->
 name|async_p
 argument_list|)
 expr_stmt|;
-name|psignal
+name|kern_psignal
 argument_list|(
 name|f
 operator|->
@@ -6672,7 +6672,7 @@ operator|->
 name|async_p
 argument_list|)
 expr_stmt|;
-name|psignal
+name|kern_psignal
 argument_list|(
 name|f
 operator|->

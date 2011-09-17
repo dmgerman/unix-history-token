@@ -6911,7 +6911,7 @@ end_comment
 
 begin_function
 name|int
-name|swapon
+name|sys_swapon
 parameter_list|(
 name|struct
 name|thread
@@ -7479,7 +7479,7 @@ end_comment
 
 begin_function
 name|int
-name|swapoff
+name|sys_swapoff
 parameter_list|(
 name|struct
 name|thread

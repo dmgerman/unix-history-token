@@ -313,7 +313,7 @@ end_function
 
 begin_function
 name|int
-name|sched_setparam
+name|sys_sched_setparam
 parameter_list|(
 name|struct
 name|thread
@@ -474,7 +474,7 @@ end_function
 
 begin_function
 name|int
-name|sched_getparam
+name|sys_sched_getparam
 parameter_list|(
 name|struct
 name|thread
@@ -628,7 +628,7 @@ end_function
 
 begin_function
 name|int
-name|sched_setscheduler
+name|sys_sched_setscheduler
 parameter_list|(
 name|struct
 name|thread
@@ -812,7 +812,7 @@ end_function
 
 begin_function
 name|int
-name|sched_getscheduler
+name|sys_sched_getscheduler
 parameter_list|(
 name|struct
 name|thread
@@ -948,7 +948,7 @@ end_function
 
 begin_function
 name|int
-name|sched_yield
+name|sys_sched_yield
 parameter_list|(
 name|struct
 name|thread
@@ -974,7 +974,7 @@ end_function
 
 begin_function
 name|int
-name|sched_get_priority_max
+name|sys_sched_get_priority_max
 parameter_list|(
 name|struct
 name|thread
@@ -1025,7 +1025,7 @@ end_function
 
 begin_function
 name|int
-name|sched_get_priority_min
+name|sys_sched_get_priority_min
 parameter_list|(
 name|struct
 name|thread
@@ -1076,7 +1076,7 @@ end_function
 
 begin_function
 name|int
-name|sched_rr_get_interval
+name|sys_sched_rr_get_interval
 parameter_list|(
 name|struct
 name|thread

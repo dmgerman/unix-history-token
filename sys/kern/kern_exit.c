@@ -388,7 +388,7 @@ end_comment
 
 begin_function
 name|void
-name|sys_exit
+name|sys_sys_exit
 parameter_list|(
 name|struct
 name|thread
@@ -706,7 +706,7 @@ argument_list|(
 name|q
 argument_list|)
 expr_stmt|;
-name|psignal
+name|kern_psignal
 argument_list|(
 name|q
 argument_list|,
@@ -1413,7 +1413,7 @@ operator|&=
 operator|~
 name|TDB_SUSPEND
 expr_stmt|;
-name|psignal
+name|kern_psignal
 argument_list|(
 name|q
 argument_list|,
@@ -1671,7 +1671,7 @@ name|p_pptr
 operator|==
 name|initproc
 condition|)
-name|psignal
+name|kern_psignal
 argument_list|(
 name|p
 operator|->
@@ -1705,7 +1705,7 @@ argument_list|)
 expr_stmt|;
 else|else
 comment|/* LINUX thread */
-name|psignal
+name|kern_psignal
 argument_list|(
 name|p
 operator|->
@@ -1872,7 +1872,7 @@ end_endif
 
 begin_function
 name|int
-name|abort2
+name|sys_abort2
 parameter_list|(
 name|struct
 name|thread
@@ -2290,7 +2290,7 @@ end_comment
 
 begin_function
 name|int
-name|wait4
+name|sys_wait4
 parameter_list|(
 name|struct
 name|thread
