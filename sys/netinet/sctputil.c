@@ -7394,19 +7394,6 @@ name|sctp_it_ctl
 operator|.
 name|iterator_flags
 operator|&
-name|SCTP_ITERATOR_MUST_EXIT
-condition|)
-block|{
-goto|goto
-name|done_with_iterator
-goto|;
-block|}
-if|if
-condition|(
-name|sctp_it_ctl
-operator|.
-name|iterator_flags
-operator|&
 name|SCTP_ITERATOR_STOP_CUR_IT
 condition|)
 block|{
@@ -7760,17 +7747,6 @@ expr_stmt|;
 name|SCTP_IPI_ITERATOR_WQ_LOCK
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|sctp_it_ctl
-operator|.
-name|iterator_flags
-operator|&
-name|SCTP_ITERATOR_MUST_EXIT
-condition|)
-block|{
-break|break;
-block|}
 comment|/* sa_ignore FREED_MEMORY */
 block|}
 name|sctp_it_ctl
