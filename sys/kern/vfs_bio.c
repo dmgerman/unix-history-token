@@ -16817,12 +16817,9 @@ argument_list|(
 literal|" "
 argument_list|)
 expr_stmt|;
-name|lockmgr_printinfo
+name|BUF_LOCKPRINTINFO
 argument_list|(
-operator|&
 name|bp
-operator|->
-name|b_lock
 argument_list|)
 expr_stmt|;
 block|}
