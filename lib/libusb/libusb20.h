@@ -1324,6 +1324,23 @@ modifier|*
 name|pbe
 parameter_list|)
 function_decl|;
+comment|/* USB debugging */
+specifier|const
+name|char
+modifier|*
+name|libusb20_strerror
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|libusb20_error_name
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
 if|#
 directive|if
 literal|0
