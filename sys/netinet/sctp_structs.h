@@ -550,22 +550,15 @@ end_struct
 begin_define
 define|#
 directive|define
-name|SCTP_ITERATOR_MUST_EXIT
-value|0x00000001
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTP_ITERATOR_STOP_CUR_IT
-value|0x00000002
+value|0x00000004
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_ITERATOR_STOP_CUR_INP
-value|0x00000004
+value|0x00000008
 end_define
 
 begin_struct

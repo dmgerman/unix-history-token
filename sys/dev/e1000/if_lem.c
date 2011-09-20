@@ -12422,6 +12422,12 @@ block|}
 comment|/* Reset state */
 name|adapter
 operator|->
+name|last_hw_offload
+operator|=
+literal|0
+expr_stmt|;
+name|adapter
+operator|->
 name|next_avail_tx_desc
 operator|=
 literal|0
