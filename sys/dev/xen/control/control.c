@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/taskqueue.h>
 end_include
 
@@ -479,6 +485,11 @@ name|max_pfn
 decl_stmt|,
 name|start_info_mfn
 decl_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|power_suspend
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
@@ -567,6 +578,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Be sure to hold Giant across DEVICE_SUSPEND/RESUME since non-MPSAFE 	 * drivers need this. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|DEVICE_SUSPEND
@@ -577,6 +595,12 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"xen_suspend: device_suspend failed\n"
@@ -603,6 +627,12 @@ endif|#
 directive|endif
 return|return;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|local_irq_disable
 argument_list|()
 expr_stmt|;
@@ -839,9 +869,21 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/*  	 * Only resume xenbus /after/ we've prepared our VCPUs; otherwise 	 * the VCPU hotplug callback can race with our vcpu_prepare 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|DEVICE_RESUME
 argument_list|(
 name|root_bus
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -878,6 +920,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|power_resume
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -947,6 +994,18 @@ block|{
 name|int
 name|suspend_cancelled
 decl_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|power_suspend
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Be sure to hold Giant across DEVICE_SUSPEND/RESUME since non-MPSAFE 	 * drivers need this. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|DEVICE_SUSPEND
@@ -955,6 +1014,12 @@ name|root_bus
 argument_list|)
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"xen_suspend: device_suspend failed\n"
@@ -962,15 +1027,17 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Make sure we don't change cpus or switch to some other 	 * thread. for the duration. 	 */
-name|critical_enter
-argument_list|()
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Prevent any races with evtchn_interrupt() handler. 	 */
-name|irq_suspend
+name|disable_intr
 argument_list|()
 expr_stmt|;
-name|disable_intr
+name|irq_suspend
 argument_list|()
 expr_stmt|;
 name|suspend_cancelled
@@ -982,9 +1049,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|suspend_cancelled
 condition|)
+name|irq_resume
+argument_list|()
+expr_stmt|;
+else|else
 name|xenpci_resume
 argument_list|()
 expr_stmt|;
@@ -992,10 +1062,13 @@ comment|/* 	 * Re-enable interrupts and put the scheduler back to normal. 	 */
 name|enable_intr
 argument_list|()
 expr_stmt|;
-name|critical_exit
-argument_list|()
-expr_stmt|;
 comment|/* 	 * FreeBSD really needs to add DEVICE_SUSPEND_CANCEL or 	 * similar. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1004,6 +1077,17 @@ condition|)
 name|DEVICE_RESUME
 argument_list|(
 name|root_bus
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|power_resume
 argument_list|)
 expr_stmt|;
 block|}

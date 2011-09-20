@@ -823,7 +823,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_resume
 argument_list|,
-name|bus_generic_resume
+name|xenbusb_resume
 argument_list|)
 block|,
 comment|/* Bus Interface */
