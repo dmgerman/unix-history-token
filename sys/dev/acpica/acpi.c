@@ -3177,7 +3177,7 @@ name|acpi_sleep_delay
 argument_list|,
 literal|0
 argument_list|,
-literal|"sleep delay"
+literal|"sleep delay in seconds"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_INT
