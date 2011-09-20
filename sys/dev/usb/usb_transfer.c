@@ -8547,7 +8547,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* start the transfer */
+comment|/* start USB transfer, if no error */
+if|if
+condition|(
+name|xfer
+operator|->
+name|error
+operator|==
+literal|0
+condition|)
 call|(
 name|ep
 operator|->
@@ -9110,7 +9118,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* start USB transfer */
+comment|/* start USB transfer, if no error */
+if|if
+condition|(
+name|xfer
+operator|->
+name|error
+operator|==
+literal|0
+condition|)
 call|(
 name|ep
 operator|->
