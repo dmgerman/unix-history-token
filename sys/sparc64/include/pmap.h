@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/_rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cache.h>
 end_include
 
@@ -213,6 +219,46 @@ parameter_list|(
 name|pmap
 parameter_list|)
 value|mtx_unlock(&(pmap)->pm_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MDPAGE_ASSERT_WLOCKED
+parameter_list|()
+value|rw_assert(&md_page_rwlock, RA_WLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MDPAGE_RLOCK
+parameter_list|()
+value|rw_rlock(&md_page_rwlock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MDPAGE_WLOCK
+parameter_list|()
+value|rw_wlock(&md_page_rwlock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MDPAGE_RUNLOCK
+parameter_list|()
+value|rw_runlock(&md_page_rwlock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MDPAGE_WUNLOCK
+parameter_list|()
+value|rw_wunlock(&md_page_rwlock)
 end_define
 
 begin_define
@@ -395,6 +441,14 @@ directive|define
 name|kernel_pmap
 value|(&kernel_pmap_store)
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|rwlock
+name|md_page_rwlock
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

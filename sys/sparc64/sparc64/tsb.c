@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/smp.h>
 end_include
 
@@ -577,13 +583,8 @@ name|tsb_nenter_u_oc
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_page_queue_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
+name|MDPAGE_ASSERT_WLOCKED
+argument_list|()
 expr_stmt|;
 name|PMAP_LOCK_ASSERT
 argument_list|(
