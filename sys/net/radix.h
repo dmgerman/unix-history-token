@@ -311,6 +311,14 @@ name|radix_node
 modifier|*
 name|rnh_treetop
 decl_stmt|;
+name|u_int
+name|rnh_gen
+decl_stmt|;
+comment|/* generation counter */
+name|int
+name|rnh_multipath
+decl_stmt|;
+comment|/* multipath capable ? */
 name|int
 name|rnh_addrsize
 decl_stmt|;
@@ -558,14 +566,6 @@ literal|3
 index|]
 decl_stmt|;
 comment|/* empty tree for common case */
-name|int
-name|rnh_multipath
-decl_stmt|;
-comment|/* multipath capable ? */
-name|u_int
-name|rnh_spare
-decl_stmt|;
-comment|/* route caching */
 ifdef|#
 directive|ifdef
 name|_KERNEL

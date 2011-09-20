@@ -38,12 +38,27 @@ modifier|*
 name|ro_lle
 decl_stmt|;
 name|struct
+name|in_ifaddr
+modifier|*
+name|ro_ia
+decl_stmt|;
+name|int
+name|ro_flags
+decl_stmt|;
+name|struct
 name|sockaddr
 name|ro_dst
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|RT_CACHING_CONTEXT
+value|0x1
+end_define
 
 begin_comment
 comment|/*  * These numbers are used by reliable protocols for determining  * retransmission behavior and are included in the routing structure.  */

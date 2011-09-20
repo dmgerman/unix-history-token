@@ -1208,6 +1208,14 @@ modifier|*
 name|ro_lle
 decl_stmt|;
 name|struct
+name|in6_addr
+modifier|*
+name|ro_ia6
+decl_stmt|;
+name|int
+name|ro_flags
+decl_stmt|;
+name|struct
 name|sockaddr_in6
 name|ro_dst
 decl_stmt|;
