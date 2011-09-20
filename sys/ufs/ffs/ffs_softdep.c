@@ -58793,7 +58793,7 @@ name|ffs_syncvnode
 argument_list|(
 name|lvp
 argument_list|,
-name|MNT_WAIT
+name|MNT_NOWAIT
 argument_list|)
 expr_stmt|;
 name|vput
