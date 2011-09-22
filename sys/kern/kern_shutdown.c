@@ -2735,11 +2735,36 @@ block|{
 name|printf
 argument_list|(
 literal|"Attempt to write outside dump device boundaries.\n"
+literal|"offset(%jd), mediaoffset(%jd), length(%ju), mediasize(%jd).\n"
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|offset
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|di
+operator|->
+name|mediaoffset
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|length
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|di
+operator|->
+name|mediasize
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ENXIO
+name|ENOSPC
 operator|)
 return|;
 block|}
