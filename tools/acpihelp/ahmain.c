@@ -39,39 +39,44 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|printf
+name|ACPI_USAGE_HEADER
 argument_list|(
-literal|"\n"
+literal|"acpihelp<options> [NamePrefix | HexValue]"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"Usage: acpihelp<options> [NamePrefix | HexValue]\n\n"
+literal|"-k [NamePrefix]"
+argument_list|,
+literal|"Find/Display ASL non-operator keyword(s)"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"Where: -k [NamePrefix]     Find/Display ASL non-operator keyword(s)\n"
+literal|"-m [NamePrefix]"
+argument_list|,
+literal|"Find/Display AML opcode name(s)"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"       -m [NamePrefix]     Find/Display AML opcode name(s)\n"
+literal|"-o [HexValue]"
+argument_list|,
+literal|"Decode hex AML opcode"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"       -o [HexValue]       Decode hex AML opcode\n"
+literal|"-p [NamePrefix]"
+argument_list|,
+literal|"Find/Display ASL predefined method name(s)"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"       -p [NamePrefix]     Find/Display ASL predefined method name(s)\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"       -s [NamePrefix]     Find/Display ASL operator name(s)\n"
+literal|"-s [NamePrefix]"
+argument_list|,
+literal|"Find/Display ASL operator name(s)"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -92,11 +97,6 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"    Find ASL predefined method names - if NamePrefix starts with underscore\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}

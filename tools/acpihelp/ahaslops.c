@@ -25,6 +25,14 @@ index|[]
 init|=
 block|{
 block|{
+literal|"AccessAs"
+block|,
+literal|"(AccessType, AccessAttibute)"
+block|,
+literal|"ChangeFieldUnitAccess"
+block|}
+block|,
+block|{
 literal|"Acquire"
 block|,
 literal|"(SyncObject, TimeoutValue) => Boolean"
@@ -728,6 +736,14 @@ block|,
 literal|"(Object) => Integer"
 block|,
 literal|"Type of object"
+block|}
+block|,
+block|{
+literal|"Offset"
+block|,
+literal|"(ByteOffset)"
+block|,
+literal|"Change Current Field Unit Offset"
 block|}
 block|,
 block|{

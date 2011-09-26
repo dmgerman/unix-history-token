@@ -1675,6 +1675,12 @@ name|SRC_TYPE_SIMPLE
 block|}
 block|,
 block|{
+literal|"ACPI_TAG_INFO"
+block|,
+name|SRC_TYPE_STRUCT
+block|}
+block|,
+block|{
 literal|"ACPI_THREAD_ID"
 block|,
 name|SRC_TYPE_SIMPLE

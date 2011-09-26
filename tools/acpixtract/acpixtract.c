@@ -10,6 +10,24 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"acpi.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"accommon.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"acapps.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -32,56 +50,25 @@ file|<ctype.h>
 end_include
 
 begin_comment
-comment|/* Note: This is a 32-bit program only */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VERSION
-value|0x20110330
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIND_HEADER
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|EXTRACT_DATA
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|BUFFER_SIZE
-value|256
-end_define
-
-begin_define
-define|#
-directive|define
-name|MIN_HEADER_LENGTH
-value|6
-end_define
-
-begin_comment
-comment|/* strlen ("DSDT @") */
-end_comment
-
-begin_comment
 comment|/* Local prototypes */
 end_comment
 
 begin_function_decl
 specifier|static
 name|void
-name|CheckAscii
+name|AxStrlwr
+parameter_list|(
+name|char
+modifier|*
+name|String
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|AxCheckAscii
 parameter_list|(
 name|char
 modifier|*
@@ -96,7 +83,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|NormalizeSignature
+name|AxNormalizeSignature
 parameter_list|(
 name|char
 modifier|*
@@ -109,7 +96,7 @@ begin_function_decl
 specifier|static
 name|unsigned
 name|int
-name|GetNextInstance
+name|AxGetNextInstance
 parameter_list|(
 name|char
 modifier|*
@@ -118,26 +105,6 @@ parameter_list|,
 name|char
 modifier|*
 name|Signature
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|ExtractTables
-parameter_list|(
-name|char
-modifier|*
-name|InputPathname
-parameter_list|,
-name|char
-modifier|*
-name|Signature
-parameter_list|,
-name|unsigned
-name|int
-name|MinimumInstances
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -145,7 +112,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|size_t
-name|GetTableHeader
+name|AxGetTableHeader
 parameter_list|(
 name|FILE
 modifier|*
@@ -163,7 +130,7 @@ begin_function_decl
 specifier|static
 name|unsigned
 name|int
-name|CountTableInstances
+name|AxCountTableInstances
 parameter_list|(
 name|char
 modifier|*
@@ -177,9 +144,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
 name|int
-name|ListTables
+name|AxExtractTables
+parameter_list|(
+name|char
+modifier|*
+name|InputPathname
+parameter_list|,
+name|char
+modifier|*
+name|Signature
+parameter_list|,
+name|unsigned
+name|int
+name|MinimumInstances
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|AxListTables
 parameter_list|(
 name|char
 modifier|*
@@ -191,7 +176,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|size_t
-name|ConvertLine
+name|AxConvertLine
 parameter_list|(
 name|char
 modifier|*
@@ -205,73 +190,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|DisplayUsage
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_typedef
 typedef|typedef
 struct|struct
-name|acpi_table_header
+name|AxTableInfo
 block|{
-name|char
-name|Signature
-index|[
-literal|4
-index|]
-decl_stmt|;
-name|int
-name|Length
-decl_stmt|;
-name|unsigned
-name|char
-name|Revision
-decl_stmt|;
-name|unsigned
-name|char
-name|Checksum
-decl_stmt|;
-name|char
-name|OemId
-index|[
-literal|6
-index|]
-decl_stmt|;
-name|char
-name|OemTableId
-index|[
-literal|8
-index|]
-decl_stmt|;
-name|int
-name|OemRevision
-decl_stmt|;
-name|char
-name|AslCompilerId
-index|[
-literal|4
-index|]
-decl_stmt|;
-name|int
-name|AslCompilerRevision
-decl_stmt|;
-block|}
-name|ACPI_TABLE_HEADER
-typedef|;
-end_typedef
-
-begin_struct
-struct|struct
-name|TableInfo
-block|{
-name|unsigned
-name|int
+name|UINT32
 name|Signature
 decl_stmt|;
 name|unsigned
@@ -283,20 +207,60 @@ name|int
 name|NextInstance
 decl_stmt|;
 name|struct
-name|TableInfo
+name|AxTableInfo
 modifier|*
 name|Next
 decl_stmt|;
 block|}
-struct|;
-end_struct
+name|AX_TABLE_INFO
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Extraction states */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AX_STATE_FIND_HEADER
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AX_STATE_EXTRACT_DATA
+value|1
+end_define
+
+begin_comment
+comment|/* Miscellaneous constants */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AX_LINE_BUFFER_SIZE
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|AX_MIN_TABLE_NAME_LENGTH
+value|6
+end_define
+
+begin_comment
+comment|/* strlen ("DSDT @") */
+end_comment
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|TableInfo
+name|AX_TABLE_INFO
 modifier|*
-name|ListHead
+name|AxTableListHead
 init|=
 name|NULL
 decl_stmt|;
@@ -323,76 +287,86 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|LineBuffer
+index|[
+name|AX_LINE_BUFFER_SIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|HeaderBuffer
+index|[
+name|AX_LINE_BUFFER_SIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|InstanceBuffer
+index|[
+name|AX_LINE_BUFFER_SIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    DisplayUsage  *  * DESCRIPTION: Usage message  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AxStrlwr  *  * PARAMETERS:  String              - Ascii string  *  * RETURN:      None  *  * DESCRIPTION: String lowercase function.  *  ******************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|DisplayUsage
+name|AxStrlwr
 parameter_list|(
-name|void
+name|char
+modifier|*
+name|String
 parameter_list|)
 block|{
-name|printf
+while|while
+condition|(
+operator|*
+name|String
+condition|)
+block|{
+operator|*
+name|String
+operator|=
+operator|(
+name|char
+operator|)
+name|tolower
 argument_list|(
-literal|"Usage: acpixtract [option]<InputFile>\n"
+operator|(
+name|int
+operator|)
+operator|*
+name|String
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"\nExtract binary ACPI tables from text acpidump output\n"
-argument_list|)
+name|String
+operator|++
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Default invocation extracts all DSDTs and SSDTs\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Version %8.8X\n\n"
-argument_list|,
-name|VERSION
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Options:\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" -a                    Extract all tables, not just DSDT/SSDT\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" -l                    List table summaries, do not extract\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" -s<Signature>         Extract all tables named<Signature>\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
+block|}
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CheckAscii  *  * PARAMETERS:  Name                - Ascii string, at least as long as Count  *              Count               - Number of characters to check  *  * RETURN:      None  *  * DESCRIPTION: Ensure that the requested number of characters are printable  *              Ascii characters. Sets non-printable and null chars to<space>.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AxCheckAscii  *  * PARAMETERS:  Name                - Ascii string, at least as long as Count  *              Count               - Number of characters to check  *  * RETURN:      None  *  * DESCRIPTION: Ensure that the requested number of characters are printable  *              Ascii characters. Sets non-printable and null chars to<space>.  *  ******************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|CheckAscii
+name|AxCheckAscii
 parameter_list|(
 name|char
 modifier|*
@@ -453,13 +427,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    NormalizeSignature  *  * PARAMETERS:  Name                - Ascii string containing an ACPI signature  *  * RETURN:      None  *  * DESCRIPTION: Change "RSD PTR" to "RSDP"  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AxNormalizeSignature  *  * PARAMETERS:  Name                - Ascii string containing an ACPI signature  *  * RETURN:      None  *  * DESCRIPTION: Change "RSD PTR" to "RSDP"  *  ******************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|NormalizeSignature
+name|AxNormalizeSignature
 parameter_list|(
 name|char
 modifier|*
@@ -491,13 +465,13 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    ConvertLine  *  * PARAMETERS:  InputLine           - One line from the input acpidump file  *              OutputData          - Where the converted data is returned  *  * RETURN:      The number of bytes actually converted  *  * DESCRIPTION: Convert one line of ascii text binary (up to 16 bytes)  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AxConvertLine  *  * PARAMETERS:  InputLine           - One line from the input acpidump file  *              OutputData          - Where the converted data is returned  *  * RETURN:      The number of bytes actually converted  *  * DESCRIPTION: Convert one line of ascii text binary (up to 16 bytes)  *  ******************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|size_t
-name|ConvertLine
+name|AxConvertLine
 parameter_list|(
 name|char
 modifier|*
@@ -703,13 +677,13 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    GetTableHeader  *  * PARAMETERS:  InputFile           - Handle for the input acpidump file  *              OutputData          - Where the table header is returned  *  * RETURN:      The actual number of bytes converted  *  * DESCRIPTION: Extract and convert an ACPI table header  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AxGetTableHeader  *  * PARAMETERS:  InputFile           - Handle for the input acpidump file  *              OutputData          - Where the table header is returned  *  * RETURN:      The actual number of bytes converted  *  * DESCRIPTION: Extract and convert an ACPI table header  *  ******************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|size_t
-name|GetTableHeader
+name|AxGetTableHeader
 parameter_list|(
 name|FILE
 modifier|*
@@ -729,16 +703,10 @@ name|TotalConverted
 init|=
 literal|0
 decl_stmt|;
-name|char
-name|Buffer
-index|[
-name|BUFFER_SIZE
-index|]
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* Get the full 36 byte header, requires 3 lines */
+comment|/* Get the full 36 byte ACPI table header, requires 3 input text lines */
 for|for
 control|(
 name|i
@@ -758,9 +726,9 @@ condition|(
 operator|!
 name|fgets
 argument_list|(
-name|Buffer
+name|HeaderBuffer
 argument_list|,
-name|BUFFER_SIZE
+name|AX_LINE_BUFFER_SIZE
 argument_list|,
 name|InputFile
 argument_list|)
@@ -774,9 +742,9 @@ return|;
 block|}
 name|BytesConverted
 operator|=
-name|ConvertLine
+name|AxConvertLine
 argument_list|(
-name|Buffer
+name|HeaderBuffer
 argument_list|,
 name|OutputData
 argument_list|)
@@ -812,14 +780,14 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    CountTableInstances  *  * PARAMETERS:  InputPathname       - Filename for acpidump file  *              Signature           - Requested signature to count  *  * RETURN:      The number of instances of the signature  *  * DESCRIPTION: Count the instances of tables with the given signature within  *              the input acpidump file.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AxCountTableInstances  *  * PARAMETERS:  InputPathname       - Filename for acpidump file  *              Signature           - Requested signature to count  *  * RETURN:      The number of instances of the signature  *  * DESCRIPTION: Count the instances of tables with the given signature within  *              the input acpidump file.  *  ******************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|unsigned
 name|int
-name|CountTableInstances
+name|AxCountTableInstances
 parameter_list|(
 name|char
 modifier|*
@@ -830,12 +798,6 @@ modifier|*
 name|Signature
 parameter_list|)
 block|{
-name|char
-name|Buffer
-index|[
-name|BUFFER_SIZE
-index|]
-decl_stmt|;
 name|FILE
 modifier|*
 name|InputFile
@@ -879,9 +841,9 @@ while|while
 condition|(
 name|fgets
 argument_list|(
-name|Buffer
+name|InstanceBuffer
 argument_list|,
-name|BUFFER_SIZE
+name|AX_LINE_BUFFER_SIZE
 argument_list|,
 name|InputFile
 argument_list|)
@@ -891,7 +853,7 @@ comment|/* Ignore empty lines and lines that start with a space */
 if|if
 condition|(
 operator|(
-name|Buffer
+name|InstanceBuffer
 index|[
 literal|0
 index|]
@@ -900,7 +862,7 @@ literal|' '
 operator|)
 operator|||
 operator|(
-name|Buffer
+name|InstanceBuffer
 index|[
 literal|0
 index|]
@@ -911,9 +873,9 @@ condition|)
 block|{
 continue|continue;
 block|}
-name|NormalizeSignature
+name|AxNormalizeSignature
 argument_list|(
-name|Buffer
+name|InstanceBuffer
 argument_list|)
 expr_stmt|;
 if|if
@@ -921,7 +883,7 @@ condition|(
 operator|!
 name|strncmp
 argument_list|(
-name|Buffer
+name|InstanceBuffer
 argument_list|,
 name|Signature
 argument_list|,
@@ -948,14 +910,14 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    GetNextInstance  *  * PARAMETERS:  InputPathname       - Filename for acpidump file  *              Signature           - Requested ACPI signature  *  * RETURN:      The next instance number for this signature. Zero if this  *              is the first instance of this signature.  *  * DESCRIPTION: Get the next instance number of the specified table. If this  *              is the first instance of the table, create a new instance  *              block. Note: only SSDT and PSDT tables can have multiple  *              instances.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AxGetNextInstance  *  * PARAMETERS:  InputPathname       - Filename for acpidump file  *              Signature           - Requested ACPI signature  *  * RETURN:      The next instance number for this signature. Zero if this  *              is the first instance of this signature.  *  * DESCRIPTION: Get the next instance number of the specified table. If this  *              is the first instance of the table, create a new instance  *              block. Note: only SSDT and PSDT tables can have multiple  *              instances.  *  ******************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|unsigned
 name|int
-name|GetNextInstance
+name|AxGetNextInstance
 parameter_list|(
 name|char
 modifier|*
@@ -966,14 +928,13 @@ modifier|*
 name|Signature
 parameter_list|)
 block|{
-name|struct
-name|TableInfo
+name|AX_TABLE_INFO
 modifier|*
 name|Info
 decl_stmt|;
 name|Info
 operator|=
-name|ListHead
+name|AxTableListHead
 expr_stmt|;
 while|while
 condition|(
@@ -984,8 +945,7 @@ if|if
 condition|(
 operator|*
 operator|(
-name|unsigned
-name|int
+name|UINT32
 operator|*
 operator|)
 name|Signature
@@ -1017,8 +977,7 @@ name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|TableInfo
+name|AX_TABLE_INFO
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1045,8 +1004,7 @@ name|Signature
 operator|=
 operator|*
 operator|(
-name|unsigned
-name|int
+name|UINT32
 operator|*
 operator|)
 name|Signature
@@ -1055,7 +1013,7 @@ name|Info
 operator|->
 name|Instances
 operator|=
-name|CountTableInstances
+name|AxCountTableInstances
 argument_list|(
 name|InputPathname
 argument_list|,
@@ -1072,9 +1030,9 @@ name|Info
 operator|->
 name|Next
 operator|=
-name|ListHead
+name|AxTableListHead
 expr_stmt|;
-name|ListHead
+name|AxTableListHead
 operator|=
 name|Info
 expr_stmt|;
@@ -1106,13 +1064,12 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    ExtractTables  *  * PARAMETERS:  InputPathname       - Filename for acpidump file  *              Signature           - Requested ACPI signature to extract.  *                                    NULL means extract ALL tables.  *              MinimumInstances    - Min instances that are acceptable  *  * RETURN:      Status  *  * DESCRIPTION: Convert text ACPI tables to binary  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AxExtractTables  *  * PARAMETERS:  InputPathname       - Filename for acpidump file  *              Signature           - Requested ACPI signature to extract.  *                                    NULL means extract ALL tables.  *              MinimumInstances    - Min instances that are acceptable  *  * RETURN:      Status  *  * DESCRIPTION: Convert text ACPI tables to binary  *  ******************************************************************************/
 end_comment
 
 begin_function
-specifier|static
 name|int
-name|ExtractTables
+name|AxExtractTables
 parameter_list|(
 name|char
 modifier|*
@@ -1127,12 +1084,6 @@ name|int
 name|MinimumInstances
 parameter_list|)
 block|{
-name|char
-name|Buffer
-index|[
-name|BUFFER_SIZE
-index|]
-decl_stmt|;
 name|FILE
 modifier|*
 name|InputFile
@@ -1158,7 +1109,7 @@ name|unsigned
 name|int
 name|State
 init|=
-name|FIND_HEADER
+name|AX_STATE_FIND_HEADER
 decl_stmt|;
 name|unsigned
 name|int
@@ -1223,14 +1174,14 @@ name|Signature
 condition|)
 block|{
 comment|/* Are there enough instances of the table to continue? */
-name|NormalizeSignature
+name|AxNormalizeSignature
 argument_list|(
 name|Signature
 argument_list|)
 expr_stmt|;
 name|Instances
 operator|=
-name|CountTableInstances
+name|AxCountTableInstances
 argument_list|(
 name|InputPathname
 argument_list|,
@@ -1279,9 +1230,9 @@ while|while
 condition|(
 name|fgets
 argument_list|(
-name|Buffer
+name|LineBuffer
 argument_list|,
-name|BUFFER_SIZE
+name|AX_LINE_BUFFER_SIZE
 argument_list|,
 name|InputFile
 argument_list|)
@@ -1293,17 +1244,17 @@ name|State
 condition|)
 block|{
 case|case
-name|FIND_HEADER
+name|AX_STATE_FIND_HEADER
 case|:
 comment|/* Ignore lines that are too short to be header lines */
 if|if
 condition|(
 name|strlen
 argument_list|(
-name|Buffer
+name|LineBuffer
 argument_list|)
 operator|<
-name|MIN_HEADER_LENGTH
+name|AX_MIN_TABLE_NAME_LENGTH
 condition|)
 block|{
 continue|continue;
@@ -1312,7 +1263,7 @@ comment|/* Ignore empty lines and lines that start with a space */
 if|if
 condition|(
 operator|(
-name|Buffer
+name|LineBuffer
 index|[
 literal|0
 index|]
@@ -1321,7 +1272,7 @@ literal|' '
 operator|)
 operator|||
 operator|(
-name|Buffer
+name|LineBuffer
 index|[
 literal|0
 index|]
@@ -1332,13 +1283,13 @@ condition|)
 block|{
 continue|continue;
 block|}
-comment|/*              * Ignore lines that are not of the form<sig> @<addr>. Examples:              *              * DSDT @ 0x737e4000              * XSDT @ 0x737f2fff              * RSD PTR @ 0xf6cd0              * SSDT @ (nil)              */
+comment|/*              * Ignore lines that are not of the form<sig> @<addr>.              * Examples of lines that must be supported:              *              * DSDT @ 0x737e4000              * XSDT @ 0x737f2fff              * RSD PTR @ 0xf6cd0              * SSDT @ (nil)              */
 if|if
 condition|(
 operator|!
 name|strstr
 argument_list|(
-name|Buffer
+name|LineBuffer
 argument_list|,
 literal|" @ "
 argument_list|)
@@ -1346,16 +1297,16 @@ condition|)
 block|{
 continue|continue;
 block|}
-name|NormalizeSignature
+name|AxNormalizeSignature
 argument_list|(
-name|Buffer
+name|LineBuffer
 argument_list|)
 expr_stmt|;
 name|strncpy
 argument_list|(
 name|ThisSignature
 argument_list|,
-name|Buffer
+name|LineBuffer
 argument_list|,
 literal|4
 argument_list|)
@@ -1384,7 +1335,7 @@ block|}
 comment|/*              * Get the instance number for this signature. Only the              * SSDT and PSDT tables can have multiple instances.              */
 name|ThisInstance
 operator|=
-name|GetNextInstance
+name|AxGetNextInstance
 argument_list|(
 name|InputPathname
 argument_list|,
@@ -1423,6 +1374,11 @@ name|ThisSignature
 argument_list|)
 expr_stmt|;
 block|}
+name|AxStrlwr
+argument_list|(
+name|Filename
+argument_list|)
+expr_stmt|;
 name|OutputFile
 operator|=
 name|fopen
@@ -1456,7 +1412,7 @@ goto|;
 block|}
 name|State
 operator|=
-name|EXTRACT_DATA
+name|AX_STATE_EXTRACT_DATA
 expr_stmt|;
 name|TotalBytesWritten
 operator|=
@@ -1468,13 +1424,13 @@ literal|1
 expr_stmt|;
 continue|continue;
 case|case
-name|EXTRACT_DATA
+name|AX_STATE_EXTRACT_DATA
 case|:
 comment|/* Empty line or non-data line terminates the data */
 if|if
 condition|(
 operator|(
-name|Buffer
+name|LineBuffer
 index|[
 literal|0
 index|]
@@ -1483,7 +1439,7 @@ literal|'\n'
 operator|)
 operator|||
 operator|(
-name|Buffer
+name|LineBuffer
 index|[
 literal|0
 index|]
@@ -1503,7 +1459,7 @@ name|NULL
 expr_stmt|;
 name|State
 operator|=
-name|FIND_HEADER
+name|AX_STATE_FIND_HEADER
 expr_stmt|;
 name|printf
 argument_list|(
@@ -1525,9 +1481,9 @@ block|}
 comment|/* Convert the ascii data (one line of text) to binary */
 name|BytesConverted
 operator|=
-name|ConvertLine
+name|AxConvertLine
 argument_list|(
-name|Buffer
+name|LineBuffer
 argument_list|,
 name|Data
 argument_list|)
@@ -1626,7 +1582,7 @@ if|if
 condition|(
 name|State
 operator|==
-name|EXTRACT_DATA
+name|AX_STATE_EXTRACT_DATA
 condition|)
 block|{
 comment|/* Received an EOF while extracting data */
@@ -1661,13 +1617,12 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    ListTables  *  * PARAMETERS:  InputPathname       - Filename for acpidump file  *  * RETURN:      Status  *  * DESCRIPTION: Display info for all ACPI tables found in input. Does not  *              perform an actual extraction of the tables.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AxListTables  *  * PARAMETERS:  InputPathname       - Filename for acpidump file  *  * RETURN:      Status  *  * DESCRIPTION: Display info for all ACPI tables found in input. Does not  *              perform an actual extraction of the tables.  *  ******************************************************************************/
 end_comment
 
 begin_function
-specifier|static
 name|int
-name|ListTables
+name|AxListTables
 parameter_list|(
 name|char
 modifier|*
@@ -1677,12 +1632,6 @@ block|{
 name|FILE
 modifier|*
 name|InputFile
-decl_stmt|;
-name|char
-name|Buffer
-index|[
-name|BUFFER_SIZE
-index|]
 decl_stmt|;
 name|size_t
 name|HeaderSize
@@ -1754,9 +1703,9 @@ while|while
 condition|(
 name|fgets
 argument_list|(
-name|Buffer
+name|LineBuffer
 argument_list|,
-name|BUFFER_SIZE
+name|AX_LINE_BUFFER_SIZE
 argument_list|,
 name|InputFile
 argument_list|)
@@ -1766,7 +1715,7 @@ comment|/* Ignore empty lines and lines that start with a space */
 if|if
 condition|(
 operator|(
-name|Buffer
+name|LineBuffer
 index|[
 literal|0
 index|]
@@ -1775,7 +1724,7 @@ literal|' '
 operator|)
 operator|||
 operator|(
-name|Buffer
+name|LineBuffer
 index|[
 literal|0
 index|]
@@ -1789,7 +1738,7 @@ block|}
 comment|/* Get the 36 byte header and display the fields */
 name|HeaderSize
 operator|=
-name|GetTableHeader
+name|AxGetTableHeader
 argument_list|(
 name|InputFile
 argument_list|,
@@ -1821,7 +1770,7 @@ literal|8
 argument_list|)
 condition|)
 block|{
-name|CheckAscii
+name|AxCheckAscii
 argument_list|(
 operator|(
 name|char
@@ -1859,7 +1808,10 @@ if|if
 condition|(
 name|HeaderSize
 operator|<
-literal|36
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_HEADER
+argument_list|)
 condition|)
 block|{
 continue|continue;
@@ -1905,7 +1857,7 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* OEM IDs and Compiler IDs */
-name|CheckAscii
+name|AxCheckAscii
 argument_list|(
 name|TableHeader
 operator|->
@@ -1914,7 +1866,7 @@ argument_list|,
 literal|6
 argument_list|)
 expr_stmt|;
-name|CheckAscii
+name|AxCheckAscii
 argument_list|(
 name|TableHeader
 operator|->
@@ -1923,7 +1875,7 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-name|CheckAscii
+name|AxCheckAscii
 argument_list|(
 name|TableHeader
 operator|->
@@ -1964,11 +1916,9 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\nFound %u ACPI tables [%8.8X]\n"
+literal|"\nFound %u ACPI tables\n"
 argument_list|,
 name|TableCount
-argument_list|,
-name|VERSION
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -1979,201 +1929,6 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    main  *  * DESCRIPTION: C main function  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|int
-name|main
-parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
-parameter_list|)
-block|{
-name|int
-name|Status
-decl_stmt|;
-if|if
-condition|(
-name|argc
-operator|<
-literal|2
-condition|)
-block|{
-name|DisplayUsage
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-if|if
-condition|(
-name|argv
-index|[
-literal|1
-index|]
-index|[
-literal|0
-index|]
-operator|==
-literal|'-'
-condition|)
-block|{
-if|if
-condition|(
-name|argc
-operator|<
-literal|3
-condition|)
-block|{
-name|DisplayUsage
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-switch|switch
-condition|(
-name|argv
-index|[
-literal|1
-index|]
-index|[
-literal|1
-index|]
-condition|)
-block|{
-case|case
-literal|'a'
-case|:
-comment|/* Extract all tables found */
-return|return
-operator|(
-name|ExtractTables
-argument_list|(
-name|argv
-index|[
-literal|2
-index|]
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|)
-operator|)
-return|;
-case|case
-literal|'l'
-case|:
-comment|/* List tables only, do not extract */
-return|return
-operator|(
-name|ListTables
-argument_list|(
-name|argv
-index|[
-literal|2
-index|]
-argument_list|)
-operator|)
-return|;
-case|case
-literal|'s'
-case|:
-comment|/* Extract only tables with this signature */
-return|return
-operator|(
-name|ExtractTables
-argument_list|(
-name|argv
-index|[
-literal|2
-index|]
-argument_list|,
-operator|&
-name|argv
-index|[
-literal|1
-index|]
-index|[
-literal|2
-index|]
-argument_list|,
-literal|1
-argument_list|)
-operator|)
-return|;
-default|default:
-name|DisplayUsage
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-block|}
-comment|/*      * Default output is the DSDT and all SSDTs. One DSDT is required,      * any SSDTs are optional.      */
-name|Status
-operator|=
-name|ExtractTables
-argument_list|(
-name|argv
-index|[
-literal|1
-index|]
-argument_list|,
-literal|"DSDT"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|Status
-condition|)
-block|{
-return|return
-operator|(
-name|Status
-operator|)
-return|;
-block|}
-name|Status
-operator|=
-name|ExtractTables
-argument_list|(
-name|argv
-index|[
-literal|1
-index|]
-argument_list|,
-literal|"SSDT"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|Status
 operator|)
 return|;
 block|}

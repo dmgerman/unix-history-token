@@ -2090,7 +2090,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|RsCreateBitField
+name|RsCreateResourceField
 parameter_list|(
 name|ACPI_PARSE_OBJECT
 modifier|*
@@ -2105,24 +2105,9 @@ name|ByteOffset
 parameter_list|,
 name|UINT32
 name|BitOffset
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|RsCreateByteField
-parameter_list|(
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|Op
-parameter_list|,
-name|char
-modifier|*
-name|Name
 parameter_list|,
 name|UINT32
-name|ByteOffset
+name|BitLength
 parameter_list|)
 function_decl|;
 end_function_decl

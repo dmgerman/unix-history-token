@@ -71,19 +71,16 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|printf
+name|ACPI_USAGE_HEADER
 argument_list|(
-literal|"Usage: AcpiNames [options] AMLfile\n\n"
+literal|"AcpiNames [options] AMLfile"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"Where:\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"   -?                  Display this message\n"
+literal|"-?"
+argument_list|,
+literal|"Display this message"
 argument_list|)
 expr_stmt|;
 block|}

@@ -592,6 +592,14 @@ argument_list|,
 name|Gbl_Files
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Gbl_Files
+condition|)
+block|{
+return|return;
+block|}
 name|printf
 argument_list|(
 literal|"%8u Total bytes (%.1fK/file)\n"
@@ -704,6 +712,14 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Gbl_TotalLines
+condition|)
+block|{
+return|return;
+block|}
 name|printf
 argument_list|(
 literal|"         %u%% code, %u%% comments, %u%% whitespace, %u%% headers\n"
@@ -756,59 +772,37 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|printf
+name|ACPI_USAGE_HEADER
 argument_list|(
-literal|"\n"
+literal|"acpisrc [-c|l|u] [-dsvy]<SourceDir><DestinationDir>"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"Usage: acpisrc [-c|l|u] [-dsvy]<SourceDir><DestinationDir>\n\n"
+literal|"-c"
+argument_list|,
+literal|"Generate cleaned version of the source"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"Where: -c          Generate cleaned version of the source\n"
+literal|"-h"
+argument_list|,
+literal|"Insert dual-license header into all modules"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"       -h          Insert dual-license header into all modules\n"
+literal|"-l"
+argument_list|,
+literal|"Generate Linux version of the source"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"       -l          Generate Linux version of the source\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"       -u          Generate Custom source translation\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"       -d          Leave debug statements in code\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"       -s          Generate source statistics only\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"       -v          Verbose mode\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"       -y          Suppress file overwrite prompts\n"
+literal|"-u"
+argument_list|,
+literal|"Generate Custom source translation"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -816,7 +810,34 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-return|return;
+name|ACPI_OPTION
+argument_list|(
+literal|"-d"
+argument_list|,
+literal|"Leave debug statements in code"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-s"
+argument_list|,
+literal|"Generate source statistics only"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-v"
+argument_list|,
+literal|"Verbose mode"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-y"
+argument_list|,
+literal|"Suppress file overwrite prompts"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -525,14 +525,6 @@ literal|"NODE_METHOD_TYPED"
 operator|)
 return|;
 case|case
-name|NODE_IS_BIT_OFFSET
-case|:
-return|return
-operator|(
-literal|"NODE_IS_BIT_OFFSET"
-operator|)
-return|;
-case|case
 name|NODE_COMPILE_TIME_CONST
 case|:
 return|return

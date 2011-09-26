@@ -629,6 +629,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|ASL_EXTERN
+name|BOOLEAN
+name|ASL_INIT_GLOBAL
+parameter_list|(
+name|Gbl_CompileGeneric
+parameter_list|,
+name|FALSE
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define

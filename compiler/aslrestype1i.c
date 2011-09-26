@@ -151,7 +151,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|RsCreateBitField
+name|RsCreateMultiBitField
 argument_list|(
 name|InitializerOp
 argument_list|,
@@ -167,6 +167,8 @@ name|Flags
 argument_list|)
 argument_list|,
 literal|5
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 break|break;
@@ -229,7 +231,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|RsCreateBitField
+name|RsCreateMultiBitField
 argument_list|(
 name|InitializerOp
 argument_list|,
@@ -245,6 +247,8 @@ name|Flags
 argument_list|)
 argument_list|,
 literal|0
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 break|break;
@@ -518,7 +522,7 @@ name|Value
 operator|.
 name|Integer
 expr_stmt|;
-name|RsCreateByteField
+name|RsCreateWordField
 argument_list|(
 name|InitializerOp
 argument_list|,
@@ -811,7 +815,7 @@ name|Value
 operator|.
 name|Integer
 expr_stmt|;
-name|RsCreateByteField
+name|RsCreateWordField
 argument_list|(
 name|InitializerOp
 argument_list|,
@@ -853,7 +857,7 @@ name|Value
 operator|.
 name|Integer
 expr_stmt|;
-name|RsCreateByteField
+name|RsCreateWordField
 argument_list|(
 name|InitializerOp
 argument_list|,
@@ -1371,7 +1375,7 @@ name|InitializerOp
 argument_list|)
 expr_stmt|;
 comment|/* Create a named field at the start of the list */
-name|RsCreateByteField
+name|RsCreateWordField
 argument_list|(
 name|InitializerOp
 argument_list|,
@@ -1626,7 +1630,7 @@ name|InitializerOp
 argument_list|)
 expr_stmt|;
 comment|/* Create a named field at the start of the list */
-name|RsCreateByteField
+name|RsCreateWordField
 argument_list|(
 name|InitializerOp
 argument_list|,

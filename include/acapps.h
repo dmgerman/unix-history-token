@@ -148,6 +148,34 @@ define|\
 value|"%s%s\n%s%s version %8.8X%s [%s]\n%s%s\n%s\n", \     Prefix, ACPICA_NAME, \     Prefix, UtilityName, ((UINT32) ACPI_CA_VERSION), ACPI_WIDTH, __DATE__, \     Prefix, ACPICA_COPYRIGHT, \     Prefix
 end_define
 
+begin_comment
+comment|/* Macros for usage messages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_USAGE_HEADER
+parameter_list|(
+name|Usage
+parameter_list|)
+define|\
+value|printf ("Usage: %s\nOptions:\n", Usage);
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_OPTION
+parameter_list|(
+name|Name
+parameter_list|,
+name|Description
+parameter_list|)
+define|\
+value|printf ("  %-18s%s\n", Name, Description);
+end_define
+
 begin_define
 define|#
 directive|define

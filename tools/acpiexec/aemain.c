@@ -142,59 +142,30 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|printf
+name|ACPI_USAGE_HEADER
 argument_list|(
-literal|"Usage: acpiexec [options] AMLfile1 AMLfile2 ...\n\n"
+literal|"acpiexec [options] AMLfile1 AMLfile2 ..."
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"Where:\n"
+literal|"-?"
+argument_list|,
+literal|"Display this message"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"   -?                  Display this message\n"
+literal|"-b<CommandLine>"
+argument_list|,
+literal|"Batch mode command execution"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"   -b<CommandLine>    Batch mode command execution\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"   -m [Method]         Batch mode method execution. Default=MAIN\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"   -da                 Disable method abort on error\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"   -di                 Disable execution of STA/INI methods during init\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"   -do                 Disable Operation Region address simulation\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"   -dr                 Disable repair of method return values\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"   -dt                 Disable allocation tracking (performance)\n"
+literal|"-m [Method]"
+argument_list|,
+literal|"Batch mode method execution. Default=MAIN"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -202,24 +173,39 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"   -ef                 Enable display of final memory statistics\n"
+literal|"-da"
+argument_list|,
+literal|"Disable method abort on error"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"   -em                 Enable Interpreter Serialized Mode\n"
+literal|"-di"
+argument_list|,
+literal|"Disable execution of STA/INI methods during init"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"   -es                 Enable Interpreter Slack Mode\n"
+literal|"-do"
+argument_list|,
+literal|"Disable Operation Region address simulation"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"   -et                 Enable debug semaphore timeout\n"
+literal|"-dr"
+argument_list|,
+literal|"Disable repair of method return values"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-dt"
+argument_list|,
+literal|"Disable allocation tracking (performance)"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -227,19 +213,58 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"   -f<Value>          Operation Region initialization fill value\n"
+literal|"-ef"
+argument_list|,
+literal|"Enable display of final memory statistics"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-em"
+argument_list|,
+literal|"Enable Interpreter Serialized Mode"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-es"
+argument_list|,
+literal|"Enable Interpreter Slack Mode"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-et"
+argument_list|,
+literal|"Enable debug semaphore timeout"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"   -v                  Verbose initialization output\n"
+literal|"\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"   -x<DebugLevel>     Debug output level\n"
+literal|"-f<Value>"
+argument_list|,
+literal|"Operation Region initialization fill value"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-v"
+argument_list|,
+literal|"Verbose initialization output"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-x<DebugLevel>"
+argument_list|,
+literal|"Debug output level"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1506,28 +1531,39 @@ expr_stmt|;
 name|WildcardList
 operator|++
 expr_stmt|;
-comment|/*                  * Ignore an FACS or RSDT, we can't use them.                  */
+comment|/* Ignore non-AML tables, we can't use them. Except for an FADT */
 if|if
 condition|(
+operator|!
 name|ACPI_COMPARE_NAME
 argument_list|(
 name|Table
 operator|->
 name|Signature
 argument_list|,
-name|ACPI_SIG_FACS
+name|ACPI_SIG_FADT
 argument_list|)
-operator|||
-name|ACPI_COMPARE_NAME
+operator|&&
+operator|!
+name|AcpiUtIsAmlTable
 argument_list|(
 name|Table
-operator|->
-name|Signature
-argument_list|,
-name|ACPI_SIG_RSDT
 argument_list|)
 condition|)
 block|{
+name|ACPI_WARNING
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Table %4.4s is not an AML table, ignoring"
+operator|,
+name|Table
+operator|->
+name|Signature
+operator|)
+argument_list|)
+expr_stmt|;
 name|AcpiOsFree
 argument_list|(
 name|Table

@@ -209,6 +209,12 @@ operator|(
 name|defined
 name|ACPI_SRC_APP
 operator|)
+operator|||
+expr|\
+operator|(
+name|defined
+name|ACPI_XTRACT_APP
+operator|)
 end_if
 
 begin_define

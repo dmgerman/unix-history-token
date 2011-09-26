@@ -201,11 +201,11 @@ begin_define
 define|#
 directive|define
 name|ACPI_MAX_SLEEP
-value|20000
+value|2000
 end_define
 
 begin_comment
-comment|/* Two seconds */
+comment|/* 2000 millisec == two seconds */
 end_comment
 
 begin_comment

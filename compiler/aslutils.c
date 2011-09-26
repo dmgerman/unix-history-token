@@ -99,6 +99,50 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Table below must match ASL_FILE_TYPES in asltypes.h */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AslFileTypeNames
+index|[
+name|ASL_NUM_FILES
+index|]
+init|=
+block|{
+literal|"stdout:       "
+block|,
+literal|"stderr:       "
+block|,
+literal|"Table Input:  "
+block|,
+literal|"Binary Output:"
+block|,
+literal|"Source Output:"
+block|,
+literal|"Listing File: "
+block|,
+literal|"Hex Dump:     "
+block|,
+literal|"Namespace:    "
+block|,
+literal|"Debug File:   "
+block|,
+literal|"ASM Source:   "
+block|,
+literal|"C Source:     "
+block|,
+literal|"ASM Include:  "
+block|,
+literal|"C Include:    "
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Local prototypes */
 end_comment
 
@@ -917,6 +961,9 @@ name|UINT32
 name|FileId
 parameter_list|)
 block|{
+name|UINT32
+name|i
+decl_stmt|;
 if|if
 condition|(
 name|FileId
@@ -929,7 +976,7 @@ name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"%s version %X%s [%s]\n"
+literal|"%s version %X%s [%s]\n\n"
 argument_list|,
 name|ASL_COMPILER_NAME
 argument_list|,
@@ -944,6 +991,7 @@ name|__DATE__
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Summary of main input and output files */
 if|if
 condition|(
 name|Gbl_FileType
@@ -955,7 +1003,9 @@ name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"Table Input:   %s - %u lines, %u bytes, %u fields\n"
+literal|"%-14s %s - %u lines, %u bytes, %u fields\n"
+argument_list|,
+literal|"Table Input:"
 argument_list|,
 name|Gbl_Files
 index|[
@@ -991,7 +1041,9 @@ name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"Binary Output: %s - %u bytes\n\n"
+literal|"%-14s %s - %u bytes\n"
+argument_list|,
+literal|"Binary Output:"
 argument_list|,
 name|Gbl_Files
 index|[
@@ -1007,12 +1059,13 @@ block|}
 block|}
 else|else
 block|{
-comment|/* Input/Output summary */
 name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"ASL Input:  %s - %u lines, %u bytes, %u keywords\n"
+literal|"%-14s %s - %u lines, %u bytes, %u keywords\n"
+argument_list|,
+literal|"ASL Input:"
 argument_list|,
 name|Gbl_Files
 index|[
@@ -1049,7 +1102,9 @@ name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"AML Output: %s - %u bytes, %u named objects, %u executable opcodes\n\n"
+literal|"%-14s %s - %u bytes, %u named objects, %u executable opcodes\n"
+argument_list|,
+literal|"AML Output:"
 argument_list|,
 name|Gbl_Files
 index|[
@@ -1067,12 +1122,90 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Display summary of any optional files */
+for|for
+control|(
+name|i
+operator|=
+name|ASL_FILE_SOURCE_OUTPUT
+init|;
+name|i
+operator|<=
+name|ASL_MAX_FILE_TYPE
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|Gbl_Files
+index|[
+name|i
+index|]
+operator|.
+name|Filename
+operator|||
+operator|!
+name|Gbl_Files
+index|[
+name|i
+index|]
+operator|.
+name|Handle
+condition|)
+block|{
+continue|continue;
+block|}
+comment|/* .SRC is a temp file unless specifically requested */
+if|if
+condition|(
+operator|(
+name|i
+operator|==
+name|ASL_FILE_SOURCE_OUTPUT
+operator|)
+operator|&&
+operator|(
+operator|!
+name|Gbl_SourceOutputFlag
+operator|)
+condition|)
+block|{
+continue|continue;
+block|}
+name|FlPrintFile
+argument_list|(
+name|FileId
+argument_list|,
+literal|"%14s %s - %u bytes\n"
+argument_list|,
+name|AslFileTypeNames
+index|[
+name|i
+index|]
+argument_list|,
+name|Gbl_Files
+index|[
+name|i
+index|]
+operator|.
+name|Filename
+argument_list|,
+name|FlGetFileSize
+argument_list|(
+name|i
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Error summary */
 name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"Compilation complete. %u Errors, %u Warnings, %u Remarks"
+literal|"\nCompilation complete. %u Errors, %u Warnings, %u Remarks"
 argument_list|,
 name|Gbl_ExceptionCount
 index|[

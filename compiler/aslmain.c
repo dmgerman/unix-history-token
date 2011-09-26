@@ -180,7 +180,7 @@ begin_define
 define|#
 directive|define
 name|ASL_SUPPORTED_OPTIONS
-value|"@:2b:c:d^e:fgh^i^I:l^no:p:r:s:t:T:v:w:x:z"
+value|"@:2b:c:d^e:fgh^i^I:l^no:p:r:s:t:T:G^v:w:x:z"
 end_define
 
 begin_comment
@@ -197,17 +197,21 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"Global:\n"
+literal|"\nGlobal:\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -@<file>       Specify command file\n"
+literal|"-@<file>"
+argument_list|,
+literal|"Specify command file"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -I<dir>        Specify additional include directory\n"
+literal|"-I<dir>"
+argument_list|,
+literal|"Specify additional include directory"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -215,39 +219,53 @@ argument_list|(
 literal|"\nGeneral Output:\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -p<prefix>     Specify path/filename prefix for all output files\n"
+literal|"-p<prefix>"
+argument_list|,
+literal|"Specify path/filename prefix for all output files"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -va            Disable all errors and warnings (summary only)\n"
+literal|"-va"
+argument_list|,
+literal|"Disable all errors and warnings (summary only)"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -vi            Less verbose errors and warnings for use with IDEs\n"
+literal|"-vi"
+argument_list|,
+literal|"Less verbose errors and warnings for use with IDEs"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -vo            Enable optimization comments\n"
+literal|"-vo"
+argument_list|,
+literal|"Enable optimization comments"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -vr            Disable remarks\n"
+literal|"-vr"
+argument_list|,
+literal|"Disable remarks"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -vs            Disable signon\n"
+literal|"-vs"
+argument_list|,
+literal|"Disable signon"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -w<1|2|3>      Set warning reporting level\n"
+literal|"-w<1|2|3>"
+argument_list|,
+literal|"Set warning reporting level"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -255,19 +273,25 @@ argument_list|(
 literal|"\nAML Output Files:\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -s<a|c>        Create AML in assembler or C source file (*.asm or *.c)\n"
+literal|"-s<a|c>"
+argument_list|,
+literal|"Create AML in assembler or C source file (*.asm or *.c)"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -i<a|c>        Create assembler or C include file (*.inc or *.h)\n"
+literal|"-i<a|c>"
+argument_list|,
+literal|"Create assembler or C include file (*.inc or *.h)"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -t<a|c|s>      Create AML in assembler, C, or ASL hex table (*.hex)\n"
+literal|"-t<a|c|s>"
+argument_list|,
+literal|"Create AML in assembler, C, or ASL hex table (*.hex)"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -275,34 +299,46 @@ argument_list|(
 literal|"\nAML Code Generation:\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -oa            Disable all optimizations (compatibility mode)\n"
+literal|"-oa"
+argument_list|,
+literal|"Disable all optimizations (compatibility mode)"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -of            Disable constant folding\n"
+literal|"-of"
+argument_list|,
+literal|"Disable constant folding"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -oi            Disable integer optimization to Zero/One/Ones\n"
+literal|"-oi"
+argument_list|,
+literal|"Disable integer optimization to Zero/One/Ones"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -on            Disable named reference string optimization\n"
+literal|"-on"
+argument_list|,
+literal|"Disable named reference string optimization"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -cr            Disable Resource Descriptor error checking\n"
+literal|"-cr"
+argument_list|,
+literal|"Disable Resource Descriptor error checking"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -r<Revision>   Override table header Revision (1-255)\n"
+literal|"-r<revision>"
+argument_list|,
+literal|"Override table header Revision (1-255)"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -310,19 +346,25 @@ argument_list|(
 literal|"\nASL Listing Files:\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -l             Create mixed listing file (ASL source and AML) (*.lst)\n"
+literal|"-l"
+argument_list|,
+literal|"Create mixed listing file (ASL source and AML) (*.lst)"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -ln            Create namespace file (*.nsp)\n"
+literal|"-ln"
+argument_list|,
+literal|"Create namespace file (*.nsp)"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -ls            Create combined source file (expanded includes) (*.src)\n"
+literal|"-ls"
+argument_list|,
+literal|"Create combined source file (expanded includes) (*.src)"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -330,14 +372,25 @@ argument_list|(
 literal|"\nACPI Data Tables:\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -T<Sig>|ALL|* Create table template file(s) for<Sig>\n"
+literal|"-G"
+argument_list|,
+literal|"Compile custom table containing generic operators"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -vt            Create verbose templates (full disassembly)\n"
+literal|"-T<sig>|ALL|*"
+argument_list|,
+literal|"Create table template file(s) for<Sig>"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-vt"
+argument_list|,
+literal|"Create verbose templates (full disassembly)"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -345,39 +398,53 @@ argument_list|(
 literal|"\nAML Disassembler:\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -d  [file]     Disassemble or decode binary ACPI table to file (*.dsl)\n"
+literal|"-d  [file]"
+argument_list|,
+literal|"Disassemble or decode binary ACPI table to file (*.dsl)"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -da [f1,f2]    Disassemble multiple tables from single namespace\n"
+literal|"-da [f1,f2]"
+argument_list|,
+literal|"Disassemble multiple tables from single namespace"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -dc [file]     Disassemble AML and immediately compile it\n"
+literal|"-dc [file]"
+argument_list|,
+literal|"Disassemble AML and immediately compile it"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"                 (Obtain DSDT from current system if no input file)\n"
+literal|""
+argument_list|,
+literal|"(Obtain DSDT from current system if no input file)"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -e  [f1,f2]    Include ACPI table(s) for external symbol resolution\n"
+literal|"-e  [f1,f2]"
+argument_list|,
+literal|"Include ACPI table(s) for external symbol resolution"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -2             Emit ACPI 2.0 compatible ASL code\n"
+literal|"-2"
+argument_list|,
+literal|"Emit ACPI 2.0 compatible ASL code"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -g             Get ACPI tables and write to files (*.dat)\n"
+literal|"-g"
+argument_list|,
+literal|"Get ACPI tables and write to files (*.dat)"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -385,24 +452,32 @@ argument_list|(
 literal|"\nHelp:\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -h             Additional help and compiler debug options\n"
+literal|"-h"
+argument_list|,
+literal|"Additional help and compiler debug options"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -hc            Display operators allowed in constant expressions\n"
+literal|"-hc"
+argument_list|,
+literal|"Display operators allowed in constant expressions"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -hr            Display ACPI reserved method names\n"
+literal|"-hr"
+argument_list|,
+literal|"Display ACPI reserved method names"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -ht            Display currently supported ACPI table names\n"
+literal|"-ht"
+argument_list|,
+literal|"Display currently supported ACPI table names"
 argument_list|)
 expr_stmt|;
 block|}
@@ -422,7 +497,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"AML output filename generation:\n"
+literal|"\nAML output filename generation:\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -468,39 +543,53 @@ argument_list|(
 literal|"\nCompiler/Disassembler Debug Options:\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -b<p|t|b>      Create compiler debug/trace file (*.txt)\n"
+literal|"-b<p|t|b>"
+argument_list|,
+literal|"Create compiler debug/trace file (*.txt)"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"                   Types: Parse/Tree/Both\n"
+literal|""
+argument_list|,
+literal|"Types: Parse/Tree/Both"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -f             Ignore errors, force creation of AML output file(s)\n"
+literal|"-f"
+argument_list|,
+literal|"Ignore errors, force creation of AML output file(s)"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -n             Parse only, no output generation\n"
+literal|"-n"
+argument_list|,
+literal|"Parse only, no output generation"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -ot            Display compile times\n"
+literal|"-ot"
+argument_list|,
+literal|"Display compile times"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -x<level>      Set debug level for trace output\n"
+literal|"-x<level>"
+argument_list|,
+literal|"Set debug level for trace output"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_OPTION
 argument_list|(
-literal|"  -z             Do not insert new compiler ID for DataTables\n"
+literal|"-z"
+argument_list|,
+literal|"Do not insert new compiler ID for DataTables"
 argument_list|)
 expr_stmt|;
 block|}
@@ -520,16 +609,14 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"%s\n"
+literal|"%s\n\n"
 argument_list|,
 name|ASL_COMPLIANCE
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_USAGE_HEADER
 argument_list|(
-literal|"Usage:    %s [Options] [Files]\n\n"
-argument_list|,
-name|ASL_INVOCATION_NAME
+literal|"iasl [Options] [Files]"
 argument_list|)
 expr_stmt|;
 name|Options
@@ -1556,6 +1643,14 @@ literal|1
 operator|)
 return|;
 block|}
+break|break;
+case|case
+literal|'G'
+case|:
+name|Gbl_CompileGeneric
+operator|=
+name|TRUE
+expr_stmt|;
 break|break;
 case|case
 literal|'T'

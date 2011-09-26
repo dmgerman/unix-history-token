@@ -906,6 +906,17 @@ operator|!
 name|RootNode
 condition|)
 block|{
+name|AslError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_COMPILER_INTERNAL
+argument_list|,
+name|NULL
+argument_list|,
+literal|"- Could not resolve parse tree root node"
+argument_list|)
+expr_stmt|;
 name|CmCleanupAndExit
 argument_list|()
 expr_stmt|;

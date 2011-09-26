@@ -1823,6 +1823,14 @@ literal|"Wake Event"
 block|,
 literal|"Method executed as a result of a wake event"
 block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt

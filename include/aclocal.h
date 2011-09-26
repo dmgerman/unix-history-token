@@ -553,17 +553,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ANOBJ_IS_BIT_OFFSET
-value|0x40
-end_define
-
-begin_comment
-comment|/* iASL only: Reference is a bit offset */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ANOBJ_IS_REFERENCED
 value|0x80
 end_define
@@ -2087,6 +2076,30 @@ name|ACPI_OPCODE_INFO
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* Structure for Resource Tag information */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_tag_info
+block|{
+name|UINT32
+name|BitOffset
+decl_stmt|;
+name|UINT32
+name|BitLength
+decl_stmt|;
+block|}
+name|ACPI_TAG_INFO
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Value associated with the parse object */
+end_comment
+
 begin_typedef
 typedef|typedef
 union|union
@@ -2121,6 +2134,10 @@ modifier|*
 name|Arg
 decl_stmt|;
 comment|/* arguments and contained ops */
+name|ACPI_TAG_INFO
+name|Tag
+decl_stmt|;
+comment|/* Resource descriptor tag info  */
 block|}
 name|ACPI_PARSE_VALUE
 typedef|;

@@ -1663,6 +1663,9 @@ break|break;
 case|case
 name|PARSEOP_PACKAGE
 case|:
+case|case
+name|PARSEOP_VAR_PACKAGE
+case|:
 name|ReturnBtype
 operator|=
 name|ACPI_RTYPE_PACKAGE

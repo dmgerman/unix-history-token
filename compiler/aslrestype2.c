@@ -265,7 +265,7 @@ name|Value
 operator|.
 name|Integer
 expr_stmt|;
-name|RsCreateByteField
+name|RsCreateQwordField
 argument_list|(
 name|InitializerOp
 argument_list|,
@@ -1015,7 +1015,7 @@ name|InitializerOp
 argument_list|)
 expr_stmt|;
 comment|/* Create a named field at the start of the list */
-name|RsCreateByteField
+name|RsCreateDwordField
 argument_list|(
 name|InitializerOp
 argument_list|,

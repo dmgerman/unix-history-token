@@ -80,6 +80,8 @@ name|ASL_MSG_RESERVED
 init|=
 literal|0
 block|,
+name|ASL_MSG_ALIGNMENT
+block|,
 name|ASL_MSG_ALPHANUMERIC_STRING
 block|,
 name|ASL_MSG_AML_NOT_IMPLEMENTED
@@ -92,15 +94,13 @@ name|ASL_MSG_ARG_INIT
 block|,
 name|ASL_MSG_BACKWARDS_OFFSET
 block|,
-name|ASL_MSG_BITS_TO_BYTES
-block|,
 name|ASL_MSG_BUFFER_LENGTH
-block|,
-name|ASL_MSG_BYTES_TO_BITS
 block|,
 name|ASL_MSG_CLOSE
 block|,
 name|ASL_MSG_COMPILER_INTERNAL
+block|,
+name|ASL_MSG_COMPILER_RESERVED
 block|,
 name|ASL_MSG_CONSTANT_EVALUATION
 block|,
@@ -138,6 +138,10 @@ name|ASL_MSG_FIELD_UNIT_ACCESS_WIDTH
 block|,
 name|ASL_MSG_FIELD_UNIT_OFFSET
 block|,
+name|ASL_MSG_GPE_NAME_CONFLICT
+block|,
+name|ASL_MSG_HID_LENGTH
+block|,
 name|ASL_MSG_INCLUDE_FILE_OPEN
 block|,
 name|ASL_MSG_INPUT_FILE_OPEN
@@ -150,11 +154,25 @@ name|ASL_MSG_INTERRUPT_LIST
 block|,
 name|ASL_MSG_INTERRUPT_NUMBER
 block|,
+name|ASL_MSG_INVALID_ACCESS_SIZE
+block|,
+name|ASL_MSG_INVALID_ADDR_FLAGS
+block|,
 name|ASL_MSG_INVALID_CONSTANT_OP
 block|,
 name|ASL_MSG_INVALID_EISAID
 block|,
 name|ASL_MSG_INVALID_ESCAPE
+block|,
+name|ASL_MSG_INVALID_GRAN_FIXED
+block|,
+name|ASL_MSG_INVALID_GRANULARITY
+block|,
+name|ASL_MSG_INVALID_LENGTH
+block|,
+name|ASL_MSG_INVALID_LENGTH_FIXED
+block|,
+name|ASL_MSG_INVALID_MIN_MAX
 block|,
 name|ASL_MSG_INVALID_OPERAND
 block|,
@@ -172,6 +190,10 @@ name|ASL_MSG_INVALID_TYPE
 block|,
 name|ASL_MSG_INVALID_UUID
 block|,
+name|ASL_MSG_ISA_ADDRESS
+block|,
+name|ASL_MSG_LEADING_ASTERISK
+block|,
 name|ASL_MSG_LIST_LENGTH_LONG
 block|,
 name|ASL_MSG_LIST_LENGTH_SHORT
@@ -182,6 +204,8 @@ name|ASL_MSG_LISTING_FILENAME
 block|,
 name|ASL_MSG_LOCAL_INIT
 block|,
+name|ASL_MSG_LOCAL_OUTSIDE_METHOD
+block|,
 name|ASL_MSG_LONG_LINE
 block|,
 name|ASL_MSG_MEMORY_ALLOCATION
@@ -190,21 +214,29 @@ name|ASL_MSG_MISSING_ENDDEPENDENT
 block|,
 name|ASL_MSG_MISSING_STARTDEPENDENT
 block|,
+name|ASL_MSG_MULTIPLE_DEFAULT
+block|,
 name|ASL_MSG_MULTIPLE_TYPES
 block|,
 name|ASL_MSG_NAME_EXISTS
 block|,
 name|ASL_MSG_NAME_OPTIMIZATION
 block|,
+name|ASL_MSG_NAMED_OBJECT_IN_WHILE
+block|,
 name|ASL_MSG_NESTED_COMMENT
 block|,
 name|ASL_MSG_NO_CASES
+block|,
+name|ASL_MSG_NO_REGION
 block|,
 name|ASL_MSG_NO_RETVAL
 block|,
 name|ASL_MSG_NO_WHILE
 block|,
 name|ASL_MSG_NON_ASCII
+block|,
+name|ASL_MSG_NON_ZERO
 block|,
 name|ASL_MSG_NOT_EXIST
 block|,
@@ -215,6 +247,12 @@ block|,
 name|ASL_MSG_NOT_PARAMETER
 block|,
 name|ASL_MSG_NOT_REACHABLE
+block|,
+name|ASL_MSG_NOT_REFERENCED
+block|,
+name|ASL_MSG_NULL_DESCRIPTOR
+block|,
+name|ASL_MSG_NULL_STRING
 block|,
 name|ASL_MSG_OPEN
 block|,
@@ -238,6 +276,8 @@ name|ASL_MSG_RESERVED_ARG_COUNT_LO
 block|,
 name|ASL_MSG_RESERVED_METHOD
 block|,
+name|ASL_MSG_RESERVED_NO_RETURN_VAL
+block|,
 name|ASL_MSG_RESERVED_OPERAND_TYPE
 block|,
 name|ASL_MSG_RESERVED_RETURN_VALUE
@@ -254,6 +294,8 @@ name|ASL_MSG_RESOURCE_LIST
 block|,
 name|ASL_MSG_RESOURCE_SOURCE
 block|,
+name|ASL_MSG_RESULT_NOT_USED
+block|,
 name|ASL_MSG_RETURN_TYPES
 block|,
 name|ASL_MSG_SCOPE_FWD_REF
@@ -262,9 +304,13 @@ name|ASL_MSG_SCOPE_TYPE
 block|,
 name|ASL_MSG_SEEK
 block|,
+name|ASL_MSG_SERIALIZED
+block|,
 name|ASL_MSG_SINGLE_NAME_OPTIMIZATION
 block|,
 name|ASL_MSG_SOME_NO_RETVAL
+block|,
+name|ASL_MSG_STRING_LENGTH
 block|,
 name|ASL_MSG_SWITCH_TYPE
 block|,
@@ -274,6 +320,12 @@ name|ASL_MSG_SYNTAX
 block|,
 name|ASL_MSG_TABLE_SIGNATURE
 block|,
+name|ASL_MSG_TAG_LARGER
+block|,
+name|ASL_MSG_TAG_SMALLER
+block|,
+name|ASL_MSG_TIMEOUT
+block|,
 name|ASL_MSG_TOO_MANY_TEMPS
 block|,
 name|ASL_MSG_UNKNOWN_RESERVED_NAME
@@ -282,89 +334,38 @@ name|ASL_MSG_UNREACHABLE_CODE
 block|,
 name|ASL_MSG_UNSUPPORTED
 block|,
+name|ASL_MSG_UPPER_CASE
+block|,
 name|ASL_MSG_VENDOR_LIST
 block|,
 name|ASL_MSG_WRITE
 block|,
-name|ASL_MSG_MULTIPLE_DEFAULT
-block|,
-name|ASL_MSG_TIMEOUT
-block|,
-name|ASL_MSG_RESULT_NOT_USED
-block|,
-name|ASL_MSG_NOT_REFERENCED
-block|,
-name|ASL_MSG_NON_ZERO
-block|,
-name|ASL_MSG_STRING_LENGTH
-block|,
-name|ASL_MSG_SERIALIZED
-block|,
-name|ASL_MSG_COMPILER_RESERVED
-block|,
-name|ASL_MSG_NAMED_OBJECT_IN_WHILE
-block|,
-name|ASL_MSG_LOCAL_OUTSIDE_METHOD
-block|,
-name|ASL_MSG_ALIGNMENT
-block|,
-name|ASL_MSG_ISA_ADDRESS
-block|,
-name|ASL_MSG_INVALID_MIN_MAX
-block|,
-name|ASL_MSG_INVALID_LENGTH
-block|,
-name|ASL_MSG_INVALID_LENGTH_FIXED
-block|,
-name|ASL_MSG_INVALID_GRANULARITY
-block|,
-name|ASL_MSG_INVALID_GRAN_FIXED
-block|,
-name|ASL_MSG_INVALID_ACCESS_SIZE
-block|,
-name|ASL_MSG_INVALID_ADDR_FLAGS
-block|,
-name|ASL_MSG_NULL_DESCRIPTOR
-block|,
-name|ASL_MSG_UPPER_CASE
-block|,
-name|ASL_MSG_HID_LENGTH
-block|,
-name|ASL_MSG_NULL_STRING
-block|,
-name|ASL_MSG_LEADING_ASTERISK
-block|,
-name|ASL_MSG_RESERVED_NO_RETURN_VAL
-block|,
-name|ASL_MSG_GPE_NAME_CONFLICT
-block|,
-name|ASL_MSG_NO_REGION
-block|,
-name|ASL_MSG_INVALID_FIELD_NAME
-block|,
-name|ASL_MSG_INTEGER_SIZE
-block|,
-name|ASL_MSG_INVALID_HEX_INTEGER
-block|,
+comment|/* These messages are used by the data table compiler only */
 name|ASL_MSG_BUFFER_ELEMENT
 block|,
-name|ASL_MSG_RESERVED_VALUE
+name|ASL_MSG_DIVIDE_BY_ZERO
 block|,
 name|ASL_MSG_FLAG_VALUE
 block|,
-name|ASL_MSG_ZERO_VALUE
-block|,
-name|ASL_MSG_UNKNOWN_TABLE
-block|,
-name|ASL_MSG_UNKNOWN_SUBTABLE
-block|,
-name|ASL_MSG_OEM_TABLE
-block|,
-name|ASL_MSG_UNKNOWN_LABEL
+name|ASL_MSG_INTEGER_SIZE
 block|,
 name|ASL_MSG_INVALID_EXPRESSION
 block|,
-name|ASL_MSG_DIVIDE_BY_ZERO
+name|ASL_MSG_INVALID_FIELD_NAME
+block|,
+name|ASL_MSG_INVALID_HEX_INTEGER
+block|,
+name|ASL_MSG_OEM_TABLE
+block|,
+name|ASL_MSG_RESERVED_VALUE
+block|,
+name|ASL_MSG_UNKNOWN_LABEL
+block|,
+name|ASL_MSG_UNKNOWN_SUBTABLE
+block|,
+name|ASL_MSG_UNKNOWN_TABLE
+block|,
+name|ASL_MSG_ZERO_VALUE
 block|}
 name|ASL_MESSAGE_IDS
 typedef|;
@@ -390,6 +391,9 @@ block|{
 comment|/*    The zeroth message is reserved */
 literal|""
 block|,
+comment|/*    ASL_MSG_ALIGNMENT */
+literal|"Must be a multiple of alignment/granularity value"
+block|,
 comment|/*    ASL_MSG_ALPHANUMERIC_STRING */
 literal|"String must be entirely alphanumeric"
 block|,
@@ -408,20 +412,17 @@ block|,
 comment|/*    ASL_MSG_BACKWARDS_OFFSET */
 literal|"Invalid backwards offset"
 block|,
-comment|/*    ASL_MSG_BITS_TO_BYTES */
-literal|"Field offset is in bits, but a byte offset is required"
-block|,
 comment|/*    ASL_MSG_BUFFER_LENGTH */
 literal|"Effective AML buffer length is zero"
-block|,
-comment|/*    ASL_MSG_BYTES_TO_BITS */
-literal|"Field offset is in bytes, but a bit offset is required"
 block|,
 comment|/*    ASL_MSG_CLOSE */
 literal|"Could not close file"
 block|,
 comment|/*    ASL_MSG_COMPILER_INTERNAL */
 literal|"Internal compiler error"
+block|,
+comment|/*    ASL_MSG_COMPILER_RESERVED */
+literal|"Use of compiler reserved name"
 block|,
 comment|/*    ASL_MSG_CONSTANT_EVALUATION */
 literal|"Could not evaluate constant expression"
@@ -477,6 +478,12 @@ block|,
 comment|/*    ASL_MSG_FIELD_UNIT_OFFSET */
 literal|"Field Unit extends beyond region limit"
 block|,
+comment|/*    ASL_MSG_GPE_NAME_CONFLICT */
+literal|"Name conflicts with a previous GPE method"
+block|,
+comment|/*    ASL_MSG_HID_LENGTH */
+literal|"_HID string must be exactly 7 or 8 characters"
+block|,
 comment|/*    ASL_MSG_INCLUDE_FILE_OPEN */
 literal|"Could not open include file"
 block|,
@@ -495,6 +502,12 @@ block|,
 comment|/*    ASL_MSG_INTERRUPT_NUMBER */
 literal|"Invalid interrupt number (must be 0-15)"
 block|,
+comment|/*    ASL_MSG_INVALID_ACCESS_SIZE */
+literal|"Invalid AccessSize (Maximum is 4 - QWord access)"
+block|,
+comment|/*    ASL_MSG_INVALID_ADDR_FLAGS */
+literal|"Invalid combination of Length and Min/Max fixed flags"
+block|,
 comment|/*    ASL_MSG_INVALID_CONSTANT_OP */
 literal|"Invalid operator in constant expression (not type 3/4/5)"
 block|,
@@ -503,6 +516,21 @@ literal|"EISAID string must be of the form \"UUUXXXX\" (3 uppercase, 4 hex digit
 block|,
 comment|/*    ASL_MSG_INVALID_ESCAPE */
 literal|"Invalid or unknown escape sequence"
+block|,
+comment|/*    ASL_MSG_INVALID_GRAN_FIXED */
+literal|"Granularity must be zero for fixed Min/Max"
+block|,
+comment|/*    ASL_MSG_INVALID_GRANULARITY */
+literal|"Granularity must be zero or a power of two minus one"
+block|,
+comment|/*    ASL_MSG_INVALID_LENGTH */
+literal|"Length is larger than Min/Max window"
+block|,
+comment|/*    ASL_MSG_INVALID_LENGTH_FIXED */
+literal|"Length is not equal to fixed Min/Max window"
+block|,
+comment|/*    ASL_MSG_INVALID_MIN_MAX */
+literal|"Address Min is greater than Address Max"
 block|,
 comment|/*    ASL_MSG_INVALID_OPERAND */
 literal|"Invalid operand"
@@ -528,6 +556,12 @@ block|,
 comment|/*    ASL_MSG_INVALID_UUID */
 literal|"UUID string must be of the form \"aabbccdd-eeff-gghh-iijj-kkllmmnnoopp\""
 block|,
+comment|/*    ASL_MSG_ISA_ADDRESS */
+literal|"Maximum 10-bit ISA address (0x3FF)"
+block|,
+comment|/*    ASL_MSG_LEADING_ASTERISK */
+literal|"Invalid leading asterisk"
+block|,
 comment|/*    ASL_MSG_LIST_LENGTH_LONG */
 literal|"Initializer list longer than declared package length"
 block|,
@@ -543,6 +577,9 @@ block|,
 comment|/*    ASL_MSG_LOCAL_INIT */
 literal|"Method local variable is not initialized"
 block|,
+comment|/*    ASL_MSG_LOCAL_OUTSIDE_METHOD */
+literal|"Local or Arg used outside a control method"
+block|,
 comment|/*    ASL_MSG_LONG_LINE */
 literal|"Splitting long input line"
 block|,
@@ -555,6 +592,9 @@ block|,
 comment|/*    ASL_MSG_MISSING_STARTDEPENDENT */
 literal|"Missing StartDependentFn() macro in dependent resource list"
 block|,
+comment|/*    ASL_MSG_MULTIPLE_DEFAULT */
+literal|"More than one Default statement within Switch construct"
+block|,
 comment|/*    ASL_MSG_MULTIPLE_TYPES */
 literal|"Multiple types"
 block|,
@@ -564,11 +604,17 @@ block|,
 comment|/*    ASL_MSG_NAME_OPTIMIZATION */
 literal|"NamePath optimized"
 block|,
+comment|/*    ASL_MSG_NAMED_OBJECT_IN_WHILE */
+literal|"Creating a named object in a While loop"
+block|,
 comment|/*    ASL_MSG_NESTED_COMMENT */
 literal|"Nested comment found"
 block|,
 comment|/*    ASL_MSG_NO_CASES */
 literal|"No Case statements under Switch"
+block|,
+comment|/*    ASL_MSG_NO_REGION */
+literal|"_REG has no corresponding Operation Region"
 block|,
 comment|/*    ASL_MSG_NO_RETVAL */
 literal|"Called method returns no value"
@@ -578,6 +624,9 @@ literal|"No enclosing While statement"
 block|,
 comment|/*    ASL_MSG_NON_ASCII */
 literal|"Invalid characters found in file"
+block|,
+comment|/*    ASL_MSG_NON_ZERO */
+literal|"Operand evaluates to zero"
 block|,
 comment|/*    ASL_MSG_NOT_EXIST */
 literal|"Object does not exist"
@@ -593,6 +642,15 @@ literal|"Not a parameter, used as local only"
 block|,
 comment|/*    ASL_MSG_NOT_REACHABLE */
 literal|"Object is not accessible from this scope"
+block|,
+comment|/*    ASL_MSG_NOT_REFERENCED */
+literal|"Namespace object is not referenced"
+block|,
+comment|/*    ASL_MSG_NULL_DESCRIPTOR */
+literal|"Min/Max/Length/Gran are all zero, but no resource tag"
+block|,
+comment|/*    ASL_MSG_NULL_STRING */
+literal|"Invalid zero-length (null) string"
 block|,
 comment|/*    ASL_MSG_OPEN */
 literal|"Could not open file"
@@ -627,6 +685,9 @@ block|,
 comment|/*    ASL_MSG_RESERVED_METHOD */
 literal|"Reserved name must be a control method"
 block|,
+comment|/*    ASL_MSG_RESERVED_NO_RETURN_VAL */
+literal|"Reserved method should not return a value"
+block|,
 comment|/*    ASL_MSG_RESERVED_OPERAND_TYPE */
 literal|"Invalid object type for reserved name"
 block|,
@@ -651,6 +712,9 @@ block|,
 comment|/*    ASL_MSG_RESOURCE_SOURCE */
 literal|"Missing ResourceSource string (required)"
 block|,
+comment|/*    ASL_MSG_RESULT_NOT_USED */
+literal|"Result is not used, operator has no effect"
+block|,
 comment|/*    ASL_MSG_RETURN_TYPES */
 literal|"Not all control paths return a value"
 block|,
@@ -663,11 +727,17 @@ block|,
 comment|/*    ASL_MSG_SEEK */
 literal|"Could not seek file"
 block|,
+comment|/*    ASL_MSG_SERIALIZED */
+literal|"Control Method marked Serialized"
+block|,
 comment|/*    ASL_MSG_SINGLE_NAME_OPTIMIZATION */
 literal|"NamePath optimized to NameSeg (uses run-time search path)"
 block|,
 comment|/*    ASL_MSG_SOME_NO_RETVAL */
 literal|"Called method may not always return a value"
+block|,
+comment|/*    ASL_MSG_STRING_LENGTH */
+literal|"String literal too long"
 block|,
 comment|/*    ASL_MSG_SWITCH_TYPE */
 literal|"Switch expression is not a static Integer/Buffer/String data type, defaulting to Integer"
@@ -681,6 +751,15 @@ block|,
 comment|/*    ASL_MSG_TABLE_SIGNATURE */
 literal|"Invalid Table Signature"
 block|,
+comment|/*    ASL_MSG_TAG_LARGER */
+literal|"ResourceTag larger than Field"
+block|,
+comment|/*    ASL_MSG_TAG_SMALLER */
+literal|"ResourceTag smaller than Field"
+block|,
+comment|/*    ASL_MSG_TIMEOUT */
+literal|"Result is not used, possible operator timeout will be missed"
+block|,
 comment|/*    ASL_MSG_TOO_MANY_TEMPS */
 literal|"Method requires too many temporary variables (_T_x)"
 block|,
@@ -693,132 +772,54 @@ block|,
 comment|/*    ASL_MSG_UNSUPPORTED */
 literal|"Unsupported feature"
 block|,
+comment|/*    ASL_MSG_UPPER_CASE */
+literal|"Non-hex letters must be upper case"
+block|,
 comment|/*    ASL_MSG_VENDOR_LIST */
 literal|"Too many vendor data bytes (7 max)"
 block|,
 comment|/*    ASL_MSG_WRITE */
 literal|"Could not write file"
 block|,
-comment|/*    ASL_MSG_MULTIPLE_DEFAULT */
-literal|"More than one Default statement within Switch construct"
-block|,
-comment|/*    ASL_MSG_TIMEOUT */
-literal|"Result is not used, possible operator timeout will be missed"
-block|,
-comment|/*    ASL_MSG_RESULT_NOT_USED */
-literal|"Result is not used, operator has no effect"
-block|,
-comment|/*    ASL_MSG_NOT_REFERENCED */
-literal|"Namespace object is not referenced"
-block|,
-comment|/*    ASL_MSG_NON_ZERO */
-literal|"Operand evaluates to zero"
-block|,
-comment|/*    ASL_MSG_STRING_LENGTH */
-literal|"String literal too long"
-block|,
-comment|/*    ASL_MSG_SERIALIZED */
-literal|"Control Method marked Serialized"
-block|,
-comment|/*    ASL_MSG_COMPILER_RESERVED */
-literal|"Use of compiler reserved name"
-block|,
-comment|/*    ASL_MSG_NAMED_OBJECT_IN_WHILE */
-literal|"Creating a named object in a While loop"
-block|,
-comment|/*    ASL_MSG_LOCAL_OUTSIDE_METHOD */
-literal|"Local or Arg used outside a control method"
-block|,
-comment|/*    ASL_MSG_ALIGNMENT */
-literal|"Must be a multiple of alignment/granularity value"
-block|,
-comment|/*    ASL_MSG_ISA_ADDRESS */
-literal|"Maximum 10-bit ISA address (0x3FF)"
-block|,
-comment|/*    ASL_MSG_INVALID_MIN_MAX */
-literal|"Address Min is greater than Address Max"
-block|,
-comment|/*    ASL_MSG_INVALID_LENGTH */
-literal|"Length is larger than Min/Max window"
-block|,
-comment|/*    ASL_MSG_INVALID_LENGTH_FIXED */
-literal|"Length is not equal to fixed Min/Max window"
-block|,
-comment|/*    ASL_MSG_INVALID_GRANULARITY */
-literal|"Granularity must be zero or a power of two minus one"
-block|,
-comment|/*    ASL_MSG_INVALID_GRAN_FIXED */
-literal|"Granularity must be zero for fixed Min/Max"
-block|,
-comment|/*    ASL_MSG_INVALID_ACCESS_SIZE */
-literal|"Invalid AccessSize (Maximum is 4 - QWord access)"
-block|,
-comment|/*    ASL_MSG_INVALID_ADDR_FLAGS */
-literal|"Invalid combination of Length and Min/Max fixed flags"
-block|,
-comment|/*    ASL_MSG_NULL_DESCRIPTOR */
-literal|"Min/Max/Length/Gran are all zero, but no resource tag"
-block|,
-comment|/*    ASL_MSG_UPPER_CASE */
-literal|"Non-hex letters must be upper case"
-block|,
-comment|/*    ASL_MSG_HID_LENGTH */
-literal|"_HID string must be exactly 7 or 8 characters"
-block|,
-comment|/*    ASL_MSG_NULL_STRING */
-literal|"Invalid zero-length (null) string"
-block|,
-comment|/*    ASL_MSG_LEADING_ASTERISK */
-literal|"Invalid leading asterisk"
-block|,
-comment|/*    ASL_MSG_RESERVED_NO_RETURN_VAL */
-literal|"Reserved method should not return a value"
-block|,
-comment|/*    ASL_MSG_GPE_NAME_CONFLICT */
-literal|"Name conflicts with a previous GPE method"
-block|,
-comment|/*    ASL_MSG_NO_REGION */
-literal|"_REG has no corresponding Operation Region"
-block|,
 comment|/* These messages are used by the data table compiler only */
-comment|/*    ASL_MSG_INVALID_FIELD_NAME */
-literal|"Invalid Field Name"
-block|,
-comment|/*    ASL_MSG_INTEGER_SIZE */
-literal|"Integer too large for target"
-block|,
-comment|/*    ASL_MSG_INVALID_HEX_INTEGER */
-literal|"Invalid hex integer constant"
-block|,
 comment|/*    ASL_MSG_BUFFER_ELEMENT */
 literal|"Invalid element in buffer initializer list"
 block|,
-comment|/*    ASL_MSG_RESERVED_VALUE */
-literal|"Reserved field must be zero"
+comment|/*    ASL_MSG_DIVIDE_BY_ZERO */
+literal|"Expression contains divide-by-zero"
 block|,
 comment|/*    ASL_MSG_FLAG_VALUE */
 literal|"Flag value is too large"
 block|,
-comment|/*    ASL_MSG_ZERO_VALUE */
-literal|"Value must be non-zero"
-block|,
-comment|/*    ASL_MSG_UNKNOWN_TABLE */
-literal|"Unknown ACPI table signature"
-block|,
-comment|/*    ASL_MSG_UNKNOWN_SUBTABLE */
-literal|"Unknown subtable type"
-block|,
-comment|/*    ASL_MSG_OEM_TABLE */
-literal|"OEM table - unknown contents"
-block|,
-comment|/*    ASL_MSG_UNKNOWN_LABEL */
-literal|"Label is undefined"
+comment|/*    ASL_MSG_INTEGER_SIZE */
+literal|"Integer too large for target"
 block|,
 comment|/*    ASL_MSG_INVALID_EXPRESSION */
 literal|"Invalid expression"
 block|,
-comment|/*    ASL_MSG_DIVIDE_BY_ZERO */
-literal|"Expression contains divide-by-zero"
+comment|/*    ASL_MSG_INVALID_FIELD_NAME */
+literal|"Invalid Field Name"
+block|,
+comment|/*    ASL_MSG_INVALID_HEX_INTEGER */
+literal|"Invalid hex integer constant"
+block|,
+comment|/*    ASL_MSG_OEM_TABLE */
+literal|"OEM table - unknown contents"
+block|,
+comment|/*    ASL_MSG_RESERVED_VALUE */
+literal|"Reserved field must be zero"
+block|,
+comment|/*    ASL_MSG_UNKNOWN_LABEL */
+literal|"Label is undefined"
+block|,
+comment|/*    ASL_MSG_UNKNOWN_SUBTABLE */
+literal|"Unknown subtable type"
+block|,
+comment|/*    ASL_MSG_UNKNOWN_TABLE */
+literal|"Unknown ACPI table signature"
+block|,
+comment|/*    ASL_MSG_ZERO_VALUE */
+literal|"Value must be non-zero"
 block|}
 decl_stmt|;
 end_decl_stmt

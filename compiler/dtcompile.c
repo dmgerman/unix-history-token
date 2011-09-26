@@ -681,6 +681,8 @@ if|if
 condition|(
 operator|!
 name|TableData
+operator|||
+name|Gbl_CompileGeneric
 condition|)
 block|{
 name|DtCompileGeneric

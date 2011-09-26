@@ -1850,7 +1850,7 @@ name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"\n\n"
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|UtDisplaySummary
@@ -1862,7 +1862,7 @@ name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"\n\n"
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2866,6 +2866,13 @@ argument_list|(
 name|ASL_FILE_AML_OUTPUT
 argument_list|)
 expr_stmt|;
+name|FlSeekFile
+argument_list|(
+name|ASL_FILE_AML_OUTPUT
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|FlPrintFile
 argument_list|(
 name|ASL_FILE_HEX_OUTPUT
@@ -3061,11 +3068,6 @@ argument_list|,
 literal|"};\n"
 argument_list|)
 expr_stmt|;
-name|FlCloseFile
-argument_list|(
-name|ASL_FILE_HEX_OUTPUT
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3107,6 +3109,13 @@ operator|=
 name|FlGetFileSize
 argument_list|(
 name|ASL_FILE_AML_OUTPUT
+argument_list|)
+expr_stmt|;
+name|FlSeekFile
+argument_list|(
+name|ASL_FILE_AML_OUTPUT
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|FlPrintFile
@@ -3304,11 +3313,6 @@ argument_list|,
 literal|"    })\n"
 argument_list|)
 expr_stmt|;
-name|FlCloseFile
-argument_list|(
-name|ASL_FILE_HEX_OUTPUT
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3350,6 +3354,13 @@ operator|=
 name|FlGetFileSize
 argument_list|(
 name|ASL_FILE_AML_OUTPUT
+argument_list|)
+expr_stmt|;
+name|FlSeekFile
+argument_list|(
+name|ASL_FILE_AML_OUTPUT
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|FlPrintFile
@@ -3525,11 +3536,6 @@ argument_list|(
 name|ASL_FILE_HEX_OUTPUT
 argument_list|,
 literal|"\n"
-argument_list|)
-expr_stmt|;
-name|FlCloseFile
-argument_list|(
-name|ASL_FILE_HEX_OUTPUT
 argument_list|)
 expr_stmt|;
 block|}
