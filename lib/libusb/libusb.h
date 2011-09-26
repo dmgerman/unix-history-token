@@ -932,6 +932,15 @@ name|int
 name|code
 parameter_list|)
 function_decl|;
+specifier|const
+name|char
+modifier|*
+name|libusb_error_name
+parameter_list|(
+name|int
+name|code
+parameter_list|)
+function_decl|;
 name|int
 name|libusb_init
 parameter_list|(
