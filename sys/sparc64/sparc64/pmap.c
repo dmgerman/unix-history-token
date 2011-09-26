@@ -3030,10 +3030,15 @@ operator|*
 name|sparc64_memreg
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize the kernel pmap (which is statically allocated). 	 * NOTE: PMAP_LOCK_INIT() is needed as part of the initialization 	 * but sparc64 start up is not ready to initialize mutexes yet. 	 * It is called in machdep.c. 	 */
+comment|/* 	 * Initialize the kernel pmap (which is statically allocated). 	 */
 name|pm
 operator|=
 name|kernel_pmap
+expr_stmt|;
+name|PMAP_LOCK_INIT
+argument_list|(
+name|pm
+argument_list|)
 expr_stmt|;
 for|for
 control|(
