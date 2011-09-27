@@ -2873,7 +2873,7 @@ name|fopen
 argument_list|(
 name|path
 argument_list|,
-literal|"a"
+literal|"r+"
 argument_list|)
 operator|)
 operator|==
@@ -2970,6 +2970,7 @@ name|nsb
 expr_stmt|;
 comment|/* picked up again later */
 block|}
+block|}
 comment|/* seek to where we left off */
 if|if
 condition|(
@@ -3008,7 +3009,6 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* picked up again later */
-block|}
 block|}
 block|}
 elseif|else
