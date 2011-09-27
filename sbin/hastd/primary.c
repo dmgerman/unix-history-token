@@ -6472,14 +6472,10 @@ literal|0
 expr_stmt|;
 break|break;
 default|default:
-name|PJDLOG_ASSERT
+name|PJDLOG_ABORT
 argument_list|(
-operator|!
 literal|"invalid condition"
 argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
 expr_stmt|;
 block|}
 name|nv
@@ -7523,14 +7519,10 @@ name|BIO_FLUSH
 case|:
 break|break;
 default|default:
-name|PJDLOG_ASSERT
+name|PJDLOG_ABORT
 argument_list|(
-operator|!
 literal|"invalid condition"
 argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
 expr_stmt|;
 block|}
 name|hio
