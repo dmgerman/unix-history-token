@@ -3315,6 +3315,11 @@ expr_stmt|;
 name|nintr
 operator|=
 name|sintrcnt
+operator|/
+sizeof|sizeof
+argument_list|(
+name|u_long
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
