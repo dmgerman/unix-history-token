@@ -2978,7 +2978,7 @@ name|of
 operator|!=
 name|NULL
 operator|&&
-name|fseek
+name|fseeko
 argument_list|(
 name|of
 argument_list|,
@@ -2994,7 +2994,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"%s: fseek()"
+literal|"%s: fseeko()"
 argument_list|,
 name|path
 argument_list|)
