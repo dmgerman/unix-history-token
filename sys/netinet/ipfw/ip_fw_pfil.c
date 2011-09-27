@@ -45,6 +45,12 @@ directive|include
 file|"opt_inet.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_inet6.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -74,12 +80,6 @@ end_endif
 begin_comment
 comment|/* KLD_MODULE */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"opt_inet6.h"
-end_include
 
 begin_include
 include|#
@@ -717,9 +717,27 @@ name|NULL
 condition|)
 break|break;
 comment|/* pass */
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|IPFIREWALL_FORWARD
+argument_list|)
+operator|||
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|)
 name|ret
 operator|=
 name|EACCES
@@ -983,6 +1001,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* IPFIREWALL_FORWARD */
 break|break;
 case|case
 name|IP_FW_DENY
