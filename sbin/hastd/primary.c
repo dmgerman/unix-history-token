@@ -1027,14 +1027,11 @@ operator|)
 name|size
 condition|)
 block|{
-name|KEEP_ERRNO
-argument_list|(
 name|pjdlog_errno
 argument_list|(
 name|LOG_ERR
 argument_list|,
 literal|"Unable to flush activemap to disk"
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
