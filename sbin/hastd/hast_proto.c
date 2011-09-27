@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -658,7 +652,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|hptr
 operator|!=
@@ -776,14 +770,14 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|data
 operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|size
 operator|>
