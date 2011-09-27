@@ -3114,9 +3114,9 @@ argument_list|(
 literal|"FTP_PASSIVE_MODE"
 argument_list|)
 operator|)
-operator|!=
+operator|==
 name|NULL
-operator|&&
+operator|||
 name|strncasecmp
 argument_list|(
 name|s
@@ -3125,7 +3125,7 @@ literal|"no"
 argument_list|,
 literal|2
 argument_list|)
-operator|!=
+operator|==
 literal|0
 operator|)
 expr_stmt|;
