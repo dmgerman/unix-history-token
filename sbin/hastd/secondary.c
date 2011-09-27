@@ -3514,10 +3514,15 @@ literal|0
 expr_stmt|;
 break|break;
 default|default:
-name|abort
-argument_list|()
+name|PJDLOG_ABORT
+argument_list|(
+literal|"Unexpected command (cmd=%hhu)."
+argument_list|,
+name|hio
+operator|->
+name|hio_cmd
+argument_list|)
 expr_stmt|;
-break|break;
 block|}
 if|if
 condition|(

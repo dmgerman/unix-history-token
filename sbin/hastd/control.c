@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -276,14 +270,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|cfg
 operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|name
 operator|!=
@@ -335,7 +329,7 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|!=
@@ -1013,21 +1007,21 @@ name|int
 name|no
 parameter_list|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|cfg
 operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|nvout
 operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|name
 operator|!=
@@ -1098,7 +1092,7 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|!=
@@ -1292,7 +1286,7 @@ block|{
 case|case
 name|HAST_ROLE_PRIMARY
 case|:
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->
@@ -2172,7 +2166,7 @@ case|case
 name|CONTROL_RELOAD
 case|:
 comment|/* 			 * When parent receives SIGHUP and discovers that 			 * something related to us has changes, it sends reload 			 * message to us. 			 */
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->
