@@ -3089,6 +3089,12 @@ name|CHECK_FLAG
 argument_list|(
 literal|'p'
 argument_list|)
+operator|||
+operator|!
+name|CHECK_FLAG
+argument_list|(
+literal|'P'
+argument_list|)
 expr_stmt|;
 name|verbose
 operator|=
@@ -3100,12 +3106,6 @@ expr_stmt|;
 comment|/* passive mode */
 if|if
 condition|(
-operator|!
-name|pasv
-condition|)
-name|pasv
-operator|=
-operator|(
 operator|(
 name|s
 operator|=
@@ -3114,9 +3114,12 @@ argument_list|(
 literal|"FTP_PASSIVE_MODE"
 argument_list|)
 operator|)
-operator|==
+operator|!=
 name|NULL
-operator|||
+condition|)
+name|pasv
+operator|=
+operator|(
 name|strncasecmp
 argument_list|(
 name|s
@@ -3125,7 +3128,7 @@ literal|"no"
 argument_list|,
 literal|2
 argument_list|)
-operator|==
+operator|!=
 literal|0
 operator|)
 expr_stmt|;
