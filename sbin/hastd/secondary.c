@@ -3078,6 +3078,7 @@ argument_list|,
 literal|"Local activemap cleared."
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 name|reqlog
 argument_list|(
