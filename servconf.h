@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: servconf.h,v 1.95 2010/11/13 23:27:50 djm Exp $ */
+comment|/* $OpenBSD: servconf.h,v 1.99 2011/06/22 21:57:01 djm Exp $ */
 end_comment
 
 begin_comment
@@ -129,6 +129,17 @@ begin_comment
 comment|/* Max # of groups for Match. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAX_AUTHKEYS_FILES
+value|256
+end_define
+
+begin_comment
+comment|/* Max # of authorized_keys files. */
+end_comment
+
 begin_comment
 comment|/* permit_root_login */
 end_comment
@@ -166,6 +177,31 @@ define|#
 directive|define
 name|PERMIT_YES
 value|3
+end_define
+
+begin_comment
+comment|/* use_privsep */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIVSEP_OFF
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRIVSEP_ON
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRIVSEP_SANDBOX
+value|2
 end_define
 
 begin_define
@@ -544,14 +580,16 @@ name|int
 name|client_alive_count_max
 decl_stmt|;
 comment|/* 					 * If the client is unresponsive 					 * for this many intervals above, 					 * disconnect the session 					 */
-name|char
-modifier|*
-name|authorized_keys_file
+name|u_int
+name|num_authkeys_files
 decl_stmt|;
-comment|/* File containing public keys */
+comment|/* Files containing public keys */
 name|char
 modifier|*
-name|authorized_keys_file2
+name|authorized_keys_files
+index|[
+name|MAX_AUTHKEYS_FILES
+index|]
 decl_stmt|;
 name|char
 modifier|*
@@ -587,6 +625,18 @@ block|}
 name|ServerOptions
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*  * These are string config options that must be copied between the  * Match sub-config and the main config, and must be sent from the  * privsep slave to the privsep master. We use a macro to ensure all  * the options are copied and the copies are done in the correct order.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COPY_MATCH_STRING_OPTS
+parameter_list|()
+value|do { \ 		M_CP_STROPT(banner); \ 		M_CP_STROPT(trusted_user_ca_keys); \ 		M_CP_STROPT(revoked_keys_file); \ 		M_CP_STROPT(authorized_principals_file); \ 		M_CP_STRARRAYOPT(authorized_keys_files, num_authkeys_files); \ 	} while (0)
+end_define
 
 begin_function_decl
 name|void

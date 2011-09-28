@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth.h,v 1.66 2010/05/07 11:30:29 djm Exp $ */
+comment|/* $OpenBSD: auth.h,v 1.69 2011/05/23 03:30:07 djm Exp $ */
 end_comment
 
 begin_comment
@@ -130,6 +130,9 @@ name|attempt
 decl_stmt|;
 name|int
 name|failures
+decl_stmt|;
+name|int
+name|server_caused_failure
 decl_stmt|;
 name|int
 name|force_pwchange
@@ -981,23 +984,16 @@ end_function_decl
 begin_function_decl
 name|char
 modifier|*
-name|authorized_keys_file
+name|expand_authorized_keys
 parameter_list|(
-name|struct
-name|passwd
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|const
 name|char
 modifier|*
-name|authorized_keys_file2
-parameter_list|(
+parameter_list|,
 name|struct
 name|passwd
 modifier|*
+name|pw
 parameter_list|)
 function_decl|;
 end_function_decl

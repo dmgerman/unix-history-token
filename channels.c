@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: channels.c,v 1.310 2010/11/24 01:24:14 djm Exp $ */
+comment|/* $OpenBSD: channels.c,v 1.311 2011/06/22 22:08:42 djm Exp $ */
 end_comment
 
 begin_comment
@@ -17347,6 +17347,9 @@ specifier|const
 name|char
 modifier|*
 name|data
+parameter_list|,
+name|int
+name|want_reply
 parameter_list|)
 block|{
 name|u_int
@@ -17602,7 +17605,7 @@ name|client_session_id
 argument_list|,
 literal|"x11-req"
 argument_list|,
-literal|0
+name|want_reply
 argument_list|)
 expr_stmt|;
 name|packet_put_char

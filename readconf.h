@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readconf.h,v 1.88 2010/11/13 23:27:50 djm Exp $ */
+comment|/* $OpenBSD: readconf.h,v 1.90 2011/05/24 07:15:47 djm Exp $ */
 end_comment
 
 begin_comment
@@ -62,6 +62,13 @@ begin_define
 define|#
 directive|define
 name|MAX_SEND_ENV
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_MAX_HOSTS_FILES
 value|256
 end_define
 
@@ -254,23 +261,27 @@ name|int
 name|escape_char
 decl_stmt|;
 comment|/* Escape character; -2 = none */
-name|char
-modifier|*
-name|system_hostfile
+name|u_int
+name|num_system_hostfiles
 decl_stmt|;
-comment|/* Path for /etc/ssh/ssh_known_hosts. */
+comment|/* Paths for /etc/ssh/ssh_known_hosts */
 name|char
 modifier|*
-name|user_hostfile
+name|system_hostfiles
+index|[
+name|SSH_MAX_HOSTS_FILES
+index|]
 decl_stmt|;
-comment|/* Path for $HOME/.ssh/known_hosts. */
-name|char
-modifier|*
-name|system_hostfile2
+name|u_int
+name|num_user_hostfiles
 decl_stmt|;
+comment|/* Path for $HOME/.ssh/known_hosts */
 name|char
 modifier|*
-name|user_hostfile2
+name|user_hostfiles
+index|[
+name|SSH_MAX_HOSTS_FILES
+index|]
 decl_stmt|;
 name|char
 modifier|*
@@ -398,6 +409,9 @@ decl_stmt|;
 name|int
 name|use_roaming
 decl_stmt|;
+name|int
+name|request_tty
+decl_stmt|;
 block|}
 name|Options
 typedef|;
@@ -436,6 +450,34 @@ define|#
 directive|define
 name|SSHCTL_MASTER_AUTO_ASK
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|REQUEST_TTY_AUTO
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|REQUEST_TTY_NO
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|REQUEST_TTY_YES
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|REQUEST_TTY_FORCE
+value|3
 end_define
 
 begin_function_decl

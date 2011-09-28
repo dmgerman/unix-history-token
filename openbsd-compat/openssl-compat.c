@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: openssl-compat.c,v 1.13 2011/01/21 22:37:06 dtucker Exp $ */
+comment|/* $Id: openssl-compat.c,v 1.14 2011/05/10 01:13:38 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -586,12 +586,12 @@ end_ifdef
 
 begin_function
 name|void
-name|ssh_SSLeay_add_all_algorithms
+name|ssh_OpenSSL_add_all_algorithms
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|SSLeay_add_all_algorithms
+name|OpenSSL_add_all_algorithms
 argument_list|()
 expr_stmt|;
 comment|/* Enable use of crypto hardware */

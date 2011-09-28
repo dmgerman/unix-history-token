@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: channels.h,v 1.104 2010/05/14 23:29:23 djm Exp $ */
+comment|/* $OpenBSD: channels.h,v 1.105 2011/06/22 22:08:42 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1562,6 +1562,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

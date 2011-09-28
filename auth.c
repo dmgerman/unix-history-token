@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth.c,v 1.91 2010/11/29 23:45:51 djm Exp $ */
+comment|/* $OpenBSD: auth.c,v 1.94 2011/05/23 03:33:38 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1396,7 +1396,6 @@ comment|/*  * Given a template and a passwd structure, build a filename  * by su
 end_comment
 
 begin_function
-specifier|static
 name|char
 modifier|*
 name|expand_authorized_keys
@@ -1515,54 +1514,6 @@ argument_list|(
 name|ret
 argument_list|)
 operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|char
-modifier|*
-name|authorized_keys_file
-parameter_list|(
-name|struct
-name|passwd
-modifier|*
-name|pw
-parameter_list|)
-block|{
-return|return
-name|expand_authorized_keys
-argument_list|(
-name|options
-operator|.
-name|authorized_keys_file
-argument_list|,
-name|pw
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|char
-modifier|*
-name|authorized_keys_file2
-parameter_list|(
-name|struct
-name|passwd
-modifier|*
-name|pw
-parameter_list|)
-block|{
-return|return
-name|expand_authorized_keys
-argument_list|(
-name|options
-operator|.
-name|authorized_keys_file2
-argument_list|,
-name|pw
-argument_list|)
 return|;
 block|}
 end_function
@@ -2072,13 +2023,6 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|debug3
-argument_list|(
-literal|"secure_filename: checking '%s'"
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|stat
@@ -2146,16 +2090,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-name|debug3
-argument_list|(
-literal|"secure_filename: terminating check at '%s'"
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
 break|break;
-block|}
 comment|/* 		 * dirname should always complete with a "/" path, 		 * but we can be paranoid and check for "." too 		 */
 if|if
 condition|(

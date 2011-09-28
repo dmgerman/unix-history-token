@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: packet.h,v 1.55 2010/11/13 23:27:50 djm Exp $ */
+comment|/* $OpenBSD: packet.h,v 1.56 2011/05/06 21:14:05 djm Exp $ */
 end_comment
 
 begin_comment
@@ -742,15 +742,6 @@ end_function_decl
 begin_function_decl
 name|int
 name|packet_connection_is_on_socket
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|packet_connection_is_ipv4
 parameter_list|(
 name|void
 parameter_list|)

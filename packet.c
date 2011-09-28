@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: packet.c,v 1.172 2010/11/13 23:27:50 djm Exp $ */
+comment|/* $OpenBSD: packet.c,v 1.173 2011/05/06 21:14:05 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1581,13 +1581,10 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* returns 1 if connection is via ipv4 */
-end_comment
-
 begin_function
+specifier|static
 name|int
-name|packet_connection_is_ipv4
+name|packet_connection_af
 parameter_list|(
 name|void
 parameter_list|)
@@ -1681,12 +1678,14 @@ name|sin6_addr
 argument_list|)
 condition|)
 return|return
-literal|1
+name|AF_INET
 return|;
 endif|#
 directive|endif
 return|return
-literal|0
+name|to
+operator|.
+name|ss_family
 return|;
 block|}
 end_function
@@ -7717,29 +7716,28 @@ name|int
 name|tos
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IP_TOS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
+ifndef|#
+directive|ifndef
 name|IP_TOS_IS_BROKEN
-argument_list|)
 if|if
 condition|(
 operator|!
 name|packet_connection_is_on_socket
 argument_list|()
-operator|||
-operator|!
-name|packet_connection_is_ipv4
-argument_list|()
 condition|)
 return|return;
+switch|switch
+condition|(
+name|packet_connection_af
+argument_list|()
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|IP_TOS
+case|case
+name|AF_INET
+case|:
 name|debug3
 argument_list|(
 literal|"%s: set IP_TOS 0x%02x"
@@ -7784,8 +7782,68 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+break|break;
 endif|#
 directive|endif
+comment|/* IP_TOS */
+ifdef|#
+directive|ifdef
+name|IPV6_TCLASS
+case|case
+name|AF_INET6
+case|:
+name|debug3
+argument_list|(
+literal|"%s: set IPV6_TCLASS 0x%02x"
+argument_list|,
+name|__func__
+argument_list|,
+name|tos
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+name|active_state
+operator|->
+name|connection_in
+argument_list|,
+name|IPPROTO_IPV6
+argument_list|,
+name|IPV6_TCLASS
+argument_list|,
+operator|&
+name|tos
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tos
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"setsockopt IPV6_TCLASS %d: %.100s:"
+argument_list|,
+name|tos
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* IPV6_TCLASS */
+block|}
+endif|#
+directive|endif
+comment|/* IP_TOS_IS_BROKEN */
 block|}
 end_function
 

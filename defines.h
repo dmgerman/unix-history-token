@@ -16,7 +16,7 @@ name|_DEFINES_H
 end_define
 
 begin_comment
-comment|/* $Id: defines.h,v 1.165 2011/05/05 01:19:15 djm Exp $ */
+comment|/* $Id: defines.h,v 1.167 2011/06/03 01:17:49 tim Exp $ */
 end_comment
 
 begin_comment
@@ -608,6 +608,28 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|S_IFSOCK
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|S_IFSOCK
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* S_IFSOCK */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -2093,46 +2115,13 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAIL_DIRECTORY
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MAIL_DIRECTORY
-value|"/var/spool/mail"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAILDIR
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MAILDIR
-value|MAIL_DIRECTORY
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* user may have set a different path */
+end_comment
 
 begin_if
 if|#
 directive|if
-operator|!
 name|defined
 argument_list|(
 name|_PATH_MAILDIR
@@ -2140,16 +2129,16 @@ argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|MAILDIR
+name|MAIL_DIRECTORY
 argument_list|)
 end_if
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|_PATH_MAILDIR
-value|MAILDIR
-end_define
+name|MAILDIR
+end_undef
 
 begin_endif
 endif|#
@@ -2157,8 +2146,26 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !defined(_PATH_MAILDIR)&& defined(MAILDIR) */
+comment|/* defined(_PATH_MAILDIR)&& defined(MAIL_DIRECTORY) */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MAIL_DIRECTORY
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_PATH_MAILDIR
+value|MAIL_DIRECTORY
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#

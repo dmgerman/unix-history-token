@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: authfd.c,v 1.84 2010/08/31 11:54:45 djm Exp $ */
+comment|/* $OpenBSD: authfd.c,v 1.86 2011/07/06 18:09:21 tedu Exp $ */
 end_comment
 
 begin_comment
@@ -274,6 +274,17 @@ return|return
 operator|-
 literal|1
 return|;
+name|bzero
+argument_list|(
+operator|&
+name|sunaddr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sunaddr
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|sunaddr
 operator|.
 name|sun_family
@@ -326,7 +337,7 @@ name|sock
 argument_list|,
 name|F_SETFD
 argument_list|,
-literal|1
+name|FD_CLOEXEC
 argument_list|)
 operator|==
 operator|-
