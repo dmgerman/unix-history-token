@@ -11703,6 +11703,19 @@ name|nmcastq
 expr_stmt|;
 block|}
 comment|/* NB: gated by beacon so safe to start here */
+if|if
+condition|(
+operator|!
+name|STAILQ_EMPTY
+argument_list|(
+operator|&
+operator|(
+name|cabq
+operator|->
+name|axq_q
+operator|)
+argument_list|)
+condition|)
 name|ath_hal_txstart
 argument_list|(
 name|ah
