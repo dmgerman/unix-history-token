@@ -1603,21 +1603,14 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|"%5d,%4d "
+literal|"%#10jx "
 argument_list|,
-name|major
-argument_list|(
+operator|(
+name|uintmax_t
+operator|)
 name|xt
 operator|->
 name|xt_dev
-argument_list|)
-argument_list|,
-name|minor
-argument_list|(
-name|xt
-operator|->
-name|xt_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
