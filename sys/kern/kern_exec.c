@@ -3254,22 +3254,6 @@ operator|&=
 operator|~
 name|P_INEXEC
 expr_stmt|;
-comment|/* 	 * If tracing the process, trap to the debugger so that 	 * breakpoints can be set before the program executes.  We 	 * have to use tdsignal() to deliver the signal to the current 	 * thread since any other threads in this process will exit if 	 * execve() succeeds. 	 */
-if|if
-condition|(
-name|p
-operator|->
-name|p_flag
-operator|&
-name|P_TRACED
-condition|)
-name|tdsignal
-argument_list|(
-name|td
-argument_list|,
-name|SIGTRAP
-argument_list|)
-expr_stmt|;
 comment|/* clear "fork but no exec" flag, as we _are_ execing */
 name|p
 operator|->

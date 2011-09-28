@@ -1027,14 +1027,11 @@ operator|)
 name|size
 condition|)
 block|{
-name|KEEP_ERRNO
-argument_list|(
 name|pjdlog_errno
 argument_list|(
 name|LOG_ERR
 argument_list|,
 literal|"Unable to flush activemap to disk"
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -6472,14 +6469,10 @@ literal|0
 expr_stmt|;
 break|break;
 default|default:
-name|PJDLOG_ASSERT
+name|PJDLOG_ABORT
 argument_list|(
-operator|!
 literal|"invalid condition"
 argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
 expr_stmt|;
 block|}
 name|nv
@@ -7523,14 +7516,10 @@ name|BIO_FLUSH
 case|:
 break|break;
 default|default:
-name|PJDLOG_ASSERT
+name|PJDLOG_ABORT
 argument_list|(
-operator|!
 literal|"invalid condition"
 argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
 expr_stmt|;
 block|}
 name|hio

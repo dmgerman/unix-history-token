@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -62,8 +56,41 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pjdlog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ebuf.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PJDLOG_ASSERT
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|PJDLOG_ASSERT
+parameter_list|(
+modifier|...
+parameter_list|)
+value|assert(__VA_ARGS__)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -272,7 +299,7 @@ modifier|*
 name|eb
 parameter_list|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|eb
 operator|!=
@@ -324,7 +351,7 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|eb
 operator|!=
@@ -374,7 +401,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|size
 operator|<=
@@ -448,7 +475,7 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|eb
 operator|!=
@@ -504,7 +531,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|size
 operator|<=
@@ -577,7 +604,7 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|eb
 operator|!=
@@ -590,7 +617,7 @@ operator|==
 name|EBUF_MAGIC
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|size
 operator|<=
@@ -627,7 +654,7 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|eb
 operator|!=
@@ -640,7 +667,7 @@ operator|==
 name|EBUF_MAGIC
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|size
 operator|<=
@@ -677,7 +704,7 @@ modifier|*
 name|sizep
 parameter_list|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|eb
 operator|!=
@@ -735,7 +762,7 @@ modifier|*
 name|eb
 parameter_list|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|eb
 operator|!=
@@ -787,7 +814,7 @@ decl_stmt|;
 name|size_t
 name|newsize
 decl_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|eb
 operator|!=
@@ -926,7 +953,7 @@ decl_stmt|;
 name|size_t
 name|newsize
 decl_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|eb
 operator|!=
