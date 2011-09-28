@@ -8546,7 +8546,7 @@ name|pagebits
 expr_stmt|;
 else|else
 block|{
-comment|/* 		 * The pmap layer can call vm_page_dirty() without 		 * holding a distinguished lock.  The combination of 		 * the object's lock and an atomic operation suffice 		 * to guarantee consistency of the page dirty field. 		 * 		 * For PAGE_SIZE == 32768 case, compiler already 		 * properly aligns the dirty field, so no forcible 		 * alignment is needed. Only require existence of 		 * atomic_clear_64 when page size if 32768. 		 */
+comment|/* 		 * The pmap layer can call vm_page_dirty() without 		 * holding a distinguished lock.  The combination of 		 * the object's lock and an atomic operation suffice 		 * to guarantee consistency of the page dirty field. 		 * 		 * For PAGE_SIZE == 32768 case, compiler already 		 * properly aligns the dirty field, so no forcible 		 * alignment is needed. Only require existence of 		 * atomic_clear_64 when page size is 32768. 		 */
 name|addr
 operator|=
 operator|(
@@ -8595,7 +8595,7 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* PAGE_SIZE<= 8192 */
-comment|/* 		 * Use a trick to perform an 32bit atomic on the 		 * contained aligned word, to not depend on existence 		 * of the atomic_clear_{8, 16}. 		 */
+comment|/* 		 * Use a trick to perform a 32-bit atomic on the 		 * containing aligned word, to not depend on the existence 		 * of atomic_clear_{8, 16}. 		 */
 name|shift
 operator|=
 name|addr
