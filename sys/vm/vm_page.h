@@ -140,11 +140,11 @@ directive|if
 name|PAGE_SIZE
 operator|==
 literal|4096
-name|u_char
+name|uint8_t
 name|valid
 decl_stmt|;
 comment|/* map of valid DEV_BSIZE chunks (O) */
-name|u_char
+name|uint8_t
 name|dirty
 decl_stmt|;
 comment|/* map of dirty DEV_BSIZE chunks (M) */
@@ -153,11 +153,11 @@ directive|elif
 name|PAGE_SIZE
 operator|==
 literal|8192
-name|u_short
+name|uint16_t
 name|valid
 decl_stmt|;
 comment|/* map of valid DEV_BSIZE chunks (O) */
-name|u_short
+name|uint16_t
 name|dirty
 decl_stmt|;
 comment|/* map of dirty DEV_BSIZE chunks (M) */
@@ -166,11 +166,11 @@ directive|elif
 name|PAGE_SIZE
 operator|==
 literal|16384
-name|u_int
+name|uint32_t
 name|valid
 decl_stmt|;
 comment|/* map of valid DEV_BSIZE chunks (O) */
-name|u_int
+name|uint32_t
 name|dirty
 decl_stmt|;
 comment|/* map of dirty DEV_BSIZE chunks (M) */
@@ -179,11 +179,11 @@ directive|elif
 name|PAGE_SIZE
 operator|==
 literal|32768
-name|u_long
+name|uint64_t
 name|valid
 decl_stmt|;
 comment|/* map of valid DEV_BSIZE chunks (O) */
-name|u_long
+name|uint64_t
 name|dirty
 decl_stmt|;
 comment|/* map of dirty DEV_BSIZE chunks (M) */
