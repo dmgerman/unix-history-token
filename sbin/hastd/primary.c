@@ -5496,7 +5496,7 @@ name|pjdlog_debug
 argument_list|(
 literal|2
 argument_list|,
-literal|"ggate_recv: (%p) Moving request to the send queues."
+literal|"ggate_recv: (%p) Moving request to the send queue."
 argument_list|,
 name|hio
 argument_list|)
