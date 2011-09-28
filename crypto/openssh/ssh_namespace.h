@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Namespace munging inspired by an equivalent hack in NetBSD's tree: add  * the "ssh_" prefix to every symbol in libssh which doesn't already have  * it.  This prevents collisions between symbols in libssh and symbols in  * other libraries or applications which link with libssh, either directly  * or indirectly (e.g. through PAM loading pam_ssh).  *  * A list of symbols which need munging is obtained as follows:  *  * nm libssh.a | awk '/[0-9a-z] [A-Z] /&& $3 !~ /^ssh_/ { print "#define" $3 "\t\tssh_" $3 }'  *  * $FreeBSD$  */
+comment|/*  * Namespace munging inspired by an equivalent hack in NetBSD's tree: add  * the "ssh_" prefix to every symbol in libssh which doesn't already have  * it.  This prevents collisions between symbols in libssh and symbols in  * other libraries or applications which link with libssh, either directly  * or indirectly (e.g. through PAM loading pam_ssh).  *  * A list of symbols which need munging is obtained as follows:  *  * nm libssh.a | awk '/[0-9a-z] [A-Z] /&& $3 !~ /^ssh_/ { print "#define " $3 "\t\tssh_" $3 }'  *  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -323,6 +323,13 @@ define|#
 directive|define
 name|buffer_get_int_ret
 value|ssh_buffer_get_int_ret
+end_define
+
+begin_define
+define|#
+directive|define
+name|buffer_get_max_len
+value|ssh_buffer_get_max_len
 end_define
 
 begin_define
@@ -890,6 +897,13 @@ define|#
 directive|define
 name|channel_set_fds
 value|ssh_channel_set_fds
+end_define
+
+begin_define
+define|#
+directive|define
+name|channel_set_hpn
+value|ssh_channel_set_hpn
 end_define
 
 begin_define
@@ -2983,6 +2997,13 @@ define|#
 directive|define
 name|sigdie
 value|ssh_sigdie
+end_define
+
+begin_define
+define|#
+directive|define
+name|sock_get_rcvbuf
+value|ssh_sock_get_rcvbuf
 end_define
 
 begin_define
