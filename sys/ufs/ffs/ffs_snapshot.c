@@ -1040,7 +1040,7 @@ name|len
 decl_stmt|,
 name|loc
 decl_stmt|;
-name|int
+name|uint64_t
 name|flag
 decl_stmt|;
 name|struct
