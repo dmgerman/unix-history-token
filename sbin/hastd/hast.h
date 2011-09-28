@@ -539,6 +539,10 @@ name|unsigned
 name|int
 name|hr_local_sectorsize
 decl_stmt|;
+comment|/* Is flushing write cache supported by the local provider? */
+name|bool
+name|hr_localflush
+decl_stmt|;
 comment|/* Flush write cache on metadata updates? */
 name|int
 name|hr_metaflush
