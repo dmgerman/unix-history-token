@@ -539,6 +539,10 @@ name|unsigned
 name|int
 name|hr_local_sectorsize
 decl_stmt|;
+comment|/* Flush write cache on metadata updates? */
+name|int
+name|hr_metaflush
+decl_stmt|;
 comment|/* Descriptor for /dev/ggctl communication. */
 name|int
 name|hr_ggatefd
