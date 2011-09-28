@@ -2034,6 +2034,10 @@ condition|(
 name|maxbits
 operator|>
 name|BITS
+operator|||
+name|maxbits
+operator|<
+literal|12
 condition|)
 block|{
 name|errno
@@ -2190,31 +2194,19 @@ expr_stmt|;
 name|free_ent
 operator|=
 name|FIRST
+expr_stmt|;
+name|oldcode
+operator|=
 operator|-
 literal|1
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|code
-operator|=
-name|getcode
-argument_list|(
-name|zs
-argument_list|)
-operator|)
-operator|==
-operator|-
-literal|1
-condition|)
-comment|/* O, untimely death! */
-break|break;
+continue|continue;
 block|}
 name|incode
 operator|=
 name|code
 expr_stmt|;
-comment|/* Special case for KwKwK string. */
+comment|/* Special case for kWkWk string. */
 if|if
 condition|(
 name|code
@@ -2222,6 +2214,30 @@ operator|>=
 name|free_ent
 condition|)
 block|{
+if|if
+condition|(
+name|code
+operator|>
+name|free_ent
+operator|||
+name|oldcode
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+comment|/* Bad stream. */
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 operator|*
 name|stackp
 operator|++
@@ -2233,6 +2249,7 @@ operator|=
 name|oldcode
 expr_stmt|;
 block|}
+comment|/* 		 * The above condition ensures that code< free_ent. 		 * The construction of tab_prefixof in turn guarantees that 		 * each iteration decreases code and therefore stack usage is 		 * bound by 1<< BITS - 256. 		 */
 comment|/* Generate output characters in reverse order. */
 while|while
 condition|(
@@ -2312,6 +2329,11 @@ name|free_ent
 operator|)
 operator|<
 name|maxmaxcode
+operator|&&
+name|oldcode
+operator|!=
+operator|-
+literal|1
 condition|)
 block|{
 name|tab_prefixof
