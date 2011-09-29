@@ -72,8 +72,6 @@ decl_stmt|,
 name|sumrusage
 decl_stmt|,
 name|termwidth
-decl_stmt|,
-name|totwidth
 decl_stmt|;
 end_decl_stmt
 
@@ -91,7 +89,8 @@ end_expr_stmt
 
 begin_function_decl
 name|__BEGIN_DECLS
-name|void
+name|char
+modifier|*
 name|arguments
 parameter_list|(
 name|KINFO
@@ -104,7 +103,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|command
 parameter_list|(
 name|KINFO
@@ -117,7 +117,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|cputime
 parameter_list|(
 name|KINFO
@@ -139,7 +140,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|elapsed
 parameter_list|(
 name|KINFO
@@ -152,7 +154,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|elapseds
 parameter_list|(
 name|KINFO
@@ -165,7 +168,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|emulname
 parameter_list|(
 name|KINFO
@@ -218,7 +222,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|kvar
 parameter_list|(
 name|KINFO
@@ -231,7 +236,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|label
 parameter_list|(
 name|KINFO
@@ -244,7 +250,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|loginclass
 parameter_list|(
 name|KINFO
@@ -257,7 +264,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|logname
 parameter_list|(
 name|KINFO
@@ -270,7 +278,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|longtname
 parameter_list|(
 name|KINFO
@@ -283,7 +292,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|lstarted
 parameter_list|(
 name|KINFO
@@ -296,7 +306,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|maxrss
 parameter_list|(
 name|KINFO
@@ -309,7 +320,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|lockname
 parameter_list|(
 name|KINFO
@@ -322,7 +334,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|mwchan
 parameter_list|(
 name|KINFO
@@ -335,7 +348,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|nwchan
 parameter_list|(
 name|KINFO
@@ -348,7 +362,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|pagein
 parameter_list|(
 name|KINFO
@@ -374,7 +389,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|pcpu
 parameter_list|(
 name|KINFO
@@ -387,7 +403,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|pmem
 parameter_list|(
 name|KINFO
@@ -400,7 +417,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|pri
 parameter_list|(
 name|KINFO
@@ -422,7 +440,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|priorityr
 parameter_list|(
 name|KINFO
@@ -435,7 +454,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|egroupname
 parameter_list|(
 name|KINFO
@@ -448,7 +468,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|rgroupname
 parameter_list|(
 name|KINFO
@@ -461,7 +482,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|runame
 parameter_list|(
 name|KINFO
@@ -474,123 +496,14 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|rvar
 parameter_list|(
 name|KINFO
 modifier|*
 parameter_list|,
 name|VARENT
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|s_comm
-parameter_list|(
-name|KINFO
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|s_cputime
-parameter_list|(
-name|KINFO
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|s_label
-parameter_list|(
-name|KINFO
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|s_loginclass
-parameter_list|(
-name|KINFO
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|s_logname
-parameter_list|(
-name|KINFO
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|s_egroupname
-parameter_list|(
-name|KINFO
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|s_rgroupname
-parameter_list|(
-name|KINFO
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|s_runame
-parameter_list|(
-name|KINFO
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|s_systime
-parameter_list|(
-name|KINFO
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|s_uname
-parameter_list|(
-name|KINFO
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|s_usertime
-parameter_list|(
-name|KINFO
 modifier|*
 parameter_list|)
 function_decl|;
@@ -606,7 +519,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|started
 parameter_list|(
 name|KINFO
@@ -619,7 +533,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|state
 parameter_list|(
 name|KINFO
@@ -632,7 +547,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|systime
 parameter_list|(
 name|KINFO
@@ -645,7 +561,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|tdev
 parameter_list|(
 name|KINFO
@@ -658,7 +575,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|tdnam
 parameter_list|(
 name|KINFO
@@ -671,7 +589,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|tname
 parameter_list|(
 name|KINFO
@@ -684,7 +603,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|ucomm
 parameter_list|(
 name|KINFO
@@ -697,7 +617,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|uname
 parameter_list|(
 name|KINFO
@@ -710,7 +631,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|upr
 parameter_list|(
 name|KINFO
@@ -723,7 +645,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|usertime
 parameter_list|(
 name|KINFO
@@ -736,7 +659,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|vsize
 parameter_list|(
 name|KINFO
@@ -749,7 +673,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|char
+modifier|*
 name|wchan
 parameter_list|(
 name|KINFO
