@@ -8505,7 +8505,7 @@ name|shift
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * If the object is locked and the page is neither VPO_BUSY nor 	 * PGA_WRITEABLE, then the page's dirty field cannot possibly be 	 * set by a concurrent pmap operation. 	 * 	 */
+comment|/* 	 * If the object is locked and the page is neither VPO_BUSY nor 	 * PGA_WRITEABLE, then the page's dirty field cannot possibly be 	 * set by a concurrent pmap operation. 	 */
 name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|m
