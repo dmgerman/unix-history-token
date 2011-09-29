@@ -28,7 +28,7 @@ directive|endif
 end_endif
 
 begin_endif
-unit|static const char rcsid[] =   "$FreeBSD$";
+unit|static const char rcsid[] =   "$FreeBSD: vendor-crypto/heimdal/dist/appl/rcp/util.c 225864 2011-09-29 05:23:57Z stas $";
 endif|#
 directive|endif
 end_endif
