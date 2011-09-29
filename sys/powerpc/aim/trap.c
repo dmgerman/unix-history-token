@@ -1841,6 +1841,12 @@ return|;
 block|}
 end_function
 
+begin_include
+include|#
+directive|include
+file|"../../kern/subr_syscall.c"
+end_include
+
 begin_function
 name|void
 name|syscall

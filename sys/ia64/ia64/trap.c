@@ -3681,6 +3681,12 @@ return|;
 block|}
 end_function
 
+begin_include
+include|#
+directive|include
+file|"../../kern/subr_syscall.c"
+end_include
+
 begin_comment
 comment|/*  * Process a system call.  *  * See syscall.s for details as to how we get here. In order to support  * the ERESTART case, we return the error to our caller. They deal with  * the hairy details.  */
 end_comment

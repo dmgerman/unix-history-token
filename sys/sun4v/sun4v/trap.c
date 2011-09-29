@@ -2705,6 +2705,12 @@ return|;
 block|}
 end_function
 
+begin_include
+include|#
+directive|include
+file|"../../kern/subr_syscall.c"
+end_include
+
 begin_comment
 comment|/*  * Syscall handler. The arguments to the syscall are passed in the o registers  * by the caller, and are saved in the trap frame. The syscall number is passed  * in %g1 (and also saved in the trap frame).  */
 end_comment

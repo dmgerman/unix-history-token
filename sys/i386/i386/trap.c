@@ -3889,6 +3889,12 @@ return|;
 block|}
 end_function
 
+begin_include
+include|#
+directive|include
+file|"../../kern/subr_syscall.c"
+end_include
+
 begin_comment
 comment|/*  *	syscall -	system call request C handler  *  *	A system call is essentially treated as a trap.  */
 end_comment
