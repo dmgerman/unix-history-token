@@ -1906,21 +1906,14 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%10d,%-2d"
+literal|"%#10jx"
 argument_list|,
-name|major
-argument_list|(
+operator|(
+name|uintmax_t
+operator|)
 name|pts
 operator|.
 name|dev
-argument_list|)
-argument_list|,
-name|minor
-argument_list|(
-name|pts
-operator|.
-name|dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2062,21 +2055,14 @@ name|nflg
 condition|)
 name|printf
 argument_list|(
-literal|" %2d,%-2d"
+literal|" %#8jx"
 argument_list|,
-name|major
-argument_list|(
+operator|(
+name|uintmax_t
+operator|)
 name|vn
 operator|.
 name|vn_fsid
-argument_list|)
-argument_list|,
-name|minor
-argument_list|(
-name|vn
-operator|.
-name|vn_fsid
-argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -2180,21 +2166,14 @@ name|vn_devname
 condition|)
 name|printf
 argument_list|(
-literal|"  %2d,%-2d"
+literal|" %#6jx"
 argument_list|,
-name|major
-argument_list|(
+operator|(
+name|uintmax_t
+operator|)
 name|vn
 operator|.
 name|vn_dev
-argument_list|)
-argument_list|,
-name|minor
-argument_list|(
-name|vn
-operator|.
-name|vn_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 else|else

@@ -591,26 +591,16 @@ name|IFBLK
 case|:
 name|printf
 argument_list|(
-literal|"block special (%d,%d)"
+literal|"block special (%#jx)"
 argument_list|,
-name|major
-argument_list|(
+operator|(
+name|uintmax_t
+operator|)
 name|DIP
 argument_list|(
 name|dp
 argument_list|,
 name|di_rdev
-argument_list|)
-argument_list|)
-argument_list|,
-name|minor
-argument_list|(
-name|DIP
-argument_list|(
-name|dp
-argument_list|,
-name|di_rdev
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -620,26 +610,13 @@ name|IFCHR
 case|:
 name|printf
 argument_list|(
-literal|"character special (%d,%d)"
+literal|"character special (%#jx)"
 argument_list|,
-name|major
-argument_list|(
 name|DIP
 argument_list|(
 name|dp
 argument_list|,
 name|di_rdev
-argument_list|)
-argument_list|)
-argument_list|,
-name|minor
-argument_list|(
-name|DIP
-argument_list|(
-name|dp
-argument_list|,
-name|di_rdev
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
