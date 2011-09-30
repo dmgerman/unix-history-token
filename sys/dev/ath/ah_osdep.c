@@ -571,6 +571,10 @@ operator|)
 operator|||
 operator|(
 name|ah
+operator|!=
+name|NULL
+operator|&&
+name|ah
 operator|->
 name|ah_config
 operator|.
