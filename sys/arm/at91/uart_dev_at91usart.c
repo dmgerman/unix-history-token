@@ -1698,7 +1698,6 @@ argument_list|)
 expr_stmt|;
 name|errout
 label|:
-empty_stmt|;
 comment|// XXX bad
 return|return
 operator|(
