@@ -110,7 +110,7 @@ parameter_list|,
 name|r3
 parameter_list|)
 define|\
-value|ldx	[r1], r2 ;						\ 9:	add	r2, 1, r3 ;						\ 	casxa	[r1] ASI_N, r2, r3 ;					\ 	cmp	r2, r3 ;						\ 	bne,pn	%icc, 9b ;						\ 	 mov	r3, r2
+value|ldx	[r1], r2 ;						\ 9:	add	r2, 1, r3 ;						\ 	casxa	[r1] ASI_N, r2, r3 ;					\ 	cmp	r2, r3 ;						\ 	bne,pn	%xcc, 9b ;						\ 	 mov	r3, r2
 end_define
 
 begin_comment
