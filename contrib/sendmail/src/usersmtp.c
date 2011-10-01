@@ -2251,6 +2251,9 @@ block|{
 block|{
 name|SASL_CB_GETREALM
 block|,
+operator|(
+name|sasl_callback_ft
+operator|)
 operator|&
 name|saslgetrealm
 block|,
@@ -2264,6 +2267,9 @@ value|0
 block|{
 name|SASL_CB_PASS
 block|,
+operator|(
+name|sasl_callback_ft
+operator|)
 operator|&
 name|getsecret
 block|,
@@ -2277,6 +2283,9 @@ value|1
 block|{
 name|SASL_CB_USER
 block|,
+operator|(
+name|sasl_callback_ft
+operator|)
 operator|&
 name|getsimple
 block|,
@@ -2290,6 +2299,9 @@ value|2
 block|{
 name|SASL_CB_AUTHNAME
 block|,
+operator|(
+name|sasl_callback_ft
+operator|)
 operator|&
 name|getsimple
 block|,
@@ -2303,6 +2315,9 @@ value|3
 block|{
 name|SASL_CB_VERIFYFILE
 block|,
+operator|(
+name|sasl_callback_ft
+operator|)
 operator|&
 name|safesaslfile
 block|,
