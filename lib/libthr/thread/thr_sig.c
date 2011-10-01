@@ -218,7 +218,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__sigwait
+name|___sigwait
 parameter_list|(
 specifier|const
 name|sigset_t
@@ -1091,7 +1091,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|__sigwait
+name|___sigwait
 argument_list|,
 name|sigwait
 argument_list|)
@@ -1366,7 +1366,7 @@ end_function
 
 begin_function
 name|int
-name|__sigwait
+name|___sigwait
 parameter_list|(
 specifier|const
 name|sigset_t
@@ -1392,6 +1392,8 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+do|do
+block|{
 name|_thr_cancel_enter
 argument_list|(
 name|curthread
@@ -1417,6 +1419,14 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
+block|}
+do|while
+condition|(
+name|ret
+operator|==
+name|EINTR
+condition|)
+do|;
 return|return
 operator|(
 name|ret
