@@ -72,7 +72,7 @@ parameter_list|,
 name|r3
 parameter_list|)
 define|\
-value|lduw	[r1], r2 ; \ 9:	sub	r2, 1, r3 ; \ 	casa	[r1] ASI_N, r2, r3 ; \ 	cmp	r2, r3 ; \ 	bne,pn	%icc, 9b ; \ 	 mov	r3, r2
+value|lduw	[r1], r2 ;						\ 9:	sub	r2, 1, r3 ;						\ 	casa	[r1] ASI_N, r2, r3 ;					\ 	cmp	r2, r3 ;						\ 	bne,pn	%icc, 9b ;						\ 	 mov	r3, r2
 end_define
 
 begin_comment
@@ -91,17 +91,17 @@ parameter_list|,
 name|r3
 parameter_list|)
 define|\
-value|lduw	[r1], r2 ; \ 9:	add	r2, 1, r3 ; \ 	casa	[r1] ASI_N, r2, r3 ; \ 	cmp	r2, r3 ; \ 	bne,pn	%icc, 9b ; \ 	 mov	r3, r2
+value|lduw	[r1], r2 ;						\ 9:	add	r2, 1, r3 ;						\ 	casa	[r1] ASI_N, r2, r3 ;					\ 	cmp	r2, r3 ;						\ 	bne,pn	%icc, 9b ;						\ 	 mov	r3, r2
 end_define
 
 begin_comment
-comment|/*  * Atomically increment an u_long in memory.  */
+comment|/*  * Atomically increment a long in memory.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ATOMIC_INC_ULONG
+name|ATOMIC_INC_LONG
 parameter_list|(
 name|r1
 parameter_list|,
@@ -110,7 +110,7 @@ parameter_list|,
 name|r3
 parameter_list|)
 define|\
-value|ldx	[r1], r2 ; \ 9:	add	r2, 1, r3 ; \ 	casxa	[r1] ASI_N, r2, r3 ; \ 	cmp	r2, r3 ; \ 	bne,pn	%icc, 9b ; \ 	 mov	r3, r2
+value|ldx	[r1], r2 ;						\ 9:	add	r2, 1, r3 ;						\ 	casxa	[r1] ASI_N, r2, r3 ;					\ 	cmp	r2, r3 ;						\ 	bne,pn	%xcc, 9b ;						\ 	 mov	r3, r2
 end_define
 
 begin_comment
@@ -131,11 +131,11 @@ parameter_list|,
 name|bits
 parameter_list|)
 define|\
-value|lduw	[r1], r2 ; \ 9:	andn	r2, bits, r3 ; \ 	casa	[r1] ASI_N, r2, r3 ; \ 	cmp	r2, r3 ; \ 	bne,pn	%icc, 9b ; \ 	 mov	r3, r2
+value|lduw	[r1], r2 ;						\ 9:	andn	r2, bits, r3 ;						\ 	casa	[r1] ASI_N, r2, r3 ;					\ 	cmp	r2, r3 ;						\ 	bne,pn	%icc, 9b ;						\ 	 mov	r3, r2
 end_define
 
 begin_comment
-comment|/*  * Atomically clear a number of bits of an u_long in memory.  */
+comment|/*  * Atomically clear a number of bits of a long in memory.  */
 end_comment
 
 begin_define
@@ -152,7 +152,7 @@ parameter_list|,
 name|bits
 parameter_list|)
 define|\
-value|ldx	[r1], r2 ; \ 9:	andn	r2, bits, r3 ; \ 	casxa	[r1] ASI_N, r2, r3 ; \ 	cmp	r2, r3 ; \ 	bne,pn	%icc, 9b ; \ 	 mov	r3, r2
+value|ldx	[r1], r2 ;						\ 9:	andn	r2, bits, r3 ;						\ 	casxa	[r1] ASI_N, r2, r3 ;					\ 	cmp	r2, r3 ;						\ 	bne,pn	%icc, 9b ;						\ 	 mov	r3, r2
 end_define
 
 begin_define
@@ -197,7 +197,7 @@ parameter_list|,
 name|r1
 parameter_list|)
 define|\
-value|.sect	.rodata ; \ 9:	.asciz	msg ; \ 	.previous ; \ 	SET(9b, r1, %o0) ; \ 	call	panic ; \ 	 nop
+value|.sect	.rodata ;						\ 9:	.asciz	msg ;							\ 	.previous ;							\ 	SET(9b, r1, %o0) ;						\ 	call	panic ;							\ 	 nop
 end_define
 
 begin_ifdef
@@ -216,7 +216,7 @@ parameter_list|,
 name|msg
 parameter_list|)
 define|\
-value|brnz,pt	r1, 8f ; \ 	 nop ; \ 	PANIC(msg, r1) ; \ 8:
+value|brnz,pt	r1, 8f ;						\ 	 nop ;								\ 	PANIC(msg, r1) ;						\ 8:
 end_define
 
 begin_else
@@ -250,7 +250,7 @@ parameter_list|,
 name|r1
 parameter_list|)
 define|\
-value|.sect	.rodata ; \ 9:	.asciz	msg ; \ 	.previous ; \ 	SET(9b, r1, %o0) ; \ 	call	printf ; \ 	 nop
+value|.sect	.rodata ;						\ 9:	.asciz	msg ;							\ 	.previous ;							\ 	SET(9b, r1, %o0) ;						\ 	call	printf ;						\ 	 nop
 end_define
 
 begin_define
@@ -268,7 +268,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|.data ; \ 	_ALIGN_DATA ; \ 	.globl	name ; \ 	.type	name, @object ; \ name:
+value|.data ;								\ 	_ALIGN_DATA ;							\ 	.globl	name ;							\ 	.type	name, @object ;						\ name:
 end_define
 
 begin_define

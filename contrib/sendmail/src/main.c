@@ -427,6 +427,9 @@ block|{
 block|{
 name|SASL_CB_VERIFYFILE
 block|,
+operator|(
+name|sasl_callback_ft
+operator|)
 operator|&
 name|safesaslfile
 block|,
@@ -436,6 +439,9 @@ block|,
 block|{
 name|SASL_CB_PROXY_POLICY
 block|,
+operator|(
+name|sasl_callback_ft
+operator|)
 operator|&
 name|proxy_policy
 block|,

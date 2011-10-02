@@ -883,7 +883,7 @@ decl_stmt|;
 name|HAL_STATUS
 name|ecode
 decl_stmt|;
-name|HALDEBUG_G
+name|HALDEBUG
 argument_list|(
 name|AH_NULL
 argument_list|,
@@ -927,7 +927,7 @@ operator|==
 name|AH_NULL
 condition|)
 block|{
-name|HALDEBUG_G
+name|HALDEBUG
 argument_list|(
 name|AH_NULL
 argument_list|,

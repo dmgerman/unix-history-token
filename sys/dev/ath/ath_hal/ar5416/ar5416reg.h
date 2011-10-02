@@ -1772,6 +1772,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR_ISR_GENTMR
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* OR of generic timer bits in S5 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AR_ISR_TXINTM
 value|0x40000000
 end_define

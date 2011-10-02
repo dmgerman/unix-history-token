@@ -2055,7 +2055,7 @@ name|nflg
 condition|)
 name|printf
 argument_list|(
-literal|" %#8jx"
+literal|" %#5jx"
 argument_list|,
 operator|(
 name|uintmax_t

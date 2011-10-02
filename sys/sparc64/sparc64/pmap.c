@@ -231,30 +231,6 @@ directive|include
 file|<machine/ver.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|PMAP_DEBUG
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PMAP_SHPGPERPROC
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|PMAP_SHPGPERPROC
-value|200
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* XXX */
 end_comment

@@ -3749,7 +3749,7 @@ operator|<
 literal|2
 condition|)
 block|{
-name|HALDEBUG_G
+name|HALDEBUG
 argument_list|(
 name|AH_NULL
 argument_list|,

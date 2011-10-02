@@ -2175,26 +2175,7 @@ comment|/* Global debug flags */
 end_comment
 
 begin_comment
-comment|/*  * This is used for global debugging, when ahp doesn't yet have the  * related debugging state. For example, during probe/attach.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HALDEBUG_G
-parameter_list|(
-name|_ah
-parameter_list|,
-name|__m
-parameter_list|,
-modifier|...
-parameter_list|)
-define|\
-value|do {							\ 		if ((__m) == HAL_DEBUG_UNMASKABLE ||		\ 		    ath_hal_debug& (__m)) {			\ 			DO_HALDEBUG((_ah), (__m), __VA_ARGS__);	\ 		}						\ 	} while (0);
-end_define
-
-begin_comment
-comment|/*  * This is used for local debugging, when ahp isn't NULL and  * thus may have debug flags set.  */
+comment|/*  * The typecast is purely because some callers will pass in  * AH_NULL directly rather than using a NULL ath_hal pointer.  */
 end_comment
 
 begin_define
@@ -2209,7 +2190,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|do {							\ 		if ((__m) == HAL_DEBUG_UNMASKABLE ||		\ 		    ath_hal_debug& (__m) ||			\ 		    (_ah)->ah_config.ah_debug& (__m)) {	\ 			DO_HALDEBUG((_ah), (__m), __VA_ARGS__);	\ 		}						\ 	} while(0);
+value|do {							\ 		if ((__m) == HAL_DEBUG_UNMASKABLE ||		\ 		    ath_hal_debug& (__m) ||			\ 		    ((_ah) != NULL&&				\ 		      ((struct ath_hal *) (_ah))->ah_config.ah_debug& (__m))) {	\ 			DO_HALDEBUG((_ah), (__m), __VA_ARGS__);	\ 		}						\ 	} while(0);
 end_define
 
 begin_function_decl
@@ -2253,19 +2234,6 @@ begin_define
 define|#
 directive|define
 name|HALDEBUG
-parameter_list|(
-name|_ah
-parameter_list|,
-name|__m
-parameter_list|,
-modifier|...
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|HALDEBUG_G
 parameter_list|(
 name|_ah
 parameter_list|,

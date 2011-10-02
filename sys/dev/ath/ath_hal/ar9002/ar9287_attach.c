@@ -563,7 +563,7 @@ decl_stmt|;
 name|int8_t
 name|pwr_table_offset
 decl_stmt|;
-name|HALDEBUG_G
+name|HALDEBUG
 argument_list|(
 name|AH_NULL
 argument_list|,
@@ -607,7 +607,7 @@ operator|==
 name|AH_NULL
 condition|)
 block|{
-name|HALDEBUG_G
+name|HALDEBUG
 argument_list|(
 name|AH_NULL
 argument_list|,
