@@ -425,13 +425,6 @@ operator|~
 name|AR_RxDone
 expr_stmt|;
 comment|/* clear the rest of the status fields */
-if|if
-condition|(
-operator|!
-name|pCap
-operator|->
-name|halAutoSleepSupport
-condition|)
 name|OS_MEMZERO
 argument_list|(
 operator|&
