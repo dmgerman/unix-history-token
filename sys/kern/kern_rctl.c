@@ -1356,6 +1356,16 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
+comment|/* 			 * If the process state is not fully initialized yet, 			 * we can't access most of the required fields, e.g. 			 * p->p_comm.  This happens when called from fork1(). 			 * Ignore this rule for now; it will be processed just 			 * after fork, when called from racct_proc_fork_done(). 			 */
+if|if
+condition|(
+name|p
+operator|->
+name|p_state
+operator|!=
+name|PRS_NORMAL
+condition|)
+continue|continue;
 if|if
 condition|(
 operator|!
@@ -1488,6 +1498,15 @@ operator|->
 name|rrl_exceeded
 operator|!=
 literal|0
+condition|)
+continue|continue;
+if|if
+condition|(
+name|p
+operator|->
+name|p_state
+operator|!=
+name|PRS_NORMAL
 condition|)
 continue|continue;
 name|buf
@@ -1624,6 +1643,15 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
+if|if
+condition|(
+name|p
+operator|->
+name|p_state
+operator|!=
+name|PRS_NORMAL
+condition|)
+continue|continue;
 name|KASSERT
 argument_list|(
 name|rule
@@ -1647,22 +1675,6 @@ name|rr_action
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 			 * We're supposed to send a signal, but the process 			 * is not fully initialized yet, probably because we 			 * got called from fork1().  For now just deny the 			 * allocation instead. 			 */
-if|if
-condition|(
-name|p
-operator|->
-name|p_state
-operator|!=
-name|PRS_NORMAL
-condition|)
-block|{
-name|should_deny
-operator|=
-literal|1
-expr_stmt|;
-continue|continue;
-block|}
 comment|/* 			 * We're using the fact that RCTL_ACTION_SIG* values 			 * are equal to their counterparts from sys/signal.h. 			 */
 name|kern_psignal
 argument_list|(

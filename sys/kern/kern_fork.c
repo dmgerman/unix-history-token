@@ -3874,6 +3874,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|racct_proc_fork_done
+argument_list|(
+name|newproc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0

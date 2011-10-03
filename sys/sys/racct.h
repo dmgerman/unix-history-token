@@ -558,6 +558,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|racct_proc_fork_done
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|child
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|racct_proc_exit
 parameter_list|(
 name|struct
