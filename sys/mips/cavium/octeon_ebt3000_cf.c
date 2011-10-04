@@ -2031,23 +2031,42 @@ name|lba_size_2
 argument_list|)
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 name|printf
 argument_list|(
-literal|"cf0:<%s> %lld sectors\n"
+literal|"    model %s\n"
 argument_list|,
 name|drive_param
 operator|.
 name|model
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    heads %d tracks %d sec_tracks %d sectors %d\n"
 argument_list|,
-operator|(
-name|long
-name|long
-operator|)
+name|drive_param
+operator|.
+name|heads
+argument_list|,
+name|drive_param
+operator|.
+name|tracks
+argument_list|,
+name|drive_param
+operator|.
+name|sec_track
+argument_list|,
 name|drive_param
 operator|.
 name|nr_sectors
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -2431,15 +2450,13 @@ expr_stmt|;
 block|}
 break|break;
 block|}
+comment|/* DRQ is only for when read data is actually available; check BSY */
+comment|/* Some vendors do assert DRQ, but not all. Check BSY instead. */
 if|if
 condition|(
-operator|(
 name|status
 operator|&
-name|STATUS_DRQ
-operator|)
-operator|==
-literal|0
+name|STATUS_BSY
 condition|)
 block|{
 name|printf
@@ -2586,15 +2603,6 @@ begin_comment
 comment|/* ------------------------------------------------------------------- *  *                      cf_identify()                                  *  * ------------------------------------------------------------------- *  *  * Find the bootbus region for the CF to determine   * 16 or 8 bit and check to see if device is   * inserted.  *  */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|long
-name|llu
-typedef|;
-end_typedef
-
 begin_function
 specifier|static
 name|void
@@ -2619,6 +2627,13 @@ decl_stmt|;
 name|cvmx_mio_boot_reg_cfgx_t
 name|cfg
 decl_stmt|;
+name|uint64_t
+name|phys_base
+init|=
+name|octeon_bootinfo
+operator|->
+name|compact_flash_common_base_addr
+decl_stmt|;
 if|if
 condition|(
 name|octeon_is_simulation
@@ -2629,9 +2644,7 @@ name|base_addr
 operator|=
 name|cvmx_phys_to_ptr
 argument_list|(
-name|octeon_bootinfo
-operator|->
-name|compact_flash_common_base_addr
+name|phys_base
 argument_list|)
 expr_stmt|;
 for|for
@@ -2668,16 +2681,15 @@ name|s
 operator|.
 name|base
 operator|==
-name|octeon_bootinfo
-operator|->
-name|compact_flash_common_base_addr
+name|phys_base
 operator|>>
 literal|16
 condition|)
 block|{
 if|if
 condition|(
-name|octeon_bootinfo
+name|cvmx_sysinfo_get
+argument_list|()
 operator|->
 name|compact_flash_attribute_base_addr
 operator|==
