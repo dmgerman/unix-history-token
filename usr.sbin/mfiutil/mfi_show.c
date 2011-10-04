@@ -644,6 +644,8 @@ decl_stmt|,
 name|error
 decl_stmt|,
 name|fd
+decl_stmt|,
+name|show_capacity
 decl_stmt|;
 if|if
 condition|(
@@ -719,6 +721,26 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
+name|warn
+argument_list|(
+literal|"Failed to get capacity info"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|status
@@ -744,26 +766,14 @@ literal|0
 operator|)
 return|;
 block|}
-name|error
+name|show_capacity
 operator|=
-name|errno
-expr_stmt|;
-name|warn
-argument_list|(
-literal|"Failed to get capacity info"
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-return|return
 operator|(
-name|error
+name|status
+operator|==
+name|MFI_STAT_OK
 operator|)
-return|;
-block|}
+expr_stmt|;
 if|if
 condition|(
 name|mfi_dcmd_command
@@ -935,6 +945,11 @@ operator|.
 name|design_capacity
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|show_capacity
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|" Full Charge Capacity: %d mAh\n"
@@ -971,6 +986,7 @@ operator|.
 name|relative_charge
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"       Design Voltage: %d mV\n"
