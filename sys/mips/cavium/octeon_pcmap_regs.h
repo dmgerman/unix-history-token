@@ -890,6 +890,17 @@ name|OCTEON_CHAR_LED_BASE_ADDR
 value|(0x1d020000 | (0x1ffffffffull<< 31))
 end_define
 
+begin_comment
+comment|/*  * Default FLASH device (physical) base address  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OCTEON_FLASH_BASE_ADDR
+value|(0x1d040000ull)
+end_define
+
 begin_endif
 endif|#
 directive|endif
