@@ -895,6 +895,10 @@ parameter_list|)
 value|(0x9c18 + ((_i)<< 12))
 end_define
 
+begin_comment
+comment|/* This is AR9130 and later */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -904,6 +908,21 @@ name|_i
 parameter_list|)
 value|(0x9c1c + ((_i)<< 12))
 end_define
+
+begin_comment
+comment|/*  * AR5416 still uses AR_PHY(263) for current RSSI;  * AR9130 and later uses AR_PHY(271).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR9130_PHY_CURRENT_RSSI
+value|0x9c3c
+end_define
+
+begin_comment
+comment|/* rssi of current frame rx'd */
+end_comment
 
 begin_define
 define|#
