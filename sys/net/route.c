@@ -1595,7 +1595,7 @@ index|]
 operator|=
 name|dst
 expr_stmt|;
-name|rt_missmsg
+name|rt_missmsg_fib
 argument_list|(
 name|msgtype
 argument_list|,
@@ -1605,6 +1605,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|err
+argument_list|,
+name|fibnum
 argument_list|)
 expr_stmt|;
 block|}
@@ -2488,7 +2490,7 @@ index|]
 operator|=
 name|src
 expr_stmt|;
-name|rt_missmsg
+name|rt_missmsg_fib
 argument_list|(
 name|RTM_REDIRECT
 argument_list|,
@@ -2498,6 +2500,8 @@ argument_list|,
 name|flags
 argument_list|,
 name|error
+argument_list|,
+name|fibnum
 argument_list|)
 expr_stmt|;
 if|if
@@ -6302,7 +6306,7 @@ argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
-name|rt_newaddrmsg
+name|rt_newaddrmsg_fib
 argument_list|(
 name|cmd
 argument_list|,
@@ -6311,6 +6315,8 @@ argument_list|,
 name|error
 argument_list|,
 name|rt
+argument_list|,
+name|fibnum
 argument_list|)
 expr_stmt|;
 name|RT_LOCK
