@@ -346,12 +346,29 @@ name|MAXTSIZ
 value|(16*1024*1024)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DFLDSIZ
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|DFLDSIZ
 value|(128*1024*1024)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXDSIZ
+end_ifndef
 
 begin_define
 define|#
@@ -360,12 +377,34 @@ name|MAXDSIZ
 value|(512*1024*1024)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DFLSSIZ
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|DFLSSIZ
 value|(2*1024*1024)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXSSIZ
+end_ifndef
 
 begin_define
 define|#
@@ -374,12 +413,28 @@ name|MAXSSIZ
 value|(8*1024*1024)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SGROWSIZ
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|SGROWSIZ
 value|(128*1024)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
