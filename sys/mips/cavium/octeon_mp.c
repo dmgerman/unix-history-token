@@ -83,18 +83,6 @@ directive|include
 file|<contrib/octeon-sdk/cvmx-interrupt.h>
 end_include
 
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|cvmx_bootinfo_t
-modifier|*
-name|octeon_bootinfo
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 name|unsigned
 name|octeon_ap_boot
@@ -284,7 +272,8 @@ block|{
 name|uint64_t
 name|core_mask
 init|=
-name|octeon_bootinfo
+name|cvmx_sysinfo_get
+argument_list|()
 operator|->
 name|core_mask
 decl_stmt|;

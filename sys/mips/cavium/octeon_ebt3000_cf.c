@@ -337,18 +337,6 @@ value|40
 end_define
 
 begin_comment
-comment|/* XXX */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|cvmx_bootinfo_t
-modifier|*
-name|octeon_bootinfo
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Globals */
 end_comment
 
@@ -2630,7 +2618,8 @@ decl_stmt|;
 name|uint64_t
 name|phys_base
 init|=
-name|octeon_bootinfo
+name|cvmx_sysinfo_get
+argument_list|()
 operator|->
 name|compact_flash_common_base_addr
 decl_stmt|;
