@@ -95,16 +95,12 @@ name|octeon_bootinfo
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* NOTE: this 64-bit mask (and many others) limits MAXCPU to 64 */
-end_comment
-
 begin_decl_stmt
-name|uint64_t
+name|unsigned
 name|octeon_ap_boot
 init|=
 operator|~
-literal|0ULL
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -428,7 +424,7 @@ comment|/* Give it a moment to start */
 block|}
 if|if
 condition|(
-name|atomic_cmpset_64
+name|atomic_cmpset_32
 argument_list|(
 operator|&
 name|octeon_ap_boot
@@ -460,7 +456,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|atomic_cmpset_64
+name|atomic_cmpset_32
 argument_list|(
 operator|&
 name|octeon_ap_boot
