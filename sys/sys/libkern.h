@@ -1125,6 +1125,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|size_t
+name|strnlen
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 modifier|*
 name|strsep
