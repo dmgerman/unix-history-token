@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001 - 2003 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 2001 - 2003 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -20,14 +20,6 @@ include|#
 directive|include
 file|"locate_plugin.h"
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: krbhst.c 21457 2007-07-10 12:53:25Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function
 specifier|static
@@ -144,12 +136,12 @@ literal|1024
 index|]
 decl_stmt|;
 name|struct
-name|dns_reply
+name|rk_dns_reply
 modifier|*
 name|r
 decl_stmt|;
 name|struct
-name|resource_record
+name|rk_resource_record
 modifier|*
 name|rr
 decl_stmt|;
@@ -186,11 +178,18 @@ operator|<
 literal|0
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"unknown protocol `%s'"
+name|EINVAL
+argument_list|,
+name|N_
+argument_list|(
+literal|"unknown protocol `%s' to lookup"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|proto
 argument_list|)
@@ -269,7 +268,7 @@ argument_list|)
 expr_stmt|;
 name|r
 operator|=
-name|dns_lookup
+name|rk_dns_lookup
 argument_list|(
 name|domain
 argument_list|,
@@ -282,9 +281,22 @@ name|r
 operator|==
 name|NULL
 condition|)
+block|{
+name|_krb5_debug
+argument_list|(
+name|context
+argument_list|,
+literal|0
+argument_list|,
+literal|"DNS lookup failed domain: %s"
+argument_list|,
+name|domain
+argument_list|)
+expr_stmt|;
 return|return
 name|KRB5_KDC_UNREACH
 return|;
+block|}
 for|for
 control|(
 name|num_srv
@@ -311,7 +323,7 @@ name|rr
 operator|->
 name|type
 operator|==
-name|T_SRV
+name|rk_ns_t_srv
 condition|)
 name|num_srv
 operator|++
@@ -339,23 +351,30 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|dns_free_data
+name|rk_dns_free_data
 argument_list|(
 name|r
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
 name|ENOMEM
 return|;
 block|}
-name|dns_srv_order
+name|rk_dns_srv_order
 argument_list|(
 name|r
 argument_list|)
@@ -386,7 +405,7 @@ name|rr
 operator|->
 name|type
 operator|==
-name|T_SRV
+name|rk_ns_t_srv
 condition|)
 block|{
 name|krb5_krbhst_info
@@ -429,7 +448,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|dns_free_data
+name|rk_dns_free_data
 argument_list|(
 name|r
 argument_list|)
@@ -540,7 +559,7 @@ name|count
 operator|=
 name|num_srv
 expr_stmt|;
-name|dns_free_data
+name|rk_dns_free_data
 argument_list|(
 name|r
 argument_list|)
@@ -698,6 +717,28 @@ block|}
 end_function
 
 begin_comment
+comment|/*  *  */
+end_comment
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|_krb5_krbhst_get_realm
+parameter_list|(
+name|krb5_krbhst_handle
+name|handle
+parameter_list|)
+block|{
+return|return
+name|handle
+operator|->
+name|realm
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * parse `spec' into a krb5_krbhst_info, defaulting the port to `def_port'  * and forcing it to `port' if port != 0  */
 end_comment
 
@@ -734,6 +775,9 @@ modifier|*
 name|p
 init|=
 name|spec
+decl_stmt|,
+modifier|*
+name|q
 decl_stmt|;
 name|struct
 name|krb5_krbhst_info
@@ -891,6 +935,83 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|p
+index|[
+literal|0
+index|]
+operator|==
+literal|'['
+operator|&&
+operator|(
+name|q
+operator|=
+name|strchr
+argument_list|(
+name|p
+argument_list|,
+literal|']'
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* if address looks like [foo:bar] or [foo:bar]: its a ipv6 	   adress, strip of [] */
+name|memcpy
+argument_list|(
+name|hi
+operator|->
+name|hostname
+argument_list|,
+operator|&
+name|p
+index|[
+literal|1
+index|]
+argument_list|,
+name|q
+operator|-
+name|p
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|hi
+operator|->
+name|hostname
+index|[
+name|q
+operator|-
+name|p
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|p
+operator|=
+name|q
+operator|+
+literal|1
+expr_stmt|;
+comment|/* get trailing : */
+if|if
+condition|(
+name|p
+index|[
+literal|0
+index|]
+operator|==
+literal|':'
+condition|)
+name|p
+operator|++
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|strsep_copy
 argument_list|(
 operator|&
@@ -913,6 +1034,7 @@ operator|<
 literal|0
 condition|)
 block|{
+comment|/* copy everything before : */
 name|free
 argument_list|(
 name|hi
@@ -961,6 +1083,11 @@ condition|(
 name|p
 operator|!=
 name|NULL
+operator|&&
+name|p
+index|[
+literal|0
+index|]
 condition|)
 block|{
 name|char
@@ -1099,11 +1226,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"malloc - out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1360,8 +1494,9 @@ comment|/*  * return a readable representation of `host' in `hostname, hostlen' 
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_krbhst_format_string
 parameter_list|(
 name|krb5_context
@@ -1539,12 +1674,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * return an `struct addrinfo *' in `ai' corresponding to the information  * in `host'.  free:ing is handled by krb5_krbhst_free.  */
+comment|/**  * Return an `struct addrinfo *' for a KDC host.  *  * Returns an the struct addrinfo in in that corresponds to the  * information in `host'.  free:ing is handled by krb5_krbhst_free, so  * the returned ai must not be released.  *  * @ingroup krb5  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_krbhst_get_addrinfo
 parameter_list|(
 name|krb5_context
@@ -1561,18 +1697,10 @@ modifier|*
 name|ai
 parameter_list|)
 block|{
-name|struct
-name|addrinfo
-name|hints
-decl_stmt|;
-name|char
-name|portstr
-index|[
-name|NI_MAXSERV
-index|]
-decl_stmt|;
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -1583,16 +1711,24 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|make_hints
-argument_list|(
-operator|&
+name|struct
+name|addrinfo
 name|hints
-argument_list|,
+decl_stmt|;
+name|char
+name|portstr
+index|[
+name|NI_MAXSERV
+index|]
+decl_stmt|;
+name|char
+modifier|*
+name|hostname
+init|=
 name|host
 operator|->
-name|proto
-argument_list|)
-expr_stmt|;
+name|hostname
+decl_stmt|;
 name|snprintf
 argument_list|(
 name|portstr
@@ -1608,6 +1744,25 @@ name|host
 operator|->
 name|port
 argument_list|)
+expr_stmt|;
+name|make_hints
+argument_list|(
+operator|&
+name|hints
+argument_list|,
+name|host
+operator|->
+name|proto
+argument_list|)
+expr_stmt|;
+comment|/** 	 * First try this as an IP address, this allows us to add a 	 * dot at the end to stop using the search domains. 	 */
+name|hints
+operator|.
+name|ai_flags
+operator||=
+name|AI_NUMERICHOST
+operator||
+name|AI_NUMERICSERV
 expr_stmt|;
 name|ret
 operator|=
@@ -1631,16 +1786,123 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
+operator|==
+literal|0
+condition|)
+goto|goto
+name|out
+goto|;
+comment|/** 	 * If the hostname contains a dot, assumes it's a FQDN and 	 * don't use search domains since that might be painfully slow 	 * when machine is disconnected from that network. 	 */
+name|hints
+operator|.
+name|ai_flags
+operator|&=
+operator|~
+operator|(
+name|AI_NUMERICHOST
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|hostname
+argument_list|,
+literal|'.'
+argument_list|)
+operator|&&
+name|hostname
+index|[
+name|strlen
+argument_list|(
+name|hostname
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|!=
+literal|'.'
+condition|)
+block|{
+name|ret
+operator|=
+name|asprintf
+argument_list|(
+operator|&
+name|hostname
+argument_list|,
+literal|"%s."
+argument_list|,
+name|host
+operator|->
+name|hostname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|<
+literal|0
+operator|||
+name|hostname
+operator|==
+name|NULL
 condition|)
 return|return
+name|ENOMEM
+return|;
+block|}
+name|ret
+operator|=
+name|getaddrinfo
+argument_list|(
+name|hostname
+argument_list|,
+name|portstr
+argument_list|,
+operator|&
+name|hints
+argument_list|,
+operator|&
+name|host
+operator|->
+name|ai
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hostname
+operator|!=
+name|host
+operator|->
+name|hostname
+condition|)
+name|free
+argument_list|(
+name|hostname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+block|{
+name|ret
+operator|=
 name|krb5_eai_to_heim_errno
 argument_list|(
 name|ret
 argument_list|,
 name|errno
 argument_list|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
+block|}
+name|out
+label|:
 operator|*
 name|ai
 operator|=
@@ -1649,7 +1911,7 @@ operator|->
 name|ai
 expr_stmt|;
 return|return
-literal|0
+name|ret
 return|;
 block|}
 end_function
@@ -1740,6 +2002,9 @@ modifier|*
 name|service
 parameter_list|)
 block|{
+name|krb5_error_code
+name|ret
+decl_stmt|;
 name|krb5_krbhst_info
 modifier|*
 modifier|*
@@ -1750,8 +2015,8 @@ name|count
 decl_stmt|,
 name|i
 decl_stmt|;
-if|if
-condition|(
+name|ret
+operator|=
 name|srv_find_realm
 argument_list|(
 name|context
@@ -1776,6 +2041,29 @@ name|kd
 operator|->
 name|port
 argument_list|)
+expr_stmt|;
+name|_krb5_debug
+argument_list|(
+name|context
+argument_list|,
+literal|2
+argument_list|,
+literal|"searching DNS for realm %s %s.%s -> %d"
+argument_list|,
+name|kd
+operator|->
+name|realm
+argument_list|,
+name|proto
+argument_list|,
+name|service
+argument_list|,
+name|ret
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
 condition|)
 return|return;
 for|for
@@ -1859,6 +2147,25 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|_krb5_debug
+argument_list|(
+name|context
+argument_list|,
+literal|2
+argument_list|,
+literal|"configuration file for realm %s%s found"
+argument_list|,
+name|kd
+operator|->
+name|realm
+argument_list|,
+name|hostlist
+condition|?
+literal|""
+else|:
+literal|" not"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|hostlist
@@ -1919,7 +2226,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * as a fallback, look for `serv_string.kd->realm' (typically  * kerberos.REALM, kerberos-1.REALM, ...  * `port' is the default port for the service, and `proto' the   * protocol  */
+comment|/*  * as a fallback, look for `serv_string.kd->realm' (typically  * kerberos.REALM, kerberos-1.REALM, ...  * `port' is the default port for the service, and `proto' the  * protocol  */
 end_comment
 
 begin_function
@@ -1950,6 +2257,8 @@ block|{
 name|char
 modifier|*
 name|host
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|ret
@@ -1969,7 +2278,26 @@ index|[
 name|NI_MAXSERV
 index|]
 decl_stmt|;
-comment|/*       * Don't try forever in case the DNS server keep returning us      * entries (like wildcard entries or the .nu TLD)      */
+name|_krb5_debug
+argument_list|(
+name|context
+argument_list|,
+literal|2
+argument_list|,
+literal|"fallback lookup %d for realm %s (service %s)"
+argument_list|,
+name|kd
+operator|->
+name|fallback_count
+argument_list|,
+name|kd
+operator|->
+name|realm
+argument_list|,
+name|serv_string
+argument_list|)
+expr_stmt|;
+comment|/*      * Don't try forever in case the DNS server keep returning us      * entries (like wildcard entries or the .nu TLD)      */
 if|if
 condition|(
 name|kd
@@ -1997,6 +2325,8 @@ name|fallback_count
 operator|==
 literal|0
 condition|)
+name|ret
+operator|=
 name|asprintf
 argument_list|(
 operator|&
@@ -2012,6 +2342,8 @@ name|realm
 argument_list|)
 expr_stmt|;
 else|else
+name|ret
+operator|=
 name|asprintf
 argument_list|(
 operator|&
@@ -2032,6 +2364,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ret
+operator|<
+literal|0
+operator|||
 name|host
 operator|==
 name|NULL
@@ -2474,7 +2810,7 @@ name|context
 argument_list|,
 name|PLUGIN_TYPE_DATA
 argument_list|,
-literal|"resolve"
+name|KRB5_PLUGIN_LOCATE
 argument_list|,
 operator|&
 name|list
@@ -2491,12 +2827,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|kd
-operator|->
-name|flags
-operator||=
-name|KD_CONFIG_EXISTS
-expr_stmt|;
 for|for
 control|(
 name|e
@@ -2591,16 +2921,61 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
+operator|&&
+name|ret
+operator|!=
+name|KRB5_PLUGIN_NO_HANDLE
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"Plugin failed to lookup"
+name|ret
+argument_list|,
+name|N_
+argument_list|(
+literal|"Locate plugin failed to lookup realm %s: %d"
+argument_list|,
+literal|""
+argument_list|)
+argument_list|,
+name|kd
+operator|->
+name|realm
+argument_list|,
+name|ret
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
+elseif|else
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+condition|)
+block|{
+name|_krb5_debug
+argument_list|(
+name|context
+argument_list|,
+literal|2
+argument_list|,
+literal|"plugin found result for realm %s"
+argument_list|,
+name|kd
+operator|->
+name|realm
+argument_list|)
+expr_stmt|;
+name|kd
+operator|->
+name|flags
+operator||=
+name|KD_CONFIG_EXISTS
+expr_stmt|;
 block|}
 block|}
 name|_krb5_plugin_free
@@ -2727,10 +3102,24 @@ name|flags
 operator|&
 name|KD_CONFIG_EXISTS
 condition|)
+block|{
+name|_krb5_debug
+argument_list|(
+name|context
+argument_list|,
+literal|1
+argument_list|,
+literal|"Configuration exists for realm %s, wont go to DNS"
+argument_list|,
+name|kd
+operator|->
+name|realm
+argument_list|)
+expr_stmt|;
 return|return
 name|KRB5_KDC_UNREACH
 return|;
-comment|/* XXX */
+block|}
 if|if
 condition|(
 name|context
@@ -2931,6 +3320,19 @@ return|return
 literal|0
 return|;
 block|}
+name|_krb5_debug
+argument_list|(
+name|context
+argument_list|,
+literal|0
+argument_list|,
+literal|"No KDC entries found for %s"
+argument_list|,
+name|kd
+operator|->
+name|realm
+argument_list|)
+expr_stmt|;
 return|return
 name|KRB5_KDC_UNREACH
 return|;
@@ -3050,10 +3452,24 @@ name|flags
 operator|&
 name|KD_CONFIG_EXISTS
 condition|)
+block|{
+name|_krb5_debug
+argument_list|(
+name|context
+argument_list|,
+literal|1
+argument_list|,
+literal|"Configuration exists for realm %s, wont go to DNS"
+argument_list|,
+name|kd
+operator|->
+name|realm
+argument_list|)
+expr_stmt|;
 return|return
 name|KRB5_KDC_UNREACH
 return|;
-comment|/* XXX */
+block|}
 if|if
 condition|(
 name|context
@@ -3169,6 +3585,19 @@ return|return
 literal|0
 return|;
 block|}
+name|_krb5_debug
+argument_list|(
+name|context
+argument_list|,
+literal|0
+argument_list|,
+literal|"No admin entries found for realm %s"
+argument_list|,
+name|kd
+operator|->
+name|realm
+argument_list|)
+expr_stmt|;
 return|return
 name|KRB5_KDC_UNREACH
 return|;
@@ -3288,10 +3717,24 @@ name|flags
 operator|&
 name|KD_CONFIG_EXISTS
 condition|)
+block|{
+name|_krb5_debug
+argument_list|(
+name|context
+argument_list|,
+literal|1
+argument_list|,
+literal|"Configuration exists for realm %s, wont go to DNS"
+argument_list|,
+name|kd
+operator|->
+name|realm
+argument_list|)
+expr_stmt|;
 return|return
 name|KRB5_KDC_UNREACH
 return|;
-comment|/* XXX */
+block|}
 if|if
 condition|(
 name|context
@@ -3453,10 +3896,22 @@ return|return
 name|ret
 return|;
 block|}
+name|_krb5_debug
+argument_list|(
+name|context
+argument_list|,
+literal|0
+argument_list|,
+literal|"No kpasswd entries found for realm %s"
+argument_list|,
+name|kd
+operator|->
+name|realm
+argument_list|)
+expr_stmt|;
 return|return
 name|KRB5_KDC_UNREACH
 return|;
-comment|/* XXX */
 block|}
 end_function
 
@@ -3569,10 +4024,24 @@ name|flags
 operator|&
 name|KD_CONFIG_EXISTS
 condition|)
+block|{
+name|_krb5_debug
+argument_list|(
+name|context
+argument_list|,
+literal|1
+argument_list|,
+literal|"Configuration exists for realm %s, wont go to DNS"
+argument_list|,
+name|kd
+operator|->
+name|realm
+argument_list|)
+expr_stmt|;
 return|return
 name|KRB5_KDC_UNREACH
 return|;
-comment|/* XXX */
+block|}
 if|if
 condition|(
 name|context
@@ -3712,10 +4181,22 @@ name|host
 argument_list|)
 return|;
 block|}
+name|_krb5_debug
+argument_list|(
+name|context
+argument_list|,
+literal|0
+argument_list|,
+literal|"No kpasswd entries found for realm %s"
+argument_list|,
+name|kd
+operator|->
+name|realm
+argument_list|)
+expr_stmt|;
 return|return
 name|KRB5_KDC_UNREACH
 return|;
-comment|/* XXX */
 block|}
 end_function
 
@@ -3728,6 +4209,11 @@ name|common_init
 parameter_list|(
 name|krb5_context
 name|context
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|service
 parameter_list|,
 specifier|const
 name|char
@@ -3790,6 +4276,21 @@ return|return
 name|NULL
 return|;
 block|}
+name|_krb5_debug
+argument_list|(
+name|context
+argument_list|,
+literal|2
+argument_list|,
+literal|"Trying to find service %s for realm %s flags %x"
+argument_list|,
+name|service
+argument_list|,
+name|realm
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
 comment|/* For 'realms' without a . do not even think of going to DNS */
 if|if
 condition|(
@@ -3843,8 +4344,9 @@ comment|/*  * initialize `handle' to look for hosts of type `type' in realm `rea
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_krbhst_init
 parameter_list|(
 name|krb5_context
@@ -3882,8 +4384,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_krbhst_init_flags
 parameter_list|(
 name|krb5_context
@@ -3931,6 +4434,11 @@ function_decl|;
 name|int
 name|def_port
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|service
+decl_stmt|;
 switch|switch
 condition|(
 name|type
@@ -3959,6 +4467,10 @@ literal|88
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|service
+operator|=
+literal|"kdc"
+expr_stmt|;
 break|break;
 case|case
 name|KRB5_KRBHST_ADMIN
@@ -3982,6 +4494,10 @@ argument_list|,
 literal|749
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|service
+operator|=
+literal|"admin"
 expr_stmt|;
 break|break;
 case|case
@@ -4007,6 +4523,10 @@ name|KPASSWD_PORT
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|service
+operator|=
+literal|"change_password"
+expr_stmt|;
 break|break;
 case|case
 name|KRB5_KRBHST_KRB524
@@ -4031,13 +4551,24 @@ literal|4444
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|service
+operator|=
+literal|"524"
+expr_stmt|;
 break|break;
 default|default:
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ENOTTY
+argument_list|,
+name|N_
+argument_list|(
 literal|"unknown krbhst type (%u)"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|type
 argument_list|)
@@ -4054,6 +4585,8 @@ operator|=
 name|common_init
 argument_list|(
 name|context
+argument_list|,
+name|service
 argument_list|,
 name|realm
 argument_list|,
@@ -4094,8 +4627,9 @@ comment|/*  * return the next host information from `handle' in `host'  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_krbhst_next
 parameter_list|(
 name|krb5_context
@@ -4145,8 +4679,9 @@ comment|/*  * return the next host information from `handle' as a host name  * i
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_krbhst_next_as_string
 parameter_list|(
 name|krb5_context
@@ -4205,8 +4740,9 @@ block|}
 end_function
 
 begin_function
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_krbhst_reset
 parameter_list|(
 name|krb5_context
@@ -4229,8 +4765,9 @@ block|}
 end_function
 
 begin_function
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_krbhst_free
 parameter_list|(
 name|krb5_context
@@ -4392,11 +4929,18 @@ operator|==
 literal|0
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|KRB5_KDC_UNREACH
+argument_list|,
+name|N_
+argument_list|(
 literal|"No KDC found for realm %s"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|realm
 argument_list|)
@@ -4518,7 +5062,6 @@ name|hostlist
 operator|)
 index|[
 name|nhost
-operator|++
 index|]
 operator|=
 name|NULL
@@ -4541,8 +5084,9 @@ comment|/*  * return an malloced list of kadmin-hosts for `realm' in `hostlist' 
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_krb_admin_hst
 parameter_list|(
 name|krb5_context
@@ -4581,8 +5125,9 @@ comment|/*  * return an malloced list of changepw-hosts for `realm' in `hostlist
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_krb_changepw_hst
 parameter_list|(
 name|krb5_context
@@ -4621,8 +5166,9 @@ comment|/*  * return an malloced list of 524-hosts for `realm' in `hostlist'  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_krb524hst
 parameter_list|(
 name|krb5_context
@@ -4661,8 +5207,9 @@ comment|/*  * return an malloced list of KDC's for `realm' in `hostlist'  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_krbhst
 parameter_list|(
 name|krb5_context
@@ -4701,8 +5248,9 @@ comment|/*  * free all the memory allocated in `hostlist'  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_free_krbhst
 parameter_list|(
 name|krb5_context

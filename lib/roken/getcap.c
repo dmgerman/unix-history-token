@@ -7,36 +7,17 @@ begin_comment
 comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Casey Leedom of Lawrence Livermore National Laboratory.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<config.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
 file|"roken.h"
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: getcap.c 22071 2007-11-14 20:04:50Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_include
 include|#
@@ -355,8 +336,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|cgetset
 parameter_list|(
 specifier|const
@@ -368,9 +350,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|ROKEN_LIB_FUNCTION
 name|char
 modifier|*
-name|ROKEN_LIB_FUNCTION
+name|ROKEN_LIB_CALL
 name|cgetcap
 parameter_list|(
 name|char
@@ -389,8 +372,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|cgetent
 parameter_list|(
 name|char
@@ -412,8 +396,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|cgetmatch
 parameter_list|(
 specifier|const
@@ -430,8 +415,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|cgetclose
 parameter_list|(
 name|void
@@ -452,8 +438,9 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|cgetstr
 parameter_list|(
 name|char
@@ -474,8 +461,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|cgetustr
 parameter_list|(
 name|char
@@ -496,8 +484,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|cgetnum
 parameter_list|(
 name|char
@@ -521,8 +510,9 @@ comment|/*  * Cgetset() allows the addition of a user specified buffer to be add
 end_comment
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|cgetset
 parameter_list|(
 specifier|const
@@ -721,9 +711,10 @@ comment|/*  * Cgetcap searches the capability record buf for the capability cap 
 end_comment
 
 begin_function
+name|ROKEN_LIB_FUNCTION
 name|char
 modifier|*
-name|ROKEN_LIB_FUNCTION
+name|ROKEN_LIB_CALL
 name|cgetcap
 parameter_list|(
 name|char
@@ -890,8 +881,9 @@ comment|/*  * Cgetent extracts the capability record name from the NULL terminat
 end_comment
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|cgetent
 parameter_list|(
 name|char
@@ -1652,7 +1644,7 @@ operator|++
 operator|=
 name|c
 expr_stmt|;
-comment|/* 				 * Enforce loop invariant: if no room  				 * left in record buffer, try to get 				 * some more. 				 */
+comment|/* 				 * Enforce loop invariant: if no room 				 * left in record buffer, try to get 				 * some more. 				 */
 if|if
 condition|(
 name|rp
@@ -2752,8 +2744,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|cgetclose
 parameter_list|(
 name|void
@@ -2806,12 +2799,12 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * Cgetnext() gets either the first or next entry in the logical database   * specified by db_array.  It returns 0 upon completion of the database, 1  * upon returning an entry with more remaining, and -1 if an error occurs.  */
+comment|/*  * Cgetnext() gets either the first or next entry in the logical database  * specified by db_array.  It returns 0 upon completion of the database, 1  * upon returning an entry with more remaining, and -1 if an error occurs.  */
 end_comment
 
 begin_comment
 unit|int cgetnext(char **bp, char **db_array) {     size_t len;     int status, done;     char *cp, *line, *rp, *np, buf[BSIZE], nbuf[BSIZE];     size_t dummy;      if (dbp == NULL) 	dbp = db_array;      if (pfp == NULL&& (pfp = fopen(*dbp, "r")) == NULL) { 	(void)cgetclose(); 	return (-1);     }     for(;;) { 	if (toprec&& !gottoprec) { 	    gottoprec = 1; 	    line = toprec; 	} else { 	    line = fgetln(pfp,&len); 	    if (line == NULL&& pfp) { 		if (ferror(pfp)) { 		    (void)cgetclose(); 		    return (-1); 		} else { 		    (void)fclose(pfp); 		    pfp = NULL; 		    if (*++dbp == NULL) { 			(void)cgetclose(); 			return (0); 		    } else if ((pfp = 				fopen(*dbp, "r")) == NULL) { 			(void)cgetclose(); 			return (-1); 		    } else 			continue; 		} 	    } else 		line[len - 1] = '\0'; 	    if (len == 1) { 		slash = 0; 		continue; 	    } 	    if (isspace((unsigned char)*line) || 		*line == ':' || *line == '#' || slash) { 		if (line[len - 2] == '\\') 		    slash = 1; 		else 		    slash = 0; 		continue; 	    } 	    if (line[len - 2] == '\\') 		slash = 1; 	    else 		slash = 0; 	}
-comment|/*  	 * Line points to a name line. 	 */
+comment|/* 	 * Line points to a name line. 	 */
 end_comment
 
 begin_comment
@@ -2821,7 +2814,7 @@ end_comment
 
 begin_comment
 unit|line = fgetln(pfp,&len); 		if (line == NULL&& pfp) { 		    if (ferror(pfp)) { 			(void)cgetclose(); 			return (-1); 		    } 		    (void)fclose(pfp); 		    pfp = NULL; 		    *np = '\0'; 		    break; 		} else 		    line[len - 1] = '\0'; 	    } 	} 	rp = buf; 	for(cp = nbuf; *cp != '\0'; cp++) 	    if (*cp == '|' || *cp == ':') 		break; 	    else 		*rp++ = *cp;  	*rp = '\0';
-comment|/*  	 * XXX  	 * Last argument of getent here should be nbuf if we want true 	 * sequential access in the case of duplicates.   	 * With NULL, getent will return the first entry found 	 * rather than the duplicate entry record.  This is a  	 * matter of semantics that should be resolved. 	 */
+comment|/* 	 * XXX 	 * Last argument of getent here should be nbuf if we want true 	 * sequential access in the case of duplicates. 	 * With NULL, getent will return the first entry found 	 * rather than the duplicate entry record.  This is a 	 * matter of semantics that should be resolved. 	 */
 end_comment
 
 begin_comment
@@ -2840,8 +2833,9 @@ comment|/*  * Cgetstr retrieves the value of the string capability cap from the 
 end_comment
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|cgetstr
 parameter_list|(
 name|char
@@ -2877,7 +2871,15 @@ decl_stmt|;
 name|char
 modifier|*
 name|mem
+decl_stmt|,
+modifier|*
+name|nmem
 decl_stmt|;
+operator|*
+name|str
+operator|=
+name|NULL
+expr_stmt|;
 comment|/*      * Find string capability cap      */
 name|bp
 operator|=
@@ -3225,7 +3227,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|mem
+name|nmem
 operator|=
 name|realloc
 argument_list|(
@@ -3239,12 +3241,23 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|free
+argument_list|(
+name|mem
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|2
 operator|)
 return|;
+block|}
+name|mem
+operator|=
+name|nmem
+expr_stmt|;
 name|m_room
 operator|=
 name|SFRAG
@@ -3282,10 +3295,11 @@ name|m_room
 operator|!=
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 operator|(
-name|mem
+name|nmem
 operator|=
 name|realloc
 argument_list|(
@@ -3304,12 +3318,24 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|free
+argument_list|(
+name|mem
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|2
 operator|)
 return|;
+block|}
+name|mem
+operator|=
+name|nmem
+expr_stmt|;
+block|}
 operator|*
 name|str
 operator|=
@@ -3324,12 +3350,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Cgetustr retrieves the value of the string capability cap from the  * capability record pointed to by buf.  The difference between cgetustr()  * and cgetstr() is that cgetustr does not decode escapes but rather treats  * all characters literally.  A pointer to a  NUL terminated malloc'd   * copy of the string is returned in the char pointed to by str.  The   * length of the string not including the trailing NUL is returned on success,  * -1 if the requested string capability couldn't be found, -2 if a system   * error was encountered (storage allocation failure).  */
+comment|/*  * Cgetustr retrieves the value of the string capability cap from the  * capability record pointed to by buf.  The difference between cgetustr()  * and cgetstr() is that cgetustr does not decode escapes but rather treats  * all characters literally.  A pointer to a  NUL terminated malloc'd  * copy of the string is returned in the char pointed to by str.  The  * length of the string not including the trailing NUL is returned on success,  * -1 if the requested string capability couldn't be found, -2 if a system  * error was encountered (storage allocation failure).  */
 end_comment
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|cgetustr
 parameter_list|(
 name|char
@@ -3571,8 +3598,9 @@ comment|/*  * Cgetnum retrieves the value of the numeric capability cap from the
 end_comment
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|cgetnum
 parameter_list|(
 name|char

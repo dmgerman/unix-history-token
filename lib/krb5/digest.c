@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2006 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 2006 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -9,19 +9,17 @@ directive|include
 file|"krb5_locl.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: digest.c 22156 2007-12-04 20:02:49Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_include
 include|#
 directive|include
 file|"digest_asn1.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HEIMDAL_SMALLER
+end_ifndef
 
 begin_struct
 struct|struct
@@ -52,7 +50,9 @@ struct|;
 end_struct
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_alloc
 parameter_list|(
 name|krb5_context
@@ -91,11 +91,18 @@ name|digest
 operator|=
 name|NULL
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -114,7 +121,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|void
+name|KRB5_LIB_CALL
 name|krb5_digest_free
 parameter_list|(
 name|krb5_digest
@@ -183,7 +192,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_server_cb
 parameter_list|(
 name|krb5_context
@@ -212,11 +223,18 @@ operator|.
 name|channel
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|EINVAL
+argument_list|,
+name|N_
+argument_list|(
 literal|"server channel binding already set"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -367,11 +385,18 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -381,7 +406,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_type
 parameter_list|(
 name|krb5_context
@@ -405,9 +432,11 @@ operator|.
 name|type
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|EINVAL
 argument_list|,
 literal|"client type already set"
 argument_list|)
@@ -438,11 +467,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -456,7 +492,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_hostname
 parameter_list|(
 name|krb5_context
@@ -480,9 +518,11 @@ operator|.
 name|hostname
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|EINVAL
 argument_list|,
 literal|"server hostname already set"
 argument_list|)
@@ -521,11 +561,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -556,11 +603,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|free
@@ -591,9 +645,11 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|char
 modifier|*
+name|KRB5_LIB_CALL
 name|krb5_digest_get_server_nonce
 parameter_list|(
 name|krb5_context
@@ -614,7 +670,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_server_nonce
 parameter_list|(
 name|krb5_context
@@ -638,11 +696,18 @@ operator|.
 name|serverNonce
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|EINVAL
+argument_list|,
+name|N_
+argument_list|(
 literal|"nonce already set"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -671,11 +736,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -689,9 +761,11 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|char
 modifier|*
+name|KRB5_LIB_CALL
 name|krb5_digest_get_opaque
 parameter_list|(
 name|krb5_context
@@ -712,7 +786,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_opaque
 parameter_list|(
 name|krb5_context
@@ -736,9 +812,11 @@ operator|.
 name|opaque
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|EINVAL
 argument_list|,
 literal|"opaque already set"
 argument_list|)
@@ -769,11 +847,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -787,9 +872,11 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|char
 modifier|*
+name|KRB5_LIB_CALL
 name|krb5_digest_get_identifier
 parameter_list|(
 name|krb5_context
@@ -824,7 +911,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_identifier
 parameter_list|(
 name|krb5_context
@@ -848,11 +937,18 @@ operator|.
 name|identifier
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|EINVAL
+argument_list|,
+name|N_
+argument_list|(
 literal|"identifier already set"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -891,11 +987,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -926,11 +1029,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|free
@@ -1003,6 +1113,8 @@ name|data2
 decl_stmt|;
 name|size_t
 name|size
+init|=
+literal|0
 decl_stmt|;
 name|krb5_crypto
 name|crypto
@@ -1178,11 +1290,18 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ret
+argument_list|,
+name|N_
+argument_list|(
 literal|"Failed to encode digest inner request"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1267,16 +1386,23 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
-argument_list|(
-name|context
-argument_list|,
-literal|"Digest failed to get local subkey"
-argument_list|)
-expr_stmt|;
 name|ret
 operator|=
 name|EINVAL
+expr_stmt|;
+name|krb5_set_error_message
+argument_list|(
+name|context
+argument_list|,
+name|ret
+argument_list|,
+name|N_
+argument_list|(
+literal|"Digest failed to get local subkey"
+argument_list|,
+literal|""
+argument_list|)
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -1376,11 +1502,18 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ret
+argument_list|,
+name|N_
+argument_list|(
 literal|"Failed to encode DigestREQest"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1448,11 +1581,18 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ret
+argument_list|,
+name|N_
+argument_list|(
 literal|"Failed to parse digest response"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1531,11 +1671,18 @@ name|ret
 operator|=
 name|EINVAL
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ret
+argument_list|,
+name|N_
+argument_list|(
 literal|"Digest reply have no remote subkey"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1632,11 +1779,18 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ret
+argument_list|,
+name|N_
+argument_list|(
 literal|"Failed to decode digest inner reply"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1737,7 +1891,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_init_request
 parameter_list|(
 name|krb5_context
@@ -1799,11 +1955,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|EINVAL
+argument_list|,
+name|N_
+argument_list|(
 literal|"Type missing from init req"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1861,21 +2024,6 @@ operator|==
 name|choice_DigestRepInner_error
 condition|)
 block|{
-name|krb5_set_error_string
-argument_list|(
-name|context
-argument_list|,
-literal|"Digest init error: %s"
-argument_list|,
-name|irep
-operator|.
-name|u
-operator|.
-name|error
-operator|.
-name|reason
-argument_list|)
-expr_stmt|;
 name|ret
 operator|=
 name|irep
@@ -1885,6 +2033,28 @@ operator|.
 name|error
 operator|.
 name|code
+expr_stmt|;
+name|krb5_set_error_message
+argument_list|(
+name|context
+argument_list|,
+name|ret
+argument_list|,
+name|N_
+argument_list|(
+literal|"Digest init error: %s"
+argument_list|,
+literal|""
+argument_list|)
+argument_list|,
+name|irep
+operator|.
+name|u
+operator|.
+name|error
+operator|.
+name|reason
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -1899,16 +2069,23 @@ operator|!=
 name|choice_DigestRepInner_initReply
 condition|)
 block|{
-name|krb5_set_error_string
-argument_list|(
-name|context
-argument_list|,
-literal|"digest reply not an initReply"
-argument_list|)
-expr_stmt|;
 name|ret
 operator|=
 name|EINVAL
+expr_stmt|;
+name|krb5_set_error_message
+argument_list|(
+name|context
+argument_list|,
+name|ret
+argument_list|,
+name|N_
+argument_list|(
+literal|"digest reply not an initReply"
+argument_list|,
+literal|""
+argument_list|)
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -1936,11 +2113,18 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ret
+argument_list|,
+name|N_
+argument_list|(
 literal|"Failed to copy initReply"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1962,7 +2146,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_client_nonce
 parameter_list|(
 name|krb5_context
@@ -1986,11 +2172,18 @@ operator|.
 name|clientNonce
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|EINVAL
+argument_list|,
+name|N_
+argument_list|(
 literal|"clientNonce already set"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2029,11 +2222,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2064,11 +2264,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|free
@@ -2099,7 +2306,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_digest
 parameter_list|(
 name|krb5_context
@@ -2123,11 +2332,18 @@ operator|.
 name|digest
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|EINVAL
+argument_list|,
+name|N_
+argument_list|(
 literal|"digest already set"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2156,11 +2372,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2174,7 +2397,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_username
 parameter_list|(
 name|krb5_context
@@ -2198,9 +2423,11 @@ operator|.
 name|username
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|EINVAL
 argument_list|,
 literal|"username already set"
 argument_list|)
@@ -2231,11 +2458,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2249,7 +2483,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_authid
 parameter_list|(
 name|krb5_context
@@ -2273,9 +2509,11 @@ operator|.
 name|authid
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|EINVAL
 argument_list|,
 literal|"authid already set"
 argument_list|)
@@ -2314,11 +2552,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2349,11 +2594,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|free
@@ -2384,7 +2636,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_authentication_user
 parameter_list|(
 name|krb5_context
@@ -2409,11 +2663,18 @@ operator|.
 name|authentication_user
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|EINVAL
+argument_list|,
+name|N_
+argument_list|(
 literal|"authentication_user already set"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2438,26 +2699,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|digest
-operator|->
-name|request
-operator|.
-name|authentication_user
-operator|==
-name|NULL
+name|ret
 condition|)
-block|{
-name|krb5_set_error_string
-argument_list|(
-name|context
-argument_list|,
-literal|"out of memory"
-argument_list|)
-expr_stmt|;
 return|return
-name|ENOMEM
+name|ret
 return|;
-block|}
 return|return
 literal|0
 return|;
@@ -2465,7 +2711,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_realm
 parameter_list|(
 name|krb5_context
@@ -2489,9 +2737,11 @@ operator|.
 name|realm
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|EINVAL
 argument_list|,
 literal|"realm already set"
 argument_list|)
@@ -2530,11 +2780,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2565,11 +2822,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|free
@@ -2600,7 +2864,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_method
 parameter_list|(
 name|krb5_context
@@ -2624,11 +2890,18 @@ operator|.
 name|method
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|EINVAL
+argument_list|,
+name|N_
+argument_list|(
 literal|"method already set"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2665,11 +2938,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2700,11 +2980,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|free
@@ -2735,7 +3022,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_uri
 parameter_list|(
 name|krb5_context
@@ -2759,11 +3048,18 @@ operator|.
 name|uri
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|EINVAL
+argument_list|,
+name|N_
+argument_list|(
 literal|"uri already set"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2800,11 +3096,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2835,11 +3138,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|free
@@ -2870,7 +3180,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_nonceCount
 parameter_list|(
 name|krb5_context
@@ -2894,11 +3206,18 @@ operator|.
 name|nonceCount
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|EINVAL
+argument_list|,
+name|N_
+argument_list|(
 literal|"nonceCount already set"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2935,11 +3254,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2970,11 +3296,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|free
@@ -3005,7 +3338,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_qop
 parameter_list|(
 name|krb5_context
@@ -3029,9 +3364,11 @@ operator|.
 name|qop
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|EINVAL
 argument_list|,
 literal|"qop already set"
 argument_list|)
@@ -3070,11 +3407,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3105,11 +3449,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|free
@@ -3140,7 +3491,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|int
+name|KRB5_LIB_CALL
 name|krb5_digest_set_responseData
 parameter_list|(
 name|krb5_context
@@ -3177,11 +3530,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3195,7 +3555,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_request
 parameter_list|(
 name|krb5_context
@@ -3284,11 +3646,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|EINVAL
+argument_list|,
+name|N_
+argument_list|(
 literal|"Type missing from req"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3322,6 +3691,14 @@ name|digest
 operator|==
 name|NULL
 condition|)
+block|{
+specifier|static
+name|char
+name|md5
+index|[]
+init|=
+literal|"md5"
+decl_stmt|;
 name|ireq
 operator|.
 name|u
@@ -3330,8 +3707,9 @@ name|digestRequest
 operator|.
 name|digest
 operator|=
-literal|"md5"
+name|md5
 expr_stmt|;
+block|}
 name|ret
 operator|=
 name|digest_request
@@ -3367,21 +3745,6 @@ operator|==
 name|choice_DigestRepInner_error
 condition|)
 block|{
-name|krb5_set_error_string
-argument_list|(
-name|context
-argument_list|,
-literal|"Digest response error: %s"
-argument_list|,
-name|irep
-operator|.
-name|u
-operator|.
-name|error
-operator|.
-name|reason
-argument_list|)
-expr_stmt|;
 name|ret
 operator|=
 name|irep
@@ -3391,6 +3754,28 @@ operator|.
 name|error
 operator|.
 name|code
+expr_stmt|;
+name|krb5_set_error_message
+argument_list|(
+name|context
+argument_list|,
+name|ret
+argument_list|,
+name|N_
+argument_list|(
+literal|"Digest response error: %s"
+argument_list|,
+literal|""
+argument_list|)
+argument_list|,
+name|irep
+operator|.
+name|u
+operator|.
+name|error
+operator|.
+name|reason
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -3405,11 +3790,18 @@ operator|!=
 name|choice_DigestRepInner_response
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|EINVAL
+argument_list|,
+name|N_
+argument_list|(
 literal|"digest reply not an DigestResponse"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ret
@@ -3442,11 +3834,18 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"Failed to copy initReply"
+name|ret
+argument_list|,
+name|N_
+argument_list|(
+literal|"Failed to copy initReply,"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3468,7 +3867,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_digest_rep_get_status
 parameter_list|(
 name|krb5_context
@@ -3493,9 +3894,11 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|char
 modifier|*
+name|KRB5_LIB_CALL
 name|krb5_digest_get_rsp
 parameter_list|(
 name|krb5_context
@@ -3530,7 +3933,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_get_tickets
 parameter_list|(
 name|krb5_context
@@ -3557,7 +3962,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_get_client_binding
 parameter_list|(
 name|krb5_context
@@ -3639,11 +4046,18 @@ operator|*
 name|binding
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3671,7 +4085,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_get_session_key
 parameter_list|(
 name|krb5_context
@@ -3723,7 +4139,7 @@ if|if
 condition|(
 name|ret
 condition|)
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -3755,7 +4171,9 @@ struct|;
 end_struct
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_alloc
 parameter_list|(
 name|krb5_context
@@ -3789,11 +4207,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3807,7 +4232,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_free
 parameter_list|(
 name|krb5_context
@@ -3874,7 +4301,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_init_request
 parameter_list|(
 name|krb5_context
@@ -4055,21 +4484,6 @@ operator|==
 name|choice_DigestRepInner_error
 condition|)
 block|{
-name|krb5_set_error_string
-argument_list|(
-name|context
-argument_list|,
-literal|"Digest init error: %s"
-argument_list|,
-name|irep
-operator|.
-name|u
-operator|.
-name|error
-operator|.
-name|reason
-argument_list|)
-expr_stmt|;
 name|ret
 operator|=
 name|irep
@@ -4079,6 +4493,28 @@ operator|.
 name|error
 operator|.
 name|code
+expr_stmt|;
+name|krb5_set_error_message
+argument_list|(
+name|context
+argument_list|,
+name|ret
+argument_list|,
+name|N_
+argument_list|(
+literal|"Digest init error: %s"
+argument_list|,
+literal|""
+argument_list|)
+argument_list|,
+name|irep
+operator|.
+name|u
+operator|.
+name|error
+operator|.
+name|reason
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -4093,16 +4529,23 @@ operator|!=
 name|choice_DigestRepInner_ntlmInitReply
 condition|)
 block|{
-name|krb5_set_error_string
-argument_list|(
-name|context
-argument_list|,
-literal|"ntlm reply not an initReply"
-argument_list|)
-expr_stmt|;
 name|ret
 operator|=
 name|EINVAL
+expr_stmt|;
+name|krb5_set_error_message
+argument_list|(
+name|context
+argument_list|,
+name|ret
+argument_list|,
+name|N_
+argument_list|(
+literal|"ntlm reply not an initReply"
+argument_list|,
+literal|""
+argument_list|)
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -4130,11 +4573,18 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ret
+argument_list|,
+name|N_
+argument_list|(
 literal|"Failed to copy initReply"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4156,7 +4606,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_init_get_flags
 parameter_list|(
 name|krb5_context
@@ -4186,7 +4638,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_init_get_challange
 parameter_list|(
 name|krb5_context
@@ -4221,7 +4675,7 @@ if|if
 condition|(
 name|ret
 condition|)
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -4233,7 +4687,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_init_get_opaque
 parameter_list|(
 name|krb5_context
@@ -4268,7 +4724,7 @@ if|if
 condition|(
 name|ret
 condition|)
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -4280,7 +4736,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_init_get_targetname
 parameter_list|(
 name|krb5_context
@@ -4315,7 +4773,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -4331,7 +4789,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_init_get_targetinfo
 parameter_list|(
 name|krb5_context
@@ -4396,7 +4856,7 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -4412,7 +4872,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_request
 parameter_list|(
 name|krb5_context
@@ -4514,21 +4976,6 @@ operator|==
 name|choice_DigestRepInner_error
 condition|)
 block|{
-name|krb5_set_error_string
-argument_list|(
-name|context
-argument_list|,
-literal|"NTLM response error: %s"
-argument_list|,
-name|irep
-operator|.
-name|u
-operator|.
-name|error
-operator|.
-name|reason
-argument_list|)
-expr_stmt|;
 name|ret
 operator|=
 name|irep
@@ -4538,6 +4985,28 @@ operator|.
 name|error
 operator|.
 name|code
+expr_stmt|;
+name|krb5_set_error_message
+argument_list|(
+name|context
+argument_list|,
+name|ret
+argument_list|,
+name|N_
+argument_list|(
+literal|"NTLM response error: %s"
+argument_list|,
+literal|""
+argument_list|)
+argument_list|,
+name|irep
+operator|.
+name|u
+operator|.
+name|error
+operator|.
+name|reason
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -4552,16 +5021,23 @@ operator|!=
 name|choice_DigestRepInner_ntlmResponse
 condition|)
 block|{
-name|krb5_set_error_string
-argument_list|(
-name|context
-argument_list|,
-literal|"NTLM reply not an NTLMResponse"
-argument_list|)
-expr_stmt|;
 name|ret
 operator|=
 name|EINVAL
+expr_stmt|;
+name|krb5_set_error_message
+argument_list|(
+name|context
+argument_list|,
+name|ret
+argument_list|,
+name|N_
+argument_list|(
+literal|"NTLM reply not an NTLMResponse"
+argument_list|,
+literal|""
+argument_list|)
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -4589,11 +5065,18 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ret
+argument_list|,
+name|N_
+argument_list|(
 literal|"Failed to copy NTLMResponse"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4615,7 +5098,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_req_set_flags
 parameter_list|(
 name|krb5_context
@@ -4643,7 +5128,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_req_set_username
 parameter_list|(
 name|krb5_context
@@ -4680,11 +5167,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -4698,7 +5192,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_req_set_targetname
 parameter_list|(
 name|krb5_context
@@ -4735,11 +5231,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -4753,7 +5256,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_req_set_lm
 parameter_list|(
 name|krb5_context
@@ -4794,13 +5299,24 @@ operator|.
 name|data
 operator|==
 name|NULL
+operator|&&
+name|len
+operator|!=
+literal|0
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -4839,7 +5355,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_req_set_ntlm
 parameter_list|(
 name|krb5_context
@@ -4880,13 +5398,24 @@ operator|.
 name|data
 operator|==
 name|NULL
+operator|&&
+name|len
+operator|!=
+literal|0
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -4925,7 +5454,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_req_set_opaque
 parameter_list|(
 name|krb5_context
@@ -4965,13 +5496,26 @@ operator|.
 name|data
 operator|==
 name|NULL
+operator|&&
+name|opaque
+operator|->
+name|length
+operator|!=
+literal|0
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5016,7 +5560,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_req_set_session
 parameter_list|(
 name|krb5_context
@@ -5065,11 +5611,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5100,13 +5653,24 @@ operator|->
 name|data
 operator|==
 name|NULL
+operator|&&
+name|length
+operator|!=
+literal|0
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5145,7 +5709,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_ntlm_rep_get_status
 parameter_list|(
 name|krb5_context
@@ -5170,7 +5736,9 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_rep_get_sessionkey
 parameter_list|(
 name|krb5_context
@@ -5195,18 +5763,25 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|EINVAL
+argument_list|,
+name|N_
+argument_list|(
 literal|"no ntlm session key"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
 name|EINVAL
 return|;
 block|}
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -5241,7 +5816,9 @@ comment|/**  * Get the supported/allowed mechanism for this principal.  *  * @pa
 end_comment
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_probe
 parameter_list|(
 name|krb5_context
@@ -5334,9 +5911,21 @@ operator|==
 name|choice_DigestRepInner_error
 condition|)
 block|{
-name|krb5_set_error_string
+name|ret
+operator|=
+name|irep
+operator|.
+name|u
+operator|.
+name|error
+operator|.
+name|code
+expr_stmt|;
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"Digest probe error: %s"
 argument_list|,
@@ -5348,16 +5937,6 @@ name|error
 operator|.
 name|reason
 argument_list|)
-expr_stmt|;
-name|ret
-operator|=
-name|irep
-operator|.
-name|u
-operator|.
-name|error
-operator|.
-name|code
 expr_stmt|;
 goto|goto
 name|out
@@ -5372,16 +5951,18 @@ operator|!=
 name|choice_DigestRepInner_supportedMechs
 condition|)
 block|{
-name|krb5_set_error_string
-argument_list|(
-name|context
-argument_list|,
-literal|"Digest reply not an probe"
-argument_list|)
-expr_stmt|;
 name|ret
 operator|=
 name|EINVAL
+expr_stmt|;
+name|krb5_set_error_message
+argument_list|(
+name|context
+argument_list|,
+name|ret
+argument_list|,
+literal|"Digest reply not an probe"
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -5412,6 +5993,15 @@ name|ret
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HEIMDAL_SMALLER */
+end_comment
 
 end_unit
 

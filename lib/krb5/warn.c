@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2001 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2001 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -14,14 +14,6 @@ include|#
 directive|include
 file|<err.h>
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: warn.c 19086 2006-11-21 08:06:40Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function_decl
 specifier|static
@@ -116,11 +108,15 @@ name|msg
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|err_str
 init|=
 name|NULL
+decl_stmt|;
+name|krb5_error_code
+name|ret
 decl_stmt|;
 name|args
 index|[
@@ -171,6 +167,8 @@ name|xfmt
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
 name|vasprintf
 argument_list|(
 operator|&
@@ -183,6 +181,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ret
+operator|<
+literal|0
+operator|||
 name|msg
 operator|==
 name|NULL
@@ -204,11 +206,6 @@ operator|&&
 name|do_errtext
 condition|)
 block|{
-specifier|const
-name|char
-modifier|*
-name|err_msg
-decl_stmt|;
 name|strlcat
 argument_list|(
 name|xfmt
@@ -223,9 +220,11 @@ argument_list|)
 expr_stmt|;
 name|err_str
 operator|=
-name|krb5_get_error_string
+name|krb5_get_error_message
 argument_list|(
 name|context
+argument_list|,
+name|code
 argument_list|)
 expr_stmt|;
 if|if
@@ -237,36 +236,14 @@ condition|)
 block|{
 operator|*
 name|arg
-operator|++
 operator|=
 name|err_str
 expr_stmt|;
 block|}
 else|else
 block|{
-name|err_msg
-operator|=
-name|krb5_get_err_text
-argument_list|(
-name|context
-argument_list|,
-name|code
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err_msg
-condition|)
 operator|*
 name|arg
-operator|++
-operator|=
-name|err_msg
-expr_stmt|;
-else|else
-operator|*
-name|arg
-operator|++
 operator|=
 literal|"<unknown error>"
 expr_stmt|;
@@ -324,8 +301,10 @@ argument_list|(
 name|msg
 argument_list|)
 expr_stmt|;
-name|free
+name|krb5_free_error_message
 argument_list|(
+name|context
+argument_list|,
 name|err_str
 argument_list|)
 expr_stmt|;
@@ -365,9 +344,14 @@ name|X
 parameter_list|)
 end_define
 
+begin_comment
+comment|/**  * Log a warning to the log, default stderr, include the error from  * the last failure.  *  * @param context A Kerberos 5 context.  * @param code error code of the last error  * @param fmt message to print  * @param ap arguments  *  * @ingroup krb5_error  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_vwarn
 parameter_list|(
 name|krb5_context
@@ -417,9 +401,14 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/**  * Log a warning to the log, default stderr, include the error from  * the last failure.  *  * @param context A Kerberos 5 context.  * @param code error code of the last error  * @param fmt message to print  *  * @ingroup krb5_error  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_warn
 parameter_list|(
 name|krb5_context
@@ -464,9 +453,14 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/**  * Log a warning to the log, default stderr.  *  * @param context A Kerberos 5 context.  * @param fmt message to print  * @param ap arguments  *  * @ingroup krb5_error  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_vwarnx
 parameter_list|(
 name|krb5_context
@@ -513,9 +507,14 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/**  * Log a warning to the log, default stderr.  *  * @param context A Kerberos 5 context.  * @param fmt message to print  *  * @ingroup krb5_error  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_warnx
 parameter_list|(
 name|krb5_context
@@ -557,9 +556,14 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/**  * Log a warning to the log, default stderr, include bthe error from  * the last failure and then exit.  *  * @param context A Kerberos 5 context  * @param eval the exit code to exit with  * @param code error code of the last error  * @param fmt message to print  * @param ap arguments  *  * @ingroup krb5_error  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_verr
 parameter_list|(
 name|krb5_context
@@ -615,12 +619,23 @@ argument_list|(
 name|eval
 argument_list|)
 expr_stmt|;
+name|UNREACHABLE
+argument_list|(
+argument|return
+literal|0
+argument_list|)
+empty_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/**  * Log a warning to the log, default stderr, include bthe error from  * the last failure and then exit.  *  * @param context A Kerberos 5 context  * @param eval the exit code to exit with  * @param code error code of the last error  * @param fmt message to print  *  * @ingroup krb5_error  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_err
 parameter_list|(
 name|krb5_context
@@ -669,12 +684,23 @@ argument_list|(
 name|eval
 argument_list|)
 expr_stmt|;
+name|UNREACHABLE
+argument_list|(
+argument|return
+literal|0
+argument_list|)
+empty_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/**  * Log a warning to the log, default stderr, and then exit.  *  * @param context A Kerberos 5 context  * @param eval the exit code to exit with  * @param fmt message to print  * @param ap arguments  *  * @ingroup krb5_error  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_verrx
 parameter_list|(
 name|krb5_context
@@ -727,12 +753,23 @@ argument_list|(
 name|eval
 argument_list|)
 expr_stmt|;
+name|UNREACHABLE
+argument_list|(
+argument|return
+literal|0
+argument_list|)
+empty_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/**  * Log a warning to the log, default stderr, and then exit.  *  * @param context A Kerberos 5 context  * @param eval the exit code to exit with  * @param fmt message to print  *  * @ingroup krb5_error  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_errx
 parameter_list|(
 name|krb5_context
@@ -778,12 +815,23 @@ argument_list|(
 name|eval
 argument_list|)
 expr_stmt|;
+name|UNREACHABLE
+argument_list|(
+argument|return
+literal|0
+argument_list|)
+empty_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/**  * Log a warning to the log, default stderr, include bthe error from  * the last failure and then abort.  *  * @param context A Kerberos 5 context  * @param code error code of the last error  * @param fmt message to print  * @param ap arguments  *  * @ingroup krb5_error  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_vabort
 parameter_list|(
 name|krb5_context
@@ -834,12 +882,23 @@ expr_stmt|;
 name|abort
 argument_list|()
 expr_stmt|;
+name|UNREACHABLE
+argument_list|(
+argument|return
+literal|0
+argument_list|)
+empty_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/**  * Log a warning to the log, default stderr, include the error from  * the last failure and then abort.  *  * @param context A Kerberos 5 context  * @param code error code of the last error  * @param fmt message to print  *  * @ingroup krb5_error  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_abort
 parameter_list|(
 name|krb5_context
@@ -883,12 +942,19 @@ expr_stmt|;
 name|abort
 argument_list|()
 expr_stmt|;
+name|UNREACHABLE
+argument_list|(
+argument|return
+literal|0
+argument_list|)
+empty_stmt|;
 block|}
 end_block
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_vabortx
 parameter_list|(
 name|krb5_context
@@ -936,12 +1002,23 @@ expr_stmt|;
 name|abort
 argument_list|()
 expr_stmt|;
+name|UNREACHABLE
+argument_list|(
+argument|return
+literal|0
+argument_list|)
+empty_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/**  * Log a warning to the log, default stderr, and then abort.  *  * @param context A Kerberos 5 context  * @param code error code of the last error  * @param fmt message to print  *  * @ingroup krb5_error  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_abortx
 parameter_list|(
 name|krb5_context
@@ -982,12 +1059,23 @@ expr_stmt|;
 name|abort
 argument_list|()
 expr_stmt|;
+name|UNREACHABLE
+argument_list|(
+argument|return
+literal|0
+argument_list|)
+empty_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/**  * Set the default logging facility.  *  * @param context A Kerberos 5 context  * @param fac Facility to use for logging.  *  * @ingroup krb5_error  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_set_warn_dest
 parameter_list|(
 name|krb5_context
@@ -1010,10 +1098,15 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Get the default logging facility.  *  * @param context A Kerberos 5 context  *  * @ingroup krb5_error  */
+end_comment
+
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_log_facility
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_get_warn_dest
 parameter_list|(
 name|krb5_context

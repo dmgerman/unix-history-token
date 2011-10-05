@@ -1,24 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999 - 2004 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1999 - 2004 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<config.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -67,14 +56,6 @@ directive|include
 file|"test-mem.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: test-mem.c 21005 2007-06-08 01:54:35Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* #undef HAVE_MMAP */
 end_comment
@@ -108,6 +89,12 @@ name|map
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SIGACTION
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|sigaction
@@ -116,6 +103,28 @@ decl_stmt|,
 name|osa
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|osigh
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|char
@@ -160,6 +169,9 @@ operator|>=
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 name|fd
@@ -174,6 +186,9 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 name|fd
@@ -186,6 +201,9 @@ name|testname
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 name|fd
@@ -219,9 +237,10 @@ value|if (testname)							\ 	errx(1, "test %s run recursively on %s", name, test
 end_define
 
 begin_function
+name|ROKEN_LIB_FUNCTION
 name|void
 modifier|*
-name|ROKEN_LIB_FUNCTION
+name|ROKEN_LIB_CALL
 name|rk_test_mem_alloc
 parameter_list|(
 name|enum
@@ -306,6 +325,8 @@ index|[
 name|map
 operator|.
 name|size
+operator|-
+literal|1
 index|]
 operator|=
 literal|0xff
@@ -567,6 +588,9 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|HAVE_SIGACTION
 name|sigemptyset
 argument_list|(
 operator|&
@@ -609,6 +633,19 @@ operator|&
 name|osa
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|osigh
+operator|=
+name|signal
+argument_list|(
+name|SIGSEGV
+argument_list|,
+name|segv_handler
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|map
 operator|.
 name|data_size
@@ -639,8 +676,9 @@ block|}
 end_function
 
 begin_function
-name|void
 name|ROKEN_LIB_FUNCTION
+name|void
+name|ROKEN_LIB_CALL
 name|rk_test_mem_free
 parameter_list|(
 specifier|const
@@ -706,6 +744,8 @@ index|[
 name|map
 operator|.
 name|size
+operator|-
+literal|1
 index|]
 operator|!=
 literal|0xff
@@ -807,6 +847,9 @@ name|testname
 operator|=
 name|NULL
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_SIGACTION
 name|sigaction
 argument_list|(
 name|SIGSEGV
@@ -817,6 +860,17 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|signal
+argument_list|(
+name|SIGSEGV
+argument_list|,
+name|osigh
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

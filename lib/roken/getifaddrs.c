@@ -1,32 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000 - 2002, 2005 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2000 - 2002, 2005 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<config.h>
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: getifaddrs.c 21745 2007-07-31 16:11:25Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -229,7 +210,7 @@ comment|/* $USAGI: ifaddrs.c,v 1.18 2002/03/06 01:50:46 yoshfuji Exp $ */
 end_comment
 
 begin_comment
-comment|/**************************************************************************  * ifaddrs.c  * Copyright (C)2000 Hideaki YOSHIFUJI, All Rights Reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/**************************************************************************  * ifaddrs.c  * Copyright (C)2000 Hideaki YOSHIFUJI, All Rights Reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -2391,8 +2372,9 @@ comment|/* =====================================================================
 end_comment
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|rk_getifaddrs
 parameter_list|(
 name|struct
@@ -4355,6 +4337,26 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|ROKEN_LIB_FUNCTION
+name|rk_freeifaddrs
+parameter_list|(
+name|struct
+name|ifaddrs
+modifier|*
+name|ifp
+parameter_list|)
+block|{
+comment|/* AF_NETLINK method uses a single allocation for all interfaces */
+name|free
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_else
 else|#
 directive|else
@@ -4890,7 +4892,7 @@ if|#
 directive|if
 literal|0
 comment|/* fix these when we actually need them */
-block|if(ifreq.ifr_flags& IFF_BROADCAST) { 	    (*end)->ifa_broadaddr = malloc(sizeof(ifr->ifr_broadaddr)); 	    if ((*end)->ifa_broadaddr == NULL) { 		ret = ENOMEM; 		goto error_out; 	    } 	    memcpy((*end)->ifa_broadaddr,&ifr->ifr_broadaddr,  		   sizeof(ifr->ifr_broadaddr)); 	} else if(ifreq.ifr_flags& IFF_POINTOPOINT) { 	    (*end)->ifa_dstaddr = malloc(sizeof(ifr->ifr_dstaddr)); 	    if ((*end)->ifa_dstaddr == NULL) { 		ret = ENOMEM; 		goto error_out; 	    } 	    memcpy((*end)->ifa_dstaddr,&ifr->ifr_dstaddr,  		   sizeof(ifr->ifr_dstaddr)); 	} else 	    (*end)->ifa_dstaddr = NULL;
+block|if(ifreq.ifr_flags& IFF_BROADCAST) { 	    (*end)->ifa_broadaddr = malloc(sizeof(ifr->ifr_broadaddr)); 	    if ((*end)->ifa_broadaddr == NULL) { 		ret = ENOMEM; 		goto error_out; 	    } 	    memcpy((*end)->ifa_broadaddr,&ifr->ifr_broadaddr, 		   sizeof(ifr->ifr_broadaddr)); 	} else if(ifreq.ifr_flags& IFF_POINTOPOINT) { 	    (*end)->ifa_dstaddr = malloc(sizeof(ifr->ifr_dstaddr)); 	    if ((*end)->ifa_dstaddr == NULL) { 		ret = ENOMEM; 		goto error_out; 	    } 	    memcpy((*end)->ifa_dstaddr,&ifr->ifr_dstaddr, 		   sizeof(ifr->ifr_dstaddr)); 	} else 	    (*end)->ifa_dstaddr = NULL;
 else|#
 directive|else
 operator|(
@@ -5139,7 +5141,7 @@ name|ifconf
 operator|.
 name|lifc_family
 operator|=
-name|AF_UNSPEC
+name|af
 expr_stmt|;
 name|ifconf
 operator|.
@@ -5528,7 +5530,7 @@ if|#
 directive|if
 literal|0
 comment|/* fix these when we actually need them */
-block|if(ifreq.ifr_flags& IFF_BROADCAST) { 	    (*end)->ifa_broadaddr = malloc(sizeof(ifr->ifr_broadaddr)); 	    if ((*end)->ifa_broadaddr == NULL) { 		ret = ENOMEM; 		goto error_out; 	    } 	    memcpy((*end)->ifa_broadaddr,&ifr->ifr_broadaddr,  		   sizeof(ifr->ifr_broadaddr)); 	} else if(ifreq.ifr_flags& IFF_POINTOPOINT) { 	    (*end)->ifa_dstaddr = malloc(sizeof(ifr->ifr_dstaddr)); 	    if ((*end)->ifa_dstaddr == NULL) { 		ret = ENOMEM; 		goto error_out; 	    } 	    memcpy((*end)->ifa_dstaddr,&ifr->ifr_dstaddr,  		   sizeof(ifr->ifr_dstaddr)); 	} else 	    (*end)->ifa_dstaddr = NULL;
+block|if(ifreq.ifr_flags& IFF_BROADCAST) { 	    (*end)->ifa_broadaddr = malloc(sizeof(ifr->ifr_broadaddr)); 	    if ((*end)->ifa_broadaddr == NULL) { 		ret = ENOMEM; 		goto error_out; 	    } 	    memcpy((*end)->ifa_broadaddr,&ifr->ifr_broadaddr, 		   sizeof(ifr->ifr_broadaddr)); 	} else if(ifreq.ifr_flags& IFF_POINTOPOINT) { 	    (*end)->ifa_dstaddr = malloc(sizeof(ifr->ifr_dstaddr)); 	    if ((*end)->ifa_dstaddr == NULL) { 		ret = ENOMEM; 		goto error_out; 	    } 	    memcpy((*end)->ifa_dstaddr,&ifr->ifr_dstaddr, 		   sizeof(ifr->ifr_dstaddr)); 	} else 	    (*end)->ifa_dstaddr = NULL;
 else|#
 directive|else
 operator|(
@@ -5617,9 +5619,72 @@ begin_comment
 comment|/* defined(HAVE_IPV6)&& defined(SIOCGLIFCONF)&& defined(SIOCGLIFFLAGS) */
 end_comment
 
+begin_comment
+comment|/**  * Join two struct ifaddrs lists by appending supp to base.  * Either may be NULL. The new list head (usually base) will be  * returned.  */
+end_comment
+
 begin_function
-name|int
+specifier|static
+name|struct
+name|ifaddrs
+modifier|*
+name|append_ifaddrs
+parameter_list|(
+name|struct
+name|ifaddrs
+modifier|*
+name|base
+parameter_list|,
+name|struct
+name|ifaddrs
+modifier|*
+name|supp
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|base
+condition|)
+return|return
+name|supp
+return|;
+if|if
+condition|(
+operator|!
+name|supp
+condition|)
+return|return
+name|base
+return|;
+while|while
+condition|(
+name|base
+operator|->
+name|ifa_next
+condition|)
+name|base
+operator|=
+name|base
+operator|->
+name|ifa_next
+expr_stmt|;
+name|base
+operator|->
+name|ifa_next
+operator|=
+name|supp
+expr_stmt|;
+return|return
+name|base
+return|;
+block|}
+end_function
+
+begin_function
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|rk_getifaddrs
 parameter_list|(
 name|struct
@@ -5696,15 +5761,31 @@ name|defined
 argument_list|(
 name|SIOCGLIFFLAGS
 argument_list|)
+comment|/* Do IPv6 and IPv4 queries separately then join the result.      *      * HP-UX only returns IPv6 addresses using SIOCGLIFCONF,      * SIOCGIFCONF has to be used for IPv4 addresses. The result is then      * merged.      *      * Solaris needs particular care, because a SIOCGLIFCONF lookup using      * AF_UNSPEC can fail in a Zone requiring an AF_INET lookup, so we just      * do them separately the same as for HP-UX. See      * http://repo.or.cz/w/heimdal.git/commitdiff/76afc31e9ba2f37e64c70adc006ade9e37e9ef73      */
 if|if
 condition|(
 name|ret
 condition|)
-name|ret
+block|{
+name|int
+name|v6err
+decl_stmt|,
+name|v4err
+decl_stmt|;
+name|struct
+name|ifaddrs
+modifier|*
+name|v6addrs
+decl_stmt|,
+modifier|*
+name|v4addrs
+decl_stmt|;
+name|v6err
 operator|=
 name|getlifaddrs2
 argument_list|(
-name|ifap
+operator|&
+name|v6addrs
 argument_list|,
 name|AF_INET6
 argument_list|,
@@ -5719,6 +5800,102 @@ name|lifreq
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|v4err
+operator|=
+name|getifaddrs2
+argument_list|(
+operator|&
+name|v4addrs
+argument_list|,
+name|AF_INET
+argument_list|,
+name|SIOCGIFCONF
+argument_list|,
+name|SIOCGIFFLAGS
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ifreq
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|v6err
+condition|)
+name|v6addrs
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|v4err
+condition|)
+name|v4addrs
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|v6addrs
+condition|)
+block|{
+if|if
+condition|(
+name|v4addrs
+condition|)
+operator|*
+name|ifap
+operator|=
+name|append_ifaddrs
+argument_list|(
+name|v6addrs
+argument_list|,
+name|v4addrs
+argument_list|)
+expr_stmt|;
+else|else
+operator|*
+name|ifap
+operator|=
+name|v6addrs
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|v4addrs
+condition|)
+block|{
+operator|*
+name|ifap
+operator|=
+name|v4addrs
+expr_stmt|;
+block|}
+else|else
+block|{
+operator|*
+name|ifap
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+name|ret
+operator|=
+operator|(
+name|v6err
+operator|||
+name|v4err
+operator|)
+condition|?
+operator|-
+literal|1
+else|:
+literal|0
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 if|#
@@ -5804,18 +5981,10 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !AF_NETLINK */
-end_comment
-
 begin_function
-name|void
 name|ROKEN_LIB_FUNCTION
+name|void
+name|ROKEN_LIB_CALL
 name|rk_freeifaddrs
 parameter_list|(
 name|struct
@@ -5919,6 +6088,15 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !AF_NETLINK */
+end_comment
 
 begin_ifdef
 ifdef|#

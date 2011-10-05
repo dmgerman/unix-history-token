@@ -51,6 +51,77 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KRB5_DEPRECATED_FUNCTION
+end_ifndef
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|__GNUC__
+operator|>
+literal|3
+operator|)
+operator|||
+operator|(
+operator|(
+name|__GNUC__
+operator|==
+literal|3
+operator|)
+operator|&&
+operator|(
+name|__GNUC_MINOR__
+operator|>=
+literal|1
+operator|)
+operator|)
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+name|X
+parameter_list|)
+value|__attribute__((__deprecated__))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+name|X
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -65,6 +136,9 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
+name|KRB5_LIB
+ifndef|#
+directive|ifndef
 name|KRB5_LIB_FUNCTION
 if|#
 directive|if
@@ -75,18 +149,35 @@ argument_list|)
 define|#
 directive|define
 name|KRB5_LIB_FUNCTION
-value|_stdcall
+value|__declspec(dllimport)
+define|#
+directive|define
+name|KRB5_LIB_CALL
+value|__stdcall
+define|#
+directive|define
+name|KRB5_LIB_VARIABLE
+value|__declspec(dllimport)
 else|#
 directive|else
 define|#
 directive|define
 name|KRB5_LIB_FUNCTION
+define|#
+directive|define
+name|KRB5_LIB_CALL
+define|#
+directive|define
+name|KRB5_LIB_VARIABLE
 endif|#
 directive|endif
 endif|#
 directive|endif
-name|krb5_error_code
+endif|#
+directive|endif
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb524_convert_creds_kdc
 parameter_list|(
 name|krb5_context
@@ -101,9 +192,17 @@ name|credentials
 modifier|*
 comment|/*v4creds*/
 parameter_list|)
-function_decl|;
-name|krb5_error_code
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
+block|)
+empty_stmt|;
+end_extern
+
+begin_function_decl
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb524_convert_creds_kdc_ccache
 parameter_list|(
 name|krb5_context
@@ -121,149 +220,20 @@ name|credentials
 modifier|*
 comment|/*v4creds*/
 parameter_list|)
-function_decl|;
-name|krb5_error_code
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
 name|KRB5_LIB_FUNCTION
-name|krb5_425_conv_principal
-parameter_list|(
-name|krb5_context
-comment|/*context*/
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-comment|/*name*/
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-comment|/*instance*/
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-comment|/*realm*/
-parameter_list|,
-name|krb5_principal
-modifier|*
-comment|/*princ*/
-parameter_list|)
-function_decl|;
 name|krb5_error_code
-name|KRB5_LIB_FUNCTION
-name|krb5_425_conv_principal_ext
-parameter_list|(
-name|krb5_context
-comment|/*context*/
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-comment|/*name*/
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-comment|/*instance*/
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-comment|/*realm*/
-parameter_list|,
-name|krb5_boolean
-function_decl|(
-modifier|*
-comment|/*func*/
-function_decl|)
-parameter_list|(
-name|krb5_context
-parameter_list|,
-name|krb5_principal
-parameter_list|)
-parameter_list|,
-name|krb5_boolean
-comment|/*resolve*/
-parameter_list|,
-name|krb5_principal
-modifier|*
-comment|/*principal*/
-parameter_list|)
-function_decl|;
-name|krb5_error_code
-name|KRB5_LIB_FUNCTION
-name|krb5_425_conv_principal_ext2
-parameter_list|(
-name|krb5_context
-comment|/*context*/
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-comment|/*name*/
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-comment|/*instance*/
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-comment|/*realm*/
-parameter_list|,
-name|krb5_boolean
-function_decl|(
-modifier|*
-comment|/*func*/
-function_decl|)
-parameter_list|(
-name|krb5_context
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|krb5_principal
-parameter_list|)
-parameter_list|,
-name|void
-modifier|*
-comment|/*funcctx*/
-parameter_list|,
-name|krb5_boolean
-comment|/*resolve*/
-parameter_list|,
-name|krb5_principal
-modifier|*
-comment|/*princ*/
-parameter_list|)
-function_decl|;
-name|krb5_error_code
-name|KRB5_LIB_FUNCTION
-name|krb5_524_conv_principal
-parameter_list|(
-name|krb5_context
-comment|/*context*/
-parameter_list|,
-specifier|const
-name|krb5_principal
-comment|/*principal*/
-parameter_list|,
-name|char
-modifier|*
-comment|/*name*/
-parameter_list|,
-name|char
-modifier|*
-comment|/*instance*/
-parameter_list|,
-name|char
-modifier|*
-comment|/*realm*/
-parameter_list|)
-function_decl|;
-name|krb5_error_code
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_abort
 parameter_list|(
 name|krb5_context
@@ -290,17 +260,17 @@ parameter_list|,
 function_decl|3
 operator|,
 function_decl|4
-block|)
-end_extern
+end_function_decl
 
 begin_empty_stmt
-unit|))
+unit|)))
 empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_abortx
 parameter_list|(
 name|krb5_context
@@ -332,8 +302,9 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_acl_match_file
 parameter_list|(
 name|krb5_context
@@ -355,8 +326,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_acl_match_string
 parameter_list|(
 name|krb5_context
@@ -378,8 +350,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_add_et_list
 parameter_list|(
 name|krb5_context
@@ -401,8 +374,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_add_extra_addresses
 parameter_list|(
 name|krb5_context
@@ -416,8 +390,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_add_ignore_addresses
 parameter_list|(
 name|krb5_context
@@ -431,8 +406,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_addlog_dest
 parameter_list|(
 name|krb5_context
@@ -451,8 +427,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_addlog_func
 parameter_list|(
 name|krb5_context
@@ -482,8 +459,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_addr2sockaddr
 parameter_list|(
 name|krb5_context
@@ -510,8 +488,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_address_compare
 parameter_list|(
 name|krb5_context
@@ -531,8 +510,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
 name|KRB5_LIB_FUNCTION
+name|int
+name|KRB5_LIB_CALL
 name|krb5_address_order
 parameter_list|(
 name|krb5_context
@@ -552,8 +532,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_address_prefixlen_boundary
 parameter_list|(
 name|krb5_context
@@ -580,8 +561,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_address_search
 parameter_list|(
 name|krb5_context
@@ -601,8 +583,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_allow_weak_crypto
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_boolean
+comment|/*enable*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_aname_to_localname
 parameter_list|(
 name|krb5_context
@@ -622,8 +620,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_anyaddr
 parameter_list|(
 name|krb5_context
@@ -648,8 +647,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_appdefault_boolean
 parameter_list|(
 name|krb5_context
@@ -679,8 +679,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_appdefault_string
 parameter_list|(
 name|krb5_context
@@ -713,8 +714,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_appdefault_time
 parameter_list|(
 name|krb5_context
@@ -744,8 +746,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_append_addresses
 parameter_list|(
 name|krb5_context
@@ -764,8 +767,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_con_addflags
 parameter_list|(
 name|krb5_context
@@ -785,8 +789,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_con_free
 parameter_list|(
 name|krb5_context
@@ -799,8 +804,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_con_genaddrs
 parameter_list|(
 name|krb5_context
@@ -809,7 +815,7 @@ parameter_list|,
 name|krb5_auth_context
 comment|/*auth_context*/
 parameter_list|,
-name|int
+name|krb5_socket_t
 comment|/*fd*/
 parameter_list|,
 name|int
@@ -819,8 +825,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_con_generatelocalsubkey
 parameter_list|(
 name|krb5_context
@@ -837,8 +844,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_con_getaddrs
 parameter_list|(
 name|krb5_context
@@ -861,8 +869,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_con_getauthenticator
 parameter_list|(
 name|krb5_context
@@ -879,8 +888,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_con_getcksumtype
 parameter_list|(
 name|krb5_context
@@ -897,8 +907,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_con_getflags
 parameter_list|(
 name|krb5_context
@@ -915,8 +926,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_con_getkey
 parameter_list|(
 name|krb5_context
@@ -934,8 +946,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_con_getkeytype
 parameter_list|(
 name|krb5_context
@@ -952,8 +965,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_con_getlocalseqnumber
 parameter_list|(
 name|krb5_context
@@ -970,8 +984,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_con_getlocalsubkey
 parameter_list|(
 name|krb5_context
@@ -989,8 +1004,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_con_getrcache
 parameter_list|(
 name|krb5_context
@@ -1007,8 +1023,48 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_auth_con_getrecvsubkey
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_auth_context
+comment|/*auth_context*/
+parameter_list|,
+name|krb5_keyblock
+modifier|*
+modifier|*
+comment|/*keyblock*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_auth_con_getremoteseqnumber
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_auth_context
+comment|/*auth_context*/
+parameter_list|,
+name|int32_t
+modifier|*
+comment|/*seqnumber*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_con_getremotesubkey
 parameter_list|(
 name|krb5_context
@@ -1026,8 +1082,29 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_auth_con_getsendsubkey
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_auth_context
+comment|/*auth_context*/
+parameter_list|,
+name|krb5_keyblock
+modifier|*
+modifier|*
+comment|/*keyblock*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_con_init
 parameter_list|(
 name|krb5_context
@@ -1041,8 +1118,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_con_removeflags
 parameter_list|(
 name|krb5_context
@@ -1062,8 +1140,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_con_setaddrs
 parameter_list|(
 name|krb5_context
@@ -1084,8 +1163,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_con_setaddrs_from_fd
 parameter_list|(
 name|krb5_context
@@ -1102,8 +1182,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_con_setcksumtype
 parameter_list|(
 name|krb5_context
@@ -1119,8 +1200,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_con_setflags
 parameter_list|(
 name|krb5_context
@@ -1136,8 +1218,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_con_setkey
 parameter_list|(
 name|krb5_context
@@ -1154,8 +1237,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_con_setkeytype
 parameter_list|(
 name|krb5_context
@@ -1171,8 +1255,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_con_setlocalseqnumber
 parameter_list|(
 name|krb5_context
@@ -1188,8 +1273,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_con_setlocalsubkey
 parameter_list|(
 name|krb5_context
@@ -1206,8 +1292,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_con_setrcache
 parameter_list|(
 name|krb5_context
@@ -1223,8 +1310,28 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_auth_con_setrecvsubkey
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_auth_context
+comment|/*auth_context*/
+parameter_list|,
+name|krb5_keyblock
+modifier|*
+comment|/*keyblock*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_con_setremoteseqnumber
 parameter_list|(
 name|krb5_context
@@ -1240,8 +1347,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_con_setremotesubkey
 parameter_list|(
 name|krb5_context
@@ -1258,8 +1366,28 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_auth_con_setsendsubkey
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_auth_context
+comment|/*auth_context*/
+parameter_list|,
+name|krb5_keyblock
+modifier|*
+comment|/*keyblock*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_con_setuserkey
 parameter_list|(
 name|krb5_context
@@ -1276,8 +1404,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_auth_getremoteseqnumber
 parameter_list|(
 name|krb5_context
@@ -1290,12 +1419,20 @@ name|int32_t
 modifier|*
 comment|/*seqnumber*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_build_ap_req
 parameter_list|(
 name|krb5_context
@@ -1322,45 +1459,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
-name|krb5_build_authenticator
-parameter_list|(
-name|krb5_context
-comment|/*context*/
-parameter_list|,
-name|krb5_auth_context
-comment|/*auth_context*/
-parameter_list|,
-name|krb5_enctype
-comment|/*enctype*/
-parameter_list|,
-name|krb5_creds
-modifier|*
-comment|/*cred*/
-parameter_list|,
-name|Checksum
-modifier|*
-comment|/*cksum*/
-parameter_list|,
-name|Authenticator
-modifier|*
-modifier|*
-comment|/*auth_result*/
-parameter_list|,
-name|krb5_data
-modifier|*
-comment|/*result*/
-parameter_list|,
-name|krb5_key_usage
-comment|/*usage*/
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|krb5_error_code
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_build_principal
 parameter_list|(
 name|krb5_context
@@ -1382,8 +1483,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_build_principal_ext
 parameter_list|(
 name|krb5_context
@@ -1405,8 +1507,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_build_principal_va
 parameter_list|(
 name|krb5_context
@@ -1429,8 +1532,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_build_principal_va_ext
 parameter_list|(
 name|krb5_context
@@ -1453,8 +1557,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_c_block_size
 parameter_list|(
 name|krb5_context
@@ -1471,8 +1576,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_c_checksum_length
 parameter_list|(
 name|krb5_context
@@ -1489,8 +1595,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_c_decrypt
 parameter_list|(
 name|krb5_context
@@ -1520,8 +1627,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_c_encrypt
 parameter_list|(
 name|krb5_context
@@ -1553,8 +1661,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_c_encrypt_length
 parameter_list|(
 name|krb5_context
@@ -1574,8 +1683,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_c_enctype_compare
 parameter_list|(
 name|krb5_context
@@ -1591,12 +1701,20 @@ name|krb5_boolean
 modifier|*
 comment|/*similar*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_c_get_checksum
 parameter_list|(
 name|krb5_context
@@ -1620,8 +1738,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_c_is_coll_proof_cksum
 parameter_list|(
 name|krb5_cksumtype
@@ -1631,8 +1750,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_c_is_keyed_cksum
 parameter_list|(
 name|krb5_cksumtype
@@ -1642,8 +1762,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_c_keylengths
 parameter_list|(
 name|krb5_context
@@ -1664,8 +1785,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_c_make_checksum
 parameter_list|(
 name|krb5_context
@@ -1695,8 +1817,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_c_make_random_key
 parameter_list|(
 name|krb5_context
@@ -1713,8 +1836,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_c_prf
 parameter_list|(
 name|krb5_context
@@ -1738,8 +1862,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_c_prf_length
 parameter_list|(
 name|krb5_context
@@ -1756,8 +1881,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_c_random_make_octets
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_data
+modifier|*
+comment|/*data*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_c_set_checksum
 parameter_list|(
 name|krb5_context
@@ -1779,8 +1921,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_c_valid_cksumtype
 parameter_list|(
 name|krb5_cksumtype
@@ -1790,8 +1933,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_c_valid_enctype
 parameter_list|(
 name|krb5_enctype
@@ -1801,8 +1945,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_c_verify_checksum
 parameter_list|(
 name|krb5_context
@@ -1834,8 +1979,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_cc_cache_end_seq_get
 parameter_list|(
 name|krb5_context
@@ -1848,8 +1994,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_cc_cache_get_first
 parameter_list|(
 name|krb5_context
@@ -1868,8 +2015,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_cc_cache_match
 parameter_list|(
 name|krb5_context
@@ -1877,11 +2025,6 @@ comment|/*context*/
 parameter_list|,
 name|krb5_principal
 comment|/*client*/
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-comment|/*type*/
 parameter_list|,
 name|krb5_ccache
 modifier|*
@@ -1891,8 +2034,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_cc_cache_next
 parameter_list|(
 name|krb5_context
@@ -1909,8 +2053,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_cc_clear_mcred
 parameter_list|(
 name|krb5_creds
@@ -1921,8 +2066,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_cc_close
 parameter_list|(
 name|krb5_context
@@ -1935,8 +2081,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_cc_copy_cache
 parameter_list|(
 name|krb5_context
@@ -1953,9 +2100,29 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
-name|krb5_cc_copy_cache_match
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_cc_copy_creds
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+specifier|const
+name|krb5_ccache
+comment|/*from*/
+parameter_list|,
+name|krb5_ccache
+comment|/*to*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_cc_copy_match_f
 parameter_list|(
 name|krb5_context
 comment|/*context*/
@@ -1967,13 +2134,25 @@ parameter_list|,
 name|krb5_ccache
 comment|/*to*/
 parameter_list|,
-name|krb5_flags
-comment|/*whichfields*/
+name|krb5_boolean
+function_decl|(
+modifier|*
+comment|/*match*/
+function_decl|)
+parameter_list|(
+name|krb5_context
+parameter_list|,
+name|void
+modifier|*
 parameter_list|,
 specifier|const
 name|krb5_creds
 modifier|*
-comment|/*mcreds*/
+parameter_list|)
+parameter_list|,
+name|void
+modifier|*
+comment|/*matchctx*/
 parameter_list|,
 name|unsigned
 name|int
@@ -1984,8 +2163,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_cc_default
 parameter_list|(
 name|krb5_context
@@ -1999,10 +2179,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|char
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_cc_default_name
 parameter_list|(
 name|krb5_context
@@ -2012,8 +2193,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_cc_destroy
 parameter_list|(
 name|krb5_context
@@ -2026,8 +2208,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_cc_end_seq_get
 parameter_list|(
 name|krb5_context
@@ -2045,8 +2228,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_cc_gen_new
 parameter_list|(
 name|krb5_context
@@ -2061,12 +2245,86 @@ name|krb5_ccache
 modifier|*
 comment|/*id*/
 parameter_list|)
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_cc_get_config
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_ccache
+comment|/*id*/
+parameter_list|,
+name|krb5_const_principal
+comment|/*principal*/
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/*name*/
+parameter_list|,
+name|krb5_data
+modifier|*
+comment|/*data*/
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_cc_get_flags
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_ccache
+comment|/*id*/
+parameter_list|,
+name|krb5_flags
+modifier|*
+comment|/*flags*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_cc_get_friendly_name
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_ccache
+comment|/*id*/
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+comment|/*name*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_cc_get_full_name
 parameter_list|(
 name|krb5_context
@@ -2084,10 +2342,49 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_cc_get_kdc_offset
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_ccache
+comment|/*id*/
+parameter_list|,
+name|krb5_deltat
+modifier|*
+comment|/*offset*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_cc_get_lifetime
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_ccache
+comment|/*id*/
+parameter_list|,
+name|time_t
+modifier|*
+comment|/*t*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|char
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_cc_get_name
 parameter_list|(
 name|krb5_context
@@ -2100,9 +2397,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|krb5_cc_ops
 modifier|*
+name|KRB5_LIB_CALL
 name|krb5_cc_get_ops
 parameter_list|(
 name|krb5_context
@@ -2115,9 +2414,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|krb5_cc_ops
 modifier|*
+name|KRB5_LIB_CALL
 name|krb5_cc_get_prefix_ops
 parameter_list|(
 name|krb5_context
@@ -2132,8 +2433,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_cc_get_principal
 parameter_list|(
 name|krb5_context
@@ -2150,10 +2452,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|char
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_cc_get_type
 parameter_list|(
 name|krb5_context
@@ -2166,8 +2469,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_cc_get_version
 parameter_list|(
 name|krb5_context
@@ -2181,8 +2485,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_cc_initialize
 parameter_list|(
 name|krb5_context
@@ -2198,7 +2503,28 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_cc_last_change_time
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_ccache
+comment|/*id*/
+parameter_list|,
+name|krb5_timestamp
+modifier|*
+comment|/*mtime*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_cc_move
 parameter_list|(
 name|krb5_context
@@ -2214,8 +2540,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_cc_new_unique
 parameter_list|(
 name|krb5_context
@@ -2239,8 +2566,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_cc_next_cred
 parameter_list|(
 name|krb5_context
@@ -2262,39 +2590,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
-name|krb5_cc_next_cred_match
-parameter_list|(
-name|krb5_context
-comment|/*context*/
-parameter_list|,
-specifier|const
-name|krb5_ccache
-comment|/*id*/
-parameter_list|,
-name|krb5_cc_cursor
-modifier|*
-comment|/*cursor*/
-parameter_list|,
-name|krb5_creds
-modifier|*
-comment|/*creds*/
-parameter_list|,
-name|krb5_flags
-comment|/*whichfields*/
-parameter_list|,
-specifier|const
-name|krb5_creds
-modifier|*
-comment|/*mcreds*/
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|krb5_error_code
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_cc_register
 parameter_list|(
 name|krb5_context
@@ -2312,8 +2610,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_cc_remove_cred
 parameter_list|(
 name|krb5_context
@@ -2333,8 +2632,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_cc_resolve
 parameter_list|(
 name|krb5_context
@@ -2353,8 +2653,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_cc_retrieve_cred
 parameter_list|(
 name|krb5_context
@@ -2379,8 +2680,36 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_cc_set_config
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_ccache
+comment|/*id*/
+parameter_list|,
+name|krb5_const_principal
+comment|/*principal*/
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/*name*/
+parameter_list|,
+name|krb5_data
+modifier|*
+comment|/*data*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_cc_set_default_name
 parameter_list|(
 name|krb5_context
@@ -2395,8 +2724,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_cc_set_flags
 parameter_list|(
 name|krb5_context
@@ -2412,8 +2742,47 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_cc_set_friendly_name
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_ccache
+comment|/*id*/
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/*name*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_cc_set_kdc_offset
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_ccache
+comment|/*id*/
+parameter_list|,
+name|krb5_deltat
+comment|/*offset*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_cc_start_seq_get
 parameter_list|(
 name|krb5_context
@@ -2431,8 +2800,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_cc_store_cred
 parameter_list|(
 name|krb5_context
@@ -2449,8 +2819,113 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
+name|krb5_cc_support_switch
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/*type*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_cc_switch
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_ccache
+comment|/*id*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_cccol_cursor_free
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_cccol_cursor
+modifier|*
+comment|/*cursor*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_cccol_cursor_new
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_cccol_cursor
+modifier|*
+comment|/*cursor*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_cccol_cursor_next
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_cccol_cursor
+comment|/*cursor*/
+parameter_list|,
+name|krb5_ccache
+modifier|*
+comment|/*cache*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_cccol_last_change_time
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/*type*/
+parameter_list|,
+name|krb5_timestamp
+modifier|*
+comment|/*mtime*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_change_password
 parameter_list|(
 name|krb5_context
@@ -2477,12 +2952,20 @@ name|krb5_data
 modifier|*
 comment|/*result_string*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_check_transited
 parameter_list|(
 name|krb5_context
@@ -2498,6 +2981,7 @@ name|krb5_realm
 modifier|*
 comment|/*realms*/
 parameter_list|,
+name|unsigned
 name|int
 comment|/*num_realms*/
 parameter_list|,
@@ -2509,8 +2993,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_check_transited_realms
 parameter_list|(
 name|krb5_context
@@ -2523,6 +3008,7 @@ specifier|const
 modifier|*
 comment|/*realms*/
 parameter_list|,
+name|unsigned
 name|int
 comment|/*num_realms*/
 parameter_list|,
@@ -2534,8 +3020,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_checksum_disable
 parameter_list|(
 name|krb5_context
@@ -2548,8 +3035,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_checksum_free
 parameter_list|(
 name|krb5_context
@@ -2563,8 +3051,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_checksum_is_collision_proof
 parameter_list|(
 name|krb5_context
@@ -2577,8 +3066,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_checksum_is_keyed
 parameter_list|(
 name|krb5_context
@@ -2591,8 +3081,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_checksumsize
 parameter_list|(
 name|krb5_context
@@ -2609,8 +3100,28 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_cksumtype_to_enctype
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_cksumtype
+comment|/*ctype*/
+parameter_list|,
+name|krb5_enctype
+modifier|*
+comment|/*etype*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_cksumtype_valid
 parameter_list|(
 name|krb5_context
@@ -2623,9 +3134,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
-name|krb5_clear_error_string
+name|void
+name|KRB5_LIB_CALL
+name|krb5_clear_error_message
 parameter_list|(
 name|krb5_context
 comment|/*context*/
@@ -2634,8 +3146,28 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
+name|krb5_clear_error_string
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|)
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_closelog
 parameter_list|(
 name|krb5_context
@@ -2649,8 +3181,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_compare_creds
 parameter_list|(
 name|krb5_context
@@ -2673,8 +3206,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_config_file_free
 parameter_list|(
 name|krb5_context
@@ -2688,8 +3222,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_config_free_strings
 parameter_list|(
 name|char
@@ -2701,30 +3236,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|const
-name|void
-modifier|*
-name|krb5_config_get
-parameter_list|(
-name|krb5_context
-comment|/*context*/
-parameter_list|,
-specifier|const
-name|krb5_config_section
-modifier|*
-comment|/*c*/
-parameter_list|,
-name|int
-comment|/*type*/
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_config_get_bool
 parameter_list|(
 name|krb5_context
@@ -2741,8 +3255,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_config_get_bool_default
 parameter_list|(
 name|krb5_context
@@ -2762,8 +3277,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
 name|KRB5_LIB_FUNCTION
+name|int
+name|KRB5_LIB_CALL
 name|krb5_config_get_int
 parameter_list|(
 name|krb5_context
@@ -2780,8 +3296,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
 name|KRB5_LIB_FUNCTION
+name|int
+name|KRB5_LIB_CALL
 name|krb5_config_get_int_default
 parameter_list|(
 name|krb5_context
@@ -2801,9 +3318,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|krb5_config_binding
 modifier|*
+name|KRB5_LIB_CALL
 name|krb5_config_get_list
 parameter_list|(
 name|krb5_context
@@ -2820,38 +3339,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|const
-name|void
-modifier|*
-name|krb5_config_get_next
-parameter_list|(
-name|krb5_context
-comment|/*context*/
-parameter_list|,
-specifier|const
-name|krb5_config_section
-modifier|*
-comment|/*c*/
-parameter_list|,
-specifier|const
-name|krb5_config_binding
-modifier|*
-modifier|*
-comment|/*pointer*/
-parameter_list|,
-name|int
-comment|/*type*/
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|char
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_config_get_string
 parameter_list|(
 name|krb5_context
@@ -2868,10 +3360,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|char
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_config_get_string_default
 parameter_list|(
 name|krb5_context
@@ -2893,9 +3386,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|char
 modifier|*
 modifier|*
+name|KRB5_LIB_CALL
 name|krb5_config_get_strings
 parameter_list|(
 name|krb5_context
@@ -2912,8 +3407,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
 name|KRB5_LIB_FUNCTION
+name|int
+name|KRB5_LIB_CALL
 name|krb5_config_get_time
 parameter_list|(
 name|krb5_context
@@ -2930,8 +3426,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
 name|KRB5_LIB_FUNCTION
+name|int
+name|KRB5_LIB_CALL
 name|krb5_config_get_time_default
 parameter_list|(
 name|krb5_context
@@ -2951,8 +3448,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_config_parse_file
 parameter_list|(
 name|krb5_context
@@ -2972,8 +3470,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_config_parse_file_multi
 parameter_list|(
 name|krb5_context
@@ -2993,8 +3492,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_config_parse_string_multi
 parameter_list|(
 name|krb5_context
@@ -3010,35 +3510,20 @@ modifier|*
 modifier|*
 comment|/*res*/
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|const
-name|void
-modifier|*
-name|krb5_config_vget
+function_decl|KRB5_DEPRECATED_FUNCTION
 parameter_list|(
-name|krb5_context
-comment|/*context*/
-parameter_list|,
-specifier|const
-name|krb5_config_section
-modifier|*
-comment|/*c*/
-parameter_list|,
-name|int
-comment|/*type*/
-parameter_list|,
-name|va_list
-comment|/*args*/
-parameter_list|)
-function_decl|;
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_config_vget_bool
 parameter_list|(
 name|krb5_context
@@ -3056,8 +3541,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_config_vget_bool_default
 parameter_list|(
 name|krb5_context
@@ -3078,8 +3564,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
 name|KRB5_LIB_FUNCTION
+name|int
+name|KRB5_LIB_CALL
 name|krb5_config_vget_int
 parameter_list|(
 name|krb5_context
@@ -3097,8 +3584,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
 name|KRB5_LIB_FUNCTION
+name|int
+name|KRB5_LIB_CALL
 name|krb5_config_vget_int_default
 parameter_list|(
 name|krb5_context
@@ -3119,9 +3607,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|krb5_config_binding
 modifier|*
+name|KRB5_LIB_CALL
 name|krb5_config_vget_list
 parameter_list|(
 name|krb5_context
@@ -3139,39 +3629,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|const
-name|void
-modifier|*
-name|krb5_config_vget_next
-parameter_list|(
-name|krb5_context
-comment|/*context*/
-parameter_list|,
-specifier|const
-name|krb5_config_section
-modifier|*
-comment|/*c*/
-parameter_list|,
-specifier|const
-name|krb5_config_binding
-modifier|*
-modifier|*
-comment|/*pointer*/
-parameter_list|,
-name|int
-comment|/*type*/
-parameter_list|,
-name|va_list
-comment|/*args*/
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|char
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_config_vget_string
 parameter_list|(
 name|krb5_context
@@ -3189,10 +3651,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|char
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_config_vget_string_default
 parameter_list|(
 name|krb5_context
@@ -3215,10 +3678,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|char
 modifier|*
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_config_vget_strings
 parameter_list|(
 name|krb5_context
@@ -3236,8 +3700,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
 name|KRB5_LIB_FUNCTION
+name|int
+name|KRB5_LIB_CALL
 name|krb5_config_vget_time
 parameter_list|(
 name|krb5_context
@@ -3255,8 +3720,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
 name|KRB5_LIB_FUNCTION
+name|int
+name|KRB5_LIB_CALL
 name|krb5_config_vget_time_default
 parameter_list|(
 name|krb5_context
@@ -3277,8 +3743,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_copy_address
 parameter_list|(
 name|krb5_context
@@ -3297,8 +3764,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_copy_addresses
 parameter_list|(
 name|krb5_context
@@ -3317,8 +3785,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_copy_checksum
 parameter_list|(
 name|krb5_context
@@ -3338,8 +3807,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_copy_context
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_context
+modifier|*
+comment|/*out*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_copy_creds
 parameter_list|(
 name|krb5_context
@@ -3359,8 +3845,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_copy_creds_contents
 parameter_list|(
 name|krb5_context
@@ -3379,8 +3866,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_copy_data
 parameter_list|(
 name|krb5_context
@@ -3400,8 +3888,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_copy_host_realm
 parameter_list|(
 name|krb5_context
@@ -3421,8 +3910,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_copy_keyblock
 parameter_list|(
 name|krb5_context
@@ -3442,8 +3932,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_copy_keyblock_contents
 parameter_list|(
 name|krb5_context
@@ -3462,8 +3953,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_copy_principal
 parameter_list|(
 name|krb5_context
@@ -3480,8 +3972,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_copy_ticket
 parameter_list|(
 name|krb5_context
@@ -3501,8 +3994,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_create_checksum
 parameter_list|(
 name|krb5_context
@@ -3532,8 +4026,53 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_create_checksum_iov
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_crypto
+comment|/*crypto*/
+parameter_list|,
+name|unsigned
+comment|/*usage*/
+parameter_list|,
+name|krb5_crypto_iov
+modifier|*
+comment|/*data*/
+parameter_list|,
+name|unsigned
+name|int
+comment|/*num_data*/
+parameter_list|,
+name|krb5_cksumtype
+modifier|*
+comment|/*type*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|unsigned
+name|long
+name|KRB5_LIB_CALL
+name|krb5_creds_get_ticket_flags
+parameter_list|(
+name|krb5_creds
+modifier|*
+comment|/*creds*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_crypto_destroy
 parameter_list|(
 name|krb5_context
@@ -3546,8 +4085,44 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_crypto_fx_cf2
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+specifier|const
+name|krb5_crypto
+comment|/*crypto1*/
+parameter_list|,
+specifier|const
+name|krb5_crypto
+comment|/*crypto2*/
+parameter_list|,
+name|krb5_data
+modifier|*
+comment|/*pepper1*/
+parameter_list|,
+name|krb5_data
+modifier|*
+comment|/*pepper2*/
+parameter_list|,
+name|krb5_enctype
+comment|/*enctype*/
+parameter_list|,
+name|krb5_keyblock
+modifier|*
+comment|/*res*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_crypto_get_checksum_type
 parameter_list|(
 name|krb5_context
@@ -3564,8 +4139,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_crypto_getblocksize
 parameter_list|(
 name|krb5_context
@@ -3582,8 +4158,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_crypto_getconfoundersize
 parameter_list|(
 name|krb5_context
@@ -3600,8 +4177,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_crypto_getenctype
 parameter_list|(
 name|krb5_context
@@ -3618,8 +4196,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_crypto_getpadsize
 parameter_list|(
 name|krb5_context
@@ -3636,8 +4215,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_crypto_init
 parameter_list|(
 name|krb5_context
@@ -3659,7 +4239,54 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_crypto_length
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_crypto
+comment|/*crypto*/
+parameter_list|,
+name|int
+comment|/*type*/
+parameter_list|,
 name|size_t
+modifier|*
+comment|/*len*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_crypto_length_iov
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_crypto
+comment|/*crypto*/
+parameter_list|,
+name|krb5_crypto_iov
+modifier|*
+comment|/*data*/
+parameter_list|,
+name|unsigned
+name|int
+comment|/*num_data*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|size_t
+name|KRB5_LIB_CALL
 name|krb5_crypto_overhead
 parameter_list|(
 name|krb5_context
@@ -3672,8 +4299,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_crypto_prf
 parameter_list|(
 name|krb5_context
@@ -3696,8 +4324,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_crypto_prf_length
 parameter_list|(
 name|krb5_context
@@ -3714,8 +4343,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_data_alloc
 parameter_list|(
 name|krb5_data
@@ -3729,8 +4359,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
 name|KRB5_LIB_FUNCTION
+name|int
+name|KRB5_LIB_CALL
 name|krb5_data_cmp
 parameter_list|(
 specifier|const
@@ -3747,8 +4378,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_data_copy
 parameter_list|(
 name|krb5_data
@@ -3767,8 +4399,28 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|int
+name|KRB5_LIB_CALL
+name|krb5_data_ct_cmp
+parameter_list|(
+specifier|const
+name|krb5_data
+modifier|*
+comment|/*data1*/
+parameter_list|,
+specifier|const
+name|krb5_data
+modifier|*
+comment|/*data2*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_data_free
 parameter_list|(
 name|krb5_data
@@ -3779,8 +4431,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_data_realloc
 parameter_list|(
 name|krb5_data
@@ -3794,8 +4447,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_data_zero
 parameter_list|(
 name|krb5_data
@@ -3806,8 +4460,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_decode_Authenticator
 parameter_list|(
 name|krb5_context
@@ -3829,12 +4484,20 @@ name|size_t
 modifier|*
 comment|/*len*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_decode_ETYPE_INFO
 parameter_list|(
 name|krb5_context
@@ -3856,12 +4519,20 @@ name|size_t
 modifier|*
 comment|/*len*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_decode_ETYPE_INFO2
 parameter_list|(
 name|krb5_context
@@ -3883,12 +4554,20 @@ name|size_t
 modifier|*
 comment|/*len*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_decode_EncAPRepPart
 parameter_list|(
 name|krb5_context
@@ -3910,12 +4589,20 @@ name|size_t
 modifier|*
 comment|/*len*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_decode_EncASRepPart
 parameter_list|(
 name|krb5_context
@@ -3937,12 +4624,20 @@ name|size_t
 modifier|*
 comment|/*len*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_decode_EncKrbCredPart
 parameter_list|(
 name|krb5_context
@@ -3964,12 +4659,20 @@ name|size_t
 modifier|*
 comment|/*len*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_decode_EncTGSRepPart
 parameter_list|(
 name|krb5_context
@@ -3991,12 +4694,20 @@ name|size_t
 modifier|*
 comment|/*len*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_decode_EncTicketPart
 parameter_list|(
 name|krb5_context
@@ -4018,12 +4729,20 @@ name|size_t
 modifier|*
 comment|/*len*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_decode_ap_req
 parameter_list|(
 name|krb5_context
@@ -4042,8 +4761,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_decrypt
 parameter_list|(
 name|krb5_context
@@ -4070,8 +4790,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_decrypt_EncryptedData
 parameter_list|(
 name|krb5_context
@@ -4096,8 +4817,39 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_decrypt_iov_ivec
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_crypto
+comment|/*crypto*/
+parameter_list|,
+name|unsigned
+comment|/*usage*/
+parameter_list|,
+name|krb5_crypto_iov
+modifier|*
+comment|/*data*/
+parameter_list|,
+name|unsigned
+name|int
+comment|/*num_data*/
+parameter_list|,
+name|void
+modifier|*
+comment|/*ivec*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_decrypt_ivec
 parameter_list|(
 name|krb5_context
@@ -4128,8 +4880,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_decrypt_ticket
 parameter_list|(
 name|krb5_context
@@ -4154,8 +4907,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_derive_key
 parameter_list|(
 name|krb5_context
@@ -4186,7 +4940,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_alloc
 parameter_list|(
 name|krb5_context
@@ -4200,7 +4956,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|void
+name|KRB5_LIB_CALL
 name|krb5_digest_free
 parameter_list|(
 name|krb5_digest
@@ -4210,7 +4968,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_get_client_binding
 parameter_list|(
 name|krb5_context
@@ -4233,9 +4993,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|char
 modifier|*
+name|KRB5_LIB_CALL
 name|krb5_digest_get_identifier
 parameter_list|(
 name|krb5_context
@@ -4248,9 +5010,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|char
 modifier|*
+name|KRB5_LIB_CALL
 name|krb5_digest_get_opaque
 parameter_list|(
 name|krb5_context
@@ -4263,9 +5027,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|char
 modifier|*
+name|KRB5_LIB_CALL
 name|krb5_digest_get_rsp
 parameter_list|(
 name|krb5_context
@@ -4278,9 +5044,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|char
 modifier|*
+name|KRB5_LIB_CALL
 name|krb5_digest_get_server_nonce
 parameter_list|(
 name|krb5_context
@@ -4293,7 +5061,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_get_session_key
 parameter_list|(
 name|krb5_context
@@ -4310,7 +5080,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_get_tickets
 parameter_list|(
 name|krb5_context
@@ -4328,7 +5100,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_init_request
 parameter_list|(
 name|krb5_context
@@ -4347,7 +5121,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_probe
 parameter_list|(
 name|krb5_context
@@ -4367,7 +5143,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_digest_rep_get_status
 parameter_list|(
 name|krb5_context
@@ -4380,7 +5158,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_request
 parameter_list|(
 name|krb5_context
@@ -4399,7 +5179,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_authentication_user
 parameter_list|(
 name|krb5_context
@@ -4415,7 +5197,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_authid
 parameter_list|(
 name|krb5_context
@@ -4433,7 +5217,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_client_nonce
 parameter_list|(
 name|krb5_context
@@ -4451,7 +5237,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_digest
 parameter_list|(
 name|krb5_context
@@ -4469,7 +5257,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_hostname
 parameter_list|(
 name|krb5_context
@@ -4487,7 +5277,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_identifier
 parameter_list|(
 name|krb5_context
@@ -4505,7 +5297,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_method
 parameter_list|(
 name|krb5_context
@@ -4523,7 +5317,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_nonceCount
 parameter_list|(
 name|krb5_context
@@ -4541,7 +5337,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_opaque
 parameter_list|(
 name|krb5_context
@@ -4559,7 +5357,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_qop
 parameter_list|(
 name|krb5_context
@@ -4577,7 +5377,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_realm
 parameter_list|(
 name|krb5_context
@@ -4595,7 +5397,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|int
+name|KRB5_LIB_CALL
 name|krb5_digest_set_responseData
 parameter_list|(
 name|krb5_context
@@ -4613,7 +5417,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_server_cb
 parameter_list|(
 name|krb5_context
@@ -4636,7 +5442,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_server_nonce
 parameter_list|(
 name|krb5_context
@@ -4654,7 +5462,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_type
 parameter_list|(
 name|krb5_context
@@ -4672,7 +5482,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_uri
 parameter_list|(
 name|krb5_context
@@ -4690,7 +5502,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_digest_set_username
 parameter_list|(
 name|krb5_context
@@ -4708,8 +5522,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_domain_x500_decode
 parameter_list|(
 name|krb5_context
@@ -4724,6 +5539,7 @@ modifier|*
 modifier|*
 comment|/*realms*/
 parameter_list|,
+name|unsigned
 name|int
 modifier|*
 comment|/*num_realms*/
@@ -4742,8 +5558,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_domain_x500_encode
 parameter_list|(
 name|char
@@ -4751,6 +5568,7 @@ modifier|*
 modifier|*
 comment|/*realms*/
 parameter_list|,
+name|unsigned
 name|int
 comment|/*num_realms*/
 parameter_list|,
@@ -4762,8 +5580,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_eai_to_heim_errno
 parameter_list|(
 name|int
@@ -4776,8 +5595,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_encode_Authenticator
 parameter_list|(
 name|krb5_context
@@ -4798,12 +5618,20 @@ name|size_t
 modifier|*
 comment|/*len*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_encode_ETYPE_INFO
 parameter_list|(
 name|krb5_context
@@ -4824,12 +5652,20 @@ name|size_t
 modifier|*
 comment|/*len*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_encode_ETYPE_INFO2
 parameter_list|(
 name|krb5_context
@@ -4850,12 +5686,20 @@ name|size_t
 modifier|*
 comment|/*len*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_encode_EncAPRepPart
 parameter_list|(
 name|krb5_context
@@ -4876,12 +5720,20 @@ name|size_t
 modifier|*
 comment|/*len*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_encode_EncASRepPart
 parameter_list|(
 name|krb5_context
@@ -4902,12 +5754,20 @@ name|size_t
 modifier|*
 comment|/*len*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_encode_EncKrbCredPart
 parameter_list|(
 name|krb5_context
@@ -4928,12 +5788,20 @@ name|size_t
 modifier|*
 comment|/*len*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_encode_EncTGSRepPart
 parameter_list|(
 name|krb5_context
@@ -4954,12 +5822,20 @@ name|size_t
 modifier|*
 comment|/*len*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_encode_EncTicketPart
 parameter_list|(
 name|krb5_context
@@ -4980,12 +5856,20 @@ name|size_t
 modifier|*
 comment|/*len*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_encrypt
 parameter_list|(
 name|krb5_context
@@ -5013,8 +5897,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_encrypt_EncryptedData
 parameter_list|(
 name|krb5_context
@@ -5044,8 +5929,38 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_encrypt_iov_ivec
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_crypto
+comment|/*crypto*/
+parameter_list|,
+name|unsigned
+comment|/*usage*/
+parameter_list|,
+name|krb5_crypto_iov
+modifier|*
+comment|/*data*/
+parameter_list|,
+name|int
+comment|/*num_data*/
+parameter_list|,
+name|void
+modifier|*
+comment|/*ivec*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_encrypt_ivec
 parameter_list|(
 name|krb5_context
@@ -5077,8 +5992,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_enctype_disable
 parameter_list|(
 name|krb5_context
@@ -5091,8 +6007,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_enctype_enable
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_enctype
+comment|/*enctype*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_enctype_keybits
 parameter_list|(
 name|krb5_context
@@ -5109,8 +6041,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_enctype_keysize
 parameter_list|(
 name|krb5_context
@@ -5127,8 +6060,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_enctype_to_keytype
 parameter_list|(
 name|krb5_context
@@ -5145,8 +6079,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_enctype_to_string
 parameter_list|(
 name|krb5_context
@@ -5164,8 +6099,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_enctype_valid
 parameter_list|(
 name|krb5_context
@@ -5178,8 +6114,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_enctypes_compatible_keys
 parameter_list|(
 name|krb5_context
@@ -5191,12 +6128,30 @@ parameter_list|,
 name|krb5_enctype
 comment|/*etype2*/
 parameter_list|)
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|krb5_error_code
+name|krb5_enomem
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_err
 parameter_list|(
 name|krb5_context
@@ -5233,30 +6188,10 @@ unit|)))
 empty_stmt|;
 end_empty_stmt
 
-begin_decl_stmt
-name|krb5_error_code
-name|KRB5_LIB_FUNCTION
-name|__attribute__
-argument_list|(
-operator|(
-name|deprecated
-operator|)
-argument_list|)
-name|krb5_free_creds_contents
-argument_list|(
-name|krb5_context
-name|context
-argument_list|,
-name|krb5_creds
-operator|*
-name|c
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_error_from_rd_error
 parameter_list|(
 name|krb5_context
@@ -5276,8 +6211,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_errx
 parameter_list|(
 name|krb5_context
@@ -5312,8 +6248,9 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_expand_hostname
 parameter_list|(
 name|krb5_context
@@ -5333,8 +6270,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_expand_hostname_realms
 parameter_list|(
 name|krb5_context
@@ -5360,8 +6298,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|PA_DATA
 modifier|*
+name|KRB5_LIB_CALL
 name|krb5_find_padata
 parameter_list|(
 name|PA_DATA
@@ -5382,8 +6322,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_format_time
 parameter_list|(
 name|krb5_context
@@ -5406,8 +6347,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_free_address
 parameter_list|(
 name|krb5_context
@@ -5421,8 +6363,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_free_addresses
 parameter_list|(
 name|krb5_context
@@ -5436,8 +6379,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_free_ap_rep_enc_part
 parameter_list|(
 name|krb5_context
@@ -5451,8 +6395,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_free_authenticator
 parameter_list|(
 name|krb5_context
@@ -5466,8 +6411,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_free_checksum
 parameter_list|(
 name|krb5_context
@@ -5481,8 +6427,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_free_checksum_contents
 parameter_list|(
 name|krb5_context
@@ -5496,8 +6443,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_free_config_files
 parameter_list|(
 name|char
@@ -5509,8 +6457,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_free_context
 parameter_list|(
 name|krb5_context
@@ -5520,8 +6469,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_free_cred_contents
 parameter_list|(
 name|krb5_context
@@ -5535,8 +6485,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_free_creds
 parameter_list|(
 name|krb5_context
@@ -5550,8 +6501,32 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_free_creds_contents
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_creds
+modifier|*
+comment|/*c*/
+parameter_list|)
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_free_data
 parameter_list|(
 name|krb5_context
@@ -5565,8 +6540,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_free_data_contents
 parameter_list|(
 name|krb5_context
@@ -5576,12 +6552,35 @@ name|krb5_data
 modifier|*
 comment|/*data*/
 parameter_list|)
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_free_default_realm
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_realm
+comment|/*realm*/
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_free_error
 parameter_list|(
 name|krb5_context
@@ -5595,8 +6594,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_free_error_contents
 parameter_list|(
 name|krb5_context
@@ -5610,8 +6610,26 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
+name|krb5_free_error_message
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/*msg*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_free_error_string
 parameter_list|(
 name|krb5_context
@@ -5621,12 +6639,20 @@ name|char
 modifier|*
 comment|/*str*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_free_host_realm
 parameter_list|(
 name|krb5_context
@@ -5640,8 +6666,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_free_kdc_rep
 parameter_list|(
 name|krb5_context
@@ -5655,8 +6682,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_free_keyblock
 parameter_list|(
 name|krb5_context
@@ -5670,8 +6698,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_free_keyblock_contents
 parameter_list|(
 name|krb5_context
@@ -5685,8 +6714,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_free_krbhst
 parameter_list|(
 name|krb5_context
@@ -5701,8 +6731,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_free_principal
 parameter_list|(
 name|krb5_context
@@ -5715,8 +6746,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_free_salt
 parameter_list|(
 name|krb5_context
@@ -5729,8 +6761,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_free_ticket
 parameter_list|(
 name|krb5_context
@@ -5744,8 +6777,32 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
+name|krb5_free_unparsed_name
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|char
+modifier|*
+comment|/*str*/
+parameter_list|)
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_fwd_tgt_creds
 parameter_list|(
 name|krb5_context
@@ -5779,8 +6836,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_generate_random_block
 parameter_list|(
 name|void
@@ -5794,8 +6852,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_generate_random_keyblock
 parameter_list|(
 name|krb5_context
@@ -5812,8 +6871,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_generate_seq_number
 parameter_list|(
 name|krb5_context
@@ -5832,8 +6892,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_generate_subkey
 parameter_list|(
 name|krb5_context
@@ -5849,12 +6910,20 @@ modifier|*
 modifier|*
 comment|/*subkey*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_generate_subkey_extended
 parameter_list|(
 name|krb5_context
@@ -5877,8 +6946,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_all_client_addrs
 parameter_list|(
 name|krb5_context
@@ -5892,8 +6962,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_all_server_addrs
 parameter_list|(
 name|krb5_context
@@ -5907,8 +6978,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_cred_from_kdc
 parameter_list|(
 name|krb5_context
@@ -5932,12 +7004,20 @@ modifier|*
 modifier|*
 comment|/*ret_tgts*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_cred_from_kdc_opt
 parameter_list|(
 name|krb5_context
@@ -5964,12 +7044,20 @@ parameter_list|,
 name|krb5_flags
 comment|/*flags*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_credentials
 parameter_list|(
 name|krb5_context
@@ -5994,8 +7082,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_credentials_with_flags
 parameter_list|(
 name|krb5_context
@@ -6023,8 +7112,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_creds
 parameter_list|(
 name|krb5_context
@@ -6048,8 +7138,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_get_creds_opt_add_options
 parameter_list|(
 name|krb5_context
@@ -6065,8 +7156,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_creds_opt_alloc
 parameter_list|(
 name|krb5_context
@@ -6080,8 +7172,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_get_creds_opt_free
 parameter_list|(
 name|krb5_context
@@ -6094,8 +7187,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_get_creds_opt_set_enctype
 parameter_list|(
 name|krb5_context
@@ -6111,8 +7205,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_creds_opt_set_impersonate
 parameter_list|(
 name|krb5_context
@@ -6128,8 +7223,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_get_creds_opt_set_options
 parameter_list|(
 name|krb5_context
@@ -6145,8 +7241,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_creds_opt_set_ticket
 parameter_list|(
 name|krb5_context
@@ -6164,8 +7261,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_default_config_files
 parameter_list|(
 name|char
@@ -6178,12 +7276,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_default_in_tkt_etypes
 parameter_list|(
 name|krb5_context
 comment|/*context*/
+parameter_list|,
+name|krb5_pdu
+comment|/*pdu_type*/
 parameter_list|,
 name|krb5_enctype
 modifier|*
@@ -6194,8 +7296,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_default_principal
 parameter_list|(
 name|krb5_context
@@ -6209,8 +7312,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_default_realm
 parameter_list|(
 name|krb5_context
@@ -6224,8 +7328,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_default_realms
 parameter_list|(
 name|krb5_context
@@ -6240,8 +7345,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_get_dns_canonicalize_hostname
 parameter_list|(
 name|krb5_context
@@ -6251,10 +7357,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|char
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_get_err_text
 parameter_list|(
 name|krb5_context
@@ -6263,13 +7370,22 @@ parameter_list|,
 name|krb5_error_code
 comment|/*code*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
+name|KRB5_LIB_FUNCTION
+specifier|const
 name|char
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_get_error_message
 parameter_list|(
 name|krb5_context
@@ -6282,9 +7398,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|char
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_get_error_string
 parameter_list|(
 name|krb5_context
@@ -6294,8 +7411,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_extra_addresses
 parameter_list|(
 name|krb5_context
@@ -6309,8 +7427,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_fcache_version
 parameter_list|(
 name|krb5_context
@@ -6324,8 +7443,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_forwarded_creds
 parameter_list|(
 name|krb5_context
@@ -6357,8 +7477,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_host_realm
 parameter_list|(
 name|krb5_context
@@ -6378,8 +7499,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_ignore_addresses
 parameter_list|(
 name|krb5_context
@@ -6393,8 +7515,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_in_cred
 parameter_list|(
 name|krb5_context
@@ -6443,12 +7566,20 @@ name|krb5_kdc_rep
 modifier|*
 comment|/*ret_as_reply*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_in_tkt
 parameter_list|(
 name|krb5_context
@@ -6495,12 +7626,20 @@ name|krb5_kdc_rep
 modifier|*
 comment|/*ret_as_reply*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_in_tkt_with_keytab
 parameter_list|(
 name|krb5_context
@@ -6537,12 +7676,20 @@ name|krb5_kdc_rep
 modifier|*
 comment|/*ret_as_reply*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_in_tkt_with_password
 parameter_list|(
 name|krb5_context
@@ -6581,12 +7728,20 @@ name|krb5_kdc_rep
 modifier|*
 comment|/*ret_as_reply*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_in_tkt_with_skey
 parameter_list|(
 name|krb5_context
@@ -6625,49 +7780,20 @@ name|krb5_kdc_rep
 modifier|*
 comment|/*ret_as_reply*/
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|krb5_error_code
-name|KRB5_LIB_FUNCTION
-name|krb5_get_init_creds
+function_decl|KRB5_DEPRECATED_FUNCTION
 parameter_list|(
-name|krb5_context
-comment|/*context*/
-parameter_list|,
-name|krb5_creds
-modifier|*
-comment|/*creds*/
-parameter_list|,
-name|krb5_principal
-comment|/*client*/
-parameter_list|,
-name|krb5_prompter_fct
-comment|/*prompter*/
-parameter_list|,
-name|void
-modifier|*
-comment|/*data*/
-parameter_list|,
-name|krb5_deltat
-comment|/*start_time*/
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-comment|/*in_tkt_service*/
-parameter_list|,
-name|krb5_get_init_creds_opt
-modifier|*
-comment|/*options*/
-parameter_list|)
-function_decl|;
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_init_creds_keyblock
 parameter_list|(
 name|krb5_context
@@ -6700,8 +7826,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_init_creds_keytab
 parameter_list|(
 name|krb5_context
@@ -6733,8 +7860,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_init_creds_opt_alloc
 parameter_list|(
 name|krb5_context
@@ -6749,8 +7877,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_get_init_creds_opt_free
 parameter_list|(
 name|krb5_context
@@ -6764,8 +7893,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_init_creds_opt_get_error
 parameter_list|(
 name|krb5_context
@@ -6780,24 +7910,40 @@ modifier|*
 modifier|*
 comment|/*error*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_get_init_creds_opt_init
 parameter_list|(
 name|krb5_get_init_creds_opt
 modifier|*
 comment|/*opt*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_get_init_creds_opt_set_address_list
 parameter_list|(
 name|krb5_get_init_creds_opt
@@ -6812,8 +7958,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_init_creds_opt_set_addressless
 parameter_list|(
 name|krb5_context
@@ -6830,8 +7977,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_get_init_creds_opt_set_anonymous
 parameter_list|(
 name|krb5_get_init_creds_opt
@@ -6845,8 +7993,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_init_creds_opt_set_canonicalize
 parameter_list|(
 name|krb5_context
@@ -6863,8 +8012,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_get_init_creds_opt_set_default_flags
 parameter_list|(
 name|krb5_context
@@ -6886,8 +8036,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_get_init_creds_opt_set_etype_list
 parameter_list|(
 name|krb5_get_init_creds_opt
@@ -6905,8 +8056,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_get_init_creds_opt_set_forwardable
 parameter_list|(
 name|krb5_get_init_creds_opt
@@ -6920,8 +8072,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_init_creds_opt_set_pa_password
 parameter_list|(
 name|krb5_context
@@ -6943,8 +8096,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_init_creds_opt_set_pac_request
 parameter_list|(
 name|krb5_context
@@ -6961,8 +8115,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_init_creds_opt_set_pkinit
 parameter_list|(
 name|krb5_context
@@ -7015,8 +8170,29 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_get_init_creds_opt_set_pkinit_user_certs
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_get_init_creds_opt
+modifier|*
+comment|/*opt*/
+parameter_list|,
+name|struct
+name|hx509_certs_data
+modifier|*
+comment|/*certs*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_get_init_creds_opt_set_preauth_list
 parameter_list|(
 name|krb5_get_init_creds_opt
@@ -7034,8 +8210,32 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_get_init_creds_opt_set_process_last_req
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_get_init_creds_opt
+modifier|*
+comment|/*opt*/
+parameter_list|,
+name|krb5_gic_process_last_req
+comment|/*func*/
+parameter_list|,
+name|void
+modifier|*
+comment|/*ctx*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_get_init_creds_opt_set_proxiable
 parameter_list|(
 name|krb5_get_init_creds_opt
@@ -7049,8 +8249,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_get_init_creds_opt_set_renew_life
 parameter_list|(
 name|krb5_get_init_creds_opt
@@ -7064,8 +8265,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_get_init_creds_opt_set_salt
 parameter_list|(
 name|krb5_get_init_creds_opt
@@ -7080,8 +8282,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_get_init_creds_opt_set_tkt_life
 parameter_list|(
 name|krb5_get_init_creds_opt
@@ -7095,8 +8298,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_init_creds_opt_set_win2k
 parameter_list|(
 name|krb5_context
@@ -7113,8 +8317,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_init_creds_password
 parameter_list|(
 name|krb5_context
@@ -7149,14 +8354,15 @@ comment|/*in_tkt_service*/
 parameter_list|,
 name|krb5_get_init_creds_opt
 modifier|*
-comment|/*in_options*/
+comment|/*options*/
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_kdc_cred
 parameter_list|(
 name|krb5_context
@@ -7189,8 +8395,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_kdc_sec_offset
 parameter_list|(
 name|krb5_context
@@ -7208,8 +8415,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_krb524hst
 parameter_list|(
 name|krb5_context
@@ -7230,8 +8438,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_krb_admin_hst
 parameter_list|(
 name|krb5_context
@@ -7252,8 +8461,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_krb_changepw_hst
 parameter_list|(
 name|krb5_context
@@ -7274,8 +8484,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_krbhst
 parameter_list|(
 name|krb5_context
@@ -7296,8 +8507,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|time_t
 name|KRB5_LIB_FUNCTION
+name|time_t
+name|KRB5_LIB_CALL
 name|krb5_get_max_time_skew
 parameter_list|(
 name|krb5_context
@@ -7307,8 +8519,26 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_get_permitted_enctypes
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_enctype
+modifier|*
+modifier|*
+comment|/*etypes*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_pw_salt
 parameter_list|(
 name|krb5_context
@@ -7325,8 +8555,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_renewed_creds
 parameter_list|(
 name|krb5_context
@@ -7351,8 +8582,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_server_rcache
 parameter_list|(
 name|krb5_context
@@ -7371,8 +8603,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_get_use_admin_kdc
 parameter_list|(
 name|krb5_context
@@ -7382,9 +8615,36 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_get_validated_creds
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_creds
+modifier|*
+comment|/*creds*/
+parameter_list|,
+name|krb5_principal
+comment|/*client*/
+parameter_list|,
+name|krb5_ccache
+comment|/*ccache*/
+parameter_list|,
+name|char
+modifier|*
+comment|/*service*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_log_facility
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_get_warn_dest
 parameter_list|(
 name|krb5_context
@@ -7394,7 +8654,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|size_t
+name|KRB5_LIB_CALL
 name|krb5_get_wrapped_length
 parameter_list|(
 name|krb5_context
@@ -7410,8 +8672,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
 name|KRB5_LIB_FUNCTION
+name|int
+name|KRB5_LIB_CALL
 name|krb5_getportbyname
 parameter_list|(
 name|krb5_context
@@ -7434,8 +8697,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_h_addr2addr
 parameter_list|(
 name|krb5_context
@@ -7457,8 +8721,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_h_addr2sockaddr
 parameter_list|(
 name|krb5_context
@@ -7488,8 +8753,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_h_errno_to_heim_errno
 parameter_list|(
 name|int
@@ -7499,8 +8765,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_have_error_string
 parameter_list|(
 name|krb5_context
@@ -7510,8 +8777,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_hmac
 parameter_list|(
 name|krb5_context
@@ -7543,8 +8811,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_init_context
 parameter_list|(
 name|krb5_context
@@ -7555,8 +8824,219 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
+name|krb5_init_creds_free
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_init_creds_context
+comment|/*ctx*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_init_creds_get
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_init_creds_context
+comment|/*ctx*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_init_creds_get_creds
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_init_creds_context
+comment|/*ctx*/
+parameter_list|,
+name|krb5_creds
+modifier|*
+comment|/*cred*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_init_creds_get_error
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_init_creds_context
+comment|/*ctx*/
+parameter_list|,
+name|KRB_ERROR
+modifier|*
+comment|/*error*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_init_creds_init
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_principal
+comment|/*client*/
+parameter_list|,
+name|krb5_prompter_fct
+comment|/*prompter*/
+parameter_list|,
+name|void
+modifier|*
+comment|/*prompter_data*/
+parameter_list|,
+name|krb5_deltat
+comment|/*start_time*/
+parameter_list|,
+name|krb5_get_init_creds_opt
+modifier|*
+comment|/*options*/
+parameter_list|,
+name|krb5_init_creds_context
+modifier|*
+comment|/*rctx*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_init_creds_set_keyblock
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_init_creds_context
+comment|/*ctx*/
+parameter_list|,
+name|krb5_keyblock
+modifier|*
+comment|/*keyblock*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_init_creds_set_keytab
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_init_creds_context
+comment|/*ctx*/
+parameter_list|,
+name|krb5_keytab
+comment|/*keytab*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_init_creds_set_password
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_init_creds_context
+comment|/*ctx*/
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/*password*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_init_creds_set_service
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_init_creds_context
+comment|/*ctx*/
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/*service*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_init_creds_step
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_init_creds_context
+comment|/*ctx*/
+parameter_list|,
+name|krb5_data
+modifier|*
+comment|/*in*/
+parameter_list|,
+name|krb5_data
+modifier|*
+comment|/*out*/
+parameter_list|,
+name|krb5_krbhst_info
+modifier|*
+comment|/*hostinfo*/
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+comment|/*flags*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_init_ets
 parameter_list|(
 name|krb5_context
@@ -7566,33 +9046,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
-name|krb5_init_etype
-parameter_list|(
-name|krb5_context
-comment|/*context*/
-parameter_list|,
-name|unsigned
-modifier|*
-comment|/*len*/
-parameter_list|,
-name|krb5_enctype
-modifier|*
-modifier|*
-comment|/*val*/
-parameter_list|,
-specifier|const
-name|krb5_enctype
-modifier|*
-comment|/*etypes*/
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|krb5_error_code
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_initlog
 parameter_list|(
 name|krb5_context
@@ -7612,8 +9068,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
+name|krb5_is_config_principal
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_const_principal
+comment|/*principal*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_is_thread_safe
 parameter_list|(
 name|void
@@ -7622,10 +9094,56 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_kcm_call
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_storage
+modifier|*
+comment|/*request*/
+parameter_list|,
+name|krb5_storage
+modifier|*
+modifier|*
+comment|/*response_p*/
+parameter_list|,
+name|krb5_data
+modifier|*
+comment|/*response_data_p*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_kcm_storage_request
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|uint16_t
+comment|/*opcode*/
+parameter_list|,
+name|krb5_storage
+modifier|*
+modifier|*
+comment|/*storage_p*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|krb5_enctype
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_kerberos_enctypes
 parameter_list|(
 name|krb5_context
@@ -7635,7 +9153,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_enctype
+name|KRB5_LIB_CALL
 name|krb5_keyblock_get_enctype
 parameter_list|(
 specifier|const
@@ -7647,8 +9167,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_keyblock_init
 parameter_list|(
 name|krb5_context
@@ -7673,8 +9194,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_keyblock_key_proc
 parameter_list|(
 name|krb5_context
@@ -7699,8 +9221,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_keyblock_zero
 parameter_list|(
 name|krb5_keyblock
@@ -7711,8 +9234,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_CALLCONV
 name|krb5_keytab_key_proc
 parameter_list|(
 name|krb5_context
@@ -7732,12 +9256,20 @@ modifier|*
 modifier|*
 comment|/*key*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_keytype_to_enctypes
 parameter_list|(
 name|krb5_context
@@ -7755,12 +9287,20 @@ modifier|*
 modifier|*
 comment|/*val*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_keytype_to_enctypes_default
 parameter_list|(
 name|krb5_context
@@ -7778,12 +9318,20 @@ modifier|*
 modifier|*
 comment|/*val*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_keytype_to_string
 parameter_list|(
 name|krb5_context
@@ -7797,12 +9345,20 @@ modifier|*
 modifier|*
 comment|/*string*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_krbhst_format_string
 parameter_list|(
 name|krb5_context
@@ -7824,8 +9380,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_krbhst_free
 parameter_list|(
 name|krb5_context
@@ -7838,8 +9395,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_krbhst_get_addrinfo
 parameter_list|(
 name|krb5_context
@@ -7859,8 +9417,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_krbhst_init
 parameter_list|(
 name|krb5_context
@@ -7883,8 +9442,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_krbhst_init_flags
 parameter_list|(
 name|krb5_context
@@ -7910,8 +9470,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_krbhst_next
 parameter_list|(
 name|krb5_context
@@ -7929,8 +9490,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_krbhst_next_as_string
 parameter_list|(
 name|krb5_context
@@ -7950,8 +9512,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_krbhst_reset
 parameter_list|(
 name|krb5_context
@@ -7964,8 +9527,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_add_entry
 parameter_list|(
 name|krb5_context
@@ -7982,8 +9546,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_close
 parameter_list|(
 name|krb5_context
@@ -7996,8 +9561,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_kt_compare
 parameter_list|(
 name|krb5_context
@@ -8020,8 +9586,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_copy_entry_contents
 parameter_list|(
 name|krb5_context
@@ -8040,8 +9607,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_default
 parameter_list|(
 name|krb5_context
@@ -8055,8 +9623,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_default_modify_name
 parameter_list|(
 name|krb5_context
@@ -8073,8 +9642,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_default_name
 parameter_list|(
 name|krb5_context
@@ -8091,8 +9661,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_kt_destroy
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_keytab
+comment|/*id*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_end_seq_get
 parameter_list|(
 name|krb5_context
@@ -8109,8 +9695,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_free_entry
 parameter_list|(
 name|krb5_context
@@ -8124,8 +9711,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_get_entry
 parameter_list|(
 name|krb5_context
@@ -8151,8 +9739,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_get_full_name
 parameter_list|(
 name|krb5_context
@@ -8170,8 +9759,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_get_name
 parameter_list|(
 name|krb5_context
@@ -8191,8 +9781,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_get_type
 parameter_list|(
 name|krb5_context
@@ -8212,8 +9803,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
+name|krb5_kt_have_content
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_keytab
+comment|/*id*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_next_entry
 parameter_list|(
 name|krb5_context
@@ -8234,8 +9841,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_read_service_key
 parameter_list|(
 name|krb5_context
@@ -8262,8 +9870,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_register
 parameter_list|(
 name|krb5_context
@@ -8278,8 +9887,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_remove_entry
 parameter_list|(
 name|krb5_context
@@ -8296,8 +9906,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_resolve
 parameter_list|(
 name|krb5_context
@@ -8316,8 +9927,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_start_seq_get
 parameter_list|(
 name|krb5_context
@@ -8334,8 +9946,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_kuserok
 parameter_list|(
 name|krb5_context
@@ -8353,8 +9966,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_log
 parameter_list|(
 name|krb5_context
@@ -8391,8 +10005,9 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_log_msg
 parameter_list|(
 name|krb5_context
@@ -8434,8 +10049,9 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_make_addrport
 parameter_list|(
 name|krb5_context
@@ -8458,8 +10074,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_make_principal
 parameter_list|(
 name|krb5_context
@@ -8478,8 +10095,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|size_t
 name|KRB5_LIB_FUNCTION
+name|size_t
+name|KRB5_LIB_CALL
 name|krb5_max_sockaddr_size
 parameter_list|(
 name|void
@@ -8488,8 +10106,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_mk_error
 parameter_list|(
 name|krb5_context
@@ -8532,8 +10151,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_mk_priv
 parameter_list|(
 name|krb5_context
@@ -8559,8 +10179,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_mk_rep
 parameter_list|(
 name|krb5_context
@@ -8577,8 +10198,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_mk_req
 parameter_list|(
 name|krb5_context
@@ -8617,8 +10239,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_mk_req_exact
 parameter_list|(
 name|krb5_context
@@ -8651,8 +10274,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_mk_req_extended
 parameter_list|(
 name|krb5_context
@@ -8682,8 +10306,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_mk_safe
 parameter_list|(
 name|krb5_context
@@ -8709,8 +10334,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_ssize_t
 name|KRB5_LIB_FUNCTION
+name|krb5_ssize_t
+name|KRB5_LIB_CALL
 name|krb5_net_read
 parameter_list|(
 name|krb5_context
@@ -8731,8 +10357,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_ssize_t
 name|KRB5_LIB_FUNCTION
+name|krb5_ssize_t
+name|KRB5_LIB_CALL
 name|krb5_net_write
 parameter_list|(
 name|krb5_context
@@ -8754,8 +10381,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_ssize_t
 name|KRB5_LIB_FUNCTION
+name|krb5_ssize_t
+name|KRB5_LIB_CALL
 name|krb5_net_write_block
 parameter_list|(
 name|krb5_context
@@ -8780,7 +10408,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_alloc
 parameter_list|(
 name|krb5_context
@@ -8794,7 +10424,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_free
 parameter_list|(
 name|krb5_context
@@ -8807,7 +10439,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_init_get_challange
 parameter_list|(
 name|krb5_context
@@ -8824,7 +10458,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_init_get_flags
 parameter_list|(
 name|krb5_context
@@ -8841,7 +10477,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_init_get_opaque
 parameter_list|(
 name|krb5_context
@@ -8858,7 +10496,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_init_get_targetinfo
 parameter_list|(
 name|krb5_context
@@ -8875,7 +10515,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_init_get_targetname
 parameter_list|(
 name|krb5_context
@@ -8893,7 +10535,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_init_request
 parameter_list|(
 name|krb5_context
@@ -8925,7 +10569,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_rep_get_sessionkey
 parameter_list|(
 name|krb5_context
@@ -8942,7 +10588,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_ntlm_rep_get_status
 parameter_list|(
 name|krb5_context
@@ -8955,7 +10603,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_req_set_flags
 parameter_list|(
 name|krb5_context
@@ -8971,7 +10621,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_req_set_lm
 parameter_list|(
 name|krb5_context
@@ -8991,7 +10643,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_req_set_ntlm
 parameter_list|(
 name|krb5_context
@@ -9011,7 +10665,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_req_set_opaque
 parameter_list|(
 name|krb5_context
@@ -9028,7 +10684,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_req_set_session
 parameter_list|(
 name|krb5_context
@@ -9048,7 +10706,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_req_set_targetname
 parameter_list|(
 name|krb5_context
@@ -9066,7 +10726,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_req_set_username
 parameter_list|(
 name|krb5_context
@@ -9084,7 +10746,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ntlm_request
 parameter_list|(
 name|krb5_context
@@ -9103,8 +10767,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_openlog
 parameter_list|(
 name|krb5_context
@@ -9124,7 +10789,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_pac_add_buffer
 parameter_list|(
 name|krb5_context
@@ -9145,7 +10812,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|void
+name|KRB5_LIB_CALL
 name|krb5_pac_free
 parameter_list|(
 name|krb5_context
@@ -9158,7 +10827,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_pac_get_buffer
 parameter_list|(
 name|krb5_context
@@ -9178,7 +10849,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_pac_get_types
 parameter_list|(
 name|krb5_context
@@ -9200,7 +10873,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_pac_init
 parameter_list|(
 name|krb5_context
@@ -9214,7 +10889,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_pac_parse
 parameter_list|(
 name|krb5_context
@@ -9236,7 +10913,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_pac_verify
 parameter_list|(
 name|krb5_context
@@ -9266,8 +10945,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
 name|KRB5_LIB_FUNCTION
+name|int
+name|KRB5_LIB_CALL
 name|krb5_padata_add
 parameter_list|(
 name|krb5_context
@@ -9291,8 +10971,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_parse_address
 parameter_list|(
 name|krb5_context
@@ -9311,8 +10992,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_parse_name
 parameter_list|(
 name|krb5_context
@@ -9331,8 +11013,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_parse_name_flags
 parameter_list|(
 name|krb5_context
@@ -9354,7 +11037,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_parse_nametype
 parameter_list|(
 name|krb5_context
@@ -9373,10 +11058,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|char
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_passwd_result_to_string
 parameter_list|(
 name|krb5_context
@@ -9389,8 +11075,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_CALLCONV
 name|krb5_password_key_proc
 parameter_list|(
 name|krb5_context
@@ -9410,11 +11097,50 @@ modifier|*
 modifier|*
 comment|/*key*/
 parameter_list|)
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_pk_enterprise_cert
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/*user_id*/
+parameter_list|,
+name|krb5_const_realm
+comment|/*realm*/
+parameter_list|,
+name|krb5_principal
+modifier|*
+comment|/*principal*/
+parameter_list|,
+name|struct
+name|hx509_certs_data
+modifier|*
+modifier|*
+comment|/*res*/
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_plugin_register
 parameter_list|(
 name|krb5_context
@@ -9437,8 +11163,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_prepend_config_files
 parameter_list|(
 specifier|const
@@ -9461,8 +11188,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_prepend_config_files_default
 parameter_list|(
 specifier|const
@@ -9480,9 +11208,45 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
+name|krb5_prepend_error_message
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_error_code
+comment|/*ret*/
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/*fmt*/
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(format
+parameter_list|(
+name|printf
+parameter_list|,
+function_decl|3
+operator|,
+function_decl|4
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_realm
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_princ_realm
 parameter_list|(
 name|krb5_context
@@ -9491,12 +11255,20 @@ parameter_list|,
 name|krb5_principal
 comment|/*principal*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_princ_set_realm
 parameter_list|(
 name|krb5_context
@@ -9509,12 +11281,20 @@ name|krb5_realm
 modifier|*
 comment|/*realm*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_principal_compare
 parameter_list|(
 name|krb5_context
@@ -9530,8 +11310,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_principal_compare_any_realm
 parameter_list|(
 name|krb5_context
@@ -9547,10 +11328,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|char
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_principal_get_comp_string
 parameter_list|(
 name|krb5_context
@@ -9567,10 +11349,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|unsigned
+name|int
+name|KRB5_LIB_CALL
+name|krb5_principal_get_num_comp
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_const_principal
+comment|/*principal*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|char
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_principal_get_realm
 parameter_list|(
 name|krb5_context
@@ -9583,8 +11382,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
 name|KRB5_LIB_FUNCTION
+name|int
+name|KRB5_LIB_CALL
 name|krb5_principal_get_type
 parameter_list|(
 name|krb5_context
@@ -9597,8 +11397,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
+name|krb5_principal_is_krbtgt
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_const_principal
+comment|/*p*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_principal_match
 parameter_list|(
 name|krb5_context
@@ -9614,8 +11430,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_principal_set_realm
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_principal
+comment|/*principal*/
+parameter_list|,
+name|krb5_const_realm
+comment|/*realm*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_principal_set_type
 parameter_list|(
 name|krb5_context
@@ -9631,8 +11466,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_print_address
 parameter_list|(
 specifier|const
@@ -9655,8 +11491,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
 name|KRB5_LIB_FUNCTION
+name|int
+name|KRB5_LIB_CALL
 name|krb5_program_setup
 parameter_list|(
 name|krb5_context
@@ -9681,8 +11518,9 @@ comment|/*num_args*/
 parameter_list|,
 name|void
 function_decl|(
+name|KRB5_LIB_CALL
 modifier|*
-comment|/*usage*/
+name|usage
 function_decl|)
 parameter_list|(
 name|int
@@ -9698,8 +11536,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
 name|KRB5_LIB_FUNCTION
+name|int
+name|KRB5_CALLCONV
 name|krb5_prompter_posix
 parameter_list|(
 name|krb5_context
@@ -9730,8 +11569,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_random_to_key
 parameter_list|(
 name|krb5_context
@@ -9756,8 +11596,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rc_close
 parameter_list|(
 name|krb5_context
@@ -9770,8 +11611,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rc_default
 parameter_list|(
 name|krb5_context
@@ -9785,10 +11627,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|char
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_rc_default_name
 parameter_list|(
 name|krb5_context
@@ -9798,10 +11641,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|char
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_rc_default_type
 parameter_list|(
 name|krb5_context
@@ -9811,8 +11655,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rc_destroy
 parameter_list|(
 name|krb5_context
@@ -9825,8 +11670,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rc_expunge
 parameter_list|(
 name|krb5_context
@@ -9839,8 +11685,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rc_get_lifespan
 parameter_list|(
 name|krb5_context
@@ -9857,10 +11704,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|char
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_rc_get_name
 parameter_list|(
 name|krb5_context
@@ -9873,10 +11721,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|char
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_rc_get_type
 parameter_list|(
 name|krb5_context
@@ -9889,8 +11738,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rc_initialize
 parameter_list|(
 name|krb5_context
@@ -9906,8 +11756,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rc_recover
 parameter_list|(
 name|krb5_context
@@ -9920,8 +11771,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rc_resolve
 parameter_list|(
 name|krb5_context
@@ -9939,8 +11791,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rc_resolve_full
 parameter_list|(
 name|krb5_context
@@ -9959,8 +11812,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rc_resolve_type
 parameter_list|(
 name|krb5_context
@@ -9979,8 +11833,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rc_store
 parameter_list|(
 name|krb5_context
@@ -9997,8 +11852,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rd_cred
 parameter_list|(
 name|krb5_context
@@ -10025,8 +11881,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rd_cred2
 parameter_list|(
 name|krb5_context
@@ -10046,8 +11903,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rd_error
 parameter_list|(
 name|krb5_context
@@ -10066,8 +11924,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rd_priv
 parameter_list|(
 name|krb5_context
@@ -10093,8 +11952,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rd_rep
 parameter_list|(
 name|krb5_context
@@ -10117,8 +11977,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rd_req
 parameter_list|(
 name|krb5_context
@@ -10152,8 +12013,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rd_req_ctx
 parameter_list|(
 name|krb5_context
@@ -10182,8 +12044,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rd_req_in_ctx_alloc
 parameter_list|(
 name|krb5_context
@@ -10197,8 +12060,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_rd_req_in_ctx_free
 parameter_list|(
 name|krb5_context
@@ -10211,8 +12075,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rd_req_in_set_keyblock
 parameter_list|(
 name|krb5_context
@@ -10229,8 +12094,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rd_req_in_set_keytab
 parameter_list|(
 name|krb5_context
@@ -10246,8 +12112,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rd_req_in_set_pac_check
 parameter_list|(
 name|krb5_context
@@ -10263,8 +12130,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_rd_req_out_ctx_free
 parameter_list|(
 name|krb5_context
@@ -10277,8 +12145,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rd_req_out_get_ap_req_options
 parameter_list|(
 name|krb5_context
@@ -10295,8 +12164,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rd_req_out_get_keyblock
 parameter_list|(
 name|krb5_context
@@ -10314,8 +12184,28 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_rd_req_out_get_server
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_rd_req_out_ctx
+comment|/*out*/
+parameter_list|,
+name|krb5_principal
+modifier|*
+comment|/*principal*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rd_req_out_get_ticket
 parameter_list|(
 name|krb5_context
@@ -10333,8 +12223,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rd_req_with_keyblock
 parameter_list|(
 name|krb5_context
@@ -10369,8 +12260,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rd_safe
 parameter_list|(
 name|krb5_context
@@ -10396,8 +12288,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_read_message
 parameter_list|(
 name|krb5_context
@@ -10414,8 +12307,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_read_priv_message
 parameter_list|(
 name|krb5_context
@@ -10435,8 +12329,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_read_safe_message
 parameter_list|(
 name|krb5_context
@@ -10456,8 +12351,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_realm_compare
 parameter_list|(
 name|krb5_context
@@ -10473,8 +12369,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_recvauth
 parameter_list|(
 name|krb5_context
@@ -10510,8 +12407,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_recvauth_match_version
 parameter_list|(
 name|krb5_context
@@ -10562,8 +12460,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_address
 parameter_list|(
 name|krb5_storage
@@ -10578,8 +12477,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_addrs
 parameter_list|(
 name|krb5_storage
@@ -10594,8 +12494,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_authdata
 parameter_list|(
 name|krb5_storage
@@ -10610,8 +12511,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_creds
 parameter_list|(
 name|krb5_storage
@@ -10626,8 +12528,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_creds_tag
 parameter_list|(
 name|krb5_storage
@@ -10642,8 +12545,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_data
 parameter_list|(
 name|krb5_storage
@@ -10658,8 +12562,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_int16
 parameter_list|(
 name|krb5_storage
@@ -10674,8 +12579,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_int32
 parameter_list|(
 name|krb5_storage
@@ -10690,8 +12596,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_int8
 parameter_list|(
 name|krb5_storage
@@ -10706,8 +12613,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_keyblock
 parameter_list|(
 name|krb5_storage
@@ -10722,8 +12630,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_principal
 parameter_list|(
 name|krb5_storage
@@ -10738,8 +12647,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_string
 parameter_list|(
 name|krb5_storage
@@ -10755,8 +12665,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_stringnl
 parameter_list|(
 name|krb5_storage
@@ -10772,8 +12683,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_stringz
 parameter_list|(
 name|krb5_storage
@@ -10789,8 +12701,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_times
 parameter_list|(
 name|krb5_storage
@@ -10805,8 +12718,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_uint16
 parameter_list|(
 name|krb5_storage
@@ -10821,8 +12735,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_uint32
 parameter_list|(
 name|krb5_storage
@@ -10837,8 +12752,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_uint8
 parameter_list|(
 name|krb5_storage
@@ -10853,8 +12769,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_salttype_to_string
 parameter_list|(
 name|krb5_context
@@ -10875,8 +12792,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_sendauth
 parameter_list|(
 name|krb5_context
@@ -10933,8 +12851,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_sendto
 parameter_list|(
 name|krb5_context
@@ -10956,8 +12875,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_sendto_context
 parameter_list|(
 name|krb5_context
@@ -10983,8 +12903,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_sendto_ctx_add_flags
 parameter_list|(
 name|krb5_sendto_ctx
@@ -10997,8 +12918,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_sendto_ctx_alloc
 parameter_list|(
 name|krb5_context
@@ -11012,8 +12934,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_sendto_ctx_free
 parameter_list|(
 name|krb5_context
@@ -11026,8 +12949,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
 name|KRB5_LIB_FUNCTION
+name|int
+name|KRB5_LIB_CALL
 name|krb5_sendto_ctx_get_flags
 parameter_list|(
 name|krb5_sendto_ctx
@@ -11037,8 +12961,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_sendto_ctx_set_func
 parameter_list|(
 name|krb5_sendto_ctx
@@ -11055,8 +12980,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_sendto_ctx_set_type
 parameter_list|(
 name|krb5_sendto_ctx
@@ -11069,8 +12995,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_sendto_kdc
 parameter_list|(
 name|krb5_context
@@ -11094,8 +13021,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_sendto_kdc_flags
 parameter_list|(
 name|krb5_context
@@ -11122,8 +13050,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_set_config_files
 parameter_list|(
 name|krb5_context
@@ -11138,8 +13067,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_set_default_in_tkt_etypes
 parameter_list|(
 name|krb5_context
@@ -11154,8 +13084,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_set_default_realm
 parameter_list|(
 name|krb5_context
@@ -11170,8 +13101,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_set_dns_canonicalize_hostname
 parameter_list|(
 name|krb5_context
@@ -11184,8 +13116,44 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
+name|krb5_set_error_message
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_error_code
+comment|/*ret*/
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/*fmt*/
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(format
+parameter_list|(
+name|printf
+parameter_list|,
+function_decl|3
+operator|,
+function_decl|4
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_set_error_string
 parameter_list|(
 name|krb5_context
@@ -11209,14 +13177,19 @@ operator|,
 function_decl|3
 end_function_decl
 
-begin_empty_stmt
+begin_expr_stmt
 unit|)))
-empty_stmt|;
-end_empty_stmt
+name|KRB5_DEPRECATED_FUNCTION
+argument_list|(
+literal|"Use X instead"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_set_extra_addresses
 parameter_list|(
 name|krb5_context
@@ -11231,8 +13204,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_set_fcache_version
 parameter_list|(
 name|krb5_context
@@ -11245,8 +13219,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
+name|krb5_set_home_dir_access
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_boolean
+comment|/*allow*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_set_ignore_addresses
 parameter_list|(
 name|krb5_context
@@ -11261,8 +13251,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_set_kdc_sec_offset
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|int32_t
+comment|/*sec*/
+parameter_list|,
+name|int32_t
+comment|/*usec*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_set_max_time_skew
 parameter_list|(
 name|krb5_context
@@ -11275,8 +13284,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_set_password
 parameter_list|(
 name|krb5_context
@@ -11310,8 +13320,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_set_password_using_ccache
 parameter_list|(
 name|krb5_context
@@ -11344,8 +13355,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_set_real_time
 parameter_list|(
 name|krb5_context
@@ -11361,8 +13373,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_set_send_to_kdc_func
 parameter_list|(
 name|krb5_context
@@ -11379,8 +13392,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_set_use_admin_kdc
 parameter_list|(
 name|krb5_context
@@ -11393,8 +13407,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_set_warn_dest
 parameter_list|(
 name|krb5_context
@@ -11408,8 +13423,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_sname_to_principal
 parameter_list|(
 name|krb5_context
@@ -11436,8 +13452,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_sock_to_principal
 parameter_list|(
 name|krb5_context
@@ -11462,8 +13479,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_sockaddr2address
 parameter_list|(
 name|krb5_context
@@ -11483,8 +13501,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_sockaddr2port
 parameter_list|(
 name|krb5_context
@@ -11504,8 +13523,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
+name|krb5_sockaddr_is_loopback
+parameter_list|(
+specifier|const
+name|struct
+name|sockaddr
+modifier|*
+comment|/*sa*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_sockaddr_uninteresting
 parameter_list|(
 specifier|const
@@ -11518,8 +13553,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_std_usage
 parameter_list|(
 name|int
@@ -11537,8 +13573,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_storage_clear_flags
 parameter_list|(
 name|krb5_storage
@@ -11552,9 +13589,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_storage
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_storage_emem
 parameter_list|(
 name|void
@@ -11563,8 +13601,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_storage_free
 parameter_list|(
 name|krb5_storage
@@ -11575,9 +13614,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_storage
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_storage_from_data
 parameter_list|(
 name|krb5_data
@@ -11588,21 +13628,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_storage
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_storage_from_fd
 parameter_list|(
-name|int
-comment|/*fd*/
+name|krb5_socket_t
+comment|/*fd_in*/
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_storage
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_storage_from_mem
 parameter_list|(
 name|void
@@ -11616,9 +13658,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_storage
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_storage_from_readonly_mem
 parameter_list|(
 specifier|const
@@ -11633,23 +13676,35 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_flags
 name|KRB5_LIB_FUNCTION
+name|krb5_flags
+name|KRB5_LIB_CALL
 name|krb5_storage_get_byteorder
 parameter_list|(
 name|krb5_storage
 modifier|*
 comment|/*sp*/
-parameter_list|,
-name|krb5_flags
-comment|/*byteorder*/
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|int
+name|KRB5_LIB_CALL
+name|krb5_storage_get_eof_code
+parameter_list|(
+name|krb5_storage
+modifier|*
+comment|/*sp*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_storage_is_flags
 parameter_list|(
 name|krb5_storage
@@ -11663,8 +13718,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_ssize_t
 name|KRB5_LIB_FUNCTION
+name|krb5_ssize_t
+name|KRB5_LIB_CALL
 name|krb5_storage_read
 parameter_list|(
 name|krb5_storage
@@ -11682,8 +13738,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|off_t
 name|KRB5_LIB_FUNCTION
+name|off_t
+name|KRB5_LIB_CALL
 name|krb5_storage_seek
 parameter_list|(
 name|krb5_storage
@@ -11700,8 +13757,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_storage_set_byteorder
 parameter_list|(
 name|krb5_storage
@@ -11715,8 +13773,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_storage_set_eof_code
 parameter_list|(
 name|krb5_storage
@@ -11730,8 +13789,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_storage_set_flags
 parameter_list|(
 name|krb5_storage
@@ -11745,8 +13805,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
+name|krb5_storage_set_max_alloc
+parameter_list|(
+name|krb5_storage
+modifier|*
+comment|/*sp*/
+parameter_list|,
+name|size_t
+comment|/*size*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_storage_to_data
 parameter_list|(
 name|krb5_storage
@@ -11761,8 +13838,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_ssize_t
 name|KRB5_LIB_FUNCTION
+name|int
+name|KRB5_LIB_CALL
+name|krb5_storage_truncate
+parameter_list|(
+name|krb5_storage
+modifier|*
+comment|/*sp*/
+parameter_list|,
+name|off_t
+comment|/*offset*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_ssize_t
+name|KRB5_LIB_CALL
 name|krb5_storage_write
 parameter_list|(
 name|krb5_storage
@@ -11781,8 +13875,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_address
 parameter_list|(
 name|krb5_storage
@@ -11796,8 +13891,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_addrs
 parameter_list|(
 name|krb5_storage
@@ -11811,8 +13907,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_authdata
 parameter_list|(
 name|krb5_storage
@@ -11826,8 +13923,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_creds
 parameter_list|(
 name|krb5_storage
@@ -11842,8 +13940,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_creds_tag
 parameter_list|(
 name|krb5_storage
@@ -11858,8 +13957,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_data
 parameter_list|(
 name|krb5_storage
@@ -11873,8 +13973,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_int16
 parameter_list|(
 name|krb5_storage
@@ -11888,8 +13989,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_int32
 parameter_list|(
 name|krb5_storage
@@ -11903,8 +14005,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_int8
 parameter_list|(
 name|krb5_storage
@@ -11918,8 +14021,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_keyblock
 parameter_list|(
 name|krb5_storage
@@ -11933,8 +14037,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_principal
 parameter_list|(
 name|krb5_storage
@@ -11948,8 +14053,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_string
 parameter_list|(
 name|krb5_storage
@@ -11965,8 +14071,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_stringnl
 parameter_list|(
 name|krb5_storage
@@ -11982,8 +14089,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_stringz
 parameter_list|(
 name|krb5_storage
@@ -11999,8 +14107,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_times
 parameter_list|(
 name|krb5_storage
@@ -12014,8 +14123,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_uint16
 parameter_list|(
 name|krb5_storage
@@ -12029,8 +14139,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_uint32
 parameter_list|(
 name|krb5_storage
@@ -12044,8 +14155,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_uint8
 parameter_list|(
 name|krb5_storage
@@ -12059,8 +14171,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_string_to_deltat
 parameter_list|(
 specifier|const
@@ -12076,8 +14189,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_string_to_enctype
 parameter_list|(
 name|krb5_context
@@ -12096,8 +14210,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_string_to_key
 parameter_list|(
 name|krb5_context
@@ -12122,8 +14237,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_string_to_key_data
 parameter_list|(
 name|krb5_context
@@ -12146,8 +14262,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_string_to_key_data_salt
 parameter_list|(
 name|krb5_context
@@ -12170,8 +14287,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_string_to_key_data_salt_opaque
 parameter_list|(
 name|krb5_context
@@ -12197,8 +14315,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_string_to_key_derived
 parameter_list|(
 name|krb5_context
@@ -12223,8 +14342,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_string_to_key_salt
 parameter_list|(
 name|krb5_context
@@ -12249,8 +14369,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_string_to_key_salt_opaque
 parameter_list|(
 name|krb5_context
@@ -12278,8 +14399,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_string_to_keytype
 parameter_list|(
 name|krb5_context
@@ -12294,12 +14416,20 @@ name|krb5_keytype
 modifier|*
 comment|/*keytype*/
 parameter_list|)
-function_decl|;
+function_decl|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function_decl|"Use X instead"
 end_function_decl
 
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_string_to_salttype
 parameter_list|(
 name|krb5_context
@@ -12321,8 +14451,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ticket_get_authorization_data_type
 parameter_list|(
 name|krb5_context
@@ -12343,8 +14474,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ticket_get_client
 parameter_list|(
 name|krb5_context
@@ -12363,8 +14495,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|time_t
 name|KRB5_LIB_FUNCTION
+name|time_t
+name|KRB5_LIB_CALL
 name|krb5_ticket_get_endtime
 parameter_list|(
 name|krb5_context
@@ -12379,8 +14512,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|unsigned
+name|long
+name|KRB5_LIB_CALL
+name|krb5_ticket_get_flags
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+specifier|const
+name|krb5_ticket
+modifier|*
+comment|/*ticket*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ticket_get_server
 parameter_list|(
 name|krb5_context
@@ -12399,8 +14551,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_timeofday
 parameter_list|(
 name|krb5_context
@@ -12414,8 +14567,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_unparse_name
 parameter_list|(
 name|krb5_context
@@ -12433,8 +14587,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_unparse_name_fixed
 parameter_list|(
 name|krb5_context
@@ -12454,8 +14609,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_unparse_name_fixed_flags
 parameter_list|(
 name|krb5_context
@@ -12478,8 +14634,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_unparse_name_fixed_short
 parameter_list|(
 name|krb5_context
@@ -12499,8 +14656,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_unparse_name_flags
 parameter_list|(
 name|krb5_context
@@ -12521,8 +14679,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_unparse_name_short
 parameter_list|(
 name|krb5_context
@@ -12540,8 +14699,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_us_timeofday
 parameter_list|(
 name|krb5_context
@@ -12559,8 +14719,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_vabort
 parameter_list|(
 name|krb5_context
@@ -12596,8 +14757,9 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_vabortx
 parameter_list|(
 name|krb5_context
@@ -12630,8 +14792,9 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_verify_ap_req
 parameter_list|(
 name|krb5_context
@@ -12668,8 +14831,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_verify_ap_req2
 parameter_list|(
 name|krb5_context
@@ -12709,8 +14873,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_verify_authenticator_checksum
 parameter_list|(
 name|krb5_context
@@ -12730,8 +14895,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_verify_checksum
 parameter_list|(
 name|krb5_context
@@ -12758,8 +14924,39 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_verify_checksum_iov
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_crypto
+comment|/*crypto*/
+parameter_list|,
+name|unsigned
+comment|/*usage*/
+parameter_list|,
+name|krb5_crypto_iov
+modifier|*
+comment|/*data*/
+parameter_list|,
+name|unsigned
+name|int
+comment|/*num_data*/
+parameter_list|,
+name|krb5_cksumtype
+modifier|*
+comment|/*type*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_verify_init_creds
 parameter_list|(
 name|krb5_context
@@ -12787,8 +14984,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_verify_init_creds_opt_init
 parameter_list|(
 name|krb5_verify_init_creds_opt
@@ -12799,8 +14997,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_verify_init_creds_opt_set_ap_req_nofail
 parameter_list|(
 name|krb5_verify_init_creds_opt
@@ -12814,8 +15013,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
 name|KRB5_LIB_FUNCTION
+name|int
+name|KRB5_LIB_CALL
 name|krb5_verify_opt_alloc
 parameter_list|(
 name|krb5_context
@@ -12830,8 +15030,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_verify_opt_free
 parameter_list|(
 name|krb5_verify_opt
@@ -12842,8 +15043,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_verify_opt_init
 parameter_list|(
 name|krb5_verify_opt
@@ -12854,8 +15056,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_verify_opt_set_ccache
 parameter_list|(
 name|krb5_verify_opt
@@ -12869,8 +15072,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_verify_opt_set_flags
 parameter_list|(
 name|krb5_verify_opt
@@ -12885,8 +15089,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_verify_opt_set_keytab
 parameter_list|(
 name|krb5_verify_opt
@@ -12900,8 +15105,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_verify_opt_set_secure
 parameter_list|(
 name|krb5_verify_opt
@@ -12915,8 +15121,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_verify_opt_set_service
 parameter_list|(
 name|krb5_verify_opt
@@ -12932,8 +15139,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_verify_user
 parameter_list|(
 name|krb5_context
@@ -12962,8 +15170,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_verify_user_lrealm
 parameter_list|(
 name|krb5_context
@@ -12992,8 +15201,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_verify_user_opt
 parameter_list|(
 name|krb5_context
@@ -13015,8 +15225,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_verr
 parameter_list|(
 name|krb5_context
@@ -13055,8 +15266,9 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_verrx
 parameter_list|(
 name|krb5_context
@@ -13092,8 +15304,9 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_vlog
 parameter_list|(
 name|krb5_context
@@ -13131,8 +15344,9 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_vlog_msg
 parameter_list|(
 name|krb5_context
@@ -13175,8 +15389,81 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
+name|krb5_vprepend_error_message
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_error_code
+comment|/*ret*/
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/*fmt*/
+parameter_list|,
+name|va_list
+comment|/*args*/
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(format
+parameter_list|(
+name|printf
+parameter_list|,
+function_decl|3
+operator|,
+function_decl|0
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
+name|krb5_vset_error_message
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+name|krb5_error_code
+comment|/*ret*/
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/*fmt*/
+parameter_list|,
+name|va_list
+comment|/*args*/
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(format
+parameter_list|(
+name|printf
+parameter_list|,
+function_decl|3
+operator|,
+function_decl|0
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_vset_error_string
 parameter_list|(
 name|krb5_context
@@ -13201,14 +15488,19 @@ operator|,
 function_decl|0
 end_function_decl
 
-begin_empty_stmt
+begin_expr_stmt
 unit|)))
-empty_stmt|;
-end_empty_stmt
+name|KRB5_DEPRECATED_FUNCTION
+argument_list|(
+literal|"Use X instead"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_vwarn
 parameter_list|(
 name|krb5_context
@@ -13242,8 +15534,9 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_vwarnx
 parameter_list|(
 name|krb5_context
@@ -13274,8 +15567,9 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_warn
 parameter_list|(
 name|krb5_context
@@ -13308,8 +15602,9 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_warnx
 parameter_list|(
 name|krb5_context
@@ -13339,8 +15634,9 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_write_message
 parameter_list|(
 name|krb5_context
@@ -13357,8 +15653,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_write_priv_message
 parameter_list|(
 name|krb5_context
@@ -13378,8 +15675,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_write_safe_message
 parameter_list|(
 name|krb5_context
@@ -13399,8 +15697,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_xfree
 parameter_list|(
 name|void
@@ -13421,6 +15720,12 @@ unit|}
 endif|#
 directive|endif
 end_endif
+
+begin_undef
+undef|#
+directive|undef
+name|KRB5_DEPRECATED_FUNCTION
+end_undef
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2006 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2006 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -15,11 +15,28 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_SOCKET_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/socket.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_NETINET_IN_H
+end_ifdef
 
 begin_include
 include|#
@@ -27,16 +44,32 @@ directive|include
 file|<netinet/in.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_NETDB_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<netdb.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: init_c.c 21972 2007-10-18 19:11:15Z lha $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -915,12 +948,13 @@ return|;
 block|}
 name|ret
 operator|=
-name|krb5_cc_gen_new
+name|krb5_cc_new_unique
 argument_list|(
 name|context
 argument_list|,
-operator|&
-name|krb5_mcc_ops
+name|krb5_cc_type_memory
+argument_list|,
+name|NULL
 argument_list|,
 operator|&
 name|id
@@ -992,7 +1026,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check the credential cache `id´ to figure out what principal to use  * when talking to the kadmind. If there is a initial kadmin/admin@  * credential in the cache, use that client principal. Otherwise, use  * the client principals first component and add /admin to the  * principal.  */
+comment|/*  * Check the credential cache `idÂ´ to figure out what principal to use  * when talking to the kadmind. If there is a initial kadmin/admin@  * credential in the cache, use that client principal. Otherwise, use  * the client principals first component and add /admin to the  * principal.  */
 end_comment
 
 begin_function
@@ -1508,7 +1542,7 @@ condition|(
 name|ret
 condition|)
 block|{
-comment|/*  	     * No client was specified by the caller and we cannot 	     * determine the client from a credentials cache. 	     */
+comment|/* 	     * No client was specified by the caller and we cannot 	     * determine the client from a credentials cache. 	     */
 specifier|const
 name|char
 modifier|*
@@ -1526,9 +1560,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|KADM5_FAILURE
 argument_list|,
 literal|"Unable to find local user name"
 argument_list|)
@@ -1583,6 +1619,8 @@ if|if
 condition|(
 name|id
 operator|&&
+name|client
+operator|&&
 operator|(
 name|default_client
 operator|==
@@ -1596,6 +1634,8 @@ name|client
 argument_list|,
 name|default_client
 argument_list|)
+operator|!=
+literal|0
 operator|)
 condition|)
 block|{
@@ -1742,8 +1782,10 @@ decl_stmt|;
 name|krb5_ccache
 name|cc
 decl_stmt|;
-name|int
+name|rk_socket_t
 name|s
+init|=
+name|rk_INVALID_SOCKET
 decl_stmt|;
 name|struct
 name|addrinfo
@@ -1875,7 +1917,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -1943,7 +1985,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -1959,7 +2001,7 @@ argument_list|,
 name|hostname
 argument_list|)
 expr_stmt|;
-name|close
+name|rk_closesocket
 argument_list|(
 name|s
 argument_list|)
@@ -1980,7 +2022,7 @@ argument_list|(
 name|ai
 argument_list|)
 expr_stmt|;
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -2040,7 +2082,7 @@ argument_list|(
 name|ai
 argument_list|)
 expr_stmt|;
-name|close
+name|rk_closesocket
 argument_list|(
 name|s
 argument_list|)
@@ -2092,12 +2134,12 @@ argument_list|(
 name|ai
 argument_list|)
 expr_stmt|;
-name|close
+name|rk_closesocket
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -2148,7 +2190,7 @@ argument_list|,
 name|cc
 argument_list|)
 expr_stmt|;
-name|close
+name|rk_closesocket
 argument_list|(
 name|s
 argument_list|)
@@ -2292,7 +2334,7 @@ argument_list|(
 name|ai
 argument_list|)
 expr_stmt|;
-name|close
+name|rk_closesocket
 argument_list|(
 name|s
 argument_list|)
@@ -2325,7 +2367,7 @@ operator|==
 name|KRB5_SENDAUTH_BADAPPLVERS
 condition|)
 block|{
-name|close
+name|rk_closesocket
 argument_list|(
 name|s
 argument_list|)
@@ -2359,7 +2401,7 @@ argument_list|(
 name|ai
 argument_list|)
 expr_stmt|;
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -2386,7 +2428,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|close
+name|rk_closesocket
 argument_list|(
 name|s
 argument_list|)
@@ -2396,7 +2438,7 @@ argument_list|(
 name|ai
 argument_list|)
 expr_stmt|;
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -2451,7 +2493,7 @@ condition|(
 name|ret
 condition|)
 block|{
-name|close
+name|rk_closesocket
 argument_list|(
 name|s
 argument_list|)
@@ -3273,7 +3315,7 @@ literal|0
 end_if
 
 begin_endif
-unit|kadm5_ret_t  kadm5_init(char *client_name, char *pass, 	   char *service_name, 	   kadm5_config_params *realm_params, 	   unsigned long struct_version, 	   unsigned long api_version, 	   void **server_handle) { }
+unit|kadm5_ret_t kadm5_init(char *client_name, char *pass, 	   char *service_name, 	   kadm5_config_params *realm_params, 	   unsigned long struct_version, 	   unsigned long api_version, 	   void **server_handle) { }
 endif|#
 directive|endif
 end_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2006 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 2006 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -14,14 +14,6 @@ include|#
 directive|include
 file|<pkcs10_asn1.h>
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: req.c 21344 2007-06-26 14:22:34Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_struct
 struct|struct
@@ -49,7 +41,7 @@ end_comment
 
 begin_function
 name|int
-name|_hx509_request_init
+name|hx509_request_init
 parameter_list|(
 name|hx509_context
 name|context
@@ -92,7 +84,7 @@ end_function
 
 begin_function
 name|void
-name|_hx509_request_free
+name|hx509_request_free
 parameter_list|(
 name|hx509_request
 modifier|*
@@ -183,7 +175,7 @@ end_function
 
 begin_function
 name|int
-name|_hx509_request_set_name
+name|hx509_request_set_name
 parameter_list|(
 name|hx509_context
 name|context
@@ -245,7 +237,7 @@ end_function
 
 begin_function
 name|int
-name|_hx509_request_get_name
+name|hx509_request_get_name
 parameter_list|(
 name|hx509_context
 name|context
@@ -299,7 +291,7 @@ end_function
 
 begin_function
 name|int
-name|_hx509_request_set_SubjectPublicKeyInfo
+name|hx509_request_set_SubjectPublicKeyInfo
 parameter_list|(
 name|hx509_context
 name|context
@@ -337,7 +329,7 @@ end_function
 
 begin_function
 name|int
-name|_hx509_request_get_SubjectPublicKeyInfo
+name|hx509_request_get_SubjectPublicKeyInfo
 parameter_list|(
 name|hx509_context
 name|context
@@ -522,8 +514,23 @@ operator|.
 name|u
 operator|.
 name|dNSName
+operator|.
+name|data
 operator|=
 name|rk_UNCONST
+argument_list|(
+name|hostname
+argument_list|)
+expr_stmt|;
+name|name
+operator|.
+name|u
+operator|.
+name|dNSName
+operator|.
+name|length
+operator|=
+name|strlen
 argument_list|(
 name|hostname
 argument_list|)
@@ -586,8 +593,23 @@ operator|.
 name|u
 operator|.
 name|dNSName
+operator|.
+name|data
 operator|=
 name|rk_UNCONST
+argument_list|(
+name|email
+argument_list|)
+expr_stmt|;
+name|name
+operator|.
+name|u
+operator|.
+name|dNSName
+operator|.
+name|length
+operator|=
+name|strlen
 argument_list|(
 name|email
 argument_list|)
@@ -1023,7 +1045,7 @@ expr_stmt|;
 comment|/* XXX PEM request */
 name|ret
 operator|=
-name|_hx509_map_file
+name|rk_undumpdata
 argument_list|(
 name|path
 argument_list|,
@@ -1032,8 +1054,6 @@ name|p
 argument_list|,
 operator|&
 name|len
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1073,11 +1093,9 @@ operator|&
 name|size
 argument_list|)
 expr_stmt|;
-name|_hx509_unmap_file
+name|rk_xfree
 argument_list|(
 name|p
-argument_list|,
-name|len
 argument_list|)
 expr_stmt|;
 if|if
@@ -1104,7 +1122,7 @@ return|;
 block|}
 name|ret
 operator|=
-name|_hx509_request_init
+name|hx509_request_init
 argument_list|(
 name|context
 argument_list|,
@@ -1135,7 +1153,7 @@ name|certificationRequestInfo
 expr_stmt|;
 name|ret
 operator|=
-name|_hx509_request_set_SubjectPublicKeyInfo
+name|hx509_request_set_SubjectPublicKeyInfo
 argument_list|(
 name|context
 argument_list|,
@@ -1159,7 +1177,7 @@ operator|&
 name|r
 argument_list|)
 expr_stmt|;
-name|_hx509_request_free
+name|hx509_request_free
 argument_list|(
 name|req
 argument_list|)
@@ -1192,7 +1210,7 @@ operator|&
 name|r
 argument_list|)
 expr_stmt|;
-name|_hx509_request_free
+name|hx509_request_free
 argument_list|(
 name|req
 argument_list|)
@@ -1203,7 +1221,7 @@ return|;
 block|}
 name|ret
 operator|=
-name|_hx509_request_set_name
+name|hx509_request_set_name
 argument_list|(
 name|context
 argument_list|,
@@ -1230,7 +1248,7 @@ condition|(
 name|ret
 condition|)
 block|{
-name|_hx509_request_free
+name|hx509_request_free
 argument_list|(
 name|req
 argument_list|)

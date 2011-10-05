@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: cmds.c 15673 2005-07-19 18:19:33Z lha $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -8451,6 +8451,30 @@ argument_list|,
 literal|' '
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Usage: %s missing space\n"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|code
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|proxy

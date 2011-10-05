@@ -32,6 +32,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_ntlm_accept_sec_context
 parameter_list|(
 name|OM_uint32
@@ -82,6 +83,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_ntlm_acquire_cred
 parameter_list|(
 name|OM_uint32
@@ -119,6 +121,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_ntlm_add_cred
 parameter_list|(
 name|OM_uint32
@@ -182,6 +185,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_ntlm_canonicalize_name
 parameter_list|(
 name|OM_uint32
@@ -205,6 +209,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_ntlm_compare_name
 parameter_list|(
 name|OM_uint32
@@ -228,6 +233,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_ntlm_context_time
 parameter_list|(
 name|OM_uint32
@@ -247,6 +253,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_ntlm_delete_sec_context
 parameter_list|(
 name|OM_uint32
@@ -265,6 +272,23 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
+name|_gss_ntlm_destroy_cred
+parameter_list|(
+name|OM_uint32
+modifier|*
+comment|/*minor_status*/
+parameter_list|,
+name|gss_cred_id_t
+modifier|*
+comment|/*cred_handle*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_ntlm_display_name
 parameter_list|(
 name|OM_uint32
@@ -287,6 +311,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_ntlm_display_status
 parameter_list|(
 name|OM_uint32
@@ -315,6 +340,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_ntlm_duplicate_name
 parameter_list|(
 name|OM_uint32
@@ -334,6 +360,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_ntlm_export_name
 parameter_list|(
 name|OM_uint32
@@ -352,6 +379,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_ntlm_export_sec_context
 parameter_list|(
 name|OM_uint32
@@ -370,6 +398,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_ntlm_get_mic
 parameter_list|(
 name|OM_uint32
@@ -410,6 +439,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_ntlm_import_name
 parameter_list|(
 name|OM_uint32
@@ -433,6 +463,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_ntlm_import_sec_context
 parameter_list|(
 name|OM_uint32
@@ -467,6 +498,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_ntlm_init_sec_context
 parameter_list|(
 name|OM_uint32
@@ -523,6 +555,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_ntlm_inquire_context
 parameter_list|(
 name|OM_uint32
@@ -566,6 +599,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_ntlm_inquire_cred
 parameter_list|(
 name|OM_uint32
@@ -597,6 +631,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_ntlm_inquire_cred_by_mech
 parameter_list|(
 name|OM_uint32
@@ -632,6 +667,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_ntlm_inquire_mechs_for_name
 parameter_list|(
 name|OM_uint32
@@ -651,6 +687,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_ntlm_inquire_names_for_mech
 parameter_list|(
 name|OM_uint32
@@ -670,6 +707,60 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
+name|_gss_ntlm_inquire_sec_context_by_oid
+parameter_list|(
+name|OM_uint32
+modifier|*
+comment|/*minor_status*/
+parameter_list|,
+specifier|const
+name|gss_ctx_id_t
+comment|/*context_handle*/
+parameter_list|,
+specifier|const
+name|gss_OID
+comment|/*desired_object*/
+parameter_list|,
+name|gss_buffer_set_t
+modifier|*
+comment|/*data_set*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|GSSAPI_CALLCONV
+name|_gss_ntlm_iter_creds_f
+parameter_list|(
+name|OM_uint32
+comment|/*flags*/
+parameter_list|,
+name|void
+modifier|*
+name|userctx
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+comment|/*cred_iter*/
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|gss_OID
+parameter_list|,
+name|gss_cred_id_t
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_ntlm_process_context_token
 parameter_list|(
 name|OM_uint32
@@ -689,6 +780,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_ntlm_release_cred
 parameter_list|(
 name|OM_uint32
@@ -704,6 +796,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_ntlm_release_name
 parameter_list|(
 name|OM_uint32
@@ -745,6 +838,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_ntlm_unwrap
 parameter_list|(
 name|OM_uint32
@@ -775,6 +869,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_ntlm_verify_mic
 parameter_list|(
 name|OM_uint32
@@ -802,6 +897,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_ntlm_wrap
 parameter_list|(
 name|OM_uint32
@@ -834,6 +930,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_ntlm_wrap_size_limit
 parameter_list|(
 name|OM_uint32

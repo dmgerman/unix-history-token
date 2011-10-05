@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2001, 2003 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2001, 2003 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -8,14 +8,6 @@ include|#
 directive|include
 file|"krb5_locl.h"
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: transited.c 21745 2007-07-31 16:11:25Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* this is an attempt at one of the most horrible `compression'    schemes that has ever been invented; it's so amazingly brain-dead    that words can not describe it, and all this just to save a few    silly bytes */
@@ -124,24 +116,15 @@ modifier|*
 name|to
 parameter_list|)
 block|{
-specifier|const
-name|char
-modifier|*
-name|p
-decl_stmt|;
-name|struct
-name|tr_realm
-modifier|*
-name|path
-init|=
-name|r
-operator|->
-name|next
-decl_stmt|;
 name|struct
 name|tr_realm
 modifier|*
 name|tmp
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|p
 decl_stmt|;
 if|if
 condition|(
@@ -221,7 +204,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -264,29 +247,27 @@ name|tmp
 operator|==
 name|NULL
 condition|)
-block|{
-name|krb5_set_error_string
+return|return
+name|krb5_enomem
 argument_list|(
 name|context
-argument_list|,
-literal|"malloc: out of memory"
 argument_list|)
-expr_stmt|;
-return|return
-name|ENOMEM
 return|;
-block|}
 name|tmp
 operator|->
 name|next
 operator|=
-name|path
+name|r
+operator|->
+name|next
 expr_stmt|;
-name|path
+name|r
+operator|->
+name|next
 operator|=
 name|tmp
 expr_stmt|;
-name|path
+name|tmp
 operator|->
 name|realm
 operator|=
@@ -297,7 +278,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|path
+name|tmp
 operator|->
 name|realm
 operator|==
@@ -308,20 +289,21 @@ name|r
 operator|->
 name|next
 operator|=
-name|path
+name|tmp
+operator|->
+name|next
 expr_stmt|;
-comment|/* XXX */
-name|krb5_set_error_string
+name|free
 argument_list|(
-name|context
-argument_list|,
-literal|"malloc: out of memory"
+name|tmp
 argument_list|)
 expr_stmt|;
 return|return
-name|ENOMEM
+name|krb5_enomem
+argument_list|(
+name|context
+argument_list|)
 return|;
-empty_stmt|;
 block|}
 block|}
 block|}
@@ -377,18 +359,9 @@ name|p
 operator|==
 name|from
 condition|)
-block|{
-name|r
-operator|->
-name|next
-operator|=
-name|path
-expr_stmt|;
-comment|/* XXX */
 return|return
 name|KRB5KDC_ERR_POLICY
 return|;
-block|}
 if|if
 condition|(
 name|strncmp
@@ -424,29 +397,27 @@ name|tmp
 operator|==
 name|NULL
 condition|)
-block|{
-name|krb5_set_error_string
+return|return
+name|krb5_enomem
 argument_list|(
 name|context
-argument_list|,
-literal|"malloc: out of memory"
 argument_list|)
-expr_stmt|;
-return|return
-name|ENOMEM
 return|;
-block|}
 name|tmp
 operator|->
 name|next
 operator|=
-name|path
+name|r
+operator|->
+name|next
 expr_stmt|;
-name|path
+name|r
+operator|->
+name|next
 operator|=
 name|tmp
 expr_stmt|;
-name|path
+name|tmp
 operator|->
 name|realm
 operator|=
@@ -461,7 +432,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|path
+name|tmp
 operator|->
 name|realm
 operator|==
@@ -472,23 +443,25 @@ name|r
 operator|->
 name|next
 operator|=
-name|path
+name|tmp
+operator|->
+name|next
 expr_stmt|;
-comment|/* XXX */
-name|krb5_set_error_string
+name|free
 argument_list|(
-name|context
-argument_list|,
-literal|"malloc: out of memory"
+name|tmp
 argument_list|)
 expr_stmt|;
 return|return
-name|ENOMEM
+name|krb5_enomem
+argument_list|(
+name|context
+argument_list|)
 return|;
 block|}
 name|memcpy
 argument_list|(
-name|path
+name|tmp
 operator|->
 name|realm
 argument_list|,
@@ -499,7 +472,7 @@ operator|-
 name|from
 argument_list|)
 expr_stmt|;
-name|path
+name|tmp
 operator|->
 name|realm
 index|[
@@ -517,7 +490,7 @@ block|}
 block|}
 else|else
 block|{
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -526,12 +499,6 @@ return|return
 name|KRB5KDC_ERR_POLICY
 return|;
 block|}
-name|r
-operator|->
-name|next
-operator|=
-name|path
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -804,15 +771,11 @@ argument_list|(
 name|realms
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+return|return
+name|krb5_enomem
 argument_list|(
 name|context
-argument_list|,
-literal|"malloc: out of memory"
 argument_list|)
-expr_stmt|;
-return|return
-name|ENOMEM
 return|;
 block|}
 name|r
@@ -889,15 +852,11 @@ argument_list|(
 name|realms
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+return|return
+name|krb5_enomem
 argument_list|(
 name|context
-argument_list|,
-literal|"malloc: out of memory"
 argument_list|)
-expr_stmt|;
-return|return
-name|ENOMEM
 return|;
 block|}
 name|strlcpy
@@ -1329,18 +1288,12 @@ name|tmp
 operator|==
 name|NULL
 condition|)
-block|{
-name|krb5_set_error_string
+return|return
+name|krb5_enomem
 argument_list|(
 name|context
-argument_list|,
-literal|"malloc: out of memory"
 argument_list|)
-expr_stmt|;
-return|return
-name|ENOMEM
 return|;
-block|}
 name|memcpy
 argument_list|(
 name|tmp
@@ -1385,15 +1338,11 @@ operator|*
 name|realms
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+return|return
+name|krb5_enomem
 argument_list|(
 name|context
-argument_list|,
-literal|"malloc: out of memory"
 argument_list|)
-expr_stmt|;
-return|return
-name|ENOMEM
 return|;
 block|}
 operator|*
@@ -1443,15 +1392,11 @@ operator|*
 name|realms
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+return|return
+name|krb5_enomem
 argument_list|(
 name|context
-argument_list|,
-literal|"malloc: out of memory"
 argument_list|)
-expr_stmt|;
-return|return
-name|ENOMEM
 return|;
 block|}
 name|memcpy
@@ -1498,15 +1443,11 @@ operator|*
 name|realms
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+return|return
+name|krb5_enomem
 argument_list|(
 name|context
-argument_list|,
-literal|"malloc: out of memory"
 argument_list|)
-expr_stmt|;
-return|return
-name|ENOMEM
 return|;
 block|}
 operator|*
@@ -1527,8 +1468,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_domain_x500_decode
 parameter_list|(
 name|krb5_context
@@ -1543,6 +1485,7 @@ modifier|*
 modifier|*
 name|realms
 parameter_list|,
+name|unsigned
 name|int
 modifier|*
 name|num_realms
@@ -1666,11 +1609,6 @@ return|return
 name|ret
 return|;
 comment|/* remove empty components and count realms */
-name|q
-operator|=
-operator|&
-name|r
-expr_stmt|;
 operator|*
 name|num_realms
 operator|=
@@ -1678,17 +1616,22 @@ literal|0
 expr_stmt|;
 for|for
 control|(
-name|p
+name|q
 operator|=
+operator|&
 name|r
 init|;
-name|p
+operator|*
+name|q
 condition|;
 control|)
 block|{
 if|if
 condition|(
-name|p
+operator|(
+operator|*
+name|q
+operator|)
 operator|->
 name|realm
 index|[
@@ -1698,6 +1641,21 @@ operator|==
 literal|'\0'
 condition|)
 block|{
+name|p
+operator|=
+operator|*
+name|q
+expr_stmt|;
+operator|*
+name|q
+operator|=
+operator|(
+operator|*
+name|q
+operator|)
+operator|->
+name|next
+expr_stmt|;
 name|free
 argument_list|(
 name|p
@@ -1705,22 +1663,10 @@ operator|->
 name|realm
 argument_list|)
 expr_stmt|;
-operator|*
-name|q
-operator|=
-name|p
-operator|->
-name|next
-expr_stmt|;
 name|free
 argument_list|(
 name|p
 argument_list|)
-expr_stmt|;
-name|p
-operator|=
-operator|*
-name|q
 expr_stmt|;
 block|}
 else|else
@@ -1728,13 +1674,10 @@ block|{
 name|q
 operator|=
 operator|&
-name|p
-operator|->
-name|next
-expr_stmt|;
-name|p
-operator|=
-name|p
+operator|(
+operator|*
+name|q
+operator|)
 operator|->
 name|next
 expr_stmt|;
@@ -1748,11 +1691,6 @@ block|}
 block|}
 if|if
 condition|(
-operator|*
-name|num_realms
-operator|<
-literal|0
-operator|||
 operator|*
 name|num_realms
 operator|+
@@ -1801,7 +1739,10 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|ENOMEM
+name|krb5_enomem
+argument_list|(
+name|context
+argument_list|)
 return|;
 operator|*
 name|realms
@@ -1845,8 +1786,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_domain_x500_encode
 parameter_list|(
 name|char
@@ -1854,6 +1796,7 @@ modifier|*
 modifier|*
 name|realms
 parameter_list|,
+name|unsigned
 name|int
 name|num_realms
 parameter_list|,
@@ -1873,6 +1816,7 @@ name|len
 init|=
 literal|0
 decl_stmt|;
+name|unsigned
 name|int
 name|i
 decl_stmt|;
@@ -1976,12 +1920,6 @@ block|{
 if|if
 condition|(
 name|i
-operator|&&
-name|i
-operator|<
-name|num_realms
-operator|-
-literal|1
 condition|)
 name|strlcat
 argument_list|(
@@ -2054,8 +1992,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_check_transited
 parameter_list|(
 name|krb5_context
@@ -2071,6 +2010,7 @@ name|krb5_realm
 modifier|*
 name|realms
 parameter_list|,
+name|unsigned
 name|int
 name|num_realms
 parameter_list|,
@@ -2089,7 +2029,7 @@ modifier|*
 modifier|*
 name|p
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 if|if
@@ -2181,11 +2121,19 @@ argument_list|(
 name|tr_realms
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"no transit through realm %s"
+name|KRB5KRB_AP_ERR_ILL_CR_TKT
+argument_list|,
+name|N_
+argument_list|(
+literal|"no transit allowed "
+literal|"through realm %s"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|realms
 index|[
@@ -2219,8 +2167,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_check_transited_realms
 parameter_list|(
 name|krb5_context
@@ -2233,6 +2182,7 @@ specifier|const
 modifier|*
 name|realms
 parameter_list|,
+name|unsigned
 name|int
 name|num_realms
 parameter_list|,
@@ -2241,7 +2191,7 @@ modifier|*
 name|bad_realm
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|int
@@ -2323,19 +2273,27 @@ operator|==
 literal|0
 condition|)
 block|{
-name|krb5_set_error_string
+name|ret
+operator|=
+name|KRB5KRB_AP_ERR_ILL_CR_TKT
+expr_stmt|;
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"no transit through realm %s"
+name|ret
+argument_list|,
+name|N_
+argument_list|(
+literal|"no transit allowed "
+literal|"through realm %s"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 operator|*
 name|p
 argument_list|)
-expr_stmt|;
-name|ret
-operator|=
-name|KRB5KRB_AP_ERR_ILL_CR_TKT
 expr_stmt|;
 if|if
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2006 - 2007 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 2006 - 2007 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -27,13 +27,11 @@ directive|include
 file|<hx509.h>
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: kx509.c 21607 2007-07-17 07:04:52Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KX509
+end_ifdef
 
 begin_comment
 comment|/*  *  */
@@ -50,6 +48,7 @@ parameter_list|,
 name|size_t
 name|len
 parameter_list|,
+name|struct
 name|Kx509Request
 modifier|*
 name|req
@@ -180,9 +179,11 @@ name|digest
 argument_list|)
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|KRB5KDC_ERR_PREAUTH_FAILED
 argument_list|,
 literal|"pk-hash have wrong length: %lu"
 argument_list|,
@@ -318,9 +319,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|KRB5KDC_ERR_PREAUTH_FAILED
 argument_list|,
 literal|"pk-hash is not correct"
 argument_list|)
@@ -352,6 +355,9 @@ modifier|*
 name|rep
 parameter_list|)
 block|{
+name|krb5_error_code
+name|ret
+decl_stmt|;
 name|HMAC_CTX
 name|ctx
 decl_stmt|;
@@ -384,42 +390,24 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
+name|krb5_data_alloc
+argument_list|(
 name|rep
 operator|->
 name|hash
-operator|->
-name|length
-operator|=
+argument_list|,
 name|HMAC_size
 argument_list|(
 operator|&
 name|ctx
 argument_list|)
-expr_stmt|;
-name|rep
-operator|->
-name|hash
-operator|->
-name|data
-operator|=
-name|malloc
-argument_list|(
-name|rep
-operator|->
-name|hash
-operator|->
-name|length
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|rep
-operator|->
-name|hash
-operator|->
-name|data
-operator|==
-name|NULL
+name|ret
 condition|)
 block|{
 name|HMAC_CTX_cleanup
@@ -428,11 +416,13 @@ operator|&
 name|ctx
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"out of memory"
+name|ENOMEM
+argument_list|,
+literal|"malloc: out of memory"
 argument_list|)
 expr_stmt|;
 return|return
@@ -582,7 +572,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Build a certifate for `principal´ that will expire at `endtime´.  */
+comment|/*  * Build a certifate for `principalÂ´ that will expire at `endtimeÂ´.  */
 end_comment
 
 begin_function
@@ -613,11 +603,6 @@ modifier|*
 name|certificate
 parameter_list|)
 block|{
-name|hx509_context
-name|hxctx
-init|=
-name|NULL
-decl_stmt|;
 name|hx509_ca_tbs
 name|tbs
 init|=
@@ -672,42 +657,13 @@ return|;
 block|}
 name|ret
 operator|=
-name|hx509_context_init
-argument_list|(
-operator|&
-name|hxctx
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret
-condition|)
-goto|goto
-name|out
-goto|;
-name|ret
-operator|=
-name|hx509_env_init
-argument_list|(
-name|hxctx
-argument_list|,
-operator|&
-name|env
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret
-condition|)
-goto|goto
-name|out
-goto|;
-name|ret
-operator|=
 name|hx509_env_add
 argument_list|(
-name|hxctx
+name|context
+operator|->
+name|hx509ctx
 argument_list|,
+operator|&
 name|env
 argument_list|,
 literal|"principal-name"
@@ -741,7 +697,9 @@ name|ret
 operator|=
 name|hx509_certs_init
 argument_list|(
-name|hxctx
+name|context
+operator|->
+name|hx509ctx
 argument_list|,
 name|config
 operator|->
@@ -783,7 +741,9 @@ name|ret
 operator|=
 name|hx509_query_alloc
 argument_list|(
-name|hxctx
+name|context
+operator|->
+name|hx509ctx
 argument_list|,
 operator|&
 name|q
@@ -822,7 +782,9 @@ name|ret
 operator|=
 name|hx509_certs_find
 argument_list|(
-name|hxctx
+name|context
+operator|->
+name|hx509ctx
 argument_list|,
 name|certs
 argument_list|,
@@ -834,7 +796,9 @@ argument_list|)
 expr_stmt|;
 name|hx509_query_free
 argument_list|(
-name|hxctx
+name|context
+operator|->
+name|hx509ctx
 argument_list|,
 name|q
 argument_list|)
@@ -874,7 +838,9 @@ name|ret
 operator|=
 name|hx509_ca_tbs_init
 argument_list|(
-name|hxctx
+name|context
+operator|->
+name|hx509ctx
 argument_list|,
 operator|&
 name|tbs
@@ -933,8 +899,8 @@ name|ret
 operator|=
 name|der_copy_oid
 argument_list|(
-name|oid_id_pkcs1_rsaEncryption
-argument_list|()
+operator|&
+name|asn1_oid_id_pkcs1_rsaEncryption
 argument_list|,
 operator|&
 name|spki
@@ -969,7 +935,9 @@ name|ret
 operator|=
 name|hx509_ca_tbs_set_spki
 argument_list|(
-name|hxctx
+name|context
+operator|->
+name|hx509ctx
 argument_list|,
 name|tbs
 argument_list|,
@@ -1006,7 +974,9 @@ name|ret
 operator|=
 name|hx509_certs_init
 argument_list|(
-name|hxctx
+name|context
+operator|->
+name|hx509ctx
 argument_list|,
 name|config
 operator|->
@@ -1048,7 +1018,9 @@ name|ret
 operator|=
 name|hx509_get_one_cert
 argument_list|(
-name|hxctx
+name|context
+operator|->
+name|hx509ctx
 argument_list|,
 name|certs
 argument_list|,
@@ -1090,7 +1062,9 @@ name|ret
 operator|=
 name|hx509_ca_tbs_set_template
 argument_list|(
-name|hxctx
+name|context
+operator|->
+name|hx509ctx
 argument_list|,
 name|tbs
 argument_list|,
@@ -1118,7 +1092,9 @@ goto|;
 block|}
 name|hx509_ca_tbs_set_notAfter
 argument_list|(
-name|hxctx
+name|context
+operator|->
+name|hx509ctx
 argument_list|,
 name|tbs
 argument_list|,
@@ -1127,7 +1103,9 @@ argument_list|)
 expr_stmt|;
 name|hx509_ca_tbs_subject_expand
 argument_list|(
-name|hxctx
+name|context
+operator|->
+name|hx509ctx
 argument_list|,
 name|tbs
 argument_list|,
@@ -1144,7 +1122,9 @@ name|ret
 operator|=
 name|hx509_ca_sign
 argument_list|(
-name|hxctx
+name|context
+operator|->
+name|hx509ctx
 argument_list|,
 name|tbs
 argument_list|,
@@ -1176,7 +1156,9 @@ name|ret
 operator|=
 name|hx509_cert_binary
 argument_list|(
-name|hxctx
+name|context
+operator|->
+name|hx509ctx
 argument_list|,
 name|cert
 argument_list|,
@@ -1195,12 +1177,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-name|hx509_context_free
-argument_list|(
-operator|&
-name|hxctx
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1235,19 +1211,11 @@ argument_list|(
 name|signer
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|hxctx
-condition|)
-name|hx509_context_free
-argument_list|(
-operator|&
-name|hxctx
-argument_list|)
-expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"cert creation failed"
 argument_list|)
@@ -1274,6 +1242,7 @@ modifier|*
 name|config
 parameter_list|,
 specifier|const
+name|struct
 name|Kx509Request
 modifier|*
 name|req
@@ -1574,17 +1543,86 @@ operator|!=
 name|TRUE
 condition|)
 block|{
+name|char
+modifier|*
+name|expected
+decl_stmt|,
+modifier|*
+name|used
+decl_stmt|;
+name|ret
+operator|=
+name|krb5_unparse_name
+argument_list|(
+name|context
+argument_list|,
+name|sprincipal
+argument_list|,
+operator|&
+name|expected
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+goto|goto
+name|out
+goto|;
+name|ret
+operator|=
+name|krb5_unparse_name
+argument_list|(
+name|context
+argument_list|,
+name|principal
+argument_list|,
+operator|&
+name|used
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+block|{
+name|krb5_xfree
+argument_list|(
+name|expected
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 name|ret
 operator|=
 name|KRB5KDC_ERR_SERVER_NOMATCH
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"User %s used wrong Kx509 service principal"
+name|ret
+argument_list|,
+literal|"User %s used wrong Kx509 service "
+literal|"principal, expected: %s, used %s"
 argument_list|,
 name|cname
+argument_list|,
+name|expected
+argument_list|,
+name|used
+argument_list|)
+expr_stmt|;
+name|krb5_xfree
+argument_list|(
+name|expected
+argument_list|)
+expr_stmt|;
+name|krb5_xfree
+argument_list|(
+name|used
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1607,15 +1645,27 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
-operator|||
+operator|==
+literal|0
+operator|&&
 name|key
 operator|==
 name|NULL
 condition|)
+name|ret
+operator|=
+name|KRB5KDC_ERR_NULL_KEY
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"Kx509 can't get session key"
 argument_list|)
@@ -1696,7 +1746,15 @@ name|pk_key
 operator|.
 name|length
 condition|)
-empty_stmt|;
+block|{
+name|ret
+operator|=
+name|ASN1_EXTRA_DATA
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 block|}
 name|ALLOC
 argument_list|(
@@ -1832,9 +1890,11 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"Failed to encode kx509 reply"
 argument_list|)
@@ -2055,6 +2115,15 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KX509 */
+end_comment
 
 end_unit
 

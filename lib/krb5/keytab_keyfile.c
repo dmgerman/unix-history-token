@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2007 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2007 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -9,20 +9,18 @@ directive|include
 file|"krb5_locl.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: keytab_keyfile.c 20695 2007-05-30 14:09:09Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HEIMDAL_SMALLER
+end_ifndef
 
 begin_comment
 comment|/* afs keyfile operations --------------------------------------- */
 end_comment
 
 begin_comment
-comment|/*  * Minimum tools to handle the AFS KeyFile.  *   * Format of the KeyFile is:  *<int32_t numkeys> {[<int32_t kvno><char[8] deskey>] * numkeys}  *  * It just adds to the end of the keyfile, deleting isn't implemented.  * Use your favorite text/hex editor to delete keys.  *  */
+comment|/*  * Minimum tools to handle the AFS KeyFile.  *  * Format of the KeyFile is:  *<int32_t numkeys> {[<int32_t kvno><char[8] deskey>] * numkeys}  *  * It just adds to the end of the keyfile, deleting isn't implemented.  * Use your favorite text/hex editor to delete keys.  *  */
 end_comment
 
 begin_define
@@ -43,7 +41,7 @@ begin_struct
 struct|struct
 name|akf_data
 block|{
-name|int
+name|uint32_t
 name|num_entries
 decl_stmt|;
 name|char
@@ -116,11 +114,18 @@ name|ret
 operator|=
 name|errno
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"open %s: %s"
+name|ret
+argument_list|,
+name|N_
+argument_list|(
+literal|"Open ThisCell %s: %s"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|AFS_SERVERTHISCELL
 argument_list|,
@@ -156,11 +161,18 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"no cell in %s"
+name|EINVAL
+argument_list|,
+name|N_
+argument_list|(
+literal|"No cell in ThisCell file %s"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|AFS_SERVERTHISCELL
 argument_list|)
@@ -204,11 +216,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -266,11 +285,18 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"no realm in %s"
+name|EINVAL
+argument_list|,
+name|N_
+argument_list|(
+literal|"No realm in ThisCell file %s"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|AFS_SERVERMAGICKRBCONF
 argument_list|)
@@ -356,11 +382,18 @@ name|cell
 operator|=
 name|NULL
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -380,6 +413,7 @@ end_comment
 begin_function
 specifier|static
 name|krb5_error_code
+name|KRB5_CALLCONV
 name|akf_resolve
 parameter_list|(
 name|krb5_context
@@ -418,11 +452,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -495,11 +536,18 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -525,6 +573,7 @@ end_comment
 begin_function
 specifier|static
 name|krb5_error_code
+name|KRB5_CALLCONV
 name|akf_close
 parameter_list|(
 name|krb5_context
@@ -575,6 +624,7 @@ end_comment
 begin_function
 specifier|static
 name|krb5_error_code
+name|KRB5_CALLCONV
 name|akf_get_name
 parameter_list|(
 name|krb5_context
@@ -618,12 +668,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Init   */
+comment|/*  * Init  */
 end_comment
 
 begin_function
 specifier|static
 name|krb5_error_code
+name|KRB5_CALLCONV
 name|akf_start_seq_get
 parameter_list|(
 name|krb5_context
@@ -662,6 +713,8 @@ argument_list|,
 name|O_RDONLY
 operator||
 name|O_BINARY
+operator||
+name|O_CLOEXEC
 argument_list|,
 literal|0600
 argument_list|)
@@ -679,11 +732,18 @@ name|ret
 operator|=
 name|errno
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"open(%s): %s"
+name|ret
+argument_list|,
+name|N_
+argument_list|(
+literal|"keytab afs keyfile open %s failed: %s"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|d
 operator|->
@@ -712,7 +772,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|krb5_ret_int32
+name|krb5_ret_uint32
 argument_list|(
 name|c
 operator|->
@@ -743,7 +803,7 @@ operator|->
 name|fd
 argument_list|)
 expr_stmt|;
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -770,6 +830,7 @@ end_function
 begin_function
 specifier|static
 name|krb5_error_code
+name|KRB5_CALLCONV
 name|akf_next_entry
 parameter_list|(
 name|krb5_context
@@ -959,11 +1020,18 @@ operator|->
 name|principal
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ret
@@ -1025,6 +1093,18 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+name|entry
+operator|->
+name|flags
+operator|=
+literal|0
+expr_stmt|;
+name|entry
+operator|->
+name|aliases
+operator|=
+name|NULL
+expr_stmt|;
 name|out
 label|:
 name|krb5_storage_seek
@@ -1051,6 +1131,7 @@ end_function
 begin_function
 specifier|static
 name|krb5_error_code
+name|KRB5_CALLCONV
 name|akf_end_seq_get
 parameter_list|(
 name|krb5_context
@@ -1087,6 +1168,7 @@ end_function
 begin_function
 specifier|static
 name|krb5_error_code
+name|KRB5_CALLCONV
 name|akf_add_entry
 parameter_list|(
 name|krb5_context
@@ -1176,6 +1258,8 @@ argument_list|,
 name|O_RDWR
 operator||
 name|O_BINARY
+operator||
+name|O_CLOEXEC
 argument_list|)
 expr_stmt|;
 if|if
@@ -1200,6 +1284,8 @@ operator||
 name|O_CREAT
 operator||
 name|O_EXCL
+operator||
+name|O_CLOEXEC
 argument_list|,
 literal|0600
 argument_list|)
@@ -1215,11 +1301,18 @@ name|ret
 operator|=
 name|errno
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"open(%s): %s"
+name|ret
+argument_list|,
+name|N_
+argument_list|(
+literal|"open keyfile(%s): %s"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|d
 operator|->
@@ -1259,11 +1352,18 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1308,11 +1408,18 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"seek: %s"
+name|ret
+argument_list|,
+name|N_
+argument_list|(
+literal|"seeking in keyfile: %s"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|strerror
 argument_list|(
@@ -1397,11 +1504,18 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"Failed to get kvno "
+name|ret
+argument_list|,
+name|N_
+argument_list|(
+literal|"Failed getting kvno from keyfile"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1422,11 +1536,22 @@ operator|<
 literal|0
 condition|)
 block|{
-name|krb5_set_error_string
+name|ret
+operator|=
+name|errno
+expr_stmt|;
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"seek: %s"
+name|ret
+argument_list|,
+name|N_
+argument_list|(
+literal|"Failed seeing in keyfile: %s"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|strerror
 argument_list|(
@@ -1478,11 +1603,18 @@ name|ret
 operator|=
 name|errno
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"seek: %s"
+name|ret
+argument_list|,
+name|N_
+argument_list|(
+literal|"Failed seeing in keyfile: %s"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|strerror
 argument_list|(
@@ -1508,11 +1640,22 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
+name|ret
+operator|=
+name|errno
+expr_stmt|;
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ret
+argument_list|,
+name|N_
+argument_list|(
 literal|"keytab keyfile failed new length"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1547,11 +1690,18 @@ name|ret
 operator|=
 name|errno
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ret
+argument_list|,
+name|N_
+argument_list|(
 literal|"seek to end: %s"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|strerror
 argument_list|(
@@ -1579,11 +1729,18 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ret
+argument_list|,
+name|N_
+argument_list|(
 literal|"keytab keyfile failed store kvno"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1641,11 +1798,18 @@ name|ret
 operator|=
 name|ENOTTY
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ret
+argument_list|,
+name|N_
+argument_list|(
 literal|"keytab keyfile failed to add key"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1690,6 +1854,9 @@ name|akf_close
 block|,
 name|NULL
 block|,
+comment|/* destroy */
+name|NULL
+block|,
 comment|/* get */
 name|akf_start_seq_get
 block|,
@@ -1704,6 +1871,15 @@ comment|/* remove */
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HEIMDAL_SMALLER */
+end_comment
 
 end_unit
 

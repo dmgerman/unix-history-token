@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2006 - 2007 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 2006 - 2007 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -12,14 +12,6 @@ include|#
 directive|include
 file|"hx_locl.h"
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: revoke.c 22275 2007-12-11 11:02:11Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_struct
 struct|struct
@@ -74,6 +66,7 @@ struct|struct
 name|hx509_revoke_ctx_data
 block|{
 name|unsigned
+name|int
 name|ref
 decl_stmt|;
 struct|struct
@@ -228,12 +221,12 @@ condition|(
 name|ctx
 operator|->
 name|ref
-operator|<=
+operator|==
 literal|0
 condition|)
 name|_hx509_abort
 argument_list|(
-literal|"revoke ctx refcount<= 0"
+literal|"revoke ctx refcount == 0 on ref"
 argument_list|)
 expr_stmt|;
 name|ctx
@@ -247,11 +240,11 @@ name|ctx
 operator|->
 name|ref
 operator|==
-literal|0
+name|UINT_MAX
 condition|)
 name|_hx509_abort
 argument_list|(
-literal|"revoke ctx refcount == 0"
+literal|"revoke ctx refcount == UINT_MAX on ref"
 argument_list|)
 expr_stmt|;
 return|return
@@ -340,12 +333,12 @@ name|ctx
 operator|)
 operator|->
 name|ref
-operator|<=
+operator|==
 literal|0
 condition|)
 name|_hx509_abort
 argument_list|(
-literal|"revoke ctx refcount<= 0 on free"
+literal|"revoke ctx refcount == 0 on free"
 argument_list|)
 expr_stmt|;
 if|if
@@ -744,7 +737,7 @@ literal|0
 argument_list|,
 name|ret
 argument_list|,
-literal|"Revoke OSCP signer is "
+literal|"Revoke OCSP signer is "
 literal|"doesn't have CA as signer certificate"
 argument_list|)
 expr_stmt|;
@@ -758,7 +751,7 @@ name|_hx509_verify_signature_bitstring
 argument_list|(
 name|context
 argument_list|,
-name|p
+name|parent
 argument_list|,
 operator|&
 name|s
@@ -791,7 +784,7 @@ name|HX509_ERROR_APPEND
 argument_list|,
 name|ret
 argument_list|,
-literal|"OSCP signer signature invalid"
+literal|"OCSP signer signature invalid"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -806,8 +799,8 @@ name|context
 argument_list|,
 name|signer
 argument_list|,
-name|oid_id_pkix_kp_OCSPSigning
-argument_list|()
+operator|&
+name|asn1_oid_id_pkix_kp_OCSPSigning
 argument_list|,
 literal|0
 argument_list|)
@@ -826,10 +819,7 @@ name|_hx509_verify_signature_bitstring
 argument_list|(
 name|context
 argument_list|,
-name|_hx509_get_cert
-argument_list|(
 name|signer
-argument_list|)
 argument_list|,
 operator|&
 name|ocsp
@@ -868,7 +858,7 @@ name|HX509_ERROR_APPEND
 argument_list|,
 name|ret
 argument_list|,
-literal|"OSCP signature invalid"
+literal|"OCSP signature invalid"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1037,8 +1027,8 @@ name|responseBytes
 operator|->
 name|responseType
 argument_list|,
-name|oid_id_pkix_ocsp_basic
-argument_list|()
+operator|&
+name|asn1_oid_id_pkix_ocsp_basic
 argument_list|)
 expr_stmt|;
 if|if
@@ -1181,7 +1171,7 @@ name|ret
 decl_stmt|;
 name|ret
 operator|=
-name|_hx509_map_file
+name|rk_undumpdata
 argument_list|(
 name|ocsp
 operator|->
@@ -1192,6 +1182,22 @@ name|data
 argument_list|,
 operator|&
 name|length
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+return|return
+name|ret
+return|;
+name|ret
+operator|=
+name|stat
+argument_list|(
+name|ocsp
+operator|->
+name|path
 argument_list|,
 operator|&
 name|sb
@@ -1202,7 +1208,7 @@ condition|(
 name|ret
 condition|)
 return|return
-name|ret
+name|errno
 return|;
 name|ret
 operator|=
@@ -1216,11 +1222,9 @@ operator|&
 name|basic
 argument_list|)
 expr_stmt|;
-name|_hx509_unmap_file
+name|rk_xfree
 argument_list|(
 name|data
-argument_list|,
-name|length
 argument_list|)
 expr_stmt|;
 if|if
@@ -1250,7 +1254,7 @@ operator|.
 name|certs
 condition|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|ret
@@ -1947,10 +1951,7 @@ name|_hx509_verify_signature_bitstring
 argument_list|(
 name|context
 argument_list|,
-name|_hx509_get_cert
-argument_list|(
 name|signer
-argument_list|)
 argument_list|,
 operator|&
 name|crl
@@ -1990,7 +1991,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/*       * If signer is not CA cert, need to check revoke status of this      * CRL signing cert too, this include all parent CRL signer cert      * up to the root *sigh*, assume root at least hve CERTSIGN flag      * set.      */
+comment|/*      * If signer is not CA cert, need to check revoke status of this      * CRL signing cert too, this include all parent CRL signer cert      * up to the root *sigh*, assume root at least hve CERTSIGN flag      * set.      */
 while|while
 condition|(
 name|_hx509_check_key_usage
@@ -2188,7 +2189,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|_hx509_map_file
+name|rk_undumpdata
 argument_list|(
 name|path
 argument_list|,
@@ -2197,6 +2198,20 @@ name|data
 argument_list|,
 operator|&
 name|length
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+return|return
+name|ret
+return|;
+name|ret
+operator|=
+name|stat
+argument_list|(
+name|path
 argument_list|,
 operator|&
 name|sb
@@ -2207,7 +2222,7 @@ condition|(
 name|ret
 condition|)
 return|return
-name|ret
+name|errno
 return|;
 operator|*
 name|t
@@ -2230,11 +2245,9 @@ operator|&
 name|size
 argument_list|)
 expr_stmt|;
-name|_hx509_unmap_file
+name|rk_xfree
 argument_list|(
 name|data
-argument_list|,
-name|length
 argument_list|)
 expr_stmt|;
 if|if
@@ -3090,9 +3103,7 @@ name|now
 condition|)
 continue|continue;
 block|}
-else|else
-comment|/* Should force a refetch, but can we ? */
-empty_stmt|;
+comment|/* else should force a refetch, but can we ? */
 return|return
 literal|0
 return|;
@@ -3135,6 +3146,9 @@ name|struct
 name|stat
 name|sb
 decl_stmt|;
+name|int
+name|diff
+decl_stmt|;
 comment|/* check if cert.issuer == crls.val[i].crl.issuer */
 name|ret
 operator|=
@@ -3155,11 +3169,16 @@ operator|.
 name|tbsCertList
 operator|.
 name|issuer
+argument_list|,
+operator|&
+name|diff
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|ret
+operator|||
+name|diff
 condition|)
 continue|continue;
 name|ret
@@ -4169,7 +4188,7 @@ name|NULL
 expr_stmt|;
 name|ret
 operator|=
-name|hx509_certs_iter
+name|hx509_certs_iter_f
 argument_list|(
 name|context
 argument_list|,
@@ -4296,8 +4315,8 @@ name|ret
 operator|=
 name|der_copy_oid
 argument_list|(
-name|oid_id_pkix_ocsp_nonce
-argument_list|()
+operator|&
+name|asn1_oid_id_pkix_ocsp_nonce
 argument_list|,
 operator|&
 name|es
@@ -4532,15 +4551,43 @@ index|[
 literal|128
 index|]
 decl_stmt|;
-name|strlcpy
-argument_list|(
-name|s
-argument_list|,
+name|char
+modifier|*
+name|p
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|p
+operator|=
 name|ctime
 argument_list|(
 operator|&
 name|t
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|strlcpy
+argument_list|(
+name|s
+argument_list|,
+literal|"?"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|s
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|strlcpy
+argument_list|(
+name|s
+argument_list|,
+name|p
 operator|+
 literal|4
 argument_list|,
@@ -4557,6 +4604,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+block|}
 return|return
 name|s
 return|;
@@ -4590,7 +4638,8 @@ name|ocsp
 decl_stmt|;
 name|int
 name|ret
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|i
 decl_stmt|;
 if|if
@@ -4923,7 +4972,7 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\t%d. status: %s\n"
+literal|"\t%zu. status: %s\n"
 argument_list|,
 name|i
 argument_list|,
@@ -5013,7 +5062,7 @@ name|certs
 condition|)
 name|ret
 operator|=
-name|hx509_certs_iter
+name|hx509_certs_iter_f
 argument_list|(
 name|context
 argument_list|,
@@ -5086,7 +5135,8 @@ name|basic
 decl_stmt|;
 name|int
 name|ret
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|i
 decl_stmt|;
 if|if
@@ -6316,7 +6366,7 @@ name|NULL
 expr_stmt|;
 name|ret
 operator|=
-name|hx509_certs_iter
+name|hx509_certs_iter_f
 argument_list|(
 name|context
 argument_list|,
@@ -6457,6 +6507,26 @@ operator|->
 name|data
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+block|{
+name|hx509_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|0
+argument_list|,
+name|ret
+argument_list|,
+literal|"Failed to sign CRL"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 name|ASN1_MALLOC_ENCODE
 argument_list|(
 name|CRLCertificateList
@@ -6476,12 +6546,6 @@ operator|&
 name|size
 argument_list|,
 name|ret
-argument_list|)
-expr_stmt|;
-name|free_CRLCertificateList
-argument_list|(
-operator|&
-name|c
 argument_list|)
 expr_stmt|;
 if|if
@@ -6515,6 +6579,12 @@ condition|)
 name|_hx509_abort
 argument_list|(
 literal|"internal ASN.1 encoder error"
+argument_list|)
+expr_stmt|;
+name|free_CRLCertificateList
+argument_list|(
+operator|&
+name|c
 argument_list|)
 expr_stmt|;
 return|return

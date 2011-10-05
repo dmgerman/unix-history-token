@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2003 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2003 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: krb5-v4compat.h 21575 2007-07-16 07:44:54Z lha $ */
+comment|/* $Id$ */
 end_comment
 
 begin_ifndef
@@ -26,7 +26,7 @@ file|"krb_err.h"
 end_include
 
 begin_comment
-comment|/*   * This file must only be included with v4 compat glue stuff in  * heimdal sources.  *  * It MUST NOT be installed.  */
+comment|/*  * This file must only be included with v4 compat glue stuff in  * heimdal sources.  *  * It MUST NOT be installed.  */
 end_comment
 
 begin_define
@@ -339,12 +339,35 @@ directive|ifndef
 name|TKT_ROOT
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KRB5_USE_PATH_TOKENS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TKT_ROOT
+value|"%{TEMP}/tkt"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|TKT_ROOT
 value|"/tmp/tkt"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -400,7 +423,9 @@ struct|;
 end_struct
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|time_t
+name|KRB5_LIB_CALL
 name|_krb5_krb_life_to_time
 parameter_list|(
 name|int
@@ -411,7 +436,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|int
+name|KRB5_LIB_CALL
 name|_krb5_krb_time_to_life
 parameter_list|(
 name|time_t
@@ -422,7 +449,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|_krb5_krb_tf_setup
 parameter_list|(
 name|krb5_context
@@ -441,7 +470,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
+name|KRB5_LIB_CALL
 name|_krb5_krb_dest_tkt
 parameter_list|(
 name|krb5_context

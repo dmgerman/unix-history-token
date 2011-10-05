@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000 - 2007 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2000 - 2007 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -8,14 +8,6 @@ include|#
 directive|include
 file|"kuser_locl.h"
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: kimpersonate.c 22117 2007-12-03 21:24:16Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_include
 include|#
@@ -98,9 +90,9 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|enc_type
+name|enctype_string
 init|=
-literal|"des-cbc-md5"
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -145,6 +137,17 @@ name|int
 name|use_krb5
 init|=
 literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|enc_type
+init|=
+literal|"des-cbc-md5"
 decl_stmt|;
 end_decl_stmt
 
@@ -248,15 +251,11 @@ name|et
 operator|.
 name|crealm
 operator|=
-operator|*
-name|krb5_princ_realm
-argument_list|(
-name|context
-argument_list|,
 name|cred
 operator|->
 name|client
-argument_list|)
+operator|->
+name|realm
 expr_stmt|;
 name|copy_PrincipalName
 argument_list|(
@@ -381,6 +380,8 @@ argument_list|,
 literal|"EncTicketPart"
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
 name|krb5_crypto_init
 argument_list|(
 name|context
@@ -393,6 +394,23 @@ operator|&
 name|crypto
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+name|krb5_err
+argument_list|(
+name|context
+argument_list|,
+literal|1
+argument_list|,
+name|ret
+argument_list|,
+literal|"krb5_crypto_init"
+argument_list|)
+expr_stmt|;
+name|ret
+operator|=
 name|krb5_encrypt_EncryptedData
 argument_list|(
 name|context
@@ -411,6 +429,21 @@ operator|&
 name|ticket
 operator|.
 name|enc_part
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+name|krb5_err
+argument_list|(
+name|context
+argument_list|,
+literal|1
+argument_list|,
+name|ret
+argument_list|,
+literal|"krb5_encrypt_EncryptedData"
 argument_list|)
 expr_stmt|;
 name|free
@@ -436,15 +469,11 @@ name|ticket
 operator|.
 name|realm
 operator|=
-operator|*
-name|krb5_princ_realm
-argument_list|(
-name|context
-argument_list|,
 name|cred
 operator|->
 name|server
-argument_list|)
+operator|->
+name|realm
 expr_stmt|;
 name|copy_PrincipalName
 argument_list|(
@@ -503,6 +532,11 @@ argument_list|,
 name|buf
 argument_list|,
 name|len
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|buf
 argument_list|)
 expr_stmt|;
 block|}
@@ -1173,6 +1207,8 @@ operator|&
 name|server_principal_str
 block|,
 literal|"name of server principal"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1186,6 +1222,8 @@ operator|&
 name|client_principal_str
 block|,
 literal|"name of client principal"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1199,6 +1237,8 @@ operator|&
 name|keytab_file
 block|,
 literal|"name of keytab file"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1212,6 +1252,8 @@ operator|&
 name|use_krb5
 block|,
 literal|"create a kerberos 5 ticket"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1225,6 +1267,8 @@ operator|&
 name|expiration_time
 block|,
 literal|"lifetime of ticket in seconds"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1238,6 +1282,8 @@ operator|&
 name|client_addresses
 block|,
 literal|"addresses of client"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1248,9 +1294,11 @@ block|,
 name|arg_string
 block|,
 operator|&
-name|enc_type
+name|enctype_string
 block|,
 literal|"encryption type"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1264,6 +1312,8 @@ operator|&
 name|ticket_flags_str
 block|,
 literal|"ticket flags for krb5 ticket"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1352,7 +1402,7 @@ name|argv
 parameter_list|)
 block|{
 name|int
-name|optind
+name|optidx
 init|=
 literal|0
 decl_stmt|;
@@ -1418,7 +1468,7 @@ argument_list|,
 name|argv
 argument_list|,
 operator|&
-name|optind
+name|optidx
 argument_list|)
 condition|)
 name|usage
@@ -1449,6 +1499,14 @@ return|return
 literal|0
 return|;
 block|}
+if|if
+condition|(
+name|enctype_string
+condition|)
+name|enc_type
+operator|=
+name|enctype_string
+expr_stmt|;
 name|setup_env
 argument_list|(
 name|context

@@ -210,7 +210,7 @@ file|"parse.y"
 end_line
 
 begin_comment
-comment|/*  * Copyright (c) 1998 - 2000 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1998 - 2000 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -224,14 +224,6 @@ include|#
 directive|include
 file|"lex.h"
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: parse.y 15426 2005-06-16 19:21:42Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function_decl
 name|void
@@ -299,6 +291,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|YYMALLOC
+value|malloc
+end_define
+
+begin_define
+define|#
+directive|define
+name|YYFREE
+value|free
+end_define
 
 begin_comment
 comment|/* Enabling traces.  */
@@ -402,7 +408,7 @@ union|union
 name|YYSTYPE
 line|#
 directive|line
-number|53
+number|54
 file|"parse.y"
 block|{
 name|char
@@ -416,7 +422,7 @@ block|}
 comment|/* Line 193 of yacc.c.  */
 line|#
 directive|line
-number|173
+number|174
 file|"parse.c"
 name|YYSTYPE
 typedef|;
@@ -463,7 +469,7 @@ end_comment
 begin_line
 line|#
 directive|line
-number|186
+number|187
 file|"parse.c"
 end_line
 
@@ -2391,35 +2397,35 @@ init|=
 block|{
 literal|0
 block|,
-literal|64
-block|,
-literal|64
+literal|65
 block|,
 literal|65
 block|,
-literal|68
+literal|66
 block|,
 literal|69
 block|,
-literal|72
+literal|70
 block|,
-literal|78
+literal|73
 block|,
-literal|84
+literal|79
 block|,
-literal|93
+literal|85
 block|,
 literal|94
 block|,
-literal|97
+literal|95
 block|,
-literal|101
+literal|98
 block|,
-literal|109
+literal|102
 block|,
-literal|116
+literal|110
 block|,
-literal|136
+literal|117
+block|,
+literal|137
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -5859,7 +5865,7 @@ literal|6
 case|:
 line|#
 directive|line
-number|73
+number|74
 file|"parse.y"
 block|{
 name|id_str
@@ -5886,7 +5892,7 @@ literal|7
 case|:
 line|#
 directive|line
-number|79
+number|80
 file|"parse.y"
 block|{
 name|base_id
@@ -5959,7 +5965,7 @@ literal|8
 case|:
 line|#
 directive|line
-number|85
+number|86
 file|"parse.y"
 block|{
 name|base_id
@@ -6050,7 +6056,7 @@ literal|11
 case|:
 line|#
 directive|line
-number|98
+number|99
 file|"parse.y"
 block|{
 name|number
@@ -6077,7 +6083,7 @@ literal|12
 case|:
 line|#
 directive|line
-number|102
+number|103
 file|"parse.y"
 block|{
 name|free
@@ -6146,7 +6152,7 @@ literal|13
 case|:
 line|#
 directive|line
-number|110
+number|111
 file|"parse.y"
 block|{
 name|prefix
@@ -6183,7 +6189,7 @@ literal|14
 case|:
 line|#
 directive|line
-number|117
+number|118
 file|"parse.y"
 block|{
 name|struct
@@ -6352,7 +6358,7 @@ literal|15
 case|:
 line|#
 directive|line
-number|137
+number|138
 file|"parse.y"
 block|{
 name|YYACCEPT
@@ -6362,7 +6368,7 @@ break|break;
 comment|/* Line 1267 of yacc.c.  */
 line|#
 directive|line
-number|1470
+number|1471
 file|"parse.c"
 default|default:
 break|break;
@@ -7006,7 +7012,7 @@ end_decl_stmt
 begin_line
 line|#
 directive|line
-number|142
+number|143
 file|"parse.y"
 end_line
 
@@ -7152,7 +7158,7 @@ modifier|*
 name|s
 parameter_list|)
 block|{
-name|error_message
+name|_lex_error_message
 argument_list|(
 literal|"%s\n"
 argument_list|,

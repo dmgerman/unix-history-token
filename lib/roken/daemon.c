@@ -37,30 +37,11 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<config.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: daemon.c 14773 2005-04-12 11:29:18Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_ifndef
 ifndef|#
@@ -126,8 +107,9 @@ file|"roken.h"
 end_include
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|daemon
 parameter_list|(
 name|int

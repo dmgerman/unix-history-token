@@ -1,25 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2003 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2003 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<krb5_locl.h>
+file|"krb5_locl.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: mk_rep.c 13863 2004-05-25 21:46:46Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_mk_rep
 parameter_list|(
 name|krb5_context
@@ -53,6 +46,8 @@ name|buf_size
 decl_stmt|;
 name|size_t
 name|len
+init|=
+literal|0
 decl_stmt|;
 name|krb5_crypto
 name|crypto
@@ -138,13 +133,6 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
-argument_list|(
-name|context
-argument_list|,
-literal|"krb5_mk_rep: generating subkey"
-argument_list|)
-expr_stmt|;
 name|free_EncAPRepPart
 argument_list|(
 operator|&
@@ -177,17 +165,24 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
-argument_list|(
-name|context
-argument_list|,
-literal|"krb5_copy_keyblock: out of memory"
-argument_list|)
-expr_stmt|;
 name|free_EncAPRepPart
 argument_list|(
 operator|&
 name|body
+argument_list|)
+expr_stmt|;
+name|krb5_set_error_message
+argument_list|(
+name|context
+argument_list|,
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -251,9 +246,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ENOMEM
 argument_list|,
 literal|"malloc: out of memory"
 argument_list|)

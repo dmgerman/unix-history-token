@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: login_access.c 10020 2001-06-04 14:10:19Z assar $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

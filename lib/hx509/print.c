@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2004 - 2007 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 2004 - 2007 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -8,14 +8,6 @@ include|#
 directive|include
 file|"hx_locl.h"
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: print.c 22420 2008-01-13 09:42:35Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/**  * @page page_print Hx509 printing functions  *  * See the library functions here: @ref hx509_print  */
@@ -285,7 +277,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Print a oid to a string.  *   * @param oid oid to print  * @param str allocated string, free with hx509_xfree().  *  * @return An hx509 error code, see hx509_get_error_string().  *  * @ingroup hx509_print  */
+comment|/**  * Print a oid to a string.  *  * @param oid oid to print  * @param str allocated string, free with hx509_xfree().  *  * @return An hx509 error code, see hx509_get_error_string().  *  * @ingroup hx509_print  */
 end_comment
 
 begin_function
@@ -317,7 +309,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Print a oid using a hx509_vprint_func function. To print to stdout  * use hx509_print_stdout().  *   * @param oid oid to print  * @param func hx509_vprint_func to print with.  * @param ctx context variable to hx509_vprint_func function.  *  * @ingroup hx509_print  */
+comment|/**  * Print a oid using a hx509_vprint_func function. To print to stdout  * use hx509_print_stdout().  *  * @param oid oid to print  * @param func hx509_vprint_func to print with.  * @param ctx context variable to hx509_vprint_func function.  *  * @ingroup hx509_print  */
 end_comment
 
 begin_function
@@ -369,7 +361,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Print a bitstring using a hx509_vprint_func function. To print to  * stdout use hx509_print_stdout().  *   * @param b bit string to print.  * @param func hx509_vprint_func to print with.  * @param ctx context variable to hx509_vprint_func function.  *  * @ingroup hx509_print  */
+comment|/**  * Print a bitstring using a hx509_vprint_func function. To print to  * stdout use hx509_print_stdout().  *  * @param b bit string to print.  * @param func hx509_vprint_func to print with.  * @param ctx context variable to hx509_vprint_func function.  *  * @ingroup hx509_print  */
 end_comment
 
 begin_function
@@ -389,7 +381,7 @@ modifier|*
 name|ctx
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|print_func
@@ -519,7 +511,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Print certificate usage for a certificate to a string.  *   * @param context A hx509 context.  * @param c a certificate print the keyusage for.  * @param s the return string with the keysage printed in to, free  * with hx509_xfree().  *  * @return An hx509 error code, see hx509_get_error_string().  *  * @ingroup hx509_print  */
+comment|/**  * Print certificate usage for a certificate to a string.  *  * @param context A hx509 context.  * @param c a certificate print the keyusage for.  * @param s the return string with the keysage printed in to, free  * with hx509_xfree().  *  * @return An hx509 error code, see hx509_get_error_string().  *  * @ingroup hx509_print  */
 end_comment
 
 begin_function
@@ -743,7 +735,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Dont Care, SHOULD critical, SHOULD NOT critical, MUST critical,  * MUST NOT critical  */
+comment|/*  * Dont Care, SHOULD critical, SHOULD NOT critical, MUST critical,  * MUST NOT critical  */
 end_comment
 
 begin_enum
@@ -1141,23 +1133,6 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-name|status
-operator|->
-name|haveSKI
-operator|=
-literal|1
-expr_stmt|;
-name|check_Null
-argument_list|(
-name|ctx
-argument_list|,
-name|status
-argument_list|,
-name|cf
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
 name|ret
 operator|=
 name|decode_AuthorityKeyIdentifier
@@ -1277,6 +1252,242 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|check_extKeyUsage
+parameter_list|(
+name|hx509_validate_ctx
+name|ctx
+parameter_list|,
+name|struct
+name|cert_status
+modifier|*
+name|status
+parameter_list|,
+name|enum
+name|critical_flag
+name|cf
+parameter_list|,
+specifier|const
+name|Extension
+modifier|*
+name|e
+parameter_list|)
+block|{
+name|ExtKeyUsage
+name|eku
+decl_stmt|;
+name|size_t
+name|size
+decl_stmt|,
+name|i
+decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
+name|check_Null
+argument_list|(
+name|ctx
+argument_list|,
+name|status
+argument_list|,
+name|cf
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+name|decode_ExtKeyUsage
+argument_list|(
+name|e
+operator|->
+name|extnValue
+operator|.
+name|data
+argument_list|,
+name|e
+operator|->
+name|extnValue
+operator|.
+name|length
+argument_list|,
+operator|&
+name|eku
+argument_list|,
+operator|&
+name|size
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+block|{
+name|validate_print
+argument_list|(
+name|ctx
+argument_list|,
+name|HX509_VALIDATE_F_VALIDATE
+argument_list|,
+literal|"Decoding ExtKeyUsage failed: %d"
+argument_list|,
+name|ret
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+if|if
+condition|(
+name|size
+operator|!=
+name|e
+operator|->
+name|extnValue
+operator|.
+name|length
+condition|)
+block|{
+name|validate_print
+argument_list|(
+name|ctx
+argument_list|,
+name|HX509_VALIDATE_F_VALIDATE
+argument_list|,
+literal|"Padding data in EKU"
+argument_list|)
+expr_stmt|;
+name|free_ExtKeyUsage
+argument_list|(
+operator|&
+name|eku
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+if|if
+condition|(
+name|eku
+operator|.
+name|len
+operator|==
+literal|0
+condition|)
+block|{
+name|validate_print
+argument_list|(
+name|ctx
+argument_list|,
+name|HX509_VALIDATE_F_VALIDATE
+argument_list|,
+literal|"ExtKeyUsage length is 0"
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|eku
+operator|.
+name|len
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|char
+modifier|*
+name|str
+decl_stmt|;
+name|ret
+operator|=
+name|der_print_heim_oid
+argument_list|(
+operator|&
+name|eku
+operator|.
+name|val
+index|[
+name|i
+index|]
+argument_list|,
+literal|'.'
+argument_list|,
+operator|&
+name|str
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+block|{
+name|validate_print
+argument_list|(
+name|ctx
+argument_list|,
+name|HX509_VALIDATE_F_VALIDATE
+argument_list|,
+literal|"\tEKU: failed to print oid %d"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|free_ExtKeyUsage
+argument_list|(
+operator|&
+name|eku
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+name|validate_print
+argument_list|(
+name|ctx
+argument_list|,
+name|HX509_VALIDATE_F_VERBOSE
+argument_list|,
+literal|"\teku-%d: %s\n"
+argument_list|,
+name|i
+argument_list|,
+name|str
+argument_list|)
+expr_stmt|;
+empty_stmt|;
+name|free
+argument_list|(
+name|str
+argument_list|)
+expr_stmt|;
+block|}
+name|free_ExtKeyUsage
+argument_list|(
+operator|&
+name|eku
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1602,7 +1813,8 @@ name|size
 decl_stmt|;
 name|int
 name|ret
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|i
 decl_stmt|;
 name|check_Null
@@ -1712,7 +1924,7 @@ index|]
 operator|.
 name|distributionPoint
 decl_stmt|;
-name|int
+name|size_t
 name|j
 decl_stmt|;
 name|ret
@@ -1912,14 +2124,8 @@ decl_stmt|;
 specifier|const
 name|heim_oid
 modifier|*
-function_decl|(
-modifier|*
 name|oid
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
+decl_stmt|;
 name|int
 function_decl|(
 modifier|*
@@ -1933,14 +2139,15 @@ modifier|*
 parameter_list|)
 function_decl|;
 block|}
-name|check_altname
+name|altname_types
 index|[]
 init|=
 block|{
 block|{
 literal|"pk-init"
 block|,
-name|oid_id_pkinit_san
+operator|&
+name|asn1_oid_id_pkinit_san
 block|,
 name|check_pkinit_san
 block|}
@@ -1948,7 +2155,8 @@ block|,
 block|{
 literal|"jabber"
 block|,
-name|oid_id_pkix_on_xmppAddr
+operator|&
+name|asn1_oid_id_pkix_on_xmppAddr
 block|,
 name|check_utf8_string_san
 block|}
@@ -1956,7 +2164,8 @@ block|,
 block|{
 literal|"dns-srv"
 block|,
-name|oid_id_pkix_on_dnsSRV
+operator|&
+name|asn1_oid_id_pkix_on_dnsSRV
 block|,
 name|check_altnull
 block|}
@@ -1964,7 +2173,8 @@ block|,
 block|{
 literal|"card-id"
 block|,
-name|oid_id_uspkicommon_card_id
+operator|&
+name|asn1_oid_id_uspkicommon_card_id
 block|,
 name|check_altnull
 block|}
@@ -1972,7 +2182,8 @@ block|,
 block|{
 literal|"Microsoft NT-PRINCIPAL-NAME"
 block|,
-name|oid_id_pkinit_ms_san
+operator|&
+name|asn1_oid_id_pkinit_ms_san
 block|,
 name|check_utf8_string_san
 block|}
@@ -2016,7 +2227,8 @@ name|size
 decl_stmt|;
 name|int
 name|ret
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|i
 decl_stmt|;
 name|check_Null
@@ -2181,12 +2393,12 @@ name|j
 operator|<
 sizeof|sizeof
 argument_list|(
-name|check_altname
+name|altname_types
 argument_list|)
 operator|/
 sizeof|sizeof
 argument_list|(
-name|check_altname
+name|altname_types
 index|[
 literal|0
 index|]
@@ -2200,17 +2412,12 @@ if|if
 condition|(
 name|der_heim_oid_cmp
 argument_list|(
-operator|(
-operator|*
-name|check_altname
+name|altname_types
 index|[
 name|j
 index|]
 operator|.
 name|oid
-operator|)
-operator|(
-operator|)
 argument_list|,
 operator|&
 name|gn
@@ -2238,7 +2445,7 @@ name|HX509_VALIDATE_F_VERBOSE
 argument_list|,
 literal|"%s: "
 argument_list|,
-name|check_altname
+name|altname_types
 index|[
 name|j
 index|]
@@ -2248,7 +2455,7 @@ argument_list|)
 expr_stmt|;
 operator|(
 operator|*
-name|check_altname
+name|altname_types
 index|[
 name|j
 index|]
@@ -2281,12 +2488,12 @@ name|j
 operator|==
 sizeof|sizeof
 argument_list|(
-name|check_altname
+name|altname_types
 argument_list|)
 operator|/
 sizeof|sizeof
 argument_list|(
-name|check_altname
+name|altname_types
 index|[
 literal|0
 index|]
@@ -2778,7 +2985,8 @@ name|size
 decl_stmt|;
 name|int
 name|ret
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|i
 decl_stmt|;
 name|check_Null
@@ -2937,14 +3145,8 @@ decl_stmt|;
 specifier|const
 name|heim_oid
 modifier|*
-function_decl|(
-modifier|*
 name|oid
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
+decl_stmt|;
 name|int
 function_decl|(
 modifier|*
@@ -2985,7 +3187,7 @@ name|name
 parameter_list|,
 name|checkname
 parameter_list|)
-value|#name,&oid_id_x509_ce_##name, check_##checkname
+value|#name,&asn1_oid_id_x509_ce_##name, check_##checkname
 block|{
 name|ext
 argument_list|(
@@ -3154,10 +3356,12 @@ block|,
 block|{
 name|ext
 argument_list|(
-argument|certificatePolicies
+name|certificatePolicies
 argument_list|,
-argument|Null
+name|Null
 argument_list|)
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3198,7 +3402,7 @@ name|ext
 argument_list|(
 name|extKeyUsage
 argument_list|,
-name|Null
+name|extKeyUsage
 argument_list|)
 block|,
 name|D_C
@@ -3237,7 +3441,7 @@ name|name
 parameter_list|,
 name|checkname
 parameter_list|)
-value|#name,&oid_id_pkix_pe_##name, check_##checkname
+value|#name,&asn1_oid_id_pkix_pe_##name, check_##checkname
 block|{
 name|ext
 argument_list|(
@@ -3266,7 +3470,8 @@ name|ext
 block|{
 literal|"US Fed PKI - PIV Interim"
 block|,
-name|oid_id_uspkicommon_piv_interim
+operator|&
+name|asn1_oid_id_uspkicommon_piv_interim
 block|,
 name|check_Null
 block|,
@@ -3276,7 +3481,8 @@ block|,
 block|{
 literal|"Netscape cert comment"
 block|,
-name|oid_id_netscape_cert_comment
+operator|&
+name|asn1_oid_id_netscape_cert_comment
 block|,
 name|check_Null
 block|,
@@ -3285,13 +3491,19 @@ block|}
 block|,
 block|{
 name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|0
 block|}
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/**  * Allocate a hx509 validation/printing context.  *   * @param context A hx509 context.  * @param ctx a new allocated hx509 validation context, free with  * hx509_validate_ctx_free().   * @return An hx509 error code, see hx509_get_error_string().  *  * @ingroup hx509_print  */
+comment|/**  * Allocate a hx509 validation/printing context.  *  * @param context A hx509 context.  * @param ctx a new allocated hx509 validation context, free with  * hx509_validate_ctx_free().   * @return An hx509 error code, see hx509_get_error_string().  *  * @ingroup hx509_print  */
 end_comment
 
 begin_function
@@ -3351,7 +3563,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Set the printing functions for the validation context.  *   * @param ctx a hx509 valication context.  * @param func the printing function to usea.  * @param c the context variable to the printing function.  *  * @return An hx509 error code, see hx509_get_error_string().  *  * @ingroup hx509_print  */
+comment|/**  * Set the printing functions for the validation context.  *  * @param ctx a hx509 valication context.  * @param func the printing function to usea.  * @param c the context variable to the printing function.  *  * @return An hx509 error code, see hx509_get_error_string().  *  * @ingroup hx509_print  */
 end_comment
 
 begin_function
@@ -3385,7 +3597,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Add flags to control the behaivor of the hx509_validate_cert()  * function.  *   * @param ctx A hx509 validation context.  * @param flags flags to add to the validation context.  *  * @return An hx509 error code, see hx509_get_error_string().  *  * @ingroup hx509_print  */
+comment|/**  * Add flags to control the behaivor of the hx509_validate_cert()  * function.  *  * @param ctx A hx509 validation context.  * @param flags flags to add to the validation context.  *  * @return An hx509 error code, see hx509_get_error_string().  *  * @ingroup hx509_print  */
 end_comment
 
 begin_function
@@ -3409,7 +3621,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Free an hx509 validate context.  *   * @param ctx the hx509 validate context to free.  *  * @ingroup hx509_print  */
+comment|/**  * Free an hx509 validate context.  *  * @param ctx the hx509 validate context to free.  *  * @ingroup hx509_print  */
 end_comment
 
 begin_function
@@ -3429,7 +3641,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Validate/Print the status of the certificate.  *   * @param context A hx509 context.  * @param ctx A hx509 validation context.  * @param cert the cerificate to validate/print.   * @return An hx509 error code, see hx509_get_error_string().  *  * @ingroup hx509_print  */
+comment|/**  * Validate/Print the status of the certificate.  *  * @param context A hx509 context.  * @param ctx A hx509 validation context.  * @param cert the cerificate to validate/print.   * @return An hx509 error code, see hx509_get_error_string().  *  * @ingroup hx509_print  */
 end_comment
 
 begin_function
@@ -3749,7 +3961,7 @@ operator|->
 name|extensions
 condition|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|,
 name|j
@@ -3816,17 +4028,12 @@ if|if
 condition|(
 name|der_heim_oid_cmp
 argument_list|(
-operator|(
-operator|*
 name|check_extension
 index|[
 name|j
 index|]
 operator|.
 name|oid
-operator|)
-operator|(
-operator|)
 argument_list|,
 operator|&
 name|t
@@ -4183,7 +4390,7 @@ name|_hx509_verify_signature_bitstring
 argument_list|(
 name|context
 argument_list|,
-name|c
+name|cert
 argument_list|,
 operator|&
 name|c

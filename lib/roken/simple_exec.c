@@ -1,32 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 - 2001, 2004 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1998 - 2001, 2004 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<config.h>
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: simple_exec.c 21005 2007-06-08 01:54:35Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -118,7 +99,7 @@ value|127
 end_define
 
 begin_comment
-comment|/* return values:    -1   on `unspecified' system errors    -2   on fork failures    -3   on waitpid errors    -4   exec timeout    0-   is return value from subprocess    126  if the program couldn't be executed    127  if the program couldn't be found    128- is 128 + signal that killed subprocess     possible values `func' can return:    ((time_t)-2)		exit loop w/o killing child and return    			`exec timeout'/-4 from simple_exec    ((time_t)-1)		kill child with SIGTERM and wait for child to exit    0			don't timeout again    n			seconds to next timeout    */
+comment|/* return values:    SE_E_UNSPECIFIED   on `unspecified' system errors    SE_E_FORKFAILED    on fork failures    SE_E_WAITPIDFAILED on waitpid errors    SE_E_EXECTIMEOUT   exec timeout    0-   is return value from subprocess    SE_E_NOEXEC        if the program couldn't be executed    SE_E_NOTFOUND      if the program couldn't be found    128- is 128 + signal that killed subprocess     possible values `func' can return:    ((time_t)-2)		exit loop w/o killing child and return    			`exec timeout'/-4 from simple_exec    ((time_t)-1)		kill child with SIGTERM and wait for child to exit    0			don't timeout again    n			seconds to next timeout    */
 end_comment
 
 begin_decl_stmt
@@ -150,8 +131,9 @@ block|}
 end_function
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|wait_for_process_timed
 parameter_list|(
 name|pid_t
@@ -254,8 +236,7 @@ condition|)
 block|{
 name|ret
 operator|=
-operator|-
-literal|3
+name|SE_E_WAITPIDFAILED
 expr_stmt|;
 goto|goto
 name|out
@@ -319,8 +300,7 @@ condition|)
 block|{
 name|ret
 operator|=
-operator|-
-literal|4
+name|SE_E_EXECTIMEOUT
 expr_stmt|;
 goto|goto
 name|out
@@ -404,8 +384,9 @@ block|}
 end_function
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|wait_for_process
 parameter_list|(
 name|pid_t
@@ -428,8 +409,9 @@ block|}
 end_function
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|pipe_execv
 parameter_list|(
 name|FILE
@@ -848,8 +830,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-operator|-
-literal|2
+name|SE_E_FORKFAILED
 return|;
 default|default:
 if|if
@@ -947,8 +928,9 @@ block|}
 end_function
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|simple_execvp_timed
 parameter_list|(
 specifier|const
@@ -996,8 +978,7 @@ operator|-
 literal|1
 case|:
 return|return
-operator|-
-literal|2
+name|SE_E_FORKFAILED
 return|;
 case|case
 literal|0
@@ -1040,8 +1021,9 @@ block|}
 end_function
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|simple_execvp
 parameter_list|(
 specifier|const
@@ -1078,8 +1060,9 @@ comment|/* gee, I'd like a execvpe */
 end_comment
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|simple_execve_timed
 parameter_list|(
 specifier|const
@@ -1133,8 +1116,7 @@ operator|-
 literal|1
 case|:
 return|return
-operator|-
-literal|2
+name|SE_E_FORKFAILED
 return|;
 case|case
 literal|0
@@ -1179,8 +1161,9 @@ block|}
 end_function
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|simple_execve
 parameter_list|(
 specifier|const
@@ -1221,8 +1204,9 @@ block|}
 end_function
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|simple_execlp
 parameter_list|(
 specifier|const
@@ -1271,8 +1255,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|-
-literal|1
+name|SE_E_UNSPECIFIED
 return|;
 name|ret
 operator|=
@@ -1295,8 +1278,9 @@ block|}
 end_function
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|simple_execle
 parameter_list|(
 specifier|const
@@ -1363,8 +1347,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|-
-literal|1
+name|SE_E_UNSPECIFIED
 return|;
 name|ret
 operator|=
@@ -1375,82 +1358,6 @@ argument_list|,
 name|argv
 argument_list|,
 name|envp
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|argv
-argument_list|)
-expr_stmt|;
-return|return
-name|ret
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|ROKEN_LIB_FUNCTION
-name|simple_execl
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|file
-parameter_list|,
-modifier|...
-parameter_list|)
-block|{
-name|va_list
-name|ap
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|argv
-decl_stmt|;
-name|int
-name|ret
-decl_stmt|;
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
-name|argv
-operator|=
-name|vstrcollect
-argument_list|(
-operator|&
-name|ap
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|argv
-operator|==
-name|NULL
-condition|)
-return|return
-operator|-
-literal|1
-return|;
-name|ret
-operator|=
-name|simple_execve
-argument_list|(
-name|file
-argument_list|,
-name|argv
-argument_list|,
-name|environ
 argument_list|)
 expr_stmt|;
 name|free

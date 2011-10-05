@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2006 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2006 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: gen_decode.c 21503 2007-07-12 11:57:19Z lha $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -66,79 +66,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|is_primitive_type
-parameter_list|(
-name|int
-name|type
-parameter_list|)
-block|{
-switch|switch
-condition|(
-name|type
-condition|)
-block|{
-case|case
-name|TInteger
-case|:
-case|case
-name|TBoolean
-case|:
-case|case
-name|TOctetString
-case|:
-case|case
-name|TBitString
-case|:
-case|case
-name|TEnumerated
-case|:
-case|case
-name|TGeneralizedTime
-case|:
-case|case
-name|TGeneralString
-case|:
-case|case
-name|TOID
-case|:
-case|case
-name|TUTCTime
-case|:
-case|case
-name|TUTF8String
-case|:
-case|case
-name|TPrintableString
-case|:
-case|case
-name|TIA5String
-case|:
-case|case
-name|TBMPString
-case|:
-case|case
-name|TUniversalString
-case|:
-case|case
-name|TVisibleString
-case|:
-case|case
-name|TNull
-case|:
-return|return
-literal|1
-return|;
-default|default:
-return|return
-literal|0
-return|;
-block|}
 block|}
 end_function
 
@@ -256,6 +183,25 @@ operator|*
 name|tag
 operator|=
 name|UT_GeneralString
+expr_stmt|;
+break|break;
+case|case
+name|TTeletexString
+case|:
+operator|*
+name|cl
+operator|=
+name|ASN1_C_UNIV
+expr_stmt|;
+operator|*
+name|ty
+operator|=
+name|PRIM
+expr_stmt|;
+operator|*
+name|tag
+operator|=
+name|UT_TeletexString
 expr_stmt|;
 break|break;
 case|case
@@ -505,7 +451,7 @@ operator|==
 name|SUndefined
 condition|)
 block|{
-name|error_message
+name|lex_error_message
 argument_list|(
 literal|"%s is imported or still undefined, "
 literal|" can't generate tag checking data in CHOICE "
@@ -806,6 +752,15 @@ specifier|const
 name|char
 modifier|*
 name|tmpstr
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|dertype
+parameter_list|,
+name|unsigned
+name|int
+name|depth
 parameter_list|)
 block|{
 switch|switch
@@ -1097,6 +1052,37 @@ break|break;
 case|case
 name|TOctetString
 case|:
+if|if
+condition|(
+name|dertype
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|codefile
+argument_list|,
+literal|"if (%s == CONS) {\n"
+argument_list|,
+name|dertype
+argument_list|)
+expr_stmt|;
+name|decode_primitive
+argument_list|(
+literal|"octet_string_ber"
+argument_list|,
+name|name
+argument_list|,
+name|forwstr
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|codefile
+argument_list|,
+literal|"} else {\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|decode_primitive
 argument_list|(
 literal|"octet_string"
@@ -1104,6 +1090,17 @@ argument_list|,
 name|name
 argument_list|,
 name|forwstr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dertype
+condition|)
+name|fprintf
+argument_list|(
+name|codefile
+argument_list|,
+literal|"}\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1278,6 +1275,8 @@ block|{
 name|char
 modifier|*
 name|s
+init|=
+name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -1286,6 +1285,8 @@ operator|->
 name|ellipsis
 condition|)
 continue|continue;
+if|if
+condition|(
 name|asprintf
 argument_list|(
 operator|&
@@ -1307,9 +1308,9 @@ name|m
 operator|->
 name|gen_name
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|<
+literal|0
+operator|||
 name|s
 operator|==
 name|NULL
@@ -1338,6 +1339,12 @@ argument_list|,
 name|m
 operator|->
 name|gen_name
+argument_list|,
+name|NULL
+argument_list|,
+name|depth
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|free
@@ -1490,6 +1497,8 @@ name|tagvalue
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|asprintf
 argument_list|(
 operator|&
@@ -1511,9 +1520,9 @@ name|m
 operator|->
 name|gen_name
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|<
+literal|0
+operator|||
 name|s
 operator|==
 name|NULL
@@ -1562,6 +1571,12 @@ argument_list|,
 name|m
 operator|->
 name|gen_name
+argument_list|,
+name|NULL
+argument_list|,
+name|depth
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|free
@@ -1629,6 +1644,8 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
+if|if
+condition|(
 name|asprintf
 argument_list|(
 operator|&
@@ -1642,9 +1659,9 @@ name|m
 operator|->
 name|gen_name
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|<
+literal|0
+operator|||
 name|s
 operator|==
 name|NULL
@@ -1732,10 +1749,14 @@ block|{
 name|char
 modifier|*
 name|n
+init|=
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
 name|sname
+init|=
+name|NULL
 decl_stmt|;
 name|fprintf
 argument_list|(
@@ -1808,6 +1829,8 @@ argument_list|,
 name|tmpstr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|asprintf
 argument_list|(
 operator|&
@@ -1819,9 +1842,9 @@ name|name
 argument_list|,
 name|name
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|<
+literal|0
+operator|||
 name|n
 operator|==
 name|NULL
@@ -1833,6 +1856,8 @@ argument_list|,
 literal|"malloc"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|asprintf
 argument_list|(
 operator|&
@@ -1842,9 +1867,9 @@ literal|"%s_s_of"
 argument_list|,
 name|tmpstr
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|<
+literal|0
+operator|||
 name|sname
 operator|==
 name|NULL
@@ -1869,6 +1894,12 @@ argument_list|,
 name|forwstr
 argument_list|,
 name|sname
+argument_list|,
+name|NULL
+argument_list|,
+name|depth
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1946,41 +1977,97 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|TTeletexString
+case|:
+name|decode_primitive
+argument_list|(
+literal|"general_string"
+argument_list|,
+name|name
+argument_list|,
+name|forwstr
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|TTag
 case|:
 block|{
 name|char
 modifier|*
 name|tname
+init|=
+name|NULL
+decl_stmt|,
+modifier|*
+name|typestring
+init|=
+name|NULL
 decl_stmt|;
+name|char
+modifier|*
+name|ide
+init|=
+name|NULL
+decl_stmt|;
+if|if
+condition|(
+name|asprintf
+argument_list|(
+operator|&
+name|typestring
+argument_list|,
+literal|"%s_type"
+argument_list|,
+name|tmpstr
+argument_list|)
+operator|<
+literal|0
+operator|||
+name|typestring
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc"
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|codefile
 argument_list|,
 literal|"{\n"
 literal|"size_t %s_datalen, %s_oldlen;\n"
+literal|"Der_type %s;\n"
 argument_list|,
 name|tmpstr
 argument_list|,
 name|tmpstr
+argument_list|,
+name|typestring
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dce_fix
+name|support_ber
 condition|)
 name|fprintf
 argument_list|(
 name|codefile
 argument_list|,
-literal|"int dce_fix;\n"
+literal|"int is_indefinite%u;\n"
+argument_list|,
+name|depth
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|codefile
 argument_list|,
-literal|"e = der_match_tag_and_length(p, len, %s, %s, %s, "
+literal|"e = der_match_tag_and_length(p, len, %s,&%s, %s, "
 literal|"&%s_datalen,&l);\n"
 argument_list|,
 name|classname
@@ -1992,18 +2079,7 @@ operator|.
 name|tagclass
 argument_list|)
 argument_list|,
-name|is_primitive_type
-argument_list|(
-name|t
-operator|->
-name|subtype
-operator|->
-name|type
-argument_list|)
-condition|?
-literal|"PRIM"
-else|:
-literal|"CONS"
+name|typestring
 argument_list|,
 name|valuename
 argument_list|(
@@ -2023,6 +2099,50 @@ argument_list|,
 name|tmpstr
 argument_list|)
 expr_stmt|;
+comment|/* XXX hardcode for now */
+if|if
+condition|(
+name|support_ber
+operator|&&
+name|t
+operator|->
+name|subtype
+operator|->
+name|type
+operator|==
+name|TOctetString
+condition|)
+block|{
+name|ide
+operator|=
+name|typestring
+expr_stmt|;
+block|}
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|codefile
+argument_list|,
+literal|"if (e == 0&& %s != %s) { e = ASN1_BAD_ID; }\n"
+argument_list|,
+name|typestring
+argument_list|,
+name|is_primitive_type
+argument_list|(
+name|t
+operator|->
+name|subtype
+operator|->
+name|type
+argument_list|)
+condition|?
+literal|"PRIM"
+else|:
+literal|"CONS"
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|optional
@@ -2074,16 +2194,23 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dce_fix
+name|support_ber
 condition|)
 name|fprintf
 argument_list|(
 name|codefile
 argument_list|,
-literal|"if((dce_fix = _heim_fix_dce(%s_datalen,&len))< 0)\n"
+literal|"if((is_indefinite%u = _heim_fix_dce(%s_datalen,&len))< 0)\n"
 literal|"{ e = ASN1_BAD_FORMAT; %s; }\n"
+literal|"if (is_indefinite%u) { if (len< 2) { e = ASN1_OVERRUN; %s; } len -= 2; }"
+argument_list|,
+name|depth
 argument_list|,
 name|tmpstr
+argument_list|,
+name|forwstr
+argument_list|,
+name|depth
 argument_list|,
 name|forwstr
 argument_list|)
@@ -2103,6 +2230,8 @@ argument_list|,
 name|tmpstr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|asprintf
 argument_list|(
 operator|&
@@ -2112,9 +2241,9 @@ literal|"%s_Tag"
 argument_list|,
 name|tmpstr
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|<
+literal|0
+operator|||
 name|tname
 operator|==
 name|NULL
@@ -2139,24 +2268,41 @@ argument_list|,
 name|forwstr
 argument_list|,
 name|tname
+argument_list|,
+name|ide
+argument_list|,
+name|depth
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dce_fix
+name|support_ber
 condition|)
 name|fprintf
 argument_list|(
 name|codefile
 argument_list|,
-literal|"if(dce_fix){\n"
-literal|"e = der_match_tag_and_length (p, len, "
-literal|"(Der_class)0,(Der_type)0, UT_EndOfContent, "
+literal|"if(is_indefinite%u){\n"
+literal|"len += 2;\n"
+literal|"e = der_match_tag_and_length(p, len, "
+literal|"(Der_class)0,&%s, UT_EndOfContent, "
 literal|"&%s_datalen,&l);\n"
-literal|"if(e) %s;\np += l; len -= l; ret += l;\n"
+literal|"if(e) %s;\n"
+literal|"p += l; len -= l; ret += l;\n"
+literal|"if (%s != (Der_type)0) { e = ASN1_BAD_ID; %s; }\n"
 literal|"} else \n"
 argument_list|,
+name|depth
+argument_list|,
+name|typestring
+argument_list|,
 name|tmpstr
+argument_list|,
+name|forwstr
+argument_list|,
+name|typestring
 argument_list|,
 name|forwstr
 argument_list|)
@@ -2193,6 +2339,11 @@ expr_stmt|;
 name|free
 argument_list|(
 name|tname
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|typestring
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2247,6 +2398,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|s
+init|=
+name|NULL
 decl_stmt|;
 name|Der_class
 name|cl
@@ -2311,6 +2464,8 @@ name|tag
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|asprintf
 argument_list|(
 operator|&
@@ -2332,9 +2487,9 @@ name|m
 operator|->
 name|gen_name
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|<
+literal|0
+operator|||
 name|s
 operator|==
 name|NULL
@@ -2363,6 +2518,12 @@ argument_list|,
 name|m
 operator|->
 name|gen_name
+argument_list|,
+name|NULL
+argument_list|,
+name|depth
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2414,7 +2575,7 @@ literal|"memcpy((%s)->u.%s.data, p, len);\n"
 literal|"(%s)->element = %s;\n"
 literal|"p += len;\n"
 literal|"ret += len;\n"
-literal|"len -= len;\n"
+literal|"len = 0;\n"
 literal|"}\n"
 argument_list|,
 name|name
@@ -2620,27 +2781,11 @@ name|FALSE
 decl_stmt|;
 name|fprintf
 argument_list|(
-name|headerfile
-argument_list|,
-literal|"int    "
-literal|"decode_%s(const unsigned char *, size_t, %s *, size_t *);\n"
-argument_list|,
-name|s
-operator|->
-name|gen_name
-argument_list|,
-name|s
-operator|->
-name|gen_name
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
 name|codefile
 argument_list|,
-literal|"int\n"
-literal|"decode_%s(const unsigned char *p,"
-literal|" size_t len, %s *data, size_t *size)\n"
+literal|"int ASN1CALL\n"
+literal|"decode_%s(const unsigned char *p HEIMDAL_UNUSED_ATTRIBUTE,"
+literal|" size_t len HEIMDAL_UNUSED_ATTRIBUTE, %s *data, size_t *size)\n"
 literal|"{\n"
 argument_list|,
 name|s
@@ -2678,6 +2823,9 @@ name|TGeneralizedTime
 case|:
 case|case
 name|TGeneralString
+case|:
+case|case
+name|TTeletexString
 case|:
 case|case
 name|TUTF8String
@@ -2735,8 +2883,8 @@ argument_list|(
 name|codefile
 argument_list|,
 literal|"size_t ret = 0;\n"
-literal|"size_t l;\n"
-literal|"int e;\n"
+literal|"size_t l HEIMDAL_UNUSED_ATTRIBUTE;\n"
+literal|"int e HEIMDAL_UNUSED_ATTRIBUTE;\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2778,6 +2926,10 @@ argument_list|,
 literal|"goto fail"
 argument_list|,
 literal|"Top"
+argument_list|,
+name|NULL
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if

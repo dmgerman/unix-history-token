@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2001 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2001 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -9,17 +9,14 @@ directive|include
 file|"krb5_locl.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: keyblock.c 15167 2005-05-18 04:21:57Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/**  * Zero out a keyblock  *  * @param keyblock keyblock to zero out  *  * @ingroup krb5_crypto  */
+end_comment
 
 begin_function
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_keyblock_zero
 parameter_list|(
 name|krb5_keyblock
@@ -44,9 +41,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Free a keyblock's content, also zero out the content of the keyblock.  *  * @param context a Kerberos 5 context  * @param keyblock keyblock content to free, NULL is valid argument  *  * @ingroup krb5_crypto  */
+end_comment
+
 begin_function
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_free_keyblock_contents
 parameter_list|(
 name|krb5_context
@@ -107,9 +109,14 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/**  * Free a keyblock, also zero out the content of the keyblock, uses  * krb5_free_keyblock_contents() to free the content.  *  * @param context a Kerberos 5 context  * @param keyblock keyblock to free, NULL is valid argument  *  * @ingroup krb5_crypto  */
+end_comment
+
 begin_function
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_free_keyblock
 parameter_list|(
 name|krb5_context
@@ -141,9 +148,14 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/**  * Copy a keyblock, free the output keyblock with  * krb5_free_keyblock_contents().  *  * @param context a Kerberos 5 context  * @param inblock the key to copy  * @param to the output key.  *  * @return 0 on success or a Kerberos 5 error code  *  * @ingroup krb5_crypto  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_copy_keyblock_contents
 parameter_list|(
 name|krb5_context
@@ -170,9 +182,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Copy a keyblock, free the output keyblock with  * krb5_free_keyblock().  *  * @param context a Kerberos 5 context  * @param inblock the key to copy  * @param to the output key.  *  * @return 0 on success or a Kerberos 5 error code  *  * @ingroup krb5_crypto  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_copy_keyblock
 parameter_list|(
 name|krb5_context
@@ -189,14 +206,24 @@ modifier|*
 name|to
 parameter_list|)
 block|{
+name|krb5_error_code
+name|ret
+decl_stmt|;
 name|krb5_keyblock
 modifier|*
 name|k
 decl_stmt|;
+operator|*
+name|to
+operator|=
+name|NULL
+expr_stmt|;
 name|k
 operator|=
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -211,9 +238,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ENOMEM
 argument_list|,
 literal|"malloc: out of memory"
 argument_list|)
@@ -222,12 +251,8 @@ return|return
 name|ENOMEM
 return|;
 block|}
-operator|*
-name|to
+name|ret
 operator|=
-name|k
-expr_stmt|;
-return|return
 name|krb5_copy_keyblock_contents
 argument_list|(
 name|context
@@ -236,12 +261,40 @@ name|inblock
 argument_list|,
 name|k
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+block|{
+name|free
+argument_list|(
+name|k
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
+return|;
+block|}
+operator|*
+name|to
+operator|=
+name|k
+expr_stmt|;
+return|return
+literal|0
 return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Get encryption type of a keyblock.  *  * @ingroup krb5_crypto  */
+end_comment
+
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_enctype
+name|KRB5_LIB_CALL
 name|krb5_keyblock_get_enctype
 parameter_list|(
 specifier|const
@@ -259,12 +312,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Fill in `key' with key data of type `enctype' from `data' of length  * `size'. Key should be freed using krb5_free_keyblock_contents.  */
+comment|/**  * Fill in `key' with key data of type `enctype' from `data' of length  * `size'. Key should be freed using krb5_free_keyblock_contents().  *  * @return 0 on success or a Kerberos 5 error code  *  * @ingroup krb5_crypto  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_keyblock_init
 parameter_list|(
 name|krb5_context
@@ -331,9 +385,11 @@ operator|!=
 name|size
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|KRB5_PROG_ETYPE_NOSUPP
 argument_list|,
 literal|"Encryption key %d is %lu bytes "
 literal|"long, %lu was passed in"
@@ -376,17 +432,18 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"malloc failed: %lu"
+name|ret
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|len
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

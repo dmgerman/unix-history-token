@@ -1,21 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2007 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2007 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<krb5_locl.h>
+file|"krb5_locl.h"
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: rd_cred.c 20304 2007-04-11 11:15:05Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function
 specifier|static
@@ -97,9 +89,11 @@ operator|&
 name|len
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|KRB5KRB_AP_ERR_BADADDR
 argument_list|,
 literal|"%s: %s != %s"
 argument_list|,
@@ -117,8 +111,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rd_cred
 parameter_list|(
 name|krb5_context
@@ -160,7 +155,7 @@ decl_stmt|;
 name|krb5_crypto
 name|crypto
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|memset
@@ -174,6 +169,12 @@ sizeof|sizeof
 argument_list|(
 name|enc_krb_cred_part
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|krb5_data_zero
+argument_list|(
+operator|&
+name|enc_krb_cred_part_data
 argument_list|)
 expr_stmt|;
 if|if
@@ -227,7 +228,7 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -249,7 +250,7 @@ name|ret
 operator|=
 name|KRB5KRB_AP_ERR_BADVERSION
 expr_stmt|;
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -271,7 +272,7 @@ name|ret
 operator|=
 name|KRB5KRB_AP_ERR_MSG_TYPE
 expr_stmt|;
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -319,7 +320,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Try both subkey and session key. 	 *  	 * RFC4120 claims we should use the session key, but Heimdal 	 * before 0.8 used the remote subkey if it was send in the 	 * auth_context. 	 */
+comment|/* Try both subkey and session key. 	 * 	 * RFC4120 claims we should use the session key, but Heimdal 	 * before 0.8 used the remote subkey if it was send in the 	 * auth_context. 	 */
 if|if
 condition|(
 name|auth_context
@@ -377,7 +378,7 @@ name|crypto
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  	 * If there was not subkey, or we failed using subkey,  	 * retry using the session key 	 */
+comment|/* 	 * If there was not subkey, or we failed using subkey, 	 * retry using the session key 	 */
 if|if
 condition|(
 name|auth_context
@@ -451,10 +452,8 @@ goto|;
 block|}
 name|ret
 operator|=
-name|krb5_decode_EncKrbCredPart
+name|decode_EncKrbCredPart
 argument_list|(
-name|context
-argument_list|,
 name|enc_krb_cred_part_data
 operator|.
 name|data
@@ -494,9 +493,26 @@ if|if
 condition|(
 name|ret
 condition|)
+block|{
+name|krb5_set_error_message
+argument_list|(
+name|context
+argument_list|,
+name|ret
+argument_list|,
+name|N_
+argument_list|(
+literal|"Failed to decode "
+literal|"encrypte credential part"
+argument_list|,
+literal|""
+argument_list|)
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 comment|/* check sender address */
 if|if
 condition|(
@@ -554,7 +570,13 @@ name|enc_krb_cred_part
 operator|.
 name|s_address
 argument_list|,
-literal|"sender address is wrong in received creds"
+name|N_
+argument_list|(
+literal|"sender address is wrong "
+literal|"in received creds"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|krb5_free_address
@@ -645,7 +667,13 @@ name|enc_krb_cred_part
 operator|.
 name|r_address
 argument_list|,
-literal|"receiver address is wrong in received creds"
+name|N_
+argument_list|(
+literal|"receiver address is wrong "
+literal|"in received creds"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|krb5_free_address
@@ -684,7 +712,13 @@ name|enc_krb_cred_part
 operator|.
 name|r_address
 argument_list|,
-literal|"receiver address is wrong in received creds"
+name|N_
+argument_list|(
+literal|"receiver address is wrong "
+literal|"in received creds"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -746,7 +780,7 @@ operator|->
 name|max_skew
 condition|)
 block|{
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -869,11 +903,18 @@ name|ret
 operator|=
 name|ENOMEM
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ret
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -940,11 +981,18 @@ name|ret
 operator|=
 name|ENOMEM
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ret
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1297,8 +1345,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rd_cred2
 parameter_list|(
 name|krb5_context

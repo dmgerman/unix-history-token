@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2003 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997-2003 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifdef
@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: afslog.c 16438 2006-01-03 09:27:54Z lha $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -44,23 +44,6 @@ begin_include
 include|#
 directive|include
 file|<krb5.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KRB4
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<krb.h>
 end_include
 
 begin_endif
@@ -141,26 +124,6 @@ name|int
 name|verbose
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KRB4
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|int
-name|use_krb4
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -263,24 +226,6 @@ block|,
 literal|"remove tokens"
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|KRB4
-block|{
-literal|"v4"
-block|,
-literal|0
-block|,
-name|arg_negative_flag
-block|,
-operator|&
-name|use_krb4
-block|,
-literal|"don't use Kerberos 4"
-block|}
-block|,
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|KRB5
@@ -958,12 +903,8 @@ parameter_list|)
 block|{
 name|int
 name|k5ret
-decl_stmt|,
-name|k4ret
 decl_stmt|;
 name|k5ret
-operator|=
-name|k4ret
 operator|=
 literal|0
 expr_stmt|;
@@ -1008,35 +949,6 @@ return|;
 block|}
 endif|#
 directive|endif
-if|#
-directive|if
-name|KRB4
-if|if
-condition|(
-name|use_krb4
-condition|)
-block|{
-name|k4ret
-operator|=
-name|krb_afslog
-argument_list|(
-name|cell
-argument_list|,
-name|realm
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|k4ret
-operator|==
-literal|0
-condition|)
-return|return
-literal|0
-return|;
-block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|cell
@@ -1054,39 +966,15 @@ if|if
 condition|(
 name|k5ret
 condition|)
-name|warnx
-argument_list|(
-literal|"krb5_afslog(%s): %s"
-argument_list|,
-name|cell
-argument_list|,
-name|krb5_get_err_text
+name|krb5_warn
 argument_list|(
 name|context
 argument_list|,
 name|k5ret
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|KRB4
-if|if
-condition|(
-name|k4ret
-condition|)
-name|warnx
-argument_list|(
-literal|"krb_afslog(%s): %s"
+argument_list|,
+literal|"krb5_afslog(%s)"
 argument_list|,
 name|cell
-argument_list|,
-name|krb_get_err_text
-argument_list|(
-name|k4ret
-argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1094,8 +982,6 @@ directive|endif
 if|if
 condition|(
 name|k5ret
-operator|||
-name|k4ret
 condition|)
 return|return
 literal|1
@@ -1309,8 +1195,6 @@ argument_list|(
 name|context
 argument_list|,
 name|client
-argument_list|,
-name|NULL
 argument_list|,
 operator|&
 name|id

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2007 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2008 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -8,14 +8,6 @@ include|#
 directive|include
 file|"kuser_locl.h"
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: kgetcred.c 22276 2007-12-12 02:42:31Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -67,6 +59,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|canonicalize_flag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|impersonate_str
@@ -112,7 +111,12 @@ block|,
 operator|&
 name|cache_str
 block|,
+name|NP_
+argument_list|(
 literal|"credential cache to use"
+argument_list|,
+literal|""
+argument_list|)
 block|,
 literal|"cache"
 block|}
@@ -127,7 +131,12 @@ block|,
 operator|&
 name|out_cache_str
 block|,
+name|NP_
+argument_list|(
 literal|"credential cache to store credential in"
+argument_list|,
+literal|""
+argument_list|)
 block|,
 literal|"cache"
 block|}
@@ -142,9 +151,34 @@ block|,
 operator|&
 name|delegation_cred_str
 block|,
+name|NP_
+argument_list|(
 literal|"where to find the ticket use for delegation"
+argument_list|,
+literal|""
+argument_list|)
 block|,
 literal|"cache"
+block|}
+block|,
+block|{
+literal|"canonicalize"
+block|,
+literal|0
+block|,
+name|arg_flag
+block|,
+operator|&
+name|canonicalize_flag
+block|,
+name|NP_
+argument_list|(
+literal|"canonicalize the principal"
+argument_list|,
+literal|""
+argument_list|)
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -157,7 +191,14 @@ block|,
 operator|&
 name|forwardable_flag
 block|,
+name|NP_
+argument_list|(
 literal|"forwardable ticket requested"
+argument_list|,
+literal|""
+argument_list|)
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -169,6 +210,10 @@ name|arg_negative_flag
 block|,
 operator|&
 name|transit_flag
+block|,
+name|NULL
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -181,7 +226,12 @@ block|,
 operator|&
 name|etype_str
 block|,
+name|NP_
+argument_list|(
 literal|"encryption type to use"
+argument_list|,
+literal|""
+argument_list|)
 block|,
 literal|"enctype"
 block|}
@@ -196,7 +246,12 @@ block|,
 operator|&
 name|impersonate_str
 block|,
+name|NP_
+argument_list|(
 literal|"client to impersonate"
+argument_list|,
+literal|""
+argument_list|)
 block|,
 literal|"principal"
 block|}
@@ -210,6 +265,10 @@ name|arg_string
 block|,
 operator|&
 name|nametype_str
+block|,
+name|NULL
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -221,6 +280,10 @@ name|arg_flag
 block|,
 operator|&
 name|version_flag
+block|,
+name|NULL
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -232,6 +295,10 @@ name|arg_flag
 block|,
 operator|&
 name|help_flag
+block|,
+name|NULL
+block|,
+name|NULL
 block|}
 block|}
 decl_stmt|;
@@ -539,7 +606,12 @@ name|context
 argument_list|,
 literal|1
 argument_list|,
+name|N_
+argument_list|(
 literal|"unrecognized enctype: %s"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|etype_str
 argument_list|)
@@ -645,6 +717,19 @@ argument_list|,
 name|opt
 argument_list|,
 name|KRB5_GC_NO_TRANSIT_CHECK
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|canonicalize_flag
+condition|)
+name|krb5_get_creds_opt_add_options
+argument_list|(
+name|context
+argument_list|,
+name|opt
+argument_list|,
+name|KRB5_GC_CANONICALIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -784,7 +869,7 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -908,6 +993,9 @@ condition|(
 name|nametype_str
 condition|)
 block|{
+name|int32_t
+name|nametype
+decl_stmt|;
 name|ret
 operator|=
 name|krb5_parse_nametype
@@ -917,11 +1005,7 @@ argument_list|,
 name|nametype_str
 argument_list|,
 operator|&
-name|server
-operator|->
-name|name
-operator|.
-name|name_type
+name|nametype
 argument_list|)
 expr_stmt|;
 if|if
@@ -938,6 +1022,17 @@ name|ret
 argument_list|,
 literal|"krb5_parse_nametype"
 argument_list|)
+expr_stmt|;
+name|server
+operator|->
+name|name
+operator|.
+name|name_type
+operator|=
+operator|(
+name|NAME_TYPE
+operator|)
+name|nametype
 expr_stmt|;
 block|}
 name|ret

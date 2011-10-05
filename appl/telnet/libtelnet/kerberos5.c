@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kerberos5.c 22071 2007-11-14 20:04:50Z lha $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -989,7 +989,7 @@ name|context
 argument_list|,
 name|auth_context
 argument_list|,
-name|KEYTYPE_DES
+name|KRB5_ENCTYPE_DES_CBC_CRC
 argument_list|)
 expr_stmt|;
 name|ap_msg
@@ -2071,6 +2071,13 @@ name|ret
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|krb5_free_keyblock
+argument_list|(
+name|context
+argument_list|,
+name|key_block
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|Data
@@ -2300,7 +2307,7 @@ argument_list|,
 name|AUTH_REJECT
 argument_list|)
 expr_stmt|;
-name|krb5_free_keyblock_contents
+name|krb5_free_keyblock
 argument_list|(
 name|context
 argument_list|,
@@ -2316,7 +2323,7 @@ argument_list|,
 name|AUTH_USER
 argument_list|)
 expr_stmt|;
-name|krb5_free_keyblock_contents
+name|krb5_free_keyblock
 argument_list|(
 name|context
 argument_list|,
@@ -2851,7 +2858,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|krb5_free_keyblock_contents
+name|krb5_free_keyblock
 argument_list|(
 name|context
 argument_list|,
@@ -3131,7 +3138,7 @@ name|char
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|size_t
 name|cnt
 parameter_list|,
 name|unsigned
@@ -3139,7 +3146,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|int
+name|size_t
 name|buflen
 parameter_list|)
 block|{
@@ -3563,7 +3570,7 @@ name|principal
 expr_stmt|;
 name|ret
 operator|=
-name|krb5_build_principal
+name|krb5_make_principal
 argument_list|(
 name|context
 argument_list|,
@@ -3571,13 +3578,6 @@ operator|&
 name|creds
 operator|.
 name|server
-argument_list|,
-name|strlen
-argument_list|(
-name|principal
-operator|->
-name|realm
-argument_list|)
 argument_list|,
 name|principal
 operator|->

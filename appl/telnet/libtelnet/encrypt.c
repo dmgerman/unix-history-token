@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: encrypt.c 16802 2006-03-23 19:36:31Z lha $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -40,18 +40,6 @@ begin_include
 include|#
 directive|include
 file|<arpa/telnet.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"encrypt.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"misc.h"
 end_include
 
 begin_include
@@ -94,6 +82,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"encrypt.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"misc.h"
+end_include
 
 begin_comment
 comment|/*  * These functions pointers point to the current routines  * for encrypting and decrypting data.  */
@@ -2973,7 +2973,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called when ENCRYPT REQUEST-START is received.  If we receive  * this before a type is picked, then that indicates that the  * other side wants us to start encrypting data as soon as we  * can.   */
+comment|/*  * Called when ENCRYPT REQUEST-START is received.  If we receive  * this before a type is picked, then that indicates that the  * other side wants us to start encrypting data as soon as we  * can.  */
 end_comment
 
 begin_function
@@ -4256,7 +4256,7 @@ name|char
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|size_t
 name|cnt
 parameter_list|,
 name|unsigned
@@ -4264,7 +4264,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|int
+name|size_t
 name|buflen
 parameter_list|)
 block|{
@@ -4386,7 +4386,7 @@ name|char
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|size_t
 name|cnt
 parameter_list|,
 name|unsigned
@@ -4394,7 +4394,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|int
+name|size_t
 name|buflen
 parameter_list|)
 block|{

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2007 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997-2007 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -8,14 +8,6 @@ include|#
 directive|include
 file|"krb5_locl.h"
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: recvauth.c 20306 2007-04-11 11:15:55Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/*  * See `sendauth.c' for the format.  */
@@ -51,8 +43,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_recvauth
 parameter_list|(
 name|krb5_context
@@ -111,8 +104,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_recvauth_match_version
 parameter_list|(
 name|krb5_context
@@ -278,15 +272,17 @@ name|ret
 operator|=
 name|errno
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"read: %s"
 argument_list|,
 name|strerror
 argument_list|(
-name|errno
+name|ret
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -301,11 +297,18 @@ operator|==
 literal|0
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|KRB5_SENDAUTH_BADAUTHVERS
+argument_list|,
+name|N_
+argument_list|(
 literal|"Failed to receive sendauth data"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -367,7 +370,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -402,15 +405,17 @@ name|ret
 operator|=
 name|errno
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"read: %s"
 argument_list|,
 name|strerror
 argument_list|(
-name|errno
+name|ret
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -425,7 +430,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -471,11 +476,18 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -525,11 +537,18 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|KRB5_SENDAUTH_BADAPPLVERS
+argument_list|,
+name|N_
+argument_list|(
 literal|"wrong sendauth version (%s)"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|her_appl_version
 argument_list|)
@@ -573,15 +592,17 @@ name|ret
 operator|=
 name|errno
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"write: %s"
 argument_list|,
 name|strerror
 argument_list|(
-name|errno
+name|ret
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -729,17 +750,32 @@ name|ret
 operator|=
 name|errno
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"write: %s"
 argument_list|,
 name|strerror
 argument_list|(
-name|errno
+name|ret
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|krb5_free_ticket
+argument_list|(
+name|context
+argument_list|,
+operator|*
+name|ticket
+argument_list|)
+expr_stmt|;
+operator|*
+name|ticket
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 name|ret
@@ -769,9 +805,24 @@ if|if
 condition|(
 name|ret
 condition|)
+block|{
+name|krb5_free_ticket
+argument_list|(
+name|context
+argument_list|,
+operator|*
+name|ticket
+argument_list|)
+expr_stmt|;
+operator|*
+name|ticket
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 name|ret
 return|;
+block|}
 name|ret
 operator|=
 name|krb5_write_message
@@ -788,9 +839,24 @@ if|if
 condition|(
 name|ret
 condition|)
+block|{
+name|krb5_free_ticket
+argument_list|(
+name|context
+argument_list|,
+operator|*
+name|ticket
+argument_list|)
+expr_stmt|;
+operator|*
+name|ticket
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 name|ret
 return|;
+block|}
 name|krb5_data_free
 argument_list|(
 operator|&

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2004, PADL Software Pty Ltd.  * All rights reserved.
 end_comment
 
 begin_comment
-comment|/* $Id: spnego_locl.h 19411 2006-12-18 15:42:03Z lha $ */
+comment|/* $Id$ */
 end_comment
 
 begin_ifndef
@@ -19,22 +19,11 @@ directive|define
 name|SPNEGO_LOCL_H
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<config.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -70,6 +59,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<roken.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -90,13 +85,19 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<gssapi/gssapi_spnego.h>
+file|<gssapi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gssapi.h>
+file|<gssapi_krb5.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<gssapi_spnego.h>
 end_include
 
 begin_include
@@ -173,7 +174,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"mech/utils.h"
+file|"utils.h"
 end_include
 
 begin_include
@@ -185,7 +186,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<roken.h>
+file|<heimbase.h>
 end_include
 
 begin_define
@@ -199,19 +200,6 @@ name|N
 parameter_list|)
 value|(X) = calloc((N), sizeof(*(X)))
 end_define
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|gss_cred_id_t
-name|negotiated_cred_id
-decl_stmt|;
-block|}
-typedef|*
-name|gssspnego_cred
-typedef|;
-end_typedef
 
 begin_typedef
 typedef|typedef
@@ -237,9 +225,6 @@ name|mech_time_rec
 decl_stmt|;
 name|gss_name_t
 name|mech_src_name
-decl_stmt|;
-name|gss_cred_id_t
-name|delegated_cred_id
 decl_stmt|;
 name|unsigned
 name|int
@@ -328,7 +313,7 @@ end_decl_stmt
 begin_include
 include|#
 directive|include
-file|<spnego/spnego-private.h>
+file|<spnego-private.h>
 end_include
 
 begin_endif

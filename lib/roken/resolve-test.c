@@ -1,24 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 - 2004 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1995 - 2004 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<config.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -71,14 +60,6 @@ include|#
 directive|include
 file|"resolve.h"
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: resolve-test.c 15415 2005-06-16 16:58:45Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -190,12 +171,12 @@ name|argv
 parameter_list|)
 block|{
 name|struct
-name|dns_reply
+name|rk_dns_reply
 modifier|*
 name|r
 decl_stmt|;
 name|struct
-name|resource_record
+name|rk_resource_record
 modifier|*
 name|rr
 decl_stmt|;
@@ -290,7 +271,7 @@ argument_list|)
 expr_stmt|;
 name|r
 operator|=
-name|dns_lookup
+name|rk_dns_lookup
 argument_list|(
 name|argv
 index|[
@@ -329,7 +310,7 @@ name|type
 operator|==
 name|rk_ns_t_srv
 condition|)
-name|dns_srv_order
+name|rk_dns_srv_order
 argument_list|(
 name|r
 argument_list|)
@@ -359,7 +340,7 @@ name|rr
 operator|->
 name|domain
 argument_list|,
-name|dns_type_to_string
+name|rk_dns_type_to_string
 argument_list|(
 name|rr
 operator|->
@@ -457,7 +438,7 @@ name|rk_ns_t_srv
 case|:
 block|{
 name|struct
-name|srv_record
+name|rk_srv_record
 modifier|*
 name|srv
 init|=
@@ -512,7 +493,7 @@ name|rk_ns_t_sig
 case|:
 block|{
 name|struct
-name|sig_record
+name|rk_sig_record
 modifier|*
 name|sig
 init|=
@@ -527,7 +508,7 @@ name|char
 modifier|*
 name|type_string
 init|=
-name|dns_type_to_string
+name|rk_dns_type_to_string
 argument_list|(
 name|sig
 operator|->
@@ -584,7 +565,7 @@ name|rk_ns_t_key
 case|:
 block|{
 name|struct
-name|key_record
+name|rk_key_record
 modifier|*
 name|key
 init|=
@@ -618,7 +599,7 @@ name|rk_ns_t_sshfp
 case|:
 block|{
 name|struct
-name|sshfp_record
+name|rk_sshfp_record
 modifier|*
 name|sshfp
 init|=
@@ -628,7 +609,7 @@ name|u
 operator|.
 name|sshfp
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|printf
@@ -691,7 +672,7 @@ name|rk_ns_t_ds
 case|:
 block|{
 name|struct
-name|ds_record
+name|rk_ds_record
 modifier|*
 name|ds
 init|=
@@ -701,12 +682,12 @@ name|u
 operator|.
 name|ds
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"key tag %u alg %u type %u length %u data "
+literal|"key tag %u alg %u type %u length %lu data "
 argument_list|,
 name|ds
 operator|->
@@ -720,6 +701,10 @@ name|ds
 operator|->
 name|digest_type
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|ds
 operator|->
 name|digest_len

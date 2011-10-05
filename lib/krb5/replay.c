@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2001 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997-2001 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -15,14 +15,6 @@ directive|include
 file|<vis.h>
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: replay.c 17047 2006-04-10 17:13:49Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_struct
 struct|struct
 name|krb5_rcache_data
@@ -36,8 +28,9 @@ struct|;
 end_struct
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rc_resolve
 parameter_list|(
 name|krb5_context
@@ -70,11 +63,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|KRB5_RC_MALLOC
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -88,8 +88,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rc_resolve_type
 parameter_list|(
 name|krb5_context
@@ -120,11 +121,18 @@ literal|"FILE"
 argument_list|)
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|KRB5_RC_TYPE_NOTFOUND
+argument_list|,
+name|N_
+argument_list|(
 literal|"replay cache type %s not supported"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|type
 argument_list|)
@@ -156,11 +164,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|KRB5_RC_MALLOC
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -174,8 +189,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rc_resolve_full
 parameter_list|(
 name|krb5_context
@@ -211,11 +227,18 @@ literal|5
 argument_list|)
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|KRB5_RC_TYPE_NOTFOUND
+argument_list|,
+name|N_
+argument_list|(
 literal|"replay cache type %s not supported"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|string_name
 argument_list|)
@@ -282,10 +305,11 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|char
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_rc_default_name
 parameter_list|(
 name|krb5_context
@@ -299,10 +323,11 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|char
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_rc_default_type
 parameter_list|(
 name|krb5_context
@@ -316,8 +341,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rc_default
 parameter_list|(
 name|krb5_context
@@ -363,8 +389,9 @@ struct|;
 end_struct
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rc_initialize
 parameter_list|(
 name|krb5_context
@@ -404,13 +431,33 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|char
+name|buf
+index|[
+literal|128
+index|]
+decl_stmt|;
 name|ret
 operator|=
 name|errno
 expr_stmt|;
-name|krb5_set_error_string
+name|rk_strerror_r
+argument_list|(
+name|ret
+argument_list|,
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"open(%s): %s"
 argument_list|,
@@ -418,10 +465,7 @@ name|id
 operator|->
 name|name
 argument_list|,
-name|strerror
-argument_list|(
-name|ret
-argument_list|)
+name|buf
 argument_list|)
 expr_stmt|;
 return|return
@@ -461,8 +505,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rc_recover
 parameter_list|(
 name|krb5_context
@@ -479,8 +524,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rc_destroy
 parameter_list|(
 name|krb5_context
@@ -505,13 +551,33 @@ operator|<
 literal|0
 condition|)
 block|{
+name|char
+name|buf
+index|[
+literal|128
+index|]
+decl_stmt|;
 name|ret
 operator|=
 name|errno
 expr_stmt|;
-name|krb5_set_error_string
+name|rk_strerror_r
+argument_list|(
+name|ret
+argument_list|,
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"remove(%s): %s"
 argument_list|,
@@ -519,10 +585,7 @@ name|id
 operator|->
 name|name
 argument_list|,
-name|strerror
-argument_list|(
-name|ret
-argument_list|)
+name|buf
 argument_list|)
 expr_stmt|;
 return|return
@@ -541,8 +604,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rc_close
 parameter_list|(
 name|krb5_context
@@ -584,22 +648,29 @@ modifier|*
 name|data
 parameter_list|)
 block|{
-name|MD5_CTX
-name|md5
+name|EVP_MD_CTX
+modifier|*
+name|m
+init|=
+name|EVP_MD_CTX_create
+argument_list|()
 decl_stmt|;
-name|int
+name|unsigned
 name|i
 decl_stmt|;
-name|MD5_Init
+name|EVP_DigestInit_ex
 argument_list|(
-operator|&
-name|md5
+name|m
+argument_list|,
+name|EVP_md5
+argument_list|()
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-name|MD5_Update
+name|EVP_DigestUpdate
 argument_list|(
-operator|&
-name|md5
+name|m
 argument_list|,
 name|auth
 operator|->
@@ -632,10 +703,9 @@ condition|;
 name|i
 operator|++
 control|)
-name|MD5_Update
+name|EVP_DigestUpdate
 argument_list|(
-operator|&
-name|md5
+name|m
 argument_list|,
 name|auth
 operator|->
@@ -663,10 +733,9 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|MD5_Update
+name|EVP_DigestUpdate
 argument_list|(
-operator|&
-name|md5
+name|m
 argument_list|,
 operator|&
 name|auth
@@ -681,10 +750,9 @@ name|ctime
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|MD5_Update
+name|EVP_DigestUpdate
 argument_list|(
-operator|&
-name|md5
+name|m
 argument_list|,
 operator|&
 name|auth
@@ -699,20 +767,27 @@ name|cusec
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|MD5_Final
+name|EVP_DigestFinal_ex
 argument_list|(
+name|m
+argument_list|,
 name|data
 argument_list|,
-operator|&
-name|md5
+name|NULL
+argument_list|)
+expr_stmt|;
+name|EVP_MD_CTX_destroy
+argument_list|(
+name|m
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rc_store
 parameter_list|(
 name|krb5_context
@@ -778,13 +853,33 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|char
+name|buf
+index|[
+literal|128
+index|]
+decl_stmt|;
 name|ret
 operator|=
 name|errno
 expr_stmt|;
-name|krb5_set_error_string
+name|rk_strerror_r
+argument_list|(
+name|ret
+argument_list|,
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"open(%s): %s"
 argument_list|,
@@ -792,16 +887,18 @@ name|id
 operator|->
 name|name
 argument_list|,
-name|strerror
-argument_list|(
-name|ret
-argument_list|)
+name|buf
 argument_list|)
 expr_stmt|;
 return|return
 name|ret
 return|;
 block|}
+name|rk_cloexec_file
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
 name|fread
 argument_list|(
 operator|&
@@ -882,7 +979,7 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -900,6 +997,12 @@ name|f
 argument_list|)
 condition|)
 block|{
+name|char
+name|buf
+index|[
+literal|128
+index|]
+decl_stmt|;
 name|ret
 operator|=
 name|errno
@@ -909,9 +1012,23 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+name|rk_strerror_r
+argument_list|(
+name|ret
+argument_list|,
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"%s: %s"
 argument_list|,
@@ -919,10 +1036,7 @@ name|id
 operator|->
 name|name
 argument_list|,
-name|strerror
-argument_list|(
-name|ret
-argument_list|)
+name|buf
 argument_list|)
 expr_stmt|;
 return|return
@@ -952,9 +1066,29 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|char
+name|buf
+index|[
+literal|128
+index|]
+decl_stmt|;
+name|rk_strerror_r
+argument_list|(
+name|errno
+argument_list|,
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|KRB5_RC_IO_UNKNOWN
 argument_list|,
 literal|"open(%s): %s"
 argument_list|,
@@ -962,10 +1096,7 @@ name|id
 operator|->
 name|name
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+name|buf
 argument_list|)
 expr_stmt|;
 return|return
@@ -999,8 +1130,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rc_expunge
 parameter_list|(
 name|krb5_context
@@ -1017,8 +1149,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_rc_get_lifespan
 parameter_list|(
 name|krb5_context
@@ -1090,7 +1223,7 @@ return|return
 literal|0
 return|;
 block|}
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -1102,10 +1235,11 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|char
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_rc_get_name
 parameter_list|(
 name|krb5_context
@@ -1124,10 +1258,11 @@ block|}
 end_function
 
 begin_function
+name|KRB5_LIB_FUNCTION
 specifier|const
 name|char
 modifier|*
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_rc_get_type
 parameter_list|(
 name|krb5_context
@@ -1144,8 +1279,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_server_rcache
 parameter_list|(
 name|krb5_context
@@ -1193,11 +1329,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1224,6 +1367,8 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_GETEUID
+name|ret
+operator|=
 name|asprintf
 argument_list|(
 operator|&
@@ -1242,6 +1387,8 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+name|ret
+operator|=
 name|asprintf
 argument_list|(
 operator|&
@@ -1261,16 +1408,27 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ret
+operator|<
+literal|0
+operator|||
 name|name
 operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

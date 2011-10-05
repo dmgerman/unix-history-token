@@ -4,25 +4,14 @@ comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of Calif
 end_comment
 
 begin_comment
-comment|/*  * glob(3) -- a superset of the one defined in POSIX 1003.2.  *  * The [!...] convention to negate a range is supported (SysV, Posix, ksh).  *  * Optional extra services, controlled by flags not defined by POSIX:  *  * GLOB_QUOTE:  *	Escaping convention: \ inhibits any special meaning the following  *	character might have (except \ at end of string is retained).  * GLOB_MAGCHAR:  *	Set in gl_flags if pattern contained a globbing character.  * GLOB_NOMAGIC:  *	Same as GLOB_NOCHECK, but it will only append pattern if it did  *	not contain any magic characters.  [Used in csh style globbing]  * GLOB_ALTDIRFUNC:  *	Use alternately specified directory access functions.  * GLOB_TILDE:  *	expand ~user/foo to the /home/dir/of/user/foo  * GLOB_BRACE:  *	expand {1,2}{a,b} to 1a 1b 2a 2b   * gl_matchc:  *	Number of matches in the current invocation of glob.  */
+comment|/*  * glob(3) -- a superset of the one defined in POSIX 1003.2.  *  * The [!...] convention to negate a range is supported (SysV, Posix, ksh).  *  * Optional extra services, controlled by flags not defined by POSIX:  *  * GLOB_QUOTE:  *	Escaping convention: \ inhibits any special meaning the following  *	character might have (except \ at end of string is retained).  * GLOB_MAGCHAR:  *	Set in gl_flags if pattern contained a globbing character.  * GLOB_NOMAGIC:  *	Same as GLOB_NOCHECK, but it will only append pattern if it did  *	not contain any magic characters.  [Used in csh style globbing]  * GLOB_ALTDIRFUNC:  *	Use alternately specified directory access functions.  * GLOB_TILDE:  *	expand ~user/foo to the /home/dir/of/user/foo  * GLOB_BRACE:  *	expand {1,2}{a,b} to 1a 1b 2a 2b  * gl_matchc:  *	Number of matches in the current invocation of glob.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<config.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -804,8 +793,9 @@ directive|endif
 end_endif
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|glob
 parameter_list|(
 specifier|const
@@ -1308,7 +1298,7 @@ operator|==
 name|CHAR_EOS
 condition|)
 block|{
-comment|/*  				 * We could not find a matching CHAR_RBRACKET. 				 * Ignore and just look for CHAR_RBRACE 				 */
+comment|/* 				 * We could not find a matching CHAR_RBRACKET. 				 * Ignore and just look for CHAR_RBRACE 				 */
 name|pe
 operator|=
 name|pm
@@ -1431,7 +1421,7 @@ operator|==
 name|CHAR_EOS
 condition|)
 block|{
-comment|/*  				 * We could not find a matching CHAR_RBRACKET. 				 * Ignore and just look for CHAR_RBRACE 				 */
+comment|/* 				 * We could not find a matching CHAR_RBRACKET. 				 * Ignore and just look for CHAR_RBRACE 				 */
 name|pm
 operator|=
 name|pl
@@ -1496,7 +1486,7 @@ name|pl
 operator|++
 control|)
 continue|continue;
-comment|/*  				 * Append the rest of the pattern after the 				 * closing brace 				 */
+comment|/* 				 * Append the rest of the pattern after the 				 * closing brace 				 */
 for|for
 control|(
 name|pl
@@ -1682,7 +1672,7 @@ operator|==
 name|CHAR_EOS
 condition|)
 block|{
-comment|/*  		 * handle a plain ~ or ~/ by expanding $HOME  		 * first and then trying the password file 		 */
+comment|/* 		 * handle a plain ~ or ~/ by expanding $HOME 		 * first and then trying the password file 		 */
 if|if
 condition|(
 operator|(
@@ -2061,7 +2051,7 @@ name|gl_flags
 operator||=
 name|GLOB_MAGCHAR
 expr_stmt|;
-comment|/* collapse adjacent stars to one,  			 * to avoid exponential behavior 			 */
+comment|/* collapse adjacent stars to one, 			 * to avoid exponential behavior 			 */
 if|if
 condition|(
 name|bufnext
@@ -2136,7 +2126,7 @@ operator|(
 name|err
 operator|)
 return|;
-comment|/* 	 * If there was no match we are going to append the pattern  	 * if GLOB_NOCHECK was specified or if GLOB_NOMAGIC was specified 	 * and the pattern did not contain any magic characters 	 * GLOB_NOMAGIC is there just for compatibility with csh. 	 */
+comment|/* 	 * If there was no match we are going to append the pattern 	 * if GLOB_NOCHECK was specified or if GLOB_NOMAGIC was specified 	 * and the pattern did not contain any magic characters 	 * GLOB_NOMAGIC is there just for compatibility with csh. 	 */
 if|if
 condition|(
 name|pglob
@@ -3505,8 +3495,9 @@ comment|/* Free allocated data belonging to a glob_t structure. */
 end_comment
 
 begin_function
-name|void
 name|ROKEN_LIB_FUNCTION
+name|void
+name|ROKEN_LIB_CALL
 name|globfree
 parameter_list|(
 name|glob_t
