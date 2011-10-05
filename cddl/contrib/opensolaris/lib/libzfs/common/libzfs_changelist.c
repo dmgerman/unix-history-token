@@ -1647,14 +1647,6 @@ block|}
 else|else
 block|{
 comment|/* 			 * Add this child to beginning of the list. Children 			 * below this one in the hierarchy will get added above 			 * this one in the list. This produces a list in 			 * reverse dataset name order. 			 * This is necessary when the original mountpoint 			 * is legacy or none. 			 */
-name|ASSERT
-argument_list|(
-operator|!
-name|clp
-operator|->
-name|cl_alldependents
-argument_list|)
-expr_stmt|;
 name|verify
 argument_list|(
 name|uu_list_insert_before
