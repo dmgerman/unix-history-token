@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-agent.c,v 1.171 2010/11/21 01:01:13 djm Exp $ */
+comment|/* $OpenBSD: ssh-agent.c,v 1.172 2011/06/03 01:37:40 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -5991,6 +5991,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* 	 * If our parent has exited then getppid() will return (pid_t)1, 	 * so testing for that should be safe. 	 */
 if|if
 condition|(
 name|parent_pid
@@ -5998,14 +5999,10 @@ operator|!=
 operator|-
 literal|1
 operator|&&
-name|kill
-argument_list|(
+name|getppid
+argument_list|()
+operator|!=
 name|parent_pid
-argument_list|,
-literal|0
-argument_list|)
-operator|<
-literal|0
 condition|)
 block|{
 comment|/* printf("Parent has died - Authentication agent exiting.\n"); */
@@ -6270,9 +6267,6 @@ index|[
 literal|0
 index|]
 argument_list|)
-expr_stmt|;
-name|init_rng
-argument_list|()
 expr_stmt|;
 name|seed_rng
 argument_list|()

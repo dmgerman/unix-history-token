@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: port-linux.c,v 1.11.4.3 2011/02/06 02:24:17 dtucker Exp $ */
+comment|/* $Id: port-linux.c,v 1.16 2011/08/29 06:09:57 djm Exp $ */
 end_comment
 
 begin_comment
@@ -96,6 +96,24 @@ include|#
 directive|include
 file|<selinux/get_context_list.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SSH_SELINUX_UNCONFINED_TYPE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SSH_SELINUX_UNCONFINED_TYPE
+value|":unconfined_t:"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Wrapper around is_selinux_enabled() to log its return value once only */
@@ -663,6 +681,22 @@ decl_stmt|,
 modifier|*
 name|cx
 decl_stmt|;
+name|void
+function_decl|(
+modifier|*
+name|switchlog
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+init|=
+name|logit
+function_decl|;
 if|if
 condition|(
 operator|!
@@ -741,6 +775,29 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * Check whether we are attempting to switch away from an unconfined 	 * security context. 	 */
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|cx
+argument_list|,
+name|SSH_SELINUX_UNCONFINED_TYPE
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|SSH_SELINUX_UNCONFINED_TYPE
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|switchlog
+operator|=
+name|debug3
+expr_stmt|;
 name|newlen
 operator|=
 name|strlen
@@ -836,11 +893,15 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|logit
+name|switchlog
 argument_list|(
-literal|"%s: setcon failed with %s"
+literal|"%s: setcon %s from %s failed with %s"
 argument_list|,
 name|__func__
+argument_list|,
+name|newctx
+argument_list|,
+name|oldctx
 argument_list|,
 name|strerror
 argument_list|(

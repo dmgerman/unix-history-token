@@ -1317,9 +1317,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|init_rng
-argument_list|()
-expr_stmt|;
 name|seed_rng
 argument_list|()
 expr_stmt|;

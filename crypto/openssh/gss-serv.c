@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: gss-serv.c,v 1.22 2008/05/08 12:02:23 djm Exp $ */
+comment|/* $OpenBSD: gss-serv.c,v 1.23 2011/08/01 19:18:15 markus Exp $ */
 end_comment
 
 begin_comment
@@ -875,6 +875,19 @@ name|offset
 operator|+=
 literal|4
 expr_stmt|;
+if|if
+condition|(
+name|UINT_MAX
+operator|-
+name|offset
+operator|<
+name|name
+operator|->
+name|length
+condition|)
+return|return
+name|GSS_S_FAILURE
+return|;
 if|if
 condition|(
 name|ename

@@ -1329,6 +1329,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|do_log2
+value|ssh_do_log2
+end_define
+
+begin_define
+define|#
+directive|define
 name|dump_base64
 value|ssh_dump_base64
 end_define
@@ -1583,6 +1590,13 @@ define|#
 directive|define
 name|init_rng
 value|ssh_init_rng
+end_define
+
+begin_define
+define|#
+directive|define
+name|iptos2str
+value|ssh_iptos2str
 end_define
 
 begin_define
@@ -1896,6 +1910,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|key_load_file
+value|ssh_key_load_file
+end_define
+
+begin_define
+define|#
+directive|define
 name|key_load_private
 value|ssh_key_load_private
 end_define
@@ -1954,6 +1975,13 @@ define|#
 directive|define
 name|key_new_private
 value|ssh_key_new_private
+end_define
+
+begin_define
+define|#
+directive|define
+name|key_parse_private
+value|ssh_key_parse_private
 end_define
 
 begin_define
@@ -2962,6 +2990,13 @@ define|#
 directive|define
 name|seed_rng
 value|ssh_seed_rng
+end_define
+
+begin_define
+define|#
+directive|define
+name|set_log_handler
+value|ssh_set_log_handler
 end_define
 
 begin_define

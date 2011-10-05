@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor_wrap.h,v 1.22 2009/03/05 07:18:19 djm Exp $ */
+comment|/* $OpenBSD: monitor_wrap.h,v 1.23 2011/06/17 21:44:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -70,6 +70,22 @@ struct_decl|struct
 name|Authctxt
 struct_decl|;
 end_struct_decl
+
+begin_function_decl
+name|void
+name|mm_log_handler
+parameter_list|(
+name|LogLevel
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
