@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/fcntl.h>
 end_include
 
@@ -899,6 +905,22 @@ name|pipe_zone
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|unrhdr
+modifier|*
+name|pipeino_unr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|dev_t
+name|pipedev_ino
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SYSINIT
 argument_list|(
@@ -959,6 +981,44 @@ name|NULL
 argument_list|,
 operator|(
 literal|"pipe_zone not initialized"
+operator|)
+argument_list|)
+expr_stmt|;
+name|pipeino_unr
+operator|=
+name|new_unrhdr
+argument_list|(
+literal|1
+argument_list|,
+name|INT32_MAX
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|pipeino_unr
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"pipe fake inodes not initialized"
+operator|)
+argument_list|)
+expr_stmt|;
+name|pipedev_ino
+operator|=
+name|devfs_alloc_cdp_inode
+argument_list|()
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|pipedev_ino
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"pipe dev inode not initialized"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2483,6 +2543,37 @@ comment|/* If we're not backing this pipe, no need to do anything. */
 name|error
 operator|=
 literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
+name|pipe
+operator|->
+name|pipe_ino
+operator|=
+name|alloc_unr
+argument_list|(
+name|pipeino_unr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pipe
+operator|->
+name|pipe_ino
+operator|==
+operator|-
+literal|1
+condition|)
+comment|/* pipeclose will clear allocated kva */
+name|error
+operator|=
+name|ENOMEM
 expr_stmt|;
 block|}
 return|return
@@ -6164,7 +6255,21 @@ name|f_cred
 operator|->
 name|cr_gid
 expr_stmt|;
-comment|/* 	 * Left as 0: st_dev, st_ino, st_nlink, st_rdev, st_flags, st_gen. 	 * XXX (st_dev, st_ino) should be unique. 	 */
+name|ub
+operator|->
+name|st_dev
+operator|=
+name|pipedev_ino
+expr_stmt|;
+name|ub
+operator|->
+name|st_ino
+operator|=
+name|pipe
+operator|->
+name|pipe_ino
+expr_stmt|;
+comment|/* 	 * Left as 0: st_nlink, st_rdev, st_flags, st_gen. 	 */
 return|return
 operator|(
 literal|0
@@ -6391,6 +6496,9 @@ name|pipe
 modifier|*
 name|ppipe
 decl_stmt|;
+name|ino_t
+name|ino
+decl_stmt|;
 name|KASSERT
 argument_list|(
 name|cpipe
@@ -6588,6 +6696,13 @@ operator|.
 name|si_note
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Postpone the destroy of the fake inode number allocated for 	 * our end, until pipe mtx is unlocked. 	 */
+name|ino
+operator|=
+name|cpipe
+operator|->
+name|pipe_ino
+expr_stmt|;
 comment|/* 	 * If both endpoints are now closed, release the memory for the 	 * pipe pair.  If not, unlock. 	 */
 if|if
 condition|(
@@ -6627,6 +6742,21 @@ else|else
 name|PIPE_UNLOCK
 argument_list|(
 name|cpipe
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ino
+operator|>
+literal|0
+condition|)
+name|free_unr
+argument_list|(
+name|pipeino_unr
+argument_list|,
+name|cpipe
+operator|->
+name|pipe_ino
 argument_list|)
 expr_stmt|;
 block|}
