@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian F. Darwin and others;  * maintained 1995-present by Christos Zoulas and others.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *    * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian F. Darwin and others;  * maintained 1995-present by Christos Zoulas and others.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: is_tar.c,v 1.36 2009/02/03 20:27:51 christos Exp $"
+literal|"@(#)$File: is_tar.c,v 1.37 2010/11/30 14:58:53 rrt Exp $"
 argument_list|)
 end_macro
 
@@ -222,7 +222,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return   *	0 if the checksum is bad (i.e., probably not a tar archive),   *	1 for old UNIX tar file,  *	2 for Unix Std (POSIX) tar file,  *	3 for GNU tar file.  */
+comment|/*  * Return  *	0 if the checksum is bad (i.e., probably not a tar archive),  *	1 for old UNIX tar file,  *	2 for Unix Std (POSIX) tar file,  *	3 for GNU tar file.  */
 end_comment
 
 begin_function
@@ -268,6 +268,7 @@ decl_stmt|,
 name|recsum
 decl_stmt|;
 specifier|const
+name|unsigned
 name|char
 modifier|*
 name|p
@@ -324,17 +325,12 @@ operator|>=
 literal|0
 condition|;
 control|)
-block|{
-comment|/* 		 * We cannot use unsigned char here because of old compilers, 		 * e.g. V7. 		 */
 name|sum
 operator|+=
-literal|0xFF
-operator|&
 operator|*
 name|p
 operator|++
 expr_stmt|;
-block|}
 comment|/* Adjust checksum to count the "chksum" field as blanks. */
 for|for
 control|(
@@ -357,8 +353,6 @@ condition|;
 control|)
 name|sum
 operator|-=
-literal|0xFF
-operator|&
 name|header
 operator|->
 name|header
@@ -435,7 +429,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Quick and dirty octal conversion.  *  * Result is -1 if the field is invalid (all blank, or nonoctal).  */
+comment|/*  * Quick and dirty octal conversion.  *  * Result is -1 if the field is invalid (all blank, or non-octal).  */
 end_comment
 
 begin_function
@@ -502,7 +496,7 @@ name|where
 argument_list|)
 condition|)
 block|{
-comment|/* Scan til nonoctal */
+comment|/* Scan til non-octal */
 name|value
 operator|=
 operator|(
@@ -547,7 +541,7 @@ return|return
 operator|-
 literal|1
 return|;
-comment|/* Ended on non-space/nul */
+comment|/* Ended on non-(space/NUL) */
 return|return
 name|value
 return|;

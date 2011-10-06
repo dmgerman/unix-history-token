@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian 
 end_comment
 
 begin_comment
-comment|/*  * ASCII magic -- file types that we know based on keywords  * that can appear anywhere in the file.  *  * Extensively modified by Eric Fischer<enf@pobox.com> in July, 2000,  * to handle character codes other than ASCII on a unified basis.  */
+comment|/*  * ASCII magic -- try to detect text encoding.  *  * Extensively modified by Eric Fischer<enf@pobox.com> in July, 2000,  * to handle character codes other than ASCII on a unified basis.  */
 end_comment
 
 begin_include
@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: ascmagic.c,v 1.75 2009/02/03 20:27:51 christos Exp $"
+literal|"@(#)$File: ascmagic.c,v 1.81 2011/03/15 22:16:29 christos Exp $"
 argument_list|)
 end_macro
 
@@ -478,6 +478,15 @@ name|n_nel
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|score
+decl_stmt|,
+name|curtype
+decl_stmt|,
+name|executable
+init|=
+literal|0
+decl_stmt|;
 name|size_t
 name|last_line_end
 init|=
@@ -528,8 +537,21 @@ goto|goto
 name|done
 goto|;
 block|}
+if|if
+condition|(
+operator|(
+name|ms
+operator|->
+name|flags
+operator|&
+name|MAGIC_NO_CHECK_SOFT
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 comment|/* Convert ubuf to UTF-8 and try text soft magic */
-comment|/* malloc size is a conservative overestimate; could be 	   improved, or at least realloced after conversion. */
+comment|/* malloc size is a conservative overestimate; could be 		   improved, or at least realloced after conversion. */
 name|mlen
 operator|=
 name|ulen
@@ -612,7 +634,7 @@ operator|!=
 literal|0
 condition|)
 goto|goto
-name|done
+name|subtype_identified
 goto|;
 else|else
 name|rv
@@ -620,6 +642,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+block|}
 comment|/* look for tokens from names.h - this is expensive! */
 if|if
 condition|(
@@ -639,6 +662,15 @@ goto|;
 name|i
 operator|=
 literal|0
+expr_stmt|;
+name|score
+operator|=
+literal|0
+expr_stmt|;
+name|curtype
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 while|while
 condition|(
@@ -743,6 +775,56 @@ name|i
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|curtype
+operator|==
+operator|-
+literal|1
+condition|)
+name|curtype
+operator|=
+name|p
+operator|->
+name|type
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|curtype
+operator|!=
+name|p
+operator|->
+name|type
+condition|)
+block|{
+name|score
+operator|=
+name|p
+operator|->
+name|score
+expr_stmt|;
+name|curtype
+operator|=
+name|p
+operator|->
+name|type
+expr_stmt|;
+block|}
+else|else
+name|score
+operator|+=
+name|p
+operator|->
+name|score
+expr_stmt|;
+if|if
+condition|(
+name|score
+operator|>
+literal|1
+condition|)
+block|{
 name|subtype
 operator|=
 name|types
@@ -768,6 +850,7 @@ expr_stmt|;
 goto|goto
 name|subtype_identified
 goto|;
+block|}
 block|}
 block|}
 name|i
@@ -943,6 +1026,12 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
+name|file_printedlen
+argument_list|(
+name|ms
+argument_list|)
+operator|&&
 operator|(
 name|mime
 operator|&
@@ -999,6 +1088,85 @@ else|else
 block|{
 if|if
 condition|(
+name|file_printedlen
+argument_list|(
+name|ms
+argument_list|)
+condition|)
+block|{
+switch|switch
+condition|(
+name|file_replace
+argument_list|(
+name|ms
+argument_list|,
+literal|" text$"
+argument_list|,
+literal|", "
+argument_list|)
+condition|)
+block|{
+case|case
+literal|0
+case|:
+switch|switch
+condition|(
+name|file_replace
+argument_list|(
+name|ms
+argument_list|,
+literal|" text executable$"
+argument_list|,
+literal|", "
+argument_list|)
+condition|)
+block|{
+case|case
+literal|0
+case|:
+if|if
+condition|(
+name|file_printf
+argument_list|(
+name|ms
+argument_list|,
+literal|", "
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+goto|goto
+name|done
+goto|;
+case|case
+operator|-
+literal|1
+case|:
+goto|goto
+name|done
+goto|;
+default|default:
+name|executable
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
+break|break;
+case|case
+operator|-
+literal|1
+case|:
+goto|goto
+name|done
+goto|;
+default|default:
+break|break;
+block|}
+block|}
+if|if
+condition|(
 name|file_printf
 argument_list|(
 name|ms
@@ -1046,6 +1214,25 @@ argument_list|,
 literal|" %s"
 argument_list|,
 name|type
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+goto|goto
+name|done
+goto|;
+if|if
+condition|(
+name|executable
+condition|)
+if|if
+condition|(
+name|file_printf
+argument_list|(
+name|ms
+argument_list|,
+literal|" executable"
 argument_list|)
 operator|==
 operator|-

@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: encoding.c,v 1.3 2009/02/03 20:27:51 christos Exp $"
+literal|"@(#)$File: encoding.c,v 1.5 2010/07/21 16:47:17 christos Exp $"
 argument_list|)
 end_macro
 
@@ -182,6 +182,41 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG_ENCODING
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DPRINTF
+parameter_list|(
+name|a
+parameter_list|)
+value|printf a
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DPRINTF
+parameter_list|(
+name|a
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Try to determine whether text is in some character code we can  * identify.  Each of these tests, if it succeeds, will leave  * the text converted into one-unichar-per-character Unicode in  * ubuf, and the number of characters converted in ulen.  */
@@ -372,6 +407,18 @@ name|ulen
 argument_list|)
 condition|)
 block|{
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"ascii %"
+name|SIZE_T_FORMAT
+literal|"u\n"
+operator|,
+operator|*
+name|ulen
+operator|)
+argument_list|)
+expr_stmt|;
 operator|*
 name|code
 operator|=
@@ -401,6 +448,18 @@ operator|>
 literal|0
 condition|)
 block|{
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"utf8/bom %"
+name|SIZE_T_FORMAT
+literal|"u\n"
+operator|,
+operator|*
+name|ulen
+operator|)
+argument_list|)
+expr_stmt|;
 operator|*
 name|code
 operator|=
@@ -430,6 +489,23 @@ operator|>
 literal|1
 condition|)
 block|{
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"utf8 %"
+name|SIZE_T_FORMAT
+literal|"u\n"
+operator|,
+operator|*
+name|ulen
+operator|)
+argument_list|)
+expr_stmt|;
+operator|*
+name|code
+operator|=
+literal|"UTF-8 Unicode (with BOM)"
+expr_stmt|;
 operator|*
 name|code
 operator|=
@@ -494,6 +570,18 @@ operator|=
 literal|"utf-16be"
 expr_stmt|;
 block|}
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"ucs16 %"
+name|SIZE_T_FORMAT
+literal|"u\n"
+operator|,
+operator|*
+name|ulen
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -511,6 +599,18 @@ name|ulen
 argument_list|)
 condition|)
 block|{
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"latin1 %"
+name|SIZE_T_FORMAT
+literal|"u\n"
+operator|,
+operator|*
+name|ulen
+operator|)
+argument_list|)
+expr_stmt|;
 operator|*
 name|code
 operator|=
@@ -538,6 +638,18 @@ name|ulen
 argument_list|)
 condition|)
 block|{
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"extended %"
+name|SIZE_T_FORMAT
+literal|"u\n"
+operator|,
+operator|*
+name|ulen
+operator|)
+argument_list|)
+expr_stmt|;
 operator|*
 name|code
 operator|=
@@ -575,6 +687,18 @@ name|ulen
 argument_list|)
 condition|)
 block|{
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"ebcdic %"
+name|SIZE_T_FORMAT
+literal|"u\n"
+operator|,
+operator|*
+name|ulen
+operator|)
+argument_list|)
+expr_stmt|;
 operator|*
 name|code
 operator|=
@@ -602,6 +726,18 @@ name|ulen
 argument_list|)
 condition|)
 block|{
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"ebcdic/international %"
+name|SIZE_T_FORMAT
+literal|"u\n"
+operator|,
+operator|*
+name|ulen
+operator|)
+argument_list|)
+expr_stmt|;
 operator|*
 name|code
 operator|=
@@ -616,6 +752,13 @@ block|}
 else|else
 block|{
 comment|/* Doesn't look like text at all */
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"binary\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|rv
 operator|=
 literal|0

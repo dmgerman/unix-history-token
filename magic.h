@@ -271,6 +271,17 @@ comment|/* Don't check text encodings */
 end_comment
 
 begin_comment
+comment|/* No built-in tests; only consult the magic file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAGIC_NO_CHECK_BUILTIN
+value|0x3fb000
+end_define
+
+begin_comment
 comment|/* Defined for backwards compatibility (renamed) */
 end_comment
 
@@ -335,6 +346,18 @@ name|void
 name|magic_close
 parameter_list|(
 name|magic_t
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|magic_getpath
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 specifier|const
@@ -411,6 +434,16 @@ parameter_list|)
 function_decl|;
 name|int
 name|magic_check
+parameter_list|(
+name|magic_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+name|magic_list
 parameter_list|(
 name|magic_t
 parameter_list|,

@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: print.c,v 1.66 2009/02/03 20:27:51 christos Exp $"
+literal|"@(#)$File: print.c,v 1.70 2011/08/14 09:03:12 christos Exp $"
 argument_list|)
 end_macro
 
@@ -120,24 +120,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"[%u"
+literal|"%.*s %u"
 argument_list|,
-name|m
-operator|->
-name|lineno
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|">>>>>>>> %u"
-operator|+
-literal|8
-operator|-
 operator|(
 name|m
 operator|->
@@ -145,6 +129,10 @@ name|cont_level
 operator|&
 literal|7
 operator|)
+operator|+
+literal|1
+argument_list|,
+literal|">>>>>>>>"
 argument_list|,
 name|m
 operator|->
@@ -341,14 +329,14 @@ name|m
 operator|->
 name|str_flags
 operator|&
-name|STRING_COMPACT_BLANK
+name|STRING_COMPACT_WHITESPACE
 condition|)
 operator|(
 name|void
 operator|)
 name|fputc
 argument_list|(
-name|CHAR_COMPACT_BLANK
+name|CHAR_COMPACT_WHITESPACE
 argument_list|,
 name|stderr
 argument_list|)
@@ -359,14 +347,14 @@ name|m
 operator|->
 name|str_flags
 operator|&
-name|STRING_COMPACT_OPTIONAL_BLANK
+name|STRING_COMPACT_OPTIONAL_WHITESPACE
 condition|)
 operator|(
 name|void
 operator|)
 name|fputc
 argument_list|(
-name|CHAR_COMPACT_OPTIONAL_BLANK
+name|CHAR_COMPACT_OPTIONAL_WHITESPACE
 argument_list|,
 name|stderr
 argument_list|)
@@ -610,7 +598,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%lld"
+literal|"%"
+name|INT64_T_FORMAT
+literal|"d"
 argument_list|,
 operator|(
 name|unsigned
@@ -1106,9 +1096,9 @@ name|tm1
 operator|==
 name|NULL
 condition|)
-return|return
-literal|"*Invalid time*"
-return|;
+goto|goto
+name|out
+goto|;
 name|daylight
 operator|=
 name|tm1
@@ -1144,9 +1134,9 @@ name|tm
 operator|==
 name|NULL
 condition|)
-return|return
-literal|"*Invalid time*"
-return|;
+goto|goto
+name|out
+goto|;
 name|pp
 operator|=
 name|asctime
@@ -1155,6 +1145,15 @@ name|tm
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|pp
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|out
+goto|;
 name|pp
 index|[
 name|strcspn
@@ -1169,6 +1168,11 @@ literal|'\0'
 expr_stmt|;
 return|return
 name|pp
+return|;
+name|out
+label|:
+return|return
+literal|"*Invalid time*"
 return|;
 block|}
 end_function

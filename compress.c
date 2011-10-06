@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: compress.c,v 1.63 2009/03/23 14:21:51 christos Exp $"
+literal|"@(#)$File: compress.c,v 1.67 2011/09/01 12:12:37 christos Exp $"
 argument_list|)
 end_macro
 
@@ -72,11 +72,22 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__MINGW32__
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -348,29 +359,26 @@ literal|1
 block|}
 block|,
 comment|/* XZ Utils */
+block|{
+literal|"LRZI"
+block|,
+literal|4
+block|,
+block|{
+literal|"lrzip"
+block|,
+literal|"-dqo-"
+block|,
+name|NULL
+block|}
+block|,
+literal|1
+block|}
+block|,
+comment|/* LRZIP */
 block|}
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-name|private
-name|size_t
-name|ncompr
-init|=
-sizeof|sizeof
-argument_list|(
-name|compr
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|compr
-index|[
-literal|0
-index|]
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -394,6 +402,32 @@ name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_if
+if|#
+directive|if
+name|HAVE_FORK
+end_if
+
+begin_decl_stmt
+name|private
+name|size_t
+name|ncompr
+init|=
+sizeof|sizeof
+argument_list|(
+name|compr
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|compr
+index|[
+literal|0
+index|]
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|private
@@ -744,6 +778,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * `safe' write for sockets and pipes.  */
 end_comment
@@ -765,7 +804,7 @@ name|size_t
 name|n
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rv
 decl_stmt|;
 name|size_t
@@ -810,14 +849,14 @@ name|rv
 expr_stmt|;
 name|buf
 operator|=
-operator|(
-operator|(
+name|CAST
+argument_list|(
 specifier|const
 name|char
 operator|*
-operator|)
+argument_list|,
 name|buf
-operator|)
+argument_list|)
 operator|+
 name|rv
 expr_stmt|;
@@ -840,30 +879,42 @@ begin_comment
 comment|/*  * `safe' read for sockets and pipes.  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|protected
 name|ssize_t
 name|sread
-parameter_list|(
+argument_list|(
 name|int
 name|fd
-parameter_list|,
+argument_list|,
 name|void
-modifier|*
+operator|*
 name|buf
-parameter_list|,
+argument_list|,
 name|size_t
 name|n
-parameter_list|,
+argument_list|,
 name|int
 name|canbepipe
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|unused
+operator|)
+argument_list|)
+argument_list|)
 block|{
-name|int
+name|ssize_t
 name|rv
-decl_stmt|,
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|FD_ZERO
+name|ssize_t
 name|cnt
 decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|FIONREAD
@@ -1137,7 +1188,7 @@ return|return
 name|rn
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_function
 name|protected
@@ -1167,11 +1218,20 @@ index|[
 literal|4096
 index|]
 decl_stmt|;
-name|int
+name|ssize_t
 name|r
-decl_stmt|,
+decl_stmt|;
+name|int
 name|tfd
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_MKSTEMP
+name|int
+name|te
+decl_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -1241,7 +1301,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|r
+name|te
 operator|=
 name|errno
 expr_stmt|;
@@ -1255,7 +1315,7 @@ argument_list|)
 expr_stmt|;
 name|errno
 operator|=
-name|r
+name|te
 expr_stmt|;
 endif|#
 directive|endif
@@ -1460,6 +1520,12 @@ name|fd
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|HAVE_FORK
+end_if
 
 begin_ifdef
 ifdef|#
@@ -1700,9 +1766,16 @@ name|z
 operator|.
 name|avail_in
 operator|=
+name|CAST
+argument_list|(
+name|uint32_t
+argument_list|,
+operator|(
 name|n
 operator|-
 name|data_start
+operator|)
+argument_list|)
 expr_stmt|;
 name|z
 operator|.
@@ -1735,6 +1808,7 @@ name|opaque
 operator|=
 name|Z_NULL
 expr_stmt|;
+comment|/* LINTED bug in header macro */
 name|rc
 operator|=
 name|inflateInit2
@@ -1891,8 +1965,11 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|int
+name|ssize_t
 name|r
+decl_stmt|;
+name|pid_t
+name|pid
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -1975,6 +2052,8 @@ return|;
 block|}
 switch|switch
 condition|(
+name|pid
+operator|=
 name|fork
 argument_list|()
 condition|)
@@ -2540,8 +2619,7 @@ while|while
 condition|(
 name|waitpid
 argument_list|(
-operator|-
-literal|1
+name|pid
 argument_list|,
 name|NULL
 argument_list|,
@@ -2581,6 +2659,11 @@ return|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

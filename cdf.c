@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2008 Christos Zoulas  * All rights reserved.  *  * 
 end_comment
 
 begin_comment
-comment|/*  * Parse composite document files, the format used in Microsoft Office  * document files before they switched to zipped xml.  * Info from: http://sc.openoffice.org/compdocfileformat.pdf  */
+comment|/*  * Parse Composite Document Files, the format used in Microsoft Office  * document files before they switched to zipped XML.  * Info from: http://sc.openoffice.org/compdocfileformat.pdf  *  * N.B. This is the "Composite Document File" format, and not the  * "Compound Document Format", nor the "Channel Definition Format".  */
 end_comment
 
 begin_include
@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: cdf.c,v 1.30 2009/05/06 14:29:47 christos Exp $"
+literal|"@(#)$File: cdf.c,v 1.46 2011/09/16 21:23:59 christos Exp $"
 argument_list|)
 end_macro
 
@@ -84,6 +84,23 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LIMITS_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -107,27 +124,6 @@ include|#
 directive|include
 file|"cdf.h"
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__arraycount
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|__arraycount
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a) / sizeof(a[0]))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -196,7 +192,7 @@ name|CDF_TOLE8
 parameter_list|(
 name|x
 parameter_list|)
-value|(NEED_SWAP ? cdf_tole8(x) : (uint64_t)(x))
+value|((uint64_t)(NEED_SWAP ? _cdf_tole8(x) : (uint64_t)(x)))
 end_define
 
 begin_define
@@ -206,7 +202,7 @@ name|CDF_TOLE4
 parameter_list|(
 name|x
 parameter_list|)
-value|(NEED_SWAP ? cdf_tole4(x) : (uint32_t)(x))
+value|((uint32_t)(NEED_SWAP ? _cdf_tole4(x) : (uint32_t)(x)))
 end_define
 
 begin_define
@@ -216,7 +212,19 @@ name|CDF_TOLE2
 parameter_list|(
 name|x
 parameter_list|)
-value|(NEED_SWAP ? cdf_tole2(x) : (uint16_t)(x))
+value|((uint16_t)(NEED_SWAP ? _cdf_tole2(x) : (uint16_t)(x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CDF_GETUINT32
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|cdf_getuint32(x, y)
 end_define
 
 begin_comment
@@ -224,8 +232,9 @@ comment|/*  * swap a short  */
 end_comment
 
 begin_function
+specifier|static
 name|uint16_t
-name|cdf_tole2
+name|_cdf_tole2
 parameter_list|(
 name|uint16_t
 name|sv
@@ -295,8 +304,9 @@ comment|/*  * swap an int  */
 end_comment
 
 begin_function
+specifier|static
 name|uint32_t
-name|cdf_tole4
+name|_cdf_tole4
 parameter_list|(
 name|uint32_t
 name|sv
@@ -386,8 +396,9 @@ comment|/*  * swap a quad  */
 end_comment
 
 begin_function
+specifier|static
 name|uint64_t
-name|cdf_tole8
+name|_cdf_tole8
 parameter_list|(
 name|uint64_t
 name|sv
@@ -512,6 +523,59 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * grab a uint32_t from a possibly unaligned address, and return it in  * the native host order.  */
+end_comment
+
+begin_function
+specifier|static
+name|uint32_t
+name|cdf_getuint32
+parameter_list|(
+specifier|const
+name|uint8_t
+modifier|*
+name|p
+parameter_list|,
+name|size_t
+name|offs
+parameter_list|)
+block|{
+name|uint32_t
+name|rv
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|memcpy
+argument_list|(
+operator|&
+name|rv
+argument_list|,
+name|p
+operator|+
+name|offs
+operator|*
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|rv
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|CDF_TOLE4
+argument_list|(
+name|rv
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_define
 define|#
 directive|define
@@ -533,6 +597,57 @@ parameter_list|)
 define|\
 value|(void)memcpy((a),&buf[len], sizeof(a)), len += sizeof(a)
 end_define
+
+begin_function
+name|uint16_t
+name|cdf_tole2
+parameter_list|(
+name|uint16_t
+name|sv
+parameter_list|)
+block|{
+return|return
+name|CDF_TOLE2
+argument_list|(
+name|sv
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|uint32_t
+name|cdf_tole4
+parameter_list|(
+name|uint32_t
+name|sv
+parameter_list|)
+block|{
+return|return
+name|CDF_TOLE4
+argument_list|(
+name|sv
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|uint64_t
+name|cdf_tole8
+parameter_list|(
+name|uint64_t
+name|sv
+parameter_list|)
+block|{
+return|return
+name|CDF_TOLE8
+argument_list|(
+name|sv
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_function
 name|void
@@ -685,6 +800,9 @@ name|h_secid_first_sector_in_short_sat
 operator|=
 name|CDF_TOLE4
 argument_list|(
+operator|(
+name|uint32_t
+operator|)
 name|h
 operator|->
 name|h_secid_first_sector_in_short_sat
@@ -707,6 +825,9 @@ name|h_secid_first_sector_in_master_sat
 operator|=
 name|CDF_TOLE4
 argument_list|(
+operator|(
+name|uint32_t
+operator|)
 name|h
 operator|->
 name|h_secid_first_sector_in_master_sat
@@ -750,6 +871,9 @@ index|]
 operator|=
 name|CDF_TOLE4
 argument_list|(
+operator|(
+name|uint32_t
+operator|)
 name|h
 operator|->
 name|h_master_sat
@@ -951,6 +1075,9 @@ name|d_left_child
 operator|=
 name|CDF_TOLE4
 argument_list|(
+operator|(
+name|uint32_t
+operator|)
 name|d
 operator|->
 name|d_left_child
@@ -962,6 +1089,9 @@ name|d_right_child
 operator|=
 name|CDF_TOLE4
 argument_list|(
+operator|(
+name|uint32_t
+operator|)
 name|d
 operator|->
 name|d_right_child
@@ -973,6 +1103,9 @@ name|d_storage
 operator|=
 name|CDF_TOLE4
 argument_list|(
+operator|(
+name|uint32_t
+operator|)
 name|d
 operator|->
 name|d_storage
@@ -1029,6 +1162,9 @@ name|d_created
 operator|=
 name|CDF_TOLE8
 argument_list|(
+operator|(
+name|uint64_t
+operator|)
 name|d
 operator|->
 name|d_created
@@ -1040,6 +1176,9 @@ name|d_modified
 operator|=
 name|CDF_TOLE8
 argument_list|(
+operator|(
+name|uint64_t
+operator|)
 name|d
 operator|->
 name|d_modified
@@ -1051,6 +1190,9 @@ name|d_stream_first_sector
 operator|=
 name|CDF_TOLE4
 argument_list|(
+operator|(
+name|uint32_t
+operator|)
 name|d
 operator|->
 name|d_stream_first_sector
@@ -1257,12 +1399,20 @@ modifier|*
 name|sst
 parameter_list|,
 specifier|const
+name|cdf_header_t
+modifier|*
+name|h
+parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|p
 parameter_list|,
 name|size_t
 name|tail
+parameter_list|,
+name|int
+name|line
 parameter_list|)
 block|{
 specifier|const
@@ -1295,6 +1445,12 @@ operator|)
 operator|+
 name|tail
 decl_stmt|;
+operator|(
+name|void
+operator|)
+operator|&
+name|line
+expr_stmt|;
 if|if
 condition|(
 name|e
@@ -1310,9 +1466,10 @@ operator|-
 name|b
 argument_list|)
 operator|<
-name|sst
-operator|->
-name|sst_dirlen
+name|CDF_SEC_SIZE
+argument_list|(
+name|h
+argument_list|)
 operator|*
 name|sst
 operator|->
@@ -1324,9 +1481,18 @@ return|;
 name|DPRINTF
 argument_list|(
 operator|(
-name|stderr
+literal|"%d: offset begin %p end %p %"
+name|SIZE_T_FORMAT
+literal|"u"
+literal|">= %"
+name|SIZE_T_FORMAT
+literal|"u [%"
+name|SIZE_T_FORMAT
+literal|"u %"
+name|SIZE_T_FORMAT
+literal|"u]\n"
 operator|,
-literal|"offset begin %p end %p %zu>= %zu\n"
+name|line
 operator|,
 name|b
 operator|,
@@ -1341,10 +1507,20 @@ operator|-
 name|b
 argument_list|)
 operator|,
+name|CDF_SEC_SIZE
+argument_list|(
+name|h
+argument_list|)
+operator|*
 name|sst
 operator|->
-name|sst_dirlen
-operator|*
+name|sst_len
+operator|,
+name|CDF_SEC_SIZE
+argument_list|(
+name|h
+argument_list|)
+operator|,
 name|sst
 operator|->
 name|sst_len
@@ -1610,7 +1786,11 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"Bad magic 0x%llx != 0x%llx\n"
+literal|"Bad magic 0x%"
+name|INT64_T_FORMAT
+literal|"x != 0x%"
+name|INT64_T_FORMAT
+literal|"x\n"
 operator|,
 operator|(
 name|unsigned
@@ -1948,6 +2128,11 @@ name|CDF_SEC_LIMIT
 value|(UINT32_MAX / (4 * ss))
 if|if
 condition|(
+operator|(
+name|nsatpersec
+operator|>
+literal|0
+operator|&&
 name|h
 operator|->
 name|h_num_sectors_in_master_sat
@@ -1955,6 +2140,7 @@ operator|>
 name|CDF_SEC_LIMIT
 operator|/
 name|nsatpersec
+operator|)
 operator|||
 name|i
 operator|>
@@ -1964,7 +2150,9 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"Number of sectors in master SAT too big %u %zu\n"
+literal|"Number of sectors in master SAT too big %u %"
+name|SIZE_T_FORMAT
+literal|"u\n"
 operator|,
 name|h
 operator|->
@@ -1998,7 +2186,11 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"sat_len = %zu ss = %zu\n"
+literal|"sat_len = %"
+name|SIZE_T_FORMAT
+literal|"u ss = %"
+name|SIZE_T_FORMAT
+literal|"u\n"
 operator|,
 name|sat
 operator|->
@@ -2015,6 +2207,11 @@ name|sat
 operator|->
 name|sat_tab
 operator|=
+name|CAST
+argument_list|(
+name|cdf_secid_t
+operator|*
+argument_list|,
 name|calloc
 argument_list|(
 name|sat
@@ -2022,6 +2219,7 @@ operator|->
 name|sat_len
 argument_list|,
 name|ss
+argument_list|)
 argument_list|)
 operator|)
 operator|==
@@ -2118,11 +2316,17 @@ condition|(
 operator|(
 name|msa
 operator|=
+name|CAST
+argument_list|(
+name|cdf_secid_t
+operator|*
+argument_list|,
 name|calloc
 argument_list|(
 literal|1
 argument_list|,
 name|ss
+argument_list|)
 argument_list|)
 operator|)
 operator|==
@@ -2241,6 +2445,9 @@ name|sec
 operator|=
 name|CDF_TOLE4
 argument_list|(
+operator|(
+name|uint32_t
+operator|)
 name|msa
 index|[
 name|k
@@ -2337,6 +2544,9 @@ name|mid
 operator|=
 name|CDF_TOLE4
 argument_list|(
+operator|(
+name|uint32_t
+operator|)
 name|msa
 index|[
 name|nsatpersec
@@ -2513,6 +2723,9 @@ name|sid
 operator|=
 name|CDF_TOLE4
 argument_list|(
+operator|(
+name|uint32_t
+operator|)
 name|sat
 operator|->
 name|sat_tab
@@ -2780,6 +2993,9 @@ name|sid
 operator|=
 name|CDF_TOLE4
 argument_list|(
+operator|(
+name|uint32_t
+operator|)
 name|sat
 operator|->
 name|sat_tab
@@ -3035,6 +3251,9 @@ name|sid
 operator|=
 name|CDF_TOLE4
 argument_list|(
+operator|(
+name|uint32_t
+operator|)
 name|ssat
 operator|->
 name|sat_tab
@@ -3110,6 +3329,12 @@ operator|<
 name|h
 operator|->
 name|h_min_size_standard_stream
+operator|&&
+name|sst
+operator|->
+name|sst_tab
+operator|!=
+name|NULL
 condition|)
 return|return
 name|cdf_read_short_sector_chain
@@ -3242,6 +3467,11 @@ name|dir
 operator|->
 name|dir_tab
 operator|=
+name|CAST
+argument_list|(
+name|cdf_directory_t
+operator|*
+argument_list|,
 name|calloc
 argument_list|(
 name|dir
@@ -3256,6 +3486,7 @@ name|dir_tab
 index|[
 literal|0
 index|]
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3276,9 +3507,15 @@ condition|(
 operator|(
 name|buf
 operator|=
+name|CAST
+argument_list|(
+name|char
+operator|*
+argument_list|,
 name|malloc
 argument_list|(
 name|ss
+argument_list|)
 argument_list|)
 operator|)
 operator|==
@@ -3416,6 +3653,9 @@ name|sid
 operator|=
 name|CDF_TOLE4
 argument_list|(
+operator|(
+name|uint32_t
+operator|)
 name|sat
 operator|->
 name|sat_tab
@@ -3564,6 +3804,11 @@ name|ssat
 operator|->
 name|sat_tab
 operator|=
+name|CAST
+argument_list|(
+name|cdf_secid_t
+operator|*
+argument_list|,
 name|calloc
 argument_list|(
 name|ssat
@@ -3571,6 +3816,7 @@ operator|->
 name|sat_len
 argument_list|,
 name|ss
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3701,6 +3947,9 @@ name|sid
 operator|=
 name|CDF_TOLE4
 argument_list|(
+operator|(
+name|uint32_t
+operator|)
 name|sat
 operator|->
 name|sat_tab
@@ -3996,16 +4245,16 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
-init|;
-name|i
-operator|<
 name|dir
 operator|->
 name|dir_len
+init|;
+name|i
+operator|>
+literal|0
 condition|;
 name|i
-operator|++
+operator|--
 control|)
 if|if
 condition|(
@@ -4014,6 +4263,8 @@ operator|->
 name|dir_tab
 index|[
 name|i
+operator|-
+literal|1
 index|]
 operator|.
 name|d_type
@@ -4029,6 +4280,8 @@ operator|->
 name|dir_tab
 index|[
 name|i
+operator|-
+literal|1
 index|]
 operator|.
 name|d_name
@@ -4046,9 +4299,7 @@ if|if
 condition|(
 name|i
 operator|==
-name|dir
-operator|->
-name|dir_len
+literal|0
 condition|)
 block|{
 name|DPRINTF
@@ -4060,7 +4311,7 @@ argument_list|)
 expr_stmt|;
 name|errno
 operator|=
-name|EFTYPE
+name|ESRCH
 expr_stmt|;
 return|return
 operator|-
@@ -4075,6 +4326,8 @@ operator|->
 name|dir_tab
 index|[
 name|i
+operator|-
+literal|1
 index|]
 expr_stmt|;
 return|return
@@ -4113,6 +4366,11 @@ name|cdf_stream_t
 modifier|*
 name|sst
 parameter_list|,
+specifier|const
+name|cdf_header_t
+modifier|*
+name|h
+parameter_list|,
 name|uint32_t
 name|offs
 parameter_list|,
@@ -4139,7 +4397,7 @@ name|cdf_section_header_t
 name|sh
 decl_stmt|;
 specifier|const
-name|uint32_t
+name|uint8_t
 modifier|*
 name|p
 decl_stmt|,
@@ -4172,6 +4430,8 @@ name|i
 decl_stmt|,
 name|o
 decl_stmt|,
+name|o4
+decl_stmt|,
 name|nelements
 decl_stmt|,
 name|j
@@ -4199,6 +4459,12 @@ goto|;
 block|}
 name|shp
 operator|=
+name|CAST
+argument_list|(
+specifier|const
+name|cdf_section_header_t
+operator|*
+argument_list|,
 operator|(
 specifier|const
 name|void
@@ -4216,12 +4482,15 @@ name|sst_tab
 operator|+
 name|offs
 operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|cdf_check_stream_offset
 argument_list|(
 name|sst
+argument_list|,
+name|h
 argument_list|,
 name|shp
 argument_list|,
@@ -4230,6 +4499,8 @@ argument_list|(
 operator|*
 name|shp
 argument_list|)
+argument_list|,
+name|__LINE__
 argument_list|)
 operator|==
 operator|-
@@ -4336,6 +4607,11 @@ name|sh_properties
 expr_stmt|;
 name|inp
 operator|=
+name|CAST
+argument_list|(
+name|cdf_property_info_t
+operator|*
+argument_list|,
 name|realloc
 argument_list|(
 operator|*
@@ -4348,6 +4624,7 @@ sizeof|sizeof
 argument_list|(
 operator|*
 name|inp
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4363,6 +4640,11 @@ name|sh_properties
 expr_stmt|;
 name|inp
 operator|=
+name|CAST
+argument_list|(
+name|cdf_property_info_t
+operator|*
+argument_list|,
 name|malloc
 argument_list|(
 operator|*
@@ -4372,6 +4654,7 @@ sizeof|sizeof
 argument_list|(
 operator|*
 name|inp
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4404,6 +4687,12 @@ name|sh_properties
 expr_stmt|;
 name|p
 operator|=
+name|CAST
+argument_list|(
+specifier|const
+name|uint8_t
+operator|*
+argument_list|,
 operator|(
 specifier|const
 name|void
@@ -4413,6 +4702,11 @@ operator|(
 operator|(
 specifier|const
 name|char
+operator|*
+operator|)
+operator|(
+specifier|const
+name|void
 operator|*
 operator|)
 name|sst
@@ -4426,9 +4720,16 @@ argument_list|(
 name|sh
 argument_list|)
 operator|)
+argument_list|)
 expr_stmt|;
 name|e
 operator|=
+name|CAST
+argument_list|(
+specifier|const
+name|uint8_t
+operator|*
+argument_list|,
 operator|(
 specifier|const
 name|void
@@ -4441,6 +4742,11 @@ specifier|const
 name|char
 operator|*
 operator|)
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
 name|shp
 operator|)
 operator|+
@@ -4448,6 +4754,7 @@ name|sh
 operator|.
 name|sh_len
 operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4455,9 +4762,13 @@ name|cdf_check_stream_offset
 argument_list|(
 name|sst
 argument_list|,
+name|h
+argument_list|,
 name|e
 argument_list|,
 literal|0
+argument_list|,
+name|__LINE__
 argument_list|)
 operator|==
 operator|-
@@ -4486,7 +4797,12 @@ name|q
 operator|=
 operator|(
 specifier|const
-name|uint32_t
+name|uint8_t
+operator|*
+operator|)
+operator|(
+specifier|const
+name|void
 operator|*
 operator|)
 operator|(
@@ -4495,12 +4811,17 @@ specifier|const
 name|char
 operator|*
 operator|)
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
 name|p
 operator|+
-name|CDF_TOLE4
+name|CDF_GETUINT32
 argument_list|(
 name|p
-index|[
+argument_list|,
 operator|(
 name|i
 operator|<<
@@ -4508,11 +4829,15 @@ literal|1
 operator|)
 operator|+
 literal|1
-index|]
 argument_list|)
 operator|)
 operator|-
 literal|2
+operator|*
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4543,14 +4868,13 @@ index|]
 operator|.
 name|pi_id
 operator|=
-name|CDF_TOLE4
+name|CDF_GETUINT32
 argument_list|(
 name|p
-index|[
+argument_list|,
 name|i
 operator|<<
 literal|1
-index|]
 argument_list|)
 expr_stmt|;
 name|inp
@@ -4560,18 +4884,17 @@ index|]
 operator|.
 name|pi_type
 operator|=
-name|CDF_TOLE4
+name|CDF_GETUINT32
 argument_list|(
 name|q
-index|[
+argument_list|,
 literal|0
-index|]
 argument_list|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%d) id=%x type=%x offs=%x\n"
+literal|"%d) id=%x type=%x offs=%x,%d\n"
 operator|,
 name|i
 operator|,
@@ -4589,19 +4912,22 @@ index|]
 operator|.
 name|pi_type
 operator|,
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
 name|q
 operator|-
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
 name|p
+operator|,
+name|CDF_GETUINT32
+argument_list|(
+name|p
+argument_list|,
+operator|(
+name|i
+operator|<<
+literal|1
+operator|)
+operator|+
+literal|1
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4619,12 +4945,11 @@ condition|)
 block|{
 name|nelements
 operator|=
-name|CDF_TOLE4
+name|CDF_GETUINT32
 argument_list|(
 name|q
-index|[
+argument_list|,
 literal|1
-index|]
 argument_list|)
 expr_stmt|;
 name|o
@@ -4643,6 +4968,15 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+name|o4
+operator|=
+name|o
+operator|*
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|inp
@@ -4676,6 +5010,9 @@ name|CDF_TYPEMASK
 condition|)
 block|{
 case|case
+name|CDF_NULL
+case|:
+case|case
 name|CDF_EMPTY
 case|:
 break|break;
@@ -4707,7 +5044,7 @@ argument_list|,
 operator|&
 name|q
 index|[
-name|o
+name|o4
 index|]
 argument_list|,
 sizeof|sizeof
@@ -4757,7 +5094,7 @@ argument_list|,
 operator|&
 name|q
 index|[
-name|o
+name|o4
 index|]
 argument_list|,
 sizeof|sizeof
@@ -4775,6 +5112,9 @@ name|pi_s32
 operator|=
 name|CDF_TOLE4
 argument_list|(
+operator|(
+name|uint32_t
+operator|)
 name|s32
 argument_list|)
 expr_stmt|;
@@ -4810,7 +5150,7 @@ argument_list|,
 operator|&
 name|q
 index|[
-name|o
+name|o4
 index|]
 argument_list|,
 sizeof|sizeof
@@ -4860,7 +5200,7 @@ argument_list|,
 operator|&
 name|q
 index|[
-name|o
+name|o4
 index|]
 argument_list|,
 sizeof|sizeof
@@ -4876,8 +5216,11 @@ index|]
 operator|.
 name|pi_s64
 operator|=
-name|CDF_TOLE4
+name|CDF_TOLE8
 argument_list|(
+operator|(
+name|uint64_t
+operator|)
 name|s64
 argument_list|)
 expr_stmt|;
@@ -4910,7 +5253,7 @@ argument_list|,
 operator|&
 name|q
 index|[
-name|o
+name|o4
 index|]
 argument_list|,
 sizeof|sizeof
@@ -4926,14 +5269,20 @@ index|]
 operator|.
 name|pi_u64
 operator|=
-name|CDF_TOLE4
+name|CDF_TOLE8
 argument_list|(
+operator|(
+name|uint64_t
+operator|)
 name|u64
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|CDF_LENGTH32_STRING
+case|:
+case|case
+name|CDF_LENGTH32_WSTRING
 case|:
 if|if
 condition|(
@@ -4971,6 +5320,11 @@ name|nelements
 expr_stmt|;
 name|inp
 operator|=
+name|CAST
+argument_list|(
+name|cdf_property_info_t
+operator|*
+argument_list|,
 name|realloc
 argument_list|(
 operator|*
@@ -4983,6 +5337,7 @@ sizeof|sizeof
 argument_list|(
 operator|*
 name|inp
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5037,12 +5392,11 @@ block|{
 name|uint32_t
 name|l
 init|=
-name|CDF_TOLE4
+name|CDF_GETUINT32
 argument_list|(
 name|q
-index|[
+argument_list|,
 name|o
-index|]
 argument_list|)
 decl_stmt|;
 name|inp
@@ -5071,12 +5425,20 @@ name|char
 operator|*
 operator|)
 operator|(
+specifier|const
+name|void
+operator|*
+operator|)
+operator|(
 operator|&
 name|q
 index|[
-name|o
+name|o4
 operator|+
-literal|1
+sizeof|sizeof
+argument_list|(
+name|l
+argument_list|)
 index|]
 operator|)
 expr_stmt|;
@@ -5112,6 +5474,9 @@ name|l
 operator|=
 literal|4
 operator|+
+operator|(
+name|uint32_t
+operator|)
 name|CDF_ROUND
 argument_list|(
 name|l
@@ -5127,6 +5492,15 @@ operator|+=
 name|l
 operator|>>
 literal|2
+expr_stmt|;
+name|o4
+operator|=
+name|o
+operator|*
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
 expr_stmt|;
 block|}
 name|i
@@ -5161,7 +5535,7 @@ argument_list|,
 operator|&
 name|q
 index|[
-name|o
+name|o4
 index|]
 argument_list|,
 sizeof|sizeof
@@ -5179,6 +5553,9 @@ name|pi_tp
 operator|=
 name|CDF_TOLE8
 argument_list|(
+operator|(
+name|uint64_t
+operator|)
 name|tp
 argument_list|)
 expr_stmt|;
@@ -5250,6 +5627,11 @@ name|cdf_stream_t
 modifier|*
 name|sst
 parameter_list|,
+specifier|const
+name|cdf_header_t
+modifier|*
+name|h
+parameter_list|,
 name|cdf_summary_info_header_t
 modifier|*
 name|ssi
@@ -5274,15 +5656,28 @@ name|cdf_summary_info_header_t
 modifier|*
 name|si
 init|=
+name|CAST
+argument_list|(
+specifier|const
+name|cdf_summary_info_header_t
+operator|*
+argument_list|,
 name|sst
 operator|->
 name|sst_tab
+argument_list|)
 decl_stmt|;
 specifier|const
 name|cdf_section_declaration_t
 modifier|*
 name|sd
 init|=
+name|CAST
+argument_list|(
+specifier|const
+name|cdf_section_declaration_t
+operator|*
+argument_list|,
 operator|(
 specifier|const
 name|void
@@ -5300,12 +5695,15 @@ name|sst_tab
 operator|+
 name|CDF_SECTION_DECLARATION_OFFSET
 operator|)
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
 name|cdf_check_stream_offset
 argument_list|(
 name|sst
+argument_list|,
+name|h
 argument_list|,
 name|si
 argument_list|,
@@ -5314,6 +5712,8 @@ argument_list|(
 operator|*
 name|si
 argument_list|)
+argument_list|,
+name|__LINE__
 argument_list|)
 operator|==
 operator|-
@@ -5323,6 +5723,8 @@ name|cdf_check_stream_offset
 argument_list|(
 name|sst
 argument_list|,
+name|h
+argument_list|,
 name|sd
 argument_list|,
 sizeof|sizeof
@@ -5330,6 +5732,8 @@ argument_list|(
 operator|*
 name|sd
 argument_list|)
+argument_list|,
+name|__LINE__
 argument_list|)
 operator|==
 operator|-
@@ -5460,6 +5864,8 @@ condition|(
 name|cdf_read_property_info
 argument_list|(
 name|sst
+argument_list|,
+name|h
 argument_list|,
 name|CDF_TOLE4
 argument_list|(
@@ -5828,7 +6234,7 @@ name|cdf_timestamp_t
 name|ts
 parameter_list|)
 block|{
-name|size_t
+name|int
 name|len
 init|=
 literal|0
@@ -5848,9 +6254,14 @@ name|CDF_TIME_PREC
 expr_stmt|;
 name|secs
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|ts
 operator|%
 literal|60
+argument_list|)
 expr_stmt|;
 name|ts
 operator|/=
@@ -5858,9 +6269,14 @@ literal|60
 expr_stmt|;
 name|mins
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|ts
 operator|%
 literal|60
+argument_list|)
 expr_stmt|;
 name|ts
 operator|/=
@@ -5868,9 +6284,14 @@ literal|60
 expr_stmt|;
 name|hours
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|ts
 operator|%
 literal|24
+argument_list|)
 expr_stmt|;
 name|ts
 operator|/=
@@ -5878,6 +6299,9 @@ literal|24
 expr_stmt|;
 name|days
 operator|=
+operator|(
+name|int
+operator|)
 name|ts
 expr_stmt|;
 if|if
@@ -5904,6 +6328,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|len
 operator|>=
 name|bufsiz
@@ -5938,6 +6365,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|len
 operator|>=
 name|bufsiz
@@ -5965,6 +6395,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|len
 operator|>=
 name|bufsiz
@@ -6227,7 +6660,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s[%zu]:\n%.6d: "
+literal|"%s[%"
+name|SIZE_T_FORMAT
+literal|"u]:\n%.6d: "
 argument_list|,
 name|prefix
 argument_list|,
@@ -6665,7 +7100,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Directory %zu: %s\n"
+literal|"Directory %"
+name|SIZE_T_FORMAT
+literal|"u: %s\n"
 argument_list|,
 name|i
 argument_list|,
@@ -6794,7 +7231,7 @@ name|stderr
 argument_list|,
 literal|"Created %s"
 argument_list|,
-name|ctime
+name|cdf_ctime
 argument_list|(
 operator|&
 name|ts
@@ -6822,7 +7259,7 @@ name|stderr
 argument_list|,
 literal|"Modified %s"
 argument_list|,
-name|ctime
+name|cdf_ctime
 argument_list|(
 operator|&
 name|ts
@@ -6992,6 +7429,8 @@ index|]
 decl_stmt|;
 name|size_t
 name|i
+decl_stmt|,
+name|j
 decl_stmt|;
 for|for
 control|(
@@ -7031,7 +7470,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%zu) %s: "
+literal|"%"
+name|SIZE_T_FORMAT
+literal|"u) %s: "
 argument_list|,
 name|i
 argument_list|,
@@ -7048,6 +7489,10 @@ operator|.
 name|pi_type
 condition|)
 block|{
+case|case
+name|CDF_NULL
+case|:
+break|break;
 case|case
 name|CDF_SIGNED16
 case|:
@@ -7153,6 +7598,83 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|CDF_LENGTH32_WSTRING
+case|:
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"string %u ["
+argument_list|,
+name|info
+index|[
+name|i
+index|]
+operator|.
+name|pi_str
+operator|.
+name|s_len
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+name|info
+index|[
+name|i
+index|]
+operator|.
+name|pi_str
+operator|.
+name|s_len
+operator|-
+literal|1
+condition|;
+name|j
+operator|++
+control|)
+operator|(
+name|void
+operator|)
+name|fputc
+argument_list|(
+name|info
+index|[
+name|i
+index|]
+operator|.
+name|pi_str
+operator|.
+name|s_buf
+index|[
+name|j
+operator|<<
+literal|1
+index|]
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"]\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|CDF_FILETIME
 case|:
 name|tp
@@ -7215,7 +7737,7 @@ name|stderr
 argument_list|,
 literal|"timestamp %s"
 argument_list|,
-name|ctime
+name|cdf_ctime
 argument_list|(
 operator|&
 name|ts
@@ -7310,6 +7832,8 @@ condition|(
 name|cdf_unpack_summary_info
 argument_list|(
 name|sst
+argument_list|,
+name|h
 argument_list|,
 operator|&
 name|ssi
@@ -7669,9 +8193,6 @@ name|CDF_DEBUG
 name|cdf_dump_sat
 argument_list|(
 literal|"SSAT"
-argument_list|,
-operator|&
-name|h
 argument_list|,
 operator|&
 name|ssat
