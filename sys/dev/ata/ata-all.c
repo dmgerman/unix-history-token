@@ -4633,7 +4633,7 @@ name|Giant
 argument_list|)
 expr_stmt|;
 comment|/* newbus suckage it needs Giant */
-comment|/* kick of probe and attach on all channels */
+comment|/* kick off probe and attach on all channels */
 for|for
 control|(
 name|ctlr
