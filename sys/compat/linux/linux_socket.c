@@ -632,7 +632,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|EINVAL
+name|ENAMETOOLONG
 expr_stmt|;
 goto|goto
 name|out
