@@ -1364,6 +1364,13 @@ name|m_pkthdr
 operator|.
 name|rcvif
 expr_stmt|;
+comment|/* 	 * Add back the IP header length which was 	 * removed by ip_input().  Raw sockets do 	 * not modify the packet except for some 	 * byte order swaps. 	 */
+name|ip
+operator|->
+name|ip_len
+operator|+=
+name|off
+expr_stmt|;
 name|hash
 operator|=
 name|INP_PCBHASH_RAW
