@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -1689,7 +1695,7 @@ begin_define
 define|#
 directive|define
 name|BSIZE
-value|2048
+value|(LINE_MAX * 2)
 end_define
 
 begin_decl_stmt
@@ -1700,10 +1706,6 @@ name|BSIZE
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* two screenfuls should do */
-end_comment
 
 begin_function
 name|int
@@ -1797,7 +1799,9 @@ name|endblock
 operator|-
 name|curline
 operator|<
-name|BUFSIZ
+name|LINE_MAX
+operator|+
+literal|1
 condition|)
 block|{
 comment|/* need storage */
@@ -1842,11 +1846,8 @@ name|curline
 operator|,
 name|i
 operator|=
-literal|1
+literal|0
 init|;
-name|i
-operator|<
-name|BUFSIZ
 condition|;
 operator|*
 name|p
@@ -1857,6 +1858,7 @@ operator|,
 name|i
 operator|++
 control|)
+block|{
 if|if
 condition|(
 operator|(
@@ -1867,12 +1869,31 @@ argument_list|()
 operator|)
 operator|==
 name|EOF
-operator|||
+condition|)
+break|break;
+if|if
+condition|(
+name|i
+operator|>=
+name|LINE_MAX
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"maximum line length (%d) exceeded"
+argument_list|,
+name|LINE_MAX
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|c
 operator|==
 literal|'\n'
 condition|)
 break|break;
+block|}
 operator|*
 name|p
 operator|=
@@ -1881,8 +1902,6 @@ expr_stmt|;
 name|curlen
 operator|=
 name|i
-operator|-
-literal|1
 expr_stmt|;
 return|return
 operator|(
