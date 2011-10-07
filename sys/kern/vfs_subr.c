@@ -13839,9 +13839,11 @@ name|struct
 name|xvfsconf
 name|xvfsp
 decl_stmt|;
-name|printf
+name|log
 argument_list|(
-literal|"WARNING: userland calling deprecated sysctl, "
+name|LOG_WARNING
+argument_list|,
+literal|"userland calling deprecated sysctl, "
 literal|"please rebuild world\n"
 argument_list|)
 expr_stmt|;
