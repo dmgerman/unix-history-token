@@ -2803,7 +2803,7 @@ argument_list|,
 argument|cl_link
 argument_list|)
 block|{
-comment|/* 		 * Make sure this client has not already been removed 		 * from the lists by svc_rpc_gss_forget_client() or 		 * svc_rpc_gss_forget_client_locked() already. 		 */
+comment|/* 		 * Make sure this client has not already been removed 		 * from the lists by svc_rpc_gss_forget_client() or 		 * svc_rpc_gss_forget_client_locked(). 		 */
 if|if
 condition|(
 name|client
